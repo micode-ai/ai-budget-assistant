@@ -1,6 +1,6 @@
 ---
 title: "Haushaltsbuch führen: Die Methode, die wirklich hält"
-meta_description: "Haushaltsbuch führen ohne Tabellenfrust: So findest du heraus, wohin dein Geld geht, setzt realistische Grenzen und behältst gemeinsam mit deiner Familie den Überblick."
+meta_description: "Haushaltsbuch führen ohne Tabellenfrust: herausfinden, wohin dein Geld geht, realistische Grenzen setzen und als Familie den Überblick behalten."
 target_keyword: "Haushaltsbuch führen"
 slug: "haushaltsbuch-fuehren"
 pair: "budget"

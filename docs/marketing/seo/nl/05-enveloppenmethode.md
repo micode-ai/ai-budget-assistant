@@ -1,6 +1,6 @@
 ---
 title: "Enveloppenmethode: het systeem tegen te veel uitgeven"
-meta_description: "De enveloppenmethode uitgelegd: geef elke euro een categorie, geef alleen uit wat in elke envelop zit en stop met te veel uitgeven. Stappenplan, zonder contant geld."
+meta_description: "De enveloppenmethode uitgelegd: geef elke euro een categorie en geef alleen uit wat in de envelop zit. Stappenplan, zonder contant geld."
 target_keyword: "enveloppenmethode"
 slug: "enveloppenmethode"
 pair: "envelope"

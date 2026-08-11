@@ -1,6 +1,6 @@
 ---
 title: "Comment économiser de l'argent quand les fins de mois sont serrées"
-meta_description: "Savoir comment économiser de l'argent ne passe pas par les sacrifices, mais par un système. Étapes concrètes, objectifs d'épargne et outils pour ancrer l'habitude."
+meta_description: "Comment économiser de l'argent sans sacrifices, avec un système. Étapes concrètes, objectifs d'épargne et outils pour ancrer l'habitude."
 target_keyword: "comment économiser de l'argent"
 slug: "comment-economiser"
 pair: "saving"

@@ -1,6 +1,6 @@
 ---
 title: "L'IA pour gérer son budget : ce qu'elle change vraiment"
-meta_description: "Comment l'IA pour gérer son budget supprime la friction de la saisie et révèle des informations utiles. Saisie vocale, photo de ticket, alertes proactives, sans tricher."
+meta_description: "Comment l'IA pour gérer son budget supprime la friction de la saisie : saisie vocale, photo de ticket et alertes proactives. Expliqué honnêtement."
 target_keyword: "IA pour gérer son budget"
 slug: "ia-pour-gerer-son-budget"
 pair: "ai-budget"

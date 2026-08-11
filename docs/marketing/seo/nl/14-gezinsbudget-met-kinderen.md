@@ -1,6 +1,6 @@
 ---
 title: "Gezinsbudget met kinderen dat echt werkt"
-meta_description: "Een gezinsbudget met kinderen draait om grillige kosten en twee mensen die uitgeven. Reserveringspotjes, een gedeeld overzicht en kinderen leren omgaan met geld."
+meta_description: "Een gezinsbudget met kinderen draait om grillige kosten en twee mensen die uitgeven: reserveringspotjes en een gedeeld overzicht."
 target_keyword: "gezinsbudget met kinderen"
 slug: "gezinsbudget-met-kinderen"
 pair: "family"

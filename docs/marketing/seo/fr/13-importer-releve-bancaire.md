@@ -1,6 +1,6 @@
 ---
 title: "Importer un relevé bancaire dans une appli de budget"
-meta_description: "Comment importer un relevé bancaire dans une appli de budget en quelques minutes. Récupérer le fichier, mapper les colonnes, éviter les doublons à la réimportation."
+meta_description: "Comment importer un relevé bancaire dans une appli de budget en quelques minutes : récupérer le fichier, mapper les colonnes, éviter les doublons."
 target_keyword: "importer un relevé bancaire"
 slug: "importer-releve-bancaire"
 pair: "bank-import"

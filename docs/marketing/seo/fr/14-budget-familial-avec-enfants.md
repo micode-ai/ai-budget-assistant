@@ -1,6 +1,6 @@
 ---
 title: "Budget familial avec enfants : le gérer sans stress"
-meta_description: "Construire un budget familial avec enfants malgré les dépenses irrégulières. Une vue partagée pour les deux parents, des provisions, et apprendre l'argent aux enfants."
+meta_description: "Construire un budget familial avec enfants malgré les dépenses irrégulières : une vue partagée pour les deux parents et des provisions."
 target_keyword: "budget familial avec enfants"
 slug: "budget-familial-avec-enfants"
 pair: "family"

@@ -1,6 +1,6 @@
 ---
 title: "Poduszka finansowa - ile i jak ją zbudować"
-meta_description: "Dowiedz się, ile powinna mieć poduszka finansowa, gdzie ją trzymać i jak zbudować ją krok po kroku, nawet przy napiętym budżecie, bez rezygnacji w połowie drogi."
+meta_description: "Ile powinna mieć poduszka finansowa, gdzie ją trzymać i jak zbudować ją krok po kroku, nawet przy napiętym budżecie."
 target_keyword: "poduszka finansowa"
 slug: "poduszka-finansowa"
 pair: "emergency-fund"

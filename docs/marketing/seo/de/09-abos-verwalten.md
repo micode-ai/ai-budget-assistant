@@ -1,6 +1,6 @@
 ---
 title: "Abos verwalten, bevor sie dein Konto leerräumen"
-meta_description: "So verwaltest du deine Abos, findest vergessene wiederkehrende Abbuchungen und kuendigst, was du nicht nutzt. Ein Audit Schritt fuer Schritt, das echtes Geld zurueckholt."
+meta_description: "So verwaltest du deine Abos, findest vergessene Abbuchungen und kündigst, was du nicht nutzt. Ein Audit Schritt für Schritt, das echtes Geld zurückholt."
 target_keyword: "Abos verwalten"
 slug: "abos-verwalten"
 pair: "subscriptions"

@@ -1,6 +1,6 @@
 ---
 title: "Notgroschen: Wie viel du brauchst und wie du ihn aufbaust"
-meta_description: "Erfahre, wie hoch ein Notgroschen sein sollte, wo du ihn aufbewahrst und wie du ihn Schritt fuer Schritt aufbaust, auch bei knappem Budget, ohne aufzugeben."
+meta_description: "Wie hoch ein Notgroschen sein sollte, wo du ihn aufbewahrst und wie du ihn Schritt für Schritt aufbaust, auch bei knappem Budget."
 target_keyword: "Notgroschen"
 slug: "notgroschen"
 pair: "emergency-fund"

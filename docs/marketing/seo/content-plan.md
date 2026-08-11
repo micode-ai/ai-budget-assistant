@@ -30,7 +30,7 @@ translation pipeline, hreflang-grouped by the `pair` key.
 | 5 | **Emergency fund: how much & how to build** | emergency-fund | poduszka finansowa, fundusz awaryjny | emergency fund (how much to save) | how-to | Savings goals |
 | 6 | **Track & cancel subscriptions to save** | subscriptions | jak zarządzać subskrypcjami | how to track and cancel subscriptions | how-to | Subscription manager + anomaly alerts |
 
-## Wave 2 — ✅ DONE (ABA-283): the 6 topics below were published in all 9 languages (files `1[0-5]-*.md`, pairs `groceries`/`categories`/`debt`/`bank-import`/`family`/`ai-budget`). Blog now at 135 articles. Follow-ups: add pillar→cluster down-links, a landing "From the blog" entry, and an IndexNow ping.
+## Wave 2 — ✅ DONE (ABA-283): the 6 topics below were published in all 9 languages (files `1[0-5]-*.md`, pairs `groceries`/`categories`/`debt`/`bank-import`/`family`/`ai-budget`). Blog now at 135 articles. (Its three follow-ups are all closed now: pillar→cluster down-links and the landing "From the blog" entries in ABA-393/394, and the IndexNow ping back in `c0b0ed02`.)
 | # | Topic | pair | PL keyword | EN keyword | App tie |
 |---|---|---|---|---|---|
 | 7 | Save money on groceries | groceries | jak oszczędzać na jedzeniu | how to save money on groceries | Spending analytics |
@@ -89,4 +89,4 @@ Seasonal backlog with publish windows: `black-friday` (early Nov, ties to price 
 ## After each batch
 - Edit the 3 pillar articles to add "Related guides" links down to the new cluster articles.
 - Add a "From the blog" section on the landing linking the top new articles (internal links + discovery).
-- Optionally ping IndexNow for the new URLs (fast Bing/Yandex indexing).
+- **IndexNow needs no manual step** — `.github/workflows/web-deploy.yml` runs `scripts/indexnow-ping.sh` after every deploy, which diffs the pushed commit range, maps changed `site/**/index.html` files to their live URLs and POSTs them (verified accepted, HTTP 200, on the Wave-4 deploy). Do not re-add "ping IndexNow" as a manual follow-up.

@@ -1,6 +1,6 @@
 ---
 title: "Épargne de précaution : combien et comment la constituer"
-meta_description: "Découvrez combien doit contenir une épargne de précaution, où la placer, et comment la constituer pas à pas, même avec un budget serré, sans abandonner en route."
+meta_description: "Combien doit contenir une épargne de précaution, où la placer et comment la constituer pas à pas, même avec un budget serré."
 target_keyword: "épargne de précaution"
 slug: "epargne-de-precaution"
 pair: "emergency-fund"

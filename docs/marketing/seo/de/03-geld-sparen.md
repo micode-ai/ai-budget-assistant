@@ -1,6 +1,6 @@
 ---
 title: "Geld sparen: Ein konkreter Plan, der wirklich aufgeht"
-meta_description: "Geld sparen auch wenn am Monatsende nichts übrig bleibt: Wo versteckte Kosten lauern, wie du Sparziele realistisch aufbaust und welche Werkzeuge die Gewohnheit festigen."
+meta_description: "Geld sparen, auch wenn am Monatsende nichts übrig bleibt: versteckte Kosten finden, Sparziele realistisch aufbauen und die Gewohnheit festigen."
 target_keyword: "Geld sparen"
 slug: "geld-sparen"
 pair: "saving"

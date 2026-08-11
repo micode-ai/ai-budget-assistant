@@ -1,6 +1,6 @@
 ---
 title: "Familienbudget mit Kindern, das im Alltag haelt"
-meta_description: "Ein Familienbudget mit Kindern meistert unregelmaessige Kosten und zwei Ausgebende: gemeinsame Sicht, Ruecklagen fuer lumpige Posten und Geld-Lektionen fuer Kinder."
+meta_description: "Ein Familienbudget mit Kindern meistert schwankende Kosten und zwei Erwachsene, die ausgeben: gemeinsame Sicht, Rücklagen und Geld-Lektionen."
 target_keyword: "familienbudget mit kindern"
 slug: "familienbudget-mit-kindern"
 pair: "family"

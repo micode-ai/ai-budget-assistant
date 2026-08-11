@@ -1,6 +1,6 @@
 ---
 title: "Méthode des enveloppes : le système anti-dépassement"
-meta_description: "La méthode des enveloppes expliquée : assignez un rôle à chaque euro, ne dépensez que ce qu'il y a dans l'enveloppe, et arrêtez les dépassements. Guide sans espèces."
+meta_description: "La méthode des enveloppes expliquée : donnez un rôle à chaque euro et ne dépensez que le contenu de l'enveloppe. Guide pas à pas, sans espèces."
 target_keyword: "méthode des enveloppes"
 slug: "methode-des-enveloppes"
 pair: "envelope"

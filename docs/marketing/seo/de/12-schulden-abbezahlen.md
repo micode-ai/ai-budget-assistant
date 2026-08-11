@@ -1,6 +1,6 @@
 ---
 title: "Schulden abbezahlen: Schneeball oder Lawine?"
-meta_description: "Schulden abbezahlen mit Methode: Schneeball fuer Motivation, Lawine fuer minimale Zinsen. So waehlst du den richtigen Weg und bleibst bis zur letzten Rate dran."
+meta_description: "Schulden abbezahlen mit Methode: Schneeball für Motivation, Lawine für minimale Zinsen. So wählst du den richtigen Weg und bleibst dran."
 target_keyword: "schulden abbezahlen"
 slug: "schulden-abbezahlen"
 pair: "debt"

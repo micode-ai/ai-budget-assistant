@@ -1,6 +1,6 @@
 ---
 title: "Jak oszczędzać na jedzeniu bez kuponów"
-meta_description: "Jak oszczędzać na jedzeniu, gdy zakupy spożywcze to największy zmienny wydatek domu. Praktyczne taktyki, realny budżet na żywność i kontrola w czasie rzeczywistym."
+meta_description: "Jak oszczędzać na jedzeniu, gdy zakupy spożywcze to największy zmienny wydatek domu. Praktyczne taktyki i realny budżet na żywność."
 target_keyword: "jak oszczędzać na jedzeniu"
 slug: "jak-oszczedzac-na-jedzeniu"
 pair: "groceries"

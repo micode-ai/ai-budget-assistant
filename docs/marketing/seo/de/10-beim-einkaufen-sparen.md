@@ -1,6 +1,6 @@
 ---
 title: "Geld sparen beim Einkaufen ohne staendig Coupons"
-meta_description: "Geld sparen beim Einkaufen: Der groesste steuerbare Posten im Haushalt. Wie du deinen echten Wert kennst, klug einkaufst und das Lebensmittelbudget im Blick behaeltst."
+meta_description: "Geld sparen beim Einkaufen: der größte steuerbare Posten im Haushalt. Deinen echten Wert kennen, klug einkaufen und das Budget im Blick behalten."
 target_keyword: "geld sparen beim einkaufen"
 slug: "beim-einkaufen-sparen"
 pair: "groceries"

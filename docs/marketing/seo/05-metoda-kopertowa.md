@@ -1,6 +1,6 @@
 ---
 title: "Metoda kopertowa - jak przestać przepłacać"
-meta_description: "Metoda kopertowa w praktyce: przypisz każdą złotówkę do kategorii, wydawaj tylko tyle, ile masz w kopercie, i przestań przepłacać. Poradnik krok po kroku, bez gotówki."
+meta_description: "Metoda kopertowa w praktyce: przypisz każdą złotówkę do kategorii i wydawaj tylko tyle, ile masz w kopercie. Poradnik krok po kroku, bez gotówki."
 target_keyword: "metoda kopertowa"
 slug: "metoda-kopertowa"
 pair: "envelope"

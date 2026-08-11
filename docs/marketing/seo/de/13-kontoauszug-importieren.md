@@ -1,6 +1,6 @@
 ---
 title: "Kontoauszug importieren statt alles abzutippen"
-meta_description: "Kontoauszug importieren und Monate in Minuten nachtragen: So holst du die Datei aus deiner Bank, mappst die Spalten und vermeidest Duplikate beim erneuten Import."
+meta_description: "Kontoauszug importieren und Monate in Minuten nachtragen: Datei aus der Bank holen, Spalten zuordnen und Duplikate beim erneuten Import vermeiden."
 target_keyword: "kontoauszug importieren"
 slug: "kontoauszug-importieren"
 pair: "bank-import"

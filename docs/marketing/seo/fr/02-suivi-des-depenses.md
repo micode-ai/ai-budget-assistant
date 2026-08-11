@@ -1,6 +1,6 @@
 ---
 title: "Suivi des dépenses : reprendre le contrôle de son argent"
-meta_description: "Un bon suivi des dépenses ne demande pas plus de discipline, il demande moins de friction. Méthodes, applications et habitudes pour que le suivi tienne sur la durée."
+meta_description: "Un bon suivi des dépenses demande moins de friction, pas plus de discipline. Méthodes, applications et habitudes pour qu'il tienne sur la durée."
 target_keyword: "suivi des dépenses"
 slug: "suivi-des-depenses"
 pair: "expenses"

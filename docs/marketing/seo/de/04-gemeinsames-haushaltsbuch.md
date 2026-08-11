@@ -1,6 +1,6 @@
 ---
-title: "Gemeinsames Haushaltsbuch fuer Paare ohne Streit"
-meta_description: "Ein gemeinsames Haushaltsbuch fuer Paare, das den Alltag uebersteht: Modelle, die funktionieren, persoenliche Puffer und eine geteilte Ansicht in Echtzeit."
+title: "Gemeinsames Haushaltsbuch für Paare ohne Streit"
+meta_description: "Ein gemeinsames Haushaltsbuch für Paare, das den Alltag übersteht: Modelle, die funktionieren, persönliche Puffer und eine geteilte Ansicht in Echtzeit."
 target_keyword: "gemeinsames Haushaltsbuch"
 slug: "gemeinsames-haushaltsbuch"
 pair: "shared-budget"

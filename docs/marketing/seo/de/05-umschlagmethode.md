@@ -1,6 +1,6 @@
 ---
 title: "Umschlagmethode: Das System gegen Mehrausgaben"
-meta_description: "Umschlagmethode erklärt: Jedem Euro eine Kategorie geben, nur ausgeben, was im Umschlag ist, und Mehrausgaben stoppen. Schritt fuer Schritt, ganz ohne Bargeld."
+meta_description: "Umschlagmethode erklärt: Jedem Euro eine Kategorie geben, nur ausgeben, was im Umschlag ist, und Mehrausgaben stoppen. Schritt für Schritt, ohne Bargeld."
 target_keyword: "Umschlagmethode"
 slug: "umschlagmethode"
 pair: "envelope"

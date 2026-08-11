@@ -853,7 +853,7 @@ def lp(lang):
     return f"{BASE}/{lang}/"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["budget", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "best-apps", "saving"]  # curated homepage -> article internal links (USP + high-intent topics first)
+FROM_BLOG_PAIRS = ["budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "best-apps", "saving"]  # curated homepage -> article internal links (USP + high-intent topics first). `school` is deliberately absent: it is seasonal and should not sit on the homepage year-round.
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()

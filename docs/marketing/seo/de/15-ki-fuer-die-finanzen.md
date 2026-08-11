@@ -1,6 +1,6 @@
 ---
-title: "KI fuer die Finanzen: weniger Aufwand, mehr Einblick"
-meta_description: "KI fuer die Finanzen nimmt die Muehe beim Erfassen und liefert Einblick von selbst: Sprache, Beleg-Foto, Fragen in Alltagssprache und proaktive Warnungen. Ehrlich erklaert."
+title: "KI für die Finanzen: weniger Aufwand, mehr Einblick"
+meta_description: "KI für die Finanzen nimmt die Mühe beim Erfassen: Spracheingabe, Beleg-Foto, Fragen in Alltagssprache und proaktive Warnungen. Ehrlich erklärt."
 target_keyword: "KI für die Finanzen"
 slug: "ki-fuer-die-finanzen"
 pair: "ai-budget"

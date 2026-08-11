@@ -1,6 +1,6 @@
 ---
 title: "Jak zarządzać subskrypcjami, zanim cię zdrenują"
-meta_description: "Dowiedz się, jak zarządzać subskrypcjami, znaleźć zapomniane cykliczne opłaty i anulować to, czego nie używasz. Audyt krok po kroku, który odzyskuje realne pieniądze."
+meta_description: "Jak zarządzać subskrypcjami, znaleźć zapomniane cykliczne opłaty i anulować to, czego nie używasz. Audyt, który odzyskuje realne pieniądze."
 target_keyword: "jak zarządzać subskrypcjami"
 slug: "jak-zarzadzac-subskrypcjami"
 pair: "subscriptions"
