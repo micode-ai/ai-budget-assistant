@@ -112,3 +112,13 @@ For most people, yes. Seeing the gap between what you planned to save and what y
 ---
 
 *Related articles: [How to budget your money step by step](/blog/en/how-to-budget/) | [How to track expenses without the tedium](/blog/en/expense-tracker/)*
+
+<!-- pillar-downlinks -->
+
+## Related guides
+
+- [How to Save Money on Groceries Without Coupons](/blog/en/save-money-on-groceries/)
+- [Emergency Fund: How Much You Need and How to Build It](/blog/en/emergency-fund/)
+- [How to Track Subscriptions Before They Drain You](/blog/en/track-subscriptions/)
+- [How to Pay Off Debt: Snowball vs Avalanche](/blog/en/pay-off-debt/)
+- [Your Personal Inflation Rate: How to Calculate It](/blog/en/personal-inflation-rate/)

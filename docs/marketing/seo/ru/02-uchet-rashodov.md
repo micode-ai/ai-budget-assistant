@@ -113,3 +113,14 @@ AI Budget Assistant работает по принципу офлайн-преж
 ---
 
 *Смотрите также: [Как вести бюджет и не бросить через месяц](/blog/ru/kak-vesti-byudzhet/) | [Как экономить деньги: конкретный план](/blog/ru/kak-ekonomit-dengi/)*
+
+<!-- pillar-downlinks -->
+
+## Похожие руководства
+
+- [Импорт банковской выписки в приложение бюджета](/blog/ru/import-bankovskoy-vypiski/)
+- [Лучшие приложения для бюджета в 2026 году](/blog/ru/luchshie-prilozheniya-dlya-byudzheta/)
+- [Карта расходов: куда уходят ваши деньги](/blog/ru/karta-raskhodov/)
+- [Автоматический учёт расходов без ручного ввода](/blog/ru/avtomaticheskiy-uchet-raskhodov/)
+- [Сканирование чеков: важны позиции, а не сумма](/blog/ru/skanirovanie-chekov/)
+- [Как разделить счёт с друзьями и реально получить деньги](/blog/ru/kak-razdelit-schet-s-druzyami/)

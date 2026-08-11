@@ -123,4 +123,14 @@ Tak, szczególnie jeśli trudno ci wyrobić nawyk. Aplikacja daje natychmiastowy
 
 ---
 
-*Powiązane artykuły: [Jak prowadzić budżet domowy krok po kroku](../01-budzet-domowy/) | [Kontrola wydatków - aplikacje i metody](../02-kontrola-wydatkow/)*
+*Powiązane artykuły: [Jak prowadzić budżet domowy krok po kroku](/blog/pl/jak-prowadzic-budzet-domowy/) | [Kontrola wydatków - aplikacje i metody](/blog/pl/kontrola-wydatkow-aplikacja/)*
+
+<!-- pillar-downlinks -->
+
+## Powiązane przewodniki
+
+- [Jak oszczędzać na jedzeniu bez kuponów](/blog/pl/jak-oszczedzac-na-jedzeniu/)
+- [Poduszka finansowa - ile i jak ją zbudować](/blog/pl/poduszka-finansowa/)
+- [Jak zarządzać subskrypcjami, zanim cię zdrenują](/blog/pl/jak-zarzadzac-subskrypcjami/)
+- [Jak spłacić długi: kula śnieżna czy lawina](/blog/pl/jak-splacic-dlugi/)
+- [Twoja osobista inflacja: jak ją obliczyć](/blog/pl/osobista-inflacja/)

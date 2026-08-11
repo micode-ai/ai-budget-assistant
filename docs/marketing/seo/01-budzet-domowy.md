@@ -106,4 +106,16 @@ Zacznij od jednej rozmowy o celach, nie o wydatkach. "Chcemy pojechać za rok na
 
 ---
 
-*Powiązane artykuły: [Aplikacja do kontroli wydatków - co wybrać](../02-kontrola-wydatkow/) | [Jak oszczędzać pieniądze skutecznie](../03-jak-oszczedzac-pieniadze/)*
+*Powiązane artykuły: [Aplikacja do kontroli wydatków - co wybrać](/blog/pl/kontrola-wydatkow-aplikacja/) | [Jak oszczędzać pieniądze skutecznie](/blog/pl/jak-oszczedzac-pieniadze/)*
+
+<!-- pillar-downlinks -->
+
+## Powiązane przewodniki
+
+- [Wspólny budżet dla par - plan bez kłótni](/blog/pl/wspolny-budzet-dla-par/)
+- [Metoda kopertowa - jak przestać przepłacać](/blog/pl/metoda-kopertowa/)
+- [Zasada 50/30/20 - praktyczny poradnik](/blog/pl/zasada-50-30-20/)
+- [Kategorie wydatków, które naprawdę działają](/blog/pl/kategorie-wydatkow/)
+- [Budżet domowy z dziećmi, który się spina](/blog/pl/budzet-domowy-z-dziecmi/)
+- [AI w zarządzaniu finansami: jak naprawdę pomaga](/blog/pl/ai-w-zarzadzaniu-finansami/)
+- [Wyprawka szkolna: ile kosztuje i jak ją rozplanować](/blog/pl/wyprawka-szkolna-ile-kosztuje/)

@@ -109,3 +109,15 @@ Begin met een gesprek over doelen, niet over het budget zelf. "We willen in okto
 ---
 
 *Verwante artikelen: [Uitgaven bijhouden zonder gedoe](/blog/nl/uitgaven-bijhouden/) | [Hoe geld besparen met een concreet plan](/blog/nl/geld-besparen/)*
+
+<!-- pillar-downlinks -->
+
+## Gerelateerde gidsen
+
+- [Samen budgetteren met je partner zonder ruzie](/blog/nl/samen-budgetteren/)
+- [Enveloppenmethode: het systeem tegen te veel uitgeven](/blog/nl/enveloppenmethode/)
+- [De 50/30/20-regel: een praktische gids](/blog/nl/50-30-20-regel/)
+- [Uitgavencategorieën die echt werken in je budget](/blog/nl/uitgavencategorieen/)
+- [Gezinsbudget met kinderen dat echt werkt](/blog/nl/gezinsbudget-met-kinderen/)
+- [AI voor je budget: minder gedoe, meer inzicht](/blog/nl/ai-voor-je-budget/)
+- [Nieuw schooljaar: wat kosten schoolspullen echt](/blog/nl/schoolspullen-kosten/)

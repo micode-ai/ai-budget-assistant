@@ -112,3 +112,13 @@ lang: "ua"
 ---
 
 *Пов'язані статті: [Як вести бюджет: покроковий план](/blog/ua/yak-vesty-byudzhet/) | [Облік витрат без зайвих зусиль](/blog/ua/oblik-vytrat/)*
+
+<!-- pillar-downlinks -->
+
+## Схожі посібники
+
+- [Як заощаджувати на продуктах без купонів](/blog/ua/ekonomiya-na-produktah/)
+- [Фінансова подушка: скільки потрібно і як зібрати](/blog/ua/finansova-podushka/)
+- [Як керувати підписками, поки вони вас не спустошили](/blog/ua/yak-keruvaty-pidpyskamy/)
+- [Як погасити борги: снігова куля чи лавина](/blog/ua/yak-pohasyty-borhy/)
+- [Особиста інфляція: як порахувати свій показник](/blog/ua/osobysta-inflyatsiya/)

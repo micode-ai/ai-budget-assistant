@@ -112,3 +112,13 @@ Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te spare
 ---
 
 *Verwante artikelen: [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) | [Uitgaven bijhouden zonder gedoe](/blog/nl/uitgaven-bijhouden/)*
+
+<!-- pillar-downlinks -->
+
+## Gerelateerde gidsen
+
+- [Besparen op boodschappen zonder kortingsbonnen](/blog/nl/besparen-op-boodschappen/)
+- [Noodfonds: hoeveel je nodig hebt en hoe je het opbouwt](/blog/nl/noodfonds/)
+- [Abonnementen beheren voordat ze je leegtrekken](/blog/nl/abonnementen-beheren/)
+- [Schulden aflossen: sneeuwbal of lawine?](/blog/nl/schulden-aflossen/)
+- [Persoonlijke inflatie berekenen: jouw echte prijsstijging](/blog/nl/persoonlijke-inflatie/)

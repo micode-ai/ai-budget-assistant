@@ -111,3 +111,15 @@ Commencez par une conversation sur vos objectifs communs, pas sur le budget. "On
 ---
 
 *Articles liés : [Suivi des dépenses : comment ne plus perdre trace de son argent](/blog/fr/suivi-des-depenses/) | [Comment économiser de l'argent avec un plan concret](/blog/fr/comment-economiser/)*
+
+<!-- pillar-downlinks -->
+
+## Guides associés
+
+- [Budget commun en couple : un plan sans disputes](/blog/fr/budget-commun-couple/)
+- [Méthode des enveloppes : le système anti-dépassement](/blog/fr/methode-des-enveloppes/)
+- [La règle 50/30/20 : un guide pratique](/blog/fr/regle-50-30-20/)
+- [Catégories de dépenses : la liste qui tient vraiment](/blog/fr/categories-de-depenses/)
+- [Budget familial avec enfants : le gérer sans stress](/blog/fr/budget-familial-avec-enfants/)
+- [L'IA pour gérer son budget : ce qu'elle change vraiment](/blog/fr/ia-pour-gerer-son-budget/)
+- [Rentrée scolaire : combien elle coûte vraiment](/blog/fr/cout-de-la-rentree-scolaire/)

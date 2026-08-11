@@ -109,3 +109,15 @@ AI Budget Assistant (доступен на Android и в браузере на [
 ---
 
 *Смотрите также: [Учёт расходов - как не терять деньги, которых не замечаешь](/blog/ru/uchet-rashodov/) | [Как экономить деньги и формировать накопления](/blog/ru/kak-ekonomit-dengi/)*
+
+<!-- pillar-downlinks -->
+
+## Похожие руководства
+
+- [Совместный бюджет: как вести вдвоём без ссор](/blog/ru/sovmestnyj-byudzhet/)
+- [Метод конвертов: система против перерасхода](/blog/ru/metod-konvertov/)
+- [Правило 50/30/20: практическое руководство](/blog/ru/pravilo-50-30-20/)
+- [Категории расходов: список, который не бросишь](/blog/ru/kategorii-rashodov/)
+- [Семейный бюджет с детьми: как вести вместе](/blog/ru/semejnyj-byudzhet-s-detmi/)
+- [ИИ для управления финансами: как это работает](/blog/ru/ai-dlya-byudzheta/)
+- [Сколько стоит собрать ребёнка в школу](/blog/ru/skolko-stoit-sobrat-rebyonka-v-shkolu/)

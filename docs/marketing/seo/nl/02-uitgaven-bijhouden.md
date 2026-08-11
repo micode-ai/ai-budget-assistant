@@ -109,3 +109,14 @@ Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedrags
 ---
 
 *Verwante artikelen: [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) | [Hoe geld besparen met een concreet plan](/blog/nl/geld-besparen/)*
+
+<!-- pillar-downlinks -->
+
+## Gerelateerde gidsen
+
+- [Bankafschrift importeren in je budget-app](/blog/nl/bankafschrift-importeren/)
+- [Beste budget app in 2026: een eerlijke koopgids](/blog/nl/beste-budget-app/)
+- [Uitgavenkaart: zie waar je geld echt naartoe gaat](/blog/nl/uitgavenkaart/)
+- [Uitgaven automatisch bijhouden zonder alles te typen](/blog/nl/uitgaven-automatisch-bijhouden/)
+- [Bonnetjes scannen: de regels tellen, niet het totaal](/blog/nl/bonnetjes-scannen/)
+- [Rekening splitsen met vrienden en je geld echt terugzien](/blog/nl/rekening-splitsen-met-vrienden/)

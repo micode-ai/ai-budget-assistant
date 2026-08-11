@@ -112,3 +112,13 @@ Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas 
 ---
 
 *Artículos relacionados: [Cómo hacer un presupuesto personal paso a paso](/blog/es/como-hacer-un-presupuesto/) | [Control de gastos: cómo llevar un seguimiento real](/blog/es/control-de-gastos/)*
+
+<!-- pillar-downlinks -->
+
+## Guías relacionadas
+
+- [Cómo ahorrar en el supermercado sin cupones](/blog/es/ahorrar-en-el-supermercado/)
+- [Fondo de emergencia: cuánto necesitas y cómo crearlo](/blog/es/fondo-de-emergencia/)
+- [Cómo gestionar suscripciones antes de que te vacíen](/blog/es/como-gestionar-suscripciones/)
+- [Cómo pagar deudas: método bola de nieve o avalancha](/blog/es/como-pagar-deudas/)
+- [Tu inflación personal: cómo calcularla](/blog/es/inflacion-personal/)

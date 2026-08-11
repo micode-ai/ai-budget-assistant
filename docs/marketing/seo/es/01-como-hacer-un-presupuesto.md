@@ -111,3 +111,15 @@ Empieza con una conversación sobre objetivos, no sobre el presupuesto. "Queremo
 ---
 
 *Artículos relacionados: [Control de gastos: cómo llevar un seguimiento real](/blog/es/control-de-gastos/) | [Cómo ahorrar dinero con un plan concreto](/blog/es/como-ahorrar-dinero/)*
+
+<!-- pillar-downlinks -->
+
+## Guías relacionadas
+
+- [Presupuesto compartido en pareja: un plan sin discusiones](/blog/es/presupuesto-compartido-en-pareja/)
+- [Método de sobres: el sistema que frena el gasto](/blog/es/metodo-de-sobres/)
+- [La regla 50/30/20: una guía práctica](/blog/es/regla-50-30-20/)
+- [Categorías de gastos que de verdad funcionan](/blog/es/categorias-de-gastos/)
+- [Presupuesto familiar con hijos: un plan que funciona](/blog/es/presupuesto-familiar-con-hijos/)
+- [IA para las finanzas personales: cómo te ayuda de verdad](/blog/es/ia-para-las-finanzas/)
+- [Vuelta al colegio: cuánto cuesta y cómo planificarla](/blog/es/cuanto-cuesta-la-vuelta-al-colegio/)

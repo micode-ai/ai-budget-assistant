@@ -111,3 +111,15 @@ Fange mit einem Gespräch über Ziele an, nicht über Budgets. "Wir möchten im 
 ---
 
 *Verwandte Artikel: [Ausgaben tracken - so behältst du die Kontrolle](/blog/de/ausgaben-tracken/) | [Geld sparen mit einem konkreten Plan](/blog/de/geld-sparen/)*
+
+<!-- pillar-downlinks -->
+
+## Verwandte Ratgeber
+
+- [Gemeinsames Haushaltsbuch fuer Paare ohne Streit](/blog/de/gemeinsames-haushaltsbuch/)
+- [Umschlagmethode: Das System gegen Mehrausgaben](/blog/de/umschlagmethode/)
+- [Die 50-30-20-Regel: Ein praktischer Leitfaden](/blog/de/50-30-20-regel/)
+- [Ausgabenkategorien, die im Budget wirklich funktionieren](/blog/de/ausgabenkategorien/)
+- [Familienbudget mit Kindern, das im Alltag haelt](/blog/de/familienbudget-mit-kindern/)
+- [KI fuer die Finanzen: weniger Aufwand, mehr Einblick](/blog/de/ki-fuer-die-finanzen/)
+- [Schulanfang: Was die Ausstattung wirklich kostet](/blog/de/schulanfang-kosten/)

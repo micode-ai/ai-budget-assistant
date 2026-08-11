@@ -114,4 +114,15 @@ Pierwsze obserwacje masz po jednym miesiącu śledzenia. Pierwsze realne oszczę
 
 ---
 
-*Powiązane artykuły: [Jak prowadzić budżet domowy razem z rodziną](../01-budzet-domowy/) | [Jak skutecznie oszczędzać pieniądze](../03-jak-oszczedzac-pieniadze/)*
+*Powiązane artykuły: [Jak prowadzić budżet domowy razem z rodziną](/blog/pl/jak-prowadzic-budzet-domowy/) | [Jak skutecznie oszczędzać pieniądze](/blog/pl/jak-oszczedzac-pieniadze/)*
+
+<!-- pillar-downlinks -->
+
+## Powiązane przewodniki
+
+- [Jak zaimportować wyciąg bankowy do budżetu](/blog/pl/jak-zaimportowac-wyciag-bankowy/)
+- [Najlepsze aplikacje do budżetu w 2026 roku](/blog/pl/najlepsze-aplikacje-do-budzetu/)
+- [Mapa wydatków: zobacz, gdzie znikają pieniądze](/blog/pl/mapa-wydatkow/)
+- [Automatyczne zapisywanie wydatków bez wysiłku](/blog/pl/automatyczne-zapisywanie-wydatkow/)
+- [Skanowanie paragonów: liczą się pozycje, nie suma](/blog/pl/skanowanie-paragonow/)
+- [Jak podzielić rachunek ze znajomymi i dostać zwrot](/blog/pl/jak-podzielic-rachunek/)

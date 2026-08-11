@@ -113,3 +113,14 @@ AI Budget Assistant працуе па прынцыпе offline-first: выдат
 ---
 
 *Звязаныя артыкулы: [Як весці бюджэт крок за крокам](/blog/be/yak-vesci-budzet/) | [Як эканоміць грошы з канкрэтным планам](/blog/be/yak-ekanomic/)*
+
+<!-- pillar-downlinks -->
+
+## Падобныя дапаможнікі
+
+- [Імпарт банкаўскай выпіскі ў дадатак для бюджэту](/blog/be/import-bankauskay-vypiski/)
+- [Лепшыя праграмы для бюджэту ў 2026: сумленны агляд](/blog/be/lepshyya-prahramy-dlya-budzetu/)
+- [Карта выдаткаў: дзе сапраўды дзяваюцца вашы грошы](/blog/be/karta-vydatkau/)
+- [Аўтаматычны ўлік выдаткаў без ручнога ўводу](/blog/be/autamatychny-ulik-vydatkau/)
+- [Сканаванне чэкаў: важныя пазіцыі, а не сума](/blog/be/skanavanne-chekau/)
+- [Як падзяліць рахунак з сябрамі і рэальна атрымаць грошы](/blog/be/yak-padzialic-rahunak-z-siabrami/)

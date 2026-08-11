@@ -109,3 +109,15 @@ AI Budget Assistant (доступний на Android і в браузері на
 ---
 
 *Пов'язані статті: [Облік витрат: як не втрачати гроші непомітно](/blog/ua/oblik-vytrat/) | [Як заощаджувати гроші: конкретний план](/blog/ua/yak-zaoshchadzhuvaty/)*
+
+<!-- pillar-downlinks -->
+
+## Схожі посібники
+
+- [Спільний бюджет для пари: план без сварок](/blog/ua/spilnyy-byudzhet-dlya-par/)
+- [Метод конвертів: система проти перевитрат](/blog/ua/metod-konvertiv/)
+- [Правило 50/30/20: практичний гід з бюджету](/blog/ua/pravylo-50-30-20/)
+- [Категорії витрат, які реально працюють](/blog/ua/katehoriyi-vytrat/)
+- [Сімейний бюджет з дітьми: як усе впорядкувати](/blog/ua/simejnyj-byudzhet-z-ditmy/)
+- [ШІ для управління фінансами: чесний погляд](/blog/ua/ai-dlya-byudzhetu/)
+- [Скільки коштує зібрати дитину до школи](/blog/ua/skilky-koshtuye-zibraty-dytynu-do-shkoly/)

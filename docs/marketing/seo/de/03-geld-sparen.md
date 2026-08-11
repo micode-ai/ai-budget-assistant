@@ -112,3 +112,13 @@ Für die meisten Menschen: ja. Den Abstand zwischen dem geplanten und dem tatsä
 ---
 
 *Verwandte Artikel: [Haushaltsbuch führen - die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/) | [Ausgaben tracken - so behältst du die Kontrolle](/blog/de/ausgaben-tracken/)*
+
+<!-- pillar-downlinks -->
+
+## Verwandte Ratgeber
+
+- [Geld sparen beim Einkaufen ohne staendig Coupons](/blog/de/beim-einkaufen-sparen/)
+- [Notgroschen: Wie viel du brauchst und wie du ihn aufbaust](/blog/de/notgroschen/)
+- [Abos verwalten, bevor sie dein Konto leerräumen](/blog/de/abos-verwalten/)
+- [Schulden abbezahlen: Schneeball oder Lawine?](/blog/de/schulden-abbezahlen/)
+- [Persönliche Inflation berechnen: so geht's](/blog/de/persoenliche-inflation/)

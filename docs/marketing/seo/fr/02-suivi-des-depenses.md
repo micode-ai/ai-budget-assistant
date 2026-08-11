@@ -113,3 +113,14 @@ Vous aurez une image claire de vos habitudes de dépenses après un mois. Des ch
 ---
 
 *Articles liés : [Comment faire un budget personnel étape par étape](/blog/fr/comment-faire-un-budget/) | [Comment économiser de l'argent avec un plan concret](/blog/fr/comment-economiser/)*
+
+<!-- pillar-downlinks -->
+
+## Guides associés
+
+- [Importer un relevé bancaire dans une appli de budget](/blog/fr/importer-releve-bancaire/)
+- [Meilleures applications de budget en 2026 : guide honnête](/blog/fr/meilleures-applications-budget/)
+- [Carte des dépenses : voir où va votre argent](/blog/fr/carte-des-depenses/)
+- [Enregistrer ses dépenses automatiquement, sans tout saisir](/blog/fr/enregistrer-depenses-automatiquement/)
+- [Scanner ses tickets de caisse : les lignes comptent plus](/blog/fr/scanner-tickets-de-caisse/)
+- [Comment partager l'addition entre amis et être remboursé](/blog/fr/partager-addition-entre-amis/)

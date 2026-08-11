@@ -113,3 +113,14 @@ You'll have a clear picture of your spending patterns after one month. Meaningfu
 ---
 
 *Related articles: [How to budget your money step by step](/blog/en/how-to-budget/) | [How to save money with a concrete plan](/blog/en/how-to-save-money/)*
+
+<!-- pillar-downlinks -->
+
+## Related guides
+
+- [How to Import a Bank Statement Into a Budget App](/blog/en/import-bank-statement/)
+- [Best Budgeting Apps in 2026: An Honest Buyer's Guide](/blog/en/best-budgeting-apps/)
+- [Expense Map: See Where Your Money Actually Goes](/blog/en/expense-map/)
+- [Automatic Expense Tracking: Stop Typing Every Purchase](/blog/en/automatic-expense-tracking/)
+- [Receipt Scanner App: Why Line Items Beat the Total](/blog/en/receipt-scanner-app/)
+- [How to Split Bills With Friends and Get Paid Back](/blog/en/split-bill-with-friends/)

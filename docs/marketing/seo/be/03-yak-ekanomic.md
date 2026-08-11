@@ -114,3 +114,13 @@ lang: "be"
 ---
 
 *Звязаныя артыкулы: [Як весці бюджэт крок за крокам](/blog/be/yak-vesci-budzet/) | [Улік выдаткаў без клопату](/blog/be/ulik-vydatkau/)*
+
+<!-- pillar-downlinks -->
+
+## Падобныя дапаможнікі
+
+- [Як эканоміць на прадуктах без купонаў і самаабмежавання](/blog/be/ekanomiya-na-praduktah/)
+- [Фінансавая падушка: колькі трэба і як яе сабраць](/blog/be/finansavaya-padushka/)
+- [Як кіраваць падпіскамі, пакуль яны не апустошылі вас](/blog/be/yak-kiravac-padpiskami/)
+- [Як пагасіць даўгі: метад снежнага кома супраць лавіны](/blog/be/yak-pagasic-dougi/)
+- [Асабістая інфляцыя: як яе разлічыць](/blog/be/asabistaya-inflyatsyya/)

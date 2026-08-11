@@ -48,6 +48,25 @@ translation pipeline, hreflang-grouped by the `pair` key.
 
 Source files `16-*.md` / `17-*.md`; pairs `inflation` / `expense-map`. Published in all 9 languages. These are differentiated USP topics (few competitors offer a personal inflation index or a spending map), so they target low-competition long-tail queries with a natural CTA to the exact feature.
 
+## Wave 4 — ✅ DONE (ABA-393): 4 topics published in all 9 languages (files `1[89]-*.md`, `2[01]-*.md`). Blog now at 189 articles across 21 topics.
+| # | Topic | pair | PL keyword | EN keyword | Intent | App tie |
+|---|---|---|---|---|---|---|
+| 18 | **Split a bill with friends** | split-bill | jak podzielić rachunek | how to split bills with friends | how-to | **Receipt splitting + guest links** (friends need no app or account) |
+| 19 | **The app records spending for you** | auto-capture | automatyczne zapisywanie wydatków | automatic expense tracking | guide | **Bank-notification auto-capture** (Android, on-device) + voice/bots/import |
+| 20 | **Scanning receipts: why line items matter** | receipts | skanowanie paragonów | receipt scanner app | guide | OCR line items -> price history, personal inflation, receipt price check |
+| 21 | **Back-to-school costs** | school | wyprawka szkolna ile kosztuje | back to school budget | how-to (seasonal) | Budgets + threshold alerts, savings goal, shared shopping list |
+
+Wave 4 notes:
+- Topics 18-20 are feature-led USP pieces (each maps to a capability most competitors lack); 21 is seasonal and should be refreshed each August.
+- **Positioning constraint on `receipts`**: the receipt price check may only be described as "more expensive than usual, worth checking" — never as detecting an overcharge or a failed promotion. The app cannot prove a promotion did not apply. This wording rule is enforced in all 9 languages.
+- **Also fixed in this wave:** the 3 Polish pillars cross-linked each other with relative paths built from old numbered slugs (`../01-budzet-domowy/`), so all 6 inter-pillar links 404'd. They now use absolute `/blog/pl/<slug>/` like every other article.
+- **Pillar down-links are now generated, not hand-written.** All 3 pillars in all 9 languages carry a localized "Related guides" list of their cluster children, appended below a `<!-- pillar-downlinks -->` marker. Re-run the generator (see below) after adding any topic so the new article is linked from its pillar; the block is replaced, not duplicated.
+
+## Wave 5 — proposed (not started)
+High-volume commercial queries we do not rank for yet: `excel-budget` (budżet domowy w Excelu — szablon, plus when to move off a spreadsheet), `free-app` (darmowa aplikacja do budżetu domowego), `irregular-income` (budget on freelance/B2B income — ties to Safe-to-Spend + scenario simulator), `multi-currency` (living and earning across two currencies — the one topic where the ru/ua/be locales serve their own audience rather than being a translation).
+
+Seasonal backlog with publish windows: `black-friday` (early Nov, ties to price history + Inflation Shield), `christmas` (Oct), `year-review` (early Dec, ties to Financial Wrapped and its share image), `new-year` (late Dec).
+
 ## Article conventions (per piece)
 - Frontmatter: `title` (<=60, keyword), `meta_description` (<=155), `target_keyword`, `slug`, `pair`, `lang`.
 - One H1, several H2/H3, a 3-4 question **FAQ** (auto-emits FAQPage schema).

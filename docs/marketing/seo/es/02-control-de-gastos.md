@@ -115,3 +115,14 @@ Tendrás una imagen clara de tus patrones de gasto después de un mes. Los cambi
 ---
 
 *Artículos relacionados: [Cómo hacer un presupuesto personal paso a paso](/blog/es/como-hacer-un-presupuesto/) | [Cómo ahorrar dinero con un plan concreto](/blog/es/como-ahorrar-dinero/)*
+
+<!-- pillar-downlinks -->
+
+## Guías relacionadas
+
+- [Cómo importar un extracto bancario a tu app de presupuesto](/blog/es/importar-extracto-bancario/)
+- [Mejores apps de presupuesto en 2026: guía honesta](/blog/es/mejores-apps-de-presupuesto/)
+- [Mapa de gastos: ve adónde va tu dinero](/blog/es/mapa-de-gastos/)
+- [Registrar gastos automáticamente sin escribir nada](/blog/es/registrar-gastos-automaticamente/)
+- [Escanear tickets de compra: importan las líneas, no el total](/blog/es/escanear-tickets-de-compra/)
+- [Cómo dividir la cuenta entre amigos y cobrar de verdad](/blog/es/dividir-la-cuenta-entre-amigos/)

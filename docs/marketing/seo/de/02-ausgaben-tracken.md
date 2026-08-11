@@ -113,3 +113,14 @@ Nach einem Monat hast du ein klares Bild deiner Ausgabenmuster. Spürbare Verhal
 ---
 
 *Verwandte Artikel: [Haushaltsbuch führen - die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/) | [Geld sparen mit einem konkreten Plan](/blog/de/geld-sparen/)*
+
+<!-- pillar-downlinks -->
+
+## Verwandte Ratgeber
+
+- [Kontoauszug importieren statt alles abzutippen](/blog/de/kontoauszug-importieren/)
+- [Beste Haushaltsbuch App 2026: Ein ehrlicher Vergleich](/blog/de/beste-haushaltsbuch-app/)
+- [Ausgaben-Karte: Sieh, wohin dein Geld wirklich geht](/blog/de/ausgaben-karte/)
+- [Ausgaben automatisch erfassen statt alles selbst eintippen](/blog/de/ausgaben-automatisch-erfassen/)
+- [Kassenbons scannen: warum die Posten zählen, nicht die Summe](/blog/de/kassenbons-scannen/)
+- [Rechnung teilen mit Freunden und wirklich zurückbekommen](/blog/de/rechnung-teilen-mit-freunden/)

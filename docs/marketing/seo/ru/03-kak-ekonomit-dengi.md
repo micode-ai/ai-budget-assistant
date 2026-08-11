@@ -108,3 +108,13 @@ lang: "ru"
 ---
 
 *Смотрите также: [Как вести бюджет: пошаговое руководство](/blog/ru/kak-vesti-byudzhet/) | [Учёт расходов без рутины](/blog/ru/uchet-rashodov/)*
+
+<!-- pillar-downlinks -->
+
+## Похожие руководства
+
+- [Как экономить на продуктах без купонов и страданий](/blog/ru/ekonomiya-na-produktah/)
+- [Финансовая подушка: сколько нужно и как накопить](/blog/ru/finansovaya-podushka/)
+- [Как управлять подписками, пока они вас не обескровили](/blog/ru/kak-upravlyat-podpiskami/)
+- [Как погасить долги: метод снежного кома или лавины](/blog/ru/kak-pogasit-dolgi/)
+- [Личная инфляция: как её посчитать](/blog/ru/lichnaya-inflyatsiya/)

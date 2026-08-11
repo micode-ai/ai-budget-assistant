@@ -113,3 +113,14 @@ AI Budget Assistant вирішує це через спільні сімейні
 ---
 
 *Пов'язані статті: [Як вести бюджет покроково](/blog/ua/yak-vesty-byudzhet/) | [Як заощаджувати гроші з конкретним планом](/blog/ua/yak-zaoshchadzhuvaty/)*
+
+<!-- pillar-downlinks -->
+
+## Схожі посібники
+
+- [Імпорт банківської виписки в застосунок бюджету](/blog/ua/import-bankivskoyi-vypysky/)
+- [Найкращі застосунки для бюджету 2026: чесний гід](/blog/ua/naykrashchi-zastosunky-dlya-byudzhetu/)
+- [Карта витрат: куди йдуть мої гроші](/blog/ua/karta-vytrat/)
+- [Автоматичний облік витрат без ручного введення](/blog/ua/avtomatychnyi-oblik-vytrat/)
+- [Сканування чеків: важливі позиції, а не сума](/blog/ua/skanuvannya-chekiv/)
+- [Як поділити рахунок з друзями і реально отримати гроші](/blog/ua/yak-podilyty-rahunok-z-druzyami/)

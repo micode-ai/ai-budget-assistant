@@ -111,3 +111,15 @@ Start with a goals conversation, not a budget conversation. "We want to take a v
 ---
 
 *Related articles: [How to track expenses effectively](/blog/en/expense-tracker/) | [How to save money with a concrete plan](/blog/en/how-to-save-money/)*
+
+<!-- pillar-downlinks -->
+
+## Related guides
+
+- [Shared Budget for Couples: A Plan Without Fights](/blog/en/shared-budget-for-couples/)
+- [Envelope Budgeting: The System That Stops Overspending](/blog/en/envelope-budgeting/)
+- [The 50/30/20 Budget Rule: A Practical Guide](/blog/en/50-30-20-budget-rule/)
+- [Expense Categories That Actually Work for Budgeting](/blog/en/expense-categories/)
+- [Family Budgeting With Kids: A Practical Guide](/blog/en/family-budget-with-kids/)
+- [How AI Can Help You Budget (Honestly)](/blog/en/how-ai-helps-budgeting/)
+- [Back-to-School Budget: What It Really Costs](/blog/en/back-to-school-budget/)

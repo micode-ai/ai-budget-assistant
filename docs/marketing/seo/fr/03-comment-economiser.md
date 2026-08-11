@@ -112,3 +112,13 @@ Pour la plupart des gens, oui. Voir en temps réel l'écart entre ce qu'on avait
 ---
 
 *Articles liés : [Comment faire un budget personnel étape par étape](/blog/fr/comment-faire-un-budget/) | [Suivi des dépenses : reprendre le contrôle de son argent](/blog/fr/suivi-des-depenses/)*
+
+<!-- pillar-downlinks -->
+
+## Guides associés
+
+- [Économiser sur les courses : la méthode qui marche](/blog/fr/economiser-sur-les-courses/)
+- [Épargne de précaution : combien et comment la constituer](/blog/fr/epargne-de-precaution/)
+- [Gérer ses abonnements avant qu'ils ne vous vident](/blog/fr/gerer-ses-abonnements/)
+- [Rembourser ses dettes : boule de neige ou avalanche](/blog/fr/rembourser-ses-dettes/)
+- [Inflation personnelle : comment la calculer](/blog/fr/inflation-personnelle/)
