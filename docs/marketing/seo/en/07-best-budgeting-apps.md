@@ -5,6 +5,7 @@ target_keyword: "best budgeting apps"
 slug: "best-budgeting-apps"
 pair: "best-apps"
 lang: "en"
+date: "2026-06-20"
 ---
 
 # Best Budgeting Apps in 2026: How to Pick One You'll Actually Use

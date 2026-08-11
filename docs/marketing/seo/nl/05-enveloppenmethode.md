@@ -5,6 +5,7 @@ target_keyword: "enveloppenmethode"
 slug: "enveloppenmethode"
 pair: "envelope"
 lang: "nl"
+date: "2026-06-20"
 ---
 
 # Enveloppenmethode: alleen uitgeven wat je hebt

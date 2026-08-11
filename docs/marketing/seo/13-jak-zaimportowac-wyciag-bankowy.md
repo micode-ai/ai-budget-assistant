@@ -5,6 +5,7 @@ target_keyword: "jak zaimportować wyciąg bankowy"
 slug: "jak-zaimportowac-wyciag-bankowy"
 pair: "bank-import"
 lang: "pl"
+date: "2026-06-27"
 ---
 
 # Jak zaimportować wyciąg bankowy i nadrobić miesiące w kilka minut

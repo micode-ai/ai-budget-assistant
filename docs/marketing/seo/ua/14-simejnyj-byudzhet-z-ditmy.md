@@ -5,6 +5,7 @@ target_keyword: "сімейний бюджет з дітьми"
 slug: "simejnyj-byudzhet-z-ditmy"
 pair: "family"
 lang: "ua"
+date: "2026-06-27"
 ---
 
 # Сімейний бюджет з дітьми, який витримує реальне життя

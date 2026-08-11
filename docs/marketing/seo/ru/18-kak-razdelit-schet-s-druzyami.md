@@ -5,6 +5,7 @@ target_keyword: "как разделить счёт с друзьями"
 slug: "kak-razdelit-schet-s-druzyami"
 pair: "split-bill"
 lang: "ru"
+date: "2026-08-11"
 ---
 
 # Как разделить счёт с друзьями и реально получить свои деньги

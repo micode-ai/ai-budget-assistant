@@ -5,6 +5,7 @@ target_keyword: "automatic expense tracking"
 slug: "automatic-expense-tracking"
 pair: "auto-capture"
 lang: "en"
+date: "2026-08-11"
 ---
 
 # Automatic Expense Tracking: Stop Typing Every Purchase

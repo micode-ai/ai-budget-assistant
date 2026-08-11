@@ -5,6 +5,7 @@ target_keyword: "uitgavencategorieën"
 slug: "uitgavencategorieen"
 pair: "categories"
 lang: "nl"
+date: "2026-06-27"
 ---
 
 # Uitgavencategorieën die je budget maken of breken

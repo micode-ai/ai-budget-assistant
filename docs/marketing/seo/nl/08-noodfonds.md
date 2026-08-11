@@ -5,6 +5,7 @@ target_keyword: "noodfonds"
 slug: "noodfonds"
 pair: "emergency-fund"
 lang: "nl"
+date: "2026-06-20"
 ---
 
 # Noodfonds: hoeveel je moet sparen en hoe je het opbouwt

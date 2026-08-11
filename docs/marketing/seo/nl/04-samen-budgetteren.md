@@ -5,6 +5,7 @@ target_keyword: "samen budgetteren"
 slug: "samen-budgetteren"
 pair: "shared-budget"
 lang: "nl"
+date: "2026-06-20"
 ---
 
 # Samen budgetteren zonder dat het ruzie wordt

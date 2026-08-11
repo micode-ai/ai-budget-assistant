@@ -5,6 +5,7 @@ target_keyword: "Ausgaben-Karte"
 slug: "ausgaben-karte"
 pair: "expense-map"
 lang: "de"
+date: "2026-07-05"
 ---
 
 # Ausgaben-Karte: Sieh, wohin dein Geld wirklich geht

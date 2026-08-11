@@ -5,6 +5,7 @@ target_keyword: "categorías de gastos"
 slug: "categorias-de-gastos"
 pair: "categories"
 lang: "es"
+date: "2026-06-27"
 ---
 
 # Las categorías de gastos que hacen que un presupuesto funcione

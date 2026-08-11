@@ -5,6 +5,7 @@ target_keyword: "Rechnung teilen mit Freunden"
 slug: "rechnung-teilen-mit-freunden"
 pair: "split-bill"
 lang: "de"
+date: "2026-08-11"
 ---
 
 # Rechnung teilen mit Freunden, ohne dem Geld hinterherzulaufen

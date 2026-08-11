@@ -5,6 +5,7 @@ target_keyword: "schulden abbezahlen"
 slug: "schulden-abbezahlen"
 pair: "debt"
 lang: "de"
+date: "2026-06-27"
 ---
 
 # Schulden abbezahlen mit einem Plan, der dich trägt

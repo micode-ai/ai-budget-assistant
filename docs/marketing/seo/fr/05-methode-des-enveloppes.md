@@ -5,6 +5,7 @@ target_keyword: "méthode des enveloppes"
 slug: "methode-des-enveloppes"
 pair: "envelope"
 lang: "fr"
+date: "2026-06-20"
 ---
 
 # Méthode des enveloppes : ne dépenser que ce que l'on a

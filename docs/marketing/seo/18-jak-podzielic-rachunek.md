@@ -5,6 +5,7 @@ target_keyword: "jak podzielić rachunek"
 slug: "jak-podzielic-rachunek"
 pair: "split-bill"
 lang: "pl"
+date: "2026-08-11"
 ---
 
 # Jak podzielić rachunek ze znajomymi, żeby naprawdę odzyskać pieniądze

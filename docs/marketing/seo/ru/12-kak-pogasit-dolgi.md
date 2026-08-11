@@ -5,6 +5,7 @@ target_keyword: "как погасить долги"
 slug: "kak-pogasit-dolgi"
 pair: "debt"
 lang: "ru"
+date: "2026-06-27"
 ---
 
 # Как погасить долги: снежный ком против лавины

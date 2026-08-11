@@ -68,7 +68,8 @@ High-volume commercial queries we do not rank for yet: `excel-budget` (budżet d
 Seasonal backlog with publish windows: `black-friday` (early Nov, ties to price history + Inflation Shield), `christmas` (Oct), `year-review` (early Dec, ties to Financial Wrapped and its share image), `new-year` (late Dec).
 
 ## Article conventions (per piece)
-- Frontmatter: `title` (<=60, keyword), `meta_description` (<=155), `target_keyword`, `slug`, `pair`, `lang`.
+- Frontmatter: `title` (<=60, keyword), `meta_description` (<=155), `target_keyword`, `slug`, `pair`, `lang`, **`date`** (`YYYY-MM-DD`).
+- **`date` is REQUIRED on every new file and is the publication date** (ABA-394). It drives the newest-first order of the blog index, the visible date on each card, and `datePublished` in the article's JSON-LD. It is deliberately NOT derived from git: `git_date()` is the *last-commit* date, so a later edit to an old article would silently promote it to the top of the index and rewrite its publication date. Use the same `date` in all 9 language files of a topic.
 - One H1, several H2/H3, a 3-4 question **FAQ** (auto-emits FAQPage schema).
 - How-to topics: structured as numbered steps (the generator can emit `HowTo` schema — to be added).
 - 900-1300 words, natural transcreation per language (NOT machine translation), correct diacritics.

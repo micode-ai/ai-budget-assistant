@@ -5,6 +5,7 @@ target_keyword: "kontoauszug importieren"
 slug: "kontoauszug-importieren"
 pair: "bank-import"
 lang: "de"
+date: "2026-06-27"
 ---
 
 # Den Kontoauszug importieren und Monate in Minuten nachtragen

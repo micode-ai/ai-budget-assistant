@@ -13,12 +13,12 @@ import sys
 ROOT = os.path.join("docs", "marketing", "seo")
 LANGS = ["pl", "en", "de", "es", "fr", "ru", "ua", "be", "nl"]
 
-# pillar pair -> cluster pairs that link up to it
-CLUSTERS = {
-    "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school"],
-    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill"],
-    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation"],
-}
+# pillar pair -> cluster pairs, imported so the down-links and the blog index category
+# filter can never disagree about which pillar a topic belongs to (same `bb` import
+# pattern build_help.py uses; importing does not run build()).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build_blog as bb  # noqa: E402
+CLUSTERS = bb.CLUSTERS
 
 LABEL = {
     "pl": "Powiązane przewodniki",

@@ -5,6 +5,7 @@ target_keyword: "épargne de précaution"
 slug: "epargne-de-precaution"
 pair: "emergency-fund"
 lang: "fr"
+date: "2026-06-20"
 ---
 
 # Épargne de précaution : combien mettre de côté et comment la constituer

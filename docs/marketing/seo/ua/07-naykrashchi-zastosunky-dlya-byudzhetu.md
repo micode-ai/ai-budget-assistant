@@ -5,6 +5,7 @@ target_keyword: "найкращі застосунки для бюджету"
 slug: "naykrashchi-zastosunky-dlya-byudzhetu"
 pair: "best-apps"
 lang: "ua"
+date: "2026-06-20"
 ---
 
 # Найкращі застосунки для бюджету 2026: як обрати той, яким ти реально користуватимешся

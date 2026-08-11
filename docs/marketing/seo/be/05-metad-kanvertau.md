@@ -5,6 +5,7 @@ target_keyword: "метад канвертаў"
 slug: "metad-kanvertau"
 pair: "envelope"
 lang: "be"
+date: "2026-06-20"
 ---
 
 # Метад канвертаў: як траціць толькі тое, што ёсць

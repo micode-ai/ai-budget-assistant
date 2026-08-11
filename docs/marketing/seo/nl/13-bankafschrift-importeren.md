@@ -5,6 +5,7 @@ target_keyword: "bankafschrift importeren"
 slug: "bankafschrift-importeren"
 pair: "bank-import"
 lang: "nl"
+date: "2026-06-27"
 ---
 
 # Bankafschrift importeren en maanden in minuten bijwerken

@@ -5,6 +5,7 @@ target_keyword: "катэгорыі выдаткаў"
 slug: "katehoryi-vydatkau"
 pair: "categories"
 lang: "be"
+date: "2026-06-27"
 ---
 
 # Катэгорыі выдаткаў, якія робяць бюджэт жывым

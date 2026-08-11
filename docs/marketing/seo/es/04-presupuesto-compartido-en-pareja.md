@@ -5,6 +5,7 @@ target_keyword: "presupuesto compartido en pareja"
 slug: "presupuesto-compartido-en-pareja"
 pair: "shared-budget"
 lang: "es"
+date: "2026-06-20"
 ---
 
 # Un presupuesto compartido en pareja que no acaba en discusión

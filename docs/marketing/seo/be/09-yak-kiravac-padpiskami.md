@@ -5,6 +5,7 @@ target_keyword: "як кіраваць падпіскамі"
 slug: "yak-kiravac-padpiskami"
 pair: "subscriptions"
 lang: "be"
+date: "2026-06-20"
 ---
 
 # Як кіраваць падпіскамі, каб яны перасталі ціха вас апустошваць

@@ -5,6 +5,7 @@ target_keyword: "cómo dividir la cuenta entre amigos"
 slug: "dividir-la-cuenta-entre-amigos"
 pair: "split-bill"
 lang: "es"
+date: "2026-08-11"
 ---
 
 # Cómo dividir la cuenta entre amigos y cobrar de verdad

@@ -5,6 +5,7 @@ target_keyword: "registrar gastos automáticamente"
 slug: "registrar-gastos-automaticamente"
 pair: "auto-capture"
 lang: "es"
+date: "2026-08-11"
 ---
 
 # Registrar gastos automáticamente sin escribir nada

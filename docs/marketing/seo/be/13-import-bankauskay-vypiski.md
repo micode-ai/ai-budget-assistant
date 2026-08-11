@@ -5,6 +5,7 @@ target_keyword: "імпарт банкаўскай выпіскі"
 slug: "import-bankauskay-vypiski"
 pair: "bank-import"
 lang: "be"
+date: "2026-06-27"
 ---
 
 # Імпарт банкаўскай выпіскі замест ручнога ўводу

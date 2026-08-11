@@ -5,6 +5,7 @@ target_keyword: "importer un relevé bancaire"
 slug: "importer-releve-bancaire"
 pair: "bank-import"
 lang: "fr"
+date: "2026-06-27"
 ---
 
 # Importer un relevé bancaire pour rattraper des mois en minutes

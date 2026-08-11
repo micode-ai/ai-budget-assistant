@@ -5,6 +5,7 @@ target_keyword: "hoe geld besparen"
 slug: "geld-besparen"
 pair: "saving"
 lang: "nl"
+date: "2026-06-19"
 ---
 
 # Hoe geld besparen als er aan het einde van de maand niets over lijkt te zijn

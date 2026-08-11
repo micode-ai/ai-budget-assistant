@@ -5,6 +5,7 @@ target_keyword: "Abos verwalten"
 slug: "abos-verwalten"
 pair: "subscriptions"
 lang: "de"
+date: "2026-06-20"
 ---
 
 # Abos verwalten, damit sie aufhören, dich still zu schröpfen

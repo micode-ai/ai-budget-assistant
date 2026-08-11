@@ -5,6 +5,7 @@ target_keyword: "Ausgaben tracken"
 slug: "ausgaben-tracken"
 pair: "expenses"
 lang: "de"
+date: "2026-06-19"
 ---
 
 # Ausgaben tracken: Hör auf, Geld zu verlieren, das du gar nicht gehen siehst

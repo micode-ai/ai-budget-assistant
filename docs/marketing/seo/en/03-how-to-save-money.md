@@ -5,6 +5,7 @@ target_keyword: "how to save money"
 slug: "how-to-save-money"
 pair: "saving"
 lang: "en"
+date: "2026-06-19"
 ---
 
 # How to Save Money When It Feels Like There's Nothing Left

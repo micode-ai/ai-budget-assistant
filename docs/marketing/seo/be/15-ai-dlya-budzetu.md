@@ -5,6 +5,7 @@ target_keyword: "ШІ для кіравання фінансамі"
 slug: "ai-dlya-budzetu"
 pair: "ai-budget"
 lang: "be"
+date: "2026-06-27"
 ---
 
 # Як ШІ дапамагае весці бюджэт, без шуму і перабольшанняў

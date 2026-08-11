@@ -5,6 +5,7 @@ target_keyword: "importar extracto bancario"
 slug: "importar-extracto-bancario"
 pair: "bank-import"
 lang: "es"
+date: "2026-06-27"
 ---
 
 # Cómo importar un extracto bancario y rellenar tu presupuesto en minutos

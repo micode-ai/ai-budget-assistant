@@ -5,6 +5,7 @@ target_keyword: "beste Haushaltsbuch App"
 slug: "beste-haushaltsbuch-app"
 pair: "best-apps"
 lang: "de"
+date: "2026-06-20"
 ---
 
 # Beste Haushaltsbuch App 2026: So findest du eine, die du wirklich nutzt

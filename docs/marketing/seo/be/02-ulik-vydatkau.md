@@ -5,6 +5,7 @@ target_keyword: "улік выдаткаў"
 slug: "ulik-vydatkau"
 pair: "expenses"
 lang: "be"
+date: "2026-06-19"
 ---
 
 # Улік выдаткаў: перастаньце губляць грошы, якіх не замяжаеце

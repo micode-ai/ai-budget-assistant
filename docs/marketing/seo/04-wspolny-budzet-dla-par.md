@@ -5,6 +5,7 @@ target_keyword: "wspólny budżet"
 slug: "wspolny-budzet-dla-par"
 pair: "shared-budget"
 lang: "pl"
+date: "2026-06-20"
 ---
 
 # Wspólny budżet dla par, który nie kończy się awanturą

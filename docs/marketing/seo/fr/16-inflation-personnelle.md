@@ -5,6 +5,7 @@ target_keyword: "inflation personnelle"
 slug: "inflation-personnelle"
 pair: "inflation"
 lang: "fr"
+date: "2026-07-05"
 ---
 
 # Votre inflation personnelle n'est pas celle du journal télévisé

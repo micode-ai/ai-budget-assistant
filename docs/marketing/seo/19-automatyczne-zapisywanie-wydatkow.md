@@ -5,6 +5,7 @@ target_keyword: "automatyczne zapisywanie wydatków"
 slug: "automatyczne-zapisywanie-wydatkow"
 pair: "auto-capture"
 lang: "pl"
+date: "2026-08-11"
 ---
 
 # Automatyczne zapisywanie wydatków: koniec z ręcznym wpisywaniem

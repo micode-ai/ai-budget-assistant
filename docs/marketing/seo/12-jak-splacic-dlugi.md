@@ -5,6 +5,7 @@ target_keyword: "jak spłacić długi"
 slug: "jak-splacic-dlugi"
 pair: "debt"
 lang: "pl"
+date: "2026-06-27"
 ---
 
 # Jak spłacić długi i wreszcie wyjść na prostą

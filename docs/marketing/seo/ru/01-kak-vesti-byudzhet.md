@@ -5,6 +5,7 @@ target_keyword: "как вести бюджет"
 slug: "kak-vesti-byudzhet"
 pair: "budget"
 lang: "ru"
+date: "2026-06-19"
 ---
 
 # Как вести бюджет, чтобы деньги шли туда, куда нужно

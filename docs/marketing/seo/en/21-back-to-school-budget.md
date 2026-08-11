@@ -5,6 +5,7 @@ target_keyword: "back to school budget"
 slug: "back-to-school-budget"
 pair: "school"
 lang: "en"
+date: "2026-08-11"
 ---
 
 # Back-to-School Budget: What It Really Costs

@@ -5,6 +5,7 @@ target_keyword: "супольны бюджэт"
 slug: "supolny-budzet"
 pair: "shared-budget"
 lang: "be"
+date: "2026-06-20"
 ---
 
 # Супольны бюджэт для пары, які не пачынае сваркі

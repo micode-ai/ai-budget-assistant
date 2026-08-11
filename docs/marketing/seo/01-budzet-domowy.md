@@ -5,6 +5,7 @@ target_keyword: "budżet domowy"
 slug: "jak-prowadzic-budzet-domowy"
 pair: "budget"
 lang: "pl"
+date: "2026-06-19"
 ---
 
 # Jak prowadzić budżet domowy, który naprawdę działa

@@ -5,6 +5,7 @@ target_keyword: "how AI can help you budget"
 slug: "how-ai-helps-budgeting"
 pair: "ai-budget"
 lang: "en"
+date: "2026-06-27"
 ---
 
 # How AI Can Help You Budget (Without the Hype)

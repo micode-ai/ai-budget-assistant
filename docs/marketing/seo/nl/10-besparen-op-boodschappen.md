@@ -5,6 +5,7 @@ target_keyword: "besparen op boodschappen"
 slug: "besparen-op-boodschappen"
 pair: "groceries"
 lang: "nl"
+date: "2026-06-27"
 ---
 
 # Besparen op boodschappen zonder elke week te couponen

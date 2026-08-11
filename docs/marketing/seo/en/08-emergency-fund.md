@@ -5,6 +5,7 @@ target_keyword: "emergency fund"
 slug: "emergency-fund"
 pair: "emergency-fund"
 lang: "en"
+date: "2026-06-20"
 ---
 
 # Emergency Fund: How Much to Save and How to Build One

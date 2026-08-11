@@ -5,6 +5,7 @@ target_keyword: "comment faire un budget"
 slug: "comment-faire-un-budget"
 pair: "budget"
 lang: "fr"
+date: "2026-06-19"
 ---
 
 # Comment faire un budget personnel qui tient dans la durée

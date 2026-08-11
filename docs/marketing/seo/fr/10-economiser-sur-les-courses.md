@@ -5,6 +5,7 @@ target_keyword: "économiser sur les courses"
 slug: "economiser-sur-les-courses"
 pair: "groceries"
 lang: "fr"
+date: "2026-06-27"
 ---
 
 # Économiser sur les courses sans coupons ni privations

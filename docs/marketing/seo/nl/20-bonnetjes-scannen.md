@@ -5,6 +5,7 @@ target_keyword: "bonnetjes scannen"
 slug: "bonnetjes-scannen"
 pair: "receipts"
 lang: "nl"
+date: "2026-08-11"
 ---
 
 # Bonnetjes scannen: de regels tellen, niet het totaal

@@ -5,6 +5,7 @@ target_keyword: "як эканоміць на прадуктах"
 slug: "ekanomiya-na-praduktah"
 pair: "groceries"
 lang: "be"
+date: "2026-06-27"
 ---
 
 # Як эканоміць на прадуктах і не адчуваць сябе абдзеленым

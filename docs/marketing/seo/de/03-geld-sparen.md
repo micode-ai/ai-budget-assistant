@@ -5,6 +5,7 @@ target_keyword: "Geld sparen"
 slug: "geld-sparen"
 pair: "saving"
 lang: "de"
+date: "2026-06-19"
 ---
 
 # Geld sparen, wenn gefühlt nichts übrig bleibt

@@ -5,6 +5,7 @@ target_keyword: "лучшие приложения для бюджета"
 slug: "luchshie-prilozheniya-dlya-byudzheta"
 pair: "best-apps"
 lang: "ru"
+date: "2026-06-20"
 ---
 
 # Лучшие приложения для бюджета в 2026 году: как выбрать то, которым вы реально будете пользоваться

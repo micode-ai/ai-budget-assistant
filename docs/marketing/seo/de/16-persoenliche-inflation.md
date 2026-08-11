@@ -5,6 +5,7 @@ target_keyword: "persönliche Inflation berechnen"
 slug: "persoenliche-inflation"
 pair: "inflation"
 lang: "de"
+date: "2026-07-05"
 ---
 
 # Deine persönliche Inflation ist nicht die aus den Nachrichten

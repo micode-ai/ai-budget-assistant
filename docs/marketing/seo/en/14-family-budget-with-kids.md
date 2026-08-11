@@ -5,6 +5,7 @@ target_keyword: "family budgeting with kids"
 slug: "family-budget-with-kids"
 pair: "family"
 lang: "en"
+date: "2026-06-27"
 ---
 
 # Family Budgeting With Kids Without Losing Your Mind

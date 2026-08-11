@@ -5,6 +5,7 @@ target_keyword: "карта выдаткаў"
 slug: "karta-vydatkau"
 pair: "expense-map"
 lang: "be"
+date: "2026-07-05"
 ---
 
 # Карта выдаткаў: дзе сапраўды дзяваюцца вашы грошы

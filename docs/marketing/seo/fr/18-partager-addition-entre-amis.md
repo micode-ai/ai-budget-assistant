@@ -5,6 +5,7 @@ target_keyword: "comment partager l'addition entre amis"
 slug: "partager-addition-entre-amis"
 pair: "split-bill"
 lang: "fr"
+date: "2026-08-11"
 ---
 
 # Comment partager l'addition entre amis et être vraiment remboursé

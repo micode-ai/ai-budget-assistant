@@ -5,6 +5,7 @@ target_keyword: "geld sparen beim einkaufen"
 slug: "beim-einkaufen-sparen"
 pair: "groceries"
 lang: "de"
+date: "2026-06-27"
 ---
 
 # Geld sparen beim Einkaufen, ohne Coupons zu sammeln

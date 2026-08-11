@@ -5,6 +5,7 @@ target_keyword: "mejores apps de presupuesto"
 slug: "mejores-apps-de-presupuesto"
 pair: "best-apps"
 lang: "es"
+date: "2026-06-20"
 ---
 
 # Mejores apps de presupuesto en 2026: cómo elegir una que de verdad uses

@@ -5,6 +5,7 @@ target_keyword: "як весці бюджэт"
 slug: "yak-vesci-budzet"
 pair: "budget"
 lang: "be"
+date: "2026-06-19"
 ---
 
 # Як весці бюджэт без таго, каб кінуць яго праз два тыдні

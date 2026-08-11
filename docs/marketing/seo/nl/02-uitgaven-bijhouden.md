@@ -5,6 +5,7 @@ target_keyword: "uitgaven bijhouden"
 slug: "uitgaven-bijhouden"
 pair: "expenses"
 lang: "nl"
+date: "2026-06-19"
 ---
 
 # Uitgaven bijhouden zonder dat het een dagtaak wordt

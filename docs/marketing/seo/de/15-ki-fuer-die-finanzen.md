@@ -5,6 +5,7 @@ target_keyword: "KI für die Finanzen"
 slug: "ki-fuer-die-finanzen"
 pair: "ai-budget"
 lang: "de"
+date: "2026-06-27"
 ---
 
 # KI für die Finanzen, ehrlich erklärt

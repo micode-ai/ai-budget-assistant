@@ -5,6 +5,7 @@ target_keyword: "kontrola wydatków"
 slug: "kontrola-wydatkow-aplikacja"
 pair: "expenses"
 lang: "pl"
+date: "2026-06-19"
 ---
 
 # Kontrola wydatków bez ręcznego wpisywania wszystkiego

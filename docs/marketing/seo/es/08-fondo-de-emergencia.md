@@ -5,6 +5,7 @@ target_keyword: "fondo de emergencia"
 slug: "fondo-de-emergencia"
 pair: "emergency-fund"
 lang: "es"
+date: "2026-06-20"
 ---
 
 # Fondo de emergencia: cuánto ahorrar y cómo crear uno

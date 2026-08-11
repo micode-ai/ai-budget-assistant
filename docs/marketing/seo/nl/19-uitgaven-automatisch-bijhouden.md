@@ -5,6 +5,7 @@ target_keyword: "uitgaven automatisch bijhouden"
 slug: "uitgaven-automatisch-bijhouden"
 pair: "auto-capture"
 lang: "nl"
+date: "2026-08-11"
 ---
 
 # Uitgaven automatisch bijhouden zonder alles te typen

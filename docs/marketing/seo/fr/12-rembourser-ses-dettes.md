@@ -5,6 +5,7 @@ target_keyword: "rembourser ses dettes"
 slug: "rembourser-ses-dettes"
 pair: "debt"
 lang: "fr"
+date: "2026-06-27"
 ---
 
 # Rembourser ses dettes plus vite avec la bonne méthode

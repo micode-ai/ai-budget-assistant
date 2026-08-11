@@ -5,6 +5,7 @@ target_keyword: "як погасити борги"
 slug: "yak-pohasyty-borhy"
 pair: "debt"
 lang: "ua"
+date: "2026-06-27"
 ---
 
 # Як погасити борги, не покладаючись лише на силу волі

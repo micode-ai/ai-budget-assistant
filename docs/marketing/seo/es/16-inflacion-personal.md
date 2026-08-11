@@ -5,6 +5,7 @@ target_keyword: "inflación personal"
 slug: "inflacion-personal"
 pair: "inflation"
 lang: "es"
+date: "2026-07-05"
 ---
 
 # Tu inflación personal no es la que sale en las noticias

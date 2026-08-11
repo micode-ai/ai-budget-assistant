@@ -5,6 +5,7 @@ target_keyword: "gezinsbudget met kinderen"
 slug: "gezinsbudget-met-kinderen"
 pair: "family"
 lang: "nl"
+date: "2026-06-27"
 ---
 
 # Een gezinsbudget met kinderen dat de chaos aankan

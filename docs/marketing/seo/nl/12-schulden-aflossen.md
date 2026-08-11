@@ -5,6 +5,7 @@ target_keyword: "schulden aflossen"
 slug: "schulden-aflossen"
 pair: "debt"
 lang: "nl"
+date: "2026-06-27"
 ---
 
 # Schulden aflossen met een plan dat je volhoudt

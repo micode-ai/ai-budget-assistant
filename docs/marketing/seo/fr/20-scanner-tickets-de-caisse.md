@@ -5,6 +5,7 @@ target_keyword: "scanner ses tickets de caisse"
 slug: "scanner-tickets-de-caisse"
 pair: "receipts"
 lang: "fr"
+date: "2026-08-11"
 ---
 
 # Scanner ses tickets de caisse : les lignes comptent plus que le total

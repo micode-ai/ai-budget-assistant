@@ -5,6 +5,7 @@ target_keyword: "cuánto cuesta la vuelta al colegio"
 slug: "cuanto-cuesta-la-vuelta-al-colegio"
 pair: "school"
 lang: "es"
+date: "2026-08-11"
 ---
 
 # Vuelta al colegio: cuánto cuesta y cómo planificarla

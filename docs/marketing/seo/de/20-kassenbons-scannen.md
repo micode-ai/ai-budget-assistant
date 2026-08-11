@@ -5,6 +5,7 @@ target_keyword: "Kassenbons scannen"
 slug: "kassenbons-scannen"
 pair: "receipts"
 lang: "de"
+date: "2026-08-11"
 ---
 
 # Kassenbons scannen: warum die Posten zählen, nicht die Summe

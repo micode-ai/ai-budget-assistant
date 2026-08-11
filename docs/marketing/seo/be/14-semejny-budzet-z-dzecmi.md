@@ -5,6 +5,7 @@ target_keyword: "сямейны бюджэт з дзецьмі"
 slug: "semejny-budzet-z-dzecmi"
 pair: "family"
 lang: "be"
+date: "2026-06-27"
 ---
 
 # Сямейны бюджэт з дзецьмі, які вытрымлівае рэальнае жыццё

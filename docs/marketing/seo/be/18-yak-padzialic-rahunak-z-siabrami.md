@@ -5,6 +5,7 @@ target_keyword: "як падзяліць рахунак з сябрамі"
 slug: "yak-padzialic-rahunak-z-siabrami"
 pair: "split-bill"
 lang: "be"
+date: "2026-08-11"
 ---
 
 # Як падзяліць рахунак з сябрамі і рэальна атрымаць свае грошы

@@ -5,6 +5,7 @@ target_keyword: "лепшыя праграмы для бюджэту"
 slug: "lepshyya-prahramy-dlya-budzetu"
 pair: "best-apps"
 lang: "be"
+date: "2026-06-20"
 ---
 
 # Лепшыя праграмы для бюджэту ў 2026: як выбраць тую, якой вы сапраўды будзеце карыстацца

@@ -5,6 +5,7 @@ target_keyword: "how to save money on groceries"
 slug: "save-money-on-groceries"
 pair: "groceries"
 lang: "en"
+date: "2026-06-27"
 ---
 
 # How to Save Money on Groceries Without Clipping a Single Coupon

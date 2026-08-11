@@ -5,6 +5,7 @@ target_keyword: "uitgavenkaart"
 slug: "uitgavenkaart"
 pair: "expense-map"
 lang: "nl"
+date: "2026-07-05"
 ---
 
 # Breng je uitgaven in kaart: zie waar je geld echt naartoe gaat

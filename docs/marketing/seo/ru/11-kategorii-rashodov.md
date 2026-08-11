@@ -5,6 +5,7 @@ target_keyword: "категории расходов"
 slug: "kategorii-rashodov"
 pair: "categories"
 lang: "ru"
+date: "2026-06-27"
 ---
 
 # Категории расходов, которые реально работают в бюджете

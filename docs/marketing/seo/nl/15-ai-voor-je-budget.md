@@ -5,6 +5,7 @@ target_keyword: "AI voor je budget"
 slug: "ai-voor-je-budget"
 pair: "ai-budget"
 lang: "nl"
+date: "2026-06-27"
 ---
 
 # AI voor je budget: hoe slimme software het bijhouden overneemt

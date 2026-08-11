@@ -57,6 +57,21 @@ article tbody tr:nth-child(even) td{background:#fafafb}
 .related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
 .card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
 .card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
 footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
 footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}

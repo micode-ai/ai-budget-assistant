@@ -5,6 +5,7 @@ target_keyword: "AI w zarządzaniu finansami"
 slug: "ai-w-zarzadzaniu-finansami"
 pair: "ai-budget"
 lang: "pl"
+date: "2026-06-27"
 ---
 
 # AI w zarządzaniu finansami, czyli koniec z porzucaniem budżetu

@@ -5,6 +5,7 @@ target_keyword: "shared budget for couples"
 slug: "shared-budget-for-couples"
 pair: "shared-budget"
 lang: "en"
+date: "2026-06-20"
 ---
 
 # A Shared Budget for Couples That Doesn't Start Arguments

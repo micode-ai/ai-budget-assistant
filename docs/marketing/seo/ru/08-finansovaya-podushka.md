@@ -5,6 +5,7 @@ target_keyword: "финансовая подушка"
 slug: "finansovaya-podushka"
 pair: "emergency-fund"
 lang: "ru"
+date: "2026-06-20"
 ---
 
 # Финансовая подушка: сколько откладывать и как её собрать

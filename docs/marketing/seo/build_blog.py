@@ -132,7 +132,45 @@ PAIR_TO_HELP = {
     "subscriptions": "subscription-manager", "groceries": "shopping-list",
     "categories": "reference-data", "debt": "debts-and-loans", "bank-import": "bank-import",
     "family": "family-feed", "ai-budget": "ai-chat", "inflation": "personal-inflation-index",
-    "expense-map": "expense-map",
+    "expense-map": "expense-map", "split-bill": "receipt-split", "receipts": "voice-and-receipt",
+    "auto-capture": "expenses-and-income", "school": "budgets",
+}
+
+# Pillar -> its cluster children. Single source of truth for BOTH the generated pillar
+# down-links (build_pillar_links.py imports this) and the blog index category filter.
+# A `pair` missing from every list gets no category chip and no pillar down-link, so add
+# new topics here.
+CLUSTERS = {
+    "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school"],
+    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill"],
+    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation"],
+}
+def category_of(pair):
+    """The pillar a topic belongs to; a pillar is its own category."""
+    if pair in CLUSTERS:
+        return pair
+    for pillar, children in CLUSTERS.items():
+        if pair in children:
+            return pillar
+    return None
+
+# Blog index listing labels (mirrors the mi-code blog listing: date, reading time, filter chips).
+READ_MIN = {"en": "{n} min read", "pl": "{n} min czytania", "de": "{n} Min. Lesezeit",
+            "es": "{n} min de lectura", "fr": "{n} min de lecture", "ru": "{n} мин чтения",
+            "ua": "{n} хв читання", "be": "{n} хв чытання", "nl": "{n} min leestijd"}
+READ_ARTICLE = {"en": "Read the article", "pl": "Czytaj artykuł", "de": "Artikel lesen",
+                "es": "Leer el artículo", "fr": "Lire l'article", "ru": "Читать статью",
+                "ua": "Читати статтю", "be": "Чытаць артыкул", "nl": "Lees het artikel"}
+CAT_ALL = {"en": "All", "pl": "Wszystkie", "de": "Alle", "es": "Todos", "fr": "Tous",
+           "ru": "Все", "ua": "Усі", "be": "Усе", "nl": "Alle"}
+CAT_LABELS = {
+    "budget": {"en": "Budgeting", "pl": "Budżet", "de": "Budget", "es": "Presupuesto",
+               "fr": "Budget", "ru": "Бюджет", "ua": "Бюджет", "be": "Бюджэт", "nl": "Budget"},
+    "expenses": {"en": "Expenses", "pl": "Wydatki", "de": "Ausgaben", "es": "Gastos",
+                 "fr": "Dépenses", "ru": "Расходы", "ua": "Витрати", "be": "Выдаткі", "nl": "Uitgaven"},
+    "saving": {"en": "Saving", "pl": "Oszczędzanie", "de": "Sparen", "es": "Ahorro",
+               "fr": "Épargne", "ru": "Сбережения", "ua": "Заощадження", "be": "Ашчаджэнне",
+               "nl": "Sparen"},
 }
 HELP_CTA = {"en": "Step-by-step guide in the Help center", "pl": "Poradnik krok po kroku w Centrum pomocy",
             "de": "Schritt-für-Schritt-Anleitung im Hilfebereich", "es": "Guía paso a paso en el Centro de ayuda",
@@ -255,6 +293,21 @@ article tbody tr:nth-child(even) td{background:#fafafb}
 .related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
 .card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
 .card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
 footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
 footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
@@ -408,12 +461,12 @@ def cta_block(lang):
             f'<a class="btn p" href="{APP}">{t["btnWeb"]}</a>'
             f'<a class="btn s" href="{PLAY}">{t["btnPlay"]}</a></aside>')
 
-def article_jsonld(lang, title, desc, url, og_path, src_path=None):
+def article_jsonld(lang, title, desc, url, og_path, src_path=None, pub=None):
     t = I18N[lang]
     return {"@context": "https://schema.org", "@graph": [
         org_node(),
         {"@type": "Article", "headline": title, "description": desc, "inLanguage": bcp47(lang),
-         "datePublished": PUBLISH_DATE, "dateModified": git_date(src_path),
+         "datePublished": pub or PUBLISH_DATE, "dateModified": git_date(src_path),
          "mainEntityOfPage": {"@type": "WebPage", "@id": url},
          "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": f"{SITE}{about_url(lang)}"},
          "publisher": {"@id": f"{SITE}/#organization"},
@@ -458,8 +511,17 @@ def read_articles():
         meta, body = parse(path)
         if not meta.get("slug") or not meta.get("lang") or not meta.get("pair"):
             continue
-        arts.append({"m": meta, "body": body, "lang": meta["lang"], "path": path})
+        # `date` is the PUBLICATION date and is authored in frontmatter, deliberately not derived
+        # from git: git_date() is the LAST-commit date, so editing an old article would silently
+        # promote it to the top of the index and rewrite its datePublished. Falls back to the
+        # git date only for a file that predates the field.
+        pub = meta.get("date") or git_date(path)
+        arts.append({"m": meta, "body": body, "lang": meta["lang"], "path": path, "date": pub})
     return arts
+
+def reading_minutes(body):
+    """Rounded reading time at 200 wpm, floored at 1 - mirrors the mi-code blog listing."""
+    return max(1, round(len(body.split()) / 200))
 
 _blog_index_cache = None
 def blog_index():
@@ -508,13 +570,18 @@ def build():
         if help_slug:
             rel = f'<a href="/help/{lang}/{help_slug}/">{HELP_CTA[lang]} &rarr;</a>' + rel
         t = I18N[lang]
-        ld = article_jsonld(lang, title, desc, url, og, a["path"])
+        ld = article_jsonld(lang, title, desc, url, og, a["path"], a["date"])
         faq = extract_faq(a["body"])
         if len(faq) >= 2:
             ld["@graph"].append({"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in faq]})
         body_html = to_html(a["body"])
-        byline = f'<p class="byline">AI Budget Assistant &middot; {UPDATED[lang]} {git_date(a["path"])}</p>'
+        # Lead with the publication date and add "Updated" only when the file really changed
+        # later. git_date() is the last-commit date, so a repo-wide frontmatter edit would
+        # otherwise stamp every article as updated today and bury when it was actually published.
+        mod = git_date(a["path"])
+        byline = (f'<p class="byline">AI Budget Assistant &middot; <time datetime="{a["date"]}">{a["date"]}</time>'
+                  + (f' &middot; {UPDATED[lang]} {mod}' if mod != a["date"] else "") + '</p>')
         body_html = (body_html.replace("</h1>", "</h1>" + byline, 1)
                      if "</h1>" in body_html else byline + body_html)
         page = (head(lang, title, desc, url, ld, alts, og, menu)
@@ -528,9 +595,36 @@ def build():
     # per-language index
     for lang in langs:
         t = I18N[lang]
-        items = [a for a in arts if a["lang"] == lang]
-        cards = "".join(f'<a class="card" href="/blog/{lang}/{a["m"]["slug"]}/"><h2>{html.escape(a["m"].get("title", ""))}</h2>'
-                        f'<p>{html.escape(a["m"].get("meta_description", ""))}</p></a>' for a in items)
+        # Newest first. Tie-break on path so same-day topics land in a stable, reverse
+        # file-number order rather than whatever glob returned.
+        items = sorted((a for a in arts if a["lang"] == lang),
+                       key=lambda a: (a["date"], a["path"]), reverse=True)
+        cats = [c for c in CLUSTERS if any(category_of(a["m"]["pair"]) == c for a in items)]
+        counts = {c: sum(1 for a in items if category_of(a["m"]["pair"]) == c) for c in cats}
+        # Pure-CSS category filter: radios first, then the chips and cards as their siblings
+        # (same `:checked` + sibling-selector trick as the landing lightbox / pricing toggle).
+        # No JS, so every card stays in the HTML for crawlers even when a filter is applied.
+        radios = '<input type="radio" name="blogcat" id="bc-all" checked>' + "".join(
+            f'<input type="radio" name="blogcat" id="bc-{c}">' for c in cats)
+        chips = (f'<div class="chips"><label class="chip" for="bc-all">{CAT_ALL[lang]} ({len(items)})</label>'
+                 + "".join(f'<label class="chip" for="bc-{c}">{html.escape(CAT_LABELS[c][lang])} ({counts[c]})</label>'
+                           for c in cats) + '</div>')
+        cards = []
+        for a in items:
+            cat = category_of(a["m"]["pair"])
+            mins = READ_MIN[lang].format(n=reading_minutes(a["body"]))
+            cat_chip = (f'<span class="ccat">{html.escape(CAT_LABELS[cat][lang])}</span>' if cat else "")
+            # The whole card is one <a>, so the category here is a plain label, not a second
+            # clickable filter (nesting interactive elements inside a link is invalid HTML) —
+            # filtering lives in the chip row above.
+            cards.append(
+                f'<a class="card{" cat-" + cat if cat else ""}" href="/blog/{lang}/{a["m"]["slug"]}/">'
+                f'<p class="cmeta"><time datetime="{a["date"]}">{a["date"]}</time>'
+                f'<span class="sep"> &middot; </span>{mins}</p>'
+                f'<h2>{html.escape(a["m"].get("title", ""))}</h2>'
+                f'<p>{html.escape(a["m"].get("meta_description", ""))}</p>'
+                f'<p class="cfoot">{cat_chip}<span class="more">{READ_ARTICLE[lang]} &rarr;</span></p></a>')
+        cards = f'<div class="blogfilter">{radios}{chips}<div class="cards">' + "".join(cards) + '</div></div>'
         url = f"{SITE}/blog/{lang}/"
         alts = [(l, f"{SITE}/blog/{l}/") for l in langs] + [("x-default", f"{SITE}/blog/{DEFAULT_LANG}/")]
         alt_map = {l: f"/blog/{l}/" for l in langs}
@@ -539,7 +633,7 @@ def build():
               "description": t["blogDesc"], "inLanguage": bcp47(lang), "url": url,
               "publisher": {"@id": f"{SITE}/#organization"},
               "blogPost": [{"@type": "BlogPosting", "headline": a["m"].get("title", ""),
-                            "url": f"{SITE}/blog/{lang}/{a['m']['slug']}/", "datePublished": PUBLISH_DATE,
+                            "url": f"{SITE}/blog/{lang}/{a['m']['slug']}/", "datePublished": a["date"],
                             "dateModified": git_date(a["path"]),
                             "inLanguage": bcp47(lang)} for a in items]}
         page = (head(lang, t["blogTitle"], t["blogDesc"], url, ld, alts, f"/blog/{lang}/assets/og-default.png", menu, og_type="website")

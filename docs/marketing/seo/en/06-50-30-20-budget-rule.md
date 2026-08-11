@@ -5,6 +5,7 @@ target_keyword: "50/30/20 budget rule"
 slug: "50-30-20-budget-rule"
 pair: "rule-503020"
 lang: "en"
+date: "2026-06-20"
 ---
 
 # The 50/30/20 Budget Rule (And How to Make It Fit Your Life)

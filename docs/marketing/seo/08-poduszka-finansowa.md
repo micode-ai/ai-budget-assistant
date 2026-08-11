@@ -5,6 +5,7 @@ target_keyword: "poduszka finansowa"
 slug: "poduszka-finansowa"
 pair: "emergency-fund"
 lang: "pl"
+date: "2026-06-20"
 ---
 
 # Poduszka finansowa: ile odłożyć i jak ją zbudować

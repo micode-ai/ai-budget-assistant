@@ -5,6 +5,7 @@ target_keyword: "catégories de dépenses"
 slug: "categories-de-depenses"
 pair: "categories"
 lang: "fr"
+date: "2026-06-27"
 ---
 
 # Des catégories de dépenses qui font tenir votre budget

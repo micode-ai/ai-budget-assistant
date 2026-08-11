@@ -5,6 +5,7 @@ target_keyword: "сканування чеків"
 slug: "skanuvannya-chekiv"
 pair: "receipts"
 lang: "ua"
+date: "2026-08-11"
 ---
 
 # Сканування чеків: важливі позиції, а не сума

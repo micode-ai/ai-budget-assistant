@@ -5,6 +5,7 @@ target_keyword: "IA para las finanzas personales"
 slug: "ia-para-las-finanzas"
 pair: "ai-budget"
 lang: "es"
+date: "2026-06-27"
 ---
 
 # IA para las finanzas personales: qué cambia de verdad

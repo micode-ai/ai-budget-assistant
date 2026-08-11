@@ -5,6 +5,7 @@ target_keyword: "Umschlagmethode"
 slug: "umschlagmethode"
 pair: "envelope"
 lang: "de"
+date: "2026-06-20"
 ---
 
 # Umschlagmethode: So gibst du nur aus, was du wirklich hast

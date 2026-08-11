@@ -5,6 +5,7 @@ target_keyword: "metoda kopertowa"
 slug: "metoda-kopertowa"
 pair: "envelope"
 lang: "pl"
+date: "2026-06-20"
 ---
 
 # Metoda kopertowa: jak wydawać tylko tyle, ile masz

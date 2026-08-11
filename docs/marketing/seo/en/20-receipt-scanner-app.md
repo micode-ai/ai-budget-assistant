@@ -5,6 +5,7 @@ target_keyword: "receipt scanner app"
 slug: "receipt-scanner-app"
 pair: "receipts"
 lang: "en"
+date: "2026-08-11"
 ---
 
 # Receipt Scanner App: Why Line Items Beat the Total

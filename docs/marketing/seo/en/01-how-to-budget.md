@@ -5,6 +5,7 @@ target_keyword: "how to budget"
 slug: "how-to-budget"
 pair: "budget"
 lang: "en"
+date: "2026-06-19"
 ---
 
 # How to Budget Your Money (Without Giving Up After Two Weeks)

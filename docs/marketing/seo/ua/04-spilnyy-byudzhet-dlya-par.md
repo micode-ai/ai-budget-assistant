@@ -5,6 +5,7 @@ target_keyword: "спільний бюджет"
 slug: "spilnyy-byudzhet-dlya-par"
 pair: "shared-budget"
 lang: "ua"
+date: "2026-06-20"
 ---
 
 # Спільний бюджет для пари, який не починається зі сварки

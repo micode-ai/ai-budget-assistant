@@ -5,6 +5,7 @@ target_keyword: "учёт расходов"
 slug: "uchet-rashodov"
 pair: "expenses"
 lang: "ru"
+date: "2026-06-19"
 ---
 
 # Учёт расходов: перестаньте терять деньги, которые утекают незаметно

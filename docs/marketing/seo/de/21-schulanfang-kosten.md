@@ -5,6 +5,7 @@ target_keyword: "Schulanfang Kosten"
 slug: "schulanfang-kosten"
 pair: "school"
 lang: "de"
+date: "2026-08-11"
 ---
 
 # Schulanfang: Was die Ausstattung wirklich kostet

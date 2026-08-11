@@ -5,6 +5,7 @@ target_keyword: "импорт банковской выписки"
 slug: "import-bankovskoy-vypiski"
 pair: "bank-import"
 lang: "ru"
+date: "2026-06-27"
 ---
 
 # Импорт банковской выписки: бюджет за минуты, а не за месяцы

@@ -5,6 +5,7 @@ target_keyword: "how to split bills with friends"
 slug: "split-bill-with-friends"
 pair: "split-bill"
 lang: "en"
+date: "2026-08-11"
 ---
 
 # How to Split Bills With Friends and Actually Get Paid Back

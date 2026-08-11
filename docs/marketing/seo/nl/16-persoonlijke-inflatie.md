@@ -5,6 +5,7 @@ target_keyword: "persoonlijke inflatie"
 slug: "persoonlijke-inflatie"
 pair: "inflation"
 lang: "nl"
+date: "2026-07-05"
 ---
 
 # Jouw persoonlijke inflatie is niet die uit het nieuws

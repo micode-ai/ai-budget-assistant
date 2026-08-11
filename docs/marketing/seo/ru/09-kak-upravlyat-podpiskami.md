@@ -5,6 +5,7 @@ target_keyword: "как управлять подписками"
 slug: "kak-upravlyat-podpiskami"
 pair: "subscriptions"
 lang: "ru"
+date: "2026-06-20"
 ---
 
 # Как управлять подписками, чтобы они перестали тихо вас обескровливать

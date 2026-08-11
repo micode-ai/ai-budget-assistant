@@ -5,6 +5,7 @@ target_keyword: "особиста інфляція"
 slug: "osobysta-inflyatsiya"
 pair: "inflation"
 lang: "ua"
+date: "2026-07-05"
 ---
 
 # Ваша особиста інфляція не та цифра, що в новинах

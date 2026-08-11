@@ -5,6 +5,7 @@ target_keyword: "як заощаджувати гроші"
 slug: "yak-zaoshchadzhuvaty"
 pair: "saving"
 lang: "ua"
+date: "2026-06-19"
 ---
 
 # Як заощаджувати гроші, коли здається, що нічого не залишається

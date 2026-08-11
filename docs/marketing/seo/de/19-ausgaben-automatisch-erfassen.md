@@ -5,6 +5,7 @@ target_keyword: "Ausgaben automatisch erfassen"
 slug: "ausgaben-automatisch-erfassen"
 pair: "auto-capture"
 lang: "de"
+date: "2026-08-11"
 ---
 
 # Ausgaben automatisch erfassen statt alles selbst eintippen

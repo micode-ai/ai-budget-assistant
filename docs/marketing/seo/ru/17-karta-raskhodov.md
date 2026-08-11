@@ -5,6 +5,7 @@ target_keyword: "карта расходов"
 slug: "karta-raskhodov"
 pair: "expense-map"
 lang: "ru"
+date: "2026-07-05"
 ---
 
 # Карта расходов: узнайте, куда реально уходят деньги

@@ -5,6 +5,7 @@ target_keyword: "familienbudget mit kindern"
 slug: "familienbudget-mit-kindern"
 pair: "family"
 lang: "de"
+date: "2026-06-27"
 ---
 
 # Ein Familienbudget mit Kindern, das den Alltag aushält

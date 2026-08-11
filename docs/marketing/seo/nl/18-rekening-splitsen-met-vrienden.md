@@ -5,6 +5,7 @@ target_keyword: "rekening splitsen met vrienden"
 slug: "rekening-splitsen-met-vrienden"
 pair: "split-bill"
 lang: "nl"
+date: "2026-08-11"
 ---
 
 # Rekening splitsen met vrienden en je geld echt terugzien

@@ -5,6 +5,7 @@ target_keyword: "ИИ для управления финансами"
 slug: "ai-dlya-byudzheta"
 pair: "ai-budget"
 lang: "ru"
+date: "2026-06-27"
 ---
 
 # ИИ для управления финансами: меньше рутины, больше смысла

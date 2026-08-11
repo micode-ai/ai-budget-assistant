@@ -5,6 +5,7 @@ target_keyword: "gérer ses abonnements"
 slug: "gerer-ses-abonnements"
 pair: "subscriptions"
 lang: "fr"
+date: "2026-06-20"
 ---
 
 # Comment gérer ses abonnements pour qu'ils cessent de vous vider en silence

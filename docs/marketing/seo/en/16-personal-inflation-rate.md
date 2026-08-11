@@ -5,6 +5,7 @@ target_keyword: "personal inflation rate"
 slug: "personal-inflation-rate"
 pair: "inflation"
 lang: "en"
+date: "2026-07-05"
 ---
 
 # Your Personal Inflation Rate Is Not the One on the News

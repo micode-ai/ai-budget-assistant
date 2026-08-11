@@ -5,6 +5,7 @@ target_keyword: "mapa de gastos"
 slug: "mapa-de-gastos"
 pair: "expense-map"
 lang: "es"
+date: "2026-07-05"
 ---
 
 # Mapea tus gastos: ve adónde va realmente tu dinero

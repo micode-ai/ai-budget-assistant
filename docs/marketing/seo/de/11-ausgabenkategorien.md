@@ -5,6 +5,7 @@ target_keyword: "ausgabenkategorien"
 slug: "ausgabenkategorien"
 pair: "categories"
 lang: "de"
+date: "2026-06-27"
 ---
 
 # Ausgabenkategorien, die dein Budget tragen

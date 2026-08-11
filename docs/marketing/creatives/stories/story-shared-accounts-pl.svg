@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920" font-family="-apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1F2937"/>
+      <stop offset="1" stop-color="#0F172A"/>
+    </linearGradient>
+    <linearGradient id="orangeGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#F59E0B"/>
+      <stop offset="1" stop-color="#EF4444"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12"/>
+      <feOffset dx="0" dy="8" result="off"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.4"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- background -->
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+
+  <!-- accent corner blob -->
+  <circle cx="120" cy="120" r="280" fill="#F59E0B" opacity="0.18"/>
+  <circle cx="980" cy="1800" r="320" fill="#EF4444" opacity="0.14"/>
+
+  <!-- top label -->
+  <text x="540" y="180" text-anchor="middle" font-size="34" font-weight="600" fill="#F59E0B" letter-spacing="6">POV · PIĄTEK 19:47</text>
+
+  <!-- hook -->
+  <text x="540" y="320" text-anchor="middle" font-size="64" font-weight="800" fill="#FFFFFF">Mąż znowu</text>
+  <text x="540" y="400" text-anchor="middle" font-size="64" font-weight="800" fill="#FFFFFF">kupił piwo.</text>
+  <text x="540" y="480" text-anchor="middle" font-size="64" font-weight="800" fill="#FFFFFF">I pizzę. I czipsy. 🍕🍺</text>
+
+  <!-- push notification card -->
+  <g filter="url(#shadow)">
+    <rect x="100" y="620" width="880" height="280" rx="36" fill="#FFFFFF"/>
+    <rect x="140" y="660" width="80" height="80" rx="20" fill="#F59E0B"/>
+    <text x="180" y="715" text-anchor="middle" font-size="44" font-weight="700" fill="#FFFFFF">💸</text>
+
+    <text x="250" y="690" font-size="26" font-weight="600" fill="#6B7280">AI BUDGET ASSISTANT · TERAZ</text>
+    <text x="250" y="745" font-size="38" font-weight="700" fill="#111827">Marcin dodał wydatek</text>
+    <text x="250" y="795" font-size="32" font-weight="500" fill="#374151">Rozrywka — 80 zł</text>
+    <text x="250" y="845" font-size="28" font-weight="500" fill="#9CA3AF">💑 Konto Rodzinne</text>
+  </g>
+
+  <!-- punchline -->
+  <text x="540" y="1060" text-anchor="middle" font-size="52" font-weight="800" fill="#FFFFFF">Dowiesz się o tym</text>
+  <text x="540" y="1130" text-anchor="middle" font-size="52" font-weight="800" fill="url(#orangeGrad)">ZANIM wróci do domu.</text>
+
+  <!-- value bullets -->
+  <g font-size="32" font-weight="500" fill="#E5E7EB">
+    <text x="540" y="1280" text-anchor="middle">👑 Właściciel zarządza</text>
+    <text x="540" y="1340" text-anchor="middle">✏️ Partner dodaje wydatki</text>
+    <text x="540" y="1400" text-anchor="middle">👁 Teściowa tylko patrzy 😅</text>
+  </g>
+
+  <!-- bottom CTA bar -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="1540" width="920" height="220" rx="40" fill="url(#orangeGrad)"/>
+    <text x="540" y="1620" text-anchor="middle" font-size="46" font-weight="800" fill="#FFFFFF">Wspólne konta</text>
+    <text x="540" y="1675" text-anchor="middle" font-size="32" font-weight="600" fill="#FFF7ED">bez kłótni o paragony</text>
+    <text x="540" y="1730" text-anchor="middle" font-size="28" font-weight="700" fill="#FFFFFF" letter-spacing="3">📲 GOOGLE PLAY · AI BUDGET ASSISTANT</text>
+  </g>
+
+  <!-- footer hint -->
+  <text x="540" y="1840" text-anchor="middle" font-size="24" font-weight="500" fill="#9CA3AF" letter-spacing="2">↑ przesuń w górę</text>
+</svg>

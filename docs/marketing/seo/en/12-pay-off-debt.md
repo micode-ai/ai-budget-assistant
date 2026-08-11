@@ -5,6 +5,7 @@ target_keyword: "how to pay off debt"
 slug: "pay-off-debt"
 pair: "debt"
 lang: "en"
+date: "2026-06-27"
 ---
 
 # How to Pay Off Debt Faster: Snowball vs Avalanche

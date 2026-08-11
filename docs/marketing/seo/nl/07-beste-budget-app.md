@@ -5,6 +5,7 @@ target_keyword: "beste budget app"
 slug: "beste-budget-app"
 pair: "best-apps"
 lang: "nl"
+date: "2026-06-20"
 ---
 
 # Beste budget app in 2026: zo kies je er een die je echt gebruikt

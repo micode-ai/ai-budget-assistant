@@ -5,6 +5,7 @@ target_keyword: "control de gastos"
 slug: "control-de-gastos"
 pair: "expenses"
 lang: "es"
+date: "2026-06-19"
 ---
 
 # Control de gastos: deja de perder dinero que no ves salir

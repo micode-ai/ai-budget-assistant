@@ -5,6 +5,7 @@ target_keyword: "budżet domowy z dziećmi"
 slug: "budzet-domowy-z-dziecmi"
 pair: "family"
 lang: "pl"
+date: "2026-06-27"
 ---
 
 # Budżet domowy z dziećmi, który naprawdę się spina

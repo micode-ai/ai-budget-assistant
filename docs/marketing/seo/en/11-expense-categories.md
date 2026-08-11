@@ -5,6 +5,7 @@ target_keyword: "expense categories"
 slug: "expense-categories"
 pair: "categories"
 lang: "en"
+date: "2026-06-27"
 ---
 
 # Expense Categories That Actually Work (Not Too Many, Not Too Few)

@@ -5,6 +5,7 @@ target_keyword: "колькі коштуе сабраць дзіця ў школ
 slug: "kolki-koshtue-sabrats-dzicya-u-shkolu"
 pair: "school"
 lang: "be"
+date: "2026-08-11"
 ---
 
 # Колькі коштуе сабраць дзіця ў школу

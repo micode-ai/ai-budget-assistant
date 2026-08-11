@@ -5,6 +5,7 @@ target_keyword: "kategorie wydatków"
 slug: "kategorie-wydatkow"
 pair: "categories"
 lang: "pl"
+date: "2026-06-27"
 ---
 
 # Kategorie wydatków, które utrzymają twój budżet przy życiu

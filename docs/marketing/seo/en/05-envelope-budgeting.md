@@ -5,6 +5,7 @@ target_keyword: "envelope budgeting"
 slug: "envelope-budgeting"
 pair: "envelope"
 lang: "en"
+date: "2026-06-20"
 ---
 
 # Envelope Budgeting: How to Spend Only What You've Got

@@ -5,6 +5,7 @@ target_keyword: "як заощаджувати на продуктах"
 slug: "ekonomiya-na-produktah"
 pair: "groceries"
 lang: "ua"
+date: "2026-06-27"
 ---
 
 # Як заощаджувати на продуктах і не жити на гречці

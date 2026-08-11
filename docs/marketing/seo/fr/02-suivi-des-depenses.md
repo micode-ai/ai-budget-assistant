@@ -5,6 +5,7 @@ target_keyword: "suivi des dépenses"
 slug: "suivi-des-depenses"
 pair: "expenses"
 lang: "fr"
+date: "2026-06-19"
 ---
 
 # Suivi des dépenses : reprendre le contrôle de son argent

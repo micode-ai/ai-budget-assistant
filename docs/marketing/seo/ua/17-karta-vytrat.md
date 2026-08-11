@@ -5,6 +5,7 @@ target_keyword: "карта витрат"
 slug: "karta-vytrat"
 pair: "expense-map"
 lang: "ua"
+date: "2026-07-05"
 ---
 
 # Карта витрат: побачте, куди насправді йдуть ваші гроші

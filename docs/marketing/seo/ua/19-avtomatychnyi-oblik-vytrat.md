@@ -5,6 +5,7 @@ target_keyword: "автоматичний облік витрат"
 slug: "avtomatychnyi-oblik-vytrat"
 pair: "auto-capture"
 lang: "ua"
+date: "2026-08-11"
 ---
 
 # Автоматичний облік витрат без ручного введення

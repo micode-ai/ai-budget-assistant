@@ -5,6 +5,7 @@ target_keyword: "carte des dépenses"
 slug: "carte-des-depenses"
 pair: "expense-map"
 lang: "fr"
+date: "2026-07-05"
 ---
 
 # Cartographiez vos dépenses : voir où va vraiment votre argent

@@ -5,6 +5,7 @@ target_keyword: "schoolspullen kosten"
 slug: "schoolspullen-kosten"
 pair: "school"
 lang: "nl"
+date: "2026-08-11"
 ---
 
 # Nieuw schooljaar: wat kosten schoolspullen echt

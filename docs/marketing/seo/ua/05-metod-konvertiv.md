@@ -5,6 +5,7 @@ target_keyword: "метод конвертів"
 slug: "metod-konvertiv"
 pair: "envelope"
 lang: "ua"
+date: "2026-06-20"
 ---
 
 # Метод конвертів: як витрачати лише те, що маєш

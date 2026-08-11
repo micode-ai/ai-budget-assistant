@@ -5,6 +5,7 @@ target_keyword: "облік витрат"
 slug: "oblik-vytrat"
 pair: "expenses"
 lang: "ua"
+date: "2026-06-19"
 ---
 
 # Облік витрат: зупини витоки, які ти не помічаєш

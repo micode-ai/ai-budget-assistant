@@ -5,6 +5,7 @@ target_keyword: "jak oszczędzać pieniądze"
 slug: "jak-oszczedzac-pieniadze"
 pair: "saving"
 lang: "pl"
+date: "2026-06-19"
 ---
 
 # Jak oszczędzać pieniądze, nawet gdy "nie ma z czego"

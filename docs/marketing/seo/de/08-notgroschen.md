@@ -5,6 +5,7 @@ target_keyword: "Notgroschen"
 slug: "notgroschen"
 pair: "emergency-fund"
 lang: "de"
+date: "2026-06-20"
 ---
 
 # Notgroschen: Wie viel du sparen solltest und wie du ihn aufbaust

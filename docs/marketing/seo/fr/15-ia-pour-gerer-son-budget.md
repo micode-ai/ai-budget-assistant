@@ -5,6 +5,7 @@ target_keyword: "IA pour gérer son budget"
 slug: "ia-pour-gerer-son-budget"
 pair: "ai-budget"
 lang: "fr"
+date: "2026-06-27"
 ---
 
 # L'IA pour gérer son budget : moins de friction, plus de clarté

@@ -5,6 +5,7 @@ target_keyword: "gemeinsames Haushaltsbuch"
 slug: "gemeinsames-haushaltsbuch"
 pair: "shared-budget"
 lang: "de"
+date: "2026-06-20"
 ---
 
 # Ein gemeinsames Haushaltsbuch, das keine Streitgespräche auslöst

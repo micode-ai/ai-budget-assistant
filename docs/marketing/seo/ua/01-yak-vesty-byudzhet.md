@@ -5,6 +5,7 @@ target_keyword: "як вести бюджет"
 slug: "yak-vesty-byudzhet"
 pair: "budget"
 lang: "ua"
+date: "2026-06-19"
 ---
 
 # Як вести бюджет і не кинути це через два тижні

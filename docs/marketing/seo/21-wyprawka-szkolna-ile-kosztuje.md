@@ -5,6 +5,7 @@ target_keyword: "wyprawka szkolna ile kosztuje"
 slug: "wyprawka-szkolna-ile-kosztuje"
 pair: "school"
 lang: "pl"
+date: "2026-08-11"
 ---
 
 # Wyprawka szkolna: ile kosztuje i jak ją rozplanować

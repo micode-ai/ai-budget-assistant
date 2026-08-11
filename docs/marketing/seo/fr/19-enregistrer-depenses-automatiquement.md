@@ -5,6 +5,7 @@ target_keyword: "enregistrer ses dépenses automatiquement"
 slug: "enregistrer-depenses-automatiquement"
 pair: "auto-capture"
 lang: "fr"
+date: "2026-08-11"
 ---
 
 # Enregistrer ses dépenses automatiquement, sans tout saisir

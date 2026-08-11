@@ -5,6 +5,7 @@ target_keyword: "Haushaltsbuch führen"
 slug: "haushaltsbuch-fuehren"
 pair: "budget"
 lang: "de"
+date: "2026-06-19"
 ---
 
 # Haushaltsbuch führen ohne nach zwei Wochen aufzugeben

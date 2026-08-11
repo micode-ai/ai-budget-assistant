@@ -5,6 +5,7 @@ target_keyword: "cómo hacer un presupuesto"
 slug: "como-hacer-un-presupuesto"
 pair: "budget"
 lang: "es"
+date: "2026-06-19"
 ---
 
 # Cómo hacer un presupuesto personal que funcione de verdad

@@ -5,6 +5,7 @@ target_keyword: "jak zarządzać subskrypcjami"
 slug: "jak-zarzadzac-subskrypcjami"
 pair: "subscriptions"
 lang: "pl"
+date: "2026-06-20"
 ---
 
 # Jak zarządzać subskrypcjami, żeby przestały cię po cichu drenować

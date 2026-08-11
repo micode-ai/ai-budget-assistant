@@ -5,6 +5,7 @@ target_keyword: "аўтаматычны ўлік выдаткаў"
 slug: "autamatychny-ulik-vydatkau"
 pair: "auto-capture"
 lang: "be"
+date: "2026-08-11"
 ---
 
 # Аўтаматычны ўлік выдаткаў без ручнога ўводу

@@ -5,6 +5,7 @@ target_keyword: "совместный бюджет"
 slug: "sovmestnyj-byudzhet"
 pair: "shared-budget"
 lang: "ru"
+date: "2026-06-20"
 ---
 
 # Совместный бюджет для пары, который не превращается в ссоры

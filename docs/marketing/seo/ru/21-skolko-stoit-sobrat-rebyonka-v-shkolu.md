@@ -5,6 +5,7 @@ target_keyword: "сколько стоит собрать ребенка в шк
 slug: "skolko-stoit-sobrat-rebyonka-v-shkolu"
 pair: "school"
 lang: "ru"
+date: "2026-08-11"
 ---
 
 # Сколько стоит собрать ребёнка в школу

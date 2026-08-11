@@ -5,6 +5,7 @@ target_keyword: "najlepsze aplikacje do budżetu"
 slug: "najlepsze-aplikacje-do-budzetu"
 pair: "best-apps"
 lang: "pl"
+date: "2026-06-20"
 ---
 
 # Najlepsze aplikacje do budżetu w 2026: jak wybrać taką, której naprawdę będziesz używać

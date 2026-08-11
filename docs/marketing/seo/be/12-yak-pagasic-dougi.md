@@ -5,6 +5,7 @@ target_keyword: "як пагасіць даўгі"
 slug: "yak-pagasic-dougi"
 pair: "debt"
 lang: "be"
+date: "2026-06-27"
 ---
 
 # Як пагасіць даўгі і не здацца на паўдарозе

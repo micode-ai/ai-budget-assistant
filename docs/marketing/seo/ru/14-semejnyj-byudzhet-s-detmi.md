@@ -5,6 +5,7 @@ target_keyword: "семейный бюджет с детьми"
 slug: "semejnyj-byudzhet-s-detmi"
 pair: "family"
 lang: "ru"
+date: "2026-06-27"
 ---
 
 # Семейный бюджет с детьми: общая картина и спокойствие

@@ -5,6 +5,7 @@ target_keyword: "skanowanie paragonów"
 slug: "skanowanie-paragonow"
 pair: "receipts"
 lang: "pl"
+date: "2026-08-11"
 ---
 
 # Skanowanie paragonów: liczą się pozycje, nie suma

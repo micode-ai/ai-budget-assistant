@@ -5,6 +5,7 @@ target_keyword: "abonnementen beheren"
 slug: "abonnementen-beheren"
 pair: "subscriptions"
 lang: "nl"
+date: "2026-06-20"
 ---
 
 # Abonnementen beheren zodat ze je niet stilletjes leegtrekken

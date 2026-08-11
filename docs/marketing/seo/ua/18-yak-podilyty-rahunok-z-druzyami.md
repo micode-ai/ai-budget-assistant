@@ -5,6 +5,7 @@ target_keyword: "як поділити рахунок з друзями"
 slug: "yak-podilyty-rahunok-z-druzyami"
 pair: "split-bill"
 lang: "ua"
+date: "2026-08-11"
 ---
 
 # Як поділити рахунок з друзями і реально отримати свої гроші

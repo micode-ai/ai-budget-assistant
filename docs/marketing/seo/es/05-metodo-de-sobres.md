@@ -5,6 +5,7 @@ target_keyword: "método de sobres"
 slug: "metodo-de-sobres"
 pair: "envelope"
 lang: "es"
+date: "2026-06-20"
 ---
 
 # Método de sobres: cómo gastar solo lo que tienes

@@ -5,6 +5,7 @@ target_keyword: "сканаванне чэкаў"
 slug: "skanavanne-chekau"
 pair: "receipts"
 lang: "be"
+date: "2026-08-11"
 ---
 
 # Сканаванне чэкаў: важныя пазіцыі, а не сума

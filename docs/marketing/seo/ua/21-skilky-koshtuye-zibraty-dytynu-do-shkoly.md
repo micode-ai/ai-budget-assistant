@@ -5,6 +5,7 @@ target_keyword: "скільки коштує зібрати дитину до ш
 slug: "skilky-koshtuye-zibraty-dytynu-do-shkoly"
 pair: "school"
 lang: "ua"
+date: "2026-08-11"
 ---
 
 # Скільки коштує зібрати дитину до школи

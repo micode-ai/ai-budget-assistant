@@ -5,6 +5,7 @@ target_keyword: "how to track subscriptions"
 slug: "track-subscriptions"
 pair: "subscriptions"
 lang: "en"
+date: "2026-06-20"
 ---
 
 # How to Track Subscriptions So They Stop Quietly Draining You

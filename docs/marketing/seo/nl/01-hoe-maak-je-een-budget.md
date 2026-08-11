@@ -5,6 +5,7 @@ target_keyword: "hoe maak je een budget"
 slug: "hoe-maak-je-een-budget"
 pair: "budget"
 lang: "nl"
+date: "2026-06-19"
 ---
 
 # Hoe maak je een budget dat werkt (en dat je niet na twee weken opgeeft)

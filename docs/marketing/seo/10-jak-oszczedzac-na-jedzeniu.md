@@ -5,6 +5,7 @@ target_keyword: "jak oszczędzać na jedzeniu"
 slug: "jak-oszczedzac-na-jedzeniu"
 pair: "groceries"
 lang: "pl"
+date: "2026-06-27"
 ---
 
 # Jak oszczędzać na jedzeniu, nie rezygnując z dobrego życia

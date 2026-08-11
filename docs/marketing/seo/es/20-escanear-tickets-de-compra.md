@@ -5,6 +5,7 @@ target_keyword: "escanear tickets de compra"
 slug: "escanear-tickets-de-compra"
 pair: "receipts"
 lang: "es"
+date: "2026-08-11"
 ---
 
 # Escanear tickets de compra: importan las líneas, no el total

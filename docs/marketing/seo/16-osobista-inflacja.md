@@ -5,6 +5,7 @@ target_keyword: "osobista inflacja"
 slug: "osobista-inflacja"
 pair: "inflation"
 lang: "pl"
+date: "2026-07-05"
 ---
 
 # Twoja osobista inflacja nie jest tą z wiadomości

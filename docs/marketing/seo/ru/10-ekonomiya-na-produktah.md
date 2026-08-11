@@ -5,6 +5,7 @@ target_keyword: "как экономить на продуктах"
 slug: "ekonomiya-na-produktah"
 pair: "groceries"
 lang: "ru"
+date: "2026-06-27"
 ---
 
 # Как экономить на продуктах: самый быстрый способ снизить расходы

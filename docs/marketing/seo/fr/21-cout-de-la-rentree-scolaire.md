@@ -5,6 +5,7 @@ target_keyword: "coût de la rentrée scolaire"
 slug: "cout-de-la-rentree-scolaire"
 pair: "school"
 lang: "fr"
+date: "2026-08-11"
 ---
 
 # Rentrée scolaire : combien elle coûte vraiment

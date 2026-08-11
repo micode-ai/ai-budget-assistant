@@ -5,6 +5,7 @@ target_keyword: "meilleures applications de budget"
 slug: "meilleures-applications-budget"
 pair: "best-apps"
 lang: "fr"
+date: "2026-06-20"
 ---
 
 # Meilleures applications de budget en 2026 : comment en choisir une que vous utiliserez vraiment

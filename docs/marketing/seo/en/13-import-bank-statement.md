@@ -5,6 +5,7 @@ target_keyword: "import bank statement to a budget app"
 slug: "import-bank-statement"
 pair: "bank-import"
 lang: "en"
+date: "2026-06-27"
 ---
 
 # How to Import a Bank Statement and Backfill Months in Minutes

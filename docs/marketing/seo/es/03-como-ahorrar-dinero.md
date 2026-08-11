@@ -5,6 +5,7 @@ target_keyword: "cómo ahorrar dinero"
 slug: "como-ahorrar-dinero"
 pair: "saving"
 lang: "es"
+date: "2026-06-19"
 ---
 
 # Cómo ahorrar dinero cuando parece que no queda nada

@@ -5,6 +5,7 @@ target_keyword: "автоматический учёт расходов"
 slug: "avtomaticheskiy-uchet-raskhodov"
 pair: "auto-capture"
 lang: "ru"
+date: "2026-08-11"
 ---
 
 # Автоматический учёт расходов без ручного ввода

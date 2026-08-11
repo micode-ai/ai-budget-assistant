@@ -5,6 +5,7 @@ target_keyword: "budget commun couple"
 slug: "budget-commun-couple"
 pair: "shared-budget"
 lang: "fr"
+date: "2026-06-20"
 ---
 
 # Un budget commun en couple qui ne déclenche pas de disputes

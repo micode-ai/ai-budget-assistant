@@ -5,6 +5,7 @@ target_keyword: "імпорт банківської виписки"
 slug: "import-bankivskoyi-vypysky"
 pair: "bank-import"
 lang: "ua"
+date: "2026-06-27"
 ---
 
 # Імпорт банківської виписки замість ручного вбивання витрат

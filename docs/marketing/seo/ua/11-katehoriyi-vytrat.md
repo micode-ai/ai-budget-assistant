@@ -5,6 +5,7 @@ target_keyword: "категорії витрат"
 slug: "katehoriyi-vytrat"
 pair: "categories"
 lang: "ua"
+date: "2026-06-27"
 ---
 
 # Категорії витрат, на яких тримається весь бюджет

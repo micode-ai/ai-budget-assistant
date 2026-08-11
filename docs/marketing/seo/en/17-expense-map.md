@@ -5,6 +5,7 @@ target_keyword: "expense map"
 slug: "expense-map"
 pair: "expense-map"
 lang: "en"
+date: "2026-07-05"
 ---
 
 # Map Your Spending: See Where Your Money Actually Goes

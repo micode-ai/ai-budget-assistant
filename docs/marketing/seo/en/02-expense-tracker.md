@@ -5,6 +5,7 @@ target_keyword: "expense tracker"
 slug: "expense-tracker"
 pair: "expenses"
 lang: "en"
+date: "2026-06-19"
 ---
 
 # Expense Tracker: Stop Losing Money You Don't Notice Leaving

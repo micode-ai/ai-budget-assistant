@@ -5,6 +5,7 @@ target_keyword: "comment économiser de l'argent"
 slug: "comment-economiser"
 pair: "saving"
 lang: "fr"
+date: "2026-06-19"
 ---
 
 # Comment économiser de l'argent quand les fins de mois sont serrées

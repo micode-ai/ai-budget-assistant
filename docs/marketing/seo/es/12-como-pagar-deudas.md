@@ -5,6 +5,7 @@ target_keyword: "cómo pagar deudas"
 slug: "como-pagar-deudas"
 pair: "debt"
 lang: "es"
+date: "2026-06-27"
 ---
 
 # Cómo pagar deudas con un plan que de verdad acabas

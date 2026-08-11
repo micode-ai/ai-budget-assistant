@@ -5,6 +5,7 @@ target_keyword: "cómo gestionar suscripciones"
 slug: "como-gestionar-suscripciones"
 pair: "subscriptions"
 lang: "es"
+date: "2026-06-20"
 ---
 
 # Cómo gestionar suscripciones para que dejen de vaciarte en silencio

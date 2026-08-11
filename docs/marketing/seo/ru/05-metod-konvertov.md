@@ -5,6 +5,7 @@ target_keyword: "метод конвертов"
 slug: "metod-konvertov"
 pair: "envelope"
 lang: "ru"
+date: "2026-06-20"
 ---
 
 # Метод конвертов: как тратить только то, что есть

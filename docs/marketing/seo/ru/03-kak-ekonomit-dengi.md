@@ -5,6 +5,7 @@ target_keyword: "как экономить деньги"
 slug: "kak-ekonomit-dengi"
 pair: "saving"
 lang: "ru"
+date: "2026-06-19"
 ---
 
 # Как экономить деньги, когда кажется, что нечего откладывать

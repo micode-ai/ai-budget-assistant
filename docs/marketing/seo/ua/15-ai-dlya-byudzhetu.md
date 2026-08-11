@@ -5,6 +5,7 @@ target_keyword: "ШІ для управління фінансами"
 slug: "ai-dlya-byudzhetu"
 pair: "ai-budget"
 lang: "ua"
+date: "2026-06-27"
 ---
 
 # ШІ для управління фінансами без зайвого галасу

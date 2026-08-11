@@ -5,6 +5,7 @@ target_keyword: "mapa wydatków"
 slug: "mapa-wydatkow"
 pair: "expense-map"
 lang: "pl"
+date: "2026-07-05"
 ---
 
 # Mapa wydatków: zobacz, gdzie naprawdę znikają twoje pieniądze

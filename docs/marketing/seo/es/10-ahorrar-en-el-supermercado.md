@@ -5,6 +5,7 @@ target_keyword: "cómo ahorrar en el supermercado"
 slug: "ahorrar-en-el-supermercado"
 pair: "groceries"
 lang: "es"
+date: "2026-06-27"
 ---
 
 # Cómo ahorrar en el supermercado mes a mes

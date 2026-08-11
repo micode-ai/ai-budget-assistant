@@ -5,6 +5,7 @@ target_keyword: "presupuesto familiar con hijos"
 slug: "presupuesto-familiar-con-hijos"
 pair: "family"
 lang: "es"
+date: "2026-06-27"
 ---
 
 # Un presupuesto familiar con hijos que aguanta la vida real
