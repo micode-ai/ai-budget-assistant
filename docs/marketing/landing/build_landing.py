@@ -484,6 +484,35 @@ _b = os.environ.get("LANDING_BASE", "preview").strip("/")
 BASE = ("/" + _b) if _b else ""
 ROBOTS = os.environ.get("ROBOTS", "noindex,follow")
 PUBLISH_DATE = "2026-06-19"
+
+def org_node():
+    """Shared Organization entity with a stable @id so every page references one node
+    instead of inlining a duplicate (mirrors build_blog.org_node, but keeps BASE so the
+    /preview build points at its own copy of the logo)."""
+    return {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY, "url": COMPANY_URL,
+            "logo": {"@type": "ImageObject", "url": f"{SITE}{BASE}/assets/mi_code_logo.svg",
+                     "width": 512, "height": 512},
+            "sameAs": SAMEAS}
+
+# UN/CEFACT codes for the billing period of a recurring plan.
+BILLING_UNIT = {"MON": "monthly", "ANN": "yearly"}
+
+def offer_node(lang, tier, amount, url, unit=None):
+    """One purchasable plan as a schema.org Offer. `unit` is the billing period
+    ("MON"/"ANN"); the free tier passes None because it never renews."""
+    cur = LANG_CURRENCY[lang]
+    price = f"{amount:.2f}"
+    label = TIER_NAMES[tier] + (f" ({BILLING_UNIT[unit]})" if unit else "")
+    offer = {"@type": "Offer", "name": f"AI Budget Assistant {label}",
+             "price": price, "priceCurrency": cur, "url": url,
+             "availability": "https://schema.org/InStock",
+             "seller": {"@id": f"{SITE}/#organization"}}
+    if unit:
+        offer["priceSpecification"] = {
+            "@type": "UnitPriceSpecification", "price": price, "priceCurrency": cur,
+            "referenceQuantity": {"@type": "QuantitativeValue", "value": 1, "unitCode": unit}}
+    return offer
+
 DEFAULT_LANG = "pl"
 LOCALE = {"pl": "pl_PL", "en": "en_US", "de": "de_DE", "es": "es_ES", "fr": "fr_FR",
           "ru": "ru_RU", "ua": "uk_UA", "be": "be_BY", "nl": "nl_NL"}
@@ -983,11 +1012,30 @@ def pricing_page(lang):
     alts = [(l, SITE + pricing_url(l)) for l in LANG_NAMES if l in PRICING] + [("x-default", SITE + pricing_url("en"))]
     alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
     og = f"{SITE}/blog/{lang}/assets/og-default.png"
+    # A subscription to a SaaS app is NOT a shippable Product: marking the three tiers up as
+    # `Product` pulled this page into Search Console's merchant-listings validation, which then
+    # demanded image/description/brand/gtin + offers.availability/shippingDetails/
+    # hasMerchantReturnPolicy — fields a downloadable app can never truthfully supply (there is
+    # nothing to ship and no consignment to return). One `SoftwareApplication` carrying the plans
+    # as `offers` is the type Google documents for software, keeps every price machine-readable
+    # for AI answer engines, and states only what the page actually shows. Do NOT reintroduce
+    # `Product` here. The offers mirror the visible monthly/yearly toggle: one offer per tier per
+    # billing period, so the markup never claims a price the page doesn't display.
+    tier_offers = []
+    for k in TIER_KEYS:
+        monthly, yearly = tier_amounts(lang, k)
+        if k == "free":
+            tier_offers.append(offer_node(lang, k, monthly, url))
+        else:
+            tier_offers.append(offer_node(lang, k, monthly, url, "MON"))
+            tier_offers.append(offer_node(lang, k, yearly, url, "ANN"))
     offers_jsonld = {"@context": "https://schema.org", "@graph": [
-        {"@type": "Product", "name": f"AI Budget Assistant {TIER_NAMES[k]}",
-         "offers": {"@type": "Offer", "price": f"{tier_amounts(lang, k)[0]:.2f}",
-                    "priceCurrency": LANG_CURRENCY[lang], "url": url}}
-        for k in TIER_KEYS
+        org_node(),
+        {"@type": "SoftwareApplication", "@id": f"{SITE}/#app", "name": "AI Budget Assistant",
+         "description": t["meta"], "image": og, "applicationCategory": "FinanceApplication",
+         "operatingSystem": "Android, Web", "inLanguage": bcp47(lang), "url": url,
+         "brand": {"@id": f"{SITE}/#organization"}, "publisher": {"@id": f"{SITE}/#organization"},
+         "downloadUrl": PLAY, "sameAs": [PLAY], "offers": tier_offers},
     ] + [
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in t["faq"]]},
@@ -1022,10 +1070,9 @@ def jsonld(lang, langs):
     return {"@context": "https://schema.org", "@graph": [
         {"@type": "WebSite", "@id": f"{SITE}/#website", "name": "AI Budget Assistant", "url": url,
          "inLanguage": bcp47(lang), "publisher": {"@id": f"{SITE}/#organization"}},
-        {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY, "url": COMPANY_URL,
-         "logo": {"@type": "ImageObject", "url": f"{SITE}{BASE}/assets/mi_code_logo.svg", "width": 512, "height": 512},
-         "sameAs": SAMEAS},
-        {"@type": "SoftwareApplication", "name": "AI Budget Assistant", "applicationCategory": "FinanceApplication",
+        org_node(),
+        {"@type": "SoftwareApplication", "@id": f"{SITE}/#app",
+         "name": "AI Budget Assistant", "applicationCategory": "FinanceApplication",
          "operatingSystem": "Android, Web", "inLanguage": bcp47(lang), "url": url, "image": og,
          "publisher": {"@id": f"{SITE}/#organization"},
          "downloadUrl": PLAY, "sameAs": [PLAY],
