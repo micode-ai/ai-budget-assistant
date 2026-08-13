@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { ExpensesService } from '../expenses/expenses.service';
 import { IncomesService } from '../incomes/incomes.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
+import { resolveExpenseCategoryId } from '../expenses/expense-category-resolver.util';
 import type { SyncChange } from '@budget/shared-types';
 
 export interface SyncResult {
@@ -234,6 +235,16 @@ export class SyncService {
       }
     }
 
+    // The client addresses a category by its own local id — resolve it the
+    // same way ExpensesService.create/update do (resolveExpenseCategoryId),
+    // so an item created or edited offline doesn't lose its category on sync.
+    // `undefined` when the payload omits categoryId at all (leave the column
+    // untouched on update); mirrors ExpensesService.update's own
+    // `dto.categoryId !== undefined ? ... : undefined` pattern.
+    const resolvedCategoryId = payload.categoryId !== undefined
+      ? await resolveExpenseCategoryId(this.prisma, payload.categoryId, accountId)
+      : undefined;
+
     const existing = await this.prisma.expenseItem.findUnique({
       where: { id: entityId },
     });
@@ -252,6 +263,7 @@ export class SyncService {
           expenseId: payload.expenseId,
           description: payload.description,
           canonicalName: payload.canonicalName ?? null,
+          categoryId: resolvedCategoryId ?? null,
           quantity: payload.quantity ?? 1,
           unitPrice: payload.unitPrice ?? 0,
           totalPrice: payload.totalPrice,
@@ -288,6 +300,7 @@ export class SyncService {
         data: {
           description: payload.description,
           canonicalName: payload.canonicalName ?? null,
+          categoryId: resolvedCategoryId,
           quantity: payload.quantity,
           unitPrice: payload.unitPrice,
           totalPrice: payload.totalPrice,

@@ -82,6 +82,16 @@ export interface Expense {
   expenseTags?: ExpenseTag[];
   tagIds?: string[];
   categorySplits?: ExpenseCategorySplit[];
+  /**
+   * Mobile-only in-memory hydration: this expense's category splits, bulk-loaded
+   * from the local SQLite `expense_category_splits` table and attached during the
+   * pull-and-merge cycle (`expenseSync.ts`'s `attachSplits`, via
+   * `splitRepository.ts`'s `getSplitsForExpenses`). `useCategoryAnalytics` groups
+   * by these when present instead of by `categoryId` (receipt-category-autosplit).
+   * Distinct from `categorySplits` above (the raw API relation shape) so the
+   * mobile hydration step never has to reconcile the two shapes.
+   */
+  splits?: ExpenseCategorySplit[];
   projectId?: string;
   /** Project join-table entries as returned by the API. */
   projectExpenses?: Array<{

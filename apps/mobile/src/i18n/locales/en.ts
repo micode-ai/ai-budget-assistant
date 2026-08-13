@@ -2449,4 +2449,11 @@ export default {
     encrypted: 'Splitting is not available for end-to-end encrypted accounts, because the server cannot read the receipt.',
     offline: 'You need a connection to create the links.',
   },
+  receiptCategorySplit: {
+    title: 'Split by category',
+    edit: 'Change categories',
+    itemCategory: 'Category for this item',
+    unassigned: 'Not assigned',
+    dropped: 'Categories could not be matched — saved without a split',
+  },
 } as const;

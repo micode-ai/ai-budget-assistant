@@ -2445,4 +2445,11 @@ export default {
     encrypted: 'La división no está disponible para cuentas con cifrado de extremo a extremo, porque el servidor no puede leer el recibo.',
     offline: 'Necesitas conexión para crear los enlaces.',
   },
+  receiptCategorySplit: {
+    title: 'Dividir por categoría',
+    edit: 'Cambiar categorías',
+    itemCategory: 'Categoría de este artículo',
+    unassigned: 'Sin asignar',
+    dropped: 'No se pudieron emparejar las categorías — guardado sin división',
+  },
 } as const;

@@ -2445,4 +2445,11 @@ export default {
     encrypted: "Le partage n'est pas disponible pour les comptes chiffrés de bout en bout, car le serveur ne peut pas lire le ticket.",
     offline: "Vous avez besoin d'une connexion pour créer les liens.",
   },
+  receiptCategorySplit: {
+    title: 'Répartir par catégorie',
+    edit: 'Modifier les catégories',
+    itemCategory: 'Catégorie de cet article',
+    unassigned: 'Non attribuée',
+    dropped: "Impossible d'associer les catégories — enregistré sans répartition",
+  },
 } as const;

@@ -59,6 +59,10 @@ export class CreateExpenseItemDto {
   @IsOptional()
   @IsNumber()
   sortOrder?: number;
+
+  @IsOptional()
+  @IsString()
+  categoryId?: string;
 }
 
 export class UpdateExpenseItemDto {

@@ -7,7 +7,7 @@ import { ExpensesService } from '../../expenses/expenses.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { SlackClientService } from '../slack-client.service';
 import { SLACK_REDIS, SlackFile, SlackUserState } from '../types';
-import { t } from '../helpers/i18n';
+import { t, buildCategorySplitLine } from '../helpers/i18n';
 
 interface PendingReceiptData {
   userId: string;
@@ -20,6 +20,7 @@ interface PendingReceiptData {
   discountAmount: number | null;
   merchant: string | null;
   location?: { lat: number; lng: number; name?: string } | null;
+  categorySplits?: ReceiptExpense['categorySplits'];
   items: Array<{
     description: string;
     quantity?: number;
@@ -100,6 +101,7 @@ export class PhotoHandler {
         discountAmount: receipt.discountAmount,
         merchant: receipt.merchant,
         location: receipt.location,
+        categorySplits: receipt.categorySplits ?? [],
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
         receiptMimeType: mimeType || 'image/jpeg',
@@ -111,6 +113,10 @@ export class PhotoHandler {
       const priceCheckLine = this.buildPriceCheckLine(receipt, language);
       if (priceCheckLine) {
         summary += `\n${priceCheckLine}`;
+      }
+      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, language);
+      if (categorySplitLine) {
+        summary += `\n${categorySplitLine}`;
       }
       await this.client.replyButtons(teamId, channel, ts, summary, [
         { id: `receipt_add:${shortId}`, title: t('addExpense', language) },
@@ -192,6 +198,7 @@ export class PhotoHandler {
         discountAmount: receipt.discountAmount,
         merchant: receipt.merchant,
         location: receipt.location,
+        categorySplits: receipt.categorySplits ?? [],
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
         receiptMimeType: mimeType,
@@ -203,6 +210,10 @@ export class PhotoHandler {
       const priceCheckLine = this.buildPriceCheckLine(receipt, language);
       if (priceCheckLine) {
         summary += `\n${priceCheckLine}`;
+      }
+      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, language);
+      if (categorySplitLine) {
+        summary += `\n${categorySplitLine}`;
       }
       await this.client.replyButtons(teamId, channel, ts, summary, [
         { id: `receipt_add:${shortId}`, title: t('addExpense', language) },
@@ -295,6 +306,7 @@ export class PhotoHandler {
         date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
         source: 'ocr',
         location: data.location ?? undefined,
+        splits: data.categorySplits?.length ? data.categorySplits : undefined,
         receiptImageBase64: data.receiptImageBase64,
         receiptMimeType: data.receiptMimeType,
         items: data.items.map((item, index) => ({

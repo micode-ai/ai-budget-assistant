@@ -633,6 +633,9 @@ export async function initializeDatabase(): Promise<void> {
     // Personal inflation index: canonical product name resolved from alias table
     try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN canonical_name TEXT`); } catch {}
 
+    // Receipt category auto-split: per-line-item category override
+    try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN category_id TEXT`); } catch {}
+
     // Group trip wallet: per-member expense shares
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS trip_expense_shares (

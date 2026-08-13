@@ -2453,4 +2453,11 @@ export default {
     encrypted: 'Podział nie jest dostępny dla kont z szyfrowaniem end-to-end, ponieważ serwer nie może odczytać paragonu.',
     offline: 'Potrzebujesz połączenia, aby utworzyć linki.',
   },
+  receiptCategorySplit: {
+    title: 'Podział na kategorie',
+    edit: 'Zmień kategorie',
+    itemCategory: 'Kategoria tej pozycji',
+    unassigned: 'Nieprzypisana',
+    dropped: 'Nie udało się dopasować kategorii — zapisano bez podziału',
+  },
 } as const;

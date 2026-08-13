@@ -7,10 +7,12 @@ import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
 import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
+import { ProductRulesService } from '../merchant-rules/product-rules.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
 import { InflationShieldTrackingService } from '../insights/inflation-shield-tracking.service';
 import { resolveShares } from './trip-share-calculator';
+import { buildCategorySplits } from '../../common/utils/receipt-category-split';
 import { buildLocationColumns } from './expense-location.util';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 import { resolveExpenseCategoryId } from './expense-category-resolver.util';
@@ -36,6 +38,7 @@ export class ExpensesService {
     @Optional() private readonly familyFeed?: FamilyFeedService,
     @Optional() private readonly communityPrices?: CommunityPriceService,
     @Optional() private readonly shieldTracking?: InflationShieldTrackingService,
+    @Optional() private readonly productRules?: ProductRulesService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -121,7 +124,94 @@ export class ExpensesService {
     return resolveExpenseCategoryId(this.prisma, categoryId, accountId);
   }
 
+  /**
+   * Re-derives an expense's category splits from its persisted line-item
+   * categories, and removes them when they can no longer be derived.
+   *
+   * The auto-split rests on one invariant: Σ split amounts === expense amount,
+   * exactly, to the cent. `analytics.service.ts` computes the period total from
+   * `expense.amount` (line 194) but groups by splits (line 218), so a set that
+   * does not add up makes the breakdown disagree with the total and corrupts
+   * every percentage the user sees. Creation enforces the invariant; this is
+   * what defends it afterwards, on the two paths that can break it — an amount
+   * edit and an item edit.
+   *
+   * Re-derivation is exactly why `expense_items.category_id` is persisted (see
+   * the design spec's Storage section) — no LLM call is involved. It degrades to
+   * removal on its own: when the items no longer reconcile with the amount,
+   * `buildCategorySplits`'s tolerance gate returns `[]` and the split disappears.
+   * Refusing to show a split beats showing a wrong one — the same philosophy as
+   * the tolerance gate itself.
+   *
+   * All arithmetic comes from `buildCategorySplits`; nothing here computes,
+   * rounds or redistributes an amount.
+   *
+   * Account scoping lives in the caller: `expensePk` is always the output of
+   * `findOne`/`resolveExpenseRow`, both of which filter on `accountId`.
+   * `expense_items` and `expense_category_splits` carry no accountId of their
+   * own and are scoped through that resolved expense PK, exactly like every
+   * other item query in this class.
+   *
+   * @param client the Prisma client, or an open transaction client when the
+   *   caller already has one (`update()` re-derives inside its transaction so a
+   *   failure rolls the amount edit back with it).
+   */
+  private async rebuildCategorySplits(
+    client: Pick<PrismaClient, 'expenseCategorySplit' | 'expenseItem'>,
+    expensePk: string,
+    total: number,
+  ): Promise<void> {
+    const existing = await client.expenseCategorySplit.findMany({
+      where: { expenseId: expensePk, isDeleted: false },
+      select: { id: true },
+    });
+    // An expense that was never split has no invariant to defend — and must not
+    // acquire one as a side effect of an unrelated edit.
+    if (existing.length === 0) return;
+
+    const items = await client.expenseItem.findMany({
+      where: { expenseId: expensePk, isDeleted: false },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        totalPrice: true,
+        categoryId: true,
+        category: { select: { name: true } },
+      },
+    });
+
+    const splits = buildCategorySplits({
+      items: items.map((item, index) => ({
+        index,
+        amount: Number(item.totalPrice),
+        categoryId: item.categoryId,
+        categoryName: item.category?.name ?? null,
+      })),
+      total,
+    });
+
+    await client.expenseCategorySplit.updateMany({
+      where: { expenseId: expensePk, isDeleted: false },
+      data: { isDeleted: true },
+    });
+
+    if (splits.length > 0) {
+      await client.expenseCategorySplit.createMany({
+        data: splits.map((split) => ({
+          expenseId: expensePk,
+          categoryId: split.categoryId,
+          amount: split.amount,
+          percentage: split.percentage,
+        })),
+      });
+    }
+  }
+
   async create(accountId: string, userId: string, dto: CreateExpenseDto): Promise<{ expense: any; isNew: boolean }> {
+    // Populated inside the transaction below (one resolved id per dto.items
+    // entry, same index) and read again afterwards by the post-create
+    // fire-and-forget rule-learning block — see the comment there.
+    let resolvedItemCategoryIds: Array<string | null> = [];
+
     const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const receiptImage = dto.receiptImageBase64
         ? Buffer.from(dto.receiptImageBase64, 'base64')
@@ -204,11 +294,39 @@ export class ExpensesService {
       });
 
       if (dto.items && dto.items.length > 0) {
+        // Items address a category by the client's own local id — the same
+        // reason dto.categoryId (above) and dto.splits[].categoryId (below) are
+        // resolved before being written. resolveCategoryId always runs against
+        // `this.prisma` (the outer, non-transactional client), never `tx`, so
+        // this works the same whether or not the account has the category yet.
+        //
+        // Resolved once per DISTINCT value, sequentially — never a Promise.all
+        // over the raw list. Receipt lines routinely repeat a category (that is
+        // the whole point of grouping them), and resolveCategoryId AUTO-CREATES
+        // a category when a name-style id matches nothing. Two lines carrying
+        // the same not-yet-existing name would both miss the findFirst, both
+        // create, and one would throw P2002 against
+        // `@@unique([accountId, name, type])`. Inside this $transaction callback
+        // that rejection aborts the whole create, so the user's receipt save
+        // 500s — reachable whenever a local-only category is picked for two or
+        // more lines in ItemCategorySheet. Deduplicating also removes N-1
+        // redundant round-trips per receipt.
+        const distinctItemCategoryIds = Array.from(
+          new Set(dto.items.map((item) => item.categoryId).filter((c): c is string => !!c)),
+        );
+        const resolvedByRawId = new Map<string, string | null>();
+        for (const rawCategoryId of distinctItemCategoryIds) {
+          resolvedByRawId.set(rawCategoryId, await this.resolveCategoryId(rawCategoryId, accountId));
+        }
+        resolvedItemCategoryIds = dto.items.map((item) =>
+          item.categoryId ? resolvedByRawId.get(item.categoryId) ?? null : null,
+        );
         await tx.expenseItem.createMany({
           data: dto.items.map((item, index) => ({
             expenseId: expense.id,
             description: item.description,
             canonicalName: item.canonicalName ?? null,
+            categoryId: resolvedItemCategoryIds[index],
             quantity: item.quantity ?? 1,
             unitPrice: item.unitPrice ?? 0,
             totalPrice: item.totalPrice,
@@ -361,6 +479,25 @@ export class ExpensesService {
       // just reconciled a recommendation — bust the cached shield so the next read
       // recomputes. Fire-and-forget; never blocks create.
       void this.cacheService.delByPrefix(`shield:${accountId}:`).catch(() => {});
+
+      // fire-and-forget: teach a product rule from every categorized receipt
+      // line, so the next receipt containing that product classifies for free.
+      // Uses the RESOLVED category id (resolvedItemCategoryIds, computed above
+      // in the same order as dto.items), not the raw client-supplied one — the
+      // rule map is consumed elsewhere as a real server categoryId. Never
+      // throws into create: ProductRulesService.upsertRules already never
+      // throws on its own, and the .catch here is the belt-and-suspenders
+      // guarantee for this call site specifically.
+      const learnable = (dto.items ?? [])
+        .map((item, index) => ({ item, categoryId: resolvedItemCategoryIds[index] }))
+        .filter((entry) => entry.categoryId && (entry.item.canonicalName?.trim() || entry.item.description?.trim()))
+        .map((entry) => ({
+          canonicalName: (entry.item.canonicalName?.trim() || entry.item.description.trim()) as string,
+          categoryId: entry.categoryId as string,
+        }));
+      if (learnable.length > 0) {
+        void this.productRules?.upsertRules(accountId, learnable).catch(() => {});
+      }
     }
 
     return result;
@@ -537,6 +674,16 @@ export class ExpensesService {
         data: expenseUpdateData,
       });
 
+      // A corrected amount (OCR read 240, the user makes it 200) leaves any
+      // stored split summing to the OLD figure, which silently breaks the
+      // Σ splits === amount invariant analytics depends on. Re-derive from the
+      // persisted item categories against the new amount; the split is removed
+      // when they no longer reconcile. Runs inside the transaction so a failure
+      // rolls the amount edit back rather than committing a drifted pair.
+      if (dto.amount !== undefined && Number(dto.amount) !== Number(expense.amount)) {
+        await this.rebuildCategorySplits(tx, expense.id, Number(dto.amount));
+      }
+
       // Update tag associations if provided
       if (dto.tagIds !== undefined) {
         // Soft-delete existing expense tags
@@ -685,22 +832,25 @@ export class ExpensesService {
    * `expenses.id`, so item queries MUST use the resolved PK — passing the raw
    * route param silently returns nothing for every app-created expense.
    * Mirrors the `OR:[{id},{clientId}]` lookup in `getReceiptImage`.
+   *
+   * Also returns `amount`, which every item write needs afterwards as the total
+   * to re-derive the category split against (see `rebuildCategorySplits`).
    */
-  private async resolveExpensePk(accountId: string, id: string): Promise<string> {
+  private async resolveExpenseRow(accountId: string, id: string): Promise<{ id: string; amount: unknown }> {
     const expense = await this.prisma.expense.findFirst({
       where: {
         accountId,
         isDeleted: false,
         OR: [{ id }, { clientId: id }],
       },
-      select: { id: true },
+      select: { id: true, amount: true },
     });
     if (!expense) throw new NotFoundException('Expense not found');
-    return expense.id;
+    return expense;
   }
 
   async getItems(accountId: string, expenseId: string) {
-    const expensePk = await this.resolveExpensePk(accountId, expenseId);
+    const { id: expensePk } = await this.resolveExpenseRow(accountId, expenseId);
     return this.prisma.expenseItem.findMany({
       where: { expenseId: expensePk, isDeleted: false },
       orderBy: { sortOrder: 'asc' },
@@ -708,8 +858,8 @@ export class ExpensesService {
   }
 
   async createItem(accountId: string, expenseId: string, dto: CreateExpenseItemDto) {
-    const expensePk = await this.resolveExpensePk(accountId, expenseId);
-    return this.prisma.expenseItem.create({
+    const { id: expensePk, amount } = await this.resolveExpenseRow(accountId, expenseId);
+    const created = await this.prisma.expenseItem.create({
       data: {
         expenseId: expensePk,
         description: dto.description,
@@ -719,16 +869,20 @@ export class ExpensesService {
         sortOrder: dto.sortOrder ?? 0,
       },
     });
+    // A new line moves Σitems, so it moves both the tolerance gate and the group
+    // sums the split was derived from.
+    await this.rebuildCategorySplits(this.prisma, expensePk, Number(amount));
+    return created;
   }
 
   async updateItem(accountId: string, expenseId: string, itemId: string, dto: UpdateExpenseItemDto) {
-    const expensePk = await this.resolveExpensePk(accountId, expenseId);
+    const { id: expensePk, amount } = await this.resolveExpenseRow(accountId, expenseId);
     const item = await this.prisma.expenseItem.findFirst({
       where: { id: itemId, expenseId: expensePk, isDeleted: false },
     });
     if (!item) throw new NotFoundException('Expense item not found');
 
-    return this.prisma.expenseItem.update({
+    const updated = await this.prisma.expenseItem.update({
       where: { id: itemId },
       data: {
         description: dto.description,
@@ -739,10 +893,14 @@ export class ExpensesService {
         syncVersion: { increment: 1 },
       },
     });
+    // Editing a line price moves money out from under the split just as an
+    // amount edit does — same rule, same re-derivation.
+    await this.rebuildCategorySplits(this.prisma, expensePk, Number(amount));
+    return updated;
   }
 
   async removeItem(accountId: string, expenseId: string, itemId: string) {
-    const expensePk = await this.resolveExpensePk(accountId, expenseId);
+    const { id: expensePk, amount } = await this.resolveExpenseRow(accountId, expenseId);
     const item = await this.prisma.expenseItem.findFirst({
       where: { id: itemId, expenseId: expensePk, isDeleted: false },
     });
@@ -752,6 +910,7 @@ export class ExpensesService {
       where: { id: itemId },
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
+    await this.rebuildCategorySplits(this.prisma, expensePk, Number(amount));
     return { success: true };
   }
 

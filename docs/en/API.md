@@ -2226,51 +2226,6 @@ Returns `null` if no suitable project found (confidence < 0.6).
 
 **AI cost**: 0.5 units
 
-### Suggest Splits
-
-```http
-POST /ai/suggest-splits
-Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
-Content-Type: application/json
-
-{
-  "id": "expense-uuid",
-  "description": "Walmart groceries and cleaning supplies",
-  "amount": 85.50,
-  "items": [
-    { "description": "Apples", "totalPrice": 5.99 },
-    { "description": "Chicken breast", "totalPrice": 12.99 },
-    { "description": "Floor cleaner", "totalPrice": 8.49 },
-    { "description": "Sponges", "totalPrice": 3.99 }
-  ]
-}
-```
-
-**Response** `200 OK`
-```json
-{
-  "shouldSplit": true,
-  "confidence": 0.91,
-  "suggestedSplits": [
-    {
-      "categoryName": "Food & Dining",
-      "amount": 18.98,
-      "percentage": 22.2,
-      "reasoning": "Grocery items: apples, chicken breast"
-    },
-    {
-      "categoryName": "Household",
-      "amount": 12.48,
-      "percentage": 14.6,
-      "reasoning": "Cleaning supplies: floor cleaner, sponges"
-    }
-  ]
-}
-```
-
-**AI cost**: 1.0 unit
-
 ### Chat with AI Assistant
 
 Chat with the AI assistant to get financial advice and **execute actions** like creating expenses, budgets, or querying data.

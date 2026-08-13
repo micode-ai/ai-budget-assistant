@@ -2162,51 +2162,6 @@ Content-Type: application/json
 
 **Стоимость AI**: 0.5 единиц
 
-### Подсказка разделения
-
-```http
-POST /ai/suggest-splits
-Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
-Content-Type: application/json
-
-{
-  "id": "expense-uuid",
-  "description": "Перекрёсток — продукты и бытовая химия",
-  "amount": 5130.00,
-  "items": [
-    { "description": "Яблоки", "totalPrice": 359.00 },
-    { "description": "Куриная грудка", "totalPrice": 779.00 },
-    { "description": "Средство для мытья полов", "totalPrice": 509.00 },
-    { "description": "Губки", "totalPrice": 239.00 }
-  ]
-}
-```
-
-**Ответ** `200 OK`
-```json
-{
-  "shouldSplit": true,
-  "confidence": 0.91,
-  "suggestedSplits": [
-    {
-      "categoryName": "Еда и рестораны",
-      "amount": 1138.00,
-      "percentage": 22.2,
-      "reasoning": "Продукты питания: яблоки, куриная грудка"
-    },
-    {
-      "categoryName": "Бытовые товары",
-      "amount": 748.00,
-      "percentage": 14.6,
-      "reasoning": "Бытовая химия: средство для мытья полов, губки"
-    }
-  ]
-}
-```
-
-**Стоимость AI**: 1.0 единица
-
 ### Чат с AI ассистентом
 
 Общайтесь с AI ассистентом для получения финансовых советов и **выполнения действий** — создания расходов, бюджетов или запроса данных.

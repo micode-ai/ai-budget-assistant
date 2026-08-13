@@ -7,7 +7,7 @@ import { OcrService } from './services/ocr.service';
 import { GeocodingService } from './services/geocoding.service';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
-import { SplitSuggestionService } from './services/split-suggestion.service';
+import { ReceiptCategorySplitService } from './services/receipt-category-split.service';
 import { GoalPlannerService } from './services/goal-planner.service';
 import { UserContextBuilder } from './services/user-context-builder.service';
 import { AiToolsService } from './services/ai-tools.service';
@@ -25,9 +25,10 @@ import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.m
 import { InsightsModule } from '../insights/insights.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 import { PriceHistoryModule } from '../price-history/price-history.module';
+import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
 
 @Module({
-  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule, PriceHistoryModule],
+  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule, PriceHistoryModule, MerchantRulesModule],
   controllers: [AiController],
   providers: [
     WhisperService,
@@ -37,7 +38,7 @@ import { PriceHistoryModule } from '../price-history/price-history.module';
     GeocodingService,
     TagSuggestionService,
     ProjectSuggestionService,
-    SplitSuggestionService,
+    ReceiptCategorySplitService,
     GoalPlannerService,
     UserContextBuilder,
     AiToolsService,
@@ -50,7 +51,7 @@ import { PriceHistoryModule } from '../price-history/price-history.module';
     OcrService,
     TagSuggestionService,
     ProjectSuggestionService,
-    SplitSuggestionService,
+    ReceiptCategorySplitService,
     GoalPlannerService,
   ],
 })

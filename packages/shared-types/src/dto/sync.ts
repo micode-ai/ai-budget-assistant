@@ -72,6 +72,7 @@ export interface SyncExpenseItemPayload {
   expenseId: string;
   description: string;
   canonicalName?: string;
+  categoryId?: string;
   quantity?: number;
   unitPrice?: number;
   totalPrice: number;

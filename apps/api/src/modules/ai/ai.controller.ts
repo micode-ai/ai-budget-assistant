@@ -22,7 +22,6 @@ import { CategorizationService } from './services/categorization.service';
 import { OcrService } from './services/ocr.service';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
-import { SplitSuggestionService } from './services/split-suggestion.service';
 import { GoalPlannerService } from './services/goal-planner.service';
 import { GeocodingService } from './services/geocoding.service';
 import { ScanReceiptRequestSchema } from './utils/sanitize';
@@ -37,7 +36,6 @@ export class AiController {
     private readonly ocrService: OcrService,
     private readonly tagSuggestionService: TagSuggestionService,
     private readonly projectSuggestionService: ProjectSuggestionService,
-    private readonly splitSuggestionService: SplitSuggestionService,
     private readonly goalPlannerService: GoalPlannerService,
     private readonly geocodingService: GeocodingService,
   ) {}
@@ -254,22 +252,6 @@ export class AiController {
     @Body() body: { description: string; date: string; locationName?: string },
   ) {
     return this.projectSuggestionService.suggestProject(req.accountId, body, req.user.id);
-  }
-
-  @Post('suggest-splits')
-  @UseGuards(AiUsageGuard)
-  @TrackAiUsage('split_suggestion', 1.0)
-  async suggestSplits(
-    @Req() req: AuthenticatedRequest,
-    @Body()
-    body: {
-      id: string;
-      description: string;
-      amount: number;
-      items?: Array<{ description: string; totalPrice: number }>;
-    },
-  ) {
-    return this.splitSuggestionService.suggestSplits(req.accountId, body, req.user.id);
   }
 
   // ── Savings Goals ──

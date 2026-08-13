@@ -435,6 +435,197 @@ describe('create — inflation-shield reconcile hook', () => {
     expect(cacheService.delByPrefix).toHaveBeenCalledWith('chat:get_inflation_shield:a1:');
   });
 });
+
+// ---------------------------------------------------------------------------
+// create() — categorized receipt items (persist categoryId + learn product rules)
+// ---------------------------------------------------------------------------
+
+/**
+ * Mirrors makeShieldReconcileCreateService's end-to-end create() shape, plus a
+ * top-level `category` mock. resolveCategoryId (used both for the top-level
+ * dto.categoryId and, after this task, each item's categoryId) always queries
+ * `this.prisma` — the OUTER, non-transactional client — even when invoked from
+ * inside the $transaction callback (see expense-category-resolver.util.ts), so
+ * the mock for it lives on `prisma.category`, not `tx.category`.
+ *
+ * The item's raw categoryId ('Alcohol', a name-style client value) is
+ * deliberately different from what the mocked lookup resolves it to ('c-alc'),
+ * so a test asserting the write got 'c-alc' actually proves resolution ran
+ * rather than merely echoing whatever was passed in.
+ */
+function makeCategorizedItemsCreateService() {
+  const createManyMock = jest.fn().mockResolvedValue({});
+
+  const findUniqueMock = jest
+    .fn()
+    .mockImplementationOnce(async () => null) // existing-by-clientId check -> isNew
+    .mockImplementationOnce(async () => ({
+      id: 'e-items-1',
+      accountId: 'a1',
+      amount: 8,
+      currencyCode: 'PLN',
+      category: null,
+      merchant: null,
+      source: 'manual',
+      items: [],
+      expenseTags: [],
+      categorySplits: [],
+      projectExpenses: [],
+      user: { name: 'Alice' },
+    }));
+
+  const tx = {
+    expense: {
+      findUnique: findUniqueMock,
+      upsert: jest.fn().mockResolvedValue({ id: 'e-items-1' }),
+    },
+    expenseItem: { createMany: createManyMock },
+    tag: { findMany: jest.fn().mockResolvedValue([]) },
+    expenseTag: { createMany: jest.fn().mockResolvedValue({}) },
+    project: { findUnique: jest.fn().mockResolvedValue(null), findFirst: jest.fn().mockResolvedValue(null) },
+    projectExpense: { upsert: jest.fn().mockResolvedValue({}) },
+    expenseCategorySplit: { createMany: jest.fn().mockResolvedValue({}) },
+  };
+
+  const prisma: any = {
+    category: {
+      findFirst: jest.fn().mockResolvedValue({ id: 'c-alc' }),
+      findUnique: jest.fn().mockResolvedValue(null),
+      // resolveCategoryId auto-creates when a name-style id matches nothing.
+      // Returning a name-derived id lets a test tell two resolutions apart.
+      create: jest
+        .fn()
+        .mockImplementation(({ data }: any) => Promise.resolve({ id: `c-${String(data.name).toLowerCase()}` })),
+    },
+    $transaction: jest.fn(async (cb: any) => cb(tx)),
+  };
+  const cacheService: any = {
+    delByPrefix: jest.fn().mockResolvedValue(undefined),
+    del: jest.fn().mockResolvedValue(undefined),
+  };
+  const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
+  const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+  const productRules: any = { upsertRules: jest.fn().mockResolvedValue(undefined) };
+
+  // productRules is appended as the 10th constructor arg (mirrors familyFeed/
+  // communityPrices/shieldTracking — all left undefined here on purpose,
+  // exercising the @Optional() no-op path for those three).
+  const service = new ExpensesService(
+    prisma,
+    gamificationService,
+    cacheService,
+    anomalyService,
+    merchantRulesService,
+    makeReceiptSplitServiceStub(),
+    undefined,
+    undefined,
+    undefined,
+    productRules,
+  );
+
+  return { service, prisma, createManyMock, productRules };
+}
+
+describe('create with categorized receipt items', () => {
+  const baseDto = {
+    localId: 'client-items-1',
+    amount: 8,
+    currencyCode: 'PLN',
+    date: '2026-08-01',
+    source: 'manual',
+    items: [
+      { description: 'Piwo', canonicalName: 'Piwo Żywiec', totalPrice: 8, categoryId: 'Alcohol' },
+    ],
+  };
+
+  it('persists each item categoryId', async () => {
+    const { service, prisma, createManyMock } = makeCategorizedItemsCreateService();
+
+    await service.create('a1', 'u1', baseDto as any);
+
+    // The raw client-supplied categoryId ('Alcohol') must be resolved through
+    // the account-scoped category lookup before it reaches the write.
+    expect(prisma.category.findFirst).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ accountId: 'a1' }) }),
+    );
+    const written = createManyMock.mock.calls[0][0].data;
+    expect(written).toHaveLength(1);
+    // Resolved id ('c-alc'), NOT the raw client-supplied value ('Alcohol') —
+    // proves the write went through resolution, not a passthrough.
+    expect(written[0].categoryId).toBe('c-alc');
+  });
+
+  it('learns a product rule from every categorized item', async () => {
+    const { service, productRules } = makeCategorizedItemsCreateService();
+
+    await service.create('a1', 'u1', baseDto as any);
+    // fire-and-forget — allow the microtask to run
+    await new Promise((resolve) => setImmediate(resolve));
+
+    expect(productRules.upsertRules).toHaveBeenCalledWith('a1', [
+      { canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' },
+    ]);
+  });
+
+  it('resolves a repeated item category once, so two lines cannot race into a duplicate-category P2002', async () => {
+    // Receipt lines routinely repeat a category — grouping them is the whole
+    // point. resolveCategoryId AUTO-CREATES a category when a name-style id
+    // matches nothing, and Category carries @@unique([accountId, name, type]),
+    // so resolving the raw list concurrently makes two lines both miss the
+    // findFirst and both create. The loser throws P2002; the rejection escapes
+    // into the $transaction callback and rolls the entire receipt save back as
+    // a 500. Trigger: a local-only category picked for 2+ lines in
+    // ItemCategorySheet.
+    const { service, prisma, createManyMock } = makeCategorizedItemsCreateService();
+    prisma.category.findFirst.mockResolvedValue(null); // account has neither category yet
+
+    await service.create('a1', 'u1', {
+      ...baseDto,
+      items: [
+        { description: 'Piwo', canonicalName: 'Piwo Żywiec', totalPrice: 8, categoryId: 'Alcohol' },
+        { description: 'Wino', canonicalName: 'Wino Carlo Rossi', totalPrice: 20, categoryId: 'Alcohol' },
+        { description: 'Chleb', canonicalName: 'Chleb', totalPrice: 5, categoryId: 'Groceries' },
+      ],
+    } as any);
+
+    // One create per DISTINCT name, not one per line.
+    expect(prisma.category.create).toHaveBeenCalledTimes(2);
+    // Both alcohol lines still land on the same resolved id — deduplicating
+    // must not drop an item's category.
+    const written = createManyMock.mock.calls[0][0].data;
+    expect(written.map((w: any) => w.categoryId)).toEqual(['c-alcohol', 'c-alcohol', 'c-groceries']);
+  });
+
+  it('does not fail the create when rule learning throws', async () => {
+    const { service, productRules } = makeCategorizedItemsCreateService();
+    productRules.upsertRules.mockRejectedValue(new Error('boom'));
+
+    let unhandled: unknown;
+    const onUnhandledRejection = (reason: unknown) => {
+      unhandled = reason;
+    };
+    process.on('unhandledRejection', onUnhandledRejection);
+
+    try {
+      await expect(service.create('a1', 'u1', baseDto as any)).resolves.toEqual(
+        expect.objectContaining({ isNew: true }),
+      );
+
+      // Prove the rejection was genuinely exercised (the mock was actually
+      // invoked, not just skipped), then flush the microtask queue so the
+      // fire-and-forget call's own .catch(() => {}) has a chance to run — if
+      // that .catch were ever removed, Node would surface this rejection as
+      // an unhandledRejection event, which the listener above would capture.
+      expect(productRules.upsertRules).toHaveBeenCalled();
+      await new Promise((resolve) => setImmediate(resolve));
+      expect(unhandled).toBeUndefined();
+    } finally {
+      process.off('unhandledRejection', onUnhandledRejection);
+    }
+  });
+});
+
 // ---------------------------------------------------------------------------
 // Expense items CRUD — clientId resolution (ABA: web receipt items missing)
 //
@@ -451,6 +642,10 @@ function makeItemsService(expense: { id: string; clientId: string }) {
     expense: {
       findFirst: jest.fn().mockResolvedValue({
         ...expense,
+        // Every item write now re-derives the expense's category split against
+        // the current amount (see "split invariant is defended after creation"),
+        // so the resolved row carries it.
+        amount: 10,
         user: { name: 'Tester' },
       }),
     },
@@ -459,6 +654,13 @@ function makeItemsService(expense: { id: string; clientId: string }) {
       findFirst: jest.fn().mockResolvedValue({ id: 'item-1', expenseId: expense.id }),
       create: jest.fn().mockImplementation(({ data }: any) => Promise.resolve({ id: 'item-new', ...data })),
       update: jest.fn().mockResolvedValue({ id: 'item-1' }),
+    },
+    // No live splits on this expense, so the re-derivation cheap-exits — these
+    // tests are about id resolution, not the split invariant.
+    expenseCategorySplit: {
+      findMany: jest.fn().mockResolvedValue([]),
+      updateMany: jest.fn().mockResolvedValue({}),
+      createMany: jest.fn().mockResolvedValue({}),
     },
   };
   const cacheService: any = { delByPrefix: jest.fn(), del: jest.fn() };
@@ -537,6 +739,240 @@ describe('expense items CRUD resolves clientId to the server PK', () => {
         where: expect.objectContaining({ expenseId: 'server-pk-1' }),
       }),
     );
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Split invariant defence — Σ splits === amount after an amount or item edit
+//
+// The receipt category auto-split rests on one invariant: the split amounts sum
+// to the expense amount exactly. It was enforced at creation only, so correcting
+// a scanned receipt's total (240 -> 200) or moving a line's price out from under
+// the split left the stored rows summing to the OLD figure. analytics.service.ts
+// computes the period total from expense.amount but groups by splits, so the
+// breakdown silently stopped adding up and every percentage went wrong.
+//
+// The rule: any change to an expense's amount, or to its items, re-derives the
+// split from the persisted expense_items.category_id values (no LLM call). If
+// re-derivation yields nothing — the tolerance gate refuses, or fewer than two
+// categories survive — the split is removed. Refusing to show a split beats
+// showing a wrong one.
+// ---------------------------------------------------------------------------
+
+/** Groceries 180 + Household 35 + Alcohol 25 = 240, the spec's worked example. */
+const SPLIT_ITEMS = [
+  { totalPrice: 180, categoryId: 'c-food', category: { name: 'Groceries' } },
+  { totalPrice: 35, categoryId: 'c-home', category: { name: 'Household' } },
+  { totalPrice: 25, categoryId: 'c-alc', category: { name: 'Alcohol' } },
+];
+
+function makeSplitDefenceService(opts: {
+  /** Amount stored BEFORE the edit under test. */
+  amount?: number;
+  items?: Array<{ totalPrice: number; categoryId: string | null; category?: { name: string } | null }>;
+  /** Live split rows on the expense; [] models an expense that was never split. */
+  splits?: Array<{ id: string }>;
+} = {}) {
+  const amount = opts.amount ?? 240;
+  const items = opts.items ?? SPLIT_ITEMS;
+  const splits = opts.splits ?? [{ id: 'sp-1' }, { id: 'sp-2' }, { id: 'sp-3' }];
+
+  const splitFindMany = jest.fn().mockResolvedValue(splits);
+  const splitUpdateMany = jest.fn().mockResolvedValue({});
+  const splitCreateMany = jest.fn().mockResolvedValue({});
+  const itemFindMany = jest.fn().mockResolvedValue(items);
+
+  const expenseRow = {
+    id: 'e-split-1',
+    clientId: 'local-split-1',
+    accountId: 'acc-1',
+    amount,
+    currencyCode: 'PLN',
+    category: null,
+    items: [],
+    expenseTags: [],
+    categorySplits: [],
+    projectExpenses: [],
+    user: { name: 'Alice' },
+  };
+
+  const tx: any = {
+    expense: {
+      update: jest.fn().mockResolvedValue({}),
+      findUnique: jest.fn().mockResolvedValue(expenseRow),
+    },
+    expenseItem: { findMany: itemFindMany },
+    expenseCategorySplit: {
+      findMany: splitFindMany,
+      updateMany: splitUpdateMany,
+      createMany: splitCreateMany,
+    },
+    tag: { findMany: jest.fn().mockResolvedValue([]) },
+    expenseTag: { updateMany: jest.fn().mockResolvedValue({}), createMany: jest.fn().mockResolvedValue({}) },
+    project: { findUnique: jest.fn().mockResolvedValue(null) },
+    projectExpense: { updateMany: jest.fn().mockResolvedValue({}), upsert: jest.fn().mockResolvedValue({}) },
+    tripExpenseShare: { deleteMany: jest.fn().mockResolvedValue({}), createMany: jest.fn().mockResolvedValue({}) },
+  };
+
+  const prisma: any = {
+    expense: {
+      findFirst: jest.fn().mockResolvedValue(expenseRow),
+      update: jest.fn().mockResolvedValue({}),
+    },
+    expenseItem: {
+      findMany: itemFindMany,
+      findFirst: jest.fn().mockResolvedValue({ id: 'item-1', expenseId: 'e-split-1' }),
+      create: jest.fn().mockImplementation(({ data }: any) => Promise.resolve({ id: 'item-new', ...data })),
+      update: jest.fn().mockResolvedValue({ id: 'item-1' }),
+    },
+    expenseCategorySplit: {
+      findMany: splitFindMany,
+      updateMany: splitUpdateMany,
+      createMany: splitCreateMany,
+    },
+    $transaction: jest.fn(async (cb: any) => cb(tx)),
+  };
+
+  const cacheService: any = { delByPrefix: jest.fn(), del: jest.fn().mockResolvedValue(undefined) };
+  const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+  const service = new ExpensesService(
+    prisma,
+    {} as any,
+    cacheService,
+    { dismissForExpense: jest.fn().mockResolvedValue(undefined) } as any,
+    merchantRulesService,
+    makeReceiptSplitServiceStub(),
+  );
+
+  return { service, prisma, splitFindMany, splitUpdateMany, splitCreateMany, itemFindMany };
+}
+
+/** Every created row's amount, summed in cents so the assertion is exact. */
+function createdSplitTotal(createMany: jest.Mock): number {
+  const rows = createMany.mock.calls[0][0].data as Array<{ amount: number }>;
+  return rows.reduce((cents, r) => cents + Math.round(r.amount * 100), 0) / 100;
+}
+
+describe('split invariant is defended after creation', () => {
+  describe('update() — amount edit', () => {
+    it('removes the split when the corrected amount no longer reconciles with the items', async () => {
+      // OCR read 240; the user corrects it to 200. The items still say 240, a 20%
+      // gap — far outside the 5% tolerance — so there is no honest split to show.
+      const { service, splitUpdateMany, splitCreateMany } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', { amount: 200 } as any);
+
+      expect(splitUpdateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: expect.objectContaining({ expenseId: 'e-split-1', isDeleted: false }),
+          data: { isDeleted: true },
+        }),
+      );
+      expect(splitCreateMany).not.toHaveBeenCalled();
+    });
+
+    it('rewrites a split that sums to the new amount exactly when the items still reconcile', async () => {
+      // 240 -> 238: a 0.84% gap, inside tolerance. The residual (-2) lands on the
+      // largest group, so the set still sums to the cent.
+      const { service, splitCreateMany } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', { amount: 238 } as any);
+
+      expect(splitCreateMany).toHaveBeenCalledTimes(1);
+      expect(createdSplitTotal(splitCreateMany)).toBe(238);
+      const rows = splitCreateMany.mock.calls[0][0].data;
+      expect(rows).toHaveLength(3);
+      expect(rows.find((r: any) => r.categoryId === 'c-food').amount).toBe(178);
+      expect(rows.every((r: any) => r.expenseId === 'e-split-1')).toBe(true);
+    });
+
+    it('leaves an expense that has no splits completely untouched', async () => {
+      const { service, splitUpdateMany, splitCreateMany, itemFindMany } = makeSplitDefenceService({
+        splits: [],
+      });
+
+      await service.update('acc-1', 'e-split-1', { amount: 200 } as any);
+
+      expect(splitUpdateMany).not.toHaveBeenCalled();
+      expect(splitCreateMany).not.toHaveBeenCalled();
+      // Cheap-exits before reading the items at all.
+      expect(itemFindMany).not.toHaveBeenCalled();
+    });
+
+    it('does not re-derive when the update leaves the amount alone', async () => {
+      const { service, splitUpdateMany, splitCreateMany } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', { description: 'Biedronka' } as any);
+
+      expect(splitUpdateMany).not.toHaveBeenCalled();
+      expect(splitCreateMany).not.toHaveBeenCalled();
+    });
+
+    it('does not re-derive when the amount is resubmitted unchanged', async () => {
+      const { service, splitUpdateMany, splitCreateMany } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', { amount: 240, notes: 'x' } as any);
+
+      expect(splitUpdateMany).not.toHaveBeenCalled();
+      expect(splitCreateMany).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('item edits', () => {
+    it('removeItem re-derives and drops a split the surviving lines no longer support', async () => {
+      // The alcohol line is gone, so the items now sum to 215 against a 240 total —
+      // a 10.4% gap, outside tolerance.
+      const { service, splitUpdateMany, splitCreateMany, itemFindMany } = makeSplitDefenceService({
+        amount: 240,
+      });
+      itemFindMany.mockResolvedValue(SPLIT_ITEMS.slice(0, 2));
+
+      await service.removeItem('acc-1', 'local-split-1', 'item-1');
+
+      expect(splitUpdateMany).toHaveBeenCalled();
+      expect(splitCreateMany).not.toHaveBeenCalled();
+    });
+
+    it('updateItem re-derives a split that still sums to the amount exactly', async () => {
+      const { service, splitCreateMany, itemFindMany } = makeSplitDefenceService({ amount: 240 });
+      // The household line was mis-read; corrected 35 -> 40 (items 245 vs 240, 2% gap).
+      itemFindMany.mockResolvedValue([
+        SPLIT_ITEMS[0],
+        { totalPrice: 40, categoryId: 'c-home', category: { name: 'Household' } },
+        SPLIT_ITEMS[2],
+      ]);
+
+      await service.updateItem('acc-1', 'local-split-1', 'item-1', { totalPrice: 40 } as any);
+
+      expect(splitCreateMany).toHaveBeenCalledTimes(1);
+      expect(createdSplitTotal(splitCreateMany)).toBe(240);
+    });
+
+    it('createItem re-derives the split, since a new line moves the reconciliation', async () => {
+      const { service, splitCreateMany, itemFindMany } = makeSplitDefenceService({ amount: 240 });
+      itemFindMany.mockResolvedValue([
+        { totalPrice: 175, categoryId: 'c-food', category: { name: 'Groceries' } },
+        SPLIT_ITEMS[1],
+        SPLIT_ITEMS[2],
+        { totalPrice: 5, categoryId: 'c-home', category: { name: 'Household' } },
+      ]);
+
+      await service.createItem('acc-1', 'local-split-1', { description: 'Gąbki', totalPrice: 5 } as any);
+
+      expect(splitCreateMany).toHaveBeenCalledTimes(1);
+      expect(createdSplitTotal(splitCreateMany)).toBe(240);
+    });
+
+    it('leaves an expense with no splits untouched on every item path', async () => {
+      const { service, splitUpdateMany, splitCreateMany } = makeSplitDefenceService({ splits: [] });
+
+      await service.createItem('acc-1', 'local-split-1', { description: 'x', totalPrice: 1 } as any);
+      await service.updateItem('acc-1', 'local-split-1', 'item-1', { totalPrice: 2 } as any);
+      await service.removeItem('acc-1', 'local-split-1', 'item-1');
+
+      expect(splitUpdateMany).not.toHaveBeenCalled();
+      expect(splitCreateMany).not.toHaveBeenCalled();
+    });
   });
 });
 

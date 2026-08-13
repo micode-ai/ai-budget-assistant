@@ -5,6 +5,23 @@ export interface ExpenseShareDto {
   value: number; // interpretation depends on the parent request's splitType
 }
 
+/**
+ * A single receipt/manual line item sent alongside `CreateExpenseDto.items`.
+ * `categoryId` addresses a category by the client's own local id (same
+ * convention as the top-level `CreateExpenseDto.categoryId` and each
+ * `CreateExpenseCategorySplitDto.categoryId`) — the server resolves it before
+ * persisting to `expense_items.category_id`.
+ */
+export interface CreateExpenseItemDto {
+  description: string;
+  canonicalName?: string;
+  quantity?: number;
+  unitPrice?: number;
+  totalPrice: number;
+  sortOrder?: number;
+  categoryId?: string | null;
+}
+
 export interface CreateExpenseDto {
   localId: string;
   amount: number;
@@ -21,6 +38,7 @@ export interface CreateExpenseDto {
     name?: string;
   };
   source: ExpenseSource;
+  items?: CreateExpenseItemDto[];
   tagIds?: string[];
   projectId?: string;
   isDebt?: boolean;

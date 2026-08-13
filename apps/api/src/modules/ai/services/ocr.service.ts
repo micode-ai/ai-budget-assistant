@@ -19,6 +19,8 @@ import {
   type ReceiptCheckLine,
 } from '../../price-history/receipt-check.util';
 import { PriceHistoryService } from '../../price-history/price-history.service';
+import { ReceiptCategorySplitService } from './receipt-category-split.service';
+import { buildCategorySplits, type ReceiptCategorySplit } from '../../../common/utils/receipt-category-split';
 
 export interface ReceiptItem {
   description: string;
@@ -98,6 +100,8 @@ export interface ReceiptExpense {
   location: { lat: number; lng: number; name: string } | null;
   /** Lines that cost more than usual for this user in this store. Always present; empty when nothing to report. */
   priceFindings: ReceiptCheckFinding[];
+  /** Category groups derived from the receipt's own lines. Always present; empty when there is nothing to split. */
+  categorySplits: ReceiptCategorySplit[];
 }
 
 interface CategoryWithName {
@@ -193,6 +197,7 @@ export class OcrService {
     private readonly prisma: PrismaService,
     private readonly geocoding: GeocodingService,
     private readonly priceHistory: PriceHistoryService,
+    private readonly categorySplitter: ReceiptCategorySplitService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -384,6 +389,7 @@ Important:
       receiptItems: parsed.items || [],
       location,
       priceFindings: [],
+      categorySplits: [],
     };
   }
 
@@ -440,6 +446,66 @@ Important:
   }
 
   /**
+   * Groups the receipt's lines into category splits. Fail-silent by contract,
+   * for the same reason as runPriceCheck: a scan must never break because a
+   * derived extra failed.
+   */
+  private async runCategorySplit(accountId: string, receipt: ReceiptExpense): Promise<ReceiptCategorySplit[]> {
+    try {
+      // Tier 2 (full E2EE): line items are encrypted at rest, so the server
+      // cannot read them to classify. Same lookup as receipt-split/wrapped.
+      const account = await this.prisma.account.findUnique({
+        where: { id: accountId },
+        select: { encryptionTier: true },
+      });
+      if ((account?.encryptionTier ?? 0) >= 2) return [];
+
+      // Every line with a valid amount counts toward the split, labeled or
+      // not: an unlabeled line's money is still part of the receipt, and
+      // buildCategorySplits folds an unassigned (categoryId: null) line's
+      // amount into the dominant category via the residual. Only a labeled
+      // line can be sent to the classifier — there is nothing to classify
+      // without a label — so that is the narrower set the cheap "is there
+      // enough to bother classifying" pre-check measures.
+      const allLines = (receipt.receiptItems ?? [])
+        .map((item, index) => ({
+          index,
+          label: (item.canonicalName?.trim() || item.description?.trim() || ''),
+          amount: Number(item.totalPrice),
+        }))
+        .filter((line) => Number.isFinite(line.amount) && line.amount > 0);
+      const labeledLines = allLines.filter((line) => line.label.length > 0);
+      if (labeledLines.length < 2) return [];
+
+      const categories = await this.prisma.category.findMany({
+        where: { OR: [{ isSystem: true }, { accountId }], type: 'expense', isDeleted: false },
+        select: { id: true, name: true },
+      });
+      if (categories.length === 0) return [];
+
+      const assigned = await this.categorySplitter.classify({ accountId, items: labeledLines, categories });
+      if (assigned.size === 0) return [];
+
+      const byId = new Map(categories.map((c) => [c.id, c.name]));
+      return buildCategorySplits({
+        total: receipt.amount,
+        items: allLines.map((line) => {
+          const categoryId = assigned.get(line.index) ?? null;
+          return {
+            index: line.index,
+            amount: line.amount,
+            categoryId,
+            categoryName: categoryId ? byId.get(categoryId) ?? null : null,
+          };
+        }),
+      });
+    } catch (error) {
+      this.logger.warn(`[CategorySplit] skipped: ${error}`);
+      return [];
+    }
+  }
+
+  /**
    * The single funnel for turning a parsed receipt into a ReceiptExpense.
    * Every scan path must go through here so the price check cannot be
    * forgotten when a new path is added.
@@ -451,6 +517,7 @@ Important:
   ): Promise<ReceiptExpense> {
     const receipt = await this.buildReceiptExpense(parsed, categories);
     receipt.priceFindings = await this.runPriceCheck(accountId, receipt);
+    receipt.categorySplits = await this.runCategorySplit(accountId, receipt);
     return receipt;
   }
 

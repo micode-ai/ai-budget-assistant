@@ -2445,4 +2445,11 @@ export default {
     encrypted: 'Aufteilen ist bei Ende-zu-Ende-verschlüsselten Konten nicht möglich, da der Server den Kassenbon nicht lesen kann.',
     offline: 'Du benötigst eine Verbindung, um die Links zu erstellen.',
   },
+  receiptCategorySplit: {
+    title: 'Nach Kategorie aufteilen',
+    edit: 'Kategorien ändern',
+    itemCategory: 'Kategorie für diesen Artikel',
+    unassigned: 'Nicht zugewiesen',
+    dropped: 'Kategorien konnten nicht zugeordnet werden — ohne Aufteilung gespeichert',
+  },
 } as const;

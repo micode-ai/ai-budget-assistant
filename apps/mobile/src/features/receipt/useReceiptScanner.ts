@@ -13,6 +13,14 @@ export interface ReceiptItem {
   totalPrice: number;
 }
 
+export interface ReceiptCategorySplitItem {
+  categoryId: string;
+  categoryName: string;
+  amount: number;
+  percentage: number;
+  itemIndexes: number[];
+}
+
 export interface ScannedReceipt {
   amount: number;
   discountAmount: number | null;
@@ -26,6 +34,10 @@ export interface ScannedReceipt {
   receiptItems: ReceiptItem[];
   location: { lat: number; lng: number; name: string } | null;
   priceFindings?: ReceiptCheckFinding[];
+  /** Category groups derived from the receipt's own lines. Always present on
+   * the wire (empty when there is nothing to split), optional here for the
+   * same defensive-typing reason as `priceFindings` above. */
+  categorySplits?: ReceiptCategorySplitItem[];
 }
 
 export interface ReceiptScannerState {

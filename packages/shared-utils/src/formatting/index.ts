@@ -232,6 +232,15 @@ export {
   formatFinancialMonth,
 } from './financial-month';
 
+// Receipt category split arithmetic
+export {
+  buildCategorySplits,
+  RECEIPT_SPLIT_DEFAULTS,
+  type ReceiptCategorySplit,
+  type ReceiptSplitConfig,
+  type SplitInputItem,
+} from './receipt-category-split';
+
 // ---------------------------------------------------------------------------
 // Safe-to-spend cashflow formula (single source of truth for API + mobile
 // offline fallback — must stay pure / no I/O).

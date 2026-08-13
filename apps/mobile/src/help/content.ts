@@ -573,6 +573,17 @@ Review and correct any details, then:
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
 
+### Category Splits
+
+Grocery-store receipts often mix several kinds of items in one trip — food, household supplies, alcohol. When the app recognizes more than one kind of item on a receipt, it automatically splits the expense across the matching categories instead of putting it all in one.
+
+- On the confirmation screen, a row of category chips appears above the item list, labelled **Split by category** (for example, "Groceries 180 · Household 35 · Alcohol 25"), showing how the total will be broken down.
+- Tap **Change categories** to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.
+- If the items don't add up closely enough to the receipt total, the app falls back to one category instead of guessing.
+- This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt's one overall category.
+
+Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.
@@ -641,6 +652,9 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
 
 - **Q: Does voice/receipt scanning use my AI requests?**
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.
+
+- **Q: Why did one receipt end up split across several categories in my charts?**
+  **A:** When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts. This never changes your budgets. Tap **Change categories** on the receipt confirmation screen to adjust it — corrections are remembered for next time.
 
 ---
 
@@ -5003,6 +5017,17 @@ iOS, Android, Web
 - Держите камеру ровно, чтобы избежать размытия
 - Используйте **Дополнительные инструкции для ИИ** для особых случаев (например, «Это в EUR», «Игнорировать первую позицию»)
 
+### Разделение по категориям
+
+Чеки из супермаркета часто объединяют разные виды покупок за одно посещение — продукты, бытовую химию, алкоголь. Когда приложение распознаёт на чеке больше одного вида товаров, оно автоматически разделяет расход между подходящими категориями, вместо того чтобы отнести всё к одной.
+
+- На экране подтверждения над списком позиций появляется ряд чипов категорий с подписью **Разделение по категориям** (например, «Продукты 180 · Хозтовары 35 · Алкоголь 25»), показывающий, как будет разбита итоговая сумма.
+- Нажмите **Изменить категории**, чтобы открыть список всех позиций и указать, к какой категории относится каждая из них. Изменения применяются сразу — и запоминаются, поэтому тот же товар будет правильно распознан при следующем сканировании.
+- Если позиции недостаточно точно совпадают с итоговой суммой чека, приложение возвращается к одной категории вместо того, чтобы гадать.
+- Это влияет только на то, как ваши расходы отображаются в Аналитике и на графиках — бюджеты при этом никогда не меняются и по-прежнему учитываются по единой общей категории чека.
+
+Работает одинаково — как при сканировании в приложении, так и через ботов в Telegram, WhatsApp или Slack.
+
 ## Голосовой ввод дохода
 
 Регистрируйте полученные платежи голосом — тот же процесс, что и для голосового расхода, оптимизированный для доходов.
@@ -5071,6 +5096,9 @@ iOS, Android, Web
 
 - **В: Используют ли голосовой ввод и сканирование чеков запросы AI?**
   **О:** Да, каждый голосовой ввод или сканирование чека использует один запрос AI из вашего ежемесячного лимита.
+
+- **В: Почему один чек оказался разделён на несколько категорий в моих графиках?**
+  **О:** Когда чек явно объединяет разные виды товаров (например, продукты и алкоголь), приложение автоматически распределяет его между подходящими категориями в графиках расходов. Бюджеты при этом никогда не меняются. Нажмите **Изменить категории** на экране подтверждения чека, чтобы это исправить — исправления запоминаются на будущее.
 
 ---
 
@@ -9431,6 +9459,17 @@ iOS, Android, Web
 - Тримайте камеру стабільно, щоб уникнути розмиття
 - Використовуйте **Додаткові інструкції для ШІ** для спеціальної обробки (наприклад, "Це в EUR", "Ігнорувати першу позицію")
 
+### Розподіл за категоріями
+
+Чеки з супермаркету часто поєднують різні види покупок за один похід — продукти, побутову хімію, алкоголь. Коли додаток розпізнає на чеку більше одного виду товарів, він автоматично розподіляє витрату між відповідними категоріями, замість того щоб віднести все до однієї.
+
+- На екрані підтвердження над списком позицій з'являється ряд чипів категорій із підписом **Розподіл за категоріями** (наприклад, «Продукти 180 · Побутові товари 35 · Алкоголь 25»), що показує, як буде розбита загальна сума.
+- Натисніть **Змінити категорії**, щоб відкрити список усіх позицій і вказати, до якої категорії належить кожна з них. Ваші зміни застосовуються одразу — і запам'ятовуються, тож той самий товар буде правильно розпізнано під час наступного сканування.
+- Якщо позиції недостатньо точно збігаються із загальною сумою чека, додаток повертається до однієї категорії, а не вгадує.
+- Це змінює лише те, як ваші витрати відображаються в Аналітиці та на графіках — бюджети при цьому ніколи не змінюються і, як і раніше, враховуються за єдиною загальною категорією чека.
+
+Працює однаково незалежно від того, скануєте ви в додатку чи через ботів Telegram, WhatsApp або Slack.
+
 ## Голосовий дохід
 
 Реєструйте отримані платежі голосом — той самий процес, що й для голосової витрати, оптимізований для доходів.
@@ -9499,6 +9538,9 @@ iOS, Android, Web
 
 - **П:** Чи використовує голосовий ввід та сканування чеків мої запити ШІ?
   **В:** Так, кожен голосовий ввід або сканування чека використовує один запит ШІ з вашого місячного ліміту.
+
+- **П:** Чому один чек виявився розподілений на кілька категорій на моїх графіках?
+  **В:** Коли чек явно поєднує різні види товарів (наприклад, продукти й алкоголь), додаток автоматично розподіляє його між відповідними категоріями на графіках витрат. Бюджети це ніколи не змінює. Натисніть **Змінити категорії** на екрані підтвердження чека, щоб це виправити — виправлення запам'ятовуються на майбутнє.
 
 ---
 
@@ -13807,6 +13849,17 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Trzymaj aparat stabilnie, aby uniknac rozmazania
 - Uzyj **Dodatkowe instrukcje dla AI** do specjalnej obslugi (np. "To jest w EUR", "Pomin pierwsza pozycje")
 
+### Podział na kategorie
+
+Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jednej wizycie — jedzenie, chemię gospodarczą, alkohol. Gdy aplikacja rozpozna na paragonie więcej niż jeden rodzaj pozycji, automatycznie dzieli wydatek między pasujące kategorie, zamiast przypisywać całość do jednej.
+
+- Na ekranie potwierdzenia nad listą pozycji pojawia się rząd chipów kategorii, oznaczony **Podział na kategorie** (na przykład „Spożywcze 180 · Gospodarstwo domowe 35 · Alkohol 25”), pokazujący, jak zostanie rozbita łączna kwota.
+- Dotknij **Zmień kategorie**, aby otworzyć listę wszystkich pozycji i dostosować, do której kategorii należy każda z nich. Twoje zmiany obowiązują od razu — i są zapamiętywane, dzięki czemu ten sam produkt zostanie poprawnie skategoryzowany przy następnym skanowaniu.
+- Jeśli pozycje nie sumują się wystarczająco blisko łącznej kwoty paragonu, aplikacja wraca do jednej kategorii zamiast zgadywać.
+- To zmienia jedynie sposób prezentacji wydatków w Analizie i na wykresach — nigdy nie zmienia Twoich budżetów, które nadal są liczone względem jednej, ogólnej kategorii paragonu.
+
+Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.
@@ -13875,6 +13928,9 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
 
 - **P: Czy wprowadzanie glosowe/skanowanie paragonu zuzywa moje zapytania AI?**
   **O:** Tak, kazde wprowadzenie glosowe lub skan paragonu zuzywa jedno zapytanie AI z Twojego miesiecznego limitu.
+
+- **P: Dlaczego jeden paragon został podzielony na kilka kategorii na moich wykresach?**
+  **O:** Gdy paragon wyraźnie łączy różne rodzaje pozycji (na przykład artykuły spożywcze i alkohol), aplikacja automatycznie dzieli go między pasujące kategorie na wykresach wydatków. To nigdy nie zmienia Twoich budżetów. Dotknij **Zmień kategorie** na ekranie potwierdzenia paragonu, aby to poprawić — poprawki są zapamiętywane na przyszłość.
 
 ---
 
@@ -18179,6 +18235,17 @@ Uberprufe und korrigiere Details, dann:
 - Halte die Kamera ruhig, um Unscharfe zu vermeiden
 - Verwende **Zusatzliche Anweisungen fur KI** fur besondere Handhabung (z.B. "Das ist in EUR", "Ersten Artikel ignorieren")
 
+### Aufteilung nach Kategorien
+
+Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Einkauf — Lebensmittel, Haushaltsartikel, Alkohol. Wenn die App mehr als eine Art von Artikel auf einem Beleg erkennt, teilt sie die Ausgabe automatisch auf die passenden Kategorien auf, anstatt alles einer einzigen zuzuordnen.
+
+- Auf dem Bestätigungsbildschirm erscheint über der Artikelliste eine Reihe von Kategorie-Chips mit der Bezeichnung **Nach Kategorie aufteilen** (zum Beispiel „Lebensmittel 180 · Haushalt 35 · Alkohol 25"), die zeigt, wie der Gesamtbetrag aufgeteilt wird.
+- Tippe auf **Kategorien ändern**, um eine Liste aller Artikel zu öffnen und anzupassen, zu welcher Kategorie sie gehören. Deine Änderungen gelten sofort — und werden gemerkt, sodass dasselbe Produkt beim nächsten Scan korrekt kategorisiert wird.
+- Wenn die Artikel nicht ausreichend genau zum Gesamtbetrag des Belegs passen, greift die App auf eine einzige Kategorie zurück, statt zu raten.
+- Das ändert nur, wie deine Ausgaben in der Analyse und in den Diagrammen erscheinen — es ändert nie deine Budgets, die weiterhin gegen die eine Gesamtkategorie des Belegs geführt werden.
+
+Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
@@ -18247,6 +18314,9 @@ Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahme
 
 - **F: Verbrauchen Spracheingabe/Belegscan meine KI-Anfragen?**
   **A:** Ja, jede Spracheingabe oder jeder Belegscan verbraucht eine KI-Anfrage aus deinem monatlichen Kontingent.
+
+- **F: Warum wurde ein Beleg in meinen Diagrammen auf mehrere Kategorien aufgeteilt?**
+  **A:** Wenn ein Beleg deutlich unterschiedliche Arten von Artikeln enthält (zum Beispiel Lebensmittel und Alkohol), teilt die App ihn automatisch auf die passenden Kategorien in deinen Ausgabendiagrammen auf. Das ändert nie deine Budgets. Tippe auf **Kategorien ändern** auf dem Bestätigungsbildschirm des Belegs, um es anzupassen — Korrekturen werden für das nächste Mal gemerkt.
 
 ---
 
@@ -22526,6 +22596,17 @@ Revisa y corrige cualquier detalle, luego:
 - Mantene la camara estable para evitar desenfoque
 - Usa **Instrucciones adicionales para la IA** para un tratamiento especial (por ejemplo, "Esto esta en EUR", "Ignorar el primer articulo")
 
+### División por categorías
+
+Los recibos del supermercado a menudo mezclan varios tipos de artículos en una sola compra — alimentos, artículos del hogar, alcohol. Cuando la aplicación reconoce más de un tipo de artículo en un recibo, divide automáticamente el gasto entre las categorías correspondientes en lugar de asignarlo todo a una sola.
+
+- En la pantalla de confirmación aparece una fila de chips de categoría sobre la lista de artículos, etiquetada **Dividir por categoría** (por ejemplo, "Alimentación 180 · Hogar 35 · Alcohol 25"), que muestra cómo se desglosará el importe total.
+- Toca **Cambiar categorías** para abrir una lista de todos los artículos y ajustar a qué categoría pertenece cada uno. Tus cambios se aplican de inmediato — y se recuerdan, de modo que el mismo producto se categoriza correctamente la próxima vez que lo escanees.
+- Si los artículos no suman lo suficientemente cerca del importe total del recibo, la aplicación recurre a una sola categoría en lugar de adivinar.
+- Esto solo cambia cómo aparece tu gasto en Analítica y en los gráficos — nunca cambia tus presupuestos, que siguen contabilizando contra la categoría general única del recibo.
+
+Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
@@ -22594,6 +22675,9 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
 
 - **P: La entrada de voz o el escaneo de recibos consume mis solicitudes IA?**
   **R:** Si, cada entrada de voz o escaneo de recibo utiliza una solicitud IA de tu cuota mensual.
+
+- **P: ¿Por qué un recibo terminó dividido en varias categorías en mis gráficos?**
+  **R:** Cuando un recibo mezcla claramente distintos tipos de artículos (por ejemplo, alimentación y alcohol), la aplicación lo divide automáticamente entre las categorías correspondientes en tus gráficos de gasto. Esto nunca cambia tus presupuestos. Toca **Cambiar categorías** en la pantalla de confirmación del recibo para ajustarlo — las correcciones se recuerdan para la próxima vez.
 
 ---
 
@@ -26862,6 +26946,17 @@ Verifiez et corrigez les details, puis :
 - Tenez l'appareil photo stable pour eviter le flou
 - Utilisez les **Instructions supplementaires pour l'IA** pour un traitement special (par ex. "C'est en EUR", "Ignorer le premier article")
 
+### Répartition par catégories
+
+Les tickets de supermarché mélangent souvent plusieurs types d'articles en un seul achat — alimentation, produits ménagers, alcool. Lorsque l'application reconnaît plus d'un type d'article sur un reçu, elle répartit automatiquement la dépense entre les catégories correspondantes au lieu de tout attribuer à une seule.
+
+- Sur l'écran de confirmation, une rangée de puces de catégorie apparaît au-dessus de la liste des articles, intitulée **Répartir par catégorie** (par exemple, « Alimentation 180 · Ménage 35 · Alcool 25 »), montrant comment le montant total sera réparti.
+- Appuyez sur **Modifier les catégories** pour ouvrir une liste de tous les articles et ajuster la catégorie de chacun. Vos modifications s'appliquent immédiatement — et sont mémorisées, afin que le même produit soit correctement catégorisé lors de votre prochain scan.
+- Si les articles ne correspondent pas suffisamment au montant total du reçu, l'application revient à une seule catégorie plutôt que de deviner.
+- Cela ne change que la façon dont vos dépenses apparaissent dans les Analyses et les graphiques — cela ne modifie jamais vos budgets, qui continuent d'être suivis par rapport à la catégorie globale unique du reçu.
+
+Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.
@@ -26930,6 +27025,9 @@ Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon 
 
 - **Q : La saisie vocale et le scan de recus utilisent-ils mes requetes IA ?**
   **R :** Oui, chaque saisie vocale ou scan de recu utilise une requete IA de votre allocation mensuelle.
+
+- **Q : Pourquoi un reçu s'est-il retrouvé réparti entre plusieurs catégories dans mes graphiques ?**
+  **R :** Lorsqu'un reçu mélange clairement différents types d'articles (par exemple, alimentation et alcool), l'application le répartit automatiquement entre les catégories correspondantes dans vos graphiques de dépenses. Cela ne modifie jamais vos budgets. Appuyez sur **Modifier les catégories** sur l'écran de confirmation du reçu pour l'ajuster — les corrections sont mémorisées pour la prochaine fois.
 
 ---
 
@@ -31196,6 +31294,17 @@ iOS, Android, Web
 - Трымайце камеру роўна, каб пазбегнуць размыцця
 - Выкарыстоўвайце **Дадатковыя інструкцыі для ІІ** для асаблівых выпадкаў (напрыклад, «Гэта ў EUR», «Ігнараваць першую пазіцыю»)
 
+### Падзел па катэгорыях
+
+Чэкі з супермаркета часта аб'ядноўваюць розныя віды пакупак за адзін паход — прадукты, бытавую хімію, алкаголь. Калі праграма распазнае на чэку больш за адзін від тавараў, яна аўтаматычна падзяляе выдатак паміж адпаведнымі катэгорыямі, замест таго каб аднесці ўсё да адной.
+
+- На экране пацвярджэння над спісам пазіцый з'яўляецца шэраг чыпаў катэгорый з подпісам **Падзел па катэгорыях** (напрыклад, «Прадукты 180 · Гаспадарчыя тавары 35 · Алкаголь 25»), які паказвае, як будзе разбіта агульная сума.
+- Націсніце **Змяніць катэгорыі**, каб адкрыць спіс усіх пазіцый і паказаць, да якой катэгорыі належыць кожная з іх. Вашы змены прымяняюцца адразу — і запамінаюцца, таму той самы тавар будзе правільна распазнаны пры наступным сканаванні.
+- Калі пазіцыі недастаткова дакладна супадаюць з агульнай сумай чэка, праграма вяртаецца да адной катэгорыі замест таго, каб угадваць.
+- Гэта змяняе толькі тое, як вашы выдаткі адлюстроўваюцца ў Аналітыцы і на графіках — бюджэты пры гэтым ніколі не змяняюцца і, як і раней, улічваюцца па адзінай агульнай катэгорыі чэка.
+
+Працуе аднолькава незалежна ад таго, ці скануеце вы ў праграме, ці праз ботаў Telegram, WhatsApp або Slack.
+
 ## Галасавы даход
 
 Рэгіструйце атрыманыя плацяжы голасам — той самы працэс, што і для галасавога выдатку, аптымізаваны для даходаў.
@@ -31264,6 +31373,9 @@ iOS, Android, Web
 
 - **П: Ці выкарыстоўваюць галасавы ўвод і сканаванне чэкаў запыты AI?**
   **А:** Так, кожны галасавы ўвод або сканаванне чэка выкарыстоўвае адзін запыт AI з вашага штомесячнага ліміту.
+
+- **П: Чаму адзін чэк апынуўся падзеленым на некалькі катэгорый на маіх графіках?**
+  **А:** Калі чэк відавочна аб'ядноўвае розныя віды тавараў (напрыклад, прадукты і алкаголь), праграма аўтаматычна размяркоўвае яго паміж адпаведнымі катэгорыямі на графіках выдаткаў. Бюджэты пры гэтым ніколі не змяняюцца. Націсніце **Змяніць катэгорыі** на экране пацвярджэння чэка, каб гэта выправіць — выпраўленні запамінаюцца на будучыню.
 
 ---
 
@@ -35487,6 +35599,17 @@ Controleer en corrigeer eventuele details en daarna:
 - Houd de camera stil om vervaging te voorkomen
 - Gebruik **Aanvullende instructies voor de AI** voor speciale behandeling (bijv. "Dit is in EUR", "Negeer het eerste item")
 
+### Categorieverdeling
+
+Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één keer — eten, huishoudelijke producten, alcohol. Wanneer de app meer dan één soort item op een bon herkent, verdeelt hij de uitgave automatisch over de bijbehorende categorieën in plaats van alles onder één categorie te plaatsen.
+
+- Op het bevestigingsscherm verschijnt boven de itemlijst een rij categoriechips met het label **Verdelen op categorie** (bijvoorbeeld "Boodschappen 180 · Huishouden 35 · Alcohol 25"), die laat zien hoe het totaalbedrag wordt opgesplitst.
+- Tik op **Categorieën wijzigen** om een lijst van alle items te openen en aan te passen tot welke categorie elk item behoort. Je wijzigingen gelden meteen — en worden onthouden, zodat hetzelfde product de volgende keer dat je het scant automatisch goed wordt gecategoriseerd.
+- Als de items niet voldoende overeenkomen met het totaalbedrag van de bon, valt de app terug op één categorie in plaats van te gokken.
+- Dit verandert alleen hoe je uitgaven verschijnen in Analyse en in grafieken — het verandert nooit je budgetten, die nog steeds worden bijgehouden tegen de ene, algemene categorie van de bon.
+
+Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.
+
 ## Spraakinkomsten
 
 Leg ontvangen betalingen vast met spraak — dezelfde flow als Spraakuitgave, geoptimaliseerd voor inkomsten.
@@ -35555,6 +35678,9 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
 
 - **V: Gebruikt spraak-/bonnenscannen mijn AI-verzoeken?**
   **A:** Ja, elke spraakinvoer of bonscan gebruikt één AI-verzoek uit je maandelijkse tegoed.
+
+- **V: Waarom werd één bon over meerdere categorieën verdeeld in mijn grafieken?**
+  **A:** Wanneer een bon duidelijk verschillende soorten items combineert (bijvoorbeeld boodschappen en alcohol), verdeelt de app deze automatisch over de bijbehorende categorieën in je uitgavengrafieken. Dit verandert nooit je budgetten. Tik op **Categorieën wijzigen** op het bevestigingsscherm van de bon om dit aan te passen — correcties worden onthouden voor de volgende keer.
 
 ---
 

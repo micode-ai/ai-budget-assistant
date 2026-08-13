@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import {
   View,
   Text,
@@ -21,8 +21,10 @@ import { useAuthStore } from '@/stores/authStore';
 import { MerchantInput } from '@/components/MerchantInput';
 import { resolveExistingMerchant } from '@/utils/merchant';
 import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
+import CategorySplitChips from '@/components/receipt/CategorySplitChips';
+import ItemCategorySheet, { type ItemCategorySheetItem } from '@/components/receipt/ItemCategorySheet';
 import { useCategoryStore } from '@/stores/categoryStore';
-import { formatCurrency } from '@budget/shared-utils';
+import { formatCurrency, buildCategorySplits, type ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
@@ -50,6 +52,17 @@ export default function ReceiptExpenseScreen() {
   const { addExpense } = useExpenseStore();
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { user } = useAuthStore();
+  const { getExpenseCategories } = useCategoryStore();
+
+  // itemCategories: receiptItems index -> locally-resolved category id.
+  // Seeded from the server's categorySplits (Step 1 below) and updated live
+  // as the user reassigns lines in the ItemCategorySheet.
+  const [itemCategories, setItemCategories] = useState<Record<number, string | null>>({});
+  // True only when the server DID send a split but it could not be resolved
+  // against local categories, so the whole set was dropped (see the effect
+  // below) — distinct from "the server never suggested a split at all".
+  const [splitDropped, setSplitDropped] = useState(false);
+  const [showSplitSheet, setShowSplitSheet] = useState(false);
 
   const gpsLocationRef = useRef<CapturedLocation | null>(null);
   useEffect(() => {
@@ -79,9 +92,67 @@ export default function ReceiptExpenseScreen() {
       setShowConfirm(true);
       setMerchant(resolveExistingMerchant(scannedReceipt.merchant, getDistinctMerchants()));
       useSubscriptionStore.getState().loadUsage();
+
+      // Resolve the server's category splits against local categories: by
+      // categoryId first, falling back to a name lookup (the same fallback
+      // this screen already uses for categorySuggestion). If ANY split fails
+      // to resolve, drop the entire set — a partially resolved set no longer
+      // sums to the expense amount, the one thing the split arithmetic must
+      // guarantee.
+      const incomingSplits = scannedReceipt.categorySplits;
+      if (incomingSplits && incomingSplits.length > 0) {
+        const catStore = useCategoryStore.getState();
+        const seeded: Record<number, string | null> = {};
+        let allResolved = true;
+        for (const split of incomingSplits) {
+          const local =
+            catStore.getCategoryById(split.categoryId) ||
+            catStore.getCategoryByName(split.categoryName, 'expense');
+          if (!local) {
+            allResolved = false;
+            break;
+          }
+          for (const idx of split.itemIndexes) {
+            seeded[idx] = local.id;
+          }
+        }
+        setItemCategories(allResolved ? seeded : {});
+        setSplitDropped(!allResolved);
+      } else {
+        setItemCategories({});
+        setSplitDropped(false);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scannedReceipt]);
+
+  // Recomputed locally through buildCategorySplits every time the user
+  // reassigns a line, so the edited numbers match exactly what the server
+  // would have produced (same function, same tolerance/residual rules).
+  const currentSplits: ReceiptCategorySplit[] = useMemo(() => {
+    if (!scannedReceipt?.receiptItems || scannedReceipt.receiptItems.length === 0) return [];
+    const catStore = useCategoryStore.getState();
+    const items = scannedReceipt.receiptItems.map((item, index) => {
+      const categoryId = itemCategories[index] ?? null;
+      return {
+        index,
+        amount: item.totalPrice,
+        categoryId,
+        categoryName: categoryId ? catStore.getCategoryById(categoryId)?.name ?? null : null,
+      };
+    });
+    return buildCategorySplits({ items, total: scannedReceipt.amount });
+  }, [scannedReceipt, itemCategories]);
+
+  const sheetItems: ItemCategorySheetItem[] = (scannedReceipt?.receiptItems ?? []).map((item, index) => ({
+    index,
+    description: item.description,
+    categoryId: itemCategories[index] ?? null,
+  }));
+
+  const handleItemCategoryChange = (itemIndex: number, categoryId: string | null) => {
+    setItemCategories((prev) => ({ ...prev, [itemIndex]: categoryId }));
+  };
 
   const handleCameraPress = async () => {
     await pickFromCamera(userPrompt.trim() || undefined);
@@ -117,6 +188,7 @@ export default function ReceiptExpenseScreen() {
         unitPrice: item.unitPrice,
         totalPrice: item.totalPrice,
         sortOrder: index,
+        categoryId: itemCategories[index] ?? undefined,
       }));
 
       // Compress and encode receipt image if checkbox is checked (not for PDFs)
@@ -152,6 +224,9 @@ export default function ReceiptExpenseScreen() {
         items,
         receiptImageBase64,
         location: scannedReceipt.location ?? gpsLocationRef.current ?? undefined,
+        splits: currentSplits.length > 1
+          ? currentSplits.map((s) => ({ categoryId: s.categoryId, amount: s.amount, percentage: s.percentage }))
+          : undefined,
       });
 
       showAlert(t('common.success'), t('receipt.success'), [
@@ -190,6 +265,9 @@ export default function ReceiptExpenseScreen() {
     reset();
     setShowConfirm(false);
     setSaveImage(false);
+    setItemCategories({});
+    setSplitDropped(false);
+    setShowSplitSheet(false);
   };
 
   return (
@@ -326,6 +404,17 @@ export default function ReceiptExpenseScreen() {
                 </View>
               )}
 
+              <CategorySplitChips
+                splits={currentSplits}
+                currencyCode={scannedReceipt?.currencyCode || 'USD'}
+                hasItems={sheetItems.length > 0}
+                onPress={() => setShowSplitSheet(true)}
+              />
+
+              {splitDropped && currentSplits.length === 0 && (
+                <Text style={styles.splitDroppedNote}>{t('receiptCategorySplit.dropped')}</Text>
+              )}
+
               {scannedReceipt?.receiptItems && scannedReceipt.receiptItems.length > 0 && (
                 <View style={styles.itemsSection}>
                   <Text style={styles.itemsTitle}>{t('receipt.items', { count: scannedReceipt.receiptItems.length })}</Text>
@@ -399,6 +488,14 @@ export default function ReceiptExpenseScreen() {
               <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
               <Text style={styles.retryButtonText}>{t('receipt.scanAgain')}</Text>
             </TouchableOpacity>
+
+            <ItemCategorySheet
+              visible={showSplitSheet}
+              items={sheetItems}
+              categories={getExpenseCategories()}
+              onChange={handleItemCategoryChange}
+              onClose={() => setShowSplitSheet(false)}
+            />
           </View>
         )}
       </KeyboardAwareScreen>
@@ -602,6 +699,14 @@ const createStyles = (theme: Theme) => ({
     fontSize: 12,
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[2],
+    textAlign: 'center' as const,
+  },
+  splitDroppedNote: {
+    fontSize: 12,
+    color: theme.colors.textTertiary,
+    fontStyle: 'italic' as const,
+    marginTop: theme.spacing[2],
+    marginBottom: theme.spacing[2],
     textAlign: 'center' as const,
   },
   confidenceRow: {

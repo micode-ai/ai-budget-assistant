@@ -1,5 +1,6 @@
 import { PhotoHandler } from './photo.handler';
 import type { WaMediaMessage, WhatsAppUserState } from '../types';
+import { buildCategorySplitLine } from '../helpers/i18n';
 
 /** Minimal in-memory stand-in for the ioredis client the handler uses. */
 function makeFakeRedis() {
@@ -105,5 +106,114 @@ describe('WhatsApp PhotoHandler — geocoded location wiring (ABA-310 bot photo 
     expect(expenses.create).toHaveBeenCalledTimes(1);
     const dto = expenses.create.mock.calls[0][2];
     expect(dto.location).toBeUndefined();
+  });
+});
+
+describe('WhatsApp buildCategorySplitLine (receipt category autosplit — bots report the split)', () => {
+  it('returns an empty string for an empty splits array', () => {
+    expect(buildCategorySplitLine([], 'PLN', 'en')).toBe('');
+  });
+
+  it('lists each category name with its amount', () => {
+    const line = buildCategorySplitLine(
+      [
+        { categoryName: 'Groceries', amount: 180 },
+        { categoryName: 'Alcohol', amount: 25 },
+      ],
+      'PLN',
+      'en',
+    );
+    expect(line).toContain('Groceries 180');
+    expect(line).toContain('Alcohol 25');
+  });
+});
+
+describe('WhatsApp PhotoHandler — receipt category splits reported to the bot (bots report the split)', () => {
+  const SPLITS = [
+    { categoryId: 'cat-groceries', categoryName: 'Groceries', amount: 180, percentage: 87.8, itemIndexes: [0, 1] },
+    { categoryId: 'cat-alcohol', categoryName: 'Alcohol', amount: 25, percentage: 12.2, itemIndexes: [2] },
+  ];
+
+  function receiptWithSplits(categorySplits: typeof SPLITS) {
+    return { ...baseReceipt(null), categorySplits };
+  }
+
+  function setup(categorySplits: typeof SPLITS | undefined) {
+    const redis = makeFakeRedis();
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue(
+        categorySplits === undefined ? baseReceipt(null) : receiptWithSplits(categorySplits),
+      ),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const client = {
+      downloadMedia: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      sendText: jest.fn().mockResolvedValue(undefined),
+      sendButtons: jest.fn().mockResolvedValue(undefined),
+    };
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      client as never,
+      redis as never,
+    );
+    return { handler, redis, expenses, client };
+  }
+
+  function shortIdFrom(redis: ReturnType<typeof makeFakeRedis>): string {
+    const key = [...redis.store.keys()].find((k) => k.startsWith('wa:receipt:'));
+    expect(key).toBeDefined();
+    return key!.slice('wa:receipt:'.length);
+  }
+
+  it('passes the receipt category splits into the created expense', async () => {
+    const { handler, redis, expenses } = setup(SPLITS);
+
+    await handler.handleDocument(pdfMessage(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    expect(expenses.create).toHaveBeenCalledTimes(1);
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.splits).toEqual(SPLITS);
+  });
+
+  it('appends a split line to the reply', async () => {
+    const { handler, client } = setup(SPLITS);
+
+    await handler.handleDocument(pdfMessage(), userState);
+
+    const summary = client.sendButtons.mock.calls[0][1] as string;
+    expect(summary).toContain('Groceries 180');
+    expect(summary).toContain('Alcohol 25');
+  });
+
+  it('replies exactly as before when there is no split', async () => {
+    // "before this feature existed" == a receipt with no categorySplits field
+    // at all (baseReceipt). Today's OCR always returns the field, empty when
+    // there is nothing to split — that must produce the byte-identical reply.
+    const { handler: legacyHandler, client: legacyClient } = setup(undefined);
+    const { handler: emptySplitHandler, client: emptyClient } = setup([]);
+
+    await legacyHandler.handleDocument(pdfMessage(), userState);
+    await emptySplitHandler.handleDocument(pdfMessage(), userState);
+
+    expect(emptyClient.sendButtons.mock.calls[0][1]).toEqual(legacyClient.sendButtons.mock.calls[0][1]);
+
+    // Sanity check: an actual split DOES change the reply.
+    const { handler: withSplitsHandler, client: withSplitsClient } = setup(SPLITS);
+    await withSplitsHandler.handleDocument(pdfMessage(), userState);
+    expect(withSplitsClient.sendButtons.mock.calls[0][1]).not.toEqual(legacyClient.sendButtons.mock.calls[0][1]);
+
+    // Also passes no splits through to the created expense.
+    const { handler: cbHandler, redis: cbRedis, expenses: cbExpenses } = setup([]);
+    await cbHandler.handleDocument(pdfMessage(), userState);
+    const shortId = shortIdFrom(cbRedis);
+    await cbHandler.handleReceiptAddCallback(shortId, userState);
+    const dto = cbExpenses.create.mock.calls[0][2];
+    expect(dto.splits).toBeUndefined();
   });
 });

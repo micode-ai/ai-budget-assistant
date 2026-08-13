@@ -1,4 +1,5 @@
 import { PhotoHandler } from './photo.handler';
+import { buildCategorySplitLine } from '../helpers/i18n';
 
 // The handler downloads the file via this helper (real network) — stub it.
 jest.mock('../helpers/download-file', () => ({
@@ -121,5 +122,123 @@ describe('Telegram PhotoHandler — buildPriceCheckLine (receipt price-check sum
     const line = (handler as any).buildPriceCheckLine({ priceFindings: findings(n) } as any, 'ru');
     expect(line).toMatch(new RegExp(`${n}\\s*(,|\\.|$)`));
     expect(line).not.toMatch(new RegExp(`${n}\\s+\\p{L}`, 'u'));
+  });
+});
+
+describe('Telegram buildCategorySplitLine (receipt category autosplit — bots report the split)', () => {
+  it('returns an empty string for an empty splits array', () => {
+    expect(buildCategorySplitLine([], 'PLN', 'en')).toBe('');
+  });
+
+  it('lists each category name with its amount', () => {
+    const line = buildCategorySplitLine(
+      [
+        { categoryName: 'Groceries', amount: 180 },
+        { categoryName: 'Alcohol', amount: 25 },
+      ],
+      'PLN',
+      'en',
+    );
+    expect(line).toContain('Groceries 180');
+    expect(line).toContain('Alcohol 25');
+  });
+});
+
+describe('Telegram PhotoHandler — receipt category splits reported to the bot (bots report the split)', () => {
+  const SPLITS = [
+    { categoryId: 'cat-groceries', categoryName: 'Groceries', amount: 180, percentage: 87.8, itemIndexes: [0, 1] },
+    { categoryId: 'cat-alcohol', categoryName: 'Alcohol', amount: 25, percentage: 12.2, itemIndexes: [2] },
+  ];
+
+  function receiptWithSplits(categorySplits: typeof SPLITS) {
+    return { ...baseReceipt(null), categorySplits };
+  }
+
+  function setup(categorySplits: typeof SPLITS | undefined) {
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue(
+        categorySplits === undefined ? baseReceipt(null) : receiptWithSplits(categorySplits),
+      ),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never);
+    return { handler, expenses };
+  }
+
+  it('passes the receipt category splits into the created expense', async () => {
+    const { handler, expenses } = setup(SPLITS);
+    const ctx = makeCtx();
+
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    expect(expenses.create).toHaveBeenCalledTimes(1);
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.splits).toEqual(SPLITS);
+  });
+
+  it('appends a split line to the reply', async () => {
+    const { handler } = setup(SPLITS);
+    const ctx = makeCtx();
+
+    await handler.handleDocument(ctx as never);
+
+    const summary = ctx.reply.mock.calls[0][0] as string;
+    expect(summary).toContain('Groceries 180');
+    expect(summary).toContain('Alcohol 25');
+  });
+
+  // Telegram sends the summary with parse_mode: 'HTML'. A category name is
+  // user-controlled free text ("Health & Beauty" is an entirely ordinary
+  // category), and an unescaped '&' makes Telegram reject the whole message
+  // with a parse-entities error — which the surrounding try/catch then
+  // reports to the user as receiptScanFailed, even though the scan actually
+  // succeeded. merchant/description/categorySuggestion/item descriptions are
+  // all escaped in this same file; the category-split line must be too.
+  it('HTML-escapes category names before they reach the parse_mode: HTML reply', async () => {
+    const { handler } = setup([
+      { categoryId: 'cat-hb', categoryName: 'Health & Beauty', amount: 50, percentage: 100, itemIndexes: [0] },
+    ]);
+    const ctx = makeCtx();
+
+    await handler.handleDocument(ctx as never);
+
+    const summary = ctx.reply.mock.calls[0][0] as string;
+    expect(summary).toContain('Health &amp; Beauty');
+    expect(summary).not.toContain('Health & Beauty');
+  });
+
+  it('replies exactly as before when there is no split', async () => {
+    // "before this feature existed" == a receipt with no categorySplits field
+    // at all (baseReceipt). Today's OCR always returns the field, empty when
+    // there is nothing to split — that must produce the byte-identical reply.
+    const { handler: legacyHandler } = setup(undefined);
+    const { handler: emptySplitHandler } = setup([]);
+    const ctxLegacy = makeCtx();
+    const ctxEmpty = makeCtx();
+
+    await legacyHandler.handleDocument(ctxLegacy as never);
+    await emptySplitHandler.handleDocument(ctxEmpty as never);
+
+    expect(ctxEmpty.reply.mock.calls[0][0]).toEqual(ctxLegacy.reply.mock.calls[0][0]);
+
+    // Sanity check: an actual split DOES change the reply, so the equality
+    // above is a real assertion and not a tautology from a broken test.
+    const { handler: withSplitsHandler } = setup(SPLITS);
+    const ctxWithSplits = makeCtx();
+    await withSplitsHandler.handleDocument(ctxWithSplits as never);
+    expect(ctxWithSplits.reply.mock.calls[0][0]).not.toEqual(ctxLegacy.reply.mock.calls[0][0]);
+
+    // Also passes no splits through to the created expense.
+    const { handler: cbHandler, expenses } = setup([]);
+    const ctxCb = makeCtx();
+    await cbHandler.handleDocument(ctxCb as never);
+    const receiptId = receiptIdFromReply(ctxCb);
+    await cbHandler.handleReceiptAddCallback(ctxCb as never, receiptId);
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.splits).toBeUndefined();
   });
 });

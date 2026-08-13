@@ -77,6 +77,17 @@ Review and correct any details, then:
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
 
+### Category Splits
+
+Grocery-store receipts often mix several kinds of items in one trip — food, household supplies, alcohol. When the app recognizes more than one kind of item on a receipt, it automatically splits the expense across the matching categories instead of putting it all in one.
+
+- On the confirmation screen, a row of category chips appears above the item list, labelled **Split by category** (for example, "Groceries 180 · Household 35 · Alcohol 25"), showing how the total will be broken down.
+- Tap **Change categories** to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.
+- If the items don't add up closely enough to the receipt total, the app falls back to one category instead of guessing.
+- This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt's one overall category.
+
+Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.
@@ -145,6 +156,9 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
 
 - **Q: Does voice/receipt scanning use my AI requests?**
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.
+
+- **Q: Why did one receipt end up split across several categories in my charts?**
+  **A:** When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts. This never changes your budgets. Tap **Change categories** on the receipt confirmation screen to adjust it — corrections are remembered for next time.
 
 ---
 

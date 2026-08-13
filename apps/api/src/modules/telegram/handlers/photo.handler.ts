@@ -8,7 +8,7 @@ import { SubscriptionsService } from '../../subscriptions/subscriptions.service'
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
-import { t } from '../helpers/i18n';
+import { t, buildCategorySplitLine } from '../helpers/i18n';
 
 // `ctx.answerCbQuery` throws if Telegram considers the callback query expired
 // (15s window). When called from a `catch` block, an unhandled rethrow would
@@ -31,6 +31,7 @@ interface PendingReceiptData {
   description: string;
   merchant?: string;
   location?: { lat: number; lng: number; name?: string } | null;
+  categorySplits?: ReceiptExpense['categorySplits'];
   categoryId: string | null;
   date: string | null;
   discountAmount: number | null;
@@ -149,6 +150,10 @@ export class PhotoHandler {
       if (priceCheckLine) {
         summary += `\n${priceCheckLine}\n`;
       }
+      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, lang);
+      if (categorySplitLine) {
+        summary += `\n${escapeHtml(categorySplitLine)}\n`;
+      }
 
       // Store pending receipt data
       pendingReceipts.set(receiptId, {
@@ -159,6 +164,7 @@ export class PhotoHandler {
         description: receipt.description,
         merchant: receipt.merchant ?? undefined,
         location: receipt.location,
+        categorySplits: receipt.categorySplits ?? [],
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
@@ -272,6 +278,10 @@ export class PhotoHandler {
       if (priceCheckLine) {
         summary += `\n${priceCheckLine}\n`;
       }
+      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, lang);
+      if (categorySplitLine) {
+        summary += `\n${escapeHtml(categorySplitLine)}\n`;
+      }
 
       pendingReceipts.set(receiptId, {
         userId: ctx.userState!.userId,
@@ -281,6 +291,7 @@ export class PhotoHandler {
         description: receipt.description,
         merchant: receipt.merchant ?? undefined,
         location: receipt.location,
+        categorySplits: receipt.categorySplits ?? [],
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
@@ -333,6 +344,7 @@ export class PhotoHandler {
           date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
           source: 'ocr',
           location: data.location ?? undefined,
+          splits: data.categorySplits?.length ? data.categorySplits : undefined,
           receiptMimeType: data.receiptMimeType,
           receiptImageBase64: data.receiptImageBase64,
           items: data.items.map((item, index) => ({

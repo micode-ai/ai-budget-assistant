@@ -25,7 +25,7 @@ import {
   getAllProjectExpenseMappings,
   upsertProject,
 } from '@/db/projectRepository';
-import { getSplitsForExpense, insertSplit } from '@/db/splitRepository';
+import { getSplitsForExpense, getSplitsForExpenses, insertSplit } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
@@ -53,6 +53,25 @@ let _loadExpensesInflight: Promise<void> | null = null;
 let _lastExpensesSyncAt = 0;
 let _lastExpensesSyncedAccountId: string | null = null;
 const EXPENSES_SYNC_SKIP_WINDOW_MS = 30_000;
+
+/**
+ * Bulk-attaches each expense's category splits (one chunked query via
+ * `getSplitsForExpenses`, not one query per expense) as `expense.splits`,
+ * mutating the array's elements in place — mirrors the projectId-attachment
+ * loops immediately above each of this function's two call sites below.
+ * `useCategoryAnalytics` groups by `splits` instead of `categoryId` when
+ * present (receipt-category-autosplit) — without this hydration step the
+ * in-memory expense list never carries splits and analytics can't reflect
+ * them, even though they are correctly persisted server-side and in SQLite.
+ */
+async function attachSplits(list: Expense[]): Promise<void> {
+  if (list.length === 0) return;
+  const splitsByExpenseId = await getSplitsForExpenses(list.map((e) => e.id));
+  for (const exp of list) {
+    const splits = splitsByExpenseId.get(exp.id);
+    if (splits && splits.length > 0) exp.splits = splits;
+  }
+}
 
 // ─── syncPendingExpenses ─────────────────────────────────────────────────────
 
@@ -191,6 +210,7 @@ async function _doPullAndMerge(
       const pid = expenseProjectMap.get(exp.id);
       if (pid) exp.projectId = pid;
     }
+    await attachSplits(localExpenses);
 
     // On web SQLite is a no-op mock so localExpenses is always empty.
     // Only clobber when we have data, or when the in-memory rows belong to a
@@ -502,6 +522,7 @@ async function _doPullAndMerge(
         const pid = mergedProjectMap.get(exp.id);
         if (pid) exp.projectId = pid;
       }
+      await attachSplits(merged);
 
       // Web (no real SQLite): fall back to freshly-built server rows.
       const finalExpenses =

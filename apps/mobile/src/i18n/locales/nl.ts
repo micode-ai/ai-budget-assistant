@@ -2445,4 +2445,11 @@ export default {
     encrypted: 'Splitsen is niet beschikbaar voor accounts met end-to-end-versleuteling, omdat de server het bonnetje niet kan lezen.',
     offline: 'Je hebt een verbinding nodig om de links aan te maken.',
   },
+  receiptCategorySplit: {
+    title: 'Verdelen op categorie',
+    edit: 'Categorieën wijzigen',
+    itemCategory: 'Categorie voor dit product',
+    unassigned: 'Niet toegewezen',
+    dropped: 'Categorieën konden niet worden gekoppeld — opgeslagen zonder verdeling',
+  },
 } as const;

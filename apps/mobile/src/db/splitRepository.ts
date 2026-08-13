@@ -62,6 +62,43 @@ export async function getSplitsForExpense(expenseId: string): Promise<ExpenseCat
   return rows.map(rowToSplit);
 }
 
+// Conservative margin under SQLite's default 999-bound-variable limit — one
+// query per chunk, keyed on `expenseId` alone (no other bind params share the
+// query), so this is also the max expense ids per IN(...) clause.
+const SQLITE_IN_CLAUSE_CHUNK_SIZE = 900;
+
+/**
+ * Bulk sibling of `getSplitsForExpense` — a per-row read across a whole
+ * account's expenses would be hundreds of queries (one per expense), so this
+ * loads every expense's splits in one (or a few, chunked) `IN (...)` query
+ * instead. Used by the expense pull-and-merge path to hydrate `expense.splits`
+ * for the in-memory list that `useCategoryAnalytics` groups by.
+ */
+export async function getSplitsForExpenses(
+  expenseIds: string[],
+): Promise<Map<string, ExpenseCategorySplit[]>> {
+  const result = new Map<string, ExpenseCategorySplit[]>();
+  const uniqueIds = Array.from(new Set(expenseIds));
+  if (uniqueIds.length === 0) return result;
+
+  for (let i = 0; i < uniqueIds.length; i += SQLITE_IN_CLAUSE_CHUNK_SIZE) {
+    const chunk = uniqueIds.slice(i, i + SQLITE_IN_CLAUSE_CHUNK_SIZE);
+    const placeholders = chunk.map(() => '?').join(', ');
+    const rows = await executeSql<SplitRow>(
+      `SELECT * FROM expense_category_splits WHERE expense_id IN (${placeholders}) AND is_deleted = 0 ORDER BY percentage DESC`,
+      chunk,
+    );
+    for (const row of rows) {
+      const split = rowToSplit(row);
+      const existing = result.get(split.expenseId);
+      if (existing) existing.push(split);
+      else result.set(split.expenseId, [split]);
+    }
+  }
+
+  return result;
+}
+
 export async function deleteAllSplitsForExpense(expenseId: string): Promise<void> {
   await executeSql(
     'UPDATE expense_category_splits SET is_deleted = 1, updated_at = ? WHERE expense_id = ?',

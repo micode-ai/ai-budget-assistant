@@ -155,6 +155,13 @@ export const aiApi = {
       }[];
       location: { lat: number; lng: number; name: string } | null;
       priceFindings?: ReceiptCheckFinding[];
+      categorySplits: {
+        categoryId: string;
+        categoryName: string;
+        amount: number;
+        percentage: number;
+        itemIndexes: number[];
+      }[];
     }>('/ai/scan-receipt', {
       method: 'POST',
       body: JSON.stringify({
@@ -189,18 +196,6 @@ export const aiApi = {
 
   suggestProject(data: { description: string; date: string; locationName?: string }) {
     return httpClient.request<any>('/ai/suggest-project', {
-      method: 'POST',
-      body: JSON.stringify(data),
-    });
-  },
-
-  suggestSplits(data: {
-    id: string;
-    description: string;
-    amount: number;
-    items?: { description: string; totalPrice: number }[];
-  }) {
-    return httpClient.request<any>('/ai/suggest-splits', {
       method: 'POST',
       body: JSON.stringify(data),
     });

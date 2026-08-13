@@ -69,7 +69,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: (opts?: { force?: boolean }) => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items' | 'splits'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number; categoryId?: string }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense> & { splitType?: ShareType; shares?: ExpenseShareDto[] }) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
@@ -223,6 +223,17 @@ export const useExpenseStore = create<ExpenseState>()(
       }
 
       // Fire-and-forget server sync
+      const catStore = useCategoryStore.getState();
+      const resolveCatId = (catId: string | undefined) => {
+        if (!catId) return undefined;
+        const cat = catStore.getCategoryById(catId);
+        return cat?.name || catId;
+      };
+      // Item-level categoryId (receipt category splits, ABA) addresses a
+      // category by the client's own local id — resolved to its name the same
+      // way the top-level category and each split's categoryId already are,
+      // since a just-created-locally category has no server row yet and would
+      // fail a raw-id lookup server-side.
       const sanitizedItems = items?.map((item) => ({
         description: item.description,
         canonicalName: item.canonicalName,
@@ -230,13 +241,8 @@ export const useExpenseStore = create<ExpenseState>()(
         unitPrice: Math.max(0, item.unitPrice ?? 0),
         totalPrice: Math.max(0, item.totalPrice ?? 0),
         sortOrder: item.sortOrder,
+        categoryId: resolveCatId(item.categoryId),
       }));
-      const catStore = useCategoryStore.getState();
-      const resolveCatId = (catId: string | undefined) => {
-        if (!catId) return undefined;
-        const cat = catStore.getCategoryById(catId);
-        return cat?.name || catId;
-      };
       // Mark as syncing immediately to prevent syncPendingExpenses from picking it up
       set((state) => ({
         expenses: state.expenses.map((e) =>

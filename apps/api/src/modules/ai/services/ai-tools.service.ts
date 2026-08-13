@@ -845,6 +845,16 @@ export class AiToolsService {
 
     const rates = await this.getRatesSafe(baseCurrency);
     let fxConverted = false;
+    // Converts into the display currency, flagging that a conversion happened.
+    // Falls back to the native amount when no rate is available — the tool's
+    // long-standing behaviour, unchanged by the split handling below.
+    const conv = (val: number, from: string): number => {
+      if (baseCurrency && rates) {
+        const c = this.convertAmount(val, from, baseCurrency, rates);
+        if (c != null) { fxConverted = true; return c; }
+      }
+      return val;
+    };
 
     const catMap = new Map<string, { categoryId?: string; categoryName: string; amount: number; count: number }>();
     const totalsByCurrency: Record<string, number> = {};
@@ -852,18 +862,37 @@ export class AiToolsService {
     for (const e of expenses) {
       const raw = Number(e.amount);
       const from = e.currencyCode || baseCurrency || 'USD';
-      let value = raw;
-      if (baseCurrency && rates) {
-        const c = this.convertAmount(raw, from, baseCurrency, rates);
-        if (c != null) { value = c; fxConverted = true; }
-      }
+      const value = conv(raw, from);
       totalsByCurrency[from] = Math.round(((totalsByCurrency[from] || 0) + raw) * 100) / 100;
-      const name = e.category?.name || 'Uncategorized';
-      const entry = catMap.get(name) || { categoryId: e.category?.id, categoryName: name, amount: 0, count: 0 };
-      entry.amount += value;
-      entry.count += 1;
-      catMap.set(name, entry);
+      // The period total always comes from the expense amount, never from the
+      // splits — exactly how analytics.service.ts:194 computes it.
       total += value;
+
+      const addToCategory = (categoryId: string | undefined, categoryName: string, amount: number) => {
+        const entry = catMap.get(categoryName) || { categoryId, categoryName, amount: 0, count: 0 };
+        entry.amount += amount;
+        entry.count += 1;
+        catMap.set(categoryName, entry);
+      };
+
+      // A receipt split across categories is attributed per split, mirroring
+      // analytics.service.ts:218 — otherwise "how much did I spend on alcohol?"
+      // answers 0 in chat while the Analytics tab shows 25 zł for the same
+      // period. A category breakdown is an analytics surface; budgets and
+      // get_budget_status stay deliberately split-blind (design spec,
+      // locked decision 1).
+      const splits = Array.isArray(e.categorySplits) ? e.categorySplits : [];
+      if (splits.length > 0) {
+        for (const split of splits) {
+          addToCategory(
+            split.categoryId ?? split.category?.id,
+            split.category?.name || 'Uncategorized',
+            conv(Number(split.amount), from),
+          );
+        }
+      } else {
+        addToCategory(e.category?.id, e.category?.name || 'Uncategorized', value);
+      }
     }
 
     const outCurrency = fxConverted ? baseCurrency : undefined;

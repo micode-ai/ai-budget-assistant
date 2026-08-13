@@ -87,6 +87,17 @@ const messages: Record<string, Record<string, string>> = {
     be: '⚠️ Даражэй, чым звычайна — тавараў: {{count}}, розніца: прыблізна {{amount}}. Варта праверыць чэк.',
     nl: '⚠️ Duurder dan gebruikelijk — artikelen: {{count}}, verschil: ongeveer {{amount}}. Het is de moeite waard om de bon te controleren.',
   },
+  categorySplit: {
+    en: '🗂️ Split across categories: {{list}}',
+    ru: '🗂️ Разбивка по категориям: {{list}}',
+    ua: '🗂️ Розподіл за категоріями: {{list}}',
+    de: '🗂️ Aufteilung nach Kategorien: {{list}}',
+    es: '🗂️ Desglose por categorías: {{list}}',
+    fr: '🗂️ Répartition par catégories : {{list}}',
+    pl: '🗂️ Podział na kategorie: {{list}}',
+    be: '🗂️ Разбіўка па катэгорыях: {{list}}',
+    nl: '🗂️ Verdeling over categorieën: {{list}}',
+  },
   confirm: {
     en: '✅ Confirm',
     ru: '✅ Подтвердить',
@@ -583,4 +594,28 @@ export function t(key: string, lang?: string, params?: Record<string, string>): 
     }
   }
   return text;
+}
+
+export interface CategorySplitLineItem {
+  categoryName: string;
+  amount: number;
+}
+
+/**
+ * One line reporting how a receipt's own line items split across categories
+ * (receipt category autosplit). Empty string when there is nothing to
+ * report — an unsplit receipt (categorySplits: []) must produce a
+ * byte-identical reply to before this feature existed, the same rule the
+ * price-check line (buildPriceCheckLine) already follows.
+ */
+export function buildCategorySplitLine(
+  splits: CategorySplitLineItem[],
+  currencyCode: string,
+  lang?: string,
+): string {
+  if (!splits || splits.length === 0) return '';
+  const list = splits
+    .map((s) => `${s.categoryName} ${s.amount.toFixed(2)} ${currencyCode}`)
+    .join(', ');
+  return t('categorySplit', lang, { list });
 }
