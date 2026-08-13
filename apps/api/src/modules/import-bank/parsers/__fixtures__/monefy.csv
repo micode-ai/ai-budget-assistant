@@ -1,0 +1,6 @@
+date;account;category;amount;currency;converted amount;currency;description
+01/02/2024;Cash;Jedzenie;-25,50;PLN;-25,50;PLN;Biedronka
+02/02/2024;Bank;Wynagrodzenie;5000,00;PLN;5000,00;PLN;Pensja luty
+03/02/2024;Cash;Transport;-4,60;PLN;-4,60;PLN;Bilet tramwajowy
+04/02/2024;Bank;Rozrywka;-89,99;PLN;-89,99;PLN;
+05/02/2024;Cash;;-12,00;PLN;-12,00;PLN;Kiosk

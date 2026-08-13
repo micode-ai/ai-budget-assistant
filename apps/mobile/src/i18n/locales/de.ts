@@ -868,6 +868,8 @@ export default {
     quickImportHeader: 'Schnellimport',
     autoDetect: 'Automatisch erkennen (jede Bank)',
     analysing: 'Kontoauszug wird gelesen…',
+    migrationHeader: 'Wechseln Sie von einer anderen App?',
+    migrationHint: 'Importieren Sie Ihren Verlauf aus einer anderen Budget-App — Ihre Kategorien kommen mit.',
     savedMappingsHeader: 'Gespeicherte Zuordnungen',
     noSavedMappings: 'Noch keine gespeicherten Zuordnungen',
     detectedBank: 'Erkannt: {{name}}',

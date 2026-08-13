@@ -9,6 +9,9 @@ import { ErsteParser } from './erste.parser';
 import { AliorParser } from './alior.parser';
 import { UniversalParser } from './universal.parser';
 import { AiStatementParser } from './ai-statement.parser';
+import { MonefyParser } from './monefy.parser';
+import { WalletParser } from './wallet.parser';
+import { MoneyManagerParser } from './moneymanager.parser';
 
 export const PARSERS: BankParser[] = [
   new MBankParser(),
@@ -19,6 +22,11 @@ export const PARSERS: BankParser[] = [
   new PekaoParser(),
   new ErsteParser(),
   new AliorParser(),
+  // Competitor app exports — tried before UniversalParser, which never
+  // self-detects, so an unclaimed file still falls through to AI inference.
+  new MonefyParser(),
+  new WalletParser(),
+  new MoneyManagerParser(),
   new UniversalParser(),
   new AiStatementParser(),
 ];

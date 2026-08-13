@@ -859,6 +859,8 @@ export default {
     quickImportHeader: 'Хуткі імпарт',
     autoDetect: 'Вызначыць аўтаматычна (любы банк)',
     analysing: 'Чытаем вашу выпіску…',
+    migrationHeader: 'Пераходзіце з іншай праграмы?',
+    migrationHint: 'Імпартуйце гісторыю з іншай бюджэтнай праграмы — катэгорыі пераедуць разам з ёй.',
     savedMappingsHeader: 'Захаваныя супастаўленні',
     noSavedMappings: 'Няма захаваных супастаўленняў',
     detectedBank: 'Вызначана: {{name}}',

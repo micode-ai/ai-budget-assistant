@@ -1,0 +1,6 @@
+Date,Account,Category,Subcategory,Note,Amount,Income/Expense,Description,Currency,Account Type
+2024-02-01,Cash,Food,Groceries,Biedronka,25.50,Expense,,PLN,Cash
+2024-02-02,Bank,Salary,,Pensja luty,5000.00,Income,,PLN,Bank Accounts
+2024-02-03,Cash,Transport,Public,Bilet,4.60,Expense,,PLN,Cash
+2024-02-04,Bank,Cash,,ATM,500.00,Transfer,,PLN,Bank Accounts
+2024-02-05,Bank,Entertainment,Music,,19.99,Expense,Spotify,EUR,Card

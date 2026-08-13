@@ -868,6 +868,8 @@ export default {
     quickImportHeader: 'Import rapide',
     autoDetect: 'Détection automatique (toute banque)',
     analysing: 'Lecture de votre relevé…',
+    migrationHeader: 'Vous venez d’une autre application ?',
+    migrationHint: 'Importez votre historique depuis une autre application de budget : vos catégories vous suivent.',
     savedMappingsHeader: 'Mappages enregistrés',
     noSavedMappings: 'Aucun mappage enregistré pour l\'instant',
     detectedBank: 'Détecté : {{name}}',

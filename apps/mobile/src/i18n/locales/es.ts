@@ -868,6 +868,8 @@ export default {
     quickImportHeader: 'Importación rápida',
     autoDetect: 'Detectar automáticamente (cualquier banco)',
     analysing: 'Leyendo tu extracto…',
+    migrationHeader: '¿Vienes de otra aplicación?',
+    migrationHint: 'Importa tu historial desde otra aplicación de presupuestos: tus categorías vienen contigo.',
     savedMappingsHeader: 'Asignaciones guardadas',
     noSavedMappings: 'Aún no hay asignaciones guardadas',
     detectedBank: 'Detectado: {{name}}',
