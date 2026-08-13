@@ -1168,6 +1168,17 @@ export default {
     wantMore: 'Meer nodig? Upgrade wanneer je wilt',
     continueWithFree: 'Doorgaan met gratis',
   },
+  onboarding: {
+    heading: 'Waar wil je beginnen?',
+    subheading: 'Voeg één ding toe en de app gaat voor je aan de slag.',
+    scanReceipt: 'Bon scannen',
+    scanReceiptHint: 'Regels en categorieën, voor je uitgelezen',
+    useVoice: 'Gebruik je stem',
+    typeManually: 'Handmatig invoeren',
+    bringHistory: 'Importeer je geschiedenis',
+    bringHistoryHint: 'Vanuit je bank of een andere budget-app',
+    later: 'Dat doe ik later',
+  },
   admin: {
     title: 'Beheerpaneel',
     openPanel: 'Beheerdashboard',

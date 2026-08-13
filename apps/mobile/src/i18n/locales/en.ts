@@ -1169,6 +1169,17 @@ export default {
     wantMore: 'Want more? Upgrade anytime',
     continueWithFree: 'Continue with Free',
   },
+  onboarding: {
+    heading: 'Where would you like to start?',
+    subheading: 'Add one thing and the app starts working for you.',
+    scanReceipt: 'Scan a receipt',
+    scanReceiptHint: 'Line items and categories, read for you',
+    useVoice: 'Use your voice',
+    typeManually: 'Type it manually',
+    bringHistory: 'Bring your history',
+    bringHistoryHint: 'From your bank or another budgeting app',
+    later: "I'll do this later",
+  },
   admin: {
     title: 'Admin Panel',
     openPanel: 'Admin Dashboard',

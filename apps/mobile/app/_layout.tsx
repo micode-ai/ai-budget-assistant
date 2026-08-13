@@ -284,6 +284,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="get-started"
+          options={{
+            headerShown: false,
+            gestureEnabled: false,
+          }}
+        />
+        <Stack.Screen
           name="subscription"
           options={{
             headerShown: true,
