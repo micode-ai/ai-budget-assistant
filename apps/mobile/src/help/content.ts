@@ -3516,6 +3516,16 @@ At the bottom of **Settings → Import transactions** there's a **"Don't see you
 
 For CSV files the app auto-detects UTF-8 and Windows-1250 (common for Polish bank exports). PDF statements are read directly — no encoding choice needed.
 
+## Moving from another app?
+
+Under **Settings → Import transactions** there's a separate **"Moving from another app?"** card with Monefy, Wallet by BudgetBakers and Money Manager / 1Money.
+
+Export your history from the old app, pick the matching row here, and your transactions come across — **together with your categories**. A category you had there that doesn't exist here yet is created for you, so your history arrives organised rather than as one undifferentiated pile.
+
+Transfers between your own accounts in the old app are skipped: they aren't spending, and importing them would double-count.
+
+Your app isn't on the list? Use **Auto-detect** at the top — unknown export formats are analysed automatically and usually import fine anyway.
+
 ---
 
 *See also: Expenses & Income | Wallet & Exchange | Settings*
@@ -7952,6 +7962,16 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Для CSV-файлов автоматически определяются UTF-8 и Windows-1250. PDF-выписки читаются напрямую.
 
+## Переходите из другого приложения?
+
+В **Настройки → Импорт транзакций** есть отдельная карточка **«Переходите из другого приложения?»** с Monefy, Wallet by BudgetBakers и Money Manager / 1Money.
+
+Выгрузите историю из старого приложения, выберите здесь нужную строку — и транзакции переедут **вместе с категориями**. Категория, которая была там, но которой ещё нет здесь, создастся сама, так что история приедет разобранной, а не одной сплошной кучей.
+
+Переводы между вашими собственными счетами в старом приложении пропускаются: это не траты, и их импорт посчитал бы их дважды.
+
+Вашего приложения нет в списке? Используйте **Автоопределение** сверху — незнакомые форматы разбираются автоматически и обычно всё равно импортируются.
+
 ---
 
 *См. также: Расходы и доходы | Кошелёк и обмен | Настройки*
@@ -12353,6 +12373,16 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Внизу **Налаштування → Імпорт транзакцій** є картка **«Немає вашого банку?»**. Натисніть, вкажіть назву банку та прикріпіть приклад виписки.
 
+## Переходите з іншого застосунку?
+
+У **Налаштування → Імпорт транзакцій** є окрема картка **«Переходите з іншого застосунку?»** з Monefy, Wallet by BudgetBakers і Money Manager / 1Money.
+
+Вивантажте історію зі старого застосунку, оберіть тут потрібний рядок — і транзакції переїдуть **разом із категоріями**. Категорія, яка була там, але якої ще немає тут, створиться сама, тож історія приїде впорядкованою, а не однією суцільною купою.
+
+Перекази між вашими власними рахунками у старому застосунку пропускаються: це не витрати, а їхній імпорт порахував би їх двічі.
+
+Вашого застосунку немає у списку? Скористайтеся **Автовизначенням** угорі — незнайомі формати розбираються автоматично й зазвичай усе одно імпортуються.
+
 ---
 
 *Дивіться також: Витрати і доходи | Гаманець і обмін | Налаштування*
@@ -16743,6 +16773,16 @@ Na dole **Ustawienia → Import transakcji** jest karta **„Nie widzisz swojego
 
 Dla CSV aplikacja automatycznie wykrywa UTF-8 i Windows-1250. Wyciągi PDF są odczytywane bezpośrednio.
 
+## Przenosisz się z innej aplikacji?
+
+W **Ustawienia → Import transakcji** znajdziesz osobną kartę **„Przenosisz się z innej aplikacji?"** z Monefy, Wallet by BudgetBakers i Money Manager / 1Money.
+
+Wyeksportuj historię ze starej aplikacji, wybierz tutaj odpowiedni wiersz, a transakcje przeniosą się — **razem z kategoriami**. Kategoria, którą tam miałeś, a której tu jeszcze nie ma, zostanie utworzona, więc historia przyjdzie uporządkowana, a nie jako jedna wielka kupka.
+
+Przelewy między Twoimi własnymi kontami w starej aplikacji są pomijane: to nie są wydatki, a ich import liczyłby je podwójnie.
+
+Twojej aplikacji nie ma na liście? Użyj **Wykryj automatycznie** na górze — nieznane formaty są analizowane automatycznie i zwykle i tak importują się poprawnie.
+
 ---
 
 *Zobacz też: Wydatki i dochody | Portfel i wymiana | Ustawienia*
@@ -21107,6 +21147,16 @@ Der Bereich **Vergangene Importe** zeigt die letzten 20 Importe. Tippe auf den *
 
 Unten bei **Einstellungen → Transaktionen importieren** gibt es eine **„Bank nicht gefunden?"**-Karte. Tippe darauf, gib den Banknamen ein und füge einen Musterauszug bei.
 
+## Wechseln Sie von einer anderen App?
+
+Unter **Einstellungen → Transaktionen importieren** gibt es eine eigene Karte **„Wechseln Sie von einer anderen App?"** mit Monefy, Wallet by BudgetBakers und Money Manager / 1Money.
+
+Exportieren Sie Ihren Verlauf aus der alten App, wählen Sie hier die passende Zeile, und Ihre Transaktionen kommen mit — **samt Ihren Kategorien**. Eine Kategorie, die es dort gab und hier noch nicht gibt, wird für Sie angelegt, damit Ihr Verlauf geordnet ankommt statt als ein undifferenzierter Haufen.
+
+Umbuchungen zwischen Ihren eigenen Konten in der alten App werden übersprungen: Sie sind keine Ausgaben, und ein Import würde sie doppelt zählen.
+
+Ihre App fehlt in der Liste? Nutzen Sie **Automatisch erkennen** oben — unbekannte Exportformate werden automatisch analysiert und lassen sich meist trotzdem importieren.
+
 ---
 
 *Siehe auch: Ausgaben & Einnahmen | Wallet & Tausch | Einstellungen*
@@ -25458,6 +25508,16 @@ La sección **Importaciones anteriores** muestra las últimas 20 importaciones. 
 
 Al final de **Ajustes → Importar transacciones** hay una tarjeta **«¿No ves tu banco?»**. Tócala, escribe el nombre del banco y adjunta un extracto de ejemplo.
 
+## ¿Vienes de otra aplicación?
+
+En **Ajustes → Importar transacciones** hay una tarjeta aparte, **«¿Vienes de otra aplicación?»**, con Monefy, Wallet by BudgetBakers y Money Manager / 1Money.
+
+Exporta tu historial desde la aplicación anterior, elige aquí la fila correspondiente y tus transacciones se trasladan — **junto con tus categorías**. Una categoría que tenías allí y que aquí todavía no existe se crea automáticamente, para que tu historial llegue organizado y no como un montón indiferenciado.
+
+Las transferencias entre tus propias cuentas en la aplicación anterior se omiten: no son gastos, e importarlas los contaría dos veces.
+
+¿Tu aplicación no está en la lista? Usa **Detección automática** arriba: los formatos desconocidos se analizan automáticamente y suelen importarse sin problema.
+
 ---
 
 *Ver también: Gastos e ingresos | Cartera y cambio | Ajustes*
@@ -29806,6 +29866,16 @@ La section **Imports précédents** affiche les 20 derniers imports. Touchez la 
 
 En bas de **Paramètres → Importer des transactions** se trouve une carte **« Votre banque n'est pas là ? »**. Touchez-la, entrez le nom de la banque et joignez un exemple de relevé.
 
+## Vous venez d’une autre application ?
+
+Dans **Paramètres → Importer des transactions**, une carte distincte **« Vous venez d’une autre application ? »** propose Monefy, Wallet by BudgetBakers et Money Manager / 1Money.
+
+Exportez votre historique depuis l’ancienne application, choisissez ici la ligne correspondante, et vos transactions vous suivent — **avec vos catégories**. Une catégorie que vous aviez là-bas et qui n’existe pas encore ici est créée pour vous : votre historique arrive organisé plutôt qu’en un seul tas indifférencié.
+
+Les virements entre vos propres comptes dans l’ancienne application sont ignorés : ce ne sont pas des dépenses, et les importer les compterait deux fois.
+
+Votre application n’est pas dans la liste ? Utilisez **Détection automatique** en haut : les formats inconnus sont analysés automatiquement et s’importent généralement quand même.
+
 ---
 
 *Voir aussi : Dépenses et revenus | Portefeuille et change | Paramètres*
@@ -34121,6 +34191,16 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ## Не бачыце свой банк?
 
 Унізе **Налады → Імпарт транзакцый** ёсць картка **«Няма вашага банка?»**. Націсніце і ўкажыце назву банка з прыкладам выпіскі.
+
+## Пераходзіце з іншай праграмы?
+
+У **Налады → Імпарт транзакцый** ёсць асобная картка **«Пераходзіце з іншай праграмы?»** з Monefy, Wallet by BudgetBakers і Money Manager / 1Money.
+
+Выгрузіце гісторыю са старой праграмы, выберыце тут патрэбны радок — і транзакцыі пераедуць **разам з катэгорыямі**. Катэгорыя, якая была там, але якой яшчэ няма тут, створыцца сама, так што гісторыя прыедзе ўпарадкаванай, а не адной суцэльнай кучай.
+
+Пераводы паміж вашымі ўласнымі рахункамі ў старой праграме прапускаюцца: гэта не выдаткі, а іх імпарт палічыў бы іх двойчы.
+
+Вашай праграмы няма ў спісе? Скарыстайцеся **Аўтавызначэннем** уверсе — незнаёмыя фарматы разбіраюцца аўтаматычна і звычайна ўсё роўна імпартуюцца.
 
 ---
 
@@ -38537,6 +38617,16 @@ Onder aan **Instellingen → Transacties importeren** staat een kaart **"Zie je 
 ## Codering
 
 Voor CSV-bestanden detecteert de app automatisch UTF-8 en Windows-1250 (gangbaar voor Poolse bankexports). PDF-afschriften worden direct gelezen — geen keuze voor codering nodig.
+
+## Overstappen van een andere app?
+
+Onder **Instellingen → Transacties importeren** staat een aparte kaart **'Overstappen van een andere app?'** met Monefy, Wallet by BudgetBakers en Money Manager / 1Money.
+
+Exporteer je geschiedenis uit de oude app, kies hier de bijbehorende regel, en je transacties gaan mee — **samen met je categorieën**. Een categorie die je daar had en die hier nog niet bestaat, wordt voor je aangemaakt, zodat je geschiedenis geordend aankomt in plaats van als één ongedifferentieerde hoop.
+
+Overboekingen tussen je eigen rekeningen in de oude app worden overgeslagen: dat zijn geen uitgaven, en importeren zou ze dubbel tellen.
+
+Staat jouw app er niet bij? Gebruik **Automatisch detecteren** bovenaan — onbekende exportformaten worden automatisch geanalyseerd en importeren meestal toch prima.
 
 ---
 

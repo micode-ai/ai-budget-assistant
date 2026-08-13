@@ -85,6 +85,16 @@ Na dole **Ustawienia → Import transakcji** jest karta **„Nie widzisz swojego
 
 Dla CSV aplikacja automatycznie wykrywa UTF-8 i Windows-1250. Wyciągi PDF są odczytywane bezpośrednio.
 
+## Przenosisz się z innej aplikacji?
+
+W **Ustawienia → Import transakcji** znajdziesz osobną kartę **„Przenosisz się z innej aplikacji?"** z Monefy, Wallet by BudgetBakers i Money Manager / 1Money.
+
+Wyeksportuj historię ze starej aplikacji, wybierz tutaj odpowiedni wiersz, a transakcje przeniosą się — **razem z kategoriami**. Kategoria, którą tam miałeś, a której tu jeszcze nie ma, zostanie utworzona, więc historia przyjdzie uporządkowana, a nie jako jedna wielka kupka.
+
+Przelewy między Twoimi własnymi kontami w starej aplikacji są pomijane: to nie są wydatki, a ich import liczyłby je podwójnie.
+
+Twojej aplikacji nie ma na liście? Użyj **Wykryj automatycznie** na górze — nieznane formaty są analizowane automatycznie i zwykle i tak importują się poprawnie.
+
 ---
 
 *Zobacz też: [Wydatki i dochody](./03-expenses-and-income.md) | [Portfel i wymiana](./10-wallet-and-exchange.md) | [Ustawienia](./11-settings.md)*

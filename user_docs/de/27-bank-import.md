@@ -75,6 +75,16 @@ Der Bereich **Vergangene Importe** zeigt die letzten 20 Importe. Tippe auf den *
 
 Unten bei **Einstellungen → Transaktionen importieren** gibt es eine **„Bank nicht gefunden?"**-Karte. Tippe darauf, gib den Banknamen ein und füge einen Musterauszug bei.
 
+## Wechseln Sie von einer anderen App?
+
+Unter **Einstellungen → Transaktionen importieren** gibt es eine eigene Karte **„Wechseln Sie von einer anderen App?"** mit Monefy, Wallet by BudgetBakers und Money Manager / 1Money.
+
+Exportieren Sie Ihren Verlauf aus der alten App, wählen Sie hier die passende Zeile, und Ihre Transaktionen kommen mit — **samt Ihren Kategorien**. Eine Kategorie, die es dort gab und hier noch nicht gibt, wird für Sie angelegt, damit Ihr Verlauf geordnet ankommt statt als ein undifferenzierter Haufen.
+
+Umbuchungen zwischen Ihren eigenen Konten in der alten App werden übersprungen: Sie sind keine Ausgaben, und ein Import würde sie doppelt zählen.
+
+Ihre App fehlt in der Liste? Nutzen Sie **Automatisch erkennen** oben — unbekannte Exportformate werden automatisch analysiert und lassen sich meist trotzdem importieren.
+
 ---
 
 *Siehe auch: [Ausgaben & Einnahmen](./03-expenses-and-income.md) | [Wallet & Tausch](./10-wallet-and-exchange.md) | [Einstellungen](./11-settings.md)*
