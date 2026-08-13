@@ -123,20 +123,32 @@ malformed or duplicated is dropped silently, never repaired and never trusted.
 
 ## Arithmetic and transport
 
-`ReceiptCategorySplit.categoryId` becomes `string | null`, where `null` means
-"proposed, does not exist yet". `categoryName` already carries the name, so no
-second field is needed. Both copies of the type change together — canonical
-`apps/api/src/common/utils/receipt-category-split.ts`, mirror
-`packages/shared-utils/src/formatting/receipt-category-split.ts` — under the same
-duplicated-pair convention as `financial-month.ts`.
+Nullability belongs to the **transport type only**, never to the arithmetic.
 
-The pure `buildCategorySplits` is **not** changed. It groups by whatever key it is
-handed, and `null` already means "unassigned" to it, which is a different concept
-and must stay that way. So `runCategorySplit` groups a proposal under the
-synthetic key `proposed:<name>` and rewrites that key to `categoryId: null` on the
-way out. The mobile mirror does the same in reverse when it recomputes after an
-edit, keying a proposal locally as `new:<name>`. The synthetic key never leaves
-the function that created it, and never reaches a DTO or the database.
+`buildCategorySplits` and its `ReceiptCategorySplit` type are not changed at all,
+in either copy. Two reasons, both load-bearing. `rebuildCategorySplits` feeds that
+same function's output straight into `expense_category_splits.categoryId`, a
+non-nullable column (`expenses.service.ts:219`), so a nullable output type would
+be wrong there and would have to be narrowed by a filter — and dropping a group
+is exactly what breaks the exact-sum invariant. And `null` already means
+"unassigned" to that function, a genuinely different concept that must stay
+distinct from "proposed".
+
+So the function keeps grouping by an opaque string key, and the two ends supply
+their own synthetic keys:
+
+- The server groups a proposal under `proposed:<name>` and, on the way out, maps
+  that key to `categoryId: null` in the wire payload.
+- The client seeds a proposal as `new:<name>` in `itemCategories` and recomputes
+  through the untouched function, so its `currentSplits` carry sentinel string
+  ids until save swaps them for real ones.
+
+Neither sentinel ever reaches a DTO or the database. What changes type is the
+payload that leaves the API — `ReceiptExpense.categorySplits` in
+`ocr.service.ts`, its client mirrors `ReceiptCategorySplitItem` in
+`features/receipt/useReceiptScanner.ts` and the inline response type in
+`services/ai.api.ts` — where `categoryId` becomes `string | null`. `categoryName`
+already carries the name, so no second field is needed.
 
 The consequence that matters: a proposal is an ordinary group, so the exact-sum
 invariant holds untouched, and one real category plus one proposal is already
@@ -157,14 +169,18 @@ carries on working unchanged.
 - The all-or-nothing drop at `receipt.tsx:96-115` learns to tell `null`
   ("proposed") from "did not resolve", and stops treating the former as a reason
   to discard the whole set.
+- Seeding checks the local categories by name first: a proposal whose name the
+  account has acquired since the scan resolves to that real category instead of
+  staying a proposal, so nothing duplicate is ever created.
 - On save, each surviving proposal goes through
-  `categoryStore.createCategory(name, 'expense', icon, color)` — idempotent since
+  `categoryStore.createCategory(name, 'expense', '🏷️')` — idempotent since
   ABA-392, offline-first, returns the existing row on a name clash — and the real
   ids are substituted into both `splits` and `items[].categoryId` before the
   expense is written. Nothing else in the save path changes.
-- Icon `🏷️`; colour picked deterministically from the palette already used by
-  `default-categories.ts`, keyed on the name, so two devices creating the same
-  category agree. Both are editable afterwards in Settings like any category.
+- Icon `🏷️`, no colour. Colour is left unset exactly as it is for a category
+  created by hand today, and both are editable afterwards in Settings. A
+  deterministic colour was considered and dropped: it would be a second thing to
+  keep identical across the API and the client for no user-visible gain.
 
 A viewer cannot reach this: saving an expense is already `ViewerBlockGuard`-ed, so
 no category can be created by a role that may not write.
@@ -208,12 +224,23 @@ lines the user re-assigned by hand, and needs no change at all. What this buys:
 The "learn once, then it is free" property is preserved — it simply keys off
 saved receipts now. Rules accumulate slightly more slowly and are worth more.
 
+One hole has to be closed in the same change, or moving the writer would be a
+regression rather than a fix. All three bots build their `items` array **without**
+`categoryId` (`photo.handler.ts`, the confirm branch that calls
+`expensesService.create`), so the save-time learner — which reads exactly that
+field — currently learns nothing from a bot receipt. Today the scan-time writer
+hides this. Each bot therefore has to derive each line's category from the splits
+it already holds (`itemIndexes` is right there) and pass it on the item. That also
+gives bot receipts the same per-line explainability mobile receipts have, which
+they were silently missing.
+
 ## Observability
 
 `runCategorySplit` gets one log line stating the outcome and its reason:
-`few_lines`, `no_categories`, `one_category`, `gap_over_tolerance`, or
-`ok(<groups>, proposed=<n>)`. Its absence is why diagnosing the production silence
-required reading `product_category_rules` in the database rather than the logs.
+`few_lines`, `no_categories`, `no_assignments`, `one_category`,
+`gap_over_tolerance`, or `ok groups=<n> proposed=<n>`. Its absence is why
+diagnosing the production silence required reading `product_category_rules` in
+the database rather than the logs.
 
 ## Edge cases
 
@@ -241,9 +268,13 @@ required reading `product_category_rules` in the database rather than the logs.
 - `runCategorySplit` tests: a proposal becomes a `categoryId: null` group; the
   synthetic key never appears in the output; one real plus one proposed group
   clears the floor that previously refused; sums stay exact to the cent.
-- Mobile: recompute keeps a proposal after an unrelated line is re-assigned; a
-  proposal stripped of its last line vanishes; the incoming-split resolver keeps a
-  set containing `null` instead of dropping it.
+- Mobile: the sentinel key round-trips and never matches a real category id; the
+  seeding rule resolves by id, then by name, holds a genuine proposal under a
+  sentinel, and drops the whole set only when a *real* split fails to resolve.
+  Seeding is extracted into a pure function precisely so this is testable — the
+  repo has no `@testing-library/react-native`, so the parts that stay inside the
+  component (the recompute memo, the chip rendering, a proposal losing its last
+  line) are verified by running the screen, not by a unit test.
 - Bots: the resolve helper substitutes ids and the created expense's splits sum to
   the expense amount.
 - A regression test pinning the ABA-398 production case: three categories, a
