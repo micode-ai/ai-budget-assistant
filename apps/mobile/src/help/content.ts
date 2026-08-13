@@ -17875,7 +17875,7 @@ Wenn Sie Ihr Passwort vergessen haben:
 Wenn du die App zum ersten Mal öffnest und noch nichts erfasst hast, siehst du einen kurzen Bildschirm mit der Frage **"Wo möchten Sie beginnen?"** — wähle, was für dich am schnellsten geht:
 
 - **Beleg scannen** — mach ein Foto, und die App liest Geschäft, Betrag und sogar einzelne Positionen für dich aus
-- **Sprache verwenden** — sag, was du ausgegeben hast, und die App füllt die Details aus
+- **Stimme verwenden** — sag, was du ausgegeben hast, und die App füllt die Details aus
 - **Manuell eingeben** — trage deine erste Ausgabe selbst Schritt für Schritt ein
 - **Verlauf importieren** — importiere vergangene Transaktionen von deinem Kontoauszug oder einer anderen Budget-App
 

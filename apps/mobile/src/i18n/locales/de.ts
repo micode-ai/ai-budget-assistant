@@ -1173,7 +1173,7 @@ export default {
     subheading: 'Fügen Sie eine Sache hinzu, und die App beginnt, für Sie zu arbeiten.',
     scanReceipt: 'Beleg scannen',
     scanReceiptHint: 'Positionen und Kategorien werden für Sie erkannt',
-    useVoice: 'Sprache verwenden',
+    useVoice: 'Stimme verwenden',
     typeManually: 'Manuell eingeben',
     bringHistory: 'Verlauf importieren',
     bringHistoryHint: 'Von Ihrer Bank oder einer anderen Budget-App',
