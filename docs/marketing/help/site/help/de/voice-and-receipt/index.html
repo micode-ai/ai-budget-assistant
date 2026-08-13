@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Spracheingabe & Beleg scannen | AI Budget Assistant", "description": "Lass die KI die Arbeit machen. Sprich deine Ausgabe naturlich aus oder fotografiere einen Beleg — die App extrahiert Betrag, Beschreibung, Handler und Kategorie automatisch.", "inLanguage": "de", "datePublished": "2026-06-19", "dateModified": "2026-06-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/de/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/de/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/de/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Hilfe", "item": "https://ai-budget.pl/help/de/"}, {"@type": "ListItem", "position": 3, "name": "Spracheingabe & Beleg scannen | AI Budget Assistant", "item": "https://ai-budget.pl/help/de/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Spracheingabe & Beleg scannen | AI Budget Assistant", "description": "Lass die KI die Arbeit machen. Sprich deine Ausgabe naturlich aus oder fotografiere einen Beleg — die App extrahiert Betrag, Beschreibung, Handler und Kategorie automatisch.", "inLanguage": "de", "datePublished": "2026-06-19", "dateModified": "2026-08-13", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/de/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/de/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/de/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Hilfe", "item": "https://ai-budget.pl/help/de/"}, {"@type": "ListItem", "position": 3, "name": "Spracheingabe & Beleg scannen | AI Budget Assistant", "item": "https://ai-budget.pl/help/de/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -159,6 +159,16 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Halte die Kamera ruhig, um Unscharfe zu vermeiden</li>
 <li>Verwende <strong>Zusatzliche Anweisungen fur KI</strong> fur besondere Handhabung (z.B. &ldquo;Das ist in EUR&rdquo;, &ldquo;Ersten Artikel ignorieren&rdquo;)</li>
 </ul>
+<h3>Aufteilung nach Kategorien</h3>
+<p>Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Einkauf — Lebensmittel, Haushaltsartikel, Alkohol. Wenn die App mehr als eine Art von Artikel auf einem Beleg erkennt, teilt sie die Ausgabe automatisch auf die passenden Kategorien auf, anstatt alles einer einzigen zuzuordnen.</p>
+<ul>
+<li>Auf dem Bestätigungsbildschirm erscheint über der Artikelliste eine Reihe von Kategorie-Chips mit der Bezeichnung <strong>Nach Kategorie aufteilen</strong> (zum Beispiel „Lebensmittel 180 · Haushalt 35 · Alkohol 25&rdquo;), die zeigt, wie der Gesamtbetrag aufgeteilt wird.</li>
+<li>Tippe auf <strong>Kategorien ändern</strong>, um eine Liste aller Artikel zu öffnen und anzupassen, zu welcher Kategorie sie gehören. Deine Änderungen gelten sofort — und werden gemerkt, sodass dasselbe Produkt beim nächsten Scan korrekt kategorisiert wird.</li>
+<li>Wenn die Artikel nicht ausreichend genau zum Gesamtbetrag des Belegs passen, greift die App auf eine einzige Kategorie zurück, statt zu raten.</li>
+<li>Das ändert nur, wie deine Ausgaben in der Analyse und in den Diagrammen erscheinen — es ändert nie deine Budgets, die weiterhin gegen die eine Gesamtkategorie des Belegs geführt werden.</li>
+<li>Manchmal passt keine deiner bestehenden Kategorien zu einer Gruppe von Artikeln. In diesem Fall schlägt die App eine brandneue Kategorie vor, angezeigt als Chip mit einem <strong>+</strong>-Zeichen (zum Beispiel „+ Haushaltschemie 10&rdquo;). Sie wird noch nicht angelegt — tippe auf <strong>Kategorien ändern</strong>, um ihre Artikel stattdessen einer bestehenden Kategorie zuzuweisen oder sie wie vorgeschlagen zu belassen. Die neue Kategorie wird erst angelegt, wenn du den Beleg speicherst.</li>
+</ul>
+<p>Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.</p>
 <h2>Spracheingabe Einnahmen</h2>
 <p>Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.</p>
 <h3>So funktioniert es</h3>
@@ -225,6 +235,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>
 <p><strong>F: Verbrauchen Spracheingabe/Belegscan meine KI-Anfragen?</strong>
   <strong>A:</strong> Ja, jede Spracheingabe oder jeder Belegscan verbraucht eine KI-Anfrage aus deinem monatlichen Kontingent.</p>
+</li>
+<li>
+<p><strong>F: Warum wurde ein Beleg in meinen Diagrammen auf mehrere Kategorien aufgeteilt?</strong>
+  <strong>A:</strong> Wenn ein Beleg deutlich unterschiedliche Arten von Artikeln enthält (zum Beispiel Lebensmittel und Alkohol), teilt die App ihn automatisch auf die passenden Kategorien in deinen Ausgabendiagrammen auf. Das ändert nie deine Budgets. Tippe auf <strong>Kategorien ändern</strong> auf dem Bestätigungsbildschirm des Belegs, um es anzupassen — Korrekturen werden für das nächste Mal gemerkt.</p>
 </li>
 </ul>
 <hr />

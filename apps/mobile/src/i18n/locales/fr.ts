@@ -2453,5 +2453,6 @@ export default {
     itemCategory: 'Catégorie de cet article',
     unassigned: 'Non attribuée',
     dropped: "Impossible d'associer les catégories — enregistré sans répartition",
+    newCategory: 'Nouvelle catégorie',
   },
 } as const;

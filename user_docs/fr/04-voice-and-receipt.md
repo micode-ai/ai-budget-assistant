@@ -85,6 +85,7 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 - Appuyez sur **Modifier les catégories** pour ouvrir une liste de tous les articles et ajuster la catégorie de chacun. Vos modifications s'appliquent immédiatement — et sont mémorisées, afin que le même produit soit correctement catégorisé lors de votre prochain scan.
 - Si les articles ne correspondent pas suffisamment au montant total du reçu, l'application revient à une seule catégorie plutôt que de deviner.
 - Cela ne change que la façon dont vos dépenses apparaissent dans les Analyses et les graphiques — cela ne modifie jamais vos budgets, qui continuent d'être suivis par rapport à la catégorie globale unique du reçu.
+- Parfois, aucune de vos catégories existantes ne correspond à un groupe d'articles. Dans ce cas, l'application suggère une toute nouvelle catégorie, affichée sous forme de puce marquée d'un **+** (par exemple, « + Produits d'entretien 10 »). Elle n'est pas encore créée — appuyez sur **Modifier les catégories** pour réattribuer ses articles à une catégorie existante, ou la laisser telle quelle. La nouvelle catégorie n'est réellement créée que lorsque vous enregistrez le reçu.
 
 Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
 

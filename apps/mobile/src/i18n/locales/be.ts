@@ -2429,5 +2429,6 @@ export default {
     itemCategory: 'Катэгорыя гэтай пазіцыі',
     unassigned: 'Не прызначана',
     dropped: 'Не ўдалося супаставіць катэгорыі — захавана без падзелу',
+    newCategory: 'Новая катэгорыя',
   },
 } as const;

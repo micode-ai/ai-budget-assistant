@@ -19,8 +19,13 @@ import {
   type ReceiptCheckLine,
 } from '../../price-history/receipt-check.util';
 import { PriceHistoryService } from '../../price-history/price-history.service';
-import { ReceiptCategorySplitService } from './receipt-category-split.service';
-import { buildCategorySplits, type ReceiptCategorySplit } from '../../../common/utils/receipt-category-split';
+import {
+  ReceiptCategorySplitService,
+  proposedKey,
+  isProposedKey,
+  proposedNameFromKey,
+} from './receipt-category-split.service';
+import { buildCategorySplits } from '../../../common/utils/receipt-category-split';
 
 export interface ReceiptItem {
   description: string;
@@ -86,6 +91,19 @@ export interface ParsedReceipt {
   rawText: string;
 }
 
+/**
+ * What leaves the server. Distinct from the arithmetic type
+ * `ReceiptCategorySplit`: here `categoryId` may be `null`, meaning "a category
+ * the model proposed that does not exist yet — create it if the user saves".
+ */
+export interface ReceiptCategorySplitPayload {
+  categoryId: string | null;
+  categoryName: string;
+  amount: number;
+  percentage: number;
+  itemIndexes: number[];
+}
+
 export interface ReceiptExpense {
   amount: number;
   discountAmount: number | null;
@@ -101,7 +119,7 @@ export interface ReceiptExpense {
   /** Lines that cost more than usual for this user in this store. Always present; empty when nothing to report. */
   priceFindings: ReceiptCheckFinding[];
   /** Category groups derived from the receipt's own lines. Always present; empty when there is nothing to split. */
-  categorySplits: ReceiptCategorySplit[];
+  categorySplits: ReceiptCategorySplitPayload[];
 }
 
 interface CategoryWithName {
@@ -450,7 +468,11 @@ Important:
    * for the same reason as runPriceCheck: a scan must never break because a
    * derived extra failed.
    */
-  private async runCategorySplit(accountId: string, receipt: ReceiptExpense): Promise<ReceiptCategorySplit[]> {
+  private async runCategorySplit(
+    accountId: string,
+    receipt: ReceiptExpense,
+    userId: string,
+  ): Promise<ReceiptCategorySplitPayload[]> {
     try {
       // Tier 2 (full E2EE): line items are encrypted at rest, so the server
       // cannot read them to classify. Same lookup as receipt-split/wrapped.
@@ -475,30 +497,85 @@ Important:
         }))
         .filter((line) => Number.isFinite(line.amount) && line.amount > 0);
       const labeledLines = allLines.filter((line) => line.label.length > 0);
-      if (labeledLines.length < 2) return [];
+      if (labeledLines.length < 2) {
+        this.logger.log(`[CategorySplit] ${accountId}: skipped few_lines`);
+        return [];
+      }
 
       const categories = await this.prisma.category.findMany({
         where: { OR: [{ isSystem: true }, { accountId }], type: 'expense', isDeleted: false },
         select: { id: true, name: true },
       });
-      if (categories.length === 0) return [];
+      if (categories.length === 0) {
+        this.logger.log(`[CategorySplit] ${accountId}: skipped no_categories`);
+        return [];
+      }
 
-      const assigned = await this.categorySplitter.classify({ accountId, items: labeledLines, categories });
-      if (assigned.size === 0) return [];
+      const user = await this.prisma.user.findUnique({
+        where: { id: userId },
+        select: { language: true },
+      });
 
+      const { assignments, proposals } = await this.categorySplitter.classify({
+        accountId,
+        items: labeledLines,
+        categories,
+        language: user?.language ?? undefined,
+      });
+      if (assignments.size === 0 && proposals.length === 0) {
+        this.logger.log(`[CategorySplit] ${accountId}: skipped no_assignments`);
+        return [];
+      }
+
+      // A proposal has no id yet, so it is grouped under a synthetic key. The
+      // key never leaves this method — it is mapped to `categoryId: null` below.
+      const keyByIndex = new Map<number, string>();
+      const nameByKey = new Map<string, string>();
       const byId = new Map(categories.map((c) => [c.id, c.name]));
-      return buildCategorySplits({
+      for (const [index, categoryId] of assignments) {
+        keyByIndex.set(index, categoryId);
+        nameByKey.set(categoryId, byId.get(categoryId) ?? '');
+      }
+      for (const proposal of proposals) {
+        const key = proposedKey(proposal.name);
+        nameByKey.set(key, proposal.name);
+        for (const index of proposal.itemIndexes) keyByIndex.set(index, key);
+      }
+
+      const splits = buildCategorySplits({
         total: receipt.amount,
         items: allLines.map((line) => {
-          const categoryId = assigned.get(line.index) ?? null;
+          const key = keyByIndex.get(line.index) ?? null;
           return {
             index: line.index,
             amount: line.amount,
-            categoryId,
-            categoryName: categoryId ? byId.get(categoryId) ?? null : null,
+            categoryId: key,
+            categoryName: key ? nameByKey.get(key) ?? null : null,
           };
         }),
       });
+
+      if (splits.length === 0) {
+        // 'one_category' is the specific, actionable cause this feature exists
+        // for. Everything else buildCategorySplits can refuse for — the gap
+        // over tolerance, a residual that zeroes out the largest group, no
+        // line with a usable amount — collapses to one honest catch-all
+        // rather than a label that names only one of those causes and is
+        // wrong for the other two.
+        this.logger.log(
+          `[CategorySplit] ${accountId}: refused ${new Set(keyByIndex.values()).size < 2 ? 'one_category' : 'refused_by_arithmetic'}`,
+        );
+        return [];
+      }
+
+      this.logger.log(`[CategorySplit] ${accountId}: ok groups=${splits.length} proposed=${proposals.length}`);
+      return splits.map((split) => ({
+        ...split,
+        categoryId: isProposedKey(split.categoryId) ? null : split.categoryId,
+        categoryName: isProposedKey(split.categoryId)
+          ? proposedNameFromKey(split.categoryId)
+          : split.categoryName,
+      }));
     } catch (error) {
       this.logger.warn(`[CategorySplit] skipped: ${error}`);
       return [];
@@ -514,10 +591,11 @@ Important:
     parsed: ParsedReceipt & { suggestedCategory?: string },
     categories: CategoryWithName[],
     accountId: string,
+    userId: string,
   ): Promise<ReceiptExpense> {
     const receipt = await this.buildReceiptExpense(parsed, categories);
     receipt.priceFindings = await this.runPriceCheck(accountId, receipt);
-    receipt.categorySplits = await this.runCategorySplit(accountId, receipt);
+    receipt.categorySplits = await this.runCategorySplit(accountId, receipt, userId);
     return receipt;
   }
 
@@ -762,7 +840,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
+    return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
   }
 
   async parseReceiptPdf(
@@ -812,12 +890,12 @@ Important:
         if (!content) throw new Error('No response from AI');
 
         const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-        return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
+        return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
       }
 
       // Scanned PDF — send the full PDF as a file
       this.logger.log(`[PDF] Insufficient meaningful text (${meaningfulText.length} chars), sending full PDF as file with model: ${aiModel}`);
-      return this.parseReceiptFile(pdfBase64, accountId, context, userPrompt, aiModel, ocrMaxTokens);
+      return this.parseReceiptFile(pdfBase64, userId, accountId, context, userPrompt, aiModel, ocrMaxTokens);
     } finally {
       await parser.destroy();
     }
@@ -852,6 +930,7 @@ Important:
 
   private async parseReceiptFile(
     pdfBase64: string,
+    userId: string,
     accountId: string,
     context: OcrContext,
     userPrompt?: string,
@@ -897,7 +976,7 @@ Important:
       this.logger.log(`[PDF-File] GPT response (fallback): ${content}`);
       if (!content) throw new Error('No response from AI');
       const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-      return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
+      return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
     }
 
     const response = await this.openai.chat.completions.create({
@@ -919,7 +998,7 @@ Important:
     }
 
     const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId);
+    return await this.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {

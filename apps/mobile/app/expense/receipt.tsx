@@ -24,6 +24,8 @@ import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
 import CategorySplitChips from '@/components/receipt/CategorySplitChips';
 import ItemCategorySheet, { type ItemCategorySheetItem } from '@/components/receipt/ItemCategorySheet';
 import { useCategoryStore } from '@/stores/categoryStore';
+import { proposedKey, isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
+import { seedItemCategories } from '@/features/receipt/seedItemCategories';
 import { formatCurrency, buildCategorySplits, type ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -93,35 +95,19 @@ export default function ReceiptExpenseScreen() {
       setMerchant(resolveExistingMerchant(scannedReceipt.merchant, getDistinctMerchants()));
       useSubscriptionStore.getState().loadUsage();
 
-      // Resolve the server's category splits against local categories: by
-      // categoryId first, falling back to a name lookup (the same fallback
-      // this screen already uses for categorySuggestion). If ANY split fails
-      // to resolve, drop the entire set — a partially resolved set no longer
-      // sums to the expense amount, the one thing the split arithmetic must
-      // guarantee.
-      const incomingSplits = scannedReceipt.categorySplits;
-      if (incomingSplits && incomingSplits.length > 0) {
-        const catStore = useCategoryStore.getState();
-        const seeded: Record<number, string | null> = {};
-        let allResolved = true;
-        for (const split of incomingSplits) {
-          const local =
-            catStore.getCategoryById(split.categoryId) ||
-            catStore.getCategoryByName(split.categoryName, 'expense');
-          if (!local) {
-            allResolved = false;
-            break;
-          }
-          for (const idx of split.itemIndexes) {
-            seeded[idx] = local.id;
-          }
-        }
-        setItemCategories(allResolved ? seeded : {});
-        setSplitDropped(!allResolved);
-      } else {
-        setItemCategories({});
-        setSplitDropped(false);
-      }
+      // Resolve the server's splits against local categories: by id first,
+      // falling back to a name lookup (the same fallback this screen already
+      // uses for categorySuggestion). A proposal (categoryId null) has no local
+      // category by definition and is held under a sentinel until save.
+      const catStore = useCategoryStore.getState();
+      const { itemCategories: seeded, dropped } = seedItemCategories(
+        scannedReceipt.categorySplits,
+        (split) =>
+          ((split.categoryId ? catStore.getCategoryById(split.categoryId) : undefined) ||
+            catStore.getCategoryByName(split.categoryName, 'expense'))?.id,
+      );
+      setItemCategories(seeded);
+      setSplitDropped(dropped);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scannedReceipt]);
@@ -138,11 +124,29 @@ export default function ReceiptExpenseScreen() {
         index,
         amount: item.totalPrice,
         categoryId,
-        categoryName: categoryId ? catStore.getCategoryById(categoryId)?.name ?? null : null,
+        categoryName: categoryId
+          ? isProposedKey(categoryId)
+            ? proposedName(categoryId)
+            : catStore.getCategoryById(categoryId)?.name ?? null
+          : null,
       };
     });
     return buildCategorySplits({ items, total: scannedReceipt.amount });
   }, [scannedReceipt, itemCategories]);
+
+  // Names still attached to at least one line. A proposal the user emptied
+  // disappears from the picker and is never created.
+  const proposedNamesInPlay = useMemo(
+    () =>
+      Array.from(
+        new Set(
+          Object.values(itemCategories)
+            .filter(isProposedKey)
+            .map((key) => proposedName(key as string)),
+        ),
+      ),
+    [itemCategories],
+  );
 
   const sheetItems: ItemCategorySheetItem[] = (scannedReceipt?.receiptItems ?? []).map((item, index) => ({
     index,
@@ -180,6 +184,17 @@ export default function ReceiptExpenseScreen() {
         }
       }
 
+      // Proposals become real categories only here — a scan the user abandons
+      // must leave the account exactly as it found it. createCategory is
+      // idempotent on (name, type) and offline-first.
+      const realIdByKey = new Map<string, string>();
+      for (const name of proposedNamesInPlay) {
+        const created = await useCategoryStore.getState().createCategory(name, 'expense', '🏷️');
+        realIdByKey.set(proposedKey(name), created.id);
+      }
+      const resolveKey = (key: string | null | undefined): string | undefined =>
+        key ? realIdByKey.get(key) ?? key : undefined;
+
       // Prepare receipt items
       const items = scannedReceipt.receiptItems?.map((item, index) => ({
         description: item.description,
@@ -188,7 +203,7 @@ export default function ReceiptExpenseScreen() {
         unitPrice: item.unitPrice,
         totalPrice: item.totalPrice,
         sortOrder: index,
-        categoryId: itemCategories[index] ?? undefined,
+        categoryId: resolveKey(itemCategories[index]),
       }));
 
       // Compress and encode receipt image if checkbox is checked (not for PDFs)
@@ -225,7 +240,11 @@ export default function ReceiptExpenseScreen() {
         receiptImageBase64,
         location: scannedReceipt.location ?? gpsLocationRef.current ?? undefined,
         splits: currentSplits.length > 1
-          ? currentSplits.map((s) => ({ categoryId: s.categoryId, amount: s.amount, percentage: s.percentage }))
+          ? currentSplits.map((s) => ({
+              categoryId: resolveKey(s.categoryId) as string,
+              amount: s.amount,
+              percentage: s.percentage,
+            }))
           : undefined,
       });
 
@@ -493,6 +512,7 @@ export default function ReceiptExpenseScreen() {
               visible={showSplitSheet}
               items={sheetItems}
               categories={getExpenseCategories()}
+              proposedNames={proposedNamesInPlay}
               onChange={handleItemCategoryChange}
               onClose={() => setShowSplitSheet(false)}
             />

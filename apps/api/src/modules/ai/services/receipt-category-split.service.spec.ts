@@ -43,26 +43,23 @@ describe('ReceiptCategorySplitService.classify', () => {
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.get(0)).toBe('c-food');
-    expect(result.get(1)).toBe('c-alc');
+    expect(result.assignments.get(0)).toBe('c-food');
+    expect(result.assignments.get(1)).toBe('c-alc');
     expect(create).not.toHaveBeenCalled();
   });
 
-  it('asks the model only about lines the rules did not cover, and learns the answer', async () => {
-    const { service, productRules, create, cache } = makeService({
+  it('asks the model only about lines the rules did not cover', async () => {
+    const { service, create, cache } = makeService({
       rules: new Map([['chleb', 'c-food']]),
       completion: { assignments: [{ line: 1, category: 'Alcohol' }] },
     });
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.get(1)).toBe('c-alc');
+    expect(result.assignments.get(1)).toBe('c-alc');
     const prompt = create.mock.calls[0][0].messages[0].content as string;
     expect(prompt).toContain('Piwo Żywiec');
     expect(prompt).not.toContain('Chleb');
-    expect(productRules.upsertRules).toHaveBeenCalledWith('a1', [
-      { canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' },
-    ]);
     // A successful model call must actually spend one unit of the daily quota —
     // this is the positive counterpart to the "leaves it untouched on failure"
     // test below; without it, deleting recordInferenceUse entirely (removing
@@ -80,7 +77,7 @@ describe('ReceiptCategorySplitService.classify', () => {
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.size).toBe(0);
+    expect(result.assignments.size).toBe(0);
   });
 
   it('drops an out-of-range line number, keeping a valid assignment from the same response', async () => {
@@ -97,9 +94,9 @@ describe('ReceiptCategorySplitService.classify', () => {
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.get(0)).toBe('c-food');
-    expect(result.has(1)).toBe(false);
-    expect(result.size).toBe(1);
+    expect(result.assignments.get(0)).toBe('c-food');
+    expect(result.assignments.has(1)).toBe(false);
+    expect(result.assignments.size).toBe(1);
   });
 
   it('keeps the valid assignments when one entry is bad', async () => {
@@ -109,8 +106,8 @@ describe('ReceiptCategorySplitService.classify', () => {
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.get(0)).toBe('c-food');
-    expect(result.has(1)).toBe(false);
+    expect(result.assignments.get(0)).toBe('c-food');
+    expect(result.assignments.has(1)).toBe(false);
   });
 
   it('falls back to rules only when the daily quota is spent', async () => {
@@ -121,7 +118,7 @@ describe('ReceiptCategorySplitService.classify', () => {
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.get(0)).toBe('c-food');
+    expect(result.assignments.get(0)).toBe('c-food');
     expect(create).not.toHaveBeenCalled();
   });
 
@@ -131,8 +128,8 @@ describe('ReceiptCategorySplitService.classify', () => {
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.get(0)).toBe('c-food');
-    expect(result.has(1)).toBe(false);
+    expect(result.assignments.get(0)).toBe('c-food');
+    expect(result.assignments.has(1)).toBe(false);
     // A failed call must not spend the daily quota it never got value from —
     // only a model call that actually returns increments the counter.
     expect(cache.set).not.toHaveBeenCalled();
@@ -143,6 +140,134 @@ describe('ReceiptCategorySplitService.classify', () => {
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
-    expect(result.get(1)).toBe('c-alc');
+    expect(result.assignments.get(1)).toBe('c-alc');
+  });
+});
+
+describe('ReceiptCategorySplitService proposals', () => {
+  it('returns a validated proposal alongside assignments', async () => {
+    const { service } = makeService({
+      completion: {
+        assignments: [{ line: 1, category: 'Groceries' }],
+        newCategories: [{ name: 'Chemia', lines: [2] }],
+      },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(result.assignments.get(0)).toBe('c-food');
+    expect(result.proposals).toEqual([{ name: 'Chemia', itemIndexes: [1] }]);
+  });
+
+  it('drops a proposal that restates an existing category, whatever its casing', async () => {
+    const { service } = makeService({
+      completion: { assignments: [], newCategories: [{ name: '  aLCohol ', lines: [1, 2] }] },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(result.proposals).toEqual([]);
+  });
+
+  it('drops a second proposal repeating the first name, and keeps at most three', async () => {
+    const { service } = makeService({
+      completion: {
+        assignments: [],
+        newCategories: [
+          { name: 'Chemia', lines: [1] },
+          { name: 'chemia', lines: [2] },
+        ],
+      },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(result.proposals).toHaveLength(1);
+    expect(result.proposals[0].itemIndexes).toEqual([0]);
+  });
+
+  // The test above never actually exercises the MAX_PROPOSED_CATEGORIES cap:
+  // its second entry is a same-name duplicate, so validateProposals drops it
+  // for a different reason (already-taken name) before the length check ever
+  // has a fourth entry to truncate. This one feeds four DISTINCT, individually
+  // valid proposals — each with its own unclaimed line — so the only thing
+  // that can drop the fourth is the cap itself. ITEMS only has two lines, so
+  // the items list is extended here rather than reusing indexes (a line
+  // already claimed by an earlier proposal is skipped, which would silently
+  // turn this into the same non-test as above).
+  it('keeps at most three proposals when the model returns four distinct, valid ones', async () => {
+    const items = [
+      { index: 0, label: 'Chleb', amount: 5 },
+      { index: 1, label: 'Piwo Żywiec', amount: 8 },
+      { index: 2, label: 'Płyn do naczyń', amount: 3 },
+      { index: 3, label: 'Baterie AA', amount: 4 },
+    ];
+    const { service } = makeService({
+      completion: {
+        assignments: [],
+        newCategories: [
+          { name: 'Chemia', lines: [1] },
+          { name: 'Elektronika', lines: [2] },
+          { name: 'Zdrowie', lines: [3] },
+          { name: 'Zabawki', lines: [4] },
+        ],
+      },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items, categories: CATEGORIES });
+
+    expect(result.proposals).toHaveLength(3);
+    expect(result.proposals.map((p) => p.name)).toEqual(['Chemia', 'Elektronika', 'Zdrowie']);
+  });
+
+  it('lets an assignment win a line the model also claimed for a proposal', async () => {
+    const { service } = makeService({
+      completion: {
+        assignments: [{ line: 1, category: 'Groceries' }],
+        newCategories: [{ name: 'Chemia', lines: [1, 2] }],
+      },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(result.assignments.get(0)).toBe('c-food');
+    expect(result.proposals[0].itemIndexes).toEqual([1]);
+  });
+
+  it('rejects malformed names and out-of-range lines', async () => {
+    const { service } = makeService({
+      completion: {
+        assignments: [],
+        newCategories: [
+          { name: 'X', lines: [1] },
+          { name: '12345', lines: [1] },
+          { name: 'A'.repeat(31), lines: [1] },
+          { name: 'Chemia', lines: [99] },
+          { name: 'Chemia', lines: [] },
+        ],
+      },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(result.proposals).toEqual([]);
+  });
+
+  it('names the account language in the prompt', async () => {
+    const { service, create } = makeService({ completion: { assignments: [] } });
+
+    await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES, language: 'pl' });
+
+    expect(create.mock.calls[0][0].messages[0].content).toContain('Polish');
+  });
+
+  it('never writes a product rule — learning belongs to the save path', async () => {
+    const { service, productRules } = makeService({
+      completion: { assignments: [{ line: 1, category: 'Groceries' }] },
+    });
+
+    await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(productRules.upsertRules).not.toHaveBeenCalled();
   });
 });

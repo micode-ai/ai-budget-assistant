@@ -222,8 +222,13 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
 
     await upsertCategory(category);
 
+    // Web (no real SQLite): the read-back below is always empty (see
+    // loadCategories' identical guard above), which would wipe the in-memory
+    // list and silently drop this category from any split still being built
+    // around it. Fall back to appending it to the current list instead — the
+    // `existing` check above already ruled out a duplicate.
     const categories = await getAllCategories(accountId);
-    set({ categories });
+    set({ categories: categories.length > 0 ? categories : [...get().categories, category] });
 
     // Encrypt sensitive fields before sending to server
     maybeEncrypt('category', { name }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {

@@ -2461,5 +2461,6 @@ export default {
     itemCategory: 'Kategoria tej pozycji',
     unassigned: 'Nieprzypisana',
     dropped: 'Nie udało się dopasować kategorii — zapisano bez podziału',
+    newCategory: 'Nowa kategoria',
   },
 } as const;

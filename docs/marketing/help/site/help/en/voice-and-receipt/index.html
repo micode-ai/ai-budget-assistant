@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Voice Input & Receipt Scanning | AI Budget Assistant", "description": "Let AI do the work. Speak your expense naturally or photograph a receipt — the app extracts amount, description, merchant, and category automatically.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-06-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Voice Input & Receipt Scanning | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Voice Input & Receipt Scanning | AI Budget Assistant", "description": "Let AI do the work. Speak your expense naturally or photograph a receipt — the app extracts amount, description, merchant, and category automatically.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-08-13", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Voice Input & Receipt Scanning | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -159,6 +159,16 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Hold the camera steady to avoid blurring</li>
 <li>Use <strong>Additional instructions for AI</strong> for special handling (e.g., &ldquo;This is in EUR&rdquo;, &ldquo;Ignore the first item&rdquo;)</li>
 </ul>
+<h3>Category Splits</h3>
+<p>Grocery-store receipts often mix several kinds of items in one trip — food, household supplies, alcohol. When the app recognizes more than one kind of item on a receipt, it automatically splits the expense across the matching categories instead of putting it all in one.</p>
+<ul>
+<li>On the confirmation screen, a row of category chips appears above the item list, labelled <strong>Split by category</strong> (for example, &ldquo;Groceries 180 · Household 35 · Alcohol 25&rdquo;), showing how the total will be broken down.</li>
+<li>Tap <strong>Change categories</strong> to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.</li>
+<li>If the items don&rsquo;t add up closely enough to the receipt total, the app falls back to one category instead of guessing.</li>
+<li>This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt&rsquo;s one overall category.</li>
+<li>Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a <strong>+</strong> (for example, &ldquo;+ Household chemicals 10&rdquo;). Nothing is created yet — tap <strong>Change categories</strong> to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.</li>
+</ul>
+<p>Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.</p>
 <h2>Voice Income</h2>
 <p>Capture received payments by voice — same flow as Voice Expense, optimised for income.</p>
 <h3>How It Works</h3>
@@ -225,6 +235,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>
 <p><strong>Q: Does voice/receipt scanning use my AI requests?</strong>
   <strong>A:</strong> Yes, each voice input or receipt scan uses one AI request from your monthly allowance.</p>
+</li>
+<li>
+<p><strong>Q: Why did one receipt end up split across several categories in my charts?</strong>
+  <strong>A:</strong> When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts. This never changes your budgets. Tap <strong>Change categories</strong> on the receipt confirmation screen to adjust it — corrections are remembered for next time.</p>
 </li>
 </ul>
 <hr />

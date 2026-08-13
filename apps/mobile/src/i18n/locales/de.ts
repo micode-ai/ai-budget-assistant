@@ -2453,5 +2453,6 @@ export default {
     itemCategory: 'Kategorie für diesen Artikel',
     unassigned: 'Nicht zugewiesen',
     dropped: 'Kategorien konnten nicht zugeordnet werden — ohne Aufteilung gespeichert',
+    newCategory: 'Neue Kategorie',
   },
 } as const;

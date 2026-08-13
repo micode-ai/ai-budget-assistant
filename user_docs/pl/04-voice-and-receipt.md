@@ -85,6 +85,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Dotknij **Zmień kategorie**, aby otworzyć listę wszystkich pozycji i dostosować, do której kategorii należy każda z nich. Twoje zmiany obowiązują od razu — i są zapamiętywane, dzięki czemu ten sam produkt zostanie poprawnie skategoryzowany przy następnym skanowaniu.
 - Jeśli pozycje nie sumują się wystarczająco blisko łącznej kwoty paragonu, aplikacja wraca do jednej kategorii zamiast zgadywać.
 - To zmienia jedynie sposób prezentacji wydatków w Analizie i na wykresach — nigdy nie zmienia Twoich budżetów, które nadal są liczone względem jednej, ogólnej kategorii paragonu.
+- Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
 

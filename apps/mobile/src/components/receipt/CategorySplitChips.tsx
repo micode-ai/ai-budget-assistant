@@ -5,6 +5,7 @@ import { formatCurrency } from '@budget/shared-utils';
 import type { ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { isProposedKey } from '@/features/receipt/proposedCategory';
 
 interface Props {
   splits: ReceiptCategorySplit[];
@@ -53,13 +54,16 @@ export default function CategorySplitChips({ splits, currencyCode, hasItems, onP
       </View>
       {hasSplits && (
         <View style={styles.chipRow}>
-          {splits.map((split) => (
-            <View key={split.categoryId} style={styles.chip}>
-              <Text style={styles.chipText} numberOfLines={1}>
-                {split.categoryName} {formatCurrency(split.amount, currencyCode as Currency)}
-              </Text>
-            </View>
-          ))}
+          {splits.map((split) => {
+            const proposed = isProposedKey(split.categoryId);
+            return (
+              <View key={split.categoryId} style={[styles.chip, proposed && styles.chipProposed]}>
+                <Text style={styles.chipText} numberOfLines={1}>
+                  {proposed ? '+ ' : ''}{split.categoryName} {formatCurrency(split.amount, currencyCode as Currency)}
+                </Text>
+              </View>
+            );
+          })}
         </View>
       )}
     </View>
@@ -113,5 +117,11 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.primary,
     fontWeight: '600' as const,
+  },
+  chipProposed: {
+    borderWidth: 1,
+    borderStyle: 'dashed' as const,
+    borderColor: theme.colors.primary,
+    backgroundColor: 'transparent' as const,
   },
 });

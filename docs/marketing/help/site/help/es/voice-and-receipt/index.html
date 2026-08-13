@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Entrada de voz y Escaneo de recibos | AI Budget Assistant", "description": "Deja que la IA haga el trabajo. Describe tu gasto de forma natural o fotografa un recibo — la aplicacion extrae el importe, la descripcion, el comercio y la categoria automaticamente.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-06-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Entrada de voz y Escaneo de recibos | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Entrada de voz y Escaneo de recibos | AI Budget Assistant", "description": "Deja que la IA haga el trabajo. Describe tu gasto de forma natural o fotografa un recibo — la aplicacion extrae el importe, la descripcion, el comercio y la categoria automaticamente.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-08-13", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Entrada de voz y Escaneo de recibos | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -159,6 +159,16 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Mantene la camara estable para evitar desenfoque</li>
 <li>Usa <strong>Instrucciones adicionales para la IA</strong> para un tratamiento especial (por ejemplo, &ldquo;Esto esta en EUR&rdquo;, &ldquo;Ignorar el primer articulo&rdquo;)</li>
 </ul>
+<h3>División por categorías</h3>
+<p>Los recibos del supermercado a menudo mezclan varios tipos de artículos en una sola compra — alimentos, artículos del hogar, alcohol. Cuando la aplicación reconoce más de un tipo de artículo en un recibo, divide automáticamente el gasto entre las categorías correspondientes en lugar de asignarlo todo a una sola.</p>
+<ul>
+<li>En la pantalla de confirmación aparece una fila de chips de categoría sobre la lista de artículos, etiquetada <strong>Dividir por categoría</strong> (por ejemplo, &ldquo;Alimentación 180 · Hogar 35 · Alcohol 25&rdquo;), que muestra cómo se desglosará el importe total.</li>
+<li>Toca <strong>Cambiar categorías</strong> para abrir una lista de todos los artículos y ajustar a qué categoría pertenece cada uno. Tus cambios se aplican de inmediato — y se recuerdan, de modo que el mismo producto se categoriza correctamente la próxima vez que lo escanees.</li>
+<li>Si los artículos no suman lo suficientemente cerca del importe total del recibo, la aplicación recurre a una sola categoría en lugar de adivinar.</li>
+<li>Esto solo cambia cómo aparece tu gasto en Analítica y en los gráficos — nunca cambia tus presupuestos, que siguen contabilizando contra la categoría general única del recibo.</li>
+<li>A veces ninguna de tus categorías existentes encaja con un grupo de artículos. En ese caso, la aplicación sugiere una categoría totalmente nueva, mostrada como un chip marcado con un <strong>+</strong> (por ejemplo, &ldquo;+ Productos de limpieza 10&rdquo;). Todavía no se crea — toca <strong>Cambiar categorías</strong> para reasignar sus artículos a una categoría existente, o dejarla tal como se sugirió. La nueva categoría solo se crea de verdad cuando guardas el recibo.</li>
+</ul>
+<p>Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.</p>
 <h2>Ingresos por voz</h2>
 <p>Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.</p>
 <h3>Cómo funciona</h3>
@@ -225,6 +235,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>
 <p><strong>P: La entrada de voz o el escaneo de recibos consume mis solicitudes IA?</strong>
   <strong>R:</strong> Si, cada entrada de voz o escaneo de recibo utiliza una solicitud IA de tu cuota mensual.</p>
+</li>
+<li>
+<p><strong>P: ¿Por qué un recibo terminó dividido en varias categorías en mis gráficos?</strong>
+  <strong>R:</strong> Cuando un recibo mezcla claramente distintos tipos de artículos (por ejemplo, alimentación y alcohol), la aplicación lo divide automáticamente entre las categorías correspondientes en tus gráficos de gasto. Esto nunca cambia tus presupuestos. Toca <strong>Cambiar categorías</strong> en la pantalla de confirmación del recibo para ajustarlo — las correcciones se recuerdan para la próxima vez.</p>
 </li>
 </ul>
 <hr />

@@ -156,7 +156,7 @@ export const aiApi = {
       location: { lat: number; lng: number; name: string } | null;
       priceFindings?: ReceiptCheckFinding[];
       categorySplits: {
-        categoryId: string;
+        categoryId: string | null;
         categoryName: string;
         amount: number;
         percentage: number;

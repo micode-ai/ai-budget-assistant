@@ -105,7 +105,7 @@ describe('OcrService', () => {
       getProductTrendsFor: jest.fn().mockResolvedValue([]),
     };
     categorySplitterMock = {
-      classify: jest.fn().mockResolvedValue(new Map()),
+      classify: jest.fn().mockResolvedValue({ assignments: new Map(), proposals: [] }),
     };
     service = new OcrService(
       configService,
@@ -114,6 +114,11 @@ describe('OcrService', () => {
       priceHistoryMock as any,
       categorySplitterMock as any,
     );
+    // Silence the real Nest Logger's console output (same convention as
+    // anomaly.service.spec.ts / receipt-check.util.cross-path.spec.ts) — these
+    // tests exercise the full parseReceipt flow, which logs [Vision]/[PDF]/
+    // [CategorySplit] lines that are not what any assertion here cares about.
+    (service as any).logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
   });
 
   async function runParseWithFixture(overrides: Partial<ParsedReceipt> = {}) {
@@ -263,7 +268,7 @@ describe('finalizeReceipt category splits', () => {
       user: { findUnique: jest.fn().mockResolvedValue({ aiModel: null, language: 'en', timezone: 'UTC' }) },
       account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: 0 }) },
     };
-    categorySplitterMock = { classify: jest.fn().mockResolvedValue(new Map()) };
+    categorySplitterMock = { classify: jest.fn().mockResolvedValue({ assignments: new Map(), proposals: [] }) };
     const configService = { get: jest.fn().mockReturnValue('sk-test') };
     const geocodingMock = {
       geocode: jest.fn().mockResolvedValue(null),
@@ -277,6 +282,11 @@ describe('finalizeReceipt category splits', () => {
       priceHistoryMock as any,
       categorySplitterMock as any,
     );
+    // Silence the real Nest Logger's console output (same convention as
+    // anomaly.service.spec.ts / receipt-check.util.cross-path.spec.ts) — the
+    // nested 'runCategorySplit with proposals' tests below still spy on this
+    // stub's `log` fn directly when they need to assert on a specific call.
+    (service as any).logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
   });
 
   function runFixture(overrides: Partial<ParsedReceipt> = {}) {
@@ -318,12 +328,13 @@ describe('finalizeReceipt category splits', () => {
     // it would leave only 50 of 100 accounted for — a 50% gap, well past the
     // 5% tolerance — and the split would be refused ([]) even though the
     // spec requires the unlabeled money to fold into the dominant group.
-    categorySplitterMock.classify.mockResolvedValue(
-      new Map([
+    categorySplitterMock.classify.mockResolvedValue({
+      assignments: new Map([
         [0, 'cat-groceries'],
         [1, 'cat-household'],
       ]),
-    );
+      proposals: [],
+    });
 
     const result = await runFixture({
       items: [
@@ -354,5 +365,106 @@ describe('finalizeReceipt category splits', () => {
       { categoryId: 'cat-groceries', categoryName: 'Groceries', amount: 75, percentage: 75, itemIndexes: [0] },
       { categoryId: 'cat-household', categoryName: 'Household', amount: 25, percentage: 25, itemIndexes: [1] },
     ]);
+  });
+
+  describe('OcrService.runCategorySplit with proposals', () => {
+    const RECEIPT = {
+      amount: 30,
+      receiptItems: [
+        { description: 'Chleb', canonicalName: 'Chleb', totalPrice: 20 },
+        { description: 'Płyn do naczyń', canonicalName: 'Płyn do naczyń', totalPrice: 10 },
+      ],
+    } as any;
+
+    beforeEach(() => {
+      prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Food & Dining' }]);
+    });
+
+    it('emits a proposed group as categoryId null and keeps the total exact', async () => {
+      categorySplitterMock.classify.mockResolvedValue({
+        assignments: new Map([[0, 'c-food']]),
+        proposals: [{ name: 'Chemia', itemIndexes: [1] }],
+      });
+
+      const splits = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
+
+      expect(splits).toHaveLength(2);
+      const proposed = splits.find((s: any) => s.categoryId === null);
+      expect(proposed.categoryName).toBe('Chemia');
+      expect(proposed.amount).toBeCloseTo(10, 2);
+      expect(splits.reduce((sum: number, s: any) => sum + s.amount, 0)).toBeCloseTo(30, 2);
+      expect(JSON.stringify(splits)).not.toContain('proposed:');
+    });
+
+    it('splits entirely across proposals when every line falls under one and none under an existing category', async () => {
+      // Both lines are claimed by a proposal, none by an assignment — the one
+      // shape where the name map is populated exclusively from proposals
+      // (spec "Edge cases": still two or more groups, so it splits).
+      categorySplitterMock.classify.mockResolvedValue({
+        assignments: new Map(),
+        proposals: [
+          { name: 'Pieczywo', itemIndexes: [0] },
+          { name: 'Chemia', itemIndexes: [1] },
+        ],
+      });
+
+      const splits = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
+
+      expect(splits).toHaveLength(2);
+      expect(splits.every((s: any) => s.categoryId === null)).toBe(true);
+      expect(splits.map((s: any) => s.categoryName).sort()).toEqual(['Chemia', 'Pieczywo']);
+      expect(splits.reduce((sum: number, s: any) => sum + s.amount, 0)).toBeCloseTo(30, 2);
+      expect(JSON.stringify(splits)).not.toContain('proposed:');
+    });
+
+    it('passes the account language to the classifier', async () => {
+      prisma.user.findUnique.mockResolvedValue({ language: 'pl' });
+
+      await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
+
+      expect(categorySplitterMock.classify).toHaveBeenCalledWith(
+        expect.objectContaining({ language: 'pl' }),
+      );
+    });
+
+    it('still refuses when everything lands in one category, and logs the reason', async () => {
+      const log = jest.spyOn((service as any).logger, 'log').mockImplementation(() => undefined);
+      categorySplitterMock.classify.mockResolvedValue({
+        assignments: new Map([[0, 'c-food'], [1, 'c-food']]),
+        proposals: [],
+      });
+
+      const splits = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
+
+      expect(splits).toEqual([]);
+      expect(log).toHaveBeenCalledWith(expect.stringContaining('one_category'));
+    });
+
+    it('refuses when three categories were on offer and everything still lands in one (ABA-398 production case)', async () => {
+      prisma.category.findMany.mockResolvedValue([
+        { id: 'c-bills', name: 'Bills & Utilities' },
+        { id: 'c-fun', name: 'Entertainment' },
+        { id: 'c-food', name: 'Food & Dining' },
+      ]);
+      categorySplitterMock.classify.mockResolvedValue({
+        assignments: new Map([[0, 'c-food'], [1, 'c-food'], [2, 'c-food']]),
+        proposals: [],
+      });
+
+      const splits = await (service as any).runCategorySplit(
+        'a1',
+        {
+          amount: 33,
+          receiptItems: [
+            { description: 'Chleb', canonicalName: 'Chleb', totalPrice: 8 },
+            { description: 'Whisky G Loch 0,7l', canonicalName: 'Whisky G Loch 0,7l', totalPrice: 20 },
+            { description: 'Tulipan 9 Sztuk', canonicalName: 'Tulipan 9 Sztuk', totalPrice: 5 },
+          ],
+        } as any,
+        'u1',
+      );
+
+      expect(splits).toEqual([]);
+    });
   });
 });

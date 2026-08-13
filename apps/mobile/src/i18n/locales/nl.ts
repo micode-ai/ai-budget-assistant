@@ -2453,5 +2453,6 @@ export default {
     itemCategory: 'Categorie voor dit product',
     unassigned: 'Niet toegewezen',
     dropped: 'Categorieën konden niet worden gekoppeld — opgeslagen zonder verdeling',
+    newCategory: 'Nieuwe categorie',
   },
 } as const;

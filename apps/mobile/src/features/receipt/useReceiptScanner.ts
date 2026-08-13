@@ -14,7 +14,8 @@ export interface ReceiptItem {
 }
 
 export interface ReceiptCategorySplitItem {
-  categoryId: string;
+  /** `null` means the server proposed this category and it does not exist yet. */
+  categoryId: string | null;
   categoryName: string;
   amount: number;
   percentage: number;

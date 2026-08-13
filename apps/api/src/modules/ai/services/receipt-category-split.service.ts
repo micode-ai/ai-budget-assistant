@@ -13,6 +13,49 @@ export interface ClassifyLine {
   amount: number;
 }
 
+export interface ProposedCategory {
+  /** Validated, normalized name. Never equal to an existing category's name. */
+  name: string;
+  /** Indexes in `ClassifyLine.index` space, not the 1-based prompt numbering. */
+  itemIndexes: number[];
+}
+
+export interface ClassifyResult {
+  assignments: Map<number, string>;
+  proposals: ProposedCategory[];
+}
+
+export const MAX_PROPOSED_CATEGORIES = 3;
+const MIN_PROPOSED_NAME_LEN = 2;
+const MAX_PROPOSED_NAME_LEN = 30;
+
+/**
+ * Key a proposal is grouped under inside `buildCategorySplits`, which needs an
+ * opaque string id. It is rewritten to `categoryId: null` before the payload
+ * leaves the server and must never reach a DTO or the database.
+ */
+export const PROPOSED_KEY_PREFIX = 'proposed:';
+export const proposedKey = (name: string): string => `${PROPOSED_KEY_PREFIX}${name}`;
+export const isProposedKey = (key: string): boolean => key.startsWith(PROPOSED_KEY_PREFIX);
+export const proposedNameFromKey = (key: string): string => key.slice(PROPOSED_KEY_PREFIX.length);
+
+/**
+ * A lookup table, not a dependency: `PromptBuilderService.localeToLanguageName`
+ * is a method on a service this one has no other reason to inject.
+ */
+const LANGUAGE_NAMES: Record<string, string> = {
+  en: 'English',
+  pl: 'Polish',
+  de: 'German',
+  es: 'Spanish',
+  fr: 'French',
+  ru: 'Russian',
+  ua: 'Ukrainian',
+  be: 'Belarusian',
+  nl: 'Dutch',
+};
+const languageName = (language?: string): string => LANGUAGE_NAMES[language ?? ''] ?? 'English';
+
 /** NaN-guarded, mirroring parseInferenceQuotaEnv in the AI import path. */
 function resolveDailyLimit(raw: string | undefined): number {
   const parsed = Number.parseInt(raw ?? '', 10);
@@ -45,10 +88,12 @@ export class ReceiptCategorySplitService {
     accountId: string;
     items: ClassifyLine[];
     categories: Array<{ id: string; name: string }>;
-  }): Promise<Map<number, string>> {
-    const { accountId, items, categories } = params;
+    language?: string;
+  }): Promise<ClassifyResult> {
+    const { accountId, items, categories, language } = params;
     const assigned = new Map<number, string>();
-    if (items.length === 0 || categories.length === 0) return assigned;
+    const empty: ClassifyResult = { assignments: assigned, proposals: [] };
+    if (items.length === 0 || categories.length === 0) return empty;
 
     const rules = await this.productRules.getRulesMap(accountId);
     const validCategoryIds = new Set(categories.map((c) => c.id));
@@ -65,35 +110,34 @@ export class ReceiptCategorySplitService {
       }
     }
 
-    if (unresolved.length === 0) return assigned;
+    if (unresolved.length === 0) return empty;
     if (!(await this.hasQuotaRemaining(accountId))) {
       this.logger.log(`[CategorySplit] daily inference quota spent for ${accountId}; rules only`);
-      return assigned;
+      return empty;
     }
 
     try {
-      const learned = await this.classifyWithModel(unresolved, categories);
+      const learned = await this.classifyWithModel(unresolved, categories, language);
       // Only a call that actually returned counts against the daily ceiling — a
       // thrown/failed call must not silently eat a user's quota for nothing.
       await this.recordInferenceUse(accountId);
-      for (const [index, categoryId] of learned) assigned.set(index, categoryId);
-
-      const newRules = Array.from(learned.entries()).map(([index, categoryId]) => ({
-        canonicalName: unresolved.find((l) => l.index === index)!.label,
-        categoryId,
-      }));
-      if (newRules.length > 0) await this.productRules.upsertRules(accountId, newRules);
+      for (const [index, categoryId] of learned.assignments) assigned.set(index, categoryId);
+      // No rule is learned here on purpose. The save-time learner in
+      // ExpensesService.create writes rules from the categories the lines
+      // actually ended up with, so a scan the user abandons teaches nothing.
+      return { assignments: assigned, proposals: learned.proposals };
     } catch (error) {
       this.logger.warn(`[CategorySplit] model classification skipped: ${error}`);
     }
 
-    return assigned;
+    return empty;
   }
 
   private async classifyWithModel(
     lines: ClassifyLine[],
     categories: Array<{ id: string; name: string }>,
-  ): Promise<Map<number, string>> {
+    language?: string,
+  ): Promise<ClassifyResult> {
     const numbered = lines.map((line, i) => `${i + 1}. ${sanitizeForPrompt(line.label)}`).join('\n');
     const categoryNames = categories.map((c) => c.name).join(', ');
 
@@ -104,9 +148,10 @@ ${numbered}
 
 Categories: ${categoryNames}
 
-Return JSON: {"assignments":[{"line":1,"category":"<one of the categories above>"}]}
+Return JSON: {"assignments":[{"line":1,"category":"<one of the categories above>"}],"newCategories":[{"name":"<new category>","lines":[2,3]}]}
 Use only the category names listed, spelled exactly as given.
 Omit a line entirely if you are not confident.
+Only when several lines clearly belong together and NONE of the listed categories fits them, propose up to ${MAX_PROPOSED_CATEGORIES} new categories in "newCategories", each named in ${languageName(language)} as a short noun phrase. Never propose a name that restates a listed category. Leave "newCategories" empty otherwise.
 Do not return any amounts, prices, totals or percentages.`;
 
     const response = await this.openai.chat.completions.create({
@@ -117,7 +162,9 @@ Do not return any amounts, prices, totals or percentages.`;
     });
 
     const parsed = JSON.parse(response.choices[0]?.message?.content || '{}');
-    return this.validateAssignments(parsed?.assignments, lines, categories);
+    const assignments = this.validateAssignments(parsed?.assignments, lines, categories);
+    const proposals = this.validateProposals(parsed?.newCategories, lines, categories, new Set(assignments.keys()));
+    return { assignments, proposals };
   }
 
   /**
@@ -144,6 +191,54 @@ Do not return any amounts, prices, totals or percentages.`;
 
       result.set(lines[lineNumber - 1].index, byName.get(name)!);
     }
+    return result;
+  }
+
+  /**
+   * Same posture as `validateAssignments`: anything invented, malformed or
+   * duplicated is dropped, never repaired. `claimed` carries the line indexes
+   * the assignments already took, so an assignment always wins a contested line
+   * and the outcome does not depend on the order the model emitted things in.
+   */
+  private validateProposals(
+    raw: unknown,
+    lines: ClassifyLine[],
+    categories: Array<{ id: string; name: string }>,
+    claimed: Set<number>,
+  ): ProposedCategory[] {
+    if (!Array.isArray(raw)) return [];
+
+    const taken = new Set(categories.map((c) => c.name.trim().toLowerCase()));
+    const result: ProposedCategory[] = [];
+
+    for (const entry of raw) {
+      if (result.length >= MAX_PROPOSED_CATEGORIES) break;
+
+      const name = String(entry?.name ?? '')
+        // eslint-disable-next-line no-control-regex -- intentional: strip control chars from a model-supplied name
+        .replace(/[\u0000-\u001F\u007F]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+      if (name.length < MIN_PROPOSED_NAME_LEN || name.length > MAX_PROPOSED_NAME_LEN) continue;
+      // A name with no letter at all is a number, a code or punctuation.
+      if (!/\p{L}/u.test(name)) continue;
+      if (taken.has(name.toLowerCase())) continue;
+
+      const itemIndexes: number[] = [];
+      for (const rawLine of Array.isArray(entry?.lines) ? entry.lines : []) {
+        const lineNumber = Number(rawLine);
+        if (!Number.isInteger(lineNumber) || lineNumber < 1 || lineNumber > lines.length) continue;
+        const index = lines[lineNumber - 1].index;
+        if (claimed.has(index)) continue;
+        claimed.add(index);
+        itemIndexes.push(index);
+      }
+      if (itemIndexes.length === 0) continue;
+
+      taken.add(name.toLowerCase());
+      result.push({ name, itemIndexes });
+    }
+
     return result;
   }
 

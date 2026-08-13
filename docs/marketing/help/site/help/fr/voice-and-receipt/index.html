@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Saisie vocale et scan de recus | AI Budget Assistant", "description": "Laissez l'IA faire le travail. Decrivez votre depense naturellement a l'oral ou photographiez un recu — l'application extrait automatiquement le montant, la description, le commercant et la categorie.", "inLanguage": "fr", "datePublished": "2026-06-19", "dateModified": "2026-06-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/fr/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/fr/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/fr/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Aide", "item": "https://ai-budget.pl/help/fr/"}, {"@type": "ListItem", "position": 3, "name": "Saisie vocale et scan de recus | AI Budget Assistant", "item": "https://ai-budget.pl/help/fr/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Saisie vocale et scan de recus | AI Budget Assistant", "description": "Laissez l'IA faire le travail. Decrivez votre depense naturellement a l'oral ou photographiez un recu — l'application extrait automatiquement le montant, la description, le commercant et la categorie.", "inLanguage": "fr", "datePublished": "2026-06-19", "dateModified": "2026-08-13", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/fr/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/fr/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/fr/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Aide", "item": "https://ai-budget.pl/help/fr/"}, {"@type": "ListItem", "position": 3, "name": "Saisie vocale et scan de recus | AI Budget Assistant", "item": "https://ai-budget.pl/help/fr/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -159,6 +159,16 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Tenez l&rsquo;appareil photo stable pour eviter le flou</li>
 <li>Utilisez les <strong>Instructions supplementaires pour l&rsquo;IA</strong> pour un traitement special (par ex. &ldquo;C&rsquo;est en EUR&rdquo;, &ldquo;Ignorer le premier article&rdquo;)</li>
 </ul>
+<h3>Répartition par catégories</h3>
+<p>Les tickets de supermarché mélangent souvent plusieurs types d&rsquo;articles en un seul achat — alimentation, produits ménagers, alcool. Lorsque l&rsquo;application reconnaît plus d&rsquo;un type d&rsquo;article sur un reçu, elle répartit automatiquement la dépense entre les catégories correspondantes au lieu de tout attribuer à une seule.</p>
+<ul>
+<li>Sur l&rsquo;écran de confirmation, une rangée de puces de catégorie apparaît au-dessus de la liste des articles, intitulée <strong>Répartir par catégorie</strong> (par exemple, « Alimentation 180 · Ménage 35 · Alcool 25 »), montrant comment le montant total sera réparti.</li>
+<li>Appuyez sur <strong>Modifier les catégories</strong> pour ouvrir une liste de tous les articles et ajuster la catégorie de chacun. Vos modifications s&rsquo;appliquent immédiatement — et sont mémorisées, afin que le même produit soit correctement catégorisé lors de votre prochain scan.</li>
+<li>Si les articles ne correspondent pas suffisamment au montant total du reçu, l&rsquo;application revient à une seule catégorie plutôt que de deviner.</li>
+<li>Cela ne change que la façon dont vos dépenses apparaissent dans les Analyses et les graphiques — cela ne modifie jamais vos budgets, qui continuent d&rsquo;être suivis par rapport à la catégorie globale unique du reçu.</li>
+<li>Parfois, aucune de vos catégories existantes ne correspond à un groupe d&rsquo;articles. Dans ce cas, l&rsquo;application suggère une toute nouvelle catégorie, affichée sous forme de puce marquée d&rsquo;un <strong>+</strong> (par exemple, « + Produits d&rsquo;entretien 10 »). Elle n&rsquo;est pas encore créée — appuyez sur <strong>Modifier les catégories</strong> pour réattribuer ses articles à une catégorie existante, ou la laisser telle quelle. La nouvelle catégorie n&rsquo;est réellement créée que lorsque vous enregistrez le reçu.</li>
+</ul>
+<p>Fonctionne de la même façon que vous scanniez depuis l&rsquo;application ou depuis les bots Telegram, WhatsApp ou Slack.</p>
 <h2>Revenus vocaux</h2>
 <p>Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.</p>
 <h3>Comment ça marche</h3>
@@ -225,6 +235,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>
 <p><strong>Q : La saisie vocale et le scan de recus utilisent-ils mes requetes IA ?</strong>
   <strong>R :</strong> Oui, chaque saisie vocale ou scan de recu utilise une requete IA de votre allocation mensuelle.</p>
+</li>
+<li>
+<p><strong>Q : Pourquoi un reçu s&rsquo;est-il retrouvé réparti entre plusieurs catégories dans mes graphiques ?</strong>
+  <strong>R :</strong> Lorsqu&rsquo;un reçu mélange clairement différents types d&rsquo;articles (par exemple, alimentation et alcool), l&rsquo;application le répartit automatiquement entre les catégories correspondantes dans vos graphiques de dépenses. Cela ne modifie jamais vos budgets. Appuyez sur <strong>Modifier les catégories</strong> sur l&rsquo;écran de confirmation du reçu pour l&rsquo;ajuster — les corrections sont mémorisées pour la prochaine fois.</p>
 </li>
 </ul>
 <hr />

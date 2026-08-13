@@ -5,9 +5,11 @@ import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { CategoriesService } from '../../categories/categories.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
 import { WA_REDIS, WaMediaMessage, WhatsAppUserState } from '../types';
 import { t, buildCategorySplitLine } from '../helpers/i18n';
+import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 
 interface PendingReceiptData {
   userId: string;
@@ -23,6 +25,7 @@ interface PendingReceiptData {
   categorySplits?: ReceiptExpense['categorySplits'];
   items: Array<{
     description: string;
+    canonicalName?: string;
     quantity?: number;
     unitPrice?: number;
     totalPrice: number;
@@ -40,6 +43,7 @@ export class PhotoHandler {
     private readonly ocrService: OcrService,
     private readonly expensesService: ExpensesService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly categoriesService: CategoriesService,
     private readonly client: WhatsAppClientService,
     @Inject(WA_REDIS) private readonly redis: Redis,
   ) {}
@@ -272,6 +276,11 @@ export class PhotoHandler {
       }
 
       const data: PendingReceiptData = JSON.parse(raw);
+      const resolvedSplits = await resolveProposedSplits(
+        data.categorySplits ?? [],
+        (name) => this.categoriesService.create(data.accountId, data.userId, { name, type: 'expense', icon: '🏷️' }),
+      );
+      const itemCategoryIds = buildItemCategoryMap(resolvedSplits);
 
       await this.expensesService.create(data.accountId, data.userId, {
         localId: randomUUID(),
@@ -284,15 +293,17 @@ export class PhotoHandler {
         date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
         source: 'ocr',
         location: data.location ?? undefined,
-        splits: data.categorySplits?.length ? data.categorySplits : undefined,
+        splits: resolvedSplits.length ? resolvedSplits : undefined,
         receiptImageBase64: data.receiptImageBase64,
         receiptMimeType: data.receiptMimeType,
         items: data.items.map((item, index) => ({
           description: item.description,
+          canonicalName: item.canonicalName,
           quantity: item.quantity || 1,
           unitPrice: item.unitPrice || item.totalPrice,
           totalPrice: item.totalPrice,
           sortOrder: index,
+          categoryId: itemCategoryIds.get(index),
         })),
       });
 

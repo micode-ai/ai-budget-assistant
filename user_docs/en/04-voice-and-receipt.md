@@ -85,6 +85,7 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - Tap **Change categories** to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.
 - If the items don't add up closely enough to the receipt total, the app falls back to one category instead of guessing.
 - This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt's one overall category.
+- Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
 

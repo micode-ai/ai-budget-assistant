@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { Category } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { proposedKey, isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
 
 export interface ItemCategorySheetItem {
   /** Position of the line in the receipt's own `receiptItems` array. */
@@ -16,6 +17,8 @@ interface Props {
   visible: boolean;
   items: ItemCategorySheetItem[];
   categories: Category[];
+  /** Names of categories the server proposed; picked with a `new:` sentinel id. */
+  proposedNames: string[];
   /** `null` returns the line to unassigned — its money then rides with the residual. */
   onChange: (itemIndex: number, categoryId: string | null) => void;
   onClose: () => void;
@@ -29,7 +32,7 @@ interface Props {
  * `buildCategorySplits` after every change — this component only reports the
  * user's choice.
  */
-export default function ItemCategorySheet({ visible, items, categories, onChange, onClose }: Props) {
+export default function ItemCategorySheet({ visible, items, categories, proposedNames, onChange, onClose }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -70,8 +73,13 @@ export default function ItemCategorySheet({ visible, items, categories, onChange
                       <Text style={styles.description} numberOfLines={1}>
                         {item.description}
                       </Text>
-                      <Text style={[styles.categoryLine, !category && styles.categoryLineUnassigned]}>
-                        {t('receiptCategorySplit.itemCategory')}: {category ? category.name : t('receiptCategorySplit.unassigned')}
+                      <Text style={[styles.categoryLine, !item.categoryId && styles.categoryLineUnassigned]}>
+                        {t('receiptCategorySplit.itemCategory')}:{' '}
+                        {isProposedKey(item.categoryId)
+                          ? `${proposedName(item.categoryId as string)} (${t('receiptCategorySplit.newCategory')})`
+                          : category
+                            ? category.name
+                            : t('receiptCategorySplit.unassigned')}
                       </Text>
                     </View>
                     <Ionicons
@@ -107,6 +115,33 @@ export default function ItemCategorySheet({ visible, items, categories, onChange
                           <Ionicons name="checkmark" size={16} color={theme.colors.primary} />
                         )}
                       </TouchableOpacity>
+                      {proposedNames.map((name) => {
+                        const key = proposedKey(name);
+                        const selected = key === item.categoryId;
+                        return (
+                          <TouchableOpacity
+                            key={key}
+                            style={styles.pickerRow}
+                            onPress={() => {
+                              onChange(item.index, key);
+                              setExpandedIndex(null);
+                            }}
+                          >
+                            <Ionicons
+                              name="add-circle-outline"
+                              size={16}
+                              color={selected ? theme.colors.primary : theme.colors.textSecondary}
+                            />
+                            <Text
+                              style={[styles.pickerRowText, selected && styles.pickerRowTextSelected]}
+                              numberOfLines={1}
+                            >
+                              {name} ({t('receiptCategorySplit.newCategory')})
+                            </Text>
+                            {selected && <Ionicons name="checkmark" size={16} color={theme.colors.primary} />}
+                          </TouchableOpacity>
+                        );
+                      })}
                       {categories.map((cat) => {
                         const selected = cat.id === item.categoryId;
                         return (

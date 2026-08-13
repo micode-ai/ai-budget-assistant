@@ -63,6 +63,7 @@ describe('Slack PhotoHandler — geocoded location wiring (ABA-310 bot photo geo
     };
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
     const client = {
       postPlaceholder: jest.fn().mockResolvedValue('1700000000.000100'),
       downloadFile: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
@@ -75,6 +76,7 @@ describe('Slack PhotoHandler — geocoded location wiring (ABA-310 bot photo geo
       ocr as never,
       expenses as never,
       subs as never,
+      categories as never,
       client as never,
       redis as never,
     );
@@ -151,6 +153,7 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
     };
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
     const client = {
       postPlaceholder: jest.fn().mockResolvedValue('1700000000.000100'),
       downloadFile: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
@@ -163,6 +166,7 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
       ocr as never,
       expenses as never,
       subs as never,
+      categories as never,
       client as never,
       redis as never,
     );
@@ -221,5 +225,57 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
     await cbHandler.handleReceiptAddCallback(shortId, userState);
     const dto = cbExpenses.create.mock.calls[0][2];
     expect(dto.splits).toBeUndefined();
+  });
+
+  // A split set must sum to the expense total or not appear at all: category
+  // analytics prefer split rows over the expense's own categoryId. Once a
+  // proposed (`categoryId: null`) group is resolved into a real, created
+  // category, the FULL split set travels — 20 (already-real) + 10 (proposed,
+  // now created) = 30 = the expense amount. A partial split set (withholding
+  // the proposed group, or creating the category without wiring it back into
+  // the splits) is the specific defect this test exists to catch.
+  it('creates a category for a proposed group and passes the full resolved split set', async () => {
+    const MIXED_SPLITS = [
+      { categoryId: 'cat-groceries', categoryName: 'Groceries', amount: 20, percentage: 66.67, itemIndexes: [0] },
+      { categoryId: null, categoryName: 'Chemia', amount: 10, percentage: 33.33, itemIndexes: [1] },
+    ];
+    const redis = makeFakeRedis();
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({ ...baseReceipt(null), amount: 30, categorySplits: MIXED_SPLITS }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn().mockResolvedValue({ id: 'cat-chemia' }) };
+    const client = {
+      postPlaceholder: jest.fn().mockResolvedValue('1700000000.000100'),
+      downloadFile: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      replyText: jest.fn().mockResolvedValue(undefined),
+      replyButtons: jest.fn().mockResolvedValue(undefined),
+      sendText: jest.fn().mockResolvedValue(undefined),
+      sendButtons: jest.fn().mockResolvedValue(undefined),
+    };
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      client as never,
+      redis as never,
+    );
+
+    await handler.handleDocument(pdfFile(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    expect(categories.create).toHaveBeenCalledTimes(1);
+    expect(categories.create).toHaveBeenCalledWith('acc-1', 'user-1', { name: 'Chemia', type: 'expense', icon: '🏷️' });
+    expect(expenses.create).toHaveBeenCalledTimes(1);
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.amount).toBe(30);
+    expect(dto.splits).toEqual([
+      { categoryId: 'cat-groceries', categoryName: 'Groceries', amount: 20, percentage: 66.67, itemIndexes: [0] },
+      { categoryId: 'cat-chemia', categoryName: 'Chemia', amount: 10, percentage: 33.33, itemIndexes: [1] },
+    ]);
   });
 });

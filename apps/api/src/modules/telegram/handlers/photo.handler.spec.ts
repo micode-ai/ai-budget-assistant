@@ -52,7 +52,8 @@ describe('Telegram PhotoHandler — geocoded location wiring (ABA-310 bot photo 
     };
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never);
+    const categories = { create: jest.fn() };
+    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
     return { handler, expenses };
   }
 
@@ -88,7 +89,8 @@ describe('Telegram PhotoHandler — buildPriceCheckLine (receipt price-check sum
     const ocr = { parseReceipt: jest.fn(), parseReceiptPdf: jest.fn() };
     const expenses = { create: jest.fn() };
     const subs = { trackAiUsage: jest.fn() };
-    return new PhotoHandler(ocr as never, expenses as never, subs as never);
+    const categories = { create: jest.fn() };
+    return new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
   }
 
   it('appends a price-check line when the scan returned findings', async () => {
@@ -163,7 +165,8 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
     };
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never);
+    const categories = { create: jest.fn() };
+    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
     return { handler, expenses };
   }
 
@@ -240,5 +243,41 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
     await cbHandler.handleReceiptAddCallback(ctxCb as never, receiptId);
     const dto = expenses.create.mock.calls[0][2];
     expect(dto.splits).toBeUndefined();
+  });
+
+  // A split set must sum to the expense total or not appear at all: category
+  // analytics prefer split rows over the expense's own categoryId. Once a
+  // proposed (`categoryId: null`) group is resolved into a real, created
+  // category, the FULL split set travels — 20 (already-real) + 10 (proposed,
+  // now created) = 30 = the expense amount. This replaces the earlier
+  // interim behavior of withholding the whole set.
+  it('creates a category for a proposed group and passes the full resolved split set', async () => {
+    const MIXED_SPLITS = [
+      { categoryId: 'cat-groceries', categoryName: 'Groceries', amount: 20, percentage: 66.67, itemIndexes: [0] },
+      { categoryId: null, categoryName: 'Chemia', amount: 10, percentage: 33.33, itemIndexes: [1] },
+    ];
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({ ...baseReceipt(null), amount: 30, categorySplits: MIXED_SPLITS }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn().mockResolvedValue({ id: 'cat-chemia' }) };
+    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
+    const ctx = makeCtx();
+
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    expect(categories.create).toHaveBeenCalledTimes(1);
+    expect(categories.create).toHaveBeenCalledWith('acc-1', 'user-1', { name: 'Chemia', type: 'expense', icon: '🏷️' });
+    expect(expenses.create).toHaveBeenCalledTimes(1);
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.amount).toBe(30);
+    expect(dto.splits).toEqual([
+      { categoryId: 'cat-groceries', categoryName: 'Groceries', amount: 20, percentage: 66.67, itemIndexes: [0] },
+      { categoryId: 'cat-chemia', categoryName: 'Chemia', amount: 10, percentage: 33.33, itemIndexes: [1] },
+    ]);
   });
 });

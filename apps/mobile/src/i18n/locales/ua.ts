@@ -2461,5 +2461,6 @@ export default {
     itemCategory: 'Категорія цієї позиції',
     unassigned: 'Не призначена',
     dropped: 'Не вдалося зіставити категорії — збережено без розподілу',
+    newCategory: 'Нова категорія',
   },
 } as const;

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Голосовой ввод и сканирование чеков | AI Budget Assistant", "description": "Пусть ИИ сделает работу за вас. Произнесите расход естественным языком или сфотографируйте чек — приложение автоматически извлечёт сумму, описание, продавца и категорию.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-06-02", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Голосовой ввод и сканирование чеков | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Голосовой ввод и сканирование чеков | AI Budget Assistant", "description": "Пусть ИИ сделает работу за вас. Произнесите расход естественным языком или сфотографируйте чек — приложение автоматически извлечёт сумму, описание, продавца и категорию.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-08-13", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Голосовой ввод и сканирование чеков | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -159,6 +159,16 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Держите камеру ровно, чтобы избежать размытия</li>
 <li>Используйте <strong>Дополнительные инструкции для ИИ</strong> для особых случаев (например, «Это в EUR», «Игнорировать первую позицию»)</li>
 </ul>
+<h3>Разделение по категориям</h3>
+<p>Чеки из супермаркета часто объединяют разные виды покупок за одно посещение — продукты, бытовую химию, алкоголь. Когда приложение распознаёт на чеке больше одного вида товаров, оно автоматически разделяет расход между подходящими категориями, вместо того чтобы отнести всё к одной.</p>
+<ul>
+<li>На экране подтверждения над списком позиций появляется ряд чипов категорий с подписью <strong>Разделение по категориям</strong> (например, «Продукты 180 · Хозтовары 35 · Алкоголь 25»), показывающий, как будет разбита итоговая сумма.</li>
+<li>Нажмите <strong>Изменить категории</strong>, чтобы открыть список всех позиций и указать, к какой категории относится каждая из них. Изменения применяются сразу — и запоминаются, поэтому тот же товар будет правильно распознан при следующем сканировании.</li>
+<li>Если позиции недостаточно точно совпадают с итоговой суммой чека, приложение возвращается к одной категории вместо того, чтобы гадать.</li>
+<li>Это влияет только на то, как ваши расходы отображаются в Аналитике и на графиках — бюджеты при этом никогда не меняются и по-прежнему учитываются по единой общей категории чека.</li>
+<li>Иногда ни одна из ваших существующих категорий не подходит для группы товаров. В этом случае приложение предлагает совершенно новую категорию — она показывается как чип, отмеченный значком <strong>+</strong> (например, «+ Бытовая химия 10»). Пока она не создаётся — нажмите <strong>Изменить категории</strong>, чтобы перенести её позиции в существующую категорию или оставить как предложено. Новая категория действительно создаётся только после сохранения чека.</li>
+</ul>
+<p>Работает одинаково — как при сканировании в приложении, так и через ботов в Telegram, WhatsApp или Slack.</p>
 <h2>Голосовой ввод дохода</h2>
 <p>Регистрируйте полученные платежи голосом — тот же процесс, что и для голосового расхода, оптимизированный для доходов.</p>
 <h3>Как это работает</h3>
@@ -225,6 +235,10 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>
 <p><strong>В: Используют ли голосовой ввод и сканирование чеков запросы AI?</strong>
   <strong>О:</strong> Да, каждый голосовой ввод или сканирование чека использует один запрос AI из вашего ежемесячного лимита.</p>
+</li>
+<li>
+<p><strong>В: Почему один чек оказался разделён на несколько категорий в моих графиках?</strong>
+  <strong>О:</strong> Когда чек явно объединяет разные виды товаров (например, продукты и алкоголь), приложение автоматически распределяет его между подходящими категориями в графиках расходов. Бюджеты при этом никогда не меняются. Нажмите <strong>Изменить категории</strong> на экране подтверждения чека, чтобы это исправить — исправления запоминаются на будущее.</p>
 </li>
 </ul>
 <hr />

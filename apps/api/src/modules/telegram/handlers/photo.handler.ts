@@ -5,10 +5,12 @@ import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { CategoriesService } from '../../categories/categories.service';
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
 import { t, buildCategorySplitLine } from '../helpers/i18n';
+import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 
 // `ctx.answerCbQuery` throws if Telegram considers the callback query expired
 // (15s window). When called from a `catch` block, an unhandled rethrow would
@@ -35,7 +37,7 @@ interface PendingReceiptData {
   categoryId: string | null;
   date: string | null;
   discountAmount: number | null;
-  items: Array<{ description: string; quantity?: number; unitPrice?: number; totalPrice: number }>;
+  items: Array<{ description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number }>;
   receiptImageBase64: string;
   receiptMimeType: string;
   createdAt: number;
@@ -62,6 +64,7 @@ export class PhotoHandler {
     private readonly ocrService: OcrService,
     private readonly expensesService: ExpensesService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly categoriesService: CategoriesService,
   ) {}
 
   async handlePhoto(ctx: BotContext): Promise<void> {
@@ -330,6 +333,11 @@ export class PhotoHandler {
     await safeAnswerCb(ctx, 'Creating expense...');
 
     try {
+      const resolvedSplits = await resolveProposedSplits(
+        data.categorySplits ?? [],
+        (name) => this.categoriesService.create(data.accountId, data.userId, { name, type: 'expense', icon: '🏷️' }),
+      );
+      const itemCategoryIds = buildItemCategoryMap(resolvedSplits);
       await this.expensesService.create(
         data.accountId,
         data.userId,
@@ -344,15 +352,17 @@ export class PhotoHandler {
           date: data.date ? `${data.date}T12:00:00.000Z` : new Date().toISOString(),
           source: 'ocr',
           location: data.location ?? undefined,
-          splits: data.categorySplits?.length ? data.categorySplits : undefined,
+          splits: resolvedSplits.length ? resolvedSplits : undefined,
           receiptMimeType: data.receiptMimeType,
           receiptImageBase64: data.receiptImageBase64,
           items: data.items.map((item, index) => ({
             description: item.description,
+            canonicalName: item.canonicalName,
             quantity: item.quantity || 1,
             unitPrice: item.unitPrice || item.totalPrice,
             totalPrice: item.totalPrice,
             sortOrder: index,
+            categoryId: itemCategoryIds.get(index),
           })),
         },
       );

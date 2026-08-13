@@ -2457,5 +2457,6 @@ export default {
     itemCategory: 'Category for this item',
     unassigned: 'Not assigned',
     dropped: 'Categories could not be matched — saved without a split',
+    newCategory: 'New category',
   },
 } as const;

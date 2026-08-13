@@ -68,7 +68,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       this.incomeHandler = new IncomeHandler(this.incomesService);
       this.chatHandler = new ChatHandler(this.chatService, this.linkService, this.prisma, this.subscriptionsService);
       this.voiceHandler = new VoiceHandler(this.whisperService, this.chatHandler, this.subscriptionsService);
-      this.photoHandler = new PhotoHandler(this.ocrService, this.expensesService, this.subscriptionsService);
+      this.photoHandler = new PhotoHandler(this.ocrService, this.expensesService, this.subscriptionsService, this.categoriesService);
       this.categoryHandler = new CategoryHandler(this.categoriesService);
       this.purchaseRequestHandler = new PurchaseRequestHandler(this.purchaseRequestsService);
 
