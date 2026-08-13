@@ -89,6 +89,13 @@ The hook therefore asks SQLite directly for a count. That is race-free by
 construction and depends on no ordering at all. The cost is one cheap query, run
 only while the seen-flag is unset — that is, at most once per install.
 
+It is evaluated at most **once per app session** as well, and that second guard
+is not redundant. The account switcher sits in every tab header and in the home
+hero, and both deep-link paths switch accounts too; re-evaluating on an account
+change would re-count against an account the user may never have opened, which
+has no local rows and therefore counts zero. The seen-flag rule above makes that
+improbable, this makes it unreachable.
+
 **The gate is not optional.** CLAUDE.md records that navigating while
 `RootNavigator` still returns `null` wedges expo-router on a black screen, and
 that both existing deep-link paths are gated for exactly this reason. A third
@@ -147,6 +154,13 @@ single-key MMKV pattern (`locationSettingsStore`, `merchantSuggestionStore`), an
 the show/hide decision is a pure exported function so it can be unit-tested
 without mocking MMKV — the `quickActionStore` precedent.
 
+The trigger **also sets the flag when it finds the account already has
+transactions**. Without that, the flag stays unset for the entire installed
+base forever — nothing but the screen's own handlers ever sets it, and an
+established user never sees the screen — so every later re-evaluation of the
+trigger is one empty local account away from firing. Recording it there is what
+makes "at most once per install" true rather than aspirational.
+
 Device-local rather than server-side is a deliberate trade: a user who reinstalls
 or signs in on a second device sees the screen again. That costs one skippable
 screen in a rare case and saves a column, a migration, an endpoint and a sync
@@ -159,8 +173,11 @@ change.
   every existing user would see the screen once. That is wrong: they are already
   activated. The trigger therefore also requires the account to have **no
   transactions**, which is both the honest condition and self-correcting.
-- **A user who already has data but no flag** (reinstall, second device) is
-  covered by the same condition — no screen.
+- **Web.** `db/client.web.ts` is an in-memory mock whose `executeSql` returns
+  `[]`, so the count is always zero there and the premise of the check is
+  false. The trigger bails on `Platform.OS === 'web'` rather than interrupting
+  every established web user with a screen built on a wrong answer — the
+  precedent being `captureCurrentLocation` and `NotificationCapture.ios.ts`.
 - **Offline first run.** Every option routes to a screen that already works
   offline except the import, which needs a file and a network call; it fails
   through its own existing error handling, not new code here.

@@ -1172,7 +1172,7 @@ export default {
     heading: '¿Por dónde te gustaría empezar?',
     subheading: 'Añade una cosa y la aplicación empezará a trabajar para ti.',
     scanReceipt: 'Escanear un recibo',
-    scanReceiptHint: 'Artículos y categorías, leídos por ti',
+    scanReceiptHint: 'Artículos y categorías, los leemos por ti',
     useVoice: 'Usar tu voz',
     typeManually: 'Escribirlo manualmente',
     bringHistory: 'Importa tu historial',
