@@ -1,8 +1,8 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useFirstRunStore } from '@/stores/firstRunStore';
 import { useExpenseStore } from '@/stores/expenseStore';
@@ -35,25 +35,44 @@ export default function GetStartedScreen() {
   const styles = useStyles(createStyles);
   const { next } = useLocalSearchParams<{ next?: string }>();
   const markSeen = useFirstRunStore((s) => s.markSeen);
+  const nextAfter = useFirstRunStore((s) => s.nextAfter);
 
   const expenseCount = useExpenseStore((s) => s.expenses.length);
   const incomeCount = useIncomeStore((s) => s.incomes.length);
   const startedEmpty = useRef(expenseCount + incomeCount === 0);
+  // Set when the first transaction lands, acted on when this screen is focused
+  // again — never while an entry screen is on top of it. See useFocusEffect below.
+  const pendingFinish = useRef(false);
 
   // Where the user goes when onboarding is done — after an action or a skip.
-  // `next=welcome` is passed only by the email-verification path, which is the
-  // one that used to land on the pricing screen. Google sign-in passes nothing
+  // The destination is set only by the email-verification path, which is the
+  // one that used to land on the pricing screen. Google sign-in sets neither
   // and therefore keeps going straight to the tabs, exactly as it does today:
   // this feature must not start showing pricing to an audience that never saw it.
-  const finish = () => {
+  // The store field is read as well as the param so the destination survives a
+  // clobbering navigation that drops the param — see firstRunStore.nextAfter.
+  const finish = useCallback(() => {
     markSeen();
-    router.replace(next === 'welcome' ? '/welcome' : '/(tabs)');
-  };
+    router.replace(next === 'welcome' || nextAfter === 'welcome' ? '/welcome' : '/(tabs)');
+  }, [markSeen, next, nextAfter]);
 
   useEffect(() => {
-    if (startedEmpty.current && expenseCount + incomeCount > 0) finish();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (startedEmpty.current && expenseCount + incomeCount > 0) pendingFinish.current = true;
   }, [expenseCount, incomeCount]);
+
+  // `finish` is a global router.replace, so firing it the instant the store
+  // count changes would replace whatever screen is focused — and the entry
+  // screens are pushed on top of this one. On the headline path,
+  // expense/receipt.tsx shows an Alert after addExpense resolves, and the
+  // replace would land underneath that open alert; expense/new.tsx calls
+  // router.back(), which in the losing ordering parks the user back here right
+  // after they successfully added their first expense. Advancing on focus is
+  // what the spec describes: after the entry screen returns.
+  useFocusEffect(
+    useCallback(() => {
+      if (pendingFinish.current) finish();
+    }, [finish]),
+  );
 
   const goTo = (route: string) => {
     markSeen();
