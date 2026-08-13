@@ -8,6 +8,7 @@ import { SubscriptionsService } from '../../subscriptions/subscriptions.service'
 import { SlackClientService } from '../slack-client.service';
 import { SLACK_REDIS, SlackFile, SlackUserState } from '../types';
 import { t, buildCategorySplitLine } from '../helpers/i18n';
+import { buildItemCategoryMap } from '../../ai/utils/receipt-split-items';
 
 interface PendingReceiptData {
   userId: string;
@@ -294,6 +295,7 @@ export class PhotoHandler {
       }
 
       const data: PendingReceiptData = JSON.parse(raw);
+      const itemCategoryIds = buildItemCategoryMap(data.categorySplits);
 
       await this.expensesService.create(data.accountId, data.userId, {
         localId: randomUUID(),
@@ -315,6 +317,7 @@ export class PhotoHandler {
           unitPrice: item.unitPrice || item.totalPrice,
           totalPrice: item.totalPrice,
           sortOrder: index,
+          categoryId: itemCategoryIds.get(index),
         })),
       });
 

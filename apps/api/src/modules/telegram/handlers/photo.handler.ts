@@ -9,6 +9,7 @@ import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
 import { t, buildCategorySplitLine } from '../helpers/i18n';
+import { buildItemCategoryMap } from '../../ai/utils/receipt-split-items';
 
 // `ctx.answerCbQuery` throws if Telegram considers the callback query expired
 // (15s window). When called from a `catch` block, an unhandled rethrow would
@@ -330,6 +331,7 @@ export class PhotoHandler {
     await safeAnswerCb(ctx, 'Creating expense...');
 
     try {
+      const itemCategoryIds = buildItemCategoryMap(data.categorySplits);
       await this.expensesService.create(
         data.accountId,
         data.userId,
@@ -353,6 +355,7 @@ export class PhotoHandler {
             unitPrice: item.unitPrice || item.totalPrice,
             totalPrice: item.totalPrice,
             sortOrder: index,
+            categoryId: itemCategoryIds.get(index),
           })),
         },
       );
