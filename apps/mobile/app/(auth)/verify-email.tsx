@@ -12,6 +12,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
+import { useFirstRunStore } from '@/stores/firstRunStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 const API_ERROR_MAP: Record<string, string> = {
@@ -46,6 +47,12 @@ export default function VerifyEmailScreen() {
 
     try {
       await verifyEmail(email!, code);
+      // Set the destination BEFORE navigating, not as a param the next route
+      // has to survive with: useFirstRunOnboarding reads this to stand down,
+      // and get-started reads it to still reach the pricing screen even if a
+      // param-less navigation lands on top of this one. The param is kept too
+      // — belt and braces, and it keeps the screen reachable directly.
+      useFirstRunStore.getState().setNextAfter('welcome');
       router.replace('/get-started?next=welcome');
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
