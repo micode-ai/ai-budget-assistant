@@ -10,6 +10,12 @@ WORKDIR /app
 
 # --- deps ---
 FROM base AS deps
+# bcrypt ships a prebuilt binary and falls back to compiling from source when
+# that download fails. Alpine has no toolchain, so a transient network blip
+# fetching the prebuilt binary from GitHub took the whole deploy down (the
+# fallback died on "gyp ERR! find Python"). These make the fallback actually
+# work; they stay in this intermediate stage and never reach the runtime image.
+RUN apk add --no-cache python3 make g++
 COPY package.json package-lock.json turbo.json ./
 COPY packages/shared-types/package.json ./packages/shared-types/
 COPY packages/shared-utils/package.json ./packages/shared-utils/

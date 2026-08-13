@@ -2,6 +2,7 @@ import {
   buildCategorySplits,
   RECEIPT_SPLIT_DEFAULTS,
   type SplitInputItem,
+  rescaleSplits,
 } from './receipt-category-split';
 
 const item = (
@@ -138,5 +139,57 @@ describe('buildCategorySplits', () => {
     // The cent-values sum to the total's cent-value exactly.
     const sumCents = Math.round(splits.reduce((sum, s) => sum + s.amount, 0) * 100);
     expect(sumCents).toBe(1999); // 19.99 in cents
+  });
+});
+
+describe('rescaleSplits', () => {
+  it('scales every share proportionally and sums exactly to the new total', () => {
+    const out = rescaleSplits([{ categoryId: 'c-a', amount: 100 }, { categoryId: 'c-b', amount: 40 }], 70);
+
+    expect(out.find((s) => s.categoryId === 'c-a')!.amount).toBe(50);
+    expect(out.find((s) => s.categoryId === 'c-b')!.amount).toBe(20);
+    expect(Math.round(out.reduce((sum, s) => sum + s.amount, 0) * 100)).toBe(7000);
+  });
+
+  it('gives the rounding residual to the largest share so the sum stays exact', () => {
+    // 3 equal shares scaled to 10 cannot divide evenly.
+    const out = rescaleSplits(
+      [{ categoryId: 'c-a', amount: 1 }, { categoryId: 'c-b', amount: 1 }, { categoryId: 'c-c', amount: 1 }],
+      10,
+    );
+
+    expect(Math.round(out.reduce((sum, s) => sum + s.amount, 0) * 100)).toBe(1000);
+    // Compared in hundredths, not as a raw float sum: 33.4 + 33.3 + 33.3 is
+    // 99.99999999999999 in IEEE-754 even though the values are exactly right.
+    expect(Math.round(out.reduce((sum, s) => sum + s.percentage, 0) * 100)).toBe(10000);
+  });
+
+  it('keeps a manual split alive when the amount barely moves', () => {
+    const out = rescaleSplits([{ categoryId: 'c-a', amount: 150 }, { categoryId: 'c-b', amount: 50 }], 201);
+
+    expect(out).toHaveLength(2);
+    expect(Math.round(out.reduce((sum, s) => sum + s.amount, 0) * 100)).toBe(20100);
+  });
+
+  it('returns nothing for a non-positive or non-finite total', () => {
+    const splits = [{ categoryId: 'c-a', amount: 10 }, { categoryId: 'c-b', amount: 10 }];
+    expect(rescaleSplits(splits, 0)).toEqual([]);
+    expect(rescaleSplits(splits, Number.NaN)).toEqual([]);
+  });
+
+  it('returns nothing when the existing shares sum to zero, since there is no ratio to scale by', () => {
+    expect(rescaleSplits([{ categoryId: 'c-a', amount: 0 }, { categoryId: 'c-b', amount: 0 }], 100)).toEqual([]);
+  });
+
+  it('returns nothing for an empty set', () => {
+    expect(rescaleSplits([], 100)).toEqual([]);
+  });
+
+  it('is deterministic for equal shares', () => {
+    const args: Array<{ categoryId: string; amount: number }> = [
+      { categoryId: 'c-b', amount: 5 },
+      { categoryId: 'c-a', amount: 5 },
+    ];
+    expect(rescaleSplits(args, 10)).toEqual(rescaleSplits([...args].reverse(), 10));
   });
 });

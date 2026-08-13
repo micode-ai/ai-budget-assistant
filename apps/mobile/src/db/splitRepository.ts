@@ -99,6 +99,29 @@ export async function getSplitsForExpenses(
   return result;
 }
 
+/**
+ * Makes the local mirror match what the server just returned for one expense.
+ *
+ * Hard-deletes rather than soft-deleting, then re-inserts: local split rows are
+ * only ever written by the pull-and-merge (nothing authors one offline), so
+ * there is no local state to preserve — and a soft-delete would leave the old
+ * rows in place to collide on their primary keys when the server sends the same
+ * split ids back.
+ *
+ * Passing an empty array is meaningful: it means the server has no splits for
+ * this expense, so the local ones must go. Without that, a split the server
+ * removed would live on this device forever.
+ */
+export async function replaceSplitsForExpense(
+  expenseId: string,
+  splits: ExpenseCategorySplit[],
+): Promise<void> {
+  await executeSql('DELETE FROM expense_category_splits WHERE expense_id = ?', [expenseId]);
+  for (const split of splits) {
+    await insertSplit(split);
+  }
+}
+
 export async function deleteAllSplitsForExpense(expenseId: string): Promise<void> {
   await executeSql(
     'UPDATE expense_category_splits SET is_deleted = 1, updated_at = ? WHERE expense_id = ?',

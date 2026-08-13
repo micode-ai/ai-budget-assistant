@@ -771,7 +771,7 @@ function makeSplitDefenceService(opts: {
   amount?: number;
   items?: Array<{ totalPrice: number; categoryId: string | null; category?: { name: string } | null }>;
   /** Live split rows on the expense; [] models an expense that was never split. */
-  splits?: Array<{ id: string }>;
+  splits?: Array<{ id: string; categoryId?: string; amount?: number }>;
 } = {}) {
   const amount = opts.amount ?? 240;
   const items = opts.items ?? SPLIT_ITEMS;
@@ -1022,5 +1022,70 @@ describe('remove — receipt-split cleanup', () => {
     await service.remove('acc-1', 'e-1');
 
     expect(receiptSplitService.expireForExpense).toHaveBeenCalledWith('e-1');
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Hand-made splits must survive an amount edit
+//
+// Two kinds of split share one table. A split derived from a receipt's line
+// items is rebuilt from those items. A split the user made by hand has no item
+// categories behind it at all — a manual split is created on an expense with no
+// line items — so re-deriving it would find nothing and delete the user's own
+// work on every amount edit. It is redistributed proportionally instead.
+// ---------------------------------------------------------------------------
+
+describe('a hand-made split survives an amount edit', () => {
+  const MANUAL_SPLITS = [
+    { id: 'sp-1', categoryId: 'c-a', amount: 150 },
+    { id: 'sp-2', categoryId: 'c-b', amount: 50 },
+  ];
+
+  it('rescales proportionally instead of deleting, when the expense has no line items', async () => {
+    const { service, splitCreateMany } = makeSplitDefenceService({
+      amount: 200,
+      items: [],
+      splits: MANUAL_SPLITS,
+    });
+
+    await service.update('acc-1', 'e-split-1', { amount: 250 } as any);
+
+    expect(splitCreateMany).toHaveBeenCalled();
+    const rows = splitCreateMany.mock.calls[0][0].data as Array<{ categoryId: string; amount: number }>;
+    expect(rows).toHaveLength(2);
+    expect(rows.find((r) => r.categoryId === 'c-a')!.amount).toBe(187.5);
+    expect(rows.find((r) => r.categoryId === 'c-b')!.amount).toBe(62.5);
+    expect(createdSplitTotal(splitCreateMany)).toBe(250);
+  });
+
+  it('rescales when the expense has items but none of them carry a category', async () => {
+    const { service, splitCreateMany } = makeSplitDefenceService({
+      amount: 200,
+      items: [
+        { totalPrice: 120, categoryId: null },
+        { totalPrice: 80, categoryId: null },
+      ],
+      splits: MANUAL_SPLITS,
+    });
+
+    await service.update('acc-1', 'e-split-1', { amount: 250 } as any);
+
+    expect(splitCreateMany).toHaveBeenCalled();
+    expect(createdSplitTotal(splitCreateMany)).toBe(250);
+  });
+
+  it('still re-derives from the items when they DO carry categories', async () => {
+    // Guard against the fix over-reaching: a receipt split must keep being
+    // rebuilt from its items, not proportionally rescaled.
+    const { service, splitCreateMany } = makeSplitDefenceService({
+      amount: 240,
+      splits: MANUAL_SPLITS,
+    });
+
+    await service.update('acc-1', 'e-split-1', { amount: 238 } as any);
+
+    const rows = splitCreateMany.mock.calls[0][0].data as Array<{ categoryId: string }>;
+    expect(rows.map((r) => r.categoryId).sort()).toEqual(['c-alc', 'c-food', 'c-home']);
+    expect(createdSplitTotal(splitCreateMany)).toBe(238);
   });
 });

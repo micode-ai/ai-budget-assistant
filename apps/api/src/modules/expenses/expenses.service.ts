@@ -12,7 +12,7 @@ import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
 import { InflationShieldTrackingService } from '../insights/inflation-shield-tracking.service';
 import { resolveShares } from './trip-share-calculator';
-import { buildCategorySplits } from '../../common/utils/receipt-category-split';
+import { buildCategorySplits, rescaleSplits } from '../../common/utils/receipt-category-split';
 import { buildLocationColumns } from './expense-location.util';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 import { resolveExpenseCategoryId } from './expense-category-resolver.util';
@@ -163,7 +163,7 @@ export class ExpensesService {
   ): Promise<void> {
     const existing = await client.expenseCategorySplit.findMany({
       where: { expenseId: expensePk, isDeleted: false },
-      select: { id: true },
+      select: { id: true, categoryId: true, amount: true },
     });
     // An expense that was never split has no invariant to defend — and must not
     // acquire one as a side effect of an unrelated edit.
@@ -179,15 +179,33 @@ export class ExpensesService {
       },
     });
 
-    const splits = buildCategorySplits({
-      items: items.map((item, index) => ({
-        index,
-        amount: Number(item.totalPrice),
-        categoryId: item.categoryId,
-        categoryName: item.category?.name ?? null,
-      })),
-      total,
-    });
+    // Two kinds of split live in this table and they need opposite treatment.
+    //
+    // A split DERIVED from a receipt's line items is rebuilt from those items:
+    // they are the ground truth for which money sits in which category, and if
+    // they no longer reconcile with the new total, buildCategorySplits refuses
+    // and the split is removed — better none than a wrong one.
+    //
+    // A split the user made BY HAND has no item categories behind it (a manual
+    // split is created on an expense with no line items at all). There is
+    // nothing to derive from, so rebuilding would delete the user's own work on
+    // any amount edit. It is redistributed proportionally instead.
+    const derivedFromItems = items.some((item) => !!item.categoryId);
+
+    const splits = derivedFromItems
+      ? buildCategorySplits({
+          items: items.map((item, index) => ({
+            index,
+            amount: Number(item.totalPrice),
+            categoryId: item.categoryId,
+            categoryName: item.category?.name ?? null,
+          })),
+          total,
+        })
+      : rescaleSplits(
+          existing.map((split) => ({ categoryId: split.categoryId, amount: Number(split.amount) })),
+          total,
+        );
 
     await client.expenseCategorySplit.updateMany({
       where: { expenseId: expensePk, isDeleted: false },

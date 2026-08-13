@@ -25,7 +25,7 @@ import {
   getAllProjectExpenseMappings,
   upsertProject,
 } from '@/db/projectRepository';
-import { getSplitsForExpense, getSplitsForExpenses, insertSplit } from '@/db/splitRepository';
+import { getSplitsForExpenses, replaceSplitsForExpense } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
@@ -425,30 +425,32 @@ async function _doPullAndMerge(
             }
           }
 
-          if (
-            se.categorySplits &&
-            Array.isArray(se.categorySplits) &&
-            se.categorySplits.length > 0
-          ) {
-            const localSplits = await getSplitsForExpense(expense.id);
-            if (localSplits.length === 0) {
-              const now = new Date();
-              for (const ss of se.categorySplits) {
-                const split: ExpenseCategorySplit = {
-                  id: ss.id,
-                  expenseId: expense.id,
-                  categoryId: ss.categoryId ?? ss.category?.id,
-                  amount: Number(ss.amount),
-                  percentage: Number(ss.percentage),
-                  notes: ss.notes ?? undefined,
-                  createdAt: ss.createdAt ? new Date(ss.createdAt) : now,
-                  updatedAt: ss.updatedAt ? new Date(ss.updatedAt) : now,
-                  isDeleted: ss.isDeleted || false,
-                  syncVersion: ss.syncVersion ?? 0,
-                };
-                await insertSplit(split);
-              }
-            }
+          // The server owns split integrity: it re-derives a receipt's split
+          // from its line-item categories on every amount or item edit, and
+          // rescales a hand-made one. So the local mirror is replaced outright
+          // on every merge, including with an empty set.
+          //
+          // Inserting only when there were no local rows — the previous rule —
+          // meant a split could never be corrected or removed on a device once
+          // it had one, so a server-side correction never reached the screen the
+          // user was looking at.
+          if (se.categorySplits && Array.isArray(se.categorySplits)) {
+            const now = new Date();
+            await replaceSplitsForExpense(
+              expense.id,
+              se.categorySplits.map((ss: any) => ({
+                id: ss.id,
+                expenseId: expense.id,
+                categoryId: ss.categoryId ?? ss.category?.id,
+                amount: Number(ss.amount),
+                percentage: Number(ss.percentage),
+                notes: ss.notes ?? undefined,
+                createdAt: ss.createdAt ? new Date(ss.createdAt) : now,
+                updatedAt: ss.updatedAt ? new Date(ss.updatedAt) : now,
+                isDeleted: ss.isDeleted || false,
+                syncVersion: ss.syncVersion ?? 0,
+              })),
+            );
           }
 
           if (

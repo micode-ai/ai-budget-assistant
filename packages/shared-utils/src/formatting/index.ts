@@ -235,9 +235,12 @@ export {
 // Receipt category split arithmetic
 export {
   buildCategorySplits,
+  rescaleSplits,
   RECEIPT_SPLIT_DEFAULTS,
+  type ExistingSplitShare,
   type ReceiptCategorySplit,
   type ReceiptSplitConfig,
+  type RescaledSplit,
   type SplitInputItem,
 } from './receipt-category-split';
 

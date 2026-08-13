@@ -118,3 +118,67 @@ export function buildCategorySplits(params: {
 
   return splits;
 }
+
+export interface ExistingSplitShare {
+  categoryId: string;
+  amount: number;
+}
+
+export interface RescaledSplit {
+  categoryId: string;
+  amount: number;
+  percentage: number;
+}
+
+/**
+ * Redistributes an existing split across a new total, keeping each category's
+ * proportion and the exact-sum invariant.
+ *
+ * This is what a split whose categories were NOT derived from line items needs
+ * when the expense amount changes — a hand-made split has no item categories to
+ * rebuild from, so proportional redistribution is the only honest answer, and
+ * deleting it instead would silently discard the user's own work.
+ *
+ * Deliberately NOT expressible through buildCategorySplits: that function
+ * reconciles lines against a total and refuses when they disagree by more than
+ * the tolerance, which is exactly what an amount edit makes them do.
+ */
+export function rescaleSplits(splits: ExistingSplitShare[], total: number): RescaledSplit[] {
+  if (!Number.isFinite(total) || total <= 0) return [];
+  if (splits.length === 0) return [];
+
+  const totalCents = toCents(total);
+  const shares = splits
+    .map((split) => ({ categoryId: split.categoryId, cents: toCents(split.amount) }))
+    .filter((share) => Number.isFinite(share.cents));
+
+  const previousCents = shares.reduce((sum, share) => sum + share.cents, 0);
+  // Nothing to scale by: every share is zero, so no ratio exists.
+  if (previousCents <= 0) return [];
+
+  // Largest first, ties broken by categoryId, so the output is deterministic
+  // for a given input — same convention as buildCategorySplits.
+  const ordered = shares.sort((a, b) => b.cents - a.cents || a.categoryId.localeCompare(b.categoryId));
+
+  const scaled = ordered.map((share, index) => ({
+    categoryId: share.categoryId,
+    cents: index === 0 ? 0 : Math.round((share.cents * totalCents) / previousCents),
+  }));
+  const allButLargest = scaled.slice(1).reduce((sum, share) => sum + share.cents, 0);
+  scaled[0].cents = totalCents - allButLargest;
+
+  // A residual big enough to zero out the largest share means the rescale no
+  // longer describes a split. Refusing beats publishing a nonsense one.
+  if (scaled[0].cents <= 0) return [];
+
+  const result = scaled.map((share) => ({
+    categoryId: share.categoryId,
+    amount: fromCents(share.cents),
+    percentage: Math.round((share.cents / totalCents) * 10000) / 100,
+  }));
+
+  const percentageDrift = 100 - result.reduce((sum, share) => sum + share.percentage, 0);
+  result[0].percentage = Math.round((result[0].percentage + percentageDrift) * 100) / 100;
+
+  return result;
+}

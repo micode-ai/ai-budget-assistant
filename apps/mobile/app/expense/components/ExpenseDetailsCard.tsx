@@ -205,32 +205,14 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
 
         await setExpenseProject(expense.id, editProjectId);
 
-        try {
-          if (splits.length > 0 && numericAmount !== oldAmount && oldAmount > 0) {
-            const ratio = numericAmount / oldAmount;
-            let runningSum = 0;
-            const rescaled = splits.map((s, i) => {
-              let amount: number;
-              if (i === splits.length - 1) {
-                amount = Math.round((numericAmount - runningSum) * 100) / 100;
-              } else {
-                amount = Math.round(s.amount * ratio * 100) / 100;
-                runningSum += amount;
-              }
-              return {
-                categoryId: s.categoryId,
-                amount,
-                percentage: numericAmount > 0 ? (amount / numericAmount) * 100 : 0,
-                notes: s.notes,
-              };
-            });
-            await persistSplits(rescaled);
-          }
-        } catch (e) {
-          console.error('Failed to rescale splits:', e);
-        } finally {
-          onSaved();
-        }
+        // Splits are deliberately NOT adjusted here. The server owns their
+        // integrity: the same PATCH that carries this amount re-derives a
+        // receipt's split from its line-item categories, and proportionally
+        // rescales a hand-made one. Doing it here as well raced that write —
+        // both paths overwrite the same rows, unordered, so whichever landed
+        // last won, and a split the server had correctly decided to remove
+        // could be silently reinstated.
+        onSaved();
       },
     }));
 
