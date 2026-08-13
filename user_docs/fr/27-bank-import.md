@@ -75,6 +75,16 @@ La section **Imports précédents** affiche les 20 derniers imports. Touchez la 
 
 En bas de **Paramètres → Importer des transactions** se trouve une carte **« Votre banque n'est pas là ? »**. Touchez-la, entrez le nom de la banque et joignez un exemple de relevé.
 
+## Vous venez d’une autre application ?
+
+Dans **Paramètres → Importer des transactions**, une carte distincte **« Vous venez d’une autre application ? »** propose Monefy, Wallet by BudgetBakers et Money Manager / 1Money.
+
+Exportez votre historique depuis l’ancienne application, choisissez ici la ligne correspondante, et vos transactions vous suivent — **avec vos catégories**. Une catégorie que vous aviez là-bas et qui n’existe pas encore ici est créée pour vous : votre historique arrive organisé plutôt qu’en un seul tas indifférencié.
+
+Les virements entre vos propres comptes dans l’ancienne application sont ignorés : ce ne sont pas des dépenses, et les importer les compterait deux fois.
+
+Votre application n’est pas dans la liste ? Utilisez **Détection automatique** en haut : les formats inconnus sont analysés automatiquement et s’importent généralement quand même.
+
 ---
 
 *Voir aussi : [Dépenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md) | [Paramètres](./11-settings.md)*

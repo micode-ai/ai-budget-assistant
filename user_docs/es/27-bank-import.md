@@ -75,6 +75,16 @@ La sección **Importaciones anteriores** muestra las últimas 20 importaciones. 
 
 Al final de **Ajustes → Importar transacciones** hay una tarjeta **«¿No ves tu banco?»**. Tócala, escribe el nombre del banco y adjunta un extracto de ejemplo.
 
+## ¿Vienes de otra aplicación?
+
+En **Ajustes → Importar transacciones** hay una tarjeta aparte, **«¿Vienes de otra aplicación?»**, con Monefy, Wallet by BudgetBakers y Money Manager / 1Money.
+
+Exporta tu historial desde la aplicación anterior, elige aquí la fila correspondiente y tus transacciones se trasladan — **junto con tus categorías**. Una categoría que tenías allí y que aquí todavía no existe se crea automáticamente, para que tu historial llegue organizado y no como un montón indiferenciado.
+
+Las transferencias entre tus propias cuentas en la aplicación anterior se omiten: no son gastos, e importarlas los contaría dos veces.
+
+¿Tu aplicación no está en la lista? Usa **Detección automática** arriba: los formatos desconocidos se analizan automáticamente y suelen importarse sin problema.
+
 ---
 
 *Ver también: [Gastos e ingresos](./03-expenses-and-income.md) | [Cartera y cambio](./10-wallet-and-exchange.md) | [Ajustes](./11-settings.md)*

@@ -88,6 +88,16 @@ At the bottom of **Settings → Import transactions** there's a **"Don't see you
 
 For CSV files the app auto-detects UTF-8 and Windows-1250 (common for Polish bank exports). PDF statements are read directly — no encoding choice needed.
 
+## Moving from another app?
+
+Under **Settings → Import transactions** there's a separate **"Moving from another app?"** card with Monefy, Wallet by BudgetBakers and Money Manager / 1Money.
+
+Export your history from the old app, pick the matching row here, and your transactions come across — **together with your categories**. A category you had there that doesn't exist here yet is created for you, so your history arrives organised rather than as one undifferentiated pile.
+
+Transfers between your own accounts in the old app are skipped: they aren't spending, and importing them would double-count.
+
+Your app isn't on the list? Use **Auto-detect** at the top — unknown export formats are analysed automatically and usually import fine anyway.
+
 ---
 
 *See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Settings](./11-settings.md)*

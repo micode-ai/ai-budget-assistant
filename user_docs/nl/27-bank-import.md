@@ -88,6 +88,16 @@ Onder aan **Instellingen → Transacties importeren** staat een kaart **"Zie je 
 
 Voor CSV-bestanden detecteert de app automatisch UTF-8 en Windows-1250 (gangbaar voor Poolse bankexports). PDF-afschriften worden direct gelezen — geen keuze voor codering nodig.
 
+## Overstappen van een andere app?
+
+Onder **Instellingen → Transacties importeren** staat een aparte kaart **'Overstappen van een andere app?'** met Monefy, Wallet by BudgetBakers en Money Manager / 1Money.
+
+Exporteer je geschiedenis uit de oude app, kies hier de bijbehorende regel, en je transacties gaan mee — **samen met je categorieën**. Een categorie die je daar had en die hier nog niet bestaat, wordt voor je aangemaakt, zodat je geschiedenis geordend aankomt in plaats van als één ongedifferentieerde hoop.
+
+Overboekingen tussen je eigen rekeningen in de oude app worden overgeslagen: dat zijn geen uitgaven, en importeren zou ze dubbel tellen.
+
+Staat jouw app er niet bij? Gebruik **Automatisch detecteren** bovenaan — onbekende exportformaten worden automatisch geanalyseerd en importeren meestal toch prima.
+
 ---
 
 *Zie ook: [Uitgaven & inkomsten](./03-expenses-and-income.md) | [Portemonnee & wissel](./10-wallet-and-exchange.md) | [Instellingen](./11-settings.md)*
