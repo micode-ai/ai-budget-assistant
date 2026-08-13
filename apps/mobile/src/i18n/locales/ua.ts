@@ -868,6 +868,8 @@ export default {
     quickImportHeader: 'Швидкий імпорт',
     autoDetect: 'Визначити автоматично (будь-який банк)',
     analysing: 'Читаємо вашу виписку…',
+    migrationHeader: 'Переходите з іншого застосунку?',
+    migrationHint: 'Імпортуйте історію з іншого бюджетного застосунку — категорії переїдуть разом із нею.',
     savedMappingsHeader: 'Збережені відповідності',
     noSavedMappings: 'Немає збережених відповідностей',
     detectedBank: 'Визначено: {{name}}',

@@ -29,7 +29,7 @@ export interface ImportEntry {
   /** i18n key, for the one entry whose label is a sentence rather than a brand. */
   labelKey?: string;
   /** Icon name; the auto-detect entry gets its own so it doesn't read as a bank. */
-  icon: 'sparkles-outline' | 'business-outline';
+  icon: 'sparkles-outline' | 'business-outline' | 'swap-horizontal-outline';
 }
 
 export const IMPORT_ENTRIES: ImportEntry[] = [
@@ -43,12 +43,29 @@ export const IMPORT_ENTRIES: ImportEntry[] = [
   { id: 'universal', label: 'Other (custom CSV)', icon: 'business-outline' },
 ];
 
+/**
+ * Exports from other budgeting apps — the "moving from another app?" card,
+ * kept apart from the bank list because it answers a different question.
+ *
+ * These are not required for such a file to import: an unrecognised export
+ * still falls through to the server's AI inference. What a dedicated entry buys
+ * is a parser that costs no model call, carries the app's own categories across
+ * instead of guessing from the merchant, and — not least — tells a prospective
+ * user we support their old app before they have to try it and find out.
+ */
+export const MIGRATION_ENTRIES: ImportEntry[] = [
+  { id: 'monefy', label: 'Monefy', icon: 'swap-horizontal-outline' },
+  { id: 'wallet', label: 'Wallet by BudgetBakers', icon: 'swap-horizontal-outline' },
+  { id: 'moneymanager', label: 'Money Manager / 1Money', icon: 'swap-horizontal-outline' },
+];
+
 /** Display label for a past import's `source`, e.g. `bank:mbank` → `mBank`. */
 export function importSourceLabel(source: string): string {
   if (source === 'wise') return 'Wise';
   if (source.startsWith('bank:')) {
     const bankId = source.slice(5);
-    const entry = IMPORT_ENTRIES.find((e) => e.id === bankId);
+    // Both lists, or a past migration import would render its raw parser id.
+    const entry = [...IMPORT_ENTRIES, ...MIGRATION_ENTRIES].find((e) => e.id === bankId);
     return entry?.label ?? bankId;
   }
   return source;

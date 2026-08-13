@@ -830,6 +830,13 @@ export class ImportBankService {
     const rowsToInsert = await this.dropDuplicateRows(accountId, toImport);
     skippedDuplicates += toImport.length - rowsToInsert.length;
 
+    // Resolve — and where needed create — every category the rows reference,
+    // BEFORE the transaction opens, for the same reason duplicates are dropped
+    // above: a P2002 inside a Postgres transaction poisons it, and creating a
+    // category the account already has under a different case would fire the
+    // `(account_id, name, type)` constraint mid-import.
+    await this.preloadCategories(accountId, rowsToInsert, categoryCache);
+
     await this.prisma.$transaction(async (tx) => {
       batchId = await this.importBatches.createBatch(tx as any, { accountId, userId, source });
 
@@ -845,6 +852,7 @@ export class ImportBankService {
               accountId,
               row.suggestedCategoryName,
               categoryCache,
+              'expense',
             );
             const created = await (tx as any).expense.create({
               data: {
@@ -872,6 +880,7 @@ export class ImportBankService {
               accountId,
               row.suggestedCategoryName,
               categoryCache,
+              'income',
             );
             await (tx as any).income.create({
               data: {
@@ -1044,17 +1053,88 @@ export class ImportBankService {
     accountId: string,
     suggestedName: string | undefined,
     cache: Map<string, string | null>,
+    kind: 'expense' | 'income' = 'expense',
   ): Promise<string | null> {
     if (!suggestedName) return null;
-    if (cache.has(suggestedName)) return cache.get(suggestedName)!;
+    const key = categoryCacheKey(suggestedName, kind);
+    if (cache.has(key)) return cache.get(key)!;
+    // Anything not pre-resolved is a name preloadCategories did not see. Match
+    // case-insensitively, as every other category resolver in this codebase
+    // does, but do NOT create here: a P2002 inside this transaction would abort
+    // the whole import.
     const cat = await tx.category.findFirst({
-      where: { accountId, name: suggestedName },
+      where: { accountId, type: kind, name: { equals: suggestedName, mode: 'insensitive' } },
       select: { id: true },
     });
     const id = cat?.id ?? null;
-    cache.set(suggestedName, id);
+    cache.set(key, id);
     return id;
   }
+
+  /**
+   * Resolves every distinct category name the batch references into an id,
+   * creating the ones this account does not have yet.
+   *
+   * A statement from a bank carries no categories, so this does nothing for
+   * those imports. It exists for exports from other budgeting apps, which do
+   * carry the user's own taxonomy — and migrating a history is only worth doing
+   * if it arrives organised, so a name with no local counterpart becomes a real
+   * category rather than being dropped.
+   *
+   * Runs before the transaction and swallows a concurrent-create P2002 by
+   * re-reading, the pattern this codebase settled on after a unique-constraint
+   * violation inside a transaction took down a whole import (ABA-313).
+   */
+  private async preloadCategories(
+    accountId: string,
+    rows: Array<{ kind: string; suggestedCategoryName?: string }>,
+    cache: Map<string, string | null>,
+  ): Promise<void> {
+    const wanted = new Map<string, { name: string; type: 'expense' | 'income' }>();
+    for (const row of rows) {
+      const name = row.suggestedCategoryName?.trim();
+      if (!name) continue;
+      if (row.kind !== 'expense' && row.kind !== 'income') continue;
+      const type = row.kind as 'expense' | 'income';
+      wanted.set(categoryCacheKey(name, type), { name, type });
+    }
+    if (wanted.size === 0) return;
+
+    for (const [key, { name, type }] of wanted) {
+      const existing = await this.prisma.category.findFirst({
+        where: { accountId, type, name: { equals: name, mode: 'insensitive' } },
+        select: { id: true },
+      });
+      if (existing) {
+        cache.set(key, existing.id);
+        continue;
+      }
+      try {
+        const created = await this.prisma.category.create({
+          data: { accountId, name, type },
+          select: { id: true },
+        });
+        cache.set(key, created.id);
+      } catch {
+        // Lost a race, or the name collides under a casing this query missed —
+        // re-read rather than fail the import over a category.
+        const raced = await this.prisma.category.findFirst({
+          where: { accountId, type, name: { equals: name, mode: 'insensitive' } },
+          select: { id: true },
+        });
+        cache.set(key, raced?.id ?? null);
+      }
+    }
+  }
+}
+
+/**
+ * Cache key for a resolved category. Includes the type: the same name can
+ * legitimately exist as both an expense and an income category, and the unique
+ * constraint is on `(account_id, name, type)`.
+ */
+function categoryCacheKey(name: string, type: 'expense' | 'income'): string {
+  return `${type}:${name.trim().toLowerCase()}`;
 }
 
 function peekHeaders(text: string, delimiter = ';'): string[] {

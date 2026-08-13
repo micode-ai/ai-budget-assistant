@@ -868,6 +868,8 @@ export default {
     quickImportHeader: 'Snel importeren',
     autoDetect: 'Automatisch herkennen (elke bank)',
     analysing: 'We lezen je afschrift…',
+    migrationHeader: 'Overstappen van een andere app?',
+    migrationHint: 'Importeer je geschiedenis uit een andere budget-app — je categorieën gaan mee.',
     savedMappingsHeader: 'Opgeslagen koppelingen',
     noSavedMappings: 'Nog geen opgeslagen koppelingen',
     detectedBank: 'Gedetecteerd: {{name}}',

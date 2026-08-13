@@ -869,6 +869,8 @@ export default {
     quickImportHeader: 'Quick import',
     autoDetect: 'Detect automatically (any bank)',
     analysing: 'Reading your statement…',
+    migrationHeader: 'Moving from another app?',
+    migrationHint: 'Import your history from another budgeting app — your categories come with it.',
     savedMappingsHeader: 'Saved mappings',
     noSavedMappings: 'No saved mappings yet',
     detectedBank: 'Detected: {{name}}',

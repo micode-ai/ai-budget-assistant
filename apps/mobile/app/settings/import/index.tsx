@@ -14,7 +14,7 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { isTierRequiredError } from '@/services/importErrors';
 import { useUpgradeStore } from '@/stores/upgradeStore';
-import { IMPORT_ENTRIES, importSourceLabel } from '@/features/import/importEntries';
+import { IMPORT_ENTRIES, MIGRATION_ENTRIES, importSourceLabel } from '@/features/import/importEntries';
 
 // Only banks whose parser has been validated against a real export are shown.
 // ING / Millennium / Pekao are temporarily hidden (parsers still in the API
@@ -209,6 +209,22 @@ export default function ImportHubScreen() {
                 </TouchableOpacity>
               ))
             )}
+
+            <Text style={styles.sectionHeader}>{t('bankImport.migrationHeader')}</Text>
+            <Text style={styles.empty}>{t('bankImport.migrationHint')}</Text>
+            {!previewing &&
+              MIGRATION_ENTRIES.map((e) => (
+                <TouchableOpacity
+                  key={e.id}
+                  style={styles.row}
+                  onPress={() => pickAndPreview(e.id)}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name={e.icon} size={20} color={theme.colors.primary} />
+                  <Text style={styles.rowLabel}>{e.label}</Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              ))}
 
             <Text style={styles.sectionHeader}>{t('bankImport.savedMappingsHeader')}</Text>
             {loading ? (

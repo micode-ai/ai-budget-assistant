@@ -45,7 +45,7 @@ export type ImportPreviewResponse = WiseImportPreviewResponse;
 
 // Bank Import — new types
 export interface BankParserDescriptor {
-  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal' | 'ai';
+  id: 'mbank' | 'pko' | 'revolut' | 'ing' | 'millennium' | 'pekao' | 'erste' | 'alior' | 'universal' | 'ai' | 'monefy' | 'wallet' | 'moneymanager';
   displayName: string;
 }
 
