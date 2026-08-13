@@ -445,7 +445,7 @@ Add the validator next to `validateAssignments`:
       if (result.length >= MAX_PROPOSED_CATEGORIES) break;
 
       const name = String(entry?.name ?? '')
-        .replace(/[ -]/g, '')
+        .replace(/[\u0000-\u001F\u007F]/g, '')
         .replace(/\s+/g, ' ')
         .trim();
       if (name.length < MIN_PROPOSED_NAME_LEN || name.length > MAX_PROPOSED_NAME_LEN) continue;
