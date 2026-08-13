@@ -3,7 +3,10 @@ import { join } from 'path';
 import { MonefyParser } from './monefy.parser';
 
 const fixture = readFileSync(join(__dirname, '__fixtures__', 'monefy.csv'), 'utf8');
-const headers = fixture.split('\n')[0].split(';');
+// Trimmed per cell: on a CRLF checkout the raw split leaves a \r on the last
+// header, and the parser trims — so an untrimmed expectation fails on Windows
+// while passing on a CI runner that checks out LF.
+const headers = fixture.split('\n')[0].split(';').map((h) => h.trim());
 
 describe('MonefyParser', () => {
   const parser = new MonefyParser();
