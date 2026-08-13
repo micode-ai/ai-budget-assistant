@@ -47,6 +47,17 @@ Als je je wachtwoord bent vergeten:
 
 > Als je de code niet ontvangt, controleer dan je spammap of tik op **Code opnieuw verzenden**.
 
+## Waar wil je beginnen?
+
+De eerste keer dat je de app opent zonder dat er nog iets is vastgelegd, zie je een kort scherm met de vraag **"Waar wil je beginnen?"** — kies wat voor jou het snelst gaat:
+
+- **Bon scannen** — maak een foto en de app leest de winkel, het bedrag en zelfs de afzonderlijke regels voor je uit
+- **Gebruik je stem** — zeg wat je hebt uitgegeven, en de app vult de details voor je in
+- **Handmatig invoeren** — voer je eerste uitgave zelf stap voor stap in
+- **Importeer je geschiedenis** — importeer eerdere transacties uit je bankafschrift of een andere budget-app
+
+Tik op **Dat doe ik later** als je liever eerst rondkijkt — je gaat dan direct naar je dashboard. Dit scherm verschijnt alleen totdat je je eerste transactie hebt toegevoegd; daarna zie je het niet meer.
+
 ## Welkomstscherm
 
 Na je eerste keer inloggen zie je het **Welkom**-scherm:

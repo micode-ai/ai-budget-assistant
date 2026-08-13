@@ -47,6 +47,17 @@ Si vous avez oublié votre mot de passe :
 
 > Si vous ne recevez pas le code, vérifiez votre dossier spam ou appuyez sur **Renvoyer le code**.
 
+## Par où voulez-vous commencer ?
+
+La première fois que vous ouvrez l'application sans rien avoir encore enregistré, un court écran vous demande **"Par où voulez-vous commencer ?"** — choisissez l'option la plus rapide pour vous :
+
+- **Scanner un reçu** — prenez une photo, l'application lit le magasin, le montant et même chaque article pour vous
+- **Utiliser votre voix** — dites ce que vous avez dépensé, et l'application remplit les détails
+- **Le saisir manuellement** — saisissez vous-même votre première dépense, étape par étape
+- **Importer votre historique** — importez vos transactions passées depuis votre relevé bancaire ou une autre application de budget
+
+Appuyez sur **Je le ferai plus tard** si vous préférez explorer d'abord l'application — vous accéderez directement à votre tableau de bord. Cet écran n'apparaît que tant que vous n'avez pas ajouté votre première transaction ; ensuite, il ne s'affichera plus.
+
 ## Ecran de bienvenue
 
 Apres votre premiere connexion, vous verrez l'ecran **Bienvenue** :

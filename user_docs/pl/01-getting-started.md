@@ -47,6 +47,17 @@ Jeśli zapomniałeś hasła:
 
 > Jeśli kod nie dotarł, sprawdź folder spam lub naciśnij **Wyślij kod ponownie**.
 
+## Od czego chcesz zacząć?
+
+Gdy pierwszy raz otwierasz aplikację i nie masz jeszcze żadnych zapisanych transakcji, zobaczysz krótki ekran z pytaniem **"Od czego chcesz zacząć?"** — wybierz opcję, która jest dla Ciebie najszybsza:
+
+- **Zeskanuj paragon** — zrób zdjęcie, a aplikacja sama odczyta sklep, kwotę, a nawet poszczególne pozycje
+- **Użyj głosu** — powiedz, na co wydałeś pieniądze, a aplikacja uzupełni szczegóły
+- **Wpisz ręcznie** — wprowadź swój pierwszy wydatek samodzielnie, krok po kroku
+- **Zaimportuj historię** — zaimportuj wcześniejsze transakcje z wyciągu bankowego lub innej aplikacji budżetowej
+
+Dotknij **Zrobię to później**, jeśli wolisz najpierw rozejrzeć się po aplikacji — trafisz od razu na pulpit. Ten ekran pojawia się tylko do momentu dodania pierwszej transakcji; potem już się nie wyświetli.
+
 ## Ekran powitalny
 
 Po pierwszym zalogowaniu zobaczysz ekran **Witamy**:
