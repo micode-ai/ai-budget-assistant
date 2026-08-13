@@ -1877,7 +1877,7 @@ export default {
   location: {
     sectionTitle: 'Standort',
     attachToggle: 'Standort an neue Ausgaben anhängen',
-    attachToggleDesc: 'Speichert deine GPS-Position, wenn du eine Ausgabe vor Ort hinzufügst',
+    attachToggleDesc: 'Speichert deine GPS-Position, wenn du eine Ausgabe vor Ort hinzufügst, und prüft deinen Standort, wenn du die Übersicht öffnest',
     permissionDenied: 'Standortberechtigung erforderlich. Aktiviere sie in den Systemeinstellungen.',
     title: 'Standort',
     addLocation: 'Standort hinzufügen',
@@ -2241,6 +2241,13 @@ export default {
     noIncomeAssumed: 'Kein weiteres Einkommen diesen Monat angenommen',
     approxRate: 'Ungefährer Wechselkurs angewendet',
     widgetLabel: 'Sicher ausgeben',
+  },
+  storeArrival: {
+    title: 'Du bist bei {{merchant}}',
+    widgetLabel: 'Im Geschäft',
+    listHeading: 'Noch auf deiner Liste',
+    moreItems: '+{{count}} mehr',
+    safeToSpend: 'Heute sicher ausgebbar',
   },
   inflationShield: {
     title: 'Inflationsschutz',

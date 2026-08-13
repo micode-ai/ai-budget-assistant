@@ -1877,7 +1877,7 @@ export default {
   location: {
     sectionTitle: 'Ubicación',
     attachToggle: 'Adjuntar ubicación a nuevos gastos',
-    attachToggleDesc: 'Guarda tu posición GPS cuando añades un gasto en el momento',
+    attachToggleDesc: 'Guarda tu posición GPS cuando añades un gasto en el momento y comprueba dónde estás al abrir el Panel',
     permissionDenied: 'Se requiere permiso de ubicación. Actívalo en los ajustes del sistema.',
     title: 'Ubicación',
     addLocation: 'Añadir ubicación',
@@ -2241,6 +2241,13 @@ export default {
     noIncomeAssumed: 'No se asumen más ingresos este mes',
     approxRate: 'Tasa de cambio aproximada aplicada',
     widgetLabel: 'Gasto seguro',
+  },
+  storeArrival: {
+    title: 'Estás en {{merchant}}',
+    widgetLabel: 'En la tienda',
+    listHeading: 'Aún en tu lista',
+    moreItems: '+{{count}} más',
+    safeToSpend: 'Gasto seguro hoy',
   },
   inflationShield: {
     title: 'Escudo contra la inflación',

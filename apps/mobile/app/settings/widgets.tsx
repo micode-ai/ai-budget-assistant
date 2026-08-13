@@ -41,6 +41,7 @@ export default function WidgetsSettingsScreen() {
   };
 
   const widgetLabels: Record<WidgetKey, string> = {
+    storeArrival: t('storeArrival.widgetLabel'),
     safeToSpend: t('safeToSpend.widgetLabel'),
     familyFeed: t('familyFeed.title'),
     inflationShield: t('inflationShield.title'),

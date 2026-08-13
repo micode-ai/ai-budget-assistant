@@ -1880,7 +1880,7 @@ export default {
   location: {
     sectionTitle: 'Lokalizacja',
     attachToggle: 'Dołączaj lokalizację do nowych wydatków',
-    attachToggleDesc: 'Zapisuje pozycję GPS, gdy dodajesz wydatek na miejscu',
+    attachToggleDesc: 'Zapisuje pozycję GPS, gdy dodajesz wydatek na miejscu, i sprawdza, gdzie jesteś, gdy otwierasz Pulpit',
     permissionDenied: 'Wymagane jest uprawnienie do lokalizacji. Włącz je w ustawieniach systemu.',
     title: 'Lokalizacja',
     addLocation: 'Dodaj lokalizację',
@@ -2245,6 +2245,13 @@ export default {
     noIncomeAssumed: 'Przyjęto brak dodatkowych przychodów w tym miesiącu',
     approxRate: 'Zastosowano przybliżony kurs wymiany',
     widgetLabel: 'Bezpieczne wydatki',
+  },
+  storeArrival: {
+    title: 'Jesteś w: {{merchant}}',
+    widgetLabel: 'W sklepie',
+    listHeading: 'Wciąż na Twojej liście',
+    moreItems: '+{{count}} więcej',
+    safeToSpend: 'Bezpieczne wydatki na dziś',
   },
   inflationShield: {
     title: 'Tarcza antyinflacyjna',

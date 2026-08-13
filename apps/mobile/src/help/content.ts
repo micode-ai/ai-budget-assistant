@@ -211,6 +211,19 @@ Available actions:
 
 You can customize this strip: go to **Settings → Dashboard Widgets**, open the **Quick actions** section, toggle any action on or off, and drag the handles to reorder them. **Voice Income** and **Scan Invoice** are hidden by default — turn them on there if you track income by voice or invoice scan.
 
+## At the Shop
+
+When you open the app while you're standing in a store you've shopped at before, a card appears near the top of the Dashboard — for example, "You're at Biedronka." It shows:
+
+- **Still on your list** — the unchecked items from your active shopping list (up to five, with a count for anything beyond that).
+- **Safe to spend today** — today's Safe to Spend figure, so you know how much room you have before it affects the rest of the month.
+
+Tap the card to open your shopping list.
+
+The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
+
+> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's off by default. Without it, the app never checks where you are, and this card never appears.
+
 ## Financial Health Score
 
 The **Financial Health Score** widget shows a single 0–100 score summarizing your overall financial health for the current month:
@@ -4677,6 +4690,19 @@ iOS, Android, Web
 
 Вы можете настроить эту панель: перейдите в **Настройки → Виджеты главного экрана**, откройте раздел **Быстрые действия**, включите или отключите любые действия и перетащите ручки для изменения порядка. **Доход голосом** и **Сканировать счёт** скрыты по умолчанию — включите их там, если вы записываете доходы голосом или сканируя счета.
 
+## В магазине
+
+Когда вы открываете приложение, стоя в магазине, где уже делали покупки раньше, вверху Главной появляется карточка — например, «Вы в Biedronka». Она показывает:
+
+- **Ещё в вашем списке** — неотмеченные позиции из вашего активного списка покупок (до пяти, со счётчиком остальных).
+- **Безопасно потратить сегодня** — сегодняшнюю цифру Безопасных трат, чтобы вы знали, сколько ещё можно потратить, не влияя на остаток месяца.
+
+Нажмите на карточку, чтобы открыть список покупок.
+
+Карточка появляется только тогда, когда приложение узнаёт магазин по вашим прошлым покупкам там — поэтому при первом посещении нового места она не появится, а когда вы уйдёте из магазина, она исчезнет при следующем открытии приложения или возвращении на Главную.
+
+> **Примечание:** Для этой карточки нужен доступ к геолокации. Включите **Прикреплять локацию к новым расходам** в **Настройки → Данные и отчёты → Локация** — по умолчанию это выключено. Без этого приложение никогда не проверяет, где вы находитесь, и карточка никогда не появится.
+
 ## Финансовое здоровье
 
 Виджет **Финансовое здоровье** показывает единый показатель от 0 до 100, отражающий общее состояние ваших финансов за текущий месяц:
@@ -9141,6 +9167,19 @@ iOS, Android, Web
 
 Ви можете налаштувати цю панель: перейдіть до **Налаштування → Віджети головного екрану**, відкрийте розділ **Швидкі дії**, увімкніть або вимкніть будь-які дії та перетягніть ручки для зміни порядку. **Дохід голосом** і **Сканувати рахунок** приховані за замовчуванням — увімкніть їх там, якщо ви записуєте доходи голосом або скануючи рахунки.
 
+## У магазині
+
+Коли ви відкриваєте застосунок, стоячи в магазині, де вже робили покупки раніше, вгорі Головної з'являється картка — наприклад, «Ви у Biedronka». Вона показує:
+
+- **Ще у вашому списку** — невідмічені позиції з вашого активного списку покупок (до п'яти, з лічильником решти).
+- **Безпечно витратити сьогодні** — сьогоднішню цифру Безпечних витрат, щоб ви знали, скільки ще можна витратити, перш ніж це вплине на решту місяця.
+
+Натисніть на картку, щоб відкрити список покупок.
+
+Картка з'являється лише тоді, коли застосунок розпізнає магазин за вашими попередніми покупками там — тож під час першого відвідування нового місця вона не з'явиться, а коли ви підете з магазину, вона зникне під час наступного відкриття застосунку або повернення на Головну.
+
+> **Примітка:** Для цієї картки потрібен доступ до геолокації. Увімкніть **Прикріплювати локацію до нових витрат** у **Налаштування → Дані та звіти → Локація** — за замовчуванням це вимкнено. Без цього застосунок ніколи не перевіряє, де ви перебуваєте, і картка ніколи не з'явиться.
+
 ## Фінансове здоров'я
 
 Віджет **Фінансове здоров'я** показує єдиний показник від 0 до 100, що відображає загальний стан ваших фінансів за поточний місяць:
@@ -13553,6 +13592,19 @@ Dostępne akcje:
 
 Możesz dostosować ten pasek: przejdź do **Ustawienia → Widgety pulpitu**, otwórz sekcję **Szybkie akcje**, włącz lub wyłącz dowolne akcje i przeciągnij uchwyty, aby je przestawić. **Przychód głosowo** i **Skanuj fakturę** są domyślnie ukryte — włącz je tam, jeśli rejestrujesz przychody głosowo lub skanując faktury.
 
+## W sklepie
+
+Gdy otwierasz aplikację, stojąc w sklepie, w którym już wcześniej robiłeś zakupy, na górze Pulpitu pojawia się karta — na przykład „Jesteś w Biedronka." Pokazuje ona:
+
+- **Wciąż na Twojej liście** — nieodznaczone pozycje z Twojej aktywnej listy zakupów (do pięciu, z licznikiem pozostałych).
+- **Bezpieczne wydatki na dziś** — dzisiejszą kwotę Bezpiecznych wydatków, dzięki czemu wiesz, ile jeszcze możesz wydać, zanim wpłynie to na resztę miesiąca.
+
+Dotknij karty, aby otworzyć listę zakupów.
+
+Karta pojawia się dopiero, gdy aplikacja rozpozna sklep na podstawie Twoich wcześniejszych zakupów w nim — nie zobaczysz jej więc podczas pierwszej wizyty w nowym miejscu, a gdy wyjdziesz ze sklepu, karta zniknie przy następnym otwarciu aplikacji lub powrocie na Pulpit.
+
+> **Uwaga:** Ta karta wymaga dostępu do lokalizacji. Włącz **Dołączaj lokalizację do nowych wydatków** w **Ustawienia → Dane i raporty → Lokalizacja** — domyślnie jest to wyłączone. Bez tego aplikacja nigdy nie sprawdza, gdzie jesteś, i karta nigdy się nie pojawi.
+
 ## Kondycja Finansowa
 
 Widget **Kondycja Finansowa** wyświetla pojedynczy wynik od 0 do 100 podsumowujący Twoją ogólną kondycję finansową w bieżącym miesiącu:
@@ -17961,6 +18013,19 @@ Verfügbare Aktionen:
 
 Du kannst diese Leiste anpassen: Gehe zu **Einstellungen → Dashboard-Widgets**, öffne den Bereich **Schnellaktionen**, aktiviere oder deaktiviere beliebige Aktionen und ziehe die Griffe, um sie neu anzuordnen. **Einnahme per Sprache** und **Rechnung scannen** sind standardmäßig ausgeblendet — aktiviere sie dort, wenn du Einnahmen per Sprache oder Rechnungsscan erfasst.
 
+## Im Geschäft
+
+Wenn du die App öffnest, während du in einem Geschäft stehst, in dem du schon einmal eingekauft hast, erscheint oben auf der Übersicht eine Karte — zum Beispiel „Du bist bei Biedronka." Sie zeigt:
+
+- **Noch auf deiner Liste** — die noch nicht abgehakten Artikel deiner aktiven Einkaufsliste (bis zu fünf, mit einer Zahl für alle weiteren).
+- **Heute sicher ausgebbar** — deine heutige „Sicher ausgeben"-Zahl, damit du weißt, wie viel Spielraum dir noch bleibt, bevor es den Rest des Monats beeinflusst.
+
+Tippe auf die Karte, um deine Einkaufsliste zu öffnen.
+
+Die Karte erscheint erst, wenn die App das Geschäft anhand deiner bisherigen Einkäufe dort erkennt — beim allerersten Besuch eines neuen Ortes wird sie also noch nicht angezeigt. Wenn du das Geschäft verlässt, verschwindet sie, sobald du die App das nächste Mal öffnest oder zur Übersicht zurückkehrst.
+
+> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das ausgeschaltet. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
+
 ## Finanzielle Gesundheit
 
 Das Widget **Finanzielle Gesundheit** zeigt eine einzelne Punktzahl von 0–100, die Ihre finanzielle Gesundheit im aktuellen Monat zusammenfasst:
@@ -22344,6 +22409,19 @@ Acciones disponibles:
 
 Puedes personalizar esta barra: ve a **Ajustes → Widgets del panel**, abre la sección **Acciones rápidas**, activa o desactiva cualquier acción, y arrastra los controles para reordenarlas. **Ingreso por voz** y **Escanear factura** están ocultos por defecto — actívalos allí si registras ingresos por voz o escaneando facturas.
 
+## En la tienda
+
+Cuando abres la app mientras estás en una tienda en la que ya has comprado antes, aparece una tarjeta cerca de la parte superior del Panel — por ejemplo, "Estás en Biedronka." Muestra:
+
+- **Aún en tu lista** — los artículos sin marcar de tu lista de la compra activa (hasta cinco, con un contador para el resto).
+- **Gasto seguro hoy** — tu cifra de Gasto seguro de hoy, para que sepas cuánto margen te queda antes de que afecte al resto del mes.
+
+Toca la tarjeta para abrir tu lista de la compra.
+
+La tarjeta solo aparece cuando la app reconoce la tienda a partir de tus compras anteriores allí — no aparecerá en tu primera visita a un lugar nuevo, y cuando te vas, desaparece la próxima vez que abres la app o vuelves al Panel.
+
+> **Nota:** Esta tarjeta necesita acceso a la ubicación. Activa **Adjuntar ubicación a nuevos gastos** en **Ajustes → Datos e informes → Ubicación** — está desactivado de forma predeterminada. Sin esto, la app nunca comprueba dónde estás, y la tarjeta nunca aparece.
+
 ## Salud Financiera
 
 El widget **Salud Financiera** muestra una puntuación única de 0–100 que resume tu salud financiera general del mes actual:
@@ -26716,6 +26794,19 @@ Actions disponibles :
 
 Vous pouvez personnaliser cette barre : allez dans **Paramètres → Widgets du tableau de bord**, ouvrez la section **Actions rapides**, activez ou désactivez n'importe quelle action, et faites glisser les poignées pour les réordonner. **Revenu par voix** et **Scanner une facture** sont masqués par défaut — activez-les là si vous enregistrez vos revenus par voix ou en scannant des factures.
 
+## Au magasin
+
+Lorsque vous ouvrez l'application alors que vous êtes dans un magasin où vous avez déjà fait des achats, une carte apparaît en haut du Tableau de bord — par exemple, « Vous êtes chez Biedronka. » Elle affiche :
+
+- **Encore sur votre liste** — les articles non cochés de votre liste de courses active (jusqu'à cinq, avec un compteur pour le reste).
+- **Dépense sûre aujourd'hui** — votre chiffre de Dépense sûre du jour, pour savoir combien de marge il vous reste avant que cela n'affecte le reste du mois.
+
+Appuyez sur la carte pour ouvrir votre liste de courses.
+
+La carte n'apparaît que lorsque l'application reconnaît le magasin à partir de vos achats précédents à cet endroit — elle n'apparaîtra donc pas lors de votre toute première visite dans un nouvel endroit, et lorsque vous partez, elle disparaît à la prochaine ouverture de l'application ou lorsque vous revenez au Tableau de bord.
+
+> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est désactivée par défaut. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
+
 ## Santé Financière
 
 Le widget **Santé Financière** affiche un score unique de 0 à 100 résumant votre santé financière globale pour le mois en cours :
@@ -31086,6 +31177,19 @@ iOS, Android, Web
 
 Вы можаце наладзіць гэту панэль: перайдзіце ў **Налады → Віджэты галоўнага экрана**, адкрыйце раздзел **Хуткія дзеянні**, уключыце або выключыце любыя дзеянні і перацягніце ручкі для змены парадку. **Даход голасам** і **Сканаваць рахунак** схаваны па змаўчанні — уключыце іх там, калі вы запісваеце даходы голасам або скануючы рахункі.
 
+## У краме
+
+Калі вы адкрываеце праграму, стоячы ў краме, дзе ўжо рабілі пакупкі раней, уверсе Галоўнай з'яўляецца картка — напрыклад, «Вы ў Biedronka». Яна паказвае:
+
+- **Яшчэ ў вашым спісе** — неадзначаныя пазіцыі з вашага актыўнага спіса пакупак (да пяці, з лічыльнікам астатніх).
+- **Бяспечна патраціць сёння** — сённяшнюю лічбу Бяспечных выдаткаў, каб вы ведалі, колькі яшчэ можна патраціць, перш чым гэта паўплывае на рэшту месяца.
+
+Націсніце на картку, каб адкрыць спіс пакупак.
+
+Картка з'яўляецца толькі тады, калі праграма распазнае краму па вашых папярэдніх пакупках там — таму падчас першага наведвання новага месца яна не з'явіцца, а калі вы пойдзеце з крамы, яна знікне пры наступным адкрыцці праграмы ці вяртанні на Галоўную.
+
+> **Заўвага:** Для гэтай карткі патрэбны доступ да геалакацыі. Уключыце **Прымацоўваць лакацыю да новых выдаткаў** у **Налады → Даныя і справаздачы → Лакацыя** — па змаўчанні гэта выключана. Без гэтага праграма ніколі не правярае, дзе вы знаходзіцеся, і картка ніколі не з'явіцца.
+
 ## Фінансавае здароўе
 
 Віджэт **Фінансавае здароўе** паказвае адзіны паказчык ад 0 да 100, які адлюстроўвае агульны стан вашых фінансаў за бягучы месяц:
@@ -35412,6 +35516,19 @@ Beschikbare acties:
 | **Overboekingen** | Opent het formulier voor portemonnee-overboekingen |
 
 Je kunt deze balk aanpassen: ga naar **Instellingen → Dashboard-widgets**, open de sectie **Snelle acties**, zet acties aan of uit en sleep de handvatten om ze te herordenen. **Inkomsten via spraak** en **Factuur scannen** zijn standaard verborgen — schakel ze daar in als je inkomsten bijhoudt via spraak of factuurscan.
+
+## In de winkel
+
+Wanneer je de app opent terwijl je in een winkel staat waar je al eerder hebt gewinkeld, verschijnt er een kaart bovenaan het Dashboard — bijvoorbeeld "U bent bij Biedronka." Deze toont:
+
+- **Nog op uw lijst** — de niet-afgevinkte items van je actieve boodschappenlijst (tot vijf, met een teller voor de rest).
+- **Veilig te besteden vandaag** — je Veilig-uitgeven-cijfer van vandaag, zodat je weet hoeveel ruimte je nog hebt voordat het de rest van de maand beïnvloedt.
+
+Tik op de kaart om je boodschappenlijst te openen.
+
+De kaart verschijnt pas zodra de app de winkel herkent aan je eerdere aankopen daar — bij je allereerste bezoek aan een nieuwe plek zie je hem dus nog niet, en zodra je vertrekt, verdwijnt hij de volgende keer dat je de app opent of terugkeert naar het Dashboard.
+
+> **Let op:** Deze kaart heeft locatietoegang nodig. Zet **Locatie toevoegen aan nieuwe uitgaven** aan onder **Instellingen → Gegevens & rapporten → Locatie** — dit staat standaard uit. Zonder deze instelling controleert de app nooit waar je bent, en verschijnt deze kaart nooit.
 
 ## Financiële gezondheidsscore
 

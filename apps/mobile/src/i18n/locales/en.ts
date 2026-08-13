@@ -1881,7 +1881,7 @@ export default {
   location: {
     sectionTitle: 'Location',
     attachToggle: 'Attach location to new expenses',
-    attachToggleDesc: 'Saves your GPS position when you add an expense on the spot',
+    attachToggleDesc: 'Saves your GPS position when you add an expense on the spot, and checks where you are when you open the Dashboard',
     permissionDenied: 'Location permission is required. Enable it in system settings.',
     title: 'Location',
     addLocation: 'Add location',
@@ -2245,6 +2245,13 @@ export default {
     noIncomeAssumed: 'No further income assumed this month',
     approxRate: 'Approximate FX rate applied',
     widgetLabel: 'Safe to Spend',
+  },
+  storeArrival: {
+    title: 'You\'re at {{merchant}}',
+    widgetLabel: 'At the shop',
+    listHeading: 'Still on your list',
+    moreItems: '+{{count}} more',
+    safeToSpend: 'Safe to spend today',
   },
   inflationShield: {
     title: 'Inflation Shield',

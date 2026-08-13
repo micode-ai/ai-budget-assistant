@@ -1880,7 +1880,7 @@ export default {
   location: {
     sectionTitle: 'Локація',
     attachToggle: 'Прикріплювати локацію до нових витрат',
-    attachToggleDesc: 'Зберігає вашу GPS-позицію, коли ви додаєте витрату на місці',
+    attachToggleDesc: 'Зберігає вашу GPS-позицію, коли ви додаєте витрату на місці, і перевіряє, де ви перебуваєте, коли відкриваєте Головну',
     permissionDenied: 'Потрібен дозвіл на геолокацію. Увімкніть його в налаштуваннях системи.',
     title: 'Локація',
     addLocation: 'Додати локацію',
@@ -2245,6 +2245,13 @@ export default {
     noIncomeAssumed: 'Додатковий дохід цього місяця не передбачається',
     approxRate: 'Застосовано приблизний курс обміну',
     widgetLabel: 'Безпечна трата',
+  },
+  storeArrival: {
+    title: 'Ви у {{merchant}}',
+    widgetLabel: 'У магазині',
+    listHeading: 'Ще у Вашому списку',
+    moreItems: '+{{count}} більше',
+    safeToSpend: 'Безпечно витратити сьогодні',
   },
   inflationShield: {
     title: 'Щит від інфляції',

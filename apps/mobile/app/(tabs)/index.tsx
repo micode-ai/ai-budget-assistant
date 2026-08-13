@@ -79,6 +79,8 @@ export default function DashboardScreen() {
     investmentSummary,
     currentAccountType,
     rates,
+    safeToSpendData,
+    hasSafeToSpend,
   };
 
   return (

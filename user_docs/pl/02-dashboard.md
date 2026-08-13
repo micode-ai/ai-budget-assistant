@@ -33,6 +33,19 @@ Dostępne akcje:
 
 Możesz dostosować ten pasek: przejdź do **Ustawienia → Widgety pulpitu**, otwórz sekcję **Szybkie akcje**, włącz lub wyłącz dowolne akcje i przeciągnij uchwyty, aby je przestawić. **Przychód głosowo** i **Skanuj fakturę** są domyślnie ukryte — włącz je tam, jeśli rejestrujesz przychody głosowo lub skanując faktury.
 
+## W sklepie
+
+Gdy otwierasz aplikację, stojąc w sklepie, w którym już wcześniej robiłeś zakupy, na górze Pulpitu pojawia się karta — na przykład „Jesteś w Biedronka." Pokazuje ona:
+
+- **Wciąż na Twojej liście** — nieodznaczone pozycje z Twojej aktywnej listy zakupów (do pięciu, z licznikiem pozostałych).
+- **Bezpieczne wydatki na dziś** — dzisiejszą kwotę Bezpiecznych wydatków, dzięki czemu wiesz, ile jeszcze możesz wydać, zanim wpłynie to na resztę miesiąca.
+
+Dotknij karty, aby otworzyć listę zakupów.
+
+Karta pojawia się dopiero, gdy aplikacja rozpozna sklep na podstawie Twoich wcześniejszych zakupów w nim — nie zobaczysz jej więc podczas pierwszej wizyty w nowym miejscu, a gdy wyjdziesz ze sklepu, karta zniknie przy następnym otwarciu aplikacji lub powrocie na Pulpit.
+
+> **Uwaga:** Ta karta wymaga dostępu do lokalizacji. Włącz **Dołączaj lokalizację do nowych wydatków** w **Ustawienia → Dane i raporty → Lokalizacja** — domyślnie jest to wyłączone. Bez tego aplikacja nigdy nie sprawdza, gdzie jesteś, i karta nigdy się nie pojawi.
+
 ## Kondycja Finansowa
 
 Widget **Kondycja Finansowa** wyświetla pojedynczy wynik od 0 do 100 podsumowujący Twoją ogólną kondycję finansową w bieżącym miesiącu:

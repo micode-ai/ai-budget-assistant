@@ -33,6 +33,19 @@ Beschikbare acties:
 
 Je kunt deze balk aanpassen: ga naar **Instellingen → Dashboard-widgets**, open de sectie **Snelle acties**, zet acties aan of uit en sleep de handvatten om ze te herordenen. **Inkomsten via spraak** en **Factuur scannen** zijn standaard verborgen — schakel ze daar in als je inkomsten bijhoudt via spraak of factuurscan.
 
+## In de winkel
+
+Wanneer je de app opent terwijl je in een winkel staat waar je al eerder hebt gewinkeld, verschijnt er een kaart bovenaan het Dashboard — bijvoorbeeld "U bent bij Biedronka." Deze toont:
+
+- **Nog op uw lijst** — de niet-afgevinkte items van je actieve boodschappenlijst (tot vijf, met een teller voor de rest).
+- **Veilig te besteden vandaag** — je Veilig-uitgeven-cijfer van vandaag, zodat je weet hoeveel ruimte je nog hebt voordat het de rest van de maand beïnvloedt.
+
+Tik op de kaart om je boodschappenlijst te openen.
+
+De kaart verschijnt pas zodra de app de winkel herkent aan je eerdere aankopen daar — bij je allereerste bezoek aan een nieuwe plek zie je hem dus nog niet, en zodra je vertrekt, verdwijnt hij de volgende keer dat je de app opent of terugkeert naar het Dashboard.
+
+> **Let op:** Deze kaart heeft locatietoegang nodig. Zet **Locatie toevoegen aan nieuwe uitgaven** aan onder **Instellingen → Gegevens & rapporten → Locatie** — dit staat standaard uit. Zonder deze instelling controleert de app nooit waar je bent, en verschijnt deze kaart nooit.
+
 ## Financiële gezondheidsscore
 
 De widget **Financiële gezondheidsscore** toont één score van 0–100 die je algehele financiële gezondheid voor de huidige maand samenvat:

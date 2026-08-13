@@ -33,6 +33,19 @@ Actions disponibles :
 
 Vous pouvez personnaliser cette barre : allez dans **Paramètres → Widgets du tableau de bord**, ouvrez la section **Actions rapides**, activez ou désactivez n'importe quelle action, et faites glisser les poignées pour les réordonner. **Revenu par voix** et **Scanner une facture** sont masqués par défaut — activez-les là si vous enregistrez vos revenus par voix ou en scannant des factures.
 
+## Au magasin
+
+Lorsque vous ouvrez l'application alors que vous êtes dans un magasin où vous avez déjà fait des achats, une carte apparaît en haut du Tableau de bord — par exemple, « Vous êtes chez Biedronka. » Elle affiche :
+
+- **Encore sur votre liste** — les articles non cochés de votre liste de courses active (jusqu'à cinq, avec un compteur pour le reste).
+- **Dépense sûre aujourd'hui** — votre chiffre de Dépense sûre du jour, pour savoir combien de marge il vous reste avant que cela n'affecte le reste du mois.
+
+Appuyez sur la carte pour ouvrir votre liste de courses.
+
+La carte n'apparaît que lorsque l'application reconnaît le magasin à partir de vos achats précédents à cet endroit — elle n'apparaîtra donc pas lors de votre toute première visite dans un nouvel endroit, et lorsque vous partez, elle disparaît à la prochaine ouverture de l'application ou lorsque vous revenez au Tableau de bord.
+
+> **Note :** Cette carte nécessite l'accès à la localisation. Activez **Joindre la localisation aux nouvelles dépenses** dans **Paramètres → Données et rapports → Localisation** — elle est désactivée par défaut. Sans cela, l'application ne vérifie jamais où vous êtes, et cette carte n'apparaît jamais.
+
 ## Santé Financière
 
 Le widget **Santé Financière** affiche un score unique de 0 à 100 résumant votre santé financière globale pour le mois en cours :

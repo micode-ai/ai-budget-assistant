@@ -33,6 +33,19 @@ Acciones disponibles:
 
 Puedes personalizar esta barra: ve a **Ajustes → Widgets del panel**, abre la sección **Acciones rápidas**, activa o desactiva cualquier acción, y arrastra los controles para reordenarlas. **Ingreso por voz** y **Escanear factura** están ocultos por defecto — actívalos allí si registras ingresos por voz o escaneando facturas.
 
+## En la tienda
+
+Cuando abres la app mientras estás en una tienda en la que ya has comprado antes, aparece una tarjeta cerca de la parte superior del Panel — por ejemplo, "Estás en Biedronka." Muestra:
+
+- **Aún en tu lista** — los artículos sin marcar de tu lista de la compra activa (hasta cinco, con un contador para el resto).
+- **Gasto seguro hoy** — tu cifra de Gasto seguro de hoy, para que sepas cuánto margen te queda antes de que afecte al resto del mes.
+
+Toca la tarjeta para abrir tu lista de la compra.
+
+La tarjeta solo aparece cuando la app reconoce la tienda a partir de tus compras anteriores allí — no aparecerá en tu primera visita a un lugar nuevo, y cuando te vas, desaparece la próxima vez que abres la app o vuelves al Panel.
+
+> **Nota:** Esta tarjeta necesita acceso a la ubicación. Activa **Adjuntar ubicación a nuevos gastos** en **Ajustes → Datos e informes → Ubicación** — está desactivado de forma predeterminada. Sin esto, la app nunca comprueba dónde estás, y la tarjeta nunca aparece.
+
 ## Salud Financiera
 
 El widget **Salud Financiera** muestra una puntuación única de 0–100 que resume tu salud financiera general del mes actual:

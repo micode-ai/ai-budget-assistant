@@ -1877,7 +1877,7 @@ export default {
   location: {
     sectionTitle: 'Localisation',
     attachToggle: 'Joindre la localisation aux nouvelles dépenses',
-    attachToggleDesc: 'Enregistre votre position GPS quand vous ajoutez une dépense sur place',
+    attachToggleDesc: 'Enregistre votre position GPS quand vous ajoutez une dépense sur place et vérifie où vous êtes à l’ouverture du Tableau de bord',
     permissionDenied: 'Autorisation de localisation requise. Activez-la dans les réglages du système.',
     title: 'Localisation',
     addLocation: 'Ajouter une localisation',
@@ -2241,6 +2241,13 @@ export default {
     noIncomeAssumed: 'Aucun revenu supplémentaire supposé ce mois',
     approxRate: 'Taux de change approximatif appliqué',
     widgetLabel: 'Dépense sûre',
+  },
+  storeArrival: {
+    title: 'Vous êtes chez {{merchant}}',
+    widgetLabel: 'Au magasin',
+    listHeading: 'Encore sur votre liste',
+    moreItems: '+{{count}} de plus',
+    safeToSpend: 'Dépense sûre aujourd’hui',
   },
   inflationShield: {
     title: 'Bouclier anti-inflation',

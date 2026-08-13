@@ -33,6 +33,19 @@ Available actions:
 
 You can customize this strip: go to **Settings → Dashboard Widgets**, open the **Quick actions** section, toggle any action on or off, and drag the handles to reorder them. **Voice Income** and **Scan Invoice** are hidden by default — turn them on there if you track income by voice or invoice scan.
 
+## At the Shop
+
+When you open the app while you're standing in a store you've shopped at before, a card appears near the top of the Dashboard — for example, "You're at Biedronka." It shows:
+
+- **Still on your list** — the unchecked items from your active shopping list (up to five, with a count for anything beyond that).
+- **Safe to spend today** — today's Safe to Spend figure, so you know how much room you have before it affects the rest of the month.
+
+Tap the card to open your shopping list.
+
+The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
+
+> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's off by default. Without it, the app never checks where you are, and this card never appears.
+
 ## Financial Health Score
 
 The **Financial Health Score** widget shows a single 0–100 score summarizing your overall financial health for the current month:

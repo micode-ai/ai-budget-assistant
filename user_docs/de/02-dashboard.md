@@ -33,6 +33,19 @@ Verfügbare Aktionen:
 
 Du kannst diese Leiste anpassen: Gehe zu **Einstellungen → Dashboard-Widgets**, öffne den Bereich **Schnellaktionen**, aktiviere oder deaktiviere beliebige Aktionen und ziehe die Griffe, um sie neu anzuordnen. **Einnahme per Sprache** und **Rechnung scannen** sind standardmäßig ausgeblendet — aktiviere sie dort, wenn du Einnahmen per Sprache oder Rechnungsscan erfasst.
 
+## Im Geschäft
+
+Wenn du die App öffnest, während du in einem Geschäft stehst, in dem du schon einmal eingekauft hast, erscheint oben auf der Übersicht eine Karte — zum Beispiel „Du bist bei Biedronka." Sie zeigt:
+
+- **Noch auf deiner Liste** — die noch nicht abgehakten Artikel deiner aktiven Einkaufsliste (bis zu fünf, mit einer Zahl für alle weiteren).
+- **Heute sicher ausgebbar** — deine heutige „Sicher ausgeben"-Zahl, damit du weißt, wie viel Spielraum dir noch bleibt, bevor es den Rest des Monats beeinflusst.
+
+Tippe auf die Karte, um deine Einkaufsliste zu öffnen.
+
+Die Karte erscheint erst, wenn die App das Geschäft anhand deiner bisherigen Einkäufe dort erkennt — beim allerersten Besuch eines neuen Ortes wird sie also noch nicht angezeigt. Wenn du das Geschäft verlässt, verschwindet sie, sobald du die App das nächste Mal öffnest oder zur Übersicht zurückkehrst.
+
+> **Hinweis:** Diese Karte benötigt Standortzugriff. Aktiviere **Standort an neue Ausgaben anhängen** unter **Einstellungen → Daten & Berichte → Standort** — standardmäßig ist das ausgeschaltet. Ohne diese Einstellung prüft die App nie, wo du dich befindest, und die Karte erscheint nie.
+
 ## Finanzielle Gesundheit
 
 Das Widget **Finanzielle Gesundheit** zeigt eine einzelne Punktzahl von 0–100, die Ihre finanzielle Gesundheit im aktuellen Monat zusammenfasst:

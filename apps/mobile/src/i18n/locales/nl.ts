@@ -1877,7 +1877,7 @@ export default {
   location: {
     sectionTitle: 'Locatie',
     attachToggle: 'Locatie toevoegen aan nieuwe uitgaven',
-    attachToggleDesc: 'Slaat je GPS-positie op wanneer je ter plekke een uitgave toevoegt',
+    attachToggleDesc: 'Slaat je GPS-positie op wanneer je ter plekke een uitgave toevoegt, en controleert waar je bent wanneer je het Dashboard opent',
     permissionDenied: 'Locatietoestemming is vereist. Schakel deze in bij de systeeminstellingen.',
     title: 'Locatie',
     addLocation: 'Locatie toevoegen',
@@ -2241,6 +2241,13 @@ export default {
     noIncomeAssumed: 'Geen verdere inkomsten deze maand aangenomen',
     approxRate: 'Geschatte wisselkoers toegepast',
     widgetLabel: 'Veilig te besteden',
+  },
+  storeArrival: {
+    title: 'U bent bij {{merchant}}',
+    widgetLabel: 'In de winkel',
+    listHeading: 'Nog op uw lijst',
+    moreItems: '+{{count}} meer',
+    safeToSpend: 'Veilig te besteden vandaag',
   },
   inflationShield: {
     title: 'Inflatieschild',

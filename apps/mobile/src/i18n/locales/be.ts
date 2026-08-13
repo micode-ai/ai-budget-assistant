@@ -1848,7 +1848,7 @@ export default {
   location: {
     sectionTitle: 'Лакацыя',
     attachToggle: 'Прымацоўваць лакацыю да новых выдаткаў',
-    attachToggleDesc: 'Захоўвае вашу GPS-пазіцыю, калі вы дадаяце выдатак на месцы',
+    attachToggleDesc: 'Захоўвае вашу GPS-пазіцыю, калі вы дадаяце выдатак на месцы, і правярае, дзе вы знаходзіцеся, калі адкрываеце Галоўную',
     permissionDenied: 'Патрэбны дазвол на геалакацыю. Уключыце яго ў наладах сістэмы.',
     title: 'Лакацыя',
     addLocation: 'Дадаць лакацыю',
@@ -2213,6 +2213,13 @@ export default {
     noIncomeAssumed: 'Дадатковы прыбытак у гэтым месяцы не прадугледжваецца',
     approxRate: 'Ужыты прыблізны курс абмену',
     widgetLabel: 'Бяспечныя выдаткі',
+  },
+  storeArrival: {
+    title: 'Вы ў {{merchant}}',
+    widgetLabel: 'У краме',
+    listHeading: 'Яшчэ ў Вашым спісе',
+    moreItems: '+{{count}} яшчэ',
+    safeToSpend: 'Бяспечна патраціць сёння',
   },
   inflationShield: {
     title: 'Шчыт ад інфляцыі',
