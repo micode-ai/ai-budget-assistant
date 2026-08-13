@@ -47,6 +47,17 @@ If you forgot your password:
 
 > If you don't receive the code, check your spam folder or tap **Resend code**.
 
+## Where Would You Like to Start?
+
+The first time you open the app with nothing tracked yet, you'll see a short screen asking **"Where would you like to start?"** — pick whichever is fastest for you:
+
+- **Scan a receipt** — snap a photo and the app reads the store, amount, and even individual line items for you
+- **Use your voice** — say what you spent, and the app fills in the details
+- **Type it manually** — enter your first expense yourself, step by step
+- **Bring your history** — import past transactions from your bank statement or another budgeting app
+
+Tap **I'll do this later** if you'd rather explore first — you'll go straight to your dashboard. This screen appears only until you've added your first transaction; after that, it won't show up again.
+
 ## Welcome Screen
 
 After your first login, you'll see the **Welcome** screen:

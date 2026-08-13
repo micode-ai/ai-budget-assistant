@@ -1168,6 +1168,17 @@ export default {
     wantMore: 'Mehr gewünscht? Jederzeit upgraden',
     continueWithFree: 'Kostenlos fortfahren',
   },
+  onboarding: {
+    heading: 'Wo möchten Sie beginnen?',
+    subheading: 'Fügen Sie eine Sache hinzu, und die App beginnt, für Sie zu arbeiten.',
+    scanReceipt: 'Beleg scannen',
+    scanReceiptHint: 'Positionen und Kategorien werden für Sie erkannt',
+    useVoice: 'Stimme verwenden',
+    typeManually: 'Manuell eingeben',
+    bringHistory: 'Verlauf importieren',
+    bringHistoryHint: 'Von Ihrer Bank oder einer anderen Budget-App',
+    later: 'Das mache ich später',
+  },
   admin: {
     title: 'Admin-Panel',
     openPanel: 'Admin-Dashboard',

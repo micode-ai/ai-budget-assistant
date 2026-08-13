@@ -1168,6 +1168,17 @@ export default {
     wantMore: 'Envie de plus ? Passez à un forfait supérieur',
     continueWithFree: 'Continuer gratuitement',
   },
+  onboarding: {
+    heading: 'Par où voulez-vous commencer ?',
+    subheading: 'Ajoutez un élément et l’application se met au travail pour vous.',
+    scanReceipt: 'Scanner un reçu',
+    scanReceiptHint: 'Articles et catégories, lus pour vous',
+    useVoice: 'Utiliser votre voix',
+    typeManually: 'Le saisir manuellement',
+    bringHistory: 'Importer votre historique',
+    bringHistoryHint: 'Depuis votre banque ou une autre appli de budget',
+    later: 'Je le ferai plus tard',
+  },
   admin: {
     title: 'Panneau d\'administration',
     openPanel: 'Tableau de bord admin',

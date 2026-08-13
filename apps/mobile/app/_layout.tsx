@@ -21,6 +21,7 @@ import { useAuthenticatedBootstrap } from '@/hooks/useAuthenticatedBootstrap';
 import { useNotificationDeepLink } from '@/hooks/useNotificationDeepLink';
 import { useTripInviteDeepLink } from '@/hooks/useTripInviteDeepLink';
 import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
+import { useFirstRunOnboarding } from '@/hooks/useFirstRunOnboarding';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -48,6 +49,7 @@ function RootNavigator() {
   useBankNotificationCapture();
   useNotificationDeepLink(coldStartGateReady);
   useTripInviteDeepLink(coldStartGateReady, t);
+  useFirstRunOnboarding(coldStartGateReady);
   useGenericDeepLink(isInitializing, isAuthenticated);
 
   if (isInitializing || !fontsLoaded) {
@@ -280,6 +282,13 @@ function RootNavigator() {
             headerShown: true,
             title: '',
             headerBackVisible: false,
+            gestureEnabled: false,
+          }}
+        />
+        <Stack.Screen
+          name="get-started"
+          options={{
+            headerShown: false,
             gestureEnabled: false,
           }}
         />

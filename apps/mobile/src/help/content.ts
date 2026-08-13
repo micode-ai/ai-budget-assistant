@@ -120,6 +120,17 @@ If you forgot your password:
 
 > If you don't receive the code, check your spam folder or tap **Resend code**.
 
+## Where Would You Like to Start?
+
+The first time you open the app with nothing tracked yet, you'll see a short screen asking **"Where would you like to start?"** — pick whichever is fastest for you:
+
+- **Scan a receipt** — snap a photo and the app reads the store, amount, and even individual line items for you
+- **Use your voice** — say what you spent, and the app fills in the details
+- **Type it manually** — enter your first expense yourself, step by step
+- **Bring your history** — import past transactions from your bank statement or another budgeting app
+
+Tap **I'll do this later** if you'd rather explore first — you'll go straight to your dashboard. This screen appears only until you've added your first transaction; after that, it won't show up again.
+
 ## Welcome Screen
 
 After your first login, you'll see the **Welcome** screen:
@@ -4575,6 +4586,17 @@ iOS, Android, Web
 
 > Если код не пришёл, проверьте папку «Спам» или нажмите **Отправить код повторно**.
 
+## С чего хотите начать?
+
+Когда вы впервые открываете приложение и ещё ничего не добавили, появится короткий экран с вопросом **«С чего хотите начать?»** — выберите то, что удобнее всего:
+
+- **Сканировать чек** — сфотографируйте чек, и приложение само распознает магазин, сумму и даже отдельные позиции
+- **Использовать голос** — скажите, на что вы потратили деньги, а приложение заполнит детали
+- **Ввести вручную** — добавьте первый расход самостоятельно, шаг за шагом
+- **Перенести историю** — импортируйте прошлые операции из банковской выписки или другого приложения для учёта финансов
+
+Нажмите **Сделаю это позже**, если хотите сначала осмотреться — вы сразу попадёте на главный экран. Этот экран показывается только до тех пор, пока вы не добавите первую транзакцию — после этого он больше не появится.
+
 ## Экран приветствия
 
 После первого входа вы увидите экран **Добро пожаловать в AI Budget!**:
@@ -9017,6 +9039,17 @@ iOS, Android, Web
 
 > Якщо код не надійшов, перевірте папку «Спам» або натисніть **Надіслати код повторно**.
 
+## З чого хочете почати?
+
+Коли ви вперше відкриваєте застосунок і ще нічого не додали, з'явиться короткий екран із запитанням **«З чого хочете почати?»** — оберіть варіант, який найзручніший саме для вас:
+
+- **Сканувати чек** — сфотографуйте чек, і застосунок сам розпізнає магазин, суму та навіть окремі позиції
+- **Використати голос** — скажіть, на що ви витратили гроші, а застосунок заповнить деталі
+- **Ввести вручну** — додайте першу витрату самостійно, крок за кроком
+- **Перенести історію** — імпортуйте минулі операції з банківської виписки або іншого застосунку для бюджету
+
+Натисніть **Зроблю це пізніше**, якщо хочете спершу роздивитися застосунок — ви одразу потрапите на головний екран. Цей екран з'являється лише доки ви не додасте першу транзакцію — після цього він більше не показуватиметься.
+
 ## Екран привітання
 
 Після першого входу ви побачите екран **Ласкаво просимо до AI Budget!**:
@@ -13429,6 +13462,17 @@ Jeśli zapomniałeś hasła:
 
 > Jeśli kod nie dotarł, sprawdź folder spam lub naciśnij **Wyślij kod ponownie**.
 
+## Od czego chcesz zacząć?
+
+Gdy pierwszy raz otwierasz aplikację i nie masz jeszcze żadnych zapisanych transakcji, zobaczysz krótki ekran z pytaniem **"Od czego chcesz zacząć?"** — wybierz opcję, która jest dla Ciebie najszybsza:
+
+- **Zeskanuj paragon** — zrób zdjęcie, a aplikacja sama odczyta sklep, kwotę, a nawet poszczególne pozycje
+- **Użyj głosu** — powiedz, na co wydałeś pieniądze, a aplikacja uzupełni szczegóły
+- **Wpisz ręcznie** — wprowadź swój pierwszy wydatek samodzielnie, krok po kroku
+- **Zaimportuj historię** — zaimportuj wcześniejsze transakcje z wyciągu bankowego lub innej aplikacji budżetowej
+
+Dotknij **Zrobię to później**, jeśli wolisz najpierw rozejrzeć się po aplikacji — trafisz od razu na pulpit. Ten ekran pojawia się tylko do momentu dodania pierwszej transakcji; potem już się nie wyświetli.
+
 ## Ekran powitalny
 
 Po pierwszym zalogowaniu zobaczysz ekran **Witamy**:
@@ -17826,6 +17870,17 @@ Wenn Sie Ihr Passwort vergessen haben:
 
 > Wenn der Code nicht ankommt, überprüfen Sie Ihren Spam-Ordner oder tippen Sie auf **Code erneut senden**.
 
+## Wo möchten Sie beginnen?
+
+Wenn du die App zum ersten Mal öffnest und noch nichts erfasst hast, siehst du einen kurzen Bildschirm mit der Frage **"Wo möchten Sie beginnen?"** — wähle, was für dich am schnellsten geht:
+
+- **Beleg scannen** — mach ein Foto, und die App liest Geschäft, Betrag und sogar einzelne Positionen für dich aus
+- **Stimme verwenden** — sag, was du ausgegeben hast, und die App füllt die Details aus
+- **Manuell eingeben** — trage deine erste Ausgabe selbst Schritt für Schritt ein
+- **Verlauf importieren** — importiere vergangene Transaktionen von deinem Kontoauszug oder einer anderen Budget-App
+
+Tippe auf **Das mache ich später**, wenn du lieber zuerst alles erkunden möchtest — du gelangst direkt zu deinem Dashboard. Dieser Bildschirm erscheint nur, bis du deine erste Ausgabe hinzugefügt hast; danach wird er nicht mehr angezeigt.
+
 ## Willkommensbildschirm
 
 Nach deiner ersten Anmeldung siehst du den **Willkommen**-Bildschirm:
@@ -22198,6 +22253,17 @@ Si olvidaste tu contraseña:
 
 > Si no recibes el código, revisa tu carpeta de spam o toca **Reenviar código**.
 
+## ¿Por dónde te gustaría empezar?
+
+La primera vez que abres la app sin nada registrado todavía, verás una pantalla breve que te pregunta **"¿Por dónde te gustaría empezar?"** — elige lo que te resulte más rápido:
+
+- **Escanear un recibo** — toma una foto y la app lee la tienda, el importe e incluso los artículos individuales por ti
+- **Usar tu voz** — di lo que gastaste y la app completa los detalles
+- **Escribirlo manualmente** — introduce tu primer gasto tú mismo, paso a paso
+- **Importa tu historial** — importa transacciones pasadas desde tu extracto bancario o desde otra app de presupuesto
+
+Toca **Lo haré más tarde** si prefieres explorar primero — irás directamente a tu panel. Esta pantalla solo aparece hasta que agregues tu primera transacción; después, no volverá a mostrarse.
+
 ## Pantalla de bienvenida
 
 Despues de tu primer inicio de sesion, veras la pantalla de **Bienvenida**:
@@ -26559,6 +26625,17 @@ Si vous avez oublié votre mot de passe :
 
 > Si vous ne recevez pas le code, vérifiez votre dossier spam ou appuyez sur **Renvoyer le code**.
 
+## Par où voulez-vous commencer ?
+
+La première fois que vous ouvrez l'application sans rien avoir encore enregistré, un court écran vous demande **"Par où voulez-vous commencer ?"** — choisissez l'option la plus rapide pour vous :
+
+- **Scanner un reçu** — prenez une photo, l'application lit le magasin, le montant et même chaque article pour vous
+- **Utiliser votre voix** — dites ce que vous avez dépensé, et l'application remplit les détails
+- **Le saisir manuellement** — saisissez vous-même votre première dépense, étape par étape
+- **Importer votre historique** — importez vos transactions passées depuis votre relevé bancaire ou une autre application de budget
+
+Appuyez sur **Je le ferai plus tard** si vous préférez explorer d'abord l'application — vous accéderez directement à votre tableau de bord. Cet écran n'apparaît que tant que vous n'avez pas ajouté votre première transaction ; ensuite, il ne s'affichera plus.
+
 ## Ecran de bienvenue
 
 Apres votre premiere connexion, vous verrez l'ecran **Bienvenue** :
@@ -30918,6 +30995,17 @@ iOS, Android, Web
 
 > Калі код не прыйшоў, праверце папку «Спам» або націсніце **Адправіць код паўторна**.
 
+## З чаго хочаце пачаць?
+
+Калі вы ўпершыню адкрываеце праграму і яшчэ нічога не дадалі, з'явіцца кароткі экран з пытаннем **«З чаго хочаце пачаць?»** — выберыце варыянт, які найбольш зручны для вас:
+
+- **Сканаваць чэк** — сфатаграфуйце чэк, і праграма сама распазнае краму, суму і нават асобныя пазіцыі
+- **Выкарыстаць голас** — скажыце, на што вы патрацілі грошы, а праграма запоўніць дэталі
+- **Увесці ўручную** — дадайце першы выдатак самастойна, крок за крокам
+- **Перанесці гісторыю** — імпартуйце мінулыя аперацыі з банкаўскай выпіскі ці іншай праграмы для бюджэту
+
+Націсніце **Зраблю гэта пазней**, калі хочаце спачатку агледзецца ў праграме — вы адразу трапіце на галоўны экран. Гэты экран з'яўляецца толькі пакуль вы не дадасце першую транзакцыю — пасля гэтага ён больш не паказваецца.
+
 ## Экран прывітання
 
 Пасля першага ўваходу вы ўбачыце экран **Сардэчна запрашаем у AI Budget!**:
@@ -35233,6 +35321,17 @@ Als je je wachtwoord bent vergeten:
 6. Je wordt teruggeleid naar het inlogscherm — log in met je nieuwe wachtwoord
 
 > Als je de code niet ontvangt, controleer dan je spammap of tik op **Code opnieuw verzenden**.
+
+## Waar wil je beginnen?
+
+De eerste keer dat je de app opent zonder dat er nog iets is vastgelegd, zie je een kort scherm met de vraag **"Waar wil je beginnen?"** — kies wat voor jou het snelst gaat:
+
+- **Bon scannen** — maak een foto en de app leest de winkel, het bedrag en zelfs de afzonderlijke regels voor je uit
+- **Gebruik je stem** — zeg wat je hebt uitgegeven, en de app vult de details voor je in
+- **Handmatig invoeren** — voer je eerste uitgave zelf stap voor stap in
+- **Importeer je geschiedenis** — importeer eerdere transacties uit je bankafschrift of een andere budget-app
+
+Tik op **Dat doe ik later** als je liever eerst rondkijkt — je gaat dan direct naar je dashboard. Dit scherm verschijnt alleen totdat je je eerste transactie hebt toegevoegd; daarna zie je het niet meer.
 
 ## Welkomstscherm
 

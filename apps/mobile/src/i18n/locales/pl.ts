@@ -1170,6 +1170,17 @@ export default {
     wantMore: 'Chcesz więcej? Zaktualizuj w dowolnym momencie',
     continueWithFree: 'Kontynuuj za darmo',
   },
+  onboarding: {
+    heading: 'Od czego chcesz zacząć?',
+    subheading: 'Dodaj jedną rzecz, a aplikacja zacznie działać dla Ciebie.',
+    scanReceipt: 'Zeskanuj paragon',
+    scanReceiptHint: 'Pozycje i kategorie odczytane za Ciebie',
+    useVoice: 'Użyj głosu',
+    typeManually: 'Wpisz ręcznie',
+    bringHistory: 'Zaimportuj historię',
+    bringHistoryHint: 'Z banku lub innej aplikacji budżetowej',
+    later: 'Zrobię to później',
+  },
   admin: {
     title: 'Panel administratora',
     openPanel: 'Panel administratora',

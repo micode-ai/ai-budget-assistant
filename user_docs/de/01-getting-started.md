@@ -47,6 +47,17 @@ Wenn Sie Ihr Passwort vergessen haben:
 
 > Wenn der Code nicht ankommt, überprüfen Sie Ihren Spam-Ordner oder tippen Sie auf **Code erneut senden**.
 
+## Wo möchten Sie beginnen?
+
+Wenn du die App zum ersten Mal öffnest und noch nichts erfasst hast, siehst du einen kurzen Bildschirm mit der Frage **"Wo möchten Sie beginnen?"** — wähle, was für dich am schnellsten geht:
+
+- **Beleg scannen** — mach ein Foto, und die App liest Geschäft, Betrag und sogar einzelne Positionen für dich aus
+- **Stimme verwenden** — sag, was du ausgegeben hast, und die App füllt die Details aus
+- **Manuell eingeben** — trage deine erste Ausgabe selbst Schritt für Schritt ein
+- **Verlauf importieren** — importiere vergangene Transaktionen von deinem Kontoauszug oder einer anderen Budget-App
+
+Tippe auf **Das mache ich später**, wenn du lieber zuerst alles erkunden möchtest — du gelangst direkt zu deinem Dashboard. Dieser Bildschirm erscheint nur, bis du deine erste Ausgabe hinzugefügt hast; danach wird er nicht mehr angezeigt.
+
 ## Willkommensbildschirm
 
 Nach deiner ersten Anmeldung siehst du den **Willkommen**-Bildschirm:

@@ -446,3 +446,28 @@ export async function loadRepaymentExpensesForIncome(incomeId: string): Promise<
   );
   return rows.map(rowToExpense);
 }
+
+/**
+ * Number of transactions this account holds locally, expenses and incomes both.
+ *
+ * Exists for the first-run check, which must NOT read the in-memory stores:
+ * they fill from SQLite after the cold-start gate opens, so an established user
+ * looks empty for a moment on every cold start — long enough to be sent to
+ * onboarding on top of their own data. Reading the table is race-free by
+ * construction.
+ *
+ * Mirrors loadAllExpenses' filters so a planned expense (which never counts as
+ * spending anywhere else either) does not make an empty account look used.
+ */
+export async function countTransactions(accountId: string): Promise<number> {
+  const rows = await executeSql<{ n: number }>(
+    `SELECT
+       (SELECT COUNT(*) FROM expenses
+         WHERE account_id = ? AND is_deleted = 0
+           AND (is_planned IS NULL OR is_planned = 0))
+     + (SELECT COUNT(*) FROM incomes
+         WHERE account_id = ? AND is_deleted = 0) AS n`,
+    [accountId, accountId],
+  );
+  return Number(rows[0]?.n ?? 0);
+}
