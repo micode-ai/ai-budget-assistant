@@ -46,7 +46,7 @@ export default function VerifyEmailScreen() {
 
     try {
       await verifyEmail(email!, code);
-      router.replace('/welcome');
+      router.replace('/get-started?next=welcome');
     } catch (e) {
       const msg = e instanceof Error ? e.message : '';
       setError(mapApiError(msg, t));
