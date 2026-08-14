@@ -3,8 +3,8 @@ import { readSession, writeSession } from '@/stores/shoppingModeStore';
 import { deriveSnapshotListFields } from './snapshot';
 
 function sameLabels(stored: string[] | undefined, next: string[]): boolean {
-  // `parseStoredSession` validates only `startedAt` and `centres`, so a row
-  // written by an older build can reach here without this field at all.
+  // `parseStoredSession` does not validate this field, so a row written by an
+  // older build can reach here without it at all. This is its only reader.
   if (!Array.isArray(stored) || stored.length !== next.length) return false;
   return stored.every((label, i) => label === next[i]);
 }

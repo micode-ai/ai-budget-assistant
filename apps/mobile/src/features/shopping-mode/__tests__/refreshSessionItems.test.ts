@@ -75,8 +75,11 @@ describe('refreshSessionItems', () => {
 
   // The count alone cannot tell a changed list from an unchanged one: swapping
   // one item for another leaves the count identical while every label differs.
-  // A refresh keyed on the count would leave the lock screen naming an item the
-  // user already bought.
+  //
+  // Neither notification body names an item today — both carry a bare count —
+  // so nothing user-facing depends on this yet. `uncheckedLabels` is kept
+  // accurate because the snapshot is what a future body would read, and a
+  // stale label is worse than no label.
   it('updates labels when the count is unchanged but the items are not', () => {
     live();
 

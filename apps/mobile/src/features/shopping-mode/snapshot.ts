@@ -3,7 +3,12 @@ import { buildStoreCentres, type StoreCentre } from '@/features/stores/findNearb
 import { expensesToVisits } from '@/features/stores/expensesToVisits';
 import { SHOPPING_MODE_DEFAULTS } from './session';
 
-/** Enough to recognise the list at a glance on a lock screen; not the whole list. */
+/**
+ * Nothing renders these yet — both notification bodies carry a bare count. They
+ * are stored, and kept accurate by `refreshSessionItems`, for the body that
+ * would name items: enough to recognise the list at a glance, not the whole
+ * list.
+ */
 export const MAX_SNAPSHOT_LABELS = 3;
 
 /**
@@ -38,8 +43,8 @@ export type SnapshotListFields = Pick<SessionSnapshot, 'uncheckedCount' | 'unche
 /**
  * Shared by the builder and by the in-app refresh, so a mid-trip update can
  * never disagree with what the session was born with. Filter first, cap after:
- * the cap is on what a lock screen can show, not on how far down the list we
- * are willing to look.
+ * the cap is on how many labels are worth keeping, not on how far down the
+ * list we are willing to look — `uncheckedCount` counts all of them.
  */
 export function deriveSnapshotListFields(items: ShoppingListItem[]): SnapshotListFields {
   const unchecked = items.filter((i) => !i.isChecked);

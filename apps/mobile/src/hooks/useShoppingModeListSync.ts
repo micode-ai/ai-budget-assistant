@@ -29,9 +29,20 @@ export function useShoppingModeListSync(): void {
   useEffect(() => {
     if (Platform.OS !== 'android') return;
     // `items` is derived from `lists` by a module-scope subscription in the
-    // store, so it is a fresh array on every list change; the selector
-    // overload's default `Object.is` check is what keeps this to one call per
-    // actual change rather than one per `set`.
+    // store (`recomputeActiveItems`), which hands back the active list's own
+    // `items` array by reference rather than copying it. The selector
+    // overload's default `Object.is` check therefore filters out every `set`
+    // that leaves that reference alone — renaming a list, or creating,
+    // deleting or archiving a different one, all spread or filter `lists`
+    // while keeping each list's `items` array untouched.
+    //
+    // It is NOT one call per real change, though. `toggleChecked` and its
+    // siblings map EVERY list, so ticking an item off a *different* list still
+    // allocates a new array here; and `hydrate()`'s merge rebuilds all of them
+    // from SQLite even when nothing changed. Both fire this callback with
+    // identical content. That is harmless rather than something to fix here:
+    // `refreshSessionItems` compares the derived count and labels by value and
+    // returns without writing when they match.
     return useShoppingListStore.subscribe((s) => s.items, refreshSessionItems);
   }, []);
 }
