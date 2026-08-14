@@ -23,6 +23,15 @@ function sameLabels(stored: string[] | undefined, next: string[]): boolean {
  * "Still on your list: 5" on the way out, because the count was captured when
  * they pressed the button.
  *
+ * Switching the ACTIVE LIST mid-session re-points a running session at the
+ * other list, and that is deliberate. The caller subscribes to the store's
+ * `items`, which is the active list's items — the same field
+ * `buildSessionSnapshot` was handed at press time — so a switch is read as "I
+ * am shopping from this list now" and the notification follows the list the
+ * user is actually looking at. The alternative, pinning the session to a list
+ * id, would keep counting a list the user has navigated away from. Nothing
+ * else about the session moves with the switch.
+ *
  * Cost when no session is running: one MMKV read that finds nothing. The gate
  * is `readSession()` returning null, before any list is walked.
  *
