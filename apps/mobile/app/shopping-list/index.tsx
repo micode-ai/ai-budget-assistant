@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { Stack, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,6 +7,11 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useShoppingListStore } from '@/stores/shoppingListStore';
 import { useAccountStore } from '@/stores/accountStore';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { useInsightsStore } from '@/stores/insightsStore';
+import { useShoppingModeStore } from '@/stores/shoppingModeStore';
+import { buildSessionSnapshot } from '@/features/shopping-mode/snapshot';
+import { startShoppingMode, stopShoppingMode } from '@/services/shoppingMode';
 import { AddItemModal } from '@/components/shopping-list/AddItemModal';
 import { ListSwitcherModal } from '@/components/shopping-list/ListSwitcherModal';
 import { ListNameModal, type NameModalState } from '@/components/shopping-list/ListNameModal';
@@ -20,7 +25,7 @@ import type {
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export default function ShoppingListScreen() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
@@ -47,6 +52,64 @@ export default function ShoppingListScreen() {
   const renameList = useShoppingListStore((s) => s.renameList);
   const archiveList = useShoppingListStore((s) => s.archiveList);
   const deleteList = useShoppingListStore((s) => s.deleteList);
+
+  // ─── Shopping mode (Android only) ─────────────────────────────────────────
+  // The only subscription this feature adds to the screen: the button's own
+  // label and icon depend on it. Everything else the snapshot needs is read
+  // once, at press time, straight from the stores — subscribing to expenses,
+  // the user, or the safe-to-spend figure would re-render this list on changes
+  // that never touch it.
+  const shoppingModeActive = useShoppingModeStore((s) => s.active);
+  const refreshShoppingMode = useShoppingModeStore((s) => s.refreshFromDisk);
+  // Both branches below await before the button's appearance can change, and
+  // `startShoppingMode` stops any running service before starting a new one —
+  // so a double tap is the easiest way to have a stop resolve into a freshly
+  // started service and kill it. One press at a time.
+  const shoppingModeBusy = useRef(false);
+
+  const toggleShoppingMode = async () => {
+    if (shoppingModeBusy.current) return;
+    shoppingModeBusy.current = true;
+    try {
+      if (shoppingModeActive) {
+        await stopShoppingMode();
+        refreshShoppingMode();
+        return;
+      }
+
+      const snapshot = buildSessionSnapshot({
+        accountId: currentAccountId ?? '',
+        // The live UI language, not a field on the user: the mobile `User`
+        // entity carries no `language` — the client owns it and merely tells
+        // the server about it. This is the same i18n instance the headless
+        // notification path resolves `{ lng: snapshot.language }` against, so
+        // the two cannot disagree.
+        language: i18n.language,
+        expenses: useExpenseStore.getState().expenses,
+        items,
+        // The cached figure the home hero already shows, not a fresh fetch: it
+        // is a daily number, the home tab refreshes it on every app start, and
+        // a null here degrades the arrival notification to its no-figure
+        // wording rather than blocking anything.
+        safeToSpend: useInsightsStore.getState().safeToSpend,
+      });
+
+      // A session that can never fire is worse than no button: say so instead.
+      if (snapshot.centres.length === 0) {
+        showAlert(t('shoppingMode.noShopsTitle'), t('shoppingMode.noShopsBody'));
+        return;
+      }
+
+      const result = await startShoppingMode(snapshot);
+      if (result === 'no_permission') {
+        showAlert(t('shoppingMode.permissionTitle'), t('shoppingMode.permissionBody'));
+        return;
+      }
+      refreshShoppingMode();
+    } finally {
+      shoppingModeBusy.current = false;
+    }
+  };
 
   useEffect(() => {
     hydrate();
@@ -221,6 +284,35 @@ export default function ShoppingListScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
+        {/*
+          Android only, and not cosmetically: there is no iOS native project in
+          this repo, and on web `startLocationUpdatesAsync` throws. The service
+          degrades that harmlessly, but the alert it produces would tell the
+          user "location needed" when the truth is "not on this platform".
+
+          Deliberately NOT canEdit-gated — a viewer can walk into a shop, and
+          starting a location session on their own device writes nothing to the
+          account.
+        */}
+        {Platform.OS === 'android' && (
+          <TouchableOpacity
+            style={[styles.shoppingModeButton, shoppingModeActive && styles.shoppingModeButtonActive]}
+            onPress={() => void toggleShoppingMode()}
+            activeOpacity={0.7}
+          >
+            <Ionicons
+              name={shoppingModeActive ? 'stop-circle-outline' : 'navigate-outline'}
+              size={18}
+              color={shoppingModeActive ? theme.colors.textInverse : theme.colors.primary}
+            />
+            <Text
+              style={[styles.shoppingModeText, shoppingModeActive && styles.shoppingModeTextActive]}
+            >
+              {shoppingModeActive ? t('shoppingMode.stop') : t('shoppingMode.start')}
+            </Text>
+          </TouchableOpacity>
+        )}
+
         <TouchableOpacity
           style={styles.switcherPill}
           onPress={openSwitcher}
@@ -397,6 +489,28 @@ const createStyles = (theme: Theme) => ({
 
   headerActions: { flexDirection: 'row' as const, alignItems: 'center' as const },
   headerAction: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+
+  // No horizontal margin on purpose: the ScrollView's own content padding
+  // already sets the gutter every other element on this screen sits inside.
+  shoppingModeButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[3],
+    paddingVertical: theme.spacing[3],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+    backgroundColor: theme.colors.surface,
+  },
+  shoppingModeButtonActive: { backgroundColor: theme.colors.primary },
+  shoppingModeText: {
+    ...theme.textStyles.bodyMedium,
+    fontWeight: '600' as const,
+    color: theme.colors.primary,
+  },
+  shoppingModeTextActive: { color: theme.colors.textInverse },
 
   switcherPill: {
     flexDirection: 'row' as const,
