@@ -52,9 +52,14 @@ const isUsableAmount = (amount: number): boolean => Number.isFinite(amount) && a
 export function buildCategorySplits(params: {
   items: SplitInputItem[];
   total: number;
+  /**
+   * A discount the shop applied to the basket as a whole, if the receipt
+   * reported one. Positive. See the tolerance check below for why it matters.
+   */
+  discount?: number | null;
   config?: ReceiptSplitConfig;
 }): ReceiptCategorySplit[] {
-  const { items, total } = params;
+  const { items, total, discount } = params;
   const config = params.config ?? RECEIPT_SPLIT_DEFAULTS;
 
   if (!Number.isFinite(total) || total <= 0) return [];
@@ -67,7 +72,17 @@ export function buildCategorySplits(params: {
   // Every line counts toward the tolerance check, assigned or not: an
   // unassigned line's money is still part of this receipt.
   const itemsCents = usable.reduce((sum, i) => sum + toCents(i.amount), 0);
-  const gapPct = (Math.abs(itemsCents - totalCents) / totalCents) * 100;
+
+  // A basket-level discount is money taken off after the lines were priced: the
+  // lines keep their full price and only the total reflects it. Measuring the
+  // gap without subtracting it fails every such receipt — a 25 on a 183 Lidl
+  // basket reads as a 10% discrepancy — which silently disabled the whole
+  // feature at the shops whose entire marketing is basket coupons. A shop that
+  // prints its discounts per line is unaffected: those are already folded into
+  // the line prices, and `discount` is then 0.
+  const discountCents =
+    typeof discount === 'number' && Number.isFinite(discount) && discount > 0 ? toCents(discount) : 0;
+  const gapPct = (Math.abs(itemsCents - discountCents - totalCents) / totalCents) * 100;
   if (gapPct > config.tolerancePct) return [];
 
   const groups = new Map<string, { categoryName: string; cents: number; itemIndexes: number[] }>();
@@ -90,8 +105,30 @@ export function buildCategorySplits(params: {
     // Ties broken by categoryId so the output is deterministic for a given input.
     .sort((a, b) => b.cents - a.cents || a.categoryId.localeCompare(b.categoryId));
 
+  // The known discount is spread across the groups in proportion to what each
+  // contributed to the basket, because that is how a basket coupon actually
+  // works — it is not a price cut on the largest department. The share computed
+  // for unassigned lines is deliberately left out of the groups; it stays part
+  // of the residual below.
+  //
+  // Only the KNOWN discount is spread. Whatever remains unexplained — a line the
+  // OCR misread, a deposit it never listed — still lands on the largest group,
+  // so a bad read stays concentrated and visible instead of being smeared
+  // invisibly across every category.
+  if (discountCents > 0) {
+    for (const group of ordered) {
+      group.cents -= Math.round((group.cents / itemsCents) * discountCents);
+    }
+    // The gate above guarantees discountCents < itemsCents, so a group can only
+    // reach zero through rounding, and only if it was worth a cent or two to
+    // begin with. Publishing a zero-value category is nonsense; refusing is the
+    // same answer this function gives everywhere else it cannot describe the
+    // receipt honestly.
+    if (ordered.some((group) => group.cents <= 0)) return [];
+  }
+
   // The residual is whatever the assigned lines did not account for: unassigned
-  // lines, a folded discount, or rounding. It goes to the largest group.
+  // lines, an unexplained gap, or rounding. It goes to the largest group.
   const assignedCents = ordered.reduce((sum, g) => sum + g.cents, 0);
   const residual = totalCents - assignedCents;
   ordered[0].cents += residual;

@@ -544,6 +544,7 @@ Important:
 
       const splits = buildCategorySplits({
         total: receipt.amount,
+        discount: receipt.discountAmount,
         items: allLines.map((line) => {
           const key = keyByIndex.get(line.index) ?? null;
           return {

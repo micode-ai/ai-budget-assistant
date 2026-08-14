@@ -131,7 +131,15 @@ export default function ReceiptExpenseScreen() {
           : null,
       };
     });
-    return buildCategorySplits({ items, total: scannedReceipt.amount });
+    // The discount must travel with the total: the lines are priced before a
+    // basket coupon and the amount is after it, so recomputing without it would
+    // make the chips vanish on the first reassignment of a receipt the server
+    // had just split.
+    return buildCategorySplits({
+      items,
+      total: scannedReceipt.amount,
+      discount: scannedReceipt.discountAmount,
+    });
   }, [scannedReceipt, itemCategories]);
 
   // Names still attached to at least one line. A proposal the user emptied

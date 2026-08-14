@@ -772,6 +772,8 @@ function makeSplitDefenceService(opts: {
   items?: Array<{ totalPrice: number; categoryId: string | null; category?: { name: string } | null }>;
   /** Live split rows on the expense; [] models an expense that was never split. */
   splits?: Array<{ id: string; categoryId?: string; amount?: number }>;
+  /** Receipt-level discount stored on the expense, as a basket coupon leaves it. */
+  discount?: number | null;
 } = {}) {
   const amount = opts.amount ?? 240;
   const items = opts.items ?? SPLIT_ITEMS;
@@ -787,6 +789,9 @@ function makeSplitDefenceService(opts: {
     clientId: 'local-split-1',
     accountId: 'acc-1',
     amount,
+    // Read by rebuildCategorySplits through whichever client it was handed —
+    // the transaction on an amount edit, the plain client on an item edit.
+    discountAmount: opts.discount ?? null,
     currencyCode: 'PLN',
     category: null,
     items: [],
@@ -814,10 +819,15 @@ function makeSplitDefenceService(opts: {
     tripExpenseShare: { deleteMany: jest.fn().mockResolvedValue({}), createMany: jest.fn().mockResolvedValue({}) },
   };
 
+  const expenseFindUnique = jest.fn().mockResolvedValue({ discountAmount: opts.discount ?? null });
+
   const prisma: any = {
     expense: {
       findFirst: jest.fn().mockResolvedValue(expenseRow),
       update: jest.fn().mockResolvedValue({}),
+      // rebuildCategorySplits reads the receipt-level discount: the stored line
+      // items are priced before it and the amount after it.
+      findUnique: expenseFindUnique,
     },
     expenseItem: {
       findMany: itemFindMany,
@@ -884,6 +894,48 @@ describe('split invariant is defended after creation', () => {
       expect(rows).toHaveLength(3);
       expect(rows.find((r: any) => r.categoryId === 'c-food').amount).toBe(178);
       expect(rows.every((r: any) => r.expenseId === 'e-split-1')).toBe(true);
+    });
+
+    it('keeps the split of a receipt whose basket coupon explains the gap', async () => {
+      // Lines priced before a 20 coupon (100 + 60 + 40) against a 180 total: a
+      // 10% gap on its face, fully explained once the coupon is counted. Before
+      // the rebuild read the discount, an ordinary amount edit deleted the split
+      // of every such receipt.
+      const { service, splitCreateMany } = makeSplitDefenceService({
+        amount: 200,
+        discount: 20,
+        items: [
+          { totalPrice: 100, categoryId: 'c-food', category: { name: 'Groceries' } },
+          { totalPrice: 60, categoryId: 'c-home', category: { name: 'Household' } },
+          { totalPrice: 40, categoryId: 'c-alc', category: { name: 'Alcohol' } },
+        ],
+      });
+
+      await service.update('acc-1', 'e-split-1', { amount: 180 } as any);
+
+      expect(splitCreateMany).toHaveBeenCalledTimes(1);
+      expect(createdSplitTotal(splitCreateMany)).toBe(180);
+      // The coupon is spread in proportion, not dropped on the largest group.
+      const rows = splitCreateMany.mock.calls[0][0].data;
+      expect(rows.find((r: any) => r.categoryId === 'c-food').amount).toBe(90);
+      expect(rows.find((r: any) => r.categoryId === 'c-home').amount).toBe(54);
+      expect(rows.find((r: any) => r.categoryId === 'c-alc').amount).toBe(36);
+    });
+
+    it('removes that same split when no discount was recorded to explain the gap', async () => {
+      const { service, splitCreateMany } = makeSplitDefenceService({
+        amount: 200,
+        discount: null,
+        items: [
+          { totalPrice: 100, categoryId: 'c-food', category: { name: 'Groceries' } },
+          { totalPrice: 60, categoryId: 'c-home', category: { name: 'Household' } },
+          { totalPrice: 40, categoryId: 'c-alc', category: { name: 'Alcohol' } },
+        ],
+      });
+
+      await service.update('acc-1', 'e-split-1', { amount: 180 } as any);
+
+      expect(splitCreateMany).not.toHaveBeenCalled();
     });
 
     it('leaves an expense that has no splits completely untouched', async () => {

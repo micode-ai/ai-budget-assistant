@@ -193,3 +193,69 @@ describe('rescaleSplits', () => {
     expect(rescaleSplits(args, 10)).toEqual(rescaleSplits([...args].reverse(), 10));
   });
 });
+
+describe('buildCategorySplits with a basket-level discount', () => {
+  // The receipt that exposed this: Lidl, lines priced BEFORE a 25.00 basket
+  // coupon and a total after it. Sum of lines 201.15, total 182.93 — and the
+  // 6.78 between them is what the OCR failed to read, not part of the coupon.
+  const lidl = (): SplitInputItem[] => [
+    item(0, 49.9, 'c-alc', 'Alcohol'),
+    item(1, 49.98, 'c-care', 'Health'),
+    item(2, 101.27, 'c-food', 'Groceries'),
+  ];
+
+  it('refuses without the discount, because the lines then look 10% adrift', () => {
+    expect(buildCategorySplits({ items: lidl(), total: 182.93 })).toEqual([]);
+  });
+
+  it('splits once the discount explains the gap, still summing exactly', () => {
+    const splits = buildCategorySplits({ items: lidl(), total: 182.93, discount: 25 });
+
+    expect(splits).toHaveLength(3);
+    expect(splits.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(18293);
+  });
+
+  it('spreads the known discount proportionally, leaving the unexplained rest on the largest group', () => {
+    const byId = new Map(
+      buildCategorySplits({ items: lidl(), total: 182.93, discount: 25 }).map((s) => [s.categoryId, s.amount]),
+    );
+
+    // Each group carries its own share of the coupon...
+    expect(byId.get('c-alc')).toBeCloseTo(43.7, 2);
+    expect(byId.get('c-care')).toBeCloseTo(43.77, 2);
+    // ...while the 6.78 nobody can account for stays concentrated on the largest
+    // group, where it is visible, instead of being smeared across all three.
+    expect(byId.get('c-food')).toBeCloseTo(95.46, 2);
+  });
+
+  it('ignores a discount that is zero, negative or not a number', () => {
+    for (const discount of [0, -5, Number.NaN, null, undefined]) {
+      expect(buildCategorySplits({ items: lidl(), total: 182.93, discount })).toEqual([]);
+    }
+  });
+
+  it('still refuses when the discount does not explain the gap', () => {
+    // 5.00 off a 201.15 basket leaves 196.15 against a 150.00 total.
+    expect(buildCategorySplits({ items: lidl(), total: 150, discount: 5 })).toEqual([]);
+  });
+
+  it('refuses rather than publish a group the discount rounded away to nothing', () => {
+    // Half the basket taken off, and one line worth a single cent: its share of
+    // the coupon rounds up to that whole cent and the group vanishes.
+    const splits = buildCategorySplits({
+      items: [item(0, 100, 'c-food', 'Groceries'), item(1, 0.01, 'c-alc', 'Alcohol')],
+      total: 50,
+      discount: 50.01,
+    });
+
+    expect(splits).toEqual([]);
+  });
+
+  it('leaves a receipt without a discount exactly as it was', () => {
+    const items = [item(0, 180, 'c-food', 'Groceries'), item(1, 60, 'c-alc', 'Alcohol')];
+
+    expect(buildCategorySplits({ items, total: 240, discount: 0 })).toEqual(
+      buildCategorySplits({ items, total: 240 }),
+    );
+  });
+});

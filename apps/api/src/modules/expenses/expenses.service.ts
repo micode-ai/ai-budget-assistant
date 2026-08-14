@@ -157,7 +157,7 @@ export class ExpensesService {
    *   failure rolls the amount edit back with it).
    */
   private async rebuildCategorySplits(
-    client: Pick<PrismaClient, 'expenseCategorySplit' | 'expenseItem'>,
+    client: Pick<PrismaClient, 'expenseCategorySplit' | 'expenseItem' | 'expense'>,
     expensePk: string,
     total: number,
   ): Promise<void> {
@@ -168,6 +168,16 @@ export class ExpensesService {
     // An expense that was never split has no invariant to defend — and must not
     // acquire one as a side effect of an unrelated edit.
     if (existing.length === 0) return;
+
+    // Read here rather than take it from a caller: `total` is post-discount
+    // while the stored line items are priced pre-discount, so re-deriving
+    // without it would fail the tolerance gate and delete the split of every
+    // receipt that carried a basket coupon — on an edit that had nothing to do
+    // with its categories.
+    const expense = await client.expense.findUnique({
+      where: { id: expensePk },
+      select: { discountAmount: true },
+    });
 
     const items = await client.expenseItem.findMany({
       where: { expenseId: expensePk, isDeleted: false },
@@ -201,6 +211,7 @@ export class ExpensesService {
             categoryName: item.category?.name ?? null,
           })),
           total,
+          discount: expense?.discountAmount != null ? Number(expense.discountAmount) : null,
         })
       : rescaleSplits(
           existing.map((split) => ({ categoryId: split.categoryId, amount: Number(split.amount) })),
