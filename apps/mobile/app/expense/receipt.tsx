@@ -64,6 +64,11 @@ export default function ReceiptExpenseScreen() {
   // against local categories, so the whole set was dropped (see the effect
   // below) — distinct from "the server never suggested a split at all".
   const [splitDropped, setSplitDropped] = useState(false);
+  // The split exactly as the server sent it, shown until the user edits a line.
+  // Keeping it means the screen never depends on the client reproducing the
+  // server's arithmetic just to display what the server already computed.
+  const [serverSplits, setServerSplits] = useState<ReceiptCategorySplit[]>([]);
+  const [hasEditedCategories, setHasEditedCategories] = useState(false);
   const [showSplitSheet, setShowSplitSheet] = useState(false);
 
   const gpsLocationRef = useRef<CapturedLocation | null>(null);
@@ -100,7 +105,7 @@ export default function ReceiptExpenseScreen() {
       // uses for categorySuggestion). A proposal (categoryId null) has no local
       // category by definition and is held under a sentinel until save.
       const catStore = useCategoryStore.getState();
-      const { itemCategories: seeded, dropped } = seedItemCategories(
+      const { itemCategories: seeded, dropped, splits } = seedItemCategories(
         scannedReceipt.categorySplits,
         (split) =>
           ((split.categoryId ? catStore.getCategoryById(split.categoryId) : undefined) ||
@@ -108,14 +113,23 @@ export default function ReceiptExpenseScreen() {
       );
       setItemCategories(seeded);
       setSplitDropped(dropped);
+      setServerSplits(splits);
+      setHasEditedCategories(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scannedReceipt]);
 
-  // Recomputed locally through buildCategorySplits every time the user
-  // reassigns a line, so the edited numbers match exactly what the server
-  // would have produced (same function, same tolerance/residual rules).
+  // Until the user touches a line, show what the server actually sent. Deriving
+  // it locally instead would require two implementations of the same arithmetic
+  // to agree before anything appears — and a disagreement renders as an empty
+  // block with no error, which is how a stale web bundle once hid a split the
+  // server had built correctly.
+  //
+  // Once a line moves, the local recompute takes over: the edited numbers then
+  // have to come from somewhere, and it is the same function with the same
+  // tolerance and residual rules the server used.
   const currentSplits: ReceiptCategorySplit[] = useMemo(() => {
+    if (!hasEditedCategories) return serverSplits;
     if (!scannedReceipt?.receiptItems || scannedReceipt.receiptItems.length === 0) return [];
     const catStore = useCategoryStore.getState();
     const items = scannedReceipt.receiptItems.map((item, index) => {
@@ -140,7 +154,7 @@ export default function ReceiptExpenseScreen() {
       total: scannedReceipt.amount,
       discount: scannedReceipt.discountAmount,
     });
-  }, [scannedReceipt, itemCategories]);
+  }, [hasEditedCategories, serverSplits, scannedReceipt, itemCategories]);
 
   // Names still attached to at least one line. A proposal the user emptied
   // disappears from the picker and is never created.
@@ -164,6 +178,7 @@ export default function ReceiptExpenseScreen() {
 
   const handleItemCategoryChange = (itemIndex: number, categoryId: string | null) => {
     setItemCategories((prev) => ({ ...prev, [itemIndex]: categoryId }));
+    setHasEditedCategories(true);
   };
 
   const handleCameraPress = async () => {
