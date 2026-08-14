@@ -8,6 +8,39 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.18.0 - 2026-08-14
+
+**A scanned receipt no longer lands as one lump**
+
+- **A supermarket trip is split across categories automatically.** A 240 zl shop used to arrive as a single "Groceries" expense. Now the lines of the receipt itself are read and the amount is divided the way you actually spent it - 180 groceries, 35 household, 25 alcohol. The split shows on the scan screen before you save, and tapping any line lets you move it to a different category (ABA-398).
+- **It learns as you correct it.** Every line you reassign teaches your account, so the same product on your next receipt is sorted without asking anyone. That is also why it costs nothing to run once you have shopped a few times.
+- **If your categories don't fit, it says so and offers new ones.** A receipt full of whisky, tulips and shower gel has nowhere to go in an account that only has "Food & Dining" - so alongside the split you now get up to three suggested new categories, named in your language. Nothing is created until you press Save; a scan you abandon leaves your categories exactly as it found them (ABA-402).
+- **When the lines don't add up to the total, no split is made.** Refusing is the honest answer - spreading an unexplained difference across your categories would be worse than leaving the receipt whole.
+- Category spending in Analytics counts these splits, including the three-month average it compares against, so a split month isn't measured against unsplit history. Budgets deliberately keep reading the expense's own single category, exactly as they already do for splits you make by hand.
+- The Telegram, WhatsApp and Slack bots report the split in their reply to a scanned photo.
+
+**Moving in from another budgeting app**
+
+- **Exports from Monefy, Wallet by BudgetBakers and Money Manager (1Money) import in one tap.** Settings -> Import transactions -> "Moving from another app?". These files could already be read, but now each format is understood properly: no guessing, and the categories you built up in your old app come across as your categories here rather than being re-derived from shop names (ABA-401).
+- Categories from the export are created for you, and a name that differs only in capitalisation won't produce a duplicate.
+
+**A first screen instead of an empty dashboard**
+
+- **A new account now opens on "Where would you like to start?"** - scan a receipt, say it out loud, type it in, or import a statement - instead of a dashboard with nothing on it. It appears once, and never for an account that already has transactions (ABA-403).
+
+**Knowing where you are**
+
+- **A card appears on your home screen when you're in a shop you've bought from before**, listing what's still unticked on your shopping list and what you can safely spend today. It needs "Attach location to new expenses" turned on in Settings -> Data, and it recognises a shop from your own scanned receipts - two visits are enough (ABA-404).
+- **Shopping mode tells you even with the app closed.** Press "I'm going shopping" on your shopping list and you'll get a notification when you reach a known shop, and one more on the way out if something is still unticked - then it switches itself off. Android only. It runs only while you have switched it on, and shows a notification for the whole time it does (ABA-408).
+- Your shops are learned only from receipts you scanned, bank notifications and bot photos - never from expenses you typed or dictated, whose location is wherever you happened to be sitting.
+
+**Fixes**
+
+- Creating a category that already existed returned an error instead of simply using the one you had. It could be hit from the app, from AI chat and from all three bots (ABA-392).
+- On the web app, choosing a PDF receipt could hide the file you wanted in the picker.
+
+---
+
 ## 1.17.2 — 2026-08-10
 
 **Fixes**
