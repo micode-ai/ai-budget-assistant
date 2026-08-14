@@ -91,6 +91,22 @@ describe('buildSessionSnapshot', () => {
     expect(MAX_SNAPSHOT_LABELS).toBe(3);
   });
 
+  // Neither test above can tell "filter then cap" from "cap then filter": one
+  // has too few items to truncate, the other has none checked, so slicing
+  // before or after the isChecked filter yields the same array either way.
+  // Only a fixture with MORE items than the cap AND some checked ones among
+  // the first few separates them — here the checked items sit at the front,
+  // so capping the raw list first (then filtering) would keep just one
+  // unchecked label instead of three, silently under-reporting what the user
+  // still needs to buy.
+  it('filters before capping, not after', () => {
+    const s = build({
+      items: [item('x', true), item('y', true), item('z', false), item('w', false), item('v', false)],
+    });
+
+    expect(s.uncheckedLabels).toEqual(['z', 'w', 'v']);
+  });
+
   it('snapshots the safe-to-spend figure and its currency', () => {
     const s = build();
 
