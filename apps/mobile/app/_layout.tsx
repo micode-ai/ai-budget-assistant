@@ -22,6 +22,10 @@ import { useNotificationDeepLink } from '@/hooks/useNotificationDeepLink';
 import { useTripInviteDeepLink } from '@/hooks/useTripInviteDeepLink';
 import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
 import { useFirstRunOnboarding } from '@/hooks/useFirstRunOnboarding';
+// Reaches `@/services/shoppingMode` and thereby registers its location task —
+// see the comment on that import inside the hook before making either lazy.
+import { useShoppingModeSweep } from '@/hooks/useShoppingModeSweep';
+import { useShoppingModeListSync } from '@/hooks/useShoppingModeListSync';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -47,6 +51,10 @@ function RootNavigator() {
 
   useAuthenticatedBootstrap(isAuthenticated);
   useBankNotificationCapture();
+  // Unconditional, not behind the cold-start gate: a foreground service
+  // stranded by a crash must be cleaned up whether or not anyone signs in.
+  useShoppingModeSweep();
+  useShoppingModeListSync();
   useNotificationDeepLink(coldStartGateReady);
   useTripInviteDeepLink(coldStartGateReady, t);
   useFirstRunOnboarding(coldStartGateReady);
