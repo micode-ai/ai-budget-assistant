@@ -161,8 +161,11 @@ then finds no session and tears down silently instead of notifying again.
 ## Starting and stopping
 
 **Start** is a button on the shopping-list screen — that is where the intent
-forms — and a row in the existing `shopping_hub` quick-action sheet on the home
-screen. Pressing it:
+forms. A second row in the home screen's `shopping_hub` quick-action sheet was
+considered and dropped: that sheet is data-driven and *already* carries a
+"Shopping list" row pointing at the same screen, so another row to the same
+destination under a different label would be noise rather than an entry point.
+Pressing the button:
 
 1. checks there is at least one known shop, and says so plainly if there is not,
    rather than starting a service that can never fire;
