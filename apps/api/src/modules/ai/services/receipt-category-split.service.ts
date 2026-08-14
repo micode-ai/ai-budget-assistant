@@ -151,7 +151,7 @@ Categories: ${categoryNames}
 Return JSON: {"assignments":[{"line":1,"category":"<one of the categories above>"}],"newCategories":[{"name":"<new category>","lines":[2,3]}]}
 Use only the category names listed, spelled exactly as given.
 Omit a line entirely if you are not confident.
-When several lines form a distinct kind of spending a person would want to see separately — alcohol, household chemicals, cosmetics, pet supplies, baby goods, tobacco — propose a category for them in "newCategories", even if a broad listed category such as groceries could technically hold them. That separation is the point: a supermarket receipt filed entirely under one category tells the user nothing they did not already know. Propose up to ${MAX_PROPOSED_CATEGORIES}, each named in ${languageName(language)} as a short noun phrase, and never propose a name that restates a listed category. A line that genuinely belongs to a listed category stays in "assignments"; leave "newCategories" empty when nothing forms such a group.
+Alcohol, tobacco, household chemicals, cosmetics, pet supplies and baby goods are each a separate kind of spending. NEVER put such a line in a general groceries or food category. Assign it to a listed category that names its kind, and when no listed category names it, group those lines into a new one in "newCategories" — up to ${MAX_PROPOSED_CATEGORIES}, each named in ${languageName(language)} as a short noun phrase, never restating a listed name. Beer, wine and spirits are alcohol, not groceries. Everything else goes in "assignments"; leave "newCategories" empty when there is no such group.
 Do not return any amounts, prices, totals or percentages.`;
 
     const response = await this.openai.chat.completions.create({

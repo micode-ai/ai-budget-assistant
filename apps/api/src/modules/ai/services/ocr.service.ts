@@ -597,6 +597,15 @@ Important:
         categoryName: isProposedKey(key) ? proposedNameFromKey(key) : nameByKey.get(key) ?? '',
       }));
 
+      // What it actually decided, in one line. Without this the only way to see
+      // the classification was to save the expense and read the database, which
+      // is how three rounds of prompt tuning were diagnosed.
+      const tally = new Map<string, number>();
+      for (const line of itemCategories) tally.set(line.categoryName, (tally.get(line.categoryName) ?? 0) + 1);
+      const decided = Array.from(tally.entries())
+        .map(([name, n]) => `${name}x${n}`)
+        .join(', ');
+
       const splits = buildCategorySplits({
         total: receipt.amount,
         discount: receipt.discountAmount,
@@ -621,7 +630,7 @@ Important:
         this.logger.log(
           `[CategorySplit] ${accountId}: refused ${
             new Set(keyByIndex.values()).size < 2 ? 'one_category' : 'refused_by_arithmetic'
-          }, kept ${itemCategories.length} line categories`,
+          }, kept ${itemCategories.length} line categories: ${decided}`,
         );
         // No split, but the lines keep their categories: the user sees what each
         // line is, the rules still learn from it on save, and assigning a line
@@ -629,7 +638,7 @@ Important:
         return { splits: [], itemCategories };
       }
 
-      this.logger.log(`[CategorySplit] ${accountId}: ok groups=${splits.length} proposed=${materialProposals.length}`);
+      this.logger.log(`[CategorySplit] ${accountId}: ok groups=${splits.length} proposed=${materialProposals.length}: ${decided}`);
       return {
         itemCategories,
         splits: splits.map((split) => ({
