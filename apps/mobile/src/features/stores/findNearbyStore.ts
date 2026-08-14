@@ -161,6 +161,37 @@ export function buildStoreCentres(visits: StoreVisit[], minVisits: number): Stor
 }
 
 /**
+ * The nearest centre within `radiusM`, or null if none qualify.
+ *
+ * Shared scan logic: both `findNearbyStore` below and the Shopping Mode
+ * session reducer (`features/shopping-mode/session.ts`) need "closest
+ * in-range centre", and this is the one place that scan lives — the session
+ * reducer's spec is explicit that it adds no matching logic of its own.
+ *
+ * Returns the raw (unrounded) distance. Rounding is a presentation decision
+ * for the caller to make at its own return boundary, never before a
+ * comparison — see `findNearbyStore`, the only place that rounds.
+ */
+export function nearestWithin(
+  coords: { lat: number; lng: number },
+  centres: StoreCentre[],
+  radiusM: number
+): { merchant: string; distanceM: number } | null {
+  let best: { merchant: string; distanceM: number } | null = null;
+  // Callers are expected to pass centres name-sorted (see `buildStoreCentres`)
+  // so that an exact distance tie resolves by name rather than by array
+  // order — this function receives `centres` as a plain parameter and has no
+  // way to enforce that itself; it is the caller's guarantee, not a fact this
+  // function can rely on independently.
+  for (const centre of centres) {
+    const distanceM = haversineM(coords, centre);
+    if (distanceM > radiusM) continue;
+    if (!best || distanceM < best.distanceM) best = { merchant: centre.merchant, distanceM };
+  }
+  return best;
+}
+
+/**
  * The shop the user is standing in, if it is one they have bought from before.
  *
  * Pure: no I/O, no clock, no store reads — so the decision can be tested
@@ -178,16 +209,8 @@ export function findNearbyStore(params: {
 
   if (!isRealPoint(coords)) return null;
 
-  let best: { merchant: string; distanceRaw: number } | null = null;
-  // buildStoreCentres returns name-sorted, so an exact distance tie resolves by
-  // name rather than by insertion order.
-  for (const centre of buildStoreCentres(visits, config.minVisits)) {
-    const distanceM = haversineM(coords, centre);
-    if (distanceM > config.radiusM) continue;
-    if (!best || distanceM < best.distanceRaw) {
-      best = { merchant: centre.merchant, distanceRaw: distanceM };
-    }
-  }
+  const centres = buildStoreCentres(visits, config.minVisits);
+  const best = nearestWithin(coords, centres, config.radiusM);
 
-  return best ? { merchant: best.merchant, distanceM: Math.round(best.distanceRaw) } : null;
+  return best ? { merchant: best.merchant, distanceM: Math.round(best.distanceM) } : null;
 }
