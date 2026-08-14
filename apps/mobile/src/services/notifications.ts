@@ -143,6 +143,9 @@ export function handleNotificationResponse(
     case 'shopping_deal':
       router.push('/shopping-list' as any);
       break;
+    case 'shopping_mode':
+      router.push('/shopping-list' as any);
+      break;
     case 'inflation_shield':
       router.push('/inflation-shield' as any);
       break;
