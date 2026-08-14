@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import { PICKER_TYPES, isPdfAsset } from './pickerTypes';
 import { uriToBase64 } from '@/utils/fileBase64';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
@@ -129,7 +130,7 @@ export function useReceiptScanner() {
     try {
       const DocumentPicker = await import('expo-document-picker');
       const result = await DocumentPicker.getDocumentAsync({
-        type: 'application/pdf',
+        type: PICKER_TYPES,
         copyToCacheDirectory: true,
       });
 
@@ -138,6 +139,14 @@ export function useReceiptScanner() {
       }
 
       const asset = result.assets[0];
+
+      // The web filter deliberately admits more than PDFs (see PICKER_TYPES), and
+      // a store's "PDF" receipt is often really an exported photo. Anything that
+      // is not a PDF goes down the ordinary image path, which already knows how to
+      // preview it, offer to store it, and label the progress text correctly.
+      if (!isPdfAsset(asset.mimeType, asset.name)) {
+        return processImage(asset.uri, userPrompt);
+      }
 
       if (asset.size && asset.size > MAX_PDF_SIZE) {
         setState((s) => ({ ...s, error: i18n.t('errors.pdfTooLarge') }));
