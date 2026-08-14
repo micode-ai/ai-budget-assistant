@@ -2252,9 +2252,10 @@ export default {
   shoppingMode: {
     start: 'Ik ga boodschappen doen',
     stop: 'Winkelmodus stoppen',
-    active: 'Winkelmodus staat aan',
     noShopsTitle: 'Nog geen winkels',
     noShopsBody: 'Scan eerst een paar bonnetjes — zo leert de app waar je winkels zijn.',
+    notReadyTitle: 'Nog aan het laden',
+    notReadyBody: 'Je bonnetjes worden nog geladen. Probeer het zo nog eens.',
     permissionTitle: 'Locatie nodig',
     permissionBody: 'De winkelmodus heeft je locatie nodig zolang hij aan staat, om te merken wanneer je bij een winkel aankomt.',
     serviceTitle: 'Winkelmodus',

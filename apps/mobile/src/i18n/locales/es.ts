@@ -2252,9 +2252,10 @@ export default {
   shoppingMode: {
     start: 'Voy de compras',
     stop: 'Detener el modo compras',
-    active: 'El modo compras está activo',
     noShopsTitle: 'Aún no hay tiendas',
     noShopsBody: 'Escanea primero unos cuantos tickets — así la app aprende dónde están tus tiendas.',
+    notReadyTitle: 'Todavía cargando',
+    notReadyBody: 'Tus tickets aún se están cargando. Inténtalo de nuevo en un momento.',
     permissionTitle: 'Se necesita la ubicación',
     permissionBody: 'El modo compras necesita tu ubicación mientras está activo, para saber cuándo llegas a una tienda.',
     serviceTitle: 'Modo compras',

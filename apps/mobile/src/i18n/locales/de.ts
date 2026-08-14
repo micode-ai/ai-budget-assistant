@@ -2252,9 +2252,10 @@ export default {
   shoppingMode: {
     start: 'Ich gehe einkaufen',
     stop: 'Einkaufsmodus beenden',
-    active: 'Einkaufsmodus ist aktiv',
     noShopsTitle: 'Noch keine Geschäfte',
     noShopsBody: 'Scanne zuerst ein paar Kassenbons — so lernt die App, wo deine Geschäfte sind.',
+    notReadyTitle: 'Wird noch geladen',
+    notReadyBody: 'Deine Kassenbons werden noch geladen. Versuch es gleich noch einmal.',
     permissionTitle: 'Standort benötigt',
     permissionBody: 'Der Einkaufsmodus braucht deinen Standort, solange er läuft, um zu erkennen, wann du ein Geschäft erreichst.',
     serviceTitle: 'Einkaufsmodus',

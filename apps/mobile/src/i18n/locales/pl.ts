@@ -2256,9 +2256,10 @@ export default {
   shoppingMode: {
     start: 'Idę na zakupy',
     stop: 'Zakończ tryb zakupów',
-    active: 'Tryb zakupów jest włączony',
     noShopsTitle: 'Brak sklepów',
     noShopsBody: 'Zeskanuj najpierw kilka paragonów — tak aplikacja uczy się, gdzie są Twoje sklepy.',
+    notReadyTitle: 'Jeszcze wczytujemy',
+    notReadyBody: 'Twoje paragony wciąż się wczytują. Spróbuj ponownie za chwilę.',
     permissionTitle: 'Potrzebna lokalizacja',
     permissionBody: 'Tryb zakupów potrzebuje lokalizacji, gdy jest włączony, aby rozpoznać, kiedy dotrzesz do sklepu.',
     serviceTitle: 'Tryb zakupów',

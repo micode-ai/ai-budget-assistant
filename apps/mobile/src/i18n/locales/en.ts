@@ -2256,9 +2256,10 @@ export default {
   shoppingMode: {
     start: 'I\'m going shopping',
     stop: 'Stop shopping mode',
-    active: 'Shopping mode is on',
     noShopsTitle: 'No shops yet',
     noShopsBody: 'Scan a few receipts first — that is how the app learns where your shops are.',
+    notReadyTitle: 'Still loading',
+    notReadyBody: 'Your receipts are still loading. Try again in a moment.',
     permissionTitle: 'Location needed',
     permissionBody: 'Shopping mode needs location while it runs, so it can tell when you reach a shop.',
     serviceTitle: 'Shopping mode',

@@ -2252,9 +2252,10 @@ export default {
   shoppingMode: {
     start: 'Je pars faire les courses',
     stop: 'Arrêter le mode courses',
-    active: 'Le mode courses est activé',
     noShopsTitle: 'Aucun magasin pour l’instant',
     noShopsBody: 'Scannez d’abord quelques tickets — c’est ainsi que l’application apprend où sont vos magasins.',
+    notReadyTitle: 'Chargement en cours',
+    notReadyBody: 'Vos tickets sont encore en cours de chargement. Réessayez dans un instant.',
     permissionTitle: 'Localisation nécessaire',
     permissionBody: 'Le mode courses a besoin de votre position pendant qu’il fonctionne, pour savoir quand vous arrivez dans un magasin.',
     serviceTitle: 'Mode courses',
