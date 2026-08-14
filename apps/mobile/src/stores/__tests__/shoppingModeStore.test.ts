@@ -97,6 +97,77 @@ describe('parseStoredSession', () => {
     );
     expect(result?.insideMerchant).toBeNull();
   });
+
+  // A centre whose coordinates are not real numbers is not merely useless —
+  // it is actively dangerous. `nearestWithin` compares `haversineM(...) >
+  // radiusM`, every comparison against NaN is false, so such a centre skips
+  // the `continue`, becomes `best` on the first pass, and fires an arrival
+  // notification for a shop the user is nowhere near. Note `JSON.stringify`
+  // turns a stored `NaN` into `null`, which is exactly the shape an older
+  // build would have left behind.
+  it('drops centres whose coordinates cannot be measured against', () => {
+    const centres = [
+      { merchant: 'Biedronka', lat: 52.0, lng: 21.0 },
+      { merchant: 'NaNy', lat: null, lng: 21.0 },
+      { merchant: 'Stringy', lat: '52.0', lng: '21.0' },
+      // Null island: the zeroed plaintext of an undecryptable tier-2 row.
+      { merchant: 'Nowhere', lat: 0, lng: 0 },
+      { merchant: 'Nameless', lat: 52.1, lng: 21.1 },
+      'not-an-object',
+      null,
+    ];
+
+    const result = parseStoredSession(
+      JSON.stringify({ startedAt: 1, snapshot: { ...snapshot, centres } })
+    );
+
+    // The good ones survive: one malformed centre must not cost a session its
+    // other shops.
+    expect(result?.snapshot.centres).toEqual([
+      { merchant: 'Biedronka', lat: 52.0, lng: 21.0 },
+      { merchant: 'Nameless', lat: 52.1, lng: 21.1 },
+    ]);
+  });
+
+  it('drops a centre with no usable merchant name', () => {
+    const centres = [
+      { merchant: '', lat: 52.0, lng: 21.0 },
+      { merchant: 7, lat: 52.0, lng: 21.0 },
+    ];
+
+    const result = parseStoredSession(
+      JSON.stringify({ startedAt: 1, snapshot: { ...snapshot, centres } })
+    );
+
+    expect(result?.snapshot.centres).toEqual([]);
+  });
+
+  // `uncheckedCount` is read twice by the task: as the exit body's `{{count}}`
+  // and as the `> 0` gate deciding whether to notify at all. An absent one
+  // therefore renders an empty number AND silently suppresses the exit —
+  // 0 says "nothing left", which suppresses it honestly.
+  it('degrades an unusable uncheckedCount to zero rather than letting it through', () => {
+    const cases: unknown[] = [undefined, null, 'three', -1];
+
+    for (const uncheckedCount of cases) {
+      const result = parseStoredSession(
+        JSON.stringify({ startedAt: 1, snapshot: { ...snapshot, uncheckedCount } })
+      );
+      expect(result?.snapshot.uncheckedCount).toBe(0);
+    }
+  });
+
+  it('keeps a usable uncheckedCount as a whole number', () => {
+    const result = parseStoredSession(
+      JSON.stringify({ startedAt: 1, snapshot: { ...snapshot, uncheckedCount: 3.7 } })
+    );
+    expect(result?.snapshot.uncheckedCount).toBe(3);
+  });
+
+  it('returns null for a non-finite startedAt, which no elapsed-time check could use', () => {
+    // JSON has no Infinity/NaN literal, so this is the shape one arrives as.
+    expect(parseStoredSession(JSON.stringify({ startedAt: null, snapshot }))).toBeNull();
+  });
 });
 
 describe('session persistence', () => {
@@ -108,9 +179,8 @@ describe('session persistence', () => {
 
     // The whole object, not just `insideMerchant` -- a `writeSession` that
     // dropped `startedAt` or replaced the snapshot with e.g. `{ centres: [] }`
-    // would still pass a merchant-only assertion, since the shape guard in
-    // `parseStoredSession` only requires `centres` to BE an array, never to be
-    // the RIGHT one.
+    // would still pass a merchant-only assertion, since `parseStoredSession`
+    // checks each centre is measurable but never that it is the RIGHT one.
     expect(readSession()).toEqual(written);
   });
 
