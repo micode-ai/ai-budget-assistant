@@ -2262,6 +2262,9 @@ export default {
     notReadyBody: 'Your receipts are still loading. Try again in a moment.',
     permissionTitle: 'Location needed',
     permissionBody: 'Shopping mode needs location while it runs, so it can tell when you reach a shop.',
+    notifyPermissionTitle: 'Notifications needed',
+    notifyPermissionBody:
+      'Shopping mode only talks to you through notifications. With them turned off for this app, it has no way to reach you — so it will not start.',
     serviceTitle: 'Shopping mode',
     serviceBody: 'Watching for your shops',
     arrivalTitle: 'You\'re at {{merchant}}',

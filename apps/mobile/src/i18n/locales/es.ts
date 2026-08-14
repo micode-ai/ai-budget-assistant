@@ -2258,6 +2258,9 @@ export default {
     notReadyBody: 'Tus tickets aún se están cargando. Inténtalo de nuevo en un momento.',
     permissionTitle: 'Se necesita la ubicación',
     permissionBody: 'El modo compras necesita tu ubicación mientras está activo, para saber cuándo llegas a una tienda.',
+    notifyPermissionTitle: 'Se necesitan las notificaciones',
+    notifyPermissionBody:
+      'El modo compras solo te habla mediante notificaciones. Si están desactivadas para esta app, no puede avisarte de nada, así que no se inicia.',
     serviceTitle: 'Modo compras',
     serviceBody: 'Estamos atentos a tus tiendas',
     arrivalTitle: 'Estás en {{merchant}}',

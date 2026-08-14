@@ -2262,6 +2262,9 @@ export default {
     notReadyBody: 'Twoje paragony wciąż się wczytują. Spróbuj ponownie za chwilę.',
     permissionTitle: 'Potrzebna lokalizacja',
     permissionBody: 'Tryb zakupów potrzebuje lokalizacji, gdy jest włączony, aby rozpoznać, kiedy dotrzesz do sklepu.',
+    notifyPermissionTitle: 'Potrzebne powiadomienia',
+    notifyPermissionBody:
+      'Tryb zakupów odzywa się wyłącznie przez powiadomienia. Gdy są wyłączone dla tej aplikacji, nie ma jak Cię powiadomić — dlatego się nie uruchomi.',
     serviceTitle: 'Tryb zakupów',
     serviceBody: 'Wypatrujemy Twoich sklepów',
     arrivalTitle: 'Jesteś w: {{merchant}}',

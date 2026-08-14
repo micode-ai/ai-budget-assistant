@@ -154,8 +154,17 @@ export default function ShoppingListScreen() {
       }
 
       const result = await startShoppingMode(snapshot);
-      if (result === 'no_permission') {
-        showAlert(t('shoppingMode.permissionTitle'), t('shoppingMode.permissionBody'));
+      // Same explain-and-abort shape as the no-shops and no-permission cases:
+      // nothing is running, and the user is told which of the two permissions
+      // the mode cannot work without. Notifications are not a nicety here —
+      // they are the whole output, including the persistent service
+      // notification the user is meant to see for the entire session.
+      if (result === 'no_permission' || result === 'no_notifications') {
+        const notifications = result === 'no_notifications';
+        showAlert(
+          t(notifications ? 'shoppingMode.notifyPermissionTitle' : 'shoppingMode.permissionTitle'),
+          t(notifications ? 'shoppingMode.notifyPermissionBody' : 'shoppingMode.permissionBody'),
+        );
         return;
       }
       refreshShoppingMode();

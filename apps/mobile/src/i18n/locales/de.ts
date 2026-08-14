@@ -2258,6 +2258,9 @@ export default {
     notReadyBody: 'Deine Kassenbons werden noch geladen. Versuch es gleich noch einmal.',
     permissionTitle: 'Standort benötigt',
     permissionBody: 'Der Einkaufsmodus braucht deinen Standort, solange er läuft, um zu erkennen, wann du ein Geschäft erreichst.',
+    notifyPermissionTitle: 'Benachrichtigungen benötigt',
+    notifyPermissionBody:
+      'Der Einkaufsmodus meldet sich nur über Benachrichtigungen. Sind sie für diese App ausgeschaltet, kann er dich nicht erreichen — deshalb startet er nicht.',
     serviceTitle: 'Einkaufsmodus',
     serviceBody: 'Wir achten auf deine Geschäfte',
     arrivalTitle: 'Du bist bei {{merchant}}',

@@ -168,8 +168,9 @@ TaskManager.defineTask(SHOPPING_MODE_TASK, async ({ data, error }) => {
 });
 
 /**
- * Begin a session. Returns `'no_permission'` without leaving anything running
- * if the session could not be started.
+ * Begin a session. Returns without leaving anything running if the session
+ * could not be started, saying which permission was missing so the caller can
+ * explain the right thing.
  *
  * Foreground location only — `requestForegroundPermissionsAsync`, never
  * `requestBackgroundPermissionsAsync`. A foreground service of type `location`
@@ -185,7 +186,7 @@ TaskManager.defineTask(SHOPPING_MODE_TASK, async ({ data, error }) => {
  */
 export async function startShoppingMode(
   snapshot: SessionSnapshot,
-): Promise<'started' | 'no_permission'> {
+): Promise<'started' | 'no_permission' | 'no_notifications'> {
   try {
     const { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') return 'no_permission';
@@ -198,6 +199,31 @@ export async function startShoppingMode(
     return 'no_permission';
   }
 
+  // Notification permission is not a nicety here — it is the entire output of
+  // the feature. Since targetSdk 33 a denied POST_NOTIFICATIONS suppresses the
+  // **foreground-service** notification too, so without this check the button
+  // flips to "Stop shopping mode", the service runs, and the arrival, the exit
+  // AND the persistent notification are all silently impossible.
+  //
+  // That last one also guts the justification above for not gating this on the
+  // Settings → Data location toggle: "a persistent notification visible the
+  // whole time — a stronger signal than the toggle" is precisely the signal
+  // that is missing. Refusing to start is the honest answer.
+  try {
+    const existing = await Notifications.getPermissionsAsync();
+    let granted = existing.status === 'granted';
+    if (!granted) {
+      const requested = await Notifications.requestPermissionsAsync();
+      granted = requested.status === 'granted';
+    }
+    if (!granted) return 'no_notifications';
+  } catch (e) {
+    // Same shape as the location branch: nothing has been written or started,
+    // and a UI handler must get a branch rather than a rejection. Reported as
+    // `'no_notifications'` because that is the surface we could not confirm.
+    console.warn('[ShoppingMode] notification permission request failed:', e);
+    return 'no_notifications';
+  }
 
   // Stop whatever is running before starting. What this DOES guarantee is that
   // two sessions never coexist on disk — there is one MMKV row and the write

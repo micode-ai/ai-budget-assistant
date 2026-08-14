@@ -2258,6 +2258,9 @@ export default {
     notReadyBody: 'Vos tickets sont encore en cours de chargement. Réessayez dans un instant.',
     permissionTitle: 'Localisation nécessaire',
     permissionBody: 'Le mode courses a besoin de votre position pendant qu’il fonctionne, pour savoir quand vous arrivez dans un magasin.',
+    notifyPermissionTitle: 'Notifications nécessaires',
+    notifyPermissionBody:
+      'Le mode courses ne s’adresse à vous que par des notifications. Si elles sont désactivées pour cette application, il ne peut rien vous signaler — il ne démarre donc pas.',
     serviceTitle: 'Mode courses',
     serviceBody: 'À l’affût de vos magasins',
     arrivalTitle: 'Vous êtes chez {{merchant}}',

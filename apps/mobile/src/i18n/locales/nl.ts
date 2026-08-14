@@ -2258,6 +2258,9 @@ export default {
     notReadyBody: 'Je bonnetjes worden nog geladen. Probeer het zo nog eens.',
     permissionTitle: 'Locatie nodig',
     permissionBody: 'De winkelmodus heeft je locatie nodig zolang hij aan staat, om te merken wanneer je bij een winkel aankomt.',
+    notifyPermissionTitle: 'Meldingen nodig',
+    notifyPermissionBody:
+      'De winkelmodus laat alleen via meldingen iets van zich horen. Staan ze uit voor deze app, dan kan hij je niets doorgeven — daarom start hij niet.',
     serviceTitle: 'Winkelmodus',
     serviceBody: 'We letten op je winkels',
     arrivalTitle: 'Je bent bij {{merchant}}',
