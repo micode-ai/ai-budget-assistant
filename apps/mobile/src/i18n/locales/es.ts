@@ -2258,7 +2258,7 @@ export default {
     permissionTitle: 'Se necesita la ubicación',
     permissionBody: 'El modo compras necesita tu ubicación mientras está activo, para saber cuándo llegas a una tienda.',
     serviceTitle: 'Modo compras',
-    serviceBody: 'Atentos a tus tiendas',
+    serviceBody: 'Estamos atentos a tus tiendas',
     arrivalTitle: 'Estás en {{merchant}}',
     arrivalBody: 'Aún en tu lista: {{count}} · Gasto seguro hoy: {{amount}}',
     arrivalBodyNoSpend: 'Aún en tu lista: {{count}}',

@@ -2258,7 +2258,7 @@ export default {
     permissionTitle: 'Standort benötigt',
     permissionBody: 'Der Einkaufsmodus braucht deinen Standort, solange er läuft, um zu erkennen, wann du ein Geschäft erreichst.',
     serviceTitle: 'Einkaufsmodus',
-    serviceBody: 'Achtet auf deine Geschäfte',
+    serviceBody: 'Wir achten auf deine Geschäfte',
     arrivalTitle: 'Du bist bei {{merchant}}',
     arrivalBody: 'Noch auf deiner Liste: {{count}} · Heute sicher ausgebbar: {{amount}}',
     arrivalBodyNoSpend: 'Noch auf deiner Liste: {{count}}',
