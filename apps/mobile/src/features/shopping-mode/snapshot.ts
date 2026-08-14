@@ -32,6 +32,23 @@ export interface SessionSnapshot {
   currencyCode: string | null;
 }
 
+/** The two list fields of a snapshot, and the only two that are ever refreshed. */
+export type SnapshotListFields = Pick<SessionSnapshot, 'uncheckedCount' | 'uncheckedLabels'>;
+
+/**
+ * Shared by the builder and by the in-app refresh, so a mid-trip update can
+ * never disagree with what the session was born with. Filter first, cap after:
+ * the cap is on what a lock screen can show, not on how far down the list we
+ * are willing to look.
+ */
+export function deriveSnapshotListFields(items: ShoppingListItem[]): SnapshotListFields {
+  const unchecked = items.filter((i) => !i.isChecked);
+  return {
+    uncheckedCount: unchecked.length,
+    uncheckedLabels: unchecked.slice(0, MAX_SNAPSHOT_LABELS).map((i) => i.rawLabel),
+  };
+}
+
 export function buildSessionSnapshot(params: {
   accountId: string;
   language: string;
@@ -42,14 +59,12 @@ export function buildSessionSnapshot(params: {
   const { accountId, language, expenses, items, safeToSpend } = params;
 
   const centres = buildStoreCentres(expensesToVisits(expenses), SHOPPING_MODE_DEFAULTS.minVisits);
-  const unchecked = items.filter((i) => !i.isChecked);
 
   return {
     accountId,
     language,
     centres,
-    uncheckedCount: unchecked.length,
-    uncheckedLabels: unchecked.slice(0, MAX_SNAPSHOT_LABELS).map((i) => i.rawLabel),
+    ...deriveSnapshotListFields(items),
     safeToSpendToday: safeToSpend?.safeToSpendToday ?? null,
     currencyCode: safeToSpend?.baseCurrency ?? null,
   };
