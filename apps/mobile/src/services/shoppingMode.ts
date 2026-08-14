@@ -39,10 +39,21 @@ function arrivalText(snapshot: SessionSnapshot, merchant: string): { title: stri
   const lng = snapshot.language;
   const title = i18n.t('shoppingMode.arrivalTitle', { lng, merchant });
   const count = snapshot.uncheckedCount;
-  if (snapshot.safeToSpendToday === null || !snapshot.currencyCode) {
+
+  // Checked with `Number.isFinite`, not `=== null`. The type says
+  // `number | null`, but the value arrives from an MMKV row that a previous
+  // build wrote and `parseStoredSession` only validates `startedAt` and
+  // `centres` — so `undefined` and `NaN` both reach here past a null check and
+  // straight into `formatCurrency`, which renders them as the literal "NaN" in
+  // a notification body. This repo has shipped that exact bug once already (a
+  // NaN unit price cleared every gate, because every NaN comparison is false,
+  // and produced "about NaN PLN more" in a bot reply). Falling back to the
+  // no-figure wording is the honest degradation: the count is still true.
+  const safeToSpend = snapshot.safeToSpendToday;
+  if (typeof safeToSpend !== 'number' || !Number.isFinite(safeToSpend) || !snapshot.currencyCode) {
     return { title, body: i18n.t('shoppingMode.arrivalBodyNoSpend', { lng, count }) };
   }
-  const amount = formatCurrency(snapshot.safeToSpendToday, snapshot.currencyCode);
+  const amount = formatCurrency(safeToSpend, snapshot.currencyCode);
   return { title, body: i18n.t('shoppingMode.arrivalBody', { lng, count, amount }) };
 }
 
@@ -54,10 +65,14 @@ function exitText(snapshot: SessionSnapshot, merchant: string): { title: string;
   };
 }
 
-// A throw inside this executor cannot take the service down: expo-task-manager
-// wraps every invocation in its own try/catch and still calls
-// `notifyTaskFinishedAsync` from a `finally` (TaskManager.js:140-148). So the
-// worst a malformed native payload can do here is log and skip one update.
+// A throw inside this executor cannot take the service down: expo-task-manager's
+// own task-event handler awaits `taskExecutor(...)` inside a try/catch and
+// calls `notifyTaskFinishedAsync` from the `finally`, so the task is always
+// reported finished whether or not we threw. (Verified in the installed
+// expo-task-manager source rather than assumed — deliberately cited by
+// function and control flow, not by line number, so the claim stays checkable
+// across an Expo bump.) The worst a malformed native payload can do here is
+// log and skip one update.
 TaskManager.defineTask(SHOPPING_MODE_TASK, async ({ data, error }) => {
   if (error) {
     console.warn('[ShoppingMode] task error:', error);
@@ -67,8 +82,13 @@ TaskManager.defineTask(SHOPPING_MODE_TASK, async ({ data, error }) => {
   const last = locations?.[locations.length - 1];
   if (!last) return;
 
-  // Everything below reads MMKV and pure functions only. No store, no network,
-  // no hook — this may be a headless JS context with nothing else initialised.
+  // Everything below reads MMKV and pure functions only: no network, no hook,
+  // and no Zustand state — `readSession`/`writeSession`/`clearSession` are
+  // plain functions over MMKV, not store actions. (Importing that module does
+  // construct the `useShoppingModeStore` singleton at module scope, which
+  // reads the session once as its initial state; that is a one-off import
+  // cost, not something this path depends on or writes to.) This may be a
+  // headless JS context with nothing else initialised.
   const session = readSession();
   if (!session) {
     // No session on disk but the task is running: either a leftover from a
@@ -157,7 +177,21 @@ export async function startShoppingMode(
     return 'no_permission';
   }
 
-  // Never two sessions at once: stop whatever is running before starting.
+  // Stop whatever is running before starting. What this DOES guarantee is that
+  // two sessions never coexist on disk — there is one MMKV row and the write
+  // below replaces it.
+  //
+  // What it does NOT guarantee is that two services never overlap. A location
+  // update from the outgoing session can already be queued when this await
+  // begins; it then takes the no-session branch and calls
+  // `stopLocationUpdatesAsync` itself, which can resolve AFTER the new service
+  // has started — killing the new service while the fresh session row
+  // survives. Left as a known window rather than serialised behind a lock: it
+  // needs an in-flight update landing inside a restart, the stop button
+  // recovers immediately, and `sweepStaleShoppingMode` now detects exactly
+  // this end state (a session with no registered task) at the next app start,
+  // so the worst outcome is bounded by that sweep rather than by the 2-hour
+  // cap.
   await stopShoppingMode();
 
   writeSession({ startedAt: Date.now(), insideMerchant: null, snapshot });
@@ -210,8 +244,25 @@ export async function stopShoppingMode(): Promise<void> {
 }
 
 /**
- * Stop a session that outlived its cap, and stop a service running with no
- * session behind it.
+ * Three-state on purpose.
+ *
+ * A plain `.catch(() => false)` collapses "definitely not registered" and "we
+ * could not find out" into the same answer, and the sweep below acts
+ * destructively on one of those and must not act on the other.
+ */
+async function taskRegistration(): Promise<'registered' | 'not_registered' | 'unknown'> {
+  try {
+    const registered = await TaskManager.isTaskRegisteredAsync(SHOPPING_MODE_TASK);
+    return registered ? 'registered' : 'not_registered';
+  } catch (e) {
+    console.warn('[ShoppingMode] could not read task registration:', e);
+    return 'unknown';
+  }
+}
+
+/**
+ * Reconcile the session row on disk with the service that is supposed to be
+ * behind it, in both directions.
  *
  * This is not belt-and-braces. `killServiceOnDestroy: false` keeps the service
  * alive across the app being swiped away, and since Android 13 a user can
@@ -221,13 +272,38 @@ export async function stopShoppingMode(): Promise<void> {
  */
 export async function sweepStaleShoppingMode(now: number): Promise<void> {
   const session = readSession();
-  const registered = await TaskManager.isTaskRegisteredAsync(SHOPPING_MODE_TASK).catch(() => false);
+  const registration = await taskRegistration();
 
+  // A service with no session behind it.
   if (!session) {
-    if (registered) await stopShoppingMode();
+    if (registration === 'registered') await stopShoppingMode();
     return;
   }
+
   if (now - session.startedAt > SHOPPING_MODE_DEFAULTS.sessionMaxMs) {
     await stopShoppingMode();
+    return;
+  }
+
+  // A session with no service behind it — the mirror case, and the one the
+  // age cap alone never catches. The foreground service can die without
+  // clearing anything (OS memory pressure, force-stop from app info, or the
+  // restart race documented in `startShoppingMode`), and the row that outlives
+  // it makes the UI report shopping mode as running, with nothing watching,
+  // until the 2-hour cap expires.
+  //
+  // ONLY on a definite `not_registered`. On `unknown` we leave the session
+  // alone: clearing a live session because one API call happened to fail would
+  // be a worse bug than the one this closes — it would silently end a real
+  // shopping trip.
+  if (registration === 'not_registered') {
+    // Re-read before clearing. `taskRegistration()` awaited, and a
+    // `startShoppingMode()` that began during that await has already written
+    // its new session while its service is legitimately not registered yet.
+    // Only discard the exact row this sweep sampled.
+    const current = readSession();
+    if (current && current.startedAt === session.startedAt) {
+      clearSession();
+    }
   }
 }
