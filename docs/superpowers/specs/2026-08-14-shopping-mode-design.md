@@ -196,8 +196,17 @@ running with no session recorded.
 
 ## What the notifications say
 
-Both are local, on the app's existing high-importance channel, and both deep-link
-to the shopping list.
+Both are local and both deep-link to the shopping list.
+
+They do **not** land on the app's existing `'default'` channel, and no amount of
+`content.channelId` will put them there: in `expo-notifications` 0.32 the
+channel is a property of the **trigger**, not the content, so a `trigger: null`
+notification short-circuits to expo's own fallback channel. That fallback is
+created at `IMPORTANCE_HIGH`, so heads-up display and sound behave as intended —
+the only real consequence is that these two appear under expo's fallback channel
+name in Android's per-app notification settings rather than beside the app's
+other alerts. Stated here because the obvious "fix" is to add a `channelId` and
+it does nothing.
 
 - **Arrival** — the shop name, the unchecked-item count, and today's Safe to
   Spend. The same two facts the card carries, for the same reason: what you came
