@@ -3,7 +3,8 @@ import { AppState, AppStateStatus } from 'react-native';
 import { useFocusEffect } from 'expo-router';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
-import { findNearbyStore, type NearbyStore, type StoreVisit } from '@/features/stores/findNearbyStore';
+import { findNearbyStore, type NearbyStore } from '@/features/stores/findNearbyStore';
+import { expensesToVisits } from '@/features/stores/expensesToVisits';
 
 /** GPS is not free; a return to the home tab should not re-acquire it. */
 const POSITION_TTL_MS = 5 * 60 * 1000;
@@ -33,20 +34,7 @@ export function useNearbyStore(): NearbyStore | null {
    */
   const performMatch = useCallback(
     (coords: { lat: number; lng: number }) => {
-      // Flatten here, not in the pure function: an expense carries its position
-      // either as a nested `location` object (rebuilt by the pull merge) or as
-      // flat `locationLat`/`locationLng` columns straight from the API.
-      const visits: StoreVisit[] = [];
-      for (const e of expenses) {
-        const merchant = e.merchant?.trim();
-        if (!merchant) continue;
-        const lat = e.location?.lat ?? e.locationLat;
-        const lng = e.location?.lng ?? e.locationLng;
-        if (typeof lat !== 'number' || typeof lng !== 'number') continue;
-        // `source` decides whether this coordinate describes a shop or the
-        // user's sofa; the matcher filters on it (TRUSTED_VISIT_SOURCES).
-        visits.push({ merchant, lat, lng, source: e.source });
-      }
+      const visits = expensesToVisits(expenses);
 
       const next = findNearbyStore({ coords, visits });
       // findNearbyStore allocates a fresh object every call, so setting it

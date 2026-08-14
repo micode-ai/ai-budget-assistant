@@ -1,6 +1,9 @@
 import type { ExpenseSource } from '@budget/shared-types';
 import {
+  buildStoreCentres,
   findNearbyStore,
+  haversineM,
+  isRealPoint,
   NEARBY_STORE_DEFAULTS,
   TRUSTED_VISIT_SOURCES,
   type StoreVisit,
@@ -222,5 +225,78 @@ describe('findNearbyStore', () => {
         ['notification', 'ocr', 'slack', 'telegram', 'whatsapp'],
       );
     });
+  });
+});
+
+describe('buildStoreCentres', () => {
+  const at = (merchant: string, lat: number, lng: number): StoreVisit => ({
+    merchant,
+    lat,
+    lng,
+    source: 'ocr',
+  });
+
+  it('returns one centre per merchant that clears the visit floor', () => {
+    const centres = buildStoreCentres(
+      [at('Biedronka', 52.0, 21.0), at('Biedronka', 52.0001, 21.0001), at('Lidl', 52.5, 21.5)],
+      2,
+    );
+
+    expect(centres.map((c) => c.merchant)).toEqual(['Biedronka']);
+  });
+
+  it('groups case-insensitively but keeps the first spelling seen', () => {
+    const centres = buildStoreCentres([at('Biedronka', 52.0, 21.0), at('BIEDRONKA', 52.0, 21.0)], 2);
+
+    expect(centres).toHaveLength(1);
+    expect(centres[0].merchant).toBe('Biedronka');
+  });
+
+  it('excludes untrusted sources, exactly as the matcher does', () => {
+    const sofa: StoreVisit[] = [
+      { merchant: 'Netflix', lat: 52.0, lng: 21.0, source: 'manual' },
+      { merchant: 'Netflix', lat: 52.0, lng: 21.0, source: 'voice' },
+    ];
+
+    expect(buildStoreCentres(sofa, 2)).toEqual([]);
+  });
+
+  it('returns centres sorted by name so the order is deterministic', () => {
+    const centres = buildStoreCentres(
+      [
+        at('Zabka', 52.0, 21.0),
+        at('Zabka', 52.0, 21.0),
+        at('Aldi', 52.1, 21.1),
+        at('Aldi', 52.1, 21.1),
+      ],
+      2,
+    );
+
+    expect(centres.map((c) => c.merchant)).toEqual(['Aldi', 'Zabka']);
+  });
+
+  it('skips null island', () => {
+    expect(buildStoreCentres([at('Ghost', 0, 0), at('Ghost', 0, 0)], 2)).toEqual([]);
+  });
+});
+
+describe('haversineM', () => {
+  it('measures roughly 111 km per degree of latitude', () => {
+    const d = haversineM({ lat: 52.0, lng: 21.0 }, { lat: 53.0, lng: 21.0 });
+
+    expect(d).toBeGreaterThan(111_000);
+    expect(d).toBeLessThan(111_400);
+  });
+
+  it('is zero for the same point', () => {
+    expect(haversineM({ lat: 52.0, lng: 21.0 }, { lat: 52.0, lng: 21.0 })).toBe(0);
+  });
+});
+
+describe('isRealPoint', () => {
+  it('rejects null island and non-finite values', () => {
+    expect(isRealPoint({ lat: 0, lng: 0 })).toBe(false);
+    expect(isRealPoint({ lat: Number.NaN, lng: 21.0 })).toBe(false);
+    expect(isRealPoint({ lat: 52.0, lng: 21.0 })).toBe(true);
   });
 });

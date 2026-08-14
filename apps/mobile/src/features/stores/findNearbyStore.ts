@@ -82,7 +82,7 @@ const toRad = (d: number): number => (d * Math.PI) / 180;
  * build over it), so "sharing" would mean the same hand-maintained duplicated
  * pair as `financial-month.ts` for a five-line formula.
  */
-function haversineM(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
+export function haversineM(a: { lat: number; lng: number }, b: { lat: number; lng: number }): number {
   const dLat = toRad(b.lat - a.lat);
   const dLng = toRad(b.lng - a.lng);
   const lat1 = toRad(a.lat);
@@ -93,7 +93,7 @@ function haversineM(a: { lat: number; lng: number }, b: { lat: number; lng: numb
 }
 
 /** Null island: the zeroed plaintext of an undecryptable tier-2 row, not a place. */
-const isRealPoint = (p: { lat: number; lng: number }): boolean =>
+export const isRealPoint = (p: { lat: number; lng: number }): boolean =>
   Number.isFinite(p.lat) && Number.isFinite(p.lng) && !(p.lat === 0 && p.lng === 0);
 
 /**
@@ -116,6 +116,50 @@ function median(values: number[]): number {
   return sorted[Math.floor((sorted.length - 1) / 2)];
 }
 
+/** A shop's location: one merchant, one representative coordinate. */
+export interface StoreCentre {
+  merchant: string;
+  lat: number;
+  lng: number;
+}
+
+/**
+ * The user's shops, as coordinates.
+ *
+ * This is the grouping half of `findNearbyStore`, lifted out so a caller can
+ * hold the answer without holding the expenses it came from — Shopping Mode
+ * snapshots these into MMKV, where storing raw expense history would be both
+ * larger and a worse thing to leave lying on disk.
+ *
+ * Returned sorted by lowercased merchant name, which is what gives
+ * `findNearbyStore` its deterministic tie-break.
+ */
+export function buildStoreCentres(visits: StoreVisit[], minVisits: number): StoreCentre[] {
+  // Group case-insensitively, but keep the first spelling seen for display —
+  // "BIEDRONKA" off a bank import and "Biedronka" off a receipt are one shop.
+  const groups = new Map<string, { display: string; lats: number[]; lngs: number[] }>();
+  for (const v of visits) {
+    const name = v.merchant?.trim();
+    if (!name || !isRealPoint(v)) continue;
+    // A coordinate the user's own phone supplied while they sat at home is not
+    // evidence of a shop — see TRUSTED_VISIT_SOURCES.
+    if (!TRUSTED_VISIT_SOURCES.has(v.source)) continue;
+    const key = name.toLowerCase();
+    const group = groups.get(key) ?? { display: name, lats: [], lngs: [] };
+    group.lats.push(v.lat);
+    group.lngs.push(v.lng);
+    groups.set(key, group);
+  }
+
+  const centres: StoreCentre[] = [];
+  for (const key of Array.from(groups.keys()).sort()) {
+    const group = groups.get(key)!;
+    if (group.lats.length < minVisits) continue;
+    centres.push({ merchant: group.display, lat: median(group.lats), lng: median(group.lngs) });
+  }
+  return centres;
+}
+
 /**
  * The shop the user is standing in, if it is one they have bought from before.
  *
@@ -134,34 +178,14 @@ export function findNearbyStore(params: {
 
   if (!isRealPoint(coords)) return null;
 
-  // Group case-insensitively, but keep the first spelling seen for display —
-  // "BIEDRONKA" off a bank import and "Biedronka" off a receipt are one shop.
-  const groups = new Map<string, { display: string; lats: number[]; lngs: number[] }>();
-  for (const v of visits) {
-    const name = v.merchant?.trim();
-    if (!name || !isRealPoint(v)) continue;
-    // A coordinate the user's own phone supplied while they sat at home is not
-    // evidence of a shop — see TRUSTED_VISIT_SOURCES.
-    if (!TRUSTED_VISIT_SOURCES.has(v.source)) continue;
-    const key = name.toLowerCase();
-    const group = groups.get(key) ?? { display: name, lats: [], lngs: [] };
-    group.lats.push(v.lat);
-    group.lngs.push(v.lng);
-    groups.set(key, group);
-  }
-
   let best: { merchant: string; distanceRaw: number } | null = null;
-  // Sorted so an exact distance tie resolves by name rather than by insertion
-  // order — the same determinism convention as buildCategorySplits.
-  for (const key of Array.from(groups.keys()).sort()) {
-    const group = groups.get(key)!;
-    if (group.lats.length < config.minVisits) continue;
-
-    const centre = { lat: median(group.lats), lng: median(group.lngs) };
+  // buildStoreCentres returns name-sorted, so an exact distance tie resolves by
+  // name rather than by insertion order.
+  for (const centre of buildStoreCentres(visits, config.minVisits)) {
     const distanceM = haversineM(coords, centre);
     if (distanceM > config.radiusM) continue;
     if (!best || distanceM < best.distanceRaw) {
-      best = { merchant: group.display, distanceRaw: distanceM };
+      best = { merchant: centre.merchant, distanceRaw: distanceM };
     }
   }
 
