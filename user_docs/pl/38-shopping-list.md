@@ -43,11 +43,11 @@ Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę
 
 ## Tryb zakupów (Android)
 
-Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji.
+Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji. Potrzebuje też zgody na wyświetlanie powiadomień — tylko przez nie się odzywa, więc bez nich się nie uruchomi.
 
 Gdy tryb zakupów działa, przez cały czas widoczne jest powiadomienie na pasku powiadomień. To normalne — oznacza tylko, że tryb zakupów jest włączony, a nie że coś jest nie tak.
 
-Gdy dotrzesz do sklepu, w którym już wcześniej robiłeś zakupy, dostaniesz powiadomienie z nazwą sklepu, tym, co wciąż zostało do odhaczenia na liście, i dzisiejszą kwotą bezpiecznych wydatków. Jeśli wyjdziesz ze sklepu, mając coś jeszcze nieodhaczone, dostaniesz jeszcze jedno powiadomienie z tym, co zostało, a potem tryb zakupów sam się wyłączy — nie musisz pamiętać, żeby go zatrzymać. Wyłączy się też sam, jeśli przez dłuższą chwilę nic się nie wydarzy. Możesz go zatrzymać wcześniej w każdej chwili, stukając **Zakończ tryb zakupów**.
+Gdy dotrzesz do sklepu, w którym już wcześniej robiłeś zakupy, dostaniesz powiadomienie z nazwą sklepu, liczbą pozycji, które wciąż zostały do odhaczenia na liście, i dzisiejszą kwotą bezpiecznych wydatków. Jeśli wyjdziesz ze sklepu, mając coś jeszcze nieodhaczone, dostaniesz jeszcze jedno powiadomienie z liczbą pozostałych pozycji, a potem tryb zakupów sam się wyłączy — nie musisz pamiętać, żeby go zatrzymać. Wyłączy się też sam, jeśli przez dłuższą chwilę nic się nie wydarzy. Możesz go zatrzymać wcześniej w każdej chwili, stukając **Zakończ tryb zakupów**.
 
 Tryb zakupów jest dostępny tylko na Androidzie.
 

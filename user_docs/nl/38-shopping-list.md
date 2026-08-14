@@ -43,11 +43,11 @@ Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidstell
 
 ## Winkelmodus (Android)
 
-Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie.
+Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie. Hij heeft ook toestemming nodig om meldingen te tonen — dat is zijn enige manier om iets aan je door te geven, dus zonder die toestemming start hij niet.
 
 Zolang de winkelmodus actief is, blijft er de hele tijd een melding zichtbaar in je meldingenbalk. Dat is normaal — het betekent alleen dat de winkelmodus actief is, niet dat er iets mis is.
 
-Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, wat er nog op je lijst openstaat, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met wat er nog over is, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
+Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, hoeveel dingen er nog op je lijst openstaan, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met hoeveel er nog over zijn, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
 
 De winkelmodus is alleen beschikbaar op Android.
 

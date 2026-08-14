@@ -43,11 +43,11 @@ Cada artículo de la lista tiene una casilla, un contador de cantidad editable y
 
 ## Modo compras (Android)
 
-Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación.
+Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación. También necesita permiso para mostrar notificaciones — son su única forma de avisarte, así que sin ellas no se inicia.
 
 Mientras el modo compras está activo, verás una notificación fija en tu bandeja de notificaciones todo el tiempo. Es normal — solo significa que el modo compras está activo, no que algo vaya mal.
 
-Cuando llegas a una tienda en la que ya has comprado antes, recibes una notificación con el nombre de la tienda, lo que aún te queda por marcar en la lista, y tu gasto seguro de hoy. Si sales de la tienda con algo todavía sin marcar, recibes una notificación más con lo que falta, y después el modo compras se apaga solo — no tienes que acordarte de detenerlo. También se apaga solo si pasa un buen rato sin que ocurra nada. Puedes detenerlo antes tocando **Detener el modo compras** en cualquier momento.
+Cuando llegas a una tienda en la que ya has comprado antes, recibes una notificación con el nombre de la tienda, cuántos artículos te quedan por marcar en la lista, y tu gasto seguro de hoy. Si sales de la tienda con algo todavía sin marcar, recibes una notificación más con cuántos quedan, y después el modo compras se apaga solo — no tienes que acordarte de detenerlo. También se apaga solo si pasa un buen rato sin que ocurra nada. Puedes detenerlo antes tocando **Detener el modo compras** en cualquier momento.
 
 El modo compras solo está disponible en Android.
 
