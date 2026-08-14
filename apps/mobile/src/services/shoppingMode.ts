@@ -262,7 +262,9 @@ export async function startShoppingMode(
         notificationTitle: i18n.t('shoppingMode.serviceTitle', { lng: snapshot.language }),
         notificationBody: i18n.t('shoppingMode.serviceBody', { lng: snapshot.language }),
         // False on purpose: the whole point is that this survives the app being
-        // swiped away. The 2-hour cap and the stale sweep are what bound it.
+        // swiped away. The stale sweep — at app start and on every foreground
+        // transition — is what bounds it; the 2-hour cap can only enforce
+        // itself while location updates are actually being delivered.
         killServiceOnDestroy: false,
       },
     });
@@ -274,9 +276,9 @@ export async function startShoppingMode(
     // here — that row must not survive, or the UI shows shopping mode as
     // running for up to the 2-hour cap with nothing behind it.
     //
-    // Reported as `'no_permission'` because the union has no third member and
-    // this is the branch a caller must take either way: we could not start
-    // watching the user's location.
+    // Reported as `'no_permission'` rather than `'no_notifications'`: both
+    // permissions were confirmed granted a moment ago, so location is the
+    // truthful thing to point the user at — we could not start watching it.
     console.warn('[ShoppingMode] failed to start location updates:', e);
     clearSession();
     return 'no_permission';
