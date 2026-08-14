@@ -59,11 +59,13 @@ interface ShoppingModeState {
   refreshFromDisk: () => void;
 }
 
+function deriveState(session: StoredSession | null): Pick<ShoppingModeState, 'active' | 'merchant'> {
+  return { active: session !== null, merchant: session?.insideMerchant ?? null };
+}
+
 export const useShoppingModeStore = create<ShoppingModeState>((set) => ({
-  active: readSession() !== null,
-  merchant: readSession()?.insideMerchant ?? null,
+  ...deriveState(readSession()),
   refreshFromDisk: () => {
-    const session = readSession();
-    set({ active: session !== null, merchant: session?.insideMerchant ?? null });
+    set(deriveState(readSession()));
   },
 }));
