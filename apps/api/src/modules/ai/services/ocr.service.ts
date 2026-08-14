@@ -225,6 +225,11 @@ function todayInTimezone(timezone: string | null | undefined): string {
 // totals; gpt-4.1 reads the same PDF correctly AND is cheaper per token.
 const OCR_RECEIPT_MODEL = 'gpt-4.1';
 
+// Smallest share of a receipt a proposed category may account for. A category
+// is a lasting part of the user's taxonomy; minting one for a rounding error's
+// worth of the basket costs more attention than it returns.
+const MIN_PROPOSAL_SHARE_PCT = 10;
+
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
@@ -548,6 +553,25 @@ Important:
         return nothing;
       }
 
+      // A new category has to earn its place in the user's taxonomy. The model
+      // is told to propose a distinct kind of spending even when a broad
+      // category could hold it — otherwise a supermarket receipt files entirely
+      // under "Groceries" and tells the user nothing — but it cannot judge
+      // whether the group is worth a category, because by contract it never
+      // sees an amount. The server can: a group below this share of the receipt
+      // is clutter, and its lines are left unassigned rather than given a
+      // category that exists to hold three zloty.
+      const amountByIndex = new Map(allLines.map((line) => [line.index, line.amount]));
+      const materialProposals = proposals.filter((proposal) => {
+        const share = proposal.itemIndexes.reduce((sum, i) => sum + (amountByIndex.get(i) ?? 0), 0);
+        return receipt.amount > 0 && (share / receipt.amount) * 100 >= MIN_PROPOSAL_SHARE_PCT;
+      });
+      if (materialProposals.length < proposals.length) {
+        this.logger.log(
+          `[CategorySplit] ${accountId}: dropped ${proposals.length - materialProposals.length} immaterial proposal(s)`,
+        );
+      }
+
       // A proposal has no id yet, so it is grouped under a synthetic key. The
       // key never leaves this method — it is mapped to `categoryId: null` below.
       const keyByIndex = new Map<number, string>();
@@ -557,7 +581,7 @@ Important:
         keyByIndex.set(index, categoryId);
         nameByKey.set(categoryId, byId.get(categoryId) ?? '');
       }
-      for (const proposal of proposals) {
+      for (const proposal of materialProposals) {
         const key = proposedKey(proposal.name);
         nameByKey.set(key, proposal.name);
         for (const index of proposal.itemIndexes) keyByIndex.set(index, key);
@@ -605,7 +629,7 @@ Important:
         return { splits: [], itemCategories };
       }
 
-      this.logger.log(`[CategorySplit] ${accountId}: ok groups=${splits.length} proposed=${proposals.length}`);
+      this.logger.log(`[CategorySplit] ${accountId}: ok groups=${splits.length} proposed=${materialProposals.length}`);
       return {
         itemCategories,
         splits: splits.map((split) => ({

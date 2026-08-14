@@ -8,6 +8,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   en: [
     { name: 'Food & Dining', icon: '🍔', color: '#FF6B6B' },
     { name: 'Groceries', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Alcohol', icon: '🍺', color: '#D63031' },
+    { name: 'Household', icon: '🧴', color: '#00CEC9' },
     { name: 'Transport', icon: '🚗', color: '#45B7D1' },
     { name: 'Shopping', icon: '🛍️', color: '#96CEB4' },
     { name: 'Entertainment', icon: '🎬', color: '#FFEAA7' },
@@ -25,6 +27,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   ru: [
     { name: 'Еда и рестораны', icon: '🍔', color: '#FF6B6B' },
     { name: 'Продукты', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Алкоголь', icon: '🍺', color: '#D63031' },
+    { name: 'Бытовая химия', icon: '🧴', color: '#00CEC9' },
     { name: 'Транспорт', icon: '🚗', color: '#45B7D1' },
     { name: 'Покупки', icon: '🛍️', color: '#96CEB4' },
     { name: 'Развлечения', icon: '🎬', color: '#FFEAA7' },
@@ -42,6 +46,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   ua: [
     { name: 'Їжа та ресторани', icon: '🍔', color: '#FF6B6B' },
     { name: 'Продукти', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Алкоголь', icon: '🍺', color: '#D63031' },
+    { name: 'Побутова хімія', icon: '🧴', color: '#00CEC9' },
     { name: 'Транспорт', icon: '🚗', color: '#45B7D1' },
     { name: 'Покупки', icon: '🛍️', color: '#96CEB4' },
     { name: 'Розваги', icon: '🎬', color: '#FFEAA7' },
@@ -59,6 +65,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   pl: [
     { name: 'Jedzenie i restauracje', icon: '🍔', color: '#FF6B6B' },
     { name: 'Zakupy spożywcze', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Alkohol', icon: '🍺', color: '#D63031' },
+    { name: 'Chemia domowa', icon: '🧴', color: '#00CEC9' },
     { name: 'Transport', icon: '🚗', color: '#45B7D1' },
     { name: 'Zakupy', icon: '🛍️', color: '#96CEB4' },
     { name: 'Rozrywka', icon: '🎬', color: '#FFEAA7' },
@@ -76,6 +84,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   de: [
     { name: 'Essen & Restaurants', icon: '🍔', color: '#FF6B6B' },
     { name: 'Lebensmittel', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Alkohol', icon: '🍺', color: '#D63031' },
+    { name: 'Haushalt', icon: '🧴', color: '#00CEC9' },
     { name: 'Transport', icon: '🚗', color: '#45B7D1' },
     { name: 'Einkaufen', icon: '🛍️', color: '#96CEB4' },
     { name: 'Unterhaltung', icon: '🎬', color: '#FFEAA7' },
@@ -93,6 +103,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   es: [
     { name: 'Comida y restaurantes', icon: '🍔', color: '#FF6B6B' },
     { name: 'Supermercado', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Alcohol', icon: '🍺', color: '#D63031' },
+    { name: 'Hogar', icon: '🧴', color: '#00CEC9' },
     { name: 'Transporte', icon: '🚗', color: '#45B7D1' },
     { name: 'Compras', icon: '🛍️', color: '#96CEB4' },
     { name: 'Entretenimiento', icon: '🎬', color: '#FFEAA7' },
@@ -110,6 +122,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   fr: [
     { name: 'Repas et restaurants', icon: '🍔', color: '#FF6B6B' },
     { name: 'Courses', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Alcool', icon: '🍺', color: '#D63031' },
+    { name: 'Maison', icon: '🧴', color: '#00CEC9' },
     { name: 'Transport', icon: '🚗', color: '#45B7D1' },
     { name: 'Shopping', icon: '🛍️', color: '#96CEB4' },
     { name: 'Divertissement', icon: '🎬', color: '#FFEAA7' },
@@ -127,6 +141,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
   be: [
     { name: 'Ежа і рэстараны', icon: '🍔', color: '#FF6B6B' },
     { name: 'Прадукты', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Алкаголь', icon: '🍺', color: '#D63031' },
+    { name: 'Бытавая хімія', icon: '🧴', color: '#00CEC9' },
     { name: 'Транспарт', icon: '🚗', color: '#45B7D1' },
     { name: 'Пакупкі', icon: '🛍️', color: '#96CEB4' },
     { name: 'Забавы', icon: '🎬', color: '#FFEAA7' },
@@ -140,6 +156,27 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Зарплата', icon: '💰', color: '#00B894' },
     { name: 'Фрыланс', icon: '💻', color: '#6C5CE7' },
     { name: 'Іншае', icon: '📦', color: '#636E72' },
+  ],
+  // Dutch was missing entirely, so every Dutch account has been seeded with the
+  // English list since the locale shipped.
+  nl: [
+    { name: 'Eten & restaurants', icon: '🍔', color: '#FF6B6B' },
+    { name: 'Boodschappen', icon: '🛒', color: '#4ECDC4' },
+    { name: 'Alcohol', icon: '🍺', color: '#D63031' },
+    { name: 'Huishouden', icon: '🧴', color: '#00CEC9' },
+    { name: 'Vervoer', icon: '🚗', color: '#45B7D1' },
+    { name: 'Winkelen', icon: '🛍️', color: '#96CEB4' },
+    { name: 'Entertainment', icon: '🎬', color: '#FFEAA7' },
+    { name: 'Rekeningen', icon: '💡', color: '#DFE6E9' },
+    { name: 'Gezondheid', icon: '💊', color: '#A29BFE' },
+    { name: 'Onderwijs', icon: '📚', color: '#6C5CE7' },
+    { name: 'Kleding', icon: '👕', color: '#FD79A8' },
+    { name: 'Cadeaus', icon: '🎁', color: '#E17055' },
+    { name: 'Reizen', icon: '✈️', color: '#00B894' },
+    { name: 'Abonnementen', icon: '📱', color: '#0984E3' },
+    { name: 'Salaris', icon: '💰', color: '#00B894' },
+    { name: 'Freelance', icon: '💻', color: '#6C5CE7' },
+    { name: 'Overig', icon: '📦', color: '#636E72' },
   ],
 };
 

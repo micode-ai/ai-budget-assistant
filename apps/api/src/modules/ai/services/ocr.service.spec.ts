@@ -440,7 +440,57 @@ describe('finalizeReceipt category splits', () => {
       expect(log).toHaveBeenCalledWith(expect.stringContaining('one_category'));
     });
 
-    it('keeps the category of every line when the arithmetic refuses the split', async () => {
+    it('drops a proposed category that accounts for too little of the receipt', async () => {
+    // The model cannot weigh this itself — by contract it never sees an amount —
+    // so the server does. A category minted for 2 of a 100 receipt is clutter,
+    // and its line is left unassigned rather than given one.
+    categorySplitterMock.classify.mockResolvedValue({
+      assignments: new Map([[0, 'c-food']]),
+      proposals: [{ name: 'Chemia', itemIndexes: [1] }],
+    });
+    prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
+
+    const { splits, itemCategories } = await (service as any).runCategorySplit(
+      'a1',
+      {
+        amount: 100,
+        receiptItems: [
+          { description: 'Chleb', canonicalName: 'Chleb', totalPrice: 98 },
+          { description: 'Mydło', canonicalName: 'Mydło', totalPrice: 2 },
+        ],
+      } as any,
+      'u1',
+    );
+
+    expect(itemCategories).toEqual([{ index: 0, categoryId: 'c-food', categoryName: 'Groceries' }]);
+    expect(splits).toEqual([]);
+  });
+
+  it('keeps a proposed category that accounts for a real share of the receipt', async () => {
+    categorySplitterMock.classify.mockResolvedValue({
+      assignments: new Map([[0, 'c-food']]),
+      proposals: [{ name: 'Alkohol', itemIndexes: [1] }],
+    });
+    prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
+
+    const { splits } = await (service as any).runCategorySplit(
+      'a1',
+      {
+        amount: 100,
+        receiptItems: [
+          { description: 'Chleb', canonicalName: 'Chleb', totalPrice: 60 },
+          { description: 'Piwo', canonicalName: 'Piwo', totalPrice: 40 },
+        ],
+      } as any,
+      'u1',
+    );
+
+    const proposed = splits.find((s: any) => s.categoryId === null);
+    expect(proposed.categoryName).toBe('Alkohol');
+    expect(proposed.amount).toBeCloseTo(40, 2);
+  });
+
+  it('keeps the category of every line when the arithmetic refuses the split', async () => {
     // The classification and the money split answer two different questions.
     // A receipt whose lines do not reconcile with its total still knows which
     // line is beer and which is bread, and that answer is what fills
