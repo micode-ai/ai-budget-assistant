@@ -41,6 +41,16 @@ En plus d'ajouter des articles, vous pouvez demander à l'assistant de :
 
 Chaque article de la liste a une case à cocher, un compteur de quantité modifiable et une icône de suppression. Les articles cochés descendent en bas de la liste. Utilisez **Effacer les cochés** (en haut à droite de l'écran) pour retirer d'un coup tout ce que vous avez coché.
 
+## Mode courses (Android)
+
+Touchez **Je pars faire les courses** en haut de la liste de courses pour activer le mode courses. Il doit d'abord connaître au moins un de vos magasins — scannez quelques tickets pour que l'application apprenne où vous faites vos courses — et la première fois, il vous demandera l'accès à votre position.
+
+Pendant que le mode courses fonctionne, une notification reste affichée en permanence dans votre barre de notifications. C'est normal — cela signifie simplement que le mode courses est actif, pas qu'il y a un problème.
+
+Quand vous arrivez dans un magasin où vous avez déjà fait des achats, vous recevez une notification qui indique le nom du magasin, ce qu'il reste à cocher sur votre liste, et votre dépense sûre du jour. Si vous quittez le magasin alors qu'il reste des articles non cochés, vous recevez une dernière notification avec ce qu'il reste, puis le mode courses s'arrête tout seul — inutile de penser à l'arrêter. Il s'arrête aussi tout seul au bout d'un moment si rien ne se passe. Vous pouvez l'arrêter plus tôt à tout moment en touchant **Arrêter le mode courses**.
+
+Le mode courses n'est disponible que sur Android.
+
 ## Comparer les prix (« Où est-ce le moins cher »)
 
 Touchez **Comparer les prix** en bas de la liste pour voir quel magasin est le moins cher pour tout ce qui n'est pas encore coché dans votre liste.

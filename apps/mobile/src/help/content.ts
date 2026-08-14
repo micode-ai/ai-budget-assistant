@@ -4203,6 +4203,16 @@ Besides adding items, you can ask the assistant to:
 - **Remove an item** — "remove milk from my list" or "take eggs off, I already bought them." This takes the item off your list immediately, same as adding — no confirmation needed. It only removes items that aren't already checked off; to mark something as bought without deleting it, use the checkbox on the list itself.
 - **Ask what's running low or on sale** — "what am I running low on?" or "any deals right now?" The assistant answers with the same restock and deal information shown in the **Time to restock** and **Deals for you** rows below.
 
+## Shopping Mode (Android)
+
+Tap **I'm going shopping** at the top of the shopping list to turn on Shopping Mode. It needs to know at least one of your shops first — scan a few receipts so the app can learn where you shop — and the first time you use it, it will ask for location access.
+
+While Shopping Mode is on, a notification stays visible in your notification shade the whole time. That's expected — it just means Shopping Mode is active, not that something is wrong.
+
+When you reach a shop you've bought from before, you get a notification naming the shop, what's still unchecked on your list, and today's Safe to Spend. If you leave the shop with anything still unchecked, you get one more notification listing what's left, and Shopping Mode then turns itself off — you don't need to remember to stop it. It also turns itself off on its own after a while if nothing happens. You can stop it early at any time by tapping **Stop shopping mode**.
+
+Shopping Mode is only available on Android.
+
 ## Compare Prices ("Where's cheapest")
 
 Tap **Compare prices** at the bottom of the list to see which store is cheapest for everything currently unchecked on your list.
@@ -8669,6 +8679,16 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 У каждого товара в списке есть флажок, редактируемый счётчик количества и значок удаления. Отмеченные товары опускаются в конец списка. Используйте **Очистить отмеченные** (в правом верхнем углу экрана), чтобы одним нажатием убрать всё, что вы уже отметили.
 
+## Режим покупок (Android)
+
+Нажмите **Я иду за покупками** вверху списка покупок, чтобы включить режим покупок. Для этого приложению нужно уже знать хотя бы один из Ваших магазинов — сначала отсканируйте несколько чеков, чтобы оно этому научилось, — а при первом использовании оно запросит доступ к геолокации.
+
+Пока режим покупок работает, в шторке уведомлений всё время видно уведомление. Это нормально — оно лишь означает, что режим покупок включён, а не что что-то не так.
+
+Когда Вы доходите до магазина, где уже делали покупки раньше, приходит уведомление с названием магазина, тем, что ещё осталось не отмечено в списке, и суммой, которую сегодня безопасно потратить. Если Вы уходите из магазина, а в списке ещё остаётся что-то неотмеченное, приходит ещё одно уведомление с тем, что осталось, а затем режим покупок сам выключается — не нужно помнить о том, чтобы его останавливать. Он также сам выключается, если долго ничего не происходит. Вы можете остановить его раньше в любой момент, нажав **Выключить режим покупок**.
+
+Режим покупок доступен только на Android.
+
 ## Сравнение цен («Где дешевле»)
 
 Нажмите **Сравнить цены** внизу списка, чтобы узнать, в каком магазине дешевле всего обойдётся всё, что пока не отмечено в вашем списке.
@@ -13105,6 +13125,16 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 У кожного товару в списку є прапорець, редагований лічильник кількості та іконка видалення. Позначені товари опускаються в кінець списку. Використовуйте **Очистити позначені** (у правому верхньому куті екрана), щоб одним дотиком прибрати все, що ви вже позначили.
 
+## Режим покупок (Android)
+
+Натисніть **Я йду за покупками** вгорі списку покупок, щоб увімкнути режим покупок. Для цього застосунку потрібно вже знати принаймні один із Ваших магазинів — спочатку відскануйте кілька чеків, щоб він цього навчився, — а під час першого використання він запитає доступ до геолокації.
+
+Поки режим покупок працює, у шторці сповіщень весь час видно сповіщення. Це нормально — це лише означає, що режим покупок увімкнено, а не що щось не так.
+
+Коли Ви доходите до магазину, де вже робили покупки раніше, приходить сповіщення з назвою магазину, тим, що ще залишилося не відмічено у списку, і сумою, яку сьогодні безпечно витратити. Якщо Ви виходите з магазину, а у списку ще залишається щось невідмічене, приходить ще одне сповіщення з тим, що залишилося, а потім режим покупок сам вимикається — не потрібно пам'ятати про те, щоб його зупиняти. Він також сам вимикається, якщо довго нічого не відбувається. Ви можете зупинити його раніше в будь-який момент, натиснувши **Вимкнути режим покупок**.
+
+Режим покупок доступний лише на Android.
+
 ## Порівняння цін («Де дешевше»)
 
 Натисніть **Порівняти ціни** внизу списку, щоб дізнатися, у якому магазині дешевше вийде все, що поки не позначено у вашому списку.
@@ -17526,6 +17556,16 @@ Oprócz dodawania możesz poprosić asystenta o:
 
 Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę usuwania. Zaznaczone produkty spadają na dół listy. Użyj **Wyczyść zaznaczone** (w prawym górnym rogu ekranu), aby jednym dotknięciem usunąć wszystko, co zostało odhaczone.
 
+## Tryb zakupów (Android)
+
+Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji.
+
+Gdy tryb zakupów działa, przez cały czas widoczne jest powiadomienie na pasku powiadomień. To normalne — oznacza tylko, że tryb zakupów jest włączony, a nie że coś jest nie tak.
+
+Gdy dotrzesz do sklepu, w którym już wcześniej robiłeś zakupy, dostaniesz powiadomienie z nazwą sklepu, tym, co wciąż zostało do odhaczenia na liście, i dzisiejszą kwotą bezpiecznych wydatków. Jeśli wyjdziesz ze sklepu, mając coś jeszcze nieodhaczone, dostaniesz jeszcze jedno powiadomienie z tym, co zostało, a potem tryb zakupów sam się wyłączy — nie musisz pamiętać, żeby go zatrzymać. Wyłączy się też sam, jeśli przez dłuższą chwilę nic się nie wydarzy. Możesz go zatrzymać wcześniej w każdej chwili, stukając **Zakończ tryb zakupów**.
+
+Tryb zakupów jest dostępny tylko na Androidzie.
+
 ## Porównaj ceny ("Gdzie najtaniej")
 
 Stuknij **Porównaj ceny** na dole listy, aby zobaczyć, który sklep jest najtańszy dla wszystkiego, co jest obecnie niezaznaczone na Twojej liście.
@@ -21922,6 +21962,16 @@ Neben dem Hinzufügen kannst du den Assistenten auch bitten:
 
 Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Mengenzähler und ein Löschsymbol. Abgehakte Artikel sinken ans Ende der Liste. Mit **Erledigte entfernen** (oben rechts im Bildschirm) entfernst du alles Abgehakte mit einem Tipp.
 
+## Einkaufsmodus (Android)
+
+Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodus einzuschalten. Dafür muss die App mindestens eines deiner Geschäfte schon kennen — scanne dazu ein paar Kassenbons, damit sie lernt, wo du einkaufst — und beim ersten Mal fragt sie nach dem Zugriff auf deinen Standort.
+
+Solange der Einkaufsmodus läuft, bleibt die ganze Zeit eine Benachrichtigung in deiner Benachrichtigungsleiste sichtbar. Das ist normal — es bedeutet nur, dass der Einkaufsmodus aktiv ist, nicht dass etwas nicht stimmt.
+
+Wenn du ein Geschäft erreichst, in dem du schon einmal eingekauft hast, bekommst du eine Benachrichtigung mit dem Namen des Geschäfts, was auf deiner Liste noch offen ist, und wie viel du heute noch sicher ausgeben kannst. Verlässt du das Geschäft, während noch etwas offen ist, bekommst du eine weitere Benachrichtigung mit dem Rest der Liste, und der Einkaufsmodus schaltet sich danach von selbst ab — du musst nicht daran denken, ihn zu beenden. Er schaltet sich außerdem von selbst ab, wenn längere Zeit nichts passiert. Du kannst ihn jederzeit vorzeitig beenden, indem du auf **Einkaufsmodus beenden** tippst.
+
+Der Einkaufsmodus ist nur auf Android verfügbar.
+
 ## Preise vergleichen („Wo es am günstigsten ist")
 
 Tippe unten in der Liste auf **Preise vergleichen**, um zu sehen, welches Geschäft für alles, was auf deiner Liste noch nicht abgehakt ist, am günstigsten ist.
@@ -26307,6 +26357,16 @@ Además de añadir, puedes pedirle al asistente que:
 
 Cada artículo de la lista tiene una casilla, un contador de cantidad editable y un icono de eliminar. Los artículos marcados bajan al final de la lista. Usa **Borrar marcados** (arriba a la derecha de la pantalla) para quitar de una vez todo lo que ya has marcado.
 
+## Modo compras (Android)
+
+Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación.
+
+Mientras el modo compras está activo, verás una notificación fija en tu bandeja de notificaciones todo el tiempo. Es normal — solo significa que el modo compras está activo, no que algo vaya mal.
+
+Cuando llegas a una tienda en la que ya has comprado antes, recibes una notificación con el nombre de la tienda, lo que aún te queda por marcar en la lista, y tu gasto seguro de hoy. Si sales de la tienda con algo todavía sin marcar, recibes una notificación más con lo que falta, y después el modo compras se apaga solo — no tienes que acordarte de detenerlo. También se apaga solo si pasa un buen rato sin que ocurra nada. Puedes detenerlo antes tocando **Detener el modo compras** en cualquier momento.
+
+El modo compras solo está disponible en Android.
+
 ## Comparar precios ("Dónde es más barato")
 
 Toca **Comparar precios** al final de la lista para ver qué tienda es más barata para todo lo que sigue sin marcar en tu lista.
@@ -30690,6 +30750,16 @@ En plus d'ajouter des articles, vous pouvez demander à l'assistant de :
 
 Chaque article de la liste a une case à cocher, un compteur de quantité modifiable et une icône de suppression. Les articles cochés descendent en bas de la liste. Utilisez **Effacer les cochés** (en haut à droite de l'écran) pour retirer d'un coup tout ce que vous avez coché.
 
+## Mode courses (Android)
+
+Touchez **Je pars faire les courses** en haut de la liste de courses pour activer le mode courses. Il doit d'abord connaître au moins un de vos magasins — scannez quelques tickets pour que l'application apprenne où vous faites vos courses — et la première fois, il vous demandera l'accès à votre position.
+
+Pendant que le mode courses fonctionne, une notification reste affichée en permanence dans votre barre de notifications. C'est normal — cela signifie simplement que le mode courses est actif, pas qu'il y a un problème.
+
+Quand vous arrivez dans un magasin où vous avez déjà fait des achats, vous recevez une notification qui indique le nom du magasin, ce qu'il reste à cocher sur votre liste, et votre dépense sûre du jour. Si vous quittez le magasin alors qu'il reste des articles non cochés, vous recevez une dernière notification avec ce qu'il reste, puis le mode courses s'arrête tout seul — inutile de penser à l'arrêter. Il s'arrête aussi tout seul au bout d'un moment si rien ne se passe. Vous pouvez l'arrêter plus tôt à tout moment en touchant **Arrêter le mode courses**.
+
+Le mode courses n'est disponible que sur Android.
+
 ## Comparer les prix (« Où est-ce le moins cher »)
 
 Touchez **Comparer les prix** en bas de la liste pour voir quel magasin est le moins cher pour tout ce qui n'est pas encore coché dans votre liste.
@@ -35029,6 +35099,16 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - **Спытаць, чаго не хапае альбо што са зніжкай** — «чаго мне не хапае?» ці «ёсць зараз зніжкі?». Асістэнт адкажа той жа інфармацыяй, што паказана ў радках **Час папоўніць запасы** і **Зніжкі для вас**.
 
 У кожнага тавару ў спісе ёсць сцяжок, рэдагаваны лічыльнік колькасці і значок выдалення. Пазначаныя тавары апускаюцца ў канец спісу. Выкарыстоўвайце **Ачысціць пазначаныя** (у правым верхнім куце экрана), каб адным дотыкам прыбраць усё, што вы ўжо пазначылі.
+
+## Рэжым пакупак (Android)
+
+Націсніце **Я іду па пакупкі** уверсе спіса пакупак, каб уключыць рэжым пакупак. Для гэтага праграме трэба ўжо ведаць прынамсі адну з Вашых крам — спачатку адсканіруйце некалькі чэкаў, каб яна гэтаму навучылася, — а пры першым выкарыстанні яна запытае доступ да геалакацыі.
+
+Пакуль рэжым пакупак працуе, увесь час бачнае апавяшчэнне ў шторцы апавяшчэнняў. Гэта нармальна — гэта проста азначае, што рэжым пакупак уключаны, а не тое, што нешта не так.
+
+Калі Вы даходзіце да крамы, дзе ўжо рабілі пакупкі раней, прыходзіць апавяшчэнне з назвай крамы, тым, што яшчэ засталося не адзначана ў спісе, і сумай, якую сёння бяспечна патраціць. Калі Вы выходзіце з крамы, а ў спісе яшчэ застаецца нешта неадзначанае, прыходзіць яшчэ адно апавяшчэнне з тым, што засталося, а потым рэжым пакупак сам выключаецца — не трэба памятаць пра тое, каб яго спыняць. Ён таксама сам выключаецца, калі доўга нічога не адбываецца. Вы можаце спыніць яго раней у любы момант, націснуўшы **Выключыць рэжым пакупак**.
+
+Рэжым пакупак даступны толькі на Android.
 
 ## Параўнанне цэн («Дзе танней»)
 
@@ -39491,6 +39571,16 @@ Naast toevoegen kun je de assistent ook vragen om:
 - **Te vragen wat er bijna op is of in de aanbieding** — "wat heb ik bijna niet meer?" of "zijn er nu aanbiedingen?" De assistent antwoordt met dezelfde informatie die te zien is in de rijen **Tijd om aan te vullen** en **Aanbiedingen voor jou**.
 
 Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidsteller en een verwijderpictogram. Aangevinkte artikelen zakken naar de onderkant van de lijst. Gebruik **Aangevinkte verwijderen** (rechtsboven in het scherm) om alles wat je hebt afgevinkt in één tik te verwijderen.
+
+## Winkelmodus (Android)
+
+Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie.
+
+Zolang de winkelmodus actief is, blijft er de hele tijd een melding zichtbaar in je meldingenbalk. Dat is normaal — het betekent alleen dat de winkelmodus actief is, niet dat er iets mis is.
+
+Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, wat er nog op je lijst openstaat, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met wat er nog over is, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
+
+De winkelmodus is alleen beschikbaar op Android.
 
 ## Prijzen vergelijken ("Waar is het goedkoopst")
 

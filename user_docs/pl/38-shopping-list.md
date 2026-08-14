@@ -41,6 +41,16 @@ Oprócz dodawania możesz poprosić asystenta o:
 
 Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę usuwania. Zaznaczone produkty spadają na dół listy. Użyj **Wyczyść zaznaczone** (w prawym górnym rogu ekranu), aby jednym dotknięciem usunąć wszystko, co zostało odhaczone.
 
+## Tryb zakupów (Android)
+
+Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji.
+
+Gdy tryb zakupów działa, przez cały czas widoczne jest powiadomienie na pasku powiadomień. To normalne — oznacza tylko, że tryb zakupów jest włączony, a nie że coś jest nie tak.
+
+Gdy dotrzesz do sklepu, w którym już wcześniej robiłeś zakupy, dostaniesz powiadomienie z nazwą sklepu, tym, co wciąż zostało do odhaczenia na liście, i dzisiejszą kwotą bezpiecznych wydatków. Jeśli wyjdziesz ze sklepu, mając coś jeszcze nieodhaczone, dostaniesz jeszcze jedno powiadomienie z tym, co zostało, a potem tryb zakupów sam się wyłączy — nie musisz pamiętać, żeby go zatrzymać. Wyłączy się też sam, jeśli przez dłuższą chwilę nic się nie wydarzy. Możesz go zatrzymać wcześniej w każdej chwili, stukając **Zakończ tryb zakupów**.
+
+Tryb zakupów jest dostępny tylko na Androidzie.
+
 ## Porównaj ceny ("Gdzie najtaniej")
 
 Stuknij **Porównaj ceny** na dole listy, aby zobaczyć, który sklep jest najtańszy dla wszystkiego, co jest obecnie niezaznaczone na Twojej liście.
