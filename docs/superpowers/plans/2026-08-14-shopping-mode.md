@@ -1546,8 +1546,10 @@ Nothing below is verifiable in CI. A foreground service, a headless JS wake, an 
 1. With location permission granted and at least one shop with two receipt-scanned expenses, press "I'm going shopping" on the shopping-list screen. The persistent notification appears.
 2. Confirm it is in the app's language, not English, for a non-English user.
 3. **Close the app entirely** (swipe it away). Walk or drive to the shop. The arrival notification arrives with the app closed. Tapping it opens the shopping list.
-4. Leave the shop. The exit notification arrives once, and the persistent notification disappears.
-5. Start a session and check every item off, then leave: no exit notification, service still stops.
-6. Start a session and leave the phone alone for two hours: the service stops silently.
-7. Press the button with no known shops: the explanation appears and no service starts.
-8. Deny the location permission: the explanation appears and no service starts.
+4. **Repeat step 3, but kill the process too.** Swipe the app away, then `adb shell am kill com.budget.assistant`, **then** walk to the shop. This is a different path, not a stricter version of the same one: swiping away leaves the process alive — the foreground service is holding it — so step 3 only ever exercises the case that already works. Killing it forces `LocationTaskService` to restart and load the JS bundle **headless**, with no Activity and nothing rendered. If the location task is not registered from `apps/mobile/index.js`, expo-task-manager finds no executor, calls `unregisterTaskAsync`, and the session is dead for the rest of the trip with no signal to the user — the persistent notification simply vanishes. Arrival must still fire here.
+5. Leave the shop. The exit notification arrives once, and the persistent notification disappears.
+6. Start a session and check every item off, then leave: no exit notification, service still stops.
+7. Start a session, press Home (do **not** swipe away), leave the phone still for over two hours, then reopen the app: the service and its notification are gone. This is the stationary case — the phone never moves 50 m, so no location callback ever runs and the cap inside the reducer never fires; the foreground re-check in `useShoppingModeSweep` is what ends it.
+8. Press the button with no known shops: the explanation appears and no service starts.
+9. Deny the location permission: the explanation appears and no service starts.
+10. Grant location but deny notifications (Android 13+): the notification explanation appears and no service starts — the failure this prevents is a service running invisibly, with the persistent notification suppressed along with the arrival and exit ones.
