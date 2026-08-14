@@ -3,6 +3,7 @@ import {
   reduceShoppingSession,
   SHOPPING_MODE_DEFAULTS,
   type ShoppingSession,
+  type ShoppingSessionConfig,
 } from '../session';
 
 const SHOP: StoreCentre = { merchant: 'Biedronka', lat: 52.0, lng: 21.0 };
@@ -15,16 +16,35 @@ const northOf = (metres: number) => ({ lat: SHOP.lat + metres / 111_000, lng: SH
 const approaching: ShoppingSession = { startedAt: START, insideMerchant: null };
 const inside: ShoppingSession = { startedAt: START, insideMerchant: 'Biedronka' };
 
-const run = (session: ShoppingSession, coords: { lat: number; lng: number }, over: Partial<{ now: number; hasUncheckedItems: boolean; centres: StoreCentre[] }> = {}) =>
+const run = (
+  session: ShoppingSession,
+  coords: { lat: number; lng: number },
+  over: Partial<{
+    now: number;
+    hasUncheckedItems: boolean;
+    centres: StoreCentre[];
+    config: ShoppingSessionConfig;
+  }> = {}
+) =>
   reduceShoppingSession({
     session,
     centres: over.centres ?? [SHOP, OTHER],
     coords,
     now: over.now ?? START + 60_000,
     hasUncheckedItems: over.hasUncheckedItems ?? true,
+    config: over.config,
   });
 
 describe('reduceShoppingSession', () => {
+  it('pins the default radii, cap and visit threshold', () => {
+    expect(SHOPPING_MODE_DEFAULTS).toEqual({
+      arriveRadiusM: 150,
+      leaveRadiusM: 250,
+      sessionMaxMs: 7_200_000,
+      minVisits: 2,
+    });
+  });
+
   it('notifies on arrival inside the arrive radius and records the merchant', () => {
     const r = run(approaching, northOf(100));
 
@@ -33,16 +53,51 @@ describe('reduceShoppingSession', () => {
     expect(r.stop).toBe(false);
   });
 
+  // 200 m sits BETWEEN the two radii. Outside the arrive radius (150 m) is
+  // not enough on its own to discriminate a correct implementation from one
+  // that collapsed both radii to one shared threshold, or that reads
+  // `leaveRadiusM` in the arrival branch — either mutant would still be
+  // inside 250 m here and wrongly arrive. A position past BOTH radii (e.g.
+  // 400 m) would pass against either version and prove nothing.
   it('does nothing while still outside the arrive radius', () => {
-    const r = run(approaching, northOf(400));
+    const r = run(approaching, northOf(200));
 
     expect(r.notify).toBeNull();
     expect(r.session.insideMerchant).toBeNull();
     expect(r.stop).toBe(false);
   });
 
+  it('arrives at the nearest in-range shop, not the first one in the array', () => {
+    // Both are within the 150 m arrive radius of this position; Alpha is the
+    // nearer one but is listed SECOND. An implementation that just takes the
+    // first in-range match (rather than scanning for the closest) would
+    // arrive at Zeta instead.
+    const far: StoreCentre = { merchant: 'Zeta', lat: SHOP.lat + 140 / 111_000, lng: SHOP.lng };
+    const near: StoreCentre = { merchant: 'Alpha', lat: SHOP.lat + 30 / 111_000, lng: SHOP.lng };
+    const r = run(approaching, { lat: SHOP.lat, lng: SHOP.lng }, { centres: [far, near] });
+
+    expect(r.notify).toEqual({ kind: 'arrival', merchant: 'Alpha' });
+  });
+
   it('arrives immediately when the session starts at the shop', () => {
     const r = run(approaching, { lat: SHOP.lat, lng: SHOP.lng }, { now: START });
+
+    expect(r.notify).toEqual({ kind: 'arrival', merchant: 'Biedronka' });
+  });
+
+  it('honours an explicit config override rather than always falling back to the defaults', () => {
+    // 400 m is past the DEFAULT arrive radius (150 m) but within this custom
+    // one (500 m). Arriving here proves `params.config` is actually read —
+    // deleting the `params.config ?? SHOPPING_MODE_DEFAULTS` fallback (or
+    // ignoring the parameter entirely) would fall back to the tighter
+    // default and fail to arrive.
+    const config: ShoppingSessionConfig = {
+      arriveRadiusM: 500,
+      leaveRadiusM: 600,
+      sessionMaxMs: SHOPPING_MODE_DEFAULTS.sessionMaxMs,
+      minVisits: 2,
+    };
+    const r = run(approaching, northOf(400), { config });
 
     expect(r.notify).toEqual({ kind: 'arrival', merchant: 'Biedronka' });
   });
@@ -79,14 +134,12 @@ describe('reduceShoppingSession', () => {
   });
 
   // Exit is measured against the shop we are IN, never the nearest one —
-  // otherwise walking past a second shop would end the session.
-  it('does not exit because a different shop is now nearer', () => {
-    // OTHER is ~1.1 km from SHOP, so this position is far outside SHOP's
-    // arrive radius but well inside its leave radius... no: it is outside
-    // both. The point is that being *at* another shop is measured against
-    // Biedronka, and 1.1 km is past the leave radius, so this DOES end the
-    // session — which is correct. The guard being tested is that the exit is
-    // attributed to Biedronka, not to Lidl.
+  // otherwise walking past a second shop would end the session. Standing at
+  // OTHER's own coordinates while the session is inside SHOP is ~1.1 km past
+  // SHOP's leave radius, so the session correctly ends here; what this test
+  // pins is that the exit is attributed to SHOP (Biedronka), the shop the
+  // session was in, and not to OTHER (Lidl), the shop the user is standing at.
+  it('attributes the exit to the shop the session was in, not the shop the user is standing at', () => {
     const r = run(inside, { lat: OTHER.lat, lng: OTHER.lng });
 
     expect(r.notify).toEqual({ kind: 'exit', merchant: 'Biedronka' });
@@ -95,11 +148,23 @@ describe('reduceShoppingSession', () => {
 
   it('stays inside its own shop even when another shop is closer', () => {
     // Standing 120 m from Biedronka, with Lidl's centre moved to 10 m away:
-    // the nearest shop is Lidl, but the session is in Biedronka and 120 m is
-    // inside its leave radius, so nothing happens. Measuring against the
-    // nearest shop instead would have ended the session here.
+    // the nearest shop is Lidl, not the shop the session is in. This pins
+    // that a nearer shop does not steal an already-active session — the
+    // reducer keeps measuring against Biedronka (120 m, inside its leave
+    // radius) rather than switching to whichever centre happens to be
+    // closest right now.
     const near: StoreCentre = { merchant: 'Lidl', lat: SHOP.lat + 130 / 111_000, lng: SHOP.lng };
     const r = run(inside, northOf(120), { centres: [SHOP, near] });
+
+    expect(r.notify).toBeNull();
+    expect(r.stop).toBe(false);
+  });
+
+  it('matches the shop it is inside case-insensitively', () => {
+    // `buildStoreCentres` groups merchants case-insensitively, so the
+    // snapshot's spelling need not match `insideMerchant` byte-for-byte.
+    const centres: StoreCentre[] = [{ merchant: 'BIEDRONKA', lat: SHOP.lat, lng: SHOP.lng }];
+    const r = run(inside, northOf(10), { centres });
 
     expect(r.notify).toBeNull();
     expect(r.stop).toBe(false);
@@ -120,8 +185,47 @@ describe('reduceShoppingSession', () => {
     expect(r.stop).toBe(true);
   });
 
+  // The case that actually matters: a session receiving nothing but unusable
+  // fixes must still be able to time out. Moving the cap check below the
+  // null-island guard (or below the arrival/exit logic entirely) would let
+  // `{0, 0}` short-circuit with `stop: false` before the cap is ever
+  // consulted, and the foreground service would outlive its cap for as long
+  // as the app stayed closed.
+  it('times out even when the only available position is unusable', () => {
+    const r = run(inside, { lat: 0, lng: 0 }, {
+      now: START + SHOPPING_MODE_DEFAULTS.sessionMaxMs + 1,
+    });
+
+    expect(r.notify).toBeNull();
+    expect(r.stop).toBe(true);
+  });
+
   it('ignores null island rather than treating it as a position', () => {
     const r = run(approaching, { lat: 0, lng: 0 });
+
+    expect(r.notify).toBeNull();
+    expect(r.stop).toBe(false);
+  });
+
+  // The case that actually matters: an APPROACHING session at null island
+  // arrives nowhere either way, since null island is thousands of kilometres
+  // from any fixture shop — that test alone would pass even with the guard
+  // deleted. An INSIDE session is where a missing guard is harmful: without
+  // it, the huge distance to null island exceeds the leave radius and fires
+  // a spurious exit notification for a shop the user never left.
+  it('does not fire a spurious exit when the position is null island', () => {
+    const r = run(inside, { lat: 0, lng: 0 });
+
+    expect(r.notify).toBeNull();
+    expect(r.stop).toBe(false);
+  });
+
+  // A NaN coordinate must be rejected the same way — `NaN <= leaveRadiusM` is
+  // always false, so without a guard that treats non-finite input as
+  // unusable, this would fall through to the same spurious-exit branch as
+  // null island above.
+  it('treats a NaN coordinate as unusable too, not as a real position', () => {
+    const r = run(inside, { lat: NaN, lng: 21.0 });
 
     expect(r.notify).toBeNull();
     expect(r.stop).toBe(false);
