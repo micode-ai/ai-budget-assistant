@@ -2488,6 +2488,7 @@ export default {
     itemCategory: 'Categoría de este artículo',
     unassigned: 'Sin asignar',
     dropped: 'No se pudieron emparejar las categorías — guardado sin división',
+    notSplit: 'No se dividió automáticamente: puedes asignar las categorías tú mismo',
     newCategory: 'Nueva categoría',
   },
 } as const;

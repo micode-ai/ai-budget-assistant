@@ -2492,6 +2492,7 @@ export default {
     itemCategory: 'Category for this item',
     unassigned: 'Not assigned',
     dropped: 'Categories could not be matched — saved without a split',
+    notSplit: 'Not split automatically — assign the categories yourself if you like',
     newCategory: 'New category',
   },
 } as const;

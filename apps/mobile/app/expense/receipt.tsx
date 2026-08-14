@@ -25,8 +25,9 @@ import CategorySplitChips from '@/components/receipt/CategorySplitChips';
 import ItemCategorySheet, { type ItemCategorySheetItem } from '@/components/receipt/ItemCategorySheet';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { proposedKey, isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
-import { seedItemCategories } from '@/features/receipt/seedItemCategories';
-import { formatCurrency, buildCategorySplits, type ReceiptCategorySplit } from '@budget/shared-utils';
+import { seedItemCategories, seedLineCategories } from '@/features/receipt/seedItemCategories';
+import { buildManualSplits } from '@/features/receipt/manualSplits';
+import { formatCurrency, type ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
@@ -105,13 +106,15 @@ export default function ReceiptExpenseScreen() {
       // uses for categorySuggestion). A proposal (categoryId null) has no local
       // category by definition and is held under a sentinel until save.
       const catStore = useCategoryStore.getState();
-      const { itemCategories: seeded, dropped, splits } = seedItemCategories(
-        scannedReceipt.categorySplits,
-        (split) =>
-          ((split.categoryId ? catStore.getCategoryById(split.categoryId) : undefined) ||
-            catStore.getCategoryByName(split.categoryName, 'expense'))?.id,
-      );
-      setItemCategories(seeded);
+      const resolveLocalId = (c: { categoryId: string | null; categoryName: string }) =>
+        ((c.categoryId ? catStore.getCategoryById(c.categoryId) : undefined) ||
+          catStore.getCategoryByName(c.categoryName, 'expense'))?.id;
+
+      const { dropped, splits } = seedItemCategories(scannedReceipt.categorySplits, resolveLocalId);
+      // The lines keep their own categories even when there is no money split —
+      // the server classifies and reconciles as two separate questions, and the
+      // answer to the first is useful on its own.
+      setItemCategories(seedLineCategories(scannedReceipt.receiptItems, resolveLocalId));
       setSplitDropped(dropped);
       setServerSplits(splits);
       setHasEditedCategories(false);
@@ -125,9 +128,9 @@ export default function ReceiptExpenseScreen() {
   // block with no error, which is how a stale web bundle once hid a split the
   // server had built correctly.
   //
-  // Once a line moves, the local recompute takes over: the edited numbers then
-  // have to come from somewhere, and it is the same function with the same
-  // tolerance and residual rules the server used.
+  // Once a line moves, the split becomes the user's rather than the machine's,
+  // and buildManualSplits takes over: their assignment is published in
+  // proportion to the total, with no tolerance gate second-guessing it.
   const currentSplits: ReceiptCategorySplit[] = useMemo(() => {
     if (!hasEditedCategories) return serverSplits;
     if (!scannedReceipt?.receiptItems || scannedReceipt.receiptItems.length === 0) return [];
@@ -145,15 +148,7 @@ export default function ReceiptExpenseScreen() {
           : null,
       };
     });
-    // The discount must travel with the total: the lines are priced before a
-    // basket coupon and the amount is after it, so recomputing without it would
-    // make the chips vanish on the first reassignment of a receipt the server
-    // had just split.
-    return buildCategorySplits({
-      items,
-      total: scannedReceipt.amount,
-      discount: scannedReceipt.discountAmount,
-    });
+    return buildManualSplits(items, scannedReceipt.amount);
   }, [hasEditedCategories, serverSplits, scannedReceipt, itemCategories]);
 
   // Names still attached to at least one line. A proposal the user emptied
@@ -455,6 +450,13 @@ export default function ReceiptExpenseScreen() {
 
               {splitDropped && currentSplits.length === 0 && (
                 <Text style={styles.splitDroppedNote}>{t('receiptCategorySplit.dropped')}</Text>
+              )}
+
+              {/* The lines carry their categories, but the amounts did not add
+                  up to a split the server would publish. Saying so beats an
+                  empty block, and the editor below can still produce one. */}
+              {!splitDropped && currentSplits.length === 0 && sheetItems.length > 1 && (
+                <Text style={styles.splitDroppedNote}>{t('receiptCategorySplit.notSplit')}</Text>
               )}
 
               {scannedReceipt?.receiptItems && scannedReceipt.receiptItems.length > 0 && (

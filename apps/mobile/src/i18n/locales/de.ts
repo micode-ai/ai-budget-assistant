@@ -2488,6 +2488,7 @@ export default {
     itemCategory: 'Kategorie für diesen Artikel',
     unassigned: 'Nicht zugewiesen',
     dropped: 'Kategorien konnten nicht zugeordnet werden — ohne Aufteilung gespeichert',
+    notSplit: 'Nicht automatisch aufgeteilt — Sie können die Kategorien selbst zuweisen',
     newCategory: 'Neue Kategorie',
   },
 } as const;

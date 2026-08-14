@@ -386,7 +386,7 @@ describe('finalizeReceipt category splits', () => {
         proposals: [{ name: 'Chemia', itemIndexes: [1] }],
       });
 
-      const splits = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
 
       expect(splits).toHaveLength(2);
       const proposed = splits.find((s: any) => s.categoryId === null);
@@ -408,7 +408,7 @@ describe('finalizeReceipt category splits', () => {
         ],
       });
 
-      const splits = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
 
       expect(splits).toHaveLength(2);
       expect(splits.every((s: any) => s.categoryId === null)).toBe(true);
@@ -434,13 +434,49 @@ describe('finalizeReceipt category splits', () => {
         proposals: [],
       });
 
-      const splits = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT, 'u1');
 
       expect(splits).toEqual([]);
       expect(log).toHaveBeenCalledWith(expect.stringContaining('one_category'));
     });
 
-    it('refuses when three categories were on offer and everything still lands in one (ABA-398 production case)', async () => {
+    it('keeps the category of every line when the arithmetic refuses the split', async () => {
+    // The classification and the money split answer two different questions.
+    // A receipt whose lines do not reconcile with its total still knows which
+    // line is beer and which is bread, and that answer is what fills
+    // expense_items.category_id and teaches the product rules on save. Throwing
+    // it away with the arithmetic left users looking at a receipt of
+    // "not assigned" rows to redo by hand.
+    categorySplitterMock.classify.mockResolvedValue({
+      assignments: new Map([[0, 'c-food'], [1, 'c-alc']]),
+      proposals: [],
+    });
+    prisma.category.findMany.mockResolvedValue([
+      { id: 'c-food', name: 'Groceries' },
+      { id: 'c-alc', name: 'Alcohol' },
+    ]);
+
+    const { splits, itemCategories } = await (service as any).runCategorySplit(
+      'a1',
+      // Lines sum to 30 against a total of 100: nothing reconciles, no split.
+      {
+        amount: 100,
+        receiptItems: [
+          { description: 'Chleb', canonicalName: 'Chleb', totalPrice: 20 },
+          { description: 'Piwo', canonicalName: 'Piwo', totalPrice: 10 },
+        ],
+      } as any,
+      'u1',
+    );
+
+    expect(splits).toEqual([]);
+    expect(itemCategories).toEqual([
+      { index: 0, categoryId: 'c-food', categoryName: 'Groceries' },
+      { index: 1, categoryId: 'c-alc', categoryName: 'Alcohol' },
+    ]);
+  });
+
+  it('refuses when three categories were on offer and everything still lands in one (ABA-398 production case)', async () => {
       prisma.category.findMany.mockResolvedValue([
         { id: 'c-bills', name: 'Bills & Utilities' },
         { id: 'c-fun', name: 'Entertainment' },
@@ -451,7 +487,7 @@ describe('finalizeReceipt category splits', () => {
         proposals: [],
       });
 
-      const splits = await (service as any).runCategorySplit(
+      const { splits } = await (service as any).runCategorySplit(
         'a1',
         {
           amount: 33,

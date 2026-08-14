@@ -2488,6 +2488,7 @@ export default {
     itemCategory: 'Categorie voor dit product',
     unassigned: 'Niet toegewezen',
     dropped: 'Categorieën konden niet worden gekoppeld — opgeslagen zonder verdeling',
+    notSplit: 'Niet automatisch gesplitst — je kunt de categorieën zelf toewijzen',
     newCategory: 'Nieuwe categorie',
   },
 } as const;

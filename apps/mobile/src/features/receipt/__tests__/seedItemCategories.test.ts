@@ -1,4 +1,4 @@
-import { seedItemCategories, type SeedableSplit } from '../seedItemCategories';
+import { seedItemCategories, seedLineCategories, type SeedableSplit } from '../seedItemCategories';
 
 const SPLIT = (over: Partial<SeedableSplit> = {}): SeedableSplit => ({
   categoryId: 'c-food',
@@ -95,5 +95,40 @@ describe('seedItemCategories', () => {
       expect(result.dropped).toBe(true);
       expect(result.splits).toEqual([]);
     });
+  });
+});
+
+describe('seedLineCategories', () => {
+  const classified = (categoryId?: string | null, categoryName?: string | null) => ({ categoryId, categoryName });
+
+  it('maps each line to its own local category', () => {
+    const map = seedLineCategories(
+      [classified('c-food', 'Groceries'), classified('c-alc', 'Alcohol')],
+      (line) => (line.categoryId === 'c-food' ? 'local-food' : 'local-alc'),
+    );
+
+    expect(map).toEqual({ 0: 'local-food', 1: 'local-alc' });
+  });
+
+  it('keeps the lines it CAN resolve when one of them fails', () => {
+    // Unlike the split, a line's category is a claim about that line alone —
+    // one bad match must not cost the user the other fourteen.
+    const map = seedLineCategories(
+      [classified('c-food', 'Groceries'), classified('c-gone', 'Deleted'), classified('c-alc', 'Alcohol')],
+      (line) => (line.categoryId === 'c-gone' ? undefined : `local-${line.categoryId}`),
+    );
+
+    expect(map).toEqual({ 0: 'local-c-food', 2: 'local-c-alc' });
+  });
+
+  it('holds a proposal under its sentinel', () => {
+    const map = seedLineCategories([classified(null, 'Chemia')], () => undefined);
+
+    expect(map).toEqual({ 0: 'new:Chemia' });
+  });
+
+  it('skips a line the server never classified', () => {
+    expect(seedLineCategories([classified(null, null), classified(undefined, undefined)], () => 'x')).toEqual({});
+    expect(seedLineCategories(undefined, () => 'x')).toEqual({});
   });
 });

@@ -33,6 +33,26 @@ export interface ReceiptItem {
   quantity?: number;
   unitPrice?: number;
   totalPrice: number;
+  /**
+   * The category this line was classified into, when it was. Present even when
+   * the receipt produced no money split: knowing which line is beer and which
+   * is bread is worth having on its own — it is what gives the line-by-line
+   * view its categories, what teaches the product rules on save, and what fills
+   * `expense_items.category_id`. Discarding it because the amounts did not
+   * reconcile would throw away the answer along with the arithmetic.
+   *
+   * `null` with a name set means a category the model proposed that does not
+   * exist yet — the same convention the split payload uses.
+   */
+  categoryId?: string | null;
+  categoryName?: string | null;
+}
+
+/** One line's classification, applied onto `ReceiptItem` by `finalizeReceipt`. */
+export interface ReceiptItemCategory {
+  index: number;
+  categoryId: string | null;
+  categoryName: string;
 }
 
 export function buildCanonicalNameFallback(description: string): string | null {
@@ -472,7 +492,8 @@ Important:
     accountId: string,
     receipt: ReceiptExpense,
     userId: string,
-  ): Promise<ReceiptCategorySplitPayload[]> {
+  ): Promise<{ splits: ReceiptCategorySplitPayload[]; itemCategories: ReceiptItemCategory[] }> {
+    const nothing = { splits: [], itemCategories: [] };
     try {
       // Tier 2 (full E2EE): line items are encrypted at rest, so the server
       // cannot read them to classify. Same lookup as receipt-split/wrapped.
@@ -480,7 +501,7 @@ Important:
         where: { id: accountId },
         select: { encryptionTier: true },
       });
-      if ((account?.encryptionTier ?? 0) >= 2) return [];
+      if ((account?.encryptionTier ?? 0) >= 2) return nothing;
 
       // Every line with a valid amount counts toward the split, labeled or
       // not: an unlabeled line's money is still part of the receipt, and
@@ -499,7 +520,7 @@ Important:
       const labeledLines = allLines.filter((line) => line.label.length > 0);
       if (labeledLines.length < 2) {
         this.logger.log(`[CategorySplit] ${accountId}: skipped few_lines`);
-        return [];
+        return nothing;
       }
 
       const categories = await this.prisma.category.findMany({
@@ -508,7 +529,7 @@ Important:
       });
       if (categories.length === 0) {
         this.logger.log(`[CategorySplit] ${accountId}: skipped no_categories`);
-        return [];
+        return nothing;
       }
 
       const user = await this.prisma.user.findUnique({
@@ -524,7 +545,7 @@ Important:
       });
       if (assignments.size === 0 && proposals.length === 0) {
         this.logger.log(`[CategorySplit] ${accountId}: skipped no_assignments`);
-        return [];
+        return nothing;
       }
 
       // A proposal has no id yet, so it is grouped under a synthetic key. The
@@ -541,6 +562,16 @@ Important:
         nameByKey.set(key, proposal.name);
         for (const index of proposal.itemIndexes) keyByIndex.set(index, key);
       }
+
+      // The classification stands on its own, whatever the arithmetic decides
+      // below. It is the answer to "what is this line" — the money split is a
+      // separate question about how much of the total each category accounts
+      // for, and only that second question needs the sums to reconcile.
+      const itemCategories: ReceiptItemCategory[] = Array.from(keyByIndex.entries()).map(([index, key]) => ({
+        index,
+        categoryId: isProposedKey(key) ? null : key,
+        categoryName: isProposedKey(key) ? proposedNameFromKey(key) : nameByKey.get(key) ?? '',
+      }));
 
       const splits = buildCategorySplits({
         total: receipt.amount,
@@ -564,22 +595,30 @@ Important:
         // rather than a label that names only one of those causes and is
         // wrong for the other two.
         this.logger.log(
-          `[CategorySplit] ${accountId}: refused ${new Set(keyByIndex.values()).size < 2 ? 'one_category' : 'refused_by_arithmetic'}`,
+          `[CategorySplit] ${accountId}: refused ${
+            new Set(keyByIndex.values()).size < 2 ? 'one_category' : 'refused_by_arithmetic'
+          }, kept ${itemCategories.length} line categories`,
         );
-        return [];
+        // No split, but the lines keep their categories: the user sees what each
+        // line is, the rules still learn from it on save, and assigning a line
+        // by hand from there can produce a split the arithmetic would not.
+        return { splits: [], itemCategories };
       }
 
       this.logger.log(`[CategorySplit] ${accountId}: ok groups=${splits.length} proposed=${proposals.length}`);
-      return splits.map((split) => ({
-        ...split,
-        categoryId: isProposedKey(split.categoryId) ? null : split.categoryId,
-        categoryName: isProposedKey(split.categoryId)
-          ? proposedNameFromKey(split.categoryId)
-          : split.categoryName,
-      }));
+      return {
+        itemCategories,
+        splits: splits.map((split) => ({
+          ...split,
+          categoryId: isProposedKey(split.categoryId) ? null : split.categoryId,
+          categoryName: isProposedKey(split.categoryId)
+            ? proposedNameFromKey(split.categoryId)
+            : split.categoryName,
+        })),
+      };
     } catch (error) {
       this.logger.warn(`[CategorySplit] skipped: ${error}`);
-      return [];
+      return nothing;
     }
   }
 
@@ -596,7 +635,16 @@ Important:
   ): Promise<ReceiptExpense> {
     const receipt = await this.buildReceiptExpense(parsed, categories);
     receipt.priceFindings = await this.runPriceCheck(accountId, receipt);
-    receipt.categorySplits = await this.runCategorySplit(accountId, receipt, userId);
+
+    const { splits, itemCategories } = await this.runCategorySplit(accountId, receipt, userId);
+    receipt.categorySplits = splits;
+    for (const line of itemCategories) {
+      const item = receipt.receiptItems[line.index];
+      if (!item) continue;
+      item.categoryId = line.categoryId;
+      item.categoryName = line.categoryName;
+    }
+
     return receipt;
   }
 

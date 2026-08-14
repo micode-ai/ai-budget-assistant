@@ -12,6 +12,11 @@ export interface ReceiptItem {
   quantity?: number;
   unitPrice?: number;
   totalPrice: number;
+  /** The category the server classified this line into; `null` id with a name
+   * means a category it proposed that does not exist yet. Present even when the
+   * receipt produced no money split. */
+  categoryId?: string | null;
+  categoryName?: string | null;
 }
 
 export interface ReceiptCategorySplitItem {

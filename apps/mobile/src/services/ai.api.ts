@@ -152,6 +152,8 @@ export const aiApi = {
         quantity?: number;
         unitPrice?: number;
         totalPrice: number;
+        categoryId?: string | null;
+        categoryName?: string | null;
       }[];
       location: { lat: number; lng: number; name: string } | null;
       priceFindings?: ReceiptCheckFinding[];

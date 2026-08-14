@@ -31,6 +31,44 @@ export interface SeedResult {
 
 const EMPTY: SeedResult = { itemCategories: {}, dropped: false, splits: [] };
 
+export interface ClassifiedLine {
+  categoryId?: string | null;
+  categoryName?: string | null;
+}
+
+/**
+ * Reads the category the server put on each receipt line.
+ *
+ * Deliberately NOT all-or-nothing, unlike the split above. A split is a claim
+ * about money and has to add up, so one unresolvable category poisons the set.
+ * A line's category is a claim about that line alone — if one of them cannot be
+ * matched locally, the other fourteen are still right, and dropping them would
+ * hand the user a receipt of "not assigned" rows to redo by hand.
+ */
+export function seedLineCategories(
+  items: ClassifiedLine[] | undefined,
+  resolveLocalId: (line: { categoryId: string | null; categoryName: string }) => string | undefined,
+): Record<number, string> {
+  const itemCategories: Record<number, string> = {};
+  if (!items) return itemCategories;
+
+  items.forEach((item, index) => {
+    const name = item.categoryName?.trim();
+    if (!item.categoryId && !name) return;
+
+    const localId = resolveLocalId({ categoryId: item.categoryId ?? null, categoryName: name ?? '' });
+    if (localId) {
+      itemCategories[index] = localId;
+      return;
+    }
+    // Only a proposal may stand without a local category; a real one that does
+    // not resolve is left unassigned rather than invented.
+    if (item.categoryId == null && name) itemCategories[index] = proposedKey(name);
+  });
+
+  return itemCategories;
+}
+
 /**
  * Turns the server's splits into the screen's line→category state, and into the
  * split it should display before any editing.

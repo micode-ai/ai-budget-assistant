@@ -37,7 +37,16 @@ interface PendingReceiptData {
   categoryId: string | null;
   date: string | null;
   discountAmount: number | null;
-  items: Array<{ description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number }>;
+  items: Array<{
+    description: string;
+    /** Category the scan classified this line into; survives even when the
+     * receipt produced no money split. */
+    categoryId?: string | null;
+    canonicalName?: string;
+    quantity?: number;
+    unitPrice?: number;
+    totalPrice: number;
+  }>;
   receiptImageBase64: string;
   receiptMimeType: string;
   createdAt: number;
@@ -362,7 +371,7 @@ export class PhotoHandler {
             unitPrice: item.unitPrice || item.totalPrice,
             totalPrice: item.totalPrice,
             sortOrder: index,
-            categoryId: itemCategoryIds.get(index),
+            categoryId: itemCategoryIds.get(index) ?? item.categoryId ?? undefined,
           })),
         },
       );

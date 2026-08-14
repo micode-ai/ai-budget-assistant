@@ -2496,6 +2496,7 @@ export default {
     itemCategory: 'Kategoria tej pozycji',
     unassigned: 'Nieprzypisana',
     dropped: 'Nie udało się dopasować kategorii — zapisano bez podziału',
+    notSplit: 'Nie podzielono automatycznie — kategorie możesz przypisać samodzielnie',
     newCategory: 'Nowa kategoria',
   },
 } as const;
