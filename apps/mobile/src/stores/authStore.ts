@@ -500,6 +500,33 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             });
           }
 
+          // End a running Shopping Mode session. Its foreground service
+          // outlives the app, and its snapshot is the signing-out user's —
+          // their shops, their list count, their safe-to-spend figure — so
+          // without this, arriving at the shop still posts "You're at
+          // Biedronka — Still on your list: 3" on a signed-out device.
+          //
+          // Deliberately here, and NOT by treating "no account" as a reason to
+          // stop in `useShoppingModeSweep`: `useAccountStore.reset()` below
+          // does null `currentAccountId`, but so does every cold start before
+          // `loadAccounts()` resolves, so that hook cannot tell a sign-out
+          // from ordinary startup and would kill live sessions on launch.
+          // Here the intent is unambiguous.
+          //
+          // Android-only and dynamically imported for the same reason
+          // `notifications` is above: this module pulls
+          // expo-location/expo-task-manager, which auth must not depend on.
+          if (Platform.OS === 'android') {
+            try {
+              const { stopShoppingMode } = await import('../services/shoppingMode');
+              await stopShoppingMode();
+              const { useShoppingModeStore } = await import('./shoppingModeStore');
+              useShoppingModeStore.getState().refreshFromDisk();
+            } catch {
+              // Non-critical — the stale sweep at the next app start retries.
+            }
+          }
+
           // Reset stores
           useAccountStore.getState().reset();
           useBudgetStore.getState().reset();
