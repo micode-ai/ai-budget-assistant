@@ -1,13 +1,23 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+  Platform,
+  AppState,
+  type AppStateStatus,
+} from 'react-native';
 import { showAlert } from '@/utils/alert';
-import { Stack, router } from 'expo-router';
+import { Stack, router, useFocusEffect } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useShoppingListStore } from '@/stores/shoppingListStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useHydrationStore } from '@/stores/hydrateTransactions';
 import { useInsightsStore } from '@/stores/insightsStore';
 import { useShoppingModeStore } from '@/stores/shoppingModeStore';
 import { buildSessionSnapshot } from '@/features/shopping-mode/snapshot';
@@ -67,6 +77,34 @@ export default function ShoppingListScreen() {
   // started service and kill it. One press at a time.
   const shoppingModeBusy = useRef(false);
 
+  // A trip that ends by itself — on exit, or at the two-hour cap — is cleared
+  // by the location task, which writes MMKV and cannot touch a store. That is
+  // the NORMAL ending, and it happens while the app is backgrounded but alive,
+  // because `killServiceOnDestroy: false` is precisely what keeps the process
+  // up. Without re-reading disk here, the user comes home to a button still
+  // reading "Stop shopping mode" and spends their first press correcting the
+  // label instead of starting the next trip.
+  //
+  // Both listeners are needed, and neither subsumes the other: focus covers
+  // arriving at this screen, `AppState` covers foregrounding while already
+  // standing on it. An `AppState` change fires no navigation focus event —
+  // the lesson `useNearbyStore` carries a comment about. `refreshFromDisk` is
+  // one MMKV read, so running both on a cold foreground-into-this-screen costs
+  // nothing worth avoiding.
+  useFocusEffect(
+    useCallback(() => {
+      refreshShoppingMode();
+    }, [refreshShoppingMode]),
+  );
+
+  useEffect(() => {
+    const sub = AppState.addEventListener('change', (s: AppStateStatus) => {
+      if (s !== 'active') return;
+      refreshShoppingMode();
+    });
+    return () => sub.remove();
+  }, [refreshShoppingMode]);
+
   const toggleShoppingMode = async () => {
     if (shoppingModeBusy.current) return;
     shoppingModeBusy.current = true;
@@ -77,6 +115,7 @@ export default function ShoppingListScreen() {
         return;
       }
 
+      const expenses = useExpenseStore.getState().expenses;
       const snapshot = buildSessionSnapshot({
         accountId: currentAccountId ?? '',
         // The live UI language, not a field on the user: the mobile `User`
@@ -85,7 +124,7 @@ export default function ShoppingListScreen() {
         // notification path resolves `{ lng: snapshot.language }` against, so
         // the two cannot disagree.
         language: i18n.language,
-        expenses: useExpenseStore.getState().expenses,
+        expenses,
         items,
         // The cached figure the home hero already shows, not a fresh fetch: it
         // is a daily number, the home tab refreshes it on every app start, and
@@ -96,7 +135,21 @@ export default function ShoppingListScreen() {
 
       // A session that can never fire is worse than no button: say so instead.
       if (snapshot.centres.length === 0) {
-        showAlert(t('shoppingMode.noShopsTitle'), t('shoppingMode.noShopsBody'));
+        // ...but say the RIGHT thing. `/shopping-list` is reachable straight
+        // from a `shopping_reminder` / `shopping_deal` push deep link, which
+        // can land the user here while `hydrateTransactions()` is still in
+        // flight and the expense store is empty. Telling someone holding
+        // hundreds of receipts to "scan a few receipts first" is a lie about
+        // their own data; "not loaded yet" is the truth, and it self-corrects
+        // on the retry a second later. An empty store with nothing loading is
+        // a genuinely empty account, where the original wording is right.
+        const stillLoading =
+          expenses.length === 0 &&
+          (useHydrationStore.getState().isHydrating || useExpenseStore.getState().isLoading);
+        showAlert(
+          t(stillLoading ? 'shoppingMode.notReadyTitle' : 'shoppingMode.noShopsTitle'),
+          t(stillLoading ? 'shoppingMode.notReadyBody' : 'shoppingMode.noShopsBody'),
+        );
         return;
       }
 
