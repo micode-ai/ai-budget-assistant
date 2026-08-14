@@ -10,6 +10,27 @@ import { readSession, writeSession, clearSession } from '@/stores/shoppingModeSt
 export const SHOPPING_MODE_TASK = 'shopping-mode-location';
 
 /**
+ * How often the OS is asked for a position, in ms. Do NOT delete this as
+ * redundant with `distanceInterval` — it is load-bearing, and for a reason that
+ * is invisible from the JS side.
+ *
+ * Left unset, `LocationOptions.timeInterval` falls back to
+ * `buildLocationParamsForAccuracy(ACCURACY_BALANCED)`, which is **3 seconds**;
+ * `prepareLocationRequest` then builds the request with
+ * `setMaxUpdateDelayMillis` equal to that interval, which is how you tell the
+ * fused provider *not* to batch. So the spec's "Balanced accuracy plus a 50 m
+ * filter lets the OS coalesce updates" was wrong twice over: the provider was
+ * being asked for a fix every 3 seconds for up to two hours, and the 50 m
+ * filter suppresses only *delivery*, never acquisition — it saves no power at
+ * all.
+ *
+ * 45 s is ~15x fewer acquisitions. It costs nothing in detection: arrival is a
+ * 150 m radius and the 50 m displacement filter is the binding constraint on
+ * granularity long before this is.
+ */
+const LOCATION_INTERVAL_MS = 45_000;
+
+/**
  * Post a local notification.
  *
  * `presentNotificationAsync` no longer exists in expo-notifications 0.32 — a
@@ -177,6 +198,7 @@ export async function startShoppingMode(
     return 'no_permission';
   }
 
+
   // Stop whatever is running before starting. What this DOES guarantee is that
   // two sessions never coexist on disk — there is one MMKV row and the write
   // below replaces it.
@@ -199,7 +221,15 @@ export async function startShoppingMode(
   try {
     await Location.startLocationUpdatesAsync(SHOPPING_MODE_TASK, {
       accuracy: Location.Accuracy.Balanced,
-      // Let the OS coalesce updates: we care about ~150 m, not about metres.
+      // Explicit, not defaulted — see LOCATION_INTERVAL_MS.
+      timeInterval: LOCATION_INTERVAL_MS,
+      // Delivery filter only. We care about ~150 m, not about metres, so a
+      // position that has barely moved is not worth waking JS for.
+      //
+      // It does NOT make a stationary session tick, and nothing here can: the
+      // filter is an absolute gate on delivery, so a phone standing still
+      // reaches the reducer — and therefore the 2 h cap — never. That case is
+      // bounded by `useShoppingModeSweep`'s foreground re-check instead.
       distanceInterval: 50,
       pausesUpdatesAutomatically: false,
       foregroundService: {
