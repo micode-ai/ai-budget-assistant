@@ -1966,6 +1966,17 @@ If you forgot your password:
 
 > If you don't receive the code, check your spam folder or tap **Resend code**.
 
+## Where Would You Like to Start?
+
+The first time you open the app with nothing tracked yet, you'll see a short screen asking **"Where would you like to start?"** — pick whichever is fastest for you:
+
+- **Scan a receipt** — snap a photo and the app reads the store, amount, and even individual line items for you
+- **Use your voice** — say what you spent, and the app fills in the details
+- **Type it manually** — enter your first expense yourself, step by step
+- **Bring your history** — import past transactions from your bank statement or another budgeting app
+
+Tap **I'll do this later** if you'd rather explore first — you'll go straight to your dashboard. This screen appears only until you've added your first transaction; after that, it won't show up again.
+
 ## Welcome Screen
 
 After your first login, you'll see the **Welcome** screen:
@@ -2040,6 +2051,19 @@ Available actions:
 | **Transfers** | Opens the wallet transfer form |
 
 You can customize this strip: go to **Settings → Dashboard Widgets**, open the **Quick actions** section, toggle any action on or off, and drag the handles to reorder them. **Voice Income** and **Scan Invoice** are hidden by default — turn them on there if you track income by voice or invoice scan.
+
+## At the Shop
+
+When you open the app while you're standing in a store you've shopped at before, a card appears near the top of the Dashboard — for example, "You're at Biedronka." It shows:
+
+- **Still on your list** — the unchecked items from your active shopping list (up to five, with a count for anything beyond that).
+- **Safe to spend today** — today's Safe to Spend figure, so you know how much room you have before it affects the rest of the month.
+
+Tap the card to open your shopping list.
+
+The card only appears once the app recognizes the store from your past shopping there, so it won't show up on your very first visit to a new place — and once you leave, it clears the next time you open the app or come back to the Dashboard.
+
+> **Note:** This card needs location access. Turn on **Attach location to new expenses** in **Settings → Data & Reports → Location** — it's off by default. Without it, the app never checks where you are, and this card never appears.
 
 ## Financial Health Score
 
@@ -2401,6 +2425,18 @@ Review and correct any details, then:
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
 
+### Category Splits
+
+Grocery-store receipts often mix several kinds of items in one trip — food, household supplies, alcohol. When the app recognizes more than one kind of item on a receipt, it automatically splits the expense across the matching categories instead of putting it all in one.
+
+- On the confirmation screen, a row of category chips appears above the item list, labelled **Split by category** (for example, "Groceries 180 · Household 35 · Alcohol 25"), showing how the total will be broken down.
+- Tap **Change categories** to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.
+- If the items don't add up closely enough to the receipt total, the app falls back to one category instead of guessing.
+- This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt's one overall category.
+- Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
+
+Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.
@@ -2469,6 +2505,9 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
 
 - **Q: Does voice/receipt scanning use my AI requests?**
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.
+
+- **Q: Why did one receipt end up split across several categories in my charts?**
+  **A:** When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts. This never changes your budgets. Tap **Change categories** on the receipt confirmation screen to adjust it — corrections are remembered for next time.
 
 ---
 
@@ -5231,6 +5270,16 @@ At the bottom of **Settings → Import transactions** there's a **"Don't see you
 
 For CSV files the app auto-detects UTF-8 and Windows-1250 (common for Polish bank exports). PDF statements are read directly — no encoding choice needed.
 
+## Moving from another app?
+
+Under **Settings → Import transactions** there's a separate **"Moving from another app?"** card with Monefy, Wallet by BudgetBakers and Money Manager / 1Money.
+
+Export your history from the old app, pick the matching row here, and your transactions come across — **together with your categories**. A category you had there that doesn't exist here yet is created for you, so your history arrives organised rather than as one undifferentiated pile.
+
+Transfers between your own accounts in the old app are skipped: they aren't spending, and importing them would double-count.
+
+Your app isn't on the list? Use **Auto-detect** at the top — unknown export formats are analysed automatically and usually import fine anyway.
+
 ---
 
 *See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Settings](./11-settings.md)*
@@ -5836,6 +5885,16 @@ Besides adding items, you can ask the assistant to:
 
 - **Remove an item** — "remove milk from my list" or "take eggs off, I already bought them." This takes the item off your list immediately, same as adding — no confirmation needed. It only removes items that aren't already checked off; to mark something as bought without deleting it, use the checkbox on the list itself.
 - **Ask what's running low or on sale** — "what am I running low on?" or "any deals right now?" The assistant answers with the same restock and deal information shown in the **Time to restock** and **Deals for you** rows below.
+
+## Shopping Mode (Android)
+
+Tap **I'm going shopping** at the top of the shopping list to turn on Shopping Mode. It needs to know at least one of your shops first — scan a few receipts so the app can learn where you shop — and the first time you use it, it will ask for location access. It also needs permission to show notifications — they are the only way it tells you anything, so it will not start without them.
+
+While Shopping Mode is on, a notification stays visible in your notification shade the whole time. That's expected — it just means Shopping Mode is active, not that something is wrong.
+
+When you reach a shop you've bought from before, you get a notification naming the shop, how many items are still unchecked on your list, and today's Safe to Spend. If you leave the shop with anything still unchecked, you get one more notification with how many are left, and Shopping Mode then turns itself off — you don't need to remember to stop it. It also turns itself off on its own after a while if nothing happens. You can stop it early at any time by tapping **Stop shopping mode**.
+
+Shopping Mode is only available on Android.
 
 ## Compare Prices ("Where's cheapest")
 

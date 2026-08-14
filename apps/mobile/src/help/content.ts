@@ -8685,7 +8685,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Пока режим покупок работает, в шторке уведомлений всё время видно уведомление. Это нормально — оно лишь означает, что режим покупок включён, а не что что-то не так.
 
-Когда Вы доходите до магазина, где уже делали покупки раньше, приходит уведомление с названием магазина, количеством пунктов, которые ещё не отмечены в списке, и суммой, которую сегодня безопасно потратить. Если Вы уходите из магазина, а в списке ещё остаётся что-то неотмеченное, приходит ещё одно уведомление с количеством оставшихся пунктов, а затем режим покупок сам выключается — не нужно помнить о том, чтобы его останавливать. Он также сам выключается, если долго ничего не происходит. Вы можете остановить его раньше в любой момент, нажав **Выключить режим покупок**.
+Когда Вы доходите до магазина, где уже делали покупки раньше, приходит уведомление с названием магазина, количеством товаров, которые ещё не отмечены в списке, и суммой, которую сегодня безопасно потратить. Если Вы уходите из магазина, а в списке ещё остаётся что-то неотмеченное, приходит ещё одно уведомление с количеством оставшихся товаров, а затем режим покупок сам выключается — не нужно помнить о том, чтобы его останавливать. Он также сам выключается, если долго ничего не происходит. Вы можете остановить его раньше в любой момент, нажав **Выключить режим покупок**.
 
 Режим покупок доступен только на Android.
 
@@ -13131,7 +13131,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Поки режим покупок працює, у шторці сповіщень весь час видно сповіщення. Це нормально — це лише означає, що режим покупок увімкнено, а не що щось не так.
 
-Коли Ви доходите до магазину, де вже робили покупки раніше, приходить сповіщення з назвою магазину, кількістю пунктів, які ще не відмічені у списку, і сумою, яку сьогодні безпечно витратити. Якщо Ви виходите з магазину, а у списку ще залишається щось невідмічене, приходить ще одне сповіщення з кількістю пунктів, що залишилися, а потім режим покупок сам вимикається — не потрібно пам'ятати про те, щоб його зупиняти. Він також сам вимикається, якщо довго нічого не відбувається. Ви можете зупинити його раніше в будь-який момент, натиснувши **Вимкнути режим покупок**.
+Коли Ви доходите до магазину, де вже робили покупки раніше, приходить сповіщення з назвою магазину, кількістю товарів, які ще не відмічені у списку, і сумою, яку сьогодні безпечно витратити. Якщо Ви виходите з магазину, а у списку ще залишається щось невідмічене, приходить ще одне сповіщення з кількістю товарів, що залишилися, а потім режим покупок сам вимикається — не потрібно пам'ятати про те, щоб його зупиняти. Він також сам вимикається, якщо довго нічого не відбувається. Ви можете зупинити його раніше в будь-який момент, натиснувши **Вимкнути режим покупок**.
 
 Режим покупок доступний лише на Android.
 
@@ -21968,7 +21968,7 @@ Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodu
 
 Solange der Einkaufsmodus läuft, bleibt die ganze Zeit eine Benachrichtigung in deiner Benachrichtigungsleiste sichtbar. Das ist normal — es bedeutet nur, dass der Einkaufsmodus aktiv ist, nicht dass etwas nicht stimmt.
 
-Wenn du ein Geschäft erreichst, in dem du schon einmal eingekauft hast, bekommst du eine Benachrichtigung mit dem Namen des Geschäfts, wie viele Punkte auf deiner Liste noch offen sind, und wie viel du heute noch sicher ausgeben kannst. Verlässt du das Geschäft, während noch etwas offen ist, bekommst du eine weitere Benachrichtigung mit der Anzahl der offenen Punkte, und der Einkaufsmodus schaltet sich danach von selbst ab — du musst nicht daran denken, ihn zu beenden. Er schaltet sich außerdem von selbst ab, wenn längere Zeit nichts passiert. Du kannst ihn jederzeit vorzeitig beenden, indem du auf **Einkaufsmodus beenden** tippst.
+Wenn du ein Geschäft erreichst, in dem du schon einmal eingekauft hast, bekommst du eine Benachrichtigung mit dem Namen des Geschäfts, wie viele Artikel auf deiner Liste noch offen sind, und wie viel du heute noch sicher ausgeben kannst. Verlässt du das Geschäft, während noch etwas offen ist, bekommst du eine weitere Benachrichtigung mit der Anzahl der offenen Artikel, und der Einkaufsmodus schaltet sich danach von selbst ab — du musst nicht daran denken, ihn zu beenden. Er schaltet sich außerdem von selbst ab, wenn längere Zeit nichts passiert. Du kannst ihn jederzeit vorzeitig beenden, indem du auf **Einkaufsmodus beenden** tippst.
 
 Der Einkaufsmodus ist nur auf Android verfügbar.
 
@@ -35106,7 +35106,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 Пакуль рэжым пакупак працуе, увесь час бачнае апавяшчэнне ў шторцы апавяшчэнняў. Гэта нармальна — гэта проста азначае, што рэжым пакупак уключаны, а не тое, што нешта не так.
 
-Калі Вы даходзіце да крамы, дзе ўжо рабілі пакупкі раней, прыходзіць апавяшчэнне з назвай крамы, колькасцю пунктаў, якія яшчэ не адзначаныя ў спісе, і сумай, якую сёння бяспечна патраціць. Калі Вы выходзіце з крамы, а ў спісе яшчэ застаецца нешта неадзначанае, прыходзіць яшчэ адно апавяшчэнне з колькасцю пунктаў, што засталіся, а потым рэжым пакупак сам выключаецца — не трэба памятаць пра тое, каб яго спыняць. Ён таксама сам выключаецца, калі доўга нічога не адбываецца. Вы можаце спыніць яго раней у любы момант, націснуўшы **Выключыць рэжым пакупак**.
+Калі Вы даходзіце да крамы, дзе ўжо рабілі пакупкі раней, прыходзіць апавяшчэнне з назвай крамы, колькасцю тавараў, якія яшчэ не адзначаныя ў спісе, і сумай, якую сёння бяспечна патраціць. Калі Вы выходзіце з крамы, а ў спісе яшчэ застаецца нешта неадзначанае, прыходзіць яшчэ адно апавяшчэнне з колькасцю тавараў, што засталіся, а потым рэжым пакупак сам выключаецца — не трэба памятаць пра тое, каб яго спыняць. Ён таксама сам выключаецца, калі доўга нічога не адбываецца. Вы можаце спыніць яго раней у любы момант, націснуўшы **Выключыць рэжым пакупак**.
 
 Рэжым пакупак даступны толькі на Android.
 
@@ -39578,7 +39578,7 @@ Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmod
 
 Zolang de winkelmodus actief is, blijft er de hele tijd een melding zichtbaar in je meldingenbalk. Dat is normaal — het betekent alleen dat de winkelmodus actief is, niet dat er iets mis is.
 
-Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, hoeveel dingen er nog op je lijst openstaan, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met hoeveel er nog over zijn, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
+Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, hoeveel artikelen er nog op je lijst openstaan, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met hoeveel er nog over zijn, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
 
 De winkelmodus is alleen beschikbaar op Android.
 

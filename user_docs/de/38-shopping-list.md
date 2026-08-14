@@ -47,7 +47,7 @@ Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodu
 
 Solange der Einkaufsmodus läuft, bleibt die ganze Zeit eine Benachrichtigung in deiner Benachrichtigungsleiste sichtbar. Das ist normal — es bedeutet nur, dass der Einkaufsmodus aktiv ist, nicht dass etwas nicht stimmt.
 
-Wenn du ein Geschäft erreichst, in dem du schon einmal eingekauft hast, bekommst du eine Benachrichtigung mit dem Namen des Geschäfts, wie viele Punkte auf deiner Liste noch offen sind, und wie viel du heute noch sicher ausgeben kannst. Verlässt du das Geschäft, während noch etwas offen ist, bekommst du eine weitere Benachrichtigung mit der Anzahl der offenen Punkte, und der Einkaufsmodus schaltet sich danach von selbst ab — du musst nicht daran denken, ihn zu beenden. Er schaltet sich außerdem von selbst ab, wenn längere Zeit nichts passiert. Du kannst ihn jederzeit vorzeitig beenden, indem du auf **Einkaufsmodus beenden** tippst.
+Wenn du ein Geschäft erreichst, in dem du schon einmal eingekauft hast, bekommst du eine Benachrichtigung mit dem Namen des Geschäfts, wie viele Artikel auf deiner Liste noch offen sind, und wie viel du heute noch sicher ausgeben kannst. Verlässt du das Geschäft, während noch etwas offen ist, bekommst du eine weitere Benachrichtigung mit der Anzahl der offenen Artikel, und der Einkaufsmodus schaltet sich danach von selbst ab — du musst nicht daran denken, ihn zu beenden. Er schaltet sich außerdem von selbst ab, wenn längere Zeit nichts passiert. Du kannst ihn jederzeit vorzeitig beenden, indem du auf **Einkaufsmodus beenden** tippst.
 
 Der Einkaufsmodus ist nur auf Android verfügbar.
 

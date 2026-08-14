@@ -40,7 +40,14 @@ if (Platform.OS === 'android') {
     require('./src/services/shoppingMode');
   } catch (e) {
     // expo-location / expo-task-manager native modules not available
-    // (Expo Go / dev client without native build)
+    // (Expo Go / dev client without native build).
+    //
+    // Deliberately noisier than the widget catch above: if this ever throws on
+    // a real device, the outcome is byte-identical to the bug this registration
+    // exists to prevent — task unregistered, notification gone, trip silently
+    // dead. This warning is the only breadcrumb logcat would carry, and it is
+    // what the `adb shell am kill` step of the device pass would be looking at.
+    console.warn('[ShoppingMode] location task not registered:', e);
   }
 }
 

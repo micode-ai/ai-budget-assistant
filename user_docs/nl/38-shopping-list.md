@@ -47,7 +47,7 @@ Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmod
 
 Zolang de winkelmodus actief is, blijft er de hele tijd een melding zichtbaar in je meldingenbalk. Dat is normaal — het betekent alleen dat de winkelmodus actief is, niet dat er iets mis is.
 
-Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, hoeveel dingen er nog op je lijst openstaan, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met hoeveel er nog over zijn, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
+Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, hoeveel artikelen er nog op je lijst openstaan, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met hoeveel er nog over zijn, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
 
 De winkelmodus is alleen beschikbaar op Android.
 
