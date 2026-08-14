@@ -145,8 +145,18 @@ it takes a real walk away to get out again. Exit is also only ever evaluated
 against **the merchant we are inside**, never against the nearest one, so
 passing a second shop cannot end the session.
 
-Exit fires at most once per session by construction, because it is immediately
-followed by `stop`.
+Exit is **not** exactly-once by construction, and it is worth being precise
+about that rather than assuming it. The reducer returns the session unchanged
+when it emits an exit, so calling it again with the same session and any
+position still past the leave radius emits a second exit. Tearing the service
+down is asynchronous and the service survives the app being killed, so an
+update already queued when the exit decision was taken is a real path to a
+duplicate notification.
+
+What makes it once is the caller: on `stop`, the persisted session must be
+cleared **synchronously, before** anything is awaited — before the
+notification, not merely before `stopLocationUpdatesAsync`. The next update
+then finds no session and tears down silently instead of notifying again.
 
 ## Starting and stopping
 
