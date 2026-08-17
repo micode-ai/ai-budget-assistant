@@ -36,6 +36,8 @@ Berichte zu erstellen und Backups anzulegen ist in allen Plänen kostenlos. Nur 
 
 Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — dieselben Daten stehen im Kopf der Datei. Ist ein eigener Zeitraum unvollständig oder liegt sein Start nach dem Ende, bleibt **Erstellen** deaktiviert.
 
+Wenn du diesen Bildschirm über **Bericht exportieren** im Analyse-Tab öffnest, wird der Zeitraum mitgenommen, den du dort angesehen hast - bist du dort auf Juni zurückgeblättert, wird der Bericht für Juni erstellt und nicht für den aktuellen Monat. Ein laufender Zeitraum endet heute, ein abgeschlossener umfasst seine volle Spanne.
+
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
 
 ## Monatliche Zusammenfassung

@@ -161,7 +161,19 @@ export default function AnalyticsScreen() {
         <QuickInsights summary={summary} anomalies={anomalies} predictions={predictions} selectedRange={selectedRange} currency={currency} />
         {itemBreakdown.length > 0 && <TopReceiptItems itemBreakdown={itemBreakdown} currency={currency} />}
 
-        <TouchableOpacity style={styles.exportButton} onPress={() => router.push('/reports')}>
+        <TouchableOpacity
+          style={styles.exportButton}
+          onPress={() =>
+            router.push({
+              pathname: '/reports',
+              params: {
+                range: selectedRange,
+                month: String(selectedMonth),
+                year: String(selectedYear),
+              },
+            })
+          }
+        >
           <Ionicons name="download-outline" size={20} color={theme.colors.primary} />
           <Text style={styles.exportButtonText}>{t('analytics.exportReport')}</Text>
         </TouchableOpacity>

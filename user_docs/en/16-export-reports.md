@@ -36,6 +36,8 @@ Generating reports and creating backups is free on every plan. Only the automate
 
 Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.
 
+Opening this screen through **Export Report** on the Analytics tab carries the period you were looking at over with you - page back to June there and the report is prepared for June, not for the current month. A period that is still running ends today; a finished one covers its full span.
+
 Reports are stored for 7 days and then automatically deleted.
 
 ## Monthly Digest

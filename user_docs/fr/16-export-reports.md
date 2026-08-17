@@ -36,6 +36,8 @@ Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits
 
 Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.
 
+Si vous ouvrez cet ecran via **Exporter le rapport** dans l'onglet Analyses, la periode que vous consultiez vous suit : si vous y etiez revenu a juin, le rapport est prepare pour juin et non pour le mois en cours. Une periode en cours s'arrete aujourd'hui ; une periode terminee couvre toute son etendue.
+
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
 
 ## Resume mensuel

@@ -2447,6 +2447,8 @@ Generating reports and creating backups is free on every plan. Only the automate
 
 Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.
 
+Opening this screen through **Export Report** on the Analytics tab carries the period you were looking at over with you - page back to June there and the report is prepared for June, not for the current month. A period that is still running ends today; a finished one covers its full span.
+
 Reports are stored for 7 days and then automatically deleted.
 
 ## Monthly Digest
@@ -6949,6 +6951,8 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Под кнопками видны точные даты, которые попадут в отчёт — те же даты печатаются в заголовке файла. Если свой период указан не полностью или его начало позже конца, кнопка **Создать** остаётся неактивной.
 
+Если открыть этот экран кнопкой **Экспортировать отчёт** на вкладке Аналитика, сюда переносится тот период, который вы там смотрели — отлистали до июня, значит отчёт готовится за июнь, а не за текущий месяц. Незакончившийся период заканчивается сегодняшним днём, завершённый берётся целиком.
+
 Отчёты хранятся в течение 7 дней, затем автоматически удаляются.
 
 ## Ежемесячный дайджест
@@ -11440,6 +11444,8 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Під кнопками видно точні дати, які потраплять у звіт — ті самі дати друкуються в заголовку файлу. Якщо власний період указано не повністю або його початок пізніше кінця, кнопка **Створити** залишається неактивною.
 
+Якщо відкрити цей екран кнопкою **Експортувати звіт** на вкладці Аналітика, сюди переноситься той період, який ви там дивилися — відлистали до червня, отже звіт готується за червень, а не за поточний місяць. Незавершений період завершується сьогоднішнім днем, завершений береться повністю.
+
 Звіти зберігаються протягом 7 днів, після чого автоматично видаляються.
 
 ## Щомісячний дайджест
@@ -15881,6 +15887,8 @@ Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich p
 
 Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.
 
+Otwarcie tego ekranu przyciskiem **Eksportuj raport** na zakladce Analityka przenosi tu okres, ktory wlasnie ogladasz - jesli cofnales sie tam do czerwca, raport bedzie przygotowany za czerwiec, a nie za biezacy miesiac. Okres trwajacy konczy sie na dzisiaj, zakonczony obejmuje caly swoj zakres.
+
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
 
 ## Podsumowanie miesieczne
@@ -20320,6 +20328,8 @@ Berichte zu erstellen und Backups anzulegen ist in allen Plänen kostenlos. Nur 
 
 Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — dieselben Daten stehen im Kopf der Datei. Ist ein eigener Zeitraum unvollständig oder liegt sein Start nach dem Ende, bleibt **Erstellen** deaktiviert.
 
+Wenn du diesen Bildschirm über **Bericht exportieren** im Analyse-Tab öffnest, wird der Zeitraum mitgenommen, den du dort angesehen hast - bist du dort auf Juni zurückgeblättert, wird der Bericht für Juni erstellt und nicht für den aktuellen Monat. Ein laufender Zeitraum endet heute, ein abgeschlossener umfasst seine volle Spanne.
+
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
 
 ## Monatliche Zusammenfassung
@@ -24737,6 +24747,8 @@ Generar informes y crear copias de seguridad es gratis en todos los planes. Solo
 
 Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.
 
+Si abres esta pantalla con **Exportar informe** en la pestana Analiticas, se trae el periodo que estabas viendo: si alli retrocediste a junio, el informe se prepara para junio y no para el mes actual. Un periodo en curso termina hoy; uno cerrado cubre su rango completo.
+
 Los informes se almacenan durante 7 dias y luego se eliminan automaticamente.
 
 ## Resumen mensual
@@ -29140,6 +29152,8 @@ Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits
 5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
 
 Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.
+
+Si vous ouvrez cet ecran via **Exporter le rapport** dans l'onglet Analyses, la periode que vous consultiez vous suit : si vous y etiez revenu a juin, le rapport est prepare pour juin et non pour le mois en cours. Une periode en cours s'arrete aujourd'hui ; une periode terminee couvre toute son etendue.
 
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
 
@@ -33550,6 +33564,8 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 Пад кнопкамі відаць дакладныя даты, якія трапяць у справаздачу — тыя ж даты друкуюцца ў загалоўку файла. Калі свой перыяд пазначаны не цалкам або яго пачатак пазней за канец, кнопка **Стварыць** застаецца неактыўнай.
 
+Калі адкрыць гэты экран кнопкай **Экспартаваць справаздачу** на закладцы Аналітыка, сюда пераносіцца той перыяд, які вы там глядзелі — адлісталі да чэрвеня, значыць справаздача гатуецца за чэрвень, а не за цяперашні месяц. Незакончаны перыяд заканчваецца сённяшнім днём, завершаны бярэцца цалкам.
+
 Справаздачы захоўваюцца на працягу 7 дзён, а потым аўтаматычна выдаляюцца.
 
 ## Штомесячны дайджэст
@@ -37916,6 +37932,8 @@ Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de 
 5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
 
 Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.
+
+Open je dit scherm via **Rapport exporteren** op het tabblad Analyse, dan gaat de periode die je bekeek mee - ben je daar teruggebladerd naar juni, dan wordt het rapport voor juni gemaakt en niet voor de huidige maand. Een lopende periode eindigt vandaag; een afgeronde beslaat haar volle bereik.
 
 Rapporten worden 7 dagen bewaard en daarna automatisch verwijderd.
 

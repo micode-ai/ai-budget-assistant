@@ -36,6 +36,8 @@ Generar informes y crear copias de seguridad es gratis en todos los planes. Solo
 
 Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.
 
+Si abres esta pantalla con **Exportar informe** en la pestana Analiticas, se trae el periodo que estabas viendo: si alli retrocediste a junio, el informe se prepara para junio y no para el mes actual. Un periodo en curso termina hoy; uno cerrado cubre su rango completo.
+
 Los informes se almacenan durante 7 dias y luego se eliminan automaticamente.
 
 ## Resumen mensual

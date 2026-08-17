@@ -36,6 +36,8 @@ Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich p
 
 Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.
 
+Otwarcie tego ekranu przyciskiem **Eksportuj raport** na zakladce Analityka przenosi tu okres, ktory wlasnie ogladasz - jesli cofnales sie tam do czerwca, raport bedzie przygotowany za czerwiec, a nie za biezacy miesiac. Okres trwajacy konczy sie na dzisiaj, zakonczony obejmuje caly swoj zakres.
+
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
 
 ## Podsumowanie miesieczne

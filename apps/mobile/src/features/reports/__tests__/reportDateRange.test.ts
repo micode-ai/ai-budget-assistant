@@ -2,6 +2,7 @@ import {
   buildRecentMonthAnchors,
   formatDigestPeriod,
   formatMonthLabel,
+  reportSelectionFromAnalytics,
   resolveReportDateRange,
 } from '../reportDateRange';
 
@@ -136,6 +137,81 @@ describe('buildRecentMonthAnchors', () => {
 
   it('returns nothing for a non-positive count', () => {
     expect(buildRecentMonthAnchors(0, NOW)).toEqual([]);
+  });
+});
+
+describe('reportSelectionFromAnalytics', () => {
+  // What the whole mapping exists for: paging Analytics back to June and hitting
+  // "Export report" must not generate August.
+  it('carries a past month over as that whole month', () => {
+    const selection = reportSelectionFromAnalytics(
+      { range: 'month', month: '6', year: '2026' },
+      NOW,
+    );
+    expect(selection?.mode).toBe('specificMonth');
+    expect(resolveReportDateRange(selection!, NOW)).toEqual({
+      startDate: '2026-06-01',
+      endDate: '2026-06-30',
+    });
+  });
+
+  it('ends the running month today rather than printing a future date', () => {
+    const selection = reportSelectionFromAnalytics(
+      { range: 'month', month: '8', year: '2026' },
+      NOW,
+    );
+    expect(selection).toEqual({ mode: 'month' });
+    expect(resolveReportDateRange(selection!, NOW)).toEqual({
+      startDate: '2026-08-01',
+      endDate: '2026-08-17',
+    });
+  });
+
+  it('maps a past year to its full span', () => {
+    const selection = reportSelectionFromAnalytics({ range: 'year', year: '2025' }, NOW);
+    expect(resolveReportDateRange(selection!, NOW)).toEqual({
+      startDate: '2025-01-01',
+      endDate: '2025-12-31',
+    });
+  });
+
+  it('ends the running year today', () => {
+    const selection = reportSelectionFromAnalytics({ range: 'year', year: '2026' }, NOW);
+    expect(selection).toEqual({ mode: 'year' });
+    expect(resolveReportDateRange(selection!, NOW)).toEqual({
+      startDate: '2026-01-01',
+      endDate: '2026-08-17',
+    });
+  });
+
+  it("uses Analytics' Monday-based week, not the trailing-7-days preset", () => {
+    // 17 Aug 2026 is a Monday, where the two differ most: the calendar week has
+    // just started, the preset would reach back into the previous week.
+    const selection = reportSelectionFromAnalytics({ range: 'week' }, NOW);
+    expect(resolveReportDateRange(selection!, NOW)).toEqual({
+      startDate: '2026-08-17',
+      endDate: '2026-08-17',
+    });
+    expect(resolveReportDateRange({ mode: 'week' }, NOW)).toEqual({
+      startDate: '2026-08-10',
+      endDate: '2026-08-17',
+    });
+  });
+
+  it('accepts numbers as well as the router\'s strings', () => {
+    expect(reportSelectionFromAnalytics({ range: 'month', month: 6, year: 2026 }, NOW)?.mode).toBe(
+      'specificMonth',
+    );
+  });
+
+  it('falls back to the screen default when nothing usable was passed', () => {
+    expect(reportSelectionFromAnalytics({}, NOW)).toBeNull();
+    expect(reportSelectionFromAnalytics({ range: 'month', year: '2026' }, NOW)).toBeNull();
+    expect(reportSelectionFromAnalytics({ range: 'month', month: '13', year: '2026' }, NOW))
+      .toBeNull();
+    expect(reportSelectionFromAnalytics({ range: 'quarter', year: '2026' }, NOW)).toBeNull();
+    expect(reportSelectionFromAnalytics({ range: 'month', month: 'abc', year: '2026' }, NOW))
+      .toBeNull();
   });
 });
 

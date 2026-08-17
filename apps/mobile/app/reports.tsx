@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -17,10 +17,12 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
 import { getIntlLocale } from '@/i18n';
 import { DatePicker } from '@/components/DatePicker';
+import { useLocalSearchParams } from 'expo-router';
 import {
   buildRecentMonthAnchors,
   formatDigestPeriod,
   formatMonthLabel,
+  reportSelectionFromAnalytics,
   resolveReportDateRange,
   type ReportRangeMode,
 } from '@/features/reports/reportDateRange';
@@ -54,11 +56,18 @@ export default function ReportsScreen() {
     loadMonthlyDigest,
   } = useReportStore();
 
+  // Opened from the Analytics tab's "Export report", which passes the period the
+  // user was actually looking at. Seeded once: the screen is pushed over the
+  // tabs, so going back pops it and re-entry remounts with the fresh params.
+  const params = useLocalSearchParams<{ range?: string; month?: string; year?: string }>();
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- launch params, read once on mount
+  const seed = useMemo(() => reportSelectionFromAnalytics(params), []);
+
   const [selectedFormat, setSelectedFormat] = useState<ReportFormat>('csv');
-  const [rangeMode, setRangeMode] = useState<ReportRangeMode>('month');
-  const [monthAnchor, setMonthAnchor] = useState<Date | null>(null);
-  const [customStart, setCustomStart] = useState<Date | null>(null);
-  const [customEnd, setCustomEnd] = useState<Date | null>(null);
+  const [rangeMode, setRangeMode] = useState<ReportRangeMode>(seed?.mode ?? 'month');
+  const [monthAnchor, setMonthAnchor] = useState<Date | null>(seed?.monthAnchor ?? null);
+  const [customStart, setCustomStart] = useState<Date | null>(seed?.customStart ?? null);
+  const [customEnd, setCustomEnd] = useState<Date | null>(seed?.customEnd ?? null);
   const [showStartPicker, setShowStartPicker] = useState(false);
   const [showEndPicker, setShowEndPicker] = useState(false);
 
@@ -71,7 +80,32 @@ export default function ReportsScreen() {
 
   const intlLocale = getIntlLocale();
 
-  const monthOptions = useMemo(() => buildRecentMonthAnchors(MONTH_PICKER_COUNT), []);
+  const monthOptions = useMemo(() => {
+    const anchors = buildRecentMonthAnchors(MONTH_PICKER_COUNT);
+    const seeded = seed?.monthAnchor;
+    // Analytics can page back further than the picker offers; keep that month
+    // reachable instead of showing the strip with nothing selected.
+    if (
+      seeded &&
+      !anchors.some(
+        (a) => a.getFullYear() === seeded.getFullYear() && a.getMonth() === seeded.getMonth(),
+      )
+    ) {
+      anchors.push(seeded);
+    }
+    return anchors;
+  }, [seed]);
+
+  const monthScrollRef = useRef<ScrollView>(null);
+  const monthRevealed = useRef(false);
+
+  // Scrolls the selected month into view exactly once, on the first layout that
+  // reports its position. Later scrolling is the user's.
+  const revealMonth = useCallback((x: number) => {
+    if (monthRevealed.current || x <= 0) return;
+    monthRevealed.current = true;
+    monthScrollRef.current?.scrollTo({ x: Math.max(0, x - 16), animated: false });
+  }, []);
 
   // `null` while a custom range is half-picked or backwards — Generate stays
   // disabled rather than sending a range the report cannot honour.
@@ -192,6 +226,7 @@ export default function ReportsScreen() {
             <View style={styles.rangeDetail}>
               <Text style={styles.rangeDetailLabel}>{t('reports.selectMonth')}</Text>
               <ScrollView
+                ref={monthScrollRef}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 contentContainerStyle={styles.monthRow}
@@ -207,6 +242,10 @@ export default function ReportsScreen() {
                       key={key}
                       style={[styles.rangeChip, isSelected && styles.rangeChipActive]}
                       onPress={() => setMonthAnchor(anchor)}
+                      // A month seeded from Analytics can sit well off the right
+                      // edge of the strip; chip widths vary by month name, so the
+                      // offset is only knowable once it has laid out.
+                      onLayout={isSelected ? (e) => revealMonth(e.nativeEvent.layout.x) : undefined}
                     >
                       <Text style={[styles.rangeChipText, isSelected && styles.rangeChipTextActive]}>
                         {formatMonthLabel(anchor, intlLocale)}

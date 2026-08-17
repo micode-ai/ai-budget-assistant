@@ -36,6 +36,8 @@ Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de 
 
 Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.
 
+Open je dit scherm via **Rapport exporteren** op het tabblad Analyse, dan gaat de periode die je bekeek mee - ben je daar teruggebladerd naar juni, dan wordt het rapport voor juni gemaakt en niet voor de huidige maand. Een lopende periode eindigt vandaag; een afgeronde beslaat haar volle bereik.
+
 Rapporten worden 7 dagen bewaard en daarna automatisch verwijderd.
 
 ## Maandelijkse digest

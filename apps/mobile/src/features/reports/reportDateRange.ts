@@ -9,6 +9,7 @@
  * last day of the previous month, and a yearly one on 31 December of the year
  * before — the same class of bug `src/utils/dateInput.ts` was written to stop.
  */
+import { getStartOfWeek } from '@budget/shared-utils';
 import { toDateInputValue } from '@/utils/dateInput';
 
 export type ReportRangeMode =
@@ -100,6 +101,67 @@ export function resolveReportDateRange(
       return { startDate, endDate };
     }
   }
+}
+
+function toInt(value: string | number | null | undefined): number | null {
+  if (value === null || value === undefined || value === '') return null;
+  const n = typeof value === 'number' ? value : Number(value);
+  return Number.isInteger(n) ? n : null;
+}
+
+/**
+ * The Analytics tab's period, translated into a report selection.
+ *
+ * Analytics carries its own month/year state and its "Export report" button used
+ * to push `/reports` with no params at all, so a report generated after paging
+ * back to, say, June silently covered the CURRENT month instead (ABA-411). The
+ * two sibling buttons in that file already passed the period to `/story` and
+ * `/wrapped`; this closes the gap for reports.
+ *
+ * Rule: a period that is **still running** maps to the preset that ends today —
+ * a report generated on the 17th must not print "1-31 August" in its header,
+ * even though Analytics itself charts the whole month. No data exists past
+ * today, so the file's contents are identical either way. A **finished** period
+ * maps to its exact full span, which is what Analytics displayed.
+ *
+ * `null` means "nothing usable was passed" — the screen keeps its own default.
+ */
+export function reportSelectionFromAnalytics(
+  params: {
+    range?: string | null;
+    month?: string | number | null;
+    year?: string | number | null;
+  },
+  now: Date = new Date(),
+): ReportRangeSelection | null {
+  const { range } = params;
+
+  // Analytics' week is the Monday-based calendar week, not the trailing 7 days
+  // the `week` preset means, so carry its real start instead of the preset.
+  if (range === 'week') {
+    return { mode: 'custom', customStart: getStartOfWeek(now), customEnd: now };
+  }
+
+  const year = toInt(params.year);
+  if (year === null) return null;
+
+  if (range === 'year') {
+    if (year === now.getFullYear()) return { mode: 'year' };
+    return {
+      mode: 'custom',
+      customStart: new Date(year, 0, 1),
+      customEnd: new Date(year, 11, 31),
+    };
+  }
+
+  if (range !== 'month') return null;
+
+  // `usePeriodNavigation` keeps the month 1-based.
+  const month = toInt(params.month);
+  if (month === null || month < 1 || month > 12) return null;
+
+  if (year === now.getFullYear() && month === now.getMonth() + 1) return { mode: 'month' };
+  return { mode: 'specificMonth', monthAnchor: new Date(year, month - 1, 1) };
 }
 
 /**
