@@ -17,7 +17,7 @@ Alle functies zijn beschikbaar in elk abonnement. Abonnementen verschillen allee
 | **Leden per account** | 1 | Tot 5 | Onbeperkt |
 | **Alle functies** | Ja | Ja | Ja |
 
-Alle gebruikers hebben toegang tot: uitgavenregistratie, AI-chat, Spraakinvoer, Bonnen scannen, Uitgavenverhalen, Fat Finder, AI-inzichten, voorspellende analyse, anomaliedetectie, PDF-/Excel-rapporten, wekelijkse e-mailrapporten, maandelijkse digest, versleutelde back-ups en alle valuta's.
+Alle gebruikers hebben toegang tot: uitgavenregistratie, AI-chat, Spraakinvoer, Bonnen scannen, Uitgavenverhalen, Fat Finder, AI-inzichten, voorspellende analyse, anomaliedetectie, PDF-/Excel-rapporten, de maandelijkse digest in de app, versleutelde back-ups en alle valuta's. Automatische e-mailsamenvattingen zijn betaald: de maandelijkse digest per e-mail vereist Pro, het wekelijkse rapport Business.
 
 ## Gratis-abonnement
 

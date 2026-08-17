@@ -18,7 +18,7 @@ Plany roznia sie limitami uzycia oraz dostepem do zaawansowanych funkcji AI:
 | **Funkcje podstawowe** (sledzenie, Czat AI, glos, paragony) | Tak | Tak | Tak |
 | **Zaawansowane AI** (Historia wydatkow, Fat Finder, Wnioski AI) | — | Tak | Tak |
 
-> Wszyscy uzytkownicy (rowniez Free) maja dostep do: sledzenia wydatkow, Czatu AI, Wprowadzania glosowego, Skanowania paragonow, wykrywania anomalii, raportow PDF/Excel, tygodniowych raportow e-mail, miesiecznego podsumowania, zaszyfrowanych kopii zapasowych i wszystkich walut. Historia wydatkow, Fat Finder i Wnioski AI wymagaja planu Pro lub Business.
+> Wszyscy uzytkownicy (rowniez Free) maja dostep do: sledzenia wydatkow, Czatu AI, Wprowadzania glosowego, Skanowania paragonow, wykrywania anomalii, raportow PDF/Excel, miesiecznego podsumowania w aplikacji, zaszyfrowanych kopii zapasowych i wszystkich walut. Historia wydatkow, Fat Finder i Wnioski AI wymagaja planu Pro lub Business; platne jest tez automatyczne wysylanie e-mailem - miesieczne podsumowanie wymaga Pro, tygodniowe planu Business.
 
 ## Plan Free
 

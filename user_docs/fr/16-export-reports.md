@@ -15,20 +15,30 @@ Trois formats d'export disponibles :
 | Format | Description | Disponibilite |
 |---|---|---|
 | **CSV** | Valeurs separees par des virgules, compatible avec Excel et Google Sheets | Tous les plans |
-| **PDF** | Rapport formate avec resume, repartition par categorie et liste des transactions | Pro et Business |
-| **Excel** | Classeur multi-feuilles avec feuilles Resume, Depenses et Revenus | Pro et Business |
+| **PDF** | Rapport formate avec resume, repartition par categorie et liste des transactions | Tous les plans |
+| **Excel** | Classeur multi-feuilles avec feuilles Resume, Depenses et Revenus | Tous les plans |
+
+Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits. Seul l'envoi automatique par e-mail decrit ci-dessous necessite un forfait payant.
 
 ## Generer un rapport
 
 1. Selectionnez un **format** (CSV, PDF ou Excel)
-2. Choisissez une **periode** (Semaine derniere, Ce mois, Trimestre dernier, Cette annee)
+2. Choisissez une **periode** :
+   - **Semaine derniere** — les 7 derniers jours
+   - **Ce mois** — du 1er a aujourd'hui
+   - **Trimestre dernier** — le dernier trimestre civil *complet* (en aout, avril-juin). Une periode close : ses chiffres ne bougent plus
+   - **Cette annee** — du 1er janvier a aujourd'hui
+   - **Mois precis** — un seul mois entier parmi les 24 derniers
+   - **Periode personnalisee** — vos propres dates de debut et de fin
 3. Appuyez sur **Generer**
 4. Le rapport se genere et s'ouvre immediatement via la feuille de partage du systeme — enregistrez-le ou envoyez-le depuis la
 5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
 
+Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.
+
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
 
-## Resume mensuel (Pro+)
+## Resume mensuel
 
 Un apercu de votre activite financiere du mois en cours :
 
@@ -36,6 +46,7 @@ Un apercu de votre activite financiere du mois en cours :
 - **Taux d'epargne** — pourcentage des revenus economises
 - **Principales categories** — vos plus grandes categories de depenses avec montants
 - Les donnees sont mises en cache pendant 7 jours et se rafraichissent automatiquement
+- Toujours le mois **en cours** — independant de la periode choisie ci-dessus
 
 ## Rapports recents
 

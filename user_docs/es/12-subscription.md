@@ -18,7 +18,7 @@ Los planes difieren en los límites de uso y en el acceso a funciones avanzadas 
 | **Funciones principales** (seguimiento, Chat IA, voz, recibos) | Si | Si | Si |
 | **IA avanzada** (Historia de gastos, Fat Finder, Informacion de IA) | — | Si | Si |
 
-> Todos los usuarios (incluido Gratuito) tienen acceso a: seguimiento de gastos, Chat IA, Entrada de voz, Escaneo de recibos, deteccion de anomalias, informes PDF/Excel, resumen semanal por email, resumen mensual, copias de seguridad cifradas y todas las monedas. Historia de gastos, Fat Finder e Informacion de IA requieren Pro o Business.
+> Todos los usuarios (incluido Gratuito) tienen acceso a: seguimiento de gastos, Chat IA, Entrada de voz, Escaneo de recibos, deteccion de anomalias, informes PDF/Excel, resumen mensual en la aplicacion, copias de seguridad cifradas y todas las monedas. Historia de gastos, Fat Finder e Informacion de IA requieren Pro o Business; el envio automatico por email tambien es de pago: el resumen mensual requiere Pro y el semanal Business.
 
 ## Plan Gratuito
 

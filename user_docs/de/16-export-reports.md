@@ -15,20 +15,30 @@ Drei Exportformate verfügbar:
 | Format | Beschreibung | Verfügbarkeit |
 |---|---|---|
 | **CSV** | Kommagetrennte Werte, kompatibel mit Excel und Google Sheets | Alle Pläne |
-| **PDF** | Formatierter Bericht mit Zusammenfassung, Kategorieaufschlüsselung und Transaktionsliste | Pro & Business |
-| **Excel** | Mehrblatt-Arbeitsmappe mit Zusammenfassung, Ausgaben und Einkommensblättern | Pro & Business |
+| **PDF** | Formatierter Bericht mit Zusammenfassung, Kategorieaufschlüsselung und Transaktionsliste | Alle Pläne |
+| **Excel** | Mehrblatt-Arbeitsmappe mit Zusammenfassung, Ausgaben und Einkommensblättern | Alle Pläne |
+
+Berichte zu erstellen und Backups anzulegen ist in allen Plänen kostenlos. Nur der unten beschriebene automatische E-Mail-Versand erfordert einen bezahlten Plan.
 
 ## Einen Bericht generieren
 
 1. Wähle ein **Format** (CSV, PDF oder Excel)
-2. Wähle einen **Zeitraum** (Letzte Woche, Dieser Monat, Letztes Quartal, Dieses Jahr)
+2. Wähle einen **Zeitraum**:
+   - **Letzte Woche** — die letzten 7 Tage
+   - **Dieser Monat** — vom 1. bis heute
+   - **Letztes Quartal** — das letzte *vollständige* Kalenderquartal (im August also April-Juni). Ein abgeschlossener Zeitraum, seine Zahlen ändern sich nicht mehr
+   - **Dieses Jahr** — vom 1. Januar bis heute
+   - **Bestimmter Monat** — ein einzelner ganzer Monat aus den letzten 24
+   - **Eigener Zeitraum** — eigenes Start- und Enddatum
 3. Tippe auf **Generieren**
 4. Der Bericht wird erstellt und öffnet sich sofort über das System-Teilen-Blatt — speichere oder sende ihn von dort
 5. Der Bericht erscheint auch unter **Kürzlich erstellte Berichte** für späteren Zugriff
 
+Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — dieselben Daten stehen im Kopf der Datei. Ist ein eigener Zeitraum unvollständig oder liegt sein Start nach dem Ende, bleibt **Erstellen** deaktiviert.
+
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
 
-## Monatliche Zusammenfassung (Pro+)
+## Monatliche Zusammenfassung
 
 Eine Momentaufnahme deiner aktuellen Monatsfinanzaktivität:
 
@@ -36,6 +46,7 @@ Eine Momentaufnahme deiner aktuellen Monatsfinanzaktivität:
 - **Sparquote** — Prozentsatz des gesparten Einkommens
 - **Top-Kategorien** — deine größten Ausgabenkategorien mit Beträgen
 - Daten werden 7 Tage zwischengespeichert und automatisch aktualisiert
+- Immer der **aktuelle** Monat — unabhängig vom oben gewählten Zeitraum
 
 ## Kürzlich erstellte Berichte
 

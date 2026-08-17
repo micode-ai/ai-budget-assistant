@@ -18,7 +18,7 @@ Tarife unterscheiden sich in den Nutzungslimits und im Zugang zu erweiterten KI-
 | **Kernfunktionen** (Verfolgung, KI-Chat, Sprache, Belege) | Ja | Ja | Ja |
 | **Erweitertes KI** (Ausgabengeschichte, Fat Finder, KI-Einblicke) | — | Ja | Ja |
 
-> Alle Nutzer (auch Free) haben Zugang zu: Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen, Erkennung von Ausgabenauffalligkeit, PDF/Excel-Berichte, wochentlicher E-Mail-Bericht, monatliche Zusammenfassung, verschlusselte Backups und alle Wahrungen. Ausgabengeschichte, Fat Finder und KI-Einblicke erfordern Pro oder Business.
+> Alle Nutzer (auch Free) haben Zugang zu: Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen, Erkennung von Ausgabenauffalligkeit, PDF/Excel-Berichte, monatliche Zusammenfassung in der App, verschlusselte Backups und alle Wahrungen. Ausgabengeschichte, Fat Finder und KI-Einblicke erfordern Pro oder Business; auch der automatische E-Mail-Versand ist kostenpflichtig - die monatliche Zusammenfassung per E-Mail erfordert Pro, der wochentliche Bericht Business.
 
 ## Free-Plan
 

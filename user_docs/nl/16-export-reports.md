@@ -15,20 +15,30 @@ Er zijn drie exportformaten beschikbaar:
 | Formaat | Beschrijving | Beschikbaarheid |
 |---|---|---|
 | **CSV** | Door komma's gescheiden waarden, compatibel met Excel en Google Sheets | Alle abonnementen |
-| **PDF** | Opgemaakt rapport met overzicht, categorieverdeling en transactielijst | Pro & Business |
-| **Excel** | Werkmap met meerdere bladen: Overzicht, Uitgaven en Inkomsten | Pro & Business |
+| **PDF** | Opgemaakt rapport met overzicht, categorieverdeling en transactielijst | Alle abonnementen |
+| **Excel** | Werkmap met meerdere bladen: Overzicht, Uitgaven en Inkomsten | Alle abonnementen |
+
+Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de hieronder beschreven automatische e-mailbezorging vereist een betaald abonnement.
 
 ## Een rapport genereren
 
 1. Selecteer een **formaat** (CSV, PDF of Excel)
-2. Kies een **periode** (Vorige week, Deze maand, Vorig kwartaal, Dit jaar)
+2. Kies een **periode**:
+   - **Vorige week** — de laatste 7 dagen
+   - **Deze maand** — van de 1e tot vandaag
+   - **Vorig kwartaal** — het laatste *volledige* kalenderkwartaal (in augustus dus april-juni). Een afgesloten periode, de cijfers veranderen niet meer
+   - **Dit jaar** — van 1 januari tot vandaag
+   - **Specifieke maand** — een enkele volledige maand uit de laatste 24
+   - **Eigen periode** — je eigen begin- en einddatum
 3. Tik op **Genereren**
 4. Het rapport wordt gegenereerd en direct geopend via het systeemdeelvenster — sla het daar op of verstuur het
 5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
 
+Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.
+
 Rapporten worden 7 dagen bewaard en daarna automatisch verwijderd.
 
-## Maandelijkse digest (Pro+)
+## Maandelijkse digest
 
 Een momentopname van de financiële activiteit van je huidige maand:
 
@@ -36,6 +46,7 @@ Een momentopname van de financiële activiteit van je huidige maand:
 - **Spaarquote** — percentage van de inkomsten dat is gespaard
 - **Topcategorieën** — je grootste uitgavencategorieën met bedragen
 - Gegevens worden 7 dagen gecached en automatisch vernieuwd
+- Altijd de **huidige** maand — die volgt niet de hierboven gekozen periode
 
 ## Recente rapporten
 

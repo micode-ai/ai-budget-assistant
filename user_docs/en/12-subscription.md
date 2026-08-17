@@ -18,7 +18,7 @@ Plans differ in usage limits and in access to advanced AI features:
 | **Core features** (tracking, AI Chat, voice, receipts) | Yes | Yes | Yes |
 | **Advanced AI** (Spending Story, Fat Finder, AI Insights) | — | Yes | Yes |
 
-All users (including Free) have: expense tracking, AI Chat, Voice Input, Receipt Scanning, anomaly detection, PDF/Excel reports, weekly email reports, monthly digest, encrypted backups, and all currencies. Spending Stories, Fat Finder, and AI Insights require Pro or Business.
+All users (including Free) have: expense tracking, AI Chat, Voice Input, Receipt Scanning, anomaly detection, PDF/Excel reports, the in-app monthly digest, encrypted backups, and all currencies. Spending Stories, Fat Finder, and AI Insights require Pro or Business; the automated e-mail summaries are paid too - the monthly digest e-mail needs Pro, the weekly summary needs Business.
 
 ## Free Plan
 

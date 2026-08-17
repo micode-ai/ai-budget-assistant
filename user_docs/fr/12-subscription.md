@@ -18,7 +18,7 @@ Les forfaits diffèrent par les limites d'utilisation et par l'accès aux foncti
 | **Fonctionnalites principales** (suivi, Chat IA, voix, recus) | Oui | Oui | Oui |
 | **IA avancee** (Histoire des depenses, Fat Finder, Apercus IA) | — | Oui | Oui |
 
-> Tous les utilisateurs (y compris Gratuit) ont acces a : suivi des depenses, Chat IA, Saisie vocale, Scan de recus, detection d'anomalies, rapports PDF/Excel, rapport hebdomadaire par email, resume mensuel, sauvegardes chiffrees et toutes les devises. L'Histoire des depenses, Fat Finder et les Apercus IA necessitent le plan Pro ou Business.
+> Tous les utilisateurs (y compris Gratuit) ont acces a : suivi des depenses, Chat IA, Saisie vocale, Scan de recus, detection d'anomalies, rapports PDF/Excel, resume mensuel dans l'application, sauvegardes chiffrees et toutes les devises. L'Histoire des depenses, Fat Finder et les Apercus IA necessitent le plan Pro ou Business ; l'envoi automatique par email est egalement payant : le resume mensuel exige Pro et le rapport hebdomadaire Business.
 
 ## Plan Gratuit
 

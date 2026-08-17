@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
+  Platform,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -14,11 +15,23 @@ import { useReportStore } from '@/stores/reportStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAuthStore } from '@/stores/authStore';
-import { formatCurrency } from '@budget/shared-utils';
+import { getIntlLocale } from '@/i18n';
+import { DatePicker } from '@/components/DatePicker';
+import {
+  buildRecentMonthAnchors,
+  formatDigestPeriod,
+  formatMonthLabel,
+  resolveReportDateRange,
+  type ReportRangeMode,
+} from '@/features/reports/reportDateRange';
+import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { GenerateReportDto, ReportListItem } from '@budget/shared-types';
 import type { Currency } from '@budget/shared-types';
 
 type ReportFormat = 'csv' | 'pdf' | 'excel';
+
+/** How far back the "specific month" picker offers to go. */
+const MONTH_PICKER_COUNT = 24;
 
 export default function ReportsScreen() {
   const { t, i18n } = useTranslation();
@@ -42,7 +55,12 @@ export default function ReportsScreen() {
   } = useReportStore();
 
   const [selectedFormat, setSelectedFormat] = useState<ReportFormat>('csv');
-  const [dateRange, setDateRange] = useState<'week' | 'month' | 'quarter' | 'year'>('month');
+  const [rangeMode, setRangeMode] = useState<ReportRangeMode>('month');
+  const [monthAnchor, setMonthAnchor] = useState<Date | null>(null);
+  const [customStart, setCustomStart] = useState<Date | null>(null);
+  const [customEnd, setCustomEnd] = useState<Date | null>(null);
+  const [showStartPicker, setShowStartPicker] = useState(false);
+  const [showEndPicker, setShowEndPicker] = useState(false);
 
   useEffect(() => {
     loadReports();
@@ -51,32 +69,20 @@ export default function ReportsScreen() {
     loadMonthlyDigest(month);
   }, [loadReports, loadMonthlyDigest]);
 
-  const getDateRange = useCallback((): { startDate: string; endDate: string } => {
-    const now = new Date();
-    const end = now.toISOString().split('T')[0];
-    let start: Date;
+  const intlLocale = getIntlLocale();
 
-    switch (dateRange) {
-      case 'week':
-        start = new Date(now);
-        start.setDate(now.getDate() - 7);
-        break;
-      case 'month':
-        start = new Date(now.getFullYear(), now.getMonth(), 1);
-        break;
-      case 'quarter':
-        start = new Date(now.getFullYear(), now.getMonth() - 3, 1);
-        break;
-      case 'year':
-        start = new Date(now.getFullYear(), 0, 1);
-        break;
-    }
+  const monthOptions = useMemo(() => buildRecentMonthAnchors(MONTH_PICKER_COUNT), []);
 
-    return { startDate: start.toISOString().split('T')[0], endDate: end };
-  }, [dateRange]);
+  // `null` while a custom range is half-picked or backwards — Generate stays
+  // disabled rather than sending a range the report cannot honour.
+  const resolvedRange = useMemo(
+    () => resolveReportDateRange({ mode: rangeMode, monthAnchor, customStart, customEnd }),
+    [rangeMode, monthAnchor, customStart, customEnd],
+  );
 
   const handleGenerate = async () => {
-    const { startDate, endDate } = getDateRange();
+    if (!resolvedRange) return;
+    const { startDate, endDate } = resolvedRange;
     const dto: GenerateReportDto = {
       format: selectedFormat,
       startDate,
@@ -126,11 +132,13 @@ export default function ReportsScreen() {
     { key: 'excel', label: 'Excel', icon: 'grid-outline' },
   ];
 
-  const DATE_RANGES: { key: typeof dateRange; label: string }[] = [
+  const DATE_RANGES: { key: ReportRangeMode; label: string }[] = [
     { key: 'week', label: t('reports.lastWeek') },
     { key: 'month', label: t('reports.thisMonth') },
     { key: 'quarter', label: t('reports.lastQuarter') },
     { key: 'year', label: t('reports.thisYear') },
+    { key: 'specificMonth', label: t('reports.specificMonth') },
+    { key: 'custom', label: t('reports.customRange') },
   ];
 
   const currency = ((digest?.digest.currencyCode || user?.currencyCode || 'USD')) as Currency;
@@ -169,21 +177,120 @@ export default function ReportsScreen() {
             {DATE_RANGES.map((range) => (
               <TouchableOpacity
                 key={range.key}
-                style={[styles.rangeChip, dateRange === range.key && styles.rangeChipActive]}
-                onPress={() => setDateRange(range.key)}
+                style={[styles.rangeChip, rangeMode === range.key && styles.rangeChipActive]}
+                onPress={() => setRangeMode(range.key)}
               >
-                <Text style={[styles.rangeChipText, dateRange === range.key && styles.rangeChipTextActive]}>
+                <Text style={[styles.rangeChipText, rangeMode === range.key && styles.rangeChipTextActive]}>
                   {range.label}
                 </Text>
               </TouchableOpacity>
             ))}
           </View>
 
+          {/* A specific month */}
+          {rangeMode === 'specificMonth' && (
+            <View style={styles.rangeDetail}>
+              <Text style={styles.rangeDetailLabel}>{t('reports.selectMonth')}</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.monthRow}
+              >
+                {monthOptions.map((anchor) => {
+                  const key = `${anchor.getFullYear()}-${anchor.getMonth()}`;
+                  const isSelected =
+                    !!monthAnchor &&
+                    monthAnchor.getFullYear() === anchor.getFullYear() &&
+                    monthAnchor.getMonth() === anchor.getMonth();
+                  return (
+                    <TouchableOpacity
+                      key={key}
+                      style={[styles.rangeChip, isSelected && styles.rangeChipActive]}
+                      onPress={() => setMonthAnchor(anchor)}
+                    >
+                      <Text style={[styles.rangeChipText, isSelected && styles.rangeChipTextActive]}>
+                        {formatMonthLabel(anchor, intlLocale)}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>
+            </View>
+          )}
+
+          {/* An arbitrary range */}
+          {rangeMode === 'custom' && (
+            <View style={styles.rangeDetail}>
+              <View style={styles.customRow}>
+                <View style={styles.customField}>
+                  <Text style={styles.rangeDetailLabel}>{t('reports.from')}</Text>
+                  <TouchableOpacity
+                    style={styles.dateButton}
+                    onPress={() => setShowStartPicker(true)}
+                  >
+                    <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
+                    <Text style={styles.dateButtonText}>
+                      {customStart
+                        ? formatDate(customStart, undefined, intlLocale)
+                        : t('reports.pickDate')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.customField}>
+                  <Text style={styles.rangeDetailLabel}>{t('reports.to')}</Text>
+                  <TouchableOpacity
+                    style={styles.dateButton}
+                    onPress={() => setShowEndPicker(true)}
+                  >
+                    <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
+                    <Text style={styles.dateButtonText}>
+                      {customEnd
+                        ? formatDate(customEnd, undefined, intlLocale)
+                        : t('reports.pickDate')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              {showStartPicker && (
+                <DatePicker
+                  value={customStart ?? new Date()}
+                  onChange={(selectedDate) => {
+                    setShowStartPicker(Platform.OS === 'ios');
+                    if (selectedDate) setCustomStart(selectedDate);
+                  }}
+                />
+              )}
+              {showEndPicker && (
+                <DatePicker
+                  value={customEnd ?? customStart ?? new Date()}
+                  onChange={(selectedDate) => {
+                    setShowEndPicker(Platform.OS === 'ios');
+                    if (selectedDate) setCustomEnd(selectedDate);
+                  }}
+                />
+              )}
+            </View>
+          )}
+
+          {/* What will actually be exported — the selected preset's own dates,
+              so a label can never quietly disagree with the report's header. */}
+          <Text style={[styles.rangePreview, !resolvedRange && styles.rangePreviewInvalid]}>
+            {resolvedRange
+              ? `${resolvedRange.startDate} — ${resolvedRange.endDate}`
+              : rangeMode === 'custom'
+                ? t('reports.rangeIncomplete')
+                : t('reports.selectMonthHint')}
+          </Text>
+
           {/* Generate Button */}
           <TouchableOpacity
-            style={[styles.generateButton, isGenerating && styles.generateButtonDisabled]}
+            style={[
+              styles.generateButton,
+              (isGenerating || !resolvedRange) && styles.generateButtonDisabled,
+            ]}
             onPress={handleGenerate}
-            disabled={isGenerating}
+            disabled={isGenerating || !resolvedRange}
           >
             {isGenerating ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
@@ -201,7 +308,12 @@ export default function ReportsScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>{t('reports.monthlyDigest')}</Text>
             <View style={styles.digestCard}>
-              <Text style={styles.digestPeriod}>{digest.digest.periodLabel}</Text>
+              <Text style={styles.digestPeriod}>
+                {formatDigestPeriod(digest.digest.periodLabel, intlLocale)}
+              </Text>
+              {/* Sits right under Generate, so it reads as that button's result
+                  unless it says otherwise. It is always the current month. */}
+              <Text style={styles.digestNote}>{t('reports.monthlyDigestIndependent')}</Text>
               <View style={styles.digestMetrics}>
                 <View style={styles.digestMetric}>
                   <Text style={styles.digestMetricLabel}>{t('reports.income')}</Text>
@@ -400,6 +512,51 @@ const createStyles = (theme: Theme) => ({
     color: '#FFFFFF',
   },
 
+  // Specific month / custom range detail
+  rangeDetail: {
+    marginTop: theme.spacing[3],
+  },
+  rangeDetailLabel: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[2],
+  },
+  monthRow: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[2],
+    paddingRight: theme.spacing[2],
+  },
+  customRow: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[3],
+  },
+  customField: {
+    flex: 1,
+  },
+  dateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[3],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  dateButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+  },
+  rangePreview: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[3],
+  },
+  rangePreviewInvalid: {
+    color: theme.colors.warning,
+  },
+
   // Generate button
   generateButton: {
     flexDirection: 'row' as const,
@@ -430,6 +587,12 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyLargeSemiBold,
     color: theme.colors.textPrimary,
     textAlign: 'center' as const,
+  },
+  digestNote: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    marginTop: theme.spacing[1],
     marginBottom: theme.spacing[4],
   },
   digestMetrics: {

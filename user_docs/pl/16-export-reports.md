@@ -15,20 +15,30 @@ Dostepne sa trzy formaty eksportu:
 | Format | Opis | Dostepnosc |
 |---|---|---|
 | **CSV** | Wartosci rozdzielane przecinkami, kompatybilne z Excel i Google Sheets | Wszystkie plany |
-| **PDF** | Sformatowany raport z podsumowaniem, podzialem na kategorie i lista transakcji | Pro i Business |
-| **Excel** | Skoroszyt wieloarkuszowy z arkuszami Podsumowanie, Wydatki i Przychody | Pro i Business |
+| **PDF** | Sformatowany raport z podsumowaniem, podzialem na kategorie i lista transakcji | Wszystkie plany |
+| **Excel** | Skoroszyt wieloarkuszowy z arkuszami Podsumowanie, Wydatki i Przychody | Wszystkie plany |
+
+Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich planach. Platne jest tylko automatyczne wysylanie e-mailem, opisane ponizej.
 
 ## Generowanie raportu
 
 1. Wybierz **format** (CSV, PDF lub Excel)
-2. Wybierz **okres czasu** (Ostatni tydzien, Ten miesiac, Ostatni kwartal, Ten rok)
+2. Wybierz **okres czasu**:
+   - **Ostatni tydzien** — ostatnie 7 dni
+   - **Ten miesiac** — od 1. dnia miesiaca do dzisiaj
+   - **Ostatni kwartal** — ostatni *pelny* kwartal kalendarzowy (w sierpniu to kwiecien-czerwiec). Okres zamkniety, wiec jego liczby sie nie zmieniaja
+   - **Ten rok** — od 1 stycznia do dzisiaj
+   - **Konkretny miesiac** — dowolny pojedynczy caly miesiac z ostatnich 24
+   - **Wlasny zakres** — wlasna data poczatkowa i koncowa
 3. Dotknij **Generuj**
 4. Raport generuje sie i otwiera sie natychmiast przez systemowy arkusz udostepniania — zapisz lub wysli go stamtad
 5. Raport pojawi sie takze w **Ostatnich raportach** w celu pozniejszego dostepu
 
+Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.
+
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
 
-## Podsumowanie miesieczne (Pro+)
+## Podsumowanie miesieczne
 
 Migawka aktywnosci finansowej biezacego miesiaca:
 
@@ -36,6 +46,7 @@ Migawka aktywnosci finansowej biezacego miesiaca:
 - **Stopa oszczednosci** — procent zaoszczedzonego dochodu
 - **Glowne kategorie** — Twoje najwieksze kategorie wydatkow z kwotami
 - Dane sa buforowane przez 7 dni i odswiezaja sie automatycznie
+- Zawsze **biezacy** miesiac — nie zalezy od okresu wybranego powyzej
 
 ## Ostatnie raporty
 

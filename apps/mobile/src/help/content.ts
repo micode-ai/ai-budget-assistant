@@ -1876,7 +1876,7 @@ Plans differ in usage limits and in access to advanced AI features:
 | **Core features** (tracking, AI Chat, voice, receipts) | Yes | Yes | Yes |
 | **Advanced AI** (Spending Story, Fat Finder, AI Insights) | — | Yes | Yes |
 
-All users (including Free) have: expense tracking, AI Chat, Voice Input, Receipt Scanning, anomaly detection, PDF/Excel reports, weekly email reports, monthly digest, encrypted backups, and all currencies. Spending Stories, Fat Finder, and AI Insights require Pro or Business.
+All users (including Free) have: expense tracking, AI Chat, Voice Input, Receipt Scanning, anomaly detection, PDF/Excel reports, the in-app monthly digest, encrypted backups, and all currencies. Spending Stories, Fat Finder, and AI Insights require Pro or Business; the automated e-mail summaries are paid too - the monthly digest e-mail needs Pro, the weekly summary needs Business.
 
 ## Free Plan
 
@@ -2426,20 +2426,30 @@ Three export formats available:
 | Format | Description | Availability |
 |---|---|---|
 | **CSV** | Comma-separated values, compatible with Excel and Google Sheets | All plans |
-| **PDF** | Formatted report with summary, category breakdown, and transaction list | Pro & Business |
-| **Excel** | Multi-sheet workbook with Summary, Expenses, and Incomes sheets | Pro & Business |
+| **PDF** | Formatted report with summary, category breakdown, and transaction list | All plans |
+| **Excel** | Multi-sheet workbook with Summary, Expenses, and Incomes sheets | All plans |
+
+Generating reports and creating backups is free on every plan. Only the automated e-mail delivery described below needs a paid plan.
 
 ## Generating a Report
 
 1. Select a **format** (CSV, PDF, or Excel)
-2. Choose a **time period** (Last Week, This Month, Last Quarter, This Year)
+2. Choose a **time period**:
+   - **Last Week** — the last 7 days
+   - **This Month** — from the 1st of the month to today
+   - **Last Quarter** — the last *full* calendar quarter (asked in August, that means April-June). A closed period, so its figures no longer move
+   - **This Year** — from 1 January to today
+   - **Specific month** — any single whole month out of the last 24
+   - **Custom range** — your own start and end date
 3. Tap **Generate**
 4. The report generates and opens immediately via the system share dialog — save or send it from there
 5. The report also appears in **Recent Reports** below for future access
 
+Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.
+
 Reports are stored for 7 days and then automatically deleted.
 
-## Monthly Digest (Pro+)
+## Monthly Digest
 
 A snapshot of your current month's financial activity:
 
@@ -2447,6 +2457,7 @@ A snapshot of your current month's financial activity:
 - **Savings Rate** — percentage of income saved
 - **Top Categories** — your biggest spending categories with amounts
 - Data is cached for 7 days and refreshes automatically
+- Always the **current** month — it does not follow the period selected above
 
 ## Recent Reports
 
@@ -6365,7 +6376,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 | **Базовые функции** (учёт, ИИ Чат, голос, чеки) | Да | Да | Да |
 | **Расширенный ИИ** (Истории расходов, Fat Finder, ИИ-инсайты) | — | Да | Да |
 
-> Все пользователи (включая Free) имеют доступ к: учёту расходов, ИИ Чату, Голосовому вводу, Сканированию чеков, обнаружению аномалий, PDF/Excel отчётам, еженедельным email-отчётам, ежемесячному дайджесту, зашифрованным резервным копиям и всем валютам. Истории расходов, Fat Finder и ИИ-инсайты требуют тарифа Pro или Business.
+> Все пользователи (включая Free) имеют доступ к: учёту расходов, ИИ Чату, Голосовому вводу, Сканированию чеков, обнаружению аномалий, PDF/Excel отчётам, ежемесячному дайджесту в приложении, зашифрованным резервным копиям и всем валютам. Истории расходов, Fat Finder и ИИ-инсайты требуют тарифа Pro или Business; автоматическая отправка на e-mail тоже платная — ежемесячный дайджест требует Pro, еженедельный отчёт — Business.
 
 ## Бесплатный план (Free)
 
@@ -6917,20 +6928,30 @@ AI Budget Assistant предлагает три уровня подписки. �
 | Формат | Описание | Доступность |
 |---|---|---|
 | **CSV** | Значения, разделённые запятыми, совместимые с Excel и Google Sheets | Все планы |
-| **PDF** | Форматированный отчёт со сводкой, разбивкой по категориям и списком транзакций | Pro и Business |
-| **Excel** | Многостраничная рабочая книга с листами Сводка, Расходы и Доходы | Pro и Business |
+| **PDF** | Форматированный отчёт со сводкой, разбивкой по категориям и списком транзакций | Все планы |
+| **Excel** | Многостраничная рабочая книга с листами Сводка, Расходы и Доходы | Все планы |
+
+Создание отчётов и резервных копий бесплатно на всех планах. Платная только автоматическая отправка на e-mail, описанная ниже.
 
 ## Генерация отчёта
 
 1. Выберите **формат** (CSV, PDF или Excel)
-2. Выберите **временной период** (Последняя неделя, Этот месяц, Последний квартал, Этот год)
+2. Выберите **временной период**:
+   - **Последняя неделя** — последние 7 дней
+   - **Этот месяц** — с 1-го числа по сегодня
+   - **Последний квартал** — последний *полный* календарный квартал (в августе это апрель-июнь). Период закрытый, поэтому его цифры больше не меняются
+   - **Этот год** — с 1 января по сегодня
+   - **Конкретный месяц** — любой отдельный месяц целиком из последних 24
+   - **Свой период** — своя дата начала и окончания
 3. Нажмите **Сгенерировать**
 4. Отчёт генерируется и сразу открывается через системное меню — сохраните или отправьте его оттуда
 5. Отчёт также появляется в разделе **Недавние отчёты** ниже для дальнейшего доступа
 
+Под кнопками видны точные даты, которые попадут в отчёт — те же даты печатаются в заголовке файла. Если свой период указан не полностью или его начало позже конца, кнопка **Создать** остаётся неактивной.
+
 Отчёты хранятся в течение 7 дней, затем автоматически удаляются.
 
-## Ежемесячный дайджест (Pro+)
+## Ежемесячный дайджест
 
 Снимок вашей финансовой активности за текущий месяц:
 
@@ -6938,6 +6959,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 - **Норма сбережений** — процент сохранённого дохода
 - **Топ категории** — ваши самые крупные категории расходов с суммами
 - Данные кэшируются на 7 дней и автоматически обновляются
+- Всегда **текущий** месяц — не зависит от выбранного выше периода
 
 ## Недавние отчёты
 
@@ -10847,7 +10869,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 | **Базові функції** (облік, ШІ Чат, голос, чеки) | Так | Так | Так |
 | **Розширений ШІ** (Історії витрат, Fat Finder, ШІ-інсайти) | — | Так | Так |
 
-> Усі користувачі (включаючи Free) мають доступ до: обліку витрат, ШІ Чату, Голосового вводу, Сканування чеків, виявлення аномалій, PDF/Excel звітів, щотижневих email-звітів, щомісячного дайджесту, зашифрованих резервних копій та всіх валют. Історії витрат, Fat Finder та ШІ-інсайти потребують тарифу Pro або Business.
+> Усі користувачі (включаючи Free) мають доступ до: обліку витрат, ШІ Чату, Голосового вводу, Сканування чеків, виявлення аномалій, PDF/Excel звітів, щомісячного дайджесту в застосунку, зашифрованих резервних копій та всіх валют. Історії витрат, Fat Finder та ШІ-інсайти потребують тарифу Pro або Business; автоматичне надсилання на e-mail також платне — щомісячний дайджест потребує Pro, щотижневий звіт — Business.
 
 ## Free план
 
@@ -11397,20 +11419,30 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 | Формат | Опис | Доступність |
 |---|---|---|
 | **CSV** | Значення, розділені комами, сумісні з Excel та Google Sheets | Усі плани |
-| **PDF** | Форматований звіт з підсумком, розбивкою по категоріях та списком транзакцій | Pro та Business |
-| **Excel** | Багатосторінкова книга з аркушами Підсумок, Витрати та Доходи | Pro та Business |
+| **PDF** | Форматований звіт з підсумком, розбивкою по категоріях та списком транзакцій | Усі плани |
+| **Excel** | Багатосторінкова книга з аркушами Підсумок, Витрати та Доходи | Усі плани |
+
+Створення звітів і резервних копій безкоштовне на всіх планах. Платним є лише автоматичне надсилання на e-mail, описане нижче.
 
 ## Генерація звіту
 
 1. Оберіть **формат** (CSV, PDF або Excel)
-2. Виберіть **часовий період** (Минулий тиждень, Цей місяць, Минулий квартал, Цей рік)
+2. Виберіть **часовий період**:
+   - **Минулий тиждень** — останні 7 днів
+   - **Цей місяць** — з 1-го числа до сьогодні
+   - **Минулий квартал** — останній *повний* календарний квартал (у серпні це квітень-червень). Період закритий, тому його цифри більше не змінюються
+   - **Цей рік** — з 1 січня до сьогодні
+   - **Конкретний місяць** — будь-який окремий місяць повністю з останніх 24
+   - **Власний період** — власна дата початку та закінчення
 3. Натисніть **Згенерувати**
 4. Звіт генерується та одразу відкривається через системний діалог — збережіть або надішліть його звідти
 5. Звіт також з'являється в розділі **Останні звіти** для подальшого доступу
 
+Під кнопками видно точні дати, які потраплять у звіт — ті самі дати друкуються в заголовку файлу. Якщо власний період указано не повністю або його початок пізніше кінця, кнопка **Створити** залишається неактивною.
+
 Звіти зберігаються протягом 7 днів, після чого автоматично видаляються.
 
-## Щомісячний дайджест (Pro+)
+## Щомісячний дайджест
 
 Знімок поточної фінансової активності за місяць:
 
@@ -11418,6 +11450,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 - **Рівень заощаджень** — відсоток доходу, що заощаджується
 - **Топ категорії** — ваші найбільші категорії витрат з сумами
 - Дані кешуються на 7 днів та оновлюються автоматично
+- Завжди **поточний** місяць — не залежить від вибраного вище періоду
 
 ## Останні звіти
 
@@ -15278,7 +15311,7 @@ Plany roznia sie limitami uzycia oraz dostepem do zaawansowanych funkcji AI:
 | **Funkcje podstawowe** (sledzenie, Czat AI, glos, paragony) | Tak | Tak | Tak |
 | **Zaawansowane AI** (Historia wydatkow, Fat Finder, Wnioski AI) | — | Tak | Tak |
 
-> Wszyscy uzytkownicy (rowniez Free) maja dostep do: sledzenia wydatkow, Czatu AI, Wprowadzania glosowego, Skanowania paragonow, wykrywania anomalii, raportow PDF/Excel, tygodniowych raportow e-mail, miesiecznego podsumowania, zaszyfrowanych kopii zapasowych i wszystkich walut. Historia wydatkow, Fat Finder i Wnioski AI wymagaja planu Pro lub Business.
+> Wszyscy uzytkownicy (rowniez Free) maja dostep do: sledzenia wydatkow, Czatu AI, Wprowadzania glosowego, Skanowania paragonow, wykrywania anomalii, raportow PDF/Excel, miesiecznego podsumowania w aplikacji, zaszyfrowanych kopii zapasowych i wszystkich walut. Historia wydatkow, Fat Finder i Wnioski AI wymagaja planu Pro lub Business; platne jest tez automatyczne wysylanie e-mailem - miesieczne podsumowanie wymaga Pro, tygodniowe planu Business.
 
 ## Plan Free
 
@@ -15827,20 +15860,30 @@ Dostepne sa trzy formaty eksportu:
 | Format | Opis | Dostepnosc |
 |---|---|---|
 | **CSV** | Wartosci rozdzielane przecinkami, kompatybilne z Excel i Google Sheets | Wszystkie plany |
-| **PDF** | Sformatowany raport z podsumowaniem, podzialem na kategorie i lista transakcji | Pro i Business |
-| **Excel** | Skoroszyt wieloarkuszowy z arkuszami Podsumowanie, Wydatki i Przychody | Pro i Business |
+| **PDF** | Sformatowany raport z podsumowaniem, podzialem na kategorie i lista transakcji | Wszystkie plany |
+| **Excel** | Skoroszyt wieloarkuszowy z arkuszami Podsumowanie, Wydatki i Przychody | Wszystkie plany |
+
+Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich planach. Platne jest tylko automatyczne wysylanie e-mailem, opisane ponizej.
 
 ## Generowanie raportu
 
 1. Wybierz **format** (CSV, PDF lub Excel)
-2. Wybierz **okres czasu** (Ostatni tydzien, Ten miesiac, Ostatni kwartal, Ten rok)
+2. Wybierz **okres czasu**:
+   - **Ostatni tydzien** — ostatnie 7 dni
+   - **Ten miesiac** — od 1. dnia miesiaca do dzisiaj
+   - **Ostatni kwartal** — ostatni *pelny* kwartal kalendarzowy (w sierpniu to kwiecien-czerwiec). Okres zamkniety, wiec jego liczby sie nie zmieniaja
+   - **Ten rok** — od 1 stycznia do dzisiaj
+   - **Konkretny miesiac** — dowolny pojedynczy caly miesiac z ostatnich 24
+   - **Wlasny zakres** — wlasna data poczatkowa i koncowa
 3. Dotknij **Generuj**
 4. Raport generuje sie i otwiera sie natychmiast przez systemowy arkusz udostepniania — zapisz lub wysli go stamtad
 5. Raport pojawi sie takze w **Ostatnich raportach** w celu pozniejszego dostepu
 
+Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.
+
 Raporty sa przechowywane przez 7 dni, a nastepnie automatycznie usuwane.
 
-## Podsumowanie miesieczne (Pro+)
+## Podsumowanie miesieczne
 
 Migawka aktywnosci finansowej biezacego miesiaca:
 
@@ -15848,6 +15891,7 @@ Migawka aktywnosci finansowej biezacego miesiaca:
 - **Stopa oszczednosci** — procent zaoszczedzonego dochodu
 - **Glowne kategorie** — Twoje najwieksze kategorie wydatkow z kwotami
 - Dane sa buforowane przez 7 dni i odswiezaja sie automatycznie
+- Zawsze **biezacy** miesiac — nie zalezy od okresu wybranego powyzej
 
 ## Ostatnie raporty
 
@@ -19706,7 +19750,7 @@ Tarife unterscheiden sich in den Nutzungslimits und im Zugang zu erweiterten KI-
 | **Kernfunktionen** (Verfolgung, KI-Chat, Sprache, Belege) | Ja | Ja | Ja |
 | **Erweitertes KI** (Ausgabengeschichte, Fat Finder, KI-Einblicke) | — | Ja | Ja |
 
-> Alle Nutzer (auch Free) haben Zugang zu: Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen, Erkennung von Ausgabenauffalligkeit, PDF/Excel-Berichte, wochentlicher E-Mail-Bericht, monatliche Zusammenfassung, verschlusselte Backups und alle Wahrungen. Ausgabengeschichte, Fat Finder und KI-Einblicke erfordern Pro oder Business.
+> Alle Nutzer (auch Free) haben Zugang zu: Ausgabenverfolgung, KI-Chat, Spracheingabe, Beleg scannen, Erkennung von Ausgabenauffalligkeit, PDF/Excel-Berichte, monatliche Zusammenfassung in der App, verschlusselte Backups und alle Wahrungen. Ausgabengeschichte, Fat Finder und KI-Einblicke erfordern Pro oder Business; auch der automatische E-Mail-Versand ist kostenpflichtig - die monatliche Zusammenfassung per E-Mail erfordert Pro, der wochentliche Bericht Business.
 
 ## Free-Plan
 
@@ -20255,20 +20299,30 @@ Drei Exportformate verfügbar:
 | Format | Beschreibung | Verfügbarkeit |
 |---|---|---|
 | **CSV** | Kommagetrennte Werte, kompatibel mit Excel und Google Sheets | Alle Pläne |
-| **PDF** | Formatierter Bericht mit Zusammenfassung, Kategorieaufschlüsselung und Transaktionsliste | Pro & Business |
-| **Excel** | Mehrblatt-Arbeitsmappe mit Zusammenfassung, Ausgaben und Einkommensblättern | Pro & Business |
+| **PDF** | Formatierter Bericht mit Zusammenfassung, Kategorieaufschlüsselung und Transaktionsliste | Alle Pläne |
+| **Excel** | Mehrblatt-Arbeitsmappe mit Zusammenfassung, Ausgaben und Einkommensblättern | Alle Pläne |
+
+Berichte zu erstellen und Backups anzulegen ist in allen Plänen kostenlos. Nur der unten beschriebene automatische E-Mail-Versand erfordert einen bezahlten Plan.
 
 ## Einen Bericht generieren
 
 1. Wähle ein **Format** (CSV, PDF oder Excel)
-2. Wähle einen **Zeitraum** (Letzte Woche, Dieser Monat, Letztes Quartal, Dieses Jahr)
+2. Wähle einen **Zeitraum**:
+   - **Letzte Woche** — die letzten 7 Tage
+   - **Dieser Monat** — vom 1. bis heute
+   - **Letztes Quartal** — das letzte *vollständige* Kalenderquartal (im August also April-Juni). Ein abgeschlossener Zeitraum, seine Zahlen ändern sich nicht mehr
+   - **Dieses Jahr** — vom 1. Januar bis heute
+   - **Bestimmter Monat** — ein einzelner ganzer Monat aus den letzten 24
+   - **Eigener Zeitraum** — eigenes Start- und Enddatum
 3. Tippe auf **Generieren**
 4. Der Bericht wird erstellt und öffnet sich sofort über das System-Teilen-Blatt — speichere oder sende ihn von dort
 5. Der Bericht erscheint auch unter **Kürzlich erstellte Berichte** für späteren Zugriff
 
+Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — dieselben Daten stehen im Kopf der Datei. Ist ein eigener Zeitraum unvollständig oder liegt sein Start nach dem Ende, bleibt **Erstellen** deaktiviert.
+
 Berichte werden 7 Tage gespeichert und dann automatisch gelöscht.
 
-## Monatliche Zusammenfassung (Pro+)
+## Monatliche Zusammenfassung
 
 Eine Momentaufnahme deiner aktuellen Monatsfinanzaktivität:
 
@@ -20276,6 +20330,7 @@ Eine Momentaufnahme deiner aktuellen Monatsfinanzaktivität:
 - **Sparquote** — Prozentsatz des gesparten Einkommens
 - **Top-Kategorien** — deine größten Ausgabenkategorien mit Beträgen
 - Daten werden 7 Tage zwischengespeichert und automatisch aktualisiert
+- Immer der **aktuelle** Monat — unabhängig vom oben gewählten Zeitraum
 
 ## Kürzlich erstellte Berichte
 
@@ -24113,7 +24168,7 @@ Los planes difieren en los límites de uso y en el acceso a funciones avanzadas 
 | **Funciones principales** (seguimiento, Chat IA, voz, recibos) | Si | Si | Si |
 | **IA avanzada** (Historia de gastos, Fat Finder, Informacion de IA) | — | Si | Si |
 
-> Todos los usuarios (incluido Gratuito) tienen acceso a: seguimiento de gastos, Chat IA, Entrada de voz, Escaneo de recibos, deteccion de anomalias, informes PDF/Excel, resumen semanal por email, resumen mensual, copias de seguridad cifradas y todas las monedas. Historia de gastos, Fat Finder e Informacion de IA requieren Pro o Business.
+> Todos los usuarios (incluido Gratuito) tienen acceso a: seguimiento de gastos, Chat IA, Entrada de voz, Escaneo de recibos, deteccion de anomalias, informes PDF/Excel, resumen mensual en la aplicacion, copias de seguridad cifradas y todas las monedas. Historia de gastos, Fat Finder e Informacion de IA requieren Pro o Business; el envio automatico por email tambien es de pago: el resumen mensual requiere Pro y el semanal Business.
 
 ## Plan Gratuito
 
@@ -24661,20 +24716,30 @@ Tres formatos de exportacion disponibles:
 | Formato | Descripcion | Disponibilidad |
 |---|---|---|
 | **CSV** | Valores separados por comas, compatible con Excel y Google Sheets | Todos los planes |
-| **PDF** | Informe formateado con resumen, desglose por categoria y lista de transacciones | Pro y Business |
-| **Excel** | Libro de trabajo con varias hojas: Resumen, Gastos e Ingresos | Pro y Business |
+| **PDF** | Informe formateado con resumen, desglose por categoria y lista de transacciones | Todos los planes |
+| **Excel** | Libro de trabajo con varias hojas: Resumen, Gastos e Ingresos | Todos los planes |
+
+Generar informes y crear copias de seguridad es gratis en todos los planes. Solo el envio automatico por correo descrito mas abajo requiere un plan de pago.
 
 ## Generar un informe
 
 1. Selecciona un **formato** (CSV, PDF o Excel)
-2. Elige un **periodo de tiempo** (Ultima semana, Este mes, Ultimo trimestre, Este ano)
+2. Elige un **periodo de tiempo**:
+   - **Ultima semana** — los ultimos 7 dias
+   - **Este mes** — del dia 1 a hoy
+   - **Ultimo trimestre** — el ultimo trimestre natural *completo* (en agosto, abril-junio). Es un periodo cerrado, sus cifras ya no cambian
+   - **Este ano** — del 1 de enero a hoy
+   - **Mes concreto** — cualquier mes completo de los ultimos 24
+   - **Rango personalizado** — tu propia fecha de inicio y de fin
 3. Toca **Generar**
 4. El informe se genera y se abre inmediatamente mediante el dialogo para compartir del sistema — guardalo o envialo desde ahi
 5. El informe tambien aparece en **Informes recientes** para acceder mas tarde
 
+Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.
+
 Los informes se almacenan durante 7 dias y luego se eliminan automaticamente.
 
-## Resumen mensual (Pro+)
+## Resumen mensual
 
 Una instantanea de tu actividad financiera del mes actual:
 
@@ -24682,6 +24747,7 @@ Una instantanea de tu actividad financiera del mes actual:
 - **Tasa de ahorro** — porcentaje de ingresos ahorrados
 - **Categorias principales** — tus categorias de mayor gasto con importes
 - Los datos se almacenan en cache durante 7 dias y se actualizan automaticamente
+- Siempre el mes **actual**: no sigue el periodo elegido arriba
 
 ## Informes recientes
 
@@ -28506,7 +28572,7 @@ Les forfaits diffèrent par les limites d'utilisation et par l'accès aux foncti
 | **Fonctionnalites principales** (suivi, Chat IA, voix, recus) | Oui | Oui | Oui |
 | **IA avancee** (Histoire des depenses, Fat Finder, Apercus IA) | — | Oui | Oui |
 
-> Tous les utilisateurs (y compris Gratuit) ont acces a : suivi des depenses, Chat IA, Saisie vocale, Scan de recus, detection d'anomalies, rapports PDF/Excel, rapport hebdomadaire par email, resume mensuel, sauvegardes chiffrees et toutes les devises. L'Histoire des depenses, Fat Finder et les Apercus IA necessitent le plan Pro ou Business.
+> Tous les utilisateurs (y compris Gratuit) ont acces a : suivi des depenses, Chat IA, Saisie vocale, Scan de recus, detection d'anomalies, rapports PDF/Excel, resume mensuel dans l'application, sauvegardes chiffrees et toutes les devises. L'Histoire des depenses, Fat Finder et les Apercus IA necessitent le plan Pro ou Business ; l'envoi automatique par email est egalement payant : le resume mensuel exige Pro et le rapport hebdomadaire Business.
 
 ## Plan Gratuit
 
@@ -29054,20 +29120,30 @@ Trois formats d'export disponibles :
 | Format | Description | Disponibilite |
 |---|---|---|
 | **CSV** | Valeurs separees par des virgules, compatible avec Excel et Google Sheets | Tous les plans |
-| **PDF** | Rapport formate avec resume, repartition par categorie et liste des transactions | Pro et Business |
-| **Excel** | Classeur multi-feuilles avec feuilles Resume, Depenses et Revenus | Pro et Business |
+| **PDF** | Rapport formate avec resume, repartition par categorie et liste des transactions | Tous les plans |
+| **Excel** | Classeur multi-feuilles avec feuilles Resume, Depenses et Revenus | Tous les plans |
+
+Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits. Seul l'envoi automatique par e-mail decrit ci-dessous necessite un forfait payant.
 
 ## Generer un rapport
 
 1. Selectionnez un **format** (CSV, PDF ou Excel)
-2. Choisissez une **periode** (Semaine derniere, Ce mois, Trimestre dernier, Cette annee)
+2. Choisissez une **periode** :
+   - **Semaine derniere** — les 7 derniers jours
+   - **Ce mois** — du 1er a aujourd'hui
+   - **Trimestre dernier** — le dernier trimestre civil *complet* (en aout, avril-juin). Une periode close : ses chiffres ne bougent plus
+   - **Cette annee** — du 1er janvier a aujourd'hui
+   - **Mois precis** — un seul mois entier parmi les 24 derniers
+   - **Periode personnalisee** — vos propres dates de debut et de fin
 3. Appuyez sur **Generer**
 4. Le rapport se genere et s'ouvre immediatement via la feuille de partage du systeme — enregistrez-le ou envoyez-le depuis la
 5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
 
+Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.
+
 Les rapports sont conserves pendant 7 jours puis automatiquement supprimes.
 
-## Resume mensuel (Pro+)
+## Resume mensuel
 
 Un apercu de votre activite financiere du mois en cours :
 
@@ -29075,6 +29151,7 @@ Un apercu de votre activite financiere du mois en cours :
 - **Taux d'epargne** — pourcentage des revenus economises
 - **Principales categories** — vos plus grandes categories de depenses avec montants
 - Les donnees sont mises en cache pendant 7 jours et se rafraichissent automatiquement
+- Toujours le mois **en cours** — independant de la periode choisie ci-dessus
 
 ## Rapports recents
 
@@ -32901,7 +32978,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 | **Базавыя функцыі** (улік, ШІ Чат, голас, чэкі) | Так | Так | Так |
 | **Пашыраны ШІ** (Гісторыі выдаткаў, Fat Finder, ШІ-інсайты) | — | Так | Так |
 
-> Усе карыстальнікі (уключаючы Free) маюць доступ да: уліку выдаткаў, ШІ Чату, Галасавога ўводу, Сканіравання чэкаў, выяўлення анамалій, PDF/Excel справаздач, штотыднёвых email-справаздач, штомесачнага дайджэсту, зашыфраваных рэзервовых копій і ўсіх валют. Гісторыі выдаткаў, Fat Finder і ШІ-інсайты патрабуюць тарыфу Pro або Business.
+> Усе карыстальнікі (уключаючы Free) маюць доступ да: уліку выдаткаў, ШІ Чату, Галасавога ўводу, Сканіравання чэкаў, выяўлення анамалій, PDF/Excel справаздач, штомесячнага дайджэсту ў дадатку, зашыфраваных рэзервовых копій і ўсіх валют. Гісторыі выдаткаў, Fat Finder і ШІ-інсайты патрабуюць тарыфу Pro або Business; аўтаматычная адпраўка на e-mail таксама платная — штомесячны дайджэст патрабуе Pro, штотыднёвая справаздача — Business.
 
 ## Бясплатны план (Free)
 
@@ -33452,20 +33529,30 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 | Фармат | Апісанне | Даступнасць |
 |---|---|---|
 | **CSV** | Значэнні, падзеленыя коскамі, сумяшчальныя з Excel і Google Sheets | Усе планы |
-| **PDF** | Фарматаванае справаздача са зводкай, разбіўкай па катэгорыях і спісам транзакцый | Pro і Business |
-| **Excel** | Кніга з некалькімі аркушамі: Зводка, Выдаткі і Даходы | Pro і Business |
+| **PDF** | Фарматаванае справаздача са зводкай, разбіўкай па катэгорыях і спісам транзакцый | Усе планы |
+| **Excel** | Кніга з некалькімі аркушамі: Зводка, Выдаткі і Даходы | Усе планы |
+
+Стварэнне справаздач і рэзервовых копій бясплатнае на ўсіх планах. Платнай з'яўляецца толькі аўтаматычная адпраўка на e-mail, апісаная ніжэй.
 
 ## Генерацыя справаздачы
 
 1. Выберыце **фармат** (CSV, PDF або Excel)
-2. Выберыце **перыяд часу** (Мінулы тыдзень, Гэты месяц, Мінулы квартал, Гэты год)
+2. Выберыце **перыяд часу**:
+   - **Мінулы тыдзень** — апошнія 7 дзён
+   - **Гэты месяц** — з 1-га чысла па сёння
+   - **Мінулы квартал** — апошні *поўны* каляндарны квартал (у жніўні гэта красавік-чэрвень). Перыяд закрыты, таму яго цыфры больш не змяняюцца
+   - **Гэты год** — з 1 студзеня па сёння
+   - **Канкрэтны месяц** — любы асобны месяц цалкам з апошніх 24
+   - **Свой перыяд** — свая дата пачатку і заканчэння
 3. Націсніце **Генераваць**
 4. Справаздача генеруецца і адразу адкрываецца праз сістэмнае меню — захавайце ці адпраўце яе адтуль
 5. Справаздача таксама з'яўляецца ў раздзеле **Апошнія справаздачы** для далейшага доступу
 
+Пад кнопкамі відаць дакладныя даты, якія трапяць у справаздачу — тыя ж даты друкуюцца ў загалоўку файла. Калі свой перыяд пазначаны не цалкам або яго пачатак пазней за канец, кнопка **Стварыць** застаецца неактыўнай.
+
 Справаздачы захоўваюцца на працягу 7 дзён, а потым аўтаматычна выдаляюцца.
 
-## Штомесячны дайджэст (Pro+)
+## Штомесячны дайджэст
 
 Здымак вашай бягучай фінансавай актыўнасці за месяц:
 
@@ -33473,6 +33560,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 - **Каэфіцыент эканоміі** — адсотак даходу, які вы зэканомілі
 - **Топ катэгорыі** — вашы найбольшыя катэгорыі выдаткаў з сумамі
 - Даныя кэшуюцца на 7 дзён і абнаўляюцца аўтаматычна
+- Заўсёды **цяперашні** месяц — не залежыць ад выбранага вышэй перыяду
 
 ## Апошнія справаздачы
 
@@ -37261,7 +37349,7 @@ Alle functies zijn beschikbaar in elk abonnement. Abonnementen verschillen allee
 | **Leden per account** | 1 | Tot 5 | Onbeperkt |
 | **Alle functies** | Ja | Ja | Ja |
 
-Alle gebruikers hebben toegang tot: uitgavenregistratie, AI-chat, Spraakinvoer, Bonnen scannen, Uitgavenverhalen, Fat Finder, AI-inzichten, voorspellende analyse, anomaliedetectie, PDF-/Excel-rapporten, wekelijkse e-mailrapporten, maandelijkse digest, versleutelde back-ups en alle valuta's.
+Alle gebruikers hebben toegang tot: uitgavenregistratie, AI-chat, Spraakinvoer, Bonnen scannen, Uitgavenverhalen, Fat Finder, AI-inzichten, voorspellende analyse, anomaliedetectie, PDF-/Excel-rapporten, de maandelijkse digest in de app, versleutelde back-ups en alle valuta's. Automatische e-mailsamenvattingen zijn betaald: de maandelijkse digest per e-mail vereist Pro, het wekelijkse rapport Business.
 
 ## Gratis-abonnement
 
@@ -37808,20 +37896,30 @@ Er zijn drie exportformaten beschikbaar:
 | Formaat | Beschrijving | Beschikbaarheid |
 |---|---|---|
 | **CSV** | Door komma's gescheiden waarden, compatibel met Excel en Google Sheets | Alle abonnementen |
-| **PDF** | Opgemaakt rapport met overzicht, categorieverdeling en transactielijst | Pro & Business |
-| **Excel** | Werkmap met meerdere bladen: Overzicht, Uitgaven en Inkomsten | Pro & Business |
+| **PDF** | Opgemaakt rapport met overzicht, categorieverdeling en transactielijst | Alle abonnementen |
+| **Excel** | Werkmap met meerdere bladen: Overzicht, Uitgaven en Inkomsten | Alle abonnementen |
+
+Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de hieronder beschreven automatische e-mailbezorging vereist een betaald abonnement.
 
 ## Een rapport genereren
 
 1. Selecteer een **formaat** (CSV, PDF of Excel)
-2. Kies een **periode** (Vorige week, Deze maand, Vorig kwartaal, Dit jaar)
+2. Kies een **periode**:
+   - **Vorige week** — de laatste 7 dagen
+   - **Deze maand** — van de 1e tot vandaag
+   - **Vorig kwartaal** — het laatste *volledige* kalenderkwartaal (in augustus dus april-juni). Een afgesloten periode, de cijfers veranderen niet meer
+   - **Dit jaar** — van 1 januari tot vandaag
+   - **Specifieke maand** — een enkele volledige maand uit de laatste 24
+   - **Eigen periode** — je eigen begin- en einddatum
 3. Tik op **Genereren**
 4. Het rapport wordt gegenereerd en direct geopend via het systeemdeelvenster — sla het daar op of verstuur het
 5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
 
+Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.
+
 Rapporten worden 7 dagen bewaard en daarna automatisch verwijderd.
 
-## Maandelijkse digest (Pro+)
+## Maandelijkse digest
 
 Een momentopname van de financiële activiteit van je huidige maand:
 
@@ -37829,6 +37927,7 @@ Een momentopname van de financiële activiteit van je huidige maand:
 - **Spaarquote** — percentage van de inkomsten dat is gespaard
 - **Topcategorieën** — je grootste uitgavencategorieën met bedragen
 - Gegevens worden 7 dagen gecached en automatisch vernieuwd
+- Altijd de **huidige** maand — die volgt niet de hierboven gekozen periode
 
 ## Recente rapporten
 

@@ -15,20 +15,30 @@ Three export formats available:
 | Format | Description | Availability |
 |---|---|---|
 | **CSV** | Comma-separated values, compatible with Excel and Google Sheets | All plans |
-| **PDF** | Formatted report with summary, category breakdown, and transaction list | Pro & Business |
-| **Excel** | Multi-sheet workbook with Summary, Expenses, and Incomes sheets | Pro & Business |
+| **PDF** | Formatted report with summary, category breakdown, and transaction list | All plans |
+| **Excel** | Multi-sheet workbook with Summary, Expenses, and Incomes sheets | All plans |
+
+Generating reports and creating backups is free on every plan. Only the automated e-mail delivery described below needs a paid plan.
 
 ## Generating a Report
 
 1. Select a **format** (CSV, PDF, or Excel)
-2. Choose a **time period** (Last Week, This Month, Last Quarter, This Year)
+2. Choose a **time period**:
+   - **Last Week** — the last 7 days
+   - **This Month** — from the 1st of the month to today
+   - **Last Quarter** — the last *full* calendar quarter (asked in August, that means April-June). A closed period, so its figures no longer move
+   - **This Year** — from 1 January to today
+   - **Specific month** — any single whole month out of the last 24
+   - **Custom range** — your own start and end date
 3. Tap **Generate**
 4. The report generates and opens immediately via the system share dialog — save or send it from there
 5. The report also appears in **Recent Reports** below for future access
 
+Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.
+
 Reports are stored for 7 days and then automatically deleted.
 
-## Monthly Digest (Pro+)
+## Monthly Digest
 
 A snapshot of your current month's financial activity:
 
@@ -36,6 +46,7 @@ A snapshot of your current month's financial activity:
 - **Savings Rate** — percentage of income saved
 - **Top Categories** — your biggest spending categories with amounts
 - Data is cached for 7 days and refreshes automatically
+- Always the **current** month — it does not follow the period selected above
 
 ## Recent Reports
 

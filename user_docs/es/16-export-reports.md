@@ -15,20 +15,30 @@ Tres formatos de exportacion disponibles:
 | Formato | Descripcion | Disponibilidad |
 |---|---|---|
 | **CSV** | Valores separados por comas, compatible con Excel y Google Sheets | Todos los planes |
-| **PDF** | Informe formateado con resumen, desglose por categoria y lista de transacciones | Pro y Business |
-| **Excel** | Libro de trabajo con varias hojas: Resumen, Gastos e Ingresos | Pro y Business |
+| **PDF** | Informe formateado con resumen, desglose por categoria y lista de transacciones | Todos los planes |
+| **Excel** | Libro de trabajo con varias hojas: Resumen, Gastos e Ingresos | Todos los planes |
+
+Generar informes y crear copias de seguridad es gratis en todos los planes. Solo el envio automatico por correo descrito mas abajo requiere un plan de pago.
 
 ## Generar un informe
 
 1. Selecciona un **formato** (CSV, PDF o Excel)
-2. Elige un **periodo de tiempo** (Ultima semana, Este mes, Ultimo trimestre, Este ano)
+2. Elige un **periodo de tiempo**:
+   - **Ultima semana** — los ultimos 7 dias
+   - **Este mes** — del dia 1 a hoy
+   - **Ultimo trimestre** — el ultimo trimestre natural *completo* (en agosto, abril-junio). Es un periodo cerrado, sus cifras ya no cambian
+   - **Este ano** — del 1 de enero a hoy
+   - **Mes concreto** — cualquier mes completo de los ultimos 24
+   - **Rango personalizado** — tu propia fecha de inicio y de fin
 3. Toca **Generar**
 4. El informe se genera y se abre inmediatamente mediante el dialogo para compartir del sistema — guardalo o envialo desde ahi
 5. El informe tambien aparece en **Informes recientes** para acceder mas tarde
 
+Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.
+
 Los informes se almacenan durante 7 dias y luego se eliminan automaticamente.
 
-## Resumen mensual (Pro+)
+## Resumen mensual
 
 Una instantanea de tu actividad financiera del mes actual:
 
@@ -36,6 +46,7 @@ Una instantanea de tu actividad financiera del mes actual:
 - **Tasa de ahorro** — porcentaje de ingresos ahorrados
 - **Categorias principales** — tus categorias de mayor gasto con importes
 - Los datos se almacenan en cache durante 7 dias y se actualizan automaticamente
+- Siempre el mes **actual**: no sigue el periodo elegido arriba
 
 ## Informes recientes
 
