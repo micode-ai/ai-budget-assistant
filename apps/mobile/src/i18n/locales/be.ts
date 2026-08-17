@@ -1808,6 +1808,7 @@ export default {
     generate: 'Стварыць',
     generating: 'Стварэнне...',
     reportGenerated: 'Справаздача паспяхова створана!',
+    reportSavedTo: 'Справаздача збережана ў:\n{{location}}',
     recentReports: 'Апошнія справаздачы',
     noReports: 'Справаздач пакуль няма',
     monthlyDigest: 'Штомесячны дайджэст',

@@ -1837,6 +1837,7 @@ export default {
     generate: 'Genereren',
     generating: 'Genereren...',
     reportGenerated: 'Rapport succesvol gegenereerd!',
+    reportSavedTo: 'Rapport opgeslagen in:\n{{location}}',
     recentReports: 'Recente rapporten',
     noReports: 'Nog geen rapporten',
     monthlyDigest: 'Maandelijks overzicht',

@@ -2442,7 +2442,7 @@ Generating reports and creating backups is free on every plan. Only the automate
    - **Specific month** — any single whole month out of the last 24
    - **Custom range** — your own start and end date
 3. Tap **Generate**
-4. The report generates and opens immediately via the system share dialog — save or send it from there
+4. The report is generated and **saved**. On Android a folder picker opens and the file is written where you choose - the app then shows you the path. On iOS the share sheet opens so you can "Save to Files". In the web app it simply downloads. Cancel the folder picker and nothing is saved; the report still waits for you below.
 5. The report also appears in **Recent Reports** below for future access
 
 Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.
@@ -6946,7 +6946,7 @@ AI Budget Assistant предлагает три уровня подписки. �
    - **Конкретный месяц** — любой отдельный месяц целиком из последних 24
    - **Свой период** — своя дата начала и окончания
 3. Нажмите **Сгенерировать**
-4. Отчёт генерируется и сразу открывается через системное меню — сохраните или отправьте его оттуда
+4. Отчёт создаётся и **сохраняется**. На Android открывается выбор папки, и файл записывается туда, куда вы укажете — приложение затем покажет путь. На iOS открывается системное меню, откуда доступно «Сохранить в Файлы». В веб-версии файл просто скачивается. Если отменить выбор папки, ничего не сохранится — отчёт всё равно останется в списке ниже.
 5. Отчёт также появляется в разделе **Недавние отчёты** ниже для дальнейшего доступа
 
 Под кнопками видны точные даты, которые попадут в отчёт — те же даты печатаются в заголовке файла. Если свой период указан не полностью или его начало позже конца, кнопка **Создать** остаётся неактивной.
@@ -11439,7 +11439,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
    - **Конкретний місяць** — будь-який окремий місяць повністю з останніх 24
    - **Власний період** — власна дата початку та закінчення
 3. Натисніть **Згенерувати**
-4. Звіт генерується та одразу відкривається через системний діалог — збережіть або надішліть його звідти
+4. Звіт створюється і **зберігається**. На Android відкривається вибір теки, і файл записується туди, куди ви вкажете — застосунок потім покаже шлях. На iOS відкривається системний діалог, звідки доступно «Зберегти у Файли». У веб-версії файл просто завантажується. Якщо скасувати вибір теки, нічого не збережеться — звіт усе одно залишиться у списку нижче.
 5. Звіт також з'являється в розділі **Останні звіти** для подальшого доступу
 
 Під кнопками видно точні дати, які потраплять у звіт — ті самі дати друкуються в заголовку файлу. Якщо власний період указано не повністю або його початок пізніше кінця, кнопка **Створити** залишається неактивною.
@@ -15882,7 +15882,7 @@ Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich p
    - **Konkretny miesiac** — dowolny pojedynczy caly miesiac z ostatnich 24
    - **Wlasny zakres** — wlasna data poczatkowa i koncowa
 3. Dotknij **Generuj**
-4. Raport generuje sie i otwiera sie natychmiast przez systemowy arkusz udostepniania — zapisz lub wysli go stamtad
+4. Raport zostaje wygenerowany i **zapisany**. Na Androidzie otwiera sie wybor folderu i plik ladowany jest tam, gdzie wskazesz - aplikacja pokaze potem sciezke. Na iOS otwiera sie arkusz udostepniania, wiec mozesz uzyc "Zapisz w Plikach". W wersji przegladarkowej plik po prostu sie pobiera. Jesli anulujesz wybor folderu, nic nie zostanie zapisane - raport nadal czeka na liscie ponizej.
 5. Raport pojawi sie takze w **Ostatnich raportach** w celu pozniejszego dostepu
 
 Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.
@@ -20323,7 +20323,7 @@ Berichte zu erstellen und Backups anzulegen ist in allen Plänen kostenlos. Nur 
    - **Bestimmter Monat** — ein einzelner ganzer Monat aus den letzten 24
    - **Eigener Zeitraum** — eigenes Start- und Enddatum
 3. Tippe auf **Generieren**
-4. Der Bericht wird erstellt und öffnet sich sofort über das System-Teilen-Blatt — speichere oder sende ihn von dort
+4. Der Bericht wird erstellt und **gespeichert**. Unter Android öffnet sich eine Ordnerauswahl und die Datei wird dort abgelegt, wo du sie hinlegst - die App zeigt dir danach den Pfad. Unter iOS öffnet sich das Teilen-Blatt, sodass du "In Dateien speichern" nutzen kannst. In der Web-App wird die Datei einfach heruntergeladen. Brichst du die Ordnerauswahl ab, wird nichts gespeichert - der Bericht wartet weiter unten in der Liste.
 5. Der Bericht erscheint auch unter **Kürzlich erstellte Berichte** für späteren Zugriff
 
 Unter den Schaltflächen stehen die genauen Daten, die der Bericht abdeckt — dieselben Daten stehen im Kopf der Datei. Ist ein eigener Zeitraum unvollständig oder liegt sein Start nach dem Ende, bleibt **Erstellen** deaktiviert.
@@ -24742,7 +24742,7 @@ Generar informes y crear copias de seguridad es gratis en todos los planes. Solo
    - **Mes concreto** — cualquier mes completo de los ultimos 24
    - **Rango personalizado** — tu propia fecha de inicio y de fin
 3. Toca **Generar**
-4. El informe se genera y se abre inmediatamente mediante el dialogo para compartir del sistema — guardalo o envialo desde ahi
+4. El informe se genera y se **guarda**. En Android se abre un selector de carpeta y el archivo se escribe donde tu indiques; despues la aplicacion te muestra la ruta. En iOS se abre el dialogo para compartir, para que puedas usar "Guardar en Archivos". En la version web simplemente se descarga. Si cancelas el selector de carpeta no se guarda nada; el informe sigue esperando en la lista de abajo.
 5. El informe tambien aparece en **Informes recientes** para acceder mas tarde
 
 Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.
@@ -29148,7 +29148,7 @@ Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits
    - **Mois precis** — un seul mois entier parmi les 24 derniers
    - **Periode personnalisee** — vos propres dates de debut et de fin
 3. Appuyez sur **Generer**
-4. Le rapport se genere et s'ouvre immediatement via la feuille de partage du systeme — enregistrez-le ou envoyez-le depuis la
+4. Le rapport est genere et **enregistre**. Sous Android, un selecteur de dossier s'ouvre et le fichier est ecrit la ou vous l'indiquez - l'application vous montre ensuite le chemin. Sous iOS, la feuille de partage s'ouvre pour vous permettre d'utiliser "Enregistrer dans Fichiers". Dans la version web, le fichier se telecharge simplement. Si vous annulez le selecteur de dossier, rien n'est enregistre : le rapport vous attend toujours dans la liste ci-dessous.
 5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
 
 Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.
@@ -33559,7 +33559,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
    - **Канкрэтны месяц** — любы асобны месяц цалкам з апошніх 24
    - **Свой перыяд** — свая дата пачатку і заканчэння
 3. Націсніце **Генераваць**
-4. Справаздача генеруецца і адразу адкрываецца праз сістэмнае меню — захавайце ці адпраўце яе адтуль
+4. Справаздача ствараецца і **захоўваецца**. На Android адкрываецца выбар папкі, і файл запісваецца туды, куда вы ўкажаце — дадатак потым пакажа шлях. На iOS адкрываецца сістэмнае меню, адкуль даступна «Захаваць у Файлы». У вэб-версіі файл проста спампоўваецца. Калі скасаваць выбар папкі, нічога не захаваецца — справаздача ўсё роўна застанецца ў спісе ніжэй.
 5. Справаздача таксама з'яўляецца ў раздзеле **Апошнія справаздачы** для далейшага доступу
 
 Пад кнопкамі відаць дакладныя даты, якія трапяць у справаздачу — тыя ж даты друкуюцца ў загалоўку файла. Калі свой перыяд пазначаны не цалкам або яго пачатак пазней за канец, кнопка **Стварыць** застаецца неактыўнай.
@@ -37928,7 +37928,7 @@ Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de 
    - **Specifieke maand** — een enkele volledige maand uit de laatste 24
    - **Eigen periode** — je eigen begin- en einddatum
 3. Tik op **Genereren**
-4. Het rapport wordt gegenereerd en direct geopend via het systeemdeelvenster — sla het daar op of verstuur het
+4. Het rapport wordt gegenereerd en **opgeslagen**. Op Android opent een mapkiezer en wordt het bestand weggeschreven waar jij het aanwijst - de app laat daarna het pad zien. Op iOS opent het deelvenster, zodat je "Bewaar in Bestanden" kunt gebruiken. In de webversie wordt het bestand gewoon gedownload. Annuleer je de mapkiezer, dan wordt er niets opgeslagen; het rapport wacht nog in de lijst hieronder.
 5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
 
 Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.

@@ -1837,6 +1837,7 @@ export default {
     generate: 'Générer',
     generating: 'Génération...',
     reportGenerated: 'Rapport généré avec succès !',
+    reportSavedTo: 'Rapport enregistré dans :\n{{location}}',
     recentReports: 'Rapports récents',
     noReports: 'Aucun rapport pour le moment',
     monthlyDigest: 'Résumé mensuel',

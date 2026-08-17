@@ -1840,6 +1840,7 @@ export default {
     generate: 'Generuj',
     generating: 'Generowanie...',
     reportGenerated: 'Raport wygenerowany pomyślnie!',
+    reportSavedTo: 'Raport zapisany w:\n{{location}}',
     recentReports: 'Ostatnie raporty',
     noReports: 'Brak raportów',
     monthlyDigest: 'Podsumowanie miesięczne',

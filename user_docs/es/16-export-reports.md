@@ -31,7 +31,7 @@ Generar informes y crear copias de seguridad es gratis en todos los planes. Solo
    - **Mes concreto** — cualquier mes completo de los ultimos 24
    - **Rango personalizado** — tu propia fecha de inicio y de fin
 3. Toca **Generar**
-4. El informe se genera y se abre inmediatamente mediante el dialogo para compartir del sistema — guardalo o envialo desde ahi
+4. El informe se genera y se **guarda**. En Android se abre un selector de carpeta y el archivo se escribe donde tu indiques; despues la aplicacion te muestra la ruta. En iOS se abre el dialogo para compartir, para que puedas usar "Guardar en Archivos". En la version web simplemente se descarga. Si cancelas el selector de carpeta no se guarda nada; el informe sigue esperando en la lista de abajo.
 5. El informe tambien aparece en **Informes recientes** para acceder mas tarde
 
 Debajo de los botones se ven las fechas exactas que cubrira el informe: las mismas que se imprimen en la cabecera del archivo. Si un rango personalizado esta incompleto, o su inicio es posterior al fin, **Generar** permanece desactivado.

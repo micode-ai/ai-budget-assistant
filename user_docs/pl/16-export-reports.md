@@ -31,7 +31,7 @@ Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich p
    - **Konkretny miesiac** — dowolny pojedynczy caly miesiac z ostatnich 24
    - **Wlasny zakres** — wlasna data poczatkowa i koncowa
 3. Dotknij **Generuj**
-4. Raport generuje sie i otwiera sie natychmiast przez systemowy arkusz udostepniania — zapisz lub wysli go stamtad
+4. Raport zostaje wygenerowany i **zapisany**. Na Androidzie otwiera sie wybor folderu i plik ladowany jest tam, gdzie wskazesz - aplikacja pokaze potem sciezke. Na iOS otwiera sie arkusz udostepniania, wiec mozesz uzyc "Zapisz w Plikach". W wersji przegladarkowej plik po prostu sie pobiera. Jesli anulujesz wybor folderu, nic nie zostanie zapisane - raport nadal czeka na liscie ponizej.
 5. Raport pojawi sie takze w **Ostatnich raportach** w celu pozniejszego dostepu
 
 Pod przyciskami widac dokladne daty, ktore obejmie raport — te same daty sa wpisane w naglowku pliku. Jesli wlasny zakres jest niepelny albo jego poczatek jest po koncu, przycisk **Generuj** pozostaje nieaktywny.

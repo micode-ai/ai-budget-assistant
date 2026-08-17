@@ -31,7 +31,7 @@ Generating reports and creating backups is free on every plan. Only the automate
    - **Specific month** — any single whole month out of the last 24
    - **Custom range** — your own start and end date
 3. Tap **Generate**
-4. The report generates and opens immediately via the system share dialog — save or send it from there
+4. The report is generated and **saved**. On Android a folder picker opens and the file is written where you choose - the app then shows you the path. On iOS the share sheet opens so you can "Save to Files". In the web app it simply downloads. Cancel the folder picker and nothing is saved; the report still waits for you below.
 5. The report also appears in **Recent Reports** below for future access
 
 Under the buttons you can see the exact dates the report will cover — the same dates printed in the file's header. If a custom range is incomplete, or its start is after its end, **Generate** stays disabled.

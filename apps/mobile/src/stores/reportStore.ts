@@ -1,8 +1,6 @@
 import { create } from 'zustand';
-import { Platform } from 'react-native';
 import { api } from '@/services/api';
-import { File, Directory, Paths } from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
+import { saveFile, shareFile, type FileExportResult } from '@/services/fileExport';
 import type {
   GenerateReportDto,
   ReportListItem,
@@ -15,6 +13,7 @@ import type {
 export type BackupExportResult =
   | { status: 'saved'; location: string }
   | { status: 'shared' }
+  | { status: 'cancelled' }
   | { status: 'error'; error: string };
 
 interface ReportState {
@@ -39,8 +38,8 @@ interface ReportState {
   generateReport: (dto: GenerateReportDto) => Promise<string | null>;
   loadReports: () => Promise<void>;
   deleteReport: (reportId: string) => Promise<void>;
-  shareReport: (reportId: string, fileName: string) => Promise<void>;
-  downloadReport: (reportId: string, fileName: string) => Promise<void>;
+  shareReport: (reportId: string, fileName: string) => Promise<FileExportResult>;
+  downloadReport: (reportId: string, fileName: string) => Promise<FileExportResult>;
   loadMonthlyDigest: (month: string) => Promise<void>;
   exportBackup: () => Promise<BackupExportResult>;
   restoreBackup: (data: string, overwrite: boolean) => Promise<{ restoredCounts: Record<string, number>; errors: string[] }>;
@@ -104,111 +103,26 @@ export const useReportStore = create<ReportState>()((set, get) => ({
   shareReport: async (reportId: string, fileName: string) => {
     try {
       const blob = await api.downloadReport(reportId);
-      const ext = fileName.split('.').pop()?.toLowerCase();
-      const mimeTypes: Record<string, string> = {
-        pdf: 'application/pdf',
-        csv: 'text/csv',
-        xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      };
-      const mimeType = mimeTypes[ext || ''] || 'application/octet-stream';
-
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          const dataUrl = reader.result as string;
-          resolve(dataUrl.split(',')[1]);
-        };
-        reader.onerror = reject;
-        reader.readAsDataURL(blob);
-      });
-
-      const file = new File(Paths.cache, fileName);
-      file.write(base64, { encoding: 'base64' });
-
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(file.uri, {
-          mimeType,
-          dialogTitle: fileName,
-        });
-      }
+      const result = await shareFile(blob, fileName);
+      if (result.status === 'error') set({ error: result.error });
+      return result;
     } catch (err) {
-      set({ error: err instanceof Error ? err.message : 'Failed to share report' });
+      const error = err instanceof Error ? err.message : 'Failed to share report';
+      set({ error });
+      return { status: 'error' as const, error };
     }
   },
 
   downloadReport: async (reportId: string, fileName: string) => {
     try {
       const blob = await api.downloadReport(reportId);
-      const ext = fileName.split('.').pop()?.toLowerCase();
-      const mimeTypes: Record<string, string> = {
-        pdf: 'application/pdf',
-        csv: 'text/csv',
-        xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      };
-      const mimeType = mimeTypes[ext || ''] || 'application/octet-stream';
-
-      let saved = false;
-
-      // Android: save directly to user-chosen directory via SAF
-      if (Platform.OS === 'android') {
-        try {
-          const dir = await Directory.pickDirectoryAsync();
-          const destFile = dir.createFile(fileName, mimeType);
-          if (ext === 'csv') {
-            const text = await new Promise<string>((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onloadend = () => resolve(reader.result as string);
-              reader.onerror = reject;
-              reader.readAsText(blob);
-            });
-            destFile.write(text);
-          } else {
-            const base64 = await new Promise<string>((resolve, reject) => {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                const dataUrl = reader.result as string;
-                resolve(dataUrl.split(',')[1]);
-              };
-              reader.onerror = reject;
-              reader.readAsDataURL(blob);
-            });
-            const binaryString = atob(base64);
-            const bytes = new Uint8Array(binaryString.length);
-            for (let i = 0; i < binaryString.length; i++) {
-              bytes[i] = binaryString.charCodeAt(i);
-            }
-            destFile.write(bytes);
-          }
-          saved = true;
-        } catch {
-          // SAF picker cancelled or failed, fall through to sharing
-        }
-      }
-
-      // iOS / fallback: open share sheet so user can save to Files
-      if (!saved) {
-        const base64 = await new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            const dataUrl = reader.result as string;
-            resolve(dataUrl.split(',')[1]);
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(blob);
-        });
-
-        const file = new File(Paths.cache, fileName);
-        file.write(base64, { encoding: 'base64' });
-
-        if (await Sharing.isAvailableAsync()) {
-          await Sharing.shareAsync(file.uri, {
-            mimeType,
-            dialogTitle: fileName,
-          });
-        }
-      }
+      const result = await saveFile(blob, fileName);
+      if (result.status === 'error') set({ error: result.error });
+      return result;
     } catch (err) {
-      set({ error: err instanceof Error ? err.message : 'Failed to download report' });
+      const error = err instanceof Error ? err.message : 'Failed to download report';
+      set({ error });
+      return { status: 'error' as const, error };
     }
   },
 
@@ -229,64 +143,14 @@ export const useReportStore = create<ReportState>()((set, get) => ({
     set({ isExporting: true, error: null });
     try {
       const { blob, fileName } = await api.downloadBackupData();
-      const content = await new Promise<string>((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsText(blob);
-      });
 
-      // Android: let the user pick a folder via the system picker (SAF) and
-      // write the backup directly there so it lands in a place they chose.
-      if (Platform.OS === 'android') {
-        try {
-          const dir = await Directory.pickDirectoryAsync();
-          const destFile = dir.createFile(fileName, 'application/json');
-          destFile.write(content);
-          await get().loadBackupHistory();
-          set({ isExporting: false });
-          // Surface the chosen folder so the user knows where the file is.
-          let location = fileName;
-          try {
-            location = `${decodeURIComponent(dir.uri)}/${fileName}`;
-          } catch {
-            // keep the bare file name if the SAF URI can't be decoded
-          }
-          return { status: 'saved', location };
-        } catch {
-          // Picker cancelled or unavailable — fall through to the share sheet.
-        }
-      }
-
-      // iOS, or Android when the folder picker was cancelled/unavailable:
-      // write to cache and open the system share sheet (always appears and
-      // lets the user "Save to Files" / Downloads / Drive, etc.).
-      const base64 = await new Promise<string>((resolve, reject) => {
-        const reader2 = new FileReader();
-        reader2.onloadend = () => {
-          const dataUrl = reader2.result as string;
-          resolve(dataUrl.split(',')[1]);
-        };
-        reader2.onerror = reject;
-        reader2.readAsDataURL(blob);
-      });
-
-      const file = new File(Paths.cache, fileName);
-      file.write(base64, { encoding: 'base64' });
-
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(file.uri, {
-          mimeType: 'application/json',
-          dialogTitle: fileName,
-        });
-        await get().loadBackupHistory();
-        set({ isExporting: false });
-        return { status: 'shared' };
-      }
+      // Android: folder picker; iOS: share sheet; web: browser download.
+      // A cancelled picker comes back as 'cancelled' and the caller stays quiet.
+      const result = await saveFile(blob, fileName);
 
       await get().loadBackupHistory();
-      set({ isExporting: false });
-      return { status: 'error', error: 'Sharing is not available on this device' };
+      set({ isExporting: false, error: result.status === 'error' ? result.error : null });
+      return result;
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to export backup';
       set({ isExporting: false, error: message });

@@ -127,14 +127,23 @@ export default function ReportsScreen() {
     };
 
     const reportId = await generateReport(dto);
-    if (reportId) {
-      // Find the newly generated report and open it immediately
-      const updatedReports = useReportStore.getState().reports;
-      const newReport = updatedReports.find(r => r.id === reportId);
-      if (newReport) {
-        await shareReport(newReport.id, newReport.fileName);
-      }
+    if (!reportId) return;
+
+    const newReport = useReportStore.getState().reports.find(r => r.id === reportId);
+    if (!newReport) return;
+
+    // Save it, don't just offer to forward it: on Android this opens the folder
+    // picker and writes the file, which is what "export" means. iOS has no such
+    // picker so it stays the share sheet, and web downloads. Sharing is still one
+    // tap away from the report's row below.
+    const result = await downloadReport(newReport.id, newReport.fileName);
+    if (result.status === 'saved') {
+      showAlert(t('common.success'), t('reports.reportSavedTo', { location: result.location }));
+    } else if (result.status === 'shared') {
+      showAlert(t('common.success'), t('reports.reportGenerated'));
     }
+    // 'cancelled' is the user backing out of the picker — say nothing. 'error'
+    // has already been put on the store and is rendered above the form.
   };
 
   const handleShare = async (report: ReportListItem) => {

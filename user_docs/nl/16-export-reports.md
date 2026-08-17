@@ -31,7 +31,7 @@ Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de 
    - **Specifieke maand** — een enkele volledige maand uit de laatste 24
    - **Eigen periode** — je eigen begin- en einddatum
 3. Tik op **Genereren**
-4. Het rapport wordt gegenereerd en direct geopend via het systeemdeelvenster — sla het daar op of verstuur het
+4. Het rapport wordt gegenereerd en **opgeslagen**. Op Android opent een mapkiezer en wordt het bestand weggeschreven waar jij het aanwijst - de app laat daarna het pad zien. Op iOS opent het deelvenster, zodat je "Bewaar in Bestanden" kunt gebruiken. In de webversie wordt het bestand gewoon gedownload. Annuleer je de mapkiezer, dan wordt er niets opgeslagen; het rapport wacht nog in de lijst hieronder.
 5. Het rapport verschijnt ook hieronder in **Recente rapporten** voor toekomstige toegang
 
 Onder de knoppen staan de exacte datums die het rapport dekt — dezelfde datums die in de kop van het bestand worden afgedrukt. Is een eigen periode onvolledig, of ligt het begin na het einde, dan blijft **Genereren** uitgeschakeld.

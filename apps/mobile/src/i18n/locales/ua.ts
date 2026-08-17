@@ -1840,6 +1840,7 @@ export default {
     generate: 'Створити',
     generating: 'Створення...',
     reportGenerated: 'Звіт успішно створено!',
+    reportSavedTo: 'Звіт збережено в:\n{{location}}',
     recentReports: 'Останні звіти',
     noReports: 'Звітів поки немає',
     monthlyDigest: 'Щомісячний дайджест',

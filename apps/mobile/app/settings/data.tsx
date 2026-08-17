@@ -149,9 +149,10 @@ export default function DataSettingsScreen() {
         showAlert(t('common.success'), t('reports.backupSavedTo', { location: result.location }));
       } else if (result.status === 'shared') {
         showAlert(t('common.success'), t('reports.backupShared'));
-      } else {
+      } else if (result.status === 'error') {
         showAlert(t('common.error'), result.error || t('errors.unknown'));
       }
+      // 'cancelled' — the user backed out of the folder picker, so say nothing.
     } catch (e) {
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }

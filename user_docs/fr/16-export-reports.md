@@ -31,7 +31,7 @@ Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits
    - **Mois precis** — un seul mois entier parmi les 24 derniers
    - **Periode personnalisee** — vos propres dates de debut et de fin
 3. Appuyez sur **Generer**
-4. Le rapport se genere et s'ouvre immediatement via la feuille de partage du systeme — enregistrez-le ou envoyez-le depuis la
+4. Le rapport est genere et **enregistre**. Sous Android, un selecteur de dossier s'ouvre et le fichier est ecrit la ou vous l'indiquez - l'application vous montre ensuite le chemin. Sous iOS, la feuille de partage s'ouvre pour vous permettre d'utiliser "Enregistrer dans Fichiers". Dans la version web, le fichier se telecharge simplement. Si vous annulez le selecteur de dossier, rien n'est enregistre : le rapport vous attend toujours dans la liste ci-dessous.
 5. Le rapport apparait egalement dans **Rapports recents** pour un acces ulterieur
 
 Sous les boutons figurent les dates exactes que couvrira le rapport — les memes que celles imprimees dans l'en-tete du fichier. Si une periode personnalisee est incomplete, ou si son debut est apres sa fin, **Generer** reste desactive.

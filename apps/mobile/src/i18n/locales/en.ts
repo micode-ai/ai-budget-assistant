@@ -1841,6 +1841,7 @@ export default {
     generate: 'Generate',
     generating: 'Generating...',
     reportGenerated: 'Report generated successfully!',
+    reportSavedTo: 'Report saved to:\n{{location}}',
     recentReports: 'Recent Reports',
     noReports: 'No reports yet',
     monthlyDigest: 'Monthly Digest',
