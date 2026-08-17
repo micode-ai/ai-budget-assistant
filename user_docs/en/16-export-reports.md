@@ -20,6 +20,8 @@ Three export formats available:
 
 Generating reports and creating backups is free on every plan. Only the automated e-mail delivery described below needs a paid plan.
 
+Totals are shown in **your display currency** — the one on the pill on the home screen, not the currency of any single transaction. Amounts recorded in another currency are converted at current rates before anything is added up, and the report says so. Each transaction in the list keeps its own currency, so you can always see what was actually recorded. If a rate is unavailable, that amount is left out of the totals rather than counted as the wrong currency, and the report says that too.
+
 ## Generating a Report
 
 1. Select a **format** (CSV, PDF, or Excel)

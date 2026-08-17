@@ -20,6 +20,8 @@ Dostepne sa trzy formaty eksportu:
 
 Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich planach. Platne jest tylko automatyczne wysylanie e-mailem, opisane ponizej.
 
+Sumy sa podawane w **Twojej walucie wyswietlania** — tej z przycisku na ekranie glownym, a nie w walucie jednej z transakcji. Kwoty zapisane w innej walucie sa przeliczane po aktualnych kursach, zanim cokolwiek zostanie zsumowane, i raport o tym informuje. Kazda transakcja na liscie zachowuje swoja wlasna walute, wiec zawsze widzisz, co faktycznie zostalo zapisane. Jesli kurs jest niedostepny, taka kwota nie wchodzi do sum, zamiast byc policzona w zlej walucie — i raport rowniez to zaznacza.
+
 ## Generowanie raportu
 
 1. Wybierz **format** (CSV, PDF lub Excel)

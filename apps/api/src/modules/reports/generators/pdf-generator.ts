@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import * as PDFDocument from 'pdfkit';
 import * as path from 'path';
+import { planTransactionRows } from './pdf-row-layout.util';
 
 // Inter covers Latin, Cyrillic, Latin-Extended — already in node_modules via @expo-google-fonts/inter
 const INTER_DIR = path.dirname(require.resolve('@expo-google-fonts/inter/package.json'));
 const FONT_REGULAR = path.join(INTER_DIR, '400Regular', 'Inter_400Regular.ttf');
 const FONT_BOLD = path.join(INTER_DIR, '700Bold', 'Inter_700Bold.ttf');
 
+/** Single-line transaction row height. Taller rows are measured, not assumed. */
+const ROW_MIN_HEIGHT = 14;
+/** Last y a transaction row may start+fit on; the page footer is drawn at 770. */
+const TX_PAGE_BOTTOM = 740;
 
 interface PdfReportData {
   accountName: string;
@@ -25,6 +30,10 @@ interface PdfReportData {
     amount: number;
     currency: string;
   }>;
+  /** Some amount came from another currency and was converted into `currencyCode`. */
+  fxConverted?: boolean;
+  /** Some amount had no known rate and is missing from the totals. */
+  fxApproximate?: boolean;
 }
 
 interface LangLabels {
@@ -43,6 +52,8 @@ interface LangLabels {
   expense: string;
   income: string;
   pageOf: (i: number, total: number, date: string) => string;
+  /** Currency note; `excluded` = some amount had no rate and is missing. */
+  fxNote: (currency: string, excluded: boolean) => string;
 }
 
 const LABELS: Record<string, LangLabels> = {
@@ -62,6 +73,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'expense',
     income: 'income',
     pageOf: (i, total, date) => `Page ${i} of ${total} — Generated on ${date}`,
+    fxNote: (c, excluded) =>
+      `Totals are shown in ${c}. Amounts recorded in other currencies were converted at current rates, so they are approximate.` + (excluded ? ' Some amounts had no available exchange rate and are not included in the totals.' : ''),
   },
   de: {
     title: 'Finanzbericht',
@@ -79,6 +92,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'Ausgabe',
     income: 'Einnahme',
     pageOf: (i, total, date) => `Seite ${i} von ${total} — Erstellt am ${date}`,
+    fxNote: (c, excluded) =>
+      `Die Summen sind in ${c} angegeben. Beträge in anderen Währungen wurden zu aktuellen Kursen umgerechnet und sind daher ungefähr.` + (excluded ? ' Für einige Beträge war kein Wechselkurs verfügbar; sie sind in den Summen nicht enthalten.' : ''),
   },
   es: {
     title: 'Informe Financiero',
@@ -96,6 +111,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'gasto',
     income: 'ingreso',
     pageOf: (i, total, date) => `Página ${i} de ${total} — Generado el ${date}`,
+    fxNote: (c, excluded) =>
+      `Los totales se muestran en ${c}. Los importes registrados en otras monedas se convirtieron a los tipos actuales, por lo que son aproximados.` + (excluded ? ' Algunos importes no tenían tipo de cambio disponible y no se incluyen en los totales.' : ''),
   },
   fr: {
     title: 'Rapport Financier',
@@ -113,6 +130,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'dépense',
     income: 'revenu',
     pageOf: (i, total, date) => `Page ${i} sur ${total} — Généré le ${date}`,
+    fxNote: (c, excluded) =>
+      `Les totaux sont exprimés en ${c}. Les montants enregistrés dans d'autres devises ont été convertis aux taux actuels et sont donc approximatifs.` + (excluded ? ` Certains montants n'avaient pas de taux de change disponible et ne sont pas inclus dans les totaux.` : ''),
   },
   pl: {
     title: 'Raport Finansowy',
@@ -130,6 +149,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'wydatek',
     income: 'przychód',
     pageOf: (i, total, date) => `Strona ${i} z ${total} — Wygenerowano ${date}`,
+    fxNote: (c, excluded) =>
+      `Sumy podano w ${c}. Kwoty zapisane w innych walutach przeliczono po aktualnych kursach, więc są przybliżone.` + (excluded ? ' Dla części kwot nie był dostępny kurs wymiany i nie zostały one uwzględnione w sumach.' : ''),
   },
   ru: {
     title: 'Финансовый Отчёт',
@@ -147,6 +168,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'расход',
     income: 'доход',
     pageOf: (i, total, date) => `Страница ${i} из ${total} — Создано ${date}`,
+    fxNote: (c, excluded) =>
+      `Итоги указаны в ${c}. Суммы в других валютах пересчитаны по текущим курсам, поэтому они приблизительны.` + (excluded ? ' Для части сумм курс был недоступен, и они не вошли в итоги.' : ''),
   },
   ua: {
     title: 'Фінансовий Звіт',
@@ -164,6 +187,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'витрата',
     income: 'дохід',
     pageOf: (i, total, date) => `Сторінка ${i} з ${total} — Створено ${date}`,
+    fxNote: (c, excluded) =>
+      `Підсумки наведено у ${c}. Суми в інших валютах перераховано за поточними курсами, тому вони приблизні.` + (excluded ? ' Для частини сум курс був недоступний, і вони не увійшли до підсумків.' : ''),
   },
   be: {
     title: 'Фінансавы Справаздача',
@@ -181,6 +206,8 @@ const LABELS: Record<string, LangLabels> = {
     expense: 'выдатак',
     income: 'даход',
     pageOf: (i, total, date) => `Старонка ${i} з ${total} — Створана ${date}`,
+    fxNote: (c, excluded) =>
+      `Вынікі пададзены ў ${c}. Сумы ў іншых валютах пералічаны па цяперашніх курсах, таму яны прыблізныя.` + (excluded ? ' Для часткі сум курс быў недаступны, і яны не ўвайшлі ў вынікі.' : ''),
   },
 };
 
@@ -215,6 +242,17 @@ export class PdfGenerator {
       doc.text(`${L.totalIncome}:    ${data.currencyCode} ${data.totalIncome.toFixed(2)}`);
       doc.text(`${L.totalExpenses}:  ${data.currencyCode} ${data.totalExpenses.toFixed(2)}`);
       doc.text(`${L.netSavings}:     ${data.currencyCode} ${netSavings.toFixed(2)}`);
+
+      // Transaction rows keep their own currency (the list is a ledger), so when
+      // anything was converted the reader has to be told what the totals mean.
+      if (data.fxConverted || data.fxApproximate) {
+        doc.moveDown(0.4);
+        doc.fontSize(8).font('Inter').text(
+          L.fxNote(data.currencyCode, !!data.fxApproximate),
+          { width: 470 },
+        );
+      }
+
       doc.moveDown(1);
 
       // Category Breakdown
@@ -266,20 +304,41 @@ export class PdfGenerator {
 
         doc.moveTo(50, txTop + 13).lineTo(520, txTop + 13).stroke();
 
-        let ty = txTop + 18;
         doc.font('Inter').fontSize(8);
-        for (const tx of data.transactions) {
-          if (ty > 720) {
+
+        // Each row advances by its own measured height. With a fixed step, a long
+        // description ("Biedronka \"Codziennie Niskie Ceny\" 4357 (28 items)")
+        // wrapped inside its 170pt column and printed its second line ON TOP of
+        // the next transaction. heightOfString reads the font/size set just above,
+        // so the measuring must stay inside this block.
+        const plan = planTransactionRows(
+          data.transactions,
+          (tx) =>
+            Math.max(
+              doc.heightOfString(tx.description || '-', { width: 170 }),
+              doc.heightOfString(tx.category || '-', { width: 90 }),
+            ),
+          {
+            startY: txTop + 18,
+            minHeight: ROW_MIN_HEIGHT,
+            pageBottom: TX_PAGE_BOTTOM,
+            pageTopY: 50,
+          },
+        );
+
+        let currentPage = 0;
+        for (const { row: tx, y, page } of plan) {
+          // The planner decided where the breaks fall; here we just honour them.
+          while (currentPage < page) {
             doc.addPage();
-            ty = 50;
+            currentPage += 1;
           }
-          doc.text(tx.date, 50, ty, { width: 70 });
-          doc.text(tx.type === 'income' ? L.income : L.expense, 120, ty, { width: 55 });
-          doc.text(tx.description || '-', 175, ty, { width: 170 });
-          doc.text(tx.category || '-', 345, ty, { width: 90 });
+          doc.text(tx.date, 50, y, { width: 70 });
+          doc.text(tx.type === 'income' ? L.income : L.expense, 120, y, { width: 55 });
+          doc.text(tx.description || '-', 175, y, { width: 170 });
+          doc.text(tx.category || '-', 345, y, { width: 90 });
           const sign = tx.type === 'income' ? '+' : '-';
-          doc.text(`${sign}${tx.currency} ${tx.amount.toFixed(2)}`, 435, ty, { width: 80 });
-          ty += 14;
+          doc.text(`${sign}${tx.currency} ${tx.amount.toFixed(2)}`, 435, y, { width: 80 });
         }
       }
 

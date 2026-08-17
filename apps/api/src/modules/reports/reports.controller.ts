@@ -22,7 +22,14 @@ export class ReportsController {
     @Req() req: AuthenticatedRequest,
     @Body() dto: GenerateReportDto,
   ) {
-    return this.reportsService.generateReport(req.accountId, req.user.id, dto);
+    // The report is labelled AND computed in the caller's display currency, never
+    // in the currency of some transaction row (ABA-386 / ABA-387 convention).
+    return this.reportsService.generateReport(
+      req.accountId,
+      req.user.id,
+      dto,
+      req.user.currencyCode || 'USD',
+    );
   }
 
   @Get()

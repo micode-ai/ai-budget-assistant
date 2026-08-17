@@ -9,6 +9,10 @@ interface ExcelReportData {
   totalExpenses: number;
   currencyCode: string;
   categories: Array<{ name: string; amount: number; percentage: number }>;
+  /** Some amount came from another currency and was converted into `currencyCode`. */
+  fxConverted?: boolean;
+  /** Some amount had no known rate and is missing from the totals. */
+  fxApproximate?: boolean;
   expenses: Array<{
     date: string;
     description: string;
@@ -58,6 +62,19 @@ export class ExcelGenerator {
     summary.addRow({ metric: 'Total Expenses', value: data.totalExpenses });
     summary.addRow({ metric: 'Net Savings', value: data.totalIncome - data.totalExpenses });
     summary.addRow({ metric: 'Currency', value: data.currencyCode });
+
+    // The Expenses/Incomes sheets keep each row's own currency, so a converted
+    // total needs saying out loud. This sheet is English throughout.
+    if (data.fxConverted || data.fxApproximate) {
+      summary.addRow({
+        metric: 'Note',
+        value:
+          `Totals are in ${data.currencyCode}; amounts in other currencies were converted at current rates and are approximate.` +
+          (data.fxApproximate
+            ? ' Some amounts had no available exchange rate and are not included.'
+            : ''),
+      });
+    }
 
     if (data.categories.length > 0) {
       summary.addRow({});

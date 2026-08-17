@@ -20,6 +20,8 @@ Tres formatos de exportacion disponibles:
 
 Generar informes y crear copias de seguridad es gratis en todos los planes. Solo el envio automatico por correo descrito mas abajo requiere un plan de pago.
 
+Los totales se muestran en **tu moneda de visualizacion**, la del boton en la pantalla de inicio, y no en la moneda de una transaccion cualquiera. Los importes registrados en otra moneda se convierten a los tipos actuales antes de sumar nada, y el informe lo indica. Cada transaccion de la lista conserva su propia moneda, asi que siempre ves lo que se registro realmente. Si no hay tipo de cambio disponible, ese importe queda fuera de los totales en lugar de contarse en la moneda equivocada, y el informe tambien lo senala.
+
 ## Generar un informe
 
 1. Selecciona un **formato** (CSV, PDF o Excel)

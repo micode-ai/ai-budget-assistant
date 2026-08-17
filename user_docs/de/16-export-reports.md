@@ -20,6 +20,8 @@ Drei Exportformate verfügbar:
 
 Berichte zu erstellen und Backups anzulegen ist in allen Plänen kostenlos. Nur der unten beschriebene automatische E-Mail-Versand erfordert einen bezahlten Plan.
 
+Die Summen erscheinen in **deiner Anzeigewährung** — der aus der Schaltfläche auf dem Startbildschirm, nicht in der Währung einer einzelnen Transaktion. Beträge in einer anderen Währung werden zu aktuellen Kursen umgerechnet, bevor irgendetwas addiert wird, und der Bericht weist darauf hin. Jede Transaktion in der Liste behält ihre eigene Währung, sodass du immer siehst, was tatsächlich erfasst wurde. Ist kein Kurs verfügbar, bleibt der Betrag aus den Summen heraus, statt in der falschen Währung mitgezählt zu werden — auch das steht im Bericht.
+
 ## Einen Bericht generieren
 
 1. Wähle ein **Format** (CSV, PDF oder Excel)

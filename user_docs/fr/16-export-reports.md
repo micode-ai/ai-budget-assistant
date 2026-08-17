@@ -20,6 +20,8 @@ Trois formats d'export disponibles :
 
 Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits. Seul l'envoi automatique par e-mail decrit ci-dessous necessite un forfait payant.
 
+Les totaux sont exprimes dans **votre devise d'affichage**, celle du bouton sur l'ecran d'accueil, et non dans la devise d'une transaction particuliere. Les montants enregistres dans une autre devise sont convertis aux taux actuels avant toute addition, et le rapport le precise. Chaque transaction de la liste conserve sa propre devise, vous voyez donc toujours ce qui a reellement ete enregistre. Si aucun taux n'est disponible, le montant reste en dehors des totaux plutot que d'etre compte dans la mauvaise devise, et le rapport le signale aussi.
+
 ## Generer un rapport
 
 1. Selectionnez un **format** (CSV, PDF ou Excel)

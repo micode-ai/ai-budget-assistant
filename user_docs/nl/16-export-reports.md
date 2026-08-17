@@ -20,6 +20,8 @@ Er zijn drie exportformaten beschikbaar:
 
 Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de hieronder beschreven automatische e-mailbezorging vereist een betaald abonnement.
 
+De totalen staan in **jouw weergavevaluta** — die van de knop op het startscherm, niet in de valuta van een willekeurige transactie. Bedragen in een andere valuta worden tegen actuele koersen omgerekend voordat er iets wordt opgeteld, en het rapport vermeldt dat. Elke transactie in de lijst houdt zijn eigen valuta, zodat je altijd ziet wat er werkelijk is vastgelegd. Is er geen koers beschikbaar, dan blijft dat bedrag buiten de totalen in plaats van in de verkeerde valuta te worden meegeteld, en ook dat staat in het rapport.
+
 ## Een rapport genereren
 
 1. Selecteer een **formaat** (CSV, PDF of Excel)

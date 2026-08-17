@@ -2431,6 +2431,8 @@ Three export formats available:
 
 Generating reports and creating backups is free on every plan. Only the automated e-mail delivery described below needs a paid plan.
 
+Totals are shown in **your display currency** — the one on the pill on the home screen, not the currency of any single transaction. Amounts recorded in another currency are converted at current rates before anything is added up, and the report says so. Each transaction in the list keeps its own currency, so you can always see what was actually recorded. If a rate is unavailable, that amount is left out of the totals rather than counted as the wrong currency, and the report says that too.
+
 ## Generating a Report
 
 1. Select a **format** (CSV, PDF, or Excel)
@@ -6935,6 +6937,8 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Создание отчётов и резервных копий бесплатно на всех планах. Платная только автоматическая отправка на e-mail, описанная ниже.
 
+Итоги приводятся в **вашей валюте отображения** — той, что на кнопке на главном экране, а не в валюте какой-то одной транзакции. Суммы, записанные в другой валюте, пересчитываются по текущим курсам до того, как что-либо складывается, и отчёт об этом сообщает. Каждая транзакция в списке сохраняет свою валюту, так что всегда видно, что было записано на самом деле. Если курс недоступен, такая сумма не входит в итоги, вместо того чтобы быть посчитанной в чужой валюте, — отчёт помечает и это.
+
 ## Генерация отчёта
 
 1. Выберите **формат** (CSV, PDF или Excel)
@@ -11428,6 +11432,8 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Створення звітів і резервних копій безкоштовне на всіх планах. Платним є лише автоматичне надсилання на e-mail, описане нижче.
 
+Підсумки наводяться у **вашій валюті відображення** — тій, що на кнопці на головному екрані, а не у валюті якоїсь однієї транзакції. Суми, записані в іншій валюті, перераховуються за поточними курсами до того, як щось додається, і звіт про це повідомляє. Кожна транзакція у списку зберігає свою валюту, тож завжди видно, що було записано насправді. Якщо курс недоступний, така сума не входить до підсумків замість того, щоб бути порахованою в чужій валюті, — звіт позначає і це.
+
 ## Генерація звіту
 
 1. Оберіть **формат** (CSV, PDF або Excel)
@@ -15871,6 +15877,8 @@ Dostepne sa trzy formaty eksportu:
 
 Generowanie raportow i tworzenie kopii zapasowych jest bezplatne we wszystkich planach. Platne jest tylko automatyczne wysylanie e-mailem, opisane ponizej.
 
+Sumy sa podawane w **Twojej walucie wyswietlania** — tej z przycisku na ekranie glownym, a nie w walucie jednej z transakcji. Kwoty zapisane w innej walucie sa przeliczane po aktualnych kursach, zanim cokolwiek zostanie zsumowane, i raport o tym informuje. Kazda transakcja na liscie zachowuje swoja wlasna walute, wiec zawsze widzisz, co faktycznie zostalo zapisane. Jesli kurs jest niedostepny, taka kwota nie wchodzi do sum, zamiast byc policzona w zlej walucie — i raport rowniez to zaznacza.
+
 ## Generowanie raportu
 
 1. Wybierz **format** (CSV, PDF lub Excel)
@@ -20312,6 +20320,8 @@ Drei Exportformate verfügbar:
 
 Berichte zu erstellen und Backups anzulegen ist in allen Plänen kostenlos. Nur der unten beschriebene automatische E-Mail-Versand erfordert einen bezahlten Plan.
 
+Die Summen erscheinen in **deiner Anzeigewährung** — der aus der Schaltfläche auf dem Startbildschirm, nicht in der Währung einer einzelnen Transaktion. Beträge in einer anderen Währung werden zu aktuellen Kursen umgerechnet, bevor irgendetwas addiert wird, und der Bericht weist darauf hin. Jede Transaktion in der Liste behält ihre eigene Währung, sodass du immer siehst, was tatsächlich erfasst wurde. Ist kein Kurs verfügbar, bleibt der Betrag aus den Summen heraus, statt in der falschen Währung mitgezählt zu werden — auch das steht im Bericht.
+
 ## Einen Bericht generieren
 
 1. Wähle ein **Format** (CSV, PDF oder Excel)
@@ -24731,6 +24741,8 @@ Tres formatos de exportacion disponibles:
 
 Generar informes y crear copias de seguridad es gratis en todos los planes. Solo el envio automatico por correo descrito mas abajo requiere un plan de pago.
 
+Los totales se muestran en **tu moneda de visualizacion**, la del boton en la pantalla de inicio, y no en la moneda de una transaccion cualquiera. Los importes registrados en otra moneda se convierten a los tipos actuales antes de sumar nada, y el informe lo indica. Cada transaccion de la lista conserva su propia moneda, asi que siempre ves lo que se registro realmente. Si no hay tipo de cambio disponible, ese importe queda fuera de los totales en lugar de contarse en la moneda equivocada, y el informe tambien lo senala.
+
 ## Generar un informe
 
 1. Selecciona un **formato** (CSV, PDF o Excel)
@@ -29136,6 +29148,8 @@ Trois formats d'export disponibles :
 | **Excel** | Classeur multi-feuilles avec feuilles Resume, Depenses et Revenus | Tous les plans |
 
 Generer des rapports et creer des sauvegardes est gratuit dans tous les forfaits. Seul l'envoi automatique par e-mail decrit ci-dessous necessite un forfait payant.
+
+Les totaux sont exprimes dans **votre devise d'affichage**, celle du bouton sur l'ecran d'accueil, et non dans la devise d'une transaction particuliere. Les montants enregistres dans une autre devise sont convertis aux taux actuels avant toute addition, et le rapport le precise. Chaque transaction de la liste conserve sa propre devise, vous voyez donc toujours ce qui a reellement ete enregistre. Si aucun taux n'est disponible, le montant reste en dehors des totaux plutot que d'etre compte dans la mauvaise devise, et le rapport le signale aussi.
 
 ## Generer un rapport
 
@@ -33548,6 +33562,8 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 Стварэнне справаздач і рэзервовых копій бясплатнае на ўсіх планах. Платнай з'яўляецца толькі аўтаматычная адпраўка на e-mail, апісаная ніжэй.
 
+Вынікі падаюцца ў **вашай валюце адлюстравання** — той, што на кнопцы на галоўным экране, а не ў валюце якойсьці адной транзакцыі. Сумы, запісаныя ў іншай валюце, пералічваюцца па цяперашніх курсах перш чым нешта складаецца, і справаздача пра гэта паведамляе. Кожная транзакцыя ў спісе захоўвае сваю валюту, таму заўсёды відаць, што было запісана насамрэч. Калі курс недаступны, такая сума не ўваходзіць у вынікі замест таго, каб быць палічанай у чужой валюце, — справаздача пазначае і гэта.
+
 ## Генерацыя справаздачы
 
 1. Выберыце **фармат** (CSV, PDF або Excel)
@@ -37916,6 +37932,8 @@ Er zijn drie exportformaten beschikbaar:
 | **Excel** | Werkmap met meerdere bladen: Overzicht, Uitgaven en Inkomsten | Alle abonnementen |
 
 Rapporten genereren en back-ups maken is gratis in alle abonnementen. Alleen de hieronder beschreven automatische e-mailbezorging vereist een betaald abonnement.
+
+De totalen staan in **jouw weergavevaluta** — die van de knop op het startscherm, niet in de valuta van een willekeurige transactie. Bedragen in een andere valuta worden tegen actuele koersen omgerekend voordat er iets wordt opgeteld, en het rapport vermeldt dat. Elke transactie in de lijst houdt zijn eigen valuta, zodat je altijd ziet wat er werkelijk is vastgelegd. Is er geen koers beschikbaar, dan blijft dat bedrag buiten de totalen in plaats van in de verkeerde valuta te worden meegeteld, en ook dat staat in het rapport.
 
 ## Een rapport genereren
 

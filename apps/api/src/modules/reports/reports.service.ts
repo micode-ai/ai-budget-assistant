@@ -4,6 +4,13 @@ import { CsvGenerator } from './generators/csv-generator';
 import { PdfGenerator } from './generators/pdf-generator';
 import { ExcelGenerator } from './generators/excel-generator';
 import { GenerateReportDto } from './dto';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { getRatesSafe } from '../../common/utils/fx';
+import {
+  buildCategoryTotals,
+  convertRowsToBase,
+  needsConversion,
+} from './report-currency.util';
 import type { Response } from 'express';
 
 @Injectable()
@@ -15,9 +22,22 @@ export class ReportsService {
     private readonly csvGenerator: CsvGenerator,
     private readonly pdfGenerator: PdfGenerator,
     private readonly excelGenerator: ExcelGenerator,
+    private readonly exchangeRateService: ExchangeRateService,
   ) {}
 
-  async generateReport(accountId: string, userId: string, dto: GenerateReportDto) {
+  /**
+   * `baseCurrency` is the caller's display currency (`user.currencyCode`), the same
+   * convention as Fat Finder (ABA-386) and Spending Story (ABA-387). It is never
+   * inferred from a transaction row, and every amount is converted into it BEFORE
+   * anything is summed — the totals used to add a EUR charge to a PLN report as
+   * though it were zloty.
+   */
+  async generateReport(
+    accountId: string,
+    userId: string,
+    dto: GenerateReportDto,
+    baseCurrency = 'USD',
+  ) {
     // Check encryption tier
     const account = await this.prisma.account.findUnique({
       where: { id: accountId },
@@ -95,21 +115,35 @@ export class ReportsService {
       );
     }
 
-    // Compute summary
-    const totalExpenses = filteredExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
-    const totalIncome = filteredIncomes.reduce((sum, i) => sum + Number(i.amount), 0);
+    // Everything is expressed in ONE currency before it is summed. Rates are only
+    // fetched when the rows actually mix currencies.
+    const mixesCurrencies =
+      needsConversion(filteredExpenses, baseCurrency) ||
+      needsConversion(filteredIncomes, baseCurrency);
+    const rates = mixesCurrencies
+      ? await getRatesSafe(this.exchangeRateService, baseCurrency)
+      : null;
 
-    // Category breakdown (expenses only)
-    const categoryMap = new Map<string, { name: string; amount: number }>();
-    for (const e of filteredExpenses) {
-      const catName = e.category?.name || 'Uncategorized';
-      const existing = categoryMap.get(catName) || { name: catName, amount: 0 };
-      existing.amount += Number(e.amount);
-      categoryMap.set(catName, existing);
+    const convertedExpenses = convertRowsToBase(filteredExpenses, baseCurrency, rates);
+    const convertedIncomes = convertRowsToBase(filteredIncomes, baseCurrency, rates);
+
+    const totalExpenses = convertedExpenses.total;
+    const totalIncome = convertedIncomes.total;
+    const fxConverted = convertedExpenses.fxConverted || convertedIncomes.fxConverted;
+    const fxApproximate = convertedExpenses.fxApproximate || convertedIncomes.fxApproximate;
+
+    if (fxApproximate) {
+      this.logger.warn(
+        `[Reports] account=${accountId} base=${baseCurrency}: some amounts had no rate and were excluded from the totals`,
+      );
     }
-    const categories = Array.from(categoryMap.values())
-      .sort((a, b) => b.amount - a.amount)
-      .map(c => ({ ...c, percentage: totalExpenses > 0 ? (c.amount / totalExpenses) * 100 : 0 }));
+
+    // Category breakdown (expenses only), over the converted amounts.
+    const categories = buildCategoryTotals(
+      convertedExpenses.rows,
+      (e) => e.category?.name || '',
+      totalExpenses,
+    );
 
     const formatDate = (d: Date) => d.toISOString().split('T')[0];
     const getDesc = (desc: string | null) => desc || '';
@@ -170,10 +204,12 @@ export class ReportsService {
         periodEnd: formatDate(endDate),
         totalIncome,
         totalExpenses,
-        currencyCode: account.currencyCode,
+        currencyCode: baseCurrency,
         locale: dto.locale,
         categories,
         transactions,
+        fxConverted,
+        fxApproximate,
       });
       extension = 'pdf';
     } else {
@@ -206,10 +242,12 @@ export class ReportsService {
         periodEnd: formatDate(endDate),
         totalIncome,
         totalExpenses,
-        currencyCode: account.currencyCode,
+        currencyCode: baseCurrency,
         categories,
         expenses: expenseRows,
         incomes: incomeRows,
+        fxConverted,
+        fxApproximate,
       });
       extension = 'xlsx';
     }
