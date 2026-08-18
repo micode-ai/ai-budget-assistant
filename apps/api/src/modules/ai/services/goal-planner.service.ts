@@ -1,5 +1,6 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
@@ -273,7 +274,7 @@ Return ONLY valid JSON:
     });
     if (!goal) throw new NotFoundException('Goal not found');
 
-    const data: any = {};
+    const data: Prisma.SavingsGoalUncheckedUpdateInput = {};
     if (dto.name !== undefined) data.name = dto.name;
     if (dto.targetAmount !== undefined) data.targetAmount = dto.targetAmount;
     if (dto.deadline !== undefined) data.deadline = new Date(dto.deadline);
@@ -281,9 +282,9 @@ Return ONLY valid JSON:
     if (dto.status !== undefined) data.status = dto.status;
 
     // Auto-complete: mark as completed when currentAmount reaches targetAmount
-    if (data.currentAmount !== undefined && goal.status === 'active') {
-      const target = data.targetAmount !== undefined ? data.targetAmount : Number(goal.targetAmount);
-      if (Number(data.currentAmount) >= target) {
+    if (dto.currentAmount !== undefined && goal.status === 'active') {
+      const target = dto.targetAmount !== undefined ? dto.targetAmount : Number(goal.targetAmount);
+      if (dto.currentAmount >= target) {
         data.status = 'completed';
       }
     }
