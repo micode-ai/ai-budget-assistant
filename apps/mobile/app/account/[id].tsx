@@ -1,16 +1,8 @@
-import React, { useCallback, useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ActivityIndicator,
-  Modal,
-  ScrollView,
-} from 'react-native';
+import { useCallback, useState } from 'react';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { router, useLocalSearchParams, useFocusEffect } from 'expo-router';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTranslation } from 'react-i18next';
@@ -18,17 +10,17 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountRole, AccountMember, AccountInvitation } from '@budget/shared-types';
 import { api } from '@/services/api';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
+import { FinancialMonthSheet } from '@/components/account/FinancialMonthSheet';
+import { MembersSection } from '@/components/account/MembersSection';
+import { TripActionsCard, TripArchiveButton } from '@/components/account/TripSection';
 
-// 1..31 — every possible financial-month anchor day. "Calendar month" (null)
-// is rendered as its own row above this list, not as a 0th entry here.
-const ANCHOR_DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
+const MEMBER_VISIBLE_TYPES: string[] = ['shared', 'business', 'investment', 'trip'];
 
 export default function AccountDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const insets = useSafeAreaInsets();
   const {
     accounts,
     members,
@@ -38,14 +30,8 @@ export default function AccountDetailScreen() {
     removeMember,
     updateMemberRole,
     leaveAccount,
-    archiveTrip,
     isLoading,
   } = useAccountStore();
-  const ROLE_COLORS: Record<AccountRole, string> = {
-    owner: theme.colors.primary,
-    editor: theme.colors.secondary,
-    viewer: theme.colors.textTertiary,
-  };
 
   const account = accounts.find((a) => a.id === id);
   const accountMembers = id ? members[id] || [] : [];
@@ -60,7 +46,7 @@ export default function AccountDetailScreen() {
 
   useFocusEffect(
     useCallback(() => {
-      if (id && (account?.type === 'shared' || account?.type === 'business' || account?.type === 'investment' || account?.type === 'trip')) {
+      if (id && account && MEMBER_VISIBLE_TYPES.includes(account.type)) {
         loadMembers(id);
         loadInvitations();
       }
@@ -92,6 +78,7 @@ export default function AccountDetailScreen() {
   }
 
   const isOwner = account.myRole === 'owner';
+  const showMembers = MEMBER_VISIBLE_TYPES.includes(account.type);
 
   const openAnchorSheet = () => {
     setPendingAnchorDay(account.monthAnchorDay ?? null);
@@ -224,41 +211,6 @@ export default function AccountDetailScreen() {
     showAlert(t('accounts.changeRole'), t('accounts.selectRole'), buttons as any);
   };
 
-  const doArchiveTrip = async (force: boolean) => {
-    if (!id) return;
-    try {
-      await archiveTrip(id, force);
-    } catch (e) {
-      // The API returns a 400 (no `code` field) specifically when there are
-      // still unconfirmed settle-up transactions and `force` wasn't passed —
-      // see accounts.service.ts archiveTrip(). Offer the force override.
-      const status = (e as { status?: number } | undefined)?.status;
-      if (!force && status === 400) {
-        showAlert(t('trip.archiveTrip'), t('trip.archiveTripUnconfirmedWarning'), [
-          { text: t('common.cancel'), style: 'cancel' },
-          {
-            text: t('trip.archiveTripForce'),
-            style: 'destructive',
-            onPress: () => doArchiveTrip(true),
-          },
-        ]);
-        return;
-      }
-      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
-    }
-  };
-
-  const handleArchiveTrip = () => {
-    showAlert(t('trip.archiveTrip'), t('trip.archiveTripConfirm'), [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('trip.archiveTrip'),
-        style: 'destructive',
-        onPress: () => doArchiveTrip(false),
-      },
-    ]);
-  };
-
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
@@ -329,138 +281,27 @@ export default function AccountDetailScreen() {
         )}
 
         {/* Trip actions (only for trip accounts) */}
-        {account.type === 'trip' && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('trip.tripName')}</Text>
-            <View style={styles.card}>
-              <TouchableOpacity
-                style={styles.tripActionRow}
-                onPress={() => router.push(`/trip/${id}/settle-up`)}
-              >
-                <Ionicons name="swap-horizontal-outline" size={20} color={theme.colors.primary} />
-                <Text style={styles.tripActionText}>{t('trip.settleUp')}</Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
-              </TouchableOpacity>
-              <View style={styles.divider} />
-              <TouchableOpacity
-                style={styles.tripActionRow}
-                onPress={() => router.push(`/trip/payment-settings?id=${id}`)}
-              >
-                <Ionicons name="card-outline" size={20} color={theme.colors.primary} />
-                <Text style={styles.tripActionText}>{t('trip.paymentSettingsTitle')}</Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
-              </TouchableOpacity>
-              <View style={styles.divider} />
-              <TouchableOpacity
-                style={styles.tripActionRow}
-                onPress={async () => {
-                  const { currentAccountId, switchAccount } = useAccountStore.getState();
-                  if (id && id !== currentAccountId) await switchAccount(id);
-                  router.push({ pathname: '/(tabs)/expenses', params: { view: 'map', mapKey: Date.now().toString() } });
-                }}
-              >
-                <Ionicons name="map-outline" size={20} color={theme.colors.primary} />
-                <Text style={styles.tripActionText}>{t('trip.tripMap')}</Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
-              </TouchableOpacity>
-            </View>
-          </View>
-        )}
+        {account.type === 'trip' && <TripActionsCard accountId={id!} />}
 
-        {/* Members Section (for shared accounts) */}
-        {(account.type === 'shared' || account.type === 'business' || account.type === 'investment' || account.type === 'trip') && (
-          <View style={styles.section}>
-            <View style={styles.sectionHeader}>
-              <Text style={styles.sectionTitle}>{t('accounts.members')}</Text>
-              {isOwner && (
-                <TouchableOpacity onPress={() => router.push(`/account/invite?accountId=${id}`)}>
-                  <Ionicons name="person-add-outline" size={22} color={theme.colors.primary} />
-                </TouchableOpacity>
-              )}
-            </View>
-
-            {accountMembers.length === 0 && isLoading ? (
-              <ActivityIndicator style={{ marginVertical: theme.spacing[5] }} color={theme.colors.primary} />
-            ) : (
-              accountMembers.map((member) => (
-                <View key={member.id} style={styles.memberCard}>
-                  <View style={styles.memberAvatar}>
-                    <Text style={styles.memberAvatarText}>
-                      {(member.user?.name || member.user?.email || '?')[0].toUpperCase()}
-                    </Text>
-                  </View>
-                  <View style={styles.memberInfo}>
-                    <Text style={styles.memberName}>
-                      {member.user?.name || member.user?.email}
-                    </Text>
-                    <View style={[styles.roleBadge, { backgroundColor: ROLE_COLORS[member.role] + '20' }]}>
-                      <Text style={[styles.roleText, { color: ROLE_COLORS[member.role] }]}>
-                        {t(`accounts.roles.${member.role}`)}
-                      </Text>
-                    </View>
-                  </View>
-                  {isOwner && member.role !== 'owner' && (
-                    <View style={styles.memberActions}>
-                      <TouchableOpacity
-                        onPress={() => handleChangeRole(member)}
-                        style={{ marginRight: theme.spacing[3] }}
-                      >
-                        <Ionicons name="swap-horizontal-outline" size={20} color={theme.colors.secondary} />
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => handleRemoveMember(member)}>
-                        <Ionicons name="close-circle-outline" size={20} color={theme.colors.danger} />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                </View>
-              ))
-            )}
-          </View>
-        )}
-
-        {/* Pending Invitations (for shared accounts, owners only) */}
-        {(account.type === 'shared' || account.type === 'business' || account.type === 'investment' || account.type === 'trip') && isOwner && (
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('accounts.pendingInvitations')}</Text>
-            {loadingInvitations ? (
-              <ActivityIndicator style={{ marginVertical: theme.spacing[3] }} color={theme.colors.primary} />
-            ) : invitations.length === 0 ? (
-              <Text style={styles.emptyText}>{t('accounts.noPendingInvitations')}</Text>
-            ) : (
-              invitations.map((invitation) => (
-                <View key={invitation.id} style={styles.memberCard}>
-                  <View style={[styles.memberAvatar, { backgroundColor: '#F0AD4E' }]}>
-                    <Ionicons name="mail-outline" size={18} color={theme.colors.onSemantic} />
-                  </View>
-                  <View style={styles.memberInfo}>
-                    <Text style={styles.memberName}>
-                      {invitation.invitedEmail || invitation.inviteCode}
-                    </Text>
-                    <View style={[styles.roleBadge, { backgroundColor: ROLE_COLORS[invitation.role] + '20' }]}>
-                      <Text style={[styles.roleText, { color: ROLE_COLORS[invitation.role] }]}>
-                        {t(`accounts.roles.${invitation.role}`)}
-                      </Text>
-                    </View>
-                  </View>
-                  <TouchableOpacity onPress={() => handleCancelInvitation(invitation)}>
-                    <Ionicons name="close-circle-outline" size={20} color={theme.colors.danger} />
-                  </TouchableOpacity>
-                </View>
-              ))
-            )}
-          </View>
+        {/* Members + pending invitations (for shared/business/investment/trip accounts) */}
+        {showMembers && (
+          <MembersSection
+            accountId={id!}
+            isOwner={isOwner}
+            members={accountMembers}
+            isLoadingMembers={isLoading}
+            invitations={invitations}
+            loadingInvitations={loadingInvitations}
+            onChangeRole={handleChangeRole}
+            onRemoveMember={handleRemoveMember}
+            onCancelInvitation={handleCancelInvitation}
+          />
         )}
 
         {/* Danger Zone */}
         <View style={styles.section}>
-          {isOwner && account.type === 'trip' && account.tripStatus !== 'archived' && (
-            <TouchableOpacity
-              style={[styles.dangerButton, styles.tripArchiveButton]}
-              onPress={handleArchiveTrip}
-            >
-              <Ionicons name="archive-outline" size={20} color={theme.colors.danger} />
-              <Text style={styles.dangerButtonText}>{t('trip.archiveTrip')}</Text>
-            </TouchableOpacity>
+          {account.type === 'trip' && (
+            <TripArchiveButton accountId={id!} isOwner={isOwner} tripStatus={account.tripStatus} />
           )}
           {isOwner ? (
             <TouchableOpacity style={styles.dangerButton} onPress={handleDelete}>
@@ -476,72 +317,14 @@ export default function AccountDetailScreen() {
         </View>
       </KeyboardAwareScreen>
 
-      {/* Financial month anchor picker */}
-      <Modal
+      <FinancialMonthSheet
         visible={showAnchorSheet}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setShowAnchorSheet(false)}
-      >
-        <View style={styles.anchorOverlay}>
-          <TouchableOpacity
-            style={styles.anchorBackdrop}
-            activeOpacity={1}
-            onPress={() => setShowAnchorSheet(false)}
-          />
-          <View style={[styles.anchorSheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
-            <View style={styles.anchorHandle} />
-            <Text style={styles.anchorTitle}>{t('accounts.financialMonthPickerTitle')}</Text>
-            <Text style={styles.anchorHint}>{t('accounts.financialMonthHint')}</Text>
-            {pendingAnchorDay !== null && pendingAnchorDay > 28 && (
-              <Text style={styles.anchorClamped}>{t('accounts.financialMonthClamped')}</Text>
-            )}
-            <ScrollView style={styles.anchorList} showsVerticalScrollIndicator={false}>
-              <TouchableOpacity
-                style={styles.anchorOption}
-                onPress={() => setPendingAnchorDay(null)}
-                activeOpacity={0.7}
-              >
-                <Text style={styles.anchorOptionText}>{t('accounts.financialMonthCalendar')}</Text>
-                {pendingAnchorDay === null && (
-                  <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
-                )}
-              </TouchableOpacity>
-              <View style={styles.divider} />
-              {ANCHOR_DAYS.map((day) => (
-                <React.Fragment key={day}>
-                  <TouchableOpacity
-                    style={styles.anchorOption}
-                    onPress={() => setPendingAnchorDay(day)}
-                    activeOpacity={0.7}
-                  >
-                    <Text style={styles.anchorOptionText}>{day}</Text>
-                    {pendingAnchorDay === day && (
-                      <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
-                    )}
-                  </TouchableOpacity>
-                  {day < 31 && <View style={styles.divider} />}
-                </React.Fragment>
-              ))}
-            </ScrollView>
-            <View style={styles.anchorActions}>
-              <TouchableOpacity
-                style={styles.anchorCancelButton}
-                onPress={() => setShowAnchorSheet(false)}
-              >
-                <Text style={styles.anchorCancelText}>{t('common.cancel')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.anchorSaveButton, savingAnchor && styles.anchorSaveButtonDisabled]}
-                onPress={handleSaveAnchor}
-                disabled={savingAnchor}
-              >
-                <Text style={styles.anchorSaveText}>{t('common.save')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </Modal>
+        onClose={() => setShowAnchorSheet(false)}
+        pendingAnchorDay={pendingAnchorDay}
+        onSelectDay={setPendingAnchorDay}
+        onSave={handleSaveAnchor}
+        saving={savingAnchor}
+      />
     </SafeAreaView>
   );
 }
@@ -564,12 +347,6 @@ const createStyles = (theme: Theme) => ({
   },
   section: {
     marginBottom: theme.spacing[6],
-  },
-  sectionHeader: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    marginBottom: theme.spacing[3],
   },
   sectionTitle: {
     ...theme.textStyles.label,
@@ -635,56 +412,6 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
     flex: 1,
   },
-  divider: {
-    height: 1,
-    backgroundColor: theme.colors.divider,
-  },
-  tripArchiveButton: {
-    marginBottom: theme.spacing[3],
-  },
-  memberCard: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[3],
-    marginBottom: theme.spacing[2],
-  },
-  memberAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: theme.colors.primary,
-    justifyContent: 'center' as const,
-    alignItems: 'center' as const,
-    marginRight: theme.spacing[3],
-  },
-  memberAvatarText: {
-    color: theme.colors.textInverse,
-    ...theme.textStyles.bodyLargeSemiBold,
-  },
-  memberInfo: {
-    flex: 1,
-  },
-  memberName: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textPrimary,
-  },
-  roleBadge: {
-    alignSelf: 'flex-start' as const,
-    paddingHorizontal: theme.spacing[2],
-    paddingVertical: theme.spacing[0.5],
-    borderRadius: theme.spacing[2.5],
-    marginTop: theme.spacing[1],
-  },
-  roleText: {
-    ...theme.textStyles.caption,
-    fontWeight: '600' as const,
-  },
-  memberActions: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-  },
   dangerButton: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
@@ -699,98 +426,5 @@ const createStyles = (theme: Theme) => ({
   dangerButtonText: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.danger,
-  },
-  emptyText: {
-    ...theme.textStyles.body,
-    color: theme.colors.textTertiary,
-    textAlign: 'center' as const,
-    paddingVertical: theme.spacing[3],
-  },
-
-  // Financial month anchor sheet
-  anchorOverlay: {
-    flex: 1,
-    justifyContent: 'flex-end' as const,
-  },
-  anchorBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  anchorSheet: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: theme.borderRadius['2xl'],
-    borderTopRightRadius: theme.borderRadius['2xl'],
-    padding: theme.spacing[6],
-    maxHeight: '80%' as const,
-  },
-  anchorHandle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const,
-    marginBottom: theme.spacing[4],
-  },
-  anchorTitle: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[2],
-  },
-  anchorHint: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginBottom: theme.spacing[3],
-  },
-  anchorClamped: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.warning,
-    marginBottom: theme.spacing[3],
-  },
-  anchorList: {
-    marginBottom: theme.spacing[4],
-  },
-  anchorOption: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-  },
-  anchorOptionText: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textPrimary,
-  },
-  anchorActions: {
-    flexDirection: 'row' as const,
-    gap: theme.spacing[3],
-  },
-  anchorCancelButton: {
-    flex: 1,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  anchorCancelText: {
-    fontSize: 16,
-    fontWeight: '500' as const,
-    color: theme.colors.textSecondary,
-  },
-  anchorSaveButton: {
-    flex: 1,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.primary,
-  },
-  anchorSaveButtonDisabled: {
-    opacity: 0.6,
-  },
-  anchorSaveText: {
-    fontSize: 16,
-    fontWeight: '600' as const,
-    color: theme.colors.textInverse,
   },
 });
