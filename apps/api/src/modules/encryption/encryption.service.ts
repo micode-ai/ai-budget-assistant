@@ -8,6 +8,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { CacheService } from '../../common/cache/cache.service';
 import {
   SetupEncryptionDto,
   EnableAccountEncryptionDto,
@@ -19,22 +20,39 @@ import {
 import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
+const RECOVERY_RATE_LIMIT_MAX_ATTEMPTS = 5;
+const RECOVERY_RATE_LIMIT_WINDOW_MS = 15 * 60 * 1000;
+
+export const recoveryRateLimitKey = (email: string) => `enc:recovery:${email}`;
+
 @Injectable()
 export class EncryptionService {
   private readonly logger = new Logger(EncryptionService.name);
-  private readonly recoveryAttempts = new Map<string, number[]>();
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly cache: CacheService,
+  ) {}
 
-  private checkRecoveryRateLimit(email: string): void {
-    const now = Date.now();
-    const windowMs = 15 * 60 * 1000;
-    const attempts = (this.recoveryAttempts.get(email) || []).filter((t) => now - t < windowMs);
-    if (attempts.length >= 5) {
-      throw new HttpException('Too many recovery attempts. Please try again later.', HttpStatus.TOO_MANY_REQUESTS);
+  private async checkRecoveryRateLimit(email: string): Promise<void> {
+    const tooManyAttempts = () =>
+      new HttpException('Too many recovery attempts. Please try again later.', HttpStatus.TOO_MANY_REQUESTS);
+
+    let totalHits: number;
+    try {
+      totalHits = await this.cache.incrementWindow(recoveryRateLimitKey(email), RECOVERY_RATE_LIMIT_WINDOW_MS);
+    } catch (err) {
+      // Redis is unreachable — fail closed. This is a brute-force guard on
+      // recovering a user's E2EE keys, not a best-effort cache: letting the
+      // attempt through on a Redis outage is exactly the failure mode this
+      // fix exists to close.
+      this.logger.error(`recovery rate limit check failed for ${email}: ${(err as Error).message}`);
+      throw tooManyAttempts();
     }
-    attempts.push(now);
-    this.recoveryAttempts.set(email, attempts);
+
+    if (totalHits > RECOVERY_RATE_LIMIT_MAX_ATTEMPTS) {
+      throw tooManyAttempts();
+    }
   }
 
   async setupEncryption(userId: string, dto: SetupEncryptionDto) {
@@ -400,7 +418,7 @@ export class EncryptionService {
   }
 
   async recover(dto: RecoverEncryptionDto) {
-    this.checkRecoveryRateLimit(dto.email);
+    await this.checkRecoveryRateLimit(dto.email);
 
     const user = await this.prisma.user.findUnique({
       where: { email: dto.email },

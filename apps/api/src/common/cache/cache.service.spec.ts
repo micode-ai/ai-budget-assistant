@@ -8,6 +8,10 @@ const mockScan = jest.fn();
 const mockPing = jest.fn();
 const mockQuit = jest.fn();
 const mockOn = jest.fn();
+const mockPipelineIncr = jest.fn();
+const mockPipelinePexpire = jest.fn();
+const mockPipelineExec = jest.fn();
+const mockPipeline = jest.fn();
 
 jest.mock('ioredis', () => ({
   __esModule: true,
@@ -19,6 +23,7 @@ jest.mock('ioredis', () => ({
     ping: mockPing,
     quit: mockQuit,
     on: mockOn,
+    pipeline: mockPipeline,
   })),
 }));
 
@@ -26,7 +31,26 @@ describe('CacheService', () => {
   let cache: CacheService;
 
   beforeEach(() => {
-    [mockGet, mockSet, mockDel, mockScan, mockPing, mockQuit, mockOn].forEach((m) => m.mockReset());
+    [
+      mockGet,
+      mockSet,
+      mockDel,
+      mockScan,
+      mockPing,
+      mockQuit,
+      mockOn,
+      mockPipeline,
+      mockPipelineIncr,
+      mockPipelinePexpire,
+      mockPipelineExec,
+    ].forEach((m) => m.mockReset());
+    mockPipelineIncr.mockReturnThis();
+    mockPipelinePexpire.mockReturnThis();
+    mockPipeline.mockImplementation(() => ({
+      incr: mockPipelineIncr,
+      pexpire: mockPipelinePexpire,
+      exec: mockPipelineExec,
+    }));
     cache = new CacheService({ get: () => 'redis://localhost:6379' } as unknown as ConfigService);
   });
 
@@ -104,6 +128,36 @@ describe('CacheService', () => {
     it('swallows redis errors', async () => {
       mockScan.mockRejectedValueOnce(new Error('timeout'));
       await expect(cache.delByPrefix('p:')).resolves.toBeUndefined();
+    });
+  });
+
+  describe('incrementWindow', () => {
+    it('returns the incremented count and sets expiry only on new keys (NX)', async () => {
+      mockPipelineExec.mockResolvedValueOnce([
+        [null, 3],
+        [null, 1],
+      ]);
+
+      const count = await cache.incrementWindow('k', 900000);
+
+      expect(count).toBe(3);
+      expect(mockPipelineIncr).toHaveBeenCalledWith('k');
+      expect(mockPipelinePexpire).toHaveBeenCalledWith('k', 900000, 'NX');
+    });
+
+    it('throws when the incr command itself errors', async () => {
+      mockPipelineExec.mockResolvedValueOnce([
+        [new Error('boom'), null],
+        [null, 1],
+      ]);
+
+      await expect(cache.incrementWindow('k', 900000)).rejects.toThrow('boom');
+    });
+
+    it('throws (does not swallow) when redis is unreachable', async () => {
+      mockPipelineExec.mockRejectedValueOnce(new Error('connection lost'));
+
+      await expect(cache.incrementWindow('k', 900000)).rejects.toThrow('connection lost');
     });
   });
 

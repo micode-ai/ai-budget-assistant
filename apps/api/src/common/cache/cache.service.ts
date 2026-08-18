@@ -88,6 +88,28 @@ export class CacheService implements OnModuleDestroy {
     return this.redis.ping();
   }
 
+  /**
+   * Atomic fixed-window counter (`INCR` + `PEXPIRE … NX`), mirroring
+   * `RedisThrottlerStorage`. Returns the hit count for the current window.
+   *
+   * Unlike every other method here, this does NOT swallow Redis errors: it
+   * exists to gate abuse-prone security actions (e.g. brute-force limits on
+   * account recovery), and silently returning "no hits yet" on a Redis error
+   * would disable the limit precisely when it matters. Callers must decide
+   * how to fail (typically: deny the action).
+   */
+  async incrementWindow(key: string, windowMs: number): Promise<number> {
+    const results = (await this.redis
+      .pipeline()
+      .incr(key)
+      .pexpire(key, windowMs, 'NX')
+      .exec()) as [Error | null, unknown][];
+
+    const [incrErr, totalHits] = results[0];
+    if (incrErr) throw incrErr;
+    return totalHits as number;
+  }
+
   async onModuleDestroy(): Promise<void> {
     await this.redis.quit().catch(() => undefined);
   }
