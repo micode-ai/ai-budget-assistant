@@ -1,11 +1,11 @@
-import { OcrService } from '../ai/services/ocr.service';
+import { ReceiptFinalizerService } from '../ai/services/receipt-finalizer.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
 import { PriceHistoryService } from './price-history.service';
 
 /**
  * The whole receipt price-check architecture rests on one claim: the inline
- * scan-time check (OcrService.runPriceCheck, called from finalizeReceipt
- * BEFORE the expense exists) and the persisted, feed-writing check
+ * scan-time check (ReceiptFinalizerService.runPriceCheck, called from
+ * finalizeReceipt BEFORE the expense exists) and the persisted, feed-writing check
  * (AnomalyService.detectPriceOvercharge, called AFTER ExpensesService.create
  * has already committed the expense and its expense_items) run the SAME
  * deterministic engine over the SAME price history and therefore MUST agree.
@@ -65,7 +65,7 @@ describe('receipt price-check: cross-path agreement (OCR scan-time vs. persisted
     // --- Path A: OCR scan-time check. The expense does not exist yet, so the
     // fake DB this call sees only ever contains the prior purchase. ---
     const ocrPriceHistory = new PriceHistoryService(makeFakePrisma([priorRow]) as any, null as any);
-    const ocrService = Object.create(OcrService.prototype) as any;
+    const ocrService = Object.create(ReceiptFinalizerService.prototype) as any;
     ocrService.priceHistory = ocrPriceHistory;
     ocrService.logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
 

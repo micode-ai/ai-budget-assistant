@@ -4,6 +4,8 @@ import { WhisperService } from './services/whisper.service';
 import { ChatService } from './services/chat.service';
 import { CategorizationService } from './services/categorization.service';
 import { OcrService } from './services/ocr.service';
+import { ReceiptFinalizerService } from './services/receipt-finalizer.service';
+import { ReceiptPdfService } from './services/receipt-pdf.service';
 import { GeocodingService } from './services/geocoding.service';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
@@ -35,6 +37,8 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     ChatService,
     CategorizationService,
     OcrService,
+    ReceiptFinalizerService,
+    ReceiptPdfService,
     GeocodingService,
     TagSuggestionService,
     ProjectSuggestionService,
