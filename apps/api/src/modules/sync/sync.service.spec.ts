@@ -472,18 +472,17 @@ describe('SyncService', () => {
     });
   });
 
-  describe('processChange — budget (unimplemented stub handler)', () => {
-    // processBudgetChange (and processCategoryChange) is an unimplemented
-    // stub that always returns success without writing anything to the
-    // database. This is not exercised in production today — the mobile app
-    // manages budgets/categories via their own dedicated REST endpoints and
-    // never emits 'budget'/'category' SyncChange entries through this push
-    // path — but pinning the current behavior here means a future attempt to
-    // route budget sync through this handler gets a loud, specific test
-    // failure the moment real persistence is expected, instead of silently
-    // reporting success while dropping the change on the floor (exactly the
-    // failure mode this tech-debt item warns about).
-    it('returns success without calling into Prisma', async () => {
+  describe('processChange — budget/category (unsupported sync-queue entities)', () => {
+    // Budgets and categories are deliberately NOT sync-queue entities — the
+    // mobile app manages both exclusively through their own REST CRUD
+    // endpoints and never emits 'budget'/'category' SyncChange entries
+    // through this push path. processBudgetChange/processCategoryChange used
+    // to silently return status:'success' without writing anything, which
+    // would have marked a future such change synced on the client while the
+    // server discarded it. They now fail loudly instead — pinning that
+    // behavior here means a future attempt to route budget/category writes
+    // through this handler gets an explicit error, not a false success.
+    it('returns an error for a budget change without calling into Prisma', async () => {
       const result = await (service as any).processChange('acc-1', 'user-1', {
         entityType: 'budget',
         entityId: 'client-budget-1',
@@ -493,7 +492,26 @@ describe('SyncService', () => {
         payload: {},
       });
 
-      expect(result).toEqual({ entityId: 'client-budget-1', status: 'success' });
+      expect(result.entityId).toBe('client-budget-1');
+      expect(result.status).toBe('error');
+      expect(result.error).toMatch(/not supported/i);
+      expect(prisma.user.update).not.toHaveBeenCalled();
+    });
+
+    it('returns an error for a category change without calling into Prisma', async () => {
+      const result = await (service as any).processChange('acc-1', 'user-1', {
+        entityType: 'category',
+        entityId: 'client-category-1',
+        operation: 'update',
+        clientVersion: 0,
+        accountId: 'acc-1',
+        payload: {},
+      });
+
+      expect(result.entityId).toBe('client-category-1');
+      expect(result.status).toBe('error');
+      expect(result.error).toMatch(/not supported/i);
+      expect(prisma.user.update).not.toHaveBeenCalled();
     });
   });
 

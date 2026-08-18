@@ -329,14 +329,26 @@ export class SyncService {
     return { entityId, status: 'error', error: 'Invalid operation' };
   }
 
+  // Budgets and categories are deliberately NOT sync-queue entities — the
+  // mobile app manages both exclusively through their own REST CRUD
+  // endpoints (BudgetsService / CategoriesService) and never pushes a
+  // 'budget'/'category' SyncChange. These two cases exist only because
+  // SyncChange's entityType union still includes them; if a client ever
+  // does queue one (a future offline-edit feature, a store bug), fail
+  // loudly instead of silently reporting success and dropping the write —
+  // a false 'success' here would mark the change synced on the client while
+  // the server discarded it (see docs/tech-debt/sync-service-budget-category-noop-stubs.md).
   private async processBudgetChange(
     accountId: string,
     change: Extract<SyncChange, { entityType: 'budget' }>,
   ): Promise<SyncResult> {
-    // Similar implementation for budgets
+    this.logger.error(
+      `Received unsupported 'budget' sync change for account ${accountId} (entityId=${change.entityId}) — budgets are not synced via the generic sync queue`,
+    );
     return {
       entityId: change.entityId,
-      status: 'success',
+      status: 'error',
+      error: 'Budgets are not supported by the sync queue — use the /budgets REST endpoints instead',
     };
   }
 
@@ -344,10 +356,13 @@ export class SyncService {
     accountId: string,
     change: Extract<SyncChange, { entityType: 'category' }>,
   ): Promise<SyncResult> {
-    // Similar implementation for categories
+    this.logger.error(
+      `Received unsupported 'category' sync change for account ${accountId} (entityId=${change.entityId}) — categories are not synced via the generic sync queue`,
+    );
     return {
       entityId: change.entityId,
-      status: 'success',
+      status: 'error',
+      error: 'Categories are not supported by the sync queue — use the /categories REST endpoints instead',
     };
   }
 
