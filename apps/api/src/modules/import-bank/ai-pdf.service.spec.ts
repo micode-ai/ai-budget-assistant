@@ -1,4 +1,7 @@
 import { ImportBankService } from './import-bank.service';
+import { ImportBankAiPreviewService } from './ai-preview.service';
+import { ImportBankAiPdfService } from './ai-pdf.service';
+import { ImportBankDedupService } from './import-bank-dedup.service';
 import { extractPdfText } from './utils/pdf-text';
 
 const SINGLE_PAGE_TEXT =
@@ -46,6 +49,15 @@ function buildService(
     }),
     trackAiUsage: jest.fn().mockResolvedValue(undefined),
   };
+  const signatures: any = {
+    find: jest.fn().mockResolvedValue(null),
+    record: jest.fn(),
+    confirm: jest.fn(),
+    markCorrected: jest.fn(),
+  };
+  const dedup = new ImportBankDedupService(prisma);
+  const aiPreview = new ImportBankAiPreviewService(prisma, cache, signatures, ai, dedup);
+  const aiPdf = new ImportBankAiPdfService(ai, subscriptions, aiPreview, dedup);
   const service = new ImportBankService(
     prisma,
     { create: jest.fn() } as any,
@@ -53,10 +65,10 @@ function buildService(
     { sendMessage: jest.fn() } as any,
     { checkExpenseBatch: jest.fn() } as any,
     { getRulesMap: jest.fn().mockResolvedValue(new Map()) } as any,
-    { find: jest.fn().mockResolvedValue(null), record: jest.fn(), confirm: jest.fn(), markCorrected: jest.fn() } as any,
-    ai,
-    subscriptions,
-    cache,
+    signatures,
+    aiPreview,
+    aiPdf,
+    dedup,
   );
   return { service, ai, subscriptions };
 }

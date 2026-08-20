@@ -1,4 +1,7 @@
-import { ImportBankService, parseInferenceQuotaEnv } from './import-bank.service';
+import { ImportBankService } from './import-bank.service';
+import { ImportBankAiPreviewService, parseInferenceQuotaEnv } from './ai-preview.service';
+import { ImportBankAiPdfService } from './ai-pdf.service';
+import { ImportBankDedupService } from './import-bank-dedup.service';
 
 const CSV = 'Data;Kwota;Opis\n2026-01-15;-50,00;Biedronka\n2026-01-16;1200,00;Wyplata';
 const CSV_WITH_CURRENCY =
@@ -50,6 +53,10 @@ function buildService(overrides: {
     inferMapping: jest.fn().mockResolvedValue(overrides.inferred ?? null),
     extractRows: jest.fn(),
   };
+  const subscriptions: any = { getCurrent: jest.fn(), trackAiUsage: jest.fn() };
+  const dedup = new ImportBankDedupService(prisma);
+  const aiPreview = new ImportBankAiPreviewService(prisma, cache, signatures, ai, dedup);
+  const aiPdf = new ImportBankAiPdfService(ai, subscriptions, aiPreview, dedup);
   const service = new ImportBankService(
     prisma,
     { create: jest.fn() } as any,   // importBatches
@@ -58,11 +65,11 @@ function buildService(overrides: {
     { checkExpenseBatch: jest.fn() } as any, // anomaly
     { getRulesMap: jest.fn().mockResolvedValue(new Map()) } as any, // merchantRules
     signatures,
-    ai,
-    { getCurrent: jest.fn(), trackAiUsage: jest.fn() } as any, // subscriptions
-    cache,
+    aiPreview,
+    aiPdf,
+    dedup,
   );
-  return { service, prisma, signatures, ai, cache };
+  return { service, prisma, signatures, ai, cache, aiPreview };
 }
 
 const GOOD_INFERENCE = {
@@ -262,8 +269,8 @@ describe('AI inference path', () => {
 
 describe('grantAiConsent (the single writer of consent)', () => {
   it('records consent for a normal account', async () => {
-    const { service, prisma } = buildService();
-    await expect(service.grantAiConsent('acc')).resolves.toEqual({ ok: true });
+    const { aiPreview, prisma } = buildService();
+    await expect(aiPreview.grantAiConsent('acc')).resolves.toEqual({ ok: true });
     expect(prisma.account.update).toHaveBeenCalledWith({
       where: { id: 'acc' },
       data: { aiImportConsentAt: expect.any(Date) },
@@ -271,8 +278,8 @@ describe('grantAiConsent (the single writer of consent)', () => {
   });
 
   it('refuses a tier-2 E2EE account without writing anything', async () => {
-    const { service, prisma } = buildService({ encryptionTier: 2 });
-    await expect(service.grantAiConsent('acc')).rejects.toMatchObject({
+    const { aiPreview, prisma } = buildService({ encryptionTier: 2 });
+    await expect(aiPreview.grantAiConsent('acc')).rejects.toMatchObject({
       response: { code: 'E2EE_UNSUPPORTED' },
     });
     expect(prisma.account.update).not.toHaveBeenCalled();

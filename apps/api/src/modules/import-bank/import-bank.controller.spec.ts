@@ -3,10 +3,12 @@ import { ImportBankController } from './import-bank.controller';
 describe('ImportBankController', () => {
   const service: any = {
     parsePreview: jest.fn().mockResolvedValue({ status: 'parsed' }),
-    grantAiConsent: jest.fn().mockResolvedValue({ ok: true }),
   };
   const mapping: any = {};
-  const controller = new ImportBankController(service, mapping);
+  const aiPreview: any = {
+    grantAiConsent: jest.fn().mockResolvedValue({ ok: true }),
+  };
+  const controller = new ImportBankController(service, mapping, aiPreview);
   const req: any = { accountId: 'acc', accountRole: 'owner', user: { id: 'user' } };
   const file: any = { buffer: Buffer.from('x') };
 
@@ -23,6 +25,6 @@ describe('ImportBankController', () => {
 
   it('records consent on the dedicated endpoint', async () => {
     await expect(controller.aiConsent(req)).resolves.toEqual({ ok: true });
-    expect(service.grantAiConsent).toHaveBeenCalledWith('acc');
+    expect(aiPreview.grantAiConsent).toHaveBeenCalledWith('acc');
   });
 });

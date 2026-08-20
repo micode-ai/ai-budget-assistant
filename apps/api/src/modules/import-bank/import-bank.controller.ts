@@ -5,6 +5,7 @@ import {
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImportBankService } from './import-bank.service';
+import { ImportBankAiPreviewService } from './ai-preview.service';
 import { MappingService } from './mapping/mapping.service';
 import { BankImportCommitBodyDto, CreateMappingBodyDto, RequestBankBodyDto } from './dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -19,6 +20,7 @@ export class ImportBankController {
   constructor(
     private readonly service: ImportBankService,
     private readonly mapping: MappingService,
+    private readonly aiPreview: ImportBankAiPreviewService,
   ) {}
 
   @Post('preview')
@@ -64,7 +66,7 @@ export class ImportBankController {
   @UseGuards(new ViewerBlockGuard(), ThrottlerGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   aiConsent(@Req() req: AuthenticatedRequest) {
-    return this.service.grantAiConsent(req.accountId);
+    return this.aiPreview.grantAiConsent(req.accountId);
   }
 
   @Post('commit')

@@ -1,4 +1,4 @@
-import { ImportBankService } from './import-bank.service';
+import { preloadCategories } from './import-bank-category.util';
 
 /**
  * preloadCategories — resolving an exporting app's own taxonomy.
@@ -13,7 +13,7 @@ import { ImportBankService } from './import-bank.service';
  * transaction on the first unique-constraint violation, so creating categories
  * inside it would let one colliding name take down a whole import (ABA-313).
  */
-function makeService(opts: { existing?: Array<{ id: string; name: string; type: string }> } = {}) {
+function makePrisma(opts: { existing?: Array<{ id: string; name: string; type: string }> } = {}) {
   const existing = opts.existing ?? [];
 
   const findFirst = jest.fn(async ({ where }: any) => {
@@ -31,20 +31,18 @@ function makeService(opts: { existing?: Array<{ id: string; name: string; type: 
   });
 
   const prisma: any = { category: { findFirst, create } };
-  const service = Object.create(ImportBankService.prototype) as ImportBankService;
-  (service as any).prisma = prisma;
 
-  return { service, findFirst, create, existing };
+  return { prisma, findFirst, create, existing };
 }
 
-const preload = (service: ImportBankService, rows: any[], cache = new Map<string, string | null>()) =>
-  (service as any).preloadCategories('acc-1', rows, cache).then(() => cache);
+const preload = (prisma: any, rows: any[], cache = new Map<string, string | null>()) =>
+  preloadCategories(prisma, 'acc-1', rows, cache).then(() => cache);
 
 describe('preloadCategories', () => {
   it('creates a category the account does not have yet', async () => {
-    const { service, create } = makeService();
+    const { prisma, create } = makePrisma();
 
-    const cache = await preload(service, [
+    const cache = await preload(prisma, [
       { kind: 'expense', suggestedCategoryName: 'Jedzenie' },
     ]);
 
@@ -55,22 +53,22 @@ describe('preloadCategories', () => {
   });
 
   it('reuses an existing category instead of creating a duplicate', async () => {
-    const { service, create } = makeService({
+    const { prisma, create } = makePrisma({
       existing: [{ id: 'cat-food', name: 'Jedzenie', type: 'expense' }],
     });
 
-    const cache = await preload(service, [{ kind: 'expense', suggestedCategoryName: 'Jedzenie' }]);
+    const cache = await preload(prisma, [{ kind: 'expense', suggestedCategoryName: 'Jedzenie' }]);
 
     expect(create).not.toHaveBeenCalled();
     expect(cache.get('expense:jedzenie')).toBe('cat-food');
   });
 
   it('matches case-insensitively, so one export cannot mint Food and food', async () => {
-    const { service, create } = makeService({
+    const { prisma, create } = makePrisma({
       existing: [{ id: 'cat-food', name: 'Food', type: 'expense' }],
     });
 
-    const cache = await preload(service, [
+    const cache = await preload(prisma, [
       { kind: 'expense', suggestedCategoryName: 'food' },
       { kind: 'expense', suggestedCategoryName: 'FOOD' },
     ]);
@@ -80,9 +78,9 @@ describe('preloadCategories', () => {
   });
 
   it('resolves a repeated name once, however many rows use it', async () => {
-    const { service, findFirst } = makeService();
+    const { prisma, findFirst } = makePrisma();
 
-    await preload(service, [
+    await preload(prisma, [
       { kind: 'expense', suggestedCategoryName: 'Transport' },
       { kind: 'expense', suggestedCategoryName: 'Transport' },
       { kind: 'expense', suggestedCategoryName: 'Transport' },
@@ -95,9 +93,9 @@ describe('preloadCategories', () => {
     // The unique constraint is on (account_id, name, type), and "Bonus" is a
     // plausible name on both sides. Collapsing them would attach an income
     // category to expenses.
-    const { service, create } = makeService();
+    const { prisma, create } = makePrisma();
 
-    const cache = await preload(service, [
+    const cache = await preload(prisma, [
       { kind: 'expense', suggestedCategoryName: 'Bonus' },
       { kind: 'income', suggestedCategoryName: 'Bonus' },
     ]);
@@ -107,22 +105,21 @@ describe('preloadCategories', () => {
   });
 
   it('recovers from a concurrent create rather than failing the import', async () => {
-    const { service } = makeService();
-    const prisma = (service as any).prisma;
+    const { prisma } = makePrisma();
     prisma.category.create.mockRejectedValueOnce(new Error('P2002'));
     prisma.category.findFirst
       .mockResolvedValueOnce(null) // initial lookup: not there
       .mockResolvedValueOnce({ id: 'cat-raced' }); // re-read after the collision
 
-    const cache = await preload(service, [{ kind: 'expense', suggestedCategoryName: 'Transport' }]);
+    const cache = await preload(prisma, [{ kind: 'expense', suggestedCategoryName: 'Transport' }]);
 
     expect(cache.get('expense:transport')).toBe('cat-raced');
   });
 
   it('touches the database at all only when a row actually names a category', async () => {
-    const { service, findFirst, create } = makeService();
+    const { prisma, findFirst, create } = makePrisma();
 
-    await preload(service, [
+    await preload(prisma, [
       { kind: 'expense' },
       { kind: 'expense', suggestedCategoryName: '   ' },
       { kind: 'fx', suggestedCategoryName: 'Exchange' },

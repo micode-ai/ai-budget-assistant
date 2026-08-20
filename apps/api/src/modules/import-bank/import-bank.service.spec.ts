@@ -1,6 +1,9 @@
 import { Test } from '@nestjs/testing';
 import { PrismaService } from '../../database/prisma.service';
 import { ImportBankService } from './import-bank.service';
+import { ImportBankAiPreviewService } from './ai-preview.service';
+import { ImportBankAiPdfService } from './ai-pdf.service';
+import { ImportBankDedupService } from './import-bank-dedup.service';
 import { ImportBatchesService } from '../import-batches/import-batches.service';
 import { MappingService } from './mapping/mapping.service';
 import { TelegramService } from '../telegram/telegram.service';
@@ -71,6 +74,9 @@ describe('ImportBankService.parsePreview', () => {
     const mod = await Test.createTestingModule({
       providers: [
         ImportBankService,
+        ImportBankAiPreviewService,
+        ImportBankAiPdfService,
+        ImportBankDedupService,
         { provide: PrismaService, useValue: prisma },
         { provide: ImportBatchesService, useValue: importBatches },
         { provide: MappingService, useValue: mapping },
@@ -363,6 +369,9 @@ describe('ImportBankService.parsePreview', () => {
       const mod = await Test.createTestingModule({
         providers: [
           ImportBankService,
+          ImportBankAiPreviewService,
+          ImportBankAiPdfService,
+          ImportBankDedupService,
           { provide: PrismaService, useValue: prisma },
           { provide: ImportBatchesService, useValue: importBatches },
           { provide: MappingService, useValue: mapping },
