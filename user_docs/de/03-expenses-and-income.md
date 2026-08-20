@@ -134,12 +134,15 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - Beschreibung, Datum, Kategorie, Notizen
 - **Hinzugefügt von** — in geteilten Konten zeigt, wer diesen Einkommensbetrag erstellt hat
-- Bearbeiten- oder Loschen-Optionen
+- **Bearbeiten** — den Einkommenseintrag ändern, einschließlich seiner **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet) — oder löschen
 
 ## FAQ
 
 - **F: Kann ich Ausgaben in verschiedenen Wahrungen hinzufugen?**
   **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH, RUB und BYN zu wechseln. Du kannst die Währung auch bei einer bereits gespeicherten Ausgabe ändern — tippe auf **Bearbeiten** und dann auf den Währungs-Chip neben dem Betrag. Das beschriftet den Betrag nur neu, es rechnet ihn nicht um.
+
+- **F: Kann ich die Währung eines Einkommenseintrags nachträglich ändern?**
+  **A:** Ja — öffne den Eintrag, tippe auf **Bearbeiten**, dann auf den Währungs-Chip neben dem Betrag und wähle eine neue Währung. Wie bei Ausgaben wird der Betrag dabei nur neu beschriftet, nicht umgerechnet.
 
 - **F: Wie bearbeite ich eine vorhandene Ausgabe?**
   **A:** Tippe auf die Ausgabe in der Liste, um die Details zu offnen, und tippe dann auf **Bearbeiten**.

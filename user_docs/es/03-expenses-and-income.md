@@ -134,12 +134,15 @@ Toca cualquier gasto para ver sus detalles completos:
 Toca cualquier entrada de ingreso para ver los detalles:
 - Descripcion, fecha, categoria, notas
 - **Agregado por** — en cuentas compartidas, muestra quién creó esta entrada de ingreso
-- Opciones de editar o eliminar
+- **Editar** — modificar el ingreso, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta) — o eliminarlo
 
 ## Preguntas frecuentes
 
 - **P: Puedo agregar gastos en diferentes monedas?**
   **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN. También puedes cambiar la moneda de un gasto ya guardado: toca **Editar** y luego el chip de moneda junto al importe. Esto solo reetiqueta el importe, no lo convierte.
+
+- **P: Puedo cambiar la moneda de un ingreso despues de guardarlo?**
+  **R:** Si — abre la entrada de ingreso, toca **Editar**, luego el chip de moneda junto al importe y elige una nueva moneda. Igual que con los gastos, esto solo reetiqueta el importe, no lo convierte.
 
 - **P: Como edito un gasto existente?**
   **R:** Toca el gasto en la lista para abrir los detalles, luego toca **Editar**.

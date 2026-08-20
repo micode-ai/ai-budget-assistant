@@ -134,12 +134,15 @@ Tik op een uitgave om de volledige details te bekijken:
 Tik op een inkomstenpost om de details te bekijken:
 - Omschrijving, datum, categorie, notities
 - **Toegevoegd door** — in gedeelde accounts wordt getoond wie deze inkomstenpost heeft aangemaakt
-- Bewerk- of verwijderopties
+- **Bewerken** — de inkomstenpost wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld) — of verwijderen
 
 ## Veelgestelde vragen
 
 - **V: Kan ik uitgaven in verschillende valuta's toevoegen?**
   **A:** Ja! Tik op het valutasymbool in het uitgavenformulier om te wisselen tussen USD, EUR, PLN, GBP, UAH, RUB en BYN. Je kunt de valuta van een al opgeslagen uitgave ook wijzigen: tik op **Bewerken** en daarna op de valutachip naast het bedrag. Dit labelt het bedrag alleen anders, het rekent niets om.
+
+- **V: Kan ik de valuta van een inkomstenpost wijzigen na het opslaan?**
+  **A:** Ja — open de inkomstenpost, tik op **Bewerken**, tik daarna op de valutachip naast het bedrag en kies een nieuwe valuta. Net als bij uitgaven labelt dit alleen het bedrag anders, het rekent niets om.
 
 - **V: Hoe bewerk ik een bestaande uitgave?**
   **A:** Tik op de uitgave in de lijst om de details te openen en tik vervolgens op **Bewerken**.

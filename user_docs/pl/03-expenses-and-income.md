@@ -134,12 +134,15 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - Opis, data, kategoria, notatki
 - **Dodane przez** — w udostępnionych kontach pokazuje, kto utworzył ten wpis przychodu
-- Opcje edycji i usuwania
+- **Edytuj** — zmien przychod, w tym jego **walute** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, tylko zmienia sie jej oznaczenie) — lub usun wpis
 
 ## FAQ
 
 - **P: Czy moge dodawac wydatki w roznych walutach?**
   **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN. Walutę już zapisanego wydatku też możesz zmienić — dotknij **Edytuj**, a następnie plakietki waluty obok kwoty. Zmienia to tylko oznaczenie kwoty, nie przelicza jej.
+
+- **P: Czy moge zmienic walute przychodu po zapisaniu?**
+  **O:** Tak — otworz wpis przychodu, dotknij **Edytuj**, a nastepnie plakietki waluty obok kwoty i wybierz nowa walute. Podobnie jak w przypadku wydatkow, zmienia to tylko oznaczenie kwoty, nie przelicza jej.
 
 - **P: Jak edytowac istniejacy wydatek?**
   **O:** Dotknij wydatek na liscie, aby otworzyc szczegoly, a nastepnie dotknij **Edytuj**.

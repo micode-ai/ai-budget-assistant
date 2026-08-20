@@ -134,12 +134,15 @@ Tap any expense to view its full details:
 Tap any income entry to view details:
 - Description, date, category, notes
 - **Added by** — in shared accounts, shows who created this income entry
-- Edit or delete options
+- **Edit** — modify the income, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled) — or delete the entry
 
 ## FAQ
 
 - **Q: Can I add expenses in different currencies?**
   **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN. You can also change the currency of an expense you already saved — tap **Edit**, then tap the currency chip next to the amount. This only relabels the amount, it does not convert it.
+
+- **Q: Can I change the currency of an income entry after saving it?**
+  **A:** Yes — open the income entry, tap **Edit**, then tap the currency chip next to the amount and pick a new currency. Just like with expenses, this only relabels the amount; it does not convert it.
 
 - **Q: How do I edit an existing expense?**
   **A:** Tap the expense in the list to open details, then tap **Edit**.

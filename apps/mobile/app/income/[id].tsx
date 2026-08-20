@@ -19,9 +19,9 @@ import { useAccountStore } from '@/stores/accountStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { getTagsForIncome } from '@/db/tagRepository';
 import { TagChip } from '@/components/TagChip';
-import { formatCurrency, formatDate } from '@budget/shared-utils';
+import { formatCurrency, formatDate, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
-import type { Tag } from '@budget/shared-types';
+import type { Currency, Tag } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 
@@ -42,6 +42,12 @@ export default function IncomeDetailScreen() {
   }, [edit]);
   const [editDescription, setEditDescription] = useState(income?.description || '');
   const [editAmount, setEditAmount] = useState(income?.amount?.toString() || '');
+  // Changing the currency RELABELS the income — it never converts the amount
+  // (same rule as ExpenseDetailsCard's ABA-379 currency chip).
+  const [editCurrencyCode, setEditCurrencyCode] = useState<Currency>(
+    (income?.currencyCode as Currency) || 'USD',
+  );
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
   const [editCategory, setEditCategory] = useState(income?.categoryId || '');
   const [editNotes, setEditNotes] = useState(income?.notes || '');
   const [editDate, setEditDate] = useState(income?.date ? new Date(income.date) : new Date());
@@ -72,6 +78,7 @@ export default function IncomeDetailScreen() {
     updateIncome(income.id, {
       description: editDescription.trim() || undefined,
       amount: numericAmount,
+      currencyCode: editCurrencyCode,
       categoryId: editCategory || undefined,
       notes: editNotes.trim() || undefined,
       date: editDate,
@@ -103,12 +110,55 @@ export default function IncomeDetailScreen() {
         {/* Amount Card */}
         <View style={styles.amountCard}>
           {isEditing ? (
-            <TextInput
-              style={styles.amountInput}
-              value={editAmount}
-              onChangeText={setEditAmount}
-              keyboardType="decimal-pad"
-            />
+            <>
+              <View style={styles.amountEditRow}>
+                <TextInput
+                  style={[styles.amountInput, styles.amountEditInput]}
+                  value={editAmount}
+                  onChangeText={setEditAmount}
+                  keyboardType="decimal-pad"
+                />
+                <TouchableOpacity
+                  style={styles.currencyChip}
+                  onPress={() => setShowCurrencyPicker((v) => !v)}
+                  accessibilityLabel={t('incomeDetail.currency')}
+                >
+                  <Text style={styles.currencyChipText}>
+                    {SUPPORTED_CURRENCIES.find((c) => c.code === editCurrencyCode)?.symbol || '$'}{' '}
+                    {editCurrencyCode}
+                  </Text>
+                  <Ionicons
+                    name={showCurrencyPicker ? 'chevron-up' : 'chevron-down'}
+                    size={14}
+                    color={theme.colors.textSecondary}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {showCurrencyPicker && (
+                <View style={styles.pickerContainer}>
+                  {SUPPORTED_CURRENCIES.map((currency) => (
+                    <TouchableOpacity
+                      key={currency.code}
+                      style={[
+                        styles.pickerItem,
+                        editCurrencyCode === currency.code && styles.pickerItemSelected,
+                      ]}
+                      onPress={() => {
+                        setEditCurrencyCode(currency.code as Currency);
+                        setShowCurrencyPicker(false);
+                      }}
+                    >
+                      <Text style={styles.pickerSymbol}>{currency.symbol}</Text>
+                      <Text style={styles.pickerLabel}>{currency.name}</Text>
+                      {editCurrencyCode === currency.code && (
+                        <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              )}
+            </>
           ) : (
             <Text style={styles.amountText}>
               +{formatCurrency(income.amount, income.currencyCode)}
@@ -345,6 +395,59 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.success,
     textAlign: 'center' as const,
     minWidth: 150,
+  },
+  amountEditRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[3],
+    width: '100%' as const,
+  },
+  amountEditInput: {
+    minWidth: 0,
+    flexShrink: 1,
+  },
+  currencyChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.md,
+  },
+  currencyChipText: {
+    fontSize: 14,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
+  pickerContainer: {
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    marginTop: theme.spacing[3],
+    width: '100%' as const,
+    overflow: 'hidden' as const,
+  },
+  pickerItem: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[3.5],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  pickerItemSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  pickerSymbol: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    width: 30,
+  },
+  pickerLabel: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+    flex: 1,
   },
   detailsCard: {
     backgroundColor: theme.colors.surface,

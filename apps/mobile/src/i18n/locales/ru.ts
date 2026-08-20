@@ -208,6 +208,7 @@ export default {
   },
   incomeDetail: {
     notFound: 'Доход не найден',
+    currency: 'Валюта',
     noDescription: 'Без описания',
     description: 'Описание',
     date: 'Дата',

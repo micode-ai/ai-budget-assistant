@@ -493,12 +493,15 @@ Tap any expense to view its full details:
 Tap any income entry to view details:
 - Description, date, category, notes
 - **Added by** — in shared accounts, shows who created this income entry
-- Edit or delete options
+- **Edit** — modify the income, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled) — or delete the entry
 
 ## FAQ
 
 - **Q: Can I add expenses in different currencies?**
   **A:** Yes! Tap the currency symbol on the expense form to switch between USD, EUR, PLN, GBP, UAH, RUB, and BYN. You can also change the currency of an expense you already saved — tap **Edit**, then tap the currency chip next to the amount. This only relabels the amount, it does not convert it.
+
+- **Q: Can I change the currency of an income entry after saving it?**
+  **A:** Yes — open the income entry, tap **Edit**, then tap the currency chip next to the amount and pick a new currency. Just like with expenses, this only relabels the amount; it does not convert it.
 
 - **Q: How do I edit an existing expense?**
   **A:** Tap the expense in the list to open details, then tap **Edit**.
@@ -4997,12 +5000,15 @@ iOS, Android, Web
 Нажмите на любую запись о доходе для просмотра деталей:
 - Описание, дата, категория, заметки
 - **Добавил(а)** — в общих счетах показывает, кто добавил этот доход
-- Возможности редактирования и удаления
+- **Редактировать** — изменить доход, включая его **валюту** (нажмите на чип валюты рядом с суммой; сама сумма не пересчитывается, меняется только её обозначение) — или удалить запись
 
 ## Часто задаваемые вопросы
 
 - **В: Можно ли добавлять расходы в разных валютах?**
   **О:** Да! Нажмите на символ валюты в форме расхода, чтобы переключиться между USD, EUR, PLN, GBP, UAH, RUB и BYN. Валюту уже сохранённого расхода тоже можно изменить — нажмите **Редактировать**, затем чип валюты рядом с суммой. Это меняет только обозначение суммы, но не пересчитывает её.
+
+- **В: Можно ли изменить валюту дохода после сохранения?**
+  **О:** Да — откройте запись о доходе, нажмите **Редактировать**, затем чип валюты рядом с суммой и выберите новую валюту. Как и с расходами, это меняет только обозначение суммы, но не пересчитывает её.
 
 - **В: Как отредактировать существующий расход?**
   **О:** Нажмите на расход в списке, чтобы открыть детали, затем нажмите **Редактировать**.
@@ -9499,12 +9505,15 @@ iOS, Android, Web
 Натисніть будь-який запис доходу для перегляду деталей:
 - Опис, дата, категорія, нотатки
 - **Додав(ла)** — у спільних рахунках показує, хто додав цей дохід
-- Можливість редагувати або видалити
+- **Редагувати** — змінити дохід, включно з його **валютою** (натисніть чип валюти біля суми; сама сума не перераховується, змінюється лише її позначення) — або видалити запис
 
 ## Часті запитання
 
 - **П:** Чи можу я додавати витрати в різних валютах?
   **В:** Так! Натисніть символ валюти у формі витрати, щоб переключатися між USD, EUR, PLN, GBP, UAH, RUB та BYN. Валюту вже збереженої витрати також можна змінити — натисніть **Редагувати**, потім чип валюти біля суми. Це змінює лише позначення суми, а не перераховує її.
+
+- **П:** Чи можу я змінити валюту доходу після збереження?
+  **В:** Так — відкрийте запис доходу, натисніть **Редагувати**, потім чип валюти біля суми та виберіть нову валюту. Як і з витратами, це змінює лише позначення суми, а не перераховує її.
 
 - **П:** Як редагувати існуючу витрату?
   **В:** Натисніть витрату в списку, щоб відкрити деталі, потім натисніть **Редагувати**.
@@ -13949,12 +13958,15 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 Dotknij dowolny wpis przychodu, aby zobaczyc szczegoly:
 - Opis, data, kategoria, notatki
 - **Dodane przez** — w udostępnionych kontach pokazuje, kto utworzył ten wpis przychodu
-- Opcje edycji i usuwania
+- **Edytuj** — zmien przychod, w tym jego **walute** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, tylko zmienia sie jej oznaczenie) — lub usun wpis
 
 ## FAQ
 
 - **P: Czy moge dodawac wydatki w roznych walutach?**
   **O:** Tak! Dotknij symbolu waluty w formularzu wydatku, aby przelaczac miedzy USD, EUR, PLN, GBP, UAH, RUB i BYN. Walutę już zapisanego wydatku też możesz zmienić — dotknij **Edytuj**, a następnie plakietki waluty obok kwoty. Zmienia to tylko oznaczenie kwoty, nie przelicza jej.
+
+- **P: Czy moge zmienic walute przychodu po zapisaniu?**
+  **O:** Tak — otworz wpis przychodu, dotknij **Edytuj**, a nastepnie plakietki waluty obok kwoty i wybierz nowa walute. Podobnie jak w przypadku wydatkow, zmienia to tylko oznaczenie kwoty, nie przelicza jej.
 
 - **P: Jak edytowac istniejacy wydatek?**
   **O:** Dotknij wydatek na liscie, aby otworzyc szczegoly, a nastepnie dotknij **Edytuj**.
@@ -18395,12 +18407,15 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 Tippe auf einen beliebigen Einkommensentrag, um Details anzuzeigen:
 - Beschreibung, Datum, Kategorie, Notizen
 - **Hinzugefügt von** — in geteilten Konten zeigt, wer diesen Einkommensbetrag erstellt hat
-- Bearbeiten- oder Loschen-Optionen
+- **Bearbeiten** — den Einkommenseintrag ändern, einschließlich seiner **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet) — oder löschen
 
 ## FAQ
 
 - **F: Kann ich Ausgaben in verschiedenen Wahrungen hinzufugen?**
   **A:** Ja! Tippe auf das Wahrungssymbol im Ausgabenformular, um zwischen USD, EUR, PLN, GBP, UAH, RUB und BYN zu wechseln. Du kannst die Währung auch bei einer bereits gespeicherten Ausgabe ändern — tippe auf **Bearbeiten** und dann auf den Währungs-Chip neben dem Betrag. Das beschriftet den Betrag nur neu, es rechnet ihn nicht um.
+
+- **F: Kann ich die Währung eines Einkommenseintrags nachträglich ändern?**
+  **A:** Ja — öffne den Eintrag, tippe auf **Bearbeiten**, dann auf den Währungs-Chip neben dem Betrag und wähle eine neue Währung. Wie bei Ausgaben wird der Betrag dabei nur neu beschriftet, nicht umgerechnet.
 
 - **F: Wie bearbeite ich eine vorhandene Ausgabe?**
   **A:** Tippe auf die Ausgabe in der Liste, um die Details zu offnen, und tippe dann auf **Bearbeiten**.
@@ -22816,12 +22831,15 @@ Toca cualquier gasto para ver sus detalles completos:
 Toca cualquier entrada de ingreso para ver los detalles:
 - Descripcion, fecha, categoria, notas
 - **Agregado por** — en cuentas compartidas, muestra quién creó esta entrada de ingreso
-- Opciones de editar o eliminar
+- **Editar** — modificar el ingreso, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta) — o eliminarlo
 
 ## Preguntas frecuentes
 
 - **P: Puedo agregar gastos en diferentes monedas?**
   **R:** Si. Toca el simbolo de moneda en el formulario de gasto para alternar entre USD, EUR, PLN, GBP, UAH, RUB y BYN. También puedes cambiar la moneda de un gasto ya guardado: toca **Editar** y luego el chip de moneda junto al importe. Esto solo reetiqueta el importe, no lo convierte.
+
+- **P: Puedo cambiar la moneda de un ingreso despues de guardarlo?**
+  **R:** Si — abre la entrada de ingreso, toca **Editar**, luego el chip de moneda junto al importe y elige una nueva moneda. Igual que con los gastos, esto solo reetiqueta el importe, no lo convierte.
 
 - **P: Como edito un gasto existente?**
   **R:** Toca el gasto en la lista para abrir los detalles, luego toca **Editar**.
@@ -27226,12 +27244,15 @@ Appuyez sur une depense pour afficher ses details complets :
 Appuyez sur une entree de revenu pour afficher les details :
 - Description, date, categorie, notes
 - **Ajouté par** — dans les comptes partagés, affiche qui a créé cette entrée de revenu
-- Options de modification ou de suppression
+- **Modifier** — modifier le revenu, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté) — ou le supprimer
 
 ## FAQ
 
 - **Q : Puis-je ajouter des depenses dans differentes devises ?**
   **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH, RUB et BYN. Vous pouvez aussi changer la devise d'une dépense déjà enregistrée : appuyez sur **Modifier**, puis sur la puce de devise à côté du montant. Cela réétiquette seulement le montant, sans le convertir.
+
+- **Q : Puis-je changer la devise d'un revenu après l'avoir enregistré ?**
+  **R :** Oui — ouvrez l'entrée de revenu, appuyez sur **Modifier**, puis sur la puce de devise à côté du montant et choisissez une nouvelle devise. Comme pour les dépenses, cela réétiquette seulement le montant, sans le convertir.
 
 - **Q : Comment modifier une depense existante ?**
   **R :** Appuyez sur la depense dans la liste pour ouvrir les details, puis appuyez sur **Modifier**.
@@ -31634,12 +31655,15 @@ iOS, Android, Web
 Націсніце на любы запіс пра даход для прагляду дэталяў:
 - Апісанне, дата, катэгорыя, нататкі
 - **Дадаў(ла)** — у агульных рахунках паказвае, хто дадаў гэты даход
-- Магчымасці рэдагавання і выдалення
+- **Рэдагаваць** — змяніць даход, разам з яго **валютай** (націсніце чып валюты побач з сумай; сама сума не пералічваецца, змяняецца толькі яе абазначэнне) — або выдаліць запіс
 
 ## Частыя пытанні
 
 - **П: Ці можна дадаваць выдаткі ў розных валютах?**
   **А:** Так! Націсніце на сімвал валюты ў форме выдатку, каб пераключыцца паміж USD, EUR, PLN, GBP, UAH, RUB і BYN. Валюту ўжо збераганага выдатку таксама можна змяніць — націсніце **Рэдагаваць**, потым чып валюты побач з сумай. Гэта змяняе толькі абазначэнне сумы, а не пералічвае яе.
+
+- **П: Ці можна змяніць валюту даходу пасля захавання?**
+  **А:** Так — адкрыйце запіс даходу, націсніце **Рэдагаваць**, потым чып валюты побач з сумай і абярыце новую валюту. Як і з выдаткамі, гэта змяняе толькі абазначэнне сумы, а не пералічвае яе.
 
 - **П: Як адрэдагаваць існуючы выдатак?**
   **А:** Націсніце на выдатак у спісе, каб адкрыць дэталі, затым націсніце **Рэдагаваць**.
@@ -35999,12 +36023,15 @@ Tik op een uitgave om de volledige details te bekijken:
 Tik op een inkomstenpost om de details te bekijken:
 - Omschrijving, datum, categorie, notities
 - **Toegevoegd door** — in gedeelde accounts wordt getoond wie deze inkomstenpost heeft aangemaakt
-- Bewerk- of verwijderopties
+- **Bewerken** — de inkomstenpost wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld) — of verwijderen
 
 ## Veelgestelde vragen
 
 - **V: Kan ik uitgaven in verschillende valuta's toevoegen?**
   **A:** Ja! Tik op het valutasymbool in het uitgavenformulier om te wisselen tussen USD, EUR, PLN, GBP, UAH, RUB en BYN. Je kunt de valuta van een al opgeslagen uitgave ook wijzigen: tik op **Bewerken** en daarna op de valutachip naast het bedrag. Dit labelt het bedrag alleen anders, het rekent niets om.
+
+- **V: Kan ik de valuta van een inkomstenpost wijzigen na het opslaan?**
+  **A:** Ja — open de inkomstenpost, tik op **Bewerken**, tik daarna op de valutachip naast het bedrag en kies een nieuwe valuta. Net als bij uitgaven labelt dit alleen het bedrag anders, het rekent niets om.
 
 - **V: Hoe bewerk ik een bestaande uitgave?**
   **A:** Tik op de uitgave in de lijst om de details te openen en tik vervolgens op **Bewerken**.

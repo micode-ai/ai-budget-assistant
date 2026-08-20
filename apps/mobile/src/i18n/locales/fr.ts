@@ -208,6 +208,7 @@ export default {
   },
   incomeDetail: {
     notFound: 'Revenu introuvable',
+    currency: 'Devise',
     noDescription: 'Aucune description',
     description: 'Description',
     date: 'Date',

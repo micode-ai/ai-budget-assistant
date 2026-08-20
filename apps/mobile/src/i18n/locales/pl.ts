@@ -208,6 +208,7 @@ export default {
   },
   incomeDetail: {
     notFound: 'Nie znaleziono przychodu',
+    currency: 'Waluta',
     noDescription: 'Brak opisu',
     description: 'Opis',
     date: 'Data',

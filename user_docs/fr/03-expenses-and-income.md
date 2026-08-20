@@ -134,12 +134,15 @@ Appuyez sur une depense pour afficher ses details complets :
 Appuyez sur une entree de revenu pour afficher les details :
 - Description, date, categorie, notes
 - **Ajouté par** — dans les comptes partagés, affiche qui a créé cette entrée de revenu
-- Options de modification ou de suppression
+- **Modifier** — modifier le revenu, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté) — ou le supprimer
 
 ## FAQ
 
 - **Q : Puis-je ajouter des depenses dans differentes devises ?**
   **R :** Oui ! Appuyez sur le symbole de devise dans le formulaire de depense pour basculer entre USD, EUR, PLN, GBP, UAH, RUB et BYN. Vous pouvez aussi changer la devise d'une dépense déjà enregistrée : appuyez sur **Modifier**, puis sur la puce de devise à côté du montant. Cela réétiquette seulement le montant, sans le convertir.
+
+- **Q : Puis-je changer la devise d'un revenu après l'avoir enregistré ?**
+  **R :** Oui — ouvrez l'entrée de revenu, appuyez sur **Modifier**, puis sur la puce de devise à côté du montant et choisissez une nouvelle devise. Comme pour les dépenses, cela réétiquette seulement le montant, sans le convertir.
 
 - **Q : Comment modifier une depense existante ?**
   **R :** Appuyez sur la depense dans la liste pour ouvrir les details, puis appuyez sur **Modifier**.

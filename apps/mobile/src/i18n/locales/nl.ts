@@ -208,6 +208,7 @@ export default {
   },
   incomeDetail: {
     notFound: 'Inkomsten niet gevonden',
+    currency: 'Valuta',
     noDescription: 'Geen omschrijving',
     description: 'Omschrijving',
     date: 'Datum',
