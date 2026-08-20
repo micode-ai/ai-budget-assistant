@@ -11,131 +11,29 @@ function makeReceiptSplitServiceStub(): any {
   return { expireForExpense: jest.fn().mockResolvedValue(undefined) };
 }
 
-// ---------------------------------------------------------------------------
-// reconcileNotificationStub (Tier 1 Case A)
-// ---------------------------------------------------------------------------
-
-function makeCreateService(overrides: {
-  newExpense?: Record<string, any>;
-  stubs?: Array<{ id: string; merchant: string | null; description: string | null }>;
-} = {}) {
-  const newExpense = overrides.newExpense ?? {
-    id: 'e-new',
-    amount: 15,
-    currencyCode: 'PLN',
-    date: new Date('2026-06-15'),
-    merchant: 'Żabka',
-    description: 'Żabka',
-    source: 'manual',
-  };
-  const stubs = overrides.stubs ?? [
-    { id: 'stub-1', merchant: 'Żabka', description: 'Żabka' },
-  ];
-
-  const stubUpdateMock = jest.fn().mockResolvedValue({});
-  const prisma: any = {
-    expense: {
-      // findFirst for reconcileNotificationStub lookup
-      findFirst: jest.fn().mockResolvedValue(newExpense),
-      // findMany for the stub candidate query
-      findMany: jest.fn().mockResolvedValue(stubs),
-      // update for stub soft-delete
-      update: stubUpdateMock,
-    },
-    $transaction: jest.fn(async (cb: any) => cb({
-      expense: {
-        findUnique: jest.fn().mockResolvedValue(null),
-        upsert: jest.fn().mockResolvedValue({ ...newExpense, id: 'e-new' }),
-        findFirst: jest.fn().mockResolvedValue(null),
-        findMany: jest.fn().mockResolvedValue([]),
-        update: jest.fn().mockResolvedValue({}),
-      },
-      expenseItem: { createMany: jest.fn().mockResolvedValue({}) },
-      tag: { findMany: jest.fn().mockResolvedValue([]) },
-      expenseTag: { createMany: jest.fn().mockResolvedValue({}) },
-      project: { findUnique: jest.fn().mockResolvedValue(null), findFirst: jest.fn().mockResolvedValue(null) },
-      projectExpense: { upsert: jest.fn().mockResolvedValue({}) },
-      expenseCategorySplit: { createMany: jest.fn().mockResolvedValue({}) },
-    })),
-  };
-
-  const cacheService: any = {
-    delByPrefix: jest.fn().mockResolvedValue(undefined),
-    del: jest.fn().mockResolvedValue(undefined),
-  };
-  const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
-  const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
-  const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-  const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService, makeReceiptSplitServiceStub());
-  return { service, prisma, anomalyService, stubUpdateMock };
+/**
+ * Default stub for the DI-injected ExpenseCreatedHooksService (see
+ * docs/tech-debt/expenses-service-regrowth-after-split.md — the post-create
+ * fire-and-forget hook chain, and its own tests, now live in
+ * expense-created-hooks.service.spec.ts). Most tests in this file only care
+ * that create() hands off the right (accountId, userId, expense, learnableItems)
+ * tuple — the dedicated describe blocks below assert on that call directly.
+ */
+function makeCreatedHooksStub(): any {
+  return { onExpenseCreated: jest.fn().mockResolvedValue(undefined) };
 }
-
-describe('reconcileNotificationStub (Tier 1 Case A)', () => {
-  it('soft-deletes a matching notification stub when a richer (manual) expense is created', async () => {
-    const { service, prisma, stubUpdateMock } = makeCreateService();
-    // Call the private method directly via casting.
-    await (service as any).reconcileNotificationStub('acc-1', 'e-new');
-    // Should have queried stubs scoped to source:'notification'
-    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
-    expect(where.source).toBe('notification');
-    expect(where.accountId).toBe('acc-1');
-    // Should have soft-deleted the stub.
-    expect(stubUpdateMock).toHaveBeenCalledWith(
-      expect.objectContaining({
-        where: { id: 'stub-1' },
-        data: expect.objectContaining({ isDeleted: true }),
-      }),
-    );
-  });
-
-  it('MUST-NOT-DEDUP: two identical manual expenses (same amount/currency/date/merchant) both survive — no notification stub to delete', async () => {
-    // The stubs query is scoped to source:'notification', so the first manual expense
-    // is never a candidate. Pass empty stubs array.
-    const { service, stubUpdateMock } = makeCreateService({ stubs: [] });
-    await (service as any).reconcileNotificationStub('acc-1', 'e-new');
-    expect(stubUpdateMock).not.toHaveBeenCalled();
-  });
-
-  it('does nothing when the new expense has no merchant or description', async () => {
-    const { service, stubUpdateMock } = makeCreateService({
-      newExpense: { id: 'e-new', amount: 15, currencyCode: 'PLN', date: new Date('2026-06-15'), merchant: null, description: null },
-    });
-    await (service as any).reconcileNotificationStub('acc-1', 'e-new');
-    expect(stubUpdateMock).not.toHaveBeenCalled();
-  });
-
-  it('does nothing when no stub payee matches', async () => {
-    const { service, stubUpdateMock } = makeCreateService({
-      stubs: [{ id: 'stub-1', merchant: 'Biedronka', description: 'Biedronka' }],
-    });
-    await (service as any).reconcileNotificationStub('acc-1', 'e-new');
-    expect(stubUpdateMock).not.toHaveBeenCalled();
-  });
-
-  it('does not invoke reconcileNotificationStub when the new expense source is notification', async () => {
-    // This tests the guard in create() — source:'notification' never triggers Case A.
-    const { service } = makeCreateService();
-    const reconcileSpy = jest.spyOn(service as any, 'reconcileNotificationStub');
-    // Simulate the guard: source is 'notification', so reconcile should not be called.
-    const source = 'notification';
-    if (source !== 'notification') {
-      await (service as any).reconcileNotificationStub('acc-1', 'e-new');
-    }
-    expect(reconcileSpy).not.toHaveBeenCalled();
-  });
-});
 
 // ---------------------------------------------------------------------------
 // create() — trip expense shares (paidByUserId + resolveShares wiring)
 // ---------------------------------------------------------------------------
 
 /**
- * Mocks the create() $transaction end-to-end (unlike makeCreateService, which only
- * exercises the private reconcileNotificationStub method). expense.findUnique is
- * called twice inside create(): once for the existing-by-clientId lookup (must
- * resolve null so isNew=true), and once for the final `full` refetch — the second
- * mock captures whatever paidByUserId/amount/currencyCode the upsert was given so
- * the assertions below observe the real values the service computed, not fixtures.
+ * Mocks the create() $transaction end-to-end. expense.findUnique is called
+ * twice inside create(): once for the existing-by-clientId lookup (must
+ * resolve null so isNew=true), and once for the final `full` refetch — the
+ * second mock captures whatever paidByUserId/amount/currencyCode the upsert
+ * was given so the assertions below observe the real values the service
+ * computed, not fixtures.
  */
 function makeTripShareCreateService() {
   let paidByUserId: string | undefined;
@@ -190,7 +88,15 @@ function makeTripShareCreateService() {
   const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
   const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-  const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService, makeReceiptSplitServiceStub());
+  const service = new ExpensesService(
+    prisma,
+    gamificationService,
+    cacheService,
+    anomalyService,
+    merchantRulesService,
+    makeReceiptSplitServiceStub(),
+    makeCreatedHooksStub(),
+  );
   return { service, tx, shareCreateMany, shareDeleteMany, upsertMock };
 }
 
@@ -299,7 +205,15 @@ describe('create — trip expense shares', () => {
     const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
     const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
     const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-    const service = new ExpensesService(prisma, gamificationService, cacheService, anomalyService, merchantRulesService, makeReceiptSplitServiceStub());
+    const service = new ExpensesService(
+      prisma,
+      gamificationService,
+      cacheService,
+      anomalyService,
+      merchantRulesService,
+      makeReceiptSplitServiceStub(),
+      makeCreatedHooksStub(),
+    );
 
     const dto = {
       localId: 'client-retry-1',
@@ -324,23 +238,22 @@ describe('create — trip expense shares', () => {
 });
 
 // ---------------------------------------------------------------------------
-// create() — inflation-shield reconcile hook (fire-and-forget)
+// create() — hand-off to ExpenseCreatedHooksService
+//
+// The hook chain's own behavior (anomaly check, family-feed, community-prices,
+// shield tracking, product-rule learning, and their error-swallowing) is
+// tested in expense-created-hooks.service.spec.ts. What belongs here is
+// narrower: does create() correctly resolve the expense and the learnableItems
+// list, and hand them to the hooks service exactly once, only for genuinely
+// new expenses, without ever letting a rejection from that call escape?
 // ---------------------------------------------------------------------------
 
-/**
- * Unlike makeCreateService (which only exercises the private reconcileNotificationStub
- * method and never actually calls service.create() — its tx.expense.findUnique always
- * resolves null, which would make the real create() crash on toExpenseResponse(null)),
- * this factory mirrors makeTripShareCreateService's proven-working create() mock:
- * findUnique resolves null on the existing-by-clientId check (isNew) then the full
- * refetch row on the second call.
- */
-function makeShieldReconcileCreateService() {
+function makeCreateHooksHandoffService() {
   const findUniqueMock = jest
     .fn()
     .mockImplementationOnce(async () => null) // existing-by-clientId check -> not found (isNew)
     .mockImplementationOnce(async () => ({
-      id: 'e-shield-1',
+      id: 'e-new-1',
       accountId: 'a1',
       amount: 15,
       currencyCode: 'PLN',
@@ -357,7 +270,7 @@ function makeShieldReconcileCreateService() {
   const tx = {
     expense: {
       findUnique: findUniqueMock,
-      upsert: jest.fn().mockResolvedValue({ id: 'e-shield-1' }),
+      upsert: jest.fn().mockResolvedValue({ id: 'e-new-1' }),
     },
     expenseItem: { createMany: jest.fn().mockResolvedValue({}) },
     tag: { findMany: jest.fn().mockResolvedValue([]) },
@@ -377,10 +290,8 @@ function makeShieldReconcileCreateService() {
   const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
   const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-  const shieldTracking: any = { reconcilePurchase: jest.fn().mockResolvedValue(undefined) };
+  const createdHooks = makeCreatedHooksStub();
 
-  // shieldTracking is appended as the LAST constructor arg (mirrors familyFeed/
-  // communityPrices — both left undefined here, exercising the @Optional() no-op path).
   const service = new ExpensesService(
     prisma,
     gamificationService,
@@ -388,19 +299,17 @@ function makeShieldReconcileCreateService() {
     anomalyService,
     merchantRulesService,
     makeReceiptSplitServiceStub(),
-    undefined,
-    undefined,
-    shieldTracking,
+    createdHooks,
   );
-  return { service, shieldTracking, cacheService };
+  return { service, createdHooks, findUniqueMock, tx };
 }
 
-describe('create — inflation-shield reconcile hook', () => {
-  it('fires inflation-shield reconcilePurchase after creating a new expense', async () => {
-    const { service, shieldTracking } = makeShieldReconcileCreateService();
+describe('create() hands off to ExpenseCreatedHooksService', () => {
+  it('calls onExpenseCreated with the resolved expense and an empty learnableItems list for a new, item-less expense', async () => {
+    const { service, createdHooks } = makeCreateHooksHandoffService();
 
     const { expense, isNew } = await service.create('a1', 'u1', {
-      localId: 'client-shield-1',
+      localId: 'client-hooks-1',
       amount: 15,
       currencyCode: 'PLN',
       date: '2026-06-15',
@@ -408,45 +317,89 @@ describe('create — inflation-shield reconcile hook', () => {
     } as any);
 
     expect(isNew).toBe(true);
-
     // fire-and-forget — allow the microtask to run
     await new Promise((r) => setImmediate(r));
 
-    expect(shieldTracking.reconcilePurchase).toHaveBeenCalledWith('a1', expense.id);
+    expect(createdHooks.onExpenseCreated).toHaveBeenCalledTimes(1);
+    expect(createdHooks.onExpenseCreated).toHaveBeenCalledWith(
+      'a1',
+      'u1',
+      expect.objectContaining({ id: expense.id }),
+      [],
+    );
   });
 
-  it('invalidates the shield cache when a new expense is created', async () => {
-    const { service, cacheService } = makeShieldReconcileCreateService();
+  it('does not call onExpenseCreated when the create resolves to an existing (non-new) expense', async () => {
+    // create() only fires the hook chain when `result.isNew && result.expense` —
+    // an update via the upsert's update: branch must not re-fire it.
+    const upsertMock = jest.fn().mockResolvedValue({ id: 'e-existing' });
+    const existingRow = {
+      id: 'e-existing',
+      accountId: 'a1',
+      amount: 10,
+      currencyCode: 'USD',
+      category: null,
+      items: [],
+      expenseTags: [],
+      categorySplits: [],
+      projectExpenses: [],
+      user: { name: 'Alice' },
+    };
+    const findUniqueMock = jest
+      .fn()
+      .mockImplementationOnce(async () => ({ id: 'e-existing' })) // existing-by-clientId check -> found (not new)
+      .mockImplementationOnce(async () => existingRow); // full refetch
 
-    await service.create('a1', 'u1', {
-      localId: 'client-shield-2',
-      amount: 15,
-      currencyCode: 'PLN',
-      date: '2026-06-15',
+    const tx = {
+      expense: { findUnique: findUniqueMock, upsert: upsertMock },
+      expenseItem: { createMany: jest.fn().mockResolvedValue({}) },
+      tag: { findMany: jest.fn().mockResolvedValue([]) },
+      expenseTag: { createMany: jest.fn().mockResolvedValue({}) },
+      project: { findUnique: jest.fn().mockResolvedValue(null), findFirst: jest.fn().mockResolvedValue(null) },
+      projectExpense: { upsert: jest.fn().mockResolvedValue({}) },
+      expenseCategorySplit: { createMany: jest.fn().mockResolvedValue({}) },
+    };
+    const prisma: any = { $transaction: jest.fn(async (cb: any) => cb(tx)) };
+    const cacheService: any = { delByPrefix: jest.fn().mockResolvedValue(undefined), del: jest.fn().mockResolvedValue(undefined) };
+    const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
+    const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+    const createdHooks = makeCreatedHooksStub();
+    const service = new ExpensesService(
+      prisma,
+      gamificationService,
+      cacheService,
+      anomalyService,
+      merchantRulesService,
+      makeReceiptSplitServiceStub(),
+      createdHooks,
+    );
+
+    const { isNew } = await service.create('a1', 'u1', {
+      localId: 'client-existing-1',
+      amount: 10,
+      currencyCode: 'USD',
+      date: '2026-08-01',
       source: 'manual',
     } as any);
 
-    // fire-and-forget — allow the microtask to run
+    expect(isNew).toBe(false);
     await new Promise((r) => setImmediate(r));
-
-    expect(cacheService.delByPrefix).toHaveBeenCalledWith('shield:a1:');
-    // The AI-chat layer caches the shield tool result in front of getShield, so
-    // its per-account cache must be busted too (final-review fix).
-    expect(cacheService.delByPrefix).toHaveBeenCalledWith('chat:get_inflation_shield:a1:');
+    expect(createdHooks.onExpenseCreated).not.toHaveBeenCalled();
   });
 });
 
 // ---------------------------------------------------------------------------
-// create() — categorized receipt items (persist categoryId + learn product rules)
+// create() — categorized receipt items (persist categoryId + compute learnableItems)
 // ---------------------------------------------------------------------------
 
 /**
- * Mirrors makeShieldReconcileCreateService's end-to-end create() shape, plus a
+ * Mirrors makeCreateHooksHandoffService's end-to-end create() shape, plus a
  * top-level `category` mock. resolveCategoryId (used both for the top-level
- * dto.categoryId and, after this task, each item's categoryId) always queries
- * `this.prisma` — the OUTER, non-transactional client — even when invoked from
- * inside the $transaction callback (see expense-category-resolver.util.ts), so
- * the mock for it lives on `prisma.category`, not `tx.category`.
+ * dto.categoryId and each item's categoryId) always queries `this.prisma` —
+ * the OUTER, non-transactional client — even when invoked from inside the
+ * $transaction callback (see expense-category-resolver.util.ts), so the mock
+ * for it lives on `prisma.category`, not `tx.category`.
  *
  * The item's raw categoryId ('Alcohol', a name-style client value) is
  * deliberately different from what the mocked lookup resolves it to ('c-alc'),
@@ -506,11 +459,8 @@ function makeCategorizedItemsCreateService() {
   const gamificationService: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
   const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined), dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const merchantRulesService: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
-  const productRules: any = { upsertRules: jest.fn().mockResolvedValue(undefined) };
+  const createdHooks = makeCreatedHooksStub();
 
-  // productRules is appended as the 10th constructor arg (mirrors familyFeed/
-  // communityPrices/shieldTracking — all left undefined here on purpose,
-  // exercising the @Optional() no-op path for those three).
   const service = new ExpensesService(
     prisma,
     gamificationService,
@@ -518,13 +468,10 @@ function makeCategorizedItemsCreateService() {
     anomalyService,
     merchantRulesService,
     makeReceiptSplitServiceStub(),
-    undefined,
-    undefined,
-    undefined,
-    productRules,
+    createdHooks,
   );
 
-  return { service, prisma, createManyMock, productRules };
+  return { service, prisma, createManyMock, createdHooks };
 }
 
 describe('create with categorized receipt items', () => {
@@ -556,16 +503,19 @@ describe('create with categorized receipt items', () => {
     expect(written[0].categoryId).toBe('c-alc');
   });
 
-  it('learns a product rule from every categorized item', async () => {
-    const { service, productRules } = makeCategorizedItemsCreateService();
+  it('computes learnableItems from every categorized item and hands them to the created-hooks service', async () => {
+    const { service, createdHooks } = makeCategorizedItemsCreateService();
 
     await service.create('a1', 'u1', baseDto as any);
     // fire-and-forget — allow the microtask to run
     await new Promise((resolve) => setImmediate(resolve));
 
-    expect(productRules.upsertRules).toHaveBeenCalledWith('a1', [
-      { canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' },
-    ]);
+    expect(createdHooks.onExpenseCreated).toHaveBeenCalledWith(
+      'a1',
+      'u1',
+      expect.objectContaining({ id: 'e-items-1' }),
+      [{ canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' }],
+    );
   });
 
   it('resolves a repeated item category once, so two lines cannot race into a duplicate-category P2002', async () => {
@@ -597,9 +547,9 @@ describe('create with categorized receipt items', () => {
     expect(written.map((w: any) => w.categoryId)).toEqual(['c-alcohol', 'c-alcohol', 'c-groceries']);
   });
 
-  it('does not fail the create when rule learning throws', async () => {
-    const { service, productRules } = makeCategorizedItemsCreateService();
-    productRules.upsertRules.mockRejectedValue(new Error('boom'));
+  it('does not fail create when the created-hooks call rejects', async () => {
+    const { service, createdHooks } = makeCategorizedItemsCreateService();
+    createdHooks.onExpenseCreated.mockRejectedValue(new Error('boom'));
 
     let unhandled: unknown;
     const onUnhandledRejection = (reason: unknown) => {
@@ -617,7 +567,7 @@ describe('create with categorized receipt items', () => {
       // fire-and-forget call's own .catch(() => {}) has a chance to run — if
       // that .catch were ever removed, Node would surface this rejection as
       // an unhandledRejection event, which the listener above would capture.
-      expect(productRules.upsertRules).toHaveBeenCalled();
+      expect(createdHooks.onExpenseCreated).toHaveBeenCalled();
       await new Promise((resolve) => setImmediate(resolve));
       expect(unhandled).toBeUndefined();
     } finally {
@@ -671,6 +621,7 @@ function makeItemsService(expense: { id: string; clientId: string }) {
     {} as any,
     {} as any,
     makeReceiptSplitServiceStub(),
+    makeCreatedHooksStub(),
   );
   return { service, prisma };
 }
@@ -852,6 +803,7 @@ function makeSplitDefenceService(opts: {
     { dismissForExpense: jest.fn().mockResolvedValue(undefined) } as any,
     merchantRulesService,
     makeReceiptSplitServiceStub(),
+    makeCreatedHooksStub(),
   );
 
   return { service, prisma, splitFindMany, splitUpdateMany, splitCreateMany, itemFindMany };
@@ -1069,6 +1021,7 @@ describe('remove — receipt-split cleanup', () => {
       anomalyService,
       merchantRulesService,
       receiptSplitService,
+      makeCreatedHooksStub(),
     );
 
     await service.remove('acc-1', 'e-1');

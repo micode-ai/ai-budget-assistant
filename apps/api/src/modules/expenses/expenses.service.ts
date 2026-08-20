@@ -1,29 +1,28 @@
-import { Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
-import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
-import { ProductRulesService } from '../merchant-rules/product-rules.service';
-import { FamilyFeedService } from '../family-feed/family-feed.service';
-import { CommunityPriceService } from '../community-prices/community-price.service';
-import { InflationShieldTrackingService } from '../insights/inflation-shield-tracking.service';
 import { resolveShares } from './trip-share-calculator';
 import { buildCategorySplits, rescaleSplits } from '../../common/utils/receipt-category-split';
 import { buildLocationColumns } from './expense-location.util';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 import { resolveExpenseCategoryId } from './expense-category-resolver.util';
 import { ReceiptSplitService } from '../receipt-split/receipt-split.service';
+import { ExpenseCreatedHooksService, LearnableExpenseItem } from './expense-created-hooks.service';
 
 /**
- * CRUD + fire-and-forget-hooks orchestrator for expenses. `bulkUpdate` lives in
- * ExpenseBulkService, and `mergeExpenses`/`moveToAccount` live in
- * ExpenseCrossAccountService (see docs/tech-debt/expenses-service-god-file.md) —
- * neither needed the gamification/anomaly/family-feed/community-price/shield hook
- * chain this class owns for create/update/remove.
+ * CRUD orchestrator for expenses. `bulkUpdate` lives in ExpenseBulkService,
+ * `mergeExpenses`/`moveToAccount` live in ExpenseCrossAccountService, and the
+ * post-create fire-and-forget hook chain (anomaly check, family-feed,
+ * community-prices, inflation-shield tracking, product-rule learning) lives in
+ * ExpenseCreatedHooksService (see
+ * docs/tech-debt/expenses-service-regrowth-after-split.md) — none of that needs
+ * to live on this class. A new "what happens after an expense is created"
+ * feature belongs in ExpenseCreatedHooksService, not here.
  */
 
 @Injectable()
@@ -35,10 +34,7 @@ export class ExpensesService {
     private readonly anomalyService: AnomalyService,
     private readonly merchantRules: MerchantRulesService,
     private readonly receiptSplitService: ReceiptSplitService,
-    @Optional() private readonly familyFeed?: FamilyFeedService,
-    @Optional() private readonly communityPrices?: CommunityPriceService,
-    @Optional() private readonly shieldTracking?: InflationShieldTrackingService,
-    @Optional() private readonly productRules?: ProductRulesService,
+    private readonly createdHooks: ExpenseCreatedHooksService,
   ) {}
 
   private toExpenseResponse(expense: any) {
@@ -53,66 +49,6 @@ export class ExpensesService {
    */
   private async invalidateChatCache(accountId: string): Promise<void> {
     await invalidateExpenseChatCache(this.cacheService, accountId);
-  }
-
-  /**
-   * Tier 1 Case A — stub-yield reconciliation.
-   * Called AFTER the create transaction commits (to keep the create lock short)
-   * and BEFORE anomalyService.checkExpense fires (so detectDuplicateCharge
-   * won't see the already-reconciled stub and raise a spurious alert).
-   *
-   * Finds a non-deleted source:'notification' expense in the same account that
-   * satisfies predicate P (same amount + currency + date ±1 day + same payee)
-   * and soft-deletes it. SAFETY: only source:'notification' rows are candidates —
-   * two genuine non-notification expenses can never delete each other.
-   */
-  private async reconcileNotificationStub(accountId: string, newExpenseId: string): Promise<void> {
-    const e = await this.prisma.expense.findFirst({
-      where: { id: newExpenseId, accountId, isDeleted: false },
-      select: {
-        id: true,
-        amount: true,
-        currencyCode: true,
-        date: true,
-        merchant: true,
-        description: true,
-      },
-    });
-    if (!e) return;
-
-    const label = expensePayee(e as any);
-    if (!label) return; // unidentifiable — never dedup blank vs blank
-
-    const stubs = await this.prisma.expense.findMany({
-      where: {
-        accountId,
-        isDeleted: false,
-        source: 'notification',
-        id: { not: e.id },
-        amount: e.amount as any,
-        currencyCode: e.currencyCode,
-        date: {
-          gte: new Date((e.date as Date).getTime() - DUP_DAY_MS),
-          lte: new Date((e.date as Date).getTime() + DUP_DAY_MS),
-        },
-      },
-      select: { id: true, merchant: true, description: true },
-    });
-
-    const stub = stubs.find((s) => expensePayee(s as any) === label);
-    if (!stub) return;
-
-    await this.prisma.expense.update({
-      where: { id: stub.id },
-      data: { isDeleted: true, syncVersion: { increment: 1 } },
-    });
-
-    // The stub may already carry a duplicate_charge alert — drop it so it doesn't
-    // dead-end on the now-deleted stub.
-    void this.anomalyService.dismissForExpense(accountId, stub.id);
-
-    // Also invalidate the cache since we mutated a row outside the main transaction.
-    await this.invalidateChatCache(accountId);
   }
 
   /**
@@ -468,65 +404,25 @@ export class ExpensesService {
     // Fire-and-forget cache invalidation; never block the create response.
     this.invalidateChatCache(accountId).catch(() => undefined);
 
-    // Fire-and-forget post-create side effects — only for genuinely new expenses.
-    // ORDERING IS CRITICAL: reconcileNotificationStub must run BEFORE checkExpense
-    // so detectDuplicateCharge sees the stub already gone (isDeleted:true) and
-    // does not raise a spurious duplicate_charge alert for the auto-reconciled pair.
+    // Fire-and-forget post-create hook chain — only for genuinely new expenses.
+    // learnableItems is computed HERE (needs both the raw dto.items and the
+    // per-index resolvedItemCategoryIds computed inside the transaction above)
+    // and handed to ExpenseCreatedHooksService as already-resolved data; the
+    // hooks service owns everything about WHAT happens next (anomaly check,
+    // family-feed, community-prices, shield tracking, product-rule learning) —
+    // see docs/tech-debt/expenses-service-regrowth-after-split.md.
     if (result.isNew && result.expense) {
-      const run = async () => {
-        if (result.expense.source !== 'notification') {
-          // Case A: a richer source supersedes the stub. Soft-delete any matching
-          // source:'notification' stub. SAFETY: query is hard-scoped to notification
-          // rows — two genuine non-notification expenses can never delete each other.
-          await this.reconcileNotificationStub(accountId, result.expense.id).catch(() => {});
-        }
-        await this.anomalyService.checkExpense(accountId, userId, result.expense.id).catch(() => {});
-      };
-      run().catch(() => {});
-
-      // fire-and-forget: record in family feed (non-personal accounts only)
-      void this.familyFeed
-        ?.recordEvent(accountId, userId, 'EXPENSE_ADDED', result.expense.id, {
-          amount: Number(result.expense.amount),
-          currency: result.expense.currencyCode,
-        })
-        .catch(() => {});
-
-      // fire-and-forget: contribute to the community price corpus (ABA-335,
-      // consent + location + E2EE gated inside the service; never throws)
-      void this.communityPrices
-        ?.recordContribution(accountId, userId, result.expense.id)
-        .catch(() => {});
-
-      // fire-and-forget: credit any active inflation-shield recommendation this
-      // purchase acts on (realized-savings tracking). Never throws into create.
-      void this.shieldTracking
-        ?.reconcilePurchase(accountId, result.expense.id)
-        .catch(() => {});
-
-      // A new expense changes the shield's inputs (new price point) and may have
-      // just reconciled a recommendation — bust the cached shield so the next read
-      // recomputes. Fire-and-forget; never blocks create.
-      void this.cacheService.delByPrefix(`shield:${accountId}:`).catch(() => {});
-
-      // fire-and-forget: teach a product rule from every categorized receipt
-      // line, so the next receipt containing that product classifies for free.
-      // Uses the RESOLVED category id (resolvedItemCategoryIds, computed above
-      // in the same order as dto.items), not the raw client-supplied one — the
-      // rule map is consumed elsewhere as a real server categoryId. Never
-      // throws into create: ProductRulesService.upsertRules already never
-      // throws on its own, and the .catch here is the belt-and-suspenders
-      // guarantee for this call site specifically.
-      const learnable = (dto.items ?? [])
+      const learnableItems: LearnableExpenseItem[] = (dto.items ?? [])
         .map((item, index) => ({ item, categoryId: resolvedItemCategoryIds[index] }))
         .filter((entry) => entry.categoryId && (entry.item.canonicalName?.trim() || entry.item.description?.trim()))
         .map((entry) => ({
           canonicalName: (entry.item.canonicalName?.trim() || entry.item.description.trim()) as string,
           categoryId: entry.categoryId as string,
         }));
-      if (learnable.length > 0) {
-        void this.productRules?.upsertRules(accountId, learnable).catch(() => {});
-      }
+
+      void this.createdHooks
+        .onExpenseCreated(accountId, userId, result.expense, learnableItems)
+        .catch(() => {});
     }
 
     return result;

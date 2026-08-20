@@ -3,6 +3,7 @@ import { ExpensesController } from './expenses.controller';
 import { ExpensesService } from './expenses.service';
 import { ExpenseBulkService } from './expense-bulk.service';
 import { ExpenseCrossAccountService } from './expense-cross-account.service';
+import { ExpenseCreatedHooksService } from './expense-created-hooks.service';
 import { ExpenseRecurringCron } from './expense-recurring.cron';
 import { BudgetsModule } from '../budgets/budgets.module';
 import { GamificationModule } from '../gamification/gamification.module';
@@ -21,7 +22,7 @@ import { ReceiptSplitModule } from '../receipt-split/receipt-split.module';
 @Module({
   imports: [BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule, ReceiptSplitModule],
   controllers: [ExpensesController],
-  providers: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseRecurringCron],
+  providers: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseCreatedHooksService, ExpenseRecurringCron],
   exports: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService],
 })
 export class ExpensesModule {}
