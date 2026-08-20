@@ -69,7 +69,13 @@ docs/plans
 docs/product-ideas
 docs/tech-debt
 docs/scaling
-docs/marketing
+# Exclude the CONTENTS, not the directory itself: git never descends into an
+# excluded directory, so a negation inside one can never re-include anything.
+docs/marketing/*
+# ...except the SEO blog. Its 22 sources and 208 built pages are already tracked,
+# and web-deploy.yml copies docs/marketing/seo/site/blog into the apex tree, so a
+# NEW article has to be committable too.
+!docs/marketing/seo/
 # Superpowers brainstorm artifacts
 .superpowers/
 
