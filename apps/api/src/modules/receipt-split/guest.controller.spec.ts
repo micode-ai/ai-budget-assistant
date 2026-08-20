@@ -314,7 +314,7 @@ describe('Legacy pair clearing on PUT /users/me/payment-methods closes the stale
    * silently fallen back to the old `revolut` handle the payer thought they'd removed.
    */
   it('after saving the list (then emptying it) via replacePaymentMethods, the guest page no longer falls back to the old legacy handle', async () => {
-    let legacy = { paymentMethod: 'revolut' as string | null, paymentHandle: 'legacy-revolut' as string | null };
+    const legacy = { paymentMethod: 'revolut' as string | null, paymentHandle: 'legacy-revolut' as string | null };
     let methodRows: { method: string; handle: string; sortOrder: number }[] = [];
 
     const prisma: any = {

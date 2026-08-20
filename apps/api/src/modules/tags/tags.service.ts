@@ -83,10 +83,12 @@ export class TagsService {
   }
 
   async update(accountId: string, id: string, dto: UpdateTagDto) {
+    // `id` may be the mobile's local clientId — resolve to the server PK
+    // before using it in a Prisma unique `where`.
     const existing = await this.findOne(accountId, id);
 
     const updated = await this.prisma.tag.update({
-      where: { id },
+      where: { id: existing.id },
       data: {
         name: dto.name,
         color: dto.color,
@@ -100,11 +102,12 @@ export class TagsService {
   }
 
   async remove(accountId: string, id: string) {
-    // Verify ownership
-    await this.findOne(accountId, id);
+    // Verify ownership; `id` may be the mobile's local clientId, so resolve
+    // to the server PK before using it in a Prisma unique `where`.
+    const existing = await this.findOne(accountId, id);
 
     return this.prisma.tag.update({
-      where: { id },
+      where: { id: existing.id },
       data: {
         isDeleted: true,
       },
