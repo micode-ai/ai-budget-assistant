@@ -479,3 +479,113 @@ describe('WalletService.getSummariesForAccounts', () => {
     expect(balances.find((b) => b.currencyCode === 'EUR')?.currentBalance).toBe(25);
   });
 });
+
+// ---------------------------------------------------------------------------
+// ABA-431 — currencies with money but no wallet_balances row
+// ---------------------------------------------------------------------------
+
+describe('WalletService currency derivation', () => {
+  type Row = { accountId?: string; currencyCode: string; initialAmount: number; isDeleted?: boolean };
+
+  function makeService(opts: {
+    walletBalances?: Row[];
+    income?: { currencyCode: string; amount: number }[];
+    expense?: { currencyCode: string; amount: number }[];
+    ensure?: jest.Mock;
+  }) {
+    const rows = (opts.walletBalances ?? []).map((r) => ({ isDeleted: false, ...r }));
+    const groupSum = (
+      list: { currencyCode: string; amount: number }[] | undefined,
+      field: string,
+    ) => (list ?? []).map((r) => ({ [field]: r.currencyCode, _sum: { amount: r.amount } }));
+
+    const prisma = {
+      walletBalance: { findMany: jest.fn().mockResolvedValue(rows) },
+      income: { groupBy: jest.fn().mockResolvedValue(groupSum(opts.income, 'currencyCode')) },
+      expense: { groupBy: jest.fn().mockResolvedValue(groupSum(opts.expense, 'currencyCode')) },
+      currencyExchange: { groupBy: jest.fn().mockResolvedValue([]) },
+      accountTransfer: { groupBy: jest.fn().mockResolvedValue([]) },
+      accountMember: { findMany: jest.fn().mockResolvedValue([{ accountId: 'a1' }]) },
+    };
+    const ensure = opts.ensure ?? jest.fn().mockResolvedValue(undefined);
+    const service = new WalletService(prisma as never, { ensureCurrencies: ensure } as never);
+    return { service, prisma, ensure };
+  }
+
+  it('shows a currency that has income but no wallet row, with a balance derived from the movements', async () => {
+    const { service } = makeService({
+      walletBalances: [{ currencyCode: 'PLN', initialAmount: 0 }],
+      income: [{ currencyCode: 'USD', amount: 126500 }],
+      expense: [{ currencyCode: 'USD', amount: 2016 }],
+    });
+
+    const res = await service.getSummary('a1');
+    const usd = res.balances.find((b) => b.currencyCode === 'USD');
+
+    expect(usd).toBeDefined();
+    expect(usd?.initialAmount).toBe(0);
+    expect(usd?.currentBalance).toBe(124484);
+  });
+
+  it('does not show a currency the user hid from the wallet even though it still has movements', async () => {
+    const { service } = makeService({
+      walletBalances: [
+        { currencyCode: 'PLN', initialAmount: 0 },
+        { currencyCode: 'BYN', initialAmount: 0, isDeleted: true },
+      ],
+      expense: [{ currencyCode: 'BYN', amount: 349 }],
+    });
+
+    const res = await service.getSummary('a1');
+
+    expect(res.balances.map((b) => b.currencyCode)).toEqual(['PLN']);
+  });
+
+  it('persists only the derived currencies so the rows exist on the next read', async () => {
+    const { service, ensure } = makeService({
+      walletBalances: [{ currencyCode: 'PLN', initialAmount: 0 }],
+      income: [{ currencyCode: 'USD', amount: 10 }, { currencyCode: 'PLN', amount: 5 }],
+    });
+
+    await service.getSummary('a1');
+
+    expect(ensure).toHaveBeenCalledTimes(1);
+    expect(ensure.mock.calls[0][2]).toEqual(['USD']);
+  });
+
+  it('does not call the persister at all when nothing had to be derived', async () => {
+    const { service, ensure } = makeService({
+      walletBalances: [{ currencyCode: 'PLN', initialAmount: 0 }],
+      income: [{ currencyCode: 'PLN', amount: 5 }],
+    });
+
+    await service.getSummary('a1');
+
+    expect(ensure).not.toHaveBeenCalled();
+  });
+
+  it('still returns the derived balance when persisting the row fails', async () => {
+    const { service } = makeService({
+      income: [{ currencyCode: 'USD', amount: 10 }],
+      ensure: jest.fn().mockRejectedValue(new Error('db down')),
+    });
+
+    const res = await service.getSummary('a1');
+
+    expect(res.balances.map((b) => b.currencyCode)).toEqual(['USD']);
+  });
+
+  it('derives the same missing currencies for the multi-account transfer-form summary', async () => {
+    const { service } = makeService({
+      walletBalances: [{ accountId: 'a1', currencyCode: 'PLN', initialAmount: 0 }],
+    });
+    // groupBy for the multi-account path keys rows by accountId as well
+    (service as unknown as { prisma: { income: { groupBy: jest.Mock } } }).prisma.income.groupBy =
+      jest.fn().mockResolvedValue([{ accountId: 'a1', currencyCode: 'USD', _sum: { amount: 700 } }]);
+
+    const res = await service.getSummariesForAccounts('u1');
+    const balances = res.accounts[0].balances;
+
+    expect(balances.find((b) => b.currencyCode === 'USD')?.currentBalance).toBe(700);
+  });
+});

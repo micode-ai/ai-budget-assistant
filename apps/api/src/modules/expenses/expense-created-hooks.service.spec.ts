@@ -274,3 +274,54 @@ describe('onExpenseCreated', () => {
     await new Promise((r) => setImmediate(r));
   });
 });
+
+// ---------------------------------------------------------------------------
+// ABA-431 — a new currency has to reach the wallet
+// ---------------------------------------------------------------------------
+
+describe('onExpenseCreated wallet currency registration', () => {
+  function makeService() {
+    const prisma: any = { expense: { findFirst: jest.fn().mockResolvedValue(null) } };
+    const cacheService: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+    const ensureCurrencies = jest.fn().mockResolvedValue(undefined);
+    const service = new ExpenseCreatedHooksService(
+      prisma,
+      anomalyService,
+      cacheService,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      { ensureCurrencies } as never,
+    );
+    return { service, ensureCurrencies };
+  }
+
+  it('registers the expense currency so the wallet can show a card for it', async () => {
+    const { service, ensureCurrencies } = makeService();
+
+    await service.onExpenseCreated(
+      'acc-1',
+      'user-1',
+      { id: 'e-1', amount: 20, currencyCode: 'USD', source: 'manual' },
+      [],
+    );
+
+    expect(ensureCurrencies).toHaveBeenCalledWith('acc-1', 'user-1', ['USD']);
+  });
+
+  it('does not fail the create when registering the currency rejects', async () => {
+    const { service, ensureCurrencies } = makeService();
+    ensureCurrencies.mockRejectedValue(new Error('db down'));
+
+    await expect(
+      service.onExpenseCreated(
+        'acc-1',
+        'user-1',
+        { id: 'e-1', amount: 20, currencyCode: 'USD', source: 'manual' },
+        [],
+      ),
+    ).resolves.toBeUndefined();
+  });
+});

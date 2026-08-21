@@ -34,6 +34,7 @@ import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
 import { useExpenseStore } from './expenseStore';
 import { useIncomeStore } from './incomeStore';
+import { buildWalletSummary } from '../features/wallet/walletSummary';
 
 // Sum amounts grouped by a currency key. Used to aggregate in-memory store
 // data on web, where the SQLite GROUP BY helpers are no-ops.
@@ -692,7 +693,10 @@ export const useWalletStore = create<WalletState>()(
       const accountId = useAccountStore.getState().currentAccountId;
       if (!accountId) return [];
 
-      const balances = get().walletBalances.filter((b) => !b.isDeleted);
+      // Deleted rows are kept in the list on purpose: buildWalletSummary needs
+      // them to tell "the user hid this currency" from "this currency has no
+      // row yet and must be derived from the movements" (ABA-431).
+      const balances = get().walletBalances;
 
       let expenseTotals: Record<string, number>;
       let incomeTotals: Record<string, number>;
@@ -736,31 +740,14 @@ export const useWalletStore = create<WalletState>()(
         ({ transferredIn, transferredOut } = await getTransferTotals(accountId));
       }
 
-      const summary: WalletSummary[] = balances.map((wb) => {
-        const totalIncomes = incomeTotals[wb.currencyCode] || 0;
-        const totalExpenses = expenseTotals[wb.currencyCode] || 0;
-        const totalExchangedIn = exchangedIn[wb.currencyCode] || 0;
-        const totalExchangedOut = exchangedOut[wb.currencyCode] || 0;
-        const totalTransferredIn = transferredIn[wb.currencyCode] || 0;
-        const totalTransferredOut = transferredOut[wb.currencyCode] || 0;
-        const currentBalance = wb.initialAmount + totalIncomes - totalExpenses
-          + totalExchangedIn - totalExchangedOut
-          + totalTransferredIn - totalTransferredOut;
-
-        return {
-          currencyCode: wb.currencyCode as Currency,
-          initialAmount: wb.initialAmount,
-          totalIncomes,
-          totalExpenses,
-          totalExchangedIn,
-          totalExchangedOut,
-          totalTransferredIn,
-          totalTransferredOut,
-          currentBalance,
-        };
-      });
-
-      return summary;
+      return buildWalletSummary(
+        balances.map((b) => ({
+          currencyCode: b.currencyCode,
+          initialAmount: b.initialAmount,
+          isDeleted: !!b.isDeleted,
+        })),
+        { incomeTotals, expenseTotals, exchangedIn, exchangedOut, transferredIn, transferredOut },
+      );
     },
 
     getBalanceForCurrency: (currencyCode) => {

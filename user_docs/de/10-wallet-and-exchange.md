@@ -28,6 +28,8 @@ Fur jede Wahrung siehst du:
 
 Die Formel: **Aktueller Saldo = Anfangssaldo + Gesamteinkommen - Gesamtausgaben + Eingetauscht - Umgetauscht + Ubertragen erhalten - Ubertragen gesendet**
 
+Eine Währung erscheint von selbst in der Geldbörse, sobald Sie darin einen Betrag erfassen — eine Ausgabe, eine Einnahme, einen Umtausch oder eine Überweisung. Solange Sie keinen Anfangsbestand festlegen, beträgt dieser 0, die Karte zeigt also genau die Summe Ihrer Transaktionen. Wenn Sie eine Währung aus der Geldbörse entfernen, bleibt sie verborgen, auch wenn Sie weiterhin Transaktionen darin erfassen — legen Sie erneut einen Bestand fest, um die Karte zurückzuholen.
+
 ## Gesamtsaldo
 
 Wenn du Salden in mehreren Wahrungen hast, zeigt die App einen **Gesamtsaldo** an, der alle Wahrungssalden in deine in den Einstellungen festgelegte Hauptwahrung umrechnet. So erhaltst du einen schnellen Uberblick uber dein gesamtes Vermogen, ohne manuell zwischen Wahrungen rechnen zu mussen.

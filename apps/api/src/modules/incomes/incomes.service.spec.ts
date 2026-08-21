@@ -375,3 +375,43 @@ describe('IncomesService.getByClientId', () => {
     expect(result).toEqual({ id: 'inc-1' });
   });
 });
+
+// ---------------------------------------------------------------------------
+// ABA-431 — a new currency has to reach the wallet
+// ---------------------------------------------------------------------------
+
+describe('IncomesService.create wallet currency registration', () => {
+  it('registers the income currency so the wallet can show a card for it', async () => {
+    const income = { id: 'i-1', amount: 2500, currencyCode: 'USD' };
+    const prisma: any = {
+      $transaction: jest.fn(async (fn: any) =>
+        fn({
+          income: {
+            upsert: jest.fn().mockResolvedValue(income),
+            findUnique: jest.fn().mockResolvedValue(income),
+          },
+          category: { findFirst: jest.fn().mockResolvedValue(null) },
+        }),
+      ),
+    };
+    const cache: any = { del: jest.fn().mockResolvedValue(undefined) };
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const ensureCurrencies = jest.fn().mockResolvedValue(undefined);
+    const service = new IncomesService(
+      prisma,
+      cache,
+      gamification,
+      undefined,
+      { ensureCurrencies } as never,
+    );
+
+    await service.create('acc-1', 'user-1', {
+      localId: 'local-1',
+      amount: 2500,
+      currencyCode: 'USD',
+      date: '2026-08-17',
+    } as never);
+
+    expect(ensureCurrencies).toHaveBeenCalledWith('acc-1', 'user-1', ['USD']);
+  });
+});

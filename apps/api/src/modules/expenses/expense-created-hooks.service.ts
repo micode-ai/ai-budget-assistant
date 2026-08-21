@@ -6,6 +6,7 @@ import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
 import { InflationShieldTrackingService } from '../insights/inflation-shield-tracking.service';
 import { ProductRulesService } from '../merchant-rules/product-rules.service';
+import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 
 /** The subset of a persisted Expense row the post-create hook chain needs. */
@@ -47,6 +48,7 @@ export class ExpenseCreatedHooksService {
     @Optional() private readonly communityPrices?: CommunityPriceService,
     @Optional() private readonly shieldTracking?: InflationShieldTrackingService,
     @Optional() private readonly productRules?: ProductRulesService,
+    @Optional() private readonly walletCurrency?: WalletCurrencyService,
   ) {}
 
   /**
@@ -168,5 +170,13 @@ export class ExpenseCreatedHooksService {
     if (learnableItems.length > 0) {
       void this.productRules?.upsertRules(accountId, learnableItems).catch(() => {});
     }
+
+    // fire-and-forget: spending in a currency the wallet has no row for yet
+    // must still produce a balance card, instead of the money being invisible
+    // until somebody manually sets an initial balance for that currency
+    // (ABA-431). Never throws; the read path derives it anyway if this misses.
+    void this.walletCurrency
+      ?.ensureCurrencies(accountId, userId, [expense.currencyCode])
+      .catch(() => {});
   }
 }

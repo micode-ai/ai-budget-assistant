@@ -28,6 +28,8 @@ Pour chaque devise, vous verrez :
 
 La formule : **Solde actuel = Solde initial + Total des revenus - Total depense + Change entrant - Change sortant + Transfert entrant - Transfert sortant**
 
+Une devise apparaît d'elle-même dans le portefeuille dès que vous y enregistrez de l'argent — une dépense, un revenu, un change ou un transfert. Tant que vous ne définissez pas de solde initial, celui-ci vaut 0 : la carte affiche donc exactement la somme de vos transactions. Si vous retirez une devise du portefeuille, elle reste masquée même si vous continuez à y enregistrer des transactions — définissez-lui à nouveau un solde pour faire revenir la carte.
+
 ## Definir le solde initial
 
 Definissez votre solde de depart pour chaque devise :

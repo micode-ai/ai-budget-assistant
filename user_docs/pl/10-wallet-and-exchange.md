@@ -28,6 +28,8 @@ Dla kazdej waluty zobaczysz:
 
 Formula: **Bieżące saldo = Saldo początkowe + Łączne przychody - Łącznie wydano + Otrzymano z wymiany - Wymieniono + Otrzymano przelewem - Wysłano przelewem**
 
+Waluta pojawia się w portfelu sama, gdy tylko zapiszesz w niej pierwszą kwotę — wydatek, przychód, wymianę lub przelew. Dopóki nie ustawisz dla niej salda początkowego, wynosi ono 0, więc karta pokazuje dokładnie sumę Twoich transakcji. Jeśli usuniesz walutę z portfela, pozostanie ukryta, nawet jeśli nadal zapisujesz w niej transakcje — ustaw dla niej saldo ponownie, aby przywrócić kartę.
+
 ## Ustawianie salda poczatkowego
 
 Ustaw saldo startowe dla kazdej waluty:

@@ -34,7 +34,7 @@ export class WalletController {
 
   @Get('summary')
   async getSummary(@Req() req: AuthenticatedRequest) {
-    return this.walletService.getSummary(req.accountId);
+    return this.walletService.getSummary(req.accountId, req.user.id);
   }
 
   /**

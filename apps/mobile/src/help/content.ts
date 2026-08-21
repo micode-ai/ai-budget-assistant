@@ -1458,6 +1458,8 @@ For each currency, you'll see:
 
 The formula: **Current Balance = Initial Balance + Total Income - Total Spent + Exchanged In - Exchanged Out + Transferred In - Transferred Out**
 
+A currency appears in the wallet by itself as soon as you record money in it — an expense, income, exchange or transfer. Until you set an initial balance for it, that balance is 0, so the card shows exactly what your transactions add up to. If you remove a currency from the wallet it stays hidden even if you keep recording transactions in it — set a balance for it again to bring the card back.
+
 ## Total Balance
 
 If you hold balances in multiple currencies, the wallet displays a **Total Balance** card at the top. This card converts all your currency balances into your chosen settings currency (configured in **Settings** > **Currency**) using the latest exchange rates, giving you a single combined view of your finances.
@@ -5964,6 +5966,8 @@ iOS, Android, Web
 | **Переведено исходящий** | Сумма, отправленная переводами на другие счета |
 
 Формула: **Текущий баланс = Начальный баланс + Общий доход - Всего потрачено + Получено обменом - Обменяно + Переведено входящий - Переведено исходящий**
+
+Валюта появляется в кошельке сама, как только вы записали в ней первую сумму — расход, доход, обмен или перевод. Пока вы не задали для неё начальный баланс, он равен 0, поэтому карточка показывает ровно то, что дают ваши транзакции. Если убрать валюту из кошелька, она останется скрытой, даже если вы продолжаете записывать в ней транзакции — задайте для неё баланс снова, чтобы вернуть карточку.
 
 ## Общий баланс
 
@@ -10472,6 +10476,8 @@ iOS, Android, Web
 
 Формула: **Поточний баланс = Початковий баланс + Загальний дохід - Загальні витрати + Отримано обміном - Обміняно + Отримано переказом - Відправлено переказом**
 
+Валюта з'являється в гаманці сама, як тільки ви записали в ній першу суму — витрату, дохід, обмін або переказ. Поки ви не задали для неї початковий баланс, він дорівнює 0, тому картка показує саме те, що дають ваші транзакції. Якщо прибрати валюту з гаманця, вона залишиться прихованою, навіть якщо ви й далі записуєте в ній транзакції — задайте для неї баланс знову, щоб повернути картку.
+
 ## Встановити баланс
 
 Встановіть стартовий баланс для кожної валюти:
@@ -14923,6 +14929,8 @@ Dla kazdej waluty zobaczysz:
 
 Formula: **Bieżące saldo = Saldo początkowe + Łączne przychody - Łącznie wydano + Otrzymano z wymiany - Wymieniono + Otrzymano przelewem - Wysłano przelewem**
 
+Waluta pojawia się w portfelu sama, gdy tylko zapiszesz w niej pierwszą kwotę — wydatek, przychód, wymianę lub przelew. Dopóki nie ustawisz dla niej salda początkowego, wynosi ono 0, więc karta pokazuje dokładnie sumę Twoich transakcji. Jeśli usuniesz walutę z portfela, pozostanie ukryta, nawet jeśli nadal zapisujesz w niej transakcje — ustaw dla niej saldo ponownie, aby przywrócić kartę.
+
 ## Ustawianie salda poczatkowego
 
 Ustaw saldo startowe dla kazdej waluty:
@@ -19372,6 +19380,8 @@ Fur jede Wahrung siehst du:
 
 Die Formel: **Aktueller Saldo = Anfangssaldo + Gesamteinkommen - Gesamtausgaben + Eingetauscht - Umgetauscht + Ubertragen erhalten - Ubertragen gesendet**
 
+Eine Währung erscheint von selbst in der Geldbörse, sobald Sie darin einen Betrag erfassen — eine Ausgabe, eine Einnahme, einen Umtausch oder eine Überweisung. Solange Sie keinen Anfangsbestand festlegen, beträgt dieser 0, die Karte zeigt also genau die Summe Ihrer Transaktionen. Wenn Sie eine Währung aus der Geldbörse entfernen, bleibt sie verborgen, auch wenn Sie weiterhin Transaktionen darin erfassen — legen Sie erneut einen Bestand fest, um die Karte zurückzuholen.
+
 ## Gesamtsaldo
 
 Wenn du Salden in mehreren Wahrungen hast, zeigt die App einen **Gesamtsaldo** an, der alle Wahrungssalden in deine in den Einstellungen festgelegte Hauptwahrung umrechnet. So erhaltst du einen schnellen Uberblick uber dein gesamtes Vermogen, ohne manuell zwischen Wahrungen rechnen zu mussen.
@@ -23796,6 +23806,8 @@ Para cada moneda, veras:
 
 La formula: **Saldo actual = Saldo inicial + Total ingresos - Total gastado + Cambio entrante - Cambio saliente + Transferencia entrante - Transferencia saliente**
 
+Una moneda aparece en la cartera por sí sola en cuanto registras dinero en ella: un gasto, un ingreso, un cambio o una transferencia. Hasta que le asignes un saldo inicial, este es 0, por lo que la tarjeta muestra exactamente la suma de tus transacciones. Si eliminas una moneda de la cartera, seguirá oculta aunque sigas registrando transacciones en ella: vuelve a asignarle un saldo para recuperar la tarjeta.
+
 ## Establecer saldo inicial
 
 Establece tu saldo inicial para cada moneda:
@@ -28209,6 +28221,8 @@ Pour chaque devise, vous verrez :
 
 La formule : **Solde actuel = Solde initial + Total des revenus - Total depense + Change entrant - Change sortant + Transfert entrant - Transfert sortant**
 
+Une devise apparaît d'elle-même dans le portefeuille dès que vous y enregistrez de l'argent — une dépense, un revenu, un change ou un transfert. Tant que vous ne définissez pas de solde initial, celui-ci vaut 0 : la carte affiche donc exactement la somme de vos transactions. Si vous retirez une devise du portefeuille, elle reste masquée même si vous continuez à y enregistrer des transactions — définissez-lui à nouveau un solde pour faire revenir la carte.
+
 ## Definir le solde initial
 
 Definissez votre solde de depart pour chaque devise :
@@ -32620,6 +32634,8 @@ iOS, Android, Web
 
 Формула: **Бягучы баланс = Пачатковы баланс + Агульны даход - Усяго выдаткавана + Атрымана абменам - Абменяна + Пераведзена ўваходны - Пераведзена выходны**
 
+Валюта з'яўляецца ў гаманцы сама, як толькі вы запісалі ў ёй першую суму — выдатак, прыход, абмен або пераказ. Пакуль вы не задалі для яе пачатковы баланс, ён роўны 0, таму картка паказвае акурат тое, што даюць вашы транзакцыі. Калі прыбраць валюту з гаманца, яна застанецца схаванай, нават калі вы далей запісваеце ў ёй транзакцыі — задайце для яе баланс зноў, каб вярнуць картку.
+
 ## Агульны баланс
 
 Калі ў вас ёсць балансы ў некалькіх валютах, праграма паказвае картку **Агульны баланс** у верхняй частцы экрана Кашалька. Гэтая картка канвертуе ўсе вашы валютныя балансы ў адзіную валюту (устаноўленую ў Наладах) па актуальных курсах абмену, каб вы маглі бачыць агульны кошт усіх вашых сродкаў у адным месцы.
@@ -36987,6 +37003,8 @@ Voor elke valuta zie je:
 | **Overgemaakt uit** | Bedrag verstuurd naar andere accounts |
 
 De formule: **Huidig saldo = Beginsaldo + Totale inkomsten - Totaal uitgegeven + Ingewisseld in - Ingewisseld uit + Overgemaakt in - Overgemaakt uit**
+
+Een valuta verschijnt automatisch in de wallet zodra je er geld in vastlegt — een uitgave, inkomsten, een wissel of een overboeking. Zolang je er geen beginsaldo voor instelt, is dat 0, dus de kaart laat precies zien wat je transacties opleveren. Verwijder je een valuta uit de wallet, dan blijft die verborgen ook als je er transacties in blijft vastleggen — stel er opnieuw een saldo voor in om de kaart terug te halen.
 
 ## Totaalsaldo
 

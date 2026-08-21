@@ -28,6 +28,8 @@ Voor elke valuta zie je:
 
 De formule: **Huidig saldo = Beginsaldo + Totale inkomsten - Totaal uitgegeven + Ingewisseld in - Ingewisseld uit + Overgemaakt in - Overgemaakt uit**
 
+Een valuta verschijnt automatisch in de wallet zodra je er geld in vastlegt — een uitgave, inkomsten, een wissel of een overboeking. Zolang je er geen beginsaldo voor instelt, is dat 0, dus de kaart laat precies zien wat je transacties opleveren. Verwijder je een valuta uit de wallet, dan blijft die verborgen ook als je er transacties in blijft vastleggen — stel er opnieuw een saldo voor in om de kaart terug te halen.
+
 ## Totaalsaldo
 
 Als je saldo's in meerdere valuta's hebt, toont de portemonnee bovenaan een kaart **Totaalsaldo**. Deze kaart rekent al je valutasaldo's om naar de gekozen valuta in je instellingen (geconfigureerd in **Instellingen** > **Valuta**) met de meest recente wisselkoersen, zodat je één gecombineerd overzicht van je financiën krijgt.

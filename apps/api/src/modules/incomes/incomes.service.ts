@@ -5,6 +5,7 @@ import { CacheService } from '../../common/cache/cache.service';
 import { CreateIncomeDto, UpdateIncomeDto, IncomeFiltersDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
+import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 
 const incomeInclude = {
   category: true,
@@ -23,6 +24,7 @@ export class IncomesService {
     private readonly cache: CacheService,
     private readonly gamificationService: GamificationService,
     @Optional() private readonly familyFeed?: FamilyFeedService,
+    @Optional() private readonly walletCurrency?: WalletCurrencyService,
   ) {}
 
   private toIncomeResponse(income: IncomeWithRelations): IncomeResponse {
@@ -181,6 +183,13 @@ export class IncomesService {
           amount: Number(result.amount),
           currency: result.currencyCode,
         })
+        .catch(() => {});
+
+      // fire-and-forget: income in a currency the wallet has no row for yet
+      // must still produce a balance card instead of being invisible until
+      // somebody sets an initial balance by hand (ABA-431). Never throws.
+      void this.walletCurrency
+        ?.ensureCurrencies(accountId, userId, [result.currencyCode])
         .catch(() => {});
     }
 

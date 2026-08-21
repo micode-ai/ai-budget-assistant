@@ -28,6 +28,8 @@ For each currency, you'll see:
 
 The formula: **Current Balance = Initial Balance + Total Income - Total Spent + Exchanged In - Exchanged Out + Transferred In - Transferred Out**
 
+A currency appears in the wallet by itself as soon as you record money in it — an expense, income, exchange or transfer. Until you set an initial balance for it, that balance is 0, so the card shows exactly what your transactions add up to. If you remove a currency from the wallet it stays hidden even if you keep recording transactions in it — set a balance for it again to bring the card back.
+
 ## Total Balance
 
 If you hold balances in multiple currencies, the wallet displays a **Total Balance** card at the top. This card converts all your currency balances into your chosen settings currency (configured in **Settings** > **Currency**) using the latest exchange rates, giving you a single combined view of your finances.

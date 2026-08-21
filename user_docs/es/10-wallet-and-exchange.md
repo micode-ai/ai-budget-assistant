@@ -28,6 +28,8 @@ Para cada moneda, veras:
 
 La formula: **Saldo actual = Saldo inicial + Total ingresos - Total gastado + Cambio entrante - Cambio saliente + Transferencia entrante - Transferencia saliente**
 
+Una moneda aparece en la cartera por sí sola en cuanto registras dinero en ella: un gasto, un ingreso, un cambio o una transferencia. Hasta que le asignes un saldo inicial, este es 0, por lo que la tarjeta muestra exactamente la suma de tus transacciones. Si eliminas una moneda de la cartera, seguirá oculta aunque sigas registrando transacciones en ella: vuelve a asignarle un saldo para recuperar la tarjeta.
+
 ## Establecer saldo inicial
 
 Establece tu saldo inicial para cada moneda:

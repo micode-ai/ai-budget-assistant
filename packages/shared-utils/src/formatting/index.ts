@@ -244,6 +244,13 @@ export {
   type SplitInputItem,
 } from './receipt-category-split';
 
+// Which currencies the wallet should show for an account
+export {
+  resolveWalletCurrencies,
+  type WalletCurrencyRow,
+  type ResolvedWalletCurrency,
+} from './wallet-currencies';
+
 // ---------------------------------------------------------------------------
 // Safe-to-spend cashflow formula (single source of truth for API + mobile
 // offline fallback — must stay pure / no I/O).

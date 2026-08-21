@@ -1,13 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import { accountCurrencyKey, buildWalletBalanceRow } from './wallet-balance.util';
+import { resolveWalletCurrencies } from '../../common/utils/wallet-currencies';
+import { WalletCurrencyService } from './wallet-currency.service';
 import { SetWalletBalanceDto } from './dto';
 
 @Injectable()
 export class WalletService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    // Optional so the display still works without it — persisting a derived
+    // currency row is best-effort housekeeping, never a precondition for
+    // showing the user their money.
+    @Optional() private readonly walletCurrency?: WalletCurrencyService,
+  ) {}
 
   async setBalance(accountId: string, userId: string, dto: SetWalletBalanceDto) {
     return this.prisma.walletBalance.upsert({
@@ -61,10 +69,12 @@ export class WalletService {
     return { success: true };
   }
 
-  async getSummary(accountId: string) {
-    // Get all wallet balances
+  async getSummary(accountId: string, userId?: string) {
+    // Deleted rows are fetched too: a soft-deleted row means the user hid that
+    // currency, and resolveWalletCurrencies needs to see it to keep it hidden
+    // rather than re-derive it from the movements.
     const walletBalances = await this.prisma.walletBalance.findMany({
-      where: { accountId, isDeleted: false },
+      where: { accountId },
     });
 
     // Get income totals grouped by currency
@@ -146,19 +156,54 @@ export class WalletService {
       transferInMap.set(t.toCurrency, Number(t._sum.toAmount || 0));
     }
 
-    // Compute balances
-    const balances = walletBalances.map((wb: typeof walletBalances[number]) =>
-      buildWalletBalanceRow(wb.currencyCode, Number(wb.initialAmount), {
-        totalIncomes: incomeMap.get(wb.currencyCode) || 0,
-        totalExpenses: expenseMap.get(wb.currencyCode) || 0,
-        totalExchangedIn: exchangeInMap.get(wb.currencyCode) || 0,
-        totalExchangedOut: exchangeOutMap.get(wb.currencyCode) || 0,
-        totalTransferredIn: transferInMap.get(wb.currencyCode) || 0,
-        totalTransferredOut: transferOutMap.get(wb.currencyCode) || 0,
+    // A currency the account holds money in must show up even when nobody ever
+    // set an initial balance for it (ABA-431) — in this path the totals maps are
+    // keyed by the currency itself.
+    const resolved = resolveWalletCurrencies(
+      walletBalances.map((wb: typeof walletBalances[number]) => ({
+        currencyCode: wb.currencyCode,
+        isDeleted: wb.isDeleted,
+        initialAmount: Number(wb.initialAmount),
+      })),
+      [
+        ...incomeMap.keys(),
+        ...expenseMap.keys(),
+        ...exchangeInMap.keys(),
+        ...exchangeOutMap.keys(),
+        ...transferInMap.keys(),
+        ...transferOutMap.keys(),
+      ],
+    );
+
+    this.persistDerivedCurrencies(accountId, userId, resolved);
+
+    const balances = resolved.map((r) =>
+      buildWalletBalanceRow(r.currencyCode, r.initialAmount, {
+        totalIncomes: incomeMap.get(r.currencyCode) || 0,
+        totalExpenses: expenseMap.get(r.currencyCode) || 0,
+        totalExchangedIn: exchangeInMap.get(r.currencyCode) || 0,
+        totalExchangedOut: exchangeOutMap.get(r.currencyCode) || 0,
+        totalTransferredIn: transferInMap.get(r.currencyCode) || 0,
+        totalTransferredOut: transferOutMap.get(r.currencyCode) || 0,
       }),
     );
 
     return { balances };
+  }
+
+  /**
+   * Fire-and-forget: turn the currencies we had to derive into real
+   * `wallet_balances` rows so the next read finds them, and so every other
+   * consumer of that table (mobile's local mirror included) sees them too.
+   */
+  private persistDerivedCurrencies(
+    accountId: string,
+    userId: string | undefined,
+    resolved: { currencyCode: string; derived: boolean }[],
+  ): void {
+    const derived = resolved.filter((r) => r.derived).map((r) => r.currencyCode);
+    if (derived.length === 0) return;
+    void this.walletCurrency?.ensureCurrencies(accountId, userId, derived).catch(() => {});
   }
 
   /**
@@ -187,7 +232,8 @@ export class WalletService {
       transfersIn,
     ] = await Promise.all([
       this.prisma.walletBalance.findMany({
-        where: { accountId: { in: accountIds }, isDeleted: false },
+        // Deleted rows included on purpose — see getSummary.
+        where: { accountId: { in: accountIds } },
       }),
       this.prisma.income.groupBy({
         by: ['accountId', 'currencyCode'],
@@ -223,6 +269,10 @@ export class WalletService {
       }),
     ]);
 
+    // Every money source below goes through toMap, so recording the movement
+    // here is what keeps the "which currencies does this account actually hold"
+    // set complete without each call site having to remember (ABA-431).
+    const movementsByAccount = new Map<string, Set<string>>();
     const toMap = <T>(
       rows: T[],
       accountOf: (row: T) => string,
@@ -231,7 +281,12 @@ export class WalletService {
     ) => {
       const map = new Map<string, number>();
       for (const row of rows) {
-        map.set(accountCurrencyKey(accountOf(row), currencyOf(row)), Number(amountOf(row) || 0));
+        const accountId = accountOf(row);
+        const currencyCode = currencyOf(row);
+        map.set(accountCurrencyKey(accountId, currencyCode), Number(amountOf(row) || 0));
+        const seen = movementsByAccount.get(accountId) ?? new Set<string>();
+        seen.add(currencyCode);
+        movementsByAccount.set(accountId, seen);
       }
       return map;
     };
@@ -274,20 +329,42 @@ export class WalletService {
       (r) => r._sum.toAmount,
     );
 
-    const byAccount = new Map<string, ReturnType<typeof buildWalletBalanceRow>[]>();
-    for (const accountId of accountIds) byAccount.set(accountId, []);
-
+    const rowsByAccount = new Map<
+      string,
+      { currencyCode: string; isDeleted: boolean; initialAmount: number }[]
+    >();
     for (const wb of walletBalances) {
-      const key = accountCurrencyKey(wb.accountId, wb.currencyCode);
-      const row = buildWalletBalanceRow(wb.currencyCode, Number(wb.initialAmount), {
-        totalIncomes: incomeMap.get(key) || 0,
-        totalExpenses: expenseMap.get(key) || 0,
-        totalExchangedIn: exchangeInMap.get(key) || 0,
-        totalExchangedOut: exchangeOutMap.get(key) || 0,
-        totalTransferredIn: transferInMap.get(key) || 0,
-        totalTransferredOut: transferOutMap.get(key) || 0,
+      const rows = rowsByAccount.get(wb.accountId) ?? [];
+      rows.push({
+        currencyCode: wb.currencyCode,
+        isDeleted: wb.isDeleted,
+        initialAmount: Number(wb.initialAmount),
       });
-      byAccount.get(wb.accountId)?.push(row);
+      rowsByAccount.set(wb.accountId, rows);
+    }
+
+    const byAccount = new Map<string, ReturnType<typeof buildWalletBalanceRow>[]>();
+    for (const accountId of accountIds) {
+      const resolved = resolveWalletCurrencies(
+        rowsByAccount.get(accountId) ?? [],
+        movementsByAccount.get(accountId) ?? [],
+      );
+      this.persistDerivedCurrencies(accountId, userId, resolved);
+
+      byAccount.set(
+        accountId,
+        resolved.map((r) => {
+          const key = accountCurrencyKey(accountId, r.currencyCode);
+          return buildWalletBalanceRow(r.currencyCode, r.initialAmount, {
+            totalIncomes: incomeMap.get(key) || 0,
+            totalExpenses: expenseMap.get(key) || 0,
+            totalExchangedIn: exchangeInMap.get(key) || 0,
+            totalExchangedOut: exchangeOutMap.get(key) || 0,
+            totalTransferredIn: transferInMap.get(key) || 0,
+            totalTransferredOut: transferOutMap.get(key) || 0,
+          });
+        }),
+      );
     }
 
     return {
