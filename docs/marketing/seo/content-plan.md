@@ -56,8 +56,11 @@ Source files `16-*.md` / `17-*.md`; pairs `inflation` / `expense-map`. Published
 | 20 | **Scanning receipts: why line items matter** | receipts | skanowanie paragonów | receipt scanner app | guide | OCR line items -> price history, personal inflation, receipt price check |
 | 21 | **Back-to-school costs** | school | wyprawka szkolna ile kosztuje | back to school budget | how-to (seasonal) | Budgets + threshold alerts, savings goal, shared shopping list |
 
+| 22 | **What happens when your bank is not on the list** | ai-bank-import | import wyciągu z dowolnego banku | import bank statement from any bank | product | **AI universal statement import** (ABA-390/391) — column-mapping inference or PDF row extraction when no built-in parser recognizes the file |
+
 Wave 4 notes:
 - Topics 18-20 are feature-led USP pieces (each maps to a capability most competitors lack); 21 is seasonal and should be refreshed each August.
+- Topic 22 was proposed via the AI Dreaming Center (project-scan proposal, tied to commit `4c094cf3` / app v1.17.0) rather than drafted as part of the original Wave 4 batch, but shares this batch's feature-led USP framing and cluster (`ai-bank-import` pairs with `bank-import`, topic 10) — filed here rather than opening a Wave 5 entry for one topic.
 - **Positioning constraint on `receipts`**: the receipt price check may only be described as "more expensive than usual, worth checking" — never as detecting an overcharge or a failed promotion. The app cannot prove a promotion did not apply. This wording rule is enforced in all 9 languages.
 - **Also fixed in this wave:** the 3 Polish pillars cross-linked each other with relative paths built from old numbered slugs (`../01-budzet-domowy/`), so all 6 inter-pillar links 404'd. They now use absolute `/blog/pl/<slug>/` like every other article.
 - **Pillar down-links are now generated, not hand-written.** All 3 pillars in all 9 languages carry a localized "Related guides" list of their cluster children, appended below a `<!-- pillar-downlinks -->` marker. Re-run the generator (see below) after adding any topic so the new article is linked from its pillar; the block is replaced, not duplicated.
