@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url><loc>https://ai-budget.pl/</loc><lastmod>2026-06-19</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/</loc><lastmod>2026-08-22</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/en/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/de/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/es/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
-<url><loc>https://ai-budget.pl/blog/fr/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+<url><loc>https://ai-budget.pl/blog/fr/</loc><lastmod>2026-08-22</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/ru/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/ua/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/</loc><lastmod>2026-08-21</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -31,7 +31,7 @@
 <url><loc>https://ai-budget.pl/blog/pl/automatyczne-zapisywanie-wydatkow/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/skanowanie-paragonow/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/pl/wyprawka-szkolna-ile-kosztuje/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-z-dowolnego-banku/</loc><lastmod>2026-08-21</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/pl/import-wyciagu-z-dowolnego-banku/</loc><lastmod>2026-08-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/yak-vesci-budzet/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/ulik-vydatkau/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/be/yak-ekanomic/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
@@ -141,7 +141,7 @@
 <url><loc>https://ai-budget.pl/blog/fr/enregistrer-depenses-automatiquement/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/fr/scanner-tickets-de-caisse/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/fr/cout-de-la-rentree-scolaire/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-<url><loc>https://ai-budget.pl/blog/fr/importer-releve-nimporte-quelle-banque/</loc><lastmod>2026-08-21</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+<url><loc>https://ai-budget.pl/blog/fr/importer-releve-nimporte-quelle-banque/</loc><lastmod>2026-08-22</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/nl/hoe-maak-je-een-budget/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/nl/uitgaven-bijhouden/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
 <url><loc>https://ai-budget.pl/blog/nl/geld-besparen/</loc><lastmod>2026-08-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
