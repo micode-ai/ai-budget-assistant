@@ -76,6 +76,13 @@ docs/marketing/*
 # and web-deploy.yml copies docs/marketing/seo/site/blog into the apex tree, so a
 # NEW article has to be committable too.
 !docs/marketing/seo/
+# ...and the landing, for the same reason one step further out. The apex
+# sitemap.xml and llms-full.txt are emitted by build_landing.py, and those are
+# what ai-budget.pl actually serves, so publishing an article has to commit
+# them too. All 101 files here were already tracked; without this negation
+# `git add docs/marketing/landing/...` is refused for the directory, which is
+# how article 22 shipped with a sitemap that did not list it.
+!docs/marketing/landing/
 # Superpowers brainstorm artifacts
 .superpowers/
 
