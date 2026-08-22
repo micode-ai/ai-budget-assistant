@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/micode-ai/ai-budget-assistant/security/advisories/new
+    about: Report privately, never as a public issue. See SECURITY.md.
+  - name: Help centre
+    url: https://ai-budget.pl/help/en/
+    about: How a feature is meant to work, in 9 languages — check here before filing a bug.

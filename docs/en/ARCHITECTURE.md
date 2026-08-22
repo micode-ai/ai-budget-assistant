@@ -438,7 +438,8 @@ src/
 │   │   └── admin.service.ts
 │   ├── wallet/                  # Multi-currency wallets
 │   │   ├── wallet.controller.ts
-│   │   └── wallet.service.ts
+│   │   ├── wallet.service.ts
+│   │   └── wallet-currency.service.ts  # leaf: ensures a row exists per held currency
 │   ├── currency-exchange/       # Currency exchange tracking
 │   │   ├── currency-exchange.controller.ts
 │   │   ├── currency-exchange.service.ts

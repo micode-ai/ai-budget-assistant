@@ -1,0 +1,109 @@
+name: Bug report
+description: Something behaves incorrectly, shows wrong numbers, or crashes
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Security problems do not go here** — report those privately, see
+        [SECURITY.md](https://github.com/micode-ai/ai-budget-assistant/blob/development/SECURITY.md).
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you saw, and what you expected to see instead.
+      placeholder: |
+        The wallet shows only a PLN card on a shared account that also has USD income.
+        I expected a card per currency I have money in.
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps, starting from a known state. Include the amounts and
+        currencies if the report is about a wrong figure.
+      placeholder: |
+        1. Switch to the shared account "House"
+        2. Add income of 2500 USD
+        3. Open Wallet
+    validations:
+      required: true
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where
+      multiple: true
+      options:
+        - Mobile app — Android
+        - Mobile app — iOS
+        - Web app (app.ai-budget.pl)
+        - Admin dashboard
+        - API
+        - Telegram bot
+        - WhatsApp bot
+        - Slack bot
+        - Marketing site / blog / help centre
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: App version
+      description: Settings → About. Skip for API-only or admin-only reports.
+      placeholder: "1.18.0"
+
+  - type: dropdown
+    id: account-type
+    attributes:
+      label: Account type
+      description: Several bugs only appear on one type, or only for a non-owner member.
+      options:
+        - personal
+        - shared
+        - business
+        - investment
+        - trip
+        - not relevant / unknown
+    validations:
+      required: true
+
+  - type: dropdown
+    id: role
+    attributes:
+      label: Your role in that account
+      options:
+        - owner
+        - editor
+        - viewer
+        - not relevant / unknown
+
+  - type: input
+    id: locale
+    attributes:
+      label: App language
+      description: Matters for anything involving text, dates, or amounts.
+      placeholder: "pl"
+
+  - type: dropdown
+    id: reproduces-on-web
+    attributes:
+      label: Does it also happen in the web app?
+      description: Worth checking. The web build has no local SQLite, so a bug that
+        appears only there usually points at the server rather than the app.
+      options:
+        - Yes, same on web
+        - "No, only on the phone"
+        - Only on web, the phone is fine
+        - Not checked
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else
+      description: Screenshots, a screen recording, the currency involved, whether the
+        device was offline, or a `console.warn` / server log line if you have one.

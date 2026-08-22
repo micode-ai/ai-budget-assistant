@@ -1,0 +1,60 @@
+name: Feature request
+description: Propose a new capability or a change to how something works
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What is hard or impossible today, for whom, and how often. Describe the
+        situation rather than the solution — the best version of a feature often looks
+        nothing like the first idea of it.
+      placeholder: |
+        On a trip with friends I pay for most things, and working out who owes what at the
+        end means exporting a report and doing it by hand.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: What you have in mind
+      description: Optional. If you already know the shape you want, describe it.
+
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Where it belongs
+      multiple: true
+      options:
+        - Mobile app
+        - Web app
+        - Admin dashboard
+        - API
+        - Chat bots (Telegram / WhatsApp / Slack)
+        - AI assistant
+        - Marketing site / blog / help centre
+    validations:
+      required: true
+
+  - type: textarea
+    id: today
+    attributes:
+      label: How you work around it today
+      description: A workaround tells us how much the gap actually costs, and sometimes it
+        is already most of a design.
+
+  - type: checkboxes
+    id: considerations
+    attributes:
+      label: Things this probably touches
+      description: Best guess is fine — it helps size the work, and every box is a place a
+        change usually has to land in this repo.
+      options:
+        - label: New or changed database schema
+        - label: New API endpoint
+        - label: New screen or a change to an existing one
+        - label: New user-facing text (needs all 9 locales)
+        - label: Something that has to work offline
+        - label: Money in more than one currency
+        - label: Paid-tier gating (Pro / Business)

@@ -439,7 +439,8 @@ src/
 │   │   └── admin.service.ts
 │   ├── wallet/                  # Мультивалютные кошельки
 │   │   ├── wallet.controller.ts
-│   │   └── wallet.service.ts
+│   │   ├── wallet.service.ts
+│   │   └── wallet-currency.service.ts  # leaf-модуль: строка на каждую валюту счёта
 │   ├── currency-exchange/       # Отслеживание обмена валют
 │   │   ├── currency-exchange.controller.ts
 │   │   ├── currency-exchange.service.ts

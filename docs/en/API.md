@@ -1495,6 +1495,17 @@ Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
 
+Returns one entry per currency the account **holds money in** — every currency
+with a `wallet_balances` row, plus every currency that has movements (income,
+expense, exchange, transfer) but no row yet. A derived currency reports
+`initialAmount: 0`, so its `currentBalance` is exactly what the transactions add
+up to, and the row is created in the background so the next read finds it.
+
+A currency whose row was removed via `DELETE /wallet/:currencyCode` stays out of
+the response even if it still has movements — removing a currency is a deliberate
+"hide it", and that has to survive the next transaction in it. Set a balance for
+it again to bring it back.
+
 ### Balance History (daily)
 
 ```http
@@ -1546,6 +1557,11 @@ DELETE /wallet/:currencyCode
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
+
+Hides the currency from the wallet. This is a soft delete, and it is permanent
+until the caller sets a balance for that currency again: a currency with a
+removed row is **not** re-derived from its movements, unlike one that never had a
+row at all (see **Get Wallet Summary**).
 
 **Response** `204 No Content`
 
