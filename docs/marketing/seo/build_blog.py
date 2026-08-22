@@ -519,6 +519,35 @@ def read_articles():
         arts.append({"m": meta, "body": body, "lang": meta["lang"], "path": path, "date": pub})
     return arts
 
+def lint_meta(arts, limit=12):
+    """Warn about frontmatter that breaks content-plan.md's length budgets.
+
+    Deliberately non-fatal. 15 of the 22 topics published before this check
+    existed overflow meta_description in at least one language, so failing the
+    build on legacy copy would block every future article for a reason the
+    author of that article cannot fix. A warning is enough because the article
+    pipeline runs this script as its verify step and shows the output at the
+    publish gate — which is where a new overflow gets caught, before it ships.
+    Google truncates the description around this length, so an overflow costs
+    the tail of the sentence, not the indexing.
+    """
+    over = []
+    for a in sorted(arts, key=lambda x: x["path"], reverse=True):
+        m, rel = a["m"], os.path.relpath(a["path"], ROOT)
+        if len(m.get("title", "")) > 60:
+            over.append(f"  title            {len(m['title']):4}/60   {rel}")
+        if len(m.get("meta_description", "")) > 155:
+            over.append(
+                f"  meta_description {len(m['meta_description']):4}/155  {rel}")
+    if not over:
+        return
+    print(f"WARNING: {len(over)} frontmatter length overflow(s) "
+          f"(content-plan.md: title <=60, meta_description <=155)")
+    for line in over[:limit]:
+        print(line)
+    if len(over) > limit:
+        print(f"  ... and {len(over) - limit} more")
+
 def reading_minutes(body):
     """Rounded reading time at 200 wpm, floored at 1 - mirrors the mi-code blog listing."""
     return max(1, round(len(body.split()) / 200))
@@ -674,6 +703,7 @@ location.replace(L.indexOf(n)>=0?'/blog/'+n+'/':'/blog/{DEFAULT_LANG}/');}})();<
     open(os.path.join(OUT, "robots.txt"), "w", encoding="utf-8", newline="\n").write(
         f"User-agent: *\nAllow: /\n\nSitemap: {SITE}/sitemap.xml\n")
 
+    lint_meta(arts)
     print(f"built {len(arts)} articles in {len(langs)} langs ({','.join(langs)}) -> {OUT}")
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 ---
 title: "Que se passe-t-il si votre banque n'est pas dans la liste"
-meta_description: "Votre banque n'est pas dans la liste ? Découvrez comment l'IA reconnaît les colonnes d'un CSV ou lit un relevé PDF pour importer presque n'importe quelle banque."
+meta_description: "Banque absente de la liste ? Découvrez comment l'IA reconnaît les colonnes d'un CSV ou lit un relevé PDF pour importer presque n'importe quelle banque."
 target_keyword: "importer relevé de n'importe quelle banque"
 slug: "importer-releve-nimporte-quelle-banque"
 pair: "ai-bank-import"

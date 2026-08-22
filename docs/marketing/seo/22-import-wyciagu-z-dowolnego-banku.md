@@ -1,6 +1,6 @@
 ---
 title: "Co zrobić, gdy twojego banku nie ma na liście"
-meta_description: "Twojego banku nie ma na liście obsługiwanych banków? Sprawdź, jak AI rozpoznaje kolumny w pliku CSV albo czyta wyciąg PDF, żebyś mógł zaimportować dowolny bank."
+meta_description: "Twojego banku nie ma na liście obsługiwanych banków? Sprawdź, jak AI rozpoznaje kolumny w CSV albo czyta wyciąg PDF, żebyś mógł zaimportować dowolny bank."
 target_keyword: "import wyciągu z dowolnego banku"
 slug: "import-wyciagu-z-dowolnego-banku"
 pair: "ai-bank-import"
