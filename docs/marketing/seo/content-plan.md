@@ -65,6 +65,19 @@ Wave 4 notes:
 - **Also fixed in this wave:** the 3 Polish pillars cross-linked each other with relative paths built from old numbered slugs (`../01-budzet-domowy/`), so all 6 inter-pillar links 404'd. They now use absolute `/blog/pl/<slug>/` like every other article.
 - **Pillar down-links are now generated, not hand-written.** All 3 pillars in all 9 languages carry a localized "Related guides" list of their cluster children, appended below a `<!-- pillar-downlinks -->` marker. Re-run the generator (see below) after adding any topic so the new article is linked from its pillar; the block is replaced, not duplicated.
 
+## Wave 6 — proposed via AI Dreaming Center
+| # | Topic | pair | PL keyword | EN keyword | Intent | App tie |
+|---|---|---|---|---|---|---|
+| 23 | **Why most budgeting apps get deleted in the first week** | app-abandonment | dlaczego usuwamy aplikacje do budżetu | why budgeting apps get deleted | top-of-funnel / awareness | **First-run onboarding** (ABA-403) — the one-screen fix that routes a new signup straight to their first transaction instead of an empty dashboard, deferring the pricing screen until after activation |
+
+Wave 6 notes:
+- Topic 23 was proposed via the AI Dreaming Center (proposal id 514, proposal-scan), tied to commit `487ba074` / ABA-403 ("First-run onboarding") — same sourcing pattern as topic 22 in Wave 4. Filed as its own Wave rather than folded into Wave 4/5 since it opens a new cluster angle (product/app-abandonment) rather than extending an existing pair.
+- Cluster: `expenses` (pillar `expense-tracker`/`kontrola-wydatkow-aplikacja`), alongside siblings `best-apps`, `auto-capture`, `receipts`. Each of the 9 language files links up to the expenses pillar and to the `receipts`/`auto-capture` (and, in most languages, `best-apps` or `ai-budget`) sibling articles.
+- This is a **top-of-funnel** piece: it leads with the general, well-known day-one/day-three app-abandonment problem (kept qualitative, no invented percentages or cited studies) and uses AI Budget Assistant's own first-run fix as the concrete illustration, not as a hard sell.
+- Positioning constraint (binding in all 9 languages): no invented abandonment percentage or named external study, and no invented "reduced onboarding from N steps to 1" metric — describe the before/after qualitatively (empty dashboard + a pricing screen first, vs. one screen with a clear primary action).
+- **Follow-up before the next regenerate**: `app-abandonment` still needs to be added to `CLUSTERS["expenses"]` in `build_blog.py` so `build_pillar_links.py` writes the down-link from the expenses pillar and the blog index files the topic under the "Expenses" category chip — this was not done as part of authoring the Markdown sources (see the verification step).
+- Blog now at 22 topics / 190 articles once this topic ships (was 21 topics / 189 articles after Wave 4).
+
 ## Wave 5 — proposed (not started)
 High-volume commercial queries we do not rank for yet: `excel-budget` (budżet domowy w Excelu — szablon, plus when to move off a spreadsheet), `free-app` (darmowa aplikacja do budżetu domowego), `irregular-income` (budget on freelance/B2B income — ties to Safe-to-Spend + scenario simulator), `multi-currency` (living and earning across two currencies — the one topic where the ru/ua/be locales serve their own audience rather than being a translation).
 

@@ -142,7 +142,7 @@ PAIR_TO_HELP = {
 # new topics here.
 CLUSTERS = {
     "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school"],
-    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill"],
+    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment"],
     "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation"],
 }
 def category_of(pair):

@@ -125,3 +125,4 @@ Nach einem Monat hast du ein klares Bild deiner Ausgabenmuster. Spürbare Verhal
 - [Ausgaben automatisch erfassen statt alles selbst eintippen](/blog/de/ausgaben-automatisch-erfassen/)
 - [Kassenbons scannen: warum die Posten zählen, nicht die Summe](/blog/de/kassenbons-scannen/)
 - [Rechnung teilen mit Freunden und wirklich zurückbekommen](/blog/de/rechnung-teilen-mit-freunden/)
+- [Warum Haushaltsbuch-Apps schon nach einer Woche fliegen](/blog/de/warum-haushaltsbuch-apps-schnell-fliegen/)

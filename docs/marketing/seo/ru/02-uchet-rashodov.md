@@ -125,3 +125,4 @@ AI Budget Assistant работает по принципу офлайн-преж
 - [Автоматический учёт расходов без ручного ввода](/blog/ru/avtomaticheskiy-uchet-raskhodov/)
 - [Сканирование чеков: важны позиции, а не сумма](/blog/ru/skanirovanie-chekov/)
 - [Как разделить счёт с друзьями и реально получить деньги](/blog/ru/kak-razdelit-schet-s-druzyami/)
+- [Почему приложения для бюджета удаляют за неделю](/blog/ru/pochemu-udalyayut-prilozheniya-dlya-byudzheta/)

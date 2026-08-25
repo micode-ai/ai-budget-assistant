@@ -125,3 +125,4 @@ You'll have a clear picture of your spending patterns after one month. Meaningfu
 - [Automatic Expense Tracking: Stop Typing Every Purchase](/blog/en/automatic-expense-tracking/)
 - [Receipt Scanner App: Why Line Items Beat the Total](/blog/en/receipt-scanner-app/)
 - [How to Split Bills With Friends and Get Paid Back](/blog/en/split-bill-with-friends/)
+- [Why Most Budgeting Apps Get Deleted in the First Week](/blog/en/why-budget-apps-abandoned-first-week/)

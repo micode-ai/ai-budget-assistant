@@ -125,3 +125,4 @@ AI Budget Assistant вирішує це через спільні сімейні
 - [Автоматичний облік витрат без ручного введення](/blog/ua/avtomatychnyi-oblik-vytrat/)
 - [Сканування чеків: важливі позиції, а не сума](/blog/ua/skanuvannya-chekiv/)
 - [Як поділити рахунок з друзями і реально отримати гроші](/blog/ua/yak-podilyty-rahunok-z-druzyami/)
+- [Чому додатки для бюджету видаляють за тиждень](/blog/ua/chomu-vydalyayut-dodatky-dlya-byudzhetu/)

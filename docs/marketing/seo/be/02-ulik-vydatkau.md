@@ -125,3 +125,4 @@ AI Budget Assistant працуе па прынцыпе offline-first: выдат
 - [Аўтаматычны ўлік выдаткаў без ручнога ўводу](/blog/be/autamatychny-ulik-vydatkau/)
 - [Сканаванне чэкаў: важныя пазіцыі, а не сума](/blog/be/skanavanne-chekau/)
 - [Як падзяліць рахунак з сябрамі і рэальна атрымаць грошы](/blog/be/yak-padzialic-rahunak-z-siabrami/)
+- [Чаму праграмы для бюджету выдаляюць за тыдзень](/blog/be/chamu-vydalyayuc-prahramy-dlya-budzetu/)

@@ -121,3 +121,4 @@ Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedrags
 - [Uitgaven automatisch bijhouden zonder alles te typen](/blog/nl/uitgaven-automatisch-bijhouden/)
 - [Bonnetjes scannen: de regels tellen, niet het totaal](/blog/nl/bonnetjes-scannen/)
 - [Rekening splitsen met vrienden en je geld echt terugzien](/blog/nl/rekening-splitsen-met-vrienden/)
+- [Waarom budget-apps binnen een week weer verdwijnen](/blog/nl/waarom-budget-apps-snel-verwijderd-worden/)
