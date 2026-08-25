@@ -3,6 +3,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { estimateCost } from './admin-analytics.service';
+import { isComplimentarySub, PAID_SUB_WHERE, COMPED_SUB_WHERE } from './admin-comped.util';
 import type { AdminUserUsageItem } from '@budget/shared-types';
 
 type SubscriptionTier = 'free' | 'pro' | 'business';
@@ -84,11 +85,13 @@ export class AdminService {
     limit: number;
     search?: string;
     tier?: string;
+    /** 'paying' = Stripe-backed, 'comped' = admin-granted with no payment. Anything else ignored. */
+    billing?: string;
     isActive?: string;
     sortBy?: string;
     order?: 'asc' | 'desc';
   }) {
-    const { page, limit, search, tier, isActive, sortBy = 'createdAt', order = 'desc' } = params;
+    const { page, limit, search, tier, billing, isActive, sortBy = 'createdAt', order = 'desc' } = params;
     const skip = (page - 1) * limit;
     const where: Record<string, unknown> = {};
     if (search) {
@@ -98,7 +101,14 @@ export class AdminService {
       ];
     }
     if (isActive !== undefined) where.isActive = isActive === 'true';
-    if (tier) where.subscription = { tier };
+    // `tier` and `billing` are separate axes and compose: tier=business&billing=comped is
+    // "business tiers I gave away". Merged into one subscription filter because Prisma
+    // takes a single relation condition, and billing wins on the fields it sets.
+    const subFilter: Record<string, unknown> = {};
+    if (tier) subFilter.tier = tier;
+    if (billing === 'paying') Object.assign(subFilter, PAID_SUB_WHERE, tier ? { tier } : {});
+    if (billing === 'comped') Object.assign(subFilter, COMPED_SUB_WHERE, tier ? { tier } : {});
+    if (Object.keys(subFilter).length > 0) where.subscription = subFilter;
 
     const orderBy: Record<string, string> = {};
     const allowedSortFields = ['name', 'email', 'createdAt', 'lastSyncAt'];
@@ -119,13 +129,29 @@ export class AdminService {
           language: true,
           createdAt: true,
           lastSyncAt: true,
-          subscription: { select: { tier: true, status: true, aiRequestsUsed: true } },
+          subscription: {
+            select: { tier: true, status: true, aiRequestsUsed: true, stripeSubscriptionId: true },
+          },
         },
       }),
       this.prisma.user.count({ where }),
     ]);
 
-    return { data: users, total, page, limit, totalPages: Math.ceil(total / limit) };
+    // The raw Stripe subscription id has no business in a user list — collapse it to the
+    // one bit the UI needs before it leaves the service.
+    const data = users.map(({ subscription, ...user }) => ({
+      ...user,
+      subscription: subscription
+        ? {
+            tier: subscription.tier,
+            status: subscription.status,
+            aiRequestsUsed: subscription.aiRequestsUsed,
+          }
+        : null,
+      isComplimentary: isComplimentarySub(subscription),
+    }));
+
+    return { data, total, page, limit, totalPages: Math.ceil(total / limit) };
   }
 
   async getUserDetail(userId: string) {
@@ -209,6 +235,7 @@ export class AdminService {
 
     return {
       ...user,
+      isComplimentary: isComplimentarySub(user.subscription),
       accounts: user.accountMembers.map((m) => ({
         id: m.account.id,
         name: m.account.name,

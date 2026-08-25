@@ -16,10 +16,11 @@ import {
   computeTrialConversion,
   computeWeeklyRetention,
   normalizeMrr,
+  toMrrRows,
   type ActivityEvent,
-  type PaidSubRow,
   type SignupRow,
 } from './admin-metrics.util';
+import { isComplimentarySub, isStripePaidSub } from './admin-comped.util';
 
 interface Params { months: number; weeks: number; activationDays: number }
 
@@ -66,7 +67,7 @@ export class AdminInvestorMetricsService {
       }),
       this.prisma.subscription.findMany({
         select: {
-          userId: true, tier: true, status: true,
+          userId: true, tier: true, status: true, stripeSubscriptionId: true,
           currentPeriodStart: true, currentPeriodEnd: true,
           trialStart: true, trialEnd: true, canceledAt: true,
           user: { select: { language: true, currencyCode: true } },
@@ -95,7 +96,7 @@ export class AdminInvestorMetricsService {
       const segActive = buildActiveDays(segActivity);
       const ret = computeWeeklyRetention(segSignups, segActive, params.weeks, now);
       const act = computeActivation(segSignups, segActive, params.activationDays, now);
-      const segPaid = this.paidRows(subs.filter((s) => inSeg(s.user?.language)));
+      const segPaid = toMrrRows(subs.filter((s) => inSeg(s.user?.language)), isStripePaidSub);
       const segMrr = normalizeMrr(segPaid).mrrUsd;
       return {
         segment: which,
@@ -124,24 +125,6 @@ export class AdminInvestorMetricsService {
     return response;
   }
 
-  // Maps active paid subscription rows to the pure PaidSubRow shape.
-  private paidRows(
-    subs: Array<{
-      tier: string; status: string;
-      currentPeriodStart: Date | null; currentPeriodEnd: Date | null;
-      user?: { currencyCode?: string } | null;
-    }>,
-  ): PaidSubRow[] {
-    return subs
-      .filter((s) => (s.tier === 'pro' || s.tier === 'business') && s.status === 'active')
-      .map((s) => ({
-        tier: s.tier as 'pro' | 'business',
-        currentPeriodStart: s.currentPeriodStart,
-        currentPeriodEnd: s.currentPeriodEnd,
-        currencyCode: s.user?.currencyCode ?? 'USD',
-      }));
-  }
-
   private buildMonetization(
     subs: Array<any>,
     usageLogs: Array<{ featureType: string }>,
@@ -150,9 +133,14 @@ export class AdminInvestorMetricsService {
     now: Date,
     monthStart: Date,
   ): MonetizationBlock {
-    const paid = this.paidRows(subs);
+    const paid = toMrrRows(subs, isStripePaidSub);
     const { mrrUsd, approximate, payingUsers } = normalizeMrr(paid);
     const trialingUsers = subs.filter((s) => s.status === 'trialing').length;
+
+    // Admin-granted tiers carry no money. They are reported separately rather than
+    // folded into MRR, so the giveaway volume stays visible instead of inflating revenue.
+    const comped = toMrrRows(subs, isComplimentarySub);
+    const compedMrr = normalizeMrr(comped);
 
     const mau = computeEngagement(buildActiveDays(activity), now).mau;
     const aiCogsUsd = Math.round(
@@ -161,7 +149,7 @@ export class AdminInvestorMetricsService {
 
     const endedTrialFlags = subs
       .filter((s) => s.trialEnd && s.trialEnd.getTime() < now.getTime())
-      .map((s) => (s.tier === 'pro' || s.tier === 'business') && s.status === 'active');
+      .map((s) => isStripePaidSub(s));
     const trialToPaidConversion = computeTrialConversion(endedTrialFlags);
 
     // Churned this month: detect by canceled status + canceledAt, NOT by tier —
@@ -178,6 +166,8 @@ export class AdminInvestorMetricsService {
       // no cents rounding — see Task 7); round to cents here at the presentation
       // boundary, consistent with arpu/arppu/aiCogs below.
       mrrUsd: Math.round(mrrUsd * 100) / 100, mrrApproximate: approximate, payingUsers, trialingUsers,
+      compedUsers: compedMrr.payingUsers,
+      compedMrrUsd: Math.round(compedMrr.mrrUsd * 100) / 100,
       arpuUsd: mau > 0 ? Math.round((mrrUsd / mau) * 100) / 100 : 0,
       arppuUsd: payingUsers > 0 ? Math.round((mrrUsd / payingUsers) * 100) / 100 : 0,
       freeToPaidConversion: totalUsers > 0 ? payingUsers / totalUsers : 0,

@@ -37,8 +37,10 @@ export interface GrowthBlock {
 export interface MonetizationBlock {
   mrrUsd: number;
   mrrApproximate: boolean;
-  payingUsers: number;
+  payingUsers: number; // Stripe-backed only; admin-granted tiers are excluded
   trialingUsers: number;
+  compedUsers: number; // active paid tiers an admin granted with no payment behind them
+  compedMrrUsd: number; // what those users would be paying at list price (revenue foregone)
   arpuUsd: number; // mrr / MAU (0 if MAU 0)
   arppuUsd: number; // mrr / payingUsers (0 if 0)
   freeToPaidConversion: number; // payingUsers / totalUsers (0 if 0)

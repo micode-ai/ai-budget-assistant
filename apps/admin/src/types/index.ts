@@ -58,6 +58,8 @@ export interface AdminUserListItem {
     status: SubscriptionStatus;
     aiRequestsUsed: number;
   } | null;
+  /** Paid tier granted by an admin with no payment behind it. Excluded from every MRR figure. */
+  isComplimentary: boolean;
 }
 
 export interface PaginatedResponse<T> {
@@ -98,6 +100,8 @@ export interface AdminUserDetail {
     cancelAtPeriodEnd: boolean;
     customAiLimit: number | null;
   } | null;
+  /** Paid tier granted by an admin with no payment behind it. Excluded from every MRR figure. */
+  isComplimentary: boolean;
   accounts: Array<{
     id: string;
     name: string;
@@ -136,6 +140,8 @@ export interface AnalyticsOverview {
   mrr: number;
   mrrChange: number;
   totalRevenue: number;
+  compedUsers: number;
+  compedMrrUsd: number;
   dailyRegistrations: Array<{ date: string; count: number }>;
 }
 
@@ -154,6 +160,9 @@ export interface SubscriptionStats {
     trialing: number;
   };
   mrr: number;
+  payingUsers: number;
+  compedUsers: number;
+  compedMrrUsd: number;
   churnRate: number;
   conversionRate: number;
   recentChanges: Array<{

@@ -117,9 +117,18 @@ export default function UserDetailPage({ params }: { params: Promise<{ id: strin
           </CardHeader>
           <CardContent className="space-y-3">
             <div className="flex items-center gap-2">
-              <TierBadge tier={(user.subscription?.tier ?? "free") as SubscriptionTier} />
+              <TierBadge
+                tier={(user.subscription?.tier ?? "free") as SubscriptionTier}
+                complimentary={user.isComplimentary}
+              />
               <Badge variant="outline">{user.subscription?.status ?? "none"}</Badge>
             </div>
+            {user.isComplimentary && (
+              <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
+                Granted manually — no Stripe subscription behind this tier. This user is excluded
+                from MRR, paying users and conversion everywhere in the admin panel.
+              </p>
+            )}
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
                 <span className="text-muted-foreground">AI Requests Used</span>

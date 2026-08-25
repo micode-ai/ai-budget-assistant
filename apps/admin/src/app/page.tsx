@@ -27,6 +27,8 @@ export default function DashboardPage() {
         totalExpenses={dashboard?.totalExpenses ?? 0}
         mrr={overview?.mrr ?? 0}
         mrrChange={overview?.mrrChange ?? 0}
+        compedUsers={overview?.compedUsers ?? 0}
+        compedMrr={overview?.compedMrrUsd ?? 0}
         aiCost={dashboard?.aiUsage?.totalEstimatedCostUsd ?? 0}
       />
 

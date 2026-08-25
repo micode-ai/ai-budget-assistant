@@ -41,7 +41,11 @@ const HINTS = {
   activation:
     "Share of new users who logged their first transaction within 3 days of signing up. This is the 'aha moment' rate — the bridge between growth and retention.",
   mrr:
-    "Monthly Recurring Revenue: every active paid subscription normalized to a monthly amount (yearly plans ÷ 12), summed in USD. A trailing ≈ means some subs are billed in another currency and are approximated at the USD price.",
+    "Monthly Recurring Revenue: every active paid subscription normalized to a monthly amount (yearly plans ÷ 12), summed in USD. Tiers granted by hand in the admin panel carry no payment and are excluded — see Comped. A trailing ≈ means some subs are billed in another currency and are approximated at the USD price.",
+  comped:
+    "Paid tiers granted by hand in the admin panel, with no Stripe subscription behind them. Detected as an active Pro/Business tier with no Stripe subscription id. These users are excluded from MRR, paying users, ARPPU and both conversion rates.",
+  compedMrr:
+    "What the comped users would be paying at list price — revenue foregone, not revenue earned. Useful for judging how much the free grants actually cost.",
   momGrowth:
     "Month-over-month growth in new signups, comparing the two most recent complete months (the current partial month is excluded). Can be negative.",
   dauMau:
@@ -53,7 +57,7 @@ const HINTS = {
   growthChart:
     "New user signups per calendar month. The last bar is the current, still-incomplete month.",
   payingUsers:
-    "Active paying subscribers (Pro or Business). Trials are not counted here.",
+    "Active paying subscribers (Pro or Business) with a real Stripe subscription. Trials and admin-granted tiers are not counted here.",
   trialing:
     "Users currently in a free trial — not paying yet.",
   arpu:
@@ -210,6 +214,8 @@ export default function MetricsPage() {
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           <Stat label="Paying users" value={String(m.payingUsers)} hint={HINTS.payingUsers} />
           <Stat label="Trialing" value={String(m.trialingUsers)} hint={HINTS.trialing} />
+          <Stat label="Comped users" value={String(m.compedUsers)} hint={HINTS.comped} />
+          <Stat label="Comped MRR" value={formatCurrency(m.compedMrrUsd)} hint={HINTS.compedMrr} />
           <Stat label="ARPU" value={formatCurrency(m.arpuUsd)} hint={HINTS.arpu} />
           <Stat label="ARPPU" value={formatCurrency(m.arppuUsd)} hint={HINTS.arppu} />
           <Stat label="Free→Paid" value={pct(conversion)} hint={HINTS.freeToPaid} />

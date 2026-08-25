@@ -44,7 +44,7 @@ export default function SubscriptionsPage() {
       <h1 className="text-2xl font-bold">Subscriptions</h1>
 
       {/* Stats cards */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-5">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm text-muted-foreground">Free</CardTitle>
@@ -84,6 +84,20 @@ export default function SubscriptionsPage() {
           </CardHeader>
           <CardContent>
             <p className="text-3xl font-bold text-emerald-600">{formatCurrency(data.mrr)}</p>
+            <p className="text-xs text-muted-foreground">
+              {data.payingUsers} paying · comped excluded
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm text-muted-foreground">Comped</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-3xl font-bold text-amber-600">{data.compedUsers}</p>
+            <p className="text-xs text-muted-foreground">
+              {formatCurrency(data.compedMrrUsd)}/mo given away
+            </p>
           </CardContent>
         </Card>
       </div>

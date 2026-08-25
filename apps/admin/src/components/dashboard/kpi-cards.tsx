@@ -22,6 +22,10 @@ interface KpiCardsProps {
   mrr: number;
   mrrChange: number;
   aiCost: number;
+  /** Users on an admin-granted paid tier. Not in `mrr` — shown so the gap is explained, not silent. */
+  compedUsers: number;
+  /** What those users would be paying at list price. Revenue foregone, not earned. */
+  compedMrr: number;
 }
 
 const cards = [
@@ -86,6 +90,14 @@ export function KpiCards(props: KpiCardsProps) {
                   }`}
                 >
                   {formatPercent(props.mrrChange)} vs last month
+                </p>
+              )}
+              {card.key === "mrr" && props.compedUsers > 0 && (
+                <p
+                  className="text-xs mt-1 text-amber-600"
+                  title="Paid tiers granted by hand in the admin panel. No payment behind them, so they are excluded from MRR."
+                >
+                  + {props.compedUsers} comped ({formatCurrency(props.compedMrr)}/mo not billed)
                 </p>
               )}
             </CardContent>

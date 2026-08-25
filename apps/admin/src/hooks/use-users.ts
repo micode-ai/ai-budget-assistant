@@ -9,18 +9,20 @@ export function useUsers(params: {
   limit?: number;
   search?: string;
   tier?: string;
+  billing?: string;
   isActive?: string;
   sortBy?: string;
   order?: "asc" | "desc";
 }) {
-  const { page, limit = 20, search, tier, isActive, sortBy, order } = params;
+  const { page, limit = 20, search, tier, billing, isActive, sortBy, order } = params;
 
   return useQuery<PaginatedResponse<AdminUserListItem>>({
-    queryKey: ["admin", "users", { page, limit, search, tier, isActive, sortBy, order }],
+    queryKey: ["admin", "users", { page, limit, search, tier, billing, isActive, sortBy, order }],
     queryFn: async () => {
       const qs = new URLSearchParams({ page: String(page), limit: String(limit) });
       if (search) qs.set("search", search);
       if (tier) qs.set("tier", tier);
+      if (billing) qs.set("billing", billing);
       if (isActive) qs.set("isActive", isActive);
       if (sortBy) qs.set("sortBy", sortBy);
       if (order) qs.set("order", order);

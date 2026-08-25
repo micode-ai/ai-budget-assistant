@@ -62,6 +62,13 @@ export function ChangeTierDialog({ userId }: { userId: string }) {
               <SelectItem value="business">Business</SelectItem>
             </SelectContent>
           </Select>
+          {(selectedTier === "pro" || selectedTier === "business") && (
+            <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-xs text-amber-700 dark:text-amber-400">
+              Granting a paid tier here does not charge anything. The user will be marked{" "}
+              <strong>Comped</strong> and left out of MRR, paying users and conversion, so revenue
+              stays honest.
+            </p>
+          )}
           <Button onClick={handleChangeTier} disabled={!selectedTier || changeTier.isPending} className="w-full">
             {changeTier.isPending ? "Changing..." : "Confirm Change"}
           </Button>

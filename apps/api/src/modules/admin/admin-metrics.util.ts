@@ -171,6 +171,29 @@ export function computeGrowth(signups: SignupRow[], months: number, now: Date): 
   return { monthly, momGrowthRate };
 }
 
+// A subscription row as it comes off Prisma, before it is reduced to an MRR row.
+export interface RawSubRow {
+  tier: string;
+  status: string;
+  stripeSubscriptionId: string | null;
+  currentPeriodStart: Date | null;
+  currentPeriodEnd: Date | null;
+  user?: { currencyCode?: string | null } | null;
+}
+
+// Reduces Prisma rows to MRR rows under a caller-supplied predicate (see admin-comped.util:
+// isStripePaidSub for real revenue, isComplimentarySub for what was given away). One mapper for
+// both sets on purpose — two copies would drift on interval or currency handling, and the whole
+// point of splitting the sets is that they stay comparable.
+export function toMrrRows(subs: RawSubRow[], predicate: (s: RawSubRow) => boolean): PaidSubRow[] {
+  return subs.filter(predicate).map((s) => ({
+    tier: s.tier as 'pro' | 'business',
+    currentPeriodStart: s.currentPeriodStart,
+    currentPeriodEnd: s.currentPeriodEnd,
+    currencyCode: s.user?.currencyCode ?? 'USD',
+  }));
+}
+
 export function normalizeMrr(subs: PaidSubRow[]): { mrrUsd: number; approximate: boolean; payingUsers: number } {
   let mrrUsd = 0;
   let approximate = false;

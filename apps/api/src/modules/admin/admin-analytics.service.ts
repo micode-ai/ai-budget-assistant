@@ -1,6 +1,26 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import type { AdminDashboardResponse, AdminUserUsageItem } from '@budget/shared-types';
+import { normalizeMrr, toMrrRows } from './admin-metrics.util';
+import {
+  PAID_SUB_WHERE,
+  COMPED_SUB_WHERE,
+  isStripePaidSub,
+  isComplimentarySub,
+} from './admin-comped.util';
+
+// Everything these two legacy endpoints need to price a subscription. Kept next to the
+// queries so a future field (e.g. a discount) is added once, not per call site.
+const MRR_SUB_SELECT = {
+  tier: true,
+  status: true,
+  stripeSubscriptionId: true,
+  currentPeriodStart: true,
+  currentPeriodEnd: true,
+  user: { select: { currencyCode: true } },
+} as const;
+
+const round2 = (n: number) => Math.round(n * 100) / 100;
 
 export const ESTIMATED_COST_PER_REQUEST: Record<string, number> = {
   voice: 0.02,
@@ -10,8 +30,6 @@ export const ESTIMATED_COST_PER_REQUEST: Record<string, number> = {
   ocr: 0.012,
 };
 export const DEFAULT_COST_PER_REQUEST = 0.01;
-export const PRO_MONTHLY_USD = 999;
-export const BUSINESS_MONTHLY_USD = 1999;
 
 export function estimateCost(featureType: string, count: number): number {
   const perRequest = ESTIMATED_COST_PER_REQUEST[featureType] ?? DEFAULT_COST_PER_REQUEST;
@@ -149,25 +167,29 @@ export class AdminAnalyticsService {
       newUsersThisMonth,
       activeUsersToday,
       activeUsersThisWeek,
-      proCount,
-      businessCount,
-      lastMonthProCount,
-      lastMonthBusinessCount,
+      paidSubs,
+      lastMonthPaidSubs,
+      compedSubs,
     ] = await Promise.all([
       this.prisma.user.count({ where: { createdAt: { gte: todayStart } } }),
       this.prisma.user.count({ where: { createdAt: { gte: weekAgo } } }),
       this.prisma.user.count({ where: { createdAt: { gte: monthStart } } }),
       this.prisma.user.count({ where: { lastSyncAt: { gte: todayStart } } }),
       this.prisma.user.count({ where: { lastSyncAt: { gte: weekAgo } } }),
-      this.prisma.subscription.count({ where: { tier: 'pro', status: 'active' } }),
-      this.prisma.subscription.count({ where: { tier: 'business', status: 'active' } }),
-      this.prisma.subscription.count({ where: { tier: 'pro', status: 'active', createdAt: { lte: lastMonthEnd } } }),
-      this.prisma.subscription.count({ where: { tier: 'business', status: 'active', createdAt: { lte: lastMonthEnd } } }),
+      this.prisma.subscription.findMany({ where: PAID_SUB_WHERE, select: MRR_SUB_SELECT }),
+      this.prisma.subscription.findMany({
+        where: { ...PAID_SUB_WHERE, createdAt: { lte: lastMonthEnd } },
+        select: MRR_SUB_SELECT,
+      }),
+      this.prisma.subscription.findMany({ where: COMPED_SUB_WHERE, select: MRR_SUB_SELECT }),
     ]);
 
-    const mrr = (proCount * PRO_MONTHLY_USD + businessCount * BUSINESS_MONTHLY_USD) / 100;
-    const lastMrr = (lastMonthProCount * PRO_MONTHLY_USD + lastMonthBusinessCount * BUSINESS_MONTHLY_USD) / 100;
+    // Rows, not counts: a yearly plan is not a month of revenue, and an admin-granted
+    // tier is not revenue at all. Both are why this used to over-report.
+    const mrr = round2(normalizeMrr(toMrrRows(paidSubs, isStripePaidSub)).mrrUsd);
+    const lastMrr = round2(normalizeMrr(toMrrRows(lastMonthPaidSubs, isStripePaidSub)).mrrUsd);
     const mrrChange = lastMrr > 0 ? ((mrr - lastMrr) / lastMrr) * 100 : 0;
+    const compedMrr = normalizeMrr(toMrrRows(compedSubs, isComplimentarySub));
 
     const thirtyDaysAgo = new Date(todayStart);
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -198,6 +220,8 @@ export class AdminAnalyticsService {
       mrr,
       mrrChange: Math.round(mrrChange * 10) / 10,
       totalRevenue: mrr,
+      compedUsers: compedMrr.payingUsers,
+      compedMrrUsd: round2(compedMrr.mrrUsd),
       dailyRegistrations,
     };
   }
@@ -274,9 +298,12 @@ export class AdminAnalyticsService {
       if (g.status === 'active' || g.status === 'trialing') totalActive += g._count;
     }
 
-    const proActive = await this.prisma.subscription.count({ where: { tier: 'pro', status: 'active' } });
-    const businessActive = await this.prisma.subscription.count({ where: { tier: 'business', status: 'active' } });
-    const mrr = (proActive * PRO_MONTHLY_USD + businessActive * BUSINESS_MONTHLY_USD) / 100;
+    const [paidSubs, compedSubs] = await Promise.all([
+      this.prisma.subscription.findMany({ where: PAID_SUB_WHERE, select: MRR_SUB_SELECT }),
+      this.prisma.subscription.findMany({ where: COMPED_SUB_WHERE, select: MRR_SUB_SELECT }),
+    ]);
+    const mrr = round2(normalizeMrr(toMrrRows(paidSubs, isStripePaidSub)).mrrUsd);
+    const compedMrr = normalizeMrr(toMrrRows(compedSubs, isComplimentarySub));
 
     const canceledThisMonth = await this.prisma.subscription.count({
       where: {
@@ -286,12 +313,16 @@ export class AdminAnalyticsService {
     });
 
     const churnRate = totalActive > 0 ? (canceledThisMonth / totalActive) * 100 : 0;
-    const paidTotal = proActive + businessActive;
+    // Conversion means somebody paid — a comped tier is not a conversion.
+    const paidTotal = paidSubs.length;
     const conversionRate = dist.free > 0 ? (paidTotal / (dist.free + paidTotal)) * 100 : 0;
 
     return {
       distribution: dist,
       mrr,
+      payingUsers: paidTotal,
+      compedUsers: compedMrr.payingUsers,
+      compedMrrUsd: round2(compedMrr.mrrUsd),
       churnRate: Math.round(churnRate * 10) / 10,
       conversionRate: Math.round(conversionRate * 10) / 10,
       recentChanges: recentChanges.map((c) => ({

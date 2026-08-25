@@ -132,7 +132,8 @@ describe('computeActivation', () => {
   });
 });
 
-import { computeGrowth, normalizeMrr, computeTrialConversion, computeChurn } from './admin-metrics.util';
+import { computeGrowth, normalizeMrr, toMrrRows, computeTrialConversion, computeChurn } from './admin-metrics.util';
+import { isComplimentarySub, isStripePaidSub } from './admin-comped.util';
 
 describe('computeGrowth', () => {
   const now = new Date('2026-07-12T00:00:00Z'); // current month 2026-07 (partial)
@@ -199,5 +200,42 @@ describe('computeChurn', () => {
     const r = computeChurn({ payingNow: 0, churnedCount: 0, mrrNow: 0 });
     expect(r.logoChurnMonthly).toBeNull();
     expect(r.revenueChurnMonthly).toBeNull();
+  });
+});
+
+describe('toMrrRows', () => {
+  const subs = [
+    { tier: 'pro', status: 'active', stripeSubscriptionId: 'sub_1', currentPeriodStart: new Date('2026-07-01Z'), currentPeriodEnd: new Date('2026-08-01Z'), user: { currencyCode: 'PLN' } },
+    { tier: 'business', status: 'active', stripeSubscriptionId: null, currentPeriodStart: null, currentPeriodEnd: null, user: { currencyCode: 'USD' } },
+    { tier: 'free', status: 'active', stripeSubscriptionId: null, currentPeriodStart: null, currentPeriodEnd: null, user: { currencyCode: 'USD' } },
+    { tier: 'pro', status: 'trialing', stripeSubscriptionId: 'sub_2', currentPeriodStart: null, currentPeriodEnd: null, user: { currencyCode: 'USD' } },
+  ];
+
+  it('keeps only rows the predicate accepts and carries the user currency through', () => {
+    const paid = toMrrRows(subs, isStripePaidSub);
+    expect(paid).toEqual([
+      { tier: 'pro', currentPeriodStart: new Date('2026-07-01Z'), currentPeriodEnd: new Date('2026-08-01Z'), currencyCode: 'PLN' },
+    ]);
+  });
+
+  it('builds the comped set from the same rows, so both sides share interval handling', () => {
+    const comped = toMrrRows(subs, isComplimentarySub);
+    expect(comped.map((r) => r.tier)).toEqual(['business']);
+    // no Stripe period on a hand-granted tier -> subInterval defaults to monthly
+    expect(normalizeMrr(comped)).toEqual({ mrrUsd: 19.99, approximate: false, payingUsers: 1 });
+  });
+
+  it('paid and comped sets are disjoint and never double-count a subscription', () => {
+    const paid = toMrrRows(subs, isStripePaidSub);
+    const comped = toMrrRows(subs, isComplimentarySub);
+    expect(paid.length + comped.length).toBe(2);
+  });
+
+  it('falls back to USD when the user row carries no currency', () => {
+    const rows = toMrrRows(
+      [{ tier: 'pro', status: 'active', stripeSubscriptionId: 'sub_3', currentPeriodStart: null, currentPeriodEnd: null, user: null }],
+      isStripePaidSub,
+    );
+    expect(rows[0].currencyCode).toBe('USD');
   });
 });

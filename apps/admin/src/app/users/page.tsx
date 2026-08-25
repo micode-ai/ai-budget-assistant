@@ -34,6 +34,7 @@ export default function UsersPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [tier, setTier] = useState<string>("");
+  const [billing, setBilling] = useState<string>("");
   const [isActive, setIsActive] = useState<string>("");
   const [sortBy, setSortBy] = useState<SortField>("createdAt");
   const [order, setOrder] = useState<"asc" | "desc">("desc");
@@ -42,6 +43,7 @@ export default function UsersPage() {
     page,
     search: debouncedSearch,
     tier: tier || undefined,
+    billing: billing || undefined,
     isActive: isActive || undefined,
     sortBy,
     order,
@@ -113,6 +115,16 @@ export default function UsersPage() {
             <SelectItem value="business">Business</SelectItem>
           </SelectContent>
         </Select>
+        <Select value={billing} onValueChange={(v) => { setBilling(v === "all" ? "" : v); setPage(1); }}>
+          <SelectTrigger className="w-[160px]">
+            <SelectValue placeholder="All billing" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All billing</SelectItem>
+            <SelectItem value="paying">Paying (Stripe)</SelectItem>
+            <SelectItem value="comped">Comped (no payment)</SelectItem>
+          </SelectContent>
+        </Select>
         <Select value={isActive} onValueChange={(v) => { setIsActive(v === "all" ? "" : v); setPage(1); }}>
           <SelectTrigger className="w-[140px]">
             <SelectValue placeholder="All statuses" />
@@ -155,7 +167,10 @@ export default function UsersPage() {
                     </TableCell>
                     <TableCell className="text-muted-foreground">{user.email}</TableCell>
                     <TableCell>
-                      <TierBadge tier={(user.subscription?.tier ?? "free") as SubscriptionTier} />
+                      <TierBadge
+                        tier={(user.subscription?.tier ?? "free") as SubscriptionTier}
+                        complimentary={user.isComplimentary}
+                      />
                     </TableCell>
                     <TableCell>
                       <StatusBadge active={user.isActive} />
