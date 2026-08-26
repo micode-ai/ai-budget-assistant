@@ -84,10 +84,10 @@ COOKIES = {
         "GA4 sets analytics cookies (such as <code>_ga</code>) to count visits and understand how pages are used. We do not use advertising or cross-site tracking cookies.</p>"
         "<h2>Your consent</h2><p>Analytics is off by default. GA4 loads <strong>only after you click Accept</strong> on the cookie banner. "
         "If you Decline, no analytics cookies are set. To change your choice, clear this site's data in your browser and the banner will appear again.</p>"
-        "<h2>What is collected</h2><p>Analytics data is aggregated and does not identify you. This website does not collect your name, email or financial data.</p>"
+        "<h2>What is collected</h2><p>Besides page views we record anonymous interactions with the page - which buttons and links you click, a language switch, and the monthly/yearly pricing toggle - so we can see which parts of the site are useful. Analytics data is aggregated and does not identify you. This website does not collect your name, email or financial data.</p>"
         "<h2>More information</h2><p>For how the AI Budget Assistant app handles your account and financial data, see the full "
         "<a href=\"__PRIV__\">Privacy Policy</a> and <a href=\"__TERMS__\">Terms of Service</a>. "
-        "Data controller: MICODE Sp. z o.o. Contact: <a href=\"mailto:__MAIL__\">__MAIL__</a>.</p><p><em>Last updated: June 2026.</em></p>"),
+        "Data controller: MICODE Sp. z o.o. Contact: <a href=\"mailto:__MAIL__\">__MAIL__</a>.</p><p><em>Last updated: August 2026.</em></p>"),
  "pl": ("Polityka cookie - AI Budget Assistant",
         "Jak ai-budget.pl używa plików cookie i Google Analytics oraz jak zarządzać zgodą.",
         "Polityka cookie",
@@ -95,10 +95,10 @@ COOKIES = {
         "GA4 ustawia pliki cookie analityczne (np. <code>_ga</code>), aby liczyć wizyty i rozumieć, jak korzystasz ze stron. Nie używamy plików cookie reklamowych ani śledzących między witrynami.</p>"
         "<h2>Twoja zgoda</h2><p>Analityka jest domyślnie wyłączona. GA4 ładuje się <strong>dopiero po kliknięciu Akceptuję</strong> w banerze cookie. "
         "Jeśli klikniesz Odrzuć, żadne pliki cookie analityczne nie zostaną ustawione. Aby zmienić wybór, wyczyść dane tej strony w przeglądarce, a baner pojawi się ponownie.</p>"
-        "<h2>Co zbieramy</h2><p>Dane analityczne są zagregowane i nie identyfikują Ciebie. Ta strona nie zbiera imienia, adresu e-mail ani danych finansowych.</p>"
+        "<h2>Co zbieramy</h2><p>Oprócz odsłon stron zapisujemy anonimowe interakcje ze stroną - które przyciski i linki klikasz, zmianę języka oraz przełącznik cennika miesięcznie/rocznie - aby wiedzieć, które części serwisu są przydatne. Dane analityczne są zagregowane i nie identyfikują Ciebie. Ta strona nie zbiera imienia, adresu e-mail ani danych finansowych.</p>"
         "<h2>Więcej informacji</h2><p>Jak aplikacja AI Budget Assistant przetwarza dane konta i finansowe, opisuje pełna "
         "<a href=\"__PRIV__\">Polityka prywatności</a> i <a href=\"__TERMS__\">Regulamin</a>. "
-        "Administrator danych: MICODE Sp. z o.o. Kontakt: <a href=\"mailto:__MAIL__\">__MAIL__</a>.</p><p><em>Ostatnia aktualizacja: czerwiec 2026.</em></p>"),
+        "Administrator danych: MICODE Sp. z o.o. Kontakt: <a href=\"mailto:__MAIL__\">__MAIL__</a>.</p><p><em>Ostatnia aktualizacja: sierpień 2026.</em></p>"),
 }
 
 def legal_lang(lang):
@@ -922,12 +922,68 @@ _CONSENT_TPL = ('<div class="cc" id="cc"><p>__TXT__</p><div class="row">'
                 'document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}'
                 '})();</script>')
 
+# Event tracking (MI-78 analogue). Until this existed the site sent `config` and nothing
+# else, so GA4 could only ever report Enhanced Measurement's automatic events and "Key
+# events" stayed permanently empty -- the funnel was unmeasured end to end.
+#
+# One delegated listener per page rather than an onclick on every anchor: the markup comes
+# out of a dozen separate f-strings (header, hero, band, footer, pricing cards, blog list),
+# and a per-link attribute would have to be threaded through all of them and re-added by
+# whoever writes the next section. Reading intent off the href + nearest section survives
+# new sections for free.
+#
+# Consent is deliberately NOT re-checked here. window.gtag is only defined once the loader
+# in _CONSENT_TPL has run, and that runs only on "granted" -- so for a visitor who declined
+# every send() is a no-op with no second copy of the consent rule to keep in sync.
+_TRACK_TPL = ('<script>(function(){'
+              'var APP="__APP__",PLAY="__PLAY__";'
+              'function lg(){return document.documentElement.lang||"";}'
+              'function pt(){var p=location.pathname;'
+              'if(p.indexOf("/pricing/")>-1)return "pricing";'
+              'if(p.indexOf("/about/")>-1)return "about";'
+              'if(p.indexOf("/cookies/")>-1)return "cookies";'
+              'if(p.indexOf("/privacy/")>-1||p.indexOf("/terms/")>-1)return "legal";'
+              'return "home";}'
+              # where on the page the click happened -- "the CTA works" is useless without
+              # knowing which CTA, and the same href appears in up to five places per page.
+              'function loc(el){'
+              'if(el.closest(".pcard"))return "pricing_card";'
+              'if(el.closest("header"))return "nav";'
+              'if(el.closest(".hero"))return "hero";'
+              'if(el.closest(".band"))return "band";'
+              'if(el.closest(".blogcta"))return "blog_cta";'
+              'if(el.closest(".fromblog"))return "from_blog";'
+              'if(el.closest("footer"))return "footer";'
+              'return "body";}'
+              'function bill(){var y=document.getElementById("by");return y&&y.checked?"yearly":"monthly";}'
+              'function send(n,p){if(typeof window.gtag!=="function")return;'
+              'p=p||{};p.language=lg();p.page_type=pt();'
+              'try{window.gtag("event",n,p);}catch(e){}}'
+              'document.addEventListener("click",function(ev){'
+              'var t=ev.target;if(!t||!t.closest)return;'
+              'var a=t.closest("a");if(!a)return;var h=a.getAttribute("href")||"";'
+              'if(a.closest(".langlist")){'
+              'send("language_change",{language_from:lg(),language_to:a.getAttribute("data-lang")||""});return;}'
+              'if(h.indexOf(APP)===0){var c=a.closest(".pcard"),d=c?(c.getAttribute("data-tier")||""):"";'
+              'send("cta_click",d?{link_location:loc(a),plan:d}:{link_location:loc(a)});'
+              'if(c)send("plan_select",{plan:d,billing_period:bill()});return;}'
+              'if(h.indexOf(PLAY)===0){send("store_click",{link_location:loc(a)});return;}'
+              'if(h.indexOf("/blog/")===0){send("blog_click",{link_location:loc(a)});}'
+              '},true);'
+              'document.addEventListener("change",function(ev){var el=ev.target;'
+              'if(el&&el.classList&&el.classList.contains("billcb"))send("billing_toggle",{billing_period:bill()});'
+              '},true);'
+              '})();</script>')
+
+def track_html():
+    return _TRACK_TPL.replace("__APP__", APP).replace("__PLAY__", PLAY)
+
 def consent_html(lang):
     txt, ok, no = CONSENT.get(lang, CONSENT["en"])
     txt_html = (html.escape(txt) + f' <a href="{cookies_url(lang)}" style="color:#F58320;text-decoration:underline">'
                 f'{html.escape(MORE.get(lang, MORE["en"]))}</a>')
     return (_CONSENT_TPL.replace("__TXT__", txt_html).replace("__OK__", html.escape(ok))
-            .replace("__NO__", html.escape(no)).replace("__GA__", GA_ID))
+            .replace("__NO__", html.escape(no)).replace("__GA__", GA_ID)) + track_html()
 
 def footer_html(lang):
     t = C[lang]
@@ -998,7 +1054,7 @@ def pricing_page(lang):
         feat_items = (f'<li>{html.escape(intro)}</li>' if intro else '') + \
             "".join(f'<li>{html.escape(f)}</li>' for f in features)
         cards += (
-            f'<div class="pcard{" pop" if pop else ""}">'
+            f'<div class="pcard{" pop" if pop else ""}" data-tier="{key}">'
             + (f'<span class="pop-badge">{html.escape(t["popular"])}</span>' if pop else '')
             + f'<div class="ic"><b>{i+1}</b></div><h3>{html.escape(name)}</h3>'
             + f'<p class="psub">{html.escape(subtitle)}</p>'
@@ -1145,7 +1201,7 @@ def shot_dims(lang, shot):
 def page(lang, langs):
     t = C[lang]
     blog = f"/blog/{lang}/"
-    langlinks = "".join(f'<a class="{"active" if l==lang else ""}" href="{lp(l)}">{LANG_NAMES[l]}</a>' for l in langs)
+    langlinks = "".join(f'<a class="{"active" if l==lang else ""}" href="{lp(l)}" data-lang="{bcp47(l)}">{LANG_NAMES[l]}</a>' for l in langs)
     langmenu = f'<details class="langmenu"><summary><span class="lang-full">{LANG_NAMES[lang]}</span><span class="lang-short">{lang.upper()}</span> &#9662;</summary><div class="langlist">{langlinks}</div></details>'
     cards, lbs = "", ""
     for i, (h, p, shot) in enumerate(t["features"]):
