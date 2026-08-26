@@ -122,5 +122,5 @@ Commencez par une conversation sur vos objectifs communs, pas sur le budget. "On
 - [La règle 50/30/20 : un guide pratique](/blog/fr/regle-50-30-20/)
 - [Catégories de dépenses : la liste qui tient vraiment](/blog/fr/categories-de-depenses/)
 - [Budget familial avec enfants : le gérer sans stress](/blog/fr/budget-familial-avec-enfants/)
-- [L'IA pour gérer son budget : ce qu'elle change vraiment](/blog/fr/ia-pour-gerer-son-budget/)
+- [Comment l'IA peut vous aider à gérer votre budget](/blog/fr/ia-pour-gerer-son-budget/)
 - [Rentrée scolaire : combien elle coûte vraiment](/blog/fr/cout-de-la-rentree-scolaire/)

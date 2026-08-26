@@ -120,5 +120,5 @@ Begin met een gesprek over doelen, niet over het budget zelf. "We willen in okto
 - [De 50/30/20-regel: een praktische gids](/blog/nl/50-30-20-regel/)
 - [Uitgavencategorieën die echt werken in je budget](/blog/nl/uitgavencategorieen/)
 - [Gezinsbudget met kinderen dat echt werkt](/blog/nl/gezinsbudget-met-kinderen/)
-- [AI voor je budget: minder gedoe, meer inzicht](/blog/nl/ai-voor-je-budget/)
+- [Hoe AI je helpt met budgetteren (eerlijk uitgelegd)](/blog/nl/ai-voor-je-budget/)
 - [Nieuw schooljaar: wat kosten schoolspullen echt](/blog/nl/schoolspullen-kosten/)

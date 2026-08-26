@@ -336,7 +336,7 @@ def parse(path):
         body = m.group(2)
     return meta, body
 
-def to_html(body):
+def to_html(body, lang=None):
     out = md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
     # wrap tables so wide ones scroll horizontally on mobile (CSS .tablewrap)
     out = re.sub(r"<table>(.*?)</table>", r'<div class="tablewrap"><table>\1</table></div>',
@@ -344,6 +344,14 @@ def to_html(body):
     # promote a standalone bold question (**...?**) to a semantic <h3> so FAQ questions
     # are headings in the rendered DOM (a11y + extractability for crawlers / AI engines)
     out = re.sub(r"<p><strong>([^<]+\?)</strong></p>", r"<h3>\1</h3>", out)
+    # Send in-body apex links to the language-matched landing. The markdown writes them as
+    # the bare https://ai-budget.pl, which IS the Polish homepage - so every non-pl article
+    # was handing its readers and its internal link equity to a page in a language they
+    # don't read, and /en/, /fr/, /nl/ got no in-body inbound links at all. Same defect
+    # class as ABA-280's cross-site language preservation, one level down in the body.
+    # Only the bare apex is rewritten; a deep link (/pricing/, /blog/...) keeps its path.
+    if lang:
+        out = re.sub(r'href="https://ai-budget\.pl/?"', f'href="{home_url(lang)}"', out)
     return out
 
 _QLINE = re.compile(r"^\*\*(.+\?)\*\*\s*$")
@@ -604,7 +612,7 @@ def build():
         if len(faq) >= 2:
             ld["@graph"].append({"@type": "FAQPage", "mainEntity": [
                 {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}} for q, ans in faq]})
-        body_html = to_html(a["body"])
+        body_html = to_html(a["body"], lang)
         # Lead with the publication date and add "Updated" only when the file really changed
         # later. git_date() is the last-commit date, so a repo-wide frontmatter edit would
         # otherwise stamp every article as updated today and bury when it was actually published.

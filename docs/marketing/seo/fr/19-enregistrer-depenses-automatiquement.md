@@ -96,4 +96,4 @@ Le scan de ticket et la saisie vocale réduisent l'enregistrement d'une dépense
 
 ---
 
-*Articles liés : [Importer un relevé bancaire dans une appli de budget](/blog/fr/importer-releve-bancaire/) | [L'IA pour gérer son budget : ce qu'elle change vraiment](/blog/fr/ia-pour-gerer-son-budget/)*
+*Articles liés : [Importer un relevé bancaire dans une appli de budget](/blog/fr/importer-releve-bancaire/) | [Comment l'IA peut vous aider à gérer votre budget](/blog/fr/ia-pour-gerer-son-budget/)*

@@ -558,7 +558,7 @@ C = {
    "title": "AI Budget Assistant - budget app & expense tracker",
    "desc": "AI budget app and expense tracker: add expenses by voice or a receipt photo, plan budgets and save money, together with your family. Free to start.",
    "nav_blog": "Blog", "nav_login": "Log in",
-   "hero_h1": "Budget app and expense tracker with AI",
+   "hero_h1": "AI budget app and expense tracker",
    "hero_sub": "Track expenses, plan budgets, hit savings goals and manage money together with your family, in one app. The AI does the boring work. Start free.",
    "cta_primary": "Open the app", "cta_secondary": "Get it on Google Play",
    "intro_title": "Expense tracking without spreadsheets",
@@ -1088,7 +1088,7 @@ def pricing_page(lang):
     offers_jsonld = {"@context": "https://schema.org", "@graph": [
         org_node(),
         {"@type": "SoftwareApplication", "@id": f"{SITE}/#app", "name": "AI Budget Assistant",
-         "description": t["meta"], "image": og, "applicationCategory": "FinanceApplication",
+         "alternateName": ["AI Budget", "AI Budget App"], "description": t["meta"], "image": og, "applicationCategory": "FinanceApplication",
          "operatingSystem": "Android, Web", "inLanguage": bcp47(lang), "url": url,
          "brand": {"@id": f"{SITE}/#organization"}, "publisher": {"@id": f"{SITE}/#organization"},
          "downloadUrl": PLAY, "sameAs": [PLAY], "offers": tier_offers},
@@ -1124,11 +1124,12 @@ def jsonld(lang, langs):
     t = C[lang]; url = SITE + lp(lang)
     og = f"{SITE}/blog/{lang}/assets/og-default.png"
     return {"@context": "https://schema.org", "@graph": [
-        {"@type": "WebSite", "@id": f"{SITE}/#website", "name": "AI Budget Assistant", "url": url,
+        {"@type": "WebSite", "@id": f"{SITE}/#website", "name": "AI Budget Assistant",
+         "alternateName": ["AI Budget", "AI Budget App"], "url": url,
          "inLanguage": bcp47(lang), "publisher": {"@id": f"{SITE}/#organization"}},
         org_node(),
         {"@type": "SoftwareApplication", "@id": f"{SITE}/#app",
-         "name": "AI Budget Assistant", "applicationCategory": "FinanceApplication",
+         "name": "AI Budget Assistant", "alternateName": ["AI Budget", "AI Budget App"], "applicationCategory": "FinanceApplication",
          "operatingSystem": "Android, Web", "inLanguage": bcp47(lang), "url": url, "image": og,
          "publisher": {"@id": f"{SITE}/#organization"},
          "downloadUrl": PLAY, "sameAs": [PLAY],

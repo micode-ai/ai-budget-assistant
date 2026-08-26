@@ -96,4 +96,4 @@ Bon scannen en spraakinvoer brengen het vastleggen van één uitgave terug tot e
 
 ---
 
-*Gerelateerde artikelen: [Een bankafschrift importeren in je budget-app](/blog/nl/bankafschrift-importeren/) | [AI voor je budget: minder gedoe, meer inzicht](/blog/nl/ai-voor-je-budget/)*
+*Gerelateerde artikelen: [Een bankafschrift importeren in je budget-app](/blog/nl/bankafschrift-importeren/) | [Hoe AI je helpt met budgetteren (eerlijk uitgelegd)](/blog/nl/ai-voor-je-budget/)*
