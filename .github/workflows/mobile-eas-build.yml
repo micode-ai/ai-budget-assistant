@@ -28,7 +28,12 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          # 22, not 20: `eas-version: latest` now resolves an eas-cli whose
+          # @oclif/plugin-autocomplete dependency declares engines.node >=22, and
+          # yarn refuses to install it on 20 — the CLI install step fails before a
+          # build is even attempted. Raising the pin follows the tool; leaving it
+          # would mean pinning eas-version instead and freezing the CLI.
+          node-version: 22
           cache: 'npm'
 
       - run: npm ci
