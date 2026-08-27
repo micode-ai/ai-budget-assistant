@@ -188,6 +188,24 @@ def tier_price_display(lang, tier):
     m, y = tier_amounts(lang, tier)
     return fmt_price(cur, m), fmt_price(cur, y)
 
+def app_url(loc, lang, plan=None):
+    """Link into the web app, tagged so a registration can be traced back to the page,
+    the section and the language that produced it. `loc` MUST use the same vocabulary as
+    the GA4 tracker's loc() (nav/hero/band/pricing_card/footer/...) - the click is
+    reported by the tracker and the signup by the API, and if the two disagree on the
+    section name the funnel silently splits in half. Only first touch is kept client-side,
+    so these params say where a visit started, never that a later signup is attributable
+    across sessions."""
+    # `&amp;`, not a bare `&`: these land inside an HTML attribute, and `lang` is a real
+    # named character reference. HTML5 happens not to decode `&lang=` (the entity needs its
+    # semicolon, and an `=` after an unterminated reference is left alone "for historical
+    # reasons"), but relying on that is a trap for the next param someone adds. getAttribute()
+    # hands the tracker the decoded value either way, so cta_click detection is unaffected.
+    q = f"src=landing&amp;loc={loc}&amp;lang={bcp47(lang)}"
+    if plan:
+        q += f"&amp;plan={plan}"
+    return f"{APP}?{q}"
+
 def pricing_url(lang):
     return "/pricing/" if lang == "pl" else f"/{lang}/pricing/"
 
@@ -996,7 +1014,7 @@ def footer_html(lang):
             f'<a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a href="{priv_url(lang)}">{pl}</a><a href="{terms_url(lang)}">{tl}</a>'
             f'<a href="{cookies_url(lang)}">{cl}</a>'
-            f'<a href="{APP}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a>'
+            f'<a href="{app_url("footer", lang)}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a>'
             f'<a href="/llms.txt">llms.txt</a></div>'
             f'<div class="f-badge">{STARTUP_FAME_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener">'
@@ -1019,7 +1037,7 @@ def cookies_page(lang):
             f'<style>{CSS}</style></head><body>'
             f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
-            f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<a class="btn p" href="{app_url("nav", lang)}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 
@@ -1036,7 +1054,7 @@ def about_page(lang):
             f'<style>{CSS}</style></head><body>'
             f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
-            f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<a class="btn p" href="{app_url("nav", lang)}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 
@@ -1060,7 +1078,7 @@ def pricing_page(lang):
             + f'<p class="psub">{html.escape(subtitle)}</p>'
             + f'<div class="price"><span class="price-m">{price_m}<small>{html.escape(t["per_month"])}</small></span>'
             + f'<span class="price-y">{price_y}<small>{html.escape(t["per_year"])}</small></span></div>'
-            + f'<a class="btn p pfull" href="{APP}">{html.escape(cta)}</a>'
+            + f'<a class="btn p pfull" href="{app_url("pricing_card", lang, key)}">{html.escape(cta)}</a>'
             + f'<ul class="pfeat">{feat_items}</ul></div>'
         )
     faq = "".join(f'<div class="qa"><h3>{html.escape(q)}</h3><p>{html.escape(a)}</p></div>' for q, a in t["faq"])
@@ -1107,7 +1125,7 @@ def pricing_page(lang):
             f'<style>{CSS}</style></head><body>'
             f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a href="{pricing_url(lang)}">{PRICING_LABELS[lang]}</a>'
-            f'<a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<a class="btn p" href="{app_url("nav", lang)}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<section class="hero"><div class="wrap"><h1>{html.escape(t["h1"])}</h1><p>{html.escape(t["sub"])}</p></div></section>'
             f'<section class="sec"><div class="wrap">'
             f'<input type="radio" name="bill" id="bm" class="billcb" checked>'
@@ -1117,7 +1135,7 @@ def pricing_page(lang):
             f'<div class="pricing-grid">{cards}</div></div></section>'
             f'<section class="sec"><div class="wrap"><h2>{html.escape(t["faq_title"])}</h2><div class="faq">{faq}</div></div></section>'
             + f'<section class="band"><div class="wrap"><h2>{html.escape(C[lang]["cta_band"])}</h2>'
-              f'<a class="btn p" href="{APP}">{html.escape(C[lang]["cta_band_btn"])}</a></div></section>'
+              f'<a class="btn p" href="{app_url("band", lang)}">{html.escape(C[lang]["cta_band_btn"])}</a></div></section>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 
 def jsonld(lang, langs):
@@ -1223,9 +1241,9 @@ def page(lang, langs):
     return (head(lang, langs)
         + f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
           f'<nav class="nav">{langmenu}<a href="{blog}">{t["nav_blog"]}</a>'
-          f'<a class="btn p" href="{APP}">{t["nav_login"]}</a></nav></div></header><main>'
+          f'<a class="btn p" href="{app_url("nav", lang)}">{t["nav_login"]}</a></nav></div></header><main>'
         + f'<section class="hero"><div class="wrap"><h1>{html.escape(t["hero_h1"])}</h1>'
-          f'<p>{html.escape(t["hero_sub"])}</p><a class="btn p" href="{APP}">{t["cta_primary"]}</a>'
+          f'<p>{html.escape(t["hero_sub"])}</p><a class="btn p" href="{app_url('hero', lang)}">{t["cta_primary"]}</a>'
           f'<a class="btn s" href="{PLAY}">{t["cta_secondary"]}</a></div></section>'
         + f'<section class="sec intro"><div class="wrap"><h2>{html.escape(t["intro_title"])}</h2>'
           f'<p>{html.escape(t["intro"])}</p></div></section>'
@@ -1235,7 +1253,7 @@ def page(lang, langs):
         + fromblog_sec
         + f'<div class="blogcta"><a href="{blog}">{t["blog_cta"]} &rarr;</a></div>'
         + f'<section class="band"><div class="wrap"><h2>{html.escape(t["cta_band"])}</h2>'
-          f'<a class="btn p" href="{APP}">{t["cta_band_btn"]}</a></div></section></main>'
+          f'<a class="btn p" href="{app_url("band", lang)}">{t["cta_band_btn"]}</a></div></section></main>'
         + footer_html(lang)
         + lbs + consent_html(lang) + '</body></html>')
 
@@ -1270,7 +1288,7 @@ def legal_page(lang, kind):
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
             f'<style>{CSS}</style></head><body>'
             f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
-            f'<nav class="nav"><a class="btn p" href="{APP}">{C[lang]["nav_login"]}</a></nav></div></header>'
+            f'<nav class="nav"><a class="btn p" href="{app_url("nav", lang)}">{C[lang]["nav_login"]}</a></nav></div></header>'
             f'<main class="wrap legal">{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 

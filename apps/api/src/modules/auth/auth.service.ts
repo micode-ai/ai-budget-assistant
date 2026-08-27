@@ -80,6 +80,12 @@ export class AuthService {
       timezone: dto.timezone,
       emailVerificationCode: verificationCodeHash,
       emailVerificationExpiresAt: verificationExpiresAt,
+      // Attribution rides along with the row that is being created anyway. It must never
+      // be able to fail a signup, which is why the DTO validates charset and not values.
+      acquisitionSource: dto.acquisition?.src,
+      acquisitionLocation: dto.acquisition?.loc,
+      acquisitionLanguage: dto.acquisition?.lang,
+      acquisitionPlan: dto.acquisition?.plan,
     });
 
     // Send verification email
@@ -242,6 +248,12 @@ export class AuthService {
         isVerified: true,
         currencyCode: dto.currencyCode,
         language: dto.language,
+        // Google sign-in never passes through register()/verifyEmail(), so it needs its
+        // own copy — omit it here and every Google signup reads as unattributed.
+        acquisitionSource: dto.acquisition?.src,
+        acquisitionLocation: dto.acquisition?.loc,
+        acquisitionLanguage: dto.acquisition?.lang,
+        acquisitionPlan: dto.acquisition?.plan,
       });
 
       this.telegramService.notifyNewUser(user.name, user.email);

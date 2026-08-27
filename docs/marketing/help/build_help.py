@@ -207,10 +207,10 @@ def build():
             rel = f'<a href="/blog/{lang}/{blog[0]}/">{html.escape(blog[1])}</a>' + rel
         crumb = (f'<nav class="crumb"><a href="{bb.home_url(lang)}">{bb.I18N[lang]["home"]}</a> / '
                  f'<a href="/help/{lang}/">{HELP_NAV[lang]}</a> / <span>{html.escape(a["title"])}</span></nav>')
-        page = (bb.head(lang, title, desc, url, ld, alts, og, menu, robots=robots)
-                + f'<main class="wrap">{crumb}<article>{body}</article>{bb.cta_block(lang)}'
+        page = (bb.head(lang, title, desc, url, ld, alts, og, menu, robots=robots, src="help")
+                + f'<main class="wrap">{crumb}<article>{body}</article>{bb.cta_block(lang, src="help")}'
                 + f'<section class="related"><h2>{HELP_I18N[lang][4]}</h2>{rel}</section></main>'
-                + bb.foot(lang))
+                + bb.foot(lang, src="help"))
         d = os.path.join(OUT, "help", lang, slug)
         os.makedirs(d, exist_ok=True)
         open(os.path.join(d, "index.html"), "w", encoding="utf-8", newline="\n").write(page)
@@ -232,9 +232,9 @@ def build():
               "description": idesc, "inLanguage": bb.bcp47(lang), "url": url,
               "publisher": {"@id": f"{SITE}/#organization"}}
         crumb = f'<nav class="crumb"><a href="{bb.home_url(lang)}">{bb.I18N[lang]["home"]}</a> / {HELP_NAV[lang]}</nav>'
-        page = (bb.head(lang, it, idesc, url, ld, alts, f"/help/{lang}/assets/og-default.png", menu, og_type="website")
+        page = (bb.head(lang, it, idesc, url, ld, alts, f"/help/{lang}/assets/og-default.png", menu, og_type="website", src="help")
                 + f'<main class="wrap">{crumb}<h1>{html.escape(ih1)}</h1><p>{html.escape(iintro)}</p>'
-                + f'{cards}{bb.cta_block(lang)}</main>' + bb.foot(lang))
+                + f'{cards}{bb.cta_block(lang, src="help")}</main>' + bb.foot(lang, src="help"))
         open(os.path.join(OUT, "help", lang, "index.html"), "w", encoding="utf-8", newline="\n").write(page)
 
     # /help/ dispatcher (noindex, NOT in sitemap)

@@ -1,5 +1,6 @@
 import type { Account } from '@budget/shared-types';
 import { httpClient } from './http-client';
+import { getAcquisition } from './attribution';
 
 export const authApi = {
   login(email: string, password: string) {
@@ -18,7 +19,10 @@ export const authApi = {
       '/auth/register',
       {
         method: 'POST',
-        body: JSON.stringify({ email, password, name, currencyCode, referralCode, language }),
+        // Attribution is attached HERE, not threaded through authStore.register's
+        // already six-positional-argument signature — that way both signup paths pick
+        // it up by construction and no future caller can forget it.
+        body: JSON.stringify({ email, password, name, currencyCode, referralCode, language, acquisition: getAcquisition() }),
         skipAuth: true,
       },
     );
@@ -29,7 +33,7 @@ export const authApi = {
       '/auth/google',
       {
         method: 'POST',
-        body: JSON.stringify({ idToken, language, currencyCode, referralCode }),
+        body: JSON.stringify({ idToken, language, currencyCode, referralCode, acquisition: getAcquisition() }),
         skipAuth: true,
       },
     );

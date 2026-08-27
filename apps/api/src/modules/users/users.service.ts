@@ -18,6 +18,10 @@ interface CreateUserData {
   accentColor?: string | null;
   paymentMethod?: SettleMethod | null;
   paymentHandle?: string | null;
+  acquisitionSource?: string;
+  acquisitionLocation?: string;
+  acquisitionLanguage?: string;
+  acquisitionPlan?: string;
 }
 
 @Injectable()
@@ -37,6 +41,10 @@ export class UsersService {
         isVerified: data.isVerified ?? false,
         emailVerificationCode: data.emailVerificationCode,
         emailVerificationExpiresAt: data.emailVerificationExpiresAt,
+        acquisitionSource: data.acquisitionSource,
+        acquisitionLocation: data.acquisitionLocation,
+        acquisitionLanguage: data.acquisitionLanguage,
+        acquisitionPlan: data.acquisitionPlan,
       },
     });
   }

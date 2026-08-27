@@ -1,4 +1,42 @@
-import { IsEmail, IsString, MinLength, MaxLength, IsOptional, Matches } from 'class-validator';
+import { IsEmail, IsString, MinLength, MaxLength, IsOptional, Matches, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+
+/**
+ * Where a signup came from — read off the CTA query string the marketing generators
+ * put on every link into the app (`app_url()` in build_landing.py / build_blog.py).
+ *
+ * Deliberately validated by CHARSET AND LENGTH, not by an allow-list of the values we
+ * emit today: an allow-list would mean that the first time marketing adds a new section
+ * name, every registration carrying it fails validation and the signup is lost. Losing
+ * the attribution of a signup is acceptable; losing the signup is not. The tight charset
+ * is what protects the column and the admin group-by, and cardinality is bounded because
+ * only our own generators produce these links.
+ */
+export class AcquisitionDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  @Matches(/^[A-Za-z0-9_-]*$/)
+  src?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  @Matches(/^[A-Za-z0-9_-]*$/)
+  loc?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  @Matches(/^[A-Za-z0-9_-]*$/)
+  lang?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(20)
+  @Matches(/^[A-Za-z0-9_-]*$/)
+  plan?: string;
+}
 
 export class RegisterDto {
   @IsEmail()
@@ -32,6 +70,11 @@ export class RegisterDto {
   @IsString()
   @Matches(/^[A-Z0-9]{4,10}$/, { message: 'Invalid referral code format' })
   referralCode?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AcquisitionDto)
+  acquisition?: AcquisitionDto;
 }
 
 export class LoginDto {
@@ -110,4 +153,9 @@ export class GoogleAuthDto {
   @IsString()
   @Matches(/^[A-Z0-9]{4,10}$/, { message: 'Invalid referral code format' })
   referralCode?: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => AcquisitionDto)
+  acquisition?: AcquisitionDto;
 }

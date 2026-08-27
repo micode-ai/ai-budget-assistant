@@ -425,8 +425,20 @@ def lang_menu(lang, alt_map, langs):
     return (f'<details class="langmenu"><summary><span class="lang-full">{LANG_NAMES[lang]}</span><span class="lang-short">{lang.upper()}</span> &#9662;</summary>'
             f'<div class="langlist">{links}</div></details>')
 
+def app_url(loc, lang, src="blog"):
+    """Link into the web app, tagged so a registration can be traced back to what produced
+    it. `src` distinguishes the blog from the help centre: both render through this same
+    chrome (build_help imports it), so without the parameter every help page would report
+    itself as blog traffic. `loc` uses the same vocabulary as the landing tracker's loc()."""
+    # `&amp;`, not a bare `&`: these land inside an HTML attribute, and `lang` is a real
+    # named character reference. HTML5 happens not to decode `&lang=` (the entity needs its
+    # semicolon, and an `=` after an unterminated reference is left alone "for historical
+    # reasons"), but relying on that is a trap for the next param someone adds. getAttribute()
+    # hands the tracker the decoded value either way, so cta_click detection is unaffected.
+    return f"{APP}?src={src}&amp;loc={loc}&amp;lang={bcp47(lang)}"
+
 def head(lang, title, desc, url, jsonld, alternates, og_path, langmenu, og_type="article",
-         robots="index,follow,max-image-preview:large"):
+         robots="index,follow,max-image-preview:large", src="blog"):
     alt_tags = "\n".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alternates)
     t = I18N[lang]
     return f"""<!DOCTYPE html>
@@ -445,10 +457,10 @@ def head(lang, title, desc, url, jsonld, alternates, og_path, langmenu, og_type=
 <script type="application/ld+json">{json.dumps(jsonld, ensure_ascii=False)}</script>
 <style>{CSS}</style></head><body>
 <header class="site"><div class="wrap"><a class="brand" href="{home_url(lang)}">AI <span>Budget</span> Assistant</a>
-<nav class="nav">{langmenu}<a href="/blog/{lang}/">{t['blog']}</a><a class="btn-login" href="{APP}">{t['login']}</a></nav></div></header>
+<nav class="nav">{langmenu}<a href="/blog/{lang}/">{t['blog']}</a><a class="btn-login" href="{app_url('nav', lang, src)}">{t['login']}</a></nav></div></header>
 """
 
-def foot(lang):
+def foot(lang, src="blog"):
     t = I18N[lang]
     return (f'<footer class="site"><div class="wrap">'
             f'<div class="f-links"><a href="/blog/{lang}/">{t["blog"]}</a>'
@@ -457,16 +469,16 @@ def foot(lang):
             f'<a href="{priv_url(lang)}">{LEGAL_LABELS[lang][0]}</a>'
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'
             f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
-            f'<a href="{APP}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
+            f'<a href="{app_url("footer", lang, src)}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
             f'<div class="f-badge">{STARTUP_FAME_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'
             f'</div></footer>\n' + consent_html(lang) + '</body></html>')
 
-def cta_block(lang):
+def cta_block(lang, src="blog"):
     t = I18N[lang]
     return (f'<aside class="cta"><h3>{t["ctaTitle"]}</h3><p>{t["ctaText"]}</p>'
-            f'<a class="btn p" href="{APP}">{t["btnWeb"]}</a>'
+            f'<a class="btn p" href="{app_url("cta", lang, src)}">{t["btnWeb"]}</a>'
             f'<a class="btn s" href="{PLAY}">{t["btnPlay"]}</a></aside>')
 
 def article_jsonld(lang, title, desc, url, og_path, src_path=None, pub=None):

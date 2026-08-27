@@ -254,6 +254,18 @@ model User {
   tripExpenseShares     TripExpenseShare[]
   paymentMethods        UserPaymentMethod[]
 
+  // Where this signup came from, captured from the CTA query string on the visitor's
+  // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
+  // rather than one Json blob on purpose: the admin groups by these, and Prisma cannot
+  // groupBy on Json. Nullable everywhere — every user who registered before this, every
+  // native install, and anyone arriving without params has all four NULL, which is a
+  // legitimate "unknown", not a defect to backfill.
+  acquisitionSource     String?               @map("acquisition_source")
+  acquisitionLocation   String?               @map("acquisition_location")
+  acquisitionLanguage   String?               @map("acquisition_language")
+  acquisitionPlan       String?               @map("acquisition_plan")
+
+  @@index([acquisitionSource])
   @@map("users")
 }
 
