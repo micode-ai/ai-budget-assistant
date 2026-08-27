@@ -43,7 +43,7 @@ Besides adding items, you can ask the assistant to:
 
 ## Shopping Mode (Android)
 
-Tap **I'm going shopping** at the top of the shopping list to turn on Shopping Mode. It needs to know at least one of your shops first — scan a few receipts so the app can learn where you shop — and the first time you use it, it will ask for location access. It also needs permission to show notifications — they are the only way it tells you anything, so it will not start without them.
+Tap **I'm going shopping** at the top of the shopping list to turn on Shopping Mode. It needs to know at least one of your shops first — scan a few receipts so the app can learn where you shop — and the first time you use it, it will ask for location access. It also needs permission to show notifications — they are the only way it tells you anything, so it will not start without them. It learns each shop from the address on your receipts, so two branches of the same chain count as two separate shops — it takes a couple of visits to the same one before it recognises it.
 
 While Shopping Mode is on, a notification stays visible in your notification shade the whole time. That's expected — it just means Shopping Mode is active, not that something is wrong.
 

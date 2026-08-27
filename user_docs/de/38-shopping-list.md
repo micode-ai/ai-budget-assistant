@@ -43,7 +43,7 @@ Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Menge
 
 ## Einkaufsmodus (Android)
 
-Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodus einzuschalten. Dafür muss die App mindestens eines deiner Geschäfte schon kennen — scanne dazu ein paar Kassenbons, damit sie lernt, wo du einkaufst — und beim ersten Mal fragt sie nach dem Zugriff auf deinen Standort. Sie braucht außerdem die Erlaubnis, Benachrichtigungen anzuzeigen — nur darüber meldet sie sich, deshalb startet der Einkaufsmodus ohne sie nicht.
+Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodus einzuschalten. Dafür muss die App mindestens eines deiner Geschäfte schon kennen — scanne dazu ein paar Kassenbons, damit sie lernt, wo du einkaufst — und beim ersten Mal fragt sie nach dem Zugriff auf deinen Standort. Sie braucht außerdem die Erlaubnis, Benachrichtigungen anzuzeigen — nur darüber meldet sie sich, deshalb startet der Einkaufsmodus ohne sie nicht. Die App lernt jeden Laden anhand der Adresse auf deinen Belegen, deshalb zählen zwei Filialen derselben Kette als zwei verschiedene Läden — es braucht ein paar Besuche in derselben Filiale, bis sie erkannt wird.
 
 Solange der Einkaufsmodus läuft, bleibt die ganze Zeit eine Benachrichtigung in deiner Benachrichtigungsleiste sichtbar. Das ist normal — es bedeutet nur, dass der Einkaufsmodus aktiv ist, nicht dass etwas nicht stimmt.
 

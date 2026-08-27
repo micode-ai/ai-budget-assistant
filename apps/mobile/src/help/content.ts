@@ -4225,7 +4225,7 @@ Besides adding items, you can ask the assistant to:
 
 ## Shopping Mode (Android)
 
-Tap **I'm going shopping** at the top of the shopping list to turn on Shopping Mode. It needs to know at least one of your shops first — scan a few receipts so the app can learn where you shop — and the first time you use it, it will ask for location access. It also needs permission to show notifications — they are the only way it tells you anything, so it will not start without them.
+Tap **I'm going shopping** at the top of the shopping list to turn on Shopping Mode. It needs to know at least one of your shops first — scan a few receipts so the app can learn where you shop — and the first time you use it, it will ask for location access. It also needs permission to show notifications — they are the only way it tells you anything, so it will not start without them. It learns each shop from the address on your receipts, so two branches of the same chain count as two separate shops — it takes a couple of visits to the same one before it recognises it.
 
 While Shopping Mode is on, a notification stays visible in your notification shade the whole time. That's expected — it just means Shopping Mode is active, not that something is wrong.
 
@@ -8721,7 +8721,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 ## Режим покупок (Android)
 
-Нажмите **Я иду за покупками** вверху списка покупок, чтобы включить режим покупок. Для этого приложению нужно уже знать хотя бы один из Ваших магазинов — сначала отсканируйте несколько чеков, чтобы оно этому научилось, — а при первом использовании оно запросит доступ к геолокации. Ему также нужно разрешение показывать уведомления — только через них он о чём-либо сообщает, поэтому без них он не запустится.
+Нажмите **Я иду за покупками** вверху списка покупок, чтобы включить режим покупок. Для этого приложению нужно уже знать хотя бы один из Ваших магазинов — сначала отсканируйте несколько чеков, чтобы оно этому научилось, — а при первом использовании оно запросит доступ к геолокации. Ему также нужно разрешение показывать уведомления — только через них он о чём-либо сообщает, поэтому без них он не запустится. Магазин распознаётся по адресу с чека, поэтому два магазина одной сети — это два разных места: чтобы приложение узнало конкретный магазин, нужно сходить в него пару раз.
 
 Пока режим покупок работает, в шторке уведомлений всё время видно уведомление. Это нормально — оно лишь означает, что режим покупок включён, а не что что-то не так.
 
@@ -13187,7 +13187,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 ## Режим покупок (Android)
 
-Натисніть **Я йду за покупками** вгорі списку покупок, щоб увімкнути режим покупок. Для цього застосунку потрібно вже знати принаймні один із Ваших магазинів — спочатку відскануйте кілька чеків, щоб він цього навчився, — а під час першого використання він запитає доступ до геолокації. Йому також потрібен дозвіл показувати сповіщення — лише через них він про щось повідомляє, тож без них він не запуститься.
+Натисніть **Я йду за покупками** вгорі списку покупок, щоб увімкнути режим покупок. Для цього застосунку потрібно вже знати принаймні один із Ваших магазинів — спочатку відскануйте кілька чеків, щоб він цього навчився, — а під час першого використання він запитає доступ до геолокації. Йому також потрібен дозвіл показувати сповіщення — лише через них він про щось повідомляє, тож без них він не запуститься. Магазин розпізнається за адресою з чека, тому два магазини однієї мережі — це два різні місця: щоб застосунок упізнав конкретний магазин, потрібно сходити до нього кілька разів.
 
 Поки режим покупок працює, у шторці сповіщень весь час видно сповіщення. Це нормально — це лише означає, що режим покупок увімкнено, а не що щось не так.
 
@@ -17638,7 +17638,7 @@ Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę
 
 ## Tryb zakupów (Android)
 
-Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji. Potrzebuje też zgody na wyświetlanie powiadomień — tylko przez nie się odzywa, więc bez nich się nie uruchomi.
+Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji. Potrzebuje też zgody na wyświetlanie powiadomień — tylko przez nie się odzywa, więc bez nich się nie uruchomi. Aplikacja rozpoznaje każdy sklep po adresie z paragonu, więc dwa sklepy tej samej sieci to dwa różne miejsca — zanim rozpozna dany sklep, potrzebuje kilku wizyt właśnie w nim.
 
 Gdy tryb zakupów działa, przez cały czas widoczne jest powiadomienie na pasku powiadomień. To normalne — oznacza tylko, że tryb zakupów jest włączony, a nie że coś jest nie tak.
 
@@ -22064,7 +22064,7 @@ Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Menge
 
 ## Einkaufsmodus (Android)
 
-Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodus einzuschalten. Dafür muss die App mindestens eines deiner Geschäfte schon kennen — scanne dazu ein paar Kassenbons, damit sie lernt, wo du einkaufst — und beim ersten Mal fragt sie nach dem Zugriff auf deinen Standort. Sie braucht außerdem die Erlaubnis, Benachrichtigungen anzuzeigen — nur darüber meldet sie sich, deshalb startet der Einkaufsmodus ohne sie nicht.
+Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodus einzuschalten. Dafür muss die App mindestens eines deiner Geschäfte schon kennen — scanne dazu ein paar Kassenbons, damit sie lernt, wo du einkaufst — und beim ersten Mal fragt sie nach dem Zugriff auf deinen Standort. Sie braucht außerdem die Erlaubnis, Benachrichtigungen anzuzeigen — nur darüber meldet sie sich, deshalb startet der Einkaufsmodus ohne sie nicht. Die App lernt jeden Laden anhand der Adresse auf deinen Belegen, deshalb zählen zwei Filialen derselben Kette als zwei verschiedene Läden — es braucht ein paar Besuche in derselben Filiale, bis sie erkannt wird.
 
 Solange der Einkaufsmodus läuft, bleibt die ganze Zeit eine Benachrichtigung in deiner Benachrichtigungsleiste sichtbar. Das ist normal — es bedeutet nur, dass der Einkaufsmodus aktiv ist, nicht dass etwas nicht stimmt.
 
@@ -26479,7 +26479,7 @@ Cada artículo de la lista tiene una casilla, un contador de cantidad editable y
 
 ## Modo compras (Android)
 
-Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación. También necesita permiso para mostrar notificaciones — son su única forma de avisarte, así que sin ellas no se inicia.
+Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación. También necesita permiso para mostrar notificaciones — son su única forma de avisarte, así que sin ellas no se inicia. Aprende cada tienda por la dirección de tus tickets, así que dos sucursales de la misma cadena cuentan como dos tiendas distintas: necesita un par de visitas a la misma antes de reconocerla.
 
 Mientras el modo compras está activo, verás una notificación fija en tu bandeja de notificaciones todo el tiempo. Es normal — solo significa que el modo compras está activo, no que algo vaya mal.
 
@@ -30892,7 +30892,7 @@ Chaque article de la liste a une case à cocher, un compteur de quantité modifi
 
 ## Mode courses (Android)
 
-Touchez **Je pars faire les courses** en haut de la liste de courses pour activer le mode courses. Il doit d'abord connaître au moins un de vos magasins — scannez quelques tickets pour que l'application apprenne où vous faites vos courses — et la première fois, il vous demandera l'accès à votre position. Il a aussi besoin de l'autorisation d'afficher des notifications — c'est son seul moyen de vous prévenir, il ne démarre donc pas sans elles.
+Touchez **Je pars faire les courses** en haut de la liste de courses pour activer le mode courses. Il doit d'abord connaître au moins un de vos magasins — scannez quelques tickets pour que l'application apprenne où vous faites vos courses — et la première fois, il vous demandera l'accès à votre position. Il a aussi besoin de l'autorisation d'afficher des notifications — c'est son seul moyen de vous prévenir, il ne démarre donc pas sans elles. Elle apprend chaque magasin à partir de l'adresse figurant sur vos tickets : deux magasins d'une même enseigne comptent donc comme deux magasins distincts, et il faut quelques passages dans le même avant qu'il soit reconnu.
 
 Pendant que le mode courses fonctionne, une notification reste affichée en permanence dans votre barre de notifications. C'est normal — cela signifie simplement que le mode courses est actif, pas qu'il y a un problème.
 
@@ -35262,7 +35262,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 
 ## Рэжым пакупак (Android)
 
-Націсніце **Я іду па пакупкі** уверсе спіса пакупак, каб уключыць рэжым пакупак. Для гэтага праграме трэба ўжо ведаць прынамсі адну з Вашых крам — спачатку адсканіруйце некалькі чэкаў, каб яна гэтаму навучылася, — а пры першым выкарыстанні яна запытае доступ да геалакацыі. Ёй таксама патрэбны дазвол паказваць апавяшчэнні — толькі праз іх яна пра нешта паведамляе, таму без іх рэжым не запусціцца.
+Націсніце **Я іду па пакупкі** уверсе спіса пакупак, каб уключыць рэжым пакупак. Для гэтага праграме трэба ўжо ведаць прынамсі адну з Вашых крам — спачатку адсканіруйце некалькі чэкаў, каб яна гэтаму навучылася, — а пры першым выкарыстанні яна запытае доступ да геалакацыі. Ёй таксама патрэбны дазвол паказваць апавяшчэнні — толькі праз іх яна пра нешта паведамляе, таму без іх рэжым не запусціцца. Крама распазнаецца па адрасе з чэка, таму дзве крамы адной сеткі — гэта два розныя месцы: каб дадатак пазнаў пэўную краму, трэба схадзіць у яе некалькі разоў.
 
 Пакуль рэжым пакупак працуе, увесь час бачнае апавяшчэнне ў шторцы апавяшчэнняў. Гэта нармальна — гэта проста азначае, што рэжым пакупак уключаны, а не тое, што нешта не так.
 
@@ -39754,7 +39754,7 @@ Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidstell
 
 ## Winkelmodus (Android)
 
-Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie. Hij heeft ook toestemming nodig om meldingen te tonen — dat is zijn enige manier om iets aan je door te geven, dus zonder die toestemming start hij niet.
+Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie. Hij heeft ook toestemming nodig om meldingen te tonen — dat is zijn enige manier om iets aan je door te geven, dus zonder die toestemming start hij niet. De app leert elke winkel via het adres op je bonnetjes, dus twee filialen van dezelfde keten tellen als twee verschillende winkels — het duurt een paar bezoeken aan hetzelfde filiaal voordat het wordt herkend.
 
 Zolang de winkelmodus actief is, blijft er de hele tijd een melding zichtbaar in je meldingenbalk. Dat is normaal — het betekent alleen dat de winkelmodus actief is, niet dat er iets mis is.
 

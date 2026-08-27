@@ -62,20 +62,27 @@ describe('findNearbyStore', () => {
 
   it('at the two-visit floor centres on an observed point, not the midpoint', () => {
     // n = 2 is the default floor, and averaging the two middle values IS the
-    // mean there — exactly what the median is supposed to prevent. One real
-    // geotag plus one stray ~1.1 km away used to put the centre ~555 m from
-    // both, so the card never appeared at the shop the user was standing in.
-    // The order statistic returns a coordinate a visit actually occupied.
+    // mean there — exactly what the median is supposed to prevent. The order
+    // statistic returns a coordinate a visit actually occupied, so the card
+    // appears where the user stood rather than between two places.
+    const visits = [visit('Biedronka'), visit('Biedronka', 0.0009, 0.0009)];
+
+    const [centre] = buildStoreCentres(visits, NEARBY_STORE_DEFAULTS.minVisits);
+
+    expect(centre).toEqual({ merchant: 'Biedronka', lat: HERE.lat, lng: HERE.lng });
+    expect(findNearbyStore({ coords: HERE, visits })!.distanceM).toBeLessThan(5);
+  });
+
+  it('two visits a kilometre apart are two branches, so neither clears the floor', () => {
+    // These used to be one shop, centred by the order statistic on whichever
+    // of the two sorted lower — which is how a receipt scanned at home could
+    // become "the" Biedronka. Two lone coordinates are now two lone
+    // coordinates, and neither is evidence of a shop on its own.
     const visits = [visit('Biedronka'), visit('Biedronka', 0.01)];
 
-    const atShop = findNearbyStore({ coords: HERE, visits });
-    expect(atShop?.merchant).toBe('Biedronka');
-    expect(atShop!.distanceM).toBeLessThan(20);
-
-    // And the midpoint between them — where nothing was ever bought — is not a
-    // shop. Under the old averaging median it was the only place that matched.
-    const midpoint = { lat: HERE.lat + 0.005, lng: HERE.lng };
-    expect(findNearbyStore({ coords: midpoint, visits })).toBeNull();
+    expect(buildStoreCentres(visits, NEARBY_STORE_DEFAULTS.minVisits)).toEqual([]);
+    expect(findNearbyStore({ coords: HERE, visits })).toBeNull();
+    expect(findNearbyStore({ coords: { lat: HERE.lat + 0.005, lng: HERE.lng }, visits })).toBeNull();
   });
 
   it('returns the nearer of two shops in range', () => {
@@ -298,5 +305,75 @@ describe('isRealPoint', () => {
     expect(isRealPoint({ lat: 0, lng: 0 })).toBe(false);
     expect(isRealPoint({ lat: Number.NaN, lng: 21.0 })).toBe(false);
     expect(isRealPoint({ lat: 52.0, lng: 21.0 })).toBe(true);
+  });
+});
+
+describe('branches of one chain', () => {
+  // The production failure this suite exists for: one account had 75 trusted
+  // Biedronka geotags spread over 13 different Gdansk branches. Collapsing them
+  // into a single group put the centre 288 m from the nearest real shop — no
+  // visit was ever within the 150 m radius of it, so the busiest merchant in
+  // the account was the one merchant that could never match.
+  it('matches at a real branch even when the chain median lands where no shop is', () => {
+    // Two branches, two visits each. Taking latitude and longitude
+    // independently over all four points yields (HERE.lat, HERE.lng) — a
+    // corner where neither branch stands, ~680 m from one and ~1.1 km
+    // from the other.
+    const east = [visit('Biedronka', 0, 0.01), visit('Biedronka', 0, 0.01)];
+    const north = [visit('Biedronka', 0.01, 0), visit('Biedronka', 0.01, 0)];
+    const visits = [...east, ...north];
+
+    const atEast = findNearbyStore({ coords: { lat: HERE.lat, lng: HERE.lng + 0.01 }, visits });
+    expect(atEast?.merchant).toBe('Biedronka');
+    expect(atEast!.distanceM).toBeLessThan(20);
+
+    const atNorth = findNearbyStore({ coords: { lat: HERE.lat + 0.01, lng: HERE.lng }, visits });
+    expect(atNorth?.merchant).toBe('Biedronka');
+    expect(atNorth!.distanceM).toBeLessThan(20);
+
+    // And the phantom corner the old grouping produced is not a shop.
+    expect(findNearbyStore({ coords: HERE, visits })).toBeNull();
+  });
+
+  it('keeps one centre per branch rather than one per merchant', () => {
+    const visits = [
+      visit('Biedronka'),
+      visit('Biedronka', 0.0001),
+      visit('Biedronka', 0.01),
+      visit('Biedronka', 0.0101),
+    ];
+
+    const centres = buildStoreCentres(visits, NEARBY_STORE_DEFAULTS.minVisits);
+
+    expect(centres).toHaveLength(2);
+    expect(centres.every((c) => c.merchant === 'Biedronka')).toBe(true);
+  });
+
+  it('does not make a shop of a branch visited once, however busy the chain is', () => {
+    // Four visits to one branch clear the floor for the chain; the single
+    // geotag a kilometre away is still one geotag, and a lone coordinate is
+    // as likely to be a geocoding miss or a home fallback as a shop.
+    const visits = [
+      visit('Biedronka'),
+      visit('Biedronka', 0.0001),
+      visit('Biedronka', 0.0002),
+      visit('Biedronka', 0.0003),
+      visit('Biedronka', 0.01),
+    ];
+
+    expect(findNearbyStore({ coords: { lat: HERE.lat + 0.01, lng: HERE.lng }, visits })).toBeNull();
+    expect(findNearbyStore({ coords: HERE, visits })?.merchant).toBe('Biedronka');
+  });
+
+  it('still treats visits inside the match radius as one branch, not many', () => {
+    // Wander around a single shop entrance must not shatter it into centres.
+    const visits = [
+      visit('Lidl'),
+      visit('Lidl', 0.0003),
+      visit('Lidl', 0.0006),
+      visit('Lidl', 0.0009),
+    ];
+
+    expect(buildStoreCentres(visits, NEARBY_STORE_DEFAULTS.minVisits)).toHaveLength(1);
   });
 });

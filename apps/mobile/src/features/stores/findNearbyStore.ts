@@ -124,6 +124,46 @@ export interface StoreCentre {
 }
 
 /**
+ * How far apart two visits can be and still be the same shop.
+ *
+ * Equal to the match radius on purpose, and that equality is the argument: a
+ * visit lying inside the radius of a centre is a visit a user standing on it
+ * would be matched by, so for this feature it IS that shop. Anything further
+ * is a different branch and has to get a centre of its own.
+ */
+export const STORE_CLUSTER_RADIUS_M = NEARBY_STORE_DEFAULTS.radiusM;
+
+/**
+ * Split one merchant's visits into branches.
+ *
+ * Greedy leader clustering: the first point of a cluster stays its reference
+ * for the whole pass, so membership never drifts as points are added and a
+ * cluster can never grow wider than twice the radius. Input is sorted first,
+ * which is what makes the result a function of the coordinates alone rather
+ * than of the order expenses happened to arrive in.
+ */
+function clusterByProximity(points: StoreVisit[], radiusM: number): StoreVisit[][] {
+  const sorted = [...points].sort((a, b) => a.lat - b.lat || a.lng - b.lng);
+  const clusters: { leader: StoreVisit; members: StoreVisit[] }[] = [];
+
+  for (const point of sorted) {
+    let best: { leader: StoreVisit; members: StoreVisit[] } | null = null;
+    let bestDistance = Infinity;
+    for (const cluster of clusters) {
+      const distance = haversineM(point, cluster.leader);
+      if (distance <= radiusM && distance < bestDistance) {
+        best = cluster;
+        bestDistance = distance;
+      }
+    }
+    if (best) best.members.push(point);
+    else clusters.push({ leader: point, members: [point] });
+  }
+
+  return clusters.map((c) => c.members);
+}
+
+/**
  * The user's shops, as coordinates.
  *
  * This is the grouping half of `findNearbyStore`, lifted out so a caller can
@@ -137,7 +177,7 @@ export interface StoreCentre {
 export function buildStoreCentres(visits: StoreVisit[], minVisits: number): StoreCentre[] {
   // Group case-insensitively, but keep the first spelling seen for display —
   // "BIEDRONKA" off a bank import and "Biedronka" off a receipt are one shop.
-  const groups = new Map<string, { display: string; lats: number[]; lngs: number[] }>();
+  const groups = new Map<string, { display: string; points: StoreVisit[] }>();
   for (const v of visits) {
     const name = v.merchant?.trim();
     if (!name || !isRealPoint(v)) continue;
@@ -145,17 +185,31 @@ export function buildStoreCentres(visits: StoreVisit[], minVisits: number): Stor
     // evidence of a shop — see TRUSTED_VISIT_SOURCES.
     if (!TRUSTED_VISIT_SOURCES.has(v.source)) continue;
     const key = name.toLowerCase();
-    const group = groups.get(key) ?? { display: name, lats: [], lngs: [] };
-    group.lats.push(v.lat);
-    group.lngs.push(v.lng);
+    const group = groups.get(key) ?? { display: name, points: [] };
+    group.points.push(v);
     groups.set(key, group);
   }
 
   const centres: StoreCentre[] = [];
   for (const key of Array.from(groups.keys()).sort()) {
     const group = groups.get(key)!;
-    if (group.lats.length < minVisits) continue;
-    centres.push({ merchant: group.display, lat: median(group.lats), lng: median(group.lngs) });
+    // A chain is not a place. One group per merchant put the centre of a
+    // 13-branch chain where no branch stood — 288 m from the nearest real one
+    // in the account that surfaced this — so the merchant with the most
+    // receipts was the one that could never match. Branches are clustered
+    // first, and the visit floor is then applied to each branch rather than to
+    // the chain: a lone coordinate is as likely to be a geocoding miss or a
+    // receipt scanned at home as it is a shop, and one visit is one visit no
+    // matter how busy the rest of the chain is.
+    const branches = clusterByProximity(group.points, STORE_CLUSTER_RADIUS_M)
+      .filter((members) => members.length >= minVisits)
+      .map((members) => ({
+        merchant: group.display,
+        lat: median(members.map((m) => m.lat)),
+        lng: median(members.map((m) => m.lng)),
+      }))
+      .sort((a, b) => a.lat - b.lat || a.lng - b.lng);
+    centres.push(...branches);
   }
   return centres;
 }

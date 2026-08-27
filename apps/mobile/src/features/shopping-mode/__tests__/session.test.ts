@@ -237,4 +237,29 @@ describe('reduceShoppingSession', () => {
     expect(r.notify).toBeNull();
     expect(r.stop).toBe(true);
   });
+
+  describe('two branches of the chain you are inside', () => {
+    // `buildStoreCentres` now emits one centre per branch, so several centres
+    // can share a merchant name. Resolving the shop we are inside by name
+    // alone picks whichever happens to sit first in the array — and if that is
+    // a branch across town, the very first fix after arrival reads as "far
+    // away", ending the trip with a spurious exit notification while the user
+    // is still standing in the aisle.
+    const NEAR: StoreCentre = { merchant: 'Biedronka', lat: SHOP.lat, lng: SHOP.lng };
+    const FAR: StoreCentre = { merchant: 'Biedronka', lat: SHOP.lat + 0.02, lng: SHOP.lng };
+
+    it('measures against the branch you are in, not the first one with that name', () => {
+      const result = run(inside, northOf(30), { centres: [FAR, NEAR] });
+
+      expect(result.stop).toBe(false);
+      expect(result.notify).toBeNull();
+    });
+
+    it('still ends the trip once every branch of that chain is out of range', () => {
+      const result = run(inside, northOf(400), { centres: [FAR, NEAR] });
+
+      expect(result.stop).toBe(true);
+      expect(result.notify).toEqual({ kind: 'exit', merchant: 'Biedronka' });
+    });
+  });
 });

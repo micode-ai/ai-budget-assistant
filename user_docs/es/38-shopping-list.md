@@ -43,7 +43,7 @@ Cada artículo de la lista tiene una casilla, un contador de cantidad editable y
 
 ## Modo compras (Android)
 
-Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación. También necesita permiso para mostrar notificaciones — son su única forma de avisarte, así que sin ellas no se inicia.
+Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación. También necesita permiso para mostrar notificaciones — son su única forma de avisarte, así que sin ellas no se inicia. Aprende cada tienda por la dirección de tus tickets, así que dos sucursales de la misma cadena cuentan como dos tiendas distintas: necesita un par de visitas a la misma antes de reconocerla.
 
 Mientras el modo compras está activo, verás una notificación fija en tu bandeja de notificaciones todo el tiempo. Es normal — solo significa que el modo compras está activo, no que algo vaya mal.
 

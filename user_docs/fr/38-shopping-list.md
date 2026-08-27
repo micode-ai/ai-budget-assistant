@@ -43,7 +43,7 @@ Chaque article de la liste a une case à cocher, un compteur de quantité modifi
 
 ## Mode courses (Android)
 
-Touchez **Je pars faire les courses** en haut de la liste de courses pour activer le mode courses. Il doit d'abord connaître au moins un de vos magasins — scannez quelques tickets pour que l'application apprenne où vous faites vos courses — et la première fois, il vous demandera l'accès à votre position. Il a aussi besoin de l'autorisation d'afficher des notifications — c'est son seul moyen de vous prévenir, il ne démarre donc pas sans elles.
+Touchez **Je pars faire les courses** en haut de la liste de courses pour activer le mode courses. Il doit d'abord connaître au moins un de vos magasins — scannez quelques tickets pour que l'application apprenne où vous faites vos courses — et la première fois, il vous demandera l'accès à votre position. Il a aussi besoin de l'autorisation d'afficher des notifications — c'est son seul moyen de vous prévenir, il ne démarre donc pas sans elles. Elle apprend chaque magasin à partir de l'adresse figurant sur vos tickets : deux magasins d'une même enseigne comptent donc comme deux magasins distincts, et il faut quelques passages dans le même avant qu'il soit reconnu.
 
 Pendant que le mode courses fonctionne, une notification reste affichée en permanence dans votre barre de notifications. C'est normal — cela signifie simplement que le mode courses est actif, pas qu'il y a un problème.
 

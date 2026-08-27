@@ -43,7 +43,7 @@ Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidstell
 
 ## Winkelmodus (Android)
 
-Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie. Hij heeft ook toestemming nodig om meldingen te tonen — dat is zijn enige manier om iets aan je door te geven, dus zonder die toestemming start hij niet.
+Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie. Hij heeft ook toestemming nodig om meldingen te tonen — dat is zijn enige manier om iets aan je door te geven, dus zonder die toestemming start hij niet. De app leert elke winkel via het adres op je bonnetjes, dus twee filialen van dezelfde keten tellen als twee verschillende winkels — het duurt een paar bezoeken aan hetzelfde filiaal voordat het wordt herkend.
 
 Zolang de winkelmodus actief is, blijft er de hele tijd een melding zichtbaar in je meldingenbalk. Dat is normaal — het betekent alleen dat de winkelmodus actief is, niet dat er iets mis is.
 

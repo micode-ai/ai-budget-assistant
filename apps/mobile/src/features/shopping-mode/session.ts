@@ -100,15 +100,28 @@ export function reduceShoppingSession(params: {
   // `buildStoreCentres` groups merchants case-insensitively too — "BIEDRONKA"
   // off a bank import and "Biedronka" off a receipt are the one shop this
   // session is inside.
+  //
+  // The NEAREST centre of that name, not the first one carrying it: since
+  // `buildStoreCentres` emits one centre per branch, a chain contributes
+  // several centres sharing a name, and picking by name alone picks by array
+  // position. A branch across town would then read as "far away" on the very
+  // first fix after arrival, ending the trip with an exit notification while
+  // the user is still in the aisle. Walking from one branch to another keeps
+  // the session alive, which is the right answer for a user who is still
+  // shopping at that chain.
   const insideKey = session.insideMerchant.toLowerCase();
-  const centre = centres.find((c) => c.merchant.toLowerCase() === insideKey);
-  if (!centre) {
+  let distanceM = Infinity;
+  for (const c of centres) {
+    if (c.merchant.toLowerCase() !== insideKey) continue;
+    distanceM = Math.min(distanceM, haversineM(coords, c));
+  }
+  if (distanceM === Infinity) {
     // The snapshot no longer describes the shop we recorded. Nothing sensible
     // is left to measure against, so end rather than guess.
     return { session, notify: null, stop: true };
   }
 
-  if (haversineM(coords, centre) <= config.leaveRadiusM) {
+  if (distanceM <= config.leaveRadiusM) {
     return { session, notify: null, stop: false };
   }
 

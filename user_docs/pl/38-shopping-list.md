@@ -43,7 +43,7 @@ Każdy produkt na liście ma pole wyboru, edytowalny licznik ilości oraz ikonę
 
 ## Tryb zakupów (Android)
 
-Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji. Potrzebuje też zgody na wyświetlanie powiadomień — tylko przez nie się odzywa, więc bez nich się nie uruchomi.
+Stuknij **Idę na zakupy** u góry listy zakupów, aby włączyć tryb zakupów. Aplikacja musi najpierw znać przynajmniej jeden z Twoich sklepów — zeskanuj kilka paragonów, żeby się tego nauczyła — a przy pierwszym użyciu poprosi o dostęp do lokalizacji. Potrzebuje też zgody na wyświetlanie powiadomień — tylko przez nie się odzywa, więc bez nich się nie uruchomi. Aplikacja rozpoznaje każdy sklep po adresie z paragonu, więc dwa sklepy tej samej sieci to dwa różne miejsca — zanim rozpozna dany sklep, potrzebuje kilku wizyt właśnie w nim.
 
 Gdy tryb zakupów działa, przez cały czas widoczne jest powiadomienie na pasku powiadomień. To normalne — oznacza tylko, że tryb zakupów jest włączony, a nie że coś jest nie tak.
 
