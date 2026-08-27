@@ -1,6 +1,6 @@
 ---
 title: "Hoe AI je helpt met budgetteren (eerlijk uitgelegd)"
-meta_description: "Hoe AI je helpt met budgetteren: het haalt de wrijving uit het bijhouden. Vastleggen met je stem of een bonfoto, vragen in gewone taal, en signalen."
+meta_description: "Hoe AI je helpt met budgetteren en kosten besparen: minder invoerwerk, antwoord in gewone taal, en signalen bij dubbele afschrijvingen."
 target_keyword: "hoe AI je helpt met budgetteren"
 slug: "ai-voor-je-budget"
 pair: "ai-budget"
@@ -40,9 +40,9 @@ Traditionele apps geven je grafieken en laten het uitzoeken aan jou. AI draait d
 
 Vraag "hoeveel hebben we deze maand aan boodschappen uitgegeven?" en je krijgt het getal, niet een diagram dat je moet interpreteren. Vraag "geef ik meer uit aan uit eten dan vorige maand?" en je krijgt de vergelijking. Het verschil is dat je geen analist hoeft te zijn om je eigen geld te begrijpen. Je stelt de vraag die in je opkomt, in de taal die je gebruikt, en de app doet het rekenwerk. Dat haalt een drempel weg waar grafieken die juist opwerpen.
 
-## Proactieve intelligentie die je waarschuwt
+## Waar AI je concreet kosten bespaart
 
-Het krachtigste aan AI is dat het niet wacht tot jij gaat kijken. Het let mee en waarschuwt je als er iets opvalt.
+Het krachtigste aan AI is dat het niet wacht tot jij gaat kijken. Het let mee en waarschuwt je als er iets opvalt — en juist daar zit het geld. Dit zijn de drie plekken waar kosten besparen met AI niet theoretisch is, maar meetbaar.
 
 **Dubbele afschrijvingen.** Word je per ongeluk twee keer voor dezelfde aankoop belast, dan signaleert de app het, terwijl jij het anders misschien nooit had gezien.
 
@@ -50,7 +50,7 @@ Het krachtigste aan AI is dat het niet wacht tot jij gaat kijken. Het let mee en
 
 **Ongebruikelijke uitschieters.** Loopt een categorie deze maand opvallend uit de pas met je gewone patroon, dan meldt de app dat, voordat het je budget echt schaadt.
 
-Dit is inzicht dat naar jou toe komt op het moment dat het ertoe doet, niet pas in een terugblik aan het einde van de maand. Daarin schuilt het echte voordeel van AI: het verlegt het inzicht van achteraf naar nu.
+Dit is inzicht dat naar jou toe komt op het moment dat het ertoe doet, niet pas in een terugblik aan het einde van de maand. Daarin schuilt het echte voordeel van AI: het verlegt het inzicht van achteraf naar nu — en een abonnement dat je een maand eerder opzegt, is echt bespaard geld.
 
 ## Wat AI niet voor je doet
 
@@ -73,6 +73,10 @@ AI pakt de twee redenen aan waarom budgetten mislukken: wrijving en gebrek aan i
 **Is het veilig om een AI-app voor mijn financiën te gebruiken?**
 
 Bij AI Budget Assistant leg je uitgaven vast en stel je vragen over je eigen cijfers; je hoeft de app geen toegang tot je bankrekening of inloggegevens te geven. Wil je bankgegevens meenemen, dan gebeurt dat door zelf een afschriftbestand te importeren, niet door een directe koppeling. Zoals bij elke financiële app geldt: gebruik een sterk wachtwoord en houd je apparaat beveiligd. De AI verwerkt je gegevens om jou antwoorden en waarschuwingen te geven, niet om voor jou te beslissen.
+
+**Bespaart AI je echt geld?**
+
+Niet vanzelf. AI zegt geen abonnement voor je op en onderhandelt geen contract. Wat het wel doet, is de plekken aanwijzen waar geld weglekt zonder dat je het merkt: een dubbele afschrijving, een abonnement dat stilletjes duurder is geworden, een categorie die deze maand uit de pas loopt. Kosten besparen met AI werkt dus als opsporing, niet als automaat: de app vindt het lek, jij dicht het.
 
 **Kan AI uitgaven automatisch bijhouden?**
 

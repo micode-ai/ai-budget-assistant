@@ -36,7 +36,7 @@ Voordat je op zoek gaat naar bestedingen om te snijden, controleer je wat je nu 
 
 Begin met abonnementen. Maak een lijst van elke dienst waarvoor je nu betaalt: streamingvideo, muziek, fitnessapps, software, betaalde nieuwsbrieven, games. Hoeveel daarvan heb je de afgelopen dertig dagen gebruikt? Ongebruikte abonnementen zijn gratis geld dat op je ligt te wachten.
 
-Een abonnementenoverzicht dat al je terugkerende kosten op een plek toont, met verlengingsdata, maakt dit in een oogopslag duidelijk. AI Budget Assistant heeft dat ingebouwd. Gebruikers ontdekken regelmatig twee of drie abonnementen die ze helemaal vergeten waren, samen oplopend tot 20 tot 60 euro per maand teruggewonnen zonder enige levensstijlverandering.
+Een abonnementenoverzicht dat al je terugkerende kosten op een plek toont, met verlengingsdata, maakt dit in een oogopslag duidelijk. AI Budget Assistant heeft dat ingebouwd. Gebruikers ontdekken regelmatig twee of drie abonnementen die ze helemaal vergeten waren, samen oplopend tot 20 tot 60 euro per maand teruggewonnen zonder enige levensstijlverandering. De app signaleert daarnaast wanneer een abonnement stilletjes duurder wordt; hoe [besparen met AI](/blog/nl/ai-voor-je-budget/) in de praktijk werkt, leggen we daar apart uit.
 
 Kijk daarna naar verzekeringen, telefoonabonnementen en energiecontracten. Veel huishoudens betalen nog tarieven die jaren geleden zijn afgesloten op contracten die sindsdien veel concurrerender zijn geworden. Een paar telefoontjes kunnen betekenisvolle ruimte vrijmaken.
 
