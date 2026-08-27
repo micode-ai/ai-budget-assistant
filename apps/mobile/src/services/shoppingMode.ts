@@ -4,6 +4,9 @@ import * as Notifications from 'expo-notifications';
 import i18n from '@/i18n';
 import { formatCurrency } from '@budget/shared-utils';
 import { reduceShoppingSession, SHOPPING_MODE_DEFAULTS } from '@/features/shopping-mode/session';
+// Radius-capped by design; passing Infinity turns the same tested scan into
+// "nearest centre, however far" — which is exactly what the diagnostic needs.
+import { nearestWithin } from '@/features/stores/findNearbyStore';
 import type { SessionSnapshot } from '@/features/shopping-mode/snapshot';
 import { readSession, writeSession, clearSession } from '@/stores/shoppingModeStore';
 
@@ -154,6 +157,28 @@ TaskManager.defineTask(SHOPPING_MODE_TASK, async ({ data, error }) => {
     writeSession({ ...session, insideMerchant: result.session.insideMerchant });
   }
 
+  // One line per delivered update, on the ordinary path and not only on
+  // failure. Without it a walk that produces no notification leaves no
+  // evidence of anything at all: the two explanations — the task never woke,
+  // and the task woke but no centre was in range — look identical from the
+  // outside, and both look identical to the feature simply not working. The
+  // nearest distance is what separates them, and nothing else records it.
+  // Same reason `[CategorySplit]` logs its outcome rather than only its
+  // errors. Cheap: at `distanceInterval: 50` this is a handful of lines per
+  // trip, and `console.warn` is what the ESLint config allows.
+  const nearest = nearestWithin(
+    { lat: last.coords.latitude, lng: last.coords.longitude },
+    session.snapshot.centres,
+    Number.POSITIVE_INFINITY,
+  );
+  console.warn(
+    `[ShoppingMode] tick at ${last.coords.latitude.toFixed(5)},${last.coords.longitude.toFixed(5)} ` +
+      `inside=${session.insideMerchant ?? 'none'} ` +
+      `nearest=${nearest ? `${nearest.merchant}@${Math.round(nearest.distanceM)}m` : 'none'} ` +
+      `of ${session.snapshot.centres.length} centres ` +
+      `-> ${result.notify ? result.notify.kind : 'nothing'}${result.stop ? ' stop' : ''}`,
+  );
+
   if (result.notify?.kind === 'arrival') {
     const { title, body } = arrivalText(session.snapshot, result.notify.merchant);
     await notify(title, body);
@@ -283,6 +308,19 @@ export async function startShoppingMode(
     clearSession();
     return 'no_permission';
   }
+
+  // What the session was born knowing. The other half of the tick line above:
+  // a trip that produced nothing is either "the task never woke" or "the shop
+  // was not in this list", and only this records which shops the snapshot
+  // actually held — the centres are derived from the current account's local
+  // expenses at press time, so the answer changes with the selected account
+  // and with how much of the expense store had hydrated.
+  console.warn(
+    `[ShoppingMode] started with ${snapshot.centres.length} centres: ` +
+      snapshot.centres
+        .map((c) => `${c.merchant}@${c.lat.toFixed(5)},${c.lng.toFixed(5)}`)
+        .join('; '),
+  );
 
   return 'started';
 }
