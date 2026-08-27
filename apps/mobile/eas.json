@@ -10,6 +10,9 @@
     },
     "preview": {
       "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
       "env": {
         "EXPO_PUBLIC_API_URL": "https://api.ai-budget.pl/api/v1",
         "EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID": "587710971480-l2noql6vqb8bikcfc0ef3juom9h51gbi.apps.googleusercontent.com",

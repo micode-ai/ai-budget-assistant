@@ -54,7 +54,20 @@ jobs:
         working-directory: apps/mobile
         run: node scripts/check-release-version.js
 
-      - name: Build AAB locally
+      - name: Resolve output artifact
+        # `preview` is internal distribution and builds an APK, which is the
+        # only Android artifact a tester can actually install; `production`
+        # builds the AAB Play requires. The extension is not cosmetic — Android
+        # refuses to install a file that is not named .apk.
+        id: out
+        run: |
+          if [ "${{ inputs.profile }}" = "production" ]; then
+            echo "file=app-release.aab" >> "$GITHUB_OUTPUT"
+          else
+            echo "file=app-release.apk" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build locally
         # GOOGLE_SERVICES_JSON is consumed by `eas-build-pre-install` (see
         # apps/mobile/scripts/write-google-services.js). The hook runs inside
         # EAS's build workdir AFTER archive extraction and BEFORE Gradle, so
@@ -63,13 +76,13 @@ jobs:
         working-directory: apps/mobile
         env:
           GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
-        run: eas build --platform android --profile ${{ inputs.profile }} --local --non-interactive --output ./app-release.aab
+        run: eas build --platform android --profile ${{ inputs.profile }} --local --non-interactive --output ./${{ steps.out.outputs.file }}
 
-      - name: Upload AAB
+      - name: Upload build
         uses: actions/upload-artifact@v4
         with:
           name: app-release-${{ inputs.profile }}
-          path: apps/mobile/app-release.aab
+          path: apps/mobile/${{ steps.out.outputs.file }}
           retention-days: 30
 
       - name: Write Google Play service account key
