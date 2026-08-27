@@ -21,7 +21,8 @@ jobs:
   build:
     name: Build Android
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # Build is ~35 min; waiting on the submission adds a few more.
+    timeout-minutes: 75
 
     steps:
       - uses: actions/checkout@v5
@@ -98,7 +99,15 @@ jobs:
       - name: Submit to Google Play
         if: inputs.submit && inputs.profile == 'production'
         working-directory: apps/mobile
-        run: eas submit --platform android --profile production --path ./app-release.aab --non-interactive --no-wait
+        # No `--no-wait`, deliberately. Scheduling a submission and reporting
+        # success is not the same as Play accepting it: the upload happens
+        # asynchronously on EAS, and the failure mode this project has actually
+        # hit — Play refusing the track update over the foreground-service
+        # declaration — occurs entirely in that later stage. With --no-wait the
+        # run went green while 1.18.0 never reached a single user, and nobody
+        # noticed for thirteen days. Waiting costs a few minutes and makes a
+        # green run mean the release shipped.
+        run: eas submit --platform android --profile production --path ./app-release.aab --non-interactive
 
       - name: Clean up service account key
         if: always() && inputs.submit && inputs.profile == 'production'
