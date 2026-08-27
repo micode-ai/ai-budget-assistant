@@ -8,6 +8,40 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.19.0 - 2026-08-27
+
+**1.18.0 never reached the stores.** Its submit was rejected by Google Play over a
+foreground-service declaration, so if you are updating from 1.17.x this release
+carries 1.18.0's work as well - automatic receipt category splits, one-tap import
+from other budgeting apps, and the first-run start screen. The store-arrival card
+and shopping mode announced in 1.18.0's notes are **held back** and are not part of
+this release (ABA-438).
+
+**Reports work the way the dates say they do**
+
+- **The period you pick is the period you get.** Every boundary was built through UTC, so on our timezone "this month" started on the last day of the previous one and "this year" on 31 December. "Last quarter" meant roughly three and a half months rather than a quarter. Both are fixed, and the resolved range is now printed under the chips so a label can never quietly disagree with the file (ABA-409).
+- **Pick a specific month or an arbitrary range.** A 24-month picker sits beside the presets, plus a free date pair (ABA-409).
+- **Exporting from Analytics keeps the period you were looking at.** Paging back to June and exporting used to produce the current month (ABA-411).
+- **Report export works on the web app.** It threw an error and produced nothing - which also meant backup creation was broken on the web by the same line. Generate now saves the file rather than opening a "Share with..." sheet; sharing stays on the report's own row (ABA-412).
+- **The PDF stopped overlapping itself and blending currencies.** A long merchant name printed its second line on top of the next row. Amounts in different currencies were added together as if they were the same money; every figure is now converted to your display currency, with transaction rows keeping their own currency and a note saying so (ABA-413).
+- Reports in all three formats, and backup export and restore, are free. Only scheduled e-mail delivery is paid - the in-app monthly digest is not.
+
+**Money you hold, shown**
+
+- **The wallet shows every currency your account actually holds.** It used to show only currencies someone had explicitly set a starting balance for, so an account with real income in a second currency simply did not display it. A currency you have hidden stays hidden (ABA-431).
+- **An income's currency can be corrected.** The amount is relabelled, never converted - the same rule expenses already followed (ABA-428).
+
+**Fixes**
+
+- Renaming or deleting a tag you had just created, before it had synced, updated the wrong row or nothing at all (ABA-419).
+- Budget and category changes queued for sync were silently reported as saved while being discarded. They now fail loudly instead (ABA-423).
+
+**Admin**
+
+- **Tiers granted by hand no longer count as revenue.** Every MRR figure counted admin-granted Pro and Business subscriptions as paying customers, reporting revenue that does not exist. Grants are now identified and excluded everywhere, they are labelled in the users table, and both legacy calculations were corrected while fixing it - a stale hardcoded Pro price and an ignored yearly interval (ABA-433).
+
+---
+
 ## 1.18.0 - 2026-08-14
 
 **A scanned receipt no longer lands as one lump**
