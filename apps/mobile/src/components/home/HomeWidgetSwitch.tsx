@@ -8,7 +8,7 @@ import type { DebtSummary } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import { convertAmount } from '@/stores/exchangeRateStore';
-import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget, FamilyFeedWidget, InflationShieldWidget, StoreArrivalWidget } from '@/components/widgets';
+import { NetProfitWidget, NetCapitalWidget, CalendarWidget, FinancialHealthWidget, FamilyFeedWidget, InflationShieldWidget } from '@/components/widgets';
 import { FatFinderCard } from '@/components/insights/FatFinderCard';
 import { GoalsCard } from '@/components/goals/GoalsCard';
 import type { UseHomeScreenDataReturn } from '@/hooks/useHomeScreenData';
@@ -319,15 +319,6 @@ export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext) {
   const { widgetVisibility, monthlyBudgetSummary, widgetRefreshKey, currentAccountType, safeToSpendData, hasSafeToSpend } = ctx;
 
   switch (key) {
-    case 'storeArrival':
-      return widgetVisibility.storeArrival ? (
-        <StoreArrivalWidget
-          key="storeArrival"
-          safeToSpendData={safeToSpendData}
-          hasSafeToSpend={hasSafeToSpend}
-        />
-      ) : null;
-
     case 'safeToSpend':
       // Shown as the home hero number (tap → breakdown sheet). No duplicate
       // dashboard card — the hero is the single in-app surface for this value.

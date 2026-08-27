@@ -41,16 +41,6 @@ Besides adding items, you can ask the assistant to:
 - **Remove an item** — "remove milk from my list" or "take eggs off, I already bought them." This takes the item off your list immediately, same as adding — no confirmation needed. It only removes items that aren't already checked off; to mark something as bought without deleting it, use the checkbox on the list itself.
 - **Ask what's running low or on sale** — "what am I running low on?" or "any deals right now?" The assistant answers with the same restock and deal information shown in the **Time to restock** and **Deals for you** rows below.
 
-## Shopping Mode (Android)
-
-Tap **I'm going shopping** at the top of the shopping list to turn on Shopping Mode. It needs to know at least one of your shops first — scan a few receipts so the app can learn where you shop — and the first time you use it, it will ask for location access. It also needs permission to show notifications — they are the only way it tells you anything, so it will not start without them. It learns each shop from the address on your receipts, so two branches of the same chain count as two separate shops — it takes a couple of visits to the same one before it recognises it.
-
-While Shopping Mode is on, a notification stays visible in your notification shade the whole time. That's expected — it just means Shopping Mode is active, not that something is wrong.
-
-When you reach a shop you've bought from before, you get a notification naming the shop, how many items are still unchecked on your list, and today's Safe to Spend. If you leave the shop with anything still unchecked, you get one more notification with how many are left, and Shopping Mode then turns itself off — you don't need to remember to stop it. It also turns itself off on its own after a while if nothing happens. You can stop it early at any time by tapping **Stop shopping mode**.
-
-Shopping Mode is only available on Android.
-
 ## Compare Prices ("Where's cheapest")
 
 Tap **Compare prices** at the bottom of the list to see which store is cheapest for everything currently unchecked on your list.

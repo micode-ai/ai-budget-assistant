@@ -41,16 +41,6 @@ Naast toevoegen kun je de assistent ook vragen om:
 
 Elk artikel op de lijst heeft een selectievakje, een bewerkbare hoeveelheidsteller en een verwijderpictogram. Aangevinkte artikelen zakken naar de onderkant van de lijst. Gebruik **Aangevinkte verwijderen** (rechtsboven in het scherm) om alles wat je hebt afgevinkt in één tik te verwijderen.
 
-## Winkelmodus (Android)
-
-Tik op **Ik ga boodschappen doen** bovenaan de boodschappenlijst om de winkelmodus in te schakelen. Daarvoor moet de app minstens één van je winkels al kennen — scan eerst een paar bonnetjes zodat de app leert waar je winkelt — en de eerste keer vraagt hij om toegang tot je locatie. Hij heeft ook toestemming nodig om meldingen te tonen — dat is zijn enige manier om iets aan je door te geven, dus zonder die toestemming start hij niet. De app leert elke winkel via het adres op je bonnetjes, dus twee filialen van dezelfde keten tellen als twee verschillende winkels — het duurt een paar bezoeken aan hetzelfde filiaal voordat het wordt herkend.
-
-Zolang de winkelmodus actief is, blijft er de hele tijd een melding zichtbaar in je meldingenbalk. Dat is normaal — het betekent alleen dat de winkelmodus actief is, niet dat er iets mis is.
-
-Wanneer je bij een winkel aankomt waar je al eerder hebt gewinkeld, krijg je een melding met de naam van de winkel, hoeveel artikelen er nog op je lijst openstaan, en wat je vandaag nog veilig kunt uitgeven. Verlaat je de winkel terwijl er nog iets openstaat, dan krijg je nog een melding met hoeveel er nog over zijn, en daarna schakelt de winkelmodus zichzelf uit — je hoeft er niet aan te denken om hem te stoppen. Hij schakelt zichzelf ook uit als er een tijdje niets gebeurt. Je kunt hem op elk moment eerder stoppen door op **Winkelmodus stoppen** te tikken.
-
-De winkelmodus is alleen beschikbaar op Android.
-
 ## Prijzen vergelijken ("Waar is het goedkoopst")
 
 Tik onderaan de lijst op **Prijzen vergelijken** om te zien welke winkel het goedkoopst is voor alles wat nog niet is aangevinkt op je lijst.

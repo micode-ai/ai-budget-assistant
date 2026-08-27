@@ -41,16 +41,6 @@ Neben dem Hinzufügen kannst du den Assistenten auch bitten:
 
 Jeder Artikel auf der Liste hat ein Kontrollkästchen, einen bearbeitbaren Mengenzähler und ein Löschsymbol. Abgehakte Artikel sinken ans Ende der Liste. Mit **Erledigte entfernen** (oben rechts im Bildschirm) entfernst du alles Abgehakte mit einem Tipp.
 
-## Einkaufsmodus (Android)
-
-Tippe oben auf der Einkaufsliste auf **Ich gehe einkaufen**, um den Einkaufsmodus einzuschalten. Dafür muss die App mindestens eines deiner Geschäfte schon kennen — scanne dazu ein paar Kassenbons, damit sie lernt, wo du einkaufst — und beim ersten Mal fragt sie nach dem Zugriff auf deinen Standort. Sie braucht außerdem die Erlaubnis, Benachrichtigungen anzuzeigen — nur darüber meldet sie sich, deshalb startet der Einkaufsmodus ohne sie nicht. Die App lernt jeden Laden anhand der Adresse auf deinen Belegen, deshalb zählen zwei Filialen derselben Kette als zwei verschiedene Läden — es braucht ein paar Besuche in derselben Filiale, bis sie erkannt wird.
-
-Solange der Einkaufsmodus läuft, bleibt die ganze Zeit eine Benachrichtigung in deiner Benachrichtigungsleiste sichtbar. Das ist normal — es bedeutet nur, dass der Einkaufsmodus aktiv ist, nicht dass etwas nicht stimmt.
-
-Wenn du ein Geschäft erreichst, in dem du schon einmal eingekauft hast, bekommst du eine Benachrichtigung mit dem Namen des Geschäfts, wie viele Artikel auf deiner Liste noch offen sind, und wie viel du heute noch sicher ausgeben kannst. Verlässt du das Geschäft, während noch etwas offen ist, bekommst du eine weitere Benachrichtigung mit der Anzahl der offenen Artikel, und der Einkaufsmodus schaltet sich danach von selbst ab — du musst nicht daran denken, ihn zu beenden. Er schaltet sich außerdem von selbst ab, wenn längere Zeit nichts passiert. Du kannst ihn jederzeit vorzeitig beenden, indem du auf **Einkaufsmodus beenden** tippst.
-
-Der Einkaufsmodus ist nur auf Android verfügbar.
-
 ## Preise vergleichen („Wo es am günstigsten ist")
 
 Tippe unten in der Liste auf **Preise vergleichen**, um zu sehen, welches Geschäft für alles, was auf deiner Liste noch nicht abgehakt ist, am günstigsten ist.

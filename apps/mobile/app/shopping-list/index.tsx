@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Platform } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { Stack, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,11 +7,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useShoppingListStore } from '@/stores/shoppingListStore';
 import { useAccountStore } from '@/stores/accountStore';
-import { useShoppingModeButton } from '@/hooks/useShoppingModeButton';
 import { AddItemModal } from '@/components/shopping-list/AddItemModal';
 import { ListSwitcherModal } from '@/components/shopping-list/ListSwitcherModal';
 import { ListNameModal, type NameModalState } from '@/components/shopping-list/ListNameModal';
-import { ShoppingModeButton } from '@/components/shopping-list/ShoppingModeButton';
 import type {
   ShoppingList,
   ShoppingListItem,
@@ -49,11 +47,6 @@ export default function ShoppingListScreen() {
   const renameList = useShoppingListStore((s) => s.renameList);
   const archiveList = useShoppingListStore((s) => s.archiveList);
   const deleteList = useShoppingListStore((s) => s.deleteList);
-
-  // ─── Shopping mode (Android only) ─────────────────────────────────────────
-  // See useShoppingModeButton for the session lifecycle (start/stop, permission
-  // Alert branching, and re-syncing the button when a trip ends on its own).
-  const { active: shoppingModeActive, toggle: toggleShoppingMode } = useShoppingModeButton(items);
 
   useEffect(() => {
     hydrate();
@@ -228,16 +221,6 @@ export default function ShoppingListScreen() {
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        {/*
-          Android only, and not cosmetically: there is no iOS native project in
-          this repo, and on web `startLocationUpdatesAsync` throws. The service
-          degrades that harmlessly, but the alert it produces would tell the
-          user "location needed" when the truth is "not on this platform".
-        */}
-        {Platform.OS === 'android' && (
-          <ShoppingModeButton active={shoppingModeActive} onPress={() => void toggleShoppingMode()} />
-        )}
-
         <TouchableOpacity
           style={styles.switcherPill}
           onPress={openSwitcher}

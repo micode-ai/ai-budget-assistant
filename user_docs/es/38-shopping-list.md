@@ -41,16 +41,6 @@ Además de añadir, puedes pedirle al asistente que:
 
 Cada artículo de la lista tiene una casilla, un contador de cantidad editable y un icono de eliminar. Los artículos marcados bajan al final de la lista. Usa **Borrar marcados** (arriba a la derecha de la pantalla) para quitar de una vez todo lo que ya has marcado.
 
-## Modo compras (Android)
-
-Toca **Voy de compras** en la parte superior de la lista de la compra para activar el modo compras. Antes necesita conocer al menos una de tus tiendas — escanea unos cuantos tickets para que la app aprenda dónde compras — y la primera vez te pedirá acceso a tu ubicación. También necesita permiso para mostrar notificaciones — son su única forma de avisarte, así que sin ellas no se inicia. Aprende cada tienda por la dirección de tus tickets, así que dos sucursales de la misma cadena cuentan como dos tiendas distintas: necesita un par de visitas a la misma antes de reconocerla.
-
-Mientras el modo compras está activo, verás una notificación fija en tu bandeja de notificaciones todo el tiempo. Es normal — solo significa que el modo compras está activo, no que algo vaya mal.
-
-Cuando llegas a una tienda en la que ya has comprado antes, recibes una notificación con el nombre de la tienda, cuántos artículos te quedan por marcar en la lista, y tu gasto seguro de hoy. Si sales de la tienda con algo todavía sin marcar, recibes una notificación más con cuántos quedan, y después el modo compras se apaga solo — no tienes que acordarte de detenerlo. También se apaga solo si pasa un buen rato sin que ocurra nada. Puedes detenerlo antes tocando **Detener el modo compras** en cualquier momento.
-
-El modo compras solo está disponible en Android.
-
 ## Comparar precios ("Dónde es más barato")
 
 Toca **Comparar precios** al final de la lista para ver qué tienda es más barata para todo lo que sigue sin marcar en tu lista.

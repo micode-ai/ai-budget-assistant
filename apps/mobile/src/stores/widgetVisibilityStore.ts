@@ -2,7 +2,6 @@ import { create } from 'zustand';
 import { MMKV } from 'react-native-mmkv';
 
 export const WIDGET_KEYS = [
-  'storeArrival',
   'familyFeed',
   'safeToSpend',
   'inflationShield',
