@@ -5,6 +5,12 @@ import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { extractReceiptDiscounts } from '../utils/receipt-discount';
+import {
+  RECEIPT_RECONCILE_TOLERANCE_PCT,
+  betterRead,
+  needsReread,
+  reconciliationGapPct,
+} from '../utils/receipt-reconcile';
 import type { ReceiptCheckFinding } from '@budget/shared-types';
 import { ReceiptFinalizerService } from './receipt-finalizer.service';
 import { ReceiptPdfService } from './receipt-pdf.service';
@@ -375,6 +381,66 @@ Important:
     return prompt;
   }
 
+  /**
+   * One model reading of a receipt — and a second one when the first does not
+   * add up.
+   *
+   * The model is not reproducible: the same PDF, the same prompt, three scans,
+   * three different line totals and two different readings of the same printed
+   * discount (see `receipt-reconcile.ts`). Tightening the prompt removed one
+   * class of error and left the variance. So rather than requiring the model to
+   * be right every time, this asks again exactly when the receipt's own
+   * arithmetic says it was wrong, and keeps whichever reading reconciles.
+   *
+   * The extra call is only ever spent on a scan that was already going to
+   * produce no category split, and `betterRead` can only improve on the first
+   * reading, never replace it with a worse one.
+   *
+   * The retry re-issues the IDENTICAL request on purpose: what is wanted is a
+   * second independent sample, not a differently-worded question.
+   */
+  private async readReceipt(
+    label: string,
+    // Typed loosely because the four call sites build genuinely different
+    // request shapes (image content, plain text, file attachment).
+    request: any,
+    context: OcrContext,
+  ): Promise<ParsedReceipt & { suggestedCategory?: string }> {
+    const readOnce = async (): Promise<ParsedReceipt & { suggestedCategory?: string }> => {
+      const response = await this.openai.chat.completions.create(request);
+      const choice = (response as any).choices?.[0];
+      const content = choice?.message?.content;
+      this.logger.log(`[${label}] GPT finish_reason: ${choice?.finish_reason}`);
+      this.logger.log(`[${label}] GPT response: ${content}`);
+      if (!content) throw new Error('No response from AI');
+      if (choice?.finish_reason === 'length') {
+        this.logger.warn(`[${label}] Response was truncated (finish_reason=length), attempting to parse anyway`);
+      }
+      return this.validateAndNormalizeReceipt(JSON.parse(content), context);
+    };
+
+    const first = await readOnce();
+    if (!needsReread(first, RECEIPT_RECONCILE_TOLERANCE_PCT)) return first;
+
+    const firstGap = reconciliationGapPct(first);
+    this.logger.warn(`[${label}] lines miss the total by ${firstGap?.toFixed(1)}% — re-reading once`);
+
+    let second: ParsedReceipt & { suggestedCategory?: string };
+    try {
+      second = await readOnce();
+    } catch (error) {
+      // A failed re-read must never cost the user the reading already in hand.
+      this.logger.warn(`[${label}] re-read failed, keeping the first reading: ${error}`);
+      return first;
+    }
+
+    const chosen = betterRead(first, second);
+    this.logger.log(
+      `[${label}] re-read gap ${reconciliationGapPct(second)?.toFixed(1)}% vs ${firstGap?.toFixed(1)}% — keeping the ${chosen === second ? 'second' : 'first'} reading`,
+    );
+    return chosen;
+  }
+
   private async getExpenseCategories(accountId: string): Promise<CategoryWithName[]> {
     return this.prisma.category.findMany({
       where: {
@@ -580,7 +646,7 @@ Important:
     this.logger.log(`[Vision] Using model: ${aiModel} (forced for OCR), maxTokens: ${ocrMaxTokens}`);
     this.logger.log(`[Vision] Image base64 size: ${(imageBase64.length / 1024).toFixed(1)}KB`);
 
-    const response = await this.openai.chat.completions.create({
+    const normalized = await this.readReceipt('Vision', {
       model: aiModel,
       messages: [
         {
@@ -599,23 +665,8 @@ Important:
       ],
       max_tokens: ocrMaxTokens,
       response_format: { type: 'json_object' },
-    });
-
-    const choice = response.choices[0];
-    const content = choice?.message?.content;
-    this.logger.log(`[Vision] GPT finish_reason: ${choice?.finish_reason}`);
-    this.logger.log(`[Vision] GPT response: ${content}`);
-
-    if (!content) {
-      throw new Error('No response from AI');
-    }
-
-    if (choice?.finish_reason === 'length') {
-      this.logger.warn('[Vision] Response was truncated (finish_reason=length), attempting to parse anyway');
-    }
-
-    const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return await this.receiptFinalizer.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
+    }, context);
+    return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
   }
 
   async parseReceiptPdf(
@@ -640,21 +691,13 @@ Important:
 
       this.logger.log(`[PDF] Using text-based parsing with model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
 
-      const response = await this.openai.chat.completions.create({
+      const normalized = await this.readReceipt('PDF', {
         model: aiModel,
         messages: [{ role: 'user', content: prompt }],
         max_tokens: ocrMaxTokens,
         response_format: { type: 'json_object' },
-      });
-
-      const choice = response.choices[0];
-      const content = choice?.message?.content;
-      this.logger.log(`[PDF] GPT finish_reason: ${choice?.finish_reason}`);
-      this.logger.log(`[PDF] GPT response: ${content}`);
-      if (!content) throw new Error('No response from AI');
-
-      const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-      return await this.receiptFinalizer.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
+      }, context);
+      return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
     }
 
     // Scanned PDF — send the full PDF as a file
@@ -694,7 +737,7 @@ Important:
       }));
     } catch (err) {
       this.logger.error(`[PDF-File] pdftoppm rendering failed, falling back to raw PDF file upload: ${err instanceof Error ? err.message : err}`);
-      const response = await this.openai.chat.completions.create({
+      const normalized = await this.readReceipt('PDF-File-fallback', {
         model: resolvedModel,
         messages: [{
           role: 'user',
@@ -705,15 +748,11 @@ Important:
         }],
         max_tokens: resolvedMaxTokens,
         response_format: { type: 'json_object' },
-      });
-      const content = response.choices[0]?.message?.content;
-      this.logger.log(`[PDF-File] GPT response (fallback): ${content}`);
-      if (!content) throw new Error('No response from AI');
-      const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-      return await this.receiptFinalizer.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
+      }, context);
+      return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
     }
 
-    const response = await this.openai.chat.completions.create({
+    const normalized = await this.readReceipt('PDF-File', {
       model: resolvedModel,
       messages: [
         {
@@ -723,16 +762,8 @@ Important:
       ],
       max_tokens: resolvedMaxTokens,
       response_format: { type: 'json_object' },
-    });
-
-    const content = response.choices[0]?.message?.content;
-    this.logger.log(`[PDF-File] GPT response: ${content}`);
-    if (!content) {
-      throw new Error('No response from AI');
-    }
-
-    const parsed: ParsedReceipt & { suggestedCategory?: string } = JSON.parse(content);
-    return await this.receiptFinalizer.finalizeReceipt(this.validateAndNormalizeReceipt(parsed, context), categories, accountId, userId);
+    }, context);
+    return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {
