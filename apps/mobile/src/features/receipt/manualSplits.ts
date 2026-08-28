@@ -80,3 +80,37 @@ export function buildManualSplits(items: ManualSplitItem[], total: number): Rece
 
   return splits;
 }
+
+/**
+ * Re-attaches the deposit group after the user's own assignment has been
+ * rebuilt.
+ *
+ * `buildManualSplits` scales an assignment across the total it is given, which
+ * is right for lines and wrong for a deposit: a deposit is a printed figure,
+ * not a share of the basket. So the caller rescales the lines against the total
+ * MINUS the deposit and puts the deposit back here, whole.
+ *
+ * Percentages are recomputed against the full total — the manual splits were
+ * computed against the smaller base and would otherwise sum past 100 once the
+ * deposit is added.
+ */
+export function withDepositGroup(
+  manual: ReceiptCategorySplit[],
+  deposit: ReceiptCategorySplit | null,
+  total: number,
+): ReceiptCategorySplit[] {
+  if (!deposit || !Number.isFinite(total) || total <= 0) return manual;
+
+  const all = [...manual, deposit];
+  const withPct = all.map((split) => ({
+    ...split,
+    percentage: Math.round((split.amount / total) * 10000) / 100,
+  }));
+
+  // The largest share absorbs the rounding drift, the same way buildManualSplits
+  // and buildCategorySplits both do, so the set still reads as exactly 100%.
+  const drift = 100 - withPct.reduce((sum, s) => sum + s.percentage, 0);
+  const largest = withPct.reduce((a, b) => (b.amount > a.amount ? b : a), withPct[0]);
+  largest.percentage = Math.round((largest.percentage + drift) * 100) / 100;
+  return withPct;
+}

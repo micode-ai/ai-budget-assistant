@@ -4,6 +4,7 @@ import {
   type SplitInputItem,
   rescaleSplits,
 } from '@budget/shared-utils';
+import { buildManualSplits, withDepositGroup } from '../manualSplits';
 
 const item = (
   index: number,
@@ -257,5 +258,50 @@ describe('buildCategorySplits with a basket-level discount', () => {
     expect(buildCategorySplits({ items, total: 240, discount: 0 })).toEqual(
       buildCategorySplits({ items, total: 240 }),
     );
+  });
+});
+
+describe('withDepositGroup', () => {
+  const deposit = {
+    categoryId: null as any,
+    categoryName: 'Kaucja',
+    amount: 4.5,
+    percentage: 2.2,
+    itemIndexes: [] as number[],
+  };
+
+  it('appends the deposit untouched and keeps the set summing to the total', () => {
+    const manual = buildManualSplits(
+      [
+        { index: 0, amount: 120, categoryId: 'c-food', categoryName: 'Groceries' },
+        { index: 1, amount: 80, categoryId: 'c-beer', categoryName: 'Beer' },
+      ],
+      200,
+    );
+
+    const result = withDepositGroup(manual, deposit, 204.5);
+
+    expect(result.find((s) => s.categoryName === 'Kaucja')?.amount).toBe(4.5);
+    expect(result.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(20450);
+  });
+
+  it('recomputes percentages against the full total, so they still sum to 100', () => {
+    const manual = buildManualSplits(
+      [{ index: 0, amount: 200, categoryId: 'c-food', categoryName: 'Groceries' }],
+      200,
+    );
+
+    const result = withDepositGroup(manual, deposit, 204.5);
+
+    expect(result.reduce((sum, s) => sum + s.percentage, 0)).toBeCloseTo(100, 2);
+  });
+
+  it('is a no-op when the receipt had no deposit', () => {
+    const manual = buildManualSplits(
+      [{ index: 0, amount: 200, categoryId: 'c-food', categoryName: 'Groceries' }],
+      200,
+    );
+
+    expect(withDepositGroup(manual, null, 200)).toBe(manual);
   });
 });

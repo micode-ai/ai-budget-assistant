@@ -26,7 +26,7 @@ import ItemCategorySheet, { type ItemCategorySheetItem } from '@/components/rece
 import { useCategoryStore } from '@/stores/categoryStore';
 import { proposedKey, isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
 import { seedItemCategories, seedLineCategories } from '@/features/receipt/seedItemCategories';
-import { buildManualSplits } from '@/features/receipt/manualSplits';
+import { buildManualSplits, withDepositGroup } from '@/features/receipt/manualSplits';
 import { formatCurrency, type ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -148,7 +148,12 @@ export default function ReceiptExpenseScreen() {
           : null,
       };
     });
-    return buildManualSplits(items, scannedReceipt.amount);
+    // The deposit group is the only split with no lines behind it. Identified
+    // structurally rather than by name, because the name is localized and comes
+    // from the server.
+    const depositSplit = serverSplits.find((s) => s.itemIndexes.length === 0) ?? null;
+    const base = scannedReceipt.amount - (depositSplit?.amount ?? 0);
+    return withDepositGroup(buildManualSplits(items, base), depositSplit, scannedReceipt.amount);
   }, [hasEditedCategories, serverSplits, scannedReceipt, itemCategories]);
 
   // Names still attached to at least one line. A proposal the user emptied
