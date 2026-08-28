@@ -201,6 +201,7 @@ describe('finalizeReceipt category splits', () => {
       },
       user: { findUnique: jest.fn().mockResolvedValue({ aiModel: null, language: 'en', timezone: 'UTC' }) },
       account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: 0 }) },
+      accountMember: { findFirst: jest.fn().mockResolvedValue(null) },
     };
     categorySplitterMock = { classify: jest.fn().mockResolvedValue({ assignments: new Map(), proposals: [] }) };
     const geocodingMock = {
@@ -496,7 +497,7 @@ describe('finalizeReceipt category splits', () => {
     });
 
     it('gives the deposit its own group, named in the account owner language', async () => {
-      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'pl', timezone: 'UTC' });
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'pl' } });
       prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
 
       const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
@@ -510,7 +511,7 @@ describe('finalizeReceipt category splits', () => {
     });
 
     it('splits a receipt that is otherwise a single category', async () => {
-      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'pl', timezone: 'UTC' });
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'pl' } });
       prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
 
       const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
@@ -520,7 +521,7 @@ describe('finalizeReceipt category splits', () => {
     });
 
     it('reuses the deposit category when the account already has it', async () => {
-      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'pl', timezone: 'UTC' });
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'pl' } });
       prisma.category.findMany.mockResolvedValue([
         { id: 'c-food', name: 'Groceries' },
         { id: 'c-dep', name: 'Kaucja' },
@@ -534,12 +535,55 @@ describe('finalizeReceipt category splits', () => {
     it('is not subject to the 10% materiality floor that governs proposals', async () => {
       // 4.5 of 204.5 is 2.2%. A model proposal that small is dropped; a deposit
       // is not a proposal — it is a printed, named block of the receipt.
-      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'en', timezone: 'UTC' });
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'en' } });
       prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
 
       const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
 
       expect(splits.map((s: any) => s.categoryName)).toContain('Deposit');
+    });
+
+    it('resolves the deposit name from the account OWNER language, not the scanning member', async () => {
+      // The scanning member (userId 'u1') reads English; the account owner
+      // reads Polish. A shared account must converge on one deposit category
+      // regardless of which member's device did the scan, so the category
+      // must follow the owner, not the acting user.
+      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'en', timezone: 'UTC' });
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'pl' } });
+      prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      expect(splits.map((s: any) => s.categoryName)).toContain('Kaucja');
+      expect(splits.map((s: any) => s.categoryName)).not.toContain('Deposit');
+      // Filtered on role, never sorted by it — an `orderBy` would risk
+      // alphabetically preferring 'editor' over 'owner'.
+      expect(prisma.accountMember.findFirst).toHaveBeenCalledWith(
+        expect.objectContaining({ where: { accountId: 'a1', role: 'owner' } }),
+      );
+    });
+
+    it('produces no split for a deposit-only receipt with no line items to classify', async () => {
+      // The relaxed few_lines guard lets a zero-labeled-line receipt reach
+      // this point when a deposit is present. Traced by hand: the real
+      // ReceiptCategorySplitService.classify returns empty
+      // assignments/proposals for an empty items array (mocked here to match
+      // that), and the pre-existing "no_assignments" check below then refuses
+      // any split — deposit included, because a lone deposit with nothing to
+      // pair it with is not "a receipt that split", per the design's own
+      // "deposit but no line items" edge case.
+      prisma.accountMember.findFirst.mockResolvedValue({ user: { language: 'pl' } });
+      prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
+      categorySplitterMock.classify.mockResolvedValue({ assignments: new Map(), proposals: [] });
+
+      const { splits, itemCategories } = await (service as any).runCategorySplit(
+        'a1',
+        { amount: 4.5, depositAmount: 4.5, receiptItems: [] } as any,
+        'u1',
+      );
+
+      expect(splits).toEqual([]);
+      expect(itemCategories).toEqual([]);
     });
   });
 });

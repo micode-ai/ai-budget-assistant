@@ -163,6 +163,25 @@ export class ReceiptFinalizerService {
   }
 
   /**
+   * The deposit category's name is resolved from the ACCOUNT OWNER's
+   * language, never the acting member's — a shared account whose members use
+   * different app languages must converge on one deposit category, not mint
+   * one per member per scan. Filtered on `role: 'owner'`, never sorted by it:
+   * alphabetically 'editor' sorts ahead of 'owner', so an `orderBy` would
+   * silently pick the wrong member (the same trap
+   * `WalletCurrencyService.resolveOwnerId` documents). `undefined` when there
+   * is no owner row or the owner has no language set — `depositCategoryName`
+   * already falls back to English for that case.
+   */
+  private async resolveOwnerLanguage(accountId: string): Promise<string | undefined> {
+    const owner = await this.prisma.accountMember.findFirst({
+      where: { accountId, role: 'owner' },
+      select: { user: { select: { language: true } } },
+    });
+    return owner?.user.language ?? undefined;
+  }
+
+  /**
    * Groups the receipt's lines into category splits. Fail-silent by contract,
    * for the same reason as runPriceCheck: a scan must never break because a
    * derived extra failed.
@@ -294,16 +313,23 @@ export class ReceiptFinalizerService {
       // inventing a lasting category to hold three zloty; a deposit is a
       // printed, labelled block of the receipt with a name we supply ourselves,
       // and at a typical 1-2% of the basket the floor would drop it every time.
-      const depositName = depositCategoryName(user?.language ?? undefined);
-      const existingDeposit = categories.find(
-        (c) => c.name.trim().toLowerCase() === depositName.toLowerCase(),
-      );
-      const depositGroup = hasDeposit
-        ? {
-            categoryId: existingDeposit ? existingDeposit.id : proposedKey(depositName),
-            categoryName: depositName,
-          }
-        : null;
+      //
+      // Named from the ACCOUNT OWNER's language (resolveOwnerLanguage), NOT
+      // `user?.language` above — `user` is whoever's device did the scan, and
+      // a shared account must converge on one deposit category regardless of
+      // which member scanned. Query only runs when there is actually a
+      // deposit to name.
+      let depositGroup: { categoryId: string; categoryName: string } | null = null;
+      if (hasDeposit) {
+        const depositName = depositCategoryName(await this.resolveOwnerLanguage(accountId));
+        const existingDeposit = categories.find(
+          (c) => c.name.trim().toLowerCase() === depositName.toLowerCase(),
+        );
+        depositGroup = {
+          categoryId: existingDeposit ? existingDeposit.id : proposedKey(depositName),
+          categoryName: depositName,
+        };
+      }
 
       const splits = buildCategorySplits({
         total: receipt.amount,
