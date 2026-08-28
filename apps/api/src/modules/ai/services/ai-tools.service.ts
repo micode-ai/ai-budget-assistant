@@ -15,6 +15,7 @@ import { GoalPlannerService } from './goal-planner.service';
 import { SafeToSpendService } from '../../insights/safe-to-spend.service';
 import { InflationShieldService } from '../../insights/inflation-shield.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
+import { attributeToCategories } from '../utils/category-attribution';
 import { buildSearchUnits } from '../utils/semantic-filter';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
@@ -639,24 +640,62 @@ export class AiToolsService {
       limit: 500,
     };
 
+    // Resolved, but deliberately NOT pushed into the SQL filter. A category can
+    // exist purely as a receipt SPLIT — deposits, alcohol, household — and
+    // `expenses.category_id` would never match one, so a pushed-down filter
+    // answered "nothing" for a question the Analytics tab answers with a
+    // number. The matching happens over the attribution below instead.
+    let categoryFilterId: string | undefined;
     if (data.categoryName) {
       const categories = await this.categoriesService.findAll(accountId);
       const match = categories.find(
         (c: { name: string }) => c.name.toLowerCase() === String(data.categoryName).toLowerCase(),
       );
-      if (match) filters.categoryId = match.id;
+      if (match) categoryFilterId = match.id;
     }
 
     const result = await this.expensesService.findAll(accountId, filters);
-    const expenses = result.data;
+    const expenses = Array.isArray(result.data) ? result.data : [];
     const pagination = result.pagination;
-    const rawList = (Array.isArray(expenses) ? expenses : []).map((e) => ({
+
+    // Filtering after the fetch means the page cap now bites before the filter
+    // rather than after it. Say so rather than truncating silently — same
+    // reason the keyword search logs its own cap below.
+    if (categoryFilterId && expenses.length >= (filters.limit ?? Infinity)) {
+      this.logger.warn(
+        `[chat] get_expenses category filter: page cap ${filters.limit} reached before filtering, older matches may be missing`,
+      );
+    }
+
+    const round2 = (value: number): number => Math.round(value * 100) / 100;
+
+    // One row per expense that answers the question, carrying the categories it
+    // counts toward. A category-filtered row reports only its matching share:
+    // answering "233.98 spent on deposits" is worse than answering nothing.
+    const rows = expenses
+      .map((e) => {
+        const attribution = attributeToCategories(e);
+        if (!categoryFilterId) {
+          return { e, attribution, amount: Number(e.amount), categoryName: e.category?.name };
+        }
+        const mine = attribution.filter((a) => a.categoryId === categoryFilterId);
+        if (mine.length === 0) return null;
+        return {
+          e,
+          attribution: mine,
+          amount: round2(mine.reduce((sum, a) => sum + a.amount, 0)),
+          categoryName: mine[0].categoryName,
+        };
+      })
+      .filter((row): row is NonNullable<typeof row> => row !== null);
+
+    const rawList = rows.map(({ e, amount, categoryName }) => ({
       id: e.id,
-      amount: Number(e.amount),
+      amount,
       currencyCode: e.currencyCode,
       description: e.description,
       merchant: e.merchant,
-      category: e.category?.name,
+      category: categoryName,
       date: e.date,
       items: Array.isArray(e.items)
         ? e.items.map((it: { id: string; description?: string | null; canonicalName?: string | null; totalPrice: unknown }) => ({
@@ -701,28 +740,36 @@ export class AiToolsService {
       matchedUnits = units.slice(0, SEARCH_UNIT_LIMIT);
     }
 
-    const buildTotals = (list: typeof expenseList) => {
-      const totalsByCurrency: Record<string, number> = {};
-      const categoryBreakdown: Record<string, { amount: number; count: number; currency: string }> = {};
-      for (const e of list) {
-        const cur = e.currencyCode || 'USD';
-        totalsByCurrency[cur] = Math.round(((totalsByCurrency[cur] || 0) + e.amount) * 100) / 100;
-        const key = `${e.category || 'Uncategorized'}|${cur}`;
-        if (!categoryBreakdown[key]) categoryBreakdown[key] = { amount: 0, count: 0, currency: cur };
-        categoryBreakdown[key].amount += e.amount;
-        categoryBreakdown[key].count += 1;
+    const totalsByCurrency: Record<string, number> = {};
+    const categoryBreakdown = new Map<string, { name: string; amount: number; count: number; currency: string }>();
+    for (const row of rows) {
+      const from = row.e.currencyCode;
+      const paid = convert(row.amount, from);
+      totalsByCurrency[paid.currencyCode] = round2((totalsByCurrency[paid.currencyCode] || 0) + paid.amount);
+      // Per split, so the chat's own breakdown agrees with the Analytics tab.
+      // The period total above still comes from what was actually paid.
+      for (const share of row.attribution) {
+        const converted = convert(share.amount, from);
+        const key = `${share.categoryName}|${converted.currencyCode}`;
+        const entry = categoryBreakdown.get(key)
+          || { name: share.categoryName, amount: 0, count: 0, currency: converted.currencyCode };
+        entry.amount += converted.amount;
+        entry.count += 1;
+        categoryBreakdown.set(key, entry);
       }
-      const categoryTotals = Object.entries(categoryBreakdown).map(([key, val]) => ({
-        category: key.split('|')[0],
-        amount: Math.round(val.amount * 100) / 100,
+    }
+    const categoryTotals = Array.from(categoryBreakdown.values())
+      .map((val) => ({
+        category: val.name,
+        amount: round2(val.amount),
         count: val.count,
         currencyCode: val.currency,
-      })).sort((a, b) => b.amount - a.amount);
-      return { totalsByCurrency, categoryTotals };
-    };
+      }))
+      .sort((a, b) => b.amount - a.amount);
 
-    const { totalsByCurrency, categoryTotals } = buildTotals(expenseList);
-    const actualCount = pagination?.total ?? expenseList.length;
+    // A category filter is applied in memory, so the query's own total counts
+    // the whole period and cannot be reported as the answer's size.
+    const actualCount = categoryFilterId ? rows.length : (pagination?.total ?? rows.length);
 
     return {
       actionType: 'get_expenses',
@@ -881,17 +928,8 @@ export class AiToolsService {
       // period. A category breakdown is an analytics surface; budgets and
       // get_budget_status stay deliberately split-blind (design spec,
       // locked decision 1).
-      const splits = Array.isArray(e.categorySplits) ? e.categorySplits : [];
-      if (splits.length > 0) {
-        for (const split of splits) {
-          addToCategory(
-            split.categoryId ?? split.category?.id,
-            split.category?.name || 'Uncategorized',
-            conv(Number(split.amount), from),
-          );
-        }
-      } else {
-        addToCategory(e.category?.id, e.category?.name || 'Uncategorized', value);
+      for (const share of attributeToCategories(e)) {
+        addToCategory(share.categoryId, share.categoryName, conv(share.amount, from));
       }
     }
 
