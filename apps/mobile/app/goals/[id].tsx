@@ -170,7 +170,7 @@ export default function GoalDetailScreen() {
           headerRight: () => (
             <View style={{ flexDirection: 'row', gap: 12, marginRight: 16 }}>
               <TouchableOpacity onPress={handleDelete}>
-                <Ionicons name="trash-outline" size={22} color={theme.colors.danger} />
+                <Ionicons name="trash-outline" size={22} color={theme.colors.textInverse} />
               </TouchableOpacity>
             </View>
           ),

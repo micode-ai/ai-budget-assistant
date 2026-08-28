@@ -145,16 +145,6 @@ export default function ShoppingListScreen() {
     ]);
   };
 
-  const headerRight = () => (
-    <View style={styles.headerActions}>
-      {checkedCount > 0 && (
-        <TouchableOpacity onPress={() => clearChecked()} hitSlop={8}>
-          <Text style={styles.headerAction}>{t('shoppingList.clearChecked')}</Text>
-        </TouchableOpacity>
-      )}
-    </View>
-  );
-
   const renderRow = (item: ShoppingListItem, isLast: boolean) => (
     <React.Fragment key={item.id}>
       <View style={styles.row}>
@@ -214,24 +204,35 @@ export default function ShoppingListScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
-      <Stack.Screen options={{ title: t('shoppingList.title'), headerRight }} />
+      <Stack.Screen options={{ title: t('shoppingList.title') }} />
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={styles.content}
         keyboardShouldPersistTaps="handled"
       >
-        <TouchableOpacity
-          style={styles.switcherPill}
-          onPress={openSwitcher}
-          hitSlop={8}
-          accessibilityLabel={t('shoppingList.switchList')}
-        >
-          <Text style={styles.switcherPillText} numberOfLines={1}>
-            {activeListName}
-          </Text>
-          <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
-        </TouchableOpacity>
+        <View style={styles.listHeaderRow}>
+          <TouchableOpacity
+            style={styles.switcherPill}
+            onPress={openSwitcher}
+            hitSlop={8}
+            accessibilityLabel={t('shoppingList.switchList')}
+          >
+            <Text style={styles.switcherPillText} numberOfLines={1}>
+              {activeListName}
+            </Text>
+            <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
+          </TouchableOpacity>
+
+          {checkedCount > 0 && (
+            <TouchableOpacity style={styles.clearCheckedBtn} onPress={() => clearChecked()} hitSlop={8}>
+              <Ionicons name="close-circle-outline" size={16} color={theme.colors.primary} />
+              <Text style={styles.clearCheckedText} numberOfLines={1}>
+                {t('shoppingList.clearChecked')}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
 
         {lists.length > 0 && suggestions.length > 0 && (
           <View style={styles.restockSection}>
@@ -291,14 +292,6 @@ export default function ShoppingListScreen() {
           </View>
         )}
 
-        {lists.length > 0 && (
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle} numberOfLines={1}>
-              {activeListName}
-            </Text>
-          </View>
-        )}
-
         {isLoading && items.length === 0 ? (
           <View style={styles.emptyState}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
@@ -332,17 +325,21 @@ export default function ShoppingListScreen() {
         <View style={styles.bottomBarRow}>
           <TouchableOpacity style={styles.addBtn} onPress={() => setAddModalVisible(true)}>
             <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
-            <Text style={styles.addBtnText}>{t('shoppingList.addItem')}</Text>
+            <Text style={styles.addBtnText} numberOfLines={1}>
+              {t('shoppingList.addItem')}
+            </Text>
           </TouchableOpacity>
           {items.length > 0 && (
-            <>
+            <View style={styles.compareGroup}>
               <TouchableOpacity
                 style={[styles.compareBtn, comparableCount === 0 && styles.compareBtnDisabled]}
                 onPress={() => router.push('/shopping-list/compare')}
                 disabled={comparableCount === 0}
               >
                 <Ionicons name="storefront-outline" size={18} color={theme.colors.textInverse} />
-                <Text style={styles.compareBtnText}>{t('shoppingList.compareCta')}</Text>
+                <Text style={styles.compareBtnText} numberOfLines={1}>
+                  {t('shoppingList.compareCta')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.mapIconBtn}
@@ -351,7 +348,7 @@ export default function ShoppingListScreen() {
               >
                 <Ionicons name="map-outline" size={22} color={theme.colors.primary} />
               </TouchableOpacity>
-            </>
+            </View>
           )}
         </View>
       </View>
@@ -395,13 +392,31 @@ const createStyles = (theme: Theme) => ({
   scrollView: { flex: 1 },
   content: { padding: theme.spacing[4], paddingBottom: theme.spacing[10] },
 
-  headerActions: { flexDirection: 'row' as const, alignItems: 'center' as const },
-  headerAction: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+  // The clear-checked action lives beside the list switcher, NOT in the header.
+  // In the header it was `theme.colors.primary` text on a `theme.colors.primary`
+  // header (see `headerStyle` in app/_layout.tsx) — orange on orange, invisible —
+  // and, being a long label in most of the 9 locales, it squeezed the centred
+  // title down to "Lista zaku...". Down here it sits on `surface` and reads.
+  listHeaderRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'space-between' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[3],
+  },
+  clearCheckedBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    flexShrink: 1,
+    gap: theme.spacing[1],
+    paddingVertical: theme.spacing[2],
+    paddingHorizontal: theme.spacing[1],
+  },
+  clearCheckedText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary, flexShrink: 1 },
 
   switcherPill: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
-    alignSelf: 'flex-start' as const,
     gap: theme.spacing[1.5],
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.full,
@@ -409,7 +424,7 @@ const createStyles = (theme: Theme) => ({
     borderColor: theme.colors.border,
     paddingHorizontal: theme.spacing[3.5],
     paddingVertical: theme.spacing[2],
-    marginBottom: theme.spacing[3],
+    flexShrink: 1,
     maxWidth: '100%' as const,
   },
   switcherPillText: {
@@ -474,19 +489,6 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
     flexShrink: 1,
-  },
-
-  sectionHeader: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    marginBottom: theme.spacing[2],
-  },
-  sectionTitle: {
-    ...theme.textStyles.bodyMedium,
-    color: theme.colors.textSecondary,
-    flexShrink: 1,
-    marginRight: theme.spacing[2],
   },
 
   card: {
@@ -557,14 +559,36 @@ const createStyles = (theme: Theme) => ({
     borderTopWidth: 1,
     borderTopColor: theme.colors.divider,
   },
+  // Three controls, two of them with labels that are long in most of the nine
+  // locales, do not fit one 360dp row. They used to be forced into one anyway:
+  // `addBtn` had no flex at all, and React Native (unlike the web) defaults
+  // `flexShrink` to 0, so it never gave ground; `compareBtn` had `flex: 1`
+  // (basis 0) and absorbed the entire shortfall. Its content then overflowed
+  // its own box — RN does not clip by default — so in Polish the storefront
+  // icon spilled left across the neighbouring button's border and the label
+  // wrapped onto a second line.
+  //
+  // So the row is allowed to WRAP instead. Both sides size from their content
+  // (`flexBasis: 'auto'`) and carry a `minWidth`, so on a narrow screen or in a
+  // long language the compare group drops to its own line and each control gets
+  // full width; on a wide screen it stays a single row. `compareGroup` keeps the
+  // map button welded to the compare button so wrapping can never strand it
+  // alone on a line of its own.
   bottomBarRow: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
-    gap: theme.spacing[2],
+    flexWrap: 'wrap' as const,
+    rowGap: theme.spacing[2],
+    columnGap: theme.spacing[2],
   },
   addBtn: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 'auto' as const,
+    minWidth: 150,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
+    justifyContent: 'center' as const,
     gap: theme.spacing[1.5],
     paddingVertical: theme.spacing[3.5],
     paddingHorizontal: theme.spacing[3],
@@ -572,9 +596,20 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.primary,
   },
-  addBtnText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary },
+  addBtnText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary, flexShrink: 1 },
+  compareGroup: {
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 'auto' as const,
+    minWidth: 200,
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
   compareBtn: {
-    flex: 1,
+    flexGrow: 1,
+    flexShrink: 1,
+    flexBasis: 'auto' as const,
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
@@ -584,10 +619,16 @@ const createStyles = (theme: Theme) => ({
     borderRadius: theme.borderRadius.lg,
   },
   compareBtnDisabled: { opacity: 0.45 },
-  compareBtnText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
+  compareBtnText: {
+    fontSize: 16,
+    fontWeight: '600' as const,
+    color: theme.colors.textInverse,
+    flexShrink: 1,
+  },
   mapIconBtn: {
     width: 48,
     height: 48,
+    flexShrink: 0,
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
     borderRadius: theme.borderRadius.lg,

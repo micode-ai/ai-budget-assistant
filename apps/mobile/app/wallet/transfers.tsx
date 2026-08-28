@@ -206,7 +206,7 @@ export default function TransferHistoryScreen() {
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               style={{ paddingHorizontal: 12 }}
             >
-              <Ionicons name="add" size={28} color={theme.colors.primary} />
+              <Ionicons name="add" size={28} color={theme.colors.textInverse} />
             </TouchableOpacity>
           ),
         }}

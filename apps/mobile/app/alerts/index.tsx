@@ -437,7 +437,7 @@ const createStyles = (theme: Theme) => ({
   },
   markAllRead: {
     ...theme.textStyles.bodyMedium,
-    color: theme.colors.primary,
+    color: theme.colors.textInverse,
   },
   emptyText: {
     ...theme.textStyles.body,

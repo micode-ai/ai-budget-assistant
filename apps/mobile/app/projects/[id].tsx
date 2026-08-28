@@ -115,10 +115,10 @@ export default function ProjectDetailScreen() {
           headerRight: canEdit ? () => (
             <View style={{ flexDirection: 'row', gap: 16, marginRight: 16 }}>
               <TouchableOpacity onPress={() => openEdit(project)} hitSlop={8}>
-                <Ionicons name="pencil-outline" size={22} color={theme.colors.primary} />
+                <Ionicons name="pencil-outline" size={22} color={theme.colors.textInverse} />
               </TouchableOpacity>
               <TouchableOpacity onPress={handleDelete} hitSlop={8}>
-                <Ionicons name="trash-outline" size={22} color={theme.colors.danger} />
+                <Ionicons name="trash-outline" size={22} color={theme.colors.textInverse} />
               </TouchableOpacity>
             </View>
           ) : undefined,

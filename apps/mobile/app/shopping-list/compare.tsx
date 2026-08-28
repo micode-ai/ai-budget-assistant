@@ -30,7 +30,7 @@ export default function CompareBasketScreen() {
         hitSlop={8}
         accessibilityLabel={t('shoppingList.mapTitle')}
       >
-        <Ionicons name="map-outline" size={22} color={theme.colors.primary} />
+        <Ionicons name="map-outline" size={22} color={theme.colors.textInverse} />
       </TouchableOpacity>
     ) : null;
 

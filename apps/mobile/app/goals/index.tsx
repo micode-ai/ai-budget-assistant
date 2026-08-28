@@ -274,7 +274,7 @@ export default function GoalsScreen() {
               <Ionicons
                 name="add-circle"
                 size={28}
-                color={theme.colors.primary}
+                color={theme.colors.textInverse}
               />
             </TouchableOpacity>
           ),
