@@ -6,8 +6,8 @@ const CATEGORIES = [
 ];
 
 const ITEMS = [
-  { index: 0, label: 'Chleb', amount: 5 },
-  { index: 1, label: 'Piwo Żywiec', amount: 8 },
+  { index: 0, label: 'Chleb', ruleKey: 'Chleb', amount: 5 },
+  { index: 1, label: 'Piwo Żywiec', ruleKey: 'Piwo Żywiec', amount: 8 },
 ];
 
 function makeService(opts: {
@@ -39,7 +39,7 @@ function makeService(opts: {
 
 describe('ReceiptCategorySplitService.classify', () => {
   it('answers from rules without calling the model', async () => {
-    const { service, create } = makeService({ rules: new Map([['chleb', 'c-food'], ['piwo żywiec', 'c-alc']]) });
+    const { service, create } = makeService({ rules: new Map([['chleb', 'c-food'], ['piwozywiec', 'c-alc']]) });
 
     const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
 
@@ -197,10 +197,10 @@ describe('ReceiptCategorySplitService proposals', () => {
   // turn this into the same non-test as above).
   it('keeps at most three proposals when the model returns four distinct, valid ones', async () => {
     const items = [
-      { index: 0, label: 'Chleb', amount: 5 },
-      { index: 1, label: 'Piwo Żywiec', amount: 8 },
-      { index: 2, label: 'Płyn do naczyń', amount: 3 },
-      { index: 3, label: 'Baterie AA', amount: 4 },
+      { index: 0, label: 'Chleb', ruleKey: 'Chleb', amount: 5 },
+      { index: 1, label: 'Piwo Żywiec', ruleKey: 'Piwo Żywiec', amount: 8 },
+      { index: 2, label: 'Płyn do naczyń', ruleKey: 'Płyn do naczyń', amount: 3 },
+      { index: 3, label: 'Baterie AA', ruleKey: 'Baterie AA', amount: 4 },
     ];
     const { service } = makeService({
       completion: {

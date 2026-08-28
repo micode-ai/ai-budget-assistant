@@ -8,8 +8,16 @@ import { sanitizeForPrompt } from '../utils/sanitize';
 
 export interface ClassifyLine {
   index: number;
-  /** canonicalName when we have one, else the raw description. */
+  /** canonicalName when we have one, else the raw description. Sent to the model. */
   label: string;
+  /**
+   * The receipt's own printed line, which is what the learned-rule cache is
+   * keyed on. Deliberately NOT `label`: `canonicalName` is invented by the
+   * model and is not stable across two scans of the same product ("piwo
+   * carlsberg 0,5l" one day, "carlsberg 0,5l" the next), so keying on it meant
+   * the cache never hit. The till prints the same characters every time.
+   */
+  ruleKey: string;
   amount: number;
 }
 
@@ -100,7 +108,7 @@ export class ReceiptCategorySplitService {
 
     const unresolved: ClassifyLine[] = [];
     for (const line of items) {
-      const ruleCategoryId = rules.get(normalizeProductName(line.label));
+      const ruleCategoryId = rules.get(normalizeProductName(line.ruleKey));
       // A rule can outlive its category (a stale row, a cross-account id): only
       // honour it if the category is still one of this account's.
       if (ruleCategoryId && validCategoryIds.has(ruleCategoryId)) {

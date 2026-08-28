@@ -19,7 +19,12 @@ export interface ExpenseCreatedHookExpense {
 
 /** A resolved, already-server-categorized receipt line, ready to teach a product rule. */
 export interface LearnableExpenseItem {
-  canonicalName: string;
+  /**
+   * The receipt's own printed line. Must be the SAME string the classifier
+   * looks rules up by (`ClassifyLine.ruleKey`) — teaching under one key and
+   * reading under another is exactly the bug this replaced.
+   */
+  ruleKey: string;
   categoryId: string;
 }
 

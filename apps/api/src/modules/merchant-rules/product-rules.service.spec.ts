@@ -1,8 +1,11 @@
 import { ProductRulesService, normalizeProductName } from './product-rules.service';
 
 describe('normalizeProductName', () => {
-  it('trims and lowercases so the same product matches across receipts', () => {
-    expect(normalizeProductName('  Mleko Łaciate 3,2% 1L ')).toBe('mleko łaciate 3,2% 1l');
+  it('reduces a product to letters and digits so the same line matches across receipts', () => {
+    // Spacing, punctuation, case and diacritics are all things two readings of
+    // one printed line disagree about; none of them is a different product.
+    // The exhaustive cases live in product-key.spec.ts.
+    expect(normalizeProductName('  Mleko Łaciate 3,2% 1L ')).toBe('mlekolaciate321l');
   });
 });
 
@@ -10,7 +13,7 @@ describe('ProductRulesService', () => {
   const makePrisma = () => ({
     productCategoryRule: {
       findMany: jest.fn().mockResolvedValue([
-        { canonicalNameNormalized: 'piwo żywiec 500ml', categoryId: 'c-alc' },
+        { canonicalNameNormalized: 'piwozywiec500ml', categoryId: 'c-alc' },
       ]),
       upsert: jest.fn().mockResolvedValue({}),
     },
@@ -22,7 +25,7 @@ describe('ProductRulesService', () => {
 
     const map = await service.getRulesMap('acc-1');
 
-    expect(map.get('piwo żywiec 500ml')).toBe('c-alc');
+    expect(map.get('piwozywiec500ml')).toBe('c-alc');
     expect(prisma.productCategoryRule.findMany).toHaveBeenCalledWith({
       where: { accountId: 'acc-1' },
       select: { canonicalNameNormalized: true, categoryId: true },
@@ -33,11 +36,11 @@ describe('ProductRulesService', () => {
     const prisma = makePrisma();
     const service = new ProductRulesService(prisma as any);
 
-    await service.upsertRules('acc-1', [{ canonicalName: '  Piwo Żywiec 500ml', categoryId: 'c-alc' }]);
+    await service.upsertRules('acc-1', [{ ruleKey: '  Piwo Żywiec 500ml', categoryId: 'c-alc' }]);
 
     expect(prisma.productCategoryRule.upsert).toHaveBeenCalledWith({
-      where: { accountId_canonicalNameNormalized: { accountId: 'acc-1', canonicalNameNormalized: 'piwo żywiec 500ml' } },
-      create: { accountId: 'acc-1', canonicalNameNormalized: 'piwo żywiec 500ml', categoryId: 'c-alc' },
+      where: { accountId_canonicalNameNormalized: { accountId: 'acc-1', canonicalNameNormalized: 'piwozywiec500ml' } },
+      create: { accountId: 'acc-1', canonicalNameNormalized: 'piwozywiec500ml', categoryId: 'c-alc' },
       update: { categoryId: 'c-alc' },
     });
   });
@@ -49,8 +52,8 @@ describe('ProductRulesService', () => {
 
     await expect(
       service.upsertRules('acc-1', [
-        { canonicalName: '   ', categoryId: 'c-alc' },
-        { canonicalName: 'chleb', categoryId: 'c-food' },
+        { ruleKey: '   ', categoryId: 'c-alc' },
+        { ruleKey: 'chleb', categoryId: 'c-food' },
       ]),
     ).resolves.toBeUndefined();
 

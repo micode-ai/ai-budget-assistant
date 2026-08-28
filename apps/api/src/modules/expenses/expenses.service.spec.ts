@@ -514,7 +514,11 @@ describe('create with categorized receipt items', () => {
       'a1',
       'u1',
       expect.objectContaining({ id: 'e-items-1' }),
-      [{ canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' }],
+      // The DESCRIPTION ('Piwo'), not the canonicalName ('Piwo Żywiec'): the
+      // rule cache is keyed on what the till printed, because that is what the
+      // classifier looks rules up by. Teaching under the model's invented name
+      // and reading under the printed one is the mismatch this replaced.
+      [{ ruleKey: 'Piwo', categoryId: 'c-alc' }],
     );
   });
 

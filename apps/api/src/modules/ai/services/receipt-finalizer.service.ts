@@ -192,6 +192,8 @@ export class ReceiptFinalizerService {
         .map((item, index) => ({
           index,
           label: (item.canonicalName?.trim() || item.description?.trim() || ''),
+          // The printed line, not the model's name — see ClassifyLine.ruleKey.
+          ruleKey: (item.description?.trim() || item.canonicalName?.trim() || ''),
           amount: Number(item.totalPrice),
         }))
         .filter((line) => Number.isFinite(line.amount) && line.amount > 0);

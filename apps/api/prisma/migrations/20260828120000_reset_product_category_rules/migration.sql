@@ -1,0 +1,17 @@
+-- Data-only: empty the learned product→category cache.
+--
+-- The rule key changed from the model's invented `canonicalName` to the
+-- receipt's own printed line, normalized far more aggressively (ABA-441). Every
+-- existing row was written under the old scheme, so none of them can ever match
+-- a lookup again — they are dead weight, not history.
+--
+-- They are also actively wrong: because the old key was unstable across scans,
+-- the same receipt read twice produced contradictory pairs
+-- ("piwo carlsberg 0,5l" → Piwo beside "carlsberg 0,5l" → Groceries), and which
+-- one wins is an accident of spelling. Keeping them would let that accident
+-- outlive the fix.
+--
+-- Safe to delete: this table is a cache, rewritten by ExpensesService.create on
+-- every saved receipt. The cost of clearing it is one model call per product on
+-- the next scan; the cost of keeping it is the bug.
+DELETE FROM "product_category_rules";

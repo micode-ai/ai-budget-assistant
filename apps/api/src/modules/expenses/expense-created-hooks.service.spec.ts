@@ -212,12 +212,12 @@ describe('onExpenseCreated', () => {
     const { service } = makeHooksService({ productRules });
 
     await service.onExpenseCreated('a1', 'u1', baseExpense, [
-      { canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' },
+      { ruleKey: 'Piwo Żywiec', categoryId: 'c-alc' },
     ]);
     await new Promise((r) => setImmediate(r));
 
     expect(productRules.upsertRules).toHaveBeenCalledWith('a1', [
-      { canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' },
+      { ruleKey: 'Piwo Żywiec', categoryId: 'c-alc' },
     ]);
   });
 
@@ -243,7 +243,7 @@ describe('onExpenseCreated', () => {
 
     try {
       await expect(
-        service.onExpenseCreated('a1', 'u1', baseExpense, [{ canonicalName: 'Piwo Żywiec', categoryId: 'c-alc' }]),
+        service.onExpenseCreated('a1', 'u1', baseExpense, [{ ruleKey: 'Piwo Żywiec', categoryId: 'c-alc' }]),
       ).resolves.toBeUndefined();
 
       expect(productRules.upsertRules).toHaveBeenCalled();
@@ -268,7 +268,7 @@ describe('onExpenseCreated', () => {
     anomalyService.checkExpense.mockRejectedValue(new Error('anomaly down'));
 
     await expect(
-      service.onExpenseCreated('a1', 'u1', baseExpense, [{ canonicalName: 'x', categoryId: 'c-1' }]),
+      service.onExpenseCreated('a1', 'u1', baseExpense, [{ ruleKey: 'x', categoryId: 'c-1' }]),
     ).resolves.toBeUndefined();
     // Give every fire-and-forget branch a chance to settle (and swallow its error).
     await new Promise((r) => setImmediate(r));

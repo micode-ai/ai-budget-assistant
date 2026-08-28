@@ -414,9 +414,10 @@ export class ExpensesService {
     if (result.isNew && result.expense) {
       const learnableItems: LearnableExpenseItem[] = (dto.items ?? [])
         .map((item, index) => ({ item, categoryId: resolvedItemCategoryIds[index] }))
-        .filter((entry) => entry.categoryId && (entry.item.canonicalName?.trim() || entry.item.description?.trim()))
+        .filter((entry) => entry.categoryId && (entry.item.description?.trim() || entry.item.canonicalName?.trim()))
         .map((entry) => ({
-          canonicalName: (entry.item.canonicalName?.trim() || entry.item.description.trim()) as string,
+          // Printed line first — must match ClassifyLine.ruleKey exactly.
+          ruleKey: (entry.item.description?.trim() || entry.item.canonicalName?.trim()) as string,
           categoryId: entry.categoryId as string,
         }));
 
