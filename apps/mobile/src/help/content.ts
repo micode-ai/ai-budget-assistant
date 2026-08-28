@@ -607,6 +607,7 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - On the confirmation screen, a row of category chips appears above the item list, labelled **Split by category** (for example, "Groceries 180 · Household 35 · Alcohol 25"), showing how the total will be broken down.
 - Tap **Change categories** to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.
 - If the items don't add up closely enough to the receipt total, the app falls back to one category instead of guessing.
+- Bottle and can deposits are recognised and shown as their own category, so you can see how much of your spending is packaging you can get back.
 - This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt's one overall category.
 - Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
 
@@ -5106,6 +5107,7 @@ iOS, Android, Web
 - На экране подтверждения над списком позиций появляется ряд чипов категорий с подписью **Разделение по категориям** (например, «Продукты 180 · Хозтовары 35 · Алкоголь 25»), показывающий, как будет разбита итоговая сумма.
 - Нажмите **Изменить категории**, чтобы открыть список всех позиций и указать, к какой категории относится каждая из них. Изменения применяются сразу — и запоминаются, поэтому тот же товар будет правильно распознан при следующем сканировании.
 - Если позиции недостаточно точно совпадают с итоговой суммой чека, приложение возвращается к одной категории вместо того, чтобы гадать.
+- Залог за бутылки и банки распознаётся и показывается как отдельная категория, чтобы вы видели, какая часть ваших расходов — это упаковка, которую можно вернуть.
 - Это влияет только на то, как ваши расходы отображаются в Аналитике и на графиках — бюджеты при этом никогда не меняются и по-прежнему учитываются по единой общей категории чека.
 - Иногда ни одна из ваших существующих категорий не подходит для группы товаров. В этом случае приложение предлагает совершенно новую категорию — она показывается как чип, отмеченный значком **+** (например, «+ Бытовая химия 10»). Пока она не создаётся — нажмите **Изменить категории**, чтобы перенести её позиции в существующую категорию или оставить как предложено. Новая категория действительно создаётся только после сохранения чека.
 
@@ -9603,6 +9605,7 @@ iOS, Android, Web
 - На екрані підтвердження над списком позицій з'являється ряд чипів категорій із підписом **Розподіл за категоріями** (наприклад, «Продукти 180 · Побутові товари 35 · Алкоголь 25»), що показує, як буде розбита загальна сума.
 - Натисніть **Змінити категорії**, щоб відкрити список усіх позицій і вказати, до якої категорії належить кожна з них. Ваші зміни застосовуються одразу — і запам'ятовуються, тож той самий товар буде правильно розпізнано під час наступного сканування.
 - Якщо позиції недостатньо точно збігаються із загальною сумою чека, додаток повертається до однієї категорії, а не вгадує.
+- Застава за пляшки та банки розпізнається і показується як окрема категорія, щоб ви бачили, яка частина ваших витрат — це упаковка, яку можна повернути.
 - Це змінює лише те, як ваші витрати відображаються в Аналітиці та на графіках — бюджети при цьому ніколи не змінюються і, як і раніше, враховуються за єдиною загальною категорією чека.
 - Іноді жодна з ваших наявних категорій не підходить для групи товарів. У такому разі додаток пропонує зовсім нову категорію — вона показується як чип, позначений значком **+** (наприклад, «+ Побутова хімія 10»). Поки що вона не створюється — натисніть **Змінити категорії**, щоб перенести її позиції до наявної категорії або залишити як запропоновано. Нова категорія справді створюється лише після збереження чека.
 
@@ -14048,6 +14051,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Na ekranie potwierdzenia nad listą pozycji pojawia się rząd chipów kategorii, oznaczony **Podział na kategorie** (na przykład „Spożywcze 180 · Gospodarstwo domowe 35 · Alkohol 25”), pokazujący, jak zostanie rozbita łączna kwota.
 - Dotknij **Zmień kategorie**, aby otworzyć listę wszystkich pozycji i dostosować, do której kategorii należy każda z nich. Twoje zmiany obowiązują od razu — i są zapamiętywane, dzięki czemu ten sam produkt zostanie poprawnie skategoryzowany przy następnym skanowaniu.
 - Jeśli pozycje nie sumują się wystarczająco blisko łącznej kwoty paragonu, aplikacja wraca do jednej kategorii zamiast zgadywać.
+- Kaucje za butelki i puszki są rozpoznawane i pokazywane jako osobna kategoria, dzięki czemu widzisz, jaka część Twoich wydatków to opakowania, które możesz odzyskać.
 - To zmienia jedynie sposób prezentacji wydatków w Analizie i na wykresach — nigdy nie zmienia Twoich budżetów, które nadal są liczone względem jednej, ogólnej kategorii paragonu.
 - Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
 
@@ -18489,6 +18493,7 @@ Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Eink
 - Auf dem Bestätigungsbildschirm erscheint über der Artikelliste eine Reihe von Kategorie-Chips mit der Bezeichnung **Nach Kategorie aufteilen** (zum Beispiel „Lebensmittel 180 · Haushalt 35 · Alkohol 25"), die zeigt, wie der Gesamtbetrag aufgeteilt wird.
 - Tippe auf **Kategorien ändern**, um eine Liste aller Artikel zu öffnen und anzupassen, zu welcher Kategorie sie gehören. Deine Änderungen gelten sofort — und werden gemerkt, sodass dasselbe Produkt beim nächsten Scan korrekt kategorisiert wird.
 - Wenn die Artikel nicht ausreichend genau zum Gesamtbetrag des Belegs passen, greift die App auf eine einzige Kategorie zurück, statt zu raten.
+- Pfand für Flaschen und Dosen wird erkannt und als eigene Kategorie angezeigt, damit du siehst, wie viel deiner Ausgaben aus Verpackung besteht, die du zurückbekommst.
 - Das ändert nur, wie deine Ausgaben in der Analyse und in den Diagrammen erscheinen — es ändert nie deine Budgets, die weiterhin gegen die eine Gesamtkategorie des Belegs geführt werden.
 - Manchmal passt keine deiner bestehenden Kategorien zu einer Gruppe von Artikeln. In diesem Fall schlägt die App eine brandneue Kategorie vor, angezeigt als Chip mit einem **+**-Zeichen (zum Beispiel „+ Haushaltschemie 10"). Sie wird noch nicht angelegt — tippe auf **Kategorien ändern**, um ihre Artikel stattdessen einer bestehenden Kategorie zuzuweisen oder sie wie vorgeschlagen zu belassen. Die neue Kategorie wird erst angelegt, wenn du den Beleg speicherst.
 
@@ -22905,6 +22910,7 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 - En la pantalla de confirmación aparece una fila de chips de categoría sobre la lista de artículos, etiquetada **Dividir por categoría** (por ejemplo, "Alimentación 180 · Hogar 35 · Alcohol 25"), que muestra cómo se desglosará el importe total.
 - Toca **Cambiar categorías** para abrir una lista de todos los artículos y ajustar a qué categoría pertenece cada uno. Tus cambios se aplican de inmediato — y se recuerdan, de modo que el mismo producto se categoriza correctamente la próxima vez que lo escanees.
 - Si los artículos no suman lo suficientemente cerca del importe total del recibo, la aplicación recurre a una sola categoría en lugar de adivinar.
+- Los depósitos de botellas y latas se reconocen y se muestran como su propia categoría, para que puedas ver cuánto de tu gasto es envase que puedes recuperar.
 - Esto solo cambia cómo aparece tu gasto en Analítica y en los gráficos — nunca cambia tus presupuestos, que siguen contabilizando contra la categoría general única del recibo.
 - A veces ninguna de tus categorías existentes encaja con un grupo de artículos. En ese caso, la aplicación sugiere una categoría totalmente nueva, mostrada como un chip marcado con un **+** (por ejemplo, "+ Productos de limpieza 10"). Todavía no se crea — toca **Cambiar categorías** para reasignar sus artículos a una categoría existente, o dejarla tal como se sugirió. La nueva categoría solo se crea de verdad cuando guardas el recibo.
 
@@ -27310,6 +27316,7 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 - Sur l'écran de confirmation, une rangée de puces de catégorie apparaît au-dessus de la liste des articles, intitulée **Répartir par catégorie** (par exemple, « Alimentation 180 · Ménage 35 · Alcool 25 »), montrant comment le montant total sera réparti.
 - Appuyez sur **Modifier les catégories** pour ouvrir une liste de tous les articles et ajuster la catégorie de chacun. Vos modifications s'appliquent immédiatement — et sont mémorisées, afin que le même produit soit correctement catégorisé lors de votre prochain scan.
 - Si les articles ne correspondent pas suffisamment au montant total du reçu, l'application revient à une seule catégorie plutôt que de deviner.
+- Les consignes sur les bouteilles et les canettes sont reconnues et affichées comme leur propre catégorie, afin que vous puissiez voir quelle part de vos dépenses correspond à un emballage que vous pouvez récupérer.
 - Cela ne change que la façon dont vos dépenses apparaissent dans les Analyses et les graphiques — cela ne modifie jamais vos budgets, qui continuent d'être suivis par rapport à la catégorie globale unique du reçu.
 - Parfois, aucune de vos catégories existantes ne correspond à un groupe d'articles. Dans ce cas, l'application suggère une toute nouvelle catégorie, affichée sous forme de puce marquée d'un **+** (par exemple, « + Produits d'entretien 10 »). Elle n'est pas encore créée — appuyez sur **Modifier les catégories** pour réattribuer ses articles à une catégorie existante, ou la laisser telle quelle. La nouvelle catégorie n'est réellement créée que lorsque vous enregistrez le reçu.
 
@@ -31713,6 +31720,7 @@ iOS, Android, Web
 - На экране пацвярджэння над спісам пазіцый з'яўляецца шэраг чыпаў катэгорый з подпісам **Падзел па катэгорыях** (напрыклад, «Прадукты 180 · Гаспадарчыя тавары 35 · Алкаголь 25»), які паказвае, як будзе разбіта агульная сума.
 - Націсніце **Змяніць катэгорыі**, каб адкрыць спіс усіх пазіцый і паказаць, да якой катэгорыі належыць кожная з іх. Вашы змены прымяняюцца адразу — і запамінаюцца, таму той самы тавар будзе правільна распазнаны пры наступным сканаванні.
 - Калі пазіцыі недастаткова дакладна супадаюць з агульнай сумай чэка, праграма вяртаецца да адной катэгорыі замест таго, каб угадваць.
+- Закладзь за бутэлькі і банкі распазнаецца і паказваецца як асобная катэгорыя, каб вы бачылі, якая частка вашых выдаткаў — гэта ўпакоўка, якую можна вярнуць.
 - Гэта змяняе толькі тое, як вашы выдаткі адлюстроўваюцца ў Аналітыцы і на графіках — бюджэты пры гэтым ніколі не змяняюцца і, як і раней, улічваюцца па адзінай агульнай катэгорыі чэка.
 - Часам ніводная з вашых наяўных катэгорый не падыходзіць для групы тавараў. У такім выпадку праграма прапануе зусім новую катэгорыю — яна паказваецца як чып, пазначаны значком **+** (напрыклад, «+ Бытавая хімія 10»). Пакуль яна не ствараецца — націсніце **Змяніць катэгорыі**, каб перанесці яе пазіцыі ў наяўную катэгорыю або пакінуць як прапанавана. Новая катэгорыя сапраўды ствараецца толькі пасля захавання чэка.
 
@@ -36073,6 +36081,7 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 - Op het bevestigingsscherm verschijnt boven de itemlijst een rij categoriechips met het label **Verdelen op categorie** (bijvoorbeeld "Boodschappen 180 · Huishouden 35 · Alcohol 25"), die laat zien hoe het totaalbedrag wordt opgesplitst.
 - Tik op **Categorieën wijzigen** om een lijst van alle items te openen en aan te passen tot welke categorie elk item behoort. Je wijzigingen gelden meteen — en worden onthouden, zodat hetzelfde product de volgende keer dat je het scant automatisch goed wordt gecategoriseerd.
 - Als de items niet voldoende overeenkomen met het totaalbedrag van de bon, valt de app terug op één categorie in plaats van te gokken.
+- Statiegeld voor flessen en blikjes wordt herkend en als eigen categorie weergegeven, zodat je ziet hoeveel van je uitgaven verpakking is die je terugkrijgt.
 - Dit verandert alleen hoe je uitgaven verschijnen in Analyse en in grafieken — het verandert nooit je budgetten, die nog steeds worden bijgehouden tegen de ene, algemene categorie van de bon.
 - Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een **+**-teken (bijvoorbeeld "+ Schoonmaakmiddelen 10"). Die wordt nog niet aangemaakt — tik op **Categorieën wijzigen** om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.
 

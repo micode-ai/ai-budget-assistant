@@ -1208,14 +1208,35 @@ total and refuses to split at all when they differ by more than 5%:
   total reflects it. Spread across the groups in proportion to what each
   contributed.
 - *deposit* — returnable-packaging charges (Polish `kaucja`), printed in their
-  own block, never as line items, yet included in the amount due. Gate only; it
-  stays in the residual rather than being attributed by guesswork.
+  own block, never as line items, yet included in the amount due. It is never
+  spread across groups the way the discount is, and never absorbs the
+  residual — both those adjustments touch only the item groups, before the
+  deposit is appended (see below).
 
 Refusing is the intended answer, not a failure: smearing an unexplained
 difference across a user's categories would be worse than leaving the receipt
 whole. A split also requires at least two distinct categories. Whatever the
 assigned lines do not account for — an unassigned line, rounding — goes to the
 largest group.
+
+**The deposit is its own category, not only a gate adjustment.** When the
+receipt reports one, it is appended as an exact group of its own — after the
+discount has been spread and the residual assigned, so it shares in neither —
+and it counts toward the two-category minimum on both the automatic split and
+a user's manual line reassignment, so a receipt that would otherwise be one
+category (typically groceries) now splits into that category plus deposit.
+The category name comes from a small table baked into the API, one word per
+locale (`Deposit`/`Kaucja`/`Pfand`/…), resolved from the **account owner's**
+language — never the scanning member's — so a shared account converges on one
+deposit category regardless of who scanned; an existing category with that
+exact name is reused rather than duplicated. It is deliberately never routed
+through the model-proposal path, so it never has to clear the 10% materiality
+floor a proposed category needs: a deposit is typically 1–2% of a receipt and
+would be dropped by that floor every time, which would have made the whole
+feature silently never appear. Independent of whether a split is produced at
+all, the deposit amount is persisted on the expense itself, so it remains
+visible even on a receipt whose line items don't reconcile closely enough to
+produce a split.
 
 **Re-reading.** Extraction is not reproducible: the same receipt and the same
 prompt yield different line totals and sometimes a different reading of the

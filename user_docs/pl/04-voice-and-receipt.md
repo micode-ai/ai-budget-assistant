@@ -84,6 +84,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Na ekranie potwierdzenia nad listą pozycji pojawia się rząd chipów kategorii, oznaczony **Podział na kategorie** (na przykład „Spożywcze 180 · Gospodarstwo domowe 35 · Alkohol 25”), pokazujący, jak zostanie rozbita łączna kwota.
 - Dotknij **Zmień kategorie**, aby otworzyć listę wszystkich pozycji i dostosować, do której kategorii należy każda z nich. Twoje zmiany obowiązują od razu — i są zapamiętywane, dzięki czemu ten sam produkt zostanie poprawnie skategoryzowany przy następnym skanowaniu.
 - Jeśli pozycje nie sumują się wystarczająco blisko łącznej kwoty paragonu, aplikacja wraca do jednej kategorii zamiast zgadywać.
+- Kaucje za butelki i puszki są rozpoznawane i pokazywane jako osobna kategoria, dzięki czemu widzisz, jaka część Twoich wydatków to opakowania, które możesz odzyskać.
 - To zmienia jedynie sposób prezentacji wydatków w Analizie i na wykresach — nigdy nie zmienia Twoich budżetów, które nadal są liczone względem jednej, ogólnej kategorii paragonu.
 - Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
 

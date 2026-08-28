@@ -84,6 +84,7 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 - Op het bevestigingsscherm verschijnt boven de itemlijst een rij categoriechips met het label **Verdelen op categorie** (bijvoorbeeld "Boodschappen 180 · Huishouden 35 · Alcohol 25"), die laat zien hoe het totaalbedrag wordt opgesplitst.
 - Tik op **Categorieën wijzigen** om een lijst van alle items te openen en aan te passen tot welke categorie elk item behoort. Je wijzigingen gelden meteen — en worden onthouden, zodat hetzelfde product de volgende keer dat je het scant automatisch goed wordt gecategoriseerd.
 - Als de items niet voldoende overeenkomen met het totaalbedrag van de bon, valt de app terug op één categorie in plaats van te gokken.
+- Statiegeld voor flessen en blikjes wordt herkend en als eigen categorie weergegeven, zodat je ziet hoeveel van je uitgaven verpakking is die je terugkrijgt.
 - Dit verandert alleen hoe je uitgaven verschijnen in Analyse en in grafieken — het verandert nooit je budgetten, die nog steeds worden bijgehouden tegen de ene, algemene categorie van de bon.
 - Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een **+**-teken (bijvoorbeeld "+ Schoonmaakmiddelen 10"). Die wordt nog niet aangemaakt — tik op **Categorieën wijzigen** om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.
 
