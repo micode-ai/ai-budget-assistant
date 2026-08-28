@@ -473,6 +473,7 @@ export class ExpensesService {
           categoryId: true,
           amount: true,
           discountAmount: true,
+          depositAmount: true,
           currencyCode: true,
           description: true,
           notes: true,

@@ -117,7 +117,10 @@ export interface ReceiptCategorySplitPayload {
 export interface ReceiptExpense {
   amount: number;
   discountAmount: number | null;
-  /** See `ParsedReceipt.deposit`. Not persisted — used by the split gate. */
+  /**
+   * See `ParsedReceipt.deposit`. Persisted on the expense (`Expense.depositAmount`)
+   * and, when the split reconciles, emitted as its own category group.
+   */
   depositAmount: number | null;
   currencyCode: string;
   description: string;

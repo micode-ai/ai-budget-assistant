@@ -266,7 +266,10 @@ export const useExpenseStore = create<ExpenseState>()(
           localId: id,
           amount: encPayload.amount ?? newExpense.amount,
           discountAmount: encPayload.discountAmount ?? newExpense.discountAmount,
-          depositAmount: encPayload.depositAmount ?? newExpense.depositAmount,
+          // Deliberately NOT through encPayload: depositAmount is in neither
+          // ENCRYPTION_FIELDS tier and is not fed to maybeEncrypt, so a tier-2
+          // account stores its deposit in clear. Known gap — see CLAUDE.md.
+          depositAmount: newExpense.depositAmount,
           currencyCode: newExpense.currencyCode,
           description: encPayload.description ?? newExpense.description,
           notes: encPayload.notes ?? newExpense.notes,

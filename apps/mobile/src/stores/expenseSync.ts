@@ -110,7 +110,10 @@ export async function syncPendingExpenses(
         localId: expense.localId || expense.id,
         amount: encPayload.amount ?? expense.amount,
         discountAmount: encPayload.discountAmount ?? expense.discountAmount,
-        depositAmount: encPayload.depositAmount ?? expense.depositAmount,
+        // Deliberately NOT through encPayload: depositAmount is in neither
+        // ENCRYPTION_FIELDS tier and is not fed to maybeEncrypt, so a tier-2
+        // account stores its deposit in clear. Known gap — see CLAUDE.md.
+        depositAmount: expense.depositAmount,
         currencyCode: expense.currencyCode,
         description: encPayload.description ?? expense.description,
         notes: encPayload.notes ?? expense.notes,

@@ -24,7 +24,11 @@ import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
 import CategorySplitChips from '@/components/receipt/CategorySplitChips';
 import ItemCategorySheet, { type ItemCategorySheetItem } from '@/components/receipt/ItemCategorySheet';
 import { useCategoryStore } from '@/stores/categoryStore';
-import { proposedKey, isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
+import { isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
+import {
+  proposedNamesForSave,
+  resolveProposedCategories,
+} from '@/features/receipt/resolveProposedCategories';
 import { seedItemCategories, seedLineCategories } from '@/features/receipt/seedItemCategories';
 import { buildManualSplits, withDepositGroup } from '@/features/receipt/manualSplits';
 import { formatCurrency, type ReceiptCategorySplit } from '@budget/shared-utils';
@@ -166,8 +170,10 @@ export default function ReceiptExpenseScreen() {
     );
   }, [hasEditedCategories, serverSplits, scannedReceipt, itemCategories]);
 
-  // Names still attached to at least one line. A proposal the user emptied
-  // disappears from the picker and is never created.
+  // Names still attached to at least one line. Feeds the line-category picker
+  // ONLY — a proposal the user emptied disappears from it, and a category with
+  // no lines behind it (the deposit) has no place in a picker over lines.
+  // Creating categories reads proposedNamesToCreate below instead.
   const proposedNamesInPlay = useMemo(
     () =>
       Array.from(
@@ -178,6 +184,15 @@ export default function ReceiptExpenseScreen() {
         ),
       ),
     [itemCategories],
+  );
+
+  // What actually gets created on save: every proposal on a line PLUS every
+  // proposal in the split being published. The deposit group is only in the
+  // latter — it has no lines — so a list built from the lines alone left its
+  // `new:` sentinel to travel to the API. See proposedNamesForSave.
+  const proposedNamesToCreate = useMemo(
+    () => proposedNamesForSave(itemCategories, currentSplits),
+    [itemCategories, currentSplits],
   );
 
   const sheetItems: ItemCategorySheetItem[] = (scannedReceipt?.receiptItems ?? []).map((item, index) => ({
@@ -220,13 +235,9 @@ export default function ReceiptExpenseScreen() {
       // Proposals become real categories only here — a scan the user abandons
       // must leave the account exactly as it found it. createCategory is
       // idempotent on (name, type) and offline-first.
-      const realIdByKey = new Map<string, string>();
-      for (const name of proposedNamesInPlay) {
-        const created = await useCategoryStore.getState().createCategory(name, 'expense', '🏷️');
-        realIdByKey.set(proposedKey(name), created.id);
-      }
-      const resolveKey = (key: string | null | undefined): string | undefined =>
-        key ? realIdByKey.get(key) ?? key : undefined;
+      const resolveKey = await resolveProposedCategories(proposedNamesToCreate, (name) =>
+        useCategoryStore.getState().createCategory(name, 'expense', '🏷️'),
+      );
 
       // Prepare receipt items
       const items = scannedReceipt.receiptItems?.map((item, index) => ({
