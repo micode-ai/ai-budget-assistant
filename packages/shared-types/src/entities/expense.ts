@@ -48,6 +48,8 @@ export interface Expense {
   accountId: string;
   amount: number;
   discountAmount?: number;
+  /** Returnable-packaging deposit included in `amount` (kaucja / Pfand). */
+  depositAmount?: number;
   currencyCode: Currency;
   description?: string;
   notes?: string;

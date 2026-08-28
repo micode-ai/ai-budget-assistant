@@ -450,6 +450,10 @@ function makeCategorizedItemsCreateService() {
         .fn()
         .mockImplementation(({ data }: any) => Promise.resolve({ id: `c-${String(data.name).toLowerCase()}` })),
     },
+    // Alias onto the SAME mock the service actually writes through (`tx.expense`,
+    // reached only inside the `$transaction` callback below) — a test asserting
+    // on `prisma.expense.upsert` must observe the real call, not an empty stub.
+    expense: tx.expense,
     $transaction: jest.fn(async (cb: any) => cb(tx)),
   };
   const cacheService: any = {
@@ -577,6 +581,18 @@ describe('create with categorized receipt items', () => {
     } finally {
       process.off('unhandledRejection', onUnhandledRejection);
     }
+  });
+
+  it('persists the returnable-packaging deposit alongside the discount', async () => {
+    const { service, prisma } = makeCategorizedItemsCreateService();
+
+    await service.create('a1', 'u1', { ...baseDto, discountAmount: 70.34, depositAmount: 4.5 } as any);
+
+    expect(prisma.expense.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        create: expect.objectContaining({ discountAmount: 70.34, depositAmount: 4.5 }),
+      }),
+    );
   });
 });
 

@@ -198,6 +198,7 @@ export class ExpensesService {
         clientId: dto.localId,
         amount: dto.amount,
         discountAmount: dto.discountAmount,
+        depositAmount: dto.depositAmount,
         currencyCode: dto.currencyCode,
         description: dto.description,
         notes: dto.notes,
