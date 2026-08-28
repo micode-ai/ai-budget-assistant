@@ -9,6 +9,7 @@ interface ExpenseRow {
   account_id: string;
   amount: number;
   discount_amount: number | null;
+  deposit_amount: number | null;
   currency_code: string;
   description: string | null;
   notes: string | null;
@@ -50,6 +51,7 @@ function rowToExpense(row: ExpenseRow): Expense {
     accountId: row.account_id,
     amount: row.amount,
     discountAmount: row.discount_amount ?? undefined,
+    depositAmount: row.deposit_amount ?? undefined,
     currencyCode: row.currency_code as Currency,
     description: row.description ?? undefined,
     notes: row.notes ?? undefined,
@@ -97,6 +99,7 @@ function expenseToParams(expense: Expense): (string | number | null)[] {
     expense.accountId,
     expense.amount,
     expense.discountAmount ?? null,
+    expense.depositAmount ?? null,
     expense.currencyCode,
     expense.description ?? null,
     expense.notes ?? null,
@@ -147,7 +150,7 @@ export async function loadAllExpenses(accountId?: string): Promise<Expense[]> {
 export async function insertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (
-      id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
+      id, local_id, server_id, user_id, account_id, amount, discount_amount, deposit_amount, currency_code,
       description, notes, merchant, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
       is_recurring, recurring_id, recurring_period, source, external_ref,
@@ -155,7 +158,7 @@ export async function insertExpense(expense: Expense): Promise<void> {
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     expenseToParams(expense),
   );
 }
@@ -176,6 +179,10 @@ export async function updateExpenseInDb(
   if (updates.discountAmount !== undefined) {
     setClauses.push('discount_amount = ?');
     params.push(updates.discountAmount ?? null);
+  }
+  if (updates.depositAmount !== undefined) {
+    setClauses.push('deposit_amount = ?');
+    params.push(updates.depositAmount ?? null);
   }
   if (updates.description !== undefined) {
     setClauses.push('description = ?');
@@ -366,7 +373,7 @@ export async function bulkMergeMerchants(
 export async function upsertExpense(expense: Expense): Promise<void> {
   await executeSql(
     `INSERT INTO expenses (
-      id, local_id, server_id, user_id, account_id, amount, discount_amount, currency_code,
+      id, local_id, server_id, user_id, account_id, amount, discount_amount, deposit_amount, currency_code,
       description, notes, merchant, category_id, date, time,
       location_lat, location_lng, location_name, receipt_url,
       is_recurring, recurring_id, recurring_period, source, external_ref,
@@ -374,7 +381,7 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       created_by_user_name,
       created_at, updated_at,
       is_deleted, sync_status, sync_version, is_planned, paid_by_user_id, is_split_receivable
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -382,6 +389,7 @@ export async function upsertExpense(expense: Expense): Promise<void> {
       account_id = excluded.account_id,
       amount = excluded.amount,
       discount_amount = COALESCE(excluded.discount_amount, discount_amount),
+      deposit_amount = COALESCE(excluded.deposit_amount, deposit_amount),
       currency_code = excluded.currency_code,
       description = excluded.description,
       notes = excluded.notes,

@@ -194,6 +194,11 @@ export default function ExpenseDetailScreen() {
               {t('receipt.discount')}: -{formatCurrency(expense.discountAmount, expense.currencyCode)}
             </Text>
           )}
+          {expense.depositAmount != null && expense.depositAmount > 0 && (
+            <Text style={styles.discountText}>
+              {t('receipt.deposit')}: {formatCurrency(expense.depositAmount, expense.currencyCode)}
+            </Text>
+          )}
           <View style={styles.sourceBadge}>
             <Ionicons
               name={(sourceIcon[expense.source] || 'help-circle-outline') as any}

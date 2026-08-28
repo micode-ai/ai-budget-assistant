@@ -139,6 +139,7 @@ export const aiApi = {
     return httpClient.request<{
       amount: number;
       discountAmount: number | null;
+      depositAmount: number | null;
       currencyCode: string;
       description: string;
       categoryId: string | null;

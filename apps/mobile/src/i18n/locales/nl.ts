@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Nog een scannen',
     saveFailed: 'Uitgave opslaan mislukt',
     discount: 'Korting',
+    deposit: 'Statiegeld',
     saveImage: 'Bonafbeelding opslaan',
     choosePdf: 'PDF uploaden',
     analyzingPdf: 'PDF-bon analyseren...',

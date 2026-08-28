@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Сканувати ще',
     saveFailed: 'Не вдалося зберегти витрату',
     discount: 'Знижка',
+    deposit: 'Застава за тару',
     saveImage: 'Зберегти фото чеку',
     choosePdf: 'Завантажити PDF',
     analyzingPdf: 'Аналіз PDF чеку...',

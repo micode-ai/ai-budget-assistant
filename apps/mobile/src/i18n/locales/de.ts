@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Weiteren scannen',
     saveFailed: 'Ausgabe konnte nicht gespeichert werden',
     discount: 'Rabatt',
+    deposit: 'Pfand',
     saveImage: 'Kassenbon-Bild speichern',
     choosePdf: 'PDF hochladen',
     analyzingPdf: 'PDF-Beleg wird analysiert...',

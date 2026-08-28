@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Skanuj kolejny',
     saveFailed: 'Nie udało się zapisać wydatku',
     discount: 'Rabat',
+    deposit: 'Kaucja',
     saveImage: 'Zapisz zdjęcie paragonu',
     choosePdf: 'Wgraj PDF',
     analyzingPdf: 'Analizowanie paragonu PDF...',

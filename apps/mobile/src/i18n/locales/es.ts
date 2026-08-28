@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Escanear otro',
     saveFailed: 'Error al guardar el gasto',
     discount: 'Descuento',
+    deposit: 'Depósito',
     saveImage: 'Guardar imagen del recibo',
     choosePdf: 'Subir PDF',
     analyzingPdf: 'Analizando recibo PDF...',

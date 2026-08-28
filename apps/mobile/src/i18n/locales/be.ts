@@ -467,6 +467,7 @@ export default {
     scanAnother: 'Сканаваць яшчэ',
     saveFailed: 'Не ўдалося захаваць расход',
     discount: 'Зніжка',
+    deposit: 'Закладзь за тару',
     saveImage: 'Захаваць фота чэка',
     choosePdf: 'Загрузіць PDF',
     analyzingPdf: 'Аналіз PDF чэка...',

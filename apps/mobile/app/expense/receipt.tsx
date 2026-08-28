@@ -245,6 +245,7 @@ export default function ReceiptExpenseScreen() {
         userId: user?.id || '',
         amount: scannedReceipt.amount,
         discountAmount: scannedReceipt.discountAmount ?? undefined,
+        depositAmount: scannedReceipt.depositAmount ?? undefined,
         currencyCode: scannedReceipt.currencyCode as Currency,
         description: scannedReceipt.description,
         merchant: merchant.trim() || undefined,
@@ -410,6 +411,18 @@ export default function ReceiptExpenseScreen() {
                   <Text style={[styles.expenseValue, { color: theme.colors.success }]}>
                     -{formatCurrency(
                       scannedReceipt.discountAmount,
+                      (scannedReceipt?.currencyCode || 'USD') as Currency
+                    )}
+                  </Text>
+                </View>
+              )}
+
+              {scannedReceipt?.depositAmount != null && scannedReceipt.depositAmount > 0 && (
+                <View style={styles.expenseRow}>
+                  <Text style={styles.expenseLabel}>{t('receipt.deposit')}</Text>
+                  <Text style={styles.expenseValue}>
+                    {formatCurrency(
+                      scannedReceipt.depositAmount,
                       (scannedReceipt?.currencyCode || 'USD') as Currency
                     )}
                   </Text>

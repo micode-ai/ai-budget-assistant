@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Scan Another',
     saveFailed: 'Failed to save expense',
     discount: 'Discount',
+    deposit: 'Deposit',
     saveImage: 'Save receipt image',
     choosePdf: 'Upload PDF',
     analyzingPdf: 'Analyzing PDF receipt...',

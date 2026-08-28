@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Сканировать ещё',
     saveFailed: 'Не удалось сохранить расход',
     discount: 'Скидка',
+    deposit: 'Залог за тару',
     saveImage: 'Сохранить фото чека',
     choosePdf: 'Загрузить PDF',
     analyzingPdf: 'Анализ PDF чека...',

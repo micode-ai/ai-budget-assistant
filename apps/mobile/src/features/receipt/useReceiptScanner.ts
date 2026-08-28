@@ -31,6 +31,7 @@ export interface ReceiptCategorySplitItem {
 export interface ScannedReceipt {
   amount: number;
   discountAmount: number | null;
+  depositAmount: number | null;
   currencyCode: string;
   description: string;
   categoryId: string | null;

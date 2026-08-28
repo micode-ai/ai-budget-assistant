@@ -469,6 +469,7 @@ export default {
     scanAnother: 'Scanner un autre',
     saveFailed: 'Échec de l\'enregistrement de la dépense',
     discount: 'Remise',
+    deposit: 'Consigne',
     saveImage: 'Enregistrer l\'image du reçu',
     choosePdf: 'Importer PDF',
     analyzingPdf: 'Analyse du reçu PDF...',

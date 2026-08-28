@@ -560,6 +560,13 @@ export async function initializeDatabase(): Promise<void> {
       // Column already exists, ignore
     }
 
+    // Add deposit_amount column to expenses (returnable packaging)
+    try {
+      expoDb.execSync(`ALTER TABLE expenses ADD COLUMN deposit_amount REAL`);
+    } catch {
+      // Column already exists, ignore
+    }
+
     // Add session_user_id to accounts (multi-user device isolation)
     try {
       expoDb.execSync(`ALTER TABLE accounts ADD COLUMN session_user_id TEXT NOT NULL DEFAULT ''`);
