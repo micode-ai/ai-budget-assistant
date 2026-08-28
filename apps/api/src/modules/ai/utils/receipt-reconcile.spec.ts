@@ -1,6 +1,7 @@
 import {
   RECEIPT_RECONCILE_TOLERANCE_PCT,
   betterRead,
+  isDiscountAlreadyInLines,
   needsReread,
   reconciliationGapPct,
 } from './receipt-reconcile';
@@ -71,5 +72,46 @@ describe('betterRead', () => {
   it('keeps the first read when the second cannot be measured at all', () => {
     const unmeasurable = { items: [], discount: null, deposit: null, total: 233.98 };
     expect(betterRead(scanThree, unmeasurable)).toBe(scanThree);
+  });
+});
+
+describe('isDiscountAlreadyInLines', () => {
+  const TOL = RECEIPT_RECONCILE_TOLERANCE_PCT;
+
+  it('detects a discount whose value the line items already have taken off', () => {
+    // Sinsay, 2026-08-14: printed lines are 2,09 and 13,99, SUMA PLN 16,08.
+    // The model reported the receipt's `Podatek PTU 3,01` — the VAT — as a
+    // discount. Subtracting it a second time is what refuses the split.
+    expect(isDiscountAlreadyInLines(receipt([2.09, 13.99], { discount: 3.01, total: 16.08 }), TOL)).toBe(true);
+  });
+
+  it('detects it through an already-included per-item discount too', () => {
+    // Rossmann, 2026-08-14: two `Uwzgl. opust: -5,00` lines — "uwzględniony"
+    // means already applied — against lines summing to the 46,85 total.
+    expect(isDiscountAlreadyInLines(receipt([10.99, 10.99, 14.49, 5.59, 4.79], { discount: 10, total: 46.85 }), TOL)).toBe(
+      true,
+    );
+  });
+
+  it('leaves a real discount alone: gross lines less the discount are what make the total', () => {
+    // Biedronka, 2026-08-14: 152,20 of goods, OPUSTY ŁĄCZNIE -55,05, 1,00 of
+    // bottle deposit, DO ZAPŁATY 98,15.
+    expect(isDiscountAlreadyInLines(receipt([152.2], { discount: 55.05, deposit: 1, total: 98.15 }), TOL)).toBe(false);
+  });
+
+  it('has nothing to say when no discount was reported', () => {
+    expect(isDiscountAlreadyInLines(receipt([16.08], { discount: null, total: 16.08 }), TOL)).toBe(false);
+    expect(isDiscountAlreadyInLines(receipt([16.08], { discount: 0, total: 16.08 }), TOL)).toBe(false);
+  });
+
+  it('has nothing to say when the lines reconcile neither way — that is a misread, not a spurious discount', () => {
+    // Yesterday's Biedronka read: lines 14.29 short even with the real
+    // discount. Clearing the discount would make it 39.76 short instead.
+    expect(isDiscountAlreadyInLines(receipt([137.91], { discount: 55.05, deposit: 1, total: 98.15 }), TOL)).toBe(false);
+  });
+
+  it('has nothing to say when the question cannot be asked', () => {
+    expect(isDiscountAlreadyInLines({ items: [], discount: 5, deposit: null, total: 100 }, TOL)).toBe(false);
+    expect(isDiscountAlreadyInLines(receipt([50], { discount: 5, total: 0 }), TOL)).toBe(false);
   });
 });

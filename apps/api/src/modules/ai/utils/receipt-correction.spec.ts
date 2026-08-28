@@ -39,7 +39,7 @@ describe('buildCorrectionNote', () => {
     expect(note).toContain('416.63');
   });
 
-  it('points at the quantity column, which is where the error actually is', () => {
+  it('points at the quantity column for a reading whose lines came out too high', () => {
     const note = buildCorrectionNote(FAILED_READING, 36.5).toLowerCase();
 
     expect(note).toContain('ilość');
@@ -109,5 +109,43 @@ describe('withCorrection', () => {
     expect(corrected.model).toBe('gpt-4o');
     expect(corrected.max_tokens).toBe(4096);
     expect(corrected.response_format).toEqual({ type: 'json_object' });
+  });
+});
+
+/**
+ * Yesterday's real failing reading (Biedronka, 2026-08-14, scanned 2026-08-27):
+ * every quantity correct, seven of fifteen unit prices misread — 10,49 read as
+ * 5,27 (the value of the `OPUST` row printed beneath that line), 9,59 as 5,99,
+ * 3,49 as 3,99 (the price of the neighbouring line), 14,69 as 4,69 and 16,99 as
+ * 6,99 (leading digit dropped). The lines come out SHORT of the receipt, which
+ * is the opposite direction from the over-read that motivated the note.
+ */
+const UNDER_READING = {
+  items: [{ totalPrice: 137.91 }],
+  discount: 55.05,
+  deposit: 1.0,
+  total: 98.15,
+};
+
+describe('buildCorrectionNote — which column it points at', () => {
+  it('blames the quantity column only when the lines over-read the receipt', () => {
+    const note = buildCorrectionNote(FAILED_READING, 36.5);
+
+    expect(note).toMatch(/Ilo/);
+    expect(note).toContain('too high');
+  });
+
+  it('blames the price columns when the lines under-read it, since no pack multiplier can make a sum too small', () => {
+    const note = buildCorrectionNote(UNDER_READING, 14.6);
+
+    expect(note).toContain('too low');
+    // The two ways a price comes out short, both seen in production.
+    expect(note).toMatch(/leading digit/i);
+    expect(note).toMatch(/OPUST/);
+  });
+
+  it('never tells the model its lines were too high when they were too low', () => {
+    expect(buildCorrectionNote(UNDER_READING, 14.6)).not.toContain('too high');
+    expect(buildCorrectionNote(FAILED_READING, 36.5)).not.toContain('too low');
   });
 });

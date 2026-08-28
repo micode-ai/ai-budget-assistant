@@ -127,6 +127,79 @@ describe('OcrService', () => {
     return parsed;
   }
 
+  /**
+   * Production, 2026-08-27. Four of one user's eleven scans stored a discount
+   * the line values had already had taken off, and every one of them produced
+   * no category split as a result. The earlier reconciliation in this method
+   * cannot catch it: `subtotal - discount + tax = total` holds identically when
+   * the model reports the VAT as a discount, because the two cancel.
+   */
+  describe('validateAndNormalizeReceipt — a discount the lines already reflect', () => {
+    const CONTEXT = { language: 'pl', todayIso: '2026-08-28' };
+    const normalize = (over: Partial<ParsedReceipt>) =>
+      (service as any).validateAndNormalizeReceipt({ ...BASE_PARSED_RECEIPT, ...over }, CONTEXT) as ParsedReceipt;
+
+    it('clears the VAT a Sinsay receipt reported as a discount', () => {
+      // Lines 2,09 + 13,99 = 16,08 = SUMA PLN. `Podatek PTU 3,01` is the VAT.
+      const result = normalize({
+        items: [
+          { description: 'Kapcie Dziewczęce', totalPrice: 2.09 },
+          { description: 'Baleriny Dziewczęce', totalPrice: 13.99 },
+        ],
+        subtotal: 16.08,
+        tax: 3.01,
+        discount: 3.01,
+        total: 16.08,
+      });
+
+      expect(result.discount).toBeNull();
+    });
+
+    it('clears an already-applied per-item opust a Rossmann receipt reported', () => {
+      // Two `Uwzgl. opust: -5,00` lines against lines summing to the total.
+      const result = normalize({
+        items: [10.99, 10.99, 14.49, 5.59, 4.79].map((totalPrice, i) => ({ description: `Item ${i}`, totalPrice })),
+        subtotal: 46.85,
+        tax: 8.76,
+        discount: 10,
+        total: 46.85,
+      });
+
+      expect(result.discount).toBeNull();
+    });
+
+    it('keeps a real discount that gross lines actually need', () => {
+      // Biedronka: 152,20 of goods, OPUSTY ŁĄCZNIE -55,05, 1,00 kaucja, 98,15 due.
+      const result = normalize({
+        items: [{ description: 'Goods', totalPrice: 152.2 }],
+        subtotal: 152.2,
+        tax: 9.23,
+        discount: 55.05,
+        deposit: 1,
+        total: 98.15,
+      });
+
+      expect(result.discount).toBe(55.05);
+      expect(result.deposit).toBe(1);
+    });
+
+    it('keeps the discount when the lines reconcile neither way, leaving it to the re-read', () => {
+      // Yesterday's under-read of that same Biedronka: lines 137.91, so the
+      // receipt adds up with neither the discount nor without it. Dropping the
+      // discount here would swap a 15% gap for a 41% one.
+      const result = normalize({
+        items: [{ description: 'Goods', totalPrice: 137.91 }],
+        subtotal: 152.2,
+        tax: 9.23,
+        discount: 55.05,
+        deposit: 1,
+        total: 98.15,
+      });
+
+      expect(result.discount).toBe(55.05);
+    });
+  });
+
   describe('parseReceipt', () => {
     it('sends a vision request and hands the normalized parse to the finalizer', async () => {
       mockOpenAiResponse({ merchantName: 'Biedronka' });

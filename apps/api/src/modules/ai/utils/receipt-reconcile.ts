@@ -71,6 +71,43 @@ export function reconciliationGapPct(receipt: ReconcilableReceipt): number | nul
   return (Math.abs(expected - total) / total) * 100;
 }
 
+/**
+ * True when the model reported a discount its own line values have already had
+ * taken off.
+ *
+ * Grounded in production (2026-08-27). A Sinsay receipt prints lines 2,09 and
+ * 13,99 against `SUMA PLN 16,08`, and the model returned those two lines plus a
+ * `discount` of 3,01 — which is the receipt's `Podatek PTU 3,01`, the VAT, not a
+ * discount at all. A Rossmann receipt prints two `Uwzgl. opust: -5,00` lines
+ * ("uwzględniony" = already applied) and the model returned all five gross-looking
+ * lines summing to the 46,85 total plus a discount of 10,00. In both the lines
+ * already make the total, so subtracting the discount a second time puts the
+ * arithmetic 19% and 21% out and the category split refuses to run.
+ *
+ * The test is not "is this discount plausible" — it is the much narrower
+ * "do the lines reconcile WITHOUT it and fail WITH it". A real discount off
+ * gross lines fails that test by construction, so a genuine `OPUSTY ŁĄCZNIE`
+ * is never touched.
+ *
+ * Distinct from the rejected `Σlines − total` derivation this file warns about:
+ * that INVENTS a discount and makes every reading reconcile. This one only ever
+ * DROPS a discount the lines contradict, and only when dropping it makes the
+ * receipt add up. It cannot manufacture agreement out of a bad reading — when
+ * neither form reconciles, it says nothing and leaves the re-read to decide.
+ */
+export function isDiscountAlreadyInLines(receipt: ReconcilableReceipt, tolerancePct: number): boolean {
+  if (!positive(receipt.discount)) return false;
+
+  const withDiscount = reconciliationGapPct(receipt);
+  // Unmeasurable, or already reconciling — either way there is nothing to doubt.
+  if (withDiscount === null || withDiscount <= tolerancePct) return false;
+
+  const withoutDiscount = reconciliationGapPct({ ...receipt, discount: null });
+  if (withoutDiscount === null) return false;
+
+  return withoutDiscount <= tolerancePct;
+}
+
 /** True when another reading is worth paying for. */
 export function needsReread(receipt: ReconcilableReceipt, tolerancePct: number): boolean {
   const gap = reconciliationGapPct(receipt);
@@ -101,14 +138,18 @@ export function betterRead<T extends ReconcilableReceipt>(first: T, second: T): 
  * poor use of a second vision call. But the failing readings are not uniformly
  * wrong: the 416.63 one reported `subtotal` 299.82, `discount` 70.34,
  * `deposit` 4.50 and `total` 233.98 — every footer figure exactly right —
- * while its items contradicted all of them. The error is concentrated in the
- * quantity column, and usually comes from reading the pack notation printed
- * inside the product NAME ("chust Dada 3x72szt" priced 1 x 10.49 came back as
- * 10 x 10.49).
+ * while its items contradicted all of them.
  *
  * So the note states the arithmetic that failed, quotes the model's own
  * subtotal back at it when it has one, and points at the column that is
  * actually wrong — rather than repeating the original instructions louder.
+ *
+ * Which column that is depends on the SIGN of the gap, and getting it from the
+ * evidence rather than from a constant matters: the note originally always
+ * blamed the quantity column, because the reading it was written against had
+ * over-read. A day later two Biedronka receipts failed the other way — every
+ * quantity correct, seven of fifteen unit prices misread — and that wording
+ * would have sent the second pass to re-check the one column already right.
  */
 export function buildCorrectionNote(receipt: ReconcilableReceipt, gapPct: number): string {
   const lines = receipt.items ?? [];
@@ -127,10 +168,35 @@ export function buildCorrectionNote(receipt: ReconcilableReceipt, gapPct: number
     );
   }
 
-  parts.push(
-    'The error is almost always in the quantity column (Ilość), not in the prices: a pack size printed inside the product NAME ("3x72szt", "4x130G") is NOT a quantity, and a line bought once must have quantity 1 even when its name contains a multiplier.',
-    'Re-read every line value from the value column (Wartość) and every quantity from the Ilość column. Do not change the total, the discount or the deposit — those were correct.',
-  );
+  // Which column to point at is decided by the SIGN of the gap, not by a fixed
+  // guess. The two failure modes push the sum in opposite directions, so the
+  // direction identifies the mode:
+  //
+  //   too high — a pack size printed inside the product NAME was taken for a
+  //     quantity ("chust Dada 3x72szt" priced 1 x 10.49 came back as 10 x 10.49).
+  //     A multiplier can only ever inflate.
+  //   too low — a price was misread. Seen in production on 2026-08-27: a
+  //     leading digit dropped (14,69 -> 4,69; 16,99 -> 6,99) and a value taken
+  //     from the `OPUST` row printed beneath the line instead of the line's own
+  //     (JajaSciol 2 x 10,49 came back as 2 x 5,27, which is that line's OPUST).
+  //     Every quantity on that receipt was correct, so telling the model to
+  //     re-check the Ilosc column sends it to look at the one column that was
+  //     already right.
+  const expected = linesTotal - positive(receipt.discount) + positive(receipt.deposit);
+  if (expected > positive(receipt.total)) {
+    parts.push(
+      'Your line values came out too high. The error is almost always in the quantity column (Ilość), not in the prices: a pack size printed inside the product NAME ("3x72szt", "4x130G") is NOT a quantity, and a line bought once must have quantity 1 even when its name contains a multiplier.',
+      'Re-read every quantity from the Ilość column and every line value from the value column (Wartość).',
+    );
+  } else {
+    parts.push(
+      'Your line values came out too low, so this is NOT a quantity error — a pack multiplier can only make a sum too large. Re-read the price and value columns.',
+      "Two misreads produce exactly this: a dropped leading digit (14,69 read as 4,69; 16,99 as 6,99), and taking the number from the OPUST / discount row printed BENEATH a line instead of the line's own value (2 x 10,49 = 20,98 read as 2 x 5,27, where 5,27 was that line's OPUST).",
+      "Each product line's value is on the product line itself; a discount row (OPUST, RABAT, СКИДКА, ЗНИЖКА, DISCOUNT) belongs to the line above it and is never a line of its own.",
+    );
+  }
+
+  parts.push('Do not change the total, the discount or the deposit — re-read only the line items.');
 
   return parts.join(' ');
 }

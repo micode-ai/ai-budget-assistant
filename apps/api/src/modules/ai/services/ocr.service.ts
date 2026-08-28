@@ -9,6 +9,7 @@ import {
   RECEIPT_RECONCILE_TOLERANCE_PCT,
   betterRead,
   buildCorrectionNote,
+  isDiscountAlreadyInLines,
   needsReread,
   reconciliationGapPct,
   withCorrection,
@@ -573,6 +574,25 @@ Important:
       for (const item of parsed.items) {
         item.canonicalName = item.canonicalName?.trim() || buildCanonicalNameFallback(item.description) || undefined;
       }
+    }
+
+    // Last, on the final items/discount/deposit — so the discount-line fold
+    // above is already accounted for.
+    //
+    // A discount whose value the line items have ALREADY had taken off must not
+    // be subtracted again. The checks earlier in this method cannot catch that
+    // case and in fact bless it: the tax-exclusive form
+    // `subtotal - discount + tax = total` is satisfied identically whenever the
+    // model mistakes the VAT line for a discount, because the two cancel. That
+    // is exactly what happened on 2026-08-27 — a Sinsay receipt whose
+    // `Podatek PTU 3,01` came back as `discount: 3.01` reconciled perfectly and
+    // then produced no category split, because Sum(lines) - 3.01 misses the
+    // total by 19%.
+    if (isDiscountAlreadyInLines(parsed, RECEIPT_RECONCILE_TOLERANCE_PCT)) {
+      this.logger.warn(
+        `[OCR] Discount ${parsed.discount} is already reflected in the line values (they reconcile with the total without it) - clearing it`,
+      );
+      parsed.discount = null;
     }
 
     return parsed;
