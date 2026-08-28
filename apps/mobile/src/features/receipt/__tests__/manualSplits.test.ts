@@ -63,6 +63,16 @@ describe('buildManualSplits', () => {
     expect(buildManualSplits([line(0, 10, 'c-a'), line(1, 30, 'c-a')], 40)).toEqual([]);
   });
 
+  it('keeps a lone category alive when willAppendGroup is true, since a group is coming right after it', () => {
+    // Mirrors buildCategorySplits counting its depositGroup toward the same
+    // two-group minimum — a receipt collapsed to one category plus a deposit
+    // is still a two-group split, not a zero-group one.
+    const splits = buildManualSplits([line(0, 10, 'c-a'), line(1, 30, 'c-a')], 40, true);
+
+    expect(splits).toHaveLength(1);
+    expect(splits[0]).toMatchObject({ categoryId: 'c-a', amount: 40, percentage: 100 });
+  });
+
   it('refuses a non-positive or unusable total', () => {
     const items = [line(0, 10, 'c-a'), line(1, 30, 'c-b')];
 

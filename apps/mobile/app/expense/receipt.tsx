@@ -150,10 +150,20 @@ export default function ReceiptExpenseScreen() {
     });
     // The deposit group is the only split with no lines behind it. Identified
     // structurally rather than by name, because the name is localized and comes
-    // from the server.
+    // from the server. `.find` (not `.filter`) is deliberate: the server-side
+    // finalizer emits at most one deposit group per receipt, so a second match
+    // is not a case this screen needs to handle.
     const depositSplit = serverSplits.find((s) => s.itemIndexes.length === 0) ?? null;
     const base = scannedReceipt.amount - (depositSplit?.amount ?? 0);
-    return withDepositGroup(buildManualSplits(items, base), depositSplit, scannedReceipt.amount);
+    // willAppendGroup tells buildManualSplits a deposit group is coming right
+    // back via withDepositGroup, so a receipt collapsed to one category still
+    // publishes both groups instead of losing the category's money behind a
+    // lone 100% deposit entry.
+    return withDepositGroup(
+      buildManualSplits(items, base, Boolean(depositSplit)),
+      depositSplit,
+      scannedReceipt.amount,
+    );
   }, [hasEditedCategories, serverSplits, scannedReceipt, itemCategories]);
 
   // Names still attached to at least one line. A proposal the user emptied

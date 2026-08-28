@@ -286,9 +286,13 @@ describe('withDepositGroup', () => {
   });
 
   it('recomputes percentages against the full total, so they still sum to 100', () => {
+    // willAppendGroup: true — this is what the receipt screen actually passes
+    // when a deposit exists, so this test exercises the real call shape rather
+    // than the two-category case above.
     const manual = buildManualSplits(
       [{ index: 0, amount: 200, categoryId: 'c-food', categoryName: 'Groceries' }],
       200,
+      true,
     );
 
     const result = withDepositGroup(manual, deposit, 204.5);
@@ -303,5 +307,30 @@ describe('withDepositGroup', () => {
     );
 
     expect(withDepositGroup(manual, null, 200)).toBe(manual);
+  });
+
+  it('keeps the assigned money when the user collapses every line to one category and a deposit exists', () => {
+    // The critical bug the review caught: with willAppendGroup unset,
+    // buildManualSplits refuses a lone category (groups.size < 2) and returns
+    // [], so withDepositGroup([], deposit, total) used to append the deposit
+    // as the ONLY entry, showing "Kaucja, 100%" while the user's real 200
+    // vanished from the split. Telling buildManualSplits a group will be
+    // appended keeps the lone category alive so both groups survive.
+    const manual = buildManualSplits(
+      [{ index: 0, amount: 200, categoryId: 'c-food', categoryName: 'Groceries' }],
+      200,
+      true,
+    );
+
+    const result = withDepositGroup(manual, deposit, 204.5);
+
+    expect(result).toHaveLength(2);
+    expect(result.find((s) => s.categoryId === 'c-food')?.amount).toBe(200);
+    expect(result.find((s) => s.categoryName === 'Kaucja')?.amount).toBe(4.5);
+    expect(result.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(20450);
+  });
+
+  it('returns nothing rather than fabricate a lone 100% deposit entry when nothing was assigned', () => {
+    expect(withDepositGroup([], deposit, 204.5)).toEqual([]);
   });
 });

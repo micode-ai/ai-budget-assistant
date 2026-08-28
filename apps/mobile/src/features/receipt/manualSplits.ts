@@ -27,8 +27,22 @@ const toCents = (amount: number): number => Math.round(amount * 100);
  * line prices are known to be unreliable the only faithful reading of "these
  * lines are beer, those are food" is the ratio between them — dumping the whole
  * discrepancy on one category would invent a number the user never implied.
+ *
+ * `willAppendGroup` tells this function that a caller (in practice,
+ * `withDepositGroup`) is about to add one more group on top of what this
+ * function returns. It exists to keep this function's "one category is not a
+ * split" rule in parity with `buildCategorySplits`, which counts its own
+ * `depositGroup` toward the same two-group minimum. Without it, a receipt
+ * collapsed to a single category plus a deposit used to make this function
+ * refuse (return []), which then made `withDepositGroup` append the deposit
+ * as the ONLY entry — a lone "Kaucja, 100%" while the user's real money
+ * silently vanished from the split.
  */
-export function buildManualSplits(items: ManualSplitItem[], total: number): ReceiptCategorySplit[] {
+export function buildManualSplits(
+  items: ManualSplitItem[],
+  total: number,
+  willAppendGroup = false,
+): ReceiptCategorySplit[] {
   if (!Number.isFinite(total) || total <= 0) return [];
 
   const groups = new Map<string, { categoryName: string; cents: number; itemIndexes: number[] }>();
@@ -45,8 +59,10 @@ export function buildManualSplits(items: ManualSplitItem[], total: number): Rece
     groups.set(line.categoryId, group);
   }
 
-  // One category is not a split, the same rule the automatic path follows.
-  if (groups.size < 2) return [];
+  // One category is not a split, the same rule the automatic path follows —
+  // unless one more group is about to be appended on top (see willAppendGroup
+  // above), in which case one category here plus that group makes two.
+  if (groups.size < (willAppendGroup ? 1 : 2)) return [];
 
   const ordered = Array.from(groups.entries())
     .map(([categoryId, group]) => ({ categoryId, ...group }))
@@ -93,13 +109,21 @@ export function buildManualSplits(items: ManualSplitItem[], total: number): Rece
  * Percentages are recomputed against the full total — the manual splits were
  * computed against the smaller base and would otherwise sum past 100 once the
  * deposit is added.
+ *
+ * `manual` empty is a backstop, not the expected path: the caller is meant to
+ * pass `willAppendGroup: true` to `buildManualSplits` whenever a deposit
+ * exists, which keeps a single assigned category alive instead of collapsing
+ * to []. But if `manual` somehow arrives empty anyway (nothing was assigned
+ * at all), returning it unchanged — rather than appending the deposit as the
+ * only entry — is what stops a lone deposit split from fabricating a claim to
+ * 100% of the receipt.
  */
 export function withDepositGroup(
   manual: ReceiptCategorySplit[],
   deposit: ReceiptCategorySplit | null,
   total: number,
 ): ReceiptCategorySplit[] {
-  if (!deposit || !Number.isFinite(total) || total <= 0) return manual;
+  if (!deposit || manual.length === 0 || !Number.isFinite(total) || total <= 0) return manual;
 
   const all = [...manual, deposit];
   const withPct = all.map((split) => ({
