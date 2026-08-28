@@ -98,8 +98,15 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
 
     useEffect(() => {
       getTagsForExpense(expense.id).then(setExpenseTags).catch(() => {});
-      getSplitsForExpense(expense.id).then(setSplits).catch(() => {});
-    }, [expense.id]);
+      // Local table first, the expense's own server-supplied splits second.
+      // On web `executeSql` resolves to `[]` by design, so without the
+      // fallback this card can never show a category breakdown there — which
+      // is why the whole feature was invisible in the browser. Local wins when
+      // it has rows: an offline edit has not reached the server yet.
+      getSplitsForExpense(expense.id)
+        .then((local) => setSplits(local.length > 0 ? local : expense.splits ?? []))
+        .catch(() => setSplits(expense.splits ?? []));
+    }, [expense.id, expense.splits]);
 
     useEffect(() => {
       if (!isTripAccount) return;

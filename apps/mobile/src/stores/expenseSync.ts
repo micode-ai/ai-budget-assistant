@@ -25,6 +25,7 @@ import {
   getAllProjectExpenseMappings,
   upsertProject,
 } from '@/db/projectRepository';
+import { mapServerSplits } from '@/features/receipt/serverSplits';
 import { getSplitsForExpenses, replaceSplitsForExpense } from '@/db/splitRepository';
 import { upsertCategory } from '@/db/categoryRepository';
 import { api } from '@/services/api';
@@ -348,6 +349,12 @@ async function _doPullAndMerge(
             ? se.projectExpenses[0].projectId ?? se.projectExpenses[0].project?.id
             : undefined;
         const decrypted = decryptedAll[i];
+        // The server already sends the category breakdown with the expense.
+        // Carrying it here is what makes splits visible on web at all, where
+        // SQLite is a no-op and `attachSplits` below can never find anything.
+        // On native `attachSplits` still overwrites this whenever the local
+        // table has rows, so an offline edit stays authoritative.
+        const serverSplits = mapServerSplits((se as any).categorySplits, expenseId);
         return {
           id: expenseId,
           localId: expenseId,
@@ -357,6 +364,7 @@ async function _doPullAndMerge(
           amount: Number(decrypted.amount),
           discountAmount: serverDiscount ?? localExpense?.discountAmount,
           depositAmount: serverDeposit ?? localExpense?.depositAmount,
+          splits: serverSplits ?? localExpense?.splits,
           currencyCode: decrypted.currencyCode,
           description: decrypted.description ?? undefined,
           notes: decrypted.notes ?? undefined,
