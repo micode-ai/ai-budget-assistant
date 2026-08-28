@@ -188,6 +188,75 @@ describe('buildCategorySplits', () => {
       expect(splits.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(23398);
     });
   });
+
+  describe('deposit as its own group', () => {
+    const depositGroup = { categoryId: 'c-dep', categoryName: 'Kaucja' };
+
+    it('emits the deposit as a group of exactly the deposit amount', () => {
+      const items = [item(0, 180, 'c-food', 'Groceries'), item(1, 60, 'c-beer', 'Beer')];
+
+      const splits = buildCategorySplits({ items, total: 244.5, deposit: 4.5, depositGroup });
+
+      expect(splits.find((s) => s.categoryId === 'c-dep')?.amount).toBe(4.5);
+      expect(splits.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(24450);
+    });
+
+    it('carries no item indexes, because no line of the receipt is the deposit', () => {
+      const items = [item(0, 180, 'c-food', 'Groceries'), item(1, 60, 'c-beer', 'Beer')];
+
+      const splits = buildCategorySplits({ items, total: 244.5, deposit: 4.5, depositGroup });
+
+      expect(splits.find((s) => s.categoryId === 'c-dep')?.itemIndexes).toEqual([]);
+    });
+
+    it('counts toward the two-category minimum, so one category plus a deposit splits', () => {
+      // Previously this receipt produced nothing: a single category is not a split.
+      const items = [item(0, 200, 'c-food', 'Groceries')];
+
+      const splits = buildCategorySplits({ items, total: 204.5, deposit: 4.5, depositGroup });
+
+      expect(splits.map((s) => s.categoryId).sort()).toEqual(['c-dep', 'c-food']);
+      expect(splits.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(20450);
+    });
+
+    it('is not a split on its own, with no line categories behind it', () => {
+      expect(
+        buildCategorySplits({ items: [item(0, 200, null, null)], total: 204.5, deposit: 4.5, depositGroup }),
+      ).toEqual([]);
+    });
+
+    it('keeps the residual off the deposit, which is an exact printed figure', () => {
+      // 5 of unassigned lines must land on Groceries, never on the deposit.
+      const items = [
+        item(0, 180, 'c-food', 'Groceries'),
+        item(1, 60, 'c-beer', 'Beer'),
+        item(2, 5, null, null),
+      ];
+
+      const splits = buildCategorySplits({ items, total: 249.5, deposit: 4.5, depositGroup });
+
+      expect(splits.find((s) => s.categoryId === 'c-dep')?.amount).toBe(4.5);
+      expect(splits.find((s) => s.categoryId === 'c-food')?.amount).toBe(185);
+    });
+
+    it('leaves the discount off the deposit too', () => {
+      // A basket coupon discounts goods, not the bottle deposit.
+      const items = [item(0, 120, 'c-food', 'Groceries'), item(1, 80, 'c-beer', 'Beer')];
+
+      const splits = buildCategorySplits({ items, total: 184.5, discount: 20, deposit: 4.5, depositGroup });
+
+      expect(splits.find((s) => s.categoryId === 'c-dep')?.amount).toBe(4.5);
+      expect(splits.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(18450);
+    });
+
+    it('ignores the group when there is no deposit to put in it', () => {
+      const items = [item(0, 180, 'c-food', 'Groceries'), item(1, 60, 'c-beer', 'Beer')];
+
+      const splits = buildCategorySplits({ items, total: 240, deposit: 0, depositGroup });
+
+      expect(splits.map((s) => s.categoryId)).not.toContain('c-dep');
+    });
+  });
 });
 
 describe('rescaleSplits', () => {

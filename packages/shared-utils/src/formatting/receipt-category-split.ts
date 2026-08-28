@@ -63,9 +63,16 @@ export function buildCategorySplits(params: {
    * that no line item can ever account for.
    */
   deposit?: number | null;
+  /**
+   * The category the deposit belongs to, when it should be shown as its own
+   * group rather than left in the residual. `categoryId` may be a real id or
+   * the caller's `proposed:<name>` sentinel — this function only uses it as a
+   * grouping key and never interprets it.
+   */
+  depositGroup?: { categoryId: string; categoryName: string } | null;
   config?: ReceiptSplitConfig;
 }): ReceiptCategorySplit[] {
-  const { items, total, discount, deposit } = params;
+  const { items, total, discount, deposit, depositGroup } = params;
   const config = params.config ?? RECEIPT_SPLIT_DEFAULTS;
 
   if (!Number.isFinite(total) || total <= 0) return [];
@@ -119,7 +126,14 @@ export function buildCategorySplits(params: {
     groups.set(line.categoryId, group);
   }
 
-  if (groups.size < 2) return [];
+  // A deposit counts as a category of its own, which is what lets a receipt
+  // that is otherwise entirely groceries split at all.
+  const depositSplit =
+    depositCents > 0 && depositGroup
+      ? { categoryId: depositGroup.categoryId, categoryName: depositGroup.categoryName, cents: depositCents }
+      : null;
+
+  if (groups.size + (depositSplit ? 1 : 0) < 2) return [];
 
   const ordered = Array.from(groups.entries())
     .map(([categoryId, group]) => ({ categoryId, ...group }))
@@ -151,17 +165,24 @@ export function buildCategorySplits(params: {
   // The residual is whatever the assigned lines did not account for: unassigned
   // lines, an unexplained gap, or rounding. It goes to the largest group.
   const assignedCents = ordered.reduce((sum, g) => sum + g.cents, 0);
-  const residual = totalCents - assignedCents;
+  const residual = totalCents - assignedCents - (depositSplit?.cents ?? 0);
   ordered[0].cents += residual;
 
   // A residual big enough to zero out the largest group means the arithmetic no
   // longer describes the receipt. Refusing beats publishing a nonsense split.
   if (ordered[0].cents <= 0) return [];
 
-  // Re-sort: absorbing the residual can change which group is largest.
-  ordered.sort((a, b) => b.cents - a.cents || a.categoryId.localeCompare(b.categoryId));
+  // Appended only now: the deposit takes no share of the discount and absorbs
+  // no residual. It is a printed, exact figure, and the two adjustments above
+  // exist for figures that are neither.
+  const all = depositSplit
+    ? [...ordered, { ...depositSplit, itemIndexes: [] as number[] }]
+    : ordered;
 
-  const splits = ordered.map((group) => ({
+  // Re-sort: absorbing the residual can change which group is largest.
+  all.sort((a, b) => b.cents - a.cents || a.categoryId.localeCompare(b.categoryId));
+
+  const splits = all.map((group) => ({
     categoryId: group.categoryId,
     categoryName: group.categoryName,
     amount: fromCents(group.cents),
