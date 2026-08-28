@@ -72,6 +72,7 @@ const BASE_PARSED_RECEIPT: ParsedReceipt & { suggestedCategory?: string } = {
   items: [{ description: 'Item', totalPrice: 10 }],
   subtotal: 10,
   discount: null,
+  deposit: null,
   tax: 0,
   total: 10,
   currency: 'USD',

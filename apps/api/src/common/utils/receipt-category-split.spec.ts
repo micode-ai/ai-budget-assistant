@@ -140,6 +140,54 @@ describe('buildCategorySplits', () => {
     const sumCents = Math.round(splits.reduce((sum, s) => sum + s.amount, 0) * 100);
     expect(sumCents).toBe(1999); // 19.99 in cents
   });
+
+  describe('returnable-packaging deposits', () => {
+    // A Polish receipt prints bottle and can deposits (kaucja) in their own
+    // OPAKOWANIA ZWROTNE block, below the goods total and outside the line
+    // items — but DO ZAPLATY includes them. So the lines can never account for
+    // that money, and measuring the gap without it spends the tolerance budget
+    // on a number that was never a discrepancy. On the Biedronka receipt that
+    // prompted this, 4.50 of deposits was 1.9% of the total on its own.
+    it('counts a deposit as part of the total the lines cannot explain', () => {
+      const items = [item(0, 180, 'c-food', 'Groceries'), item(1, 60, 'c-beer', 'Beer')];
+
+      // Lines total 240, deposit 4.50, so the customer paid 244.50.
+      const splits = buildCategorySplits({ items, total: 244.5, deposit: 4.5 });
+
+      expect(splits).toHaveLength(2);
+      expect(splits.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(24450);
+    });
+
+    it('still refuses when the gap is real even after allowing for the deposit', () => {
+      const items = [item(0, 180, 'c-food', 'Groceries'), item(1, 60, 'c-beer', 'Beer')];
+
+      // 40 unaccounted for on top of the deposit is a misread receipt, not a deposit.
+      expect(buildCategorySplits({ items, total: 204.5, deposit: 4.5 })).toEqual([]);
+    });
+
+    it('ignores a deposit that is absent, zero or nonsense', () => {
+      const items = [item(0, 180, 'c-food', 'Groceries'), item(1, 60, 'c-beer', 'Beer')];
+
+      for (const deposit of [undefined, null, 0, -5, Number.NaN]) {
+        expect(buildCategorySplits({ items, total: 240, deposit })).toHaveLength(2);
+      }
+    });
+
+    it('allows for a discount and a deposit on the same receipt', () => {
+      // The real shape: lines are gross, a basket discount comes off, a deposit
+      // goes on. 299.82 - 70.34 + 4.50 = 233.98, the Biedronka receipt exactly.
+      const items = [
+        item(0, 200, 'c-food', 'Groceries'),
+        item(1, 79.82, 'c-beer', 'Beer'),
+        item(2, 20, 'c-fun', 'Entertainment'),
+      ];
+
+      const splits = buildCategorySplits({ items, total: 233.98, discount: 70.34, deposit: 4.5 });
+
+      expect(splits).toHaveLength(3);
+      expect(splits.reduce((sum, s) => sum + Math.round(s.amount * 100), 0)).toBe(23398);
+    });
+  });
 });
 
 describe('rescaleSplits', () => {

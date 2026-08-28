@@ -57,9 +57,15 @@ export function buildCategorySplits(params: {
    * reported one. Positive. See the tolerance check below for why it matters.
    */
   discount?: number | null;
+  /**
+   * Returnable-packaging deposits (Polish `kaucja`), if the receipt reported
+   * them. Positive. The mirror image of `discount`: money the customer paid
+   * that no line item can ever account for.
+   */
+  deposit?: number | null;
   config?: ReceiptSplitConfig;
 }): ReceiptCategorySplit[] {
-  const { items, total, discount } = params;
+  const { items, total, discount, deposit } = params;
   const config = params.config ?? RECEIPT_SPLIT_DEFAULTS;
 
   if (!Number.isFinite(total) || total <= 0) return [];
@@ -82,7 +88,22 @@ export function buildCategorySplits(params: {
   // the line prices, and `discount` is then 0.
   const discountCents =
     typeof discount === 'number' && Number.isFinite(discount) && discount > 0 ? toCents(discount) : 0;
-  const gapPct = (Math.abs(itemsCents - discountCents - totalCents) / totalCents) * 100;
+
+  // A deposit runs the other way: bottle and can deposits are printed in their
+  // own block below the goods total, never as line items, yet the amount due
+  // includes them. So the lines legitimately fall short by exactly that much,
+  // and charging it to the tolerance spends the budget on a number that was
+  // never a discrepancy — on the Biedronka receipt that prompted this, 4.50 of
+  // deposits was 1.9% of the total before a single line had been misread.
+  //
+  // Only the gate is affected. The deposit is NOT spread across the groups the
+  // way the discount is: it belongs to whichever lines the bottles were on, and
+  // guessing which is worse than leaving it in the residual below.
+  const depositCents =
+    typeof deposit === 'number' && Number.isFinite(deposit) && deposit > 0 ? toCents(deposit) : 0;
+
+  const gapPct =
+    (Math.abs(itemsCents - discountCents + depositCents - totalCents) / totalCents) * 100;
   if (gapPct > config.tolerancePct) return [];
 
   const groups = new Map<string, { categoryName: string; cents: number; itemIndexes: number[] }>();

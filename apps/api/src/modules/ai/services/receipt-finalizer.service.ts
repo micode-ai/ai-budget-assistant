@@ -94,6 +94,7 @@ export class ReceiptFinalizerService {
     return {
       amount: parsed.total || 0,
       discountAmount: parsed.discount || null,
+      depositAmount: parsed.deposit || null,
       currencyCode: parsed.currency || 'USD',
       description,
       categoryId: matchedCategory?.id || null,
@@ -281,6 +282,7 @@ export class ReceiptFinalizerService {
       const splits = buildCategorySplits({
         total: receipt.amount,
         discount: receipt.discountAmount,
+        deposit: receipt.depositAmount,
         items: allLines.map((line) => {
           const key = keyByIndex.get(line.index) ?? null;
           return {

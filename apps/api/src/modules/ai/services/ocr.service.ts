@@ -85,6 +85,8 @@ export interface ParsedReceipt {
   items: ReceiptItem[];
   subtotal: number | null;
   discount: number | null;
+  /** Returnable-packaging deposits (Polish `kaucja`), positive. */
+  deposit: number | null;
   tax: number | null;
   total: number;
   currency: string;
@@ -109,6 +111,8 @@ export interface ReceiptCategorySplitPayload {
 export interface ReceiptExpense {
   amount: number;
   discountAmount: number | null;
+  /** See `ParsedReceipt.deposit`. Not persisted — used by the split gate. */
+  depositAmount: number | null;
   currencyCode: string;
   description: string;
   categoryId: string | null;
@@ -280,6 +284,7 @@ Return a JSON object with the following structure:
   ],
   "subtotal": number or null (sum BEFORE any discount and BEFORE tax, when shown),
   "discount": total discount amount as a POSITIVE number, or null,
+  "deposit": total returnable-packaging deposit as a POSITIVE number, or null (see deposit rules below),
   "tax": number or null,
   "total": total amount the customer actually pays (after discount, including tax) — REQUIRED,
   "currency": "USD/EUR/PLN/etc",
@@ -331,6 +336,23 @@ Discount extraction (read carefully — Polish/Lidl/Biedronka receipts often hav
   - US style (tax added on top): items_sum − discount + tax = total
   - Set "subtotal" to items_sum BEFORE discount (NOT the printed "Suma PLN" which is post-discount)
 - "total" is the FINAL amount paid as printed on the receipt (DO ZAPŁATY / TOTAL / SUMMA / Итого)
+
+Returnable-packaging deposit ("deposit"):
+- Bottle and can deposits are printed in their OWN block BELOW the goods total, never as ordinary line items. Polish layout: "OPAKOWANIA ZWROTNE WYDANIA", then lines like "But Plastik kaucja 4 x 0,50 -> 2,00" and "Puszka Kaucja 5 x 0,50 -> 2,50", then "OPAKOWANIA ZWROTNE SUMA 4,50".
+- Output the total of that block as a single POSITIVE number. If the receipt prints its own deposit sum, use that rather than re-adding the lines.
+- Do NOT put deposit lines into "items" — they are not products. "total" (DO ZAPŁATY) already includes them.
+- Other labels: kaucja, kaucja zwrotna, Pfand (DE), statiegeld (NL), consigne (FR), depósito (ES), заставна, депозит.
+- Return null when the receipt has no such block.
+
+Line values must be READ, never computed (the most damaging error you can make here):
+- "totalPrice" is the number printed in that line's own value column ("Wartość" / "Wert" / "Value" / "Suma"). Copy it. Do NOT multiply quantity by unitPrice to produce it.
+- "quantity" and "unitPrice" come from the Ilość and Cena columns. If what you read makes quantity × unitPrice disagree with the printed value, THE PRINTED VALUE WINS: keep it as totalPrice and correct the other two — or set quantity to 1 and unitPrice equal to that value.
+- Columns on a narrow receipt sit close together and digits migrate between them. A real failure from production: a line printed "chust Dada 3x72szt  A  1 x  10,49  10,49" came back as quantity 10, unitPrice 4.09, totalPrice 40.90 — an internally consistent triple in which every number was wrong, overstating that receipt by 30 zł and destroying its category split.
+- Never let pack notation inside the product NAME ("3x72szt", "4×130G") become the quantity. Quantity comes only from the Ilość column.
+
+Check your own arithmetic before answering:
+- Σ(items[].totalPrice) − discount + deposit should equal "total", within about 1%.
+- If it does not, RE-READ the line items — especially the quantity and value columns. Do not adjust "total", "discount" or "deposit" to make the sum come out: those three are printed plainly at the foot of the receipt and are almost always right, while the line columns are where misreads happen.
 
 Date extraction:
 - Output STRICTLY in YYYY-MM-DD form. If the receipt shows DD.MM.YYYY, convert it. Do not include time in this field.
@@ -427,6 +449,19 @@ Important:
     }
 
     parsed.discount = discount;
+
+    // Deposits are a handful of 0.50 charges, never the basket. A model that
+    // returns something the size of the receipt has read the wrong number, and
+    // feeding that to the split gate would widen the tolerance rather than
+    // explain a gap — the opposite of why it is passed at all.
+    const rawDeposit =
+      typeof parsed.deposit === 'number' && Number.isFinite(parsed.deposit) ? Math.abs(parsed.deposit) : null;
+    let deposit = rawDeposit !== null && rawDeposit > 0 ? rawDeposit : null;
+    if (deposit !== null && total !== null && deposit >= total) {
+      this.logger.warn(`[OCR] Deposit ${deposit} >= total ${total} — discarding implausible deposit`);
+      deposit = null;
+    }
+    parsed.deposit = deposit;
 
     if (parsed.items && parsed.items.length > 0) {
       // Some receipts print discounts as their own line ("OPUST PIWO ... -8,00") and the
