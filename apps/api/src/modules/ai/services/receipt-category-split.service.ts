@@ -64,6 +64,30 @@ const LANGUAGE_NAMES: Record<string, string> = {
 };
 const languageName = (language?: string): string => LANGUAGE_NAMES[language ?? ''] ?? 'English';
 
+/**
+ * The deposit category's name, per app locale.
+ *
+ * Ours, not the model's: unlike a proposed category this one has a fixed
+ * meaning, so it is not worth an inference and must not drift between scans.
+ * One word per language — it sits in a category list next to "Groceries".
+ * Resolved from the ACCOUNT OWNER's language so a shared account does not
+ * accumulate one deposit category per member.
+ */
+const DEPOSIT_CATEGORY_NAMES: Record<string, string> = {
+  en: 'Deposit',
+  pl: 'Kaucja',
+  de: 'Pfand',
+  es: 'Depósito',
+  fr: 'Consigne',
+  nl: 'Statiegeld',
+  ru: 'Залог за тару',
+  ua: 'Застава за тару',
+  be: 'Закладзь за тару',
+};
+
+export const depositCategoryName = (language?: string): string =>
+  DEPOSIT_CATEGORY_NAMES[language ?? ''] ?? DEPOSIT_CATEGORY_NAMES.en;
+
 /** NaN-guarded, mirroring parseInferenceQuotaEnv in the AI import path. */
 function resolveDailyLimit(raw: string | undefined): number {
   const parsed = Number.parseInt(raw ?? '', 10);

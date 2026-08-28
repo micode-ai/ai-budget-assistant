@@ -480,4 +480,66 @@ describe('finalizeReceipt category splits', () => {
       expect(splits).toEqual([]);
     });
   });
+
+  describe('ReceiptFinalizerService.runCategorySplit with a deposit', () => {
+    const RECEIPT_WITH_DEPOSIT = {
+      amount: 204.5,
+      depositAmount: 4.5,
+      receiptItems: [{ description: 'Chleb', canonicalName: 'Chleb', totalPrice: 200 }],
+    } as any;
+
+    beforeEach(() => {
+      categorySplitterMock.classify.mockResolvedValue({
+        assignments: new Map([[0, 'c-food']]),
+        proposals: [],
+      });
+    });
+
+    it('gives the deposit its own group, named in the account owner language', async () => {
+      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'pl', timezone: 'UTC' });
+      prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      const deposit = splits.find((s: any) => s.categoryName === 'Kaucja');
+      expect(deposit).toBeDefined();
+      expect(deposit.amount).toBeCloseTo(4.5, 2);
+      // Not a real category yet: it is created when the user saves.
+      expect(deposit.categoryId).toBeNull();
+      expect(JSON.stringify(splits)).not.toContain('proposed:');
+    });
+
+    it('splits a receipt that is otherwise a single category', async () => {
+      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'pl', timezone: 'UTC' });
+      prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      expect(splits).toHaveLength(2);
+      expect(splits.reduce((sum: number, s: any) => sum + s.amount, 0)).toBeCloseTo(204.5, 2);
+    });
+
+    it('reuses the deposit category when the account already has it', async () => {
+      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'pl', timezone: 'UTC' });
+      prisma.category.findMany.mockResolvedValue([
+        { id: 'c-food', name: 'Groceries' },
+        { id: 'c-dep', name: 'Kaucja' },
+      ]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      expect(splits.find((s: any) => s.categoryName === 'Kaucja').categoryId).toBe('c-dep');
+    });
+
+    it('is not subject to the 10% materiality floor that governs proposals', async () => {
+      // 4.5 of 204.5 is 2.2%. A model proposal that small is dropped; a deposit
+      // is not a proposal — it is a printed, named block of the receipt.
+      prisma.user.findUnique.mockResolvedValue({ aiModel: null, language: 'en', timezone: 'UTC' });
+      prisma.category.findMany.mockResolvedValue([{ id: 'c-food', name: 'Groceries' }]);
+
+      const { splits } = await (service as any).runCategorySplit('a1', RECEIPT_WITH_DEPOSIT, 'u1');
+
+      expect(splits.map((s: any) => s.categoryName)).toContain('Deposit');
+    });
+  });
 });

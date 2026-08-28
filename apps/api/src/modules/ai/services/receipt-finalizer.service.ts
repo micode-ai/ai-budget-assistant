@@ -14,6 +14,7 @@ import {
   proposedKey,
   isProposedKey,
   proposedNameFromKey,
+  depositCategoryName,
 } from './receipt-category-split.service';
 import { buildCategorySplits } from '../../../common/utils/receipt-category-split';
 import type {
@@ -198,7 +199,14 @@ export class ReceiptFinalizerService {
         }))
         .filter((line) => Number.isFinite(line.amount) && line.amount > 0);
       const labeledLines = allLines.filter((line) => line.label.length > 0);
-      if (labeledLines.length < 2) {
+      // A deposit is a legitimate second group on its own (design decision 2:
+      // it always forms its own split), so a receipt with only one
+      // classifiable line is still worth sending to the classifier when a
+      // deposit is present — skip only when there is neither enough to
+      // classify nor a deposit to pair it with.
+      const depositAmount = Number(receipt.depositAmount ?? 0);
+      const hasDeposit = Number.isFinite(depositAmount) && depositAmount > 0;
+      if (labeledLines.length < 2 && !hasDeposit) {
         this.logger.log(`[CategorySplit] ${accountId}: skipped few_lines`);
         return nothing;
       }
@@ -281,10 +289,27 @@ export class ReceiptFinalizerService {
         .map(([name, n]) => `${name}x${n}`)
         .join(', ');
 
+      // The deposit is deliberately NOT routed through `proposals` and so never
+      // meets MIN_PROPOSAL_SHARE_PCT. That floor exists to stop the model
+      // inventing a lasting category to hold three zloty; a deposit is a
+      // printed, labelled block of the receipt with a name we supply ourselves,
+      // and at a typical 1-2% of the basket the floor would drop it every time.
+      const depositName = depositCategoryName(user?.language ?? undefined);
+      const existingDeposit = categories.find(
+        (c) => c.name.trim().toLowerCase() === depositName.toLowerCase(),
+      );
+      const depositGroup = hasDeposit
+        ? {
+            categoryId: existingDeposit ? existingDeposit.id : proposedKey(depositName),
+            categoryName: depositName,
+          }
+        : null;
+
       const splits = buildCategorySplits({
         total: receipt.amount,
         discount: receipt.discountAmount,
         deposit: receipt.depositAmount,
+        depositGroup,
         items: allLines.map((line) => {
           const key = keyByIndex.get(line.index) ?? null;
           return {
@@ -305,7 +330,9 @@ export class ReceiptFinalizerService {
         // wrong for the other two.
         this.logger.log(
           `[CategorySplit] ${accountId}: refused ${
-            new Set(keyByIndex.values()).size < 2 ? 'one_category' : 'refused_by_arithmetic'
+            new Set(keyByIndex.values()).size + (depositGroup ? 1 : 0) < 2
+              ? 'one_category'
+              : 'refused_by_arithmetic'
           }, kept ${itemCategories.length} line categories: ${decided}`,
         );
         // No split, but the lines keep their categories: the user sees what each
