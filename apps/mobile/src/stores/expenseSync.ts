@@ -110,6 +110,7 @@ export async function syncPendingExpenses(
         localId: expense.localId || expense.id,
         amount: encPayload.amount ?? expense.amount,
         discountAmount: encPayload.discountAmount ?? expense.discountAmount,
+        depositAmount: encPayload.depositAmount ?? expense.depositAmount,
         currencyCode: expense.currencyCode,
         description: encPayload.description ?? expense.description,
         notes: encPayload.notes ?? expense.notes,
@@ -334,6 +335,8 @@ async function _doPullAndMerge(
         const serverCategoryId = se.categoryId ?? se.category?.id ?? undefined;
         const serverDiscount =
           se.discountAmount != null ? Number(se.discountAmount) : undefined;
+        const serverDeposit =
+          se.depositAmount != null ? Number(se.depositAmount) : undefined;
         const localExpense = localById.get(expenseId);
         const serverProjectId =
           se.projectExpenses &&
@@ -350,6 +353,7 @@ async function _doPullAndMerge(
           accountId: decrypted.accountId,
           amount: Number(decrypted.amount),
           discountAmount: serverDiscount ?? localExpense?.discountAmount,
+          depositAmount: serverDeposit ?? localExpense?.depositAmount,
           currencyCode: decrypted.currencyCode,
           description: decrypted.description ?? undefined,
           notes: decrypted.notes ?? undefined,

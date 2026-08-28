@@ -26,6 +26,7 @@ export interface CreateExpenseDto {
   localId: string;
   amount: number;
   discountAmount?: number;
+  depositAmount?: number;
   currencyCode: Currency;
   description?: string;
   notes?: string;
@@ -55,6 +56,7 @@ export interface CreateExpenseDto {
 export interface UpdateExpenseDto {
   amount?: number;
   discountAmount?: number;
+  depositAmount?: number;
   currencyCode?: Currency;
   description?: string;
   notes?: string;

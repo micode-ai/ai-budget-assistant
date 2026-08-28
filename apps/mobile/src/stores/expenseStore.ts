@@ -266,6 +266,7 @@ export const useExpenseStore = create<ExpenseState>()(
           localId: id,
           amount: encPayload.amount ?? newExpense.amount,
           discountAmount: encPayload.discountAmount ?? newExpense.discountAmount,
+          depositAmount: encPayload.depositAmount ?? newExpense.depositAmount,
           currencyCode: newExpense.currencyCode,
           description: encPayload.description ?? newExpense.description,
           notes: encPayload.notes ?? newExpense.notes,
