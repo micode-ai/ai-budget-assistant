@@ -1,4 +1,9 @@
-# Receipt Category Auto-Split — Design (v1)
+# Receipt Category Auto-Split — Design
+
+> v1 shipped 2026-08-12. Three parts of it did not survive contact with real
+> receipts and were corrected on 2026-08-28; the affected sections below have
+> been rewritten to describe what is actually built, and **Revisions after v1**
+> at the end records what changed and why.
 
 One scanned supermarket receipt currently lands as a single category. A 240 zł
 Biedronka trip is "Groceries", even though it is really 180 groceries + 35
@@ -66,17 +71,27 @@ skeleton, but its contract with the model changes.
 
 Chain, cheapest first:
 
-1. **Per-account rules** — `product_category_rules`, `canonicalNameNormalized → categoryId`.
+1. **Per-account rules** — `product_category_rules`, keyed on the receipt's own
+   **printed line** (`ExpenseItem.description`), normalized to letters and digits
+   only. NOT on the model's `canonicalName` — see Revisions.
 2. **LLM** for whatever the rules do not cover.
 
-The LLM's output is written back into the rules, so a repeat purchase is free.
+The LLM's output is written back into the rules **when the expense is saved**,
+from the category it actually saved with — not at scan time, or a scan the user
+abandons would teach the cache. A repeat purchase is then free.
 In a grocery basket that is nearly everything: people buy the same products every
 week. This is what keeps the "free, outside quota" decision affordable.
 
 ### The model never emits money
 
-Input: the receipt's line items (index + `canonicalName`, falling back to
-`description`) and the account's expense category **names**.
+Input: the receipt's line items (index + label, where the label is
+`canonicalName` falling back to `description`) and the account's expense category
+**names**.
+
+Two strings per line, for two different jobs: the **label** goes to the model,
+where a clean product name genuinely reads better, while the **rule key** is the
+printed line. `ClassifyLine.label` and `ClassifyLine.ruleKey` are separate fields
+for exactly this reason.
 
 Output: `[{ itemIndex, categoryName }]`. Nothing else. No amounts, no percentages,
 no totals.
@@ -96,10 +111,18 @@ still useful.
 
 The obvious cost-saver is a hand-written PL keyword map (`piwo → Alcohol`), a
 sibling of `MERCHANTS_PL`. Deliberately not done: the per-account rule cache,
-populated by the model's own output, reaches the same steady state within one or
-two shopping trips — without a hundred lines of hand-maintained vocabulary and
+populated by the model's own output, should reach the same steady state within a
+shopping trip or two — without a hundred lines of hand-maintained vocabulary and
 without the PL bias that already fragments non-Polish merchants in
 `normalizeMerchantPL`.
+
+That claim was untested when written, and under the original key it was simply
+false: one receipt scanned twice produced 22 rules and then 33 more **with no key
+in common**. Measured again after the key changed, a fourth scan of the same
+receipt matched 27 of the 32 existing rules and created 4. The remaining misses
+are lines whose printed text the OCR itself reads differently between scans
+(`JajaŚcioł` / `JajaKlSol`), which no normalization can reconcile — fuzzy matching
+was considered and deliberately not taken.
 
 ### Budget and failure behaviour
 
@@ -125,12 +148,21 @@ breakdown stops adding up to it and every percentage is wrong**.
 **Invariant: Σ split amounts === expense amount, exactly, to the cent.**
 
 The difficulty is that Σ line items is rarely equal to the receipt total —
-discounts, non-itemized fees, and OCR misses all break it. `parsed.amount` is the
-OCR `total` and is never adjusted (ABA-343). Rules:
+discounts, deposits, non-itemized fees, and OCR misses all break it.
+`parsed.amount` is the OCR `total` and is never adjusted (ABA-343). Rules:
 
-- If `|Σitems − amount| / amount` exceeds `SPLIT_TOLERANCE_PCT` (default 5%),
-  **emit no split at all**. Refusing is honest; smearing an unexplained difference
-  across categories is not.
+- Two of those differences are *known* and are allowed for before the gate is
+  applied. A **discount** is money taken off after the lines were priced: the
+  lines stay gross and only the total reflects it. A **deposit** (Polish
+  `kaucja`, returnable packaging) runs the other way: it is printed in its own
+  block, never as a line item, yet the amount due includes it. So the gate
+  measures `|Σitems − discount + deposit − amount| / amount`.
+- If that exceeds `SPLIT_TOLERANCE_PCT` (default 5%), **emit no split at all**.
+  Refusing is honest; smearing an unexplained difference across categories is
+  not.
+- Only the known discount is spread across the groups, in proportion to what each
+  contributed. The deposit is not: it belongs to whichever lines the bottles were
+  on, and guessing which is worse than leaving it in the residual.
 - Within tolerance, the residual goes deterministically to the largest group —
   the same shape as `resolveShares` in `trip-share-calculator.ts`, where the last
   participant absorbs the residual cent.
@@ -159,6 +191,33 @@ before it can ship, and why an `apps/api` ESLint rule mirrors it. (Note that
 imports its own `insights/safe-to-spend.util.ts` copy and only the spec file
 reaches for the shared one.) Same case table on both sides — change one, change
 the other.
+
+## Re-reading a receipt that does not add up
+
+The gate above assumes a bad reading is rare. It is not: extraction is **not
+reproducible**. The same Biedronka PDF, the same prompt, four scans — line totals
+of 345.16, 294.28, 311.97 and 306.05 against a true 299.82, and the printed
+`OPUSTY ŁĄCZNIE: -70,34` read as 70.34 three times and 18.97 once. Two of those
+four scans refused to split, for two unrelated reasons.
+
+So rather than requiring the model to be right every time, `OcrService.readReceipt`
+asks the receipt's own arithmetic whether the reading holds and, when it does not,
+re-issues the **identical** request once and keeps whichever reading reconciles.
+An identical request on purpose: what is wanted is a second independent sample,
+not a differently-worded question.
+
+- All four scan paths (image, text-PDF, both PDF-as-file branches) go through this
+  one choke point, so a fifth inherits it — the same property `finalizeReceipt`
+  gives the price check and the split itself.
+- A tie, or a second reading that cannot be measured, keeps the first: a re-read
+  can rescue a scan, never degrade one. A re-read that throws keeps the first too.
+- The extra call is only ever spent on a scan already headed for no split.
+- The decision is pure and unit-tested in `modules/ai/utils/receipt-reconcile.ts`;
+  the service calls, the util decides.
+
+**Deliberately not done**: deriving the discount from `Σitems − total`. That makes
+every reading reconcile by construction — including the one that over-read the
+basket by 45 — and destroys the only signal that a reading is bad.
 
 ## Storage
 
@@ -285,3 +344,33 @@ as a follow-up rather than silently pretended away.
 - Re-deriving splits for historical receipts after rules accumulate (the reason
   `expense_items.category_id` exists).
 - Learning a rule from an item category change made outside the receipt screen.
+
+## Revisions after v1
+
+v1 shipped on 2026-08-12. What follows was found by scanning one real Biedronka
+receipt repeatedly on 2026-08-27/28 and reading the production database; each
+item corrected a claim above rather than adding a feature.
+
+**ABA-440 — deposits, and line values the model invented.** A 33-line receipt
+with four correctly identified categories produced no split. Two causes: the
+`OPAKOWANIA ZWROTNE` deposit block was charged to the tolerance (4.50 on a 233.98
+receipt, 1.9% before anything else went wrong), and the model returned
+internally-consistent `quantity × unitPrice = totalPrice` triples in which every
+number was wrong — `1 × 10,49` came back as `10 × 4.09 = 40.90`. The gate learned
+about deposits; the prompt learned that the printed value column is copied, never
+computed, and that `Σlines − discount + deposit` must reconcile with the total.
+Line sum moved from 345.16 to 294.28 against a true 299.82.
+
+**ABA-441 — the rule key.** `canonicalName` is invented per scan and is not
+stable (`piwo carlsberg 0,5l` one day, `carlsberg 0,5l` the next), so the cache
+never hit, every scan paid the model, and contradictory rules accumulated. The
+key became the receipt's printed line, normalized to letters and digits only, and
+the existing rows — dead under the new scheme — were dropped by migration.
+
+**ABA-442 — the re-read.** See the section above. Prompt wording had removed one
+class of error and left the variance, which is what actually decided whether a
+receipt split.
+
+Where this leaves the feature, measured on the fourth scan of that receipt: gap
+0.7% against the total, split emitted, no re-read needed, and 27 of 32 rule keys
+matched.
