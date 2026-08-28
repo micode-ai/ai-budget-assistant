@@ -20,6 +20,7 @@ interface PendingReceiptData {
   categoryId: string | null;
   date: string | null;
   discountAmount: number | null;
+  depositAmount: number | null;
   merchant: string | null;
   location?: { lat: number; lng: number; name?: string } | null;
   categorySplits?: ReceiptExpense['categorySplits'];
@@ -106,6 +107,7 @@ export class PhotoHandler {
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
+        depositAmount: receipt.depositAmount,
         merchant: receipt.merchant,
         location: receipt.location,
         categorySplits: receipt.categorySplits ?? [],
@@ -203,6 +205,7 @@ export class PhotoHandler {
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
+        depositAmount: receipt.depositAmount,
         merchant: receipt.merchant,
         location: receipt.location,
         categorySplits: receipt.categorySplits ?? [],
@@ -311,6 +314,7 @@ export class PhotoHandler {
         localId: randomUUID(),
         amount: data.amount,
         discountAmount: data.discountAmount || undefined,
+        depositAmount: data.depositAmount || undefined,
         currencyCode: data.currencyCode,
         description: data.description,
         merchant: data.merchant ?? undefined,

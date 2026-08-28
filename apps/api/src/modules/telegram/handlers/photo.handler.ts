@@ -37,6 +37,7 @@ interface PendingReceiptData {
   categoryId: string | null;
   date: string | null;
   discountAmount: number | null;
+  depositAmount: number | null;
   items: Array<{
     description: string;
     /** Category the scan classified this line into; survives even when the
@@ -180,6 +181,7 @@ export class PhotoHandler {
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
+        depositAmount: receipt.depositAmount,
         receiptMimeType: 'image/jpeg',
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
@@ -307,6 +309,7 @@ export class PhotoHandler {
         categoryId: receipt.categoryId,
         date: receipt.date,
         discountAmount: receipt.discountAmount,
+        depositAmount: receipt.depositAmount,
         receiptMimeType: mime_type || 'application/pdf',
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
@@ -354,6 +357,7 @@ export class PhotoHandler {
           localId: randomUUID(),
           amount: data.amount,
           discountAmount: data.discountAmount || undefined,
+          depositAmount: data.depositAmount || undefined,
           currencyCode: data.currencyCode,
           description: data.description,
           merchant: data.merchant,

@@ -8,8 +8,10 @@ import { extractReceiptDiscounts } from '../utils/receipt-discount';
 import {
   RECEIPT_RECONCILE_TOLERANCE_PCT,
   betterRead,
+  buildCorrectionNote,
   needsReread,
   reconciliationGapPct,
+  withCorrection,
 } from '../utils/receipt-reconcile';
 import type { ReceiptCheckFinding } from '@budget/shared-types';
 import { ReceiptFinalizerService } from './receipt-finalizer.service';
@@ -409,8 +411,10 @@ Important:
     request: any,
     context: OcrContext,
   ): Promise<ParsedReceipt & { suggestedCategory?: string }> {
-    const readOnce = async (): Promise<ParsedReceipt & { suggestedCategory?: string }> => {
-      const response = await this.openai.chat.completions.create(request);
+    const readOnce = async (
+      req: any = request,
+    ): Promise<ParsedReceipt & { suggestedCategory?: string }> => {
+      const response = await this.openai.chat.completions.create(req);
       const choice = (response as any).choices?.[0];
       const content = choice?.message?.content;
       this.logger.log(`[${label}] GPT finish_reason: ${choice?.finish_reason}`);
@@ -428,9 +432,29 @@ Important:
     const firstGap = reconciliationGapPct(first);
     this.logger.warn(`[${label}] lines miss the total by ${firstGap?.toFixed(1)}% — re-reading once`);
 
+    // The re-read is CORRECTIVE, not a blind resample.
+    //
+    // Six readings of one Biedronka receipt produced line sums of 345.16,
+    // 294.28, 311.97, 306.05, 385.14 and 416.63 against a true 299.82 — only
+    // two reconciled. Resampling the identical question converges far too
+    // slowly to be worth a second vision call.
+    //
+    // What makes correction possible is that the failing readings are not
+    // uniformly bad: in the 416.63 reading the model reported `subtotal`
+    // 299.82, `discount` 70.34, `deposit` 4.50 and `total` 233.98 — every
+    // footer figure exactly right — while its own line items contradicted
+    // them. It is the Ilość column that gets misread (a "chust Dada 3x72szt"
+    // priced 1 x 10.49 came back as 10 x 10.49), usually because the pack
+    // notation printed inside the product NAME is taken for the quantity.
+    //
+    // So the second pass is handed the arithmetic it failed, and pointed at
+    // the column that is actually wrong. `betterRead` still decides which
+    // reading survives, so a corrective pass that comes back worse is
+    // discarded exactly as a blind one would be.
+    const correction = buildCorrectionNote(first, firstGap ?? 0);
     let second: ParsedReceipt & { suggestedCategory?: string };
     try {
-      second = await readOnce();
+      second = await readOnce(withCorrection(request, correction));
     } catch (error) {
       // A failed re-read must never cost the user the reading already in hand.
       this.logger.warn(`[${label}] re-read failed, keeping the first reading: ${error}`);
@@ -439,7 +463,7 @@ Important:
 
     const chosen = betterRead(first, second);
     this.logger.log(
-      `[${label}] re-read gap ${reconciliationGapPct(second)?.toFixed(1)}% vs ${firstGap?.toFixed(1)}% — keeping the ${chosen === second ? 'second' : 'first'} reading`,
+      `[${label}] corrective re-read gap ${reconciliationGapPct(second)?.toFixed(1)}% vs ${firstGap?.toFixed(1)}% — keeping the ${chosen === second ? 'second' : 'first'} reading`,
     );
     return chosen;
   }
