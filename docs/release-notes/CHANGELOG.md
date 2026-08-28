@@ -8,6 +8,24 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.20.0 - 2026-08-28
+
+**Receipts that add up**
+
+- **The category split on a scanned receipt now actually appears.** It was refusing far more often than it should have, for four separate reasons, all of them fixed: a bottle-and-can deposit printed below the goods total was never accounted for; a discount the receipt's line prices had *already* had taken off was subtracted a second time (on one receipt the app had read the VAT line as a discount); the learned product rules were keyed on a name the model reinvents on every scan, so the same shop taught contradictory rules and never got cheaper; and a single bad reading of the line column killed the whole split (ABA-440, ABA-441, ABA-442, ABA-449).
+- **Bottle and can deposits get their own category.** Polish `kaucja` is printed in its own block below the goods total and is never a line item, yet you pay it — on one receipt 4.50 of deposits was 1.9% of the total. It is now tracked separately, named in the account owner's language, and the figure is saved even when the rest of the receipt does not reconcile (ABA-440, ABA-444).
+- **A receipt that does not add up is read a second time.** Extraction is not reproducible: the same receipt, the same request, three different answers. When the arithmetic says a reading is wrong, the app asks once more and keeps whichever reading matches the receipt's own printed totals — so a scan can only be rescued, never made worse (ABA-442).
+- **The assistant can answer about a category that only exists inside a split.** Ask what you spent on alcohol and it now counts the alcohol line of a supermarket receipt, instead of answering "nothing" while the Analytics tab shows a figure (ABA-446).
+- Category splits show up on the web app and on a freshly reinstalled phone, not only on the device that scanned the receipt (ABA-445).
+
+**Buttons you can see**
+
+- **The actions in the top bar were invisible.** Orange icons were being drawn on the orange header — a contrast ratio of 1.0:1. This affected nine actions across eight screens: add a goal, edit or delete a project, delete a goal, exchange and transfer history, the shopping-list map, and "mark all read" in alerts. On the shopping list it hid a button that deletes every ticked item (ABA-450).
+- **The shopping list's bottom bar no longer overlaps itself.** In Polish the "compare prices" icon spilled across the neighbouring button's border and its label wrapped onto two lines. The bar now moves the compare and map buttons onto their own row when the language needs the space (ABA-450).
+- The shopping list's screen title is no longer cut to `Lista zaku...`, and the list name is no longer printed twice (ABA-450).
+
+---
+
 ## 1.19.0 - 2026-08-27
 
 **1.18.0 never reached the stores.** Its submit was rejected by Google Play over a
