@@ -1163,7 +1163,80 @@ The cost multiplier scales the AI quota consumed per request. For example, with 
 | Investment Insights | User-selected model | Portfolio analysis, concentration risks, performance alerts |
 | Tag Suggestions | User-selected model | Suggest tags based on expense description (history-first, AI fallback) |
 | Project Suggestions | User-selected model | Match expenses to active projects by date range and semantic analysis |
-| Split Suggestions | User-selected model | Suggest category splits for multi-category expenses |
+| Receipt Category Auto-Split | User-selected model | Assign each scanned receipt line to a category (labels only, never amounts) — see below |
+
+
+### Receipt Category Auto-Split
+
+Splits a scanned receipt's own line items across expense categories — a 240 zł
+supermarket trip becomes groceries + household + alcohol instead of one lump.
+Computed once at scan time inside the OCR funnel: no endpoint of its own, and no
+LLM in any write path. `ReceiptExpense.categorySplits` is **always present** (an
+empty array when there is no split), so every scan path and all three bots
+receive it without extra wiring.
+
+**Classification chain, cheapest first.** Per-account learned rules answer first
+and cost nothing; only the lines they do not cover go to the model.
+
+- Rules live in `product_category_rules` and are keyed on **the receipt's own
+  printed line**, normalized to letters and digits only (spacing, punctuation,
+  case and diacritics discarded). They are deliberately *not* keyed on the
+  model's `canonicalName`: that string is invented per scan and is not stable,
+  so the cache never hit and contradictory rules accumulated.
+- Rules are taught at **save** time, from the category the expense actually
+  saved with — never at scan time, or an abandoned scan would teach the cache.
+- A model answer costs one inference against `AI_SPLIT_MAX_INFERENCES_PER_DAY`
+  (default 20/account/day, a Redis counter kept outside the monthly AI quota).
+  A rule hit costs nothing.
+
+**The model never emits money.** It receives each line's index and label plus
+the account's category *names*, and returns `{itemIndex, categoryName}` only —
+no amount, percentage or total appears anywhere in the exchange. Responses are
+validated against the account's real category names and the real index range;
+anything invented is dropped rather than trusted.
+
+**Arithmetic** is the pure `buildCategorySplits` — a deliberately duplicated
+pair (`apps/api/src/common/utils/receipt-category-split.ts` canonical, mirrored
+in `packages/shared-utils` because the API cannot import that package at
+runtime). Group cent-values sum to the receipt total exactly by integer
+construction.
+
+**The tolerance gate** compares `Sum(lines) - discount + deposit` against the
+total and refuses to split at all when they differ by more than 5%:
+
+- *discount* — a basket discount: the lines keep their full price and only the
+  total reflects it. Spread across the groups in proportion to what each
+  contributed.
+- *deposit* — returnable-packaging charges (Polish `kaucja`), printed in their
+  own block, never as line items, yet included in the amount due. Gate only; it
+  stays in the residual rather than being attributed by guesswork.
+
+Refusing is the intended answer, not a failure: smearing an unexplained
+difference across a user's categories would be worse than leaving the receipt
+whole. A split also requires at least two distinct categories. Whatever the
+assigned lines do not account for — an unassigned line, rounding — goes to the
+largest group.
+
+**Re-reading.** Extraction is not reproducible: the same receipt and the same
+prompt yield different line totals and sometimes a different reading of the
+printed discount. When the arithmetic above fails, the identical request is
+re-issued **once** and the reading that reconciles is kept (a tie or an
+unmeasurable second reading keeps the first, so a re-read can only rescue a
+scan, never degrade one). The extra call is only ever spent on a scan already
+headed for no split.
+
+**Category proposals.** When no existing category fits a group of lines, the
+model may propose up to three new ones, named in the account owner's language.
+Nothing is created until the user saves — an abandoned scan leaves the taxonomy
+as it found it.
+
+**Budgets deliberately ignore these splits** and keep reading the expense's own
+single category, exactly as they already do for splits made by hand. Only
+category analytics counts them.
+
+Each scan logs exactly one `[CategorySplit]` line naming the outcome
+(`few_lines`, `no_categories`, `no_assignments`, `one_category`,
+`refused_by_arithmetic`, or `ok groups=N`).
 
 ### Data Flow
 
