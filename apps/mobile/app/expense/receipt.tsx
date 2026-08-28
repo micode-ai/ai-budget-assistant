@@ -1,52 +1,23 @@
-import { useState, useEffect, useMemo, useRef } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  Image,
-} from 'react-native';
+import { useEffect, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
-import * as ImageManipulator from 'expo-image-manipulator';
-import { uriToBase64 } from '@/utils/fileBase64';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
+import { useReceiptCategorySplit } from '@/hooks/useReceiptCategorySplit';
+import { useReceiptSave } from '@/hooks/useReceiptSave';
 import { useExpenseStore } from '@/stores/expenseStore';
-import { useAuthStore } from '@/stores/authStore';
-import { MerchantInput } from '@/components/MerchantInput';
 import { resolveExistingMerchant } from '@/utils/merchant';
-import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
-import CategorySplitChips from '@/components/receipt/CategorySplitChips';
-import ItemCategorySheet, { type ItemCategorySheetItem } from '@/components/receipt/ItemCategorySheet';
+import ReceiptCaptureView from '@/components/receipt/ReceiptCaptureView';
+import ReceiptConfirmCard from '@/components/receipt/ReceiptConfirmCard';
+import ItemCategorySheet from '@/components/receipt/ItemCategorySheet';
 import { useCategoryStore } from '@/stores/categoryStore';
-import { isProposedKey, proposedName } from '@/features/receipt/proposedCategory';
-import {
-  proposedNamesForSave,
-  resolveProposedCategories,
-} from '@/features/receipt/resolveProposedCategories';
-import { seedItemCategories, seedLineCategories } from '@/features/receipt/seedItemCategories';
-import { buildManualSplits, withDepositGroup } from '@/features/receipt/manualSplits';
-import { formatCurrency, type ReceiptCategorySplit } from '@budget/shared-utils';
-import type { Currency } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
-import { getIntlLocale } from '@/i18n';
-import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
-
-async function compressAndEncodeImage(uri: string): Promise<string> {
-  const result = await ImageManipulator.manipulateAsync(
-    uri,
-    [{ resize: { width: 800 } }],
-    { compress: 0.6, format: ImageManipulator.SaveFormat.JPEG },
-  );
-  return await uriToBase64(result.uri);
-}
 
 export default function ReceiptExpenseScreen() {
   const { t } = useTranslation();
@@ -56,30 +27,8 @@ export default function ReceiptExpenseScreen() {
   const [saveImage, setSaveImage] = useState(true);
   const [userPrompt, setUserPrompt] = useState('');
   const [merchant, setMerchant] = useState('');
-  const { addExpense } = useExpenseStore();
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
-  const { user } = useAuthStore();
   const { getExpenseCategories } = useCategoryStore();
-
-  // itemCategories: receiptItems index -> locally-resolved category id.
-  // Seeded from the server's categorySplits (Step 1 below) and updated live
-  // as the user reassigns lines in the ItemCategorySheet.
-  const [itemCategories, setItemCategories] = useState<Record<number, string | null>>({});
-  // True only when the server DID send a split but it could not be resolved
-  // against local categories, so the whole set was dropped (see the effect
-  // below) — distinct from "the server never suggested a split at all".
-  const [splitDropped, setSplitDropped] = useState(false);
-  // The split exactly as the server sent it, shown until the user edits a line.
-  // Keeping it means the screen never depends on the client reproducing the
-  // server's arithmetic just to display what the server already computed.
-  const [serverSplits, setServerSplits] = useState<ReceiptCategorySplit[]>([]);
-  const [hasEditedCategories, setHasEditedCategories] = useState(false);
-  const [showSplitSheet, setShowSplitSheet] = useState(false);
-
-  const gpsLocationRef = useRef<CapturedLocation | null>(null);
-  useEffect(() => {
-    captureCurrentLocation().then((loc) => { gpsLocationRef.current = loc; });
-  }, []);
 
   const {
     isProcessing,
@@ -104,107 +53,41 @@ export default function ReceiptExpenseScreen() {
       setShowConfirm(true);
       setMerchant(resolveExistingMerchant(scannedReceipt.merchant, getDistinctMerchants()));
       useSubscriptionStore.getState().loadUsage();
-
-      // Resolve the server's splits against local categories: by id first,
-      // falling back to a name lookup (the same fallback this screen already
-      // uses for categorySuggestion). A proposal (categoryId null) has no local
-      // category by definition and is held under a sentinel until save.
-      const catStore = useCategoryStore.getState();
-      const resolveLocalId = (c: { categoryId: string | null; categoryName: string }) =>
-        ((c.categoryId ? catStore.getCategoryById(c.categoryId) : undefined) ||
-          catStore.getCategoryByName(c.categoryName, 'expense'))?.id;
-
-      const { dropped, splits } = seedItemCategories(scannedReceipt.categorySplits, resolveLocalId);
-      // The lines keep their own categories even when there is no money split —
-      // the server classifies and reconciles as two separate questions, and the
-      // answer to the first is useful on its own.
-      setItemCategories(seedLineCategories(scannedReceipt.receiptItems, resolveLocalId));
-      setSplitDropped(dropped);
-      setServerSplits(splits);
-      setHasEditedCategories(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scannedReceipt]);
 
-  // Until the user touches a line, show what the server actually sent. Deriving
-  // it locally instead would require two implementations of the same arithmetic
-  // to agree before anything appears — and a disagreement renders as an empty
-  // block with no error, which is how a stale web bundle once hid a split the
-  // server had built correctly.
-  //
-  // Once a line moves, the split becomes the user's rather than the machine's,
-  // and buildManualSplits takes over: their assignment is published in
-  // proportion to the total, with no tolerance gate second-guessing it.
-  const currentSplits: ReceiptCategorySplit[] = useMemo(() => {
-    if (!hasEditedCategories) return serverSplits;
-    if (!scannedReceipt?.receiptItems || scannedReceipt.receiptItems.length === 0) return [];
-    const catStore = useCategoryStore.getState();
-    const items = scannedReceipt.receiptItems.map((item, index) => {
-      const categoryId = itemCategories[index] ?? null;
-      return {
-        index,
-        amount: item.totalPrice,
-        categoryId,
-        categoryName: categoryId
-          ? isProposedKey(categoryId)
-            ? proposedName(categoryId)
-            : catStore.getCategoryById(categoryId)?.name ?? null
-          : null,
-      };
-    });
-    // The deposit group is the only split with no lines behind it. Identified
-    // structurally rather than by name, because the name is localized and comes
-    // from the server. `.find` (not `.filter`) is deliberate: the server-side
-    // finalizer emits at most one deposit group per receipt, so a second match
-    // is not a case this screen needs to handle.
-    const depositSplit = serverSplits.find((s) => s.itemIndexes.length === 0) ?? null;
-    const base = scannedReceipt.amount - (depositSplit?.amount ?? 0);
-    // willAppendGroup tells buildManualSplits a deposit group is coming right
-    // back via withDepositGroup, so a receipt collapsed to one category still
-    // publishes both groups instead of losing the category's money behind a
-    // lone 100% deposit entry.
-    return withDepositGroup(
-      buildManualSplits(items, base, Boolean(depositSplit)),
-      depositSplit,
-      scannedReceipt.amount,
-    );
-  }, [hasEditedCategories, serverSplits, scannedReceipt, itemCategories]);
+  const {
+    itemCategories,
+    splitDropped,
+    currentSplits,
+    proposedNamesInPlay,
+    proposedNamesToCreate,
+    sheetItems,
+    showSplitSheet,
+    setShowSplitSheet,
+    handleItemCategoryChange,
+    resetSplitState,
+  } = useReceiptCategorySplit(scannedReceipt);
 
-  // Names still attached to at least one line. Feeds the line-category picker
-  // ONLY — a proposal the user emptied disappears from it, and a category with
-  // no lines behind it (the deposit) has no place in a picker over lines.
-  // Creating categories reads proposedNamesToCreate below instead.
-  const proposedNamesInPlay = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          Object.values(itemCategories)
-            .filter(isProposedKey)
-            .map((key) => proposedName(key as string)),
-        ),
-      ),
-    [itemCategories],
-  );
-
-  // What actually gets created on save: every proposal on a line PLUS every
-  // proposal in the split being published. The deposit group is only in the
-  // latter — it has no lines — so a list built from the lines alone left its
-  // `new:` sentinel to travel to the API. See proposedNamesForSave.
-  const proposedNamesToCreate = useMemo(
-    () => proposedNamesForSave(itemCategories, currentSplits),
-    [itemCategories, currentSplits],
-  );
-
-  const sheetItems: ItemCategorySheetItem[] = (scannedReceipt?.receiptItems ?? []).map((item, index) => ({
-    index,
-    description: item.description,
-    categoryId: itemCategories[index] ?? null,
-  }));
-
-  const handleItemCategoryChange = (itemIndex: number, categoryId: string | null) => {
-    setItemCategories((prev) => ({ ...prev, [itemIndex]: categoryId }));
-    setHasEditedCategories(true);
+  const handleReset = () => {
+    reset();
+    setShowConfirm(false);
+    setSaveImage(false);
+    resetSplitState();
   };
+
+  const { handleConfirmExpense, handleEditExpense } = useReceiptSave({
+    scannedReceipt,
+    merchant,
+    saveImage,
+    imageUri,
+    isPdf,
+    currentSplits,
+    itemCategories,
+    proposedNamesToCreate,
+    onReset: handleReset,
+  });
 
   const handleCameraPress = async () => {
     await pickFromCamera(userPrompt.trim() || undefined);
@@ -216,122 +99,6 @@ export default function ReceiptExpenseScreen() {
 
   const handlePdfPress = async () => {
     await pickPdfDocument(userPrompt.trim() || undefined);
-  };
-
-  const handleConfirmExpense = async () => {
-    if (!scannedReceipt) return;
-
-    try {
-      // Parse date if available
-      // Use "T12:00:00" to parse as local time and avoid timezone date shift
-      let expenseDate = new Date();
-      if (scannedReceipt.date) {
-        const parsedDate = new Date(scannedReceipt.date + 'T12:00:00');
-        if (!isNaN(parsedDate.getTime())) {
-          expenseDate = parsedDate;
-        }
-      }
-
-      // Proposals become real categories only here — a scan the user abandons
-      // must leave the account exactly as it found it. createCategory is
-      // idempotent on (name, type) and offline-first.
-      const resolveKey = await resolveProposedCategories(proposedNamesToCreate, (name) =>
-        useCategoryStore.getState().createCategory(name, 'expense', '🏷️'),
-      );
-
-      // Prepare receipt items
-      const items = scannedReceipt.receiptItems?.map((item, index) => ({
-        description: item.description,
-        canonicalName: item.canonicalName,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        totalPrice: item.totalPrice,
-        sortOrder: index,
-        categoryId: resolveKey(itemCategories[index]),
-      }));
-
-      // Compress and encode receipt image if checkbox is checked (not for PDFs)
-      let receiptImageBase64: string | undefined;
-      if (saveImage && imageUri && !isPdf) {
-        try {
-          receiptImageBase64 = await compressAndEncodeImage(imageUri);
-        } catch (e) {
-          console.error('Failed to compress receipt image:', e);
-        }
-      }
-
-      // Resolve category suggestion (name string) to a local category ID
-      let resolvedCategoryId = scannedReceipt.categoryId || undefined;
-      if (!resolvedCategoryId && scannedReceipt.categorySuggestion) {
-        const matched = useCategoryStore.getState().getCategoryByName(scannedReceipt.categorySuggestion, 'expense');
-        resolvedCategoryId = matched?.id;
-      }
-
-      await addExpense({
-        userId: user?.id || '',
-        amount: scannedReceipt.amount,
-        discountAmount: scannedReceipt.discountAmount ?? undefined,
-        depositAmount: scannedReceipt.depositAmount ?? undefined,
-        currencyCode: scannedReceipt.currencyCode as Currency,
-        description: scannedReceipt.description,
-        merchant: merchant.trim() || undefined,
-        categoryId: resolvedCategoryId,
-        date: expenseDate,
-        source: 'ocr',
-        isRecurring: false,
-        isDebt: false,
-        isDebtRepayment: false,
-        items,
-        receiptImageBase64,
-        location: scannedReceipt.location ?? gpsLocationRef.current ?? undefined,
-        splits: currentSplits.length > 1
-          ? currentSplits.map((s) => ({
-              categoryId: resolveKey(s.categoryId) as string,
-              amount: s.amount,
-              percentage: s.percentage,
-            }))
-          : undefined,
-      });
-
-      showAlert(t('common.success'), t('receipt.success'), [
-        { text: t('receipt.scanAnother'), style: 'cancel', onPress: handleReset },
-        { text: t('common.done'), onPress: () => router.back() },
-      ]);
-    } catch {
-      showAlert(t('common.error'), t('receipt.saveFailed'));
-    }
-  };
-
-  const handleEditExpense = () => {
-    if (!scannedReceipt) return;
-
-    let resolvedCategoryId = scannedReceipt.categoryId || '';
-    if (!resolvedCategoryId && scannedReceipt.categorySuggestion) {
-      const matched = useCategoryStore.getState().getCategoryByName(scannedReceipt.categorySuggestion, 'expense');
-      resolvedCategoryId = matched?.id || '';
-    }
-
-    const params = {
-      amount: scannedReceipt.amount.toString(),
-      description: scannedReceipt.description,
-      merchant: merchant.trim(),
-      categoryId: resolvedCategoryId,
-      currencyCode: scannedReceipt.currencyCode,
-    };
-
-    // Reset scan state so returning to this screen won't allow duplicate creation
-    handleReset();
-
-    router.push({ pathname: '/expense/new', params });
-  };
-
-  const handleReset = () => {
-    reset();
-    setShowConfirm(false);
-    setSaveImage(false);
-    setItemCategories({});
-    setSplitDropped(false);
-    setShowSplitSheet(false);
   };
 
   return (
@@ -346,231 +113,34 @@ export default function ReceiptExpenseScreen() {
 
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
         {!showConfirm ? (
-          <>
-            <View style={styles.instructionContainer}>
-              <Ionicons name="receipt-outline" size={80} color={theme.colors.primary} />
-              <Text style={styles.instructionText}>
-                {isProcessing ? t('receipt.analyzing') : t('receipt.instructions')}
-              </Text>
-              <Text style={styles.exampleText}>
-                {t('receipt.hint')}
-              </Text>
-            </View>
-
-            <TextInput
-              style={styles.userPromptInput}
-              placeholder={t('receipt.userPromptPlaceholder')}
-              placeholderTextColor={theme.colors.textTertiary}
-              value={userPrompt}
-              onChangeText={setUserPrompt}
-              multiline
-              numberOfLines={2}
-              textAlignVertical="top"
-            />
-
-            {isProcessing ? (
-              <View style={styles.processingContainer}>
-                {imageUri && (
-                  <Image source={{ uri: imageUri }} style={styles.previewImage} />
-                )}
-                {isPdf && !imageUri && (
-                  <Ionicons name="document-text" size={80} color={theme.colors.primary} style={{ marginBottom: theme.spacing[6] }} />
-                )}
-                <ActivityIndicator size="large" color={theme.colors.primary} style={styles.loader} />
-                <Text style={styles.processingText}>
-                  {isPdf ? t('receipt.analyzingPdf') : t('receipt.extracting')}
-                </Text>
-              </View>
-            ) : (
-              <View style={styles.buttonContainer}>
-                <TouchableOpacity
-                  style={styles.scanButton}
-                  onPress={handleCameraPress}
-                  activeOpacity={0.8}
-                >
-                  <Ionicons name="camera" size={32} color={theme.colors.textInverse} />
-                  <Text style={styles.scanButtonText}>{t('receipt.takePhoto')}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.galleryButton}
-                  onPress={handleGalleryPress}
-                  activeOpacity={0.8}
-                >
-                  <Ionicons name="images" size={28} color={theme.colors.primary} />
-                  <Text style={styles.galleryButtonText}>{t('receipt.chooseGallery')}</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={styles.galleryButton}
-                  onPress={handlePdfPress}
-                  activeOpacity={0.8}
-                >
-                  <Ionicons name="document-text" size={28} color={theme.colors.primary} />
-                  <Text style={styles.galleryButtonText}>{t('receipt.choosePdf')}</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </>
+          <ReceiptCaptureView
+            isProcessing={isProcessing}
+            imageUri={imageUri}
+            isPdf={isPdf}
+            userPrompt={userPrompt}
+            onUserPromptChange={setUserPrompt}
+            onCameraPress={handleCameraPress}
+            onGalleryPress={handleGalleryPress}
+            onPdfPress={handlePdfPress}
+          />
         ) : (
-          <View style={styles.confirmContainer}>
-            <Text style={styles.confirmTitle}>{t('receipt.scannedTitle')}</Text>
-
-            {!isPdf && imageUri && (
-              <Image source={{ uri: imageUri }} style={styles.receiptImage} />
-            )}
-
-            <View style={styles.expenseCard}>
-              <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>{t('receipt.totalAmount')}</Text>
-                <Text style={styles.expenseAmount}>
-                  {formatCurrency(
-                    scannedReceipt?.amount || 0,
-                    (scannedReceipt?.currencyCode || 'USD') as Currency
-                  )}
-                </Text>
-              </View>
-
-              {scannedReceipt?.discountAmount != null && scannedReceipt.discountAmount > 0 && (
-                <View style={styles.expenseRow}>
-                  <Text style={styles.expenseLabel}>{t('receipt.discount')}</Text>
-                  <Text style={[styles.expenseValue, { color: theme.colors.success }]}>
-                    -{formatCurrency(
-                      scannedReceipt.discountAmount,
-                      (scannedReceipt?.currencyCode || 'USD') as Currency
-                    )}
-                  </Text>
-                </View>
-              )}
-
-              {scannedReceipt?.depositAmount != null && scannedReceipt.depositAmount > 0 && (
-                <View style={styles.expenseRow}>
-                  <Text style={styles.expenseLabel}>{t('receipt.deposit')}</Text>
-                  <Text style={styles.expenseValue}>
-                    {formatCurrency(
-                      scannedReceipt.depositAmount,
-                      (scannedReceipt?.currencyCode || 'USD') as Currency
-                    )}
-                  </Text>
-                </View>
-              )}
-
-              <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>{t('receipt.description')}</Text>
-                <Text style={styles.expenseValue}>{scannedReceipt?.description}</Text>
-              </View>
-
-              <View style={styles.merchantField}>
-                <MerchantInput value={merchant} onChangeText={setMerchant} />
-              </View>
-
-              <View style={styles.expenseRow}>
-                <Text style={styles.expenseLabel}>{t('receipt.category')}</Text>
-                <Text style={styles.expenseValue}>
-                  {scannedReceipt?.categorySuggestion || t('common.uncategorized')}
-                </Text>
-              </View>
-
-              {scannedReceipt?.date && (
-                <View style={styles.expenseRow}>
-                  <Text style={styles.expenseLabel}>{t('receipt.date')}</Text>
-                  <Text style={styles.expenseValue}>
-                    {new Date(scannedReceipt.date + 'T12:00:00').toLocaleDateString(getIntlLocale())}
-                  </Text>
-                </View>
-              )}
-
-              <CategorySplitChips
-                splits={currentSplits}
-                currencyCode={scannedReceipt?.currencyCode || 'USD'}
-                hasItems={sheetItems.length > 0}
-                onPress={() => setShowSplitSheet(true)}
-              />
-
-              {splitDropped && currentSplits.length === 0 && (
-                <Text style={styles.splitDroppedNote}>{t('receiptCategorySplit.dropped')}</Text>
-              )}
-
-              {/* The lines carry their categories, but the amounts did not add
-                  up to a split the server would publish. Saying so beats an
-                  empty block, and the editor below can still produce one. */}
-              {!splitDropped && currentSplits.length === 0 && sheetItems.length > 1 && (
-                <Text style={styles.splitDroppedNote}>{t('receiptCategorySplit.notSplit')}</Text>
-              )}
-
-              {scannedReceipt?.receiptItems && scannedReceipt.receiptItems.length > 0 && (
-                <View style={styles.itemsSection}>
-                  <Text style={styles.itemsTitle}>{t('receipt.items', { count: scannedReceipt.receiptItems.length })}</Text>
-                  {scannedReceipt.receiptItems.slice(0, 5).map((item, index) => (
-                    <View key={index} style={styles.itemRow}>
-                      <Text style={styles.itemDescription} numberOfLines={1}>
-                        {item.description}
-                      </Text>
-                      <Text style={styles.itemPrice}>
-                        {formatCurrency(
-                          item.totalPrice,
-                          (scannedReceipt?.currencyCode || 'USD') as Currency
-                        )}
-                      </Text>
-                    </View>
-                  ))}
-                  {scannedReceipt.receiptItems.length > 5 && (
-                    <Text style={styles.moreItems}>
-                      {t('receipt.moreItems', { count: scannedReceipt.receiptItems.length - 5 })}
-                    </Text>
-                  )}
-                </View>
-              )}
-
-              <View style={styles.confidenceRow}>
-                <Ionicons
-                  name={
-                    scannedReceipt && scannedReceipt.confidence > 0.8
-                      ? 'checkmark-circle'
-                      : 'alert-circle'
-                  }
-                  size={16}
-                  color={
-                    scannedReceipt && scannedReceipt.confidence > 0.8 ? theme.colors.primary : theme.colors.warning
-                  }
-                />
-                <Text style={styles.confidenceText}>
-                  {scannedReceipt && scannedReceipt.confidence > 0.8 ? t('receipt.highConfidence') : t('receipt.mediumConfidence')}
-                </Text>
-              </View>
-            </View>
-
-            <PriceFindingsCard findings={scannedReceipt?.priceFindings ?? []} />
-
-            {!isPdf && (
-              <TouchableOpacity
-                style={styles.saveImageCheckbox}
-                onPress={() => setSaveImage(!saveImage)}
-                activeOpacity={0.7}
-              >
-                <Ionicons
-                  name={saveImage ? 'checkbox' : 'square-outline'}
-                  size={24}
-                  color={saveImage ? theme.colors.primary : theme.colors.textTertiary}
-                />
-                <Text style={styles.saveImageText}>{t('receipt.saveImage')}</Text>
-              </TouchableOpacity>
-            )}
-
-            <View style={styles.confirmActions}>
-              <TouchableOpacity style={styles.editButton} onPress={handleEditExpense}>
-                <Ionicons name="pencil" size={24} color={theme.colors.primary} />
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.confirmButton} onPress={handleConfirmExpense}>
-                <Ionicons name="checkmark" size={24} color={theme.colors.textInverse} />
-              </TouchableOpacity>
-            </View>
-
-            <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
-              <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
-              <Text style={styles.retryButtonText}>{t('receipt.scanAgain')}</Text>
-            </TouchableOpacity>
+          <>
+            <ReceiptConfirmCard
+              scannedReceipt={scannedReceipt}
+              imageUri={imageUri}
+              isPdf={isPdf}
+              merchant={merchant}
+              onMerchantChange={setMerchant}
+              currentSplits={currentSplits}
+              splitDropped={splitDropped}
+              sheetItemsLength={sheetItems.length}
+              onOpenSplitSheet={() => setShowSplitSheet(true)}
+              saveImage={saveImage}
+              onToggleSaveImage={() => setSaveImage(!saveImage)}
+              onEdit={handleEditExpense}
+              onConfirm={handleConfirmExpense}
+              onRetry={handleReset}
+            />
 
             <ItemCategorySheet
               visible={showSplitSheet}
@@ -580,7 +150,7 @@ export default function ReceiptExpenseScreen() {
               onChange={handleItemCategoryChange}
               onClose={() => setShowSplitSheet(false)}
             />
-          </View>
+          </>
         )}
       </KeyboardAwareScreen>
     </SafeAreaView>
@@ -616,253 +186,5 @@ const createStyles = (theme: Theme) => ({
   content: {
     padding: theme.spacing[6],
     alignItems: 'center' as const,
-  },
-  instructionContainer: {
-    alignItems: 'center' as const,
-    marginBottom: theme.spacing[12],
-    marginTop: theme.spacing[6],
-  },
-  instructionText: {
-    fontSize: 18,
-    color: theme.colors.textPrimary,
-    marginTop: theme.spacing[6],
-    fontWeight: '500' as const,
-    textAlign: 'center' as const,
-  },
-  exampleText: {
-    fontSize: 14,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[2],
-    textAlign: 'center' as const,
-  },
-  userPromptInput: {
-    width: '100%' as const,
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    padding: theme.spacing[4],
-    fontSize: 14,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[6],
-    minHeight: 60,
-    maxHeight: 100,
-  },
-  buttonContainer: {
-    width: '100%' as const,
-    gap: theme.spacing[4],
-  },
-  scanButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    backgroundColor: theme.colors.primary,
-    paddingVertical: theme.spacing[5],
-    paddingHorizontal: theme.spacing[8],
-    borderRadius: theme.borderRadius.xl,
-    gap: theme.spacing[3],
-    ...theme.shadows.xl,
-  },
-  scanButtonText: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textInverse,
-  },
-  galleryButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    backgroundColor: theme.colors.surface,
-    paddingVertical: theme.spacing[4],
-    paddingHorizontal: theme.spacing[6],
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-    gap: theme.spacing[2.5],
-  },
-  galleryButtonText: {
-    ...theme.textStyles.button,
-    color: theme.colors.primary,
-  },
-  processingContainer: {
-    alignItems: 'center' as const,
-    padding: theme.spacing[6],
-    width: '100%' as const,
-  },
-  previewImage: {
-    width: 200,
-    height: 280,
-    borderRadius: theme.borderRadius.lg,
-    marginBottom: theme.spacing[6],
-  },
-  loader: {
-    marginBottom: theme.spacing[4],
-  },
-  processingText: {
-    fontSize: 16,
-    color: theme.colors.textSecondary,
-  },
-  confirmContainer: {
-    width: '100%' as const,
-    alignItems: 'center' as const,
-  },
-  confirmTitle: {
-    fontSize: 24,
-    fontWeight: 'bold' as const,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[4],
-  },
-  receiptImage: {
-    width: 120,
-    height: 160,
-    borderRadius: theme.borderRadius.md,
-    marginBottom: theme.spacing[5],
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  expenseCard: {
-    width: '100%' as const,
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing[5],
-    marginBottom: theme.spacing[6],
-  },
-  expenseRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[3],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-  },
-  expenseLabel: {
-    fontSize: 14,
-    color: theme.colors.textSecondary,
-  },
-  expenseAmount: {
-    fontSize: 24,
-    fontWeight: 'bold' as const,
-    color: theme.colors.textPrimary,
-  },
-  expenseValue: {
-    fontSize: 16,
-    color: theme.colors.textPrimary,
-    fontWeight: '500' as const,
-    maxWidth: '60%' as const,
-    textAlign: 'right' as const,
-  },
-  itemsSection: {
-    marginTop: theme.spacing[4],
-    paddingTop: theme.spacing[4],
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
-  },
-  itemsTitle: {
-    fontSize: 14,
-    fontWeight: '600' as const,
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing[3],
-  },
-  itemRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[1.5],
-  },
-  itemDescription: {
-    fontSize: 14,
-    color: theme.colors.textPrimary,
-    flex: 1,
-    marginRight: theme.spacing[3],
-  },
-  itemPrice: {
-    fontSize: 14,
-    color: theme.colors.textPrimary,
-    fontWeight: '500' as const,
-  },
-  moreItems: {
-    fontSize: 12,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[2],
-    textAlign: 'center' as const,
-  },
-  splitDroppedNote: {
-    fontSize: 12,
-    color: theme.colors.textTertiary,
-    fontStyle: 'italic' as const,
-    marginTop: theme.spacing[2],
-    marginBottom: theme.spacing[2],
-    textAlign: 'center' as const,
-  },
-  confidenceRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingTop: theme.spacing[3],
-    gap: theme.spacing[1.5],
-  },
-  confidenceText: {
-    fontSize: 12,
-    color: theme.colors.textSecondary,
-  },
-  saveImageCheckbox: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2.5],
-    marginBottom: theme.spacing[5],
-    paddingHorizontal: theme.spacing[2],
-  },
-  saveImageText: {
-    fontSize: 16,
-    color: theme.colors.textPrimary,
-  },
-  confirmActions: {
-    flexDirection: 'row' as const,
-    gap: theme.spacing[3],
-    marginBottom: theme.spacing[4],
-    width: '100%' as const,
-  },
-  editButton: {
-    flex: 1,
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[3],
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 2,
-    borderColor: theme.colors.primary,
-    gap: theme.spacing[2],
-  },
-  editButtonText: {
-    ...theme.textStyles.button,
-    color: theme.colors.primary,
-  },
-  confirmButton: {
-    flex: 1,
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-    paddingHorizontal: theme.spacing[3],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.primary,
-    gap: theme.spacing[2],
-  },
-  confirmButtonText: {
-    ...theme.textStyles.button,
-    color: theme.colors.textInverse,
-  },
-  retryButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    padding: theme.spacing[3],
-    gap: theme.spacing[1.5],
-  },
-  retryButtonText: {
-    fontSize: 14,
-    color: theme.colors.textSecondary,
-  },
-  merchantField: {
-    marginTop: theme.spacing[2],
   },
 });
