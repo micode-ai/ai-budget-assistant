@@ -594,6 +594,22 @@ describe('create with categorized receipt items', () => {
       }),
     );
   });
+
+  // create() upserts on the local clientId, so an offline-retried create of the
+  // SAME expense lands on the update: branch, not create:. A field written only
+  // to create: would silently vanish on retry — the exact bug class CLAUDE.md
+  // documents twice already (trip-wallet paidByUserId, expense location).
+  it('persists the deposit on the create-upsert\'s update: branch too (offline retry)', async () => {
+    const { service, prisma } = makeCategorizedItemsCreateService();
+
+    await service.create('a1', 'u1', { ...baseDto, discountAmount: 70.34, depositAmount: 4.5 } as any);
+
+    expect(prisma.expense.upsert).toHaveBeenCalledWith(
+      expect.objectContaining({
+        update: expect.objectContaining({ discountAmount: 70.34, depositAmount: 4.5 }),
+      }),
+    );
+  });
 });
 
 // ---------------------------------------------------------------------------
@@ -826,7 +842,11 @@ function makeSplitDefenceService(opts: {
     makeCreatedHooksStub(),
   );
 
-  return { service, prisma, splitFindMany, splitUpdateMany, splitCreateMany, itemFindMany };
+  // `tx` is what update()'s actual `tx.expense.update(...)` call lands on
+  // (the plain `prisma.expense.update` mock above is never invoked by that
+  // code path) — returned so a test can assert on the real write, mirroring
+  // how `makeTripShareCreateService` above exposes its own `tx`.
+  return { service, prisma, tx, splitFindMany, splitUpdateMany, splitCreateMany, itemFindMany };
 }
 
 /** Every created row's amount, summed in cents so the assertion is exact. */
@@ -939,6 +959,18 @@ describe('split invariant is defended after creation', () => {
 
       expect(splitUpdateMany).not.toHaveBeenCalled();
       expect(splitCreateMany).not.toHaveBeenCalled();
+    });
+
+    it('persists depositAmount', async () => {
+      const { service, tx } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', { depositAmount: 2.5 } as any);
+
+      expect(tx.expense.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ depositAmount: 2.5 }),
+        }),
+      );
     });
   });
 

@@ -228,6 +228,7 @@ export class ExpensesService {
       const updateData = {
           amount: dto.amount,
           discountAmount: dto.discountAmount,
+          depositAmount: dto.depositAmount,
           currencyCode: dto.currencyCode,
           description: dto.description,
           notes: dto.notes,
@@ -574,6 +575,7 @@ export class ExpensesService {
       const expenseUpdateData = {
           amount: dto.amount,
           discountAmount: dto.discountAmount,
+          depositAmount: dto.depositAmount,
           currencyCode: dto.currencyCode,
           description: dto.description,
           notes: dto.notes,
