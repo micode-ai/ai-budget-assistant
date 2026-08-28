@@ -126,3 +126,4 @@ AI Budget Assistant вирішує це через спільні сімейні
 - [Сканування чеків: важливі позиції, а не сума](/blog/ua/skanuvannya-chekiv/)
 - [Як поділити рахунок з друзями і реально отримати гроші](/blog/ua/yak-podilyty-rahunok-z-druzyami/)
 - [Чому додатки для бюджету видаляють за тиждень](/blog/ua/chomu-vydalyayut-dodatky-dlya-byudzhetu/)
+- [Перехід з Monefy, Wallet або Money Manager за кілька хвилин](/blog/ua/perekhid-z-monefy-wallet-moneymanager/)

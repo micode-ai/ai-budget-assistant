@@ -78,6 +78,19 @@ Wave 6 notes:
 - **Follow-up before the next regenerate**: `app-abandonment` still needs to be added to `CLUSTERS["expenses"]` in `build_blog.py` so `build_pillar_links.py` writes the down-link from the expenses pillar and the blog index files the topic under the "Expenses" category chip — this was not done as part of authoring the Markdown sources (see the verification step).
 - Blog now at 22 topics / 190 articles once this topic ships (was 21 topics / 189 articles after Wave 4).
 
+## Wave 7 — proposed via AI Dreaming Center
+| # | Topic | pair | PL keyword | EN keyword | Intent | App tie |
+|---|---|---|---|---|---|---|
+| 24 | **Switching from Monefy, Wallet, or Money Manager in one tap** | switch-apps | alternatywa dla monefy | monefy alternative | top-of-funnel / comparison | **Competitor-app import parsers** (ABA-401) — dedicated Monefy/Wallet/Money Manager CSV parsers that carry over the exporting app's own categories instead of guessing from the merchant name |
+
+Wave 7 notes:
+- Topic 24 was proposed via the AI Dreaming Center (proposal id 513, proposal-scan), tied to commit `6f559740` / ABA-401 ("Competitor app migration") — same sourcing pattern as topics 22 and 23. Filed as its own wave for the same reason as Wave 6: it extends the `expenses` cluster with a new pair rather than adding to an existing one.
+- Cluster: `expenses` (pillar `expense-tracker`/`kontrola-wydatkow-aplikacja`), alongside siblings `bank-import` and `ai-bank-import`. Each of the 9 language files links up to the expenses pillar and sideways to both import-themed siblings.
+- **Positioning, distinct from `ai-bank-import` (topic 22) on purpose**: topic 22 is about **banks** with no matching parser, resolved via AI column-mapping/PDF extraction — a probabilistic fallback. Topic 24 is about **competing budgeting apps** (Monefy, Wallet by BudgetBakers, Money Manager) with dedicated, deterministic (non-AI) parsers that read the category the user already assigned straight out of the export file. The core promise of topic 24 is "keep your categories, no AI guessing needed" — near-opposite framing from topic 22 — so the two target different search intent and should not be blended.
+- Positioning constraints (binding in all 9 languages): no claim of automatic account sync/linking to Monefy, Wallet, or Money Manager (it is a one-time offline CSV export/import, not a live connection); no claim that all data types transfer (only transactions and categories — the competing app's own budgets, recurring-charge rules, and attachments do not carry over); no invented percentage or time-saved statistic (nothing of that kind has been measured).
+- `switch-apps` was added to `CLUSTERS["expenses"]` in `build_blog.py` as part of authoring this topic (unlike `app-abandonment` in Wave 6, which needed a follow-up commit) — `build_pillar_links.py` picks it up on the next run with no further edits needed.
+- Blog now at 24 topics / 216 articles once this topic ships (was 23 topics / 207 articles after Wave 6).
+
 ## Wave 5 — proposed (not started)
 High-volume commercial queries we do not rank for yet: `excel-budget` (budżet domowy w Excelu — szablon, plus when to move off a spreadsheet), `free-app` (darmowa aplikacja do budżetu domowego), `irregular-income` (budget on freelance/B2B income — ties to Safe-to-Spend + scenario simulator), `multi-currency` (living and earning across two currencies — the one topic where the ru/ua/be locales serve their own audience rather than being a translation).
 

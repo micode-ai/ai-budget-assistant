@@ -126,3 +126,4 @@ AI Budget Assistant работает по принципу офлайн-преж
 - [Сканирование чеков: важны позиции, а не сумма](/blog/ru/skanirovanie-chekov/)
 - [Как разделить счёт с друзьями и реально получить деньги](/blog/ru/kak-razdelit-schet-s-druzyami/)
 - [Почему приложения для бюджета удаляют за неделю](/blog/ru/pochemu-udalyayut-prilozheniya-dlya-byudzheta/)
+- [Переход с Monefy, Wallet или Money Manager за пару минут](/blog/ru/perehod-s-monefy-wallet-moneymanager/)

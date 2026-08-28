@@ -126,3 +126,4 @@ Vous aurez une image claire de vos habitudes de dépenses après un mois. Des ch
 - [Scanner ses tickets de caisse : les lignes comptent plus](/blog/fr/scanner-tickets-de-caisse/)
 - [Comment partager l'addition entre amis et être remboursé](/blog/fr/partager-addition-entre-amis/)
 - [Pourquoi on supprime les applis de budget en une semaine](/blog/fr/pourquoi-on-supprime-les-applis-de-budget/)
+- [Changer de Monefy, Wallet ou Money Manager en minutes](/blog/fr/changer-de-monefy-wallet-moneymanager/)

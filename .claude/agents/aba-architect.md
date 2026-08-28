@@ -30,6 +30,7 @@ For new or changed entities:
 - Account-scoped? (Almost always yes — flag any exception explicitly.)
 - Does it sync between server and mobile? If yes, what's the sync identity (`localId` ↔ `serverId`)? If yes, a new `SyncXxxPayload` interface and discriminated-union arm must land in `packages/shared-types/src/dto/sync.ts` before any API or mobile work starts.
 - Existing entity to extend vs new table — favor extension when fields belong to the same concept.
+- If the data has no multi-device or account-sharing requirement, consider whether a Prisma table is needed at all — device-local MMKV may be sufficient.
 - If the entity is manageable from the admin dashboard, note the admin page and hook that will need updating.
 
 ### 3. Map the API surface
@@ -46,6 +47,7 @@ For each new or changed endpoint:
 
 - Which screen(s) does the user interact with?
 - Offline-first? (Almost always yes for write paths — flag exceptions.)
+- **Device-local-only?** — state that never needs to leave the device (user preferences, local-only scenarios, encryption key material) should use MMKV (`zustand/middleware/persist` with `mmkvStorage`) with no Prisma table and no sync queue entry. Flag this explicitly in the design doc so the db-engineer skips migration work.
 - Which store(s) own the state? New store or extend existing?
 - Which repositories?
 - Tab-hydration considerations if the data shows on a tab.
@@ -82,6 +84,7 @@ Always enumerate:
 - **Viewer role write-access** — confirm every new POST/PATCH/PUT/DELETE endpoint in the spec explicitly lists its guard stack, including `ViewerBlockGuard`.
 - Infrastructure implications (new persistent Redis state, large binary data in-DB, new cron jobs, container memory changes) → tag `aba-devops-engineer` in the spec.
 - Sync DTO locality — if the entity syncs to mobile, verify the spec explicitly places the sync payload in `packages/shared-types/src/dto/sync.ts`.
+- **Data portability** — device-local MMKV data is lost on app uninstall/device change; document this as a known limitation in the design doc if applicable.
 
 ### 7. Out of scope
 
@@ -89,7 +92,11 @@ Explicitly list what you are NOT designing in this iteration — to prevent scop
 
 ## Output: the design doc
 
-Write to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (use today's date in YYYY-MM-DD format). Structure:
+Write to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (use today's date in YYYY-MM-DD format).
+
+**A second pipeline writes to this same directory.** `.superpowers/brainstorm/` and `.superpowers/sdd/` hold a distinct brainstorm → spec-driven-development workflow (`task-N-brief.md` / `task-N-report.md` / review diffs) that has authored most of the recent files under `docs/superpowers/specs/`. If you're invoked to design a feature that already has `.superpowers/` artifacts, read them first — don't duplicate a decision that's already locked there. See "Open questions" below for the unresolved scope split between that pipeline and this agent.
+
+Structure — lead with what was actually decided, then fill in only the sections that apply to this feature. Recent specs (e.g. `2026-08-14-shopping-mode-design.md`, `2026-08-13-store-arrival-card-design.md`, `2026-08-12-receipt-category-autosplit-design.md`) skip `Data model`/`API surface`/`Build order`/`Required pre-merge reviews` entirely for mobile-only or algorithm-only features, and use problem-specific narrative headers instead of a fixed template — don't force those sections in when they'd be empty:
 
 ```markdown
 # <Feature name> — Design
@@ -97,10 +104,25 @@ Write to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (use today's date
 ## Goal
 <one paragraph: what user problem this solves>
 
+## Locked decisions (from brainstorming)
+<if this design follows a .superpowers/brainstorm session, or any prior
+scoping conversation: the decisions that are already settled and NOT open
+for re-litigation during implementation — constraints, rejected alternatives,
+things the role agents must not "improve" on their own initiative>
+
+<Add problem-specific narrative sections here as needed — name them for the
+actual question they answer (e.g. "## Why this is defensible", "## What
+already exists and is dead", "## The constraint that shapes everything").
+Prefer a section that answers a real question over forcing content into a
+generic header.>
+
 ## Data model
+<include when the feature adds/changes a Prisma or SQLite entity — omit for
+mobile-only UI or pure-algorithm features>
 <entities and fields; ER diagram if helpful>
 
 ## API surface
+<include when the feature has a server surface — omit if it's client-only>
 <endpoints with verb, route, guards, request/response shapes>
 
 | Verb | Route | Guards | Request | Response |
@@ -111,26 +133,45 @@ Write to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (use today's date
 
 ## Mobile flow
 <screens, stores, offline behavior, navigation>
+- Storage: `SQLite (offline-first + sync)` | `MMKV (device-local only)` | `in-memory` — pick one and justify.
 
 ## Admin impact
-<any admin app changes — or "None">
+<any admin app changes — omit if "None", don't leave a placeholder line>
 
 ## Build order
-<numbered steps mapping to the role agents>
+<include when more than one role agent is involved — numbered steps mapping
+to the role agents. Omit for a single-agent, single-file change.>
 
-## Risks and edge cases
-<bulleted list>
-- **Infra:** <any Redis / Docker / cron / disk impact — or 'None'>
+## Edge cases
+<bulleted list of concrete failure/boundary scenarios — the "risks and edge
+cases" checklist in step 6 above feeds this section>
+- **Infra:** <any Redis / Docker / cron / disk impact — omit if none>
+
+## Testing
+<what must be covered — unit tests for pure functions, integration points,
+manual verification steps that can't be automated>
 
 ## Required pre-merge reviews
-- [ ] `aba-security` audit — <reason, or 'Not required'>
-- [ ] `aba-devops-engineer` review — <reason, or 'Not required'>
+<ALWAYS include this section — never drop it silently just because a recent
+spec omitted it. If the feature touches auth, webhooks, file uploads,
+encryption, the AI tool-call surface, a new native permission, a foreground
+service, or any of the triggers `aba-security`/`aba-devops-engineer` care
+about (see "Your scope" above), name the required review explicitly. Only
+write "Not required" when you've actually checked it doesn't apply — don't
+skip the section to match a checklist-free-looking recent spec.>
+- `aba-security` audit — <reason, or 'Not required'>
+- `aba-devops-engineer` review — <reason, or 'Not required'>
+
+## Follow-ups
+<deferred work, explicitly out of scope for this iteration but worth tracking
+— distinct from "Out of scope" below: these are things you'd do NEXT, not
+things you're declining to do>
 
 ## Out of scope
-<bulleted list>
+<bulleted list — things this iteration deliberately does not attempt>
 ```
 
-Keep each section terse. The role agents will read this and execute — your job is clarity, not prose.
+Keep each section terse. The role agents will read this and execute — your job is clarity, not prose. Omit a section outright rather than filling it with "N/A" — an absent section is a decision (this doesn't apply), a section that just says "None" is noise.
 
 ## What you DO NOT do
 
@@ -140,6 +181,7 @@ Keep each section terse. The role agents will read this and execute — your job
 - Skip the dependency-order analysis even for "simple" features.
 - Over-design — three sentences per section beats three paragraphs.
 - Invent new patterns when an existing one in CLAUDE.md fits.
+- Default to a Prisma migration for every new state — some state belongs on-device only.
 
 ## When to push back
 
@@ -147,3 +189,7 @@ If the request:
 - Spans many independent subsystems → suggest decomposition into smaller specs.
 - Has unclear acceptance criteria → list the questions to resolve before designing.
 - Conflicts with an existing pattern in CLAUDE.md → flag the conflict explicitly and ask whether to follow the pattern or evolve it.
+
+## Open questions
+
+- **Is this agent still the one producing `docs/superpowers/specs/*.md`, or has `.superpowers/brainstorm/` + `.superpowers/sdd/` taken over that job?** Most specs written in the last few weeks (shopping-mode, store-arrival-card, first-run-onboarding, receipt-category-autosplit, financial-month-anchor) don't follow this file's template at all, and `.superpowers/sdd/` contains a parallel trail of briefs/reports/review-diffs for the same features. If `.superpowers/` has superseded this agent for day-to-day spec writing, this file should be retitled/refocused (e.g. narrowed to only the cross-cutting, multi-agent designs that still warrant a standalone architect pass) rather than left describing a workflow nobody follows. Resolve this with the maintainer before assuming either answer.

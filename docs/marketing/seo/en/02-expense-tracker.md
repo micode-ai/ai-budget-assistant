@@ -126,3 +126,4 @@ You'll have a clear picture of your spending patterns after one month. Meaningfu
 - [Receipt Scanner App: Why Line Items Beat the Total](/blog/en/receipt-scanner-app/)
 - [How to Split Bills With Friends and Get Paid Back](/blog/en/split-bill-with-friends/)
 - [Why Most Budgeting Apps Get Deleted in the First Week](/blog/en/why-budget-apps-abandoned-first-week/)
+- [Switching from Monefy, Wallet, or Money Manager in one tap](/blog/en/switch-from-monefy-wallet-moneymanager/)

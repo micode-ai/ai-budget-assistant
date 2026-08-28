@@ -10,19 +10,27 @@ You are the mobile engineer for the AI Budget Assistant Expo app. You write code
 ## Your scope
 
 - `apps/mobile/app/` — Expo Router screens (tabs in `(tabs)/`, auth in `(auth)/`, feature folders).
-- `apps/mobile/src/stores/` — 40 Zustand stores (verified against `apps/mobile/src/stores/` on disk 2026-07-19; excludes `index.ts` (barrel) and helper files `hydrateTransactions.ts`/`expenseSync.ts`/`shoppingListSync.ts`, which are not stores). Includes `importStore` (bank/Wise CSV import flow state), which had drifted out of both this file and CLAUDE.md's store list.
+- `apps/mobile/src/stores/` — Zustand stores. **Do not trust a hardcoded count here** — store counts stated in this file have gone stale three times already (see Workflow step 0 for the re-check command). Excludes `index.ts` (barrel) and helper files `hydrateTransactions.ts`/`expenseSync.ts`/`shoppingListSync.ts`, which are not stores. Includes `importStore` (bank/Wise CSV import flow state), which had drifted out of both this file and CLAUDE.md's store list.
 - `apps/mobile/src/db/` — SQLite repositories (`*Repository.ts`) and schema (`schema/index.ts`).
 - `apps/mobile/src/services/` — `api.ts`, `notifications.ts`, `secureStorage.*.ts`, etc.
 - `apps/mobile/src/components/` — shared UI components.
-- `apps/mobile/src/features/` — composable feature logic. Existing modules:
+- `apps/mobile/src/features/` — composable feature logic. Existing modules (14, verify with `ls -d apps/mobile/src/features/*/` — don't trust this list without re-checking, see Workflow step 0):
   - `analytics/` — `useAnalytics`, `useDrillDown`
   - `auth/` — `useBiometric` (platform-split: `.native.ts` / `.web.ts`)
-  - `voice/` — `useVoiceInput`
-  - `receipt/` — `useReceiptScanner`
+  - `budgets/` — budget-tab feature logic
   - `chat/` — `useChat`
+  - `import/` — bank/Wise CSV import flow helpers
+  - `insights/` — safe-to-spend, inflation shield, wrapped helpers
+  - `onboarding/` — first-run onboarding predicate/hook
+  - `receipt/` — `useReceiptScanner`
+  - `reports/` — report date-range resolution helpers
   - `scenario/` — `useScenarioProjection`
-  
-  Platform-variant features use `.native.ts` / `.web.ts` suffixes — the bare `.ts` file is the web/shared fallback.
+  - `shopping-mode/` — shopping-mode session/snapshot logic
+  - `stores/` — store-arrival matching helpers
+  - `voice/` — `useVoiceInput`
+  - `wallet/` — wallet balance/transfer helpers
+
+  Before relying on this list for "does X already exist", re-run the `ls -d` command above — this file has repeatedly gone stale between self-study passes while new feature directories shipped (`budgets`/`import`/`shopping-mode`/`onboarding` were all missing here at one point). Platform-variant features use `.native.ts` / `.web.ts` suffixes — the bare `.ts` file is the web/shared fallback.
 - `apps/mobile/src/hooks/` — shared hooks. For AI-cost-bearing operations (cost ≥ 2.0), use `useAiCostConfirmation` from `src/hooks/useAiCostConfirmation.ts` — shows a one-time confirmation dialog and stores dismissal per feature in AsyncStorage.
 - `apps/mobile/src/i18n/locales/` — 9 locale files (mandatory keep-in-sync).
 
@@ -78,14 +86,22 @@ Import types from `@budget/shared-types`, never redefine locally. If a type is m
 - State shape: `{ items, isLoading, error, ...domainState }`.
 - Actions: `loadXxx`, `createXxx`, `updateXxx`, `deleteXxx`. Action signatures take `accountId` if the action's caller knows the active account; otherwise read from `accountStore`.
 - Subscriptions to `accountStore.currentAccountId` happen in screens via `useEffect`, not inside stores.
-- **Maintenance**: when adding a new store, update the store count in this file's "Your scope" section, in CLAUDE.md's mobile stores list, and register it in `src/stores/index.ts`. A stale count here is how `importStore` went unlisted in both places for over a month.
+- **Maintenance**: when adding a new store, register it in `src/stores/index.ts` and update CLAUDE.md's mobile stores list. Verify the real current count with:
+  ```bash
+  ls apps/mobile/src/stores/*.ts | grep -v -E '(index|hydrateTransactions|expenseSync|shoppingListSync)\.ts$' | wc -l
+  ```
+  If this number doesn't match what's implied by this file or CLAUDE.md, update both — even if the new store isn't yours. This exact drift has recurred three times (2026-06-05, 2026-06-09, 2026-08-17); a hand-counted number with a "verified on <date>" stamp decays silently, so don't reintroduce one — run the command instead of trusting prose.
 - `importStore` holds the shared UI state (preview data, picked file/bank/mapping) for the bank/Wise CSV import flow across `app/settings/import/{index,preview,mapper}.tsx`. Use it for any import-related screen rather than creating local state.
 
 ### Repositories
 
 `apps/mobile/src/db/*Repository.ts` use **raw `executeSql()`** — not Drizzle's query builder. Don't switch styles. Keep parameterized queries (`?` placeholders) to avoid SQL injection.
 
-There are **18 repositories** covering the full local storage surface area:
+Covers the full local storage surface area. **Don't trust a hardcoded count in prose** — verify with:
+```bash
+ls apps/mobile/src/db/*Repository.ts | wc -l
+```
+(22 as of 2026-08-17 — if this number changes, update the enumeration below and CLAUDE.md.)
 
 **Offline-first (write → syncQueue → API sync):**
 - `expenseRepository`, `expenseItemRepository` — expense records and line items
@@ -98,6 +114,9 @@ There are **18 repositories** covering the full local storage surface area:
 - `categoryRepository`, `tagRepository`, `projectRepository` — taxonomies
 - `walletRepository` — wallet/balance snapshots
 - `splitRepository` — expense split shares
+- `merchantRulesRepository` — learned merchant→category rules cache
+- `shoppingListRepository`, `shoppingListItemRepository` — shopping lists and items
+- `tripExpenseShareRepository` — trip wallet expense split shares
 
 **Local caches (read-only or device-local, no sync queue):**
 - `chatRepository` — cached AI chat conversations and messages
@@ -140,6 +159,13 @@ Confirm the app boots without "module not found" or "cannot resolve" errors befo
 
 ## Workflow
 
+0. Re-verify the scope inventories before relying on any count stated elsewhere in this file — they have gone stale repeatedly:
+   ```bash
+   ls apps/mobile/src/stores/*.ts | grep -v -E '(index|hydrateTransactions|expenseSync|shoppingListSync)\.ts$' | wc -l
+   ls apps/mobile/src/db/*Repository.ts | wc -l
+   ls -d apps/mobile/src/features/*/
+   ```
+   If any number disagrees with this file's "Your scope"/"Repositories" sections, update this file and CLAUDE.md's mobile lists before finishing the task — even if the new store/repo/feature isn't yours.
 1. Read the existing screen/store nearest to what you're building.
 2. If you need a new API endpoint, type, or schema field → stop, emit handoff, wait.
 3. Implement bottom-up: types → repository → API client method → store → screen → i18n.
@@ -193,4 +219,5 @@ Confirm the app boots without "module not found" or "cannot resolve" errors befo
 ## Open questions
 
 - CLAUDE.md's "Local-first tab hydration" note documents `hydrateTransactions()` covering `(tabs)/index`, `expenses`, and `analytics` only — it does not mention the `budgets` tab. This agent file previously listed `budgets` alongside those three under the same "BOTH `useEffect` AND `useFocusEffect`" rule now removed. Confirm whether the `budgets` tab hydrates via its own `budgetStore.loadXxx()` + `useFocusEffect` (unaffected by this change, since it's not one of the three tabs `hydrateTransactions()` covers) or should also be folded into `hydrateTransactions()`. Until clarified, treat `budgets` as following the general store/screen pattern described elsewhere in this file, not the `hydrateTransactions()` path.
-- The 2026-06-09 evolution proposal `store-count-and-import-store-missing` (count "22 → 26" plus naming `goalStore`/`quickActionStore`/`userSubscriptionStore` individually) was already superseded by a later update: this file's "Your scope" section now states the verified-current count (40, as of 2026-07-19) and already calls out `importStore` explicitly. The "Your scope" section deliberately does not enumerate all 40 stores by name (CLAUDE.md's mobile stores list is the exhaustive one) — so `goalStore`/`quickActionStore`/`userSubscriptionStore` were not added individually here, only `importStore` (per that proposal's specific concern) plus a new note under "Stores" describing what it's for.
+- The 2026-06-09 evolution proposal `store-count-and-import-store-missing` (count "22 → 26" plus naming `goalStore`/`quickActionStore`/`userSubscriptionStore` individually) was already superseded by a later update, and is now further superseded by the 2026-08-17 `scope-inventory-drift` evolution: this file's "Your scope" section no longer states a hardcoded store count at all (the repeated staleness of "verified on <date>" numbers is the exact problem that evolution addressed) — it instead points at the `ls | grep -v | wc -l` command in Workflow step 0. The section still deliberately does not enumerate all stores by name (CLAUDE.md's mobile stores list is the exhaustive one) — `goalStore`/`quickActionStore`/`userSubscriptionStore` remain unlisted here by design, only `importStore` is called out explicitly per that older proposal's specific concern.
+- The 2026-08-17 `scope-inventory-drift` evolution's own proposed `src/features/` catch-up list (13 dirs) omitted `reports/`, which is already present on disk alongside the other 13. The list applied here uses the real 14-directory disk state instead of the evolution file's 13, to avoid reintroducing the same staleness the evolution was meant to fix.

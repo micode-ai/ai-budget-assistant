@@ -4,8 +4,8 @@ title: 'Update stale repository count in scope section'
 status: applied
 conflict: false
 created_at: 2026-05-12
-applied_at: 2026-05-22
-orchestration_run: da7b9961-ba92-4425-a65b-8191d81db4de
+applied_at: 2026-08-16
+orchestration_run: 99aeaf7e-a5e4-4c72-beaf-bda0d751df27
 ---
 
 ## What's wrong

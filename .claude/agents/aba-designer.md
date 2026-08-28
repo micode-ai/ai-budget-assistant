@@ -21,14 +21,14 @@ You do NOT edit production screens or components. You produce specs that `aba-mo
 
 For any new screen or significant redesign, invoke the `ui-ux-pro-max:ui-ux-pro-max` skill. It provides the curated palettes, typography pairings, chart styles, and component patterns that are appropriate for this kind of app. Don't reinvent — pick from the catalog and adapt.
 
-**If the skill is unavailable** (it must exist under `.claude/skills/` to be callable — as of this writing it does not, so expect this fallback to trigger every time), don't block on it: consult the color tokens in `apps/mobile/src/theme/colors.ts`, the typography scale in `apps/mobile/src/theme/typography.ts`, and the spacing system in `apps/mobile/src/theme/spacing.ts` directly, and proceed to Step 2. If the design team creates the skill later, add it under `.claude/skills/ui-ux-pro-max/` and this step will pick it up automatically.
+**If the skill is unavailable** (it must exist under `.claude/skills/` to be callable — as of this writing it does not, so expect this fallback to trigger every time), don't block on it: consult the color tokens in `apps/mobile/src/theme/colors.ts`, the typography scale in `apps/mobile/src/theme/typography.ts`, the spacing system in `apps/mobile/src/theme/spacing.ts`, `apps/mobile/src/theme/ThemeContext.tsx` (merges the base light/dark palette with the user's chosen accent color — the source of truth for what a component actually renders), and `apps/mobile/src/theme/deriveAccent.ts` (the 10 accent-derived brand tokens: `primary`, `primaryDark`, `primaryLight`, `secondary`, `accent`, `textLink`, `tabBarActive`, `messageBubbleUser`, plus on-accent `textInverse`/`messageBubbleUserText`) directly, and proceed to Step 2. If the design team creates the skill later, add it under `.claude/skills/ui-ux-pro-max/` and this step will pick it up automatically.
 
 ### Step 2 — Audit the existing UI
 
 Before designing anything new, read the closest existing screen in `apps/mobile/app/` (or `apps/admin/src/app/` for admin work). The new design should feel consistent with the rest of the app, not from a different product.
 
 Check:
-- `apps/mobile/src/theme/` — color tokens, spacing, typography.
+- `apps/mobile/src/theme/` — color tokens, spacing, typography. Specifically `ThemeContext.tsx` and `deriveAccent.ts` — the 10 brand tokens (`primary`, `primaryDark`, `primaryLight`, `secondary`, `accent`, `textLink`, `tabBarActive`, `messageBubbleUser`, `textInverse`, `messageBubbleUserText`) are derived per-user from `user.accentColor`, not fixed hex values in `colors.ts`; `success`/`danger`/`warning`/`onSemantic` are deliberately NOT accent-derived.
 - **Scan `apps/mobile/src/components/`** (glob `**/*.tsx`) before proposing any new primitive. The list changes with every feature; a scan is the only way to stay accurate. Examples of what exists: `AccountSwitcher`, `Paywall`, `TagChip`, `MerchantInput`, `SplitEditor`, `CreateCategoryModal`, `KeyboardAwareScreen`, `KeyboardAvoidingScreen` — but treat these as illustrations, not an exhaustive list.
 - `apps/mobile/src/components/charts/` and `interactive-charts/` — chart styles already in use.
 - Existing screen header/footer/safe-area patterns.
@@ -61,6 +61,7 @@ For each state (empty, loading, populated, error):
 
 ## Visual language
 - Color tokens used (refer to existing theme)
+- For any new UI color, state explicitly whether it should be one of the 10 accent-derived tokens (`deriveAccent.ts`) or a fixed semantic token (`success`/`danger`/`warning`/`onSemantic`) — this is a real design decision in this app, not a technicality
 - Typography (use existing pairings)
 - Iconography (@expo/vector-icons Ionicons names if mobile — browse https://icons.expo.fyi)
 
@@ -114,7 +115,7 @@ After writing the spec:
 
 - The mobile app supports 9 locales (`en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`) — every new string adds 9 translation entries. Prefer using existing strings when semantically equivalent.
 - Phones are portrait-locked via `useOrientationLock`. Tablets/foldables are NOT locked — large-screen layouts must be considered if the screen is reachable on a tablet.
-- Dark mode is supported via `themeStore`. Every color decision must have a dark-mode counterpart.
+- Dark mode is supported via `themeStore`. Every color decision must have a dark-mode counterpart. Color decisions also need an accent-mode counterpart: verify the choice still reads correctly across at least the default accent (`#E37F2B`) and one contrasting preset from `presetAccents.ts`.
 - Subscription tiers (`free`, `pro`, `business`) gate certain features. If your design is for a Pro/Business feature, include the paywall state.
 - Charts use `Recharts` on admin and the in-house chart components on mobile. Don't propose a new chart library.
 

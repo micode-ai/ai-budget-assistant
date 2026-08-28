@@ -128,3 +128,4 @@ Pierwsze obserwacje masz po jednym miesiącu śledzenia. Pierwsze realne oszczę
 - [Skanowanie paragonów: liczą się pozycje, nie suma](/blog/pl/skanowanie-paragonow/)
 - [Jak podzielić rachunek ze znajomymi i dostać zwrot](/blog/pl/jak-podzielic-rachunek/)
 - [Dlaczego usuwamy aplikacje do budżetu po tygodniu](/blog/pl/dlaczego-usuwamy-aplikacje-do-budzetu/)
+- [Zmiana z Monefy, Wallet lub Money Manager w kilka minut](/blog/pl/zmiana-z-monefy-wallet-money-manager/)

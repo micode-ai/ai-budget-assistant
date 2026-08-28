@@ -126,3 +126,4 @@ Nach einem Monat hast du ein klares Bild deiner Ausgabenmuster. Spürbare Verhal
 - [Kassenbons scannen: warum die Posten zählen, nicht die Summe](/blog/de/kassenbons-scannen/)
 - [Rechnung teilen mit Freunden und wirklich zurückbekommen](/blog/de/rechnung-teilen-mit-freunden/)
 - [Warum Haushaltsbuch-Apps schon nach einer Woche fliegen](/blog/de/warum-haushaltsbuch-apps-schnell-fliegen/)
+- [Wechsel von Monefy, Wallet oder Money Manager in Minuten](/blog/de/wechsel-von-monefy-wallet-moneymanager/)
