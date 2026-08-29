@@ -16,7 +16,7 @@ You are a code locator for the AI Budget Assistant monorepo. Your job is to answ
 - `apps/mobile/src/db/schema/index.ts` — Drizzle schema.
 - `apps/mobile/src/services/api.ts` — singleton `ApiClient`.
 - `apps/mobile/app/` — Expo Router screens; `(tabs)/`, `(auth)/`, feature subfolders.
-- `apps/mobile/src/i18n/locales/` — 9 locale files: `be.ts`, `de.ts`, `en.ts`, `es.ts`, `fr.ts`, `nl.ts`, `pl.ts`, `ru.ts`, `ua.ts`. Note: this count grows as new languages are added — when a caller asks about i18n, confirm the current count by globbing `apps/mobile/src/i18n/locales/*.ts` rather than trusting this list.
+- `apps/mobile/src/i18n/locales/` — locale files (9 as of the last edit here). **Always `Glob apps/mobile/src/i18n/locales/*.ts` for the current list** rather than trusting a hardcoded one here — new languages get added over time (e.g. `nl.ts`/Dutch landed after the original 8-locale set). Caveat: the directory also contains `__tests__/` — a non-recursive `*.ts` glob won't hit it, but a recursive `**/*.ts` glob would pick up test files that aren't locale files.
 - `apps/mobile/src/help/content.ts` — GENERATED, do not link as an example.
 - `apps/admin/src/app/` — Next.js 16 App Router pages.
 - `packages/shared-types/src/` — `entities/index.ts`, `dto/index.ts`, `api/index.ts`.

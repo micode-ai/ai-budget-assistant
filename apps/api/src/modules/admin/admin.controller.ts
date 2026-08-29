@@ -249,6 +249,13 @@ export class AdminController {
     return this.adminAnalyticsService.getSubscriptionStats();
   }
 
+  @Get('analytics/acquisition')
+  async getAcquisitionBreakdown(@Query('days') days?: string) {
+    const n = parseInt(days ?? '', 10);
+    const clamped = Number.isNaN(n) ? 30 : Math.min(365, Math.max(1, n));
+    return this.adminAnalyticsService.getAcquisitionBreakdown(clamped);
+  }
+
   // ─── Audit Log ───────────────────────────────────
 
   @Get('audit-log')

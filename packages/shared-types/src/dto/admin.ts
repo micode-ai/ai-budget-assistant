@@ -16,6 +16,22 @@ export interface AdminUserUsageItem {
   }>;
 }
 
+export interface AdminAcquisitionBreakdownRow {
+  value: string;
+  count: number;
+}
+
+export interface AdminAcquisitionBreakdownResponse {
+  windowDays: number;
+  totalUsers: number;
+  windowSignups: number;
+  attributedWindowSignups: number;
+  bySource: AdminAcquisitionBreakdownRow[];
+  byLocation: AdminAcquisitionBreakdownRow[];
+  byLanguage: AdminAcquisitionBreakdownRow[];
+  byPlan: AdminAcquisitionBreakdownRow[];
+}
+
 export interface AdminDashboardResponse {
   totalUsers: number;
   totalAccounts: number;

@@ -82,7 +82,7 @@ Before auditing, detect the framework and routing model. Look for:
 - `app.json` with an `expo.web.output` field (`"single"` or `"static"`) → **Expo Metro SPA** (React Native Web via Metro bundler, not Next.js/Vite — see the Expo-specific section below)
 - `index.html` at root with no framework config → plain HTML / Vite SPA
 - `_config.yml` / `hugo.toml` → Jekyll / Hugo
-- A `build_*.py` (or similarly-named) Python script — commonly under a `docs/marketing/` or `scripts/`-style directory — that string-templates HTML directly into a sibling `site/`/`dist/`-style output directory, with no npm/framework config anywhere nearby → **hand-rolled static-site generator**. Example: this repo's `docs/marketing/landing/build_landing.py` (apex marketing site, 9 languages, hreflang, JSON-LD, merged `sitemap.xml`/`robots.txt`), `docs/marketing/seo/build_blog.py` (blog), and `docs/marketing/help/build_help.py` (help center) — all committed as generated `site/` output but driven entirely from `.py` source. There may be more than one such generator in a repo (one per site section); detect and audit each separately.
+- A `build_*.py` (or similarly-named) Python script — commonly under a `docs/marketing/` or `scripts/`-style directory — that string-templates HTML directly into a sibling `site/`/`dist/`-style output directory, with no npm/framework config anywhere nearby → **hand-rolled static-site generator**. Example: this repo's `docs/marketing/landing/build_landing.py` (apex marketing site, 9 languages, hreflang, JSON-LD, merged `sitemap.xml`/`robots.txt`), `docs/marketing/seo/build_blog.py` (blog), and `docs/marketing/help/build_help.py` (help center) — all committed as generated `site/` output but driven entirely from `.py` source. There may be more than one such generator in a repo (one per site section); detect and audit each separately. When auditing a hand-rolled generator, also check whether it emits `llms.txt` / `llms-full.txt` as part of its own build (see checklist category J) — cite the generator source line the same way as any other finding, never the generated output file.
 
 Different stacks have different idiomatic places for SEO primitives (e.g., Next.js App Router uses `generateMetadata()` in `layout.tsx` / `page.tsx`; Nuxt uses `useHead()` / `definePageMeta()`). Cite the right API for the stack.
 
@@ -184,6 +184,13 @@ Audit against these categories. For each, output **status** (✓ ok / ⚠ partia
 - About page describes the organization and people
 - Privacy policy and terms-of-service exist and are linked
 
+#### J. AI-crawler / GEO visibility
+- `llms.txt` exists at the site root, describes the product/site in plain language, and links to `llms-full.txt` or per-section content if present
+- `robots.txt` explicitly `Allow`s known AI-answer-engine crawlers (GPTBot, OAI-SearchBot, ChatGPT-User, ClaudeBot, anthropic-ai, Claude-Web, PerplexityBot, Perplexity-User, Google-Extended, CCBot, etc.) rather than leaving them to an ambiguous default `Disallow`/absence
+- If a content mirror (`llms-full.txt` or similar) exists, it is generated from the same source as the human-facing pages (not hand-maintained) — flag ✗ if it is a static committed file with no generator wiring, since that lets it silently drift stale as new pages are added
+- Cross-reference, don't duplicate: structured data (C) and plain semantic HTML (D) already double as AI-answer-engine signals — note that connection here rather than re-auditing them
+- This category is a checkable, fixable technical item (existence + freshness + allow-list completeness) — do not invent a scoring rubric or claim ranking/citability impact for it (see Constraints: don't promise specific ranking improvements)
+
 ### Step 3 — Write the audit
 
 Write to `docs/seo/YYYY-MM-DD-audit.md`. Structure:
@@ -209,7 +216,7 @@ Write to `docs/seo/YYYY-MM-DD-audit.md`. Structure:
 ### B. On-page metadata
 <...>
 
-(continue through all 9 categories)
+(continue through all 10 categories)
 
 ## Prioritized fix list
 

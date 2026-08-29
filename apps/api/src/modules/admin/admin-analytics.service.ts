@@ -1,6 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import type { AdminDashboardResponse, AdminUserUsageItem } from '@budget/shared-types';
+import type {
+  AdminAcquisitionBreakdownResponse,
+  AdminAcquisitionBreakdownRow,
+  AdminDashboardResponse,
+  AdminUserUsageItem,
+} from '@budget/shared-types';
 import { normalizeMrr, toMrrRows } from './admin-metrics.util';
 import {
   PAID_SUB_WHERE,
@@ -333,6 +338,47 @@ export class AdminAnalyticsService {
         details: c.details,
         createdAt: c.createdAt.toISOString(),
       })),
+    };
+  }
+
+  // ABA-436 follow-up: groups signups by the ?src/loc/lang/plan attribution
+  // tags captured at first arrival (see attribution.ts on mobile). NULL is a
+  // legitimate "unknown" (pre-migration user, native install, no query
+  // param) — bucketed as 'direct' here rather than dropped, per the
+  // CLAUDE.md note on this feature.
+  async getAcquisitionBreakdown(days: number): Promise<AdminAcquisitionBreakdownResponse> {
+    const windowStart = new Date();
+    windowStart.setDate(windowStart.getDate() - days);
+    const windowWhere = { createdAt: { gte: windowStart } };
+
+    const [totalUsers, windowSignups, attributedWindowSignups, bySource, byLocation, byLanguage, byPlan] =
+      await Promise.all([
+        this.prisma.user.count(),
+        this.prisma.user.count({ where: windowWhere }),
+        this.prisma.user.count({ where: { ...windowWhere, acquisitionSource: { not: null } } }),
+        this.prisma.user.groupBy({ by: ['acquisitionSource'], where: windowWhere, _count: true }),
+        this.prisma.user.groupBy({ by: ['acquisitionLocation'], where: windowWhere, _count: true }),
+        this.prisma.user.groupBy({ by: ['acquisitionLanguage'], where: windowWhere, _count: true }),
+        this.prisma.user.groupBy({ by: ['acquisitionPlan'], where: windowWhere, _count: true }),
+      ]);
+
+    const toRows = <K extends string>(
+      groups: Array<Record<K, string | null> & { _count: number }>,
+      key: K,
+    ): AdminAcquisitionBreakdownRow[] =>
+      groups
+        .map((g) => ({ value: g[key] ?? 'direct', count: g._count }))
+        .sort((a, b) => b.count - a.count);
+
+    return {
+      windowDays: days,
+      totalUsers,
+      windowSignups,
+      attributedWindowSignups,
+      bySource: toRows(bySource, 'acquisitionSource'),
+      byLocation: toRows(byLocation, 'acquisitionLocation'),
+      byLanguage: toRows(byLanguage, 'acquisitionLanguage'),
+      byPlan: toRows(byPlan, 'acquisitionPlan'),
     };
   }
 }
