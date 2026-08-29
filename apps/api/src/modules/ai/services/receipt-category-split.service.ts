@@ -5,6 +5,7 @@ import { CacheService } from '../../../common/cache/cache.service';
 import { ProductRulesService, normalizeProductName } from '../../merchant-rules/product-rules.service';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { depositCategoryName, isDepositCategoryName } from '../../../common/utils/deposit-category';
 
 export interface ClassifyLine {
   index: number;
@@ -64,29 +65,8 @@ const LANGUAGE_NAMES: Record<string, string> = {
 };
 const languageName = (language?: string): string => LANGUAGE_NAMES[language ?? ''] ?? 'English';
 
-/**
- * The deposit category's name, per app locale.
- *
- * Ours, not the model's: unlike a proposed category this one has a fixed
- * meaning, so it is not worth an inference and must not drift between scans.
- * One word per language — it sits in a category list next to "Groceries".
- * Resolved from the ACCOUNT OWNER's language so a shared account does not
- * accumulate one deposit category per member.
- */
-const DEPOSIT_CATEGORY_NAMES: Record<string, string> = {
-  en: 'Deposit',
-  pl: 'Kaucja',
-  de: 'Pfand',
-  es: 'Depósito',
-  fr: 'Consigne',
-  nl: 'Statiegeld',
-  ru: 'Залог за тару',
-  ua: 'Застава за тару',
-  be: 'Закладзь за тару',
-};
-
-export const depositCategoryName = (language?: string): string =>
-  DEPOSIT_CATEGORY_NAMES[language ?? ''] ?? DEPOSIT_CATEGORY_NAMES.en;
+// Re-exported so receipt-finalizer.service.ts keeps its existing import path.
+export { depositCategoryName };
 
 /** NaN-guarded, mirroring parseInferenceQuotaEnv in the AI import path. */
 function resolveDailyLimit(raw: string | undefined): number {
@@ -128,13 +108,29 @@ export class ReceiptCategorySplitService {
     if (items.length === 0 || categories.length === 0) return empty;
 
     const rules = await this.productRules.getRulesMap(accountId);
-    const validCategoryIds = new Set(categories.map((c) => c.id));
+
+    // The returnable-packaging deposit is appended by the finalizer as its own
+    // group with NO receipt line behind it, so no line may ever resolve to it.
+    // It is a real category in the account (created by the first receipt that
+    // printed a kaucja), which is exactly the trap: left in this list it is
+    // offered to the model like any other, and on 2026-08-29 a Lidl receipt
+    // filed cured ham, bacon and peanuts under "Kaucja". The save-time learner
+    // then wrote those as rules, so the mistake would have repeated forever
+    // without another model call. Excluded from BOTH halves below.
+    const depositCategoryIds = new Set(
+      categories.filter((c) => isDepositCategoryName(c.name)).map((c) => c.id),
+    );
+    const assignable = categories.filter((c) => !depositCategoryIds.has(c.id));
+    const validCategoryIds = new Set(assignable.map((c) => c.id));
 
     const unresolved: ClassifyLine[] = [];
     for (const line of items) {
       const ruleCategoryId = rules.get(normalizeProductName(line.ruleKey));
-      // A rule can outlive its category (a stale row, a cross-account id): only
-      // honour it if the category is still one of this account's.
+      // A rule can outlive its category (a stale row, a cross-account id), and
+      // a rule written before this guard existed can point at the deposit
+      // category: only honour it if the category is still an assignable one of
+      // this account's. This is what neutralises the poisoned rows already in
+      // production, ahead of the migration that deletes them.
       if (ruleCategoryId && validCategoryIds.has(ruleCategoryId)) {
         assigned.set(line.index, ruleCategoryId);
       } else {
@@ -143,13 +139,15 @@ export class ReceiptCategorySplitService {
     }
 
     if (unresolved.length === 0) return empty;
+    // Nothing left to ask about once the deposit category is taken out.
+    if (assignable.length === 0) return empty;
     if (!(await this.hasQuotaRemaining(accountId))) {
       this.logger.log(`[CategorySplit] daily inference quota spent for ${accountId}; rules only`);
       return empty;
     }
 
     try {
-      const learned = await this.classifyWithModel(unresolved, categories, language);
+      const learned = await this.classifyWithModel(unresolved, assignable, language);
       // Only a call that actually returned counts against the daily ceiling — a
       // thrown/failed call must not silently eat a user's quota for nothing.
       await this.recordInferenceUse(accountId);
@@ -255,6 +253,11 @@ Do not return any amounts, prices, totals or percentages.`;
       // A name with no letter at all is a number, a code or punctuation.
       if (!/\p{L}/u.test(name)) continue;
       if (taken.has(name.toLowerCase())) continue;
+      // The deposit category is ours and is appended by the finalizer, so a
+      // proposal must never mint a second one. `taken` cannot catch this: the
+      // real deposit category is filtered out of the list handed to the model
+      // precisely so it is not assignable, which also removes it from here.
+      if (isDepositCategoryName(name)) continue;
 
       const itemIndexes: number[] = [];
       for (const rawLine of Array.isArray(entry?.lines) ? entry.lines : []) {

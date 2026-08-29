@@ -271,3 +271,72 @@ describe('ReceiptCategorySplitService proposals', () => {
     expect(productRules.upsertRules).not.toHaveBeenCalled();
   });
 });
+
+/**
+ * Production, 2026-08-29. The deposit feature creates a real category named
+ * "Kaucja" on the first receipt that prints one. From then on it sat in the
+ * account's category list like any other, so the classifier was free to assign
+ * ordinary products to it — a Lidl receipt filed cured ham, bacon and peanuts
+ * under "Kaucja", and the save-time learner then wrote those as permanent
+ * rules, making the mistake deterministic and model-free from then on.
+ *
+ * The deposit group is appended by the finalizer with no receipt line behind
+ * it, so no line may ever resolve to it.
+ */
+describe('ReceiptCategorySplitService — the deposit category is not assignable', () => {
+  const WITH_DEPOSIT = [...CATEGORIES, { id: 'c-dep', name: 'Kaucja' }];
+
+  it('never offers the deposit category to the model', async () => {
+    const { service, create } = makeService({ completion: { assignments: [] } });
+
+    await service.classify({ accountId: 'a1', items: ITEMS, categories: WITH_DEPOSIT, language: 'pl' });
+
+    const prompt = JSON.stringify(create.mock.calls[0][0]);
+    expect(prompt).toContain('Groceries');
+    expect(prompt).not.toContain('Kaucja');
+  });
+
+  it('drops an assignment to the deposit category even if the model invents one', async () => {
+    const { service } = makeService({
+      completion: { assignments: [{ line: 1, category: 'Kaucja' }, { line: 2, category: 'Groceries' }] },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: WITH_DEPOSIT });
+
+    expect(result.assignments.get(0)).toBeUndefined();
+    expect(result.assignments.get(1)).toBe('c-food');
+  });
+
+  it('ignores a learned rule that points at the deposit category', async () => {
+    // The three rows the Lidl receipt wrote: bacon, ham and peanuts -> Kaucja.
+    const { service } = makeService({
+      rules: new Map([['chleb', 'c-dep']]),
+      completion: { assignments: [{ line: 1, category: 'Groceries' }] },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: WITH_DEPOSIT });
+
+    expect(result.assignments.get(0)).toBe('c-food');
+  });
+
+  it('refuses a proposal that would mint a second deposit category', async () => {
+    const { service } = makeService({
+      completion: { assignments: [], newCategories: [{ name: 'Pfand', lines: [1] }] },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(result.proposals).toHaveLength(0);
+  });
+
+  it('leaves an account without a deposit category completely unchanged', async () => {
+    const { service, create } = makeService({
+      completion: { assignments: [{ line: 1, category: 'Groceries' }] },
+    });
+
+    const result = await service.classify({ accountId: 'a1', items: ITEMS, categories: CATEGORIES });
+
+    expect(JSON.stringify(create.mock.calls[0][0])).toContain('Alcohol');
+    expect(result.assignments.get(0)).toBe('c-food');
+  });
+});
