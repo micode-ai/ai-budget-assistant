@@ -39,12 +39,40 @@ export class ProjectsService {
     });
   }
 
+  /** Resolve a project by server PK or mobile clientId; null if not found. */
+  private async resolveProjectPk(accountId: string, idOrClientId: string): Promise<string | null> {
+    const p = await this.prisma.project.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+      select: { id: true },
+    });
+    return p?.id ?? null;
+  }
+
+  /** Resolve an expense by server PK or mobile clientId; null if not found. */
+  private async resolveExpensePk(accountId: string, idOrClientId: string): Promise<string | null> {
+    const e = await this.prisma.expense.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+      select: { id: true },
+    });
+    return e?.id ?? null;
+  }
+
+  /** Resolve an income by server PK or mobile clientId; null if not found. */
+  private async resolveIncomePk(accountId: string, idOrClientId: string): Promise<string | null> {
+    const i = await this.prisma.income.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+      select: { id: true },
+    });
+    return i?.id ?? null;
+  }
+
   async findOne(accountId: string, id: string) {
+    // `id` may be the server PK or the mobile's local clientId (offline-first).
     const project = await this.prisma.project.findFirst({
       where: {
-        id,
         accountId,
         isDeleted: false,
+        OR: [{ id }, { clientId: id }],
       },
       include: {
         projectExpenses: {
@@ -105,11 +133,13 @@ export class ProjectsService {
   }
 
   async update(accountId: string, id: string, dto: UpdateProjectDto) {
+    // `id` may be the mobile's local clientId — resolve to the server PK
+    // before using it in a Prisma unique `where`.
     const project = await this.prisma.project.findFirst({
       where: {
-        id,
         accountId,
         isDeleted: false,
+        OR: [{ id }, { clientId: id }],
       },
     });
 
@@ -131,7 +161,7 @@ export class ProjectsService {
     if (dto.isArchived !== undefined) data.isArchived = dto.isArchived;
 
     const updated = await this.prisma.project.update({
-      where: { id },
+      where: { id: project.id },
       data,
     });
     if (dto.name && dto.name !== project.name) {
@@ -141,11 +171,13 @@ export class ProjectsService {
   }
 
   async remove(accountId: string, id: string) {
+    // `id` may be the mobile's local clientId — resolve to the server PK
+    // before using it in a Prisma unique `where`.
     const project = await this.prisma.project.findFirst({
       where: {
-        id,
         accountId,
         isDeleted: false,
+        OR: [{ id }, { clientId: id }],
       },
     });
 
@@ -154,48 +186,33 @@ export class ProjectsService {
     }
 
     return this.prisma.project.update({
-      where: { id },
+      where: { id: project.id },
       data: { isDeleted: true },
     });
   }
 
   async addExpense(accountId: string, projectId: string, expenseId: string) {
-    // Verify project belongs to account
-    const project = await this.prisma.project.findFirst({
-      where: {
-        id: projectId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!project) {
+    // Resolve project + expense to server PKs (ids may be mobile clientIds).
+    const resolvedProjectId = await this.resolveProjectPk(accountId, projectId);
+    if (!resolvedProjectId) {
       throw new NotFoundException('Project not found');
     }
 
-    // Verify expense belongs to account
-    const expense = await this.prisma.expense.findFirst({
-      where: {
-        id: expenseId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!expense) {
+    const resolvedExpenseId = await this.resolveExpensePk(accountId, expenseId);
+    if (!resolvedExpenseId) {
       throw new NotFoundException('Expense not found');
     }
 
     return this.prisma.projectExpense.upsert({
       where: {
         projectId_expenseId: {
-          projectId,
-          expenseId,
+          projectId: resolvedProjectId,
+          expenseId: resolvedExpenseId,
         },
       },
       create: {
-        projectId,
-        expenseId,
+        projectId: resolvedProjectId,
+        expenseId: resolvedExpenseId,
       },
       update: {
         isDeleted: false,
@@ -208,24 +225,22 @@ export class ProjectsService {
     projectId: string,
     expenseId: string,
   ) {
-    // Verify project belongs to account
-    const project = await this.prisma.project.findFirst({
-      where: {
-        id: projectId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!project) {
+    // Resolve project + expense to server PKs (ids may be mobile clientIds).
+    const resolvedProjectId = await this.resolveProjectPk(accountId, projectId);
+    if (!resolvedProjectId) {
       throw new NotFoundException('Project not found');
+    }
+
+    const resolvedExpenseId = await this.resolveExpensePk(accountId, expenseId);
+    if (!resolvedExpenseId) {
+      throw new NotFoundException('Project expense association not found');
     }
 
     const projectExpense = await this.prisma.projectExpense.findUnique({
       where: {
         projectId_expenseId: {
-          projectId,
-          expenseId,
+          projectId: resolvedProjectId,
+          expenseId: resolvedExpenseId,
         },
       },
     });
@@ -237,8 +252,8 @@ export class ProjectsService {
     return this.prisma.projectExpense.update({
       where: {
         projectId_expenseId: {
-          projectId,
-          expenseId,
+          projectId: resolvedProjectId,
+          expenseId: resolvedExpenseId,
         },
       },
       data: { isDeleted: true },
@@ -246,42 +261,27 @@ export class ProjectsService {
   }
 
   async addIncome(accountId: string, projectId: string, incomeId: string) {
-    // Verify project belongs to account
-    const project = await this.prisma.project.findFirst({
-      where: {
-        id: projectId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!project) {
+    // Resolve project + income to server PKs (ids may be mobile clientIds).
+    const resolvedProjectId = await this.resolveProjectPk(accountId, projectId);
+    if (!resolvedProjectId) {
       throw new NotFoundException('Project not found');
     }
 
-    // Verify income belongs to account
-    const income = await this.prisma.income.findFirst({
-      where: {
-        id: incomeId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!income) {
+    const resolvedIncomeId = await this.resolveIncomePk(accountId, incomeId);
+    if (!resolvedIncomeId) {
       throw new NotFoundException('Income not found');
     }
 
     return this.prisma.projectIncome.upsert({
       where: {
         projectId_incomeId: {
-          projectId,
-          incomeId,
+          projectId: resolvedProjectId,
+          incomeId: resolvedIncomeId,
         },
       },
       create: {
-        projectId,
-        incomeId,
+        projectId: resolvedProjectId,
+        incomeId: resolvedIncomeId,
       },
       update: {
         isDeleted: false,
@@ -290,24 +290,22 @@ export class ProjectsService {
   }
 
   async removeIncome(accountId: string, projectId: string, incomeId: string) {
-    // Verify project belongs to account
-    const project = await this.prisma.project.findFirst({
-      where: {
-        id: projectId,
-        accountId,
-        isDeleted: false,
-      },
-    });
-
-    if (!project) {
+    // Resolve project + income to server PKs (ids may be mobile clientIds).
+    const resolvedProjectId = await this.resolveProjectPk(accountId, projectId);
+    if (!resolvedProjectId) {
       throw new NotFoundException('Project not found');
+    }
+
+    const resolvedIncomeId = await this.resolveIncomePk(accountId, incomeId);
+    if (!resolvedIncomeId) {
+      throw new NotFoundException('Project income association not found');
     }
 
     const projectIncome = await this.prisma.projectIncome.findUnique({
       where: {
         projectId_incomeId: {
-          projectId,
-          incomeId,
+          projectId: resolvedProjectId,
+          incomeId: resolvedIncomeId,
         },
       },
     });
@@ -319,8 +317,8 @@ export class ProjectsService {
     return this.prisma.projectIncome.update({
       where: {
         projectId_incomeId: {
-          projectId,
-          incomeId,
+          projectId: resolvedProjectId,
+          incomeId: resolvedIncomeId,
         },
       },
       data: { isDeleted: true },
@@ -328,11 +326,12 @@ export class ProjectsService {
   }
 
   async getAnalytics(accountId: string, projectId: string) {
+    // `projectId` may be the mobile's local clientId.
     const project = await this.prisma.project.findFirst({
       where: {
-        id: projectId,
         accountId,
         isDeleted: false,
+        OR: [{ id: projectId }, { clientId: projectId }],
       },
       include: {
         projectExpenses: {

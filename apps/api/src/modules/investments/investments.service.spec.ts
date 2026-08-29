@@ -546,3 +546,140 @@ describe('InvestmentsService.getPortfolioAnalytics', () => {
     expect(result.performance.benchmarkValues).toEqual([0, 10]);
   });
 });
+
+// Regression for the ABA-374 bug class: the mobile client addresses every
+// offline-first row (holdings, transactions) by its local clientId, which
+// differs from the server PK until a full sync round-trip backfills it.
+// Every lookup below must resolve OR:[{id},{clientId}] before the id is
+// reused as a foreign key, or a device-created row 404s from the web app.
+describe('InvestmentsService — clientId resolution (ABA-374 bug class)', () => {
+  it('removeHolding resolves a holding addressed by its local clientId', async () => {
+    const prisma = makePrisma({
+      portfolioHolding: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'server-holding-1' }),
+      },
+    });
+    const service = new InvestmentsService(prisma as any, makeTwelveData() as any);
+
+    await service.removeHolding('acc-1', 'local-holding-1');
+
+    const where = prisma.portfolioHolding.findFirst.mock.calls[0][0].where;
+    expect(where.OR).toEqual([{ id: 'local-holding-1' }, { clientId: 'local-holding-1' }]);
+
+    // Downstream writes must use the RESOLVED server PK, not the local id.
+    expect(prisma.investmentTransaction.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ holdingId: 'server-holding-1' }) }),
+    );
+    expect(prisma.portfolioHolding.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'server-holding-1' } }),
+    );
+  });
+
+  it('createTransaction resolves dto.holdingId by clientId and writes the resolved server PK everywhere', async () => {
+    const prisma = makePrisma({
+      portfolioHolding: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'server-holding-2',
+          quantity: 0,
+          totalInvested: 0,
+        }),
+      },
+      investmentTransaction: {
+        findFirst: jest.fn().mockResolvedValue(null),
+        create: jest.fn().mockImplementation(({ data }: any) => Promise.resolve({ id: 'tx-new', ...data })),
+      },
+    });
+    const service = new InvestmentsService(prisma as any, makeTwelveData() as any);
+
+    const tx = await service.createTransaction('acc-1', 'u1', {
+      localId: 'local-tx-1',
+      holdingId: 'local-holding-2', // the mobile's local clientId, not the server PK
+      type: 'buy',
+      quantity: 1,
+      pricePerUnit: 10,
+      date: '2026-01-01',
+    } as any);
+
+    expect(tx.holdingId).toBe('server-holding-2');
+    expect(prisma.portfolioHolding.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'server-holding-2' } }),
+    );
+  });
+
+  it('updateTransaction resolves txId by clientId before updating/recalculating', async () => {
+    const prisma = makePrisma({
+      investmentTransaction: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'server-tx-1',
+          holdingId: 'server-holding-3',
+          type: 'buy',
+          quantity: 1,
+          pricePerUnit: 1,
+          fee: 0,
+        }),
+        findMany: jest.fn().mockResolvedValue([]),
+        update: jest.fn().mockResolvedValue({ id: 'server-tx-1' }),
+      },
+    });
+    const service = new InvestmentsService(prisma as any, makeTwelveData() as any);
+
+    await service.updateTransaction('acc-1', 'local-tx-2', { quantity: 2 } as any);
+
+    const where = prisma.investmentTransaction.findFirst.mock.calls[0][0].where;
+    expect(where.OR).toEqual([{ id: 'local-tx-2' }, { clientId: 'local-tx-2' }]);
+    expect(prisma.investmentTransaction.update).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { id: 'server-tx-1' } }),
+    );
+  });
+
+  it('removeTransaction resolves txId by clientId before soft-deleting', async () => {
+    const prisma = makePrisma({
+      investmentTransaction: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'server-tx-2', holdingId: 'server-holding-4' }),
+        findMany: jest.fn().mockResolvedValue([]),
+        update: jest.fn().mockResolvedValue({ id: 'server-tx-2' }),
+      },
+    });
+    const service = new InvestmentsService(prisma as any, makeTwelveData() as any);
+
+    await service.removeTransaction('acc-1', 'local-tx-3');
+
+    expect(prisma.investmentTransaction.update).toHaveBeenCalledWith({
+      where: { id: 'server-tx-2' },
+      data: { isDeleted: true, syncVersion: { increment: 1 } },
+    });
+  });
+
+  it('getAssetPriceHistory resolves holdingId by clientId', async () => {
+    const prisma = makePrisma({
+      portfolioHolding: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'server-holding-5',
+          asset: { symbol: 'AAPL', exchange: undefined },
+        }),
+      },
+      assetPriceHistory: { findMany: jest.fn().mockResolvedValue([]) },
+    });
+    const service = new InvestmentsService(prisma as any, makeTwelveData() as any);
+
+    await service.getAssetPriceHistory('acc-1', 'local-holding-5', 30);
+
+    const where = prisma.portfolioHolding.findFirst.mock.calls[0][0].where;
+    expect(where.OR).toEqual([{ id: 'local-holding-5' }, { clientId: 'local-holding-5' }]);
+  });
+
+  it('getTransactions resolves an optional holdingId filter by clientId', async () => {
+    const prisma = makePrisma({
+      portfolioHolding: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'server-holding-6' }),
+      },
+    });
+    const service = new InvestmentsService(prisma as any, makeTwelveData() as any);
+
+    await service.getTransactions('acc-1', 'local-holding-6');
+
+    expect(prisma.investmentTransaction.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ holdingId: 'server-holding-6' }) }),
+    );
+  });
+});

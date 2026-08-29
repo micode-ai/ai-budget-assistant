@@ -263,3 +263,36 @@ describe('getHistory month stepping', () => {
     expect(new Set(endDayKeys).size).toBe(endDayKeys.length);
   });
 });
+
+// Regression for the ABA-374 bug class: the mobile client addresses a
+// budget by its local clientId until a full sync round-trip backfills the
+// server PK. Every other budget method (update/remove/getHistory/getProgress)
+// funnels through findOne, so this one lookup fixes the whole module.
+describe('BudgetsService.findOne — clientId resolution (ABA-374 bug class)', () => {
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  it('resolves a budget addressed by its local clientId, not just the server PK', async () => {
+    const budget = { id: 'server-budget-1', clientId: 'local-budget-1', categoryAllocations: [] };
+    const prisma: any = {
+      budget: { findFirst: jest.fn().mockResolvedValue(budget) },
+    };
+
+    const result = await makeService(prisma).findOne('acc-1', 'local-budget-1');
+
+    expect(result).toBe(budget);
+    const where = prisma.budget.findFirst.mock.calls[0][0].where;
+    expect(where.OR).toEqual([{ id: 'local-budget-1' }, { clientId: 'local-budget-1' }]);
+  });
+
+  it('throws NotFoundException when neither id nor clientId matches', async () => {
+    const prisma: any = {
+      budget: { findFirst: jest.fn().mockResolvedValue(null) },
+    };
+
+    await expect(makeService(prisma).findOne('acc-1', 'missing')).rejects.toThrow('Budget not found');
+  });
+});

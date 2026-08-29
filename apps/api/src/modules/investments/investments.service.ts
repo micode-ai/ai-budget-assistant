@@ -28,6 +28,22 @@ export class InvestmentsService {
     return this.twelveData.searchAssets(query);
   }
 
+  // ---- clientId resolution (ABA-374 bug class) ----
+  // The mobile client addresses every offline-first row by its local id,
+  // which the server stores in `clientId`. Any route `:id` (or DTO id field)
+  // may be either the server PK or that local id, so lookups against these
+  // tables must resolve through OR:[{id},{clientId}] before being used as a
+  // foreign key elsewhere — mirrors `TagsService.resolveExpensePk`.
+
+  /** Resolve a holding by server PK or mobile clientId; null if not found. */
+  private async resolveHoldingPk(accountId: string, idOrClientId: string): Promise<string | null> {
+    const h = await this.prisma.portfolioHolding.findFirst({
+      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
+      select: { id: true },
+    });
+    return h?.id ?? null;
+  }
+
   // ---- Holdings ----
 
   async getHoldings(accountId: string) {
@@ -87,23 +103,21 @@ export class InvestmentsService {
   }
 
   async removeHolding(accountId: string, holdingId: string) {
-    const holding = await this.prisma.portfolioHolding.findFirst({
-      where: { id: holdingId, accountId, isDeleted: false },
-    });
+    const resolvedId = await this.resolveHoldingPk(accountId, holdingId);
 
-    if (!holding) {
+    if (!resolvedId) {
       throw new NotFoundException('Holding not found');
     }
 
     await this.prisma.$transaction([
       // Soft-delete all transactions for this holding
       this.prisma.investmentTransaction.updateMany({
-        where: { holdingId, isDeleted: false },
+        where: { holdingId: resolvedId, isDeleted: false },
         data: { isDeleted: true, syncVersion: { increment: 1 } },
       }),
       // Soft-delete the holding
       this.prisma.portfolioHolding.update({
-        where: { id: holdingId },
+        where: { id: resolvedId },
         data: {
           isDeleted: true,
           quantity: 0,
@@ -120,7 +134,10 @@ export class InvestmentsService {
 
   async getTransactions(accountId: string, holdingId?: string) {
     const where: Record<string, unknown> = { accountId, isDeleted: false };
-    if (holdingId) where.holdingId = holdingId;
+    if (holdingId) {
+      const resolvedId = await this.resolveHoldingPk(accountId, holdingId);
+      where.holdingId = resolvedId ?? holdingId;
+    }
 
     return this.prisma.investmentTransaction.findMany({
       where,
@@ -133,14 +150,20 @@ export class InvestmentsService {
     userId: string,
     dto: CreateInvestmentTransactionDto,
   ) {
-    // Validate holding exists
+    // Validate holding exists (dto.holdingId may be the mobile's local clientId)
     const holding = await this.prisma.portfolioHolding.findFirst({
-      where: { id: dto.holdingId, accountId, isDeleted: false },
+      where: {
+        accountId,
+        isDeleted: false,
+        OR: [{ id: dto.holdingId }, { clientId: dto.holdingId }],
+      },
     });
 
     if (!holding) {
       throw new NotFoundException('Holding not found');
     }
+    // Use the resolved server PK for every downstream write/lookup below.
+    const holdingId = holding.id;
 
     // For sell transactions, validate sufficient quantity
     if (dto.type === 'sell') {
@@ -162,13 +185,13 @@ export class InvestmentsService {
 
     if (existing) {
       // Already synced — still recalculate in case holding was reset
-      await this.recalculateHolding(dto.holdingId);
+      await this.recalculateHolding(holdingId);
       return existing;
     }
 
     const transaction = await this.prisma.investmentTransaction.create({
       data: {
-        holdingId: dto.holdingId,
+        holdingId,
         accountId,
         userId,
         clientId: dto.localId,
@@ -197,7 +220,7 @@ export class InvestmentsService {
     }
     const newAvgCost = newQty > 0 ? newTotalInvested / newQty : 0;
     await this.prisma.portfolioHolding.update({
-      where: { id: dto.holdingId },
+      where: { id: holdingId },
       data: {
         quantity: Math.max(0, newQty),
         averageCostBasis: Math.max(0, newAvgCost),
@@ -214,8 +237,14 @@ export class InvestmentsService {
     txId: string,
     dto: UpdateInvestmentTransactionDto,
   ) {
+    // txId may be the mobile's local clientId — resolve to the server PK
+    // before using it in a Prisma unique `where`.
     const tx = await this.prisma.investmentTransaction.findFirst({
-      where: { id: txId, accountId, isDeleted: false },
+      where: {
+        accountId,
+        isDeleted: false,
+        OR: [{ id: txId }, { clientId: txId }],
+      },
     });
 
     if (!tx) {
@@ -228,7 +257,7 @@ export class InvestmentsService {
     const totalAmount = quantity * pricePerUnit + (tx.type === 'buy' ? fee : -fee);
 
     const updated = await this.prisma.investmentTransaction.update({
-      where: { id: txId },
+      where: { id: tx.id },
       data: {
         quantity: dto.quantity,
         pricePerUnit: dto.pricePerUnit,
@@ -246,8 +275,14 @@ export class InvestmentsService {
   }
 
   async removeTransaction(accountId: string, txId: string) {
+    // txId may be the mobile's local clientId — resolve to the server PK
+    // before using it in a Prisma unique `where`.
     const tx = await this.prisma.investmentTransaction.findFirst({
-      where: { id: txId, accountId, isDeleted: false },
+      where: {
+        accountId,
+        isDeleted: false,
+        OR: [{ id: txId }, { clientId: txId }],
+      },
     });
 
     if (!tx) {
@@ -255,7 +290,7 @@ export class InvestmentsService {
     }
 
     await this.prisma.investmentTransaction.update({
-      where: { id: txId },
+      where: { id: tx.id },
       data: { isDeleted: true, syncVersion: { increment: 1 } },
     });
 
@@ -667,8 +702,13 @@ export class InvestmentsService {
   // ---- Asset Price History ----
 
   async getAssetPriceHistory(accountId: string, holdingId: string, days: number = 30) {
+    // holdingId may be the mobile's local clientId.
     const holding = await this.prisma.portfolioHolding.findFirst({
-      where: { id: holdingId, accountId, isDeleted: false },
+      where: {
+        accountId,
+        isDeleted: false,
+        OR: [{ id: holdingId }, { clientId: holdingId }],
+      },
       include: { asset: true },
     });
 

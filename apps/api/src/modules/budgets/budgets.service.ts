@@ -152,8 +152,9 @@ export class BudgetsService {
   }
 
   async findOne(accountId: string, id: string) {
+    // `id` may be the server PK or the mobile's local clientId (offline-first).
     const budget = await this.prisma.budget.findFirst({
-      where: { id, accountId, isDeleted: false },
+      where: { accountId, isDeleted: false, OR: [{ id }, { clientId: id }] },
       include: { ...CATEGORY_ALLOCATIONS_INCLUDE },
     });
 

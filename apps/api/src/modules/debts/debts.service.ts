@@ -114,22 +114,29 @@ export class DebtsService {
   ) {
     const repayDate = date ? new Date(date) : new Date();
 
+    // debtId may be the mobile's local clientId — resolve to the server PK
+    // before storing it as the related-debt foreign key below.
     // Try lent debt (expense with isDebt=true)
     const lentDebt = await this.prisma.expense.findFirst({
-      where: { id: debtId, accountId, isDebt: true, isDeleted: false },
+      where: {
+        accountId,
+        isDebt: true,
+        isDeleted: false,
+        OR: [{ id: debtId }, { clientId: debtId }],
+      },
     });
     if (lentDebt) {
       const income = await this.prisma.income.create({
         data: {
           userId,
           accountId,
-          clientId: `repay-${debtId}-${Date.now()}`,
+          clientId: `repay-${lentDebt.id}-${Date.now()}`,
           amount,
           currencyCode: lentDebt.currencyCode,
           description: `Repayment from ${lentDebt.debtContactName || 'contact'}`,
           date: repayDate,
           isDebtRepayment: true,
-          relatedDebtExpenseId: debtId,
+          relatedDebtExpenseId: lentDebt.id,
           debtContactName: lentDebt.debtContactName,
         },
       });
@@ -138,20 +145,25 @@ export class DebtsService {
 
     // Try borrowed debt (income with isDebt=true)
     const borrowedDebt = await this.prisma.income.findFirst({
-      where: { id: debtId, accountId, isDebt: true, isDeleted: false },
+      where: {
+        accountId,
+        isDebt: true,
+        isDeleted: false,
+        OR: [{ id: debtId }, { clientId: debtId }],
+      },
     });
     if (borrowedDebt) {
       const expense = await this.prisma.expense.create({
         data: {
           userId,
           accountId,
-          clientId: `repay-${debtId}-${Date.now()}`,
+          clientId: `repay-${borrowedDebt.id}-${Date.now()}`,
           amount,
           currencyCode: borrowedDebt.currencyCode,
           description: `Repayment to ${borrowedDebt.debtContactName || 'contact'}`,
           date: repayDate,
           isDebtRepayment: true,
-          relatedDebtIncomeId: debtId,
+          relatedDebtIncomeId: borrowedDebt.id,
           debtContactName: borrowedDebt.debtContactName,
         },
       });

@@ -256,3 +256,51 @@ describe('DebtsService.createDebt', () => {
     expect(data.debtContactName).toHaveLength(100);
   });
 });
+
+// Regression for the ABA-374 bug class: the mobile client may address a debt
+// (an Expense or Income row) by its local clientId, which differs from the
+// server PK until a full sync round-trip backfills it.
+describe('DebtsService.recordRepayment — clientId resolution (ABA-374 bug class)', () => {
+  it('resolves a lent debt addressed by its local clientId and links the repayment via the resolved server PK', async () => {
+    const { service, expense, income } = makeService();
+    expense.findFirst.mockResolvedValue({
+      id: 'server-debt-1',
+      currencyCode: 'USD',
+      debtContactName: 'Bob',
+    });
+
+    const result = await service.recordRepayment('acc-1', 'user-1', 'local-debt-1', 40);
+
+    const where = expense.findFirst.mock.calls[0][0].where;
+    expect(where.OR).toEqual([{ id: 'local-debt-1' }, { clientId: 'local-debt-1' }]);
+
+    expect(result.type).toBe('lent');
+    expect(income.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ relatedDebtExpenseId: 'server-debt-1' }),
+      }),
+    );
+  });
+
+  it('resolves a borrowed debt addressed by its local clientId and links the repayment via the resolved server PK', async () => {
+    const { service, expense, income } = makeService();
+    expense.findFirst.mockResolvedValue(null);
+    income.findFirst.mockResolvedValue({
+      id: 'server-debt-2',
+      currencyCode: 'EUR',
+      debtContactName: 'Alice',
+    });
+
+    const result = await service.recordRepayment('acc-1', 'user-1', 'local-debt-2', 25);
+
+    const where = income.findFirst.mock.calls[0][0].where;
+    expect(where.OR).toEqual([{ id: 'local-debt-2' }, { clientId: 'local-debt-2' }]);
+
+    expect(result.type).toBe('borrowed');
+    expect(expense.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ relatedDebtIncomeId: 'server-debt-2' }),
+      }),
+    );
+  });
+});
