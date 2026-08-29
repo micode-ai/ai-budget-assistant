@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { IncomesService } from '../../incomes/incomes.service';
 import { BotContext } from '../types';
@@ -6,6 +6,7 @@ import { parseAmount } from '../helpers/parse-amount';
 import { formatCurrency } from '../helpers/format-telegram';
 import { t } from '../helpers/i18n';
 
+@Injectable()
 export class IncomeHandler {
   private readonly logger = new Logger(IncomeHandler.name);
 

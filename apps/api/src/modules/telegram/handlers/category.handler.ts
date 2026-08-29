@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { Markup } from 'telegraf';
 import { Prisma } from '@prisma/client';
 import { CategoriesService } from '../../categories/categories.service';
@@ -6,6 +6,7 @@ import { BotContext } from '../types';
 import { escapeHtml } from '../helpers/format-telegram';
 import { t } from '../helpers/i18n';
 
+@Injectable()
 export class CategoryHandler {
   private readonly logger = new Logger(CategoryHandler.name);
 

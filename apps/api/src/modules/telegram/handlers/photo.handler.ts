@@ -1,4 +1,4 @@
-import { Logger, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { Markup } from 'telegraf';
 import { randomUUID } from 'crypto';
 import { OcrService } from '../../ai/services/ocr.service';
@@ -67,6 +67,7 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
+@Injectable()
 export class PhotoHandler {
   private readonly logger = new Logger(PhotoHandler.name);
 

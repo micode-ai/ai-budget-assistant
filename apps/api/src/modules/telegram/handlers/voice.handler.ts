@@ -1,4 +1,4 @@
-import { Logger, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { WhisperService } from '../../ai/services/whisper.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { ChatHandler } from './chat.handler';
@@ -6,6 +6,7 @@ import { BotContext } from '../types';
 import { downloadFile } from '../helpers/download-file';
 import { t } from '../helpers/i18n';
 
+@Injectable()
 export class VoiceHandler {
   private readonly logger = new Logger(VoiceHandler.name);
 

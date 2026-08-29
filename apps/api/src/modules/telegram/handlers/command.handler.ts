@@ -1,4 +1,4 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { TelegramLinkService } from '../telegram-link.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
@@ -6,6 +6,7 @@ import { BotContext } from '../types';
 import { Markup } from 'telegraf';
 import { t } from '../helpers/i18n';
 
+@Injectable()
 export class CommandHandler {
   private readonly logger = new Logger(CommandHandler.name);
 

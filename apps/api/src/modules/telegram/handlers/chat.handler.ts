@@ -1,4 +1,4 @@
-import { Logger, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
 import { Markup } from 'telegraf';
 import { randomUUID } from 'crypto';
 import { ChatService } from '../../ai/services/chat.service';
@@ -25,6 +25,7 @@ setInterval(() => {
   }
 }, 5 * 60 * 1000);
 
+@Injectable()
 export class ChatHandler {
   private readonly logger = new Logger(ChatHandler.name);
 

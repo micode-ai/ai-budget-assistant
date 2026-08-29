@@ -1,10 +1,11 @@
-import { Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PurchaseRequestsService } from '../../purchase-requests/purchase-requests.service';
 import { BotContext } from '../types';
 
 // Phase 2: Handles inbound vote callbacks (pr_approve/pr_reject).
 // Outbound bot messages (sending buttons on request creation) are deferred to Phase 2.
 // The push notification path (NotificationsService) provides text-only notifications for now.
+@Injectable()
 export class PurchaseRequestHandler {
   private readonly logger = new Logger(PurchaseRequestHandler.name);
 

@@ -2,14 +2,7 @@ import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import { Telegraf } from 'telegraf';
 import { PrismaService } from '../../database/prisma.service';
-import { ChatService } from '../ai/services/chat.service';
-import { WhisperService } from '../ai/services/whisper.service';
-import { OcrService } from '../ai/services/ocr.service';
-import { ExpensesService } from '../expenses/expenses.service';
-import { IncomesService } from '../incomes/incomes.service';
-import { CategoriesService } from '../categories/categories.service';
 import { TelegramLinkService } from './telegram-link.service';
-import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { CommandHandler } from './handlers/command.handler';
 import { ExpenseHandler } from './handlers/expense.handler';
 import { IncomeHandler } from './handlers/income.handler';
@@ -18,7 +11,6 @@ import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
-import { PurchaseRequestsService } from '../purchase-requests/purchase-requests.service';
 import { BotContext } from './types';
 
 @Injectable()
@@ -28,28 +20,18 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
   private botUsername: string = '';
   private webhookSecret: string | null = null;
 
-  // Handlers
-  private commandHandler!: CommandHandler;
-  private expenseHandler!: ExpenseHandler;
-  private incomeHandler!: IncomeHandler;
-  private chatHandler!: ChatHandler;
-  private voiceHandler!: VoiceHandler;
-  private photoHandler!: PhotoHandler;
-  private categoryHandler!: CategoryHandler;
-  private purchaseRequestHandler!: PurchaseRequestHandler;
-
   constructor(
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
     private readonly linkService: TelegramLinkService,
-    private readonly chatService: ChatService,
-    private readonly whisperService: WhisperService,
-    private readonly ocrService: OcrService,
-    private readonly expensesService: ExpensesService,
-    private readonly incomesService: IncomesService,
-    private readonly categoriesService: CategoriesService,
-    private readonly subscriptionsService: SubscriptionsService,
-    private readonly purchaseRequestsService: PurchaseRequestsService,
+    private readonly commandHandler: CommandHandler,
+    private readonly expenseHandler: ExpenseHandler,
+    private readonly incomeHandler: IncomeHandler,
+    private readonly chatHandler: ChatHandler,
+    private readonly voiceHandler: VoiceHandler,
+    private readonly photoHandler: PhotoHandler,
+    private readonly categoryHandler: CategoryHandler,
+    private readonly purchaseRequestHandler: PurchaseRequestHandler,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -61,16 +43,6 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
 
     try {
       this.bot = new Telegraf<BotContext>(botToken);
-
-      // Initialize handlers
-      this.commandHandler = new CommandHandler(this.linkService, this.prisma, this.subscriptionsService);
-      this.expenseHandler = new ExpenseHandler(this.expensesService);
-      this.incomeHandler = new IncomeHandler(this.incomesService);
-      this.chatHandler = new ChatHandler(this.chatService, this.linkService, this.prisma, this.subscriptionsService);
-      this.voiceHandler = new VoiceHandler(this.whisperService, this.chatHandler, this.subscriptionsService);
-      this.photoHandler = new PhotoHandler(this.ocrService, this.expensesService, this.subscriptionsService, this.categoriesService);
-      this.categoryHandler = new CategoryHandler(this.categoriesService);
-      this.purchaseRequestHandler = new PurchaseRequestHandler(this.purchaseRequestsService);
 
       // Get bot info
       const botInfo = await this.bot.telegram.getMe();
