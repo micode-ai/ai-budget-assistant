@@ -4,6 +4,9 @@ import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
+import { paginateById } from '../../common/utils/paginate';
+
+const BATCH_SIZE = 500;
 
 export type BillingCycle = 'monthly' | 'yearly' | 'quarterly' | 'weekly';
 
@@ -49,79 +52,90 @@ export class SubscriptionRenewalCron {
     const today = new Date();
     today.setHours(23, 59, 59, 999); // include anything due up to end of today
 
-    const due = await this.prisma.userSubscription.findMany({
-      where: { isActive: true, nextRenewalDate: { lte: today } },
-    });
-
-    if (due.length === 0) {
-      this.logger.log('No subscription renewals due');
-      return;
-    }
+    const pages = paginateById(
+      (cursor) =>
+        this.prisma.userSubscription.findMany({
+          where: { isActive: true, nextRenewalDate: { lte: today } },
+          take: BATCH_SIZE,
+          orderBy: { id: 'asc' },
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        }),
+      BATCH_SIZE,
+    );
 
     let charged = 0;
-    for (const sub of due) {
-      const owner = await this.prisma.accountMember.findFirst({
-        where: { accountId: sub.accountId, role: 'owner' },
-        select: { userId: true },
-        orderBy: { joinedAt: 'asc' },
-      });
-      const fallback = owner
-        ? null
-        : await this.prisma.accountMember.findFirst({
-            where: { accountId: sub.accountId },
-            select: { userId: true },
-            orderBy: { joinedAt: 'asc' },
-          });
-      const userId = owner?.userId ?? fallback?.userId;
-      if (!userId) {
-        this.logger.warn(`Subscription ${sub.id}: account ${sub.accountId} has no members; skipping`);
-        continue;
+    let scanned = 0;
+    for await (const due of pages) {
+      scanned += due.length;
+      for (const sub of due) {
+        const owner = await this.prisma.accountMember.findFirst({
+          where: { accountId: sub.accountId, role: 'owner' },
+          select: { userId: true },
+          orderBy: { joinedAt: 'asc' },
+        });
+        const fallback = owner
+          ? null
+          : await this.prisma.accountMember.findFirst({
+              where: { accountId: sub.accountId },
+              select: { userId: true },
+              orderBy: { joinedAt: 'asc' },
+            });
+        const userId = owner?.userId ?? fallback?.userId;
+        if (!userId) {
+          this.logger.warn(`Subscription ${sub.id}: account ${sub.accountId} has no members; skipping`);
+          continue;
+        }
+
+        const chargeDate = new Date(sub.nextRenewalDate);
+        chargeDate.setHours(0, 0, 0, 0);
+        const cycle = (['monthly', 'yearly', 'quarterly', 'weekly'].includes(sub.billingCycle)
+          ? sub.billingCycle
+          : 'monthly') as BillingCycle;
+        const nextDate = addCycle(chargeDate, cycle);
+
+        try {
+          await this.prisma.$transaction([
+            this.prisma.expense.create({
+              data: {
+                clientId: randomUUID(),
+                accountId: sub.accountId,
+                userId,
+                amount: sub.amount,
+                currencyCode: sub.currencyCode,
+                description: sub.name,
+                categoryId: sub.categoryId ?? null,
+                date: chargeDate,
+                source: 'manual',
+              },
+            }),
+            this.prisma.userSubscription.update({
+              where: { id: sub.id },
+              data: { nextRenewalDate: nextDate },
+            }),
+          ]);
+          charged++;
+        } catch (err) {
+          this.logger.error(`Failed to auto-charge subscription ${sub.id}: ${err}`);
+          continue;
+        }
+
+        const amount = Number(sub.amount).toFixed(2);
+        const { name, currencyCode } = sub;
+        this.notificationsService
+          .sendToUser(
+            userId,
+            (lang) => ni18n.subscriptionChargedTitle(lang, { name }),
+            (lang) => ni18n.subscriptionChargedBody(lang, { name, amount, currencyCode }),
+            { subscriptionId: sub.id, charged: true },
+            'subscription_renewal',
+          )
+          .catch(() => {});
       }
+    }
 
-      const chargeDate = new Date(sub.nextRenewalDate);
-      chargeDate.setHours(0, 0, 0, 0);
-      const cycle = (['monthly', 'yearly', 'quarterly', 'weekly'].includes(sub.billingCycle)
-        ? sub.billingCycle
-        : 'monthly') as BillingCycle;
-      const nextDate = addCycle(chargeDate, cycle);
-
-      try {
-        await this.prisma.$transaction([
-          this.prisma.expense.create({
-            data: {
-              clientId: randomUUID(),
-              accountId: sub.accountId,
-              userId,
-              amount: sub.amount,
-              currencyCode: sub.currencyCode,
-              description: sub.name,
-              categoryId: sub.categoryId ?? null,
-              date: chargeDate,
-              source: 'manual',
-            },
-          }),
-          this.prisma.userSubscription.update({
-            where: { id: sub.id },
-            data: { nextRenewalDate: nextDate },
-          }),
-        ]);
-        charged++;
-      } catch (err) {
-        this.logger.error(`Failed to auto-charge subscription ${sub.id}: ${err}`);
-        continue;
-      }
-
-      const amount = Number(sub.amount).toFixed(2);
-      const { name, currencyCode } = sub;
-      this.notificationsService
-        .sendToUser(
-          userId,
-          (lang) => ni18n.subscriptionChargedTitle(lang, { name }),
-          (lang) => ni18n.subscriptionChargedBody(lang, { name, amount, currencyCode }),
-          { subscriptionId: sub.id, charged: true },
-          'subscription_renewal',
-        )
-        .catch(() => {});
+    if (scanned === 0) {
+      this.logger.log('No subscription renewals due');
+      return;
     }
 
     this.logger.log(`Subscription auto-charge complete — created ${charged} expense(s)`);
@@ -139,43 +153,54 @@ export class SubscriptionRenewalCron {
     const threeDaysEnd = new Date(threeDaysFromNow);
     threeDaysEnd.setHours(23, 59, 59, 999);
 
-    const subscriptions = await this.prisma.userSubscription.findMany({
-      where: {
-        isActive: true,
-        nextRenewalDate: { gte: threeDaysFromNow, lte: threeDaysEnd },
-      },
-      include: {
-        account: {
-          include: {
-            members: { select: { userId: true } },
+    const pages = paginateById(
+      (cursor) =>
+        this.prisma.userSubscription.findMany({
+          where: {
+            isActive: true,
+            nextRenewalDate: { gte: threeDaysFromNow, lte: threeDaysEnd },
           },
-        },
-      },
-    });
+          include: {
+            account: {
+              include: {
+                members: { select: { userId: true } },
+              },
+            },
+          },
+          take: BATCH_SIZE,
+          orderBy: { id: 'asc' },
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        }),
+      BATCH_SIZE,
+    );
 
-    if (subscriptions.length === 0) {
+    let total = 0;
+    for await (const subscriptions of pages) {
+      total += subscriptions.length;
+      for (const sub of subscriptions) {
+        const userIds = sub.account.members.map((m) => m.userId);
+        const amount = Number(sub.amount).toFixed(2);
+        const { name, currencyCode } = sub;
+
+        for (const userId of userIds) {
+          this.notificationsService
+            .sendToUser(
+              userId,
+              (lang) => ni18n.subscriptionReminderTitle(lang, { name }),
+              (lang) => ni18n.subscriptionReminderBody(lang, { name, amount, currencyCode }),
+              { subscriptionId: sub.id },
+              'subscription_renewal',
+            )
+            .catch(() => {});
+        }
+      }
+    }
+
+    if (total === 0) {
       this.logger.log('No subscription renewals in 3 days');
       return;
     }
 
-    for (const sub of subscriptions) {
-      const userIds = sub.account.members.map((m) => m.userId);
-      const amount = Number(sub.amount).toFixed(2);
-      const { name, currencyCode } = sub;
-
-      for (const userId of userIds) {
-        this.notificationsService
-          .sendToUser(
-            userId,
-            (lang) => ni18n.subscriptionReminderTitle(lang, { name }),
-            (lang) => ni18n.subscriptionReminderBody(lang, { name, amount, currencyCode }),
-            { subscriptionId: sub.id },
-            'subscription_renewal',
-          )
-          .catch(() => {});
-      }
-    }
-
-    this.logger.log(`Sent renewal reminders for ${subscriptions.length} subscriptions`);
+    this.logger.log(`Sent renewal reminders for ${total} subscriptions`);
   }
 }

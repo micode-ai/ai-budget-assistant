@@ -3,6 +3,9 @@ import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
+import { paginateById } from '../../common/utils/paginate';
+
+const BATCH_SIZE = 500;
 
 @Injectable()
 export class DebtReminderCron {
@@ -49,70 +52,77 @@ export class DebtReminderCron {
     rangeEnd: Date,
     kind: 'upcoming' | 'overdue',
   ) {
-    const debts = await this.prisma.expense.findMany({
-      where: {
-        isDebt: true,
-        isDeleted: false,
-        debtDueDate: { gte: rangeStart, lte: rangeEnd },
-      },
-      select: {
-        id: true,
-        userId: true,
-        amount: true,
-        currencyCode: true,
-        debtContactName: true,
-      },
-    });
+    const pages = paginateById(
+      (cursor) =>
+        this.prisma.expense.findMany({
+          where: {
+            isDebt: true,
+            isDeleted: false,
+            debtDueDate: { gte: rangeStart, lte: rangeEnd },
+          },
+          select: {
+            id: true,
+            userId: true,
+            amount: true,
+            currencyCode: true,
+            debtContactName: true,
+          },
+          take: BATCH_SIZE,
+          orderBy: { id: 'asc' },
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        }),
+      BATCH_SIZE,
+    );
 
-    if (debts.length === 0) return;
+    for await (const debts of pages) {
+      const debtIds = debts.map((d) => d.id);
+      const repayments = await this.prisma.income.findMany({
+        where: {
+          relatedDebtExpenseId: { in: debtIds },
+          isDebtRepayment: true,
+          isDeleted: false,
+        },
+        select: { relatedDebtExpenseId: true, amount: true },
+      });
 
-    const debtIds = debts.map((d) => d.id);
-    const repayments = await this.prisma.income.findMany({
-      where: {
-        relatedDebtExpenseId: { in: debtIds },
-        isDebtRepayment: true,
-        isDeleted: false,
-      },
-      select: { relatedDebtExpenseId: true, amount: true },
-    });
+      const repaidByDebt = new Map<string, number>();
+      for (const r of repayments) {
+        if (!r.relatedDebtExpenseId) continue;
+        repaidByDebt.set(
+          r.relatedDebtExpenseId,
+          (repaidByDebt.get(r.relatedDebtExpenseId) ?? 0) + Number(r.amount),
+        );
+      }
 
-    const repaidByDebt = new Map<string, number>();
-    for (const r of repayments) {
-      if (!r.relatedDebtExpenseId) continue;
-      repaidByDebt.set(
-        r.relatedDebtExpenseId,
-        (repaidByDebt.get(r.relatedDebtExpenseId) ?? 0) + Number(r.amount),
-      );
-    }
+      for (const debt of debts) {
+        const remaining = Number(debt.amount) - (repaidByDebt.get(debt.id) ?? 0);
+        if (remaining <= 0) continue;
 
-    for (const debt of debts) {
-      const remaining = Number(debt.amount) - (repaidByDebt.get(debt.id) ?? 0);
-      if (remaining <= 0) continue;
+        const contactName = debt.debtContactName || 'Unknown';
+        const amount = remaining.toFixed(2);
+        const currencyCode = debt.currencyCode;
 
-      const contactName = debt.debtContactName || 'Unknown';
-      const amount = remaining.toFixed(2);
-      const currencyCode = debt.currencyCode;
-
-      if (kind === 'upcoming') {
-        this.notificationsService
-          .sendToUser(
-            debt.userId,
-            (lang) => ni18n.debtUpcomingTitle(lang, { contactName, days: 3, amount, currencyCode, type: 'lent' }),
-            (lang) => ni18n.debtUpcomingBody(lang, { contactName, days: 3, amount, currencyCode, type: 'lent' }),
-            { debtId: debt.id },
-            'debt_reminder',
-          )
-          .catch(() => {});
-      } else {
-        this.notificationsService
-          .sendToUser(
-            debt.userId,
-            (lang) => ni18n.debtOverdueTitle(lang, { contactName, amount, currencyCode, type: 'lent' }),
-            (lang) => ni18n.debtOverdueBody(lang, { contactName, amount, currencyCode, type: 'lent' }),
-            { debtId: debt.id },
-            'debt_reminder',
-          )
-          .catch(() => {});
+        if (kind === 'upcoming') {
+          this.notificationsService
+            .sendToUser(
+              debt.userId,
+              (lang) => ni18n.debtUpcomingTitle(lang, { contactName, days: 3, amount, currencyCode, type: 'lent' }),
+              (lang) => ni18n.debtUpcomingBody(lang, { contactName, days: 3, amount, currencyCode, type: 'lent' }),
+              { debtId: debt.id },
+              'debt_reminder',
+            )
+            .catch(() => {});
+        } else {
+          this.notificationsService
+            .sendToUser(
+              debt.userId,
+              (lang) => ni18n.debtOverdueTitle(lang, { contactName, amount, currencyCode, type: 'lent' }),
+              (lang) => ni18n.debtOverdueBody(lang, { contactName, amount, currencyCode, type: 'lent' }),
+              { debtId: debt.id },
+              'debt_reminder',
+            )
+            .catch(() => {});
+        }
       }
     }
   }
@@ -122,70 +132,77 @@ export class DebtReminderCron {
     rangeEnd: Date,
     kind: 'upcoming' | 'overdue',
   ) {
-    const debts = await this.prisma.income.findMany({
-      where: {
-        isDebt: true,
-        isDeleted: false,
-        debtDueDate: { gte: rangeStart, lte: rangeEnd },
-      },
-      select: {
-        id: true,
-        userId: true,
-        amount: true,
-        currencyCode: true,
-        debtContactName: true,
-      },
-    });
+    const pages = paginateById(
+      (cursor) =>
+        this.prisma.income.findMany({
+          where: {
+            isDebt: true,
+            isDeleted: false,
+            debtDueDate: { gte: rangeStart, lte: rangeEnd },
+          },
+          select: {
+            id: true,
+            userId: true,
+            amount: true,
+            currencyCode: true,
+            debtContactName: true,
+          },
+          take: BATCH_SIZE,
+          orderBy: { id: 'asc' },
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        }),
+      BATCH_SIZE,
+    );
 
-    if (debts.length === 0) return;
+    for await (const debts of pages) {
+      const debtIds = debts.map((d) => d.id);
+      const repayments = await this.prisma.expense.findMany({
+        where: {
+          relatedDebtIncomeId: { in: debtIds },
+          isDebtRepayment: true,
+          isDeleted: false,
+        },
+        select: { relatedDebtIncomeId: true, amount: true },
+      });
 
-    const debtIds = debts.map((d) => d.id);
-    const repayments = await this.prisma.expense.findMany({
-      where: {
-        relatedDebtIncomeId: { in: debtIds },
-        isDebtRepayment: true,
-        isDeleted: false,
-      },
-      select: { relatedDebtIncomeId: true, amount: true },
-    });
+      const repaidByDebt = new Map<string, number>();
+      for (const r of repayments) {
+        if (!r.relatedDebtIncomeId) continue;
+        repaidByDebt.set(
+          r.relatedDebtIncomeId,
+          (repaidByDebt.get(r.relatedDebtIncomeId) ?? 0) + Number(r.amount),
+        );
+      }
 
-    const repaidByDebt = new Map<string, number>();
-    for (const r of repayments) {
-      if (!r.relatedDebtIncomeId) continue;
-      repaidByDebt.set(
-        r.relatedDebtIncomeId,
-        (repaidByDebt.get(r.relatedDebtIncomeId) ?? 0) + Number(r.amount),
-      );
-    }
+      for (const debt of debts) {
+        const remaining = Number(debt.amount) - (repaidByDebt.get(debt.id) ?? 0);
+        if (remaining <= 0) continue;
 
-    for (const debt of debts) {
-      const remaining = Number(debt.amount) - (repaidByDebt.get(debt.id) ?? 0);
-      if (remaining <= 0) continue;
+        const contactName = debt.debtContactName || 'Unknown';
+        const amount = remaining.toFixed(2);
+        const currencyCode = debt.currencyCode;
 
-      const contactName = debt.debtContactName || 'Unknown';
-      const amount = remaining.toFixed(2);
-      const currencyCode = debt.currencyCode;
-
-      if (kind === 'upcoming') {
-        this.notificationsService
-          .sendToUser(
-            debt.userId,
-            (lang) => ni18n.debtUpcomingTitle(lang, { contactName, days: 3, amount, currencyCode, type: 'borrowed' }),
-            (lang) => ni18n.debtUpcomingBody(lang, { contactName, days: 3, amount, currencyCode, type: 'borrowed' }),
-            { debtId: debt.id },
-            'debt_reminder',
-          )
-          .catch(() => {});
-      } else {
-        this.notificationsService
-          .sendToUser(
-            debt.userId,
-            (lang) => ni18n.debtOverdueTitle(lang, { contactName, amount, currencyCode, type: 'borrowed' }),
-            (lang) => ni18n.debtOverdueBody(lang, { contactName, amount, currencyCode, type: 'borrowed' }),
-            { debtId: debt.id },
-            'debt_reminder',
-          )
-          .catch(() => {});
+        if (kind === 'upcoming') {
+          this.notificationsService
+            .sendToUser(
+              debt.userId,
+              (lang) => ni18n.debtUpcomingTitle(lang, { contactName, days: 3, amount, currencyCode, type: 'borrowed' }),
+              (lang) => ni18n.debtUpcomingBody(lang, { contactName, days: 3, amount, currencyCode, type: 'borrowed' }),
+              { debtId: debt.id },
+              'debt_reminder',
+            )
+            .catch(() => {});
+        } else {
+          this.notificationsService
+            .sendToUser(
+              debt.userId,
+              (lang) => ni18n.debtOverdueTitle(lang, { contactName, amount, currencyCode, type: 'borrowed' }),
+              (lang) => ni18n.debtOverdueBody(lang, { contactName, amount, currencyCode, type: 'borrowed' }),
+              { debtId: debt.id },
+              'debt_reminder',
+            )
+            .catch(() => {});
+        }
       }
     }
   }

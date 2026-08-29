@@ -3,6 +3,9 @@ import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
+import { paginateById } from '../../common/utils/paginate';
+
+const BATCH_SIZE = 500;
 
 @Injectable()
 export class TrackingGapReminderCron {
@@ -30,54 +33,65 @@ export class TrackingGapReminderCron {
     // We only care about streaks of type 'daily_tracking'.
     // We query users who have notifyTrackingGap enabled and a pushToken,
     // then let the cron compute diffDays in JS (avoids raw SQL).
-    const users = await this.prisma.user.findMany({
-      where: {
-        notifyTrackingGap: true,
-        pushToken: { not: null },
-        isActive: true,
-      },
-      select: {
-        id: true,
-        streaks: {
-          where: { streakType: 'daily_tracking' },
-          select: { lastActivityDate: true },
-          orderBy: { lastActivityDate: 'desc' },
-        },
-      },
-    });
-
+    // Streamed in id-ordered batches (not one findMany for the whole table) —
+    // see tech-debt daily-crons-full-table-scan.
     let sent = 0;
 
-    for (const user of users) {
-      if (user.streaks.length === 0) continue; // new user, never logged
+    const pages = paginateById(
+      (cursor) =>
+        this.prisma.user.findMany({
+          where: {
+            notifyTrackingGap: true,
+            pushToken: { not: null },
+            isActive: true,
+          },
+          select: {
+            id: true,
+            streaks: {
+              where: { streakType: 'daily_tracking' },
+              select: { lastActivityDate: true },
+              orderBy: { lastActivityDate: 'desc' },
+            },
+          },
+          take: BATCH_SIZE,
+          orderBy: { id: 'asc' },
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        }),
+      BATCH_SIZE,
+    );
 
-      // Most recent activity across all accounts
-      const latestActivityDate = user.streaks[0].lastActivityDate;
-      const lastActive = new Date(
-        Date.UTC(
-          latestActivityDate.getFullYear(),
-          latestActivityDate.getMonth(),
-          latestActivityDate.getDate(),
-        ),
-      );
+    for await (const users of pages) {
+      for (const user of users) {
+        if (user.streaks.length === 0) continue; // new user, never logged
 
-      const diffMs = todayUtc.getTime() - lastActive.getTime();
-      const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+        // Most recent activity across all accounts
+        const latestActivityDate = user.streaks[0].lastActivityDate;
+        const lastActive = new Date(
+          Date.UTC(
+            latestActivityDate.getFullYear(),
+            latestActivityDate.getMonth(),
+            latestActivityDate.getDate(),
+          ),
+        );
 
-      if (diffDays < 3) continue; // active recently
-      if (diffDays % 3 !== 0) continue; // not a send day
+        const diffMs = todayUtc.getTime() - lastActive.getTime();
+        const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
-      this.notificationsService
-        .sendToUser(
-          user.id,
-          (lang) => ni18n.trackingGapTitle(lang),
-          (lang) => ni18n.trackingGapBody(lang),
-          {},
-          'tracking_gap_reminder',
-        )
-        .catch(() => {});
+        if (diffDays < 3) continue; // active recently
+        if (diffDays % 3 !== 0) continue; // not a send day
 
-      sent++;
+        this.notificationsService
+          .sendToUser(
+            user.id,
+            (lang) => ni18n.trackingGapTitle(lang),
+            (lang) => ni18n.trackingGapBody(lang),
+            {},
+            'tracking_gap_reminder',
+          )
+          .catch(() => {});
+
+        sent++;
+      }
     }
 
     this.logger.log(`Tracking gap reminder cron complete. Sent ${sent} notifications.`);

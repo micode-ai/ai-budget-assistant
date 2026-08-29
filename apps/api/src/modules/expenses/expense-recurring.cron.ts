@@ -4,6 +4,9 @@ import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
+import { paginateById } from '../../common/utils/paginate';
+
+const BATCH_SIZE = 500;
 
 type RecurringPeriod = 'weekly' | 'monthly' | 'yearly';
 
@@ -14,6 +17,37 @@ function addPeriod(date: Date, period: RecurringPeriod): Date {
   else next.setFullYear(next.getFullYear() + 1);
   return next;
 }
+
+function fetchRecurringPage(prisma: PrismaService, cursor: string | undefined) {
+  return prisma.expense.findMany({
+    where: {
+      isRecurring: true,
+      isDeleted: false,
+      recurringId: { not: null },
+      recurringPeriod: { not: null },
+    },
+    select: {
+      id: true,
+      recurringId: true,
+      recurringPeriod: true,
+      date: true,
+      userId: true,
+      accountId: true,
+      clientId: true,
+      amount: true,
+      currencyCode: true,
+      description: true,
+      notes: true,
+      categoryId: true,
+      source: true,
+    },
+    take: BATCH_SIZE,
+    orderBy: { id: 'asc' },
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+  });
+}
+
+type RecurringRow = Awaited<ReturnType<typeof fetchRecurringPage>>[number];
 
 @Injectable()
 export class ExpenseRecurringCron {
@@ -36,39 +70,22 @@ export class ExpenseRecurringCron {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Find all active recurring template expenses (most recent per recurringId)
-    // Use a raw group-by approach: fetch all recurring expenses and group in JS
-    const allRecurring = await this.prisma.expense.findMany({
-      where: {
-        isRecurring: true,
-        isDeleted: false,
-        recurringId: { not: null },
-        recurringPeriod: { not: null },
-      },
-      select: {
-        id: true,
-        recurringId: true,
-        recurringPeriod: true,
-        date: true,
-        userId: true,
-        accountId: true,
-        clientId: true,
-        amount: true,
-        currencyCode: true,
-        description: true,
-        notes: true,
-        categoryId: true,
-        source: true,
-      },
-      orderBy: { date: 'desc' },
-    });
+    // Find all active recurring template expenses (most recent per recurringId).
+    // Streamed in id-ordered batches rather than one findMany for the whole
+    // table (see tech-debt daily-crons-full-table-scan) — so unlike the old
+    // `orderBy: { date: 'desc' }` + first-seen-wins grouping, a row's recency
+    // is decided by comparing its own date, not by scan order.
+    const pages = paginateById((cursor) => fetchRecurringPage(this.prisma, cursor), BATCH_SIZE);
 
-    // Group by recurringId, keep only the latest per series
-    const latestByRecurringId = new Map<string, typeof allRecurring[number]>();
-    for (const exp of allRecurring) {
-      if (!exp.recurringId) continue;
-      if (!latestByRecurringId.has(exp.recurringId)) {
-        latestByRecurringId.set(exp.recurringId, exp);
+    // Group by recurringId, keep only the latest (by date) per series.
+    const latestByRecurringId = new Map<string, RecurringRow>();
+    for await (const batch of pages) {
+      for (const exp of batch) {
+        if (!exp.recurringId) continue;
+        const existing = latestByRecurringId.get(exp.recurringId);
+        if (!existing || exp.date > existing.date) {
+          latestByRecurringId.set(exp.recurringId, exp);
+        }
       }
     }
 

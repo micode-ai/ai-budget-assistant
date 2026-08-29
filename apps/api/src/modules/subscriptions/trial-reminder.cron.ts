@@ -4,6 +4,9 @@ import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { MailService } from '../mail/mail.service';
 import * as ni18n from '../notifications/notification-i18n';
+import { paginateById } from '../../common/utils/paginate';
+
+const BATCH_SIZE = 500;
 
 @Injectable()
 export class TrialReminderCron {
@@ -31,69 +34,94 @@ export class TrialReminderCron {
     const in3Start = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 3);
     const in3End = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 4);
 
-    const [expiringTomorrow, expiringIn3] = await Promise.all([
-      this.prisma.subscription.findMany({
-        where: {
-          status: 'trialing',
-          trialEnd: { gte: tomorrowStart, lt: tomorrowEnd },
-        },
-        include: {
-          user: { select: { id: true, name: true, email: true, language: true } },
-        },
-      }),
-      this.prisma.subscription.findMany({
-        where: {
-          status: 'trialing',
-          trialEnd: { gte: in3Start, lt: in3End },
-        },
-        include: {
-          user: { select: { id: true, name: true, email: true, language: true } },
-        },
-      }),
-    ]);
-
-    this.logger.log(
-      `Found ${expiringTomorrow.length} trials expiring tomorrow, ${expiringIn3.length} expiring in 3 days`,
+    // Streamed in id-ordered batches rather than one findMany each (see
+    // tech-debt daily-crons-full-table-scan).
+    const tomorrowPages = paginateById(
+      (cursor) =>
+        this.prisma.subscription.findMany({
+          where: {
+            status: 'trialing',
+            trialEnd: { gte: tomorrowStart, lt: tomorrowEnd },
+          },
+          include: {
+            user: { select: { id: true, name: true, email: true, language: true } },
+          },
+          take: BATCH_SIZE,
+          orderBy: { id: 'asc' },
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        }),
+      BATCH_SIZE,
     );
 
-    // Send T-1 reminders
-    for (const sub of expiringTomorrow) {
-      const { user } = sub;
-      if (!user) continue;
+    let tomorrowCount = 0;
+    for await (const expiringTomorrow of tomorrowPages) {
+      tomorrowCount += expiringTomorrow.length;
 
-      const tierUpper = sub.tier.toUpperCase();
-      const lang = user.language || 'en';
+      // Send T-1 reminders
+      for (const sub of expiringTomorrow) {
+        const { user } = sub;
+        if (!user) continue;
 
-      this.notificationsService.sendToUser(
-        user.id,
-        (l: string) => ni18n.trialReminderTitle(l),
-        (l: string) => ni18n.trialReminderBody(l, { tier: tierUpper }),
-        { type: 'trial_reminder' },
-      ).catch(() => {});
+        const tierUpper = sub.tier.toUpperCase();
+        const lang = user.language || 'en';
 
-      const subject = ni18n.trialReminderEmailSubject(lang);
-      const html = ni18n.trialReminderEmailHtml(lang, user.name, { tier: tierUpper });
-      this.mailService.sendMail(user.email, subject, html).catch(() => {});
+        this.notificationsService.sendToUser(
+          user.id,
+          (l: string) => ni18n.trialReminderTitle(l),
+          (l: string) => ni18n.trialReminderBody(l, { tier: tierUpper }),
+          { type: 'trial_reminder' },
+        ).catch(() => {});
+
+        const subject = ni18n.trialReminderEmailSubject(lang);
+        const html = ni18n.trialReminderEmailHtml(lang, user.name, { tier: tierUpper });
+        this.mailService.sendMail(user.email, subject, html).catch(() => {});
+      }
     }
 
-    // Send T-3 reminders
-    for (const sub of expiringIn3) {
-      const { user } = sub;
-      if (!user) continue;
+    const in3Pages = paginateById(
+      (cursor) =>
+        this.prisma.subscription.findMany({
+          where: {
+            status: 'trialing',
+            trialEnd: { gte: in3Start, lt: in3End },
+          },
+          include: {
+            user: { select: { id: true, name: true, email: true, language: true } },
+          },
+          take: BATCH_SIZE,
+          orderBy: { id: 'asc' },
+          ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+        }),
+      BATCH_SIZE,
+    );
 
-      const tierUpper = sub.tier.toUpperCase();
-      const lang = user.language || 'en';
+    let in3Count = 0;
+    for await (const expiringIn3 of in3Pages) {
+      in3Count += expiringIn3.length;
 
-      this.notificationsService.sendToUser(
-        user.id,
-        (l: string) => ni18n.trialReminderIn3Title(l),
-        (l: string) => ni18n.trialReminderIn3Body(l, { tier: tierUpper }),
-        { type: 'trial_reminder' },
-      ).catch(() => {});
+      // Send T-3 reminders
+      for (const sub of expiringIn3) {
+        const { user } = sub;
+        if (!user) continue;
 
-      const subject = ni18n.trialReminderIn3EmailSubject(lang);
-      const html = ni18n.trialReminderIn3EmailHtml(lang, user.name, { tier: tierUpper });
-      this.mailService.sendMail(user.email, subject, html).catch(() => {});
+        const tierUpper = sub.tier.toUpperCase();
+        const lang = user.language || 'en';
+
+        this.notificationsService.sendToUser(
+          user.id,
+          (l: string) => ni18n.trialReminderIn3Title(l),
+          (l: string) => ni18n.trialReminderIn3Body(l, { tier: tierUpper }),
+          { type: 'trial_reminder' },
+        ).catch(() => {});
+
+        const subject = ni18n.trialReminderIn3EmailSubject(lang);
+        const html = ni18n.trialReminderIn3EmailHtml(lang, user.name, { tier: tierUpper });
+        this.mailService.sendMail(user.email, subject, html).catch(() => {});
+      }
     }
+
+    this.logger.log(
+      `Found ${tomorrowCount} trials expiring tomorrow, ${in3Count} expiring in 3 days`,
+    );
   }
 }
