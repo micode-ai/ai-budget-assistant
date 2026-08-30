@@ -183,19 +183,29 @@ export class RestoreCredentialsService {
 
   private async reconcileExistingCredential(
     userId: string,
-    existing: { id: string; userId: string },
+    existing: { id: string; userId: string; counter: number },
     data: { publicKey: Buffer; counter: number; transports: string[] },
   ): Promise<void> {
     if (existing.userId !== userId) {
-      throw new UnauthorizedException(
-        'Restore credential is already registered to a different account',
+      this.logger.warn(
+        `Restore credential ${existing.id} re-registration rejected: already ` +
+          `registered to a different account (existing user ${existing.userId}, ` +
+          `requesting user ${userId})`,
       );
+      throw new UnauthorizedException('Restore credential failed verification');
     }
+    // Same high-water-mark rule as verifyAuthentication: this is the
+    // idempotent-retry path (lost flag, reinstall, sign-out/sign-in) for a
+    // credential that already has a row, and `data.counter` is just-attested
+    // FRESH state from the authenticator — for a system-managed restore key
+    // that is routinely 0. Writing it verbatim would zero out the stored
+    // watermark and permanently disarm the `stored.counter > 0` replay guard
+    // in verifyAuthentication for a credential that had already advanced.
     await this.prisma.restoreCredential.update({
       where: { id: existing.id },
       data: {
         publicKey: data.publicKey,
-        counter: data.counter,
+        counter: Math.max(existing.counter, data.counter),
         transports: data.transports,
       },
     });
@@ -287,9 +297,10 @@ export class RestoreCredentialsService {
       throw new UnauthorizedException('Account is deactivated');
     }
     // Restore is the one login path that mints a full session unconditionally
-    // (no password, no OTP) — the spec calls for the same checks googleLogin
-    // already applies, so an unverified account is refused too, even though
-    // nothing today can reach this state (registration/Google both verify).
+    // (no password, no OTP) — every other path either checks isVerified before
+    // issuing tokens (login) or sets it itself (register/verifyEmail/Google),
+    // so an unverified account is rejected here as defence in depth, even
+    // though nothing today can actually reach this state.
     if (!user.isVerified) {
       throw new UnauthorizedException('Account is not verified');
     }

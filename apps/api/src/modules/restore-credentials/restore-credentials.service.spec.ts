@@ -234,6 +234,44 @@ describe('RestoreCredentialsService — registration', () => {
     });
   });
 
+  // Mirrors the authentication side's high-water-mark guarantee (see the
+  // `verifyAuthentication` describe block below), reached through the
+  // REGISTRATION door instead: a re-registration is the same idempotent-retry
+  // path (lost flag, reinstall, sign-out-then-sign-in) that legitimately
+  // re-presents a system-managed authenticator's counter, and that counter is
+  // routinely 0. Writing it verbatim would zero out the stored high-water
+  // mark and permanently disarm the `stored.counter > 0` replay guard in
+  // verifyAuthentication for a credential that had already advanced.
+  it('persists the counter HIGH-WATER MARK, not the presented value, when a re-registration reports a lower counter than what is stored', async () => {
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('chal-1');
+    prisma.restoreCredential.findUnique.mockResolvedValue({
+      id: 'row-1',
+      userId: 'u1',
+      credentialId: 'cred-1',
+      publicKey: Buffer.from([9]),
+      counter: 5,
+      transports: [],
+    });
+    (verifyRegistrationResponse as jest.Mock).mockResolvedValue({
+      verified: true,
+      registrationInfo: {
+        credential: {
+          id: 'cred-1',
+          publicKey: new Uint8Array([1, 2, 3]),
+          counter: 0,
+          transports: ['internal'],
+        },
+      },
+    });
+
+    await service.verifyRegistration('u1', {} as any);
+
+    expect(prisma.restoreCredential.update).toHaveBeenCalledWith({
+      where: { id: 'row-1' },
+      data: expect.objectContaining({ counter: 5 }),
+    });
+  });
+
   it('rejects re-registering a credential id that already belongs to a DIFFERENT user, and never reassigns it', async () => {
     (cache.getAndDelete as jest.Mock).mockResolvedValue('chal-1');
     prisma.restoreCredential.findUnique.mockResolvedValue({
@@ -617,10 +655,12 @@ describe('RestoreCredentialsService — authentication', () => {
   });
 
   // Restore is the one login path that mints a full session unconditionally
-  // (no password, no OTP) — defence in depth, matching the same check
-  // googleLogin already applies. Unreachable today (registration and Google
-  // both require a verified account before a restore credential could exist),
-  // but a route this privileged should not rely on that staying true forever.
+  // (no password, no OTP) — every other path either checks isVerified before
+  // issuing tokens (login) or sets it itself (register/verifyEmail/Google),
+  // so this is defence in depth, not a mirror of an existing check.
+  // Unreachable today (registration and Google both require a verified
+  // account before a restore credential could exist), but a route this
+  // privileged should not rely on that staying true forever.
   it('refuses an unverified account', async () => {
     (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     prisma.user.findUnique.mockResolvedValue({

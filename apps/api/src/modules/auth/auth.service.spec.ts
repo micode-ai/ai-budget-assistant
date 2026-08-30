@@ -496,11 +496,14 @@ describe('AuthService — auth responses carry paymentMethod/paymentHandle', () 
   });
 });
 
-// buildAuthResponse is the single place a signed-in session is assembled — the
-// restore-credential login (a later task) must return exactly what this produces,
-// so googleLogin is refactored to delegate to it rather than assembling its own
-// response inline. No makeUser helper exists in this file; build the object
-// inline, matching the shape the neighbouring googleLogin tests already use.
+// buildAuthResponse is the session assembly SHARED by googleLogin and the
+// restore-credential login — register()/login()/verifyEmail() still assemble
+// their response inline, each with its own pre-verification/deactivated-account
+// branches that don't fit this shared shape. The restore-credential login (a
+// later task) must return exactly what this produces, so googleLogin is
+// refactored to delegate to it rather than assembling its own response inline.
+// No makeUser helper exists in this file; build the object inline, matching
+// the shape the neighbouring googleLogin tests already use.
 describe('AuthService — buildAuthResponse', () => {
   it('returns tokens, the user block and the account list', async () => {
     const { service, accountsService } = makeService();

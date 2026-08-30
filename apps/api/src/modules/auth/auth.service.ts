@@ -288,9 +288,9 @@ export class AuthService {
 
   /**
    * The shared session assembly for `googleLogin` and the restore-credential
-   * login (`login` and `verifyEmail` still assemble their response inline) —
-   * so those two, at least, cannot drift into reporting different user
-   * blocks for the same account.
+   * login (`register`, `login`, and `verifyEmail` still assemble their
+   * response inline) — so those two, at least, cannot drift into reporting
+   * different user blocks for the same account.
    */
   async buildAuthResponse(user: User, overrideDefaultAccountId?: string) {
     const tokens = await this.generateTokens(user.id, user.email);
