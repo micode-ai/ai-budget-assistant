@@ -89,13 +89,26 @@ export class RestoreCredentialsService {
       throw new UnauthorizedException('No pending restore-credential registration');
     }
 
-    const result = await verifyRegistrationResponse({
-      response,
-      expectedChallenge,
-      expectedOrigin: config.expectedOrigins,
-      expectedRPID: config.rpId,
-      requireUserVerification: false,
-    });
+    let result: Awaited<ReturnType<typeof verifyRegistrationResponse>>;
+    try {
+      result = await verifyRegistrationResponse({
+        response,
+        expectedChallenge,
+        expectedOrigin: config.expectedOrigins,
+        expectedRPID: config.rpId,
+        requireUserVerification: false,
+      });
+    } catch (err) {
+      // @simplewebauthn/server throws plain Errors (not `{verified: false}`)
+      // for structural problems (bad type, corrupted attestation object, …).
+      // Log the cause so a genuine library bug stays diagnosable, but never
+      // let it escape as an uncaught error — this is a public route and every
+      // failure here must be a controlled 401, not a 500.
+      this.logger.warn(
+        `Restore credential registration verification threw: ${(err as Error).message}`,
+      );
+      throw new UnauthorizedException('Restore credential failed verification');
+    }
 
     if (!result.verified || !result.registrationInfo) {
       throw new UnauthorizedException('Restore credential failed verification');
@@ -135,12 +148,14 @@ export class RestoreCredentialsService {
     const config = this.requireConfig();
 
     const challenge = this.readChallenge(response);
-    const issued = await this.cache.get<string>(authKey(challenge));
+    // Atomic read+delete: a plain get-then-del pair would leave a window in
+    // which two concurrent submissions of the same assertion both observe
+    // the challenge as present before either deletes it, and both mint a
+    // session from one single-use challenge.
+    const issued = await this.cache.getAndDelete<string>(authKey(challenge));
     if (!issued) {
       throw new UnauthorizedException('Unknown or expired restore challenge');
     }
-    // Consume before verifying so a replay cannot race a slow signature check.
-    await this.cache.del(authKey(challenge));
 
     const stored = await this.prisma.restoreCredential.findUnique({
       where: { credentialId: response.id },
@@ -149,19 +164,33 @@ export class RestoreCredentialsService {
       throw new UnauthorizedException('Unknown restore credential');
     }
 
-    const result = await verifyAuthenticationResponse({
-      response,
-      expectedChallenge: challenge,
-      expectedOrigin: config.expectedOrigins,
-      expectedRPID: config.rpId,
-      requireUserVerification: false,
-      credential: {
-        id: stored.credentialId,
-        publicKey: new Uint8Array(stored.publicKey),
-        counter: stored.counter,
-        transports: stored.transports as AuthenticatorTransportFuture[],
-      },
-    });
+    let result: Awaited<ReturnType<typeof verifyAuthenticationResponse>>;
+    try {
+      result = await verifyAuthenticationResponse({
+        response,
+        expectedChallenge: challenge,
+        expectedOrigin: config.expectedOrigins,
+        expectedRPID: config.rpId,
+        requireUserVerification: false,
+        credential: {
+          id: stored.credentialId,
+          publicKey: new Uint8Array(stored.publicKey),
+          counter: stored.counter,
+          transports: stored.transports as AuthenticatorTransportFuture[],
+        },
+      });
+    } catch (err) {
+      // @simplewebauthn/server throws plain Errors (not `{verified: false}`)
+      // for structural problems beyond what readChallenge already validates
+      // (bad type, corrupted authenticatorData, a malformed signature). Log
+      // the cause so a genuine library bug stays diagnosable, but never let
+      // it escape as an uncaught error — this is a public route and every
+      // failure here must be a controlled 401, not a 500.
+      this.logger.warn(
+        `Restore credential authentication verification threw: ${(err as Error).message}`,
+      );
+      throw new UnauthorizedException('Restore credential failed verification');
+    }
 
     if (!result.verified) {
       throw new UnauthorizedException('Restore credential failed verification');

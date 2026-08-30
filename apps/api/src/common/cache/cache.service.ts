@@ -68,6 +68,21 @@ export class CacheService implements OnModuleDestroy {
     }
   }
 
+  /**
+   * Atomically read a key and delete it. Used for single-use values such as
+   * one-shot challenges, where a get-then-del pair would leave a window in
+   * which two concurrent callers both observe the value as present.
+   */
+  async getAndDelete<T>(key: string): Promise<T | null> {
+    try {
+      const raw = await this.redis.getdel(key);
+      return raw ? (JSON.parse(raw) as T) : null;
+    } catch (err) {
+      this.logger.warn(`cache getAndDelete failed for ${key}: ${(err as Error).message}`);
+      return null;
+    }
+  }
+
   async delByPrefix(prefix: string): Promise<void> {
     try {
       const pattern = `${prefix}*`;

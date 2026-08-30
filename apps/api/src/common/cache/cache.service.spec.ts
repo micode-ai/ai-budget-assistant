@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { CacheService } from './cache.service';
 
 const mockGet = jest.fn();
+const mockGetdel = jest.fn();
 const mockSet = jest.fn();
 const mockDel = jest.fn();
 const mockScan = jest.fn();
@@ -17,6 +18,7 @@ jest.mock('ioredis', () => ({
   __esModule: true,
   default: jest.fn().mockImplementation(() => ({
     get: mockGet,
+    getdel: mockGetdel,
     set: mockSet,
     del: mockDel,
     scan: mockScan,
@@ -33,6 +35,7 @@ describe('CacheService', () => {
   beforeEach(() => {
     [
       mockGet,
+      mockGetdel,
       mockSet,
       mockDel,
       mockScan,
@@ -75,6 +78,30 @@ describe('CacheService', () => {
     it('returns null when stored value is invalid json', async () => {
       mockGet.mockResolvedValueOnce('not-json{');
       expect(await cache.get('foo')).toBeNull();
+    });
+  });
+
+  describe('getAndDelete', () => {
+    it('parses json and returns it when the key existed', async () => {
+      mockGetdel.mockResolvedValueOnce(JSON.stringify({ a: 1 }));
+      const r = await cache.getAndDelete<{ a: number }>('foo');
+      expect(r).toEqual({ a: 1 });
+      expect(mockGetdel).toHaveBeenCalledWith('foo');
+    });
+
+    it('returns null on miss', async () => {
+      mockGetdel.mockResolvedValueOnce(null);
+      expect(await cache.getAndDelete('foo')).toBeNull();
+    });
+
+    it('returns null when redis throws', async () => {
+      mockGetdel.mockRejectedValueOnce(new Error('connection lost'));
+      expect(await cache.getAndDelete('foo')).toBeNull();
+    });
+
+    it('returns null when stored value is invalid json', async () => {
+      mockGetdel.mockResolvedValueOnce('not-json{');
+      expect(await cache.getAndDelete('foo')).toBeNull();
     });
   });
 

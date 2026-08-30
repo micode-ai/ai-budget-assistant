@@ -128,6 +128,22 @@ describe('RestoreCredentialsService — registration', () => {
     expect(prisma.restoreCredential.create).not.toHaveBeenCalled();
   });
 
+  // @simplewebauthn/server throws plain Errors for structural problems
+  // (bad type, corrupted attestation object, ...) instead of returning
+  // {verified: false}. This is a public route — an uncaught throw here
+  // would surface as an HTTP 500, not a controlled 401.
+  it('wraps a thrown verification error as an UnauthorizedException, not a 500', async () => {
+    (cache.get as jest.Mock).mockResolvedValue('chal-1');
+    (verifyRegistrationResponse as jest.Mock).mockRejectedValue(
+      new Error('bad attestation object'),
+    );
+
+    await expect(service.verifyRegistration('u1', {} as any)).rejects.toBeInstanceOf(
+      UnauthorizedException,
+    );
+    expect(prisma.restoreCredential.create).not.toHaveBeenCalled();
+  });
+
   it('passes both the rp id and every expected origin to the verifier', async () => {
     (cache.get as jest.Mock).mockResolvedValue('chal-1');
     (verifyRegistrationResponse as jest.Mock).mockResolvedValue({
@@ -217,7 +233,7 @@ describe('RestoreCredentialsService — authentication', () => {
       },
       user: { findUnique: jest.fn() },
     };
-    cache = { get: jest.fn(), set: jest.fn(), del: jest.fn() };
+    cache = { get: jest.fn(), set: jest.fn(), del: jest.fn(), getAndDelete: jest.fn() };
     auth = { buildAuthResponse: jest.fn() };
 
     const module = await Test.createTestingModule({
@@ -260,11 +276,16 @@ describe('RestoreCredentialsService — authentication', () => {
   });
 
   it('returns a full session for the credential owner', async () => {
-    (cache.get as jest.Mock).mockResolvedValue('1');
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     auth.buildAuthResponse.mockResolvedValue({ accessToken: 'a', refreshToken: 'r' });
 
     const res = await service.verifyAuthentication(assertion('chal-9'));
 
+    // Pins that the SESSION USER comes from the stored credential row's
+    // userId, not from the assertion's userHandle: a bare object-shaped mock
+    // would still pass this if the implementation read userHandle instead,
+    // so the where clause itself is asserted, not just "was called".
+    expect(prisma.user.findUnique).toHaveBeenCalledWith({ where: { id: 'u1' } });
     expect(auth.buildAuthResponse).toHaveBeenCalledWith(
       expect.objectContaining({ id: 'u1' }),
     );
@@ -272,35 +293,61 @@ describe('RestoreCredentialsService — authentication', () => {
   });
 
   // The challenge is consumed before verification, so a replay cannot race a
-  // slow verification.
-  it('consumes the challenge so the same assertion cannot be replayed', async () => {
-    (cache.get as jest.Mock).mockResolvedValue('1');
+  // slow verification. Pinned two ways: the atomic method is what actually
+  // consumes it (a plain get-then-del pair would leave a race window), and
+  // its call demonstrably precedes the signature check, so a regression that
+  // reordered "verify, then consume" would fail this test.
+  it('consumes the challenge atomically, before verification, so a replay cannot race a slow signature check', async () => {
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     auth.buildAuthResponse.mockResolvedValue({});
 
     await service.verifyAuthentication(assertion('chal-9'));
 
-    expect(cache.del).toHaveBeenCalledWith('restorecred:auth:chal-9');
+    expect(cache.getAndDelete).toHaveBeenCalledWith('restorecred:auth:chal-9');
+    expect(cache.get).not.toHaveBeenCalled();
+    expect(cache.del).not.toHaveBeenCalled();
+
+    const consumeOrder = (cache.getAndDelete as jest.Mock).mock.invocationCallOrder[0];
+    const verifyOrder = (verifyAuthenticationResponse as jest.Mock).mock.invocationCallOrder[0];
+    expect(consumeOrder).toBeLessThan(verifyOrder);
   });
 
   it('rejects an assertion whose challenge was never issued', async () => {
-    (cache.get as jest.Mock).mockResolvedValue(null);
+    (cache.getAndDelete as jest.Mock).mockResolvedValue(null);
 
     await expect(service.verifyAuthentication(assertion('forged'))).rejects.toBeInstanceOf(
       UnauthorizedException,
     );
   });
 
+  // @simplewebauthn/server throws plain Errors for structural problems (bad
+  // type, corrupted authenticatorData, a malformed signature) instead of
+  // returning {verified: false}. POST /auth/restore is a public,
+  // unauthenticated route — an uncaught throw here would surface as an HTTP
+  // 500 (and fill Sentry with them on malformed traffic) instead of a 401.
+  it('wraps a thrown signature-verification error as an UnauthorizedException, not a 500', async () => {
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
+    (verifyAuthenticationResponse as jest.Mock).mockRejectedValue(
+      new Error('corrupted authenticatorData'),
+    );
+
+    await expect(service.verifyAuthentication(assertion('chal-9'))).rejects.toBeInstanceOf(
+      UnauthorizedException,
+    );
+    expect(auth.buildAuthResponse).not.toHaveBeenCalled();
+  });
+
   // A system-managed restore key may legitimately always report 0. Demanding a
   // strictly increasing counter would lock out every user on every device.
   it('accepts a sign count of zero', async () => {
-    (cache.get as jest.Mock).mockResolvedValue('1');
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     auth.buildAuthResponse.mockResolvedValue({});
 
     await expect(service.verifyAuthentication(assertion('chal-9'))).resolves.toBeDefined();
   });
 
   it('rejects a counter that goes backwards from a non-zero value', async () => {
-    (cache.get as jest.Mock).mockResolvedValue('1');
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     prisma.restoreCredential.findUnique.mockResolvedValue({
       id: 'row1', userId: 'u1', credentialId: 'cred-1',
       publicKey: Buffer.from([1]), counter: 5, transports: [],
@@ -320,7 +367,7 @@ describe('RestoreCredentialsService — authentication', () => {
   // by a presented 0 must be accepted, not treated as a clone signal — pinned
   // here so a future edit to the counter guard cannot silently reverse it.
   it('accepts a zero count from a credential that previously reported a non-zero one', async () => {
-    (cache.get as jest.Mock).mockResolvedValue('1');
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     prisma.restoreCredential.findUnique.mockResolvedValue({
       id: 'row1', userId: 'u1', credentialId: 'cred-1',
       publicKey: Buffer.from([1]), counter: 5, transports: [],
@@ -340,7 +387,7 @@ describe('RestoreCredentialsService — authentication', () => {
   });
 
   it('rejects an unknown credential without a 500', async () => {
-    (cache.get as jest.Mock).mockResolvedValue('1');
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     prisma.restoreCredential.findUnique.mockResolvedValue(null);
 
     await expect(service.verifyAuthentication(assertion('chal-9'))).rejects.toBeInstanceOf(
@@ -349,7 +396,7 @@ describe('RestoreCredentialsService — authentication', () => {
   });
 
   it('refuses a deactivated account', async () => {
-    (cache.get as jest.Mock).mockResolvedValue('1');
+    (cache.getAndDelete as jest.Mock).mockResolvedValue('1');
     prisma.user.findUnique.mockResolvedValue({ id: 'u1', email: 'a@b.c', isActive: false });
 
     await expect(service.verifyAuthentication(assertion('chal-9'))).rejects.toBeInstanceOf(
