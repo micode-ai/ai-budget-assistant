@@ -1,25 +1,26 @@
 import { Module } from '@nestjs/common';
 import { CommunityPriceService } from './community-price.service';
 import { CommunityPriceController } from './community-price.controller';
-import { GeocodingService } from '../ai/services/geocoding.service';
+import { GeocodingModule } from '../ai/geocoding.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 
 // PrismaService + ConfigService are both @Global() — no explicit module import
 // needed for either.
 //
-// GeocodingService is provided directly here (not via importing AiModule) to
-// avoid a module cycle: AiModule already imports ExpensesModule, and
-// ExpensesModule needs this module for the community-price write hook —
+// GeocodingService comes from the standalone GeocodingModule, NOT from
+// importing AiModule directly — AiModule already imports ExpensesModule, and
+// ExpensesModule needs this module for the community-price write hook, so
 // AiModule -> ExpensesModule -> CommunityPriceModule -> AiModule would be
-// circular. GeocodingService's own dependencies (PrismaService, optional
-// CacheService) are global, so a second DI instance here is inert — it shares
-// the same `geocode_cache` table, just not the in-process Nominatim throttle
-// with AiModule's instance (acceptable: reverse-geocode calls are rare and
-// cached per-coordinate across ALL accounts).
+// circular. GeocodingModule has no imports of its own (a leaf module), so
+// importing it here is cycle-free AND gives this module the SAME
+// GeocodingService singleton AiModule uses — required because the Nominatim
+// rate-limit throttle is instance-level state; two separate instances would
+// each independently pace their own ≥1.1s gap and could together exceed
+// Nominatim's 1 req/s usage-policy limit from this server's single IP.
 @Module({
-  imports: [SubscriptionsModule],
+  imports: [SubscriptionsModule, GeocodingModule],
   controllers: [CommunityPriceController],
-  providers: [CommunityPriceService, GeocodingService],
+  providers: [CommunityPriceService],
   exports: [CommunityPriceService],
 })
 export class CommunityPriceModule {}

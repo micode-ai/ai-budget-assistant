@@ -6,7 +6,7 @@ import { CategorizationService } from './services/categorization.service';
 import { OcrService } from './services/ocr.service';
 import { ReceiptFinalizerService } from './services/receipt-finalizer.service';
 import { ReceiptPdfService } from './services/receipt-pdf.service';
-import { GeocodingService } from './services/geocoding.service';
+import { GeocodingModule } from './geocoding.module';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { ReceiptCategorySplitService } from './services/receipt-category-split.service';
@@ -30,7 +30,7 @@ import { PriceHistoryModule } from '../price-history/price-history.module';
 import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
 
 @Module({
-  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule, PriceHistoryModule, MerchantRulesModule],
+  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule, PriceHistoryModule, MerchantRulesModule, GeocodingModule],
   controllers: [AiController],
   providers: [
     WhisperService,
@@ -39,7 +39,6 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     OcrService,
     ReceiptFinalizerService,
     ReceiptPdfService,
-    GeocodingService,
     TagSuggestionService,
     ProjectSuggestionService,
     ReceiptCategorySplitService,
