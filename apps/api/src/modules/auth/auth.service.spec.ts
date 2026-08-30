@@ -495,3 +495,47 @@ describe('AuthService — auth responses carry paymentMethod/paymentHandle', () 
     expect(result.user.paymentHandle).toBe('some-handle');
   });
 });
+
+// buildAuthResponse is the session assembly SHARED by googleLogin and the
+// restore-credential login — register()/login()/verifyEmail() still assemble
+// their response inline, each with its own pre-verification/deactivated-account
+// branches that don't fit this shared shape. The restore-credential login (a
+// later task) must return exactly what this produces, so googleLogin is
+// refactored to delegate to it rather than assembling its own response inline.
+// No makeUser helper exists in this file; build the object inline, matching
+// the shape the neighbouring googleLogin tests already use.
+describe('AuthService — buildAuthResponse', () => {
+  it('returns tokens, the user block and the account list', async () => {
+    const { service, accountsService } = makeService();
+    const user: any = {
+      id: 'u1', email: 'a@b.c', name: 'User', isActive: true, isVerified: true,
+      currencyCode: 'USD', defaultAccountId: 'acc-1',
+      themeMode: 'system', accentColor: null,
+      paymentMethod: null, paymentHandle: null,
+    };
+    accountsService.findAllForUser.mockResolvedValue([{ id: 'acc1' }]);
+
+    const res = await service.buildAuthResponse(user);
+
+    expect(res.accessToken).toEqual(expect.any(String));
+    expect(res.refreshToken).toEqual(expect.any(String));
+    expect(res.user.id).toBe('u1');
+    expect(res.user.isVerified).toBe(true);
+    expect(res.accounts).toEqual([{ id: 'acc1' }]);
+  });
+
+  it('prefers an explicit default account id over the stored one', async () => {
+    const { service, accountsService } = makeService();
+    const user: any = {
+      id: 'u1', email: 'a@b.c', name: 'User', isActive: true, isVerified: true,
+      currencyCode: 'USD', defaultAccountId: null,
+      themeMode: 'system', accentColor: null,
+      paymentMethod: null, paymentHandle: null,
+    };
+    accountsService.findAllForUser.mockResolvedValue([]);
+
+    const res = await service.buildAuthResponse(user, 'fresh-acc');
+
+    expect(res.user.defaultAccountId).toBe('fresh-acc');
+  });
+});

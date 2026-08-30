@@ -253,6 +253,7 @@ model User {
   feedReactions         FeedReaction[]
   tripExpenseShares     TripExpenseShare[]
   paymentMethods        UserPaymentMethod[]
+  restoreCredentials    RestoreCredential[]
 
   // Where this signup came from, captured from the CTA query string on the visitor's
   // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
@@ -287,6 +288,28 @@ model UserPaymentMethod {
   @@unique([userId, method])
   @@index([userId])
   @@map("user_payment_methods")
+}
+
+/// An Android Restore Credential (a WebAuthn public-key credential managed by
+/// the system restore service). Several rows per user on purpose: a unique on
+/// userId would let a second device's registration overwrite the first, and a
+/// restore from the older backup would then fail against a public key we no
+/// longer hold. Nothing here is secret — a public key and a credential id are
+/// safe at rest — so no encryption tier applies.
+model RestoreCredential {
+  id           String    @id @default(uuid())
+  userId       String    @map("user_id")
+  credentialId String    @unique @map("credential_id")
+  publicKey    Bytes     @map("public_key")
+  counter      Int       @default(0)
+  transports   String[]  @default([])
+  createdAt    DateTime  @default(now()) @map("created_at")
+  lastUsedAt   DateTime? @map("last_used_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("user_restore_credentials")
 }
 
 model Account {

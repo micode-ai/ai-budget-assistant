@@ -61,10 +61,20 @@ jobs:
           cp -r docs/marketing/landing/site/. apex/
           cp -r docs/marketing/seo/site/blog apex/blog
           cp -r docs/marketing/help/site/help apex/help
+          # Android app-links / Credential Manager verification (ABA-464) —
+          # binds com.budget.assistant to rp.id = ai-budget.pl. Source of truth
+          # is docs/ops/assetlinks.json (see docs/ops/restore-credentials-rollout.md).
+          mkdir -p apex/.well-known
+          cp docs/ops/assetlinks.json apex/.well-known/assetlinks.json
           test -f apex/index.html       || { echo "::error::landing index.html missing"; exit 1; }
           test -f apex/blog/index.html  || { echo "::error::blog/index.html missing"; exit 1; }
           test -f apex/help/en/index.html || { echo "::error::help/en/index.html missing"; exit 1; }
           test -f apex/sitemap.xml      || { echo "::error::sitemap.xml missing"; exit 1; }
+          test -f apex/.well-known/assetlinks.json || { echo "::error::assetlinks.json missing"; exit 1; }
+          if grep -q 'REPLACE_WITH_' apex/.well-known/assetlinks.json; then
+            echo "::error::docs/ops/assetlinks.json still has an unfilled REPLACE_WITH_* placeholder — fill in the real SHA-256 fingerprint(s) before this can deploy"
+            exit 1
+          fi
           # IndexNow ownership key file, served at https://ai-budget.pl/<key>.txt
           printf '%s' "$INDEXNOW_KEY" > "apex/${INDEXNOW_KEY}.txt"
           echo "apex tree: $(du -sh apex | cut -f1)"

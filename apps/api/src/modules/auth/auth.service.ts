@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { randomInt } from 'crypto';
 import { promises as dnsPromises } from 'dns';
+import type { User } from '@prisma/client';
 import { MailService } from '../mail/mail.service';
 import { UsersService } from '../users/users.service';
 import { AccountsService } from '../accounts/accounts.service';
@@ -282,6 +283,16 @@ export class AuthService {
 
     this.usersService.updateLastSync(user.id).catch(() => null);
 
+    return this.buildAuthResponse(user, createdAccountId);
+  }
+
+  /**
+   * The shared session assembly for `googleLogin` and the restore-credential
+   * login (`register`, `login`, and `verifyEmail` still assemble their
+   * response inline) — so those two, at least, cannot drift into reporting
+   * different user blocks for the same account.
+   */
+  async buildAuthResponse(user: User, overrideDefaultAccountId?: string) {
     const tokens = await this.generateTokens(user.id, user.email);
     const accounts = await this.accountsService.findAllForUser(user.id);
 
@@ -293,8 +304,8 @@ export class AuthService {
         email: user.email,
         name: user.name,
         currencyCode: user.currencyCode,
-        defaultAccountId: user.defaultAccountId || createdAccountId,
-        isVerified: true,
+        defaultAccountId: user.defaultAccountId || overrideDefaultAccountId,
+        isVerified: user.isVerified,
         themeMode: user.themeMode,
         accentColor: user.accentColor,
         paymentMethod: user.paymentMethod,

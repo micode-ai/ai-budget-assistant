@@ -52,6 +52,7 @@ import { PriceHistoryModule } from './modules/price-history/price-history.module
 import { ShoppingListModule } from './modules/shopping-list/shopping-list.module';
 import { CommunityPriceModule } from './modules/community-prices/community-price.module';
 import { ReceiptSplitModule } from './modules/receipt-split/receipt-split.module';
+import { RestoreCredentialsModule } from './modules/restore-credentials/restore-credentials.module';
 
 @Module({
   imports: [
@@ -132,6 +133,7 @@ import { ReceiptSplitModule } from './modules/receipt-split/receipt-split.module
     // bulk/merge/:id declarations, per the ABA-166 discipline (no actual shadowing
     // risk here — see receipt-split.controller.ts's doc comment).
     ReceiptSplitModule,
+    RestoreCredentialsModule,
   ],
   providers: [
     {
