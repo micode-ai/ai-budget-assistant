@@ -2,6 +2,7 @@ import { useState, useCallback, useRef } from 'react';
 import * as ImagePicker from 'expo-image-picker';
 import { PICKER_TYPES, isPdfAsset } from './pickerTypes';
 import { uriToBase64 } from '@/utils/fileBase64';
+import { downscaleForOcr } from './receiptImage';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
 import type { ReceiptCheckFinding } from '@budget/shared-types';
@@ -87,8 +88,8 @@ export function useReceiptScanner() {
         return null;
       }
 
-      const imageUri = result.assets[0].uri;
-      return processImage(imageUri, userPrompt);
+      const asset = result.assets[0];
+      return processImage(asset.uri, userPrompt, asset.width);
     } catch (error) {
       console.error('Failed to capture image:', error);
       setState((s) => ({
@@ -118,8 +119,8 @@ export function useReceiptScanner() {
         return null;
       }
 
-      const imageUri = result.assets[0].uri;
-      return processImage(imageUri, userPrompt);
+      const asset = result.assets[0];
+      return processImage(asset.uri, userPrompt, asset.width);
     } catch (error) {
       console.error('Failed to pick image:', error);
       setState((s) => ({
@@ -193,19 +194,29 @@ export function useReceiptScanner() {
     }
   }, []);
 
-  const processImage = async (imageUri: string, userPrompt?: string): Promise<ScannedReceipt | null> => {
+  const processImage = async (
+    imageUri: string,
+    userPrompt?: string,
+    sourceWidth?: number,
+  ): Promise<ScannedReceipt | null> => {
     setState((s) => ({
       ...s,
       isProcessing: true,
       error: null,
-      imageUri,
+      imageUri: null,
       isPdf: false,
       scannedReceipt: null,
     }));
 
     try {
-      // Read image as base64
-      const base64 = await uriToBase64(imageUri);
+      // Shrink before encoding. The raw camera JPEG is several megabytes, base64
+      // adds a third on top, and the request body copies it again — a transient
+      // peak of tens of MB per scan. The downscaled file is also what the preview
+      // <Image> renders, so no full-resolution bitmap is ever decoded.
+      const scanUri = await downscaleForOcr(imageUri, sourceWidth);
+      setState((s) => ({ ...s, imageUri: scanUri }));
+
+      const base64 = await uriToBase64(scanUri);
 
       // Send to API for OCR
       const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined);
