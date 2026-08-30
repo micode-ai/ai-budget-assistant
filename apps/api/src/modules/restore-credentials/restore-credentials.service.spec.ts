@@ -58,6 +58,26 @@ describe('RestoreCredentialsService — registration', () => {
     expect(cache.set).toHaveBeenCalledWith('restorecred:reg:u1', 'chal-1', 300);
   });
 
+  // These are named, locked spec decisions (attestation:'none' because trust
+  // comes from the origin<->assetlinks binding, not attestation provenance;
+  // userVerification:'discouraged' because no human is present during a
+  // restore) — pin the actual values so a future edit that "corrects" one of
+  // them breaks this test instead of silently shipping.
+  it('passes the locked-down registration options to the library', async () => {
+    (generateRegistrationOptions as jest.Mock).mockResolvedValue({ challenge: 'chal-1' });
+
+    await service.getRegistrationOptions('u1', 'a@b.c');
+
+    expect(generateRegistrationOptions).toHaveBeenCalledWith(
+      expect.objectContaining({
+        rpID: 'ai-budget.pl',
+        attestationType: 'none',
+        authenticatorSelection: { residentKey: 'required', userVerification: 'discouraged' },
+        supportedAlgorithmIDs: [-7, -257],
+      }),
+    );
+  });
+
   it('stores the credential when verification succeeds', async () => {
     (cache.get as jest.Mock).mockResolvedValue('chal-1');
     (verifyRegistrationResponse as jest.Mock).mockResolvedValue({
