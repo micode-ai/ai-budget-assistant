@@ -5,7 +5,7 @@ CREATE TABLE "user_restore_credentials" (
     "credential_id" TEXT NOT NULL,
     "public_key" BYTEA NOT NULL,
     "counter" INTEGER NOT NULL DEFAULT 0,
-    "transports" TEXT[] DEFAULT ARRAY[]::TEXT[],
+    "transports" TEXT[] NOT NULL DEFAULT ARRAY[]::TEXT[],
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "last_used_at" TIMESTAMP(3),
 
