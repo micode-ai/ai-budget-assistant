@@ -168,8 +168,15 @@ Getting the fingerprints:
 
 - **`signCount` may always be 0.** A system-managed restore key is not a
   hardware authenticator maintaining a counter. Requiring a strictly increasing
-  count would lock out every user. Accept 0, and only treat a *decrease from a
-  previously non-zero value* as suspicious.
+  count would lock out every user. The rule is therefore: reject only when the
+  stored count and the presented count are **both non-zero** and the presented
+  one did not advance. A zero reading — including a stored 5 followed by a
+  presented 0 — means "this authenticator does not report counts", not "this
+  authenticator went backwards", and must be accepted: the credential's whole
+  purpose is to arrive on a new device, where nothing promises the previous
+  device's count came with it. Rejecting there would fail the exact flow the
+  feature exists for, in exchange for a weak clone signal that is already moot
+  once an attacker holds the user's Google backup.
 - **Replay.** The challenge is deleted on use; a second `POST` with the same
   assertion finds no cached challenge and is rejected.
 - **Deactivated or unverified accounts.** The restore sign-in must apply the
