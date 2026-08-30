@@ -7,8 +7,14 @@ import {
 import {
   generateRegistrationOptions,
   verifyRegistrationResponse,
+  generateAuthenticationOptions,
+  verifyAuthenticationResponse,
 } from '@simplewebauthn/server';
-import type { RegistrationResponseJSON } from '@simplewebauthn/server';
+import type {
+  RegistrationResponseJSON,
+  AuthenticationResponseJSON,
+  AuthenticatorTransportFuture,
+} from '@simplewebauthn/server';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { AuthService } from '../auth/auth.service';
@@ -19,6 +25,7 @@ import {
 
 const CHALLENGE_TTL_SEC = 300;
 const regKey = (userId: string) => `restorecred:reg:${userId}`;
+const authKey = (challenge: string) => `restorecred:auth:${challenge}`;
 
 @Injectable()
 export class RestoreCredentialsService {
@@ -28,8 +35,8 @@ export class RestoreCredentialsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
-    // Not yet called from this file — Task 5 (the authentication ceremony)
-    // is what mints a session from a verified restore credential.
+    // Used by verifyAuthentication to mint a session from a verified restore
+    // credential.
     private readonly auth: AuthService,
   ) {
     try {
@@ -107,6 +114,99 @@ export class RestoreCredentialsService {
 
     await this.cache.del(regKey(userId));
     return { ok: true as const };
+  }
+
+  async getAuthenticationOptions() {
+    const config = this.requireConfig();
+
+    const options = await generateAuthenticationOptions({
+      rpID: config.rpId,
+      // Empty on purpose: the caller has no session yet, so we cannot know
+      // which credentials to allow. The credential id in the assertion tells us.
+      allowCredentials: [],
+      userVerification: 'discouraged',
+    });
+
+    await this.cache.set(authKey(options.challenge), '1', CHALLENGE_TTL_SEC);
+    return options;
+  }
+
+  async verifyAuthentication(response: AuthenticationResponseJSON) {
+    const config = this.requireConfig();
+
+    const challenge = this.readChallenge(response);
+    const issued = await this.cache.get<string>(authKey(challenge));
+    if (!issued) {
+      throw new UnauthorizedException('Unknown or expired restore challenge');
+    }
+    // Consume before verifying so a replay cannot race a slow signature check.
+    await this.cache.del(authKey(challenge));
+
+    const stored = await this.prisma.restoreCredential.findUnique({
+      where: { credentialId: response.id },
+    });
+    if (!stored) {
+      throw new UnauthorizedException('Unknown restore credential');
+    }
+
+    const result = await verifyAuthenticationResponse({
+      response,
+      expectedChallenge: challenge,
+      expectedOrigin: config.expectedOrigins,
+      expectedRPID: config.rpId,
+      requireUserVerification: false,
+      credential: {
+        id: stored.credentialId,
+        publicKey: new Uint8Array(stored.publicKey),
+        counter: stored.counter,
+        transports: stored.transports as AuthenticatorTransportFuture[],
+      },
+    });
+
+    if (!result.verified) {
+      throw new UnauthorizedException('Restore credential failed verification');
+    }
+
+    const newCounter = result.authenticationInfo.newCounter;
+    // A system-managed restore key may always report 0; only a genuine
+    // regression from a previously non-zero counter is evidence of cloning.
+    if (stored.counter > 0 && newCounter > 0 && newCounter <= stored.counter) {
+      this.logger.warn(
+        `Restore credential ${stored.id} replayed a counter (${newCounter} <= ${stored.counter})`,
+      );
+      throw new UnauthorizedException('Restore credential failed verification');
+    }
+
+    const user = await this.prisma.user.findUnique({ where: { id: stored.userId } });
+    if (!user) {
+      throw new UnauthorizedException('Unknown restore credential');
+    }
+    if (!user.isActive) {
+      throw new UnauthorizedException('Account is deactivated');
+    }
+
+    await this.prisma.restoreCredential.update({
+      where: { id: stored.id },
+      data: { counter: newCounter, lastUsedAt: new Date() },
+    });
+
+    return this.auth.buildAuthResponse(user);
+  }
+
+  /**
+   * The assertion carries its own challenge inside clientDataJSON. Reading it
+   * is not trusting it: it is only a lookup key, and an assertion whose
+   * challenge we never issued (or already consumed) finds nothing in Redis.
+   */
+  private readChallenge(response: AuthenticationResponseJSON): string {
+    try {
+      const json = Buffer.from(response.response.clientDataJSON, 'base64url').toString('utf8');
+      const challenge = JSON.parse(json).challenge;
+      if (typeof challenge !== 'string' || !challenge) throw new Error('missing challenge');
+      return challenge;
+    } catch {
+      throw new UnauthorizedException('Malformed restore assertion');
+    }
   }
 
   async deleteForUser(userId: string): Promise<void> {
