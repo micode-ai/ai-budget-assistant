@@ -1025,8 +1025,8 @@ export class RestoreCredentialRegistrationController {
 `restore-credential-auth.controller.ts` — **no class-level guard, by design**:
 
 ```typescript
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { RestoreCredentialsService } from './restore-credentials.service';
 import { VerifyRestoreAuthenticationDto } from './dto';
 
@@ -1041,12 +1041,14 @@ export class RestoreCredentialAuthController {
   constructor(private readonly service: RestoreCredentialsService) {}
 
   @Get('options')
+  @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   getOptions() {
     return this.service.getAuthenticationOptions();
   }
 
   @Post()
+  @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   verify(@Body() dto: VerifyRestoreAuthenticationDto) {
     return this.service.verifyAuthentication(dto.response);
