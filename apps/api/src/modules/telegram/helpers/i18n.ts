@@ -1,4 +1,18 @@
-const messages: Record<string, Record<string, string>> = {
+import {
+  sharedMessages,
+  createBotT,
+  buildCategorySplitLine as buildSharedCategorySplitLine,
+  type CategorySplitLineItem,
+} from '../../../common/bot-i18n/shared-messages';
+
+/**
+ * Telegram-only copy — everything else lives in the shared dictionary
+ * (see common/bot-i18n/shared-messages.ts). Telegram uses `/slash` command
+ * syntax and `parse_mode: HTML`, which is why linkFirst/welcomeBack/
+ * welcomeNew/linkSuccess/unlinkSuccess/helpText diverge from whatsapp/slack
+ * beyond just markup and can't be folded into the shared dictionary.
+ */
+const platformMessages: Record<string, Record<string, string>> = {
   linkFirst: {
     en: 'Please link your account first. Use /link <code>.',
     ru: 'Сначала привяжите аккаунт. Используйте /link <код>.',
@@ -9,259 +23,6 @@ const messages: Record<string, Record<string, string>> = {
     pl: 'Najpierw połącz swoje konto. Użyj /link <kod>.',
     be: 'Спачатку прывяжыце акаўнт. Выкарыстоўвайце /link <код>.',
     nl: 'Koppel je account eerst. Gebruik /link <code>.',
-  },
-  aiLimitReached: {
-    en: '⚠️ AI request limit reached. Upgrade your subscription for more AI features.',
-    ru: '⚠️ Лимит AI-запросов исчерпан. Обновите подписку для большего количества AI-функций.',
-    ua: '⚠️ Ліміт AI-запитів вичерпано. Оновіть підписку для більшої кількості AI-функцій.',
-    de: '⚠️ AI-Anfragelimit erreicht. Upgraden Sie Ihr Abonnement für mehr AI-Funktionen.',
-    es: '⚠️ Límite de solicitudes AI alcanzado. Mejora tu suscripción para más funciones AI.',
-    fr: '⚠️ Limite de requêtes AI atteinte. Améliorez votre abonnement pour plus de fonctionnalités AI.',
-    pl: '⚠️ Limit zapytań AI osiągnięty. Uaktualnij subskrypcję, aby uzyskać więcej funkcji AI.',
-    be: '⚠️ Ліміт AI-запытаў вычарпаны. Абнавіце падпіску для большай колькасці AI-функцый.',
-    nl: '⚠️ AI-verzoeklimiet bereikt. Upgrade je abonnement voor meer AI-functies.',
-  },
-  somethingWrong: {
-    en: 'Something went wrong. Please try again later.',
-    ru: 'Что-то пошло не так. Попробуйте позже.',
-    ua: 'Щось пішло не так. Спробуйте пізніше.',
-    de: 'Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut.',
-    es: 'Algo salió mal. Inténtalo de nuevo más tarde.',
-    fr: 'Quelque chose s\'est mal passé. Veuillez réessayer plus tard.',
-    pl: 'Coś poszło nie tak. Spróbuj ponownie później.',
-    be: 'Нешта пайшло не так. Паспрабуйце пазней.',
-    nl: 'Er is iets misgegaan. Probeer het later opnieuw.',
-  },
-  speechNotRecognized: {
-    en: 'Could not recognize speech. Please try again.',
-    ru: 'Не удалось распознать речь. Попробуйте ещё раз.',
-    ua: 'Не вдалося розпізнати мову. Спробуйте ще раз.',
-    de: 'Sprache konnte nicht erkannt werden. Bitte versuchen Sie es erneut.',
-    es: 'No se pudo reconocer el habla. Inténtalo de nuevo.',
-    fr: 'Impossible de reconnaître la parole. Veuillez réessayer.',
-    pl: 'Nie udało się rozpoznać mowy. Spróbuj ponownie.',
-    be: 'Не атрымалася распазнаць маўленне. Паспрабуйце яшчэ раз.',
-    nl: 'Spraak kon niet worden herkend. Probeer het opnieuw.',
-  },
-  receiptScanFailed: {
-    en: '❌ Could not scan the receipt. Please try again or add the expense manually.',
-    ru: '❌ Не удалось отсканировать чек. Попробуйте ещё раз или добавьте расход вручную.',
-    ua: '❌ Не вдалося відсканувати чек. Спробуйте ще раз або додайте витрату вручну.',
-    de: '❌ Der Beleg konnte nicht gescannt werden. Bitte versuchen Sie es erneut oder fügen Sie die Ausgabe manuell hinzu.',
-    es: '❌ No se pudo escanear el recibo. Inténtalo de nuevo o agrega el gasto manualmente.',
-    fr: '❌ Impossible de scanner le reçu. Veuillez réessayer ou ajouter la dépense manuellement.',
-    pl: '❌ Nie udało się zeskanować paragonu. Spróbuj ponownie lub dodaj wydatek ręcznie.',
-    be: '❌ Не атрымалася адсканаваць чэк. Паспрабуйце яшчэ раз або дадайце выдатак уручную.',
-    nl: '❌ De bon kon niet worden gescand. Probeer het opnieuw of voeg de uitgave handmatig toe.',
-  },
-  voiceFailed: {
-    en: '❌ Could not process the voice message. Please try again.',
-    ru: '❌ Не удалось обработать голосовое сообщение. Попробуйте ещё раз.',
-    ua: '❌ Не вдалося обробити голосове повідомлення. Спробуйте ще раз.',
-    de: '❌ Die Sprachnachricht konnte nicht verarbeitet werden. Bitte versuchen Sie es erneut.',
-    es: '❌ No se pudo procesar el mensaje de voz. Inténtalo de nuevo.',
-    fr: '❌ Impossible de traiter le message vocal. Veuillez réessayer.',
-    pl: '❌ Nie udało się przetworzyć wiadomości głosowej. Spróbuj ponownie.',
-    be: '❌ Не атрымалася апрацаваць галасавое паведамленне. Паспрабуйце яшчэ раз.',
-    nl: '❌ Het spraakbericht kon niet worden verwerkt. Probeer het opnieuw.',
-  },
-  receiptScanned: {
-    en: '📄 <b>Receipt scanned</b>',
-    ru: '📄 <b>Чек отсканирован</b>',
-    ua: '📄 <b>Чек відскановано</b>',
-    de: '📄 <b>Beleg gescannt</b>',
-    es: '📄 <b>Recibo escaneado</b>',
-    fr: '📄 <b>Reçu scanné</b>',
-    pl: '📄 <b>Paragon zeskanowany</b>',
-    be: '📄 <b>Чэк адсканаваны</b>',
-    nl: '📄 <b>Bon gescand</b>',
-  },
-  priceCheckSummary: {
-    en: '⚠️ Above your usual price — items: {{count}}, difference: about {{amount}}. Worth checking the receipt.',
-    ru: '⚠️ Дороже обычного — товаров: {{count}}, разница: около {{amount}}. Стоит проверить чек.',
-    ua: '⚠️ Дорожче, ніж зазвичай — товарів: {{count}}, різниця: приблизно {{amount}}. Варто перевірити чек.',
-    de: '⚠️ Teurer als üblich — Artikel: {{count}}, Differenz: etwa {{amount}}. Es lohnt sich, den Beleg zu prüfen.',
-    es: '⚠️ Más caro de lo habitual — artículos: {{count}}, diferencia: unos {{amount}}. Vale la pena revisar el recibo.',
-    fr: '⚠️ Plus cher que d\'habitude — articles : {{count}}, différence : environ {{amount}}. Mieux vaut vérifier le reçu.',
-    pl: '⚠️ Drożej niż zwykle — pozycje: {{count}}, różnica: około {{amount}}. Warto sprawdzić paragon.',
-    be: '⚠️ Даражэй, чым звычайна — тавараў: {{count}}, розніца: прыблізна {{amount}}. Варта праверыць чэк.',
-    nl: '⚠️ Duurder dan gebruikelijk — artikelen: {{count}}, verschil: ongeveer {{amount}}. Het is de moeite waard om de bon te controleren.',
-  },
-  categorySplit: {
-    en: '🗂️ Split across categories: {{list}}',
-    ru: '🗂️ Разбивка по категориям: {{list}}',
-    ua: '🗂️ Розподіл за категоріями: {{list}}',
-    de: '🗂️ Aufteilung nach Kategorien: {{list}}',
-    es: '🗂️ Desglose por categorías: {{list}}',
-    fr: '🗂️ Répartition par catégories : {{list}}',
-    pl: '🗂️ Podział na kategorie: {{list}}',
-    be: '🗂️ Разбіўка па катэгорыях: {{list}}',
-    nl: '🗂️ Verdeling over categorieën: {{list}}',
-  },
-  confirm: {
-    en: '✅ Confirm',
-    ru: '✅ Подтвердить',
-    ua: '✅ Підтвердити',
-    de: '✅ Bestätigen',
-    es: '✅ Confirmar',
-    fr: '✅ Confirmer',
-    pl: '✅ Potwierdź',
-    be: '✅ Пацвердзіць',
-    nl: '✅ Bevestigen',
-  },
-  cancel: {
-    en: '❌ Cancel',
-    ru: '❌ Отмена',
-    ua: '❌ Скасувати',
-    de: '❌ Abbrechen',
-    es: '❌ Cancelar',
-    fr: '❌ Annuler',
-    pl: '❌ Anuluj',
-    be: '❌ Адмяніць',
-    nl: '❌ Annuleren',
-  },
-  addExpense: {
-    en: '✅ Add expense',
-    ru: '✅ Добавить расход',
-    ua: '✅ Додати витрату',
-    de: '✅ Ausgabe hinzufügen',
-    es: '✅ Agregar gasto',
-    fr: '✅ Ajouter dépense',
-    pl: '✅ Dodaj wydatek',
-    be: '✅ Дадаць выдатак',
-    nl: '✅ Uitgave toevoegen',
-  },
-  expenseCreated: {
-    en: '✅ Expense created',
-    ru: '✅ Расход создан',
-    ua: '✅ Витрату створено',
-    de: '✅ Ausgabe erstellt',
-    es: '✅ Gasto creado',
-    fr: '✅ Dépense créée',
-    pl: '✅ Wydatek utworzony',
-    be: '✅ Выдатак створаны',
-    nl: '✅ Uitgave aangemaakt',
-  },
-  cancelled: {
-    en: '❌ Cancelled',
-    ru: '❌ Отменено',
-    ua: '❌ Скасовано',
-    de: '❌ Abgebrochen',
-    es: '❌ Cancelado',
-    fr: '❌ Annulé',
-    pl: '❌ Anulowano',
-    be: '❌ Адменена',
-    nl: '❌ Geannuleerd',
-  },
-  receiptCancelled: {
-    en: '❌ Receipt scan cancelled.',
-    ru: '❌ Сканирование чека отменено.',
-    ua: '❌ Сканування чеку скасовано.',
-    de: '❌ Belegscan abgebrochen.',
-    es: '❌ Escaneo de recibo cancelado.',
-    fr: '❌ Scan du reçu annulé.',
-    pl: '❌ Skanowanie paragonu anulowane.',
-    be: '❌ Сканаванне чэка адменена.',
-    nl: '❌ Bonscan geannuleerd.',
-  },
-  usageTitle: {
-    en: '📊 <b>AI Usage This Month</b>',
-    ru: '📊 <b>Использование AI в этом месяце</b>',
-    ua: '📊 <b>Використання AI цього місяця</b>',
-    de: '📊 <b>AI-Nutzung diesen Monat</b>',
-    es: '📊 <b>Uso de AI este mes</b>',
-    fr: '📊 <b>Utilisation AI ce mois-ci</b>',
-    pl: '📊 <b>Użycie AI w tym miesiącu</b>',
-    be: '📊 <b>Выкарыстанне AI гэтага месяца</b>',
-    nl: '📊 <b>AI-gebruik deze maand</b>',
-  },
-  used: {
-    en: 'Used',
-    ru: 'Использовано',
-    ua: 'Використано',
-    de: 'Verbraucht',
-    es: 'Usado',
-    fr: 'Utilisé',
-    pl: 'Wykorzystano',
-    be: 'Выкарыстана',
-    nl: 'Gebruikt',
-  },
-  tier: {
-    en: 'Tier',
-    ru: 'Тариф',
-    ua: 'Тариф',
-    de: 'Tarif',
-    es: 'Plan',
-    fr: 'Forfait',
-    pl: 'Plan',
-    be: 'Тарыф',
-    nl: 'Niveau',
-  },
-  breakdown: {
-    en: 'Breakdown',
-    ru: 'Разбивка',
-    ua: 'Розбивка',
-    de: 'Aufschlüsselung',
-    es: 'Desglose',
-    fr: 'Ventilation',
-    pl: 'Podział',
-    be: 'Разбіўка',
-    nl: 'Overzicht',
-  },
-  resets: {
-    en: 'Resets',
-    ru: 'Сброс',
-    ua: 'Скидання',
-    de: 'Zurücksetzung',
-    es: 'Se reinicia',
-    fr: 'Réinitialisation',
-    pl: 'Resetuje się',
-    be: 'Скід',
-    nl: 'Herstelt',
-  },
-  changeDate: {
-    en: '📅 Change date',
-    ru: '📅 Изменить дату',
-    ua: '📅 Змінити дату',
-    de: '📅 Datum ändern',
-    es: '📅 Cambiar fecha',
-    fr: '📅 Changer la date',
-    pl: '📅 Zmień datę',
-    be: '📅 Змяніць дату',
-    nl: '📅 Datum wijzigen',
-  },
-  sendDate: {
-    en: '📅 Send the correct date in format <b>DD.MM.YYYY</b> (e.g., 28.03.2026):',
-    ru: '📅 Отправьте правильную дату в формате <b>ДД.ММ.ГГГГ</b> (например, 28.03.2026):',
-    ua: '📅 Надішліть правильну дату у форматі <b>ДД.ММ.РРРР</b> (наприклад, 28.03.2026):',
-    de: '📅 Senden Sie das richtige Datum im Format <b>TT.MM.JJJJ</b> (z.B. 28.03.2026):',
-    es: '📅 Envía la fecha correcta en formato <b>DD.MM.AAAA</b> (ej., 28.03.2026):',
-    fr: '📅 Envoyez la bonne date au format <b>JJ.MM.AAAA</b> (ex. 28.03.2026) :',
-    pl: '📅 Wyślij poprawną datę w formacie <b>DD.MM.RRRR</b> (np. 28.03.2026):',
-    be: '📅 Адпраўце правільную дату ў фармаце <b>ДД.ММ.ГГГГ</b> (напрыклад, 28.03.2026):',
-    nl: '📅 Stuur de juiste datum in het formaat <b>DD.MM.YYYY</b> (bijv. 28.03.2026):',
-  },
-  dateUpdated: {
-    en: '✅ Date updated to {{date}}',
-    ru: '✅ Дата изменена на {{date}}',
-    ua: '✅ Дату змінено на {{date}}',
-    de: '✅ Datum geändert auf {{date}}',
-    es: '✅ Fecha actualizada a {{date}}',
-    fr: '✅ Date mise à jour : {{date}}',
-    pl: '✅ Data zmieniona na {{date}}',
-    be: '✅ Дата зменена на {{date}}',
-    nl: '✅ Datum bijgewerkt naar {{date}}',
-  },
-  invalidDate: {
-    en: '❌ Invalid date format. Please use DD.MM.YYYY',
-    ru: '❌ Неверный формат даты. Используйте ДД.ММ.ГГГГ',
-    ua: '❌ Невірний формат дати. Використовуйте ДД.ММ.РРРР',
-    de: '❌ Ungültiges Datumsformat. Verwenden Sie TT.MM.JJJJ',
-    es: '❌ Formato de fecha inválido. Usa DD.MM.AAAA',
-    fr: '❌ Format de date invalide. Utilisez JJ.MM.AAAA',
-    pl: '❌ Nieprawidłowy format daty. Użyj DD.MM.RRRR',
-    be: '❌ Няправільны фармат даты. Выкарыстоўвайце ДД.ММ.ГГГГ',
-    nl: '❌ Ongeldig datumformaat. Gebruik DD.MM.YYYY',
   },
   welcomeBack: {
     en: 'Welcome back! You are linked to account <b>{{account}}</b>.\n\nSend /help to see available commands.',
@@ -285,17 +46,6 @@ const messages: Record<string, Record<string, string>> = {
     be: '👋 Сардэчна запрашаем у Budget Assistant Bot!\n\nДля пачатку прывяжыце акаўнт:\n1. Адкрыйце праграму → Налады → Telegram Бот\n2. Націсніце «Падключыць Telegram»\n3. Адпраўце код сюды: /link ВАШ_КОД\n\nПрыклад: <code>/link A3K9F2</code>',
     nl: '👋 Welkom bij Budget Assistant Bot!\n\nKoppel je account om te beginnen:\n1. Open de app → Instellingen → Telegram Bot\n2. Tik op "Telegram koppelen"\n3. Stuur de code hier: /link JOUW_CODE\n\nVoorbeeld: <code>/link A3K9F2</code>',
   },
-  linkProvideCode: {
-    en: 'Please provide a link code.\n\nUsage: <code>/link YOUR_CODE</code>',
-    ru: 'Укажите код привязки.\n\nИспользование: <code>/link ВАШ_КОД</code>',
-    ua: 'Вкажіть код прив\'язки.\n\nВикористання: <code>/link ВАШ_КОД</code>',
-    de: 'Bitte geben Sie einen Verknüpfungscode an.\n\nVerwendung: <code>/link IHR_CODE</code>',
-    es: 'Proporciona un código de vinculación.\n\nUso: <code>/link TU_CÓDIGO</code>',
-    fr: 'Veuillez fournir un code de liaison.\n\nUtilisation : <code>/link VOTRE_CODE</code>',
-    pl: 'Podaj kod połączenia.\n\nUżycie: <code>/link TWÓJ_KOD</code>',
-    be: 'Пакажыце код прывязкі.\n\nВыкарыстанне: <code>/link ВАШ_КОД</code>',
-    nl: 'Geef een koppelcode op.\n\nGebruik: <code>/link JOUW_CODE</code>',
-  },
   linkSuccess: {
     en: '✅ Account linked successfully!\n\nYou can now:\n• Add expenses: <code>/expense 50 lunch</code>\n• Add incomes: <code>/income 3000 salary</code>\n• Send voice messages to add expenses/chat\n• Send receipt photos to scan them\n• Chat with AI — just type any question\n\nSend /help for all commands.',
     ru: '✅ Аккаунт успешно привязан!\n\nТеперь вы можете:\n• Добавлять расходы: <code>/expense 50 обед</code>\n• Добавлять доходы: <code>/income 3000 зарплата</code>\n• Отправлять голосовые для добавления расходов/чата\n• Отправлять фото чеков для сканирования\n• Общаться с ИИ — просто напишите вопрос\n\nОтправьте /help для списка команд.',
@@ -318,61 +68,6 @@ const messages: Record<string, Record<string, string>> = {
     be: '✅ Telegram адвязаны. Адпраўце /link <код> для паўторнага падключэння.',
     nl: '✅ Je Telegram is losgekoppeld. Stuur /link <code> om opnieuw te verbinden.',
   },
-  notLinked: {
-    en: 'Your Telegram is not linked to any account.',
-    ru: 'Ваш Telegram не привязан ни к одному аккаунту.',
-    ua: 'Ваш Telegram не прив\'язаний до жодного акаунту.',
-    de: 'Ihr Telegram ist mit keinem Konto verknüpft.',
-    es: 'Tu Telegram no está vinculado a ninguna cuenta.',
-    fr: 'Votre Telegram n\'est lié à aucun compte.',
-    pl: 'Twój Telegram nie jest połączony z żadnym kontem.',
-    be: 'Ваш Telegram не прывязаны ні да якога акаўнта.',
-    nl: 'Je Telegram is niet gekoppeld aan een account.',
-  },
-  newChatStarted: {
-    en: '🔄 New conversation started. Ask me anything!',
-    ru: '🔄 Новый разговор начат. Спрашивайте что угодно!',
-    ua: '🔄 Нову розмову розпочато. Запитуйте будь-що!',
-    de: '🔄 Neues Gespräch gestartet. Fragen Sie mich alles!',
-    es: '🔄 Nueva conversación iniciada. ¡Pregúntame lo que quieras!',
-    fr: '🔄 Nouvelle conversation commencée. Posez-moi vos questions !',
-    pl: '🔄 Nowa rozmowa rozpoczęta. Pytaj o cokolwiek!',
-    be: '🔄 Новая размова пачата. Пытайце што заўгодна!',
-    nl: '🔄 Nieuw gesprek gestart. Stel me van alles!',
-  },
-  chooseAccount: {
-    en: 'Choose an account:',
-    ru: 'Выберите аккаунт:',
-    ua: 'Оберіть акаунт:',
-    de: 'Konto auswählen:',
-    es: 'Elige una cuenta:',
-    fr: 'Choisissez un compte :',
-    pl: 'Wybierz konto:',
-    be: 'Абярыце акаўнт:',
-    nl: 'Kies een account:',
-  },
-  oneAccount: {
-    en: 'You have one account: <b>{{name}}</b> (already active).',
-    ru: 'У вас один аккаунт: <b>{{name}}</b> (уже активен).',
-    ua: 'У вас один акаунт: <b>{{name}}</b> (вже активний).',
-    de: 'Sie haben ein Konto: <b>{{name}}</b> (bereits aktiv).',
-    es: 'Tienes una cuenta: <b>{{name}}</b> (ya activa).',
-    fr: 'Vous avez un compte : <b>{{name}}</b> (déjà actif).',
-    pl: 'Masz jedno konto: <b>{{name}}</b> (już aktywne).',
-    be: 'У вас адзін акаўнт: <b>{{name}}</b> (ужо актыўны).',
-    nl: 'Je hebt één account: <b>{{name}}</b> (al actief).',
-  },
-  activeAccount: {
-    en: '✅ Active account: <b>{{name}}</b>',
-    ru: '✅ Активный аккаунт: <b>{{name}}</b>',
-    ua: '✅ Активний акаунт: <b>{{name}}</b>',
-    de: '✅ Aktives Konto: <b>{{name}}</b>',
-    es: '✅ Cuenta activa: <b>{{name}}</b>',
-    fr: '✅ Compte actif : <b>{{name}}</b>',
-    pl: '✅ Aktywne konto: <b>{{name}}</b>',
-    be: '✅ Актыўны акаўнт: <b>{{name}}</b>',
-    nl: '✅ Actief account: <b>{{name}}</b>',
-  },
   helpText: {
     en: '<b>Available commands:</b>\n\n/expense &lt;amount&gt; [description] — Add an expense\n/income &lt;amount&gt; [description] — Add income\n/category [type] &lt;name&gt; — Create a category\n/categories — List &amp; delete categories\n/usage — View AI usage and limits\n/account — Switch between accounts\n/newchat — Start a new AI conversation\n/unlink — Disconnect Telegram\n/help — Show this message\n\n<b>Other features:</b>\n🎤 Send a <b>voice message</b> to add expenses or chat with AI\n📷 Send a <b>receipt photo</b> to scan and create an expense\n💬 Just type any message to <b>chat with the AI assistant</b>',
     ru: '<b>Доступные команды:</b>\n\n/expense &lt;сумма&gt; [описание] — Добавить расход\n/income &lt;сумма&gt; [описание] — Добавить доход\n/category [тип] &lt;название&gt; — Создать категорию\n/categories — Список и удаление категорий\n/usage — Использование AI и лимиты\n/account — Переключить аккаунт\n/newchat — Начать новый разговор с ИИ\n/unlink — Отвязать Telegram\n/help — Показать это сообщение\n\n<b>Другие возможности:</b>\n🎤 Отправьте <b>голосовое сообщение</b> для добавления расходов или чата с ИИ\n📷 Отправьте <b>фото чека</b> для сканирования\n💬 Просто напишите сообщение для <b>чата с ИИ-ассистентом</b>',
@@ -384,51 +79,18 @@ const messages: Record<string, Record<string, string>> = {
     be: '<b>Даступныя каманды:</b>\n\n/expense &lt;сума&gt; [апісанне] — Дадаць выдатак\n/income &lt;сума&gt; [апісанне] — Дадаць даход\n/category [тып] &lt;назва&gt; — Стварыць катэгорыю\n/categories — Спіс катэгорый\n/usage — Выкарыстанне AI і ліміты\n/account — Пераключыць акаўнт\n/newchat — Новая размова з ІІ\n/unlink — Адвязаць Telegram\n/help — Паказаць гэта паведамленне\n\n<b>Іншыя магчымасці:</b>\n🎤 Адпраўце <b>галасавое паведамленне</b>\n📷 Адпраўце <b>фота чэка</b>\n💬 Проста напішыце для <b>чата з ІІ</b>',
     nl: '<b>Beschikbare opdrachten:</b>\n\n/expense &lt;bedrag&gt; [omschrijving] — Uitgave toevoegen\n/income &lt;bedrag&gt; [omschrijving] — Inkomsten toevoegen\n/category [type] &lt;naam&gt; — Categorie aanmaken\n/categories — Categorieën weergeven &amp; verwijderen\n/usage — AI-gebruik en limieten bekijken\n/account — Tussen accounts wisselen\n/newchat — Nieuw AI-gesprek starten\n/unlink — Telegram ontkoppelen\n/help — Dit bericht tonen\n\n<b>Andere functies:</b>\n🎤 Stuur een <b>spraakbericht</b> om uitgaven toe te voegen of te chatten met AI\n📷 Stuur een <b>foto van een bon</b> om te scannen en een uitgave aan te maken\n💬 Typ gewoon een bericht om <b>met de AI-assistent te chatten</b>',
   },
-  viewerRestricted: {
-    en: '🔒 You have view-only access. Only editors and owners can create or modify data.',
-    ru: '🔒 У вас только права просмотра. Создавать и изменять данные могут редакторы и владельцы.',
-    ua: '🔒 У вас лише права перегляду. Редагувати можуть лише редактори та власники.',
-    de: '🔒 Sie haben nur Leserechte. Nur Editoren und Eigentümer können Daten bearbeiten.',
-    es: '🔒 Solo tienes acceso de lectura. Solo los editores y propietarios pueden modificar datos.',
-    fr: '🔒 Vous avez un accès en lecture seule. Seuls les éditeurs et propriétaires peuvent modifier.',
-    pl: '🔒 Masz tylko dostęp do odczytu. Edytować mogą tylko edytorzy i właściciele.',
-    be: '🔒 У вас толькі правы прагляду. Рэдагаваць могуць толькі рэдактары і ўладальнікі.',
-    nl: '🔒 Je hebt alleen leestoegang. Alleen redacteurs en eigenaren kunnen gegevens aanmaken of wijzigen.',
-  },
 };
 
-export function t(key: string, lang?: string, params?: Record<string, string>): string {
-  const entry = messages[key];
-  if (!entry) return key;
-  let text = entry[lang || 'en'] || entry.en || key;
-  if (params) {
-    for (const [k, v] of Object.entries(params)) {
-      text = text.replace(new RegExp(`\\{\\{${k}\\}\\}`, 'g'), v);
-    }
-  }
-  return text;
-}
+const messages: Record<string, Record<string, string>> = { ...sharedMessages, ...platformMessages };
 
-export interface CategorySplitLineItem {
-  categoryName: string;
-  amount: number;
-}
+export const t = createBotT(messages, { markup: 'html', defaultParams: { platform: 'Telegram' } });
 
-/**
- * One line reporting how a receipt's own line items split across categories
- * (receipt category autosplit). Empty string when there is nothing to
- * report — an unsplit receipt (categorySplits: []) must produce a
- * byte-identical reply to before this feature existed, the same rule the
- * price-check line (buildPriceCheckLine) already follows.
- */
+export type { CategorySplitLineItem };
+
 export function buildCategorySplitLine(
   splits: CategorySplitLineItem[],
   currencyCode: string,
   lang?: string,
 ): string {
-  if (!splits || splits.length === 0) return '';
-  const list = splits
-    .map((s) => `${s.categoryName} ${s.amount.toFixed(2)} ${currencyCode}`)
-    .join(', ');
-  return t('categorySplit', lang, { list });
+  return buildSharedCategorySplitLine(t, splits, currencyCode, lang);
 }
