@@ -6,6 +6,7 @@ import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
+import { CacheService } from '../../../common/cache/cache.service';
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
@@ -21,9 +22,14 @@ async function safeAnswerCb(ctx: BotContext, text?: string): Promise<void> {
   } catch {}
 }
 
-// In-memory store for pending receipt data (keyed by callback ID)
-// In production, consider Redis or DB storage for multi-instance deployments
-const pendingReceipts = new Map<string, PendingReceiptData>();
+// Pending receipt data + the date-edit cursor live in Redis (mirroring the
+// WhatsApp bot's `wa:receipt:*`/`wa:awaiting_date:*` keys), not module-level
+// Maps — an in-memory Map is wiped on every deploy restart, silently
+// orphaning any user mid-scan. Redis TTL replaces the old manual LRU sweep.
+const PENDING_RECEIPT_TTL_SEC = 1800;
+const AWAITING_DATE_TTL_SEC = 600;
+const pendingReceiptKey = (receiptId: string) => `telegram:receipt:${receiptId}`;
+const awaitingDateKey = (telegramUserId: string) => `telegram:awaiting_date:${telegramUserId}`;
 
 interface PendingReceiptData {
   userId: string;
@@ -50,22 +56,8 @@ interface PendingReceiptData {
   }>;
   receiptImageBase64: string;
   receiptMimeType: string;
-  createdAt: number;
   language?: string;
 }
-
-// Map telegramUserId → receiptId for date editing flow
-const awaitingDateEdit = new Map<string, string>();
-
-// Clean up old pending receipts (older than 30 minutes)
-setInterval(() => {
-  const cutoff = Date.now() - 30 * 60 * 1000;
-  for (const [key, data] of pendingReceipts) {
-    if (data.createdAt < cutoff) {
-      pendingReceipts.delete(key);
-    }
-  }
-}, 5 * 60 * 1000);
 
 @Injectable()
 export class PhotoHandler {
@@ -76,6 +68,7 @@ export class PhotoHandler {
     private readonly expensesService: ExpensesService,
     private readonly subscriptionsService: SubscriptionsService,
     private readonly categoriesService: CategoriesService,
+    private readonly cache: CacheService,
   ) {}
 
   async handlePhoto(ctx: BotContext): Promise<void> {
@@ -170,25 +163,28 @@ export class PhotoHandler {
       }
 
       // Store pending receipt data
-      pendingReceipts.set(receiptId, {
-        userId: ctx.userState.userId,
-        accountId: ctx.userState.accountId,
-        amount: receipt.amount,
-        currencyCode: receipt.currencyCode,
-        description: receipt.description,
-        merchant: receipt.merchant ?? undefined,
-        location: receipt.location,
-        categorySplits: receipt.categorySplits ?? [],
-        categoryId: receipt.categoryId,
-        date: receipt.date,
-        discountAmount: receipt.discountAmount,
-        depositAmount: receipt.depositAmount,
-        receiptMimeType: 'image/jpeg',
-        items: receipt.receiptItems || [],
-        receiptImageBase64: base64,
-        createdAt: Date.now(),
-        language: lang,
-      });
+      await this.cache.set<PendingReceiptData>(
+        pendingReceiptKey(receiptId),
+        {
+          userId: ctx.userState.userId,
+          accountId: ctx.userState.accountId,
+          amount: receipt.amount,
+          currencyCode: receipt.currencyCode,
+          description: receipt.description,
+          merchant: receipt.merchant ?? undefined,
+          location: receipt.location,
+          categorySplits: receipt.categorySplits ?? [],
+          categoryId: receipt.categoryId,
+          date: receipt.date,
+          discountAmount: receipt.discountAmount,
+          depositAmount: receipt.depositAmount,
+          receiptMimeType: 'image/jpeg',
+          items: receipt.receiptItems || [],
+          receiptImageBase64: base64,
+          language: lang,
+        },
+        PENDING_RECEIPT_TTL_SEC,
+      );
 
       await ctx.reply(summary, {
         parse_mode: 'HTML',
@@ -298,25 +294,28 @@ export class PhotoHandler {
         summary += `\n${escapeHtml(categorySplitLine)}\n`;
       }
 
-      pendingReceipts.set(receiptId, {
-        userId: ctx.userState!.userId,
-        accountId: ctx.userState!.accountId,
-        amount: receipt.amount,
-        currencyCode: receipt.currencyCode,
-        description: receipt.description,
-        merchant: receipt.merchant ?? undefined,
-        location: receipt.location,
-        categorySplits: receipt.categorySplits ?? [],
-        categoryId: receipt.categoryId,
-        date: receipt.date,
-        discountAmount: receipt.discountAmount,
-        depositAmount: receipt.depositAmount,
-        receiptMimeType: mime_type || 'application/pdf',
-        items: receipt.receiptItems || [],
-        receiptImageBase64: base64,
-        createdAt: Date.now(),
-        language: lang,
-      });
+      await this.cache.set<PendingReceiptData>(
+        pendingReceiptKey(receiptId),
+        {
+          userId: ctx.userState!.userId,
+          accountId: ctx.userState!.accountId,
+          amount: receipt.amount,
+          currencyCode: receipt.currencyCode,
+          description: receipt.description,
+          merchant: receipt.merchant ?? undefined,
+          location: receipt.location,
+          categorySplits: receipt.categorySplits ?? [],
+          categoryId: receipt.categoryId,
+          date: receipt.date,
+          discountAmount: receipt.discountAmount,
+          depositAmount: receipt.depositAmount,
+          receiptMimeType: mime_type || 'application/pdf',
+          items: receipt.receiptItems || [],
+          receiptImageBase64: base64,
+          language: lang,
+        },
+        PENDING_RECEIPT_TTL_SEC,
+      );
 
       await ctx.reply(summary, {
         parse_mode: 'HTML',
@@ -335,7 +334,7 @@ export class PhotoHandler {
   }
 
   async handleReceiptAddCallback(ctx: BotContext, receiptId: string): Promise<void> {
-    const data = pendingReceipts.get(receiptId);
+    const data = await this.cache.get<PendingReceiptData>(pendingReceiptKey(receiptId));
     if (!data) {
       await safeAnswerCb(ctx, 'Receipt data expired. Please resend the photo.');
       return;
@@ -381,7 +380,7 @@ export class PhotoHandler {
         },
       );
 
-      pendingReceipts.delete(receiptId);
+      await this.cache.del(pendingReceiptKey(receiptId));
 
       try {
         await ctx.editMessageText(
@@ -407,14 +406,14 @@ export class PhotoHandler {
 
   async handleDateCallback(ctx: BotContext, receiptId: string): Promise<void> {
     try {
-      const data = pendingReceipts.get(receiptId);
+      const data = await this.cache.get<PendingReceiptData>(pendingReceiptKey(receiptId));
       if (!data) {
         await ctx.answerCbQuery('Expired');
         return;
       }
 
       const telegramUserId = String(ctx.from!.id);
-      awaitingDateEdit.set(telegramUserId, receiptId);
+      await this.cache.set(awaitingDateKey(telegramUserId), receiptId, AWAITING_DATE_TTL_SEC);
       await ctx.answerCbQuery('');
       await ctx.reply(t('sendDate', data.language), { parse_mode: 'HTML' });
     } catch (error) {
@@ -424,12 +423,12 @@ export class PhotoHandler {
 
   async handleDateInput(ctx: BotContext): Promise<boolean> {
     const telegramUserId = String(ctx.from!.id);
-    const receiptId = awaitingDateEdit.get(telegramUserId);
+    const receiptId = await this.cache.get<string>(awaitingDateKey(telegramUserId));
     if (!receiptId) return false;
 
-    const data = pendingReceipts.get(receiptId);
+    const data = await this.cache.get<PendingReceiptData>(pendingReceiptKey(receiptId));
     if (!data) {
-      awaitingDateEdit.delete(telegramUserId);
+      await this.cache.del(awaitingDateKey(telegramUserId));
       return false;
     }
 
@@ -452,7 +451,8 @@ export class PhotoHandler {
     }
 
     data.date = dateStr;
-    awaitingDateEdit.delete(telegramUserId);
+    await this.cache.set<PendingReceiptData>(pendingReceiptKey(receiptId), data, PENDING_RECEIPT_TTL_SEC);
+    await this.cache.del(awaitingDateKey(telegramUserId));
 
     // Re-show the receipt summary with updated date and action buttons
     const lang = data.language;
@@ -478,7 +478,7 @@ export class PhotoHandler {
   }
 
   async handleReceiptCancelCallback(ctx: BotContext, receiptId: string): Promise<void> {
-    pendingReceipts.delete(receiptId);
+    await this.cache.del(pendingReceiptKey(receiptId));
     await ctx.answerCbQuery('Cancelled.');
     await ctx.editMessageText(t('receiptCancelled', ctx.userState?.language));
   }

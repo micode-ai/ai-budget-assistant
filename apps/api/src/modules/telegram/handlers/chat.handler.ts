@@ -5,25 +5,22 @@ import { ChatService } from '../../ai/services/chat.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { TelegramLinkService } from '../telegram-link.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { CacheService } from '../../../common/cache/cache.service';
 import { BotContext } from '../types';
 import { markdownToTelegramHtml } from '../helpers/format-telegram';
 import { resolveAccountFromMessage, AccountInfo } from '../helpers/resolve-account';
 import { t } from '../helpers/i18n';
 
-// In-memory store for pending action data (keyed by short ID)
-// Keeps callback_data under Telegram's 64-byte limit
-const pendingActions = new Map<string, { conversationId: string; actionId: string }>();
+interface PendingActionData {
+  conversationId: string;
+  actionId: string;
+}
 
-// Clean up old pending actions (older than 30 minutes)
-setInterval(() => {
-  // Simple size-based cleanup since we don't track timestamps per entry
-  if (pendingActions.size > 1000) {
-    const entries = [...pendingActions.keys()];
-    for (let i = 0; i < entries.length - 500; i++) {
-      pendingActions.delete(entries[i]);
-    }
-  }
-}, 5 * 60 * 1000);
+// Pending confirmation data lives in Redis (like the WhatsApp bot's `wa:pa:*`
+// keys), not a module-level Map — an in-memory Map is wiped on every deploy
+// restart, silently orphaning any user mid-confirmation.
+const PENDING_ACTION_TTL_SEC = 1800;
+const pendingActionKey = (shortId: string) => `telegram:pa:${shortId}`;
 
 @Injectable()
 export class ChatHandler {
@@ -34,6 +31,7 @@ export class ChatHandler {
     private readonly linkService: TelegramLinkService,
     private readonly prisma: PrismaService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly cache: CacheService,
   ) {}
 
   async handleText(ctx: BotContext): Promise<void> {
@@ -108,7 +106,11 @@ export class ChatHandler {
 
       // Use short ID to stay under Telegram's 64-byte callback_data limit
       const shortId = randomUUID().slice(0, 8);
-      pendingActions.set(shortId, { conversationId: response.conversationId, actionId });
+      await this.cache.set<PendingActionData>(
+        pendingActionKey(shortId),
+        { conversationId: response.conversationId, actionId },
+        PENDING_ACTION_TTL_SEC,
+      );
 
       const callbackConfirm = `ca:${shortId}`;
       const callbackReject = `ra:${shortId}`;
@@ -140,7 +142,7 @@ export class ChatHandler {
         return;
       }
 
-      const actionData = pendingActions.get(shortId);
+      const actionData = await this.cache.get<PendingActionData>(pendingActionKey(shortId));
       if (!actionData) {
         await ctx.answerCbQuery('Action expired. Please send a new message.');
         return;
@@ -165,7 +167,7 @@ export class ChatHandler {
         ctx.userState.accountId,
       );
 
-      pendingActions.delete(shortId);
+      await this.cache.del(pendingActionKey(shortId));
 
       const html = markdownToTelegramHtml(result.message);
       await ctx.editMessageText(html, { parse_mode: 'HTML' });
@@ -182,7 +184,7 @@ export class ChatHandler {
         return;
       }
 
-      const actionData = pendingActions.get(shortId);
+      const actionData = await this.cache.get<PendingActionData>(pendingActionKey(shortId));
       if (!actionData) {
         await ctx.answerCbQuery('Action expired.');
         return;
@@ -196,7 +198,7 @@ export class ChatHandler {
         actionData.actionId,
       );
 
-      pendingActions.delete(shortId);
+      await this.cache.del(pendingActionKey(shortId));
 
       const html = markdownToTelegramHtml(result.message);
       await ctx.editMessageText(html, { parse_mode: 'HTML' });

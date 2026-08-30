@@ -6,6 +6,21 @@ jest.mock('../helpers/download-file', () => ({
   downloadFile: jest.fn().mockResolvedValue(Buffer.from('pdf')),
 }));
 
+/** In-memory stand-in for CacheService (get/set/del), now that pending
+ * receipt state lives in Redis instead of a module-level Map. */
+function makeCache() {
+  const store = new Map<string, unknown>();
+  return {
+    get: jest.fn(async (key: string) => (store.has(key) ? store.get(key) : null)),
+    set: jest.fn(async (key: string, value: unknown) => {
+      store.set(key, value);
+    }),
+    del: jest.fn(async (...keys: string[]) => {
+      for (const key of keys) store.delete(key);
+    }),
+  };
+}
+
 const RECEIPT_LOCATION = { lat: 52.2297, lng: 21.0122, name: 'Sucha 31, Sucha' };
 
 function baseReceipt(location: typeof RECEIPT_LOCATION | null) {
@@ -53,7 +68,7 @@ describe('Telegram PhotoHandler — geocoded location wiring (ABA-310 bot photo 
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
     const categories = { create: jest.fn() };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
+    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
     return { handler, expenses };
   }
 
@@ -90,7 +105,7 @@ describe('Telegram PhotoHandler — buildPriceCheckLine (receipt price-check sum
     const expenses = { create: jest.fn() };
     const subs = { trackAiUsage: jest.fn() };
     const categories = { create: jest.fn() };
-    return new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
+    return new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
   }
 
   it('appends a price-check line when the scan returned findings', async () => {
@@ -166,7 +181,7 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
     const categories = { create: jest.fn() };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
+    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
     return { handler, expenses };
   }
 
@@ -263,7 +278,7 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
     const categories = { create: jest.fn().mockResolvedValue({ id: 'cat-chemia' }) };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never);
+    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
     const ctx = makeCtx();
 
     await handler.handleDocument(ctx as never);
