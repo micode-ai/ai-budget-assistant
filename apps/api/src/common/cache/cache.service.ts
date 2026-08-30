@@ -69,9 +69,20 @@ export class CacheService implements OnModuleDestroy {
   }
 
   /**
-   * Atomically read a key and delete it. Used for single-use values such as
-   * one-shot challenges, where a get-then-del pair would leave a window in
-   * which two concurrent callers both observe the value as present.
+   * Atomically read a key and delete it (`GETDEL`, requires Redis >= 6.2 —
+   * production runs `redis:7-alpine`, so this is safe here). Used for
+   * single-use values such as one-shot challenges, where a get-then-del pair
+   * would leave a window in which two concurrent callers both observe the
+   * value as present.
+   *
+   * `null` is overloaded: it means the key is genuinely absent, OR its value
+   * failed to `JSON.parse`, OR Redis itself is unavailable — this method
+   * cannot tell those apart, and does not try to. Only use it where "treat
+   * absence as deny" is the correct behavior for ALL THREE cases (e.g. a
+   * challenge lookup, where "I can't prove this challenge was issued" should
+   * always reject). Do not use it where a Redis outage must fail *open*, or
+   * where a caller needs to distinguish "never existed" from "existed but
+   * something went wrong reading it".
    */
   async getAndDelete<T>(key: string): Promise<T | null> {
     try {

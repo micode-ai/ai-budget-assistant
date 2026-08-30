@@ -20,9 +20,9 @@ telling it that `com.budget.assistant` is allowed to act on behalf of
 exactly the kind of thing that is easy to get half-right and hard to notice
 until a user is stuck on a "restore my session" screen that quietly fails.
 
-## The two env vars
+## The three env vars
 
-Both live in `.env.example` and are consumed by
+All three live in `.env.example` and are consumed by
 `resolveRestoreCredentialConfig` (`apps/api/src/modules/restore-credentials/restore-credential.config.ts`):
 
 - **`RESTORE_CREDENTIAL_CERT_FINGERPRINTS`** — comma-separated list of
@@ -34,43 +34,71 @@ Both live in `.env.example` and are consumed by
   Never hand-convert one to the other; let the code do it. This is the one
   thing that must exactly track `docs/ops/assetlinks.json`'s
   `sha256_cert_fingerprints` array (see below).
+
+  A **malformed** value (not colon-stripped 64-hex-char SHA-256, e.g. a
+  truncated copy-paste or an accidentally-included SHA-1) fails the same way
+  an *unset* value does — `fingerprintHexToApkKeyHash` throws, the
+  constructor's catch logs a warning and leaves the service disabled, and all
+  five `/auth/restore*` routes return `503` — but with a different log line:
+  `Expected a 32-byte SHA-256 certificate fingerprint, got "<value>"` instead
+  of the "is not set" message quoted below. Same symptom, different cause —
+  check the log line before assuming the var is simply missing.
 - **`RESTORE_CREDENTIAL_RP_ID`** — the WebAuthn Relying Party ID. Defaults to
   `ai-budget.pl` when unset; there should be no reason to override it in
   production.
+- **`RESTORE_CREDENTIAL_RP_NAME`** — the Relying Party display name shown
+  during the (invisible, no-human-present) registration ceremony. Defaults to
+  `AI Budget Assistant` when unset; has no failure mode of its own.
 
-### Where each fingerprint value actually comes from
+### Where the fingerprint value actually comes from
 
-- **Debug** (for exercising the feature on a local/dev build, signed with
-  the repo's own `apps/mobile/android/app/debug.keystore`):
+**Release** (the only one production trusts): **Play Console → the app →
+Test and release → Setup → App signing → "App signing key certificate" →
+SHA-256.**
 
-  ```bash
-  cd apps/mobile/android && ./gradlew signingReport
-  ```
+**This must be the App Signing key, not the Upload key.** Play re-signs every
+AAB you upload with its own App Signing key before it reaches a device — the
+Upload key's certificate never leaves Play Console. If you paste the Upload
+key's fingerprint here instead, everything will look correct in Play Console
+and CI, and restore will still fail for every real user, because the
+certificate Android actually sees on-device is the App Signing one.
 
-  Gradle brings its own JDK, so this works even on a machine with no
-  `keytool` on `PATH`. Look for the `:app:signingReport` task's `Variant:
-  debug` / `Config: debug` block — its `Store:` line points at
-  `apps/mobile/android/app/debug.keystore`, `Alias: androiddebugkey` — and
-  take its `SHA-256:` line. **This can take several minutes on a cold Gradle
-  daemon** (a first run here took ~3.5 minutes before printing anything) —
-  let it finish rather than assuming it hung.
+Both `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` and `assetlinks.json`'s
+`sha256_cert_fingerprints` accept a comma-separated / JSON-array list, so the
+mechanism supports trusting more than one signing certificate at once. The
+value actually shipped to production today, however, is **one fingerprint —
+the release App Signing certificate — and nothing else.**
 
-- **Release** (the one that matters for real users): **Play Console → the
-  app → Test and release → Setup → App signing → "App signing key
-  certificate" → SHA-256.**
-
-  **This must be the App Signing key, not the Upload key.** Play re-signs
-  every AAB you upload with its own App Signing key before it reaches a
-  device — the Upload key's certificate never leaves Play Console. If you
-  paste the Upload key's fingerprint here instead, everything will look
-  correct in Play Console and CI, and restore will still fail for every real
-  user, because the certificate Android actually sees on-device is the App
-  Signing one.
-
-Both fingerprints are trusted simultaneously (comma-separated in the env var,
-both entries present in `assetlinks.json`'s `sha256_cert_fingerprints`
-array) so the feature works from both a Play-distributed build and a local
-debug build.
+> **Stage-2 note, not a rollout step: do not add a debug fingerprint here.**
+> `apps/mobile/android/app/debug.keystore` is the stock React Native template
+> debug keystore (byte-identical to the copy shipped inside `node_modules`,
+> well-known password `android`, alias `androiddebugkey` — its private key is
+> public). Because this feature uses `attestation: 'none'` (see the design
+> spec), the origin ↔ `assetlinks.json` binding is its *only* trust anchor, so
+> listing that keystore's fingerprint here would anchor production trust on a
+> key anyone can obtain from any RN project — see locked decision 7 in
+> `docs/superpowers/specs/2026-08-30-restore-credentials-design.md`.
+>
+> Exercising the feature on a local/debug build (a stage-2, on-device-testing
+> concern — stage 1 has no client to test with) instead needs a
+> **project-specific** debug keystore minted for this purpose, whose
+> fingerprint is obtained the same `./gradlew signingReport` way template
+> debug builds are normally inspected:
+>
+> ```bash
+> cd apps/mobile/android && ./gradlew signingReport
+> ```
+>
+> (Gradle brings its own JDK, so this works even on a machine with no
+> `keytool` on `PATH`; look for the `:app:signingReport` task's `Variant:
+> debug` / `Config: debug` block's `SHA-256:` line. Can take several minutes
+> on a cold Gradle daemon — let it finish rather than assuming it hung.)
+>
+> **Swapping the debug keystore has a side effect that must be handled in the
+> same change**: this project's Google sign-in is registered against a
+> specific signing SHA-1 in Google Cloud Console, so a new debug keystore
+> breaks Google sign-in on debug builds until the new fingerprint is
+> registered there too.
 
 ## What happens if the fingerprints var is unset
 
@@ -102,9 +130,13 @@ function of whether this one env var is set to something parseable.
 `https://ai-budget.pl/.well-known/assetlinks.json` (served as
 `application/json`) — the Digital Asset Links file Android's Credential
 Manager fetches to confirm `com.budget.assistant`, signed by one of the
-listed certificates, is allowed to act as `ai-budget.pl` (both
-`delegate_permission/common.handle_all_urls` and
-`delegate_permission/common.get_login_creds`).
+listed certificates, is allowed to act as `ai-budget.pl` for
+`delegate_permission/common.get_login_creds`. **Only that one relation is
+listed** — `delegate_permission/common.handle_all_urls` was deliberately left
+out (and removed from an earlier draft of this file): it is a much broader
+grant that lets the app claim App Links across the whole domain, which this
+feature does not need and which would become a live site-wide surface the
+moment anyone later adds an `autoVerify` intent-filter for the apex.
 
 It is copied into the deploy's apex tree by the "Assemble apex tree" step in
 `.github/workflows/web-deploy.yml`, alongside the landing/blog/help copies,
@@ -128,24 +160,24 @@ The guard is what makes it impossible to ship that placeholder to production
 by accident once this branch merges — it does not relax until someone pastes
 in the real value from Play Console.
 
-Before that happens, replace **both** entries in
-`sha256_cert_fingerprints` with real colon-separated uppercase-hex SHA-256
-values (see **Where each fingerprint value actually comes from** above), and
-update `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` in `.env.production` to match —
-see the next section.
+Before that happens, replace the placeholder entry in
+`sha256_cert_fingerprints` with the real colon-separated uppercase-hex
+SHA-256 release fingerprint (see **Where the fingerprint value actually
+comes from** above), and update `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` in
+`.env.production` to match — see the next section.
 
 ## Deploying: both places, together
 
-Once both fingerprints are real:
+Once the release fingerprint is real:
 
 1. Edit `docs/ops/assetlinks.json`'s `sha256_cert_fingerprints` array, commit,
    push to `development` (the normal deploy path publishes it as part of the
    web deploy).
-2. Add the same two fingerprints, comma-separated, to
-   `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` in `.env.production` on the VPS,
-   then force-recreate the API — a plain `docker restart` does **not** reload
-   `env_file` (same trap documented in `CLAUDE.md` → Production and repeated
-   in every other rollout runbook in this directory):
+2. Add the same fingerprint to `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` in
+   `.env.production` on the VPS, then force-recreate the API — a plain
+   `docker restart` does **not** reload `env_file` (same trap documented in
+   `CLAUDE.md` → Production and repeated in every other rollout runbook in
+   this directory):
 
    ```bash
    docker compose -f docker-compose.prod.yml --env-file .env.production up -d --force-recreate api

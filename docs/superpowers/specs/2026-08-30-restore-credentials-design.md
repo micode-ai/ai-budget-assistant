@@ -79,9 +79,28 @@ is cut here.
    verifying an attestation chain we will never evaluate is theatre.
 6. **Challenges live in Redis, not a table.** `CacheService`, 5-minute TTL,
    deleted at verification so an assertion cannot be replayed.
-7. **Both signing certificates are trusted** — Play App Signing and the
-   repository's `debug.keystore` — so the feature can be exercised on a dev
-   build instead of only through an internal-testing track.
+7. **Production trusts the Play App Signing certificate only.** `attestation:
+   'none'` (decision 5) means the origin ↔ `assetlinks.json` binding is the
+   *entire* trust anchor for this feature — there is nothing else backing it.
+   `apps/mobile/android/app/debug.keystore` is the stock React Native
+   template debug keystore, byte-identical to the copy shipped inside
+   `node_modules`, with the well-known password `android` and alias
+   `androiddebugkey`; its private key is public. Listing its fingerprint in
+   production `assetlinks.json` would anchor the only trust check this
+   feature has on a key anyone can obtain from any RN project, defeating the
+   control it exists to provide. `restore-credential.config.ts` still accepts
+   a comma-separated list of fingerprints (`RESTORE_CREDENTIAL_CERT_FINGERPRINTS`)
+   — the mechanism for trusting more than one signing certificate is not
+   going away — but the value shipped for production trusts exactly one.
+   Exercising the feature on a local/debug build needs a project-specific
+   debug keystore (not the template one) minted for that purpose, plus its
+   fingerprint added to both `assetlinks.json` and the env var; that keystore
+   does not exist yet and generating it is a stage-2 prerequisite for
+   on-device testing, not something stage 1 does. Generating it has a side
+   effect that must be handled in the same change: this project's Google
+   sign-in is registered against a specific signing SHA-1 in Google Cloud
+   Console, so swapping the debug keystore breaks Google sign-in on debug
+   builds until the new fingerprint is registered there too.
 
 ### Non-goals
 
@@ -153,16 +172,17 @@ Confusing the two is the most likely way to lose a day to "signature does not
 verify". A pure `fingerprintHexToApkKeyHash()` helper with unit tests is
 therefore part of this stage, not an afterthought.
 
-`expectedRPID` is `ai-budget.pl`. `expectedOrigin` is an **array** of both
-apk-key-hash origins (release and debug), which SimpleWebAuthn supports
-directly.
+`expectedRPID` is `ai-budget.pl`. `expectedOrigin` is an **array**, built from
+whatever is listed in `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` — SimpleWebAuthn
+supports an array of origins directly, and the config code makes no
+distinction between "one fingerprint" and "several". Production ships exactly
+one: the release App Signing certificate (see decision 7 above for why a
+debug fingerprint is not among them).
 
-Getting the fingerprints:
-
-- debug — `cd apps/mobile/android && ./gradlew signingReport` (Gradle brings its
-  own JDK; `keytool` is not on PATH on this workstation)
-- release — Play Console → the app → Test and release → Setup → App signing →
-  "App signing key certificate" → SHA-256
+Getting the release fingerprint: Play Console → the app → Test and release →
+Setup → App signing → "App signing key certificate" → SHA-256. (A
+project-specific debug fingerprint, via `cd apps/mobile/android && ./gradlew
+signingReport`, is a stage-2 concern for on-device testing — see decision 7.)
 
 ## Edge cases
 
@@ -243,3 +263,20 @@ real.
 - The machinery here is most of a passkey implementation. Offering passkeys as a
   real sign-in method later is a small addition, and worth considering on its
   own merits rather than as a side effect.
+- **Open contract question for stage 2**: `DELETE /auth/restore`
+  (`RestoreCredentialsService.deleteForUser`) deletes **every** row for the
+  calling user — `deleteMany({ where: { userId } })` — which cuts directly
+  against decision 4 above (several credentials per user, one per device, so
+  a second device's registration cannot silently invalidate the first's).
+  Wiring this route to fire on every sign-out, as the stage-2 plan describes,
+  means signing out on a phone would also delete a tablet's restore
+  credential — the tablet owner discovers this only the next time they
+  actually need to restore, which is exactly the failure mode decision 4 was
+  written to avoid for the *registration* side. This is not a bug to fix now
+  (stage 1 ships no caller of this route besides the controller test), but
+  stage 2 needs to settle it deliberately before wiring sign-out to it:
+  either scope the delete to the calling device's own credential (needs the
+  client to identify which `credentialId` is "this device's", which nothing
+  in stage 1 tracks), or accept the cross-device invalidation as intended
+  behavior and document it as such, rather than leaving it as an accident of
+  `deleteMany`'s convenient signature.

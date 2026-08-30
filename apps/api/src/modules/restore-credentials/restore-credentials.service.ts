@@ -84,7 +84,12 @@ export class RestoreCredentialsService {
   async verifyRegistration(userId: string, response: RegistrationResponseJSON) {
     const config = this.requireConfig();
 
-    const expectedChallenge = await this.cache.get<string>(regKey(userId));
+    // Atomic read+delete, same as the authentication half (see
+    // verifyAuthentication below): a failed verification must not leave the
+    // challenge sitting in Redis, live and replayable, for the rest of its
+    // 300s TTL. Consuming it here — before the verify call, not after a
+    // success — closes that window instead of only closing it on the happy path.
+    const expectedChallenge = await this.cache.getAndDelete<string>(regKey(userId));
     if (!expectedChallenge) {
       throw new UnauthorizedException('No pending restore-credential registration');
     }
@@ -115,18 +120,85 @@ export class RestoreCredentialsService {
     }
 
     const { credential } = result.registrationInfo;
-    await this.prisma.restoreCredential.create({
-      data: {
-        userId,
-        credentialId: credential.id,
-        publicKey: Buffer.from(credential.publicKey),
-        counter: credential.counter,
-        transports: credential.transports ?? [],
-      },
+    await this.upsertCredential(userId, {
+      credentialId: credential.id,
+      publicKey: Buffer.from(credential.publicKey),
+      counter: credential.counter,
+      transports: credential.transports ?? [],
     });
 
-    await this.cache.del(regKey(userId));
     return { ok: true as const };
+  }
+
+  /**
+   * Idempotent on `credentialId` (`@unique` in the schema) — the ABA-316
+   * "server-side create idempotency" rule from CLAUDE.md. Stage 2 registers a
+   * restore credential on launch whenever the device is already signed in
+   * behind a local flag, so a lost flag, a reinstall, or a sign-out/sign-in on
+   * the same device all re-present the SAME credential id. A bare `create`
+   * would throw P2002 on that ordinary retry and surface as an HTTP 500 on a
+   * route the client will simply try again. Pre-checking with `findUnique`
+   * closes the common case; catching P2002 around the `create` (outside any
+   * `$transaction` — there isn't one here, but the race between the
+   * pre-check and the insert is real regardless) closes the concurrent one.
+   *
+   * A credential id that already belongs to a DIFFERENT user is rejected, not
+   * reassigned — silently repointing an existing row would let one account
+   * take over another account's restore path.
+   */
+  private async upsertCredential(
+    userId: string,
+    data: {
+      credentialId: string;
+      publicKey: Buffer;
+      counter: number;
+      transports: string[];
+    },
+  ): Promise<void> {
+    const existing = await this.prisma.restoreCredential.findUnique({
+      where: { credentialId: data.credentialId },
+    });
+    if (existing) {
+      await this.reconcileExistingCredential(userId, existing, data);
+      return;
+    }
+
+    try {
+      await this.prisma.restoreCredential.create({
+        data: { userId, ...data },
+      });
+    } catch (err: any) {
+      if (err?.code === 'P2002') {
+        const race = await this.prisma.restoreCredential.findUnique({
+          where: { credentialId: data.credentialId },
+        });
+        if (race) {
+          await this.reconcileExistingCredential(userId, race, data);
+          return;
+        }
+      }
+      throw err;
+    }
+  }
+
+  private async reconcileExistingCredential(
+    userId: string,
+    existing: { id: string; userId: string },
+    data: { publicKey: Buffer; counter: number; transports: string[] },
+  ): Promise<void> {
+    if (existing.userId !== userId) {
+      throw new UnauthorizedException(
+        'Restore credential is already registered to a different account',
+      );
+    }
+    await this.prisma.restoreCredential.update({
+      where: { id: existing.id },
+      data: {
+        publicKey: data.publicKey,
+        counter: data.counter,
+        transports: data.transports,
+      },
+    });
   }
 
   async getAuthenticationOptions() {
@@ -214,12 +286,33 @@ export class RestoreCredentialsService {
     if (!user.isActive) {
       throw new UnauthorizedException('Account is deactivated');
     }
+    // Restore is the one login path that mints a full session unconditionally
+    // (no password, no OTP) — the spec calls for the same checks googleLogin
+    // already applies, so an unverified account is refused too, even though
+    // nothing today can reach this state (registration/Google both verify).
+    if (!user.isVerified) {
+      throw new UnauthorizedException('Account is not verified');
+    }
 
+    // Persist the HIGH-WATER MARK, not the presented count. Accepting a
+    // 5 -> 0 login (a system-managed restore key legitimately reporting no
+    // count) is deliberate — see the comment above — but persisting that 0 is
+    // not: it would zero out `stored.counter`, permanently disarming the
+    // `stored.counter > 0` guard above and letting a LATER genuine regression
+    // (e.g. 7 -> 4, on the ORIGINAL device, after the restore-device login)
+    // sail through unnoticed. The login still succeeds exactly as before;
+    // only the stored watermark differs.
     await this.prisma.restoreCredential.update({
       where: { id: stored.id },
-      data: { counter: newCounter, lastUsedAt: new Date() },
+      data: { counter: Math.max(stored.counter, newCounter), lastUsedAt: new Date() },
     });
 
+    // lastSyncAt is deliberately NOT stamped here. Unlike login()/googleLogin()
+    // — which stamp it explicitly because THEIR request never reaches
+    // JwtStrategy — the restored client's very next authenticated request
+    // does, and JwtStrategy.validate() stamps it there via LastActiveService
+    // (throttled, one write per 15 min). CLAUDE.md's ABA-389 entry explicitly
+    // says: "Do not re-add a per-route updateLastSync call."
     return this.auth.buildAuthResponse(user);
   }
 
