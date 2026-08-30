@@ -1,4 +1,4 @@
-import { buildCanonicalNameFallback, OcrService, ParsedReceipt } from './ocr.service';
+import { buildCanonicalNameFallback, OcrService, OCR_REREAD_FEATURE_TYPE, ParsedReceipt } from './ocr.service';
 
 describe('buildCanonicalNameFallback', () => {
   it('preserves size discriminators: fat% and volume (original token order)', () => {
@@ -97,6 +97,7 @@ describe('OcrService', () => {
   let configService: any;
   let receiptFinalizerMock: { finalizeReceipt: jest.Mock };
   let receiptPdfMock: { extractText: jest.Mock; renderToPngs: jest.Mock };
+  let subscriptionsMock: { recordAdditionalUsage: jest.Mock };
 
   beforeEach(() => {
     mockChatCreate.mockReset();
@@ -112,7 +113,14 @@ describe('OcrService', () => {
       extractText: jest.fn(),
       renderToPngs: jest.fn(),
     };
-    service = new OcrService(configService, prisma, receiptFinalizerMock as any, receiptPdfMock as any);
+    subscriptionsMock = { recordAdditionalUsage: jest.fn().mockResolvedValue(undefined) };
+    service = new OcrService(
+      configService,
+      prisma,
+      receiptFinalizerMock as any,
+      receiptPdfMock as any,
+      subscriptionsMock as any,
+    );
     // Silence the real Nest Logger's console output (same convention as
     // anomaly.service.spec.ts) — these tests log [Vision]/[PDF] lines that
     // are not what any assertion here cares about.
@@ -231,6 +239,81 @@ describe('OcrService', () => {
       mockChatCreate.mockResolvedValue({ choices: [{ message: { content: null }, finish_reason: 'stop' }] });
       await expect(service.parseReceipt('base64imagedata', 'user-1', 'acc-1')).rejects.toThrow('No response from AI');
       expect(receiptFinalizerMock.finalizeReceipt).not.toHaveBeenCalled();
+    });
+  });
+
+  /**
+   * ocr-reread-cost-not-tracked: the corrective re-read (ABA-442) is a real
+   * second OpenAI call that `AiUsageGuard`'s fixed `@TrackAiUsage('ocr', 2.0)`
+   * can never see (it runs before this service). Pins that OcrService itself
+   * reports the extra cost via `SubscriptionsService.recordAdditionalUsage`
+   * exactly when — and only when — a second call is actually issued.
+   */
+  describe('readReceipt — corrective re-read cost tracking', () => {
+    function respondOnceWith(overrides: Partial<ParsedReceipt> = {}) {
+      const parsed = { ...BASE_PARSED_RECEIPT, ...overrides };
+      mockChatCreate.mockResolvedValueOnce({
+        choices: [{ message: { content: JSON.stringify(parsed) }, finish_reason: 'stop' }],
+      });
+      return parsed;
+    }
+
+    it('does not track ocr_reread when the first reading reconciles', async () => {
+      mockOpenAiResponse(); // BASE_PARSED_RECEIPT: items sum 10 === total 10, reconciles
+
+      await service.parseReceipt('base64imagedata', 'user-1', 'acc-1');
+
+      expect(mockChatCreate).toHaveBeenCalledTimes(1);
+      expect(subscriptionsMock.recordAdditionalUsage).not.toHaveBeenCalled();
+    });
+
+    it('records a distinct ocr_reread usage row when a corrective re-read is issued', async () => {
+      // First reading: lines sum to 5 against a printed total of 10 (50% gap, > 5% tolerance).
+      respondOnceWith({ items: [{ description: 'Item', totalPrice: 5 }], subtotal: 5, total: 10 });
+      // Second (corrective) reading reconciles exactly.
+      respondOnceWith({ items: [{ description: 'Item', totalPrice: 10 }], subtotal: 10, total: 10 });
+
+      await service.parseReceipt('base64imagedata', 'user-1', 'acc-1');
+
+      expect(mockChatCreate).toHaveBeenCalledTimes(2);
+      expect(subscriptionsMock.recordAdditionalUsage).toHaveBeenCalledTimes(1);
+      expect(subscriptionsMock.recordAdditionalUsage).toHaveBeenCalledWith(
+        'user-1',
+        OCR_REREAD_FEATURE_TYPE,
+        2.0,
+        'acc-1',
+      );
+      // betterRead picked the reconciling second reading (subtotal 10, not the first's 5).
+      expect(receiptFinalizerMock.finalizeReceipt).toHaveBeenCalledWith(
+        expect.objectContaining({ total: 10, subtotal: 10 }),
+        [],
+        'acc-1',
+        'user-1',
+      );
+    });
+
+    it('still records the cost when the corrective re-read call itself fails', async () => {
+      respondOnceWith({ items: [{ description: 'Item', totalPrice: 5 }], subtotal: 5, total: 10 });
+      mockChatCreate.mockRejectedValueOnce(new Error('network blip'));
+
+      await service.parseReceipt('base64imagedata', 'user-1', 'acc-1');
+
+      // The second call was dispatched (and billed by OpenAI) even though it
+      // failed on this end — the cost must still be recorded.
+      expect(subscriptionsMock.recordAdditionalUsage).toHaveBeenCalledWith(
+        'user-1',
+        OCR_REREAD_FEATURE_TYPE,
+        2.0,
+        'acc-1',
+      );
+      // A failed re-read must never cost the user the reading already in hand
+      // (the first reading's subtotal of 5, not a second reading's).
+      expect(receiptFinalizerMock.finalizeReceipt).toHaveBeenCalledWith(
+        expect.objectContaining({ total: 10, subtotal: 5 }),
+        [],
+        'acc-1',
+        'user-1',
+      );
     });
   });
 

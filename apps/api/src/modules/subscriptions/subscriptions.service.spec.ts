@@ -303,6 +303,45 @@ describe('SubscriptionsService — getOrCreateSubscription (upsert race)', () =>
   });
 });
 
+// ── recordAdditionalUsage (ocr-reread-cost-not-tracked) ───────────────────────
+//
+// Used by OcrService to report a corrective re-read's real second OpenAI
+// call — a cost `AiUsageGuard`'s canActivate-time decorator can never see,
+// since it runs before the handler. Must write a usage-log row for admin
+// AI-COGS but must NOT touch the monthly quota, and must never throw (the
+// OpenAI call already happened and was billed).
+
+describe('SubscriptionsService — recordAdditionalUsage', () => {
+  it('writes a usage-log row without incrementing the monthly quota', async () => {
+    const { service, prisma } = makeService();
+
+    await service.recordAdditionalUsage('u1', 'ocr_reread', 2.0, 'acc-1');
+
+    expect(prisma.usageLog.create).toHaveBeenCalledWith({
+      data: {
+        userId: 'u1',
+        subscriptionId: 'sub-1',
+        featureType: 'ocr_reread',
+        costUnits: 2.0,
+        accountId: 'acc-1',
+      },
+    });
+    expect(prisma.subscription.update).not.toHaveBeenCalled();
+    expect(prisma.$transaction).not.toHaveBeenCalled();
+  });
+
+  it('swallows an error instead of throwing (the OpenAI call already happened)', async () => {
+    const { service, prisma } = makeService({
+      usageLog: { create: jest.fn().mockRejectedValue(new Error('db down')) },
+    });
+
+    await expect(
+      service.recordAdditionalUsage('u1', 'ocr_reread', 2.0, 'acc-1'),
+    ).resolves.not.toThrow();
+    expect(prisma.usageLog.create).toHaveBeenCalled();
+  });
+});
+
 // pricing-data.json is the single source of truth for subscription pricing
 // (tech-debt pricing-table-triple-copy) — also read by setup-stripe-products.ts
 // and docs/marketing/landing/build_landing.py. This guards its shape so a bad

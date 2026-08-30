@@ -33,6 +33,9 @@ export const ESTIMATED_COST_PER_REQUEST: Record<string, number> = {
   parse: 0.008,
   categorization: 0.005,
   ocr: 0.012,
+  // A corrective re-read (ABA-442, see docs/tech-debt/ocr-reread-cost-not-tracked.md)
+  // is a second, identically-shaped vision call — same per-request estimate as `ocr`.
+  ocr_reread: 0.012,
 };
 export const DEFAULT_COST_PER_REQUEST = 0.01;
 

@@ -687,4 +687,34 @@ export class SubscriptionsService {
       },
     });
   }
+
+  /**
+   * Records a `usage_logs` row for a cost incurred by a request that already
+   * passed its own `AiUsageGuard` check — e.g. OCR's corrective re-read
+   * (ABA-442), a second real OpenAI call the guard's fixed per-route decorator
+   * cost can't see, since the guard runs before the handler.
+   *
+   * Deliberately does NOT touch the monthly quota (`aiRequestsUsed`) — this
+   * is purely so the admin AI-COGS/per-feature breakdowns (which `groupBy` on
+   * the raw `featureType` string with no allow-list) see the true request
+   * count. Widening the user's own quota consumption for the same event is a
+   * separate, deliberately out-of-scope decision (tracked in
+   * `docs/tech-debt/ocr-reread-cost-not-tracked.md`).
+   *
+   * Never throws: the OpenAI call already happened and was billed, so a
+   * failure to write this accounting row must not fail the response.
+   */
+  async recordAdditionalUsage(
+    userId: string,
+    featureType: string,
+    costUnits: number,
+    accountId?: string,
+  ): Promise<void> {
+    try {
+      const sub = await this.getOrCreateSubscription(userId);
+      await this.logUsage(sub.id, userId, featureType, costUnits, accountId);
+    } catch (error) {
+      this.logger.warn(`recordAdditionalUsage failed for ${featureType}: ${error}`);
+    }
+  }
 }

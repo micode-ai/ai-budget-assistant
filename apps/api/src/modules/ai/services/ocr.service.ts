@@ -17,6 +17,7 @@ import {
 import type { ReceiptCheckFinding } from '@budget/shared-types';
 import { ReceiptFinalizerService } from './receipt-finalizer.service';
 import { ReceiptPdfService } from './receipt-pdf.service';
+import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 
 export interface ReceiptItem {
   description: string;
@@ -223,6 +224,18 @@ function todayInTimezone(timezone: string | null | undefined): string {
 // totals; gpt-4.1 reads the same PDF correctly AND is cheaper per token.
 const OCR_RECEIPT_MODEL = 'gpt-4.1';
 
+// `readReceipt`'s corrective re-read (see its doc comment) is a real, full
+// second vision call — the same shape and cost as the first — issued only
+// when reconciliation fails. `AiUsageGuard`'s `@TrackAiUsage('ocr', 2.0)`
+// fires as a canActivate guard BEFORE this service ever runs, so it can only
+// ever record the fixed first-call cost; this constant is what makes the
+// re-read visible to admin AI-COGS as its own line, via
+// `SubscriptionsService.recordAdditionalUsage` (see docs/tech-debt/
+// ocr-reread-cost-not-tracked.md). Deliberately not folded into the 'ocr'
+// quota cost — see that method's doc comment.
+export const OCR_REREAD_FEATURE_TYPE = 'ocr_reread';
+const OCR_REREAD_COST_UNITS = 2.0;
+
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
@@ -233,6 +246,7 @@ export class OcrService {
     private readonly prisma: PrismaService,
     private readonly receiptFinalizer: ReceiptFinalizerService,
     private readonly receiptPdf: ReceiptPdfService,
+    private readonly subscriptions: SubscriptionsService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -404,6 +418,11 @@ Important:
    *
    * The retry re-issues the IDENTICAL request on purpose: what is wanted is a
    * second independent sample, not a differently-worded question.
+   *
+   * `userId`/`accountId` are only used to attribute the re-read's real OpenAI
+   * cost to the right account for admin AI-COGS (see
+   * `OCR_REREAD_FEATURE_TYPE`) — they play no role in the reconciliation
+   * logic itself.
    */
   private async readReceipt(
     label: string,
@@ -411,6 +430,8 @@ Important:
     // request shapes (image content, plain text, file attachment).
     request: any,
     context: OcrContext,
+    userId: string,
+    accountId: string,
   ): Promise<ParsedReceipt & { suggestedCategory?: string }> {
     const readOnce = async (
       req: any = request,
@@ -453,6 +474,18 @@ Important:
     // reading survives, so a corrective pass that comes back worse is
     // discarded exactly as a blind one would be.
     const correction = buildCorrectionNote(first, firstGap ?? 0);
+
+    // The second vision call is about to be dispatched and billed by OpenAI
+    // regardless of how the response turns out below (parse failure, a worse
+    // reading, or a genuine improvement) — record it now, once, so a failed
+    // or discarded re-read still shows up as real spend in admin AI-COGS.
+    void this.subscriptions.recordAdditionalUsage(
+      userId,
+      OCR_REREAD_FEATURE_TYPE,
+      OCR_REREAD_COST_UNITS,
+      accountId,
+    );
+
     let second: ParsedReceipt & { suggestedCategory?: string };
     try {
       second = await readOnce(withCorrection(request, correction));
@@ -712,7 +745,7 @@ Important:
       ],
       max_tokens: ocrMaxTokens,
       response_format: { type: 'json_object' },
-    }, context);
+    }, context, userId, accountId);
     return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
   }
 
@@ -743,7 +776,7 @@ Important:
         messages: [{ role: 'user', content: prompt }],
         max_tokens: ocrMaxTokens,
         response_format: { type: 'json_object' },
-      }, context);
+      }, context, userId, accountId);
       return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
     }
 
@@ -795,7 +828,7 @@ Important:
         }],
         max_tokens: resolvedMaxTokens,
         response_format: { type: 'json_object' },
-      }, context);
+      }, context, userId, accountId);
       return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
     }
 
@@ -809,7 +842,7 @@ Important:
       ],
       max_tokens: resolvedMaxTokens,
       response_format: { type: 'json_object' },
-    }, context);
+    }, context, userId, accountId);
     return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
   }
 
