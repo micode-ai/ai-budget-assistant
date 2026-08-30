@@ -5,6 +5,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { MailService } from '../mail/mail.service';
 import * as ni18n from '../notifications/notification-i18n';
 import { paginateById } from '../../common/utils/paginate';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 const BATCH_SIZE = 500;
 
@@ -70,11 +71,11 @@ export class TrialReminderCron {
           (l: string) => ni18n.trialReminderTitle(l),
           (l: string) => ni18n.trialReminderBody(l, { tier: tierUpper }),
           { type: 'trial_reminder' },
-        ).catch(() => {});
+        ).catch(logFireAndForget(this.logger, 'TrialReminderCron.sendToUser#t1'));
 
         const subject = ni18n.trialReminderEmailSubject(lang);
         const html = ni18n.trialReminderEmailHtml(lang, user.name, { tier: tierUpper });
-        this.mailService.sendMail(user.email, subject, html).catch(() => {});
+        this.mailService.sendMail(user.email, subject, html).catch(logFireAndForget(this.logger, 'TrialReminderCron.sendMail#t1'));
       }
     }
 
@@ -112,11 +113,11 @@ export class TrialReminderCron {
           (l: string) => ni18n.trialReminderIn3Title(l),
           (l: string) => ni18n.trialReminderIn3Body(l, { tier: tierUpper }),
           { type: 'trial_reminder' },
-        ).catch(() => {});
+        ).catch(logFireAndForget(this.logger, 'TrialReminderCron.sendToUser#t3'));
 
         const subject = ni18n.trialReminderIn3EmailSubject(lang);
         const html = ni18n.trialReminderIn3EmailHtml(lang, user.name, { tier: tierUpper });
-        this.mailService.sendMail(user.email, subject, html).catch(() => {});
+        this.mailService.sendMail(user.email, subject, html).catch(logFireAndForget(this.logger, 'TrialReminderCron.sendMail#t3'));
       }
     }
 

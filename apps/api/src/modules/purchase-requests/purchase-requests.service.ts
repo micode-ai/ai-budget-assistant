@@ -1,5 +1,6 @@
 import {
   Injectable,
+  Logger,
   NotFoundException,
   BadRequestException,
   ForbiddenException,
@@ -8,6 +9,7 @@ import {
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import type {
   CreatePurchaseRequestDto,
   UpdatePurchaseRequestDto,
@@ -21,6 +23,8 @@ type MemberRow = { userId: string; role: string };
 
 @Injectable()
 export class PurchaseRequestsService {
+  private readonly logger = new Logger(PurchaseRequestsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly notifications: NotificationsService,
@@ -137,7 +141,7 @@ export class PurchaseRequestsService {
         currency: pr.currency,
         title: pr.title,
       })
-      .catch(() => {});
+      .catch(logFireAndForget(this.logger, 'PurchaseRequestsService.recordEvent#created'));
 
     return this.toResponse(pr);
   }
@@ -233,7 +237,7 @@ export class PurchaseRequestsService {
             currency: pr.currency,
             title: pr.title,
           })
-          .catch(() => {});
+          .catch(logFireAndForget(this.logger, 'PurchaseRequestsService.recordEvent#approved'));
       } else {
         void this.notifications.sendToUser(
           pr.createdByUserId,
@@ -245,7 +249,7 @@ export class PurchaseRequestsService {
         // Remove all feed events for this PR so it disappears from the family feed
         void this.prisma.familyFeedEvent
           .deleteMany({ where: { entityId: id, accountId } })
-          .catch(() => {});
+          .catch(logFireAndForget(this.logger, 'PurchaseRequestsService.deleteFeedEvents#rejected'));
       }
     } else {
       // Notify creator of the new vote
@@ -330,7 +334,7 @@ export class PurchaseRequestsService {
         currency: pr.currency,
         title: pr.title,
       })
-      .catch(() => {});
+      .catch(logFireAndForget(this.logger, 'PurchaseRequestsService.recordEvent#purchased'));
   }
 
   async cancel(
@@ -361,7 +365,7 @@ export class PurchaseRequestsService {
           currency: pr.currency,
           title: pr.title,
         })
-        .catch(() => {});
+        .catch(logFireAndForget(this.logger, 'PurchaseRequestsService.recordEvent#cancelled'));
     } else {
       // History cleanup → hard delete + remove orphaned feed events
       await this.prisma.$transaction([

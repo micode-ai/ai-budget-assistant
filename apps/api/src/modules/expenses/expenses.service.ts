@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CreateExpenseDto, UpdateExpenseDto, ExpenseFiltersDto, CreateExpenseItemDto, UpdateExpenseItemDto } from './dto';
@@ -13,6 +13,7 @@ import { invalidateExpenseChatCache } from './expense-cache.util';
 import { resolveExpenseCategoryId } from './expense-category-resolver.util';
 import { ReceiptSplitService } from '../receipt-split/receipt-split.service';
 import { ExpenseCreatedHooksService, LearnableExpenseItem } from './expense-created-hooks.service';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 /**
  * CRUD orchestrator for expenses. `bulkUpdate` lives in ExpenseBulkService,
@@ -27,6 +28,8 @@ import { ExpenseCreatedHooksService, LearnableExpenseItem } from './expense-crea
 
 @Injectable()
 export class ExpensesService {
+  private readonly logger = new Logger(ExpensesService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly gamificationService: GamificationService,
@@ -401,7 +404,9 @@ export class ExpensesService {
     });
 
     // Fire-and-forget gamification check
-    this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+    this.gamificationService
+      .checkAchievements(accountId, userId)
+      .catch(logFireAndForget(this.logger, 'ExpensesService.checkAchievements'));
 
     // Fire-and-forget cache invalidation; never block the create response.
     this.invalidateChatCache(accountId).catch(() => undefined);
@@ -425,7 +430,7 @@ export class ExpensesService {
 
       void this.createdHooks
         .onExpenseCreated(accountId, userId, result.expense, learnableItems)
-        .catch(() => {});
+        .catch(logFireAndForget(this.logger, 'ExpensesService.onExpenseCreated'));
     }
 
     return result;

@@ -1,4 +1,4 @@
-import { Injectable, Optional } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService, expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
@@ -8,6 +8,7 @@ import { InflationShieldTrackingService } from '../insights/inflation-shield-tra
 import { ProductRulesService } from '../merchant-rules/product-rules.service';
 import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { invalidateExpenseChatCache } from './expense-cache.util';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 /** The subset of a persisted Expense row the post-create hook chain needs. */
 export interface ExpenseCreatedHookExpense {
@@ -45,6 +46,8 @@ export interface LearnableExpenseItem {
  */
 @Injectable()
 export class ExpenseCreatedHooksService {
+  private readonly logger = new Logger(ExpenseCreatedHooksService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly anomalyService: AnomalyService,
@@ -138,11 +141,15 @@ export class ExpenseCreatedHooksService {
         // Case A: a richer source supersedes the stub. Soft-delete any matching
         // source:'notification' stub. SAFETY: query is hard-scoped to notification
         // rows — two genuine non-notification expenses can never delete each other.
-        await this.reconcileNotificationStub(accountId, expense.id).catch(() => {});
+        await this.reconcileNotificationStub(accountId, expense.id).catch(
+          logFireAndForget(this.logger, 'ExpenseCreatedHooksService.reconcileNotificationStub'),
+        );
       }
-      await this.anomalyService.checkExpense(accountId, userId, expense.id).catch(() => {});
+      await this.anomalyService
+        .checkExpense(accountId, userId, expense.id)
+        .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.checkExpense'));
     };
-    void run().catch(() => {});
+    void run().catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.onExpenseCreated#run'));
 
     // fire-and-forget: record in family feed (non-personal accounts only)
     void this.familyFeed
@@ -150,20 +157,26 @@ export class ExpenseCreatedHooksService {
         amount: Number(expense.amount),
         currency: expense.currencyCode,
       })
-      .catch(() => {});
+      .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.recordEvent'));
 
     // fire-and-forget: contribute to the community price corpus (ABA-335,
     // consent + location + E2EE gated inside the service; never throws)
-    void this.communityPrices?.recordContribution(accountId, userId, expense.id).catch(() => {});
+    void this.communityPrices
+      ?.recordContribution(accountId, userId, expense.id)
+      .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.recordContribution'));
 
     // fire-and-forget: credit any active inflation-shield recommendation this
     // purchase acts on (realized-savings tracking). Never throws.
-    void this.shieldTracking?.reconcilePurchase(accountId, expense.id).catch(() => {});
+    void this.shieldTracking
+      ?.reconcilePurchase(accountId, expense.id)
+      .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.reconcilePurchase'));
 
     // A new expense changes the shield's inputs (new price point) and may have
     // just reconciled a recommendation — bust the cached shield so the next read
     // recomputes. Fire-and-forget; never throws.
-    void this.cacheService.delByPrefix(`shield:${accountId}:`).catch(() => {});
+    void this.cacheService
+      .delByPrefix(`shield:${accountId}:`)
+      .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.invalidateShieldCache'));
 
     // fire-and-forget: teach a product rule from every categorized receipt
     // line, so the next receipt containing that product classifies for free.
@@ -173,7 +186,9 @@ export class ExpenseCreatedHooksService {
     // never throws on its own, and the .catch here is the belt-and-suspenders
     // guarantee for this call site specifically.
     if (learnableItems.length > 0) {
-      void this.productRules?.upsertRules(accountId, learnableItems).catch(() => {});
+      void this.productRules
+        ?.upsertRules(accountId, learnableItems)
+        .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.upsertRules'));
     }
 
     // fire-and-forget: spending in a currency the wallet has no row for yet
@@ -182,6 +197,6 @@ export class ExpenseCreatedHooksService {
     // (ABA-431). Never throws; the read path derives it anyway if this misses.
     void this.walletCurrency
       ?.ensureCurrencies(accountId, userId, [expense.currencyCode])
-      .catch(() => {});
+      .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.ensureCurrencies'));
   }
 }

@@ -4,6 +4,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
 import { paginateById } from '../../common/utils/paginate';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 const BATCH_SIZE = 500;
 
@@ -88,7 +89,7 @@ export class TrackingGapReminderCron {
             {},
             'tracking_gap_reminder',
           )
-          .catch(() => {});
+          .catch(logFireAndForget(this.logger, 'TrackingGapReminderCron.sendToUser'));
 
         sent++;
       }

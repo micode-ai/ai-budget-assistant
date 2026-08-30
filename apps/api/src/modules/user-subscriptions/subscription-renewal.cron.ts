@@ -5,6 +5,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
 import { paginateById } from '../../common/utils/paginate';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 const BATCH_SIZE = 500;
 
@@ -129,7 +130,7 @@ export class SubscriptionRenewalCron {
             { subscriptionId: sub.id, charged: true },
             'subscription_renewal',
           )
-          .catch(() => {});
+          .catch(logFireAndForget(this.logger, 'SubscriptionRenewalCron.sendToUser#charged'));
       }
     }
 
@@ -191,7 +192,7 @@ export class SubscriptionRenewalCron {
               { subscriptionId: sub.id },
               'subscription_renewal',
             )
-            .catch(() => {});
+            .catch(logFireAndForget(this.logger, 'SubscriptionRenewalCron.sendToUser#reminder'));
         }
       }
     }

@@ -7,6 +7,7 @@ import { TelegramService } from '../telegram/telegram.service';
 import Stripe from 'stripe';
 import * as crypto from 'crypto';
 import * as ni18n from '../notifications/notification-i18n';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; // no 0/O/1/I/L
 const CODE_LENGTH = 6;
@@ -114,11 +115,11 @@ export class ReferralsService {
         referrer.id,
         (lang: string) => ni18n.newReferralTitle(lang),
         (lang: string) => ni18n.newReferralBody(lang, { name: referred?.name || '' }),
-      ).catch(() => {});
+      ).catch(logFireAndForget(this.logger, 'ReferralsService.sendToUser#newReferral'));
 
       this.telegramService.sendMessage(
         `🤝 New referral: ${referred?.name} joined via ${referrer.name}'s code (${code})`,
-      ).catch(() => {});
+      ).catch(logFireAndForget(this.logger, 'ReferralsService.notifyOps#newReferral'));
     } catch (error: any) {
       if (error.code === 'P2002') {
         this.logger.warn(`User ${referredUserId} already has a referral`);
@@ -169,11 +170,11 @@ export class ReferralsService {
           referral.referrer.id,
           (lang: string) => ni18n.referralQualifiedTitle(lang),
           (lang: string) => ni18n.referralQualifiedBody(lang, { name: referral.referred.name, bonus: BONUS_AI_REQUESTS }),
-        ).catch(() => {});
+        ).catch(logFireAndForget(this.logger, 'ReferralsService.sendToUser#referralQualified'));
 
         this.telegramService.sendMessage(
           `✅ Referral qualified: ${referral.referred.name} (referrer: ${referral.referrer.name}, +${BONUS_AI_REQUESTS} AI requests)`,
-        ).catch(() => {});
+        ).catch(logFireAndForget(this.logger, 'ReferralsService.notifyOps#referralQualified'));
       } else if (referral.createdAt <= thirtyDaysAgo) {
         await this.prisma.referral.update({
           where: { id: referral.id },
@@ -252,7 +253,7 @@ export class ReferralsService {
         userId,
         (lang: string) => ni18n.referralMilestone5Title(lang),
         (lang: string) => ni18n.referralMilestone5Body(lang),
-      ).catch(() => {});
+      ).catch(logFireAndForget(this.logger, 'ReferralsService.sendToUser#milestone5'));
     } catch (error) {
       this.logger.error(`Failed to create Stripe coupon for user ${userId}: ${error}`);
     }

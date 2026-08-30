@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
@@ -6,9 +6,12 @@ import { accountCurrencyKey, buildWalletBalanceRow } from './wallet-balance.util
 import { resolveWalletCurrencies } from '../../common/utils/wallet-currencies';
 import { WalletCurrencyService } from './wallet-currency.service';
 import { SetWalletBalanceDto } from './dto';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 @Injectable()
 export class WalletService {
+  private readonly logger = new Logger(WalletService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     // Optional so the display still works without it — persisting a derived
@@ -203,7 +206,9 @@ export class WalletService {
   ): void {
     const derived = resolved.filter((r) => r.derived).map((r) => r.currencyCode);
     if (derived.length === 0) return;
-    void this.walletCurrency?.ensureCurrencies(accountId, userId, derived).catch(() => {});
+    void this.walletCurrency
+      ?.ensureCurrencies(accountId, userId, derived)
+      .catch(logFireAndForget(this.logger, 'WalletService.ensureCurrencies'));
   }
 
   /**

@@ -5,6 +5,7 @@ import { IncomesService } from '../incomes/incomes.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
 import { resolveExpenseCategoryId } from '../expenses/expense-category-resolver.util';
 import type { SyncChange } from '@budget/shared-types';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 export interface SyncResult {
   entityId: string;
@@ -280,7 +281,7 @@ export class SyncService {
       if (created.canonicalName) {
         void this.communityPrices
           ?.recordContribution(accountId, userId, created.expenseId)
-          .catch(() => {});
+          .catch(logFireAndForget(this.logger, 'SyncService.recordContribution#create'));
       }
 
       return { entityId, status: 'success', serverId: created.id, serverVersion: created.syncVersion };
@@ -313,7 +314,7 @@ export class SyncService {
       if (updated.canonicalName) {
         void this.communityPrices
           ?.recordContribution(accountId, userId, updated.expenseId)
-          .catch(() => {});
+          .catch(logFireAndForget(this.logger, 'SyncService.recordContribution#update'));
       }
       return { entityId, status: 'success', serverVersion: updated.syncVersion };
     }

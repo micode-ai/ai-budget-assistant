@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
@@ -7,6 +7,7 @@ import { AnomalyService } from '../anomaly/anomaly.service';
 import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
 import { WiseImportCommitDto } from './dto';
 import type { WiseImportPreviewResponse, WiseImportRow, WiseImportCommitResponse } from '@budget/shared-types';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 export const MERCHANT_CATEGORY_HINTS: Record<string, string> = {
   UBER: 'Transport',
@@ -84,6 +85,8 @@ function suggestCategory(merchant: string | undefined): string | undefined {
 
 @Injectable()
 export class ImportWiseService {
+  private readonly logger = new Logger(ImportWiseService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly importBatches: ImportBatchesService,
@@ -358,7 +361,9 @@ export class ImportWiseService {
     });
 
     // Fire-and-forget anomaly detection on the committed expenses.
-    this.anomaly.checkExpenseBatch(accountId, userId, createdExpenseIds).catch(() => {});
+    this.anomaly
+      .checkExpenseBatch(accountId, userId, createdExpenseIds)
+      .catch(logFireAndForget(this.logger, 'ImportWiseService.checkExpenseBatch'));
 
     return { createdExpenses, createdIncomes, createdExchanges, batchId };
   }

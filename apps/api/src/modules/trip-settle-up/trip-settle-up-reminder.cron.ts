@@ -3,6 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../database/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 @Injectable()
 export class TripSettleUpReminderCron {
@@ -59,7 +60,7 @@ export class TripSettleUpReminderCron {
             { accountId: trip.id },
             'trip_settle_up',
           )
-          .catch(() => {});
+          .catch(logFireAndForget(this.logger, 'TripSettleUpReminderCron.sendToUser'));
       }
     }
 

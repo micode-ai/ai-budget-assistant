@@ -6,6 +6,7 @@ import { InflationShieldService } from './inflation-shield.service';
 import { InsightNotificationLedger } from './insight-notification-ledger.service';
 import { shieldDedupKey, monthBucket } from './insight-notification-dedup.util';
 import * as ni18n from '../notifications/notification-i18n';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 const LOG_RETENTION_DAYS = 90;
 
@@ -86,7 +87,7 @@ export class InflationShieldNotifyCron {
               { type: 'inflation_shield' },
               'inflation_shield',
             )
-            .catch(() => {});
+            .catch(logFireAndForget(this.logger, 'InflationShieldNotifyCron.sendToUser'));
         }
       } catch (e) {
         this.logger.warn(`inflation shield notify run failed for ${account.id}`, e as Error);

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, Optional } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
@@ -6,6 +6,7 @@ import { CreateIncomeDto, UpdateIncomeDto, IncomeFiltersDto } from './dto';
 import { GamificationService } from '../gamification/gamification.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { WalletCurrencyService } from '../wallet/wallet-currency.service';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 const incomeInclude = {
   category: true,
@@ -19,6 +20,8 @@ type IncomeResponse = Omit<IncomeWithRelations, 'user'> & { createdByUserName: s
 
 @Injectable()
 export class IncomesService {
+  private readonly logger = new Logger(IncomesService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
@@ -173,8 +176,10 @@ export class IncomesService {
     });
 
     // Fire-and-forget gamification check and cache invalidation
-    this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
-    this.cache.del(`uc:${accountId}`).catch(() => {});
+    this.gamificationService
+      .checkAchievements(accountId, userId)
+      .catch(logFireAndForget(this.logger, 'IncomesService.checkAchievements'));
+    this.cache.del(`uc:${accountId}`).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
 
     // fire-and-forget: record in family feed (non-personal accounts only)
     if (result) {
@@ -183,14 +188,14 @@ export class IncomesService {
           amount: Number(result.amount),
           currency: result.currencyCode,
         })
-        .catch(() => {});
+        .catch(logFireAndForget(this.logger, 'IncomesService.recordEvent'));
 
       // fire-and-forget: income in a currency the wallet has no row for yet
       // must still produce a balance card instead of being invisible until
       // somebody sets an initial balance by hand (ABA-431). Never throws.
       void this.walletCurrency
         ?.ensureCurrencies(accountId, userId, [result.currencyCode])
-        .catch(() => {});
+        .catch(logFireAndForget(this.logger, 'IncomesService.ensureCurrencies'));
     }
 
     return result;
@@ -354,7 +359,7 @@ export class IncomesService {
       });
       return updated ? this.toIncomeResponse(updated) : updated;
     });
-    this.cache.del(`uc:${accountId}`).catch(() => {});
+    this.cache.del(`uc:${accountId}`).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
     return result;
   }
 
@@ -369,7 +374,7 @@ export class IncomesService {
       },
     });
 
-    this.cache.del(`uc:${accountId}`).catch(() => {});
+    this.cache.del(`uc:${accountId}`).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
     return { success: true };
   }
 

@@ -12,6 +12,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { MailService } from '../mail/mail.service';
 import * as ni18n from '../notifications/notification-i18n';
 import * as pricingData from './pricing-data.json';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 type SubscriptionTier = 'free' | 'pro' | 'business';
 type SubscriptionRecord = NonNullable<Awaited<ReturnType<PrismaService['subscription']['findUnique']>>>;
@@ -529,7 +530,7 @@ export class SubscriptionsService {
         (lang: string) => ni18n.subscriptionActivatedTitle(lang),
         (lang: string) => ni18n.subscriptionActivatedBody(lang, { tier: tierUpper }),
         { type: 'subscription_activated' },
-      ).catch(() => {});
+      ).catch(logFireAndForget(this.logger, 'SubscriptionsService.sendToUser#activated'));
     }
   }
 
@@ -579,7 +580,7 @@ export class SubscriptionsService {
       (lang: string) => ni18n.paymentSuccessTitle(lang),
       (lang: string) => ni18n.paymentSuccessBody(lang, { amount: amountDisplay, currency, tier: tierUpper }),
       { type: 'payment_success' },
-    ).catch(() => {});
+    ).catch(logFireAndForget(this.logger, 'SubscriptionsService.sendToUser#paymentSuccess'));
   }
 
   private async handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
@@ -605,7 +606,7 @@ export class SubscriptionsService {
         (lang: string) => ni18n.paymentFailedTitle(lang),
         (lang: string) => ni18n.paymentFailedBody(lang),
         { type: 'payment_failed' },
-      ).catch(() => {});
+      ).catch(logFireAndForget(this.logger, 'SubscriptionsService.sendToUser#paymentFailed'));
     }
   }
 

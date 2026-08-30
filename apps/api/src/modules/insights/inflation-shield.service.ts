@@ -6,6 +6,7 @@ import { CacheService } from '../../common/cache/cache.service';
 import { assembleShield, SHIELD_DEFAULTS, ShieldOpts } from './inflation-shield.util';
 import { InflationShieldTrackingService } from './inflation-shield-tracking.service';
 import type { InflationShieldResponse, ShieldItem } from '@budget/shared-types';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 function envNum(name: string, fallback: number): number {
   const v = Number(process.env[name]);
@@ -146,7 +147,7 @@ export class InflationShieldService {
         baseCurrency,
         now,
       )
-      .catch(() => {});
+      .catch(logFireAndForget(this.logger, 'InflationShieldService.recordRecommendations'));
 
     await this.cache.set(cacheKey, result, 3600);
     return result;

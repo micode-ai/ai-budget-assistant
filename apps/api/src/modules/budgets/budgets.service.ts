@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { computeBudgetPeriod } from './budget-period.util';
 import { shiftFinancialMonth } from '../../common/utils/financial-month';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 export { computeBudgetPeriod };
 
@@ -16,6 +17,8 @@ const CATEGORY_ALLOCATIONS_INCLUDE = {
 
 @Injectable()
 export class BudgetsService {
+  private readonly logger = new Logger(BudgetsService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly gamificationService: GamificationService,
@@ -119,7 +122,9 @@ export class BudgetsService {
         });
 
         // Fire-and-forget gamification check
-        this.gamificationService.checkAchievements(accountId, userId).catch(() => {});
+        this.gamificationService
+          .checkAchievements(accountId, userId)
+          .catch(logFireAndForget(this.logger, 'BudgetsService.checkAchievements'));
 
         this.invalidateChatCache(accountId);
 

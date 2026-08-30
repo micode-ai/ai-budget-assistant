@@ -1,4 +1,4 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { ImportBatchesService } from '../import-batches/import-batches.service';
@@ -25,6 +25,7 @@ import type {
   BankImportCommitResponse,
 } from '@budget/shared-types';
 import type { BankImportCommitBodyDto, RequestBankBodyDto } from './dto';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 export interface PreviewOptions {
   bankId?: BankParser['id'];
@@ -38,6 +39,8 @@ export interface PreviewOptions {
 
 @Injectable()
 export class ImportBankService {
+  private readonly logger = new Logger(ImportBankService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly importBatches: ImportBatchesService,
@@ -142,7 +145,9 @@ export class ImportBankService {
         const legacyFingerprint = headerFingerprint(peekHeaders(text, ';'));
         saved = await this.mapping.findByFingerprint(accountId, legacyFingerprint);
         if (saved) {
-          void this.mapping.rekey(saved.id, fingerprint).catch(() => {});
+          void this.mapping
+            .rekey(saved.id, fingerprint)
+            .catch(logFireAndForget(this.logger, 'ImportBankService.rekeyMapping'));
         }
       }
       if (saved) {
@@ -351,7 +356,9 @@ export class ImportBankService {
     });
 
     // Fire-and-forget anomaly detection on the committed expenses.
-    this.anomaly.checkExpenseBatch(accountId, userId, createdExpenseIds).catch(() => {});
+    this.anomaly
+      .checkExpenseBatch(accountId, userId, createdExpenseIds)
+      .catch(logFireAndForget(this.logger, 'ImportBankService.checkExpenseBatch'));
 
     let savedMappingId: string | undefined;
     if (dto.saveMapping && dto.mapping && dto.headerFingerprint) {
@@ -388,10 +395,14 @@ export class ImportBankService {
     if (dto.headerFingerprint) {
       const isCorrection = await this.aiPreview.isMappingCorrection(dto.headerFingerprint, dto.mapping);
       if (isCorrection) {
-        void this.signatures.markCorrected(dto.headerFingerprint).catch(() => {});
+        void this.signatures
+          .markCorrected(dto.headerFingerprint)
+          .catch(logFireAndForget(this.logger, 'ImportBankService.markCorrected'));
       } else {
         // Fire-and-forget: never allowed to fail an import that already succeeded.
-        void this.signatures.confirm(dto.headerFingerprint).catch(() => {});
+        void this.signatures
+          .confirm(dto.headerFingerprint)
+          .catch(logFireAndForget(this.logger, 'ImportBankService.confirmSignature'));
       }
     }
 

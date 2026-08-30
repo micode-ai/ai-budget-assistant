@@ -7,6 +7,7 @@ import { ShoppingNotificationLedger } from './shopping-notification-ledger.servi
 import { restockDedupKey, dealDedupKey, weekBucket } from './shopping-notification-dedup.util';
 import * as ni18n from '../notifications/notification-i18n';
 import type { DealSuggestion, RestockSuggestion } from '@budget/shared-types';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 const LOG_RETENTION_DAYS = 90;
 
@@ -78,7 +79,7 @@ export class ShoppingReminderCron {
                   { type: 'shopping_reminder' },
                   'shopping_reminder',
                 )
-                .catch(() => {});
+                .catch(logFireAndForget(this.logger, 'ShoppingReminderCron.sendToUser#restock'));
             }
           }
         }
@@ -97,7 +98,7 @@ export class ShoppingReminderCron {
                   { type: 'shopping_deal' },
                   'shopping_deal',
                 )
-                .catch(() => {});
+                .catch(logFireAndForget(this.logger, 'ShoppingReminderCron.sendToUser#deal'));
             }
           }
         }

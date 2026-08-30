@@ -8,6 +8,7 @@ import { normalizeMerchantPL } from '../import-bank/merchants/merchants-pl';
 import { mondayOfWeek, regionBucket, computeContributorKey, isEligibleContributor } from './community-price.util';
 import { aggregateCommunityPrices, aggregateCommunityMap, DEFAULT_K_ANONYMITY } from './community-price-calculator';
 import { clusterContributors, DEFAULT_CORRELATION } from './community-price-correlation';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 import type {
   CommunityPriceResponse,
   CommunityPricePeriod,
@@ -464,7 +465,7 @@ export class CommunityPriceService {
           create: { merchantNormalized, region, lat, lng },
           update: { lat, lng },
         })
-        .catch(() => {});
+        .catch(logFireAndForget(this.logger, 'CommunityPriceService.upsertStoreGeo'));
 
       for (const item of expense.items) {
         const rawName = item.canonicalName as string;
