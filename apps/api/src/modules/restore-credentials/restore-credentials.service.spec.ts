@@ -315,6 +315,30 @@ describe('RestoreCredentialsService — authentication', () => {
     );
   });
 
+  // A restore credential's whole purpose is arriving on a NEW device with no
+  // guarantee the old device's counter travelled with it. A stored 5 followed
+  // by a presented 0 must be accepted, not treated as a clone signal — pinned
+  // here so a future edit to the counter guard cannot silently reverse it.
+  it('accepts a zero count from a credential that previously reported a non-zero one', async () => {
+    (cache.get as jest.Mock).mockResolvedValue('1');
+    prisma.restoreCredential.findUnique.mockResolvedValue({
+      id: 'row1', userId: 'u1', credentialId: 'cred-1',
+      publicKey: Buffer.from([1]), counter: 5, transports: [],
+    });
+    (verifyAuthenticationResponse as jest.Mock).mockResolvedValue({
+      verified: true,
+      authenticationInfo: { newCounter: 0 },
+    });
+    auth.buildAuthResponse.mockResolvedValue({});
+
+    await expect(service.verifyAuthentication(assertion('chal-9'))).resolves.toBeDefined();
+
+    expect(prisma.restoreCredential.update).toHaveBeenCalledWith({
+      where: { id: 'row1' },
+      data: expect.objectContaining({ counter: 0 }),
+    });
+  });
+
   it('rejects an unknown credential without a 500', async () => {
     (cache.get as jest.Mock).mockResolvedValue('1');
     prisma.restoreCredential.findUnique.mockResolvedValue(null);

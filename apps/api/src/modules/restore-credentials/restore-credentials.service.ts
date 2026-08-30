@@ -168,8 +168,9 @@ export class RestoreCredentialsService {
     }
 
     const newCounter = result.authenticationInfo.newCounter;
-    // A system-managed restore key may always report 0; only a genuine
-    // regression from a previously non-zero counter is evidence of cloning.
+    // A zero counter means "doesn't report counts", not "went backwards" — a
+    // restore credential's whole purpose is arriving on a NEW device with no
+    // guarantee the old counter travelled with it, so 5 -> 0 is accepted on purpose.
     if (stored.counter > 0 && newCounter > 0 && newCounter <= stored.counter) {
       this.logger.warn(
         `Restore credential ${stored.id} replayed a counter (${newCounter} <= ${stored.counter})`,
