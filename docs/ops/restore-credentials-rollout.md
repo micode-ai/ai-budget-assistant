@@ -151,20 +151,25 @@ error instead of the real problem (nothing was ever added to git).
 ### Deploy-time placeholder guard
 
 The same workflow step greps the copied file for the literal string
-`REPLACE_WITH_` and fails the build with `::error::` if it finds it. This
-exists because the real App Signing fingerprint isn't available from this
-workstation (it's behind a Play Console login) — so
-`docs/ops/assetlinks.json`, as committed on this branch, still carries
-`REPLACE_WITH_PLAY_APP_SIGNING_SHA256` in place of the release fingerprint.
-The guard is what makes it impossible to ship that placeholder to production
-by accident once this branch merges — it does not relax until someone pastes
-in the real value from Play Console.
+`REPLACE_WITH_` and fails the build with `::error::` if it finds it. It
+exists because the file was committed before the real App Signing
+fingerprint was available, and shipping a public trust statement full of
+dummy values would have been worse than not shipping it at all.
 
-Before that happens, replace the placeholder entry in
-`sha256_cert_fingerprints` with the real colon-separated uppercase-hex
-SHA-256 release fingerprint (see **Where the fingerprint value actually
-comes from** above), and update `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` in
-`.env.production` to match — see the next section.
+**The real fingerprint is now in place**, so the guard passes. It stays in
+the workflow as a standing check: if anyone ever re-introduces a
+placeholder — a rotation left half-finished, a merge resolved the wrong
+way — the apex deploy fails loudly instead of publishing a file that
+silently breaks sign-in on new devices.
+
+Note what failing costs, so nobody is surprised: the guard lives in the
+"Assemble apex tree" step, which runs *before* both rsyncs, so a failure
+freezes the `app.ai-budget.pl` SPA deploy and the apex site deploy
+together — not just this feature.
+
+The value in `sha256_cert_fingerprints` and the value in
+`RESTORE_CREDENTIAL_CERT_FINGERPRINTS` must always change together — see
+the next section.
 
 ## Deploying: both places, together
 
