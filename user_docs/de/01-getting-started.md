@@ -34,6 +34,12 @@ Nach deiner ersten Anmeldung kannst du die biometrische Authentifizierung (Face 
 2. Authentifiziere dich mit dem biometrischen Sensor deines Gerats
 3. Du bist eingeloggt!
 
+### Neues Android-Smartphone
+
+Wenn du ein neues Android-Smartphone mit der integrierten Funktion "Aus Sicherung wiederherstellen" eingerichtet hast (Apps und Daten von deinem alten Smartphone übernommen), kann AI Budget Assistant dich automatisch anmelden — ganz ohne Passwort. Öffne einfach die App: Werden gespeicherte Anmeldedaten gefunden, landest du direkt auf deinem Dashboard.
+
+Das funktioniert nur auf Android und nur, wenn das neue Gerät wirklich als Wiederherstellung deines alten Geräts eingerichtet wurde — bei einer Neuinstallation brauchst du weiterhin E-Mail und Passwort. Nutzt du die [Ende-zu-Ende-Verschlüsselung](./15-encryption.md), stellt die automatische Anmeldung nur deinen Kontozugriff wieder her; du musst weiterhin deine **Verschlüsselungs-Passphrase** eingeben, um deine Finanzdaten zu entsperren.
+
 ### Passwort vergessen
 
 Wenn Sie Ihr Passwort vergessen haben:

@@ -48,6 +48,11 @@ export interface AuthResponse {
     name: string;
     currencyCode: Currency;
     defaultAccountId?: string;
+    /** The API always includes this today (login/register/verifyEmail inline,
+    * and googleLogin/restore via the shared `buildAuthResponse`) — optional
+    * here only so a caller falls back explicitly rather than assuming `true`
+    * when reading a value that is, in practice, always present. */
+    isVerified?: boolean;
     themeMode?: ThemeMode;
     accentColor?: string | null;
     /** How the user prefers to be paid back — used to build the pay button on a

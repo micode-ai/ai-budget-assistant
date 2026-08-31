@@ -34,6 +34,12 @@ Po pierwszym zalogowaniu mozesz uzyc uwierzytelniania biometrycznego (Face ID lu
 2. Uwierzytelnij sie czujnikiem biometrycznym urzadzenia
 3. Gotowe!
 
+### Nowy telefon z Androidem
+
+Jeśli skonfigurowałeś nowy telefon z Androidem za pomocą wbudowanej opcji "przywróć z kopii zapasowej" (kopiując aplikacje i dane ze starego telefonu), AI Budget Assistant może zalogować Cię automatycznie — bez hasła. Po prostu otwórz aplikację: jeśli zostaną znalezione zapisane dane logowania, trafisz od razu na swój pulpit.
+
+Działa to wyłącznie na Androidzie i tylko wtedy, gdy nowe urządzenie rzeczywiście zostało skonfigurowane jako przywrócenie poprzedniego — świeża instalacja nadal wymaga podania e-maila i hasła. Jeśli korzystasz z [szyfrowania end-to-end](./15-encryption.md), automatyczne logowanie przywraca jedynie dostęp do konta; nadal musisz osobno wprowadzić swoje **hasło szyfrowania**, aby odblokować dane finansowe.
+
 ### Zapomniałeś hasła?
 
 Jeśli zapomniałeś hasła:

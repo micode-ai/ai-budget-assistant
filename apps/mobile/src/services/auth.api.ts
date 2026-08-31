@@ -90,4 +90,40 @@ export const authApi = {
       },
     );
   },
+
+  // Restore Credentials (Android "restore from backup" auto sign-in, ABA-465).
+  // Registration runs while the user already has a session, so it's authenticated
+  // like everything below it. Authentication runs with NO session at all — before
+  // login, at app boot — so both of its calls are `skipAuth: true`, same as
+  // `login`/`register` above.
+
+  getRestoreRegistrationOptions() {
+    return httpClient.request<unknown>('/auth/restore/register/options');
+  },
+
+  verifyRestoreRegistration(response: unknown) {
+    return httpClient.request<{ ok: boolean }>('/auth/restore/register', {
+      method: 'POST',
+      body: JSON.stringify({ response }),
+    });
+  },
+
+  getRestoreAuthenticationOptions() {
+    return httpClient.request<unknown>('/auth/restore/options', { skipAuth: true });
+  },
+
+  verifyRestoreAuthentication(response: unknown) {
+    return httpClient.request<{ accessToken: string; refreshToken: string; user: any; accounts: Account[] }>(
+      '/auth/restore',
+      {
+        method: 'POST',
+        body: JSON.stringify({ response }),
+        skipAuth: true,
+      },
+    );
+  },
+
+  deleteRestoreCredentials() {
+    return httpClient.request<void>('/auth/restore', { method: 'DELETE' });
+  },
 };

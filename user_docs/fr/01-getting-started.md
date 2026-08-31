@@ -34,6 +34,12 @@ Apres votre premiere connexion, vous pouvez utiliser l'authentification biometri
 2. Authentifiez-vous avec le capteur biometrique de votre appareil
 3. Vous etes connecte !
 
+### Nouveau téléphone Android
+
+Si vous avez configuré un nouveau téléphone Android à l'aide de son option intégrée « restaurer à partir d'une sauvegarde » (copie des applications et des données de votre ancien téléphone), AI Budget Assistant peut vous connecter automatiquement, sans mot de passe. Ouvrez simplement l'application : si des informations de connexion enregistrées sont trouvées, vous accédez directement à votre tableau de bord.
+
+Cela ne fonctionne que sur Android, et uniquement lorsque le nouvel appareil a réellement été configuré comme une restauration de l'ancien — une nouvelle installation nécessite toujours votre e-mail et votre mot de passe. Si vous utilisez le [chiffrement de bout en bout](./15-encryption.md), la connexion automatique ne restaure que l'accès à votre compte ; vous devrez entrer votre **phrase de passe de chiffrement** séparément pour déverrouiller vos données financières.
+
 ### Mot de passe oublié
 
 Si vous avez oublié votre mot de passe :

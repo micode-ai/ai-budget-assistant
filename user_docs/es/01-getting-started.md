@@ -34,6 +34,12 @@ Despues de tu primer inicio de sesion, puedes usar la autenticacion biometrica (
 2. Autenticate con el sensor biometrico de tu dispositivo
 3. Listo, ya estas dentro
 
+### Nuevo teléfono Android
+
+Si configuraste un nuevo teléfono Android con la opción integrada "restaurar desde copia de seguridad" (copiando apps y datos de tu teléfono anterior), AI Budget Assistant puede iniciar tu sesión automáticamente, sin necesidad de contraseña. Solo abre la app: si se encuentran datos de inicio de sesión guardados, llegarás directamente a tu panel principal.
+
+Esto solo funciona en Android, y solo cuando el nuevo dispositivo se configuró realmente como una restauración del anterior — una instalación nueva sigue necesitando tu correo y contraseña. Si usas el [cifrado de extremo a extremo](./15-encryption.md), el inicio de sesión automático solo restaura el acceso a tu cuenta; deberás introducir tu **frase de cifrado** por separado para desbloquear tus datos financieros.
+
 ### ¿Olvidaste tu contraseña?
 
 Si olvidaste tu contraseña:

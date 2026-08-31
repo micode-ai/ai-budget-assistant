@@ -34,6 +34,12 @@ Na je eerste keer inloggen kun je biometrische authenticatie (Face ID of vingera
 2. Authenticeer met de biometrische sensor van je apparaat
 3. Je bent binnen!
 
+### Nieuwe Android-telefoon
+
+Als je een nieuwe Android-telefoon hebt ingesteld met de ingebouwde optie "herstellen vanaf back-up" (waarbij apps en gegevens van je oude telefoon worden gekopieerd), kan AI Budget Assistant je automatisch inloggen — zonder wachtwoord. Open gewoon de app: als er opgeslagen inloggegevens worden gevonden, kom je direct op je dashboard terecht.
+
+Dit werkt alleen op Android, en alleen wanneer het nieuwe toestel echt is ingesteld als herstel van je oude toestel — bij een nieuwe installatie heb je nog steeds je e-mailadres en wachtwoord nodig. Als je [end-to-end-versleuteling](./15-encryption.md) gebruikt, herstelt automatisch inloggen alleen je accounttoegang; je moet nog steeds apart je **versleutelingswachtwoordzin** invoeren om je financiële gegevens te ontgrendelen.
+
 ### Wachtwoord vergeten
 
 Als je je wachtwoord bent vergeten:

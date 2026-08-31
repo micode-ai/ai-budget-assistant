@@ -107,6 +107,12 @@ After your first login, you can use biometric authentication (Face ID or fingerp
 2. Authenticate with your device's biometric sensor
 3. You're in!
 
+### Getting a New Android Phone
+
+If you set up a new Android phone using its built-in "restore from backup" option (copying apps and data from your old phone), AI Budget Assistant can sign you in automatically — no password needed. Just open the app; if a matching restore credential is found, you'll land straight on your dashboard.
+
+This only works on Android, and only when the new device was genuinely set up as a restore of your old one — a fresh install still needs your email and password. If you use end-to-end encryption, automatic sign-in still restores only your account access; you'll need to enter your **encryption passphrase** separately to unlock your financial data.
+
 ### Forgot Password
 
 If you forgot your password:
@@ -4607,6 +4613,12 @@ iOS, Android, Web
 2. Пройдите аутентификацию с помощью биометрического датчика устройства
 3. Готово!
 
+### Новый телефон на Android
+
+Если вы настроили новый телефон на Android с помощью встроенной функции «Восстановление из резервной копии» (копирование приложений и данных со старого телефона), AI Budget Assistant может войти в ваш аккаунт автоматически — без пароля. Просто откройте приложение: если будут найдены сохранённые данные для входа, вы сразу попадёте на свою панель.
+
+Это работает только на Android и только в том случае, если новое устройство было настроено именно как восстановление старого — при обычной установке по-прежнему нужны email и пароль. Если вы используете сквозное шифрование, автоматический вход восстанавливает только доступ к аккаунту; вам всё равно нужно будет отдельно ввести **парольную фразу шифрования**, чтобы разблокировать финансовые данные.
+
 ### Забыли пароль
 
 Если вы забыли свой пароль:
@@ -9094,6 +9106,12 @@ iOS, Android, Web
 2. Пройдіть автентифікацію за допомогою біометричного сенсора пристрою
 3. Готово!
 
+### Новий телефон на Android
+
+Якщо ви налаштували новий телефон на Android за допомогою вбудованої функції «Відновлення з резервної копії» (копіювання застосунків і даних зі старого телефону), AI Budget Assistant може увійти у ваш акаунт автоматично — без пароля. Просто відкрийте застосунок: якщо буде знайдено збережені дані для входу, ви одразу потрапите на свою панель.
+
+Це працює лише на Android і лише тоді, коли новий пристрій справді був налаштований як відновлення старого — за звичайного встановлення все ще потрібні email і пароль. Якщо ви використовуєте наскрізне шифрування, автоматичний вхід відновлює лише доступ до акаунта; вам усе одно потрібно буде окремо ввести **парольну фразу шифрування**, щоб розблокувати фінансові дані.
+
 ### Забули пароль
 
 Якщо ви забули свій пароль:
@@ -13551,6 +13569,12 @@ Po pierwszym zalogowaniu mozesz uzyc uwierzytelniania biometrycznego (Face ID lu
 2. Uwierzytelnij sie czujnikiem biometrycznym urzadzenia
 3. Gotowe!
 
+### Nowy telefon z Androidem
+
+Jeśli skonfigurowałeś nowy telefon z Androidem za pomocą wbudowanej opcji "przywróć z kopii zapasowej" (kopiując aplikacje i dane ze starego telefonu), AI Budget Assistant może zalogować Cię automatycznie — bez hasła. Po prostu otwórz aplikację: jeśli zostaną znalezione zapisane dane logowania, trafisz od razu na swój pulpit.
+
+Działa to wyłącznie na Androidzie i tylko wtedy, gdy nowe urządzenie rzeczywiście zostało skonfigurowane jako przywrócenie poprzedniego — świeża instalacja nadal wymaga podania e-maila i hasła. Jeśli korzystasz z szyfrowania end-to-end, automatyczne logowanie przywraca jedynie dostęp do konta; nadal musisz osobno wprowadzić swoje **hasło szyfrowania**, aby odblokować dane finansowe.
+
 ### Zapomniałeś hasła?
 
 Jeśli zapomniałeś hasła:
@@ -17993,6 +18017,12 @@ Nach deiner ersten Anmeldung kannst du die biometrische Authentifizierung (Face 
 2. Authentifiziere dich mit dem biometrischen Sensor deines Gerats
 3. Du bist eingeloggt!
 
+### Neues Android-Smartphone
+
+Wenn du ein neues Android-Smartphone mit der integrierten Funktion "Aus Sicherung wiederherstellen" eingerichtet hast (Apps und Daten von deinem alten Smartphone übernommen), kann AI Budget Assistant dich automatisch anmelden — ganz ohne Passwort. Öffne einfach die App: Werden gespeicherte Anmeldedaten gefunden, landest du direkt auf deinem Dashboard.
+
+Das funktioniert nur auf Android und nur, wenn das neue Gerät wirklich als Wiederherstellung deines alten Geräts eingerichtet wurde — bei einer Neuinstallation brauchst du weiterhin E-Mail und Passwort. Nutzt du die Ende-zu-Ende-Verschlüsselung, stellt die automatische Anmeldung nur deinen Kontozugriff wieder her; du musst weiterhin deine **Verschlüsselungs-Passphrase** eingeben, um deine Finanzdaten zu entsperren.
+
 ### Passwort vergessen
 
 Wenn Sie Ihr Passwort vergessen haben:
@@ -22410,6 +22440,12 @@ Despues de tu primer inicio de sesion, puedes usar la autenticacion biometrica (
 2. Autenticate con el sensor biometrico de tu dispositivo
 3. Listo, ya estas dentro
 
+### Nuevo teléfono Android
+
+Si configuraste un nuevo teléfono Android con la opción integrada "restaurar desde copia de seguridad" (copiando apps y datos de tu teléfono anterior), AI Budget Assistant puede iniciar tu sesión automáticamente, sin necesidad de contraseña. Solo abre la app: si se encuentran datos de inicio de sesión guardados, llegarás directamente a tu panel principal.
+
+Esto solo funciona en Android, y solo cuando el nuevo dispositivo se configuró realmente como una restauración del anterior — una instalación nueva sigue necesitando tu correo y contraseña. Si usas el cifrado de extremo a extremo, el inicio de sesión automático solo restaura el acceso a tu cuenta; deberás introducir tu **frase de cifrado** por separado para desbloquear tus datos financieros.
+
 ### ¿Olvidaste tu contraseña?
 
 Si olvidaste tu contraseña:
@@ -26816,6 +26852,12 @@ Apres votre premiere connexion, vous pouvez utiliser l'authentification biometri
 2. Authentifiez-vous avec le capteur biometrique de votre appareil
 3. Vous etes connecte !
 
+### Nouveau téléphone Android
+
+Si vous avez configuré un nouveau téléphone Android à l'aide de son option intégrée « restaurer à partir d'une sauvegarde » (copie des applications et des données de votre ancien téléphone), AI Budget Assistant peut vous connecter automatiquement, sans mot de passe. Ouvrez simplement l'application : si des informations de connexion enregistrées sont trouvées, vous accédez directement à votre tableau de bord.
+
+Cela ne fonctionne que sur Android, et uniquement lorsque le nouvel appareil a réellement été configuré comme une restauration de l'ancien — une nouvelle installation nécessite toujours votre e-mail et votre mot de passe. Si vous utilisez le chiffrement de bout en bout, la connexion automatique ne restaure que l'accès à votre compte ; vous devrez entrer votre **phrase de passe de chiffrement** séparément pour déverrouiller vos données financières.
+
 ### Mot de passe oublié
 
 Si vous avez oublié votre mot de passe :
@@ -31220,6 +31262,12 @@ iOS, Android, Web
 2. Прайдзіце аўтэнтыфікацыю з дапамогай біяметрычнага датчыка прылады
 3. Гатова!
 
+### Новы тэлефон на Android
+
+Калі вы наладзілі новы тэлефон на Android з дапамогай убудаванай функцыі «Аднаўленне з рэзервнай копіі» (капіраванне прыкладанняў і даных са старога тэлефона), AI Budget Assistant можа ўвайсці ў ваш акаунт аўтаматычна — без пароля. Проста адкрыйце праграму: калі будуць знойдзены захаваныя даныя для ўваходу, вы адразу трапіце на сваю панэль.
+
+Гэта працуе толькі на Android і толькі тады, калі новая прылада сапраўды была наладжана як аднаўленне старой — пры звычайнай устаноўцы па-ранейшаму патрэбныя email і пароль. Калі вы выкарыстоўваеце скразное шыфраванне, аўтаматычны ўваход аднаўляе толькі доступ да акаунта; вам усё роўна трэба будзе асобна ўвесці сваю **парольную фразу шыфравання**, каб разблакаваць фінансавыя даныя.
+
 ### Забылі пароль
 
 Калі вы забылі свой пароль:
@@ -35580,6 +35628,12 @@ Na je eerste keer inloggen kun je biometrische authenticatie (Face ID of vingera
 1. Tik op het inlogscherm op **Face ID gebruiken** / **Vingerafdruk gebruiken**
 2. Authenticeer met de biometrische sensor van je apparaat
 3. Je bent binnen!
+
+### Nieuwe Android-telefoon
+
+Als je een nieuwe Android-telefoon hebt ingesteld met de ingebouwde optie "herstellen vanaf back-up" (waarbij apps en gegevens van je oude telefoon worden gekopieerd), kan AI Budget Assistant je automatisch inloggen — zonder wachtwoord. Open gewoon de app: als er opgeslagen inloggegevens worden gevonden, kom je direct op je dashboard terecht.
+
+Dit werkt alleen op Android, en alleen wanneer het nieuwe toestel echt is ingesteld als herstel van je oude toestel — bij een nieuwe installatie heb je nog steeds je e-mailadres en wachtwoord nodig. Als je end-to-end-versleuteling gebruikt, herstelt automatisch inloggen alleen je accounttoegang; je moet nog steeds apart je **versleutelingswachtwoordzin** invoeren om je financiële gegevens te ontgrendelen.
 
 ### Wachtwoord vergeten
 

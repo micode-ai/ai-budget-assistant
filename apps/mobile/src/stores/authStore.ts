@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Platform } from 'react-native';
 import { secureStorage } from '../services/secureStorage';
 import { api } from '../services/api';
-import type { User, Currency, SettleMethod, UserPaymentMethod } from '@budget/shared-types';
+import type { User, Currency, SettleMethod, UserPaymentMethod, AuthResponse } from '@budget/shared-types';
 import { useAccountStore } from './accountStore';
 import { useBudgetStore } from './budgetStore';
 import { useExpenseStore } from './expenseStore';
@@ -17,6 +17,9 @@ import { useGoalStore } from './goalStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { applyCurrencyChange } from '../utils/currency';
 import { applyPaymentInfoPatch, applyPaymentMethodsPatch } from '../utils/paymentInfo';
+import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
+import { clearRestoreCredential, isRestoreCredentialAvailable } from '../services/restoreCredentials';
+import { useFirstRunStore } from './firstRunStore';
 
 let isLoggingOut = false;
 
@@ -47,6 +50,108 @@ interface AuthState {
   resetPassword: (email: string, code: string, newPassword: string) => Promise<void>;
   verifyEmail: (email: string, code: string) => Promise<void>;
   resendVerification: (email: string) => Promise<void>;
+}
+
+/**
+ * Writes tokens and the user to secureStorage. Shared by `login()` and a
+ * restored session below, so the two cannot drift into storing different
+ * things — `register()`, `googleLogin()`, and `verifyEmail()` still write
+ * the same three keys inline rather than through this helper.
+ */
+async function persistSession(user: User, accessToken: string, refreshToken: string): Promise<void> {
+  await secureStorage.setItem('accessToken', accessToken);
+  await secureStorage.setItem('refreshToken', refreshToken);
+  await secureStorage.setItem('user', JSON.stringify(user));
+}
+
+/**
+ * Signs the user in from a session recovered via Credential Manager restore
+ * (`attemptRestoreSession`) when the app starts with no stored session at
+ * all — the common case on a fresh device restored from an Android backup.
+ *
+ * `isVerified` is read from the response, not assumed: the restore endpoint
+ * (`RestoreCredentialsService`) already rejects an unverified account as
+ * defence-in-depth before it ever reaches this response, and the server's
+ * `buildAuthResponse` always includes the real field, so this reads it the
+ * same way `login()` does rather than hardcoding `true` — a hardcode would
+ * silently misrepresent an unverified account if that server-side guard is
+ * ever relaxed. Falls back to `true` only when the field is genuinely
+ * absent, matching this path's original (pre-fix) behavior.
+ *
+ * Writes tokens and the user to secureStorage exactly as `login()` does (via
+ * `persistSession`), sets the store state, marks first-run onboarding seen,
+ * and then runs the SAME data-hydration path the stored-session branch of
+ * `initialize()` runs below, so a restored user lands on a populated app
+ * rather than an empty one.
+ *
+ * Account setup uses `accountStore.initialize()` — the same call `login()`
+ * and `googleLogin()` make with the accounts already present in the auth
+ * response — NOT `loadAccounts()`. `loadAccounts()`'s premise is a populated
+ * local SQLite (the stored-session case this mirrors), which a freshly
+ * restored device never has: it would read zero local rows, fall through to
+ * `loadAccountsFromServer()`, re-fetch `GET /accounts` for data already sent
+ * in `response.accounts`, and — worse — pick `localAccounts[0]` instead of
+ * `user.defaultAccountId` and never persist `currentAccountId`. For a
+ * multi-account user that can land them on the wrong account after a device
+ * transfer, in an app where every screen is account-scoped, and re-derive the
+ * same wrong choice on every later launch. `initialize()` is also cheaper
+ * here (no extra round trip) and clears stale local rows, which matches a
+ * fresh device better than a merge would.
+ */
+async function applyRestoredSession(
+  response: AuthResponse,
+  set: (partial: Partial<AuthState>) => void,
+): Promise<void> {
+  const user: User = {
+    id: response.user.id,
+    email: response.user.email,
+    name: response.user.name,
+    currencyCode: (response.user.currencyCode || 'USD') as Currency,
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    defaultAccountId: response.user.defaultAccountId,
+    isVerified: response.user.isVerified ?? true,
+    themeMode: (response.user.themeMode as User['themeMode']) ?? 'system',
+    accentColor: (response.user.accentColor as string | null) ?? null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+
+  await persistSession(user, response.accessToken, response.refreshToken);
+
+  set({
+    user,
+    accessToken: response.accessToken,
+    refreshToken: response.refreshToken,
+    // Mirrors the stored-session branch of initialize() below (`isAuthenticated:
+    // !!user.isVerified`) — an unverified account must land on the verify-email
+    // screen, not skip past it, whichever path restored the session.
+    isAuthenticated: !!user.isVerified,
+    isInitializing: false,
+    hasSavedSession: false,
+  });
+
+  // A restored device has an empty local SQLite until the first sync
+  // pull, and useFirstRunOnboarding reads exactly that — so without
+  // this a user with years of history is shown "add your first
+  // expense". Restoring by credential is proof they are established.
+  useFirstRunStore.getState().markSeen();
+
+  // Same data-hydration path the stored-session branch of initialize() runs
+  // (see below), so a restored user lands on a populated app rather than an
+  // empty one. Uses the accounts the restore response already carried — see
+  // the doc comment above for why this is `initialize()`, not `loadAccounts()`.
+  await useAccountStore.getState().initialize(
+    response.accounts,
+    response.user.defaultAccountId || '',
+    user.id,
+  );
+  await useExchangeRateStore.getState().loadRates();
+  await Promise.allSettled([
+    hydrateTransactions(),
+    useCategoryStore.getState().loadCategories(),
+    useWalletStore.getState().loadWallet(),
+    useBudgetStore.getState().loadBudgets(),
+  ]);
 }
 
 export const useAuthStore = create<AuthState>()((set, get) => ({
@@ -113,7 +218,12 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
               set({ isInitializing: false });
             }
           } else {
-            set({ isInitializing: false });
+            const restored = await attemptRestoreSession();
+            if (restored) {
+              await applyRestoredSession(restored, set);
+            } else {
+              set({ isInitializing: false });
+            }
           }
         } catch (error) {
           console.error('Failed to initialize auth:', error);
@@ -140,14 +250,18 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             updatedAt: new Date(),
           };
 
-          await secureStorage.setItem('accessToken', response.accessToken);
-          await secureStorage.setItem('refreshToken', response.refreshToken);
-          await secureStorage.setItem('user', JSON.stringify(user));
+          await persistSession(user, response.accessToken, response.refreshToken);
           // Only enable biometric for verified users — unverified users
           // must reach the verify-email screen without a fingerprint prompt.
           if (user.isVerified) {
             await secureStorage.setItem('biometricEnabled', 'true');
           }
+          // Fire-and-forget: sign-in must not wait on Credential Manager.
+          // Sits after the biometricEnabled write, same relative position as
+          // googleLogin()/verifyEmail() below — kept consistent across all
+          // three sign-in sites so the "when does this fire" answer doesn't
+          // depend on which one you're reading.
+          void registerRestoreCredential(user.id);
 
           set({
             user,
@@ -327,6 +441,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
           await secureStorage.setItem('refreshToken', response.refreshToken);
           await secureStorage.setItem('user', JSON.stringify(user));
           await secureStorage.setItem('biometricEnabled', 'true');
+          // Fire-and-forget: sign-in must not wait on Credential Manager. Same
+          // relative position (right after biometricEnabled) as login()/
+          // verifyEmail() — see the note in login() above.
+          void registerRestoreCredential(user.id);
 
           set({
             user,
@@ -468,7 +586,31 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             } catch {
               // Non-critical — server token will expire naturally
             }
+
+            // iOS/web (and an Android build with no registered native module)
+            // can never have a server-side row to delete — this device could
+            // never have registered one — so this would otherwise call the
+            // server on every sign-out on those platforms for nothing. Same
+            // defect class as the availability gate on registerRestoreCredential
+            // / attemptRestoreSession above.
+            if (isRestoreCredentialAvailable()) {
+              try {
+                await api.deleteRestoreCredentials();
+              } catch {
+                // Offline sign-out: the server row survives, which is harmless —
+                // using it would need the private key clearRestoreCredential is
+                // about to destroy.
+              }
+            }
           }
+
+          // Clear the local restore credential regardless of whether the server
+          // call above ran (or was skipped) — a signed-out device must never
+          // offer a passkey that would silently sign the user back in on the
+          // next launch. Deliberately NOT gated on isRestoreCredentialAvailable:
+          // it's a local no-op on iOS/web (see the stub in
+          // services/restoreCredentials), so gating it buys nothing.
+          await clearRestoreCredential();
 
           const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 
@@ -564,6 +706,10 @@ export const useAuthStore = create<AuthState>()((set, get) => ({
             }
             await secureStorage.setItem('user', JSON.stringify(user));
             await secureStorage.setItem('biometricEnabled', 'true');
+            // Fire-and-forget: sign-in must not wait on Credential Manager. Same
+            // relative position (right after biometricEnabled) as login()/
+            // googleLogin() above — see the note in login().
+            void registerRestoreCredential(user.id);
 
             // Initialize account store so dashboard loads correctly
             if (response.accounts) {

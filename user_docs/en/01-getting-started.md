@@ -34,6 +34,12 @@ After your first login, you can use biometric authentication (Face ID or fingerp
 2. Authenticate with your device's biometric sensor
 3. You're in!
 
+### Getting a New Android Phone
+
+If you set up a new Android phone using its built-in "restore from backup" option (copying apps and data from your old phone), AI Budget Assistant can sign you in automatically — no password needed. Just open the app; if a matching restore credential is found, you'll land straight on your dashboard.
+
+This only works on Android, and only when the new device was genuinely set up as a restore of your old one — a fresh install still needs your email and password. If you use [end-to-end encryption](./15-encryption.md), automatic sign-in still restores only your account access; you'll need to enter your **encryption passphrase** separately to unlock your financial data.
+
 ### Forgot Password
 
 If you forgot your password:
