@@ -17,6 +17,7 @@ import { InflationShieldService } from '../../insights/inflation-shield.service'
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { attributeToCategories } from '../utils/category-attribution';
 import { buildSearchUnits } from '../utils/semantic-filter';
+import { getRatesSafe, convertAmount } from '../../../common/utils/fx';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
 // Cap on the number of searchable units (expense-level rows + receipt line items)
@@ -49,20 +50,7 @@ export class AiToolsService {
    */
   private async getRatesSafe(base?: string): Promise<Record<string, number> | null> {
     if (!base) return null;
-    try {
-      const { rates } = await this.exchangeRateService.getRates(base);
-      return rates || null;
-    } catch {
-      return null;
-    }
-  }
-
-  /** Convert `amount` from `from` currency into `base`. Returns null if no rate is known. */
-  private convertAmount(amount: number, from: string, base: string, rates: Record<string, number>): number | null {
-    if (from === base) return amount;
-    const r = rates[from];
-    if (!r || r <= 0) return null;
-    return Math.round((amount / r) * 100) / 100;
+    return getRatesSafe(this.exchangeRateService, base);
   }
 
   getToolDefinitions(): OpenAI.Chat.Completions.ChatCompletionTool[] {
@@ -713,7 +701,7 @@ export class AiToolsService {
     let fxConverted = false;
     const convert = (amount: number, from: string | null | undefined): { amount: number; currencyCode: string } => {
       if (baseCurrency && rates) {
-        const conv = this.convertAmount(amount, from || baseCurrency, baseCurrency, rates);
+        const conv = convertAmount(amount, from || baseCurrency, baseCurrency, rates);
         if (conv != null) {
           fxConverted = true;
           return { amount: conv, currencyCode: baseCurrency };
@@ -821,7 +809,7 @@ export class AiToolsService {
     // Convert a value from the budget's currency into the display currency (no-op without rates).
     const conv = (val: number, from: string): { value: number; currency: string } => {
       if (baseCurrency && rates) {
-        const c = this.convertAmount(val, from || baseCurrency, baseCurrency, rates);
+        const c = convertAmount(val, from || baseCurrency, baseCurrency, rates);
         if (c != null) { fxConverted = true; return { value: c, currency: baseCurrency }; }
       }
       return { value: val, currency: from };
@@ -897,7 +885,7 @@ export class AiToolsService {
     // long-standing behaviour, unchanged by the split handling below.
     const conv = (val: number, from: string): number => {
       if (baseCurrency && rates) {
-        const c = this.convertAmount(val, from, baseCurrency, rates);
+        const c = convertAmount(val, from, baseCurrency, rates);
         if (c != null) { fxConverted = true; return c; }
       }
       return val;

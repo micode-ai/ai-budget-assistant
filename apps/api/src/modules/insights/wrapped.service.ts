@@ -4,6 +4,7 @@ import { ExchangeRateService } from '../currency-exchange/exchange-rate.service'
 import { CacheService } from '../../common/cache/cache.service';
 import { PriceHistoryService } from '../price-history/price-history.service';
 import { StreakService } from '../gamification/streak.service';
+import { getRatesSafe } from '../../common/utils/fx';
 import type { WrappedResponse } from '@budget/shared-types';
 import {
   assembleWrapped,
@@ -33,16 +34,6 @@ export class WrappedService {
     private readonly priceHistoryService: PriceHistoryService,
     private readonly streakService: StreakService,
   ) {}
-
-  /** Fetch rates for `base`; null when unavailable (caller falls back to native amounts). */
-  private async getRatesSafe(base: string): Promise<Record<string, number> | null> {
-    try {
-      const { rates } = await this.exchangeRateService.getRates(base);
-      return rates || null;
-    } catch {
-      return null;
-    }
-  }
 
   async getWrapped(
     accountId: string,
@@ -106,7 +97,7 @@ export class WrappedService {
         where: { accountId, isDeleted: false, date: { gte: rangeStart, lte: rangeEnd } },
         select: { amount: true, currencyCode: true, date: true },
       }),
-      this.getRatesSafe(baseCurrency),
+      getRatesSafe(this.exchangeRateService, baseCurrency),
     ]);
 
     const expenseRows: WrappedExpenseRow[] = expenses.map((e) => ({

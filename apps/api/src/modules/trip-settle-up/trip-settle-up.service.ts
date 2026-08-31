@@ -7,6 +7,7 @@ import {
 import { PrismaService } from '../../database/prisma.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { computeBalances, simplifyDebts, round2, ShareInput } from './settle-up-calculator';
+import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 import type { SettleUpResponse, Currency, SettleUpPayResponse } from '@budget/shared-types';
 import type { SettleUpPayDto } from './dto';
 
@@ -17,31 +18,10 @@ export class TripSettleUpService {
     private readonly exchangeRateService: ExchangeRateService,
   ) {}
 
-  private async getRatesSafe(base: string): Promise<Record<string, number> | null> {
-    try {
-      const { rates } = await this.exchangeRateService.getRates(base);
-      return rates || null;
-    } catch {
-      return null;
-    }
-  }
-
-  private convertAmount(
-    amount: number,
-    from: string,
-    base: string,
-    rates: Record<string, number>,
-  ): number | null {
-    if (from === base) return amount;
-    const r = rates[from];
-    if (!r || r <= 0) return null;
-    return Math.round((amount / r) * 100) / 100;
-  }
-
   async getBalances(accountId: string): Promise<SettleUpResponse> {
     const account = await this.prisma.account.findUnique({ where: { id: accountId } });
     const baseCurrency = account?.currencyCode ?? 'USD';
-    const rates = await this.getRatesSafe(baseCurrency);
+    const rates = await getRatesSafe(this.exchangeRateService, baseCurrency);
     let fxApproximate = rates === null;
 
     const expenses = await this.prisma.expense.findMany({
@@ -54,7 +34,7 @@ export class TripSettleUpService {
       .map((e: any) => {
         const amount = Number(e.amount);
         const convertedAmount = rates
-          ? this.convertAmount(amount, e.currencyCode, baseCurrency, rates)
+          ? convertAmount(amount, e.currencyCode, baseCurrency, rates)
           : amount;
         if (convertedAmount === null) fxApproximate = true;
         return {
@@ -64,7 +44,7 @@ export class TripSettleUpService {
           shares: e.shares.map((s: any) => {
             const shareAmount = Number(s.shareAmount);
             const converted = rates
-              ? this.convertAmount(shareAmount, e.currencyCode, baseCurrency, rates)
+              ? convertAmount(shareAmount, e.currencyCode, baseCurrency, rates)
               : shareAmount;
             if (converted === null) fxApproximate = true;
             return { userId: s.userId, shareAmount: converted ?? shareAmount };

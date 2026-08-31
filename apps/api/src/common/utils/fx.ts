@@ -1,9 +1,11 @@
 /**
  * Shared FX helpers for services that must express amounts in ONE display currency.
  *
- * The formula and the fail-soft behaviour originate in AiToolsService (ai-tools.service.ts:37-53)
- * and were then hand-copied into safe-to-spend, wrapped and inflation-shield. New call sites
- * should import from here instead of adding a fifth copy; the older three are left as they are.
+ * The formula and the fail-soft behaviour originate in AiToolsService and were
+ * hand-copied at least five times (safe-to-spend, wrapped, inflation-shield,
+ * trip-settle-up, plus fat-finder/story before this file existed) before all
+ * five call sites were consolidated onto this module. New FX-consuming code
+ * must import from here — do not add a sixth copy.
  *
  * Rate convention (open.er-api.com via ExchangeRateService): `1 base = rates[X] X`,
  * therefore `amount_in_base = amount / rates[from]`.

@@ -4,6 +4,7 @@ import { WalletService } from '../wallet/wallet.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 import { computeSafeToSpend } from './safe-to-spend.util';
 import type { SafeToSpendResponse, AffordabilityVerdict } from '@budget/shared-types';
 
@@ -72,36 +73,6 @@ export class SafeToSpendService {
     private readonly exchangeRateService: ExchangeRateService,
     private readonly cacheService: CacheService,
   ) {}
-
-  /**
-   * Fetch exchange rates for `base`. Returns null when unavailable (caller falls back to native amounts).
-   * Pattern mirrors AiToolsService.getRatesSafe (ai-tools.service.ts:37-45).
-   */
-  private async getRatesSafe(base: string): Promise<Record<string, number> | null> {
-    try {
-      const { rates } = await this.exchangeRateService.getRates(base);
-      return rates || null;
-    } catch {
-      return null;
-    }
-  }
-
-  /**
-   * Convert `amount` from `from` currency to `base`.
-   * Returns null when the rate is unknown (caller excludes the amount and sets fxApproximate).
-   * Pattern mirrors AiToolsService.convertAmount (ai-tools.service.ts:47-53).
-   */
-  private convertAmount(
-    amount: number,
-    from: string,
-    base: string,
-    rates: Record<string, number>,
-  ): number | null {
-    if (from === base) return amount;
-    const r = rates[from];
-    if (!r || r <= 0) return null;
-    return Math.round((amount / r) * 100) / 100;
-  }
 
   /**
    * Returns the ISO date string for the last day of the current month (today's month).
@@ -195,7 +166,7 @@ export class SafeToSpendService {
       // Convert amount to base
       let converted: number | null = amount;
       if (rates && currencyCode !== base) {
-        converted = this.convertAmount(amount, currencyCode, base, rates);
+        converted = convertAmount(amount, currencyCode, base, rates);
         if (converted != null) {
           fxApproximate = true;
         } else {
@@ -248,7 +219,7 @@ export class SafeToSpendService {
       // Convert once; if unavailable, skip this subscription
       let convertedAmount: number | null = amount;
       if (rates && sub.currencyCode !== base) {
-        convertedAmount = this.convertAmount(amount, sub.currencyCode, base, rates);
+        convertedAmount = convertAmount(amount, sub.currencyCode, base, rates);
         if (convertedAmount != null) {
           fxApproximate = true;
         } else {
@@ -327,7 +298,7 @@ export class SafeToSpendService {
 
       let convertedAmount: number | null = amount;
       if (rates && template.currencyCode !== base) {
-        convertedAmount = this.convertAmount(amount, template.currencyCode, base, rates);
+        convertedAmount = convertAmount(amount, template.currencyCode, base, rates);
         if (convertedAmount != null) {
           fxApproximate = true;
         } else {
@@ -404,7 +375,7 @@ export class SafeToSpendService {
 
       let convertedDue: number | null = dueDuringHorizon;
       if (rates && goal.currencyCode !== base) {
-        convertedDue = this.convertAmount(dueDuringHorizon, goal.currencyCode, base, rates);
+        convertedDue = convertAmount(dueDuringHorizon, goal.currencyCode, base, rates);
         if (convertedDue != null) {
           fxApproximate = true;
         } else {
@@ -453,7 +424,7 @@ export class SafeToSpendService {
 
   private async computeUncached(accountId: string, baseCurrency: string): Promise<SafeToSpendResponse> {
     const now = new Date();
-    const rates = await this.getRatesSafe(baseCurrency);
+    const rates = await getRatesSafe(this.exchangeRateService, baseCurrency);
     let fxApproximate = false;
 
     // --- Wallet balances ---
@@ -464,7 +435,7 @@ export class SafeToSpendService {
       if (bal.currencyCode === baseCurrency) {
         walletBalance += b;
       } else if (rates) {
-        const conv = this.convertAmount(b, bal.currencyCode, baseCurrency, rates);
+        const conv = convertAmount(b, bal.currencyCode, baseCurrency, rates);
         if (conv != null) {
           walletBalance += conv;
           fxApproximate = true;
@@ -565,13 +536,13 @@ export class SafeToSpendService {
     currencyCode: string,
   ): Promise<AffordabilityVerdict> {
     const sts = await this.compute(accountId, userId, baseCurrency);
-    const rates = await this.getRatesSafe(baseCurrency);
+    const rates = await getRatesSafe(this.exchangeRateService, baseCurrency);
 
     // Convert the asked amount to base currency
     let amountInBase = amount;
     if (currencyCode !== baseCurrency) {
       if (rates) {
-        const conv = this.convertAmount(amount, currencyCode, baseCurrency, rates);
+        const conv = convertAmount(amount, currencyCode, baseCurrency, rates);
         amountInBase = conv ?? amount; // graceful: use native if rate unavailable
       }
       // else keep native as fallback

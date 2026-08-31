@@ -7,6 +7,7 @@ import { assembleShield, SHIELD_DEFAULTS, ShieldOpts } from './inflation-shield.
 import { InflationShieldTrackingService } from './inflation-shield-tracking.service';
 import type { InflationShieldResponse, ShieldItem } from '@budget/shared-types';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import { getRatesSafe } from '../../common/utils/fx';
 
 function envNum(name: string, fallback: number): number {
   const v = Number(process.env[name]);
@@ -38,16 +39,6 @@ export class InflationShieldService {
     };
   }
 
-  private async getRatesSafe(base: string): Promise<Record<string, number> | null> {
-    try {
-      const { rates } = await this.exchangeRate.getRates(base);
-      return rates || null;
-    } catch {
-      this.logger.warn(`shield: FX rates unavailable for ${base}`);
-      return null;
-    }
-  }
-
   // `now` is injectable for deterministic tests; the controller omits it (defaults to real time).
   async getShield(
     accountId: string,
@@ -60,7 +51,10 @@ export class InflationShieldService {
     if (cached) return cached;
 
     const trends = await this.priceHistory.getProductTrends(accountId);
-    const rates = await this.getRatesSafe(baseCurrency);
+    const rates = await getRatesSafe(this.exchangeRate, baseCurrency);
+    if (rates === null) {
+      this.logger.warn(`shield: FX rates unavailable for ${baseCurrency}`);
+    }
 
     // Plan 1: personal store hint (latest merchant). Plan 2's community store may later override this.
     const assembled = assembleShield(
