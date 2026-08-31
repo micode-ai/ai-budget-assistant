@@ -1,219 +1,23 @@
-import { View, Text, ScrollView, TouchableOpacity, TextInput, Platform } from 'react-native';
-import { showAlert } from '@/utils/alert';
-import { parseAmount } from '@/utils/amount';
+import { View, Text, TouchableOpacity, TextInput, Platform } from 'react-native';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { DatePicker } from '@/components/DatePicker';
-import { useState, useEffect, useMemo, useRef } from 'react';
 import { router, Stack } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { useWalletStore } from '@/stores/walletStore';
-import { useAccountStore } from '@/stores/accountStore';
-import { api } from '@/services/api';
-import type { Currency } from '@budget/shared-types';
-import { formatCurrency, formatDate } from '@budget/shared-utils';
-import {
-  buildFrequentTransfers,
-  type FrequentTransfer,
-} from '@/features/wallet/frequentTransfers';
-import { exceedsAvailable, resolveAccountBalance } from '@/features/wallet/transferBalances';
+import { formatDate } from '@budget/shared-utils';
+import { useTransferForm } from '@/hooks/useTransferForm';
+import { FrequentTransferChips } from '@/components/wallet/FrequentTransferChips';
+import { TransferAccountCard } from '@/components/wallet/TransferAccountCard';
+import { TransferAvailableRow } from '@/components/wallet/TransferAvailableRow';
 import { useTranslation } from 'react-i18next';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
-const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
-
 export default function TransferScreen() {
   const { t } = useTranslation();
-  const addTransfer = useWalletStore((s) => s.addTransfer);
-  const transfers = useWalletStore((s) => s.transfers);
-  const walletSummary = useWalletStore((s) => s.walletSummary);
-  const accountSummaries = useWalletStore((s) => s.accountSummaries);
-  const loadAccountSummaries = useWalletStore((s) => s.loadAccountSummaries);
-  const accounts = useAccountStore((s) => s.accounts);
-  const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const theme = useTheme();
   const styles = useStyles(createStyles);
-
-  const [fromAccountId, setFromAccountId] = useState(currentAccountId || '');
-  const [toAccountId, setToAccountId] = useState('');
-  const [fromCurrency, setFromCurrency] = useState<Currency>('USD');
-  const [toCurrency, setToCurrency] = useState<Currency>('USD');
-  const [fromAmount, setFromAmount] = useState('');
-  const [toAmount, setToAmount] = useState('');
-  const [exchangeRate, setExchangeRate] = useState('1');
-  const [notes, setNotes] = useState('');
-  const [countAsIncome, setCountAsIncome] = useState(false);
-  const [loadingRate, setLoadingRate] = useState(false);
-  const [date, setDate] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-
-  // A frequent-transfer chip carries its own currencies. Without these guards the
-  // account-change effects below would immediately overwrite them with each
-  // account's default currency, silently discarding what the chip restored.
-  const prefillFromRef = useRef(false);
-  const prefillToRef = useRef(false);
-
-  // Balances of the *other* accounts are server-side only — the local SQLite
-  // mirror holds nothing for an account the user has never opened.
-  useEffect(() => {
-    loadAccountSummaries();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // Set default currencies from selected accounts
-  useEffect(() => {
-    if (prefillFromRef.current) {
-      prefillFromRef.current = false;
-      return;
-    }
-    const fromAccount = accounts.find((a) => a.id === fromAccountId);
-    if (fromAccount) setFromCurrency(fromAccount.currencyCode as Currency);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromAccountId]);
-
-  useEffect(() => {
-    if (prefillToRef.current) {
-      prefillToRef.current = false;
-      return;
-    }
-    const toAccount = accounts.find((a) => a.id === toAccountId);
-    if (toAccount) setToCurrency(toAccount.currencyCode as Currency);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [toAccountId]);
-
-  // Fetch exchange rate when currencies differ
-  useEffect(() => {
-    if (fromCurrency === toCurrency) {
-      setExchangeRate('1');
-      if (fromAmount) setToAmount(fromAmount);
-      return;
-    }
-    fetchRate();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fromCurrency, toCurrency]);
-
-  const fetchRate = async () => {
-    setLoadingRate(true);
-    try {
-      const data = await api.getExchangeRates(fromCurrency);
-      const rate = data.rates[toCurrency];
-      if (rate) {
-        setExchangeRate(rate.toFixed(4));
-        if (fromAmount) {
-          setToAmount((parseAmount(fromAmount) * rate).toFixed(2));
-        }
-      }
-    } catch {
-      // ignore — rate field stays empty
-    } finally {
-      setLoadingRate(false);
-    }
-  };
-
-  const onFromAmountChange = (value: string) => {
-    setFromAmount(value);
-    if (value && exchangeRate) {
-      setToAmount((parseAmount(value) * parseAmount(exchangeRate)).toFixed(2));
-    } else {
-      setToAmount('');
-    }
-  };
-
-  const onToAmountChange = (value: string) => {
-    setToAmount(value);
-    if (value && exchangeRate) {
-      setFromAmount((parseAmount(value) / parseAmount(exchangeRate)).toFixed(2));
-    } else {
-      setFromAmount('');
-    }
-  };
-
-  const onRateChange = (value: string) => {
-    setExchangeRate(value);
-    if (fromAmount && value) {
-      setToAmount((parseAmount(fromAmount) * parseAmount(value)).toFixed(2));
-    }
-  };
-
-  const balanceSources = useMemo(
-    () => ({ accountSummaries, localSummary: walletSummary, currentAccountId }),
-    [accountSummaries, walletSummary, currentAccountId],
-  );
-
-  const payableAccounts = useMemo(
-    () => accounts.filter((a) => a.myRole !== 'viewer'),
-    [accounts],
-  );
-
-  const frequentTransfers = useMemo(
-    () =>
-      buildFrequentTransfers(transfers, {
-        eligibleAccountIds: accounts.map((a) => a.id),
-        readOnlyAccountIds: accounts.filter((a) => a.myRole === 'viewer').map((a) => a.id),
-      }),
-    [transfers, accounts],
-  );
-
-  const accountName = (id: string) => accounts.find((a) => a.id === id)?.name ?? '…';
-
-  /** Balance shown under an account chip, in that account's own currency. */
-  const chipBalance = (id: string, currencyCode: string) =>
-    resolveAccountBalance(balanceSources, id, currencyCode);
-
-  // Keyed to the *selected* transfer currency, not the account's default: the
-  // amount is entered in `fromCurrency`, so that is the balance that constrains it.
-  const availableFrom = resolveAccountBalance(balanceSources, fromAccountId, fromCurrency);
-  const isOverBalance = exceedsAvailable(parseAmount(fromAmount), availableFrom);
-
-  const applyFrequentTransfer = (f: FrequentTransfer) => {
-    if (f.fromAccountId !== fromAccountId) prefillFromRef.current = true;
-    if (f.toAccountId !== toAccountId) prefillToRef.current = true;
-    setFromAccountId(f.fromAccountId);
-    setToAccountId(f.toAccountId);
-    setFromCurrency(f.fromCurrency);
-    setToCurrency(f.toCurrency);
-    setExchangeRate(String(f.exchangeRate));
-    setFromAmount(String(f.fromAmount));
-    setToAmount(String(f.toAmount));
-  };
-
-  const handleSubmit = () => {
-    if (!fromAccountId || !toAccountId) {
-      showAlert(t('common.error'), t('transfer.sameAccountError'));
-      return;
-    }
-    if (fromAccountId === toAccountId) {
-      showAlert(t('common.error'), t('transfer.sameAccountError'));
-      return;
-    }
-
-    const from = parseAmount(fromAmount);
-    const to = parseAmount(toAmount);
-    const rate = parseAmount(exchangeRate);
-
-    if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
-      showAlert(t('common.error'), t('validation.invalidAmount'));
-      return;
-    }
-
-    addTransfer({
-      fromAccountId,
-      fromCurrency,
-      fromAmount: from,
-      toAccountId,
-      toCurrency,
-      toAmount: to,
-      exchangeRate: rate,
-      date,
-      notes: notes || undefined,
-      countAsIncome,
-    });
-
-    router.back();
-  };
-
-  const otherAccounts = accounts.filter((a) => a.id !== fromAccountId);
+  const form = useTransferForm();
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -232,178 +36,69 @@ export default function TransferScreen() {
         }}
       />
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
-        {/* Routes the user has moved money along before — one tap refills the form. */}
-        {frequentTransfers.length > 0 && (
-          <View style={styles.frequentSection}>
-            <Text style={styles.label}>{t('transfer.frequent')}</Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-              {frequentTransfers.map((f) => (
-                <TouchableOpacity
-                  key={f.key}
-                  style={styles.frequentChip}
-                  onPress={() => applyFrequentTransfer(f)}
-                  activeOpacity={0.7}
-                >
-                  <Text style={styles.frequentChipRoute} numberOfLines={1}>
-                    {accountName(f.fromAccountId)} → {accountName(f.toAccountId)}
-                  </Text>
-                  <Text style={styles.frequentChipAmount}>
-                    {formatCurrency(f.fromAmount, f.fromCurrency)}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        )}
+        <FrequentTransferChips
+          frequentTransfers={form.frequentTransfers}
+          accountName={form.accountName}
+          onSelect={form.applyFrequentTransfer}
+        />
 
-        {/* From Account */}
-        <View style={styles.card}>
-          <Text style={styles.label}>{t('transfer.fromAccount')}</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.accountPicker}>
-            {payableAccounts.map((account) => {
-              const balance = chipBalance(account.id, account.currencyCode);
-              const active = fromAccountId === account.id;
-              return (
-                <TouchableOpacity
-                  key={account.id}
-                  style={[styles.accountChip, active && styles.accountChipActive]}
-                  onPress={() => setFromAccountId(account.id)}
-                >
-                  <Text style={[styles.accountChipText, active && styles.accountChipTextActive]}>
-                    {account.name}
-                  </Text>
-                  <Text style={[styles.accountChipType, active && styles.accountChipTextActive]}>
-                    {balance === null
-                      ? account.currencyCode
-                      : formatCurrency(balance, account.currencyCode)}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-
-          <Text style={[styles.label, { marginTop: theme.spacing[3] }]}>{t('wallet.currency')}</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.currencyPicker}>
-            {CURRENCIES.map((c) => (
-              <TouchableOpacity
-                key={c}
-                style={[styles.currencyChip, fromCurrency === c && styles.currencyChipActive]}
-                onPress={() => setFromCurrency(c)}
-              >
-                <Text style={[styles.currencyChipText, fromCurrency === c && styles.currencyChipTextActive]}>{c}</Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-
-          <TextInput
-            style={styles.amountInput}
-            value={fromAmount}
-            onChangeText={onFromAmountChange}
-            placeholder="0.00"
-            placeholderTextColor={theme.colors.textTertiary}
-            keyboardType="decimal-pad"
-          />
-
-          <View style={styles.availableRow}>
-            <Text style={styles.availableText}>
-              {t('transfer.available')}{' '}
-              {availableFrom === null ? '—' : formatCurrency(availableFrom, fromCurrency)}
-            </Text>
-            {availableFrom !== null && availableFrom > 0 && (
-              <TouchableOpacity
-                style={styles.maxButton}
-                onPress={() => onFromAmountChange(availableFrom.toFixed(2))}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-              >
-                <Text style={styles.maxButtonText}>{t('transfer.max')}</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-
-          {/* A warning, never a block: transfers get entered after the fact and an
-              account whose initial balance was never set looks emptier than it is. */}
-          {isOverBalance && (
-            <View style={styles.warningRow}>
-              <Ionicons name="alert-circle-outline" size={16} color={theme.colors.warning} />
-              <Text style={styles.warningText}>{t('transfer.insufficientHint')}</Text>
-            </View>
-          )}
-        </View>
+        <TransferAccountCard
+          label={t('transfer.fromAccount')}
+          currencyLabel={t('wallet.currency')}
+          accounts={form.payableAccounts}
+          selectedAccountId={form.fromAccountId}
+          onSelectAccount={form.setFromAccountId}
+          chipBalance={form.chipBalance}
+          showCurrencyPicker
+          currency={form.fromCurrency}
+          onSelectCurrency={form.setFromCurrency}
+          amount={form.fromAmount}
+          onAmountChange={form.onFromAmountChange}
+          footer={
+            <TransferAvailableRow
+              available={form.availableFrom}
+              currency={form.fromCurrency}
+              isOverBalance={form.isOverBalance}
+              onMaxPress={form.applyMaxAmount}
+            />
+          }
+        />
 
         <View style={styles.swapContainer}>
           <Ionicons name="arrow-down" size={24} color={theme.colors.primary} />
         </View>
 
-        {/* To Account */}
-        <View style={styles.card}>
-          <Text style={styles.label}>{t('transfer.toAccount')}</Text>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.accountPicker}>
-            {otherAccounts.map((account) => {
-              const balance = chipBalance(account.id, account.currencyCode);
-              const active = toAccountId === account.id;
-              return (
-                <TouchableOpacity
-                  key={account.id}
-                  style={[styles.accountChip, active && styles.accountChipActive]}
-                  onPress={() => setToAccountId(account.id)}
-                >
-                  <Text style={[styles.accountChipText, active && styles.accountChipTextActive]}>
-                    {account.name}
-                  </Text>
-                  <Text style={[styles.accountChipType, active && styles.accountChipTextActive]}>
-                    {balance === null
-                      ? account.currencyCode
-                      : formatCurrency(balance, account.currencyCode)}
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
-
-          {fromCurrency !== toCurrency && (
-            <>
-              <Text style={[styles.label, { marginTop: theme.spacing[3] }]}>{t('wallet.currency')}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.currencyPicker}>
-                {CURRENCIES.map((c) => (
-                  <TouchableOpacity
-                    key={c}
-                    style={[styles.currencyChip, toCurrency === c && styles.currencyChipActive]}
-                    onPress={() => setToCurrency(c)}
-                  >
-                    <Text style={[styles.currencyChipText, toCurrency === c && styles.currencyChipTextActive]}>{c}</Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-            </>
-          )}
-
-          <TextInput
-            style={styles.amountInput}
-            value={toAmount}
-            onChangeText={onToAmountChange}
-            placeholder="0.00"
-            placeholderTextColor={theme.colors.textTertiary}
-            keyboardType="decimal-pad"
-          />
-        </View>
+        <TransferAccountCard
+          label={t('transfer.toAccount')}
+          currencyLabel={t('wallet.currency')}
+          accounts={form.otherAccounts}
+          selectedAccountId={form.toAccountId}
+          onSelectAccount={form.setToAccountId}
+          chipBalance={form.chipBalance}
+          showCurrencyPicker={form.fromCurrency !== form.toCurrency}
+          currency={form.toCurrency}
+          onSelectCurrency={form.setToCurrency}
+          amount={form.toAmount}
+          onAmountChange={form.onToAmountChange}
+        />
 
         {/* Exchange Rate (only if currencies differ) */}
-        {fromCurrency !== toCurrency && (
+        {form.fromCurrency !== form.toCurrency && (
           <View style={styles.card}>
             <Text style={styles.label}>
-              {t('transfer.rate')} {loadingRate ? '...' : ''}
+              {t('transfer.rate')} {form.loadingRate ? '...' : ''}
             </Text>
             <View style={styles.rateRow}>
-              <Text style={styles.rateLabel}>1 {fromCurrency} =</Text>
+              <Text style={styles.rateLabel}>1 {form.fromCurrency} =</Text>
               <TextInput
                 style={styles.rateInput}
-                value={exchangeRate}
-                onChangeText={onRateChange}
+                value={form.exchangeRate}
+                onChangeText={form.onRateChange}
                 placeholder="0.0000"
                 placeholderTextColor={theme.colors.textTertiary}
                 keyboardType="decimal-pad"
               />
-              <Text style={styles.rateLabel}>{toCurrency}</Text>
+              <Text style={styles.rateLabel}>{form.toCurrency}</Text>
             </View>
           </View>
         )}
@@ -411,16 +106,18 @@ export default function TransferScreen() {
         {/* Date — pre-filled with today; tap to record a past transfer */}
         <View style={styles.card}>
           <Text style={styles.label}>{t('transfer.date')}</Text>
-          <TouchableOpacity style={styles.dateButton} onPress={() => setShowDatePicker(true)}>
+          <TouchableOpacity style={styles.dateButton} onPress={() => form.setShowDatePicker(true)}>
             <Ionicons name="calendar-outline" size={18} color={theme.colors.primary} />
-            <Text style={styles.dateButtonText}>{formatDate(date, undefined, getIntlLocale())}</Text>
+            <Text style={styles.dateButtonText}>
+              {formatDate(form.date, undefined, getIntlLocale())}
+            </Text>
           </TouchableOpacity>
-          {showDatePicker && (
+          {form.showDatePicker && (
             <DatePicker
-              value={date}
+              value={form.date}
               onChange={(selectedDate) => {
-                setShowDatePicker(Platform.OS === 'ios');
-                if (selectedDate) setDate(selectedDate);
+                form.setShowDatePicker(Platform.OS === 'ios');
+                if (selectedDate) form.setDate(selectedDate);
               }}
             />
           )}
@@ -431,8 +128,8 @@ export default function TransferScreen() {
           <Text style={styles.label}>{t('transfer.notes')}</Text>
           <TextInput
             style={styles.notesInput}
-            value={notes}
-            onChangeText={setNotes}
+            value={form.notes}
+            onChangeText={form.setNotes}
             placeholder={t('transfer.notesPlaceholder')}
             placeholderTextColor={theme.colors.textTertiary}
             multiline
@@ -441,9 +138,13 @@ export default function TransferScreen() {
 
         {/* Count as Income */}
         <View style={styles.card}>
-          <TouchableOpacity style={styles.checkboxRow} onPress={() => setCountAsIncome(!countAsIncome)} activeOpacity={0.7}>
-            <View style={[styles.checkbox, countAsIncome && styles.checkboxActive]}>
-              {countAsIncome && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
+          <TouchableOpacity
+            style={styles.checkboxRow}
+            onPress={() => form.setCountAsIncome(!form.countAsIncome)}
+            activeOpacity={0.7}
+          >
+            <View style={[styles.checkbox, form.countAsIncome && styles.checkboxActive]}>
+              {form.countAsIncome && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
             </View>
             <View style={styles.checkboxTextContainer}>
               <Text style={styles.checkboxLabel}>{t('transfer.countAsIncome')}</Text>
@@ -452,7 +153,7 @@ export default function TransferScreen() {
           </TouchableOpacity>
         </View>
 
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
+        <TouchableOpacity style={styles.submitButton} onPress={form.handleSubmit}>
           <Text style={styles.submitButtonText}>{t('transfer.submit')}</Text>
         </TouchableOpacity>
       </KeyboardAwareScreen>
@@ -472,11 +173,6 @@ const createStyles = (theme: Theme) => ({
     padding: theme.spacing[4],
     paddingBottom: theme.spacing[8],
   },
-  title: {
-    ...theme.textStyles.h1,
-    color: theme.colors.textPrimary,
-    marginBottom: theme.spacing[6],
-  },
   card: {
     backgroundColor: theme.colors.surface,
     borderRadius: theme.borderRadius.xl,
@@ -488,136 +184,6 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing[2],
-  },
-  accountPicker: {
-    flexDirection: 'row' as const,
-    marginBottom: theme.spacing[3],
-  },
-  accountChip: {
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.background,
-    marginRight: theme.spacing[2],
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    alignItems: 'center' as const,
-  },
-  accountChipActive: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
-  },
-  accountChipText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textSecondary,
-  },
-  accountChipType: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    fontSize: 10,
-  },
-  accountChipTextActive: {
-    color: '#FFFFFF',
-  },
-  currencyPicker: {
-    flexDirection: 'row' as const,
-    marginBottom: theme.spacing[3],
-  },
-  currencyChip: {
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2],
-    borderRadius: theme.borderRadius.full,
-    backgroundColor: theme.colors.background,
-    marginRight: theme.spacing[2],
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  currencyChipActive: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
-  },
-  currencyChipText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textSecondary,
-  },
-  currencyChipTextActive: {
-    color: '#FFFFFF',
-  },
-  amountInput: {
-    ...theme.textStyles.h2,
-    color: theme.colors.textPrimary,
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.border,
-    paddingVertical: theme.spacing[2],
-  },
-  frequentSection: {
-    marginBottom: theme.spacing[4],
-  },
-  frequentChip: {
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[3],
-    marginRight: theme.spacing[2],
-    maxWidth: 220,
-  },
-  frequentChipRoute: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textPrimary,
-  },
-  frequentChipAmount: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.primary,
-    marginTop: 2,
-  },
-  availableRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'space-between' as const,
-    marginTop: theme.spacing[2],
-  },
-  availableText: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-  },
-  maxButton: {
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[1],
-    borderRadius: theme.borderRadius.full,
-    backgroundColor: theme.colors.background,
-    borderWidth: 1,
-    borderColor: theme.colors.primary,
-  },
-  maxButtonText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.primary,
-  },
-  warningRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[1.5],
-    marginTop: theme.spacing[2],
-  },
-  warningText: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.warning,
-    flex: 1,
-  },
-  dateButton: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    borderRadius: theme.borderRadius.lg,
-    paddingHorizontal: theme.spacing[3],
-    paddingVertical: theme.spacing[3],
-  },
-  dateButtonText: {
-    ...theme.textStyles.body,
-    color: theme.colors.textPrimary,
   },
   swapContainer: {
     alignSelf: 'center' as const,
@@ -644,6 +210,20 @@ const createStyles = (theme: Theme) => ({
     borderBottomColor: theme.colors.border,
     paddingVertical: theme.spacing[2],
     textAlign: 'center' as const,
+  },
+  dateButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[3],
+  },
+  dateButtonText: {
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
   },
   notesInput: {
     ...theme.textStyles.body,
