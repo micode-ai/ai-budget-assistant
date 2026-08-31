@@ -8,6 +8,54 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.21.0 - 2026-08-31
+
+**A new phone signs you in by itself**
+
+- **Move to a new Android phone and the app is already signed in.** Set the new
+  device up from a backup of the old one and the app restores your session on
+  first launch, with nothing to type. It works on Android only, only for a
+  device genuinely restored from a backup rather than set up fresh, and if you
+  use end-to-end encryption you still enter your passphrase — that protects
+  your data, and signing in does not unlock it (ABA-464, ABA-465).
+
+**Scanning and receipts**
+
+- **Scanning a receipt uses a fraction of the memory it used to.** The app was
+  sending the camera's full-resolution photo, several megabytes of it, and
+  holding two more copies in memory while it did — enough to make the whole app
+  sluggish on a modest phone mid-scan. It now shrinks the photo first, which
+  also makes the scan start faster (ABA-463).
+- **Bacon is no longer filed under "deposit".** Once a receipt had taught the
+  app a bottle-deposit category, that category was offered for ordinary
+  groceries too, and the app then learned the mistake and repeated it on every
+  later receipt from the same shop (ABA-451).
+
+**Things that were only working on your phone**
+
+- **Investments, projects, debts and budgets now load on the web app.** They
+  were addressed by the wrong identifier, so the server quietly found nothing.
+  Your phone hid the problem by answering from its own copy; the web app, which
+  has no local copy, showed you an empty screen (ABA-454).
+- **A chat-bot conversation survives a server restart.** A half-finished
+  confirmation in the Telegram bot — a receipt waiting to be saved, a date
+  being edited — was being held in memory and thrown away on every deploy
+  (ABA-460).
+
+**Under the hood**
+
+Work with no visible change, listed for completeness: the admin gained an
+acquisition dashboard for signup attribution (ABA-452); the daily reminder jobs
+now page through their tables instead of loading them whole (ABA-457); the
+Telegram bot's handlers are registered properly with the framework (ABA-453);
+duplicated logic was merged in three places (ABA-455, ABA-456, ABA-462); a
+duplicated geocoding service that silently split its own rate limit was made
+one (ABA-458); background failures are now logged instead of swallowed
+(ABA-461); and the cost of a corrective receipt re-read is tracked as its own
+line (ABA-459).
+
+---
+
 ## 1.20.0 - 2026-08-28
 
 **Receipts that add up**
