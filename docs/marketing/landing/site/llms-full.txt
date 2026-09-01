@@ -998,6 +998,80 @@ Make it visible and hands-on. Give a small allowance so a child manages their ow
 
 *Related articles: [A shared budget for couples](/blog/en/shared-budget-for-couples/) | [How to budget your money step by step](/blog/en/how-to-budget/)*
 
+## Your Financial Year, Wrapped: What It Reveals
+URL: https://ai-budget.pl/blog/en/financial-wrapped-year-in-review/
+
+Every December, one graphic takes over everyone's feed: your top artist, your top song, the number of minutes you spent listening. People screenshot it, argue about it, compare it with friends. Nobody has to ask why a year-end recap of a habit as small as listening to music is interesting. Yet the same people who share their Spotify Wrapped rarely, if ever, look back at a full year of their own spending, even though that habit shapes far more of their life than a playlist does.
+
+Most budgeting tools do not help. They are built to answer one question, over and over: did this month stay under the limit? That is useful, but it is not the same question as "what actually happened with my money this year, and what should I do differently next year." A monthly check is a snapshot. A year in review is a pattern, and patterns only show up once you stop looking at a single month at a time.
+
+## Why a monthly report and a yearly recap answer different questions
+
+A budget alert tells you that groceries are at 80 percent of this month's limit. It cannot tell you that your grocery spending has been quietly climbing for six straight months, because no single month looks alarming on its own. A subscription that costs a few dollars barely registers in a monthly summary; multiplied by twelve, it is a real line item you probably forgot you were paying for. A store you visit twice a week never feels like "your biggest expense" in the moment, yet by December it often is.
+
+This is the same reason a music recap works: a year is long enough for a real pattern to form, and short enough that you still remember living through it. Applied to money instead of playlists, that same zoomed-out view answers questions a monthly budget was never designed to ask.
+
+## What a real financial year in review should show
+
+A useful recap is not one number. It is a small set of specific facts about the year, each answering something a monthly report cannot:
+
+- **How much moved through your accounts this year** — the total that everything else in the recap is measured against.
+- **Your top merchant** — the store or service you paid the most often, not necessarily the one you spent the most at. Frequency and cost are different signals, and both matter.
+- **Your biggest month** — which single month cost the most, and usually why: a holiday, a move, a one-off purchase that skewed the whole year.
+- **Your top category, and the mix behind it** — not just "you spent the most on groceries," but the full shape of where the money actually went.
+- **How many receipts you tracked** — less a vanity count and more a proxy for how consistently you actually recorded the year, rather than reconstructing it from memory afterward.
+- **Your savings for the year** — the net amount left over, the rate that represents, and how that compares with the year before, so a single number turns into a trend.
+- **Your personal inflation** — not the national headline figure, but how much more you paid this year for the specific things you actually buy.
+- **A tracking streak** — the simplest possible measure of whether you actually kept this up.
+
+None of this needs to be complicated. It needs to be specific, and it needs to come from real numbers rather than a guess made in December about what the year probably looked like.
+
+## Building this by hand
+
+You can put this together yourself with a spreadsheet, and it is worth doing once to see what it takes. Export a year of transactions, group them by merchant and by category, sum each group, and compare the totals with the year before. Count how many months you actually logged something versus months you let slide. If you have receipts with line items, you can even approximate a personal inflation figure the same way the [personal inflation](/blog/en/personal-inflation-rate/) method works: track the unit price of the same products over time and weight the change by how much you spend on each.
+
+It works, but it is exactly the kind of one-time chore most people do once, out of curiosity, and never repeat. The moment it needs to happen again next December, most spreadsheets are abandoned halfway through.
+
+## The shortcut: the data was already there all year
+
+This is the part a good app should do for free, because the underlying data already exists the moment you have been tracking expenses through the year. [AI Budget Assistant](https://ai-budget.pl) builds a Financial Wrapped from exactly the categories above: total tracked, top merchant, biggest month, top category and category mix, receipts scanned, your savings rate and how it compares with last year, your personal inflation rate, and your tracking streak, presented as a swipeable, full-screen set of cards you can flip through in a minute. It is free, with no premium plan required, and it only shows a card when there is real data behind it rather than filling gaps with something invented — on a year where you only tracked a few months, the recap says so honestly instead of guessing at the rest.
+
+You can revisit it any time from the Analytics tab, for any year you have used the app, even a partial one. When you want to show someone, a text summary and a shareable image card are both built in, the same story-card format people already use for a music recap, just built from your own year in money instead.
+
+## What to actually do with what you see
+
+A recap is only worth building if it changes something next year. A few moves it usually points toward:
+
+**Deal with the top merchant, if the cost surprises you.** A store visited twice a week is easy to miss in a monthly view and hard to ignore once you see the yearly total attached to it.
+
+**Turn the biggest month into a plan.** If it was a predictable event, a holiday, a birthday season, a recurring bill, set money aside for it ahead of time next year instead of absorbing it as a shock.
+
+**Decide if your top category grew on purpose.** Sometimes a category climbs because life changed and that is fine. Sometimes it crept up without a decision behind it, and that is worth a real budget for next year.
+
+**Use your personal inflation number the way the [personal inflation](/blog/en/personal-inflation-rate/) guide describes**: switch stores or products for whichever items rose the most, rather than padding every category "because everything is expensive."
+
+**Set next year's savings goal from the real rate, not a guess.** A savings rate you actually measured is a far better starting point than a round number picked out of optimism.
+
+AI Budget Assistant is free to start, works in the browser at [ai-budget.pl](https://ai-budget.pl) with no card required, and is on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) for Android. If you have been tracking your spending at all this year, your recap is already sitting there waiting, built from data you already entered.
+
+## FAQ
+
+**What is a financial year in review?**
+It is a single, backward-looking summary of a full year of spending and saving: your biggest expenses, your most frequent merchant, your busiest month, how your category mix looked, and how your savings rate changed. It answers "what actually happened this year," a question a monthly budget check is not built to answer.
+
+**Do I need a full year of data for it to work?**
+No. A recap can work with a partial year, and a useful one only shows the parts it actually has enough data for rather than guessing at the rest. More months of tracking make the picture sharper, but even a few months is usually enough to see a top merchant or a biggest month.
+
+**Is a financial wrapped free?**
+In AI Budget Assistant it is a free feature with no subscription required, since it is built entirely from expenses and receipts you have already tracked through the app during the year.
+
+**Can I share my financial wrapped?**
+Yes. AI Budget Assistant can generate both a plain text summary and a shareable image card built from your year, the same format people already use to post a music recap, just built from your own spending instead.
+
+---
+
+*Related articles: [How to Save Money](/blog/en/how-to-save-money/) | [Your Personal Inflation Rate](/blog/en/personal-inflation-rate/) | [Track and Cancel Subscriptions to Save](/blog/en/track-subscriptions/)*
+
 ## How AI Can Help You Budget (Honestly)
 URL: https://ai-budget.pl/blog/en/how-ai-helps-budgeting/
 
@@ -1315,6 +1389,8 @@ For most people, yes. Seeing the gap between what you planned to save and what y
 - [How to Track Subscriptions Before They Drain You](/blog/en/track-subscriptions/)
 - [How to Pay Off Debt: Snowball vs Avalanche](/blog/en/pay-off-debt/)
 - [Your Personal Inflation Rate: How to Calculate It](/blog/en/personal-inflation-rate/)
+- [Your Financial Year, Wrapped: What It Reveals](/blog/en/financial-wrapped-year-in-review/)
+- [Stock Up Before Prices Rise: an Inflation Shield](/blog/en/inflation-shield-stock-up/)
 
 ## How to Import a Bank Statement Into a Budget App
 URL: https://ai-budget.pl/blog/en/import-bank-statement/
@@ -1392,6 +1468,77 @@ Importing a statement file is simply uploading a record of transactions you alre
 ---
 
 *Related articles: [An expense tracker that actually sticks](/blog/en/expense-tracker/) | [Expense categories that actually work](/blog/en/expense-categories/)*
+
+## Stock Up Before Prices Rise: an Inflation Shield
+URL: https://ai-budget.pl/blog/en/inflation-shield-stock-up/
+
+Your personal inflation rate tells you how much more you already paid for the things you buy over the last few months. That is a useful number, but it arrives too late to do anything about it: the increase already happened, the money already left your account. There is a different question that arrives earlier and actually gives you a chance to react: which of the products you buy regularly are about to get more expensive, and is it worth stocking up before that happens.
+
+That is the difference between looking in the rearview mirror and looking through the windshield. Both are useful, but only one lets you change the outcome before the loss is locked in.
+
+## Why "how much I already lost" is not enough
+
+A personal inflation index is valuable because it names specific products and stores instead of handing you a vague national number from the news. But by design it looks backward: it compares today's price with a price from a few months ago. By the time you see that coffee is up double digits, that increase is already sitting inside your spending. The only thing left to do is change behavior going forward, switch stores, switch brands, or brace for the next bill.
+
+There is a different way to use the same underlying data, though. If you have a few weeks of price history for a specific product at a specific store, that history contains not just what already happened but also a direction. Milk that has crept up week over week for the past two months is likely to be a bit more expensive again next week too. That is not a guess pulled out of thin air, it is ordinary trend statistics, the same kind of reasoning used to forecast sales or web traffic, applied instead to the prices sitting on your own receipts.
+
+Once you have that forecast, the question changes from "how much did I lose" to "what is worth buying now, before it gets more expensive still."
+
+## How the price forecast works from your own receipts
+
+The mechanism is fairly simple even though it sounds technical. Every time you scan a grocery receipt, the app records the price of each line item, the store you bought it at, and the date. After a handful of trips buying the same product, that builds a short time series: the price in week one, week two, week three.
+
+Once that series is long enough, typically a few price points spread across at least a couple of weeks, a simple trend line can be fit to it and its slope checked. If the price is clearly climbing, the product becomes a candidate for the forecast. If there is not enough data yet, or the price is bouncing around with no clear direction, the app simply stays quiet about that product instead of guessing. That distinction matters: no signal is not the same thing as a signal that says "everything is fine."
+
+It is worth being direct about what this is not. It is not a forecast generated by an AI model in the language-model or deep-learning sense. It is ordinary, deterministic statistics, trend regression run over your own historical prices. No market-wide magic, no guessing from general pricing data. The result depends entirely on what you actually paid, at the specific stores you actually shopped at, over the time you actually shopped there.
+
+## Not every rising product is worth stockpiling
+
+A rising price alone is not enough reason to recommend buying extra. Fresh milk can get more expensive too, but stocking up a month's worth of it makes no sense, it will spoil long before you drink it. So the second half of the mechanism filters products for whether they are even suited to being stockpiled at all: short-shelf-life items bought very frequently are excluded up front, even when their price is climbing.
+
+What survives that filter tends to be shelf-stable or semi-stable goods, canned food, spices, toiletries, cleaning supplies, sometimes frozen items, bought with some regularity, whose price has been consistently trending up. For each such product the app suggests a specific quantity to buy now, roughly matched to your normal consumption pace over the next month or two, never some unrealistic bulk amount that would just sit in a cupboard.
+
+## What the inflation shield actually shows you
+
+For each flagged product, you see four things in one place: the product itself, a suggested quantity to buy, the store where it was recently cheapest, and an estimated saving from buying now instead of waiting for it to get more expensive still.
+
+That word "estimated" is deliberate and important. The underlying model is intentionally conservative, it calculates the saving as roughly half the gap between today's price and the forecast price, because in practice prices rarely jump all at once by the full forecast amount, they tend to move gradually. That reflects reality better than an optimistic calculation that assumes the whole rise happens overnight. Treat the figure as a reasonable, conservative estimate, not a guarantee.
+
+The app goes a step further than just surfacing a suggestion: when you actually buy a recommended product in a sensible quantity, that saving gets credited toward a running "saved so far" total shown on the screen. That is not a decorative number, it is genuinely tracked from what you actually bought after seeing the recommendation, so over time you can see how much this feature has actually helped rather than taking it on faith.
+
+## What this feature deliberately does not do
+
+It is worth stating plainly what the inflation shield does not try to do, since it is easy to confuse with similarly named features. It does not compare your prices against other users' prices in your area, today it works entirely from your own purchase history, with no community layer. It also does not check whether a specific discount actually applied at checkout or whether you were overcharged on a receipt, that is a different feature in the app that checks prices on the receipt itself. The shield looks only forward, at a trend, never at a single transaction.
+
+It also needs a bit of real history before it can suggest anything. A handful of shopping trips scanned into the app is usually enough for the first forecasts to appear for products you buy regularly, but at the very start, with an empty history, there is genuinely nothing to show yet, and that is an honest answer, not a bug.
+
+## Where the data comes from, and why it costs nothing
+
+[AI Budget Assistant](https://ai-budget.pl) builds this feature from exactly the same data it already collects for your [personal inflation rate](/blog/en/personal-inflation-rate/): the line items on your scanned receipts, prices, stores, and dates. The only difference is what happens to that data next, one feature looks backward and measures what already happened, the other looks forward and tries to flag what is about to happen. Both run off the same receipts, so there is nothing extra to set up, you just keep scanning your shopping the way you already do.
+
+The inflation shield is free, with no premium plan required and no cap on how many products it tracks. A home-screen widget surfaces the single best suggestion the moment you open the app, and a full screen listing every recommendation is available any time. Occasionally the app also sends a notification about the single best stock-up opportunity, kept deliberately rare so it does not turn into noise, but you never have to wait for one to check yourself. If you want to ask the AI chat assistant directly what is worth buying ahead of a price rise, it can answer from the same underlying data in conversation.
+
+Personal inflation and the inflation shield are two sides of the same coin, built from the same receipts. One tells you how much you lost. The other gives you a chance to lose less.
+
+AI Budget Assistant is free to start, works in the browser at [ai-budget.pl](https://ai-budget.pl) with no card required, and is on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) for Android.
+
+## FAQ
+
+**Does the inflation shield use AI to predict prices?**
+Not in the language-model or machine-learning sense. The forecast is ordinary trend statistics run over your own price history from scanned receipts, the longer and more regular that history for a product, the more reliable the forecast. The AI chat assistant in the app can talk you through the results in conversation, but it does not generate them.
+
+**Where does the forecast data come from if I do not scan receipts?**
+Without scanned receipts that carry line items, there is no price history to build a trend from, so you need a handful of shopping trips logged in the app before the first suggestions appear. It is the same history the personal inflation index is built from.
+
+**Is the estimated saving an exact amount?**
+No, and deliberately so. It is a conservative estimate calculated as roughly half the gap between today's price and the forecast price, because price rises rarely happen all at once. Treat it as a directional signal, not a guaranteed figure.
+
+**Does the inflation shield compare my prices with other users?**
+Not currently. Today it works entirely from your own purchase history, with no comparison against other accounts or regions.
+
+---
+
+*Related articles: [How to Save Money](/blog/en/how-to-save-money/) | [Your Personal Inflation Rate](/blog/en/personal-inflation-rate/) | [Your Financial Year, Wrapped](/blog/en/financial-wrapped-year-in-review/)*
 
 ## How to Pay Off Debt: Snowball vs Avalanche
 URL: https://ai-budget.pl/blog/en/pay-off-debt/
@@ -2167,6 +2314,12 @@ After your first login, you can use biometric authentication (Face ID or fingerp
 1. On the login screen, tap **Use Face ID** / **Use Fingerprint**
 2. Authenticate with your device's biometric sensor
 3. You're in!
+
+### Getting a New Android Phone
+
+If you set up a new Android phone using its built-in "restore from backup" option (copying apps and data from your old phone), AI Budget Assistant can sign you in automatically — no password needed. Just open the app; if a matching restore credential is found, you'll land straight on your dashboard.
+
+This only works on Android, and only when the new device was genuinely set up as a restore of your old one — a fresh install still needs your email and password. If you use [end-to-end encryption](./15-encryption.md), automatic sign-in still restores only your account access; you'll need to enter your **encryption passphrase** separately to unlock your financial data.
 
 ### Forgot Password
 
@@ -6346,6 +6499,10 @@ The app won't let the assigned shares add up to more than what you actually paid
 ## Sending the links
 
 Send each friend their link however you like — text message, WhatsApp, email, anything your phone can share to. There's also a **Copy all links** button that copies every friend's name and link at once. A friend never needs to install the app or create an account to use their link.
+
+### Still at the table? Show one QR code instead
+
+If everyone's still sitting there, tap **Show QR code** instead of sending links one by one. Hold up your screen, and everyone scans the same code with their phone's camera — no typing a number, no waiting for a text to arrive. Scanning it opens a page listing everyone's name; each person taps their own name, confirms "yes, that's me," and lands straight on their own private share — exactly the same page they'd have gotten from an individual link. Sending links one at a time is still there for anyone who isn't physically present.
 
 ## What your friend sees
 
