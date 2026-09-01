@@ -6,6 +6,8 @@ import { NotificationsService } from '../notifications/notifications.service';
 import {
   renderGuestPage,
   renderNotFoundPage,
+  renderGroupPickerPage,
+  renderGroupConfirmPage,
   buildGuestPayLink,
   GuestPageModel,
   GuestPaymentMethodBlock,
@@ -159,6 +161,27 @@ export class GuestController {
   }
 
   /**
+   * Resolves a `groupToken` (ABA — QR-code bill split) to the anchor
+   * (seq:0) participant row's `id`/`expenseId`, or `null` if the token is
+   * unknown, expired, or cancelled — same three-way collapse and same
+   * split-into-two-reads shape as `findUsableParticipant` above, and for the
+   * identical reason (no timing oracle between "no such link" and "this
+   * link is dead"). A `groupToken` only ever lives on the anchor row (see
+   * the schema comment on `groupToken`), so this can never resolve to a
+   * non-anchor participant.
+   */
+  private async findUsableGroupAnchor(groupToken: string): Promise<{ id: string; expenseId: string } | null> {
+    const anchor = await this.prisma.receiptSplitParticipant.findUnique({
+      where: { groupToken },
+      select: { id: true, expenseId: true, cancelledAt: true, expiresAt: true },
+    });
+    if (!anchor) return null;
+    if (anchor.cancelledAt) return null;
+    if (anchor.expiresAt <= new Date()) return null;
+    return { id: anchor.id, expenseId: anchor.expenseId };
+  }
+
+  /**
    * Resolution order (binding, per the task brief): the payer's `UserPaymentMethod`
    * list first (ordered by `sortOrder`) — if it has any rows, those are the whole
    * answer, full stop. Only when that list is EMPTY do we fall back to the legacy
@@ -267,6 +290,93 @@ export class GuestController {
 
     const payer = await this.resolvePayer(participant.expense as GuestExpenseView);
     return renderGuestPage(this.buildModel(participant, payer, token), strings);
+  }
+
+  /**
+   * ABA — QR-code bill split. Names-only picker page for a whole split — see
+   * docs/contracts/qr-code-bill-split-api.md. No route-shadow risk against
+   * `GET /s/:token` above regardless of declaration order (ABA-166 class of
+   * bug, checked): `:token` is a single-segment pattern
+   * (`/s/:token`), while both routes here require a static "g" segment plus
+   * one or two further segments — Express only matches a route when the
+   * segment COUNT agrees, so a request to `/s/g/<token>` can never resolve
+   * against the one-segment `:token` route.
+   */
+  @Get('g/:groupToken')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  @Header('Cache-Control', 'no-store')
+  async groupPicker(@Param('groupToken') groupToken: string, @Req() req: Request): Promise<string> {
+    const strings = getGuestPageStrings(resolveGuestLang(req));
+
+    const anchor = await this.findUsableGroupAnchor(groupToken);
+    if (!anchor) {
+      return renderNotFoundPage(strings);
+    }
+
+    const siblings = await this.prisma.receiptSplitParticipant.findMany({
+      where: { expenseId: anchor.expenseId, cancelledAt: null },
+      orderBy: { seq: 'asc' },
+      select: { seq: true, name: true },
+    });
+
+    const expense = await this.prisma.expense.findUnique({
+      where: { id: anchor.expenseId },
+      select: { merchant: true },
+    });
+
+    const lang = resolveGuestLang(req);
+    const entries = siblings.map((s) => ({
+      name: s.name,
+      href: `/s/g/${groupToken}/${s.seq}?lang=${lang}`,
+    }));
+
+    return renderGroupPickerPage({ merchant: expense?.merchant ?? null, entries }, strings);
+  }
+
+  /**
+   * ABA — QR-code bill split. "You are «Name» — is that you?" confirm step
+   * reached from the picker page above; answers the wrong-tap open question
+   * WITHOUT touching the existing `:token` handler at all. `:seq` is a small
+   * position index (0..MAX_PARTICIPANTS-1), not a bearer credential — it is
+   * only ever meaningful scoped by the still-secret `groupToken`.
+   */
+  @Get('g/:groupToken/:seq')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  @Header('Cache-Control', 'no-store')
+  async groupConfirm(
+    @Param('groupToken') groupToken: string,
+    @Param('seq') seqParam: string,
+    @Req() req: Request,
+  ): Promise<string> {
+    const strings = getGuestPageStrings(resolveGuestLang(req));
+
+    const anchor = await this.findUsableGroupAnchor(groupToken);
+    const seq = Number(seqParam);
+    if (!anchor || !Number.isInteger(seq)) {
+      return renderNotFoundPage(strings);
+    }
+
+    const sibling = await this.prisma.receiptSplitParticipant.findFirst({
+      where: { expenseId: anchor.expenseId, seq, cancelledAt: null },
+      select: { name: true, token: true },
+    });
+    if (!sibling) {
+      return renderNotFoundPage(strings);
+    }
+
+    const lang = resolveGuestLang(req);
+    return renderGroupConfirmPage(
+      {
+        name: sibling.name,
+        yesHref: `/s/${sibling.token}?lang=${lang}`,
+        noHref: `/s/g/${groupToken}?lang=${lang}`,
+      },
+      strings,
+    );
   }
 
   @Post(':token/paid')

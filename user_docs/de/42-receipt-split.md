@@ -23,6 +23,10 @@ Die App lässt es nicht zu, dass die zugewiesenen Anteile zusammen mehr ergeben,
 
 Schick jedem Freund seinen Link, wie du möchtest — SMS, WhatsApp, E-Mail, alles, worüber dein Handy teilen kann. Es gibt außerdem den Button **Alle Links kopieren**, der Namen und Link jedes Freundes auf einmal kopiert. Ein Freund muss die App nie installieren oder ein Konto anlegen, um seinen Link zu nutzen.
 
+### Noch am Tisch? Zeig einen einzigen QR-Code
+
+Wenn alle noch da sitzen, tippe auf **QR-Code anzeigen**, statt Links einzeln zu verschicken. Halte dein Display hoch, und alle scannen denselben Code mit der Handykamera — keine Nummer eintippen, kein Warten auf eine SMS. Nach dem Scannen erscheint eine Liste mit allen Namen; jede Person tippt auf den eigenen Namen, bestätigt "ja, das bin ich" und landet direkt auf ihrem eigenen privaten Anteil — genau derselben Seite, die sie auch über einen einzelnen Link bekommen hätte. Das einzelne Versenden bleibt für alle, die nicht persönlich dabei sind.
+
 ## Was dein Freund sieht
 
 Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine zugewiesenen Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.

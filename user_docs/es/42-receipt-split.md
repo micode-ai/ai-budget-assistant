@@ -23,6 +23,10 @@ La app no deja que las partes asignadas sumen más de lo que realmente pagaste �
 
 Envía a cada amigo su enlace como prefieras — mensaje de texto, WhatsApp, correo, cualquier cosa con la que tu teléfono pueda compartir. También hay un botón **Copiar todos los enlaces** que copia el nombre y el enlace de cada amigo de una vez. Un amigo nunca necesita instalar la app ni crear una cuenta para usar su enlace.
 
+### ¿Seguís en la mesa? Muestra un solo código QR
+
+Si todos siguen ahí sentados, toca **Mostrar código QR** en lugar de enviar enlaces uno por uno. Levanta la pantalla y que todos escaneen el mismo código con la cámara del teléfono — sin escribir ningún número, sin esperar a que llegue un mensaje. Al escanearlo se abre una página con el nombre de cada uno; cada persona toca su propio nombre, confirma "sí, soy yo" y llega directamente a su propia parte privada — exactamente la misma página que habría obtenido con un enlace individual. Enviar los enlaces uno por uno sigue disponible para quien no esté presente.
+
 ## Qué ve tu amigo
 
 Al abrir el enlace solo se ve la parte de esa persona: el comercio y la fecha, "*Tú* pagaste por todos", sus artículos asignados (o su parte igual de la cuenta si no había artículos) y el importe que te debe, en la moneda de la cuenta. La página se abre en el idioma de tu app, no necesariamente en el suyo.

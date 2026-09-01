@@ -255,3 +255,72 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
 
   return pageShell(strings.title(model.merchant ?? strings.genericMerchant), body);
 }
+
+// --- Group picker (ABA — QR-code bill split). One QR-able link per split
+// that lets every participant scan the same code and pick their own name,
+// instead of the payer delivering N distinct per-person links one at a time.
+// Both functions below are strictly NAMES-ONLY — never an amount, never a
+// payment status, never another participant's real token — see
+// docs/contracts/qr-code-bill-split-api.md for the full leak analysis. ---
+
+export interface GroupPickerEntry {
+  /** Free text the payer typed — escaped by the renderer, never trusted as
+   * safe markup. */
+  name: string;
+  /** Points at THIS entry's own confirm step (`/s/g/:groupToken/:seq`), never
+   * directly at a real per-participant `/s/:token` — see
+   * `renderGroupConfirmPage` below. */
+  href: string;
+}
+
+export interface GroupPickerModel {
+  merchant: string | null;
+  entries: GroupPickerEntry[];
+}
+
+/** Rendered for `GET /s/g/:groupToken`. Lists participant names only, each
+ * linking to its own confirm step — never a bare list of real per-participant
+ * links, so a stray tap can't land straight in someone else's payment page. */
+export function renderGroupPickerPage(model: GroupPickerModel, strings: GuestPageStrings): string {
+  const merchantLabel = model.merchant ?? strings.genericMerchant;
+  const title = strings.groupPickerTitle(escapeHtml(merchantLabel));
+
+  const rows = model.entries
+    .map(
+      (entry) =>
+        `<a class="btn btn-secondary" href="${escapeHtml(entry.href)}">${escapeHtml(entry.name)}</a>`,
+    )
+    .join('');
+
+  const body = `<div class="card">
+    <h1>${title}</h1>
+    <p class="muted">${escapeHtml(strings.groupPickerHint)}</p>
+    ${rows}
+  </div>`;
+
+  return pageShell(strings.groupPickerTitle(merchantLabel), body);
+}
+
+export interface GroupConfirmModel {
+  /** Free text the payer typed — escaped by the renderer. */
+  name: string;
+  /** The one place this whole group-picker code path reveals a real
+   * per-participant `/s/:token` — scoped to the entry the guest just
+   * self-selected on the picker page above. */
+  yesHref: string;
+  /** Back to the picker page (`/s/g/:groupToken`) — never leaks anything new. */
+  noHref: string;
+}
+
+/** Rendered for `GET /s/g/:groupToken/:seq` — the "is this you?" gate that
+ * answers the wrong-tap open question without touching the existing,
+ * already-hardened `/s/:token` handler at all. */
+export function renderGroupConfirmPage(model: GroupConfirmModel, strings: GuestPageStrings): string {
+  const question = strings.pickedConfirmQuestion(escapeHtml(model.name));
+  const body = `<div class="card">
+    <h1>${question}</h1>
+    <a class="btn btn-primary" href="${escapeHtml(model.yesHref)}">${escapeHtml(strings.pickedConfirmYes)}</a>
+    <a class="btn btn-secondary" href="${escapeHtml(model.noHref)}">${escapeHtml(strings.pickedConfirmNo)}</a>
+  </div>`;
+  return pageShell(strings.pickedConfirmQuestion(model.name), body);
+}

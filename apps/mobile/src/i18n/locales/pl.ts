@@ -2488,6 +2488,11 @@ export default {
     overBill: 'Suma udziałów przekracza kwotę rachunku.',
     encrypted: 'Podział nie jest dostępny dla kont z szyfrowaniem end-to-end, ponieważ serwer nie może odczytać paragonu.',
     offline: 'Potrzebujesz połączenia, aby utworzyć linki.',
+    showQr: 'Pokaż kod QR',
+    qrTitle: 'Zeskanuj, aby podzielić',
+    qrHint: 'Każdy przy stole może to zeskanować, aby zobaczyć swoją część',
+    qrShare: 'Udostępnij link',
+    qrShareMessage: 'Zeskanuj to, aby zobaczyć swoją część rachunku:',
   },
   receiptCategorySplit: {
     title: 'Podział na kategorie',

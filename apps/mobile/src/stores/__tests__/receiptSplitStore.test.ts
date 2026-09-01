@@ -33,6 +33,7 @@ function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateRespo
       { id: 'p1', name: 'Alice', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok1' },
       { id: 'p2', name: 'Bob', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok2' },
     ],
+    groupUrl: 'https://x/s/g/grouptok1',
     ...overrides,
   };
 }

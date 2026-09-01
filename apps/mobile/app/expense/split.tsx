@@ -38,6 +38,7 @@ import { useReceiptSplitStore } from '@/stores/receiptSplitStore';
 import { useEncryptionStore } from '@/stores/encryptionStore';
 import { AssignmentEditor } from '@/components/receipt-split/AssignmentEditor';
 import { ParticipantStatusList } from '@/components/receipt-split/ParticipantStatusList';
+import { GroupQrModal } from '@/components/receipt-split/GroupQrModal';
 import { deriveSplitMode } from '@/components/split/deriveSplitMode';
 import { showAlert } from '@/utils/alert';
 import type { CreateSplitDto, SplitParticipantState } from '@budget/shared-types';
@@ -157,6 +158,11 @@ export default function ReceiptSplitScreen() {
   // cancel is in flight.
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
+  // ABA — QR-code bill split: the group QR modal is mounted unconditionally
+  // (same pattern as every other bottom-sheet modal in this codebase) and
+  // only ever opened from a "Show QR" button that is itself hidden when
+  // `split.groupUrl` is null — see ParticipantStatusList's `onShowQr` prop.
+  const [qrModalVisible, setQrModalVisible] = useState(false);
 
   async function handleCreate(dto: CreateSplitDto) {
     if (!expense || isCreating) return;
@@ -197,6 +203,20 @@ export default function ReceiptSplitScreen() {
     } catch (e) {
       // console.warn, never console.error — see the create() catch above.
       console.warn('[ReceiptSplitScreen] share failed', e);
+    }
+  }
+
+  // Same Share.share pattern as handleSend above — sharing the group link
+  // mutates nothing server-side, so it's available to every role.
+  async function handleShareGroupQr() {
+    if (!split?.groupUrl) return;
+    try {
+      await Share.share({
+        message: `${t('receiptSplit.qrShareMessage')}\n${split.groupUrl}`,
+        url: split.groupUrl,
+      });
+    } catch (e) {
+      console.warn('[ReceiptSplitScreen] group share failed', e);
     }
   }
 
@@ -286,16 +306,27 @@ export default function ReceiptSplitScreen() {
 
   if (split) {
     return (
-      <ParticipantStatusList
-        split={split}
-        canEdit={canEdit}
-        confirmingId={confirmingId}
-        isCancelling={isCancelling}
-        onSend={handleSend}
-        onConfirm={handleConfirm}
-        onCopyAll={handleCopyAll}
-        onCancelPress={handleCancelPress}
-      />
+      <>
+        <ParticipantStatusList
+          split={split}
+          canEdit={canEdit}
+          confirmingId={confirmingId}
+          isCancelling={isCancelling}
+          onSend={handleSend}
+          onConfirm={handleConfirm}
+          onCopyAll={handleCopyAll}
+          onCancelPress={handleCancelPress}
+          onShowQr={split.groupUrl ? () => setQrModalVisible(true) : undefined}
+        />
+        {split.groupUrl && (
+          <GroupQrModal
+            visible={qrModalVisible}
+            groupUrl={split.groupUrl}
+            onClose={() => setQrModalVisible(false)}
+            onShare={handleShareGroupQr}
+          />
+        )}
+      </>
     );
   }
 

@@ -2480,6 +2480,11 @@ export default {
     overBill: 'Las partes suman más que la cuenta.',
     encrypted: 'La división no está disponible para cuentas con cifrado de extremo a extremo, porque el servidor no puede leer el recibo.',
     offline: 'Necesitas conexión para crear los enlaces.',
+    showQr: 'Mostrar código QR',
+    qrTitle: 'Escanea para dividir',
+    qrHint: 'Cualquiera en la mesa puede escanear esto para ver su propia parte',
+    qrShare: 'Compartir enlace',
+    qrShareMessage: 'Escanea esto para ver tu parte de la cuenta:',
   },
   receiptCategorySplit: {
     title: 'Dividir por categoría',

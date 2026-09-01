@@ -23,6 +23,10 @@ De app laat niet toe dat de toegewezen delen samen meer worden dan je daadwerkel
 
 Stuur elke vriend zijn link zoals jij wilt — sms, WhatsApp, e-mail, alles waarmee je telefoon kan delen. Er is ook een knop **Alle links kopiëren**, die de naam en link van elke vriend in één keer kopieert. Een vriend hoeft nooit de app te installeren of een account aan te maken om zijn link te gebruiken.
 
+### Nog aan tafel? Toon één QR-code
+
+Zit iedereen nog bij elkaar, tik dan op **QR-code tonen** in plaats van links één voor één te versturen. Houd je scherm omhoog en laat iedereen dezelfde code scannen met de camera van hun telefoon — geen nummer intypen, niet wachten op een sms. Scannen opent een pagina met ieders naam; elke persoon tikt op zijn eigen naam, bevestigt "ja, dat ben ik" en komt direct op zijn eigen privédeel terecht — precies dezelfde pagina als bij een individuele link. Links één voor één versturen blijft beschikbaar voor wie niet fysiek aanwezig is.
+
 ## Wat je vriend ziet
 
 Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn toegewezen items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. De pagina opent in de taal van jouw app, niet per se in die van hem.

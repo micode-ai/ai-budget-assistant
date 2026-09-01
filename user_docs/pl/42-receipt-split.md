@@ -23,6 +23,10 @@ Aplikacja nie pozwoli, żeby przypisane części zsumowały się na więcej, ni�
 
 Wyślij każdemu znajomemu jego link, jak Ci wygodnie — SMS-em, przez WhatsApp, mailem, czymkolwiek, czym Twój telefon potrafi się dzielić. Jest też przycisk **Skopiuj wszystkie linki**, który kopiuje imię i link każdego znajomego naraz. Znajomy nigdy nie musi instalować aplikacji ani zakładać konta, żeby skorzystać ze swojego linku.
 
+### Wciąż przy stole? Pokaż jeden kod QR
+
+Jeśli wszyscy wciąż siedzą przy stole, zamiast wysyłać linki po kolei, dotknij **Pokaż kod QR**. Podnieś ekran, a każdy zeskanuje ten sam kod aparatem telefonu — bez wpisywania numeru, bez czekania na SMS-a. Po zeskanowaniu otwiera się strona z listą imion wszystkich osób; każda osoba dotyka swojego imienia, potwierdza „tak, to ja” i trafia prosto na swoją prywatną część — dokładnie tę samą stronę, którą dostałaby z osobnego linku. Wysyłanie linków pojedynczo nadal jest dostępne dla osób, których nie ma przy stole.
+
 ## Co widzi Twój znajomy
 
 Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", przypisane jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.

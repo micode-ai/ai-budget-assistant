@@ -2484,6 +2484,11 @@ export default {
     overBill: "The shares add up to more than the bill.",
     encrypted: 'Splitting is not available for end-to-end encrypted accounts, because the server cannot read the receipt.',
     offline: 'You need a connection to create the links.',
+    showQr: 'Show QR code',
+    qrTitle: 'Scan to split',
+    qrHint: 'Anyone at the table can scan this to see their own share',
+    qrShare: 'Share link',
+    qrShareMessage: 'Scan this to see your share of the bill:',
   },
   receiptCategorySplit: {
     title: 'Split by category',

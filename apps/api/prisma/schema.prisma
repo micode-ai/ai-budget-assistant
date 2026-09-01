@@ -605,6 +605,13 @@ model ReceiptSplitParticipant {
   seq           Int
   name          String
   token         String    @unique
+  // Set ONLY on the seq:0 ("anchor") row of a split, at creation time — one
+  // shared group-picker token per split, not per participant. NULL for every
+  // split created before this column existed (no backfill) and for every
+  // non-anchor row of a split created after it. See
+  // docs/contracts/qr-code-bill-split-api.md for the full design (QR-code
+  // bill split — scan one code, pick your own name).
+  groupToken    String?   @unique @map("group_token")
   amount        Decimal   @db.Decimal(12, 2)
   currencyCode  String    @map("currency_code")
   itemIds       Json?     @map("item_ids")

@@ -483,6 +483,141 @@ describe('GuestController guard metadata — the no-authentication invariant', (
     expect(nonThrottlerGuardNames(GuestController.prototype.markPaid)).toEqual([]);
     expect(guards).toContain(ThrottlerGuard);
   });
+
+  it('attaches no authentication guard on GET /g/:groupToken, and keeps ThrottlerGuard', () => {
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.groupPicker) as Function[] | undefined) ?? [];
+    expect(nonThrottlerGuardNames(GuestController.prototype.groupPicker)).toEqual([]);
+    expect(guards).toContain(ThrottlerGuard);
+  });
+
+  it('attaches no authentication guard on GET /g/:groupToken/:seq, and keeps ThrottlerGuard', () => {
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.groupConfirm) as Function[] | undefined) ?? [];
+    expect(nonThrottlerGuardNames(GuestController.prototype.groupConfirm)).toEqual([]);
+    expect(guards).toContain(ThrottlerGuard);
+  });
+});
+
+/**
+ * ABA — QR-code bill split. Fixture mirrors `participantFixture` above but adds
+ * `expenseId`/`seq`/`groupToken` — the columns `findUsableGroupAnchor` actually
+ * selects, which the pre-existing per-participant fixture never needed.
+ */
+const groupAnchorFixture: any = {
+  id: 'p-anchor',
+  expenseId: 'exp-1',
+  cancelledAt: null,
+  expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 10),
+};
+
+function buildGroupController(
+  opts: {
+    anchor?: any;
+    siblings?: any[];
+    merchant?: string | null;
+    sibling?: any;
+  } = {},
+) {
+  const anchor = opts.anchor === undefined ? groupAnchorFixture : opts.anchor;
+  const siblings =
+    opts.siblings ??
+    [
+      { seq: 0, name: 'Alice' },
+      { seq: 1, name: 'Bob' },
+    ];
+
+  const prisma: any = {
+    receiptSplitParticipant: {
+      findUnique: jest.fn().mockResolvedValue(anchor),
+      findMany: jest.fn().mockResolvedValue(siblings),
+      findFirst: jest
+        .fn()
+        .mockResolvedValue(
+          opts.sibling === undefined ? { name: 'Alice', token: 'a'.repeat(32) } : opts.sibling,
+        ),
+    },
+    expense: {
+      findUnique: jest.fn().mockResolvedValue({ merchant: opts.merchant ?? 'Test Diner' }),
+    },
+  };
+
+  const notificationsService: any = { sendToUser: jest.fn() };
+  const controller = new GuestController(prisma, notificationsService);
+  return { controller, prisma };
+}
+
+describe('GuestController.groupPicker (ABA — QR-code bill split)', () => {
+  it('needs no authentication and renders a names-only list', async () => {
+    const { controller } = buildGroupController();
+    const html = await controller.groupPicker('g'.repeat(32), {} as any);
+    expect(html).toContain('Alice');
+    expect(html).toContain('Bob');
+  });
+
+  it('never renders an amount, a currency code, or a payment status — names and hrefs only', async () => {
+    const { controller } = buildGroupController();
+    const html = await controller.groupPicker('g'.repeat(32), {} as any);
+    expect(html).not.toMatch(/USD|EUR|PLN/);
+    expect(html).not.toMatch(/settled|claimed|opened/i);
+  });
+
+  it('never embeds a real per-participant /s/:token link — only /s/g/:groupToken/:seq confirm links', async () => {
+    const { controller } = buildGroupController();
+    const groupToken = 'g'.repeat(32);
+    const html = await controller.groupPicker(groupToken, {} as any);
+    expect(html).toContain(`/s/g/${groupToken}/0`);
+    expect(html).toContain(`/s/g/${groupToken}/1`);
+    // No bare /s/<32-hex> link anywhere in the picker page.
+    expect(html).not.toMatch(/\/s\/[0-9a-f]{32}(?!\/)/);
+  });
+
+  it('answers an unknown, an expired, and a cancelled groupToken identically', async () => {
+    const unknown = await buildGroupController({ anchor: null }).controller.groupPicker(
+      '0'.repeat(32),
+      {} as any,
+    );
+    const expired = await buildGroupController({
+      anchor: { ...groupAnchorFixture, expiresAt: new Date('2000-01-01') },
+    }).controller.groupPicker('1'.repeat(32), {} as any);
+    const cancelled = await buildGroupController({
+      anchor: { ...groupAnchorFixture, cancelledAt: new Date() },
+    }).controller.groupPicker('2'.repeat(32), {} as any);
+
+    expect(expired).toBe(unknown);
+    expect(cancelled).toBe(unknown);
+  });
+});
+
+describe('GuestController.groupConfirm (ABA — QR-code bill split)', () => {
+  it('renders a "is this you?" confirmation naming the picked participant, with a Yes link to their real token page', async () => {
+    const { controller } = buildGroupController({
+      sibling: { name: 'Alice', token: 'a'.repeat(32) },
+    });
+    const groupToken = 'g'.repeat(32);
+    const html = await controller.groupConfirm(groupToken, '0', {} as any);
+    expect(html).toContain('Alice');
+    expect(html).toContain(`/s/${'a'.repeat(32)}`);
+    // The "no" path returns to the picker, not to any other participant's page.
+    expect(html).toContain(`/s/g/${groupToken}`);
+  });
+
+  it('renders the not-found page for an out-of-range seq', async () => {
+    const { controller } = buildGroupController({ sibling: null });
+    const html = await controller.groupConfirm('g'.repeat(32), '99', {} as any);
+    expect(html).not.toContain('Alice');
+  });
+
+  it('renders the not-found page for a non-numeric seq without throwing', async () => {
+    const { controller } = buildGroupController();
+    await expect(controller.groupConfirm('g'.repeat(32), 'not-a-number', {} as any)).resolves.toEqual(
+      expect.any(String),
+    );
+  });
+
+  it('answers an unknown groupToken the same way regardless of seq', async () => {
+    const { controller } = buildGroupController({ anchor: null });
+    const html = await controller.groupConfirm('0'.repeat(32), '0', {} as any);
+    expect(html).not.toContain('Alice');
+  });
 });
 
 describe('renderGuestPage — pay affordance suppressed once payment is claimed', () => {

@@ -28,6 +28,10 @@ interface ParticipantStatusListProps {
   onConfirm: (participant: SplitParticipantState) => void;
   onCopyAll: () => void;
   onCancelPress: () => void;
+  /** Opens the group QR modal (ABA — QR-code bill split) — undefined when
+   * `split.groupUrl` is null (a split created before this field existed),
+   * in which case the button below is not rendered at all. */
+  onShowQr?: () => void;
 }
 
 /**
@@ -49,6 +53,7 @@ export function ParticipantStatusList({
   onConfirm,
   onCopyAll,
   onCancelPress,
+  onShowQr,
 }: ParticipantStatusListProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -127,6 +132,18 @@ export function ParticipantStatusList({
             </View>
           ))}
         </View>
+
+        {/* In-person action — everyone at the table scans one code instead of
+            the payer delivering N distinct links one at a time (ABA —
+            QR-code bill split). Hidden for a split created before
+            `groupUrl` existed (see the prop doc above); "Copy all links"
+            below stays for the async/remote case either way. */}
+        {onShowQr && (
+          <TouchableOpacity style={styles.showQrBtn} onPress={onShowQr} activeOpacity={0.7}>
+            <Ionicons name="qr-code-outline" size={18} color={theme.colors.onSemantic} />
+            <Text style={styles.showQrText}>{t('receiptSplit.showQr')}</Text>
+          </TouchableOpacity>
+        )}
 
         <TouchableOpacity style={styles.copyAllBtn} onPress={onCopyAll} activeOpacity={0.7}>
           <Ionicons name="copy-outline" size={16} color={theme.colors.primary} />
@@ -232,6 +249,20 @@ const createStyles = (theme: Theme) => ({
   },
   confirmActionText: {
     color: theme.colors.success,
+  },
+  showQrBtn: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[2],
+    paddingVertical: theme.spacing[3.5],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.primary,
+  },
+  showQrText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.onSemantic,
+    fontFamily: theme.fonts.semiBold,
   },
   copyAllBtn: {
     flexDirection: 'row' as const,

@@ -49,6 +49,8 @@ interface ParticipantRow {
   amount: unknown;
   currencyCode: string;
   token: string;
+  seq: number;
+  groupToken: string | null;
   openedAt: Date | null;
   claimedAt: Date | null;
   settledAt: Date | null;
@@ -173,6 +175,14 @@ export class ReceiptSplitService {
     return `${GUEST_LINK_BASE}/s/${token}?lang=${lang}`;
   }
 
+  /** Group-picker URL — one QR-able link for the whole split (ABA — QR-code
+   * bill split). `null` when the anchor (seq:0) row carries no groupToken,
+   * which is the case for every split created before this field existed. */
+  private buildGuestGroupUrl(groupToken: string | null, lang: string): string | null {
+    if (!groupToken) return null;
+    return `${GUEST_LINK_BASE}/s/g/${groupToken}?lang=${lang}`;
+  }
+
   private toStateResponse(
     expense: { id: string; currencyCode: string; amount: unknown },
     participants: ParticipantRow[],
@@ -188,11 +198,17 @@ export class ReceiptSplitService {
       status: this.statusFor(p),
       url: this.buildGuestUrl(p.token, lang),
     }));
+    // The anchor row (seq:0) is the sole carrier of groupToken — find it
+    // rather than assuming array order/index, since `orderBy: { createdAt: 'asc' }`
+    // (used by getSplit/the idempotency re-fetch) happens to match seq order
+    // today but is not itself a guarantee of it.
+    const anchor = participants.find((p) => p.seq === 0);
     return {
       expenseId: expense.id,
       ownShare,
       currencyCode: expense.currencyCode,
       participants: participantStates,
+      groupUrl: this.buildGuestGroupUrl(anchor?.groupToken ?? null, lang),
     };
   }
 
@@ -292,6 +308,12 @@ export class ReceiptSplitService {
           const name = trimmedNames[index];
           const token = randomBytes(TOKEN_BYTES).toString('hex');
 
+          // One shared group-picker token per split (ABA — QR-code bill
+          // split), minted alongside the per-participant token but stored
+          // ONLY on the anchor (seq:0) row — see the schema comment on
+          // `groupToken`.
+          const groupToken = index === 0 ? randomBytes(TOKEN_BYTES).toString('hex') : undefined;
+
           const debtExpense = await tx.expense.create({
             data: {
               accountId,
@@ -326,6 +348,7 @@ export class ReceiptSplitService {
               seq: index,
               name,
               token,
+              groupToken,
               amount,
               currencyCode: expense.currencyCode,
               itemIds: p.itemIds && p.itemIds.length > 0 ? p.itemIds : undefined,

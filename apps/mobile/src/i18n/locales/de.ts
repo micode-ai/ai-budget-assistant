@@ -2480,6 +2480,11 @@ export default {
     overBill: 'Die Anteile ergeben zusammen mehr als die Rechnung.',
     encrypted: 'Aufteilen ist bei Ende-zu-Ende-verschlüsselten Konten nicht möglich, da der Server den Kassenbon nicht lesen kann.',
     offline: 'Du benötigst eine Verbindung, um die Links zu erstellen.',
+    showQr: 'QR-Code anzeigen',
+    qrTitle: 'Zum Teilen scannen',
+    qrHint: 'Jeder am Tisch kann das scannen, um seinen eigenen Anteil zu sehen',
+    qrShare: 'Link teilen',
+    qrShareMessage: 'Scanne das, um deinen Anteil der Rechnung zu sehen:',
   },
   receiptCategorySplit: {
     title: 'Nach Kategorie aufteilen',

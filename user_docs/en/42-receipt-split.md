@@ -23,6 +23,10 @@ The app won't let the assigned shares add up to more than what you actually paid
 
 Send each friend their link however you like — text message, WhatsApp, email, anything your phone can share to. There's also a **Copy all links** button that copies every friend's name and link at once. A friend never needs to install the app or create an account to use their link.
 
+### Still at the table? Show one QR code instead
+
+If everyone's still sitting there, tap **Show QR code** instead of sending links one by one. Hold up your screen, and everyone scans the same code with their phone's camera — no typing a number, no waiting for a text to arrive. Scanning it opens a page listing everyone's name; each person taps their own name, confirms "yes, that's me," and lands straight on their own private share — exactly the same page they'd have gotten from an individual link. Sending links one at a time is still there for anyone who isn't physically present.
+
 ## What your friend sees
 
 Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their assigned items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. The page opens in your app's language, not necessarily theirs.

@@ -4471,6 +4471,10 @@ The app won't let the assigned shares add up to more than what you actually paid
 
 Send each friend their link however you like — text message, WhatsApp, email, anything your phone can share to. There's also a **Copy all links** button that copies every friend's name and link at once. A friend never needs to install the app or create an account to use their link.
 
+### Still at the table? Show one QR code instead
+
+If everyone's still sitting there, tap **Show QR code** instead of sending links one by one. Hold up your screen, and everyone scans the same code with their phone's camera — no typing a number, no waiting for a text to arrive. Scanning it opens a page listing everyone's name; each person taps their own name, confirms "yes, that's me," and lands straight on their own private share — exactly the same page they'd have gotten from an individual link. Sending links one at a time is still there for anyone who isn't physically present.
+
 ## What your friend sees
 
 Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their assigned items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. The page opens in your app's language, not necessarily theirs.
@@ -8964,6 +8968,10 @@ AI Budget Assistant предлагает три уровня подписки. �
 
 Отправьте каждому другу его ссылку как вам удобно — SMS, WhatsApp, email, чем угодно, чем умеет делиться ваш телефон. Есть также кнопка **Скопировать все ссылки**, которая копирует имя и ссылку каждого друга сразу. Другу никогда не нужно устанавливать приложение или создавать аккаунт, чтобы воспользоваться своей ссылкой.
 
+### Все ещё за столом? Покажите один QR-код
+
+Если все ещё сидят рядом, нажмите **Показать QR-код** вместо того, чтобы рассылать ссылки по одной. Поднимите экран — и пусть каждый отсканирует один и тот же код камерой телефона: не нужно вводить номер, не нужно ждать SMS. После сканирования открывается страница со списком всех имён; каждый нажимает на своё имя, подтверждает «да, это я» и попадает прямо на свою личную часть счёта — точно ту же страницу, что и по отдельной ссылке. Рассылка ссылок по одной по-прежнему доступна для тех, кого нет за столом.
+
 ## Что видит ваш друг
 
 Открыв ссылку, он видит только свою собственную часть: магазин/заведение и дату, «*Вы* оплатили за всех», назначенные ему позиции (или его равную долю счёта, если позиций не было) и сумму, которую он вам должен, — в валюте счёта. Страница открывается на языке вашего приложения, не обязательно на его.
@@ -13427,6 +13435,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 
 Надішліть кожному другові його посилання як вам зручно — SMS, WhatsApp, електронною поштою, будь-чим, чим уміє ділитися ваш телефон. Є також кнопка **Скопіювати всі посилання**, яка копіює ім'я та посилання кожного друга одразу. Другові ніколи не потрібно встановлювати застосунок чи створювати акаунт, щоб скористатися своїм посиланням.
 
+### Ще за столом? Покажіть один QR-код
+
+Якщо всі ще сидять поруч, натисніть **Показати QR-код** замість того, щоб надсилати посилання по одному. Підніміть екран — і нехай кожен відсканує один і той самий код камерою телефону: не треба вводити номер, не треба чекати на SMS. Після сканування відкривається сторінка зі списком усіх імен; кожен натискає на своє ім'я, підтверджує «так, це я» і потрапляє прямо на свою особисту частку — точно ту саму сторінку, що й за окремим посиланням. Надсилання посилань по одному й досі доступне для тих, кого немає за столом.
+
 ## Що бачить ваш друг
 
 Відкривши посилання, він бачить лише свою власну частку: заклад і дату, «*Ви* заплатили за всіх», призначені йому позиції (або його рівну частку рахунку, якщо позицій не було) і суму, яку він винен вам, — у валюті рахунку. Сторінка відкривається мовою вашого застосунку, не обов'язково його.
@@ -17875,6 +17887,10 @@ Aplikacja nie pozwoli, żeby przypisane części zsumowały się na więcej, ni�
 
 Wyślij każdemu znajomemu jego link, jak Ci wygodnie — SMS-em, przez WhatsApp, mailem, czymkolwiek, czym Twój telefon potrafi się dzielić. Jest też przycisk **Skopiuj wszystkie linki**, który kopiuje imię i link każdego znajomego naraz. Znajomy nigdy nie musi instalować aplikacji ani zakładać konta, żeby skorzystać ze swojego linku.
 
+### Wciąż przy stole? Pokaż jeden kod QR
+
+Jeśli wszyscy wciąż siedzą przy stole, zamiast wysyłać linki po kolei, dotknij **Pokaż kod QR**. Podnieś ekran, a każdy zeskanuje ten sam kod aparatem telefonu — bez wpisywania numeru, bez czekania na SMS-a. Po zeskanowaniu otwiera się strona z listą imion wszystkich osób; każda osoba dotyka swojego imienia, potwierdza „tak, to ja” i trafia prosto na swoją prywatną część — dokładnie tę samą stronę, którą dostałaby z osobnego linku. Wysyłanie linków pojedynczo nadal jest dostępne dla osób, których nie ma przy stole.
+
 ## Co widzi Twój znajomy
 
 Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", przypisane jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
@@ -22298,6 +22314,10 @@ Die App lässt es nicht zu, dass die zugewiesenen Anteile zusammen mehr ergeben,
 
 Schick jedem Freund seinen Link, wie du möchtest — SMS, WhatsApp, E-Mail, alles, worüber dein Handy teilen kann. Es gibt außerdem den Button **Alle Links kopieren**, der Namen und Link jedes Freundes auf einmal kopiert. Ein Freund muss die App nie installieren oder ein Konto anlegen, um seinen Link zu nutzen.
 
+### Noch am Tisch? Zeig einen einzigen QR-Code
+
+Wenn alle noch da sitzen, tippe auf **QR-Code anzeigen**, statt Links einzeln zu verschicken. Halte dein Display hoch, und alle scannen denselben Code mit der Handykamera — keine Nummer eintippen, kein Warten auf eine SMS. Nach dem Scannen erscheint eine Liste mit allen Namen; jede Person tippt auf den eigenen Namen, bestätigt "ja, das bin ich" und landet direkt auf ihrem eigenen privaten Anteil — genau derselben Seite, die sie auch über einen einzelnen Link bekommen hätte. Das einzelne Versenden bleibt für alle, die nicht persönlich dabei sind.
+
 ## Was dein Freund sieht
 
 Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine zugewiesenen Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.
@@ -26710,6 +26730,10 @@ La app no deja que las partes asignadas sumen más de lo que realmente pagaste �
 
 Envía a cada amigo su enlace como prefieras — mensaje de texto, WhatsApp, correo, cualquier cosa con la que tu teléfono pueda compartir. También hay un botón **Copiar todos los enlaces** que copia el nombre y el enlace de cada amigo de una vez. Un amigo nunca necesita instalar la app ni crear una cuenta para usar su enlace.
 
+### ¿Seguís en la mesa? Muestra un solo código QR
+
+Si todos siguen ahí sentados, toca **Mostrar código QR** en lugar de enviar enlaces uno por uno. Levanta la pantalla y que todos escaneen el mismo código con la cámara del teléfono — sin escribir ningún número, sin esperar a que llegue un mensaje. Al escanearlo se abre una página con el nombre de cada uno; cada persona toca su propio nombre, confirma "sí, soy yo" y llega directamente a su propia parte privada — exactamente la misma página que habría obtenido con un enlace individual. Enviar los enlaces uno por uno sigue disponible para quien no esté presente.
+
 ## Qué ve tu amigo
 
 Al abrir el enlace solo se ve la parte de esa persona: el comercio y la fecha, "*Tú* pagaste por todos", sus artículos asignados (o su parte igual de la cuenta si no había artículos) y el importe que te debe, en la moneda de la cuenta. La página se abre en el idioma de tu app, no necesariamente en el suyo.
@@ -31120,6 +31144,10 @@ L'application ne laisse pas les parts attribuées dépasser, une fois additionn�
 
 Envoyez à chaque ami son lien comme vous le souhaitez — SMS, WhatsApp, e-mail, tout ce que votre téléphone sait partager. Il y a aussi un bouton **Copier tous les liens**, qui copie le nom et le lien de chaque ami en une fois. Un ami n'a jamais besoin d'installer l'application ni de créer un compte pour utiliser son lien.
 
+### Encore à table ? Affichez un seul code QR
+
+Si tout le monde est encore là, appuyez sur **Afficher le code QR** au lieu d'envoyer les liens un par un. Montrez votre écran, et que chacun scanne le même code avec l'appareil photo de son téléphone — pas de numéro à saisir, pas d'attente d'un SMS. Le scan ouvre une page listant tous les noms ; chaque personne appuie sur son propre nom, confirme « oui, c'est moi » et arrive directement sur sa propre part privée — exactement la même page qu'avec un lien individuel. L'envoi des liens un par un reste disponible pour qui n'est pas présent physiquement.
+
 ## Ce que voit votre ami
 
 En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles attribués (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.
@@ -35486,6 +35514,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 ## Адпраўка спасылак
 
 Адпраўце кожнаму сябру яго спасылку так, як вам зручна — SMS, WhatsApp, электроннай поштай, чым заўгодна, чым умее дзяліцца ваш тэлефон. Ёсць таксама кнопка **Скапіраваць усе спасылкі**, якая капіруе імя і спасылку кожнага сябра адразу. Сябру ніколі не трэба ўсталёўваць праграму ці ствараць уліковы запіс, каб скарыстацца сваёй спасылкай.
+
+### Усе яшчэ за сталом? Пакажыце адзін QR-код
+
+Калі ўсе яшчэ сядзяць побач, націсніце **Паказаць QR-код** замест таго, каб рассылаць спасылкі па адной. Падніміце экран — і няхай кожны адсканіруе адзін і той жа код камерай тэлефона: не трэба ўводзіць нумар, не трэба чакаць SMS. Пасля сканавання адкрываецца старонка са спісам усіх імёнаў; кожны націскае на сваё імя, пацвярджае «так, гэта я» і трапляе прама на сваю асабістую частку — дакладна тую ж старонку, што і па асобнай спасылцы. Рассылка спасылак па адной па-ранейшаму даступная для тых, каго няма за сталом.
 
 ## Што бачыць ваш сябар
 
@@ -39975,6 +40007,10 @@ De app laat niet toe dat de toegewezen delen samen meer worden dan je daadwerkel
 ## Links versturen
 
 Stuur elke vriend zijn link zoals jij wilt — sms, WhatsApp, e-mail, alles waarmee je telefoon kan delen. Er is ook een knop **Alle links kopiëren**, die de naam en link van elke vriend in één keer kopieert. Een vriend hoeft nooit de app te installeren of een account aan te maken om zijn link te gebruiken.
+
+### Nog aan tafel? Toon één QR-code
+
+Zit iedereen nog bij elkaar, tik dan op **QR-code tonen** in plaats van links één voor één te versturen. Houd je scherm omhoog en laat iedereen dezelfde code scannen met de camera van hun telefoon — geen nummer intypen, niet wachten op een sms. Scannen opent een pagina met ieders naam; elke persoon tikt op zijn eigen naam, bevestigt "ja, dat ben ik" en komt direct op zijn eigen privédeel terecht — precies dezelfde pagina als bij een individuele link. Links één voor één versturen blijft beschikbaar voor wie niet fysiek aanwezig is.
 
 ## Wat je vriend ziet
 

@@ -261,6 +261,49 @@ describe('ReceiptSplitService.createSplit', () => {
     expect(new Set(tokens).size).toBe(tokens.length);
   });
 
+  it('ABA — QR-code bill split: mints a groupToken ONLY on the seq:0 row, and returns a groupUrl built from it', async () => {
+    const { service, tx } = buildDeps({ expense: makeExpense({ amount: 100 }) });
+
+    const result = await service.createSplit('acc-1', 'user-1', 'exp-1', {
+      mode: 'equal',
+      participants: [{ name: 'Alice' }, { name: 'Bob' }, { name: 'Carol' }],
+    } as any);
+
+    const participantCalls = tx.receiptSplitParticipant.create.mock.calls.map((c: any) => c[0].data);
+    expect(participantCalls[0].groupToken).toMatch(/^[0-9a-f]{32}$/);
+    expect(participantCalls[1].groupToken).toBeUndefined();
+    expect(participantCalls[2].groupToken).toBeUndefined();
+
+    expect(result.groupUrl).not.toBeNull();
+    expect(result.groupUrl).toContain('/s/g/');
+    expect(result.groupUrl).toContain(participantCalls[0].groupToken);
+  });
+
+  it('ABA — QR-code bill split: getSplit/idempotent-return paths surface groupUrl:null for a split created before groupToken existed', async () => {
+    const { service, prisma } = buildDeps({ expense: makeExpense({ amount: 100 }) });
+    // Models a pre-migration split: real rows, but no groupToken column value
+    // (undefined here mirrors a real DB row where the column is simply absent
+    // from the select, and null mirrors the actual persisted value).
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce([
+      {
+        id: 'p-1',
+        seq: 0,
+        name: 'Alice',
+        amount: 100,
+        currencyCode: 'USD',
+        token: 'a'.repeat(32),
+        groupToken: null,
+        openedAt: null,
+        claimedAt: null,
+        settledAt: null,
+        cancelledAt: null,
+      },
+    ]);
+
+    const result = await service.getSplit('acc-1', 'exp-1');
+    expect(result.groupUrl).toBeNull();
+  });
+
   it('re-fetches and returns the winning split on a concurrent-create P2002 race, without a second write', async () => {
     const expense = makeExpense({ amount: 100 });
     const { service, prisma, transactionMock } = buildDeps({ expense });

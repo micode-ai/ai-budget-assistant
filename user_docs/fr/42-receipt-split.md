@@ -23,6 +23,10 @@ L'application ne laisse pas les parts attribuées dépasser, une fois additionn�
 
 Envoyez à chaque ami son lien comme vous le souhaitez — SMS, WhatsApp, e-mail, tout ce que votre téléphone sait partager. Il y a aussi un bouton **Copier tous les liens**, qui copie le nom et le lien de chaque ami en une fois. Un ami n'a jamais besoin d'installer l'application ni de créer un compte pour utiliser son lien.
 
+### Encore à table ? Affichez un seul code QR
+
+Si tout le monde est encore là, appuyez sur **Afficher le code QR** au lieu d'envoyer les liens un par un. Montrez votre écran, et que chacun scanne le même code avec l'appareil photo de son téléphone — pas de numéro à saisir, pas d'attente d'un SMS. Le scan ouvre une page listant tous les noms ; chaque personne appuie sur son propre nom, confirme « oui, c'est moi » et arrive directement sur sa propre part privée — exactement la même page qu'avec un lien individuel. L'envoi des liens un par un reste disponible pour qui n'est pas présent physiquement.
+
 ## Ce que voit votre ami
 
 En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles attribués (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.

@@ -29,6 +29,12 @@ export interface SplitStateResponse {
   ownShare: number;
   currencyCode: string;
   participants: SplitParticipantState[];
+  /** Group picker URL — one QR-able link that resolves to a names-only picker
+   * page, letting every participant scan the same code and pick their own
+   * name (ABA — QR-code bill split). `null` for a split created before this
+   * field existed (no backfill); callers must treat null as "no QR
+   * available", not as an error. */
+  groupUrl: string | null;
 }
 
 /** Distinct names this account has split receipts with before, most-recent

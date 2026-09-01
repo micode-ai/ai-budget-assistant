@@ -2480,6 +2480,11 @@ export default {
     overBill: 'De delen zijn samen meer dan de rekening.',
     encrypted: 'Splitsen is niet beschikbaar voor accounts met end-to-end-versleuteling, omdat de server het bonnetje niet kan lezen.',
     offline: 'Je hebt een verbinding nodig om de links aan te maken.',
+    showQr: 'QR-code tonen',
+    qrTitle: 'Scan om te splitsen',
+    qrHint: 'Iedereen aan tafel kan dit scannen om zijn eigen deel te zien',
+    qrShare: 'Link delen',
+    qrShareMessage: 'Scan dit om jouw deel van de rekening te zien:',
   },
   receiptCategorySplit: {
     title: 'Verdelen op categorie',

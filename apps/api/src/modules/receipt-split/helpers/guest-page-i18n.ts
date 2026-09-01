@@ -58,6 +58,18 @@ export interface GuestPageStrings {
   getIos: string;
   /** Fallback when the expense has no merchant name recorded. */
   genericMerchant: string;
+
+  // --- Group picker (ABA — QR-code bill split): GET /s/g/:groupToken and
+  // GET /s/g/:groupToken/:seq. A names-only page — never renders an amount
+  // or a payment status, see docs/contracts/qr-code-bill-split-api.md. ---
+  /** Browser tab title + heading for the group picker page. */
+  groupPickerTitle: (merchant: string) => string;
+  groupPickerHint: string;
+  /** "You are «Name» — is that you?" confirm step before landing on that
+   * person's own (real, unchanged) guest page. */
+  pickedConfirmQuestion: (name: string) => string;
+  pickedConfirmYes: string;
+  pickedConfirmNo: string;
 }
 
 // Same 9 locales the mobile app supports (src/i18n/locales/*.ts). Order mirrors
@@ -86,6 +98,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Get it on Google Play',
     getIos: 'Download on the App Store',
     genericMerchant: 'your receipt',
+    groupPickerTitle: (merchant) => `Who are you? — ${merchant}`,
+    groupPickerHint: 'Tap your name to see your share',
+    pickedConfirmQuestion: (name) => `You are ${name} — is that you?`,
+    pickedConfirmYes: "Yes, that's me",
+    pickedConfirmNo: 'No, go back',
   },
   ru: {
     title: (merchant) => `Ваша часть счёта в ${merchant}`,
@@ -110,6 +127,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Доступно в Google Play',
     getIos: 'Загрузить в App Store',
     genericMerchant: 'вашему чеку',
+    groupPickerTitle: (merchant) => `Кто вы? — ${merchant}`,
+    groupPickerHint: 'Нажмите на своё имя, чтобы увидеть свою часть',
+    pickedConfirmQuestion: (name) => `Это вы — ${name}?`,
+    pickedConfirmYes: 'Да, это я',
+    pickedConfirmNo: 'Нет, назад',
   },
   ua: {
     title: (merchant) => `Ваша частка рахунку в ${merchant}`,
@@ -134,6 +156,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Доступно в Google Play',
     getIos: 'Завантажити в App Store',
     genericMerchant: 'вашому чеку',
+    groupPickerTitle: (merchant) => `Хто ви? — ${merchant}`,
+    groupPickerHint: 'Натисніть на своє ім’я, щоб побачити свою частку',
+    pickedConfirmQuestion: (name) => `Це ви — ${name}?`,
+    pickedConfirmYes: 'Так, це я',
+    pickedConfirmNo: 'Ні, назад',
   },
   pl: {
     title: (merchant) => `Twoja część rachunku w ${merchant}`,
@@ -158,6 +185,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Dostępne w Google Play',
     getIos: 'Pobierz z App Store',
     genericMerchant: 'Twojego paragonu',
+    groupPickerTitle: (merchant) => `Kim jesteś? — ${merchant}`,
+    groupPickerHint: 'Dotknij swojego imienia, aby zobaczyć swoją część',
+    pickedConfirmQuestion: (name) => `Czy to Ty — ${name}?`,
+    pickedConfirmYes: 'Tak, to ja',
+    pickedConfirmNo: 'Nie, wróć',
   },
   es: {
     title: (merchant) => `Tu parte en ${merchant}`,
@@ -182,6 +214,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Consíguelo en Google Play',
     getIos: 'Descargar en App Store',
     genericMerchant: 'tu recibo',
+    groupPickerTitle: (merchant) => `¿Quién eres? — ${merchant}`,
+    groupPickerHint: 'Toca tu nombre para ver tu parte',
+    pickedConfirmQuestion: (name) => `¿Eres tú — ${name}?`,
+    pickedConfirmYes: 'Sí, soy yo',
+    pickedConfirmNo: 'No, volver',
   },
   fr: {
     title: (merchant) => `Ta part chez ${merchant}`,
@@ -206,6 +243,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Disponible sur Google Play',
     getIos: "Télécharger sur l'App Store",
     genericMerchant: 'ton ticket',
+    groupPickerTitle: (merchant) => `Qui es-tu ? — ${merchant}`,
+    groupPickerHint: 'Touche ton nom pour voir ta part',
+    pickedConfirmQuestion: (name) => `Es-tu ${name} ?`,
+    pickedConfirmYes: "Oui, c'est moi",
+    pickedConfirmNo: 'Non, retour',
   },
   de: {
     title: (merchant) => `Dein Anteil bei ${merchant}`,
@@ -230,6 +272,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Bei Google Play',
     getIos: 'Im App Store laden',
     genericMerchant: 'deinem Beleg',
+    groupPickerTitle: (merchant) => `Wer bist du? — ${merchant}`,
+    groupPickerHint: 'Tippe auf deinen Namen, um deinen Anteil zu sehen',
+    pickedConfirmQuestion: (name) => `Bist du ${name}?`,
+    pickedConfirmYes: 'Ja, das bin ich',
+    pickedConfirmNo: 'Nein, zurück',
   },
   be: {
     title: (merchant) => `Ваша частка рахунку ў ${merchant}`,
@@ -254,6 +301,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Даступна ў Google Play',
     getIos: 'Спампаваць у App Store',
     genericMerchant: 'вашаму чэку',
+    groupPickerTitle: (merchant) => `Хто вы? — ${merchant}`,
+    groupPickerHint: 'Націсніце на сваё імя, каб убачыць сваю частку',
+    pickedConfirmQuestion: (name) => `Гэта вы — ${name}?`,
+    pickedConfirmYes: 'Так, гэта я',
+    pickedConfirmNo: 'Не, назад',
   },
   nl: {
     title: (merchant) => `Jouw deel bij ${merchant}`,
@@ -278,6 +330,11 @@ const translations: Record<string, GuestPageStrings> = {
     getAndroid: 'Beschikbaar op Google Play',
     getIos: 'Download in de App Store',
     genericMerchant: 'je bonnetje',
+    groupPickerTitle: (merchant) => `Wie ben jij? — ${merchant}`,
+    groupPickerHint: 'Tik op jouw naam om jouw deel te zien',
+    pickedConfirmQuestion: (name) => `Ben jij ${name}?`,
+    pickedConfirmYes: 'Ja, dat ben ik',
+    pickedConfirmNo: 'Nee, terug',
   },
 };
 

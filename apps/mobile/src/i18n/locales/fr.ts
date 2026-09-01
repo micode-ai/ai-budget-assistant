@@ -2480,6 +2480,11 @@ export default {
     overBill: "La somme des parts dépasse le montant de l'addition.",
     encrypted: "Le partage n'est pas disponible pour les comptes chiffrés de bout en bout, car le serveur ne peut pas lire le ticket.",
     offline: "Vous avez besoin d'une connexion pour créer les liens.",
+    showQr: 'Afficher le code QR',
+    qrTitle: 'Scanner pour partager',
+    qrHint: "N'importe qui à table peut scanner ceci pour voir sa propre part",
+    qrShare: 'Partager le lien',
+    qrShareMessage: "Scanne ceci pour voir ta part de l'addition :",
   },
   receiptCategorySplit: {
     title: 'Répartir par catégorie',
