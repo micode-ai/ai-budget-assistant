@@ -11,6 +11,7 @@ import { ThemeProvider, useTheme } from '@/theme';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
+import { WhatsNewSpotlight } from '@/components/whatsNew/WhatsNewSpotlight';
 import { UpgradeGate } from '@/components/UpgradeGate';
 import { WebShell } from '@/components/WebShell';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
@@ -484,6 +485,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="whats-new"
+          options={{
+            headerShown: true,
+            title: t('whatsNew.title'),
+          }}
+        />
+        <Stack.Screen
           name="help/[id]"
           options={{
             headerShown: true,
@@ -750,6 +758,7 @@ function RootNavigator() {
         </Stack>
       </WebShell>
       <UpdatePrompt />
+      <WhatsNewSpotlight gateOpen={coldStartGateReady} />
       <UpgradeGate />
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>

@@ -2031,6 +2031,8 @@ export default {
     subscriptionDesc: 'Plan, uso, mejora',
     products: 'Productos',
     productsDesc: 'Gestionar nombres y grupos de productos',
+    whatsNew: 'Novedades',
+    whatsNewDesc: 'Descubre lo que esta app ya puede hacer por ti',
   },
   categories: {
     title: 'Categorías',
@@ -2174,6 +2176,15 @@ export default {
     actionUpdate: 'Actualizar',
     actionLater: 'Más tarde',
     releaseNotesLabel: 'Novedades',
+  },
+  whatsNew: {
+    title: 'Novedades',
+    spotlightNewBadge: 'Nuevo',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'Cuéntame más',
+    actionGotIt: 'Entendido',
+    emptyState: 'Todavía no hay nada aquí — vuelve después de tu próxima actualización.',
   },
   wrapped: {
     title: 'Resumen del año',

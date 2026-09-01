@@ -2035,6 +2035,8 @@ export default {
     subscriptionDesc: 'Тариф, використання, покращення',
     products: 'Товари',
     productsDesc: 'Управління назвами та групами товарів',
+    whatsNew: 'Що нового',
+    whatsNewDesc: 'Дізнайтеся, що цей застосунок вже вміє для вас',
   },
   categories: {
     title: 'Категорії',
@@ -2178,6 +2180,15 @@ export default {
     actionUpdate: 'Оновити',
     actionLater: 'Пізніше',
     releaseNotesLabel: 'Що нового',
+  },
+  whatsNew: {
+    title: 'Що нового',
+    spotlightNewBadge: 'Нове',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'Розкажіть більше',
+    actionGotIt: 'Зрозуміло',
+    emptyState: 'Тут поки що порожньо — перевірте після наступного оновлення.',
   },
   wrapped: {
     title: 'Підсумки року',

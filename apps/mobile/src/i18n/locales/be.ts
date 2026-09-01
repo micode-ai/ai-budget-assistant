@@ -2003,6 +2003,8 @@ export default {
     subscriptionDesc: 'Тарыф, выкарыстанне, паляпшэнне',
     products: 'Тавары',
     productsDesc: 'Кіраванне назвамі і групамі тавараў',
+    whatsNew: 'Што новага',
+    whatsNewDesc: 'Даведайцеся, што гэта праграма ўжо ўмее для вас',
   },
   categories: {
     title: 'Катэгорыі',
@@ -2146,6 +2148,15 @@ export default {
     actionUpdate: 'Абнавіць',
     actionLater: 'Пазней',
     releaseNotesLabel: 'Што новага',
+  },
+  whatsNew: {
+    title: 'Што новага',
+    spotlightNewBadge: 'Новае',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'Раскажыце больш',
+    actionGotIt: 'Зразумела',
+    emptyState: 'Тут пакуль пуста — праверце пасля наступнага абнаўлення.',
   },
   wrapped: {
     title: 'Вынікі году',

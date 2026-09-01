@@ -2035,6 +2035,8 @@ export default {
     subscriptionDesc: 'Plan, zużycie, ulepszenie',
     products: 'Produkty',
     productsDesc: 'Zarządzaj nazwami i grupami produktów',
+    whatsNew: 'Co nowego',
+    whatsNewDesc: 'Zobacz, co ta aplikacja już potrafi dla Ciebie zrobić',
   },
   categories: {
     title: 'Kategorie',
@@ -2178,6 +2180,15 @@ export default {
     actionUpdate: 'Aktualizuj',
     actionLater: 'Później',
     releaseNotesLabel: 'Co nowego',
+  },
+  whatsNew: {
+    title: 'Co nowego',
+    spotlightNewBadge: 'Nowość',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'Powiedz mi więcej',
+    actionGotIt: 'Rozumiem',
+    emptyState: 'Nic tu jeszcze nie ma — sprawdź ponownie po kolejnej aktualizacji.',
   },
   wrapped: {
     title: 'Podsumowanie roku',

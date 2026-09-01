@@ -2035,6 +2035,8 @@ export default {
     subscriptionDesc: 'Тариф, использование, улучшение',
     products: 'Товары',
     productsDesc: 'Управление названиями и группами товаров',
+    whatsNew: 'Что нового',
+    whatsNewDesc: 'Узнайте, что это приложение уже умеет для вас',
   },
   categories: {
     title: 'Категории',
@@ -2178,6 +2180,15 @@ export default {
     actionUpdate: 'Обновить',
     actionLater: 'Позже',
     releaseNotesLabel: 'Что нового',
+  },
+  whatsNew: {
+    title: 'Что нового',
+    spotlightNewBadge: 'Новое',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'Расскажите подробнее',
+    actionGotIt: 'Понятно',
+    emptyState: 'Пока здесь пусто — загляните после следующего обновления.',
   },
   wrapped: {
     title: 'Итоги года',

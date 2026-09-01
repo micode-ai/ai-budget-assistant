@@ -2035,6 +2035,8 @@ export default {
     subscriptionDesc: 'Plan, usage, upgrade',
     products: 'Products',
     productsDesc: 'Manage product names and groups',
+    whatsNew: "What's New",
+    whatsNewDesc: 'See what this app can already do for you',
   },
   categories: {
     title: 'Categories',
@@ -2178,6 +2180,15 @@ export default {
     actionUpdate: 'Update',
     actionLater: 'Later',
     releaseNotesLabel: "What's new",
+  },
+  whatsNew: {
+    title: "What's New",
+    spotlightNewBadge: 'New',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'Tell me more',
+    actionGotIt: 'Got it',
+    emptyState: 'Nothing here yet — check back after your next update.',
   },
   wrapped: {
     title: 'Wrapped',

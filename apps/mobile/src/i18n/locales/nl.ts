@@ -2031,6 +2031,8 @@ export default {
     subscriptionDesc: 'Plan, gebruik, upgrade',
     products: 'Producten',
     productsDesc: 'Productnamen en groepen beheren',
+    whatsNew: 'Wat is er nieuw',
+    whatsNewDesc: 'Ontdek wat deze app al voor je kan doen',
   },
   categories: {
     title: 'Categorieën',
@@ -2174,6 +2176,15 @@ export default {
     actionUpdate: 'Bijwerken',
     actionLater: 'Later',
     releaseNotesLabel: 'Wat is er nieuw',
+  },
+  whatsNew: {
+    title: 'Wat is er nieuw',
+    spotlightNewBadge: 'Nieuw',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'Vertel me meer',
+    actionGotIt: 'Begrepen',
+    emptyState: 'Hier staat nog niets — kom terug na je volgende update.',
   },
   wrapped: {
     title: 'Jaaroverzicht',

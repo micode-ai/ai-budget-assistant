@@ -135,6 +135,12 @@ export default function SettingsIndexScreen() {
       route: '/settings/data',
     },
     {
+      icon: 'megaphone-outline',
+      label: t('settingsNav.whatsNew'),
+      description: t('settingsNav.whatsNewDesc'),
+      route: '/whats-new',
+    },
+    {
       icon: 'information-circle-outline',
       label: t('settingsNav.about'),
       description: t('settingsNav.aboutDesc'),

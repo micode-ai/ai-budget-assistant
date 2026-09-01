@@ -2031,6 +2031,8 @@ export default {
     subscriptionDesc: 'Forfait, utilisation, mise à niveau',
     products: 'Produits',
     productsDesc: 'Gérer les noms et groupes de produits',
+    whatsNew: 'Nouveautés',
+    whatsNewDesc: "Découvrez ce que l'application peut déjà faire pour vous",
   },
   categories: {
     title: 'Catégories',
@@ -2174,6 +2176,15 @@ export default {
     actionUpdate: 'Mettre à jour',
     actionLater: 'Plus tard',
     releaseNotesLabel: 'Nouveautés',
+  },
+  whatsNew: {
+    title: 'Nouveautés',
+    spotlightNewBadge: 'Nouveau',
+    tierPro: 'Pro',
+    tierBusiness: 'Business',
+    actionLearnMore: 'En savoir plus',
+    actionGotIt: 'Compris',
+    emptyState: "Rien ici pour l'instant — revenez après votre prochaine mise à jour.",
   },
   wrapped: {
     title: "Rétro de l'année",
