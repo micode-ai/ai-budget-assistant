@@ -8,6 +8,37 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.22.0 - 2026-09-01
+
+**Splitting a bill with the people standing next to you**
+
+- **One QR code instead of five separate links.** Split a receipt and the app now
+  shows a single QR code everyone at the table can scan. Each person picks their
+  own name from a list, confirms it is them, and lands on their own share with
+  the payment link already there — no messaging anyone, no copying links one at a
+  time. The QR shows names only, never an amount or who has paid, and sending
+  individual links still works for anyone who is not in the room (ABA-471).
+
+**Finding what the app already does**
+
+- **A one-time note about a feature you probably have not found.** The app has
+  quietly gained a lot — Safe-to-Spend, the Inflation Shield, your personal
+  inflation index, Financial Wrapped, the receipt price check — and nothing ever
+  told you. You will now see a single dismissible card about one of them: one at
+  a time, never a digest of everything you missed, and never before you have
+  added your first transaction. The full list is in Settings whenever you want to
+  browse it (ABA-470).
+
+**Under the hood**
+
+Work with no visible change, listed for completeness: the currency-conversion
+helper that had been copied into five separate services is now one (ABA-466), and
+four oversized files were split into focused modules — the sign-in store
+(ABA-467), the sync service (ABA-468), the transfer screen (ABA-469) and the
+home-screen widget switch.
+
+---
+
 ## 1.21.0 - 2026-08-31
 
 **A new phone signs you in by itself**
