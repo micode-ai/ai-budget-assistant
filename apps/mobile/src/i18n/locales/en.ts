@@ -1049,6 +1049,8 @@ export default {
     available: 'Available:',
     max: 'Max',
     insufficientHint: 'Amount exceeds the known balance of this account',
+    saveFailed: 'Could not save the change',
+    saveFailedHint: 'The transfer was left as it was. Check your connection and try again.',
   },
   errors: {
     error: 'Error',

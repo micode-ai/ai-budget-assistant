@@ -33,6 +33,7 @@ import {
   addTransferAction,
   updateTransferAction,
   deleteTransferAction,
+  type TransferWriteResult,
 } from './accountTransferActions';
 
 // Sum amounts grouped by a currency key. Used to aggregate in-memory store
@@ -107,7 +108,7 @@ interface WalletState {
     notes?: string;
     countAsIncome?: boolean;
   }) => AccountTransfer;
-  updateTransfer: (id: string, updates: Partial<AccountTransfer>) => void;
+  updateTransfer: (id: string, updates: Partial<AccountTransfer>) => Promise<TransferWriteResult>;
   deleteTransfer: (id: string) => void;
 
   // Computed

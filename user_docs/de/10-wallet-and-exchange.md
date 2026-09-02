@@ -167,7 +167,9 @@ Offne eine Uberweisung uber **Letzte Uberweisungen** oder den Uberweisungsverlau
 
 Beim Wechsel eines Kontos wechselt diese Seite der Uberweisung auch auf die Wahrung des Kontos. Ist **Als Einnahme zahlen** aktiv, wandert der zugehorige Einnahmeeintrag ebenfalls auf das neue Zielkonto.
 
-Eines der beiden Konten muss das Konto bleiben, in dem du gerade arbeitest — sonst wurde die Uberweisung aus dem Verlauf beider Seiten verschwinden.
+Du kannst jede der beiden Seiten auf ein beliebiges anderes Konto verschieben, zu dem du gehörst — auch so, dass das Konto, in dem du gerade arbeitest, gar nicht mehr an der Überweisung beteiligt ist. Genau so korrigierst du eine Überweisung, die auf dem falschen Konto gelandet ist: sie erscheint dann im Verlauf der beiden Konten, zu denen sie jetzt gehört, und verschwindet aus dem Konto, das sie nicht mehr betrifft.
+
+Lässt sich die Änderung nicht speichern — etwa ohne Verbindung —, sagt die App das und lässt die Überweisung unverändert. Halb gespeichert wird sie nie.
 
 ## Unterstutzte Wahrungen
 

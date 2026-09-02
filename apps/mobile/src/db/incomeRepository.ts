@@ -215,6 +215,24 @@ export async function updateIncomeInDb(
   );
 }
 
+/**
+ * Re-homes a locally-cached income to another account after the server has already
+ * moved it (a transfer's receiving account was changed). Mirrors
+ * moveExpenseAccountInDb: server-authoritative, so the row is marked `synced` and no
+ * push is queued. Without this the money keeps counting towards the OLD account's
+ * balance until that account's next income pull tombstones it — which is exactly
+ * what "the balance didn't change and no income appeared" looks like.
+ */
+export async function moveIncomeAccountInDb(
+  id: string,
+  targetAccountId: string,
+): Promise<void> {
+  await executeSql(
+    'UPDATE incomes SET account_id = ?, sync_status = ? WHERE id = ?',
+    [targetAccountId, 'synced', id],
+  );
+}
+
 export async function softDeleteIncomeInDb(
   id: string,
   updatedAt: Date,

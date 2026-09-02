@@ -115,7 +115,9 @@ Abre una transferencia desde **Transferencias recientes** o desde el historial y
 
 Al cambiar una cuenta, ese lado de la transferencia pasa tambien a la moneda de esa cuenta. Si **Contar como ingreso** esta activo, el registro de ingreso correspondiente se mueve tambien a la nueva cuenta destino.
 
-Una de las dos cuentas debe seguir siendo la cuenta en la que estas trabajando; de lo contrario la transferencia desapareceria del historial de ambas partes.
+Puedes mover cualquiera de los dos lados a otra cuenta a la que pertenezcas, incluso si eso deja fuera de la transferencia la cuenta en la que estás trabajando. Así es como se corrige una transferencia que fue a la cuenta equivocada: pasa a aparecer en el historial de las dos cuentas a las que ahora pertenece y desaparece de la que ya no le corresponde.
+
+Si el cambio no se puede guardar —por ejemplo, sin conexión—, la aplicación te lo indica y deja la transferencia tal como estaba. Nunca se guarda a medias.
 
 ## Cambio de divisa
 

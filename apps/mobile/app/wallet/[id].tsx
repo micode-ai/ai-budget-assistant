@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, ScrollView, Platform, ActivityIndicator } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
@@ -25,6 +25,7 @@ export default function TransferDetailScreen() {
   const transfer = transfers.find((tr) => tr.id === id);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
   const [editFromAmount, setEditFromAmount] = useState(transfer?.fromAmount?.toString() || '');
   const [editToAmount, setEditToAmount] = useState(transfer?.toAmount?.toString() || '');
   const [editExchangeRate, setEditExchangeRate] = useState(transfer?.exchangeRate?.toString() || '');
@@ -67,7 +68,7 @@ export default function TransferDetailScreen() {
       ? transfer.toCurrency
       : currencyOf(editToAccountId, transfer.toCurrency);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const from = parseAmount(editFromAmount);
     const to = parseAmount(editToAmount);
     const rate = parseAmount(editExchangeRate);
@@ -82,7 +83,8 @@ export default function TransferDetailScreen() {
       return;
     }
 
-    updateTransfer(transfer.id, {
+    setIsSaving(true);
+    const result = await updateTransfer(transfer.id, {
       fromAccountId: editFromAccountId,
       toAccountId: editToAccountId,
       fromCurrency: editFromCurrency,
@@ -94,6 +96,14 @@ export default function TransferDetailScreen() {
       notes: editNotes.trim() || undefined,
       countAsIncome: editCountAsIncome,
     });
+    setIsSaving(false);
+
+    // A transfer edit that the server refuses is rolled back, not queued — so say
+    // so and stay in edit mode. It used to look saved and then silently revert.
+    if (!result.ok) {
+      showAlert(t('transfer.saveFailed'), t('transfer.saveFailedHint'));
+      return;
+    }
     setIsEditing(false);
   };
 
@@ -348,8 +358,19 @@ export default function TransferDetailScreen() {
               <TouchableOpacity style={styles.cancelEditButton} onPress={handleCancel}>
                 <Text style={styles.cancelEditText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.saveEditButton} onPress={handleSave}>
-                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
+              <TouchableOpacity
+                style={styles.saveEditButton}
+                onPress={handleSave}
+                disabled={isSaving}
+              >
+                {/* Saving is a round trip now, so a second tap must not start a
+                    second update — its rollback baseline would be the already-edited
+                    row. */}
+                {isSaving ? (
+                  <ActivityIndicator size="small" color={theme.colors.textInverse} />
+                ) : (
+                  <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
+                )}
                 <Text style={styles.saveEditText}>{t('common.save')}</Text>
               </TouchableOpacity>
             </View>

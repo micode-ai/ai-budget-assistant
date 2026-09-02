@@ -20,7 +20,9 @@ const EXISTING = {
 
 type Roles = Record<string, 'owner' | 'editor' | 'viewer' | undefined>;
 
-function makeService(options: { roles?: Roles; transfer?: unknown | null } = {}) {
+function makeService(
+  options: { roles?: Roles; transfer?: unknown | null; existing?: typeof EXISTING } = {},
+) {
   const roles: Roles = options.roles ?? {
     personal: 'owner',
     savings: 'owner',
@@ -40,9 +42,22 @@ function makeService(options: { roles?: Roles; transfer?: unknown | null } = {})
       }),
     },
     accountTransfer: {
-      findFirst: jest
-        .fn()
-        .mockResolvedValue(options.transfer === undefined ? EXISTING : options.transfer),
+      // Evaluates the lookup against EXISTING instead of blindly resolving it, so
+      // "found by clientId" and "not a party to this account" are tested as
+      // behaviour rather than as a query shape. An explicit `options.transfer`
+      // (including null) short-circuits it.
+      findFirst: jest.fn(({ where }: { where: Record<string, unknown> }) => {
+        if (options.transfer !== undefined) return Promise.resolve(options.transfer);
+        const row = options.existing ?? EXISTING;
+        const matches = (cond: Record<string, unknown>) =>
+          Object.entries(cond).every(([k, v]) => (row as Record<string, unknown>)[k] === v);
+        const and = (where.AND ?? []) as { OR: Record<string, unknown>[] }[];
+        const ok =
+          where.userId === row.userId &&
+          !where.isDeleted &&
+          and.every((clause) => clause.OR.some(matches));
+        return Promise.resolve(ok ? row : null);
+      }),
     },
     $transaction: jest.fn((cb: (t: typeof tx) => unknown) => cb(tx)),
   };
@@ -74,17 +89,66 @@ describe('AccountTransferService.update — changing accounts', () => {
     );
   });
 
-  it('rejects moving both sides away from the requesting account', async () => {
-    // findAll filters on fromAccountId/toAccountId, so this would make the transfer
-    // invisible to the very account that edited it.
-    const { service } = makeService();
+  it('re-homes the receiving side even when that drops the requesting account', async () => {
+    // The reported bug: a MiCode -> Family transfer, corrected FROM the Family
+    // account to say the money actually went to House. Family stops being a party,
+    // which is the whole point of the correction — the row belongs to MiCode/House
+    // now. Rejecting this made the fix impossible from the screen the user was on,
+    // and the client swallowed the rejection, so the edit silently reverted.
+    const { service, tx } = makeService({
+      transfer: { ...EXISTING, countAsIncome: true, linkedIncomeId: 'inc1' },
+    });
+
+    await service.update('savings', 'u1', 't1', {
+      toAccountId: 'vacation',
+      toCurrency: 'PLN',
+    });
+
+    expect(tx.accountTransfer.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        data: expect.objectContaining({ toAccountId: 'vacation' }),
+      }),
+    );
+    // The money has to follow the transfer, or it stays on an account the
+    // transfer no longer touches.
+    expect(tx.income.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 'inc1' },
+        data: expect.objectContaining({ accountId: 'vacation' }),
+      }),
+    );
+  });
+
+  it('still requires membership of both accounts after dropping the requesting one', async () => {
+    // Removing the party rail must not weaken the real rule: assertCanTransferBetween.
+    const { service } = makeService({ roles: { personal: 'owner', savings: 'owner' } });
 
     await expect(
-      service.update('personal', 'u1', 't1', {
-        fromAccountId: 'savings',
-        toAccountId: 'vacation',
-      }),
+      service.update('savings', 'u1', 't1', { toAccountId: 'stranger' }),
     ).rejects.toThrow(ForbiddenException);
+  });
+
+  it('resolves the transfer by clientId when the client never learned the server id', async () => {
+    // The mobile client addresses a row by its local id until a wallet pull
+    // backfills serverId; looking up by `id` alone 404s that edit away.
+    const { service, tx } = makeService();
+
+    await service.update('personal', 'u1', 'c1', { fromAmount: 2500 });
+
+    expect(tx.accountTransfer.update).toHaveBeenCalledWith(
+      expect.objectContaining({
+        where: { id: 't1' },
+        data: expect.objectContaining({ fromAmount: 2500 }),
+      }),
+    );
+  });
+
+  it('404s when the requesting account is party to neither side', async () => {
+    // Read scoping is the security boundary and must stay: you can only edit a
+    // transfer that the account you are acting as actually touches.
+    const { service } = makeService();
+
+    await expect(service.update('vacation', 'u1', 't1', {})).rejects.toThrow(NotFoundException);
   });
 
   it('rejects collapsing both sides onto the same account', async () => {

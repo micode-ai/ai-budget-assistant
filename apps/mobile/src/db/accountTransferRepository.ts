@@ -100,6 +100,17 @@ export async function insertTransfer(transfer: AccountTransfer): Promise<void> {
   );
 }
 
+/**
+ * Records the server PK for a locally-created transfer. Without this the row keeps
+ * `server_id = NULL` until the next wallet pull happens to backfill it, and any edit
+ * made in that window is addressed by the local id — which the server used to 404
+ * away silently. Mirrors setExpenseServerId (ABA-339): a targeted UPDATE, with no
+ * updated_at/sync_status side effects.
+ */
+export async function setTransferServerId(id: string, serverId: string): Promise<void> {
+  await executeSql('UPDATE account_transfers SET server_id = ? WHERE id = ?', [serverId, id]);
+}
+
 export async function updateTransferInDb(
   id: string,
   updates: Partial<AccountTransfer>,

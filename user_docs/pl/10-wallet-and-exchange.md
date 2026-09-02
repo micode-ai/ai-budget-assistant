@@ -170,7 +170,9 @@ Otwórz przelew z sekcji **Ostatnie przelewy** lub z historii i dotknij **Edytuj
 
 Zmiana konta przełącza tę stronę przelewu również na walutę tego konta. Jeśli opcja **Licz jako przychód** jest włączona, powiązany wpis przychodu przenosi się na nowe konto docelowe.
 
-Jedno z dwóch kont musi pozostać kontem, na którym aktualnie pracujesz — inaczej przelew zniknąłby z historii obu stron.
+Każdą ze stron możesz przenieść na dowolne inne swoje konto — również tak, że konto, na którym właśnie pracujesz, przestanie być stroną przelewu. Właśnie tak poprawia się przelew, który trafił na złe konto: po zapisaniu pojawi się w historii dwóch kont, do których teraz należy, i zniknie z tego, którego już nie dotyczy.
+
+Jeśli zmiany nie da się zapisać — na przykład brak połączenia — aplikacja to zgłosi i zostawi przelew bez zmian. Nigdy nie zapisuje się połowicznie.
 
 ## Obslugiwane waluty
 

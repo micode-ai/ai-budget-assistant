@@ -166,7 +166,9 @@ Open a transfer from **Recent Transfers** or the Transfer History screen and tap
 
 Changing an account also switches that side of the transfer to the account's own currency. If **Count as income** is on, the matching income record moves to the new destination account as well.
 
-One of the two accounts must remain the account you're currently working in — otherwise the transfer would vanish from the history of both sides.
+You can move either side to any other account you belong to — including a change that leaves the account you're currently working in out of the transfer. That is exactly how you correct a transfer that landed on the wrong account: it then appears in the history of the two accounts it now belongs to, and disappears from the one it no longer touches.
+
+If the change cannot be saved — no connection, for example — the app says so and leaves the transfer exactly as it was. It is never saved half-way.
 
 ## Supported Currencies
 

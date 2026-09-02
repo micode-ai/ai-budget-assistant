@@ -166,7 +166,9 @@ Open een overboeking via **Recente overboekingen** of de geschiedenis en tik op 
 
 Een account wijzigen zet die kant van de overboeking ook om naar de valuta van dat account. Staat **Tellen als inkomsten** aan, dan verhuist de bijbehorende inkomstenpost mee naar het nieuwe doelaccount.
 
-Een van de twee accounts moet het account blijven waarin je nu werkt — anders zou de overboeking uit de geschiedenis van beide kanten verdwijnen.
+Je kunt elke kant naar elk ander account verplaatsen waar je lid van bent — ook als het account waarin je nu werkt daardoor geen partij meer is bij de overboeking. Precies zo corrigeer je een overboeking die op het verkeerde account is beland: hij verschijnt dan in de geschiedenis van de twee accounts waar hij nu bij hoort en verdwijnt uit het account dat hij niet meer raakt.
+
+Kan de wijziging niet worden opgeslagen — bijvoorbeeld zonder verbinding — dan meldt de app dat en blijft de overboeking ongewijzigd. Half opgeslagen wordt hij nooit.
 
 ## Ondersteunde valuta's
 

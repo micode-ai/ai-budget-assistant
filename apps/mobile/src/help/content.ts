@@ -1603,7 +1603,9 @@ Open a transfer from **Recent Transfers** or the Transfer History screen and tap
 
 Changing an account also switches that side of the transfer to the account's own currency. If **Count as income** is on, the matching income record moves to the new destination account as well.
 
-One of the two accounts must remain the account you're currently working in — otherwise the transfer would vanish from the history of both sides.
+You can move either side to any other account you belong to — including a change that leaves the account you're currently working in out of the transfer. That is exactly how you correct a transfer that landed on the wrong account: it then appears in the history of the two accounts it now belongs to, and disappears from the one it no longer touches.
+
+If the change cannot be saved — no connection, for example — the app says so and leaves the transfer exactly as it was. It is never saved half-way.
 
 ## Supported Currencies
 
@@ -6115,7 +6117,9 @@ iOS, Android, Web
 
 Смена счёта переводит эту сторону операции и на валюту выбранного счёта. Если включено **Считать доходом**, связанная запись дохода тоже переезжает на новый счёт-получатель.
 
-Один из двух счетов должен остаться тем счётом, в котором вы сейчас работаете, — иначе перевод пропал бы из истории обеих сторон.
+Любую из двух сторон можно перевести на любой другой ваш счёт — в том числе так, что счёт, в котором вы сейчас работаете, вообще перестанет участвовать в переводе. Именно так исправляется перевод, ушедший не на тот счёт: после сохранения он появится в истории двух счетов, к которым теперь относится, и исчезнет из того, к которому больше не имеет отношения.
+
+Если изменение не удалось сохранить — например, нет связи, — приложение сообщит об этом и оставит перевод без изменений. Наполовину он не сохраняется никогда.
 
 ## Поддерживаемые валюты
 
@@ -10631,7 +10635,9 @@ iOS, Android, Web
 
 Зміна рахунку переводить цю сторону операції і на валюту обраного рахунку. Якщо увімкнено **Рахувати як дохід**, пов'язаний запис доходу теж переїжджає на новий рахунок-отримувач.
 
-Один із двох рахунків має залишитися тим рахунком, у якому ви зараз працюєте, — інакше переказ зник би з історії обох сторін.
+Будь-яку зі сторін можна перенести на будь-який інший ваш рахунок — у тому числі так, що рахунок, у якому ви зараз працюєте, більше не буде стороною переказу. Саме так виправляють переказ, який пішов не на той рахунок: після збереження він з'явиться в історії двох рахунків, до яких тепер належить, і зникне з того, якого більше не стосується.
+
+Якщо зміну не вдалося зберегти — наприклад, немає зв'язку — застосунок про це повідомить і залишить переказ без змін. Наполовину він не зберігається ніколи.
 
 ## Підтримувані валюти
 
@@ -15081,7 +15087,9 @@ Otwórz przelew z sekcji **Ostatnie przelewy** lub z historii i dotknij **Edytuj
 
 Zmiana konta przełącza tę stronę przelewu również na walutę tego konta. Jeśli opcja **Licz jako przychód** jest włączona, powiązany wpis przychodu przenosi się na nowe konto docelowe.
 
-Jedno z dwóch kont musi pozostać kontem, na którym aktualnie pracujesz — inaczej przelew zniknąłby z historii obu stron.
+Każdą ze stron możesz przenieść na dowolne inne swoje konto — również tak, że konto, na którym właśnie pracujesz, przestanie być stroną przelewu. Właśnie tak poprawia się przelew, który trafił na złe konto: po zapisaniu pojawi się w historii dwóch kont, do których teraz należy, i zniknie z tego, którego już nie dotyczy.
+
+Jeśli zmiany nie da się zapisać — na przykład brak połączenia — aplikacja to zgłosi i zostawi przelew bez zmian. Nigdy nie zapisuje się połowicznie.
 
 ## Obslugiwane waluty
 
@@ -19530,7 +19538,9 @@ Offne eine Uberweisung uber **Letzte Uberweisungen** oder den Uberweisungsverlau
 
 Beim Wechsel eines Kontos wechselt diese Seite der Uberweisung auch auf die Wahrung des Kontos. Ist **Als Einnahme zahlen** aktiv, wandert der zugehorige Einnahmeeintrag ebenfalls auf das neue Zielkonto.
 
-Eines der beiden Konten muss das Konto bleiben, in dem du gerade arbeitest — sonst wurde die Uberweisung aus dem Verlauf beider Seiten verschwinden.
+Du kannst jede der beiden Seiten auf ein beliebiges anderes Konto verschieben, zu dem du gehörst — auch so, dass das Konto, in dem du gerade arbeitest, gar nicht mehr an der Überweisung beteiligt ist. Genau so korrigierst du eine Überweisung, die auf dem falschen Konto gelandet ist: sie erscheint dann im Verlauf der beiden Konten, zu denen sie jetzt gehört, und verschwindet aus dem Konto, das sie nicht mehr betrifft.
+
+Lässt sich die Änderung nicht speichern — etwa ohne Verbindung —, sagt die App das und lässt die Überweisung unverändert. Halb gespeichert wird sie nie.
 
 ## Unterstutzte Wahrungen
 
@@ -23905,7 +23915,9 @@ Abre una transferencia desde **Transferencias recientes** o desde el historial y
 
 Al cambiar una cuenta, ese lado de la transferencia pasa tambien a la moneda de esa cuenta. Si **Contar como ingreso** esta activo, el registro de ingreso correspondiente se mueve tambien a la nueva cuenta destino.
 
-Una de las dos cuentas debe seguir siendo la cuenta en la que estas trabajando; de lo contrario la transferencia desapareceria del historial de ambas partes.
+Puedes mover cualquiera de los dos lados a otra cuenta a la que pertenezcas, incluso si eso deja fuera de la transferencia la cuenta en la que estás trabajando. Así es como se corrige una transferencia que fue a la cuenta equivocada: pasa a aparecer en el historial de las dos cuentas a las que ahora pertenece y desaparece de la que ya no le corresponde.
+
+Si el cambio no se puede guardar —por ejemplo, sin conexión—, la aplicación te lo indica y deja la transferencia tal como estaba. Nunca se guarda a medias.
 
 ## Cambio de divisa
 
@@ -28372,7 +28384,9 @@ Ouvrez un transfert depuis **Transferts recents** ou l'historique, puis appuyez 
 
 Changer un compte bascule aussi ce cote du transfert vers la devise de ce compte. Si **Compter comme revenu** est active, l'ecriture de revenu correspondante est deplacee vers le nouveau compte destination.
 
-L'un des deux comptes doit rester le compte dans lequel vous travaillez, sinon le transfert disparaitrait de l'historique des deux cotes.
+Vous pouvez déplacer l'un ou l'autre côté vers n'importe quel autre compte dont vous êtes membre, y compris lorsque cela retire de l'opération le compte dans lequel vous travaillez. C'est ainsi que l'on corrige un transfert arrivé sur le mauvais compte : il apparaît alors dans l'historique des deux comptes auxquels il appartient désormais et disparaît de celui qu'il ne concerne plus.
+
+Si la modification ne peut pas être enregistrée — faute de connexion, par exemple — l'application le signale et laisse le transfert inchangé. Il n'est jamais enregistré à moitié.
 
 ## Devises prises en charge
 
@@ -32788,7 +32802,9 @@ iOS, Android, Web
 
 Змена рахунку пераводзіць гэты бок аперацыі і на валюту выбранага рахунку. Калі ўключана **Лічыць даходам**, звязаны запіс даходу таксама пераязджае на новы рахунак-атрымальнік.
 
-Адзін з двух рахункаў павінен застацца тым рахункам, у якім вы зараз працуеце, — інакш перавод знік бы з гісторыі абодвух бакоў.
+Любы з двух бакоў можна перанесці на любы іншы ваш рахунак — у тым ліку так, што рахунак, у якім вы зараз працуеце, больш не будзе бокам пераводу. Менавіта так выпраўляюць перавод, які пайшоў не на той рахунак: пасля захавання ён з'явіцца ў гісторыі двух рахункаў, да якіх ён цяпер належыць, і знікне з таго, да якога больш не мае адносін.
+
+Калі змену не ўдалося захаваць — напрыклад, няма злучэння — дадатак пра гэта паведаміць і пакіне перавод без змен. Напалову ён не захоўваецца ніколі.
 
 ## Падтрыманыя валюты
 
@@ -37157,7 +37173,9 @@ Open een overboeking via **Recente overboekingen** of de geschiedenis en tik op 
 
 Een account wijzigen zet die kant van de overboeking ook om naar de valuta van dat account. Staat **Tellen als inkomsten** aan, dan verhuist de bijbehorende inkomstenpost mee naar het nieuwe doelaccount.
 
-Een van de twee accounts moet het account blijven waarin je nu werkt — anders zou de overboeking uit de geschiedenis van beide kanten verdwijnen.
+Je kunt elke kant naar elk ander account verplaatsen waar je lid van bent — ook als het account waarin je nu werkt daardoor geen partij meer is bij de overboeking. Precies zo corrigeer je een overboeking die op het verkeerde account is beland: hij verschijnt dan in de geschiedenis van de twee accounts waar hij nu bij hoort en verdwijnt uit het account dat hij niet meer raakt.
+
+Kan de wijziging niet worden opgeslagen — bijvoorbeeld zonder verbinding — dan meldt de app dat en blijft de overboeking ongewijzigd. Half opgeslagen wordt hij nooit.
 
 ## Ondersteunde valuta's
 

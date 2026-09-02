@@ -166,7 +166,9 @@ Ouvrez un transfert depuis **Transferts recents** ou l'historique, puis appuyez 
 
 Changer un compte bascule aussi ce cote du transfert vers la devise de ce compte. Si **Compter comme revenu** est active, l'ecriture de revenu correspondante est deplacee vers le nouveau compte destination.
 
-L'un des deux comptes doit rester le compte dans lequel vous travaillez, sinon le transfert disparaitrait de l'historique des deux cotes.
+Vous pouvez déplacer l'un ou l'autre côté vers n'importe quel autre compte dont vous êtes membre, y compris lorsque cela retire de l'opération le compte dans lequel vous travaillez. C'est ainsi que l'on corrige un transfert arrivé sur le mauvais compte : il apparaît alors dans l'historique des deux comptes auxquels il appartient désormais et disparaît de celui qu'il ne concerne plus.
+
+Si la modification ne peut pas être enregistrée — faute de connexion, par exemple — l'application le signale et laisse le transfert inchangé. Il n'est jamais enregistré à moitié.
 
 ## Devises prises en charge
 

@@ -72,14 +72,7 @@ export class AccountTransferService {
   }
 
   async update(accountId: string, userId: string, id: string, dto: UpdateAccountTransferDto) {
-    const transfer = await this.prisma.accountTransfer.findFirst({
-      where: {
-        id,
-        userId,
-        isDeleted: false,
-        OR: [{ fromAccountId: accountId }, { toAccountId: accountId }],
-      },
-    });
+    const transfer = await this.findOwnedTransfer(accountId, userId, id);
     if (!transfer) throw new NotFoundException('Transfer not found');
 
     const nextFromAccountId = dto.fromAccountId ?? transfer.fromAccountId;
@@ -90,12 +83,13 @@ export class AccountTransferService {
       if (nextFromAccountId === nextToAccountId) {
         throw new BadRequestException('Cannot transfer to the same account');
       }
-      // The request's account must stay a party to the transfer: findAll filters on
-      // fromAccountId/toAccountId, so re-homing both sides away would make the row
-      // invisible to the very account that edited it.
-      if (nextFromAccountId !== accountId && nextToAccountId !== accountId) {
-        throw new ForbiddenException('Current account must be a party to the transfer');
-      }
+      // Deliberately NOT requiring the request's account to stay a party. Correcting
+      // "this money went to House, not Family" *from* the Family screen necessarily
+      // drops Family from both sides — that is the correction, not an error. The row
+      // stays visible on the two accounts it now belongs to, and permission is still
+      // decided by assertCanTransferBetween below. The rail used to reject exactly
+      // this edit while the client swallowed the rejection, so the money never moved
+      // and no error was ever shown.
       await this.assertCanTransferBetween(userId, nextFromAccountId, nextToAccountId);
     }
 
@@ -117,7 +111,7 @@ export class AccountTransferService {
           },
         });
         return tx.accountTransfer.update({
-          where: { id },
+          where: { id: transfer.id },
           data: {
             ...this.buildUpdateData(dto),
             countAsIncome: true,
@@ -132,7 +126,7 @@ export class AccountTransferService {
           data: { isDeleted: true, syncVersion: { increment: 1 } },
         });
         return tx.accountTransfer.update({
-          where: { id },
+          where: { id: transfer.id },
           data: {
             ...this.buildUpdateData(dto),
             countAsIncome: false,
@@ -159,7 +153,7 @@ export class AccountTransferService {
           });
         }
         return tx.accountTransfer.update({
-          where: { id },
+          where: { id: transfer.id },
           data: {
             ...this.buildUpdateData(dto),
             countAsIncome,
@@ -167,6 +161,30 @@ export class AccountTransferService {
           },
         });
       }
+    });
+  }
+
+  /**
+   * Resolves a transfer the caller may act on: owned by them, not deleted, and
+   * touching the account they are acting as (the read boundary — you cannot reach a
+   * transfer from an account that is party to neither side).
+   *
+   * `id` is matched against BOTH the server id and `clientId`: the mobile client
+   * addresses a row by its local id until a wallet pull backfills serverId, and
+   * matching on `id` alone 404s that edit away — silently, since the client only
+   * console.warns. Same convention as ExpensesService.resolveExpensePk (ABA-374).
+   * `@@unique([userId, clientId])` makes the clientId branch unambiguous.
+   */
+  private findOwnedTransfer(accountId: string, userId: string, id: string) {
+    return this.prisma.accountTransfer.findFirst({
+      where: {
+        userId,
+        isDeleted: false,
+        AND: [
+          { OR: [{ id }, { clientId: id }] },
+          { OR: [{ fromAccountId: accountId }, { toAccountId: accountId }] },
+        ],
+      },
     });
   }
 
@@ -212,14 +230,7 @@ export class AccountTransferService {
   }
 
   async remove(accountId: string, userId: string, id: string) {
-    const transfer = await this.prisma.accountTransfer.findFirst({
-      where: {
-        id,
-        userId,
-        isDeleted: false,
-        OR: [{ fromAccountId: accountId }, { toAccountId: accountId }],
-      },
-    });
+    const transfer = await this.findOwnedTransfer(accountId, userId, id);
     if (!transfer) throw new NotFoundException('Transfer not found');
 
     await this.prisma.$transaction(async (tx) => {
@@ -231,7 +242,7 @@ export class AccountTransferService {
       }
 
       await tx.accountTransfer.update({
-        where: { id },
+        where: { id: transfer.id },
         data: { isDeleted: true, syncVersion: { increment: 1 } },
       });
     });
