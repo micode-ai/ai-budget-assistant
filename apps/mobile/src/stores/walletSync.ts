@@ -6,7 +6,11 @@
 import type { WalletBalance, CurrencyExchange, AccountTransfer, WalletSummary, Currency, SyncStatus } from '@budget/shared-types';
 import { loadAllWalletBalances, upsertWalletBalance } from '@/db/walletRepository';
 import { loadAllExchanges, insertExchange } from '@/db/currencyExchangeRepository';
-import { loadTransfersByAccount, insertTransfer } from '@/db/accountTransferRepository';
+import {
+  loadTransfersByAccount,
+  insertTransfer,
+  loadPendingTransfers,
+} from '@/db/accountTransferRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { api } from '@/services/api';
 import { maybeDecrypt } from '@/services/encryptionHelper';
@@ -107,13 +111,22 @@ export async function syncWalletFromServer(
     try {
       const serverTransfers = await api.getAccountTransfers();
       if (useAccountStore.getState().currentAccountId !== accountId) return;
+      // A row still waiting in the write queue must NOT be overwritten by the
+      // server's copy: insertTransfer is INSERT OR REPLACE, so the pull would
+      // silently revert an edit made offline (the shopping-list merge guards
+      // pending clientIds for the same reason).
+      const pendingIds = new Set(
+        (await loadPendingTransfers(accountId)).map((t) => t.id),
+      );
       if (Array.isArray(serverTransfers)) {
         for (const st of serverTransfers) {
+          const localId = st.clientId || st.id;
+          if (pendingIds.has(localId)) continue;
           // Only store transfers relevant to current account
           if (st.fromAccountId === accountId || st.toAccountId === accountId) {
             const transfer: AccountTransfer = {
-              id: st.clientId || st.id,
-              localId: st.clientId || st.id,
+              id: localId,
+              localId,
               serverId: st.id,
               userId: st.userId,
               fromAccountId: st.fromAccountId,

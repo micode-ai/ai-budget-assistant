@@ -169,7 +169,9 @@ Beim Wechsel eines Kontos wechselt diese Seite der Uberweisung auch auf die Wahr
 
 Du kannst jede der beiden Seiten auf ein beliebiges anderes Konto verschieben, zu dem du gehörst — auch so, dass das Konto, in dem du gerade arbeitest, gar nicht mehr an der Überweisung beteiligt ist. Genau so korrigierst du eine Überweisung, die auf dem falschen Konto gelandet ist: sie erscheint dann im Verlauf der beiden Konten, zu denen sie jetzt gehört, und verschwindet aus dem Konto, das sie nicht mehr betrifft.
 
-Lässt sich die Änderung nicht speichern — etwa ohne Verbindung —, sagt die App das und lässt die Überweisung unverändert. Halb gespeichert wird sie nie.
+Überweisungen erfassen, bearbeiten und löschen funktioniert auch offline: die Änderung bleibt auf dem Gerät und wird beim nächsten Öffnen des Wallet-Bildschirms mit Verbindung übertragen. Lehnt der Server eine Änderung ab — etwa weil du auf eines der gewählten Konten keinen Zugriff mehr hast —, sagt die App das und lässt die Überweisung unverändert.
+
+In einem gemeinsamen Konto sehen alle Mitglieder die Überweisungen, die es berühren, unabhängig davon, wer sie erfasst hat; im Kontostand waren sie ohnehin immer enthalten. Wer die Überweisung selbst hätte anlegen können — also beiden Konten angehört und auf der zahlenden Seite kein Betrachter ist —, kann sie auch korrigieren oder löschen.
 
 ## Unterstutzte Wahrungen
 

@@ -1605,7 +1605,9 @@ Changing an account also switches that side of the transfer to the account's own
 
 You can move either side to any other account you belong to — including a change that leaves the account you're currently working in out of the transfer. That is exactly how you correct a transfer that landed on the wrong account: it then appears in the history of the two accounts it now belongs to, and disappears from the one it no longer touches.
 
-If the change cannot be saved — no connection, for example — the app says so and leaves the transfer exactly as it was. It is never saved half-way.
+Recording, editing and deleting transfers works offline: the change stays on your device and is pushed the next time the Wallet screen opens with a connection. If the server refuses a change — for example because you no longer have access to one of the accounts you picked — the app tells you and the transfer is left exactly as it was.
+
+In a shared account, every member sees the transfers that touch it, whoever recorded them; the account's balance always counted them anyway. Any member who could have made the transfer — that is, who belongs to both accounts and isn't a viewer on the paying side — can also correct or delete it.
 
 ## Supported Currencies
 
@@ -6119,7 +6121,9 @@ iOS, Android, Web
 
 Любую из двух сторон можно перевести на любой другой ваш счёт — в том числе так, что счёт, в котором вы сейчас работаете, вообще перестанет участвовать в переводе. Именно так исправляется перевод, ушедший не на тот счёт: после сохранения он появится в истории двух счетов, к которым теперь относится, и исчезнет из того, к которому больше не имеет отношения.
 
-Если изменение не удалось сохранить — например, нет связи, — приложение сообщит об этом и оставит перевод без изменений. Наполовину он не сохраняется никогда.
+Добавление, изменение и удаление переводов работает офлайн: изменение остаётся на устройстве и уходит на сервер при следующем открытии экрана «Кошелёк» со связью. Если сервер отклонит изменение — например, потому что у вас больше нет доступа к одному из выбранных счетов, — приложение об этом сообщит, а перевод останется без изменений.
+
+На общем счёте переводы, которые его касаются, видят все участники, независимо от того, кто их записал: в баланс счёта они и так всегда входили. Исправить или удалить перевод может любой участник, который мог бы его сделать сам, — то есть входит в оба счёта и не является наблюдателем на списывающей стороне.
 
 ## Поддерживаемые валюты
 
@@ -10637,7 +10641,9 @@ iOS, Android, Web
 
 Будь-яку зі сторін можна перенести на будь-який інший ваш рахунок — у тому числі так, що рахунок, у якому ви зараз працюєте, більше не буде стороною переказу. Саме так виправляють переказ, який пішов не на той рахунок: після збереження він з'явиться в історії двох рахунків, до яких тепер належить, і зникне з того, якого більше не стосується.
 
-Якщо зміну не вдалося зберегти — наприклад, немає зв'язку — застосунок про це повідомить і залишить переказ без змін. Наполовину він не зберігається ніколи.
+Додавання, зміна та видалення переказів працює офлайн: зміна залишається на пристрої й надсилається на сервер під час наступного відкриття екрана «Гаманець» зі зв’язком. Якщо сервер відхилить зміну — наприклад, тому що у вас більше немає доступу до одного з обраних рахунків, — застосунок про це повідомить, а переказ залишиться без змін.
+
+На спільному рахунку перекази, які його стосуються, бачать усі учасники, незалежно від того, хто їх записав: у баланс рахунку вони й так завжди входили. Виправити або видалити переказ може будь-який учасник, який міг би зробити його сам, — тобто входить до обох рахунків і не є спостерігачем на стороні, що платить.
 
 ## Підтримувані валюти
 
@@ -15089,7 +15095,9 @@ Zmiana konta przełącza tę stronę przelewu również na walutę tego konta. J
 
 Każdą ze stron możesz przenieść na dowolne inne swoje konto — również tak, że konto, na którym właśnie pracujesz, przestanie być stroną przelewu. Właśnie tak poprawia się przelew, który trafił na złe konto: po zapisaniu pojawi się w historii dwóch kont, do których teraz należy, i zniknie z tego, którego już nie dotyczy.
 
-Jeśli zmiany nie da się zapisać — na przykład brak połączenia — aplikacja to zgłosi i zostawi przelew bez zmian. Nigdy nie zapisuje się połowicznie.
+Dodawanie, edytowanie i usuwanie przelewów działa offline: zmiana zostaje na urządzeniu i trafia na serwer przy następnym otwarciu ekranu Portfel z połączeniem. Jeśli serwer odrzuci zmianę — na przykład dlatego, że nie masz już dostępu do jednego z wybranych kont — aplikacja to zgłosi, a przelew zostanie bez zmian.
+
+Na koncie współdzielonym każdy członek widzi przelewy, które go dotyczą, niezależnie od tego, kto je zapisał; saldo konta i tak je zawsze uwzględniało. Każdy, kto mógłby taki przelew wykonać — czyli należy do obu kont i nie jest obserwatorem po stronie płacącej — może go też poprawić lub usunąć.
 
 ## Obslugiwane waluty
 
@@ -19540,7 +19548,9 @@ Beim Wechsel eines Kontos wechselt diese Seite der Uberweisung auch auf die Wahr
 
 Du kannst jede der beiden Seiten auf ein beliebiges anderes Konto verschieben, zu dem du gehörst — auch so, dass das Konto, in dem du gerade arbeitest, gar nicht mehr an der Überweisung beteiligt ist. Genau so korrigierst du eine Überweisung, die auf dem falschen Konto gelandet ist: sie erscheint dann im Verlauf der beiden Konten, zu denen sie jetzt gehört, und verschwindet aus dem Konto, das sie nicht mehr betrifft.
 
-Lässt sich die Änderung nicht speichern — etwa ohne Verbindung —, sagt die App das und lässt die Überweisung unverändert. Halb gespeichert wird sie nie.
+Überweisungen erfassen, bearbeiten und löschen funktioniert auch offline: die Änderung bleibt auf dem Gerät und wird beim nächsten Öffnen des Wallet-Bildschirms mit Verbindung übertragen. Lehnt der Server eine Änderung ab — etwa weil du auf eines der gewählten Konten keinen Zugriff mehr hast —, sagt die App das und lässt die Überweisung unverändert.
+
+In einem gemeinsamen Konto sehen alle Mitglieder die Überweisungen, die es berühren, unabhängig davon, wer sie erfasst hat; im Kontostand waren sie ohnehin immer enthalten. Wer die Überweisung selbst hätte anlegen können — also beiden Konten angehört und auf der zahlenden Seite kein Betrachter ist —, kann sie auch korrigieren oder löschen.
 
 ## Unterstutzte Wahrungen
 
@@ -23917,7 +23927,9 @@ Al cambiar una cuenta, ese lado de la transferencia pasa tambien a la moneda de 
 
 Puedes mover cualquiera de los dos lados a otra cuenta a la que pertenezcas, incluso si eso deja fuera de la transferencia la cuenta en la que estás trabajando. Así es como se corrige una transferencia que fue a la cuenta equivocada: pasa a aparecer en el historial de las dos cuentas a las que ahora pertenece y desaparece de la que ya no le corresponde.
 
-Si el cambio no se puede guardar —por ejemplo, sin conexión—, la aplicación te lo indica y deja la transferencia tal como estaba. Nunca se guarda a medias.
+Registrar, editar y eliminar transferencias funciona sin conexión: el cambio se queda en tu dispositivo y se envía la próxima vez que abras la pantalla de Cartera con conexión. Si el servidor rechaza un cambio —por ejemplo, porque ya no tienes acceso a una de las cuentas elegidas—, la aplicación te lo dice y la transferencia queda tal como estaba.
+
+En una cuenta compartida, todos los miembros ven las transferencias que la afectan, sin importar quién las registró; el saldo de la cuenta ya las contaba de todos modos. Cualquier miembro que hubiera podido hacer la transferencia —es decir, que pertenece a las dos cuentas y no es observador en la cuenta que paga— también puede corregirla o eliminarla.
 
 ## Cambio de divisa
 
@@ -28386,7 +28398,9 @@ Changer un compte bascule aussi ce cote du transfert vers la devise de ce compte
 
 Vous pouvez déplacer l'un ou l'autre côté vers n'importe quel autre compte dont vous êtes membre, y compris lorsque cela retire de l'opération le compte dans lequel vous travaillez. C'est ainsi que l'on corrige un transfert arrivé sur le mauvais compte : il apparaît alors dans l'historique des deux comptes auxquels il appartient désormais et disparaît de celui qu'il ne concerne plus.
 
-Si la modification ne peut pas être enregistrée — faute de connexion, par exemple — l'application le signale et laisse le transfert inchangé. Il n'est jamais enregistré à moitié.
+Enregistrer, modifier et supprimer un transfert fonctionne hors connexion : la modification reste sur votre appareil et part à la prochaine ouverture de l’écran Portefeuille avec une connexion. Si le serveur refuse une modification — par exemple parce que vous n’avez plus accès à l’un des comptes choisis — l’application vous le signale et le transfert reste inchangé.
+
+Dans un compte partagé, tous les membres voient les transferts qui le concernent, quel que soit celui qui les a saisis ; le solde du compte les comptait de toute façon. Tout membre qui aurait pu effectuer le transfert — c’est-à-dire qui appartient aux deux comptes et n’est pas observateur du côté payeur — peut aussi le corriger ou le supprimer.
 
 ## Devises prises en charge
 
@@ -32804,7 +32818,9 @@ iOS, Android, Web
 
 Любы з двух бакоў можна перанесці на любы іншы ваш рахунак — у тым ліку так, што рахунак, у якім вы зараз працуеце, больш не будзе бокам пераводу. Менавіта так выпраўляюць перавод, які пайшоў не на той рахунак: пасля захавання ён з'явіцца ў гісторыі двух рахункаў, да якіх ён цяпер належыць, і знікне з таго, да якога больш не мае адносін.
 
-Калі змену не ўдалося захаваць — напрыклад, няма злучэння — дадатак пра гэта паведаміць і пакіне перавод без змен. Напалову ён не захоўваецца ніколі.
+Дадаванне, змена і выдаленне пераводаў працуе афлайн: змена застаецца на прыладзе і адпраўляецца на сервер пры наступным адкрыцці экрана «Кашалёк» са злучэннем. Калі сервер адхіліць змену — напрыклад, таму што ў вас больш няма доступу да аднаго з абраных рахункаў, — дадатак пра гэта паведаміць, а перавод застанецца без змен.
+
+На агульным рахунку пераводы, якія яго кранаюць, бачаць усе ўдзельнікі, незалежна ад таго, хто іх запісаў: у баланс рахунку яны і так заўсёды ўваходзілі. Выправіць або выдаліць перавод можа любы ўдзельнік, які мог бы зрабіць яго сам, — гэта значыць уваходзіць у абодва рахункі і не з'яўляецца назіральнікам на баку, які плаціць.
 
 ## Падтрыманыя валюты
 
@@ -37175,7 +37191,9 @@ Een account wijzigen zet die kant van de overboeking ook om naar de valuta van d
 
 Je kunt elke kant naar elk ander account verplaatsen waar je lid van bent — ook als het account waarin je nu werkt daardoor geen partij meer is bij de overboeking. Precies zo corrigeer je een overboeking die op het verkeerde account is beland: hij verschijnt dan in de geschiedenis van de twee accounts waar hij nu bij hoort en verdwijnt uit het account dat hij niet meer raakt.
 
-Kan de wijziging niet worden opgeslagen — bijvoorbeeld zonder verbinding — dan meldt de app dat en blijft de overboeking ongewijzigd. Half opgeslagen wordt hij nooit.
+Overboekingen vastleggen, wijzigen en verwijderen werkt offline: de wijziging blijft op je toestel en wordt verstuurd zodra je het Portemonnee-scherm met verbinding opent. Weigert de server een wijziging — bijvoorbeeld omdat je geen toegang meer hebt tot een van de gekozen accounts — dan meldt de app dat en blijft de overboeking ongewijzigd.
+
+In een gedeeld account zien alle leden de overboekingen die het raken, wie ze ook heeft vastgelegd; in het saldo zaten ze toch al. Elk lid dat de overboeking zelf had kunnen doen — dus lid is van beide accounts en geen kijker aan de betalende kant — kan hem ook corrigeren of verwijderen.
 
 ## Ondersteunde valuta's
 

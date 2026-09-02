@@ -117,7 +117,9 @@ Al cambiar una cuenta, ese lado de la transferencia pasa tambien a la moneda de 
 
 Puedes mover cualquiera de los dos lados a otra cuenta a la que pertenezcas, incluso si eso deja fuera de la transferencia la cuenta en la que estás trabajando. Así es como se corrige una transferencia que fue a la cuenta equivocada: pasa a aparecer en el historial de las dos cuentas a las que ahora pertenece y desaparece de la que ya no le corresponde.
 
-Si el cambio no se puede guardar —por ejemplo, sin conexión—, la aplicación te lo indica y deja la transferencia tal como estaba. Nunca se guarda a medias.
+Registrar, editar y eliminar transferencias funciona sin conexión: el cambio se queda en tu dispositivo y se envía la próxima vez que abras la pantalla de Cartera con conexión. Si el servidor rechaza un cambio —por ejemplo, porque ya no tienes acceso a una de las cuentas elegidas—, la aplicación te lo dice y la transferencia queda tal como estaba.
+
+En una cuenta compartida, todos los miembros ven las transferencias que la afectan, sin importar quién las registró; el saldo de la cuenta ya las contaba de todos modos. Cualquier miembro que hubiera podido hacer la transferencia —es decir, que pertenece a las dos cuentas y no es observador en la cuenta que paga— también puede corregirla o eliminarla.
 
 ## Cambio de divisa
 

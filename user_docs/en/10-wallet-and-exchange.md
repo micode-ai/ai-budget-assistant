@@ -168,7 +168,9 @@ Changing an account also switches that side of the transfer to the account's own
 
 You can move either side to any other account you belong to — including a change that leaves the account you're currently working in out of the transfer. That is exactly how you correct a transfer that landed on the wrong account: it then appears in the history of the two accounts it now belongs to, and disappears from the one it no longer touches.
 
-If the change cannot be saved — no connection, for example — the app says so and leaves the transfer exactly as it was. It is never saved half-way.
+Recording, editing and deleting transfers works offline: the change stays on your device and is pushed the next time the Wallet screen opens with a connection. If the server refuses a change — for example because you no longer have access to one of the accounts you picked — the app tells you and the transfer is left exactly as it was.
+
+In a shared account, every member sees the transfers that touch it, whoever recorded them; the account's balance always counted them anyway. Any member who could have made the transfer — that is, who belongs to both accounts and isn't a viewer on the paying side — can also correct or delete it.
 
 ## Supported Currencies
 

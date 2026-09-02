@@ -19,8 +19,36 @@ export class AccountTransferService {
 
     await this.assertCanTransferBetween(userId, dto.fromAccountId, dto.toAccountId);
 
+    // The mobile queue re-sends a create whose response was lost, with the same
+    // localId. Without this pre-check the retry hits @@unique([userId, clientId])
+    // and 500s forever, so the row could never leave the queue. Checked BEFORE the
+    // $transaction, and the P2002 re-fetch below is outside it too — a constraint
+    // violation aborts the whole Postgres transaction (ABA-313).
+    const already = await this.prisma.accountTransfer.findUnique({
+      where: { userId_clientId: { userId, clientId: dto.localId } },
+    });
+    if (already) return already;
+
     const countAsIncome = dto.countAsIncome ?? false;
 
+    try {
+      return await this.createRow(userId, dto, countAsIncome);
+    } catch (e) {
+      if ((e as { code?: string }).code === 'P2002') {
+        const raced = await this.prisma.accountTransfer.findUnique({
+          where: { userId_clientId: { userId, clientId: dto.localId } },
+        });
+        if (raced) return raced;
+      }
+      throw e;
+    }
+  }
+
+  private createRow(
+    userId: string,
+    dto: CreateAccountTransferDto,
+    countAsIncome: boolean,
+  ) {
     return this.prisma.$transaction(async (tx) => {
       let linkedIncomeId: string | undefined;
 
@@ -60,10 +88,17 @@ export class AccountTransferService {
     });
   }
 
-  async findAll(accountId: string, userId: string) {
+  /**
+   * Every transfer touching this account, whoever created it. Deliberately NOT
+   * filtered by `userId` (ABA-473): `WalletService` aggregates transfers by account
+   * with no user filter, so a shared account's balance already counts a transfer
+   * made by another member — hiding the row itself only made the list disagree with
+   * the balance it is supposed to explain. `userId` stays on the row as creator
+   * attribution.
+   */
+  async findAll(accountId: string, _userId: string) {
     return this.prisma.accountTransfer.findMany({
       where: {
-        userId,
         isDeleted: false,
         OR: [{ fromAccountId: accountId }, { toAccountId: accountId }],
       },
@@ -79,19 +114,22 @@ export class AccountTransferService {
     const nextToAccountId = dto.toAccountId ?? transfer.toAccountId;
     const nextToCurrency = dto.toCurrency ?? transfer.toCurrency;
 
-    if (nextFromAccountId !== transfer.fromAccountId || nextToAccountId !== transfer.toAccountId) {
-      if (nextFromAccountId === nextToAccountId) {
-        throw new BadRequestException('Cannot transfer to the same account');
-      }
-      // Deliberately NOT requiring the request's account to stay a party. Correcting
-      // "this money went to House, not Family" *from* the Family screen necessarily
-      // drops Family from both sides — that is the correction, not an error. The row
-      // stays visible on the two accounts it now belongs to, and permission is still
-      // decided by assertCanTransferBetween below. The rail used to reject exactly
-      // this edit while the client swallowed the rejection, so the money never moved
-      // and no error was ever shown.
-      await this.assertCanTransferBetween(userId, nextFromAccountId, nextToAccountId);
+    if (nextFromAccountId === nextToAccountId) {
+      throw new BadRequestException('Cannot transfer to the same account');
     }
+    // Deliberately NOT requiring the request's account to stay a party. Correcting
+    // "this money went to House, not Family" *from* the Family screen necessarily
+    // drops Family from both sides — that is the correction, not an error. The row
+    // stays visible on the two accounts it now belongs to. The rail used to reject
+    // exactly this edit while the client swallowed the rejection, so the money never
+    // moved and no error was ever shown.
+    //
+    // Checked on EVERY edit, not only when the accounts change (ABA-473): the row is
+    // no longer creator-locked, and changing an amount moves the *other* account's
+    // balance too — so the rule is "you may edit a transfer only if you could have
+    // created it". Skipping the check on a no-account-change edit was safe only
+    // while the lookup required `userId`.
+    await this.assertCanTransferBetween(userId, nextFromAccountId, nextToAccountId);
 
     return this.prisma.$transaction(async (tx) => {
       const countAsIncome = dto.countAsIncome ?? transfer.countAsIncome;
@@ -165,20 +203,23 @@ export class AccountTransferService {
   }
 
   /**
-   * Resolves a transfer the caller may act on: owned by them, not deleted, and
-   * touching the account they are acting as (the read boundary — you cannot reach a
-   * transfer from an account that is party to neither side).
+   * Resolves a transfer the caller may act on: not deleted, and touching the account
+   * they are acting as. That party scoping IS the read boundary — you cannot reach a
+   * transfer from an account that is party to neither side — and it replaced a
+   * `userId` filter (ABA-473) so a shared account's other members can see and fix a
+   * transfer they did not create. Permission to actually write is then decided by
+   * `assertCanTransferBetween` in the callers.
    *
    * `id` is matched against BOTH the server id and `clientId`: the mobile client
    * addresses a row by its local id until a wallet pull backfills serverId, and
    * matching on `id` alone 404s that edit away — silently, since the client only
    * console.warns. Same convention as ExpensesService.resolveExpensePk (ABA-374).
-   * `@@unique([userId, clientId])` makes the clientId branch unambiguous.
+   * A clientId is a client-generated UUIDv4, so dropping `userId` from that branch
+   * cannot realistically collide, and the party scoping bounds it anyway.
    */
-  private findOwnedTransfer(accountId: string, userId: string, id: string) {
+  private findOwnedTransfer(accountId: string, _userId: string, id: string) {
     return this.prisma.accountTransfer.findFirst({
       where: {
-        userId,
         isDeleted: false,
         AND: [
           { OR: [{ id }, { clientId: id }] },
@@ -232,6 +273,10 @@ export class AccountTransferService {
   async remove(accountId: string, userId: string, id: string) {
     const transfer = await this.findOwnedTransfer(accountId, userId, id);
     if (!transfer) throw new NotFoundException('Transfer not found');
+
+    // Deleting moves both accounts' balances, so it takes the same permission as
+    // creating the transfer would (ABA-473) — the row is no longer creator-locked.
+    await this.assertCanTransferBetween(userId, transfer.fromAccountId, transfer.toAccountId);
 
     await this.prisma.$transaction(async (tx) => {
       if (transfer.countAsIncome && transfer.linkedIncomeId) {

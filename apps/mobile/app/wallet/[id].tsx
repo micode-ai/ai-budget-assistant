@@ -98,9 +98,11 @@ export default function TransferDetailScreen() {
     });
     setIsSaving(false);
 
-    // A transfer edit that the server refuses is rolled back, not queued — so say
-    // so and stay in edit mode. It used to look saved and then silently revert.
-    if (!result.ok) {
+    // Only a server refusal is an error worth interrupting for: it is rolled back
+    // and will never sync, so say so and stay in edit mode. An offline save comes
+    // back as `queued` — the edit is kept and retried, exactly like every other
+    // offline write in the app, so it closes silently.
+    if (result.status === 'rejected') {
       showAlert(t('transfer.saveFailed'), t('transfer.saveFailedHint'));
       return;
     }

@@ -172,7 +172,9 @@ Zmiana konta przełącza tę stronę przelewu również na walutę tego konta. J
 
 Każdą ze stron możesz przenieść na dowolne inne swoje konto — również tak, że konto, na którym właśnie pracujesz, przestanie być stroną przelewu. Właśnie tak poprawia się przelew, który trafił na złe konto: po zapisaniu pojawi się w historii dwóch kont, do których teraz należy, i zniknie z tego, którego już nie dotyczy.
 
-Jeśli zmiany nie da się zapisać — na przykład brak połączenia — aplikacja to zgłosi i zostawi przelew bez zmian. Nigdy nie zapisuje się połowicznie.
+Dodawanie, edytowanie i usuwanie przelewów działa offline: zmiana zostaje na urządzeniu i trafia na serwer przy następnym otwarciu ekranu Portfel z połączeniem. Jeśli serwer odrzuci zmianę — na przykład dlatego, że nie masz już dostępu do jednego z wybranych kont — aplikacja to zgłosi, a przelew zostanie bez zmian.
+
+Na koncie współdzielonym każdy członek widzi przelewy, które go dotyczą, niezależnie od tego, kto je zapisał; saldo konta i tak je zawsze uwzględniało. Każdy, kto mógłby taki przelew wykonać — czyli należy do obu kont i nie jest obserwatorem po stronie płacącej — może go też poprawić lub usunąć.
 
 ## Obslugiwane waluty
 

@@ -1050,8 +1050,8 @@ export default {
     available: 'Dostępne:',
     max: 'Maks',
     insufficientHint: 'Kwota przekracza znane saldo tego konta',
-    saveFailed: 'Nie udało się zapisać zmiany',
-    saveFailedHint: 'Przelew pozostał bez zmian. Sprawdź połączenie i spróbuj ponownie.',
+    saveFailed: 'Zmiana nie została przyjęta',
+    saveFailedHint: 'Przelew pozostał bez zmian. Możliwe, że nie masz dostępu do jednego z wybranych kont.',
   },
   errors: {
     error: 'Błąd',

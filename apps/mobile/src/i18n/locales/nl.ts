@@ -1048,8 +1048,8 @@ export default {
     available: 'Beschikbaar:',
     max: 'Max',
     insufficientHint: 'Bedrag overschrijdt het bekende saldo van deze rekening',
-    saveFailed: 'Wijziging kon niet worden opgeslagen',
-    saveFailedHint: 'De overboeking is ongewijzigd gebleven. Controleer je verbinding en probeer het opnieuw.',
+    saveFailed: 'Wijziging niet geaccepteerd',
+    saveFailedHint: 'De overboeking is ongewijzigd gebleven. Misschien heb je geen toegang tot een van de gekozen accounts.',
   },
   errors: {
     error: 'Fout',

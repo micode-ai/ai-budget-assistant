@@ -33,6 +33,7 @@ import {
   addTransferAction,
   updateTransferAction,
   deleteTransferAction,
+  syncPendingTransfersAction,
   type TransferWriteResult,
 } from './accountTransferActions';
 
@@ -110,6 +111,7 @@ interface WalletState {
   }) => AccountTransfer;
   updateTransfer: (id: string, updates: Partial<AccountTransfer>) => Promise<TransferWriteResult>;
   deleteTransfer: (id: string) => void;
+  syncPendingTransfers: () => Promise<void>;
 
   // Computed
   computeWalletSummary: () => Promise<WalletSummary[]>;
@@ -188,7 +190,13 @@ export const useWalletStore = create<WalletState>()(
         const summary = await get().computeWalletSummary();
         set({ walletSummary: summary, isLoading: false });
 
-        // 3. Sync from server
+        // 3. Push queued writes, then sync from server. Order matters: the pull
+        // skips pending rows, so anything the push just landed is picked up with the
+        // server's own copy instead of staying pending until the next load.
+        await syncPendingTransfersAction(set, get, accountId);
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
+
+        // 4. Sync from server
         await syncWalletFromServer(set, get, accountId);
       } catch (e) {
         console.error('Failed to load wallet:', e);
@@ -207,6 +215,11 @@ export const useWalletStore = create<WalletState>()(
     addTransfer: (data) => addTransferAction(set, get, data),
     updateTransfer: (id, updates) => updateTransferAction(set, get, id, updates),
     deleteTransfer: (id) => deleteTransferAction(set, get, id),
+    syncPendingTransfers: async () => {
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (!accountId) return;
+      await syncPendingTransfersAction(set, get, accountId);
+    },
 
     computeWalletSummary: async () => {
       const accountId = useAccountStore.getState().currentAccountId;

@@ -21,7 +21,12 @@ const EXISTING = {
 type Roles = Record<string, 'owner' | 'editor' | 'viewer' | undefined>;
 
 function makeService(
-  options: { roles?: Roles; transfer?: unknown | null; existing?: typeof EXISTING } = {},
+  options: {
+    roles?: Roles;
+    transfer?: unknown | null;
+    existing?: typeof EXISTING;
+    byClientId?: unknown;
+  } = {},
 ) {
   const roles: Roles = options.roles ?? {
     personal: 'owner',
@@ -52,12 +57,12 @@ function makeService(
         const matches = (cond: Record<string, unknown>) =>
           Object.entries(cond).every(([k, v]) => (row as Record<string, unknown>)[k] === v);
         const and = (where.AND ?? []) as { OR: Record<string, unknown>[] }[];
-        const ok =
-          where.userId === row.userId &&
-          !where.isDeleted &&
-          and.every((clause) => clause.OR.some(matches));
+        const ok = !where.isDeleted && and.every((clause) => clause.OR.some(matches));
         return Promise.resolve(ok ? row : null);
       }),
+      findMany: jest.fn().mockResolvedValue([]),
+      findUnique: jest.fn().mockResolvedValue(options.byClientId ?? null),
+      create: jest.fn(),
     },
     $transaction: jest.fn((cb: (t: typeof tx) => unknown) => cb(tx)),
   };
@@ -177,12 +182,16 @@ describe('AccountTransferService.update — changing accounts', () => {
     ).rejects.toThrow(ForbiddenException);
   });
 
-  it('skips membership checks entirely when the accounts are unchanged', async () => {
+  it('checks membership even when the accounts are unchanged', async () => {
+    // This used to skip the two membership lookups as an optimisation, which was
+    // safe only while the row was creator-locked. Now that any member of either
+    // account can reach it (ABA-473), the check is authorisation, not an
+    // optimisation — an amount edit moves the other account's balance too.
     const { service, prisma } = makeService();
 
     await service.update('personal', 'u1', 't1', { fromAmount: 2500 });
 
-    expect(prisma.accountMember.findUnique).not.toHaveBeenCalled();
+    expect(prisma.accountMember.findUnique).toHaveBeenCalledTimes(2);
   });
 
   it('moves the linked income to the new receiving account', async () => {
@@ -222,6 +231,57 @@ describe('AccountTransferService.update — changing accounts', () => {
   });
 });
 
+describe('AccountTransferService — shared accounts', () => {
+  it('lists every transfer touching the account, whoever created it', async () => {
+    // A shared account's balance already counts a transfer made by another member
+    // (WalletService aggregates by account, not by user), so hiding the row itself
+    // made the list disagree with the balance it explains. ABA-473.
+    const { service, prisma } = makeService();
+
+    await service.findAll('savings', 'someone-else');
+
+    const where = (prisma.accountTransfer.findMany as jest.Mock).mock.calls[0][0].where;
+    expect(where).not.toHaveProperty('userId');
+    expect(where.OR).toEqual([{ fromAccountId: 'savings' }, { toAccountId: 'savings' }]);
+  });
+
+  it('lets another member of both accounts fix a transfer they did not create', async () => {
+    const { service, tx } = makeService();
+
+    await service.update('savings', 'u2', 't1', { fromAmount: 2500 });
+
+    expect(tx.accountTransfer.update).toHaveBeenCalled();
+  });
+
+  it('refuses an edit from someone who could not have created the transfer', async () => {
+    // Membership is checked even when the accounts are unchanged: editing the amount
+    // moves the OTHER account's balance too, so "you may edit it only if you could
+    // have created it" is the rule. Previously the membership check was skipped on a
+    // no-account-change edit, which was safe only because the row was creator-locked.
+    const { service } = makeService({ roles: { personal: 'owner' } });
+
+    await expect(
+      service.update('personal', 'u2', 't1', { fromAmount: 2500 }),
+    ).rejects.toThrow(ForbiddenException);
+  });
+
+  it('refuses a delete from someone who could not have created the transfer', async () => {
+    const { service } = makeService({ roles: { savings: 'owner' } });
+
+    await expect(service.remove('savings', 'u2', 't1')).rejects.toThrow(ForbiddenException);
+  });
+
+  it('refuses an edit by a viewer on the paying side', async () => {
+    const { service } = makeService({
+      roles: { personal: 'viewer', savings: 'owner', vacation: 'owner' },
+    });
+
+    await expect(
+      service.update('savings', 'u2', 't1', { fromAmount: 2500 }),
+    ).rejects.toThrow(ForbiddenException);
+  });
+});
+
 describe('AccountTransferService.create', () => {
   const dto = {
     localId: '11111111-1111-1111-1111-111111111111',
@@ -251,5 +311,17 @@ describe('AccountTransferService.create', () => {
     const { service } = makeService({ roles: { personal: 'owner' } });
 
     await expect(service.create('personal', 'u1', dto as never)).rejects.toThrow(ForbiddenException);
+  });
+
+  it('returns the existing row instead of duplicating a retried create', async () => {
+    // The offline queue re-sends a create whose response was lost. Without this the
+    // retry hits @@unique([userId, clientId]) and 500s forever, so the transfer can
+    // never leave the queue. ABA-473.
+    const { service, prisma } = makeService({ byClientId: { id: 'already-there' } });
+
+    const result = await service.create('personal', 'u1', dto as never);
+
+    expect(result).toEqual({ id: 'already-there' });
+    expect(prisma.$transaction).not.toHaveBeenCalled();
   });
 });

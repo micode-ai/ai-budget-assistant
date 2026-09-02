@@ -65,6 +65,32 @@ export async function loadTransfersByAccount(accountId: string): Promise<Account
   return rows.map(rowToTransfer);
 }
 
+/**
+ * The offline write queue for one account: rows that never reached the server,
+ * INCLUDING soft-deleted ones (a pending delete has to be pushed too, and
+ * loadTransfersByAccount filters those out). Scoped to the account because the
+ * queue pushes under the current `X-Account-Id`, and the server refuses a transfer
+ * the acting account is not a party to.
+ */
+export async function loadPendingTransfers(accountId: string): Promise<AccountTransfer[]> {
+  const rows = await executeSql<AccountTransferRow>(
+    `SELECT * FROM account_transfers
+     WHERE sync_status = 'pending' AND (from_account_id = ? OR to_account_id = ?)
+     ORDER BY updated_at ASC`,
+    [accountId, accountId],
+  );
+  return rows.map(rowToTransfer);
+}
+
+/**
+ * Records the outcome of a queued push without touching any other column —
+ * `updateTransferInDb` would also rewrite `updated_at`, which is the queue's
+ * ordering key.
+ */
+export async function setTransferSyncStatus(id: string, status: SyncStatus): Promise<void> {
+  await executeSql('UPDATE account_transfers SET sync_status = ? WHERE id = ?', [status, id]);
+}
+
 export async function insertTransfer(transfer: AccountTransfer): Promise<void> {
   await executeSql(
     `INSERT OR REPLACE INTO account_transfers (

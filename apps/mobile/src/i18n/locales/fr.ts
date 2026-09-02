@@ -1048,8 +1048,8 @@ export default {
     available: 'Disponible :',
     max: 'Max',
     insufficientHint: 'Le montant dépasse le solde connu de ce compte',
-    saveFailed: 'La modification n’a pas été enregistrée',
-    saveFailedHint: 'Le transfert est resté inchangé. Vérifiez votre connexion et réessayez.',
+    saveFailed: 'Modification refusée',
+    saveFailedHint: 'Le transfert est resté inchangé. Vous n’avez peut-être pas accès à l’un des comptes choisis.',
   },
   errors: {
     error: 'Erreur',

@@ -1048,8 +1048,8 @@ export default {
     available: 'Disponible:',
     max: 'Máx',
     insufficientHint: 'El importe supera el saldo conocido de esta cuenta',
-    saveFailed: 'No se pudo guardar el cambio',
-    saveFailedHint: 'La transferencia quedó sin cambios. Comprueba la conexión e inténtalo de nuevo.',
+    saveFailed: 'El cambio no se aceptó',
+    saveFailedHint: 'La transferencia quedó sin cambios. Puede que no tengas acceso a una de las cuentas elegidas.',
   },
   errors: {
     error: 'Error',

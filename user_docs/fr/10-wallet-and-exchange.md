@@ -168,7 +168,9 @@ Changer un compte bascule aussi ce cote du transfert vers la devise de ce compte
 
 Vous pouvez déplacer l'un ou l'autre côté vers n'importe quel autre compte dont vous êtes membre, y compris lorsque cela retire de l'opération le compte dans lequel vous travaillez. C'est ainsi que l'on corrige un transfert arrivé sur le mauvais compte : il apparaît alors dans l'historique des deux comptes auxquels il appartient désormais et disparaît de celui qu'il ne concerne plus.
 
-Si la modification ne peut pas être enregistrée — faute de connexion, par exemple — l'application le signale et laisse le transfert inchangé. Il n'est jamais enregistré à moitié.
+Enregistrer, modifier et supprimer un transfert fonctionne hors connexion : la modification reste sur votre appareil et part à la prochaine ouverture de l’écran Portefeuille avec une connexion. Si le serveur refuse une modification — par exemple parce que vous n’avez plus accès à l’un des comptes choisis — l’application vous le signale et le transfert reste inchangé.
+
+Dans un compte partagé, tous les membres voient les transferts qui le concernent, quel que soit celui qui les a saisis ; le solde du compte les comptait de toute façon. Tout membre qui aurait pu effectuer le transfert — c’est-à-dire qui appartient aux deux comptes et n’est pas observateur du côté payeur — peut aussi le corriger ou le supprimer.
 
 ## Devises prises en charge
 

@@ -1048,8 +1048,8 @@ export default {
     available: 'Verfügbar:',
     max: 'Max',
     insufficientHint: 'Betrag übersteigt den bekannten Kontostand',
-    saveFailed: 'Änderung konnte nicht gespeichert werden',
-    saveFailedHint: 'Die Überweisung bleibt unverändert. Prüfen Sie die Verbindung und versuchen Sie es erneut.',
+    saveFailed: 'Änderung nicht übernommen',
+    saveFailedHint: 'Die Überweisung bleibt unverändert. Möglicherweise hast du keinen Zugriff auf eines der gewählten Konten.',
   },
   errors: {
     error: 'Fehler',

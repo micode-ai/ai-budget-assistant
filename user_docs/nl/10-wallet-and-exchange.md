@@ -168,7 +168,9 @@ Een account wijzigen zet die kant van de overboeking ook om naar de valuta van d
 
 Je kunt elke kant naar elk ander account verplaatsen waar je lid van bent — ook als het account waarin je nu werkt daardoor geen partij meer is bij de overboeking. Precies zo corrigeer je een overboeking die op het verkeerde account is beland: hij verschijnt dan in de geschiedenis van de twee accounts waar hij nu bij hoort en verdwijnt uit het account dat hij niet meer raakt.
 
-Kan de wijziging niet worden opgeslagen — bijvoorbeeld zonder verbinding — dan meldt de app dat en blijft de overboeking ongewijzigd. Half opgeslagen wordt hij nooit.
+Overboekingen vastleggen, wijzigen en verwijderen werkt offline: de wijziging blijft op je toestel en wordt verstuurd zodra je het Portemonnee-scherm met verbinding opent. Weigert de server een wijziging — bijvoorbeeld omdat je geen toegang meer hebt tot een van de gekozen accounts — dan meldt de app dat en blijft de overboeking ongewijzigd.
+
+In een gedeeld account zien alle leden de overboekingen die het raken, wie ze ook heeft vastgelegd; in het saldo zaten ze toch al. Elk lid dat de overboeking zelf had kunnen doen — dus lid is van beide accounts en geen kijker aan de betalende kant — kan hem ook corrigeren of verwijderen.
 
 ## Ondersteunde valuta's
 
