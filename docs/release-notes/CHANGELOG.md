@@ -8,6 +8,38 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.24.0 - 2026-09-03
+
+**Invitations that actually carry a link**
+
+- **Your invite now contains a link, and it is written in your language.**
+  Sharing your referral code used to send an English sentence with a bare
+  six-character code and nothing else, so the friend had to find the app on
+  their own and then remember to type the code into a field they had never
+  seen. The message is now in whatever language you use the app in, and it
+  carries a link that fills the code in for them. The code is still printed in
+  the text, because a friend who installs from Google Play instead of opening
+  the link needs to type it (ABA-486).
+- **The page you send when splitting a bill now leads somewhere.** At the
+  bottom of a friend's payment page there was a link for iPhone users that had
+  never worked — it pointed at an App Store entry that does not exist. It now
+  offers the browser version, which works on every phone, with Google Play
+  alongside it (ABA-487).
+- **Rate alerts have their own screen.** They used to be visible only inside the
+  add-exchange form, and only for the currency pair selected there, so an alert
+  on any other pair was unreachable and one that had already fired was invisible
+  in the app entirely. Wallet now has a "Rate alerts" entry listing every alert
+  you have, waiting or already triggered, with the rate it fired at (ABA-484).
+- **The web version can be added to your home screen.** Open it in a browser and
+  install it, and it launches with its own icon and no address bar. On iPhone
+  this is the closest thing to an app icon until a native iOS version exists. It
+  still needs an internet connection (ABA-488).
+- **The app may ask you to rate it** — after you finish scanning a receipt, or
+  share your year in review. At most once per app version, and never more often
+  than every three months (ABA-485).
+
+---
+
 ## 1.23.1 - 2026-09-03
 
 **A sheet whose buttons you could not reach**
