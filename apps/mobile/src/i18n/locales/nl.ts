@@ -474,6 +474,10 @@ export default {
     choosePdf: 'PDF uploaden',
     analyzingPdf: 'PDF-bon analyseren...',
     userPromptPlaceholder: 'Aanvullende instructies voor AI (optioneel)',
+    sessionCount_one: '{{count}} bon gescand in deze sessie',
+    sessionCount_other: '{{count}} bonnen gescand in deze sessie',
+    sessionCapTitle: 'Mooi tempo!',
+    sessionCapBody: 'Je hebt {{count}} bonnen gescand in deze sessie. Ga door of neem een pauze — je voortgang is al opgeslagen.',
   },
   incomeVoice: {
     title: 'Spraakinkomsten',

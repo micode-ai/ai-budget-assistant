@@ -474,6 +474,10 @@ export default {
     choosePdf: 'Importer PDF',
     analyzingPdf: 'Analyse du reçu PDF...',
     userPromptPlaceholder: 'Instructions supplémentaires pour l\'IA (facultatif)',
+    sessionCount_one: '{{count}} reçu scanné pendant cette session',
+    sessionCount_other: '{{count}} reçus scannés pendant cette session',
+    sessionCapTitle: 'Beau rythme !',
+    sessionCapBody: 'Vous avez scanné {{count}} reçus pendant cette session. Continuez, ou faites une pause — votre progression est déjà enregistrée.',
   },
   incomeVoice: {
     title: 'Revenu vocal',

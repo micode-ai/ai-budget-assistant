@@ -90,6 +90,15 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 
 Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
 
+### Scanner une pile de reçus
+
+Vous avez accumulé une semaine de reçus papier ? Après en avoir enregistré un, la confirmation propose deux choix au lieu de simplement fermer l'écran :
+
+- **Scanner un autre** — revient directement à l'appareil photo sans quitter l'écran, pour enchaîner toute une pile de reçus
+- **Terminé** — termine et vous ramène là où vous avez commencé
+
+Pendant que vous scannez, un petit compteur indique combien de reçus vous avez enregistrés dans cette session. Tous les 15 reçus, l'application vous rappelle amicalement que vous pouvez continuer ou faire une pause — votre progression est déjà enregistrée dans tous les cas. Le compteur se réinitialise dès que vous quittez l'écran ; il sert uniquement à donner un sentiment de progression pendant une session.
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.

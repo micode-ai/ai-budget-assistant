@@ -474,6 +474,10 @@ export default {
     choosePdf: 'Upload PDF',
     analyzingPdf: 'Analyzing PDF receipt...',
     userPromptPlaceholder: 'Additional instructions for AI (optional)',
+    sessionCount_one: '{{count}} receipt scanned this session',
+    sessionCount_other: '{{count}} receipts scanned this session',
+    sessionCapTitle: 'Nice pace!',
+    sessionCapBody: "You've scanned {{count}} receipts this session. Keep going, or take a break — your progress is already saved.",
   },
   incomeVoice: {
     title: 'Voice Income',

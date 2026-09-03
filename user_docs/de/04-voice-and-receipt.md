@@ -90,6 +90,15 @@ Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Eink
 
 Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.
 
+### Einen ganzen Stapel Belege scannen
+
+Hast du eine Woche Papierbelege gesammelt? Nach dem Speichern bietet die Bestätigung zwei Optionen statt den Bildschirm einfach zu schließen:
+
+- **Weiteren scannen** — springt direkt zurück zur Kamera, ohne den Bildschirm zu verlassen, damit du einen ganzen Stapel hintereinander abarbeiten kannst
+- **Fertig** — schließt ab und bringt dich zurück, wo du gestartet bist
+
+Während du scannst, zeigt ein kleiner Zähler, wie viele Belege du in dieser Sitzung bereits gespeichert hast. Alle 15 Belege meldet sich die App mit einer freundlichen Erinnerung, dass du weitermachen oder eine Pause einlegen kannst — dein Fortschritt ist so oder so schon gespeichert. Der Zähler setzt sich zurück, sobald du den Bildschirm verlässt; er dient nur dazu, dir während einer Sitzung ein Gefühl für den Fortschritt zu geben.
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.

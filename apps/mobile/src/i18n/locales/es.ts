@@ -474,6 +474,10 @@ export default {
     choosePdf: 'Subir PDF',
     analyzingPdf: 'Analizando recibo PDF...',
     userPromptPlaceholder: 'Instrucciones adicionales para la IA (opcional)',
+    sessionCount_one: '{{count}} recibo escaneado en esta sesión',
+    sessionCount_other: '{{count}} recibos escaneados en esta sesión',
+    sessionCapTitle: '¡Buen ritmo!',
+    sessionCapBody: 'Has escaneado {{count}} recibos en esta sesión. Sigue así o toma un descanso — tu progreso ya está guardado.',
   },
   incomeVoice: {
     title: 'Voz Ingresos',

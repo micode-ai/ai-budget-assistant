@@ -474,6 +474,12 @@ export default {
     choosePdf: 'Завантажити PDF',
     analyzingPdf: 'Аналіз PDF чеку...',
     userPromptPlaceholder: 'Додаткові інструкції для ШІ (необов\'язково)',
+    sessionCount_one: '{{count}} чек відскановано в цій сесії',
+    sessionCount_few: '{{count}} чеки відскановано в цій сесії',
+    sessionCount_many: '{{count}} чеків відскановано в цій сесії',
+    sessionCount_other: '{{count}} чеки відскановано в цій сесії',
+    sessionCapTitle: 'Гарний темп!',
+    sessionCapBody: 'Ви відсканували {{count}} чеків у цій сесії. Продовжуйте або зробіть перерву — прогрес уже збережено.',
   },
   incomeVoice: {
     title: 'Голосовий дохід',

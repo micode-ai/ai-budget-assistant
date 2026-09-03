@@ -7,8 +7,10 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
+import { isReceiptSessionCheckpoint } from '@/features/receipt/receiptScanSession';
 import { useReceiptCategorySplit } from '@/hooks/useReceiptCategorySplit';
 import { useReceiptSave } from '@/hooks/useReceiptSave';
+import { useReceiptScanSession } from '@/hooks/useReceiptScanSession';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { resolveExistingMerchant } from '@/utils/merchant';
 import ReceiptCaptureView from '@/components/receipt/ReceiptCaptureView';
@@ -77,6 +79,8 @@ export default function ReceiptExpenseScreen() {
     resetSplitState();
   };
 
+  const { count: sessionCount, recordSaved } = useReceiptScanSession();
+
   const { handleConfirmExpense, handleEditExpense } = useReceiptSave({
     scannedReceipt,
     merchant,
@@ -87,6 +91,10 @@ export default function ReceiptExpenseScreen() {
     itemCategories,
     proposedNamesToCreate,
     onReset: handleReset,
+    onSaved: () => {
+      const count = recordSaved();
+      return { count, isCheckpoint: isReceiptSessionCheckpoint(count) };
+    },
   });
 
   const handleCameraPress = async () => {
@@ -122,6 +130,7 @@ export default function ReceiptExpenseScreen() {
             onCameraPress={handleCameraPress}
             onGalleryPress={handleGalleryPress}
             onPdfPress={handlePdfPress}
+            sessionCount={sessionCount}
           />
         ) : (
           <>

@@ -90,6 +90,15 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
 
+### Skanowanie całego stosu paragonów
+
+Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potwierdzenie oferuje dwie opcje zamiast po prostu zamykać ekran:
+
+- **Skanuj kolejny** — od razu wraca do aparatu bez wychodzenia z ekranu, dzięki czemu można przejść przez cały stos jeden po drugim
+- **Gotowe** — kończy skanowanie i wraca tam, skąd zacząłeś
+
+Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.

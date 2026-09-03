@@ -474,6 +474,12 @@ export default {
     choosePdf: 'Загрузить PDF',
     analyzingPdf: 'Анализ PDF чека...',
     userPromptPlaceholder: 'Дополнительные инструкции для ИИ (необязательно)',
+    sessionCount_one: '{{count}} чек отсканирован в этой сессии',
+    sessionCount_few: '{{count}} чека отсканировано в этой сессии',
+    sessionCount_many: '{{count}} чеков отсканировано в этой сессии',
+    sessionCount_other: '{{count}} чека отсканировано в этой сессии',
+    sessionCapTitle: 'Хороший темп!',
+    sessionCapBody: 'Вы отсканировали {{count}} чеков в этой сессии. Продолжайте или сделайте перерыв — прогресс уже сохранён.',
   },
   incomeVoice: {
     title: 'Голосовой ввод дохода',

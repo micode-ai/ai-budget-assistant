@@ -472,6 +472,12 @@ export default {
     choosePdf: 'Загрузіць PDF',
     analyzingPdf: 'Аналіз PDF чэка...',
     userPromptPlaceholder: 'Дадатковыя інструкцыі для ІІ (неабавязкова)',
+    sessionCount_one: '{{count}} чэк адсканаваны ў гэтай сесіі',
+    sessionCount_few: '{{count}} чэкі адсканаваныя ў гэтай сесіі',
+    sessionCount_many: '{{count}} чэкаў адсканавана ў гэтай сесіі',
+    sessionCount_other: '{{count}} чэкі адсканаваныя ў гэтай сесіі',
+    sessionCapTitle: 'Добры тэмп!',
+    sessionCapBody: 'Вы адсканавалі {{count}} чэкаў у гэтай сесіі. Працягвайце або зрабіце перапынак — прагрэс ужо захаваны.',
   },
   incomeVoice: {
     title: 'Галасавы даход',

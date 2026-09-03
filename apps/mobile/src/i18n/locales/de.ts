@@ -474,6 +474,10 @@ export default {
     choosePdf: 'PDF hochladen',
     analyzingPdf: 'PDF-Beleg wird analysiert...',
     userPromptPlaceholder: 'Zusätzliche Anweisungen für KI (optional)',
+    sessionCount_one: '{{count}} Beleg in dieser Sitzung gescannt',
+    sessionCount_other: '{{count}} Belege in dieser Sitzung gescannt',
+    sessionCapTitle: 'Gutes Tempo!',
+    sessionCapBody: 'Sie haben in dieser Sitzung {{count}} Belege gescannt. Machen Sie weiter oder legen Sie eine Pause ein — Ihr Fortschritt ist bereits gespeichert.',
   },
   incomeVoice: {
     title: 'Spracheingabe Einnahmen',

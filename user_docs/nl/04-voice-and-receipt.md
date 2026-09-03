@@ -90,6 +90,15 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 
 Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.
 
+### Een stapel bonnen achter elkaar scannen
+
+Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg je twee keuzes in plaats van dat het scherm gewoon sluit:
+
+- **Nog een scannen** — gaat direct terug naar de camera zonder het scherm te verlaten, zodat je een hele stapel achter elkaar kunt afhandelen
+- **Klaar** — rondt af en brengt je terug naar waar je begon
+
+Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.
+
 ## Spraakinkomsten
 
 Leg ontvangen betalingen vast met spraak — dezelfde flow als Spraakuitgave, geoptimaliseerd voor inkomsten.

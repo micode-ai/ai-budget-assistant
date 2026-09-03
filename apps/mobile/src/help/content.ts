@@ -619,6 +619,15 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
 
+### Scanning a Stack of Receipts
+
+Caught up on a week of paper receipts? After you save one, the confirmation prompt offers two choices instead of just closing the screen:
+
+- **Scan Another** — jumps straight back to the camera without leaving the screen, so you can clear a whole stack back-to-back
+- **Done** — finishes and returns you to where you started
+
+While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.
@@ -5151,6 +5160,15 @@ iOS, Android, Web
 
 Работает одинаково — как при сканировании в приложении, так и через ботов в Telegram, WhatsApp или Slack.
 
+### Сканирование целой стопки чеков
+
+Накопилась неделя бумажных чеков? После сохранения одного чека подтверждение предлагает два варианта вместо простого закрытия экрана:
+
+- **Сканировать ещё** — сразу возвращает к камере, не покидая экран, чтобы можно было обработать всю стопку подряд
+- **Готово** — завершает сессию и возвращает туда, откуда вы начали
+
+Пока вы сканируете, небольшой счётчик показывает, сколько чеков сохранено в этой сессии. Каждые 15 чеков приложение дружелюбно напоминает, что можно продолжить или сделать перерыв — прогресс в любом случае уже сохранён. Счётчик сбрасывается при выходе с экрана; он нужен только для ощущения прогресса в рамках одной сессии.
+
 ## Голосовой ввод дохода
 
 Регистрируйте полученные платежи голосом — тот же процесс, что и для голосового расхода, оптимизированный для доходов.
@@ -9681,6 +9699,15 @@ iOS, Android, Web
 
 Працює однаково незалежно від того, скануєте ви в додатку чи через ботів Telegram, WhatsApp або Slack.
 
+### Сканування цілої стопки чеків
+
+Накопичився тиждень паперових чеків? Після збереження одного чека підтвердження пропонує два варіанти замість простого закриття екрана:
+
+- **Сканувати ще** — одразу повертає до камери, не залишаючи екран, щоб можна було обробити цілу стопку одну за одною
+- **Готово** — завершує та повертає туди, звідки ви почали
+
+Поки ви скануєте, невеликий лічильник показує, скільки чеків збережено в цій сесії. Кожні 15 чеків додаток дружньо нагадує, що можна продовжити або зробити перерву — прогрес у будь-якому разі вже збережено. Лічильник скидається після виходу з екрана; він потрібен лише для відчуття прогресу в межах однієї сесії.
+
 ## Голосовий дохід
 
 Реєструйте отримані платежі голосом — той самий процес, що й для голосової витрати, оптимізований для доходів.
@@ -14159,6 +14186,15 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
 
+### Skanowanie całego stosu paragonów
+
+Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potwierdzenie oferuje dwie opcje zamiast po prostu zamykać ekran:
+
+- **Skanuj kolejny** — od razu wraca do aparatu bez wychodzenia z ekranu, dzięki czemu można przejść przez cały stos jeden po drugim
+- **Gotowe** — kończy skanowanie i wraca tam, skąd zacząłeś
+
+Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.
@@ -18633,6 +18669,15 @@ Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Eink
 
 Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.
 
+### Einen ganzen Stapel Belege scannen
+
+Hast du eine Woche Papierbelege gesammelt? Nach dem Speichern bietet die Bestätigung zwei Optionen statt den Bildschirm einfach zu schließen:
+
+- **Weiteren scannen** — springt direkt zurück zur Kamera, ohne den Bildschirm zu verlassen, damit du einen ganzen Stapel hintereinander abarbeiten kannst
+- **Fertig** — schließt ab und bringt dich zurück, wo du gestartet bist
+
+Während du scannst, zeigt ein kleiner Zähler, wie viele Belege du in dieser Sitzung bereits gespeichert hast. Alle 15 Belege meldet sich die App mit einer freundlichen Erinnerung, dass du weitermachen oder eine Pause einlegen kannst — dein Fortschritt ist so oder so schon gespeichert. Der Zähler setzt sich zurück, sobald du den Bildschirm verlässt; er dient nur dazu, dir während einer Sitzung ein Gefühl für den Fortschritt zu geben.
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
@@ -23082,6 +23127,15 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 
 Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
 
+### Escanear una pila de recibos
+
+¿Tienes acumulada una semana de recibos en papel? Después de guardar uno, la confirmación te ofrece dos opciones en lugar de simplemente cerrar la pantalla:
+
+- **Escanear otro** — vuelve directamente a la cámara sin salir de la pantalla, para que puedas resolver toda una pila uno tras otro
+- **Listo** — termina y te devuelve a donde empezaste
+
+Mientras escaneas, un pequeño contador muestra cuántos recibos has guardado en esta sesión. Cada 15 recibos, la app te avisa con un recordatorio amistoso de que puedes seguir o tomar un descanso — tu progreso ya está guardado de cualquier forma. El contador se reinicia al salir de la pantalla; solo está para darte una sensación de progreso durante una sesión.
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
@@ -27520,6 +27574,15 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 
 Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
 
+### Scanner une pile de reçus
+
+Vous avez accumulé une semaine de reçus papier ? Après en avoir enregistré un, la confirmation propose deux choix au lieu de simplement fermer l'écran :
+
+- **Scanner un autre** — revient directement à l'appareil photo sans quitter l'écran, pour enchaîner toute une pile de reçus
+- **Terminé** — termine et vous ramène là où vous avez commencé
+
+Pendant que vous scannez, un petit compteur indique combien de reçus vous avez enregistrés dans cette session. Tous les 15 reçus, l'application vous rappelle amicalement que vous pouvez continuer ou faire une pause — votre progression est déjà enregistrée dans tous les cas. Le compteur se réinitialise dès que vous quittez l'écran ; il sert uniquement à donner un sentiment de progression pendant une session.
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.
@@ -31956,6 +32019,15 @@ iOS, Android, Web
 
 Працуе аднолькава незалежна ад таго, ці скануеце вы ў праграме, ці праз ботаў Telegram, WhatsApp або Slack.
 
+### Сканаванне цэлай стопкі чэкаў
+
+Назбіраўся тыдзень папяровых чэкаў? Пасля захавання аднаго чэка пацвярджэнне прапануе два варыянты замест простага закрыцця экрана:
+
+- **Сканаваць яшчэ** — адразу вяртае да камеры, не пакідаючы экран, каб можна было апрацаваць усю стопку адну за адной
+- **Гатова** — завяршае і вяртае туды, адкуль вы пачалі
+
+Пакуль вы скануеце, невялікі лічыльнік паказвае, колькі чэкаў захавана ў гэтай сесіі. Кожныя 15 чэкаў праграма сяброўска нагадвае, што можна працягнуць або зрабіць перапынак — прагрэс у любым выпадку ўжо захаваны. Лічыльнік скідаецца пасля выхаду з экрана; ён патрэбны толькі для адчування прагрэсу ў межах адной сесіі.
+
 ## Галасавы даход
 
 Рэгіструйце атрыманыя плацяжы голасам — той самы працэс, што і для галасавога выдатку, аптымізаваны для даходаў.
@@ -36348,6 +36420,15 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 - Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een **+**-teken (bijvoorbeeld "+ Schoonmaakmiddelen 10"). Die wordt nog niet aangemaakt — tik op **Categorieën wijzigen** om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.
 
 Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.
+
+### Een stapel bonnen achter elkaar scannen
+
+Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg je twee keuzes in plaats van dat het scherm gewoon sluit:
+
+- **Nog een scannen** — gaat direct terug naar de camera zonder het scherm te verlaten, zodat je een hele stapel achter elkaar kunt afhandelen
+- **Klaar** — rondt af en brengt je terug naar waar je begon
+
+Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.
 
 ## Spraakinkomsten
 

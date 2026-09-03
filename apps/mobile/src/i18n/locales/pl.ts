@@ -474,6 +474,12 @@ export default {
     choosePdf: 'Wgraj PDF',
     analyzingPdf: 'Analizowanie paragonu PDF...',
     userPromptPlaceholder: 'Dodatkowe instrukcje dla AI (opcjonalnie)',
+    sessionCount_one: '{{count}} paragon zeskanowany w tej sesji',
+    sessionCount_few: '{{count}} paragony zeskanowane w tej sesji',
+    sessionCount_many: '{{count}} paragonów zeskanowanych w tej sesji',
+    sessionCount_other: '{{count}} paragonów zeskanowanych w tej sesji',
+    sessionCapTitle: 'Dobre tempo!',
+    sessionCapBody: 'W tej sesji zeskanowano {{count}} paragonów. Możesz kontynuować lub zrobić przerwę — Twój postęp jest już zapisany.',
   },
   incomeVoice: {
     title: 'Głosowy przychód',

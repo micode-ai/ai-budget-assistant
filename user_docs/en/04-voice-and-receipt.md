@@ -90,6 +90,15 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
 
+### Scanning a Stack of Receipts
+
+Caught up on a week of paper receipts? After you save one, the confirmation prompt offers two choices instead of just closing the screen:
+
+- **Scan Another** — jumps straight back to the camera without leaving the screen, so you can clear a whole stack back-to-back
+- **Done** — finishes and returns you to where you started
+
+While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.

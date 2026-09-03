@@ -23,6 +23,13 @@ interface UseReceiptSaveParams {
   proposedNamesToCreate: string[];
   /** Resets the whole scan (scanner state + split state + confirm UI). */
   onReset: () => void;
+  /**
+   * Called right after a successful save, before the result alert is shown.
+   * Lets the screen track a batch-scanning session (ABA
+   * batch-receipt-scan-session) without this hook owning any session state
+   * itself — omit it and the alert is byte-identical to before.
+   */
+  onSaved?: () => { count: number; isCheckpoint: boolean };
 }
 
 /**
@@ -44,6 +51,7 @@ export function useReceiptSave({
   itemCategories,
   proposedNamesToCreate,
   onReset,
+  onSaved,
 }: UseReceiptSaveParams) {
   const { t } = useTranslation();
   const { addExpense } = useExpenseStore();
@@ -129,10 +137,18 @@ export function useReceiptSave({
           : undefined,
       });
 
-      showAlert(t('common.success'), t('receipt.success'), [
-        { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
-        { text: t('common.done'), onPress: () => router.back() },
-      ]);
+      const session = onSaved?.();
+      if (session?.isCheckpoint) {
+        showAlert(t('receipt.sessionCapTitle'), t('receipt.sessionCapBody', { count: session.count }), [
+          { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
+          { text: t('common.done'), onPress: () => router.back() },
+        ]);
+      } else {
+        showAlert(t('common.success'), t('receipt.success'), [
+          { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
+          { text: t('common.done'), onPress: () => router.back() },
+        ]);
+      }
     } catch {
       showAlert(t('common.error'), t('receipt.saveFailed'));
     }

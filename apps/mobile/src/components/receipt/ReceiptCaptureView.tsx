@@ -12,6 +12,8 @@ interface Props {
   onCameraPress: () => void;
   onGalleryPress: () => void;
   onPdfPress: () => void;
+  /** Receipts saved so far in this continuous scanning session; 0/undefined renders nothing. */
+  sessionCount?: number;
 }
 
 /**
@@ -30,6 +32,7 @@ export default function ReceiptCaptureView({
   onCameraPress,
   onGalleryPress,
   onPdfPress,
+  sessionCount,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -37,6 +40,15 @@ export default function ReceiptCaptureView({
 
   return (
     <>
+      {!!sessionCount && (
+        <View style={styles.sessionPill}>
+          <Ionicons name="checkmark-circle" size={16} color={theme.colors.success} />
+          <Text style={styles.sessionPillText}>
+            {t('receipt.sessionCount', { count: sessionCount })}
+          </Text>
+        </View>
+      )}
+
       <View style={styles.instructionContainer}>
         <Ionicons name="receipt-outline" size={80} color={theme.colors.primary} />
         <Text style={styles.instructionText}>
@@ -106,6 +118,22 @@ export default function ReceiptCaptureView({
 }
 
 const createStyles = (theme: Theme) => ({
+  sessionPill: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    alignSelf: 'center' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.full,
+    paddingVertical: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[4],
+    gap: theme.spacing[2],
+    marginTop: theme.spacing[4],
+  },
+  sessionPillText: {
+    fontSize: 13,
+    fontWeight: '600' as const,
+    color: theme.colors.textSecondary,
+  },
   instructionContainer: {
     alignItems: 'center' as const,
     marginBottom: theme.spacing[12],

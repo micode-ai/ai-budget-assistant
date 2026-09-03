@@ -90,6 +90,15 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 
 Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
 
+### Escanear una pila de recibos
+
+¿Tienes acumulada una semana de recibos en papel? Después de guardar uno, la confirmación te ofrece dos opciones en lugar de simplemente cerrar la pantalla:
+
+- **Escanear otro** — vuelve directamente a la cámara sin salir de la pantalla, para que puedas resolver toda una pila uno tras otro
+- **Listo** — termina y te devuelve a donde empezaste
+
+Mientras escaneas, un pequeño contador muestra cuántos recibos has guardado en esta sesión. Cada 15 recibos, la app te avisa con un recordatorio amistoso de que puedes seguir o tomar un descanso — tu progreso ya está guardado de cualquier forma. El contador se reinicia al salir de la pantalla; solo está para darte una sensación de progreso durante una sesión.
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
