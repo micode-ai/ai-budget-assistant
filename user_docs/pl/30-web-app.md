@@ -10,6 +10,16 @@
 
 Nie trzeba niczego pobierać ani instalować. Aplikacja webowa działa na komputerach stacjonarnych, laptopach, tabletach i w przeglądarkach telefonów.
 
+## Dodaj ją do ekranu głównego
+
+Aplikację webową można zainstalować, żeby otwierała się jak zwykła aplikacja — z własną ikoną i bez paska adresu.
+
+- **iPhone / iPad (Safari):** dotknij Udostępnij, a potem **Do ekranu początkowego**. To dziś jedyny sposób na ikonę aplikacji w iOS, bo wersji z App Store jeszcze nie ma.
+- **Android (Chrome):** otwórz menu przeglądarki i wybierz **Dodaj do ekranu głównego**.
+- **Komputer (Chrome / Edge):** poszukaj ikony instalacji na pasku adresu.
+
+Instalacja zmienia sposób uruchamiania, a nie możliwości: połączenie z internetem nadal jest potrzebne.
+
 ## Co możesz robić
 
 Wersja webowa obejmuje codzienne podstawy:

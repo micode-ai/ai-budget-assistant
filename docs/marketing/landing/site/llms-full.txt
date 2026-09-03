@@ -2780,7 +2780,7 @@ After AI analysis, you'll see:
 - **Merchant** — store/restaurant name (editable)
 - **Category** — automatically assigned (editable)
 - **Date** — from the receipt (editable)
-- **Items** — individual line items with quantities and prices (if detected)
+- **Items** — individual line items with quantities and prices (if detected) — tap any item to edit it, delete it, or add one the scan missed (see **Editing Items** below)
 - **Discount** — discount amount (if present on receipt)
 - **Confidence** indicator — High or Medium
 - **Save receipt image** toggle — keep the photo attached to the expense
@@ -2796,6 +2796,16 @@ Review and correct any details, then:
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
 
+### Editing Items
+
+AI extraction isn't always perfect — a price digit can get dropped, a discount can bleed into a unit price, or the scan can miss a line entirely. You don't need to rescan or delete the whole expense to fix it:
+
+- **Tap any item** in the list to edit its name, quantity, unit price, or total price. Tap **Save** to apply the correction.
+- **Tap the trash icon** next to an item to remove it — useful for a duplicated or invented line.
+- **Tap + Add item** at the bottom of the list to add a line the scan missed.
+
+Every item is listed — there's no cutoff, however many the receipt has. Any change you make updates the category split and totals immediately, so what you save always matches what's on screen. The receipt's overall total, discount, and deposit stay as scanned; only the individual line items are editable.
+
 ### Category Splits
 
 Grocery-store receipts often mix several kinds of items in one trip — food, household supplies, alcohol. When the app recognizes more than one kind of item on a receipt, it automatically splits the expense across the matching categories instead of putting it all in one.
@@ -2808,6 +2818,15 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
+
+### Scanning a Stack of Receipts
+
+Caught up on a week of paper receipts? After you save one, the confirmation prompt offers two choices instead of just closing the screen:
+
+- **Scan Another** — jumps straight back to the camera without leaving the screen, so you can clear a whole stack back-to-back
+- **Done** — finishes and returns you to where you started
+
+While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
 
 ## Voice Income
 
@@ -2873,7 +2892,7 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
   **A:** Both digital PDFs (e.g. Amazon or PayPal invoices) and scanned PDF receipts are supported. Maximum file size is 10 MB. Digital PDFs with selectable text are processed faster and more accurately. For best results with scanned PDFs, make sure the scan is clear and high-contrast.
 
 - **Q: Why was the amount wrong after scanning?**
-  **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results.
+  **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results. If a specific line item is wrong, tap it to edit it directly — see **Editing Items** above.
 
 - **Q: Does voice/receipt scanning use my AI requests?**
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.
@@ -3679,6 +3698,26 @@ Exchange money between your currency wallets:
 - **Notes field** — add context to the exchange
 - **Recent Exchanges** — view your exchange history
 
+### Rate alerts
+
+You don't have to keep checking the rate yourself. On the Exchange screen, the **Rate alerts** card sets a target for the pair you have selected and notifies you when the live rate reaches it.
+
+1. Select the **From** and **To** currencies you care about
+2. Tap the **+** on the **Rate alerts** card
+3. Enter your target — the field reads `1 <From> = ___ <To>`
+4. Choose **above** or **below**. The app preselects whichever matches the number you typed (above if your target is higher than the current rate, below if it is lower); tap the other chip to override it
+5. Tap **Add alert**
+
+The rate is checked on our servers once an hour, so it works with the app closed. When your target is reached you get a notification — *"1 EUR is now 4.3512 PLN. Tap to exchange."* — and tapping it opens the Exchange screen with that pair already selected.
+
+Each alert fires **once** and then stops, so a rate hovering around your target can't notify you over and over. Add a new alert if you want to keep watching that pair.
+
+The card shows the alerts for the pair currently selected, so switching currencies switches the list — tap **Show all** on it, or **Rate alerts** on the Wallet screen, for the full list.
+
+That screen is where all your alerts live: the ones still waiting, and the ones that have already fired with the rate and date they fired at. Since an alert only fires once, that history is the only record in the app that it did — the notification itself can be swiped away. You can create an alert for any pair from there without touching the exchange form, delete any of them with the bin icon, and keep up to 20 waiting at a time.
+
+Rate alerts are **personal**: they follow you across all your accounts, nobody else sees them, and a viewer can set them like anyone else. There is no separate switch in notification settings — deleting the alert is how you turn it off.
+
 ### Recent Exchanges
 
 Below the exchange form, you'll find the 5 most recent currency exchanges with:
@@ -3761,7 +3800,11 @@ Open a transfer from **Recent Transfers** or the Transfer History screen and tap
 
 Changing an account also switches that side of the transfer to the account's own currency. If **Count as income** is on, the matching income record moves to the new destination account as well.
 
-One of the two accounts must remain the account you're currently working in — otherwise the transfer would vanish from the history of both sides.
+You can move either side to any other account you belong to — including a change that leaves the account you're currently working in out of the transfer. That is exactly how you correct a transfer that landed on the wrong account: it then appears in the history of the two accounts it now belongs to, and disappears from the one it no longer touches.
+
+Recording, editing and deleting transfers works offline: the change stays on your device and is pushed the next time the Wallet screen opens with a connection. If the server refuses a change — for example because you no longer have access to one of the accounts you picked — the app tells you and the transfer is left exactly as it was.
+
+In a shared account, every member sees the transfers that touch it, whoever recorded them; the account's balance always counted them anyway. Any member who could have made the transfer — that is, who belongs to both accounts and isn't a viewer on the paying side — can also correct or delete it.
 
 ## Supported Currencies
 
@@ -5333,6 +5376,22 @@ To connect: **Settings → Chat Bots**.
 3. If the date is wrong, send the correct date in `DD.MM.YYYY` format
 4. Confirm to add the expense, or cancel
 
+### Fixing the scanned lines
+
+OCR sometimes misreads a price, invents a line, or misses one. Tap **✏️ Items** (on WhatsApp: **✏️ Edit → Items**) and send one correction per message:
+
+| Message | What it does |
+|---|---|
+| `3 = 14.69` | sets the price of line 3 |
+| `3: Rye bread` | renames line 3 |
+| `3 -` | deletes line 3 |
+| `+ Bread 5.99` | adds a line |
+| `= 233.98` | corrects the receipt total |
+
+Both `14.69` and `14,69` work. After every correction the bot re-sends the numbered list and a `Lines: … · receipt total: …` line — when those two disagree, something on the receipt is still misread. The category split is rebuilt from the corrected lines, so correct the total too when you change a price.
+
+When you are done, tap **Add expense** — nothing is saved until you do, and cancelling discards every correction. Only the lines and the total can be corrected here; to change a line's category, open the expense in the app.
+
 ## Multiple Accounts
 
 If you have several accounts (e.g. "Personal" and "Family"):
@@ -5497,12 +5556,12 @@ Every user has a unique 6-character referral code. You can find it on the **Invi
 1. Go to **Settings** → **Invite Friends**
 2. Your code is displayed at the top of the screen
 3. Use **Copy** to copy the code to your clipboard
-4. Use **Share** to send it via any messaging app
+4. Use **Share** to send it via any messaging app — the message already contains a link, and a friend who opens it has your code filled in for them
 
 ## How It Works
 
 1. **Share your code** — send it to friends via any messenger or social media
-2. **Friend registers** — they enter your code during registration (optional field)
+2. **Friend registers** — from your link the code is already in place; typed by hand it is an optional field
 3. **7-day waiting period** — the referral stays in "Pending" status
 4. **Friend uses the app** — they must actively use the app (open it and add expenses) within 7 days
 5. **Referral becomes Active** — you receive **+30 AI requests** as a bonus
@@ -5820,6 +5879,16 @@ URL: https://ai-budget.pl/help/en/web-app/
 3. Your accounts, transactions, and settings appear automatically — they sync from the same server
 
 There is nothing to download or install. The web app works on desktops, laptops, tablets, and phone browsers.
+
+## Add It to Your Home Screen
+
+You can install the web app so it opens like a normal app — its own icon, no browser address bar.
+
+- **iPhone / iPad (Safari):** tap the Share button, then **Add to Home Screen**. This is the only way to get an app icon on iOS today, as there is no App Store version yet.
+- **Android (Chrome):** open the browser menu and choose **Add to Home screen**.
+- **Desktop (Chrome / Edge):** look for the install icon in the address bar.
+
+Installing changes how it launches, not what it can do: it still needs an internet connection.
 
 ## What You Can Do
 

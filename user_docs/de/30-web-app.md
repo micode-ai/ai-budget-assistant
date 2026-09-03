@@ -10,6 +10,16 @@
 
 Es gibt nichts herunterzuladen oder zu installieren. Die Web-App funktioniert auf Desktops, Laptops, Tablets und Smartphone-Browsern.
 
+## Zum Startbildschirm hinzufügen
+
+Du kannst die Web-App installieren, sodass sie wie eine normale App startet — mit eigenem Symbol und ohne Adressleiste.
+
+- **iPhone / iPad (Safari):** auf „Teilen" tippen, dann **Zum Home-Bildschirm**. Das ist derzeit der einzige Weg zu einem App-Symbol unter iOS, da es noch keine App-Store-Version gibt.
+- **Android (Chrome):** Browser-Menü öffnen und **Zum Startbildschirm zufügen** wählen.
+- **Desktop (Chrome / Edge):** das Installationssymbol in der Adressleiste anklicken.
+
+Die Installation ändert nur den Start, nicht den Funktionsumfang: eine Internetverbindung wird weiterhin benötigt.
+
 ## Was du tun kannst
 
 Die Web-App deckt die täglichen Grundfunktionen ab:

@@ -10,6 +10,16 @@
 
 There is nothing to download or install. The web app works on desktops, laptops, tablets, and phone browsers.
 
+## Add It to Your Home Screen
+
+You can install the web app so it opens like a normal app — its own icon, no browser address bar.
+
+- **iPhone / iPad (Safari):** tap the Share button, then **Add to Home Screen**. This is the only way to get an app icon on iOS today, as there is no App Store version yet.
+- **Android (Chrome):** open the browser menu and choose **Add to Home screen**.
+- **Desktop (Chrome / Edge):** look for the install icon in the address bar.
+
+Installing changes how it launches, not what it can do: it still needs an internet connection.
+
 ## What You Can Do
 
 The web app covers the everyday essentials:

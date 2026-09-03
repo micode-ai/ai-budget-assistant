@@ -10,6 +10,16 @@
 
 Er valt niets te downloaden of te installeren. De web-app werkt op desktops, laptops, tablets en telefoonbrowsers.
 
+## Zet hem op je beginscherm
+
+Je kunt de web-app installeren zodat hij opent als een gewone app — met een eigen icoon en zonder adresbalk.
+
+- **iPhone / iPad (Safari):** tik op Deel en dan **Zet op beginscherm**. Dit is vandaag de enige manier om een app-icoon op iOS te krijgen, want er is nog geen App Store-versie.
+- **Android (Chrome):** open het browsermenu en kies **Toevoegen aan startscherm**.
+- **Desktop (Chrome / Edge):** klik op het installatie-icoon in de adresbalk.
+
+Installeren verandert hoe hij start, niet wat hij kan: een internetverbinding blijft nodig.
+
 ## Wat je kunt doen
 
 De webversie dekt de dagelijkse basis:

@@ -19,6 +19,12 @@ echo "==> Building web bundle against API: $EXPO_PUBLIC_API_URL"
 rm -rf dist
 npx expo export --platform web
 
+# `web.output: "single"` makes Expo render its own HTML shell and ignore
+# app/+html.tsx, so the PWA tags are injected here instead. Everything in
+# apps/mobile/public/ (manifest + icons) is copied into dist/ by the export.
+node scripts/inject-pwa-tags.js dist/index.html
+grep -q 'rel="manifest"' dist/index.html   || { echo "ERROR: PWA tags missing from dist/index.html" >&2; exit 1; }
+
 echo ""
 echo "==> Done. Static site in: $ROOT/apps/mobile/dist"
 echo "    Deploy with, e.g.:"

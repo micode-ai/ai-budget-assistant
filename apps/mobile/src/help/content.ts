@@ -3803,6 +3803,16 @@ If your account role is **Viewer**, you can see the subscription list but cannot
 
 There is nothing to download or install. The web app works on desktops, laptops, tablets, and phone browsers.
 
+## Add It to Your Home Screen
+
+You can install the web app so it opens like a normal app — its own icon, no browser address bar.
+
+- **iPhone / iPad (Safari):** tap the Share button, then **Add to Home Screen**. This is the only way to get an app icon on iOS today, as there is no App Store version yet.
+- **Android (Chrome):** open the browser menu and choose **Add to Home screen**.
+- **Desktop (Chrome / Edge):** look for the install icon in the address bar.
+
+Installing changes how it launches, not what it can do: it still needs an internet connection.
+
 ## What You Can Do
 
 The web app covers the everyday essentials:
@@ -8361,6 +8371,16 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Ничего скачивать и устанавливать не нужно. Веб-приложение работает на компьютерах, ноутбуках, планшетах и в браузере телефона.
 
+## Добавьте на главный экран
+
+Веб-версию можно установить, чтобы она открывалась как обычное приложение — со своей иконкой и без адресной строки.
+
+- **iPhone / iPad (Safari):** нажмите «Поделиться», затем **На экран «Домой»**. Сегодня это единственный способ получить иконку приложения на iOS — версии в App Store пока нет.
+- **Android (Chrome):** откройте меню браузера и выберите **Добавить на главный экран**.
+- **Компьютер (Chrome / Edge):** нажмите значок установки в адресной строке.
+
+Установка меняет способ запуска, а не возможности: интернет по-прежнему нужен.
+
 ## Что можно делать
 
 Веб-версия покрывает повседневные задачи:
@@ -12887,6 +12907,16 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Нічого завантажувати чи встановлювати не потрібно. Веб-застосунок працює на комп’ютерах, ноутбуках, планшетах і в браузері телефона.
 
+## Додайте на головний екран
+
+Вебверсію можна встановити, щоб вона відкривалася як звичайний застосунок — із власною іконкою та без адресного рядка.
+
+- **iPhone / iPad (Safari):** натисніть «Поділитися», потім **На екран «Додому»**. Сьогодні це єдиний спосіб отримати іконку застосунку на iOS — версії в App Store поки немає.
+- **Android (Chrome):** відкрийте меню браузера й виберіть **Додати на головний екран**.
+- **Комп'ютер (Chrome / Edge):** натисніть значок встановлення в адресному рядку.
+
+Встановлення змінює спосіб запуску, а не можливості: інтернет усе одно потрібен.
+
 ## Що можна робити
 
 Веб-версія охоплює щоденні завдання:
@@ -17398,6 +17428,16 @@ Jeśli Twoja rola na koncie to **Obserwator**, możesz przeglądać listę subsk
 
 Nie trzeba niczego pobierać ani instalować. Aplikacja webowa działa na komputerach stacjonarnych, laptopach, tabletach i w przeglądarkach telefonów.
 
+## Dodaj ją do ekranu głównego
+
+Aplikację webową można zainstalować, żeby otwierała się jak zwykła aplikacja — z własną ikoną i bez paska adresu.
+
+- **iPhone / iPad (Safari):** dotknij Udostępnij, a potem **Do ekranu początkowego**. To dziś jedyny sposób na ikonę aplikacji w iOS, bo wersji z App Store jeszcze nie ma.
+- **Android (Chrome):** otwórz menu przeglądarki i wybierz **Dodaj do ekranu głównego**.
+- **Komputer (Chrome / Edge):** poszukaj ikony instalacji na pasku adresu.
+
+Instalacja zmienia sposób uruchamiania, a nie możliwości: połączenie z internetem nadal jest potrzebne.
+
 ## Co możesz robić
 
 Wersja webowa obejmuje codzienne podstawy:
@@ -21884,6 +21924,16 @@ Wenn deine Kontorolle **Betrachter** ist, kannst du die Abonnementliste einsehen
 
 Es gibt nichts herunterzuladen oder zu installieren. Die Web-App funktioniert auf Desktops, Laptops, Tablets und Smartphone-Browsern.
 
+## Zum Startbildschirm hinzufügen
+
+Du kannst die Web-App installieren, sodass sie wie eine normale App startet — mit eigenem Symbol und ohne Adressleiste.
+
+- **iPhone / iPad (Safari):** auf „Teilen" tippen, dann **Zum Home-Bildschirm**. Das ist derzeit der einzige Weg zu einem App-Symbol unter iOS, da es noch keine App-Store-Version gibt.
+- **Android (Chrome):** Browser-Menü öffnen und **Zum Startbildschirm zufügen** wählen.
+- **Desktop (Chrome / Edge):** das Installationssymbol in der Adressleiste anklicken.
+
+Die Installation ändert nur den Start, nicht den Funktionsumfang: eine Internetverbindung wird weiterhin benötigt.
+
 ## Was du tun kannst
 
 Die Web-App deckt die täglichen Grundfunktionen ab:
@@ -26359,6 +26409,16 @@ Si tu rol en la cuenta es **Observador**, puedes ver la lista de suscripciones p
 
 No hay nada que descargar ni instalar. La aplicación web funciona en ordenadores de escritorio, portátiles, tabletas y navegadores de teléfono.
 
+## Añádela a tu pantalla de inicio
+
+Puedes instalar la app web para que se abra como una app normal — con su propio icono y sin barra de direcciones.
+
+- **iPhone / iPad (Safari):** toca Compartir y luego **Añadir a pantalla de inicio**. Hoy es la única forma de tener un icono en iOS, ya que aún no hay versión en la App Store.
+- **Android (Chrome):** abre el menú del navegador y elige **Añadir a pantalla de inicio**.
+- **Escritorio (Chrome / Edge):** busca el icono de instalar en la barra de direcciones.
+
+Instalarla cambia cómo se abre, no lo que puede hacer: sigue necesitando conexión a internet.
+
 ## Qué puedes hacer
 
 La versión web cubre lo esencial del día a día:
@@ -30832,6 +30892,16 @@ Si votre rôle dans le compte est **Observateur**, vous pouvez consulter la list
 
 Rien à télécharger ni à installer. L’application web fonctionne sur ordinateurs de bureau, portables, tablettes et navigateurs de téléphone.
 
+## Ajoutez-la à votre écran d'accueil
+
+Vous pouvez installer l'application web pour qu'elle s'ouvre comme une vraie application — avec sa propre icône et sans barre d'adresse.
+
+- **iPhone / iPad (Safari) :** appuyez sur Partager, puis **Sur l'écran d'accueil**. C'est aujourd'hui le seul moyen d'avoir une icône sur iOS, faute de version App Store.
+- **Android (Chrome) :** ouvrez le menu du navigateur et choisissez **Ajouter à l'écran d'accueil**.
+- **Ordinateur (Chrome / Edge) :** cherchez l'icône d'installation dans la barre d'adresse.
+
+L'installation change la façon de la lancer, pas ce qu'elle sait faire : une connexion internet reste nécessaire.
+
 ## Ce que vous pouvez faire
 
 La version web couvre l’essentiel du quotidien :
@@ -35268,6 +35338,16 @@ OCR часам няправільна чытае цану, выдумляе ра
 3. Вашы рахункі, транзакцыі і налады з’явяцца аўтаматычна — яны сінхранізуюцца з таго самага сервера
 
 Нічога спампоўваць ці ўсталёўваць не трэба. Вэб-праграма працуе на камп’ютарах, ноўтбуках, планшэтах і ў браўзеры тэлефона.
+
+## Дадайце на галоўны экран
+
+Вэб-версію можна ўсталяваць, каб яна адкрывалася як звычайная праграма — са сваёй іконкай і без адраснага радка.
+
+- **iPhone / iPad (Safari):** націсніце «Падзяліцца», потым **На экран «Дадому»**. Сёння гэта адзіны спосаб атрымаць іконку праграмы на iOS — версіі ў App Store пакуль няма.
+- **Android (Chrome):** адкрыйце меню браўзера і выберыце **Дадаць на галоўны экран**.
+- **Камп'ютар (Chrome / Edge):** націсніце значок усталявання ў адрасным радку.
+
+Усталяванне змяняе спосаб запуску, а не магчымасці: інтэрнэт па-ранейшаму патрэбны.
 
 ## Што можна рабіць
 
@@ -39820,6 +39900,16 @@ Als je accountrol **Kijker** is, kun je de abonnementenlijst bekijken, maar kun 
 3. Je accounts, transacties en instellingen verschijnen automatisch — ze synchroniseren vanaf dezelfde server
 
 Er valt niets te downloaden of te installeren. De web-app werkt op desktops, laptops, tablets en telefoonbrowsers.
+
+## Zet hem op je beginscherm
+
+Je kunt de web-app installeren zodat hij opent als een gewone app — met een eigen icoon en zonder adresbalk.
+
+- **iPhone / iPad (Safari):** tik op Deel en dan **Zet op beginscherm**. Dit is vandaag de enige manier om een app-icoon op iOS te krijgen, want er is nog geen App Store-versie.
+- **Android (Chrome):** open het browsermenu en kies **Toevoegen aan startscherm**.
+- **Desktop (Chrome / Edge):** klik op het installatie-icoon in de adresbalk.
+
+Installeren verandert hoe hij start, niet wat hij kan: een internetverbinding blijft nodig.
 
 ## Wat je kunt doen
 

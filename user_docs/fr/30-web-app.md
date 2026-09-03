@@ -10,6 +10,16 @@
 
 Rien à télécharger ni à installer. L’application web fonctionne sur ordinateurs de bureau, portables, tablettes et navigateurs de téléphone.
 
+## Ajoutez-la à votre écran d'accueil
+
+Vous pouvez installer l'application web pour qu'elle s'ouvre comme une vraie application — avec sa propre icône et sans barre d'adresse.
+
+- **iPhone / iPad (Safari) :** appuyez sur Partager, puis **Sur l'écran d'accueil**. C'est aujourd'hui le seul moyen d'avoir une icône sur iOS, faute de version App Store.
+- **Android (Chrome) :** ouvrez le menu du navigateur et choisissez **Ajouter à l'écran d'accueil**.
+- **Ordinateur (Chrome / Edge) :** cherchez l'icône d'installation dans la barre d'adresse.
+
+L'installation change la façon de la lancer, pas ce qu'elle sait faire : une connexion internet reste nécessaire.
+
 ## Ce que vous pouvez faire
 
 La version web couvre l’essentiel du quotidien :
