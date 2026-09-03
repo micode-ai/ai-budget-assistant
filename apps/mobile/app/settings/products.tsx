@@ -4,19 +4,20 @@ import {
   Text,
   FlatList,
   TouchableOpacity,
-  Modal,
   TextInput,
   ActivityIndicator,
 } from 'react-native';
 import { Stack } from 'expo-router';
 import { showAlert } from '@/utils/alert';
-import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { usePriceHistoryStore } from '@/stores/priceHistoryStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { useProductMultiSelect } from '@/hooks/useProductMultiSelect';
+import { RenameProductModal } from '@/components/settings/RenameProductModal';
+import { MergeProductsModal } from '@/components/settings/MergeProductsModal';
 import type { ProductListItem } from '@budget/shared-types';
 
 export default function ProductsSettingsScreen() {
@@ -64,24 +65,9 @@ export default function ProductsSettingsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
 
   // Multi-select + merge
-  const [selecting, setSelecting] = useState(false);
-  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const { selecting, selected, toggleSelect, enterSelect, exitSelect } = useProductMultiSelect();
   const [mergeSources, setMergeSources] = useState<string[] | null>(null);
   const [mergeName, setMergeName] = useState('');
-
-  const toggleSelect = useCallback((rawName: string) => {
-    setSelected((prev) => {
-      const next = new Set(prev);
-      if (next.has(rawName)) next.delete(rawName);
-      else next.add(rawName);
-      return next;
-    });
-  }, []);
-
-  const exitSelect = useCallback(() => {
-    setSelecting(false);
-    setSelected(new Set());
-  }, []);
 
   const openRename = (item: ProductListItem) => {
     setEditing(item);
@@ -121,6 +107,26 @@ export default function ProductsSettingsScreen() {
     );
   }, [deleteAlias, t]);
 
+  const handleIgnore = useCallback((item: ProductListItem) => {
+    showAlert(
+      t('priceHistory.ignoreProduct'),
+      t('priceHistory.ignoreConfirm', { name: item.canonicalName }),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('priceHistory.ignoreProduct'),
+          style: 'destructive',
+          onPress: async () => {
+            closeRename();
+            try {
+              await Promise.all(item.rawNames.map((rn) => ignoreProduct(rn)));
+            } catch { /* warn'd */ }
+          },
+        },
+      ],
+    );
+  }, [ignoreProduct, t]);
+
   const defaultMergeName = (sources: string[]) => {
     const byCount = new Map(products.map((p) => [p.rawName, p.purchaseCount]));
     return [...sources].sort((a, b) => (byCount.get(b) ?? 0) - (byCount.get(a) ?? 0))[0] ?? '';
@@ -133,6 +139,14 @@ export default function ProductsSettingsScreen() {
     setMergeName(defaultMergeName(sources));
   };
   const closeMerge = () => { setMergeSources(null); setMergeName(''); };
+
+  const mergeLabel = useMemo(
+    () =>
+      mergeSources
+        ?.map((s) => products.find((x) => x.rawName === s)?.canonicalName ?? s)
+        .join(' + ') ?? '',
+    [mergeSources, products],
+  );
 
   const handleConfirmMerge = async () => {
     if (!mergeSources) return;
@@ -268,7 +282,7 @@ export default function ProductsSettingsScreen() {
             {canEdit && products.length > 1 && (
               <TouchableOpacity
                 style={styles.mergeButton}
-                onPress={() => setSelecting(true)}
+                onPress={enterSelect}
                 activeOpacity={0.75}
               >
                 <Ionicons name="git-merge-outline" size={16} color={theme.colors.primary} />
@@ -374,104 +388,28 @@ export default function ProductsSettingsScreen() {
           </View>
         )}
 
-        {/* Rename modal */}
-        <Modal visible={editing !== null} transparent animationType="slide" onRequestClose={closeRename}>
-          <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
-            <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeRename} />
-            <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
-              <View style={styles.handle} />
-              <Text style={styles.modalTitle}>{t('priceHistory.renameProduct')}</Text>
-              {editing?.rawName !== editing?.canonicalName && (
-                <Text style={styles.modalSub}>{editing?.rawName}</Text>
-              )}
-              <TextInput
-                style={styles.input}
-                value={renameName}
-                onChangeText={setRenameName}
-                placeholderTextColor={theme.colors.textTertiary}
-                autoFocus
-                autoCapitalize="words"
-              />
-              <View style={styles.rowActions}>
-                <TouchableOpacity style={styles.cancelBtn} onPress={closeRename}>
-                  <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.saveBtn, saving && styles.saveBtnDisabled]}
-                  onPress={handleSaveRename}
-                  disabled={saving}
-                >
-                  <Text style={styles.saveText}>{t('common.save')}</Text>
-                </TouchableOpacity>
-              </View>
-              {canEdit && editing && (
-                <TouchableOpacity
-                  style={styles.ignoreBtn}
-                  onPress={() => {
-                    const item = editing;
-                    showAlert(
-                      t('priceHistory.ignoreProduct'),
-                      t('priceHistory.ignoreConfirm', { name: item.canonicalName }),
-                      [
-                        { text: t('common.cancel'), style: 'cancel' },
-                        {
-                          text: t('priceHistory.ignoreProduct'),
-                          style: 'destructive',
-                          onPress: async () => {
-                            closeRename();
-                            try {
-                              await Promise.all(item.rawNames.map((rn) => ignoreProduct(rn)));
-                            } catch { /* warn'd */ }
-                          },
-                        },
-                      ],
-                    );
-                  }}
-                >
-                  <Ionicons name="eye-off-outline" size={14} color={theme.colors.danger} />
-                  <Text style={styles.ignoreBtnText}>{t('priceHistory.ignoreProduct')}</Text>
-                </TouchableOpacity>
-              )}
-            </View>
-          </KeyboardAvoidingView>
-        </Modal>
+        <RenameProductModal
+          editing={editing}
+          renameName={renameName}
+          onChangeName={setRenameName}
+          saving={saving}
+          canEdit={canEdit}
+          onClose={closeRename}
+          onSave={handleSaveRename}
+          onIgnore={handleIgnore}
+          bottomInset={insets.bottom}
+        />
 
-        {/* Merge modal */}
-        <Modal visible={mergeSources !== null} transparent animationType="slide" onRequestClose={closeMerge}>
-          <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
-            <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeMerge} />
-            <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
-              <View style={styles.handle} />
-              <Text style={styles.modalTitle}>{t('priceHistory.mergeProducts')}</Text>
-              <Text style={styles.modalSub} numberOfLines={2}>
-                {mergeSources
-                  ?.map((s) => products.find((x) => x.rawName === s)?.canonicalName ?? s)
-                  .join(' + ')}
-              </Text>
-              <Text style={styles.fieldLabel}>{t('priceHistory.mergeInto')}</Text>
-              <TextInput
-                style={styles.input}
-                value={mergeName}
-                onChangeText={setMergeName}
-                placeholderTextColor={theme.colors.textTertiary}
-                autoFocus
-                autoCapitalize="words"
-              />
-              <View style={styles.rowActions}>
-                <TouchableOpacity style={styles.cancelBtn} onPress={closeMerge}>
-                  <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.saveBtn, saving && styles.saveBtnDisabled]}
-                  onPress={handleConfirmMerge}
-                  disabled={saving}
-                >
-                  <Text style={styles.saveText}>{t('priceHistory.mergeProducts')}</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </KeyboardAvoidingView>
-        </Modal>
+        <MergeProductsModal
+          visible={mergeSources !== null}
+          mergeLabel={mergeLabel}
+          mergeName={mergeName}
+          onChangeName={setMergeName}
+          saving={saving}
+          onClose={closeMerge}
+          onConfirm={handleConfirmMerge}
+          bottomInset={insets.bottom}
+        />
       </SafeAreaView>
     </>
   );
@@ -620,61 +558,4 @@ const createStyles = (theme: Theme) => ({
   },
   mergeBtnDisabled: { opacity: 0.45 },
   mergeBtnText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
-
-  overlay: { flex: 1, justifyContent: 'flex-end' as const },
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
-  sheet: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: theme.borderRadius['2xl'],
-    borderTopRightRadius: theme.borderRadius['2xl'],
-    padding: theme.spacing[6],
-    gap: theme.spacing[3],
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const,
-  },
-  modalTitle: { ...theme.textStyles.h3, color: theme.colors.textPrimary },
-  modalSub: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary },
-  fieldLabel: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
-  input: {
-    backgroundColor: theme.colors.surfaceSecondary,
-    borderRadius: theme.borderRadius.lg,
-    padding: theme.spacing[4],
-    fontSize: 16,
-    color: theme.colors.textPrimary,
-  },
-  rowActions: { flexDirection: 'row' as const, gap: theme.spacing[3] },
-  cancelBtn: {
-    flex: 1,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  cancelText: { fontSize: 16, fontWeight: '500' as const, color: theme.colors.textSecondary },
-  saveBtn: {
-    flex: 1,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    paddingVertical: theme.spacing[3.5],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.primary,
-  },
-  saveBtnDisabled: { opacity: 0.6 },
-  saveText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
-  ignoreBtn: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'center' as const,
-    gap: 6,
-    marginTop: theme.spacing[3],
-    paddingVertical: theme.spacing[2],
-  },
-  ignoreBtnText: { fontSize: 14, color: theme.colors.danger },
 });
