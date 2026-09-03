@@ -8,6 +8,21 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.23.1 - 2026-09-03
+
+**A sheet whose buttons you could not reach**
+
+- **Fixed: the buttons at the bottom of a pop-up sheet sat under the system
+  navigation bar.** On a phone with three-button navigation the bottom row of a
+  sheet was covered by the navigation bar, so it could not be tapped at all —
+  the "What's New" note was the plainest case, with both of its buttons
+  unreachable. Eight sheets shared the fault and all of them now leave room for
+  the navigation bar: What's New, the Safe-to-Spend breakdown, the chat-history
+  picker, the receipt line-category picker, the bill-split QR sheet, the
+  new-category form, the add-to-goal form and the upgrade screen (ABA-483).
+
+---
+
 ## 1.23.0 - 2026-09-03
 
 **Fixing what the receipt scanner got wrong**
