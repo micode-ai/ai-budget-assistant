@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Голосовий ввід та сканування чеків | AI Budget Assistant", "description": "Дозвольте ШІ зробити роботу за вас. Озвучте витрату природною мовою або сфотографуйте чек — додаток автоматично розпізнає суму, опис, продавця та категорію.", "inLanguage": "uk", "datePublished": "2026-06-19", "dateModified": "2026-08-28", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ua/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ua/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ua/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Головна", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Довідка", "item": "https://ai-budget.pl/help/ua/"}, {"@type": "ListItem", "position": 3, "name": "Голосовий ввід та сканування чеків | AI Budget Assistant", "item": "https://ai-budget.pl/help/ua/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Голосовий ввід та сканування чеків | AI Budget Assistant", "description": "Дозвольте ШІ зробити роботу за вас. Озвучте витрату природною мовою або сфотографуйте чек — додаток автоматично розпізнає суму, опис, продавця та категорію.", "inLanguage": "uk", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ua/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ua/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ua/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Головна", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Довідка", "item": "https://ai-budget.pl/help/ua/"}, {"@type": "ListItem", "position": 3, "name": "Голосовий ввід та сканування чеків | AI Budget Assistant", "item": "https://ai-budget.pl/help/ua/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -144,7 +144,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Продавець</strong> — назва магазину/ресторану (можна редагувати)</li>
 <li><strong>Категорія</strong> — автоматично визначена (можна редагувати)</li>
 <li><strong>Дата</strong> — з чека (можна редагувати)</li>
-<li><strong>Позиції</strong> — окремі рядки з кількістю та цінами (якщо розпізнані)</li>
+<li><strong>Позиції</strong> — окремі рядки з кількістю та цінами (якщо розпізнані) — торкніться будь-якої позиції, щоб відредагувати її, видалити або додати ту, яку сканування пропустило (див. <strong>Редагування позицій</strong> нижче)</li>
 <li><strong>Знижка</strong> — сума знижки (якщо вказана на чеку)</li>
 <li>Індикатор <strong>точності</strong> — <strong>Висока точність</strong> або <strong>Середня точність</strong></li>
 <li>Перемикач <strong>Зберегти фото чеку</strong> — зберегти фото прикріпленим до витрати</li>
@@ -159,6 +159,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Тримайте камеру стабільно, щоб уникнути розмиття</li>
 <li>Використовуйте <strong>Додаткові інструкції для ШІ</strong> для спеціальної обробки (наприклад, &ldquo;Це в EUR&rdquo;, &ldquo;Ігнорувати першу позицію&rdquo;)</li>
 </ul>
+<h3>Редагування позицій</h3>
+<p>Розпізнавання за допомогою ШІ не завжди ідеальне — цифра в ціні може загубитися, знижка може «влитися» в ціну за одиницю, або цілий рядок може бути пропущений під час сканування. Щоб це виправити, не потрібно пересканувати чек або видаляти всю витрату:</p>
+<ul>
+<li><strong>Торкніться будь-якої позиції</strong> у списку, щоб змінити її назву, кількість, ціну за одиницю або підсумкову ціну. Торкніться <strong>Зберегти</strong>, щоб застосувати виправлення.</li>
+<li><strong>Торкніться значка кошика</strong> поруч із позицією, щоб видалити її — зручно для задубльованого або хибно розпізнаного рядка.</li>
+<li><strong>Торкніться + Додати позицію</strong> внизу списку, щоб додати рядок, який сканування пропустило.</li>
+</ul>
+<p>Показані всі позиції — без обмеження, скільки б їх не було на чеку. Будь-яка зміна одразу оновлює розподіл за категоріями та суми, тож те, що ви зберігаєте, завжди збігається з тим, що видно на екрані. Загальна сума, знижка та застава за тару чека залишаються такими, як при скануванні — редагувати можна лише окремі позиції.</p>
 <h3>Розподіл за категоріями</h3>
 <p>Чеки з супермаркету часто поєднують різні види покупок за один похід — продукти, побутову хімію, алкоголь. Коли додаток розпізнає на чеку більше одного виду товарів, він автоматично розподіляє витрату між відповідними категоріями, замість того щоб віднести все до однієї.</p>
 <ul>
@@ -170,6 +178,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Іноді жодна з ваших наявних категорій не підходить для групи товарів. У такому разі додаток пропонує зовсім нову категорію — вона показується як чип, позначений значком <strong>+</strong> (наприклад, «+ Побутова хімія 10»). Поки що вона не створюється — натисніть <strong>Змінити категорії</strong>, щоб перенести її позиції до наявної категорії або залишити як запропоновано. Нова категорія справді створюється лише після збереження чека.</li>
 </ul>
 <p>Працює однаково незалежно від того, скануєте ви в додатку чи через ботів Telegram, WhatsApp або Slack.</p>
+<h3>Сканування цілої стопки чеків</h3>
+<p>Накопичився тиждень паперових чеків? Після збереження одного чека підтвердження пропонує два варіанти замість простого закриття екрана:</p>
+<ul>
+<li><strong>Сканувати ще</strong> — одразу повертає до камери, не залишаючи екран, щоб можна було обробити цілу стопку одну за одною</li>
+<li><strong>Готово</strong> — завершує та повертає туди, звідки ви почали</li>
+</ul>
+<p>Поки ви скануєте, невеликий лічильник показує, скільки чеків збережено в цій сесії. Кожні 15 чеків додаток дружньо нагадує, що можна продовжити або зробити перерву — прогрес у будь-якому разі вже збережено. Лічильник скидається після виходу з екрана; він потрібен лише для відчуття прогресу в межах однієї сесії.</p>
 <h2>Голосовий дохід</h2>
 <p>Реєструйте отримані платежі голосом — той самий процес, що й для голосової витрати, оптимізований для доходів.</p>
 <h3>Як це працює</h3>
@@ -231,7 +246,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </li>
 <li>
 <p><strong>П:</strong> Чому сума після сканування виявилася неправильною?
-  <strong>В:</strong> ШІ-розпізнавання не завжди ідеальне. Завжди перевіряйте екран підтвердження та виправляйте будь-які помилки перед збереженням. Розмиті або пошкоджені чеки можуть давати менш точні результати.</p>
+  <strong>В:</strong> ШІ-розпізнавання не завжди ідеальне. Завжди перевіряйте екран підтвердження та виправляйте будь-які помилки перед збереженням. Розмиті або пошкоджені чеки можуть давати менш точні результати. Якщо конкретна позиція вказана неправильно, торкніться її, щоб відредагувати напряму — див. <strong>Редагування позицій</strong> вище.</p>
 </li>
 <li>
 <p><strong>П:</strong> Чи використовує голосовий ввід та сканування чеків мої запити ШІ?

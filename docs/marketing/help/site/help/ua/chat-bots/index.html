@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/chat-bots/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/chat-bots/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/chat-bots/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Чат-боти — Telegram, WhatsApp і Slack | AI Budget Assistant", "description": "Керуйте фінансами прямо з Telegram, WhatsApp або Slack. Спілкуйтеся з ШІ, додавайте витрати, скануйте чеки та надсилайте голосові — без відкриття застосунку.", "inLanguage": "uk", "datePublished": "2026-06-19", "dateModified": "2026-06-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ua/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ua/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ua/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Головна", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Довідка", "item": "https://ai-budget.pl/help/ua/"}, {"@type": "ListItem", "position": 3, "name": "Чат-боти — Telegram, WhatsApp і Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/ua/chat-bots/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Чат-боти — Telegram, WhatsApp і Slack | AI Budget Assistant", "description": "Керуйте фінансами прямо з Telegram, WhatsApp або Slack. Спілкуйтеся з ШІ, додавайте витрати, скануйте чеки та надсилайте голосові — без відкриття застосунку.", "inLanguage": "uk", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ua/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ua/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ua/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Головна", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Довідка", "item": "https://ai-budget.pl/help/ua/"}, {"@type": "ListItem", "position": 3, "name": "Чат-боти — Telegram, WhatsApp і Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/ua/chat-bots/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -187,6 +187,40 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Якщо дата невірна — надішліть правильну у форматі <code>ДД.ММ.РРРР</code></li>
 <li>Підтвердіть додавання або скасуйте</li>
 </ol>
+<h3>Правка розпізнаних позицій</h3>
+<p>OCR іноді неправильно читає ціну, вигадує рядок або пропускає його. Натисніть <strong>✏️ Позиції</strong> (у WhatsApp: <strong>✏️ Правка → Позиції</strong>) і надсилайте по одній правці в повідомленні:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Повідомлення</th>
+<th>Що робить</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3 = 14,69</code></td>
+<td>ставить ціну рядка 3</td>
+</tr>
+<tr>
+<td><code>3: Хліб</code></td>
+<td>перейменовує рядок 3</td>
+</tr>
+<tr>
+<td><code>3 -</code></td>
+<td>видаляє рядок 3</td>
+</tr>
+<tr>
+<td><code>+ Хліб 5,99</code></td>
+<td>додає рядок</td>
+</tr>
+<tr>
+<td><code>= 233,98</code></td>
+<td>виправляє ітог чека</td>
+</tr>
+</tbody>
+</table></div>
+<p>Працюють і <code>14,69</code>, і <code>14.69</code>. Після кожної правки бот надсилає нумерований список заново та рядок <code>Сума позицій: … · ітог чека: …</code> — якщо ці два числа розходяться, щось у чеку все ще прочитано неправильно. Розподіл за категоріями перераховується за виправленими рядками, тому зі зміною ціни виправте й ітог.</p>
+<p>Коли завершите — натисніть <strong>Додати витрату</strong>: до цього нічого не зберігається, а скасування відкидає всі правки. Тут правляться лише рядки та ітог; щоб змінити категорію рядка, відкрийте витрату в застосунку.</p>
 <h2>Кілька акаунтів</h2>
 <ul>
 <li>Згадайте назву акаунту в повідомленні: «Покажи витрати в Сімейному» — ШІ запитає цей акаунт лише для цього повідомлення</li>

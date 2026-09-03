@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Voice Input & Receipt Scanning | AI Budget Assistant", "description": "Let AI do the work. Speak your expense naturally or photograph a receipt — the app extracts amount, description, merchant, and category automatically.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-08-28", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Voice Input & Receipt Scanning | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Voice Input & Receipt Scanning | AI Budget Assistant", "description": "Let AI do the work. Speak your expense naturally or photograph a receipt — the app extracts amount, description, merchant, and category automatically.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Voice Input & Receipt Scanning | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -144,7 +144,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Merchant</strong> — store/restaurant name (editable)</li>
 <li><strong>Category</strong> — automatically assigned (editable)</li>
 <li><strong>Date</strong> — from the receipt (editable)</li>
-<li><strong>Items</strong> — individual line items with quantities and prices (if detected)</li>
+<li><strong>Items</strong> — individual line items with quantities and prices (if detected) — tap any item to edit it, delete it, or add one the scan missed (see <strong>Editing Items</strong> below)</li>
 <li><strong>Discount</strong> — discount amount (if present on receipt)</li>
 <li><strong>Confidence</strong> indicator — High or Medium</li>
 <li><strong>Save receipt image</strong> toggle — keep the photo attached to the expense</li>
@@ -159,6 +159,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Hold the camera steady to avoid blurring</li>
 <li>Use <strong>Additional instructions for AI</strong> for special handling (e.g., &ldquo;This is in EUR&rdquo;, &ldquo;Ignore the first item&rdquo;)</li>
 </ul>
+<h3>Editing Items</h3>
+<p>AI extraction isn&rsquo;t always perfect — a price digit can get dropped, a discount can bleed into a unit price, or the scan can miss a line entirely. You don&rsquo;t need to rescan or delete the whole expense to fix it:</p>
+<ul>
+<li><strong>Tap any item</strong> in the list to edit its name, quantity, unit price, or total price. Tap <strong>Save</strong> to apply the correction.</li>
+<li><strong>Tap the trash icon</strong> next to an item to remove it — useful for a duplicated or invented line.</li>
+<li><strong>Tap + Add item</strong> at the bottom of the list to add a line the scan missed.</li>
+</ul>
+<p>Every item is listed — there&rsquo;s no cutoff, however many the receipt has. Any change you make updates the category split and totals immediately, so what you save always matches what&rsquo;s on screen. The receipt&rsquo;s overall total, discount, and deposit stay as scanned; only the individual line items are editable.</p>
 <h3>Category Splits</h3>
 <p>Grocery-store receipts often mix several kinds of items in one trip — food, household supplies, alcohol. When the app recognizes more than one kind of item on a receipt, it automatically splits the expense across the matching categories instead of putting it all in one.</p>
 <ul>
@@ -170,6 +178,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a <strong>+</strong> (for example, &ldquo;+ Household chemicals 10&rdquo;). Nothing is created yet — tap <strong>Change categories</strong> to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.</li>
 </ul>
 <p>Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.</p>
+<h3>Scanning a Stack of Receipts</h3>
+<p>Caught up on a week of paper receipts? After you save one, the confirmation prompt offers two choices instead of just closing the screen:</p>
+<ul>
+<li><strong>Scan Another</strong> — jumps straight back to the camera without leaving the screen, so you can clear a whole stack back-to-back</li>
+<li><strong>Done</strong> — finishes and returns you to where you started</li>
+</ul>
+<p>While you&rsquo;re scanning, a small counter shows how many receipts you&rsquo;ve saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it&rsquo;s just there to give you a sense of progress during one sitting.</p>
 <h2>Voice Income</h2>
 <p>Capture received payments by voice — same flow as Voice Expense, optimised for income.</p>
 <h3>How It Works</h3>
@@ -231,7 +246,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </li>
 <li>
 <p><strong>Q: Why was the amount wrong after scanning?</strong>
-  <strong>A:</strong> AI extraction isn&rsquo;t always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results.</p>
+  <strong>A:</strong> AI extraction isn&rsquo;t always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results. If a specific line item is wrong, tap it to edit it directly — see <strong>Editing Items</strong> above.</p>
 </li>
 <li>
 <p><strong>Q: Does voice/receipt scanning use my AI requests?</strong>

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Spraakinvoer & Bonnen scannen | AI Budget Assistant", "description": "Laat de AI het werk doen. Spreek je uitgave natuurlijk uit of fotografeer een bon — de app haalt automatisch het bedrag, de omschrijving, de verkoper en de categorie eruit.", "inLanguage": "nl", "datePublished": "2026-06-19", "dateModified": "2026-08-28", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/nl/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/nl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/nl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/nl/"}, {"@type": "ListItem", "position": 3, "name": "Spraakinvoer & Bonnen scannen | AI Budget Assistant", "item": "https://ai-budget.pl/help/nl/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Spraakinvoer & Bonnen scannen | AI Budget Assistant", "description": "Laat de AI het werk doen. Spreek je uitgave natuurlijk uit of fotografeer een bon — de app haalt automatisch het bedrag, de omschrijving, de verkoper en de categorie eruit.", "inLanguage": "nl", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/nl/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/nl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/nl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/nl/"}, {"@type": "ListItem", "position": 3, "name": "Spraakinvoer & Bonnen scannen | AI Budget Assistant", "item": "https://ai-budget.pl/help/nl/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -144,7 +144,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Verkoper</strong> — naam van de winkel/het restaurant (bewerkbaar)</li>
 <li><strong>Categorie</strong> — automatisch toegewezen (bewerkbaar)</li>
 <li><strong>Datum</strong> — van de bon (bewerkbaar)</li>
-<li><strong>Items</strong> — afzonderlijke regelitems met aantallen en prijzen (indien gedetecteerd)</li>
+<li><strong>Items</strong> — afzonderlijke regelitems met aantallen en prijzen (indien gedetecteerd) — tik op een item om het te bewerken, te verwijderen of een gemist item toe te voegen (zie <strong>Items bewerken</strong> hieronder)</li>
 <li><strong>Korting</strong> — kortingsbedrag (indien aanwezig op de bon)</li>
 <li><strong>Betrouwbaarheids</strong>indicator — hoog of gemiddeld</li>
 <li>Schakelaar <strong>Bonafbeelding opslaan</strong> — houd de foto gekoppeld aan de uitgave</li>
@@ -159,6 +159,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Houd de camera stil om vervaging te voorkomen</li>
 <li>Gebruik <strong>Aanvullende instructies voor de AI</strong> voor speciale behandeling (bijv. &ldquo;Dit is in EUR&rdquo;, &ldquo;Negeer het eerste item&rdquo;)</li>
 </ul>
+<h3>Items bewerken</h3>
+<p>AI-extractie is niet altijd perfect — een cijfer in de prijs kan wegvallen, een korting kan in een stukprijs terechtkomen, of een regel kan bij het scannen helemaal gemist worden. Je hoeft niet opnieuw te scannen of de hele uitgave te verwijderen om dit te corrigeren:</p>
+<ul>
+<li><strong>Tik op een item</strong> in de lijst om de naam, hoeveelheid, stukprijs of totaalprijs te bewerken. Tik op <strong>Opslaan</strong> om de correctie toe te passen.</li>
+<li><strong>Tik op het prullenbakicoon</strong> naast een item om het te verwijderen — handig voor een dubbele of verzonnen regel.</li>
+<li><strong>Tik op + Product toevoegen</strong> onderaan de lijst om een regel toe te voegen die de scan gemist heeft.</li>
+</ul>
+<p>Elk item wordt getoond — er is geen limiet, hoeveel de bon er ook heeft. Elke wijziging werkt de categorieverdeling en de totalen direct bij, zodat wat je opslaat altijd overeenkomt met wat je op het scherm ziet. Het totaalbedrag, de korting en het statiegeld van de bon blijven zoals gescand — alleen de afzonderlijke items zijn bewerkbaar.</p>
 <h3>Categorieverdeling</h3>
 <p>Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één keer — eten, huishoudelijke producten, alcohol. Wanneer de app meer dan één soort item op een bon herkent, verdeelt hij de uitgave automatisch over de bijbehorende categorieën in plaats van alles onder één categorie te plaatsen.</p>
 <ul>
@@ -170,6 +178,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een <strong>+</strong>-teken (bijvoorbeeld &ldquo;+ Schoonmaakmiddelen 10&rdquo;). Die wordt nog niet aangemaakt — tik op <strong>Categorieën wijzigen</strong> om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.</li>
 </ul>
 <p>Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.</p>
+<h3>Een stapel bonnen achter elkaar scannen</h3>
+<p>Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg je twee keuzes in plaats van dat het scherm gewoon sluit:</p>
+<ul>
+<li><strong>Nog een scannen</strong> — gaat direct terug naar de camera zonder het scherm te verlaten, zodat je een hele stapel achter elkaar kunt afhandelen</li>
+<li><strong>Klaar</strong> — rondt af en brengt je terug naar waar je begon</li>
+</ul>
+<p>Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.</p>
 <h2>Spraakinkomsten</h2>
 <p>Leg ontvangen betalingen vast met spraak — dezelfde flow als Spraakuitgave, geoptimaliseerd voor inkomsten.</p>
 <h3>Hoe het werkt</h3>
@@ -231,7 +246,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </li>
 <li>
 <p><strong>V: Waarom was het bedrag verkeerd na het scannen?</strong>
-  <strong>A:</strong> AI-extractie is niet altijd perfect. Controleer altijd het bevestigingsscherm en corrigeer eventuele fouten voordat je opslaat. Wazige of beschadigde bonnen kunnen minder nauwkeurige resultaten geven.</p>
+  <strong>A:</strong> AI-extractie is niet altijd perfect. Controleer altijd het bevestigingsscherm en corrigeer eventuele fouten voordat je opslaat. Wazige of beschadigde bonnen kunnen minder nauwkeurige resultaten geven. Als een specifiek item onjuist is, tik erop om het direct te bewerken — zie <strong>Items bewerken</strong> hierboven.</p>
 </li>
 <li>
 <p><strong>V: Gebruikt spraak-/bonnenscannen mijn AI-verzoeken?</strong>

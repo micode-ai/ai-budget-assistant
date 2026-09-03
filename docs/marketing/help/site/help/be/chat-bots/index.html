@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/chat-bots/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/chat-bots/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/chat-bots/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "description": "Кіруйце фінансамі прама з Telegram, WhatsApp або Slack. Размаўляйце з ШІ, дадавайце выдаткі, скануйце чэкі і адпраўляйце галасавыя — без адкрыцця прыкладання.", "inLanguage": "be", "datePublished": "2026-06-19", "dateModified": "2026-06-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/be/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/be/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/be/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Галоўная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Дапамога", "item": "https://ai-budget.pl/help/be/"}, {"@type": "ListItem", "position": 3, "name": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/be/chat-bots/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "description": "Кіруйце фінансамі прама з Telegram, WhatsApp або Slack. Размаўляйце з ШІ, дадавайце выдаткі, скануйце чэкі і адпраўляйце галасавыя — без адкрыцця прыкладання.", "inLanguage": "be", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/be/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/be/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/be/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Галоўная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Дапамога", "item": "https://ai-budget.pl/help/be/"}, {"@type": "ListItem", "position": 3, "name": "Чат-боты — Telegram, WhatsApp і Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/be/chat-bots/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -167,6 +167,47 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <blockquote>
 <p>У <strong>WhatsApp</strong> і <strong>Slack</strong> каманды працуюць з <code>/</code> або без яго. Можна таксама проста напісаць суму і апісанне: <code>50 абед</code>.</p>
 </blockquote>
+<h2>Сканаванне чэкаў</h2>
+<ol>
+<li>Зрабіце фота чэка і адпраўце боту</li>
+<li>Бот распазнае суму, дату і краму</li>
+<li>Калі дата няправільная, адпраўце правільную ў фармаце <code>ДД.ММ.ГГГГ</code></li>
+<li>Пацвердзіце, каб дадаць выдатак, або скасуйце</li>
+</ol>
+<h3>Правка распазнаных пазіцый</h3>
+<p>OCR часам няправільна чытае цану, выдумляе радок або прапускае яго. Націсніце <strong>✏️ Пазіцыі</strong> (у WhatsApp: <strong>✏️ Правка → Пазіцыі</strong>) і адпраўляйце па адной правцы ў паведамленні:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Паведамленне</th>
+<th>Што робіць</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3 = 14,69</code></td>
+<td>ставіць цану радка 3</td>
+</tr>
+<tr>
+<td><code>3: Хлеб</code></td>
+<td>пераймяноўвае радок 3</td>
+</tr>
+<tr>
+<td><code>3 -</code></td>
+<td>выдаляе радок 3</td>
+</tr>
+<tr>
+<td><code>+ Хлеб 5,99</code></td>
+<td>дадае радок</td>
+</tr>
+<tr>
+<td><code>= 233,98</code></td>
+<td>выпраўляе ітог чэка</td>
+</tr>
+</tbody>
+</table></div>
+<p>Працуюць і <code>14,69</code>, і <code>14.69</code>. Пасля кожнай правкі бот прысылае нумараваны спіс заново і радок <code>Сума пазіцый: … · ітог чэка: …</code> — калі гэтыя два лікі разыходзяцца, штосьці ў чэку ўсё яшчэ прачытана няправільна. Разбіўка па катэгорыях пералічваецца па выпраўленых радках, таму пры зміне цаны выпраўце і ітог.</p>
+<p>Калі скончыце — націсніце <strong>Дадаць выдаткі</strong>: да гэтага нічога не захоўваецца, а скасаванне адкідае ўсе правкі. Тут правяцца толькі радкі і ітог; каб змяніць катэгорыю радка, адкрыйце выдатак у дадатку.</p>
 <h2>Кошт запытаў ШІ</h2>
 <div class="tablewrap"><table>
 <thead>

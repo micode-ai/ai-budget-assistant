@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Spracheingabe & Beleg scannen | AI Budget Assistant", "description": "Lass die KI die Arbeit machen. Sprich deine Ausgabe naturlich aus oder fotografiere einen Beleg — die App extrahiert Betrag, Beschreibung, Handler und Kategorie automatisch.", "inLanguage": "de", "datePublished": "2026-06-19", "dateModified": "2026-08-28", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/de/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/de/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/de/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Hilfe", "item": "https://ai-budget.pl/help/de/"}, {"@type": "ListItem", "position": 3, "name": "Spracheingabe & Beleg scannen | AI Budget Assistant", "item": "https://ai-budget.pl/help/de/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Spracheingabe & Beleg scannen | AI Budget Assistant", "description": "Lass die KI die Arbeit machen. Sprich deine Ausgabe naturlich aus oder fotografiere einen Beleg — die App extrahiert Betrag, Beschreibung, Handler und Kategorie automatisch.", "inLanguage": "de", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/de/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/de/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/de/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Hilfe", "item": "https://ai-budget.pl/help/de/"}, {"@type": "ListItem", "position": 3, "name": "Spracheingabe & Beleg scannen | AI Budget Assistant", "item": "https://ai-budget.pl/help/de/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -144,7 +144,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Handler</strong> — Geschaft-/Restaurantname (bearbeitbar)</li>
 <li><strong>Kategorie</strong> — automatisch zugewiesen (bearbeitbar)</li>
 <li><strong>Datum</strong> — vom Beleg (bearbeitbar)</li>
-<li><strong>Artikel</strong> — einzelne Positionen mit Mengen und Preisen (falls erkannt)</li>
+<li><strong>Artikel</strong> — einzelne Positionen mit Mengen und Preisen (falls erkannt) — tippe auf einen Artikel, um ihn zu bearbeiten, zu löschen oder einen fehlenden hinzuzufügen (siehe <strong>Artikel bearbeiten</strong> unten)</li>
 <li><strong>Rabatt</strong> — Rabattbetrag (falls auf dem Beleg vorhanden)</li>
 <li><strong>Zuverlassigkeit</strong>-Indikator — <strong>Hohe Zuverlassigkeit</strong> oder <strong>Mittlere Zuverlassigkeit</strong></li>
 <li><strong>Kassenbon-Bild speichern</strong>-Schalter — das Foto an die Ausgabe anhangen</li>
@@ -159,6 +159,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Halte die Kamera ruhig, um Unscharfe zu vermeiden</li>
 <li>Verwende <strong>Zusatzliche Anweisungen fur KI</strong> fur besondere Handhabung (z.B. &ldquo;Das ist in EUR&rdquo;, &ldquo;Ersten Artikel ignorieren&rdquo;)</li>
 </ul>
+<h3>Artikel bearbeiten</h3>
+<p>Die KI-Extraktion ist nicht immer perfekt — eine Ziffer im Preis kann fehlen, ein Rabatt kann in einen Einzelpreis hineinrutschen, oder eine Zeile kann beim Scannen ganz übersehen werden. Du musst nicht neu scannen oder die ganze Ausgabe löschen, um das zu korrigieren:</p>
+<ul>
+<li><strong>Tippe auf einen Artikel</strong> in der Liste, um Name, Menge, Einzelpreis oder Gesamtpreis zu bearbeiten. Tippe auf <strong>Speichern</strong>, um die Korrektur zu übernehmen.</li>
+<li><strong>Tippe auf das Papierkorb-Symbol</strong> neben einem Artikel, um ihn zu entfernen — praktisch bei einer doppelten oder erfundenen Zeile.</li>
+<li><strong>Tippe auf + Artikel hinzufügen</strong> am Ende der Liste, um eine vom Scan übersehene Zeile hinzuzufügen.</li>
+</ul>
+<p>Jeder Artikel wird angezeigt — es gibt keine Begrenzung, egal wie viele der Beleg enthält. Jede Änderung aktualisiert sofort die Kategorienaufteilung und die Summen, sodass das Gespeicherte immer dem entspricht, was auf dem Bildschirm zu sehen ist. Der Gesamtbetrag, Rabatt und Pfand des Belegs bleiben wie gescannt — nur die einzelnen Artikel sind bearbeitbar.</p>
 <h3>Aufteilung nach Kategorien</h3>
 <p>Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Einkauf — Lebensmittel, Haushaltsartikel, Alkohol. Wenn die App mehr als eine Art von Artikel auf einem Beleg erkennt, teilt sie die Ausgabe automatisch auf die passenden Kategorien auf, anstatt alles einer einzigen zuzuordnen.</p>
 <ul>
@@ -170,6 +178,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Manchmal passt keine deiner bestehenden Kategorien zu einer Gruppe von Artikeln. In diesem Fall schlägt die App eine brandneue Kategorie vor, angezeigt als Chip mit einem <strong>+</strong>-Zeichen (zum Beispiel „+ Haushaltschemie 10&rdquo;). Sie wird noch nicht angelegt — tippe auf <strong>Kategorien ändern</strong>, um ihre Artikel stattdessen einer bestehenden Kategorie zuzuweisen oder sie wie vorgeschlagen zu belassen. Die neue Kategorie wird erst angelegt, wenn du den Beleg speicherst.</li>
 </ul>
 <p>Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.</p>
+<h3>Einen ganzen Stapel Belege scannen</h3>
+<p>Hast du eine Woche Papierbelege gesammelt? Nach dem Speichern bietet die Bestätigung zwei Optionen statt den Bildschirm einfach zu schließen:</p>
+<ul>
+<li><strong>Weiteren scannen</strong> — springt direkt zurück zur Kamera, ohne den Bildschirm zu verlassen, damit du einen ganzen Stapel hintereinander abarbeiten kannst</li>
+<li><strong>Fertig</strong> — schließt ab und bringt dich zurück, wo du gestartet bist</li>
+</ul>
+<p>Während du scannst, zeigt ein kleiner Zähler, wie viele Belege du in dieser Sitzung bereits gespeichert hast. Alle 15 Belege meldet sich die App mit einer freundlichen Erinnerung, dass du weitermachen oder eine Pause einlegen kannst — dein Fortschritt ist so oder so schon gespeichert. Der Zähler setzt sich zurück, sobald du den Bildschirm verlässt; er dient nur dazu, dir während einer Sitzung ein Gefühl für den Fortschritt zu geben.</p>
 <h2>Spracheingabe Einnahmen</h2>
 <p>Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.</p>
 <h3>So funktioniert es</h3>
@@ -231,7 +246,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </li>
 <li>
 <p><strong>F: Warum war der Betrag nach dem Scannen falsch?</strong>
-  <strong>A:</strong> Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern.</p>
+  <strong>A:</strong> Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern. Wenn eine einzelne Position falsch ist, tippe darauf, um sie direkt zu bearbeiten — siehe <strong>Artikel bearbeiten</strong> oben.</p>
 </li>
 <li>
 <p><strong>F: Verbrauchen Spracheingabe/Belegscan meine KI-Anfragen?</strong>

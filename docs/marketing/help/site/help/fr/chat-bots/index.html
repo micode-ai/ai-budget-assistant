@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/chat-bots/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/chat-bots/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/chat-bots/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Chatbots — Telegram, WhatsApp et Slack | AI Budget Assistant", "description": "Gérez vos finances directement depuis Telegram, WhatsApp ou Slack. Chattez avec l'IA, ajoutez des dépenses, scannez des reçus et envoyez des messages vocaux — sans ouvrir l'application.", "inLanguage": "fr", "datePublished": "2026-06-19", "dateModified": "2026-06-04", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/fr/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/fr/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/fr/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Aide", "item": "https://ai-budget.pl/help/fr/"}, {"@type": "ListItem", "position": 3, "name": "Chatbots — Telegram, WhatsApp et Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/fr/chat-bots/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Chatbots — Telegram, WhatsApp et Slack | AI Budget Assistant", "description": "Gérez vos finances directement depuis Telegram, WhatsApp ou Slack. Chattez avec l'IA, ajoutez des dépenses, scannez des reçus et envoyez des messages vocaux — sans ouvrir l'application.", "inLanguage": "fr", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/fr/chat-bots/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/fr/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/fr/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Aide", "item": "https://ai-budget.pl/help/fr/"}, {"@type": "ListItem", "position": 3, "name": "Chatbots — Telegram, WhatsApp et Slack | AI Budget Assistant", "item": "https://ai-budget.pl/help/fr/chat-bots/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -183,6 +183,40 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Si la date est incorrecte — envoyez la bonne au format <code>JJ.MM.AAAA</code></li>
 <li>Confirmez ou annulez</li>
 </ol>
+<h3>Corriger les lignes scannées</h3>
+<p>L&rsquo;OCR lit parfois mal un prix, invente une ligne ou en oublie une. Appuyez sur <strong>✏️ Lignes</strong> (sur WhatsApp : <strong>✏️ Modifier → Lignes</strong>) et envoyez une correction par message :</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Message</th>
+<th>Effet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>3 = 14,69</code></td>
+<td>fixe le prix de la ligne 3</td>
+</tr>
+<tr>
+<td><code>3: Pain de seigle</code></td>
+<td>renomme la ligne 3</td>
+</tr>
+<tr>
+<td><code>3 -</code></td>
+<td>supprime la ligne 3</td>
+</tr>
+<tr>
+<td><code>+ Pain 5,99</code></td>
+<td>ajoute une ligne</td>
+</tr>
+<tr>
+<td><code>= 233,98</code></td>
+<td>corrige le total du ticket</td>
+</tr>
+</tbody>
+</table></div>
+<p><code>14,69</code> et <code>14.69</code> fonctionnent tous les deux. Après chaque correction, le bot renvoie la liste numérotée et une ligne <code>Lignes : … · total du ticket : …</code> — si les deux ne concordent pas, quelque chose est encore mal lu. La répartition par catégories est recalculée à partir des lignes corrigées : corrigez donc aussi le total quand vous changez un prix.</p>
+<p>Quand vous avez fini, appuyez sur <strong>Ajouter la dépense</strong> : rien n&rsquo;est enregistré avant, et annuler abandonne toutes les corrections. Seules les lignes et le total sont corrigeables ici ; pour changer la catégorie d&rsquo;une ligne, ouvrez la dépense dans l&rsquo;application.</p>
 <h2>Coût des requêtes IA</h2>
 <div class="tablewrap"><table>
 <thead>

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/voice-and-receipt/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/voice-and-receipt/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/voice-and-receipt/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Wprowadzanie glosowe i skanowanie paragonow | AI Budget Assistant", "description": "Pozwol, aby AI wykonal prace za Ciebie. Powiedz swoj wydatek naturalnie lub sfotografuj paragon — aplikacja automatycznie wyodrebni kwote, opis, sprzedawce i kategorie.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-08-28", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Wprowadzanie glosowe i skanowanie paragonow | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/voice-and-receipt/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Wprowadzanie glosowe i skanowanie paragonow | AI Budget Assistant", "description": "Pozwol, aby AI wykonal prace za Ciebie. Powiedz swoj wydatek naturalnie lub sfotografuj paragon — aplikacja automatycznie wyodrebni kwote, opis, sprzedawce i kategorie.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-09-03", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/voice-and-receipt/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Wprowadzanie glosowe i skanowanie paragonow | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/voice-and-receipt/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -144,7 +144,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Sprzedawca</strong> — nazwa sklepu/restauracji (mozna edytowac)</li>
 <li><strong>Kategoria</strong> — przypisana automatycznie (mozna edytowac)</li>
 <li><strong>Data</strong> — z paragonu (mozna edytowac)</li>
-<li><strong>Pozycje</strong> — poszczegolne pozycje z ilosciami i cenami (jezeli wykryto)</li>
+<li><strong>Pozycje</strong> — poszczegolne pozycje z ilosciami i cenami (jezeli wykryto) — stuknij dowolna pozycje, aby ja edytowac, usunac lub dodac te, ktora skan pominal (zobacz <strong>Edytowanie pozycji</strong> ponizej)</li>
 <li><strong>Rabat</strong> — kwota rabatu (jezeli widnieje na paragonie)</li>
 <li>Wskaznik <strong>pewnosci</strong> — Wysoka lub Srednia</li>
 <li>Przelacznik <strong>Zapisz zdjecie paragonu</strong> — zachowaj zdjecie dolaczone do wydatku</li>
@@ -159,6 +159,14 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Trzymaj aparat stabilnie, aby uniknac rozmazania</li>
 <li>Uzyj <strong>Dodatkowe instrukcje dla AI</strong> do specjalnej obslugi (np. &ldquo;To jest w EUR&rdquo;, &ldquo;Pomin pierwsza pozycje&rdquo;)</li>
 </ul>
+<h3>Edytowanie pozycji</h3>
+<p>Ekstrakcja AI nie zawsze jest idealna — cyfra w cenie moze zostac pominieta, rabat moze wmieszac sie w cene jednostkowa, albo cala pozycja moze zostac pominieta podczas skanowania. Nie musisz skanowac ponownie ani usuwac calego wydatku, aby to poprawic:</p>
+<ul>
+<li><strong>Stuknij dowolna pozycje</strong> na liscie, aby edytowac jej nazwe, ilosc, cene jednostkowa lub cene laczna. Stuknij <strong>Zapisz</strong>, aby zastosowac poprawke.</li>
+<li><strong>Stuknij ikone kosza</strong> obok pozycji, aby ja usunac — przydatne w przypadku zdublowanej lub zmyslonej pozycji.</li>
+<li><strong>Stuknij + Dodaj pozycje</strong> na dole listy, aby dodac pozycje pominieta przez skan.</li>
+</ul>
+<p>Wyswietlane sa wszystkie pozycje — bez limitu, niezaleznie od tego, ile ich jest na paragonie. Kazda zmiana natychmiast aktualizuje podzial na kategorie i sumy, wiec to, co zapisujesz, zawsze odpowiada temu, co widac na ekranie. Laczna kwota, rabat i kaucja z paragonu pozostaja takie, jak zeskanowano — edytowac mozna tylko poszczegolne pozycje.</p>
 <h3>Podział na kategorie</h3>
 <p>Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jednej wizycie — jedzenie, chemię gospodarczą, alkohol. Gdy aplikacja rozpozna na paragonie więcej niż jeden rodzaj pozycji, automatycznie dzieli wydatek między pasujące kategorie, zamiast przypisywać całość do jednej.</p>
 <ul>
@@ -170,6 +178,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li>Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem <strong>+</strong> (na przykład „+ Chemia gospodarcza 10&rdquo;). Nie jest ona jeszcze utworzona — dotknij <strong>Zmień kategorie</strong>, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.</li>
 </ul>
 <p>Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.</p>
+<h3>Skanowanie całego stosu paragonów</h3>
+<p>Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potwierdzenie oferuje dwie opcje zamiast po prostu zamykać ekran:</p>
+<ul>
+<li><strong>Skanuj kolejny</strong> — od razu wraca do aparatu bez wychodzenia z ekranu, dzięki czemu można przejść przez cały stos jeden po drugim</li>
+<li><strong>Gotowe</strong> — kończy skanowanie i wraca tam, skąd zacząłeś</li>
+</ul>
+<p>Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.</p>
 <h2>Głosowe przychody</h2>
 <p>Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.</p>
 <h3>Jak to działa</h3>
@@ -231,7 +246,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </li>
 <li>
 <p><strong>P: Dlaczego kwota byla bledna po zeskanowaniu?</strong>
-  <strong>O:</strong> Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki.</p>
+  <strong>O:</strong> Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki. Jesli konkretna pozycja jest bledna, stuknij ja, aby edytowac bezposrednio — zobacz <strong>Edytowanie pozycji</strong> powyzej.</p>
 </li>
 <li>
 <p><strong>P: Czy wprowadzanie glosowe/skanowanie paragonu zuzywa moje zapytania AI?</strong>
