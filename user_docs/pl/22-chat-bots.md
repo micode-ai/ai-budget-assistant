@@ -62,6 +62,22 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 3. Jeśli data jest błędna — wyślij poprawną w formacie `DD.MM.RRRR`
 4. Potwierdź lub anuluj
 
+### Poprawianie zeskanowanych pozycji
+
+OCR czasem źle odczyta cenę, wymyśli pozycję albo jakąś pominie. Dotknij **✏️ Pozycje** (w WhatsApp: **✏️ Popraw → Pozycje**) i wysyłaj po jednej poprawce w wiadomości:
+
+| Wiadomość | Co robi |
+|---|---|
+| `3 = 14,69` | ustawia cenę pozycji 3 |
+| `3: Chleb żytni` | zmienia nazwę pozycji 3 |
+| `3 -` | usuwa pozycję 3 |
+| `+ Chleb 5,99` | dodaje pozycję |
+| `= 233,98` | poprawia sumę paragonu |
+
+Działa i `14,69`, i `14.69`. Po każdej poprawce bot ponownie wysyła numerowaną listę oraz wiersz `Pozycje: … · suma paragonu: …` — jeśli te dwie liczby się nie zgadzają, coś na paragonie nadal jest źle odczytane. Podział na kategorie jest przeliczany z poprawionych pozycji, więc przy zmianie ceny popraw też sumę.
+
+Gdy skończysz, dotknij **Dodaj wydatek** — nic nie jest zapisywane wcześniej, a anulowanie odrzuca wszystkie poprawki. Tutaj można poprawić tylko pozycje i sumę; aby zmienić kategorię pozycji, otwórz wydatek w aplikacji.
+
 ## Wiele kont
 
 - Wspomnij nazwę konta w wiadomości: „Pokaż wydatki na koncie Rodzinnym" — AI zapyta to konto tylko dla tej wiadomości

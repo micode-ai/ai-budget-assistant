@@ -8,7 +8,16 @@ import { SubscriptionsService } from '../../subscriptions/subscriptions.service'
 import { CategoriesService } from '../../categories/categories.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
 import { WA_REDIS, WaMediaMessage, WhatsAppUserState } from '../types';
-import { t, buildCategorySplitLine } from '../helpers/i18n';
+import { t, buildCategorySplitLine, buildItemListBlock } from '../helpers/i18n';
+import {
+  parseItemEditCommand,
+  applyItemEditCommand,
+  recomputeSplits,
+  seedItemGroups,
+  type ItemEditCommand,
+  type ItemEditError,
+} from '../../../common/utils/receipt-item-edit';
+
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 
 interface PendingReceiptData {
@@ -26,6 +35,9 @@ interface PendingReceiptData {
   categorySplits?: ReceiptExpense['categorySplits'];
   items: Array<{
     description: string;
+    /** Set by `seedItemGroups` on entering item-edit mode — the only handle on a
+     * category the scan merely PROPOSED. Redis-only; the confirm path ignores it. */
+    categoryName?: string | null;
     /** Category the scan classified this line into; survives even when the
      * receipt produced no money split. */
     categoryId?: string | null;
@@ -119,7 +131,7 @@ export class PhotoHandler {
       }
       await this.client.sendButtons(waPhoneNumber, summary, [
         { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
-        { id: `receipt_date--${shortId}`, title: t('changeDate', language) },
+        { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
         { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
       ]);
     } catch (error) {
@@ -207,7 +219,7 @@ export class PhotoHandler {
       }
       await this.client.sendButtons(waPhoneNumber, summary, [
         { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
-        { id: `receipt_date--${shortId}`, title: t('changeDate', language) },
+        { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
         { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
       ]);
     } catch (error) {
@@ -261,7 +273,7 @@ export class PhotoHandler {
       const summary = this.buildSummaryText(data.amount, data.currencyCode, dateStr, data.merchant, language);
       await this.client.sendButtons(waPhoneNumber, summary, [
         { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
-        { id: `receipt_date--${shortId}`, title: t('changeDate', language) },
+        { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
         { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
       ]);
 
@@ -316,6 +328,9 @@ export class PhotoHandler {
 
       await this.redis.del(`wa:receipt:${shortId}`);
       await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
+      // Leave item-edit mode, or the next chat message would be swallowed by the
+      // correction parser instead of reaching the AI.
+      await this.redis.del(`wa:awaiting_item_edit:${waPhoneNumber}`);
 
       const amountStr = `${data.amount} ${data.currencyCode}`;
       await this.client.sendText(
@@ -345,11 +360,149 @@ export class PhotoHandler {
     }
   }
 
+  /**
+   * WhatsApp caps an interactive message at 3 buttons (the client throws above
+   * that) and the scan reply already uses all three, so the edit affordances hang
+   * off one button and open a 2-row list. Telegram and Slack show them flat.
+   */
+  async handleEditMenuCallback(shortId: string, userState: WhatsAppUserState): Promise<void> {
+    const { waPhoneNumber, language } = userState;
+    try {
+      const raw = await this.redis.get(`wa:receipt:${shortId}`);
+      if (!raw) {
+        await this.client.sendText(waPhoneNumber, `${t('cancelled', language)} Expired.`);
+        return;
+      }
+      await this.client.sendList(
+        waPhoneNumber,
+        t('editReceiptPrompt', language),
+        t('editReceipt', language),
+        [
+          { id: `receipt_items--${shortId}`, title: t('editItems', language) },
+          { id: `receipt_date--${shortId}`, title: t('changeDate', language) },
+        ],
+      );
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleEditMenuCallback error for ${waPhoneNumber}: ${error}`);
+      await this.client.sendText(waPhoneNumber, t('somethingWrong', language));
+    }
+  }
+
+  /** Step into line-item edit mode. Corrections are typed — see receipt-item-edit.ts. */
+  async handleItemsCallback(shortId: string, userState: WhatsAppUserState): Promise<void> {
+    const { waPhoneNumber, language } = userState;
+    try {
+      const raw = await this.redis.get(`wa:receipt:${shortId}`);
+      if (!raw) {
+        await this.client.sendText(waPhoneNumber, `${t('cancelled', language)} Expired.`);
+        return;
+      }
+
+      const data: PendingReceiptData = JSON.parse(raw);
+      // Land the split's item -> category mapping on the items once, so deleting a
+      // line cannot shift it (the split carries positions, not per-item ids).
+      data.items = seedItemGroups(data.items, data.categorySplits ?? []);
+      await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
+
+      // The two typed-input modes are mutually exclusive.
+      await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
+      await this.redis.set(`wa:awaiting_item_edit:${waPhoneNumber}`, shortId, 'EX', 600);
+
+      await this.client.sendText(waPhoneNumber, t('itemEditHint', language));
+      await this.sendItemEditView(shortId, data, userState);
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleItemsCallback error for ${waPhoneNumber}: ${error}`);
+      await this.client.sendText(waPhoneNumber, t('somethingWrong', language));
+    }
+  }
+
+  /** Returns true if the text was consumed by the "editing items" mode. */
+  async handleItemEditInput(text: string, userState: WhatsAppUserState): Promise<boolean> {
+    const { waPhoneNumber, language } = userState;
+    try {
+      const shortId = await this.redis.get(`wa:awaiting_item_edit:${waPhoneNumber}`);
+      if (!shortId) return false;
+
+      const raw = await this.redis.get(`wa:receipt:${shortId}`);
+      if (!raw) {
+        await this.redis.del(`wa:awaiting_item_edit:${waPhoneNumber}`);
+        return false;
+      }
+
+      const command = parseItemEditCommand(text);
+      if (!command) {
+        await this.client.sendText(
+          waPhoneNumber,
+          `${t('itemEditInvalid', language)}\n\n${t('itemEditHint', language)}`,
+        );
+        return true;
+      }
+
+      const data: PendingReceiptData = JSON.parse(raw);
+      const outcome = applyItemEditCommand(data.items, data.amount, command);
+      if (!outcome.ok) {
+        await this.client.sendText(
+          waPhoneNumber,
+          this.itemEditErrorText(outcome.error, command, language),
+        );
+        return true;
+      }
+
+      data.items = outcome.items;
+      data.amount = outcome.total;
+      data.categorySplits = recomputeSplits({
+        items: outcome.items,
+        total: outcome.total,
+        discount: data.discountAmount,
+        deposit: data.depositAmount,
+        existing: data.categorySplits ?? [],
+      });
+      await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
+
+      await this.sendItemEditView(shortId, data, userState, t('itemsUpdated', language));
+      return true;
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleItemEditInput error for ${waPhoneNumber}: ${error}`);
+      return false;
+    }
+  }
+
+  private async sendItemEditView(
+    shortId: string,
+    data: PendingReceiptData,
+    userState: WhatsAppUserState,
+    header?: string,
+  ): Promise<void> {
+    const { waPhoneNumber, language } = userState;
+    const block = buildItemListBlock(data.items, data.currencyCode, data.amount, language);
+    const splitLine = buildCategorySplitLine(data.categorySplits ?? [], data.currencyCode, language);
+    const body = [header, block, splitLine].filter(Boolean).join('\n\n');
+
+    await this.client.sendButtons(waPhoneNumber, body, [
+      { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
+      { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
+    ]);
+  }
+
+  private itemEditErrorText(
+    error: ItemEditError,
+    command: ItemEditCommand,
+    language: string | undefined,
+  ): string {
+    if (error === 'no_such_line') {
+      const index = 'index' in command ? command.index : undefined;
+      return t('itemEditNoSuchLine', language, { index: String(index ?? '') });
+    }
+    if (error === 'invalid_amount') return t('itemEditInvalidAmount', language);
+    return t('itemEditEmptyDescription', language);
+  }
+
   async handleReceiptCancelCallback(shortId: string, userState: WhatsAppUserState): Promise<void> {
     const { waPhoneNumber, language } = userState;
     try {
       await this.redis.del(`wa:receipt:${shortId}`);
       await this.redis.del(`wa:awaiting_date:${waPhoneNumber}`);
+      await this.redis.del(`wa:awaiting_item_edit:${waPhoneNumber}`);
       await this.client.sendText(waPhoneNumber, t('receiptCancelled', language));
     } catch (error) {
       this.logger.error(`PhotoHandler.handleReceiptCancelCallback error for ${userState.waPhoneNumber}: ${error}`);

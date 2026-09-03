@@ -270,3 +270,107 @@ describe('WhatsApp PhotoHandler — receipt category splits reported to the bot 
     ]);
   });
 });
+
+describe('WhatsApp PhotoHandler — line-item editing (ABA-482)', () => {
+  const ITEMS = [
+    { description: 'Bread', quantity: 1, unitPrice: 5.99, totalPrice: 5.99, categoryId: 'cat-food' },
+    { description: 'Beer', quantity: 2, unitPrice: 3.0, totalPrice: 6.0, categoryId: 'cat-beer' },
+  ];
+
+  function setup() {
+    const redis = makeFakeRedis();
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({
+        ...baseReceipt(null),
+        amount: 11.99,
+        receiptItems: ITEMS,
+        categorySplits: [],
+      }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
+    const client = {
+      downloadMedia: jest
+        .fn()
+        .mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      sendText: jest.fn().mockResolvedValue(undefined),
+      sendButtons: jest.fn().mockResolvedValue(undefined),
+      sendList: jest.fn().mockResolvedValue(undefined),
+    };
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      client as never,
+      redis as never,
+    );
+    return { handler, redis, expenses, client };
+  }
+
+  const shortIdFrom = (redis: ReturnType<typeof makeFakeRedis>) => {
+    const key = [...redis.store.keys()].find((k) => k.startsWith('wa:receipt:'));
+    return key!.slice('wa:receipt:'.length);
+  };
+
+  it('ignores text when the user is not editing items', async () => {
+    const { handler } = setup();
+
+    await expect(handler.handleItemEditInput('2 = 14,69', userState)).resolves.toBe(false);
+  });
+
+  it('offers items and date as a list, since a fourth button is impossible here', async () => {
+    // sendButtons throws above 3 entries, and the scan reply already uses all
+    // three — so the edit affordances hang off one button and open a list.
+    const { handler, redis, client } = setup();
+    await handler.handleDocument(pdfMessage(), userState);
+    const shortId = shortIdFrom(redis);
+
+    await handler.handleEditMenuCallback(shortId, userState);
+
+    const rows = client.sendList.mock.calls[0][3];
+    expect(rows.map((r: { id: string }) => r.id)).toEqual([
+      `receipt_items--${shortId}`,
+      `receipt_date--${shortId}`,
+    ]);
+  });
+
+  it('carries a corrected line price through to the created expense', async () => {
+    const { handler, redis, expenses } = setup();
+    await handler.handleDocument(pdfMessage(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleItemsCallback(shortId, userState);
+
+    await expect(handler.handleItemEditInput('2 = 14,69', userState)).resolves.toBe(true);
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.items[1].totalPrice).toBe(14.69);
+    expect(dto.items[1].unitPrice).toBe(7.35);
+  });
+
+  it('carries a corrected receipt total through to the created expense', async () => {
+    const { handler, redis, expenses } = setup();
+    await handler.handleDocument(pdfMessage(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleItemsCallback(shortId, userState);
+
+    await handler.handleItemEditInput('= 233,98', userState);
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    expect(expenses.create.mock.calls[0][2].amount).toBe(233.98);
+  });
+
+  it('leaves edit mode once the expense is confirmed', async () => {
+    const { handler, redis } = setup();
+    await handler.handleDocument(pdfMessage(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleItemsCallback(shortId, userState);
+
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    await expect(handler.handleItemEditInput('1 -', userState)).resolves.toBe(false);
+  });
+});

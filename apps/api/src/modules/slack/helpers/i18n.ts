@@ -2,8 +2,10 @@ import {
   sharedMessages,
   createBotT,
   buildCategorySplitLine as buildSharedCategorySplitLine,
+  buildItemListBlock as buildSharedItemListBlock,
   type CategorySplitLineItem,
 } from '../../../common/bot-i18n/shared-messages';
+import type { EditableItem } from '../../../common/utils/receipt-item-edit';
 
 /**
  * Slack-only copy — everything else lives in the shared dictionary (see
@@ -83,4 +85,13 @@ export function buildCategorySplitLine(
   lang?: string,
 ): string {
   return buildSharedCategorySplitLine(t, splits, currencyCode, lang);
+}
+
+export function buildItemListBlock(
+  items: EditableItem[],
+  currencyCode: string,
+  total: number,
+  lang?: string,
+): string {
+  return buildSharedItemListBlock(t, items, currencyCode, total, lang);
 }

@@ -62,6 +62,22 @@ Om te verbinden: **Instellingen → Chatbots**.
 3. Als de datum onjuist is, stuur de juiste datum in het formaat `DD.MM.JJJJ`
 4. Bevestig om de uitgave toe te voegen, of annuleer
 
+### Gescande regels corrigeren
+
+OCR leest soms een prijs verkeerd, verzint een regel of mist er een. Tik op **✏️ Regels** (in WhatsApp: **✏️ Bewerken → Regels**) en stuur één correctie per bericht:
+
+| Bericht | Wat het doet |
+|---|---|
+| `3 = 14,69` | zet de prijs van regel 3 |
+| `3: Roggebrood` | wijzigt de naam van regel 3 |
+| `3 -` | verwijdert regel 3 |
+| `+ Brood 5,99` | voegt een regel toe |
+| `= 233,98` | corrigeert het bontotaal |
+
+Zowel `14,69` als `14.69` werkt. Na elke correctie stuurt de bot de genummerde lijst opnieuw, met een regel `Regels: … · bontotaal: …` — verschillen die twee, dan is er nog iets verkeerd gelezen. De categorieverdeling wordt opnieuw berekend uit de gecorrigeerde regels, dus corrigeer ook het totaal als je een prijs wijzigt.
+
+Ben je klaar, tik dan op **Uitgave toevoegen** — daarvoor wordt niets opgeslagen, en annuleren gooit alle correcties weg. Alleen de regels en het totaal zijn hier te corrigeren; open de uitgave in de app om de categorie van een regel te wijzigen.
+
 ## Meerdere accounts
 
 Als je meerdere accounts hebt (bijv. "Persoonlijk" en "Familie"):

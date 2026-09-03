@@ -14,6 +14,8 @@
  * pattern. Do not add a 4th near-duplicate; extend this file instead.
  */
 
+import type { EditableItem } from '../utils/receipt-item-edit';
+
 export type BotMarkup = 'html' | 'markdown';
 
 export interface BotTOptions {
@@ -71,7 +73,161 @@ export function buildCategorySplitLine(
   return t('categorySplit', lang, { list });
 }
 
+/**
+ * The numbered line list the bot item-edit mode works on, plus a "lines add up to
+ * X, receipt says Y" footer — that gap is the only signal the user has that a
+ * misread is still there.
+ *
+ * Emits plain text with NO markup tags: descriptions come from OCR and can contain
+ * `&` or `<`, which would break Telegram's `parse_mode: 'HTML'`, so the Telegram
+ * call site escapes this whole block exactly as it already does for
+ * `buildCategorySplitLine`.
+ */
+export function buildItemListBlock(
+  t: (key: string, lang?: string, params?: Record<string, string>) => string,
+  items: EditableItem[],
+  currencyCode: string,
+  total: number,
+  lang?: string,
+): string {
+  const money = (value: number) => `${value.toFixed(2)} ${currencyCode}`;
+  const sum = items.reduce(
+    (acc, item) => acc + (Number.isFinite(item.totalPrice) ? item.totalPrice : 0),
+    0,
+  );
+  const sumLine = t('itemSumLine', lang, { sum: money(sum), total: money(total) });
+
+  if (items.length === 0) return `${t('itemsEmpty', lang)}\n${sumLine}`;
+
+  const lines = items.map((item, index) => {
+    const quantity = item.quantity && item.quantity > 1 ? `${item.quantity}\u00d7 ` : '';
+    return `${index + 1}. ${quantity}${item.description} \u2014 ${money(item.totalPrice)}`;
+  });
+  return `${lines.join('\n')}\n${sumLine}`;
+}
+
 export const sharedMessages: Record<string, Record<string, string>> = {
+  editItems: {
+    en: '\u270f\ufe0f Items',
+    ru: '\u270f\ufe0f \u041f\u043e\u0437\u0438\u0446\u0438\u0438',
+    ua: '\u270f\ufe0f \u041f\u043e\u0437\u0438\u0446\u0456\u0457',
+    de: '\u270f\ufe0f Positionen',
+    es: '\u270f\ufe0f L\u00edneas',
+    fr: '\u270f\ufe0f Lignes',
+    pl: '\u270f\ufe0f Pozycje',
+    be: '\u270f\ufe0f \u041f\u0430\u0437\u0456\u0446\u044b\u0456',
+    nl: '\u270f\ufe0f Regels',
+  },
+  editReceipt: {
+    en: '\u270f\ufe0f Edit',
+    ru: '\u270f\ufe0f \u041f\u0440\u0430\u0432\u043a\u0430',
+    ua: '\u270f\ufe0f \u041f\u0440\u0430\u0432\u043a\u0430',
+    de: '\u270f\ufe0f Bearbeiten',
+    es: '\u270f\ufe0f Editar',
+    fr: '\u270f\ufe0f Modifier',
+    pl: '\u270f\ufe0f Popraw',
+    be: '\u270f\ufe0f \u041f\u0440\u0430\u0432\u043a\u0430',
+    nl: '\u270f\ufe0f Bewerken',
+  },
+  editReceiptPrompt: {
+    en: 'What would you like to fix?',
+    ru: '\u0427\u0442\u043e \u043f\u043e\u043f\u0440\u0430\u0432\u0438\u0442\u044c?',
+    ua: '\u0429\u043e \u0432\u0438\u043f\u0440\u0430\u0432\u0438\u0442\u0438?',
+    de: 'Was m\u00f6chtest du korrigieren?',
+    es: '\u00bfQu\u00e9 quieres corregir?',
+    fr: 'Que voulez-vous corriger ?',
+    pl: 'Co poprawi\u0107?',
+    be: '\u0428\u0442\u043e \u0432\u044b\u043f\u0440\u0430\u0432\u0456\u0446\u044c?',
+    nl: 'Wat wil je aanpassen?',
+  },
+  itemEditHint: {
+    en: '\u270f\ufe0f Send one correction per message:\n<code>3 = 14.69</code> \u2014 price of line 3\n<code>3: Rye bread</code> \u2014 rename line 3\n<code>3 -</code> \u2014 delete line 3\n<code>+ Bread 5.99</code> \u2014 add a line\n<code>= 233.98</code> \u2014 receipt total\nWhen you are done, tap \u201cAdd expense\u201d.',
+    ru: '\u270f\ufe0f \u041e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0439\u0442\u0435 \u043f\u043e \u043e\u0434\u043d\u043e\u0439 \u043f\u0440\u0430\u0432\u043a\u0435 \u0432 \u0441\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0438:\n<code>3 = 14,69</code> \u2014 \u0446\u0435\u043d\u0430 \u0441\u0442\u0440\u043e\u043a\u0438 3\n<code>3: \u0425\u043b\u0435\u0431</code> \u2014 \u043f\u0435\u0440\u0435\u0438\u043c\u0435\u043d\u043e\u0432\u0430\u0442\u044c \u0441\u0442\u0440\u043e\u043a\u0443 3\n<code>3 -</code> \u2014 \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0441\u0442\u0440\u043e\u043a\u0443 3\n<code>+ \u0425\u043b\u0435\u0431 5,99</code> \u2014 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0441\u0442\u0440\u043e\u043a\u0443\n<code>= 233,98</code> \u2014 \u0438\u0442\u043e\u0433 \u0447\u0435\u043a\u0430\n\u041a\u043e\u0433\u0434\u0430 \u0437\u0430\u043a\u043e\u043d\u0447\u0438\u0442\u0435 \u2014 \u043d\u0430\u0436\u043c\u0438\u0442\u0435 \u00ab\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0440\u0430\u0441\u0445\u043e\u0434\u00bb.',
+    ua: '\u270f\ufe0f \u041d\u0430\u0434\u0441\u0438\u043b\u0430\u0439\u0442\u0435 \u043f\u043e \u043e\u0434\u043d\u0456\u0439 \u043f\u0440\u0430\u0432\u0446\u0456 \u0432 \u043f\u043e\u0432\u0456\u0434\u043e\u043c\u043b\u0435\u043d\u043d\u0456:\n<code>3 = 14,69</code> \u2014 \u0446\u0456\u043d\u0430 \u0440\u044f\u0434\u043a\u0430 3\n<code>3: \u0425\u043b\u0456\u0431</code> \u2014 \u043f\u0435\u0440\u0435\u0439\u043c\u0435\u043d\u0443\u0432\u0430\u0442\u0438 \u0440\u044f\u0434\u043e\u043a 3\n<code>3 -</code> \u2014 \u0432\u0438\u0434\u0430\u043b\u0438\u0442\u0438 \u0440\u044f\u0434\u043e\u043a 3\n<code>+ \u0425\u043b\u0456\u0431 5,99</code> \u2014 \u0434\u043e\u0434\u0430\u0442\u0438 \u0440\u044f\u0434\u043e\u043a\n<code>= 233,98</code> \u2014 \u0456\u0442\u043e\u0433 \u0447\u0435\u043a\u0430\n\u041a\u043e\u043b\u0438 \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u0435 \u2014 \u043d\u0430\u0442\u0438\u0441\u043d\u0456\u0442\u044c \u00ab\u0414\u043e\u0434\u0430\u0442\u0438 \u0432\u0438\u0442\u0440\u0430\u0442\u0443\u00bb.',
+    de: '\u270f\ufe0f Sende eine Korrektur pro Nachricht:\n<code>3 = 14,69</code> \u2014 Preis von Zeile 3\n<code>3: Roggenbrot</code> \u2014 Zeile 3 umbenennen\n<code>3 -</code> \u2014 Zeile 3 l\u00f6schen\n<code>+ Brot 5,99</code> \u2014 Zeile hinzuf\u00fcgen\n<code>= 233,98</code> \u2014 Belegsumme\nWenn du fertig bist, tippe auf \u201eAusgabe hinzuf\u00fcgen\u201c.',
+    es: '\u270f\ufe0f Env\u00eda una correcci\u00f3n por mensaje:\n<code>3 = 14,69</code> \u2014 precio de la l\u00ednea 3\n<code>3: Pan de centeno</code> \u2014 renombrar la l\u00ednea 3\n<code>3 -</code> \u2014 borrar la l\u00ednea 3\n<code>+ Pan 5,99</code> \u2014 a\u00f1adir una l\u00ednea\n<code>= 233,98</code> \u2014 total del recibo\nCuando termines, toca \u00abA\u00f1adir gasto\u00bb.',
+    fr: '\u270f\ufe0f Envoyez une correction par message :\n<code>3 = 14,69</code> \u2014 prix de la ligne 3\n<code>3: Pain de seigle</code> \u2014 renommer la ligne 3\n<code>3 -</code> \u2014 supprimer la ligne 3\n<code>+ Pain 5,99</code> \u2014 ajouter une ligne\n<code>= 233,98</code> \u2014 total du ticket\nQuand vous avez fini, appuyez sur \u00ab Ajouter la d\u00e9pense \u00bb.',
+    pl: '\u270f\ufe0f Wysy\u0142aj po jednej poprawce w wiadomo\u015bci:\n<code>3 = 14,69</code> \u2014 cena pozycji 3\n<code>3: Chleb \u017cytni</code> \u2014 zmie\u0144 nazw\u0119 pozycji 3\n<code>3 -</code> \u2014 usu\u0144 pozycj\u0119 3\n<code>+ Chleb 5,99</code> \u2014 dodaj pozycj\u0119\n<code>= 233,98</code> \u2014 suma paragonu\nGdy sko\u0144czysz, dotknij \u201eDodaj wydatek\u201d.',
+    be: '\u270f\ufe0f \u0410\u0434\u043f\u0440\u0430\u045e\u043b\u044f\u0439\u0446\u0435 \u043f\u0430 \u0430\u0434\u043d\u043e\u0439 \u043f\u0440\u0430\u0432\u0446\u044b \u045e \u043f\u0430\u0432\u0435\u0434\u0430\u043c\u043b\u0435\u043d\u043d\u0456:\n<code>3 = 14,69</code> \u2014 \u0446\u0430\u043d\u0430 \u0440\u0430\u0434\u043a\u0430 3\n<code>3: \u0425\u043b\u0435\u0431</code> \u2014 \u043f\u0435\u0440\u0430\u0439\u043c\u0435\u043d\u0430\u0432\u0430\u0446\u044c \u0440\u0430\u0434\u043e\u043a 3\n<code>3 -</code> \u2014 \u0432\u044b\u0434\u0430\u043b\u0456\u0446\u044c \u0440\u0430\u0434\u043e\u043a 3\n<code>+ \u0425\u043b\u0435\u0431 5,99</code> \u2014 \u0434\u0430\u0434\u0430\u0446\u044c \u0440\u0430\u0434\u043e\u043a\n<code>= 233,98</code> \u2014 \u0456\u0442\u043e\u0433 \u0447\u044d\u043a\u0430\n\u041a\u0430\u043b\u0456 \u0441\u043a\u043e\u043d\u0447\u044b\u0446\u0435 \u2014 \u043d\u0430\u0446\u0456\u0441\u043d\u0456\u0446\u0435 \u00ab\u0414\u0430\u0434\u0430\u0446\u044c \u0432\u044b\u0434\u0430\u0442\u043a\u0456\u00bb.',
+    nl: '\u270f\ufe0f Stuur \u00e9\u00e9n correctie per bericht:\n<code>3 = 14,69</code> \u2014 prijs van regel 3\n<code>3: Roggebrood</code> \u2014 regel 3 hernoemen\n<code>3 -</code> \u2014 regel 3 verwijderen\n<code>+ Brood 5,99</code> \u2014 regel toevoegen\n<code>= 233,98</code> \u2014 bontotaal\nAls je klaar bent, tik je op \u201eUitgave toevoegen\u201d.',
+  },
+  itemSumLine: {
+    en: 'Lines: {{sum}} \u00b7 receipt total: {{total}}',
+    ru: '\u0421\u0443\u043c\u043c\u0430 \u043f\u043e\u0437\u0438\u0446\u0438\u0439: {{sum}} \u00b7 \u0438\u0442\u043e\u0433 \u0447\u0435\u043a\u0430: {{total}}',
+    ua: '\u0421\u0443\u043c\u0430 \u043f\u043e\u0437\u0438\u0446\u0456\u0439: {{sum}} \u00b7 \u0456\u0442\u043e\u0433 \u0447\u0435\u043a\u0430: {{total}}',
+    de: 'Positionen: {{sum}} \u00b7 Belegsumme: {{total}}',
+    es: 'L\u00edneas: {{sum}} \u00b7 total del recibo: {{total}}',
+    fr: 'Lignes : {{sum}} \u00b7 total du ticket : {{total}}',
+    pl: 'Pozycje: {{sum}} \u00b7 suma paragonu: {{total}}',
+    be: '\u0421\u0443\u043c\u0430 \u043f\u0430\u0437\u0456\u0446\u044b\u0439: {{sum}} \u00b7 \u0456\u0442\u043e\u0433 \u0447\u044d\u043a\u0430: {{total}}',
+    nl: 'Regels: {{sum}} \u00b7 bontotaal: {{total}}',
+  },
+  itemsEmpty: {
+    en: 'No lines left. Add one with: + Bread 5.99',
+    ru: '\u041f\u043e\u0437\u0438\u0446\u0438\u0439 \u043d\u0435 \u043e\u0441\u0442\u0430\u043b\u043e\u0441\u044c. \u0414\u043e\u0431\u0430\u0432\u044c\u0442\u0435 \u0442\u0430\u043a: + \u0425\u043b\u0435\u0431 5,99',
+    ua: '\u041f\u043e\u0437\u0438\u0446\u0456\u0439 \u043d\u0435 \u0437\u0430\u043b\u0438\u0448\u0438\u043b\u043e\u0441\u044f. \u0414\u043e\u0434\u0430\u0439\u0442\u0435 \u0442\u0430\u043a: + \u0425\u043b\u0456\u0431 5,99',
+    de: 'Keine Positionen mehr. So f\u00fcgst du eine hinzu: + Brot 5,99',
+    es: 'No quedan l\u00edneas. A\u00f1ade una as\u00ed: + Pan 5,99',
+    fr: 'Plus aucune ligne. Ajoutez-en une : + Pain 5,99',
+    pl: 'Nie zosta\u0142y \u017cadne pozycje. Dodaj tak: + Chleb 5,99',
+    be: '\u041f\u0430\u0437\u0456\u0446\u044b\u0439 \u043d\u0435 \u0437\u0430\u0441\u0442\u0430\u043b\u043e\u0441\u044f. \u0414\u0430\u0434\u0430\u0439\u0446\u0435 \u0442\u0430\u043a: + \u0425\u043b\u0435\u0431 5,99',
+    nl: 'Geen regels meer. Voeg er een toe: + Brood 5,99',
+  },
+  itemsUpdated: {
+    en: '\u2705 Updated',
+    ru: '\u2705 \u041e\u0431\u043d\u043e\u0432\u043b\u0435\u043d\u043e',
+    ua: '\u2705 \u041e\u043d\u043e\u0432\u043b\u0435\u043d\u043e',
+    de: '\u2705 Aktualisiert',
+    es: '\u2705 Actualizado',
+    fr: '\u2705 Mis \u00e0 jour',
+    pl: '\u2705 Zaktualizowano',
+    be: '\u2705 \u0410\u0431\u043d\u043e\u045e\u043b\u0435\u043d\u0430',
+    nl: '\u2705 Bijgewerkt',
+  },
+  itemEditInvalid: {
+    en: '\u274c I did not understand that.',
+    ru: '\u274c \u041d\u0435 \u043f\u043e\u043d\u044f\u043b \u043a\u043e\u043c\u0430\u043d\u0434\u0443.',
+    ua: '\u274c \u041d\u0435 \u0437\u0440\u043e\u0437\u0443\u043c\u0456\u0432 \u043a\u043e\u043c\u0430\u043d\u0434\u0443.',
+    de: '\u274c Das habe ich nicht verstanden.',
+    es: '\u274c No he entendido eso.',
+    fr: '\u274c Je n\u2019ai pas compris.',
+    pl: '\u274c Nie zrozumia\u0142em polecenia.',
+    be: '\u274c \u041d\u0435 \u0437\u0440\u0430\u0437\u1d43\u043c\u0435\u045e \u043a\u0430\u043c\u0430\u043d\u0434\u0443.',
+    nl: '\u274c Dat begreep ik niet.',
+  },
+  itemEditNoSuchLine: {
+    en: '\u274c There is no line {{index}} on this receipt.',
+    ru: '\u274c \u0421\u0442\u0440\u043e\u043a\u0438 {{index}} \u0432 \u044d\u0442\u043e\u043c \u0447\u0435\u043a\u0435 \u043d\u0435\u0442.',
+    ua: '\u274c \u0420\u044f\u0434\u043a\u0430 {{index}} \u0443 \u0446\u044c\u043e\u043c\u0443 \u0447\u0435\u043a\u0443 \u043d\u0435\u043c\u0430\u0454.',
+    de: '\u274c Zeile {{index}} gibt es auf diesem Beleg nicht.',
+    es: '\u274c En este recibo no hay l\u00ednea {{index}}.',
+    fr: '\u274c Il n\u2019y a pas de ligne {{index}} sur ce ticket.',
+    pl: '\u274c Na tym paragonie nie ma pozycji {{index}}.',
+    be: '\u274c \u0420\u0430\u0434\u043a\u0430 {{index}} \u0443 \u0433\u044d\u0442\u044b\u043c \u0447\u044d\u043a\u0443 \u043d\u044f\u043c\u0430.',
+    nl: '\u274c Regel {{index}} staat niet op dit bonnetje.',
+  },
+  itemEditInvalidAmount: {
+    en: '\u274c The price has to be greater than zero.',
+    ru: '\u274c \u0426\u0435\u043d\u0430 \u0434\u043e\u043b\u0436\u043d\u0430 \u0431\u044b\u0442\u044c \u0431\u043e\u043b\u044c\u0448\u0435 \u043d\u0443\u043b\u044f.',
+    ua: '\u274c \u0426\u0456\u043d\u0430 \u043c\u0443\u0441\u0438\u0442\u044c \u0431\u0443\u0442\u0438 \u0431\u0456\u043b\u044c\u0448\u0435 \u043d\u0443\u043b\u044f.',
+    de: '\u274c Der Preis muss gr\u00f6\u00dfer als null sein.',
+    es: '\u274c El precio tiene que ser mayor que cero.',
+    fr: '\u274c Le prix doit \u00eatre sup\u00e9rieur \u00e0 z\u00e9ro.',
+    pl: '\u274c Cena musi by\u0107 wi\u0119ksza od zera.',
+    be: '\u274c \u0426\u0430\u043d\u0430 \u043c\u0443\u0441\u0456\u0446\u044c \u0431\u044b\u0446\u044c \u0431\u043e\u043b\u044c\u0448 \u0437\u0430 \u043d\u0443\u043b\u044c.',
+    nl: '\u274c De prijs moet groter zijn dan nul.',
+  },
+  itemEditEmptyDescription: {
+    en: '\u274c The name cannot be empty.',
+    ru: '\u274c \u041d\u0430\u0437\u0432\u0430\u043d\u0438\u0435 \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u043f\u0443\u0441\u0442\u044b\u043c.',
+    ua: '\u274c \u041d\u0430\u0437\u0432\u0430 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0431\u0443\u0442\u0438 \u043f\u043e\u0440\u043e\u0436\u043d\u044c\u043e\u044e.',
+    de: '\u274c Der Name darf nicht leer sein.',
+    es: '\u274c El nombre no puede estar vac\u00edo.',
+    fr: '\u274c Le nom ne peut pas \u00eatre vide.',
+    pl: '\u274c Nazwa nie mo\u017ce by\u0107 pusta.',
+    be: '\u274c \u041d\u0430\u0437\u0432\u0430 \u043d\u0435 \u043c\u043e\u0436\u0430 \u0431\u044b\u0446\u044c \u043f\u0443\u0441\u0442\u043e\u0439.',
+    nl: '\u274c De naam mag niet leeg zijn.',
+  },
   aiLimitReached: {
     en: '⚠️ AI request limit reached. Upgrade your subscription for more AI features.',
     ru: '⚠️ Лимит AI-запросов исчерпан. Обновите подписку для большего количества AI-функций.',

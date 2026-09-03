@@ -61,6 +61,22 @@ Para conectar: **Ajustes → Chatbots**.
 3. Si la fecha es incorrecta — envía la correcta en formato `DD.MM.AAAA`
 4. Confirma o cancela
 
+### Corregir las líneas escaneadas
+
+El OCR a veces lee mal un precio, inventa una línea o se salta otra. Toca **✏️ Líneas** (en WhatsApp: **✏️ Editar → Líneas**) y envía una corrección por mensaje:
+
+| Mensaje | Qué hace |
+|---|---|
+| `3 = 14,69` | fija el precio de la línea 3 |
+| `3: Pan de centeno` | renombra la línea 3 |
+| `3 -` | borra la línea 3 |
+| `+ Pan 5,99` | añade una línea |
+| `= 233,98` | corrige el total del recibo |
+
+Sirven tanto `14,69` como `14.69`. Tras cada corrección el bot reenvía la lista numerada y una línea `Líneas: … · total del recibo: …`; si esas dos cifras no coinciden, algo del recibo sigue mal leído. El reparto por categorías se recalcula a partir de las líneas corregidas, así que corrige también el total cuando cambies un precio.
+
+Cuando termines, toca **Añadir gasto**: nada se guarda hasta entonces, y cancelar descarta todas las correcciones. Aquí solo se pueden corregir las líneas y el total; para cambiar la categoría de una línea, abre el gasto en la aplicación.
+
 ## Coste de solicitudes IA
 
 | Acción | Solicitudes IA |

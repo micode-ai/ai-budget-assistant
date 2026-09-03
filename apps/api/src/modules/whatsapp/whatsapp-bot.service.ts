@@ -178,6 +178,10 @@ export class WhatsAppBotService {
       }
 
       // Photo handler may be in "awaiting date" mode — check first
+      // Receipt line corrections first, then the date. The two modes are mutually
+      // exclusive (entering one clears the other), so the order only decides which
+      // check runs first.
+      if (await this.photoHandler.handleItemEditInput(text, userState)) return;
       const consumed = await this.photoHandler.handleDateInput(text, userState);
       if (consumed) return;
 
@@ -234,6 +238,10 @@ export class WhatsAppBotService {
         return this.categoryHandler.handleDeleteCallback(payload, userState);
       case 'receipt_add':
         return this.photoHandler.handleReceiptAddCallback(payload, userState);
+      case 'receipt_edit':
+        return this.photoHandler.handleEditMenuCallback(payload, userState);
+      case 'receipt_items':
+        return this.photoHandler.handleItemsCallback(payload, userState);
       case 'receipt_date':
         return this.photoHandler.handleDateCallback(payload, userState);
       case 'receipt_cancel':

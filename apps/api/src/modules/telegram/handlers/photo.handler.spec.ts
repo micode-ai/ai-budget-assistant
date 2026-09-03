@@ -296,3 +296,169 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
     ]);
   });
 });
+
+describe('Telegram PhotoHandler — line-item editing (ABA-482)', () => {
+  const ITEMS = [
+    { description: 'Bread', quantity: 1, unitPrice: 5.99, totalPrice: 5.99, categoryId: 'cat-food' },
+    { description: 'Beer', quantity: 2, unitPrice: 3.0, totalPrice: 6.0, categoryId: 'cat-beer' },
+  ];
+
+  function setup() {
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({
+        ...baseReceipt(null),
+        amount: 11.99,
+        receiptItems: ITEMS,
+        categorySplits: [
+          { categoryId: 'cat-food', categoryName: 'Food', amount: 5.99, percentage: 50, itemIndexes: [0] },
+          { categoryId: 'cat-beer', categoryName: 'Beer', amount: 6.0, percentage: 50, itemIndexes: [1] },
+        ],
+      }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
+    const cache = makeCache();
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      cache as never,
+    );
+    return { handler, expenses, cache };
+  }
+
+  /** Scan a receipt and step into item-edit mode; returns the pending receipt id. */
+  async function enterEditMode(handler: PhotoHandler, ctx: ReturnType<typeof makeCtx>) {
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+    await handler.handleItemsCallback(ctx as never, receiptId);
+    return receiptId;
+  }
+
+  const withText = (ctx: ReturnType<typeof makeCtx>, text: string) =>
+    ({ ...ctx, message: { text } }) as never;
+
+  it('ignores text when the user is not editing items, so the chat handler still gets it', async () => {
+    const { handler } = setup();
+    const ctx = makeCtx();
+
+    await expect(handler.handleItemEditInput(withText(ctx, '2 = 14,69'))).resolves.toBe(false);
+  });
+
+  it('carries a corrected line price through to the created expense', async () => {
+    const { handler, expenses } = setup();
+    const ctx = makeCtx();
+    const receiptId = await enterEditMode(handler, ctx);
+
+    await expect(handler.handleItemEditInput(withText(ctx, '2 = 14,69'))).resolves.toBe(true);
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.items[1].totalPrice).toBe(14.69);
+    // The stale unit price is what would have poisoned price history.
+    expect(dto.items[1].unitPrice).toBe(7.35);
+  });
+
+  it('carries a corrected receipt total through to the created expense', async () => {
+    const { handler, expenses } = setup();
+    const ctx = makeCtx();
+    const receiptId = await enterEditMode(handler, ctx);
+
+    await handler.handleItemEditInput(withText(ctx, '= 233,98'));
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    expect(expenses.create.mock.calls[0][2].amount).toBe(233.98);
+  });
+
+  it('drops a removed line from the created expense', async () => {
+    const { handler, expenses } = setup();
+    const ctx = makeCtx();
+    const receiptId = await enterEditMode(handler, ctx);
+
+    await handler.handleItemEditInput(withText(ctx, '1 -'));
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.items.map((i: { description: string }) => i.description)).toEqual(['Beer']);
+  });
+
+  it('recomputes the category split from the corrected lines', async () => {
+    // Without this the expense would be saved with a split computed from the
+    // prices the OCR misread. The total is corrected too, because a split always
+    // adds up to the receipt total by construction — correcting only the line
+    // would push the whole discrepancy into the residual instead.
+    const { handler, expenses } = setup();
+    const ctx = makeCtx();
+    const receiptId = await enterEditMode(handler, ctx);
+
+    await handler.handleItemEditInput(withText(ctx, '2 = 14,69'));
+    await handler.handleItemEditInput(withText(ctx, '= 20,68'));
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    const dto = expenses.create.mock.calls[0][2];
+    const byId = (id: string) =>
+      dto.splits.find((s: { categoryId: string }) => s.categoryId === id);
+    expect(byId('cat-beer').amount).toBe(14.69);
+    expect(byId('cat-food').amount).toBe(5.99);
+  });
+
+  it('answers an unparseable message and stays in edit mode', async () => {
+    const { handler } = setup();
+    const ctx = makeCtx();
+    await enterEditMode(handler, ctx);
+
+    await expect(handler.handleItemEditInput(withText(ctx, 'what?'))).resolves.toBe(true);
+    // Still editing: the next real command is applied rather than sent to the AI.
+    await expect(handler.handleItemEditInput(withText(ctx, '1 -'))).resolves.toBe(true);
+  });
+
+  it('reports a line number that is not on the receipt', async () => {
+    const { handler, expenses } = setup();
+    const ctx = makeCtx();
+    const receiptId = await enterEditMode(handler, ctx);
+
+    await handler.handleItemEditInput(withText(ctx, '9 = 5,00'));
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.items).toHaveLength(2);
+  });
+
+  it('leaves edit mode once the expense is confirmed', async () => {
+    // Otherwise the next chat message would be swallowed by the edit parser.
+    const { handler } = setup();
+    const ctx = makeCtx();
+    const receiptId = await enterEditMode(handler, ctx);
+
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    await expect(handler.handleItemEditInput(withText(ctx, '1 -'))).resolves.toBe(false);
+  });
+
+  it('leaves edit mode when the receipt is cancelled', async () => {
+    const { handler } = setup();
+    const ctx = makeCtx();
+    const receiptId = await enterEditMode(handler, ctx);
+
+    await handler.handleReceiptCancelCallback(ctx as never, receiptId);
+
+    await expect(handler.handleItemEditInput(withText(ctx, '1 -'))).resolves.toBe(false);
+  });
+
+  it('cancels a pending date prompt when stepping into item editing', async () => {
+    // The two typed-input modes are mutually exclusive; leaving both armed would
+    // make the next message ambiguous.
+    const { handler, cache } = setup();
+    const ctx = makeCtx();
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+
+    await handler.handleDateCallback(ctx as never, receiptId);
+    await handler.handleItemsCallback(ctx as never, receiptId);
+
+    expect(await cache.get('telegram:awaiting_date:123')).toBeNull();
+  });
+});

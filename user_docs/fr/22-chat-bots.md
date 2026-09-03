@@ -61,6 +61,22 @@ Pour connecter : **Paramètres → Chatbots**.
 3. Si la date est incorrecte — envoyez la bonne au format `JJ.MM.AAAA`
 4. Confirmez ou annulez
 
+### Corriger les lignes scannées
+
+L'OCR lit parfois mal un prix, invente une ligne ou en oublie une. Appuyez sur **✏️ Lignes** (sur WhatsApp : **✏️ Modifier → Lignes**) et envoyez une correction par message :
+
+| Message | Effet |
+|---|---|
+| `3 = 14,69` | fixe le prix de la ligne 3 |
+| `3: Pain de seigle` | renomme la ligne 3 |
+| `3 -` | supprime la ligne 3 |
+| `+ Pain 5,99` | ajoute une ligne |
+| `= 233,98` | corrige le total du ticket |
+
+`14,69` et `14.69` fonctionnent tous les deux. Après chaque correction, le bot renvoie la liste numérotée et une ligne `Lignes : … · total du ticket : …` — si les deux ne concordent pas, quelque chose est encore mal lu. La répartition par catégories est recalculée à partir des lignes corrigées : corrigez donc aussi le total quand vous changez un prix.
+
+Quand vous avez fini, appuyez sur **Ajouter la dépense** : rien n'est enregistré avant, et annuler abandonne toutes les corrections. Seules les lignes et le total sont corrigeables ici ; pour changer la catégorie d'une ligne, ouvrez la dépense dans l'application.
+
 ## Coût des requêtes IA
 
 | Action | Requêtes IA |

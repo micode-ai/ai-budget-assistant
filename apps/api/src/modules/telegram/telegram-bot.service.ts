@@ -204,6 +204,12 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
+      if (data.startsWith('receipt_items:')) {
+        const receiptId = data.slice('receipt_items:'.length);
+        await this.photoHandler.handleItemsCallback(ctx, receiptId);
+        return;
+      }
+
       if (data.startsWith('receipt_date:')) {
         const receiptId = data.slice('receipt_date:'.length);
         await this.photoHandler.handleDateCallback(ctx, receiptId);
@@ -238,7 +244,10 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
 
     // Free-form text messages (catch-all — must be registered last)
     this.bot.on('text', async (ctx) => {
-      // Check if user is editing a receipt date
+      // Check if the user is correcting scanned receipt lines, then the date. The
+      // two modes are mutually exclusive (entering one clears the other), so the
+      // order only decides which check runs first.
+      if (await this.photoHandler.handleItemEditInput(ctx)) return;
       const handled = await this.photoHandler.handleDateInput(ctx);
       if (handled) return;
       return this.chatHandler.handleText(ctx);

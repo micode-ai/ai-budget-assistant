@@ -3270,6 +3270,22 @@ To connect: **Settings → Chat Bots**.
 3. If the date is wrong, send the correct date in \`DD.MM.YYYY\` format
 4. Confirm to add the expense, or cancel
 
+### Fixing the scanned lines
+
+OCR sometimes misreads a price, invents a line, or misses one. Tap **✏️ Items** (on WhatsApp: **✏️ Edit → Items**) and send one correction per message:
+
+| Message | What it does |
+|---|---|
+| \`3 = 14.69\` | sets the price of line 3 |
+| \`3: Rye bread\` | renames line 3 |
+| \`3 -\` | deletes line 3 |
+| \`+ Bread 5.99\` | adds a line |
+| \`= 233.98\` | corrects the receipt total |
+
+Both \`14.69\` and \`14,69\` work. After every correction the bot re-sends the numbered list and a \`Lines: … · receipt total: …\` line — when those two disagree, something on the receipt is still misread. The category split is rebuilt from the corrected lines, so correct the total too when you change a price.
+
+When you are done, tap **Add expense** — nothing is saved until you do, and cancelling discards every correction. Only the lines and the total can be corrected here; to change a line's category, open the expense in the app.
+
 ## Multiple Accounts
 
 If you have several accounts (e.g. "Personal" and "Family"):
@@ -7823,6 +7839,22 @@ AI Budget Assistant предлагает три уровня подписки. �
 3. Если дата неверная — отправьте правильную в формате \`ДД.ММ.ГГГГ\`
 4. Подтвердите добавление или отмените
 
+### Правка распознанных позиций
+
+OCR иногда неверно читает цену, выдумывает строку или пропускает её. Нажмите **✏️ Позиции** (в WhatsApp: **✏️ Правка → Позиции**) и отправляйте по одной правке в сообщении:
+
+| Сообщение | Что делает |
+|---|---|
+| \`3 = 14,69\` | ставит цену строки 3 |
+| \`3: Хлеб\` | переименовывает строку 3 |
+| \`3 -\` | удаляет строку 3 |
+| \`+ Хлеб 5,99\` | добавляет строку |
+| \`= 233,98\` | исправляет итог чека |
+
+Работают и \`14,69\`, и \`14.69\`. После каждой правки бот присылает нумерованный список заново и строку \`Сумма позиций: … · итог чека: …\` — если эти два числа расходятся, что-то в чеке всё ещё прочитано неверно. Разбивка по категориям пересчитывается по исправленным строкам, поэтому при изменении цены исправьте и итог.
+
+Когда закончите — нажмите **Добавить расход**: до этого ничего не сохраняется, а отмена отбрасывает все правки. Здесь правятся только строки и итог; чтобы сменить категорию строки, откройте расход в приложении.
+
 ## Несколько аккаунтов
 
 - Упомяните название аккаунта в сообщении: «Покажи расходы в Семейном» — ИИ запросит этот аккаунт только для данного сообщения
@@ -12344,6 +12376,22 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 3. Якщо дата невірна — надішліть правильну у форматі \`ДД.ММ.РРРР\`
 4. Підтвердіть додавання або скасуйте
 
+### Правка розпізнаних позицій
+
+OCR іноді неправильно читає ціну, вигадує рядок або пропускає його. Натисніть **✏️ Позиції** (у WhatsApp: **✏️ Правка → Позиції**) і надсилайте по одній правці в повідомленні:
+
+| Повідомлення | Що робить |
+|---|---|
+| \`3 = 14,69\` | ставить ціну рядка 3 |
+| \`3: Хліб\` | перейменовує рядок 3 |
+| \`3 -\` | видаляє рядок 3 |
+| \`+ Хліб 5,99\` | додає рядок |
+| \`= 233,98\` | виправляє ітог чека |
+
+Працюють і \`14,69\`, і \`14.69\`. Після кожної правки бот надсилає нумерований список заново та рядок \`Сума позицій: … · ітог чека: …\` — якщо ці два числа розходяться, щось у чеку все ще прочитано неправильно. Розподіл за категоріями перераховується за виправленими рядками, тому зі зміною ціни виправте й ітог.
+
+Коли завершите — натисніть **Додати витрату**: до цього нічого не зберігається, а скасування відкидає всі правки. Тут правляться лише рядки та ітог; щоб змінити категорію рядка, відкрийте витрату в застосунку.
+
 ## Кілька акаунтів
 
 - Згадайте назву акаунту в повідомленні: «Покажи витрати в Сімейному» — ШІ запитає цей акаунт лише для цього повідомлення
@@ -16836,6 +16884,22 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 3. Jeśli data jest błędna — wyślij poprawną w formacie \`DD.MM.RRRR\`
 4. Potwierdź lub anuluj
 
+### Poprawianie zeskanowanych pozycji
+
+OCR czasem źle odczyta cenę, wymyśli pozycję albo jakąś pominie. Dotknij **✏️ Pozycje** (w WhatsApp: **✏️ Popraw → Pozycje**) i wysyłaj po jednej poprawce w wiadomości:
+
+| Wiadomość | Co robi |
+|---|---|
+| \`3 = 14,69\` | ustawia cenę pozycji 3 |
+| \`3: Chleb żytni\` | zmienia nazwę pozycji 3 |
+| \`3 -\` | usuwa pozycję 3 |
+| \`+ Chleb 5,99\` | dodaje pozycję |
+| \`= 233,98\` | poprawia sumę paragonu |
+
+Działa i \`14,69\`, i \`14.69\`. Po każdej poprawce bot ponownie wysyła numerowaną listę oraz wiersz \`Pozycje: … · suma paragonu: …\` — jeśli te dwie liczby się nie zgadzają, coś na paragonie nadal jest źle odczytane. Podział na kategorie jest przeliczany z poprawionych pozycji, więc przy zmianie ceny popraw też sumę.
+
+Gdy skończysz, dotknij **Dodaj wydatek** — nic nie jest zapisywane wcześniej, a anulowanie odrzuca wszystkie poprawki. Tutaj można poprawić tylko pozycje i sumę; aby zmienić kategorię pozycji, otwórz wydatek w aplikacji.
+
 ## Wiele kont
 
 - Wspomnij nazwę konta w wiadomości: „Pokaż wydatki na koncie Rodzinnym" — AI zapyta to konto tylko dla tej wiadomości
@@ -21326,6 +21390,22 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 3. Falls das Datum falsch ist — sende das korrekte im Format \`TT.MM.JJJJ\`
 4. Bestätige oder storniere
 
+### Erfasste Positionen korrigieren
+
+Die Texterkennung liest manchmal einen Preis falsch, erfindet eine Position oder übersieht eine. Tippe auf **✏️ Positionen** (in WhatsApp: **✏️ Bearbeiten → Positionen**) und sende eine Korrektur pro Nachricht:
+
+| Nachricht | Wirkung |
+|---|---|
+| \`3 = 14,69\` | setzt den Preis von Zeile 3 |
+| \`3: Roggenbrot\` | benennt Zeile 3 um |
+| \`3 -\` | löscht Zeile 3 |
+| \`+ Brot 5,99\` | fügt eine Zeile hinzu |
+| \`= 233,98\` | korrigiert die Belegsumme |
+
+\`14,69\` und \`14.69\` funktionieren beide. Nach jeder Korrektur sendet der Bot die nummerierte Liste erneut, dazu eine Zeile \`Positionen: … · Belegsumme: …\` — weichen die beiden voneinander ab, ist auf dem Beleg noch etwas falsch gelesen. Die Kategorienaufteilung wird aus den korrigierten Zeilen neu berechnet, korrigiere daher bei einer Preisänderung auch die Summe.
+
+Wenn du fertig bist, tippe auf **Ausgabe hinzufügen** — vorher wird nichts gespeichert, und ein Abbruch verwirft alle Korrekturen. Hier lassen sich nur die Zeilen und die Summe korrigieren; um die Kategorie einer Zeile zu ändern, öffne die Ausgabe in der App.
+
 ## Mehrere Konten
 
 - Erwähne den Kontonamen in deiner Nachricht für eine einmalige Abfrage
@@ -25794,6 +25874,22 @@ Para conectar: **Ajustes → Chatbots**.
 3. Si la fecha es incorrecta — envía la correcta en formato \`DD.MM.AAAA\`
 4. Confirma o cancela
 
+### Corregir las líneas escaneadas
+
+El OCR a veces lee mal un precio, inventa una línea o se salta otra. Toca **✏️ Líneas** (en WhatsApp: **✏️ Editar → Líneas**) y envía una corrección por mensaje:
+
+| Mensaje | Qué hace |
+|---|---|
+| \`3 = 14,69\` | fija el precio de la línea 3 |
+| \`3: Pan de centeno\` | renombra la línea 3 |
+| \`3 -\` | borra la línea 3 |
+| \`+ Pan 5,99\` | añade una línea |
+| \`= 233,98\` | corrige el total del recibo |
+
+Sirven tanto \`14,69\` como \`14.69\`. Tras cada corrección el bot reenvía la lista numerada y una línea \`Líneas: … · total del recibo: …\`; si esas dos cifras no coinciden, algo del recibo sigue mal leído. El reparto por categorías se recalcula a partir de las líneas corregidas, así que corrige también el total cuando cambies un precio.
+
+Cuando termines, toca **Añadir gasto**: nada se guarda hasta entonces, y cancelar descarta todas las correcciones. Aquí solo se pueden corregir las líneas y el total; para cambiar la categoría de una línea, abre el gasto en la aplicación.
+
 ## Coste de solicitudes IA
 
 | Acción | Solicitudes IA |
@@ -30249,6 +30345,22 @@ Pour connecter : **Paramètres → Chatbots**.
 3. Si la date est incorrecte — envoyez la bonne au format \`JJ.MM.AAAA\`
 4. Confirmez ou annulez
 
+### Corriger les lignes scannées
+
+L'OCR lit parfois mal un prix, invente une ligne ou en oublie une. Appuyez sur **✏️ Lignes** (sur WhatsApp : **✏️ Modifier → Lignes**) et envoyez une correction par message :
+
+| Message | Effet |
+|---|---|
+| \`3 = 14,69\` | fixe le prix de la ligne 3 |
+| \`3: Pain de seigle\` | renomme la ligne 3 |
+| \`3 -\` | supprime la ligne 3 |
+| \`+ Pain 5,99\` | ajoute une ligne |
+| \`= 233,98\` | corrige le total du ticket |
+
+\`14,69\` et \`14.69\` fonctionnent tous les deux. Après chaque correction, le bot renvoie la liste numérotée et une ligne \`Lignes : … · total du ticket : …\` — si les deux ne concordent pas, quelque chose est encore mal lu. La répartition par catégories est recalculée à partir des lignes corrigées : corrigez donc aussi le total quand vous changez un prix.
+
+Quand vous avez fini, appuyez sur **Ajouter la dépense** : rien n'est enregistré avant, et annuler abandonne toutes les corrections. Seules les lignes et le total sont corrigeables ici ; pour changer la catégorie d'une ligne, ouvrez la dépense dans l'application.
+
 ## Coût des requêtes IA
 
 | Action | Requêtes IA |
@@ -34691,6 +34803,29 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 | \`/help\` | Паказаць усе каманды |
 
 > У **WhatsApp** і **Slack** каманды працуюць з \`/\` або без яго. Можна таксама проста напісаць суму і апісанне: \`50 абед\`.
+
+## Сканаванне чэкаў
+
+1. Зрабіце фота чэка і адпраўце боту
+2. Бот распазнае суму, дату і краму
+3. Калі дата няправільная, адпраўце правільную ў фармаце \`ДД.ММ.ГГГГ\`
+4. Пацвердзіце, каб дадаць выдатак, або скасуйце
+
+### Правка распазнаных пазіцый
+
+OCR часам няправільна чытае цану, выдумляе радок або прапускае яго. Націсніце **✏️ Пазіцыі** (у WhatsApp: **✏️ Правка → Пазіцыі**) і адпраўляйце па адной правцы ў паведамленні:
+
+| Паведамленне | Што робіць |
+|---|---|
+| \`3 = 14,69\` | ставіць цану радка 3 |
+| \`3: Хлеб\` | пераймяноўвае радок 3 |
+| \`3 -\` | выдаляе радок 3 |
+| \`+ Хлеб 5,99\` | дадае радок |
+| \`= 233,98\` | выпраўляе ітог чэка |
+
+Працуюць і \`14,69\`, і \`14.69\`. Пасля кожнай правкі бот прысылае нумараваны спіс заново і радок \`Сума пазіцый: … · ітог чэка: …\` — калі гэтыя два лікі разыходзяцца, штосьці ў чэку ўсё яшчэ прачытана няправільна. Разбіўка па катэгорыях пералічваецца па выпраўленых радках, таму пры зміне цаны выпраўце і ітог.
+
+Калі скончыце — націсніце **Дадаць выдаткі**: да гэтага нічога не захоўваецца, а скасаванне адкідае ўсе правкі. Тут правяцца толькі радкі і ітог; каб змяніць катэгорыю радка, адкрыйце выдатак у дадатку.
 
 ## Кошт запытаў ШІ
 
@@ -39147,6 +39282,22 @@ Om te verbinden: **Instellingen → Chatbots**.
 2. De bot haalt het bedrag, de datum en de verkoper eruit met OCR
 3. Als de datum onjuist is, stuur de juiste datum in het formaat \`DD.MM.JJJJ\`
 4. Bevestig om de uitgave toe te voegen, of annuleer
+
+### Gescande regels corrigeren
+
+OCR leest soms een prijs verkeerd, verzint een regel of mist er een. Tik op **✏️ Regels** (in WhatsApp: **✏️ Bewerken → Regels**) en stuur één correctie per bericht:
+
+| Bericht | Wat het doet |
+|---|---|
+| \`3 = 14,69\` | zet de prijs van regel 3 |
+| \`3: Roggebrood\` | wijzigt de naam van regel 3 |
+| \`3 -\` | verwijdert regel 3 |
+| \`+ Brood 5,99\` | voegt een regel toe |
+| \`= 233,98\` | corrigeert het bontotaal |
+
+Zowel \`14,69\` als \`14.69\` werkt. Na elke correctie stuurt de bot de genummerde lijst opnieuw, met een regel \`Regels: … · bontotaal: …\` — verschillen die twee, dan is er nog iets verkeerd gelezen. De categorieverdeling wordt opnieuw berekend uit de gecorrigeerde regels, dus corrigeer ook het totaal als je een prijs wijzigt.
+
+Ben je klaar, tik dan op **Uitgave toevoegen** — daarvoor wordt niets opgeslagen, en annuleren gooit alle correcties weg. Alleen de regels en het totaal zijn hier te corrigeren; open de uitgave in de app om de categorie van een regel te wijzigen.
 
 ## Meerdere accounts
 

@@ -10,7 +10,15 @@ import { CacheService } from '../../../common/cache/cache.service';
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
-import { t, buildCategorySplitLine } from '../helpers/i18n';
+import { t, buildCategorySplitLine, buildItemListBlock } from '../helpers/i18n';
+import {
+  parseItemEditCommand,
+  applyItemEditCommand,
+  recomputeSplits,
+  seedItemGroups,
+  type ItemEditCommand,
+  type ItemEditError,
+} from '../../../common/utils/receipt-item-edit';
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 
 // `ctx.answerCbQuery` throws if Telegram considers the callback query expired
@@ -28,8 +36,11 @@ async function safeAnswerCb(ctx: BotContext, text?: string): Promise<void> {
 // orphaning any user mid-scan. Redis TTL replaces the old manual LRU sweep.
 const PENDING_RECEIPT_TTL_SEC = 1800;
 const AWAITING_DATE_TTL_SEC = 600;
+const AWAITING_ITEM_EDIT_TTL_SEC = 600;
 const pendingReceiptKey = (receiptId: string) => `telegram:receipt:${receiptId}`;
 const awaitingDateKey = (telegramUserId: string) => `telegram:awaiting_date:${telegramUserId}`;
+const awaitingItemEditKey = (telegramUserId: string) =>
+  `telegram:awaiting_item_edit:${telegramUserId}`;
 
 interface PendingReceiptData {
   userId: string;
@@ -49,6 +60,10 @@ interface PendingReceiptData {
     /** Category the scan classified this line into; survives even when the
      * receipt produced no money split. */
     categoryId?: string | null;
+    /** Set when the user steps into item-edit mode (`seedItemGroups`): the split's
+     * own name, which is the only handle on a category the scan merely PROPOSED.
+     * Redis-only — never read by the confirm path. */
+    categoryName?: string | null;
     canonicalName?: string;
     quantity?: number;
     unitPrice?: number;
@@ -191,9 +206,10 @@ export class PhotoHandler {
         ...Markup.inlineKeyboard([
           [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
           [
+            Markup.button.callback(t('editItems', lang), `receipt_items:${receiptId}`),
             Markup.button.callback(t('changeDate', lang), `receipt_date:${receiptId}`),
-            Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
           ],
+          [Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`)],
         ]),
       });
     } catch (error) {
@@ -322,9 +338,10 @@ export class PhotoHandler {
         ...Markup.inlineKeyboard([
           [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
           [
+            Markup.button.callback(t('editItems', lang), `receipt_items:${receiptId}`),
             Markup.button.callback(t('changeDate', lang), `receipt_date:${receiptId}`),
-            Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`),
           ],
+          [Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`)],
         ]),
       });
     } catch (error) {
@@ -381,6 +398,9 @@ export class PhotoHandler {
       );
 
       await this.cache.del(pendingReceiptKey(receiptId));
+      // Leave item-edit mode, or the user's next chat message would be swallowed
+      // by the correction parser instead of reaching the AI.
+      await this.cache.del(awaitingItemEditKey(String(ctx.from!.id)));
 
       try {
         await ctx.editMessageText(
@@ -477,8 +497,133 @@ export class PhotoHandler {
     return true;
   }
 
+  /**
+   * Step into line-item edit mode. Corrections are typed rather than tapped: a
+   * receipt has twenty to forty lines and WhatsApp caps interactive messages at 3
+   * buttons / 10 rows, so one typed grammar is the only shape that works on all
+   * three bots (see common/utils/receipt-item-edit.ts).
+   */
+  async handleItemsCallback(ctx: BotContext, receiptId: string): Promise<void> {
+    try {
+      const data = await this.cache.get<PendingReceiptData>(pendingReceiptKey(receiptId));
+      if (!data) {
+        await safeAnswerCb(ctx, 'Expired');
+        return;
+      }
+
+      const telegramUserId = String(ctx.from!.id);
+      // The two typed-input modes are mutually exclusive — leaving a date prompt
+      // armed would make the next message ambiguous.
+      await this.cache.del(awaitingDateKey(telegramUserId));
+      await this.cache.set(awaitingItemEditKey(telegramUserId), receiptId, AWAITING_ITEM_EDIT_TTL_SEC);
+      await safeAnswerCb(ctx, '');
+
+      // Land the split's item -> category mapping on the items once, so deleting a
+      // line cannot shift it (the split carries positions, not per-item ids).
+      data.items = seedItemGroups(data.items, data.categorySplits ?? []);
+      await this.cache.set<PendingReceiptData>(
+        pendingReceiptKey(receiptId),
+        data,
+        PENDING_RECEIPT_TTL_SEC,
+      );
+
+      await ctx.reply(t('itemEditHint', data.language), { parse_mode: 'HTML' });
+      await this.sendItemEditView(ctx, receiptId, data);
+    } catch (error) {
+      this.logger.error(`Error in items callback: ${error}`);
+    }
+  }
+
+  /**
+   * Consumes one typed correction. Returns false when this user is not editing a
+   * receipt, so the bot's text router can pass the message on to the AI chat.
+   */
+  async handleItemEditInput(ctx: BotContext): Promise<boolean> {
+    const telegramUserId = String(ctx.from!.id);
+    const receiptId = await this.cache.get<string>(awaitingItemEditKey(telegramUserId));
+    if (!receiptId) return false;
+
+    const data = await this.cache.get<PendingReceiptData>(pendingReceiptKey(receiptId));
+    if (!data) {
+      await this.cache.del(awaitingItemEditKey(telegramUserId));
+      return false;
+    }
+
+    const text = ctx.message && 'text' in ctx.message ? ctx.message.text?.trim() : '';
+    if (!text) return false;
+
+    const command = parseItemEditCommand(text);
+    if (!command) {
+      await ctx.reply(`${t('itemEditInvalid', data.language)}\n\n${t('itemEditHint', data.language)}`, {
+        parse_mode: 'HTML',
+      });
+      return true;
+    }
+
+    const outcome = applyItemEditCommand(data.items, data.amount, command);
+    if (!outcome.ok) {
+      await ctx.reply(this.itemEditErrorText(outcome.error, command, data.language), {
+        parse_mode: 'HTML',
+      });
+      return true;
+    }
+
+    data.items = outcome.items;
+    data.amount = outcome.total;
+    data.categorySplits = recomputeSplits({
+      items: outcome.items,
+      total: outcome.total,
+      discount: data.discountAmount,
+      deposit: data.depositAmount,
+      existing: data.categorySplits ?? [],
+    });
+    await this.cache.set<PendingReceiptData>(pendingReceiptKey(receiptId), data, PENDING_RECEIPT_TTL_SEC);
+
+    await this.sendItemEditView(ctx, receiptId, data, t('itemsUpdated', data.language));
+    return true;
+  }
+
+  /** The numbered list plus the confirm/cancel keyboard, re-sent after every edit. */
+  private async sendItemEditView(
+    ctx: BotContext,
+    receiptId: string,
+    data: PendingReceiptData,
+    header?: string,
+  ): Promise<void> {
+    const lang = data.language;
+    // Item descriptions come from OCR and can contain `&` or `<`, which would
+    // break parse_mode HTML — escaped exactly as the split line already is.
+    const block = escapeHtml(buildItemListBlock(data.items, data.currencyCode, data.amount, lang));
+    const splitLine = buildCategorySplitLine(data.categorySplits ?? [], data.currencyCode, lang);
+    const body = [header, block, splitLine ? escapeHtml(splitLine) : '']
+      .filter(Boolean)
+      .join('\n\n');
+
+    await ctx.reply(body, {
+      parse_mode: 'HTML',
+      ...Markup.inlineKeyboard([
+        [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
+        [Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`)],
+      ]),
+    });
+  }
+
+  private itemEditErrorText(
+    error: ItemEditError,
+    command: ItemEditCommand,
+    lang: string | undefined,
+  ): string {
+    if (error === 'no_such_line') {
+      const index = 'index' in command ? command.index : undefined;
+      return t('itemEditNoSuchLine', lang, { index: String(index ?? '') });
+    }
+    if (error === 'invalid_amount') return t('itemEditInvalidAmount', lang);
+    return t('itemEditEmptyDescription', lang);
+  }
+
   async handleReceiptCancelCallback(ctx: BotContext, receiptId: string): Promise<void> {
     await this.cache.del(pendingReceiptKey(receiptId));
+    await this.cache.del(awaitingItemEditKey(String(ctx.from!.id)));
     await ctx.answerCbQuery('Cancelled.');
     await ctx.editMessageText(t('receiptCancelled', ctx.userState?.language));
   }

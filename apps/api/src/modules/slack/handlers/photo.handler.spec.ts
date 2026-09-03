@@ -279,3 +279,94 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
     ]);
   });
 });
+
+describe('Slack PhotoHandler — line-item editing (ABA-482)', () => {
+  const ITEMS = [
+    { description: 'Bread', quantity: 1, unitPrice: 5.99, totalPrice: 5.99, categoryId: 'cat-food' },
+    { description: 'Beer', quantity: 2, unitPrice: 3.0, totalPrice: 6.0, categoryId: 'cat-beer' },
+  ];
+
+  function setup() {
+    const redis = makeFakeRedis();
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({
+        ...baseReceipt(null),
+        amount: 11.99,
+        receiptItems: ITEMS,
+        categorySplits: [],
+      }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
+    const client = {
+      postPlaceholder: jest.fn().mockResolvedValue('1700000000.000100'),
+      downloadFile: jest
+        .fn()
+        .mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      replyText: jest.fn().mockResolvedValue(undefined),
+      replyButtons: jest.fn().mockResolvedValue(undefined),
+      sendText: jest.fn().mockResolvedValue(undefined),
+      sendButtons: jest.fn().mockResolvedValue(undefined),
+    };
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      client as never,
+      redis as never,
+    );
+    return { handler, redis, expenses, client };
+  }
+
+  const shortIdFrom = (redis: ReturnType<typeof makeFakeRedis>) => {
+    const key = [...redis.store.keys()].find((k) => k.startsWith('slack:receipt:'));
+    return key!.slice('slack:receipt:'.length);
+  };
+
+  it('ignores text when the user is not editing items', async () => {
+    const { handler } = setup();
+
+    await expect(handler.handleItemEditInput('2 = 14,69', userState)).resolves.toBe(false);
+  });
+
+  it('carries a corrected line price through to the created expense', async () => {
+    const { handler, redis, expenses } = setup();
+    await handler.handleDocument(pdfFile(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleItemsCallback(shortId, userState);
+
+    await expect(handler.handleItemEditInput('2 = 14,69', userState)).resolves.toBe(true);
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.items[1].totalPrice).toBe(14.69);
+    expect(dto.items[1].unitPrice).toBe(7.35);
+  });
+
+  it('drops a removed line from the created expense', async () => {
+    const { handler, redis, expenses } = setup();
+    await handler.handleDocument(pdfFile(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleItemsCallback(shortId, userState);
+
+    await handler.handleItemEditInput('1 -', userState);
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    const dto = expenses.create.mock.calls[0][2];
+    expect(dto.items.map((i: { description: string }) => i.description)).toEqual(['Beer']);
+  });
+
+  it('leaves edit mode once the expense is confirmed', async () => {
+    const { handler, redis } = setup();
+    await handler.handleDocument(pdfFile(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleItemsCallback(shortId, userState);
+
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    await expect(handler.handleItemEditInput('1 -', userState)).resolves.toBe(false);
+  });
+});

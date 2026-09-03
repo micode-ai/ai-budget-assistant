@@ -62,6 +62,22 @@ To connect: **Settings → Chat Bots**.
 3. If the date is wrong, send the correct date in `DD.MM.YYYY` format
 4. Confirm to add the expense, or cancel
 
+### Fixing the scanned lines
+
+OCR sometimes misreads a price, invents a line, or misses one. Tap **✏️ Items** (on WhatsApp: **✏️ Edit → Items**) and send one correction per message:
+
+| Message | What it does |
+|---|---|
+| `3 = 14.69` | sets the price of line 3 |
+| `3: Rye bread` | renames line 3 |
+| `3 -` | deletes line 3 |
+| `+ Bread 5.99` | adds a line |
+| `= 233.98` | corrects the receipt total |
+
+Both `14.69` and `14,69` work. After every correction the bot re-sends the numbered list and a `Lines: … · receipt total: …` line — when those two disagree, something on the receipt is still misread. The category split is rebuilt from the corrected lines, so correct the total too when you change a price.
+
+When you are done, tap **Add expense** — nothing is saved until you do, and cancelling discards every correction. Only the lines and the total can be corrected here; to change a line's category, open the expense in the app.
+
 ## Multiple Accounts
 
 If you have several accounts (e.g. "Personal" and "Family"):

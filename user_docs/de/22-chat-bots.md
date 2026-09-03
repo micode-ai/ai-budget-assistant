@@ -61,6 +61,22 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 3. Falls das Datum falsch ist — sende das korrekte im Format `TT.MM.JJJJ`
 4. Bestätige oder storniere
 
+### Erfasste Positionen korrigieren
+
+Die Texterkennung liest manchmal einen Preis falsch, erfindet eine Position oder übersieht eine. Tippe auf **✏️ Positionen** (in WhatsApp: **✏️ Bearbeiten → Positionen**) und sende eine Korrektur pro Nachricht:
+
+| Nachricht | Wirkung |
+|---|---|
+| `3 = 14,69` | setzt den Preis von Zeile 3 |
+| `3: Roggenbrot` | benennt Zeile 3 um |
+| `3 -` | löscht Zeile 3 |
+| `+ Brot 5,99` | fügt eine Zeile hinzu |
+| `= 233,98` | korrigiert die Belegsumme |
+
+`14,69` und `14.69` funktionieren beide. Nach jeder Korrektur sendet der Bot die nummerierte Liste erneut, dazu eine Zeile `Positionen: … · Belegsumme: …` — weichen die beiden voneinander ab, ist auf dem Beleg noch etwas falsch gelesen. Die Kategorienaufteilung wird aus den korrigierten Zeilen neu berechnet, korrigiere daher bei einer Preisänderung auch die Summe.
+
+Wenn du fertig bist, tippe auf **Ausgabe hinzufügen** — vorher wird nichts gespeichert, und ein Abbruch verwirft alle Korrekturen. Hier lassen sich nur die Zeilen und die Summe korrigieren; um die Kategorie einer Zeile zu ändern, öffne die Ausgabe in der App.
+
 ## Mehrere Konten
 
 - Erwähne den Kontonamen in deiner Nachricht für eine einmalige Abfrage
