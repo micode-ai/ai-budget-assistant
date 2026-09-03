@@ -100,7 +100,9 @@ Der Kurs wird stündlich auf unseren Servern geprüft — das funktioniert also 
 
 Jeder Alarm löst **einmal** aus und endet dann, damit ein um die Zielmarke schwankender Kurs nicht immer wieder benachrichtigt. Lege einen neuen Alarm an, wenn du das Paar weiter beobachten willst.
 
-Die Karte zeigt die Alarme des aktuell gewählten Paares — mit den Währungen wechselt also die Liste. Zum Löschen tippe auf das Papierkorb-Symbol. Möglich sind bis zu **20** aktive Alarme gleichzeitig.
+Die Karte zeigt die Alarme des aktuell gewählten Paares — mit den Währungen wechselt also die Liste. Für die vollständige Liste tippe dort auf **Alle anzeigen** oder im Wallet-Bildschirm auf **Kursalarme**.
+
+Dort liegen alle deine Alarme: die noch wartenden und die schon ausgelösten, mit Kurs und Datum der Auslösung. Da ein Alarm nur einmal auslöst, ist diese Historie der einzige Nachweis in der App dafür — die Benachrichtigung selbst lässt sich wegwischen. Von dort aus legst du einen Alarm für jedes Paar an, ohne das Umtausch-Formular zu berühren, löschst jeden mit dem Papierkorb-Symbol, und bis zu **20** dürfen gleichzeitig warten.
 
 Kursalarme sind **persönlich**: sie gelten in allen deinen Konten, niemand sonst sieht sie, und auch ein Betrachter kann sie setzen. In den Benachrichtigungseinstellungen gibt es keinen eigenen Schalter — den Alarm zu löschen ist das Ausschalten.
 

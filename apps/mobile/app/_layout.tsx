@@ -265,6 +265,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="wallet/rate-alerts"
+          options={{
+            headerShown: true,
+            title: t('exchange.rateAlerts'),
+          }}
+        />
+        <Stack.Screen
           name="calendar/index"
           options={{
             headerShown: true,

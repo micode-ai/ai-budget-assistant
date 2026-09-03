@@ -102,7 +102,9 @@ Kurs sprawdzamy na naszych serwerach raz na godzinę, więc działa to przy zamk
 
 Każdy alert uruchamia się **raz** i wygasa, żeby kurs krążący wokół celu nie powiadamiał bez końca. Dodaj nowy alert, jeśli chcesz dalej obserwować tę parę.
 
-Karta pokazuje alerty dla aktualnie wybranej pary, więc zmiana walut zmienia listę. Dotknij ikony kosza, aby usunąć alert. Jednocześnie możesz mieć do **20** aktywnych alertów.
+Karta pokazuje alerty dla aktualnie wybranej pary, więc zmiana walut zmienia listę. Pełną listę otworzysz przyciskiem **Pokaż wszystkie** na tej karcie albo **Alerty kursowe** na ekranie Portfel.
+
+Tam są wszystkie Twoje alerty: te, które jeszcze czekają, i te, które już się uruchomiły — z kursem i datą uruchomienia. Alert uruchamia się tylko raz, więc ta historia jest jedynym śladem w aplikacji, że to się stało; samo powiadomienie można przesunąć i zniknie. Z tego ekranu utworzysz alert dla dowolnej pary bez otwierania formularza wymiany, usuniesz dowolny ikoną kosza, a jednocześnie czekać może do **20**.
 
 Alerty kursowe są **osobiste**: działają na wszystkich Twoich kontach, nikt inny ich nie widzi, a obserwator może je ustawiać tak samo jak każdy. W ustawieniach powiadomień nie ma dla nich osobnego przełącznika — wyłączeniem jest usunięcie alertu.
 

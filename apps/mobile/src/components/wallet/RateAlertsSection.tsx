@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { showAlert } from '@/utils/alert';
@@ -20,7 +21,7 @@ export function RateAlertsSection({ fromCurrency, toCurrency, currentRate }: Rat
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { watches, loadWatches, createWatch, deleteWatch, getWatchesForPair } = useExchangeRateWatchStore();
+  const { loadWatches, createWatch, deleteWatch, getWatchesForPair } = useExchangeRateWatchStore();
 
   const [expanded, setExpanded] = useState(false);
   const [targetRate, setTargetRate] = useState('');
@@ -87,6 +88,18 @@ export function RateAlertsSection({ fromCurrency, toCurrency, currentRate }: Rat
       {pairWatches.length === 0 && !expanded && (
         <Text style={styles.emptyText}>{t('exchange.noAlerts')}</Text>
       )}
+
+      {/* This card only ever shows the pair selected on this screen, so it has to
+          point at the full list — otherwise an alert on another pair is
+          unreachable (ABA-484). */}
+      <TouchableOpacity
+        style={styles.showAllRow}
+        onPress={() => router.push('/wallet/rate-alerts')}
+        accessibilityRole="button"
+      >
+        <Text style={styles.showAllText}>{t('common.showAll')}</Text>
+        <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />
+      </TouchableOpacity>
 
       {pairWatches.map((w) => (
         <View key={w.id} style={styles.watchRow}>
@@ -163,6 +176,17 @@ const createStyles = (theme: Theme) => ({
   label: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textSecondary,
+  },
+  showAllRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[1],
+    paddingTop: theme.spacing[3],
+  },
+  showAllText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.primary,
   },
   emptyText: {
     ...theme.textStyles.bodySm,

@@ -1554,7 +1554,9 @@ The rate is checked on our servers once an hour, so it works with the app closed
 
 Each alert fires **once** and then stops, so a rate hovering around your target can't notify you over and over. Add a new alert if you want to keep watching that pair.
 
-The card shows the alerts for the pair currently selected, so switching currencies switches the list. Tap the bin icon to delete one. You can keep up to **20** active alerts at a time.
+The card shows the alerts for the pair currently selected, so switching currencies switches the list — tap **Show all** on it, or **Rate alerts** on the Wallet screen, for the full list.
+
+That screen is where all your alerts live: the ones still waiting, and the ones that have already fired with the rate and date they fired at. Since an alert only fires once, that history is the only record in the app that it did — the notification itself can be swiped away. You can create an alert for any pair from there without touching the exchange form, delete any of them with the bin icon, and keep up to 20 waiting at a time.
 
 Rate alerts are **personal**: they follow you across all your accounts, nobody else sees them, and a viewer can set them like anyone else. There is no separate switch in notification settings — deleting the alert is how you turn it off.
 
@@ -6123,7 +6125,9 @@ iOS, Android, Web
 
 Каждое оповещение срабатывает **один раз** и после этого выключается, чтобы курс, колеблющийся около вашей цели, не присылал уведомления снова и снова. Если хотите следить дальше — создайте новое.
 
-Карточка показывает оповещения только для выбранной сейчас пары, так что при смене валют меняется и список. Чтобы удалить оповещение, нажмите на значок корзины. Одновременно можно держать до **20** активных оповещений.
+Карточка показывает оповещения только для выбранной сейчас пары, так что при смене валют меняется и список. Полный список открывается кнопкой **Показать все** на этой карточке или строкой **Оповещения о курсе** на экране «Кошелёк».
+
+На этом экране лежат все ваши оповещения: и те, что ещё ждут, и те, что уже сработали — с курсом и датой срабатывания. Оповещение срабатывает один раз, поэтому эта история — единственный след в приложении о том, что цель была достигнута: само уведомление можно смахнуть. Оттуда же можно создать оповещение для любой пары, не открывая форму обмена, удалить любое значком корзины, а ждать одновременно могут до **20**.
 
 Оповещения о курсе **личные**: они действуют на всех ваших счетах, никто другой их не видит, и наблюдатель может их создавать так же, как остальные. Отдельного переключателя в настройках уведомлений нет — выключение это удаление оповещения.
 
@@ -10696,7 +10700,9 @@ iOS, Android, Web
 
 Кожне сповіщення спрацьовує **один раз** і після цього вимикається, щоб курс, який коливається біля вашої цілі, не надсилав повідомлення знову й знову. Якщо хочете стежити далі — створіть нове.
 
-Картка показує сповіщення лише для вибраної зараз пари, тож зі зміною валют змінюється й список. Щоб видалити сповіщення, натисніть значок кошика. Одночасно можна тримати до **20** активних сповіщень.
+Картка показує сповіщення лише для вибраної зараз пари, тож зі зміною валют змінюється й список. Повний список відкривається кнопкою **Показати всі** на цій картці або рядком **Сповіщення про курс** на екрані «Гаманець».
+
+На цьому екрані є всі ваші сповіщення: і ті, що ще чекають, і ті, що вже спрацювали — з курсом і датою спрацювання. Сповіщення спрацьовує один раз, тому ця історія — єдиний слід у застосунку про те, що ціль була досягнута: саме повідомлення можна змахнути. Звідти ж можна створити сповіщення для будь-якої пари, не відкриваючи форму обміну, видалити будь-яке значком кошика, а чекати одночасно можуть до **20**.
 
 Сповіщення про курс **особисті**: вони діють на всіх ваших рахунках, ніхто інший їх не бачить, і спостерігач може їх створювати так само, як інші. Окремого перемикача в налаштуваннях повідомлень немає — вимкнення це видалення сповіщення.
 
@@ -15203,7 +15209,9 @@ Kurs sprawdzamy na naszych serwerach raz na godzinę, więc działa to przy zamk
 
 Każdy alert uruchamia się **raz** i wygasa, żeby kurs krążący wokół celu nie powiadamiał bez końca. Dodaj nowy alert, jeśli chcesz dalej obserwować tę parę.
 
-Karta pokazuje alerty dla aktualnie wybranej pary, więc zmiana walut zmienia listę. Dotknij ikony kosza, aby usunąć alert. Jednocześnie możesz mieć do **20** aktywnych alertów.
+Karta pokazuje alerty dla aktualnie wybranej pary, więc zmiana walut zmienia listę. Pełną listę otworzysz przyciskiem **Pokaż wszystkie** na tej karcie albo **Alerty kursowe** na ekranie Portfel.
+
+Tam są wszystkie Twoje alerty: te, które jeszcze czekają, i te, które już się uruchomiły — z kursem i datą uruchomienia. Alert uruchamia się tylko raz, więc ta historia jest jedynym śladem w aplikacji, że to się stało; samo powiadomienie można przesunąć i zniknie. Z tego ekranu utworzysz alert dla dowolnej pary bez otwierania formularza wymiany, usuniesz dowolny ikoną kosza, a jednocześnie czekać może do **20**.
 
 Alerty kursowe są **osobiste**: działają na wszystkich Twoich kontach, nikt inny ich nie widzi, a obserwator może je ustawiać tak samo jak każdy. W ustawieniach powiadomień nie ma dla nich osobnego przełącznika — wyłączeniem jest usunięcie alertu.
 
@@ -19710,7 +19718,9 @@ Der Kurs wird stündlich auf unseren Servern geprüft — das funktioniert also 
 
 Jeder Alarm löst **einmal** aus und endet dann, damit ein um die Zielmarke schwankender Kurs nicht immer wieder benachrichtigt. Lege einen neuen Alarm an, wenn du das Paar weiter beobachten willst.
 
-Die Karte zeigt die Alarme des aktuell gewählten Paares — mit den Währungen wechselt also die Liste. Zum Löschen tippe auf das Papierkorb-Symbol. Möglich sind bis zu **20** aktive Alarme gleichzeitig.
+Die Karte zeigt die Alarme des aktuell gewählten Paares — mit den Währungen wechselt also die Liste. Für die vollständige Liste tippe dort auf **Alle anzeigen** oder im Wallet-Bildschirm auf **Kursalarme**.
+
+Dort liegen alle deine Alarme: die noch wartenden und die schon ausgelösten, mit Kurs und Datum der Auslösung. Da ein Alarm nur einmal auslöst, ist diese Historie der einzige Nachweis in der App dafür — die Benachrichtigung selbst lässt sich wegwischen. Von dort aus legst du einen Alarm für jedes Paar an, ohne das Umtausch-Formular zu berühren, löschst jeden mit dem Papierkorb-Symbol, und bis zu **20** dürfen gleichzeitig warten.
 
 Kursalarme sind **persönlich**: sie gelten in allen deinen Konten, niemand sonst sieht sie, und auch ein Betrachter kann sie setzen. In den Benachrichtigungseinstellungen gibt es keinen eigenen Schalter — den Alarm zu löschen ist das Ausschalten.
 
@@ -24255,7 +24265,9 @@ El tipo se comprueba en nuestros servidores una vez por hora, así que funciona 
 
 Cada alerta se dispara **una sola vez** y luego se detiene, para que un tipo que ronda tu objetivo no te avise una y otra vez. Añade una alerta nueva si quieres seguir vigilando ese par.
 
-La tarjeta muestra las alertas del par seleccionado, así que al cambiar de divisas cambia la lista. Toca el icono de la papelera para eliminar una. Puedes mantener hasta **20** alertas activas a la vez.
+La tarjeta muestra las alertas del par seleccionado, así que al cambiar de divisas cambia la lista. Para verlas todas, toca **Ver todo** en ella o **Alertas de tipo de cambio** en la pantalla de Cartera.
+
+Esa pantalla es donde viven todas tus alertas: las que siguen esperando y las que ya se activaron, con el tipo de cambio y la fecha en que lo hicieron. Como una alerta se activa una sola vez, ese historial es el único registro en la aplicación de que ocurrió: la notificación se puede descartar. Desde ahí puedes crear una alerta para cualquier par sin tocar el formulario de cambio, borrar cualquiera con el icono de la papelera y mantener hasta **20** en espera.
 
 Las alertas son **personales**: te acompañan en todas tus cuentas, nadie más las ve y un observador puede crearlas igual que cualquiera. No hay un interruptor aparte en los ajustes de notificaciones: eliminar la alerta es la forma de apagarla.
 
@@ -28665,7 +28677,9 @@ Le taux est vérifié sur nos serveurs une fois par heure : cela fonctionne donc
 
 Chaque alerte se déclenche **une seule fois** puis s'arrête, pour qu'un taux qui oscille autour de votre objectif ne vous prévienne pas en boucle. Créez une nouvelle alerte si vous voulez continuer à suivre la paire.
 
-La carte affiche les alertes de la paire sélectionnée : changer de devises change donc la liste. Appuyez sur l'icône corbeille pour en supprimer une. Vous pouvez conserver jusqu'à **20** alertes actives à la fois.
+La carte affiche les alertes de la paire sélectionnée : changer de devises change donc la liste. Pour la liste complète, appuyez sur **Tout afficher** sur cette carte ou sur **Alertes de taux** dans l'écran Portefeuille.
+
+C'est là que vivent toutes vos alertes : celles qui attendent encore et celles qui se sont déjà déclenchées, avec le taux et la date du déclenchement. Comme une alerte ne se déclenche qu'une fois, cet historique est la seule trace dans l'application — la notification, elle, peut être balayée. Depuis cet écran vous créez une alerte pour n'importe quelle paire sans toucher au formulaire de change, vous en supprimez avec l'icône corbeille, et jusqu'à **20** peuvent attendre en même temps.
 
 Les alertes de taux sont **personnelles** : elles vous suivent dans tous vos comptes, personne d'autre ne les voit, et un observateur peut en créer comme tout le monde. Il n'y a pas d'interrupteur distinct dans les réglages de notifications — supprimer l'alerte, c'est l'éteindre.
 
@@ -33138,7 +33152,9 @@ iOS, Android, Web
 
 Кожнае апавяшчэнне спрацоўвае **адзін раз** і пасля гэтага выключаецца, каб курс, які вагаецца побач з вашай мэтай, не прысылаў паведамленні зноў і зноў. Калі хочаце сачыць далей — стварыце новае.
 
-Картка паказвае апавяшчэнні толькі для выбранай зараз пары, таму пры змене валют мяняецца і спіс. Каб выдаліць апавяшчэнне, націсніце значок кошыка. Адначасова можна трымаць да **20** актыўных апавяшчэнняў.
+Картка паказвае апавяшчэнні толькі для выбранай зараз пары, таму пры змене валют мяняецца і спіс. Поўны спіс адкрываецца кнопкай **Паказаць усе** на гэтай картцы або радком **Апавяшчэнні пра курс** на экране «Кашалёк».
+
+На гэтым экране ёсць усе вашы апавяшчэнні: і тыя, што яшчэ чакаюць, і тыя, што ўжо спрацавалі — з курсам і датай спрацавання. Апавяшчэнне спрацоўвае адзін раз, таму гэта гісторыя — адзіны след у дадатку пра тое, што мэта была дасягнута: само паведамленне можна змахнуць. Адтуль жа можна стварыць апавяшчэнне для любой пары, не адкрываючы форму абмену, выдаліць любое значком кошыка, а чакаць адначасова могуць да **20**.
 
 Апавяшчэнні пра курс **асабістыя**: яны дзейнічаюць на ўсіх вашых рахунках, ніхто іншы іх не бачыць, і назіральнік можа іх ствараць так сама, як астатнія. Асобнага пераключальніка ў наладах паведамленняў няма — выключэнне гэта выдаленне апавяшчэння.
 
@@ -37571,7 +37587,9 @@ De koers wordt eens per uur op onze servers gecontroleerd, dus het werkt ook met
 
 Elk alarm gaat **één keer** af en stopt daarna, zodat een koers die rond je doel blijft hangen je niet steeds opnieuw waarschuwt. Voeg een nieuw alarm toe als je het paar wilt blijven volgen.
 
-De kaart toont de alarmen van het geselecteerde paar, dus met de valuta wisselt ook de lijst. Tik op het prullenbakpictogram om er een te verwijderen. Je kunt maximaal **20** actieve alarmen hebben.
+De kaart toont de alarmen van het geselecteerde paar, dus met de valuta wisselt ook de lijst. Voor de volledige lijst tik je op **Alles weergeven** op die kaart of op **Koersalarmen** in het Portemonnee-scherm.
+
+Daar staan al je alarmen: die nog wachten en die al zijn afgegaan, met de koers en de datum waarop dat gebeurde. Een alarm gaat maar één keer af, dus die geschiedenis is het enige spoor in de app dat het gebeurd is — de melding zelf kun je wegvegen. Vanaf dat scherm maak je een alarm voor elk paar zonder het wisselformulier te openen, verwijder je er een met het prullenbakpictogram, en kunnen er maximaal **20** staan wachten.
 
 Koersalarmen zijn **persoonlijk**: ze gelden in al je accounts, niemand anders ziet ze, en een kijker kan ze net als ieder ander instellen. Er is geen aparte schakelaar in de meldingsinstellingen — het alarm verwijderen is het uitzetten.
 

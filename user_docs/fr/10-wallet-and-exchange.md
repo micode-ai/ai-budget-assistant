@@ -98,7 +98,9 @@ Le taux est vérifié sur nos serveurs une fois par heure : cela fonctionne donc
 
 Chaque alerte se déclenche **une seule fois** puis s'arrête, pour qu'un taux qui oscille autour de votre objectif ne vous prévienne pas en boucle. Créez une nouvelle alerte si vous voulez continuer à suivre la paire.
 
-La carte affiche les alertes de la paire sélectionnée : changer de devises change donc la liste. Appuyez sur l'icône corbeille pour en supprimer une. Vous pouvez conserver jusqu'à **20** alertes actives à la fois.
+La carte affiche les alertes de la paire sélectionnée : changer de devises change donc la liste. Pour la liste complète, appuyez sur **Tout afficher** sur cette carte ou sur **Alertes de taux** dans l'écran Portefeuille.
+
+C'est là que vivent toutes vos alertes : celles qui attendent encore et celles qui se sont déjà déclenchées, avec le taux et la date du déclenchement. Comme une alerte ne se déclenche qu'une fois, cet historique est la seule trace dans l'application — la notification, elle, peut être balayée. Depuis cet écran vous créez une alerte pour n'importe quelle paire sans toucher au formulaire de change, vous en supprimez avec l'icône corbeille, et jusqu'à **20** peuvent attendre en même temps.
 
 Les alertes de taux sont **personnelles** : elles vous suivent dans tous vos comptes, personne d'autre ne les voit, et un observateur peut en créer comme tout le monde. Il n'y a pas d'interrupteur distinct dans les réglages de notifications — supprimer l'alerte, c'est l'éteindre.
 

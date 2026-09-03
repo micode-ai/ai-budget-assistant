@@ -199,24 +199,33 @@ export default function WalletScreen() {
               ))}
             </View>
 
-            {canEdit && (
-              <View style={styles.actions}>
-                <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/set-balance')}>
-                  <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
-                  <Text style={styles.actionButtonText}>{t('wallet.setInitialBalance')}</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/exchange')}>
-                  <Ionicons name="swap-horizontal" size={20} color={theme.colors.primary} />
-                  <Text style={styles.actionButtonText}>{t('exchange.title')}</Text>
-                </TouchableOpacity>
-                {accounts.length > 1 && (
-                  <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/transfer')}>
-                    <Ionicons name="arrow-forward-circle-outline" size={20} color={theme.colors.primary} />
-                    <Text style={styles.actionButtonText}>{t('transfer.title')}</Text>
+            {/* The three write actions are canEdit-gated; the rate-alert entry is
+                NOT — a rate target is personal, like the display currency, and the
+                server sets no ViewerBlockGuard on /rate-watches (ABA-484). */}
+            <View style={styles.actions}>
+              {canEdit && (
+                <>
+                  <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/set-balance')}>
+                    <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
+                    <Text style={styles.actionButtonText}>{t('wallet.setInitialBalance')}</Text>
                   </TouchableOpacity>
-                )}
-              </View>
-            )}
+                  <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/exchange')}>
+                    <Ionicons name="swap-horizontal" size={20} color={theme.colors.primary} />
+                    <Text style={styles.actionButtonText}>{t('exchange.title')}</Text>
+                  </TouchableOpacity>
+                  {accounts.length > 1 && (
+                    <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/transfer')}>
+                      <Ionicons name="arrow-forward-circle-outline" size={20} color={theme.colors.primary} />
+                      <Text style={styles.actionButtonText}>{t('transfer.title')}</Text>
+                    </TouchableOpacity>
+                  )}
+                </>
+              )}
+              <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/rate-alerts')}>
+                <Ionicons name="notifications-outline" size={20} color={theme.colors.primary} />
+                <Text style={styles.actionButtonText}>{t('exchange.rateAlerts')}</Text>
+              </TouchableOpacity>
+            </View>
 
             {exchanges.length > 0 && (
               <View style={styles.section}>

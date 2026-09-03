@@ -98,7 +98,9 @@ The rate is checked on our servers once an hour, so it works with the app closed
 
 Each alert fires **once** and then stops, so a rate hovering around your target can't notify you over and over. Add a new alert if you want to keep watching that pair.
 
-The card shows the alerts for the pair currently selected, so switching currencies switches the list. Tap the bin icon to delete one. You can keep up to **20** active alerts at a time.
+The card shows the alerts for the pair currently selected, so switching currencies switches the list — tap **Show all** on it, or **Rate alerts** on the Wallet screen, for the full list.
+
+That screen is where all your alerts live: the ones still waiting, and the ones that have already fired with the rate and date they fired at. Since an alert only fires once, that history is the only record in the app that it did — the notification itself can be swiped away. You can create an alert for any pair from there without touching the exchange form, delete any of them with the bin icon, and keep up to 20 waiting at a time.
 
 Rate alerts are **personal**: they follow you across all your accounts, nobody else sees them, and a viewer can set them like anyone else. There is no separate switch in notification settings — deleting the alert is how you turn it off.
 

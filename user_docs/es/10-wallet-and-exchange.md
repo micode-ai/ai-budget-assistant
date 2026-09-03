@@ -161,7 +161,9 @@ El tipo se comprueba en nuestros servidores una vez por hora, así que funciona 
 
 Cada alerta se dispara **una sola vez** y luego se detiene, para que un tipo que ronda tu objetivo no te avise una y otra vez. Añade una alerta nueva si quieres seguir vigilando ese par.
 
-La tarjeta muestra las alertas del par seleccionado, así que al cambiar de divisas cambia la lista. Toca el icono de la papelera para eliminar una. Puedes mantener hasta **20** alertas activas a la vez.
+La tarjeta muestra las alertas del par seleccionado, así que al cambiar de divisas cambia la lista. Para verlas todas, toca **Ver todo** en ella o **Alertas de tipo de cambio** en la pantalla de Cartera.
+
+Esa pantalla es donde viven todas tus alertas: las que siguen esperando y las que ya se activaron, con el tipo de cambio y la fecha en que lo hicieron. Como una alerta se activa una sola vez, ese historial es el único registro en la aplicación de que ocurrió: la notificación se puede descartar. Desde ahí puedes crear una alerta para cualquier par sin tocar el formulario de cambio, borrar cualquiera con el icono de la papelera y mantener hasta **20** en espera.
 
 Las alertas son **personales**: te acompañan en todas tus cuentas, nadie más las ve y un observador puede crearlas igual que cualquiera. No hay un interruptor aparte en los ajustes de notificaciones: eliminar la alerta es la forma de apagarla.
 

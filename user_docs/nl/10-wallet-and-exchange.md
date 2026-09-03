@@ -98,7 +98,9 @@ De koers wordt eens per uur op onze servers gecontroleerd, dus het werkt ook met
 
 Elk alarm gaat **één keer** af en stopt daarna, zodat een koers die rond je doel blijft hangen je niet steeds opnieuw waarschuwt. Voeg een nieuw alarm toe als je het paar wilt blijven volgen.
 
-De kaart toont de alarmen van het geselecteerde paar, dus met de valuta wisselt ook de lijst. Tik op het prullenbakpictogram om er een te verwijderen. Je kunt maximaal **20** actieve alarmen hebben.
+De kaart toont de alarmen van het geselecteerde paar, dus met de valuta wisselt ook de lijst. Voor de volledige lijst tik je op **Alles weergeven** op die kaart of op **Koersalarmen** in het Portemonnee-scherm.
+
+Daar staan al je alarmen: die nog wachten en die al zijn afgegaan, met de koers en de datum waarop dat gebeurde. Een alarm gaat maar één keer af, dus die geschiedenis is het enige spoor in de app dat het gebeurd is — de melding zelf kun je wegvegen. Vanaf dat scherm maak je een alarm voor elk paar zonder het wisselformulier te openen, verwijder je er een met het prullenbakpictogram, en kunnen er maximaal **20** staan wachten.
 
 Koersalarmen zijn **persoonlijk**: ze gelden in al je accounts, niemand anders ziet ze, en een kijker kan ze net als ieder ander instellen. Er is geen aparte schakelaar in de meldingsinstellingen — het alarm verwijderen is het uitzetten.
 
