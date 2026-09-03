@@ -135,3 +135,5 @@ Tak, szczególnie jeśli trudno ci wyrobić nawyk. Aplikacja daje natychmiastowy
 - [Jak zarządzać subskrypcjami, zanim cię zdrenują](/blog/pl/jak-zarzadzac-subskrypcjami/)
 - [Jak spłacić długi: kula śnieżna czy lawina](/blog/pl/jak-splacic-dlugi/)
 - [Twoja osobista inflacja: jak ją obliczyć](/blog/pl/osobista-inflacja/)
+- [Twój rok w finansach: co pokazuje podsumowanie](/blog/pl/podsumowanie-roku-finansowego/)
+- [Zapasy przed podwyżką: tarcza antyinflacyjna w budżecie](/blog/pl/tarcza-antyinflacyjna/)

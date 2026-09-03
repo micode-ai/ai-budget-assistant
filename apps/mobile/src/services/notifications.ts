@@ -149,6 +149,15 @@ export function handleNotificationResponse(
     case 'inflation_shield':
       router.push('/inflation-shield' as any);
       break;
+    case 'rate_watch_hit': {
+      const fromCurrency = data.fromCurrency ? String(data.fromCurrency) : undefined;
+      const toCurrency = data.toCurrency ? String(data.toCurrency) : undefined;
+      router.push({
+        pathname: '/wallet/exchange',
+        params: fromCurrency && toCurrency ? { fromCurrency, toCurrency } : {},
+      } as any);
+      break;
+    }
     case 'split_payment_claimed': {
       // The push payload carries only `participantId` (see
       // guest.controller.ts) — no `expenseId` to deep-link with directly.

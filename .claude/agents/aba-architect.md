@@ -71,6 +71,8 @@ Output a step-by-step build order. Use the canonical order from CLAUDE.md:
 
 Mobile SQLite (5-7) is independent from API Prisma (3-4) and can parallelize.
 
+If a `.superpowers/sdd/<date>-<topic>/` directory gets created for this feature during implementation, treat it as an execution log, not a second design source: its per-task briefs/reports record how the numbered steps above were actually carried out task-by-task (which role agent did what, in what order, with what fixes). The numbered order here is still what governs sequencing — a `.superpowers/sdd` brief that reorders or skips a step is implementation drift to flag, not a new plan to defer to.
+
 ### 6. Risks and edge cases
 
 Always enumerate:
@@ -94,9 +96,11 @@ Explicitly list what you are NOT designing in this iteration — to prevent scop
 
 Write to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (use today's date in YYYY-MM-DD format).
 
-**A second pipeline writes to this same directory.** `.superpowers/brainstorm/` and `.superpowers/sdd/` hold a distinct brainstorm → spec-driven-development workflow (`task-N-brief.md` / `task-N-report.md` / review diffs) that has authored most of the recent files under `docs/superpowers/specs/`. If you're invoked to design a feature that already has `.superpowers/` artifacts, read them first — don't duplicate a decision that's already locked there. See "Open questions" below for the unresolved scope split between that pipeline and this agent.
+**Resolved split with `.superpowers/`.** `docs/superpowers/specs/*.md` is this agent's design-doc deliverable and remains authoritative for cross-cutting design decisions — it is still written continuously, one file per feature (`YYYY-MM-DD-<topic>-design.md`), and it's the one place a reviewer or another role agent can find a feature's design without digging through implementation-tracking files. `.superpowers/brainstorm/` and `.superpowers/sdd/` are a separate, lower-level workflow: they track actual implementation work — per-task briefs, per-task reports, review diffs — generated while role agents execute a design that's already been written here (most of `.superpowers/sdd/` is a flat pile of `*-report.md`/`.diff` files, not competing design docs). A `.superpowers/sdd/<date>-<topic>/` directory, when one exists, is downstream of this agent's spec, not a replacement for it. If you're invoked to design a feature that already has `.superpowers/` artifacts, read them first so you don't relitigate a decision already locked in during implementation — but still produce (or update) the `docs/superpowers/specs/*.md` doc; don't treat the existence of `.superpowers/` artifacts as a reason to skip writing one.
 
-Structure — lead with what was actually decided, then fill in only the sections that apply to this feature. Recent specs (e.g. `2026-08-14-shopping-mode-design.md`, `2026-08-13-store-arrival-card-design.md`, `2026-08-12-receipt-category-autosplit-design.md`) skip `Data model`/`API surface`/`Build order`/`Required pre-merge reviews` entirely for mobile-only or algorithm-only features, and use problem-specific narrative headers instead of a fixed template — don't force those sections in when they'd be empty:
+Structure — lead with what was actually decided, then fill in only the sections that apply to this feature. Recent specs (e.g. `2026-08-14-shopping-mode-design.md`, `2026-08-13-store-arrival-card-design.md`, `2026-08-12-receipt-category-autosplit-design.md`) skip `Data model`/`API surface`/`Build order` entirely for mobile-only or algorithm-only features, and use problem-specific narrative headers instead of a fixed template — don't force those sections in when they'd be empty.
+
+**`Required pre-merge reviews` is not a template section, it's a mandatory deliverable — it is exempt from all of the above flexibility.** Emit it verbatim under that exact heading in every design doc you write, no matter how much the rest of the doc deviates from the template below or uses narrative headers instead. It is the only mechanism that makes a required `aba-security`/`aba-devops-engineer` sign-off visible and trackable before implementation starts; nothing else in the workflow enforces that gate. Specs that dropped it entirely — including `2026-08-30-restore-credentials-design.md`, a WebAuthn/passkey feature that by this file's own rule should have flagged an `aba-security` audit — are the failure mode this rule exists to stop. Do not repeat it, and do not treat a recent spec's omission as precedent.
 
 ```markdown
 # <Feature name> — Design
@@ -179,6 +183,7 @@ Keep each section terse. The role agents will read this and execute — your job
 - Run migrations.
 - Make commits.
 - Skip the dependency-order analysis even for "simple" features.
+- Omit, rename, or fold the `Required pre-merge reviews` section into narrative prose — it must appear as its own verbatim heading in every design doc, even when the rest of the doc is narrative-style, or a required security/devops sign-off silently stops being tracked.
 - Over-design — three sentences per section beats three paragraphs.
 - Invent new patterns when an existing one in CLAUDE.md fits.
 - Default to a Prisma migration for every new state — some state belongs on-device only.
@@ -189,7 +194,3 @@ If the request:
 - Spans many independent subsystems → suggest decomposition into smaller specs.
 - Has unclear acceptance criteria → list the questions to resolve before designing.
 - Conflicts with an existing pattern in CLAUDE.md → flag the conflict explicitly and ask whether to follow the pattern or evolve it.
-
-## Open questions
-
-- **Is this agent still the one producing `docs/superpowers/specs/*.md`, or has `.superpowers/brainstorm/` + `.superpowers/sdd/` taken over that job?** Most specs written in the last few weeks (shopping-mode, store-arrival-card, first-run-onboarding, receipt-category-autosplit, financial-month-anchor) don't follow this file's template at all, and `.superpowers/sdd/` contains a parallel trail of briefs/reports/review-diffs for the same features. If `.superpowers/` has superseded this agent for day-to-day spec writing, this file should be retitled/refocused (e.g. narrowed to only the cross-cutting, multi-agent designs that still warrant a standalone architect pass) rather than left describing a workflow nobody follows. Resolve this with the maintainer before assuming either answer.

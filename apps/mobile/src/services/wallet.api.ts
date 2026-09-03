@@ -1,4 +1,4 @@
-import type { WalletBalance, CurrencyExchange } from '@budget/shared-types';
+import type { WalletBalance, CurrencyExchange, ExchangeRateWatch } from '@budget/shared-types';
 import type {
   CreateWalletBalanceDto,
   CreateCurrencyExchangeDto,
@@ -8,6 +8,7 @@ import type {
   WalletMonthlyHistoryResponse,
   ExchangeRatesResponse,
   DebtSummaryResponse,
+  CreateExchangeRateWatchDto,
 } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
@@ -76,5 +77,20 @@ export const walletApi = {
 
   getDebtSummary() {
     return httpClient.request<DebtSummaryResponse>('/debts/summary');
+  },
+
+  getRateWatches() {
+    return httpClient.request<ExchangeRateWatch[]>('/rate-watches');
+  },
+
+  createRateWatch(data: CreateExchangeRateWatchDto) {
+    return httpClient.request<ExchangeRateWatch>('/rate-watches', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  },
+
+  deleteRateWatch(id: string) {
+    return httpClient.request<void>(`/rate-watches/${id}`, { method: 'DELETE' });
   },
 };

@@ -123,3 +123,5 @@ For most people, yes. Seeing the gap between what you planned to save and what y
 - [How to Track Subscriptions Before They Drain You](/blog/en/track-subscriptions/)
 - [How to Pay Off Debt: Snowball vs Avalanche](/blog/en/pay-off-debt/)
 - [Your Personal Inflation Rate: How to Calculate It](/blog/en/personal-inflation-rate/)
+- [Your Financial Year, Wrapped: What It Reveals](/blog/en/financial-wrapped-year-in-review/)
+- [Stock Up Before Prices Rise: an Inflation Shield](/blog/en/inflation-shield-stock-up/)

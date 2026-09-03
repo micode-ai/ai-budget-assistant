@@ -123,3 +123,5 @@ date: "2026-06-19"
 - [Як керувати підписками, поки вони вас не спустошили](/blog/ua/yak-keruvaty-pidpyskamy/)
 - [Як погасити борги: снігова куля чи лавина](/blog/ua/yak-pohasyty-borhy/)
 - [Особиста інфляція: як порахувати свій показник](/blog/ua/osobysta-inflyatsiya/)
+- [Фінансові підсумки року: що вони показують](/blog/ua/finansovi-pidsumky-roku/)
+- [Запас про запас до подорожчання: щит від інфляції](/blog/ua/shchyt-vid-infliatsii/)

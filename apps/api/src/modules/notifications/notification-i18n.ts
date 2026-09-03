@@ -132,6 +132,12 @@ interface SplitPaymentClaimedBodyParams {
   currencyCode: string;
 }
 
+interface RateWatchHitParams {
+  fromCurrency: string;
+  toCurrency: string;
+  rate: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -199,6 +205,8 @@ const translations: Record<string, {
   accountInvitationBody: (p: AccountInvitationBodyParams) => string;
   splitPaymentClaimedTitle: (p: SplitPaymentClaimedTitleParams) => string;
   splitPaymentClaimedBody: (p: SplitPaymentClaimedBodyParams) => string;
+  rateWatchHitTitle: (p: Pick<RateWatchHitParams, 'fromCurrency' | 'toCurrency'>) => string;
+  rateWatchHitBody: (p: RateWatchHitParams) => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -291,6 +299,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Join "${accountName}" — tap to accept or decline.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} says they paid`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirm the ${amount} ${currencyCode} payment in the app.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `${fromCurrency}/${toCurrency} target reached`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} is now ${rate} ${toCurrency}. Tap to exchange.`,
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -383,6 +393,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Присоединяйтесь к «${accountName}» — нажмите, чтобы принять или отклонить.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} говорит, что оплатил(а)`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Подтвердите платёж ${amount} ${currencyCode} в приложении.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Цель по курсу ${fromCurrency}/${toCurrency} достигнута`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} теперь ${rate} ${toCurrency}. Нажмите, чтобы обменять.`,
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -475,6 +487,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Приєднайтесь до «${accountName}» — торкніться, щоб прийняти або відхилити.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} каже, що оплатив(ла)`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Підтвердьте платіж ${amount} ${currencyCode} у застосунку.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Ціль за курсом ${fromCurrency}/${toCurrency} досягнута`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} тепер ${rate} ${toCurrency}. Натисніть, щоб обміняти.`,
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -567,6 +581,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Dołącz do "${accountName}" — dotknij, aby zaakceptować lub odrzucić.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} mówi, że zapłacił(a)`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Potwierdź płatność ${amount} ${currencyCode} w aplikacji.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Cel kursu ${fromCurrency}/${toCurrency} osiągnięty`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} to teraz ${rate} ${toCurrency}. Dotknij, aby wymienić.`,
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -659,6 +675,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Únete a "${accountName}" — toca para aceptar o rechazar.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} dice que pagó`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirma el pago de ${amount} ${currencyCode} en la app.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Objetivo de ${fromCurrency}/${toCurrency} alcanzado`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} ahora es ${rate} ${toCurrency}. Toca para cambiar.`,
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -751,6 +769,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Rejoignez "${accountName}" — appuyez pour accepter ou refuser.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} dit avoir payé`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirmez le paiement de ${amount} ${currencyCode} dans l'application.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Objectif de taux ${fromCurrency}/${toCurrency} atteint`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} vaut maintenant ${rate} ${toCurrency}. Touchez pour échanger.`,
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -843,6 +863,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Tritt "${accountName}" bei — tippen zum Annehmen oder Ablehnen.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} gibt an, bezahlt zu haben`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Bestätige die Zahlung von ${amount} ${currencyCode} in der App.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Kursziel ${fromCurrency}/${toCurrency} erreicht`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} entspricht jetzt ${rate} ${toCurrency}. Zum Umtauschen tippen.`,
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -935,6 +957,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Далучайцеся да «${accountName}» — націсніце, каб прыняць ці адхіліць.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} кажа, што заплаціў(ла)`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Пацвердзіце плацёж ${amount} ${currencyCode} у дадатку.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Мэта курсу ${fromCurrency}/${toCurrency} дасягнута`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} цяпер ${rate} ${toCurrency}. Націсніце, каб абмяняць.`,
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -1027,6 +1051,8 @@ const translations: Record<string, {
     accountInvitationBody: ({ accountName }) => `Word lid van "${accountName}" — tik om te accepteren of te weigeren.`,
     splitPaymentClaimedTitle: ({ name }) => `${name} geeft aan te hebben betaald`,
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Bevestig de betaling van ${amount} ${currencyCode} in de app.`,
+    rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Koersdoel ${fromCurrency}/${toCurrency} bereikt`,
+    rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} is nu ${rate} ${toCurrency}. Tik om te wisselen.`,
   },
 };
 
@@ -1270,4 +1296,12 @@ export function budgetCategoryExceededTitle(lang: Lang, params: BudgetCategoryTh
 
 export function budgetCategoryExceededBody(lang: Lang, params: BudgetCategoryThresholdParams): string {
   return t(lang).budgetCategoryExceededBody(params);
+}
+
+export function rateWatchHitTitle(lang: Lang, params: Pick<RateWatchHitParams, 'fromCurrency' | 'toCurrency'>): string {
+  return t(lang).rateWatchHitTitle(params);
+}
+
+export function rateWatchHitBody(lang: Lang, params: RateWatchHitParams): string {
+  return t(lang).rateWatchHitBody(params);
 }

@@ -17,6 +17,7 @@ import { AnalyticsModule } from './modules/analytics/analytics.module';
 import { AppVersionsModule } from './modules/app-versions/app-versions.module';
 import { WalletModule } from './modules/wallet/wallet.module';
 import { CurrencyExchangeModule } from './modules/currency-exchange/currency-exchange.module';
+import { ExchangeRateAlertsModule } from './modules/exchange-rate-alerts/exchange-rate-alerts.module';
 import { DatabaseModule } from './database/database.module';
 import { MailModule } from './modules/mail/mail.module';
 import { TelegramModule } from './modules/telegram/telegram.module';
@@ -102,6 +103,7 @@ import { RestoreCredentialsModule } from './modules/restore-credentials/restore-
     AppVersionsModule,
     WalletModule,
     CurrencyExchangeModule,
+    ExchangeRateAlertsModule,
     InsightsModule,
     SubscriptionsModule,
     AdminModule,

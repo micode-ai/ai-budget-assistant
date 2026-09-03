@@ -119,3 +119,5 @@ date: "2026-06-19"
 - [Как управлять подписками, пока они вас не обескровили](/blog/ru/kak-upravlyat-podpiskami/)
 - [Как погасить долги: метод снежного кома или лавины](/blog/ru/kak-pogasit-dolgi/)
 - [Личная инфляция: как её посчитать](/blog/ru/lichnaya-inflyatsiya/)
+- [Финансовые итоги года: что они показывают](/blog/ru/finansovye-itogi-goda/)
+- [Запас впрок до подорожания: щит от инфляции](/blog/ru/shchit-ot-inflyatsii/)

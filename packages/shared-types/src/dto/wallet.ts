@@ -1,4 +1,4 @@
-import type { Currency } from '../entities';
+import type { Currency, RateWatchDirection, ExchangeRateWatch } from '../entities';
 
 export interface CreateWalletBalanceDto {
   localId: string;
@@ -147,3 +147,12 @@ export interface WalletMonthlyHistoryResponse {
   months: WalletMonthlyDeltaPoint[];
   currencies: string[];
 }
+
+export interface CreateExchangeRateWatchDto {
+  fromCurrency: Currency;
+  toCurrency: Currency;
+  targetRate: number;
+  direction: RateWatchDirection;
+}
+
+export type ExchangeRateWatchResponse = ExchangeRateWatch;

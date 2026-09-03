@@ -123,3 +123,5 @@ Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas 
 - [Cómo gestionar suscripciones antes de que te vacíen](/blog/es/como-gestionar-suscripciones/)
 - [Cómo pagar deudas: método bola de nieve o avalancha](/blog/es/como-pagar-deudas/)
 - [Tu inflación personal: cómo calcularla](/blog/es/inflacion-personal/)
+- [Tu año financiero, resumido: qué revela](/blog/es/resumen-del-ano-financiero/)
+- [Haz acopio antes de que suban los precios: tu escudo antiinflación](/blog/es/escudo-antiinflacion/)

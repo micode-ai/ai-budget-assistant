@@ -3,7 +3,7 @@ import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useState, useEffect } from 'react';
-import { router, Stack } from 'expo-router';
+import { router, Stack, useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
@@ -11,17 +11,29 @@ import { api } from '@/services/api';
 import type { Currency } from '@budget/shared-types';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { RateAlertsSection } from '@/components/wallet/RateAlertsSection';
 
 const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+
+function isCurrency(value: unknown): value is Currency {
+  return typeof value === 'string' && (CURRENCIES as string[]).includes(value);
+}
 
 export default function ExchangeScreen() {
   const { t } = useTranslation();
   const { addExchange } = useWalletStore();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  // Populated when this screen was opened from a rate_watch_hit push deep-link
+  // (see src/services/notifications.ts) so the pair the alert fired for is prefilled.
+  const params = useLocalSearchParams<{ fromCurrency?: string; toCurrency?: string }>();
 
-  const [fromCurrency, setFromCurrency] = useState<Currency>('USD');
-  const [toCurrency, setToCurrency] = useState<Currency>('EUR');
+  const [fromCurrency, setFromCurrency] = useState<Currency>(
+    isCurrency(params.fromCurrency) ? params.fromCurrency : 'USD',
+  );
+  const [toCurrency, setToCurrency] = useState<Currency>(
+    isCurrency(params.toCurrency) ? params.toCurrency : 'EUR',
+  );
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
   const [exchangeRate, setExchangeRate] = useState('');
@@ -212,6 +224,14 @@ export default function ExchangeScreen() {
             <Text style={styles.rateLabel}>{toCurrency}</Text>
           </View>
         </View>
+
+        {fromCurrency !== toCurrency && (
+          <RateAlertsSection
+            fromCurrency={fromCurrency}
+            toCurrency={toCurrency}
+            currentRate={parseAmount(exchangeRate) > 0 ? parseAmount(exchangeRate) : undefined}
+          />
+        )}
 
         <View style={styles.card}>
           <Text style={styles.label}>{t('exchange.notes')}</Text>

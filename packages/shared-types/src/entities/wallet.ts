@@ -1,4 +1,4 @@
-import type { Currency, SyncStatus } from './primitives';
+import type { Currency, SyncStatus, RateWatchDirection } from './primitives';
 
 export interface WalletBalance {
   id: string;
@@ -61,6 +61,24 @@ export interface AccountTransfer {
   isDeleted: boolean;
   syncStatus: SyncStatus;
   syncVersion: number;
+}
+
+/**
+ * A user's personal "notify me when this pair hits my target" alert. No `accountId` —
+ * a rate target isn't shared-account data. Server-only, no offline SQLite mirror
+ * (cheap to refetch, not synced).
+ */
+export interface ExchangeRateWatch {
+  id: string;
+  userId: string;
+  fromCurrency: Currency;
+  toCurrency: Currency;
+  targetRate: number;
+  direction: RateWatchDirection;
+  isActive: boolean;
+  createdAt: Date;
+  triggeredAt?: Date | null;
+  triggeredRate?: number | null;
 }
 
 export interface WalletSummary {

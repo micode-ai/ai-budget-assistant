@@ -125,3 +125,5 @@ date: "2026-06-19"
 - [Як кіраваць падпіскамі, пакуль яны не апустошылі вас](/blog/be/yak-kiravac-padpiskami/)
 - [Як пагасіць даўгі: метад снежнага кома супраць лавіны](/blog/be/yak-pagasic-dougi/)
 - [Асабістая інфляцыя: як яе разлічыць](/blog/be/asabistaya-inflyatsyya/)
+- [Фінансавыя вынікі году: што яны паказваюць](/blog/be/finansavyya-vyniki-goda/)
+- [Запас угодных да падаражэння: шчыт ад інфляцыі](/blog/be/shchyt-ad-infliatsyi/)
