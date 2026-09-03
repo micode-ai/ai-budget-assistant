@@ -664,13 +664,13 @@ C = {
    "footer": "AI Budget Assistant - app de finanzas todo en uno con asistente de IA.", "rights": "Todos los derechos reservados.",
  },
  "fr": {
-   "title": "AI Budget Assistant - suivi des dépenses avec IA",
-   "desc": "Appli de suivi des dépenses avec IA : ajoutez des dépenses à la voix ou par photo de reçu, gérez budgets et épargne, en famille. Gratuit.",
+   "title": "AI Budget Assistant - appli de budget et suivi des dépenses",
+   "desc": "Appli de budget et de suivi des dépenses avec IA : ajoutez des dépenses à la voix ou par photo de reçu, gérez budgets et épargne, en famille. Gratuit.",
    "nav_blog": "Blog", "nav_login": "Se connecter",
-   "hero_h1": "Suivi des dépenses avec un assistant IA",
+   "hero_h1": "Appli de budget et suivi des dépenses avec IA",
    "hero_sub": "Dépenses, budgets, objectifs d'épargne et finances familiales partagées dans une appli. L'IA fait le travail ennuyeux. Commencez gratuitement.",
    "cta_primary": "Ouvrir l'appli", "cta_secondary": "Télécharger sur Google Play",
-   "intro_title": "Suivez vos dépenses sans tableur",
+   "intro_title": "Gérez votre budget sans tableur",
    "intro": "AI Budget Assistant est une appli de gestion de budget qui réunit dépenses, budgets, objectifs d'épargne, dettes et import bancaire au même endroit. Au lieu de saisir chaque reçu, vous ajoutez une dépense à la voix ou par photo, et l'IA répond à vos questions sur vos finances en langage courant. Gérez votre budget seul ou en famille, en temps réel, sur mobile, tablette et web.",
    "features_title": "Tout dans une seule appli", "features_hint": "Touchez une fonction pour la voir dans l'appli", "see": "Voir dans l'appli",
    "features": [
