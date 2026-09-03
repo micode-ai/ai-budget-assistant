@@ -8,6 +8,59 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.23.0 - 2026-09-03
+
+**Fixing what the receipt scanner got wrong**
+
+- **Scanned lines are editable before you save.** Correct a price the scanner
+  misread, rename a line, delete one it invented, or add one it missed — every
+  line is now shown (no more "+N more items" cut-off), each row opens in place,
+  and the category split is recalculated from your corrections. Until now the
+  only way to fix a wrong line was to save the expense and re-enter it by hand
+  (ABA-481).
+- **The same corrections work in the bots.** In Telegram, WhatsApp and Slack tap
+  **Items** and send corrections as text, one per message — the price of a line,
+  a rename, a deletion, a new line, or the receipt total. Before this, a
+  bot-scanned receipt saved whatever the model read and only the date could be
+  changed (ABA-482).
+- **Scanning a stack of receipts.** A counter shows how many you have scanned in
+  this session, with a brief note every fifteen. It never blocks anything
+  (ABA-480).
+
+**Currency rate alerts**
+
+- **"Tell me when EUR/PLN hits 4.35".** Set a target for a currency pair on the
+  Exchange screen and get a notification when the live rate reaches it. The rate
+  is checked hourly on the server, so it works with the app closed; each alert
+  fires once and then stops, you can keep up to twenty, and they are personal to
+  you — nobody else in a shared account sees them (ABA-474). Triggered alerts are
+  cleaned out of the history automatically (ABA-476).
+
+**Transfers between accounts**
+
+- **Correcting which account the money went to now works.** Opening a transfer
+  from the receiving account and pointing it somewhere else used to be refused by
+  the server, and the app said nothing — the edit looked saved and then quietly
+  reverted on the next refresh, with the money never arriving. It now applies,
+  and the linked income moves with it (ABA-472).
+- **Shared accounts see each other's transfers.** A transfer touching a shared
+  account is now listed for every member, whoever recorded it — the account's
+  balance always counted it, so the list and the balance no longer disagree. Any
+  member who could have made the transfer can also correct or delete it (ABA-473).
+- **Recording, editing and deleting a transfer works offline** and is sent when
+  you are back online. A change the server refuses is reported instead of being
+  silently rolled back on the next refresh (ABA-473).
+
+**Under the hood**
+
+Work with no visible change, listed for completeness: documentation for the rate
+alerts plus corrections to the account-transfer API reference (ABA-475), three
+oversized screens split into focused modules — the new-expense form (ABA-477),
+the products screen (ABA-478) and the transfer-detail screen (ABA-479) — and two
+new articles on the marketing site.
+
+---
+
 ## 1.22.0 - 2026-09-01
 
 **Splitting a bill with the people standing next to you**
