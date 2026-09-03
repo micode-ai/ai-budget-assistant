@@ -15,3 +15,14 @@ export function captureAcquisition(): void {}
 export function getAcquisition(): Acquisition | undefined {
   return undefined;
 }
+
+/**
+ * Native no-op, for the same reason as `captureAcquisition`: an install carries
+ * no query string. A referral code reaches a native signup only by the user
+ * typing the code printed in the share message.
+ */
+export function captureReferralCode(): void {}
+
+export function getReferralCode(): string | undefined {
+  return undefined;
+}

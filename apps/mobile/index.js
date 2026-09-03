@@ -24,7 +24,11 @@ if (Platform.OS === 'android') {
 // query string to read. Wrapped because attribution is optional by design and must never
 // be the reason the app fails to start.
 try {
-  require('./src/services/attribution').captureAcquisition();
+  const attribution = require('./src/services/attribution');
+  attribution.captureAcquisition();
+  // Same first-load constraint, same reason it cannot live in a screen: a
+  // referral link (`?ref=`) is read here or not at all.
+  attribution.captureReferralCode();
 } catch (e) {
   console.warn('[Attribution] capture skipped:', e);
 }

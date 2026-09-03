@@ -35,3 +35,24 @@ export function parseAcquisition(search: string): Acquisition | undefined {
   }
   return found ? out : undefined;
 }
+
+/** Referral codes are 6 chars from a no-0/O/1/I/L alphabet, but the bound is
+ * deliberately loose: the server is the authority on what a valid code is, and
+ * a client regex that is stricter than the server would silently drop a code
+ * the server would have honoured. This only has to stop a hostile query string
+ * from reaching a text input. */
+const REFERRAL_CODE = /^[A-Za-z0-9]{4,12}$/;
+
+/** Pure: pull `?ref=` out of a query string, normalised the way the register
+ * screen stores it (uppercase). Returns undefined when absent or implausible. */
+export function parseReferralCode(search: string): string | undefined {
+  let params: URLSearchParams;
+  try {
+    params = new URLSearchParams(search || '');
+  } catch {
+    return undefined;
+  }
+  const raw = params.get('ref');
+  if (!raw || !REFERRAL_CODE.test(raw)) return undefined;
+  return raw.toUpperCase();
+}

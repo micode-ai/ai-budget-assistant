@@ -15,12 +15,12 @@ Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op h
 1. Ga naar **Instellingen** → **Vrienden uitnodigen**
 2. Je code wordt boven aan het scherm weergegeven
 3. Gebruik **Kopiëren** om de code naar je klembord te kopiëren
-4. Gebruik **Delen** om hem via een willekeurige berichtenapp te versturen
+4. Gebruik **Delen** om hem via een willekeurige berichtenapp te versturen — het bericht bevat al een link, en bij wie hem opent wordt jouw code automatisch ingevuld
 
 ## Hoe het werkt
 
 1. **Deel je code** — stuur deze naar vrienden via een messenger of sociale media
-2. **Vriend registreert** — ze voeren jouw code in tijdens de registratie (optioneel veld)
+2. **Vriend registreert** — via jouw link staat de code er al; met de hand is het een optioneel veld
 3. **Wachtperiode van 7 dagen** — de verwijzing blijft in de status "In behandeling"
 4. **Vriend gebruikt de app** — ze moeten de app binnen 7 dagen actief gebruiken (openen en uitgaven toevoegen)
 5. **Verwijzing wordt Actief** — je ontvangt **+30 AI-verzoeken** als bonus

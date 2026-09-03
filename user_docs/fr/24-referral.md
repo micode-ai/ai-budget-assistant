@@ -15,12 +15,12 @@ Chaque utilisateur possède un code de parrainage unique de 6 caractères. Vous 
 1. Allez dans **Paramètres** → **Inviter des amis**
 2. Votre code est affiché en haut de l'écran
 3. Appuyez sur **Copier** pour copier le code
-4. Appuyez sur **Partager** pour l'envoyer via une application de messagerie
+4. Appuyez sur **Partager** pour l'envoyer via une application de messagerie — le message contient déjà un lien, et votre code est pré-rempli pour la personne qui l'ouvre
 
 ## Comment ça marche
 
 1. **Partagez votre code** — envoyez-le à vos amis par messagerie ou réseaux sociaux
-2. **L'ami s'inscrit** — il saisit votre code lors de l'inscription (champ facultatif)
+2. **L'ami s'inscrit** — depuis votre lien le code est déjà rempli ; saisi à la main, c'est un champ facultatif
 3. **Période d'attente de 7 jours** — le parrainage reste en statut « En attente »
 4. **L'ami utilise l'application** — il doit utiliser activement l'appli (l'ouvrir et ajouter des dépenses) pendant 7 jours
 5. **Le parrainage devient Actif** — vous recevez **+30 requêtes AI** en bonus

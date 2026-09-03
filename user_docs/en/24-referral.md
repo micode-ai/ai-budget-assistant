@@ -15,12 +15,12 @@ Every user has a unique 6-character referral code. You can find it on the **Invi
 1. Go to **Settings** → **Invite Friends**
 2. Your code is displayed at the top of the screen
 3. Use **Copy** to copy the code to your clipboard
-4. Use **Share** to send it via any messaging app
+4. Use **Share** to send it via any messaging app — the message already contains a link, and a friend who opens it has your code filled in for them
 
 ## How It Works
 
 1. **Share your code** — send it to friends via any messenger or social media
-2. **Friend registers** — they enter your code during registration (optional field)
+2. **Friend registers** — from your link the code is already in place; typed by hand it is an optional field
 3. **7-day waiting period** — the referral stays in "Pending" status
 4. **Friend uses the app** — they must actively use the app (open it and add expenses) within 7 days
 5. **Referral becomes Active** — you receive **+30 AI requests** as a bonus

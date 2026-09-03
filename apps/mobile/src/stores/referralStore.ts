@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { api } from '../services/api';
 import { Share } from 'react-native';
 import * as Clipboard from 'expo-clipboard';
+import i18n from '@/i18n';
+import { buildReferralShareMessage } from '@/features/referral/referralLink';
 import type { ReferralStatsDto, ReferralListItemDto } from '@budget/shared-types';
 
 interface ReferralState {
@@ -62,7 +64,7 @@ export const useReferralStore = create<ReferralState>()((set, get) => ({
     if (!code) return;
     try {
       await Share.share({
-        message: `Join AI Budget Assistant with my referral code: ${code}. You'll get an extended 14-day trial!`,
+        message: buildReferralShareMessage(code, i18n.t('referral.shareText', { code })),
       });
     } catch {
       // User cancelled share

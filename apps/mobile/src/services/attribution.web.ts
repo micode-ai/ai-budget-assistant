@@ -1,8 +1,14 @@
-import { ACQUISITION_KEYS, parseAcquisition, type Acquisition } from './attribution.types';
+import {
+  ACQUISITION_KEYS,
+  parseAcquisition,
+  parseReferralCode,
+  type Acquisition,
+} from './attribution.types';
 
 export type { Acquisition } from './attribution.types';
 
 const KEY = 'acquisition';
+const REFERRAL_KEY = 'referralCode';
 
 /**
  * Browser acquisition capture.
@@ -47,6 +53,42 @@ export function getAcquisition(): Acquisition | undefined {
       }
     }
     return found ? clean : undefined;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * Capture a referral code arriving as `?ref=` on a shared link.
+ *
+ * Kept beside acquisition capture rather than in its own module because it has
+ * the same one hard requirement: it must read the query string on FIRST load,
+ * before expo-router takes over the URL. Both are therefore called from the
+ * real entry point, and one call site is easier to keep correct than two.
+ *
+ * Stored separately from `Acquisition` on purpose — a referral code is not an
+ * acquisition column, it is an argument to registration, and mixing it in would
+ * put it on a path towards `acquisition*` DB fields where it does not belong.
+ *
+ * First touch wins, matching acquisition: if a visitor arrives on one friend's
+ * link and later on another's, the first friend keeps the credit.
+ */
+export function captureReferralCode(): void {
+  try {
+    const found = parseReferralCode(window.location.search);
+    if (!found) return;
+    if (window.localStorage.getItem(REFERRAL_KEY)) return;
+    window.localStorage.setItem(REFERRAL_KEY, found);
+  } catch {
+    /* private mode, storage disabled, no window - a referral must never break signup */
+  }
+}
+
+export function getReferralCode(): string | undefined {
+  try {
+    const raw = window.localStorage.getItem(REFERRAL_KEY);
+    // Re-checked on read: the value round-trips through storage a user can edit.
+    return raw && /^[A-Z0-9]{4,12}$/.test(raw) ? raw : undefined;
   } catch {
     return undefined;
   }

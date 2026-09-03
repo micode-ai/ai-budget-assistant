@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getLegalUrls } from '@/constants/legal';
+import { getReferralCode } from '@/services/attribution';
 
 const API_ERROR_MAP: Record<string, string> = {
   'User with this email already exists': 'errors.emailAlreadyExists',
@@ -50,7 +51,9 @@ export default function RegisterScreen() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [currencyCode, setCurrencyCode] = useState('USD');
   const [language, setLanguage] = useState(i18n.language);
-  const [referralCode, setReferralCode] = useState('');
+  // Pre-filled from a `?ref=` link on web; empty on native, where an install
+  // carries no query string and the code has to be typed from the message.
+  const [referralCode, setReferralCode] = useState(() => getReferralCode() ?? '');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);

@@ -3461,12 +3461,12 @@ Every user has a unique 6-character referral code. You can find it on the **Invi
 1. Go to **Settings** → **Invite Friends**
 2. Your code is displayed at the top of the screen
 3. Use **Copy** to copy the code to your clipboard
-4. Use **Share** to send it via any messaging app
+4. Use **Share** to send it via any messaging app — the message already contains a link, and a friend who opens it has your code filled in for them
 
 ## How It Works
 
 1. **Share your code** — send it to friends via any messenger or social media
-2. **Friend registers** — they enter your code during registration (optional field)
+2. **Friend registers** — from your link the code is already in place; typed by hand it is an optional field
 3. **7-day waiting period** — the referral stays in "Pending" status
 4. **Friend uses the app** — they must actively use the app (open it and add expenses) within 7 days
 5. **Referral becomes Active** — you receive **+30 AI requests** as a bonus
@@ -8025,12 +8025,12 @@ OCR иногда неверно читает цену, выдумывает ст
 1. Перейдите в **Настройки** → **Пригласить друзей**
 2. Ваш код отображается вверху экрана
 3. Нажмите **Скопировать**, чтобы скопировать код в буфер обмена
-4. Нажмите **Поделиться**, чтобы отправить его через любой мессенджер
+4. Нажмите **Поделиться**, чтобы отправить его через любой мессенджер — в сообщении уже есть ссылка, и у того, кто её откроет, ваш код подставится сам
 
 ## Как это работает
 
 1. **Поделитесь кодом** — отправьте его друзьям через мессенджер или соцсети
-2. **Друг регистрируется** — вводит ваш код при регистрации (необязательное поле)
+2. **Друг регистрируется** — по вашей ссылке код уже подставлен; вручную это необязательное поле
 3. **7-дневный период ожидания** — реферал остаётся в статусе «Ожидает»
 4. **Друг пользуется приложением** — он должен активно использовать приложение (открывать его и добавлять расходы) в течение 7 дней
 5. **Реферал становится Активным** — вы получаете **+30 AI запросов** в качестве бонуса
@@ -12561,12 +12561,12 @@ OCR іноді неправильно читає ціну, вигадує ряд
 1. Перейдіть до **Налаштування** → **Запросити друзів**
 2. Ваш код відображається вгорі екрана
 3. Натисніть **Скопіювати**, щоб скопіювати код у буфер обміну
-4. Натисніть **Поділитися**, щоб надіслати через будь-який месенджер
+4. Натисніть **Поділитися**, щоб надіслати через будь-який месенджер — у повідомленні вже є посилання, і в того, хто його відкриє, ваш код підставиться сам
 
 ## Як це працює
 
 1. **Поділіться кодом** — надішліть його друзям через месенджер або соцмережі
-2. **Друг реєструється** — вводить ваш код при реєстрації (необов'язкове поле)
+2. **Друг реєструється** — за вашим посиланням код уже підставлено; вручну це необовʼязкове поле
 3. **7-денний період очікування** — реферал залишається у статусі «Очікує»
 4. **Друг користується додатком** — він повинен активно використовувати додаток (відкривати його та додавати витрати) протягом 7 днів
 5. **Реферал стає Активним** — ви отримуєте **+30 AI запитів** як бонус
@@ -17066,12 +17066,12 @@ Każdy użytkownik ma unikalny 6-znakowy kod polecenia. Znajdziesz go na ekranie
 1. Przejdź do **Ustawienia** → **Zaproś znajomych**
 2. Twój kod jest wyświetlany na górze ekranu
 3. Naciśnij **Kopiuj**, aby skopiować kod do schowka
-4. Naciśnij **Udostępnij**, aby wysłać go przez komunikator
+4. Naciśnij **Udostępnij**, aby wysłać go przez komunikator — wiadomość zawiera już link, a osobie, która go otworzy, kod wpisze się sam
 
 ## Jak to działa
 
 1. **Udostępnij swój kod** — wyślij go znajomym przez komunikator lub media społecznościowe
-2. **Znajomy się rejestruje** — wpisuje twój kod podczas rejestracji (pole opcjonalne)
+2. **Znajomy się rejestruje** — z Twojego linku kod jest już wpisany; ręcznie to pole opcjonalne
 3. **7-dniowy okres oczekiwania** — polecenie pozostaje w statusie „Oczekujące"
 4. **Znajomy korzysta z aplikacji** — musi aktywnie używać aplikacji (otworzyć ją i dodawać wydatki) przez 7 dni
 5. **Polecenie staje się Aktywne** — otrzymujesz **+30 zapytań AI** jako bonus
@@ -21565,12 +21565,12 @@ Jeder Benutzer hat einen einzigartigen 6-stelligen Empfehlungscode. Du findest i
 1. Gehe zu **Einstellungen** → **Freunde einladen**
 2. Dein Code wird oben auf dem Bildschirm angezeigt
 3. Tippe auf **Kopieren**, um den Code in die Zwischenablage zu kopieren
-4. Tippe auf **Teilen**, um ihn über einen Messenger zu senden
+4. Tippe auf **Teilen**, um ihn über einen Messenger zu senden — die Nachricht enthält bereits einen Link, und wer ihn öffnet, bekommt deinen Code automatisch eingetragen
 
 ## So funktioniert es
 
 1. **Teile deinen Code** — sende ihn per Messenger oder Social Media an Freunde
-2. **Freund registriert sich** — gibt deinen Code bei der Registrierung ein (optionales Feld)
+2. **Freund registriert sich** — über deinen Link steht der Code schon da; von Hand ist es ein optionales Feld
 3. **7-tägige Wartezeit** — die Empfehlung bleibt im Status „Ausstehend"
 4. **Freund nutzt die App** — muss die App aktiv nutzen (öffnen und Ausgaben erfassen) innerhalb von 7 Tagen
 5. **Empfehlung wird Aktiv** — du erhältst **+30 AI-Anfragen** als Bonus
@@ -26041,12 +26041,12 @@ Cada usuario tiene un código de referido único de 6 caracteres. Puedes encontr
 1. Ve a **Configuración** → **Invitar amigos**
 2. Tu código se muestra en la parte superior de la pantalla
 3. Toca **Copiar** para copiar el código al portapapeles
-4. Toca **Compartir** para enviarlo por cualquier app de mensajería
+4. Toca **Compartir** para enviarlo por cualquier app de mensajería — el mensaje ya incluye un enlace, y a quien lo abra se le rellena tu código automáticamente
 
 ## Cómo funciona
 
 1. **Comparte tu código** — envíalo a amigos por mensajería o redes sociales
-2. **El amigo se registra** — ingresa tu código durante el registro (campo opcional)
+2. **El amigo se registra** — desde tu enlace el código ya está puesto; a mano es un campo opcional
 3. **Período de espera de 7 días** — el referido permanece en estado "Pendiente"
 4. **El amigo usa la app** — debe usar activamente la app (abrirla y añadir gastos) durante 7 días
 5. **El referido se activa** — recibes **+30 solicitudes AI** como bonificación
@@ -30514,12 +30514,12 @@ Chaque utilisateur possède un code de parrainage unique de 6 caractères. Vous 
 1. Allez dans **Paramètres** → **Inviter des amis**
 2. Votre code est affiché en haut de l'écran
 3. Appuyez sur **Copier** pour copier le code
-4. Appuyez sur **Partager** pour l'envoyer via une application de messagerie
+4. Appuyez sur **Partager** pour l'envoyer via une application de messagerie — le message contient déjà un lien, et votre code est pré-rempli pour la personne qui l'ouvre
 
 ## Comment ça marche
 
 1. **Partagez votre code** — envoyez-le à vos amis par messagerie ou réseaux sociaux
-2. **L'ami s'inscrit** — il saisit votre code lors de l'inscription (champ facultatif)
+2. **L'ami s'inscrit** — depuis votre lien le code est déjà rempli ; saisi à la main, c'est un champ facultatif
 3. **Période d'attente de 7 jours** — le parrainage reste en statut « En attente »
 4. **L'ami utilise l'application** — il doit utiliser activement l'appli (l'ouvrir et ajouter des dépenses) pendant 7 jours
 5. **Le parrainage devient Actif** — vous recevez **+30 requêtes AI** en bonus
@@ -34982,12 +34982,12 @@ OCR часам няправільна чытае цану, выдумляе ра
 1. Перайдзіце ў **Налады** → **Запрасіць сяброў**
 2. Ваш код адлюстроўваецца ўверсе экрана
 3. Націсніце **Скапіраваць**, каб скапіраваць код у буфер абмену
-4. Націсніце **Падзяліцца**, каб адправіць праз любы месенджар
+4. Націсніце **Падзяліцца**, каб адправіць праз любы месенджар — у паведамленні ўжо ёсць спасылка, і ў таго, хто яе адкрые, ваш код падставіцца сам
 
 ## Як гэта працуе
 
 1. **Падзяліцеся кодам** — адпраўце яго сябрам праз месенджар або сацсеткі
-2. **Сябар рэгіструецца** — уводзіць ваш код пры рэгістрацыі (неабавязковае поле)
+2. **Сябар рэгіструецца** — па вашай спасылцы код ужо падстаўлены; уручную гэта неабавязковае поле
 3. **7-дзённы перыяд чакання** — рэферал застаецца ў статусе «Чакае»
 4. **Сябар карыстаецца дадаткам** — ён павінен актыўна выкарыстоўваць дадатак (адкрываць яго і дадаваць выдаткі) на працягу 7 дзён
 5. **Рэферал становіцца Актыўным** — вы атрымліваеце **+30 AI запытаў** як бонус
@@ -39490,12 +39490,12 @@ Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op h
 1. Ga naar **Instellingen** → **Vrienden uitnodigen**
 2. Je code wordt boven aan het scherm weergegeven
 3. Gebruik **Kopiëren** om de code naar je klembord te kopiëren
-4. Gebruik **Delen** om hem via een willekeurige berichtenapp te versturen
+4. Gebruik **Delen** om hem via een willekeurige berichtenapp te versturen — het bericht bevat al een link, en bij wie hem opent wordt jouw code automatisch ingevuld
 
 ## Hoe het werkt
 
 1. **Deel je code** — stuur deze naar vrienden via een messenger of sociale media
-2. **Vriend registreert** — ze voeren jouw code in tijdens de registratie (optioneel veld)
+2. **Vriend registreert** — via jouw link staat de code er al; met de hand is het een optioneel veld
 3. **Wachtperiode van 7 dagen** — de verwijzing blijft in de status "In behandeling"
 4. **Vriend gebruikt de app** — ze moeten de app binnen 7 dagen actief gebruiken (openen en uitgaven toevoegen)
 5. **Verwijzing wordt Actief** — je ontvangt **+30 AI-verzoeken** als bonus

@@ -15,12 +15,12 @@ Jeder Benutzer hat einen einzigartigen 6-stelligen Empfehlungscode. Du findest i
 1. Gehe zu **Einstellungen** → **Freunde einladen**
 2. Dein Code wird oben auf dem Bildschirm angezeigt
 3. Tippe auf **Kopieren**, um den Code in die Zwischenablage zu kopieren
-4. Tippe auf **Teilen**, um ihn über einen Messenger zu senden
+4. Tippe auf **Teilen**, um ihn über einen Messenger zu senden — die Nachricht enthält bereits einen Link, und wer ihn öffnet, bekommt deinen Code automatisch eingetragen
 
 ## So funktioniert es
 
 1. **Teile deinen Code** — sende ihn per Messenger oder Social Media an Freunde
-2. **Freund registriert sich** — gibt deinen Code bei der Registrierung ein (optionales Feld)
+2. **Freund registriert sich** — über deinen Link steht der Code schon da; von Hand ist es ein optionales Feld
 3. **7-tägige Wartezeit** — die Empfehlung bleibt im Status „Ausstehend"
 4. **Freund nutzt die App** — muss die App aktiv nutzen (öffnen und Ausgaben erfassen) innerhalb von 7 Tagen
 5. **Empfehlung wird Aktiv** — du erhältst **+30 AI-Anfragen** als Bonus

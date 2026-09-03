@@ -15,12 +15,12 @@ Każdy użytkownik ma unikalny 6-znakowy kod polecenia. Znajdziesz go na ekranie
 1. Przejdź do **Ustawienia** → **Zaproś znajomych**
 2. Twój kod jest wyświetlany na górze ekranu
 3. Naciśnij **Kopiuj**, aby skopiować kod do schowka
-4. Naciśnij **Udostępnij**, aby wysłać go przez komunikator
+4. Naciśnij **Udostępnij**, aby wysłać go przez komunikator — wiadomość zawiera już link, a osobie, która go otworzy, kod wpisze się sam
 
 ## Jak to działa
 
 1. **Udostępnij swój kod** — wyślij go znajomym przez komunikator lub media społecznościowe
-2. **Znajomy się rejestruje** — wpisuje twój kod podczas rejestracji (pole opcjonalne)
+2. **Znajomy się rejestruje** — z Twojego linku kod jest już wpisany; ręcznie to pole opcjonalne
 3. **7-dniowy okres oczekiwania** — polecenie pozostaje w statusie „Oczekujące"
 4. **Znajomy korzysta z aplikacji** — musi aktywnie używać aplikacji (otworzyć ją i dodawać wydatki) przez 7 dni
 5. **Polecenie staje się Aktywne** — otrzymujesz **+30 zapytań AI** jako bonus

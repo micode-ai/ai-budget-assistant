@@ -15,12 +15,12 @@ Cada usuario tiene un código de referido único de 6 caracteres. Puedes encontr
 1. Ve a **Configuración** → **Invitar amigos**
 2. Tu código se muestra en la parte superior de la pantalla
 3. Toca **Copiar** para copiar el código al portapapeles
-4. Toca **Compartir** para enviarlo por cualquier app de mensajería
+4. Toca **Compartir** para enviarlo por cualquier app de mensajería — el mensaje ya incluye un enlace, y a quien lo abra se le rellena tu código automáticamente
 
 ## Cómo funciona
 
 1. **Comparte tu código** — envíalo a amigos por mensajería o redes sociales
-2. **El amigo se registra** — ingresa tu código durante el registro (campo opcional)
+2. **El amigo se registra** — desde tu enlace el código ya está puesto; a mano es un campo opcional
 3. **Período de espera de 7 días** — el referido permanece en estado "Pendiente"
 4. **El amigo usa la app** — debe usar activamente la app (abrirla y añadir gastos) durante 7 días
 5. **El referido se activa** — recibes **+30 solicitudes AI** como bonificación

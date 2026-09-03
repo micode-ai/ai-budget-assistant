@@ -53,9 +53,11 @@ export interface GuestPageStrings {
   settledNotice: string;
   notFoundTitle: string;
   notFoundBody: string;
+  /** Doubles as the heading of the acquisition card at the foot of a guest page. */
   poweredBy: string;
+  /** Primary CTA on that card. Points at the web app — see guest-page.ts. */
+  ctaButton: string;
   getAndroid: string;
-  getIos: string;
   /** Fallback when the expense has no merchant name recorded. */
   genericMerchant: string;
 
@@ -95,8 +97,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: "This link isn't available",
     notFoundBody: 'It may have expired, or the details may have changed.',
     poweredBy: 'Split bills easily with AI Budget Assistant',
+    ctaButton: 'Split your own bill',
     getAndroid: 'Get it on Google Play',
-    getIos: 'Download on the App Store',
     genericMerchant: 'your receipt',
     groupPickerTitle: (merchant) => `Who are you? — ${merchant}`,
     groupPickerHint: 'Tap your name to see your share',
@@ -124,8 +126,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: 'Эта ссылка недоступна',
     notFoundBody: 'Возможно, срок её действия истёк или детали изменились.',
     poweredBy: 'Делите счета легко с AI Budget Assistant',
+    ctaButton: 'Разделить свой счёт',
     getAndroid: 'Доступно в Google Play',
-    getIos: 'Загрузить в App Store',
     genericMerchant: 'вашему чеку',
     groupPickerTitle: (merchant) => `Кто вы? — ${merchant}`,
     groupPickerHint: 'Нажмите на своё имя, чтобы увидеть свою часть',
@@ -153,8 +155,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: 'Це посилання недоступне',
     notFoundBody: 'Можливо, термін його дії минув або деталі змінилися.',
     poweredBy: 'Діліть рахунки легко з AI Budget Assistant',
+    ctaButton: 'Розділити свій рахунок',
     getAndroid: 'Доступно в Google Play',
-    getIos: 'Завантажити в App Store',
     genericMerchant: 'вашому чеку',
     groupPickerTitle: (merchant) => `Хто ви? — ${merchant}`,
     groupPickerHint: 'Натисніть на своє ім’я, щоб побачити свою частку',
@@ -182,8 +184,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: 'Ten link jest niedostępny',
     notFoundBody: 'Mógł wygasnąć albo szczegóły mogły się zmienić.',
     poweredBy: 'Dziel rachunki łatwo z AI Budget Assistant',
+    ctaButton: 'Podziel własny rachunek',
     getAndroid: 'Dostępne w Google Play',
-    getIos: 'Pobierz z App Store',
     genericMerchant: 'Twojego paragonu',
     groupPickerTitle: (merchant) => `Kim jesteś? — ${merchant}`,
     groupPickerHint: 'Dotknij swojego imienia, aby zobaczyć swoją część',
@@ -211,8 +213,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: 'Este enlace no está disponible',
     notFoundBody: 'Puede haber caducado o los detalles pueden haber cambiado.',
     poweredBy: 'Divide cuentas fácilmente con AI Budget Assistant',
+    ctaButton: 'Divide tu propia cuenta',
     getAndroid: 'Consíguelo en Google Play',
-    getIos: 'Descargar en App Store',
     genericMerchant: 'tu recibo',
     groupPickerTitle: (merchant) => `¿Quién eres? — ${merchant}`,
     groupPickerHint: 'Toca tu nombre para ver tu parte',
@@ -240,8 +242,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: "Ce lien n'est pas disponible",
     notFoundBody: 'Il a peut-être expiré ou les détails ont changé.',
     poweredBy: 'Partagez facilement vos additions avec AI Budget Assistant',
+    ctaButton: 'Partage ta propre addition',
     getAndroid: 'Disponible sur Google Play',
-    getIos: "Télécharger sur l'App Store",
     genericMerchant: 'ton ticket',
     groupPickerTitle: (merchant) => `Qui es-tu ? — ${merchant}`,
     groupPickerHint: 'Touche ton nom pour voir ta part',
@@ -269,8 +271,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: 'Dieser Link ist nicht verfügbar',
     notFoundBody: 'Er könnte abgelaufen sein oder sich geändert haben.',
     poweredBy: 'Rechnungen einfach teilen mit AI Budget Assistant',
+    ctaButton: 'Teile deine eigene Rechnung',
     getAndroid: 'Bei Google Play',
-    getIos: 'Im App Store laden',
     genericMerchant: 'deinem Beleg',
     groupPickerTitle: (merchant) => `Wer bist du? — ${merchant}`,
     groupPickerHint: 'Tippe auf deinen Namen, um deinen Anteil zu sehen',
@@ -298,8 +300,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: 'Гэта спасылка недаступная',
     notFoundBody: 'Магчыма, тэрмін яе дзеяння скончыўся або дэталі змяніліся.',
     poweredBy: 'Дзяліце рахункі лёгка з AI Budget Assistant',
+    ctaButton: 'Падзяліць свой рахунак',
     getAndroid: 'Даступна ў Google Play',
-    getIos: 'Спампаваць у App Store',
     genericMerchant: 'вашаму чэку',
     groupPickerTitle: (merchant) => `Хто вы? — ${merchant}`,
     groupPickerHint: 'Націсніце на сваё імя, каб убачыць сваю частку',
@@ -327,8 +329,8 @@ const translations: Record<string, GuestPageStrings> = {
     notFoundTitle: 'Deze link is niet beschikbaar',
     notFoundBody: 'Deze kan zijn verlopen of de gegevens kunnen zijn gewijzigd.',
     poweredBy: 'Deel rekeningen eenvoudig met AI Budget Assistant',
+    ctaButton: 'Verdeel je eigen rekening',
     getAndroid: 'Beschikbaar op Google Play',
-    getIos: 'Download in de App Store',
     genericMerchant: 'je bonnetje',
     groupPickerTitle: (merchant) => `Wie ben jij? — ${merchant}`,
     groupPickerHint: 'Tik op jouw naam om jouw deel te zien',

@@ -647,6 +647,43 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
   // rendered, so assertions below match the actual markup (the anchor tag / div with
   // that class, or the href/handle text inside it) rather than the bare class-name
   // substring, which the stylesheet itself would always satisfy.
+  describe('acquisition CTA at the foot of the page', () => {
+    it('never offers the App Store, whose id has always been a placeholder', () => {
+      // Half of the guests on any shared bill are on an iPhone; the old footer
+      // handed all of them `apps.apple.com/app/id000000000`, which resolves to
+      // nothing. Its absence is the point of the whole change.
+      const html = renderGuestPage(baseModel, strings);
+      expect(html).not.toContain('apps.apple.com');
+      expect(html).not.toContain('id000000000');
+    });
+
+    it('points its primary action at the web app, which works on every device', () => {
+      const html = renderGuestPage(baseModel, strings);
+      expect(html).toContain('https://app.ai-budget.pl/');
+      expect(html).toContain(strings.ctaButton);
+    });
+
+    it('tags the link so the channel is attributable instead of reading as direct', () => {
+      const html = renderGuestPage(baseModel, strings);
+      expect(html).toContain('src=split');
+      expect(html).toContain('loc=guest');
+    });
+
+    it('keeps Google Play as the secondary link', () => {
+      const html = renderGuestPage(baseModel, strings);
+      expect(html).toContain('play.google.com/store/apps/details?id=com.budget.assistant');
+    });
+
+    it('does not use the pay button class, so it cannot pass for a payment action', () => {
+      // `.btn-primary` is what the assertions below rely on to prove the pay
+      // affordance disappears once a share is claimed. A CTA that borrowed the
+      // class would silently defeat every one of them.
+      const html = renderGuestPage({ ...baseModel, status: 'settled' }, strings);
+      expect(html).toContain('<a class="btn btn-cta"');
+      expect(html).not.toContain('<a class="btn btn-primary"');
+    });
+  });
+
   it.each<GuestPaymentStatus>(['sent', 'opened'])(
     'shows the pay button while status is "%s" (not yet claimed)',
     (status) => {

@@ -44,7 +44,7 @@ function pageShell(title: string, bodyHtml: string): string {
   // Compensated by widening `max-width` to 520px (480 + the 2×20px padding) so the
   // rendered content width stays exactly 480px either way — pixel-identical to before on
   // every viewport, not just phones.
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}.pay-method{font-weight:600;font-size:13px;margin-bottom:4px}.pay-handle{color:#6b6b73;font-size:13px;margin-bottom:8px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}</style></head><body>${bodyHtml}</body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}.pay-method{font-weight:600;font-size:13px;margin-bottom:4px}.pay-handle{color:#6b6b73;font-size:13px;margin-bottom:8px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}.cta{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:20px;text-align:center}.cta-title{font-size:14px;font-weight:600;margin-bottom:12px}.btn-cta{background:#E37F2B;color:#fff}.cta .play{display:inline-block;margin-top:6px;font-size:13px;color:#6b6b73}</style></head><body>${bodyHtml}</body></html>`;
 }
 
 /**
@@ -153,8 +153,21 @@ export function buildGuestPayLink(
 }
 
 const STORE_URL_ANDROID = 'https://play.google.com/store/apps/details?id=com.budget.assistant';
-// Placeholder until an App Store ID is assigned — same precedent as app-versions.service.ts.
-const STORE_URL_IOS = 'https://apps.apple.com/app/id000000000';
+
+/**
+ * The primary call to action points at the WEB app, not a store.
+ *
+ * This page used to offer "Download on the App Store" against a placeholder id
+ * (`id000000000`) that has never resolved, so every iPhone guest — plausibly
+ * half of them — was handed a dead link. There is still no native iOS app, but
+ * the web app runs everywhere and needs no install, which makes it the only
+ * honest primary action. Google Play stays as a secondary link for Android.
+ *
+ * `src`/`loc` follow the ABA-436 tagging scheme so this channel is attributable
+ * instead of landing in the direct bucket. It is a real acquisition surface:
+ * the visitor is a non-user who opened our page and often paid through it.
+ */
+const APP_URL = 'https://app.ai-budget.pl/?src=split&loc=guest';
 
 /**
  * Renders the guest's own view of a receipt split. Content order (binding, per the task
@@ -248,9 +261,14 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
     ${payHtml}
     ${actionHtml}
   </div>
-  <div class="footer">
-    <div>${escapeHtml(strings.poweredBy)}</div>
-    <div><a rel="noreferrer" href="${STORE_URL_ANDROID}">${escapeHtml(strings.getAndroid)}</a> · <a rel="noreferrer" href="${STORE_URL_IOS}">${escapeHtml(strings.getIos)}</a></div>
+  <div class="cta">
+    <!-- Deliberately NOT .btn-primary: that class means "a payment action is
+         available" and the suite asserts on it to prove the pay affordance
+         disappears once a share is claimed. An acquisition link must never be
+         able to satisfy that assertion. -->
+    <div class="cta-title">${escapeHtml(strings.poweredBy)}</div>
+    <a class="btn btn-cta" rel="noreferrer" href="${APP_URL}">${escapeHtml(strings.ctaButton)}</a>
+    <a class="play" rel="noreferrer" href="${STORE_URL_ANDROID}">${escapeHtml(strings.getAndroid)}</a>
   </div>`;
 
   return pageShell(strings.title(model.merchant ?? strings.genericMerchant), body);
