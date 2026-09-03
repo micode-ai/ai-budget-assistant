@@ -61,6 +61,7 @@ export default function ReceiptExpenseScreen() {
 
   const {
     itemCategories,
+    items,
     splitDropped,
     currentSplits,
     proposedNamesInPlay,
@@ -69,6 +70,9 @@ export default function ReceiptExpenseScreen() {
     showSplitSheet,
     setShowSplitSheet,
     handleItemCategoryChange,
+    handleItemFieldChange,
+    handleAddItem,
+    handleRemoveItem,
     resetSplitState,
   } = useReceiptCategorySplit(scannedReceipt);
 
@@ -87,6 +91,7 @@ export default function ReceiptExpenseScreen() {
     saveImage,
     imageUri,
     isPdf,
+    items,
     currentSplits,
     itemCategories,
     proposedNamesToCreate,
@@ -140,6 +145,10 @@ export default function ReceiptExpenseScreen() {
               isPdf={isPdf}
               merchant={merchant}
               onMerchantChange={setMerchant}
+              items={items}
+              onEditItem={handleItemFieldChange}
+              onAddItem={handleAddItem}
+              onRemoveItem={handleRemoveItem}
               currentSplits={currentSplits}
               splitDropped={splitDropped}
               sheetItemsLength={sheetItems.length}

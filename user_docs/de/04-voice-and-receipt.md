@@ -61,7 +61,7 @@ Nach der KI-Analyse siehst du:
 - **Handler** — Geschaft-/Restaurantname (bearbeitbar)
 - **Kategorie** — automatisch zugewiesen (bearbeitbar)
 - **Datum** — vom Beleg (bearbeitbar)
-- **Artikel** — einzelne Positionen mit Mengen und Preisen (falls erkannt)
+- **Artikel** — einzelne Positionen mit Mengen und Preisen (falls erkannt) — tippe auf einen Artikel, um ihn zu bearbeiten, zu löschen oder einen fehlenden hinzuzufügen (siehe **Artikel bearbeiten** unten)
 - **Rabatt** — Rabattbetrag (falls auf dem Beleg vorhanden)
 - **Zuverlassigkeit**-Indikator — **Hohe Zuverlassigkeit** oder **Mittlere Zuverlassigkeit**
 - **Kassenbon-Bild speichern**-Schalter — das Foto an die Ausgabe anhangen
@@ -76,6 +76,16 @@ Uberprufe und korrigiere Details, dann:
 - Stelle sicher, dass der gesamte Beleg sichtbar und flach ist
 - Halte die Kamera ruhig, um Unscharfe zu vermeiden
 - Verwende **Zusatzliche Anweisungen fur KI** fur besondere Handhabung (z.B. "Das ist in EUR", "Ersten Artikel ignorieren")
+
+### Artikel bearbeiten
+
+Die KI-Extraktion ist nicht immer perfekt — eine Ziffer im Preis kann fehlen, ein Rabatt kann in einen Einzelpreis hineinrutschen, oder eine Zeile kann beim Scannen ganz übersehen werden. Du musst nicht neu scannen oder die ganze Ausgabe löschen, um das zu korrigieren:
+
+- **Tippe auf einen Artikel** in der Liste, um Name, Menge, Einzelpreis oder Gesamtpreis zu bearbeiten. Tippe auf **Speichern**, um die Korrektur zu übernehmen.
+- **Tippe auf das Papierkorb-Symbol** neben einem Artikel, um ihn zu entfernen — praktisch bei einer doppelten oder erfundenen Zeile.
+- **Tippe auf + Artikel hinzufügen** am Ende der Liste, um eine vom Scan übersehene Zeile hinzuzufügen.
+
+Jeder Artikel wird angezeigt — es gibt keine Begrenzung, egal wie viele der Beleg enthält. Jede Änderung aktualisiert sofort die Kategorienaufteilung und die Summen, sodass das Gespeicherte immer dem entspricht, was auf dem Bildschirm zu sehen ist. Der Gesamtbetrag, Rabatt und Pfand des Belegs bleiben wie gescannt — nur die einzelnen Artikel sind bearbeitbar.
 
 ### Aufteilung nach Kategorien
 
@@ -163,7 +173,7 @@ Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahme
   **A:** Sowohl digitale PDFs (z.B. Amazon- oder PayPal-Rechnungen) als auch gescannte PDF-Belege werden unterstutzt. Maximale Dateigrose: 10 MB. Digitale PDFs mit selektierbarem Text werden schneller und genauer verarbeitet. Bei gescannten PDFs sollte der Scan klar und kontraststark sein.
 
 - **F: Warum war der Betrag nach dem Scannen falsch?**
-  **A:** Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern.
+  **A:** Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern. Wenn eine einzelne Position falsch ist, tippe darauf, um sie direkt zu bearbeiten — siehe **Artikel bearbeiten** oben.
 
 - **F: Verbrauchen Spracheingabe/Belegscan meine KI-Anfragen?**
   **A:** Ja, jede Spracheingabe oder jeder Belegscan verbraucht eine KI-Anfrage aus deinem monatlichen Kontingent.

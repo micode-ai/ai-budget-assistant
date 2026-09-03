@@ -8,7 +8,10 @@ import { getIntlLocale } from '@/i18n';
 import { MerchantInput } from '@/components/MerchantInput';
 import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
 import CategorySplitChips from '@/components/receipt/CategorySplitChips';
-import type { ScannedReceipt } from '@/features/receipt/useReceiptScanner';
+import ReceiptItemsEditor from '@/components/receipt/ReceiptItemsEditor';
+import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
+
+type EditableItemFields = Pick<ReceiptItem, 'description' | 'quantity' | 'unitPrice' | 'totalPrice'>;
 
 interface Props {
   scannedReceipt: ScannedReceipt | null;
@@ -16,6 +19,13 @@ interface Props {
   isPdf: boolean;
   merchant: string;
   onMerchantChange: (text: string) => void;
+  /** Local, editable copy of the receipt's line items (ABA
+   * receipt-line-item-editing) — from `useReceiptCategorySplit`, NOT
+   * `scannedReceipt.receiptItems` directly. */
+  items: ReceiptItem[];
+  onEditItem: (index: number, patch: Partial<EditableItemFields>) => void;
+  onAddItem: (item: EditableItemFields) => void;
+  onRemoveItem: (index: number) => void;
   currentSplits: ReceiptCategorySplit[];
   splitDropped: boolean;
   /** `sheetItems.length` from `useReceiptCategorySplit` — whether there are any
@@ -32,7 +42,8 @@ interface Props {
 /**
  * The post-scan confirm card of `app/expense/receipt.tsx` (ABA-448) — the
  * receipt preview, editable amount/discount/deposit/description/merchant/
- * category/date fields, the category-split chips, up to 5 line items, the
+ * category/date fields, the category-split chips, the editable line-item
+ * list (`ReceiptItemsEditor` — ABA receipt-line-item-editing), the
  * confidence indicator, the price-check findings, and the save-image/edit/
  * confirm/retry actions. Purely presentational; every field it shows and
  * every action it fires is owned by the screen (via
@@ -44,6 +55,10 @@ export default function ReceiptConfirmCard({
   isPdf,
   merchant,
   onMerchantChange,
+  items,
+  onEditItem,
+  onAddItem,
+  onRemoveItem,
   currentSplits,
   splitDropped,
   sheetItemsLength,
@@ -144,29 +159,13 @@ export default function ReceiptConfirmCard({
           <Text style={styles.splitDroppedNote}>{t('receiptCategorySplit.notSplit')}</Text>
         )}
 
-        {scannedReceipt?.receiptItems && scannedReceipt.receiptItems.length > 0 && (
-          <View style={styles.itemsSection}>
-            <Text style={styles.itemsTitle}>{t('receipt.items', { count: scannedReceipt.receiptItems.length })}</Text>
-            {scannedReceipt.receiptItems.slice(0, 5).map((item, index) => (
-              <View key={index} style={styles.itemRow}>
-                <Text style={styles.itemDescription} numberOfLines={1}>
-                  {item.description}
-                </Text>
-                <Text style={styles.itemPrice}>
-                  {formatCurrency(
-                    item.totalPrice,
-                    (scannedReceipt?.currencyCode || 'USD') as Currency
-                  )}
-                </Text>
-              </View>
-            ))}
-            {scannedReceipt.receiptItems.length > 5 && (
-              <Text style={styles.moreItems}>
-                {t('receipt.moreItems', { count: scannedReceipt.receiptItems.length - 5 })}
-              </Text>
-            )}
-          </View>
-        )}
+        <ReceiptItemsEditor
+          items={items}
+          currencyCode={scannedReceipt?.currencyCode || 'USD'}
+          onEditItem={onEditItem}
+          onAddItem={onAddItem}
+          onRemoveItem={onRemoveItem}
+        />
 
         <View style={styles.confidenceRow}>
           <Ionicons
@@ -270,41 +269,6 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '500' as const,
     maxWidth: '60%' as const,
     textAlign: 'right' as const,
-  },
-  itemsSection: {
-    marginTop: theme.spacing[4],
-    paddingTop: theme.spacing[4],
-    borderTopWidth: 1,
-    borderTopColor: theme.colors.border,
-  },
-  itemsTitle: {
-    fontSize: 14,
-    fontWeight: '600' as const,
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing[3],
-  },
-  itemRow: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    paddingVertical: theme.spacing[1.5],
-  },
-  itemDescription: {
-    fontSize: 14,
-    color: theme.colors.textPrimary,
-    flex: 1,
-    marginRight: theme.spacing[3],
-  },
-  itemPrice: {
-    fontSize: 14,
-    color: theme.colors.textPrimary,
-    fontWeight: '500' as const,
-  },
-  moreItems: {
-    fontSize: 12,
-    color: theme.colors.textTertiary,
-    marginTop: theme.spacing[2],
-    textAlign: 'center' as const,
   },
   splitDroppedNote: {
     fontSize: 12,

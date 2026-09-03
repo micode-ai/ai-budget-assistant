@@ -478,6 +478,13 @@ export default {
     sessionCount_other: '{{count}} recibos escaneados en esta sesión',
     sessionCapTitle: '¡Buen ritmo!',
     sessionCapBody: 'Has escaneado {{count}} recibos en esta sesión. Sigue así o toma un descanso — tu progreso ya está guardado.',
+    addItem: '+ Añadir artículo',
+    itemQuantity: 'Cantidad',
+    itemUnitPrice: 'Precio unitario',
+    itemTotalPrice: 'Precio total',
+    itemDescriptionPlaceholder: 'Nombre del artículo',
+    itemRequiredError: 'Introduce un nombre y un precio mayor que 0',
+    removeItemA11y: 'Eliminar artículo',
   },
   incomeVoice: {
     title: 'Voz Ingresos',

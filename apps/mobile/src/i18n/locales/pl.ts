@@ -480,6 +480,13 @@ export default {
     sessionCount_other: '{{count}} paragonów zeskanowanych w tej sesji',
     sessionCapTitle: 'Dobre tempo!',
     sessionCapBody: 'W tej sesji zeskanowano {{count}} paragonów. Możesz kontynuować lub zrobić przerwę — Twój postęp jest już zapisany.',
+    addItem: '+ Dodaj pozycję',
+    itemQuantity: 'Ilość',
+    itemUnitPrice: 'Cena jednostkowa',
+    itemTotalPrice: 'Cena łączna',
+    itemDescriptionPlaceholder: 'Nazwa pozycji',
+    itemRequiredError: 'Podaj nazwę i cenę większą od 0',
+    removeItemA11y: 'Usuń pozycję',
   },
   incomeVoice: {
     title: 'Głosowy przychód',

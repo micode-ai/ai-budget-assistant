@@ -61,7 +61,7 @@ After AI analysis, you'll see:
 - **Merchant** — store/restaurant name (editable)
 - **Category** — automatically assigned (editable)
 - **Date** — from the receipt (editable)
-- **Items** — individual line items with quantities and prices (if detected)
+- **Items** — individual line items with quantities and prices (if detected) — tap any item to edit it, delete it, or add one the scan missed (see **Editing Items** below)
 - **Discount** — discount amount (if present on receipt)
 - **Confidence** indicator — High or Medium
 - **Save receipt image** toggle — keep the photo attached to the expense
@@ -76,6 +76,16 @@ Review and correct any details, then:
 - Ensure the entire receipt is visible and flat
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
+
+### Editing Items
+
+AI extraction isn't always perfect — a price digit can get dropped, a discount can bleed into a unit price, or the scan can miss a line entirely. You don't need to rescan or delete the whole expense to fix it:
+
+- **Tap any item** in the list to edit its name, quantity, unit price, or total price. Tap **Save** to apply the correction.
+- **Tap the trash icon** next to an item to remove it — useful for a duplicated or invented line.
+- **Tap + Add item** at the bottom of the list to add a line the scan missed.
+
+Every item is listed — there's no cutoff, however many the receipt has. Any change you make updates the category split and totals immediately, so what you save always matches what's on screen. The receipt's overall total, discount, and deposit stay as scanned; only the individual line items are editable.
 
 ### Category Splits
 
@@ -163,7 +173,7 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
   **A:** Both digital PDFs (e.g. Amazon or PayPal invoices) and scanned PDF receipts are supported. Maximum file size is 10 MB. Digital PDFs with selectable text are processed faster and more accurately. For best results with scanned PDFs, make sure the scan is clear and high-contrast.
 
 - **Q: Why was the amount wrong after scanning?**
-  **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results.
+  **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results. If a specific line item is wrong, tap it to edit it directly — see **Editing Items** above.
 
 - **Q: Does voice/receipt scanning use my AI requests?**
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.

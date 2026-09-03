@@ -478,6 +478,13 @@ export default {
     sessionCount_other: '{{count}} bonnen gescand in deze sessie',
     sessionCapTitle: 'Mooi tempo!',
     sessionCapBody: 'Je hebt {{count}} bonnen gescand in deze sessie. Ga door of neem een pauze — je voortgang is al opgeslagen.',
+    addItem: '+ Product toevoegen',
+    itemQuantity: 'Aantal',
+    itemUnitPrice: 'Prijs per stuk',
+    itemTotalPrice: 'Totaalprijs',
+    itemDescriptionPlaceholder: 'Productnaam',
+    itemRequiredError: 'Voer een naam en een prijs groter dan 0 in',
+    removeItemA11y: 'Product verwijderen',
   },
   incomeVoice: {
     title: 'Spraakinkomsten',

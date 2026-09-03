@@ -480,6 +480,13 @@ export default {
     sessionCount_other: '{{count}} чеки відскановано в цій сесії',
     sessionCapTitle: 'Гарний темп!',
     sessionCapBody: 'Ви відсканували {{count}} чеків у цій сесії. Продовжуйте або зробіть перерву — прогрес уже збережено.',
+    addItem: '+ Додати позицію',
+    itemQuantity: 'Кількість',
+    itemUnitPrice: 'Ціна за одиницю',
+    itemTotalPrice: 'Підсумкова ціна',
+    itemDescriptionPlaceholder: 'Назва позиції',
+    itemRequiredError: 'Вкажіть назву та ціну більшу за 0',
+    removeItemA11y: 'Видалити позицію',
   },
   incomeVoice: {
     title: 'Голосовий дохід',

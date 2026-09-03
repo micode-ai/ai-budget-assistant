@@ -478,6 +478,13 @@ export default {
     sessionCount_other: '{{count}} чэкі адсканаваныя ў гэтай сесіі',
     sessionCapTitle: 'Добры тэмп!',
     sessionCapBody: 'Вы адсканавалі {{count}} чэкаў у гэтай сесіі. Працягвайце або зрабіце перапынак — прагрэс ужо захаваны.',
+    addItem: '+ Дадаць пазіцыю',
+    itemQuantity: 'Колькасць',
+    itemUnitPrice: 'Цана за адзінку',
+    itemTotalPrice: 'Агульная цана',
+    itemDescriptionPlaceholder: 'Назва пазіцыі',
+    itemRequiredError: 'Укажыце назву і цану больш за 0',
+    removeItemA11y: 'Выдаліць пазіцыю',
   },
   incomeVoice: {
     title: 'Галасавы даход',

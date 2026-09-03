@@ -478,6 +478,13 @@ export default {
     sessionCount_other: '{{count}} Belege in dieser Sitzung gescannt',
     sessionCapTitle: 'Gutes Tempo!',
     sessionCapBody: 'Sie haben in dieser Sitzung {{count}} Belege gescannt. Machen Sie weiter oder legen Sie eine Pause ein — Ihr Fortschritt ist bereits gespeichert.',
+    addItem: '+ Artikel hinzufügen',
+    itemQuantity: 'Menge',
+    itemUnitPrice: 'Einzelpreis',
+    itemTotalPrice: 'Gesamtpreis',
+    itemDescriptionPlaceholder: 'Artikelname',
+    itemRequiredError: 'Gib einen Namen und einen Preis größer als 0 ein',
+    removeItemA11y: 'Artikel entfernen',
   },
   incomeVoice: {
     title: 'Spracheingabe Einnahmen',

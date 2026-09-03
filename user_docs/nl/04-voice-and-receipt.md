@@ -61,7 +61,7 @@ Na de AI-analyse zie je:
 - **Verkoper** — naam van de winkel/het restaurant (bewerkbaar)
 - **Categorie** — automatisch toegewezen (bewerkbaar)
 - **Datum** — van de bon (bewerkbaar)
-- **Items** — afzonderlijke regelitems met aantallen en prijzen (indien gedetecteerd)
+- **Items** — afzonderlijke regelitems met aantallen en prijzen (indien gedetecteerd) — tik op een item om het te bewerken, te verwijderen of een gemist item toe te voegen (zie **Items bewerken** hieronder)
 - **Korting** — kortingsbedrag (indien aanwezig op de bon)
 - **Betrouwbaarheids**indicator — hoog of gemiddeld
 - Schakelaar **Bonafbeelding opslaan** — houd de foto gekoppeld aan de uitgave
@@ -76,6 +76,16 @@ Controleer en corrigeer eventuele details en daarna:
 - Zorg dat de hele bon zichtbaar en vlak is
 - Houd de camera stil om vervaging te voorkomen
 - Gebruik **Aanvullende instructies voor de AI** voor speciale behandeling (bijv. "Dit is in EUR", "Negeer het eerste item")
+
+### Items bewerken
+
+AI-extractie is niet altijd perfect — een cijfer in de prijs kan wegvallen, een korting kan in een stukprijs terechtkomen, of een regel kan bij het scannen helemaal gemist worden. Je hoeft niet opnieuw te scannen of de hele uitgave te verwijderen om dit te corrigeren:
+
+- **Tik op een item** in de lijst om de naam, hoeveelheid, stukprijs of totaalprijs te bewerken. Tik op **Opslaan** om de correctie toe te passen.
+- **Tik op het prullenbakicoon** naast een item om het te verwijderen — handig voor een dubbele of verzonnen regel.
+- **Tik op + Product toevoegen** onderaan de lijst om een regel toe te voegen die de scan gemist heeft.
+
+Elk item wordt getoond — er is geen limiet, hoeveel de bon er ook heeft. Elke wijziging werkt de categorieverdeling en de totalen direct bij, zodat wat je opslaat altijd overeenkomt met wat je op het scherm ziet. Het totaalbedrag, de korting en het statiegeld van de bon blijven zoals gescand — alleen de afzonderlijke items zijn bewerkbaar.
 
 ### Categorieverdeling
 
@@ -163,7 +173,7 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
   **A:** Zowel digitale pdf's (bijv. Amazon- of PayPal-facturen) als gescande pdf-bonnen worden ondersteund. De maximale bestandsgrootte is 10 MB. Digitale pdf's met selecteerbare tekst worden sneller en nauwkeuriger verwerkt. Zorg voor het beste resultaat met gescande pdf's dat de scan helder is en veel contrast heeft.
 
 - **V: Waarom was het bedrag verkeerd na het scannen?**
-  **A:** AI-extractie is niet altijd perfect. Controleer altijd het bevestigingsscherm en corrigeer eventuele fouten voordat je opslaat. Wazige of beschadigde bonnen kunnen minder nauwkeurige resultaten geven.
+  **A:** AI-extractie is niet altijd perfect. Controleer altijd het bevestigingsscherm en corrigeer eventuele fouten voordat je opslaat. Wazige of beschadigde bonnen kunnen minder nauwkeurige resultaten geven. Als een specifiek item onjuist is, tik erop om het direct te bewerken — zie **Items bewerken** hierboven.
 
 - **V: Gebruikt spraak-/bonnenscannen mijn AI-verzoeken?**
   **A:** Ja, elke spraakinvoer of bonscan gebruikt één AI-verzoek uit je maandelijkse tegoed.

@@ -480,6 +480,13 @@ export default {
     sessionCount_other: '{{count}} чека отсканировано в этой сессии',
     sessionCapTitle: 'Хороший темп!',
     sessionCapBody: 'Вы отсканировали {{count}} чеков в этой сессии. Продолжайте или сделайте перерыв — прогресс уже сохранён.',
+    addItem: '+ Добавить позицию',
+    itemQuantity: 'Количество',
+    itemUnitPrice: 'Цена за единицу',
+    itemTotalPrice: 'Итоговая цена',
+    itemDescriptionPlaceholder: 'Название позиции',
+    itemRequiredError: 'Укажите название и цену больше 0',
+    removeItemA11y: 'Удалить позицию',
   },
   incomeVoice: {
     title: 'Голосовой ввод дохода',

@@ -590,7 +590,7 @@ After AI analysis, you'll see:
 - **Merchant** — store/restaurant name (editable)
 - **Category** — automatically assigned (editable)
 - **Date** — from the receipt (editable)
-- **Items** — individual line items with quantities and prices (if detected)
+- **Items** — individual line items with quantities and prices (if detected) — tap any item to edit it, delete it, or add one the scan missed (see **Editing Items** below)
 - **Discount** — discount amount (if present on receipt)
 - **Confidence** indicator — High or Medium
 - **Save receipt image** toggle — keep the photo attached to the expense
@@ -605,6 +605,16 @@ Review and correct any details, then:
 - Ensure the entire receipt is visible and flat
 - Hold the camera steady to avoid blurring
 - Use **Additional instructions for AI** for special handling (e.g., "This is in EUR", "Ignore the first item")
+
+### Editing Items
+
+AI extraction isn't always perfect — a price digit can get dropped, a discount can bleed into a unit price, or the scan can miss a line entirely. You don't need to rescan or delete the whole expense to fix it:
+
+- **Tap any item** in the list to edit its name, quantity, unit price, or total price. Tap **Save** to apply the correction.
+- **Tap the trash icon** next to an item to remove it — useful for a duplicated or invented line.
+- **Tap + Add item** at the bottom of the list to add a line the scan missed.
+
+Every item is listed — there's no cutoff, however many the receipt has. Any change you make updates the category split and totals immediately, so what you save always matches what's on screen. The receipt's overall total, discount, and deposit stay as scanned; only the individual line items are editable.
 
 ### Category Splits
 
@@ -692,7 +702,7 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
   **A:** Both digital PDFs (e.g. Amazon or PayPal invoices) and scanned PDF receipts are supported. Maximum file size is 10 MB. Digital PDFs with selectable text are processed faster and more accurately. For best results with scanned PDFs, make sure the scan is clear and high-contrast.
 
 - **Q: Why was the amount wrong after scanning?**
-  **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results.
+  **A:** AI extraction isn't always perfect. Always review the confirmation screen and correct any errors before saving. Blurry or damaged receipts may produce less accurate results. If a specific line item is wrong, tap it to edit it directly — see **Editing Items** above.
 
 - **Q: Does voice/receipt scanning use my AI requests?**
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.
@@ -5131,7 +5141,7 @@ iOS, Android, Web
 - **Продавец** — название магазина/ресторана (можно редактировать)
 - **Категория** — назначена автоматически (можно редактировать)
 - **Дата** — с чека (можно редактировать)
-- **Позиции** — отдельные позиции с количеством и ценами (если распознаны)
+- **Позиции** — отдельные позиции с количеством и ценами (если распознаны) — нажмите на любую позицию, чтобы отредактировать её, удалить или добавить пропущенную сканированием (см. **Редактирование позиций** ниже)
 - **Скидка** — сумма скидки (если присутствует на чеке)
 - Индикатор **точности** — Высокая или Средняя
 - Переключатель **Сохранить фото чека** — сохранить фото прикреплённым к расходу
@@ -5146,6 +5156,16 @@ iOS, Android, Web
 - Убедитесь, что весь чек виден и расположен ровно
 - Держите камеру ровно, чтобы избежать размытия
 - Используйте **Дополнительные инструкции для ИИ** для особых случаев (например, «Это в EUR», «Игнорировать первую позицию»)
+
+### Редактирование позиций
+
+Распознавание с помощью ИИ не всегда идеально — может потеряться цифра в цене, скидка может «влиться» в цену за единицу, или целая строка может быть пропущена при сканировании. Чтобы это исправить, не нужно пересканировать чек или удалять весь расход целиком:
+
+- **Нажмите на любую позицию** в списке, чтобы изменить её название, количество, цену за единицу или итоговую цену. Нажмите **Сохранить**, чтобы применить исправление.
+- **Нажмите на значок корзины** рядом с позицией, чтобы удалить её — удобно для задвоенной или ошибочно распознанной строки.
+- **Нажмите + Добавить позицию** внизу списка, чтобы добавить строку, которую сканирование пропустило.
+
+Показаны все позиции — без ограничения, сколько бы их ни было на чеке. Любое изменение сразу обновляет разделение по категориям и суммы, поэтому то, что вы сохраняете, всегда совпадает с тем, что видно на экране. Итоговая сумма, скидка и залог за тару чека остаются такими, как при сканировании — редактировать можно только отдельные позиции.
 
 ### Разделение по категориям
 
@@ -5233,7 +5253,7 @@ iOS, Android, Web
   **О:** Поддерживаются как цифровые PDF (например, счета от Amazon или PayPal), так и сканированные чеки в PDF. Максимальный размер файла — 10 МБ. Цифровые PDF с извлекаемым текстом обрабатываются быстрее и точнее. Для сканированных PDF убедитесь, что скан чёткий и контрастный.
 
 - **В: Почему сумма была неправильной после сканирования?**
-  **О:** Извлечение данных ИИ не всегда идеально. Всегда проверяйте экран подтверждения и исправляйте ошибки перед сохранением. Размытые или повреждённые чеки могут давать менее точные результаты.
+  **О:** Извлечение данных ИИ не всегда идеально. Всегда проверяйте экран подтверждения и исправляйте ошибки перед сохранением. Размытые или повреждённые чеки могут давать менее точные результаты. Если конкретная позиция указана неверно, нажмите на неё, чтобы отредактировать напрямую — см. **Редактирование позиций** выше.
 
 - **В: Используют ли голосовой ввод и сканирование чеков запросы AI?**
   **О:** Да, каждый голосовой ввод или сканирование чека использует один запрос AI из вашего ежемесячного лимита.
@@ -9670,7 +9690,7 @@ iOS, Android, Web
 - **Продавець** — назва магазину/ресторану (можна редагувати)
 - **Категорія** — автоматично визначена (можна редагувати)
 - **Дата** — з чека (можна редагувати)
-- **Позиції** — окремі рядки з кількістю та цінами (якщо розпізнані)
+- **Позиції** — окремі рядки з кількістю та цінами (якщо розпізнані) — торкніться будь-якої позиції, щоб відредагувати її, видалити або додати ту, яку сканування пропустило (див. **Редагування позицій** нижче)
 - **Знижка** — сума знижки (якщо вказана на чеку)
 - Індикатор **точності** — **Висока точність** або **Середня точність**
 - Перемикач **Зберегти фото чеку** — зберегти фото прикріпленим до витрати
@@ -9685,6 +9705,16 @@ iOS, Android, Web
 - Переконайтесь, що весь чек видно та він лежить рівно
 - Тримайте камеру стабільно, щоб уникнути розмиття
 - Використовуйте **Додаткові інструкції для ШІ** для спеціальної обробки (наприклад, "Це в EUR", "Ігнорувати першу позицію")
+
+### Редагування позицій
+
+Розпізнавання за допомогою ШІ не завжди ідеальне — цифра в ціні може загубитися, знижка може «влитися» в ціну за одиницю, або цілий рядок може бути пропущений під час сканування. Щоб це виправити, не потрібно пересканувати чек або видаляти всю витрату:
+
+- **Торкніться будь-якої позиції** у списку, щоб змінити її назву, кількість, ціну за одиницю або підсумкову ціну. Торкніться **Зберегти**, щоб застосувати виправлення.
+- **Торкніться значка кошика** поруч із позицією, щоб видалити її — зручно для задубльованого або хибно розпізнаного рядка.
+- **Торкніться + Додати позицію** внизу списку, щоб додати рядок, який сканування пропустило.
+
+Показані всі позиції — без обмеження, скільки б їх не було на чеку. Будь-яка зміна одразу оновлює розподіл за категоріями та суми, тож те, що ви зберігаєте, завжди збігається з тим, що видно на екрані. Загальна сума, знижка та застава за тару чека залишаються такими, як при скануванні — редагувати можна лише окремі позиції.
 
 ### Розподіл за категоріями
 
@@ -9772,7 +9802,7 @@ iOS, Android, Web
   **В:** Підтримуються як цифрові PDF (наприклад, рахунки від Amazon або PayPal), так і сканований чек у PDF. Максимальний розмір файлу — 10 МБ. Цифрові PDF з текстом, що виділяється, обробляються швидше та точніше. Для сканованих PDF переконайтесь, що скан чіткий та контрастний.
 
 - **П:** Чому сума після сканування виявилася неправильною?
-  **В:** ШІ-розпізнавання не завжди ідеальне. Завжди перевіряйте екран підтвердження та виправляйте будь-які помилки перед збереженням. Розмиті або пошкоджені чеки можуть давати менш точні результати.
+  **В:** ШІ-розпізнавання не завжди ідеальне. Завжди перевіряйте екран підтвердження та виправляйте будь-які помилки перед збереженням. Розмиті або пошкоджені чеки можуть давати менш точні результати. Якщо конкретна позиція вказана неправильно, торкніться її, щоб відредагувати напряму — див. **Редагування позицій** вище.
 
 - **П:** Чи використовує голосовий ввід та сканування чеків мої запити ШІ?
   **В:** Так, кожен голосовий ввід або сканування чека використовує один запит ШІ з вашого місячного ліміту.
@@ -14157,7 +14187,7 @@ Po analizie AI zobaczysz:
 - **Sprzedawca** — nazwa sklepu/restauracji (mozna edytowac)
 - **Kategoria** — przypisana automatycznie (mozna edytowac)
 - **Data** — z paragonu (mozna edytowac)
-- **Pozycje** — poszczegolne pozycje z ilosciami i cenami (jezeli wykryto)
+- **Pozycje** — poszczegolne pozycje z ilosciami i cenami (jezeli wykryto) — stuknij dowolna pozycje, aby ja edytowac, usunac lub dodac te, ktora skan pominal (zobacz **Edytowanie pozycji** ponizej)
 - **Rabat** — kwota rabatu (jezeli widnieje na paragonie)
 - Wskaznik **pewnosci** — Wysoka lub Srednia
 - Przelacznik **Zapisz zdjecie paragonu** — zachowaj zdjecie dolaczone do wydatku
@@ -14172,6 +14202,16 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Upewnij sie, ze caly paragon jest widoczny i plasko ulozony
 - Trzymaj aparat stabilnie, aby uniknac rozmazania
 - Uzyj **Dodatkowe instrukcje dla AI** do specjalnej obslugi (np. "To jest w EUR", "Pomin pierwsza pozycje")
+
+### Edytowanie pozycji
+
+Ekstrakcja AI nie zawsze jest idealna — cyfra w cenie moze zostac pominieta, rabat moze wmieszac sie w cene jednostkowa, albo cala pozycja moze zostac pominieta podczas skanowania. Nie musisz skanowac ponownie ani usuwac calego wydatku, aby to poprawic:
+
+- **Stuknij dowolna pozycje** na liscie, aby edytowac jej nazwe, ilosc, cene jednostkowa lub cene laczna. Stuknij **Zapisz**, aby zastosowac poprawke.
+- **Stuknij ikone kosza** obok pozycji, aby ja usunac — przydatne w przypadku zdublowanej lub zmyslonej pozycji.
+- **Stuknij + Dodaj pozycje** na dole listy, aby dodac pozycje pominieta przez skan.
+
+Wyswietlane sa wszystkie pozycje — bez limitu, niezaleznie od tego, ile ich jest na paragonie. Kazda zmiana natychmiast aktualizuje podzial na kategorie i sumy, wiec to, co zapisujesz, zawsze odpowiada temu, co widac na ekranie. Laczna kwota, rabat i kaucja z paragonu pozostaja takie, jak zeskanowano — edytowac mozna tylko poszczegolne pozycje.
 
 ### Podział na kategorie
 
@@ -14259,7 +14299,7 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
   **O:** Obslugiwane sa zarowno cyfrowe pliki PDF (np. faktury Amazon lub PayPal), jak i zeskanowane paragony w formacie PDF. Maksymalny rozmiar pliku wynosi 10 MB. Cyfrowe pliki PDF z mozliwoscia zaznaczania tekstu sa przetwarzane szybciej i dokladniej. W przypadku zeskanowanych PDF upewnij sie, ze skan jest wyrazny i o wysokim kontraście.
 
 - **P: Dlaczego kwota byla bledna po zeskanowaniu?**
-  **O:** Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki.
+  **O:** Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki. Jesli konkretna pozycja jest bledna, stuknij ja, aby edytowac bezposrednio — zobacz **Edytowanie pozycji** powyzej.
 
 - **P: Czy wprowadzanie glosowe/skanowanie paragonu zuzywa moje zapytania AI?**
   **O:** Tak, kazde wprowadzenie glosowe lub skan paragonu zuzywa jedno zapytanie AI z Twojego miesiecznego limitu.
@@ -18640,7 +18680,7 @@ Nach der KI-Analyse siehst du:
 - **Handler** — Geschaft-/Restaurantname (bearbeitbar)
 - **Kategorie** — automatisch zugewiesen (bearbeitbar)
 - **Datum** — vom Beleg (bearbeitbar)
-- **Artikel** — einzelne Positionen mit Mengen und Preisen (falls erkannt)
+- **Artikel** — einzelne Positionen mit Mengen und Preisen (falls erkannt) — tippe auf einen Artikel, um ihn zu bearbeiten, zu löschen oder einen fehlenden hinzuzufügen (siehe **Artikel bearbeiten** unten)
 - **Rabatt** — Rabattbetrag (falls auf dem Beleg vorhanden)
 - **Zuverlassigkeit**-Indikator — **Hohe Zuverlassigkeit** oder **Mittlere Zuverlassigkeit**
 - **Kassenbon-Bild speichern**-Schalter — das Foto an die Ausgabe anhangen
@@ -18655,6 +18695,16 @@ Uberprufe und korrigiere Details, dann:
 - Stelle sicher, dass der gesamte Beleg sichtbar und flach ist
 - Halte die Kamera ruhig, um Unscharfe zu vermeiden
 - Verwende **Zusatzliche Anweisungen fur KI** fur besondere Handhabung (z.B. "Das ist in EUR", "Ersten Artikel ignorieren")
+
+### Artikel bearbeiten
+
+Die KI-Extraktion ist nicht immer perfekt — eine Ziffer im Preis kann fehlen, ein Rabatt kann in einen Einzelpreis hineinrutschen, oder eine Zeile kann beim Scannen ganz übersehen werden. Du musst nicht neu scannen oder die ganze Ausgabe löschen, um das zu korrigieren:
+
+- **Tippe auf einen Artikel** in der Liste, um Name, Menge, Einzelpreis oder Gesamtpreis zu bearbeiten. Tippe auf **Speichern**, um die Korrektur zu übernehmen.
+- **Tippe auf das Papierkorb-Symbol** neben einem Artikel, um ihn zu entfernen — praktisch bei einer doppelten oder erfundenen Zeile.
+- **Tippe auf + Artikel hinzufügen** am Ende der Liste, um eine vom Scan übersehene Zeile hinzuzufügen.
+
+Jeder Artikel wird angezeigt — es gibt keine Begrenzung, egal wie viele der Beleg enthält. Jede Änderung aktualisiert sofort die Kategorienaufteilung und die Summen, sodass das Gespeicherte immer dem entspricht, was auf dem Bildschirm zu sehen ist. Der Gesamtbetrag, Rabatt und Pfand des Belegs bleiben wie gescannt — nur die einzelnen Artikel sind bearbeitbar.
 
 ### Aufteilung nach Kategorien
 
@@ -18742,7 +18792,7 @@ Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahme
   **A:** Sowohl digitale PDFs (z.B. Amazon- oder PayPal-Rechnungen) als auch gescannte PDF-Belege werden unterstutzt. Maximale Dateigrose: 10 MB. Digitale PDFs mit selektierbarem Text werden schneller und genauer verarbeitet. Bei gescannten PDFs sollte der Scan klar und kontraststark sein.
 
 - **F: Warum war der Betrag nach dem Scannen falsch?**
-  **A:** Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern.
+  **A:** Die KI-Extraktion ist nicht immer perfekt. Uberprufe immer den Bestatigungsbildschirm und korrigiere Fehler vor dem Speichern. Unscharfe oder beschadigte Belege konnen weniger genaue Ergebnisse liefern. Wenn eine einzelne Position falsch ist, tippe darauf, um sie direkt zu bearbeiten — siehe **Artikel bearbeiten** oben.
 
 - **F: Verbrauchen Spracheingabe/Belegscan meine KI-Anfragen?**
   **A:** Ja, jede Spracheingabe oder jeder Belegscan verbraucht eine KI-Anfrage aus deinem monatlichen Kontingent.
@@ -23098,7 +23148,7 @@ Despues del analisis de la IA, veras:
 - **Comercio** — nombre de la tienda/restaurante (editable)
 - **Categoria** — asignada automaticamente (editable)
 - **Fecha** — del recibo (editable)
-- **Articulos** — articulos individuales con cantidades y precios (si se detectan)
+- **Articulos** — articulos individuales con cantidades y precios (si se detectan) — toca cualquier articulo para editarlo, eliminarlo o anadir uno que el escaneo paso por alto (ver **Editar articulos** mas abajo)
 - **Descuento** — importe del descuento (si esta presente en el recibo)
 - Indicador de **Confianza** — **Alta confianza** o **Confianza media**
 - Interruptor **Guardar imagen del recibo** — mantener la foto adjunta al gasto
@@ -23113,6 +23163,16 @@ Revisa y corrige cualquier detalle, luego:
 - Asegurate de que el recibo completo sea visible y este plano
 - Mantene la camara estable para evitar desenfoque
 - Usa **Instrucciones adicionales para la IA** para un tratamiento especial (por ejemplo, "Esto esta en EUR", "Ignorar el primer articulo")
+
+### Editar artículos
+
+La extracción por IA no siempre es perfecta: puede faltar una cifra en el precio, un descuento puede colarse en el precio unitario, o el escaneo puede pasar por alto una línea entera. No hace falta volver a escanear ni borrar todo el gasto para corregirlo:
+
+- **Toca cualquier artículo** de la lista para editar su nombre, cantidad, precio unitario o precio total. Toca **Guardar** para aplicar la corrección.
+- **Toca el icono de papelera** junto a un artículo para eliminarlo — útil para una línea duplicada o inventada.
+- **Toca + Añadir artículo** al final de la lista para añadir una línea que el escaneo pasó por alto.
+
+Se muestran todos los artículos, sin límite, sean los que sean los que tenga el recibo. Cualquier cambio actualiza de inmediato la división por categorías y los totales, así que lo que guardas siempre coincide con lo que ves en pantalla. El importe total, el descuento y el depósito del recibo se mantienen tal como se escanearon — solo los artículos individuales son editables.
 
 ### División por categorías
 
@@ -23200,7 +23260,7 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
   **R:** Se admiten tanto PDFs digitales (por ejemplo, facturas de Amazon o PayPal) como recibos escaneados en PDF. El tamano maximo del archivo es 10 MB. Los PDFs digitales con texto seleccionable se procesan mas rapido y con mayor precision. Para PDFs escaneados, asegurate de que el escaneo sea nitido y de alto contraste.
 
 - **P: Por que el importe fue incorrecto despues del escaneo?**
-  **R:** La extraccion por IA no siempre es perfecta. Revisa siempre la pantalla de confirmacion y corrige cualquier error antes de guardar. Los recibos borrosos o danados pueden producir resultados menos precisos.
+  **R:** La extraccion por IA no siempre es perfecta. Revisa siempre la pantalla de confirmacion y corrige cualquier error antes de guardar. Los recibos borrosos o danados pueden producir resultados menos precisos. Si un articulo concreto esta mal, tocalo para editarlo directamente — consulta **Editar artículos** más arriba.
 
 - **P: La entrada de voz o el escaneo de recibos consume mis solicitudes IA?**
   **R:** Si, cada entrada de voz o escaneo de recibo utiliza una solicitud IA de tu cuota mensual.
@@ -27545,7 +27605,7 @@ Apres l'analyse par l'IA, vous verrez :
 - **Commercant** — nom du magasin/restaurant (modifiable)
 - **Categorie** — attribuee automatiquement (modifiable)
 - **Date** — du recu (modifiable)
-- **Articles** — lignes individuelles avec quantites et prix (si detectes)
+- **Articles** — lignes individuelles avec quantites et prix (si detectes) — touchez un article pour le modifier, le supprimer ou en ajouter un que le scan a manqué (voir **Modifier les articles** ci-dessous)
 - **Remise** — montant de la remise (si presente sur le recu)
 - Indicateur de **confiance** — **Confiance elevee** ou **Confiance moyenne**
 - Option **Conserver l'image du recu** — garder la photo attachee a la depense
@@ -27560,6 +27620,16 @@ Verifiez et corrigez les details, puis :
 - Assurez-vous que l'ensemble du recu est visible et a plat
 - Tenez l'appareil photo stable pour eviter le flou
 - Utilisez les **Instructions supplementaires pour l'IA** pour un traitement special (par ex. "C'est en EUR", "Ignorer le premier article")
+
+### Modifier les articles
+
+L'extraction par IA n'est pas toujours parfaite — un chiffre du prix peut être perdu, une remise peut se glisser dans un prix unitaire, ou une ligne peut être complètement manquée lors du scan. Inutile de rescanner ou de supprimer toute la dépense pour la corriger :
+
+- **Touchez un article** dans la liste pour modifier son nom, sa quantité, son prix unitaire ou son prix total. Touchez **Enregistrer** pour appliquer la correction.
+- **Touchez l'icône de la corbeille** à côté d'un article pour le supprimer — utile pour une ligne dupliquée ou inventée.
+- **Touchez + Ajouter un article** en bas de la liste pour ajouter une ligne que le scan a manquée.
+
+Tous les articles sont affichés — il n'y a pas de limite, quel que soit leur nombre sur le reçu. Toute modification met immédiatement à jour la répartition par catégories et les totaux, afin que ce que vous enregistrez corresponde toujours à ce qui est affiché. Le montant total, la remise et la consigne du reçu restent tels que scannés — seuls les articles individuels sont modifiables.
 
 ### Répartition par catégories
 
@@ -27647,7 +27717,7 @@ Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon 
   **R :** Les PDFs numeriques (par ex. factures Amazon ou PayPal) et les recus scannes en PDF sont tous deux pris en charge. La taille maximale du fichier est de 10 Mo. Les PDFs numeriques avec du texte selectionnable sont traites plus rapidement et avec plus de precision. Pour les PDFs scannes, assurez-vous que le scan est net et contraste.
 
 - **Q : Pourquoi le montant etait-il incorrect apres le scan ?**
-  **R :** L'extraction par IA n'est pas toujours parfaite. Verifiez toujours l'ecran de confirmation et corrigez les erreurs avant de sauvegarder. Les recus flous ou endommages peuvent produire des resultats moins precis.
+  **R :** L'extraction par IA n'est pas toujours parfaite. Verifiez toujours l'ecran de confirmation et corrigez les erreurs avant de sauvegarder. Les recus flous ou endommages peuvent produire des resultats moins precis. Si un article precis est incorrect, touchez-le pour le modifier directement — voir **Modifier les articles** ci-dessus.
 
 - **Q : La saisie vocale et le scan de recus utilisent-ils mes requetes IA ?**
   **R :** Oui, chaque saisie vocale ou scan de recu utilise une requete IA de votre allocation mensuelle.
@@ -31990,7 +32060,7 @@ iOS, Android, Web
 - **Прадавец** — назва крамы/рэстарана (можна рэдагаваць)
 - **Катэгорыя** — прызначана аўтаматычна (можна рэдагаваць)
 - **Дата** — з чэка (можна рэдагаваць)
-- **Пазіцыі** — асобныя пазіцыі з колькасцю і цэнамі (калі распазнаны)
+- **Пазіцыі** — асобныя пазіцыі з колькасцю і цэнамі (калі распазнаны) — націсніце на любую пазіцыю, каб адрэдагаваць яе, выдаліць або дадаць тую, якую сканаванне прапусціла (гл. **Рэдагаванне пазіцый** ніжэй)
 - **Зніжка** — сума зніжкі (калі прысутнічае на чэку)
 - Індыкатар **дакладнасці** — Высокая або Сярэдняя
 - Пераключальнік **Захаваць фота чэка** — захаваць фота прымацаваным да выдатку
@@ -32005,6 +32075,16 @@ iOS, Android, Web
 - Пераканайцеся, што ўвесь чэк бачны і размешчаны роўна
 - Трымайце камеру роўна, каб пазбегнуць размыцця
 - Выкарыстоўвайце **Дадатковыя інструкцыі для ІІ** для асаблівых выпадкаў (напрыклад, «Гэта ў EUR», «Ігнараваць першую пазіцыю»)
+
+### Рэдагаванне пазіцый
+
+Распазнаванне з дапамогай ІІ не заўсёды ідэальнае — лічба ў цане можа згубіцца, зніжка можа "уліцца" ў цану за адзінку, альбо цэлы радок можа быць прапушчаны падчас сканавання. Каб гэта выправіць, не трэба пераскановаць чэк ці выдаляць увесь расход цалкам:
+
+- **Націсніце на любую пазіцыю** у спісе, каб змяніць яе назву, колькасць, цану за адзінку або агульную цану. Націсніце **Захаваць**, каб ужыць выпраўленне.
+- **Націсніце на значок сметніцы** побач з пазіцыяй, каб выдаліць яе — карысна для здвоенага ці выдуманага радка.
+- **Націсніце + Дадаць пазіцыю** унізе спіса, каб дадаць радок, які сканаванне прапусціла.
+
+Паказаны ўсе пазіцыі — без абмежавання, колькі б іх ні было на чэку. Любая змена адразу абнаўляе падзел па катэгорыях і сумы, таму тое, што вы захоўваеце, заўсёды супадае з тым, што бачна на экране. Агульная сума, зніжка і закладзь за тару чэка застаюцца такімі, як пры сканаванні — рэдагаваць можна толькі асобныя пазіцыі.
 
 ### Падзел па катэгорыях
 
@@ -32092,7 +32172,7 @@ iOS, Android, Web
   **А:** Падтрымліваюцца як лічбавыя PDF (напрыклад, рахункі ад Amazon або PayPal), так і сканаваныя чэкі ў PDF. Максімальны памер файла — 10 МБ. Лічбавыя PDF з вылучальным тэкстам апрацоўваюцца хутчэй і дакладней. Для сканаваных PDF пераканайцеся, што скан выразны і кантрасны.
 
 - **П: Чаму сума была няправільнай пасля сканавання?**
-  **А:** Здабыванне даных ІІ не заўсёды ідэальнае. Заўсёды правярайце экран пацвярджэння і выпраўляйце памылкі перад захаваннем. Размытыя або пашкоджаныя чэкі могуць даваць менш дакладныя вынікі.
+  **А:** Здабыванне даных ІІ не заўсёды ідэальнае. Заўсёды правярайце экран пацвярджэння і выпраўляйце памылкі перад захаваннем. Размытыя або пашкоджаныя чэкі могуць даваць менш дакладныя вынікі. Калі канкрэтная пазіцыя ўказана няправільна, націсніце на яе, каб адрэдагаваць напрамую — гл. **Рэдагаванне пазіцый** вышэй.
 
 - **П: Ці выкарыстоўваюць галасавы ўвод і сканаванне чэкаў запыты AI?**
   **А:** Так, кожны галасавы ўвод або сканаванне чэка выкарыстоўвае адзін запыт AI з вашага штомесячнага ліміту.
@@ -36392,7 +36472,7 @@ Na de AI-analyse zie je:
 - **Verkoper** — naam van de winkel/het restaurant (bewerkbaar)
 - **Categorie** — automatisch toegewezen (bewerkbaar)
 - **Datum** — van de bon (bewerkbaar)
-- **Items** — afzonderlijke regelitems met aantallen en prijzen (indien gedetecteerd)
+- **Items** — afzonderlijke regelitems met aantallen en prijzen (indien gedetecteerd) — tik op een item om het te bewerken, te verwijderen of een gemist item toe te voegen (zie **Items bewerken** hieronder)
 - **Korting** — kortingsbedrag (indien aanwezig op de bon)
 - **Betrouwbaarheids**indicator — hoog of gemiddeld
 - Schakelaar **Bonafbeelding opslaan** — houd de foto gekoppeld aan de uitgave
@@ -36407,6 +36487,16 @@ Controleer en corrigeer eventuele details en daarna:
 - Zorg dat de hele bon zichtbaar en vlak is
 - Houd de camera stil om vervaging te voorkomen
 - Gebruik **Aanvullende instructies voor de AI** voor speciale behandeling (bijv. "Dit is in EUR", "Negeer het eerste item")
+
+### Items bewerken
+
+AI-extractie is niet altijd perfect — een cijfer in de prijs kan wegvallen, een korting kan in een stukprijs terechtkomen, of een regel kan bij het scannen helemaal gemist worden. Je hoeft niet opnieuw te scannen of de hele uitgave te verwijderen om dit te corrigeren:
+
+- **Tik op een item** in de lijst om de naam, hoeveelheid, stukprijs of totaalprijs te bewerken. Tik op **Opslaan** om de correctie toe te passen.
+- **Tik op het prullenbakicoon** naast een item om het te verwijderen — handig voor een dubbele of verzonnen regel.
+- **Tik op + Product toevoegen** onderaan de lijst om een regel toe te voegen die de scan gemist heeft.
+
+Elk item wordt getoond — er is geen limiet, hoeveel de bon er ook heeft. Elke wijziging werkt de categorieverdeling en de totalen direct bij, zodat wat je opslaat altijd overeenkomt met wat je op het scherm ziet. Het totaalbedrag, de korting en het statiegeld van de bon blijven zoals gescand — alleen de afzonderlijke items zijn bewerkbaar.
 
 ### Categorieverdeling
 
@@ -36494,7 +36584,7 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
   **A:** Zowel digitale pdf's (bijv. Amazon- of PayPal-facturen) als gescande pdf-bonnen worden ondersteund. De maximale bestandsgrootte is 10 MB. Digitale pdf's met selecteerbare tekst worden sneller en nauwkeuriger verwerkt. Zorg voor het beste resultaat met gescande pdf's dat de scan helder is en veel contrast heeft.
 
 - **V: Waarom was het bedrag verkeerd na het scannen?**
-  **A:** AI-extractie is niet altijd perfect. Controleer altijd het bevestigingsscherm en corrigeer eventuele fouten voordat je opslaat. Wazige of beschadigde bonnen kunnen minder nauwkeurige resultaten geven.
+  **A:** AI-extractie is niet altijd perfect. Controleer altijd het bevestigingsscherm en corrigeer eventuele fouten voordat je opslaat. Wazige of beschadigde bonnen kunnen minder nauwkeurige resultaten geven. Als een specifiek item onjuist is, tik erop om het direct te bewerken — zie **Items bewerken** hierboven.
 
 - **V: Gebruikt spraak-/bonnenscannen mijn AI-verzoeken?**
   **A:** Ja, elke spraakinvoer of bonscan gebruikt één AI-verzoek uit je maandelijkse tegoed.

@@ -8,7 +8,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { resolveProposedCategories } from '@/features/receipt/resolveProposedCategories';
 import { compressAndEncodeImage } from '@/features/receipt/receiptImage';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
-import type { ScannedReceipt } from '@/features/receipt/useReceiptScanner';
+import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
 import type { ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
 
@@ -18,6 +18,10 @@ interface UseReceiptSaveParams {
   saveImage: boolean;
   imageUri: string | null;
   isPdf: boolean;
+  /** The user's edited line items (ABA receipt-line-item-editing) — from
+   * `useReceiptCategorySplit`'s `items`, NOT `scannedReceipt.receiptItems`,
+   * which stays the untouched original OCR read. */
+  items: ReceiptItem[];
   currentSplits: ReceiptCategorySplit[];
   itemCategories: Record<number, string | null>;
   proposedNamesToCreate: string[];
@@ -47,6 +51,7 @@ export function useReceiptSave({
   saveImage,
   imageUri,
   isPdf,
+  items: editedItems,
   currentSplits,
   itemCategories,
   proposedNamesToCreate,
@@ -83,16 +88,21 @@ export function useReceiptSave({
         useCategoryStore.getState().createCategory(name, 'expense', '🏷️'),
       );
 
-      // Prepare receipt items
-      const items = scannedReceipt.receiptItems?.map((item, index) => ({
-        description: item.description,
-        canonicalName: item.canonicalName,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        totalPrice: item.totalPrice,
-        sortOrder: index,
-        categoryId: resolveKey(itemCategories[index]),
-      }));
+      // Prepare receipt items — from the user's edited list (ABA
+      // receipt-line-item-editing), not the original OCR read. Sent as
+      // `undefined` (not `[]`) when there are none, matching the prior
+      // behavior of the optional-chained scannedReceipt.receiptItems read.
+      const items = editedItems.length
+        ? editedItems.map((item, index) => ({
+            description: item.description,
+            canonicalName: item.canonicalName,
+            quantity: item.quantity,
+            unitPrice: item.unitPrice,
+            totalPrice: item.totalPrice,
+            sortOrder: index,
+            categoryId: resolveKey(itemCategories[index]),
+          }))
+        : undefined;
 
       // Compress and encode receipt image if checkbox is checked (not for PDFs)
       let receiptImageBase64: string | undefined;

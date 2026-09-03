@@ -478,6 +478,13 @@ export default {
     sessionCount_other: '{{count}} reçus scannés pendant cette session',
     sessionCapTitle: 'Beau rythme !',
     sessionCapBody: 'Vous avez scanné {{count}} reçus pendant cette session. Continuez, ou faites une pause — votre progression est déjà enregistrée.',
+    addItem: '+ Ajouter un article',
+    itemQuantity: 'Quantité',
+    itemUnitPrice: 'Prix unitaire',
+    itemTotalPrice: 'Prix total',
+    itemDescriptionPlaceholder: 'Nom de l\'article',
+    itemRequiredError: 'Entrez un nom et un prix supérieur à 0',
+    removeItemA11y: 'Supprimer l\'article',
   },
   incomeVoice: {
     title: 'Revenu vocal',

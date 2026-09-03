@@ -478,6 +478,13 @@ export default {
     sessionCount_other: '{{count}} receipts scanned this session',
     sessionCapTitle: 'Nice pace!',
     sessionCapBody: "You've scanned {{count}} receipts this session. Keep going, or take a break — your progress is already saved.",
+    addItem: '+ Add item',
+    itemQuantity: 'Quantity',
+    itemUnitPrice: 'Unit price',
+    itemTotalPrice: 'Total price',
+    itemDescriptionPlaceholder: 'Item name',
+    itemRequiredError: 'Enter a name and a price greater than 0',
+    removeItemA11y: 'Remove item',
   },
   incomeVoice: {
     title: 'Voice Income',

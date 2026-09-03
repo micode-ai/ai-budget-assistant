@@ -61,7 +61,7 @@ Apres l'analyse par l'IA, vous verrez :
 - **Commercant** — nom du magasin/restaurant (modifiable)
 - **Categorie** — attribuee automatiquement (modifiable)
 - **Date** — du recu (modifiable)
-- **Articles** — lignes individuelles avec quantites et prix (si detectes)
+- **Articles** — lignes individuelles avec quantites et prix (si detectes) — touchez un article pour le modifier, le supprimer ou en ajouter un que le scan a manqué (voir **Modifier les articles** ci-dessous)
 - **Remise** — montant de la remise (si presente sur le recu)
 - Indicateur de **confiance** — **Confiance elevee** ou **Confiance moyenne**
 - Option **Conserver l'image du recu** — garder la photo attachee a la depense
@@ -76,6 +76,16 @@ Verifiez et corrigez les details, puis :
 - Assurez-vous que l'ensemble du recu est visible et a plat
 - Tenez l'appareil photo stable pour eviter le flou
 - Utilisez les **Instructions supplementaires pour l'IA** pour un traitement special (par ex. "C'est en EUR", "Ignorer le premier article")
+
+### Modifier les articles
+
+L'extraction par IA n'est pas toujours parfaite — un chiffre du prix peut être perdu, une remise peut se glisser dans un prix unitaire, ou une ligne peut être complètement manquée lors du scan. Inutile de rescanner ou de supprimer toute la dépense pour la corriger :
+
+- **Touchez un article** dans la liste pour modifier son nom, sa quantité, son prix unitaire ou son prix total. Touchez **Enregistrer** pour appliquer la correction.
+- **Touchez l'icône de la corbeille** à côté d'un article pour le supprimer — utile pour une ligne dupliquée ou inventée.
+- **Touchez + Ajouter un article** en bas de la liste pour ajouter une ligne que le scan a manquée.
+
+Tous les articles sont affichés — il n'y a pas de limite, quel que soit leur nombre sur le reçu. Toute modification met immédiatement à jour la répartition par catégories et les totaux, afin que ce que vous enregistrez corresponde toujours à ce qui est affiché. Le montant total, la remise et la consigne du reçu restent tels que scannés — seuls les articles individuels sont modifiables.
 
 ### Répartition par catégories
 
@@ -163,7 +173,7 @@ Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon 
   **R :** Les PDFs numeriques (par ex. factures Amazon ou PayPal) et les recus scannes en PDF sont tous deux pris en charge. La taille maximale du fichier est de 10 Mo. Les PDFs numeriques avec du texte selectionnable sont traites plus rapidement et avec plus de precision. Pour les PDFs scannes, assurez-vous que le scan est net et contraste.
 
 - **Q : Pourquoi le montant etait-il incorrect apres le scan ?**
-  **R :** L'extraction par IA n'est pas toujours parfaite. Verifiez toujours l'ecran de confirmation et corrigez les erreurs avant de sauvegarder. Les recus flous ou endommages peuvent produire des resultats moins precis.
+  **R :** L'extraction par IA n'est pas toujours parfaite. Verifiez toujours l'ecran de confirmation et corrigez les erreurs avant de sauvegarder. Les recus flous ou endommages peuvent produire des resultats moins precis. Si un article precis est incorrect, touchez-le pour le modifier directement — voir **Modifier les articles** ci-dessus.
 
 - **Q : La saisie vocale et le scan de recus utilisent-ils mes requetes IA ?**
   **R :** Oui, chaque saisie vocale ou scan de recu utilise une requete IA de votre allocation mensuelle.

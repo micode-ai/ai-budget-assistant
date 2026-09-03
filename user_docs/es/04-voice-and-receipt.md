@@ -61,7 +61,7 @@ Despues del analisis de la IA, veras:
 - **Comercio** — nombre de la tienda/restaurante (editable)
 - **Categoria** — asignada automaticamente (editable)
 - **Fecha** — del recibo (editable)
-- **Articulos** — articulos individuales con cantidades y precios (si se detectan)
+- **Articulos** — articulos individuales con cantidades y precios (si se detectan) — toca cualquier articulo para editarlo, eliminarlo o anadir uno que el escaneo paso por alto (ver **Editar articulos** mas abajo)
 - **Descuento** — importe del descuento (si esta presente en el recibo)
 - Indicador de **Confianza** — **Alta confianza** o **Confianza media**
 - Interruptor **Guardar imagen del recibo** — mantener la foto adjunta al gasto
@@ -76,6 +76,16 @@ Revisa y corrige cualquier detalle, luego:
 - Asegurate de que el recibo completo sea visible y este plano
 - Mantene la camara estable para evitar desenfoque
 - Usa **Instrucciones adicionales para la IA** para un tratamiento especial (por ejemplo, "Esto esta en EUR", "Ignorar el primer articulo")
+
+### Editar artículos
+
+La extracción por IA no siempre es perfecta: puede faltar una cifra en el precio, un descuento puede colarse en el precio unitario, o el escaneo puede pasar por alto una línea entera. No hace falta volver a escanear ni borrar todo el gasto para corregirlo:
+
+- **Toca cualquier artículo** de la lista para editar su nombre, cantidad, precio unitario o precio total. Toca **Guardar** para aplicar la corrección.
+- **Toca el icono de papelera** junto a un artículo para eliminarlo — útil para una línea duplicada o inventada.
+- **Toca + Añadir artículo** al final de la lista para añadir una línea que el escaneo pasó por alto.
+
+Se muestran todos los artículos, sin límite, sean los que sean los que tenga el recibo. Cualquier cambio actualiza de inmediato la división por categorías y los totales, así que lo que guardas siempre coincide con lo que ves en pantalla. El importe total, el descuento y el depósito del recibo se mantienen tal como se escanearon — solo los artículos individuales son editables.
 
 ### División por categorías
 
@@ -163,7 +173,7 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
   **R:** Se admiten tanto PDFs digitales (por ejemplo, facturas de Amazon o PayPal) como recibos escaneados en PDF. El tamano maximo del archivo es 10 MB. Los PDFs digitales con texto seleccionable se procesan mas rapido y con mayor precision. Para PDFs escaneados, asegurate de que el escaneo sea nitido y de alto contraste.
 
 - **P: Por que el importe fue incorrecto despues del escaneo?**
-  **R:** La extraccion por IA no siempre es perfecta. Revisa siempre la pantalla de confirmacion y corrige cualquier error antes de guardar. Los recibos borrosos o danados pueden producir resultados menos precisos.
+  **R:** La extraccion por IA no siempre es perfecta. Revisa siempre la pantalla de confirmacion y corrige cualquier error antes de guardar. Los recibos borrosos o danados pueden producir resultados menos precisos. Si un articulo concreto esta mal, tocalo para editarlo directamente — consulta **Editar artículos** más arriba.
 
 - **P: La entrada de voz o el escaneo de recibos consume mis solicitudes IA?**
   **R:** Si, cada entrada de voz o escaneo de recibo utiliza una solicitud IA de tu cuota mensual.

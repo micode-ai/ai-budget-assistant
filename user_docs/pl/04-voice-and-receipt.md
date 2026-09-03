@@ -61,7 +61,7 @@ Po analizie AI zobaczysz:
 - **Sprzedawca** — nazwa sklepu/restauracji (mozna edytowac)
 - **Kategoria** — przypisana automatycznie (mozna edytowac)
 - **Data** — z paragonu (mozna edytowac)
-- **Pozycje** — poszczegolne pozycje z ilosciami i cenami (jezeli wykryto)
+- **Pozycje** — poszczegolne pozycje z ilosciami i cenami (jezeli wykryto) — stuknij dowolna pozycje, aby ja edytowac, usunac lub dodac te, ktora skan pominal (zobacz **Edytowanie pozycji** ponizej)
 - **Rabat** — kwota rabatu (jezeli widnieje na paragonie)
 - Wskaznik **pewnosci** — Wysoka lub Srednia
 - Przelacznik **Zapisz zdjecie paragonu** — zachowaj zdjecie dolaczone do wydatku
@@ -76,6 +76,16 @@ Przejrzyj i popraw ewentualne szczegoly, a nastepnie:
 - Upewnij sie, ze caly paragon jest widoczny i plasko ulozony
 - Trzymaj aparat stabilnie, aby uniknac rozmazania
 - Uzyj **Dodatkowe instrukcje dla AI** do specjalnej obslugi (np. "To jest w EUR", "Pomin pierwsza pozycje")
+
+### Edytowanie pozycji
+
+Ekstrakcja AI nie zawsze jest idealna — cyfra w cenie moze zostac pominieta, rabat moze wmieszac sie w cene jednostkowa, albo cala pozycja moze zostac pominieta podczas skanowania. Nie musisz skanowac ponownie ani usuwac calego wydatku, aby to poprawic:
+
+- **Stuknij dowolna pozycje** na liscie, aby edytowac jej nazwe, ilosc, cene jednostkowa lub cene laczna. Stuknij **Zapisz**, aby zastosowac poprawke.
+- **Stuknij ikone kosza** obok pozycji, aby ja usunac — przydatne w przypadku zdublowanej lub zmyslonej pozycji.
+- **Stuknij + Dodaj pozycje** na dole listy, aby dodac pozycje pominieta przez skan.
+
+Wyswietlane sa wszystkie pozycje — bez limitu, niezaleznie od tego, ile ich jest na paragonie. Kazda zmiana natychmiast aktualizuje podzial na kategorie i sumy, wiec to, co zapisujesz, zawsze odpowiada temu, co widac na ekranie. Laczna kwota, rabat i kaucja z paragonu pozostaja takie, jak zeskanowano — edytowac mozna tylko poszczegolne pozycje.
 
 ### Podział na kategorie
 
@@ -163,7 +173,7 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
   **O:** Obslugiwane sa zarowno cyfrowe pliki PDF (np. faktury Amazon lub PayPal), jak i zeskanowane paragony w formacie PDF. Maksymalny rozmiar pliku wynosi 10 MB. Cyfrowe pliki PDF z mozliwoscia zaznaczania tekstu sa przetwarzane szybciej i dokladniej. W przypadku zeskanowanych PDF upewnij sie, ze skan jest wyrazny i o wysokim kontraście.
 
 - **P: Dlaczego kwota byla bledna po zeskanowaniu?**
-  **O:** Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki.
+  **O:** Ekstrakcja AI nie zawsze jest idealna. Zawsze przegladaj ekran potwierdzenia i poprawiaj ewentualne bledy przed zapisaniem. Rozmazane lub uszkodzone paragony moga dawac mniej dokladne wyniki. Jesli konkretna pozycja jest bledna, stuknij ja, aby edytowac bezposrednio — zobacz **Edytowanie pozycji** powyzej.
 
 - **P: Czy wprowadzanie glosowe/skanowanie paragonu zuzywa moje zapytania AI?**
   **O:** Tak, kazde wprowadzenie glosowe lub skan paragonu zuzywa jedno zapytanie AI z Twojego miesiecznego limitu.
