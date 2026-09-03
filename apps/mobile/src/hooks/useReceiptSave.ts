@@ -8,6 +8,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { resolveProposedCategories } from '@/features/receipt/resolveProposedCategories';
 import { compressAndEncodeImage } from '@/features/receipt/receiptImage';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
+import { maybeAskForReview } from '@/features/review/maybeAskForReview';
 import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
 import type { ReceiptCategorySplit } from '@budget/shared-utils';
 import type { Currency } from '@budget/shared-types';
@@ -147,16 +148,25 @@ export function useReceiptSave({
           : undefined,
       });
 
+      // The rating ask rides on "Done", never on "Scan another": the user is
+      // leaving satisfied, and interrupting a batch-scanning run with a system
+      // sheet is exactly how a prompt earns a one-star answer. It throttles
+      // itself, so calling it on every Done is safe (ABA-485).
+      const finish = () => {
+        router.back();
+        void maybeAskForReview();
+      };
+
       const session = onSaved?.();
       if (session?.isCheckpoint) {
         showAlert(t('receipt.sessionCapTitle'), t('receipt.sessionCapBody', { count: session.count }), [
           { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
-          { text: t('common.done'), onPress: () => router.back() },
+          { text: t('common.done'), onPress: finish },
         ]);
       } else {
         showAlert(t('common.success'), t('receipt.success'), [
           { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
-          { text: t('common.done'), onPress: () => router.back() },
+          { text: t('common.done'), onPress: finish },
         ]);
       }
     } catch {

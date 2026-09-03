@@ -33,6 +33,7 @@ import { useStyles, type Theme } from '@/theme';
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useWrapped } from '@/features/insights/useWrapped';
+import { maybeAskForReview } from '@/features/review/maybeAskForReview';
 import {
   WrappedShareCard,
   type WrappedShareCardHandle,
@@ -207,7 +208,12 @@ export default function WrappedScreen() {
       if (payload) {
         try {
           const ok = await shareCardRef.current?.share(payload);
-          if (ok) return;
+          if (ok) {
+            // Someone who shares their year in review is the likeliest person
+            // in the app to leave a good rating. Self-throttling (ABA-485).
+            void maybeAskForReview();
+            return;
+          }
         } catch {
           // fall through to text share
         }
@@ -215,6 +221,7 @@ export default function WrappedScreen() {
     }
     try {
       await Share.share({ message: buildShareMessage() });
+      void maybeAskForReview();
     } catch {
       // user dismissed / share unavailable — no-op
     }
