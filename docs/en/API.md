@@ -1678,9 +1678,138 @@ X-Account-Id: <account-uuid>
 
 ---
 
+## Exchange Rate Alerts
+
+"Notify me when this currency pair hits my target." A **personal** resource: rows are
+keyed by `userId` only, so an alert follows the user across every account they belong to
+and is never visible to other members of a shared account.
+
+All three endpoints carry `JwtAuthGuard + AccountContextGuard`, so the mobile client's
+usual `X-Account-Id` header is accepted, but the service **ignores it entirely** — same
+precedent as `GET /wallet/summaries`. There is no `ViewerBlockGuard`: a viewer may set a
+personal rate target exactly as they may set a display currency or theme accent.
+
+### Create Rate Alert
+
+```http
+POST /rate-watches
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "fromCurrency": "EUR",
+  "toCurrency": "PLN",
+  "targetRate": 4.35,
+  "direction": "above"
+}
+```
+
+`direction` is `above` or `below`; the rate compared is always `1 fromCurrency =
+<rate> toCurrency`. Both currencies must be in the supported list
+(`USD`, `EUR`, `PLN`, `GBP`, `UAH`, `RUB`, `BYN`) and must differ. `targetRate` is
+validated to `[0.000001, 999999]` — the column is `Decimal(12,6)`.
+
+**Response** `201 Created`
+```json
+{
+  "id": "uuid",
+  "userId": "user-uuid",
+  "fromCurrency": "EUR",
+  "toCurrency": "PLN",
+  "targetRate": 4.35,
+  "direction": "above",
+  "isActive": true,
+  "createdAt": "2026-09-02T12:00:00Z",
+  "triggeredAt": null,
+  "triggeredRate": null
+}
+```
+
+`400 Bad Request` on an unsupported currency, on `fromCurrency === toCurrency`, or when
+the user already holds **20** active alerts (`MAX_ACTIVE_WATCHES`, an abuse guard — the
+count-then-create is deliberately not atomic).
+
+### List Rate Alerts
+
+```http
+GET /rate-watches
+Authorization: Bearer <token>
+```
+
+Every alert of the authenticated user, newest first — **including already-triggered
+ones** (`isActive: false`), which is the only record that an alert fired. Filtering to a
+single pair is done client-side.
+
+**Response** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "userId": "user-uuid",
+    "fromCurrency": "EUR",
+    "toCurrency": "PLN",
+    "targetRate": 4.35,
+    "direction": "above",
+    "isActive": false,
+    "createdAt": "2026-09-02T12:00:00Z",
+    "triggeredAt": "2026-09-02T15:00:00Z",
+    "triggeredRate": 4.3512
+  }
+]
+```
+
+### Delete Rate Alert
+
+```http
+DELETE /rate-watches/:id
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK`
+```json
+{ "success": true }
+```
+
+Deleting is also how an alert is switched off — there is no per-type notification
+preference for `rate_watch_hit` (the alert's own existence is the opt-in, same precedent
+as `account_invitation` / `split_payment_claimed`). A row belonging to another user
+returns `404 Not Found` rather than `403`, so the response never reveals that it exists.
+
+### How the check runs
+
+`ExchangeRateAlertCron` runs hourly (`0 * * * *`), pages active alerts through
+`paginateById`, and groups each page by `fromCurrency` before calling the shared
+`ExchangeRateService` — so a run costs at most one provider call per distinct
+`fromCurrency` actually being watched (at most 7), regardless of how many users or
+alerts exist. An unknown `toCurrency` rate is skipped and retried next hour.
+
+An alert is **one-shot**: on a hit the row is flipped to `isActive: false` with
+`triggeredAt`/`triggeredRate` **before** the push is sent (so two concurrent runs cannot
+double-send), and if the push fails it is rolled back to active so the next run retries —
+a one-shot alert has no other surface telling the user it fired, so a lost push must not
+be silently final. The push (`rate_watch_hit`, localized in all 9 languages) carries only
+`{ fromCurrency, toCurrency }` and deep-links to the mobile Exchange screen with that pair
+preselected.
+
+---
+
 ## Account Transfers
 
-Account transfers are **user-scoped** — they do NOT require the `X-Account-Id` header since they span across accounts. The authenticated user must be a member of both the source and destination accounts, and must have at least **Editor** role on the source account.
+These endpoints carry `JwtAuthGuard + AccountContextGuard`, so `X-Account-Id` **is**
+required, and the account you act as must be a party to the transfer (its source or its
+destination). Writes additionally require the caller to be a member of **both** accounts
+and not a viewer on the paying side — the rule is "you may create, edit or delete a
+transfer only if you could have created it", checked on every write and not just when the
+accounts change.
+
+`GET` returns every transfer touching the account, **whoever created it** — the wallet
+aggregates transfers by account with no user filter, so a shared account's balance already
+counts a transfer made by another member (ABA-473). `userId` on the row is creator
+attribution only.
+
+A transfer may be re-homed to accounts that leave the acting account out of both sides —
+that is how "this money actually went to House, not Family" is corrected from the Family
+screen, and the row simply moves to the two accounts it now belongs to (ABA-472).
 
 ### Create Transfer
 
@@ -1699,9 +1828,18 @@ Content-Type: application/json
   "toAmount": 920.00,
   "exchangeRate": 0.92,
   "date": "2024-01-15T00:00:00Z",
-  "notes": "Monthly transfer to personal"
+  "notes": "Monthly transfer to personal",
+  "countAsIncome": false
 }
 ```
+
+`countAsIncome: true` additionally creates an `Income` row on the destination account
+(clientId `transfer-income-<localId>`), which is then what the destination's balance counts
+— an incoming transfer is only added to `transferredIn` when `countAsIncome` is `false`,
+so the money is never counted twice.
+
+Create is **idempotent on `localId`**: re-sending a create whose response was lost returns
+the existing row instead of a duplicate or a `500` (the mobile write queue relies on this).
 
 **Response** `201 Created`
 ```json
@@ -1752,14 +1890,49 @@ Authorization: Bearer <token>
 ]
 ```
 
+### Update Transfer
+
+```http
+PATCH /account-transfers/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "toAccountId": "other-account-uuid",
+  "toCurrency": "PLN",
+  "toAmount": 6000.00
+}
+```
+
+All fields optional: `fromAccountId`, `toAccountId`, `fromCurrency`, `toCurrency`,
+`fromAmount`, `toAmount`, `exchangeRate`, `date`, `notes`, `countAsIncome`. Currencies
+travel **with** the accounts — re-homing a transfer while keeping the old currency would
+store a row that means nothing.
+
+Toggling `countAsIncome` creates or soft-deletes the linked `Income`; changing
+`toAccountId` moves that income to the new destination account, or the money would stay on
+an account the transfer no longer touches.
+
+`:id` is resolved against the server id **or** the client's `clientId`, since the mobile
+client addresses a row by its local id until a wallet pull backfills the server id.
+
+**Response** `200 OK` — the updated transfer.
+
 ### Delete Transfer
 
 ```http
 DELETE /account-transfers/:id
 Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
 ```
 
-**Response** `204 No Content`
+Soft-deletes the transfer and its linked income (if any).
+
+**Response** `200 OK`
+```json
+{ "success": true }
+```
 
 ---
 

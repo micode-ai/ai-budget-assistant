@@ -86,6 +86,24 @@ Tausche Geld zwischen deinen Wahrungsgelborsen:
 - **Notizen-Feld** — Kontext zum Umtausch hinzufugen
 - **Letzte Umtausche** — deinen Umtauschverlauf anzeigen
 
+### Kursalarme
+
+Du musst den Kurs nicht selbst im Auge behalten. Auf dem Umtausch-Bildschirm setzt die Karte **Kursalarme** eine Zielmarke für das ausgewählte Währungspaar und benachrichtigt dich, sobald der aktuelle Kurs sie erreicht.
+
+1. Wähle die Währungen **Von** und **Nach**, die dich interessieren
+2. Tippe auf das **+** in der Karte **Kursalarme**
+3. Gib deine Zielmarke ein — das Feld lautet `1 <Von> = ___ <Nach>`
+4. Wähle **über** oder **unter**. Die App wählt automatisch das Passende zu deiner Eingabe (über, wenn die Zielmarke höher als der aktuelle Kurs ist, sonst unter); tippe auf den anderen Chip, um das zu ändern
+5. Tippe auf **Alarm hinzufügen**
+
+Der Kurs wird stündlich auf unseren Servern geprüft — das funktioniert also auch bei geschlossener App. Ist die Zielmarke erreicht, kommt eine Benachrichtigung: *„1 EUR sind jetzt 4,3512 PLN. Zum Umtauschen tippen."* Ein Tipp darauf öffnet den Umtausch-Bildschirm mit diesem Paar.
+
+Jeder Alarm löst **einmal** aus und endet dann, damit ein um die Zielmarke schwankender Kurs nicht immer wieder benachrichtigt. Lege einen neuen Alarm an, wenn du das Paar weiter beobachten willst.
+
+Die Karte zeigt die Alarme des aktuell gewählten Paares — mit den Währungen wechselt also die Liste. Zum Löschen tippe auf das Papierkorb-Symbol. Möglich sind bis zu **20** aktive Alarme gleichzeitig.
+
+Kursalarme sind **persönlich**: sie gelten in allen deinen Konten, niemand sonst sieht sie, und auch ein Betrachter kann sie setzen. In den Benachrichtigungseinstellungen gibt es keinen eigenen Schalter — den Alarm zu löschen ist das Ausschalten.
+
 ### Letzte Umtausche
 
 Unterhalb des Umtauschformulars findest du die 5 letzten Wahrungsumtausche mit:

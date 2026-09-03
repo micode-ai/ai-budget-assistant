@@ -84,6 +84,24 @@ Echangez de l'argent entre vos portefeuilles de devises :
 - **Champ de notes** — ajoutez du contexte au change
 - **Changes recents** — consultez votre historique de changes
 
+### Alertes de taux
+
+Vous n'avez pas à surveiller le taux vous-même. Sur l'écran Change, la carte **Alertes de taux** fixe un objectif pour la paire sélectionnée et vous prévient dès que le taux réel l'atteint.
+
+1. Sélectionnez les devises **De** et **Vers** qui vous intéressent
+2. Appuyez sur le **+** de la carte **Alertes de taux**
+3. Saisissez votre objectif — le champ indique `1 <De> = ___ <Vers>`
+4. Choisissez **au-dessus de** ou **en dessous de**. L'application présélectionne ce qui correspond au nombre saisi (au-dessus si votre objectif est supérieur au taux actuel, en dessous s'il est inférieur) ; appuyez sur l'autre puce pour changer
+5. Appuyez sur **Ajouter une alerte**
+
+Le taux est vérifié sur nos serveurs une fois par heure : cela fonctionne donc application fermée. Quand votre objectif est atteint, vous recevez une notification — *« 1 EUR vaut maintenant 4,3512 PLN. Appuyez pour échanger. »* — et l'ouvrir affiche l'écran Change avec cette paire déjà sélectionnée.
+
+Chaque alerte se déclenche **une seule fois** puis s'arrête, pour qu'un taux qui oscille autour de votre objectif ne vous prévienne pas en boucle. Créez une nouvelle alerte si vous voulez continuer à suivre la paire.
+
+La carte affiche les alertes de la paire sélectionnée : changer de devises change donc la liste. Appuyez sur l'icône corbeille pour en supprimer une. Vous pouvez conserver jusqu'à **20** alertes actives à la fois.
+
+Les alertes de taux sont **personnelles** : elles vous suivent dans tous vos comptes, personne d'autre ne les voit, et un observateur peut en créer comme tout le monde. Il n'y a pas d'interrupteur distinct dans les réglages de notifications — supprimer l'alerte, c'est l'éteindre.
+
 ### Changes recents
 
 Sous le formulaire de change, vous trouverez les 5 changes les plus recents avec :

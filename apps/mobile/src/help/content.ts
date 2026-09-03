@@ -1521,6 +1521,24 @@ Exchange money between your currency wallets:
 - **Notes field** — add context to the exchange
 - **Recent Exchanges** — view your exchange history
 
+### Rate alerts
+
+You don't have to keep checking the rate yourself. On the Exchange screen, the **Rate alerts** card sets a target for the pair you have selected and notifies you when the live rate reaches it.
+
+1. Select the **From** and **To** currencies you care about
+2. Tap the **+** on the **Rate alerts** card
+3. Enter your target — the field reads \`1 <From> = ___ <To>\`
+4. Choose **above** or **below**. The app preselects whichever matches the number you typed (above if your target is higher than the current rate, below if it is lower); tap the other chip to override it
+5. Tap **Add alert**
+
+The rate is checked on our servers once an hour, so it works with the app closed. When your target is reached you get a notification — *"1 EUR is now 4.3512 PLN. Tap to exchange."* — and tapping it opens the Exchange screen with that pair already selected.
+
+Each alert fires **once** and then stops, so a rate hovering around your target can't notify you over and over. Add a new alert if you want to keep watching that pair.
+
+The card shows the alerts for the pair currently selected, so switching currencies switches the list. Tap the bin icon to delete one. You can keep up to **20** active alerts at a time.
+
+Rate alerts are **personal**: they follow you across all your accounts, nobody else sees them, and a viewer can set them like anyone else. There is no separate switch in notification settings — deleting the alert is how you turn it off.
+
 ### Recent Exchanges
 
 Below the exchange form, you'll find the 5 most recent currency exchanges with:
@@ -6036,6 +6054,24 @@ iOS, Android, Web
 - **Ручная корректировка курса** — измените курс, если ваш фактический курс отличается
 - **Поле заметок** — добавьте контекст к обмену
 - **Последние обмены** — просмотр истории обменов
+
+### Оповещения о курсе
+
+Следить за курсом вручную не нужно. На экране обмена карточка **Оповещения о курсе** задаёт цель для выбранной пары и присылает уведомление, когда реальный курс её достигнет.
+
+1. Выберите валюты **Из** и **В**, которые вам интересны
+2. Нажмите **+** на карточке **Оповещения о курсе**
+3. Введите цель — поле выглядит как \`1 <Из> = ___ <В>\`
+4. Выберите **выше** или **ниже**. Приложение само подставит подходящее к введённому числу (выше, если цель больше текущего курса, ниже — если меньше); нажмите вторую кнопку, чтобы поменять
+5. Нажмите **Добавить оповещение**
+
+Курс проверяется на наших серверах раз в час, поэтому это работает и с закрытым приложением. Когда цель достигнута, приходит уведомление — *«1 EUR теперь 4,3512 PLN. Нажмите, чтобы обменять.»* — по нажатию открывается экран обмена с уже выбранной парой.
+
+Каждое оповещение срабатывает **один раз** и после этого выключается, чтобы курс, колеблющийся около вашей цели, не присылал уведомления снова и снова. Если хотите следить дальше — создайте новое.
+
+Карточка показывает оповещения только для выбранной сейчас пары, так что при смене валют меняется и список. Чтобы удалить оповещение, нажмите на значок корзины. Одновременно можно держать до **20** активных оповещений.
+
+Оповещения о курсе **личные**: они действуют на всех ваших счетах, никто другой их не видит, и наблюдатель может их создавать так же, как остальные. Отдельного переключателя в настройках уведомлений нет — выключение это удаление оповещения.
 
 ### Последние обмены
 
@@ -10557,6 +10593,24 @@ iOS, Android, Web
 - **Поле нотаток** — додайте контекст до обміну
 - **Останні обміни** — перегляд історії обмінів
 
+### Сповіщення про курс
+
+Стежити за курсом вручну не потрібно. На екрані обміну картка **Сповіщення про курс** задає ціль для вибраної пари й надсилає повідомлення, коли реальний курс її досягне.
+
+1. Виберіть валюти **З** і **У**, які вас цікавлять
+2. Натисніть **+** на картці **Сповіщення про курс**
+3. Введіть ціль — поле має вигляд \`1 <З> = ___ <У>\`
+4. Виберіть **вище** або **нижче**. Застосунок сам підставить те, що відповідає введеному числу (вище, якщо ціль більша за поточний курс, нижче — якщо менша); натисніть другу кнопку, щоб змінити
+5. Натисніть **Додати сповіщення**
+
+Курс перевіряється на наших серверах раз на годину, тому це працює й із закритим застосунком. Коли ціль досягнута, приходить повідомлення — *«1 EUR тепер 4,3512 PLN. Натисніть, щоб обміняти.»* — і за натисканням відкривається екран обміну з уже вибраною парою.
+
+Кожне сповіщення спрацьовує **один раз** і після цього вимикається, щоб курс, який коливається біля вашої цілі, не надсилав повідомлення знову й знову. Якщо хочете стежити далі — створіть нове.
+
+Картка показує сповіщення лише для вибраної зараз пари, тож зі зміною валют змінюється й список. Щоб видалити сповіщення, натисніть значок кошика. Одночасно можна тримати до **20** активних сповіщень.
+
+Сповіщення про курс **особисті**: вони діють на всіх ваших рахунках, ніхто інший їх не бачить, і спостерігач може їх створювати так само, як інші. Окремого перемикача в налаштуваннях повідомлень немає — вимкнення це видалення сповіщення.
+
 ### Останні обміни
 
 Під формою обміну ви знайдете список 5 останніх обмінів валют з:
@@ -15011,6 +15065,24 @@ Wymieniaj pieniadze miedzy swoimi portfelami walutowymi:
 - **Pole notatek** — dodaj kontekst do wymiany
 - **Ostatnie wymiany** — przegladaj historie wymian
 
+### Alerty kursowe
+
+Nie musisz sam pilnować kursu. Na ekranie Wymiany karta **Alerty kursowe** ustawia cel dla wybranej pary i powiadamia, gdy bieżący kurs go osiągnie.
+
+1. Wybierz waluty **Z** i **Na**, które Cię interesują
+2. Dotknij **+** na karcie **Alerty kursowe**
+3. Wpisz swój cel — pole ma postać \`1 <Z> = ___ <Na>\`
+4. Wybierz **powyżej** lub **poniżej**. Aplikacja podpowiada to, co pasuje do wpisanej liczby (powyżej, jeśli cel jest wyższy od obecnego kursu, poniżej, jeśli niższy); dotknij drugiego chipa, aby zmienić
+5. Dotknij **Dodaj alert**
+
+Kurs sprawdzamy na naszych serwerach raz na godzinę, więc działa to przy zamkniętej aplikacji. Gdy cel zostanie osiągnięty, dostaniesz powiadomienie — *„1 EUR to teraz 4,3512 PLN. Dotknij, aby wymienić."* — a jego dotknięcie otwiera ekran Wymiany z tą parą już wybraną.
+
+Każdy alert uruchamia się **raz** i wygasa, żeby kurs krążący wokół celu nie powiadamiał bez końca. Dodaj nowy alert, jeśli chcesz dalej obserwować tę parę.
+
+Karta pokazuje alerty dla aktualnie wybranej pary, więc zmiana walut zmienia listę. Dotknij ikony kosza, aby usunąć alert. Jednocześnie możesz mieć do **20** aktywnych alertów.
+
+Alerty kursowe są **osobiste**: działają na wszystkich Twoich kontach, nikt inny ich nie widzi, a obserwator może je ustawiać tak samo jak każdy. W ustawieniach powiadomień nie ma dla nich osobnego przełącznika — wyłączeniem jest usunięcie alertu.
+
 ### Ostatnie wymiany
 
 Ponizej formularza wymiany znajdziesz 5 ostatnich wymian walutowych z:
@@ -19464,6 +19536,24 @@ Tausche Geld zwischen deinen Wahrungsgelborsen:
 - **Manuelle Kursanpassung** — den Kurs bearbeiten, wenn dein tatsachlicher Kurs abweicht
 - **Notizen-Feld** — Kontext zum Umtausch hinzufugen
 - **Letzte Umtausche** — deinen Umtauschverlauf anzeigen
+
+### Kursalarme
+
+Du musst den Kurs nicht selbst im Auge behalten. Auf dem Umtausch-Bildschirm setzt die Karte **Kursalarme** eine Zielmarke für das ausgewählte Währungspaar und benachrichtigt dich, sobald der aktuelle Kurs sie erreicht.
+
+1. Wähle die Währungen **Von** und **Nach**, die dich interessieren
+2. Tippe auf das **+** in der Karte **Kursalarme**
+3. Gib deine Zielmarke ein — das Feld lautet \`1 <Von> = ___ <Nach>\`
+4. Wähle **über** oder **unter**. Die App wählt automatisch das Passende zu deiner Eingabe (über, wenn die Zielmarke höher als der aktuelle Kurs ist, sonst unter); tippe auf den anderen Chip, um das zu ändern
+5. Tippe auf **Alarm hinzufügen**
+
+Der Kurs wird stündlich auf unseren Servern geprüft — das funktioniert also auch bei geschlossener App. Ist die Zielmarke erreicht, kommt eine Benachrichtigung: *„1 EUR sind jetzt 4,3512 PLN. Zum Umtauschen tippen."* Ein Tipp darauf öffnet den Umtausch-Bildschirm mit diesem Paar.
+
+Jeder Alarm löst **einmal** aus und endet dann, damit ein um die Zielmarke schwankender Kurs nicht immer wieder benachrichtigt. Lege einen neuen Alarm an, wenn du das Paar weiter beobachten willst.
+
+Die Karte zeigt die Alarme des aktuell gewählten Paares — mit den Währungen wechselt also die Liste. Zum Löschen tippe auf das Papierkorb-Symbol. Möglich sind bis zu **20** aktive Alarme gleichzeitig.
+
+Kursalarme sind **persönlich**: sie gelten in allen deinen Konten, niemand sonst sieht sie, und auch ein Betrachter kann sie setzen. In den Benachrichtigungseinstellungen gibt es keinen eigenen Schalter — den Alarm zu löschen ist das Ausschalten.
 
 ### Letzte Umtausche
 
@@ -23957,6 +24047,24 @@ Cambia dinero entre tus billeteras de diferentes monedas:
 - **Campo de notas** — agrega contexto al cambio
 - **Cambios recientes** — consulta tu historial de cambios
 
+### Alertas de tipo de cambio
+
+No hace falta que vigiles el tipo de cambio tú mismo. En la pantalla de Cambio, la tarjeta **Alertas de tipo de cambio** fija un objetivo para el par que tengas seleccionado y te avisa cuando el tipo real lo alcanza.
+
+1. Selecciona las divisas **De** y **A** que te interesan
+2. Toca el **+** de la tarjeta **Alertas de tipo de cambio**
+3. Escribe tu objetivo — el campo dice \`1 <De> = ___ <A>\`
+4. Elige **por encima de** o **por debajo de**. La aplicación preselecciona la opción que encaja con el número que escribiste (por encima si tu objetivo es mayor que el tipo actual, por debajo si es menor); toca el otro chip para cambiarla
+5. Toca **Añadir alerta**
+
+El tipo se comprueba en nuestros servidores una vez por hora, así que funciona con la aplicación cerrada. Cuando se alcanza tu objetivo recibes una notificación —*«1 EUR son ahora 4,3512 PLN. Toca para cambiar.»*— y al tocarla se abre la pantalla de Cambio con ese par ya seleccionado.
+
+Cada alerta se dispara **una sola vez** y luego se detiene, para que un tipo que ronda tu objetivo no te avise una y otra vez. Añade una alerta nueva si quieres seguir vigilando ese par.
+
+La tarjeta muestra las alertas del par seleccionado, así que al cambiar de divisas cambia la lista. Toca el icono de la papelera para eliminar una. Puedes mantener hasta **20** alertas activas a la vez.
+
+Las alertas son **personales**: te acompañan en todas tus cuentas, nadie más las ve y un observador puede crearlas igual que cualquiera. No hay un interruptor aparte en los ajustes de notificaciones: eliminar la alerta es la forma de apagarla.
+
 ### Cambios recientes
 
 Debajo del formulario de cambio, encontraras los 5 cambios de divisa mas recientes con:
@@ -28313,6 +28421,24 @@ Echangez de l'argent entre vos portefeuilles de devises :
 - **Modification manuelle du taux** — modifiez le taux si votre taux reel differe
 - **Champ de notes** — ajoutez du contexte au change
 - **Changes recents** — consultez votre historique de changes
+
+### Alertes de taux
+
+Vous n'avez pas à surveiller le taux vous-même. Sur l'écran Change, la carte **Alertes de taux** fixe un objectif pour la paire sélectionnée et vous prévient dès que le taux réel l'atteint.
+
+1. Sélectionnez les devises **De** et **Vers** qui vous intéressent
+2. Appuyez sur le **+** de la carte **Alertes de taux**
+3. Saisissez votre objectif — le champ indique \`1 <De> = ___ <Vers>\`
+4. Choisissez **au-dessus de** ou **en dessous de**. L'application présélectionne ce qui correspond au nombre saisi (au-dessus si votre objectif est supérieur au taux actuel, en dessous s'il est inférieur) ; appuyez sur l'autre puce pour changer
+5. Appuyez sur **Ajouter une alerte**
+
+Le taux est vérifié sur nos serveurs une fois par heure : cela fonctionne donc application fermée. Quand votre objectif est atteint, vous recevez une notification — *« 1 EUR vaut maintenant 4,3512 PLN. Appuyez pour échanger. »* — et l'ouvrir affiche l'écran Change avec cette paire déjà sélectionnée.
+
+Chaque alerte se déclenche **une seule fois** puis s'arrête, pour qu'un taux qui oscille autour de votre objectif ne vous prévienne pas en boucle. Créez une nouvelle alerte si vous voulez continuer à suivre la paire.
+
+La carte affiche les alertes de la paire sélectionnée : changer de devises change donc la liste. Appuyez sur l'icône corbeille pour en supprimer une. Vous pouvez conserver jusqu'à **20** alertes actives à la fois.
+
+Les alertes de taux sont **personnelles** : elles vous suivent dans tous vos comptes, personne d'autre ne les voit, et un observateur peut en créer comme tout le monde. Il n'y a pas d'interrupteur distinct dans les réglages de notifications — supprimer l'alerte, c'est l'éteindre.
 
 ### Changes recents
 
@@ -32734,6 +32860,24 @@ iOS, Android, Web
 - **Поле нататак** — дадайце кантэкст да абмену
 - **Апошнія абмены** — прагляд гісторыі абменаў
 
+### Апавяшчэнні пра курс
+
+Сачыць за курсам уручную не трэба. На экране абмену картка **Апавяшчэнні пра курс** задае мэту для выбранай пары і прысылае паведамленне, калі рэальны курс яе дасягне.
+
+1. Выберыце валюты **З** і **У**, якія вас цікавяць
+2. Націсніце **+** на картцы **Апавяшчэнні пра курс**
+3. Увядзіце мэту — поле выглядае як \`1 <З> = ___ <У>\`
+4. Выберыце **вышэй** або **ніжэй**. Дадатак сам падставіць тое, што адпавядае ўведзенаму лічбу (вышэй, калі мэта большая за цяперашні курс, ніжэй — калі меншая); націсніце другую кнопку, каб памяняць
+5. Націсніце **Дадаць апавяшчэнне**
+
+Курс праверяецца на нашых серверах раз на гадзіну, таму гэта працуе і з закрытым дадаткам. Калі мэта дасягнута, прыходзіць паведамленне — *«1 EUR цяпер 4,3512 PLN. Націсніце, каб абмяняць.»* — і па націсканні адкрываецца экран абмену з ужо выбранай парай.
+
+Кожнае апавяшчэнне спрацоўвае **адзін раз** і пасля гэтага выключаецца, каб курс, які вагаецца побач з вашай мэтай, не прысылаў паведамленні зноў і зноў. Калі хочаце сачыць далей — стварыце новае.
+
+Картка паказвае апавяшчэнні толькі для выбранай зараз пары, таму пры змене валют мяняецца і спіс. Каб выдаліць апавяшчэнне, націсніце значок кошыка. Адначасова можна трымаць да **20** актыўных апавяшчэнняў.
+
+Апавяшчэнні пра курс **асабістыя**: яны дзейнічаюць на ўсіх вашых рахунках, ніхто іншы іх не бачыць, і назіральнік можа іх ствараць так сама, як астатнія. Асобнага пераключальніка ў наладах паведамленняў няма — выключэнне гэта выдаленне апавяшчэння.
+
 ### Апошнія абмены
 
 Пад формай абмену размешчаны спіс 5 апошніх абменаў валют з:
@@ -37106,6 +37250,24 @@ Wissel geld tussen je valutaportemonnees:
 - **Handmatige koers overschrijven** — bewerk de koers als je werkelijke koers afwijkt
 - **Notitieveld** — voeg context toe aan de wissel
 - **Recente wissels** — bekijk je wisselgeschiedenis
+
+### Koersalarmen
+
+Je hoeft de koers niet zelf in de gaten te houden. Op het Wissel-scherm zet de kaart **Koersalarmen** een doel voor het geselecteerde valutapaar en waarschuwt je zodra de actuele koers dat doel haalt.
+
+1. Kies de valuta's **Van** en **Naar** die je wilt volgen
+2. Tik op de **+** op de kaart **Koersalarmen**
+3. Vul je doel in — het veld luidt \`1 <Van> = ___ <Naar>\`
+4. Kies **boven** of **onder**. De app kiest zelf wat bij het ingevoerde getal past (boven als je doel hoger is dan de huidige koers, onder als het lager is); tik op de andere chip om dat te wijzigen
+5. Tik op **Alarm toevoegen**
+
+De koers wordt eens per uur op onze servers gecontroleerd, dus het werkt ook met de app gesloten. Zodra je doel is bereikt krijg je een melding — *"1 EUR is nu 4,3512 PLN. Tik om te wisselen."* — en die opent het Wissel-scherm met dat paar al geselecteerd.
+
+Elk alarm gaat **één keer** af en stopt daarna, zodat een koers die rond je doel blijft hangen je niet steeds opnieuw waarschuwt. Voeg een nieuw alarm toe als je het paar wilt blijven volgen.
+
+De kaart toont de alarmen van het geselecteerde paar, dus met de valuta wisselt ook de lijst. Tik op het prullenbakpictogram om er een te verwijderen. Je kunt maximaal **20** actieve alarmen hebben.
+
+Koersalarmen zijn **persoonlijk**: ze gelden in al je accounts, niemand anders ziet ze, en een kijker kan ze net als ieder ander instellen. Er is geen aparte schakelaar in de meldingsinstellingen — het alarm verwijderen is het uitzetten.
 
 ### Recente wissels
 

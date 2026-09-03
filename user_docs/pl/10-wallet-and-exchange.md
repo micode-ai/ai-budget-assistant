@@ -88,6 +88,24 @@ Wymieniaj pieniadze miedzy swoimi portfelami walutowymi:
 - **Pole notatek** — dodaj kontekst do wymiany
 - **Ostatnie wymiany** — przegladaj historie wymian
 
+### Alerty kursowe
+
+Nie musisz sam pilnować kursu. Na ekranie Wymiany karta **Alerty kursowe** ustawia cel dla wybranej pary i powiadamia, gdy bieżący kurs go osiągnie.
+
+1. Wybierz waluty **Z** i **Na**, które Cię interesują
+2. Dotknij **+** na karcie **Alerty kursowe**
+3. Wpisz swój cel — pole ma postać `1 <Z> = ___ <Na>`
+4. Wybierz **powyżej** lub **poniżej**. Aplikacja podpowiada to, co pasuje do wpisanej liczby (powyżej, jeśli cel jest wyższy od obecnego kursu, poniżej, jeśli niższy); dotknij drugiego chipa, aby zmienić
+5. Dotknij **Dodaj alert**
+
+Kurs sprawdzamy na naszych serwerach raz na godzinę, więc działa to przy zamkniętej aplikacji. Gdy cel zostanie osiągnięty, dostaniesz powiadomienie — *„1 EUR to teraz 4,3512 PLN. Dotknij, aby wymienić."* — a jego dotknięcie otwiera ekran Wymiany z tą parą już wybraną.
+
+Każdy alert uruchamia się **raz** i wygasa, żeby kurs krążący wokół celu nie powiadamiał bez końca. Dodaj nowy alert, jeśli chcesz dalej obserwować tę parę.
+
+Karta pokazuje alerty dla aktualnie wybranej pary, więc zmiana walut zmienia listę. Dotknij ikony kosza, aby usunąć alert. Jednocześnie możesz mieć do **20** aktywnych alertów.
+
+Alerty kursowe są **osobiste**: działają na wszystkich Twoich kontach, nikt inny ich nie widzi, a obserwator może je ustawiać tak samo jak każdy. W ustawieniach powiadomień nie ma dla nich osobnego przełącznika — wyłączeniem jest usunięcie alertu.
+
 ### Ostatnie wymiany
 
 Ponizej formularza wymiany znajdziesz 5 ostatnich wymian walutowych z:

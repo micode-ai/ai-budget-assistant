@@ -86,4 +86,10 @@ export const WHATS_NEW_ENTRIES: WhatsNewEntry[] = [
     body: "Every scanned receipt is quietly compared against what you paid last time at the same store — you'll see a note if something costs more than usual.",
     helpSectionId: '41-receipt-price-check',
   },
+  {
+    id: 'exchange-rate-alerts',
+    title: 'Exchange-rate alerts',
+    body: 'Set a target for a currency pair and get a notification the hour it is reached — no more opening the app to check whether the rate is good yet.',
+    route: '/wallet/exchange',
+  },
 ];

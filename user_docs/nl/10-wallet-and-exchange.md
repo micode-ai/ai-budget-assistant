@@ -84,6 +84,24 @@ Wissel geld tussen je valutaportemonnees:
 - **Notitieveld** — voeg context toe aan de wissel
 - **Recente wissels** — bekijk je wisselgeschiedenis
 
+### Koersalarmen
+
+Je hoeft de koers niet zelf in de gaten te houden. Op het Wissel-scherm zet de kaart **Koersalarmen** een doel voor het geselecteerde valutapaar en waarschuwt je zodra de actuele koers dat doel haalt.
+
+1. Kies de valuta's **Van** en **Naar** die je wilt volgen
+2. Tik op de **+** op de kaart **Koersalarmen**
+3. Vul je doel in — het veld luidt `1 <Van> = ___ <Naar>`
+4. Kies **boven** of **onder**. De app kiest zelf wat bij het ingevoerde getal past (boven als je doel hoger is dan de huidige koers, onder als het lager is); tik op de andere chip om dat te wijzigen
+5. Tik op **Alarm toevoegen**
+
+De koers wordt eens per uur op onze servers gecontroleerd, dus het werkt ook met de app gesloten. Zodra je doel is bereikt krijg je een melding — *"1 EUR is nu 4,3512 PLN. Tik om te wisselen."* — en die opent het Wissel-scherm met dat paar al geselecteerd.
+
+Elk alarm gaat **één keer** af en stopt daarna, zodat een koers die rond je doel blijft hangen je niet steeds opnieuw waarschuwt. Voeg een nieuw alarm toe als je het paar wilt blijven volgen.
+
+De kaart toont de alarmen van het geselecteerde paar, dus met de valuta wisselt ook de lijst. Tik op het prullenbakpictogram om er een te verwijderen. Je kunt maximaal **20** actieve alarmen hebben.
+
+Koersalarmen zijn **persoonlijk**: ze gelden in al je accounts, niemand anders ziet ze, en een kijker kan ze net als ieder ander instellen. Er is geen aparte schakelaar in de meldingsinstellingen — het alarm verwijderen is het uitzetten.
+
 ### Recente wissels
 
 Onder het wisselformulier vind je de 5 meest recente valutawissels met:

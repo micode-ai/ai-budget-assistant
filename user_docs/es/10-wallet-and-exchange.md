@@ -147,6 +147,24 @@ Cambia dinero entre tus billeteras de diferentes monedas:
 - **Campo de notas** — agrega contexto al cambio
 - **Cambios recientes** — consulta tu historial de cambios
 
+### Alertas de tipo de cambio
+
+No hace falta que vigiles el tipo de cambio tú mismo. En la pantalla de Cambio, la tarjeta **Alertas de tipo de cambio** fija un objetivo para el par que tengas seleccionado y te avisa cuando el tipo real lo alcanza.
+
+1. Selecciona las divisas **De** y **A** que te interesan
+2. Toca el **+** de la tarjeta **Alertas de tipo de cambio**
+3. Escribe tu objetivo — el campo dice `1 <De> = ___ <A>`
+4. Elige **por encima de** o **por debajo de**. La aplicación preselecciona la opción que encaja con el número que escribiste (por encima si tu objetivo es mayor que el tipo actual, por debajo si es menor); toca el otro chip para cambiarla
+5. Toca **Añadir alerta**
+
+El tipo se comprueba en nuestros servidores una vez por hora, así que funciona con la aplicación cerrada. Cuando se alcanza tu objetivo recibes una notificación —*«1 EUR son ahora 4,3512 PLN. Toca para cambiar.»*— y al tocarla se abre la pantalla de Cambio con ese par ya seleccionado.
+
+Cada alerta se dispara **una sola vez** y luego se detiene, para que un tipo que ronda tu objetivo no te avise una y otra vez. Añade una alerta nueva si quieres seguir vigilando ese par.
+
+La tarjeta muestra las alertas del par seleccionado, así que al cambiar de divisas cambia la lista. Toca el icono de la papelera para eliminar una. Puedes mantener hasta **20** alertas activas a la vez.
+
+Las alertas son **personales**: te acompañan en todas tus cuentas, nadie más las ve y un observador puede crearlas igual que cualquiera. No hay un interruptor aparte en los ajustes de notificaciones: eliminar la alerta es la forma de apagarla.
+
 ### Cambios recientes
 
 Debajo del formulario de cambio, encontraras los 5 cambios de divisa mas recientes con:

@@ -84,6 +84,24 @@ Exchange money between your currency wallets:
 - **Notes field** — add context to the exchange
 - **Recent Exchanges** — view your exchange history
 
+### Rate alerts
+
+You don't have to keep checking the rate yourself. On the Exchange screen, the **Rate alerts** card sets a target for the pair you have selected and notifies you when the live rate reaches it.
+
+1. Select the **From** and **To** currencies you care about
+2. Tap the **+** on the **Rate alerts** card
+3. Enter your target — the field reads `1 <From> = ___ <To>`
+4. Choose **above** or **below**. The app preselects whichever matches the number you typed (above if your target is higher than the current rate, below if it is lower); tap the other chip to override it
+5. Tap **Add alert**
+
+The rate is checked on our servers once an hour, so it works with the app closed. When your target is reached you get a notification — *"1 EUR is now 4.3512 PLN. Tap to exchange."* — and tapping it opens the Exchange screen with that pair already selected.
+
+Each alert fires **once** and then stops, so a rate hovering around your target can't notify you over and over. Add a new alert if you want to keep watching that pair.
+
+The card shows the alerts for the pair currently selected, so switching currencies switches the list. Tap the bin icon to delete one. You can keep up to **20** active alerts at a time.
+
+Rate alerts are **personal**: they follow you across all your accounts, nobody else sees them, and a viewer can set them like anyone else. There is no separate switch in notification settings — deleting the alert is how you turn it off.
+
 ### Recent Exchanges
 
 Below the exchange form, you'll find the 5 most recent currency exchanges with:

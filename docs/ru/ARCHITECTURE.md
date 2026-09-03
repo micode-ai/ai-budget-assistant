@@ -445,6 +445,10 @@ src/
 │   │   ├── currency-exchange.controller.ts
 │   │   ├── currency-exchange.service.ts
 │   │   └── exchange-rate.service.ts
+│   ├── exchange-rate-alerts/    # «Сообщить, когда EUR/PLN дойдёт до 4.35» — личный ресурс
+│   │   ├── exchange-rate-alerts.controller.ts
+│   │   ├── exchange-rate-alerts.service.ts
+│   │   └── exchange-rate-alert.cron.ts   # раз в час, группирует по fromCurrency
 │   ├── sync/                    # Синхронизация данных
 │   │   ├── sync.controller.ts
 │   │   └── sync.service.ts
