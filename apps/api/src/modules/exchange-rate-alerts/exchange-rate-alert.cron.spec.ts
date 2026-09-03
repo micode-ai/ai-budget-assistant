@@ -94,3 +94,26 @@ describe('ExchangeRateAlertCron.checkWatches', () => {
     expect(sendToUser).toHaveBeenCalledTimes(1);
   });
 });
+
+describe('ExchangeRateAlertCron.cleanupOldHistory', () => {
+  function makeCleanupCron(deleteManyResult: { count: number } = { count: 0 }) {
+    const deleteMany = jest.fn().mockResolvedValue(deleteManyResult);
+    const prisma: any = { exchangeRateWatch: { deleteMany } };
+    const cron = new ExchangeRateAlertCron(prisma, {} as any, {} as any);
+    return { cron, deleteMany };
+  }
+
+  it('deletes only triggered (isActive:false) watches older than 90 days', async () => {
+    const { cron, deleteMany } = makeCleanupCron({ count: 3 });
+    await cron.cleanupOldHistory();
+    expect(deleteMany).toHaveBeenCalledWith({
+      where: { isActive: false, triggeredAt: { lt: expect.any(Date) } },
+    });
+  });
+
+  it('does not throw when the delete fails', async () => {
+    const { cron, deleteMany } = makeCleanupCron();
+    deleteMany.mockRejectedValueOnce(new Error('db down'));
+    await expect(cron.cleanupOldHistory()).resolves.toBeUndefined();
+  });
+});

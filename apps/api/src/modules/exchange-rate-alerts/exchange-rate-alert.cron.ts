@@ -6,6 +6,9 @@ import { ExchangeRateService } from '../currency-exchange/exchange-rate.service'
 import * as ni18n from '../notifications/notification-i18n';
 import { paginateById } from '../../common/utils/paginate';
 
+/** How long a triggered (isActive:false) watch's history row is kept before cleanup. */
+const RATE_WATCH_HISTORY_RETENTION_DAYS = 90;
+
 /**
  * Hourly check of every active "notify me when this pair hits my target" watch.
  *
@@ -66,6 +69,25 @@ export class ExchangeRateAlertCron {
           }
         }
       }
+    }
+  }
+
+  /**
+   * Daily sweep of fired history — same 03:00 UTC slot and retention convention as
+   * shopping-reminder.cron.ts's cleanupOldLogs / family-feed.service.ts's pruneOldEvents.
+   * MAX_ACTIVE_WATCHES only bounds the active set; a fired one-shot watch's isActive:false
+   * row would otherwise accumulate forever.
+   */
+  @Cron('0 3 * * *')
+  async cleanupOldHistory(): Promise<void> {
+    const cutoff = new Date(Date.now() - RATE_WATCH_HISTORY_RETENTION_DAYS * 24 * 60 * 60 * 1000);
+    try {
+      const { count } = await this.prisma.exchangeRateWatch.deleteMany({
+        where: { isActive: false, triggeredAt: { lt: cutoff } },
+      });
+      if (count > 0) this.logger.log(`Pruned ${count} triggered exchange rate watch(es) older than ${RATE_WATCH_HISTORY_RETENTION_DAYS} days`);
+    } catch (err) {
+      this.logger.warn(`Exchange rate watch history cleanup failed: ${err}`);
     }
   }
 
