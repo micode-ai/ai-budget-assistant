@@ -26,6 +26,12 @@ interface ParticipantStatusListProps {
   isCancelling: boolean;
   onSend: (participant: SplitParticipantState) => void;
   onConfirm: (participant: SplitParticipantState) => void;
+  /**
+   * Rendered at the end of the scroll, inside it rather than floating over it.
+   * The screen owns what goes here (today: the invite card) so this component
+   * stays a pure status list with no opinion about referrals.
+   */
+  footer?: React.ReactNode;
   onCopyAll: () => void;
   onCancelPress: () => void;
   /** Opens the group QR modal (ABA — QR-code bill split) — undefined when
@@ -51,6 +57,7 @@ export function ParticipantStatusList({
   isCancelling,
   onSend,
   onConfirm,
+  footer,
   onCopyAll,
   onCancelPress,
   onShowQr,
@@ -164,6 +171,8 @@ export function ParticipantStatusList({
             )}
           </TouchableOpacity>
         )}
+
+        {footer}
       </KeyboardAwareScreen>
     </SafeAreaView>
   );

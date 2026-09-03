@@ -17,6 +17,8 @@ Każdy użytkownik ma unikalny 6-znakowy kod polecenia. Znajdziesz go na ekranie
 3. Naciśnij **Kopiuj**, aby skopiować kod do schowka
 4. Naciśnij **Udostępnij**, aby wysłać go przez komunikator — wiadomość zawiera już link, a osobie, która go otworzy, kod wpisze się sam
 
+Aplikacja proponuje to również w jednym konkretnym momencie: gdy znajomy odda Ci pieniądze przy dzieleniu rachunku. Tylko tam o to pyta — a jeśli zamkniesz to dwa razy, przestanie pytać.
+
 ## Jak to działa
 
 1. **Udostępnij swój kod** — wyślij go znajomym przez komunikator lub media społecznościowe

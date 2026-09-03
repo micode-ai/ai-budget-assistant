@@ -3463,6 +3463,8 @@ Every user has a unique 6-character referral code. You can find it on the **Invi
 3. Use **Copy** to copy the code to your clipboard
 4. Use **Share** to send it via any messaging app — the message already contains a link, and a friend who opens it has your code filled in for them
 
+The app also offers this to you at one specific moment: after a friend has paid you back through a bill split. That is the only place it asks — and if you close it twice, it stops asking.
+
 ## How It Works
 
 1. **Share your code** — send it to friends via any messenger or social media
@@ -8037,6 +8039,8 @@ OCR иногда неверно читает цену, выдумывает ст
 3. Нажмите **Скопировать**, чтобы скопировать код в буфер обмена
 4. Нажмите **Поделиться**, чтобы отправить его через любой мессенджер — в сообщении уже есть ссылка, и у того, кто её откроет, ваш код подставится сам
 
+Приложение также предлагает это в один конкретный момент: после того как друг вернул вам деньги при делении счёта. Это единственное место, где оно спрашивает, — и если закрыть дважды, спрашивать перестанет.
+
 ## Как это работает
 
 1. **Поделитесь кодом** — отправьте его друзьям через мессенджер или соцсети
@@ -12583,6 +12587,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 3. Натисніть **Скопіювати**, щоб скопіювати код у буфер обміну
 4. Натисніть **Поділитися**, щоб надіслати через будь-який месенджер — у повідомленні вже є посилання, і в того, хто його відкриє, ваш код підставиться сам
 
+Застосунок також пропонує це в один конкретний момент: після того як друг повернув вам гроші під час поділу рахунку. Це єдине місце, де він запитує, — і якщо закрити двічі, запитувати перестане.
+
 ## Як це працює
 
 1. **Поділіться кодом** — надішліть його друзям через месенджер або соцмережі
@@ -17098,6 +17104,8 @@ Każdy użytkownik ma unikalny 6-znakowy kod polecenia. Znajdziesz go na ekranie
 3. Naciśnij **Kopiuj**, aby skopiować kod do schowka
 4. Naciśnij **Udostępnij**, aby wysłać go przez komunikator — wiadomość zawiera już link, a osobie, która go otworzy, kod wpisze się sam
 
+Aplikacja proponuje to również w jednym konkretnym momencie: gdy znajomy odda Ci pieniądze przy dzieleniu rachunku. Tylko tam o to pyta — a jeśli zamkniesz to dwa razy, przestanie pytać.
+
 ## Jak to działa
 
 1. **Udostępnij swój kod** — wyślij go znajomym przez komunikator lub media społecznościowe
@@ -21607,6 +21615,8 @@ Jeder Benutzer hat einen einzigartigen 6-stelligen Empfehlungscode. Du findest i
 3. Tippe auf **Kopieren**, um den Code in die Zwischenablage zu kopieren
 4. Tippe auf **Teilen**, um ihn über einen Messenger zu senden — die Nachricht enthält bereits einen Link, und wer ihn öffnet, bekommt deinen Code automatisch eingetragen
 
+Die App bietet dir das auch an einer bestimmten Stelle an: nachdem dich ein Freund über eine geteilte Rechnung zurückgezahlt hat. Nur dort fragt sie — und wenn du sie zweimal schließt, fragt sie nicht mehr.
+
 ## So funktioniert es
 
 1. **Teile deinen Code** — sende ihn per Messenger oder Social Media an Freunde
@@ -26093,6 +26103,8 @@ Cada usuario tiene un código de referido único de 6 caracteres. Puedes encontr
 3. Toca **Copiar** para copiar el código al portapapeles
 4. Toca **Compartir** para enviarlo por cualquier app de mensajería — el mensaje ya incluye un enlace, y a quien lo abra se le rellena tu código automáticamente
 
+La app también te lo propone en un momento concreto: después de que un amigo te haya devuelto el dinero al dividir una cuenta. Es el único sitio donde lo pregunta, y si lo cierras dos veces, deja de preguntar.
+
 ## Cómo funciona
 
 1. **Comparte tu código** — envíalo a amigos por mensajería o redes sociales
@@ -30576,6 +30588,8 @@ Chaque utilisateur possède un code de parrainage unique de 6 caractères. Vous 
 3. Appuyez sur **Copier** pour copier le code
 4. Appuyez sur **Partager** pour l'envoyer via une application de messagerie — le message contient déjà un lien, et votre code est pré-rempli pour la personne qui l'ouvre
 
+L'application vous le propose aussi à un moment précis : après qu'un ami vous a remboursé via un partage d'addition. C'est le seul endroit où elle le demande — et si vous fermez deux fois, elle cesse de demander.
+
 ## Comment ça marche
 
 1. **Partagez votre code** — envoyez-le à vos amis par messagerie ou réseaux sociaux
@@ -35053,6 +35067,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 2. Ваш код адлюстроўваецца ўверсе экрана
 3. Націсніце **Скапіраваць**, каб скапіраваць код у буфер абмену
 4. Націсніце **Падзяліцца**, каб адправіць праз любы месенджар — у паведамленні ўжо ёсць спасылка, і ў таго, хто яе адкрые, ваш код падставіцца сам
+
+Праграма таксама прапануе гэта ў адзін канкрэтны момант: пасля таго як сябар вярнуў вам грошы пры дзяленні рахунку. Гэта адзінае месца, дзе яна пытаецца, — і калі закрыць двойчы, пытацца перастане.
 
 ## Як гэта працуе
 
@@ -39571,6 +39587,8 @@ Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op h
 2. Je code wordt boven aan het scherm weergegeven
 3. Gebruik **Kopiëren** om de code naar je klembord te kopiëren
 4. Gebruik **Delen** om hem via een willekeurige berichtenapp te versturen — het bericht bevat al een link, en bij wie hem opent wordt jouw code automatisch ingevuld
+
+De app biedt dit ook op één specifiek moment aan: nadat een vriend je heeft terugbetaald bij het delen van een rekening. Dat is de enige plek waar het gevraagd wordt — en als je het twee keer wegklikt, stopt het.
 
 ## Hoe het werkt
 

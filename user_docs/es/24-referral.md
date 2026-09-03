@@ -17,6 +17,8 @@ Cada usuario tiene un código de referido único de 6 caracteres. Puedes encontr
 3. Toca **Copiar** para copiar el código al portapapeles
 4. Toca **Compartir** para enviarlo por cualquier app de mensajería — el mensaje ya incluye un enlace, y a quien lo abra se le rellena tu código automáticamente
 
+La app también te lo propone en un momento concreto: después de que un amigo te haya devuelto el dinero al dividir una cuenta. Es el único sitio donde lo pregunta, y si lo cierras dos veces, deja de preguntar.
+
 ## Cómo funciona
 
 1. **Comparte tu código** — envíalo a amigos por mensajería o redes sociales

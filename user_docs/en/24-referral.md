@@ -17,6 +17,8 @@ Every user has a unique 6-character referral code. You can find it on the **Invi
 3. Use **Copy** to copy the code to your clipboard
 4. Use **Share** to send it via any messaging app — the message already contains a link, and a friend who opens it has your code filled in for them
 
+The app also offers this to you at one specific moment: after a friend has paid you back through a bill split. That is the only place it asks — and if you close it twice, it stops asking.
+
 ## How It Works
 
 1. **Share your code** — send it to friends via any messenger or social media

@@ -17,6 +17,8 @@ Chaque utilisateur possède un code de parrainage unique de 6 caractères. Vous 
 3. Appuyez sur **Copier** pour copier le code
 4. Appuyez sur **Partager** pour l'envoyer via une application de messagerie — le message contient déjà un lien, et votre code est pré-rempli pour la personne qui l'ouvre
 
+L'application vous le propose aussi à un moment précis : après qu'un ami vous a remboursé via un partage d'addition. C'est le seul endroit où elle le demande — et si vous fermez deux fois, elle cesse de demander.
+
 ## Comment ça marche
 
 1. **Partagez votre code** — envoyez-le à vos amis par messagerie ou réseaux sociaux

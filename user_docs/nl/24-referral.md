@@ -17,6 +17,8 @@ Elke gebruiker heeft een unieke verwijzingscode van 6 tekens. Je vindt deze op h
 3. Gebruik **Kopiëren** om de code naar je klembord te kopiëren
 4. Gebruik **Delen** om hem via een willekeurige berichtenapp te versturen — het bericht bevat al een link, en bij wie hem opent wordt jouw code automatisch ingevuld
 
+De app biedt dit ook op één specifiek moment aan: nadat een vriend je heeft terugbetaald bij het delen van een rekening. Dat is de enige plek waar het gevraagd wordt — en als je het twee keer wegklikt, stopt het.
+
 ## Hoe het werkt
 
 1. **Deel je code** — stuur deze naar vrienden via een messenger of sociale media

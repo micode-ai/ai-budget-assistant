@@ -38,6 +38,10 @@ import { useReceiptSplitStore } from '@/stores/receiptSplitStore';
 import { useEncryptionStore } from '@/stores/encryptionStore';
 import { AssignmentEditor } from '@/components/receipt-split/AssignmentEditor';
 import { ParticipantStatusList } from '@/components/receipt-split/ParticipantStatusList';
+import { InviteFriendsCard } from '@/components/receipt-split/InviteFriendsCard';
+import { shouldOfferInvite } from '@/features/referral/shouldOfferInvite';
+import { useInvitePromptStore } from '@/stores/invitePromptStore';
+import { useReferralStore } from '@/stores/referralStore';
 import { GroupQrModal } from '@/components/receipt-split/GroupQrModal';
 import { deriveSplitMode } from '@/components/split/deriveSplitMode';
 import { showAlert } from '@/utils/alert';
@@ -249,6 +253,44 @@ export default function ReceiptSplitScreen() {
     }
   }
 
+  // --- Invite nudge (ABA-489) -------------------------------------------
+  // The one place the app asks anyone to use the referral programme. Shown
+  // only once a friend has actually paid through a page we served, which is
+  // the moment the pitch is true rather than merely frequent — see
+  // `shouldOfferInvite` for the rules and for why this is an inline card
+  // instead of a second interrupting prompt.
+  const invitePrompt = useInvitePromptStore();
+  const shareReferralCode = useReferralStore((s) => s.shareCode);
+  const loadReferralCode = useReferralStore((s) => s.loadCode);
+  const referralCode = useReferralStore((s) => s.code);
+
+  const settledCount = split?.participants.filter((p) => p.status === 'settled').length ?? 0;
+  const offerInvite = shouldOfferInvite({
+    settledCount,
+    canEdit,
+    lastShownAt: invitePrompt.lastShownAt,
+    dismissals: invitePrompt.dismissals,
+    now: Date.now(),
+  });
+
+  useEffect(() => {
+    if (!offerInvite) return;
+    // Marked when the card is actually rendered, so the 60-day interval starts
+    // from a real sighting rather than from a screen the user never scrolled to.
+    invitePrompt.markShown();
+    // The code is loaded lazily elsewhere (the Invite Friends screen), and
+    // sharing without it would produce a message with an empty code.
+    if (!referralCode) void loadReferralCode();
+    // Intentionally keyed on `offerInvite` alone: `invitePrompt` is a new object
+    // every store update, and marking shown is itself an update.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [offerInvite]);
+
+  async function handleInvite() {
+    invitePrompt.markAccepted();
+    await shareReferralCode();
+  }
+
   function handleCancelPress() {
     showAlert(t('receiptSplit.cancelSplit'), t('receiptSplit.cancelConfirm'), [
       { text: t('common.cancel'), style: 'cancel' },
@@ -317,6 +359,11 @@ export default function ReceiptSplitScreen() {
           onCopyAll={handleCopyAll}
           onCancelPress={handleCancelPress}
           onShowQr={split.groupUrl ? () => setQrModalVisible(true) : undefined}
+          footer={
+            offerInvite ? (
+              <InviteFriendsCard onInvite={handleInvite} onDismiss={invitePrompt.markDismissed} />
+            ) : undefined
+          }
         />
         {split.groupUrl && (
           <GroupQrModal

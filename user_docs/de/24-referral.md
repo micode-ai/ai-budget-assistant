@@ -17,6 +17,8 @@ Jeder Benutzer hat einen einzigartigen 6-stelligen Empfehlungscode. Du findest i
 3. Tippe auf **Kopieren**, um den Code in die Zwischenablage zu kopieren
 4. Tippe auf **Teilen**, um ihn über einen Messenger zu senden — die Nachricht enthält bereits einen Link, und wer ihn öffnet, bekommt deinen Code automatisch eingetragen
 
+Die App bietet dir das auch an einer bestimmten Stelle an: nachdem dich ein Freund über eine geteilte Rechnung zurückgezahlt hat. Nur dort fragt sie — und wenn du sie zweimal schließt, fragt sie nicht mehr.
+
 ## So funktioniert es
 
 1. **Teile deinen Code** — sende ihn per Messenger oder Social Media an Freunde
