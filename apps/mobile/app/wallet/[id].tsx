@@ -1,7 +1,4 @@
-import { useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, ScrollView, Platform, ActivityIndicator } from 'react-native';
-import { showAlert } from '@/utils/alert';
-import { parseAmount } from '@/utils/amount';
+import { View, Text, TouchableOpacity, TextInput, Platform, ActivityIndicator } from 'react-native';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { DatePicker } from '@/components/DatePicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,32 +6,27 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useWalletStore } from '@/stores/walletStore';
 import { useAccountStore } from '@/stores/accountStore';
-import type { Currency } from '@budget/shared-types';
+import type { AccountTransfer } from '@budget/shared-types';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
+import { useTransferEditForm } from '@/hooks/useTransferEditForm';
+import { TransferAccountCard } from '@/components/wallet/TransferAccountCard';
+
+/** No balance chip in edit mode — the detail screen has never shown one; a
+ * balance figure here would also have to account for the transfer's own
+ * already-committed amount, which the create screen's chips don't need to. */
+const noBalance = () => null;
+const noOpCurrencySelect = () => {};
 
 export default function TransferDetailScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { transfers, updateTransfer, deleteTransfer } = useWalletStore();
-  const accounts = useAccountStore((s) => s.accounts);
+  const transfers = useWalletStore((s) => s.transfers);
   const transfer = transfers.find((tr) => tr.id === id);
-
-  const [isEditing, setIsEditing] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [editFromAmount, setEditFromAmount] = useState(transfer?.fromAmount?.toString() || '');
-  const [editToAmount, setEditToAmount] = useState(transfer?.toAmount?.toString() || '');
-  const [editExchangeRate, setEditExchangeRate] = useState(transfer?.exchangeRate?.toString() || '');
-  const [editNotes, setEditNotes] = useState(transfer?.notes || '');
-  const [editCountAsIncome, setEditCountAsIncome] = useState(transfer?.countAsIncome || false);
-  const [editFromAccountId, setEditFromAccountId] = useState(transfer?.fromAccountId || '');
-  const [editToAccountId, setEditToAccountId] = useState(transfer?.toAccountId || '');
-  const [editDate, setEditDate] = useState(transfer ? new Date(transfer.date) : new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
 
   if (!transfer) {
     return (
@@ -48,209 +40,55 @@ export default function TransferDetailScreen() {
     );
   }
 
+  return <TransferDetailBody transfer={transfer} />;
+}
+
+function TransferDetailBody({ transfer }: { transfer: AccountTransfer }) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const accounts = useAccountStore((s) => s.accounts);
   const fromAccount = accounts.find((a) => a.id === transfer.fromAccountId);
   const toAccount = accounts.find((a) => a.id === transfer.toAccountId);
-
-  // Accounts the user may pay from. A viewer cannot be the source of a transfer,
-  // which the server enforces too.
-  const payableAccounts = accounts.filter((a) => a.myRole !== 'viewer');
-
-  // Currency follows the account, exactly as it does in the create form. Re-homing
-  // a transfer while keeping the old currency would store a meaningless row.
-  const currencyOf = (accountId: string, fallback: Currency): Currency =>
-    (accounts.find((a) => a.id === accountId)?.currencyCode as Currency) ?? fallback;
-  const editFromCurrency =
-    editFromAccountId === transfer.fromAccountId
-      ? transfer.fromCurrency
-      : currencyOf(editFromAccountId, transfer.fromCurrency);
-  const editToCurrency =
-    editToAccountId === transfer.toAccountId
-      ? transfer.toCurrency
-      : currencyOf(editToAccountId, transfer.toCurrency);
-
-  const handleSave = async () => {
-    const from = parseAmount(editFromAmount);
-    const to = parseAmount(editToAmount);
-    const rate = parseAmount(editExchangeRate);
-
-    if (!editFromAccountId || !editToAccountId || editFromAccountId === editToAccountId) {
-      showAlert(t('common.error'), t('transfer.sameAccountError'));
-      return;
-    }
-
-    if (!from || !to || !rate || from <= 0 || to <= 0 || rate <= 0) {
-      showAlert(t('common.error'), t('validation.invalidAmount'));
-      return;
-    }
-
-    setIsSaving(true);
-    const result = await updateTransfer(transfer.id, {
-      fromAccountId: editFromAccountId,
-      toAccountId: editToAccountId,
-      fromCurrency: editFromCurrency,
-      toCurrency: editToCurrency,
-      fromAmount: from,
-      toAmount: to,
-      exchangeRate: rate,
-      date: editDate,
-      notes: editNotes.trim() || undefined,
-      countAsIncome: editCountAsIncome,
-    });
-    setIsSaving(false);
-
-    // Only a server refusal is an error worth interrupting for: it is rolled back
-    // and will never sync, so say so and stay in edit mode. An offline save comes
-    // back as `queued` — the edit is kept and retried, exactly like every other
-    // offline write in the app, so it closes silently.
-    if (result.status === 'rejected') {
-      showAlert(t('transfer.saveFailed'), t('transfer.saveFailedHint'));
-      return;
-    }
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setIsEditing(false);
-    setEditFromAmount(transfer.fromAmount.toString());
-    setEditToAmount(transfer.toAmount.toString());
-    setEditExchangeRate(transfer.exchangeRate.toString());
-    setEditNotes(transfer.notes || '');
-    setEditCountAsIncome(transfer.countAsIncome);
-    setEditFromAccountId(transfer.fromAccountId);
-    setEditToAccountId(transfer.toAccountId);
-    setEditDate(new Date(transfer.date));
-    setShowDatePicker(false);
-  };
-
-  const handleDelete = () => {
-    showAlert(t('transfer.deleteTitle'), t('transfer.deleteConfirm'), [
-      { text: t('common.cancel'), style: 'cancel' },
-      {
-        text: t('common.delete'),
-        style: 'destructive',
-        onPress: () => {
-          deleteTransfer(transfer.id);
-          router.back();
-        },
-      },
-    ]);
-  };
-
-  const onFromAmountChange = (value: string) => {
-    setEditFromAmount(value);
-    const rate = parseAmount(editExchangeRate);
-    if (value && rate) {
-      setEditToAmount((parseAmount(value) * rate).toFixed(2));
-    }
-  };
-
-  const onToAmountChange = (value: string) => {
-    setEditToAmount(value);
-    const rate = parseAmount(editExchangeRate);
-    if (value && rate) {
-      setEditFromAmount((parseAmount(value) / rate).toFixed(2));
-    }
-  };
+  const form = useTransferEditForm(transfer);
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen contentContainerStyle={styles.scrollContent}>
-        {/* Amount Card */}
-        <View style={styles.amountCard}>
-          {isEditing ? (
-            <>
-              <Text style={styles.editPickerLabel}>{t('transfer.fromAccount')}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.editPickerRow}>
-                {payableAccounts.map((account) => (
-                  <TouchableOpacity
-                    key={account.id}
-                    style={[
-                      styles.editAccountChip,
-                      editFromAccountId === account.id && styles.editAccountChipActive,
-                    ]}
-                    onPress={() => setEditFromAccountId(account.id)}
-                  >
-                    <Text
-                      style={[
-                        styles.editAccountChipText,
-                        editFromAccountId === account.id && styles.editAccountChipTextActive,
-                      ]}
-                    >
-                      {account.name}
-                    </Text>
-                    <Text
-                      style={[
-                        styles.editAccountChipSub,
-                        editFromAccountId === account.id && styles.editAccountChipTextActive,
-                      ]}
-                    >
-                      {account.currencyCode}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
-              </ScrollView>
-
-              <Text style={styles.editPickerLabel}>{t('transfer.toAccount')}</Text>
-              <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.editPickerRow}>
-                {accounts
-                  .filter((a) => a.id !== editFromAccountId)
-                  .map((account) => (
-                    <TouchableOpacity
-                      key={account.id}
-                      style={[
-                        styles.editAccountChip,
-                        editToAccountId === account.id && styles.editAccountChipActive,
-                      ]}
-                      onPress={() => setEditToAccountId(account.id)}
-                    >
-                      <Text
-                        style={[
-                          styles.editAccountChipText,
-                          editToAccountId === account.id && styles.editAccountChipTextActive,
-                        ]}
-                      >
-                        {account.name}
-                      </Text>
-                      <Text
-                        style={[
-                          styles.editAccountChipSub,
-                          editToAccountId === account.id && styles.editAccountChipTextActive,
-                        ]}
-                      >
-                        {account.currencyCode}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
-              </ScrollView>
-            </>
-          ) : (
+        {form.isEditing ? (
+          <>
+            <TransferAccountCard
+              label={t('transfer.fromAccount')}
+              currencyLabel={t('wallet.currency')}
+              accounts={form.payableAccounts}
+              selectedAccountId={form.fromAccountId}
+              onSelectAccount={form.setFromAccountId}
+              chipBalance={noBalance}
+              showCurrencyPicker={false}
+              currency={form.fromCurrency}
+              onSelectCurrency={noOpCurrencySelect}
+              amount={form.fromAmount}
+              onAmountChange={form.onFromAmountChange}
+            />
+            <TransferAccountCard
+              label={t('transfer.toAccount')}
+              currencyLabel={t('wallet.currency')}
+              accounts={form.otherAccounts}
+              selectedAccountId={form.toAccountId}
+              onSelectAccount={form.setToAccountId}
+              chipBalance={noBalance}
+              showCurrencyPicker={false}
+              currency={form.toCurrency}
+              onSelectCurrency={noOpCurrencySelect}
+              amount={form.toAmount}
+              onAmountChange={form.onToAmountChange}
+            />
+          </>
+        ) : (
+          <View style={styles.amountCard}>
             <Text style={styles.accountLabel}>
               {fromAccount?.name || '...'} → {toAccount?.name || '...'}
             </Text>
-          )}
-          {isEditing ? (
-            <View style={styles.amountEditRow}>
-              <View style={styles.amountEditCol}>
-                <Text style={styles.amountCurrencyLabel}>{editFromCurrency}</Text>
-                <TextInput
-                  style={styles.amountEditInput}
-                  value={editFromAmount}
-                  onChangeText={onFromAmountChange}
-                  keyboardType="decimal-pad"
-                />
-              </View>
-              <Ionicons name="arrow-forward" size={20} color={theme.colors.textTertiary} />
-              <View style={styles.amountEditCol}>
-                <Text style={styles.amountCurrencyLabel}>{editToCurrency}</Text>
-                <TextInput
-                  style={styles.amountEditInput}
-                  value={editToAmount}
-                  onChangeText={onToAmountChange}
-                  keyboardType="decimal-pad"
-                />
-              </View>
-            </View>
-          ) : (
             <View style={styles.amountDisplayRow}>
               <Text style={styles.amountFrom}>
                 -{formatCurrency(transfer.fromAmount, transfer.fromCurrency)}
@@ -260,22 +98,17 @@ export default function TransferDetailScreen() {
                 +{formatCurrency(transfer.toAmount, transfer.toCurrency)}
               </Text>
             </View>
-          )}
-        </View>
+          </View>
+        )}
 
         {/* Details Card */}
         <View style={styles.detailsCard}>
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('transfer.date')}</Text>
-            {isEditing ? (
-              <TouchableOpacity
-                style={styles.dateButton}
-                onPress={() => setShowDatePicker(true)}
-              >
+            {form.isEditing ? (
+              <TouchableOpacity style={styles.dateButton} onPress={() => form.setShowDatePicker(true)}>
                 <Ionicons name="calendar-outline" size={16} color={theme.colors.primary} />
-                <Text style={styles.dateButtonText}>
-                  {editDate.toLocaleDateString(getIntlLocale())}
-                </Text>
+                <Text style={styles.dateButtonText}>{form.date.toLocaleDateString(getIntlLocale())}</Text>
               </TouchableOpacity>
             ) : (
               <Text style={styles.detailValue}>
@@ -283,29 +116,31 @@ export default function TransferDetailScreen() {
               </Text>
             )}
           </View>
-          {isEditing && showDatePicker && (
+          {form.isEditing && form.showDatePicker && (
             <DatePicker
-              value={editDate}
+              value={form.date}
               onChange={(selectedDate) => {
-                setShowDatePicker(Platform.OS === 'ios');
-                if (selectedDate) setEditDate(selectedDate);
+                form.setShowDatePicker(Platform.OS === 'ios');
+                if (selectedDate) form.setDate(selectedDate);
               }}
             />
           )}
 
-          {(isEditing ? editFromCurrency !== editToCurrency : transfer.fromCurrency !== transfer.toCurrency) && (
+          {(form.isEditing
+            ? form.fromCurrency !== form.toCurrency
+            : transfer.fromCurrency !== transfer.toCurrency) && (
             <View style={styles.detailRow}>
               <Text style={styles.detailLabel}>{t('transfer.rate')}</Text>
-              {isEditing ? (
+              {form.isEditing ? (
                 <View style={styles.rateRow}>
-                  <Text style={styles.rateLabel}>1 {editFromCurrency} =</Text>
+                  <Text style={styles.rateLabel}>1 {form.fromCurrency} =</Text>
                   <TextInput
                     style={styles.rateEditInput}
-                    value={editExchangeRate}
-                    onChangeText={setEditExchangeRate}
+                    value={form.exchangeRate}
+                    onChangeText={form.onRateChange}
                     keyboardType="decimal-pad"
                   />
-                  <Text style={styles.rateLabel}>{editToCurrency}</Text>
+                  <Text style={styles.rateLabel}>{form.toCurrency}</Text>
                 </View>
               ) : (
                 <Text style={styles.detailValue}>
@@ -317,31 +152,29 @@ export default function TransferDetailScreen() {
 
           <View style={styles.detailRow}>
             <Text style={styles.detailLabel}>{t('transfer.notes')}</Text>
-            {isEditing ? (
+            {form.isEditing ? (
               <TextInput
                 style={styles.detailEditInput}
-                value={editNotes}
-                onChangeText={setEditNotes}
+                value={form.notes}
+                onChangeText={form.setNotes}
                 placeholder={t('transfer.notesPlaceholder')}
                 placeholderTextColor={theme.colors.textTertiary}
               />
             ) : (
-              <Text style={styles.detailValue}>
-                {transfer.notes || '-'}
-              </Text>
+              <Text style={styles.detailValue}>{transfer.notes || '-'}</Text>
             )}
           </View>
 
           <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
             <Text style={styles.detailLabel}>{t('transfer.countAsIncome')}</Text>
-            {isEditing ? (
+            {form.isEditing ? (
               <TouchableOpacity
                 style={styles.checkboxRow}
-                onPress={() => setEditCountAsIncome(!editCountAsIncome)}
+                onPress={() => form.setCountAsIncome(!form.countAsIncome)}
                 activeOpacity={0.7}
               >
-                <View style={[styles.checkbox, editCountAsIncome && styles.checkboxActive]}>
-                  {editCountAsIncome && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
+                <View style={[styles.checkbox, form.countAsIncome && styles.checkboxActive]}>
+                  {form.countAsIncome && <Ionicons name="checkmark" size={16} color="#FFFFFF" />}
                 </View>
                 <Text style={styles.checkboxLabel}>{t('transfer.countAsIncomeHint')}</Text>
               </TouchableOpacity>
@@ -355,20 +188,16 @@ export default function TransferDetailScreen() {
 
         {/* Actions */}
         <View style={styles.actionsContainer}>
-          {isEditing ? (
+          {form.isEditing ? (
             <View style={styles.editActions}>
-              <TouchableOpacity style={styles.cancelEditButton} onPress={handleCancel}>
+              <TouchableOpacity style={styles.cancelEditButton} onPress={form.cancelEditing}>
                 <Text style={styles.cancelEditText}>{t('common.cancel')}</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.saveEditButton}
-                onPress={handleSave}
-                disabled={isSaving}
-              >
+              <TouchableOpacity style={styles.saveEditButton} onPress={form.handleSave} disabled={form.isSaving}>
                 {/* Saving is a round trip now, so a second tap must not start a
                     second update — its rollback baseline would be the already-edited
                     row. */}
-                {isSaving ? (
+                {form.isSaving ? (
                   <ActivityIndicator size="small" color={theme.colors.textInverse} />
                 ) : (
                   <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
@@ -378,13 +207,10 @@ export default function TransferDetailScreen() {
             </View>
           ) : (
             <View style={styles.editActions}>
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => setIsEditing(true)}
-              >
+              <TouchableOpacity style={styles.editButton} onPress={form.startEditing}>
                 <Ionicons name="pencil" size={22} color={theme.colors.primary} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+              <TouchableOpacity style={styles.deleteButton} onPress={form.handleDelete}>
                 <Ionicons name="trash" size={22} color={theme.colors.danger} />
               </TouchableOpacity>
             </View>
@@ -439,41 +265,6 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textSecondary,
     marginBottom: theme.spacing[3],
   },
-  editPickerLabel: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textSecondary,
-    marginBottom: theme.spacing[2],
-  },
-  editPickerRow: {
-    flexDirection: 'row' as const,
-    marginBottom: theme.spacing[3],
-  },
-  editAccountChip: {
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2],
-    borderRadius: theme.borderRadius.lg,
-    backgroundColor: theme.colors.background,
-    marginRight: theme.spacing[2],
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    alignItems: 'center' as const,
-  },
-  editAccountChipActive: {
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
-  },
-  editAccountChipText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textSecondary,
-  },
-  editAccountChipSub: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    fontSize: 10,
-  },
-  editAccountChipTextActive: {
-    color: '#FFFFFF',
-  },
   dateButton: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,
@@ -502,30 +293,6 @@ const createStyles = (theme: Theme) => ({
     fontSize: 24,
     fontWeight: 'bold' as const,
     color: theme.colors.success,
-  },
-  amountEditRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-  },
-  amountEditCol: {
-    alignItems: 'center' as const,
-    flex: 1,
-  },
-  amountCurrencyLabel: {
-    ...theme.textStyles.bodySm,
-    color: theme.colors.textTertiary,
-    marginBottom: theme.spacing[1],
-  },
-  amountEditInput: {
-    fontSize: 24,
-    fontWeight: 'bold' as const,
-    color: theme.colors.textPrimary,
-    textAlign: 'center' as const,
-    borderBottomWidth: 2,
-    borderBottomColor: theme.colors.primary,
-    paddingBottom: theme.spacing[1],
-    minWidth: 100,
   },
   detailsCard: {
     backgroundColor: theme.colors.surface,
