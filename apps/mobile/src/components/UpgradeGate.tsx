@@ -1,4 +1,5 @@
 import { Modal, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { Paywall } from '@/components/Paywall';
 import { useStyles, type Theme } from '@/theme';
@@ -13,6 +14,7 @@ export function UpgradeGate() {
   const requiredTier = useUpgradeStore((s) => s.requiredTier);
   const hide = useUpgradeStore((s) => s.hide);
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
 
   return (
     <Modal
@@ -22,7 +24,10 @@ export function UpgradeGate() {
       onRequestClose={hide}
     >
       <View style={styles.overlay}>
-        <View style={styles.sheet}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <View style={[styles.sheet, { paddingBottom: 40 + insets.bottom }]}>
           <Paywall feature={feature} requiredTier={requiredTier} onDismiss={hide} />
         </View>
       </View>
@@ -40,6 +45,5 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.background,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    paddingBottom: 40,
   },
 });

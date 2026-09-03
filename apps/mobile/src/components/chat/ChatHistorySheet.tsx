@@ -1,4 +1,5 @@
 import { Modal, View, Text, FlatList, TouchableOpacity, ActivityIndicator, Pressable, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { ChatConversation } from '@budget/shared-types';
@@ -24,6 +25,7 @@ export function ChatHistorySheet({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
 
   const renderConversationItem = ({ item }: { item: ChatConversation }) => {
     const isActive = item.id === currentConversationId;
@@ -67,7 +69,13 @@ export function ChatHistorySheet({
       onRequestClose={onClose}
     >
       <Pressable style={styles.modalOverlay} onPress={onClose}>
-        <Pressable style={styles.modalSheet} onPress={() => {}}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <Pressable
+          style={[styles.modalSheet, { paddingBottom: theme.spacing[8] + insets.bottom }]}
+          onPress={() => {}}
+        >
           <View style={styles.modalHandle} />
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>{t('chat.historyTitle')}</Text>
@@ -112,7 +120,6 @@ const createStyles = (theme: Theme) =>
       borderTopLeftRadius: theme.borderRadius['2xl'],
       borderTopRightRadius: theme.borderRadius['2xl'],
       maxHeight: '70%' as const,
-      paddingBottom: theme.spacing[8],
     },
     modalHandle: {
       width: 36,

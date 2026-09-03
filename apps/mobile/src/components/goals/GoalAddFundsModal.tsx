@@ -8,6 +8,7 @@ import {
   TextInput,
   ActivityIndicator,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -30,6 +31,7 @@ export function GoalAddFundsModal({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const [fundAmount, setFundAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -63,7 +65,10 @@ export function GoalAddFundsModal({
     <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
       <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
         <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={handleClose} />
-        <View style={styles.sheet}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <View style={[styles.sheet, { paddingBottom: theme.spacing[8] + insets.bottom }]}>
           <View style={styles.handle} />
           <Text style={styles.title}>{t('goals.addFunds') || 'Add Funds'}</Text>
           <Text style={styles.subtitle}>
@@ -129,7 +134,6 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
     padding: theme.spacing[5],
-    paddingBottom: theme.spacing[8],
   },
   handle: {
     width: 40,

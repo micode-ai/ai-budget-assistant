@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useWhatsNewSpotlight } from '@/hooks/useWhatsNewSpotlight';
@@ -20,6 +21,7 @@ export function WhatsNewSpotlight({ gateOpen }: WhatsNewSpotlightProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const { activeEntry, dismiss, viewDetails } = useWhatsNewSpotlight(gateOpen);
 
   if (!activeEntry) return null;
@@ -27,7 +29,10 @@ export function WhatsNewSpotlight({ gateOpen }: WhatsNewSpotlightProps) {
   return (
     <Modal visible transparent animationType="slide" onRequestClose={dismiss}>
       <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={dismiss}>
-        <View style={styles.sheet}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <View style={[styles.sheet, { paddingBottom: theme.spacing[8] + insets.bottom }]}>
           <View style={styles.handle} />
           <View style={styles.badgeRow}>
             <View style={styles.newBadge}>
@@ -78,7 +83,6 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
     paddingHorizontal: theme.spacing[5],
-    paddingBottom: theme.spacing[8],
     paddingTop: theme.spacing[3],
   },
   handle: {

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { showAlert } from '@/utils/alert';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import { Ionicons } from '@expo/vector-icons';
@@ -35,6 +36,7 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const { createCategory } = useCategoryStore();
 
   const [name, setName] = useState('');
@@ -74,7 +76,10 @@ export const CreateCategoryModal: React.FC<CreateCategoryModalProps> = ({
         style={styles.overlay}
       >
         <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={handleClose} />
-        <View style={styles.sheet}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <View style={[styles.sheet, { paddingBottom: theme.spacing[10] + insets.bottom }]}>
           <View style={styles.handle} />
           <Text style={styles.title}>{t('categoryCreate.title')}</Text>
 
@@ -140,7 +145,6 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius['2xl'],
     borderTopRightRadius: theme.borderRadius['2xl'],
     padding: theme.spacing[6],
-    paddingBottom: theme.spacing[10],
   },
   handle: {
     width: 36,

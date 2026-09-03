@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { Category } from '@budget/shared-types';
@@ -36,6 +37,7 @@ export default function ItemCategorySheet({ visible, items, categories, proposed
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
   const categoryById = new Map(categories.map((c) => [c.id, c]));
@@ -49,7 +51,10 @@ export default function ItemCategorySheet({ visible, items, categories, proposed
     <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
       <View style={styles.overlay}>
         <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={handleClose} />
-        <View style={styles.sheet}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <View style={[styles.sheet, { paddingBottom: theme.spacing[2] + insets.bottom }]}>
           <View style={styles.handle} />
           <View style={styles.header}>
             <Text style={styles.title}>{t('receiptCategorySplit.edit')}</Text>
@@ -249,7 +254,6 @@ const createStyles = (theme: Theme) => ({
   },
   pickerList: {
     paddingLeft: theme.spacing[3],
-    paddingBottom: theme.spacing[2],
   },
   pickerRow: {
     flexDirection: 'row' as const,

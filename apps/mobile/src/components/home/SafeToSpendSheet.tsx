@@ -1,4 +1,5 @@
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import type { SafeToSpendResponse } from '@budget/shared-types';
@@ -14,6 +15,7 @@ export function SafeToSpendSheet({ visible, onClose, data }: SafeToSpendSheetPro
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
 
   if (!data) return null;
 
@@ -29,7 +31,10 @@ export function SafeToSpendSheet({ visible, onClose, data }: SafeToSpendSheetPro
         activeOpacity={1}
         onPress={onClose}
       >
-        <View style={styles.stsSheet}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <View style={[styles.stsSheet, { paddingBottom: theme.spacing[8] + insets.bottom }]}>
           <View style={styles.stsHandle} />
           <Text style={styles.stsSheetTitle}>{t('safeToSpend.breakdownTitle')}</Text>
 
@@ -124,7 +129,6 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
     paddingHorizontal: theme.spacing[5],
-    paddingBottom: theme.spacing[8],
     paddingTop: theme.spacing[3],
   },
   stsHandle: {

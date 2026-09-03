@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Modal } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import QRCode from 'react-native-qrcode-svg';
@@ -28,6 +29,7 @@ export function GroupQrModal({ visible, groupUrl, onClose, onShare }: GroupQrMod
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const insets = useSafeAreaInsets();
 
   async function handleCopy() {
     try {
@@ -41,7 +43,13 @@ export function GroupQrModal({ visible, groupUrl, onClose, onShare }: GroupQrMod
   return (
     <Modal visible={visible} transparent animationType="slide" onRequestClose={onClose}>
       <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={onClose}>
-        <TouchableOpacity activeOpacity={1} style={styles.sheet}>
+        {/* The system navigation bar overlays this window, so the bottom padding
+            has to clear it — a fixed value left the last row unreachable on a
+            three-button-nav device (ABA-483). */}
+        <TouchableOpacity
+          activeOpacity={1}
+          style={[styles.sheet, { paddingBottom: theme.spacing[8] + insets.bottom }]}
+        >
           <View style={styles.handle} />
           <Text style={styles.title}>{t('receiptSplit.qrTitle')}</Text>
           <Text style={styles.hint}>{t('receiptSplit.qrHint')}</Text>
@@ -87,7 +95,6 @@ const createStyles = (theme: Theme) => ({
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
     paddingHorizontal: theme.spacing[5],
-    paddingBottom: theme.spacing[8],
     paddingTop: theme.spacing[3],
     alignItems: 'center' as const,
   },
