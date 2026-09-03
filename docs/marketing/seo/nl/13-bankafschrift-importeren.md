@@ -1,14 +1,14 @@
 ---
-title: "Bankafschrift importeren in je budget-app"
-meta_description: "Bankafschrift importeren vult maanden aan transacties in minuten. Stap voor stap: bestand exporteren, kolommen koppelen, controleren en dubbelingen vermijden."
-target_keyword: "bankafschrift importeren"
+title: "Bankafschriften automatisch importeren in je budget-app"
+meta_description: "Bankafschriften automatisch importeren vult maanden aan transacties in minuten. Zo exporteer je het bestand, koppel je kolommen en voorkom je dubbelingen."
+target_keyword: "bankafschriften importeren"
 slug: "bankafschrift-importeren"
 pair: "bank-import"
 lang: "nl"
 date: "2026-06-27"
 ---
 
-# Bankafschrift importeren en maanden in minuten bijwerken
+# Bankafschriften importeren en maanden in minuten bijwerken
 
 Handmatig elke transactie overtikken is de nummer-een reden dat budgetten sneuvelen. Niemand houdt dat weken vol. Het mooie is dat je het helemaal niet hoeft te doen: door je bankafschrift te importeren, vul je in een paar minuten maanden aan uitgaven in, automatisch ingedeeld en zonder typwerk.
 
