@@ -36,19 +36,30 @@ describe('buildReferralShareMessage', () => {
 });
 
 describe('parseReferralCode', () => {
-  it('reads and uppercases a code from the query string', () => {
-    expect(parseReferralCode('?ref=ab12cd')).toBe('AB12CD');
+  it('reads and uppercases a code from our own referral link', () => {
+    expect(parseReferralCode(buildReferralUrl('ab12cd').split('?')[1])).toBe('AB12CD');
+    expect(parseReferralCode('?ref=ab12cd&src=referral')).toBe('AB12CD');
   });
 
   it('ignores an absent or empty ref', () => {
-    expect(parseReferralCode('?src=landing')).toBeUndefined();
+    expect(parseReferralCode('?src=referral')).toBeUndefined();
     expect(parseReferralCode('')).toBeUndefined();
   });
 
+  it("ignores someone else's `ref` — the name is not ours alone", () => {
+    // PeerPush links to us as ?utm_source=peerpush&ref=peerpush, and `peerpush`
+    // satisfies the code shape exactly. Without the src gate every visitor from
+    // that directory would arrive with PEERPUSH pre-filled in the referral
+    // field, and first-touch-wins would keep it over a real friend's later link.
+    expect(parseReferralCode('?utm_source=peerpush&ref=peerpush')).toBeUndefined();
+    expect(parseReferralCode('?ref=ab12cd')).toBeUndefined();
+    expect(parseReferralCode('?ref=ab12cd&src=landing')).toBeUndefined();
+  });
+
   it('drops a hostile value rather than passing it to a text input', () => {
-    expect(parseReferralCode('?ref=<script>')).toBeUndefined();
-    expect(parseReferralCode(`?ref=${'A'.repeat(64)}`)).toBeUndefined();
-    expect(parseReferralCode('?ref=AB')).toBeUndefined();
+    expect(parseReferralCode('?src=referral&ref=<script>')).toBeUndefined();
+    expect(parseReferralCode(`?src=referral&ref=${'A'.repeat(64)}`)).toBeUndefined();
+    expect(parseReferralCode('?src=referral&ref=AB')).toBeUndefined();
   });
 
   it('survives a malformed query string', () => {

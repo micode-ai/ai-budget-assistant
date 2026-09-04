@@ -92,8 +92,23 @@ function fromUtm(params: URLSearchParams): Acquisition | undefined {
  * from reaching a text input. */
 const REFERRAL_CODE = /^[A-Za-z0-9]{4,12}$/;
 
-/** Pure: pull `?ref=` out of a query string, normalised the way the register
- * screen stores it (uppercase). Returns undefined when absent or implausible. */
+/**
+ * Pure: pull `?ref=` out of a query string, normalised the way the register
+ * screen stores it (uppercase). Returns undefined when absent or implausible.
+ *
+ * **`src=referral` is required**, not decoration. `ref` is a common parameter
+ * name that other sites use for their own purposes — PeerPush links to us as
+ * `?utm_source=peerpush&ref=peerpush`, and `peerpush` happens to satisfy the
+ * code shape exactly, so without this gate every visitor from that directory
+ * would land on the register screen with `PEERPUSH` pre-filled in a field they
+ * never touched. Worse, first-touch-wins would then keep that junk value even
+ * if a real friend's link arrived later.
+ *
+ * Our own referral URLs come from exactly one place — `buildReferralUrl` — and
+ * it always emits `src=referral`, so demanding it costs nothing and makes the
+ * parameter unambiguous. A link that loses the marker falls back to the code
+ * printed in the share message, which is there for the Play-install path anyway.
+ */
 export function parseReferralCode(search: string): string | undefined {
   let params: URLSearchParams;
   try {
@@ -101,6 +116,7 @@ export function parseReferralCode(search: string): string | undefined {
   } catch {
     return undefined;
   }
+  if (params.get('src') !== 'referral') return undefined;
   const raw = params.get('ref');
   if (!raw || !REFERRAL_CODE.test(raw)) return undefined;
   return raw.toUpperCase();
