@@ -8,6 +8,35 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.25.0 - 2026-09-04
+
+**Asking for a referral at the one moment it is earned**
+
+- **After a friend pays you back for their share, the app offers to invite
+  them.** Nothing in the app had ever asked anyone to use the referral link — a
+  row in Settings is not an ask — so a working referral loop produced almost
+  nothing. The offer appears on the bill-split screen only once a friend has
+  actually paid you through the page you sent them: at that point the app has
+  demonstrably worked for both of you and they already know what it is. It is an
+  inline card, never a pop-up, at most one offer every 60 days, and it goes quiet
+  for good after two dismissals (ABA-489).
+
+**Fixed**
+
+- **The Wallet screen's layout no longer breaks if you have several accounts.**
+  The rate-alerts entry added in the previous release was a fourth button in a
+  row built for three, so it wrapped onto its own line, stretched across the
+  screen and covered the start of the exchange history. It is now its own row
+  under the buttons (ABA-492).
+
+**Under the hood**
+
+Work with no visible change, listed for completeness: two marketing-site
+articles retargeted at the searches they already earn impressions for
+(ABA-490, ABA-491).
+
+---
+
 ## 1.24.0 - 2026-09-03
 
 **Invitations that actually carry a link**
