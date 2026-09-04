@@ -2,6 +2,7 @@ import { useAccountStore, getTripDaysLeft } from '../accountStore';
 import { api } from '../../services/api';
 import { tripApi } from '../../services/trip.api';
 import { loadAllAccounts, insertAccount } from '../../db/accountRepository';
+import { secureStorage } from '../../services/secureStorage';
 
 // Manual factory (not bare automock): automocking still `require()`s the real
 // module to infer its shape, which would pull in `./client` -> expo-sqlite's
@@ -43,6 +44,7 @@ jest.mock('../../services/api', () => ({
     createAccount: jest.fn(),
     updateAccount: jest.fn(),
     deleteAccount: jest.fn(),
+    getAccounts: jest.fn(),
     setAccountIdGetter: jest.fn(),
   },
 }));
@@ -339,5 +341,87 @@ describe('accountStore write paths survive an empty SQLite read-back (web)', () 
     await useAccountStore.getState().updateAccount('acc-1', { monthAnchorDay: 10 } as any);
 
     expect(useAccountStore.getState().accounts[0].name).toBe('From SQLite');
+  });
+});
+
+describe('the selected account survives a web page refresh', () => {
+  // `loadAccounts` reads the persisted selection, but only AFTER its
+  // zero-local-rows branch — and on web `db/client.web.ts` is an in-memory
+  // mock, so `loadAllAccounts` always returns [] and that branch always
+  // returns early. `loadAccountsFromServer` is therefore the only path that
+  // runs on web, and it took `currentAccountId` from memory, which is null on
+  // a fresh page load. Result: every refresh reset the user to the first
+  // account. These tests pin the read, not the write — the write was already
+  // fine (secureStorage.web.ts is localStorage and survives a refresh).
+  const acc = (id: string, name: string) => ({
+    id,
+    name,
+    type: 'personal',
+    currencyCode: 'PLN',
+    ownerId: 'user-1',
+    isActive: true,
+    myRole: 'owner',
+    monthAnchorDay: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (loadAllAccounts as jest.Mock).mockResolvedValue([]); // web: no SQLite
+    (api.getAccounts as jest.Mock).mockResolvedValue([acc('acc-1', 'Personal'), acc('acc-2', 'Family')]);
+    useAccountStore.setState({
+      accounts: [],
+      currentAccountId: null, // a fresh page load has nothing in memory
+      members: {},
+      isLoading: false,
+      error: null,
+    });
+  });
+
+  it('restores the stored selection instead of falling back to the first account', async () => {
+    (secureStorage.getItem as jest.Mock).mockImplementation(async (key: string) =>
+      key === 'currentAccountId' ? 'acc-2' : null,
+    );
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-2');
+  });
+
+  it('falls back to the first account when nothing was stored', async () => {
+    (secureStorage.getItem as jest.Mock).mockResolvedValue(null);
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-1');
+  });
+
+  it('does not resurrect an account the user is no longer a member of, and clears it from storage', async () => {
+    (secureStorage.getItem as jest.Mock).mockImplementation(async (key: string) =>
+      key === 'currentAccountId' ? 'acc-gone' : null,
+    );
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-1');
+    // The dead id must not be left behind, or every later refresh repeats this
+    // lookup against an account that no longer exists (deleteAccount already
+    // re-persists on fallback for the same reason).
+    expect(secureStorage.setItem).toHaveBeenCalledWith('currentAccountId', 'acc-1');
+  });
+
+  it('keeps a live in-memory selection rather than an older stored one', async () => {
+    // The other callers of loadAccountsFromServer -- accepting an invitation,
+    // and Settings -> "Sync now" -- run with a selection already made. Storage
+    // must not win there.
+    useAccountStore.setState({ currentAccountId: 'acc-2' });
+    (secureStorage.getItem as jest.Mock).mockImplementation(async (key: string) =>
+      key === 'currentAccountId' ? 'acc-1' : null,
+    );
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-2');
   });
 });

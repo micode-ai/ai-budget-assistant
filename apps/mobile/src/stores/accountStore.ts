@@ -246,16 +246,35 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         );
       }
 
+      // The persisted selection has to be read HERE, not only in
+      // `loadAccounts`. On web `db/client.web.ts` is an in-memory mock, so
+      // `loadAllAccounts` always returns nothing, `loadAccounts` always takes
+      // its zero-local-rows branch and returns before it reaches its own
+      // `secureStorage` read — making this the only path that runs. Without
+      // this, every page refresh reset the user to their first account.
+      //
+      // In-memory wins when it is set: the other callers (accepting an
+      // invitation, Settings -> "Sync now") run with a live selection that a
+      // staler stored value must not override.
       const { currentAccountId } = get();
+      const desiredId = currentAccountId ?? (await secureStorage.getItem('currentAccountId'));
+      const resolvedId =
+        desiredId && localAccounts.some((a) => a.id === desiredId)
+          ? desiredId
+          : localAccounts[0]?.id || null;
 
       set({
         accounts: localAccounts,
-        currentAccountId:
-          currentAccountId && localAccounts.some((a) => a.id === currentAccountId)
-            ? currentAccountId
-            : localAccounts[0]?.id || null,
+        currentAccountId: resolvedId,
         isLoading: false,
       });
+
+      // Re-persist when the stored account is gone (a membership removed
+      // elsewhere), so the dead id is not looked up again on every later
+      // refresh. `deleteAccount` already does this for the same reason.
+      if (resolvedId && resolvedId !== desiredId) {
+        await secureStorage.setItem('currentAccountId', resolvedId);
+      }
     } catch (error) {
       set({
         error: error instanceof Error ? error.message : 'Failed to load accounts',
