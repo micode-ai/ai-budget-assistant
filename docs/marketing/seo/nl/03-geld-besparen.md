@@ -124,4 +124,5 @@ Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te spare
 - [Schulden aflossen: sneeuwbal of lawine?](/blog/nl/schulden-aflossen/)
 - [Persoonlijke inflatie berekenen: jouw echte prijsstijging](/blog/nl/persoonlijke-inflatie/)
 - [Jouw financiële jaar, gewrapt: wat het onthult](/blog/nl/financieel-jaaroverzicht/)
-- [Voorraad aanleggen voordat de prijzen stijgen: jouw inflatieschild](/blog/nl/inflatieschild/)
+- [Voorraad aanleggen vóór prijsstijgingen: inflatieschild](/blog/nl/inflatieschild/)
+- [Wisselkoersalert: melding bij jouw doelkoers](/blog/nl/wisselkoersalert/)

@@ -127,3 +127,4 @@ date: "2026-06-19"
 - [Асабістая інфляцыя: як яе разлічыць](/blog/be/asabistaya-inflyatsyya/)
 - [Фінансавыя вынікі году: што яны паказваюць](/blog/be/finansavyya-vyniki-goda/)
 - [Запас угодных да падаражэння: шчыт ад інфляцыі](/blog/be/shchyt-ad-infliatsyi/)
+- [Апавяшчэнне пра курс валют, калі ён дасягне мэты](/blog/be/apavyashchenne-pra-kurs-valyut/)

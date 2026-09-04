@@ -115,7 +115,7 @@ Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedrags
 
 ## Gerelateerde gidsen
 
-- [Bankafschrift importeren in je budget-app](/blog/nl/bankafschrift-importeren/)
+- [Bankafschriften automatisch importeren in je budget-app](/blog/nl/bankafschrift-importeren/)
 - [Beste budget app in 2026: een eerlijke koopgids](/blog/nl/beste-budget-app/)
 - [Uitgavenkaart: zie waar je geld echt naartoe gaat](/blog/nl/uitgavenkaart/)
 - [Uitgaven automatisch bijhouden zonder alles te typen](/blog/nl/uitgaven-automatisch-bijhouden/)

@@ -137,3 +137,4 @@ Tak, szczególnie jeśli trudno ci wyrobić nawyk. Aplikacja daje natychmiastowy
 - [Twoja osobista inflacja: jak ją obliczyć](/blog/pl/osobista-inflacja/)
 - [Twój rok w finansach: co pokazuje podsumowanie](/blog/pl/podsumowanie-roku-finansowego/)
 - [Zapasy przed podwyżką: tarcza antyinflacyjna w budżecie](/blog/pl/tarcza-antyinflacyjna/)
+- [Alert kursu walut: powiadomienie o wymarzonym kursie](/blog/pl/alert-kursu-walut/)

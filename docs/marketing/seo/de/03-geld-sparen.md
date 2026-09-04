@@ -124,4 +124,5 @@ Für die meisten Menschen: ja. Den Abstand zwischen dem geplanten und dem tatsä
 - [Schulden abbezahlen: Schneeball oder Lawine?](/blog/de/schulden-abbezahlen/)
 - [Persönliche Inflation berechnen: so geht's](/blog/de/persoenliche-inflation/)
 - [Dein Finanzjahr, Wrapped: Was es zeigt](/blog/de/finanzjahr-wrapped/)
-- [Vorrat anlegen, bevor die Preise steigen: dein Inflationsschutz](/blog/de/inflationsschutz-vorrat/)
+- [Vorrat anlegen, bevor die Preise steigen: Inflationsschutz](/blog/de/inflationsschutz-vorrat/)
+- [Wechselkurs-Alarm: Push bei deinem Zielkurs](/blog/de/wechselkurs-alarm/)

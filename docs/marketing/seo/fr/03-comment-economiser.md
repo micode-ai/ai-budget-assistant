@@ -124,4 +124,5 @@ Pour la plupart des gens, oui. Voir en temps réel l'écart entre ce qu'on avait
 - [Rembourser ses dettes : boule de neige ou avalanche](/blog/fr/rembourser-ses-dettes/)
 - [Inflation personnelle : comment la calculer](/blog/fr/inflation-personnelle/)
 - [Ton année financière résumée : ce qu'elle révèle](/blog/fr/bilan-annuel-financier/)
-- [Faire des réserves avant la hausse des prix : ton bouclier anti-inflation](/blog/fr/bouclier-anti-inflation/)
+- [Faire des réserves avant la hausse des prix](/blog/fr/bouclier-anti-inflation/)
+- [Alerte de taux de change : notification à ton objectif](/blog/fr/alerte-taux-de-change/)

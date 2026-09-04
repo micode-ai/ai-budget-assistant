@@ -124,4 +124,5 @@ Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas 
 - [Cómo pagar deudas: método bola de nieve o avalancha](/blog/es/como-pagar-deudas/)
 - [Tu inflación personal: cómo calcularla](/blog/es/inflacion-personal/)
 - [Tu año financiero, resumido: qué revela](/blog/es/resumen-del-ano-financiero/)
-- [Haz acopio antes de que suban los precios: tu escudo antiinflación](/blog/es/escudo-antiinflacion/)
+- [Haz acopio antes de que suban los precios: tu escudo](/blog/es/escudo-antiinflacion/)
+- [Alerta de tipo de cambio: aviso al llegar a tu objetivo](/blog/es/alerta-tipo-cambio/)

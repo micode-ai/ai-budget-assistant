@@ -125,3 +125,4 @@ date: "2026-06-19"
 - [Особиста інфляція: як порахувати свій показник](/blog/ua/osobysta-inflyatsiya/)
 - [Фінансові підсумки року: що вони показують](/blog/ua/finansovi-pidsumky-roku/)
 - [Запас про запас до подорожчання: щит від інфляції](/blog/ua/shchyt-vid-infliatsii/)
+- [Сповіщення про курс валют, коли він досягне цілі](/blog/ua/spovishchennya-pro-kurs-valyut/)

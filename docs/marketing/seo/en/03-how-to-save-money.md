@@ -125,3 +125,4 @@ For most people, yes. Seeing the gap between what you planned to save and what y
 - [Your Personal Inflation Rate: How to Calculate It](/blog/en/personal-inflation-rate/)
 - [Your Financial Year, Wrapped: What It Reveals](/blog/en/financial-wrapped-year-in-review/)
 - [Stock Up Before Prices Rise: an Inflation Shield](/blog/en/inflation-shield-stock-up/)
+- [Exchange Rate Alert: Get Notified at Your Target Rate](/blog/en/exchange-rate-alert/)

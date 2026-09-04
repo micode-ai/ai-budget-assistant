@@ -33,7 +33,56 @@ export function parseAcquisition(search: string): Acquisition | undefined {
       found = true;
     }
   }
-  return found ? out : undefined;
+  return found ? out : fromUtm(params);
+}
+
+/**
+ * Fold a `utm_*` value into something the API's charset will accept.
+ *
+ * Needed because the two schemes disagree on more than names: `utm_source` is
+ * conventionally a hostname (`startupfa.me`), and a dot fails `SAFE` outright —
+ * so without this every directory referral would be dropped by the very guard
+ * meant to stop hostile input. Anything outside the allowed charset collapses to
+ * a single dash, and the result is truncated to the API's 20-character limit
+ * rather than dropped: `startupfa-me` is a worse label than `startupfa.me`, but
+ * both beat "direct/unknown".
+ */
+function normalizeTag(raw: string | null): string | undefined {
+  if (!raw) return undefined;
+  const cleaned = raw
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, '-')
+    .replace(/^-+/, '')
+    .slice(0, 20)
+    // A cut can land mid-word and leave the dash dangling.
+    .replace(/-+$/, '');
+  return cleaned || undefined;
+}
+
+/**
+ * Read the standard `utm_*` scheme when our own tags are absent.
+ *
+ * Every directory, newsletter and ad network tags its links this way — Startup
+ * Fame, for one, sends `?utm_source=startupfa.me&utm_medium=referral`. Reading
+ * only our own `?src=` meant all of that arrived as "direct/unknown", which is
+ * precisely the traffic we most need to tell apart.
+ *
+ * Deliberately all-or-nothing rather than field-by-field: our own tags are more
+ * precise, so if ANY of them is present the utm set is ignored entirely, and a
+ * record never mixes `src=landing` with a medium from someone else's scheme.
+ *
+ * `utm_source` is required — `utm_medium=referral` on its own says how, but not
+ * from where, and "where" is the whole question. Medium lands in `loc` because
+ * that is the free secondary dimension, and its values (referral, cpc, email)
+ * cannot be confused with our own placement vocabulary (hero, pricing_card,
+ * footer, share, guest).
+ */
+function fromUtm(params: URLSearchParams): Acquisition | undefined {
+  const src = normalizeTag(params.get('utm_source'));
+  if (!src) return undefined;
+  const loc = normalizeTag(params.get('utm_medium'));
+  return loc ? { src, loc } : { src };
 }
 
 /** Referral codes are 6 chars from a no-0/O/1/I/L alphabet, but the bound is
