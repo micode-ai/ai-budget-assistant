@@ -83,6 +83,13 @@ docs/marketing/*
 # `git add docs/marketing/landing/...` is refused for the directory, which is
 # how article 22 shipped with a sitemap that did not list it.
 !docs/marketing/landing/
+# Python bytecode caches. Placed AFTER the two negations above on purpose: the
+# last matching pattern wins, so re-including docs/marketing/seo/ and
+# docs/marketing/landing/ would otherwise drag their __pycache__ back in — which
+# is how nine .pyc files ended up tracked and dirtying every commit that touches
+# a generator.
+__pycache__/
+*.pyc
 # Superpowers brainstorm artifacts
 .superpowers/
 
