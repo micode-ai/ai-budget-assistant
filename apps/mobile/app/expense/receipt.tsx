@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
@@ -20,8 +20,28 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
+import { trackAction } from '@/services/telemetry';
 
 export default function ReceiptExpenseScreen() {
+  useEffect(() => {
+    trackAction('expense_receipt', 'started');
+  }, []);
+  /**
+   * `started` is emitted once per MOUNT, and this screen is a batch-scan session
+   * BY DESIGN — the success alert offers "Scan another" without navigating away
+   * (see `useReceiptScanSession`). A ten-receipt session therefore reported 1
+   * started against 10 completed, which put per-flow completion over 100% and
+   * pinned `abandoned` (derived as started - completed - failed) at 0, killing
+   * the one signal this feature exists to produce. So `completed` is once per
+   * mount too: the session reads as one completed VISIT rather than ten saves.
+   * That is the intended trade — this measures abandonment, not volume, and
+   * `screens`/`lastScreens` already carry visit intensity. `sessionCount` (the
+   * user-facing pill) is unaffected and still counts every save.
+   * `failed` above is deliberately NOT deduplicated: repeated scan failures in
+   * one visit are a genuine error-rate signal.
+   */
+  const completedRef = useRef(false);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -46,6 +66,12 @@ export default function ReceiptExpenseScreen() {
 
   useEffect(() => {
     if (error) {
+      // `failed` covers only this scan-error branch. A SAVE failure inside
+      // `useReceiptSave.handleConfirmExpense`'s own `catch` reports neither
+      // `completed` nor `failed`, so it lands in the admin funnel's derived
+      // `abandoned` bucket — this flow's abandoned count over-represents true
+      // save failures relative to the other flows.
+      trackAction('expense_receipt', 'failed');
       showAlert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
     }
   }, [error, reset, t]);
@@ -97,6 +123,10 @@ export default function ReceiptExpenseScreen() {
     proposedNamesToCreate,
     onReset: handleReset,
     onSaved: () => {
+      if (!completedRef.current) {
+        completedRef.current = true;
+        trackAction('expense_receipt', 'completed');
+      }
       const count = recordSaved();
       return { count, isCheckpoint: isReceiptSessionCheckpoint(count) };
     },

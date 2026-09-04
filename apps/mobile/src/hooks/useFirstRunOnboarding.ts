@@ -56,7 +56,7 @@ import { shouldShowFirstRun } from '@/features/onboarding/shouldShowFirstRun';
  * survives even if the two navigations do collide.
  *
  * This also removes the `usePathname()` subscription that used to live here:
- * it re-rendered RootNavigator (93 `<Stack.Screen>` elements with freshly
+ * it re-rendered RootNavigator (95 `<Stack.Screen>` elements with freshly
  * allocated inline `options`) on every single navigation in the app, for a
  * hook that is a no-op for almost every user.
  */

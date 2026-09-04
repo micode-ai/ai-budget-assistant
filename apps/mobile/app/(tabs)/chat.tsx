@@ -24,8 +24,25 @@ import { ChatMessageItem, ChatHistorySheet } from '@/components/chat';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { useChatPolling } from '@/hooks/useChatPolling';
 import { useMentionBar } from '@/hooks/useMentionBar';
+import { trackAction } from '@/services/telemetry';
 
 export default function ChatScreen() {
+  useEffect(() => {
+    trackAction('chat_message', 'started');
+  }, []);
+  /**
+   * `started` is emitted once per MOUNT, and this screen lets a user send any
+   * number of messages without unmounting — ten messages in one visit reported
+   * 1 started against 10 completed, which put per-flow completion over 100% and
+   * pinned `abandoned` (derived as started - completed - failed) at 0, killing
+   * the one signal this feature exists to produce. So `completed` is once per
+   * mount too, giving a coherent per-visit funnel. `failed` is deliberately NOT
+   * deduplicated — repeated validation failures in one visit are a genuine
+   * error-rate signal — though this flow has no `failed` call site anyway (see
+   * the note in `handleSend`).
+   */
+  const completedRef = useRef(false);
+
   const { t } = useTranslation();
   const [inputText, setInputText] = useState('');
   const [historyVisible, setHistoryVisible] = useState(false);
@@ -117,6 +134,15 @@ export default function ChatScreen() {
     setInputText('');
     resetMentions();
     await sendMessage(text, currentIsShared ? stillMentioned : undefined);
+    // `sendMessage` catches its own errors internally and never rejects (an AI
+    // usage-limit 403, a network failure, etc. all surface as an in-chat error
+    // message instead of a thrown rejection), so this only marks that a message
+    // was submitted, not that the assistant answered successfully. There is
+    // deliberately no `chat_message` 'failed' call site for that reason.
+    if (!completedRef.current) {
+      completedRef.current = true;
+      trackAction('chat_message', 'completed');
+    }
   };
 
   const handleVoicePress = async () => {

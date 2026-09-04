@@ -27,8 +27,13 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { DatePicker } from '@/components/DatePicker';
+import { trackAction } from '@/services/telemetry';
 
 export default function NewIncomeScreen() {
+  useEffect(() => {
+    trackAction('income_manual', 'started');
+  }, []);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -80,11 +85,13 @@ export default function NewIncomeScreen() {
   const handleSubmit = async () => {
     const numericAmount = parseAmount(amount);
     if (!numericAmount || numericAmount <= 0) {
+      trackAction('income_manual', 'failed');
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
     if (!description.trim()) {
+      trackAction('income_manual', 'failed');
       showAlert(t('common.error'), t('validation.noDescription'));
       return;
     }
@@ -107,8 +114,10 @@ export default function NewIncomeScreen() {
         relatedDebtExpenseId: isDebtRepayment ? params.relatedDebtExpenseId : undefined,
       });
 
+      trackAction('income_manual', 'completed');
       router.back();
     } catch {
+      trackAction('income_manual', 'failed');
       showAlert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsSubmitting(false);

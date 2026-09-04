@@ -25,10 +25,15 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { BudgetCategoryEditor, type BudgetAllocationRow } from '@/components/BudgetCategoryEditor';
+import { trackAction } from '@/services/telemetry';
 
 type BudgetMode = 'overall' | 'byCategory';
 
 export default function NewBudgetScreen() {
+  useEffect(() => {
+    trackAction('budget_create', 'started');
+  }, []);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -57,6 +62,7 @@ export default function NewBudgetScreen() {
 
   const handleSubmit = async () => {
     if (!name.trim()) {
+      trackAction('budget_create', 'failed');
       showAlert(t('common.error'), t('budgetNew.errorName'));
       return;
     }
@@ -66,11 +72,13 @@ export default function NewBudgetScreen() {
       : parseAmount(amount);
 
     if (!numericAmount || numericAmount <= 0) {
+      trackAction('budget_create', 'failed');
       showAlert(t('common.error'), t('budgetNew.errorAmount'));
       return;
     }
 
     if (budgetMode === 'byCategory' && categoryAllocations.length === 0) {
+      trackAction('budget_create', 'failed');
       showAlert(t('common.error'), t('budgetNew.errorNoCategories'));
       return;
     }
@@ -111,8 +119,16 @@ export default function NewBudgetScreen() {
         isActive: true,
       });
 
+      // `budgetStore.addBudget` updates in-memory state synchronously but
+      // fire-and-forgets its own SQLite write (`insertBudget(...).catch(...)`,
+      // not awaited) — so this `completed` is a weaker guarantee than the
+      // expense/income flows, whose `completed` follows an awaited local
+      // persistence (`await addExpense`/`await addIncome`). Treat cross-flow
+      // completion-rate comparisons with that in mind.
+      trackAction('budget_create', 'completed');
       router.back();
     } catch {
+      trackAction('budget_create', 'failed');
       showAlert(t('common.error'), t('budgetNew.errorFailed'));
     } finally {
       setIsSubmitting(false);

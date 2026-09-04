@@ -260,6 +260,7 @@ model User {
   paymentMethods        UserPaymentMethod[]
   restoreCredentials    RestoreCredential[]
   exchangeRateWatches   ExchangeRateWatch[]
+  telemetryEvents       TelemetryEvent[]
 
   // Where this signup came from, captured from the CTA query string on the visitor's
   // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
@@ -2097,4 +2098,22 @@ model GeocodeCache {
   createdAt       DateTime @default(now()) @map("created_at")
 
   @@map("geocode_cache")
+}
+
+model TelemetryEvent {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  name      String
+  screen    String?
+  platform  String
+  sessionId String   @map("session_id")
+  props     Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([name, createdAt])
+  @@index([userId, sessionId])
+  @@map("telemetry_events")
 }

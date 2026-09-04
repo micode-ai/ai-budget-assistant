@@ -23,6 +23,7 @@ import { useNotificationDeepLink } from '@/hooks/useNotificationDeepLink';
 import { useTripInviteDeepLink } from '@/hooks/useTripInviteDeepLink';
 import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
 import { useFirstRunOnboarding } from '@/hooks/useFirstRunOnboarding';
+import { useTelemetryScreenViews } from '@/hooks/useTelemetryScreenViews';
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -54,6 +55,7 @@ function RootNavigator() {
   useTripInviteDeepLink(coldStartGateReady, t);
   useFirstRunOnboarding(coldStartGateReady);
   useGenericDeepLink(isInitializing, isAuthenticated);
+  useTelemetryScreenViews(coldStartGateReady);
 
   if (isInitializing || !fontsLoaded) {
     return null;

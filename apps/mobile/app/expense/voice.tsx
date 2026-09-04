@@ -27,8 +27,24 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
+import { trackAction } from '@/services/telemetry';
 
 export default function VoiceExpenseScreen() {
+  useEffect(() => {
+    trackAction('expense_voice', 'started');
+  }, []);
+  /**
+   * `started` is emitted once per MOUNT, and this screen's success alert offers
+   * `voice.addAnother` -> `handleReset()`, which stays mounted and clears the
+   * form for the next recording — so it repeats exactly the way the receipt
+   * scanner does. Two voice expenses in one visit reported 1 started against 2
+   * completed, which put per-flow completion over 100% and pinned `abandoned`
+   * (derived as started - completed - failed) at 0. So `completed` is once per
+   * mount too. `failed` is deliberately NOT deduplicated: repeated failures in
+   * one visit are a genuine error-rate signal.
+   */
+  const completedRef = useRef(false);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -112,11 +128,13 @@ export default function VoiceExpenseScreen() {
   const handleConfirmExpense = async () => {
     const numericAmount = parseAmount(editAmount);
     if (!numericAmount || numericAmount <= 0) {
+      trackAction('expense_voice', 'failed');
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
     if (!editDescription.trim()) {
+      trackAction('expense_voice', 'failed');
       showAlert(t('common.error'), t('validation.noDescription'));
       return;
     }
@@ -137,11 +155,16 @@ export default function VoiceExpenseScreen() {
         location: gpsLocationRef.current ?? undefined,
       });
 
+      if (!completedRef.current) {
+        completedRef.current = true;
+        trackAction('expense_voice', 'completed');
+      }
       showAlert(t('common.success'), t('voice.success'), [
         { text: t('voice.addAnother'), style: 'cancel', onPress: handleReset },
         { text: t('common.done'), onPress: () => router.back() },
       ]);
     } catch {
+      trackAction('expense_voice', 'failed');
       showAlert(t('common.error'), t('voice.saveFailed'));
     }
   };

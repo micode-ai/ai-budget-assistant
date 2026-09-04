@@ -43,6 +43,7 @@ import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { MerchantInput } from '@/components/MerchantInput';
 import { DatePicker } from '@/components/DatePicker';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
+import { trackAction } from '@/services/telemetry';
 
 function getContrastTextColor(hexColor: string | undefined): string {
   if (!hexColor || typeof hexColor !== 'string') return '#ffffff';
@@ -56,6 +57,10 @@ function getContrastTextColor(hexColor: string | undefined): string {
 }
 
 export default function NewExpenseScreen() {
+  useEffect(() => {
+    trackAction('expense_manual', 'started');
+  }, []);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -148,16 +153,19 @@ export default function NewExpenseScreen() {
   const handleSubmit = async () => {
     const numericAmount = parseAmount(amount);
     if (!numericAmount || numericAmount <= 0) {
+      trackAction('expense_manual', 'failed');
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
 
     if (!description.trim()) {
+      trackAction('expense_manual', 'failed');
       showAlert(t('common.error'), t('validation.noDescription'));
       return;
     }
 
     if (isTripAccount && !validateTripSplit(splitType, shares, numericAmount)) {
+      trackAction('expense_manual', 'failed');
       showAlert(
         t('common.error'),
         splitType === 'exact'
@@ -223,8 +231,10 @@ export default function NewExpenseScreen() {
         }
       }
 
+      trackAction('expense_manual', 'completed');
       router.back();
     } catch {
+      trackAction('expense_manual', 'failed');
       showAlert(t('common.error'), t('errors.saveFailed'));
     } finally {
       setIsSubmitting(false);

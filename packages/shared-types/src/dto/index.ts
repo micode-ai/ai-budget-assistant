@@ -35,3 +35,4 @@ export * from './community-price';
 export * from './receipt-check';
 export * from './receipt-split';
 export * from './user';
+export * from './telemetry';

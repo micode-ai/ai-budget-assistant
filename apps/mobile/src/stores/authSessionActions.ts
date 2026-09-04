@@ -22,6 +22,7 @@ import { useGoalStore } from './goalStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
 import { clearRestoreCredential, isRestoreCredentialAvailable } from '../services/restoreCredentials';
+import { resetTelemetry } from '../services/telemetry';
 import { useFirstRunStore } from './firstRunStore';
 import type { AuthStoreSet } from './authStore.types';
 
@@ -587,6 +588,11 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // it's a local no-op on iOS/web (see the stub in
     // services/restoreCredentials), so gating it buys nothing.
     await clearRestoreCredential();
+
+    // Drop whatever telemetry is buffered — those events belong to a session
+    // that has just ended. Outside the token-valid guard above so an offline
+    // sign-out still clears it, mirroring clearRestoreCredential() just above.
+    resetTelemetry();
 
     const biometricEnabled = await secureStorage.getItem('biometricEnabled');
 

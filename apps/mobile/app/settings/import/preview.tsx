@@ -20,6 +20,7 @@ import { applyCurrencyOverride } from '@/features/import/applyCurrencyOverride';
 import { buildCommitMappingContext } from '@/features/import/buildCommitMappingContext';
 import { isTierRequiredError } from '@/services/importErrors';
 import { useUpgradeStore } from '@/stores/upgradeStore';
+import { trackAction } from '@/services/telemetry';
 
 /** Every non-`alreadyImported` row checked — the initial/re-seeded default. */
 function seedSelected(rowsForSeed: ImportRow[]): Set<number> {
@@ -27,6 +28,10 @@ function seedSelected(rowsForSeed: ImportRow[]): Set<number> {
 }
 
 export default function ImportPreviewScreen() {
+  useEffect(() => {
+    trackAction('import_bank', 'started');
+  }, []);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -172,6 +177,8 @@ export default function ImportPreviewScreen() {
         ...buildCommitMappingContext(preview, pending, bankId),
       });
 
+      trackAction('import_bank', 'completed');
+
       await useExpenseStore.getState().loadExpenses({ force: true });
       await useIncomeStore.getState().loadIncomes({ force: true });
 
@@ -185,6 +192,7 @@ export default function ImportPreviewScreen() {
         [{ text: t('common.ok'), onPress: () => router.replace('/settings') }],
       );
     } catch (err) {
+      trackAction('import_bank', 'failed');
       showAlert(
         t('bankImport.error.parseFailed'),
         err instanceof Error ? err.message : String(err),

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
 import { View, Text, TouchableOpacity, TextInput, ScrollView, RefreshControl } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from 'expo-router';
@@ -12,6 +12,7 @@ import { partitionRateAlerts } from '@/features/wallet/rateAlerts';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import type { Currency, RateWatchDirection, ExchangeRateWatch } from '@budget/shared-types';
+import { trackAction } from '@/services/telemetry';
 
 const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
 
@@ -27,6 +28,20 @@ const CURRENCIES: Currency[] = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN']
  * on `/rate-watches`.
  */
 export default function RateAlertsScreen() {
+  useEffect(() => {
+    trackAction('rate_alert_create', 'started');
+  }, []);
+  /**
+   * `started` is emitted once per MOUNT, and this screen never navigates away on
+   * success — it clears the rate field and stays put, ready for the next alert.
+   * Two alerts in one visit therefore reported 1 started against 2 completed,
+   * which put per-flow completion over 100% and pinned `abandoned` (derived as
+   * started - completed - failed) at 0. So `completed` is once per mount too.
+   * `failed` is deliberately NOT deduplicated: the two validation branches above
+   * fire it repeatedly and that repetition is a real error-rate signal.
+   */
+  const completedRef = useRef(false);
+
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -61,20 +76,27 @@ export default function RateAlertsScreen() {
 
   const handleCreate = async () => {
     if (fromCurrency === toCurrency) {
+      trackAction('rate_alert_create', 'failed');
       showAlert(t('common.error'), t('exchange.sameCurrencyError'));
       return;
     }
     const target = parseAmount(targetRate);
     if (!isFinite(target) || target <= 0) {
+      trackAction('rate_alert_create', 'failed');
       showAlert(t('common.error'), t('validation.invalidAmount'));
       return;
     }
     setSaving(true);
     try {
       await createWatch({ fromCurrency, toCurrency, targetRate: target, direction });
+      if (!completedRef.current) {
+        completedRef.current = true;
+        trackAction('rate_alert_create', 'completed');
+      }
       setTargetRate('');
       showAlert(t('exchange.alertCreated'));
     } catch (e) {
+      trackAction('rate_alert_create', 'failed');
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.somethingWrong'));
     } finally {
       setSaving(false);

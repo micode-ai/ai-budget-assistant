@@ -17,6 +17,7 @@ import {
   Smartphone,
   LineChart,
   Megaphone,
+  Activity,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,6 +31,7 @@ export const navItems = [
   { href: "/", label: "Dashboard", icon: LayoutDashboard },
   { href: "/metrics", label: "Investor Metrics", icon: LineChart },
   { href: "/acquisition", label: "Acquisition", icon: Megaphone },
+  { href: "/telemetry", label: "Telemetry", icon: Activity },
   { href: "/users", label: "Users", icon: Users },
   { href: "/ai-usage", label: "AI Usage", icon: BrainCircuit },
   { href: "/subscriptions", label: "Subscriptions", icon: CreditCard },
