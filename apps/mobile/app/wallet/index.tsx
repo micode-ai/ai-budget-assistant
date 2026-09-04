@@ -199,33 +199,42 @@ export default function WalletScreen() {
               ))}
             </View>
 
-            {/* The three write actions are canEdit-gated; the rate-alert entry is
-                NOT — a rate target is personal, like the display currency, and the
-                server sets no ViewerBlockGuard on /rate-watches (ABA-484). */}
-            <View style={styles.actions}>
-              {canEdit && (
-                <>
-                  <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/set-balance')}>
-                    <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
-                    <Text style={styles.actionButtonText}>{t('wallet.setInitialBalance')}</Text>
+            {canEdit && (
+              <View style={styles.actions}>
+                <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/set-balance')}>
+                  <Ionicons name="add-circle-outline" size={20} color={theme.colors.primary} />
+                  <Text style={styles.actionButtonText}>{t('wallet.setInitialBalance')}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/exchange')}>
+                  <Ionicons name="swap-horizontal" size={20} color={theme.colors.primary} />
+                  <Text style={styles.actionButtonText}>{t('exchange.title')}</Text>
+                </TouchableOpacity>
+                {accounts.length > 1 && (
+                  <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/transfer')}>
+                    <Ionicons name="arrow-forward-circle-outline" size={20} color={theme.colors.primary} />
+                    <Text style={styles.actionButtonText}>{t('transfer.title')}</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/exchange')}>
-                    <Ionicons name="swap-horizontal" size={20} color={theme.colors.primary} />
-                    <Text style={styles.actionButtonText}>{t('exchange.title')}</Text>
-                  </TouchableOpacity>
-                  {accounts.length > 1 && (
-                    <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/transfer')}>
-                      <Ionicons name="arrow-forward-circle-outline" size={20} color={theme.colors.primary} />
-                      <Text style={styles.actionButtonText}>{t('transfer.title')}</Text>
-                    </TouchableOpacity>
-                  )}
-                </>
-              )}
-              <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/wallet/rate-alerts')}>
-                <Ionicons name="notifications-outline" size={20} color={theme.colors.primary} />
-                <Text style={styles.actionButtonText}>{t('exchange.rateAlerts')}</Text>
-              </TouchableOpacity>
-            </View>
+                )}
+              </View>
+            )}
+
+            {/* Its own full-width row, NOT a fourth button in `actions` above: that
+                row is `flexWrap` with `minWidth: 100, flex: 1` per button, so a
+                fourth item wraps onto its own line and stretches full width, which
+                collided with the section below (ABA-492). It also reads better as
+                navigation to a management screen than as a "create" action.
+                Outside the canEdit gate on purpose — a rate target is personal,
+                like the display currency, and the server sets no ViewerBlockGuard
+                on /rate-watches. */}
+            <TouchableOpacity
+              style={styles.navRow}
+              onPress={() => router.push('/wallet/rate-alerts')}
+              accessibilityRole="button"
+            >
+              <Ionicons name="notifications-outline" size={20} color={theme.colors.primary} />
+              <Text style={styles.navRowText}>{t('exchange.rateAlerts')}</Text>
+              <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+            </TouchableOpacity>
 
             {exchanges.length > 0 && (
               <View style={styles.section}>
@@ -462,6 +471,21 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.primary,
     minWidth: 100,
+    flex: 1,
+  },
+  navRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    paddingVertical: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
+    marginBottom: theme.spacing[6],
+  },
+  navRowText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
     flex: 1,
   },
   actionButtonText: {
