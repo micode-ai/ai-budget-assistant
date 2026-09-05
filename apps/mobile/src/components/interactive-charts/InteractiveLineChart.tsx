@@ -28,15 +28,14 @@ interface InteractiveLineChartProps {
   areaChart?: boolean;
   /**
    * Sparkline mode (dashboard desktop hero, docs/design/2026-09-05-
-   * dashboard-web.md, revised in round 3 against MEASURED, not assumed,
-   * dimensions - see the three fixes below, each verified empirically).
-   * Defaults to `false` - every existing call site (mobile
-   * `NetProfitWidget`, `ProductDetailSheet`, `ChartRenderer`, the
-   * investment screens) passes nothing and is UNCHANGED by every one of
-   * these; each is gated on `compact` specifically because the underlying
-   * mismatch it fixes exists for every caller, and fixing it unconditionally
-   * would change what mobile currently renders, which this component may not
-   * do.
+   * dashboard-web.md, revised across rounds 3 and 4 against MEASURED, not
+   * assumed, dimensions). Defaults to `false` - every existing call site
+   * (mobile `NetProfitWidget`, `ProductDetailSheet`, `ChartRenderer`, the
+   * investment screens) passes nothing and is unchanged by every fix below;
+   * each is gated on `compact` specifically because the underlying mismatch
+   * it addresses exists for every caller, and fixing it unconditionally
+   * would change what mobile currently renders, which this component may
+   * not do.
    *
    * - Hides the Y-axis numeric labels and the horizontal dashed rule lines
    *   (gifted-charts' own `hideAxesAndRules`), and reclaims the label
@@ -54,12 +53,19 @@ interface InteractiveLineChartProps {
    *   gets inflated by however negative the data happens to be (see the
    *   `libraryHeight` computation below) - confirmed empirically to hold
    *   across k=1..4 (noOfSectionsBelowXAxis), not just the specific dataset
-   *   first measured against.
-   * - The `spacing` prop is computed against the library's ACTUAL per-point
-   *   accumulation (`data.length` units, not `data.length - 1` gaps - see
-   *   the `spacing` prop below), so the rendered chart no longer overflows
-   *   its own container - confirmed to hold at 3, 6 and 12 points, not just
-   *   the 6-point case first measured.
+   *   first measured against. This one held up in round 4's re-verification
+   *   (confirmed correct on a real screen) - see `spacing` below for the
+   *   one that did not.
+   *
+   * Round 3 ALSO changed the `spacing` prop's divisor for `compact`,
+   * reasoning that gifted-charts renders a WIDER wrapper than `chartWidth`
+   * with the default divisor. Round 4 reverted that change after finding,
+   * empirically, that the default divisor's wrapper overshoot is harmless
+   * (the drawn content already reaches `chartWidth`; the excess is empty
+   * space `chartClip` clips for free) while the round-3 replacement made
+   * the drawn line stop visibly short of the edge instead - see `spacing`'s
+   * own comment below for the measurements. `spacing` is therefore
+   * unconditional again, same as every other InteractiveLineChart consumer.
    */
   compact?: boolean;
 }
@@ -251,22 +257,30 @@ export function InteractiveLineChart({
             hideDataPoints={false}
             initialSpacing={8}
             endSpacing={8}
-            // gifted-charts sums ONE `spacing` unit per DATA POINT (data.length
-            // times), not per gap between points (data.length - 1) - its own
-            // `totalWidth = initialSpacing + spacing * data.length + endSpacing`
-            // (gifted-charts-core/dist/LineChart/index.js). Dividing by
-            // `data.length - 1` (as if N points had N-1 gaps, the natural
-            // reading) under-counts by one whole `spacing` unit, so the
-            // library renders roughly 20% WIDER than the `chartWidth` we
-            // measured and asked for - confirmed empirically (a 1497px
-            // container rendered a 1806px chart). Fixed for `compact` only:
-            // this is a pre-existing mismatch in EVERY InteractiveLineChart
-            // caller, and correcting it for the non-compact path would change
-            // what mobile (and every other existing consumer) currently
-            // renders, which this fix must not do.
+            // ROUND 4 CORRECTION - round 3 divided by `data.length` here,
+            // reasoning that gifted-charts accumulates a `spacing` unit per
+            // DATA POINT (N times) rather than per gap (N-1), and that
+            // dividing by N-1 therefore under-counted, making the WRAPPER
+            // render wider than `chartWidth`. That diagnosis of the wrapper
+            // was correct, but the fix was wrong: verified empirically
+            // (rendering the real production tree, not the earlier round's
+            // hand-copied harness) that with the DEFAULT N-1 divisor, the
+            // drawn line already reaches almost exactly `chartWidth` (within
+            // `endSpacing`, confirmed across n=3/6/12) - the WRAPPER'S extra
+            // width beyond that point is empty space with no content in it,
+            // and `chartClip`'s own `overflow:hidden` (below) clips exactly
+            // that empty excess, harmlessly. Dividing by `data.length`
+            // instead (round 3's change) made the library allocate LESS
+            // width per point than the content needs, so the drawn line fell
+            // visibly short of the card's right edge - worse than the
+            // problem it was meant to fix, and confirmed by the same
+            // real-tree measurement (a 3-point chart stopped a full third
+            // short of the container). Reverted to the N-1 divisor,
+            // unconditionally - it was never compact-only to begin with, and
+            // this round found no reason to make it so.
             spacing={
               data.length > 1
-                ? Math.max(30, (chartWidth - 16) / (compact ? data.length : data.length - 1))
+                ? Math.max(30, (chartWidth - 16) / (data.length - 1))
                 : chartWidth
             }
             hideAxesAndRules={compact}
