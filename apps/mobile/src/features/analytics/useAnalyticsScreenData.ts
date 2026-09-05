@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
@@ -82,6 +82,21 @@ export function useAnalyticsScreenData() {
     });
   }, [dateRange.startDate, dateRange.endDate, currency, selectedRange]);
 
+  // Same fields `openDrillDown` pushes as route params, exposed as plain data
+  // (additive — `openDrillDown` above is unchanged and still what
+  // `AnalyticsMobile` calls) so a desktop caller can open `DrillDownDialog`
+  // with them instead of navigating. Kept as strings, matching what
+  // `useLocalSearchParams`/`DrillDownView`'s `initial` prop expect either way.
+  const drillDownParams = useMemo(
+    () => ({
+      startDate: dateRange.startDate.toISOString(),
+      endDate: dateRange.endDate.toISOString(),
+      currencyCode: currency,
+      level: selectedRange === 'year' ? 'year' : 'month',
+    }),
+    [dateRange.startDate, dateRange.endDate, currency, selectedRange],
+  );
+
   return {
     selectedRange,
     setSelectedRange,
@@ -111,6 +126,7 @@ export function useAnalyticsScreenData() {
     aiInsights,
     aiInsightsProGated,
     openDrillDown,
+    drillDownParams,
   };
 }
 

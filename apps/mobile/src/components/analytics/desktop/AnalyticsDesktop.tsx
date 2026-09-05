@@ -13,6 +13,8 @@ import { useUpgradeStore } from '@/stores/upgradeStore';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { SpendingTrendChart, DayOfWeekSection, InflationIndexSection } from '@/components/analytics';
 import { BreakdownCard, type BreakdownRow } from './BreakdownCard';
+import { DrillDownDialog } from './DrillDownDialog';
+import { StoryDialog } from './StoryDialog';
 import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import { useAnalyticsScreenData } from '@/features/analytics/useAnalyticsScreenData';
 import type {
@@ -49,6 +51,19 @@ import type {
  * per-product detail as a centred dialog instead of a bottom sheet (design's
  * Universal dialogs rule). `AnalyticsMobile.tsx`'s own call site passes no
  * prop and is unaffected.
+ *
+ * **Two of the screen's four outbound navigations are dialogs, not pushes
+ * (Task 7)**: the Spending Trend drill-down (`DrillDownDialog`, opened from
+ * the two clickable summary tiles and the trend chart's bars) and the
+ * Spending Story (`StoryDialog`, opened from the discovery row) both host a
+ * component extracted from their route unchanged — `DrillDownView`/
+ * `SpendingStoryView` — so mobile (which still navigates, via `openDrillDown`
+ * and the discovery row's own `router.push('/story', ...)` on
+ * `AnalyticsMobile`) and desktop share exactly one definition of each. The
+ * other two — Scenario Simulator and Wrapped — deliberately stay
+ * navigations: the former is a whole workspace with its own saved state and
+ * sharing, the latter a full-screen swipeable card deck; neither fits a
+ * centred dialog.
  *
  * Deliberately NOT done here, and why:
  * - The donut↔row hover cross-highlight (Interactions, "Open questions") and
@@ -90,8 +105,15 @@ export function AnalyticsDesktop() {
     projectSpending,
     aiInsights,
     aiInsightsProGated,
-    openDrillDown,
+    drillDownParams,
   } = useAnalyticsScreenData();
+
+  // Task 7: both dialogs are a single boolean/optional slot, mirroring
+  // `ExpensesDesktop`'s `selectedRowId`/`createKind` state — only one of
+  // either is ever open at a time, and both close via the same `onClose`
+  // shape every desktop dialog in this app uses.
+  const [drillDownOpen, setDrillDownOpen] = useState(false);
+  const [storyOpen, setStoryOpen] = useState(false);
 
   // "Zero transactions in the selected period" (design's Empty state) means
   // BOTH streams are empty, not just expenses — an income-only period must
@@ -140,7 +162,7 @@ export function AnalyticsDesktop() {
             selectedRange={selectedRange}
             currency={currency}
             topCategory={categorySpending[0] ?? null}
-            onPress={openDrillDown}
+            onPress={() => setDrillDownOpen(true)}
           />
 
           {isHydrating ? (
@@ -162,7 +184,7 @@ export function AnalyticsDesktop() {
               <TrendAndWeekdayRow
                 dailySpending={dailySpending}
                 selectedRange={selectedRange}
-                onBarPress={openDrillDown}
+                onBarPress={() => setDrillDownOpen(true)}
                 dayOfWeekSpending={dayOfWeekSpending}
               />
 
@@ -196,9 +218,23 @@ export function AnalyticsDesktop() {
             <InflationIndexSection desktop />
           </View>
 
-          <DiscoveryRow selectedMonth={selectedMonth} selectedYear={selectedYear} />
+          <DiscoveryRow
+            selectedYear={selectedYear}
+            onOpenStory={() => setStoryOpen(true)}
+          />
         </View>
       </ScrollView>
+
+      {drillDownOpen && (
+        <DrillDownDialog params={drillDownParams} onClose={() => setDrillDownOpen(false)} />
+      )}
+
+      {storyOpen && (
+        <StoryDialog
+          initial={{ month: String(selectedMonth), year: String(selectedYear) }}
+          onClose={() => setStoryOpen(false)}
+        />
+      )}
     </View>
   );
 }
@@ -515,7 +551,7 @@ function AnalyticsSummaryStrip({
           written for use inside a sentence (`SummaryCards.tsx`) — wrong case
           for a tile label sitting beside three Title Case ones.
           `drillDown.transactions` is the same word, Title Case, in all nine
-          locales, and already the heading `openDrillDown` navigates to. */}
+          locales, and already the title `DrillDownDialog` shows. */}
       <SummaryTile label={t('drillDown.transactions')}>
         <Text style={[styles.summaryValue, { fontVariant: ['tabular-nums'] as const }]}>
           {summary.transactionCount}
@@ -1006,9 +1042,12 @@ function InsightsCluster({
 /**
  * Story / Scenario Simulator / Wrapped, demoted from mid-scroll full-width
  * banners to a small bottom row of three (design's "What each mobile
- * affordance becomes") — same destinations/params, same i18n keys.
+ * affordance becomes"). Story opens `StoryDialog` (Task 7 — a narrative about
+ * the period selected on this screen belongs over the screen that selected
+ * it) via `onOpenStory`; Scenario Simulator and Wrapped stay pushes — same
+ * destinations/params/i18n keys as before.
  */
-function DiscoveryRow({ selectedMonth, selectedYear }: { selectedMonth: number; selectedYear: number }) {
+function DiscoveryRow({ selectedYear, onOpenStory }: { selectedYear: number; onOpenStory: () => void }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -1017,7 +1056,7 @@ function DiscoveryRow({ selectedMonth, selectedYear }: { selectedMonth: number; 
     <View style={styles.discoveryRow}>
       <Pressable
         style={styles.discoveryCard}
-        onPress={() => router.push({ pathname: '/story', params: { month: String(selectedMonth), year: String(selectedYear) } })}
+        onPress={onOpenStory}
         accessibilityRole="button"
       >
         <Ionicons name="book-outline" size={20} color={theme.colors.primary} />
