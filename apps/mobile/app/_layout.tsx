@@ -15,6 +15,7 @@ import { WhatsNewSpotlight } from '@/components/whatsNew/WhatsNewSpotlight';
 import { UpgradeGate } from '@/components/UpgradeGate';
 import { AlertDialogHost } from '@/components/AlertDialogHost';
 import { WebShell } from '@/components/WebShell';
+import { useIsDesktopWeb } from '@/components/webLayout.constants';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
 import { useColdStartGate } from '@/hooks/useColdStartGate';
@@ -58,17 +59,27 @@ function RootNavigator() {
   useGenericDeepLink(isInitializing, isAuthenticated);
   useTelemetryScreenViews(coldStartGateReady);
 
+  // Only changes on a window resize, never on navigation — safe to read here
+  // even though this component renders every <Stack.Screen> in the app.
+  const isDesktopWeb = useIsDesktopWeb();
+
   if (isInitializing || !fontsLoaded) {
     return null;
   }
 
+  // On desktop web the shell already draws an orange app bar carrying the
+  // brand and the navigation, so a secondary screen's own header stacked
+  // under it read as two app bars rather than as "you are one level down".
+  // Here it becomes a slim page bar on the surface colour instead — same
+  // back arrow, same title, but visibly subordinate to the chrome above it.
+  // Native and narrow web keep the orange header, which is the only bar there.
   const headerStyle = {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: isDesktopWeb ? theme.colors.surface : theme.colors.primary,
   };
-  const headerTintColor = theme.colors.textInverse;
+  const headerTintColor = isDesktopWeb ? theme.colors.textPrimary : theme.colors.textInverse;
   const headerTitleStyle = {
     fontFamily: theme.fonts.bold,
-    fontSize: 18,
+    fontSize: isDesktopWeb ? 16 : 18,
   };
 
   return (
@@ -80,7 +91,10 @@ function RootNavigator() {
             headerStyle,
             headerTintColor,
             headerTitleStyle,
-            headerTitleAlign: 'center',
+            // Centred on a phone; left-aligned on desktop, where a centred
+            // title in a full-window bar floats far from the back arrow it
+            // belongs to.
+            headerTitleAlign: isDesktopWeb ? 'left' : 'center',
             contentStyle: { backgroundColor: theme.colors.background },
           }}
         >
