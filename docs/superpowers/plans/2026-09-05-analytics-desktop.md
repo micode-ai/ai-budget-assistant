@@ -155,16 +155,26 @@ git commit -m "ABA-501 Lay out the analytics screen for a desktop window"
 
 **Why:** its per-product detail is a bottom sheet written as inline JSX, so nothing can host it. Extract it first — the same rule that made the detail cards hostable.
 
-- [ ] **Step 1: Extract, then host**
+- [ ] **Step 1: Reflow the section for a wide window**
+
+The design's "Personal Inflation Index — reflowed, not rebuilt" section describes a three-column layout. Task 4 deliberately left the section embedded verbatim, because reflowing it means editing `InflationIndexSection.tsx`, which this task owns. **That makes the reflow yours** — without this step it falls between the two tasks and never gets built anywhere in the plan.
+
+Reflow it for the desktop layer only; the phone keeps the single column it has.
+
+- [ ] **Step 2: Extract, then host**
 
 Move the inline sheet into its own component with no behaviour change, have `InflationIndexSection` render it exactly as before, and have the desktop host it as a centred dialog. A sheet is a phone idiom; on desktop it is a dialog.
 
-- [ ] **Step 2: Verify and commit**
+- [ ] **Step 3: Fix the summary tile's casing**
+
+`AnalyticsDesktop`'s fourth tile reads `t('analytics.transactions')`, which is the lowercase string `'transactions'` — written for use inside a sentence, not as a heading, so it sits next to three Title Case labels. Use a correctly-cased existing key, or add one to all nine locales if none fits. A one-word fix, but it is on the screen.
+
+- [ ] **Step 4: Verify and commit**
 
 ```bash
 cd apps/mobile && npx tsc --noEmit && npx jest
 git add apps/mobile/src/components/analytics
-git commit -m "ABA-501 Extract the product detail so desktop can host it as a dialog"
+git commit -m "ABA-501 Reflow the inflation index and host its detail as a dialog"
 ```
 
 ---
