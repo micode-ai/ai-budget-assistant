@@ -13,7 +13,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import {
   IncomeDetailsCard,
   type IncomeDetailsCardHandle,
-} from './components/IncomeDetailsCard';
+} from '@/components/income/detail/IncomeDetailsCard';
 
 export default function IncomeDetailScreen() {
   const { t } = useTranslation();

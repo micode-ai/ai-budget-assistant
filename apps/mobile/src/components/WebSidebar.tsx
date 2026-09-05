@@ -18,7 +18,14 @@ const tabIcons = {
  * sidebar stays focused on section navigation. Mounted only by WebShell on
  * desktop web.
  */
-export function WebSidebar() {
+/**
+ * `orientation="horizontal"` renders the same items as a row for the top bar.
+ * One component, two arrangements — the routes, active-state matching and
+ * icons must not exist twice, or a new screen gets added to one nav and not
+ * the other.
+ */
+export function WebSidebar({ orientation = 'vertical' }: { orientation?: 'vertical' | 'horizontal' } = {}) {
+  const horizontal = orientation === 'horizontal';
   const theme = useTheme();
   const { t } = useTranslation();
   const pathname = usePathname();
@@ -36,20 +43,26 @@ export function WebSidebar() {
     match.some((m) => (m === '/' ? pathname === '/' : pathname.startsWith(m)));
 
   return (
-    <View style={[styles.sidebar, { width: SIDEBAR_WIDTH, backgroundColor: theme.colors.primary }]}>
+    <View
+      style={
+        horizontal
+          ? styles.bar
+          : [styles.sidebar, { width: SIDEBAR_WIDTH, backgroundColor: theme.colors.primary }]
+      }
+    >
       {primary.map((item) => {
         const active = isActive(item.match);
         return (
           <TouchableOpacity
             key={item.key}
-            style={[styles.row, active && { backgroundColor: 'rgba(255,255,255,0.18)' }]}
+            style={[horizontal ? styles.barItem : styles.row, active && { backgroundColor: 'rgba(255,255,255,0.18)' }]}
             onPress={() => router.push(item.route as never)}
           >
             <Image
               source={item.img}
               style={{ width: 22, height: 22, resizeMode: 'contain', tintColor: theme.colors.textInverse, opacity: active ? 1 : 0.8 }}
             />
-            <Text style={[styles.label, { color: theme.colors.textInverse, opacity: active ? 1 : 0.85, fontFamily: theme.fonts.regular }]}>
+            <Text style={[horizontal ? styles.barLabel : styles.label, { color: theme.colors.textInverse, opacity: active ? 1 : 0.85, fontFamily: theme.fonts.regular }]}>
               {item.label}
             </Text>
           </TouchableOpacity>
@@ -60,7 +73,7 @@ export function WebSidebar() {
 }
 
 const styles = StyleSheet.create({
-  sidebar: { height: '100%', paddingTop: 16, paddingHorizontal: 12 },
+  sidebar: { height: '100%', paddingTop: 0, paddingHorizontal: 12 },
   row: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -71,4 +84,16 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   label: { fontSize: 15 },
+  // Horizontal arrangement for the top bar. No own background: it sits on the
+  // bar's primary colour already.
+  bar: { flexDirection: 'row', alignItems: 'center', gap: 2 },
+  barItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    borderRadius: 8,
+  },
+  barLabel: { fontSize: 14 },
 });

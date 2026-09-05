@@ -32,6 +32,17 @@ Die Web-App deckt die täglichen Grundfunktionen ab:
 
 Eine gute Möglichkeit für längere Sitzungen mit einer echten Tastatur — den Monat durchsehen, Kategorien aufräumen oder mit dem KI-Assistenten chatten.
 
+## Transaktionen auf einem großen Bildschirm
+
+Wenn das Browserfenster breit genug ist — etwa wie auf einem Laptop oder Desktop-Computer —, sieht der Bildschirm „Transaktionen" anders aus, um den Platz besser zu nutzen: Es gibt eine Seitenleiste und eine obere Leiste statt der gewohnten Ansicht vom Smartphone.
+
+- Filter werden als **Liste auf der linken Seite** angezeigt, mit der Anzahl der passenden Treffer neben jeder Option, statt als Reihe von Schaltflächen — so siehst du, wie viele Transaktionen ein Filter zeigen würde, bevor du ihn auswählst.
+- **Ausgaben und Einnahmen erscheinen zusammen in einer Liste**, nach Tagen gruppiert, und zu jedem Tag wird die Summe der an diesem Tag ausgegebenen Beträge angezeigt.
+- Ein Tipp auf eine Transaktion öffnet sie in einem **Fenster über der Liste** statt auf einer neuen Seite — schließe das Fenster, um wieder genau dorthin zurückzukehren.
+- Du kannst **mehrere Transaktionen mit Kontrollkästchen auswählen** — halte Umschalt gedrückt und klicke, um alles zwischen zwei Zeilen auszuwählen — und dann ihre Kategorie ändern, ein Tag hinzufügen oder sie zusammen löschen.
+
+Unter etwa 1024 Pixel Breite — das betrifft auch die meisten im Hochformat gehaltenen Tablets — zeigt der Browser stattdessen die gewohnte Smartphone-Ansicht. Das ist so gewollt: Die breite Ansicht ist für einen echten Desktop- oder Laptop-Bildschirm gedacht, und ein schmaleres Fenster ist mit der Smartphone-Ansicht besser bedient.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:

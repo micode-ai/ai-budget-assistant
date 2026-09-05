@@ -3827,6 +3827,17 @@ The web app covers the everyday essentials:
 
 It's a great way to do longer sessions on a real keyboard — reviewing the month, cleaning up categories, or chatting with the AI assistant.
 
+## Transactions on a Wide Screen
+
+When the browser window is wide enough — roughly as wide as a laptop or desktop screen — the Transactions screen changes to make better use of the space, with a sidebar and a top bar instead of the familiar phone layout.
+
+- Filters are shown as a **list down the left side**, with a count next to each option, instead of a row of buttons — so you can see how many transactions a filter will show before you pick it.
+- **Expenses and income appear together in one list**, grouped by day, with each day showing the total spent that day.
+- Tapping a transaction opens it in a **panel over the list** instead of a new page — close the panel to go back to exactly where you were.
+- You can **select several transactions with checkboxes** — hold Shift and click to select everything between two rows — and then change their category, add a tag, or delete them all together.
+
+Below about 1024 pixels wide — which includes most tablets held upright — the browser shows the familiar phone layout instead. That's expected: the wide layout is designed for a real desktop or laptop screen, and a narrower window is better served by the phone layout.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:
@@ -8397,6 +8408,17 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Это удобно для долгих сессий за настоящей клавиатурой — разобрать месяц, навести порядок в категориях или пообщаться с AI-ассистентом.
 
+## Транзакции на большом экране
+
+Когда окно браузера достаточно широкое — как на ноутбуке или настольном компьютере, — экран «Транзакции» меняется, чтобы использовать пространство лучше: появляются боковая панель и верхняя панель вместо привычного вида для телефона.
+
+- Фильтры показаны **списком слева**, и рядом с каждым вариантом видно число подходящих операций, а не рядом кнопок — так вы сразу видите, сколько операций покажет фильтр, ещё до того как выберете его.
+- **Расходы и доходы показаны вместе, одним списком**, сгруппированным по дням, и для каждого дня видна общая сумма расходов за этот день.
+- Нажатие на операцию открывает её в **панели поверх списка**, а не на новой странице — закройте панель, чтобы вернуться туда же, где были.
+- Можно **выбрать сразу несколько операций с помощью галочек** — зажмите Shift и щёлкните, чтобы выбрать всё между двумя строками, — а затем изменить им категорию, добавить тег или удалить всё разом.
+
+Если ширина окна меньше примерно 1024 пикселей — это касается и большинства планшетов в вертикальной ориентации, — браузер вместо этого показывает привычный вид для телефона. Так и задумано: широкий вид рассчитан на настоящий экран компьютера или ноутбука, а для более узкого окна лучше подходит вид для телефона.
+
 ## Ограничения
 
 Веб-версия дополняет мобильное приложение, но не заменяет его полностью. Несколько функций в браузере работают иначе:
@@ -12935,6 +12957,17 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Це зручно для довгих сесій за справжньою клавіатурою — розібрати місяць, навести лад у категоріях або поспілкуватися з AI-асистентом.
 
+## Транзакції на великому екрані
+
+Коли вікно браузера достатньо широке — приблизно як на ноутбуці чи настільному комп’ютері, — екран «Транзакції» змінюється, щоб краще використати простір: з’являються бічна панель і верхня панель замість звичного вигляду для телефона.
+
+- Фільтри показані **списком зліва**, і біля кожного варіанта видно кількість відповідних операцій, а не рядом кнопок — так ви одразу бачите, скільки операцій покаже фільтр, ще до того як оберете його.
+- **Витрати й доходи показані разом, одним списком**, згрупованим за днями, і для кожного дня видно загальну суму витрат за цей день.
+- Натискання на операцію відкриває її в **панелі над списком**, а не на новій сторінці — закрийте панель, щоб повернутися саме туди, де ви були.
+- Можна **вибрати одразу декілька операцій за допомогою прапорців** — утримуйте Shift і клацніть, щоб вибрати все між двома рядками, — а потім змінити їм категорію, додати тег або видалити всі одразу.
+
+Якщо ширина вікна менша за приблизно 1024 пікселі — це стосується й більшості планшетів у вертикальній орієнтації, — браузер натомість показує звичний вигляд для телефона. Так і задумано: широкий вигляд розрахований на справжній екран комп’ютера чи ноутбука, а для вужчого вікна краще підходить вигляд для телефона.
+
 ## Обмеження
 
 Веб-версія доповнює мобільний застосунок, але не замінює його повністю. Кілька функцій у браузері працюють інакше:
@@ -17458,6 +17491,17 @@ Wersja webowa obejmuje codzienne podstawy:
 
 To świetny sposób na dłuższe sesje przy prawdziwej klawiaturze — przegląd miesiąca, porządkowanie kategorii lub rozmowa z asystentem AI.
 
+## Transakcje na dużym ekranie
+
+Gdy okno przeglądarki jest wystarczająco szerokie — mniej więcej jak na laptopie lub komputerze stacjonarnym — ekran Transakcji zmienia się, aby lepiej wykorzystać miejsce: pojawia się panel boczny i pasek górny zamiast układu znanego z telefonu.
+
+- Filtry są pokazane jako **lista po lewej stronie**, a przy każdej opcji widać liczbę pasujących transakcji, zamiast rzędu przycisków — dzięki temu widzisz, ile transakcji pokaże dany filtr, zanim go wybierzesz.
+- **Wydatki i przychody pojawiają się razem, w jednej liście**, pogrupowanej według dnia, a przy każdym dniu widać sumę wydatków z tego dnia.
+- Dotknięcie transakcji otwiera ją w **panelu nad listą** zamiast na nowej stronie — zamknij panel, aby wrócić do listy.
+- Możesz **zaznaczyć kilka transakcji za pomocą checkboxów** — przytrzymaj Shift i kliknij, aby zaznaczyć wszystko pomiędzy dwoma wierszami — a potem zmienić im kategorię, dodać tag albo usunąć je razem.
+
+Poniżej około 1024 pikseli szerokości — dotyczy to też większości tabletów trzymanych pionowo — przeglądarka pokazuje zamiast tego znany układ telefoniczny. Tak ma być: szeroki układ jest pomyślany dla prawdziwego ekranu komputera lub laptopa, a węższe okno lepiej obsługuje układ telefoniczny.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:
@@ -21956,6 +22000,17 @@ Die Web-App deckt die täglichen Grundfunktionen ab:
 
 Eine gute Möglichkeit für längere Sitzungen mit einer echten Tastatur — den Monat durchsehen, Kategorien aufräumen oder mit dem KI-Assistenten chatten.
 
+## Transaktionen auf einem großen Bildschirm
+
+Wenn das Browserfenster breit genug ist — etwa wie auf einem Laptop oder Desktop-Computer —, sieht der Bildschirm „Transaktionen" anders aus, um den Platz besser zu nutzen: Es gibt eine Seitenleiste und eine obere Leiste statt der gewohnten Ansicht vom Smartphone.
+
+- Filter werden als **Liste auf der linken Seite** angezeigt, mit der Anzahl der passenden Treffer neben jeder Option, statt als Reihe von Schaltflächen — so siehst du, wie viele Transaktionen ein Filter zeigen würde, bevor du ihn auswählst.
+- **Ausgaben und Einnahmen erscheinen zusammen in einer Liste**, nach Tagen gruppiert, und zu jedem Tag wird die Summe der an diesem Tag ausgegebenen Beträge angezeigt.
+- Ein Tipp auf eine Transaktion öffnet sie in einem **Fenster über der Liste** statt auf einer neuen Seite — schließe das Fenster, um wieder genau dorthin zurückzukehren.
+- Du kannst **mehrere Transaktionen mit Kontrollkästchen auswählen** — halte Umschalt gedrückt und klicke, um alles zwischen zwei Zeilen auszuwählen — und dann ihre Kategorie ändern, ein Tag hinzufügen oder sie zusammen löschen.
+
+Unter etwa 1024 Pixel Breite — das betrifft auch die meisten im Hochformat gehaltenen Tablets — zeigt der Browser stattdessen die gewohnte Smartphone-Ansicht. Das ist so gewollt: Die breite Ansicht ist für einen echten Desktop- oder Laptop-Bildschirm gedacht, und ein schmaleres Fenster ist mit der Smartphone-Ansicht besser bedient.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:
@@ -26443,6 +26498,17 @@ La versión web cubre lo esencial del día a día:
 
 Es ideal para sesiones largas con un teclado de verdad: revisar el mes, ordenar categorías o conversar con el asistente de IA.
 
+## Transacciones en una pantalla grande
+
+Cuando la ventana del navegador es lo bastante ancha —más o menos como en un portátil o un ordenador de escritorio—, la pantalla de Transacciones cambia para aprovechar mejor el espacio: aparecen un panel lateral y una barra superior en lugar de la vista habitual del teléfono.
+
+- Los filtros se muestran como una **lista en el lado izquierdo**, con el número de coincidencias junto a cada opción, en lugar de una fila de botones — así ves cuántas transacciones mostrará un filtro antes de elegirlo.
+- **Los gastos y los ingresos aparecen juntos en una sola lista**, agrupados por día, y cada día muestra el total gastado ese día.
+- Tocar una transacción la abre en un **panel sobre la lista** en lugar de una página nueva — cierra el panel para volver exactamente a donde estabas.
+- Puedes **seleccionar varias transacciones con casillas** — mantén pulsada Mayús y haz clic para seleccionar todo lo que hay entre dos filas — y luego cambiarles la categoría, añadirles una etiqueta o eliminarlas todas a la vez.
+
+Por debajo de unos 1024 píxeles de ancho —lo que incluye la mayoría de las tabletas sujetas en vertical—, el navegador muestra en su lugar la vista habitual del teléfono. Es lo esperado: la vista ancha está pensada para una pantalla real de escritorio o portátil, y una ventana más estrecha se sirve mejor con la vista del teléfono.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:
@@ -30928,6 +30994,17 @@ La version web couvre l’essentiel du quotidien :
 
 C’est idéal pour les sessions plus longues avec un vrai clavier : passer le mois en revue, ranger les catégories ou discuter avec l’assistant IA.
 
+## Les transactions sur un grand écran
+
+Lorsque la fenêtre du navigateur est assez large — à peu près comme sur un ordinateur portable ou de bureau —, l’écran Transactions change pour mieux exploiter l’espace : une barre latérale et une barre supérieure remplacent la présentation habituelle du téléphone.
+
+- Les filtres apparaissent sous forme de **liste sur la gauche**, avec le nombre de résultats à côté de chaque option, plutôt qu’une rangée de boutons — vous voyez ainsi combien de transactions un filtre affichera avant même de le choisir.
+- **Les dépenses et les revenus apparaissent ensemble dans une seule liste**, regroupés par jour, chaque jour indiquant le total dépensé ce jour-là.
+- Toucher une transaction l’ouvre dans un **panneau au-dessus de la liste** plutôt que sur une nouvelle page — fermez le panneau pour revenir exactement là où vous étiez.
+- Vous pouvez **sélectionner plusieurs transactions avec des cases à cocher** — maintenez Maj enfoncée et cliquez pour sélectionner tout ce qui se trouve entre deux lignes — puis leur changer la catégorie, leur ajouter une étiquette ou les supprimer ensemble.
+
+En dessous d’environ 1024 pixels de large — ce qui inclut la plupart des tablettes tenues à la verticale —, le navigateur affiche à la place la présentation habituelle du téléphone. C’est normal : la présentation large est conçue pour un véritable écran d’ordinateur, et une fenêtre plus étroite est mieux servie par la présentation du téléphone.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :
@@ -35376,6 +35453,17 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Рахункі** — пераключайцеся паміж асабістым і агульнымі рахункамі, мяняйце валюту адлюстравання
 
 Гэта зручна для доўгіх сесій за сапраўднай клавіятурай — разабраць месяц, навесці лад у катэгорыях ці пагутарыць з AI-асістэнтам.
+
+## Транзакцыі на вялікім экране
+
+Калі акно браўзера дастаткова шырокае — прыкладна як на ноўтбуку ці настольным камп'ютары, — экран «Транзакцыі» змяняецца, каб лепш выкарыстаць прастору: з'яўляюцца бакавая панэль і верхняя панэль замест звыклага выгляду для тэлефона.
+
+- Фільтры паказаны **спісам злева**, і побач з кожным варыянтам відаць колькасць адпаведных аперацый, а не радком кнопак — так вы адразу бачыце, колькі аперацый пакажа фільтр, яшчэ да таго як абераце яго.
+- **Выдаткі і даходы паказаны разам, адным спісам**, згрупаваным па днях, і для кожнага дня відаць агульную суму выдаткаў за гэты дзень.
+- Націсканне на аперацыю адкрывае яе ў **панэлі над спісам**, а не на новай старонцы — зачыніце панэль, каб вярнуцца менавіта туды, дзе вы былі.
+- Можна **выбраць адразу некалькі аперацый з дапамогай сцяжкоў** — утрымлівайце Shift і пстрыкніце, каб выбраць усё паміж двума радкамі, — а потым змяніць ім катэгорыю, дадаць тэг ці выдаліць усе разам.
+
+Калі шырыня акна меншая за прыблізна 1024 пікселі — гэта тычыцца і большасці планшэтаў у вертыкальнай арыентацыі, — браўзер замест гэтага паказвае звыклы выгляд для тэлефона. Так і задумана: шырокі выгляд разлічаны на сапраўдны экран камп'ютара ці ноўтбука, а для вузейшага акна лепш падыходзіць выгляд для тэлефона.
 
 ## Абмежаванні
 
@@ -39940,6 +40028,17 @@ De webversie dekt de dagelijkse basis:
 - **Accounts** — wissel tussen je persoonlijke en gedeelde accounts, wijzig de weergavevaluta
 
 Ideaal voor langere sessies met een echt toetsenbord — de maand doornemen, categorieën opruimen of chatten met de AI-assistent.
+
+## Transacties op een groot scherm
+
+Als het browservenster breed genoeg is — ongeveer zoals op een laptop of desktopcomputer — ziet het scherm Transacties er anders uit om de ruimte beter te benutten: er komt een zijbalk en een bovenbalk in plaats van de vertrouwde telefoonweergave.
+
+- Filters worden getoond als een **lijst aan de linkerkant**, met het aantal treffers naast elke optie, in plaats van een rij knoppen — zo zie je hoeveel transacties een filter zal tonen voordat je hem kiest.
+- **Uitgaven en inkomsten staan samen in één lijst**, gegroepeerd per dag, met bij elke dag het totaal dat die dag is uitgegeven.
+- Een transactie aantikken opent hem in een **paneel over de lijst** in plaats van een nieuwe pagina — sluit het paneel om precies terug te gaan naar waar je was.
+- Je kunt **meerdere transacties selecteren met selectievakjes** — houd Shift ingedrukt en klik om alles tussen twee rijen te selecteren — en dan hun categorie wijzigen, een tag toevoegen of ze samen verwijderen.
+
+Onder ongeveer 1024 pixels breed — dat geldt ook voor de meeste tablets die je rechtop vasthoudt — toont de browser in plaats daarvan de vertrouwde telefoonweergave. Dat is de bedoeling: de brede weergave is gemaakt voor een echt bureaublad- of laptopscherm, en een smaller venster wordt beter bediend door de telefoonweergave.
 
 ## Beperkingen
 

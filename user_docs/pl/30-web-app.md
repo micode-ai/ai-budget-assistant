@@ -32,6 +32,17 @@ Wersja webowa obejmuje codzienne podstawy:
 
 To świetny sposób na dłuższe sesje przy prawdziwej klawiaturze — przegląd miesiąca, porządkowanie kategorii lub rozmowa z asystentem AI.
 
+## Transakcje na dużym ekranie
+
+Gdy okno przeglądarki jest wystarczająco szerokie — mniej więcej jak na laptopie lub komputerze stacjonarnym — ekran Transakcji zmienia się, aby lepiej wykorzystać miejsce: pojawia się panel boczny i pasek górny zamiast układu znanego z telefonu.
+
+- Filtry są pokazane jako **lista po lewej stronie**, a przy każdej opcji widać liczbę pasujących transakcji, zamiast rzędu przycisków — dzięki temu widzisz, ile transakcji pokaże dany filtr, zanim go wybierzesz.
+- **Wydatki i przychody pojawiają się razem, w jednej liście**, pogrupowanej według dnia, a przy każdym dniu widać sumę wydatków z tego dnia.
+- Dotknięcie transakcji otwiera ją w **panelu nad listą** zamiast na nowej stronie — zamknij panel, aby wrócić do listy.
+- Możesz **zaznaczyć kilka transakcji za pomocą checkboxów** — przytrzymaj Shift i kliknij, aby zaznaczyć wszystko pomiędzy dwoma wierszami — a potem zmienić im kategorię, dodać tag albo usunąć je razem.
+
+Poniżej około 1024 pikseli szerokości — dotyczy to też większości tabletów trzymanych pionowo — przeglądarka pokazuje zamiast tego znany układ telefoniczny. Tak ma być: szeroki układ jest pomyślany dla prawdziwego ekranu komputera lub laptopa, a węższe okno lepiej obsługuje układ telefoniczny.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:

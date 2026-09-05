@@ -32,6 +32,17 @@ De webversie dekt de dagelijkse basis:
 
 Ideaal voor langere sessies met een echt toetsenbord — de maand doornemen, categorieën opruimen of chatten met de AI-assistent.
 
+## Transacties op een groot scherm
+
+Als het browservenster breed genoeg is — ongeveer zoals op een laptop of desktopcomputer — ziet het scherm Transacties er anders uit om de ruimte beter te benutten: er komt een zijbalk en een bovenbalk in plaats van de vertrouwde telefoonweergave.
+
+- Filters worden getoond als een **lijst aan de linkerkant**, met het aantal treffers naast elke optie, in plaats van een rij knoppen — zo zie je hoeveel transacties een filter zal tonen voordat je hem kiest.
+- **Uitgaven en inkomsten staan samen in één lijst**, gegroepeerd per dag, met bij elke dag het totaal dat die dag is uitgegeven.
+- Een transactie aantikken opent hem in een **paneel over de lijst** in plaats van een nieuwe pagina — sluit het paneel om precies terug te gaan naar waar je was.
+- Je kunt **meerdere transacties selecteren met selectievakjes** — houd Shift ingedrukt en klik om alles tussen twee rijen te selecteren — en dan hun categorie wijzigen, een tag toevoegen of ze samen verwijderen.
+
+Onder ongeveer 1024 pixels breed — dat geldt ook voor de meeste tablets die je rechtop vasthoudt — toont de browser in plaats daarvan de vertrouwde telefoonweergave. Dat is de bedoeling: de brede weergave is gemaakt voor een echt bureaublad- of laptopscherm, en een smaller venster wordt beter bediend door de telefoonweergave.
+
 ## Beperkingen
 
 De webversie is een aanvulling op de mobiele app, geen volledige vervanging. Een paar functies werken anders in de browser:

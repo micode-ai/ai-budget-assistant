@@ -10,6 +10,12 @@ export const SIDEBAR_WIDTH = 240;
 // Height of the full-width desktop top bar (brand + global controls).
 export const TOP_BAR_HEIGHT = 56;
 export const COLUMN_HORIZONTAL_PADDING = 16;
+// Below this, the facet rail collapses to a labelled dropdown in the screen's
+// top bar (design spec decision 6's "1024-1439" regime) — a side rail next to
+// a five-column table doesn't fit in that band. This is a SEPARATE threshold
+// from DESKTOP_MIN_WIDTH: 1024-1439 is still "desktop", just the one regime
+// where the layout concedes.
+export const FACET_RAIL_MIN_WIDTH = 1440;
 
 /** Pure gate — true only on web at desktop width. Native never qualifies. */
 export function isDesktopWeb(width: number): boolean {

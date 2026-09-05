@@ -32,6 +32,17 @@ La version web couvre l’essentiel du quotidien :
 
 C’est idéal pour les sessions plus longues avec un vrai clavier : passer le mois en revue, ranger les catégories ou discuter avec l’assistant IA.
 
+## Les transactions sur un grand écran
+
+Lorsque la fenêtre du navigateur est assez large — à peu près comme sur un ordinateur portable ou de bureau —, l’écran Transactions change pour mieux exploiter l’espace : une barre latérale et une barre supérieure remplacent la présentation habituelle du téléphone.
+
+- Les filtres apparaissent sous forme de **liste sur la gauche**, avec le nombre de résultats à côté de chaque option, plutôt qu’une rangée de boutons — vous voyez ainsi combien de transactions un filtre affichera avant même de le choisir.
+- **Les dépenses et les revenus apparaissent ensemble dans une seule liste**, regroupés par jour, chaque jour indiquant le total dépensé ce jour-là.
+- Toucher une transaction l’ouvre dans un **panneau au-dessus de la liste** plutôt que sur une nouvelle page — fermez le panneau pour revenir exactement là où vous étiez.
+- Vous pouvez **sélectionner plusieurs transactions avec des cases à cocher** — maintenez Maj enfoncée et cliquez pour sélectionner tout ce qui se trouve entre deux lignes — puis leur changer la catégorie, leur ajouter une étiquette ou les supprimer ensemble.
+
+En dessous d’environ 1024 pixels de large — ce qui inclut la plupart des tablettes tenues à la verticale —, le navigateur affiche à la place la présentation habituelle du téléphone. C’est normal : la présentation large est conçue pour un véritable écran d’ordinateur, et une fenêtre plus étroite est mieux servie par la présentation du téléphone.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :

@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/theme';
 import { useAlertStore } from '@/stores/alertStore';
 import { AccountSwitcher, CurrencyPill } from '@/components/AccountSwitcher';
+import { WebSidebar } from '@/components/WebSidebar';
 import { TOP_BAR_HEIGHT } from '@/components/webLayout.constants';
 
 /** Active-section title shown next to the brand for the 5 main tabs. */
@@ -43,11 +44,7 @@ export function WebTopBar() {
       <Text style={[styles.brand, { color: theme.colors.textInverse, fontFamily: theme.fonts.bold }]}>
         AI Budget
       </Text>
-      {title ? (
-        <Text style={[styles.title, { color: theme.colors.textInverse }]} numberOfLines={1}>
-          {title}
-        </Text>
-      ) : null}
+      <WebSidebar orientation="horizontal" />
 
       <View style={styles.spacer} />
 

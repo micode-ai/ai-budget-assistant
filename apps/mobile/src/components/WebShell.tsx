@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { usePathname } from 'expo-router';
 import { useAuthStore } from '@/stores/authStore';
 import { useTheme } from '@/theme';
-import { WebSidebar } from '@/components/WebSidebar';
 import { WebTopBar } from '@/components/WebTopBar';
 import { useIsDesktopWeb } from '@/components/webLayout.constants';
 
@@ -50,7 +49,6 @@ function DesktopShell({ children }: { children: React.ReactNode }) {
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <WebTopBar />
       <View style={styles.body}>
-        <WebSidebar />
         <View style={styles.contentArea}>{children}</View>
       </View>
     </View>

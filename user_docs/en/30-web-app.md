@@ -32,6 +32,17 @@ The web app covers the everyday essentials:
 
 It's a great way to do longer sessions on a real keyboard — reviewing the month, cleaning up categories, or chatting with the AI assistant.
 
+## Transactions on a Wide Screen
+
+When the browser window is wide enough — roughly as wide as a laptop or desktop screen — the Transactions screen changes to make better use of the space, with a sidebar and a top bar instead of the familiar phone layout.
+
+- Filters are shown as a **list down the left side**, with a count next to each option, instead of a row of buttons — so you can see how many transactions a filter will show before you pick it.
+- **Expenses and income appear together in one list**, grouped by day, with each day showing the total spent that day.
+- Tapping a transaction opens it in a **panel over the list** instead of a new page — close the panel to go back to exactly where you were.
+- You can **select several transactions with checkboxes** — hold Shift and click to select everything between two rows — and then change their category, add a tag, or delete them all together.
+
+Below about 1024 pixels wide — which includes most tablets held upright — the browser shows the familiar phone layout instead. That's expected: the wide layout is designed for a real desktop or laptop screen, and a narrower window is better served by the phone layout.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:

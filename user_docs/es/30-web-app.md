@@ -32,6 +32,17 @@ La versión web cubre lo esencial del día a día:
 
 Es ideal para sesiones largas con un teclado de verdad: revisar el mes, ordenar categorías o conversar con el asistente de IA.
 
+## Transacciones en una pantalla grande
+
+Cuando la ventana del navegador es lo bastante ancha —más o menos como en un portátil o un ordenador de escritorio—, la pantalla de Transacciones cambia para aprovechar mejor el espacio: aparecen un panel lateral y una barra superior en lugar de la vista habitual del teléfono.
+
+- Los filtros se muestran como una **lista en el lado izquierdo**, con el número de coincidencias junto a cada opción, en lugar de una fila de botones — así ves cuántas transacciones mostrará un filtro antes de elegirlo.
+- **Los gastos y los ingresos aparecen juntos en una sola lista**, agrupados por día, y cada día muestra el total gastado ese día.
+- Tocar una transacción la abre en un **panel sobre la lista** en lugar de una página nueva — cierra el panel para volver exactamente a donde estabas.
+- Puedes **seleccionar varias transacciones con casillas** — mantén pulsada Mayús y haz clic para seleccionar todo lo que hay entre dos filas — y luego cambiarles la categoría, añadirles una etiqueta o eliminarlas todas a la vez.
+
+Por debajo de unos 1024 píxeles de ancho —lo que incluye la mayoría de las tabletas sujetas en vertical—, el navegador muestra en su lugar la vista habitual del teléfono. Es lo esperado: la vista ancha está pensada para una pantalla real de escritorio o portátil, y una ventana más estrecha se sirve mejor con la vista del teléfono.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:
