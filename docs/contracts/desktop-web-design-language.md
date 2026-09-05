@@ -1,8 +1,9 @@
 # Desktop Web Design Language
 
-**Status:** derived from one shipped screen — the transactions list (ABA-499),
-approved in the product on 2026-09-05. Everything here is what that screen
-actually does, not what a design document wishes it did.
+**Status:** derived from two shipped screens — the transactions list (ABA-499),
+approved in the product on 2026-09-05, and Analytics (ABA-501), which followed
+it. Everything here is what those screens actually do, not what a design
+document wishes they did.
 
 **Sample size caveat, stated once and meant:** one screen is a thin sample.
 Rules below are split into **Universal** (the chrome and interaction model, which
@@ -117,6 +118,35 @@ them by analogy.
 - Below `FACET_RAIL_MIN_WIDTH` the rail collapses to a labelled dropdown that
   states how many facets are active, so nothing filters silently.
 
+## 5a. What the second screen added
+
+Analytics was built from this document and confirmed most of it. What it
+established that one screen could not:
+
+- **A section both platforms render takes a `desktop?: boolean` prop that
+  defaults to `false`.** The mobile call site passes nothing and therefore
+  keeps its layout *by construction*, not by discipline. This is the cheapest
+  way to reflow a shared section, and it is what `InflationIndexSection` does.
+- **`useContentWidth()` is for single-column screens only.** It derives a width
+  from the window and caps it. The moment a chart sits in one track of a grid,
+  its width is its container's — measure with `onLayout` and keep the old
+  formula as the pre-measurement fallback so it never renders at zero width.
+- **`Alert.alert` no-ops on react-native-web.** This has now been found twice,
+  in unrelated code. Any confirmation reachable from the web build must use
+  `showAlert`, and content moving from a phone-only path onto a desktop path
+  should be checked for it.
+- **List-specific really is list-specific.** Analytics inherited the chrome,
+  the dialogs and the scroll model, and inherited none of the facet rail, day
+  grouping or selection. It also blends currencies via FX in its totals, unlike
+  the ledger — that rule is filed under List-specific for exactly this reason,
+  and Analytics' behaviour there is pre-existing and unchanged.
+- **Redundancy is a desktop problem before it is a design problem.** A screen
+  that answers one question in three places is invisible on a phone, where you
+  never see two answers at once. Resolve it by choosing a leader and moving or
+  dropping *presentation* — never by merging computations, which can
+  legitimately disagree. Drop duplicates on desktop only: the argument does not
+  hold on a phone, and the mobile rendering may not change regardless.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
@@ -130,6 +160,10 @@ them by analogy.
   returns `Promise<void>`. Neither type may be widened to match the other.
 - There is no account facet: the store is account-scoped, so it would offer one
   option.
+- The Project breakdown shows a donut on desktop that it does not have on the
+  phone. The generic card draws one whenever there is data, and a grid where
+  one card is visibly different for no reason is worse than that small
+  inconsistency.
 
 ## 7. What is unproven
 
