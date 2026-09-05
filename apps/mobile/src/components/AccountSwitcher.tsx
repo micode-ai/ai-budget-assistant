@@ -39,7 +39,7 @@ export function AccountSwitcher({
   const [visible, setVisible] = useState(false);
   const [pastTripsExpanded, setPastTripsExpanded] = useState(false);
   const { t } = useTranslation();
-  const { accounts, currentAccountId, switchAccount } = useAccountStore();
+  const { accounts, currentAccountId, switchAccount, ensureAccountsLoaded } = useAccountStore();
   const { loadCategories } = useCategoryStore();
   const { loadWallet } = useWalletStore();
   const { loadBudgets } = useBudgetStore();
@@ -71,6 +71,11 @@ export function AccountSwitcher({
     // Always open the menu so the currency control is reachable even with a
     // single account. Account management is the "Manage accounts" button inside.
     setVisible(true);
+    // On web the list is rebuilt from the server on every page load, so a
+    // single failed `GET /accounts` leaves this menu empty for the rest of the
+    // session — and this menu is the only place a user would go to fix that.
+    // A no-op whenever the list is already there (i.e. always, on native).
+    void ensureAccountsLoaded();
   };
 
   const renderAccountRow = (item: (typeof accounts)[number]) => {

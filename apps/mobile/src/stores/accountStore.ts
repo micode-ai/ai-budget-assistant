@@ -38,6 +38,8 @@ interface AccountState {
   switchAccount: (accountId: string) => Promise<void>;
   loadAccounts: () => Promise<void>;
   loadAccountsFromServer: () => Promise<void>;
+  /** Re-fetch the account list only when it is empty (see the implementation). */
+  ensureAccountsLoaded: () => Promise<void>;
   createAccount: (dto: CreateAccountDto) => Promise<Account>;
   updateAccount: (id: string, dto: UpdateAccountDto) => Promise<void>;
   deleteAccount: (id: string) => Promise<void>;
@@ -276,11 +278,48 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         await secureStorage.setItem('currentAccountId', resolvedId);
       }
     } catch (error) {
+      // A failed fetch is NOT the same answer as "this user has no accounts
+      // and no selection", and the difference is not cosmetic. With
+      // `currentAccountId` left null, `api.setAccountIdGetter` omits the
+      // `X-Account-Id` header, and the API's `AccountContextGuard` then falls
+      // back to the user's DEFAULT account — so one failed `GET /accounts`
+      // silently serves a different account's data (an empty dashboard for a
+      // user whose selected account is full of transactions) while the
+      // persisted selection still says otherwise, with nothing on screen
+      // saying anything went wrong.
+      //
+      // The selection is local, persisted state; only the *list* failed. Put
+      // it back so every later request stays addressed to the account the user
+      // actually chose. Fills a null only — a live in-memory selection still
+      // wins, exactly as on the success path above.
+      if (!get().currentAccountId) {
+        const storedId = await secureStorage.getItem('currentAccountId');
+        if (storedId) {
+          set({ currentAccountId: storedId });
+        }
+      }
+
       set({
         error: error instanceof Error ? error.message : 'Failed to load accounts',
         isLoading: false,
       });
     }
+  },
+
+  ensureAccountsLoaded: async () => {
+    // Re-fetch only when the list is missing entirely.
+    //
+    // On web the account list lives in memory only (`db/client.web.ts` is an
+    // in-memory mock), so it is rebuilt from `GET /accounts` on every page
+    // load — and that request is made exactly once. If it fails, the switcher
+    // is empty for the rest of the session with nothing that retries it, and
+    // the user has no route back to their accounts from the UI at all. The
+    // switcher calls this as it opens, so opening the empty menu IS the retry.
+    //
+    // Native normally has rows from SQLite by this point, so this is a no-op
+    // there.
+    if (get().accounts.length > 0 || get().isLoading) return;
+    await get().loadAccountsFromServer();
   },
 
   createAccount: async (dto) => {
