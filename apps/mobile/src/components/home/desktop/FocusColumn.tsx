@@ -73,6 +73,7 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
         <NetProfitWidget
           refreshKey={widgetRefreshKey}
           showRangeChips
+          compact
           safeToSpend={
             showSafeToSpendRow
               ? { data: safeToSpendData, hasEnoughData: hasSafeToSpend, onPress: onOpenSafeToSpend }

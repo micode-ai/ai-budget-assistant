@@ -21,6 +21,11 @@ export type NetProfitRange = '3m' | '6m' | '12m';
 const RANGE_MONTHS: Record<NetProfitRange, number> = { '3m': 3, '6m': 6, '12m': 12 };
 const RANGES: NetProfitRange[] = ['3m', '6m', '12m'];
 
+/** Target height for the compact/hero chart (`compact` prop) — a trend
+ *  indicator, not the subject: ~120-160px per the corrected mockup
+ *  proportions, not a fraction of the available card space. */
+const COMPACT_CHART_HEIGHT = 140;
+
 function monthsForRange(range: NetProfitRange): number {
   return RANGE_MONTHS[range];
 }
@@ -51,12 +56,34 @@ interface NetProfitWidgetProps {
    * state; no lifting required by the caller.
    */
   showRangeChips?: boolean;
+  /**
+   * Compact hero layout (dashboard desktop follow-up correction to the
+   * 2026-09-05-dashboard-web.md spec — the shipped hero was full chart size
+   * with the safe-to-spend row a thin strip; the mockup's proportions put
+   * Safe-to-Spend as the large figure and keep the chart a small trend
+   * indicator). When `true`:
+   * - the chart is capped at `COMPACT_CHART_HEIGHT` and hides its Y-axis
+   *   furniture (`InteractiveLineChart`'s own `compact` prop) — a sparkline,
+   *   not a diagram.
+   * - the centred pill title + stacked safe-to-spend/subtitle/amount is
+   *   replaced by one row: Safe-to-Spend as the large left-aligned figure,
+   *   Net Profit as a small label+value pushed to the right edge. Falls
+   *   back to Net Profit alone (still the row's only content, left-aligned)
+   *   when `safeToSpend` isn't passed or has no data yet — this widget
+   *   remains the sole existing desktop host for Safe-to-Spend, so it must
+   *   still mount in that combination (see `FocusColumn`'s own reasoning).
+   * - the range chips left-align under the chart instead of centering.
+   * Default `false` — mobile's own call site passes nothing and keeps
+   * today's exact centred layout, full-size chart and axis.
+   */
+  compact?: boolean;
 }
 
 export function NetProfitWidget({
   refreshKey: _refreshKey = 0,
   safeToSpend,
   showRangeChips = false,
+  compact = false,
 }: NetProfitWidgetProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -127,35 +154,77 @@ export function NetProfitWidget({
 
   const showSafeToSpendRow = !!safeToSpend && safeToSpend.hasEnoughData && !!safeToSpend.data;
 
+  const netProfitAmountEl = currentNetProfit !== null && (
+    <Text style={[styles.heroPrimaryAmount, { color: lineColor }]}>
+      {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, displayCurrency)}
+    </Text>
+  );
+
   return (
     <View style={styles.card}>
-      {header}
-      {showSafeToSpendRow && (
-        <TouchableOpacity style={styles.stsEyebrowRow} onPress={safeToSpend!.onPress} activeOpacity={0.7}>
-          <Text style={styles.stsEyebrowLabel}>{t('safeToSpend.title')}</Text>
-          <View style={styles.stsEyebrowValueRow}>
-            <Text style={styles.stsEyebrowAmount}>
-              {formatCurrency(safeToSpend!.data!.safeToSpendToday, safeToSpend!.data!.baseCurrency)}
+      {compact ? (
+        <View style={styles.heroRow}>
+          {showSafeToSpendRow ? (
+            <>
+              <TouchableOpacity style={styles.heroPrimaryBlock} onPress={safeToSpend!.onPress} activeOpacity={0.7}>
+                <Text style={styles.heroPrimaryLabel}>{t('safeToSpend.title')}</Text>
+                <View style={styles.heroPrimaryValueRow}>
+                  <Text style={styles.heroPrimaryAmount}>
+                    {formatCurrency(safeToSpend!.data!.safeToSpendToday, safeToSpend!.data!.baseCurrency)}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+                </View>
+              </TouchableOpacity>
+              <View style={styles.heroSecondaryBlock}>
+                <Text style={styles.heroSecondaryLabel}>
+                  {t('dashboard.netProfit')} · {t('wallet.monthsWindow', { count: monthCount })}
+                </Text>
+                {currentNetProfit !== null && (
+                  <Text style={[styles.heroSecondaryAmount, { color: lineColor }]}>
+                    {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, displayCurrency)}
+                  </Text>
+                )}
+              </View>
+            </>
+          ) : (
+            <View style={styles.heroPrimaryBlock}>
+              <Text style={styles.heroPrimaryLabel}>{t('dashboard.netProfit')}</Text>
+              {netProfitAmountEl}
+            </View>
+          )}
+        </View>
+      ) : (
+        <>
+          {header}
+          {showSafeToSpendRow && (
+            <TouchableOpacity style={styles.stsEyebrowRow} onPress={safeToSpend!.onPress} activeOpacity={0.7}>
+              <Text style={styles.stsEyebrowLabel}>{t('safeToSpend.title')}</Text>
+              <View style={styles.stsEyebrowValueRow}>
+                <Text style={styles.stsEyebrowAmount}>
+                  {formatCurrency(safeToSpend!.data!.safeToSpendToday, safeToSpend!.data!.baseCurrency)}
+                </Text>
+                <Ionicons name="chevron-forward" size={14} color={theme.colors.textTertiary} />
+              </View>
+            </TouchableOpacity>
+          )}
+          <Text style={styles.subtitle}>{t('dashboard.netProfitSubtitle')}</Text>
+          {currentNetProfit !== null && (
+            <Text style={[styles.mainAmount, { color: lineColor }]}>
+              {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, displayCurrency)}
             </Text>
-            <Ionicons name="chevron-forward" size={14} color={theme.colors.textTertiary} />
-          </View>
-        </TouchableOpacity>
-      )}
-      <Text style={styles.subtitle}>{t('dashboard.netProfitSubtitle')}</Text>
-      {currentNetProfit !== null && (
-        <Text style={[styles.mainAmount, { color: lineColor }]}>
-          {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, displayCurrency)}
-        </Text>
+          )}
+        </>
       )}
       <InteractiveLineChart
         data={data}
-        height={200}
+        height={compact ? COMPACT_CHART_HEIGHT : 200}
         lineColor={lineColor}
         areaChart
+        compact={compact}
         formatValue={(v) => formatCurrency(v, displayCurrency)}
       />
       {showRangeChips && (
-        <View style={styles.rangeRow}>
+        <View style={[styles.rangeRow, compact && styles.rangeRowCompact]}>
           {RANGES.map((r) => (
             <TouchableOpacity
               key={r}
@@ -237,6 +306,47 @@ const createStyles = (theme: Theme) => ({
     fontWeight: '700' as const,
     color: theme.colors.textPrimary,
   },
+  // Compact hero row (design follow-up correction) — Safe-to-Spend as the
+  // large left figure, Net Profit as a small label+value pushed to the far
+  // right edge, mirroring the mockup's proportions instead of the shipped
+  // full-size stacked layout.
+  heroRow: {
+    flexDirection: 'row' as const,
+    justifyContent: 'space-between' as const,
+    alignItems: 'flex-start' as const,
+    marginBottom: theme.spacing[2],
+  },
+  heroPrimaryBlock: {
+    alignItems: 'flex-start' as const,
+    gap: 2,
+  },
+  heroPrimaryLabel: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+  },
+  heroPrimaryValueRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+  },
+  heroPrimaryAmount: {
+    fontSize: 26,
+    fontFamily: theme.fonts.bold,
+    color: theme.colors.textPrimary,
+    fontWeight: '900' as const,
+  },
+  heroSecondaryBlock: {
+    alignItems: 'flex-end' as const,
+    gap: 2,
+  },
+  heroSecondaryLabel: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+  },
+  heroSecondaryAmount: {
+    ...theme.textStyles.bodyLargeSemiBold,
+    fontWeight: '800' as const,
+  },
   // 3M/6M/12M range control (desktop-only content — see `showRangeChips` prop),
   // mirroring `WalletBalanceCard`'s own period-selector chip styling.
   rangeRow: {
@@ -245,6 +355,11 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[2],
     marginTop: theme.spacing[3],
     marginBottom: theme.spacing[2],
+  },
+  // Compact mode (design follow-up correction): chips left-align under the
+  // chart instead of centering, per the mockup's proportions.
+  rangeRowCompact: {
+    justifyContent: 'flex-start' as const,
   },
   rangeChip: {
     paddingHorizontal: theme.spacing[3],

@@ -13,6 +13,20 @@ interface InteractiveLineChartProps {
   animate?: boolean;
   lineColor?: string;
   areaChart?: boolean;
+  /**
+   * Sparkline mode (dashboard desktop hero follow-up correction,
+   * docs/design/2026-09-05-dashboard-web.md) - hides the Y-axis numeric
+   * labels and the horizontal dashed rule lines via gifted-charts own
+   * `hideAxesAndRules` prop, and reclaims the label gutter (the width
+   * normally reserved for those labels) so the line uses the full
+   * container width. X-axis month labels are unaffected (a separate
+   * mechanism inside the library, not covered by `hideAxesAndRules`).
+   * Defaults to `false` - every existing call site (mobile
+   * `NetProfitWidget`, `ProductDetailSheet`, `ChartRenderer`, the
+   * investment screens) passes nothing and keeps its axis/rules exactly
+   * as today.
+   */
+  compact?: boolean;
 }
 
 export function InteractiveLineChart({
@@ -23,6 +37,7 @@ export function InteractiveLineChart({
   animate = true,
   lineColor,
   areaChart = true,
+  compact = false,
 }: InteractiveLineChartProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -52,8 +67,10 @@ export function InteractiveLineChart({
     );
   }
 
-  // y-axis label area is ~50px wide; subtract it so the SVG fits exactly in the container
-  const yAxisLabelWidth = 50;
+  // y-axis label area is ~50px wide; subtract it so the SVG fits exactly in the container.
+  // Compact mode hides that area entirely (see the `compact` prop doc above), so the
+  // line gets the full container width instead of leaving the gutter blank.
+  const yAxisLabelWidth = compact ? 0 : 50;
   const chartWidth = containerWidth > 0 ? containerWidth - yAxisLabelWidth : 0;
 
   const lineData = data.map((point, index) => ({
@@ -153,6 +170,8 @@ export function InteractiveLineChart({
                 ? Math.max(30, (chartWidth - 16) / (data.length - 1))
                 : chartWidth
             }
+            hideAxesAndRules={compact}
+            yAxisLabelWidth={compact ? 0 : undefined}
           />
         )}
       </View>
