@@ -623,6 +623,11 @@ export default {
     projectedExceedBy: 'Projected to exceed by {{amount}} (~{{date}})',
     emptyHint: 'Budgets alert you before you overspend — start with one category or an overall monthly limit',
   },
+  dashboardDesktop: {
+    focusEmptyTitle: 'Your main view is turned off',
+    focusEmptyBody: 'Turn on {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} or {{monthlyBudget}} to see it here.',
+    manageWidgets: 'Manage widgets',
+  },
   validation: {
     fillAllFields: 'Please fill in all fields',
     invalidEmail: 'Please enter a valid email address',

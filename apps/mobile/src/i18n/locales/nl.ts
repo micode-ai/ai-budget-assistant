@@ -623,6 +623,11 @@ export default {
     projectedExceedBy: 'Naar verwachting overschreden met {{amount}} (~{{date}})',
     emptyHint: 'Budgetten waarschuwen je voordat je te veel uitgeeft — begin met één categorie of een algemene maandelijkse limiet',
   },
+  dashboardDesktop: {
+    focusEmptyTitle: 'Je hoofdweergave staat uit',
+    focusEmptyBody: 'Zet {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} of {{monthlyBudget}} aan om het hier te zien.',
+    manageWidgets: 'Widgets beheren',
+  },
   validation: {
     fillAllFields: 'Vul alle velden in',
     invalidEmail: 'Voer een geldig e-mailadres in',

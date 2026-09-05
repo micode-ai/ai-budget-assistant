@@ -627,6 +627,11 @@ export default {
     projectedExceedBy: 'Прогнозоване перевищення на {{amount}} (~{{date}})',
     emptyHint: 'Бюджети попереджають вас, перш ніж ви витратите забагато — почніть з однієї категорії або загального місячного ліміту',
   },
+  dashboardDesktop: {
+    focusEmptyTitle: 'Ваш головний екран вимкнено',
+    focusEmptyBody: 'Увімкніть {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} або {{monthlyBudget}}, щоб побачити це тут.',
+    manageWidgets: 'Керування віджетами',
+  },
   validation: {
     fillAllFields: 'Будь ласка, заповніть усі поля',
     invalidEmail: 'Будь ласка, введіть дійсну електронну адресу',

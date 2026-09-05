@@ -12,26 +12,43 @@ import { WalletsSection } from './widgets/WalletsSection';
 import type { HomeWidgetContext } from './HomeWidgetContext';
 export type { HomeWidgetContext } from './HomeWidgetContext';
 
-// `InvestmentCard` is rendered directly by DashboardScreen (above the ordered
-// widget list, outside the WidgetKey system) — re-exported here so it keeps
-// one entry point alongside `renderHomeWidget`.
+// `InvestmentCard` is rendered directly by `DashboardMobile` and, on desktop,
+// by `DashboardRail` (both above/outside the ordered widget list, outside the
+// WidgetKey system) — re-exported here so it keeps one entry point alongside
+// `renderHomeWidget`.
 export { InvestmentCard };
+
+interface RenderHomeWidgetOptions {
+  /**
+   * Desktop web only (`docs/design/2026-09-05-dashboard-web.md`'s "The two
+   * sheets that must stop being sheets") — threads through to
+   * `FinancialHealthWidget`'s own `desktop?` prop so its breakdown panel
+   * opens as a centred dialog instead of a bottom sheet when this switch is
+   * called from `DashboardRail`. Undefined by default, so `DashboardMobile`'s
+   * own call site (which passes no options) is unaffected — the widget keeps
+   * its mobile bottom-sheet chrome there.
+   */
+  desktop?: boolean;
+}
 
 /**
  * Renders the dashboard card/widget for a given WidgetKey, or null when the
  * widget is hidden / has no data to show. Mirrors the switch previously
- * inline in DashboardScreen — same cases, same ordering, same guard conditions.
+ * inline in `DashboardMobile` — same cases, same ordering, same guard
+ * conditions. Called by both `DashboardMobile` and, for the widgets not
+ * living in the focus column, desktop web's `DashboardRail`.
  *
  * Each case's actual card component lives in its own file under `./widgets/`
  * (ABA — HomeWidgetSwitch regrowth fix) — add a new widget there, not here.
  */
-export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext) {
+export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext, opts?: RenderHomeWidgetOptions) {
   const { widgetVisibility, monthlyBudgetSummary, widgetRefreshKey, currentAccountType, safeToSpendData, hasSafeToSpend } = ctx;
 
   switch (key) {
     case 'safeToSpend':
-      // Shown as the home hero number (tap → breakdown sheet). No duplicate
-      // dashboard card — the hero is the single in-app surface for this value.
+      // Shown as the home hero number (tap → breakdown sheet) on mobile, and
+      // folded into the desktop focus column's hero (`FocusColumn`) — never a
+      // separate rail card on either platform.
       return null;
 
     case 'familyFeed':
@@ -43,7 +60,9 @@ export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext) {
       return widgetVisibility.inflationShield ? <InflationShieldWidget key="inflationShield" /> : null;
 
     case 'financialHealth':
-      return widgetVisibility.financialHealth ? <FinancialHealthWidget key="financialHealth" /> : null;
+      return widgetVisibility.financialHealth
+        ? <FinancialHealthWidget key="financialHealth" desktop={opts?.desktop} />
+        : null;
 
     case 'gamification':
       return widgetVisibility.gamification ? <GamificationCard key="gamification" ctx={ctx} /> : null;

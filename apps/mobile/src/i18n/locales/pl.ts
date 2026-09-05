@@ -627,6 +627,11 @@ export default {
     projectedExceedBy: 'Prognozowane przekroczenie o {{amount}} (~{{date}})',
     emptyHint: 'Budżety ostrzegają cię, zanim wydasz za dużo — zacznij od jednej kategorii lub ogólnego miesięcznego limitu',
   },
+  dashboardDesktop: {
+    focusEmptyTitle: 'Twój główny widok jest wyłączony',
+    focusEmptyBody: 'Włącz {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} lub {{monthlyBudget}}, aby zobaczyć to tutaj.',
+    manageWidgets: 'Zarządzaj widżetami',
+  },
   validation: {
     fillAllFields: 'Proszę wypełnić wszystkie pola',
     invalidEmail: 'Proszę podać prawidłowy adres e-mail',
