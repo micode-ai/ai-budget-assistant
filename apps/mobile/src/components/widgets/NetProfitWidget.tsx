@@ -21,10 +21,11 @@ export type NetProfitRange = '3m' | '6m' | '12m';
 const RANGE_MONTHS: Record<NetProfitRange, number> = { '3m': 3, '6m': 6, '12m': 12 };
 const RANGES: NetProfitRange[] = ['3m', '6m', '12m'];
 
-/** Target height for the compact/hero chart (`compact` prop) — a trend
- *  indicator, not the subject: ~120-160px per the corrected mockup
- *  proportions, not a fraction of the available card space. */
-const COMPACT_CHART_HEIGHT = 140;
+/** Target DRAWN height for the compact/hero chart (`compact` prop) — a
+ *  trend indicator, not the subject. `InteractiveLineChart`'s `compact`
+ *  mode makes this a true total (see its own doc comment), so this number
+ *  is what actually renders, not a library input to be inflated by k. */
+const COMPACT_CHART_HEIGHT = 110;
 
 function monthsForRange(range: NetProfitRange): number {
   return RANGE_MONTHS[range];
@@ -58,21 +59,24 @@ interface NetProfitWidgetProps {
   showRangeChips?: boolean;
   /**
    * Compact hero layout (dashboard desktop follow-up correction to the
-   * 2026-09-05-dashboard-web.md spec — the shipped hero was full chart size
-   * with the safe-to-spend row a thin strip; the mockup's proportions put
-   * Safe-to-Spend as the large figure and keep the chart a small trend
-   * indicator). When `true`:
-   * - the chart is capped at `COMPACT_CHART_HEIGHT` and hides its Y-axis
-   *   furniture (`InteractiveLineChart`'s own `compact` prop) — a sparkline,
-   *   not a diagram.
+   * 2026-09-05-dashboard-web.md spec, revised again in round 3 against a
+   * measured, not assumed, card height — see `InteractiveLineChart`'s own
+   * `compact` doc for why the chart's rendered height and width needed
+   * their own fixes first). When `true`:
+   * - the chart is drawn at a true `COMPACT_CHART_HEIGHT` total (not a
+   *   library input inflated by however negative the data gets) and hides
+   *   its Y-axis furniture, per-point value labels and X-axis line
+   *   (`InteractiveLineChart`'s own `compact` prop) — a sparkline, not a
+   *   diagram.
    * - the centred pill title + stacked safe-to-spend/subtitle/amount is
    *   replaced by one row: Safe-to-Spend as the large left-aligned figure,
-   *   Net Profit as a small label+value pushed to the right edge. Falls
-   *   back to Net Profit alone (still the row's only content, left-aligned)
-   *   when `safeToSpend` isn't passed or has no data yet — this widget
-   *   remains the sole existing desktop host for Safe-to-Spend, so it must
-   *   still mount in that combination (see `FocusColumn`'s own reasoning).
-   * - the range chips left-align under the chart instead of centering.
+   *   Net Profit as a small label+value pushed to the right edge, with the
+   *   3M/6M/12M chips merged directly under whichever figure they control
+   *   (no separate row). Falls back to Net Profit alone (still the row's
+   *   only content, left-aligned, chips under it) when `safeToSpend` isn't
+   *   passed or has no data yet — this widget remains the sole existing
+   *   desktop host for Safe-to-Spend, so it must still mount in that
+   *   combination (see `FocusColumn`'s own reasoning).
    * Default `false` — mobile's own call site passes nothing and keeps
    * today's exact centred layout, full-size chart and axis.
    */
@@ -160,8 +164,31 @@ export function NetProfitWidget({
     </Text>
   );
 
+  // Merged into the figures row (design follow-up correction, round 3):
+  // the chips control the net-profit value's window, so they sit right
+  // under whichever block is showing that value, instead of their own row
+  // under the chart — saves a whole row of pure structure. Compact only;
+  // non-compact (mobile) keeps its own centred row below the chart,
+  // unchanged, further down.
+  const compactChipsRow = compact && showRangeChips && (
+    <View style={styles.rangeRowInline}>
+      {RANGES.map((r) => (
+        <TouchableOpacity
+          key={r}
+          style={[styles.rangeChipCompact, range === r && styles.rangeChipActive]}
+          onPress={() => setRange(r)}
+          activeOpacity={0.7}
+        >
+          <Text style={[styles.rangeChipText, range === r && styles.rangeChipTextActive]}>
+            {t('wallet.monthsWindow', { count: monthsForRange(r) })}
+          </Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, compact && styles.cardCompact]}>
       {compact ? (
         <View style={styles.heroRow}>
           {showSafeToSpendRow ? (
@@ -184,12 +211,14 @@ export function NetProfitWidget({
                     {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, displayCurrency)}
                   </Text>
                 )}
+                {compactChipsRow}
               </View>
             </>
           ) : (
             <View style={styles.heroPrimaryBlock}>
               <Text style={styles.heroPrimaryLabel}>{t('dashboard.netProfit')}</Text>
               {netProfitAmountEl}
+              {compactChipsRow}
             </View>
           )}
         </View>
@@ -223,8 +252,11 @@ export function NetProfitWidget({
         compact={compact}
         formatValue={(v) => formatCurrency(v, displayCurrency)}
       />
-      {showRangeChips && (
-        <View style={[styles.rangeRow, compact && styles.rangeRowCompact]}>
+      {/* Compact already rendered its chips inline above, merged into the
+          figures row (compactChipsRow) — this centred full-width row stays
+          for non-compact (mobile), exactly as before. */}
+      {!compact && showRangeChips && (
+        <View style={styles.rangeRow}>
           {RANGES.map((r) => (
             <TouchableOpacity
               key={r}
@@ -314,7 +346,16 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     justifyContent: 'space-between' as const,
     alignItems: 'flex-start' as const,
-    marginBottom: theme.spacing[2],
+    marginBottom: theme.spacing[4],
+  },
+  // Compact-only card padding (design round 3 measurement pass) - a little
+  // more breathing room top/bottom than the non-compact card's own tighter
+  // `paddingBottom`, which was sized for a much taller stacked layout.
+  // Applied via a SEPARATE style, not by editing `card` itself, since
+  // `card` is shared with the non-compact (mobile) branch and this must
+  // not change what mobile renders.
+  cardCompact: {
+    paddingBottom: theme.spacing[4],
   },
   heroPrimaryBlock: {
     alignItems: 'flex-start' as const,
@@ -330,7 +371,10 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[1],
   },
   heroPrimaryAmount: {
-    fontSize: 26,
+    // Raised from 26 (design follow-up correction, round 3) — this is the
+    // number the whole hero exists to restore, and it was out-ranked in
+    // type by MonthlyBudgetCard's 28px headline two cards below.
+    fontSize: 32,
     fontFamily: theme.fonts.bold,
     color: theme.colors.textPrimary,
     fontWeight: '900' as const,
@@ -356,10 +400,20 @@ const createStyles = (theme: Theme) => ({
     marginTop: theme.spacing[3],
     marginBottom: theme.spacing[2],
   },
-  // Compact mode (design follow-up correction): chips left-align under the
-  // chart instead of centering, per the mockup's proportions.
-  rangeRowCompact: {
-    justifyContent: 'flex-start' as const,
+  // Compact mode's chips (design follow-up correction, round 3) — merged
+  // into whichever figures block shows the net-profit value, so this is a
+  // small inline row, not a full-width one; the parent block's own
+  // alignItems (flex-start / flex-end) decides which edge it hugs.
+  rangeRowInline: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[1],
+    marginTop: 2,
+  },
+  rangeChipCompact: {
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: 2,
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.surfaceSecondary,
   },
   rangeChip: {
     paddingHorizontal: theme.spacing[3],

@@ -107,7 +107,7 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
           }
         />
       )}
-      {showIncomeExpenses && <IncomeExpensesCard ctx={ctx} />}
+      {showIncomeExpenses && <IncomeExpensesCard ctx={ctx} showCounts />}
       {showMonthlyBudget && <MonthlyBudgetCard ctx={ctx} segments={segments} />}
     </View>
   );
