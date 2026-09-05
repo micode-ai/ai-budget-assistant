@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, LayoutChangeEvent } from 'react-native';
 import { useContentWidth } from '@/hooks/useContentWidth';
 import { BarChart } from 'react-native-gifted-charts';
 import { useTranslation } from 'react-i18next';
@@ -28,10 +28,23 @@ export function InteractiveBarChart({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const screenWidth = useContentWidth();
+  // Window-derived width, used only as a same-frame fallback (see measuredWidth below) —
+  // it does not know about this chart's own ancestor paddings, let alone a grid track it
+  // may sit in on desktop, so it is deliberately never the value used once we've measured.
+  const contentWidth = useContentWidth();
+  const [measuredWidth, setMeasuredWidth] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
   const defaultBarColor = barColor ?? theme.colors.primary;
+
+  // Same pattern as InteractiveLineChart: measure this component's own wrapper instead of
+  // deriving from the window. A measured layout only arrives after the first render, so
+  // `measuredWidth` starts null and the legacy window-derived estimate below covers that
+  // one frame — it must never render at width 0.
+  const handleLayout = useCallback((e: LayoutChangeEvent) => {
+    const width = e.nativeEvent.layout.width;
+    if (width > 0) setMeasuredWidth(width);
+  }, []);
 
   const handleBarPress = useCallback(
     (item: ChartDataPoint, index: number) => {
@@ -43,16 +56,21 @@ export function InteractiveBarChart({
 
   if (data.length === 0) {
     return (
-      <View style={[styles.container, { height }]}>
+      <View style={[styles.container, { height }]} onLayout={handleLayout}>
         <Text style={styles.emptyText}>{t('drillDown.noDataAvailable')}</Text>
       </View>
     );
   }
 
-  // Layout: container padding (2×16=32) + chartContainer padding (2×16=32) = 64px
-  // gifted-charts renders: yAxisLabels (yAxisLabelWidth) + data area (width prop)
   const yAxisLabelWidth = 40;
-  const chartWidth = screenWidth - 64 - yAxisLabelWidth;
+  // Pre-measurement fallback ONLY: approximates this wrapper's width by subtracting the
+  // 64px of ancestor padding (screen content padding + SpendingTrendChart's card padding,
+  // 2×16 each) that used to be hardcoded here. `onLayout` fires shortly after the first
+  // paint, triggering a re-render with the real `measuredWidth` — from then on it fully
+  // replaces this estimate, since it already reflects whatever paddings or grid track
+  // actually surround us (a fixed 64px guess would be wrong inside a desktop grid track).
+  const containerWidth = measuredWidth ?? contentWidth - 64;
+  const chartWidth = containerWidth - yAxisLabelWidth;
 
   // gifted-charts uses spacing uniformly: (n+1) gaps + n bars = chartWidth
   // Target ratio: barWidth ≈ 2× spacing for balanced look
@@ -83,7 +101,7 @@ export function InteractiveBarChart({
   const maxValue = Math.max(...data.map((d) => d.value), 1);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container} onLayout={handleLayout}>
       {selectedIndex !== null && data[selectedIndex] && (
         <View style={styles.tooltip}>
           <Text style={styles.tooltipLabel}>{data[selectedIndex].label}</Text>
