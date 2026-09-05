@@ -16,6 +16,7 @@ import { SummaryStrip } from './SummaryStrip';
 import { TransactionTable } from './TransactionTable';
 import { FacetRail, FacetRailTrigger, type KindFacet, type PeriodFacet } from './FacetRail';
 import { ExpenseDialog } from './ExpenseDialog';
+import { CreateDialog } from './CreateDialog';
 import { RowContextMenu } from './RowContextMenu';
 
 /** The Map toggle only ever applied to the expenses stream (income carries no
@@ -80,7 +81,6 @@ export function ExpensesDesktop() {
     setExpenseFilters,
     incomeFilters,
     setIncomeFilters,
-    handleAddExpense,
     expenses,
     incomes,
     baseCurrency,
@@ -124,6 +124,12 @@ export function ExpensesDesktop() {
   // Edit action (below); a plain row click always opens read-only, matching
   // the pre-existing behaviour for that path.
   const [dialogInitialEditing, setDialogInitialEditing] = useState(false);
+  // Task 3 (ABA-500): which create dialog is open, if any. `handleAddExpense`
+  // (from `useExpensesScreenData`) stays untouched — it navigates to
+  // `/expense/new` and is still what the mobile FAB uses; desktop's own "+"
+  // buttons open `CreateDialog` in place instead, so they set this directly
+  // rather than calling that handler.
+  const [createKind, setCreateKind] = useState<'expense' | 'income' | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [kind, setKind] = useState<KindFacet>('all');
   const [active, setActive] = useState<ActiveFacets>({ categoryId: [], accountId: [], merchant: [] });
@@ -405,16 +411,21 @@ export function ExpensesDesktop() {
                   streams (decision 8), so an "add" affordance that can only
                   ever produce an expense contradicts what is on screen. Kept
                   secondary — spending is the far more frequent action, and two
-                  equally loud primary buttons would say otherwise. */}
+                  equally loud primary buttons would say otherwise.
+                  Both buttons open `CreateDialog` (task 3) instead of
+                  navigating — `handleAddExpense` stays untouched on the hook
+                  itself, since the mobile FAB still calls it to navigate to
+                  `/expense/new`; only these two desktop buttons no longer
+                  call it. */}
               <Pressable
                 style={styles.addIncomeButton}
-                onPress={() => router.push('/income/new')}
+                onPress={() => setCreateKind('income')}
                 accessibilityRole="button"
               >
                 <Ionicons name="add" size={18} color={theme.colors.success} />
                 <Text style={styles.addIncomeButtonText}>{t('incomes.addIncome')}</Text>
               </Pressable>
-              <Pressable style={styles.addButton} onPress={handleAddExpense} accessibilityRole="button">
+              <Pressable style={styles.addButton} onPress={() => setCreateKind('expense')} accessibilityRole="button">
                 <Ionicons name="add" size={18} color={theme.colors.textInverse} />
                 <Text style={styles.addButtonText}>{t('expenses.addExpense')}</Text>
               </Pressable>
@@ -549,6 +560,8 @@ export function ExpensesDesktop() {
           initialEditing={dialogInitialEditing}
         />
       )}
+
+      {createKind && <CreateDialog kind={createKind} onClose={() => setCreateKind(null)} />}
 
       {menuState && (
         <RowContextMenu
