@@ -6,9 +6,26 @@ import { formatCurrency, formatFinancialMonth } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import { useFinancialMonth } from '@/hooks/useFinancialMonth';
+import { SegmentedProgressBar } from '@/components/shared/SegmentedProgressBar';
+import type { MonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
 import type { HomeWidgetContext } from '../HomeWidgetContext';
 
-export function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
+interface MonthlyBudgetCardProps {
+  ctx: HomeWidgetContext;
+  /**
+   * Desktop web (`docs/design/2026-09-05-dashboard-web.md`'s "The monthly
+   * budget card's segmented bar") — when the month reduces to exactly one
+   * active, category-allocated monthly budget, this carries that budget's
+   * own per-category breakdown (`resolveMonthlyBudgetSegments`), and the
+   * plain fill below is replaced with a real segmented bar + legend, reusing
+   * `SegmentedProgressBar` — the same component `BudgetCard` already draws
+   * its own segmented bar with. Undefined/null on mobile — mobile's own call
+   * site passes nothing, so it always renders today's plain fill, unchanged.
+   */
+  segments?: MonthlyBudgetSegments | null;
+}
+
+export function MonthlyBudgetCard({ ctx, segments }: MonthlyBudgetCardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -25,9 +42,17 @@ export function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
       ? null
       : formatFinancialMonth(current.start, current.end, getIntlLocale()).range;
 
-  const progressColor = budgetUsedPercent > 90
+  // When `segments` is present, the bar's own percentage drives both the
+  // fill/legend colour and (via `SegmentedProgressBar`) the category slices.
+  // `ctx.budgetUsedPercent` happens to equal `segments.percentageUsed` in the
+  // single-contributing-budget case the util covers, but only by
+  // coincidence (see `resolveMonthlyBudgetSegments`'s own doc comment) — so
+  // the segmented branch reads its own number instead of assuming the two
+  // always agree. Mobile never passes `segments`, so this is unchanged there.
+  const barPercent = segments ? segments.percentageUsed : budgetUsedPercent;
+  const progressColor = barPercent > 90
     ? theme.colors.danger
-    : budgetUsedPercent > 70
+    : barPercent > 70
       ? theme.colors.warning
       : theme.colors.primary;
 
@@ -49,17 +74,29 @@ export function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
           </Text>
           <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
         </View>
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
-            <View
-              style={[
-                styles.progressFill,
-                { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
-              ]}
+        {segments ? (
+          <View style={styles.progressContainer}>
+            <SegmentedProgressBar
+              categories={segments.categories}
+              totalAmount={segments.totalAmount}
+              percentageUsed={segments.percentageUsed}
+              barColor={progressColor}
+              currencyCode={segments.currencyCode}
             />
           </View>
-          <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
-        </View>
+        ) : (
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
+                ]}
+              />
+            </View>
+            <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
+          </View>
+        )}
       </View>
     </TouchableOpacity>
   );

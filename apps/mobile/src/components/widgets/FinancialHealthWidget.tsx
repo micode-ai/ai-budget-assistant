@@ -10,6 +10,13 @@ const STROKE = 8;
 const RADIUS = (GAUGE_SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
+/**
+ * Stable accessible-name id for the breakdown panel's title. A fixed id is
+ * safe for the same reason `ExpenseDialog.tsx`'s `TITLE_ID` is: only one
+ * instance of this widget's panel is ever mounted at a time.
+ */
+const TITLE_ID = 'financial-health-sheet-title';
+
 function CircularGauge({ score, colorKey }: { score: number; colorKey: HealthColorKey }) {
   const theme = useTheme();
   const fill = colorKey === 'green'
@@ -106,7 +113,21 @@ function ComponentRow({ component }: { component: HealthScoreComponent }) {
   );
 }
 
-export function FinancialHealthWidget() {
+interface FinancialHealthWidgetProps {
+  /**
+   * Desktop web (`docs/design/2026-09-05-dashboard-web.md`'s "The two sheets
+   * that must stop being sheets") — the internal breakdown panel becomes a
+   * centred dialog with a raw `<div>` scrim instead of a bottom sheet with a
+   * bare `Pressable` backdrop, same `desktop?` convention as
+   * `SafeToSpendSheet`/`InflationIndexSection`. Defaults to `false` — mobile's
+   * own call site passes nothing and gets today's exact bottom sheet. The
+   * outer card (score + gauge) this prop's own `TouchableOpacity` renders is
+   * untouched either way; only the panel opened on tap changes chrome.
+   */
+  desktop?: boolean;
+}
+
+export function FinancialHealthWidget({ desktop = false }: FinancialHealthWidgetProps = {}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -120,6 +141,38 @@ export function FinancialHealthWidget() {
     : colorKey === 'yellow'
       ? theme.colors.warning
       : theme.colors.danger;
+
+  // Shared by both chromes, byte-for-byte — only the wrapper differs.
+  const panelContent = (
+    <>
+      <View style={styles.sheetHeader}>
+        {hasEnoughData ? (
+          <View style={styles.sheetScoreRow}>
+            <CircularGauge score={score} colorKey={colorKey} />
+            <View style={styles.sheetScoreText}>
+              <Text nativeID={TITLE_ID} style={styles.sheetTitle}>{t('healthScore.title')}</Text>
+              <Text style={[styles.sheetScoreNumber, { color: scoreColor }]}>{score}</Text>
+              <Text style={[styles.sheetScoreLabel, { color: scoreColor }]}>
+                {t(`healthScore.label.${colorKey}`)}
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <Text nativeID={TITLE_ID} style={styles.sheetTitle}>{t('healthScore.title')}</Text>
+        )}
+      </View>
+      <ScrollView style={styles.sheetScroll} contentContainerStyle={styles.sheetScrollContent}>
+        <Text style={styles.sheetSectionLabel}>{t('healthScore.breakdown')}</Text>
+        {components.map((c, i) => (
+          <View key={c.key}>
+            <ComponentRow component={c} />
+            {i < components.length - 1 && <View style={styles.divider} />}
+          </View>
+        ))}
+        <Text style={styles.sheetNote}>{t('healthScore.note')}</Text>
+      </ScrollView>
+    </>
+  );
 
   return (
     <>
@@ -153,43 +206,55 @@ export function FinancialHealthWidget() {
         </View>
       </TouchableOpacity>
 
-      <Modal
-        visible={sheetOpen}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setSheetOpen(false)}
-      >
-        <Pressable style={styles.backdrop} onPress={() => setSheetOpen(false)} />
-        <View style={styles.sheet}>
-          <View style={styles.sheetHandle} />
-          <View style={styles.sheetHeader}>
-            {hasEnoughData ? (
-              <View style={styles.sheetScoreRow}>
-                <CircularGauge score={score} colorKey={colorKey} />
-                <View style={styles.sheetScoreText}>
-                  <Text style={styles.sheetTitle}>{t('healthScore.title')}</Text>
-                  <Text style={[styles.sheetScoreNumber, { color: scoreColor }]}>{score}</Text>
-                  <Text style={[styles.sheetScoreLabel, { color: scoreColor }]}>
-                    {t(`healthScore.label.${colorKey}`)}
-                  </Text>
-                </View>
-              </View>
-            ) : (
-              <Text style={styles.sheetTitle}>{t('healthScore.title')}</Text>
-            )}
+      {desktop ? (
+        sheetOpen && (
+          <Modal
+            visible
+            transparent
+            animationType="fade"
+            onRequestClose={() => setSheetOpen(false)}
+            aria-labelledby={TITLE_ID}
+          >
+            {/* Deliberately a raw <div>, not a themed RN View/Pressable — see
+                `ExpenseDialog.tsx`'s file-level comment for why it must carry
+                no tabindex at all (a `Pressable` scrim would steal the focus
+                trap's initial focus). */}
+            <div
+              role="presentation"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setSheetOpen(false);
+              }}
+              style={{
+                position: 'fixed',
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                backgroundColor: theme.colors.overlay,
+                padding: 24,
+              }}
+            >
+              <View style={styles.dialogPanel}>{panelContent}</View>
+            </div>
+          </Modal>
+        )
+      ) : (
+        <Modal
+          visible={sheetOpen}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setSheetOpen(false)}
+        >
+          <Pressable style={styles.backdrop} onPress={() => setSheetOpen(false)} />
+          <View style={styles.sheet}>
+            <View style={styles.sheetHandle} />
+            {panelContent}
           </View>
-          <ScrollView style={styles.sheetScroll} contentContainerStyle={styles.sheetScrollContent}>
-            <Text style={styles.sheetSectionLabel}>{t('healthScore.breakdown')}</Text>
-            {components.map((c, i) => (
-              <View key={c.key}>
-                <ComponentRow component={c} />
-                {i < components.length - 1 && <View style={styles.divider} />}
-              </View>
-            ))}
-            <Text style={styles.sheetNote}>{t('healthScore.note')}</Text>
-          </ScrollView>
-        </View>
-      </Modal>
+        </Modal>
+      )}
     </>
   );
 }
@@ -324,5 +389,19 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[4],
     textAlign: 'center' as const,
+  },
+  // Desktop-only centred dialog chrome, mirroring `ExpenseDialog.tsx`'s
+  // panel shape — narrower than that one since this panel is a compact
+  // breakdown, not a form. `sheetHeader`/`sheetScroll` (unchanged) already
+  // provide their own padding, so this panel itself carries none beyond the
+  // rounded-corner clip.
+  dialogPanel: {
+    width: '90%' as const,
+    maxWidth: 480,
+    maxHeight: '85%' as const,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.xl,
+    overflow: 'hidden' as const,
+    ...theme.shadows.xl,
   },
 });
