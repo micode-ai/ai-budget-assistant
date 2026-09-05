@@ -400,10 +400,25 @@ export function ExpensesDesktop() {
           )}
 
           {canEdit && (
-            <Pressable style={styles.addButton} onPress={handleAddExpense} accessibilityRole="button">
-              <Ionicons name="add" size={18} color={theme.colors.textInverse} />
-              <Text style={styles.addButtonText}>{t('expenses.addExpense')}</Text>
-            </Pressable>
+            <>
+              {/* Income needs its own entry point here: this table shows both
+                  streams (decision 8), so an "add" affordance that can only
+                  ever produce an expense contradicts what is on screen. Kept
+                  secondary — spending is the far more frequent action, and two
+                  equally loud primary buttons would say otherwise. */}
+              <Pressable
+                style={styles.addIncomeButton}
+                onPress={() => router.push('/income/new')}
+                accessibilityRole="button"
+              >
+                <Ionicons name="add" size={18} color={theme.colors.success} />
+                <Text style={styles.addIncomeButtonText}>{t('incomes.addIncome')}</Text>
+              </Pressable>
+              <Pressable style={styles.addButton} onPress={handleAddExpense} accessibilityRole="button">
+                <Ionicons name="add" size={18} color={theme.colors.textInverse} />
+                <Text style={styles.addButtonText}>{t('expenses.addExpense')}</Text>
+              </Pressable>
+            </>
           )}
         </View>
       </View>
@@ -488,7 +503,20 @@ export function ExpensesDesktop() {
               <ExpenseMapView
                 points={mapPoints}
                 openLabel={t('map.open')}
-                onPointPress={(pointId) => router.push(`/expense/${pointId}`)}
+                onPointPress={(pointId) => {
+                  // The same dialog a row click opens, not a navigate — the
+                  // map is a view OF this screen, so leaving it to show one
+                  // of its own points would undo decision 4 the moment the
+                  // user switched to Map. Falls back to navigating only if
+                  // the point somehow isn't among the rows on screen.
+                  const row = visibleRows.find((r) => rowId(r) === pointId || (r.kind === 'expense' && r.expense.id === pointId));
+                  if (row) {
+                    setDialogInitialEditing(false);
+                    setSelectedRowId(rowId(row));
+                  } else {
+                    router.push(`/expense/${pointId}`);
+                  }
+                }}
                 style={styles.map}
               />
             </View>
@@ -738,6 +766,20 @@ const createStyles = (theme: Theme) => ({
   addButtonText: {
     ...theme.textStyles.button,
     color: theme.colors.textInverse,
+  },
+  addIncomeButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    borderWidth: 1,
+    borderColor: theme.colors.success,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.lg,
+  },
+  addIncomeButtonText: {
+    ...theme.textStyles.button,
+    color: theme.colors.success,
   },
   pageScroll: {
     flex: 1,
