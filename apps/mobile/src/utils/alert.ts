@@ -1,4 +1,5 @@
 import { Alert, Platform, type AlertButton, type AlertOptions } from 'react-native';
+import { useAlertDialogStore } from '@/stores/alertDialogStore';
 
 /**
  * Cross-platform alert.
@@ -7,9 +8,17 @@ import { Alert, Platform, type AlertButton, type AlertOptions } from 'react-nati
  * no-op (`class Alert { static alert() {} }`). That means every `Alert.alert(...)`
  * call silently does nothing on the web build — validation messages never show,
  * and buttons that rely on an alert for feedback (e.g. "Save expense" when a
- * required field is empty) appear completely dead. This wrapper falls back to the
- * browser's native `window.alert` / `window.confirm` on web while delegating to
+ * required field is empty) appear completely dead. This wrapper renders an in-app
+ * dialog on web (via `alertDialogStore` + `AlertDialogHost`) while delegating to
  * the real native `Alert.alert` everywhere else.
+ *
+ * The web path used to call `window.alert`/`window.confirm`. Those block the
+ * renderer until answered, which froze the whole tab and ignored the app's
+ * theme; more importantly they made web behave differently from native, where
+ * `Alert.alert` has always returned immediately and delivered the answer
+ * through `onPress`. Both platforms are now non-blocking, so no call site can
+ * depend on code after `showAlert(...)` running only once the user answered —
+ * such a call site was already broken on native.
  *
  * Use this instead of `Alert.alert` for any user-facing notice or confirmation
  * that must work on web.
@@ -25,28 +34,9 @@ export function showAlert(
     return;
   }
 
-  const text = [title, message].filter(Boolean).join('\n\n');
-
-  // Simple notice (no buttons, or a single acknowledgement button).
-  if (!buttons || buttons.length === 0) {
-    window.alert(text);
-    return;
-  }
-
-  if (buttons.length === 1) {
-    window.alert(text);
-    buttons[0]?.onPress?.();
-    return;
-  }
-
-  // Confirmation: map OK/Cancel onto window.confirm.
-  const cancelButton = buttons.find((b) => b.style === 'cancel');
-  const confirmButton =
-    buttons.find((b) => b.style !== 'cancel') ?? buttons[buttons.length - 1];
-
-  if (window.confirm(text)) {
-    confirmButton?.onPress?.();
-  } else {
-    cancelButton?.onPress?.();
-  }
+  useAlertDialogStore.getState().show({
+    title,
+    message,
+    buttons: buttons && buttons.length > 0 ? buttons : [{ text: 'OK' }],
+  });
 }

@@ -13,6 +13,7 @@ import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { WhatsNewSpotlight } from '@/components/whatsNew/WhatsNewSpotlight';
 import { UpgradeGate } from '@/components/UpgradeGate';
+import { AlertDialogHost } from '@/components/AlertDialogHost';
 import { WebShell } from '@/components/WebShell';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
@@ -769,6 +770,7 @@ function RootNavigator() {
       <UpdatePrompt />
       <WhatsNewSpotlight gateOpen={coldStartGateReady} />
       <UpgradeGate />
+      <AlertDialogHost />
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>
   );
