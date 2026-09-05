@@ -66,6 +66,13 @@ interface InteractiveLineChartProps {
    * the drawn line stop visibly short of the edge instead - see `spacing`'s
    * own comment below for the measurements. `spacing` is therefore
    * unconditional again, same as every other InteractiveLineChart consumer.
+   *
+   * Round 5 found a THIRD, unrelated defect in the same symptom (a clipped
+   * line): gifted-charts' own reveal animation can permanently lock the
+   * chart's wrapper to a stale, too-narrow width from the component's
+   * FIRST layout pass (a real bug in its `widthValue` effect's dependency
+   * array - see `isAnimated` below for the source citation and the fix,
+   * a compact-only `isAnimated={false}`).
    */
   compact?: boolean;
 }
@@ -224,7 +231,45 @@ export function InteractiveLineChart({
             width={chartWidth}
             height={libraryHeight}
             overflowTop={overflowTopValue}
-            isAnimated={animate}
+            // ROUND 5 FINDING - gifted-charts' reveal animation has a
+            // real bug, confirmed by reading react-native-gifted-charts'
+            // LineChart/index.js: the wrapping Animated.View that holds the
+            // actual <Svg> is sized by an Animated.Value (`widthValue`)
+            // that is animated ONCE, in a `useEffect` whose dependency array
+            // is `[animateTogether, animationDuration, decreaseWidth, ...,
+            // labelsExtraHeight-derived callbacks]` - `totalWidth` (the
+            // target the animation runs toward) is NOT a dependency, and
+            // neither is anything derived from `width`/`chartWidth`. So if
+            // this component's FIRST layout pass reports a narrower width
+            // than the container's true, settled width (an ordinary
+            // occurrence for a flex sibling on web, where the browser can
+            // report an intermediate width before the row's final layout
+            // converges), the reveal animation runs ONCE toward that
+            // stale, narrow `totalWidth` and never re-runs - the wrapper's
+            // width is then locked there permanently, even though every
+            // later render recomputes `chartWidth`/`spacing` correctly and
+            // the drawn <Path> (positioned fresh from props on every
+            // render, never from the Animated.Value) correctly reaches the
+            // true final width - so the path overflows the wrapper's own
+            // `overflow:hidden` and is clipped. This is a CONSTANT pixel
+            // shortfall, not a proportional one (confirmed against two
+            // real-browser measurements at different container widths -
+            // see docs/design/2026-09-05-dashboard-web.md's task-5 report,
+            // fix round 5), which is what distinguishes it from the
+            // spacing-divisor issue rounds 3/4 chased (a ratio, not a
+            // constant). Confirmed via source that `isAnimated={false}`
+            // takes an entirely different render path (`renderLine`, not
+            // `renderAnimatedLine`) that sizes the wrapper from `totalWidth`
+            // directly on every render - never touching the Animated.Value
+            // at all - and that per-point tap interactivity (this
+            // component's `customDataPoint`/`onPointPress`) is unaffected:
+            // gifted-charts' own code comments the non-animated data-point
+            // path as the one to prefer for reliable onPress. Disabling the
+            // reveal animation only for `compact` (never for `animate`
+            // itself, which every other InteractiveLineChart caller still
+            // controls exactly as before) trades a one-time fade-in for a
+            // wrapper width that can never desync from the drawn content.
+            isAnimated={compact ? false : animate}
             animationDuration={600}
             curved
             maxValue={maxValue}
