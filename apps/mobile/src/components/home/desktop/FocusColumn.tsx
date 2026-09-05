@@ -8,6 +8,8 @@ import { NetProfitWidget } from '@/components/widgets';
 import { IncomeExpensesCard } from '@/components/home/widgets/IncomeExpensesCard';
 import { MonthlyBudgetCard } from '@/components/home/widgets/MonthlyBudgetCard';
 import { useBudgetStore } from '@/stores/budgetStore';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { useCategoryStore } from '@/stores/categoryStore';
 import { resolveMonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 
@@ -38,9 +40,33 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
   const { widgetVisibility, monthlyBudgetSummary, safeToSpendData, hasSafeToSpend, widgetRefreshKey } = ctx;
 
   const { budgets, getBudgetProgress } = useBudgetStore();
+  // `budgetStore.getBudgetProgress` internally reads `useExpenseStore`'s
+  // expenses AND `useCategoryStore`'s categories via a plain `.getState()`
+  // snapshot - not a subscription - so it can silently answer with whichever
+  // of the two happened to have loaded yet, without telling this caller.
+  // `budgets`/`getBudgetProgress` alone are therefore NOT a sufficient memo
+  // dependency list: once `budgets` first settles, this memo freezes at
+  // whatever expenses/categories state existed at that instant and never
+  // recomputes again - not on later loads, and not on a later edit (e.g. a
+  // new expense added while the dashboard stays open). This was a real,
+  // reproduced bug, not a hypothetical one: the dashboard is the first
+  // screen mounted after sign-in, and `budgets` routinely settles before
+  // expenses/categories do, freezing the segmented bar at 0% with every
+  // category name unresolved ("Unknown"). `BudgetsDesktop`'s own analogous
+  // computation escapes this only by accident - its `visibleBudgets` is a
+  // fresh, unmemoized `.filter()` result on every render, so it recomputes
+  // on every re-render regardless of any dependency list, not because it
+  // is reactive on purpose. Subscribing to both stores here (rather than
+  // copying that accident) is the deliberate fix.
+  const expenses = useExpenseStore((s) => s.expenses);
+  const categories = useCategoryStore((s) => s.categories);
+  // The lint rule's static analysis can't see that `getBudgetProgress`
+  // reads `expenses`/`categories` internally (it only sees the two
+  // identifiers it's actually called with) and flags them as "unnecessary"
+  // - they are the opposite: the entire fix above.
   const segments = useMemo(
     () => resolveMonthlyBudgetSegments(budgets, getBudgetProgress),
-    [budgets, getBudgetProgress],
+    [budgets, getBudgetProgress, expenses, categories], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
   const showSafeToSpendRow = widgetVisibility.safeToSpend && hasSafeToSpend && !!safeToSpendData;
