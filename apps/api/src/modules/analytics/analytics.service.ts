@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
+import { formatInTimezone, yearMonthIdInTimezone, calendarPartsInTimezone } from '../../common/utils/timezone';
 
 interface ExpenseWithCategory {
   id: string;
@@ -522,6 +523,11 @@ export class AnalyticsService {
     parentId?: string,
     currencyCode?: string,
     locale?: string,
+    /** The requester's IANA zone. Every label below is derived from an instant
+     *  the CLIENT sent (a local midnight serialised with toISOString()), and
+     *  this process runs in UTC — so without it September reads as August for
+     *  anyone east of UTC. See ABA-503. */
+    timezone?: string,
   ) {
     const effectiveLocale = locale || 'en';
     if (await this.isFullEncryption(accountId)) {
@@ -567,7 +573,7 @@ export class AnalyticsService {
         formatting: { currencyCode, showValues: true },
       };
 
-      const breadcrumb = [{ level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` }];
+      const breadcrumb = [{ level: 'year' as DrillDownLevel, label: `${calendarPartsInTimezone(startDate, timezone).year}` }];
       return { chart, breadcrumb };
     }
 
@@ -599,7 +605,7 @@ export class AnalyticsService {
           id: String(week),
         }));
 
-      const monthLabel = new Intl.DateTimeFormat(effectiveLocale, { month: 'long' }).format(startDate);
+      const monthLabel = formatInTimezone(startDate, timezone, effectiveLocale, { month: 'long' });
 
       const chart: ChartConfig = {
         chartType: 'bar',
@@ -610,7 +616,7 @@ export class AnalyticsService {
       };
 
       const breadcrumb = [
-        { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
+        { level: 'year' as DrillDownLevel, label: `${calendarPartsInTimezone(startDate, timezone).year}` },
         { level: 'month' as DrillDownLevel, label: monthLabel, id: parentId },
       ];
       return { chart, breadcrumb };
@@ -635,7 +641,7 @@ export class AnalyticsService {
         dailyTotals.set(dateKey, (dailyTotals.get(dateKey) || 0) + Number(expense.amount));
       }
 
-      const dayFormatter = new Intl.DateTimeFormat(effectiveLocale, { weekday: 'short' });
+      const dayFormatter = new Intl.DateTimeFormat(effectiveLocale, { weekday: 'short', timeZone: timezone || 'UTC' });
       const data: ChartDataPoint[] = Array.from(dailyTotals.entries())
         .sort(([a], [b]) => a.localeCompare(b))
         .map(([dateKey, value]) => {
@@ -652,8 +658,8 @@ export class AnalyticsService {
       };
 
       const breadcrumb = [
-        { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
-        { level: 'month' as DrillDownLevel, label: new Intl.DateTimeFormat(effectiveLocale, { month: 'long' }).format(startDate), id: `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}` },
+        { level: 'year' as DrillDownLevel, label: `${calendarPartsInTimezone(startDate, timezone).year}` },
+        { level: 'month' as DrillDownLevel, label: formatInTimezone(startDate, timezone, effectiveLocale, { month: 'long' }), id: yearMonthIdInTimezone(startDate, timezone) },
         { level: 'week' as DrillDownLevel, label: `Week ${parentId || ''}`, id: parentId },
       ];
       return { chart, breadcrumb };
@@ -696,10 +702,10 @@ export class AnalyticsService {
         formatting: { currencyCode, showValues: true },
       };
 
-      const dateLabel = new Intl.DateTimeFormat(effectiveLocale, { month: 'short', day: 'numeric' }).format(startDate);
+      const dateLabel = formatInTimezone(startDate, timezone, effectiveLocale, { month: 'short', day: 'numeric' });
       const breadcrumb = [
-        { level: 'year' as DrillDownLevel, label: `${startDate.getFullYear()}` },
-        { level: 'month' as DrillDownLevel, label: new Intl.DateTimeFormat(effectiveLocale, { month: 'long' }).format(startDate), id: `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, '0')}` },
+        { level: 'year' as DrillDownLevel, label: `${calendarPartsInTimezone(startDate, timezone).year}` },
+        { level: 'month' as DrillDownLevel, label: formatInTimezone(startDate, timezone, effectiveLocale, { month: 'long' }), id: yearMonthIdInTimezone(startDate, timezone) },
         { level: 'day' as DrillDownLevel, label: dateLabel, id: parentId },
       ];
       return { chart, transactions, breadcrumb };
