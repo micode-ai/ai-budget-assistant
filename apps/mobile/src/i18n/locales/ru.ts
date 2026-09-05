@@ -616,6 +616,17 @@ export default {
       avgSavings: 'Ср. экономия: {{amount}}',
     },
   },
+  budgetsDesktop: {
+    summaryTotal: 'Всего бюджетов',
+    needsAttention: 'Требует внимания',
+    categoriesOverAllocation: 'Категории сверх лимита',
+    needsAttentionHeading: 'Требует внимания ({{count}})',
+    onTrackHeading: 'В рамках бюджета ({{count}})',
+    nearingLimit: 'Близко к лимиту',
+    exceedsBy: 'Превышение на {{amount}}',
+    projectedExceedBy: 'Прогнозируемое превышение на {{amount}} (~{{date}})',
+    emptyHint: 'Бюджеты предупреждают вас до того, как вы потратите слишком много — начните с одной категории или общего месячного лимита',
+  },
   validation: {
     fillAllFields: 'Пожалуйста, заполните все поля',
     invalidEmail: 'Пожалуйста, введите корректный адрес электронной почты',

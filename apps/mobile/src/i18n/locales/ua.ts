@@ -616,6 +616,17 @@ export default {
       avgSavings: 'Сер. економія: {{amount}}',
     },
   },
+  budgetsDesktop: {
+    summaryTotal: 'Усього бюджетів',
+    needsAttention: 'Потребує уваги',
+    categoriesOverAllocation: 'Категорії понад ліміт',
+    needsAttentionHeading: 'Потребує уваги ({{count}})',
+    onTrackHeading: 'В межах норми ({{count}})',
+    nearingLimit: 'Близько до ліміту',
+    exceedsBy: 'Перевищення на {{amount}}',
+    projectedExceedBy: 'Прогнозоване перевищення на {{amount}} (~{{date}})',
+    emptyHint: 'Бюджети попереджають вас, перш ніж ви витратите забагато — почніть з однієї категорії або загального місячного ліміту',
+  },
   validation: {
     fillAllFields: 'Будь ласка, заповніть усі поля',
     invalidEmail: 'Будь ласка, введіть дійсну електронну адресу',

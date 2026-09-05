@@ -612,6 +612,17 @@ export default {
       avgSavings: 'Avg savings: {{amount}}',
     },
   },
+  budgetsDesktop: {
+    summaryTotal: 'Total Budgets',
+    needsAttention: 'Needs Attention',
+    categoriesOverAllocation: 'Categories Over Allocation',
+    needsAttentionHeading: 'Needs attention ({{count}})',
+    onTrackHeading: 'On track ({{count}})',
+    nearingLimit: 'Nearing limit',
+    exceedsBy: 'Exceeds by {{amount}}',
+    projectedExceedBy: 'Projected to exceed by {{amount}} (~{{date}})',
+    emptyHint: 'Budgets alert you before you overspend — start with one category or an overall monthly limit',
+  },
   validation: {
     fillAllFields: 'Please fill in all fields',
     invalidEmail: 'Please enter a valid email address',

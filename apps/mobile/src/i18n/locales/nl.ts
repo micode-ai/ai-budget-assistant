@@ -612,6 +612,17 @@ export default {
       avgSavings: 'Gem. besparing: {{amount}}',
     },
   },
+  budgetsDesktop: {
+    summaryTotal: 'Totaal aantal budgetten',
+    needsAttention: 'Vereist aandacht',
+    categoriesOverAllocation: 'Categorieën boven toewijzing',
+    needsAttentionHeading: 'Vereist aandacht ({{count}})',
+    onTrackHeading: 'Op schema ({{count}})',
+    nearingLimit: 'Nadert de limiet',
+    exceedsBy: 'Overschrijdt met {{amount}}',
+    projectedExceedBy: 'Naar verwachting overschreden met {{amount}} (~{{date}})',
+    emptyHint: 'Budgetten waarschuwen je voordat je te veel uitgeeft — begin met één categorie of een algemene maandelijkse limiet',
+  },
   validation: {
     fillAllFields: 'Vul alle velden in',
     invalidEmail: 'Voer een geldig e-mailadres in',

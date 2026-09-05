@@ -33,6 +33,17 @@ export interface BudgetDetailViewProps {
   /** Called after a confirmed delete actually removes the budget — the
    *  route's `router.back()` today, a dialog's close tomorrow. */
   onDeleted: () => void;
+  /**
+   * Defaults to `false` so the mobile route (which passes nothing) keeps its
+   * layout by construction (design language §5a) — reflows the category
+   * breakdown card into two columns above 4 categories, mirroring the
+   * reference/Analytics screens' own `TopReceiptItems`/`TopItemsCard`
+   * precedent (one column of 10 -> two of 5). Does NOT touch the
+   * `canEdit`-gated Edit/Delete row below it — `BudgetDialog` hosts that
+   * row as-is rather than re-homing it into its own chrome (see that
+   * component's file header for why).
+   */
+  desktop?: boolean;
 }
 
 /**
@@ -60,6 +71,7 @@ export function BudgetDetailView({
   onReferenceDateChange,
   onEdit,
   onDeleted,
+  desktop = false,
 }: BudgetDetailViewProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -209,38 +221,62 @@ export function BudgetDetailView({
         </View>
 
         {/* Category Breakdown Card */}
-        {progress?.categoryBreakdown && progress.categoryBreakdown.length > 0 && (
-          <View style={styles.breakdownCard}>
-            <Text style={styles.breakdownTitle}>{t('budgetDetail.categoryBreakdown')}</Text>
-            {progress.categoryBreakdown.map((cat) => {
-              const catPercentUsed = cat.percentageUsed;
-              const catColor = cat.isOverBudget
-                ? theme.colors.danger
-                : catPercentUsed > 80
-                  ? theme.colors.warning
-                  : cat.categoryColor || theme.colors.primary;
-              return (
-                <View key={cat.categoryId} style={styles.breakdownRow}>
-                  <View style={styles.breakdownHeader}>
-                    <View style={[styles.catColorDot, { backgroundColor: cat.categoryColor || '#6B7280' }]} />
-                    <Text style={styles.breakdownCatName} numberOfLines={1}>{cat.categoryName}</Text>
-                    <Text style={styles.breakdownCatAmount}>
-                      {formatCurrency(cat.spent, budget.currencyCode)} / {formatCurrency(cat.allocated, budget.currencyCode)}
-                    </Text>
+        {progress?.categoryBreakdown && progress.categoryBreakdown.length > 0 && (() => {
+          const breakdown = progress.categoryBreakdown!;
+          const renderCategoryRow = (cat: (typeof breakdown)[number]) => {
+            const catPercentUsed = cat.percentageUsed;
+            const catColor = cat.isOverBudget
+              ? theme.colors.danger
+              : catPercentUsed > 80
+                ? theme.colors.warning
+                : cat.categoryColor || theme.colors.primary;
+            return (
+              <View key={cat.categoryId} style={styles.breakdownRow}>
+                <View style={styles.breakdownHeader}>
+                  <View style={[styles.catColorDot, { backgroundColor: cat.categoryColor || '#6B7280' }]} />
+                  <Text style={styles.breakdownCatName} numberOfLines={1}>{cat.categoryName}</Text>
+                  <Text style={styles.breakdownCatAmount}>
+                    {formatCurrency(cat.spent, budget.currencyCode)} / {formatCurrency(cat.allocated, budget.currencyCode)}
+                  </Text>
+                </View>
+                <View style={styles.breakdownProgressBar}>
+                  <View
+                    style={[
+                      styles.breakdownProgressFill,
+                      { width: `${Math.min(catPercentUsed, 100)}%`, backgroundColor: catColor },
+                    ]}
+                  />
+                </View>
+              </View>
+            );
+          };
+
+          // Two columns above 4 categories, desktop only (design's "What
+          // each mobile affordance becomes" — mirrors the reference/
+          // Analytics screens' TopReceiptItems/TopItemsCard precedent).
+          // `desktop` defaults false, so the mobile route (which passes
+          // nothing) always takes the single-column branch, unchanged.
+          const twoColumns = desktop && breakdown.length > 4;
+          const splitAt = Math.ceil(breakdown.length / 2);
+
+          return (
+            <View style={styles.breakdownCard}>
+              <Text style={styles.breakdownTitle}>{t('budgetDetail.categoryBreakdown')}</Text>
+              {twoColumns ? (
+                <View style={styles.breakdownColumns}>
+                  <View style={styles.breakdownColumn}>
+                    {breakdown.slice(0, splitAt).map(renderCategoryRow)}
                   </View>
-                  <View style={styles.breakdownProgressBar}>
-                    <View
-                      style={[
-                        styles.breakdownProgressFill,
-                        { width: `${Math.min(catPercentUsed, 100)}%`, backgroundColor: catColor },
-                      ]}
-                    />
+                  <View style={styles.breakdownColumn}>
+                    {breakdown.slice(splitAt).map(renderCategoryRow)}
                   </View>
                 </View>
-              );
-            })}
-          </View>
-        )}
+              ) : (
+                breakdown.map(renderCategoryRow)
+              )}
+            </View>
+          );
+        })()}
 
         {/* Details Card */}
         <View style={styles.detailsCard}>
@@ -411,6 +447,14 @@ const createStyles = (theme: Theme) => ({
   },
   breakdownRow: {
     marginBottom: theme.spacing[4],
+  },
+  breakdownColumns: {
+    flexDirection: 'row' as const,
+    gap: theme.spacing[5],
+  },
+  breakdownColumn: {
+    flex: 1,
+    minWidth: 0,
   },
   breakdownHeader: {
     flexDirection: 'row' as const,

@@ -612,6 +612,17 @@ export default {
       avgSavings: 'Ahorro prom.: {{amount}}',
     },
   },
+  budgetsDesktop: {
+    summaryTotal: 'Presupuestos totales',
+    needsAttention: 'Necesita atención',
+    categoriesOverAllocation: 'Categorías por encima de lo asignado',
+    needsAttentionHeading: 'Necesita atención ({{count}})',
+    onTrackHeading: 'En camino ({{count}})',
+    nearingLimit: 'Cerca del límite',
+    exceedsBy: 'Excede en {{amount}}',
+    projectedExceedBy: 'Previsto para exceder en {{amount}} (~{{date}})',
+    emptyHint: 'Los presupuestos te avisan antes de gastar de más — empieza con una categoría o un límite mensual general',
+  },
   validation: {
     fillAllFields: 'Por favor completa todos los campos',
     invalidEmail: 'Por favor ingresa un correo electrónico válido',

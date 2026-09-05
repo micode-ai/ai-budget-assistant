@@ -616,6 +616,17 @@ export default {
       avgSavings: 'Śr. oszczędności: {{amount}}',
     },
   },
+  budgetsDesktop: {
+    summaryTotal: 'Wszystkie budżety',
+    needsAttention: 'Wymaga uwagi',
+    categoriesOverAllocation: 'Kategorie ponad limit',
+    needsAttentionHeading: 'Wymaga uwagi ({{count}})',
+    onTrackHeading: 'W normie ({{count}})',
+    nearingLimit: 'Zbliża się do limitu',
+    exceedsBy: 'Przekracza o {{amount}}',
+    projectedExceedBy: 'Prognozowane przekroczenie o {{amount}} (~{{date}})',
+    emptyHint: 'Budżety ostrzegają cię, zanim wydasz za dużo — zacznij od jednej kategorii lub ogólnego miesięcznego limitu',
+  },
   validation: {
     fillAllFields: 'Proszę wypełnić wszystkie pola',
     invalidEmail: 'Proszę podać prawidłowy adres e-mail',

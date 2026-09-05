@@ -614,6 +614,17 @@ export default {
       avgSavings: 'Сярэд. эканомія: {{amount}}',
     },
   },
+  budgetsDesktop: {
+    summaryTotal: 'Усяго бюджэтаў',
+    needsAttention: 'Патрабуе ўвагі',
+    categoriesOverAllocation: 'Катэгорыі звыш ліміту',
+    needsAttentionHeading: 'Патрабуе ўвагі ({{count}})',
+    onTrackHeading: 'У межах бюджэту ({{count}})',
+    nearingLimit: 'Блізка да ліміту',
+    exceedsBy: 'Перавышэнне на {{amount}}',
+    projectedExceedBy: 'Прагназаванае перавышэнне на {{amount}} (~{{date}})',
+    emptyHint: 'Бюджэты папярэджваюць вас, перш чым вы патраціце занадта шмат — пачніце з адной катэгорыі або агульнага месячнага ліміту',
+  },
   validation: {
     fillAllFields: 'Калі ласка, запоўніце ўсе палі',
     invalidEmail: 'Калі ласка, увядзіце карэктны адрас электроннай пошты',
