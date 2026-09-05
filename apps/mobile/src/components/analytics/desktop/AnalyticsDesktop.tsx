@@ -43,14 +43,14 @@ import type {
  * breakdown grid already shows the same signal). `AnalyticsMobile.tsx` is
  * untouched — this file duplicates LAYOUT, never behaviour.
  *
+ * `InflationIndexSection` is passed `desktop` (ABA-501 Task 5): it reflows its
+ * own headline / product-list / links-rail into three columns internally
+ * (design's "Personal Inflation Index — reflowed, not rebuilt") and hosts its
+ * per-product detail as a centred dialog instead of a bottom sheet (design's
+ * Universal dialogs rule). `AnalyticsMobile.tsx`'s own call site passes no
+ * prop and is unaffected.
+ *
  * Deliberately NOT done here, and why:
- * - `InflationIndexSection` is embedded verbatim (same as `AnalyticsMobile`
- *   renders it) rather than reflowed into the spec's three-column card. The
- *   plan's Task 5 owns `InflationIndexSection.tsx` (extracting its inline
- *   product-detail bottom sheet into its own component so desktop can host it
- *   as a centred dialog); reflowing the section's own internals is the same
- *   kind of edit and belongs with that step, not scattered across two tasks
- *   touching one file's internals independently.
  * - The donut↔row hover cross-highlight (Interactions, "Open questions") and
  *   the currency dropdown's arrow-key-between-options behaviour are both
  *   named as open/optional in the spec — skipped for v1, not forgotten.
@@ -190,10 +190,10 @@ export function AnalyticsDesktop() {
             suppressDeterministicTiles={isEmptyPeriod}
           />
 
-          {/* Reused verbatim — see the doc comment above for why the
-              three-column reflow described in the design isn't built here. */}
+          {/* `desktop` triggers its own internal reflow + dialog chrome —
+              see the doc comment above. */}
           <View style={styles.wideSection}>
-            <InflationIndexSection />
+            <InflationIndexSection desktop />
           </View>
 
           <DiscoveryRow selectedMonth={selectedMonth} selectedYear={selectedYear} />
@@ -511,7 +511,12 @@ function AnalyticsSummaryStrip({
         )}
       </SummaryTile>
 
-      <SummaryTile label={t('analytics.transactions')}>
+      {/* `analytics.transactions` is the lowercase noun ("N transactions"),
+          written for use inside a sentence (`SummaryCards.tsx`) — wrong case
+          for a tile label sitting beside three Title Case ones.
+          `drillDown.transactions` is the same word, Title Case, in all nine
+          locales, and already the heading `openDrillDown` navigates to. */}
+      <SummaryTile label={t('drillDown.transactions')}>
         <Text style={[styles.summaryValue, { fontVariant: ['tabular-nums'] as const }]}>
           {summary.transactionCount}
         </Text>
