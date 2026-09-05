@@ -147,6 +147,27 @@ established that one screen could not:
   legitimately disagree. Drop duplicates on desktop only: the argument does not
   hold on a phone, and the mobile rendering may not change regardless.
 
+## 5b. Verifying the platform split, and how to read the result
+
+After each desktop screen, confirm the desktop code is genuinely absent from
+the app users install. `tsc` and Jest pass either way, so this is the only
+check that can catch a leak:
+
+```bash
+cd apps/mobile && npx expo export --platform android --output-dir /tmp/native-check --clear
+grep -c <YourDesktopComponent> /tmp/native-check/_expo/static/js/android/index-*.hbc   # expect 0
+```
+
+**Read a non-zero result carefully before believing it.** The grep matches a
+substring of the Hermes string table, so a short component name can collide
+with a legitimate mobile one — `BudgetCard` returned 1 purely because the home
+screen has a `MonthlyBudgetCard`. Confirm what actually matched before
+concluding anything leaked.
+
+Two results that are correct and should not be "fixed": `WebShell` appears
+because its native no-op file is real code, and any component whose name is a
+substring of a mobile component's will match.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
