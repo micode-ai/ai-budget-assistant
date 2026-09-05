@@ -12,6 +12,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useBudgetStore } from '@/stores/budgetStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { formatCurrency, getStartOfWeek, financialMonth, formatFinancialMonth } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -26,6 +27,7 @@ export default function BudgetDetailScreen() {
   const styles = useStyles(createStyles);
   const { id } = useLocalSearchParams<{ id: string }>();
   const { budgets, deleteBudget, getBudgetProgress, loadBudgets, isLoading } = useBudgetStore();
+  const canEdit = useAccountStore((s) => s.canEdit());
   // Deep-links (e.g. a `budget_alert` push) carry the SERVER budget id, but on a
   // device the local row id is the clientId and the server PK lives in `serverId`.
   // Match all four so tapping a budget notification resolves the budget instead of
@@ -305,16 +307,18 @@ export default function BudgetDetailScreen() {
         <BudgetHistorySection budget={budget} />
 
         {/* Actions */}
-        <View style={styles.actionsContainer}>
-          <View style={styles.actionRow}>
-            <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
-              <Ionicons name="pencil" size={22} color={theme.colors.primary} />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
-              <Ionicons name="trash" size={22} color={theme.colors.danger} />
-            </TouchableOpacity>
+        {canEdit && (
+          <View style={styles.actionsContainer}>
+            <View style={styles.actionRow}>
+              <TouchableOpacity style={styles.editButton} onPress={() => setIsEditing(true)}>
+                <Ionicons name="pencil" size={22} color={theme.colors.primary} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.deleteButton} onPress={handleDelete}>
+                <Ionicons name="trash" size={22} color={theme.colors.danger} />
+              </TouchableOpacity>
+            </View>
           </View>
-        </View>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
