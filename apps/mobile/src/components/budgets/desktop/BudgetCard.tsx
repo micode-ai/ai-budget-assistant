@@ -6,6 +6,7 @@ import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { formatBudgetPeriodRange } from '@/features/budgets/periodNav';
 import { DEFAULT_ALERT_THRESHOLD, type ClassifiedBudget } from '@/features/budgets/budgetGrouping';
+import { SegmentedProgressBar } from '@/components/shared/SegmentedProgressBar';
 
 interface Props {
   classified: ClassifiedBudget;
@@ -27,17 +28,10 @@ export function BudgetCard({ classified, now, anchorDay, onPress }: Props) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [hovered, setHovered] = useState(false);
-  const [hoveredSegment, setHoveredSegment] = useState<number | null>(null);
 
   const { budget, progress, percentageUsed, state } = classified;
   const isOverBudget = progress?.isOverBudget ?? false;
   const threshold = budget.alertThreshold ?? DEFAULT_ALERT_THRESHOLD;
-
-  const breakdown = progress?.categoryBreakdown;
-  // A budget with exactly one allocation renders identically to a plain
-  // overall budget (design: "there is nothing to segment or list with one
-  // entry") — segmentation only kicks in above that.
-  const isSegmented = !!breakdown && breakdown.length > 1;
 
   // Departure from mobile: the fill (and, here, the threshold that decides
   // it) uses the budget's own `alertThreshold`, not a hardcoded 80% — kept
@@ -48,21 +42,6 @@ export function BudgetCard({ classified, now, anchorDay, onPress }: Props) {
     : percentageUsed >= threshold
       ? theme.colors.warning
       : theme.colors.success;
-
-  const segments = isSegmented
-    ? (() => {
-        const raw = breakdown!.map((cat) => ({
-          cat,
-          widthPct: budget.amount > 0 ? (cat.spent / budget.amount) * 100 : 0,
-        }));
-        const total = raw.reduce((sum, x) => sum + x.widthPct, 0);
-        // Same clip mobile's plain bar already does at 100% — scaled
-        // proportionally so an over-budget multi-category bar still sums to
-        // exactly one full track width instead of overflowing it.
-        const scale = total > 100 ? 100 / total : 1;
-        return raw.map((x) => ({ ...x, widthPct: Math.max(0, x.widthPct * scale) }));
-      })()
-    : [];
 
   const periodRange = formatBudgetPeriodRange(
     budget.period,
@@ -76,9 +55,6 @@ export function BudgetCard({ classified, now, anchorDay, onPress }: Props) {
 
   const formatShortDate = (d: Date) =>
     new Date(d).toLocaleDateString(getIntlLocale(), { month: 'short', day: 'numeric' });
-
-  const legendItems = isSegmented ? breakdown!.slice(0, 3) : [];
-  const legendMoreCount = isSegmented ? Math.max(0, breakdown!.length - 3) : 0;
 
   return (
     <Pressable
@@ -126,82 +102,13 @@ export function BudgetCard({ classified, now, anchorDay, onPress }: Props) {
         </Text>
       </View>
 
-      <View style={styles.progressRow}>
-        <View style={styles.progressTrack}>
-          {isSegmented ? (
-            // Raw DOM elements, not RN `View`/`Pressable` — same reasoning as
-            // `ExpenseDialog.tsx`'s scrim: a real web-only hover affordance
-            // RN's cross-platform prop types don't model, and (unlike
-            // `Pressable`) a plain `<div>` carries no `tabIndex`, so hovering
-            // a segment can never add a stray Tab stop to the card (design's
-            // Keyboard section: "each card in grid order", not each segment).
-            <div style={{ display: 'flex', height: '100%', width: '100%' }}>
-              {segments.map((seg, i) => (
-                <div
-                  key={seg.cat.categoryId}
-                  onMouseEnter={() => setHoveredSegment(i)}
-                  onMouseLeave={() => setHoveredSegment((cur) => (cur === i ? null : cur))}
-                  style={{
-                    position: 'relative',
-                    height: '100%',
-                    width: `${seg.widthPct}%`,
-                    backgroundColor: seg.cat.isOverBudget
-                      ? theme.colors.danger
-                      : seg.cat.categoryColor || theme.colors.textDisabled,
-                  }}
-                >
-                  {hoveredSegment === i && (
-                    <div
-                      style={{
-                        position: 'absolute',
-                        bottom: '100%',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        marginBottom: 6,
-                        padding: '4px 8px',
-                        borderRadius: 6,
-                        whiteSpace: 'nowrap',
-                        backgroundColor: theme.colors.textPrimary,
-                        color: theme.colors.background,
-                        fontSize: 12,
-                        zIndex: 10,
-                        pointerEvents: 'none',
-                      }}
-                    >
-                      {seg.cat.categoryName}: {formatCurrency(seg.cat.spent, budget.currencyCode)} /{' '}
-                      {formatCurrency(seg.cat.allocated, budget.currencyCode)}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <View
-              style={[
-                styles.progressFill,
-                { width: `${Math.min(percentageUsed, 100)}%`, backgroundColor: barColor },
-              ]}
-            />
-          )}
-        </View>
-        <Text style={styles.percentText}>{percentageUsed.toFixed(0)}%</Text>
-      </View>
-
-      {isSegmented && (
-        <View style={styles.legendRow}>
-          {legendItems.map((cat) => (
-            <View key={cat.categoryId} style={styles.legendItem}>
-              <View style={[styles.legendDot, { backgroundColor: cat.categoryColor || theme.colors.textDisabled }]} />
-              <Text style={styles.legendText} numberOfLines={1}>
-                {cat.categoryName}
-              </Text>
-            </View>
-          ))}
-          {legendMoreCount > 0 && (
-            <Text style={styles.legendMore}>{t('expensesDesktop.showMore', { count: legendMoreCount })}</Text>
-          )}
-        </View>
-      )}
+      <SegmentedProgressBar
+        categories={progress?.categoryBreakdown}
+        totalAmount={budget.amount}
+        percentageUsed={percentageUsed}
+        barColor={barColor}
+        currencyCode={budget.currencyCode}
+      />
 
       {progress && progress.remaining > 0 && (
         <Text style={styles.remainingText}>
@@ -313,55 +220,6 @@ const createStyles = (theme: Theme) => ({
   },
   ofText: {
     ...theme.textStyles.bodyMedium,
-    color: theme.colors.textTertiary,
-  },
-  progressRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[3],
-  },
-  progressTrack: {
-    flex: 1,
-    height: 8,
-    backgroundColor: theme.colors.progressTrack,
-    borderRadius: theme.borderRadius.sm,
-    overflow: 'hidden' as const,
-  },
-  progressFill: {
-    height: '100%' as const,
-    borderRadius: theme.borderRadius.sm,
-  },
-  percentText: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textSecondary,
-    width: 40,
-    textAlign: 'right' as const,
-    fontVariant: ['tabular-nums' as const],
-  },
-  legendRow: {
-    flexDirection: 'row' as const,
-    flexWrap: 'wrap' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-    marginTop: theme.spacing[2],
-  },
-  legendItem: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[1],
-    maxWidth: 120,
-  },
-  legendDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  legendText: {
-    ...theme.textStyles.caption,
-    color: theme.colors.textSecondary,
-  },
-  legendMore: {
-    ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
   },
   remainingText: {
