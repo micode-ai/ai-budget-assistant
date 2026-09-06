@@ -78,6 +78,26 @@ import type { ProductListItem } from '@budget/shared-types';
  * flag is a plain `useState` and is safe for the same reason it is unremarkable
  * on the phone: it is only ever written by the handler that owns it, and a pane
  * lives at least as long as the route it replaced.
+ *
+ * **A backfill that outlives the account it was issued for says nothing.** Both
+ * of its alerts are suppressed when `currentAccountId` has changed across the
+ * await, and the reason is not that the count would be wrong - it is right, for
+ * account A. It is that by the time it resolves it describes work on a list the
+ * user is no longer looking at, and there is no correct number to quote instead:
+ * the count comes from the server for the account the request was issued under,
+ * and deriving one for account B would mean running a backfill on B that nobody
+ * asked for. An alert naming an account you have left is also unactionable - you
+ * would have to switch back to see what it refers to.
+ *
+ * Both alerts, symmetrically. Suppressing only the success would turn a silent
+ * success into a visible failure on exactly the switch that made it irrelevant,
+ * which is worse than either. `setIsBackfilling(false)` is deliberately outside
+ * that guard: the button must leave "Analyzing..." whatever happened, and the
+ * pane is still mounted to show it.
+ *
+ * The work itself is unaffected - it completed on the server for account A, and
+ * A's list shows it the next time that account is opened. The backfill is not
+ * cancelled, only its report withheld.
  */
 export function ProductsSettings() {
   const { t } = useTranslation();
@@ -114,12 +134,24 @@ export function ProductsSettings() {
         {
           text: t('priceHistory.reanalyzeWithAi'),
           onPress: async () => {
+            // Capture-then-recheck around the await, the shape
+            // `walletStore.loadWallet` uses for the same hazard. Read live from
+            // `getState()` on both sides rather than from the subscribed
+            // `currentAccountId`: this runs from an alert callback, so the
+            // render that created the handler may be several account switches
+            // old, and only the value at the moment the request is ISSUED is
+            // the one the answer will describe.
+            const issuedFor = useAccountStore.getState().currentAccountId;
             setIsBackfilling(true);
             try {
               const { updatedCount } = await backfillWithAi();
-              showAlert('', t('priceHistory.reanalyzeSuccess', { count: updatedCount }));
-            } catch {
-              // warn'd in store
+              if (useAccountStore.getState().currentAccountId === issuedFor) {
+                showAlert('', t('priceHistory.reanalyzeSuccess', { count: updatedCount }));
+              }
+            } catch (e) {
+              if (useAccountStore.getState().currentAccountId === issuedFor) {
+                showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
+              }
             }
             setIsBackfilling(false);
           },
