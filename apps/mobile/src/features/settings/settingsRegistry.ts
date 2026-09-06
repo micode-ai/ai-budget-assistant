@@ -159,8 +159,8 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // --- Configure the app. Panes, once extracted (waves 1-3). ---
   { kind: 'link', key: 'profile', labelKey: 'settingsNav.profile', route: '/settings/profile', width: 'form' },
   { kind: 'pane', key: 'appearance', labelKey: 'settingsNav.appearance', route: '/settings/appearance', width: 'form' },
-  { kind: 'link', key: 'ai', labelKey: 'settingsNav.ai', route: '/settings/ai', width: 'form' },
-  { kind: 'link', key: 'widgets', labelKey: 'settingsNav.widgets', route: '/settings/widgets', width: 'form' },
+  { kind: 'pane', key: 'ai', labelKey: 'settingsNav.ai', route: '/settings/ai', width: 'form' },
+  { kind: 'pane', key: 'widgets', labelKey: 'settingsNav.widgets', route: '/settings/widgets', width: 'form' },
   { kind: 'link', key: 'notifications', labelKey: 'settingsNav.notifications', route: '/settings/notifications', width: 'form' },
   { kind: 'link', key: 'bots', labelKey: 'settings.bots.title', route: '/settings/bots', width: 'form' },
   { kind: 'link', key: 'security', labelKey: 'settingsNav.security', route: '/settings/security', width: 'form' },
@@ -170,7 +170,7 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'link', key: 'categories', labelKey: 'settingsNav.categories', route: '/settings/categories', width: 'full' },
   { kind: 'link', key: 'merchants', labelKey: 'settingsNav.merchants', route: '/settings/merchants', width: 'full' },
   { kind: 'link', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
-  { kind: 'link', key: 'about', labelKey: 'settingsNav.about', route: '/settings/about', width: 'form' },
+  { kind: 'pane', key: 'about', labelKey: 'settingsNav.about', route: '/settings/about', width: 'form' },
 
   // --- Places you work. Links, permanently: they are in settings only
   //     because a phone has no room for more tabs. ---

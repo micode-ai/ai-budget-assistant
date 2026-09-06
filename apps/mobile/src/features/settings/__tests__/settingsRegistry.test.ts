@@ -163,9 +163,12 @@ describe('settingsRegistry', () => {
   // Records which screens have actually been extracted and hosted. A pane here
   // is a claim that `src/components/settings/<key>/` exists and that the route
   // renders it through `SettingsRoute` - flipping an entry without the
-  // extraction gives the row a selected state and an empty pane. Tasks 3-5 each
-  // add one key; that is the point of the test.
+  // extraction gives the row a selected state and an empty pane. Each task in
+  // this wave adds the keys it moved; that is the point of the test. The order
+  // is the order `SETTINGS_ENTRIES` declares, which is the order the left pane
+  // draws - so this also pins that a newly promoted row rises into the pane
+  // block in its intended place rather than being appended.
   it('records which entries are panes today', () => {
-    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['appearance']);
+    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['appearance', 'ai', 'widgets', 'about']);
   });
 });
