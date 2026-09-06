@@ -47,7 +47,7 @@ git commit -m "ABA-508 Give settings a two-pane desktop shell"
 
 **Files:**
 - Create: `src/components/settings/appearance/AppearanceSettings.tsx`
-- Modify: `app/settings/appearance.tsx`
+- Modify: `app/settings/appearance.tsx`, `src/features/settings/settingsRegistry.ts` and its spec
 
 **Why this one first:** it is the reported defect, and a pure-presentation leaf with no data and no actions — the safest screen to prove the shell on.
 
@@ -69,7 +69,7 @@ A pure move must not change the test count.
 
 **Files:**
 - Create: `src/components/settings/widgets/WidgetsSettings.tsx`, `src/components/settings/ai/AiSettings.tsx`, `src/components/settings/about/AboutSettings.tsx`
-- Modify: the three matching route files
+- Modify: the three matching route files, `src/features/settings/settingsRegistry.ts` and its spec
 
 These are 152, 152 and 115 lines and structurally identical to Task 2 — one dispatch, three moves, reviewed as one diff.
 
@@ -89,7 +89,7 @@ git commit -m "ABA-508 Move the widgets, AI and about screens into panes"
 
 **Files:**
 - Create: `src/components/settings/notifications/NotificationsSettings.tsx`
-- Modify: `app/settings/notifications.tsx`
+- Modify: `app/settings/notifications.tsx`, `src/features/settings/settingsRegistry.ts` and its spec
 
 464 lines, structurally trivial (toggle rows), and the highest-traffic settings screen after profile.
 
@@ -109,7 +109,7 @@ git commit -m "ABA-508 Move the notification settings into a pane"
 
 **Files:**
 - Create: `src/components/settings/data/DataSettings.tsx`
-- Modify: `app/settings/data.tsx`
+- Modify: `app/settings/data.tsx`, `src/features/settings/settingsRegistry.ts` and its spec
 
 493 lines and the first with real actions — export, restore, share. Done while the wave is still small, deliberately.
 
