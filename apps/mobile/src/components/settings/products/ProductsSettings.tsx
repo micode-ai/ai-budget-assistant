@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useDeferredValue, useEffect, useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -101,6 +101,13 @@ const PANE_MAX_ROWS = 100;
  * `openRename` sits in `renderItem`'s dep array, so while it was redefined
  * each render `renderItem`'s memo could never hold. Neither changes a pixel.
  *
+ * **The search box drives two values, and taking the wrong one costs a
+ * keystroke.** `searchQuery` is immediate and draws the input;
+ * `useDeferredValue`'s copy drives the filter, the rows and the empty state, so
+ * the list renders at low priority and typing never waits for it. See the
+ * comment at the declaration for the measurement and for why this is not a
+ * `setTimeout` debounce.
+ *
  * **Do not add a poll or an interval here.** A pane stays mounted while another
  * pane is read - `SettingsNav` pushes, and a stack push does not unmount the
  * screen beneath - so a timer a phone would have stopped by unmounting keeps
@@ -190,7 +197,24 @@ export function ProductsSettings() {
     );
   };
 
+  // Two values, deliberately, and which one a reader takes decides whether it
+  // waits for the list. The `TextInput` binds to `searchQuery` and so stays
+  // instant; everything that derives ROWS reads `q`, built from the deferred
+  // copy, so React renders the list at low priority and a keystroke never
+  // blocks on it. On a long list that render is the whole document -- ~12 RNW
+  // nodes per row x the 100-row cap -- and it was measured at ~160ms per
+  // character, against 6ms once a query had narrowed the list to ~10 products.
+  //
+  // Deferring does not make that work cheaper; it takes it off the typing path,
+  // which is the right trade for a search box and is why this is one hook
+  // rather than a debounce constant. `useDeferredValue` and not a `setTimeout`
+  // for a reason: the two debounces already in this app
+  // (`account/invite.tsx`, `price-history/community.tsx`) delay a NETWORK
+  // REQUEST, where the point is to avoid firing one. Here the cost is local
+  // rendering, there is nothing to avoid firing, and deferring adapts to typing
+  // speed instead of imposing a fixed wait on everybody.
   const [searchQuery, setSearchQuery] = useState('');
+  const deferredQuery = useDeferredValue(searchQuery);
 
   // Multi-select + merge
   const { selecting, selected, toggleSelect, enterSelect, exitSelect } = useProductMultiSelect();
@@ -295,7 +319,11 @@ export function ProductsSettings() {
     showAlert('', t('priceHistory.merged'));
   };
 
-  const q = searchQuery.trim().toLowerCase();
+  // The deferred copy: `q` feeds `filteredProducts`, the rows, and `ListEmpty`,
+  // so the empty message can never describe a query the rows have not caught up
+  // to. `ListHeader` keeps reading `searchQuery` -- it draws the input's own
+  // value and its clear button, which must not lag behind the caret.
+  const q = deferredQuery.trim().toLowerCase();
   const filteredProducts = useMemo(
     () =>
       q
