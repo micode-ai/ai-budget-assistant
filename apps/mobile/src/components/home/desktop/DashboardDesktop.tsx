@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View, ScrollView, useWindowDimensions } from 'react-native';
 import { useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
@@ -12,6 +12,9 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { useFirstRunStore } from '@/stores/firstRunStore';
+import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
+import { useUserSubscriptionStore } from '@/stores/userSubscriptionStore';
+import { isPurchaseRequestAccount } from '@/features/dashboard/attentionEnrichment';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FocusColumn } from './FocusColumn';
 import { DashboardRail } from './DashboardRail';
@@ -49,6 +52,16 @@ import { DashboardRail } from './DashboardRail';
  * new account, and the ordinary dashboard. Both columns take the same
  * `firstRunView` value, so they can never disagree about which one is being
  * drawn.
+ *
+ * **The two Phase B reads are issued here and nowhere else.** Everything else
+ * on this screen reuses data the app already loads; the pending
+ * purchase-request count and the subscription list are the only two extra GETs
+ * the desktop dashboard makes, and they exist solely to fill two of the five
+ * kinds in "Needs your attention". They live in this component rather than in
+ * `useHomeScreenData` precisely because the phone shares that hook and must
+ * not gain two requests it has no use for. Both are fire-and-forget: see the
+ * effect below for why an attention list that never receives them is a correct
+ * outcome and not a degraded one.
  */
 export function DashboardDesktop() {
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
@@ -73,6 +86,7 @@ export function DashboardDesktop() {
     convertedLentTotal,
     convertedBorrowedTotal,
     currentAccountType,
+    currentAccountId,
     widgetVisibility,
     widgetOrder,
     monthlyBudgetSummary,
@@ -96,6 +110,47 @@ export function DashboardDesktop() {
   const walletPullAt = useWalletStore((s) => s.lastPullAt);
   const checklistDismissed = useFirstRunStore((s) => s.checklistDismissed);
   const dismissChecklist = useFirstRunStore((s) => s.dismissChecklist);
+
+  // ---- Phase B: the two extra reads --------------------------------------
+  //
+  // The only two things "Needs your attention" can show that the dashboard was
+  // not already loading. They are issued HERE rather than in
+  // `useHomeScreenData`, which the phone shares — this component is reached
+  // only through `DashboardView.web.tsx` at desktop width, so mobile issues
+  // neither request. `AttentionPanel` reads the results off these same two
+  // stores, the way it already reads alerts, invitations and budgets.
+  const loadPendingPurchaseRequests = usePurchaseRequestStore((s) => s.loadPendingCount);
+  const loadSubscriptions = useUserSubscriptionStore((s) => s.loadSubscriptions);
+
+  useEffect(() => {
+    if (!currentAccountId) return;
+
+    // Both reads are ENRICHMENT. Neither is awaited, neither gates a render,
+    // and a list that never receives them is simply shorter — never an error,
+    // never a placeholder row, never a spinner outliving the rest of the
+    // screen. Both store loaders already swallow their own failure internally
+    // (`purchaseRequestStore` silently, `userSubscriptionStore` into its own
+    // `error` field, which nothing on this screen reads), so these handlers
+    // are inert today by construction. They are here so that a loader which
+    // later starts rethrowing degrades into the `inflationShieldStore`
+    // precedent — one warning, screen carries on — instead of an unhandled
+    // rejection on the one screen built to be worth staying on.
+    void loadSubscriptions().catch((e) =>
+      console.warn('[DashboardDesktop] loadSubscriptions failed', e),
+    );
+
+    // Non-personal accounts only. A personal account has no other members to
+    // vote, so this asks a question whose answer is already known. The panel
+    // applies the SAME predicate before showing the row — nothing zeroes
+    // `pendingCount` on an account switch, so gating only the request would
+    // leave a shared account's queue on screen after switching to a personal
+    // one.
+    if (isPurchaseRequestAccount(currentAccountType)) {
+      void loadPendingPurchaseRequests().catch((e) =>
+        console.warn('[DashboardDesktop] loadPendingCount failed', e),
+      );
+    }
+  }, [currentAccountId, currentAccountType, loadSubscriptions, loadPendingPurchaseRequests]);
 
   // ANY active budget, not `monthlyBudgetSummary.budgetCount`, which filters
   // `period === 'monthly'`. The row says "Create Budget" and says nothing

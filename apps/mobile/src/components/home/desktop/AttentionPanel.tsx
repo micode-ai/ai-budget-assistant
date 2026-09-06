@@ -22,6 +22,7 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useUserSubscriptionStore } from '@/stores/userSubscriptionStore';
+import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
 import { InvitationCard } from '@/components/alerts/InvitationCard';
 import { ExpenseDialog } from '@/components/expenses/desktop/ExpenseDialog';
 import { renderAlertBody, TYPE_ICON } from '@/features/alerts/alertPresentation';
@@ -39,6 +40,7 @@ import {
   mergeTargets,
   buildTrackedSubscription,
 } from '@/features/dashboard/attentionActions';
+import { resolveAttentionEnrichment } from '@/features/dashboard/attentionEnrichment';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
 import { FIRST_RUN_GRID_MIN_WIDTH } from './FirstRunPanel';
 
@@ -167,6 +169,18 @@ export function AttentionPanel({ canEdit }: Props) {
   const expenses = useExpenseStore((s) => s.expenses);
   const categories = useCategoryStore((s) => s.categories);
 
+  // The two Phase B kinds. `DashboardDesktop` issues both reads (see its own
+  // note on why they are not in `useHomeScreenData`); this panel only reads
+  // whatever landed, exactly as it does for alerts and invitations. Neither
+  // store is ever empty in an error sense — both simply hold less — so there
+  // is nothing here to branch on.
+  const pendingPurchaseRequestCount = usePurchaseRequestStore((s) => s.pendingCount);
+  const subscriptions = useUserSubscriptionStore((s) => s.subscriptions);
+
+  // Declared here rather than beside the dialog state below because the memo
+  // needs it: it is the account whose rows this panel is entitled to show.
+  const currentAccount = useAccountStore((s) => s.currentAccount());
+
   /**
    * `hiddenCount` is ALWAYS read off the capped reading, never off the expanded
    * one — an uncapped call drops nothing and so reports `overflowCount: 0` by
@@ -180,7 +194,25 @@ export function AttentionPanel({ canEdit }: Props) {
    * still composes the list exactly once.
    */
   const { visible, hiddenCount } = useMemo(() => {
-    const inputs = { invitations, alerts, budgets, getBudgetProgress };
+    // The two Phase B inputs cross into the tested rules through
+    // `resolveAttentionEnrichment` and nowhere else — it is the one place that
+    // decides whether the purchase-request count applies to this account,
+    // whether these subscriptions are this account's, and whether each one
+    // carries a day count that can honestly be compared against the horizon.
+    // It returns exactly the two optional fields of `AttentionInputs` and
+    // nothing else, so the spread cannot reach the four Phase A keys above it.
+    const inputs = {
+      invitations,
+      alerts,
+      budgets,
+      getBudgetProgress,
+      ...resolveAttentionEnrichment({
+        accountId: currentAccount?.id,
+        accountType: currentAccount?.type,
+        pendingPurchaseRequestCount,
+        subscriptions,
+      }),
+    };
     const capped = buildAttentionItems(inputs);
     if (!expanded || capped.overflowCount === 0) {
       return { visible: capped.items, hiddenCount: capped.overflowCount };
@@ -190,7 +222,24 @@ export function AttentionPanel({ canEdit }: Props) {
       hiddenCount: capped.overflowCount,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [invitations, alerts, budgets, getBudgetProgress, expenses, categories, expanded]);
+  }, [
+    invitations,
+    alerts,
+    budgets,
+    getBudgetProgress,
+    expenses,
+    categories,
+    expanded,
+    pendingPurchaseRequestCount,
+    subscriptions,
+    // The two fields, not the object. `currentAccount()` re-finds its element
+    // in whatever `accounts` array the store currently holds, so any reload of
+    // the account list hands back a fresh identity; depending on the object
+    // would recompose the whole list on every such refresh, while these two
+    // are exactly what the enrichment reads.
+    currentAccount?.id,
+    currentAccount?.type,
+  ]);
 
   // ---- The expense dialog this panel hosts -------------------------------
 
@@ -204,7 +253,6 @@ export function AttentionPanel({ canEdit }: Props) {
   // it has to arrive with the same trip context that screen provides, or a
   // trip account's expense silently loses its split picker when opened from
   // here but not from the transactions table.
-  const currentAccount = useAccountStore((s) => s.currentAccount());
   const accountMembersMap = useAccountStore((s) => s.members);
   const loadMembers = useAccountStore((s) => s.loadMembers);
   const isTripAccount = currentAccount?.type === 'trip';
