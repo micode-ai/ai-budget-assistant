@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -37,6 +37,30 @@ interface ParsedIncome {
   confidence: number;
 }
 
+/**
+ * Stop and unload a recording, then put the audio session back the way
+ * `startRecording` found it.
+ *
+ * Both halves matter and only the happy path used to do either: `stopRecording`
+ * restores `allowsRecordingIOS` on success, but `handleReset` (which is what
+ * the Cancel button calls) only unloaded the recording, and NOTHING ran when
+ * the screen went away mid-recording — so the microphone stayed open and the
+ * iOS session stayed in recording mode. Module scope on purpose: it closes over
+ * nothing, so the unmount effect below can call it without taking a dependency.
+ */
+async function releaseRecording(recording: Audio.Recording) {
+  try {
+    await recording.stopAndUnloadAsync();
+  } catch {
+    // Already unloaded, or never fully started — nothing left to release.
+  }
+  try {
+    await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+  } catch {
+    // Ignore: the recording itself is released either way.
+  }
+}
+
 export default function VoiceIncomeScreen() {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -48,6 +72,37 @@ export default function VoiceIncomeScreen() {
   const [parsedIncome, setParsedIncome] = useState<ParsedIncome | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [recordingRef, setRecordingRef] = useState<Audio.Recording | null>(null);
+  /**
+   * A mirror of `recordingRef` that the unmount cleanup can read.
+   *
+   * The recording lives in STATE here, and a cleanup cannot read state safely:
+   * with `[]` deps it closes over the first render's value (`null`) and would
+   * release nothing at all, and with `[recordingRef]` deps it re-fires every
+   * time that state changes — including right after `startRecording` sets it,
+   * tearing down the recording the user just started. A ref sidesteps both:
+   * `[]` deps, and `.current` is read at teardown time.
+   */
+  const recordingInstanceRef = useRef<Audio.Recording | null>(null);
+
+  const setRecording = (recording: Audio.Recording | null) => {
+    recordingInstanceRef.current = recording;
+    setRecordingRef(recording);
+  };
+
+  /**
+   * Release the microphone when this screen goes away. See `releaseRecording`
+   * above for what was leaking; `app/expense/voice.tsx`'s side of the same bug
+   * is fixed in `useVoiceInput`, which that screen uses instead of its own
+   * inline `expo-av` handling.
+   */
+  useEffect(() => {
+    return () => {
+      const recording = recordingInstanceRef.current;
+      if (!recording) return;
+      recordingInstanceRef.current = null;
+      void releaseRecording(recording);
+    };
+  }, []);
 
   const [editAmount, setEditAmount] = useState('');
   const [editDescription, setEditDescription] = useState('');
@@ -94,7 +149,7 @@ export default function VoiceIncomeScreen() {
       }
       await Audio.setAudioModeAsync({ allowsRecordingIOS: true, playsInSilentModeIOS: true });
       const { recording } = await Audio.Recording.createAsync(Audio.RecordingOptionsPresets.HIGH_QUALITY);
-      setRecordingRef(recording);
+      setRecording(recording);
       setIsRecording(true);
       setError(null);
       setTranscription(null);
@@ -112,7 +167,7 @@ export default function VoiceIncomeScreen() {
       await recordingRef.stopAndUnloadAsync();
       await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
       const uri = recordingRef.getURI();
-      setRecordingRef(null);
+      setRecording(null);
       if (!uri) throw new Error('No recording URI');
 
       const base64Audio = await uriToBase64(uri);
@@ -140,8 +195,8 @@ export default function VoiceIncomeScreen() {
     setEditCategory('');
     setEditCurrencyCode('');
     if (recordingRef) {
-      recordingRef.stopAndUnloadAsync().catch(() => {});
-      setRecordingRef(null);
+      void releaseRecording(recordingRef);
+      setRecording(null);
     }
   };
 
