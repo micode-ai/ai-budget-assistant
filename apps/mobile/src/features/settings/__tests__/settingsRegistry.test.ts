@@ -160,11 +160,12 @@ describe('settingsRegistry', () => {
     }
   });
 
-  // Records the deliberate state of wave 1. Nothing is a pane until its screen
-  // is extracted — the spec's rule is that an entry not yet extracted stays a
-  // link, so the left pane is honest from day one. Tasks 2-5 each flip one
-  // entry and update this list; that is the point of the test.
+  // Records which screens have actually been extracted and hosted. A pane here
+  // is a claim that `src/components/settings/<key>/` exists and that the route
+  // renders it through `SettingsRoute` - flipping an entry without the
+  // extraction gives the row a selected state and an empty pane. Tasks 3-5 each
+  // add one key; that is the point of the test.
   it('records which entries are panes today', () => {
-    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual([]);
+    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['appearance']);
   });
 });
