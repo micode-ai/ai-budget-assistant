@@ -63,6 +63,8 @@ jest.mock('../../services/trip.api', () => ({
 }));
 
 import { useAccountStore } from '../accountStore';
+import { loadAllAccounts } from '../../db/accountRepository';
+import { secureStorage } from '../../services/secureStorage';
 import { usePriceHistoryStore } from '../priceHistoryStore';
 import { useMerchantRulesStore } from '../merchantRulesStore';
 import { api } from '../../services/api';
@@ -98,6 +100,8 @@ function seedAccountAReferenceData() {
 describe('account switch clears account-scoped reference data (ABA-511)', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    (loadAllAccounts as jest.Mock).mockResolvedValue([]);
+    (secureStorage.getItem as jest.Mock).mockResolvedValue(null);
     useAccountStore.setState({
       accounts: [account('acc-a'), account('acc-b')],
       currentAccountId: 'acc-a',
@@ -192,6 +196,64 @@ describe('account switch clears account-scoped reference data (ABA-511)', () => 
 
     expect(usePriceHistoryStore.getState().products).toEqual([]);
     expect(useMerchantRulesStore.getState().isLoaded).toBe(false);
+  });
+
+  // The fourth path, and the one nobody chooses: both list-loading actions
+  // silently fall back to `localAccounts[0]` when the selection is no longer
+  // in the list, which is exactly the moment a user is moved to a different
+  // account without asking - a membership removed elsewhere, or an account
+  // deleted on another device.
+  it('loadAccountsFromServer clears when the selection is gone from the server list', async () => {
+    (api.getAccounts as jest.Mock).mockResolvedValue([{ id: 'acc-b', name: 'acc-b' }]);
+    (loadAllAccounts as jest.Mock).mockResolvedValue([account('acc-b')]);
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-b');
+    expect(usePriceHistoryStore.getState().products).toEqual([]);
+    expect(useMerchantRulesStore.getState().isLoaded).toBe(false);
+  });
+
+  it('loadAccounts clears when the persisted selection is gone from the local list', async () => {
+    (loadAllAccounts as jest.Mock).mockResolvedValue([account('acc-b')]);
+    (secureStorage.getItem as jest.Mock).mockImplementation((key: string) =>
+      Promise.resolve(key === 'currentAccountId' ? 'acc-a' : null),
+    );
+    // `loadAccounts` ends with a fire-and-forget `loadAccountsFromServer()`;
+    // rejecting keeps that background call from racing the assertions with a
+    // second selection change.
+    (api.getAccounts as jest.Mock).mockRejectedValue(new Error('offline'));
+
+    await useAccountStore.getState().loadAccounts();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-b');
+    expect(usePriceHistoryStore.getState().products).toEqual([]);
+    expect(useMerchantRulesStore.getState().isLoaded).toBe(false);
+  });
+
+  // The teardown is attached to the field, not to the actions that assign it.
+  // This is the test that keeps a NINTH writer of `currentAccountId` safe, and
+  // it is the one that fails if the clear is ever moved back into the
+  // individual actions - which is how three of the eight existing writers came
+  // to be missed in the first place.
+  it('clears for any writer of currentAccountId, not just the actions that were remembered', () => {
+    useAccountStore.setState({ currentAccountId: 'acc-b' });
+
+    expect(usePriceHistoryStore.getState().products).toEqual([]);
+    expect(useMerchantRulesStore.getState().isLoaded).toBe(false);
+  });
+
+  // Nothing was addressed under a real account before, so there is nothing
+  // belonging to one to throw away; sign-out has its own teardown block in
+  // `logoutAction`. Without this guard every cold start would clear.
+  it('does not clear when the selection is set for the first time', () => {
+    useAccountStore.setState({ currentAccountId: null });
+    seedAccountAReferenceData();
+
+    useAccountStore.setState({ currentAccountId: 'acc-b' });
+
+    expect(usePriceHistoryStore.getState().products).toHaveLength(1);
+    expect(useMerchantRulesStore.getState().isLoaded).toBe(true);
   });
 });
 

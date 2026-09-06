@@ -89,9 +89,9 @@ interface AccountState {
  * it in an order that depends on mount timing. Screens keep only the *refill*
  * half — a load effect keyed on `[currentAccountId]`.
  *
- * Called only when the id actually moves to a different account: clearing on a
- * no-op re-select would empty screens that have no reason to reload, since a
- * `[currentAccountId]` effect does not re-fire when the value is unchanged.
+ * It is invoked from the subscription at the bottom of this file, NOT from
+ * each action that reassigns `currentAccountId` — see the comment there for
+ * why the callers cannot be enumerated reliably.
  */
 function clearAccountScopedCaches() {
   usePriceHistoryStore.getState().reset();
@@ -210,14 +210,11 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
   },
 
   switchAccount: async (accountId) => {
-    const { accounts, currentAccountId } = get();
+    const { accounts } = get();
     const account = accounts.find((a) => a.id === accountId);
     if (!account) return;
 
-    const isDifferentAccount = currentAccountId !== accountId;
-
     set({ currentAccountId: accountId });
-    if (isDifferentAccount) clearAccountScopedCaches();
     await secureStorage.setItem('currentAccountId', accountId);
   },
 
@@ -412,10 +409,6 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         isLoading: false,
       });
 
-      // Deleting the account you are on moves the active id without going
-      // through `switchAccount` — same staleness, same teardown.
-      if (currentAccountId === id) clearAccountScopedCaches();
-
       // Update persisted selection if needed
       if (currentAccountId === id && localAccounts[0]) {
         await secureStorage.setItem('currentAccountId', localAccounts[0].id);
@@ -579,8 +572,6 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       currentAccountId:
         currentAccountId === accountId ? localAccounts[0]?.id || null : currentAccountId,
     });
-
-    if (currentAccountId === accountId) clearAccountScopedCaches();
   },
 
   // Selectors
@@ -618,3 +609,30 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
 
 // Wire up account context for API client (avoids circular require)
 api.setAccountIdGetter(() => useAccountStore.getState().currentAccountId);
+
+// The account-scoped teardown is attached to the VALUE, not to the actions
+// that assign it, because the assigning actions cannot be enumerated
+// reliably: `currentAccountId` is written from eight places in this file, and
+// a careful pass looking for exactly this found three of them. The two that
+// were missed are the two that matter most — `loadAccounts` and
+// `loadAccountsFromServer` both silently fall back to `localAccounts[0]` when
+// the persisted selection is no longer in the list the server returned, which
+// is precisely the moment the user is moved to a different account without
+// asking. A `clearAccountScopedCaches()` call per caller would be one more
+// thing the next writer of this field has to know about; a subscription is
+// one thing that already knows.
+//
+// Fires synchronously inside `set()`, so the caches are empty before any
+// `[currentAccountId]` effect runs and a switch cannot paint the previous
+// account's data while the refetch is in flight.
+//
+// Skips null -> account: nothing was addressed under a real account before, so
+// there is nothing belonging to one to throw away (sign-out has its own
+// teardown block in `logoutAction`). Skips an unchanged value: re-selecting
+// the account you are already on fires no `[currentAccountId]` effect, so a
+// clear there would leave screens empty rather than stale.
+useAccountStore.subscribe((state, prev) => {
+  if (prev.currentAccountId === null) return;
+  if (state.currentAccountId === prev.currentAccountId) return;
+  clearAccountScopedCaches();
+});
