@@ -169,7 +169,7 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // level of depth removed. These three are list screens and want the width.
   { kind: 'pane', key: 'categories', labelKey: 'settingsNav.categories', route: '/settings/categories', width: 'full' },
   { kind: 'pane', key: 'merchants', labelKey: 'settingsNav.merchants', route: '/settings/merchants', width: 'full' },
-  { kind: 'link', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
+  { kind: 'pane', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
   { kind: 'pane', key: 'about', labelKey: 'settingsNav.about', route: '/settings/about', width: 'form' },
 
   // --- Places you work. Links, permanently: they are in settings only
