@@ -78,6 +78,12 @@ describe('resolveBudgetProjection', () => {
     // `BudgetsMobile.tsx` renders them as two `<Text>` blocks and prints both
     // at once — "Runs out ~24 Sep" then "Projected: 620 zł" — which reads as
     // two problems when there is one. One key, one amount, one date.
+    //
+    // Also breaks if: the amount reverts to `projectedTotal` (620). The key
+    // reads "Projected to exceed BY {{amount}}", so it takes the OVERAGE —
+    // 620 projected against a 500 limit is 120 over. Task 6 mirrored the
+    // shipped bug on purpose and reported it; both call sites (here and
+    // `BudgetCard.tsx`) were corrected together in task 7.
     const date = new Date('2026-09-24T10:00:00Z');
     const result = resolveBudgetProjection(
       budget(),
@@ -87,7 +93,7 @@ describe('resolveBudgetProjection', () => {
     expect(result).toEqual({
       status: 'projected',
       i18nKey: 'budgetsDesktop.projectedExceedBy',
-      amount: 620,
+      amount: 120,
       date,
     });
   });

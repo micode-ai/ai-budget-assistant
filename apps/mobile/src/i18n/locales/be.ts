@@ -107,6 +107,7 @@ export default {
     googleTermsNote: 'Працягваючы, вы прымаеце Умовы і Палітыку прыватнасці',
   },
   dashboard: {
+    attentionMore: 'яшчэ {{count}}',
     hello: 'Прывітанне, {{name}}!',
     monthlyBudget: 'Месячны бюджэт',
     used: '{{percent}}% выкарыстана',

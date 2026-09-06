@@ -12,10 +12,12 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { resolveMonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
+import { resolveMonthlyBudgetProjection } from '@/features/dashboard/monthlyBudgetProjection';
 import { shouldShowSafeToSpendRow } from '@/features/dashboard/safeToSpendRow';
 import type { FirstRunView } from '@/features/onboarding/webFirstRunView';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FirstRunPanel } from './FirstRunPanel';
+import { AttentionPanel } from './AttentionPanel';
 
 interface FocusColumnProps {
   ctx: HomeWidgetContext;
@@ -99,6 +101,15 @@ export function FocusColumn({
     [budgets, getBudgetProgress, expenses, categories], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
+  // The Monthly Budget card's second line ("at this rate you reach 500 zl on
+  // the 24th"). Same memo hazard, same dependency list, and for the same
+  // reason: `getBudgetProgress` reads expenses/categories off a `.getState()`
+  // snapshot that neither `budgets` nor its own identity reflects.
+  const budgetProjection = useMemo(
+    () => resolveMonthlyBudgetProjection(budgets, getBudgetProgress),
+    [budgets, getBudgetProgress, expenses, categories], // eslint-disable-line react-hooks/exhaustive-deps
+  );
+
   // The fourth condition — a wallet balance actually exists — is new, and it
   // is the whole of this screen's half of "stop reporting a server zero as a
   // fact". `useSafeToSpend.hasEnoughData` is `data !== null`, and the server
@@ -149,12 +160,28 @@ export function FocusColumn({
   if (firstRunView === 'wait') return <FocusColumnLoading />;
   if (firstRunView === 'first-run') return <FirstRunPanel onSkip={onSkipFirstRun} />;
 
+  // The attention panel is the FIRST slot, above the hero, and only when it
+  // has something in it — it hides itself when empty, which on most days it
+  // is. It sits outside the "everything is hidden" branch below on purpose:
+  // it is not a widget (no `WidgetKey`, no visibility toggle, no place in
+  // `widgetOrder` — every item in it is individually dismissible or
+  // self-resolving, so it empties itself, and a global toggle would let a
+  // user hide an invitation that is waiting on them). Hiding every widget
+  // must therefore not also hide a person waiting for an answer.
+  const attention = <AttentionPanel canEdit={ctx.canEdit} />;
+
   if (!showHero && !showIncomeExpenses && !showMonthlyBudget && !showWallets) {
-    return <FocusColumnEmptyState />;
+    return (
+      <View>
+        {attention}
+        <FocusColumnEmptyState />
+      </View>
+    );
   }
 
   return (
     <View>
+      {attention}
       {showHero && (
         <NetProfitWidget
           refreshKey={widgetRefreshKey}
@@ -168,7 +195,9 @@ export function FocusColumn({
         />
       )}
       {showIncomeExpenses && <IncomeExpensesCard ctx={ctx} showCounts />}
-      {showMonthlyBudget && <MonthlyBudgetCard ctx={ctx} segments={segments} />}
+      {showMonthlyBudget && (
+        <MonthlyBudgetCard ctx={ctx} segments={segments} projection={budgetProjection} />
+      )}
       {showWallets && <WalletsSection ctx={ctx} />}
     </View>
   );

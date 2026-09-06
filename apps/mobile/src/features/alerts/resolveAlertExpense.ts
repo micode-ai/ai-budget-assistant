@@ -1,5 +1,5 @@
 import type { TFunction } from 'i18next';
-import type { AnomalyAlert } from '@budget/shared-types';
+import type { AnomalyAlert, Expense } from '@budget/shared-types';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { showAlert } from '@/utils/alert';
 
@@ -7,16 +7,30 @@ import { showAlert } from '@/utils/alert';
  * An anomaly alert deep-links by the expense's SERVER PK, but a locally-created row
  * is keyed by its clientId and only learns its serverId once it has synced/pulled.
  * Resolve against the live store the same 4-way way the detail/merge screens do.
+ *
+ * Added for the desktop dashboard's attention panel, which does not NAVIGATE to
+ * `expense/[id]` with the id — it hosts `ExpenseDialog`, which needs the row
+ * itself. Returning the expense rather than a boolean is the only difference;
+ * `isExpenseResolvableLocally` below is now expressed in terms of it so the
+ * four-way match cannot exist in two places and drift. `.some(p)` and
+ * `!!.find(p)` are the same answer for the same predicate, so no caller of the
+ * boolean form sees any change.
  */
+export function findAlertExpense(id?: string | null): Expense | null {
+  if (!id) return null;
+  return (
+    useExpenseStore
+      .getState()
+      .expenses.find(
+        (e) =>
+          !e.isDeleted &&
+          (e.id === id || e.serverId === id || e.clientId === id || e.localId === id),
+      ) ?? null
+  );
+}
+
 export function isExpenseResolvableLocally(id?: string | null): boolean {
-  if (!id) return false;
-  return useExpenseStore
-    .getState()
-    .expenses.some(
-      (e) =>
-        !e.isDeleted &&
-        (e.id === id || e.serverId === id || e.clientId === id || e.localId === id),
-    );
+  return findAlertExpense(id) !== null;
 }
 
 /** Everything `openAlertTargets` used to read off the screen's own closure/state. */

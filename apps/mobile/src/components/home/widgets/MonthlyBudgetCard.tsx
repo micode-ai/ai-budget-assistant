@@ -8,6 +8,7 @@ import { getIntlLocale } from '@/i18n';
 import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import { SegmentedProgressBar } from '@/components/shared/SegmentedProgressBar';
 import type { MonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
+import type { MonthlyBudgetProjection } from '@/features/dashboard/monthlyBudgetProjection';
 import type { HomeWidgetContext } from '../HomeWidgetContext';
 
 interface MonthlyBudgetCardProps {
@@ -23,9 +24,28 @@ interface MonthlyBudgetCardProps {
    * site passes nothing, so it always renders today's plain fill, unchanged.
    */
   segments?: MonthlyBudgetSegments | null;
+  /**
+   * Desktop web (`docs/design/2026-09-05-dashboard-web.md`'s "The budget
+   * projection line") — a SECOND line under the bar, from data already
+   * computed: "340 zl of 500 zl · 68%" is a report, "at this rate you reach
+   * 500 zl on the 24th" is a reason to behave differently today.
+   *
+   * Resolved by the CALLER (`FocusColumn`, via
+   * `features/dashboard/budgetProjection.ts`) rather than derived here, for
+   * the same reason the attention row carries its projection pre-resolved:
+   * one resolver is what keeps "one sentence" true across the two places on
+   * this screen that can say it. A `null`/absent value renders nothing, which
+   * is also what the module returns when the budget is not heading over.
+   *
+   * Undefined on mobile — mobile's own call sites
+   * (`HomeWidgetSwitch.tsx`'s `'monthlyBudget'` case) pass nothing, so the
+   * card renders exactly as it does today and the extra `<Text>` is never
+   * mounted.
+   */
+  projection?: MonthlyBudgetProjection | null;
 }
 
-export function MonthlyBudgetCard({ ctx, segments }: MonthlyBudgetCardProps) {
+export function MonthlyBudgetCard({ ctx, segments, projection }: MonthlyBudgetCardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -96,6 +116,30 @@ export function MonthlyBudgetCard({ ctx, segments }: MonthlyBudgetCardProps) {
             </View>
             <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
           </View>
+        )}
+        {projection && (
+          <Text
+            style={
+              projection.projection.status === 'exceeded'
+                ? styles.projectionExceeded
+                : styles.projectionText
+            }
+          >
+            {/* One sentence, one key, chosen by `resolveBudgetProjection` —
+                never a date line AND a total line, which is what mobile's
+                budgets list prints and what this whole module exists to
+                collapse. The amount is in the BUDGET's currency, carried
+                alongside the projection, not `ctx.currency`. */}
+            {t(projection.projection.i18nKey, {
+              amount: formatCurrency(projection.projection.amount, projection.currencyCode),
+              date: projection.projection.date
+                ? projection.projection.date.toLocaleDateString(getIntlLocale(), {
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                : '',
+            })}
+          </Text>
         )}
       </View>
     </TouchableOpacity>
@@ -169,6 +213,21 @@ const createStyles = (theme: Theme) => ({
   progressText: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+  },
+  // Same two treatments `BudgetCard.tsx` (the budgets grid) gives the same two
+  // states, so one budget never looks more or less urgent depending on which
+  // screen is showing it. `warning`/`danger` are semantic tokens and are
+  // deliberately NOT accent-derived.
+  projectionText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.warning,
+    textAlign: 'center' as const,
+  },
+  projectionExceeded: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.danger,
+    fontWeight: '600' as const,
     textAlign: 'center' as const,
   },
 });

@@ -72,14 +72,19 @@ export interface BudgetProjection {
    * different numbers for one budget:
    *
    * - `budgetsDesktop.exceedsBy` → the overage, `spent - amount`.
-   * - `budgetsDesktop.projectedExceedBy` → the projected TOTAL, not the
-   *   projected overage. The English reads "Projected to exceed by {{amount}}",
-   *   which is arguably the wrong noun for that number — but it is the number
-   *   the budgets grid has shipped with, and one screen quietly disagreeing
-   *   with another about the same budget is worse than one imprecise word.
-   *   Filed for the product owner rather than silently changed.
+   * - `budgetsDesktop.projectedExceedBy` → the projected OVERAGE,
+   *   `projectedTotal - amount`. The key reads "Projected to exceed BY
+   *   {{amount}}" in all nine locales. Task 6 mirrored `BudgetCard.tsx`'s
+   *   shipped call site, which passed the projected TOTAL — so a 500 zl budget
+   *   heading for 620 read "projected to exceed by 620 zl" when the overage is
+   *   120 — and reported the defect rather than fixing it inside another
+   *   task's file, precisely so the dashboard and the budgets grid could not
+   *   end up quoting different numbers for one budget. Both call sites are
+   *   corrected together here.
    * - `insights.projectedTotal` → the projected total, which is what that key
-   *   ("Projected: {{amount}}") actually names.
+   *   ("Projected: {{amount}}") actually names. NOT the overage: this is the
+   *   dateless fallback and its own noun is "Projected", so the two keys
+   *   deliberately carry different quantities.
    */
   amount: number;
   /**
@@ -136,10 +141,14 @@ export function resolveBudgetProjection(
   if (progress.projectedTotal <= budget.amount) return null;
 
   const date = normalizeExhaustionDate(progress.estimatedExhaustionDate);
+  // The amount follows the KEY, not the status — the two branches genuinely
+  // want different quantities. `projectedExceedBy` says "exceed by", so it
+  // takes the overage; `insights.projectedTotal` says "Projected:", so it
+  // takes the total. See the `amount` field's doc comment above.
   return {
     status: 'projected',
     i18nKey: date ? 'budgetsDesktop.projectedExceedBy' : 'insights.projectedTotal',
-    amount: progress.projectedTotal,
+    amount: date ? progress.projectedTotal - budget.amount : progress.projectedTotal,
     date,
   };
 }

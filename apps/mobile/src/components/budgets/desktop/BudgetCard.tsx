@@ -130,7 +130,19 @@ export function BudgetCard({ classified, now, anchorDay, onPress }: Props) {
         <Text style={styles.projectedText}>
           {progress.estimatedExhaustionDate
             ? t('budgetsDesktop.projectedExceedBy', {
-                amount: formatCurrency(progress.projectedTotal, budget.currencyCode),
+                // The OVERAGE, not the projected total. The key reads
+                // "Projected to exceed BY {{amount}}" in all nine locales, and
+                // this shipped quoting `projectedTotal` — so a 500 zl budget
+                // heading for 620 said "projected to exceed by 620 zl" when the
+                // overage is 120. Fixed here and in
+                // `features/dashboard/budgetProjection.ts` (which the dashboard's
+                // attention row and Monthly Budget line both read) in the same
+                // change, deliberately: the two screens quote the same budget,
+                // and fixing one alone would make them disagree.
+                amount: formatCurrency(
+                  progress.projectedTotal - budget.amount,
+                  budget.currencyCode,
+                ),
                 date: formatShortDate(progress.estimatedExhaustionDate),
               })
             : t('insights.projectedTotal', {
