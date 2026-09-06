@@ -332,6 +332,60 @@ they exist for. What must be absent is the desktop *UI*: `SettingsShell`,
 `SettingsNav`, `SettingsOverviewPane`, `WebTopBar`. Grep for those, and
 read a non-zero result before believing it.
 
+## 5f. What wave 2 added — and where the habit broke
+
+Three heavier screens, taking the shell from six panes to nine. The
+extractions were routine; everything worth recording came from the checks
+attached to them.
+
+- **Five identical repetitions create a reflex, and the sixth case differs.**
+  Wave 1 swapped five screen roots onto `SettingsScreenScroll` without
+  incident. `security`'s root was a `KeyboardAwareScreen`, and the same swap
+  would have silently dropped `keyboardShouldPersistTaps`, the on-drag
+  dismiss, the keyboard insets on both platforms and the hidden scroll
+  indicator — from a form whose buttons sit under two secure inputs. The
+  answer was a sibling primitive (`SettingsScreenKeyboardScroll`), not a
+  report of the loss. `bots` was then the first root that was
+  `SafeAreaView edges={['bottom']}`, established by checking all seven
+  predecessors **in git** rather than assuming they were uniform.
+- **A pane outlives the user's attention.** `SettingsNav` pushes, and a stack
+  push does not unmount the screen beneath, so a pane stays mounted while
+  another is read. `bots` came back clean only because it has no poll at all;
+  one `setInterval` in that file and it is the microphone case exactly. Its
+  component now carries "do not add a poll here" in its doc comment.
+- **`useFocusEffect` works only because the selection is the URL.** A shell
+  that swapped panes inside one route would have killed every on-return
+  refresh silently — which is what retroactively justifies keeping all
+  seventeen route files instead of one `_layout.tsx`.
+- **Selecting the thing you are already on must be a no-op.** `router.push`
+  on the current row stacked a second copy of the pane. The guard reuses the
+  row's own `selected` flag, so a row cannot look current without being
+  inert. The same defect existed one level up: the top-bar gear pushed a
+  second shell from inside settings.
+- **Match a pathname exactly, not by prefix, when the guard can disable a
+  route.** From `/settings/ai` the gear is the only in-app way back to the
+  overview — and to the only sign-out button on desktop web — so a
+  `startsWith` guard would have gone dead across the settings area and taken
+  signing out with it. The tolerance runs one way: a missed spelling leaves a
+  duplicate, a wrong match kills the control.
+- **A raw `<div>` earns a file split; an unused RN primitive does not.**
+  §5a's runtime `desktop?` prop is right for shared components that render
+  React Native primitives — merely unused on the wrong platform. A component
+  whose scrim is a `<div>` would *throw* if it ever rendered, so its
+  extensionless file is a real no-op and the bundler enforces it, rather than
+  a chain of reasoning about which provider sets `desktop: true`.
+
+### Probes go stale — re-derive them, do not reuse them
+
+Wave 2's dialog split was proved with a probe unique to the web file
+(`settings.changeEmail.title`), measured **1 before and 0 after**, with two
+counter-controls confirming the screen itself was still on the phone. That
+evidence was sound when taken and is now worthless: a later commit put the
+same key in `app/_layout.tsx` legitimately. Grepping a **component name** is
+worse still — the native no-op carries the same name by construction. Before
+trusting a bundle probe, check that the string is still unique to the thing
+you are probing for.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
