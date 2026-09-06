@@ -10,7 +10,7 @@ import { AlertsPanel } from '@/components/alerts/desktop/AlertsPanel';
 import { alertsBadgeCount } from '@/features/alerts/alertsPanelItems';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { WebSidebar } from '@/components/WebSidebar';
-import { TOP_BAR_HEIGHT } from '@/components/webLayout.constants';
+import { TOP_BAR_HEIGHT, WEB_TOP_BAR_PADDING_X } from '@/components/webLayout.constants';
 
 /** Active-section title shown next to the brand for the 5 main tabs. */
 function sectionTitle(pathname: string, t: (k: string) => string): string {
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   bar: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: WEB_TOP_BAR_PADDING_X,
     zIndex: 10,
   },
   brand: { fontSize: 18 },

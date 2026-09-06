@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   View,
   Text,
@@ -10,14 +10,12 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
-import type { AnomalyAlert } from '@budget/shared-types';
 import { getIntlLocale } from '@/i18n';
 import { showAlert } from '@/utils/alert';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAlertStore } from '@/stores/alertStore';
 import { useInvitationStore } from '@/stores/invitationStore';
 import { useAccountStore } from '@/stores/accountStore';
-import { useAuthStore } from '@/stores/authStore';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -26,22 +24,14 @@ import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
 import { InvitationCard } from '@/components/alerts/InvitationCard';
 import { ExpenseDialog } from '@/components/expenses/desktop/ExpenseDialog';
 import { renderAlertBody, TYPE_ICON } from '@/features/alerts/alertPresentation';
-import {
-  openAlertTargets as openAlertTargetsImpl,
-  findAlertExpense,
-} from '@/features/alerts/resolveAlertExpense';
+import { useAlertTapThrough } from '@/hooks/useAlertTapThrough';
 import {
   ALL_ATTENTION_ROWS,
   buildAttentionItems,
   type AttentionItem,
 } from '@/features/dashboard/attentionItems';
-import {
-  alertAction,
-  mergeTargets,
-  buildTrackedSubscription,
-} from '@/features/dashboard/attentionActions';
+import { alertAction } from '@/features/dashboard/attentionActions';
 import { resolveAttentionEnrichment } from '@/features/dashboard/attentionEnrichment';
-import type { LedgerRow } from '@/features/expenses/desktopTable';
 
 /**
  * Below this MEASURED panel width a row's action buttons drop under its text
@@ -160,7 +150,6 @@ export function AttentionPanel({ canEdit }: Props) {
   const invitations = useInvitationStore((s) => s.invitations);
   const respond = useInvitationStore((s) => s.respond);
   const alerts = useAlertStore((s) => s.alerts);
-  const markRead = useAlertStore((s) => s.markRead);
   const dismiss = useAlertStore((s) => s.dismiss);
   const budgets = useBudgetStore((s) => s.budgets);
   const getBudgetProgress = useBudgetStore((s) => s.getBudgetProgress);
@@ -244,47 +233,16 @@ export function AttentionPanel({ canEdit }: Props) {
     currentAccount?.type,
   ]);
 
-  // ---- The expense dialog this panel hosts -------------------------------
-
-  const [dialogRow, setDialogRow] = useState<LedgerRow | null>(null);
-  // Which alert is waiting on a forced expense pull. Drives an inline spinner
-  // and blocks a second tap, exactly as `app/alerts/index.tsx` does.
-  const [resolvingId, setResolvingId] = useState<string | null>(null);
-
-  // Mirrors `ExpensesDesktop`'s own block, which in turn mirrors
-  // `app/expense/[id].tsx` — the dialog replaced navigating to that screen, so
-  // it has to arrive with the same trip context that screen provides, or a
-  // trip account's expense silently loses its split picker when opened from
-  // here but not from the transactions table.
-  const accountMembersMap = useAccountStore((s) => s.members);
-  const loadMembers = useAccountStore((s) => s.loadMembers);
-  const isTripAccount = currentAccount?.type === 'trip';
-  const tripMembers =
-    isTripAccount && currentAccount
-      ? (accountMembersMap[currentAccount.id] || []).map((m) => ({
-          userId: m.userId,
-          name: m.user?.name || m.user?.email || m.userId,
-        }))
-      : [];
-
-  // Trip accounts only, so an ordinary account's dashboard makes no extra
-  // request. `ExpensesDesktop` runs the identical effect for the identical
-  // reason: `ExpenseDetailsCard` gates its split picker on
-  // `tripMembers.length > 0`, so without this the picker would be missing from
-  // an expense opened here and present on the same expense opened from the
-  // transactions table — a divergence with no visible cause.
-  useEffect(() => {
-    if (isTripAccount && currentAccount) loadMembers(currentAccount.id);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentAccount?.id, isTripAccount]);
-
-  const openAlertTargets = useCallback(
-    (alert: AnomalyAlert, ids: (string | undefined)[], navigate: () => void) =>
-      openAlertTargetsImpl(alert, ids, navigate, { canEdit, dismiss, t, setResolvingId }),
-    [canEdit, dismiss, t],
-  );
-
-  // ---- Actions ----------------------------------------------------------
+  // ---- Tapping an alert -------------------------------------------------
+  //
+  // The whole flow — resolving the target, the forced-pull spinner, the
+  // `markRead`-only-on-success ordering rule, and the `ExpenseDialog` this
+  // panel hosts — moved into `useAlertTapThrough` when the top bar's alerts
+  // panel needed exactly the same behaviour. Two hand-written copies of a
+  // flow whose correctness depends on WHEN one call happens is the drift this
+  // layer exists to prevent; the hook's own doc comment states the rule.
+  const alertTap = useAlertTapThrough({ canEdit });
+  const { resolvingId } = alertTap;
 
   const handleAccept = async (id: string) => {
     try {
@@ -304,81 +262,6 @@ export function AttentionPanel({ canEdit }: Props) {
     } catch (e) {
       showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
-  };
-
-  const handleTrack = async (alert: AnomalyAlert) => {
-    const input = buildTrackedSubscription(
-      alert,
-      new Date(),
-      useAuthStore.getState().user?.currencyCode || 'USD',
-    );
-    if (!input) {
-      // The alert did not carry enough to build an honest subscription (see
-      // `buildTrackedSubscription`). Fall back to the form the alerts screen
-      // has always opened, prefilled with whatever IS there, rather than
-      // leaving a button that does nothing.
-      const p = alert.params as Record<string, string>;
-      router.push({
-        pathname: '/subscriptions/new' as never,
-        params: { name: p.merchant, amount: String(p.amount), detectedFrom: p.merchant },
-      });
-      return;
-    }
-    try {
-      await useUserSubscriptionStore.getState().createSubscription(input);
-      // Only after the server confirms. Dismissing first would lose the alert
-      // on a failed create, and the suggestion fires once per merchant EVER
-      // (`dedupKey: recur:{merchant}`), so it would never come back.
-      dismiss(alert.id);
-    } catch (e) {
-      showAlert(t('errors.error'), e instanceof Error ? e.message : t('errors.unknown'));
-    }
-  };
-
-  const handleAlertPress = (alert: AnomalyAlert) => {
-    if (resolvingId) return; // a resolve pull is already in flight
-    const action = alertAction(alert, canEdit);
-    // The Track row's own button owns its action; the row body does nothing,
-    // so a stray click cannot create a subscription.
-    if (action === 'track' || action === 'none') return;
-
-    /**
-     * Marked read only once the target has actually opened — a DELIBERATE
-     * divergence from `app/alerts/index.tsx`, which marks read the instant the
-     * row is tapped.
-     *
-     * There the ordering is invisible: a read alert stays in that list, only
-     * losing its unread accent. Here `alertItems` filters on `readAt`, so
-     * marking read REMOVES the row — and `openAlertTargets` may first spend a
-     * whole forced `loadExpenses({ force: true })` round trip resolving the
-     * expense. Marking read up front would delete the row (and with it the
-     * `resolvingId` spinner attached to it) and leave the user looking at
-     * nothing at all for the length of that pull: a dead click on the one
-     * screen built to be worth staying on.
-     */
-    const markHandled = () => {
-      if (canEdit) markRead(alert.id);
-    };
-
-    if (action === 'merge') {
-      const { aId, bId } = mergeTargets(alert);
-      void openAlertTargets(alert, [aId, bId], () => {
-        markHandled();
-        router.push({ pathname: '/expense/merge' as never, params: { aId, bId } });
-      });
-      return;
-    }
-
-    const targetId = alert.expenseId as string;
-    void openAlertTargets(alert, [targetId], () => {
-      const expense = findAlertExpense(targetId);
-      // `openAlertTargets` only calls this once the id resolves, so the guard
-      // is belt-and-braces — but opening a dialog on a missing row would be a
-      // blank modal with no way to explain itself.
-      if (!expense) return;
-      markHandled();
-      setDialogRow({ kind: 'expense', expense });
-    });
   };
 
   /**
@@ -443,9 +326,9 @@ export function AttentionPanel({ canEdit }: Props) {
                     body={body}
                     onPress={action === 'track' || action === 'none'
                       ? undefined
-                      : () => handleAlertPress(item.alert)}
+                      : () => alertTap.onAlertPress(item.alert)}
                     actionLabel={action === 'track' ? t('fatFinder.trackSubscription') : undefined}
-                    onAction={action === 'track' ? () => void handleTrack(item.alert) : undefined}
+                    onAction={action === 'track' ? () => void alertTap.onTrack(item.alert) : undefined}
                     onDismiss={canEdit ? () => dismiss(item.alert.id) : undefined}
                     busy={resolvingId === item.alert.id}
                     stacked={stacked}
@@ -522,15 +405,9 @@ export function AttentionPanel({ canEdit }: Props) {
         </View>
       )}
 
-      {dialogRow && (
-        <ExpenseDialog
-          row={dialogRow}
-          onClose={() => setDialogRow(null)}
-          canEdit={canEdit}
-          isTripAccount={isTripAccount}
-          tripMembers={tripMembers}
-        />
-      )}
+      {/* One line, identical on both alert surfaces: the hook decided every
+          prop in here, trip context included. */}
+      {alertTap.dialogProps && <ExpenseDialog {...alertTap.dialogProps} />}
     </>
   );
 }

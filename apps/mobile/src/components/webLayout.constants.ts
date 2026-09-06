@@ -10,6 +10,20 @@ export const SIDEBAR_WIDTH = 240;
 // Height of the full-width desktop top bar (brand + global controls).
 export const TOP_BAR_HEIGHT = 56;
 export const COLUMN_HORIZONTAL_PADDING = 16;
+/**
+ * `WebTopBar`'s own horizontal padding.
+ *
+ * It lives here rather than only in that file because two panels anchored to
+ * controls IN that bar — the account menu and the alerts inbox — need the same
+ * number to line their right edge up with the trigger that opened them, and
+ * neither may import `WebTopBar`: a child importing its parent would drag the
+ * whole desktop bar into the native graph, which is exactly what
+ * `WebShell.tsx`'s no-op split exists to prevent. Three hand-copied literals
+ * drifting is what breaks that alignment, invisibly and only at one width, so
+ * the shared constants module is the right home — the same role
+ * `DESKTOP_MIN_WIDTH` and `SECOND_RAIL_MIN_WIDTH` already play.
+ */
+export const WEB_TOP_BAR_PADDING_X = 20;
 // Below this, the facet rail collapses to a labelled dropdown in the screen's
 // top bar (design spec decision 6's "1024-1439" regime) — a side rail next to
 // a five-column table doesn't fit in that band. This is a SEPARATE threshold

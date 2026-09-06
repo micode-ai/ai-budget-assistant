@@ -12,21 +12,16 @@ import { useAccountStore } from '@/stores/accountStore';
 import { InvitationCard } from '@/components/alerts/InvitationCard';
 import { renderAlertBody, TYPE_ICON } from '@/features/alerts/alertPresentation';
 import { buildAlertsPanelItems } from '@/features/alerts/alertsPanelItems';
-import { TOP_BAR_HEIGHT } from '@/components/webLayout.constants';
+import { alertAction } from '@/features/dashboard/attentionActions';
+import { useAlertTapThrough } from '@/hooks/useAlertTapThrough';
+import { ExpenseDialog } from '@/components/expenses/desktop/ExpenseDialog';
+import { TOP_BAR_HEIGHT, WEB_TOP_BAR_PADDING_X } from '@/components/webLayout.constants';
 
 /** Only one instance is ever mounted at a time (`WebTopBar` renders it from a
  *  single boolean slot), so a fixed id is safe — same reasoning as
  *  `ExpenseDialog.tsx`'s `TITLE_ID`, just a distinct string. */
 const TITLE_ID = 'alerts-panel-title';
 
-/**
- * `WebTopBar`'s own `paddingHorizontal`, duplicated for the same reason
- * `AccountSwitcher` duplicates it: the real value lives in a
- * `StyleSheet.create` inside `WebTopBar`, and importing that file here would be
- * a child importing its own parent. Keep the three in step — it is what makes
- * this panel's right edge line up with the bell that opened it.
- */
-const WEB_TOP_BAR_PADDING_X = 20;
 
 /**
  * 400, where the account menu is 340.
@@ -68,19 +63,22 @@ interface Props {
  * by the same selector the attention panel uses — see that module for why the
  * ordering is shared rather than re-decided here.
  *
- * ## Alert rows are readable and dismissable, not tappable
+ * ## Tapping a row opens what it references
  *
- * A deliberate limit, and the one place this panel is less than the page it
- * replaces. Opening the expense behind an alert is a ~100-line flow
- * (`openAlertTargets`, a forced `loadExpenses({ force: true })` round trip, an
- * inline spinner, and an `ExpenseDialog` to host the result) which
- * `AttentionPanel` already implements. Addendum 5 lists exactly three things
- * this panel hosts and that flow is not among them, and a second copy of it is
- * the drift this whole desktop layer exists to avoid. So a row shows its title,
- * body and date with an inline dismiss, and "See all" carries anyone who wants
- * the target to the page — which also keeps one interaction model per row,
- * rather than teaching that an invitation resolves in place while its
- * neighbour navigates. Flagged in the task report as the designer's to revisit.
+ * Through `useAlertTapThrough`, the SAME hook the attention panel uses — not a
+ * second copy. That flow resolves the alert's target (an alert deep-links by
+ * the expense's server PK, which a locally-created row may not carry yet, so it
+ * may spend a forced `loadExpenses({ force: true })` round trip and show an
+ * inline spinner), then opens `ExpenseDialog` in place or navigates to the
+ * merge screen, and marks the alert read ONLY once that has succeeded. That
+ * last ordering rule is load-bearing on this surface specifically: the list is
+ * built from `selectUnreadAlerts`, so marking read removes the row, and marking
+ * up front would delete the row and its spinner mid-action. See the hook.
+ *
+ * An inbox whose rows cannot be acted on is half an inbox, and `/alerts` is now
+ * an archive the badge no longer points at — so without this the app's most
+ * attention-demanding control would open a list you can look at and nothing
+ * more.
  *
  * ## It loads on open
  *
@@ -108,6 +106,7 @@ export function AlertsPanel({ onClose }: Props) {
   const respond = useInvitationStore((s) => s.respond);
 
   const canEdit = useAccountStore((s) => s.canEdit());
+  const alertTap = useAlertTapThrough({ canEdit });
 
   useEffect(() => {
     void loadAlerts();
@@ -245,6 +244,18 @@ export function AlertsPanel({ onClose }: Props) {
                     alert={item.alert}
                     canEdit={canEdit}
                     onDismiss={() => void dismiss(item.alert.id)}
+                    onPress={
+                      alertAction(item.alert, canEdit) === 'track' ||
+                      alertAction(item.alert, canEdit) === 'none'
+                        ? undefined
+                        : () => alertTap.onAlertPress(item.alert)
+                    }
+                    onTrack={
+                      alertAction(item.alert, canEdit) === 'track'
+                        ? () => void alertTap.onTrack(item.alert)
+                        : undefined
+                    }
+                    busy={alertTap.resolvingId === item.alert.id}
                   />
                 ),
               )
@@ -257,6 +268,12 @@ export function AlertsPanel({ onClose }: Props) {
           </Pressable>
         </View>
       </div>
+
+      {/* One line, identical on both alert surfaces: the hook decided every
+          prop in here, trip context included. Rendered INSIDE this panel's
+          `Modal` subtree but as its own `Modal`, which react-native-web
+          portals independently of where it is declared. */}
+      {alertTap.dialogProps && <ExpenseDialog {...alertTap.dialogProps} />}
     </Modal>
   );
 }
@@ -266,26 +283,38 @@ export function AlertsPanel({ onClose }: Props) {
  * attention panel and the `/alerts` page render from, so all three quote an
  * alert identically.
  *
- * No chevron, for the reason Addendum 2 gave for the setup checklist: it means
- * "this leaves" everywhere in this app, and this row does not leave. The
- * dismiss button is its only affordance.
+ * `onPress` is absent when the alert has nothing to open (a viewer, or a
+ * `track` row whose own button owns the action) — the row then renders as
+ * plain content with no press feedback, rather than a dead click target. Same
+ * rule `AttentionRow` states for itself.
+ *
+ * No chevron. It means "this leaves" everywhere in this app, and the common
+ * case here opens a dialog in place. (A `possible_merge` row does navigate to
+ * the merge screen — a real screen with real choices — but one row kind is not
+ * worth an affordance that would be a false promise on the other five.)
  */
 function AlertRow({
   alert,
   canEdit,
   onDismiss,
+  onPress,
+  onTrack,
+  busy,
 }: {
   alert: Parameters<typeof renderAlertBody>[0];
   canEdit: boolean;
   onDismiss: () => void;
+  onPress?: () => void;
+  onTrack?: () => void;
+  busy: boolean;
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { title, body } = renderAlertBody(alert, t);
 
-  return (
-    <View style={styles.row}>
+  const content = (
+    <>
       <View style={styles.rowIcon}>
         <Ionicons
           name={TYPE_ICON[alert.type] || 'alert-circle-outline'}
@@ -302,19 +331,39 @@ function AlertRow({
             month: 'short',
           })}
         </Text>
+        {onTrack && (
+          <Pressable onPress={onTrack} accessibilityRole="button" style={styles.trackButton}>
+            <Text style={styles.trackButtonText}>{t('fatFinder.trackSubscription')}</Text>
+          </Pressable>
+        )}
       </View>
-      {canEdit && (
-        <Pressable
-          onPress={onDismiss}
-          accessibilityRole="button"
-          accessibilityLabel={t('common.delete')}
-          style={styles.iconButton}
-          hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-        >
-          <Ionicons name="close" size={16} color={theme.colors.textTertiary} />
-        </Pressable>
+      {/* The spinner replaces the dismiss button while a forced expense pull
+          is in flight — the row must stay on screen and stay explained, which
+          is the whole reason `markRead` waits for success. */}
+      {busy ? (
+        <ActivityIndicator size="small" color={theme.colors.primary} style={styles.iconButton} />
+      ) : (
+        canEdit && (
+          <Pressable
+            onPress={onDismiss}
+            accessibilityRole="button"
+            accessibilityLabel={t('common.delete')}
+            style={styles.iconButton}
+            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+          >
+            <Ionicons name="close" size={16} color={theme.colors.textTertiary} />
+          </Pressable>
+        )
       )}
-    </View>
+    </>
+  );
+
+  if (!onPress) return <View style={styles.row}>{content}</View>;
+
+  return (
+    <Pressable onPress={onPress} accessibilityRole="button" style={styles.row}>
+      {content}
+    </Pressable>
   );
 }
 
@@ -429,6 +478,18 @@ const createStyles = (theme: Theme) => ({
   },
   footerText: {
     ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
+  },
+  trackButton: {
+    alignSelf: 'flex-start' as const,
+    marginTop: theme.spacing[2],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.primaryLight,
+  },
+  trackButtonText: {
+    ...theme.textStyles.caption,
     color: theme.colors.primary,
   },
 });

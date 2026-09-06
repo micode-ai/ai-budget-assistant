@@ -19,16 +19,8 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, Currency } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES, getCurrencySymbol } from '@budget/shared-utils';
 import { useAuthStore } from '@/stores/authStore';
-import { TOP_BAR_HEIGHT } from '@/components/webLayout.constants';
+import { TOP_BAR_HEIGHT, WEB_TOP_BAR_PADDING_X } from '@/components/webLayout.constants';
 
-/**
- * `WebTopBar`'s own `paddingHorizontal`. Duplicated as a named constant rather
- * than imported, because that value lives in a `StyleSheet.create` inside a
- * web-only file this shared component must not import — pulling `WebTopBar`
- * in here would put the whole desktop bar into the native graph, the exact
- * thing `WebShell.tsx`'s split exists to prevent. Keep the two in step.
- */
-const WEB_TOP_BAR_PADDING_X = 20;
 
 const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = {
   personal: 'person-outline',
@@ -358,9 +350,9 @@ function MenuScrim({
         justifyContent: 'flex-start',
         // Clears the bar rather than the magic `60` the mobile overlay uses.
         paddingTop: TOP_BAR_HEIGHT + 4,
-        // Equal to `WebTopBar`'s own `paddingHorizontal`, so the panel's right
-        // edge lines up with the trigger that opened it. A known constant, so
-        // no measurement and no positioning math.
+        // The bar's own horizontal padding, so the panel's right edge lines
+        // up with the trigger that opened it. A shared constant, so no
+        // measurement and no positioning math — and no third copy to drift.
         paddingRight: WEB_TOP_BAR_PADDING_X,
         backgroundColor: theme.colors.overlay,
       }}

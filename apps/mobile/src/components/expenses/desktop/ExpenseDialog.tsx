@@ -23,7 +23,13 @@ import type { LedgerRow } from '@/features/expenses/desktopTable';
  *  open), so a fixed id is safe — no `useId()` needed. */
 const TITLE_ID = 'expense-dialog-title';
 
-interface Props {
+/**
+ * Exported so `useAlertTapThrough` can hand a caller a ready-made prop bundle
+ * without restating this shape — the hook decides every value in it (trip
+ * context included), the call site only instantiates the element. A type-only
+ * import, so nothing about the runtime graph changes.
+ */
+export interface ExpenseDialogProps {
   row: LedgerRow;
   onClose: () => void;
   canEdit: boolean;
@@ -111,7 +117,7 @@ export function ExpenseDialog({
   isTripAccount = false,
   tripMembers = [],
   initialEditing = false,
-}: Props) {
+}: ExpenseDialogProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
