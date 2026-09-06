@@ -529,7 +529,7 @@ function RootNavigator() {
           name="settings/change-email"
           options={{
             headerShown: true,
-            title: t('changeEmail.title'),
+            title: t('settings.changeEmail.title'),
           }}
         />
         <Stack.Screen

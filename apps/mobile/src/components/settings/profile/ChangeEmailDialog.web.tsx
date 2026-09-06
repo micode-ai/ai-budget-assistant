@@ -83,10 +83,10 @@ interface Props {
  * copy of the step state. Same situation and same answer as `SetBalanceDialog`:
  * the header holds the close button alone, and the accessible name comes from
  * `aria-label` rather than `aria-labelledby`, since there is no header text
- * node to point at. (`app/_layout.tsx` gives the route a stack title, but it
- * asks for `changeEmail.title`, which does not exist — the key is
- * `settings.changeEmail.title`, used here. The route's own header is a
- * pre-existing bug, untouched by this work.)
+ * node to point at. (`app/_layout.tsx` gives the route a stack title from the
+ * same `settings.changeEmail.title` used here. It asked for `changeEmail.title`
+ * until this branch — a key that exists in no locale, so the phone rendered
+ * the raw string as a header.)
  */
 export function ChangeEmailDialog({ onClose }: Props) {
   const { t } = useTranslation();
