@@ -1,10 +1,16 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { View, ScrollView, useWindowDimensions } from 'react-native';
 import { useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { useHomeScreenData } from '@/hooks/useHomeScreenData';
+import { useWebFirstRun } from '@/hooks/useWebFirstRun';
 import { SafeToSpendSheet } from '@/components/home/SafeToSpendSheet';
 import { SECOND_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
+import { isSetupComplete, resolveSetupSteps } from '@/features/onboarding/resolveSetupSteps';
+import { useBudgetStore } from '@/stores/budgetStore';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
+import { useFirstRunStore } from '@/stores/firstRunStore';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FocusColumn } from './FocusColumn';
 import { DashboardRail } from './DashboardRail';
@@ -36,12 +42,20 @@ import { DashboardRail } from './DashboardRail';
  * quick-list (`DashboardRail`'s `RailQuickActions`) replaces the strip.
  * `HomeQuickActionStrip.tsx` itself is untouched — it simply isn't part of
  * this tree.
+ *
+ * **Three states, not one** (`useWebFirstRun`): a bounded loading state while
+ * the transaction pulls are unanswered, the first-run state for a genuinely
+ * new account, and the ordinary dashboard. Both columns take the same
+ * `firstRunView` value, so they can never disagree about which one is being
+ * drawn.
  */
 export function DashboardDesktop() {
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
   const showSecondRail = width >= SECOND_RAIL_MIN_WIDTH;
+
+  const { view: firstRunView, pullAnswered, skip: skipFirstRun } = useWebFirstRun();
 
   const {
     canEdit,
@@ -69,6 +83,61 @@ export function DashboardDesktop() {
     hasSafeToSpend,
     rates,
   } = useHomeScreenData();
+
+  // Checklist inputs. `expenses`/`incomes` are not on `useHomeScreenData`'s
+  // return, so they are read here directly — the same two stores it already
+  // subscribes to through `hydrateTransactions`.
+  const expenseCount = useExpenseStore((s) => s.expenses.length);
+  const incomeCount = useIncomeStore((s) => s.incomes.length);
+  const budgets = useBudgetStore((s) => s.budgets);
+  const checklistDismissed = useFirstRunStore((s) => s.checklistDismissed);
+  const dismissChecklist = useFirstRunStore((s) => s.dismissChecklist);
+
+  // ANY active budget, not `monthlyBudgetSummary.budgetCount`, which filters
+  // `period === 'monthly'`. The row says "Create Budget" and says nothing
+  // about a period, so counting monthly-only left a user whose single budget
+  // is weekly or yearly staring at an instruction they had already followed,
+  // on a row they could never tick. This is the identical filter
+  // `useFinancialHealthScore` applies for its own budget-adherence component
+  // — the component this step exists to unblock — so the tick and the score
+  // cannot disagree about what counts.
+  const activeBudgetCount = useMemo(
+    () => budgets.filter((b) => b.isActive && !b.isDeleted).length,
+    [budgets],
+  );
+
+  const setupSteps = useMemo(
+    () =>
+      resolveSetupSteps({
+        expenseCount,
+        incomeCount,
+        walletCurrencyCount: walletSummary.length,
+        budgetCount: activeBudgetCount,
+      }),
+    [expenseCount, incomeCount, walletSummary.length, activeBudgetCount],
+  );
+
+  // All three steps go to `isSetupComplete`, never a pre-filtered list —
+  // `[].every(...)` is `true`, so filtering the done ones out first would
+  // report a fresh account as fully set up and hide the card exactly when it
+  // is most useful.
+  //
+  // `pullAnswered` is the third condition and it is doing real work: after the
+  // wait bound elapses the view becomes `'dashboard'` with the server still
+  // silent, and a checklist derived from counts nobody has confirmed would
+  // tell an established, fully-configured user to add their first transaction.
+  //
+  // `canEdit` for the same reason `RailQuickActions` is gated on it: every row
+  // navigates to a write screen a viewer is blocked from server-side, so the
+  // card would be a list of three things they cannot do. The first-run rail
+  // needs no such check — `resolveWebFirstRun` already suppresses the whole
+  // state for a viewer.
+  const showChecklist =
+    firstRunView === 'dashboard' &&
+    canEdit &&
+    pullAnswered &&
+    !checklistDismissed &&
+    !isSetupComplete(setupSteps);
 
   const widgetCtx: HomeWidgetContext = {
     widgetVisibility,
@@ -101,12 +170,25 @@ export function DashboardDesktop() {
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
         <View style={styles.layout}>
           <View style={styles.focusColumn}>
-            <FocusColumn ctx={widgetCtx} onOpenSafeToSpend={() => setSafeToSpendSheetVisible(true)} />
+            <FocusColumn
+              ctx={widgetCtx}
+              onOpenSafeToSpend={() => setSafeToSpendSheetVisible(true)}
+              firstRunView={firstRunView}
+              onSkipFirstRun={skipFirstRun}
+            />
           </View>
           {/* No sizing wrapper here (round 6) — `DashboardRail` renders its
               own 300px column(s) and owns their width entirely, whether one
               or two are shown. */}
-          <DashboardRail ctx={widgetCtx} widgetOrder={widgetOrder} secondRailVisible={showSecondRail} />
+          <DashboardRail
+            ctx={widgetCtx}
+            widgetOrder={widgetOrder}
+            secondRailVisible={showSecondRail}
+            firstRunView={firstRunView}
+            setupSteps={setupSteps}
+            showChecklist={showChecklist}
+            onDismissChecklist={dismissChecklist}
+          />
         </View>
       </ScrollView>
 

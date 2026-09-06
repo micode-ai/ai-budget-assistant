@@ -4,7 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { InvestmentCard, renderHomeWidget } from '@/components/home/HomeWidgetSwitch';
+import { SetupChecklist } from '@/components/home/SetupChecklist';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
+import type { SetupStep } from '@/features/onboarding/resolveSetupSteps';
+import type { FirstRunView } from '@/features/onboarding/webFirstRunView';
 import type { WidgetKey } from '@/stores/widgetVisibilityStore';
 
 /** Fixed rail COLUMN width (`docs/design/2026-09-05-dashboard-web.md`'s
@@ -35,6 +38,20 @@ interface DashboardRailProps {
    *  of one. Owns its own root element's width either way, so
    *  `DashboardDesktop` no longer wraps this component in a sizing `View`. */
   secondRailVisible: boolean;
+  /** Which dashboard state to draw — see `FocusColumn`'s matching prop. */
+  firstRunView: FirstRunView;
+  /** All three, from `resolveSetupSteps`, ticks included. */
+  setupSteps: SetupStep[];
+  /**
+   * Whether to render the checklist in the ORDINARY rail. Decided by
+   * `DashboardDesktop` (outstanding steps, not dismissed, and built on an
+   * answered pull) rather than here, so this component holds no opinion
+   * about what "done" means. The FIRST-RUN rail renders it regardless — in
+   * that state every step is outstanding by definition.
+   */
+  showChecklist: boolean;
+  /** Persists the dismissal. Only ever wired in the ordinary rail. */
+  onDismissChecklist: () => void;
 }
 
 /**
@@ -72,9 +89,54 @@ interface DashboardRailProps {
  * scrollbar keeps moving. With two rail columns this can now be true of
  * either rail column independently — neither is padded to match the other.
  */
-export function DashboardRail({ ctx, widgetOrder, secondRailVisible }: DashboardRailProps) {
+export function DashboardRail({
+  ctx,
+  widgetOrder,
+  secondRailVisible,
+  firstRunView,
+  setupSteps,
+  showChecklist,
+  onDismissChecklist,
+}: DashboardRailProps) {
   const { canEdit, currentAccountType, investmentSummary } = ctx;
   const styles = useStyles(createStyles);
+
+  // Loading: the rail is empty, but its column(s) are still rendered, so the
+  // focus column beside them is exactly as wide as it will be a moment later
+  // and the spinner does not jump sideways when the answer arrives.
+  if (firstRunView === 'wait') {
+    return secondRailVisible ? (
+      <View style={styles.twoRailWrapper}>
+        <View style={styles.rail} />
+        <View style={styles.rail} />
+      </View>
+    ) : (
+      <View style={styles.rail} />
+    );
+  }
+
+  // First run: one card, and the fixed quick-action list is HIDDEN. A
+  // "+ Expense" button beside a 2x2 grid whose third card is "Type it
+  // manually" is the same action offered twice, two hundred pixels apart.
+  // No dismiss control either — this state ends on its own the moment a
+  // transaction lands, so there is nothing to dismiss.
+  if (firstRunView === 'first-run') {
+    return secondRailVisible ? (
+      <View style={styles.twoRailWrapper}>
+        <View style={styles.rail}>
+          <SetupChecklist steps={setupSteps} />
+        </View>
+        {/* Empty on purpose (the spec's own wireframe): there are no widgets
+            to put here yet, and keeping the column preserves the focus
+            column's width across the transition out of this state. */}
+        <View style={styles.rail} />
+      </View>
+    ) : (
+      <View style={styles.rail}>
+        <SetupChecklist steps={setupSteps} />
+      </View>
+    );
+  }
 
   // De-dupe exactly like `DashboardMobile` — a duplicate key in the stored
   // order would render the same widget twice (doubled card + broken modal).
@@ -96,6 +158,14 @@ export function DashboardRail({ ctx, widgetOrder, secondRailVisible }: Dashboard
 
   const fixedTop = (
     <>
+      {/* The checklist outlives the first-run state: once that ends it sits at
+          the TOP of the ordinary rail — above the quick actions — and stays
+          while any step is outstanding, then disappears on its own. It takes
+          no `WidgetKey` and no slot, exactly as `InvestmentCard` already
+          does. This is what covers the user who adds one expense and never
+          sets a wallet balance: their Safe to Spend reads 0,00 for ever and
+          nothing else on the screen says why. */}
+      {showChecklist && <SetupChecklist steps={setupSteps} onDismiss={onDismissChecklist} />}
       {canEdit && <RailQuickActions />}
       {investmentEl}
     </>

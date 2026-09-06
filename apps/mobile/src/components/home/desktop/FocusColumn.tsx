@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -12,11 +12,25 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { resolveMonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
+import type { FirstRunView } from '@/features/onboarding/webFirstRunView';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
+import { FirstRunPanel } from './FirstRunPanel';
 
 interface FocusColumnProps {
   ctx: HomeWidgetContext;
   onOpenSafeToSpend: () => void;
+  /**
+   * Which of the three dashboard states to draw. `'dashboard'` is the whole
+   * of this component's pre-existing behaviour, unchanged; the other two
+   * replace the five slots entirely.
+   *
+   * Required rather than optional, and deliberately so: `DashboardDesktop` is
+   * the only caller, and a default would let a future second caller silently
+   * opt out of the state machine.
+   */
+  firstRunView: FirstRunView;
+  /** Passed through to `FirstRunPanel`'s skip link. */
+  onSkipFirstRun: () => void;
 }
 
 /**
@@ -46,7 +60,12 @@ interface FocusColumnProps {
  * spec adds" per the design, because a blank focus column is the worst
  * failure this layout has (it's the first thing shown after signing in).
  */
-export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
+export function FocusColumn({
+  ctx,
+  onOpenSafeToSpend,
+  firstRunView,
+  onSkipFirstRun,
+}: FocusColumnProps) {
   const { widgetVisibility, monthlyBudgetSummary, safeToSpendData, hasSafeToSpend, widgetRefreshKey } = ctx;
 
   const { budgets, getBudgetProgress } = useBudgetStore();
@@ -104,6 +123,16 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
   // prompt to add one).
   const showWallets = widgetVisibility.wallets;
 
+  // The three states, ahead of the visibility branches below. Both of these
+  // replace the whole column rather than sitting above it: the spec's own
+  // rule is "no mock data anywhere", and a real widget reporting absence
+  // beside an invitation to add the first thing is exactly the nine-empty-
+  // cards reading this state exists to stop. Placed after every hook above,
+  // never before one — an early return that changes the hook count would
+  // crash on a browser resize across a width threshold.
+  if (firstRunView === 'wait') return <FocusColumnLoading />;
+  if (firstRunView === 'first-run') return <FirstRunPanel onSkip={onSkipFirstRun} />;
+
   if (!showHero && !showIncomeExpenses && !showMonthlyBudget && !showWallets) {
     return <FocusColumnEmptyState />;
   }
@@ -125,6 +154,27 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
       {showIncomeExpenses && <IncomeExpensesCard ctx={ctx} showCounts />}
       {showMonthlyBudget && <MonthlyBudgetCard ctx={ctx} segments={segments} />}
       {showWallets && <WalletsSection ctx={ctx} />}
+    </View>
+  );
+}
+
+/**
+ * The loading state, and the one this screen must never skip: on web a failed
+ * pull is indistinguishable from an empty account, so rendering the ordinary
+ * (empty) dashboard while the request is still in flight is what makes an
+ * offline first paint look like a brand-new account. One centred spinner, and
+ * the rail is empty beside it.
+ *
+ * It is bounded — see `FIRST_RUN_WAIT_TIMEOUT_MS`; after that the ordinary
+ * dashboard is drawn rather than this spinner staying up for ever.
+ */
+function FocusColumnLoading() {
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+
+  return (
+    <View style={styles.loading}>
+      <ActivityIndicator size="large" color={theme.colors.primary} />
     </View>
   );
 }
@@ -155,6 +205,11 @@ function FocusColumnEmptyState() {
 }
 
 const createStyles = (theme: Theme) => ({
+  loading: {
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[20],
+  },
   emptyCard: {
     alignItems: 'center' as const,
     backgroundColor: theme.colors.surface,

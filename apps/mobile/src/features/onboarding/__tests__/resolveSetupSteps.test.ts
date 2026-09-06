@@ -23,7 +23,7 @@ const nothingDone: SetupStepsInputs = {
   expenseCount: 0,
   incomeCount: 0,
   walletCurrencyCount: 0,
-  monthlyBudgetCount: 0,
+  budgetCount: 0,
 };
 
 const byId = (i: SetupStepsInputs) =>
@@ -59,7 +59,7 @@ describe('resolveSetupSteps', () => {
       // expressions swapped). Each row must read its own input and only its
       // own — a checklist whose rows tick each other teaches nothing.
       expect(
-        byId({ ...nothingDone, walletCurrencyCount: 3, monthlyBudgetCount: 2 }).transaction,
+        byId({ ...nothingDone, walletCurrencyCount: 3, budgetCount: 2 }).transaction,
       ).toBe(false);
     });
   });
@@ -87,14 +87,27 @@ describe('resolveSetupSteps', () => {
   });
 
   describe('step 3 — create a budget', () => {
-    it('is done once an active monthly budget exists', () => {
-      // Breaks if: `monthlyBudgetCount > 0` is dropped or hard-coded false.
-      expect(byId({ ...nothingDone, monthlyBudgetCount: 1 }).budget).toBe(true);
+    it('is done once ANY active budget exists', () => {
+      // Breaks if: `budgetCount > 0` is dropped or hard-coded false.
+      expect(byId({ ...nothingDone, budgetCount: 1 }).budget).toBe(true);
     });
 
-    it('is not done with no monthly budget', () => {
+    it('is not done with no budget at all', () => {
       // Breaks if: the comparison becomes `>= 0`.
       expect(byId(nothingDone).budget).toBe(false);
+    });
+
+    it('counts a budget of any period, not monthly only', () => {
+      // Breaks if: a caller is re-wired to `monthlyBudgetSummary.budgetCount`
+      // (which filters `period === 'monthly'`) or a period filter is
+      // reintroduced here. This function must not know about periods at all:
+      // the row says "Create Budget", so a user whose only budget is weekly
+      // or yearly would otherwise be told to do something already done, on a
+      // row they can never tick.
+      expect(Object.keys(nothingDone)).not.toContain('monthlyBudgetCount');
+      // One yearly budget is one active budget as far as this rule is
+      // concerned — the caller counts `isActive && !isDeleted` and nothing else.
+      expect(byId({ ...nothingDone, budgetCount: 1 }).budget).toBe(true);
     });
   });
 
@@ -107,7 +120,7 @@ describe('resolveSetupSteps', () => {
         expenseCount: 1,
         incomeCount: 0,
         walletCurrencyCount: 1,
-        monthlyBudgetCount: 0,
+        budgetCount: 0,
       });
       expect(steps).toHaveLength(3);
       expect(steps.map((s) => s.done)).toEqual([true, true, false]);
@@ -181,7 +194,7 @@ describe('isSetupComplete', () => {
       expenseCount: 1,
       incomeCount: 0,
       walletCurrencyCount: 0,
-      monthlyBudgetCount: 1,
+      budgetCount: 1,
     });
     expect(isSetupComplete(steps)).toBe(false);
   });
@@ -193,7 +206,7 @@ describe('isSetupComplete', () => {
       expenseCount: 1,
       incomeCount: 1,
       walletCurrencyCount: 2,
-      monthlyBudgetCount: 1,
+      budgetCount: 1,
     });
     expect(isSetupComplete(steps)).toBe(true);
   });

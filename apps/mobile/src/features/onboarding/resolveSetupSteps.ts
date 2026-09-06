@@ -39,8 +39,17 @@ export interface SetupStepsInputs {
    * Wallets stop saying nothing, and the honest fix for the 0,00 reading.
    */
   walletCurrencyCount: number;
-  /** `monthlyBudgetSummary.budgetCount` — active monthly budgets only. */
-  monthlyBudgetCount: number;
+  /**
+   * The count of ALL active budgets on the account (`isActive && !isDeleted`),
+   * NOT `monthlyBudgetSummary.budgetCount`, which filters `period ===
+   * 'monthly'`. The row's label is `budgets.createBudget` ("Create Budget"),
+   * which says nothing about a period — so counting monthly-only told a user
+   * whose single budget is weekly or yearly to do something they had already
+   * done, on a row they could never tick. The set counted here is exactly the
+   * set `useFinancialHealthScore` counts for its own budget-adherence
+   * component, which is the component this step exists to unblock.
+   */
+  budgetCount: number;
 }
 
 /**
@@ -56,7 +65,7 @@ export function resolveSetupSteps({
   expenseCount,
   incomeCount,
   walletCurrencyCount,
-  monthlyBudgetCount,
+  budgetCount,
 }: SetupStepsInputs): SetupStep[] {
   return [
     {
@@ -84,7 +93,7 @@ export function resolveSetupSteps({
     },
     {
       id: 'budget',
-      done: monthlyBudgetCount > 0,
+      done: budgetCount > 0,
       titleKey: 'budgets.createBudget',
       hintKey: 'budgets.createHint',
       route: '/budget/new',
