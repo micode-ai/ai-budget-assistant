@@ -629,7 +629,7 @@ export default {
   },
   dashboardDesktop: {
     focusEmptyTitle: 'Twój główny widok jest wyłączony',
-    focusEmptyBody: 'Włącz {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} lub {{monthlyBudget}}, aby zobaczyć to tutaj.',
+    focusEmptyBody: 'Włącz {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} lub {{wallets}}, aby zobaczyć to tutaj.',
     manageWidgets: 'Zarządzaj widżetami',
   },
   validation: {

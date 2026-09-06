@@ -1,19 +1,13 @@
 import { useState } from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, useWindowDimensions } from 'react-native';
 import { useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { useHomeScreenData } from '@/hooks/useHomeScreenData';
 import { SafeToSpendSheet } from '@/components/home/SafeToSpendSheet';
+import { SECOND_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FocusColumn } from './FocusColumn';
 import { DashboardRail } from './DashboardRail';
-
-/**
- * Fixed rail width (`docs/design/2026-09-05-dashboard-web.md`'s wireframe:
- * "~300px, fixed"). Kept local rather than added to `webLayout.constants.ts`
- * — no other screen currently needs it.
- */
-const RAIL_WIDTH = 300;
 
 /**
  * Desktop web dashboard (`docs/design/2026-09-05-dashboard-web.md`). A fluid
@@ -28,6 +22,14 @@ const RAIL_WIDTH = 300;
  * **Pull-to-refresh is dropped, with no substitute** — same precedent as
  * `ExpensesDesktop`/`BudgetsDesktop`, both of which drop `onRefresh` too.
  *
+ * **Round 6 added a second rail column** at/above `SECOND_RAIL_MIN_WIDTH`
+ * (`webLayout.constants.ts`) — `DashboardRail` now owns deciding and sizing
+ * how many physical rail columns to render (see its own doc comment for the
+ * row-major split); this component only computes and passes the boolean
+ * that decides which regime applies, via the same `useWindowDimensions()`
+ * pattern `ExpensesDesktop`/`AnalyticsDesktop` already use for their own
+ * width-conditional regimes (`FACET_RAIL_MIN_WIDTH`/`isWideGrid`).
+ *
  * **The orange hero and the quick-action strip are retired here.**
  * `WebTopBar` (mounted by `WebShell`, above this component in the tree)
  * already carries account/currency/alerts/settings; the rail's own fixed
@@ -38,6 +40,8 @@ const RAIL_WIDTH = 300;
 export function DashboardDesktop() {
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
   const styles = useStyles(createStyles);
+  const { width } = useWindowDimensions();
+  const showSecondRail = width >= SECOND_RAIL_MIN_WIDTH;
 
   const {
     canEdit,
@@ -99,9 +103,10 @@ export function DashboardDesktop() {
           <View style={styles.focusColumn}>
             <FocusColumn ctx={widgetCtx} onOpenSafeToSpend={() => setSafeToSpendSheetVisible(true)} />
           </View>
-          <View style={styles.rail}>
-            <DashboardRail ctx={widgetCtx} widgetOrder={widgetOrder} />
-          </View>
+          {/* No sizing wrapper here (round 6) — `DashboardRail` renders its
+              own 300px column(s) and owns their width entirely, whether one
+              or two are shown. */}
+          <DashboardRail ctx={widgetCtx} widgetOrder={widgetOrder} secondRailVisible={showSecondRail} />
         </View>
       </ScrollView>
 
@@ -145,9 +150,5 @@ const createStyles = (theme: Theme) => ({
   focusColumn: {
     flex: 1,
     minWidth: 0,
-  },
-  rail: {
-    width: RAIL_WIDTH,
-    flexShrink: 0,
   },
 });

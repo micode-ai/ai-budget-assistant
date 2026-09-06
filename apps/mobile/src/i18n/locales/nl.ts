@@ -625,7 +625,7 @@ export default {
   },
   dashboardDesktop: {
     focusEmptyTitle: 'Je hoofdweergave staat uit',
-    focusEmptyBody: 'Zet {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} of {{monthlyBudget}} aan om het hier te zien.',
+    focusEmptyBody: 'Zet {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} of {{wallets}} aan om het hier te zien.',
     manageWidgets: 'Widgets beheren',
   },
   validation: {

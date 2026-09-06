@@ -625,7 +625,7 @@ export default {
   },
   dashboardDesktop: {
     focusEmptyTitle: 'Your main view is turned off',
-    focusEmptyBody: 'Turn on {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} or {{monthlyBudget}} to see it here.',
+    focusEmptyBody: 'Turn on {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} or {{wallets}} to see it here.',
     manageWidgets: 'Manage widgets',
   },
   validation: {

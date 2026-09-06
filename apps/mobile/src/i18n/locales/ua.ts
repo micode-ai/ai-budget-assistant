@@ -629,7 +629,7 @@ export default {
   },
   dashboardDesktop: {
     focusEmptyTitle: 'Ваш головний екран вимкнено',
-    focusEmptyBody: 'Увімкніть {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} або {{monthlyBudget}}, щоб побачити це тут.',
+    focusEmptyBody: 'Увімкніть {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} або {{wallets}}, щоб побачити це тут.',
     manageWidgets: 'Керування віджетами',
   },
   validation: {

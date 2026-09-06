@@ -627,7 +627,7 @@ export default {
   },
   dashboardDesktop: {
     focusEmptyTitle: 'Ваш галоўны экран адключаны',
-    focusEmptyBody: 'Уключыце {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} або {{monthlyBudget}}, каб убачыць гэта тут.',
+    focusEmptyBody: 'Уключыце {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} або {{wallets}}, каб убачыць гэта тут.',
     manageWidgets: 'Кіраванне віджэтамі',
   },
   validation: {

@@ -7,6 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { NetProfitWidget } from '@/components/widgets';
 import { IncomeExpensesCard } from '@/components/home/widgets/IncomeExpensesCard';
 import { MonthlyBudgetCard } from '@/components/home/widgets/MonthlyBudgetCard';
+import { WalletsSection } from '@/components/home/widgets/WalletsSection';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -19,22 +20,31 @@ interface FocusColumnProps {
 }
 
 /**
- * Desktop web's fixed three-slot "lead story" (`docs/design/2026-09-05-
- * dashboard-web.md`'s "The focus column") — hero (Safe-to-Spend + Net
- * Profit), Income & Expenses, Monthly Budget, top to bottom, in that FIXED
- * order regardless of `widgetOrder` (see the design's "A consequence worth
- * stating outright" — only visibility, not position, is user-driven for
- * these four keys on desktop). This is ordinary top-to-bottom flow, not a
- * promotion algorithm: there is no code that decides "since the hero is
- * hidden, promote X into its place" — whatever slot is next in this fixed
- * template simply becomes the first thing shown.
+ * Desktop web's fixed FIVE-slot "lead story" (`docs/design/2026-09-05-
+ * dashboard-web.md`'s "The focus column", originally three; round 4 added
+ * nothing here, round 6 added `wallets` as a fifth slot) — hero
+ * (Safe-to-Spend + Net Profit), Income & Expenses, Monthly Budget, Wallet
+ * Balances, top to bottom, in that FIXED order regardless of `widgetOrder`
+ * (see the design's "A consequence worth stating outright" — only
+ * visibility, not position, is user-driven for these five keys on desktop;
+ * round 6 is the SAME rule extended to a fifth key, not a new one — the
+ * cost is now five keys ignore the user's stored order instead of four).
+ * `wallets` moved here from the rail because at the rail's fixed ~300px its
+ * currency chips scrolled horizontally out of view — the focus column is
+ * wide enough that they fit without a scroller. This is ordinary
+ * top-to-bottom flow, not a promotion algorithm: there is no code that
+ * decides "since the hero is hidden, promote X into its place" — whatever
+ * slot is next in this fixed template simply becomes the first thing shown.
  *
  * Each slot is independently visible only when its backing widget(s) are
- * visible AND have something to show. When all three collapse, this renders
- * one centred empty state instead of a blank column beside a populated rail
- * — "the one genuinely new empty state this spec adds" per the design,
- * because a blank focus column is the worst failure this layout has (it's
- * the first thing shown after signing in).
+ * visible AND have something to show (`wallets` always has something to
+ * show — `WalletsSection` renders its own empty state when there are no
+ * balances, the same "has something to show" gate `renderHomeWidget`'s
+ * `'wallets'` case already uses for the rail, unchanged here). When all
+ * five collapse, this renders one centred empty state instead of a blank
+ * column beside a populated rail — "the one genuinely new empty state this
+ * spec adds" per the design, because a blank focus column is the worst
+ * failure this layout has (it's the first thing shown after signing in).
  */
 export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
   const { widgetVisibility, monthlyBudgetSummary, safeToSpendData, hasSafeToSpend, widgetRefreshKey } = ctx;
@@ -88,8 +98,13 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
   // already uses on mobile — kept identical so the two platforms never
   // disagree about whether this card has content.
   const showMonthlyBudget = widgetVisibility.monthlyBudget && monthlyBudgetSummary.budgetCount > 0;
+  // Same gate `renderHomeWidget`'s `'wallets'` case uses for the rail —
+  // visibility alone, no "has balances" check, because `WalletsSection`
+  // always renders something (a real balance grid or its own empty-state
+  // prompt to add one).
+  const showWallets = widgetVisibility.wallets;
 
-  if (!showHero && !showIncomeExpenses && !showMonthlyBudget) {
+  if (!showHero && !showIncomeExpenses && !showMonthlyBudget && !showWallets) {
     return <FocusColumnEmptyState />;
   }
 
@@ -109,6 +124,7 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
       )}
       {showIncomeExpenses && <IncomeExpensesCard ctx={ctx} showCounts />}
       {showMonthlyBudget && <MonthlyBudgetCard ctx={ctx} segments={segments} />}
+      {showWallets && <WalletsSection ctx={ctx} />}
     </View>
   );
 }
@@ -128,6 +144,7 @@ function FocusColumnEmptyState() {
           netProfit: t('dashboard.netProfit'),
           incomeExpenses: t('settings.widget.incomeExpenses'),
           monthlyBudget: t('dashboard.monthlyBudget'),
+          wallets: t('settings.widget.wallets'),
         })}
       </Text>
       <TouchableOpacity onPress={() => router.push('/settings/widgets')} activeOpacity={0.7} accessibilityRole="button">

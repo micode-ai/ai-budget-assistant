@@ -625,7 +625,7 @@ export default {
   },
   dashboardDesktop: {
     focusEmptyTitle: 'Votre vue principale est désactivée',
-    focusEmptyBody: 'Activez {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} ou {{monthlyBudget}} pour le voir ici.',
+    focusEmptyBody: 'Activez {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} ou {{wallets}} pour le voir ici.',
     manageWidgets: 'Gérer les widgets',
   },
   validation: {

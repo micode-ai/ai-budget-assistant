@@ -16,6 +16,12 @@ export const COLUMN_HORIZONTAL_PADDING = 16;
 // from DESKTOP_MIN_WIDTH: 1024-1439 is still "desktop", just the one regime
 // where the layout concedes.
 export const FACET_RAIL_MIN_WIDTH = 1440;
+// Dashboard round 6: a second 300px rail column beside the first, so a
+// wide-enough window shows two standing columns instead of one very long
+// one. At 1920px this yields 40 outer padding + a fluid focus column +
+// 20 gap + 300 + 20 gap + 300 (verified against a real deployed build).
+// Below this, exactly one rail — same as before round 6.
+export const SECOND_RAIL_MIN_WIDTH = 1680;
 
 /** Pure gate — true only on web at desktop width. Native never qualifies. */
 export function isDesktopWeb(width: number): boolean {

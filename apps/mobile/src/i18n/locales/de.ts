@@ -625,7 +625,7 @@ export default {
   },
   dashboardDesktop: {
     focusEmptyTitle: 'Deine Hauptansicht ist ausgeschaltet',
-    focusEmptyBody: 'Aktiviere {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}} oder {{monthlyBudget}}, um es hier zu sehen.',
+    focusEmptyBody: 'Aktiviere {{safeToSpend}}, {{netProfit}}, {{incomeExpenses}}, {{monthlyBudget}} oder {{wallets}}, um es hier zu sehen.',
     manageWidgets: 'Widgets verwalten',
   },
   validation: {
