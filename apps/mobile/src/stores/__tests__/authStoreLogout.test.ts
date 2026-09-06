@@ -89,6 +89,16 @@ jest.mock('../goalStore', () => {
   return { useGoalStore: { getState: () => state } };
 });
 
+jest.mock('../priceHistoryStore', () => {
+  const state = { reset: jest.fn() };
+  return { usePriceHistoryStore: { getState: () => state } };
+});
+
+jest.mock('../merchantRulesStore', () => {
+  const state = { reset: jest.fn() };
+  return { useMerchantRulesStore: { getState: () => state } };
+});
+
 jest.mock('../../db/investmentRepository', () => ({
   clearAllInvestments: jest.fn().mockResolvedValue(undefined),
 }));
@@ -114,6 +124,8 @@ jest.mock('../firstRunStore', () => {
 
 import { useAuthStore } from '../authStore';
 import { useInflationShieldStore } from '../inflationShieldStore';
+import { usePriceHistoryStore } from '../priceHistoryStore';
+import { useMerchantRulesStore } from '../merchantRulesStore';
 import { secureStorage } from '../../services/secureStorage';
 import { api } from '../../services/api';
 import { unregisterPushNotifications } from '../../services/notifications';
@@ -237,5 +249,23 @@ describe('authStore.logout — restore credential cleanup (ABA-465)', () => {
     await useAuthStore.getState().logout();
 
     expect(useInflationShieldStore.getState().reset).toHaveBeenCalledTimes(1);
+  });
+
+  // Same defect class one row down the list (ABA-511): both of these hold data
+  // the server scopes per account, and neither was in this teardown block, so
+  // signing in as somebody else on the same device showed the previous user's
+  // products and merchant rules. `merchantRulesStore` was the worse of the
+  // two - its `isLoaded` flag is a lazy-load guard, so nothing would have
+  // re-fetched for the new user either.
+  it('resets the account-scoped reference-data caches on sign-out', async () => {
+    mockGetItem.mockImplementation((key: string) => {
+      if (key === 'accessToken') return Promise.resolve('valid-access-token');
+      return Promise.resolve(null);
+    });
+
+    await useAuthStore.getState().logout();
+
+    expect(usePriceHistoryStore.getState().reset).toHaveBeenCalledTimes(1);
+    expect(useMerchantRulesStore.getState().reset).toHaveBeenCalledTimes(1);
   });
 });

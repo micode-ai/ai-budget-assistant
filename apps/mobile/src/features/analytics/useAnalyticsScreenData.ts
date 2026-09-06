@@ -62,7 +62,10 @@ export function useAnalyticsScreenData() {
   useEffect(() => {
     if (!currentAccountId) return;
     hydrateTransactions();
-    usePriceHistoryStore.getState().reset();
+    // No `usePriceHistoryStore.reset()` here: `accountStore` clears that store
+    // at the account boundary now (ABA-511), because Settings -> Products reads
+    // it too and a second component clearing it on `[currentAccountId]` would
+    // fight this one. This effect owns only the refill.
     useAlertStore.getState().clearPriceCheckSummary();
     usePriceHistoryStore.getState().loadPriceHistory();
     // Decorative "found" total shown alongside the inflation index — same

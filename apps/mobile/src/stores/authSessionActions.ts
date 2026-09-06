@@ -20,6 +20,8 @@ import { useInvestmentStore } from './investmentStore';
 import { useInsightsStore } from './insightsStore';
 import { useInflationShieldStore } from './inflationShieldStore';
 import { useGoalStore } from './goalStore';
+import { usePriceHistoryStore } from './priceHistoryStore';
+import { useMerchantRulesStore } from './merchantRulesStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
 import { clearRestoreCredential, isRestoreCredentialAvailable } from '../services/restoreCredentials';
@@ -643,6 +645,14 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // somewhere that the next sign-out path would have to remember to call.
     useInflationShieldStore.getState().reset();
     useGoalStore.getState().reset();
+    // Account-scoped reference data. `accountStore` clears these on an account
+    // switch (ABA-511); sign-out is the other boundary they cross, and it is
+    // the reason the analytics screen's ad-hoc reset could be removed rather
+    // than merely duplicated — without these two lines, signing in as a
+    // different user on the same device would paint the previous user's
+    // products and merchant rules.
+    usePriceHistoryStore.getState().reset();
+    useMerchantRulesStore.getState().reset();
 
     // Clear investment data from SQLite
     await investmentRepo.clearAllInvestments();

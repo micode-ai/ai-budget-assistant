@@ -26,11 +26,17 @@ export default function ProductsSettingsScreen() {
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
   const { products, isLoadingProducts, loadProducts, upsertAlias, deleteAlias, ignoreProduct, mergeProducts, backfillWithAi } =
     usePriceHistoryStore();
 
-  useEffect(() => { loadProducts(); }, []);
+  // Keyed on the account, matching the analytics screen's cadence for the same
+  // store: the list is scoped server-side to `X-Account-Id`, so a switch has to
+  // refill it. `accountStore` has already emptied the store by the time this
+  // runs, so the switch cannot paint the previous account's products while the
+  // fetch is in flight, nor leave them on screen if it fails.
+  useEffect(() => { loadProducts(); }, [currentAccountId]);
 
   // Single rename
   const [editing, setEditing] = useState<ProductListItem | null>(null);

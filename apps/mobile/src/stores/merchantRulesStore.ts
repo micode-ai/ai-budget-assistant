@@ -8,6 +8,14 @@ interface MerchantRulesState {
   loadRules: () => Promise<void>;
   getRuleForMerchant: (merchant: string) => string | null;
   deleteRule: (id: string) => Promise<void>;
+  /**
+   * Cleared by `accountStore` whenever the active account changes. Resetting
+   * `isLoaded` is the load-bearing half: it is a lazy-load guard read by the
+   * merchants screen and by `notificationCapture/captureService`, so leaving
+   * it set would mean nothing ever re-fetches and the previous account's
+   * merchant -> category rules keep being applied under the new one.
+   */
+  reset: () => void;
 }
 
 export const useMerchantRulesStore = create<MerchantRulesState>((set, get) => ({
@@ -39,4 +47,6 @@ export const useMerchantRulesStore = create<MerchantRulesState>((set, get) => ({
       get().loadRules();
     }
   },
+
+  reset: () => set({ rules: [], isLoaded: false }),
 }));

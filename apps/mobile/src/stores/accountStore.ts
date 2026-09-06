@@ -25,6 +25,8 @@ import {
 import { clearAllExpenses } from '@/db/expenseRepository';
 import { clearAllWalletBalances } from '@/db/walletRepository';
 import { clearAllExchanges } from '@/db/currencyExchangeRepository';
+import { usePriceHistoryStore } from './priceHistoryStore';
+import { useMerchantRulesStore } from './merchantRulesStore';
 
 interface AccountState {
   accounts: (Account & { myRole: AccountRole })[];
@@ -73,6 +75,27 @@ interface AccountState {
   isOwner: () => boolean;
   clearError: () => void;
   reset: () => void;
+}
+
+/**
+ * In-memory caches of data the server scopes to `X-Account-Id`, torn down the
+ * moment the active account changes.
+ *
+ * This lives here, at the account boundary, rather than in each screen that
+ * reads one of these stores, for the same reason sign-out tears its stores
+ * down in one block inside `logoutAction`: `priceHistoryStore` is read by both
+ * the analytics screen and Settings -> Products, and two components each
+ * clearing one store on `[currentAccountId]` is how they come to fight over
+ * it in an order that depends on mount timing. Screens keep only the *refill*
+ * half — a load effect keyed on `[currentAccountId]`.
+ *
+ * Called only when the id actually moves to a different account: clearing on a
+ * no-op re-select would empty screens that have no reason to reload, since a
+ * `[currentAccountId]` effect does not re-fire when the value is unchanged.
+ */
+function clearAccountScopedCaches() {
+  usePriceHistoryStore.getState().reset();
+  useMerchantRulesStore.getState().reset();
 }
 
 async function getCurrentUserId(): Promise<string | null> {
@@ -187,11 +210,14 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
   },
 
   switchAccount: async (accountId) => {
-    const { accounts } = get();
+    const { accounts, currentAccountId } = get();
     const account = accounts.find((a) => a.id === accountId);
     if (!account) return;
 
+    const isDifferentAccount = currentAccountId !== accountId;
+
     set({ currentAccountId: accountId });
+    if (isDifferentAccount) clearAccountScopedCaches();
     await secureStorage.setItem('currentAccountId', accountId);
   },
 
@@ -386,6 +412,10 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         isLoading: false,
       });
 
+      // Deleting the account you are on moves the active id without going
+      // through `switchAccount` — same staleness, same teardown.
+      if (currentAccountId === id) clearAccountScopedCaches();
+
       // Update persisted selection if needed
       if (currentAccountId === id && localAccounts[0]) {
         await secureStorage.setItem('currentAccountId', localAccounts[0].id);
@@ -549,6 +579,8 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
       currentAccountId:
         currentAccountId === accountId ? localAccounts[0]?.id || null : currentAccountId,
     });
+
+    if (currentAccountId === accountId) clearAccountScopedCaches();
   },
 
   // Selectors

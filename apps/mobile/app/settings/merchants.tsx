@@ -18,6 +18,7 @@ export default function MerchantsSettingsScreen() {
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
   const canEdit = useAccountStore((s) => s.canEdit());
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const expenses = useExpenseStore((s) => s.expenses);
   const renameMerchant = useExpenseStore((s) => s.renameMerchant);
   const mergeMerchants = useExpenseStore((s) => s.mergeMerchants);
@@ -33,9 +34,12 @@ export default function MerchantsSettingsScreen() {
   const loadRules = useMerchantRulesStore((s) => s.loadRules);
   const deleteRule = useMerchantRulesStore((s) => s.deleteRule);
 
+  // Keyed on the account: the rules are scoped server-side to `X-Account-Id`.
+  // `accountStore` clears `isLoaded` on a switch, so this re-fetches then while
+  // a plain revisit still reads the cache.
   React.useEffect(() => {
     if (!isRulesLoaded) loadRules();
-  }, []);
+  }, [currentAccountId]);
 
   const handleDeleteRule = (id: string, merchant: string) => {
     showAlert(
