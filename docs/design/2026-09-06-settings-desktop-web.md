@@ -343,3 +343,208 @@ No other departures.
 - **Whether keeping panes mounted across selections is right at all**, or whether
   the shell should unmount the previous pane. Unmounting is safer and loses
   scroll position; this spec assumes unmount-on-switch and flags it.
+
+---
+
+# Addendum — the sheets inside panes (2026-09-06)
+
+**Ruling: convert (option 1) — but the unit of work is one shared wrapper, not
+four conversions.**
+
+## Why not option 3
+
+§3 of the design language is explicit: *a detail or a form opens in a centred
+dialog, not a new screen and not a bottom sheet.* Leaving them is keeping a
+standing violation, which is worth doing only if the harm is cosmetic. It is
+not.
+
+On a phone a sheet covers a screen you are **leaving**. In a pane it covers the
+thing you are **editing** — and RNW anchors it to the bottom of the *window*, so
+at 1920×855 a click on a row in the upper-left of a 900px pane produces a
+1920px-wide form at the far bottom of the screen, with the list it came from
+still visible above it. That is a pointer-travel and focus defect, not an odd
+look. It is the same argument that retired the phone hero and the quick-action
+strip from this layer.
+
+## Why not option 2
+
+RNW's `Modal` is a fixed full-viewport overlay. Anchoring it to the pane means
+either hand-rolling an overlay — giving up `role="dialog"`, `aria-modal`, the
+`Esc` handler, the focus trap and focus restoration, every one of which §3 says
+in terms not to hand-roll — or portal work that is a new mechanism on this
+branch for **less** benefit than a centred dialog. It is also worse at 1200,
+where the pane is ~700px: a pane-anchored dialog gets cramped exactly where a
+centred one is unaffected.
+
+## The part that changes the plan: this is not four sheets
+
+I checked the population. It is ~10, and **the sheet→dialog swap is already
+hand-written twice**: `SafeToSpendSheet` (an `if (desktop)` branch at line 125)
+and `FinancialHealthWidget`, both shipped and verified. Converting four more one
+at a time makes six copies of one idea, and the sixth will drift from the first
+— the same triplication I found in the rail widget headers.
+
+So build **one `SheetDialog`** that owns the `Modal`, the scrim, the sheet
+chrome and the centred-dialog chrome. Each sheet swaps only its chrome; every
+form body is untouched.
+
+**It decides internally with `useIsDesktopWeb()`, not a `desktop?` prop.** Every
+call site would pass the same value, and a prop that must be remembered at ten
+call sites is a prop that will be forgotten at one. `useIsDesktopWeb()` is
+`false` on native at every width, so the mobile branch is today's sheet by
+construction.
+
+**It also closes a documented recurring bug.** Eight sheets have already needed
+the same hand-copied `paddingBottom: <base> + insets.bottom` fix, because a
+bottom-anchored sheet's last row lands under the system navigation bar. A shared
+wrapper owns that inset in one place, so the ninth sheet cannot reintroduce it.
+That, not the desktop look, is the strongest reason this is worth a round.
+
+## Scope of the round
+
+**Convert:** the four wave-3 sheets (categories ×1, merchants ×1, products ×2)
+plus **the colour picker in `appearance`** — every sheet that opens inside a
+pane. `MergeProductsModal`'s multi-select needs no special case: it is already a
+presentational component, and a dialog hosts a list plus an input the same way
+the account menu does — give it a `maxHeight` with the list scrolling inside,
+and make sure the body does not add a second scroller of its own.
+
+**Also retire the two hand-written branches** in `SafeToSpendSheet` and
+`FinancialHealthWidget` onto the wrapper in the same round. They are already
+correct, so this is deduplication — and it proves the wrapper against two
+shipped, hand-verified cases before it is trusted with five new ones.
+
+**Do not sweep the rest.** `BulkTagPickerSheet`, `MerchantPickerSheet` and
+`TransactionActionSheet` belong to the transactions screen, are not in a pane,
+and nobody has asked about them. `TransactionActionSheet` especially: it opens
+on long-press, which on desktop is a right-click context menu — a different
+question that a chrome swap would quietly pre-empt. They convert when someone
+touches that screen.
+
+## What the implementer should look for
+
+- **Double bottom padding on mobile.** `CategoriesSettings` reads
+  `useSettingsPane().bottomInset` specifically to feed its bottom-anchored
+  `Modal`. Once the wrapper owns the inset, that read must go, or the phone
+  gains a second gap.
+- **Two scrollers.** Several of these bodies contain their own `ScrollView`.
+  The wrapper owns one; the body must not add another.
+- **The keyboard on the mobile branch.** These are text-entry forms, and the
+  sheet currently lifts for the keyboard. If the wrapper's mobile branch loses
+  that, entering a category name breaks on a phone — which the byte-identical
+  rule forbids and no desktop check would catch.
+
+## Cost and constraints
+
+One new component, five conversions, two dedupes — and it lands as one round
+after wave 3's plain moves, as you proposed. **Zero new i18n keys:** this is
+chrome only, and every string already lives in the form bodies. No new
+dependency. Mobile byte-identical by construction, since the mobile branch is
+the existing sheet and the gate is false on native. Holds at 1440 and 1200
+because a centred dialog is viewport-centred and width-capped, independent of
+the pane.
+
+## Acceptance criteria
+
+1. Edit a category at 1920: a centred dialog opens over the shell, not a
+   full-width sheet at the bottom of the window. Repeat at 1440 and 1200.
+2. Open the colour picker in Appearance: same treatment.
+3. Open the products merge dialog with enough products to overflow: the list
+   scrolls inside the dialog and the page behind it does not.
+4. `Esc` closes each one; `Tab` from an open dialog never lands on the scrim.
+5. Open Safe-to-Spend and Financial Health on the dashboard: identical to before
+   the dedupe.
+6. On a phone, open all five: each is the same bottom sheet as before, with the
+   same bottom gap above the navigation bar, and the keyboard still lifts it.
+
+---
+
+# Addendum — correction, and selection action bars in a pane (2026-09-06)
+
+## Correction to the `SheetDialog` ruling
+
+**You are right and I was wrong.** `CategoriesSettings` reads
+`useSafeAreaInsets()`, not `useSettingsPane().bottomInset` — and the file's own
+comment at lines 54–58 says so explicitly, stating that `useSafeAreaInsets`
+"is deliberately NOT swapped for `useSettingsPane().bottomInset`". I read the
+mention and inverted its meaning.
+
+The instruction still holds with the right mechanism: **`categories` and
+`merchants` each call `useSafeAreaInsets()` and feed `insets.bottom` into their
+`Modal`'s padding. Once `SheetDialog` owns that inset, those reads must go**, or
+the phone gains a second gap. And the comment itself must be updated in the same
+change — it documents a decision the wrapper supersedes, and leaving it would
+tell the next reader the opposite of what the code then does.
+
+## Where a selection action bar lives — the answer already shipped
+
+**Ruling: in normal flow, immediately above the content it acts on, appearing
+when the selection is non-empty. Not sticky, not docked, no new mechanism.**
+
+This is not a new pattern — `ExpensesDesktop` already does exactly this. Its
+bulk bar renders inline right after `SummaryStrip` and **before** the table, as
+a bordered, shadowed card with horizontal margins, gated on
+`selectedIds.size > 0`. The reference screen made this decision, it is approved,
+and it should not be re-decided per screen.
+
+**Why above rather than sticky-bottom**, since sticky was the natural guess:
+
+- A phone docks the bar because the thumb is at the bottom and the screen is
+  short. On desktop the pointer is wherever the user just clicked, and the list
+  is read top-down — so the bar appears where the eye already is.
+- It **removes** the reported defect rather than working around it: a bar above
+  the list is never behind the rules card, so nothing has to be scrolled past.
+- A sticky-bottom bar inside a pane sticks to the bottom of the *page* scroller,
+  which means it hovers over whatever the pane is showing at that moment — the
+  rules card — permanently covering content on a screen that is not short.
+- `position: sticky` is used exactly once on this branch, for the transactions
+  table header, and its own source documents the scroll-container trap it needs
+  care around. Spending that care to reach a worse outcome is the wrong trade.
+
+## It generalises — extract it now, at two, not at three
+
+Yes. The chrome is identical across all three (row, count on the left, actions
+on the right, bordered card, shadow, conditional on selection); only the actions
+differ. Extract **`BulkActionBar`** now: it owns the chrome and the layout, and
+each screen passes its own count label and its own action buttons as children.
+
+Extracting at the second instance rather than the third is the whole point —
+`products` is the third, and three hand-placed copies is precisely how the rail
+widget headers got triplicated. `ExpensesDesktop` adopts it in the same change,
+which also proves the component against a shipped, verified case before
+`merchants` and `products` depend on it.
+
+**Key-neutral by construction:** the count label is a prop, not a hardcoded key,
+so `ExpensesDesktop` keeps `expenses.bulkSelected` and `merchants` keeps
+`merchants.selected` — both already count-bearing in all nine locales. **Zero
+new i18n keys.**
+
+## Below 1024
+
+Unchanged: the phone keeps its docked bar. The placement fork lives inside the
+extracted screen — `useIsDesktopWeb()` decides whether the bar renders docked
+(mobile, today's tree) or above the list (desktop). `BulkActionBar` is the
+desktop chrome only; do not route the mobile docked bar through it, or the
+byte-identical guarantee turns into a diff nobody asked for.
+
+## What to look for
+
+- **`merchants`' docked bar relied on `flex: 1` and a full-height scroller.**
+  Both are gone in a pane, so verify on a phone that the mobile branch still
+  docks — this is the same class of inertness that caused the regression, and
+  the fix must not quietly change the phone too.
+- **The bar must not be inside the list's own scroller** if that list ever gets
+  one; in flow above it, it should be a sibling of the list, not its header.
+
+## Acceptance criteria
+
+1. In `merchants` at 1920, select two merchants: the bar appears immediately
+   above the merchant list, with no scrolling required, and the rules card stays
+   below where it is.
+2. Deselect everything: the bar disappears and the layout does not jump beyond
+   the bar's own height.
+3. Repeat at 1440 and 1200.
+4. Open the transactions screen and select rows: the bar is unchanged from
+   before the extraction.
+5. On a phone, `merchants` selection docks the bar at the bottom exactly as it
+   does today.

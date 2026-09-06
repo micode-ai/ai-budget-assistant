@@ -386,6 +386,90 @@ worse still — the native no-op carries the same name by construction. Before
 trusting a bundle probe, check that the string is still unique to the thing
 you are probing for.
 
+## 5g. What wave 3 added — reference-data panes, and a measurement that lied
+
+**A pane that outlives a switch is a data-correctness problem, not a layout
+one.** `products` and `merchants` loaded once in a mount effect and were
+previously remounted on every visit; in a pane they are not. `merchants` also
+carried a never-reset `isLoaded`, so a remount alone would not have saved it.
+The fix belongs at the value, not the callers: `currentAccountId` is written
+from eight places, so one `useAccountStore.subscribe((state, prev) => …)`
+clears the caches rather than eight call sites each remembering to. **The phone
+had this bug too**, and the commit says so in its first paragraph — as this
+branch does for every change that alters the mobile rendering.
+
+**Truncation must be unrepresentable as silent.** `SettingsScreenList` takes
+`desktopMaxRows` and `showMoreLabel` as **one prop pair**. A cap with no visible
+"+N more" row is a list that lies about its own length, and two separate props
+would allow exactly that.
+
+**Route chrome stays in the route.** `products` is the one settings screen with
+a `<Stack.Screen>`, and it stays a sibling of `SettingsRoute` rather than moving
+into the extracted body: under `src/` it would rename whichever route later
+hosts that component.
+
+**Check the root — the previous wave's prediction was wrong in both
+directions.** Wave 2 predicted all three of these screens would need
+`SettingsScreenKeyboardScroll`. `categories` did not (its root is a bare
+`ScrollView`; the `KeyboardAvoidingScreen` import wraps a modal), and `products`
+did not either, for the opposite reason (its root is a `FlatList`). A prediction
+carried forward from the previous wave is a place to look, never a finding.
+
+### The measurement that lied, and the reasoning that caught it
+
+The products pane rendered ~1,120 rows at once. After the cap, typing measured
+160ms and 185ms against 1,228 and 12,303 rendered nodes — which reads as a
+~160ms **fixed cost per keystroke** that row count barely affects. It was not.
+The node counts labelled the state **before** each keystroke; after the first
+character both lists were filtered to similar small sets, so the ten-fold
+difference in the labels was never a ten-fold difference in what re-rendered.
+**The presence of a string is not a state — and neither is a count taken at a
+different moment from the thing being timed.** This doc already recorded the
+first half; the person who wrote it walked into the second half in the same
+session.
+
+What settled it was a one-line falsification rather than an argument: drive the
+input to a query matching ~10 products and time a further keystroke.
+
+```
+capped list, 1,228 divs   →  160 ms
+narrow query,  116 divs   →    6 ms
+```
+
+No floor. Cost tracks rendered rows at ~0.13ms per RNW node, and ~100 capped
+rows lands on the 160 almost exactly.
+
+The move that got there first was **concluding, from the absence of a heavy
+constant in the render path, that the number had to be mismeasured** — rather
+than hunting for a constant to match the claim. That hunt would have found
+candidates: two mounted sheets look plausible right up until RNW's
+`ModalAnimation` turns out to return `null` when hidden, and one of them would
+probably have been "fixed" on suspicion.
+
+**`useDeferredValue` — the first use in this codebase.** The `TextInput` stays
+on the immediate value; the filter, the rows and the empty state derive from the
+deferred one. It is not a debounce: the two debounces here (`invite.tsx`,
+`community.tsx`) delay *network requests*, which is right when the goal is not
+firing something. Here the cost is local rendering, so deferring is more
+accurate than delaying and has no constant to defend. It is also correct under
+both diagnoses, which is why it was worth landing before the cause was fully
+settled. Measured after: **160/185 → 58–84 ms**, with the rendered node count
+unchanged across three consecutive keystrokes — the rows are off the typing
+path. Both sides were measured in a background tab (`visibility: "hidden"`),
+which inflates the absolute numbers; the comparison holds because both were
+measured the same way. It cannot be given a test: "the input does not wait for
+the list" is a rendering property.
+
+### Verifying "the phone is untouched" when the window will not shrink
+
+Chrome silently ignores a resize of a **maximized** window, and this harness
+blocks the zoom shortcuts, so a sub-1024 viewport could not be forced in this
+session. The structural evidence is stronger than the screenshot would have
+been: `SettingsRoute.web.tsx` early-returns
+`<SettingsScreenFrame>{children}</SettingsScreenFrame>` below
+`DESKTOP_MIN_WIDTH`, which is byte-identical to the whole body of the native
+`SettingsRoute.tsx`. One early return, not an inspection.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
