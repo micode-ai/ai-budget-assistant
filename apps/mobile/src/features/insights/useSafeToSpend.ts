@@ -5,6 +5,7 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useWalletStore } from '@/stores/walletStore';
 import { useGoalStore } from '@/stores/goalStore';
 import { useAuthStore } from '@/stores/authStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { computeSafeToSpend } from '@budget/shared-utils';
 import { filterConsumption } from '@/utils/consumption';
@@ -37,15 +38,37 @@ export function useSafeToSpend(): UseSafeToSpendResult {
   const { goals } = useGoalStore();
   const { user } = useAuthStore();
   const { rates } = useExchangeRateStore();
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
-  // Load from server on mount
+  // Load on mount AND on every account change.
+  //
+  // `currentAccountId` is load-bearing twice over, for two different failures:
+  //
+  //  - Cold start. This effect used to fire once, with `loadSafeToSpend` (a
+  //    stable zustand action) as its only dependency — so it ran while
+  //    `currentAccountId` was still null, before `accountStore.loadAccounts()`
+  //    had resolved it. The store now refuses to issue that request; this
+  //    dependency is what re-issues it, correctly addressed, the moment the
+  //    account is known.
+  //  - Account switch. Nothing re-fired this at all: the hero kept showing the
+  //    previous account's figure for as long as the tab stayed mounted, which
+  //    is not a race but a permanently wrong number. No guard inside the store
+  //    can fix that — a guard can only suppress a wrong request, never trigger
+  //    the right one. This dependency is the only part of the fix that does.
   useEffect(() => {
     loadSafeToSpend();
-  }, [loadSafeToSpend]);
+  }, [loadSafeToSpend, currentAccountId]);
 
   // Offline fallback: approximate the formula locally when server data is absent
   const localFallback = useMemo<SafeToSpendResponse | null>(() => {
     if (safeToSpend) return null; // server data available — skip local computation
+
+    // Same rule as the server path: with no account resolved there is nothing
+    // to attribute a figure to. The stores this reads from (`walletSummary`,
+    // expenses, incomes, goals) are account-scoped, and at cold start they are
+    // empty anyway — but returning early states the rule rather than relying on
+    // that happening to be true.
+    if (!currentAccountId) return null;
 
     const baseCurrency = user?.currencyCode ?? 'USD';
     const now = new Date();
@@ -134,7 +157,7 @@ export function useSafeToSpend(): UseSafeToSpendResult {
       },
       computedAt: new Date().toISOString(),
     };
-  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates]);
+  }, [safeToSpend, user, walletSummary, expenses, incomes, goals, rates, currentAccountId]);
 
   const data = safeToSpend ?? localFallback;
   const hasEnoughData = data !== null;
