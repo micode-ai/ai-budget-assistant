@@ -1,9 +1,13 @@
 import {
   buildNetProfitSeries,
   countPopulatedMonthsInWindow,
+  monthsForNetProfitRange,
   shouldRenderRangeChips,
   shouldRenderTrendChart,
   NET_PROFIT_MIN_POPULATED_MONTHS,
+  NET_PROFIT_RANGE_MONTHS,
+  NET_PROFIT_RANGES,
+  NET_PROFIT_WIDEST_RANGE_MONTHS,
   type NetProfitRow,
   type NetProfitSeriesInputs,
 } from '../netProfitSeries';
@@ -337,5 +341,173 @@ describe('shouldRenderTrendChart / shouldRenderRangeChips — two questions, two
     });
     expect(populatedMonthsInHistory).toBe(0);
     expect(shouldRenderRangeChips({ populatedMonthsInHistory })).toBe(false);
+  });
+});
+
+describe('the widest window is the chips ceiling — the promise, enforced', () => {
+  /** The account from the round-2 report: one income and one expense, both in
+   *  the current month, and nothing else anywhere. */
+  const oneMonth = {
+    incomes: [row(new Date(2026, 8, 3), 100)],
+    expenses: [row(new Date(2026, 8, 4), 40)],
+  };
+
+  const counts = (monthCount: number, data = oneMonth) => ({
+    inRange: buildNetProfitSeries({
+      monthCount,
+      now: NOW,
+      incomes: data.incomes,
+      expenses: data.expenses,
+      convert: (amount) => amount,
+      formatLabel: (start) => String(start.getMonth()),
+    }).populatedMonthsInRange,
+    inHistory: countPopulatedMonthsInWindow({
+      monthCount: 12,
+      now: NOW,
+      incomes: data.incomes,
+      expenses: data.expenses,
+    }),
+  });
+
+  it('ONE POPULATED MONTH, 12M SELECTED: no chart AND no chips', () => {
+    // Breaks if: the chips are fed a count taken over a window WIDER than the
+    // widest selectable range, or over a different clock, or if their
+    // "populated month" rule stops matching the chart's.
+    //
+    // This is the state reported from a real build — chart absent, "Not enough
+    // data yet" shown, chips still there — and it must be unreachable: at the
+    // widest window the chips have nothing left to reveal, so offering three
+    // controls that all lead to the same absence is the very failure the
+    // no-data case exists to prevent.
+    const { inRange, inHistory } = counts(12);
+    expect(inRange).toBe(1);
+    expect(inHistory).toBe(1);
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: inRange })).toBe(false);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: inHistory })).toBe(false);
+  });
+
+  it('at the widest window the two counts are EQUAL, so chips imply a chart', () => {
+    // Breaks if: either count is taken over a window that is not the one it
+    // names, or over a different `now`. This is the general form of the case
+    // above and the property the whole promise rests on — the selected range
+    // and the widest range are the same window when 12M is selected, so a
+    // verdict of "chips yes, chart no" cannot be produced there at all.
+    for (const data of [
+      oneMonth,
+      { incomes: [row(new Date(2025, 10, 4), 10)], expenses: [row(new Date(2026, 8, 4), 10)] },
+      { incomes: [], expenses: [] },
+      { incomes: [row(new Date(2026, 6, 4), 10)], expenses: [row(new Date(2026, 7, 4), 10)] },
+    ]) {
+      const { inRange, inHistory } = counts(12, data);
+      expect(inRange).toBe(inHistory);
+      expect(shouldRenderTrendChart({ populatedMonthsInRange: inRange })).toBe(
+        shouldRenderRangeChips({ populatedMonthsInHistory: inHistory }),
+      );
+    }
+  });
+
+  it('a narrower range can only ever count FEWER months than the widest', () => {
+    // Breaks if: MAX_RANGE_MONTHS stops being the largest selectable range, or
+    // the counter ignores its `monthCount`. Either would let the chips be
+    // decided by a window the user cannot reach, which is one of the two ways
+    // the reported state could have been produced.
+    const spread = {
+      incomes: [row(new Date(2025, 10, 4), 10)],
+      expenses: [row(new Date(2026, 8, 4), 10)],
+    };
+    for (const monthCount of [3, 6, 12]) {
+      const { inRange, inHistory } = counts(monthCount, spread);
+      expect(inRange).toBeLessThanOrEqual(inHistory);
+    }
+  });
+
+  it('the chips stay while a NARROWER range is the sparse one — round 1, still true', () => {
+    // Breaks if: this round's fix is applied by collapsing the two predicates
+    // back into one. The trap round 1 closed and this round must not reopen:
+    // two populated months inside 12M, only one inside 3M.
+    const spread = {
+      incomes: [row(new Date(2025, 10, 4), 10)],
+      expenses: [row(new Date(2026, 8, 4), 10)],
+    };
+    const { inRange, inHistory } = counts(3, spread);
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: inRange })).toBe(false);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: inHistory })).toBe(true);
+  });
+
+  it('two clocks in different months break the ceiling — why the widget shares one', () => {
+    // Breaks if: `countPopulatedMonthsInWindow` stops honouring its own `now`.
+    //
+    // Documents the defect fixed this round in the layer that can express it:
+    // measured from October the 12M window is Nov 2025..Oct 2026 and holds both
+    // rows; measured from September it is Oct 2025..Sep 2026 and holds one. Two
+    // independent `new Date()` captures could therefore put the chips' window
+    // and the chart's window in different months, and the ceiling would no
+    // longer bound anything. The widget now passes ONE `now` to both.
+    const rows = [row(new Date(2025, 9, 20), 10), row(new Date(2026, 8, 4), 10)];
+    const fromSeptember = countPopulatedMonthsInWindow({
+      monthCount: 12, now: new Date(2026, 8, 6), incomes: [], expenses: rows,
+    });
+    const fromOctober = countPopulatedMonthsInWindow({
+      monthCount: 12, now: new Date(2026, 9, 6), incomes: [], expenses: rows,
+    });
+    expect(fromSeptember).toBe(2);
+    expect(fromOctober).toBe(1);
+  });
+});
+
+describe('the range table and the ceiling derived from it', () => {
+  it('the ceiling IS the widest selectable range, for every range in the list', () => {
+    // Breaks if: NET_PROFIT_WIDEST_RANGE_MONTHS is written down as a literal
+    // that drifts from the table, or derived with Math.min, or the table gains
+    // a wider entry nobody propagated.
+    //
+    // This is the structural half of the fix: the chips are fed THIS number,
+    // and it cannot be a window the user is unable to reach because it is
+    // computed from the very list the chips render.
+    for (const range of NET_PROFIT_RANGES) {
+      expect(monthsForNetProfitRange(range)).toBeLessThanOrEqual(NET_PROFIT_WIDEST_RANGE_MONTHS);
+    }
+    expect(NET_PROFIT_RANGES.map(monthsForNetProfitRange)).toContain(
+      NET_PROFIT_WIDEST_RANGE_MONTHS,
+    );
+  });
+
+  it('every chip in the list has a window, and every window has a chip', () => {
+    // Breaks if: a range is added to the table but not to NET_PROFIT_RANGES
+    // (a window nothing can select, silently raising the ceiling above what
+    // the chips can reach) or added to the list but not the table (a chip
+    // whose label renders `undefined`).
+    expect([...NET_PROFIT_RANGES].sort()).toEqual(Object.keys(NET_PROFIT_RANGE_MONTHS).sort());
+    for (const range of NET_PROFIT_RANGES) {
+      expect(typeof monthsForNetProfitRange(range)).toBe('number');
+      expect(monthsForNetProfitRange(range)).toBeGreaterThan(0);
+    }
+  });
+
+  it('no selectable range can out-count the ceiling, for any account', () => {
+    // Breaks if: the ceiling stops bounding the selectable ranges. Runs the
+    // real counter over every chip against a deliberately spread-out account,
+    // which is the general statement of "chips shown implies some setting
+    // draws a chart".
+    const spread = [
+      row(new Date(2025, 10, 4), 10),
+      row(new Date(2026, 3, 4), 10),
+      row(new Date(2026, 8, 4), 10),
+    ];
+    const ceiling = countPopulatedMonthsInWindow({
+      monthCount: NET_PROFIT_WIDEST_RANGE_MONTHS,
+      now: NOW,
+      incomes: [],
+      expenses: spread,
+    });
+    for (const range of NET_PROFIT_RANGES) {
+      const selected = countPopulatedMonthsInWindow({
+        monthCount: monthsForNetProfitRange(range),
+        now: NOW,
+        incomes: [],
+        expenses: spread,
+      });
+      expect(selected).toBeLessThanOrEqual(ceiling);
+    }
   });
 });

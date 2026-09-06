@@ -13,38 +13,31 @@ import { InteractiveLineChart } from '@/components/interactive-charts/Interactiv
 import {
   buildNetProfitSeries,
   countPopulatedMonthsInWindow,
+  monthsForNetProfitRange,
   shouldRenderRangeChips,
   shouldRenderTrendChart,
+  NET_PROFIT_RANGES,
   NET_PROFIT_SPARSE_HINT_KEY,
+  NET_PROFIT_WIDEST_RANGE_MONTHS,
+  type NetProfitRange,
 } from '@/features/dashboard/netProfitSeries';
 import { filterConsumption } from '@/utils/consumption';
 import type { SafeToSpendResponse } from '@budget/shared-types';
 
 /** 3M/6M/12M window for the trend chart — desktop's range control (see
  *  `showRangeChips` below); mobile never renders the control, so `range`
- *  stays pinned at its default and the chart keeps showing exactly 6 months. */
-export type NetProfitRange = '3m' | '6m' | '12m';
-
-const RANGE_MONTHS: Record<NetProfitRange, number> = { '3m': 3, '6m': 6, '12m': 12 };
-const RANGES: NetProfitRange[] = ['3m', '6m', '12m'];
-
-/**
- * The widest window the range chips can select — derived from RANGE_MONTHS so
- * there is no second copy of the range table. This is the horizon the chips
- * are decided against: they are worth offering only while at least one of
- * their settings would actually draw a chart.
- */
-const MAX_RANGE_MONTHS = Math.max(...Object.values(RANGE_MONTHS));
+ *  stays pinned at its default and the chart keeps showing exactly 6 months.
+ *  The table itself now lives beside the predicates that read it, so the
+ *  chips' ceiling and the list of selectable ranges cannot disagree — see
+ *  `NET_PROFIT_WIDEST_RANGE_MONTHS`. Re-exported here because this was this
+ *  module's public type before the move. */
+export type { NetProfitRange };
 
 /** Target DRAWN height for the compact/hero chart (`compact` prop) — a
  *  trend indicator, not the subject. `InteractiveLineChart`'s `compact`
  *  mode makes this a true total (see its own doc comment), so this number
  *  is what actually renders, not a library input to be inflated by k. */
 const COMPACT_CHART_HEIGHT = 110;
-
-function monthsForRange(range: NetProfitRange): number {
-  return RANGE_MONTHS[range];
-}
 
 interface NetProfitWidgetSafeToSpend {
   data: SafeToSpendResponse | null;
@@ -123,7 +116,27 @@ export function NetProfitWidget({
   // rendered there is nothing to change it with, so this reproduces today's
   // hardcoded 6-month window exactly.
   const [range, setRange] = useState<NetProfitRange>('6m');
-  const monthCount = monthsForRange(range);
+  const monthCount = monthsForNetProfitRange(range);
+
+  // ONE clock, shared by BOTH windows below.
+  //
+  // Each memo used to capture its own `new Date()`, and their dependency lists
+  // differ — so the two could be evaluated at different moments and, across a
+  // month boundary, end on DIFFERENT months. The chips would then be decided
+  // against a window that is no longer the widest selectable one, which is
+  // exactly the failure mode "the chips predicate is fed a count that is not
+  // the widest-window count" describes; the invariant that the selected range
+  // is a subset of the widest only holds while both are measured from the same
+  // instant. There is now literally one `now` variable, passed to both.
+  //
+  // Bucketed by CALENDAR MONTH, not by day: the month containing `now` is the
+  // only thing about it either window uses, so this recomputes once a month
+  // rather than on every render (the day-bucketed shape `useFinancialMonth`
+  // uses, tightened to the coarsest key that is still correct here).
+  const clock = new Date();
+  const monthKey = `${clock.getFullYear()}-${clock.getMonth()}`;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const now = useMemo(() => clock, [monthKey]);
 
   // The bucketing loop that used to live inline here moved VERBATIM into
   // `buildNetProfitSeries` (same boundaries, same filters, same reducers), so
@@ -135,14 +148,14 @@ export function NetProfitWidget({
     () =>
       buildNetProfitSeries({
         monthCount,
-        now: new Date(),
+        now,
         incomes,
         expenses,
         convert: (amount, currencyCode) =>
           convertAmount(amount, currencyCode, displayCurrency, rates),
         formatLabel: (start) => start.toLocaleDateString(intlLocale, { month: 'short' }),
       }),
-    [expenses, incomes, rates, displayCurrency, intlLocale, monthCount],
+    [expenses, incomes, rates, displayCurrency, intlLocale, monthCount, now],
   );
 
   // The chips' OWN input, and deliberately a separate memo with a separate
@@ -153,12 +166,12 @@ export function NetProfitWidget({
   const populatedMonthsInHistory = useMemo(
     () =>
       countPopulatedMonthsInWindow({
-        monthCount: MAX_RANGE_MONTHS,
-        now: new Date(),
+        monthCount: NET_PROFIT_WIDEST_RANGE_MONTHS,
+        now,
         incomes,
         expenses,
       }),
-    [expenses, incomes],
+    [expenses, incomes, now],
   );
 
   const isPositive = (currentNetProfit ?? 0) >= 0;
@@ -206,7 +219,7 @@ export function NetProfitWidget({
   // unchanged, further down.
   const compactChipsRow = compact && showRangeChips && showRangeControl && (
     <View style={styles.rangeRowInline}>
-      {RANGES.map((r) => (
+      {NET_PROFIT_RANGES.map((r) => (
         <TouchableOpacity
           key={r}
           style={[styles.rangeChipCompact, range === r && styles.rangeChipActive]}
@@ -214,7 +227,7 @@ export function NetProfitWidget({
           activeOpacity={0.7}
         >
           <Text style={[styles.rangeChipText, range === r && styles.rangeChipTextActive]}>
-            {t('wallet.monthsWindow', { count: monthsForRange(r) })}
+            {t('wallet.monthsWindow', { count: monthsForNetProfitRange(r) })}
           </Text>
         </TouchableOpacity>
       ))}
@@ -299,7 +312,7 @@ export function NetProfitWidget({
           for non-compact (mobile), exactly as before. */}
       {!compact && showRangeChips && (
         <View style={styles.rangeRow}>
-          {RANGES.map((r) => (
+          {NET_PROFIT_RANGES.map((r) => (
             <TouchableOpacity
               key={r}
               style={[styles.rangeChip, range === r && styles.rangeChipActive]}
@@ -307,7 +320,7 @@ export function NetProfitWidget({
               activeOpacity={0.7}
             >
               <Text style={[styles.rangeChipText, range === r && styles.rangeChipTextActive]}>
-                {t('wallet.monthsWindow', { count: monthsForRange(r) })}
+                {t('wallet.monthsWindow', { count: monthsForNetProfitRange(r) })}
               </Text>
             </TouchableOpacity>
           ))}

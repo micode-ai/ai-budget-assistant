@@ -35,6 +35,44 @@ import type { ChartDataPoint } from '@budget/shared-types';
 /** Below this many populated months, a trend chart claims more than it knows. */
 export const NET_PROFIT_MIN_POPULATED_MONTHS = 2;
 
+/** The windows the hero's range control can select. */
+export type NetProfitRange = '3m' | '6m' | '12m';
+
+/**
+ * The range table, and the ceiling derived from it.
+ *
+ * It lives HERE, beside the two predicates, rather than in the widget: the
+ * chips are decided against the widest selectable window, and the only way to
+ * be sure they are fed that window and not some other number is for the window
+ * and the table to be the same fact. A widget-side constant is one edit away
+ * from being a window the user cannot reach, which is precisely the failure
+ * "the chips are fed a count that is not the widest-window count" names.
+ */
+export const NET_PROFIT_RANGE_MONTHS: Record<NetProfitRange, number> = {
+  '3m': 3,
+  '6m': 6,
+  '12m': 12,
+};
+
+export const NET_PROFIT_RANGES: NetProfitRange[] = ['3m', '6m', '12m'];
+
+export function monthsForNetProfitRange(range: NetProfitRange): number {
+  return NET_PROFIT_RANGE_MONTHS[range];
+}
+
+/**
+ * The widest window the chips can select — DERIVED, never written down twice.
+ *
+ * This is the horizon `shouldRenderRangeChips` is fed. Because every selectable
+ * range is bounded by it and the ranges are nested, the selected range's
+ * populated-month count can never exceed the count over this window, which is
+ * what makes "if the chips are shown, some setting draws a chart" true rather
+ * than merely intended.
+ */
+export const NET_PROFIT_WIDEST_RANGE_MONTHS = Math.max(
+  ...Object.values(NET_PROFIT_RANGE_MONTHS),
+);
+
 /**
  * The one line of copy drawn in the chart's place below the threshold.
  *
