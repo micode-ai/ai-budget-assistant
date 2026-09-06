@@ -204,10 +204,13 @@ describe('isShellHostedSettingsRoute', () => {
   });
 
   // Catches an over-broad match — a prefix or `includes` test would strip the
-  // header from a route the shell has never heard of. `settings/index` is the
-  // shell's own landing page and deliberately keeps its header: it is the only
-  // thing labelling that screen, since `WebTopBar` titles the five main tabs
-  // and nothing else.
+  // header from a route the shell has never heard of, leaving it with no way
+  // back. `settings/index` is in this list on purpose and is the subtle one:
+  // it draws the shell too, but with nothing selected, so it is the shell
+  // rather than something the shell hosts in its right pane, which is the only
+  // question this predicate answers. `app/_layout.tsx` hides its header with a
+  // plain `!isDesktopWeb` instead — so a future change that made this return
+  // true would be wrong even though the observable header behaviour matches.
   it('does not host a settings route that is not an entry', () => {
     for (const route of [
       'settings/index',

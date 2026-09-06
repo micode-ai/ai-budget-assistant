@@ -352,7 +352,22 @@ function RootNavigator() {
         <Stack.Screen
           name="settings/index"
           options={{
-            headerShown: true,
+            // `/settings` IS the shell on desktop — the same left pane, just
+            // with nothing selected — so its header is redundant for the same
+            // reason a pane's is, and keeping it would make the first click
+            // into a pane shift the whole page by the header's height.
+            //
+            // It is left no worse labelled than the six panes already are:
+            // there too the left pane is the only thing saying where you are,
+            // and here it says it by listing settings with nothing selected
+            // while the right pane shows who you are signed in as. (The top
+            // bar does NOT name it — `sectionTitle` answers for `/settings`,
+            // but nothing has rendered that answer since ABA-499.)
+            //
+            // Not `settingsHeaderShown`: the registry answers "does the shell
+            // host this route in its right pane", and this route is the shell
+            // rather than something inside it.
+            headerShown: !isDesktopWeb,
             title: t('nav.settings'),
           }}
         />

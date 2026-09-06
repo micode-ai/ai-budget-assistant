@@ -12,13 +12,36 @@ import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { WebSidebar } from '@/components/WebSidebar';
 import { TOP_BAR_HEIGHT, WEB_TOP_BAR_PADDING_X } from '@/components/webLayout.constants';
 
-/** Active-section title shown next to the brand for the 5 main tabs. */
+/**
+ * Active-section title shown next to the brand: the 5 main tabs, and settings.
+ *
+ * A **section** title, not a page one — `/expenses/anything` reads "Expenses",
+ * and a screen pushed on top keeps its own title in its own page bar below.
+ * Settings answers the same way, for the whole `/settings` area, because it is
+ * a section of the app reached from this bar's own gear button.
+ *
+ * Nothing outside `app/settings/` produces a `/settings` pathname, so the
+ * prefix is unambiguous. `nav.settings` is the key `app/_layout.tsx` already
+ * titles the route with, so no new string was minted.
+ *
+ * **This function's result is currently rendered nowhere.** The `<Text>` that
+ * drew it beside the brand was dropped in ABA-499, silently — the function,
+ * the `title` const and `styles.title` all survived, which is why eslint has
+ * been reporting `'title' is assigned a value but never used` since then, and
+ * why no desktop screen shows a section title today despite CLAUDE.md
+ * describing the bar as "brand + active-section title". The settings branch is
+ * here so that restoring that one line names the settings area correctly
+ * instead of leaving the gap this comment documents; nothing depends on it in
+ * the meantime — `/settings` and its panes are named by the shell's own left
+ * pane, not by this bar.
+ */
 function sectionTitle(pathname: string, t: (k: string) => string): string {
   if (pathname === '/' || pathname === '/index') return t('nav.dashboard');
   if (pathname.startsWith('/expenses')) return t('nav.expenses');
   if (pathname.startsWith('/budgets')) return t('nav.budgets');
   if (pathname.startsWith('/analytics')) return t('nav.analytics');
   if (pathname.startsWith('/chat')) return t('nav.aiChat');
+  if (pathname.startsWith('/settings')) return t('nav.settings');
   return '';
 }
 
