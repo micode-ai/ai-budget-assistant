@@ -93,6 +93,14 @@ const PANE_MAX_ROWS = 100;
  * component under `src/` that renamed whichever route happened to host it would
  * be a trap for the next screen that hosts this one.
  *
+ * **The list's separator and `openRename` are memoised, and that is a fix, not
+ * tidiness.** An inline `ItemSeparatorComponent` arrow is a fresh component
+ * TYPE on every render, so React unmounted and remounted every separator in
+ * the list instead of diffing it - on the phone that is every separator the
+ * `FlatList` currently has mounted, on every keystroke in the search box. And
+ * `openRename` sits in `renderItem`'s dep array, so while it was redefined
+ * each render `renderItem`'s memo could never hold. Neither changes a pixel.
+ *
  * **Do not add a poll or an interval here.** A pane stays mounted while another
  * pane is read - `SettingsNav` pushes, and a stack push does not unmount the
  * screen beneath - so a timer a phone would have stopped by unmounting keeps
@@ -189,10 +197,13 @@ export function ProductsSettings() {
   const [mergeSources, setMergeSources] = useState<string[] | null>(null);
   const [mergeName, setMergeName] = useState('');
 
-  const openRename = (item: ProductListItem) => {
+  // `useCallback` with no deps, not a plain function: `renderItem` lists this
+  // in its own dep array, so while it was redefined every render `renderItem`
+  // was too, and its memo never held. Both setters are stable.
+  const openRename = useCallback((item: ProductListItem) => {
     setEditing(item);
     setRenameName(item.canonicalName);
-  };
+  }, []);
   const closeRename = () => {
     setEditing(null);
     setRenameName('');
@@ -481,6 +492,20 @@ export function ProductsSettings() {
     ListHeader
   );
 
+  // A stable component TYPE. Written inline this was a fresh arrow on every
+  // render, so React saw a different type each time and unmounted and
+  // remounted every separator in the list rather than diffing it - about a
+  // thousand subtrees per keystroke in the search box on a long list. Only
+  // the theme can change what it draws.
+  const ItemSeparator = useCallback(
+    () => (
+      <View style={{ backgroundColor: theme.colors.surface }}>
+        <View style={styles.itemSeparator} />
+      </View>
+    ),
+    [theme, styles],
+  );
+
   const ListEmpty = useMemo(
     () => (
       <View style={styles.card}>
@@ -507,11 +532,7 @@ export function ProductsSettings() {
         renderItem={renderItem}
         ListHeaderComponent={listHeader}
         ListEmptyComponent={ListEmpty}
-        ItemSeparatorComponent={() => (
-          <View style={{ backgroundColor: theme.colors.surface }}>
-            <View style={styles.itemSeparator} />
-          </View>
-        )}
+        ItemSeparatorComponent={ItemSeparator}
         contentContainerStyle={[styles.content, { paddingBottom: theme.spacing[10] + bottomInset }]}
         showsVerticalScrollIndicator={false}
         desktopMaxRows={PANE_MAX_ROWS}
