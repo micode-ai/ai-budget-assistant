@@ -12,7 +12,6 @@ import { showAlert } from '@/utils/alert';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import * as DocumentPicker from 'expo-document-picker';
-import { File } from 'expo-file-system';
 import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAccountStore } from '@/stores/accountStore';
@@ -26,6 +25,7 @@ import { useLocationSettingsStore } from '@/stores/locationSettingsStore';
 import { useAuthStore } from '@/stores/authStore';
 import { api } from '@/services/api';
 import { requestLocationPermission } from '@/services/locationCapture';
+import { readTextFile, parseBackupFile } from '@/services/fileImport';
 import { getLastSyncTime } from '@/db/syncMetadataRepository';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
@@ -78,6 +78,18 @@ import { SettingsScreenScroll } from '../SettingsScreenScroll';
  * Nothing here holds a resource that must be explicitly released - no
  * listener, timer, recorder or watch. The document picker and the file write
  * are one-shot calls that own their own lifetime.
+ *
+ * ## One thing that did NOT survive the move unchanged, deliberately
+ *
+ * Everything above is a pure lift. "Import Backup" is not: it used to call
+ * `new File(asset.uri)` from `expo-file-system` directly, which **throws in a
+ * browser** - that package ships no web implementation, so the flow died on
+ * the line after the user picked their file and reported it as
+ * `errors.unknown`. Reading now goes through `@/services/fileImport`, the same
+ * three-file platform split `fileExport` uses for the way out; native runs the
+ * identical `expo-file-system` call it always did. The two validation failures
+ * (not JSON / not one of our backups) are told apart by the pure
+ * `parseBackupFile` and now report a sentence a person can act on.
  *
  * ## Not keyed on `currentAccountId`, and checked rather than assumed
  *
@@ -230,19 +242,23 @@ export function DataSettings() {
       if (result.canceled) return;
 
       const asset = result.assets[0];
-      const file = new File(asset.uri);
-      const data = await file.text();
 
-      try {
-        const parsed = JSON.parse(data);
-        if (!parsed.version || !parsed.data) {
-          showAlert(t('common.error'), t('errors.unknown'));
-          return;
-        }
-      } catch {
-        showAlert(t('common.error'), t('errors.unknown'));
+      // Reading the picked file goes through the platform split, never
+      // `expo-file-system` directly: that package's `File` throws outright in a
+      // browser, so this whole flow used to die here on web and report it as
+      // `errors.unknown`. See `fileImport.web.ts`.
+      const read = await readTextFile(asset.uri);
+      if (read.status === 'error') {
+        showAlert(t('common.error'), read.error);
         return;
       }
+
+      const backup = parseBackupFile(read.text);
+      if (!backup.ok) {
+        showAlert(t('common.error'), t('bankImport.error.parseFailed'));
+        return;
+      }
+      const data = backup.text;
 
       showAlert(
         t('reports.restoreConfirmTitle'),
