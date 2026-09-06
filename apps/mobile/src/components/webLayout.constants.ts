@@ -22,6 +22,17 @@ export const FACET_RAIL_MIN_WIDTH = 1440;
 // 20 gap + 300 + 20 gap + 300 (verified against a real deployed build).
 // Below this, exactly one rail — same as before round 6.
 export const SECOND_RAIL_MIN_WIDTH = 1680;
+// Addendum 2: each setup-checklist cell in the first-run band is `flex: 1`
+// capped at this width, with the row left-packed — NOT equal thirds. An equal
+// split of 1640px of content guarantees ~400px of nothing inside every cell,
+// and the band sits directly under the row of three entry cards, so a
+// stretched echo of that rhythm holding a fifth of the content reads as the
+// same row, broken. The cap only bites above ~1300px of content width, so
+// 1440 and 1200 fill naturally and the leftover lands at the band's right
+// edge — one void, at an edge, which is ordinary for a card holding a
+// horizontal list. A starting value to be judged by eye: nothing in this repo
+// renders a component in CI.
+export const CHECKLIST_CELL_MAX_WIDTH = 420;
 
 /** Pure gate — true only on web at desktop width. Native never qualifies. */
 export function isDesktopWeb(width: number): boolean {

@@ -990,3 +990,113 @@ space is genuinely scarce. Worth its own small fix — either stop passing
 be checked at 1024 as well as 1920 before the cap is simply removed.
 
 **No new i18n key is requested by anything in this addendum.**
+
+---
+
+# Addendum 2 — the checklist band's internal composition (2026-09-06)
+
+Measured: 1640px content width, three 539px cells, ~130px of visible content
+each, chevron pinned ~390px from its label, "0 of 3" alone in the top-left.
+
+The diagnosis in one line: **one void at a card's trailing edge is invisible;
+three voids between an item and its own chevron are the defect.** Everything
+below follows from that.
+
+## 1. The chevron — remove it
+
+Two reasons, and the incoming dialog change settles it rather than changing it.
+
+- It is a **list-row idiom**. A chevron pinned right exists because a full-width
+  phone row's target is ambiguous and the chevron says "this row goes
+  somewhere". In a 539px cell holding 130px of content it clarifies nothing and
+  is the sole cause of the 390px traverse.
+- **A chevron means "this leaves."** That is what it means everywhere in this
+  app. Once a step opens a dialog over the dashboard it becomes a false
+  promise — it advertises navigation and delivers a dialog. The design
+  language's own desktop rule is that a flow which returns on mobile resolves in
+  place here; the chevron *is* the mobile-return affordance.
+
+So the answer to "does it belong" was already no, and the dialog change removes
+the last argument for keeping it.
+
+**The affordance becomes the cell.** The whole cell is one `Pressable`:
+`cursor: pointer` comes free on web, plus a surface-tint hover state, and it is
+a real focusable target with `Enter`/`Space` — the focusable twin of the hover,
+which a chevron never was.
+
+**A completed step stays clickable** (re-opening the wallet or budget dialog is
+harmless) but reads as settled: filled circle with a check, label at
+`textSecondary`. Do not disable it — a dead cell in a row of three is worse than
+a redundant one. Removing the chevron also fixes this: a chevron on a finished
+step was nonsense.
+
+## 2. The counter — delete it
+
+I ruled earlier that the missing title stops being a defect once this is a band.
+That was right about the title and wrong about the counter: a small grey string
+alone in the top-left **occupies the title slot**, so the band still reads as an
+untitled card. Relocating it only moves the problem.
+
+**Three visible circles are the counter.** "0 of 3" earns its place over a
+collapsed list or a long one; over three items on a single row it counts things
+the eye has already counted. Deleting it removes the corner-title problem
+outright and frees whatever key it was using.
+
+## 3. Equal thirds — equal, but capped, and left-packed
+
+Not thirds. An equal split of 1640px guarantees ~400px of nothing per cell, and
+the band sits directly under the row of three entry cards, so a stretched echo
+of that rhythm with a fifth of the content reads as the same row, broken.
+
+**Each cell is `flex: 1` with `maxWidth: 420`, the row left-packed with a fixed
+gap.** The cap only bites above ~1300px of content width, so:
+
+- 1920 (1640 content): three 420px cells, ~340px trailing at the card's edge —
+  one void, at the edge, which is ordinary for a card holding a horizontal list
+- 1440 (~1360 content): cells ~430 → fills naturally, cap inactive
+- 1200 (~1120 content): cells ~355 → fills, cap inactive
+
+Equal cells keep it tidy and symmetric with the row above; the cap is what stops
+them becoming thirds on a wide monitor. 420 is a starting value to be judged by
+eye — nothing in this repo renders a component in CI.
+
+**And give each step its second line.** With the chevron gone a cell is a circle
+and one short label, which is what makes 420px still feel thin. Each step
+already has hint copy written and translated in all nine locales, and my
+original spec named two of the three for this exact card:
+
+| Step | Label key | Hint key (verified in all 9 locales) |
+|---|---|---|
+| Add your first transaction | as shipped | `dashboard.addFirstExpense` |
+| Set your wallet balance | `wallet.addBalance` | `wallet.noBalancesHint` |
+| Create a budget | `budgets.createBudget` | `budgets.createHint` |
+
+This is what turns three bare labels into a band that is actually informative —
+each step now says what it unlocks — and it is why the trailing space shrinks
+without inventing anything. The band grows ~110px → ~135px; the vertical budget
+had ~90px of slack.
+
+**Zero new i18n keys. One key is freed** (whatever "0 of 3" used).
+
+## Consistency with the rail form
+
+When this same component returns to the 300px rail after first-run, it stacks —
+that is its original shape and it is correct there. **No chevron in either
+form**, and no counter in either form, or the two variants drift into different
+answers to the same question.
+
+## Acceptance criteria
+
+30. No chevron appears anywhere in the band, in either the first-run row form or
+    the post-first-run rail form.
+31. Hovering anywhere in a step tints the whole cell; tabbing reaches each step
+    as one target and `Enter` opens its dialog.
+32. No "N of 3" counter appears; progress is legible from the circles alone.
+33. At 1920 the three cells are equal and visibly narrower than a third of the
+    band, with the leftover space at the band's right edge, not inside the cells.
+34. At 1440 and 1200 the cells fill the band with no cap gap and no clipped hint
+    text.
+35. Each step shows two lines — its label and its hint — in all nine locales,
+    with no truncation at 1200.
+36. A completed step shows a filled circle and a dimmed label, and is still
+    clickable.

@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { View, Text, TouchableOpacity, type LayoutChangeEvent } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SetupChecklist } from '@/components/home/SetupChecklist';
 import {
-  ENTRY_ROUTE_IMPORT,
-  ENTRY_ROUTE_MANUAL,
-  ENTRY_ROUTE_RECEIPT,
-  ENTRY_ROUTE_VOICE,
-  resolveEntryAction,
-  type CaptureKind,
-} from '@/features/onboarding/firstRunEntries';
+  ROUTE_EXPENSE_NEW,
+  ROUTE_IMPORT,
+  ROUTE_RECEIPT,
+  ROUTE_VOICE,
+} from '@/features/dashboard/dashboardDialogs';
 import {
   entryCardBasis,
   isChecklistBand,
@@ -48,7 +45,7 @@ const PRIMARY_CARD: EntryCard = {
   icon: 'cloud-download-outline',
   labelKey: 'onboarding.bringHistory',
   hintKey: 'onboarding.bringHistoryHint',
-  route: ENTRY_ROUTE_IMPORT,
+  route: ROUTE_IMPORT,
 };
 
 /**
@@ -72,10 +69,10 @@ const SECONDARY_CARDS: EntryCard[] = [
     icon: 'receipt-outline',
     labelKey: 'onboarding.scanReceipt',
     hintKey: 'onboarding.scanReceiptHint',
-    route: ENTRY_ROUTE_RECEIPT,
+    route: ROUTE_RECEIPT,
   },
-  { icon: 'create-outline', labelKey: 'onboarding.typeManually', route: ENTRY_ROUTE_MANUAL },
-  { icon: 'mic-outline', labelKey: 'onboarding.useVoice', route: ENTRY_ROUTE_VOICE },
+  { icon: 'create-outline', labelKey: 'onboarding.typeManually', route: ROUTE_EXPENSE_NEW },
+  { icon: 'mic-outline', labelKey: 'onboarding.useVoice', route: ROUTE_VOICE },
 ];
 
 interface FirstRunPanelProps {
@@ -84,7 +81,9 @@ interface FirstRunPanelProps {
   /** All three, from `resolveSetupSteps`. Rendered as the band. */
   setupSteps: SetupStep[];
   /**
-   * Open one of the three capture flows over the dashboard.
+   * Open an entry's destination — a dialog over the dashboard where one
+   * exists, a navigation otherwise. Takes the ROUTE, so the decision stays in
+   * `resolveDialogAction`'s single table rather than being re-made here.
    *
    * Owned by `DashboardDesktop`, not here, for one load-bearing reason: this
    * panel UNMOUNTS the moment the first transaction lands (that is the whole
@@ -94,7 +93,7 @@ interface FirstRunPanelProps {
    * the panel it was opened from and the user watches the dashboard come
    * alive behind it.
    */
-  onOpenCapture: (kind: CaptureKind) => void;
+  onOpenRoute: (route: string) => void;
 }
 
 /**
@@ -135,7 +134,7 @@ interface FirstRunPanelProps {
  * Web-only: reached solely from `DashboardDesktop`, which
  * `DashboardView.web.tsx` alone renders.
  */
-export function FirstRunPanel({ onSkip, setupSteps, onOpenCapture }: FirstRunPanelProps) {
+export function FirstRunPanel({ onSkip, setupSteps, onOpenRoute }: FirstRunPanelProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
 
@@ -153,7 +152,7 @@ export function FirstRunPanel({ onSkip, setupSteps, onOpenCapture }: FirstRunPan
         <Text style={styles.subheading}>{t('onboarding.subheading')}</Text>
       </View>
 
-      <EntryCardView card={PRIMARY_CARD} primary onOpenCapture={onOpenCapture} />
+      <EntryCardView card={PRIMARY_CARD} primary onOpenRoute={onOpenRoute} />
 
       <View
         style={styles.row}
@@ -164,7 +163,7 @@ export function FirstRunPanel({ onSkip, setupSteps, onOpenCapture }: FirstRunPan
             key={card.route}
             card={card}
             regime={regime}
-            onOpenCapture={onOpenCapture}
+            onOpenRoute={onOpenRoute}
           />
         ))}
       </View>
@@ -174,7 +173,11 @@ export function FirstRunPanel({ onSkip, setupSteps, onOpenCapture }: FirstRunPan
           labelled, ticked steps under the entry cards reads as a progress
           indicator, so the missing title key stopped being a gap when the
           shape changed. Do NOT add one. */}
-      <SetupChecklist steps={setupSteps} layout={isChecklistBand(regime) ? 'band' : 'card'} />
+      <SetupChecklist
+        steps={setupSteps}
+        layout={isChecklistBand(regime) ? 'band' : 'card'}
+        onOpenStep={(step) => onOpenRoute(step.route)}
+      />
 
       <TouchableOpacity
         style={styles.laterLink}
@@ -202,12 +205,12 @@ function EntryCardView({
   card,
   primary = false,
   regime,
-  onOpenCapture,
+  onOpenRoute,
 }: {
   card: EntryCard;
   primary?: boolean;
   regime?: EntryRowRegime;
-  onOpenCapture: (kind: CaptureKind) => void;
+  onOpenRoute: (route: string) => void;
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -227,14 +230,10 @@ function EntryCardView({
         primary ? styles.cardPrimary : styles.cardSecondary,
         primary ? undefined : { flexBasis: entryCardBasis(regime ?? 'three') },
       ]}
-      onPress={() => {
-        // One table decides which entries open over the dashboard and which
-        // replace it (`firstRunEntries.ts`), so that decision is unit-tested
-        // rather than living in a `.tsx` no test in this repo can render.
-        const action = resolveEntryAction(card.route);
-        if (action.kind === 'dialog') onOpenCapture(action.dialog);
-        else router.push(action.route as never);
-      }}
+      // One table decides which entries open over the dashboard and which
+      // replace it (`dashboardDialogs.ts`), and it is applied once, by the
+      // owner of the dialog slot — so this card just names its route.
+      onPress={() => onOpenRoute(card.route)}
       activeOpacity={0.85}
       accessibilityRole="button"
     >

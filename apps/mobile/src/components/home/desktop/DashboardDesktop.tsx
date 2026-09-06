@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
+import { router } from 'expo-router';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { useHomeScreenData } from '@/hooks/useHomeScreenData';
@@ -22,7 +23,9 @@ import { FirstRunPanel } from './FirstRunPanel';
 import { CreateDialog } from '@/components/expenses/desktop/CreateDialog';
 import { ReceiptDialog } from '@/components/expenses/desktop/ReceiptDialog';
 import { VoiceDialog } from '@/components/expenses/desktop/VoiceDialog';
-import type { CaptureKind } from '@/features/onboarding/firstRunEntries';
+import { BudgetCreateDialog } from '@/components/budgets/desktop/BudgetCreateDialog';
+import { SetBalanceDialog } from '@/components/wallet/desktop/SetBalanceDialog';
+import { resolveDialogAction, type DashboardDialogKind } from '@/features/dashboard/dashboardDialogs';
 import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseCreateForm';
 
 /**
@@ -84,19 +87,38 @@ export function DashboardDesktop() {
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
 
   /**
-   * Which of the three first-run capture flows is open over the dashboard, and
-   * the prefill the receipt scanner's "Edit" hands to the manual form.
+   * Which dialog is open over the dashboard, and the prefill the receipt
+   * scanner's "Edit" hands to the manual form.
    *
-   * Held here rather than in `FirstRunPanel` because that panel unmounts the
-   * instant the first transaction lands — see the mount site at the bottom of
-   * this file. `createPrefill` is cleared on close so a later, unrelated open
-   * of the manual dialog does not resurrect a previous scan's values.
+   * ONE slot for the whole screen. Three surfaces open dialogs — the first-run
+   * entry cards, the setup checklist's steps, and the ordinary rail's quick
+   * actions — and several of their destinations overlap. A slot per surface
+   * would let two be open at once and would give the same action two
+   * implementations; `resolveDialogAction` is the single table that says which
+   * route becomes which dialog, so a route can only ever open one thing.
+   *
+   * Held here rather than in `FirstRunPanel` or `DashboardRail` because the
+   * panel unmounts the instant the first transaction lands, and the rail is
+   * mounted only in the other branch — see the mount site at the bottom of this
+   * file. `createPrefill` is cleared on close so a later, unrelated open of the
+   * expense dialog does not resurrect a previous scan's values.
    */
-  const [captureDialog, setCaptureDialog] = useState<CaptureKind | null>(null);
+  const [dialog, setDialog] = useState<DashboardDialogKind | null>(null);
   const [createPrefill, setCreatePrefill] = useState<ExpenseCreatePrefill | null>(null);
-  const closeCaptureDialog = useCallback(() => {
-    setCaptureDialog(null);
+  const closeDialog = useCallback(() => {
+    setDialog(null);
     setCreatePrefill(null);
+  }, []);
+
+  /**
+   * Every surface hands a ROUTE here, never a dialog kind, so the table stays
+   * the only thing that knows which routes resolve in place. An entry whose
+   * route has no dialog navigates, exactly as it does on the phone.
+   */
+  const openRoute = useCallback((route: string) => {
+    const action = resolveDialogAction(route);
+    if (action.kind === 'dialog') setDialog(action.dialog);
+    else router.push(action.route as never);
   }, []);
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -269,7 +291,7 @@ export function DashboardDesktop() {
           <FirstRunPanel
             onSkip={skipFirstRun}
             setupSteps={setupSteps}
-            onOpenCapture={setCaptureDialog}
+            onOpenRoute={openRoute}
           />
         ) : (
           <View style={styles.layout}>
@@ -289,6 +311,7 @@ export function DashboardDesktop() {
               setupSteps={setupSteps}
               showChecklist={showChecklist}
               onDismissChecklist={dismissChecklist}
+              onOpenRoute={openRoute}
             />
           </View>
         )}
@@ -302,9 +325,11 @@ export function DashboardDesktop() {
         data={safeToSpendData}
         desktop
       />
-      {/* The three first-run capture flows, as dialogs over the dashboard
-          rather than routes that replace it — the panel's own thesis is that
-          navigating away IS the user leaving.
+      {/* Every dashboard flow that resolves in place, as dialogs over the
+          dashboard rather than routes that replace it — this screen's own
+          thesis is that navigating away IS the user leaving. Opened by three
+          surfaces (first-run entry cards, setup checklist steps, rail quick
+          actions), all of which hand a route to `openRoute` above.
 
           **Mounted HERE, outside the `firstRunView` branch above, and that
           placement is load-bearing.** Saving the first transaction flips
@@ -315,28 +340,28 @@ export function DashboardDesktop() {
           — the receipt scanner's "Scan another"/"Done" choice would disappear
           from under the user at the exact moment they earned it. As a sibling
           it survives, and the dashboard behind it is already populated when
-          they close it. */}
-      {captureDialog === 'manual' && (
-        <CreateDialog
-          kind="expense"
-          initial={createPrefill ?? undefined}
-          onClose={closeCaptureDialog}
-        />
+          they close it. The rail's own dialogs need the same treatment for the
+          mirror-image reason: the rail is mounted only in the OTHER branch. */}
+      {dialog === 'expense' && (
+        <CreateDialog kind="expense" initial={createPrefill ?? undefined} onClose={closeDialog} />
       )}
-      {captureDialog === 'receipt' && (
+      {dialog === 'income' && <CreateDialog kind="income" onClose={closeDialog} />}
+      {dialog === 'receipt' && (
         <ReceiptDialog
-          onClose={closeCaptureDialog}
+          onClose={closeDialog}
           onEdit={(prefill) => {
             // "Edit" on the confirm card: the scan is close but the user wants
             // the full form. On the phone this pushes `/expense/new`; here it
             // becomes a dialog swap, so the hand-off never leaves the
             // dashboard. Both carry the same object (`buildReceiptPrefill`).
             setCreatePrefill(prefill);
-            setCaptureDialog('manual');
+            setDialog('expense');
           }}
         />
       )}
-      {captureDialog === 'voice' && <VoiceDialog onClose={closeCaptureDialog} />}
+      {dialog === 'voice' && <VoiceDialog onClose={closeDialog} />}
+      {dialog === 'budget' && <BudgetCreateDialog onClose={closeDialog} />}
+      {dialog === 'wallet' && <SetBalanceDialog onClose={closeDialog} />}
 
       <NewBadgeModal />
     </View>

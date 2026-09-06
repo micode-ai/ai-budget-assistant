@@ -1,10 +1,15 @@
 import { View, Text, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { InvestmentCard, renderHomeWidget } from '@/components/home/HomeWidgetSwitch';
 import { SetupChecklist } from '@/components/home/SetupChecklist';
+import {
+  ROUTE_EXPENSE_NEW,
+  ROUTE_INCOME_NEW,
+  ROUTE_RECEIPT,
+  ROUTE_VOICE,
+} from '@/features/dashboard/dashboardDialogs';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import type { SetupStep } from '@/features/onboarding/resolveSetupSteps';
 import type { WidgetKey } from '@/stores/widgetVisibilityStore';
@@ -47,6 +52,19 @@ interface DashboardRailProps {
   showChecklist: boolean;
   /** Persists the dismissal. Only ever wired in the ordinary rail. */
   onDismissChecklist: () => void;
+  /**
+   * Open a route's destination — a dialog over the dashboard where one exists,
+   * a navigation otherwise. Used by both the quick-action card and the setup
+   * checklist, which between them cover five of the table's six routes.
+   *
+   * Required, and it takes a ROUTE rather than a dialog kind, so the decision
+   * stays in `resolveDialogAction`'s single table and this component never
+   * holds a second opinion about what a route opens. `DashboardDesktop` owns
+   * the dialog slot because this rail is mounted in only one of its two
+   * branches — a dialog held here would not exist at all in the first-run
+   * branch, which offers the same actions.
+   */
+  onOpenRoute: (route: string) => void;
 }
 
 /**
@@ -99,6 +117,7 @@ export function DashboardRail({
   setupSteps,
   showChecklist,
   onDismissChecklist,
+  onOpenRoute,
 }: DashboardRailProps) {
   const { canEdit, currentAccountType, investmentSummary } = ctx;
   const styles = useStyles(createStyles);
@@ -123,7 +142,7 @@ export function DashboardRail({
 
   const fixedTop = (
     <>
-      {canEdit && <RailQuickActions />}
+      {canEdit && <RailQuickActions onOpenRoute={onOpenRoute} />}
       {/* The checklist outlives the first-run state, and here it sits BELOW
           the quick actions, not above them.
 
@@ -148,7 +167,13 @@ export function DashboardRail({
           the quick actions" has to mean below them in the same column; a
           checklist that drifted into the second rail at >= 1680px would be
           beside them, not below. */}
-      {showChecklist && <SetupChecklist steps={setupSteps} onDismiss={onDismissChecklist} />}
+      {showChecklist && (
+        <SetupChecklist
+          steps={setupSteps}
+          onDismiss={onDismissChecklist}
+          onOpenStep={(step) => onOpenRoute(step.route)}
+        />
+      )}
       {investmentEl}
     </>
   );
@@ -188,8 +213,15 @@ export function DashboardRail({
  * quick actions happen to be enabled on mobile (see the design's
  * Departures). Hidden for a viewer, same as the mobile strip — none of
  * these four actions is something a viewer can do.
+ *
+ * **All four open a dialog over the dashboard rather than navigating.** All
+ * four routes are in `resolveDialogAction`'s table, and this component names
+ * routes rather than dialogs so that table stays the only thing deciding. This
+ * was the last surface still pushing: for a while the same action — "Scan a
+ * receipt" — opened over the dashboard from the first-run panel on day one and
+ * replaced the dashboard from this card on day two.
  */
-function RailQuickActions() {
+function RailQuickActions({ onOpenRoute }: { onOpenRoute: (route: string) => void }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -198,7 +230,7 @@ function RailQuickActions() {
     <View style={styles.quickCard}>
       <TouchableOpacity
         style={styles.primaryButton}
-        onPress={() => router.push('/expense/new')}
+        onPress={() => onOpenRoute(ROUTE_EXPENSE_NEW)}
         activeOpacity={0.8}
         accessibilityRole="button"
       >
@@ -208,7 +240,7 @@ function RailQuickActions() {
       <View style={styles.secondaryRow}>
         <TouchableOpacity
           style={styles.secondaryButton}
-          onPress={() => router.push('/income/new')}
+          onPress={() => onOpenRoute(ROUTE_INCOME_NEW)}
           activeOpacity={0.7}
           accessibilityRole="button"
         >
@@ -219,7 +251,7 @@ function RailQuickActions() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.secondaryButton}
-          onPress={() => router.push('/expense/receipt')}
+          onPress={() => onOpenRoute(ROUTE_RECEIPT)}
           activeOpacity={0.7}
           accessibilityRole="button"
         >
@@ -230,7 +262,7 @@ function RailQuickActions() {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.secondaryButton}
-          onPress={() => router.push('/expense/voice')}
+          onPress={() => onOpenRoute(ROUTE_VOICE)}
           activeOpacity={0.7}
           accessibilityRole="button"
         >
