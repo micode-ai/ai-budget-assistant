@@ -285,6 +285,36 @@ export function isShellHostedSettingsRoute(routeName: string): boolean {
   return SETTINGS_ENTRIES.some((entry) => isPaneEntry(entry) && entry.route === route);
 }
 
+/**
+ * Whether this pathname IS the settings root — the shell with nothing
+ * selected.
+ *
+ * Asked by `WebTopBar`'s gear, which pushes `/settings`, for the same reason
+ * {@link isCurrentSelection} is asked by a left-pane row: `router.push` onto
+ * the route you are already on stacks a second copy rather than doing nothing,
+ * and here that copy is a second whole shell, with its own `loadPendingCount`.
+ * The gear is reachable from every desktop screen, so it hits this more often
+ * than any single nav row can.
+ *
+ * **Exact, never a prefix, and this is the load-bearing half.** From
+ * `/settings/ai` the gear is a real navigation — and today the only one back to
+ * the overview pane, which holds the profile card and the ONLY sign-out button
+ * on desktop web, with no left-pane row of its own. A `startsWith('/settings')`
+ * guard would therefore go dead across the entire settings area and take
+ * signing out with it, which is far worse than the duplicate it set out to
+ * prevent.
+ *
+ * More than one spelling of the same place is accepted because expo-router has
+ * produced an `/index` form before in this app: `sectionTitle` in that same top
+ * bar already defends `'/index'` for the dashboard. A missed spelling only
+ * leaves the duplicate, while a wrong match kills the button — so the tolerance
+ * runs in the safe direction only.
+ */
+export function isSettingsRootPath(pathname: string): boolean {
+  const path = pathname.replace(/\/+$/, '');
+  return path === '/settings' || path === '/settings/index';
+}
+
 /** `undefined` means "no cap" — the pane's own width. */
 export function paneContentMaxWidth(entry: SettingsPaneEntry): number | undefined {
   return entry.width === 'form' ? SETTINGS_FORM_MAX_WIDTH : undefined;

@@ -17,6 +17,7 @@ import {
   resolveSettingsPane,
   isShellHostedSettingsRoute,
   isCurrentSelection,
+  isSettingsRootPath,
   paneContentMaxWidth,
   visibleSettingsEntries,
 } from '../settingsRegistry';
@@ -276,6 +277,42 @@ describe('isCurrentSelection', () => {
   it('marks no row when no pane is open', () => {
     for (const entry of visibleSettingsEntries(true)) {
       expect(isCurrentSelection(entry, undefined)).toBe(false);
+    }
+  });
+});
+
+describe('isSettingsRootPath', () => {
+  // Guards `WebTopBar`'s gear, which pushes `/settings` from every desktop
+  // screen. A wrong `true` makes the gear inert somewhere it should navigate.
+
+  // Catches: the guard never firing, i.e. the defect left unfixed - pressing
+  // the gear at the settings root stacks a second whole shell, complete with a
+  // second `loadPendingCount`.
+  it('answers true at the settings root, however the router spells it', () => {
+    expect(isSettingsRootPath('/settings')).toBe(true);
+    expect(isSettingsRootPath('/settings/index')).toBe(true);
+    expect(isSettingsRootPath('/settings/')).toBe(true);
+  });
+
+  // Catches: writing this as `startsWith('/settings')`. That kills the gear
+  // across the WHOLE settings area, and the gear is currently the only in-app
+  // route from a pane back to the overview - which holds the profile card and
+  // the only sign-out button on desktop web, and has no left-pane row of its
+  // own. Trading a duplicate screen for an unreachable sign-out is the one way
+  // this fix could be much worse than the bug.
+  it('answers false inside a pane, so the gear still navigates there', () => {
+    for (const entry of SETTINGS_ENTRIES.filter(isPaneEntry)) {
+      expect(isSettingsRootPath(entry.route)).toBe(false);
+    }
+    expect(isSettingsRootPath('/settings/import')).toBe(false);
+    expect(isSettingsRootPath('/settings/ai-usage-details')).toBe(false);
+  });
+
+  // Catches: a match loose enough to reach outside settings, which would leave
+  // the gear inert on screens that have no other way into settings at all.
+  it('answers false outside settings', () => {
+    for (const path of ['/', '/index', '/expenses', '/wallet', '/settingsomething', '']) {
+      expect(isSettingsRootPath(path)).toBe(false);
     }
   });
 });

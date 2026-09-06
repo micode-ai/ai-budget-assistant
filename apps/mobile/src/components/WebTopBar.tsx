@@ -8,6 +8,7 @@ import { useAlertStore } from '@/stores/alertStore';
 import { useInvitationStore } from '@/stores/invitationStore';
 import { AlertsPanel } from '@/components/alerts/desktop/AlertsPanel';
 import { alertsBadgeCount } from '@/features/alerts/alertsPanelItems';
+import { isSettingsRootPath } from '@/features/settings/settingsRegistry';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { WebSidebar } from '@/components/WebSidebar';
 import { TOP_BAR_HEIGHT, WEB_TOP_BAR_PADDING_X } from '@/components/webLayout.constants';
@@ -119,6 +120,7 @@ export function WebTopBar() {
   // page that at 1920 is two half-viewport tabs over 350px of empty scroll.
   const [alertsOpen, setAlertsOpen] = useState(false);
   const title = sectionTitle(pathname, t);
+  const atSettingsRoot = isSettingsRootPath(pathname);
 
   const btn = {
     width: 34,
@@ -219,7 +221,11 @@ export function WebTopBar() {
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          onPress={() => router.push('/settings')}
+          // Dead only where it points. Pushing `/settings` while already there
+          // stacks a second whole shell, so the gear no-ops at the settings
+          // root and nowhere else - from a pane it is still a real navigation,
+          // and the only one back to the overview and its sign-out button.
+          onPress={atSettingsRoot ? undefined : () => router.push('/settings')}
           style={btn}
           accessibilityRole="button"
           accessibilityLabel={t('nav.settings')}
