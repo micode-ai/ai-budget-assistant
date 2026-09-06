@@ -167,7 +167,7 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'data', labelKey: 'settingsNav.data', route: '/settings/data', width: 'form' },
   // Promoted out of the `reference` sub-hub, which dissolves on desktop — one
   // level of depth removed. These three are list screens and want the width.
-  { kind: 'link', key: 'categories', labelKey: 'settingsNav.categories', route: '/settings/categories', width: 'full' },
+  { kind: 'pane', key: 'categories', labelKey: 'settingsNav.categories', route: '/settings/categories', width: 'full' },
   { kind: 'link', key: 'merchants', labelKey: 'settingsNav.merchants', route: '/settings/merchants', width: 'full' },
   { kind: 'link', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
   { kind: 'pane', key: 'about', labelKey: 'settingsNav.about', route: '/settings/about', width: 'form' },
