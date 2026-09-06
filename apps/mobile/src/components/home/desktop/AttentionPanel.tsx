@@ -42,23 +42,26 @@ import {
 } from '@/features/dashboard/attentionActions';
 import { resolveAttentionEnrichment } from '@/features/dashboard/attentionEnrichment';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
-import { FIRST_RUN_GRID_MIN_WIDTH } from './FirstRunPanel';
 
 /**
  * Below this MEASURED panel width a row's action buttons drop under its text
- * instead of sitting beside it.
+ * instead of sitting beside it. The design's own figure: "the attention
+ * panel's rows wrap their action buttons under the text below ~700px of
+ * focus-column width".
  *
- * Deliberately the same number as `FIRST_RUN_GRID_MIN_WIDTH`, and imported
- * from it rather than written out again — the design names one threshold for
- * both ("the attention panel's rows wrap their action buttons under the text
- * below ~700px of focus-column width, and the first-run 2x2 grid becomes 1x4
- * below the same threshold"), and two constants that must stay equal are two
- * constants that will not. Measured with `onLayout` on the panel, **not**
- * `useContentWidth()`: that hook reports the window, which is right for a
- * single-column screen and wrong here, where the panel lives in a fluid focus
- * column whose width is whatever the rail(s) leave behind.
+ * It used to be imported from `FirstRunPanel`'s grid threshold, because the
+ * design named one number for both. That coupling is gone with the first-run
+ * grid: the first-run state no longer uses the focus/rail split, so its cards
+ * are measured against the FULL content width while this panel is still
+ * measured against a focus column narrowed by one or two rails. Two different
+ * containers, so two independent thresholds — sharing one now would mean a
+ * change made for the wide composition silently re-wrapping this panel.
+ *
+ * Measured with `onLayout` on the panel, **not** `useContentWidth()`: that
+ * hook reports the window, which is right for a single-column screen and
+ * wrong here.
  */
-const ATTENTION_ROW_STACK_WIDTH = FIRST_RUN_GRID_MIN_WIDTH;
+const ATTENTION_ROW_STACK_WIDTH = 700;
 
 type IconName = keyof typeof Ionicons.glyphMap;
 

@@ -861,3 +861,132 @@ tests for what can be tested without rendering.
 - **Light theme and the 1024–1439 band**, per the standing caveat: nothing in
   this repo renders a component in CI, so these are checked by eye on the
   deployed build or not at all.
+
+---
+
+# Addendum — the empty 500px below first-run (2026-09-06)
+
+Measured at 1920×855: content occupies the top ~290px. Ruling below.
+
+## The emptiness is geometric, not a content shortage
+
+At 1920 with the second rail the screen is **three columns** — focus 1240px
+(1920 − 40 padding − 300 − 300 − 40 gaps), plus two 300px rails holding one
+small checklist card between them. So the empty region is not only the 500px
+below; it is also ~600px of rail to the right. Both come from the same cause.
+
+**My original reasoning was wrong on one point and I am reversing it here.** I
+argued the first-run state should keep the focus/rail split "so the layout the
+user learns is the layout they will use". An empty rail teaches nothing — it
+teaches that there is a column here which is broken, which is precisely the
+"failed to finish loading" reading reported. The rail is a container for
+user-configurable widgets; a user with no data has no widgets. Pretending
+otherwise is what produced two empty regions instead of one.
+
+**Ruling: the first-run state does not use the focus/rail split.** It is a
+single composition across the full content width. `DashboardDesktop` renders
+either the first-run composition **or** the focus+rail layout — never the
+first-run panel inside the rail geometry.
+
+## What fills the space — none of the four candidates
+
+Nothing is added. The space is filled by fixing the geometry and letting the
+subject occupy it. All four offered candidates are rejected:
+
+- **A preview of the populated dashboard.** Without numbers it is grey boxes,
+  which is the reported symptom rather than its cure. With numbers it is the
+  next item.
+- **A worked example with obviously-fake figures, plainly labelled.** This is
+  the `0,00 zł` error with a label on it — the exact error the surrounding work
+  exists to remove. Labels are missed, and screenshots outlive their captions.
+  In an app whose subject is not stating a number it does not have, inventing
+  money on the first screen is the one thing that cannot be done.
+- **"What the app can do for you once there is data."** Every honest version is
+  a list of feature names — that is the settings hub, not onboarding. It also
+  competes with the four entry cards for the single decision this screen exists
+  to produce, and a second place for the eye to go is how a user does neither.
+- **Nothing at all, re-centred.** Closest to right, and the reason the ruling is
+  "no new content" — but re-centring alone leaves the two empty rails, so it
+  treats the symptom.
+
+## The composition
+
+Single column, full content width, top to bottom. Every string already exists in
+all nine locales; **zero new keys.**
+
+1. `onboarding.heading` / `onboarding.subheading`
+2. **Primary, full width** — Bring your history (`onboarding.bringHistory`,
+   `onboarding.bringHistoryHint`) → `/settings/import`
+3. **A row of three** — Scan a receipt / Type it manually / Use your voice
+   (`onboarding.scanReceipt` + `.scanReceiptHint`, `.typeManually`, `.useVoice`)
+4. **The checklist, promoted from a rail card to a full-width horizontal band**
+   of three ticked steps — the same component and the same keys
+   (`wallet.addBalance`, `budgets.createBudget`, whatever the shipped step-1
+   label uses), laid out across rather than down
+5. `onboarding.later`
+
+Approximate vertical budget at 855: 120 heading + 140 primary + 160 row +
+110 band + 60 skip + ~80 gaps ≈ 670, plus the 56px bar and 40px padding ≈ 766
+of 855. Full without stretching, and the primary card genuinely reads as
+primary at ~1240px wide rather than as one filled tile in a 2×2.
+
+**Degradation.** The row of three wraps to 2+1 below ~900px of content width and
+to 1×3 below ~620px, measured with `onLayout` on the row — not
+`useContentWidth()`. The checklist band becomes a stack at the same first
+threshold. At 1440 and 1200 the composition is the same, shorter; it must never
+be vertically centred with `justifyContent: 'center'`, or a narrow window
+pushes the skip link off-screen while leaving air above the heading.
+
+## The checklist's missing title — no longer a defect
+
+Shipping it titleless was correct and it stops being a gap once it is a band: a
+full-width row of three labelled, ticked steps under the entry cards reads as a
+progress strip, not as an untitled card. **Do not add a title key for it.**
+
+## Is "Bring your history" the right primary — yes, and now it is actually primary
+
+Kept, as a decision rather than an inheritance:
+
+- It is the **only one of the four that is easier here than on the phone.** The
+  export is on this machine; the camera and the microphone are not. A desktop
+  first-run screen should lead with the thing desktop is best at, which is also
+  the argument for the desktop app existing.
+- It is the only action that turns all nine cards real in one step.
+- The phone leads with Scan for the mirror-image reason. The two platforms
+  disagree **on purpose**, and `app/get-started.tsx` stays untouched.
+
+The real defect the report exposes is that a filled tile in a 2×2 does not read
+as primary at all. Full width above a row of three fixes the hierarchy and the
+vertical budget with one change.
+
+**The mitigation is structural, not copy:** a user with no export to hand must
+never hit a dead end, so the other three sit immediately below the primary in
+the same view. At 1440×855 all four cards and the skip link must be above the
+fold — see criterion 26.
+
+## Acceptance criteria
+
+24. At 1920×855 the first-run screen has no visible rail, no third column, and
+    no region taller than ~120px that contains nothing.
+25. The primary card spans the full content width; the other three sit in one
+    row beneath it.
+26. At 1440×855 and at 1200×800, all four entry cards, the checklist band and
+    "I'll do this later" are reachable without scrolling.
+27. Narrow the window from 1200 to 1000. The row of three reflows (2+1, then
+    stacked) without any card being clipped, and the skip link stays on screen.
+28. Nothing anywhere on the screen shows a currency amount.
+29. Complete step 1. The band's tick updates in place and the layout does not
+    reflow around it.
+
+## The two smaller items
+
+**Account name truncating to "Investm…"** — a real defect, not this screen's.
+Cause: `AccountSwitcher`'s `triggerCompact` sets `maxWidth: 110`, and
+`WebTopBar` passes `compact` even though its bar carries a `flex: 1` spacer and
+has room to spare at every desktop width. The cap exists for phone headers where
+space is genuinely scarce. Worth its own small fix — either stop passing
+`compact` from `WebTopBar` or let the caller raise the cap; either way it is a
+`WebTopBar`/`AccountSwitcher` change with no bearing on first-run, and it should
+be checked at 1024 as well as 1920 before the cap is simply removed.
+
+**No new i18n key is requested by anything in this addendum.**

@@ -21,6 +21,17 @@ interface SetupChecklistProps {
    * already translated everywhere.
    */
   title?: string;
+  /**
+   * `'card'` (default) is the rail's vertical card, byte-identical to what
+   * shipped. `'band'` lays the same three steps ACROSS a full-width strip —
+   * the first-run composition's fourth block, once that state stopped using
+   * the focus/rail split.
+   *
+   * The caller decides, because only the caller has measured its own width
+   * (`resolveEntryRowRegime`); this component takes no measurement of its own
+   * and holds no opinion about where it is rendered.
+   */
+  layout?: 'card' | 'band';
 }
 
 /**
@@ -28,13 +39,19 @@ interface SetupChecklistProps {
  * checklist"): three real steps, each with a live tick derived from data the
  * dashboard has already loaded.
  *
- * **Deliberately NOT under `desktop/`.** Both the first-run rail and the
- * ordinary rail render it — in first-run it replaces the fixed quick-action
- * list and is the whole of that rail, and afterwards it moves to sit
- * directly BELOW that list (taking no `WidgetKey` and no slot, exactly as
- * `InvestmentCard` already does) and stays while any step is outstanding.
- * The position is per-state and belongs to the caller: `DashboardRail` owns
- * it, this component has no opinion about where it is rendered.
+ * **Deliberately NOT under `desktop/`.** Two callers render it. In the
+ * ordinary rail it is the vertical `'card'` — sitting directly below the
+ * quick-action list, taking no `WidgetKey` and no slot exactly as
+ * `InvestmentCard` does, and staying while any step is outstanding. In the
+ * first-run composition it is the full-width `'band'`, the fourth of that
+ * screen's five blocks. Position and variant are the caller's; this
+ * component measures nothing and holds no opinion about where it sits.
+ *
+ * **The band deliberately drops the per-step hint line.** Not an oversight:
+ * it is what makes the strip's height independent of how many steps are
+ * done, so ticking one updates in place instead of reflowing everything
+ * under it. The three titles are imperatives that already stand alone, and
+ * the card variant — which has the vertical room — still shows the hints.
  *
  * **Purely presentational.** Every `done` flag arrives as a prop, so the two
  * callers cannot hold different opinions about what is finished; the rule
@@ -43,11 +60,12 @@ interface SetupChecklistProps {
  *
  * Nothing on mobile renders this today.
  */
-export function SetupChecklist({ steps, onDismiss, title }: SetupChecklistProps) {
+export function SetupChecklist({ steps, onDismiss, title, layout = 'card' }: SetupChecklistProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
+  const band = layout === 'band';
   const doneCount = steps.filter((step) => step.done).length;
 
   return (
@@ -76,9 +94,15 @@ export function SetupChecklist({ steps, onDismiss, title }: SetupChecklistProps)
         ) : null}
       </View>
 
-      {steps.map((step) => (
-        <SetupChecklistRow key={step.id} step={step} />
-      ))}
+      {/* `styles.rows` is not decoration: the card used to lay its header and
+          three rows out as direct children of `card`, whose `gap` spaced all
+          four. Wrapping the rows costs that gap unless the wrapper carries it,
+          which would have silently closed up the rail's checklist. */}
+      <View style={band ? styles.bandRow : styles.rows}>
+        {steps.map((step) => (
+          <SetupChecklistRow key={step.id} step={step} band={band} />
+        ))}
+      </View>
     </View>
   );
 }
@@ -88,7 +112,7 @@ export function SetupChecklist({ steps, onDismiss, title }: SetupChecklistProps)
  * nothing left to ask for, and keeping it tappable would send a user who
  * already has wallet balances to the set-balance form to be told so.
  */
-function SetupChecklistRow({ step }: { step: SetupStep }) {
+function SetupChecklistRow({ step, band = false }: { step: SetupStep; band?: boolean }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -104,10 +128,13 @@ function SetupChecklistRow({ step }: { step: SetupStep }) {
         color={step.done ? theme.colors.success : theme.colors.textTertiary}
       />
       <View style={styles.rowText}>
-        <Text style={[styles.rowTitle, step.done && styles.rowTitleDone]} numberOfLines={1}>
+        <Text style={[styles.rowTitle, step.done && styles.rowTitleDone]} numberOfLines={band ? 2 : 1}>
           {t(step.titleKey)}
         </Text>
-        {!step.done ? (
+        {/* Never in the band — see the component's doc comment: a hint that
+            disappears when a step is ticked would change the strip's height
+            and reflow the skip link under it. */}
+        {!band && !step.done ? (
           <Text style={styles.rowHint} numberOfLines={2}>
             {t(step.hintKey)}
           </Text>
@@ -119,13 +146,15 @@ function SetupChecklistRow({ step }: { step: SetupStep }) {
     </>
   );
 
+  const rowStyle = band ? [styles.row, styles.bandCell] : styles.row;
+
   if (step.done) {
-    return <View style={styles.row}>{body}</View>;
+    return <View style={rowStyle}>{body}</View>;
   }
 
   return (
     <TouchableOpacity
-      style={styles.row}
+      style={rowStyle}
       onPress={() => router.push(step.route as never)}
       activeOpacity={0.7}
       accessibilityRole="button"
@@ -167,6 +196,24 @@ const createStyles = (theme: Theme) => ({
   },
   dismiss: {
     padding: theme.spacing[1],
+  },
+  rows: {
+    gap: theme.spacing[2],
+  },
+  // Band: the three steps laid ACROSS. `alignItems: stretch` so all three
+  // cells share the tallest one's height rather than each sizing to its own
+  // label, which would leave the ticks on different baselines.
+  bandRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'stretch' as const,
+    gap: theme.spacing[5],
+  },
+  bandCell: {
+    flex: 1,
+    minWidth: 0,
+    // A little more air than the card's rows: the band is a full-width strip
+    // rather than a stack inside a 300px rail.
+    paddingVertical: theme.spacing[3],
   },
   row: {
     flexDirection: 'row' as const,

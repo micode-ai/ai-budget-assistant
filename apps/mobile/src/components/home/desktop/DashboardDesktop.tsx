@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { View, ScrollView, useWindowDimensions } from 'react-native';
-import { useStyles, type Theme } from '@/theme';
+import { View, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
+import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { useHomeScreenData } from '@/hooks/useHomeScreenData';
 import { useWebFirstRun } from '@/hooks/useWebFirstRun';
@@ -18,6 +18,7 @@ import { isPurchaseRequestAccount } from '@/features/dashboard/attentionEnrichme
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FocusColumn } from './FocusColumn';
 import { DashboardRail } from './DashboardRail';
+import { FirstRunPanel } from './FirstRunPanel';
 
 /**
  * Desktop web dashboard (`docs/design/2026-09-05-dashboard-web.md`). A fluid
@@ -47,11 +48,22 @@ import { DashboardRail } from './DashboardRail';
  * `HomeQuickActionStrip.tsx` itself is untouched — it simply isn't part of
  * this tree.
  *
- * **Three states, not one** (`useWebFirstRun`): a bounded loading state while
- * the transaction pulls are unanswered, the first-run state for a genuinely
- * new account, and the ordinary dashboard. Both columns take the same
- * `firstRunView` value, so they can never disagree about which one is being
- * drawn.
+ * **Three states, not one** (`useWebFirstRun`), and this component is the one
+ * place that branches between them: a bounded loading state while the
+ * transaction pulls are unanswered, the first-run state, and the ordinary
+ * dashboard. The two-column split belongs to the ordinary dashboard ALONE —
+ * `FocusColumn` and `DashboardRail` know nothing about the other two states
+ * and are never mounted in them.
+ *
+ * The first-run state gets ONE full-width composition instead (see
+ * `FirstRunPanel`). The split was tried first, on the argument that the
+ * layout the user learns should be the layout they will use; it was reversed
+ * against a deployed build, where at 1920 it left roughly 600px of empty rail
+ * beside the content holding a single small card. An empty rail teaches
+ * nothing — the rail is a container for user-configurable widgets, and a user
+ * with no data has no widgets. The loading state is a bare centred spinner
+ * for the same reason: a 300px column standing empty for up to five seconds
+ * reads as a broken column, not as a promise.
  *
  * **The two Phase B reads are issued here and nowhere else.** Everything else
  * on this screen reuses data the app already loads; the pending
@@ -65,6 +77,7 @@ import { DashboardRail } from './DashboardRail';
  */
 export function DashboardDesktop() {
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
+  const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
   const showSecondRail = width >= SECOND_RAIL_MIN_WIDTH;
@@ -227,28 +240,33 @@ export function DashboardDesktop() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        <View style={styles.layout}>
-          <View style={styles.focusColumn}>
-            <FocusColumn
+        {firstRunView === 'wait' ? (
+          <View style={styles.loading}>
+            <ActivityIndicator size="large" color={theme.colors.primary} />
+          </View>
+        ) : firstRunView === 'first-run' ? (
+          <FirstRunPanel onSkip={skipFirstRun} setupSteps={setupSteps} />
+        ) : (
+          <View style={styles.layout}>
+            <View style={styles.focusColumn}>
+              <FocusColumn
+                ctx={widgetCtx}
+                onOpenSafeToSpend={() => setSafeToSpendSheetVisible(true)}
+              />
+            </View>
+            {/* No sizing wrapper here (round 6) — `DashboardRail` renders its
+                own 300px column(s) and owns their width entirely, whether one
+                or two are shown. */}
+            <DashboardRail
               ctx={widgetCtx}
-              onOpenSafeToSpend={() => setSafeToSpendSheetVisible(true)}
-              firstRunView={firstRunView}
-              onSkipFirstRun={skipFirstRun}
+              widgetOrder={widgetOrder}
+              secondRailVisible={showSecondRail}
+              setupSteps={setupSteps}
+              showChecklist={showChecklist}
+              onDismissChecklist={dismissChecklist}
             />
           </View>
-          {/* No sizing wrapper here (round 6) — `DashboardRail` renders its
-              own 300px column(s) and owns their width entirely, whether one
-              or two are shown. */}
-          <DashboardRail
-            ctx={widgetCtx}
-            widgetOrder={widgetOrder}
-            secondRailVisible={showSecondRail}
-            firstRunView={firstRunView}
-            setupSteps={setupSteps}
-            showChecklist={showChecklist}
-            onDismissChecklist={dismissChecklist}
-          />
-        </View>
+        )}
       </ScrollView>
 
       {/* Safe-to-Spend breakdown — a centred dialog on desktop (`desktop`
@@ -279,6 +297,16 @@ const createStyles = (theme: Theme) => ({
   content: {
     padding: theme.spacing[5],
     paddingBottom: theme.spacing[8],
+  },
+  // The loading state, and the one this screen must never skip: on web a
+  // failed pull is indistinguishable from an empty account, so drawing the
+  // ordinary (empty) dashboard while the request is in flight is what makes
+  // an offline first paint look like a brand-new account. Bounded — see
+  // `FIRST_RUN_WAIT_TIMEOUT_MS`.
+  loading: {
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[20],
   },
   layout: {
     flexDirection: 'row' as const,

@@ -7,7 +7,6 @@ import { InvestmentCard, renderHomeWidget } from '@/components/home/HomeWidgetSw
 import { SetupChecklist } from '@/components/home/SetupChecklist';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import type { SetupStep } from '@/features/onboarding/resolveSetupSteps';
-import type { FirstRunView } from '@/features/onboarding/webFirstRunView';
 import type { WidgetKey } from '@/stores/widgetVisibilityStore';
 
 /** Fixed rail COLUMN width (`docs/design/2026-09-05-dashboard-web.md`'s
@@ -38,16 +37,12 @@ interface DashboardRailProps {
    *  of one. Owns its own root element's width either way, so
    *  `DashboardDesktop` no longer wraps this component in a sizing `View`. */
   secondRailVisible: boolean;
-  /** Which dashboard state to draw — see `FocusColumn`'s matching prop. */
-  firstRunView: FirstRunView;
   /** All three, from `resolveSetupSteps`, ticks included. */
   setupSteps: SetupStep[];
   /**
-   * Whether to render the checklist in the ORDINARY rail. Decided by
-   * `DashboardDesktop` (outstanding steps, not dismissed, and built on an
-   * answered pull) rather than here, so this component holds no opinion
-   * about what "done" means. The FIRST-RUN rail renders it regardless — in
-   * that state every step is outstanding by definition.
+   * Whether to render the checklist. Decided by `DashboardDesktop`
+   * (outstanding steps, not dismissed, and built on an answered pull) rather
+   * than here, so this component holds no opinion about what "done" means.
    */
   showChecklist: boolean;
   /** Persists the dismissal. Only ever wired in the ordinary rail. */
@@ -64,10 +59,11 @@ interface DashboardRailProps {
  * the five now living in `FocusColumn` — in the user's own stored order,
  * filtered. Nothing else about that order changes.
  *
- * The rail has three states, not one (see `firstRunView`): empty while the
- * transaction pulls are unanswered, the setup checklist ALONE — at the top,
- * with the quick-action list hidden — during first run, and the order above
- * once that ends.
+ * **This component belongs to the ordinary dashboard alone.** The loading and
+ * first-run states are branched in `DashboardDesktop` and never mount a rail
+ * at all — the first-run screen is one full-width composition, because a
+ * standing column with nothing in it reads as a broken column rather than as
+ * a preview of one.
  *
  * **Below `SECOND_RAIL_MIN_WIDTH`**: one 300px column, exactly as before
  * round 6 — quick actions, then the checklist, then `InvestmentCard`, then
@@ -100,50 +96,12 @@ export function DashboardRail({
   ctx,
   widgetOrder,
   secondRailVisible,
-  firstRunView,
   setupSteps,
   showChecklist,
   onDismissChecklist,
 }: DashboardRailProps) {
   const { canEdit, currentAccountType, investmentSummary } = ctx;
   const styles = useStyles(createStyles);
-
-  // Loading: the rail is empty, but its column(s) are still rendered, so the
-  // focus column beside them is exactly as wide as it will be a moment later
-  // and the spinner does not jump sideways when the answer arrives.
-  if (firstRunView === 'wait') {
-    return secondRailVisible ? (
-      <View style={styles.twoRailWrapper}>
-        <View style={styles.rail} />
-        <View style={styles.rail} />
-      </View>
-    ) : (
-      <View style={styles.rail} />
-    );
-  }
-
-  // First run: one card, and the fixed quick-action list is HIDDEN. A
-  // "+ Expense" button beside a 2x2 grid whose third card is "Type it
-  // manually" is the same action offered twice, two hundred pixels apart.
-  // No dismiss control either — this state ends on its own the moment a
-  // transaction lands, so there is nothing to dismiss.
-  if (firstRunView === 'first-run') {
-    return secondRailVisible ? (
-      <View style={styles.twoRailWrapper}>
-        <View style={styles.rail}>
-          <SetupChecklist steps={setupSteps} />
-        </View>
-        {/* Empty on purpose (the spec's own wireframe): there are no widgets
-            to put here yet, and keeping the column preserves the focus
-            column's width across the transition out of this state. */}
-        <View style={styles.rail} />
-      </View>
-    ) : (
-      <View style={styles.rail}>
-        <SetupChecklist steps={setupSteps} />
-      </View>
-    );
-  }
 
   // De-dupe exactly like `DashboardMobile` — a duplicate key in the stored
   // order would render the same widget twice (doubled card + broken modal).
@@ -166,28 +124,24 @@ export function DashboardRail({
   const fixedTop = (
     <>
       {canEdit && <RailQuickActions />}
-      {/* The checklist outlives the first-run state, but in THIS state it sits
-          BELOW the quick actions, not above them.
+      {/* The checklist outlives the first-run state, and here it sits BELOW
+          the quick actions, not above them.
 
-          The design spec says "top of the ordinary rail" and that is the one
-          thing overridden here, by the product owner, against the deployed
-          build: the checklist pushed "+ Add Expense" down by roughly 150px,
-          and on the landing screen the primary action outranks a progress
-          list. It is also what this component's own doc comment has always
-          required — quick actions must not be pushed below the fold by
-          whatever else the rail is carrying.
+          The design spec says "top of the ordinary rail"; that is the one
+          thing overridden, by the product owner, against a deployed build
+          where it pushed "+ Add Expense" down by roughly 150px. On the
+          landing screen the primary action outranks a progress list, and this
+          component's own doc comment has always required as much — quick
+          actions must not be pushed below the fold by whatever else the rail
+          is carrying. In the FIRST-RUN composition the same component is a
+          full-width band instead, which is `FirstRunPanel`'s to place.
 
-          **The FIRST-RUN rail keeps it at the top** (see the branch above):
-          nothing competes with it there, and it is the whole content of that
-          state. So the ordering is per-state, which is why this lives here
-          rather than inside `SetupChecklist`.
-
-          Position aside, nothing else changed: it still takes no `WidgetKey`
-          and no slot — exactly as `InvestmentCard` does — and it still stays
-          while any step is outstanding, then disappears on its own. This is
-          what covers the user who adds one expense and never sets a wallet
-          balance: their Safe to Spend reads 0,00 for ever and nothing else on
-          the screen says why.
+          Position aside, nothing else changed: it takes no `WidgetKey` and no
+          slot — exactly as `InvestmentCard` does — and it stays while any
+          step is outstanding, then disappears on its own. This is what covers
+          the user who adds one expense and never sets a wallet balance: their
+          Safe to Spend reads 0,00 for ever and nothing else on the screen
+          says why.
 
           It stays inside `fixedTop`, which the two-rail branch renders into
           the LEFT column only — the column the quick actions are in. "Below
