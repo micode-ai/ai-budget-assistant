@@ -356,9 +356,10 @@ interface CurrencyDropdownProps {
  * `onCurrencyChange` contract. Built on RN's own `Modal` (Universal dialogs
  * rule — free Escape handling + focus trap) with a raw, tab-index-less
  * `<div>` scrim, same shape as `RowContextMenu.tsx`'s anchored popover.
- * Deliberately visually distinct from `WebTopBar`'s `CurrencyPill` (that one
- * sets the account's global display currency; this is a screen-local
- * filter) — a labelled button, not a bare pill.
+ * Deliberately visually distinct from the global display-currency control
+ * (which now lives inside the account menu, and sets the account's display
+ * currency for the whole app; this is a screen-local filter) — a labelled
+ * button, not a bare pill.
  */
 function CurrencyDropdown({ selectedCurrency, onCurrencyChange, availableCurrencies }: CurrencyDropdownProps) {
   const { t } = useTranslation();

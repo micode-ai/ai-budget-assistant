@@ -1100,3 +1100,254 @@ answers to the same question.
     with no truncation at 1200.
 36. A completed step shows a filled circle and a dimmed label, and is still
     clickable.
+
+---
+
+# Addendum 3 — the rail widgets (2026-09-06)
+
+## 1. Widget problem, not a rail problem
+
+The circularity breaks with one test: **would widening the rail fix this tell?**
+
+| Tell | Fixed by a wider rail? |
+|---|---|
+| Centred pill titles | No — centred is wrong at 300px and at 600px |
+| Centred content in a column | No |
+| Horizontal scroller (Family Feed) | No — it would scroll later, not stop |
+| Gauge sized for a thumb | No |
+| Calendar's tiny days and dots | **No — see below** |
+
+Zero of five. **Do not widen the rail and do not move the widgets into a grid** —
+both cost a layout change and deliver nothing.
+
+**I checked the one I expected to be a genuine width case and it is not.**
+`CalendarWidget`'s day cell is a **fixed** `width: 28, height: 28` with a fixed
+`5×5` dot. Seven columns is 196px inside a rail whose inner width is 260px — the
+calendar is not being compressed by the rail, it has **~64px of unused room and
+is simply drawn at thumb scale**. That was going to be my counter-example, and
+it turned out to be the strongest evidence for the ruling.
+
+**The real diagnosis, in two parts:**
+
+- **The rail has no scan line.** A phone card centres its content because it is
+  the full width of the screen and the only thing you see. A rail card is one of
+  eight in a column the eye runs *down* — so every card must start its content
+  at the same x. Eight centred cards give eight different starting positions.
+  That is why they read as transplanted, and it is why the fix is mostly
+  alignment rather than size.
+- **They are drawn at thumb scale**, which on a screen driven by a precise
+  pointer wastes the density the product owner is asking for.
+
+## 2. The ranking, and the three
+
+**Do these three properly:**
+
+1. **Quick actions.** The loudest phone tell on the screen — a full-width orange
+   primary button is a FAB's cousin, and icon-above-label is an action sheet.
+   It is also **the only one of the eight with zero mobile cost**: it is not a
+   widget, it is the rail-only list from this spec's own earlier ruling, so it
+   can be rewritten outright with no `desktop?` prop and no shared branch.
+   Highest wrongness, lowest price — do it first.
+2. **Family Feed.** A horizontal scroller inside a vertical rail is a **second
+   scroller**, which the design language forbids outright ("If two scrollbars
+   look wrong, there is one scroller too many"). The fourth avatar cut off at
+   the edge is the phone-carousel affordance advertising it. This is a rule
+   violation, not a taste difference.
+3. **Calendar.** Not unfamiliar — **illegible**, which is worse: the information
+   is rendered and cannot be read. And per the check above it is the cheapest of
+   the three to fix, because the room is already there.
+
+**Then one sweep for the rest** (see §3) — Financial Health, Debts & Loans,
+Expense Audit, Net Capital, Gamification. These are *alignment*, not layout.
+Net Capital is the one the product owner already read as closest to right, and
+its only real tell is the pill; that is the proof the sweep is the right size of
+fix for this group.
+
+**Nothing here is merely unfamiliar except Net Capital's body**, which is
+already correct and should not be touched.
+
+## 3. Cheapest correct treatment
+
+**The sweep is one extraction, not five bespoke branches.** I checked: the
+centred header is **copy-pasted, not shared** — `DebtsCard`'s `cardHeader`,
+`NetCapitalWidget`'s `headerRow` and `FatFinderCard`'s `headerRow` are three
+independent copies of the same `justifyContent: 'center'` + `alignSelf: 'center'`
+shape, several of them beside an identical absolutely-positioned `chevronHint`.
+
+So: extract one shared `WidgetHeader` (title, optional leading icon, optional
+trailing chevron) taking `desktop?: boolean`. Its default branch renders
+byte-identical to today's copy; its desktop branch is left-aligned and drops the
+pill. Then each widget swaps its hand-rolled header for it. **One new component
+plus N one-line swaps**, instead of N bespoke desktop layouts — and it retires a
+triplication that would otherwise drift.
+
+| Widget | Treatment | Cost |
+|---|---|---|
+| **Quick actions** | Four equal, left-aligned rows with small leading icons. No full-width fill, no icon-above-label; weight the primary with an accent icon, not an orange block | Rewrite in place, **no `desktop?` prop, no mobile surface** |
+| **Family Feed** | Drop the horizontal strip on desktop: three stacked rows, avatar left, name and amount beside it. Same data, same three items, no second scroller | `desktop?` prop |
+| **Calendar** | Scale up into the room it already has: day cell 28→**36**, dot 5→**7**, `dayText` `bodySm`→`body`. 7×36 = 252 against 260 of inner width | `desktop?` prop, **three numbers** |
+| **Financial Health** | Shrink the gauge, move it beside the score rather than dominating, and **drop the "tap for details" line** — wrong verb for a mouse, and the card is already a `Pressable` with hover and `cursor: pointer`. Dropping is also how it stays key-neutral | `desktop?` prop + `WidgetHeader` |
+| **Debts & Loans** | `WidgetHeader`; the two icon-above-number columns become two left-aligned label/value rows | `WidgetHeader` + small |
+| **Expense Audit** | `WidgetHeader`; left-align the empty state | `WidgetHeader` only |
+| **Net Capital** | `WidgetHeader` only — the currency list is already left-aligned rows | `WidgetHeader` only |
+| **Gamification** | `WidgetHeader`; the full-width button becomes a left-aligned text action | `WidgetHeader` + small |
+
+**Zero new i18n keys** — every change above is alignment, sizing or removal.
+`healthScore.tapForDetails` is dropped on desktop rather than reworded, which is
+what keeps that true.
+
+**1440 and 1200, where there is one rail:** nothing above is width-conditional.
+The rail is 300px at every desktop width, so all eight render identically at
+1200, 1440 and 1920 — which is the point of ruling that this was never a width
+problem.
+
+## Acceptance criteria
+
+37. Run the eye down the rail: every card's title starts at the same x, and no
+    title sits in a centred pill.
+38. No horizontal scrollbar or cut-off item appears inside any rail card at any
+    desktop width; the page still has exactly one scrollbar.
+39. Calendar day numbers are legible at arm's length and the dots are
+    distinguishable by colour without leaning in; the grid still fits with no
+    clipping at 1200.
+40. The rail's action list has no full-width filled button and no
+    icon-above-label item.
+41. No card says "tap".
+42. Open the mobile app on a phone: all eight widgets are pixel-identical to
+    before this pass, including the three headers that moved to `WidgetHeader`.
+
+---
+
+# Addendum 4 — the top bar's right-hand cluster (2026-09-06)
+
+*(Addendum 3, on the rail widgets, was answered against a misread brief. It
+stands as a record but was not asked for; nothing in it is scheduled.)*
+
+## 1. What the cluster is
+
+It is not a toolbar. It is **four different kinds of thing wearing one costume**:
+
+| Control | What it actually is |
+|---|---|
+| Account | **Scope.** It changes every number on the screen — the workspace switcher |
+| Currency | **A display preference.** Changes presentation, not scope |
+| Alerts | **An inbox**, with a count |
+| Settings | **Navigation** to a screen |
+
+Giving a scope selector, a preference, an inbox and a nav link the same 34px
+translucent pill is the defect. **Ruling: three tiers, not four equals.**
+
+- **Account is the one prominent element** — labelled, widest, visibly a
+  different weight from the two icon buttons. It is the only control here whose
+  value the user needs to *read* rather than recognise.
+- **Alerts and Settings stay icon-only pills** — a bell and a gear are
+  universally legible and their labels would be noise. They are correct as they
+  are; they are only wrong *relative* to the account control, which is the thing
+  that changes.
+- **A thin vertical divider between the account control and the two icons**
+  makes the tiering legible with no new chrome and no new key.
+
+Settings does **not** fold into the account menu — folding a navigation target
+into a scope selector is a category error, and it is the one control a user
+looks for by position.
+
+## 2. The account menu — a 340px panel anchored right
+
+**The full-width band has a one-line cause.** `styles.dropdown` sets
+`marginHorizontal: theme.spacing[5]` and **no width and no `maxWidth`**, inside
+an overlay with `justifyContent: 'flex-start'` — so the panel stretches to the
+viewport minus 40px. At 1920 that is an 1880px panel. It was never sized; it was
+only inset.
+
+Desktop branch, three style values:
+
+- `dropdown`: `width: 340`, replacing the horizontal margins
+- `overlay`: add `alignItems: 'flex-end'` and `paddingRight` equal to
+  `WebTopBar`'s own `paddingHorizontal` (20), so the panel's right edge lines up
+  with the trigger that opened it
+- `overlay.paddingTop`: use `TOP_BAR_HEIGHT + 4`, not the current magic `60` —
+  the constant already exists in `webLayout.constants.ts`
+
+No measurement and no positioning math: the bar's padding is a known constant.
+The existing `maxHeight: '82%'` already handles seven accounts (≈700px at 855),
+so the list needs nothing.
+
+**One real bug to fix in the same branch: the scrim is a `Pressable`.** Both
+this menu and `CurrencyPill`'s use `<Pressable style={styles.overlay}>`, and a
+`Pressable` always emits a `tabIndex`, which makes the invisible scrim the focus
+trap's **first** target — the design language names this exactly, and
+`ExpenseDialog` already solves it. On desktop the scrim must be a raw `<div>`.
+
+## 3. Currency — remove it from the bar
+
+**Ruling: drop the standalone `CurrencyPill` from `WebTopBar`, and let the
+account trigger carry the currency as a suffix instead.**
+
+- It is **already inside the account menu** — deliberately, per that component's
+  own comment that the menu always opens "so the currency control is
+  reachable". Two controls for one preference, side by side, one of them
+  unlabelled, is the redundancy the design language tells us to resolve by
+  choosing a leader.
+- A display preference does not belong in a navigation bar. Its home is
+  Settings → Profile; its shortcut is the account menu. Two clicks is right for
+  a preference.
+- Nothing becomes unreachable, and the unlabelled `zł ⌄` — which reads as
+  decoration precisely because it has no label — stops existing.
+
+**What replaces the indicator:** `WebTopBar` currently passes
+`showCurrency={false}`. Stop passing it, and the trigger reads `Family · zł ⌄`
+— one control that states both the scope and the currency those numbers are
+in, which is what the combined pill was built for. The split into two pills was
+a *mobile tab-header* decision, made where width is scarce; on a desktop bar
+with a `flex: 1` spacer it buys nothing.
+
+**This makes the earlier truncation fix load-bearing rather than cosmetic.**
+`AccountSwitcher`'s `triggerCompact` caps at `maxWidth: 110`, which already
+clips "Investment"; adding a currency suffix guarantees it. `WebTopBar` must
+stop passing `compact`.
+
+## 4. The alert badge
+
+Two things, both grounded: the badge is a **hardcoded `#E53935`**, which
+violates the rule that every colour comes from `useTheme()` — `danger` exists.
+And `danger` is deliberately **not** accent-derived while the bar's ground **is**,
+so on a red-family accent it is red on red. The accent-independent fix is a
+**2px border in `theme.colors.primary`** — the bar's own colour, so the ring
+reads as a gap and separates the badge from the ground whatever the accent is.
+Label colour becomes `onSemantic`, not a literal `#FFFFFF`.
+
+## 5. Cost, cheapest first
+
+| Change | Where | Mobile risk |
+|---|---|---|
+| Remove `CurrencyPill`; stop passing `compact` and `showCurrency={false}`; add the divider; re-tier the two icons | `WebTopBar` | **None — web-only file** |
+| Badge → `danger` + `onSemantic` + primary ring | `WebTopBar` | **None** |
+| Menu panel width, right-anchor, `TOP_BAR_HEIGHT` | `AccountSwitcher` | `desktop?` prop, **three style values**, byte-identical default |
+| Scrim `Pressable` → `<div>` | `AccountSwitcher` | Same `desktop?` branch |
+
+Everything above the line is free. `CurrencyPill` itself needs **no change at
+all** — it simply stops being rendered on desktop.
+
+**1440 and 1200:** nothing here is width-conditional. The bar has a `flex: 1`
+spacer at every desktop width and a 340px panel fits with room to spare at
+1200, so all four widths render identically.
+
+**Zero new i18n keys** — one control is removed, one already-translated suffix
+is re-enabled, and the rest is colour, size and anchoring.
+
+## Acceptance criteria
+
+43. The account control is visibly wider and heavier than the bell and gear, and
+    a divider separates them.
+44. The account control reads `<name> · <currency symbol>` with the full account
+    name — open an account named "Investment" and confirm no ellipsis.
+45. Open the account menu at 1920: the panel is ~340px wide and its right edge
+    aligns with the control that opened it. Repeat at 1440 and 1200.
+46. With the menu open, press `Tab` once — focus lands on a real control inside
+    the panel, never on the scrim. `Esc` closes it.
+47. There is no separate currency pill in the bar; the display currency is still
+    changeable from inside the account menu.
+48. With unread alerts, cycle all 13 accents in both themes: the badge is
+    distinguishable from the bar's ground at every one.
+49. Open the app on a phone: the account switcher, its menu and the currency
+    pill are pixel-identical to before this pass.

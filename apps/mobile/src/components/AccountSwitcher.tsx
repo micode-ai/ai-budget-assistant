@@ -19,6 +19,16 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, Currency } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES, getCurrencySymbol } from '@budget/shared-utils';
 import { useAuthStore } from '@/stores/authStore';
+import { TOP_BAR_HEIGHT } from '@/components/webLayout.constants';
+
+/**
+ * `WebTopBar`'s own `paddingHorizontal`. Duplicated as a named constant rather
+ * than imported, because that value lives in a `StyleSheet.create` inside a
+ * web-only file this shared component must not import — pulling `WebTopBar`
+ * in here would put the whole desktop bar into the native graph, the exact
+ * thing `WebShell.tsx`'s split exists to prevent. Keep the two in step.
+ */
+const WEB_TOP_BAR_PADDING_X = 20;
 
 const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = {
   personal: 'person-outline',
@@ -32,6 +42,7 @@ export function AccountSwitcher({
   compact = false,
   showCurrency = true,
   maxTriggerWidth,
+  desktop = false,
 }: {
   compact?: boolean;
   /** Hide the inline currency symbol when a separate CurrencyPill sits next to the switcher. */
@@ -53,6 +64,24 @@ export function AccountSwitcher({
    * phone; a caller-supplied override cannot.
    */
   maxTriggerWidth?: number;
+  /**
+   * Desktop web only: size and right-anchor the menu panel under `WebTopBar`,
+   * and use a raw `<div>` scrim instead of a `Pressable`.
+   *
+   * Defaults to `false`, so BOTH phone call sites — the home hero and the tab
+   * header — render byte-identically to before. The `desktop?: boolean`
+   * defaulting to false is the design language's own convention for a
+   * component both platforms render (`InflationIndexSection`): the mobile call
+   * site passes nothing and therefore keeps its layout by construction rather
+   * than by discipline.
+   *
+   * **The `<div>` below is unreachable from native, structurally.** Only
+   * `WebTopBar` passes this prop, `WebTopBar` is imported only by
+   * `WebShell.web.tsx`, and native's `WebShell.tsx` is a real no-op that
+   * imports neither — so on a phone this branch is dead code that React Native
+   * never evaluates, not a runtime `Platform` check that could be reached.
+   */
+  desktop?: boolean;
 }) {
   const [visible, setVisible] = useState(false);
   const [pastTripsExpanded, setPastTripsExpanded] = useState(false);
@@ -189,8 +218,8 @@ export function AccountSwitcher({
         animationType="fade"
         onRequestClose={() => setVisible(false)}
       >
-        <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
-          <View style={styles.dropdown}>
+        <MenuScrim desktop={desktop} styles={styles} theme={theme} onDismiss={() => setVisible(false)}>
+          <View style={[styles.dropdown, desktop && styles.dropdownDesktop]}>
             <Text style={styles.dropdownTitle}>{t('accounts.switchAccount')}</Text>
 
             <FlatList
@@ -263,9 +292,81 @@ export function AccountSwitcher({
               <Text style={styles.manageButtonText}>{t('accounts.manage')}</Text>
             </TouchableOpacity>
           </View>
-        </Pressable>
+        </MenuScrim>
       </Modal>
     </>
+  );
+}
+
+/**
+ * The dismiss-on-click backdrop behind either menu.
+ *
+ * **On desktop it is a raw `<div>`, never a `Pressable`.** react-native-web
+ * gives every `Pressable` a `tabIndex` attribute, and ANY tabindex — including
+ * `-1` — makes an element a valid `.focus()` target, which is all RN's
+ * `ModalFocusTrap` checks for when it walks for the first focusable
+ * descendant. So a `Pressable` scrim is the trap's FIRST target and swallows
+ * the focus that should land on a real control inside the panel. The design
+ * language names this exactly and `ExpenseDialog` already solves it the same
+ * way. A bare `<div>` with no tabindex is genuinely unfocusable, so the walk
+ * skips it and recurses into the panel.
+ *
+ * The CSS mirrors `styles.overlay` axis for axis: RN's overlay is a column
+ * flex container, so its `justifyContent` is the VERTICAL axis (top) and its
+ * `alignItems` is the HORIZONTAL one (right) — hence `flexDirection: 'column'`
+ * here rather than relying on the CSS default of `row`, which would silently
+ * swap the two.
+ *
+ * Off desktop it is the exact `Pressable` that shipped, so the phone is
+ * unchanged.
+ */
+function MenuScrim({
+  desktop,
+  styles,
+  theme,
+  onDismiss,
+  children,
+}: {
+  desktop: boolean;
+  styles: ReturnType<typeof createStyles>;
+  theme: Theme;
+  onDismiss: () => void;
+  children: React.ReactNode;
+}) {
+  if (!desktop) {
+    return (
+      <Pressable style={styles.overlay} onPress={onDismiss}>
+        {children}
+      </Pressable>
+    );
+  }
+  return (
+    <div
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onDismiss();
+      }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-start',
+        // Clears the bar rather than the magic `60` the mobile overlay uses.
+        paddingTop: TOP_BAR_HEIGHT + 4,
+        // Equal to `WebTopBar`'s own `paddingHorizontal`, so the panel's right
+        // edge lines up with the trigger that opened it. A known constant, so
+        // no measurement and no positioning math.
+        paddingRight: WEB_TOP_BAR_PADDING_X,
+        backgroundColor: theme.colors.overlay,
+      }}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -388,6 +489,17 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.overlay,
     justifyContent: 'flex-start' as const,
     paddingTop: 60,
+  },
+  // Desktop: a real width, replacing the horizontal margins. The full-width
+  // band this fixes had a one-line cause — `dropdown` set `marginHorizontal`
+  // and NO `width` and NO `maxWidth`, inside an overlay with
+  // `justifyContent: 'flex-start'`, so the panel stretched to the viewport
+  // minus 40px: an 1880px panel at 1920. It was never sized, only inset.
+  // `maxHeight: '82%'` below already handles seven accounts, so the list needs
+  // nothing.
+  dropdownDesktop: {
+    width: 340,
+    marginHorizontal: 0,
   },
   dropdown: {
     marginHorizontal: theme.spacing[5],
