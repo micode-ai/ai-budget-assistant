@@ -281,7 +281,17 @@ export function InteractiveLineChart({
             // per-point labels present, the axis rule is the baseline a
             // signed value like -340 is read against.
             xAxisThickness={1}
-            xAxisColor={theme.colors.border}
+            // COMPACT ONLY. The zero rule was drawn HEAVIER than the grid it
+            // belongs to — `border` for the axis against `borderLight` for
+            // `rulesColor` below — so a genuinely zero month left the accent
+            // line resting on a darker rule with nothing to separate it from.
+            // Dropping the axis to grid weight lets it recede and the line
+            // read as foreground over it. Deliberately NOT a restyle of the
+            // line (thicker, offset, dashed): the value IS exactly zero and
+            // must be drawn there. `compact`-gated, like every other fix in
+            // this component, because changing it for the non-compact path
+            // would change what mobile and every other caller renders.
+            xAxisColor={compact ? theme.colors.borderLight : theme.colors.border}
             yAxisTextStyle={styles.axisText}
             xAxisLabelTextStyle={styles.axisText}
             rulesColor={theme.colors.borderLight}

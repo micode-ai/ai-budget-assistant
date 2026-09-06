@@ -10,8 +10,13 @@ import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore'
 import { formatCurrency } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { InteractiveLineChart } from '@/components/interactive-charts/InteractiveLineChart';
+import {
+  buildNetProfitSeries,
+  hasEnoughMonthsForTrend,
+  NET_PROFIT_SPARSE_HINT_KEY,
+} from '@/features/dashboard/netProfitSeries';
 import { filterConsumption } from '@/utils/consumption';
-import type { ChartDataPoint, SafeToSpendResponse } from '@budget/shared-types';
+import type { SafeToSpendResponse } from '@budget/shared-types';
 
 /** 3M/6M/12M window for the trend chart — desktop's range control (see
  *  `showRangeChips` below); mobile never renders the control, so `range`
@@ -110,41 +115,24 @@ export function NetProfitWidget({
   const [range, setRange] = useState<NetProfitRange>('6m');
   const monthCount = monthsForRange(range);
 
-  const { data, currentNetProfit } = useMemo(() => {
-    const now = new Date();
-
-    const points: ChartDataPoint[] = Array.from({ length: monthCount }, (_, i) => {
-      const offset = monthCount - 1 - i;
-      const d = new Date(now.getFullYear(), now.getMonth() - offset, 1);
-      const start = new Date(d.getFullYear(), d.getMonth(), 1);
-      const end = new Date(d.getFullYear(), d.getMonth() + 1, 0);
-      end.setHours(23, 59, 59, 999);
-      const label = start.toLocaleDateString(intlLocale, { month: 'short' });
-
-      const monthIncome = incomes
-        .filter((inc) => {
-          if (inc.isDeleted) return false;
-          const dt = new Date(inc.date);
-          return dt >= start && dt <= end;
-        })
-        .reduce((sum, inc) => sum + convertAmount(inc.amount, inc.currencyCode, displayCurrency, rates), 0);
-
-      const monthExpense = expenses
-        .filter((exp) => {
-          if (exp.isDeleted) return false;
-          const dt = new Date(exp.date);
-          return dt >= start && dt <= end;
-        })
-        .reduce((sum, exp) => sum + convertAmount(exp.amount, exp.currencyCode, displayCurrency, rates), 0);
-
-      return { label, value: monthIncome - monthExpense };
-    });
-
-    return {
-      data: points,
-      currentNetProfit: points[points.length - 1]?.value ?? null,
-    };
-  }, [expenses, incomes, rates, displayCurrency, intlLocale, monthCount]);
+  // The bucketing loop that used to live inline here moved VERBATIM into
+  // `buildNetProfitSeries` (same boundaries, same filters, same reducers), so
+  // `data` and `currentNetProfit` are computed by the same code as before —
+  // this is a move, not a re-derivation. What it adds is `populatedMonths`,
+  // read from the same pass. The dependency list is unchanged.
+  const { points: data, currentNetProfit, populatedMonths } = useMemo(
+    () =>
+      buildNetProfitSeries({
+        monthCount,
+        now: new Date(),
+        incomes,
+        expenses,
+        convert: (amount, currencyCode) =>
+          convertAmount(amount, currencyCode, displayCurrency, rates),
+        formatLabel: (start) => start.toLocaleDateString(intlLocale, { month: 'short' }),
+      }),
+    [expenses, incomes, rates, displayCurrency, intlLocale, monthCount],
+  );
 
   const isPositive = (currentNetProfit ?? 0) >= 0;
   const lineColor = isPositive ? theme.colors.success : theme.colors.danger;
@@ -158,6 +146,17 @@ export function NetProfitWidget({
 
   const showSafeToSpendRow = !!safeToSpend && safeToSpend.hasEnoughData && !!safeToSpend.data;
 
+  // COMPACT ONLY, and deliberately written so `!compact` short-circuits to a
+  // constant `true`: on the non-compact (mobile) path this is a tautology, so
+  // the chart element below is the one and only branch mobile can take and its
+  // JSX is untouched. Above the threshold nothing changes for desktop either.
+  //
+  // Below two populated months there is nothing to compare, and the remaining
+  // months are absent rather than flat — drawing them asserts a level trend
+  // that the data does not support. The RANGE CHIPS go with it: they select a
+  // window for a chart that is not on screen.
+  const showTrend = !compact || hasEnoughMonthsForTrend(populatedMonths);
+
   const netProfitAmountEl = currentNetProfit !== null && (
     <Text style={[styles.heroPrimaryAmount, { color: lineColor }]}>
       {isPositive ? '+' : ''}{formatCurrency(currentNetProfit, displayCurrency)}
@@ -170,7 +169,7 @@ export function NetProfitWidget({
   // under the chart — saves a whole row of pure structure. Compact only;
   // non-compact (mobile) keeps its own centred row below the chart,
   // unchanged, further down.
-  const compactChipsRow = compact && showRangeChips && (
+  const compactChipsRow = compact && showRangeChips && showTrend && (
     <View style={styles.rangeRowInline}>
       {RANGES.map((r) => (
         <TouchableOpacity
@@ -244,14 +243,22 @@ export function NetProfitWidget({
           )}
         </>
       )}
-      <InteractiveLineChart
-        data={data}
-        height={compact ? COMPACT_CHART_HEIGHT : 200}
-        lineColor={lineColor}
-        areaChart
-        compact={compact}
-        formatValue={(v) => formatCurrency(v, displayCurrency)}
-      />
+      {showTrend ? (
+        <InteractiveLineChart
+          data={data}
+          height={compact ? COMPACT_CHART_HEIGHT : 200}
+          lineColor={lineColor}
+          areaChart
+          compact={compact}
+          formatValue={(v) => formatCurrency(v, displayCurrency)}
+        />
+      ) : (
+        /* One line of copy in the chart's place. The key is REUSED rather
+           than invented and is declared beside the rule that creates this
+           absence — see NET_PROFIT_SPARSE_HINT_KEY, which also carries the
+           reason and the recommendation to replace it with a dedicated key. */
+        <Text style={styles.sparseHint}>{t(NET_PROFIT_SPARSE_HINT_KEY)}</Text>
+      )}
       {/* Compact already rendered its chips inline above, merged into the
           figures row (compactChipsRow) — this centred full-width row stays
           for non-compact (mobile), exactly as before. */}
@@ -390,6 +397,15 @@ const createStyles = (theme: Theme) => ({
   heroSecondaryAmount: {
     ...theme.textStyles.bodyLargeSemiBold,
     fontWeight: '800' as const,
+  },
+  // Compact-only: replaces the chart when there is not enough history to
+  // draw a trend. Sized to sit in roughly the space the 110px chart occupied
+  // so the card does not jump when the second populated month arrives.
+  sparseHint: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textTertiary,
+    textAlign: 'center' as const,
+    paddingVertical: theme.spacing[6],
   },
   // 3M/6M/12M range control (desktop-only content — see `showRangeChips` prop),
   // mirroring `WalletBalanceCard`'s own period-selector chip styling.

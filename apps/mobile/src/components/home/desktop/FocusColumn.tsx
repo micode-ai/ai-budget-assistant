@@ -12,6 +12,7 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { resolveMonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
+import { shouldShowSafeToSpendRow } from '@/features/dashboard/safeToSpendRow';
 import type { FirstRunView } from '@/features/onboarding/webFirstRunView';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FirstRunPanel } from './FirstRunPanel';
@@ -66,7 +67,7 @@ export function FocusColumn({
   firstRunView,
   onSkipFirstRun,
 }: FocusColumnProps) {
-  const { widgetVisibility, monthlyBudgetSummary, safeToSpendData, hasSafeToSpend, widgetRefreshKey } = ctx;
+  const { widgetVisibility, monthlyBudgetSummary, safeToSpendData, hasSafeToSpend, walletSummary, widgetRefreshKey } = ctx;
 
   const { budgets, getBudgetProgress } = useBudgetStore();
   // `budgetStore.getBudgetProgress` internally reads `useExpenseStore`'s
@@ -98,7 +99,22 @@ export function FocusColumn({
     [budgets, getBudgetProgress, expenses, categories], // eslint-disable-line react-hooks/exhaustive-deps
   );
 
-  const showSafeToSpendRow = widgetVisibility.safeToSpend && hasSafeToSpend && !!safeToSpendData;
+  // The fourth condition — a wallet balance actually exists — is new, and it
+  // is the whole of this screen's half of "stop reporting a server zero as a
+  // fact". `useSafeToSpend.hasEnoughData` is `data !== null`, and the server
+  // answers an empty account with real zeros, so the hook says "enough data"
+  // while holding none and the hero printed `0,00 zł` as a claim about the
+  // user's money. The condition is not invented: it is the one the hook's own
+  // offline branch already applies to itself (`if (!hasWalletData) return
+  // null`) and which only that path has ever honoured. Applied HERE rather
+  // than in the hook because `HomeHeroHeader` renders the same hook on the
+  // phone — see `shouldShowSafeToSpendRow`'s doc comment.
+  const showSafeToSpendRow = shouldShowSafeToSpendRow({
+    widgetVisible: widgetVisibility.safeToSpend,
+    hasEnoughData: hasSafeToSpend,
+    hasData: !!safeToSpendData,
+    walletCurrencyCount: walletSummary.length,
+  });
   // "the net-profit block only when widgetVisibility.netProfit" (design) gates
   // the block's OWN content, but `NetProfitWidget` remains the sole existing
   // host for the Safe-to-Spend row on desktop — it gains the row as a prop,

@@ -24,7 +24,9 @@ interface WalletSyncState {
 }
 
 type StoreSet = (
-  updater: Partial<WalletSyncState & { walletSummary: WalletSummary[] }>,
+  updater: Partial<
+    WalletSyncState & { walletSummary: WalletSummary[]; lastPullAt: number | null }
+  >,
 ) => void;
 type StoreGet = () => WalletSyncState & {
   computeWalletSummary: () => Promise<WalletSummary[]>;
@@ -169,7 +171,12 @@ export async function syncWalletFromServer(
     });
 
     const updatedSummary = await get().computeWalletSummary();
-    set({ walletSummary: updatedSummary });
+    // `lastPullAt` is written HERE and nowhere else: past every account-switch
+    // guard, past the `catch` that swallows a failed pull, and only once the
+    // server's own rows have actually landed. An assignment any earlier — or
+    // in the `catch` — would turn "we never heard back" into "the account has
+    // no balances", which is the exact confusion this field exists to end.
+    set({ walletSummary: updatedSummary, lastPullAt: Date.now() });
     setLastSyncTime(Date.now());
   } catch (e) {
     console.warn('Wallet server sync skipped:', e);

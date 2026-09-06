@@ -78,6 +78,18 @@ interface WalletState {
   isHistoryLoading: boolean;
   isLoading: boolean;
   error: string | null;
+  /**
+   * When the server pull last *succeeded*, or `null` if it has not yet this
+   * session. Additive and read by nothing on mobile — the wallet twin of the
+   * `lastPullAt` fields on `expenseStore`/`incomeStore`, and it exists for the
+   * same reason: on web SQLite is a mock and `syncWalletFromServer` swallows a
+   * failed pull with a `console.warn`, setting no flag, so
+   * `walletSummary.length === 0` cannot tell "this account holds no balances"
+   * apart from "the wallet has not answered yet". The setup checklist read the
+   * second as the first and told a fully-configured user to set a wallet
+   * balance, for the moment it took the pull to land.
+   */
+  lastPullAt: number | null;
 
   // Actions
   loadWallet: () => Promise<void>;
@@ -142,6 +154,7 @@ export const useWalletStore = create<WalletState>()(
     isHistoryLoading: false,
     isLoading: false,
     error: null,
+    lastPullAt: null,
 
     loadAccountSummaries: async () => {
       try {
@@ -291,7 +304,7 @@ export const useWalletStore = create<WalletState>()(
       // Drop the cached cross-account balances too — reset runs on logout, and the
       // next user must not see the previous one's figures.
       accountSummariesStorage.delete(ACCOUNT_SUMMARIES_KEY);
-      set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null });
+      set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null, lastPullAt: null });
     },
   })),
 );

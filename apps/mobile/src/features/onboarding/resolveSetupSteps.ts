@@ -113,3 +113,61 @@ export function resolveSetupSteps({
 export function isSetupComplete(steps: SetupStep[]): boolean {
   return steps.every((step) => step.done);
 }
+
+export interface SetupChecklistVisibilityInputs {
+  /**
+   * True only for the ORDINARY dashboard. The first-run rail renders the card
+   * unconditionally — in that state every step is outstanding by definition —
+   * so this predicate speaks only for the rail that has to decide.
+   */
+  isDashboardView: boolean;
+  /**
+   * Every row navigates to a write screen a viewer is blocked from
+   * server-side, so for a viewer the card is a list of three things they
+   * cannot do.
+   */
+  canEdit: boolean;
+  /** Both transaction pulls answered — `hasPullAnswered`. */
+  transactionPullAnswered: boolean;
+  /**
+   * `walletStore.lastPullAt !== null`.
+   *
+   * The wallet row's tick is `walletSummary.length > 0`, and on web every
+   * local read returns empty until the server answers — so without this a
+   * fully-configured user watched "Set your wallet balance" appear and then
+   * vanish, the card telling them to do something already done. Exactly the
+   * same reason `transactionPullAnswered` above is a condition, applied to the
+   * third source the card reads from.
+   */
+  walletPullAnswered: boolean;
+  /** `firstRunStore.checklistDismissed`. */
+  dismissed: boolean;
+  /** All three steps from `resolveSetupSteps`, never a pre-filtered list. */
+  steps: SetupStep[];
+}
+
+/**
+ * Whether the ORDINARY rail draws the checklist.
+ *
+ * Pure so the rule is pinned by tests rather than living as a five-term `&&`
+ * inside a component nothing in this repo's CI can render.
+ *
+ * Every condition is a reason to stay silent, and silence is the safe answer
+ * for all of them: a card derived from readings nobody has confirmed is the
+ * app asserting a fact it does not have, which is the whole class of bug this
+ * change belongs to.
+ */
+export function shouldShowSetupChecklist({
+  isDashboardView,
+  canEdit,
+  transactionPullAnswered,
+  walletPullAnswered,
+  dismissed,
+  steps,
+}: SetupChecklistVisibilityInputs): boolean {
+  if (!isDashboardView || !canEdit || dismissed) return false;
+  // Both, not either: the card reads counts from all three sources and a
+  // single unanswered one is enough to make a row wrong.
+  if (!transactionPullAnswered || !walletPullAnswered) return false;
+  return !isSetupComplete(steps);
+}

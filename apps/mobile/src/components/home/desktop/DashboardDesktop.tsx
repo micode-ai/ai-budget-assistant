@@ -6,10 +6,11 @@ import { useHomeScreenData } from '@/hooks/useHomeScreenData';
 import { useWebFirstRun } from '@/hooks/useWebFirstRun';
 import { SafeToSpendSheet } from '@/components/home/SafeToSpendSheet';
 import { SECOND_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
-import { isSetupComplete, resolveSetupSteps } from '@/features/onboarding/resolveSetupSteps';
+import { resolveSetupSteps, shouldShowSetupChecklist } from '@/features/onboarding/resolveSetupSteps';
 import { useBudgetStore } from '@/stores/budgetStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
+import { useWalletStore } from '@/stores/walletStore';
 import { useFirstRunStore } from '@/stores/firstRunStore';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FocusColumn } from './FocusColumn';
@@ -90,6 +91,9 @@ export function DashboardDesktop() {
   const expenseCount = useExpenseStore((s) => s.expenses.length);
   const incomeCount = useIncomeStore((s) => s.incomes.length);
   const budgets = useBudgetStore((s) => s.budgets);
+  // The wallet's own "has the server answered" evidence, the twin of
+  // `pullAnswered` for the third source the checklist reads from.
+  const walletPullAt = useWalletStore((s) => s.lastPullAt);
   const checklistDismissed = useFirstRunStore((s) => s.checklistDismissed);
   const dismissChecklist = useFirstRunStore((s) => s.dismissChecklist);
 
@@ -117,27 +121,27 @@ export function DashboardDesktop() {
     [expenseCount, incomeCount, walletSummary.length, activeBudgetCount],
   );
 
-  // All three steps go to `isSetupComplete`, never a pre-filtered list —
-  // `[].every(...)` is `true`, so filtering the done ones out first would
-  // report a fresh account as fully set up and hide the card exactly when it
-  // is most useful.
+  // The whole rule is `shouldShowSetupChecklist` — pure, so the five
+  // conditions are pinned by tests rather than living as an `&&` chain in a
+  // component nothing in this repo's CI renders.
   //
-  // `pullAnswered` is the third condition and it is doing real work: after the
-  // wait bound elapses the view becomes `'dashboard'` with the server still
-  // silent, and a checklist derived from counts nobody has confirmed would
-  // tell an established, fully-configured user to add their first transaction.
+  // All three steps go in, never a pre-filtered list: `[].every(...)` is
+  // `true`, so filtering the done ones out first would report a fresh account
+  // as fully set up and hide the card exactly when it is most useful.
   //
-  // `canEdit` for the same reason `RailQuickActions` is gated on it: every row
-  // navigates to a write screen a viewer is blocked from server-side, so the
-  // card would be a list of three things they cannot do. The first-run rail
-  // needs no such check — `resolveWebFirstRun` already suppresses the whole
-  // state for a viewer.
-  const showChecklist =
-    firstRunView === 'dashboard' &&
-    canEdit &&
-    pullAnswered &&
-    !checklistDismissed &&
-    !isSetupComplete(setupSteps);
+  // Both pull flags are doing real work. After the wait bound elapses the view
+  // becomes `'dashboard'` with the server possibly still silent, and a
+  // checklist derived from counts nobody has confirmed would tell an
+  // established, fully-configured user to add their first transaction — or,
+  // via the wallet count, to set a balance they set months ago.
+  const showChecklist = shouldShowSetupChecklist({
+    isDashboardView: firstRunView === 'dashboard',
+    canEdit,
+    transactionPullAnswered: pullAnswered,
+    walletPullAnswered: walletPullAt !== null,
+    dismissed: checklistDismissed,
+    steps: setupSteps,
+  });
 
   const widgetCtx: HomeWidgetContext = {
     widgetVisibility,
