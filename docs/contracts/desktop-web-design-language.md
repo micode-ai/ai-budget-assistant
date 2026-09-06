@@ -285,6 +285,53 @@ what the app knows**, and most of what it taught generalises.
 - **Never run a build while an agent is editing the tree**, and never point the
   verification browser at a directory an agent rebuilds.
 
+## 5e. What the settings shell added (wave 1)
+
+Six of seventeen screens, deliberately — the rest stay links until later
+waves, which is what keeps the left pane complete and honest from day one.
+
+- **Measure before planning.** Four greps across all 17 settings screens
+  decided the shape of the work: none reads `Dimensions` or
+  `useContentWidth`, none reads route params, and none uses `Alert.alert`.
+  So the extraction was the work and the redesign was one flag per screen —
+  the opposite of what "settings looks wrong on desktop" suggests.
+- **A screen that looks wrong is often being handed the wrong width.** The
+  reported defect was three theme chips at a third of the viewport each;
+  the cause was `flex: 1` inside an unbounded parent. Fix it at the
+  container, never in the screen: fixing the screen cures one and leaves
+  sixteen to be cured the same way.
+- **A pane keeps its component mounted** across theme, accent and account
+  changes, where a route remounted on every visit. But the shell does not
+  *introduce* that defect class, it **inherits** it — `WebTopBar` has
+  rendered the account switcher on every authenticated desktop route since
+  the web shell shipped, so it changes dwell time, not reachability. And
+  `useFocusEffect` does not mitigate it: switching accounts does not change
+  focus.
+- **Establish "is this account-scoped?" three ways** — what the client
+  sends, what the handler reads, what the service touches — never from the
+  endpoint's name. Notification preferences sound account-scoped and are
+  not; they are twelve `User.notify*` columns behind `req.user.id`.
+- **A route's chrome may not be in the route file.** Twice now it was in
+  `app/_layout.tsx`, once carrying the only place a paid flow showed its
+  remaining quota. Check both, every time.
+- **`scrollEnabled` is inert inside a pane**, because the pane branch
+  renders a plain `View`. Any prop that only means something to a
+  `ScrollView` is silently lost there — say so rather than lose it quietly.
+- **Derive a predicate from the registry; never hand-write the list.**
+  "Has a pane list beside it" and "loses its stack header" must be the same
+  predicate, or a later wave promoting a screen leaves it stranded with no
+  way back. The same rule retires a hand-written list before it can drift.
+
+### Reading the native bundle check, properly
+
+A blanket "expect 0" is wrong and will train people to ignore it. After
+wave 1 the android bundle legitimately contains the **registry** (pure
+data, because `app/_layout.tsx` asks it about headers on both platforms)
+and the **native no-op halves** of every platform-split file — that is what
+they exist for. What must be absent is the desktop *UI*: `SettingsShell`,
+`SettingsNav`, `SettingsOverviewPane`, `WebTopBar`. Grep for those, and
+read a non-zero result before believing it.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
