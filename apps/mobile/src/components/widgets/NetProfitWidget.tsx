@@ -12,7 +12,9 @@ import { getIntlLocale } from '@/i18n';
 import { InteractiveLineChart } from '@/components/interactive-charts/InteractiveLineChart';
 import {
   buildNetProfitSeries,
-  hasEnoughMonthsForTrend,
+  countPopulatedMonthsInWindow,
+  shouldRenderRangeChips,
+  shouldRenderTrendChart,
   NET_PROFIT_SPARSE_HINT_KEY,
 } from '@/features/dashboard/netProfitSeries';
 import { filterConsumption } from '@/utils/consumption';
@@ -25,6 +27,14 @@ export type NetProfitRange = '3m' | '6m' | '12m';
 
 const RANGE_MONTHS: Record<NetProfitRange, number> = { '3m': 3, '6m': 6, '12m': 12 };
 const RANGES: NetProfitRange[] = ['3m', '6m', '12m'];
+
+/**
+ * The widest window the range chips can select — derived from RANGE_MONTHS so
+ * there is no second copy of the range table. This is the horizon the chips
+ * are decided against: they are worth offering only while at least one of
+ * their settings would actually draw a chart.
+ */
+const MAX_RANGE_MONTHS = Math.max(...Object.values(RANGE_MONTHS));
 
 /** Target DRAWN height for the compact/hero chart (`compact` prop) — a
  *  trend indicator, not the subject. `InteractiveLineChart`'s `compact`
@@ -118,9 +128,10 @@ export function NetProfitWidget({
   // The bucketing loop that used to live inline here moved VERBATIM into
   // `buildNetProfitSeries` (same boundaries, same filters, same reducers), so
   // `data` and `currentNetProfit` are computed by the same code as before —
-  // this is a move, not a re-derivation. What it adds is `populatedMonths`,
-  // read from the same pass. The dependency list is unchanged.
-  const { points: data, currentNetProfit, populatedMonths } = useMemo(
+  // this is a move, not a re-derivation. What it adds is the in-range
+  // populated-month count, read from the same pass. The dependency list is
+  // unchanged.
+  const { points: data, currentNetProfit, populatedMonthsInRange } = useMemo(
     () =>
       buildNetProfitSeries({
         monthCount,
@@ -132,6 +143,22 @@ export function NetProfitWidget({
         formatLabel: (start) => start.toLocaleDateString(intlLocale, { month: 'short' }),
       }),
     [expenses, incomes, rates, displayCurrency, intlLocale, monthCount],
+  );
+
+  // The chips' OWN input, and deliberately a separate memo with a separate
+  // dependency list: it must not move when the user changes range, because
+  // its whole job is to stay true while the selected range goes sparse. No
+  // conversion or formatting is needed to count months, so this is cheaper
+  // than it looks — one pass per bucket over the same two arrays.
+  const populatedMonthsInHistory = useMemo(
+    () =>
+      countPopulatedMonthsInWindow({
+        monthCount: MAX_RANGE_MONTHS,
+        now: new Date(),
+        incomes,
+        expenses,
+      }),
+    [expenses, incomes],
   );
 
   const isPositive = (currentNetProfit ?? 0) >= 0;
@@ -146,16 +173,24 @@ export function NetProfitWidget({
 
   const showSafeToSpendRow = !!safeToSpend && safeToSpend.hasEnoughData && !!safeToSpend.data;
 
-  // COMPACT ONLY, and deliberately written so `!compact` short-circuits to a
-  // constant `true`: on the non-compact (mobile) path this is a tautology, so
-  // the chart element below is the one and only branch mobile can take and its
-  // JSX is untouched. Above the threshold nothing changes for desktop either.
+  // TWO questions, two inputs, and they must never share a boolean.
   //
-  // Below two populated months there is nothing to compare, and the remaining
-  // months are absent rather than flat — drawing them asserts a level trend
-  // that the data does not support. The RANGE CHIPS go with it: they select a
-  // window for a chart that is not on screen.
-  const showTrend = !compact || hasEnoughMonthsForTrend(populatedMonths);
+  // The chart asks "is THIS RANGE worth drawing?". Below two populated months
+  // there is nothing to compare and the remaining months are absent rather
+  // than flat, so drawing them asserts a level trend the data cannot support.
+  //
+  // The chips ask "is there anything to range OVER at all?", against the
+  // WIDEST window they can select. Hiding them alongside the chart would
+  // strand a user who narrowed to 3M on a sparse stretch: the chart vanishes
+  // and the only control that would widen it back vanishes with it. Recovering
+  // on a remount is not a way out a person can find.
+  //
+  // Both are COMPACT ONLY. `showTrend` is written so `!compact`
+  // short-circuits to a constant `true`, making the chart branch a tautology
+  // over untouched JSX on the non-compact (mobile) path; `showRangeControl`
+  // is only ever read inside an expression already guarded by `compact &&`.
+  const showTrend = !compact || shouldRenderTrendChart({ populatedMonthsInRange });
+  const showRangeControl = shouldRenderRangeChips({ populatedMonthsInHistory });
 
   const netProfitAmountEl = currentNetProfit !== null && (
     <Text style={[styles.heroPrimaryAmount, { color: lineColor }]}>
@@ -169,7 +204,7 @@ export function NetProfitWidget({
   // under the chart — saves a whole row of pure structure. Compact only;
   // non-compact (mobile) keeps its own centred row below the chart,
   // unchanged, further down.
-  const compactChipsRow = compact && showRangeChips && showTrend && (
+  const compactChipsRow = compact && showRangeChips && showRangeControl && (
     <View style={styles.rangeRowInline}>
       {RANGES.map((r) => (
         <TouchableOpacity

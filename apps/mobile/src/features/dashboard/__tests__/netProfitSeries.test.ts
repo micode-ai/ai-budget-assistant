@@ -1,6 +1,8 @@
 import {
   buildNetProfitSeries,
-  hasEnoughMonthsForTrend,
+  countPopulatedMonthsInWindow,
+  shouldRenderRangeChips,
+  shouldRenderTrendChart,
   NET_PROFIT_MIN_POPULATED_MONTHS,
   type NetProfitRow,
   type NetProfitSeriesInputs,
@@ -76,10 +78,10 @@ describe('buildNetProfitSeries — the series itself', () => {
     // Breaks if: the `?? null` fallback is dropped, making this `undefined` —
     // which the widget renders as a missing headline rather than hiding it,
     // because it tests `currentNetProfit !== null`.
-    const { points, currentNetProfit, populatedMonths } = series({ monthCount: 0 });
+    const { points, currentNetProfit, populatedMonthsInRange } = series({ monthCount: 0 });
     expect(points).toEqual([]);
     expect(currentNetProfit).toBeNull();
-    expect(populatedMonths).toBe(0);
+    expect(populatedMonthsInRange).toBe(0);
   });
 
   it('converts both sides through the caller-supplied converter', () => {
@@ -118,7 +120,7 @@ describe('buildNetProfitSeries — the series itself', () => {
   });
 });
 
-describe('buildNetProfitSeries — populatedMonths', () => {
+describe('buildNetProfitSeries — populatedMonthsInRange', () => {
   it('counts a break-even month, whose net is genuinely zero', () => {
     // Breaks if: the count is taken from the NET rather than from the
     // presence of a transaction — i.e. `if (monthIncome - monthExpense !== 0)`
@@ -126,46 +128,46 @@ describe('buildNetProfitSeries — populatedMonths', () => {
     // one line apart, the wrong one looks correct, and it would hide the trend
     // from a break-even user, who is exactly who a net-profit chart is for.
     // Every other assertion in this file passes under that mutation.
-    const { points, populatedMonths } = series({
+    const { points, populatedMonthsInRange } = series({
       incomes: [row(new Date(2026, 7, 3), 500), row(new Date(2026, 8, 3), 500)],
       expenses: [row(new Date(2026, 7, 4), 500), row(new Date(2026, 8, 4), 500)],
     });
     expect(points[4].value).toBe(0);
     expect(points[5].value).toBe(0);
-    expect(populatedMonths).toBe(2);
+    expect(populatedMonthsInRange).toBe(2);
   });
 
   it('does not count a month with nothing in it', () => {
-    // Breaks if: the guard becomes unconditional (`populatedMonths += 1` with
+    // Breaks if: the guard becomes unconditional (`populatedMonthsInRange += 1` with
     // no `if`), which would report every rendered month as populated and make
     // the threshold below unreachable — the chart would always draw.
-    expect(series().populatedMonths).toBe(0);
+    expect(series().populatedMonthsInRange).toBe(0);
   });
 
   it('counts a month holding only an expense, and one holding only an income', () => {
     // Breaks if: either operand is dropped from
     // `monthIncomes.length > 0 || monthExpenses.length > 0`, or the `||`
     // becomes `&&` (which would need BOTH kinds in the same month).
-    const { populatedMonths } = series({
+    const { populatedMonthsInRange } = series({
       incomes: [row(new Date(2026, 6, 2), 10)],
       expenses: [row(new Date(2026, 7, 2), 10)],
     });
-    expect(populatedMonths).toBe(2);
+    expect(populatedMonthsInRange).toBe(2);
   });
 
   it('counts a month once however many transactions it holds', () => {
     // Breaks if: the counter is incremented per ROW rather than per month
-    // (e.g. `populatedMonths += monthIncomes.length + monthExpenses.length`),
+    // (e.g. `populatedMonthsInRange += monthIncomes.length + monthExpenses.length`),
     // which would clear the threshold on a single busy month — the very case
     // that has nothing to compare.
-    const { populatedMonths } = series({
+    const { populatedMonthsInRange } = series({
       expenses: [
         row(new Date(2026, 8, 1), 10),
         row(new Date(2026, 8, 2), 10),
         row(new Date(2026, 8, 3), 10),
       ],
     });
-    expect(populatedMonths).toBe(1);
+    expect(populatedMonthsInRange).toBe(1);
   });
 
   it('does not count a month whose only rows are deleted', () => {
@@ -173,42 +175,167 @@ describe('buildNetProfitSeries — populatedMonths', () => {
     // the same `monthIncomes`/`monthExpenses` the sums are built from — the
     // count and the drawn data would then disagree, which is the failure the
     // shared-filtered-list design exists to prevent.
-    const { populatedMonths } = series({
+    const { populatedMonthsInRange } = series({
       expenses: [row(new Date(2026, 8, 2), 10, { isDeleted: true })],
     });
-    expect(populatedMonths).toBe(0);
+    expect(populatedMonthsInRange).toBe(0);
   });
 
   it('reproduces the reported case: one real month inside a six-month window', () => {
     // Breaks if: any of the above regresses. This is the production reading
     // that prompted the rule — a new account with a single month of activity,
     // whose other five months were being drawn as a flat line at zero.
-    const { points, populatedMonths } = series({
+    const { points, populatedMonthsInRange } = series({
       expenses: [row(new Date(2026, 8, 5), 120)],
     });
     expect(points).toHaveLength(6);
-    expect(populatedMonths).toBe(1);
-    expect(hasEnoughMonthsForTrend(populatedMonths)).toBe(false);
+    expect(populatedMonthsInRange).toBe(1);
+    expect(shouldRenderTrendChart({ populatedMonthsInRange })).toBe(false);
   });
 });
 
-describe('hasEnoughMonthsForTrend', () => {
-  it('needs two populated months, and two is enough', () => {
-    // Breaks if: the threshold constant moves, or `>=` becomes `>` (which
-    // would demand three and hide the chart from a user who has exactly the
-    // two months a comparison needs), or `<` (which would draw everything).
-    expect(hasEnoughMonthsForTrend(0)).toBe(false);
-    expect(hasEnoughMonthsForTrend(1)).toBe(false);
-    expect(hasEnoughMonthsForTrend(2)).toBe(true);
-    expect(hasEnoughMonthsForTrend(3)).toBe(true);
+describe('countPopulatedMonthsInWindow', () => {
+  const window12 = (over: Partial<Parameters<typeof countPopulatedMonthsInWindow>[0]> = {}) =>
+    countPopulatedMonthsInWindow({ monthCount: 12, now: NOW, incomes: [], expenses: [], ...over });
+
+  it('counts months across the whole window, not only the recent ones', () => {
+    // Breaks if: this function is passed the SELECTED month count instead of
+    // the widest one at the call site, or if its own loop is narrowed. The
+    // two rows below sit ten months apart, so any window shorter than 11
+    // months sees at most one of them.
+    expect(window12({ expenses: [row(new Date(2025, 10, 4), 10), row(new Date(2026, 8, 4), 10)] })).toBe(2);
   });
 
-  it('is the exported constant, so the widget and this rule cannot disagree', () => {
-    // Breaks if: the function stops reading NET_PROFIT_MIN_POPULATED_MONTHS
-    // and hardcodes its own number. A second copy of a threshold is how the
-    // chips and the chart end up disagreeing about whether to render.
+  it('shares its bucketing with the series, boundary for boundary', () => {
+    // Breaks if: a SECOND copy of the month arithmetic is introduced here
+    // rather than reusing `monthBuckets`. The last-instant-of-the-month case
+    // is where two hand-written copies diverge first, and a count that
+    // disagrees with the chart beside it is worse than either being wrong.
+    const atTheEdge = [row(new Date(2026, 8, 30, 23, 59, 59, 999), 12)];
+    expect(window12({ incomes: atTheEdge })).toBe(1);
+    expect(series({ incomes: atTheEdge }).populatedMonthsInRange).toBe(1);
+  });
+
+  it('counts by presence, so a break-even month still counts', () => {
+    // Breaks if: this counter is written against the net rather than against
+    // the rows — the same trap as the in-range count, and it would hide the
+    // chips from a break-even user rather than merely the chart.
+    expect(
+      window12({
+        incomes: [row(new Date(2026, 7, 3), 500), row(new Date(2026, 8, 3), 500)],
+        expenses: [row(new Date(2026, 7, 4), 500), row(new Date(2026, 8, 4), 500)],
+      }),
+    ).toBe(2);
+  });
+
+  it('ignores deleted rows and rows outside the window', () => {
+    // Breaks if: the `isDeleted` guard or the bucket filter is dropped from
+    // `rowsInMonth`. A deleted row propping up the chips promises a chart
+    // that no range will draw.
+    expect(
+      window12({
+        expenses: [
+          row(new Date(2026, 8, 4), 10, { isDeleted: true }),
+          row(new Date(2020, 1, 4), 10),
+        ],
+      }),
+    ).toBe(0);
+  });
+
+  it('is zero for an account with nothing in it', () => {
+    // Breaks if: the filter is inverted, or the length of the buckets array
+    // is returned instead of the length of the filtered one — which would
+    // report 12 populated months for an empty account.
+    expect(window12()).toBe(0);
+  });
+});
+
+describe('shouldRenderTrendChart / shouldRenderRangeChips — two questions, two inputs', () => {
+  it('THE TRAP: data exists, the selected range is sparse, the chips still render', () => {
+    // Breaks if: the chips are derived from the chart's own flag — the single
+    // change this whole pair exists to make impossible.
+    //
+    // This is the exact state the trap lives in. The account has two populated
+    // months inside the widest (12M) window, but the user has narrowed to 3M
+    // and only one of those months falls inside it. Hiding the chips with the
+    // chart would leave them looking at a dashboard whose chart vanished with
+    // nothing to press: the only control that would widen the range back is
+    // the one that just disappeared. It recovers on a remount, which is not a
+    // way out a person can find.
+    const rows = [row(new Date(2025, 10, 4), 10), row(new Date(2026, 8, 4), 10)];
+    const populatedMonthsInRange = countPopulatedMonthsInWindow({
+      monthCount: 3,
+      now: NOW,
+      incomes: [],
+      expenses: rows,
+    });
+    const populatedMonthsInHistory = countPopulatedMonthsInWindow({
+      monthCount: 12,
+      now: NOW,
+      incomes: [],
+      expenses: rows,
+    });
+
+    expect(populatedMonthsInRange).toBe(1);
+    expect(populatedMonthsInHistory).toBe(2);
+    expect(shouldRenderTrendChart({ populatedMonthsInRange })).toBe(false);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory })).toBe(true);
+  });
+
+  it('no data anywhere: no chart AND no chips', () => {
+    // Breaks if: `shouldRenderRangeChips` is made unconditional, or inverted.
+    // With nothing to range over, three chips offer three ways to look at the
+    // same absence.
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: 0 })).toBe(false);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: 0 })).toBe(false);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: 1 })).toBe(false);
+  });
+
+  it('a populated range draws both', () => {
+    // Breaks if: either predicate is inverted. The ordinary case, and the only
+    // one where the hero looks as it always has.
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: 2 })).toBe(true);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: 2 })).toBe(true);
+  });
+
+  it('both need two months, and two is enough', () => {
+    // Breaks if: either `>=` becomes `>` (demanding three, hiding the chart
+    // from a user who has exactly the two months a comparison needs) or `<`
+    // (drawing everything). Asserted on both, because they are separate
+    // functions and only one might be edited.
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: 1 })).toBe(false);
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: 2 })).toBe(true);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: 1 })).toBe(false);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: 2 })).toBe(true);
+  });
+
+  it('both read the one shared threshold constant', () => {
+    // Breaks if: either function hardcodes its own number instead of reading
+    // NET_PROFIT_MIN_POPULATED_MONTHS. Two questions is the point; two
+    // thresholds is not, and would let the chips promise a chart the chart
+    // then refuses to draw.
     expect(NET_PROFIT_MIN_POPULATED_MONTHS).toBe(2);
-    expect(hasEnoughMonthsForTrend(NET_PROFIT_MIN_POPULATED_MONTHS)).toBe(true);
-    expect(hasEnoughMonthsForTrend(NET_PROFIT_MIN_POPULATED_MONTHS - 1)).toBe(false);
+    const n = NET_PROFIT_MIN_POPULATED_MONTHS;
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: n })).toBe(true);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: n })).toBe(true);
+    expect(shouldRenderTrendChart({ populatedMonthsInRange: n - 1 })).toBe(false);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory: n - 1 })).toBe(false);
+  });
+
+  it('the chips can never promise a chart no range would draw', () => {
+    // Breaks if: the chips are fed a count taken over a window WIDER than the
+    // widest selectable range (literally-all-history), which would show the
+    // control to a dormant account whose only activity predates every range —
+    // three settings, three empty charts. Since the ranges are nested, the
+    // widest window's count is the exact guarantee that some setting works.
+    const dormant = [row(new Date(2020, 0, 4), 10), row(new Date(2020, 1, 4), 10)];
+    const populatedMonthsInHistory = countPopulatedMonthsInWindow({
+      monthCount: 12,
+      now: NOW,
+      incomes: [],
+      expenses: dormant,
+    });
+    expect(populatedMonthsInHistory).toBe(0);
+    expect(shouldRenderRangeChips({ populatedMonthsInHistory })).toBe(false);
   });
 });
