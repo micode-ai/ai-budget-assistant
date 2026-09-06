@@ -1,6 +1,7 @@
 import type { AnomalyAlert, Budget, BudgetProgress, UserSubscription } from '@budget/shared-types';
 import type { MyInvitation } from '@/services/accounts.api';
 import {
+  ALL_ATTENTION_ROWS,
   MAX_ATTENTION_ROWS,
   RENEWAL_HORIZON_DAYS,
   buildAttentionItems,
@@ -553,5 +554,71 @@ describe('renewalKeyForDays', () => {
     // announce a renewal two days away as happening tomorrow.
     expect(renewalKeyForDays(2)).toBe('subscriptionManager.renewalInDays');
     expect(renewalKeyForDays(7)).toBe('subscriptionManager.renewalInDays');
+  });
+});
+
+/**
+ * The `maxRows` parameter, added when the `+N more` row stopped navigating to
+ * `/alerts` and started EXPANDING the panel in place. The panel needs the same
+ * composition and the same by-kind order, uncapped — which the previous return
+ * shape could not express, since `{ items: <=3, overflowCount }` carries no way
+ * back to items 4..N.
+ */
+describe('buildAttentionItems maxRows', () => {
+  it('still caps at three when nothing is passed', () => {
+    // Breaks if: the default is dropped, or set to anything but
+    // MAX_ATTENTION_ROWS. Every call written before the parameter existed
+    // relies on this, and the resting state of the panel IS three rows — an
+    // accidental default of Infinity would silently un-cap the dashboard.
+    const result = buildAttentionItems({ ...empty, alerts: nAlerts(7) });
+    expect(result.items).toHaveLength(MAX_ATTENTION_ROWS);
+    expect(result.overflowCount).toBe(4);
+  });
+
+  it('returns every item, in the same order, when asked for all of them', () => {
+    // Breaks if: the expanded reading re-sorts, re-filters or re-composes.
+    // The expanded panel must be the SAME list the collapsed one was showing
+    // the top of — an expansion that reorders reads as the rows jumping.
+    const alerts = nAlerts(7);
+    const capped = buildAttentionItems({ ...empty, alerts });
+    const all = buildAttentionItems({ ...empty, alerts }, ALL_ATTENTION_ROWS);
+
+    expect(all.items).toHaveLength(7);
+    expect(all.items.slice(0, MAX_ATTENTION_ROWS).map((i) => i.key)).toEqual(
+      capped.items.map((i) => i.key),
+    );
+  });
+
+  it('reports no overflow once nothing has been dropped', () => {
+    // Breaks if: `overflowCount` is ever recomputed from the cap constant
+    // rather than from what was kept — `Math.max(0, total - MAX_ATTENTION_ROWS)`
+    // would report 4 hidden items on a reading that hid none, so the expanded
+    // panel would offer to expand again.
+    expect(
+      buildAttentionItems({ ...empty, alerts: nAlerts(7) }, ALL_ATTENTION_ROWS).overflowCount,
+    ).toBe(0);
+  });
+
+  it('holds the items + overflow invariant at any cap, not just the default', () => {
+    // Breaks if: the slice and the count are ever derived from different
+    // numbers. Same invariant the default-cap suite pins, re-run across caps,
+    // because a hand-written `- MAX_ATTENTION_ROWS` passes every boundary case
+    // at the default and fails immediately here.
+    const alerts = nAlerts(7);
+    for (const cap of [0, 1, 3, 7, 20, ALL_ATTENTION_ROWS]) {
+      const { items, overflowCount } = buildAttentionItems({ ...empty, alerts }, cap);
+      expect(items.length + overflowCount).toBe(7);
+      expect(overflowCount).toBeGreaterThanOrEqual(0);
+      expect(items.length).toBeLessThanOrEqual(Math.min(cap, 7));
+    }
+  });
+
+  it('an uncapped reading of an empty list is still empty, not an error', () => {
+    // Breaks if: `Infinity` reaches arithmetic that produces NaN. `0 - 0` is 0
+    // and `[].slice(0, Infinity)` is `[]`; a NaN overflowCount would render
+    // "+NaN more".
+    const result = buildAttentionItems(empty, ALL_ATTENTION_ROWS);
+    expect(result.items).toEqual([]);
+    expect(result.overflowCount).toBe(0);
   });
 });

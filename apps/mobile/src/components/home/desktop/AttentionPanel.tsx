@@ -29,7 +29,11 @@ import {
   openAlertTargets as openAlertTargetsImpl,
   findAlertExpense,
 } from '@/features/alerts/resolveAlertExpense';
-import { buildAttentionItems, type AttentionItem } from '@/features/dashboard/attentionItems';
+import {
+  ALL_ATTENTION_ROWS,
+  buildAttentionItems,
+  type AttentionItem,
+} from '@/features/dashboard/attentionItems';
 import {
   alertAction,
   mergeTargets,
@@ -86,8 +90,19 @@ interface Props {
  * in the array order it returns it, and shows the `+N more` row only when
  * `overflowCount > 0`.
  *
- * On most days `items` is empty and this draws nothing at all. That is the
+ * On most days the list is empty and this draws nothing at all. That is the
  * correct dashboard, not a failure.
+ *
+ * ## `+N more` expands in place; it does not navigate
+ *
+ * The cap governs the RESTING state — three rows until the user asks
+ * otherwise. Asking shows the rest **here**, in the same panel: the overflow
+ * can hold a budget or a renewal, and neither of those appears on `/alerts`,
+ * so sending a person there sends them somewhere their item is not. It is also
+ * the thesis of the whole screen — navigating away is the leaving this feature
+ * exists to prevent, so the overflow control of all things must not be the one
+ * that navigates. Same expand/collapse shape `FacetRail` already uses on the
+ * transactions screen, down to the two i18n keys.
  *
  * ## Resolving in place is the whole point
  *
@@ -100,6 +115,7 @@ interface Props {
  * | Alert referencing an expense | **yes** | hosts `ExpenseDialog` |
  * | `recurring_suggestion` | **yes** | inline Track button → `createSubscription`, then dismiss |
  * | Alert dismiss (x) | **yes** | `alertStore.dismiss`, optimistic |
+ * | `+N more` | **yes** | expands the panel; see below |
  * | `possible_merge` | no | a two-expense merge is a real screen with real choices |
  * | Purchase requests | no | voting needs the full context |
  * | Renewal | no | `/subscriptions` |
@@ -128,6 +144,14 @@ export function AttentionPanel({ canEdit }: Props) {
   const [panelWidth, setPanelWidth] = useState(0);
   const stacked = panelWidth > 0 && panelWidth < ATTENTION_ROW_STACK_WIDTH;
 
+  /**
+   * Screen-local UI state, deliberately NOT a store field and NOT a persisted
+   * preference: the cap is the default and the expansion is a deliberate act
+   * each time, so collapsing on remount is the correct behaviour rather than
+   * something to fix. `FacetRail` holds its own equivalent the same way.
+   */
+  const [expanded, setExpanded] = useState(false);
+
   const invitations = useInvitationStore((s) => s.invitations);
   const respond = useInvitationStore((s) => s.respond);
   const alerts = useAlertStore((s) => s.alerts);
@@ -143,11 +167,30 @@ export function AttentionPanel({ canEdit }: Props) {
   const expenses = useExpenseStore((s) => s.expenses);
   const categories = useCategoryStore((s) => s.categories);
 
-  const { items, overflowCount } = useMemo(
-    () => buildAttentionItems({ invitations, alerts, budgets, getBudgetProgress }),
+  /**
+   * `hiddenCount` is ALWAYS read off the capped reading, never off the expanded
+   * one — an uncapped call drops nothing and so reports `overflowCount: 0` by
+   * construction. Deriving it in one place keeps the number on the label and
+   * the number of rows actually withheld the same quantity, which is the trap
+   * `attentionItems.ts`'s own header warns about: two expressions of one number
+   * both render, and only one of them is right.
+   *
+   * The second, uncapped call is made only when the user has actually expanded
+   * AND something was actually hidden, so the common (collapsed, calm) path
+   * still composes the list exactly once.
+   */
+  const { visible, hiddenCount } = useMemo(() => {
+    const inputs = { invitations, alerts, budgets, getBudgetProgress };
+    const capped = buildAttentionItems(inputs);
+    if (!expanded || capped.overflowCount === 0) {
+      return { visible: capped.items, hiddenCount: capped.overflowCount };
+    }
+    return {
+      visible: buildAttentionItems(inputs, ALL_ATTENTION_ROWS).items,
+      hiddenCount: capped.overflowCount,
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [invitations, alerts, budgets, getBudgetProgress, expenses, categories],
-  );
+  }, [invitations, alerts, budgets, getBudgetProgress, expenses, categories, expanded]);
 
   // ---- The expense dialog this panel hosts -------------------------------
 
@@ -299,14 +342,14 @@ export function AttentionPanel({ canEdit }: Props) {
    */
   return (
     <>
-      {items.length > 0 && (
+      {visible.length > 0 && (
         <View
           style={styles.panel}
           onLayout={(e: LayoutChangeEvent) => setPanelWidth(e.nativeEvent.layout.width)}
         >
           <Text style={styles.heading}>{t('budgetsDesktop.needsAttention')}</Text>
 
-          {items.map((item) => {
+          {visible.map((item) => {
             switch (item.kind) {
               case 'invitation':
                 return (
@@ -400,14 +443,29 @@ export function AttentionPanel({ canEdit }: Props) {
             }
           })}
 
-          {overflowCount > 0 && (
+          {hiddenCount > 0 && (
             <Pressable
               style={styles.moreRow}
-              onPress={() => router.push('/alerts')}
+              onPress={() => setExpanded((e) => !e)}
               accessibilityRole="button"
+              accessibilityState={{ expanded }}
             >
-              <Text style={styles.moreText}>{t('dashboard.attentionMore', { count: overflowCount })}</Text>
-              <Ionicons name="chevron-forward" size={16} color={theme.colors.textLink} />
+              <Text style={styles.moreText}>
+                {/* The existing pair `FacetRail` uses for the identical
+                    gesture, in all nine locales — no key was minted for this.
+                    See the report: `dashboard.attentionMore` was found to be a
+                    near-duplicate of `expensesDesktop.showMore` and removed. */}
+                {expanded
+                  ? t('expensesDesktop.showLess')
+                  : t('expensesDesktop.showMore', { count: hiddenCount })}
+              </Text>
+              {/* Down/up, never `chevron-forward`: a forward chevron promises a
+                  navigation, and this control deliberately performs none. */}
+              <Ionicons
+                name={expanded ? 'chevron-up' : 'chevron-down'}
+                size={16}
+                color={theme.colors.textLink}
+              />
             </Pressable>
           )}
         </View>

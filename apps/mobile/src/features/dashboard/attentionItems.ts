@@ -53,6 +53,22 @@ import { resolveBudgetProjection, type BudgetProjection } from './budgetProjecti
  */
 export const MAX_ATTENTION_ROWS = 3;
 
+/**
+ * The cap to pass when the user has explicitly asked to see everything.
+ *
+ * The `+N more` control **expands the panel in place** rather than navigating
+ * to `/alerts` — the overflow can hold a budget or a renewal, and neither of
+ * those appears on that screen, so the literal reading sent a person somewhere
+ * their item is not. It is also the thesis of the whole dashboard: navigating
+ * away IS the user leaving, so the overflow control of all things must not be
+ * the one that navigates.
+ *
+ * `Infinity` rather than a large integer, because "no cap" is the actual
+ * intent and `slice(0, Infinity)` expresses it exactly; a sentinel like 999
+ * would be a silent truncation at an arbitrary size nobody would ever see fail.
+ */
+export const ALL_ATTENTION_ROWS = Number.POSITIVE_INFINITY;
+
 /** "Subscriptions renewing within 7 days", from the design's composition list. */
 export const RENEWAL_HORIZON_DAYS = 7;
 
@@ -305,8 +321,24 @@ function renewalItems(subscriptions: UserSubscription[] | undefined): AttentionI
  *
  * An empty result is the ordinary case and is not a failure — the panel hides
  * entirely when `items` is empty, which on most days is the correct dashboard.
+ *
+ * `maxRows` defaults to `MAX_ATTENTION_ROWS`, so every call written before the
+ * parameter existed is unchanged and the resting state of the panel is still
+ * three rows. It exists because the return shape genuinely cannot express an
+ * expanded reading: `{ items: <=3, overflowCount: number }` carries no way to
+ * recover items 4..N, and the alternative — reaching into this module's
+ * internals from the panel — would put composition and ordering back in an
+ * untested component. Pass `ALL_ATTENTION_ROWS` for the expanded reading.
+ *
+ * Note that an uncapped call necessarily returns `overflowCount: 0`, because
+ * nothing was dropped. That is correct and is why the panel remembers how many
+ * were hidden from its own CAPPED reading rather than from this one — see
+ * `AttentionPanel`, which derives that number in exactly one place.
  */
-export function buildAttentionItems(inputs: AttentionInputs): AttentionList {
+export function buildAttentionItems(
+  inputs: AttentionInputs,
+  maxRows: number = MAX_ATTENTION_ROWS,
+): AttentionList {
   const byKind: Record<(typeof KIND_ORDER)[number], AttentionItem[]> = {
     invitation: invitationItems(inputs.invitations),
     purchaseRequests: purchaseRequestItems(inputs.pendingPurchaseRequestCount),
@@ -316,7 +348,7 @@ export function buildAttentionItems(inputs: AttentionInputs): AttentionList {
   };
 
   const everything = KIND_ORDER.flatMap((kind) => byKind[kind]);
-  const items = everything.slice(0, MAX_ATTENTION_ROWS);
+  const items = everything.slice(0, maxRows);
 
   // Derived from what was kept, never recomputed from the cap. See the header.
   return { items, overflowCount: everything.length - items.length };

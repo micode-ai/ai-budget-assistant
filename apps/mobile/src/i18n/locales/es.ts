@@ -109,7 +109,6 @@ export default {
     googleTermsNote: 'Al continuar, aceptas nuestros Términos y la Política de Privacidad',
   },
   dashboard: {
-    attentionMore: '+{{count}} más',
     hello: '¡Hola, {{name}}!',
     monthlyBudget: 'Presupuesto mensual',
     used: '{{percent}}% usado',
