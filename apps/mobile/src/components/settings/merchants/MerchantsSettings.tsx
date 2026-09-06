@@ -11,7 +11,9 @@ import { useMerchantSuggestionStore } from '@/stores/merchantSuggestionStore';
 import { useMerchantRulesStore } from '@/stores/merchantRulesStore';
 import { getMerchantCounts, suggestMerchantGroups } from '@/utils/merchant';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { BulkActionBar } from '@/components/BulkActionBar';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
+import { useSettingsPane } from '../SettingsPaneContext';
 
 /**
  * The merchants screen's body: the merchant list with its rename / merge /
@@ -37,19 +39,29 @@ import { SettingsScreenScroll } from '../SettingsScreenScroll';
  * wrapper a screen reaches for is a fact about that screen, read from its tree
  * rather than from its import list.
  *
- * The merge bar and both `Modal`s stay siblings of the scroller, as they are
- * today: `SettingsScreenFrame`'s `SafeAreaView` wraps all four, so the
- * full-page tree is the one the phone renders now. In a pane the scroller's
- * `flex: 1` is dropped (the desktop branch applies only
- * `contentContainerStyle`), so the merge bar sits in normal flow below the
- * content instead of being docked to the bottom of the viewport - a
- * desktop-only placement, and the phone is untouched.
+ * **The merge bar has two renderings, and the fork is here rather than inside
+ * `BulkActionBar`.** The docked bar is the phone's: it is a sibling of the
+ * scroller and reaches the bottom of the viewport only because that scroller is
+ * `flex: 1` inside `SettingsScreenFrame`'s `SafeAreaView`. In a pane that
+ * `flex: 1` is inert - the desktop branch of `SettingsScreenScroll` applies only
+ * `contentContainerStyle` - so the same bar fell into normal flow *below* the
+ * category-rules card, putting the button that acts on a selection an entire
+ * section's scroll away from the selection. On the desktop path it is a
+ * `BulkActionBar` in normal flow immediately above the merchant list instead,
+ * which removes that distance rather than working around it, and the docked bar
+ * is not rendered at all. The phone keeps today's tree byte for byte.
+ *
+ * The fork reads `useSettingsPane().desktop` rather than re-deriving the width
+ * with `useIsDesktopWeb()`. They agree today - `SettingsRoute` computes one from
+ * the other - but the condition that makes the docked bar impossible is
+ * precisely the condition `SettingsScreenScroll` branches on, so asking the same
+ * source keeps the two from ever disagreeing about which layout is in force.
  *
  * `useSafeAreaInsets` stays, and is deliberately NOT swapped for
- * `useSettingsPane().bottomInset`: it feeds the bottom-anchored merge bar and
- * the two bottom sheets, not this screen's scroll padding, which carries no
- * inset today and still does not. Per ABA-483 a bottom-anchored element must
- * clear the system navigation bar wherever its opener is rendered.
+ * `useSettingsPane().bottomInset`: it feeds the phone's docked merge bar and the
+ * two bottom sheets, not this screen's scroll padding, which carries no inset
+ * today and still does not. Per ABA-483 a bottom-anchored element must clear the
+ * system navigation bar wherever its opener is rendered.
  *
  * **The rules effect is keyed on `currentAccountId`, and that is load-bearing
  * here in a way it is not on the phone.** `merchantRulesStore.isLoaded` is a
@@ -63,6 +75,7 @@ export function MerchantsSettings() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
+  const { desktop } = useSettingsPane();
   const canEdit = useAccountStore((s) => s.canEdit());
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const expenses = useExpenseStore((s) => s.expenses);
@@ -261,6 +274,27 @@ export function MerchantsSettings() {
           </View>
         ))}
 
+        {/* Desktop: in flow, immediately above the list it acts on - a sibling of
+            the card, not its header. Gated on a non-empty selection, as the
+            transactions list is, so nothing is reserved before there is
+            anything to act on. */}
+        {desktop && selected.size > 0 && (
+          <BulkActionBar
+            style={styles.bulkBarPlacement}
+            label={t('merchants.selected', { count: selected.size })}
+          >
+            <TouchableOpacity
+              style={[styles.mergeBarButton, selected.size < 2 && styles.mergeButtonDisabled]}
+              onPress={openMergeFromSelection}
+              disabled={selected.size < 2}
+              accessibilityRole="button"
+            >
+              <Ionicons name="git-merge-outline" size={16} color={theme.colors.textInverse} />
+              <Text style={styles.mergeBarButtonText}>{t('merchants.merge')}</Text>
+            </TouchableOpacity>
+          </BulkActionBar>
+        )}
+
         <View style={styles.card}>
           {merchants.length === 0 ? (
             <Text style={styles.empty}>{t('merchants.empty')}</Text>
@@ -349,8 +383,10 @@ export function MerchantsSettings() {
         </View>
       </SettingsScreenScroll>
 
-      {/* Bottom merge bar in selection mode */}
-      {selecting && (
+      {/* Bottom merge bar in selection mode - the phone's, and only the phone's.
+          It docks because the scroller above it is `flex: 1`, which is exactly
+          what a pane does not provide; see the note on the fork above. */}
+      {!desktop && selecting && (
         <View style={[styles.bottomBar, { paddingBottom: Math.max(insets.bottom, 12) }]}>
           <TouchableOpacity
             style={[styles.mergeButton, selected.size < 2 && styles.mergeButtonDisabled]}
@@ -503,7 +539,20 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium, color: theme.colors.textInverse,
     textAlign: 'center' as const,
   },
-  // Bottom merge bar
+  // Desktop merge bar: placement only, the box is `BulkActionBar`'s. The pane
+  // content is already padded, so this adds no horizontal margin of its own.
+  bulkBarPlacement: { marginBottom: theme.spacing[2] },
+  mergeBarButton: {
+    flexDirection: 'row' as const, alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[3], paddingVertical: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.primary,
+  },
+  // `textInverse` and not `onSemantic`: the fill is the accent, not a semantic
+  // colour, so the foreground must follow the accent the user picked.
+  mergeBarButtonText: { ...theme.textStyles.bodySmMedium, color: theme.colors.textInverse },
+  // Phone's docked merge bar
   bottomBar: {
     paddingHorizontal: theme.spacing[4], paddingTop: theme.spacing[3],
     backgroundColor: theme.colors.surface,

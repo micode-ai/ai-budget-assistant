@@ -12,6 +12,7 @@ import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
 import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
+import { BulkActionBar } from '@/components/BulkActionBar';
 import { SummaryStrip } from './SummaryStrip';
 import { TransactionTable } from './TransactionTable';
 import { FacetRail, FacetRailTrigger, type KindFacet, type PeriodFacet } from './FacetRail';
@@ -447,25 +448,16 @@ export function ExpensesDesktop() {
           <SummaryStrip rows={visibleRows} baseCurrency={baseCurrency} />
 
           {canEdit && multiSelect.selectedIds.size > 0 && (
-            <View style={styles.bulkBar}>
-              <View style={styles.bulkBarLeft}>
-                <Pressable
-                  onPress={multiSelect.exitMultiSelect}
-                  accessibilityRole="button"
-                  accessibilityLabel={t('expensesDesktop.clearSelection')}
-                  style={styles.bulkClearButton}
-                >
-                  <Ionicons name="close" size={16} color={theme.colors.textSecondary} />
-                </Pressable>
-                <Text style={styles.bulkBarCount}>
-                  {t('expenses.bulkSelected', { count: multiSelect.selectedIds.size })}
-                </Text>
-              </View>
-
+            <BulkActionBar
+              style={styles.bulkBarPlacement}
+              label={t('expenses.bulkSelected', { count: multiSelect.selectedIds.size })}
+              onClear={multiSelect.exitMultiSelect}
+              clearAccessibilityLabel={t('expensesDesktop.clearSelection')}
+            >
               {multiSelect.isBulkProcessing ? (
                 <ActivityIndicator size="small" color={theme.colors.primary} />
               ) : (
-                <View style={styles.bulkBarActions}>
+                <>
                   <Pressable
                     style={styles.bulkBarButton}
                     onPress={() => {
@@ -498,9 +490,9 @@ export function ExpensesDesktop() {
                       {t('expenses.bulkDelete')}
                     </Text>
                   </Pressable>
-                </View>
+                </>
               )}
-            </View>
+            </BulkActionBar>
           )}
 
           {showMap ? (
@@ -826,38 +818,12 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
   },
-  bulkBar: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    justifyContent: 'space-between' as const,
-    gap: theme.spacing[3],
-    paddingHorizontal: theme.spacing[4],
-    paddingVertical: theme.spacing[2.5],
+  // Placement only. The box itself is `BulkActionBar`'s; the main column has no
+  // horizontal padding of its own, so the bar indents itself to the gutter the
+  // table below it uses.
+  bulkBarPlacement: {
     marginHorizontal: theme.spacing[4],
     marginBottom: theme.spacing[2],
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.lg,
-    borderWidth: 1,
-    borderColor: theme.colors.borderLight,
-    ...theme.shadows.sm,
-  },
-  bulkBarLeft: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-  },
-  bulkClearButton: {
-    padding: theme.spacing[1],
-    borderRadius: theme.borderRadius.md,
-  },
-  bulkBarCount: {
-    ...theme.textStyles.bodySmMedium,
-    color: theme.colors.textPrimary,
-  },
-  bulkBarActions: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
   },
   bulkBarButton: {
     flexDirection: 'row' as const,
