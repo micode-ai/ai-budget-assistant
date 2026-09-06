@@ -157,7 +157,7 @@ export const ENTRY_POINT_ONLY_ROUTES: readonly string[] = [
  */
 export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // --- Configure the app. Panes, once extracted (waves 1-3). ---
-  { kind: 'link', key: 'profile', labelKey: 'settingsNav.profile', route: '/settings/profile', width: 'form' },
+  { kind: 'pane', key: 'profile', labelKey: 'settingsNav.profile', route: '/settings/profile', width: 'form' },
   { kind: 'pane', key: 'appearance', labelKey: 'settingsNav.appearance', route: '/settings/appearance', width: 'form' },
   { kind: 'pane', key: 'ai', labelKey: 'settingsNav.ai', route: '/settings/ai', width: 'form' },
   { kind: 'pane', key: 'widgets', labelKey: 'settingsNav.widgets', route: '/settings/widgets', width: 'form' },
