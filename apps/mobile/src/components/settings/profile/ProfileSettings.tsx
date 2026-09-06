@@ -112,10 +112,15 @@ const TIMEZONES: string[] = [
  * opens {@link ChangeEmailDialog} instead, because a pane has no back — pushing
  * a full-page route from inside the shell would replace the whole settings
  * layout with a two-field form and offer only the browser's back button to
- * return. `useSettingsPane().desktop` is the sanctioned flag (design language
- * §5a) and is `false` on every native render by construction: the native
- * `SettingsRoute` provides it through `SettingsScreenFrame`, so no branch here
- * can reach the phone.
+ * return.
+ *
+ * `useSettingsPane().desktop` answers only the *width* question, and only on
+ * web: below `DESKTOP_MIN_WIDTH` a browser gets the route, exactly as a phone
+ * does. It is not what keeps the dialog off the phone — `ChangeEmailDialog` is
+ * a Metro platform split whose native file is a real no-op, so the import
+ * below resolves to nothing at all in the native graph. That is why this call
+ * site can import it unconditionally, and why a mistake in this branch cannot
+ * put a raw `<div>` in front of a phone.
  */
 export function ProfileSettings() {
   const { t } = useTranslation();
