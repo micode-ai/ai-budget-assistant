@@ -1,28 +1,14 @@
-import { View, Text, TouchableOpacity, Modal, ScrollView } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import type { SafeToSpendResponse } from '@budget/shared-types';
+import { SheetDialog } from '@/components/SheetDialog';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface SafeToSpendSheetProps {
   visible: boolean;
   onClose: () => void;
   data: SafeToSpendResponse | null;
-  /**
-   * Desktop web (`docs/design/2026-09-05-dashboard-web.md`'s "The two sheets
-   * that must stop being sheets") — swaps the slide-up sheet chrome and its
-   * `TouchableOpacity` backdrop for a centred dialog with a raw `<div>`
-   * scrim, following `InflationIndexSection`'s established `desktop?`
-   * convention (itself following `ExpenseDialog.tsx`'s verified-against-
-   * react-native-web-source reasoning: a `Pressable`/`TouchableOpacity`
-   * backdrop always carries a `tabIndex`, making it the focus trap's first,
-   * invisible target). Defaults to `false` — mobile's own call site passes
-   * nothing and gets today's exact bottom sheet, backdrop included. The row
-   * content below (wallet, expected income, subscriptions, etc.) is shared
-   * verbatim by both branches; only the outer chrome differs.
-   */
-  desktop?: boolean;
 }
 
 /**
@@ -33,11 +19,19 @@ interface SafeToSpendSheetProps {
  */
 const TITLE_ID = 'safe-to-spend-sheet-title';
 
-export function SafeToSpendSheet({ visible, onClose, data, desktop = false }: SafeToSpendSheetProps) {
+/**
+ * The safe-to-spend breakdown, opened from the dashboard hero number.
+ *
+ * The chrome — bottom sheet on a phone, centred dialog on desktop web — is
+ * `SheetDialog`'s, and so is the bottom inset. This file's own `desktop?` prop
+ * is gone with it: both dashboards now call this identically, and the two
+ * style entries below are the only places its phone appearance differs from
+ * the wrapper's canonical sheet.
+ */
+export function SafeToSpendSheet({ visible, onClose, data }: SafeToSpendSheetProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const insets = useSafeAreaInsets();
 
   if (!data) return null;
 
@@ -122,92 +116,35 @@ export function SafeToSpendSheet({ visible, onClose, data, desktop = false }: Sa
     </>
   );
 
-  if (desktop) {
-    return (
-      <Modal
-        visible={visible}
-        transparent
-        animationType="fade"
-        onRequestClose={onClose}
-        aria-labelledby={TITLE_ID}
-      >
-        {/* Deliberately a raw <div>, not a themed RN View/Pressable — see
-            `ExpenseDialog.tsx`'s file-level comment for why it must carry
-            no tabindex at all (a `Pressable`/`TouchableOpacity` scrim would
-            steal the focus trap's initial focus). */}
-        <div
-          role="presentation"
-          onClick={(e) => {
-            if (e.target === e.currentTarget) onClose();
-          }}
-          style={{
-            position: 'fixed',
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            backgroundColor: theme.colors.overlay,
-            padding: 24,
-          }}
-        >
-          <View style={styles.dialogPanel}>
-            <ScrollView style={styles.dialogBody} contentContainerStyle={styles.dialogBodyContent}>
-              {content}
-            </ScrollView>
-          </View>
-        </div>
-      </Modal>
-    );
-  }
-
   return (
-    <Modal
+    <SheetDialog
       visible={visible}
-      transparent
-      animationType="slide"
-      onRequestClose={onClose}
+      onClose={onClose}
+      titleId={TITLE_ID}
+      // The shipped phone formula, `theme.spacing[8] + insets.bottom`, stated
+      // as the wrapper's `pad above the inset` (ABA-483).
+      padBottom={theme.spacing[8]}
+      scrimColor="rgba(0,0,0,0.45)"
+      sheetStyle={styles.sheetBox}
+      handleStyle={styles.handleBox}
     >
-      <TouchableOpacity
-        style={styles.stsBackdrop}
-        activeOpacity={1}
-        onPress={onClose}
-      >
-        {/* The system navigation bar overlays this window, so the bottom padding
-            has to clear it — a fixed value left the last row unreachable on a
-            three-button-nav device (ABA-483). */}
-        <View style={[styles.stsSheet, { paddingBottom: theme.spacing[8] + insets.bottom }]}>
-          <View style={styles.stsHandle} />
-          {content}
-        </View>
-      </TouchableOpacity>
-    </Modal>
+      {content}
+    </SheetDialog>
   );
 }
 
 const createStyles = (theme: Theme) => ({
-  // Safe-to-spend bottom-sheet
-  stsBackdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.45)',
-    justifyContent: 'flex-end' as const,
-  },
-  stsSheet: {
-    backgroundColor: theme.colors.surface,
+  // Deviations from `SheetDialog`'s canonical sheet box, kept so the phone's
+  // pixels do not move: this panel is a compact breakdown with tighter side
+  // padding than a form sheet, and a slightly wider handle.
+  sheetBox: {
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
     paddingHorizontal: theme.spacing[5],
     paddingTop: theme.spacing[3],
   },
-  stsHandle: {
+  handleBox: {
     width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const,
-    marginBottom: theme.spacing[4],
   },
   stsSheetTitle: {
     ...theme.textStyles.h3,
@@ -278,26 +215,5 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium,
     color: '#FFFFFF',
     fontWeight: '600' as const,
-  },
-  // Desktop-only centred dialog chrome, mirroring `ExpenseDialog.tsx`'s
-  // panel shape (`InflationIndexSection.tsx`'s `dialogPanel` precedent) —
-  // narrower than that one since this panel is a compact breakdown, not a
-  // form. No separate header/close-button row: `stsCloseButton` inside
-  // `content` already closes the dialog, and `onRequestClose`/backdrop-click
-  // cover `Esc`/click-outside.
-  dialogPanel: {
-    width: '90%' as const,
-    maxWidth: 480,
-    maxHeight: '85%' as const,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.xl,
-    overflow: 'hidden' as const,
-    ...theme.shadows.xl,
-  },
-  dialogBody: {
-    flexShrink: 1,
-  },
-  dialogBodyContent: {
-    padding: theme.spacing[5],
   },
 });

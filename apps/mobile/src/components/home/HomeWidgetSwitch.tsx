@@ -18,19 +18,6 @@ export type { HomeWidgetContext } from './HomeWidgetContext';
 // `renderHomeWidget`.
 export { InvestmentCard };
 
-interface RenderHomeWidgetOptions {
-  /**
-   * Desktop web only (`docs/design/2026-09-05-dashboard-web.md`'s "The two
-   * sheets that must stop being sheets") — threads through to
-   * `FinancialHealthWidget`'s own `desktop?` prop so its breakdown panel
-   * opens as a centred dialog instead of a bottom sheet when this switch is
-   * called from `DashboardRail`. Undefined by default, so `DashboardMobile`'s
-   * own call site (which passes no options) is unaffected — the widget keeps
-   * its mobile bottom-sheet chrome there.
-   */
-  desktop?: boolean;
-}
-
 /**
  * Renders the dashboard card/widget for a given WidgetKey, or null when the
  * widget is hidden / has no data to show. Mirrors the switch previously
@@ -41,7 +28,7 @@ interface RenderHomeWidgetOptions {
  * Each case's actual card component lives in its own file under `./widgets/`
  * (ABA — HomeWidgetSwitch regrowth fix) — add a new widget there, not here.
  */
-export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext, opts?: RenderHomeWidgetOptions) {
+export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext) {
   const { widgetVisibility, monthlyBudgetSummary, widgetRefreshKey, currentAccountType, safeToSpendData, hasSafeToSpend } = ctx;
 
   switch (key) {
@@ -61,7 +48,7 @@ export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext, opts?: 
 
     case 'financialHealth':
       return widgetVisibility.financialHealth
-        ? <FinancialHealthWidget key="financialHealth" desktop={opts?.desktop} />
+        ? <FinancialHealthWidget key="financialHealth" />
         : null;
 
     case 'gamification':

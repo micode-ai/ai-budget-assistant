@@ -317,13 +317,13 @@ export function DashboardDesktop() {
         )}
       </ScrollView>
 
-      {/* Safe-to-Spend breakdown — a centred dialog on desktop (`desktop`
-          prop), not the mobile bottom sheet. */}
+      {/* Safe-to-Spend breakdown. `SheetDialog` inside it decides its own
+          chrome from the width, so this call site is now identical to the
+          phone's — there is no `desktop` flag left to forget. */}
       <SafeToSpendSheet
         visible={safeToSpendSheetVisible}
         onClose={() => setSafeToSpendSheetVisible(false)}
         data={safeToSpendData}
-        desktop
       />
       {/* Every dashboard flow that resolves in place, as dialogs over the
           dashboard rather than routes that replace it — this screen's own

@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Modal } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useThemeStore } from '@/stores/themeStore';
@@ -8,6 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { SUPPORTED_LANGUAGES, changeLanguage } from '@/i18n';
 import { DEFAULT_ACCENT, PRESET_ACCENTS } from '@/theme/presetAccents';
 import { ColorPicker } from '@/components/ColorPicker';
+import { SheetDialog } from '@/components/SheetDialog';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -27,10 +27,14 @@ type IconName = keyof typeof Ionicons.glyphMap;
  * full-page, a plain `View` in a pane, because the shell owns the page scroll and
  * a nested scroller would be the second scrollbar the language forbids.
  *
- * `useSafeAreaInsets` stays, and is deliberately NOT swapped for
- * `useSettingsPane().bottomInset`: it feeds the colour picker's bottom-anchored
- * `Modal`, not this screen's scroll padding. Per ABA-483 a bottom sheet must
- * clear the system navigation bar wherever its opener is rendered.
+ * **This screen no longer reads a safe-area inset at all.** It used to hold
+ * `useSafeAreaInsets()` for the colour picker's bottom-anchored `Modal`, with
+ * a note here saying that was deliberately not `useSettingsPane().bottomInset`
+ * - true at the time, and superseded: the picker opens in a `SheetDialog`,
+ * which owns both the inset (ABA-483's rule, in one place rather than nine)
+ * and the desktop chrome. `useSettingsPane().bottomInset` is still the wrong
+ * number for it, and still not what is used; the right one is simply no longer
+ * this screen's to compose.
  *
  * Nothing else changed. In particular `themeChip`'s `flex: 1` is untouched: it is
  * correct behaviour given a bounded parent, and supplying that bound is the
@@ -41,7 +45,6 @@ export function AppearanceSettings() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { mode, setMode, accent, customAccent, setAccent, setCustomAccent } = useThemeStore();
-  const insets = useSafeAreaInsets();
   const [pickerOpen, setPickerOpen] = React.useState(false);
   const activeAccent = accent ?? DEFAULT_ACCENT;
   const isCustom = accent !== null && !PRESET_ACCENTS.includes(accent);
@@ -139,19 +142,27 @@ export function AppearanceSettings() {
         </TouchableOpacity>
       </View>
 
-      <Modal visible={pickerOpen} transparent statusBarTranslucent animationType="slide" onRequestClose={() => setPickerOpen(false)}>
-        <View style={styles.modalBackdrop}>
-          <View style={[styles.modalSheet, { paddingBottom: insets.bottom + theme.spacing[4] }]}>
-            <View style={styles.sheetHandle} />
-            <ColorPicker
-              initialColor={customAccent ?? activeAccent}
-              onApply={(hex) => { setCustomAccent(hex); setAccent(hex); }}
-              onReset={() => { setAccent(null); setPickerOpen(false); }}
-              onClose={() => setPickerOpen(false)}
-            />
-          </View>
-        </View>
-      </Modal>
+      <SheetDialog
+        visible={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        statusBarTranslucent
+        padBottom={theme.spacing[4]}
+        sheetStyle={styles.pickerSheetBox}
+        handleStyle={styles.pickerHandleBox}
+        // The phone's backdrop is inert today: the picker is dismissed by its
+        // own Close / Reset buttons (and the back button), never by a stray
+        // tap behind a control the user is dragging. The desktop scrim still
+        // closes on an outside click, as every other dialog on that surface
+        // does.
+        dismissOnScrimPress={false}
+      >
+        <ColorPicker
+          initialColor={customAccent ?? activeAccent}
+          onApply={(hex) => { setCustomAccent(hex); setAccent(hex); }}
+          onReset={() => { setAccent(null); setPickerOpen(false); }}
+          onClose={() => setPickerOpen(false)}
+        />
+      </SheetDialog>
     </SettingsScreenScroll>
   );
 }
@@ -251,24 +262,19 @@ const createStyles = (theme: Theme) => ({
     borderStyle: 'dashed' as const,
     borderColor: theme.colors.border,
   },
-  modalBackdrop: {
-    flex: 1,
-    backgroundColor: theme.colors.overlay,
-    justifyContent: 'flex-end' as const,
-  },
-  modalSheet: {
+  // Deviations from `SheetDialog`'s canonical sheet box, kept so the phone's
+  // pixels do not move: the picker sits on the elevated surface, with tighter
+  // padding and a slightly wider handle than a form sheet.
+  pickerSheetBox: {
     backgroundColor: theme.colors.surfaceElevated,
     borderTopLeftRadius: theme.borderRadius.xl,
     borderTopRightRadius: theme.borderRadius.xl,
-    padding: theme.spacing[4],
+    paddingHorizontal: theme.spacing[4],
+    paddingTop: theme.spacing[4],
     gap: theme.spacing[3],
   },
-  sheetHandle: {
-    alignSelf: 'center' as const,
+  pickerHandleBox: {
     width: 40,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
     marginBottom: theme.spacing[2],
   },
 });

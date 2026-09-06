@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput } from 'react-native';
 import { showAlert } from '@/utils/alert';
-import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
+import { SheetDialog } from '@/components/SheetDialog';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,14 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 import { useSettingsPane } from '../SettingsPaneContext';
+
+/**
+ * Stable accessible-name ids for the two sheets' titles, wired to the desktop
+ * dialogs' `aria-labelledby`. Fixed ids are safe for the same reason
+ * `ExpenseDialog.tsx`'s is: only one sheet is ever open at a time.
+ */
+const RENAME_SHEET_TITLE_ID = 'merchant-rename-sheet-title';
+const MERGE_SHEET_TITLE_ID = 'merchant-merge-sheet-title';
 
 /**
  * The merchants screen's body: the merchant list with its rename / merge /
@@ -58,10 +66,12 @@ import { useSettingsPane } from '../SettingsPaneContext';
  * source keeps the two from ever disagreeing about which layout is in force.
  *
  * `useSafeAreaInsets` stays, and is deliberately NOT swapped for
- * `useSettingsPane().bottomInset`: it feeds the phone's docked merge bar and the
- * two bottom sheets, not this screen's scroll padding, which carries no inset
- * today and still does not. Per ABA-483 a bottom-anchored element must clear the
- * system navigation bar wherever its opener is rendered.
+ * `useSettingsPane().bottomInset`: it feeds the phone's docked merge bar, which
+ * must clear the system navigation bar wherever its opener is rendered
+ * (ABA-483), and is not this screen's scroll padding, which carries no inset
+ * today and still does not. It no longer feeds the two sheets - those are
+ * `SheetDialog`s now, and that wrapper owns the same inset rule for every sheet
+ * in one place.
  *
  * **The rules effect is keyed on `currentAccountId`, and that is load-bearing
  * here in a way it is not on the phone.** `merchantRulesStore.isLoaded` is a
@@ -399,71 +409,75 @@ export function MerchantsSettings() {
         </View>
       )}
 
-      {/* Single rename modal */}
-      <Modal visible={editing !== null} transparent animationType="slide" onRequestClose={closeRename}>
-        <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
-          <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeRename} />
-          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
-            <View style={styles.handle} />
-            <Text style={styles.modalTitle}>{t('merchants.renameTitle')}</Text>
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-              placeholder={t('merchants.renamePlaceholder')}
-              placeholderTextColor={theme.colors.textTertiary}
-              autoFocus
-              autoCapitalize="words"
-            />
-            <View style={styles.actions}>
-              <TouchableOpacity style={styles.cancelButton} onPress={closeRename}>
-                <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.saveButton, saving && styles.saveButtonDisabled]}
-                onPress={handleSaveRename}
-                disabled={saving}
-              >
-                <Text style={styles.saveText}>{t('common.save')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
+      {/* Single rename sheet */}
+      <SheetDialog
+        visible={editing !== null}
+        onClose={closeRename}
+        titleId={RENAME_SHEET_TITLE_ID}
+        keyboardAvoiding
+        padBottom={theme.spacing[4]}
+        insetFloor={theme.spacing[6]}
+        scrimColor="rgba(0,0,0,0.4)"
+      >
+        <Text nativeID={RENAME_SHEET_TITLE_ID} style={styles.modalTitle}>{t('merchants.renameTitle')}</Text>
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+          placeholder={t('merchants.renamePlaceholder')}
+          placeholderTextColor={theme.colors.textTertiary}
+          autoFocus
+          autoCapitalize="words"
+        />
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.cancelButton} onPress={closeRename}>
+            <Text style={styles.cancelText}>{t('common.cancel')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.saveButton, saving && styles.saveButtonDisabled]}
+            onPress={handleSaveRename}
+            disabled={saving}
+          >
+            <Text style={styles.saveText}>{t('common.save')}</Text>
+          </TouchableOpacity>
+        </View>
+      </SheetDialog>
 
-      {/* Merge modal */}
-      <Modal visible={mergeSources !== null} transparent animationType="slide" onRequestClose={closeMerge}>
-        <KeyboardAvoidingView behavior="padding" style={styles.overlay}>
-          <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeMerge} />
-          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
-            <View style={styles.handle} />
-            <Text style={styles.modalTitle}>{t('merchants.mergeTitle')}</Text>
-            <Text style={styles.mergeLabel}>{t('merchants.mergeInto')}</Text>
-            <TextInput
-              style={styles.input}
-              value={mergeName}
-              onChangeText={setMergeName}
-              placeholder={t('merchants.renamePlaceholder')}
-              placeholderTextColor={theme.colors.textTertiary}
-              autoFocus
-              autoCapitalize="words"
-            />
-            <Text style={styles.mergeCount}>{t('merchants.mergeCount', { count: mergeExpenseCount })}</Text>
-            <View style={styles.actions}>
-              <TouchableOpacity style={styles.cancelButton} onPress={closeMerge}>
-                <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.saveButton, saving && styles.saveButtonDisabled]}
-                onPress={handleConfirmMerge}
-                disabled={saving}
-              >
-                <Text style={styles.saveText}>{t('merchants.merge')}</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
+      {/* Merge sheet */}
+      <SheetDialog
+        visible={mergeSources !== null}
+        onClose={closeMerge}
+        titleId={MERGE_SHEET_TITLE_ID}
+        keyboardAvoiding
+        padBottom={theme.spacing[4]}
+        insetFloor={theme.spacing[6]}
+        scrimColor="rgba(0,0,0,0.4)"
+      >
+        <Text nativeID={MERGE_SHEET_TITLE_ID} style={styles.modalTitle}>{t('merchants.mergeTitle')}</Text>
+        <Text style={styles.mergeLabel}>{t('merchants.mergeInto')}</Text>
+        <TextInput
+          style={styles.input}
+          value={mergeName}
+          onChangeText={setMergeName}
+          placeholder={t('merchants.renamePlaceholder')}
+          placeholderTextColor={theme.colors.textTertiary}
+          autoFocus
+          autoCapitalize="words"
+        />
+        <Text style={styles.mergeCount}>{t('merchants.mergeCount', { count: mergeExpenseCount })}</Text>
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.cancelButton} onPress={closeMerge}>
+            <Text style={styles.cancelText}>{t('common.cancel')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.saveButton, saving && styles.saveButtonDisabled]}
+            onPress={handleConfirmMerge}
+            disabled={saving}
+          >
+            <Text style={styles.saveText}>{t('merchants.merge')}</Text>
+          </TouchableOpacity>
+        </View>
+      </SheetDialog>
     </>
   );
 }
@@ -567,19 +581,6 @@ const createStyles = (theme: Theme) => ({
   mergeButtonDisabled: { opacity: 0.5 },
   mergeButtonText: { fontSize: 16, fontWeight: '600' as const, color: theme.colors.textInverse },
   // Modals
-  overlay: { flex: 1, justifyContent: 'flex-end' as const },
-  backdrop: { flex: 1, backgroundColor: 'rgba(0,0,0,0.4)' },
-  sheet: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: theme.borderRadius['2xl'],
-    borderTopRightRadius: theme.borderRadius['2xl'],
-    padding: theme.spacing[6],
-  },
-  handle: {
-    width: 36, height: 4, borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const, marginBottom: theme.spacing[4],
-  },
   modalTitle: { ...theme.textStyles.h3, color: theme.colors.textPrimary, marginBottom: theme.spacing[4] },
   mergeLabel: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, marginBottom: theme.spacing[2] },
   input: {

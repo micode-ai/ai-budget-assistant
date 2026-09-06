@@ -129,15 +129,16 @@ export function DashboardRail({
   const investmentEl =
     currentAccountType === 'investment' && investmentSummary ? <InvestmentCard key="investment" ctx={ctx} /> : null;
 
-  // `{ desktop: true }` only changes `financialHealth`'s own breakdown panel
-  // (a centred dialog instead of a bottom sheet) — every other case ignores
-  // the option and renders exactly as it does for `DashboardMobile`. Filter
+  // Rendered exactly as `DashboardMobile` renders them: the one widget that
+  // used to need a `{ desktop: true }` option here (`financialHealth`, whose
+  // breakdown panel becomes a centred dialog) now gets that from `SheetDialog`
+  // reading the width itself. Filter
   // out the `null`s (hidden widgets) BEFORE any two-column split below — a
   // hidden widget must not consume a left/right slot, or a mix of
   // hidden/visible widgets could lopside the split (e.g. every visible one
   // landing in the same column) and defeat the reason for splitting at all.
   const railWidgets = railKeys
-    .map((key) => renderHomeWidget(key, ctx, { desktop: true }))
+    .map((key) => renderHomeWidget(key, ctx))
     .filter((el): el is NonNullable<typeof el> => el !== null);
 
   const fixedTop = (

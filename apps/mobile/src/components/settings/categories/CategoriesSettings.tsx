@@ -3,12 +3,10 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Modal,
   TextInput,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
-import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SheetDialog } from '@/components/SheetDialog';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '@/stores/categoryStore';
@@ -18,6 +16,13 @@ import type { Category } from '@budget/shared-types';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 
 type IconName = keyof typeof Ionicons.glyphMap;
+
+/**
+ * Stable accessible-name id for the create/edit sheet's title, wired to the
+ * desktop dialog's `aria-labelledby`. A fixed id is safe for the same reason
+ * `ExpenseDialog.tsx`'s is: only one instance is ever mounted at a time.
+ */
+const CATEGORY_SHEET_TITLE_ID = 'category-sheet-title';
 
 const PRESET_COLORS = [
   '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4',
@@ -51,16 +56,18 @@ const PRESET_COLORS = [
  * it is today: `SettingsScreenFrame`'s `SafeAreaView` wraps both, so the
  * full-page tree is the one the phone renders now.
  *
- * `useSafeAreaInsets` stays, and is deliberately NOT swapped for
- * `useSettingsPane().bottomInset`: it feeds the bottom-anchored `Modal`, not
- * this screen's scroll padding, which carries no inset today and still does
- * not. Per ABA-483 a bottom sheet must clear the system navigation bar
- * wherever its opener is rendered.
+ * **This screen no longer reads a safe-area inset at all.** It used to hold
+ * `useSafeAreaInsets()` for its own bottom-anchored `Modal`, with a note here
+ * saying that was deliberately not `useSettingsPane().bottomInset` — true at
+ * the time, and superseded: the sheet is now a `SheetDialog`, which owns both
+ * the inset (ABA-483's rule, in one place rather than nine) and the desktop
+ * chrome. `useSettingsPane().bottomInset` is still the wrong number for it,
+ * and still not what is used; the right one is simply no longer this screen's
+ * to compose.
  */
 export function CategoriesSettings() {
   const { t } = useTranslation();
   const theme = useTheme();
-  const insets = useSafeAreaInsets();
   const styles = useStyles(createStyles);
   const canEdit = useAccountStore((s) => s.canEdit());
   const {
@@ -225,63 +232,62 @@ export function CategoriesSettings() {
         {renderSection(t('categories.incomeCategories'), incomeCategories, 'income')}
       </SettingsScreenScroll>
 
-      <Modal visible={modalVisible} transparent animationType="slide" onRequestClose={closeModal}>
-        <KeyboardAvoidingView
-          behavior="padding"
-          style={styles.overlay}
-        >
-          <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={closeModal} />
-          <View style={[styles.sheet, { paddingBottom: Math.max(insets.bottom, 24) + 16 }]}>
-            <View style={styles.handle} />
-            <Text style={styles.modalTitle}>
-              {editingCategory ? t('categories.edit') : t('categories.add')}
+      <SheetDialog
+        visible={modalVisible}
+        onClose={closeModal}
+        titleId={CATEGORY_SHEET_TITLE_ID}
+        keyboardAvoiding
+        padBottom={theme.spacing[4]}
+        insetFloor={theme.spacing[6]}
+        scrimColor="rgba(0,0,0,0.4)"
+      >
+        <Text nativeID={CATEGORY_SHEET_TITLE_ID} style={styles.modalTitle}>
+          {editingCategory ? t('categories.edit') : t('categories.add')}
+        </Text>
+
+        <TextInput
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+          placeholder={t('categoryCreate.namePlaceholder')}
+          placeholderTextColor={theme.colors.textTertiary}
+          autoFocus
+          maxLength={50}
+        />
+
+        <View style={styles.colorGrid}>
+          {PRESET_COLORS.map((color) => (
+            <TouchableOpacity
+              key={color}
+              style={[
+                styles.colorCircle,
+                { backgroundColor: color },
+                selectedColor === color && styles.colorCircleSelected,
+              ]}
+              onPress={() => setSelectedColor(color)}
+            >
+              {selectedColor === color && (
+                <Ionicons name="checkmark" size={16} color="#fff" />
+              )}
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        <View style={styles.actions}>
+          <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
+            <Text style={styles.cancelText}>{t('common.cancel')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
+            onPress={handleSave}
+            disabled={isSaving}
+          >
+            <Text style={styles.saveText}>
+              {editingCategory ? t('categories.save') : t('categoryCreate.create')}
             </Text>
-
-            <TextInput
-              style={styles.input}
-              value={name}
-              onChangeText={setName}
-              placeholder={t('categoryCreate.namePlaceholder')}
-              placeholderTextColor={theme.colors.textTertiary}
-              autoFocus
-              maxLength={50}
-            />
-
-            <View style={styles.colorGrid}>
-              {PRESET_COLORS.map((color) => (
-                <TouchableOpacity
-                  key={color}
-                  style={[
-                    styles.colorCircle,
-                    { backgroundColor: color },
-                    selectedColor === color && styles.colorCircleSelected,
-                  ]}
-                  onPress={() => setSelectedColor(color)}
-                >
-                  {selectedColor === color && (
-                    <Ionicons name="checkmark" size={16} color="#fff" />
-                  )}
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            <View style={styles.actions}>
-              <TouchableOpacity style={styles.cancelButton} onPress={closeModal}>
-                <Text style={styles.cancelText}>{t('common.cancel')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
-                onPress={handleSave}
-                disabled={isSaving}
-              >
-                <Text style={styles.saveText}>
-                  {editingCategory ? t('categories.save') : t('categoryCreate.create')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </KeyboardAvoidingView>
-      </Modal>
+          </TouchableOpacity>
+        </View>
+      </SheetDialog>
     </>
   );
 }
@@ -346,29 +352,6 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     textAlign: 'center' as const,
     paddingVertical: theme.spacing[4],
-  },
-  // Modal styles
-  overlay: {
-    flex: 1,
-    justifyContent: 'flex-end' as const,
-  },
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  sheet: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: theme.borderRadius['2xl'],
-    borderTopRightRadius: theme.borderRadius['2xl'],
-    padding: theme.spacing[6],
-  },
-  handle: {
-    width: 36,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: theme.colors.border,
-    alignSelf: 'center' as const,
-    marginBottom: theme.spacing[4],
   },
   modalTitle: {
     ...theme.textStyles.h3,

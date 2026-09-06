@@ -46,9 +46,10 @@ import type { ProductListItem } from '@budget/shared-types';
  * **The scroll padding reads `useSettingsPane().bottomInset`** rather than
  * `useSafeAreaInsets()`: the same number on a phone, and nothing in a pane,
  * where the shell has already accounted for the system inset. `useSafeAreaInsets`
- * stays for the docked merge bar and the two bottom sheets, which are
- * bottom-anchored and must clear the navigation bar wherever their opener is
- * rendered (ABA-483).
+ * stays for the docked merge bar, which is bottom-anchored and must clear the
+ * navigation bar wherever its opener is rendered (ABA-483). It no longer feeds
+ * the two sheets, and they no longer take a `bottomInset` prop: both are
+ * `SheetDialog`s, and that wrapper reads the safe area itself.
  *
  * **The merge bar has two renderings, and the fork is here rather than inside
  * `BulkActionBar`**, exactly as on the merchants screen. The docked bar is the
@@ -492,7 +493,6 @@ export function ProductsSettings() {
         onClose={closeRename}
         onSave={handleSaveRename}
         onIgnore={handleIgnore}
-        bottomInset={insets.bottom}
       />
 
       <MergeProductsModal
@@ -503,7 +503,6 @@ export function ProductsSettings() {
         saving={saving}
         onClose={closeMerge}
         onConfirm={handleConfirmMerge}
-        bottomInset={insets.bottom}
       />
     </>
   );

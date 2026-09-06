@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { SheetDialog } from '@/components/SheetDialog';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useFinancialHealthScore, type HealthScoreComponent, type HealthColorKey } from '@/features/analytics/useFinancialHealthScore';
 
@@ -113,21 +114,23 @@ function ComponentRow({ component }: { component: HealthScoreComponent }) {
   );
 }
 
-interface FinancialHealthWidgetProps {
-  /**
-   * Desktop web (`docs/design/2026-09-05-dashboard-web.md`'s "The two sheets
-   * that must stop being sheets") — the internal breakdown panel becomes a
-   * centred dialog with a raw `<div>` scrim instead of a bottom sheet with a
-   * bare `Pressable` backdrop, same `desktop?` convention as
-   * `SafeToSpendSheet`/`InflationIndexSection`. Defaults to `false` — mobile's
-   * own call site passes nothing and gets today's exact bottom sheet. The
-   * outer card (score + gauge) this prop's own `TouchableOpacity` renders is
-   * untouched either way; only the panel opened on tap changes chrome.
-   */
-  desktop?: boolean;
-}
-
-export function FinancialHealthWidget({ desktop = false }: FinancialHealthWidgetProps = {}) {
+/**
+ * The financial-health score card, and the breakdown panel it opens.
+ *
+ * That panel's chrome — bottom sheet on a phone, centred dialog on desktop web
+ * — is `SheetDialog`'s, and so is its bottom inset. The `desktop?` prop this
+ * file used to carry (threaded from `DashboardRail` through
+ * `renderHomeWidget`) is gone: the wrapper reads the width itself, so there is
+ * no flag left for a third call site to forget.
+ *
+ * **Its bottom padding is the one place this pass moves a phone pixel.** The
+ * shipped sheet padded a flat 32 with no inset at all — it is not among
+ * ABA-483's eight, and it is the ninth instance of exactly that bug. Routed
+ * through the wrapper it is `max(inset, 32)`: identical on a device with no
+ * navigation bar, and on a device with one it grows by at most ~16px, to
+ * cover the bar the note underneath was sitting behind.
+ */
+export function FinancialHealthWidget() {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -206,55 +209,22 @@ export function FinancialHealthWidget({ desktop = false }: FinancialHealthWidget
         </View>
       </TouchableOpacity>
 
-      {desktop ? (
-        sheetOpen && (
-          <Modal
-            visible
-            transparent
-            animationType="fade"
-            onRequestClose={() => setSheetOpen(false)}
-            aria-labelledby={TITLE_ID}
-          >
-            {/* Deliberately a raw <div>, not a themed RN View/Pressable — see
-                `ExpenseDialog.tsx`'s file-level comment for why it must carry
-                no tabindex at all (a `Pressable` scrim would steal the focus
-                trap's initial focus). */}
-            <div
-              role="presentation"
-              onClick={(e) => {
-                if (e.target === e.currentTarget) setSheetOpen(false);
-              }}
-              style={{
-                position: 'fixed',
-                top: 0,
-                right: 0,
-                bottom: 0,
-                left: 0,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                backgroundColor: theme.colors.overlay,
-                padding: 24,
-              }}
-            >
-              <View style={styles.dialogPanel}>{panelContent}</View>
-            </div>
-          </Modal>
-        )
-      ) : (
-        <Modal
-          visible={sheetOpen}
-          transparent
-          animationType="slide"
-          onRequestClose={() => setSheetOpen(false)}
-        >
-          <Pressable style={styles.backdrop} onPress={() => setSheetOpen(false)} />
-          <View style={styles.sheet}>
-            <View style={styles.sheetHandle} />
-            {panelContent}
-          </View>
-        </Modal>
-      )}
+      <SheetDialog
+        visible={sheetOpen}
+        onClose={() => setSheetOpen(false)}
+        titleId={TITLE_ID}
+        // See the note above: the shipped value was a flat 32 with no inset.
+        padBottom={0}
+        insetFloor={32}
+        scrimColor="rgba(0,0,0,0.4)"
+        sheetStyle={styles.sheetBox}
+        handleStyle={styles.handleBox}
+        // `panelContent` already contains its own `ScrollView`; a second one
+        // inside the dialog is the scroller the design language forbids.
+        desktopScroll={false}
+      >
+        {panelContent}
+      </SheetDialog>
     </>
   );
 }
@@ -313,23 +283,20 @@ const createStyles = (theme: Theme) => ({
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
   },
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  sheet: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+  // Deviations from `SheetDialog`'s canonical sheet box, kept so the phone's
+  // pixels do not move: this panel is capped at 80% of the screen and its own
+  // children (`sheetHeader` / `sheetScrollContent`) carry all the padding, so
+  // the sheet itself must have none.
+  sheetBox: {
+    // No border radii here: the shipped literal was 20, which is exactly what
+    // `SheetDialog`'s canonical `borderRadius['2xl']` already resolves to, so
+    // dropping the local literal moves nothing today and keeps this sheet on
+    // the token if the token ever moves.
     maxHeight: '80%' as const,
-    paddingBottom: 32,
+    paddingHorizontal: 0,
+    paddingTop: 0,
   },
-  sheetHandle: {
-    width: 36,
-    height: 4,
-    backgroundColor: theme.colors.border,
-    borderRadius: 2,
-    alignSelf: 'center' as const,
+  handleBox: {
     marginTop: 10,
     marginBottom: 4,
   },
@@ -389,19 +356,5 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textTertiary,
     marginTop: theme.spacing[4],
     textAlign: 'center' as const,
-  },
-  // Desktop-only centred dialog chrome, mirroring `ExpenseDialog.tsx`'s
-  // panel shape — narrower than that one since this panel is a compact
-  // breakdown, not a form. `sheetHeader`/`sheetScroll` (unchanged) already
-  // provide their own padding, so this panel itself carries none beyond the
-  // rounded-corner clip.
-  dialogPanel: {
-    width: '90%' as const,
-    maxWidth: 480,
-    maxHeight: '85%' as const,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.xl,
-    overflow: 'hidden' as const,
-    ...theme.shadows.xl,
   },
 });
