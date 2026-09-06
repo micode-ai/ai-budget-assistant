@@ -225,6 +225,34 @@ export function resolveSettingsPane(key: string | undefined): SettingsPaneEntry 
   return SETTINGS_ENTRIES.find((entry): entry is SettingsPaneEntry => isPaneEntry(entry) && entry.key === key);
 }
 
+/**
+ * Whether the desktop shell hosts this route in its right pane — which is the
+ * same question as "does this route already have a left pane telling the user
+ * where they are, and what else there is".
+ *
+ * `app/_layout.tsx` asks it to decide `headerShown`, mirroring what
+ * `app/(tabs)/_layout.tsx` already does with `headerShown: !isDesktopWeb`:
+ * there `WebTopBar` replaces the per-screen header, here the settings shell
+ * does. On a hosted route the stack header is not merely redundant — its back
+ * arrow is a false promise, since it leaves settings entirely rather than
+ * returning to the pane list that is already on screen.
+ *
+ * It answers from {@link SETTINGS_ENTRIES} and never from a second list, which
+ * is the whole point: a later wave promoting one entry from `link` to `pane`
+ * drops that screen's header with no edit in `app/_layout.tsx` at all, and —
+ * just as load-bearing — a settings route that is STILL a link keeps its
+ * header, because such a route renders as a full page on desktop with no pane
+ * list beside it and would otherwise strand the user with no way back.
+ *
+ * Accepts either the expo-router screen name (`settings/appearance`) or the
+ * registry's own route (`/settings/appearance`): the two differ only by the
+ * leading slash, and a caller holding one should not have to know which.
+ */
+export function isShellHostedSettingsRoute(routeName: string): boolean {
+  const route = routeName.startsWith('/') ? routeName : `/${routeName}`;
+  return SETTINGS_ENTRIES.some((entry) => isPaneEntry(entry) && entry.route === route);
+}
+
 /** `undefined` means "no cap" — the pane's own width. */
 export function paneContentMaxWidth(entry: SettingsPaneEntry): number | undefined {
   return entry.width === 'form' ? SETTINGS_FORM_MAX_WIDTH : undefined;

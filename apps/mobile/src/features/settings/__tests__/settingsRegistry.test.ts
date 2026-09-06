@@ -15,6 +15,7 @@ import {
   isPaneEntry,
   isLinkEntry,
   resolveSettingsPane,
+  isShellHostedSettingsRoute,
   paneContentMaxWidth,
   visibleSettingsEntries,
 } from '../settingsRegistry';
@@ -170,5 +171,61 @@ describe('settingsRegistry', () => {
   // block in its intended place rather than being appended.
   it('records which entries are panes today', () => {
     expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['appearance', 'ai', 'widgets', 'notifications', 'data', 'about']);
+  });
+});
+
+describe('isShellHostedSettingsRoute', () => {
+  // Every call in `app/_layout.tsx` passes the expo-router screen name, which
+  // has no leading slash, while the registry stores `/settings/x`. Asserting
+  // through the slashless form is what makes these two cases real rather than
+  // a restatement of `isPaneEntry`: drop the normalisation and every pane
+  // answers false, which puts the redundant header back on all of them with
+  // nothing else failing.
+  it('hosts every pane entry, addressed as the router names it', () => {
+    const panes = SETTINGS_ENTRIES.filter(isPaneEntry);
+    expect(panes.length).toBeGreaterThan(0);
+    for (const entry of panes) {
+      expect(isShellHostedSettingsRoute(entry.route.replace(/^\//, ''))).toBe(true);
+      expect(isShellHostedSettingsRoute(entry.route)).toBe(true);
+    }
+  });
+
+  // Catches the failure this helper exists to prevent in the other direction:
+  // a settings route that is still a link renders as a full page on desktop
+  // with no left pane beside it, so if it lost its header the back arrow would
+  // go with it and the user would be stranded there.
+  it('does not host a link entry, including the settings ones', () => {
+    const links = SETTINGS_ENTRIES.filter(isLinkEntry);
+    expect(links.some((e) => e.route.startsWith('/settings/'))).toBe(true);
+    for (const entry of links) {
+      expect(isShellHostedSettingsRoute(entry.route.replace(/^\//, ''))).toBe(false);
+      expect(isShellHostedSettingsRoute(entry.route)).toBe(false);
+    }
+  });
+
+  // Catches an over-broad match — a prefix or `includes` test would strip the
+  // header from a route the shell has never heard of. `settings/index` is the
+  // shell's own landing page and deliberately keeps its header: it is the only
+  // thing labelling that screen, since `WebTopBar` titles the five main tabs
+  // and nothing else.
+  it('does not host a settings route that is not an entry', () => {
+    for (const route of [
+      'settings/index',
+      'settings/import/preview',
+      'settings/ai-usage-details',
+      'settings/auto-capture',
+      'settings/reference',
+      'settings/change-email',
+    ]) {
+      expect(isShellHostedSettingsRoute(route)).toBe(false);
+    }
+  });
+
+  // Catches a match loose enough to reach outside settings entirely, which
+  // would take the header off an unrelated screen that has no other way back.
+  it('does not host anything outside settings', () => {
+    for (const route of ['expense/new', 'wallet/index', '/wallet', '', '/', 'settings']) {
+      expect(isShellHostedSettingsRoute(route)).toBe(false);
+    }
   });
 });

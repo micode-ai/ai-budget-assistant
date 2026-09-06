@@ -16,6 +16,7 @@ import { UpgradeGate } from '@/components/UpgradeGate';
 import { AlertDialogHost } from '@/components/AlertDialogHost';
 import { WebShell } from '@/components/WebShell';
 import { useIsDesktopWeb } from '@/components/webLayout.constants';
+import { isShellHostedSettingsRoute } from '@/features/settings/settingsRegistry';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
 import { useColdStartGate } from '@/hooks/useColdStartGate';
@@ -81,6 +82,21 @@ function RootNavigator() {
     fontFamily: theme.fonts.bold,
     fontSize: isDesktopWeb ? 16 : 18,
   };
+
+  // A settings screen the desktop shell hosts already has the shell's left
+  // pane beside it saying where you are and what else there is, so its stack
+  // header is redundant — and its back arrow is a false promise, leaving
+  // settings entirely instead of returning to that pane list. Same move as
+  // `app/(tabs)/_layout.tsx`'s `headerShown: !isDesktopWeb`, where `WebTopBar`
+  // plays the shell's role.
+  //
+  // Every settings route destined to become a pane calls this, whether or not
+  // it is one yet: the registry answers, so a later wave that flips one entry
+  // from `link` to `pane` needs no edit here, and a route still rendered as a
+  // full page keeps its header rather than stranding the user. Below
+  // `DESKTOP_MIN_WIDTH` and on native nothing changes.
+  const settingsHeaderShown = (routeName: string) =>
+    !(isDesktopWeb && isShellHostedSettingsRoute(routeName));
 
   return (
     <>
@@ -343,56 +359,56 @@ function RootNavigator() {
         <Stack.Screen
           name="settings/profile"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/profile'),
             title: t('settingsNav.profile'),
           }}
         />
         <Stack.Screen
           name="settings/appearance"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/appearance'),
             title: t('settingsNav.appearance'),
           }}
         />
         <Stack.Screen
           name="settings/ai"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/ai'),
             title: t('settingsNav.ai'),
           }}
         />
         <Stack.Screen
           name="settings/widgets"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/widgets'),
             title: t('settingsNav.widgets'),
           }}
         />
         <Stack.Screen
           name="settings/notifications"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/notifications'),
             title: t('settingsNav.notifications'),
           }}
         />
         <Stack.Screen
           name="settings/security"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/security'),
             title: t('settingsNav.security'),
           }}
         />
         <Stack.Screen
           name="settings/data"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/data'),
             title: t('settingsNav.data'),
           }}
         />
         <Stack.Screen
           name="settings/about"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/about'),
             title: t('settingsNav.about'),
           }}
         />
@@ -406,7 +422,7 @@ function RootNavigator() {
         <Stack.Screen
           name="settings/bots"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/bots'),
             title: t('settings.bots.title'),
           }}
         />
@@ -462,21 +478,21 @@ function RootNavigator() {
         <Stack.Screen
           name="settings/categories"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/categories'),
             title: t('settingsNav.categories'),
           }}
         />
         <Stack.Screen
           name="settings/merchants"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/merchants'),
             title: t('settingsNav.merchants'),
           }}
         />
         <Stack.Screen
           name="settings/products"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/products'),
             title: t('settingsNav.products'),
           }}
         />
