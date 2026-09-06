@@ -222,6 +222,69 @@ Two findings this screen surfaced that the next one has to handle:
   wait / show / suppress — because a boolean reads an offline first paint as a
   brand-new user.
 
+## 5d. What the retention/onboarding pass added
+
+The dashboard's second pass. Its subject was not layout but **honesty about
+what the app knows**, and most of what it taught generalises.
+
+- **A zero from the server is not the same as no data — and the fix belongs at
+  the desktop call site, not in the hook.** `useSafeToSpend.hasEnoughData` is
+  `data !== null`, and the API answers an empty account with real zeros, so the
+  contract is genuinely wrong. But `HomeHeroHeader` renders that same hook on
+  the phone, so correcting it there changes the mobile rendering. Gate at the
+  call site; the contract stays open and needs a store release.
+- **On web, a silently failed pull is indistinguishable from an empty
+  account**, because SQLite is a mock and `_doPullAndMerge` swallows a failure
+  without setting a flag. Any first-run or empty-state decision there needs a
+  **three-valued** predicate — wait / show / suppress. A boolean reads an
+  offline first paint as a brand-new user, and the asymmetry decides the
+  default: showing an established user "add your first expense" is the harm;
+  showing a new user today's empty dashboard is merely today's behaviour. Bound
+  the wait (~5s) so a permanently failing pull cannot sit in it forever.
+- **An account-scoped read must not be issued before the account is known.**
+  `AccountContextGuard` falls back to `req.user.defaultAccountId` when the
+  header is absent, so a request that outruns account resolution returns
+  *another account's money* and the client caches it. Measured, not theorised:
+  the app's cached hero figure was byte-identical to the header-less response.
+  The guard belongs where `walletStore.loadWallet` already puts it —
+  capture-then-recheck around the await — not in `HttpClient`, which would hang
+  for a user who legitimately has no account.
+- **Any MMKV cache of account-scoped data must be keyed by account and cleared
+  on sign-out.** `insightsStore` and `inflationShieldStore` were keyed by
+  neither; the latter had no `reset()` at all, so its cache outlived the
+  session and was read by whoever signed in next on that browser. Teardown goes
+  in `logoutAction`'s existing reset block and is **unconditional** — sign-out
+  is also reached from a 401 cascade with the tokens already gone, which is
+  exactly the case a token-gated teardown would miss.
+- **Two states that look like one flag are usually two.** The chart asks "is
+  this range worth drawing?"; the range chips ask "is there anything to range
+  over at all?" Sharing one boolean produced a dead end — a user narrowed to a
+  sparse range lost the control that would widen it back. Give such predicates
+  **differently-named destructured inputs**, so swapping them is a compile
+  error rather than a silent one, and measure both from one `now`: two memos
+  each capturing their own `new Date()` can straddle a month boundary and break
+  the subset relation the whole rule rests on.
+- **A rule that lives in a `.tsx` cannot be tested.** A derived ceiling is not
+  safe merely because it is derived; if its table sits in the component, no
+  test can check the predicate is fed the right window.
+
+### Verification lessons, all of them paid for
+
+- **The presence of a string is not a state.** A regex for `12M` over the body
+  text matches the chip's *label*; selection lives in the active-style
+  attribute. A whole false defect report was written on that mistake.
+- **Two identical strings on one page cannot be told apart by a text probe.**
+  Reusing an existing i18n key is right, but it costs diagnosability.
+- **Disbelieve a grep before deleting what it says is missing.** A raw search
+  for locale strings in the built bundle reported five of nine absent — Metro
+  escapes non-ASCII as a backslash-u escape.
+- **A mutation harness must restore in a `finally`.** One crashed mid-run and
+  left a mutation applied to the source; had it crashed on the last mutation
+  instead of the first, the defect would have been committed under a green
+  suite, because those were the very tests that catch it.
+- **Never run a build while an agent is editing the tree**, and never point the
+  verification browser at a directory an agent rebuilds.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
