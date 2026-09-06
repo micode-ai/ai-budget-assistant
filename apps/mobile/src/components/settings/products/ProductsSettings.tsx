@@ -22,6 +22,20 @@ import { useSettingsPane } from '../SettingsPaneContext';
 import type { ProductListItem } from '@budget/shared-types';
 
 /**
+ * Rows the pane renders before withholding the rest behind "+N more".
+ *
+ * A pane has no scroller of its own, so an uncapped list is rendered whole, in
+ * one commit: a production account with ~1,120 products measured 12,359 DOM
+ * elements and 67,894px of content. 100 is round -- plainly a cap rather than a
+ * coincidence -- and an order of magnitude below where the cost showed up, so
+ * most accounts never meet the affordance at all. If it is wrong it is one
+ * constant.
+ *
+ * Desktop only. The phone keeps its `FlatList`, which genuinely windows there.
+ */
+const PANE_MAX_ROWS = 100;
+
+/**
  * The products screen's body: the tracked-product list with rename, ignore,
  * multi-select merge and the AI re-analysis backfill.
  *
@@ -38,10 +52,18 @@ import type { ProductListItem } from '@budget/shared-types';
  *
  * **The root `FlatList` is `SettingsScreenList`.** This is the first extracted
  * settings screen whose root scroller is virtualized, and a `FlatList` cannot be
- * left in a pane for two independent reasons - it is a second scroll container,
- * and it would settle at `initialNumToRender` rows and silently never advance,
- * because nothing ever scrolls it. See that component. The full-page branch is
- * today's `FlatList` with every prop forwarded unchanged.
+ * left in a pane because it is a second scroll container. The full-page branch
+ * is today's `FlatList` with every prop forwarded unchanged, and it is the one
+ * that virtualizes: in a pane every row is rendered, so the pane path is capped
+ * at `PANE_MAX_ROWS` with a "+N more" affordance instead. See that component for
+ * the measurement, and for the correction of an earlier claim in this comment
+ * that a `FlatList` there would have stopped at twenty rows -- it would not.
+ *
+ * **The search filters before the cap, and that ordering is load-bearing.**
+ * `filteredProducts` filters the whole `products` array and the cap is applied
+ * to the result, so narrowing finds any product no matter how long the list is.
+ * Capping first would make a product unreachable by searching for it, which is
+ * worse than any row count.
  *
  * **The scroll padding reads `useSettingsPane().bottomInset`** rather than
  * `useSafeAreaInsets()`: the same number on a phone, and nothing in a pane,
@@ -492,6 +514,9 @@ export function ProductsSettings() {
         )}
         contentContainerStyle={[styles.content, { paddingBottom: theme.spacing[10] + bottomInset }]}
         showsVerticalScrollIndicator={false}
+        desktopMaxRows={PANE_MAX_ROWS}
+        showMoreLabel={(count) => t('priceHistory.showMore', { count })}
+        showMoreStyle={styles.showMoreCard}
         initialNumToRender={20}
         maxToRenderPerBatch={20}
         windowSize={5}
@@ -628,6 +653,14 @@ const createStyles = (theme: Theme) => ({
   itemSeparator: {
     height: 1,
     backgroundColor: theme.colors.divider,
+  },
+  // The capped list's "+N more" row is the card's last row, so it carries the
+  // card's ground and its bottom corners - the ones `itemWrapLast` would have
+  // given the final product row had the list not been cut short.
+  showMoreCard: {
+    backgroundColor: theme.colors.surface,
+    borderBottomLeftRadius: theme.borderRadius.lg,
+    borderBottomRightRadius: theme.borderRadius.lg,
   },
   row: {
     flexDirection: 'row' as const,
