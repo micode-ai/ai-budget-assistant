@@ -18,6 +18,7 @@ import { useWalletStore } from './walletStore';
 import { useExchangeRateStore } from './exchangeRateStore';
 import { useInvestmentStore } from './investmentStore';
 import { useInsightsStore } from './insightsStore';
+import { useInflationShieldStore } from './inflationShieldStore';
 import { useGoalStore } from './goalStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
@@ -633,6 +634,14 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     useExchangeRateStore.getState().reset();
     useInvestmentStore.getState().reset();
     useInsightsStore.getState().reset();
+    // The shield cache is MMKV-backed and was previously absent from this list
+    // entirely (the store had no `reset()` at all), so one user's stock-up and
+    // price figures survived sign-out and were painted for whoever signed in
+    // next on the same device. This is the one place stores are torn down on
+    // sign-out, and it already resets its sibling `useInsightsStore` — so the
+    // shield belongs here, immediately beside it, rather than in a new hook
+    // somewhere that the next sign-out path would have to remember to call.
+    useInflationShieldStore.getState().reset();
     useGoalStore.getState().reset();
 
     // Clear investment data from SQLite

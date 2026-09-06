@@ -79,6 +79,11 @@ jest.mock('../insightsStore', () => {
   return { useInsightsStore: { getState: () => state } };
 });
 
+jest.mock('../inflationShieldStore', () => {
+  const state = { reset: jest.fn() };
+  return { useInflationShieldStore: { getState: () => state } };
+});
+
 jest.mock('../goalStore', () => {
   const state = { reset: jest.fn() };
   return { useGoalStore: { getState: () => state } };
@@ -108,6 +113,7 @@ jest.mock('../firstRunStore', () => {
 });
 
 import { useAuthStore } from '../authStore';
+import { useInflationShieldStore } from '../inflationShieldStore';
 import { secureStorage } from '../../services/secureStorage';
 import { api } from '../../services/api';
 import { unregisterPushNotifications } from '../../services/notifications';
@@ -201,5 +207,35 @@ describe('authStore.logout — restore credential cleanup (ABA-465)', () => {
 
     expect(mockClearRestoreCredential).toHaveBeenCalledTimes(1);
     expect(useAuthStore.getState().isAuthenticated).toBe(false);
+  });
+
+  // The inflation-shield cache is MMKV-backed and, unlike every other store in
+  // this teardown list, was never reset on sign-out at all - the store had no
+  // reset() to call. Its cache therefore survived sign-out and was read by
+  // whoever signed in NEXT on that device: one person's shopping and price
+  // figures shown to another person on a shared or public machine. This test
+  // catches deleting `useInflationShieldStore.getState().reset()` from the
+  // teardown block in authSessionActions.ts - the store owning a working
+  // reset() is only half the fix if nothing calls it.
+  it('resets the inflation-shield cache on sign-out', async () => {
+    mockGetItem.mockImplementation((key: string) => {
+      if (key === 'accessToken') return Promise.resolve('valid-access-token');
+      return Promise.resolve(null);
+    });
+
+    await useAuthStore.getState().logout();
+
+    expect(useInflationShieldStore.getState().reset).toHaveBeenCalledTimes(1);
+  });
+
+  // Sign-out is also reached from a 401 cascade with the tokens already gone.
+  // The teardown must not be conditional on a valid token: a device with no
+  // usable session can still hold a full MMKV cache from the session before.
+  it('resets the inflation-shield cache even when there is no valid access token', async () => {
+    mockGetItem.mockResolvedValue(null);
+
+    await useAuthStore.getState().logout();
+
+    expect(useInflationShieldStore.getState().reset).toHaveBeenCalledTimes(1);
   });
 });
