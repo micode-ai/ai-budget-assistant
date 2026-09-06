@@ -30,9 +30,11 @@ interface SetupChecklistProps {
  *
  * **Deliberately NOT under `desktop/`.** Both the first-run rail and the
  * ordinary rail render it — in first-run it replaces the fixed quick-action
- * list, and afterwards it is *prepended* to the ordinary rail (taking no
- * `WidgetKey` and no slot, exactly as `InvestmentCard` already does) and stays
- * while any step is outstanding.
+ * list and is the whole of that rail, and afterwards it moves to sit
+ * directly BELOW that list (taking no `WidgetKey` and no slot, exactly as
+ * `InvestmentCard` already does) and stays while any step is outstanding.
+ * The position is per-state and belongs to the caller: `DashboardRail` owns
+ * it, this component has no opinion about where it is rendered.
  *
  * **Purely presentational.** Every `done` flag arrives as a prop, so the two
  * callers cannot hold different opinions about what is finished; the rule

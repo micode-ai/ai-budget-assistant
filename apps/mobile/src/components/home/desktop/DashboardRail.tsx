@@ -57,22 +57,29 @@ interface DashboardRailProps {
 /**
  * Desktop web's fixed-width standing rail (`docs/design/2026-09-05-
  * dashboard-web.md`'s "The rail"; round 6 added a second physical column):
- * the fixed quick-action list (below), then `InvestmentCard` (investment
- * accounts only — its pre-existing "always first, outside `widgetOrder`"
- * special case, unchanged), then every remaining `WIDGET_KEYS` entry —
- * everything except the five now living in `FocusColumn` — in the user's
- * own stored order, filtered. Nothing else about that order changes.
+ * the fixed quick-action list (below), then the setup checklist while any
+ * step is outstanding, then `InvestmentCard` (investment accounts only —
+ * its pre-existing "always first, outside `widgetOrder`" special case,
+ * unchanged), then every remaining `WIDGET_KEYS` entry — everything except
+ * the five now living in `FocusColumn` — in the user's own stored order,
+ * filtered. Nothing else about that order changes.
+ *
+ * The rail has three states, not one (see `firstRunView`): empty while the
+ * transaction pulls are unanswered, the setup checklist ALONE — at the top,
+ * with the quick-action list hidden — during first run, and the order above
+ * once that ends.
  *
  * **Below `SECOND_RAIL_MIN_WIDTH`**: one 300px column, exactly as before
- * round 6 — quick actions, then `InvestmentCard`, then every rail widget in
- * order, single-file.
+ * round 6 — quick actions, then the checklist, then `InvestmentCard`, then
+ * every rail widget in order, single-file.
  *
- * **At/above `SECOND_RAIL_MIN_WIDTH`**: two 300px columns. Quick actions and
- * `InvestmentCard` stay fixed at the top of the LEFT column only — quick
- * actions is an action, not information, and per the product owner it must
- * not be pushed below the fold by whatever the user has stacked into
- * `widgetOrder`; `InvestmentCard` was already "always first" before round 6
- * and this keeps it that way. The `widgetOrder`-driven list is then split
+ * **At/above `SECOND_RAIL_MIN_WIDTH`**: two 300px columns. Quick actions,
+ * the checklist and `InvestmentCard` stay fixed at the top of the LEFT
+ * column only — quick actions is an action, not information, and per the
+ * product owner it must not be pushed below the fold by whatever the user
+ * has stacked into `widgetOrder`, nor by the checklist, which is why the
+ * checklist sits under it rather than over it; `InvestmentCard` was already
+ * "always first" before round 6 and this keeps it that way. The `widgetOrder`-driven list is then split
  * ROW-MAJOR, alternating left/right (item 0 left, item 1 right, item 2
  * left, ...) over only the widgets that actually render something (a
  * currently-hidden widget consumes no column slot) — never column-major
@@ -158,15 +165,36 @@ export function DashboardRail({
 
   const fixedTop = (
     <>
-      {/* The checklist outlives the first-run state: once that ends it sits at
-          the TOP of the ordinary rail — above the quick actions — and stays
-          while any step is outstanding, then disappears on its own. It takes
-          no `WidgetKey` and no slot, exactly as `InvestmentCard` already
-          does. This is what covers the user who adds one expense and never
-          sets a wallet balance: their Safe to Spend reads 0,00 for ever and
-          nothing else on the screen says why. */}
-      {showChecklist && <SetupChecklist steps={setupSteps} onDismiss={onDismissChecklist} />}
       {canEdit && <RailQuickActions />}
+      {/* The checklist outlives the first-run state, but in THIS state it sits
+          BELOW the quick actions, not above them.
+
+          The design spec says "top of the ordinary rail" and that is the one
+          thing overridden here, by the product owner, against the deployed
+          build: the checklist pushed "+ Add Expense" down by roughly 150px,
+          and on the landing screen the primary action outranks a progress
+          list. It is also what this component's own doc comment has always
+          required — quick actions must not be pushed below the fold by
+          whatever else the rail is carrying.
+
+          **The FIRST-RUN rail keeps it at the top** (see the branch above):
+          nothing competes with it there, and it is the whole content of that
+          state. So the ordering is per-state, which is why this lives here
+          rather than inside `SetupChecklist`.
+
+          Position aside, nothing else changed: it still takes no `WidgetKey`
+          and no slot — exactly as `InvestmentCard` does — and it still stays
+          while any step is outstanding, then disappears on its own. This is
+          what covers the user who adds one expense and never sets a wallet
+          balance: their Safe to Spend reads 0,00 for ever and nothing else on
+          the screen says why.
+
+          It stays inside `fixedTop`, which the two-rail branch renders into
+          the LEFT column only — the column the quick actions are in. "Below
+          the quick actions" has to mean below them in the same column; a
+          checklist that drifted into the second rail at >= 1680px would be
+          beside them, not below. */}
+      {showChecklist && <SetupChecklist steps={setupSteps} onDismiss={onDismissChecklist} />}
       {investmentEl}
     </>
   );
