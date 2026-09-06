@@ -6,6 +6,14 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SetupChecklist } from '@/components/home/SetupChecklist';
 import {
+  ENTRY_ROUTE_IMPORT,
+  ENTRY_ROUTE_MANUAL,
+  ENTRY_ROUTE_RECEIPT,
+  ENTRY_ROUTE_VOICE,
+  resolveEntryAction,
+  type CaptureKind,
+} from '@/features/onboarding/firstRunEntries';
+import {
   entryCardBasis,
   isChecklistBand,
   resolveEntryRowRegime,
@@ -40,7 +48,7 @@ const PRIMARY_CARD: EntryCard = {
   icon: 'cloud-download-outline',
   labelKey: 'onboarding.bringHistory',
   hintKey: 'onboarding.bringHistoryHint',
-  route: '/settings/import',
+  route: ENTRY_ROUTE_IMPORT,
 };
 
 /**
@@ -51,18 +59,23 @@ const PRIMARY_CARD: EntryCard = {
  * view rather than behind anything. Voice is last because dictating at a desk
  * is the least natural of the four — it is not removed.
  *
- * Every route already exists and is reached exactly as `get-started` reaches
- * it, with a plain `router.push`. No entry logic is written here.
+ * **All three open over the dashboard rather than replacing it.** Every route
+ * named here still exists and the phone still pushes it; on desktop
+ * `resolveEntryAction` redirects these three to a dialog, because this panel's
+ * own thesis is that navigating away IS the user leaving — which is exactly
+ * what it exists to prevent. The routes are still named (not replaced by dialog
+ * ids) so the table keeps pointing at a real, registered destination and the
+ * redirection stays one table in one testable module.
  */
 const SECONDARY_CARDS: EntryCard[] = [
   {
     icon: 'receipt-outline',
     labelKey: 'onboarding.scanReceipt',
     hintKey: 'onboarding.scanReceiptHint',
-    route: '/expense/receipt',
+    route: ENTRY_ROUTE_RECEIPT,
   },
-  { icon: 'create-outline', labelKey: 'onboarding.typeManually', route: '/expense/new' },
-  { icon: 'mic-outline', labelKey: 'onboarding.useVoice', route: '/expense/voice' },
+  { icon: 'create-outline', labelKey: 'onboarding.typeManually', route: ENTRY_ROUTE_MANUAL },
+  { icon: 'mic-outline', labelKey: 'onboarding.useVoice', route: ENTRY_ROUTE_VOICE },
 ];
 
 interface FirstRunPanelProps {
@@ -70,6 +83,18 @@ interface FirstRunPanelProps {
   onSkip: () => void;
   /** All three, from `resolveSetupSteps`. Rendered as the band. */
   setupSteps: SetupStep[];
+  /**
+   * Open one of the three capture flows over the dashboard.
+   *
+   * Owned by `DashboardDesktop`, not here, for one load-bearing reason: this
+   * panel UNMOUNTS the moment the first transaction lands (that is the whole
+   * exit condition), so a dialog rendered as its child would vanish
+   * mid-interaction — taking away the "Scan another"/"Done" choice at the
+   * exact moment the user earned it. Mounted a level up, the dialog outlives
+   * the panel it was opened from and the user watches the dashboard come
+   * alive behind it.
+   */
+  onOpenCapture: (kind: CaptureKind) => void;
 }
 
 /**
@@ -110,7 +135,7 @@ interface FirstRunPanelProps {
  * Web-only: reached solely from `DashboardDesktop`, which
  * `DashboardView.web.tsx` alone renders.
  */
-export function FirstRunPanel({ onSkip, setupSteps }: FirstRunPanelProps) {
+export function FirstRunPanel({ onSkip, setupSteps, onOpenCapture }: FirstRunPanelProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
 
@@ -128,14 +153,19 @@ export function FirstRunPanel({ onSkip, setupSteps }: FirstRunPanelProps) {
         <Text style={styles.subheading}>{t('onboarding.subheading')}</Text>
       </View>
 
-      <EntryCardView card={PRIMARY_CARD} primary />
+      <EntryCardView card={PRIMARY_CARD} primary onOpenCapture={onOpenCapture} />
 
       <View
         style={styles.row}
         onLayout={(e: LayoutChangeEvent) => setRowWidth(e.nativeEvent.layout.width)}
       >
         {SECONDARY_CARDS.map((card) => (
-          <EntryCardView key={card.route} card={card} regime={regime} />
+          <EntryCardView
+            key={card.route}
+            card={card}
+            regime={regime}
+            onOpenCapture={onOpenCapture}
+          />
         ))}
       </View>
 
@@ -172,10 +202,12 @@ function EntryCardView({
   card,
   primary = false,
   regime,
+  onOpenCapture,
 }: {
   card: EntryCard;
   primary?: boolean;
   regime?: EntryRowRegime;
+  onOpenCapture: (kind: CaptureKind) => void;
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -195,7 +227,14 @@ function EntryCardView({
         primary ? styles.cardPrimary : styles.cardSecondary,
         primary ? undefined : { flexBasis: entryCardBasis(regime ?? 'three') },
       ]}
-      onPress={() => router.push(card.route as never)}
+      onPress={() => {
+        // One table decides which entries open over the dashboard and which
+        // replace it (`firstRunEntries.ts`), so that decision is unit-tested
+        // rather than living in a `.tsx` no test in this repo can render.
+        const action = resolveEntryAction(card.route);
+        if (action.kind === 'dialog') onOpenCapture(action.dialog);
+        else router.push(action.route as never);
+      }}
       activeOpacity={0.85}
       accessibilityRole="button"
     >

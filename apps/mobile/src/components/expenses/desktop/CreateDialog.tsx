@@ -2,7 +2,10 @@ import { Modal, View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { ExpenseCreateForm } from '@/components/expenses/create/ExpenseCreateForm';
+import {
+  ExpenseCreateForm,
+  type ExpenseCreatePrefill,
+} from '@/components/expenses/create/ExpenseCreateForm';
 import { IncomeCreateForm } from '@/components/income/create/IncomeCreateForm';
 
 /** Only one instance of this dialog is ever mounted at a time (`ExpensesDesktop`
@@ -17,6 +20,17 @@ const TITLE_ID = 'create-dialog-title';
 interface Props {
   kind: 'expense' | 'income';
   onClose: () => void;
+  /**
+   * Seeds the expense form's fields, exactly as the route's
+   * `useLocalSearchParams` did for every existing hand-off into
+   * `/expense/new` (duplicate a row, "record repayment", "lend money", and —
+   * the reason this prop exists — the receipt scanner's "Edit" button).
+   *
+   * Ignored for `kind: 'income'`: `IncomeCreateForm` takes its own separate
+   * prefill type and nothing hands off into it yet, so accepting one here
+   * would be a parameter no call site can produce.
+   */
+  initial?: ExpenseCreatePrefill;
 }
 
 /**
@@ -100,7 +114,7 @@ interface Props {
  * independent of where it's declared in the React tree, so it doesn't matter
  * that the declaration site is nested inside this dialog's own `Modal`.
  */
-export function CreateDialog({ kind, onClose }: Props) {
+export function CreateDialog({ kind, onClose, initial }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -146,7 +160,7 @@ export function CreateDialog({ kind, onClose }: Props) {
           </View>
 
           {kind === 'expense' ? (
-            <ExpenseCreateForm onDone={onClose} />
+            <ExpenseCreateForm initial={initial} onDone={onClose} />
           ) : (
             <IncomeCreateForm onDone={onClose} />
           )}

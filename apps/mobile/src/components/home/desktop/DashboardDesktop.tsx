@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { View, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
@@ -19,6 +19,11 @@ import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
 import { FocusColumn } from './FocusColumn';
 import { DashboardRail } from './DashboardRail';
 import { FirstRunPanel } from './FirstRunPanel';
+import { CreateDialog } from '@/components/expenses/desktop/CreateDialog';
+import { ReceiptDialog } from '@/components/expenses/desktop/ReceiptDialog';
+import { VoiceDialog } from '@/components/expenses/desktop/VoiceDialog';
+import type { CaptureKind } from '@/features/onboarding/firstRunEntries';
+import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseCreateForm';
 
 /**
  * Desktop web dashboard (`docs/design/2026-09-05-dashboard-web.md`). A fluid
@@ -77,6 +82,22 @@ import { FirstRunPanel } from './FirstRunPanel';
  */
 export function DashboardDesktop() {
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
+
+  /**
+   * Which of the three first-run capture flows is open over the dashboard, and
+   * the prefill the receipt scanner's "Edit" hands to the manual form.
+   *
+   * Held here rather than in `FirstRunPanel` because that panel unmounts the
+   * instant the first transaction lands — see the mount site at the bottom of
+   * this file. `createPrefill` is cleared on close so a later, unrelated open
+   * of the manual dialog does not resurrect a previous scan's values.
+   */
+  const [captureDialog, setCaptureDialog] = useState<CaptureKind | null>(null);
+  const [createPrefill, setCreatePrefill] = useState<ExpenseCreatePrefill | null>(null);
+  const closeCaptureDialog = useCallback(() => {
+    setCaptureDialog(null);
+    setCreatePrefill(null);
+  }, []);
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
@@ -245,7 +266,11 @@ export function DashboardDesktop() {
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>
         ) : firstRunView === 'first-run' ? (
-          <FirstRunPanel onSkip={skipFirstRun} setupSteps={setupSteps} />
+          <FirstRunPanel
+            onSkip={skipFirstRun}
+            setupSteps={setupSteps}
+            onOpenCapture={setCaptureDialog}
+          />
         ) : (
           <View style={styles.layout}>
             <View style={styles.focusColumn}>
@@ -277,6 +302,42 @@ export function DashboardDesktop() {
         data={safeToSpendData}
         desktop
       />
+      {/* The three first-run capture flows, as dialogs over the dashboard
+          rather than routes that replace it — the panel's own thesis is that
+          navigating away IS the user leaving.
+
+          **Mounted HERE, outside the `firstRunView` branch above, and that
+          placement is load-bearing.** Saving the first transaction flips
+          `firstRunView` from `'first-run'` to `'dashboard'` immediately (the
+          store count is updated optimistically, `shouldMarkFirstRunSeen` sees
+          it, `markSeen` fires), which unmounts `FirstRunPanel`. A dialog
+          rendered as that panel's child would be torn down in the same commit
+          — the receipt scanner's "Scan another"/"Done" choice would disappear
+          from under the user at the exact moment they earned it. As a sibling
+          it survives, and the dashboard behind it is already populated when
+          they close it. */}
+      {captureDialog === 'manual' && (
+        <CreateDialog
+          kind="expense"
+          initial={createPrefill ?? undefined}
+          onClose={closeCaptureDialog}
+        />
+      )}
+      {captureDialog === 'receipt' && (
+        <ReceiptDialog
+          onClose={closeCaptureDialog}
+          onEdit={(prefill) => {
+            // "Edit" on the confirm card: the scan is close but the user wants
+            // the full form. On the phone this pushes `/expense/new`; here it
+            // becomes a dialog swap, so the hand-off never leaves the
+            // dashboard. Both carry the same object (`buildReceiptPrefill`).
+            setCreatePrefill(prefill);
+            setCaptureDialog('manual');
+          }}
+        />
+      )}
+      {captureDialog === 'voice' && <VoiceDialog onClose={closeCaptureDialog} />}
+
       <NewBadgeModal />
     </View>
   );

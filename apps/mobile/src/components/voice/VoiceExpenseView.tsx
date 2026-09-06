@@ -38,6 +38,20 @@ interface VoiceExpenseViewProps {
    * scanner has.
    */
   onDone: () => void;
+  /**
+   * Reports whether a completed transcription is sitting here unsaved, so a
+   * host that can be dismissed by a stray click (Esc, a scrim) can ask before
+   * throwing it away. Omitted by the route — the modal route has never
+   * confirmed on dismissal, and this must not change that.
+   *
+   * **Deliberately just `showConfirm`**, not "anything is happening". A parsed
+   * expense awaiting confirmation is work the user can SEE and that cost a real
+   * Whisper + parse round trip; an in-flight recording is neither, and closing
+   * mid-recording is already safe and silent by design (`useVoiceInput`'s
+   * unmount effect cancels it and restores the audio session), so putting a
+   * confirmation in front of it would only make an ordinary cancel harder.
+   */
+  onDirtyChange?: (dirty: boolean) => void;
 }
 
 /**
@@ -54,18 +68,18 @@ interface VoiceExpenseViewProps {
  * equivalent (in particular the `AiUsageBadge`, which is the only place this
  * flow shows remaining AI quota).
  *
- * KNOWN GAP, pre-existing and NOT introduced by this extraction: neither this
- * component nor `useVoiceInput` cleans up on unmount. `recordingRef` is only
- * ever released by an explicit `stopRecording()`/`cancelRecording()` from the
- * UI, so a recording that is in flight when this view goes away keeps the mic
- * open and leaves the iOS audio session in `allowsRecordingIOS: true`. That is
- * already true today when the modal route is dismissed mid-recording; a host
- * that can unmount this view (a dialog closing) inherits it unchanged. Fixing
- * it belongs in `useVoiceInput` (an unmount effect that calls
- * `cancelRecording`), which is a behaviour change and deliberately out of
- * scope for a pure move.
+ * **Unmounting this view releases the microphone**, whatever caused the
+ * unmount — a navigation, a dismissed modal route, or a dialog host closing.
+ * That is `useVoiceInput`'s own unmount effect calling `cancelRecording`,
+ * which is an unconditional teardown (it releases the recording AND restores
+ * the audio session), not something each host has to remember. The effect
+ * depends only on `cancelRecording`, a `useCallback(..., [])`, so it runs on
+ * unmount alone and never tears down a recording the user just started. This
+ * file previously documented the opposite as a known gap; it was fixed
+ * separately and the note is kept here because a dialog host is exactly the
+ * caller that would otherwise have to worry about it.
  */
-export function VoiceExpenseView({ onDone }: VoiceExpenseViewProps) {
+export function VoiceExpenseView({ onDone, onDirtyChange }: VoiceExpenseViewProps) {
   useEffect(() => {
     trackAction('expense_voice', 'started');
   }, []);
@@ -120,6 +134,17 @@ export function VoiceExpenseView({ onDone }: VoiceExpenseViewProps) {
     if (!categoriesInitialized) loadCategories();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /**
+   * Report the unsaved-parse state outward. An effect rather than a call beside
+   * each `setShowConfirm`, so every route into and out of the confirm state
+   * (parse lands, save, reset, "add another") is covered by construction. A
+   * host that passes nothing gets an `undefined?.()` no-op, so the routed
+   * screen is untouched.
+   */
+  useEffect(() => {
+    onDirtyChange?.(showConfirm);
+  }, [showConfirm, onDirtyChange]);
 
   useEffect(() => {
     if (error) {

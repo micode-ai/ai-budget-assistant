@@ -6,6 +6,8 @@ import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { resolveProposedCategories } from '@/features/receipt/resolveProposedCategories';
+import { buildReceiptPrefill } from '@/features/receipt/receiptPrefill';
+import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseCreateForm';
 import { compressAndEncodeImage } from '@/features/receipt/receiptImage';
 import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
 import { maybeAskForReview } from '@/features/review/maybeAskForReview';
@@ -35,6 +37,26 @@ interface UseReceiptSaveParams {
    * itself — omit it and the alert is byte-identical to before.
    */
   onSaved?: () => { count: number; isCheckpoint: boolean };
+  /**
+   * How this flow finishes once the user picks "Done" on the success alert.
+   * Defaults to `router.back()` — the routed screen's behaviour, unchanged.
+   *
+   * A host that is NOT a route must override it: on the desktop dashboard this
+   * flow runs inside a dialog over a screen the user is already on, so
+   * `router.back()` there would pop whatever route the dashboard itself sits
+   * in and take them somewhere they never asked to go.
+   */
+  onDone?: () => void;
+  /**
+   * Where "Edit" hands the scan off for a full manual edit. Defaults to
+   * `router.push('/expense/new', prefill)` — again the routed behaviour.
+   *
+   * The dialog host passes the same prefill to `ExpenseCreateForm`'s `initial`
+   * prop instead, so the hand-off happens without leaving the dashboard. Both
+   * destinations build the object from one place (`buildReceiptPrefill`), so
+   * they cannot drift on what "Edit" carries over.
+   */
+  onEdit?: (prefill: ExpenseCreatePrefill) => void;
 }
 
 /**
@@ -58,6 +80,8 @@ export function useReceiptSave({
   proposedNamesToCreate,
   onReset,
   onSaved,
+  onDone,
+  onEdit,
 }: UseReceiptSaveParams) {
   const { t } = useTranslation();
   const { addExpense } = useExpenseStore();
@@ -153,7 +177,8 @@ export function useReceiptSave({
       // sheet is exactly how a prompt earns a one-star answer. It throttles
       // itself, so calling it on every Done is safe (ABA-485).
       const finish = () => {
-        router.back();
+        if (onDone) onDone();
+        else router.back();
         void maybeAskForReview();
       };
 
@@ -177,24 +202,18 @@ export function useReceiptSave({
   const handleEditExpense = () => {
     if (!scannedReceipt) return;
 
-    let resolvedCategoryId = scannedReceipt.categoryId || '';
-    if (!resolvedCategoryId && scannedReceipt.categorySuggestion) {
-      const matched = useCategoryStore.getState().getCategoryByName(scannedReceipt.categorySuggestion, 'expense');
-      resolvedCategoryId = matched?.id || '';
-    }
-
-    const params = {
-      amount: scannedReceipt.amount.toString(),
-      description: scannedReceipt.description,
-      merchant: merchant.trim(),
-      categoryId: resolvedCategoryId,
-      currencyCode: scannedReceipt.currencyCode,
-    };
+    const params = buildReceiptPrefill({
+      receipt: scannedReceipt,
+      merchant,
+      resolveCategoryByName: (name) =>
+        useCategoryStore.getState().getCategoryByName(name, 'expense')?.id,
+    });
 
     // Reset scan state so returning to this screen won't allow duplicate creation
     onReset();
 
-    router.push({ pathname: '/expense/new', params });
+    if (onEdit) onEdit(params);
+    else router.push({ pathname: '/expense/new', params });
   };
 
   return { handleConfirmExpense, handleEditExpense };
