@@ -226,6 +226,38 @@ export function resolveSettingsPane(key: string | undefined): SettingsPaneEntry 
 }
 
 /**
+ * Whether this row is the pane the shell is already showing.
+ *
+ * **Two things read one value, and that is the whole point.** It paints the
+ * row's selected state, and it suppresses the row's press — because
+ * `router.push` on the route you are already on stacks a *second copy of that
+ * screen* rather than doing nothing, so re-selecting the open pane used to
+ * leave two mounted instances of it, each with its own state. Deriving both
+ * from here means a row cannot look current without also being inert, or be
+ * inert without looking current.
+ *
+ * Only the row you are on is suppressed. Every other row still pushes, which
+ * matters more than it looks: the selection IS the URL, so a real push is what
+ * blurs the pane being left and focuses the one arriving, and that is what
+ * keeps `useFocusEffect` alive in the panes that refresh on return. A fix that
+ * stopped the route changing at all would kill that with nothing failing.
+ *
+ * Keyed by the registry key, never by the pathname. A pathname comparison
+ * invites a prefix match, and `/settings/ai` is a prefix of the real and
+ * unrelated `/settings/ai-usage-details` — which would mark the AI row current,
+ * and therefore dead, on a screen that is not it.
+ *
+ * A link is never current: it navigates out of the shell, so the shell is never
+ * showing it, and a link row has to stay pressable every single time.
+ */
+export function isCurrentSelection(
+  entry: SettingsEntry,
+  selectedKey: SettingsEntryKey | undefined,
+): boolean {
+  return isPaneEntry(entry) && entry.key === selectedKey;
+}
+
+/**
  * Whether the desktop shell hosts this route in its right pane — which is the
  * same question as "does this route already have a left pane telling the user
  * where they are, and what else there is".

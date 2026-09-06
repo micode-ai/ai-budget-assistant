@@ -16,6 +16,7 @@ import {
   isLinkEntry,
   resolveSettingsPane,
   isShellHostedSettingsRoute,
+  isCurrentSelection,
   paneContentMaxWidth,
   visibleSettingsEntries,
 } from '../settingsRegistry';
@@ -229,6 +230,52 @@ describe('isShellHostedSettingsRoute', () => {
   it('does not host anything outside settings', () => {
     for (const route of ['expense/new', 'wallet/index', '/wallet', '', '/', 'settings']) {
       expect(isShellHostedSettingsRoute(route)).toBe(false);
+    }
+  });
+});
+
+describe('isCurrentSelection', () => {
+  // This predicate does two jobs at once in `SettingsNav`: it paints the
+  // selected row AND suppresses that row's press, because `router.push` on the
+  // route you are already on stacks a second copy of the screen instead of
+  // no-opping. So a wrong answer here is never merely cosmetic — a row it marks
+  // is a row that does nothing.
+
+  // Catches: marking more than one row, or the wrong one. Every row it marks is
+  // inert, so a predicate that answered true for a second entry would leave a
+  // left-pane row that highlights and refuses to open, with nothing in CI
+  // noticing. Also pins the inverse the fix depends on — every row that is not
+  // the open pane still navigates, which is what keeps a pane switch a real
+  // blur and focus, and so keeps `useFocusEffect` alive in the panes.
+  it('marks exactly the open pane and no other row', () => {
+    const panes = SETTINGS_ENTRIES.filter(isPaneEntry);
+    expect(panes.length).toBeGreaterThan(0);
+    for (const pane of panes) {
+      expect(SETTINGS_ENTRIES.filter((entry) => isCurrentSelection(entry, pane.key))).toEqual([pane]);
+    }
+  });
+
+  // Catches: dropping the pane half, i.e. comparing keys alone. The shell hands
+  // it `resolveSettingsPane(...)?.key`, so a link key cannot reach here today
+  // and this is a guard on a future caller passing the raw URL segment — but
+  // name the cost rather than call it hypothetical: a link marked current is an
+  // inert row, and `/wallet`, `/shopping-list`, `/purchase-requests` and
+  // `/subscriptions` have no other entry point on desktop at all.
+  it('never marks a link row, even when asked by its own key', () => {
+    const links = SETTINGS_ENTRIES.filter(isLinkEntry);
+    expect(links.length).toBeGreaterThan(0);
+    for (const link of links) {
+      expect(isCurrentSelection(link, link.key)).toBe(false);
+    }
+  });
+
+  // Catches: the entire left pane going inert at `/settings`, where nothing is
+  // selected. Any predicate that treats "no selection" as matching — a nullish
+  // comparison, a truthiness slip — kills every row on the one screen the user
+  // lands on, and the shell would look perfectly normal while nothing opened.
+  it('marks no row when no pane is open', () => {
+    for (const entry of visibleSettingsEntries(true)) {
+      expect(isCurrentSelection(entry, undefined)).toBe(false);
     }
   });
 });

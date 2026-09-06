@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SETTINGS_NAV_WIDTH } from '@/components/webLayout.constants';
 import {
+  isCurrentSelection,
   isLinkEntry,
   isPaneEntry,
   visibleSettingsEntries,
@@ -47,7 +48,7 @@ export function SettingsNav({ selectedKey, isAdmin, pendingPurchaseRequests }: P
     <SettingsNavRow
       key={entry.key}
       entry={entry}
-      selected={entry.key === selectedKey && isPaneEntry(entry)}
+      selected={isCurrentSelection(entry, selectedKey)}
       badge={entry.key === 'purchaseRequests' ? pendingPurchaseRequests : 0}
     />
   );
@@ -77,7 +78,12 @@ function SettingsNavRow({
 
   return (
     <Pressable
-      onPress={() => router.push(entry.route as never)}
+      // Selecting the pane you are already on does nothing: `router.push` would
+      // stack a second copy of the screen rather than no-op, and the two would
+      // then hold separate state. This is the same `selected` that paints the
+      // row below, so the row that looks current is exactly the row that is
+      // inert — one variable, not a convention two places have to keep.
+      onPress={selected ? undefined : () => router.push(entry.route as never)}
       onHoverIn={() => setHovered(true)}
       onHoverOut={() => setHovered(false)}
       accessibilityRole="button"
