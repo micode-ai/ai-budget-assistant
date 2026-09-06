@@ -47,6 +47,15 @@ export const SECOND_RAIL_MIN_WIDTH = 1680;
 // horizontal list. A starting value to be judged by eye: nothing in this repo
 // renders a component in CI.
 export const CHECKLIST_CELL_MAX_WIDTH = 420;
+// The settings shell's left pane (ABA-508). Between SIDEBAR_WIDTH (240) and
+// the alerts panel (400): settings labels are longer than nav labels and
+// shorter than alert bodies. Fixed, never fluid — the pane beside it is what
+// absorbs the window's width. It lives here rather than beside the shell for
+// the same reason WEB_TOP_BAR_PADDING_X does: it is the one number two
+// separate things (the pane's own width and the content offset beside it)
+// have to agree on, and a hand-copied literal drifting is invisible until a
+// human looks at one width.
+export const SETTINGS_NAV_WIDTH = 280;
 
 /** Pure gate — true only on web at desktop width. Native never qualifies. */
 export function isDesktopWeb(width: number): boolean {
