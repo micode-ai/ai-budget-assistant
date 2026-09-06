@@ -168,6 +168,60 @@ Two results that are correct and should not be "fixed": `WebShell` appears
 because its native no-op file is real code, and any component whose name is a
 substring of a mobile component's will match.
 
+## 5c. What the dashboard added (screen four)
+
+The dashboard is the landing screen and the first one built around a
+third-party chart. Most of what it taught is about not trusting numbers.
+
+- **The dashboard carries abundant information.** A standing product
+  direction, not a preference of this screen: density is wanted. It does not
+  license one dominant element — a hero whose chart took 40% of the viewport
+  was rejected. Shrinking an element is not removing information, and freeing
+  vertical space is only worth it if something fills it.
+- **A `height` prop is not always the drawn height.** `react-native-gifted-charts`
+  draws its below-axis region *beyond* `height`, scaled by
+  `noOfSectionsBelowXAxis` (1-4, decided by the data), plus a hardcoded `+10`.
+  So one prop value renders between 1.25x and 2.0x depending on whose account
+  is open. Invert the formula so the prop is a true total, and write acceptance
+  criteria against the **measured** wrapper, never the prop.
+- **A constant gap means a stale measurement; a proportional gap means a
+  formula error.** The same chart was clipped by ~661px in one build and ~662px
+  in another whose card width differed. That constancy was the whole diagnosis:
+  the library animates the wrapper's width once, from an `Animated.Value` in an
+  effect whose deps never include the width, so on web — where a flex child's
+  first layout pass reports a narrower width than the settled one — the wrapper
+  locks narrow forever while the drawn path keeps tracking the true width.
+  Disable the reveal animation on the desktop (`compact`) path.
+- **A harness number is not a product number until the two have agreed once.**
+  Two harnesses in a row reported "no overflow" on a visibly clipped chart: the
+  first re-implemented the layout instead of rendering the component, the second
+  rendered it but with seeded data that never reproduced the real render
+  sequence. Measure in a real browser on the deployed build, and label harness
+  figures as harness figures.
+- **Never serve the verification browser from a directory an agent rebuilds.**
+  `apps/mobile/dist` is rebuilt by `scripts/build-web.sh`, which bakes the
+  production API URL. A whole "the selected account resets on refresh"
+  investigation turned out to be a bundle an agent had rebuilt underneath the
+  browser. Build to a private output directory and serve that.
+- **Fixed slots are a departure and must be counted out loud.** Widget
+  visibility and order are user-configurable; the desktop focus column
+  overrides that for a named set. It is five widgets today. Each addition is a
+  product decision, not an implementation detail.
+
+Two findings this screen surfaced that the next one has to handle:
+
+- **A zero from the server is not the same as no data.** `useSafeToSpend`
+  treats `data !== null` as "enough data", and the API answers an empty account
+  with real zeros — so a new user is told their safe-to-spend is `0,00`, which
+  is a false statement rather than a blank. The same error draws five absent
+  months as a flat line at zero.
+- **On web, a silently failed pull is indistinguishable from an empty
+  account.** `_doPullAndMerge` swallows a failure with `console.warn` and sets
+  no flag, and SQLite is a mock, so `expenses.length === 0` means either. Any
+  empty-state or first-run decision on web needs a three-valued predicate —
+  wait / show / suppress — because a boolean reads an offline first paint as a
+  brand-new user.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
