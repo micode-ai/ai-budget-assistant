@@ -32,6 +32,13 @@ interface IncomeState {
   incomes: Income[];
   isLoading: boolean;
   error: string | null;
+  /**
+   * When the server pull last *succeeded*, or `null` if it has not yet this
+   * session. Additive and read by nothing on mobile — the incomes half of the
+   * evidence `resolveWebFirstRun` needs to tell an empty account apart from a
+   * pull that never answered. See the twin field on `expenseStore`.
+   */
+  lastPullAt: number | null;
   filters: IncomeFilters;
 
   totalThisMonth: number;
@@ -96,6 +103,7 @@ export const useIncomeStore = create<IncomeState>()(
     incomes: [],
     isLoading: false,
     error: null,
+    lastPullAt: null,
     filters: {
       dateRange: 'month',
       categoryId: null,
@@ -265,7 +273,7 @@ export const useIncomeStore = create<IncomeState>()(
           // Web (no real SQLite): the read-back is empty, so fall back to the
           // freshly-built server rows instead of dropping everything.
           const finalIncomes = merged.length > 0 ? merged : builtIncomes.filter((i) => !i.isDeleted);
-          set({ incomes: finalIncomes });
+          set({ incomes: finalIncomes, lastPullAt: Date.now() });
           setLastSyncTime(Date.now());
           _lastIncomesSyncAt = Date.now();
           _lastIncomesSyncedAccountId = accountId;
@@ -479,7 +487,7 @@ export const useIncomeStore = create<IncomeState>()(
     },
 
     reset: () =>
-      set({ incomes: [], isLoading: false, error: null, totalThisMonth: 0, incomeTotalsByCurrency: {} }),
+      set({ incomes: [], isLoading: false, error: null, lastPullAt: null, totalThisMonth: 0, incomeTotalsByCurrency: {} }),
 
     getFilteredIncomes: () => {
       const { incomes, filters } = get();

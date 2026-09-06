@@ -59,6 +59,15 @@ interface ExpenseState {
   expenses: Expense[];
   isLoading: boolean;
   error: string | null;
+  /**
+   * When the server pull last *succeeded*, or `null` if it has not yet this
+   * session. Additive and read by nothing on mobile: it exists because on web
+   * SQLite is a mock and `_doPullAndMerge` swallows a failed pull with a
+   * `console.warn`, setting no flag — so `expenses.length === 0` cannot tell
+   * an empty account apart from a request that never came back. See
+   * `resolveWebFirstRun`.
+   */
+  lastPullAt: number | null;
   filters: ExpenseFilters;
   expenseItems: Record<string, ExpenseItem[]>;
 
@@ -110,6 +119,7 @@ export const useExpenseStore = create<ExpenseState>()(
     expenses: [],
     isLoading: false,
     error: null,
+    lastPullAt: null,
     filters: {
       dateRange: 'month',
       categoryId: null,
@@ -836,7 +846,7 @@ export const useExpenseStore = create<ExpenseState>()(
     syncPendingExpenses: () => doSync(set as any, get as any),
 
     reset: () =>
-      set({ expenses: [], expenseItems: {}, isLoading: false, error: null, totalThisMonth: 0, expenseTotalsByCurrency: {} }),
+      set({ expenses: [], expenseItems: {}, isLoading: false, error: null, lastPullAt: null, totalThisMonth: 0, expenseTotalsByCurrency: {} }),
 
     // ── Selectors ──────────────────────────────────────────────────────────────
 
