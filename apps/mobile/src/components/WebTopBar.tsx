@@ -23,6 +23,16 @@ function sectionTitle(pathname: string, t: (k: string) => string): string {
  * controls (account, display currency, alerts, settings) on the right. Mounted
  * only by WebShell on desktop web; it replaces the per-screen tab header there.
  */
+/**
+ * Width cap for the account pill in this bar only.
+ *
+ * Chosen to be generous enough for a real account name at `compact`'s 12px
+ * (roughly 22 characters) while still leaving the horizontal nav its room at
+ * the narrowest desktop width, 1024. It is a cap and not a removal: an
+ * arbitrarily long name must still truncate rather than push the nav around.
+ */
+const ACCOUNT_TRIGGER_MAX_WIDTH = 180;
+
 export function WebTopBar() {
   const theme = useTheme();
   const { t } = useTranslation();
@@ -49,7 +59,13 @@ export function WebTopBar() {
       <View style={styles.spacer} />
 
       <View style={styles.controls}>
-        <AccountSwitcher compact showCurrency={false} />
+        {/* `compact` is kept for its smaller type and tighter padding, which
+            suit this bar — but its 110px width cap is a phone-header
+            constraint and truncated an ordinary account name to "Investm…"
+            here, where the bar carries a `flex: 1` spacer and has room to
+            spare at every desktop width. Overridden per caller rather than
+            raised in `AccountSwitcher`, which the phone also renders. */}
+        <AccountSwitcher compact showCurrency={false} maxTriggerWidth={ACCOUNT_TRIGGER_MAX_WIDTH} />
         <CurrencyPill compact />
         <TouchableOpacity onPress={() => router.push('/alerts')} style={btn}>
           <Ionicons name="notifications-outline" size={20} color={theme.colors.textInverse} />

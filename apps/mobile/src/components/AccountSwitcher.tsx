@@ -31,10 +31,28 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = 
 export function AccountSwitcher({
   compact = false,
   showCurrency = true,
+  maxTriggerWidth,
 }: {
   compact?: boolean;
   /** Hide the inline currency symbol when a separate CurrencyPill sits next to the switcher. */
   showCurrency?: boolean;
+  /**
+   * Override the trigger's width cap, for a caller whose bar has room to
+   * spare.
+   *
+   * Optional and unset by default, so every existing call site — including
+   * BOTH phone ones, the home hero and the tab header — renders exactly as
+   * before. The caps themselves are unchanged: `compact` still means 110 and
+   * the full trigger still means 140, because those exist for phone headers
+   * where horizontal space is genuinely scarce.
+   *
+   * It exists because `WebTopBar` inherited `compact` for its type scale and
+   * got the phone's width cap with it, truncating a perfectly ordinary
+   * account name to "Investm…" on a bar with a `flex: 1` spacer and hundreds
+   * of pixels going spare. Raising the shared cap would have changed the
+   * phone; a caller-supplied override cannot.
+   */
+  maxTriggerWidth?: number;
 }) {
   const [visible, setVisible] = useState(false);
   const [pastTripsExpanded, setPastTripsExpanded] = useState(false);
@@ -141,7 +159,14 @@ export function AccountSwitcher({
 
   return (
     <>
-      <TouchableOpacity style={[styles.trigger, compact && styles.triggerCompact]} onPress={handleTriggerPress}>
+      <TouchableOpacity
+        style={[
+          styles.trigger,
+          compact && styles.triggerCompact,
+          maxTriggerWidth !== undefined && { maxWidth: maxTriggerWidth },
+        ]}
+        onPress={handleTriggerPress}
+      >
         <Ionicons
           name={ACCOUNT_TYPE_ICONS[currentAccount?.type || 'personal']}
           size={compact ? 14 : 18}
