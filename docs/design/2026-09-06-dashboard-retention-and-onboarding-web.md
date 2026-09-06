@@ -1351,3 +1351,123 @@ is re-enabled, and the rest is colour, size and anchoring.
     distinguishable from the bar's ground at every one.
 49. Open the app on a phone: the account switcher, its menu and the currency
     pill are pixel-identical to before this pass.
+
+---
+
+# Addendum 5 — where the bell and the gear go (2026-09-06)
+
+Addendum 4 ruled on how these two controls look. This is where they lead.
+
+## 1. Alerts — a panel from the bell
+
+**Ruling: a panel anchored to the bell, 400px, same anchoring mechanics as the
+account menu.** I already called this control an inbox, and an inbox opens where
+its badge is. The page is not deleted — it is demoted (see below).
+
+**No tabs in the panel.** Stretched half-viewport tabs are the reported defect,
+and a tab control inside a 400px panel is that same idiom merely compressed.
+More to the point, the two lists do not warrant a switch: invitations are
+"usually zero or one" and alerts are a handful. **One list, invitations first,
+then unread alerts** — which is deliberately the *same order* the dashboard's
+attention panel already uses, so the two surfaces cannot disagree about what is
+most urgent.
+
+**What it hosts, all existing:** `renderAlertBody` + `TYPE_ICON` from
+`src/features/alerts/alertPresentation.ts` and `InvitationCard` — both already
+rendered by the attention panel, so this hosts pieces rather than extracting
+any. Accept/Decline stay inline; that is what `InvitationCard` already exposes,
+and it is the reason a panel is *better* than the page here — the action
+resolves without leaving the screen the user was on.
+
+**Chrome, zero new keys:** `alerts.markAllRead` in the header when
+`unreadCount > 0`; `alerts.empty` / `alerts.invitationsEmpty` for the empty
+state; a footer row using **`dashboard.seeAll`** → `/alerts`. All four verified
+present in all nine locales.
+
+**Scrolling.** `maxHeight` with the list scrolling inside, exactly as the
+account menu's `maxHeight: '82%'` + `FlatList` already does. A modal panel is
+not the page, so this is not the second-scroller rule; the precedent is already
+accepted one control to the left.
+
+**Why 400 and not the account menu's 340.** That menu lists labels; this one
+lists a title, a wrapped body line and a date. Two adjacent panels of different
+widths is fine for the same reason the language doc already tolerates the income
+dialog being thinner than the expense one — it reflects a real content
+asymmetry, not sloppiness.
+
+**A defect the panel exposes, worth fixing in the same pass:** `WebTopBar` reads
+only `useAlertStore(s => s.unreadCount)`, while `useHomeScreenData` sums
+`unreadCount + invitations.length`. So on web a pending invitation lights no
+badge at all — and once the panel *leads* with invitations, that becomes a
+person waiting behind an unlit bell. One line in `WebTopBar`, web-only.
+
+**`/alerts` becomes the archive**, reached from "See all": read history,
+dismissed items, the full invitation list. Its phone-shaped layout is then a
+rarely-visited page rather than the destination the app's own badge points at,
+which is why it drops down the queue rather than being fixed here.
+
+## 2. Settings — the page is right, the layout is wrong, and the fix is not now
+
+**A full page is correct.** A panel is the wrong answer: 20 rows in a panel is a
+menu that dead-ends into 20 full pages, which is worse than the list it
+replaced.
+
+**The correct desktop layout is two-pane** — categories on the left, the
+selected screen's content on the right. That is the canonical desktop settings
+idiom and it fixes the hub *and* every sub-screen at once, including the
+appearance screen's half-viewport language buttons, because a sub-screen
+rendered into a ~900px right-hand pane can no longer stretch to the viewport.
+
+**It should not be started now.** Every one of ~20 sub-screens lives under
+`app/`, and `src/` cannot import from `app/` — so a right-hand pane requires
+moving all of them to `src/` first, which is the `ExpenseDetailsCard` move
+performed twenty times. That is the real cost, and it is a multi-week piece
+that also removes twenty phantom expo-router routes as a side effect. Record
+the shape so it is not re-litigated; schedule it separately.
+
+**Do not do the cheap interim either.** Grouping the hub's 20 rows into a
+multi-column card grid is one file's work, but every card still leads to a
+phone-shaped sub-screen — it polishes the front door of a phone-shaped house,
+and it would have to be undone when the two-pane layout lands.
+
+## 3. Ranking — alerts now, settings not now
+
+Not a close call, and not merely about frequency:
+
+- **The bell is a promise the app makes.** The badge summons the user; the
+  quality of what it opens is therefore the app's own claim, not the user's
+  choice to go looking.
+- **Alerts is nearly built.** The extraction to `src/` was done early in this
+  work precisely so a panel could host these pieces, and the attention panel
+  proves they render. There is no page-layout work in it at all.
+- **The asymmetry is in the cheap versions.** The cheap version of alerts is
+  ~90% of the correct answer; the cheap version of settings is close to
+  worthless. That, more than priority, is why one ships and one waits.
+
+## Cost
+
+| Change | Where | Mobile risk |
+|---|---|---|
+| Bell opens a panel; badge sums invitations | `WebTopBar` + a new desktop-only `AlertsPanel` | **None** — web-only file plus a new desktop-only component |
+| Panel hosts `renderAlertBody` / `TYPE_ICON` / `InvitationCard` | already in `src/` | **None** — no extraction, no `desktop?` prop |
+| `/alerts` page layout | — | **Deferred** |
+| Settings two-pane | ~20 moves out of `app/` | **Deferred, scheduled separately** |
+
+**1440 and 1200:** a 400px right-anchored panel fits at every desktop width;
+nothing here is width-conditional. **Zero new i18n keys.**
+
+## Acceptance criteria
+
+50. Click the bell at 1920: a ~400px panel opens right-aligned under it. The
+    page behind does not navigate. Repeat at 1440 and 1200.
+51. The panel shows one list with no tab control, invitations above alerts.
+52. Accept an invitation from the panel: the row disappears, the account list
+    updates, and the page still has not navigated.
+53. Dismiss an alert from the panel: it disappears and stays gone after reload.
+54. With only a pending invitation and no unread alerts, the bell shows a badge.
+55. With nothing pending, the panel opens and shows an empty state — not a blank
+    box.
+56. "See all" opens `/alerts`; `Esc` and an outside click both close the panel,
+    and `Tab` from the open panel never lands on the scrim.
+57. Open the app on a phone: the alerts screen and the bell are pixel-identical
+    to before this pass.

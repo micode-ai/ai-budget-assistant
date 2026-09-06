@@ -1,6 +1,7 @@
 import type { AnomalyAlert, Budget, BudgetProgress, UserSubscription } from '@budget/shared-types';
 import type { MyInvitation } from '@/services/accounts.api';
 import { resolveBudgetProjection, type BudgetProjection } from './budgetProjection';
+import { selectUnreadAlerts } from '@/features/alerts/alertPresentation';
 
 /**
  * "Needs your attention" — what goes in it, in what order, and where it stops.
@@ -206,31 +207,20 @@ function purchaseRequestItems(count: number | undefined): AttentionItem[] {
 /**
  * Unread, undismissed anomaly alerts, newest first.
  *
- * Both filters are applied here rather than trusted to the caller: the store
- * holds `GET /alerts` verbatim, which is every undismissed alert including the
- * ones already read, so an unfiltered list would fill all three rows with
- * things the user has already seen and push a live invitation behind "+N more".
- *
- * The sort is explicit for the same reason the filters are. The server does
- * return `createdAt desc` today, but "newest first" is a stated rule of this
- * panel, and a rule that depends on someone else's `orderBy` is a rule with no
- * test.
- *
- * The `.slice()` is redundant TODAY — `.filter()` already returns a fresh
- * array, so `.sort()` cannot reach `alertStore.alerts` — and it is kept
- * deliberately, as the one line that stays correct if the filter above is ever
- * narrowed or dropped. `.sort()` mutates, and the array handed in is live
- * store state. Removing the filter without noticing would reorder it under
- * every other screen reading it. Being redundant, its removal is invisible to
- * any test, which is exactly why it is explained here rather than guarded by
- * one.
+ * The filtering and ordering moved to `selectUnreadAlerts` in
+ * `features/alerts/alertPresentation.ts` when the top bar's alerts panel
+ * needed the same reading. Addendum 5 orders that panel's list deliberately to
+ * match this one, so the rule has to have one home — two copies of it is
+ * exactly how the two surfaces would come to disagree about what is most
+ * urgent. Behaviour here is unchanged; this now only wraps each alert as an
+ * `AttentionItem`.
  */
 function alertItems(alerts: AnomalyAlert[]): AttentionItem[] {
-  return alerts
-    .filter((a) => !a.readAt && !a.dismissedAt)
-    .slice()
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    .map((alert) => ({ kind: 'alert' as const, key: `alert:${alert.id}`, alert }));
+  return selectUnreadAlerts(alerts).map((alert) => ({
+    kind: 'alert' as const,
+    key: `alert:${alert.id}`,
+    alert,
+  }));
 }
 
 interface ProjectedBudget {

@@ -1,9 +1,13 @@
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { usePathname, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '@/theme';
 import { useAlertStore } from '@/stores/alertStore';
+import { useInvitationStore } from '@/stores/invitationStore';
+import { AlertsPanel } from '@/components/alerts/desktop/AlertsPanel';
+import { alertsBadgeCount } from '@/features/alerts/alertsPanelItems';
 import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { WebSidebar } from '@/components/WebSidebar';
 import { TOP_BAR_HEIGHT } from '@/components/webLayout.constants';
@@ -76,7 +80,21 @@ export function WebTopBar() {
   const theme = useTheme();
   const { t } = useTranslation();
   const pathname = usePathname();
-  const unreadAlertCount = useAlertStore((s) => s.unreadCount);
+  /**
+   * The badge summed BOTH from the start on the phone (`useHomeScreenData`),
+   * and only `unreadCount` here — so on web a pending invitation lit no badge
+   * at all. Addendum 5 calls that out because the panel now LEADS with
+   * invitations: an unlit bell over a waiting person. `alertsBadgeCount` is the
+   * one place the sum lives, so the badge and the panel's own first row cannot
+   * contradict each other.
+   */
+  const unreadAlertCount = alertsBadgeCount({
+    unreadCount: useAlertStore((s) => s.unreadCount),
+    invitationCount: useInvitationStore((s) => s.invitations.length),
+  });
+  // The bell opens an inbox where its badge is, rather than navigating to a
+  // page that at 1920 is two half-viewport tabs over 350px of empty scroll.
+  const [alertsOpen, setAlertsOpen] = useState(false);
   const title = sectionTitle(pathname, t);
 
   const btn = {
@@ -165,7 +183,7 @@ export function WebTopBar() {
         {/* Tier 2. Icon-only, unchanged - correct in themselves, and only ever
             wrong relative to the account control. */}
         <TouchableOpacity
-          onPress={() => router.push('/alerts')}
+          onPress={() => setAlertsOpen(true)}
           style={btn}
           accessibilityRole="button"
           accessibilityLabel={t('alerts.title')}
@@ -186,6 +204,8 @@ export function WebTopBar() {
           <Ionicons name="settings-outline" size={20} color={theme.colors.textInverse} />
         </TouchableOpacity>
       </View>
+
+      {alertsOpen && <AlertsPanel onClose={() => setAlertsOpen(false)} />}
     </View>
   );
 }

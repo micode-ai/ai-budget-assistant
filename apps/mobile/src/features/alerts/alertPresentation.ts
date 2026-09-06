@@ -81,3 +81,36 @@ export function renderAlertBody(
       return { title: String(alert.type), body: '' };
   }
 }
+
+/**
+ * Unread, undismissed alerts, newest first.
+ *
+ * **The single selector behind both alert surfaces** — the dashboard's
+ * attention panel and the top bar's alerts panel. It lives here rather than in
+ * either of them because the two are required to agree: Addendum 5 orders the
+ * bell panel "invitations first, then unread alerts" *deliberately* matching
+ * the attention panel, "so the two surfaces cannot disagree about what is most
+ * urgent". Two hand-written copies of this filter is precisely how they would.
+ *
+ * Both filters are applied here rather than trusted to the caller:
+ * `alertStore.alerts` holds `GET /alerts` verbatim, which is every undismissed
+ * alert INCLUDING the ones already read, so an unfiltered list fills the
+ * surface with things the user has already seen.
+ *
+ * The sort is explicit for the same reason the filters are. The server does
+ * return `createdAt desc` today, but "newest first" is a stated rule of both
+ * surfaces, and a rule that depends on someone else's `orderBy` is a rule with
+ * no test.
+ *
+ * `.slice()` before `.sort()` is redundant TODAY — `.filter()` already returns
+ * a fresh array — and is kept deliberately as the one line that stays correct
+ * if the filter above is ever narrowed or dropped. `.sort()` mutates, and the
+ * array handed in is live store state, so without it a narrowed filter would
+ * silently reorder `alertStore.alerts` under every other screen reading it.
+ */
+export function selectUnreadAlerts(alerts: AnomalyAlert[]): AnomalyAlert[] {
+  return alerts
+    .filter((a) => !a.readAt && !a.dismissedAt)
+    .slice()
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+}
