@@ -777,6 +777,132 @@ saying "the other four" where the group was five, and four counts in CLAUDE.md,
 that is seven instances in one branch. **If a list is adjacent, the count is
 decoration that rots.**
 
+## 5j. What the conversation-management wave taught — mostly about the instructions, not the code
+
+The seventh screen's wave (rename, delete, pin, and making sharing legible) was
+the first on this branch whose defects were mostly in the *dispatch*, not the
+code. That is the interesting part, so it leads.
+
+### A plan's file list is the least reliable line in a task
+
+Twice in one wave, in opposite directions. Task 4's `**Files:**` block named
+`ChatDesktop.tsx` under *Modify* while **none of its seven steps mention that
+file** — a leftover from a draft where the actions were prop-drilled. Task 6's
+block **omitted** `useChatScreenData.ts`, which its own step 4 requires (the
+"`0` members means unknown, not single" comment belongs at the read site, and
+that site is `const hasOtherMembers = accountMembers.length > 1`).
+
+The asymmetry is the lesson: a file list is written *before* the steps and never
+re-derived from them, so it drifts in both directions and it drifts silently.
+The steps are the requirement; the list is a hint. Task 4's implementer got this
+right on its own — it found no functional reason to touch the file, made the
+edit documentation-only, and **flagged rather than assumed**, which is exactly
+the behaviour that makes a wrong plan cheap.
+
+What was accepted, and the distinction worth keeping: the comment stays *on its
+own merits* — it records the "one leader" decision at the exact site where a
+later implementer would add a second copy of the actions to the title bar, which
+is this repo's house style. Making a cosmetic edit **to satisfy a file list**
+would have been the wrong reason, and had the comment been filler the answer was
+to revert the file and record the list as wrong.
+
+### Precedent beats caution, and the cautious answer can be the wrong one
+
+The Global Constraints warn that a `Modal` as a sibling of the history sheet's
+own "stacks two presented modals". Task 5 correctly made the row *menu* a plain
+`View` — and then mounted the rename dialog as a sibling `Modal`, hitting the
+named hazard for a different component. It flagged it as unproven and
+device-only, which the design had also listed as unproven.
+
+The resolution was not an argument, it was a grep: **`app/shopping-list/index.tsx`
+already does this precise shape in production** — `ListSwitcherModal` and
+`ListNameModal` are siblings, and `openRenameList` opens the second *without
+closing the first*, on both platforms, since ABA-352. The hazard was retired
+empirically a year ago.
+
+And the cautious alternative — close the sheet, then open the dialog — would
+have been **actively worse**: it costs the user their place in the list for a
+safety the shipped app shows is unnecessary. When a constraint's parenthetical
+warns about a hazard, check whether the app already lives with it before paying
+to avoid it. The constraint was written about the menu, where a better option
+existed; for a shared component like `SheetDialog` there is none.
+
+### A test can be written so that it cannot fail, and its report can say it does
+
+Task 2's cross-account test asserted the 404-before-403 ordering by keying its
+Prisma mock on `where.accountId === 'acc-2'`. Drop `accountId` from the query
+entirely — the exact regression the test exists to catch — and `where.accountId`
+is `undefined`, which also fails that comparison, so **both** the correct and
+the broken implementation take the same branch and the test passes either way.
+The report asserted the opposite. Fixed by asserting the real call shape.
+
+The general form: a mock keyed on a *value* rather than on the *shape* of a call
+silently passes when the field is absent, and absence is what most regressions
+look like. Which is why the standard on this wave became **mutation-test each
+test and report the observation, not the intention** — and it paid: the three
+rollback tests added later each produced a *different* failure signature
+(a surviving call with the stale title; `Number of calls: 0`; a surviving call
+with the stale flag), and that difference is itself evidence they are three
+tests rather than one copied three times.
+
+### A brief's file list is my version of the same mistake
+
+Task 3 shipped three new store actions — `renameConversation`,
+`deleteConversation`, `setConversationPinned` — with **zero** tests, because my
+brief's file list named only the pure module's test file. The implementer
+followed it exactly. The property left uncovered was optimistic rollback
+(restore both the in-memory row and the SQLite mirror when the server rejects),
+which both its own report and my review brief had singled out as the thing that
+mattered most, and whose sibling test already existed two stores away
+(`invitationStore.test.ts`'s "restores the invitation on failure").
+
+So the lesson above about plans applies to briefs: **the file list is a hint, the
+property to be proved is the requirement.** Name the property.
+
+### Read the arithmetic before designing a control
+
+Decision 5's platform split is a measurement, not a taste: a two-segment
+`[Личный | Общий]` control needs ~170px against ~110px available in the phone's
+top bar at 360px, so the phone gets an 18px `swap-horizontal` glyph inside the
+pill it already has. And the reverse case — `hitSlop` of 12 on all four sides of
+a 20px control is 44pt, both platforms' minimum target, which retires an
+"unproven, device-only" concern with one line of arithmetic.
+
+Two of this wave's five requests also turned out to be **already satisfied
+somewhere**: the phone's history sheet had rendered a shared-state icon since
+before the wave (so "show an icon when shared" was missing only from the desktop
+rail), and `canToggleShared` already existed as exactly the gate the new glyph
+needed. Read the surface you are asked to fix before designing the fix; part of
+it may already be there, and the part that is missing is usually narrower than
+the request sounds.
+
+### A sentence written to settle one question gets read as settling the next one
+
+Two instances, one caught before it shipped and one after.
+
+Decision 2 says "the sheet's own `onRequestClose` still handles the Android back
+button". Its *job* in context is to explain that because the phone's row menu is
+now a plain `View` rather than a `Modal`, the **menu** does not get an
+`onRequestClose` of its own — it is a statement about which component owns the
+handler. The implementer read it as a statement about what the handler must *do*,
+wrote "regardless of the menu's open state … it is not given a second,
+menu-aware behaviour here", and shipped a defect: Android back closed the whole
+sheet while leaving `menuRow` set, so the next open rendered a stale menu
+unprompted. The one dismissal path that bypassed the menu's own swallowing
+overlay.
+
+Decision 5(g) is the same shape, caught in time: it **recommends** changing
+`chat.private`'s value in nine locales to a scope word, then says in the same
+breath that it is separately authorised and not done here. An implementer
+reading the spec literally will do the recommended thing. It had to be forbidden
+explicitly in the dispatch.
+
+Both are cheap to prevent once you know the shape: when a design sentence
+mentions a mechanism in passing while making a different point, it has not ruled
+on that mechanism's behaviour — and a design that recommends something it is not
+authorising should say "do not do this here" in the same sentence, not the next
+one.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
