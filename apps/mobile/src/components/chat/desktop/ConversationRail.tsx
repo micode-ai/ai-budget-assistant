@@ -5,7 +5,18 @@ import { useTranslation } from 'react-i18next';
 import type { ChatConversation } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { CHAT_RAIL_WIDTH } from '@/components/webLayout.constants';
-import { conversationDateLabel, type RailState } from '@/features/chat/chatLayout';
+import { showAlert } from '@/utils/alert';
+import { useChatStore } from '@/stores/chatStore';
+import {
+  conversationDateLabel,
+  sortConversationsForDisplay,
+  pinnedGroupBoundary,
+  conversationMenuItems,
+  type RailState,
+  type ConversationMenuItem,
+} from '@/features/chat/chatLayout';
+import { ConversationRowMenu } from './ConversationRowMenu';
+import { RenameConversationDialog } from './RenameConversationDialog';
 
 interface ConversationRailProps {
   /** Resolved by the caller via `resolveRailState` — never `'hidden'` here,
@@ -47,6 +58,19 @@ interface ConversationRailProps {
  * this component — it goes `'list'` -> `'loading'`, both visible — and a
  * mount-only effect never fires again. See `ChatDesktop`'s own comment for
  * the fix and why it has to live there.
+ *
+ * ABA-514 (Task 4): this component ALSO owns the row's `⋯` popover, the
+ * rename dialog, and the pinned group — again read/called straight off
+ * `useChatStore` (`ownedConversationIds`, `deleteConversation`,
+ * `setConversationPinned`) rather than threaded through `useChatScreenData`,
+ * the same reasoning `conversationsStatus` above already gives, and the
+ * reason Task 4 and Task 5 (the phone's sheet) stay disjoint: neither needs
+ * to touch that shared hook to get these. `conversations` is re-sorted with
+ * `sortConversationsForDisplay` on every render before anything reads it —
+ * `pinnedGroupBoundary` trusts an already-ordered list, and an optimistic
+ * pin flip already resorts inside `chatStore`, but a defensive re-sort here
+ * costs nothing and means this component never depends on every future
+ * caller having done that first.
  */
 export function ConversationRail({
   state,
@@ -62,6 +86,68 @@ export function ConversationRail({
 
   const isFreshConversation = !currentConversationId;
   const [newHovered, setNewHovered] = useState(false);
+
+  const ownedConversationIds = useChatStore((s) => s.ownedConversationIds);
+  const deleteConversation = useChatStore((s) => s.deleteConversation);
+  const setConversationPinned = useChatStore((s) => s.setConversationPinned);
+
+  const [menuState, setMenuState] = useState<{ row: ChatConversation; anchor: { x: number; y: number } } | null>(
+    null,
+  );
+  const [renamingConversation, setRenamingConversation] = useState<ChatConversation | null>(null);
+
+  const closeMenu = () => setMenuState(null);
+  const openMenu = (row: ChatConversation, anchor: { x: number; y: number }) => setMenuState({ row, anchor });
+
+  // Every one of the four actions reports a failure the same way (design's
+  // "Error" state: "each reports through showAlert and leaves the list as
+  // it was") — `chatStore`'s three action methods already restore the
+  // optimistic change on their own catch and rethrow, so this is only the
+  // user-facing half of that contract.
+  const reportActionFailure = () => showAlert(t('common.error'), t('errors.chatError'));
+
+  const confirmDelete = (row: ChatConversation) => {
+    // Decision 4's two-tier message: creator-only is who MAY delete, not
+    // whether they understood a shared conversation holds other people's
+    // words. Never the private message for a shared row.
+    showAlert(
+      t('chat.deleteConversationTitle'),
+      row.isShared ? t('chat.deleteSharedConversationMessage') : t('common.deleteConfirmMessage'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('common.delete'),
+          style: 'destructive',
+          onPress: () => {
+            void deleteConversation(row.id).catch(reportActionFailure);
+          },
+        },
+      ],
+    );
+  };
+
+  const handleMenuAction = (row: ChatConversation, item: ConversationMenuItem) => {
+    switch (item.action) {
+      case 'pin':
+        void setConversationPinned(row.id, true).catch(reportActionFailure);
+        break;
+      case 'unpin':
+        void setConversationPinned(row.id, false).catch(reportActionFailure);
+        break;
+      case 'rename':
+        setRenamingConversation(row);
+        break;
+      case 'delete':
+        confirmDelete(row);
+        break;
+    }
+  };
+
+  // See the file-level note: reproduces the server's own ordering rather
+  // than trusting the prop is already sorted, so `pinnedGroupBoundary` below
+  // (which trusts a leading contiguous pinned run) always sees one.
+  const orderedConversations = sortConversationsForDisplay(conversations);
+  const dividerIndex = pinnedGroupBoundary(orderedConversations);
 
   return (
     <View style={styles.sidebar}>
@@ -111,33 +197,99 @@ export function ConversationRail({
           </View>
         )}
 
-        {conversations.map((item) => (
-          <ConversationRow
-            key={item.id}
-            item={item}
-            selected={item.id === currentConversationId}
-            onSelect={() => onSelectConversation(item.id)}
-          />
+        {orderedConversations.map((item, index) => (
+          <View key={item.id}>
+            <ConversationRow
+              item={item}
+              selected={item.id === currentConversationId}
+              onSelect={() => onSelectConversation(item.id)}
+              onOpenMenu={(anchor) => openMenu(item, anchor)}
+            />
+            {/* One divider, only when both groups are non-empty —
+                `pinnedGroupBoundary` decides this, never an inline
+                condition (Global Constraints). It reuses this same
+                `styles.divider` the rail already uses above New
+                Conversation — the design's own recorded, deliberate
+                choice (see "What this design leaves unproven": reuse now,
+                a group header only if it reads as a stray line on the
+                deployed build). */}
+            {dividerIndex === index && <View style={styles.divider} />}
+          </View>
         ))}
       </ScrollView>
+
+      {menuState && (
+        <ConversationRowMenu
+          anchor={menuState.anchor}
+          items={conversationMenuItems(menuState.row, {
+            isOwner: ownedConversationIds.includes(menuState.row.id),
+          })}
+          onClose={closeMenu}
+          onSelect={(item) => handleMenuAction(menuState.row, item)}
+        />
+      )}
+
+      <RenameConversationDialog conversation={renamingConversation} onClose={() => setRenamingConversation(null)} />
     </View>
   );
+}
+
+function stopEventPropagation(event: unknown): void {
+  (event as { stopPropagation?: () => void } | null | undefined)?.stopPropagation?.();
 }
 
 function ConversationRow({
   item,
   selected,
   onSelect,
+  onOpenMenu,
 }: {
   item: ChatConversation;
   selected: boolean;
   onSelect: () => void;
+  /** Anchor in viewport coordinates — the "⋯" button's own
+   *  `getBoundingClientRect()`, or the row's `clientX`/`clientY` on a
+   *  right-click. The caller (`ConversationRail`) resolves what the menu
+   *  holds and opens it; this row never decides that itself. */
+  onOpenMenu: (anchor: { x: number; y: number }) => void;
 }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
   const title = item.title || t('chat.conversationUntitled');
+
+  // Decision 1's third reveal condition, the deliberate improvement on the
+  // ledger's `hovered || focused` pair: a touch tablet at >=1024 has no
+  // hover, so the SELECTED row's "⋯" stays visible as its guaranteed path —
+  // "tap the row to read it, which you were doing anyway, and the menu
+  // button is there". Helps the mouse too.
+  const revealed = hovered || focused || selected;
+
+  const handleRowContextMenu = (event: unknown) => {
+    const e = event as { preventDefault?: () => void; clientX?: number; clientY?: number } | null | undefined;
+    e?.preventDefault?.();
+    stopEventPropagation(event);
+    onOpenMenu({ x: e?.clientX ?? 0, y: e?.clientY ?? 0 });
+  };
+
+  const handleMenuButtonPress = (event: unknown) => {
+    stopEventPropagation(event);
+    let anchor = { x: 0, y: 0 };
+    try {
+      const e = event as
+        | { currentTarget?: { getBoundingClientRect?: () => { left: number; bottom: number } } }
+        | null
+        | undefined;
+      const rect = e?.currentTarget?.getBoundingClientRect?.();
+      if (rect) anchor = { x: rect.left, y: rect.bottom + 4 };
+    } catch {
+      // Never let anchor resolution crash a row click — the popover clamps
+      // to the viewport regardless, so (0,0) still lands on-screen.
+    }
+    onOpenMenu(anchor);
+  };
 
   return (
     <Pressable
@@ -149,10 +301,15 @@ function ConversationRow({
       accessibilityRole="button"
       accessibilityState={{ selected }}
       style={[styles.row, hovered && styles.rowHovered, selected && styles.rowSelected]}
+      {...({ onContextMenu: handleRowContextMenu } as object)}
     >
       <View style={styles.rowTop}>
         <Ionicons
-          name="chatbubble-ellipses-outline"
+          // Pinned rows lead with `pin` — the only row-level change this
+          // task makes to the glyph; `chatbubble-ellipses-outline` carried
+          // no information at all (every row here is a conversation), so
+          // this swap is strictly more informative at zero added width.
+          name={item.isPinned ? 'pin' : 'chatbubble-ellipses-outline'}
           size={16}
           color={selected ? theme.colors.primary : theme.colors.textSecondary}
         />
@@ -160,6 +317,23 @@ function ConversationRow({
           {title}
         </Text>
         {item.isShared && <Ionicons name="people" size={12} color={theme.colors.primary} />}
+        {/* The "⋯" slot is UNCONDITIONAL and opacity-gated, never
+            conditionally rendered — every row carries at least the
+            Pin/Unpin action now, so every title is the same width and a
+            conditionally mounted control would make it re-truncate under
+            the cursor (Global Constraints). Stays in the tab order at
+            `opacity: 0` so a keyboard user tabbing onto it reveals it via
+            `onFocus`. */}
+        <Pressable
+          onPress={handleMenuButtonPress}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          accessibilityRole="button"
+          accessibilityLabel={t('chat.conversationActions')}
+          style={{ opacity: revealed ? 1 : 0, padding: 4, borderRadius: 4 }}
+        >
+          <Ionicons name="ellipsis-horizontal" size={16} color={theme.colors.textSecondary} />
+        </Pressable>
       </View>
       <Text style={styles.rowDate}>{conversationDateLabel(new Date(item.updatedAt))}</Text>
     </Pressable>

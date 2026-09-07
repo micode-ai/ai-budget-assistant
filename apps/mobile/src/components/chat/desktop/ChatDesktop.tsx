@@ -141,6 +141,12 @@ export function ChatDesktop({ chat }: ChatDesktopProps) {
             ground showing beside a floating island). */}
         <View style={styles.titleBar}>
           <View style={[styles.titleBarRow, { width: columnWidth }]}>
+            {/* ABA-514: rename/delete/pin live ONLY on the rail row's "⋯"
+                (`ConversationRail`/`ConversationRowMenu`), never here too —
+                one leader (design's §5a/decision 1: "the open conversation's
+                own rail row is right there, and its ⋯ is revealed BECAUSE it
+                is selected"). Do not add a second copy of those actions to
+                this title bar. */}
             <Text style={styles.titleText} numberOfLines={1}>
               {title}
             </Text>
