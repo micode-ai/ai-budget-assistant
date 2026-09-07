@@ -8,6 +8,94 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.26.0 - 2026-09-07
+
+**Rename, delete and pin a conversation in AI chat**
+
+- **Every AI chat conversation can now be renamed, deleted, or pinned to the
+  top of your list.** Long-press a conversation in the history sheet, or tap
+  its new **⋯** menu, for all three — the desktop conversation list gets the
+  same menu, opened by hover or right-click. A pin is personal: it only
+  reorders the list for you, and you can pin a shared conversation someone
+  else started without moving it for them. Deleting a shared conversation
+  removes it for every member with no undo, so it carries its own warning
+  before you can confirm. A pinned conversation now leads with a pin icon in
+  place of the ordinary chat-bubble one (ABA-514).
+- **Sharing is easier to tell at a glance.** On desktop, a conversation's
+  Private/Shared control is now two always-visible buttons instead of one
+  toggle. On the phone, a small swap arrow appears on the sharing pill
+  whenever the conversation can actually be switched between the two
+  (ABA-514).
+
+**A real desktop layout for the web app**
+
+At window widths of 1024px and up, `app.ai-budget.pl` now lays itself out for
+a mouse and a keyboard instead of stretching the phone screen across a wide
+window. Nothing changes below that width, and nothing changes on the phone.
+
+- **Transactions** got a proper desktop table: a filter panel with live
+  counts down the side, rows grouped by day with a subtotal, multi-select,
+  and a row menu reachable by keyboard as well as mouse. Creating or editing
+  an expense or income, and opening a map pin, now happens in a dialog
+  instead of a new screen, picking a merchant offers the full list instead
+  of six chips, and the browser's own alert boxes were replaced with the
+  app's own dialogs (ABA-499, ABA-500).
+- **Analytics** reflows into a grid of breakdown cards, and drilling into a
+  category or opening Spending Story now opens as a dialog instead of
+  navigating away (ABA-501, ABA-502). Also fixed there, and already live for
+  every installed build regardless of platform: opening a month and drilling
+  in could label the result with the wrong month — the figures were always
+  correct, only the label read the server's clock instead of yours
+  (ABA-503).
+- **Budgets** got the same desktop treatment: a wide layout, with create and
+  detail as dialogs, and the list now waits for the server to answer before
+  showing "no budgets yet" — the local check alone always reads empty on web
+  (ABA-504).
+- **The dashboard** became a focus column plus fixed side rails instead of
+  two stretched-out columns, and a first-time web user now opens it into a
+  first-run checklist and an "attention" list that resolves in place, rather
+  than nine empty cards (ABA-505, ABA-507).
+- **Settings** became a two-pane layout — every settings screen listed on the
+  left, the one you have open on the right — built out over four waves
+  until the whole section lived there (ABA-508, ABA-510, ABA-511, ABA-512).
+- **Chat** grew a conversation list down the side and a reading column sized
+  for the answer it is carrying rather than the width of the window
+  (ABA-513).
+
+**Fixed**
+
+- **Switching accounts, or signing out, could leave a previous account's —
+  or a previous person's — figures on screen.** The home screen's
+  Safe-to-Spend figure and the Inflation Shield's price data could each
+  survive an account switch or a sign-out instead of being cleared and
+  refetched. Your AI chat history had the same defect and is fixed the same
+  way (ABA-513).
+- **Recording your voice for an expense or income and leaving the screen
+  mid-recording could leave the microphone open.** Cancelling or navigating
+  away now always releases it (ABA-507).
+- **A link from an app-directory listing could quietly claim your referral
+  code.** This turned up on PeerPush's own listing link: it carries its own
+  `ref` parameter, which could fill in an unrelated code when you registered
+  — and since the first code seen wins, could have blocked a friend's real
+  invite from ever applying. Registering through a directory link no longer
+  touches your referral code (ABA-494).
+- On the web build: the selected account no longer resets to the first one
+  on a page refresh, including when the account list itself fails to load
+  (ABA-498, ABA-506).
+
+**Under the hood**
+
+Work with no visible change, listed for completeness: acquisition links now
+also read the standard `utm_` tags most directories and ad networks already
+use, so they stop counting as direct traffic (ABA-492); the shared marketing
+footer picked up a second directory badge, from PeerPush, beside Startup
+Fame (ABA-493); the Samsung Galaxy Store rollout was documented (ABA-495);
+the income detail screen was split into smaller files with no behaviour
+change (ABA-496); and the web build gained first-party product telemetry,
+with no admin-facing surface yet (ABA-497).
+
+---
+
 ## 1.25.0 - 2026-09-04
 
 **Asking for a referral at the one moment it is earned**
