@@ -8,6 +8,7 @@ import { CHAT_RAIL_WIDTH } from '@/components/webLayout.constants';
 import { showAlert } from '@/utils/alert';
 import { useChatStore } from '@/stores/chatStore';
 import {
+  conversationActionsVisible,
   conversationDateLabel,
   sortConversationsForDisplay,
   pinnedGroupBoundary,
@@ -257,6 +258,9 @@ function ConversationRow({
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [hovered, setHovered] = useState(false);
+  // The action control's OWN hover, kept apart from the row's. See
+  // `conversationActionsVisible` for why one flag cannot do this job.
+  const [actionHovered, setActionHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const title = item.title || t('chat.conversationUntitled');
 
@@ -264,8 +268,16 @@ function ConversationRow({
   // ledger's `hovered || focused` pair: a touch tablet at >=1024 has no
   // hover, so the SELECTED row's "⋯" stays visible as its guaranteed path —
   // "tap the row to read it, which you were doing anyway, and the menu
-  // button is there". Helps the mouse too.
-  const revealed = hovered || focused || selected;
+  // button is there".
+  // The rule itself lives in `conversationActionsVisible` and is called, never
+  // paraphrased here — it carries the reason the two hover flags are separate.
+  const hoveredAnywhere = hovered || actionHovered;
+  const revealed = conversationActionsVisible({
+    rowHovered: hovered,
+    actionHovered,
+    focused,
+    selected,
+  });
 
   const handleRowContextMenu = (event: unknown) => {
     const e = event as { preventDefault?: () => void; clientX?: number; clientY?: number } | null | undefined;
@@ -300,7 +312,7 @@ function ConversationRow({
       onHoverOut={() => setHovered(false)}
       accessibilityRole="button"
       accessibilityState={{ selected }}
-      style={[styles.row, hovered && styles.rowHovered, selected && styles.rowSelected]}
+      style={[styles.row, hoveredAnywhere && styles.rowHovered, selected && styles.rowSelected]}
       {...({ onContextMenu: handleRowContextMenu } as object)}
     >
       <View style={styles.rowTop}>
@@ -325,6 +337,8 @@ function ConversationRow({
             `onFocus`. */}
         <Pressable
           onPress={handleMenuButtonPress}
+          onHoverIn={() => setActionHovered(true)}
+          onHoverOut={() => setActionHovered(false)}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           accessibilityRole="button"

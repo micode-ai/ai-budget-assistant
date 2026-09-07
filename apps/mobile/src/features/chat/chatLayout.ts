@@ -234,3 +234,28 @@ export function canSaveRename(current: string | null, next: string): boolean {
   if (current !== null && trimmedNext === current.trim()) return false;
   return true;
 }
+
+/**
+ * Whether a rail row's action control ("...") is visible.
+ *
+ * `rowHovered` and `actionHovered` are TWO independent booleans on purpose,
+ * never one. React Native Web fires the ROW's hover-out when the pointer moves
+ * onto one of its children, so a single `hovered` flag goes false at exactly
+ * the moment the cursor arrives at the control: it vanishes under the
+ * approaching mouse and cannot be aimed at. That was a real, reported defect —
+ * and it also produced a second, more confusing symptom, because the SELECTED
+ * row keeps its control through `selected` while every hovered row's control
+ * kept disappearing, so the only stable "..." on screen sat on a row the
+ * cursor was not on.
+ *
+ * Two flags make the outcome independent of which handler fires first.
+ * Collapsing them back into one reintroduces both symptoms.
+ */
+export function conversationActionsVisible(state: {
+  rowHovered: boolean;
+  actionHovered: boolean;
+  focused: boolean;
+  selected: boolean;
+}): boolean {
+  return state.rowHovered || state.actionHovered || state.focused || state.selected;
+}

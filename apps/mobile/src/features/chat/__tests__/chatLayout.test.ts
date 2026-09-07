@@ -1,4 +1,5 @@
 import {
+  conversationActionsVisible,
   resolveRailState,
   railIsVisible,
   chatColumnWidth,
@@ -352,5 +353,36 @@ describe('canSaveRename (ABA-514)', () => {
   // change.
   it('allows a genuinely different title', () => {
     expect(canSaveRename('Grocery run', 'Budget check-in')).toBe(true);
+  });
+});
+
+describe('conversationActionsVisible', () => {
+  const off = { rowHovered: false, actionHovered: false, focused: false, selected: false };
+
+  it('hides the control when the row is untouched', () => {
+    expect(conversationActionsVisible(off)).toBe(false);
+  });
+
+  it('shows it while the row is hovered', () => {
+    expect(conversationActionsVisible({ ...off, rowHovered: true })).toBe(true);
+  });
+
+  // THE regression this function exists for. React Native Web fires the ROW's
+  // hover-out when the pointer moves onto a child, so at the moment the cursor
+  // reaches the control `rowHovered` is already false — and if that were the
+  // only flag, the button would vanish under the approaching mouse and could
+  // not be aimed at.
+  it('shows it when the pointer is on the control itself and the row reads as un-hovered', () => {
+    expect(conversationActionsVisible({ ...off, rowHovered: false, actionHovered: true })).toBe(true);
+  });
+
+  it('shows it for a keyboard user who has tabbed onto it', () => {
+    expect(conversationActionsVisible({ ...off, focused: true })).toBe(true);
+  });
+
+  // A touch tablet at >=1024 has no hover at all, so the open conversation's
+  // own row is the guaranteed path to the menu.
+  it('shows it on the selected row with no pointer anywhere near it', () => {
+    expect(conversationActionsVisible({ ...off, selected: true })).toBe(true);
   });
 });
