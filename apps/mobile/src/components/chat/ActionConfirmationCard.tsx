@@ -84,7 +84,7 @@ export function ActionConfirmationCard({
           disabled={isConfirming}
         >
           {isConfirming ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
+            <ActivityIndicator size="small" color={theme.colors.textInverse} />
           ) : (
             <Text style={styles.confirmButtonText}>{t('chat.confirmAction')}</Text>
           )}
@@ -155,8 +155,17 @@ const createStyles = (theme: Theme) => ({
   },
   confirmButtonText: {
     ...theme.textStyles.bodySmMedium,
-    color: '#FFFFFF',
+    // ABA-513: this button's fill is `theme.colors.primary`, i.e. the accent
+    // — a literal white measured ~1.9:1 against an amber accent (#EAB308) and
+    // fails 3:1 against most of the 13 preset accents, not just that one.
+    // `textInverse` is the accent's own derived on-colour (`deriveAccent.ts`
+    // picks it by luminance per accent), the same ABA-450 rule that a header
+    // action painted `primary` must use `textInverse`, not a fixed color.
+    color: theme.colors.textInverse,
   },
+  // Not accent-filled (`backgroundColor: 'transparent'` on the card's own
+  // `surface`), so `rejectButtonText`'s `textSecondary` never had the confirm
+  // button's problem — checked, not assumed, left unchanged.
   rejectButton: {
     flex: 1,
     backgroundColor: 'transparent',
