@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useFilteredTransactions } from './useFilteredTransactions';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { categoryLabel } from '@/utils/entityLabel';
 import { groupExpensesByCategory, computeVsAverage } from './categoryGrouping';
 import type { TimeRange, CategorySpending } from './useAnalytics';
 
@@ -74,7 +75,7 @@ export function useCategoryAnalytics(
         : undefined;
       result.push({
         categoryId,
-        name: category ? getCategoryDisplayName(category, t) : (categoryId ? categoryId : t('common.uncategorized')),
+        name: category ? getCategoryDisplayName(category, t) : categoryLabel(category),
         amount,
         percentage: (amount / total) * 100,
         color: category?.color || CATEGORY_COLORS[colorIndex % CATEGORY_COLORS.length],

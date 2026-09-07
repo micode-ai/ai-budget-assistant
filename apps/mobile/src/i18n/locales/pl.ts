@@ -13,6 +13,8 @@ export default {
     success: 'Sukces',
     of: 'z',
     uncategorized: 'Bez kategorii',
+    unknownProject: 'Nieznany projekt',
+    unknownTag: 'Nieznany tag',
     ok: 'OK',
     remove: 'Usuń',
     copy: 'Kopiuj',

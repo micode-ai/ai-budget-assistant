@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useFilteredTransactions } from './useFilteredTransactions';
+import { categoryLabel } from '@/utils/entityLabel';
 import type { TimeRange, AnalyticsSummary } from './useAnalytics';
 
 export function useSummaryAnalytics(
@@ -43,7 +44,7 @@ export function useSummaryAnalytics(
     filteredExpenses.forEach((e) => {
       const key = e.categoryId || null;
       const cat = key ? categories.find((c) => c.id === key) : undefined;
-      const name = cat?.name || (key ?? '');
+      const name = categoryLabel(cat);
       const existing = categoryTotals.get(key);
       categoryTotals.set(key, { name, amount: (existing?.amount ?? 0) + getAmount(e) });
     });

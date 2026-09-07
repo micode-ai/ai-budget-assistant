@@ -17,6 +17,7 @@ import { BUDGET_PERIODS, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import type { BudgetPeriod, Currency, Budget } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { categoryLabel } from '@/utils/entityLabel';
 import { CreateCategoryModal } from '@/components/CreateCategoryModal';
 import { BudgetCategoryEditor, type BudgetAllocationRow } from '@/components/BudgetCategoryEditor';
 
@@ -69,7 +70,7 @@ export function BudgetEditForm({ budget, onSaved, onCancel }: BudgetEditFormProp
             const cat = categories.find((c) => c.id === a.categoryId);
             return {
               categoryId: a.categoryId,
-              categoryName: cat?.name || 'Unknown',
+              categoryName: categoryLabel(cat),
               categoryColor: cat?.color,
               amount: a.amount,
             };

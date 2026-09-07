@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { InteractionManager } from 'react-native';
 import { useTagStore } from '@/stores/tagStore';
+import { tagLabel } from '@/utils/entityLabel';
 import { useAccountStore } from '@/stores/accountStore';
 import { getAllExpenseTagMappings } from '@/db/tagRepository';
 import { useFilteredTransactions } from './useFilteredTransactions';
@@ -61,7 +62,7 @@ export function useTagSpending(
           const tag = tags.find((t) => t.id === tagId) || tags.find((t) => t.name === tagId);
           result.push({
             tagId,
-            name: tag?.name || tagId,
+            name: tagLabel(tag),
             amount,
             percentage: (amount / totalTagged) * 100,
             color: tag?.color || TAG_COLORS[colorIndex % TAG_COLORS.length],

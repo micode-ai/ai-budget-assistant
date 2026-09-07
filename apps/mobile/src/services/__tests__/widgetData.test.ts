@@ -26,6 +26,7 @@ jest.mock('@/widgets/BudgetWidgetSmall', () => ({ BudgetWidgetSmall: jest.fn() }
 jest.mock('@/widgets/BudgetWidgetMedium', () => ({ BudgetWidgetMedium: jest.fn() }));
 jest.mock('@/widgets/BudgetWidgetLarge', () => ({ BudgetWidgetLarge: jest.fn() }));
 jest.mock('@/i18n', () => ({
+  __esModule: true,
   default: {
     t: (key: string, opts?: { returnObjects?: boolean }) =>
       opts?.returnObjects ? ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'] : key,

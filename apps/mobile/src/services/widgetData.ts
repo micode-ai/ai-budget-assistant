@@ -238,6 +238,7 @@ export async function refreshWidgetData(): Promise<void> {
     const { useCategoryStore } = require('@/stores/categoryStore');
     const { useAccountStore } = require('@/stores/accountStore');
     const { useInsightsStore } = require('@/stores/insightsStore');
+    const { categoryLabel } = require('@/utils/entityLabel');
 
     // Split-receivable debt rows are bookkeeping for a receivable already carried
     // by the original receipt expense — exclude them so the home-widget totals
@@ -312,7 +313,7 @@ export async function refreshWidgetData(): Promise<void> {
       const prev = categoryMap.get(key) || {
         amount: 0,
         icon: cat?.icon || '📦',
-        name: cat?.name || 'Other',
+        name: categoryLabel(cat),
       };
       categoryMap.set(key, { ...prev, amount: prev.amount + e.amount });
     }

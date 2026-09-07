@@ -30,6 +30,7 @@ import { useTranslation } from 'react-i18next';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useCategoryStore } from '@/stores/categoryStore';
+import { categoryLabel } from '@/utils/entityLabel';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import { showAlert } from '@/utils/alert';
@@ -136,7 +137,7 @@ export default function ExpenseMergeScreen() {
     onSelect: () => void,
   ) => {
     const categoryName = exp.categoryId
-      ? getCategoryById(exp.categoryId)?.name ?? exp.categoryId
+      ? categoryLabel(getCategoryById(exp.categoryId))
       : t('common.uncategorized');
     const dateStr = formatDate(exp.date, undefined, locale);
 
@@ -195,7 +196,7 @@ export default function ExpenseMergeScreen() {
     if (f === 'notes') return survivor.notes?.trim() || '';
     if (f === 'categoryId') {
       return survivor.categoryId
-        ? getCategoryById(survivor.categoryId)?.name ?? survivor.categoryId
+        ? categoryLabel(getCategoryById(survivor.categoryId))
         : '';
     }
     if (f === 'projectId') return survivor.projectId ?? '';
@@ -206,7 +207,7 @@ export default function ExpenseMergeScreen() {
     if (f === 'notes') return mergedRow.notes?.trim() || '';
     if (f === 'categoryId') {
       return mergedRow.categoryId
-        ? getCategoryById(mergedRow.categoryId)?.name ?? mergedRow.categoryId
+        ? categoryLabel(getCategoryById(mergedRow.categoryId))
         : '';
     }
     if (f === 'projectId') return mergedRow.projectId ?? '';

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { InteractionManager } from 'react-native';
 import { useProjectStore } from '@/stores/projectStore';
+import { projectLabel } from '@/utils/entityLabel';
 import { useAccountStore } from '@/stores/accountStore';
 import { getAllProjectExpenseMappings } from '@/db/projectRepository';
 import { useFilteredTransactions } from './useFilteredTransactions';
@@ -61,7 +62,7 @@ export function useProjectSpending(
           const project = projects.find((p) => p.id === projectId) || projects.find((p) => p.name === projectId);
           result.push({
             projectId,
-            name: project?.name || projectId,
+            name: projectLabel(project),
             amount,
             percentage: (amount / totalProjected) * 100,
             color: project?.color || PROJECT_COLORS[colorIndex % PROJECT_COLORS.length],

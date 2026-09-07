@@ -8,6 +8,7 @@ import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore'
 import { useAuthStore } from '@/stores/authStore';
 import { getIntlLocale } from '@/i18n';
 import { filterConsumption } from '@/utils/consumption';
+import { categoryLabel } from '@/utils/entityLabel';
 
 export interface CalendarDay {
   date: number;
@@ -223,7 +224,7 @@ export function useCalendarData(
         const cat = categoryMap.get(catId);
         return {
           categoryId: catId,
-          name: cat?.name || 'Uncategorized',
+          name: categoryLabel(cat),
           icon: cat?.icon || 'ellipsis-horizontal',
           color: cat?.color || '#95A5A6',
           amount,
@@ -246,7 +247,7 @@ export function useCalendarData(
         const cat = categoryMap.get(catId);
         return {
           categoryId: catId,
-          name: cat?.name || 'Uncategorized',
+          name: categoryLabel(cat),
           icon: cat?.icon || 'ellipsis-horizontal',
           color: cat?.color || '#95A5A6',
           amount,
@@ -269,7 +270,7 @@ export function useCalendarData(
         convertedAmount: convertAmount(e.amount, e.currencyCode, displayCurrency, rates),
         currencyCode: e.currencyCode,
         description: e.description || cat?.name || 'Expense',
-        categoryName: cat?.name || 'Uncategorized',
+        categoryName: categoryLabel(cat),
         categoryIcon: cat?.icon || 'ellipsis-horizontal',
         categoryColor: cat?.color || '#95A5A6',
         date: new Date(e.date),
@@ -285,7 +286,7 @@ export function useCalendarData(
         convertedAmount: convertAmount(inc.amount, inc.currencyCode, displayCurrency, rates),
         currencyCode: inc.currencyCode,
         description: inc.description || cat?.name || 'Income',
-        categoryName: cat?.name || 'Uncategorized',
+        categoryName: categoryLabel(cat),
         categoryIcon: cat?.icon || 'ellipsis-horizontal',
         categoryColor: cat?.color || '#95A5A6',
         date: new Date(inc.date),

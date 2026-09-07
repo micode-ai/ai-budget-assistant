@@ -3,7 +3,6 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Expense, ExpenseItem, ExpenseCategorySplit, SyncStatus, MergeExpensesFieldChoices, ExpenseShareDto, ShareType } from '@budget/shared-types';
 import { generateUUID, getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
-import i18n from '@/i18n';
 import {
   insertExpense,
   updateExpenseInDb,
@@ -32,6 +31,7 @@ import { api } from '@/services/api';
 import { maybeEncrypt } from '@/services/encryptionHelper';
 import { getDistinctMerchants as computeDistinctMerchants, getMerchantCounts as computeMerchantCounts } from '@/utils/merchant';
 import { filterConsumption } from '@/utils/consumption';
+import { categoryLabel } from '@/utils/entityLabel';
 import { pullAndMergeExpenses, syncPendingExpenses as doSync } from './expenseSync';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
@@ -977,10 +977,11 @@ export const useExpenseStore = create<ExpenseState>()(
         categoryMap.set(key, { amount: current.amount + expense.amount, count: current.count + 1 });
       });
 
+      const catStore = useCategoryStore.getState();
       return Array.from(categoryMap.entries())
         .map(([categoryId, data]) => ({
           categoryId,
-          name: categoryId || i18n.t('common.uncategorized'),
+          name: categoryLabel(categoryId ? catStore.getCategoryById(categoryId) : undefined),
           amount: data.amount,
           percentage: (data.amount / total) * 100,
           count: data.count,
