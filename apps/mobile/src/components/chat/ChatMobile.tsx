@@ -141,6 +141,15 @@ export function ChatMobile({ chat }: ChatMobileProps) {
                 >
                   {chat.currentIsShared ? t('chat.shared') : t('chat.private')}
                 </Text>
+                {/* ABA-514 (Task 6, decision 5(b) — the third named mobile
+                    rendering change): a `swap-horizontal` glyph, ONLY inside
+                    this interactive pill (never the static badge below it),
+                    so the creator's control reads as a switch rather than a
+                    same-coloured-apart badge. No new string, ~18px, no
+                    layout restructuring — the desktop's two-segment control
+                    (5a) doesn't fit here: two labelled segments need ~170px
+                    against ~110px available in this bar at 360px. */}
+                <Ionicons name="swap-horizontal" size={18} color={theme.colors.textSecondary} />
               </TouchableOpacity>
             ) : chat.currentIsShared ? (
               <View style={styles.sharedToggle}>

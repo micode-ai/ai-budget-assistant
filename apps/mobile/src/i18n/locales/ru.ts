@@ -387,6 +387,12 @@ export default {
     conversationUntitled: 'Разговор',
     shared: 'Общий',
     private: 'Личный',
+    renameConversation: 'Переименовать разговор',
+    deleteConversationTitle: 'Удалить разговор',
+    deleteSharedConversationMessage: 'Этот разговор общий. Если вы удалите его, он пропадёт у всех участников счёта, а не только у вас. Это действие нельзя отменить.',
+    conversationActions: 'Действия с разговором',
+    pinConversation: 'Закрепить',
+    unpinConversation: 'Открепить',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

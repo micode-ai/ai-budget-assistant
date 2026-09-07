@@ -385,6 +385,12 @@ export default {
     conversationUntitled: 'Gesprek',
     shared: 'Gedeeld',
     private: 'Privé',
+    renameConversation: 'Gesprek hernoemen',
+    deleteConversationTitle: 'Gesprek verwijderen',
+    deleteSharedConversationMessage: 'Dit gesprek is gedeeld. Als je het verwijdert, verdwijnt het voor alle accountleden, niet alleen voor jou. Deze actie kan niet ongedaan worden gemaakt.',
+    conversationActions: 'Gespreksacties',
+    pinConversation: 'Vastzetten',
+    unpinConversation: 'Losmaken',
   },
   expenseNew: {
     amountPlaceholder: '0,00',

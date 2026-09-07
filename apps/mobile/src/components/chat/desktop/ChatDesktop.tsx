@@ -150,21 +150,49 @@ export function ChatDesktop({ chat }: ChatDesktopProps) {
             <Text style={styles.titleText} numberOfLines={1}>
               {title}
             </Text>
+            {/* ABA-514 (Task 6, decision 5(a)): a two-segment control, both
+                options always visible — the single-filled-pill this replaced
+                was a status badge, not a switch (nothing said pressing it
+                would do anything). Desktop-only: 5(b) is the phone's own,
+                measured, cheaper answer. Costs zero new keys — renders
+                `chat.private`/`chat.shared`, both already in all nine
+                locales. The non-creator's case (5e) is unchanged below: a
+                static single badge, no track, no second segment. */}
             {chat.hasOtherMembers &&
               (chat.canToggleShared ? (
-                <TouchableOpacity
-                  style={styles.sharedToggle}
-                  onPress={() => chat.setConversationShared(!chat.currentIsShared)}
-                >
-                  <Ionicons
-                    name={chat.currentIsShared ? 'people' : 'person'}
-                    size={16}
-                    color={chat.currentIsShared ? theme.colors.primary : theme.colors.textSecondary}
-                  />
-                  <Text style={[styles.sharedToggleText, chat.currentIsShared && { color: theme.colors.primary }]}>
-                    {chat.currentIsShared ? t('chat.shared') : t('chat.private')}
-                  </Text>
-                </TouchableOpacity>
+                <View style={styles.sharedSegments}>
+                  <TouchableOpacity
+                    style={[styles.sharedSegment, !chat.currentIsShared && styles.sharedSegmentActive]}
+                    onPress={() => chat.currentIsShared && chat.setConversationShared(false)}
+                  >
+                    <Ionicons
+                      name="person"
+                      size={16}
+                      color={!chat.currentIsShared ? theme.colors.textInverse : theme.colors.textSecondary}
+                    />
+                    <Text
+                      style={[styles.sharedSegmentText, !chat.currentIsShared && styles.sharedSegmentTextActive]}
+                    >
+                      {t('chat.private')}
+                    </Text>
+                  </TouchableOpacity>
+                  <View style={styles.sharedSegmentDivider} />
+                  <TouchableOpacity
+                    style={[styles.sharedSegment, chat.currentIsShared && styles.sharedSegmentActive]}
+                    onPress={() => !chat.currentIsShared && chat.setConversationShared(true)}
+                  >
+                    <Ionicons
+                      name="people"
+                      size={16}
+                      color={chat.currentIsShared ? theme.colors.textInverse : theme.colors.textSecondary}
+                    />
+                    <Text
+                      style={[styles.sharedSegmentText, chat.currentIsShared && styles.sharedSegmentTextActive]}
+                    >
+                      {t('chat.shared')}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               ) : chat.currentIsShared ? (
                 <View style={styles.sharedToggle}>
                   <Ionicons name="people" size={16} color={theme.colors.primary} />
@@ -333,6 +361,38 @@ const createStyles = (theme: Theme) => ({
   sharedToggleText: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
+  },
+  // ABA-514 (Task 6, decision 5(a)): the two-segment control. The container
+  // clips both children to one rounded pill; each segment paints its own
+  // background (`surfaceSecondary` quiet, `primary` filled) rather than the
+  // container, which is what lets the two states differ visually without a
+  // second shape.
+  sharedSegments: {
+    flexDirection: 'row' as const,
+    borderRadius: theme.borderRadius.lg,
+    overflow: 'hidden' as const,
+  },
+  sharedSegment: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[1],
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  sharedSegmentDivider: {
+    width: 1,
+    backgroundColor: theme.colors.border,
+  },
+  sharedSegmentActive: {
+    backgroundColor: theme.colors.primary,
+  },
+  sharedSegmentText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+  },
+  sharedSegmentTextActive: {
+    color: theme.colors.textInverse,
   },
   transcript: {
     flex: 1,

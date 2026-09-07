@@ -387,6 +387,12 @@ export default {
     conversationUntitled: 'Розмова',
     shared: 'Спільний',
     private: 'Особистий',
+    renameConversation: 'Перейменувати розмову',
+    deleteConversationTitle: 'Видалити розмову',
+    deleteSharedConversationMessage: 'Ця розмова спільна. Якщо ви її видалите, вона зникне у всіх учасників рахунку, а не тільки у вас. Цю дію не можна скасувати.',
+    conversationActions: 'Дії з розмовою',
+    pinConversation: 'Закріпити',
+    unpinConversation: 'Відкріпити',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

@@ -385,6 +385,12 @@ export default {
     conversationUntitled: 'Gespräch',
     shared: 'Geteilt',
     private: 'Privat',
+    renameConversation: 'Gespräch umbenennen',
+    deleteConversationTitle: 'Gespräch löschen',
+    deleteSharedConversationMessage: 'Dieses Gespräch ist geteilt. Wenn Sie es löschen, wird es für alle Kontomitglieder entfernt, nicht nur für Sie. Diese Aktion kann nicht rückgängig gemacht werden.',
+    conversationActions: 'Gesprächsaktionen',
+    pinConversation: 'Anheften',
+    unpinConversation: 'Nicht mehr anheften',
   },
   expenseNew: {
     amountPlaceholder: '0,00',

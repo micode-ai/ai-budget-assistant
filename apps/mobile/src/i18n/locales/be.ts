@@ -385,6 +385,12 @@ export default {
     conversationUntitled: 'Размова',
     shared: 'Агульны',
     private: 'Асабісты',
+    renameConversation: 'Перайменаваць размову',
+    deleteConversationTitle: 'Выдаліць размову',
+    deleteSharedConversationMessage: 'Гэтая размова агульная. Калі вы яе выдаліце, яна знікне ва ўсіх удзельнікаў рахунку, а не толькі ў вас. Гэта дзеянне нельга адмяніць.',
+    conversationActions: 'Дзеянні з размовай',
+    pinConversation: 'Замацаваць',
+    unpinConversation: 'Адмацаваць',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

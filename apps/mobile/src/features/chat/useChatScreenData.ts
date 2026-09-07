@@ -55,6 +55,15 @@ export function useChatScreenData() {
   const { currentAccount, members, loadMembers } = useAccountStore();
   const account = currentAccount();
   const accountMembers = account ? (members[account.id] ?? []) : [];
+  // ABA-514 design decision 5(f) / the plan's Global Constraints: `0` here
+  // means "not loaded yet, or the fetch failed", NOT "a single-member
+  // account" — the current user is always a member of their own account, so
+  // a real single-member account reads as `1`, never `0`. Both `0` and `1`
+  // correctly evaluate `false` below (the safe direction: the sharing
+  // control stays absent rather than showing something wrong), so this is a
+  // comment, not a behaviour change — but the next person to read
+  // `accountMembers.length <= 1` as "definitely single-member" will be
+  // wrong. A retry for the `0` case is deliberately not folded in here.
   const hasOtherMembers = accountMembers.length > 1;
   const userId = useAuthStore((s) => s.user?.id);
 

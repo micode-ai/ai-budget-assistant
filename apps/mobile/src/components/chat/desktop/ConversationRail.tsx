@@ -316,7 +316,6 @@ function ConversationRow({
         <Text style={[styles.rowTitle, selected && styles.rowTitleSelected]} numberOfLines={1}>
           {title}
         </Text>
-        {item.isShared && <Ionicons name="people" size={12} color={theme.colors.primary} />}
         {/* The "⋯" slot is UNCONDITIONAL and opacity-gated, never
             conditionally rendered — every row carries at least the
             Pin/Unpin action now, so every title is the same width and a
@@ -335,7 +334,21 @@ function ConversationRow({
           <Ionicons name="ellipsis-horizontal" size={16} color={theme.colors.textSecondary} />
         </Pressable>
       </View>
-      <Text style={styles.rowDate}>{conversationDateLabel(new Date(item.updatedAt))}</Text>
+      {/* ABA-514 (Task 6, decision 5(c)): the shared indicator moves here,
+          off line 1 — 20px of title width returned above — and states
+          sharing in words rather than glyph-only: `people` at 14px
+          (matching the phone's own icon size) + `chat.shared` + " · " +
+          date, all in the existing `caption` (11px) style. Fixes the
+          rail/sheet size parity gap as a by-product, not the answer in
+          itself. */}
+      <View style={styles.rowBottom}>
+        {item.isShared && <Ionicons name="people" size={14} color={theme.colors.primary} />}
+        <Text style={styles.rowDate} numberOfLines={1}>
+          {item.isShared
+            ? `${t('chat.shared')} · ${conversationDateLabel(new Date(item.updatedAt))}`
+            : conversationDateLabel(new Date(item.updatedAt))}
+        </Text>
+      </View>
     </Pressable>
   );
 }
@@ -431,9 +444,14 @@ const createStyles = (theme: Theme) => ({
   rowTitleSelected: {
     color: theme.colors.primary,
   },
+  rowBottom: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    marginTop: theme.spacing[0.5],
+  },
   rowDate: {
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
-    marginTop: theme.spacing[0.5],
   },
 });

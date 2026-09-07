@@ -387,6 +387,12 @@ export default {
     conversationUntitled: 'Rozmowa',
     shared: 'Wspólny',
     private: 'Prywatny',
+    renameConversation: 'Zmień nazwę rozmowy',
+    deleteConversationTitle: 'Usuń rozmowę',
+    deleteSharedConversationMessage: 'Ta rozmowa jest wspólna. Jeśli ją usuniesz, zniknie ona wszystkim członkom konta, a nie tylko Tobie. Tej akcji nie można cofnąć.',
+    conversationActions: 'Akcje rozmowy',
+    pinConversation: 'Przypnij',
+    unpinConversation: 'Odepnij',
   },
   expenseNew: {
     amountPlaceholder: '0,00',

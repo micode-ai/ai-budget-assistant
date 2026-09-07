@@ -385,6 +385,12 @@ export default {
     conversationUntitled: 'Conversación',
     shared: 'Compartido',
     private: 'Privado',
+    renameConversation: 'Renombrar conversación',
+    deleteConversationTitle: 'Eliminar conversación',
+    deleteSharedConversationMessage: 'Esta conversación es compartida. Si la eliminas, desaparecerá para todos los miembros de la cuenta, no solo para ti. Esta acción no se puede deshacer.',
+    conversationActions: 'Acciones de conversación',
+    pinConversation: 'Fijar',
+    unpinConversation: 'Dejar de fijar',
   },
   expenseNew: {
     amountPlaceholder: '0.00',

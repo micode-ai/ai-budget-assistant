@@ -388,6 +388,12 @@ export default {
     conversationUntitled: 'Conversation',
     shared: 'Shared',
     private: 'Private',
+    renameConversation: 'Rename Conversation',
+    deleteConversationTitle: 'Delete Conversation',
+    deleteSharedConversationMessage: 'This conversation is shared. Deleting it removes it for all account members, not just you. This action cannot be undone.',
+    conversationActions: 'Conversation actions',
+    pinConversation: 'Pin',
+    unpinConversation: 'Unpin',
   },
   expenseNew: {
     amountPlaceholder: '0.00',
