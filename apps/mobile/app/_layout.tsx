@@ -188,7 +188,7 @@ function RootNavigator() {
         <Stack.Screen
           name="account/list"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('account/list'),
             title: t('nav.accounts'),
           }}
         />

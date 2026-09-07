@@ -158,8 +158,13 @@ export const ENTRY_POINT_ONLY_ROUTES: readonly string[] = [
  * place the day it is extracted, with no second list to reorder.
  */
 export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
-  // --- Configure the app. Panes, once extracted (waves 1-3). ---
+  // --- Configure the app. Panes, once extracted. ---
   { kind: 'pane', key: 'profile', labelKey: 'settingsNav.profile', route: '/settings/profile', width: 'form' },
+  // Extracted from outside `app/settings/`, like `tags`/`projects` below —
+  // but this one sits beside `profile` rather than with the reference-data
+  // group, because it is identity-adjacent (who you are, where the money
+  // lives), not a reference list the other four happen to also be.
+  { kind: 'pane', key: 'accounts', labelKey: 'accounts.manage', route: '/account/list', width: 'form' },
   { kind: 'pane', key: 'appearance', labelKey: 'settingsNav.appearance', route: '/settings/appearance', width: 'form' },
   { kind: 'pane', key: 'ai', labelKey: 'settingsNav.ai', route: '/settings/ai', width: 'form' },
   { kind: 'pane', key: 'widgets', labelKey: 'settingsNav.widgets', route: '/settings/widgets', width: 'form' },
@@ -167,11 +172,19 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'bots', labelKey: 'settings.bots.title', route: '/settings/bots', width: 'form' },
   { kind: 'pane', key: 'security', labelKey: 'settingsNav.security', route: '/settings/security', width: 'form' },
   { kind: 'pane', key: 'data', labelKey: 'settingsNav.data', route: '/settings/data', width: 'form' },
-  // Promoted out of the `reference` sub-hub, which dissolves on desktop — one
-  // level of depth removed. These three are list screens and want the width.
+  // The reference-data group, in the same order `app/settings/reference.tsx`
+  // — the sub-hub these five rows are promoted out of, and which dissolves
+  // on desktop only — has always listed them: one level of depth removed,
+  // the same grouping the phone already draws. `categories`/`merchants`/
+  // `products` were always under `app/settings/`; `tags`/`projects` had to be
+  // extracted from elsewhere first, same as `accounts` above, but these two
+  // stay grouped with the rest of the reference-data screens rather than
+  // moving beside `profile`. All five are list screens and want the width.
   { kind: 'pane', key: 'categories', labelKey: 'settingsNav.categories', route: '/settings/categories', width: 'full' },
   { kind: 'pane', key: 'merchants', labelKey: 'settingsNav.merchants', route: '/settings/merchants', width: 'full' },
   { kind: 'pane', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
+  { kind: 'pane', key: 'tags', labelKey: 'settingsNav.tags', route: '/tags/manage', width: 'form' },
+  { kind: 'pane', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects', width: 'form' },
   { kind: 'pane', key: 'about', labelKey: 'settingsNav.about', route: '/settings/about', width: 'form' },
 
   // --- Places you work. Links, permanently: they are in settings only
@@ -189,14 +202,6 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'link', key: 'subscription', labelKey: 'subscription.managePlan', route: '/subscription' },
   { kind: 'link', key: 'referral', labelKey: 'referral.settingsTitle', route: '/referral' },
   { kind: 'link', key: 'whatsNew', labelKey: 'settingsNav.whatsNew', route: '/whats-new' },
-  // Configure the app by the rule, but they live outside `app/settings/`, so
-  // each becomes a pane only once it is extracted (wave 4). `width` is
-  // declared on all three up front, whichever `kind` they carry today, as
-  // `SETTINGS_PANE_KEYS` membership requires — the flip to `kind: 'pane'` is
-  // then a one-word change that cannot forget to decide the cap.
-  { kind: 'link', key: 'accounts', labelKey: 'accounts.manage', route: '/account/list', width: 'form' },
-  { kind: 'pane', key: 'tags', labelKey: 'settingsNav.tags', route: '/tags/manage', width: 'form' },
-  { kind: 'pane', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects', width: 'form' },
   { kind: 'link', key: 'admin', labelKey: 'admin.openPanel', route: '/admin', adminOnly: true },
 ];
 
