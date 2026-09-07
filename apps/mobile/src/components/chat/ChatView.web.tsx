@@ -1,13 +1,11 @@
 import { useIsDesktopWeb } from '../webLayout.constants';
 import { useChatScreenData } from '@/features/chat/useChatScreenData';
 import { ChatMobile } from './ChatMobile';
+import { ChatDesktop } from './desktop/ChatDesktop';
 
 /**
  * The one file that decides, on width alone: desktop above 1024, mobile
- * below — the same rule `ExpensesView.web.tsx` follows. `ChatDesktop` does
- * not exist yet (it lands in a later task on this branch), so both branches
- * render `ChatMobile` for now; swapping the true branch to `ChatDesktop` is
- * the only edit that task needs to make here.
+ * below — the same rule `ExpensesView.web.tsx` follows.
  *
  * The hook is called HERE, once, and its whole return value passed down as
  * one `chat` prop — not separately inside `ChatMobile`/`ChatDesktop`. See
@@ -18,5 +16,5 @@ import { ChatMobile } from './ChatMobile';
  */
 export function ChatView() {
   const chat = useChatScreenData();
-  return useIsDesktopWeb() ? <ChatMobile chat={chat} /> : <ChatMobile chat={chat} />;
+  return useIsDesktopWeb() ? <ChatDesktop chat={chat} /> : <ChatMobile chat={chat} />;
 }

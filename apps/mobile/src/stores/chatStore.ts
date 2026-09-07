@@ -6,6 +6,7 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import i18n from '@/i18n';
 import * as chatRepository from '@/db/chatRepository';
+import type { ConversationListStatus } from '@/features/chat/chatLayout';
 
 // Module-level polling timer handle
 let pollTimer: ReturnType<typeof setInterval> | null = null;
@@ -39,6 +40,13 @@ interface ChatState {
   ownedConversationIds: string[];
   lastSyncedAt: string | null;
   isPolling: boolean;
+  // The desktop conversation rail's own loading state (ABA-513) — read ONLY
+  // by `ChatDesktop`/`ConversationRail`. `ChatHistorySheet` (mobile) keeps
+  // reading `isLoading`, its own pre-existing, separately-wrong wiring to the
+  // message-in-flight flag — a real defect, recorded as a follow-up, not
+  // fixed here. `resolveRailState` (`chatLayout.ts`) turns this + a cached
+  // conversation count into what the rail actually renders.
+  conversationsStatus: ConversationListStatus;
 
   // Actions
   sendMessage: (content: string, mentions?: { userId: string }[]) => Promise<void>;
@@ -69,6 +77,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   ownedConversationIds: [],
   lastSyncedAt: null,
   isPolling: false,
+  conversationsStatus: 'idle',
 
   sendMessage: async (content: string, mentions?: { userId: string }[]) => {
     const { currentConversationId, currentIsShared } = get();
@@ -255,11 +264,22 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   },
 
   loadConversations: async () => {
+    // Read by the desktop conversation rail (ABA-513, `resolveRailState`)
+    // ONLY — mobile's `ChatHistorySheet` still keys its own loading UI off
+    // the unrelated `isLoading` flag. Set BEFORE the try so a caller that
+    // reads it synchronously right after invoking this (the rail's own
+    // bounded-wait timer) always observes 'loading' first.
+    set({ conversationsStatus: 'loading' });
     try {
       // Show cached conversations immediately
       const authStore = await import('@/stores/authStore');
       const userId = authStore.useAuthStore.getState().user?.id;
-      if (!userId) return;
+      if (!userId) {
+        // Screen requires auth, so this shouldn't happen in practice; leave
+        // the flag at 'idle' rather than stuck 'loading' forever.
+        set({ conversationsStatus: 'idle' });
+        return;
+      }
 
       const { useAccountStore } = await import('@/stores/accountStore');
       const accountId = useAccountStore.getState().currentAccountId ?? undefined;
@@ -280,14 +300,22 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         updatedAt: new Date(c.updatedAt),
       }));
 
-      set({ conversations, ownedConversationIds: remote.filter((c) => c.isOwner).map((c) => c.id) });
+      set({
+        conversations,
+        ownedConversationIds: remote.filter((c) => c.isOwner).map((c) => c.id),
+        conversationsStatus: 'ready',
+      });
 
       // Upsert into SQLite
       for (const conv of conversations) {
         await chatRepository.upsertConversation(conv);
       }
     } catch {
-      // Non-fatal: leave whatever is in state
+      // Non-fatal for mobile (which never reads this flag): leave whatever
+      // conversations are already in state, but flag the failure so the
+      // desktop rail can offer a retry rather than silently looking like a
+      // genuinely conversation-less account.
+      set({ conversationsStatus: 'error' });
     }
   },
 
@@ -463,6 +491,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       ownedConversationIds: [],
       lastSyncedAt: null,
       isPolling: false,
+      conversationsStatus: 'idle',
     });
   },
 }));
