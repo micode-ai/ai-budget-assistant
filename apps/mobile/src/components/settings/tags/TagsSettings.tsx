@@ -81,7 +81,7 @@ const PRESET_COLORS = [
  * `accountStore.ts`'s `clearAccountScopedCaches()` for the full accounting;
  * the same reasoning applies to `projectStore` verbatim.
  *
- * The `Modal` is now a `SheetDialog` (ten call sites already use it) rather
+ * The `Modal` is now a `SheetDialog` — the shared sheet/dialog chrome — rather
  * than a raw RN `Modal` — in a pane a raw `Modal` slides up the full width of
  * the window from its bottom edge, covering the list being edited.
  * `keyboardAvoiding` is kept: this sheet contains a `TextInput` and no desktop
