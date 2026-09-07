@@ -20,8 +20,9 @@ jest.mock('openai', () => ({
 function buildDeps() {
   const prisma: any = {
     account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: 0 }) },
-    chatConversation: { findFirst: jest.fn(), findUnique: jest.fn(), create: jest.fn(), update: jest.fn(), findMany: jest.fn() },
-    chatMessage: { create: jest.fn().mockResolvedValue({ id: 'm1', createdAt: new Date('2026-05-25T10:00:00Z') }), findFirst: jest.fn(), findMany: jest.fn(), update: jest.fn() },
+    chatConversation: { findFirst: jest.fn(), findUnique: jest.fn(), create: jest.fn(), update: jest.fn(), findMany: jest.fn(), delete: jest.fn() },
+    chatConversationPin: { createMany: jest.fn(), deleteMany: jest.fn() },
+    chatMessage: { create: jest.fn().mockResolvedValue({ id: 'm1', createdAt: new Date('2026-05-25T10:00:00Z') }), findFirst: jest.fn(), findMany: jest.fn(), update: jest.fn(), deleteMany: jest.fn() },
     user: { findUnique: jest.fn().mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice' }) },
     accountMember: { findMany: jest.fn().mockResolvedValue([]) },
   };
@@ -255,6 +256,138 @@ describe('ChatService', () => {
     it('throws NotFound when the conversation is not in the account', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
       await expect(service.setConversationShared('owner-1', 'c-x', 'acc-1', 'owner', true)).rejects.toThrow(NotFoundException);
+    });
+  });
+
+  describe('renameConversation', () => {
+    it('renames for the creator and writes the CURRENT updatedAt back explicitly, so the row does not teleport to the top of the list', async () => {
+      // Catches: dropping `updatedAt: conversation.updatedAt` from the update
+      // data (or writing `new Date()`/`undefined` instead) — any of which
+      // would let Prisma's own @updatedAt auto-bump fire and re-sort a
+      // three-week-old conversation to position one.
+      const existingUpdatedAt = new Date('2026-08-01T00:00:00Z');
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1', updatedAt: existingUpdatedAt });
+      deps.prisma.chatConversation.update.mockResolvedValue({ id: 'c1', title: 'Grocery budget' });
+      const r = await service.renameConversation('owner-1', 'c1', 'acc-1', 'Grocery budget');
+      expect(deps.prisma.chatConversation.update).toHaveBeenCalledWith({
+        where: { id: 'c1', accountId: 'acc-1' },
+        data: { title: 'Grocery budget', updatedAt: existingUpdatedAt },
+      });
+      expect(r).toEqual({ id: 'c1', title: 'Grocery budget' });
+    });
+
+    it('rejects a member who is not the conversation creator (403)', async () => {
+      // Catches: a rename gate that checks role instead of creatorship, or no
+      // ownership check at all.
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1', updatedAt: new Date() });
+      await expect(service.renameConversation('bob-1', 'c1', 'acc-1', 'New title')).rejects.toThrow(ForbiddenException);
+      expect(deps.prisma.chatConversation.update).not.toHaveBeenCalled();
+    });
+
+    it('404s a conversation that exists only in a DIFFERENT account, before any ownership check ever runs', async () => {
+      // The security property under test is the ORDER, not merely "some
+      // exception is thrown". A conversation created by `owner-1` really
+      // exists, but under accountId `acc-2` — the caller is asking about it
+      // from `acc-1`. `findFirst`'s own `accountId` filter is what makes the
+      // row invisible from the wrong account (simulated here by making the
+      // mock inspect `where.accountId`, exactly like a real DB would). A
+      // buggy implementation that fetched the conversation WITHOUT scoping by
+      // accountId would still find this row, see `conversation.userId !==
+      // callerId`, and throw 403 Forbidden — which would leak, via a
+      // 403-vs-404 response, that a conversation with this id exists
+      // somewhere. Catches: dropping `accountId` from the `findFirst` where,
+      // or reordering the ownership check ahead of the existence check.
+      deps.prisma.chatConversation.findFirst.mockImplementation(({ where }: any) =>
+        Promise.resolve(
+          where.accountId === 'acc-2'
+            ? { id: 'c1', accountId: 'acc-2', userId: 'owner-1', updatedAt: new Date() }
+            : null,
+        ),
+      );
+      let caught: unknown;
+      try {
+        await service.renameConversation('bob-1', 'c1', 'acc-1', 'New title');
+      } catch (e) {
+        caught = e;
+      }
+      expect(caught).toBeInstanceOf(NotFoundException);
+      expect((caught as NotFoundException).getStatus()).toBe(404);
+      expect(deps.prisma.chatConversation.update).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('deleteConversation', () => {
+    it('hard-deletes the creator\'s conversation with one call, trusting the schema cascade for messages and pins', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1' });
+      deps.prisma.chatConversation.delete.mockResolvedValue({ id: 'c1' });
+      await service.deleteConversation('owner-1', 'c1', 'acc-1');
+      expect(deps.prisma.chatConversation.delete).toHaveBeenCalledWith({ where: { id: 'c1', accountId: 'acc-1' } });
+      // ChatMessage.conversation and ChatConversationPin.conversation are both
+      // `onDelete: Cascade` in the schema — this is what a single
+      // `chatConversation.delete()` call is allowed to rely on. Asserting
+      // these were never called catches a "helpful" refactor that
+      // reintroduces manual cleanup (redundant with the cascade, and one more
+      // place to forget the pins table the cascade already covers for free)
+      // — no soft delete, no undo, no bot cleanup, per the design.
+      expect(deps.prisma.chatMessage.deleteMany).not.toHaveBeenCalled();
+      expect(deps.prisma.chatConversationPin.deleteMany).not.toHaveBeenCalled();
+    });
+
+    it('rejects a member who is not the conversation creator (403)', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1' });
+      await expect(service.deleteConversation('bob-1', 'c1', 'acc-1')).rejects.toThrow(ForbiddenException);
+      expect(deps.prisma.chatConversation.delete).not.toHaveBeenCalled();
+    });
+
+    it('throws NotFound when the conversation is not in the account', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
+      await expect(service.deleteConversation('owner-1', 'c-x', 'acc-1')).rejects.toThrow(NotFoundException);
+      expect(deps.prisma.chatConversation.delete).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('setConversationPinned', () => {
+    it('resolves with READ-VISIBILITY, not the /shared creator predicate', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1', isShared: true });
+      deps.prisma.chatConversationPin.createMany.mockResolvedValue({ count: 1 });
+      await service.setConversationPinned('bob-1', 'c1', 'acc-1', true);
+      expect(deps.prisma.chatConversation.findFirst).toHaveBeenCalledWith({
+        where: { id: 'c1', accountId: 'acc-1', OR: [{ isShared: true }, { userId: 'bob-1' }] },
+      });
+    });
+
+    // This is the fork's ruling, expressed as a test: without it, a later
+    // "tidy-up" that makes pin a sibling of rename/delete (creator-only) would
+    // pass every OTHER test in this file and silently take away the one
+    // affordance a non-creator's row has.
+    it('lets a NON-creator pin a shared conversation they can see', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1', isShared: true });
+      deps.prisma.chatConversationPin.createMany.mockResolvedValue({ count: 1 });
+      const r = await service.setConversationPinned('bob-1', 'c1', 'acc-1', true);
+      expect(deps.prisma.chatConversationPin.createMany).toHaveBeenCalledWith({
+        data: [{ userId: 'bob-1', conversationId: 'c1' }],
+        skipDuplicates: true,
+      });
+      expect(r).toEqual({ id: 'c1', isPinned: true });
+    });
+
+    it('lets the creator unpin their own conversation, idempotently via deleteMany', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', userId: 'owner-1', isShared: false });
+      deps.prisma.chatConversationPin.deleteMany.mockResolvedValue({ count: 1 });
+      const r = await service.setConversationPinned('owner-1', 'c1', 'acc-1', false);
+      expect(deps.prisma.chatConversationPin.deleteMany).toHaveBeenCalledWith({ where: { userId: 'owner-1', conversationId: 'c1' } });
+      expect(deps.prisma.chatConversationPin.createMany).not.toHaveBeenCalled();
+      expect(r).toEqual({ id: 'c1', isPinned: false });
+    });
+
+    it('404s a private conversation the caller cannot see (not the creator, not shared) without confirming its existence via 403', async () => {
+      // Catches: giving the pin endpoint /shared's `{ id, accountId }`
+      // predicate (no OR) instead of the read-visibility one — which would
+      // let ANY account member pin, and thereby confirm the existence of, a
+      // co-member's PRIVATE conversation.
+      deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
+      await expect(service.setConversationPinned('bob-1', 'c1', 'acc-1', true)).rejects.toThrow(NotFoundException);
+      expect(deps.prisma.chatConversationPin.createMany).not.toHaveBeenCalled();
     });
   });
 
