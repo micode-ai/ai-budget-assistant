@@ -13,38 +13,29 @@ import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { WebSidebar } from '@/components/WebSidebar';
 import { TOP_BAR_HEIGHT, WEB_TOP_BAR_PADDING_X } from '@/components/webLayout.constants';
 
-/**
- * Active-section title shown next to the brand: the 5 main tabs, and settings.
+/*
+ * **There is deliberately no section title beside the brand, and the dead
+ * binding that used to compute one is gone (ABA-512).**
  *
- * A **section** title, not a page one — `/expenses/anything` reads "Expenses",
- * and a screen pushed on top keeps its own title in its own page bar below.
- * Settings answers the same way, for the whole `/settings` area, because it is
- * a section of the app reached from this bar's own gear button.
+ * ABA-499 dropped the `<Text>` that drew it and left `sectionTitle()`, its
+ * `title` const and `styles.title` behind, which is why eslint reported
+ * `'title' is assigned a value but never used` for weeks. ABA-509 asked
+ * whether to restore the render or delete the remains. Deleted, because the
+ * bar already names the section twice over and a third statement of it would
+ * undo ABA-507's tiering, which made the account control the one labelled
+ * element here:
  *
- * Nothing outside `app/settings/` produces a `/settings` pathname, so the
- * prefix is unambiguous. `nav.settings` is the key `app/_layout.tsx` already
- * titles the route with, so no new string was minted.
+ * - On the five tab routes `WebSidebar` (rendered horizontally inside this
+ *   bar) marks the active item with an 18% white wash and full opacity. The
+ *   section is named, in the bar, at the left edge where the eye starts.
+ * - Under `/settings` no tab matches, and there the shell's own left pane
+ *   names the selected row — the standard the settings shell set in wave 1.
  *
- * **This function's result is currently rendered nowhere.** The `<Text>` that
- * drew it beside the brand was dropped in ABA-499, silently — the function,
- * the `title` const and `styles.title` all survived, which is why eslint has
- * been reporting `'title' is assigned a value but never used` since then, and
- * why no desktop screen shows a section title today despite CLAUDE.md
- * describing the bar as "brand + active-section title". The settings branch is
- * here so that restoring that one line names the settings area correctly
- * instead of leaving the gap this comment documents; nothing depends on it in
- * the meantime — `/settings` and its panes are named by the shell's own left
- * pane, not by this bar.
+ * What WAS missing is the middle case: nothing said "you are in settings" at
+ * all, because the gear had no active state while every nav item beside it
+ * did. It has one now, so the answer to ABA-509 is a state on a control that
+ * already existed rather than a new element.
  */
-function sectionTitle(pathname: string, t: (k: string) => string): string {
-  if (pathname === '/' || pathname === '/index') return t('nav.dashboard');
-  if (pathname.startsWith('/expenses')) return t('nav.expenses');
-  if (pathname.startsWith('/budgets')) return t('nav.budgets');
-  if (pathname.startsWith('/analytics')) return t('nav.analytics');
-  if (pathname.startsWith('/chat')) return t('nav.aiChat');
-  if (pathname.startsWith('/settings')) return t('nav.settings');
-  return '';
-}
 
 /**
  * Width cap for the account control in this bar only.
@@ -119,8 +110,11 @@ export function WebTopBar() {
   // The bell opens an inbox where its badge is, rather than navigating to a
   // page that at 1920 is two half-viewport tabs over 350px of empty scroll.
   const [alertsOpen, setAlertsOpen] = useState(false);
-  const title = sectionTitle(pathname, t);
   const atSettingsRoot = isSettingsRootPath(pathname);
+  // Two predicates on purpose: the gear reads as active across the whole
+  // settings area, but only no-ops at its root — from a pane it is still a
+  // real navigation, and the only one back to the overview and its sign-out.
+  const inSettingsArea = pathname.startsWith('/settings');
 
   const btn = {
     width: 34,
@@ -226,9 +220,15 @@ export function WebTopBar() {
           // root and nowhere else - from a pane it is still a real navigation,
           // and the only one back to the overview and its sign-out button.
           onPress={atSettingsRoot ? undefined : () => router.push('/settings')}
-          style={btn}
+          // The wash is `WebSidebar`'s literal, not a token and not a value of
+          // its own: these two active states sit 200px apart in one bar, so a
+          // second opinion about what "active" looks like would be visible.
+          // The literal's weakness is shared too — it is faint on a light
+          // accent — and is worth fixing in one place, for both, if ever.
+          style={[btn, inSettingsArea && { backgroundColor: 'rgba(255,255,255,0.18)' }]}
           accessibilityRole="button"
           accessibilityLabel={t('nav.settings')}
+          aria-current={inSettingsArea ? 'page' : undefined}
         >
           <Ionicons name="settings-outline" size={20} color={theme.colors.textInverse} />
         </TouchableOpacity>
@@ -247,7 +247,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   brand: { fontSize: 18 },
-  title: { fontSize: 15, marginLeft: 16, opacity: 0.85 },
   spacer: { flex: 1 },
   controls: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   // 1px hairline at low opacity - the colour is applied inline from
