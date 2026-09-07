@@ -34,11 +34,39 @@ export interface SheetDialogProps {
   /**
    * Mobile only: whether a tap on the scrim closes the sheet. Defaults to
    * `true`; the colour picker passes `false`, whose backdrop is inert today.
-   * The DESKTOP scrim always closes on an outside click, as every other
-   * desktop dialog in this app does, and `Esc` closes both branches via
-   * `onRequestClose`.
+   * The DESKTOP scrim closes on an outside click, as every other desktop
+   * dialog in this app does, and `Esc` closes both branches via
+   * `onRequestClose` — **unless `dismissable` (below) is `false`, which turns
+   * both of those off regardless of this prop.**
    */
   dismissOnScrimPress?: boolean;
+
+  /**
+   * Whether the dialog can be closed by anything other than an explicit call
+   * to `onClose` from inside `children`. Defaults to `true`. `false` turns off
+   * `onRequestClose` on BOTH branches' underlying `Modal` (Esc on web, the
+   * Android hardware back button, the Apple TV menu button) and the desktop
+   * scrim's outside-click close — the same two paths, because both exist to
+   * let a user back out without deciding, which is exactly what a dialog
+   * showing an unrecoverable secret must not offer.
+   *
+   * **It does not touch `dismissOnScrimPress`.** That prop is mobile-only and
+   * governs a different element (the mobile scrim), so the two are
+   * independent: a call site whose mobile scrim already does nothing on tap
+   * (`dismissOnScrimPress={false}`, rendering a plain `View` instead of a
+   * `TouchableOpacity`) needs BOTH props to get a dialog with exactly one
+   * exit on every surface — passing `dismissable={false}` alone still leaves
+   * a tappable mobile scrim standing, if `dismissOnScrimPress` defaults or is
+   * set to `true`.
+   *
+   * Reach for this only when the content cannot be recovered once the dialog
+   * closes (a one-time key shown exactly once, not a form the user can
+   * reopen) and the dialog already has its own explicit, deliberate way out.
+   * It trades away the escape hatches a keyboard or screen-reader user
+   * reaches for first, for the one property that matters more here: the
+   * secret cannot be dismissed away by accident.
+   */
+  dismissable?: boolean;
 
   /** Mobile only: Android `statusBarTranslucent` on the underlying `Modal`. */
   statusBarTranslucent?: boolean;
@@ -135,6 +163,7 @@ export function SheetDialog({
   children,
   keyboardAvoiding = false,
   dismissOnScrimPress = true,
+  dismissable = true,
   statusBarTranslucent,
   titleId,
   padBottom,
@@ -156,7 +185,7 @@ export function SheetDialog({
         visible={visible}
         transparent
         animationType="fade"
-        onRequestClose={onClose}
+        onRequestClose={dismissable ? onClose : undefined}
         aria-labelledby={titleId}
       >
         {/* Deliberately a raw <div>: it must carry no tabindex at all. See the
@@ -164,7 +193,7 @@ export function SheetDialog({
         <div
           role="presentation"
           onClick={(e) => {
-            if (e.target === e.currentTarget) onClose();
+            if (dismissable && e.target === e.currentTarget) onClose();
           }}
           style={{
             position: 'fixed',
@@ -224,7 +253,7 @@ export function SheetDialog({
       transparent
       statusBarTranslucent={statusBarTranslucent}
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={dismissable ? onClose : undefined}
     >
       {keyboardAvoiding ? (
         <KeyboardAvoidingScreen style={styles.overlay}>{body}</KeyboardAvoidingScreen>
