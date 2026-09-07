@@ -12,12 +12,19 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import type { ChatConversation } from '@budget/shared-types';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
 import type { ChatMessage } from '@/stores/chatStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { ChatMessageItem, ChatHistorySheet } from '@/components/chat';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import type { UseChatScreenDataReturn } from '@/features/chat/useChatScreenData';
+// `RenameConversationDialog` lives under `chat/desktop/` because that is
+// where Task 4 created it, but its own doc comment records that nothing
+// about it is desktop-only — `SheetDialog` is what decides mobile-vs-desktop
+// chrome, so this ONE component (not a second one) is what both platforms
+// render. Imported here rather than duplicated, per that file's own note.
+import { RenameConversationDialog } from '@/components/chat/desktop/RenameConversationDialog';
 
 interface ChatMobileProps {
   chat: UseChatScreenDataReturn;
@@ -30,13 +37,21 @@ interface ChatMobileProps {
  *
  * All state/effects/handlers live in `useChatScreenData` (called by the
  * platform `ChatView` files, not here) and arrive as the single `chat` prop.
- * `historyVisible` is the one piece of state that stays local to this
- * component — it is the history sheet's own open/closed state, and the sheet
- * has no desktop existence under the design this split is for.
+ * `historyVisible` and (ABA-514) `renamingConversation` are the pieces of
+ * state that stay local to this component — they are the history sheet's own
+ * open/closed state and its rename dialog's, and neither has a desktop
+ * existence under the design this split is for (the desktop rail owns its
+ * own equivalent state instead — see `ConversationRail.tsx`).
  */
 export function ChatMobile({ chat }: ChatMobileProps) {
   const { t } = useTranslation();
   const [historyVisible, setHistoryVisible] = useState(false);
+  // Owned here, not inside `ChatHistorySheet`: `RenameConversationDialog` is
+  // itself a `SheetDialog` (a real `Modal` on mobile), and the history sheet
+  // is already a presented `Modal` — mounting the dialog as a sibling of it,
+  // rather than nesting it inside the sheet's own tree, is what decision 2
+  // requires (nesting a `Modal` inside another is the flaky-on-iOS case).
+  const [renamingConversation, setRenamingConversation] = useState<ChatConversation | null>(null);
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
@@ -246,8 +261,13 @@ export function ChatMobile({ chat }: ChatMobileProps) {
         currentConversationId={chat.currentConversationId}
         isLoading={chat.isLoading}
         onSelectConversation={handleSelectConversation}
+        onRequestRename={setRenamingConversation}
       />
 
+      <RenameConversationDialog
+        conversation={renamingConversation}
+        onClose={() => setRenamingConversation(null)}
+      />
     </SafeAreaView>
   );
 }
