@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useChatStore } from '@/stores/chatStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { ChatMessageItem } from '@/components/chat';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
 import type { UseChatScreenDataReturn } from '@/features/chat/useChatScreenData';
@@ -42,6 +43,7 @@ export function ChatDesktop({ chat }: ChatDesktopProps) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
   // `conversationsStatus` is read ONLY here (and by `ConversationRail`) — see
   // that field's own doc comment in `chatStore.ts`. Mobile's `ChatHistorySheet`
@@ -52,13 +54,53 @@ export function ChatDesktop({ chat }: ChatDesktopProps) {
   const columnWidth = chatColumnWidth(width, theme.spacing[5], railVisible);
   const title = currentConversationTitle(chat.conversations, chat.currentConversationId) ?? t('chat.conversationUntitled');
 
+  // The rail's data has to be (re)fetched on every ACCOUNT change, not merely
+  // on this component's own mount. `accountStore.ts`'s
+  // `clearAccountScopedCaches()` already does the teardown half for
+  // `chatStore` (`reset()`, called from its `[currentAccountId]`
+  // subscription) — this is the matching REFILL half, the exact idiom that
+  // comment documents for `tagStore`/`projectStore`: "Screens keep only the
+  // refill half — a load effect keyed on `[currentAccountId]`".
+  //
+  // A mount-only fetch (what `ConversationRail` used to own) is not enough:
+  // `reset()` sets `conversationsStatus` back to `'idle'`, which
+  // `resolveRailState` maps to the rail's own *visible* `'loading'` state —
+  // so if the rail was already visible before the switch (the common case,
+  // an open conversation list), it goes `'list'` -> `'loading'` without ever
+  // unmounting, and a mount-only effect never fires again. Reproduced on the
+  // deployed build: switch accounts while the rail shows a populated list,
+  // and it sticks on "Loading…" forever with nothing left to trigger a
+  // refetch — the API is fine, nothing ever asks it again. This effect is
+  // the one place guaranteed to run on every account change regardless of
+  // the rail's own mount/unmount cycle, because `ChatDesktop` itself never
+  // unmounts merely because the account (or the rail's visibility) changed.
+  //
+  // Also owns the bounded 5s wait (design's "States" section, moved here
+  // from `ConversationRail`'s former mount effect for the same reason): a
+  // request that never settles must not leave the rail stuck in `'loading'`
+  // forever with no route back to the user's conversations. Re-armed on
+  // every account change; a stale timer from the PREVIOUS account's attempt
+  // is cleared via the effect's own cleanup before this one starts.
+  useEffect(() => {
+    chat.loadConversations();
+    const timer = setTimeout(() => {
+      if (useChatStore.getState().conversationsStatus === 'loading') {
+        useChatStore.setState({ conversationsStatus: 'error' });
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAccountId]);
+
   // The one visible seam the design names: a brand-new account has no
   // conversations, so the rail starts `hidden` (ready+0) and stays hidden
   // through `startNewConversation` + the first `sendMessage` — neither
   // touches `conversations`, only `currentConversationId`. Without this, the
   // rail would never learn conversation #1 exists once it's created. Fires
   // only when the id in hand isn't (yet) in the loaded list — a no-op for
-  // ordinary rail-driven selection, where it always already is.
+  // ordinary rail-driven selection, where it always already is, and a no-op
+  // on the account-switch path above (there, `currentConversationId` is
+  // cleared to `null`, which fails this effect's own truthiness check).
   useEffect(() => {
     if (chat.currentConversationId && !chat.conversations.some((c) => c.id === chat.currentConversationId)) {
       chat.loadConversations();

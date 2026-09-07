@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import type { ChatConversation } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { useChatStore } from '@/stores/chatStore';
 import { CHAT_RAIL_WIDTH } from '@/components/webLayout.constants';
 import { conversationDateLabel, type RailState } from '@/features/chat/chatLayout';
 
@@ -17,8 +16,9 @@ interface ConversationRailProps {
   currentConversationId: string | null;
   onSelectConversation: (id: string) => void;
   onNewConversation: () => void;
-  /** Both the initial-mount fetch AND the `'retry'` state's header button
-   *  call this — same function, `chat.loadConversations`. */
+  /** `ChatDesktop` owns the actual fetch triggers (mount + account change);
+   *  this component only calls it back on the `'retry'` state's header
+   *  button — same function, `chat.loadConversations`. */
   loadConversations: () => Promise<void>;
 }
 
@@ -35,6 +35,18 @@ interface ConversationRailProps {
  * desktop") is read directly from the store here rather than threaded
  * through the shared `useChatScreenData` hook — mobile never needs it, and
  * `ChatHistorySheet`'s own (separately wrong) `isLoading` prop is untouched.
+ *
+ * Purely presentational with respect to data fetching — it owns no fetch
+ * effect of its own. `ChatDesktop` (the always-mounted parent) is what
+ * triggers `loadConversations()`, both on first paint and on every account
+ * change; this component only calls it back on the `'retry'` header's press.
+ * Putting the fetch here, keyed on THIS component's own mount, was the
+ * original design and the bug an account switch exposed: `resolveRailState`
+ * maps `'idle'`/`'loading'` to the rail's *visible* `'loading'` state, so a
+ * switch that starts from an already-visible rail (`'list'`) never unmounts
+ * this component — it goes `'list'` -> `'loading'`, both visible — and a
+ * mount-only effect never fires again. See `ChatDesktop`'s own comment for
+ * the fix and why it has to live there.
  */
 export function ConversationRail({
   state,
@@ -47,25 +59,6 @@ export function ConversationRail({
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-
-  // Fetch on mount, bounded to 5s (design's "States" section): a request
-  // that never settles must not leave the rail stuck in `loading` forever
-  // with no route back to the user's conversations. If `conversationsStatus`
-  // hasn't moved off `'loading'` by the time the timer fires, force it to
-  // `'error'` so the retry affordance appears. A concurrent caller (e.g. the
-  // "reveal the rail after the first message" effect in `ChatDesktop`) may
-  // already have this in flight — an extra `loadConversations()` call here is
-  // a harmless duplicate fetch, not a correctness issue.
-  useEffect(() => {
-    loadConversations();
-    const timer = setTimeout(() => {
-      if (useChatStore.getState().conversationsStatus === 'loading') {
-        useChatStore.setState({ conversationsStatus: 'error' });
-      }
-    }, 5000);
-    return () => clearTimeout(timer);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const isFreshConversation = !currentConversationId;
   const [newHovered, setNewHovered] = useState(false);
