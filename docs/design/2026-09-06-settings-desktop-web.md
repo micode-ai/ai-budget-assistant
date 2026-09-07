@@ -548,3 +548,339 @@ byte-identical guarantee turns into a diff nobody asked for.
    before the extraction.
 5. On a phone, `merchants` selection docks the bar at the bottom exactly as it
    does today.
+
+---
+
+# Addendum — wave 4, and what a pane's child does (2026-09-07)
+
+## Five corrections first, because three of them change the sizing
+
+**1. There IS a back button in the app's own chrome — just not in `WebTopBar`.**
+`@react-navigation/elements`' `Header.tsx:109` sets
+`headerLeft = back ? HeaderBackButton : undefined`, platform-agnostic JS that
+runs on web, and `app/_layout.tsx` declares every one of these child routes
+`headerShown: true`. So a pushed detail on desktop gets a `surface`-coloured
+bar with a left-aligned title and a working back arrow.
+
+This is not incidental: `settingsRegistry.ts`'s `isShellHostedSettingsRoute`
+doc comment makes it deliberate — a settings route that is **still a link**
+keeps its header precisely because it "renders as a full page on desktop with
+no pane list beside it and would otherwise strand the user with no way back."
+The return path for a navigate-out was designed in wave 1 and has shipped since.
+
+**2. The settings selection is not lost — it is the URL.** `goBack()` from
+`/account/[id]` restores `/account/list`, which (once it is a pane) re-renders
+the shell with Accounts selected. Nothing has to remember anything. One
+exception, traced below.
+
+**3. `projects/[id]` has two outbound edges, not zero — and its two mutating
+actions live in route chrome.** Its `<Stack.Screen>` puts **edit and delete in
+`headerRight`** (lines 112-126) and its expense rows push
+`/expense/{localId}` (line 176). A dialog has no stack header, so hosting that
+file verbatim ships a project detail with no way to edit or delete a project —
+the exact section 3 failure that has already shipped twice on this branch ("the
+detail dialog shipped twice missing content that lived *around* the card rather
+than in it"). Re-homing them into a dialog header is authoring new UI, i.e.
+reimplementing, which section 3 forbids.
+
+**4. `account/[id]` has four outbound edges of its own**, all from the three
+parts already in `src/components/account/`: `MembersSection` pushes
+`/account/invite`; `TripActionsCard` pushes `/trip/{id}/settle-up` and
+`/trip/payment-settings`, and its third row calls
+**`switchAccount(accountId)` and then navigates to the expenses tab**. So "only
+its coordinator JSX would move" is true of the *extraction* and misleading about
+the *hosting*: what would go in a dialog is a screen whose content is largely
+links out of it, one of which reconfigures the whole app underneath.
+
+**5. `tags/manage` is not a clone of wave 3's `categories`.** Two differences:
+it carries its own `<Stack.Screen options={{ title }} />` (line 92 — the second
+instance of wave 3's route-chrome wrinkle), and its data load is
+`useEffect(() => { loadTags(); }, [])`. So is `projects/index`'s. That is
+section 5g's account-switch defect, and **`clearAccountScopedCaches()` does not
+cover it** — it clears `priceHistoryStore` and `merchantRulesStore` only, and
+neither `tagStore` nor `projectStore` has a `reset()` at all. Two of wave 4's
+three screens carry a data-correctness change, not just a move.
+
+Everything else in the brief checked out: `tags/manage` has no `router` use at
+all, `projects/index` has exactly one outbound push, and `app/projects/new.tsx`
+is reached only from `src/components/ProjectPicker.tsx` — a sibling route, not
+this hub's create affordance.
+
+## The ruling
+
+> **A pane's child is a route.** Both shapes — the detail of a list the pane
+> shows, and a form that creates something — are reached with `router.push`,
+> render as a full page under `WebShell`, and return by the stack header's back
+> arrow, which restores the pane because the selection is the URL.
+
+**There is no third entry kind.** The registry's pane/link split stays binary,
+one entry to one route, and "what a pane's child does" is answered by the route
+model that already exists rather than by a new mechanism. That property — a
+later wave flips one word — is what the registry's own header comment asks to
+preserve.
+
+The two shapes do **not** differ. I looked for a reason to split them and the
+mechanics closed it off; see shape 2.
+
+## Why this is not an ad-hoc exception to section 3
+
+Section 3 says *a detail or a form* opens in a centred dialog. The test that
+makes these three screens consistent with it rather than exempt from it:
+
+> **Section 3 governs a screen a dialog can host in full. The question is not
+> "detail or form?" but "is this a leaf?"** A leaf becomes a dialog. A screen
+> whose own affordances are largely navigation cannot be hosted in full, because
+> hosting it means either trapping those navigations under an overlay or
+> omitting them — and omitting them is the section 3 violation the rule exists
+> to prevent.
+
+`ExpenseDialog` reads as a counter-example and is worth being precise about: it
+does host two outbound pushes (`LocationSection` → `/expense/location`, the debt
+row → `/income/new`). Those are *escape hatches on a card*. Here the navigation
+**is** the screen: `projects/[id]`'s expense list is a list of pushes,
+`account/[id]`'s trip card is three pushes and an account switch. Different in
+kind, and — stated plainly — whether those two pushes even behave correctly from
+inside a dialog on desktop is **unmeasured**. If they turn out not to, that is
+evidence for this ruling, not against it, and it is not a foundation to build a
+harder case on.
+
+### Shape 1 — a detail of a list the pane shows
+
+Route, for four reasons, in descending order of how mechanical they are:
+
+1. **`projects/[id]`'s only edit and delete affordances are in `headerRight`**
+   (correction 3). A dialog cannot host them.
+2. **`delete` and `leave` on `account/[id]`, and `delete` on `projects/[id]`,
+   all end in `router.back()`.** In a pushed route that is exactly right and
+   needs no change. In a dialog it is wrong — it pops the route *underneath* the
+   dialog — and must be re-authored to `onClose()` at three call sites.
+3. **`account/[id]`'s trip map row calls `switchAccount()` then navigates.** An
+   app-wide reconfiguration launched from inside a settings dialog is worse than
+   a navigation, not better.
+4. **Cost is very unequal and lands on the worse candidate.** `account/[id]`
+   would move a coordinator; `projects/[id]` is a full 367-line extraction plus
+   its own edit `Modal` plus new dialog-header UI for edit and delete — for a
+   screen reached occasionally from a settings pane.
+
+**On the danger zone and the trip archive, which you asked about directly:**
+they stay where they are, in a `SafeAreaView` page with a header, because there
+is no dialog. Had there been one, `showAlert` on web renders `AlertDialogHost`,
+so deleting an account would have been an alert dialog over a detail dialog over
+the shell — three overlays for one destruction, and the middle one is the one
+that has to vanish on success. `TripArchiveButton`'s force-retry path is a
+second `showAlert` inside the first. On the honesty question: a destructive
+action is honest in a dialog when the dialog **is** the confirmation. A dialog
+whose subject is account settings and whose bottom edge deletes the account is
+not that, and `Esc` — which section 3 correctly wires up — makes it a surface
+you dismiss without deciding anything.
+
+### Shape 2 — a form that creates something
+
+This is where section 3's pull is strongest, and it is closed by one mechanical
+fact.
+
+For the dialog: section 3 names forms explicitly; `CreateDialog.tsx` is a
+working precedent; `account/create` (239) and `account/join` (132) are small;
+both are already declared `presentation: 'modal'` in `app/_layout.tsx`; and both
+signal completion with `router.back()` — the very shape that made `change-email`
+a dialog, whose stated reason ("pushing a full-page route from inside the shell
+would replace the whole settings layout with a two-field form") applies here
+almost word for word.
+
+Against it, decisively: **`app/account/create.tsx:83` routes the `trip` type
+card to `/trip/new`, and `app/trip/new.tsx:64` finishes with
+`router.dismissAll()` followed by `router.push('/account/{id}')`.**
+`dismissAll()` is `POP_TO_TOP` (`expo-router/build/global-state/routing.js:122`)
+— it empties the stack to its first screen. An RN `Modal` is not a route, so it
+survives that: a dialog-hosted `account/create` would be left **floating over
+the tabs**, exactly the "bury the dialog behind the new screen" failure
+`CreateDialog.tsx`'s own header comment documents, and then a fresh
+`/account/{id}` would push underneath it.
+
+The escapes are all worse than the disease:
+
+- Omit the trip card → trip accounts become uncreatable on desktop. Section 3's
+  host-everything rule, violated. (`CreateDialog` gets away with omitting
+  voice/receipt only because `IncomeCreateForm` already gates the entire row on
+  those props; there is no such gate here — `trip` is one of five type cards.)
+- Close the dialog and push `/trip/new` → a hand-off that discards a half-typed
+  name, and new mechanism.
+- Make `/trip/new` a second dialog → 213 more lines to `src/`, and its success
+  path pushes `/account/{id}`, which would then have to be a dialog too. The
+  `account/*` family is a connected graph — list → create → trip/new → [id] →
+  invite / settle-up / payment-settings / map: five routes, three
+  `router.back()`s, one `dismissAll()`, one `switchAccount()`. Converting any
+  single node breaks the edges crossing into it.
+
+**And `account/join` does not get to differ.** On its own merits it is the one
+true leaf here — 132 lines, one form, one success alert, no outbound push — and
+a legitimate dialog candidate. But it and Create are two buttons side by side in
+the same pane footer. One opening a centred dialog while its neighbour replaces
+the page is a distinction with no meaning to the user, for a reason
+(`dismissAll` three routes away) that is invisible from the screen. Consistency
+within the pair wins.
+
+## Considered and rejected: give the child the left pane
+
+The option that most directly answers "the settings selection is gone" is
+neither of the two you posed: register the child as shell-hosted, so
+`/account/[id]` renders the detail in the right pane with Accounts still
+highlighted. Rejected, and worth recording because it is the one to revisit if
+the deployed navigate-out reads badly:
+
+- `isShellHostedSettingsRoute` drives `headerShown`, and the registry's doc
+  comment makes that deliberate: "'Has a pane list beside it' and 'loses its
+  stack header' must be the same predicate." So the child would lose its header
+  — taking `projects/[id]`'s edit and delete with it (correction 3), and taking
+  the back arrow.
+- It breaks the registry's one-entry-one-route model. `resolveSettingsPane` maps
+  a key to an entry to a route; a selection whose URL is not its entry's route
+  has nowhere to live, and the shell would need to render arbitrary children for
+  a selection it did not resolve.
+- Splitting the two predicates so the child keeps both a pane list and a back
+  arrow is coherent but doubles the mechanism, and is what that comment warns
+  against.
+
+## What wave 4's three screens become
+
+| Screen | Becomes | `width` | Notes |
+|---|---|---|---|
+| `app/account/list.tsx` (322) | **pane**, key `accounts`, route `/account/list` | `form` | Its footer Create/Join buttons are block buttons with no `flex: 1`, so at `full` they become two 900px dashed bars — the appearance-chips defect in another costume. Its three pushes stay pushes. No mount effect, no `<Stack.Screen>` of its own; root is `SafeAreaView edges={[]}` + plain `ScrollView` |
+| `app/tags/manage.tsx` (289) | **pane**, key `tags`, route `/tags/manage` | `form` | Keeps its `<Stack.Screen>` in the route file. `useEffect([])` → `[currentAccountId]`. Its edit `Modal` is a `SheetDialog` candidate |
+| `app/projects/index.tsx` (315) | **pane**, key `projects`, route `/projects` | `form` | Same three items. **`settingsHeaderShown` must be called with `'/projects'`** — see below |
+
+**Why `form` for all three and not `full` like wave 3's list screens.** Each is
+a single-column list of *short* rows — `tags` is a colour dot, a name and a
+delete icon; `projects` a stripe, a name and a stat row. At 900px the trailing
+action sits ~800px from the label it belongs to, which is what the cap exists
+for. Wave 3's three took `full` because their rows carry three or four columns
+of content. Judged by eye, like the 720 itself.
+
+**Child routes, all unchanged:** `/account/[id]` (430), `/account/create`
+(239), `/account/join` (132), `/projects/[id]` (367), and everything they reach
+— `/account/invite`, `/trip/new`, `/trip/{id}/settle-up`,
+`/trip/payment-settings`, `/expense/[id]`. Not extracted, not moved, not
+registered, no dialogs. **Wave 4 touches four files under `app/` and adds three
+components under `src/`.**
+
+## What a plan must not do
+
+1. **Do not add any child route to `SETTINGS_ENTRIES`.** Their absence from the
+   registry is exactly what keeps `headerShown: true`, and that header's back
+   arrow is the return path this ruling depends on.
+2. **Do not touch those routes' `headerShown: true` in `app/_layout.tsx`.**
+3. **Do not call `settingsHeaderShown('projects/index')`.**
+   `isShellHostedSettingsRoute` compares against the registry's `route`
+   **exactly**, and `/projects/index` is not `/projects`, so the expo screen
+   name returns `false` silently and the pane renders with both the shell **and**
+   a stack header. `account/list` and `tags/manage` match under either spelling
+   — which is precisely what makes the third one easy to miss. Pass
+   `'/projects'`.
+4. **Do not put a `<Stack.Screen>` inside an extracted body.** Wave 3's ruling:
+   under `src/` it would rename whichever route later hosts the component. Both
+   `tags/manage` and `projects/index` have one; it stays a sibling of
+   `SettingsRoute` in the route file.
+5. **Do not leave `useEffect(..., [])` in the extracted `tags`/`projects`
+   bodies.** A pane stays mounted across an account switch. Note this changes
+   mobile behaviour in the direction of correctness (a backgrounded route now
+   refetches on account change), so **the commit must say so in its first
+   paragraph**, as this branch does for every change that alters the phone.
+6. **Do not restate `SETTINGS_PANE_KEYS` as "the twelve destinations under
+   `app/settings/`".** It becomes fifteen, three of which are not — the type's
+   meaning changes from "lives under `app/settings/`" to "configures the app and
+   has been extracted", and the doc comment has to say the new thing rather than
+   the old thing plus three exceptions. `SettingsLinkKey` loses `accounts`,
+   `tags` and `projects` in the same edit.
+7. **Do not host `projects/[id]` in a dialog on the grounds that it is a
+   detail** — not without first re-homing edit and delete out of `headerRight`,
+   and that is reimplementing, not hosting.
+8. **Do not move `app/projects/new.tsx`, and do not give it a left-pane row.**
+   Only `ProjectPicker` reaches it; it is not this hub's create affordance.
+9. **If the `tags`/`projects` edit modals go through `SheetDialog`, keep
+   `keyboardAvoiding`.** Both wrap their overlay in `KeyboardAvoidingScreen`
+   today and both contain a `TextInput` — the addendum-2 warning, and no desktop
+   check would catch its loss. Drop each screen's own `insets.bottom` read in
+   the same change, or the phone gains a second gap.
+10. **Zero new i18n keys.** `accounts.manage`, `settingsNav.tags` and
+    `settingsNav.projects` already label these three rows and are unchanged by
+    the flip from `link` to `pane`.
+
+## What the implementer should look for
+
+- **The three pane rows lose their outbound arrow and gain a selected state.**
+  That is the visible half of the flip, and it is what tells the user the row
+  behaves differently now.
+- **The `dismissAll()` path is the one place the return breaks, and it is
+  pre-existing.** Trace it once: `/settings` → `/account/list` (pane) →
+  `/account/create` → `/trip/new` → `POP_TO_TOP` → `/account/{id}`. Back from
+  there goes to the tabs, not to the Accounts pane. Identical on mobile today,
+  and arguably fine (you just made a trip and are looking at it), but do not
+  discover it in review.
+- **Every other chain returns correctly**, because the selection is the URL:
+  `/account/{id}` → back → `/account/list` pane with Accounts selected;
+  `/account/create` after a successful create → `router.back()` → same;
+  `/projects/{id}` → back → `/projects` pane.
+- **`account/list` has no mount effect** and reads `accounts` from the
+  app-global store the switcher already maintains, so it needs no
+  `[currentAccountId]` treatment. Do not add one by analogy with its two
+  siblings.
+- **A one-frame flash of the previous account's data** is possible in `tags` and
+  `projects`: the section 5g fix works by emptying the cache synchronously
+  inside `set()` *before* any `[currentAccountId]` effect runs, and these two
+  stores have no `reset()` to empty. Either give both a `reset()` and add them
+  to `clearAccountScopedCaches()`, or accept the flash — but decide it rather
+  than inherit it.
+- **`canEdit`.** All three screens gate their write affordances on it today and
+  a pane must keep doing so; viewers are a real role here.
+
+## Acceptance criteria
+
+1. At 1920, open `/settings` and click Accounts: the URL becomes
+   `/account/list`, the row highlights, its outbound arrow is gone, and the
+   account cards plus the Create/Join buttons are capped at 720px, not 900+.
+2. Click an account card: the app navigates to `/account/[id]`, which renders as
+   a full page with a stack header carrying its title and a back arrow. The
+   settings shell is gone.
+3. Press that back arrow: `/account/list` returns with **Accounts still
+   selected** in the left pane.
+4. Repeat 2-3 for Create, for Join, and for a project card → `/projects/[id]`.
+5. On `/projects/[id]` at 1920, confirm the header still carries the pencil and
+   trash buttons, and that they still work.
+6. Delete a project from `/projects/[id]`: the confirmation is an in-app themed
+   dialog, and on success the app returns to the `/projects` pane with Projects
+   selected and the project gone from the list.
+7. Open the Tags pane, switch accounts from the top bar without leaving it: the
+   list shows the new account's tags.
+8. Repeat 7 for Projects.
+9. Narrow to 1000px: all three render exactly as today, with their stack
+   headers back.
+10. Open all three on a phone: pixel-identical to before, including bottom
+    safe-area padding, and the edit sheet still lifts for the keyboard.
+11. Native bundle check per section 5b, grepping for the desktop UI
+    (`SettingsShell`, `SettingsNav`) rather than the registry or a native no-op
+    half.
+
+## What this ruling leaves unproven
+
+- **Whether navigating out of a pane reads as a dead end in the product.** The
+  mechanism is sound and shipped — the stack header's back arrow — but only the
+  deployed screen says whether it *feels* like a return to settings or like
+  having left it. If it reads badly, the option to revisit is "give the child
+  the left pane", above, not a dialog.
+- **A cold load of a child route on web has no back arrow**, because the stack
+  is one screen deep and `back` is undefined. This is pre-existing for every one
+  of the app's ~90 routes, wave 4 changes nothing about it, and nobody has
+  checked it. It is nonetheless the single case where this ruling's return path
+  is simply absent.
+- **Whether `ExpenseDialog`'s own two outbound pushes work from inside a
+  dialog** on desktop. Unmeasured. Cited above as a weakness in the
+  counter-precedent, not as support.
+- **`form` vs `full`** for all three, and whether 720 is right at all — the
+  spec's existing open question, now with three more screens riding on it.
+- **Whether the one-frame stale flash in `tags`/`projects` is visible** at all,
+  and therefore whether the two stores need a `reset()`.
+- **Nothing here renders in CI.** The registry is testable and should gain
+  assertions for the three new pane entries; the header predicate for
+  `/projects` is testable and should be pinned by name. Layout, the back arrow's
+  appearance, hover, focus order and legibility across 13 accents and both
+  themes are verified by a person on the deployed build, by eye.
