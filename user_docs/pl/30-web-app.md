@@ -43,6 +43,26 @@ Gdy okno przeglądarki jest wystarczająco szerokie — mniej więcej jak na lap
 
 Poniżej około 1024 pikseli szerokości — dotyczy to też większości tabletów trzymanych pionowo — przeglądarka pokazuje zamiast tego znany układ telefoniczny. Tak ma być: szeroki układ jest pomyślany dla prawdziwego ekranu komputera lub laptopa, a węższe okno lepiej obsługuje układ telefoniczny.
 
+## Ustawienia na dużym ekranie
+
+W szerokim oknie Ustawienia trzymają całą listę po lewej stronie, a wybrana pozycja otwiera się obok niej, zamiast zastępować stronę — dzięki temu przechodzisz między Profilem, Powiadomieniami, Kategoriami i resztą bez cofania się za każdym razem.
+
+- Pasek adresu podąża za Twoim wyborem, więc możesz **dodać stronę ustawień do zakładek** albo odświeżyć ją i wrócić dokładnie do tego samego miejsca.
+- Kilka pozycji nadal otwiera się na pełnej stronie, bo są miejscami pracy, a nie przełącznikami: **Portfel**, **Lista zakupów**, **Wnioski o zakup**, **Subskrypcje** i **Import**.
+- Otwarcie jednego konta z Zarządzania kontami albo jednego projektu z Projektów też otwiera pełną stronę — z własnymi przyciskami edycji i usuwania na belce tytułowej oraz strzałką powrotu, która wraca do listy z tą samą podświetloną pozycją.
+- **Wylogowanie** znajduje się na samej stronie Ustawień, gdy nic nie jest wybrane; koło zębate na górnej belce prowadzi tam z powrotem.
+
+Poniżej około 1024 pikseli szerokości wraca znajomy układ telefoniczny, z wszystkimi pozycjami na jednej długiej liście.
+
+## Ekran główny na dużym ekranie
+
+Ekran główny wykorzystuje dodatkowe miejsce, żeby pokazać to, co wymaga uwagi, a nie rozciągać na nim kart z telefonu.
+
+- **Główna kolumna** prowadzi bieżące liczby — ile możesz dziś bezpiecznie wydać, budżet miesiąca, przychody względem wydatków — a obok stoi **wąska kolumna kart**. Na bardzo szerokim ekranie są dwie takie kolumny.
+- **Wszystko, co dodajesz, otwiera się nad ekranem głównym** — wydatek, saldo początkowe, budżet — więc zostajesz na ekranie, który właśnie czytasz.
+- **Dzwonek** otwiera alerty i zaproszenia jako panel, a nie osobną stronę.
+- **Nowo utworzone konto** widzi krótką listę kroków startowych, a nie ekran pustych kart: zeskanuj paragon, wpisz go ręcznie albo ustaw saldo początkowe.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:

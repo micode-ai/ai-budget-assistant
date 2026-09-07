@@ -43,6 +43,26 @@ When the browser window is wide enough — roughly as wide as a laptop or deskto
 
 Below about 1024 pixels wide — which includes most tablets held upright — the browser shows the familiar phone layout instead. That's expected: the wide layout is designed for a real desktop or laptop screen, and a narrower window is better served by the phone layout.
 
+## Settings on a Wide Screen
+
+On a wide window, Settings keeps the whole list down the left side, and the one you pick opens beside it instead of replacing the page — so you can move between Profile, Notifications, Categories and the rest without going back each time.
+
+- The address bar follows your choice, so you can **bookmark a settings page** or reload it and land back where you were.
+- A few rows still open as a full page, because they are places to work rather than switches: **Wallet**, **Shopping list**, **Purchase requests**, **Subscriptions** and **Import**.
+- Opening one account from Manage accounts, or one project from Projects, also opens a full page — with its own edit and delete buttons in the title bar, and a back arrow that brings you back to the list with the same row still highlighted.
+- **Signing out** lives on the Settings page itself with nothing selected; the gear in the top bar takes you back there.
+
+Below about 1024 pixels wide the familiar phone layout returns, with every row in one long list.
+
+## The Dashboard on a Wide Screen
+
+The dashboard uses the extra room to put what needs your attention in front of you, rather than stretching the phone's cards across it.
+
+- A **main column** carries the running figures — what is safe to spend today, the month's budget, income against expenses — and a **narrow column of cards** stands beside it. On a very wide screen there are two such columns.
+- **Anything you add opens over the dashboard** — an expense, a starting balance, a budget — so you stay on the screen you were reading.
+- The **bell** opens your alerts and invitations as a panel instead of a separate page.
+- A **brand-new account** sees a short setup checklist rather than a screen of empty cards: scan a receipt, type one in, or set a starting balance.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:

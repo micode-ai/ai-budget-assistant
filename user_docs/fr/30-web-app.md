@@ -43,6 +43,26 @@ Lorsque la fenêtre du navigateur est assez large — à peu près comme sur un 
 
 En dessous d’environ 1024 pixels de large — ce qui inclut la plupart des tablettes tenues à la verticale —, le navigateur affiche à la place la présentation habituelle du téléphone. C’est normal : la présentation large est conçue pour un véritable écran d’ordinateur, et une fenêtre plus étroite est mieux servie par la présentation du téléphone.
 
+## Les réglages sur un grand écran
+
+Dans une fenêtre large, les Réglages gardent toute la liste sur le côté gauche, et l'élément choisi s'ouvre à côté au lieu de remplacer la page — vous passez donc du Profil aux Notifications, aux Catégories et au reste sans revenir en arrière chaque fois.
+
+- La barre d'adresse suit votre choix : vous pouvez **mettre une page de réglages en favori** ou la recharger et retomber exactement où vous étiez.
+- Quelques lignes s'ouvrent toujours en pleine page, parce que ce sont des lieux de travail et non des interrupteurs : **Portefeuille**, **Liste de courses**, **Demandes d'achat**, **Abonnements** et **Import**.
+- Ouvrir un compte depuis la gestion des comptes, ou un projet depuis les Projets, ouvre aussi une pleine page — avec ses propres boutons de modification et de suppression dans la barre de titre, et une flèche de retour qui vous ramène à la liste avec la même ligne mise en évidence.
+- La **déconnexion** se trouve sur la page Réglages elle-même, quand rien n'est sélectionné ; la roue dentée de la barre du haut y ramène.
+
+En dessous d'environ 1024 pixels de large, la mise en page téléphone habituelle revient, avec toutes les lignes dans une seule longue liste.
+
+## Le tableau de bord sur un grand écran
+
+Le tableau de bord se sert de la place supplémentaire pour mettre devant vous ce qui demande votre attention, plutôt que d'y étirer les cartes du téléphone.
+
+- Une **colonne principale** porte les chiffres courants — ce que vous pouvez dépenser aujourd'hui sans risque, le budget du mois, les revenus face aux dépenses — et une **colonne étroite de cartes** se tient à côté. Sur un écran très large, il y en a deux.
+- **Tout ce que vous ajoutez s'ouvre par-dessus le tableau de bord** — une dépense, un solde de départ, un budget — vous restez donc sur l'écran que vous lisiez.
+- La **cloche** ouvre vos alertes et vos invitations sous forme de panneau, et non de page séparée.
+- Un **compte tout neuf** voit une courte liste de premiers pas au lieu d'un écran de cartes vides : scanner un ticket, en saisir un à la main, ou définir un solde de départ.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :

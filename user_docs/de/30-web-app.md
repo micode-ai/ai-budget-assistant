@@ -43,6 +43,26 @@ Wenn das Browserfenster breit genug ist — etwa wie auf einem Laptop oder Deskt
 
 Unter etwa 1024 Pixel Breite — das betrifft auch die meisten im Hochformat gehaltenen Tablets — zeigt der Browser stattdessen die gewohnte Smartphone-Ansicht. Das ist so gewollt: Die breite Ansicht ist für einen echten Desktop- oder Laptop-Bildschirm gedacht, und ein schmaleres Fenster ist mit der Smartphone-Ansicht besser bedient.
 
+## Einstellungen auf einem großen Bildschirm
+
+In einem breiten Fenster behalten die Einstellungen die gesamte Liste an der linken Seite, und der gewählte Eintrag öffnet sich daneben, statt die Seite zu ersetzen — so wechseln Sie zwischen Profil, Benachrichtigungen, Kategorien und dem Rest, ohne jedes Mal zurückzugehen.
+
+- Die Adressleiste folgt Ihrer Auswahl, Sie können also **eine Einstellungsseite als Lesezeichen speichern** oder sie neu laden und genau dort landen, wo Sie waren.
+- Einige Einträge öffnen weiterhin eine ganze Seite, weil sie Arbeitsorte und keine Schalter sind: **Geldbeutel**, **Einkaufsliste**, **Kaufanfragen**, **Abonnements** und **Import**.
+- Öffnen Sie ein einzelnes Konto aus der Kontenverwaltung oder ein einzelnes Projekt aus den Projekten, erscheint ebenfalls eine ganze Seite — mit eigenen Schaltflächen zum Bearbeiten und Löschen in der Titelzeile und einem Zurück-Pfeil, der Sie zur Liste mit derselben hervorgehobenen Zeile zurückbringt.
+- Das **Abmelden** liegt auf der Einstellungsseite selbst, wenn nichts ausgewählt ist; das Zahnrad in der oberen Leiste führt dorthin zurück.
+
+Unterhalb von etwa 1024 Pixeln Breite kehrt das bekannte Telefon-Layout zurück, mit allen Einträgen in einer langen Liste.
+
+## Die Übersicht auf einem großen Bildschirm
+
+Die Übersicht nutzt den zusätzlichen Platz, um Ihnen das Wichtige vor Augen zu stellen, statt die Karten des Telefons darüber zu strecken.
+
+- Eine **Hauptspalte** trägt die laufenden Zahlen — was heute unbesorgt ausgegeben werden kann, das Monatsbudget, Einnahmen gegen Ausgaben — und daneben steht eine **schmale Kartenspalte**. Auf einem sehr breiten Bildschirm sind es zwei solche Spalten.
+- **Alles, was Sie hinzufügen, öffnet sich über der Übersicht** — eine Ausgabe, ein Anfangssaldo, ein Budget — Sie bleiben also auf dem Bildschirm, den Sie gerade gelesen haben.
+- Die **Glocke** öffnet Hinweise und Einladungen als Panel statt als eigene Seite.
+- Ein **ganz neues Konto** sieht eine kurze Einrichtungsliste statt eines Bildschirms voller leerer Karten: einen Kassenbon scannen, einen Betrag eintippen oder einen Anfangssaldo setzen.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:

@@ -43,6 +43,26 @@ Cuando la ventana del navegador es lo bastante ancha —más o menos como en un 
 
 Por debajo de unos 1024 píxeles de ancho —lo que incluye la mayoría de las tabletas sujetas en vertical—, el navegador muestra en su lugar la vista habitual del teléfono. Es lo esperado: la vista ancha está pensada para una pantalla real de escritorio o portátil, y una ventana más estrecha se sirve mejor con la vista del teléfono.
 
+## Ajustes en una pantalla grande
+
+En una ventana ancha, Ajustes mantiene toda la lista en el lado izquierdo, y la opción que eliges se abre junto a ella en lugar de sustituir la página — así te mueves entre Perfil, Notificaciones, Categorías y el resto sin volver atrás cada vez.
+
+- La barra de direcciones sigue tu elección, así que puedes **guardar una página de ajustes en marcadores** o recargarla y volver justo donde estabas.
+- Algunas filas siguen abriéndose como página completa, porque son lugares de trabajo y no interruptores: **Cartera**, **Lista de la compra**, **Solicitudes de compra**, **Suscripciones** e **Importar**.
+- Abrir una cuenta desde Gestionar cuentas, o un proyecto desde Proyectos, también abre una página completa — con sus propios botones de editar y eliminar en la barra de título, y una flecha de volver que te devuelve a la lista con la misma fila resaltada.
+- **Cerrar sesión** está en la propia página de Ajustes, sin nada seleccionado; el engranaje de la barra superior te lleva de vuelta allí.
+
+Por debajo de unos 1024 píxeles de ancho vuelve el diseño de teléfono conocido, con todas las filas en una sola lista larga.
+
+## La pantalla principal en una pantalla grande
+
+La pantalla principal usa el espacio extra para poner delante de ti lo que necesita atención, en vez de estirar las tarjetas del teléfono.
+
+- Una **columna principal** lleva las cifras del momento — cuánto puedes gastar hoy sin riesgo, el presupuesto del mes, ingresos frente a gastos — y a su lado hay una **columna estrecha de tarjetas**. En una pantalla muy ancha hay dos de esas columnas.
+- **Todo lo que añades se abre sobre la pantalla principal** — un gasto, un saldo inicial, un presupuesto — así te quedas en la pantalla que estabas leyendo.
+- La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
+- Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:

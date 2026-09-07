@@ -3838,6 +3838,26 @@ When the browser window is wide enough — roughly as wide as a laptop or deskto
 
 Below about 1024 pixels wide — which includes most tablets held upright — the browser shows the familiar phone layout instead. That's expected: the wide layout is designed for a real desktop or laptop screen, and a narrower window is better served by the phone layout.
 
+## Settings on a Wide Screen
+
+On a wide window, Settings keeps the whole list down the left side, and the one you pick opens beside it instead of replacing the page — so you can move between Profile, Notifications, Categories and the rest without going back each time.
+
+- The address bar follows your choice, so you can **bookmark a settings page** or reload it and land back where you were.
+- A few rows still open as a full page, because they are places to work rather than switches: **Wallet**, **Shopping list**, **Purchase requests**, **Subscriptions** and **Import**.
+- Opening one account from Manage accounts, or one project from Projects, also opens a full page — with its own edit and delete buttons in the title bar, and a back arrow that brings you back to the list with the same row still highlighted.
+- **Signing out** lives on the Settings page itself with nothing selected; the gear in the top bar takes you back there.
+
+Below about 1024 pixels wide the familiar phone layout returns, with every row in one long list.
+
+## The Dashboard on a Wide Screen
+
+The dashboard uses the extra room to put what needs your attention in front of you, rather than stretching the phone's cards across it.
+
+- A **main column** carries the running figures — what is safe to spend today, the month's budget, income against expenses — and a **narrow column of cards** stands beside it. On a very wide screen there are two such columns.
+- **Anything you add opens over the dashboard** — an expense, a starting balance, a budget — so you stay on the screen you were reading.
+- The **bell** opens your alerts and invitations as a panel instead of a separate page.
+- A **brand-new account** sees a short setup checklist rather than a screen of empty cards: scan a receipt, type one in, or set a starting balance.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:
@@ -8419,6 +8439,26 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Если ширина окна меньше примерно 1024 пикселей — это касается и большинства планшетов в вертикальной ориентации, — браузер вместо этого показывает привычный вид для телефона. Так и задумано: широкий вид рассчитан на настоящий экран компьютера или ноутбука, а для более узкого окна лучше подходит вид для телефона.
 
+## Настройки на большом экране
+
+В широком окне «Настройки» держат весь список по левому краю, а выбранный пункт открывается рядом с ним, а не вместо страницы, — так вы переходите между профилем, уведомлениями, категориями и остальным, не возвращаясь каждый раз назад.
+
+- Адресная строка следует за вашим выбором, поэтому страницу настроек можно **добавить в закладки** или обновить и попасть туда же, где вы были.
+- Несколько пунктов по-прежнему открываются на всю страницу, потому что это места работы, а не переключатели: **Кошелёк**, **Список покупок**, **Запросы на покупку**, **Подписки** и **Импорт**.
+- Открытие одного счёта из управления счетами или одного проекта из проектов тоже разворачивает полную страницу — со своими кнопками правки и удаления в заголовке и стрелкой назад, которая возвращает к списку с тем же подсвеченным пунктом.
+- **Выход из аккаунта** находится на самой странице настроек, когда ничего не выбрано; шестерёнка на верхней панели возвращает туда.
+
+Ниже примерно 1024 пикселей по ширине возвращается привычная телефонная раскладка, со всеми пунктами в одном длинном списке.
+
+## Главный экран на большом экране
+
+Главный экран использует лишнее место, чтобы поставить перед вами то, что требует внимания, а не растягивать по нему телефонные карточки.
+
+- **Основная колонка** несёт текущие числа — сколько можно спокойно потратить сегодня, бюджет месяца, доходы против расходов, — а рядом стоит **узкая колонка карточек**. На очень широком экране таких колонок две.
+- **Всё, что вы добавляете, открывается поверх главного экрана** — расход, начальный баланс, бюджет, — поэтому вы остаётесь на том экране, который читали.
+- **Колокольчик** открывает оповещения и приглашения панелью, а не отдельной страницей.
+- **Совсем новый счёт** видит короткий список первых шагов вместо экрана пустых карточек: отсканировать чек, вписать его вручную или задать начальный баланс.
+
 ## Ограничения
 
 Веб-версия дополняет мобильное приложение, но не заменяет его полностью. Несколько функций в браузере работают иначе:
@@ -12968,6 +13008,26 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Якщо ширина вікна менша за приблизно 1024 пікселі — це стосується й більшості планшетів у вертикальній орієнтації, — браузер натомість показує звичний вигляд для телефона. Так і задумано: широкий вигляд розрахований на справжній екран комп’ютера чи ноутбука, а для вужчого вікна краще підходить вигляд для телефона.
 
+## Налаштування на великому екрані
+
+У широкому вікні «Налаштування» тримають увесь список по лівому краю, а вибраний пункт відкривається поряд із ним, а не замість сторінки, — тож ви переходите між профілем, повідомленнями, категоріями та рештою, не повертаючись щоразу назад.
+
+- Адресний рядок стежить за вашим вибором, тому сторінку налаштувань можна **додати в закладки** або оновити й потрапити туди ж, де ви були.
+- Кілька пунктів досі відкриваються на всю сторінку, бо це місця роботи, а не перемикачі: **Гаманець**, **Список покупок**, **Запити на покупку**, **Підписки** та **Імпорт**.
+- Відкриття одного рахунку з керування рахунками або одного проєкту з проєктів теж розгортає повну сторінку — із власними кнопками редагування та видалення в заголовку і стрілкою назад, яка повертає до списку з тим самим підсвіченим пунктом.
+- **Вихід з акаунта** розташований на самій сторінці налаштувань, коли нічого не вибрано; шестерня на верхній панелі повертає туди.
+
+Нижче приблизно 1024 пікселів завширшки повертається звична телефонна розкладка, з усіма пунктами в одному довгому списку.
+
+## Головний екран на великому екрані
+
+Головний екран використовує зайве місце, щоб поставити перед вами те, що потребує уваги, а не розтягувати по ньому телефонні картки.
+
+- **Основна колонка** несе поточні числа — скільки можна спокійно витратити сьогодні, бюджет місяця, доходи проти витрат, — а поряд стоїть **вузька колонка карток**. На дуже широкому екрані таких колонок дві.
+- **Усе, що ви додаєте, відкривається поверх головного екрана** — витрату, початковий баланс, бюджет, — тож ви залишаєтеся на тому екрані, який читали.
+- **Дзвіночок** відкриває оповіщення та запрошення панеллю, а не окремою сторінкою.
+- **Цілком новий рахунок** бачить короткий список перших кроків замість екрана порожніх карток: відсканувати чек, вписати його вручну або задати початковий баланс.
+
 ## Обмеження
 
 Веб-версія доповнює мобільний застосунок, але не замінює його повністю. Кілька функцій у браузері працюють інакше:
@@ -17502,6 +17562,26 @@ Gdy okno przeglądarki jest wystarczająco szerokie — mniej więcej jak na lap
 
 Poniżej około 1024 pikseli szerokości — dotyczy to też większości tabletów trzymanych pionowo — przeglądarka pokazuje zamiast tego znany układ telefoniczny. Tak ma być: szeroki układ jest pomyślany dla prawdziwego ekranu komputera lub laptopa, a węższe okno lepiej obsługuje układ telefoniczny.
 
+## Ustawienia na dużym ekranie
+
+W szerokim oknie Ustawienia trzymają całą listę po lewej stronie, a wybrana pozycja otwiera się obok niej, zamiast zastępować stronę — dzięki temu przechodzisz między Profilem, Powiadomieniami, Kategoriami i resztą bez cofania się za każdym razem.
+
+- Pasek adresu podąża za Twoim wyborem, więc możesz **dodać stronę ustawień do zakładek** albo odświeżyć ją i wrócić dokładnie do tego samego miejsca.
+- Kilka pozycji nadal otwiera się na pełnej stronie, bo są miejscami pracy, a nie przełącznikami: **Portfel**, **Lista zakupów**, **Wnioski o zakup**, **Subskrypcje** i **Import**.
+- Otwarcie jednego konta z Zarządzania kontami albo jednego projektu z Projektów też otwiera pełną stronę — z własnymi przyciskami edycji i usuwania na belce tytułowej oraz strzałką powrotu, która wraca do listy z tą samą podświetloną pozycją.
+- **Wylogowanie** znajduje się na samej stronie Ustawień, gdy nic nie jest wybrane; koło zębate na górnej belce prowadzi tam z powrotem.
+
+Poniżej około 1024 pikseli szerokości wraca znajomy układ telefoniczny, z wszystkimi pozycjami na jednej długiej liście.
+
+## Ekran główny na dużym ekranie
+
+Ekran główny wykorzystuje dodatkowe miejsce, żeby pokazać to, co wymaga uwagi, a nie rozciągać na nim kart z telefonu.
+
+- **Główna kolumna** prowadzi bieżące liczby — ile możesz dziś bezpiecznie wydać, budżet miesiąca, przychody względem wydatków — a obok stoi **wąska kolumna kart**. Na bardzo szerokim ekranie są dwie takie kolumny.
+- **Wszystko, co dodajesz, otwiera się nad ekranem głównym** — wydatek, saldo początkowe, budżet — więc zostajesz na ekranie, który właśnie czytasz.
+- **Dzwonek** otwiera alerty i zaproszenia jako panel, a nie osobną stronę.
+- **Nowo utworzone konto** widzi krótką listę kroków startowych, a nie ekran pustych kart: zeskanuj paragon, wpisz go ręcznie albo ustaw saldo początkowe.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:
@@ -22011,6 +22091,26 @@ Wenn das Browserfenster breit genug ist — etwa wie auf einem Laptop oder Deskt
 
 Unter etwa 1024 Pixel Breite — das betrifft auch die meisten im Hochformat gehaltenen Tablets — zeigt der Browser stattdessen die gewohnte Smartphone-Ansicht. Das ist so gewollt: Die breite Ansicht ist für einen echten Desktop- oder Laptop-Bildschirm gedacht, und ein schmaleres Fenster ist mit der Smartphone-Ansicht besser bedient.
 
+## Einstellungen auf einem großen Bildschirm
+
+In einem breiten Fenster behalten die Einstellungen die gesamte Liste an der linken Seite, und der gewählte Eintrag öffnet sich daneben, statt die Seite zu ersetzen — so wechseln Sie zwischen Profil, Benachrichtigungen, Kategorien und dem Rest, ohne jedes Mal zurückzugehen.
+
+- Die Adressleiste folgt Ihrer Auswahl, Sie können also **eine Einstellungsseite als Lesezeichen speichern** oder sie neu laden und genau dort landen, wo Sie waren.
+- Einige Einträge öffnen weiterhin eine ganze Seite, weil sie Arbeitsorte und keine Schalter sind: **Geldbeutel**, **Einkaufsliste**, **Kaufanfragen**, **Abonnements** und **Import**.
+- Öffnen Sie ein einzelnes Konto aus der Kontenverwaltung oder ein einzelnes Projekt aus den Projekten, erscheint ebenfalls eine ganze Seite — mit eigenen Schaltflächen zum Bearbeiten und Löschen in der Titelzeile und einem Zurück-Pfeil, der Sie zur Liste mit derselben hervorgehobenen Zeile zurückbringt.
+- Das **Abmelden** liegt auf der Einstellungsseite selbst, wenn nichts ausgewählt ist; das Zahnrad in der oberen Leiste führt dorthin zurück.
+
+Unterhalb von etwa 1024 Pixeln Breite kehrt das bekannte Telefon-Layout zurück, mit allen Einträgen in einer langen Liste.
+
+## Die Übersicht auf einem großen Bildschirm
+
+Die Übersicht nutzt den zusätzlichen Platz, um Ihnen das Wichtige vor Augen zu stellen, statt die Karten des Telefons darüber zu strecken.
+
+- Eine **Hauptspalte** trägt die laufenden Zahlen — was heute unbesorgt ausgegeben werden kann, das Monatsbudget, Einnahmen gegen Ausgaben — und daneben steht eine **schmale Kartenspalte**. Auf einem sehr breiten Bildschirm sind es zwei solche Spalten.
+- **Alles, was Sie hinzufügen, öffnet sich über der Übersicht** — eine Ausgabe, ein Anfangssaldo, ein Budget — Sie bleiben also auf dem Bildschirm, den Sie gerade gelesen haben.
+- Die **Glocke** öffnet Hinweise und Einladungen als Panel statt als eigene Seite.
+- Ein **ganz neues Konto** sieht eine kurze Einrichtungsliste statt eines Bildschirms voller leerer Karten: einen Kassenbon scannen, einen Betrag eintippen oder einen Anfangssaldo setzen.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:
@@ -26509,6 +26609,26 @@ Cuando la ventana del navegador es lo bastante ancha —más o menos como en un 
 
 Por debajo de unos 1024 píxeles de ancho —lo que incluye la mayoría de las tabletas sujetas en vertical—, el navegador muestra en su lugar la vista habitual del teléfono. Es lo esperado: la vista ancha está pensada para una pantalla real de escritorio o portátil, y una ventana más estrecha se sirve mejor con la vista del teléfono.
 
+## Ajustes en una pantalla grande
+
+En una ventana ancha, Ajustes mantiene toda la lista en el lado izquierdo, y la opción que eliges se abre junto a ella en lugar de sustituir la página — así te mueves entre Perfil, Notificaciones, Categorías y el resto sin volver atrás cada vez.
+
+- La barra de direcciones sigue tu elección, así que puedes **guardar una página de ajustes en marcadores** o recargarla y volver justo donde estabas.
+- Algunas filas siguen abriéndose como página completa, porque son lugares de trabajo y no interruptores: **Cartera**, **Lista de la compra**, **Solicitudes de compra**, **Suscripciones** e **Importar**.
+- Abrir una cuenta desde Gestionar cuentas, o un proyecto desde Proyectos, también abre una página completa — con sus propios botones de editar y eliminar en la barra de título, y una flecha de volver que te devuelve a la lista con la misma fila resaltada.
+- **Cerrar sesión** está en la propia página de Ajustes, sin nada seleccionado; el engranaje de la barra superior te lleva de vuelta allí.
+
+Por debajo de unos 1024 píxeles de ancho vuelve el diseño de teléfono conocido, con todas las filas en una sola lista larga.
+
+## La pantalla principal en una pantalla grande
+
+La pantalla principal usa el espacio extra para poner delante de ti lo que necesita atención, en vez de estirar las tarjetas del teléfono.
+
+- Una **columna principal** lleva las cifras del momento — cuánto puedes gastar hoy sin riesgo, el presupuesto del mes, ingresos frente a gastos — y a su lado hay una **columna estrecha de tarjetas**. En una pantalla muy ancha hay dos de esas columnas.
+- **Todo lo que añades se abre sobre la pantalla principal** — un gasto, un saldo inicial, un presupuesto — así te quedas en la pantalla que estabas leyendo.
+- La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
+- Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:
@@ -31005,6 +31125,26 @@ Lorsque la fenêtre du navigateur est assez large — à peu près comme sur un 
 
 En dessous d’environ 1024 pixels de large — ce qui inclut la plupart des tablettes tenues à la verticale —, le navigateur affiche à la place la présentation habituelle du téléphone. C’est normal : la présentation large est conçue pour un véritable écran d’ordinateur, et une fenêtre plus étroite est mieux servie par la présentation du téléphone.
 
+## Les réglages sur un grand écran
+
+Dans une fenêtre large, les Réglages gardent toute la liste sur le côté gauche, et l'élément choisi s'ouvre à côté au lieu de remplacer la page — vous passez donc du Profil aux Notifications, aux Catégories et au reste sans revenir en arrière chaque fois.
+
+- La barre d'adresse suit votre choix : vous pouvez **mettre une page de réglages en favori** ou la recharger et retomber exactement où vous étiez.
+- Quelques lignes s'ouvrent toujours en pleine page, parce que ce sont des lieux de travail et non des interrupteurs : **Portefeuille**, **Liste de courses**, **Demandes d'achat**, **Abonnements** et **Import**.
+- Ouvrir un compte depuis la gestion des comptes, ou un projet depuis les Projets, ouvre aussi une pleine page — avec ses propres boutons de modification et de suppression dans la barre de titre, et une flèche de retour qui vous ramène à la liste avec la même ligne mise en évidence.
+- La **déconnexion** se trouve sur la page Réglages elle-même, quand rien n'est sélectionné ; la roue dentée de la barre du haut y ramène.
+
+En dessous d'environ 1024 pixels de large, la mise en page téléphone habituelle revient, avec toutes les lignes dans une seule longue liste.
+
+## Le tableau de bord sur un grand écran
+
+Le tableau de bord se sert de la place supplémentaire pour mettre devant vous ce qui demande votre attention, plutôt que d'y étirer les cartes du téléphone.
+
+- Une **colonne principale** porte les chiffres courants — ce que vous pouvez dépenser aujourd'hui sans risque, le budget du mois, les revenus face aux dépenses — et une **colonne étroite de cartes** se tient à côté. Sur un écran très large, il y en a deux.
+- **Tout ce que vous ajoutez s'ouvre par-dessus le tableau de bord** — une dépense, un solde de départ, un budget — vous restez donc sur l'écran que vous lisiez.
+- La **cloche** ouvre vos alertes et vos invitations sous forme de panneau, et non de page séparée.
+- Un **compte tout neuf** voit une courte liste de premiers pas au lieu d'un écran de cartes vides : scanner un ticket, en saisir un à la main, ou définir un solde de départ.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :
@@ -35464,6 +35604,26 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Можна **выбраць адразу некалькі аперацый з дапамогай сцяжкоў** — утрымлівайце Shift і пстрыкніце, каб выбраць усё паміж двума радкамі, — а потым змяніць ім катэгорыю, дадаць тэг ці выдаліць усе разам.
 
 Калі шырыня акна меншая за прыблізна 1024 пікселі — гэта тычыцца і большасці планшэтаў у вертыкальнай арыентацыі, — браўзер замест гэтага паказвае звыклы выгляд для тэлефона. Так і задумана: шырокі выгляд разлічаны на сапраўдны экран камп'ютара ці ноўтбука, а для вузейшага акна лепш падыходзіць выгляд для тэлефона.
+
+## Налады на вялікім экране
+
+У шырокім акне «Налады» трымаюць увесь спіс па левым краі, а выбраны пункт адкрываецца побач з ім, а не замест старонкі, — так вы пераходзіце паміж профілем, паведамленнямі, катэгорыямі і астатнім, не вяртаючыся кожны раз назад.
+
+- Адрасны радок ідзе за вашым выбарам, таму сторонку налад можна **дадаць у закладкі** або абнавіць і трапіць туды ж, дзе вы былі.
+- Некалькі пунктаў па-ранейшаму адкрываюцца на ўсю старонку, бо гэта месцы працы, а не пераключальнікі: **Гаманец**, **Спіс пакупак**, **Запыты на пакупку**, **Падпіскі** і **Імпарт**.
+- Адкрыццё аднаго рахунку з кіравання рахункамі або аднаго праекта з праектаў таксама разгортвае поўную старонку — са сваімі кнопкамі рэдагавання і выдалення ў загалоўку і стрэлкай назад, якая вяртае да спісу з тым самым падсветленым пунктам.
+- **Выхад з акаўнта** знаходзіцца на самой старонцы налад, калі нічога не выбрана; шасцярня на верхняй панелі вяртае туды.
+
+Ніжэй прыблізна 1024 пікселяў па шырыні вяртаецца звыклая тэлефонная раскладка, з усімі пунктамі ў адным доўгім спісе.
+
+## Галоўны экран на вялікім экране
+
+Галоўны экран выкарыстоўвае лішняе месца, каб паставіць перад вамі тое, што патрабуе ўвагі, а не расцягваць па ім тэлефонныя карткі.
+
+- **Асноўная калонка** несе цяперашнія лічбы — колькі можна спакойна выдаткаваць сёння, бюджэт месяца, даходы супраць выдаткаў, — а побач стаіць **вузкая калонка картак**. На вельмі шырокім экране такіх калонак дзве.
+- **Усё, што вы дадаеце, адкрываецца паверх галоўнага экрана** — выдатак, пачатковы баланс, бюджэт, — таму вы застаецеся на тым экране, які чыталі.
+- **Званочак** адкрывае апавяшчэнні і запрашэнні панэллю, а не асобнай старонкай.
+- **Зусім новы рахунак** бачыць кароткі спіс першых крокаў замест экрана пустых картак: адсканаваць чэк, упісаць яго ўручную або задаць пачатковы баланс.
 
 ## Абмежаванні
 
@@ -40039,6 +40199,26 @@ Als het browservenster breed genoeg is — ongeveer zoals op een laptop of deskt
 - Je kunt **meerdere transacties selecteren met selectievakjes** — houd Shift ingedrukt en klik om alles tussen twee rijen te selecteren — en dan hun categorie wijzigen, een tag toevoegen of ze samen verwijderen.
 
 Onder ongeveer 1024 pixels breed — dat geldt ook voor de meeste tablets die je rechtop vasthoudt — toont de browser in plaats daarvan de vertrouwde telefoonweergave. Dat is de bedoeling: de brede weergave is gemaakt voor een echt bureaublad- of laptopscherm, en een smaller venster wordt beter bediend door de telefoonweergave.
+
+## Instellingen op een groot scherm
+
+In een breed venster houden de Instellingen de hele lijst aan de linkerkant, en het onderdeel dat je kiest opent ernaast in plaats van de pagina te vervangen — zo ga je van Profiel naar Meldingen, Categorieën en de rest zonder telkens terug te gaan.
+
+- De adresbalk volgt je keuze, dus je kunt **een instellingenpagina als bladwijzer opslaan** of hem herladen en precies weer uitkomen waar je was.
+- Een paar rijen openen nog wel als volledige pagina, omdat het werkplekken zijn en geen schakelaars: **Portemonnee**, **Boodschappenlijst**, **Aankoopverzoeken**, **Abonnementen** en **Importeren**.
+- Eén rekening openen vanuit Rekeningen beheren, of één project vanuit Projecten, opent ook een volledige pagina — met eigen knoppen voor bewerken en verwijderen in de titelbalk, en een terugpijl die je terugbrengt naar de lijst met dezelfde rij nog gemarkeerd.
+- **Uitloggen** staat op de Instellingenpagina zelf, met niets geselecteerd; het tandwiel in de bovenbalk brengt je daar terug.
+
+Onder ongeveer 1024 pixels breed komt de bekende telefoonindeling terug, met alle rijen in één lange lijst.
+
+## Het startscherm op een groot scherm
+
+Het startscherm gebruikt de extra ruimte om te tonen wat je aandacht nodig heeft, in plaats van de kaarten van de telefoon eroverheen uit te rekken.
+
+- Een **hoofdkolom** draagt de lopende cijfers — wat je vandaag veilig kunt uitgeven, het budget van de maand, inkomsten tegenover uitgaven — en daarnaast staat een **smalle kolom met kaarten**. Op een heel breed scherm zijn dat er twee.
+- **Alles wat je toevoegt opent over het startscherm** — een uitgave, een beginsaldo, een budget — zodat je op het scherm blijft dat je aan het lezen was.
+- De **bel** opent je meldingen en uitnodigingen als paneel in plaats van als aparte pagina.
+- Een **nieuwe rekening** ziet een korte lijst met eerste stappen in plaats van een scherm vol lege kaarten: een kassabon scannen, er handmatig een invoeren, of een beginsaldo instellen.
 
 ## Beperkingen
 
