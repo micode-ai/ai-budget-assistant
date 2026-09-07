@@ -246,7 +246,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: WEB_TOP_BAR_PADDING_X,
     zIndex: 10,
   },
-  brand: { fontSize: 18 },
+  // The 16 is a SEPARATION, not decoration. `styles.bar` is a bare row with no
+  // gap, so the wordmark was immediately followed by the nav group's first item
+  // box — and that box's background is the active wash, which therefore touched
+  // the "t" of "AI Budget" whenever the first tab was the open one (invisible
+  // until then, which is why it shipped). 16 is unmistakably larger than the
+  // 2px the nav puts BETWEEN its own items, so the eye reads a boundary rather
+  // than a fifth tab, and slightly under the bar's own 20px outer padding, so
+  // the nav still reads as content inside the bar rather than starting a new
+  // edge. It lives on the brand, never on `WebSidebar`, which is the same
+  // component the vertical sidebar renders.
+  brand: { fontSize: 18, marginRight: 16 },
   spacer: { flex: 1 },
   controls: { flexDirection: 'row', alignItems: 'center', gap: 8 },
   // 1px hairline at low opacity - the colour is applied inline from
