@@ -163,7 +163,7 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // Extracted from outside `app/settings/`, like `tags`/`projects` below —
   // but this one sits beside `profile` rather than with the reference-data
   // group, because it is identity-adjacent (who you are, where the money
-  // lives), not a reference list the other four happen to also be.
+  // lives) rather than a reference list.
   { kind: 'pane', key: 'accounts', labelKey: 'accounts.manage', route: '/account/list', width: 'form' },
   { kind: 'pane', key: 'appearance', labelKey: 'settingsNav.appearance', route: '/settings/appearance', width: 'form' },
   { kind: 'pane', key: 'ai', labelKey: 'settingsNav.ai', route: '/settings/ai', width: 'form' },
@@ -173,13 +173,19 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'security', labelKey: 'settingsNav.security', route: '/settings/security', width: 'form' },
   { kind: 'pane', key: 'data', labelKey: 'settingsNav.data', route: '/settings/data', width: 'form' },
   // The reference-data group, in the same order `app/settings/reference.tsx`
-  // — the sub-hub these five rows are promoted out of, and which dissolves
-  // on desktop only — has always listed them: one level of depth removed,
-  // the same grouping the phone already draws. `categories`/`merchants`/
+  // — the sub-hub these rows are promoted out of, and which dissolves on
+  // desktop only — has always listed them: one level of depth removed, the
+  // same grouping the phone already draws. `categories`/`merchants`/
   // `products` were always under `app/settings/`; `tags`/`projects` had to be
   // extracted from elsewhere first, same as `accounts` above, but these two
   // stay grouped with the rest of the reference-data screens rather than
-  // moving beside `profile`. All five are list screens and want the width.
+  // moving beside `profile`.
+  //
+  // The `width` is NOT uniform across the group, and the split is deliberate:
+  // `categories`/`merchants`/`products` take `'full'` because their rows carry
+  // three or four columns of content, while `tags`/`projects` are
+  // single-column lists of short rows and take `'form'` — at `'full'` a
+  // trailing action would sit ~800px from the label it belongs to.
   { kind: 'pane', key: 'categories', labelKey: 'settingsNav.categories', route: '/settings/categories', width: 'full' },
   { kind: 'pane', key: 'merchants', labelKey: 'settingsNav.merchants', route: '/settings/merchants', width: 'full' },
   { kind: 'pane', key: 'products', labelKey: 'settingsNav.products', route: '/settings/products', width: 'full' },
