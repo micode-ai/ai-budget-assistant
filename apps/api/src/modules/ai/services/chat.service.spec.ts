@@ -155,14 +155,71 @@ describe('ChatService', () => {
 
   describe('scoping', () => {
     it('lists shared + own-private conversations for the account', async () => {
-      deps.prisma.chatConversation.findMany.mockResolvedValue([
-        { id: 'c1', title: 'A', isShared: true, userId: 'owner-1', createdAt: new Date(), updatedAt: new Date() },
-      ]);
+      deps.prisma.chatConversation.findMany.mockImplementation((args: any) => {
+        // The pinned query is the same model, same base `where`, PLUS a
+        // `pins: { some: { userId } }` filter and no `take` — distinguish the
+        // two calls on that, the way the real two-query getConversations does.
+        if (args?.where?.pins) return Promise.resolve([]);
+        return Promise.resolve([
+          { id: 'c1', title: 'A', isShared: true, userId: 'owner-1', createdAt: new Date(), updatedAt: new Date() },
+        ]);
+      });
       const res = await service.getConversations('bob-1', 'acc-1');
       expect(deps.prisma.chatConversation.findMany).toHaveBeenCalledWith(expect.objectContaining({
         where: { accountId: 'acc-1', OR: [{ isShared: true }, { userId: 'bob-1' }] },
+        take: 20,
       }));
-      expect(res[0]).toMatchObject({ id: 'c1', isShared: true, isOwner: false });
+      expect(res[0]).toMatchObject({ id: 'c1', isShared: true, isOwner: false, isPinned: false });
+    });
+
+    it('marks a row pinned by the caller as isPinned, without duplicating it when it is also in the recent 20', async () => {
+      const c1 = { id: 'c1', title: 'Pinned one', isShared: false, userId: 'bob-1', createdAt: new Date(), updatedAt: new Date() };
+      const c2 = { id: 'c2', title: 'Not pinned', isShared: false, userId: 'bob-1', createdAt: new Date(), updatedAt: new Date() };
+      deps.prisma.chatConversation.findMany.mockImplementation((args: any) => {
+        if (args?.where?.pins) return Promise.resolve([c1]);
+        return Promise.resolve([c1, c2]);
+      });
+
+      const res = await service.getConversations('bob-1', 'acc-1');
+
+      expect(res.filter((r: any) => r.id === 'c1')).toHaveLength(1);
+      expect(res.map((r: any) => r.id)).toEqual(['c1', 'c2']);
+      expect(res[0]).toMatchObject({ id: 'c1', isPinned: true });
+      expect(res[1]).toMatchObject({ id: 'c2', isPinned: false });
+    });
+
+    it('includes a pinned conversation that is outside the recent-20 query', async () => {
+      const oldPin = { id: 'old-pin', title: 'Old pin', isShared: false, userId: 'bob-1', createdAt: new Date(), updatedAt: new Date() };
+      const recentRows = Array.from({ length: 20 }, (_, i) => ({
+        id: `recent-${i}`,
+        title: `Recent ${i}`,
+        isShared: false,
+        userId: 'bob-1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      }));
+      deps.prisma.chatConversation.findMany.mockImplementation((args: any) => {
+        if (args?.where?.pins) return Promise.resolve([oldPin]);
+        return Promise.resolve(recentRows);
+      });
+
+      const res = await service.getConversations('bob-1', 'acc-1');
+
+      expect(res.map((r: any) => r.id)).toContain('old-pin');
+      expect(res[0]).toMatchObject({ id: 'old-pin', isPinned: true });
+      expect(res).toHaveLength(21);
+    });
+
+    it('queries the unbounded pinned set scoped to the caller and the account', async () => {
+      deps.prisma.chatConversation.findMany.mockResolvedValue([]);
+      await service.getConversations('bob-1', 'acc-1');
+      expect(deps.prisma.chatConversation.findMany).toHaveBeenCalledWith(expect.objectContaining({
+        where: { accountId: 'acc-1', OR: [{ isShared: true }, { userId: 'bob-1' }], pins: { some: { userId: 'bob-1' } } },
+      }));
+      // Unbounded: no `take` on the pinned call — see the `objectContaining` above,
+      // which would still pass with an unwanted `take` unless we assert its absence.
+      const pinnedCall = deps.prisma.chatConversation.findMany.mock.calls.find((c: any) => c[0]?.where?.pins);
+      expect(pinnedCall?.[0]?.take).toBeUndefined();
     });
 
     it('returns messages with resolved sender names', async () => {

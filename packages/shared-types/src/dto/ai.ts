@@ -220,6 +220,13 @@ export interface ChatConversationSummary {
   title: string | null;
   isShared: boolean;
   isOwner: boolean;
+  /**
+   * Per-VIEWER, not per-conversation: this is whether the CALLER pinned it,
+   * from a separate `chat_conversation_pins` join table keyed on
+   * (user, conversation) — never a column on the conversation itself. A
+   * shared conversation can be pinned by one member and not another.
+   */
+  isPinned: boolean;
   createdAt: string;
   updatedAt: string;
 }

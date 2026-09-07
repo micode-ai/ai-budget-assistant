@@ -261,6 +261,7 @@ model User {
   restoreCredentials    RestoreCredential[]
   exchangeRateWatches   ExchangeRateWatch[]
   telemetryEvents       TelemetryEvent[]
+  chatConversationPins  ChatConversationPin[]
 
   // Where this signup came from, captured from the CTA query string on the visitor's
   // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
@@ -934,9 +935,40 @@ model ChatConversation {
   user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   account  Account?      @relation(fields: [accountId], references: [id], onDelete: Cascade)
   messages ChatMessage[]
+  pins     ChatConversationPin[]
 
   @@index([accountId, updatedAt])
   @@map("chat_conversations")
+}
+
+// Per-viewer pin, NOT a column on ChatConversation. `getConversations`' list is
+// heterogeneous (it contains other members' shared conversations via
+// `OR: [{ isShared: true }, { userId }]`), so a pin-as-column would be
+// creator-only: the non-creator who reads a shared conversation daily could
+// never pin it, and a creator pinning their own shared conversation would pin
+// it for everyone. See docs/design/2026-09-07-chat-conversation-management.md
+// "The pin fork — ruled: per viewer".
+//
+// No `accountId` here on purpose: pins are per-account BY CONSTRUCTION — the
+// conversation carries the account and `getConversations` filters on it, so a
+// pin can only ever surface in the account whose conversation it points at.
+//
+// The composite id is the uniqueness constraint and the dedup: pinning is
+// `createMany({ data: [row], skipDuplicates: true })` and unpinning is
+// `deleteMany({ where: { userId, conversationId } })` — both idempotent,
+// neither inside a `$transaction` (a constraint violation would poison it,
+// ABA-313/401).
+model ChatConversationPin {
+  userId         String   @map("user_id")
+  conversationId String   @map("conversation_id")
+  pinnedAt       DateTime @default(now()) @map("pinned_at")
+
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@id([userId, conversationId])
+  @@index([userId])
+  @@map("chat_conversation_pins")
 }
 
 model ChatMessage {

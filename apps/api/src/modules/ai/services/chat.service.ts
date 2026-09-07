@@ -19,6 +19,7 @@ import {
   computeCategoryTotals,
   type FilterExpense,
 } from '../utils/semantic-filter';
+import { mergeConversationLists } from '../utils/conversation-list';
 import type { ChatActionType, ChatPendingAction } from '@budget/shared-types';
 
 interface ChatMessageRecord {
@@ -396,17 +397,42 @@ export class ChatService {
   }
 
   async getConversations(userId: string, accountId?: string) {
-    const conversations = await this.prisma.chatConversation.findMany({
-      where: { accountId, OR: [{ isShared: true }, { userId }] },
-      orderBy: { updatedAt: 'desc' },
-      take: 20,
-      select: { id: true, title: true, isShared: true, userId: true, createdAt: true, updatedAt: true },
-    });
-    return conversations.map((c: any) => ({
+    // Two queries, not one: `take: 20` ordered by `updatedAt desc` means a
+    // conversation pinned three months ago is not in that payload at all, so
+    // a client-side (or even server-side) sort of a single query's results
+    // can never surface it. The pinned query is therefore separate and
+    // deliberately UNBOUNDED (no `take`) — see
+    // docs/design/2026-09-07-chat-conversation-management.md, "The pin has to
+    // be in the query". Both queries start from `chatConversation` (never the
+    // pin table) and select the SAME columns, so exactly one mapper below
+    // turns the merged, deduped rows into the response shape — two mappers
+    // over the two blocks is how they'd end up disagreeing on shape.
+    const where = { accountId, OR: [{ isShared: true }, { userId }] };
+    const select = { id: true, title: true, isShared: true, userId: true, createdAt: true, updatedAt: true };
+
+    const [pinned, recent] = await Promise.all([
+      this.prisma.chatConversation.findMany({
+        where: { ...where, pins: { some: { userId } } },
+        orderBy: { updatedAt: 'desc' },
+        select,
+      }),
+      this.prisma.chatConversation.findMany({
+        where,
+        orderBy: { updatedAt: 'desc' },
+        take: 20,
+        select,
+      }),
+    ]);
+
+    const pinnedIds = new Set(pinned.map((c: any) => c.id));
+    const merged = mergeConversationLists(pinned, recent);
+
+    return merged.map((c: any) => ({
       id: c.id,
       title: c.title,
       isShared: c.isShared,
       isOwner: c.userId === userId,
+      isPinned: pinnedIds.has(c.id),
       createdAt: c.createdAt,
       updatedAt: c.updatedAt,
     }));
