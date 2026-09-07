@@ -63,6 +63,18 @@ La pantalla principal usa el espacio extra para poner delante de ti lo que neces
 - La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
 - Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.
 
+## El chat en una pantalla grande
+
+En una ventana ancha el chat con la IA gana una **lista de tus conversaciones anteriores en el lado izquierdo**, y la conversación en sí se mantiene en un ancho de lectura cómodo en el centro, en vez de estirarse por toda la pantalla.
+
+- Elegir una conversación de la lista la abre en el sitio, y la que estás leyendo queda resaltada.
+- **Nueva conversación** está arriba de esa lista, así que puedes empezar una sin perder el punto en el que estabas leyendo.
+- Una conversación compartida con las demás personas de tu cuenta lleva un pequeño icono de grupo en la lista.
+- El cuadro donde escribes se queda abajo, con el micrófono y el botón de enviar junto al texto y no en bordes opuestos de la pantalla.
+- Una conversación recién empezada muestra lo que el asistente sabe hacer de verdad — añadir un gasto, consultar un presupuesto, poner algo en la lista de la compra — en lugar de una pantalla vacía.
+
+En una ventana más estrecha, y en el teléfono, la lista de conversaciones sigue detrás del botón **Historial**, como antes.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:

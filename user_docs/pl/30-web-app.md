@@ -63,6 +63,18 @@ Ekran główny wykorzystuje dodatkowe miejsce, żeby pokazać to, co wymaga uwag
 - **Dzwonek** otwiera alerty i zaproszenia jako panel, a nie osobną stronę.
 - **Nowo utworzone konto** widzi krótką listę kroków startowych, a nie ekran pustych kart: zeskanuj paragon, wpisz go ręcznie albo ustaw saldo początkowe.
 
+## Czat na dużym ekranie
+
+W szerokim oknie czat AI zyskuje **listę wcześniejszych rozmów po lewej stronie**, a sama rozmowa jest utrzymana w wygodnej do czytania szerokości na środku, zamiast rozciągać się na cały ekran.
+
+- Wybranie rozmowy z listy otwiera ją na miejscu, a ta czytana pozostaje podświetlona.
+- **Nowa rozmowa** znajduje się na górze tej listy, więc możesz ją rozpocząć bez gubienia miejsca w tym, co czytasz.
+- Rozmowa udostępniona pozostałym osobom na koncie ma na liście małą ikonę grupy.
+- Pole do pisania zostaje na dole, a mikrofon i przycisk wysyłania są obok tekstu, nie na przeciwnych krawędziach ekranu.
+- Nowa rozmowa pokazuje, co asystent faktycznie potrafi — dodać wydatek, sprawdzić budżet, wpisać coś na listę zakupów — zamiast pustego ekranu.
+
+W węższym oknie i na telefonie lista rozmów pozostaje pod przyciskiem **Historia**, tak jak dotychczas.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:

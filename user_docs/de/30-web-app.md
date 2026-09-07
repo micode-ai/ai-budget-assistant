@@ -63,6 +63,18 @@ Die Übersicht nutzt den zusätzlichen Platz, um Ihnen das Wichtige vor Augen zu
 - Die **Glocke** öffnet Hinweise und Einladungen als Panel statt als eigene Seite.
 - Ein **ganz neues Konto** sieht eine kurze Einrichtungsliste statt eines Bildschirms voller leerer Karten: einen Kassenbon scannen, einen Betrag eintippen oder einen Anfangssaldo setzen.
 
+## Der Chat auf einem großen Bildschirm
+
+In einem breiten Fenster erhält der KI-Chat eine **Liste Ihrer früheren Unterhaltungen an der linken Seite**, und die Unterhaltung selbst wird in der Mitte auf eine angenehme Lesebreite gehalten, statt über den ganzen Bildschirm gezogen zu werden.
+
+- Eine Unterhaltung aus der Liste öffnet sich an ihrer Stelle, und die gerade gelesene bleibt hervorgehoben.
+- **Neue Unterhaltung** steht oben in dieser Liste, Sie können also eine beginnen, ohne Ihre Stelle im Gelesenen zu verlieren.
+- Eine Unterhaltung, die mit den anderen Personen Ihres Kontos geteilt ist, trägt in der Liste ein kleines Gruppensymbol.
+- Das Eingabefeld bleibt unten, und Mikrofon und Sende-Schaltfläche sitzen neben dem Text statt an den gegenüberliegenden Bildschirmrändern.
+- Eine ganz neue Unterhaltung zeigt, was der Assistent wirklich kann — eine Ausgabe eintragen, ein Budget prüfen, etwas auf die Einkaufsliste setzen — statt eines leeren Bildschirms.
+
+In einem schmaleren Fenster und auf dem Telefon bleibt die Liste der Unterhaltungen wie bisher hinter der Schaltfläche **Verlauf**.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:

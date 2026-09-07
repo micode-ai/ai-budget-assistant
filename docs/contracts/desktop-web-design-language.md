@@ -651,6 +651,132 @@ inline edit `Modal`. More broadly, **47 files still contain a raw `<Modal>`** �
 sheet the moment its screen gets a desktop layout. The right time to convert
 one is that screen's own desktop pass, not a sweep.
 
+## 5i. What the chat screen added — a measure, and a trigger that came free on the phone
+
+The sixth screen and the last of the five tabs. Same gate shape as the five
+before it: one thin route, `ChatView.web.tsx` deciding on width alone,
+`ChatMobile.tsx` holding the phone's JSX in exactly one definition. What is new
+is below.
+
+### A cap in percent is not a measure
+
+`ChatMessageItem`'s bubbles were `maxWidth: '80%'` — right on a phone, where
+80% of a 328px row is a 264px measure, and absurd at 1920, where the same rule
+gave **~1510px**: 5.7× the line length the type was set for. The composer was
+worse in its own way, with its microphone and send button **1876px apart**.
+
+The fix is not a bigger percentage. On desktop the **column becomes the cap**:
+the assistant bubble loses its own `maxWidth` entirely, while the own-message
+bubble keeps its percentage of a row that is now bounded. The asymmetry is
+deliberate and worth stating in the direction it runs — the assistant's answer
+is the document (prose, markdown tables, action cards) and your question is a
+margin note, so widening the answer and not the question is the point. Inverting
+it would widen one-line questions and narrow the tables.
+
+Verified on the deployed build at 1920: transcript row **728px**, matching the
+design's own arithmetic table exactly, and the widest **rendered** line
+**649px** against a predicted 664 — right to 2%.
+
+### A measure stated in characters must name its face, and be checked against the rendered one
+
+The design predicted **72–79 characters at every desktop width**, from
+Montserrat's average advance. The width is right and that band is not, because
+**`markdownStyles.body` in `ChatMessageItem` sets `color`, `fontSize` and
+`lineHeight` and no `fontFamily`** — so every assistant answer renders in the
+platform's default face while the rest of the app is Montserrat. Measured
+`font-family: -apple-system`; the system face is narrower, so the same 649px
+carries roughly **86** characters.
+
+So the layout is right and the typographic claim about it was not checkable as
+written. Two things follow. **A measure expressed in characters is a claim about
+a face**, and it has to be measured on wrapped text as rendered — a `getClientRects()`
+count over a text range, not an advance-width estimate. And this is
+pre-existing, on both platforms: fixing it is `fontFamily` on `body` **plus**
+replacing all five `fontWeight` usages with the concrete Montserrat weight files
+(the `semiBold` token exists), because `fontWeight` on a named static family
+does nothing or synthesises. That changes every assistant message on the phone,
+so it is a decision rather than a drive-by.
+
+### Arithmetic can delete a design decision
+
+The 1024–1439 band needed no threshold constant and no collapsed-rail story at
+all, because the column reaches its 760px cap at **exactly 1080** — so the whole
+band is "the column is 704–760 instead of 760". Compare the transactions screen,
+which needed `FACET_RAIL_MIN_WIDTH = 1440` for its own band. Work the numbers
+before designing a breakpoint; sometimes there is nothing there to design.
+
+### The first deliberate departure from the one-page-scroll rule
+
+Section 2 prefers one page scroll. This screen has **none**: the transcript
+scrolls, the rail scrolls, and the composer is docked. A transcript cannot sit
+inside a page scroller when the content is end-anchored and the composer is
+fixed. Both existing rails (`FacetRail`, `SettingsNav`) sit *inside* their page
+scroller; this one cannot, and that is argued in the design's own Departures
+section rather than waved through. RNW's `ScrollView` is `overflowY: auto`, so
+the rail's scrollbar exists only on overflow.
+
+### Teardown and refill are two halves, and a sheet gives you the second one free
+
+This is the most portable thing the screen taught.
+
+`chatStore` had no `reset()`, was absent from `logoutAction` **and** absent from
+`clearAccountScopedCaches()` — so a conversation list survived both sign-out
+(the `inflationShieldStore` class: a cache readable by the next person to sign
+in on that browser) and an account switch. The teardown was written first,
+because a rail that loads on mount without it shows another account's
+conversations and the composer posts into one of them.
+
+**And the teardown alone left the rail stuck.** `reset()` sets
+`conversationsStatus` back to `'idle'`, `resolveRailState` maps that to the
+rail's *visible* `'loading'`, and the only fetch was keyed on
+`[currentConversationId]` — which the reset clears to `null`, so nothing ever
+asked again. Found in a browser: switch accounts and the rail empties correctly,
+then sits on "Loading…" forever while the API answers `200` and an empty list to
+anyone who asks it.
+
+The general rule: **a persistent list needs an explicit refetch trigger that a
+sheet-hosted list gets for free.** The phone was never affected, and the reason
+is the same reason the desktop was: `handleOpenHistory` calls
+`loadConversations()` on *every open*, so the phone refreshes at a moment the
+always-visible rail does not have. When a list moves out of a sheet and into
+permanent furniture, re-create that trigger deliberately — here, an effect keyed
+on `[currentAccountId]` in the always-mounted parent, which is the refill half
+of the idiom `accountStore`'s own comment already documents.
+
+Two wrong fixes worth naming, because both compile: changing
+`resolveRailState`'s `idle → loading` mapping (the state machine was right; the
+bug was a missing fetch), and making `'idle'` render as empty (which turns a
+genuine first paint into a false "this account has no conversations" — the exact
+confusion the `retry` state exists to prevent).
+
+### A reviewer may read anything and change nothing
+
+Two code reviewers on this wave ran `git stash -u` on the shared working tree to
+get themselves a clean checkout of the commit under review. The second landed
+inside a live implementer's write window: it wiped a full round of that agent's
+edits, which it redid blind, reporting only that its files had "silently
+vanished" with an `reset: moving to HEAD` it had not caused. The reflog shows
+both stashes.
+
+No damage survived, and only because the implementer **flagged an unexplained
+event instead of quietly redoing the work** — that is the whole reason the cause
+was findable. The rule now goes in every review dispatch: **read anything,
+change nothing** — no stash, no checkout, no branch switch. A reviewer wanting a
+clean view of a commit uses `git show` / `git diff` against it, which mutates
+nothing.
+
+### A count in a document is wrong by default
+
+Recorded here because it kept recurring and finally reached my own writing. This
+wave's plan carried a baseline test count in its Global Constraints; task 1
+moved it, and task 2's brief was extracted afterwards carrying the stale figure,
+which its reviewer then had to spend a paragraph reconciling. The plan now
+states the rule and no number, and tells the implementer to read the count off
+the tree. Along with the registry comments saying "twelve" and "ten", the one
+saying "the other four" where the group was five, and four counts in CLAUDE.md,
+that is seven instances in one branch. **If a list is adjacent, the count is
+decoration that rots.**
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under

@@ -63,6 +63,18 @@ Le tableau de bord se sert de la place supplémentaire pour mettre devant vous c
 - La **cloche** ouvre vos alertes et vos invitations sous forme de panneau, et non de page séparée.
 - Un **compte tout neuf** voit une courte liste de premiers pas au lieu d'un écran de cartes vides : scanner un ticket, en saisir un à la main, ou définir un solde de départ.
 
+## Le chat sur un grand écran
+
+Dans une fenêtre large, le chat avec l'IA gagne une **liste de vos conversations précédentes sur le côté gauche**, et la conversation elle-même est maintenue à une largeur de lecture confortable au centre, au lieu d'être étirée sur tout l'écran.
+
+- Choisir une conversation dans la liste l'ouvre sur place, et celle que vous lisez reste mise en évidence.
+- **Nouvelle conversation** se trouve en haut de cette liste : vous pouvez donc en commencer une sans perdre votre place dans ce que vous lisiez.
+- Une conversation partagée avec les autres personnes de votre compte porte une petite icône de groupe dans la liste.
+- Le champ de saisie reste en bas, avec son microphone et son bouton d'envoi à côté du texte plutôt qu'aux deux bords opposés de l'écran.
+- Une conversation toute neuve montre ce que l'assistant sait réellement faire — ajouter une dépense, consulter un budget, mettre quelque chose sur la liste de courses — au lieu d'un écran vide.
+
+Dans une fenêtre plus étroite, et sur le téléphone, la liste des conversations reste derrière le bouton **Historique**, comme avant.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :

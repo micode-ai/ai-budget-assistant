@@ -63,6 +63,18 @@ Het startscherm gebruikt de extra ruimte om te tonen wat je aandacht nodig heeft
 - De **bel** opent je meldingen en uitnodigingen als paneel in plaats van als aparte pagina.
 - Een **nieuwe rekening** ziet een korte lijst met eerste stappen in plaats van een scherm vol lege kaarten: een kassabon scannen, er handmatig een invoeren, of een beginsaldo instellen.
 
+## De chat op een groot scherm
+
+In een breed venster krijgt de AI-chat een **lijst met je eerdere gesprekken aan de linkerkant**, en het gesprek zelf blijft in het midden op een comfortabele leesbreedte in plaats van over het hele scherm uitgerekt te worden.
+
+- Een gesprek uit de lijst kiezen opent het ter plekke, en het gesprek dat je leest blijft gemarkeerd.
+- **Nieuw gesprek** staat bovenaan die lijst, dus je kunt er een beginnen zonder je plek kwijt te raken in wat je aan het lezen was.
+- Een gesprek dat je met de andere mensen op je rekening deelt, heeft een klein groepspictogram in de lijst.
+- Het invoerveld blijft onderaan, met de microfoon en de verzendknop naast de tekst in plaats van aan tegenoverliggende schermranden.
+- Een nieuw gesprek laat zien wat de assistent echt kan — een uitgave toevoegen, een budget bekijken, iets op de boodschappenlijst zetten — in plaats van een leeg scherm.
+
+In een smaller venster, en op de telefoon, blijft de gesprekkenlijst achter de knop **Geschiedenis**, zoals voorheen.
+
 ## Beperkingen
 
 De webversie is een aanvulling op de mobiele app, geen volledige vervanging. Een paar functies werken anders in de browser:

@@ -3858,6 +3858,18 @@ The dashboard uses the extra room to put what needs your attention in front of y
 - The **bell** opens your alerts and invitations as a panel instead of a separate page.
 - A **brand-new account** sees a short setup checklist rather than a screen of empty cards: scan a receipt, type one in, or set a starting balance.
 
+## The Chat on a Wide Screen
+
+On a wide window the AI chat gains a **list of your past conversations down the left side**, and the conversation itself is held to a comfortable reading width in the middle instead of being stretched across the screen.
+
+- Picking a conversation from the list opens it in place, and the one you are reading stays highlighted.
+- **New conversation** sits at the top of that list, so you can start one without losing your place in what you were reading.
+- A conversation shared with the other people on your account carries a small group icon in the list.
+- The box you type in stays at the bottom, with its microphone and send button next to the text rather than at opposite edges of the screen.
+- A brand-new conversation shows what the assistant can actually do — add an expense, check a budget, put something on the shopping list — instead of an empty screen.
+
+On a narrower window, and on the phone, the conversation list stays behind the **History** button as before.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:
@@ -8459,6 +8471,18 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Колокольчик** открывает оповещения и приглашения панелью, а не отдельной страницей.
 - **Совсем новый счёт** видит короткий список первых шагов вместо экрана пустых карточек: отсканировать чек, вписать его вручную или задать начальный баланс.
 
+## Чат на большом экране
+
+В широком окне у чата с ИИ появляется **список прошлых разговоров по левому краю**, а сам разговор держится в середине на удобной для чтения ширине, а не растягивается на весь экран.
+
+- Выбор разговора из списка открывает его на месте, а тот, что вы читаете, остаётся подсвеченным.
+- **Новый разговор** стоит наверху этого списка, так что начать его можно, не теряя места в том, что читали.
+- Разговор, открытый остальным участникам счёта, помечен в списке небольшим значком группы.
+- Поле ввода остаётся внизу, а микрофон и кнопка отправки стоят рядом с текстом, а не у противоположных краёв экрана.
+- Совсем новый разговор показывает, что помощник умеет на самом деле — записать расход, проверить бюджет, добавить что-то в список покупок, — вместо пустого экрана.
+
+В более узком окне и на телефоне список разговоров остаётся за кнопкой **История**, как и раньше.
+
 ## Ограничения
 
 Веб-версия дополняет мобильное приложение, но не заменяет его полностью. Несколько функций в браузере работают иначе:
@@ -13028,6 +13052,18 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Дзвіночок** відкриває оповіщення та запрошення панеллю, а не окремою сторінкою.
 - **Цілком новий рахунок** бачить короткий список перших кроків замість екрана порожніх карток: відсканувати чек, вписати його вручну або задати початковий баланс.
 
+## Чат на великому екрані
+
+У широкому вікні чат з ШІ отримує **список минулих розмов по лівому краю**, а сама розмова тримається в середині на зручній для читання ширині, а не розтягується на весь екран.
+
+- Вибір розмови зі списку відкриває її на місці, а та, яку ви читаєте, залишається підсвіченою.
+- **Нова розмова** стоїть згори цього списку, тож почати її можна, не втрачаючи місця в тому, що читали.
+- Розмова, відкрита іншим учасникам рахунку, позначена у списку невеликим значком групи.
+- Поле введення залишається внизу, а мікрофон і кнопка надсилання стоять поряд із текстом, а не біля протилежних країв екрана.
+- Цілком нова розмова показує, що помічник уміє насправді — записати витрату, перевірити бюджет, додати щось до списку покупок, — замість порожнього екрана.
+
+У вужчому вікні та на телефоні список розмов залишається за кнопкою **Історія**, як і раніше.
+
 ## Обмеження
 
 Веб-версія доповнює мобільний застосунок, але не замінює його повністю. Кілька функцій у браузері працюють інакше:
@@ -17582,6 +17618,18 @@ Ekran główny wykorzystuje dodatkowe miejsce, żeby pokazać to, co wymaga uwag
 - **Dzwonek** otwiera alerty i zaproszenia jako panel, a nie osobną stronę.
 - **Nowo utworzone konto** widzi krótką listę kroków startowych, a nie ekran pustych kart: zeskanuj paragon, wpisz go ręcznie albo ustaw saldo początkowe.
 
+## Czat na dużym ekranie
+
+W szerokim oknie czat AI zyskuje **listę wcześniejszych rozmów po lewej stronie**, a sama rozmowa jest utrzymana w wygodnej do czytania szerokości na środku, zamiast rozciągać się na cały ekran.
+
+- Wybranie rozmowy z listy otwiera ją na miejscu, a ta czytana pozostaje podświetlona.
+- **Nowa rozmowa** znajduje się na górze tej listy, więc możesz ją rozpocząć bez gubienia miejsca w tym, co czytasz.
+- Rozmowa udostępniona pozostałym osobom na koncie ma na liście małą ikonę grupy.
+- Pole do pisania zostaje na dole, a mikrofon i przycisk wysyłania są obok tekstu, nie na przeciwnych krawędziach ekranu.
+- Nowa rozmowa pokazuje, co asystent faktycznie potrafi — dodać wydatek, sprawdzić budżet, wpisać coś na listę zakupów — zamiast pustego ekranu.
+
+W węższym oknie i na telefonie lista rozmów pozostaje pod przyciskiem **Historia**, tak jak dotychczas.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:
@@ -22111,6 +22159,18 @@ Die Übersicht nutzt den zusätzlichen Platz, um Ihnen das Wichtige vor Augen zu
 - Die **Glocke** öffnet Hinweise und Einladungen als Panel statt als eigene Seite.
 - Ein **ganz neues Konto** sieht eine kurze Einrichtungsliste statt eines Bildschirms voller leerer Karten: einen Kassenbon scannen, einen Betrag eintippen oder einen Anfangssaldo setzen.
 
+## Der Chat auf einem großen Bildschirm
+
+In einem breiten Fenster erhält der KI-Chat eine **Liste Ihrer früheren Unterhaltungen an der linken Seite**, und die Unterhaltung selbst wird in der Mitte auf eine angenehme Lesebreite gehalten, statt über den ganzen Bildschirm gezogen zu werden.
+
+- Eine Unterhaltung aus der Liste öffnet sich an ihrer Stelle, und die gerade gelesene bleibt hervorgehoben.
+- **Neue Unterhaltung** steht oben in dieser Liste, Sie können also eine beginnen, ohne Ihre Stelle im Gelesenen zu verlieren.
+- Eine Unterhaltung, die mit den anderen Personen Ihres Kontos geteilt ist, trägt in der Liste ein kleines Gruppensymbol.
+- Das Eingabefeld bleibt unten, und Mikrofon und Sende-Schaltfläche sitzen neben dem Text statt an den gegenüberliegenden Bildschirmrändern.
+- Eine ganz neue Unterhaltung zeigt, was der Assistent wirklich kann — eine Ausgabe eintragen, ein Budget prüfen, etwas auf die Einkaufsliste setzen — statt eines leeren Bildschirms.
+
+In einem schmaleren Fenster und auf dem Telefon bleibt die Liste der Unterhaltungen wie bisher hinter der Schaltfläche **Verlauf**.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:
@@ -26629,6 +26689,18 @@ La pantalla principal usa el espacio extra para poner delante de ti lo que neces
 - La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
 - Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.
 
+## El chat en una pantalla grande
+
+En una ventana ancha el chat con la IA gana una **lista de tus conversaciones anteriores en el lado izquierdo**, y la conversación en sí se mantiene en un ancho de lectura cómodo en el centro, en vez de estirarse por toda la pantalla.
+
+- Elegir una conversación de la lista la abre en el sitio, y la que estás leyendo queda resaltada.
+- **Nueva conversación** está arriba de esa lista, así que puedes empezar una sin perder el punto en el que estabas leyendo.
+- Una conversación compartida con las demás personas de tu cuenta lleva un pequeño icono de grupo en la lista.
+- El cuadro donde escribes se queda abajo, con el micrófono y el botón de enviar junto al texto y no en bordes opuestos de la pantalla.
+- Una conversación recién empezada muestra lo que el asistente sabe hacer de verdad — añadir un gasto, consultar un presupuesto, poner algo en la lista de la compra — en lugar de una pantalla vacía.
+
+En una ventana más estrecha, y en el teléfono, la lista de conversaciones sigue detrás del botón **Historial**, como antes.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:
@@ -31145,6 +31217,18 @@ Le tableau de bord se sert de la place supplémentaire pour mettre devant vous c
 - La **cloche** ouvre vos alertes et vos invitations sous forme de panneau, et non de page séparée.
 - Un **compte tout neuf** voit une courte liste de premiers pas au lieu d'un écran de cartes vides : scanner un ticket, en saisir un à la main, ou définir un solde de départ.
 
+## Le chat sur un grand écran
+
+Dans une fenêtre large, le chat avec l'IA gagne une **liste de vos conversations précédentes sur le côté gauche**, et la conversation elle-même est maintenue à une largeur de lecture confortable au centre, au lieu d'être étirée sur tout l'écran.
+
+- Choisir une conversation dans la liste l'ouvre sur place, et celle que vous lisez reste mise en évidence.
+- **Nouvelle conversation** se trouve en haut de cette liste : vous pouvez donc en commencer une sans perdre votre place dans ce que vous lisiez.
+- Une conversation partagée avec les autres personnes de votre compte porte une petite icône de groupe dans la liste.
+- Le champ de saisie reste en bas, avec son microphone et son bouton d'envoi à côté du texte plutôt qu'aux deux bords opposés de l'écran.
+- Une conversation toute neuve montre ce que l'assistant sait réellement faire — ajouter une dépense, consulter un budget, mettre quelque chose sur la liste de courses — au lieu d'un écran vide.
+
+Dans une fenêtre plus étroite, et sur le téléphone, la liste des conversations reste derrière le bouton **Historique**, comme avant.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :
@@ -35624,6 +35708,18 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Усё, што вы дадаеце, адкрываецца паверх галоўнага экрана** — выдатак, пачатковы баланс, бюджэт, — таму вы застаецеся на тым экране, які чыталі.
 - **Званочак** адкрывае апавяшчэнні і запрашэнні панэллю, а не асобнай старонкай.
 - **Зусім новы рахунак** бачыць кароткі спіс першых крокаў замест экрана пустых картак: адсканаваць чэк, упісаць яго ўручную або задаць пачатковы баланс.
+
+## Чат на вялікім экране
+
+У шырокім акне ў чата са штучным інтэлектам з'яўляецца **спіс мінулых размоў па левым краі**, а сама размова трымаецца ў сярэдзіне на зручнай для чытання шырыні, а не расцягваецца на ўвесь экран.
+
+- Выбар размовы са спісу адкрывае яе на месцы, а тая, якую вы чытаеце, застаецца падсветленай.
+- **Новая размова** стаіць уверсе гэтага спісу, таму пачаць яе можна, не губляючы месца ў тым, што чыталі.
+- Размова, адкрытая астатнім удзельнікам рахунку, пазначана ў спісе невялікім значком групы.
+- Поле ўводу застаецца ўнізе, а мікрафон і кнопка адпраўкі стаяць побач з тэкстам, а не ля супрацьлеглых краёў экрана.
+- Зусім новая размова паказвае, што памочнік умее насамрэч — запісаць выдатак, праверыць бюджэт, дадаць нешта ў спіс пакупак, — замест пустога экрана.
+
+У вузейшым акне і на тэлефоне спіс размоў застаецца за кнопкай **Гісторыя**, як і раней.
 
 ## Абмежаванні
 
@@ -40219,6 +40315,18 @@ Het startscherm gebruikt de extra ruimte om te tonen wat je aandacht nodig heeft
 - **Alles wat je toevoegt opent over het startscherm** — een uitgave, een beginsaldo, een budget — zodat je op het scherm blijft dat je aan het lezen was.
 - De **bel** opent je meldingen en uitnodigingen als paneel in plaats van als aparte pagina.
 - Een **nieuwe rekening** ziet een korte lijst met eerste stappen in plaats van een scherm vol lege kaarten: een kassabon scannen, er handmatig een invoeren, of een beginsaldo instellen.
+
+## De chat op een groot scherm
+
+In een breed venster krijgt de AI-chat een **lijst met je eerdere gesprekken aan de linkerkant**, en het gesprek zelf blijft in het midden op een comfortabele leesbreedte in plaats van over het hele scherm uitgerekt te worden.
+
+- Een gesprek uit de lijst kiezen opent het ter plekke, en het gesprek dat je leest blijft gemarkeerd.
+- **Nieuw gesprek** staat bovenaan die lijst, dus je kunt er een beginnen zonder je plek kwijt te raken in wat je aan het lezen was.
+- Een gesprek dat je met de andere mensen op je rekening deelt, heeft een klein groepspictogram in de lijst.
+- Het invoerveld blijft onderaan, met de microfoon en de verzendknop naast de tekst in plaats van aan tegenoverliggende schermranden.
+- Een nieuw gesprek laat zien wat de assistent echt kan — een uitgave toevoegen, een budget bekijken, iets op de boodschappenlijst zetten — in plaats van een leeg scherm.
+
+In een smaller venster, en op de telefoon, blijft de gesprekkenlijst achter de knop **Geschiedenis**, zoals voorheen.
 
 ## Beperkingen
 

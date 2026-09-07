@@ -63,6 +63,18 @@ The dashboard uses the extra room to put what needs your attention in front of y
 - The **bell** opens your alerts and invitations as a panel instead of a separate page.
 - A **brand-new account** sees a short setup checklist rather than a screen of empty cards: scan a receipt, type one in, or set a starting balance.
 
+## The Chat on a Wide Screen
+
+On a wide window the AI chat gains a **list of your past conversations down the left side**, and the conversation itself is held to a comfortable reading width in the middle instead of being stretched across the screen.
+
+- Picking a conversation from the list opens it in place, and the one you are reading stays highlighted.
+- **New conversation** sits at the top of that list, so you can start one without losing your place in what you were reading.
+- A conversation shared with the other people on your account carries a small group icon in the list.
+- The box you type in stays at the bottom, with its microphone and send button next to the text rather than at opposite edges of the screen.
+- A brand-new conversation shows what the assistant can actually do — add an expense, check a budget, put something on the shopping list — instead of an empty screen.
+
+On a narrower window, and on the phone, the conversation list stays behind the **History** button as before.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:
