@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { useLocalSearchParams } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { CategoryIcon } from '@/components/CategoryIcon';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { formatCurrency } from '@budget/shared-utils';
@@ -70,10 +71,11 @@ export default function CalendarScreen() {
       return (
         <View style={styles.transactionRow}>
           <View style={[styles.transactionIcon, { backgroundColor: item.categoryColor + '20' }]}>
-            <Ionicons
-              name={(item.categoryIcon as keyof typeof Ionicons.glyphMap) || 'ellipsis-horizontal'}
+            <CategoryIcon
+              icon={item.categoryIcon}
               size={18}
               color={item.categoryColor}
+              fallback="ellipsis-horizontal"
             />
           </View>
           <View style={styles.transactionInfo}>

@@ -8,6 +8,7 @@ import {
 import { showAlert } from '@/utils/alert';
 import { SheetDialog } from '@/components/SheetDialog';
 import { Ionicons } from '@expo/vector-icons';
+import { CategoryIcon } from '@/components/CategoryIcon';
 import { useTranslation } from 'react-i18next';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useAccountStore } from '@/stores/accountStore';
@@ -15,7 +16,6 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Category } from '@budget/shared-types';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 
-type IconName = keyof typeof Ionicons.glyphMap;
 
 /**
  * Stable accessible-name id for the create/edit sheet's title, wired to the
@@ -177,8 +177,8 @@ export function CategoriesSettings() {
         activeOpacity={canEdit ? 0.7 : 1}
       >
         <View style={[styles.colorDot, { backgroundColor: category.color || theme.colors.textTertiary }]} />
-        <Ionicons
-          name={(category.icon as IconName) || 'ellipse'}
+        <CategoryIcon
+          icon={category.icon}
           size={20}
           color={theme.colors.textSecondary}
           style={styles.icon}
