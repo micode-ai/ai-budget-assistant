@@ -4,6 +4,7 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { categoryLabel } from '@/utils/entityLabel';
 import { filterConsumption } from '@/utils/consumption';
 import { useTranslation } from 'react-i18next';
 
@@ -128,7 +129,7 @@ export function useScenarioProjection(
       const pct = expenseAdjustments[catId ?? 'null'] ?? 0;
       expenseCategories.push({
         categoryId: catId,
-        name: cat ? getCategoryDisplayName(cat, t) : (catId ? catId : t('common.uncategorized')),
+        name: cat ? getCategoryDisplayName(cat, t) : categoryLabel(cat),
         icon: cat?.icon,
         color: cat?.color,
         currentMonthly,
@@ -146,7 +147,7 @@ export function useScenarioProjection(
       const pct = incomeAdjustments[catId ?? 'null'] ?? 0;
       incomeCategories.push({
         categoryId: catId,
-        name: cat ? getCategoryDisplayName(cat, t) : (catId ? catId : t('common.uncategorized')),
+        name: cat ? getCategoryDisplayName(cat, t) : categoryLabel(cat),
         icon: cat?.icon,
         color: cat?.color,
         currentMonthly,

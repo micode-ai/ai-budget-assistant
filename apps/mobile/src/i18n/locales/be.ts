@@ -13,6 +13,8 @@ export default {
     success: 'Паспяхова',
     of: 'з',
     uncategorized: 'Без катэгорыі',
+    unknownProject: 'Невядомы праект',
+    unknownTag: 'Невядомы тэг',
     ok: 'ОК',
     remove: 'Выдаліць',
     copy: 'Капіяваць',

@@ -10,6 +10,7 @@ import { api } from '@/services/api';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { readAnchorDay } from '@/hooks/useFinancialMonth';
 import { filterConsumption } from '@/utils/consumption';
+import { categoryLabel } from '@/utils/entityLabel';
 import {
   loadAllBudgets,
   insertBudget,
@@ -523,7 +524,7 @@ export const useBudgetStore = create<BudgetState>()(
           const cat = categoriesState.categories.find((c) => c.id === alloc.categoryId);
           return {
             categoryId: alloc.categoryId,
-            categoryName: cat?.name || 'Unknown',
+            categoryName: categoryLabel(cat),
             categoryColor: cat?.color,
             allocated: alloc.amount,
             spent: catSpent,

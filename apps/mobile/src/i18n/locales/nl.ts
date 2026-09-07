@@ -13,6 +13,8 @@ export default {
     success: 'Gelukt',
     of: 'van',
     uncategorized: 'Zonder categorie',
+    unknownProject: 'Onbekend project',
+    unknownTag: 'Onbekende tag',
     ok: 'OK',
     remove: 'Verwijderen',
     copy: 'Kopiëren',

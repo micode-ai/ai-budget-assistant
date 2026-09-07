@@ -13,6 +13,8 @@ export default {
     success: 'Успішно',
     of: 'з',
     uncategorized: 'Без категорії',
+    unknownProject: 'Невідомий проєкт',
+    unknownTag: 'Невідомий тег',
     ok: 'ОК',
     remove: 'Видалити',
     copy: 'Копіювати',

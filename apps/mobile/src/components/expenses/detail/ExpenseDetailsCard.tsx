@@ -29,6 +29,7 @@ import {
 } from '@/components/expenses/TripExpenseSplitPicker';
 import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { categoryLabel } from '@/utils/entityLabel';
 import { formatDate, formatCurrency, generateUUID, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -495,7 +496,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
                 <View key={split.id} style={styles.splitRow}>
                   <View style={[styles.splitDot, { backgroundColor: cat?.color || '#6B7280' }]} />
                   <Text style={styles.splitName}>
-                    {cat ? getCategoryDisplayName(cat, t) : split.categoryId}
+                    {cat ? getCategoryDisplayName(cat, t) : categoryLabel(cat)}
                   </Text>
                   <Text style={styles.splitAmount}>
                     {formatCurrency(split.amount, expense.currencyCode)}
@@ -517,7 +518,7 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
                 const cat = getCategoryById(s.categoryId);
                 return {
                   categoryId: s.categoryId,
-                  categoryName: cat ? getCategoryDisplayName(cat, t) : s.categoryId,
+                  categoryName: cat ? getCategoryDisplayName(cat, t) : categoryLabel(cat),
                   amount: s.amount,
                   percentage: s.percentage,
                   notes: s.notes,
