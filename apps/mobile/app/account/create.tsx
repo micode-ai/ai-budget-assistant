@@ -15,6 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, Currency } from '@budget/shared-types';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
+import { PaneChildWidth } from '@/components/PaneChildWidth';
 
 type IconName = keyof typeof Ionicons.glyphMap;
 
@@ -58,84 +59,86 @@ export default function CreateAccountScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
-        {/* Account Name */}
-        <Text style={styles.label}>{t('accounts.name')}</Text>
-        <TextInput
-          style={styles.input}
-          value={name}
-          onChangeText={setName}
-          placeholder={t('accounts.namePlaceholder')}
-          placeholderTextColor={theme.colors.textTertiary}
-          autoFocus
-        />
+        <PaneChildWidth>
+          {/* Account Name */}
+          <Text style={styles.label}>{t('accounts.name')}</Text>
+          <TextInput
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+            placeholder={t('accounts.namePlaceholder')}
+            placeholderTextColor={theme.colors.textTertiary}
+            autoFocus
+          />
 
-        {/* Account Type */}
-        <Text style={styles.label}>{t('accounts.type')}</Text>
-        <View style={styles.typeRow}>
-          {ACCOUNT_TYPES.map((item) => (
-            <TouchableOpacity
-              key={item.type}
-              style={[
-                styles.typeCard,
-                type === item.type && styles.typeCardActive,
-              ]}
-              onPress={() =>
-                item.type === 'trip' ? router.push('/trip/new') : setType(item.type)
-              }
-            >
-              <Ionicons
-                name={item.icon}
-                size={28}
-                color={type === item.type ? theme.colors.primary : theme.colors.textTertiary}
-              />
-              <Text
+          {/* Account Type */}
+          <Text style={styles.label}>{t('accounts.type')}</Text>
+          <View style={styles.typeRow}>
+            {ACCOUNT_TYPES.map((item) => (
+              <TouchableOpacity
+                key={item.type}
                 style={[
-                  styles.typeLabel,
-                  type === item.type && styles.typeLabelActive,
+                  styles.typeCard,
+                  type === item.type && styles.typeCardActive,
                 ]}
+                onPress={() =>
+                  item.type === 'trip' ? router.push('/trip/new') : setType(item.type)
+                }
               >
-                {t(`accounts.types.${item.type}`)}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+                <Ionicons
+                  name={item.icon}
+                  size={28}
+                  color={type === item.type ? theme.colors.primary : theme.colors.textTertiary}
+                />
+                <Text
+                  style={[
+                    styles.typeLabel,
+                    type === item.type && styles.typeLabelActive,
+                  ]}
+                >
+                  {t(`accounts.types.${item.type}`)}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-        {/* Currency */}
-        <Text style={styles.label}>{t('accounts.currency')}</Text>
-        <View style={styles.currencyRow}>
-          {CURRENCIES.map((c) => (
-            <TouchableOpacity
-              key={c}
-              style={[
-                styles.currencyChip,
-                currencyCode === c && styles.currencyChipActive,
-              ]}
-              onPress={() => setCurrencyCode(c)}
-            >
-              <Text
+          {/* Currency */}
+          <Text style={styles.label}>{t('accounts.currency')}</Text>
+          <View style={styles.currencyRow}>
+            {CURRENCIES.map((c) => (
+              <TouchableOpacity
+                key={c}
                 style={[
-                  styles.currencyText,
-                  currencyCode === c && styles.currencyTextActive,
+                  styles.currencyChip,
+                  currencyCode === c && styles.currencyChipActive,
                 ]}
+                onPress={() => setCurrencyCode(c)}
               >
-                {c}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+                <Text
+                  style={[
+                    styles.currencyText,
+                    currencyCode === c && styles.currencyTextActive,
+                  ]}
+                >
+                  {c}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 
-        {/* Create Button */}
-        <TouchableOpacity
-          style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-          onPress={handleCreate}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color={theme.colors.textInverse} />
-          ) : (
-            <Text style={styles.submitButtonText}>{t('accounts.create')}</Text>
-          )}
-        </TouchableOpacity>
+          {/* Create Button */}
+          <TouchableOpacity
+            style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
+            onPress={handleCreate}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color={theme.colors.textInverse} />
+            ) : (
+              <Text style={styles.submitButtonText}>{t('accounts.create')}</Text>
+            )}
+          </TouchableOpacity>
+        </PaneChildWidth>
       </KeyboardAwareScreen>
     </SafeAreaView>
   );

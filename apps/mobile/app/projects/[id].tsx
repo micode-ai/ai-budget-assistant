@@ -10,6 +10,7 @@ import {
 import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
 import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
+import { PaneChildWidth } from '@/components/PaneChildWidth';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -126,75 +127,77 @@ export default function ProjectDetailScreen() {
       />
 
       <ScrollView contentContainerStyle={styles.content}>
-        {/* Info card */}
-        <View style={styles.infoCard}>
-          <View style={[styles.colorStripe, { backgroundColor: project.color || theme.colors.primary }]} />
-          <View style={styles.infoContent}>
-            {project.description ? (
-              <Text style={styles.desc}>{project.description}</Text>
-            ) : null}
-            <View style={styles.statsRow}>
-              <View style={styles.stat}>
-                <Text style={styles.statLabel}>{t('projects.totalSpent')}</Text>
-                <Text style={[styles.statValue, { color: theme.colors.danger }]}>
-                  {totalSpent.toFixed(2)}
-                </Text>
-              </View>
-              {project.budget ? (
+        <PaneChildWidth>
+          {/* Info card */}
+          <View style={styles.infoCard}>
+            <View style={[styles.colorStripe, { backgroundColor: project.color || theme.colors.primary }]} />
+            <View style={styles.infoContent}>
+              {project.description ? (
+                <Text style={styles.desc}>{project.description}</Text>
+              ) : null}
+              <View style={styles.statsRow}>
                 <View style={styles.stat}>
-                  <Text style={styles.statLabel}>{t('projects.budgetRemaining')}</Text>
-                  <Text style={[styles.statValue, { color: theme.colors.primary }]}>
-                    {(Number(project.budget) - totalSpent).toFixed(2)}
+                  <Text style={styles.statLabel}>{t('projects.totalSpent')}</Text>
+                  <Text style={[styles.statValue, { color: theme.colors.danger }]}>
+                    {totalSpent.toFixed(2)}
                   </Text>
                 </View>
-              ) : null}
-              <View style={styles.stat}>
-                <Text style={styles.statLabel}>{t('nav.expenses')}</Text>
-                <Text style={styles.statValue}>{projectExpenses.length}</Text>
+                {project.budget ? (
+                  <View style={styles.stat}>
+                    <Text style={styles.statLabel}>{t('projects.budgetRemaining')}</Text>
+                    <Text style={[styles.statValue, { color: theme.colors.primary }]}>
+                      {(Number(project.budget) - totalSpent).toFixed(2)}
+                    </Text>
+                  </View>
+                ) : null}
+                <View style={styles.stat}>
+                  <Text style={styles.statLabel}>{t('nav.expenses')}</Text>
+                  <Text style={styles.statValue}>{projectExpenses.length}</Text>
+                </View>
               </View>
             </View>
           </View>
-        </View>
 
-        {/* Expenses list */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>{t('nav.expenses')}</Text>
-        </View>
-        <View style={styles.card}>
-          {projectExpenses.length === 0 ? (
-            <Text style={styles.empty}>{t('projects.noExpenses')}</Text>
-          ) : (
-            projectExpenses
-              .slice()
-              .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
-              .map((expense, i) => {
-                const cat = expense.categoryId ? getCategoryById(expense.categoryId) : undefined;
-                return (
-                  <React.Fragment key={expense.id}>
-                    <TouchableOpacity
-                      style={styles.expenseRow}
-                      onPress={() => router.push(`/expense/${expense.localId}`)}
-                      activeOpacity={0.7}
-                    >
-                      <View style={[styles.catDot, { backgroundColor: cat?.color || theme.colors.textTertiary }]} />
-                      <View style={styles.expenseInfo}>
-                        <Text style={styles.expenseName} numberOfLines={1}>
-                          {expense.merchant || expense.description || cat?.name || '—'}
+          {/* Expenses list */}
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{t('nav.expenses')}</Text>
+          </View>
+          <View style={styles.card}>
+            {projectExpenses.length === 0 ? (
+              <Text style={styles.empty}>{t('projects.noExpenses')}</Text>
+            ) : (
+              projectExpenses
+                .slice()
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .map((expense, i) => {
+                  const cat = expense.categoryId ? getCategoryById(expense.categoryId) : undefined;
+                  return (
+                    <React.Fragment key={expense.id}>
+                      <TouchableOpacity
+                        style={styles.expenseRow}
+                        onPress={() => router.push(`/expense/${expense.localId}`)}
+                        activeOpacity={0.7}
+                      >
+                        <View style={[styles.catDot, { backgroundColor: cat?.color || theme.colors.textTertiary }]} />
+                        <View style={styles.expenseInfo}>
+                          <Text style={styles.expenseName} numberOfLines={1}>
+                            {expense.merchant || expense.description || cat?.name || '—'}
+                          </Text>
+                          <Text style={styles.expenseDate}>
+                            {new Date(expense.date).toLocaleDateString()}
+                          </Text>
+                        </View>
+                        <Text style={[styles.expenseAmount, { color: theme.colors.danger }]}>
+                          -{expense.amount.toFixed(2)} {expense.currencyCode}
                         </Text>
-                        <Text style={styles.expenseDate}>
-                          {new Date(expense.date).toLocaleDateString()}
-                        </Text>
-                      </View>
-                      <Text style={[styles.expenseAmount, { color: theme.colors.danger }]}>
-                        -{expense.amount.toFixed(2)} {expense.currencyCode}
-                      </Text>
-                    </TouchableOpacity>
-                    {i < projectExpenses.length - 1 && <View style={styles.divider} />}
-                  </React.Fragment>
-                );
-              })
-          )}
-        </View>
+                      </TouchableOpacity>
+                      {i < projectExpenses.length - 1 && <View style={styles.divider} />}
+                    </React.Fragment>
+                  );
+                })
+            )}
+          </View>
+        </PaneChildWidth>
       </ScrollView>
 
       {/* Edit modal */}
