@@ -639,7 +639,7 @@ function RootNavigator() {
         <Stack.Screen
           name="tags/manage"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('tags/manage'),
             title: t('tags.title'),
           }}
         />

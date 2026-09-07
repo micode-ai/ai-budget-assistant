@@ -31,11 +31,12 @@
  *
  * ## Which rows are destined to be panes
  *
- * `SettingsPaneKey` is that list — the twelve screens that live under
- * `app/settings/` and configure the app. A key is in it whether or not its
- * entry is a pane yet, so `kind: 'pane'` is a compile error for anything
- * outside it: wave 4 cannot promote `tags/manage` without first admitting, in
- * this type, that it moved the file.
+ * `SettingsPaneKey` is that list — every screen that configures the app,
+ * whether it lives under `app/settings/` or (like `tags/manage`,
+ * `account/list` and `projects`) had to be extracted from elsewhere first. A
+ * key is in it whether or not its entry is a pane yet, so `kind: 'pane'` is a
+ * compile error for anything outside it: wave 4 cannot promote `tags/manage`
+ * without first admitting, in this type, that it moved the file.
  */
 
 /**
@@ -50,8 +51,9 @@ export type SettingsPaneWidth = 'form' | 'full';
 export const SETTINGS_FORM_MAX_WIDTH = 720;
 
 /**
- * The twelve destinations under `app/settings/` that configure the app, and
- * are therefore hostable as a pane once extracted. Membership here is a
+ * The destinations that configure the app, and are therefore hostable as a
+ * pane once extracted — most under `app/settings/`, plus three (`accounts`,
+ * `tags`, `projects`) extracted from elsewhere in wave 4. Membership here is a
  * statement about the screen, not about whether it has been extracted yet.
  *
  * A const array rather than a bare union so the same fact exists at runtime:
@@ -73,6 +75,9 @@ export const SETTINGS_PANE_KEYS = [
   'merchants',
   'products',
   'about',
+  'accounts',
+  'tags',
+  'projects',
 ] as const;
 
 export type SettingsPaneKey = (typeof SETTINGS_PANE_KEYS)[number];
@@ -91,9 +96,6 @@ export type SettingsLinkKey =
   | 'subscription'
   | 'referral'
   | 'whatsNew'
-  | 'accounts'
-  | 'tags'
-  | 'projects'
   | 'admin';
 
 export type SettingsEntryKey = SettingsPaneKey | SettingsLinkKey;
@@ -188,10 +190,13 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'link', key: 'referral', labelKey: 'referral.settingsTitle', route: '/referral' },
   { kind: 'link', key: 'whatsNew', labelKey: 'settingsNav.whatsNew', route: '/whats-new' },
   // Configure the app by the rule, but they live outside `app/settings/`, so
-  // they become panes only when they are extracted (wave 4).
-  { kind: 'link', key: 'accounts', labelKey: 'accounts.manage', route: '/account/list' },
-  { kind: 'link', key: 'tags', labelKey: 'settingsNav.tags', route: '/tags/manage' },
-  { kind: 'link', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects' },
+  // each becomes a pane only once it is extracted (wave 4). `width` is
+  // declared on all three up front, whichever `kind` they carry today, as
+  // `SETTINGS_PANE_KEYS` membership requires — the flip to `kind: 'pane'` is
+  // then a one-word change that cannot forget to decide the cap.
+  { kind: 'link', key: 'accounts', labelKey: 'accounts.manage', route: '/account/list', width: 'form' },
+  { kind: 'pane', key: 'tags', labelKey: 'settingsNav.tags', route: '/tags/manage', width: 'form' },
+  { kind: 'link', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects', width: 'form' },
   { kind: 'link', key: 'admin', labelKey: 'admin.openPanel', route: '/admin', adminOnly: true },
 ];
 

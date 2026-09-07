@@ -132,13 +132,16 @@ describe('settingsRegistry', () => {
     );
   });
 
-  // Catches: a pane declared for a screen that does not live under
-  // `app/settings/`. Wave 4 converts `account/list`, `tags/manage` and
-  // `projects`; flipping one before its file moves would claim the shell owns
+  // Catches: a pane declared with a route that is neither under `/settings/`
+  // nor one of the three destinations wave 4 promotes from elsewhere in the
+  // app (`/account/list`, `/tags/manage`, `/projects`) — the one route shape a
+  // pane may have. Nothing else here cross-checks a pane's route against a
+  // real screen, so a typo on a newly flipped entry would claim the shell owns
   // a URL it does not.
-  it('routes every pane under /settings/', () => {
+  it('routes every pane under /settings/, or a wave 4 destination', () => {
+    const waveFourRoutes = new Set(['/account/list', '/tags/manage', '/projects']);
     for (const entry of SETTINGS_ENTRIES.filter(isPaneEntry)) {
-      expect(entry.route.startsWith('/settings/')).toBe(true);
+      expect(entry.route.startsWith('/settings/') || waveFourRoutes.has(entry.route)).toBe(true);
     }
   });
 
@@ -172,7 +175,7 @@ describe('settingsRegistry', () => {
   // draws - so this also pins that a newly promoted row rises into the pane
   // block in its intended place rather than being appended.
   it('records which entries are panes today', () => {
-    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'security', 'data', 'categories', 'merchants', 'products', 'about']);
+    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'security', 'data', 'categories', 'merchants', 'products', 'about', 'tags']);
   });
 });
 
