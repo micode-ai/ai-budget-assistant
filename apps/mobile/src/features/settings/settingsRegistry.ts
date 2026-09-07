@@ -196,7 +196,7 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   // then a one-word change that cannot forget to decide the cap.
   { kind: 'link', key: 'accounts', labelKey: 'accounts.manage', route: '/account/list', width: 'form' },
   { kind: 'pane', key: 'tags', labelKey: 'settingsNav.tags', route: '/tags/manage', width: 'form' },
-  { kind: 'link', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects', width: 'form' },
+  { kind: 'pane', key: 'projects', labelKey: 'settingsNav.projects', route: '/projects', width: 'form' },
   { kind: 'link', key: 'admin', labelKey: 'admin.openPanel', route: '/admin', adminOnly: true },
 ];
 

@@ -617,7 +617,7 @@ function RootNavigator() {
         <Stack.Screen
           name="projects/index"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('/projects'),
             title: t('projects.title'),
           }}
         />
