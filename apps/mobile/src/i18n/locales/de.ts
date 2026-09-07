@@ -366,6 +366,7 @@ export default {
     shoppingSuggestionsRestock: 'Geht zur Neige',
     shoppingSuggestionsDeals: 'Angebote',
     actionInflationShield: 'Inflationsschutz',
+    andMore: '+{{count}} mehr',
     confirmTitle: 'Aktion bestätigen',
     resultSuccess: 'Erfolgreich abgeschlossen',
     resultFailed: 'Aktion fehlgeschlagen',

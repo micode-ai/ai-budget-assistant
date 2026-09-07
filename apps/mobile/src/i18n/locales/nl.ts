@@ -366,6 +366,7 @@ export default {
     shoppingSuggestionsRestock: 'Bijna op',
     shoppingSuggestionsDeals: 'Aanbiedingen',
     actionInflationShield: 'Inflatieschild',
+    andMore: '+{{count}} meer',
     confirmTitle: 'Actie bevestigen',
     resultSuccess: 'Succesvol afgerond',
     resultFailed: 'Actie mislukt',

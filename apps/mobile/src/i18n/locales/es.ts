@@ -366,6 +366,7 @@ export default {
     shoppingSuggestionsRestock: 'Se está acabando',
     shoppingSuggestionsDeals: 'Ofertas',
     actionInflationShield: 'Escudo antiinflación',
+    andMore: '+{{count}} más',
     confirmTitle: 'Confirmar acción',
     resultSuccess: 'Completado con éxito',
     resultFailed: 'Acción fallida',

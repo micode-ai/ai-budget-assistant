@@ -368,6 +368,7 @@ export default {
     shoppingSuggestionsRestock: 'Kończy się',
     shoppingSuggestionsDeals: 'Okazje',
     actionInflationShield: 'Tarcza antyinflacyjna',
+    andMore: '+{{count}} więcej',
     confirmTitle: 'Potwierdź akcję',
     resultSuccess: 'Zakończono pomyślnie',
     resultFailed: 'Akcja nie powiodła się',

@@ -15,6 +15,7 @@ import {
   currentConversationTitle,
 } from '@/features/chat/chatLayout';
 import { ConversationRail } from './ConversationRail';
+import { ChatEmptyState } from './ChatEmptyState';
 
 interface ChatDesktopProps {
   chat: UseChatScreenDataReturn;
@@ -28,12 +29,13 @@ interface ChatDesktopProps {
  * `useChatScreenData()` — see that hook's own doc comment for why it is
  * never called a second time in here.
  *
- * Deliberately renders `ChatMessageItem`/`ActionConfirmationCard`/
- * `ActionResultCard` with no `desktop` prop (it doesn't exist yet — a later
- * task on this branch adds it) and no `ListEmptyComponent` for the empty
- * transcript (a later task owns the desktop empty state). Below
- * `DESKTOP_MIN_WIDTH` this component never mounts at all — `ChatView.web.tsx`
- * is the one file that decides.
+ * Renders `ChatMessageItem` (and, through it, `ActionConfirmationCard`/
+ * `ActionResultCard`) with `desktop` — the design's Q1/Q5 bubble-measure and
+ * card-width treatment — and `ChatEmptyState` as the transcript's
+ * `ListEmptyComponent` — the design's Q4 empty state, staying inside the
+ * same capped column so sending the first message moves nothing
+ * horizontally. Below `DESKTOP_MIN_WIDTH` this component never mounts at
+ * all — `ChatView.web.tsx` is the one file that decides.
  */
 export function ChatDesktop({ chat }: ChatDesktopProps) {
   const { t } = useTranslation();
@@ -71,6 +73,7 @@ export function ChatDesktop({ chat }: ChatDesktopProps) {
       isConfirming={chat.isConfirming}
       onConfirm={chat.confirmAction}
       onReject={chat.rejectAction}
+      desktop
     />
   );
 
@@ -127,9 +130,11 @@ export function ChatDesktop({ chat }: ChatDesktopProps) {
 
         {/* The transcript spans the full main pane so its scrollbar stays put;
             only its CONTENT is capped, via `contentContainerStyle` — never by
-            wrapping the FlatList (design's placement rule 2). No
-            `ListEmptyComponent` here: the desktop empty state is a later
-            task's responsibility. */}
+            wrapping the FlatList (design's placement rule 2).
+            `ListEmptyComponent` stays inside that same capped
+            `contentContainerStyle`, so it renders at `columnWidth` too — the
+            design's Q4 requirement that the empty state and the transcript
+            share one width. */}
         <FlatList
           ref={chat.flatListRef}
           data={chat.messages}
@@ -141,6 +146,7 @@ export function ChatDesktop({ chat }: ChatDesktopProps) {
             { width: columnWidth },
             chat.messages.length === 0 && styles.emptyList,
           ]}
+          ListEmptyComponent={<ChatEmptyState onSendMessage={chat.sendMessage} />}
           onContentSizeChange={() => chat.flatListRef.current?.scrollToEnd({ animated: false })}
         />
 

@@ -366,6 +366,10 @@ export default {
     shoppingSuggestionsRestock: 'Running low',
     shoppingSuggestionsDeals: 'Deals',
     actionInflationShield: 'Inflation Shield',
+    // ABA-513: was hardcoded English "+{n} more" in ActionResultCard.tsx
+    // (four call sites) in all nine locales; copied verbatim from the
+    // already-identical `expensesDesktop.showMore`/`priceHistory.showMore`.
+    andMore: '+{{count}} more',
     confirmTitle: 'Confirm Action',
     resultSuccess: 'Successfully completed',
     resultFailed: 'Action failed',

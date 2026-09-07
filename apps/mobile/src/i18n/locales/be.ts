@@ -366,6 +366,7 @@ export default {
     shoppingSuggestionsRestock: 'Заканчваецца',
     shoppingSuggestionsDeals: 'Зніжкі',
     actionInflationShield: 'Абарона ад інфляцыі',
+    andMore: '+{{count}} яшчэ',
     confirmTitle: 'Пацвердзіце дзеянне',
     resultSuccess: 'Паспяхова выканана',
     resultFailed: 'Памылка выканання',

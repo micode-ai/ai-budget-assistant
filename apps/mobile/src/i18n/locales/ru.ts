@@ -368,6 +368,7 @@ export default {
     shoppingSuggestionsRestock: 'Заканчивается',
     shoppingSuggestionsDeals: 'Скидки',
     actionInflationShield: 'Защита от инфляции',
+    andMore: '+{{count}} ещё',
     confirmTitle: 'Подтвердите действие',
     resultSuccess: 'Успешно выполнено',
     resultFailed: 'Ошибка выполнения',
