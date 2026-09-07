@@ -470,6 +470,146 @@ been: `SettingsRoute.web.tsx` early-returns
 `DESKTOP_MIN_WIDTH`, which is byte-identical to the whole body of the native
 `SettingsRoute.tsx`. One early return, not an inspection.
 
+## 5h. What wave 4 added — a pane's child, and a premise that was wrong
+
+**The ruling: a pane's child is a route, not a dialog.** Both shapes — the detail
+of a list the pane shows, and a form that creates something — are reached with
+`router.push`, render as a full page under `WebShell`, and return by the stack
+header's back arrow. **The selection is the URL**, so `goBack()` restores the
+pane with its row still highlighted and nothing has to remember anything. There
+is no third entry kind; the registry stays binary.
+
+**The premise that made this look hard was false, and it was mine.** I had two
+precedents pointing opposite ways — a link navigates out of the shell, while
+`change-email` became a dialog because *in a pane there is no back* — and
+weighed them as a genuine conflict. There is a back button:
+`@react-navigation/elements`' `Header` sets `headerLeft` from the `back` flag in
+platform-agnostic JS, every one of these child routes is declared
+`headerShown: true`, and `settingsRegistry.ts`'s own doc comment already made
+that deliberate for exactly this reason. Before arguing from a precedent, check
+that the thing it asserts is still true.
+
+**Section 3's test is "is this a leaf?", not "detail or form?"** Section 3
+governs a screen a dialog can host **in full**. A screen whose own affordances
+are largely navigation cannot be, because hosting it means either trapping those
+pushes under an overlay or omitting them — and omitting them is the violation
+the rule exists to prevent. `projects/[id]` keeps its **only** edit and delete
+affordances in `<Stack.Screen>`'s `headerRight`, which a dialog does not have;
+re-homing them is authoring new UI, i.e. reimplementing.
+
+**What actually closed the form shape is one mechanical fact**, and it is the
+kind worth writing down because nobody re-derives it: `account/create`'s trip
+card pushes `/trip/new`, which finishes with `router.dismissAll()` —
+`POP_TO_TOP`. **An RN `Modal` is not a route and survives that**, so a
+dialog-hosted create form would be left floating over the tabs while a fresh
+`/account/{id}` pushes underneath it. The `account/*` family is a connected
+graph — list → create → trip/new → [id] → invite / settle-up / payment-settings
+/ map, five routes with three `router.back()`s, one `dismissAll()` and one
+`switchAccount()` — and converting any single node breaks the edges crossing
+into it.
+
+Verified end to end on a build rather than argued: both chains return to their
+pane with the row still selected, `/projects/{uuid}` carries its pencil and
+trash in the header, and `/account/[id]`'s "Delete account" sits at the bottom
+of a real page — which is where a destructive action belongs, rather than at the
+bottom edge of a dialog that `Esc` dismisses without deciding anything.
+
+### The predicate that fails silently
+
+`settingsHeaderShown` → `isShellHostedSettingsRoute` prefixes a leading `/` if
+absent and then compares against the registry's `route` **exactly**. The expo
+screen name for `app/projects/index.tsx` is `projects/index`, which becomes
+`/projects/index`, which is **not** `/projects` — so it returns `false` with no
+error and the pane renders with the shell **and** a redundant stack header.
+`account/list` and `tags/manage` match under either spelling, which is precisely
+what makes the third one easy to miss. Pass the registry's own route string.
+The implementer confirmed it with a throwaway test it wrote, ran and deleted,
+which is the right instinct for a predicate that cannot fail loudly.
+
+### A declared order is only true for the rows already in it
+
+`SETTINGS_ENTRIES`' doc comment promises it is *"ordered as the left pane draws
+it"*, so a row *"rises into the pane block in the right place the day it is
+extracted, with no second list to reorder."* That promise held for twelve rows
+and was **false for exactly the three that had not been extracted yet**: they
+sat at the bottom among the links, where they were put while they were links, so
+`tags` and `projects` drew **after "About"** — after the block's natural last
+item. Wave 4 landed the real order (`profile, accounts, appearance, ai, widgets,
+notifications, bots, security, data, categories, merchants, products, tags,
+projects, about`), grouping the five reference-data screens the way
+`app/settings/reference.tsx` still groups them **on the phone**, where that
+sub-hub is live and dissolves only in the desktop left pane. A single-array
+ordering promise is worth keeping — but it has to be paid for when the rows are
+declared, not when they are converted.
+
+### All three panes are `width: 'form'`, not `'full'`
+
+Wave 3's three list screens took `'full'` because their rows carry three or four
+columns. These three are single-column lists of short rows, and `account/list`'s
+footer Create/Join buttons are block buttons with **no `flex: 1`** — at `'full'`
+they become two ~900px dashed bars, the appearance-chips defect in another
+costume. Confirmed by eye at 1920: capped, both of them.
+
+### The account-switch class, once more, and the fact that settled it
+
+Two of these three screens loaded in a `useEffect(..., [])`, so a pane — which
+stays mounted across a switch — showed the previous account's rows.
+`account/list` is immune and correctly got no keying: it has no effect at all
+and reads `accounts` as a live store subscription, so keying would discard state
+to fetch a byte-identical answer.
+
+The decision that took two rounds was whether to also `reset()` `tagStore` and
+`projectStore` at the account boundary. The argument against — a reset could
+strand an open expense form with an empty `TagPicker` — dissolved on reading:
+every host is conditionally rendered and remounts per open, so the cost is
+"empty until reopened". **The fact that decided it is web-specific**:
+`db/client.web.ts` resolves `getAllTags`/`getAllProjects` to `[]` in a
+microtask, so without a reset the real sequence was *previous account's rows →
+empty → correct, after a network round trip*. The first phase is another
+account's data in the pane that exists to manage this account's data. "A
+one-frame flash" was not what was being traded away.
+
+### Two method lessons, both paid for in this wave
+
+**Presence in the DOM is not visibility.** A DOM query said the settings left
+pane was still there on `/projects/{uuid}` — and it was, because expo-router's
+stack keeps the previous screen mounted while it is visually covered. Same class
+as the `[aria-modal]` stale-node error recorded in 5f and the labelled-timing
+error in 5g: a screenshot settles what a query cannot.
+
+**The verification build, which broke twice in one session for two stacked
+reasons.** The proxy already forwards `/api/*` to the upstream, so the page can
+be same-origin and CORS never applies — but (1) `EXPO_PUBLIC_API_URL=/api/v1`
+under Git Bash becomes `C:/Program Files/Git/api/v1`, because MSYS rewrites a
+leading-slash value as a POSIX path, and (2) `scripts/build-web.sh` does not
+pass `--clear`, while Expo inlines `process.env.EXPO_PUBLIC_*` at transform time
+and **caches** it, so the first rebuild kept the old value even though the
+script printed the new one. Working recipe:
+
+```
+cd apps/mobile && rm -rf dist \
+  && EXPO_PUBLIC_API_URL=http://localhost:8099/api/v1 npx expo export --platform web --clear \
+  && node scripts/inject-pwa-tags.js dist/index.html
+```
+
+Two corollaries. A cross-origin failure surfaces as `TypeError: Failed to fetch`
+with the **browser extension's** frames on top of the stack and no CORS policy
+line in the console, so that stack is not evidence about the extension. And
+`read_network_requests` records **zero** requests for this app even when they
+demonstrably succeed, because the extension issues them from its own context —
+its silence means nothing at all.
+
+### What wave 4 leaves visible, and it is the next thing to fix
+
+**Every child route of a pane is uncapped.** `/account/create`, `/account/[id]`
+and `/projects/[id]` all stretch to the full viewport — at 1920 the create
+form's name field and its submit button span the whole width, and the member
+rows do too — while the pane they were reached from stops at 720. This is the
+appearance-chips defect one level down. It is not an argument against the
+ruling, which refused a dialog for reasons that have nothing to do with width,
+and the fix is a **shell-level** change rather than one per screen: give a
+pane's child the same cap.
+
 ## 6. Things that look like defects and are not — do not "fix" these
 
 - The empty first cell in the transactions table is deliberate indentation under
