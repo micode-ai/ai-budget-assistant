@@ -114,3 +114,123 @@ export function currentConversationTitle(
 export function conversationDateLabel(updatedAt: Date): string {
   return updatedAt.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 }
+
+/**
+ * Reproduces the SERVER's own ordering — pins first, then `updatedAt desc`
+ * within each group (design doc, "The pin has to be in the query": the
+ * pinned block is ordered by `updatedAt desc`, deliberately NOT `pinnedAt
+ * desc` — see that section for the argument). This is the optimistic path's
+ * ONLY guarantee of agreeing with the server: `chatStore.setConversationPinned`
+ * calls this on every optimistic flip so the client never needs its own
+ * second sorting rule that could drift from the query's.
+ *
+ * Deliberately does not mutate its input: `.filter()` already returns a new
+ * array, so the `.sort()` calls below run on those copies, never on the
+ * caller's own `conversations` array.
+ *
+ * `isPinned` is optional on `ChatConversation` (a row from a pre-ABA-514
+ * SQLite cache, or one built by a call site that never learned pin state)
+ * and is treated as `false` whenever absent — an unknown pin state must
+ * never sort as "pinned".
+ */
+export function sortConversationsForDisplay(conversations: ChatConversation[]): ChatConversation[] {
+  const byUpdatedAtDesc = (a: ChatConversation, b: ChatConversation) =>
+    b.updatedAt.getTime() - a.updatedAt.getTime();
+
+  const pinned = conversations.filter((c) => c.isPinned === true).sort(byUpdatedAtDesc);
+  const rest = conversations.filter((c) => c.isPinned !== true).sort(byUpdatedAtDesc);
+  return [...pinned, ...rest];
+}
+
+/**
+ * The index after which to draw the pinned/unpinned boundary divider, or
+ * `null` when there is nothing to draw — either group empty (everything
+ * pinned, or nothing pinned) draws no divider; only "both groups non-empty"
+ * does. A pure function of an ALREADY-ORDERED list (the shape
+ * `sortConversationsForDisplay` produces, or the server's own response,
+ * which is ordered the same way) — it counts the LEADING run of pinned rows
+ * rather than pinned rows anywhere in the array, so it trusts (and requires)
+ * that ordering rather than re-deriving it; do not call this on an arbitrary
+ * unsorted list and expect a meaningful answer.
+ */
+export function pinnedGroupBoundary(conversations: ChatConversation[]): number | null {
+  let pinnedCount = 0;
+  for (const c of conversations) {
+    if (!c.isPinned) break;
+    pinnedCount++;
+  }
+  if (pinnedCount === 0 || pinnedCount === conversations.length) return null;
+  return pinnedCount - 1;
+}
+
+/**
+ * One row's `⋯` menu, per decision 1's ruling: every row carries at least one
+ * action (Pin/Unpin — read visibility, not creator-only), so the menu slot is
+ * unconditional on every row and no title width ever depends on ownership.
+ * The creator's own row additionally gets Rename and, after a divider,
+ * Delete.
+ *
+ * `action` is a plain discriminant, not a closure — this stays pure and
+ * theme-free, so the two rendering surfaces (the desktop popover, the
+ * phone's sheet overlay — neither built by this task) switch on `action` to
+ * invoke `chatStore.renameConversation` / `deleteConversation` /
+ * `setConversationPinned` themselves, using `row.id` and `row.isPinned`.
+ *
+ * Labels are i18n KEYS, not translated text — same convention as
+ * `currentConversationTitle`'s caller-supplied fallback: nothing in this
+ * file bakes in translated strings. `labelKey` values are the six new
+ * `chat.*` keys decision 6 names (`chat.pinConversation`/
+ * `chat.unpinConversation`/`chat.renameConversation`) plus one reused key
+ * (`common.delete` — decision 6 explicitly reuses it rather than minting a
+ * seventh).
+ */
+export interface ConversationMenuItem {
+  action: 'pin' | 'unpin' | 'rename' | 'delete';
+  labelKey: string;
+  /** An Ionicons glyph name. Kept a plain string (not a themed/typed icon
+   *  union) for the same reason this whole file stays theme-free. */
+  icon: string;
+  /** Only Delete sets this — the caller renders `danger`/`onSemantic`
+   *  (`showAlert`'s own `style: 'destructive'` button), never a hardcoded
+   *  color; see the Global Constraints' "must not hand-author a red delete
+   *  button". */
+  destructive?: boolean;
+  /** A divider drawn immediately BEFORE this item. Only Delete ever sets
+   *  it, and only on the owner's own row (where Rename precedes it) — the
+   *  design's "Pin/Unpin · Rename · ─── · Delete" layout. */
+  dividerBefore?: boolean;
+}
+
+export function conversationMenuItems(
+  row: ChatConversation,
+  { isOwner }: { isOwner: boolean },
+): ConversationMenuItem[] {
+  const pinItem: ConversationMenuItem = row.isPinned
+    ? { action: 'unpin', labelKey: 'chat.unpinConversation', icon: 'pin' }
+    : { action: 'pin', labelKey: 'chat.pinConversation', icon: 'pin-outline' };
+
+  if (!isOwner) return [pinItem];
+
+  return [
+    pinItem,
+    { action: 'rename', labelKey: 'chat.renameConversation', icon: 'create-outline' },
+    { action: 'delete', labelKey: 'common.delete', icon: 'trash-outline', destructive: true, dividerBefore: true },
+  ];
+}
+
+/**
+ * Whether the rename dialog's Save button may fire. Rejects an empty or
+ * whitespace-only next value, and rejects "unchanged" in BOTH the exact and
+ * the trim-normalized sense — either would spend a request writing back what
+ * is already there (and an empty save would leave the row reading
+ * `chat.conversationUntitled` a second after the user deliberately named it,
+ * which decision 3 explicitly does not offer). `current: null` (an untitled
+ * conversation) has nothing to be "unchanged" against, so it is exempt from
+ * the equality check — only from the emptiness one.
+ */
+export function canSaveRename(current: string | null, next: string): boolean {
+  const trimmedNext = next.trim();
+  if (trimmedNext.length === 0) return false;
+  if (current !== null && trimmedNext === current.trim()) return false;
+  return true;
+}

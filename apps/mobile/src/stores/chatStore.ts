@@ -6,7 +6,7 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import i18n from '@/i18n';
 import * as chatRepository from '@/db/chatRepository';
-import type { ConversationListStatus } from '@/features/chat/chatLayout';
+import { sortConversationsForDisplay, type ConversationListStatus } from '@/features/chat/chatLayout';
 
 // Module-level polling timer handle
 let pollTimer: ReturnType<typeof setInterval> | null = null;
@@ -59,6 +59,14 @@ interface ChatState {
   loadConversation: (conversationId: string) => Promise<void>;
   clearMessages: () => void;
   setConversationShared: (isShared: boolean) => Promise<void>;
+  // ABA-514: rename, delete and per-viewer pin for a row in `conversations`.
+  // All three are optimistic-with-rollback (memory AND the SQLite cache) and
+  // re-throw on failure so the caller (the desktop popover / the phone's
+  // sheet menu — neither built by this task) can show its own `showAlert`;
+  // see invitationStore.respond for the identical shape this mirrors.
+  renameConversation: (conversationId: string, title: string) => Promise<void>;
+  deleteConversation: (conversationId: string) => Promise<void>;
+  setConversationPinned: (conversationId: string, pinned: boolean) => Promise<void>;
   pollNewMessages: () => Promise<void>;
   startPolling: () => void;
   stopPolling: () => void;
@@ -296,6 +304,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         accountId: undefined,
         isShared: c.isShared,
         title: c.title ?? undefined,
+        isPinned: c.isPinned,
         createdAt: new Date(c.createdAt),
         updatedAt: new Date(c.updatedAt),
       }));
@@ -407,6 +416,93 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       }));
     } catch (error) {
       set({ error: error instanceof Error ? error.message : i18n.t('errors.chatError') });
+    }
+  },
+
+  renameConversation: async (conversationId: string, title: string) => {
+    const prevConversations = get().conversations;
+    const prev = prevConversations.find((c) => c.id === conversationId);
+    if (!prev) return;
+
+    const trimmed = title.trim();
+    const optimistic = { ...prev, title: trimmed };
+
+    set({ conversations: prevConversations.map((c) => (c.id === conversationId ? optimistic : c)) });
+    await chatRepository.upsertConversation(optimistic);
+
+    try {
+      const res = await api.renameChatConversation(conversationId, trimmed);
+      // Reconcile with the server's own value (defensive — should already
+      // match what was just sent). `updatedAt` is deliberately left alone:
+      // the server writes it back unchanged (see chat.service.ts), so
+      // re-sorting here would be wrong.
+      const reconciled = { ...optimistic, title: res.title ?? undefined };
+      set((state) => ({
+        conversations: state.conversations.map((c) => (c.id === conversationId ? reconciled : c)),
+      }));
+      await chatRepository.upsertConversation(reconciled);
+    } catch (error) {
+      console.warn('[chatStore] renameConversation failed', error);
+      set({ conversations: prevConversations });
+      await chatRepository.upsertConversation(prev);
+      throw error;
+    }
+  },
+
+  deleteConversation: async (conversationId: string) => {
+    const prevConversations = get().conversations;
+    const removed = prevConversations.find((c) => c.id === conversationId);
+    if (!removed) return;
+
+    const wasOpen = get().currentConversationId === conversationId;
+
+    set({ conversations: prevConversations.filter((c) => c.id !== conversationId) });
+    // A hard delete has no undo (chat() self-heals an unresolvable id into a
+    // fresh conversation), so the open transcript must not keep pointing at
+    // a row that is gone — even before the server confirms.
+    if (wasOpen) {
+      get().startNewConversation();
+    }
+    // Mirror the removal into the cache optimistically too, so a kill mid-request
+    // can't resurrect the deleted row on the next cold start's cache-first paint.
+    await chatRepository.deleteConversation(conversationId);
+
+    try {
+      await api.deleteChatConversation(conversationId);
+    } catch (error) {
+      // The row is restored on failure, per design; the transcript reset (if
+      // it was the open conversation) is deliberately NOT undone — there is
+      // nothing dangerous left open, and the design names only the row as
+      // needing restoration.
+      console.warn('[chatStore] deleteConversation failed', error);
+      set({ conversations: prevConversations });
+      await chatRepository.upsertConversation(removed);
+      throw error;
+    }
+  },
+
+  setConversationPinned: async (conversationId: string, pinned: boolean) => {
+    const prevConversations = get().conversations;
+    const prev = prevConversations.find((c) => c.id === conversationId);
+    if (!prev) return;
+
+    // Optimistic flip AND re-sort using the exact rule the server applies
+    // (pins first, then updatedAt desc) — the one tested pure function used
+    // by both this optimistic reorder and the render, so the two can't drift.
+    const optimisticList = sortConversationsForDisplay(
+      prevConversations.map((c) => (c.id === conversationId ? { ...c, isPinned: pinned } : c)),
+    );
+    set({ conversations: optimisticList });
+    const optimisticRow = optimisticList.find((c) => c.id === conversationId) ?? { ...prev, isPinned: pinned };
+    await chatRepository.upsertConversation(optimisticRow);
+
+    try {
+      await api.setChatConversationPinned(conversationId, pinned);
+    } catch (error) {
+      console.warn('[chatStore] setConversationPinned failed', error);
+      set({ conversations: prevConversations });
+      await chatRepository.upsertConversation(prev);
+      throw error;
     }
   },
 

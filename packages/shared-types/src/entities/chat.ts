@@ -4,6 +4,14 @@ export interface ChatConversation {
   accountId?: string;
   isShared: boolean;
   title?: string;
+  /**
+   * Per-VIEWER, not per-conversation (ABA-514) — mirrors
+   * `ChatConversationSummary.isPinned` in `dto/ai.ts`. Optional because a row
+   * read from a pre-ABA-514 SQLite cache (or built by a call site that never
+   * learned pin state) carries no opinion; every call site must treat
+   * `undefined` the same as `false`, never as "unknown, don't touch it".
+   */
+  isPinned?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

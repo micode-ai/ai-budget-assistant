@@ -89,11 +89,19 @@ export const aiApi = {
   },
 
   getChatConversations() {
+    // NOTE: this is a hand-maintained duplicate of `ChatConversationSummary`
+    // (packages/shared-types/src/dto/ai.ts) rather than an import of it — this
+    // file declares every response shape inline, so `isPinned` had to be added
+    // here by hand when the API gained it (ABA-514). Worth collapsing onto the
+    // shared DTO at some point; flagged, not fixed, since every other method
+    // below has the same duplication and fixing one in isolation would just
+    // make this file inconsistent with itself.
     return httpClient.request<Array<{
       id: string;
       title: string | null;
       isShared: boolean;
       isOwner: boolean;
+      isPinned: boolean;
       createdAt: string;
       updatedAt: string;
     }>>('/ai/chat/conversations');
@@ -132,6 +140,30 @@ export const aiApi = {
     return httpClient.request<{ id: string; isShared: boolean }>(
       `/ai/chat/conversations/${conversationId}/shared`,
       { method: 'PATCH', body: JSON.stringify({ isShared }) },
+    );
+  },
+
+  renameChatConversation(conversationId: string, title: string) {
+    return httpClient.request<{ id: string; title: string | null }>(
+      `/ai/chat/conversations/${conversationId}/title`,
+      { method: 'PATCH', body: JSON.stringify({ title }) },
+    );
+  },
+
+  // 204, no body — httpClient.request resolves `undefined` for an empty response.
+  deleteChatConversation(conversationId: string) {
+    return httpClient.request<void>(`/ai/chat/conversations/${conversationId}`, {
+      method: 'DELETE',
+    });
+  },
+
+  // PUT, not POST: the body carries the desired end state and the operation
+  // is idempotent in both directions (pinning an already-pinned conversation,
+  // or unpinning an already-unpinned one, are both no-ops server-side).
+  setChatConversationPinned(conversationId: string, pinned: boolean) {
+    return httpClient.request<{ id: string; isPinned: boolean }>(
+      `/ai/chat/conversations/${conversationId}/pin`,
+      { method: 'PUT', body: JSON.stringify({ pinned }) },
     );
   },
 

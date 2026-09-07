@@ -643,6 +643,14 @@ export async function initializeDatabase(): Promise<void> {
     // Receipt category auto-split: per-line-item category override
     try { expoDb.execSync(`ALTER TABLE expense_items ADD COLUMN category_id TEXT`); } catch {}
 
+    // Per-viewer conversation pins (ABA-514). Deliberately no DEFAULT: a row
+    // synced before this migration must read NULL, not 0 — chatRepository's
+    // `getConversations` ORDER BY relies on that (COALESCE(is_pinned, 0) DESC,
+    // updated_at DESC), because SQLite sorts NULL BELOW 0, and without the
+    // COALESCE a legacy NULL row would sort after every explicitly-unpinned
+    // (0) row regardless of date, splitting the unpinned block in two.
+    try { expoDb.execSync(`ALTER TABLE chat_conversations ADD COLUMN is_pinned INTEGER`); } catch {}
+
     // Group trip wallet: per-member expense shares
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS trip_expense_shares (
