@@ -78,11 +78,22 @@ Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
 
 > El historial cargado se guarda localmente para acceso sin conexión después de la primera carga.
 
+### Gestionar una conversación
+
+Cada conversación de la lista tiene su propio menú **⋯**. En el navegador aparece al pasar el cursor sobre una fila (o cuando es la que tienes abierta); en el teléfono siempre está visible, y una pulsación larga sobre la fila abre el mismo menú.
+
+- **Renombrar** le da a la conversación un nombre propio. Hasta que lo hagas, se titula con lo primero que escribiste en ella, que rara vez es como la habrías llamado. Renombrar no cambia su posición en la lista.
+- **Fijar** mantiene una conversación arriba de la lista, encima de una línea divisoria, sin importar cuánto hace que la usaste por última vez. Fijar es **solo cosa tuya** — cambia el orden que ves tú y el de nadie más, y puedes fijar una conversación compartida que empezó otra persona. Toca **Dejar de fijar** para soltarla.
+- **Eliminar** borra la conversación y sus mensajes para siempre. No hay deshacer. Si la conversación es compartida, la confirmación lo dice claramente, porque eliminarla la quita para todos los miembros de la cuenta, no solo para ti.
+
+Solo puedes renombrar y eliminar las conversaciones que empezaste tú. En una conversación compartida que empezó otra persona, el menú ofrece solo **Fijar** — la única opción que tiene sentido ahí, porque el orden de tu propia lista es asunto tuyo.
+
 ## Conversaciones compartidas
 
 Si compartes una cuenta con otros miembros, puedes convertir una conversación en un **chat de grupo compartido** donde todos hablan con la IA juntos.
 
-- **Activar o desactivar el uso compartido:** la persona que inició una conversación ve un interruptor **Compartido / Privado** en la parte superior del chat. Tócalo para hacer que esa conversación sea compartida (visible para todos los miembros) o privada de nuevo. Cualquier miembro puede compartir una conversación que haya creado — no solo el propietario de la cuenta. No puedes cambiar el uso compartido de una conversación que inició otra persona (allí verás una etiqueta "Compartido" de solo lectura). El interruptor solo aparece cuando la cuenta tiene más de un miembro.
+- **Activar o desactivar el uso compartido:** la persona que inició una conversación ve la opción en la parte superior del chat. En el navegador son dos botones, **Privado** y **Compartido**, con el que está activo resaltado en color — así ves que el otro también existe y puedes tocarlo. En el teléfono, esa misma píldora lleva una pequeña flecha de intercambio que muestra que se puede cambiar. Cualquier miembro puede compartir una conversación que haya creado — no solo el propietario de la cuenta. No puedes cambiar el uso compartido de una conversación que inició otra persona (allí verás una etiqueta "Compartido" de solo lectura). La opción solo aparece cuando la cuenta tiene más de un miembro.
+- **Decidir antes de empezar:** la opción también funciona en una conversación vacía. Elige **Compartido** antes de escribir nada y la conversación será compartida desde su primer mensaje, así nadie tiene que leer la primera mitad de un hilo del que nunca se le avisó.
 - **Todos ven la conversación:** en una conversación compartida, los mensajes de otros miembros aparecen con su nombre, y los mensajes nuevos se muestran automáticamente mientras tienes el chat abierto.
 - **Dirigirte a una persona en lugar de a la IA:** escribe **@** y elige un miembro para mencionarlo. Cuando mencionas a un miembro, la IA permanece en silencio — el mensaje es para esa persona, no para el asistente. Si no mencionas a nadie, la IA responde como siempre.
 - **Notificaciones:** si mencionas a un miembro que no está viendo el chat en ese momento, recibe una notificación push para que no se lo pierda. Esto respeta tu ajuste de notificaciones "Actividad compartida".

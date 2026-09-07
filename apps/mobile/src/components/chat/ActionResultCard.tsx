@@ -7,9 +7,13 @@ import type { ChatActionResult } from '@budget/shared-types';
 
 interface ActionResultCardProps {
   actionResult: ChatActionResult;
+  /** Additive, default `false` (design's §5a rule 1). Threaded into the
+   *  sub-components below that render `listItemAmount`/`totalValue` — see
+   *  those styles' own comments for what it changes. */
+  desktop?: boolean;
 }
 
-export function ActionResultCard({ actionResult }: ActionResultCardProps) {
+export function ActionResultCard({ actionResult, desktop = false }: ActionResultCardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -35,11 +39,11 @@ export function ActionResultCard({ actionResult }: ActionResultCardProps) {
   // Render based on action type
   switch (actionResult.actionType) {
     case 'get_expenses':
-      return <ExpensesResult data={data} />;
+      return <ExpensesResult data={data} desktop={desktop} />;
     case 'get_budget_status':
-      return <BudgetStatusResult data={data} />;
+      return <BudgetStatusResult data={data} desktop={desktop} />;
     case 'get_category_breakdown':
-      return <CategoryBreakdownResult data={data} />;
+      return <CategoryBreakdownResult data={data} desktop={desktop} />;
     case 'create_expense':
     case 'create_income':
     case 'create_budget':
@@ -52,15 +56,15 @@ export function ActionResultCard({ actionResult }: ActionResultCardProps) {
     case 'remove_from_shopping_list':
       return <ShoppingRemoveResult data={data} />;
     case 'get_shopping_suggestions':
-      return <ShoppingSuggestionsResult data={data} />;
+      return <ShoppingSuggestionsResult data={data} desktop={desktop} />;
     case 'get_inflation_shield':
-      return <ShieldResult data={data} />;
+      return <ShieldResult data={data} desktop={desktop} />;
     default:
       return null;
   }
 }
 
-function ShieldResult({ data }: { data: Record<string, unknown> }) {
+function ShieldResult({ data, desktop }: { data: Record<string, unknown>; desktop: boolean }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -82,12 +86,14 @@ function ShieldResult({ data }: { data: Record<string, unknown> }) {
           <Text style={styles.listItemText} numberOfLines={1}>
             {it.canonicalName}{it.store ? ` · ${it.store}` : ''}
           </Text>
-          <Text style={styles.listItemAmount}>
+          <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
             +{Number(it.monthlyChangePct ?? 0).toFixed(0)}% · {Number(it.projectedSaving ?? 0).toFixed(2)} {baseCurrency}
           </Text>
         </View>
       ))}
-      {items.length > 5 && <Text style={styles.moreText}>+{items.length - 5} more</Text>}
+      {items.length > 5 && (
+        <Text style={styles.moreText}>{t('chat.andMore', { count: items.length - 5 })}</Text>
+      )}
     </View>
   );
 }
@@ -150,7 +156,13 @@ function ShoppingRemoveResult({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function ShoppingSuggestionsResult({ data }: { data: Record<string, unknown> }) {
+function ShoppingSuggestionsResult({
+  data,
+  desktop,
+}: {
+  data: Record<string, unknown>;
+  desktop: boolean;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -173,10 +185,14 @@ function ShoppingSuggestionsResult({ data }: { data: Record<string, unknown> }) 
               <Text style={styles.listItemText} numberOfLines={1}>
                 {r.canonicalName}
               </Text>
-              <Text style={styles.listItemAmount}>{r.dueInDays}d</Text>
+              <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
+                {r.dueInDays}d
+              </Text>
             </View>
           ))}
-          {restockTotal > 5 && <Text style={styles.moreText}>+{restockTotal - 5} more</Text>}
+          {restockTotal > 5 && (
+            <Text style={styles.moreText}>{t('chat.andMore', { count: restockTotal - 5 })}</Text>
+          )}
         </>
       )}
       {deals.length > 0 && (
@@ -187,19 +203,21 @@ function ShoppingSuggestionsResult({ data }: { data: Record<string, unknown> }) 
               <Text style={styles.listItemText} numberOfLines={1}>
                 {d.canonicalName}{d.merchant ? ` · ${d.merchant}` : ''}
               </Text>
-              <Text style={styles.listItemAmount}>
+              <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
                 -{Number(d.dropPct ?? 0).toFixed(0)}% · {Number(d.price ?? 0).toFixed(2)} {d.currency}
               </Text>
             </View>
           ))}
-          {dealsTotal > 5 && <Text style={styles.moreText}>+{dealsTotal - 5} more</Text>}
+          {dealsTotal > 5 && (
+            <Text style={styles.moreText}>{t('chat.andMore', { count: dealsTotal - 5 })}</Text>
+          )}
         </>
       )}
     </View>
   );
 }
 
-function ExpensesResult({ data }: { data: Record<string, unknown> }) {
+function ExpensesResult({ data, desktop }: { data: Record<string, unknown>; desktop: boolean }) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -223,18 +241,18 @@ function ExpensesResult({ data }: { data: Record<string, unknown> }) {
           <Text style={styles.listItemText} numberOfLines={1}>
             {exp.description || exp.category || '—'}
           </Text>
-          <Text style={styles.listItemAmount}>
+          <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
             {Number(exp.amount).toFixed(2)} {exp.currencyCode}
           </Text>
         </View>
       ))}
       {expenses.length > 5 && (
-        <Text style={styles.moreText}>+{expenses.length - 5} more</Text>
+        <Text style={styles.moreText}>{t('chat.andMore', { count: expenses.length - 5 })}</Text>
       )}
       {totalEntries.length > 0 && (
         <View style={styles.totalRow}>
           <Text style={styles.totalLabel}>{t('common.total') || 'Total'}:</Text>
-          <Text style={styles.totalValue}>
+          <Text style={[styles.totalValue, desktop && styles.totalValueDesktop]}>
             {totalEntries
               .map(([cur, amt]) => `${Number(amt).toFixed(2)} ${cur}`)
               .join(' · ')}
@@ -245,7 +263,13 @@ function ExpensesResult({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function BudgetStatusResult({ data }: { data: Record<string, unknown> }) {
+function BudgetStatusResult({
+  data,
+  desktop,
+}: {
+  data: Record<string, unknown>;
+  desktop: boolean;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -264,7 +288,13 @@ function BudgetStatusResult({ data }: { data: Record<string, unknown> }) {
           <View key={idx} style={styles.budgetItem}>
             <View style={styles.budgetHeader}>
               <Text style={styles.listItemText}>{b.name}</Text>
-              <Text style={[styles.listItemAmount, isOver && { color: theme.colors.danger }]}>
+              <Text
+                style={[
+                  styles.listItemAmount,
+                  desktop && styles.listItemAmountDesktop,
+                  isOver && { color: theme.colors.danger },
+                ]}
+              >
                 {Number(b.spent || 0).toFixed(0)} / {Number(b.amount).toFixed(0)} {b.currencyCode}
               </Text>
             </View>
@@ -290,7 +320,13 @@ function BudgetStatusResult({ data }: { data: Record<string, unknown> }) {
   );
 }
 
-function CategoryBreakdownResult({ data }: { data: Record<string, unknown> }) {
+function CategoryBreakdownResult({
+  data,
+  desktop,
+}: {
+  data: Record<string, unknown>;
+  desktop: boolean;
+}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -307,7 +343,7 @@ function CategoryBreakdownResult({ data }: { data: Record<string, unknown> }) {
           <Text style={styles.listItemText} numberOfLines={1}>
             {cat.categoryName || '—'}
           </Text>
-          <Text style={styles.listItemAmount}>
+          <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
             {Number(cat.amount || 0).toFixed(2)} ({Number(cat.percentage || 0).toFixed(0)}%)
           </Text>
         </View>
@@ -461,6 +497,14 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textPrimary,
   },
+  // Design's "The action cards" — Q5, point 2: money that lines up in a
+  // column carries `tabular-nums`. Gated behind `desktop` so the phone's
+  // rendering is untouched (it does not have this today, on either
+  // platform — see the design's Findings section for why the phone should
+  // get it too, separately, not folded into this branch).
+  listItemAmountDesktop: {
+    fontVariant: ['tabular-nums' as const],
+  },
   moreText: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
@@ -489,6 +533,9 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textPrimary,
     fontWeight: '600' as const,
+  },
+  totalValueDesktop: {
+    fontVariant: ['tabular-nums' as const],
   },
   budgetItem: {
     marginBottom: theme.spacing[3],

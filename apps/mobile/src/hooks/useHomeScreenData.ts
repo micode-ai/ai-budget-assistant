@@ -18,7 +18,7 @@ import { useSafeToSpend } from '@/features/insights/useSafeToSpend';
 /**
  * Owns all Zustand store subscriptions + derived data + effects for the home
  * dashboard screen. Pure data layer — no theme/i18n/UI-local state (those stay
- * in DashboardScreen or the components that render them).
+ * in `DashboardMobile`/`DashboardDesktop` or the components that render them).
  */
 export function useHomeScreenData() {
   const [refreshing, setRefreshing] = useState(false);

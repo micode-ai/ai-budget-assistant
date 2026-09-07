@@ -8,6 +8,10 @@
 # The API the web app talks to is baked in AT BUILD TIME from EXPO_PUBLIC_API_URL.
 # Defaults to production. Override to point the build at a local/staging API:
 #   EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1 scripts/build-web.sh
+#
+# EXPO_PUBLIC_BUILD_SHA is optional and, when set, is appended to the version on
+# the About screen as `1.26.0+a3f9c1e`. `web-deploy.yml` sets it to the commit
+# being deployed; a local build normally leaves it unset.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

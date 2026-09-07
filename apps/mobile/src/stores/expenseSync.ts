@@ -40,6 +40,7 @@ interface SyncableState {
   expenses: Expense[];
   isLoading: boolean;
   error: string | null;
+  lastPullAt: number | null;
 }
 
 type StoreSet = (
@@ -545,7 +546,7 @@ async function _doPullAndMerge(
       const finalExpenses =
         merged.length > 0 ? merged : builtExpenses.filter((e) => !e.isDeleted);
 
-      set({ expenses: finalExpenses });
+      set({ expenses: finalExpenses, lastPullAt: Date.now() });
       setLastSyncTime(Date.now());
       _lastExpensesSyncAt = Date.now();
       _lastExpensesSyncedAccountId = accountId;

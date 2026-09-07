@@ -32,6 +32,51 @@ De webversie dekt de dagelijkse basis:
 
 Ideaal voor langere sessies met een echt toetsenbord — de maand doornemen, categorieën opruimen of chatten met de AI-assistent.
 
+## Transacties op een groot scherm
+
+Als het browservenster breed genoeg is — ongeveer zoals op een laptop of desktopcomputer — ziet het scherm Transacties er anders uit om de ruimte beter te benutten: er komt een zijbalk en een bovenbalk in plaats van de vertrouwde telefoonweergave.
+
+- Filters worden getoond als een **lijst aan de linkerkant**, met het aantal treffers naast elke optie, in plaats van een rij knoppen — zo zie je hoeveel transacties een filter zal tonen voordat je hem kiest.
+- **Uitgaven en inkomsten staan samen in één lijst**, gegroepeerd per dag, met bij elke dag het totaal dat die dag is uitgegeven.
+- Een transactie aantikken opent hem in een **paneel over de lijst** in plaats van een nieuwe pagina — sluit het paneel om precies terug te gaan naar waar je was.
+- Je kunt **meerdere transacties selecteren met selectievakjes** — houd Shift ingedrukt en klik om alles tussen twee rijen te selecteren — en dan hun categorie wijzigen, een tag toevoegen of ze samen verwijderen.
+
+Onder ongeveer 1024 pixels breed — dat geldt ook voor de meeste tablets die je rechtop vasthoudt — toont de browser in plaats daarvan de vertrouwde telefoonweergave. Dat is de bedoeling: de brede weergave is gemaakt voor een echt bureaublad- of laptopscherm, en een smaller venster wordt beter bediend door de telefoonweergave.
+
+## Instellingen op een groot scherm
+
+In een breed venster houden de Instellingen de hele lijst aan de linkerkant, en het onderdeel dat je kiest opent ernaast in plaats van de pagina te vervangen — zo ga je van Profiel naar Meldingen, Categorieën en de rest zonder telkens terug te gaan.
+
+- De adresbalk volgt je keuze, dus je kunt **een instellingenpagina als bladwijzer opslaan** of hem herladen en precies weer uitkomen waar je was.
+- Een paar rijen openen nog wel als volledige pagina, omdat het werkplekken zijn en geen schakelaars: **Portemonnee**, **Boodschappenlijst**, **Aankoopverzoeken**, **Abonnementen** en **Importeren**.
+- Eén rekening openen vanuit Rekeningen beheren, of één project vanuit Projecten, opent ook een volledige pagina — met eigen knoppen voor bewerken en verwijderen in de titelbalk, en een terugpijl die je terugbrengt naar de lijst met dezelfde rij nog gemarkeerd.
+- **Uitloggen** staat op de Instellingenpagina zelf, met niets geselecteerd; het tandwiel in de bovenbalk brengt je daar terug.
+
+Onder ongeveer 1024 pixels breed komt de bekende telefoonindeling terug, met alle rijen in één lange lijst.
+
+## Het startscherm op een groot scherm
+
+Het startscherm gebruikt de extra ruimte om te tonen wat je aandacht nodig heeft, in plaats van de kaarten van de telefoon eroverheen uit te rekken.
+
+- Een **hoofdkolom** draagt de lopende cijfers — wat je vandaag veilig kunt uitgeven, het budget van de maand, inkomsten tegenover uitgaven — en daarnaast staat een **smalle kolom met kaarten**. Op een heel breed scherm zijn dat er twee.
+- **Alles wat je toevoegt opent over het startscherm** — een uitgave, een beginsaldo, een budget — zodat je op het scherm blijft dat je aan het lezen was.
+- De **bel** opent je meldingen en uitnodigingen als paneel in plaats van als aparte pagina.
+- Een **nieuwe rekening** ziet een korte lijst met eerste stappen in plaats van een scherm vol lege kaarten: een kassabon scannen, er handmatig een invoeren, of een beginsaldo instellen.
+
+## De chat op een groot scherm
+
+In een breed venster krijgt de AI-chat een **lijst met je eerdere gesprekken aan de linkerkant**, en het gesprek zelf blijft in het midden op een comfortabele leesbreedte in plaats van over het hele scherm uitgerekt te worden.
+
+- Een gesprek uit de lijst kiezen opent het ter plekke, en het gesprek dat je leest blijft gemarkeerd.
+- **Nieuw gesprek** staat bovenaan die lijst, dus je kunt er een beginnen zonder je plek kwijt te raken in wat je aan het lezen was.
+- Een gesprek dat je met de andere mensen op je rekening deelt, toont **Gedeeld** op de tweede regel, naast de datum, in plaats van alleen een pictogram.
+- Het invoerveld blijft onderaan, met de microfoon en de verzendknop naast de tekst in plaats van aan tegenoverliggende schermranden.
+- Een nieuw gesprek laat zien wat de assistent echt kan — een uitgave toevoegen, een budget bekijken, iets op de boodschappenlijst zetten — in plaats van een leeg scherm.
+- Beweeg met de muis over een rij voor het **⋯**-menu, waarmee je het gesprek kunt hernoemen, vastzetten of verwijderen. Vastgezette gesprekken staan bovenaan de lijst, boven een scheidingslijn. Meer over deze drie vind je in de gids over de AI-chat.
+- De keuze **Privé / Gedeeld** bovenaan het gesprek toont beide opties naast elkaar, zodat de optie die je niet gebruikt zichtbaar blijft in plaats van verborgen.
+
+In een smaller venster, en op de telefoon, blijft de gesprekkenlijst achter de knop **Geschiedenis**, zoals voorheen.
+
 ## Beperkingen
 
 De webversie is een aanvulling op de mobiele app, geen volledige vervanging. Een paar functies werken anders in de browser:

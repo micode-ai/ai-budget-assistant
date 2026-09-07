@@ -1,0 +1,681 @@
+import { useState, useEffect, useRef } from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+  TextInput,
+  ScrollView,
+} from 'react-native';
+import { showAlert } from '@/utils/alert';
+import { parseAmount } from '@/utils/amount';
+import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/KeyboardAvoidingScreen';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+import { useVoiceInput } from '@/features/voice/useVoiceInput';
+import { useExpenseStore } from '@/stores/expenseStore';
+import { useAuthStore } from '@/stores/authStore';
+import { MerchantInput } from '@/components/MerchantInput';
+import { resolveExistingMerchant } from '@/utils/merchant';
+import { useCategoryStore } from '@/stores/categoryStore';
+import type { Currency } from '@budget/shared-types';
+import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
+import { useTheme, useStyles, type Theme } from '@/theme';
+import { useSubscriptionStore } from '@/stores/subscriptionStore';
+import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
+import { CreateCategoryModal } from '@/components/CreateCategoryModal';
+import { captureCurrentLocation, type CapturedLocation } from '@/services/locationCapture';
+import { trackAction } from '@/services/telemetry';
+
+interface VoiceExpenseViewProps {
+  /**
+   * Called when the user is finished with this view — today only from the
+   * success alert's "Done" button, where the route used to call
+   * `router.back()`. "Add another" deliberately does NOT call it: that path
+   * stays mounted and resets the form for the next recording (see the
+   * telemetry note below), which is the same batch behaviour the receipt
+   * scanner has.
+   */
+  onDone: () => void;
+  /**
+   * Reports whether a completed transcription is sitting here unsaved, so a
+   * host that can be dismissed by a stray click (Esc, a scrim) can ask before
+   * throwing it away. Omitted by the route — the modal route has never
+   * confirmed on dismissal, and this must not change that.
+   *
+   * **Deliberately just `showConfirm`**, not "anything is happening". A parsed
+   * expense awaiting confirmation is work the user can SEE and that cost a real
+   * Whisper + parse round trip; an in-flight recording is neither, and closing
+   * mid-recording is already safe and silent by design (`useVoiceInput`'s
+   * unmount effect cancels it and restores the audio session), so putting a
+   * confirmation in front of it would only make an ordinary cancel harder.
+   */
+  onDirtyChange?: (dirty: boolean) => void;
+}
+
+/**
+ * The voice-expense capture body, extracted verbatim from `app/expense/voice.tsx`
+ * so it can be hosted by something other than a route — nothing under `src/`
+ * may import from `app/` (`@/*` maps to `./src/*` only), so a desktop dialog
+ * had nothing to render. Same move, and the same `params -> props`,
+ * `router.back() -> onDone()` shape, as `ExpenseCreateForm`/`IncomeCreateForm`;
+ * this screen takes no route params, so `onDone` is the whole interface.
+ *
+ * The route keeps its own chrome: `presentation: 'modal'`, the header title and
+ * the `AiUsageBadge` are all declared on the `expense/voice` `Stack.Screen` in
+ * `app/_layout.tsx`, not here — a host that is not a route must supply its own
+ * equivalent (in particular the `AiUsageBadge`, which is the only place this
+ * flow shows remaining AI quota).
+ *
+ * **Unmounting this view releases the microphone**, whatever caused the
+ * unmount — a navigation, a dismissed modal route, or a dialog host closing.
+ * That is `useVoiceInput`'s own unmount effect calling `cancelRecording`,
+ * which is an unconditional teardown (it releases the recording AND restores
+ * the audio session), not something each host has to remember. The effect
+ * depends only on `cancelRecording`, a `useCallback(..., [])`, so it runs on
+ * unmount alone and never tears down a recording the user just started. This
+ * file previously documented the opposite as a known gap; it was fixed
+ * separately and the note is kept here because a dialog host is exactly the
+ * caller that would otherwise have to worry about it.
+ */
+export function VoiceExpenseView({ onDone, onDirtyChange }: VoiceExpenseViewProps) {
+  useEffect(() => {
+    trackAction('expense_voice', 'started');
+  }, []);
+  /**
+   * `started` is emitted once per MOUNT, and this screen's success alert offers
+   * `voice.addAnother` -> `handleReset()`, which stays mounted and clears the
+   * form for the next recording — so it repeats exactly the way the receipt
+   * scanner does. Two voice expenses in one visit reported 1 started against 2
+   * completed, which put per-flow completion over 100% and pinned `abandoned`
+   * (derived as started - completed - failed) at 0. So `completed` is once per
+   * mount too. `failed` is deliberately NOT deduplicated: repeated failures in
+   * one visit are a genuine error-rate signal.
+   */
+  const completedRef = useRef(false);
+
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const { addExpense } = useExpenseStore();
+  const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
+  const { user } = useAuthStore();
+  const { getExpenseCategories, getCategoryByName, loadCategories, isInitialized: categoriesInitialized } = useCategoryStore();
+
+  const gpsLocationRef = useRef<CapturedLocation | null>(null);
+  useEffect(() => {
+    captureCurrentLocation().then((loc) => { gpsLocationRef.current = loc; });
+  }, []);
+
+  // Editable fields
+  const [editAmount, setEditAmount] = useState('');
+  const [editDescription, setEditDescription] = useState('');
+  const [editMerchant, setEditMerchant] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editCurrencyCode, setEditCurrencyCode] = useState('');
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
+  const [showCreateCategory, setShowCreateCategory] = useState(false);
+
+  const {
+    isRecording,
+    isProcessing,
+    transcription,
+    parsedExpense,
+    error,
+    startRecording,
+    stopRecording,
+    cancelRecording,
+    reset: resetVoice,
+  } = useVoiceInput();
+
+  useEffect(() => {
+    if (!categoriesInitialized) loadCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  /**
+   * Report the unsaved-parse state outward. An effect rather than a call beside
+   * each `setShowConfirm`, so every route into and out of the confirm state
+   * (parse lands, save, reset, "add another") is covered by construction. A
+   * host that passes nothing gets an `undefined?.()` no-op, so the routed
+   * screen is untouched.
+   */
+  useEffect(() => {
+    onDirtyChange?.(showConfirm);
+  }, [showConfirm, onDirtyChange]);
+
+  useEffect(() => {
+    if (error) {
+      showAlert(t('common.error'), error, [{ text: 'OK', onPress: resetVoice }]);
+    }
+  }, [error, resetVoice, t]);
+
+  useEffect(() => {
+    if (parsedExpense) {
+      setEditAmount(parsedExpense.amount.toString());
+      setEditDescription(parsedExpense.description || '');
+      setEditMerchant(resolveExistingMerchant(parsedExpense.merchant, getDistinctMerchants()));
+      // Map AI-suggested category name to category ID
+      const suggestedName = parsedExpense.categorySuggestion || '';
+      const matchedCategory = suggestedName ? getCategoryByName(suggestedName, 'expense') : undefined;
+      setEditCategory(matchedCategory?.id || '');
+      setEditCurrencyCode(parsedExpense.currencyCode || user?.currencyCode || 'USD');
+      setShowConfirm(true);
+      useSubscriptionStore.getState().loadUsage();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [parsedExpense]);
+
+  const handleReset = () => {
+    resetVoice();
+    setShowConfirm(false);
+    setEditAmount('');
+    setEditDescription('');
+    setEditMerchant('');
+    setEditCategory('');
+    setEditCurrencyCode('');
+  };
+
+  const handleRecordPress = async () => {
+    if (isRecording) {
+      await stopRecording();
+    } else {
+      await startRecording();
+    }
+  };
+
+  const handleConfirmExpense = async () => {
+    const numericAmount = parseAmount(editAmount);
+    if (!numericAmount || numericAmount <= 0) {
+      trackAction('expense_voice', 'failed');
+      showAlert(t('common.error'), t('validation.invalidAmount'));
+      return;
+    }
+
+    if (!editDescription.trim()) {
+      trackAction('expense_voice', 'failed');
+      showAlert(t('common.error'), t('validation.noDescription'));
+      return;
+    }
+
+    try {
+      await addExpense({
+        userId: user?.id || '',
+        amount: numericAmount,
+        currencyCode: editCurrencyCode as Currency,
+        description: editDescription.trim(),
+        merchant: editMerchant.trim() || undefined,
+        categoryId: editCategory || undefined,
+        date: new Date(),
+        source: 'voice',
+        isRecurring: false,
+        isDebt: false,
+        isDebtRepayment: false,
+        location: gpsLocationRef.current ?? undefined,
+      });
+
+      if (!completedRef.current) {
+        completedRef.current = true;
+        trackAction('expense_voice', 'completed');
+      }
+      showAlert(t('common.success'), t('voice.success'), [
+        { text: t('voice.addAnother'), style: 'cancel', onPress: handleReset },
+        { text: t('common.done'), onPress: () => onDone() },
+      ]);
+    } catch {
+      trackAction('expense_voice', 'failed');
+      showAlert(t('common.error'), t('voice.saveFailed'));
+    }
+  };
+
+  const handleCancel = () => {
+    if (isRecording) {
+      cancelRecording();
+    } else {
+      handleReset();
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container} edges={['bottom']}>
+      {!showConfirm ? (
+        <View style={styles.content}>
+          <View style={styles.instructionContainer}>
+            <Text style={styles.instructionText}>
+              {isProcessing
+                ? t('voice.processing')
+                : isRecording
+                  ? t('voice.listening')
+                  : t('voice.tapToStart')}
+            </Text>
+            <Text style={styles.exampleText}>
+              {t('voice.example')}
+            </Text>
+          </View>
+
+          {isProcessing ? (
+            <View style={styles.processingContainer}>
+              <ActivityIndicator size="large" color={theme.colors.primary} />
+              <Text style={styles.processingText}>
+                {t('voice.analyzing')}
+              </Text>
+            </View>
+          ) : (
+            <TouchableOpacity
+              style={[styles.recordButton, isRecording && styles.recordButtonActive]}
+              onPress={handleRecordPress}
+              activeOpacity={0.8}
+            >
+              <Ionicons
+                name={isRecording ? 'stop' : 'mic'}
+                size={48}
+                color={isRecording ? theme.colors.onSemantic : theme.colors.textInverse}
+              />
+            </TouchableOpacity>
+          )}
+
+          {isRecording && (
+            <TouchableOpacity style={styles.cancelButton} onPress={handleCancel}>
+              <Text style={styles.cancelButtonText}>{t('common.cancel')}</Text>
+            </TouchableOpacity>
+          )}
+
+          {transcription && !isProcessing && (
+            <View style={styles.transcriptionContainer}>
+              <Text style={styles.transcriptionLabel}>{t('voice.youSaid')}</Text>
+              <Text style={styles.transcriptionText}>"{transcription}"</Text>
+            </View>
+          )}
+        </View>
+      ) : (
+        <KeyboardAvoidingView
+          behavior="padding"
+          style={styles.flex}
+        >
+          <ScrollView contentContainerStyle={styles.confirmScrollContent}>
+            <Text style={styles.confirmTitle}>{t('voice.confirmTitle')}</Text>
+
+            <View style={styles.expenseCard}>
+              {/* Amount + Currency */}
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>{t('voice.amount')}</Text>
+                <View style={styles.amountRow}>
+                  <TouchableOpacity
+                    style={styles.currencyButton}
+                    onPress={() => setShowCurrencyPicker(!showCurrencyPicker)}
+                  >
+                    <Text style={styles.currencyText}>
+                      {SUPPORTED_CURRENCIES.find((c) => c.code === editCurrencyCode)?.symbol || '$'}
+                    </Text>
+                    <Ionicons name="chevron-down" size={14} color={theme.colors.textSecondary} />
+                  </TouchableOpacity>
+                  <TextInput
+                    style={styles.amountInput}
+                    value={editAmount}
+                    onChangeText={setEditAmount}
+                    keyboardType="decimal-pad"
+                    selectTextOnFocus
+                  />
+                </View>
+                {showCurrencyPicker && (
+                  <View style={styles.pickerContainer}>
+                    {SUPPORTED_CURRENCIES.map((currency) => (
+                      <TouchableOpacity
+                        key={currency.code}
+                        style={[
+                          styles.pickerItem,
+                          editCurrencyCode === currency.code && styles.pickerItemSelected,
+                        ]}
+                        onPress={() => {
+                          setEditCurrencyCode(currency.code);
+                          setShowCurrencyPicker(false);
+                        }}
+                      >
+                        <Text style={styles.pickerSymbol}>{currency.symbol}</Text>
+                        <Text style={styles.pickerLabel}>{currency.name}</Text>
+                        {editCurrencyCode === currency.code && (
+                          <Ionicons name="checkmark" size={20} color={theme.colors.primary} />
+                        )}
+                      </TouchableOpacity>
+                    ))}
+                  </View>
+                )}
+              </View>
+
+              {/* Description */}
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>{t('voice.description')}</Text>
+                <TextInput
+                  style={styles.textInput}
+                  value={editDescription}
+                  onChangeText={setEditDescription}
+                  placeholder={t('voice.description')}
+                  placeholderTextColor={theme.colors.textTertiary}
+                />
+              </View>
+
+              {/* Merchant */}
+              <View style={styles.fieldGroup}>
+                <MerchantInput value={editMerchant} onChangeText={setEditMerchant} />
+              </View>
+
+              {/* Category */}
+              <View style={styles.fieldGroup}>
+                <Text style={styles.fieldLabel}>{t('voice.category')}</Text>
+                <View style={styles.categoryGrid}>
+                  {getExpenseCategories().map((cat) => (
+                    <TouchableOpacity
+                      key={cat.id}
+                      style={[
+                        styles.categoryChip,
+                        editCategory === cat.id && {
+                          backgroundColor: cat.color,
+                          borderColor: cat.color,
+                        },
+                      ]}
+                      onPress={() =>
+                        setEditCategory(editCategory === cat.id ? '' : cat.id)
+                      }
+                    >
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={[
+                          styles.categoryChipText,
+                          editCategory === cat.id && styles.categoryChipTextSelected,
+                        ]}
+                      >
+                        {getCategoryDisplayName(cat, t)}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                  <TouchableOpacity
+                    style={[styles.categoryChip, styles.addCategoryChip]}
+                    onPress={() => setShowCreateCategory(true)}
+                  >
+                    <Ionicons name="add" size={16} color={theme.colors.primary} />
+                  </TouchableOpacity>
+                </View>
+              </View>
+
+              <CreateCategoryModal
+                visible={showCreateCategory}
+                type="expense"
+                onClose={() => setShowCreateCategory(false)}
+                onCreated={(categoryId) => {
+                  setEditCategory(categoryId);
+                  setShowCreateCategory(false);
+                }}
+              />
+
+              {/* Confidence */}
+              <View style={styles.confidenceRow}>
+                <Ionicons
+                  name={parsedExpense && parsedExpense.confidence > 0.8 ? 'checkmark-circle' : 'alert-circle'}
+                  size={16}
+                  color={parsedExpense && parsedExpense.confidence > 0.8 ? theme.colors.primary : theme.colors.warning}
+                />
+                <Text style={styles.confidenceText}>
+                  {parsedExpense && parsedExpense.confidence > 0.8 ? t('voice.highConfidence') : t('voice.mediumConfidence')}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.confirmActions}>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                onPress={handleConfirmExpense}
+              >
+                <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
+                <Text style={styles.confirmButtonText}>{t('voice.saveExpense')}</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
+                <Ionicons name="refresh" size={20} color={theme.colors.textSecondary} />
+                <Text style={styles.retryButtonText}>{t('voice.tryAgain')}</Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
+      )}
+    </SafeAreaView>
+  );
+}
+
+const createStyles = (theme: Theme) => ({
+  container: {
+    flex: 1,
+    backgroundColor: theme.colors.surface,
+  },
+  flex: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    padding: theme.spacing[6],
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  instructionContainer: {
+    alignItems: 'center' as const,
+    marginBottom: theme.spacing[12],
+  },
+  instructionText: {
+    fontSize: 18,
+    color: theme.colors.textPrimary,
+    fontWeight: '500' as const,
+  },
+  exampleText: {
+    fontSize: 14,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[2],
+    fontStyle: 'italic' as const,
+  },
+  recordButton: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: theme.colors.primary,
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    ...theme.shadows.xl,
+  },
+  recordButtonActive: {
+    backgroundColor: theme.colors.danger,
+  },
+  cancelButton: {
+    marginTop: theme.spacing[6],
+    padding: theme.spacing[3],
+  },
+  cancelButtonText: {
+    fontSize: 16,
+    color: theme.colors.textSecondary,
+  },
+  processingContainer: {
+    alignItems: 'center' as const,
+    padding: theme.spacing[6],
+  },
+  processingText: {
+    fontSize: 16,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[4],
+  },
+  transcriptionContainer: {
+    marginTop: theme.spacing[8],
+    padding: theme.spacing[4],
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.lg,
+    width: '100%' as const,
+  },
+  transcriptionLabel: {
+    fontSize: 12,
+    color: theme.colors.textTertiary,
+    marginBottom: theme.spacing[1],
+  },
+  transcriptionText: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+    fontStyle: 'italic' as const,
+  },
+  // Confirmation screen
+  confirmScrollContent: {
+    padding: theme.spacing[6],
+  },
+  confirmTitle: {
+    fontSize: 24,
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
+    marginBottom: theme.spacing[6],
+    textAlign: 'center' as const,
+  },
+  expenseCard: {
+    width: '100%' as const,
+    backgroundColor: theme.colors.surfaceSecondary,
+    borderRadius: theme.borderRadius.xl,
+    padding: theme.spacing[5],
+    marginBottom: theme.spacing[6],
+  },
+  fieldGroup: {
+    marginBottom: theme.spacing[4],
+  },
+  fieldLabel: {
+    ...theme.textStyles.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[1.5],
+  },
+  amountRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+  },
+  currencyButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    backgroundColor: theme.colors.surface,
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.md,
+    marginRight: theme.spacing[2],
+    gap: theme.spacing[1],
+  },
+  currencyText: {
+    fontSize: 24,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+  },
+  amountInput: {
+    flex: 1,
+    fontSize: 32,
+    fontWeight: 'bold' as const,
+    color: theme.colors.textPrimary,
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3],
+    textAlign: 'center' as const,
+  },
+  pickerContainer: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    marginTop: theme.spacing[2],
+    overflow: 'hidden' as const,
+  },
+  pickerItem: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[3],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  pickerItemSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  pickerSymbol: {
+    fontSize: 18,
+    fontWeight: '600' as const,
+    color: theme.colors.textPrimary,
+    width: 30,
+  },
+  pickerLabel: {
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  textInput: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    padding: theme.spacing[3],
+    fontSize: 16,
+    color: theme.colors.textPrimary,
+  },
+  categoryGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+  },
+  categoryChip: {
+    width: '31%' as const,
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[2],
+    borderRadius: theme.borderRadius.xl,
+    borderWidth: 1.5,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  categoryChipText: {
+    fontSize: 13,
+    color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+  },
+  categoryChipTextSelected: {
+    color: theme.colors.textInverse,
+    fontWeight: '600' as const,
+  },
+  addCategoryChip: {
+    borderStyle: 'dashed' as const,
+    borderColor: theme.colors.primary,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  confidenceRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingTop: theme.spacing[2],
+    gap: theme.spacing[1.5],
+  },
+  confidenceText: {
+    fontSize: 12,
+    color: theme.colors.textSecondary,
+  },
+  confirmActions: {
+    gap: theme.spacing[3],
+  },
+  confirmButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3.5],
+    paddingHorizontal: theme.spacing[5],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.primary,
+    gap: theme.spacing[2],
+  },
+  confirmButtonText: {
+    ...theme.textStyles.button,
+    color: theme.colors.textInverse,
+  },
+  retryButton: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    paddingVertical: theme.spacing[3],
+    gap: theme.spacing[1.5],
+  },
+  retryButtonText: {
+    fontSize: 16,
+    color: theme.colors.textSecondary,
+  },
+});

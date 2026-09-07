@@ -1066,11 +1066,37 @@ You can browse and reopen previous AI conversations at any time:
 
 > Loaded conversation history is also saved locally for offline access after the first load.
 
+### Managing a Conversation
+
+Each conversation in the list has its own **⋯** menu. In the browser it appears
+when you point at a row (or when the row is the one you have open); on the phone
+it is always visible, and a long press on the row opens the same menu.
+
+- **Rename** gives the conversation a name of your own. Until you do, it is
+  titled by the first thing you typed into it, which is rarely what you would
+  have called it. Renaming does not move the conversation in the list.
+- **Pin** keeps a conversation at the top of the list, above a dividing line,
+  no matter how long ago you last used it. Pinning is **yours alone** — it
+  changes the order you see and nobody else's, and you can pin a shared
+  conversation somebody else started. Tap **Unpin** to release it.
+- **Delete** removes the conversation and its messages for good. There is no
+  undo. If the conversation is shared, the confirmation says so plainly,
+  because deleting it removes it for every member of the account, not just for
+  you.
+
+You can rename and delete only the conversations you started. On someone else's
+shared conversation the menu offers **Pin** alone — which is the one thing that
+makes sense there, since the order of your own list is your business.
+
 ## Shared Conversations
 
 If you share an account with other members, you can turn a conversation into a **shared group chat** where everyone talks with the AI together.
 
-- **Turn sharing on or off:** the person who started a conversation sees a **Shared / Private** toggle at the top of the chat. Tap it to make that conversation shared (visible to all members) or private again. Any member can share a conversation they created — not just the account owner. You can't change sharing on a conversation someone else started (you'll see a read-only "Shared" label there). The toggle only appears when the account has more than one member.
+- **Turn sharing on or off:** the person who started a conversation sees the choice at the top of the chat. In the browser it is a pair of buttons, **Private** and **Shared**, with the current one filled in — so you can see that the other one exists and tap it. On the phone the same pill carries a small swap arrow to show it can be switched. Any member can share a conversation they created — not just the account owner. You can't change sharing on a conversation someone else started (you'll see a read-only "Shared" label there). The choice only appears when the account has more than one member.
+- **Deciding before you start:** the choice works on an empty conversation too.
+  Pick **Shared** before typing anything and the conversation is shared from its
+  first message, which saves everyone reading the first half of a thread they
+  were never told about.
 - **Everyone sees the conversation:** in a shared conversation, messages from other members appear with their name, and new messages show up automatically while you have the chat open.
 - **Address a person instead of the AI:** type **@** and pick a member to mention them. When you mention a member, the AI stays silent — the message is meant for that person, not the assistant. If you don't mention anyone, the AI answers as usual.
 - **Notifications:** if you mention a member who isn't currently viewing the chat, they receive a push notification so they don't miss it. This respects your "Shared activity" notification setting.
@@ -3827,6 +3853,56 @@ The web app covers the everyday essentials:
 
 It's a great way to do longer sessions on a real keyboard — reviewing the month, cleaning up categories, or chatting with the AI assistant.
 
+## Transactions on a Wide Screen
+
+When the browser window is wide enough — roughly as wide as a laptop or desktop screen — the Transactions screen changes to make better use of the space, with a sidebar and a top bar instead of the familiar phone layout.
+
+- Filters are shown as a **list down the left side**, with a count next to each option, instead of a row of buttons — so you can see how many transactions a filter will show before you pick it.
+- **Expenses and income appear together in one list**, grouped by day, with each day showing the total spent that day.
+- Tapping a transaction opens it in a **panel over the list** instead of a new page — close the panel to go back to exactly where you were.
+- You can **select several transactions with checkboxes** — hold Shift and click to select everything between two rows — and then change their category, add a tag, or delete them all together.
+
+Below about 1024 pixels wide — which includes most tablets held upright — the browser shows the familiar phone layout instead. That's expected: the wide layout is designed for a real desktop or laptop screen, and a narrower window is better served by the phone layout.
+
+## Settings on a Wide Screen
+
+On a wide window, Settings keeps the whole list down the left side, and the one you pick opens beside it instead of replacing the page — so you can move between Profile, Notifications, Categories and the rest without going back each time.
+
+- The address bar follows your choice, so you can **bookmark a settings page** or reload it and land back where you were.
+- A few rows still open as a full page, because they are places to work rather than switches: **Wallet**, **Shopping list**, **Purchase requests**, **Subscriptions** and **Import**.
+- Opening one account from Manage accounts, or one project from Projects, also opens a full page — with its own edit and delete buttons in the title bar, and a back arrow that brings you back to the list with the same row still highlighted.
+- **Signing out** lives on the Settings page itself with nothing selected; the gear in the top bar takes you back there.
+
+Below about 1024 pixels wide the familiar phone layout returns, with every row in one long list.
+
+## The Dashboard on a Wide Screen
+
+The dashboard uses the extra room to put what needs your attention in front of you, rather than stretching the phone's cards across it.
+
+- A **main column** carries the running figures — what is safe to spend today, the month's budget, income against expenses — and a **narrow column of cards** stands beside it. On a very wide screen there are two such columns.
+- **Anything you add opens over the dashboard** — an expense, a starting balance, a budget — so you stay on the screen you were reading.
+- The **bell** opens your alerts and invitations as a panel instead of a separate page.
+- A **brand-new account** sees a short setup checklist rather than a screen of empty cards: scan a receipt, type one in, or set a starting balance.
+
+## The Chat on a Wide Screen
+
+On a wide window the AI chat gains a **list of your past conversations down the left side**, and the conversation itself is held to a comfortable reading width in the middle instead of being stretched across the screen.
+
+- Picking a conversation from the list opens it in place, and the one you are reading stays highlighted.
+- **New conversation** sits at the top of that list, so you can start one without losing your place in what you were reading.
+- A conversation shared with the other people on your account says **Shared** on
+  its second line, beside the date, rather than only carrying an icon.
+- The box you type in stays at the bottom, with its microphone and send button next to the text rather than at opposite edges of the screen.
+- A brand-new conversation shows what the assistant can actually do — add an expense, check a budget, put something on the shopping list — instead of an empty screen.
+- Point at any row for its **⋯** menu, where you can rename, pin or delete the
+  conversation. Pinned conversations sit at the top of the list above a
+  dividing line. There is more on all three in the AI chat guide.
+- The **Private / Shared** choice at the top of the conversation shows both
+  options side by side, so the one you are not using is visible rather than
+  hidden.
+
+On a narrower window, and on the phone, the conversation list stays behind the **History** button as before.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:
@@ -5647,11 +5723,22 @@ iOS, Android, Web
 
 > Загруженная история сохраняется локально и доступна без интернета после первой загрузки.
 
+### Управление разговором
+
+У каждого разговора в списке есть своё меню **⋯**. В браузере оно появляется при наведении на строку (или если это тот разговор, что у вас сейчас открыт); на телефоне оно видно всегда, а долгое нажатие на строку открывает то же меню.
+
+- **Переименовать** даёт разговору собственное имя. Пока вы этого не сделали, он называется по первому, что вы в нём написали, — а это редко то имя, которое вы бы выбрали. Переименование не меняет положение разговора в списке.
+- **Закрепить** удерживает разговор вверху списка, над разделительной линией, независимо от того, как давно вы им пользовались. Закрепление касается **только вас** — оно меняет порядок, который видите вы, и ничей больше, и вы можете закрепить даже общий разговор, начатый кем-то другим. Нажмите **Открепить**, чтобы освободить его.
+- **Удалить** убирает разговор и его сообщения навсегда. Отменить это нельзя. Если разговор общий, подтверждение прямо об этом говорит, потому что удаление убирает его для всех участников счёта, а не только для вас.
+
+Переименовывать и удалять можно только те разговоры, которые начали вы сами. В общем разговоре, начатом кем-то другим, меню предлагает только **Закрепить** — единственное, что здесь имеет смысл, ведь порядок вашего собственного списка касается только вас.
+
 ## Общие разговоры
 
 Если вы используете счёт совместно с другими участниками, вы можете превратить разговор в **общий групповой чат**, где все общаются с ИИ вместе.
 
-- **Включение и отключение общего доступа:** тот, кто начал разговор, видит переключатель **Общий / Личный** вверху чата. Нажмите на него, чтобы сделать этот разговор общим (видимым всем участникам) или снова личным. Любой участник может сделать общим разговор, который он создал, — не только владелец счёта. Вы не можете менять общий доступ к разговору, начатому другим участником (там вы увидите метку «Общий» только для чтения). Переключатель появляется только тогда, когда в счёте больше одного участника.
+- **Включение и отключение общего доступа:** тот, кто начал разговор, видит выбор вверху чата. В браузере это две кнопки, **Личный** и **Общий**, причём активная сейчас показана залитой цветом — так видно, что вторая тоже существует, и её можно нажать. На телефоне та же кнопка несёт маленькую стрелку переключения, показывающую, что её можно переключить. Любой участник может сделать общим разговор, который он создал, — не только владелец счёта. Вы не можете менять общий доступ к разговору, начатому другим участником (там вы увидите метку «Общий» только для чтения). Выбор появляется только тогда, когда в счёте больше одного участника.
+- **Решение до начала разговора:** выбор работает и на пустом разговоре. Выберите **Общий**, прежде чем что-то написать, — и разговор станет общим с самого первого сообщения, так что никому не придётся читать первую половину переписки, о которой его никто не предупредил.
 - **Разговор виден всем:** в общем разговоре сообщения других участников отображаются с их именами, а новые сообщения появляются автоматически, пока у вас открыт чат.
 - **Обращение к человеку вместо ИИ:** введите **@** и выберите участника, чтобы упомянуть его. Когда вы упоминаете участника, ИИ молчит — сообщение предназначено для этого человека, а не для ассистента. Если вы никого не упоминаете, ИИ отвечает как обычно.
 - **Уведомления:** если вы упоминаете участника, который сейчас не открыл чат, он получает push-уведомление, чтобы не пропустить его. Это учитывает вашу настройку уведомлений «Общая активность».
@@ -8397,6 +8484,51 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Это удобно для долгих сессий за настоящей клавиатурой — разобрать месяц, навести порядок в категориях или пообщаться с AI-ассистентом.
 
+## Транзакции на большом экране
+
+Когда окно браузера достаточно широкое — как на ноутбуке или настольном компьютере, — экран «Транзакции» меняется, чтобы использовать пространство лучше: появляются боковая панель и верхняя панель вместо привычного вида для телефона.
+
+- Фильтры показаны **списком слева**, и рядом с каждым вариантом видно число подходящих операций, а не рядом кнопок — так вы сразу видите, сколько операций покажет фильтр, ещё до того как выберете его.
+- **Расходы и доходы показаны вместе, одним списком**, сгруппированным по дням, и для каждого дня видна общая сумма расходов за этот день.
+- Нажатие на операцию открывает её в **панели поверх списка**, а не на новой странице — закройте панель, чтобы вернуться туда же, где были.
+- Можно **выбрать сразу несколько операций с помощью галочек** — зажмите Shift и щёлкните, чтобы выбрать всё между двумя строками, — а затем изменить им категорию, добавить тег или удалить всё разом.
+
+Если ширина окна меньше примерно 1024 пикселей — это касается и большинства планшетов в вертикальной ориентации, — браузер вместо этого показывает привычный вид для телефона. Так и задумано: широкий вид рассчитан на настоящий экран компьютера или ноутбука, а для более узкого окна лучше подходит вид для телефона.
+
+## Настройки на большом экране
+
+В широком окне «Настройки» держат весь список по левому краю, а выбранный пункт открывается рядом с ним, а не вместо страницы, — так вы переходите между профилем, уведомлениями, категориями и остальным, не возвращаясь каждый раз назад.
+
+- Адресная строка следует за вашим выбором, поэтому страницу настроек можно **добавить в закладки** или обновить и попасть туда же, где вы были.
+- Несколько пунктов по-прежнему открываются на всю страницу, потому что это места работы, а не переключатели: **Кошелёк**, **Список покупок**, **Запросы на покупку**, **Подписки** и **Импорт**.
+- Открытие одного счёта из управления счетами или одного проекта из проектов тоже разворачивает полную страницу — со своими кнопками правки и удаления в заголовке и стрелкой назад, которая возвращает к списку с тем же подсвеченным пунктом.
+- **Выход из аккаунта** находится на самой странице настроек, когда ничего не выбрано; шестерёнка на верхней панели возвращает туда.
+
+Ниже примерно 1024 пикселей по ширине возвращается привычная телефонная раскладка, со всеми пунктами в одном длинном списке.
+
+## Главный экран на большом экране
+
+Главный экран использует лишнее место, чтобы поставить перед вами то, что требует внимания, а не растягивать по нему телефонные карточки.
+
+- **Основная колонка** несёт текущие числа — сколько можно спокойно потратить сегодня, бюджет месяца, доходы против расходов, — а рядом стоит **узкая колонка карточек**. На очень широком экране таких колонок две.
+- **Всё, что вы добавляете, открывается поверх главного экрана** — расход, начальный баланс, бюджет, — поэтому вы остаётесь на том экране, который читали.
+- **Колокольчик** открывает оповещения и приглашения панелью, а не отдельной страницей.
+- **Совсем новый счёт** видит короткий список первых шагов вместо экрана пустых карточек: отсканировать чек, вписать его вручную или задать начальный баланс.
+
+## Чат на большом экране
+
+В широком окне у чата с ИИ появляется **список прошлых разговоров по левому краю**, а сам разговор держится в середине на удобной для чтения ширине, а не растягивается на весь экран.
+
+- Выбор разговора из списка открывает его на месте, а тот, что вы читаете, остаётся подсвеченным.
+- **Новый разговор** стоит наверху этого списка, так что начать его можно, не теряя места в том, что читали.
+- Разговор, открытый остальным участникам счёта, показывает во второй строке списка, рядом с датой, надпись **Общий**, а не просто значок.
+- Поле ввода остаётся внизу, а микрофон и кнопка отправки стоят рядом с текстом, а не у противоположных краёв экрана.
+- Совсем новый разговор показывает, что помощник умеет на самом деле — записать расход, проверить бюджет, добавить что-то в список покупок, — вместо пустого экрана.
+- Наведите курсор на любую строку, чтобы увидеть её меню **⋯**, где можно переименовать, закрепить или удалить разговор. Закреплённые разговоры стоят вверху списка, над разделительной линией. Подробнее обо всех трёх действиях — в руководстве по чату с ИИ.
+- Выбор **Личный / Общий** вверху разговора показывает оба варианта рядом, так что тот, которым вы сейчас не пользуетесь, виден, а не скрыт.
+
+В более узком окне и на телефоне список разговоров остаётся за кнопкой **История**, как и раньше.
+
 ## Ограничения
 
 Веб-версия дополняет мобильное приложение, но не заменяет его полностью. Несколько функций в браузере работают иначе:
@@ -10226,11 +10358,22 @@ iOS, Android, Web
 
 > Завантажена історія зберігається локально і доступна без інтернету після першого завантаження.
 
+### Керування розмовою
+
+Кожна розмова у списку має власне меню **⋯**. У браузері воно з'являється, коли ви наводите курсор на рядок (або коли це та розмова, що зараз відкрита); на телефоні воно видно завжди, а довге натискання на рядок відкриває те саме меню.
+
+- **Перейменувати** дає розмові власну назву. Поки ви цього не зробили, вона називається за першим, що ви в ній написали, — а це рідко та назва, яку ви б обрали. Перейменування не переміщує розмову в списку.
+- **Закріпити** утримує розмову вгорі списку, над роздільною лінією, незалежно від того, як давно ви нею користувалися. Закріплення стосується **тільки вас** — воно змінює порядок, який бачите ви, і нічий більше, і ви можете закріпити навіть спільну розмову, розпочату кимось іншим. Натисніть **Відкріпити**, щоб звільнити її.
+- **Видалити** прибирає розмову та її повідомлення назавжди. Скасувати це не можна. Якщо розмова спільна, підтвердження прямо про це каже, бо видалення прибирає її для всіх учасників рахунку, а не лише для вас.
+
+Перейменовувати й видаляти можна лише ті розмови, які розпочали ви самі. У спільній розмові, розпочатій кимось іншим, меню пропонує лише **Закріпити** — єдине, що тут має сенс, адже порядок вашого власного списку — ваша справа.
+
 ## Спільні розмови
 
 Якщо ви користуєтеся рахунком спільно з іншими учасниками, ви можете перетворити розмову на **спільний груповий чат**, де всі спілкуються з ШІ разом.
 
-- **Увімкнення та вимкнення спільного доступу:** той, хто розпочав розмову, бачить перемикач **Спільний / Особистий** угорі чату. Натисніть на нього, щоб зробити цю розмову спільною (видимою всім учасникам) або знову особистою. Будь-який учасник може зробити спільною розмову, яку він створив, — не лише власник рахунку. Ви не можете змінювати спільний доступ до розмови, яку розпочав хтось інший (там ви побачите позначку «Спільний» лише для читання). Перемикач з'являється лише тоді, коли в рахунку більше одного учасника.
+- **Увімкнення та вимкнення спільного доступу:** той, хто розпочав розмову, бачить вибір угорі чату. У браузері це дві кнопки, **Особистий** і **Спільний**, причому активна зараз показана залитою кольором — так видно, що інша теж існує, і на неї можна натиснути. На телефоні та сама кнопка має маленьку стрілку перемикання, яка показує, що її можна переключити. Будь-який учасник може зробити спільною розмову, яку він створив, — не лише власник рахунку. Ви не можете змінювати спільний доступ до розмови, яку розпочав хтось інший (там ви побачите позначку «Спільний» лише для читання). Вибір з'являється лише тоді, коли в рахунку більше одного учасника.
+- **Рішення до початку розмови:** вибір працює і на порожній розмові. Виберіть **Спільний**, перш ніж щось написати, — і розмова стане спільною вже з першого повідомлення, тож нікому не доведеться читати першу половину переписки, про яку його ніхто не попередив.
 - **Розмову бачать усі:** у спільній розмові повідомлення інших учасників відображаються з їхніми іменами, а нові повідомлення з'являються автоматично, поки у вас відкритий чат.
 - **Звернення до людини замість ШІ:** введіть **@** та виберіть учасника, щоб згадати його. Коли ви згадуєте учасника, ШІ мовчить — повідомлення призначене для цієї людини, а не для асистента. Якщо ви нікого не згадуєте, ШІ відповідає як зазвичай.
 - **Сповіщення:** якщо ви згадуєте учасника, який зараз не відкрив чат, він отримує push-сповіщення, щоб не пропустити його. Це враховує ваше налаштування сповіщень «Спільна активність».
@@ -12935,6 +13078,51 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Це зручно для довгих сесій за справжньою клавіатурою — розібрати місяць, навести лад у категоріях або поспілкуватися з AI-асистентом.
 
+## Транзакції на великому екрані
+
+Коли вікно браузера достатньо широке — приблизно як на ноутбуці чи настільному комп’ютері, — екран «Транзакції» змінюється, щоб краще використати простір: з’являються бічна панель і верхня панель замість звичного вигляду для телефона.
+
+- Фільтри показані **списком зліва**, і біля кожного варіанта видно кількість відповідних операцій, а не рядом кнопок — так ви одразу бачите, скільки операцій покаже фільтр, ще до того як оберете його.
+- **Витрати й доходи показані разом, одним списком**, згрупованим за днями, і для кожного дня видно загальну суму витрат за цей день.
+- Натискання на операцію відкриває її в **панелі над списком**, а не на новій сторінці — закрийте панель, щоб повернутися саме туди, де ви були.
+- Можна **вибрати одразу декілька операцій за допомогою прапорців** — утримуйте Shift і клацніть, щоб вибрати все між двома рядками, — а потім змінити їм категорію, додати тег або видалити всі одразу.
+
+Якщо ширина вікна менша за приблизно 1024 пікселі — це стосується й більшості планшетів у вертикальній орієнтації, — браузер натомість показує звичний вигляд для телефона. Так і задумано: широкий вигляд розрахований на справжній екран комп’ютера чи ноутбука, а для вужчого вікна краще підходить вигляд для телефона.
+
+## Налаштування на великому екрані
+
+У широкому вікні «Налаштування» тримають увесь список по лівому краю, а вибраний пункт відкривається поряд із ним, а не замість сторінки, — тож ви переходите між профілем, повідомленнями, категоріями та рештою, не повертаючись щоразу назад.
+
+- Адресний рядок стежить за вашим вибором, тому сторінку налаштувань можна **додати в закладки** або оновити й потрапити туди ж, де ви були.
+- Кілька пунктів досі відкриваються на всю сторінку, бо це місця роботи, а не перемикачі: **Гаманець**, **Список покупок**, **Запити на покупку**, **Підписки** та **Імпорт**.
+- Відкриття одного рахунку з керування рахунками або одного проєкту з проєктів теж розгортає повну сторінку — із власними кнопками редагування та видалення в заголовку і стрілкою назад, яка повертає до списку з тим самим підсвіченим пунктом.
+- **Вихід з акаунта** розташований на самій сторінці налаштувань, коли нічого не вибрано; шестерня на верхній панелі повертає туди.
+
+Нижче приблизно 1024 пікселів завширшки повертається звична телефонна розкладка, з усіма пунктами в одному довгому списку.
+
+## Головний екран на великому екрані
+
+Головний екран використовує зайве місце, щоб поставити перед вами те, що потребує уваги, а не розтягувати по ньому телефонні картки.
+
+- **Основна колонка** несе поточні числа — скільки можна спокійно витратити сьогодні, бюджет місяця, доходи проти витрат, — а поряд стоїть **вузька колонка карток**. На дуже широкому екрані таких колонок дві.
+- **Усе, що ви додаєте, відкривається поверх головного екрана** — витрату, початковий баланс, бюджет, — тож ви залишаєтеся на тому екрані, який читали.
+- **Дзвіночок** відкриває оповіщення та запрошення панеллю, а не окремою сторінкою.
+- **Цілком новий рахунок** бачить короткий список перших кроків замість екрана порожніх карток: відсканувати чек, вписати його вручну або задати початковий баланс.
+
+## Чат на великому екрані
+
+У широкому вікні чат з ШІ отримує **список минулих розмов по лівому краю**, а сама розмова тримається в середині на зручній для читання ширині, а не розтягується на весь екран.
+
+- Вибір розмови зі списку відкриває її на місці, а та, яку ви читаєте, залишається підсвіченою.
+- **Нова розмова** стоїть згори цього списку, тож почати її можна, не втрачаючи місця в тому, що читали.
+- Розмова, відкрита іншим учасникам рахунку, показує в другому рядку списку, поряд із датою, напис **Спільний**, а не лише значок.
+- Поле введення залишається внизу, а мікрофон і кнопка надсилання стоять поряд із текстом, а не біля протилежних країв екрана.
+- Цілком нова розмова показує, що помічник уміє насправді — записати витрату, перевірити бюджет, додати щось до списку покупок, — замість порожнього екрана.
+- Наведіть курсор на будь-який рядок, щоб побачити його меню **⋯**, де можна перейменувати, закріпити або видалити розмову. Закріплені розмови стоять вгорі списку, над роздільною лінією. Більше про всі три дії — у посібнику з чату ШІ.
+- Вибір **Особистий / Спільний** вгорі розмови показує обидва варіанти поруч, тож той, яким ви зараз не користуєтесь, видно, а не приховано.
+
+У вужчому вікні та на телефоні список розмов залишається за кнопкою **Історія**, як і раніше.
+
 ## Обмеження
 
 Веб-версія доповнює мобільний застосунок, але не замінює його повністю. Кілька функцій у браузері працюють інакше:
@@ -14753,11 +14941,22 @@ Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
 
 > Załadowana historia jest zapisywana lokalnie i dostępna offline po pierwszym załadowaniu.
 
+### Zarządzanie rozmową
+
+Każda rozmowa na liście ma własne menu **⋯**. W przeglądarce pojawia się ono po najechaniu na wiersz (albo gdy to właśnie ta rozmowa jest otwarta); na telefonie jest zawsze widoczne, a długie przytrzymanie wiersza otwiera to samo menu.
+
+- **Zmień nazwę** nadaje rozmowie własną nazwę. Dopóki tego nie zrobisz, nosi tytuł pierwszej wpisanej w niej wiadomości, co rzadko jest wygodną nazwą. Zmiana nazwy nie przenosi rozmowy na liście.
+- **Przypnij** trzyma rozmowę na górze listy, nad linią oddzielającą, bez względu na to, jak dawno ostatnio z niej korzystano. Przypinanie dotyczy **tylko Ciebie** — zmienia kolejność, którą widzisz Ty, a nie ktokolwiek inny, i możesz przypiąć nawet wspólną rozmowę rozpoczętą przez kogoś innego. Dotknij **Odepnij**, aby ją zwolnić.
+- **Usuń** usuwa rozmowę i jej wiadomości na stałe. Nie ma cofnięcia. Jeśli rozmowa jest wspólna, potwierdzenie mówi o tym wprost, bo usunięcie usuwa ją dla wszystkich członków konta, nie tylko dla Ciebie.
+
+Zmieniać nazwę i usuwać można tylko rozmowy rozpoczęte przez Ciebie. We wspólnej rozmowie rozpoczętej przez kogoś innego menu oferuje tylko **Przypnij** — jedyną opcję, która ma tu sens, bo kolejność Twojej własnej listy to Twoja sprawa.
+
 ## Wspolne rozmowy
 
 Jeśli dzielisz konto z innymi członkami, możesz zamienić rozmowę we **wspólny czat grupowy**, w którym wszyscy rozmawiają z AI razem.
 
-- **Włączanie i wyłączanie udostępniania:** osoba, która rozpoczęła rozmowę, widzi przełącznik **Wspólny / Prywatny** u góry czatu. Dotknij go, aby uczynić tę rozmowę wspólną (widoczną dla wszystkich członków) lub znowu prywatną. Każdy członek może udostępnić rozmowę, którą utworzył — nie tylko właściciel konta. Nie możesz zmieniać udostępniania rozmowy rozpoczętej przez kogoś innego (zobaczysz tam etykietę "Wspólny" tylko do odczytu). Przełącznik pojawia się tylko wtedy, gdy konto ma więcej niż jednego członka.
+- **Włączanie i wyłączanie udostępniania:** osoba, która rozpoczęła rozmowę, widzi wybór u góry czatu. W przeglądarce to para przycisków, **Prywatny** i **Wspólny**, przy czym aktualnie wybrany jest wypełniony kolorem — dzięki temu widać, że ten drugi też istnieje, i można go dotknąć. Na telefonie ta sama pigułka ma małą strzałkę zamiany, pokazującą, że da się ją przełączyć. Każdy członek może udostępnić rozmowę, którą utworzył — nie tylko właściciel konta. Nie możesz zmieniać udostępniania rozmowy rozpoczętej przez kogoś innego (zobaczysz tam etykietę "Wspólny" tylko do odczytu). Wybór pojawia się tylko wtedy, gdy konto ma więcej niż jednego członka.
+- **Decyzja przed rozpoczęciem:** wybór działa też na pustej, jeszcze nierozpoczętej rozmowie. Wybierz **Wspólny**, zanim cokolwiek napiszesz, a rozmowa będzie wspólna już od pierwszej wiadomości — dzięki temu nikt nie czyta połowy wątku, o którym nigdy nie wiedział.
 - **Wszyscy widzą rozmowę:** we wspólnej rozmowie wiadomości od innych członków pojawiają się z ich imieniem, a nowe wiadomości wyświetlają się automatycznie, gdy masz czat otwarty.
 - **Zwracanie się do osoby zamiast do AI:** wpisz **@** i wybierz członka, aby go wspomnieć. Gdy wspomnisz członka, AI milczy — wiadomość jest przeznaczona dla tej osoby, a nie dla asystenta. Jeśli nikogo nie wspomnisz, AI odpowiada jak zwykle.
 - **Powiadomienia:** jeśli wspomnisz członka, który aktualnie nie ma otwartego czatu, otrzyma on powiadomienie push, aby go nie przeoczył. Uwzględnia to Twoje ustawienie powiadomień "Wspólna aktywność".
@@ -17458,6 +17657,51 @@ Wersja webowa obejmuje codzienne podstawy:
 
 To świetny sposób na dłuższe sesje przy prawdziwej klawiaturze — przegląd miesiąca, porządkowanie kategorii lub rozmowa z asystentem AI.
 
+## Transakcje na dużym ekranie
+
+Gdy okno przeglądarki jest wystarczająco szerokie — mniej więcej jak na laptopie lub komputerze stacjonarnym — ekran Transakcji zmienia się, aby lepiej wykorzystać miejsce: pojawia się panel boczny i pasek górny zamiast układu znanego z telefonu.
+
+- Filtry są pokazane jako **lista po lewej stronie**, a przy każdej opcji widać liczbę pasujących transakcji, zamiast rzędu przycisków — dzięki temu widzisz, ile transakcji pokaże dany filtr, zanim go wybierzesz.
+- **Wydatki i przychody pojawiają się razem, w jednej liście**, pogrupowanej według dnia, a przy każdym dniu widać sumę wydatków z tego dnia.
+- Dotknięcie transakcji otwiera ją w **panelu nad listą** zamiast na nowej stronie — zamknij panel, aby wrócić do listy.
+- Możesz **zaznaczyć kilka transakcji za pomocą checkboxów** — przytrzymaj Shift i kliknij, aby zaznaczyć wszystko pomiędzy dwoma wierszami — a potem zmienić im kategorię, dodać tag albo usunąć je razem.
+
+Poniżej około 1024 pikseli szerokości — dotyczy to też większości tabletów trzymanych pionowo — przeglądarka pokazuje zamiast tego znany układ telefoniczny. Tak ma być: szeroki układ jest pomyślany dla prawdziwego ekranu komputera lub laptopa, a węższe okno lepiej obsługuje układ telefoniczny.
+
+## Ustawienia na dużym ekranie
+
+W szerokim oknie Ustawienia trzymają całą listę po lewej stronie, a wybrana pozycja otwiera się obok niej, zamiast zastępować stronę — dzięki temu przechodzisz między Profilem, Powiadomieniami, Kategoriami i resztą bez cofania się za każdym razem.
+
+- Pasek adresu podąża za Twoim wyborem, więc możesz **dodać stronę ustawień do zakładek** albo odświeżyć ją i wrócić dokładnie do tego samego miejsca.
+- Kilka pozycji nadal otwiera się na pełnej stronie, bo są miejscami pracy, a nie przełącznikami: **Portfel**, **Lista zakupów**, **Wnioski o zakup**, **Subskrypcje** i **Import**.
+- Otwarcie jednego konta z Zarządzania kontami albo jednego projektu z Projektów też otwiera pełną stronę — z własnymi przyciskami edycji i usuwania na belce tytułowej oraz strzałką powrotu, która wraca do listy z tą samą podświetloną pozycją.
+- **Wylogowanie** znajduje się na samej stronie Ustawień, gdy nic nie jest wybrane; koło zębate na górnej belce prowadzi tam z powrotem.
+
+Poniżej około 1024 pikseli szerokości wraca znajomy układ telefoniczny, z wszystkimi pozycjami na jednej długiej liście.
+
+## Ekran główny na dużym ekranie
+
+Ekran główny wykorzystuje dodatkowe miejsce, żeby pokazać to, co wymaga uwagi, a nie rozciągać na nim kart z telefonu.
+
+- **Główna kolumna** prowadzi bieżące liczby — ile możesz dziś bezpiecznie wydać, budżet miesiąca, przychody względem wydatków — a obok stoi **wąska kolumna kart**. Na bardzo szerokim ekranie są dwie takie kolumny.
+- **Wszystko, co dodajesz, otwiera się nad ekranem głównym** — wydatek, saldo początkowe, budżet — więc zostajesz na ekranie, który właśnie czytasz.
+- **Dzwonek** otwiera alerty i zaproszenia jako panel, a nie osobną stronę.
+- **Nowo utworzone konto** widzi krótką listę kroków startowych, a nie ekran pustych kart: zeskanuj paragon, wpisz go ręcznie albo ustaw saldo początkowe.
+
+## Czat na dużym ekranie
+
+W szerokim oknie czat AI zyskuje **listę wcześniejszych rozmów po lewej stronie**, a sama rozmowa jest utrzymana w wygodnej do czytania szerokości na środku, zamiast rozciągać się na cały ekran.
+
+- Wybranie rozmowy z listy otwiera ją na miejscu, a ta czytana pozostaje podświetlona.
+- **Nowa rozmowa** znajduje się na górze tej listy, więc możesz ją rozpocząć bez gubienia miejsca w tym, co czytasz.
+- Rozmowa udostępniona pozostałym osobom na koncie pokazuje w drugim wierszu, obok daty, napis **Wspólny**, zamiast tylko ikony.
+- Pole do pisania zostaje na dole, a mikrofon i przycisk wysyłania są obok tekstu, nie na przeciwnych krawędziach ekranu.
+- Nowa rozmowa pokazuje, co asystent faktycznie potrafi — dodać wydatek, sprawdzić budżet, wpisać coś na listę zakupów — zamiast pustego ekranu.
+- Najedź na dowolny wiersz, aby zobaczyć jego menu **⋯**, z którego możesz zmienić nazwę rozmowy, przypiąć ją lub usunąć. Przypięte rozmowy stoją na górze listy, nad linią oddzielającą. Więcej o tych trzech opcjach znajdziesz w przewodniku po czacie AI.
+- Wybór **Prywatny / Wspólny** u góry rozmowy pokazuje obie opcje obok siebie, więc ta, z której akurat nie korzystasz, jest widoczna, a nie ukryta.
+
+W węższym oknie i na telefonie lista rozmów pozostaje pod przyciskiem **Historia**, tak jak dotychczas.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:
@@ -19276,11 +19520,22 @@ Du kannst frühere KI-Gespräche jederzeit aufrufen:
 
 > Der geladene Verlauf wird lokal gespeichert und steht nach dem ersten Laden auch offline zur Verfügung.
 
+### Eine Unterhaltung verwalten
+
+Jede Unterhaltung in der Liste hat ihr eigenes **⋯**-Menü. Im Browser erscheint es, wenn du mit der Maus über eine Zeile fährst (oder wenn es die Unterhaltung ist, die du gerade geöffnet hast); auf dem Telefon ist es immer sichtbar, und ein langes Antippen der Zeile öffnet dasselbe Menü.
+
+- **Umbenennen** gibt der Unterhaltung einen eigenen Namen. Bis dahin trägt sie den Titel des ersten Textes, den du hineingeschrieben hast — selten der Name, den du gewählt hättest. Umbenennen verschiebt die Unterhaltung nicht in der Liste.
+- **Anheften** hält eine Unterhaltung oben in der Liste, über einer Trennlinie, egal wie lange du sie schon nicht mehr benutzt hast. Anheften betrifft **nur dich** — es ändert nur die Reihenfolge, die du siehst, sonst niemandes, und du kannst auch eine geteilte Unterhaltung anheften, die jemand anders begonnen hat. Tippe auf **Lösen**, um sie wieder freizugeben.
+- **Löschen** entfernt die Unterhaltung und ihre Nachrichten endgültig. Es gibt kein Rückgängigmachen. Ist die Unterhaltung geteilt, sagt die Bestätigung das deutlich, denn das Löschen entfernt sie für alle Mitglieder des Kontos, nicht nur für dich.
+
+Umbenennen und Löschen kannst du nur bei Unterhaltungen, die du selbst begonnen hast. Bei einer geteilten Unterhaltung von jemand anderem bietet das Menü nur **Anheften** an — das Einzige, was dort Sinn ergibt, denn die Reihenfolge deiner eigenen Liste ist deine Sache.
+
 ## Geteilte Gespräche
 
 Wenn du ein Konto mit anderen Mitgliedern teilst, kannst du ein Gespräch in einen **geteilten Gruppenchat** verwandeln, in dem alle gemeinsam mit der KI sprechen.
 
-- **Teilen ein- oder ausschalten:** die Person, die ein Gespräch begonnen hat, sieht oben im Chat einen **Geteilt / Privat**-Schalter. Tippe darauf, um dieses Gespräch geteilt (für alle Mitglieder sichtbar) oder wieder privat zu machen. Jedes Mitglied kann ein von ihm erstelltes Gespräch teilen — nicht nur der Kontoeigentümer. Bei einem Gespräch, das jemand anderes begonnen hat, kannst du das Teilen nicht ändern (dort siehst du ein schreibgeschütztes "Geteilt"-Label). Der Schalter erscheint nur, wenn das Konto mehr als ein Mitglied hat.
+- **Teilen ein- oder ausschalten:** die Person, die ein Gespräch begonnen hat, sieht oben im Chat die Auswahl. Im Browser sind es zwei Schaltflächen, **Privat** und **Geteilt**, wobei die gerade aktive farbig ausgefüllt ist — so siehst du, dass es die andere auch gibt, und kannst sie antippen. Auf dem Telefon trägt dieselbe Pille einen kleinen Wechsel-Pfeil, der zeigt, dass sie sich umschalten lässt. Jedes Mitglied kann ein von ihm erstelltes Gespräch teilen — nicht nur der Kontoeigentümer. Bei einem Gespräch, das jemand anderes begonnen hat, kannst du das Teilen nicht ändern (dort siehst du ein schreibgeschütztes "Geteilt"-Label). Die Auswahl erscheint nur, wenn das Konto mehr als ein Mitglied hat.
+- **Vorher entscheiden:** die Auswahl funktioniert auch bei einer leeren Unterhaltung. Wähle **Geteilt**, bevor du etwas schreibst, dann ist die Unterhaltung schon ab der ersten Nachricht geteilt — so muss niemand die erste Hälfte eines Gesprächs lesen, von dem er nie etwas erfahren hat.
 - **Alle sehen das Gespräch:** in einem geteilten Gespräch erscheinen Nachrichten anderer Mitglieder mit ihrem Namen, und neue Nachrichten werden automatisch angezeigt, solange du den Chat geöffnet hast.
 - **Eine Person statt der KI ansprechen:** tippe **@** und wähle ein Mitglied, um es zu erwähnen. Wenn du ein Mitglied erwähnst, bleibt die KI still — die Nachricht ist für diese Person bestimmt, nicht für den Assistenten. Wenn du niemanden erwähnst, antwortet die KI wie gewohnt.
 - **Benachrichtigungen:** wenn du ein Mitglied erwähnst, das den Chat gerade nicht ansieht, erhält es eine Push-Benachrichtigung, damit es sie nicht verpasst. Dies berücksichtigt deine Benachrichtigungseinstellung "Geteilte Aktivität".
@@ -21956,6 +22211,51 @@ Die Web-App deckt die täglichen Grundfunktionen ab:
 
 Eine gute Möglichkeit für längere Sitzungen mit einer echten Tastatur — den Monat durchsehen, Kategorien aufräumen oder mit dem KI-Assistenten chatten.
 
+## Transaktionen auf einem großen Bildschirm
+
+Wenn das Browserfenster breit genug ist — etwa wie auf einem Laptop oder Desktop-Computer —, sieht der Bildschirm „Transaktionen" anders aus, um den Platz besser zu nutzen: Es gibt eine Seitenleiste und eine obere Leiste statt der gewohnten Ansicht vom Smartphone.
+
+- Filter werden als **Liste auf der linken Seite** angezeigt, mit der Anzahl der passenden Treffer neben jeder Option, statt als Reihe von Schaltflächen — so siehst du, wie viele Transaktionen ein Filter zeigen würde, bevor du ihn auswählst.
+- **Ausgaben und Einnahmen erscheinen zusammen in einer Liste**, nach Tagen gruppiert, und zu jedem Tag wird die Summe der an diesem Tag ausgegebenen Beträge angezeigt.
+- Ein Tipp auf eine Transaktion öffnet sie in einem **Fenster über der Liste** statt auf einer neuen Seite — schließe das Fenster, um wieder genau dorthin zurückzukehren.
+- Du kannst **mehrere Transaktionen mit Kontrollkästchen auswählen** — halte Umschalt gedrückt und klicke, um alles zwischen zwei Zeilen auszuwählen — und dann ihre Kategorie ändern, ein Tag hinzufügen oder sie zusammen löschen.
+
+Unter etwa 1024 Pixel Breite — das betrifft auch die meisten im Hochformat gehaltenen Tablets — zeigt der Browser stattdessen die gewohnte Smartphone-Ansicht. Das ist so gewollt: Die breite Ansicht ist für einen echten Desktop- oder Laptop-Bildschirm gedacht, und ein schmaleres Fenster ist mit der Smartphone-Ansicht besser bedient.
+
+## Einstellungen auf einem großen Bildschirm
+
+In einem breiten Fenster behalten die Einstellungen die gesamte Liste an der linken Seite, und der gewählte Eintrag öffnet sich daneben, statt die Seite zu ersetzen — so wechseln Sie zwischen Profil, Benachrichtigungen, Kategorien und dem Rest, ohne jedes Mal zurückzugehen.
+
+- Die Adressleiste folgt Ihrer Auswahl, Sie können also **eine Einstellungsseite als Lesezeichen speichern** oder sie neu laden und genau dort landen, wo Sie waren.
+- Einige Einträge öffnen weiterhin eine ganze Seite, weil sie Arbeitsorte und keine Schalter sind: **Geldbeutel**, **Einkaufsliste**, **Kaufanfragen**, **Abonnements** und **Import**.
+- Öffnen Sie ein einzelnes Konto aus der Kontenverwaltung oder ein einzelnes Projekt aus den Projekten, erscheint ebenfalls eine ganze Seite — mit eigenen Schaltflächen zum Bearbeiten und Löschen in der Titelzeile und einem Zurück-Pfeil, der Sie zur Liste mit derselben hervorgehobenen Zeile zurückbringt.
+- Das **Abmelden** liegt auf der Einstellungsseite selbst, wenn nichts ausgewählt ist; das Zahnrad in der oberen Leiste führt dorthin zurück.
+
+Unterhalb von etwa 1024 Pixeln Breite kehrt das bekannte Telefon-Layout zurück, mit allen Einträgen in einer langen Liste.
+
+## Die Übersicht auf einem großen Bildschirm
+
+Die Übersicht nutzt den zusätzlichen Platz, um Ihnen das Wichtige vor Augen zu stellen, statt die Karten des Telefons darüber zu strecken.
+
+- Eine **Hauptspalte** trägt die laufenden Zahlen — was heute unbesorgt ausgegeben werden kann, das Monatsbudget, Einnahmen gegen Ausgaben — und daneben steht eine **schmale Kartenspalte**. Auf einem sehr breiten Bildschirm sind es zwei solche Spalten.
+- **Alles, was Sie hinzufügen, öffnet sich über der Übersicht** — eine Ausgabe, ein Anfangssaldo, ein Budget — Sie bleiben also auf dem Bildschirm, den Sie gerade gelesen haben.
+- Die **Glocke** öffnet Hinweise und Einladungen als Panel statt als eigene Seite.
+- Ein **ganz neues Konto** sieht eine kurze Einrichtungsliste statt eines Bildschirms voller leerer Karten: einen Kassenbon scannen, einen Betrag eintippen oder einen Anfangssaldo setzen.
+
+## Der Chat auf einem großen Bildschirm
+
+In einem breiten Fenster erhält der KI-Chat eine **Liste Ihrer früheren Unterhaltungen an der linken Seite**, und die Unterhaltung selbst wird in der Mitte auf eine angenehme Lesebreite gehalten, statt über den ganzen Bildschirm gezogen zu werden.
+
+- Eine Unterhaltung aus der Liste öffnet sich an ihrer Stelle, und die gerade gelesene bleibt hervorgehoben.
+- **Neue Unterhaltung** steht oben in dieser Liste, Sie können also eine beginnen, ohne Ihre Stelle im Gelesenen zu verlieren.
+- Eine Unterhaltung, die mit den anderen Personen Ihres Kontos geteilt ist, zeigt in der Liste **Geteilt** in der zweiten Zeile neben dem Datum, statt nur ein Symbol zu tragen.
+- Das Eingabefeld bleibt unten, und Mikrofon und Sende-Schaltfläche sitzen neben dem Text statt an den gegenüberliegenden Bildschirmrändern.
+- Eine ganz neue Unterhaltung zeigt, was der Assistent wirklich kann — eine Ausgabe eintragen, ein Budget prüfen, etwas auf die Einkaufsliste setzen — statt eines leeren Bildschirms.
+- Fahren Sie mit der Maus über eine Zeile für ihr **⋯**-Menü, in dem Sie die Unterhaltung umbenennen, anheften oder löschen können. Angeheftete Unterhaltungen stehen oben in der Liste, über einer Trennlinie. Mehr zu allen dreien finden Sie im Leitfaden zum KI-Chat.
+- Die Auswahl **Privat / Geteilt** oben in der Unterhaltung zeigt beide Optionen nebeneinander, sodass die gerade nicht verwendete sichtbar bleibt statt verborgen zu sein.
+
+In einem schmaleren Fenster und auf dem Telefon bleibt die Liste der Unterhaltungen wie bisher hinter der Schaltfläche **Verlauf**.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:
@@ -23774,11 +24074,22 @@ Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
 
 > El historial cargado se guarda localmente para acceso sin conexión después de la primera carga.
 
+### Gestionar una conversación
+
+Cada conversación de la lista tiene su propio menú **⋯**. En el navegador aparece al pasar el cursor sobre una fila (o cuando es la que tienes abierta); en el teléfono siempre está visible, y una pulsación larga sobre la fila abre el mismo menú.
+
+- **Renombrar** le da a la conversación un nombre propio. Hasta que lo hagas, se titula con lo primero que escribiste en ella, que rara vez es como la habrías llamado. Renombrar no cambia su posición en la lista.
+- **Fijar** mantiene una conversación arriba de la lista, encima de una línea divisoria, sin importar cuánto hace que la usaste por última vez. Fijar es **solo cosa tuya** — cambia el orden que ves tú y el de nadie más, y puedes fijar una conversación compartida que empezó otra persona. Toca **Dejar de fijar** para soltarla.
+- **Eliminar** borra la conversación y sus mensajes para siempre. No hay deshacer. Si la conversación es compartida, la confirmación lo dice claramente, porque eliminarla la quita para todos los miembros de la cuenta, no solo para ti.
+
+Solo puedes renombrar y eliminar las conversaciones que empezaste tú. En una conversación compartida que empezó otra persona, el menú ofrece solo **Fijar** — la única opción que tiene sentido ahí, porque el orden de tu propia lista es asunto tuyo.
+
 ## Conversaciones compartidas
 
 Si compartes una cuenta con otros miembros, puedes convertir una conversación en un **chat de grupo compartido** donde todos hablan con la IA juntos.
 
-- **Activar o desactivar el uso compartido:** la persona que inició una conversación ve un interruptor **Compartido / Privado** en la parte superior del chat. Tócalo para hacer que esa conversación sea compartida (visible para todos los miembros) o privada de nuevo. Cualquier miembro puede compartir una conversación que haya creado — no solo el propietario de la cuenta. No puedes cambiar el uso compartido de una conversación que inició otra persona (allí verás una etiqueta "Compartido" de solo lectura). El interruptor solo aparece cuando la cuenta tiene más de un miembro.
+- **Activar o desactivar el uso compartido:** la persona que inició una conversación ve la opción en la parte superior del chat. En el navegador son dos botones, **Privado** y **Compartido**, con el que está activo resaltado en color — así ves que el otro también existe y puedes tocarlo. En el teléfono, esa misma píldora lleva una pequeña flecha de intercambio que muestra que se puede cambiar. Cualquier miembro puede compartir una conversación que haya creado — no solo el propietario de la cuenta. No puedes cambiar el uso compartido de una conversación que inició otra persona (allí verás una etiqueta "Compartido" de solo lectura). La opción solo aparece cuando la cuenta tiene más de un miembro.
+- **Decidir antes de empezar:** la opción también funciona en una conversación vacía. Elige **Compartido** antes de escribir nada y la conversación será compartida desde su primer mensaje, así nadie tiene que leer la primera mitad de un hilo del que nunca se le avisó.
 - **Todos ven la conversación:** en una conversación compartida, los mensajes de otros miembros aparecen con su nombre, y los mensajes nuevos se muestran automáticamente mientras tienes el chat abierto.
 - **Dirigirte a una persona en lugar de a la IA:** escribe **@** y elige un miembro para mencionarlo. Cuando mencionas a un miembro, la IA permanece en silencio — el mensaje es para esa persona, no para el asistente. Si no mencionas a nadie, la IA responde como siempre.
 - **Notificaciones:** si mencionas a un miembro que no está viendo el chat en ese momento, recibe una notificación push para que no se lo pierda. Esto respeta tu ajuste de notificaciones "Actividad compartida".
@@ -26443,6 +26754,51 @@ La versión web cubre lo esencial del día a día:
 
 Es ideal para sesiones largas con un teclado de verdad: revisar el mes, ordenar categorías o conversar con el asistente de IA.
 
+## Transacciones en una pantalla grande
+
+Cuando la ventana del navegador es lo bastante ancha —más o menos como en un portátil o un ordenador de escritorio—, la pantalla de Transacciones cambia para aprovechar mejor el espacio: aparecen un panel lateral y una barra superior en lugar de la vista habitual del teléfono.
+
+- Los filtros se muestran como una **lista en el lado izquierdo**, con el número de coincidencias junto a cada opción, en lugar de una fila de botones — así ves cuántas transacciones mostrará un filtro antes de elegirlo.
+- **Los gastos y los ingresos aparecen juntos en una sola lista**, agrupados por día, y cada día muestra el total gastado ese día.
+- Tocar una transacción la abre en un **panel sobre la lista** en lugar de una página nueva — cierra el panel para volver exactamente a donde estabas.
+- Puedes **seleccionar varias transacciones con casillas** — mantén pulsada Mayús y haz clic para seleccionar todo lo que hay entre dos filas — y luego cambiarles la categoría, añadirles una etiqueta o eliminarlas todas a la vez.
+
+Por debajo de unos 1024 píxeles de ancho —lo que incluye la mayoría de las tabletas sujetas en vertical—, el navegador muestra en su lugar la vista habitual del teléfono. Es lo esperado: la vista ancha está pensada para una pantalla real de escritorio o portátil, y una ventana más estrecha se sirve mejor con la vista del teléfono.
+
+## Ajustes en una pantalla grande
+
+En una ventana ancha, Ajustes mantiene toda la lista en el lado izquierdo, y la opción que eliges se abre junto a ella en lugar de sustituir la página — así te mueves entre Perfil, Notificaciones, Categorías y el resto sin volver atrás cada vez.
+
+- La barra de direcciones sigue tu elección, así que puedes **guardar una página de ajustes en marcadores** o recargarla y volver justo donde estabas.
+- Algunas filas siguen abriéndose como página completa, porque son lugares de trabajo y no interruptores: **Cartera**, **Lista de la compra**, **Solicitudes de compra**, **Suscripciones** e **Importar**.
+- Abrir una cuenta desde Gestionar cuentas, o un proyecto desde Proyectos, también abre una página completa — con sus propios botones de editar y eliminar en la barra de título, y una flecha de volver que te devuelve a la lista con la misma fila resaltada.
+- **Cerrar sesión** está en la propia página de Ajustes, sin nada seleccionado; el engranaje de la barra superior te lleva de vuelta allí.
+
+Por debajo de unos 1024 píxeles de ancho vuelve el diseño de teléfono conocido, con todas las filas en una sola lista larga.
+
+## La pantalla principal en una pantalla grande
+
+La pantalla principal usa el espacio extra para poner delante de ti lo que necesita atención, en vez de estirar las tarjetas del teléfono.
+
+- Una **columna principal** lleva las cifras del momento — cuánto puedes gastar hoy sin riesgo, el presupuesto del mes, ingresos frente a gastos — y a su lado hay una **columna estrecha de tarjetas**. En una pantalla muy ancha hay dos de esas columnas.
+- **Todo lo que añades se abre sobre la pantalla principal** — un gasto, un saldo inicial, un presupuesto — así te quedas en la pantalla que estabas leyendo.
+- La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
+- Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.
+
+## El chat en una pantalla grande
+
+En una ventana ancha el chat con la IA gana una **lista de tus conversaciones anteriores en el lado izquierdo**, y la conversación en sí se mantiene en un ancho de lectura cómodo en el centro, en vez de estirarse por toda la pantalla.
+
+- Elegir una conversación de la lista la abre en el sitio, y la que estás leyendo queda resaltada.
+- **Nueva conversación** está arriba de esa lista, así que puedes empezar una sin perder el punto en el que estabas leyendo.
+- Una conversación compartida con las demás personas de tu cuenta dice **Compartido** en su segunda línea, junto a la fecha, en lugar de llevar solo un icono.
+- El cuadro donde escribes se queda abajo, con el micrófono y el botón de enviar junto al texto y no en bordes opuestos de la pantalla.
+- Una conversación recién empezada muestra lo que el asistente sabe hacer de verdad — añadir un gasto, consultar un presupuesto, poner algo en la lista de la compra — en lugar de una pantalla vacía.
+- Pasa el cursor sobre cualquier fila para ver su menú **⋯**, donde puedes renombrar, fijar o eliminar la conversación. Las conversaciones fijadas quedan arriba de la lista, encima de una línea divisoria. Hay más sobre las tres en la guía del chat con la IA.
+- La opción **Privado / Compartido** en la parte superior de la conversación muestra las dos opciones una junto a la otra, así la que no estás usando queda visible en vez de oculta.
+
+En una ventana más estrecha, y en el teléfono, la lista de conversaciones sigue detrás del botón **Historial**, como antes.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:
@@ -28261,11 +28617,22 @@ Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment 
 
 > L'historique chargé est enregistré localement pour un accès hors ligne après le premier chargement.
 
+### Gérer une conversation
+
+Chaque conversation de la liste a son propre menu **⋯**. Dans le navigateur, il apparaît quand vous survolez une ligne (ou quand c'est celle que vous avez ouverte) ; sur le téléphone, il est toujours visible, et un appui long sur la ligne ouvre le même menu.
+
+- **Renommer** donne à la conversation un nom de votre choix. Tant que vous ne l'avez pas fait, elle porte le titre du premier message que vous y avez tapé, ce qui est rarement le nom que vous auriez choisi. Renommer ne déplace pas la conversation dans la liste.
+- **Épingler** garde une conversation en haut de la liste, au-dessus d'une ligne de séparation, peu importe depuis quand vous ne l'avez pas utilisée. Épingler ne concerne **que vous** — cela change l'ordre que vous voyez, celui de personne d'autre, et vous pouvez épingler une conversation partagée démarrée par quelqu'un d'autre. Appuyez sur **Désépingler** pour la relâcher.
+- **Supprimer** efface définitivement la conversation et ses messages. Il n'y a pas d'annulation possible. Si la conversation est partagée, la confirmation le dit clairement, car la supprimer la retire pour tous les membres du compte, pas seulement pour vous.
+
+Vous ne pouvez renommer et supprimer que les conversations que vous avez démarrées. Sur une conversation partagée démarrée par quelqu'un d'autre, le menu propose seulement **Épingler** — la seule option qui ait un sens ici, puisque l'ordre de votre propre liste ne regarde que vous.
+
 ## Conversations partagees
 
 Si vous partagez un compte avec d'autres membres, vous pouvez transformer une conversation en un **chat de groupe partage** ou tout le monde discute avec l'IA ensemble.
 
-- **Activer ou desactiver le partage :** la personne qui a demarre une conversation voit un interrupteur **Partagé / Privé** en haut du chat. Appuyez dessus pour rendre cette conversation partagee (visible par tous les membres) ou de nouveau privee. Tout membre peut partager une conversation qu'il a creee — pas seulement le proprietaire du compte. Vous ne pouvez pas modifier le partage d'une conversation demarree par quelqu'un d'autre (vous y verrez une etiquette "Partagé" en lecture seule). L'interrupteur n'apparait que lorsque le compte compte plus d'un membre.
+- **Activer ou désactiver le partage :** la personne qui a démarré une conversation voit le choix en haut du chat. Dans le navigateur, ce sont deux boutons, **Privé** et **Partagé**, celui qui est actif étant rempli de couleur — vous voyez ainsi que l'autre existe aussi, et vous pouvez appuyer dessus. Sur le téléphone, la même pastille porte une petite flèche d'échange qui montre qu'elle peut être basculée. Tout membre peut partager une conversation qu'il a créée — pas seulement le propriétaire du compte. Vous ne pouvez pas modifier le partage d'une conversation démarrée par quelqu'un d'autre (vous y verrez une étiquette "Partagé" en lecture seule). Le choix n'apparaît que lorsque le compte compte plus d'un membre.
+- **Décider avant de commencer :** le choix fonctionne aussi sur une conversation vide. Choisissez **Partagé** avant de taper quoi que ce soit, et la conversation est partagée dès son premier message — personne ne se retrouve à lire la première moitié d'un fil dont il n'a jamais entendu parler.
 - **Tout le monde voit la conversation :** dans une conversation partagee, les messages des autres membres apparaissent avec leur nom, et les nouveaux messages s'affichent automatiquement tant que vous avez le chat ouvert.
 - **S'adresser a une personne plutot qu'a l'IA :** tapez **@** et choisissez un membre pour le mentionner. Lorsque vous mentionnez un membre, l'IA reste silencieuse — le message est destine a cette personne, pas a l'assistant. Si vous ne mentionnez personne, l'IA repond comme d'habitude.
 - **Notifications :** si vous mentionnez un membre qui ne consulte pas le chat a ce moment-la, il recoit une notification push pour ne pas la manquer. Cela respecte votre parametre de notification "Activite partagee".
@@ -30928,6 +31295,51 @@ La version web couvre l’essentiel du quotidien :
 
 C’est idéal pour les sessions plus longues avec un vrai clavier : passer le mois en revue, ranger les catégories ou discuter avec l’assistant IA.
 
+## Les transactions sur un grand écran
+
+Lorsque la fenêtre du navigateur est assez large — à peu près comme sur un ordinateur portable ou de bureau —, l’écran Transactions change pour mieux exploiter l’espace : une barre latérale et une barre supérieure remplacent la présentation habituelle du téléphone.
+
+- Les filtres apparaissent sous forme de **liste sur la gauche**, avec le nombre de résultats à côté de chaque option, plutôt qu’une rangée de boutons — vous voyez ainsi combien de transactions un filtre affichera avant même de le choisir.
+- **Les dépenses et les revenus apparaissent ensemble dans une seule liste**, regroupés par jour, chaque jour indiquant le total dépensé ce jour-là.
+- Toucher une transaction l’ouvre dans un **panneau au-dessus de la liste** plutôt que sur une nouvelle page — fermez le panneau pour revenir exactement là où vous étiez.
+- Vous pouvez **sélectionner plusieurs transactions avec des cases à cocher** — maintenez Maj enfoncée et cliquez pour sélectionner tout ce qui se trouve entre deux lignes — puis leur changer la catégorie, leur ajouter une étiquette ou les supprimer ensemble.
+
+En dessous d’environ 1024 pixels de large — ce qui inclut la plupart des tablettes tenues à la verticale —, le navigateur affiche à la place la présentation habituelle du téléphone. C’est normal : la présentation large est conçue pour un véritable écran d’ordinateur, et une fenêtre plus étroite est mieux servie par la présentation du téléphone.
+
+## Les réglages sur un grand écran
+
+Dans une fenêtre large, les Réglages gardent toute la liste sur le côté gauche, et l'élément choisi s'ouvre à côté au lieu de remplacer la page — vous passez donc du Profil aux Notifications, aux Catégories et au reste sans revenir en arrière chaque fois.
+
+- La barre d'adresse suit votre choix : vous pouvez **mettre une page de réglages en favori** ou la recharger et retomber exactement où vous étiez.
+- Quelques lignes s'ouvrent toujours en pleine page, parce que ce sont des lieux de travail et non des interrupteurs : **Portefeuille**, **Liste de courses**, **Demandes d'achat**, **Abonnements** et **Import**.
+- Ouvrir un compte depuis la gestion des comptes, ou un projet depuis les Projets, ouvre aussi une pleine page — avec ses propres boutons de modification et de suppression dans la barre de titre, et une flèche de retour qui vous ramène à la liste avec la même ligne mise en évidence.
+- La **déconnexion** se trouve sur la page Réglages elle-même, quand rien n'est sélectionné ; la roue dentée de la barre du haut y ramène.
+
+En dessous d'environ 1024 pixels de large, la mise en page téléphone habituelle revient, avec toutes les lignes dans une seule longue liste.
+
+## Le tableau de bord sur un grand écran
+
+Le tableau de bord se sert de la place supplémentaire pour mettre devant vous ce qui demande votre attention, plutôt que d'y étirer les cartes du téléphone.
+
+- Une **colonne principale** porte les chiffres courants — ce que vous pouvez dépenser aujourd'hui sans risque, le budget du mois, les revenus face aux dépenses — et une **colonne étroite de cartes** se tient à côté. Sur un écran très large, il y en a deux.
+- **Tout ce que vous ajoutez s'ouvre par-dessus le tableau de bord** — une dépense, un solde de départ, un budget — vous restez donc sur l'écran que vous lisiez.
+- La **cloche** ouvre vos alertes et vos invitations sous forme de panneau, et non de page séparée.
+- Un **compte tout neuf** voit une courte liste de premiers pas au lieu d'un écran de cartes vides : scanner un ticket, en saisir un à la main, ou définir un solde de départ.
+
+## Le chat sur un grand écran
+
+Dans une fenêtre large, le chat avec l'IA gagne une **liste de vos conversations précédentes sur le côté gauche**, et la conversation elle-même est maintenue à une largeur de lecture confortable au centre, au lieu d'être étirée sur tout l'écran.
+
+- Choisir une conversation dans la liste l'ouvre sur place, et celle que vous lisez reste mise en évidence.
+- **Nouvelle conversation** se trouve en haut de cette liste : vous pouvez donc en commencer une sans perdre votre place dans ce que vous lisiez.
+- Une conversation partagée avec les autres personnes de votre compte affiche **Partagé** sur sa deuxième ligne, à côté de la date, plutôt qu'une simple icône.
+- Le champ de saisie reste en bas, avec son microphone et son bouton d'envoi à côté du texte plutôt qu'aux deux bords opposés de l'écran.
+- Une conversation toute neuve montre ce que l'assistant sait réellement faire — ajouter une dépense, consulter un budget, mettre quelque chose sur la liste de courses — au lieu d'un écran vide.
+- Survolez n'importe quelle ligne pour afficher son menu **⋯**, où vous pouvez renommer, épingler ou supprimer la conversation. Les conversations épinglées se trouvent en haut de la liste, au-dessus d'une ligne de séparation. Vous trouverez plus de détails sur ces trois options dans le guide du chat IA.
+- Le choix **Privé / Partagé** en haut de la conversation affiche les deux options côte à côte, afin que celle que vous n'utilisez pas reste visible plutôt que cachée.
+
+Dans une fenêtre plus étroite, et sur le téléphone, la liste des conversations reste derrière le bouton **Historique**, comme avant.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :
@@ -32746,11 +33158,22 @@ iOS, Android, Web
 
 > Загружаная гісторыя захоўваецца лакальна і даступна без інтэрнэту пасля першай загрузкі.
 
+### Кіраванне размовай
+
+Кожная размова ў спісе мае ўласнае меню **⋯**. У браўзеры яно з'яўляецца, калі вы навядзеце курсор на радок (альбо калі гэта тая размова, што зараз адкрыта); на тэлефоне яно бачна заўсёды, а доўгае націсканне на радок адкрывае тое самае меню.
+
+- **Перайменаваць** дае размове ўласную назву. Пакуль вы гэтага не зрабілі, яна называецца па першым, што вы ў ёй напісалі, — а гэта рэдка тая назва, якую вы б абралі. Перайменаванне не перамяшчае размову ў спісе.
+- **Замацаваць** трымае размову ўверсе спісу, над раздзяляльнай лініяй, незалежна ад таго, як даўно вы ёй карысталіся. Замацаванне тычыцца **толькі вас** — яно змяняе парадак, які бачыце вы, і нічый больш, і вы можаце замацаваць нават агульную размову, пачатую кімсьці іншым. Націсніце **Адмацаваць**, каб вызваліць яе.
+- **Выдаліць** прыбірае размову і яе паведамленні назаўсёды. Адрабіць гэта нельга. Калі размова агульная, пацвярджэнне прама пра гэта кажа, бо выдаленне прыбірае яе для ўсіх удзельнікаў рахунку, а не толькі для вас.
+
+Перайменоўваць і выдаляць можна толькі тыя размовы, якія пачалі вы самі. У агульнай размове, пачатай кімсьці іншым, меню прапануе толькі **Замацаваць** — адзінае, што тут мае сэнс, бо парадак вашага ўласнага спісу — ваша справа.
+
 ## Агульныя размовы
 
 Калі вы карыстаецеся рахункам сумесна з іншымі ўдзельнікамі, вы можаце ператварыць размову ў **агульны групавы чат**, дзе ўсе размаўляюць з ІІ разам.
 
-- **Уключэнне і выключэнне агульнага доступу:** той, хто пачаў размову, бачыць пераключальнік **Агульны / Асабісты** уверсе чата. Націсніце на яго, каб зрабіць гэтую размову агульнай (бачнай усім удзельнікам) або зноў асабістай. Любы ўдзельнік можа зрабіць агульнай размову, якую ён стварыў, — не толькі ўладальнік рахунку. Вы не можаце змяняць агульны доступ да размовы, якую пачаў хтосьці іншы (там вы ўбачыце метку «Агульны» толькі для чытання). Пераключальнік з'яўляецца толькі тады, калі ў рахунку больш за аднаго ўдзельніка.
+- **Уключэнне і выключэнне агульнага доступу:** той, хто пачаў размову, бачыць выбар уверсе чата. У браўзеры гэта дзве кнопкі, **Асабісты** і **Агульны**, прычым актыўная зараз паказана заліванай колерам — так бачна, што другая таксама існуе, і на яе можна націснуць. На тэлефоне тая ж кнопка мае маленькую стрэлку пераключэння, якая паказвае, што яе можна пераключыць. Любы ўдзельнік можа зрабіць агульнай размову, якую ён стварыў, — не толькі ўладальнік рахунку. Вы не можаце змяняць агульны доступ да размовы, якую пачаў хтосьці іншы (там вы ўбачыце метку «Агульны» толькі для чытання). Выбар з'яўляецца толькі тады, калі ў рахунку больш за аднаго ўдзельніка.
+- **Рашэнне да пачатку размовы:** выбар працуе і на пустой размове. Выберыце **Агульны**, перш чым нешта напісаць, — і размова стане агульнай ужо з першага паведамлення, таму нікому не давядзецца чытаць першую палову перапіскі, пра якую яго ніхто не папярэдзіў.
 - **Размову бачаць усе:** у агульнай размове паведамленні іншых удзельнікаў адлюстроўваюцца з іх імёнамі, а новыя паведамленні з'яўляюцца аўтаматычна, пакуль у вас адкрыты чат.
 - **Зварот да чалавека замест ІІ:** увядзіце **@** і выберыце ўдзельніка, каб згадаць яго. Калі вы згадваеце ўдзельніка, ІІ маўчыць — паведамленне прызначана для гэтага чалавека, а не для асістэнта. Калі вы нікога не згадваеце, ІІ адказвае як звычайна.
 - **Апавяшчэнні:** калі вы згадваеце ўдзельніка, які зараз не адкрыў чат, ён атрымлівае push-апавяшчэнне, каб не прапусціць яго. Гэта ўлічвае вашу настройку апавяшчэнняў «Агульная актыўнасць».
@@ -35377,6 +35800,51 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Гэта зручна для доўгіх сесій за сапраўднай клавіятурай — разабраць месяц, навесці лад у катэгорыях ці пагутарыць з AI-асістэнтам.
 
+## Транзакцыі на вялікім экране
+
+Калі акно браўзера дастаткова шырокае — прыкладна як на ноўтбуку ці настольным камп'ютары, — экран «Транзакцыі» змяняецца, каб лепш выкарыстаць прастору: з'яўляюцца бакавая панэль і верхняя панэль замест звыклага выгляду для тэлефона.
+
+- Фільтры паказаны **спісам злева**, і побач з кожным варыянтам відаць колькасць адпаведных аперацый, а не радком кнопак — так вы адразу бачыце, колькі аперацый пакажа фільтр, яшчэ да таго як абераце яго.
+- **Выдаткі і даходы паказаны разам, адным спісам**, згрупаваным па днях, і для кожнага дня відаць агульную суму выдаткаў за гэты дзень.
+- Націсканне на аперацыю адкрывае яе ў **панэлі над спісам**, а не на новай старонцы — зачыніце панэль, каб вярнуцца менавіта туды, дзе вы былі.
+- Можна **выбраць адразу некалькі аперацый з дапамогай сцяжкоў** — утрымлівайце Shift і пстрыкніце, каб выбраць усё паміж двума радкамі, — а потым змяніць ім катэгорыю, дадаць тэг ці выдаліць усе разам.
+
+Калі шырыня акна меншая за прыблізна 1024 пікселі — гэта тычыцца і большасці планшэтаў у вертыкальнай арыентацыі, — браўзер замест гэтага паказвае звыклы выгляд для тэлефона. Так і задумана: шырокі выгляд разлічаны на сапраўдны экран камп'ютара ці ноўтбука, а для вузейшага акна лепш падыходзіць выгляд для тэлефона.
+
+## Налады на вялікім экране
+
+У шырокім акне «Налады» трымаюць увесь спіс па левым краі, а выбраны пункт адкрываецца побач з ім, а не замест старонкі, — так вы пераходзіце паміж профілем, паведамленнямі, катэгорыямі і астатнім, не вяртаючыся кожны раз назад.
+
+- Адрасны радок ідзе за вашым выбарам, таму сторонку налад можна **дадаць у закладкі** або абнавіць і трапіць туды ж, дзе вы былі.
+- Некалькі пунктаў па-ранейшаму адкрываюцца на ўсю старонку, бо гэта месцы працы, а не пераключальнікі: **Гаманец**, **Спіс пакупак**, **Запыты на пакупку**, **Падпіскі** і **Імпарт**.
+- Адкрыццё аднаго рахунку з кіравання рахункамі або аднаго праекта з праектаў таксама разгортвае поўную старонку — са сваімі кнопкамі рэдагавання і выдалення ў загалоўку і стрэлкай назад, якая вяртае да спісу з тым самым падсветленым пунктам.
+- **Выхад з акаўнта** знаходзіцца на самой старонцы налад, калі нічога не выбрана; шасцярня на верхняй панелі вяртае туды.
+
+Ніжэй прыблізна 1024 пікселяў па шырыні вяртаецца звыклая тэлефонная раскладка, з усімі пунктамі ў адным доўгім спісе.
+
+## Галоўны экран на вялікім экране
+
+Галоўны экран выкарыстоўвае лішняе месца, каб паставіць перад вамі тое, што патрабуе ўвагі, а не расцягваць па ім тэлефонныя карткі.
+
+- **Асноўная калонка** несе цяперашнія лічбы — колькі можна спакойна выдаткаваць сёння, бюджэт месяца, даходы супраць выдаткаў, — а побач стаіць **вузкая калонка картак**. На вельмі шырокім экране такіх калонак дзве.
+- **Усё, што вы дадаеце, адкрываецца паверх галоўнага экрана** — выдатак, пачатковы баланс, бюджэт, — таму вы застаецеся на тым экране, які чыталі.
+- **Званочак** адкрывае апавяшчэнні і запрашэнні панэллю, а не асобнай старонкай.
+- **Зусім новы рахунак** бачыць кароткі спіс першых крокаў замест экрана пустых картак: адсканаваць чэк, упісаць яго ўручную або задаць пачатковы баланс.
+
+## Чат на вялікім экране
+
+У шырокім акне ў чата са штучным інтэлектам з'яўляецца **спіс мінулых размоў па левым краі**, а сама размова трымаецца ў сярэдзіне на зручнай для чытання шырыні, а не расцягваецца на ўвесь экран.
+
+- Выбар размовы са спісу адкрывае яе на месцы, а тая, якую вы чытаеце, застаецца падсветленай.
+- **Новая размова** стаіць уверсе гэтага спісу, таму пачаць яе можна, не губляючы месца ў тым, што чыталі.
+- Размова, адкрытая астатнім удзельнікам рахунку, паказвае ў другім радку спісу, побач з датай, надпіс **Агульны**, а не толькі значок.
+- Поле ўводу застаецца ўнізе, а мікрафон і кнопка адпраўкі стаяць побач з тэкстам, а не ля супрацьлеглых краёў экрана.
+- Зусім новая размова паказвае, што памочнік умее насамрэч — запісаць выдатак, праверыць бюджэт, дадаць нешта ў спіс пакупак, — замест пустога экрана.
+- Навядзіце курсор на любы радок, каб убачыць яго меню **⋯**, дзе можна перайменаваць, замацаваць або выдаліць размову. Замацаваныя размовы стаяць уверсе спісу, над раздзяляльнай лініяй. Больш пра ўсе тры дзеянні — у дакументацыі па ІІ-чаце.
+- Выбар **Асабісты / Агульны** уверсе размовы паказвае абодва варыянты побач, так што той, якім вы зараз не карыстаецеся, бачны, а не схаваны.
+
+У вузейшым акне і на тэлефоне спіс размоў застаецца за кнопкай **Гісторыя**, як і раней.
+
 ## Абмежаванні
 
 Вэб-версія дапаўняе мабільную праграму, але не замяняе яе цалкам. Некалькі функцый у браўзеры працуюць інакш:
@@ -37195,11 +37663,22 @@ Je kunt eerdere AI-gesprekken op elk moment doorbladeren en heropenen:
 
 > Geladen gespreksgeschiedenis wordt na het eerste laden ook lokaal opgeslagen voor offline toegang.
 
+### Een gesprek beheren
+
+Elk gesprek in de lijst heeft zijn eigen **⋯**-menu. In de browser verschijnt het wanneer je met de muis over een rij zweeft (of wanneer het de rij is die je open hebt staan); op de telefoon is het altijd zichtbaar, en een lange tik op de rij opent hetzelfde menu.
+
+- **Hernoemen** geeft het gesprek een naam van jezelf. Tot je dat doet, draagt het de titel van het eerste dat je erin typte, wat zelden is hoe je het zelf zou hebben genoemd. Hernoemen verplaatst het gesprek niet in de lijst.
+- **Vastzetten** houdt een gesprek bovenaan de lijst, boven een scheidingslijn, hoe lang geleden je het ook voor het laatst gebruikte. Vastzetten is **alleen voor jou** — het verandert alleen de volgorde die jij ziet en die van niemand anders, en je kunt zelfs een gedeeld gesprek vastzetten dat iemand anders is begonnen. Tik op **Losmaken** om het weer los te maken.
+- **Verwijderen** verwijdert het gesprek en zijn berichten definitief. Er is geen ongedaan maken. Als het gesprek gedeeld is, zegt de bevestiging dat er duidelijk bij, want verwijderen haalt het weg voor alle leden van het account, niet alleen voor jou.
+
+Je kunt alleen gesprekken die je zelf bent begonnen hernoemen en verwijderen. Bij een gedeeld gesprek dat iemand anders is begonnen biedt het menu alleen **Vastzetten** — het enige dat daar zinvol is, want de volgorde van je eigen lijst is jouw zaak.
+
 ## Gedeelde gesprekken
 
 Als je een account met andere leden deelt, kun je een gesprek omzetten in een **gedeelde groepschat** waarin iedereen samen met de AI praat.
 
-- **Delen aan- of uitzetten:** de persoon die een gesprek is begonnen ziet bovenaan de chat een schakelaar **Gedeeld / Privé**. Tik erop om dat gesprek gedeeld te maken (zichtbaar voor alle leden) of weer privé. Elk lid kan een gesprek delen dat het zelf heeft aangemaakt — niet alleen de accounteigenaar. Je kunt het delen van een gesprek dat iemand anders is begonnen niet wijzigen (daar zie je een alleen-lezen label "Gedeeld"). De schakelaar verschijnt alleen wanneer het account meer dan één lid heeft.
+- **Delen aan- of uitzetten:** de persoon die een gesprek is begonnen ziet de keuze bovenaan de chat. In de browser zijn het twee knoppen, **Privé** en **Gedeeld**, waarbij de actieve knop gevuld met kleur is weergegeven — zo zie je dat de andere ook bestaat, en kun je erop tikken. Op de telefoon draagt diezelfde knop een klein wisselpijltje dat laat zien dat je kunt omschakelen. Elk lid kan een gesprek delen dat het zelf heeft aangemaakt — niet alleen de accounteigenaar. Je kunt het delen van een gesprek dat iemand anders is begonnen niet wijzigen (daar zie je een alleen-lezen label "Gedeeld"). De keuze verschijnt alleen wanneer het account meer dan één lid heeft.
+- **Van tevoren beslissen:** de keuze werkt ook op een leeg gesprek. Kies **Gedeeld** voordat je iets typt, en het gesprek is al vanaf het eerste bericht gedeeld — zo hoeft niemand de eerste helft van een gesprek te lezen waarvan hij nooit iets wist.
 - **Iedereen ziet het gesprek:** in een gedeeld gesprek verschijnen berichten van andere leden met hun naam, en nieuwe berichten verschijnen automatisch zolang je de chat open hebt.
 - **Een persoon aanspreken in plaats van de AI:** typ **@** en kies een lid om het te vermelden. Wanneer je een lid vermeldt, blijft de AI stil — het bericht is bedoeld voor die persoon, niet voor de assistent. Als je niemand vermeldt, antwoordt de AI zoals gewoonlijk.
 - **Meldingen:** als je een lid vermeldt dat de chat op dat moment niet bekijkt, krijgt deze een pushmelding zodat hij het niet mist. Dit respecteert je meldingsinstelling "Gedeelde activiteit".
@@ -39940,6 +40419,51 @@ De webversie dekt de dagelijkse basis:
 - **Accounts** — wissel tussen je persoonlijke en gedeelde accounts, wijzig de weergavevaluta
 
 Ideaal voor langere sessies met een echt toetsenbord — de maand doornemen, categorieën opruimen of chatten met de AI-assistent.
+
+## Transacties op een groot scherm
+
+Als het browservenster breed genoeg is — ongeveer zoals op een laptop of desktopcomputer — ziet het scherm Transacties er anders uit om de ruimte beter te benutten: er komt een zijbalk en een bovenbalk in plaats van de vertrouwde telefoonweergave.
+
+- Filters worden getoond als een **lijst aan de linkerkant**, met het aantal treffers naast elke optie, in plaats van een rij knoppen — zo zie je hoeveel transacties een filter zal tonen voordat je hem kiest.
+- **Uitgaven en inkomsten staan samen in één lijst**, gegroepeerd per dag, met bij elke dag het totaal dat die dag is uitgegeven.
+- Een transactie aantikken opent hem in een **paneel over de lijst** in plaats van een nieuwe pagina — sluit het paneel om precies terug te gaan naar waar je was.
+- Je kunt **meerdere transacties selecteren met selectievakjes** — houd Shift ingedrukt en klik om alles tussen twee rijen te selecteren — en dan hun categorie wijzigen, een tag toevoegen of ze samen verwijderen.
+
+Onder ongeveer 1024 pixels breed — dat geldt ook voor de meeste tablets die je rechtop vasthoudt — toont de browser in plaats daarvan de vertrouwde telefoonweergave. Dat is de bedoeling: de brede weergave is gemaakt voor een echt bureaublad- of laptopscherm, en een smaller venster wordt beter bediend door de telefoonweergave.
+
+## Instellingen op een groot scherm
+
+In een breed venster houden de Instellingen de hele lijst aan de linkerkant, en het onderdeel dat je kiest opent ernaast in plaats van de pagina te vervangen — zo ga je van Profiel naar Meldingen, Categorieën en de rest zonder telkens terug te gaan.
+
+- De adresbalk volgt je keuze, dus je kunt **een instellingenpagina als bladwijzer opslaan** of hem herladen en precies weer uitkomen waar je was.
+- Een paar rijen openen nog wel als volledige pagina, omdat het werkplekken zijn en geen schakelaars: **Portemonnee**, **Boodschappenlijst**, **Aankoopverzoeken**, **Abonnementen** en **Importeren**.
+- Eén rekening openen vanuit Rekeningen beheren, of één project vanuit Projecten, opent ook een volledige pagina — met eigen knoppen voor bewerken en verwijderen in de titelbalk, en een terugpijl die je terugbrengt naar de lijst met dezelfde rij nog gemarkeerd.
+- **Uitloggen** staat op de Instellingenpagina zelf, met niets geselecteerd; het tandwiel in de bovenbalk brengt je daar terug.
+
+Onder ongeveer 1024 pixels breed komt de bekende telefoonindeling terug, met alle rijen in één lange lijst.
+
+## Het startscherm op een groot scherm
+
+Het startscherm gebruikt de extra ruimte om te tonen wat je aandacht nodig heeft, in plaats van de kaarten van de telefoon eroverheen uit te rekken.
+
+- Een **hoofdkolom** draagt de lopende cijfers — wat je vandaag veilig kunt uitgeven, het budget van de maand, inkomsten tegenover uitgaven — en daarnaast staat een **smalle kolom met kaarten**. Op een heel breed scherm zijn dat er twee.
+- **Alles wat je toevoegt opent over het startscherm** — een uitgave, een beginsaldo, een budget — zodat je op het scherm blijft dat je aan het lezen was.
+- De **bel** opent je meldingen en uitnodigingen als paneel in plaats van als aparte pagina.
+- Een **nieuwe rekening** ziet een korte lijst met eerste stappen in plaats van een scherm vol lege kaarten: een kassabon scannen, er handmatig een invoeren, of een beginsaldo instellen.
+
+## De chat op een groot scherm
+
+In een breed venster krijgt de AI-chat een **lijst met je eerdere gesprekken aan de linkerkant**, en het gesprek zelf blijft in het midden op een comfortabele leesbreedte in plaats van over het hele scherm uitgerekt te worden.
+
+- Een gesprek uit de lijst kiezen opent het ter plekke, en het gesprek dat je leest blijft gemarkeerd.
+- **Nieuw gesprek** staat bovenaan die lijst, dus je kunt er een beginnen zonder je plek kwijt te raken in wat je aan het lezen was.
+- Een gesprek dat je met de andere mensen op je rekening deelt, toont **Gedeeld** op de tweede regel, naast de datum, in plaats van alleen een pictogram.
+- Het invoerveld blijft onderaan, met de microfoon en de verzendknop naast de tekst in plaats van aan tegenoverliggende schermranden.
+- Een nieuw gesprek laat zien wat de assistent echt kan — een uitgave toevoegen, een budget bekijken, iets op de boodschappenlijst zetten — in plaats van een leeg scherm.
+- Beweeg met de muis over een rij voor het **⋯**-menu, waarmee je het gesprek kunt hernoemen, vastzetten of verwijderen. Vastgezette gesprekken staan bovenaan de lijst, boven een scheidingslijn. Meer over deze drie vind je in de gids over de AI-chat.
+- De keuze **Privé / Gedeeld** bovenaan het gesprek toont beide opties naast elkaar, zodat de optie die je niet gebruikt zichtbaar blijft in plaats van verborgen.
+
+In een smaller venster, en op de telefoon, blijft de gesprekkenlijst achter de knop **Geschiedenis**, zoals voorheen.
 
 ## Beperkingen
 

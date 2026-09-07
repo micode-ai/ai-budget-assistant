@@ -6,6 +6,7 @@ import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import i18n from '@/i18n';
 import * as chatRepository from '@/db/chatRepository';
+import { sortConversationsForDisplay, type ConversationListStatus } from '@/features/chat/chatLayout';
 
 // Module-level polling timer handle
 let pollTimer: ReturnType<typeof setInterval> | null = null;
@@ -39,6 +40,13 @@ interface ChatState {
   ownedConversationIds: string[];
   lastSyncedAt: string | null;
   isPolling: boolean;
+  // The desktop conversation rail's own loading state (ABA-513) — read ONLY
+  // by `ChatDesktop`/`ConversationRail`. `ChatHistorySheet` (mobile) keeps
+  // reading `isLoading`, its own pre-existing, separately-wrong wiring to the
+  // message-in-flight flag — a real defect, recorded as a follow-up, not
+  // fixed here. `resolveRailState` (`chatLayout.ts`) turns this + a cached
+  // conversation count into what the rail actually renders.
+  conversationsStatus: ConversationListStatus;
 
   // Actions
   sendMessage: (content: string, mentions?: { userId: string }[]) => Promise<void>;
@@ -51,9 +59,18 @@ interface ChatState {
   loadConversation: (conversationId: string) => Promise<void>;
   clearMessages: () => void;
   setConversationShared: (isShared: boolean) => Promise<void>;
+  // ABA-514: rename, delete and per-viewer pin for a row in `conversations`.
+  // All three are optimistic-with-rollback (memory AND the SQLite cache) and
+  // re-throw on failure so the caller (the desktop popover / the phone's
+  // sheet menu — neither built by this task) can show its own `showAlert`;
+  // see invitationStore.respond for the identical shape this mirrors.
+  renameConversation: (conversationId: string, title: string) => Promise<void>;
+  deleteConversation: (conversationId: string) => Promise<void>;
+  setConversationPinned: (conversationId: string, pinned: boolean) => Promise<void>;
   pollNewMessages: () => Promise<void>;
   startPolling: () => void;
   stopPolling: () => void;
+  reset: () => void;
 }
 
 export const useChatStore = create<ChatState>()((set, get) => ({
@@ -68,6 +85,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   ownedConversationIds: [],
   lastSyncedAt: null,
   isPolling: false,
+  conversationsStatus: 'idle',
 
   sendMessage: async (content: string, mentions?: { userId: string }[]) => {
     const { currentConversationId, currentIsShared } = get();
@@ -254,11 +272,22 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   },
 
   loadConversations: async () => {
+    // Read by the desktop conversation rail (ABA-513, `resolveRailState`)
+    // ONLY — mobile's `ChatHistorySheet` still keys its own loading UI off
+    // the unrelated `isLoading` flag. Set BEFORE the try so a caller that
+    // reads it synchronously right after invoking this (the rail's own
+    // bounded-wait timer) always observes 'loading' first.
+    set({ conversationsStatus: 'loading' });
     try {
       // Show cached conversations immediately
       const authStore = await import('@/stores/authStore');
       const userId = authStore.useAuthStore.getState().user?.id;
-      if (!userId) return;
+      if (!userId) {
+        // Screen requires auth, so this shouldn't happen in practice; leave
+        // the flag at 'idle' rather than stuck 'loading' forever.
+        set({ conversationsStatus: 'idle' });
+        return;
+      }
 
       const { useAccountStore } = await import('@/stores/accountStore');
       const accountId = useAccountStore.getState().currentAccountId ?? undefined;
@@ -275,18 +304,27 @@ export const useChatStore = create<ChatState>()((set, get) => ({
         accountId: undefined,
         isShared: c.isShared,
         title: c.title ?? undefined,
+        isPinned: c.isPinned,
         createdAt: new Date(c.createdAt),
         updatedAt: new Date(c.updatedAt),
       }));
 
-      set({ conversations, ownedConversationIds: remote.filter((c) => c.isOwner).map((c) => c.id) });
+      set({
+        conversations,
+        ownedConversationIds: remote.filter((c) => c.isOwner).map((c) => c.id),
+        conversationsStatus: 'ready',
+      });
 
       // Upsert into SQLite
       for (const conv of conversations) {
         await chatRepository.upsertConversation(conv);
       }
     } catch {
-      // Non-fatal: leave whatever is in state
+      // Non-fatal for mobile (which never reads this flag): leave whatever
+      // conversations are already in state, but flag the failure so the
+      // desktop rail can offer a retry rather than silently looking like a
+      // genuinely conversation-less account.
+      set({ conversationsStatus: 'error' });
     }
   },
 
@@ -381,6 +419,93 @@ export const useChatStore = create<ChatState>()((set, get) => ({
     }
   },
 
+  renameConversation: async (conversationId: string, title: string) => {
+    const prevConversations = get().conversations;
+    const prev = prevConversations.find((c) => c.id === conversationId);
+    if (!prev) return;
+
+    const trimmed = title.trim();
+    const optimistic = { ...prev, title: trimmed };
+
+    set({ conversations: prevConversations.map((c) => (c.id === conversationId ? optimistic : c)) });
+    await chatRepository.upsertConversation(optimistic);
+
+    try {
+      const res = await api.renameChatConversation(conversationId, trimmed);
+      // Reconcile with the server's own value (defensive — should already
+      // match what was just sent). `updatedAt` is deliberately left alone:
+      // the server writes it back unchanged (see chat.service.ts), so
+      // re-sorting here would be wrong.
+      const reconciled = { ...optimistic, title: res.title ?? undefined };
+      set((state) => ({
+        conversations: state.conversations.map((c) => (c.id === conversationId ? reconciled : c)),
+      }));
+      await chatRepository.upsertConversation(reconciled);
+    } catch (error) {
+      console.warn('[chatStore] renameConversation failed', error);
+      set({ conversations: prevConversations });
+      await chatRepository.upsertConversation(prev);
+      throw error;
+    }
+  },
+
+  deleteConversation: async (conversationId: string) => {
+    const prevConversations = get().conversations;
+    const removed = prevConversations.find((c) => c.id === conversationId);
+    if (!removed) return;
+
+    const wasOpen = get().currentConversationId === conversationId;
+
+    set({ conversations: prevConversations.filter((c) => c.id !== conversationId) });
+    // A hard delete has no undo (chat() self-heals an unresolvable id into a
+    // fresh conversation), so the open transcript must not keep pointing at
+    // a row that is gone — even before the server confirms.
+    if (wasOpen) {
+      get().startNewConversation();
+    }
+    // Mirror the removal into the cache optimistically too, so a kill mid-request
+    // can't resurrect the deleted row on the next cold start's cache-first paint.
+    await chatRepository.deleteConversation(conversationId);
+
+    try {
+      await api.deleteChatConversation(conversationId);
+    } catch (error) {
+      // The row is restored on failure, per design; the transcript reset (if
+      // it was the open conversation) is deliberately NOT undone — there is
+      // nothing dangerous left open, and the design names only the row as
+      // needing restoration.
+      console.warn('[chatStore] deleteConversation failed', error);
+      set({ conversations: prevConversations });
+      await chatRepository.upsertConversation(removed);
+      throw error;
+    }
+  },
+
+  setConversationPinned: async (conversationId: string, pinned: boolean) => {
+    const prevConversations = get().conversations;
+    const prev = prevConversations.find((c) => c.id === conversationId);
+    if (!prev) return;
+
+    // Optimistic flip AND re-sort using the exact rule the server applies
+    // (pins first, then updatedAt desc) — the one tested pure function used
+    // by both this optimistic reorder and the render, so the two can't drift.
+    const optimisticList = sortConversationsForDisplay(
+      prevConversations.map((c) => (c.id === conversationId ? { ...c, isPinned: pinned } : c)),
+    );
+    set({ conversations: optimisticList });
+    const optimisticRow = optimisticList.find((c) => c.id === conversationId) ?? { ...prev, isPinned: pinned };
+    await chatRepository.upsertConversation(optimisticRow);
+
+    try {
+      await api.setChatConversationPinned(conversationId, pinned);
+    } catch (error) {
+      console.warn('[chatStore] setConversationPinned failed', error);
+      set({ conversations: prevConversations });
+      await chatRepository.upsertConversation(prev);
+      throw error;
+    }
+  },
+
   pollNewMessages: async () => {
     const { currentConversationId, lastSyncedAt } = get();
     if (!currentConversationId) return;
@@ -425,5 +550,44 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   stopPolling: () => {
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
     set({ isPolling: false });
+  },
+
+  // A `ChatConversation` belongs to one account (its `accountId`) and one
+  // user's session, so this is the one place that clears everything this
+  // store holds — called from BOTH boundaries a conversation must not cross:
+  // `accountStore`'s `clearAccountScopedCaches()` on an account switch, and
+  // `logoutAction`'s teardown block on sign-out. Before this existed, neither
+  // boundary cleared anything here, so a conversation list (and its messages)
+  // was still on screen after switching accounts — a composer that would post
+  // into the wrong account's conversation — and survived sign-out outright,
+  // readable by the next person to sign in on that browser — the same class
+  // of finding ABA-507's `7f39d511` ("Fix inflation-shield cache surviving
+  // sign-out and leaking across accounts") made for `inflationShieldStore`.
+  // That commit's subject carries no ABA prefix, but the issue body names it
+  // explicitly as part of that work — checked via the issue text, not just
+  // the commit subject, after an earlier pass of mine wrongly called the
+  // citation invented.
+  //
+  // Also stops the module-level poll timer: without this, an interval left
+  // running from a shared conversation would keep firing after the state it
+  // reads has been cleared. `pollNewMessages` early-returns once
+  // `currentConversationId` is null, so a live timer alone is harmless, but an
+  // account-scoped teardown should not leave one running regardless.
+  reset: () => {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    set({
+      conversations: [],
+      currentConversationId: null,
+      messages: [],
+      isLoading: false,
+      isConfirming: false,
+      error: null,
+      currentIsShared: false,
+      currentIsOwner: true,
+      ownedConversationIds: [],
+      lastSyncedAt: null,
+      isPolling: false,
+      conversationsStatus: 'idle',
+    });
   },
 }));

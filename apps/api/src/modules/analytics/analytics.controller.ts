@@ -82,6 +82,7 @@ export class AnalyticsController {
       body.parentId,
       body.currencyCode,
       body.locale,
+      req.user.timezone,
     );
   }
 

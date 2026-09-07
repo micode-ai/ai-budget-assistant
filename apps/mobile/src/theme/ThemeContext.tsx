@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useMemo } from 'react';
-import { useColorScheme } from 'react-native';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import { useColorScheme, Platform } from 'react-native';
 import { useThemeStore } from '@/stores/themeStore';
 import { useAuthStore } from '@/stores/authStore';
 import { lightColors, darkColors, type ThemeColors } from './colors';
@@ -59,6 +59,16 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       isDark,
     };
   }, [isDark, accent]);
+
+  // Web only: tell the browser which scheme its OWN chrome should use, so the
+  // native scrollbars, form controls and caret follow the app's theme instead
+  // of staying light on a black page. `color-scheme` is the standards-based
+  // way to do this — styling ::-webkit-scrollbar would cover one engine and
+  // leave the caret and form controls wrong anyway. No-op off web.
+  useEffect(() => {
+    if (Platform.OS !== 'web' || typeof document === 'undefined') return;
+    document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
+  }, [isDark]);
 
   return (
     <ThemeContext.Provider value={theme}>

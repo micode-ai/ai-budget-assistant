@@ -1,6 +1,6 @@
 ---
 name: aba-mobile-engineer
-description: Use for any work in the Expo/React Native app — screens, Zustand stores, SQLite repositories, API client methods, i18n. Owns apps/mobile/. Invoke after backend endpoints are ready, or for pure mobile work like UI polish, new screens, store refactors.
+description: Use for NATIVE and SHARED work in the Expo/React Native app — screens, Zustand stores, SQLite repositories, API client methods, i18n. Owns apps/mobile/ EXCEPT the desktop web layer — *.web.tsx, src/components/**/desktop/, and the WebShell/WebTopBar/WebSidebar chrome belong to aba-web-engineer. Shared components you touch are rendered by BOTH platforms, so treat every shared edit as additive. Invoke after backend endpoints are ready, or for pure mobile work like UI polish, new screens, store refactors.
 tools: Bash, Read, Edit, Write, Glob, Grep
 model: sonnet
 ---

@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Audio } from 'expo-av';
 import { uriToBase64 } from '@/utils/fileBase64';
 import { api } from '@/services/api';
@@ -133,6 +133,20 @@ export function useVoiceInput() {
         // Ignore errors when canceling
       }
       recordingRef.current = null;
+      /**
+       * `startRecording` puts the session into recording mode, and only
+       * `stopRecording`'s SUCCESS path ever put it back — so cancelling (and,
+       * before the unmount cleanup below, simply leaving the screen while
+       * recording) left `allowsRecordingIOS: true` behind on iOS. Restoring it
+       * here rather than in each caller makes the invariant unconditional:
+       * after `cancelRecording`, the microphone is released AND the audio
+       * session is back to normal, whichever path got us here.
+       */
+      try {
+        await Audio.setAudioModeAsync({ allowsRecordingIOS: false });
+      } catch {
+        // Ignore: the recording itself is already released either way.
+      }
     }
 
     setState({
@@ -143,6 +157,34 @@ export function useVoiceInput() {
       parsedExpense: null,
     });
   }, []);
+
+  /**
+   * Release the microphone when whatever is hosting this hook goes away.
+   *
+   * Nothing used to do this: `recordingRef` was only ever released by an
+   * explicit `stopRecording()`/`cancelRecording()` button press, so navigating
+   * away (or dismissing the modal route) mid-recording left the mic open and
+   * the iOS audio session in recording mode indefinitely. Nobody chose that —
+   * it is a bug, not a behaviour anyone relied on, and it gets much easier to
+   * hit once this flow is hosted in a dialog that closes on a scrim click.
+   *
+   * `cancelRecording` is `useCallback(..., [])` and therefore referentially
+   * stable, so this dependency list never changes and the cleanup runs on
+   * unmount ONLY. A `[]` list here would be equally correct today but would
+   * silently go stale if `cancelRecording` ever gained a dependency; listing
+   * the function keeps the two facts tied together.
+   *
+   * The `setState` at the end of `cancelRecording` lands after unmount. That is
+   * a deliberate no-op under React 18+ (the "can't update an unmounted
+   * component" warning was removed precisely because cleanup like this is
+   * legitimate), and it is worth reusing the one real teardown path rather than
+   * maintaining a second one that can drift from it.
+   */
+  useEffect(() => {
+    return () => {
+      void cancelRecording();
+    };
+  }, [cancelRecording]);
 
   const reset = useCallback(() => {
     setState({

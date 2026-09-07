@@ -16,10 +16,10 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import {
   ExpenseDetailsCard,
   type ExpenseDetailsCardHandle,
-} from './components/ExpenseDetailsCard';
-import { ExpenseItemsSection } from './components/ExpenseItemsSection';
-import { ReceiptSection } from './components/ReceiptSection';
-import { LocationSection } from './components/LocationSection';
+} from '@/components/expenses/detail/ExpenseDetailsCard';
+import { ExpenseItemsSection } from '@/components/expenses/detail/ExpenseItemsSection';
+import { ReceiptSection } from '@/components/expenses/detail/ReceiptSection';
+import { LocationSection } from '@/components/expenses/detail/LocationSection';
 
 export default function ExpenseDetailScreen() {
   const { t } = useTranslation();

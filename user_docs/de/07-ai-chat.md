@@ -78,11 +78,22 @@ Du kannst frühere KI-Gespräche jederzeit aufrufen:
 
 > Der geladene Verlauf wird lokal gespeichert und steht nach dem ersten Laden auch offline zur Verfügung.
 
+### Eine Unterhaltung verwalten
+
+Jede Unterhaltung in der Liste hat ihr eigenes **⋯**-Menü. Im Browser erscheint es, wenn du mit der Maus über eine Zeile fährst (oder wenn es die Unterhaltung ist, die du gerade geöffnet hast); auf dem Telefon ist es immer sichtbar, und ein langes Antippen der Zeile öffnet dasselbe Menü.
+
+- **Umbenennen** gibt der Unterhaltung einen eigenen Namen. Bis dahin trägt sie den Titel des ersten Textes, den du hineingeschrieben hast — selten der Name, den du gewählt hättest. Umbenennen verschiebt die Unterhaltung nicht in der Liste.
+- **Anheften** hält eine Unterhaltung oben in der Liste, über einer Trennlinie, egal wie lange du sie schon nicht mehr benutzt hast. Anheften betrifft **nur dich** — es ändert nur die Reihenfolge, die du siehst, sonst niemandes, und du kannst auch eine geteilte Unterhaltung anheften, die jemand anders begonnen hat. Tippe auf **Lösen**, um sie wieder freizugeben.
+- **Löschen** entfernt die Unterhaltung und ihre Nachrichten endgültig. Es gibt kein Rückgängigmachen. Ist die Unterhaltung geteilt, sagt die Bestätigung das deutlich, denn das Löschen entfernt sie für alle Mitglieder des Kontos, nicht nur für dich.
+
+Umbenennen und Löschen kannst du nur bei Unterhaltungen, die du selbst begonnen hast. Bei einer geteilten Unterhaltung von jemand anderem bietet das Menü nur **Anheften** an — das Einzige, was dort Sinn ergibt, denn die Reihenfolge deiner eigenen Liste ist deine Sache.
+
 ## Geteilte Gespräche
 
 Wenn du ein Konto mit anderen Mitgliedern teilst, kannst du ein Gespräch in einen **geteilten Gruppenchat** verwandeln, in dem alle gemeinsam mit der KI sprechen.
 
-- **Teilen ein- oder ausschalten:** die Person, die ein Gespräch begonnen hat, sieht oben im Chat einen **Geteilt / Privat**-Schalter. Tippe darauf, um dieses Gespräch geteilt (für alle Mitglieder sichtbar) oder wieder privat zu machen. Jedes Mitglied kann ein von ihm erstelltes Gespräch teilen — nicht nur der Kontoeigentümer. Bei einem Gespräch, das jemand anderes begonnen hat, kannst du das Teilen nicht ändern (dort siehst du ein schreibgeschütztes "Geteilt"-Label). Der Schalter erscheint nur, wenn das Konto mehr als ein Mitglied hat.
+- **Teilen ein- oder ausschalten:** die Person, die ein Gespräch begonnen hat, sieht oben im Chat die Auswahl. Im Browser sind es zwei Schaltflächen, **Privat** und **Geteilt**, wobei die gerade aktive farbig ausgefüllt ist — so siehst du, dass es die andere auch gibt, und kannst sie antippen. Auf dem Telefon trägt dieselbe Pille einen kleinen Wechsel-Pfeil, der zeigt, dass sie sich umschalten lässt. Jedes Mitglied kann ein von ihm erstelltes Gespräch teilen — nicht nur der Kontoeigentümer. Bei einem Gespräch, das jemand anderes begonnen hat, kannst du das Teilen nicht ändern (dort siehst du ein schreibgeschütztes "Geteilt"-Label). Die Auswahl erscheint nur, wenn das Konto mehr als ein Mitglied hat.
+- **Vorher entscheiden:** die Auswahl funktioniert auch bei einer leeren Unterhaltung. Wähle **Geteilt**, bevor du etwas schreibst, dann ist die Unterhaltung schon ab der ersten Nachricht geteilt — so muss niemand die erste Hälfte eines Gesprächs lesen, von dem er nie etwas erfahren hat.
 - **Alle sehen das Gespräch:** in einem geteilten Gespräch erscheinen Nachrichten anderer Mitglieder mit ihrem Namen, und neue Nachrichten werden automatisch angezeigt, solange du den Chat geöffnet hast.
 - **Eine Person statt der KI ansprechen:** tippe **@** und wähle ein Mitglied, um es zu erwähnen. Wenn du ein Mitglied erwähnst, bleibt die KI still — die Nachricht ist für diese Person bestimmt, nicht für den Assistenten. Wenn du niemanden erwähnst, antwortet die KI wie gewohnt.
 - **Benachrichtigungen:** wenn du ein Mitglied erwähnst, das den Chat gerade nicht ansieht, erhält es eine Push-Benachrichtigung, damit es sie nicht verpasst. Dies berücksichtigt deine Benachrichtigungseinstellung "Geteilte Aktivität".

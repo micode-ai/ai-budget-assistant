@@ -1,6 +1,6 @@
 ---
 name: aba-designer
-description: Use for UI/UX design work before mobile/admin implementation — wireframes, screen flows, component breakdowns, color/spacing/typography decisions, accessibility audits. Outputs design specs that mobile-engineer and admin can implement. Leverages ui-ux-pro-max skill.
+description: Use for NATIVE MOBILE (and admin) UI/UX design work before implementation — wireframes, screen flows, component breakdowns, color/spacing/typography decisions, accessibility audits. Outputs design specs that mobile-engineer and admin can implement. Leverages ui-ux-pro-max skill. Do NOT use for the desktop web layout of app.ai-budget.pl (>=1024px) — that is aba-web-designer, which owns a separate design language.
 tools: Read, Glob, Grep, Bash, Write
 model: sonnet
 ---

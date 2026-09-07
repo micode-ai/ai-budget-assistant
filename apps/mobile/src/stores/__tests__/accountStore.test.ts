@@ -425,3 +425,86 @@ describe('the selected account survives a web page refresh', () => {
     expect(useAccountStore.getState().currentAccountId).toBe('acc-2');
   });
 });
+
+describe('a failed account-list load does not silently switch accounts', () => {
+  // Losing the account LIST and losing the SELECTION are different failures,
+  // and only the first one actually happened. With `currentAccountId` left
+  // null the API client omits `X-Account-Id`, and the server's
+  // AccountContextGuard then falls back to the user's *default* account — so
+  // one failed `GET /accounts` on web serves a different account's data (an
+  // empty dashboard for an account full of transactions) with nothing on
+  // screen saying anything failed, and no way back: the switcher is empty too.
+  const acc = (id: string, name: string) => ({
+    id,
+    name,
+    type: 'personal',
+    currencyCode: 'PLN',
+    ownerId: 'user-1',
+    isActive: true,
+    myRole: 'owner',
+    monthAnchorDay: null,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  });
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (loadAllAccounts as jest.Mock).mockResolvedValue([]); // web: no SQLite
+    (api.getAccounts as jest.Mock).mockRejectedValue(new TypeError('Failed to fetch'));
+    useAccountStore.setState({
+      accounts: [],
+      currentAccountId: null, // a fresh page load has nothing in memory
+      members: {},
+      isLoading: false,
+      error: null,
+    });
+  });
+
+  it('keeps the persisted selection so requests stay addressed to that account', async () => {
+    (secureStorage.getItem as jest.Mock).mockImplementation(async (key: string) =>
+      key === 'currentAccountId' ? 'acc-2' : null,
+    );
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-2');
+    expect(useAccountStore.getState().error).toBeTruthy();
+  });
+
+  it('does not overwrite a live in-memory selection with an older stored one', async () => {
+    useAccountStore.setState({ currentAccountId: 'acc-3' });
+    (secureStorage.getItem as jest.Mock).mockImplementation(async (key: string) =>
+      key === 'currentAccountId' ? 'acc-1' : null,
+    );
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBe('acc-3');
+  });
+
+  it('invents no selection when nothing was ever stored', async () => {
+    (secureStorage.getItem as jest.Mock).mockResolvedValue(null);
+
+    await useAccountStore.getState().loadAccountsFromServer();
+
+    expect(useAccountStore.getState().currentAccountId).toBeNull();
+  });
+
+  it('ensureAccountsLoaded retries the fetch while the list is empty', async () => {
+    (api.getAccounts as jest.Mock).mockResolvedValue([acc('acc-1', 'Personal'), acc('acc-2', 'Family')]);
+    (secureStorage.getItem as jest.Mock).mockResolvedValue(null);
+
+    await useAccountStore.getState().ensureAccountsLoaded();
+
+    expect(api.getAccounts).toHaveBeenCalledTimes(1);
+    expect(useAccountStore.getState().accounts).toHaveLength(2);
+  });
+
+  it('ensureAccountsLoaded leaves an already-loaded list alone', async () => {
+    useAccountStore.setState({ accounts: [acc('acc-1', 'Personal')] as any });
+
+    await useAccountStore.getState().ensureAccountsLoaded();
+
+    expect(api.getAccounts).not.toHaveBeenCalled();
+  });
+});

@@ -78,11 +78,37 @@ You can browse and reopen previous AI conversations at any time:
 
 > Loaded conversation history is also saved locally for offline access after the first load.
 
+### Managing a Conversation
+
+Each conversation in the list has its own **⋯** menu. In the browser it appears
+when you point at a row (or when the row is the one you have open); on the phone
+it is always visible, and a long press on the row opens the same menu.
+
+- **Rename** gives the conversation a name of your own. Until you do, it is
+  titled by the first thing you typed into it, which is rarely what you would
+  have called it. Renaming does not move the conversation in the list.
+- **Pin** keeps a conversation at the top of the list, above a dividing line,
+  no matter how long ago you last used it. Pinning is **yours alone** — it
+  changes the order you see and nobody else's, and you can pin a shared
+  conversation somebody else started. Tap **Unpin** to release it.
+- **Delete** removes the conversation and its messages for good. There is no
+  undo. If the conversation is shared, the confirmation says so plainly,
+  because deleting it removes it for every member of the account, not just for
+  you.
+
+You can rename and delete only the conversations you started. On someone else's
+shared conversation the menu offers **Pin** alone — which is the one thing that
+makes sense there, since the order of your own list is your business.
+
 ## Shared Conversations
 
 If you share an account with other members, you can turn a conversation into a **shared group chat** where everyone talks with the AI together.
 
-- **Turn sharing on or off:** the person who started a conversation sees a **Shared / Private** toggle at the top of the chat. Tap it to make that conversation shared (visible to all members) or private again. Any member can share a conversation they created — not just the account owner. You can't change sharing on a conversation someone else started (you'll see a read-only "Shared" label there). The toggle only appears when the account has more than one member.
+- **Turn sharing on or off:** the person who started a conversation sees the choice at the top of the chat. In the browser it is a pair of buttons, **Private** and **Shared**, with the current one filled in — so you can see that the other one exists and tap it. On the phone the same pill carries a small swap arrow to show it can be switched. Any member can share a conversation they created — not just the account owner. You can't change sharing on a conversation someone else started (you'll see a read-only "Shared" label there). The choice only appears when the account has more than one member.
+- **Deciding before you start:** the choice works on an empty conversation too.
+  Pick **Shared** before typing anything and the conversation is shared from its
+  first message, which saves everyone reading the first half of a thread they
+  were never told about.
 - **Everyone sees the conversation:** in a shared conversation, messages from other members appear with their name, and new messages show up automatically while you have the chat open.
 - **Address a person instead of the AI:** type **@** and pick a member to mention them. When you mention a member, the AI stays silent — the message is meant for that person, not the assistant. If you don't mention anyone, the AI answers as usual.
 - **Notifications:** if you mention a member who isn't currently viewing the chat, they receive a push notification so they don't miss it. This respects your "Shared activity" notification setting.

@@ -19,6 +19,8 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountType, Currency } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES, getCurrencySymbol } from '@budget/shared-utils';
 import { useAuthStore } from '@/stores/authStore';
+import { TOP_BAR_HEIGHT, WEB_TOP_BAR_PADDING_X } from '@/components/webLayout.constants';
+
 
 const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = {
   personal: 'person-outline',
@@ -31,15 +33,52 @@ const ACCOUNT_TYPE_ICONS: Record<AccountType, keyof typeof Ionicons.glyphMap> = 
 export function AccountSwitcher({
   compact = false,
   showCurrency = true,
+  maxTriggerWidth,
+  desktop = false,
 }: {
   compact?: boolean;
   /** Hide the inline currency symbol when a separate CurrencyPill sits next to the switcher. */
   showCurrency?: boolean;
+  /**
+   * Override the trigger's width cap, for a caller whose bar has room to
+   * spare.
+   *
+   * Optional and unset by default, so every existing call site — including
+   * BOTH phone ones, the home hero and the tab header — renders exactly as
+   * before. The caps themselves are unchanged: `compact` still means 110 and
+   * the full trigger still means 140, because those exist for phone headers
+   * where horizontal space is genuinely scarce.
+   *
+   * It exists because `WebTopBar` inherited `compact` for its type scale and
+   * got the phone's width cap with it, truncating a perfectly ordinary
+   * account name to "Investm…" on a bar with a `flex: 1` spacer and hundreds
+   * of pixels going spare. Raising the shared cap would have changed the
+   * phone; a caller-supplied override cannot.
+   */
+  maxTriggerWidth?: number;
+  /**
+   * Desktop web only: size and right-anchor the menu panel under `WebTopBar`,
+   * and use a raw `<div>` scrim instead of a `Pressable`.
+   *
+   * Defaults to `false`, so BOTH phone call sites — the home hero and the tab
+   * header — render byte-identically to before. The `desktop?: boolean`
+   * defaulting to false is the design language's own convention for a
+   * component both platforms render (`InflationIndexSection`): the mobile call
+   * site passes nothing and therefore keeps its layout by construction rather
+   * than by discipline.
+   *
+   * **The `<div>` below is unreachable from native, structurally.** Only
+   * `WebTopBar` passes this prop, `WebTopBar` is imported only by
+   * `WebShell.web.tsx`, and native's `WebShell.tsx` is a real no-op that
+   * imports neither — so on a phone this branch is dead code that React Native
+   * never evaluates, not a runtime `Platform` check that could be reached.
+   */
+  desktop?: boolean;
 }) {
   const [visible, setVisible] = useState(false);
   const [pastTripsExpanded, setPastTripsExpanded] = useState(false);
   const { t } = useTranslation();
-  const { accounts, currentAccountId, switchAccount } = useAccountStore();
+  const { accounts, currentAccountId, switchAccount, ensureAccountsLoaded } = useAccountStore();
   const { loadCategories } = useCategoryStore();
   const { loadWallet } = useWalletStore();
   const { loadBudgets } = useBudgetStore();
@@ -71,6 +110,11 @@ export function AccountSwitcher({
     // Always open the menu so the currency control is reachable even with a
     // single account. Account management is the "Manage accounts" button inside.
     setVisible(true);
+    // On web the list is rebuilt from the server on every page load, so a
+    // single failed `GET /accounts` leaves this menu empty for the rest of the
+    // session — and this menu is the only place a user would go to fix that.
+    // A no-op whenever the list is already there (i.e. always, on native).
+    void ensureAccountsLoaded();
   };
 
   const renderAccountRow = (item: (typeof accounts)[number]) => {
@@ -136,7 +180,14 @@ export function AccountSwitcher({
 
   return (
     <>
-      <TouchableOpacity style={[styles.trigger, compact && styles.triggerCompact]} onPress={handleTriggerPress}>
+      <TouchableOpacity
+        style={[
+          styles.trigger,
+          compact && styles.triggerCompact,
+          maxTriggerWidth !== undefined && { maxWidth: maxTriggerWidth },
+        ]}
+        onPress={handleTriggerPress}
+      >
         <Ionicons
           name={ACCOUNT_TYPE_ICONS[currentAccount?.type || 'personal']}
           size={compact ? 14 : 18}
@@ -159,8 +210,8 @@ export function AccountSwitcher({
         animationType="fade"
         onRequestClose={() => setVisible(false)}
       >
-        <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
-          <View style={styles.dropdown}>
+        <MenuScrim desktop={desktop} styles={styles} theme={theme} onDismiss={() => setVisible(false)}>
+          <View style={[styles.dropdown, desktop && styles.dropdownDesktop]}>
             <Text style={styles.dropdownTitle}>{t('accounts.switchAccount')}</Text>
 
             <FlatList
@@ -233,9 +284,81 @@ export function AccountSwitcher({
               <Text style={styles.manageButtonText}>{t('accounts.manage')}</Text>
             </TouchableOpacity>
           </View>
-        </Pressable>
+        </MenuScrim>
       </Modal>
     </>
+  );
+}
+
+/**
+ * The dismiss-on-click backdrop behind either menu.
+ *
+ * **On desktop it is a raw `<div>`, never a `Pressable`.** react-native-web
+ * gives every `Pressable` a `tabIndex` attribute, and ANY tabindex — including
+ * `-1` — makes an element a valid `.focus()` target, which is all RN's
+ * `ModalFocusTrap` checks for when it walks for the first focusable
+ * descendant. So a `Pressable` scrim is the trap's FIRST target and swallows
+ * the focus that should land on a real control inside the panel. The design
+ * language names this exactly and `ExpenseDialog` already solves it the same
+ * way. A bare `<div>` with no tabindex is genuinely unfocusable, so the walk
+ * skips it and recurses into the panel.
+ *
+ * The CSS mirrors `styles.overlay` axis for axis: RN's overlay is a column
+ * flex container, so its `justifyContent` is the VERTICAL axis (top) and its
+ * `alignItems` is the HORIZONTAL one (right) — hence `flexDirection: 'column'`
+ * here rather than relying on the CSS default of `row`, which would silently
+ * swap the two.
+ *
+ * Off desktop it is the exact `Pressable` that shipped, so the phone is
+ * unchanged.
+ */
+function MenuScrim({
+  desktop,
+  styles,
+  theme,
+  onDismiss,
+  children,
+}: {
+  desktop: boolean;
+  styles: ReturnType<typeof createStyles>;
+  theme: Theme;
+  onDismiss: () => void;
+  children: React.ReactNode;
+}) {
+  if (!desktop) {
+    return (
+      <Pressable style={styles.overlay} onPress={onDismiss}>
+        {children}
+      </Pressable>
+    );
+  }
+  return (
+    <div
+      role="presentation"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onDismiss();
+      }}
+      style={{
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        left: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        justifyContent: 'flex-start',
+        // Clears the bar rather than the magic `60` the mobile overlay uses.
+        paddingTop: TOP_BAR_HEIGHT + 4,
+        // The bar's own horizontal padding, so the panel's right edge lines
+        // up with the trigger that opened it. A shared constant, so no
+        // measurement and no positioning math — and no third copy to drift.
+        paddingRight: WEB_TOP_BAR_PADDING_X,
+        backgroundColor: theme.colors.overlay,
+      }}
+    >
+      {children}
+    </div>
   );
 }
 
@@ -358,6 +481,17 @@ const createStyles = (theme: Theme) => ({
     backgroundColor: theme.colors.overlay,
     justifyContent: 'flex-start' as const,
     paddingTop: 60,
+  },
+  // Desktop: a real width, replacing the horizontal margins. The full-width
+  // band this fixes had a one-line cause — `dropdown` set `marginHorizontal`
+  // and NO `width` and NO `maxWidth`, inside an overlay with
+  // `justifyContent: 'flex-start'`, so the panel stretched to the viewport
+  // minus 40px: an 1880px panel at 1920. It was never sized, only inset.
+  // `maxHeight: '82%'` below already handles seven accounts, so the list needs
+  // nothing.
+  dropdownDesktop: {
+    width: 340,
+    marginHorizontal: 0,
   },
   dropdown: {
     marginHorizontal: theme.spacing[5],

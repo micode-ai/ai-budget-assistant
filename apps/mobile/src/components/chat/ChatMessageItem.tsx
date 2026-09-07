@@ -15,6 +15,10 @@ interface ChatMessageItemProps {
   isConfirming: boolean;
   onConfirm: (actionId: string) => Promise<void>;
   onReject: (actionId: string, reason?: string) => Promise<void>;
+  /** Additive, default `false` (design's §5a rule 1) — the phone keeps its
+   *  `'80%'` bubble cap BY CONSTRUCTION. See `bubbleTouchableWide` below for
+   *  what changes when this is `true`. */
+  desktop?: boolean;
 }
 
 export function ChatMessageItem({
@@ -23,6 +27,7 @@ export function ChatMessageItem({
   isConfirming,
   onConfirm,
   onReject,
+  desktop = false,
 }: ChatMessageItemProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -103,7 +108,7 @@ export function ChatMessageItem({
         </View>
       )}
       <TouchableOpacity
-        style={styles.bubbleTouchable}
+        style={[styles.bubbleTouchable, desktop && !isUser && styles.bubbleTouchableWide]}
         onLongPress={handleLongPress}
         activeOpacity={0.85}
         delayLongPress={400}
@@ -125,9 +130,12 @@ export function ChatMessageItem({
               onConfirm={onConfirm}
               onReject={onReject}
               isConfirming={isConfirming}
+              desktop={desktop}
             />
           )}
-          {!isUser && item.actionResult && <ActionResultCard actionResult={item.actionResult} />}
+          {!isUser && item.actionResult && (
+            <ActionResultCard actionResult={item.actionResult} desktop={desktop} />
+          )}
         </View>
       </TouchableOpacity>
     </View>
@@ -156,6 +164,17 @@ const createStyles = (theme: Theme) =>
     bubbleTouchable: {
       maxWidth: '80%' as const,
       flexShrink: 1,
+    },
+    // Design's "The measure" — Q1: on desktop the assistant/other-member
+    // bubble has NO cap of its own; the column (via the caller's capped
+    // `contentContainerStyle`) is the cap. `100%` — not `undefined`/no
+    // maxWidth at all — so a long unwrapped run still can't push past the
+    // row: `flexShrink` still lets it hug shorter content, this only raises
+    // the ceiling from 80% of the row to the row itself (minus the avatar
+    // lane, which is a flex sibling, not this style). Never applied to the
+    // own-message bubble — its 80% stays, just of a bounded row now.
+    bubbleTouchableWide: {
+      maxWidth: '100%' as const,
     },
     messageBubble: {
       backgroundColor: theme.colors.messageBubbleAI,

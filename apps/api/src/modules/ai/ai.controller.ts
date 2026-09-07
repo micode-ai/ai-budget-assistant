@@ -3,12 +3,15 @@ import {
   Get,
   Post,
   Patch,
+  Put,
   Delete,
   Body,
   Param,
   Query,
   UseGuards,
   Req,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
@@ -25,6 +28,7 @@ import { ProjectSuggestionService } from './services/project-suggestion.service'
 import { GoalPlannerService } from './services/goal-planner.service';
 import { GeocodingService } from './services/geocoding.service';
 import { ScanReceiptRequestSchema } from './utils/sanitize';
+import { UpdateConversationTitleDto } from './dto';
 
 @Controller('ai')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -165,6 +169,36 @@ export class AiController {
     @Body() body: { isShared: boolean },
   ) {
     return this.chatService.setConversationShared(req.user.id, id, req.accountId, req.accountRole, body.isShared);
+  }
+
+  // No ViewerBlockGuard here, matching /shared above: renaming/deleting one's
+  // own conversation and pinning a visible one are not account-mutating
+  // writes in the sense that guard exists for.
+  @Patch('chat/conversations/:id/title')
+  async renameConversation(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() dto: UpdateConversationTitleDto,
+  ) {
+    return this.chatService.renameConversation(req.user.id, id, req.accountId, dto.title);
+  }
+
+  @Delete('chat/conversations/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteConversation(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ) {
+    await this.chatService.deleteConversation(req.user.id, id, req.accountId);
+  }
+
+  @Put('chat/conversations/:id/pin')
+  async setConversationPinned(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Body() body: { pinned: boolean },
+  ) {
+    return this.chatService.setConversationPinned(req.user.id, id, req.accountId, body.pinned);
   }
 
   @Post('scan-receipt')

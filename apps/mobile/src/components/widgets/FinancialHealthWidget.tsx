@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, Modal, ScrollView, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { SheetDialog } from '@/components/SheetDialog';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useFinancialHealthScore, type HealthScoreComponent, type HealthColorKey } from '@/features/analytics/useFinancialHealthScore';
 
@@ -9,6 +10,13 @@ const GAUGE_SIZE = 88;
 const STROKE = 8;
 const RADIUS = (GAUGE_SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+
+/**
+ * Stable accessible-name id for the breakdown panel's title. A fixed id is
+ * safe for the same reason `ExpenseDialog.tsx`'s `TITLE_ID` is: only one
+ * instance of this widget's panel is ever mounted at a time.
+ */
+const TITLE_ID = 'financial-health-sheet-title';
 
 function CircularGauge({ score, colorKey }: { score: number; colorKey: HealthColorKey }) {
   const theme = useTheme();
@@ -106,6 +114,22 @@ function ComponentRow({ component }: { component: HealthScoreComponent }) {
   );
 }
 
+/**
+ * The financial-health score card, and the breakdown panel it opens.
+ *
+ * That panel's chrome — bottom sheet on a phone, centred dialog on desktop web
+ * — is `SheetDialog`'s, and so is its bottom inset. The `desktop?` prop this
+ * file used to carry (threaded from `DashboardRail` through
+ * `renderHomeWidget`) is gone: the wrapper reads the width itself, so there is
+ * no flag left for a third call site to forget.
+ *
+ * **Its bottom padding is the one place this pass moves a phone pixel.** The
+ * shipped sheet padded a flat 32 with no inset at all — it is not among
+ * ABA-483's eight, and it is the ninth instance of exactly that bug. Routed
+ * through the wrapper it is `max(inset, 32)`: identical on a device with no
+ * navigation bar, and on a device with one it grows by at most ~16px, to
+ * cover the bar the note underneath was sitting behind.
+ */
 export function FinancialHealthWidget() {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -120,6 +144,38 @@ export function FinancialHealthWidget() {
     : colorKey === 'yellow'
       ? theme.colors.warning
       : theme.colors.danger;
+
+  // Shared by both chromes, byte-for-byte — only the wrapper differs.
+  const panelContent = (
+    <>
+      <View style={styles.sheetHeader}>
+        {hasEnoughData ? (
+          <View style={styles.sheetScoreRow}>
+            <CircularGauge score={score} colorKey={colorKey} />
+            <View style={styles.sheetScoreText}>
+              <Text nativeID={TITLE_ID} style={styles.sheetTitle}>{t('healthScore.title')}</Text>
+              <Text style={[styles.sheetScoreNumber, { color: scoreColor }]}>{score}</Text>
+              <Text style={[styles.sheetScoreLabel, { color: scoreColor }]}>
+                {t(`healthScore.label.${colorKey}`)}
+              </Text>
+            </View>
+          </View>
+        ) : (
+          <Text nativeID={TITLE_ID} style={styles.sheetTitle}>{t('healthScore.title')}</Text>
+        )}
+      </View>
+      <ScrollView style={styles.sheetScroll} contentContainerStyle={styles.sheetScrollContent}>
+        <Text style={styles.sheetSectionLabel}>{t('healthScore.breakdown')}</Text>
+        {components.map((c, i) => (
+          <View key={c.key}>
+            <ComponentRow component={c} />
+            {i < components.length - 1 && <View style={styles.divider} />}
+          </View>
+        ))}
+        <Text style={styles.sheetNote}>{t('healthScore.note')}</Text>
+      </ScrollView>
+    </>
+  );
 
   return (
     <>
@@ -153,43 +209,22 @@ export function FinancialHealthWidget() {
         </View>
       </TouchableOpacity>
 
-      <Modal
+      <SheetDialog
         visible={sheetOpen}
-        transparent
-        animationType="slide"
-        onRequestClose={() => setSheetOpen(false)}
+        onClose={() => setSheetOpen(false)}
+        titleId={TITLE_ID}
+        // See the note above: the shipped value was a flat 32 with no inset.
+        padBottom={0}
+        insetFloor={32}
+        scrimColor="rgba(0,0,0,0.4)"
+        sheetStyle={styles.sheetBox}
+        handleStyle={styles.handleBox}
+        // `panelContent` already contains its own `ScrollView`; a second one
+        // inside the dialog is the scroller the design language forbids.
+        desktopScroll={false}
       >
-        <Pressable style={styles.backdrop} onPress={() => setSheetOpen(false)} />
-        <View style={styles.sheet}>
-          <View style={styles.sheetHandle} />
-          <View style={styles.sheetHeader}>
-            {hasEnoughData ? (
-              <View style={styles.sheetScoreRow}>
-                <CircularGauge score={score} colorKey={colorKey} />
-                <View style={styles.sheetScoreText}>
-                  <Text style={styles.sheetTitle}>{t('healthScore.title')}</Text>
-                  <Text style={[styles.sheetScoreNumber, { color: scoreColor }]}>{score}</Text>
-                  <Text style={[styles.sheetScoreLabel, { color: scoreColor }]}>
-                    {t(`healthScore.label.${colorKey}`)}
-                  </Text>
-                </View>
-              </View>
-            ) : (
-              <Text style={styles.sheetTitle}>{t('healthScore.title')}</Text>
-            )}
-          </View>
-          <ScrollView style={styles.sheetScroll} contentContainerStyle={styles.sheetScrollContent}>
-            <Text style={styles.sheetSectionLabel}>{t('healthScore.breakdown')}</Text>
-            {components.map((c, i) => (
-              <View key={c.key}>
-                <ComponentRow component={c} />
-                {i < components.length - 1 && <View style={styles.divider} />}
-              </View>
-            ))}
-            <Text style={styles.sheetNote}>{t('healthScore.note')}</Text>
-          </ScrollView>
-        </View>
-      </Modal>
+        {panelContent}
+      </SheetDialog>
     </>
   );
 }
@@ -248,23 +283,20 @@ const createStyles = (theme: Theme) => ({
     alignItems: 'center' as const,
     justifyContent: 'center' as const,
   },
-  backdrop: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
-  },
-  sheet: {
-    backgroundColor: theme.colors.surface,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
+  // Deviations from `SheetDialog`'s canonical sheet box, kept so the phone's
+  // pixels do not move: this panel is capped at 80% of the screen and its own
+  // children (`sheetHeader` / `sheetScrollContent`) carry all the padding, so
+  // the sheet itself must have none.
+  sheetBox: {
+    // No border radii here: the shipped literal was 20, which is exactly what
+    // `SheetDialog`'s canonical `borderRadius['2xl']` already resolves to, so
+    // dropping the local literal moves nothing today and keeps this sheet on
+    // the token if the token ever moves.
     maxHeight: '80%' as const,
-    paddingBottom: 32,
+    paddingHorizontal: 0,
+    paddingTop: 0,
   },
-  sheetHandle: {
-    width: 36,
-    height: 4,
-    backgroundColor: theme.colors.border,
-    borderRadius: 2,
-    alignSelf: 'center' as const,
+  handleBox: {
     marginTop: 10,
     marginBottom: 4,
   },

@@ -6,9 +6,46 @@ import { formatCurrency, formatFinancialMonth } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import { useFinancialMonth } from '@/hooks/useFinancialMonth';
+import { SegmentedProgressBar } from '@/components/shared/SegmentedProgressBar';
+import type { MonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
+import type { MonthlyBudgetProjection } from '@/features/dashboard/monthlyBudgetProjection';
 import type { HomeWidgetContext } from '../HomeWidgetContext';
 
-export function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
+interface MonthlyBudgetCardProps {
+  ctx: HomeWidgetContext;
+  /**
+   * Desktop web (`docs/design/2026-09-05-dashboard-web.md`'s "The monthly
+   * budget card's segmented bar") — when the month reduces to exactly one
+   * active, category-allocated monthly budget, this carries that budget's
+   * own per-category breakdown (`resolveMonthlyBudgetSegments`), and the
+   * plain fill below is replaced with a real segmented bar + legend, reusing
+   * `SegmentedProgressBar` — the same component `BudgetCard` already draws
+   * its own segmented bar with. Undefined/null on mobile — mobile's own call
+   * site passes nothing, so it always renders today's plain fill, unchanged.
+   */
+  segments?: MonthlyBudgetSegments | null;
+  /**
+   * Desktop web (`docs/design/2026-09-05-dashboard-web.md`'s "The budget
+   * projection line") — a SECOND line under the bar, from data already
+   * computed: "340 zl of 500 zl · 68%" is a report, "at this rate you reach
+   * 500 zl on the 24th" is a reason to behave differently today.
+   *
+   * Resolved by the CALLER (`FocusColumn`, via
+   * `features/dashboard/budgetProjection.ts`) rather than derived here, for
+   * the same reason the attention row carries its projection pre-resolved:
+   * one resolver is what keeps "one sentence" true across the two places on
+   * this screen that can say it. A `null`/absent value renders nothing, which
+   * is also what the module returns when the budget is not heading over.
+   *
+   * Undefined on mobile — mobile's own call sites
+   * (`HomeWidgetSwitch.tsx`'s `'monthlyBudget'` case) pass nothing, so the
+   * card renders exactly as it does today and the extra `<Text>` is never
+   * mounted.
+   */
+  projection?: MonthlyBudgetProjection | null;
+}
+
+export function MonthlyBudgetCard({ ctx, segments, projection }: MonthlyBudgetCardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -25,9 +62,17 @@ export function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
       ? null
       : formatFinancialMonth(current.start, current.end, getIntlLocale()).range;
 
-  const progressColor = budgetUsedPercent > 90
+  // When `segments` is present, the bar's own percentage drives both the
+  // fill/legend colour and (via `SegmentedProgressBar`) the category slices.
+  // `ctx.budgetUsedPercent` happens to equal `segments.percentageUsed` in the
+  // single-contributing-budget case the util covers, but only by
+  // coincidence (see `resolveMonthlyBudgetSegments`'s own doc comment) — so
+  // the segmented branch reads its own number instead of assuming the two
+  // always agree. Mobile never passes `segments`, so this is unchanged there.
+  const barPercent = segments ? segments.percentageUsed : budgetUsedPercent;
+  const progressColor = barPercent > 90
     ? theme.colors.danger
-    : budgetUsedPercent > 70
+    : barPercent > 70
       ? theme.colors.warning
       : theme.colors.primary;
 
@@ -49,17 +94,53 @@ export function MonthlyBudgetCard({ ctx }: { ctx: HomeWidgetContext }) {
           </Text>
           <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
         </View>
-        <View style={styles.progressContainer}>
-          <View style={styles.progressBar}>
-            <View
-              style={[
-                styles.progressFill,
-                { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
-              ]}
+        {segments ? (
+          <View style={styles.progressContainer}>
+            <SegmentedProgressBar
+              categories={segments.categories}
+              totalAmount={segments.totalAmount}
+              percentageUsed={segments.percentageUsed}
+              barColor={progressColor}
+              currencyCode={segments.currencyCode}
             />
           </View>
-          <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
-        </View>
+        ) : (
+          <View style={styles.progressContainer}>
+            <View style={styles.progressBar}>
+              <View
+                style={[
+                  styles.progressFill,
+                  { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
+                ]}
+              />
+            </View>
+            <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
+          </View>
+        )}
+        {projection && (
+          <Text
+            style={
+              projection.projection.status === 'exceeded'
+                ? styles.projectionExceeded
+                : styles.projectionText
+            }
+          >
+            {/* One sentence, one key, chosen by `resolveBudgetProjection` —
+                never a date line AND a total line, which is what mobile's
+                budgets list prints and what this whole module exists to
+                collapse. The amount is in the BUDGET's currency, carried
+                alongside the projection, not `ctx.currency`. */}
+            {t(projection.projection.i18nKey, {
+              amount: formatCurrency(projection.projection.amount, projection.currencyCode),
+              date: projection.projection.date
+                ? projection.projection.date.toLocaleDateString(getIntlLocale(), {
+                    month: 'short',
+                    day: 'numeric',
+                  })
+                : '',
+            })}
+          </Text>
+        )}
       </View>
     </TouchableOpacity>
   );
@@ -132,6 +213,21 @@ const createStyles = (theme: Theme) => ({
   progressText: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textSecondary,
+    textAlign: 'center' as const,
+  },
+  // Same two treatments `BudgetCard.tsx` (the budgets grid) gives the same two
+  // states, so one budget never looks more or less urgent depending on which
+  // screen is showing it. `warning`/`danger` are semantic tokens and are
+  // deliberately NOT accent-derived.
+  projectionText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.warning,
+    textAlign: 'center' as const,
+  },
+  projectionExceeded: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.danger,
+    fontWeight: '600' as const,
     textAlign: 'center' as const,
   },
 });

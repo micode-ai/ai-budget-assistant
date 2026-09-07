@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
+import { PaneChildWidth } from '@/components/PaneChildWidth';
 import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -46,33 +47,35 @@ export default function JoinAccountScreen() {
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <KeyboardAwareScreen contentContainerStyle={styles.content}>
-        <View style={styles.iconContainer}>
-          <Ionicons name="people-outline" size={48} color={theme.colors.primary} />
-        </View>
-        <Text style={styles.title}>{t('accounts.joinAccount')}</Text>
-        <Text style={styles.subtitle}>{t('accounts.joinDescription')}</Text>
+        <PaneChildWidth>
+          <View style={styles.iconContainer}>
+            <Ionicons name="people-outline" size={48} color={theme.colors.primary} />
+          </View>
+          <Text style={styles.title}>{t('accounts.joinAccount')}</Text>
+          <Text style={styles.subtitle}>{t('accounts.joinDescription')}</Text>
 
-        <TextInput
-          style={styles.input}
-          value={inviteCode}
-          onChangeText={setInviteCode}
-          placeholder={t('accounts.enterCode')}
-          placeholderTextColor={theme.colors.textTertiary}
-          autoCapitalize="none"
-          autoCorrect={false}
-        />
+          <TextInput
+            style={styles.input}
+            value={inviteCode}
+            onChangeText={setInviteCode}
+            placeholder={t('accounts.enterCode')}
+            placeholderTextColor={theme.colors.textTertiary}
+            autoCapitalize="none"
+            autoCorrect={false}
+          />
 
-        <TouchableOpacity
-          style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
-          onPress={handleJoin}
-          disabled={isLoading}
-        >
-          {isLoading ? (
-            <ActivityIndicator color={theme.colors.textInverse} />
-          ) : (
-            <Text style={styles.submitButtonText}>{t('accounts.join')}</Text>
-          )}
-        </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.submitButton, isLoading && styles.submitButtonDisabled]}
+            onPress={handleJoin}
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <ActivityIndicator color={theme.colors.textInverse} />
+            ) : (
+              <Text style={styles.submitButtonText}>{t('accounts.join')}</Text>
+            )}
+          </TouchableOpacity>
+        </PaneChildWidth>
       </KeyboardAwareScreen>
     </SafeAreaView>
   );

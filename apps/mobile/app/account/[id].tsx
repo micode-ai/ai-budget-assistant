@@ -10,6 +10,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { AccountRole, AccountMember, AccountInvitation } from '@budget/shared-types';
 import { api } from '@/services/api';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
+import { PaneChildWidth } from '@/components/PaneChildWidth';
 import { FinancialMonthSheet } from '@/components/account/FinancialMonthSheet';
 import { MembersSection } from '@/components/account/MembersSection';
 import { TripActionsCard, TripArchiveButton } from '@/components/account/TripSection';
@@ -214,107 +215,109 @@ export default function AccountDetailScreen() {
   return (
     <SafeAreaView style={styles.container} edges={[]}>
       <KeyboardAwareScreen style={styles.scrollView} contentContainerStyle={styles.content}>
-        {/* Account Info */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>{t('accounts.details')}</Text>
-          <View style={styles.card}>
-            {editMode ? (
-              <View style={styles.editRow}>
-                <TextInput
-                  style={styles.editInput}
-                  value={name}
-                  onChangeText={setName}
-                  placeholderTextColor={theme.colors.textTertiary}
-                  autoFocus
-                />
-                <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-                  <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.cancelButton}
-                  onPress={() => {
-                    setEditMode(false);
-                    setName(account.name);
-                  }}
-                >
-                  <Ionicons name="close" size={20} color={theme.colors.textSecondary} />
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View style={styles.infoRow}>
-                <View>
-                  <Text style={styles.accountName}>{account.name}</Text>
-                  <Text style={styles.accountType}>
-                    {t(`accounts.types.${account.type}`)} | {account.currencyCode}
-                  </Text>
-                </View>
-                {isOwner && (
-                  <TouchableOpacity onPress={() => setEditMode(true)}>
-                    <Ionicons name="pencil-outline" size={20} color={theme.colors.primary} />
-                  </TouchableOpacity>
-                )}
-              </View>
-            )}
-          </View>
-        </View>
-
-        {/* Financial month anchor (owner-only) */}
-        {isOwner && (
+        <PaneChildWidth>
+          {/* Account Info */}
           <View style={styles.section}>
-            <Text style={styles.sectionTitle}>{t('accounts.financialMonth')}</Text>
+            <Text style={styles.sectionTitle}>{t('accounts.details')}</Text>
             <View style={styles.card}>
-              <TouchableOpacity
-                style={styles.tripActionRow}
-                onPress={openAnchorSheet}
-                activeOpacity={0.7}
-              >
-                <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
-                <Text style={styles.tripActionText}>
-                  {account.monthAnchorDay
-                    ? t('accounts.financialMonthStartsOn', { day: account.monthAnchorDay })
-                    : t('accounts.financialMonthCalendar')}
-                </Text>
-                <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
-              </TouchableOpacity>
+              {editMode ? (
+                <View style={styles.editRow}>
+                  <TextInput
+                    style={styles.editInput}
+                    value={name}
+                    onChangeText={setName}
+                    placeholderTextColor={theme.colors.textTertiary}
+                    autoFocus
+                  />
+                  <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+                    <Ionicons name="checkmark" size={20} color={theme.colors.textInverse} />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={() => {
+                      setEditMode(false);
+                      setName(account.name);
+                    }}
+                  >
+                    <Ionicons name="close" size={20} color={theme.colors.textSecondary} />
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <View style={styles.infoRow}>
+                  <View>
+                    <Text style={styles.accountName}>{account.name}</Text>
+                    <Text style={styles.accountType}>
+                      {t(`accounts.types.${account.type}`)} | {account.currencyCode}
+                    </Text>
+                  </View>
+                  {isOwner && (
+                    <TouchableOpacity onPress={() => setEditMode(true)}>
+                      <Ionicons name="pencil-outline" size={20} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                  )}
+                </View>
+              )}
             </View>
           </View>
-        )}
 
-        {/* Trip actions (only for trip accounts) */}
-        {account.type === 'trip' && <TripActionsCard accountId={id!} />}
-
-        {/* Members + pending invitations (for shared/business/investment/trip accounts) */}
-        {showMembers && (
-          <MembersSection
-            accountId={id!}
-            isOwner={isOwner}
-            members={accountMembers}
-            isLoadingMembers={isLoading}
-            invitations={invitations}
-            loadingInvitations={loadingInvitations}
-            onChangeRole={handleChangeRole}
-            onRemoveMember={handleRemoveMember}
-            onCancelInvitation={handleCancelInvitation}
-          />
-        )}
-
-        {/* Danger Zone */}
-        <View style={styles.section}>
-          {account.type === 'trip' && (
-            <TripArchiveButton accountId={id!} isOwner={isOwner} tripStatus={account.tripStatus} />
+          {/* Financial month anchor (owner-only) */}
+          {isOwner && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>{t('accounts.financialMonth')}</Text>
+              <View style={styles.card}>
+                <TouchableOpacity
+                  style={styles.tripActionRow}
+                  onPress={openAnchorSheet}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons name="calendar-outline" size={20} color={theme.colors.primary} />
+                  <Text style={styles.tripActionText}>
+                    {account.monthAnchorDay
+                      ? t('accounts.financialMonthStartsOn', { day: account.monthAnchorDay })
+                      : t('accounts.financialMonthCalendar')}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              </View>
+            </View>
           )}
-          {isOwner ? (
-            <TouchableOpacity style={styles.dangerButton} onPress={handleDelete}>
-              <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
-              <Text style={styles.dangerButtonText}>{t('accounts.deleteAccount')}</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity style={styles.dangerButton} onPress={handleLeave}>
-              <Ionicons name="exit-outline" size={20} color={theme.colors.danger} />
-              <Text style={styles.dangerButtonText}>{t('accounts.leaveAccount')}</Text>
-            </TouchableOpacity>
+
+          {/* Trip actions (only for trip accounts) */}
+          {account.type === 'trip' && <TripActionsCard accountId={id!} />}
+
+          {/* Members + pending invitations (for shared/business/investment/trip accounts) */}
+          {showMembers && (
+            <MembersSection
+              accountId={id!}
+              isOwner={isOwner}
+              members={accountMembers}
+              isLoadingMembers={isLoading}
+              invitations={invitations}
+              loadingInvitations={loadingInvitations}
+              onChangeRole={handleChangeRole}
+              onRemoveMember={handleRemoveMember}
+              onCancelInvitation={handleCancelInvitation}
+            />
           )}
-        </View>
+
+          {/* Danger Zone */}
+          <View style={styles.section}>
+            {account.type === 'trip' && (
+              <TripArchiveButton accountId={id!} isOwner={isOwner} tripStatus={account.tripStatus} />
+            )}
+            {isOwner ? (
+              <TouchableOpacity style={styles.dangerButton} onPress={handleDelete}>
+                <Ionicons name="trash-outline" size={20} color={theme.colors.danger} />
+                <Text style={styles.dangerButtonText}>{t('accounts.deleteAccount')}</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.dangerButton} onPress={handleLeave}>
+                <Ionicons name="exit-outline" size={20} color={theme.colors.danger} />
+                <Text style={styles.dangerButtonText}>{t('accounts.leaveAccount')}</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </PaneChildWidth>
       </KeyboardAwareScreen>
 
       <FinancialMonthSheet

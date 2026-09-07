@@ -14,36 +14,12 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useAlertStore } from '@/stores/alertStore';
 import { useAccountStore } from '@/stores/accountStore';
-import { useExpenseStore } from '@/stores/expenseStore';
 import { showAlert } from '@/utils/alert';
 import { useInvitationStore } from '@/stores/invitationStore';
 import { InvitationCard } from '@/components/alerts/InvitationCard';
+import { renderAlertBody, TYPE_ICON } from '@/features/alerts/alertPresentation';
+import { openAlertTargets as openAlertTargetsImpl } from '@/features/alerts/resolveAlertExpense';
 import type { AnomalyAlert } from '@budget/shared-types';
-
-const TYPE_ICON: Record<string, keyof typeof Ionicons.glyphMap> = {
-  duplicate_charge: 'copy-outline',
-  price_increase: 'trending-up-outline',
-  category_spike: 'flame-outline',
-  recurring_suggestion: 'repeat-outline',
-  possible_merge: 'git-merge-outline',
-  price_overcharge: 'pricetag-outline',
-};
-
-/**
- * An anomaly alert deep-links by the expense's SERVER PK, but a locally-created row
- * is keyed by its clientId and only learns its serverId once it has synced/pulled.
- * Resolve against the live store the same 4-way way the detail/merge screens do.
- */
-function isExpenseResolvableLocally(id?: string | null): boolean {
-  if (!id) return false;
-  return useExpenseStore
-    .getState()
-    .expenses.some(
-      (e) =>
-        !e.isDeleted &&
-        (e.id === id || e.serverId === id || e.clientId === id || e.localId === id),
-    );
-}
 
 export default function AlertsScreen() {
   const { t, i18n } = useTranslation();
@@ -85,111 +61,13 @@ export default function AlertsScreen() {
     }
   };
 
-  const renderBody = useCallback(
-    (alert: AnomalyAlert): { title: string; body: string } => {
-      const p = alert.params as Record<string, string | number>;
-      switch (alert.type) {
-        case 'duplicate_charge':
-          return {
-            title: t('alerts.duplicateTitle'),
-            body: t('alerts.duplicateBody', {
-              merchant: p.merchant,
-              amount: p.amount,
-              currency: p.currencyCode,
-            }),
-          };
-        case 'price_increase':
-          return {
-            title: t('alerts.priceIncreaseTitle', { merchant: p.merchant }),
-            body: t('alerts.priceIncreaseBody', {
-              merchant: p.merchant,
-              oldAmount: p.oldAmount,
-              newAmount: p.newAmount,
-              currency: p.currencyCode,
-              percent: p.percent,
-            }),
-          };
-        case 'category_spike':
-          return {
-            title: t('alerts.spikeTitle'),
-            body: t('alerts.spikeBody', { category: p.categoryName, percent: p.percent }),
-          };
-        case 'recurring_suggestion':
-          return {
-            title: t('alerts.recurringTitle', { merchant: p.merchant }),
-            body: t('alerts.recurringBody', {
-              merchant: p.merchant,
-              amount: p.amount,
-              currency: p.currencyCode,
-              cycle: t(p.cycle === 'weekly' ? 'alerts.cycleWeekly' : 'alerts.cycleMonthly'),
-            }),
-          };
-        case 'possible_merge':
-          return {
-            title: t('alerts.mergeTitle'),
-            body: t('alerts.mergeBody', {
-              merchant: p.merchant,
-              amountA: p.amountA,
-              currencyA: p.currencyA,
-              amountB: p.amountB,
-              currencyB: p.currencyB,
-            }),
-          };
-        case 'price_overcharge': {
-          const findingCount = Array.isArray((alert.params as { findings?: unknown }).findings)
-            ? ((alert.params as { findings: unknown[] }).findings).length
-            : 0;
-          return {
-            title: t('alerts.priceCheckTitle'),
-            body: t('alerts.priceCheckBody', {
-              count: findingCount,
-              merchant: p.merchant,
-              amount: p.totalAmount,
-              currency: p.currencyCode,
-            }),
-          };
-        }
-        default:
-          return { title: String(alert.type), body: '' };
-      }
-    },
-    [t],
-  );
-
   // Alert id currently being resolved (waiting on a fresh expense pull) — drives a
   // small inline spinner and blocks double-taps.
   const [resolvingId, setResolvingId] = React.useState<string | null>(null);
 
-  /**
-   * Open the expense(s) an alert references. A locally-created row may not carry its
-   * serverId yet, so if the target isn't resolvable we force ONE fresh expense pull
-   * (which backfills serverId) and retry — only then, if it's still missing, do we
-   * conclude the duplicate was already resolved (deleted/merged) and clear the alert.
-   * This is what fixes "the expense won't open from the alert" for existing alerts.
-   */
   const openAlertTargets = useCallback(
-    async (alert: AnomalyAlert, ids: (string | undefined)[], navigate: () => void) => {
-      const need = ids.filter((x): x is string => !!x);
-      if (need.every(isExpenseResolvableLocally)) {
-        navigate();
-        return;
-      }
-      setResolvingId(alert.id);
-      try {
-        await useExpenseStore.getState().loadExpenses({ force: true });
-      } catch {
-        // offline / pull failed — fall through to the post-pull check
-      }
-      setResolvingId(null);
-      if (need.every(isExpenseResolvableLocally)) {
-        navigate();
-        return;
-      }
-      // Still missing after a fresh pull → genuinely resolved/removed. Clear the stale
-      // alert instead of dropping the user on a confusing "Expense not found" screen.
-      if (canEdit) dismiss(alert.id);
-      showAlert(t('alerts.alreadyResolvedTitle'), t('alerts.alreadyResolvedBody'));
-    },
+    (alert: AnomalyAlert, ids: (string | undefined)[], navigate: () => void) =>
+      openAlertTargetsImpl(alert, ids, navigate, { canEdit, dismiss, t, setResolvingId }),
     [canEdit, dismiss, t],
   );
 
@@ -223,7 +101,7 @@ export default function AlertsScreen() {
   );
 
   const renderAlert = ({ item }: { item: AnomalyAlert }) => {
-    const { title, body } = renderBody(item);
+    const { title, body } = renderAlertBody(item, t);
     const icon = TYPE_ICON[item.type] || 'alert-circle-outline';
     const isUnread = !item.readAt;
 

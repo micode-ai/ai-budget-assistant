@@ -17,6 +17,9 @@ interface ActionConfirmationCardProps {
   onConfirm: (actionId: string) => void;
   onReject: (actionId: string) => void;
   isConfirming: boolean;
+  /** Additive, default `false` (design's §5a rule 1). See the button-row and
+   *  `detailValue` styles below for what it changes. */
+  desktop?: boolean;
 }
 
 export function ActionConfirmationCard({
@@ -24,6 +27,7 @@ export function ActionConfirmationCard({
   onConfirm,
   onReject,
   isConfirming,
+  desktop = false,
 }: ActionConfirmationCardProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -46,7 +50,7 @@ export function ActionConfirmationCard({
       {'amount' in data && data.amount != null ? (
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>{t('chat.amount')}:</Text>
-          <Text style={styles.detailValue}>
+          <Text style={[styles.detailValue, desktop && styles.detailValueDesktop]}>
             {Number(data.amount).toFixed(2)} {String(data.currencyCode || '')}
           </Text>
         </View>
@@ -54,37 +58,41 @@ export function ActionConfirmationCard({
       {'categoryName' in data && data.categoryName ? (
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>{t('chat.category')}:</Text>
-          <Text style={styles.detailValue}>{String(data.categoryName)}</Text>
+          <Text style={[styles.detailValue, desktop && styles.detailValueDesktop]}>{String(data.categoryName)}</Text>
         </View>
       ) : null}
       {'date' in data || 'startDate' in data ? (
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>{t('chat.date')}:</Text>
-          <Text style={styles.detailValue}>{String(data.date || data.startDate || '')}</Text>
+          <Text style={[styles.detailValue, desktop && styles.detailValueDesktop]}>{String(data.date || data.startDate || '')}</Text>
         </View>
       ) : null}
       {'period' in data && data.period ? (
         <View style={styles.detailRow}>
           <Text style={styles.detailLabel}>{t('chat.period')}:</Text>
-          <Text style={styles.detailValue}>{String(data.period)}</Text>
+          <Text style={[styles.detailValue, desktop && styles.detailValueDesktop]}>{String(data.period)}</Text>
         </View>
       ) : null}
 
-      <View style={styles.buttonRow}>
+      <View style={[styles.buttonRow, desktop && styles.buttonRowDesktop]}>
         <TouchableOpacity
-          style={styles.rejectButton}
+          style={[styles.rejectButton, desktop && styles.buttonDesktop]}
           onPress={() => onReject(pendingAction.id)}
           disabled={isConfirming}
         >
           <Text style={styles.rejectButtonText}>{t('chat.rejectAction')}</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.confirmButton, isConfirming && styles.buttonDisabled]}
+          style={[
+            styles.confirmButton,
+            desktop && styles.buttonDesktop,
+            isConfirming && styles.buttonDisabled,
+          ]}
           onPress={() => onConfirm(pendingAction.id)}
           disabled={isConfirming}
         >
           {isConfirming ? (
-            <ActivityIndicator size="small" color="#FFFFFF" />
+            <ActivityIndicator size="small" color={theme.colors.textInverse} />
           ) : (
             <Text style={styles.confirmButtonText}>{t('chat.confirmAction')}</Text>
           )}
@@ -140,10 +148,31 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textPrimary,
   },
+  // Design's "The action cards" — Q5, point 2: money that lines up in a
+  // column carries `tabular-nums`. Gated behind `desktop` so the phone's
+  // rendering is untouched (it does not have this today, on either
+  // platform — see the design's Findings section for why the phone should
+  // get it too, separately, not folded into this branch).
+  detailValueDesktop: {
+    fontVariant: ['tabular-nums' as const],
+  },
   buttonRow: {
     flexDirection: 'row' as const,
     gap: theme.spacing[2],
     marginTop: theme.spacing[3],
+  },
+  // Design's "The action cards" — Q5, point 1: at the ~664px card width two
+  // `flex: 1` bars would be ~326px each, 40% wider than the same pair in
+  // this app's widest dialog (`SheetDialog`'s 480px panel, ~230px). Behind
+  // `desktop` the row becomes right-aligned, natural-width buttons —
+  // Reject before Confirm (already the DOM order), matching
+  // `ExpenseDialog`'s footer.
+  buttonRowDesktop: {
+    justifyContent: 'flex-end' as const,
+  },
+  buttonDesktop: {
+    flex: 0,
+    paddingHorizontal: theme.spacing[6],
   },
   confirmButton: {
     flex: 1,
@@ -155,8 +184,17 @@ const createStyles = (theme: Theme) => ({
   },
   confirmButtonText: {
     ...theme.textStyles.bodySmMedium,
-    color: '#FFFFFF',
+    // ABA-513: this button's fill is `theme.colors.primary`, i.e. the accent
+    // — a literal white measured ~1.9:1 against an amber accent (#EAB308) and
+    // fails 3:1 against most of the 13 preset accents, not just that one.
+    // `textInverse` is the accent's own derived on-colour (`deriveAccent.ts`
+    // picks it by luminance per accent), the same ABA-450 rule that a header
+    // action painted `primary` must use `textInverse`, not a fixed color.
+    color: theme.colors.textInverse,
   },
+  // Not accent-filled (`backgroundColor: 'transparent'` on the card's own
+  // `surface`), so `rejectButtonText`'s `textSecondary` never had the confirm
+  // button's problem — checked, not assumed, left unchanged.
   rejectButton: {
     flex: 1,
     backgroundColor: 'transparent',

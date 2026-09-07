@@ -86,7 +86,16 @@ export const useBudgetStore = create<BudgetState>()(
           }
         }
 
-        set({ budgets: localBudgets, isLoading: false });
+        // Local data is available for the UI to render immediately, but
+        // `isLoading` stays true a little longer — until the server phase
+        // below settles too. On web `db/client.web.ts` is an in-memory mock
+        // that always resolves this local read as `[]`, so clearing
+        // isLoading right here (as this store used to) let the two
+        // consumers below the empty-vs-loading check — `app/budget/[id].tsx`
+        // and `useBudgetsScreenData.ts` (feeding `BudgetsMobile`'s "no
+        // budgets yet" empty state) — read an empty list as "there really
+        // are no budgets" before the server had a chance to answer.
+        set({ budgets: localBudgets });
 
         // 2. Sync pending local → server
         get().syncPendingBudgets();
@@ -182,6 +191,9 @@ export const useBudgetStore = create<BudgetState>()(
         } catch (e) {
           console.warn('Budget server sync skipped:', e);
         }
+
+        // Server phase settled (either branch above) — safe to clear now.
+        set({ isLoading: false });
       } catch (e) {
         console.error('Failed to load budgets from SQLite:', e);
         set({ error: 'Failed to load budgets', isLoading: false });

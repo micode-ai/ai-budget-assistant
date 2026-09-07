@@ -32,6 +32,51 @@ La versión web cubre lo esencial del día a día:
 
 Es ideal para sesiones largas con un teclado de verdad: revisar el mes, ordenar categorías o conversar con el asistente de IA.
 
+## Transacciones en una pantalla grande
+
+Cuando la ventana del navegador es lo bastante ancha —más o menos como en un portátil o un ordenador de escritorio—, la pantalla de Transacciones cambia para aprovechar mejor el espacio: aparecen un panel lateral y una barra superior en lugar de la vista habitual del teléfono.
+
+- Los filtros se muestran como una **lista en el lado izquierdo**, con el número de coincidencias junto a cada opción, en lugar de una fila de botones — así ves cuántas transacciones mostrará un filtro antes de elegirlo.
+- **Los gastos y los ingresos aparecen juntos en una sola lista**, agrupados por día, y cada día muestra el total gastado ese día.
+- Tocar una transacción la abre en un **panel sobre la lista** en lugar de una página nueva — cierra el panel para volver exactamente a donde estabas.
+- Puedes **seleccionar varias transacciones con casillas** — mantén pulsada Mayús y haz clic para seleccionar todo lo que hay entre dos filas — y luego cambiarles la categoría, añadirles una etiqueta o eliminarlas todas a la vez.
+
+Por debajo de unos 1024 píxeles de ancho —lo que incluye la mayoría de las tabletas sujetas en vertical—, el navegador muestra en su lugar la vista habitual del teléfono. Es lo esperado: la vista ancha está pensada para una pantalla real de escritorio o portátil, y una ventana más estrecha se sirve mejor con la vista del teléfono.
+
+## Ajustes en una pantalla grande
+
+En una ventana ancha, Ajustes mantiene toda la lista en el lado izquierdo, y la opción que eliges se abre junto a ella en lugar de sustituir la página — así te mueves entre Perfil, Notificaciones, Categorías y el resto sin volver atrás cada vez.
+
+- La barra de direcciones sigue tu elección, así que puedes **guardar una página de ajustes en marcadores** o recargarla y volver justo donde estabas.
+- Algunas filas siguen abriéndose como página completa, porque son lugares de trabajo y no interruptores: **Cartera**, **Lista de la compra**, **Solicitudes de compra**, **Suscripciones** e **Importar**.
+- Abrir una cuenta desde Gestionar cuentas, o un proyecto desde Proyectos, también abre una página completa — con sus propios botones de editar y eliminar en la barra de título, y una flecha de volver que te devuelve a la lista con la misma fila resaltada.
+- **Cerrar sesión** está en la propia página de Ajustes, sin nada seleccionado; el engranaje de la barra superior te lleva de vuelta allí.
+
+Por debajo de unos 1024 píxeles de ancho vuelve el diseño de teléfono conocido, con todas las filas en una sola lista larga.
+
+## La pantalla principal en una pantalla grande
+
+La pantalla principal usa el espacio extra para poner delante de ti lo que necesita atención, en vez de estirar las tarjetas del teléfono.
+
+- Una **columna principal** lleva las cifras del momento — cuánto puedes gastar hoy sin riesgo, el presupuesto del mes, ingresos frente a gastos — y a su lado hay una **columna estrecha de tarjetas**. En una pantalla muy ancha hay dos de esas columnas.
+- **Todo lo que añades se abre sobre la pantalla principal** — un gasto, un saldo inicial, un presupuesto — así te quedas en la pantalla que estabas leyendo.
+- La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
+- Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.
+
+## El chat en una pantalla grande
+
+En una ventana ancha el chat con la IA gana una **lista de tus conversaciones anteriores en el lado izquierdo**, y la conversación en sí se mantiene en un ancho de lectura cómodo en el centro, en vez de estirarse por toda la pantalla.
+
+- Elegir una conversación de la lista la abre en el sitio, y la que estás leyendo queda resaltada.
+- **Nueva conversación** está arriba de esa lista, así que puedes empezar una sin perder el punto en el que estabas leyendo.
+- Una conversación compartida con las demás personas de tu cuenta dice **Compartido** en su segunda línea, junto a la fecha, en lugar de llevar solo un icono.
+- El cuadro donde escribes se queda abajo, con el micrófono y el botón de enviar junto al texto y no en bordes opuestos de la pantalla.
+- Una conversación recién empezada muestra lo que el asistente sabe hacer de verdad — añadir un gasto, consultar un presupuesto, poner algo en la lista de la compra — en lugar de una pantalla vacía.
+- Pasa el cursor sobre cualquier fila para ver su menú **⋯**, donde puedes renombrar, fijar o eliminar la conversación. Las conversaciones fijadas quedan arriba de la lista, encima de una línea divisoria. Hay más sobre las tres en la guía del chat con la IA.
+- La opción **Privado / Compartido** en la parte superior de la conversación muestra las dos opciones una junto a la otra, así la que no estás usando queda visible en vez de oculta.
+
+En una ventana más estrecha, y en el teléfono, la lista de conversaciones sigue detrás del botón **Historial**, como antes.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:

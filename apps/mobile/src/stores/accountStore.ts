@@ -25,6 +25,11 @@ import {
 import { clearAllExpenses } from '@/db/expenseRepository';
 import { clearAllWalletBalances } from '@/db/walletRepository';
 import { clearAllExchanges } from '@/db/currencyExchangeRepository';
+import { usePriceHistoryStore } from './priceHistoryStore';
+import { useMerchantRulesStore } from './merchantRulesStore';
+import { useTagStore } from './tagStore';
+import { useProjectStore } from './projectStore';
+import { useChatStore } from './chatStore';
 
 interface AccountState {
   accounts: (Account & { myRole: AccountRole })[];
@@ -38,6 +43,8 @@ interface AccountState {
   switchAccount: (accountId: string) => Promise<void>;
   loadAccounts: () => Promise<void>;
   loadAccountsFromServer: () => Promise<void>;
+  /** Re-fetch the account list only when it is empty (see the implementation). */
+  ensureAccountsLoaded: () => Promise<void>;
   createAccount: (dto: CreateAccountDto) => Promise<Account>;
   updateAccount: (id: string, dto: UpdateAccountDto) => Promise<void>;
   deleteAccount: (id: string) => Promise<void>;
@@ -71,6 +78,72 @@ interface AccountState {
   isOwner: () => boolean;
   clearError: () => void;
   reset: () => void;
+}
+
+/**
+ * In-memory caches of data the server scopes to `X-Account-Id`, torn down the
+ * moment the active account changes.
+ *
+ * This lives here, at the account boundary, rather than in each screen that
+ * reads one of these stores, for the same reason sign-out tears its stores
+ * down in one block inside `logoutAction`: `priceHistoryStore` is read by both
+ * the analytics screen and Settings -> Products, and two components each
+ * clearing one store on `[currentAccountId]` is how they come to fight over
+ * it in an order that depends on mount timing. Screens keep only the *refill*
+ * half — a load effect keyed on `[currentAccountId]`.
+ *
+ * It is invoked from the subscription at the bottom of this file, NOT from
+ * each action that reassigns `currentAccountId` — see the comment there for
+ * why the callers cannot be enumerated reliably.
+ *
+ * **`tagStore`/`projectStore` (wave 4, ABA-512).** These were nearly left out
+ * on the theory that a synchronous reset could strand `ExpenseCreateForm.tsx`
+ * / `IncomeCreateForm.tsx` with a permanently empty `TagPicker`/`ProjectPicker`
+ * if an account switch landed while one was open. That theory does not
+ * survive reading the two forms: both call `loadTags()`/`loadProjects()` in a
+ * mount-only effect, and both are conditionally-rendered dialogs on desktop
+ * (`{dialog === 'expense' && <CreateDialog .../>}`) and pushed screens on
+ * mobile — so the real cost of a reset firing mid-edit is "this already-open
+ * form's picker is empty until it is closed and reopened", not permanent. It
+ * is also a narrower window than it looks: `CreateDialog`/`ExpenseDialog` are
+ * RN `Modal`s whose scrim is a full-viewport `position: fixed` element, which
+ * sits over `WebTopBar` and makes the account-switcher pill itself unreachable
+ * by pointer while any of these dialogs is open — the account can still move
+ * from underneath one (a background `loadAccountsFromServer` fallback), just
+ * not by the obvious click path.
+ *
+ * Against that bounded cost, the alternative was worse, not merely
+ * un-fixed: without a reset, `loadTags()`/`loadProjects()` still run (both
+ * are already keyed on `[currentAccountId]` in every long-lived screen that
+ * reads them), but on web `tagRepo.getAllTags`/`projectRepo.getAllProjects`
+ * resolve near-instantly to `[]` (SQLite is an in-memory no-op mock there —
+ * see `db/client.web.ts`), so the *actual* prior sequence was: the previous
+ * account's rows, rendered in a pane whose whole purpose is managing the
+ * CURRENT account's rows, until that promise resolves — then empty until the
+ * fire-and-forget `api.getTags()`/equivalent server call completes a real
+ * network round trip. Resetting here removes the "wrong account's rows on
+ * screen" phase entirely and replaces it with an immediate, honest "empty,
+ * loading" state — the corrected read of what this decision was trading away.
+ *
+ * **`chatStore` (ABA-513).** A `ChatConversation` carries an `accountId`, so
+ * it belongs here for the same reason as the four above it: without this,
+ * switching accounts left the previous account's conversation list, messages
+ * and `currentConversationId` on screen, and a composer that would still post
+ * into the account just switched away from. Unlike `tagStore`/`projectStore`,
+ * `chatStore.reset()` is ALSO called explicitly from `logoutAction` — a
+ * conversation is sensitive enough (it can contain another person's name,
+ * amounts, anything the user typed) that sign-out teardown should not depend
+ * on the side effect of `accountStore.reset()` nulling `currentAccountId` and
+ * this subscription happening to fire as a result. That mirrors
+ * `priceHistoryStore`/`merchantRulesStore`, which are reset in both places
+ * too, not `tagStore`/`projectStore`, which rely on the subscription alone.
+ */
+function clearAccountScopedCaches() {
+  usePriceHistoryStore.getState().reset();
+  useMerchantRulesStore.getState().reset();
+  useTagStore.getState().reset();
+  useProjectStore.getState().reset();
+  useChatStore.getState().reset();
 }
 
 async function getCurrentUserId(): Promise<string | null> {
@@ -276,11 +349,48 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         await secureStorage.setItem('currentAccountId', resolvedId);
       }
     } catch (error) {
+      // A failed fetch is NOT the same answer as "this user has no accounts
+      // and no selection", and the difference is not cosmetic. With
+      // `currentAccountId` left null, `api.setAccountIdGetter` omits the
+      // `X-Account-Id` header, and the API's `AccountContextGuard` then falls
+      // back to the user's DEFAULT account — so one failed `GET /accounts`
+      // silently serves a different account's data (an empty dashboard for a
+      // user whose selected account is full of transactions) while the
+      // persisted selection still says otherwise, with nothing on screen
+      // saying anything went wrong.
+      //
+      // The selection is local, persisted state; only the *list* failed. Put
+      // it back so every later request stays addressed to the account the user
+      // actually chose. Fills a null only — a live in-memory selection still
+      // wins, exactly as on the success path above.
+      if (!get().currentAccountId) {
+        const storedId = await secureStorage.getItem('currentAccountId');
+        if (storedId) {
+          set({ currentAccountId: storedId });
+        }
+      }
+
       set({
         error: error instanceof Error ? error.message : 'Failed to load accounts',
         isLoading: false,
       });
     }
+  },
+
+  ensureAccountsLoaded: async () => {
+    // Re-fetch only when the list is missing entirely.
+    //
+    // On web the account list lives in memory only (`db/client.web.ts` is an
+    // in-memory mock), so it is rebuilt from `GET /accounts` on every page
+    // load — and that request is made exactly once. If it fails, the switcher
+    // is empty for the rest of the session with nothing that retries it, and
+    // the user has no route back to their accounts from the UI at all. The
+    // switcher calls this as it opens, so opening the empty menu IS the retry.
+    //
+    // Native normally has rows from SQLite by this point, so this is a no-op
+    // there.
+    if (get().accounts.length > 0 || get().isLoading) return;
+    await get().loadAccountsFromServer();
   },
 
   createAccount: async (dto) => {
@@ -547,3 +657,30 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
 
 // Wire up account context for API client (avoids circular require)
 api.setAccountIdGetter(() => useAccountStore.getState().currentAccountId);
+
+// The account-scoped teardown is attached to the VALUE, not to the actions
+// that assign it, because the assigning actions cannot be enumerated
+// reliably: `currentAccountId` is written from eight places in this file, and
+// a careful pass looking for exactly this found three of them. The two that
+// were missed are the two that matter most — `loadAccounts` and
+// `loadAccountsFromServer` both silently fall back to `localAccounts[0]` when
+// the persisted selection is no longer in the list the server returned, which
+// is precisely the moment the user is moved to a different account without
+// asking. A `clearAccountScopedCaches()` call per caller would be one more
+// thing the next writer of this field has to know about; a subscription is
+// one thing that already knows.
+//
+// Fires synchronously inside `set()`, so the caches are empty before any
+// `[currentAccountId]` effect runs and a switch cannot paint the previous
+// account's data while the refetch is in flight.
+//
+// Skips null -> account: nothing was addressed under a real account before, so
+// there is nothing belonging to one to throw away (sign-out has its own
+// teardown block in `logoutAction`). Skips an unchanged value: re-selecting
+// the account you are already on fires no `[currentAccountId]` effect, so a
+// clear there would leave screens empty rather than stale.
+useAccountStore.subscribe((state, prev) => {
+  if (prev.currentAccountId === null) return;
+  if (state.currentAccountId === prev.currentAccountId) return;
+  clearAccountScopedCaches();
+});

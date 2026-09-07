@@ -52,11 +52,25 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
     }
   },
 
+  // Warns AND rethrows, matching every sibling write action below. It was the
+  // one action here that did neither, so a failed backfill produced no log and
+  // no rejection the screen could act on - and `products.tsx` swallowed it under
+  // a comment that said it had been warned in the store. Both halves of that
+  // are fixed: the store logs, the caller still learns it failed.
+  //
+  // The two reloads cannot land in this catch - each swallows and warns on its
+  // own - so what it reports is precisely "the backfill request failed", which
+  // is what the siblings' catches report too.
   backfillWithAi: async () => {
-    const result = await api.backfillProductNames();
-    await get().loadPriceHistory();
-    await get().loadProducts();
-    return result;
+    try {
+      const result = await api.backfillProductNames();
+      await get().loadPriceHistory();
+      await get().loadProducts();
+      return result;
+    } catch (e) {
+      console.warn('[priceHistoryStore] backfillWithAi failed', e);
+      throw e;
+    }
   },
 
   upsertAlias: async (rawName, canonicalName) => {

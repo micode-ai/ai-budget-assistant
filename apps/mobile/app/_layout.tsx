@@ -13,7 +13,10 @@ import { AiUsageBadge } from '@/components/AiUsageBadge';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { WhatsNewSpotlight } from '@/components/whatsNew/WhatsNewSpotlight';
 import { UpgradeGate } from '@/components/UpgradeGate';
+import { AlertDialogHost } from '@/components/AlertDialogHost';
 import { WebShell } from '@/components/WebShell';
+import { useIsDesktopWeb } from '@/components/webLayout.constants';
+import { isShellHostedSettingsRoute } from '@/features/settings/settingsRegistry';
 import { useOrientationLock } from '@/hooks/useOrientationLock';
 import { useAppBootstrap } from '@/hooks/useAppBootstrap';
 import { useColdStartGate } from '@/hooks/useColdStartGate';
@@ -57,18 +60,43 @@ function RootNavigator() {
   useGenericDeepLink(isInitializing, isAuthenticated);
   useTelemetryScreenViews(coldStartGateReady);
 
+  // Only changes on a window resize, never on navigation — safe to read here
+  // even though this component renders every <Stack.Screen> in the app.
+  const isDesktopWeb = useIsDesktopWeb();
+
   if (isInitializing || !fontsLoaded) {
     return null;
   }
 
+  // On desktop web the shell already draws an orange app bar carrying the
+  // brand and the navigation, so a secondary screen's own header stacked
+  // under it read as two app bars rather than as "you are one level down".
+  // Here it becomes a slim page bar on the surface colour instead — same
+  // back arrow, same title, but visibly subordinate to the chrome above it.
+  // Native and narrow web keep the orange header, which is the only bar there.
   const headerStyle = {
-    backgroundColor: theme.colors.primary,
+    backgroundColor: isDesktopWeb ? theme.colors.surface : theme.colors.primary,
   };
-  const headerTintColor = theme.colors.textInverse;
+  const headerTintColor = isDesktopWeb ? theme.colors.textPrimary : theme.colors.textInverse;
   const headerTitleStyle = {
     fontFamily: theme.fonts.bold,
-    fontSize: 18,
+    fontSize: isDesktopWeb ? 16 : 18,
   };
+
+  // A settings screen the desktop shell hosts already has the shell's left
+  // pane beside it saying where you are and what else there is, so its stack
+  // header is redundant — and its back arrow is a false promise, leaving
+  // settings entirely instead of returning to that pane list. Same move as
+  // `app/(tabs)/_layout.tsx`'s `headerShown: !isDesktopWeb`, where `WebTopBar`
+  // plays the shell's role.
+  //
+  // Every settings route destined to become a pane calls this, whether or not
+  // it is one yet: the registry answers, so a later wave that flips one entry
+  // from `link` to `pane` needs no edit here, and a route still rendered as a
+  // full page keeps its header rather than stranding the user. Below
+  // `DESKTOP_MIN_WIDTH` and on native nothing changes.
+  const settingsHeaderShown = (routeName: string) =>
+    !(isDesktopWeb && isShellHostedSettingsRoute(routeName));
 
   return (
     <>
@@ -79,7 +107,10 @@ function RootNavigator() {
             headerStyle,
             headerTintColor,
             headerTitleStyle,
-            headerTitleAlign: 'center',
+            // Centred on a phone; left-aligned on desktop, where a centred
+            // title in a full-window bar floats far from the back arrow it
+            // belongs to.
+            headerTitleAlign: isDesktopWeb ? 'left' : 'center',
             contentStyle: { backgroundColor: theme.colors.background },
           }}
         >
@@ -157,7 +188,7 @@ function RootNavigator() {
         <Stack.Screen
           name="account/list"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('account/list'),
             title: t('nav.accounts'),
           }}
         />
@@ -321,63 +352,78 @@ function RootNavigator() {
         <Stack.Screen
           name="settings/index"
           options={{
-            headerShown: true,
+            // `/settings` IS the shell on desktop — the same left pane, just
+            // with nothing selected — so its header is redundant for the same
+            // reason a pane's is, and keeping it would make the first click
+            // into a pane shift the whole page by the header's height.
+            //
+            // It is left no worse labelled than the six panes already are:
+            // there too the left pane is the only thing saying where you are,
+            // and here it says it by listing settings with nothing selected
+            // while the right pane shows who you are signed in as. (The top
+            // bar does NOT name it — `sectionTitle` answers for `/settings`,
+            // but nothing has rendered that answer since ABA-499.)
+            //
+            // Not `settingsHeaderShown`: the registry answers "does the shell
+            // host this route in its right pane", and this route is the shell
+            // rather than something inside it.
+            headerShown: !isDesktopWeb,
             title: t('nav.settings'),
           }}
         />
         <Stack.Screen
           name="settings/profile"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/profile'),
             title: t('settingsNav.profile'),
           }}
         />
         <Stack.Screen
           name="settings/appearance"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/appearance'),
             title: t('settingsNav.appearance'),
           }}
         />
         <Stack.Screen
           name="settings/ai"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/ai'),
             title: t('settingsNav.ai'),
           }}
         />
         <Stack.Screen
           name="settings/widgets"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/widgets'),
             title: t('settingsNav.widgets'),
           }}
         />
         <Stack.Screen
           name="settings/notifications"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/notifications'),
             title: t('settingsNav.notifications'),
           }}
         />
         <Stack.Screen
           name="settings/security"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/security'),
             title: t('settingsNav.security'),
           }}
         />
         <Stack.Screen
           name="settings/data"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/data'),
             title: t('settingsNav.data'),
           }}
         />
         <Stack.Screen
           name="settings/about"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/about'),
             title: t('settingsNav.about'),
           }}
         />
@@ -391,7 +437,7 @@ function RootNavigator() {
         <Stack.Screen
           name="settings/bots"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/bots'),
             title: t('settings.bots.title'),
           }}
         />
@@ -447,21 +493,21 @@ function RootNavigator() {
         <Stack.Screen
           name="settings/categories"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/categories'),
             title: t('settingsNav.categories'),
           }}
         />
         <Stack.Screen
           name="settings/merchants"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/merchants'),
             title: t('settingsNav.merchants'),
           }}
         />
         <Stack.Screen
           name="settings/products"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('settings/products'),
             title: t('settingsNav.products'),
           }}
         />
@@ -483,7 +529,7 @@ function RootNavigator() {
           name="settings/change-email"
           options={{
             headerShown: true,
-            title: t('changeEmail.title'),
+            title: t('settings.changeEmail.title'),
           }}
         />
         <Stack.Screen
@@ -571,7 +617,7 @@ function RootNavigator() {
         <Stack.Screen
           name="projects/index"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('/projects'),
             title: t('projects.title'),
           }}
         />
@@ -593,7 +639,7 @@ function RootNavigator() {
         <Stack.Screen
           name="tags/manage"
           options={{
-            headerShown: true,
+            headerShown: settingsHeaderShown('tags/manage'),
             title: t('tags.title'),
           }}
         />
@@ -769,6 +815,7 @@ function RootNavigator() {
       <UpdatePrompt />
       <WhatsNewSpotlight gateOpen={coldStartGateReady} />
       <UpgradeGate />
+      <AlertDialogHost />
       <StatusBar style={theme.isDark ? 'light' : 'dark'} />
     </>
   );

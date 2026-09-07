@@ -47,6 +47,21 @@ export function useExpenseMultiSelect(
     setSelectedIds(new Set(expenses.map((e) => e.id)));
   };
 
+  /**
+   * Additive (desktop Task 6): replaces the selection with exactly the given
+   * ids. Deliberately NOT `selectAll` — `selectAll` reads this hook's own
+   * `expenses` list, which after the desktop facet rail (Task 4) is a
+   * SUPERSET of whatever the rail currently leaves visible. Calling it from
+   * a facet-filtered table would select rows the user cannot see and hand
+   * them to a bulk delete. The desktop table calls this instead, with
+   * exactly the visible, selectable ids it already knows about (a header
+   * "select all" click, or a shift-click range) — mobile never calls this,
+   * and `selectAll` is untouched for it.
+   */
+  const selectIds = (ids: string[]) => {
+    setSelectedIds(new Set(ids));
+  };
+
   const handleBulkSetCategory = async (categoryId: string) => {
     if (selectedIds.size === 0) return;
     setShowBulkCategoryPicker(false);
@@ -110,6 +125,7 @@ export function useExpenseMultiSelect(
     exitMultiSelect,
     toggleSelection,
     selectAll,
+    selectIds,
     handleBulkSetCategory,
     handleBulkAddTags,
     handleBulkDelete,

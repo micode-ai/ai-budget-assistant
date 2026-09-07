@@ -78,11 +78,22 @@ Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment 
 
 > L'historique chargé est enregistré localement pour un accès hors ligne après le premier chargement.
 
+### Gérer une conversation
+
+Chaque conversation de la liste a son propre menu **⋯**. Dans le navigateur, il apparaît quand vous survolez une ligne (ou quand c'est celle que vous avez ouverte) ; sur le téléphone, il est toujours visible, et un appui long sur la ligne ouvre le même menu.
+
+- **Renommer** donne à la conversation un nom de votre choix. Tant que vous ne l'avez pas fait, elle porte le titre du premier message que vous y avez tapé, ce qui est rarement le nom que vous auriez choisi. Renommer ne déplace pas la conversation dans la liste.
+- **Épingler** garde une conversation en haut de la liste, au-dessus d'une ligne de séparation, peu importe depuis quand vous ne l'avez pas utilisée. Épingler ne concerne **que vous** — cela change l'ordre que vous voyez, celui de personne d'autre, et vous pouvez épingler une conversation partagée démarrée par quelqu'un d'autre. Appuyez sur **Désépingler** pour la relâcher.
+- **Supprimer** efface définitivement la conversation et ses messages. Il n'y a pas d'annulation possible. Si la conversation est partagée, la confirmation le dit clairement, car la supprimer la retire pour tous les membres du compte, pas seulement pour vous.
+
+Vous ne pouvez renommer et supprimer que les conversations que vous avez démarrées. Sur une conversation partagée démarrée par quelqu'un d'autre, le menu propose seulement **Épingler** — la seule option qui ait un sens ici, puisque l'ordre de votre propre liste ne regarde que vous.
+
 ## Conversations partagees
 
 Si vous partagez un compte avec d'autres membres, vous pouvez transformer une conversation en un **chat de groupe partage** ou tout le monde discute avec l'IA ensemble.
 
-- **Activer ou desactiver le partage :** la personne qui a demarre une conversation voit un interrupteur **Partagé / Privé** en haut du chat. Appuyez dessus pour rendre cette conversation partagee (visible par tous les membres) ou de nouveau privee. Tout membre peut partager une conversation qu'il a creee — pas seulement le proprietaire du compte. Vous ne pouvez pas modifier le partage d'une conversation demarree par quelqu'un d'autre (vous y verrez une etiquette "Partagé" en lecture seule). L'interrupteur n'apparait que lorsque le compte compte plus d'un membre.
+- **Activer ou désactiver le partage :** la personne qui a démarré une conversation voit le choix en haut du chat. Dans le navigateur, ce sont deux boutons, **Privé** et **Partagé**, celui qui est actif étant rempli de couleur — vous voyez ainsi que l'autre existe aussi, et vous pouvez appuyer dessus. Sur le téléphone, la même pastille porte une petite flèche d'échange qui montre qu'elle peut être basculée. Tout membre peut partager une conversation qu'il a créée — pas seulement le propriétaire du compte. Vous ne pouvez pas modifier le partage d'une conversation démarrée par quelqu'un d'autre (vous y verrez une étiquette "Partagé" en lecture seule). Le choix n'apparaît que lorsque le compte compte plus d'un membre.
+- **Décider avant de commencer :** le choix fonctionne aussi sur une conversation vide. Choisissez **Partagé** avant de taper quoi que ce soit, et la conversation est partagée dès son premier message — personne ne se retrouve à lire la première moitié d'un fil dont il n'a jamais entendu parler.
 - **Tout le monde voit la conversation :** dans une conversation partagee, les messages des autres membres apparaissent avec leur nom, et les nouveaux messages s'affichent automatiquement tant que vous avez le chat ouvert.
 - **S'adresser a une personne plutot qu'a l'IA :** tapez **@** et choisissez un membre pour le mentionner. Lorsque vous mentionnez un membre, l'IA reste silencieuse — le message est destine a cette personne, pas a l'assistant. Si vous ne mentionnez personne, l'IA repond comme d'habitude.
 - **Notifications :** si vous mentionnez un membre qui ne consulte pas le chat a ce moment-la, il recoit une notification push pour ne pas la manquer. Cela respecte votre parametre de notification "Activite partagee".
