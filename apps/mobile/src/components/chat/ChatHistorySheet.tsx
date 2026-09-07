@@ -81,6 +81,23 @@ export function ChatHistorySheet({
   const [menuRow, setMenuRow] = useState<ChatConversation | null>(null);
   const closeMenu = () => setMenuRow(null);
 
+  // Android hardware back dismisses the TOPMOST layer, not the whole sheet
+  // outright — the menu is a layer. Branching here (rather than resetting
+  // `menuRow` and closing together) is what makes this the one remaining
+  // dismissal path consistent with every touch path: the scrim already
+  // closes only the menu while it's open, never the sheet behind it. Do
+  // not "simplify" this back into a bare `onClose` — that regresses the
+  // sheet reopening with a stale menu already showing (a real Task 5 fix,
+  // ABA-514 round 1: `menuRow` used to survive a back press because this
+  // was the one path that bypassed the menu's own swallowing overlay).
+  const handleHardwareBack = () => {
+    if (menuRow) {
+      closeMenu();
+    } else {
+      onClose();
+    }
+  };
+
   const reportActionFailure = () => showAlert(t('common.error'), t('errors.chatError'));
 
   const confirmDelete = (row: ChatConversation) => {
@@ -193,10 +210,9 @@ export function ChatHistorySheet({
       visible={visible}
       animationType="slide"
       transparent
-      // Unchanged: the sheet's own `onRequestClose` still handles the
-      // Android back button regardless of the menu's open state (decision
-      // 2) — it is not given a second, menu-aware behaviour here.
-      onRequestClose={onClose}
+      // Menu-aware, not a bare `onClose` — see `handleHardwareBack`'s own
+      // comment above for why the branch exists.
+      onRequestClose={handleHardwareBack}
     >
       <Pressable style={styles.modalOverlay} onPress={onClose}>
         {/* The system navigation bar overlays this window, so the bottom padding
