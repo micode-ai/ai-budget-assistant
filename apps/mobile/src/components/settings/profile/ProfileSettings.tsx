@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Modal,
   FlatList,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
@@ -17,6 +16,7 @@ import { api } from '@/services/api';
 import { SettingsScreenKeyboardScroll } from '../SettingsScreenKeyboardScroll';
 import { useSettingsPane } from '../SettingsPaneContext';
 import { ChangeEmailDialog } from './ChangeEmailDialog';
+import { SheetDialog } from '@/components/SheetDialog';
 import type { Currency, SettleMethod } from '@budget/shared-types';
 import { SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import {
@@ -79,6 +79,13 @@ const TIMEZONES: string[] = [
 ];
 
 /**
+ * Stable accessible-name id for the timezone sheet's title, wired to the
+ * desktop dialog's `aria-labelledby`. A fixed id is safe for the same reason
+ * `ExpenseDialog.tsx`'s is: only one instance of this sheet is ever mounted.
+ */
+const TIMEZONE_SHEET_TITLE_ID = 'timezone-sheet-title';
+
+/**
  * The profile settings body: name, email, timezone, display currency, the
  * payment handles a receipt-split guest link pays to, and a row through to the
  * subscription plan.
@@ -93,8 +100,18 @@ const TIMEZONES: string[] = [
  * them (the payment handles) above a Save button that would otherwise need two
  * taps while the keyboard is open.
  *
- * The timezone picker `Modal` stays a sibling of the scroller, exactly where it
- * was; a `Modal` renders as an overlay regardless of where in the tree it sits.
+ * The timezone picker is a `SheetDialog` now, a sibling of the scroller exactly
+ * where its old raw `Modal` sat — a `Modal` renders as an overlay regardless of
+ * where in the tree it sits, and so does `SheetDialog`'s. It fixes a real defect
+ * along the way: the old `Modal` carried no `onRequestClose`, so Esc on web and
+ * the Android hardware back button both did nothing while it was open.
+ * `SheetDialog`'s header + search + list keep the exact box they always had
+ * (`sheetStyle` restores the old corner radius and the old flat bottom padding
+ * — via `insetFloor`, so a device with a gesture nav bar now clears it instead
+ * of sitting under it, the one documented pixel change, same shape as the
+ * `SheetDialog` wrapper's own FinancialHealthWidget migration) and
+ * `desktopScroll={false}`, since the `FlatList` is already the sheet's one
+ * scroller.
  *
  * ## Saving reports completion by alerting, and still does
  *
@@ -412,49 +429,55 @@ export function ProfileSettings() {
         </View>
       </SettingsScreenKeyboardScroll>
 
-      {/* Timezone Picker Modal */}
-      <Modal visible={timezonePicker} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{t('settings.timezone')}</Text>
-              <TouchableOpacity onPress={() => setTimezonePicker(false)}>
-                <Ionicons name="close" size={24} color={theme.colors.textSecondary} />
-              </TouchableOpacity>
-            </View>
-            <TextInput
-              style={styles.modalSearch}
-              placeholder={t('settings.timezoneSearch')}
-              placeholderTextColor={theme.colors.textTertiary}
-              value={timezoneSearch}
-              onChangeText={setTimezoneSearch}
-              autoFocus
-            />
-            <FlatList
-              data={filteredTimezones}
-              keyExtractor={(item) => item}
-              keyboardShouldPersistTaps="handled"
-              style={styles.modalList}
-              renderItem={({ item }) => {
-                const isSelected = item === (user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone);
-                return (
-                  <TouchableOpacity
-                    style={[styles.modalItem, isSelected && styles.modalItemActive]}
-                    onPress={() => handleTimezoneChange(item)}
-                  >
-                    <Text style={[styles.modalItemText, isSelected && styles.modalItemTextActive]}>
-                      {item.replace(/_/g, ' ')}
-                    </Text>
-                    {isSelected && (
-                      <Ionicons name="checkmark" size={18} color={theme.colors.primary} />
-                    )}
-                  </TouchableOpacity>
-                );
-              }}
-            />
-          </View>
+      {/* Timezone Picker */}
+      <SheetDialog
+        visible={timezonePicker}
+        onClose={() => setTimezonePicker(false)}
+        titleId={TIMEZONE_SHEET_TITLE_ID}
+        keyboardAvoiding
+        padBottom={0}
+        insetFloor={theme.spacing[6]}
+        scrimColor="rgba(0,0,0,0.5)"
+        sheetStyle={styles.timezoneSheetBox}
+        desktopScroll={false}
+      >
+        <View style={styles.modalHeader}>
+          <Text nativeID={TIMEZONE_SHEET_TITLE_ID} style={styles.modalTitle}>{t('settings.timezone')}</Text>
+          <TouchableOpacity onPress={() => setTimezonePicker(false)}>
+            <Ionicons name="close" size={24} color={theme.colors.textSecondary} />
+          </TouchableOpacity>
         </View>
-      </Modal>
+        <TextInput
+          style={styles.modalSearch}
+          placeholder={t('settings.timezoneSearch')}
+          placeholderTextColor={theme.colors.textTertiary}
+          value={timezoneSearch}
+          onChangeText={setTimezoneSearch}
+          autoFocus
+        />
+        <FlatList
+          data={filteredTimezones}
+          keyExtractor={(item) => item}
+          keyboardShouldPersistTaps="handled"
+          style={styles.modalList}
+          renderItem={({ item }) => {
+            const isSelected = item === (user?.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone);
+            return (
+              <TouchableOpacity
+                style={[styles.modalItem, isSelected && styles.modalItemActive]}
+                onPress={() => handleTimezoneChange(item)}
+              >
+                <Text style={[styles.modalItemText, isSelected && styles.modalItemTextActive]}>
+                  {item.replace(/_/g, ' ')}
+                </Text>
+                {isSelected && (
+                  <Ionicons name="checkmark" size={18} color={theme.colors.primary} />
+                )}
+              </TouchableOpacity>
+            );
+          }}
+        />
+      </SheetDialog>
 
       {changingEmail && <ChangeEmailDialog onClose={() => setChangingEmail(false)} />}
     </>
@@ -645,17 +668,20 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.button,
     color: theme.colors.textInverse,
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)' as const,
-    justifyContent: 'flex-end' as const,
-  },
-  modalContent: {
-    backgroundColor: theme.colors.surface,
+  // Deviations from `SheetDialog`'s canonical sheet box, kept so the phone's
+  // pixels do not move: this sheet predates the wrapper with its own bordered
+  // header (below) rather than the wrapper's drag handle, at a tighter corner
+  // radius, and every child brings its own padding — so the sheet itself must
+  // have none. The old flat `paddingBottom: theme.spacing[6]` (which, like
+  // `FinancialHealthWidget`'s, never accounted for the system navigation bar)
+  // is now `insetFloor={theme.spacing[6]}` on the `SheetDialog` itself:
+  // identical with no bar, and taller only enough to clear one where present.
+  timezoneSheetBox: {
     borderTopLeftRadius: theme.borderRadius.lg,
     borderTopRightRadius: theme.borderRadius.lg,
     maxHeight: '70%' as const,
-    paddingBottom: theme.spacing[6],
+    paddingHorizontal: 0,
+    paddingTop: 0,
   },
   modalHeader: {
     flexDirection: 'row' as const,
@@ -680,6 +706,12 @@ const createStyles = (theme: Theme) => ({
   },
   modalList: {
     marginTop: theme.spacing[2],
+    // NOT flex:1 — the sheet is sized by content (`timezoneSheetBox`'s
+    // `maxHeight` only), so flex:1 (flexBasis:0 + grow) would collapse this
+    // list to height 0 on native. flexShrink sizes it to content and still
+    // lets it shrink/scroll within the sheet's cap — same fix, same reason,
+    // as `FinancialHealthWidget`'s `sheetScroll`.
+    flexShrink: 1,
   },
   modalItem: {
     flexDirection: 'row' as const,

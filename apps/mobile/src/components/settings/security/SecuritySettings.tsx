@@ -4,7 +4,6 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
-  Modal,
   ActivityIndicator,
 } from 'react-native';
 import { showAlert } from '@/utils/alert';
@@ -15,6 +14,14 @@ import { useTranslation } from 'react-i18next';
 import { useEncryptionStore } from '@/stores/encryptionStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { SheetDialog } from '@/components/SheetDialog';
+
+/**
+ * Stable accessible-name id for the recovery-key sheet's title, wired to the
+ * desktop dialog's `aria-labelledby`. A fixed id is safe for the same reason
+ * `ExpenseDialog.tsx`'s is: only one instance of this sheet is ever mounted.
+ */
+const RECOVERY_KEY_SHEET_TITLE_ID = 'recovery-key-sheet-title';
 
 /**
  * Security settings: end-to-end encryption setup, unlock, lock and reset.
@@ -32,6 +39,20 @@ import { useTheme, useStyles, type Theme } from '@/theme';
  * `UserEncryptionProfile` has no account column. `currentAccountId` is read
  * here through a live store selector at action time, so it tracks a switch
  * without a remount.
+ *
+ * ## The recovery-key sheet is a `SheetDialog`, and deliberately undismissable
+ *
+ * It shows the e2ee recovery key exactly once, with no way to see it again, so
+ * it passes `dismissable={false}` — no `Esc`/Android-back/Apple-TV-menu close
+ * and no desktop scrim-click close — AND `dismissOnScrimPress={false}`, since
+ * the raw `Modal` this replaces never wired a tap on its dim backdrop to
+ * anything either (a bare `View`, not a `TouchableOpacity`). Together the two
+ * leave exactly one way out, on every surface: the "I've saved it" button,
+ * same as it always was. `sheetStyle` restores the old corner radius and the
+ * old flat bottom padding is now `insetFloor` (see `ProfileSettings.tsx`'s
+ * timezone sheet for the identical reasoning) — the one documented pixel
+ * change, and it is a fix, not a regression: a device with a gesture nav bar
+ * now clears it instead of the key sitting partly behind it.
  */
 export function SecuritySettings() {
   const { t } = useTranslation();
@@ -266,49 +287,56 @@ export function SecuritySettings() {
         </View>
       </SettingsScreenKeyboardScroll>
 
-      {/* Recovery Key Modal */}
-      <Modal visible={showRecoveryKey !== null} transparent animationType="slide">
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>{t('encryption.recoveryKey')}</Text>
-            </View>
-            <View style={{ padding: theme.spacing[4], gap: theme.spacing[4] }}>
-              <Text style={styles.fieldDesc}>{t('encryption.recoveryKeyDesc')}</Text>
-              <View style={{
-                backgroundColor: theme.colors.surfaceSecondary,
-                borderRadius: theme.borderRadius.md,
-                padding: theme.spacing[4],
-              }}>
-                <Text style={{
-                  fontFamily: 'monospace',
-                  fontSize: 16,
-                  color: theme.colors.textPrimary,
-                  textAlign: 'center' as const,
-                  letterSpacing: 1,
-                }}>
-                  {showRecoveryKey}
-                </Text>
-              </View>
-              <TouchableOpacity
-                style={[styles.chip, styles.chipActive, { alignSelf: 'center' as const }]}
-                onPress={handleCopyRecoveryKey}
-              >
-                <Ionicons name="copy-outline" size={16} color={theme.colors.primary} />
-                <Text style={[styles.chipText, styles.chipTextActive]}>{t('common.copy')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.primaryButton}
-                onPress={() => setShowRecoveryKey(null)}
-              >
-                <Text style={styles.primaryButtonText}>
-                  {t('encryption.recoveryKeySaved')}
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
+      {/* Recovery Key — deliberately undismissable except by its own button;
+          see the file-level comment above. */}
+      <SheetDialog
+        visible={showRecoveryKey !== null}
+        onClose={() => setShowRecoveryKey(null)}
+        titleId={RECOVERY_KEY_SHEET_TITLE_ID}
+        dismissable={false}
+        dismissOnScrimPress={false}
+        padBottom={0}
+        insetFloor={theme.spacing[6]}
+        scrimColor="rgba(0,0,0,0.5)"
+        sheetStyle={styles.recoveryKeySheetBox}
+      >
+        <View style={styles.modalHeader}>
+          <Text nativeID={RECOVERY_KEY_SHEET_TITLE_ID} style={styles.modalTitle}>{t('encryption.recoveryKey')}</Text>
         </View>
-      </Modal>
+        <View style={{ padding: theme.spacing[4], gap: theme.spacing[4] }}>
+          <Text style={styles.fieldDesc}>{t('encryption.recoveryKeyDesc')}</Text>
+          <View style={{
+            backgroundColor: theme.colors.surfaceSecondary,
+            borderRadius: theme.borderRadius.md,
+            padding: theme.spacing[4],
+          }}>
+            <Text style={{
+              fontFamily: 'monospace',
+              fontSize: 16,
+              color: theme.colors.textPrimary,
+              textAlign: 'center' as const,
+              letterSpacing: 1,
+            }}>
+              {showRecoveryKey}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.chip, styles.chipActive, { alignSelf: 'center' as const }]}
+            onPress={handleCopyRecoveryKey}
+          >
+            <Ionicons name="copy-outline" size={16} color={theme.colors.primary} />
+            <Text style={[styles.chipText, styles.chipTextActive]}>{t('common.copy')}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.primaryButton}
+            onPress={() => setShowRecoveryKey(null)}
+          >
+            <Text style={styles.primaryButtonText}>
+              {t('encryption.recoveryKeySaved')}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </SheetDialog>
     </>
   );
 }
@@ -401,17 +429,19 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.primary,
     fontWeight: '600' as const,
   },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)' as const,
-    justifyContent: 'flex-end' as const,
-  },
-  modalContent: {
-    backgroundColor: theme.colors.surface,
+  // Deviations from `SheetDialog`'s canonical sheet box, kept so the phone's
+  // pixels do not move: this sheet predates the wrapper with its own bordered
+  // header (below) rather than the wrapper's drag handle, at a tighter corner
+  // radius, and its own inner `View` brings its own padding — so the sheet
+  // itself must have none. The old flat `paddingBottom: theme.spacing[6]` is
+  // now `insetFloor={theme.spacing[6]}` on the `SheetDialog` itself; see the
+  // matching note on `ProfileSettings.tsx`'s timezone sheet.
+  recoveryKeySheetBox: {
     borderTopLeftRadius: theme.borderRadius.lg,
     borderTopRightRadius: theme.borderRadius.lg,
     maxHeight: '70%' as const,
-    paddingBottom: theme.spacing[6],
+    paddingHorizontal: 0,
+    paddingTop: 0,
   },
   modalHeader: {
     flexDirection: 'row' as const,
