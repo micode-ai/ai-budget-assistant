@@ -56,6 +56,26 @@ export const CHECKLIST_CELL_MAX_WIDTH = 420;
 // have to agree on, and a hand-copied literal drifting is invisible until a
 // human looks at one width.
 export const SETTINGS_NAV_WIDTH = 280;
+// The chat screen's transcript measure (ABA-513). A percentage of the
+// viewport cannot hold a reading-width band across 1024-1920px, but one
+// absolute cap can: at Montserrat's average advance the 15px markdown body
+// runs about 8.4px/character, so 760px sits at 72-79 characters at every
+// desktop width, against ~180 for an uncapped viewport-width transcript.
+// Deliberately NOT `CONTENT_MAX_WIDTH` (1080, ~125 characters — the "fill the
+// laptop" number for a page of cards, not a reading measure) and NOT computed
+// via `useContentWidth()` (documented as single-column-screen sizing, not a
+// transcript's own column). Lives here, not beside `ChatDesktop.tsx`, for the
+// same reason as every other constant in this file: `chatLayout.ts`'s
+// `chatColumnWidth()` and the screen both have to agree on one number.
+export const CHAT_COLUMN_MAX_WIDTH = 760;
+// The chat conversation rail (ABA-513) — the `SettingsNav`/`FacetRail` idiom
+// applied to a third selector. Persistent at every desktop width (no
+// dropdown-collapse band like `FACET_RAIL_MIN_WIDTH`): the column reaches its
+// 760 cap at exactly 1080px of window, so the rail costs the transcript
+// nothing measurable even at DESKTOP_MIN_WIDTH (1024) — see
+// `chatLayout.ts`'s `chatColumnWidth()` for the arithmetic this constant
+// feeds.
+export const CHAT_RAIL_WIDTH = 280;
 
 /** Pure gate — true only on web at desktop width. Native never qualifies. */
 export function isDesktopWeb(width: number): boolean {
