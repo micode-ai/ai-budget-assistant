@@ -437,9 +437,12 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   // was still on screen after switching accounts — a composer that would post
   // into the wrong account's conversation — and survived sign-out outright,
   // readable by the next person to sign in on that browser — the same class
-  // of finding an earlier fix made for `inflationShieldStore` (commit
-  // 7f39d511, "Fix inflation-shield cache surviving sign-out and leaking
-  // across accounts" — it carries no ABA number of its own to cite here).
+  // of finding ABA-507's `7f39d511` ("Fix inflation-shield cache surviving
+  // sign-out and leaking across accounts") made for `inflationShieldStore`.
+  // That commit's subject carries no ABA prefix, but the issue body names it
+  // explicitly as part of that work — checked via the issue text, not just
+  // the commit subject, after an earlier pass of mine wrongly called the
+  // citation invented.
   //
   // Also stops the module-level poll timer: without this, an interval left
   // running from a shared conversation would keep firing after the state it
