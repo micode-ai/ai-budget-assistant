@@ -132,6 +132,41 @@ app/
 └── _layout.tsx            # Root layout
 ```
 
+### Desktop Web Layer
+
+The mobile app's Expo web build (`app.ai-budget.pl`) renders a desktop layout at
+window widths **>= 1024px** (`DESKTOP_MIN_WIDTH`, alongside `FACET_RAIL_MIN_WIDTH`,
+in `src/components/webLayout.constants.ts`). This is not a second product — it is
+the same screens, the same stores, the same API, laid out for a mouse and a wide
+window instead of a thumb. Below the threshold, and on native, rendering is
+unchanged.
+
+- **The split is component-level and enforced by the bundler, not a route-level
+  branch.** Each screen keeps one thin route file; a sibling `*.web.tsx` decides
+  mobile vs. desktop on width alone, and a `*Mobile.tsx` holds the phone's JSX in
+  exactly one definition, imported by both platform files. Nothing under `src/`
+  may import from `app/`.
+- **`WebShell` / `WebTopBar` / `WebSidebar`** supply the chrome (top-bar
+  navigation, no left column, one page scroll per screen). Below
+  `DESKTOP_MIN_WIDTH`, `WebShell` returns its children untouched — the mechanism
+  that guarantees the phone rendering cannot drift, rather than a promise to keep
+  it in sync by hand.
+- **Screens with a desktop layout today**: the transactions list (a facet-rail
+  filter with counts, day-grouped rows), the dashboard, Settings (a two-pane
+  shell — a left nav plus the selected screen as the right pane), and Chat (a
+  conversation rail plus a width-bounded reading column).
+- **A dialog hosts an existing component through a ref handle; it never
+  reimplements the edit.** A desktop "detail" or "create" dialog calls the same
+  component's `triggerSave()` the mobile route already calls, so an edit cannot
+  behave differently depending on which platform opened it.
+- **Nothing renders a component in this repo's CI** (no `react-test-renderer`),
+  so any rule that is numerically decidable — a breakpoint, a facet count, a
+  day-grouped subtotal — lives in a pure, unit-tested module, and the desktop
+  layer calls that module rather than re-stating the rule inline.
+
+The full design language — including per-wave retrospectives and the defects each
+one caught — is `docs/contracts/desktop-web-design-language.md`.
+
 ### State Management
 
 Zustand stores manage application state:
@@ -818,6 +853,24 @@ model ChatMessage {
   createdAt      DateTime @default(now())
 
   conversation ChatConversation
+}
+
+// Per-viewer pin, not a column on ChatConversation — the conversation list is
+// heterogeneous (it can hold another member's shared conversation), so a
+// column would either deny the pin to a non-creator or turn one member's pin
+// into a shared write nobody else can undo. Composite PK IS the
+// one-pin-per-person-per-conversation uniqueness (no separate unique index).
+model ChatConversationPin {
+  userId         String
+  conversationId String
+  pinnedAt       DateTime @default(now())  // migration 20260907120000_add_chat_conversation_pins
+
+  user         User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation ChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@id([userId, conversationId])
+  @@index([userId])
+  @@map("chat_conversation_pins")
 }
 
 model SyncLog {

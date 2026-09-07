@@ -2565,7 +2565,7 @@ Content-Type: application/json
 
 ### List Chat Conversations
 
-Returns the last 20 conversations for the account. Account-scoped: a conversation is visible when `accountId` matches the `X-Account-Id` header **AND** (`isShared` is true **OR** the conversation was created by the caller).
+Returns the caller's pinned conversations (unbounded — every pinned conversation is included, however old) followed by up to 20 most-recently-updated non-pinned ones; a conversation already returned in the pinned group is not repeated. Both groups are ordered by `updatedAt` descending. Account-scoped: a conversation is visible when `accountId` matches the `X-Account-Id` header **AND** (`isShared` is true **OR** the conversation was created by the caller).
 
 ```http
 GET /ai/chat/conversations
@@ -2580,8 +2580,10 @@ X-Account-Id: <account-uuid>
     "id": "conversation-uuid",
     "title": "Food spending this month",
     "isShared": false,
-    "lastMessageAt": "2026-05-20T14:30:00Z",
-    "createdAt": "2026-05-20T14:00:00Z"
+    "isOwner": true,
+    "isPinned": true,
+    "createdAt": "2026-05-20T14:00:00Z",
+    "updatedAt": "2026-05-20T14:30:00Z"
   }
 ]
 ```
@@ -2671,6 +2673,72 @@ Content-Type: application/json
 {
   "id": "conversation-uuid",
   "isShared": true
+}
+```
+
+---
+
+### Rename Conversation
+
+Renames a conversation. **Creator-only**, checked in the same order as sharing: the conversation is looked up by `{ id, accountId }` first — a foreign account's conversation id returns `404 Not Found`, never `403`, so existence is never disclosed across an account boundary — *then* `conversation.userId !== caller` returns `403 Forbidden`. The write sets `updatedAt` back to the conversation's own current value: Prisma's `@updatedAt` only auto-bumps a field that is *absent* from the update, so without this a rename would move the conversation to the top of both the conversation list and the pinned ordering. No `ViewerBlockGuard`, matching `/shared`.
+
+```http
+PATCH /ai/chat/conversations/:id/title
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "title": "Groceries this week"
+}
+```
+
+`title` is required, non-empty, max 100 characters.
+
+**Response** `200 OK`
+```json
+{
+  "id": "conversation-uuid",
+  "title": "Groceries this week"
+}
+```
+
+---
+
+### Delete Conversation
+
+Hard-deletes a conversation — no soft-delete flag, no undo. Same predicate and order as rename: `404` if the conversation isn't in the caller's account, `403` if the caller isn't its creator. Its messages and every member's pins on it are removed with it (`ChatMessage.conversation` and `ChatConversationPin.conversation` are both `onDelete: Cascade`). Deleting a conversation one of the chat bots (Telegram/WhatsApp/Slack) still has linked in its own per-user state is safe: `chat()` self-heals an unresolvable `conversationId` by silently starting a new conversation. No `ViewerBlockGuard`, matching `/shared`.
+
+```http
+DELETE /ai/chat/conversations/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `204 No Content`
+
+---
+
+### Pin or Unpin Conversation
+
+Pins or unpins a conversation for the **calling user only** — a per-viewer preference, not a property of the conversation itself. Unlike rename, delete and sharing, this is **not creator-gated**: the access check is read visibility — `accountId` matches the header **AND** (`isShared` is true **OR** the conversation was created by the caller) — the same predicate `GET /ai/chat/conversations` uses, rather than `/shared`'s creator-only lookup. This is deliberate: a member who reads a co-owner's shared conversation needs a way to pin it too, and reusing the creator-only lookup here would let a member confirm the existence of — by pinning — a co-member's *private* conversation. Idempotent in both directions: pinning an already-pinned conversation and unpinning one that was never pinned are both no-ops. No `ViewerBlockGuard`.
+
+```http
+PUT /ai/chat/conversations/:id/pin
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "pinned": true
+}
+```
+
+**Response** `200 OK`
+```json
+{
+  "id": "conversation-uuid",
+  "isPinned": true
 }
 ```
 

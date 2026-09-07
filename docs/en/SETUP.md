@@ -630,6 +630,7 @@ All `SHIELD_*` variables are optional overrides of `SHIELD_DEFAULTS` (`apps/api/
 | Variable | Description | Default |
 |----------|-------------|---------|
 | `EXPO_PUBLIC_API_URL` | Backend API URL | required |
+| `EXPO_PUBLIC_BUILD_SHA` | Git commit sha shown on the About screen as `1.26.0+<7-char sha>` instead of the bare version. `web-deploy.yml` sets it to `github.sha` for the web build; a local build normally leaves it unset, and native never sets it | optional |
 
 ### Expo App Configuration
 
