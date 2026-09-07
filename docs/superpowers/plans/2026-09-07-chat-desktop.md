@@ -30,7 +30,7 @@ Copied from the spec's own list where they are binding; every task's requirement
 - **Do not add a dependency**, and do not reach for a virtualised-list or markdown library. The existing `FlatList` and `react-native-markdown-display` are what render this.
 - Nothing under `src/` may import from `app/`. Every colour, spacing and text style from `useTheme()` tokens; `success`/`danger`/`warning`/`onSemantic` are not accent-derived, `textInverse` is.
 - **A pure move must not move the test count.** Diff both directions.
-- The suite stands at **1318 tests across 136 suites**. Record what jest reports; never predict.
+- **Record what jest reports; never predict — and do not expect a number here.** This plan deliberately states no baseline count, because task 1 moves it and every brief extracted afterwards would inherit a stale figure (it did once: task 2's brief said 1318/136 when the tree was already at 1325/137, and its reviewer had to reconcile the two). Read the count off the tree at the moment you start: `cd apps/mobile && npx jest`. What matters is the RULE, not the figure — **a pure move must not change it, and a task that adds tests must account for exactly the ones it added.**
 
 ---
 
