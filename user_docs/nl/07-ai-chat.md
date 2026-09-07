@@ -78,11 +78,22 @@ Je kunt eerdere AI-gesprekken op elk moment doorbladeren en heropenen:
 
 > Geladen gespreksgeschiedenis wordt na het eerste laden ook lokaal opgeslagen voor offline toegang.
 
+### Een gesprek beheren
+
+Elk gesprek in de lijst heeft zijn eigen **⋯**-menu. In de browser verschijnt het wanneer je met de muis over een rij zweeft (of wanneer het de rij is die je open hebt staan); op de telefoon is het altijd zichtbaar, en een lange tik op de rij opent hetzelfde menu.
+
+- **Hernoemen** geeft het gesprek een naam van jezelf. Tot je dat doet, draagt het de titel van het eerste dat je erin typte, wat zelden is hoe je het zelf zou hebben genoemd. Hernoemen verplaatst het gesprek niet in de lijst.
+- **Vastzetten** houdt een gesprek bovenaan de lijst, boven een scheidingslijn, hoe lang geleden je het ook voor het laatst gebruikte. Vastzetten is **alleen voor jou** — het verandert alleen de volgorde die jij ziet en die van niemand anders, en je kunt zelfs een gedeeld gesprek vastzetten dat iemand anders is begonnen. Tik op **Losmaken** om het weer los te maken.
+- **Verwijderen** verwijdert het gesprek en zijn berichten definitief. Er is geen ongedaan maken. Als het gesprek gedeeld is, zegt de bevestiging dat er duidelijk bij, want verwijderen haalt het weg voor alle leden van het account, niet alleen voor jou.
+
+Je kunt alleen gesprekken die je zelf bent begonnen hernoemen en verwijderen. Bij een gedeeld gesprek dat iemand anders is begonnen biedt het menu alleen **Vastzetten** — het enige dat daar zinvol is, want de volgorde van je eigen lijst is jouw zaak.
+
 ## Gedeelde gesprekken
 
 Als je een account met andere leden deelt, kun je een gesprek omzetten in een **gedeelde groepschat** waarin iedereen samen met de AI praat.
 
-- **Delen aan- of uitzetten:** de persoon die een gesprek is begonnen ziet bovenaan de chat een schakelaar **Gedeeld / Privé**. Tik erop om dat gesprek gedeeld te maken (zichtbaar voor alle leden) of weer privé. Elk lid kan een gesprek delen dat het zelf heeft aangemaakt — niet alleen de accounteigenaar. Je kunt het delen van een gesprek dat iemand anders is begonnen niet wijzigen (daar zie je een alleen-lezen label "Gedeeld"). De schakelaar verschijnt alleen wanneer het account meer dan één lid heeft.
+- **Delen aan- of uitzetten:** de persoon die een gesprek is begonnen ziet de keuze bovenaan de chat. In de browser zijn het twee knoppen, **Privé** en **Gedeeld**, waarbij de actieve knop gevuld met kleur is weergegeven — zo zie je dat de andere ook bestaat, en kun je erop tikken. Op de telefoon draagt diezelfde knop een klein wisselpijltje dat laat zien dat je kunt omschakelen. Elk lid kan een gesprek delen dat het zelf heeft aangemaakt — niet alleen de accounteigenaar. Je kunt het delen van een gesprek dat iemand anders is begonnen niet wijzigen (daar zie je een alleen-lezen label "Gedeeld"). De keuze verschijnt alleen wanneer het account meer dan één lid heeft.
+- **Van tevoren beslissen:** de keuze werkt ook op een leeg gesprek. Kies **Gedeeld** voordat je iets typt, en het gesprek is al vanaf het eerste bericht gedeeld — zo hoeft niemand de eerste helft van een gesprek te lezen waarvan hij nooit iets wist.
 - **Iedereen ziet het gesprek:** in een gedeeld gesprek verschijnen berichten van andere leden met hun naam, en nieuwe berichten verschijnen automatisch zolang je de chat open hebt.
 - **Een persoon aanspreken in plaats van de AI:** typ **@** en kies een lid om het te vermelden. Wanneer je een lid vermeldt, blijft de AI stil — het bericht is bedoeld voor die persoon, niet voor de assistent. Als je niemand vermeldt, antwoordt de AI zoals gewoonlijk.
 - **Meldingen:** als je een lid vermeldt dat de chat op dat moment niet bekijkt, krijgt deze een pushmelding zodat hij het niet mist. Dit respecteert je meldingsinstelling "Gedeelde activiteit".

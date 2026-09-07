@@ -69,9 +69,11 @@ En una ventana ancha el chat con la IA gana una **lista de tus conversaciones an
 
 - Elegir una conversación de la lista la abre en el sitio, y la que estás leyendo queda resaltada.
 - **Nueva conversación** está arriba de esa lista, así que puedes empezar una sin perder el punto en el que estabas leyendo.
-- Una conversación compartida con las demás personas de tu cuenta lleva un pequeño icono de grupo en la lista.
+- Una conversación compartida con las demás personas de tu cuenta dice **Compartido** en su segunda línea, junto a la fecha, en lugar de llevar solo un icono.
 - El cuadro donde escribes se queda abajo, con el micrófono y el botón de enviar junto al texto y no en bordes opuestos de la pantalla.
 - Una conversación recién empezada muestra lo que el asistente sabe hacer de verdad — añadir un gasto, consultar un presupuesto, poner algo en la lista de la compra — en lugar de una pantalla vacía.
+- Pasa el cursor sobre cualquier fila para ver su menú **⋯**, donde puedes renombrar, fijar o eliminar la conversación. Las conversaciones fijadas quedan arriba de la lista, encima de una línea divisoria. Hay más sobre las tres en la guía del chat con la IA.
+- La opción **Privado / Compartido** en la parte superior de la conversación muestra las dos opciones una junto a la otra, así la que no estás usando queda visible en vez de oculta.
 
 En una ventana más estrecha, y en el teléfono, la lista de conversaciones sigue detrás del botón **Historial**, como antes.
 

@@ -69,9 +69,16 @@ On a wide window the AI chat gains a **list of your past conversations down the 
 
 - Picking a conversation from the list opens it in place, and the one you are reading stays highlighted.
 - **New conversation** sits at the top of that list, so you can start one without losing your place in what you were reading.
-- A conversation shared with the other people on your account carries a small group icon in the list.
+- A conversation shared with the other people on your account says **Shared** on
+  its second line, beside the date, rather than only carrying an icon.
 - The box you type in stays at the bottom, with its microphone and send button next to the text rather than at opposite edges of the screen.
 - A brand-new conversation shows what the assistant can actually do — add an expense, check a budget, put something on the shopping list — instead of an empty screen.
+- Point at any row for its **⋯** menu, where you can rename, pin or delete the
+  conversation. Pinned conversations sit at the top of the list above a
+  dividing line. There is more on all three in the AI chat guide.
+- The **Private / Shared** choice at the top of the conversation shows both
+  options side by side, so the one you are not using is visible rather than
+  hidden.
 
 On a narrower window, and on the phone, the conversation list stays behind the **History** button as before.
 

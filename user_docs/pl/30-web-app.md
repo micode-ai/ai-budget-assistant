@@ -69,9 +69,11 @@ W szerokim oknie czat AI zyskuje **listę wcześniejszych rozmów po lewej stron
 
 - Wybranie rozmowy z listy otwiera ją na miejscu, a ta czytana pozostaje podświetlona.
 - **Nowa rozmowa** znajduje się na górze tej listy, więc możesz ją rozpocząć bez gubienia miejsca w tym, co czytasz.
-- Rozmowa udostępniona pozostałym osobom na koncie ma na liście małą ikonę grupy.
+- Rozmowa udostępniona pozostałym osobom na koncie pokazuje w drugim wierszu, obok daty, napis **Wspólny**, zamiast tylko ikony.
 - Pole do pisania zostaje na dole, a mikrofon i przycisk wysyłania są obok tekstu, nie na przeciwnych krawędziach ekranu.
 - Nowa rozmowa pokazuje, co asystent faktycznie potrafi — dodać wydatek, sprawdzić budżet, wpisać coś na listę zakupów — zamiast pustego ekranu.
+- Najedź na dowolny wiersz, aby zobaczyć jego menu **⋯**, z którego możesz zmienić nazwę rozmowy, przypiąć ją lub usunąć. Przypięte rozmowy stoją na górze listy, nad linią oddzielającą. Więcej o tych trzech opcjach znajdziesz w przewodniku po czacie AI.
+- Wybór **Prywatny / Wspólny** u góry rozmowy pokazuje obie opcje obok siebie, więc ta, z której akurat nie korzystasz, jest widoczna, a nie ukryta.
 
 W węższym oknie i na telefonie lista rozmów pozostaje pod przyciskiem **Historia**, tak jak dotychczas.
 

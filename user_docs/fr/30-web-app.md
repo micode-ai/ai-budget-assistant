@@ -69,9 +69,11 @@ Dans une fenêtre large, le chat avec l'IA gagne une **liste de vos conversation
 
 - Choisir une conversation dans la liste l'ouvre sur place, et celle que vous lisez reste mise en évidence.
 - **Nouvelle conversation** se trouve en haut de cette liste : vous pouvez donc en commencer une sans perdre votre place dans ce que vous lisiez.
-- Une conversation partagée avec les autres personnes de votre compte porte une petite icône de groupe dans la liste.
+- Une conversation partagée avec les autres personnes de votre compte affiche **Partagé** sur sa deuxième ligne, à côté de la date, plutôt qu'une simple icône.
 - Le champ de saisie reste en bas, avec son microphone et son bouton d'envoi à côté du texte plutôt qu'aux deux bords opposés de l'écran.
 - Une conversation toute neuve montre ce que l'assistant sait réellement faire — ajouter une dépense, consulter un budget, mettre quelque chose sur la liste de courses — au lieu d'un écran vide.
+- Survolez n'importe quelle ligne pour afficher son menu **⋯**, où vous pouvez renommer, épingler ou supprimer la conversation. Les conversations épinglées se trouvent en haut de la liste, au-dessus d'une ligne de séparation. Vous trouverez plus de détails sur ces trois options dans le guide du chat IA.
+- Le choix **Privé / Partagé** en haut de la conversation affiche les deux options côte à côte, afin que celle que vous n'utilisez pas reste visible plutôt que cachée.
 
 Dans une fenêtre plus étroite, et sur le téléphone, la liste des conversations reste derrière le bouton **Historique**, comme avant.
 

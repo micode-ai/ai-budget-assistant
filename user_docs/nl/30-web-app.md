@@ -69,9 +69,11 @@ In een breed venster krijgt de AI-chat een **lijst met je eerdere gesprekken aan
 
 - Een gesprek uit de lijst kiezen opent het ter plekke, en het gesprek dat je leest blijft gemarkeerd.
 - **Nieuw gesprek** staat bovenaan die lijst, dus je kunt er een beginnen zonder je plek kwijt te raken in wat je aan het lezen was.
-- Een gesprek dat je met de andere mensen op je rekening deelt, heeft een klein groepspictogram in de lijst.
+- Een gesprek dat je met de andere mensen op je rekening deelt, toont **Gedeeld** op de tweede regel, naast de datum, in plaats van alleen een pictogram.
 - Het invoerveld blijft onderaan, met de microfoon en de verzendknop naast de tekst in plaats van aan tegenoverliggende schermranden.
 - Een nieuw gesprek laat zien wat de assistent echt kan — een uitgave toevoegen, een budget bekijken, iets op de boodschappenlijst zetten — in plaats van een leeg scherm.
+- Beweeg met de muis over een rij voor het **⋯**-menu, waarmee je het gesprek kunt hernoemen, vastzetten of verwijderen. Vastgezette gesprekken staan bovenaan de lijst, boven een scheidingslijn. Meer over deze drie vind je in de gids over de AI-chat.
+- De keuze **Privé / Gedeeld** bovenaan het gesprek toont beide opties naast elkaar, zodat de optie die je niet gebruikt zichtbaar blijft in plaats van verborgen.
 
 In een smaller venster, en op de telefoon, blijft de gesprekkenlijst achter de knop **Geschiedenis**, zoals voorheen.
 

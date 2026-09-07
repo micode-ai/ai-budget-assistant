@@ -69,9 +69,11 @@ In einem breiten Fenster erhält der KI-Chat eine **Liste Ihrer früheren Unterh
 
 - Eine Unterhaltung aus der Liste öffnet sich an ihrer Stelle, und die gerade gelesene bleibt hervorgehoben.
 - **Neue Unterhaltung** steht oben in dieser Liste, Sie können also eine beginnen, ohne Ihre Stelle im Gelesenen zu verlieren.
-- Eine Unterhaltung, die mit den anderen Personen Ihres Kontos geteilt ist, trägt in der Liste ein kleines Gruppensymbol.
+- Eine Unterhaltung, die mit den anderen Personen Ihres Kontos geteilt ist, zeigt in der Liste **Geteilt** in der zweiten Zeile neben dem Datum, statt nur ein Symbol zu tragen.
 - Das Eingabefeld bleibt unten, und Mikrofon und Sende-Schaltfläche sitzen neben dem Text statt an den gegenüberliegenden Bildschirmrändern.
 - Eine ganz neue Unterhaltung zeigt, was der Assistent wirklich kann — eine Ausgabe eintragen, ein Budget prüfen, etwas auf die Einkaufsliste setzen — statt eines leeren Bildschirms.
+- Fahren Sie mit der Maus über eine Zeile für ihr **⋯**-Menü, in dem Sie die Unterhaltung umbenennen, anheften oder löschen können. Angeheftete Unterhaltungen stehen oben in der Liste, über einer Trennlinie. Mehr zu allen dreien finden Sie im Leitfaden zum KI-Chat.
+- Die Auswahl **Privat / Geteilt** oben in der Unterhaltung zeigt beide Optionen nebeneinander, sodass die gerade nicht verwendete sichtbar bleibt statt verborgen zu sein.
 
 In einem schmaleren Fenster und auf dem Telefon bleibt die Liste der Unterhaltungen wie bisher hinter der Schaltfläche **Verlauf**.
 

@@ -78,11 +78,22 @@ Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
 
 > Załadowana historia jest zapisywana lokalnie i dostępna offline po pierwszym załadowaniu.
 
+### Zarządzanie rozmową
+
+Każda rozmowa na liście ma własne menu **⋯**. W przeglądarce pojawia się ono po najechaniu na wiersz (albo gdy to właśnie ta rozmowa jest otwarta); na telefonie jest zawsze widoczne, a długie przytrzymanie wiersza otwiera to samo menu.
+
+- **Zmień nazwę** nadaje rozmowie własną nazwę. Dopóki tego nie zrobisz, nosi tytuł pierwszej wpisanej w niej wiadomości, co rzadko jest wygodną nazwą. Zmiana nazwy nie przenosi rozmowy na liście.
+- **Przypnij** trzyma rozmowę na górze listy, nad linią oddzielającą, bez względu na to, jak dawno ostatnio z niej korzystano. Przypinanie dotyczy **tylko Ciebie** — zmienia kolejność, którą widzisz Ty, a nie ktokolwiek inny, i możesz przypiąć nawet wspólną rozmowę rozpoczętą przez kogoś innego. Dotknij **Odepnij**, aby ją zwolnić.
+- **Usuń** usuwa rozmowę i jej wiadomości na stałe. Nie ma cofnięcia. Jeśli rozmowa jest wspólna, potwierdzenie mówi o tym wprost, bo usunięcie usuwa ją dla wszystkich członków konta, nie tylko dla Ciebie.
+
+Zmieniać nazwę i usuwać można tylko rozmowy rozpoczęte przez Ciebie. We wspólnej rozmowie rozpoczętej przez kogoś innego menu oferuje tylko **Przypnij** — jedyną opcję, która ma tu sens, bo kolejność Twojej własnej listy to Twoja sprawa.
+
 ## Wspolne rozmowy
 
 Jeśli dzielisz konto z innymi członkami, możesz zamienić rozmowę we **wspólny czat grupowy**, w którym wszyscy rozmawiają z AI razem.
 
-- **Włączanie i wyłączanie udostępniania:** osoba, która rozpoczęła rozmowę, widzi przełącznik **Wspólny / Prywatny** u góry czatu. Dotknij go, aby uczynić tę rozmowę wspólną (widoczną dla wszystkich członków) lub znowu prywatną. Każdy członek może udostępnić rozmowę, którą utworzył — nie tylko właściciel konta. Nie możesz zmieniać udostępniania rozmowy rozpoczętej przez kogoś innego (zobaczysz tam etykietę "Wspólny" tylko do odczytu). Przełącznik pojawia się tylko wtedy, gdy konto ma więcej niż jednego członka.
+- **Włączanie i wyłączanie udostępniania:** osoba, która rozpoczęła rozmowę, widzi wybór u góry czatu. W przeglądarce to para przycisków, **Prywatny** i **Wspólny**, przy czym aktualnie wybrany jest wypełniony kolorem — dzięki temu widać, że ten drugi też istnieje, i można go dotknąć. Na telefonie ta sama pigułka ma małą strzałkę zamiany, pokazującą, że da się ją przełączyć. Każdy członek może udostępnić rozmowę, którą utworzył — nie tylko właściciel konta. Nie możesz zmieniać udostępniania rozmowy rozpoczętej przez kogoś innego (zobaczysz tam etykietę "Wspólny" tylko do odczytu). Wybór pojawia się tylko wtedy, gdy konto ma więcej niż jednego członka.
+- **Decyzja przed rozpoczęciem:** wybór działa też na pustej, jeszcze nierozpoczętej rozmowie. Wybierz **Wspólny**, zanim cokolwiek napiszesz, a rozmowa będzie wspólna już od pierwszej wiadomości — dzięki temu nikt nie czyta połowy wątku, o którym nigdy nie wiedział.
 - **Wszyscy widzą rozmowę:** we wspólnej rozmowie wiadomości od innych członków pojawiają się z ich imieniem, a nowe wiadomości wyświetlają się automatycznie, gdy masz czat otwarty.
 - **Zwracanie się do osoby zamiast do AI:** wpisz **@** i wybierz członka, aby go wspomnieć. Gdy wspomnisz członka, AI milczy — wiadomość jest przeznaczona dla tej osoby, a nie dla asystenta. Jeśli nikogo nie wspomnisz, AI odpowiada jak zwykle.
 - **Powiadomienia:** jeśli wspomnisz członka, który aktualnie nie ma otwartego czatu, otrzyma on powiadomienie push, aby go nie przeoczył. Uwzględnia to Twoje ustawienie powiadomień "Wspólna aktywność".
