@@ -38,6 +38,7 @@ interface ProjectState {
   getActiveProjects: () => Project[];
   getArchivedProjects: () => Project[];
   syncFromServer: (serverProjects: any[]) => Promise<void>;
+  reset: () => void;
 }
 
 export const useProjectStore = create<ProjectState>((set, get) => ({
@@ -224,4 +225,9 @@ export const useProjectStore = create<ProjectState>((set, get) => ({
     // Web (no real SQLite): read-back is empty — fall back to built server rows.
     set({ projects: projects.length > 0 ? projects : built });
   },
+
+  // Torn down on every account switch by `accountStore`'s
+  // `clearAccountScopedCaches()` — see the comment there for why it lives at
+  // the account boundary rather than in each screen that reads this store.
+  reset: () => set({ projects: [], isLoading: false }),
 }));

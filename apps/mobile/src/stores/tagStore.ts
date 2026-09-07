@@ -20,6 +20,7 @@ interface TagState {
   removeTagFromExpense: (tagId: string, expenseId: string) => Promise<void>;
   getTagsForExpense: (expenseId: string) => Promise<Tag[]>;
   syncFromServer: (serverTags: any[]) => Promise<void>;
+  reset: () => void;
 }
 
 export const useTagStore = create<TagState>((set, get) => ({
@@ -165,4 +166,9 @@ export const useTagStore = create<TagState>((set, get) => ({
     // Web (no real SQLite): read-back is empty — fall back to built server rows.
     set({ tags: tags.length > 0 ? tags : built });
   },
+
+  // Torn down on every account switch by `accountStore`'s
+  // `clearAccountScopedCaches()` — see the comment there for why it lives at
+  // the account boundary rather than in each screen that reads this store.
+  reset: () => set({ tags: [], isLoading: false }),
 }));

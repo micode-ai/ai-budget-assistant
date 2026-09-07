@@ -59,19 +59,27 @@ const PRESET_COLORS = [
  * the phone had the identical staleness bug. Re-running `loadTags()` on that
  * change is a correctness fix in both directions, not a desktop-only concern.
  *
- * **The one-frame flash this keying leaves behind is accepted, not closed.**
- * `accountStore`'s `clearAccountScopedCaches()` already empties
- * `priceHistoryStore`/`merchantRulesStore` synchronously before any
- * `[currentAccountId]` effect runs, and the same could be done here by giving
- * `tagStore`/`projectStore` a `reset()`. It was not: `ExpenseCreateForm.tsx`
- * and `IncomeCreateForm.tsx` both load tags (and projects) in a mount-only
- * effect and hand the list to `TagPicker`/`ProjectPicker`, neither of which
- * reloads on an empty list the way `useAnalytics.ts`'s `if (tags.length === 0)
- * loadTags()` does — so a `reset()` fired while either create form happened
- * to be open would leave its tag/project picker permanently empty for the
- * rest of that mount, which is worse than the flash it would remove. See the
- * task report for the full consumer survey; a future change that closes this
- * gap should audit those two forms first.
+ * **The flash this keying would otherwise leave behind is closed, not
+ * accepted — corrected after review.** `tagStore`/`projectStore` now have a
+ * `reset()`, wired into `accountStore`'s `clearAccountScopedCaches()` beside
+ * `priceHistoryStore`/`merchantRulesStore`, so `tags` (and `projects`) empty
+ * synchronously the instant the account changes, before this effect ever
+ * runs. The first pass here argued for accepting the flash instead, on the
+ * theory that resetting could strand `ExpenseCreateForm.tsx`/
+ * `IncomeCreateForm.tsx`'s `TagPicker`/`ProjectPicker` with a permanently
+ * empty list. That theory did not survive a second reading: both forms are
+ * conditionally-rendered dialogs on desktop and pushed screens on mobile, so
+ * their mount-only `loadTags()`/`loadProjects()` effect re-runs on every
+ * open — the real cost of a reset landing mid-edit is "this already-open
+ * form's picker is empty until closed and reopened", not permanent. Against
+ * that bounded cost, the flash itself was worse than described: on web,
+ * `tagRepo.getAllTags` resolves near-instantly to `[]` (`db/client.web.ts`'s
+ * SQLite mock), so without a reset this pane showed the PREVIOUS account's
+ * tags — in a screen whose whole purpose is managing the current account's
+ * tags — until that resolved, then an empty list until the fire-and-forget
+ * `api.getTags()` server call completed a real network round trip. See
+ * `accountStore.ts`'s `clearAccountScopedCaches()` for the full accounting;
+ * the same reasoning applies to `projectStore` verbatim.
  *
  * The `Modal` is now a `SheetDialog` (ten call sites already use it) rather
  * than a raw RN `Modal` — in a pane a raw `Modal` slides up the full width of

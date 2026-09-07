@@ -27,6 +27,8 @@ import { clearAllWalletBalances } from '@/db/walletRepository';
 import { clearAllExchanges } from '@/db/currencyExchangeRepository';
 import { usePriceHistoryStore } from './priceHistoryStore';
 import { useMerchantRulesStore } from './merchantRulesStore';
+import { useTagStore } from './tagStore';
+import { useProjectStore } from './projectStore';
 
 interface AccountState {
   accounts: (Account & { myRole: AccountRole })[];
@@ -92,10 +94,41 @@ interface AccountState {
  * It is invoked from the subscription at the bottom of this file, NOT from
  * each action that reassigns `currentAccountId` — see the comment there for
  * why the callers cannot be enumerated reliably.
+ *
+ * **`tagStore`/`projectStore` (wave 4, ABA-512).** These were nearly left out
+ * on the theory that a synchronous reset could strand `ExpenseCreateForm.tsx`
+ * / `IncomeCreateForm.tsx` with a permanently empty `TagPicker`/`ProjectPicker`
+ * if an account switch landed while one was open. That theory does not
+ * survive reading the two forms: both call `loadTags()`/`loadProjects()` in a
+ * mount-only effect, and both are conditionally-rendered dialogs on desktop
+ * (`{dialog === 'expense' && <CreateDialog .../>}`) and pushed screens on
+ * mobile — so the real cost of a reset firing mid-edit is "this already-open
+ * form's picker is empty until it is closed and reopened", not permanent. It
+ * is also a narrower window than it looks: `CreateDialog`/`ExpenseDialog` are
+ * RN `Modal`s whose scrim is a full-viewport `position: fixed` element, which
+ * sits over `WebTopBar` and makes the account-switcher pill itself unreachable
+ * by pointer while any of these dialogs is open — the account can still move
+ * from underneath one (a background `loadAccountsFromServer` fallback), just
+ * not by the obvious click path.
+ *
+ * Against that bounded cost, the alternative was worse, not merely
+ * un-fixed: without a reset, `loadTags()`/`loadProjects()` still run (both
+ * are already keyed on `[currentAccountId]` in every long-lived screen that
+ * reads them), but on web `tagRepo.getAllTags`/`projectRepo.getAllProjects`
+ * resolve near-instantly to `[]` (SQLite is an in-memory no-op mock there —
+ * see `db/client.web.ts`), so the *actual* prior sequence was: the previous
+ * account's rows, rendered in a pane whose whole purpose is managing the
+ * CURRENT account's rows, until that promise resolves — then empty until the
+ * fire-and-forget `api.getTags()`/equivalent server call completes a real
+ * network round trip. Resetting here removes the "wrong account's rows on
+ * screen" phase entirely and replaces it with an immediate, honest "empty,
+ * loading" state — the corrected read of what this decision was trading away.
  */
 function clearAccountScopedCaches() {
   usePriceHistoryStore.getState().reset();
   useMerchantRulesStore.getState().reset();
+  useTagStore.getState().reset();
+  useProjectStore.getState().reset();
 }
 
 async function getCurrentUserId(): Promise<string | null> {
