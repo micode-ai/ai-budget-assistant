@@ -601,14 +601,55 @@ its silence means nothing at all.
 
 ### What wave 4 leaves visible, and it is the next thing to fix
 
-**Every child route of a pane is uncapped.** `/account/create`, `/account/[id]`
-and `/projects/[id]` all stretch to the full viewport — at 1920 the create
-form's name field and its submit button span the whole width, and the member
-rows do too — while the pane they were reached from stops at 720. This is the
-appearance-chips defect one level down. It is not an argument against the
-ruling, which refused a dialog for reasons that have nothing to do with width,
-and the fix is a **shell-level** change rather than one per screen: give a
-pane's child the same cap.
+**A pane's child route was uncapped, and is now capped by `PaneChildWidth`.**
+`/account/create`, `/account/join`, `/account/[id]` and `/projects/[id]`
+stretched to the full viewport — at 1920 the create form's name field and its
+submit button spanned the whole width, and the member rows did too — while the
+pane they were reached from stopped at 720. The appearance-chips defect one
+level down. It was never an argument against the ruling, which refused a dialog
+for reasons that have nothing to do with width.
+
+**Two corrections to what this section said when it was first written**, both
+found by the implementer reading the code rather than the doc:
+
+- It listed three routes. There are **four** — `/account/join` sits beside
+  Create in the same pane footer and was missed.
+- It called the fix **"shell-level, not one per screen"**. That was asserted
+  without reading and is wrong: `SETTINGS_FORM_MAX_WIDTH` is applied in exactly
+  one place, `SettingsShell.tsx`, and a pushed route has no shell above it to
+  extend. A blanket cap in `DesktopShell` would need an enumerated opt-out list
+  for the routes that legitimately want width — the import preview and its
+  column mapper are full-width workspaces by the registry's own comment, and so
+  are the map picker and the community price map — which is the same
+  enumerated-route-list reasoning ABA-497's telemetry work rejected, on the
+  grounds that a new screen must work from the day it ships.
+
+So it is `src/components/PaneChildWidth.tsx`: one shared component, used by
+those four screens, wrapping **the content and never the root** (this wave
+found roots that were a `SafeAreaView edges={['bottom']}`, a
+`KeyboardAwareScreen`, a bare `ScrollView` and a `FlatList`, and wrapping a root
+risks its `flex: 1` chain and its keyboard handling). It reuses
+`SETTINGS_FORM_MAX_WIDTH` rather than minting a second number, and its
+non-desktop branch renders children **unwrapped — no extra node at all**, so
+the phone's rendering cannot change by construction. The one numerically
+checkable part, `paneChildCapStyle(isDesktop)`, is pure and unit-tested.
+
+**It centres the column, and that does NOT contradict the settings spec's
+"720px, left-aligned (never centred)".** Read that rule with its own
+rationale — *centred content inside a left-aligned shell reads adrift* — and it
+is scoped to a pane, which has a 280px nav to its left that the content reads
+as attached to. A pushed child has no nav beside it, so left-aligning would
+hug the window's edge with ~1200px of void to the right. Centring here matches
+`WebShell.web.tsx`'s own unauthenticated-route column, which is the other place
+in this app that renders a bounded page with no nav. Do not "fix" one to match
+the other.
+
+Still uncapped, deliberately out of that change's scope and worth doing when
+their screens are next touched: `FinancialMonthSheet` and `projects/[id]`'s
+inline edit `Modal`. More broadly, **47 files still contain a raw `<Modal>`** —
+`SheetDialog` covers ten call sites — and each is a full-width-from-the-bottom
+sheet the moment its screen gets a desktop layout. The right time to convert
+one is that screen's own desktop pass, not a sweep.
 
 ## 6. Things that look like defects and are not — do not "fix" these
 
