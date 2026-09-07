@@ -22,6 +22,7 @@ import { useInflationShieldStore } from './inflationShieldStore';
 import { useGoalStore } from './goalStore';
 import { usePriceHistoryStore } from './priceHistoryStore';
 import { useMerchantRulesStore } from './merchantRulesStore';
+import { useChatStore } from './chatStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
 import { clearRestoreCredential, isRestoreCredentialAvailable } from '../services/restoreCredentials';
@@ -653,6 +654,17 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // products and merchant rules.
     usePriceHistoryStore.getState().reset();
     useMerchantRulesStore.getState().reset();
+    // `accountStore` also clears this on an account switch (ABA-513) — this
+    // call is deliberately redundant with that, not a duplicate to prune. A
+    // conversation can carry another person's name, amounts, anything the
+    // user typed to the assistant, and this is also reached from a 401
+    // cascade with the tokens already gone — so the clear must be unconditional
+    // and must not depend on `useAccountStore.getState().reset()` (called
+    // above, at the top of this block) happening to null `currentAccountId`
+    // and the account-switch subscription firing as a side effect of that.
+    // Without it, the next person to sign in on this device or browser could
+    // read the previous user's chat history.
+    useChatStore.getState().reset();
 
     // Clear investment data from SQLite
     await investmentRepo.clearAllInvestments();

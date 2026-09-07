@@ -62,11 +62,24 @@ jest.mock('../../services/trip.api', () => ({
   tripApi: { archiveTrip: jest.fn(), updatePaymentInfo: jest.fn() },
 }));
 
+// Same reason as the other manual db factories above: `chatStore.ts` (pulled
+// in transitively now that `clearAccountScopedCaches` resets it) imports
+// `@/db/chatRepository`, which imports `./client` -> expo-sqlite. None of
+// these are called by the tests below (they seed `useChatStore` directly via
+// `setState`), but the module still has to resolve.
+jest.mock('../../db/chatRepository', () => ({
+  getConversations: jest.fn().mockResolvedValue([]),
+  upsertConversation: jest.fn().mockResolvedValue(undefined),
+  getMessages: jest.fn().mockResolvedValue([]),
+  upsertMessage: jest.fn().mockResolvedValue(undefined),
+}));
+
 import { useAccountStore } from '../accountStore';
 import { loadAllAccounts } from '../../db/accountRepository';
 import { secureStorage } from '../../services/secureStorage';
 import { usePriceHistoryStore } from '../priceHistoryStore';
 import { useMerchantRulesStore } from '../merchantRulesStore';
+import { useChatStore } from '../chatStore';
 import { api } from '../../services/api';
 
 const account = (id: string) =>
@@ -265,5 +278,95 @@ describe('merchantRulesStore.reset (ABA-511)', () => {
 
     expect(useMerchantRulesStore.getState().rules).toEqual([]);
     expect(useMerchantRulesStore.getState().isLoaded).toBe(false);
+  });
+});
+
+// ABA-513: a `ChatConversation` belongs to one account (its `accountId`), the
+// same as the price-history/merchant-rules data above, but `chatStore` was
+// never wired into `clearAccountScopedCaches()` at all — an account switch
+// left the previous account's conversation list, transcript and
+// `currentConversationId` on screen, with a composer that would still post
+// into the account just switched away from.
+describe('account switch clears the chat conversation cache (ABA-513)', () => {
+  function seedAccountAChatData() {
+    useChatStore.setState({
+      conversations: [{ id: 'conv-a', isShared: false } as any],
+      currentConversationId: 'conv-a',
+      messages: [{ id: 'm1', role: 'user', content: 'account A secret', createdAt: new Date() }],
+      isLoading: true,
+      isConfirming: true,
+      error: 'stale error',
+      currentIsShared: true,
+      currentIsOwner: false,
+      ownedConversationIds: ['conv-a'],
+      lastSyncedAt: '2026-01-01T00:00:00.000Z',
+      isPolling: true,
+    });
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    (loadAllAccounts as jest.Mock).mockResolvedValue([]);
+    (secureStorage.getItem as jest.Mock).mockResolvedValue(null);
+    useAccountStore.setState({
+      accounts: [account('acc-a'), account('acc-b')],
+      currentAccountId: 'acc-a',
+      members: {},
+      isLoading: false,
+      error: null,
+    });
+    seedAccountAChatData();
+  });
+
+  // Catches: `chatStore` staying absent from `clearAccountScopedCaches()`.
+  // Without this, `conversations`/`messages`/`currentConversationId` are still
+  // account A's after the switch resolves.
+  it('switchAccount clears the conversation list, current conversation and transcript', async () => {
+    await useAccountStore.getState().switchAccount('acc-b');
+
+    expect(useChatStore.getState().conversations).toEqual([]);
+    expect(useChatStore.getState().messages).toEqual([]);
+    expect(useChatStore.getState().currentConversationId).toBeNull();
+    expect(useChatStore.getState().currentIsShared).toBe(false);
+    expect(useChatStore.getState().currentIsOwner).toBe(true);
+    expect(useChatStore.getState().ownedConversationIds).toEqual([]);
+    expect(useChatStore.getState().isLoading).toBe(false);
+    expect(useChatStore.getState().isConfirming).toBe(false);
+    expect(useChatStore.getState().error).toBeNull();
+    expect(useChatStore.getState().lastSyncedAt).toBeNull();
+    expect(useChatStore.getState().isPolling).toBe(false);
+  });
+
+  // The interesting case. A fix that only re-triggers a reload (e.g. calling
+  // `loadConversations()` instead of `reset()` from the account-switch
+  // subscription) would make the test above pass once its promise settles,
+  // while the stale conversation and transcript are still rendered for
+  // however long that network round trip takes — the exact defect class
+  // wave 4 found for `tagStore`/`projectStore`. The subscription in
+  // `accountStore.ts` fires synchronously inside `set()`, and the synchronous
+  // prefix of an `async` function runs immediately when it is called, before
+  // the caller awaits anything — so if the clear is real, account A's
+  // messages must already be gone the instant `switchAccount` is invoked,
+  // not merely by the time its promise resolves.
+  it('clears synchronously with the switch — a stale transcript must never be visible while a reload would still be in flight', () => {
+    const resetSpy = jest.spyOn(useChatStore.getState(), 'reset');
+
+    const pending = useAccountStore.getState().switchAccount('acc-b');
+
+    expect(resetSpy).toHaveBeenCalledTimes(1);
+    expect(useChatStore.getState().messages).toEqual([]);
+    expect(useChatStore.getState().conversations).toEqual([]);
+
+    return pending;
+  });
+
+  // Mirrors the reference-data suite above: re-selecting the account you are
+  // already on must not wipe a conversation nothing is going to refill — no
+  // `[currentAccountId]` effect re-fires when the id did not change.
+  it('re-selecting the current account leaves the chat cache alone', async () => {
+    await useAccountStore.getState().switchAccount('acc-a');
+
+    expect(useChatStore.getState().messages).toHaveLength(1);
+    expect(useChatStore.getState().currentConversationId).toBe('conv-a');
   });
 });

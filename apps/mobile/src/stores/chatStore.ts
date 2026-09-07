@@ -54,6 +54,7 @@ interface ChatState {
   pollNewMessages: () => Promise<void>;
   startPolling: () => void;
   stopPolling: () => void;
+  reset: () => void;
 }
 
 export const useChatStore = create<ChatState>()((set, get) => ({
@@ -425,5 +426,40 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   stopPolling: () => {
     if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
     set({ isPolling: false });
+  },
+
+  // A `ChatConversation` belongs to one account (its `accountId`) and one
+  // user's session, so this is the one place that clears everything this
+  // store holds — called from BOTH boundaries a conversation must not cross:
+  // `accountStore`'s `clearAccountScopedCaches()` on an account switch, and
+  // `logoutAction`'s teardown block on sign-out. Before this existed, neither
+  // boundary cleared anything here, so a conversation list (and its messages)
+  // was still on screen after switching accounts — a composer that would post
+  // into the wrong account's conversation — and survived sign-out outright,
+  // readable by the next person to sign in on that browser — the same class
+  // of finding an earlier fix made for `inflationShieldStore` (commit
+  // 7f39d511, "Fix inflation-shield cache surviving sign-out and leaking
+  // across accounts" — it carries no ABA number of its own to cite here).
+  //
+  // Also stops the module-level poll timer: without this, an interval left
+  // running from a shared conversation would keep firing after the state it
+  // reads has been cleared. `pollNewMessages` early-returns once
+  // `currentConversationId` is null, so a live timer alone is harmless, but an
+  // account-scoped teardown should not leave one running regardless.
+  reset: () => {
+    if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    set({
+      conversations: [],
+      currentConversationId: null,
+      messages: [],
+      isLoading: false,
+      isConfirming: false,
+      error: null,
+      currentIsShared: false,
+      currentIsOwner: true,
+      ownedConversationIds: [],
+      lastSyncedAt: null,
+      isPolling: false,
+    });
   },
 }));

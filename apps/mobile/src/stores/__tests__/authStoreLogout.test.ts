@@ -99,6 +99,11 @@ jest.mock('../merchantRulesStore', () => {
   return { useMerchantRulesStore: { getState: () => state } };
 });
 
+jest.mock('../chatStore', () => {
+  const state = { reset: jest.fn() };
+  return { useChatStore: { getState: () => state } };
+});
+
 jest.mock('../../db/investmentRepository', () => ({
   clearAllInvestments: jest.fn().mockResolvedValue(undefined),
 }));
@@ -126,6 +131,7 @@ import { useAuthStore } from '../authStore';
 import { useInflationShieldStore } from '../inflationShieldStore';
 import { usePriceHistoryStore } from '../priceHistoryStore';
 import { useMerchantRulesStore } from '../merchantRulesStore';
+import { useChatStore } from '../chatStore';
 import { secureStorage } from '../../services/secureStorage';
 import { api } from '../../services/api';
 import { unregisterPushNotifications } from '../../services/notifications';
@@ -267,5 +273,33 @@ describe('authStore.logout — restore credential cleanup (ABA-465)', () => {
 
     expect(usePriceHistoryStore.getState().reset).toHaveBeenCalledTimes(1);
     expect(useMerchantRulesStore.getState().reset).toHaveBeenCalledTimes(1);
+  });
+
+  // ABA-513: `chatStore` had no `reset()` at all and was absent from this
+  // teardown block, so a conversation list (and its messages — which can
+  // carry another person's name, amounts, anything typed to the assistant)
+  // survived sign-out and was readable by the next person to sign in on the
+  // same device or browser. Same class of finding as the inflation-shield
+  // cache above.
+  it('resets the chat conversation cache on sign-out', async () => {
+    mockGetItem.mockImplementation((key: string) => {
+      if (key === 'accessToken') return Promise.resolve('valid-access-token');
+      return Promise.resolve(null);
+    });
+
+    await useAuthStore.getState().logout();
+
+    expect(useChatStore.getState().reset).toHaveBeenCalledTimes(1);
+  });
+
+  // Sign-out is also reached from a 401 cascade with the tokens already gone.
+  // The teardown must not be conditional on a valid token: a device with no
+  // usable session can still hold a chat cache from the session before.
+  it('resets the chat conversation cache even when there is no valid access token', async () => {
+    mockGetItem.mockResolvedValue(null);
+
+    await useAuthStore.getState().logout();
+
+    expect(useChatStore.getState().reset).toHaveBeenCalledTimes(1);
   });
 });

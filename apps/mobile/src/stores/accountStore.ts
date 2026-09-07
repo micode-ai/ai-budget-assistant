@@ -29,6 +29,7 @@ import { usePriceHistoryStore } from './priceHistoryStore';
 import { useMerchantRulesStore } from './merchantRulesStore';
 import { useTagStore } from './tagStore';
 import { useProjectStore } from './projectStore';
+import { useChatStore } from './chatStore';
 
 interface AccountState {
   accounts: (Account & { myRole: AccountRole })[];
@@ -123,12 +124,26 @@ interface AccountState {
  * network round trip. Resetting here removes the "wrong account's rows on
  * screen" phase entirely and replaces it with an immediate, honest "empty,
  * loading" state — the corrected read of what this decision was trading away.
+ *
+ * **`chatStore` (ABA-513).** A `ChatConversation` carries an `accountId`, so
+ * it belongs here for the same reason as the four above it: without this,
+ * switching accounts left the previous account's conversation list, messages
+ * and `currentConversationId` on screen, and a composer that would still post
+ * into the account just switched away from. Unlike `tagStore`/`projectStore`,
+ * `chatStore.reset()` is ALSO called explicitly from `logoutAction` — a
+ * conversation is sensitive enough (it can contain another person's name,
+ * amounts, anything the user typed) that sign-out teardown should not depend
+ * on the side effect of `accountStore.reset()` nulling `currentAccountId` and
+ * this subscription happening to fire as a result. That mirrors
+ * `priceHistoryStore`/`merchantRulesStore`, which are reset in both places
+ * too, not `tagStore`/`projectStore`, which rely on the subscription alone.
  */
 function clearAccountScopedCaches() {
   usePriceHistoryStore.getState().reset();
   useMerchantRulesStore.getState().reset();
   useTagStore.getState().reset();
   useProjectStore.getState().reset();
+  useChatStore.getState().reset();
 }
 
 async function getCurrentUserId(): Promise<string | null> {
