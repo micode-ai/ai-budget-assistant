@@ -284,34 +284,31 @@ describe('ChatService', () => {
       expect(deps.prisma.chatConversation.update).not.toHaveBeenCalled();
     });
 
-    it('404s a conversation that exists only in a DIFFERENT account, before any ownership check ever runs', async () => {
-      // The security property under test is the ORDER, not merely "some
-      // exception is thrown". A conversation created by `owner-1` really
-      // exists, but under accountId `acc-2` — the caller is asking about it
-      // from `acc-1`. `findFirst`'s own `accountId` filter is what makes the
-      // row invisible from the wrong account (simulated here by making the
-      // mock inspect `where.accountId`, exactly like a real DB would). A
-      // buggy implementation that fetched the conversation WITHOUT scoping by
-      // accountId would still find this row, see `conversation.userId !==
-      // callerId`, and throw 403 Forbidden — which would leak, via a
-      // 403-vs-404 response, that a conversation with this id exists
-      // somewhere. Catches: dropping `accountId` from the `findFirst` where,
-      // or reordering the ownership check ahead of the existence check.
-      deps.prisma.chatConversation.findFirst.mockImplementation(({ where }: any) =>
-        Promise.resolve(
-          where.accountId === 'acc-2'
-            ? { id: 'c1', accountId: 'acc-2', userId: 'owner-1', updatedAt: new Date() }
-            : null,
-        ),
-      );
-      let caught: unknown;
-      try {
-        await service.renameConversation('bob-1', 'c1', 'acc-1', 'New title');
-      } catch (e) {
-        caught = e;
-      }
-      expect(caught).toBeInstanceOf(NotFoundException);
-      expect((caught as NotFoundException).getStatus()).toBe(404);
+    it('404s before any ownership check runs, and scopes the lookup by accountId so a row in a DIFFERENT account can never be found and fall through to the 403 branch', async () => {
+      // The security property under test is the ORDER: a conversation that
+      // exists (created by `owner-1`) but under a DIFFERENT account than the
+      // caller's must 404, never 403 — a 403 would leak, via a 403-vs-404
+      // response, that a conversation with this id exists somewhere outside
+      // this account.
+      //
+      // A PRIOR version of this test tried to encode that scenario by having
+      // the mock branch on `where.accountId === 'acc-2'` (the row's OWN
+      // account) and return null otherwise. That is provably unable to catch
+      // the regression it named: a correctly-scoped call passes
+      // `accountId: 'acc-1'` (not 'acc-2', so !== 'acc-2' → null → 404,
+      // correct), but a BUGGY call that drops `accountId` entirely passes
+      // `where.accountId === undefined` — also `!== 'acc-2'` → ALSO null →
+      // ALSO 404. Both paths produced an identical, passing result, so the
+      // test could not distinguish "properly scoped" from "not scoped at
+      // all". Mutation-tested and confirmed: dropping `accountId` from the
+      // real `findFirst` call left this assertion green (see task-2-report.md
+      // addendum). Fixed the way the pin predicate test in this same file
+      // already does it: assert the ACTUAL call shape sent to Prisma, which
+      // fails the instant `accountId` is missing or wrong, independent of any
+      // row-matching logic in the mock.
+      deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
+      await expect(service.renameConversation('bob-1', 'c1', 'acc-1', 'New title')).rejects.toThrow(NotFoundException);
+      expect(deps.prisma.chatConversation.findFirst).toHaveBeenCalledWith({ where: { id: 'c1', accountId: 'acc-1' } });
       expect(deps.prisma.chatConversation.update).not.toHaveBeenCalled();
     });
   });
@@ -339,9 +336,21 @@ describe('ChatService', () => {
       expect(deps.prisma.chatConversation.delete).not.toHaveBeenCalled();
     });
 
-    it('throws NotFound when the conversation is not in the account', async () => {
+    it('404s before any ownership check runs, and scopes the lookup by accountId so a row in a DIFFERENT account can never be found and fall through to the 403 branch', async () => {
+      // Identical security property to renameConversation's sibling test
+      // above, and previously MISSING entirely here — the original version
+      // of this describe block only had a bare "returns null -> 404" test in
+      // this same spot, with no assertion on the query's shape (now folded
+      // into this one). deleteConversation mirrors
+      // setConversationShared/renameConversation's 404-before-403
+      // order, so it carries the identical cross-account existence-disclosure
+      // risk and deserves the identical test: assert the real `findFirst`
+      // call shape, which fails the instant `accountId` is dropped from the
+      // where and a row from a DIFFERENT account could otherwise be matched
+      // and fall through to the ownership check (403 instead of 404).
       deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
-      await expect(service.deleteConversation('owner-1', 'c-x', 'acc-1')).rejects.toThrow(NotFoundException);
+      await expect(service.deleteConversation('bob-1', 'c1', 'acc-1')).rejects.toThrow(NotFoundException);
+      expect(deps.prisma.chatConversation.findFirst).toHaveBeenCalledWith({ where: { id: 'c1', accountId: 'acc-1' } });
       expect(deps.prisma.chatConversation.delete).not.toHaveBeenCalled();
     });
   });
