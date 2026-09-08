@@ -6032,6 +6032,7 @@ Below about 1024 pixels wide the familiar phone layout returns, with every row i
 The dashboard uses the extra room to put what needs your attention in front of you, rather than stretching the phone's cards across it.
 
 - A **main column** carries the running figures — what is safe to spend today, the month's budget, income against expenses — and a **narrow column of cards** stands beside it. On a very wide screen there are two such columns.
+- The **shortcuts you reach for often** stand in that narrow column: recording a currency exchange, moving money between accounts, the converter, your subscriptions, the shopping list and purchase requests. The first three open over the dashboard; the rest are their own screens. Which shortcuts appear, and in what order, comes from the same **Quick actions** list in Settings → Widgets that your phone uses — turn one off there and it goes from here too.
 - **Anything you add opens over the dashboard** — an expense, a starting balance, a budget — so you stay on the screen you were reading.
 - The **bell** opens your alerts and invitations as a panel instead of a separate page.
 - A **brand-new account** sees a short setup checklist rather than a screen of empty cards: scan a receipt, type one in, or set a starting balance.

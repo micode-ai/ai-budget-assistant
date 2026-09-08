@@ -25,7 +25,11 @@ import { ReceiptDialog } from '@/components/expenses/desktop/ReceiptDialog';
 import { VoiceDialog } from '@/components/expenses/desktop/VoiceDialog';
 import { BudgetCreateDialog } from '@/components/budgets/desktop/BudgetCreateDialog';
 import { SetBalanceDialog } from '@/components/wallet/desktop/SetBalanceDialog';
+import { ExchangeDialog } from '@/components/wallet/desktop/ExchangeDialog';
+import { TransferDialog } from '@/components/wallet/desktop/TransferDialog';
+import { ConverterDialog } from '@/components/wallet/desktop/ConverterDialog';
 import { resolveDialogAction, type DashboardDialogKind } from '@/features/dashboard/dashboardDialogs';
+import { resolveRailQuickLinks } from '@/features/dashboard/railQuickLinks';
 import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseCreateForm';
 
 /**
@@ -52,9 +56,13 @@ import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseC
  * **The orange hero and the quick-action strip are retired here.**
  * `WebTopBar` (mounted by `WebShell`, above this component in the tree)
  * already carries account/currency/alerts/settings; the rail's own fixed
- * quick-list (`DashboardRail`'s `RailQuickActions`) replaces the strip.
- * `HomeQuickActionStrip.tsx` itself is untouched — it simply isn't part of
- * this tree.
+ * quick-list (`DashboardRail`'s `RailQuickActions`) replaces the strip's four
+ * capture actions, and the rail's `RailQuickLinks` card carries the rest of
+ * what the user has enabled (exchange, converter, transfers, subscriptions,
+ * shopping) — the gap the design spec left open, and the only route to
+ * `/converter` on desktop, since the strip was its single entry point in the
+ * whole app. `HomeQuickActionStrip.tsx` itself is untouched — it simply isn't
+ * part of this tree.
  *
  * **Three states, not one** (`useWebFirstRun`), and this component is the one
  * place that branches between them: a bounded loading state while the
@@ -145,6 +153,8 @@ export function DashboardDesktop() {
     currentAccountId,
     widgetVisibility,
     widgetOrder,
+    quickActionVisibility,
+    quickActionOrder,
     monthlyBudgetSummary,
     totalBudget,
     budgetUsedPercent,
@@ -219,6 +229,31 @@ export function DashboardDesktop() {
   const activeBudgetCount = useMemo(
     () => budgets.filter((b) => b.isActive && !b.isDeleted).length,
     [budgets],
+  );
+
+  /**
+   * The rail's quick-links card (`RailQuickLinks`): the quick actions that are
+   * NOT capture actions — exchange, converter, transfers, subscriptions, and
+   * the two shopping destinations. Resolved HERE, beside `setupSteps` and
+   * `showChecklist`, so the rail keeps holding no opinion of its own about
+   * what it may show; `railQuickLinks.ts` owns every rule.
+   *
+   * Read from `quickActionStore` on purpose, unlike the fixed capture card
+   * above it: those four actions are part of the layout's shape, these are
+   * "whichever shortcuts this user wants on their home screen" — which is
+   * exactly what Settings -> Widgets -> Quick actions already means on the
+   * phone. One settings screen therefore governs both platforms, with no
+   * second desktop list to keep in sync.
+   */
+  const quickLinks = useMemo(
+    () =>
+      resolveRailQuickLinks({
+        order: quickActionOrder,
+        visibility: quickActionVisibility,
+        accountType: currentAccountType,
+        canEdit,
+      }),
+    [quickActionOrder, quickActionVisibility, currentAccountType, canEdit],
   );
 
   const setupSteps = useMemo(
@@ -309,6 +344,7 @@ export function DashboardDesktop() {
               widgetOrder={widgetOrder}
               secondRailVisible={showSecondRail}
               setupSteps={setupSteps}
+              quickLinks={quickLinks}
               showChecklist={showChecklist}
               onDismissChecklist={dismissChecklist}
               onOpenRoute={openRoute}
@@ -362,6 +398,13 @@ export function DashboardDesktop() {
       {dialog === 'voice' && <VoiceDialog onClose={closeDialog} />}
       {dialog === 'budget' && <BudgetCreateDialog onClose={closeDialog} />}
       {dialog === 'wallet' && <SetBalanceDialog onClose={closeDialog} />}
+      {/* The rail quick-links card's three form-shaped destinations. Siblings
+          here for the same reason as every dialog above them — and because
+          this rail is mounted in only one of the two `firstRunView` branches,
+          so a dialog held inside it would not exist in the other. */}
+      {dialog === 'exchange' && <ExchangeDialog onClose={closeDialog} />}
+      {dialog === 'transfer' && <TransferDialog onClose={closeDialog} />}
+      {dialog === 'converter' && <ConverterDialog onClose={closeDialog} />}
 
       <NewBadgeModal />
     </View>

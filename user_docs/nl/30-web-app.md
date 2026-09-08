@@ -59,6 +59,7 @@ Onder ongeveer 1024 pixels breed komt de bekende telefoonindeling terug, met all
 Het startscherm gebruikt de extra ruimte om te tonen wat je aandacht nodig heeft, in plaats van de kaarten van de telefoon eroverheen uit te rekken.
 
 - Een **hoofdkolom** draagt de lopende cijfers — wat je vandaag veilig kunt uitgeven, het budget van de maand, inkomsten tegenover uitgaven — en daarnaast staat een **smalle kolom met kaarten**. Op een heel breed scherm zijn dat er twee.
+- De **snelkoppelingen die je het meest gebruikt** staan in die smalle kolom: een valutawissel vastleggen, geld tussen rekeningen overboeken, de omrekenaar, je abonnementen, de boodschappenlijst en aankoopverzoeken. De eerste drie openen over het startscherm heen, de rest zijn eigen schermen. Welke snelkoppelingen verschijnen, en in welke volgorde, bepaalt dezelfde lijst **Snelle acties** in Instellingen → Widgets die je telefoon gebruikt: zet er daar één uit en hij verdwijnt hier ook.
 - **Alles wat je toevoegt opent over het startscherm** — een uitgave, een beginsaldo, een budget — zodat je op het scherm blijft dat je aan het lezen was.
 - De **bel** opent je meldingen en uitnodigingen als paneel in plaats van als aparte pagina.
 - Een **nieuwe rekening** ziet een korte lijst met eerste stappen in plaats van een scherm vol lege kaarten: een kassabon scannen, er handmatig een invoeren, of een beginsaldo instellen.

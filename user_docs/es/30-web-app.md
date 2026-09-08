@@ -59,6 +59,7 @@ Por debajo de unos 1024 píxeles de ancho vuelve el diseño de teléfono conocid
 La pantalla principal usa el espacio extra para poner delante de ti lo que necesita atención, en vez de estirar las tarjetas del teléfono.
 
 - Una **columna principal** lleva las cifras del momento — cuánto puedes gastar hoy sin riesgo, el presupuesto del mes, ingresos frente a gastos — y a su lado hay una **columna estrecha de tarjetas**. En una pantalla muy ancha hay dos de esas columnas.
+- Los **atajos que usas más a menudo** están en esa columna estrecha: registrar un cambio de divisa, mover dinero entre cuentas, el conversor, tus suscripciones, la lista de la compra y las solicitudes de compra. Los tres primeros se abren sobre la pantalla principal; los demás son pantallas propias. Qué atajos aparecen, y en qué orden, lo decide la misma lista **Acciones rápidas** en Ajustes → Widgets que usa el teléfono: si desactivas uno allí, también desaparece aquí.
 - **Todo lo que añades se abre sobre la pantalla principal** — un gasto, un saldo inicial, un presupuesto — así te quedas en la pantalla que estabas leyendo.
 - La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
 - Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.

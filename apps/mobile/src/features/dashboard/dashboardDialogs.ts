@@ -48,7 +48,13 @@ export type DashboardDialogKind =
   /** `BudgetCreateDialog` — hosts `BudgetCreateForm`. */
   | 'budget'
   /** `SetBalanceDialog` — hosts `SetBalanceView`. */
-  | 'wallet';
+  | 'wallet'
+  /** `ExchangeDialog` — hosts `ExchangeView`. */
+  | 'exchange'
+  /** `TransferDialog` — hosts `TransferCreateView`. */
+  | 'transfer'
+  /** `ConverterDialog` — hosts `ConverterView`. */
+  | 'converter';
 
 export const ROUTE_IMPORT = '/settings/import';
 export const ROUTE_EXPENSE_NEW = '/expense/new';
@@ -57,6 +63,22 @@ export const ROUTE_RECEIPT = '/expense/receipt';
 export const ROUTE_VOICE = '/expense/voice';
 export const ROUTE_BUDGET_NEW = '/budget/new';
 export const ROUTE_SET_BALANCE = '/wallet/set-balance';
+/**
+ * The three routes the rail's quick-links card contributes (see
+ * `railQuickLinks.ts`). All three are forms that finish in one sitting, so all
+ * three belong in the table below by the same rule as everything above them —
+ * the card itself holds no opinion, it hands a route to `onOpenRoute` exactly
+ * as the checklist and the first-run cards do.
+ *
+ * Its other three destinations (`/subscriptions`, `/shopping-list`,
+ * `/purchase-requests`) are deliberately NOT here: each is a list screen — a
+ * place you work, in the settings shell's own vocabulary — not a form, so
+ * navigating to it is the honest behaviour and `resolveDialogAction`'s
+ * unknown-route fallthrough already gives it that.
+ */
+export const ROUTE_EXCHANGE = '/wallet/exchange';
+export const ROUTE_TRANSFER = '/wallet/transfer';
+export const ROUTE_CONVERTER = '/converter';
 
 /**
  * Route -> dialog.
@@ -80,6 +102,9 @@ const ROUTE_DIALOGS: ReadonlyMap<string, DashboardDialogKind> = new Map([
   [ROUTE_VOICE, 'voice'],
   [ROUTE_BUDGET_NEW, 'budget'],
   [ROUTE_SET_BALANCE, 'wallet'],
+  [ROUTE_EXCHANGE, 'exchange'],
+  [ROUTE_TRANSFER, 'transfer'],
+  [ROUTE_CONVERTER, 'converter'],
 ] as const);
 
 export type DialogAction =

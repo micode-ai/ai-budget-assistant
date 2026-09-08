@@ -3891,6 +3891,7 @@ Below about 1024 pixels wide the familiar phone layout returns, with every row i
 The dashboard uses the extra room to put what needs your attention in front of you, rather than stretching the phone's cards across it.
 
 - A **main column** carries the running figures — what is safe to spend today, the month's budget, income against expenses — and a **narrow column of cards** stands beside it. On a very wide screen there are two such columns.
+- The **shortcuts you reach for often** stand in that narrow column: recording a currency exchange, moving money between accounts, the converter, your subscriptions, the shopping list and purchase requests. The first three open over the dashboard; the rest are their own screens. Which shortcuts appear, and in what order, comes from the same **Quick actions** list in Settings → Widgets that your phone uses — turn one off there and it goes from here too.
 - **Anything you add opens over the dashboard** — an expense, a starting balance, a budget — so you stay on the screen you were reading.
 - The **bell** opens your alerts and invitations as a panel instead of a separate page.
 - A **brand-new account** sees a short setup checklist rather than a screen of empty cards: scan a receipt, type one in, or set a starting balance.
@@ -8533,6 +8534,7 @@ OCR иногда неверно читает цену, выдумывает ст
 Главный экран использует лишнее место, чтобы поставить перед вами то, что требует внимания, а не растягивать по нему телефонные карточки.
 
 - **Основная колонка** несёт текущие числа — сколько можно спокойно потратить сегодня, бюджет месяца, доходы против расходов, — а рядом стоит **узкая колонка карточек**. На очень широком экране таких колонок две.
+- **Ярлыки, которыми вы пользуетесь чаще всего**, стоят в этой узкой колонке: записать обмен валюты, перевести деньги между счетами, конвертер, ваши подписки, список покупок и запросы на покупку. Первые три открываются поверх главного экрана, остальные — отдельные экраны. Какие ярлыки показываются и в каком порядке, решает тот же список **Быстрые действия** в Настройках → Виджеты, которым пользуется телефон: выключите что-то там — исчезнет и здесь.
 - **Всё, что вы добавляете, открывается поверх главного экрана** — расход, начальный баланс, бюджет, — поэтому вы остаётесь на том экране, который читали.
 - **Колокольчик** открывает оповещения и приглашения панелью, а не отдельной страницей.
 - **Совсем новый счёт** видит короткий список первых шагов вместо экрана пустых карточек: отсканировать чек, вписать его вручную или задать начальный баланс.
@@ -13138,6 +13140,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Головний екран використовує зайве місце, щоб поставити перед вами те, що потребує уваги, а не розтягувати по ньому телефонні картки.
 
 - **Основна колонка** несе поточні числа — скільки можна спокійно витратити сьогодні, бюджет місяця, доходи проти витрат, — а поряд стоїть **вузька колонка карток**. На дуже широкому екрані таких колонок дві.
+- **Ярлики, якими ви користуєтеся найчастіше**, стоять у цій вузькій колонці: записати обмін валюти, переказати гроші між рахунками, конвертер, ваші підписки, список покупок і запити на покупку. Перші три відкриваються поверх головного екрана, решта — окремі екрани. Які ярлики показуються і в якому порядку, вирішує той самий список **Швидкі дії** в Налаштуваннях → Віджети, яким користується телефон: вимкніть щось там — зникне й тут.
 - **Усе, що ви додаєте, відкривається поверх головного екрана** — витрату, початковий баланс, бюджет, — тож ви залишаєтеся на тому екрані, який читали.
 - **Дзвіночок** відкриває оповіщення та запрошення панеллю, а не окремою сторінкою.
 - **Цілком новий рахунок** бачить короткий список перших кроків замість екрана порожніх карток: відсканувати чек, вписати його вручну або задати початковий баланс.
@@ -17728,6 +17731,7 @@ Poniżej około 1024 pikseli szerokości wraca znajomy układ telefoniczny, z ws
 Ekran główny wykorzystuje dodatkowe miejsce, żeby pokazać to, co wymaga uwagi, a nie rozciągać na nim kart z telefonu.
 
 - **Główna kolumna** prowadzi bieżące liczby — ile możesz dziś bezpiecznie wydać, budżet miesiąca, przychody względem wydatków — a obok stoi **wąska kolumna kart**. Na bardzo szerokim ekranie są dwie takie kolumny.
+- **Skróty, których używasz najczęściej**, stoją w tej wąskiej kolumnie: zapisanie wymiany waluty, przeniesienie pieniędzy między kontami, przelicznik, Twoje subskrypcje, lista zakupów i wnioski o zakup. Pierwsze trzy otwierają się na wierzchu ekranu głównego, pozostałe to osobne ekrany. Które skróty się pokazują i w jakiej kolejności, decyduje ta sama lista **Szybkie akcje** w Ustawieniach → Widżety, z której korzysta telefon: wyłącz coś tam, i zniknie też tutaj.
 - **Wszystko, co dodajesz, otwiera się nad ekranem głównym** — wydatek, saldo początkowe, budżet — więc zostajesz na ekranie, który właśnie czytasz.
 - **Dzwonek** otwiera alerty i zaproszenia jako panel, a nie osobną stronę.
 - **Nowo utworzone konto** widzi krótką listę kroków startowych, a nie ekran pustych kart: zeskanuj paragon, wpisz go ręcznie albo ustaw saldo początkowe.
@@ -22293,6 +22297,7 @@ Unterhalb von etwa 1024 Pixeln Breite kehrt das bekannte Telefon-Layout zurück,
 Die Übersicht nutzt den zusätzlichen Platz, um Ihnen das Wichtige vor Augen zu stellen, statt die Karten des Telefons darüber zu strecken.
 
 - Eine **Hauptspalte** trägt die laufenden Zahlen — was heute unbesorgt ausgegeben werden kann, das Monatsbudget, Einnahmen gegen Ausgaben — und daneben steht eine **schmale Kartenspalte**. Auf einem sehr breiten Bildschirm sind es zwei solche Spalten.
+- Die **Verknüpfungen, die Sie am häufigsten brauchen**, stehen in dieser schmalen Spalte: einen Währungstausch erfassen, Geld zwischen Konten umbuchen, der Umrechner, Ihre Abos, die Einkaufsliste und Kaufanfragen. Die ersten drei öffnen sich über der Übersicht, die übrigen sind eigene Bildschirme. Welche Verknüpfungen erscheinen und in welcher Reihenfolge, entscheidet dieselbe Liste **Schnellaktionen** unter Einstellungen → Widgets, die auch das Telefon nutzt — schalten Sie dort eine aus, verschwindet sie auch hier.
 - **Alles, was Sie hinzufügen, öffnet sich über der Übersicht** — eine Ausgabe, ein Anfangssaldo, ein Budget — Sie bleiben also auf dem Bildschirm, den Sie gerade gelesen haben.
 - Die **Glocke** öffnet Hinweise und Einladungen als Panel statt als eigene Seite.
 - Ein **ganz neues Konto** sieht eine kurze Einrichtungsliste statt eines Bildschirms voller leerer Karten: einen Kassenbon scannen, einen Betrag eintippen oder einen Anfangssaldo setzen.
@@ -26847,6 +26852,7 @@ Por debajo de unos 1024 píxeles de ancho vuelve el diseño de teléfono conocid
 La pantalla principal usa el espacio extra para poner delante de ti lo que necesita atención, en vez de estirar las tarjetas del teléfono.
 
 - Una **columna principal** lleva las cifras del momento — cuánto puedes gastar hoy sin riesgo, el presupuesto del mes, ingresos frente a gastos — y a su lado hay una **columna estrecha de tarjetas**. En una pantalla muy ancha hay dos de esas columnas.
+- Los **atajos que usas más a menudo** están en esa columna estrecha: registrar un cambio de divisa, mover dinero entre cuentas, el conversor, tus suscripciones, la lista de la compra y las solicitudes de compra. Los tres primeros se abren sobre la pantalla principal; los demás son pantallas propias. Qué atajos aparecen, y en qué orden, lo decide la misma lista **Acciones rápidas** en Ajustes → Widgets que usa el teléfono: si desactivas uno allí, también desaparece aquí.
 - **Todo lo que añades se abre sobre la pantalla principal** — un gasto, un saldo inicial, un presupuesto — así te quedas en la pantalla que estabas leyendo.
 - La **campana** abre tus avisos e invitaciones como un panel, no como una página aparte.
 - Una **cuenta recién creada** ve una lista corta de primeros pasos en lugar de una pantalla de tarjetas vacías: escanear un recibo, escribirlo a mano o fijar un saldo inicial.
@@ -31399,6 +31405,7 @@ En dessous d'environ 1024 pixels de large, la mise en page téléphone habituell
 Le tableau de bord se sert de la place supplémentaire pour mettre devant vous ce qui demande votre attention, plutôt que d'y étirer les cartes du téléphone.
 
 - Une **colonne principale** porte les chiffres courants — ce que vous pouvez dépenser aujourd'hui sans risque, le budget du mois, les revenus face aux dépenses — et une **colonne étroite de cartes** se tient à côté. Sur un écran très large, il y en a deux.
+- Les **raccourcis dont vous vous servez le plus** se trouvent dans cette colonne étroite : enregistrer un change de devise, transférer de l’argent entre comptes, le convertisseur, vos abonnements, la liste de courses et les demandes d’achat. Les trois premiers s’ouvrent par-dessus le tableau de bord ; les autres sont des écrans à part entière. Quels raccourcis apparaissent, et dans quel ordre, dépend de la même liste **Actions rapides** dans Réglages → Widgets que celle du téléphone : désactivez-en un là-bas et il disparaît aussi ici.
 - **Tout ce que vous ajoutez s'ouvre par-dessus le tableau de bord** — une dépense, un solde de départ, un budget — vous restez donc sur l'écran que vous lisiez.
 - La **cloche** ouvre vos alertes et vos invitations sous forme de panneau, et non de page séparée.
 - Un **compte tout neuf** voit une courte liste de premiers pas au lieu d'un écran de cartes vides : scanner un ticket, en saisir un à la main, ou définir un solde de départ.
@@ -35915,6 +35922,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 Галоўны экран выкарыстоўвае лішняе месца, каб паставіць перад вамі тое, што патрабуе ўвагі, а не расцягваць па ім тэлефонныя карткі.
 
 - **Асноўная калонка** несе цяперашнія лічбы — колькі можна спакойна выдаткаваць сёння, бюджэт месяца, даходы супраць выдаткаў, — а побач стаіць **вузкая калонка картак**. На вельмі шырокім экране такіх калонак дзве.
+- **Ярлыкі, якімі вы карыстаецеся найчасцей**, стаяць у гэтай вузкай калонцы: запісаць абмен валюты, перавесці грошы між рахункамі, канвертар, вашыя падпіскі, спіс пакупак і запыты на пакупку. Першыя тры адкрываюцца паверх галоўнага экрана, астатнія — асобныя экраны. Якія ярлыкі паказваюцца і ў якім парадку, вырашае той самы спіс **Хуткія дзеянні** у Наладах → Віджэты, якім карыстаецца тэлефон: выключыце нешта там — знікне і тут.
 - **Усё, што вы дадаеце, адкрываецца паверх галоўнага экрана** — выдатак, пачатковы баланс, бюджэт, — таму вы застаецеся на тым экране, які чыталі.
 - **Званочак** адкрывае апавяшчэнні і запрашэнні панэллю, а не асобнай старонкай.
 - **Зусім новы рахунак** бачыць кароткі спіс першых крокаў замест экрана пустых картак: адсканаваць чэк, упісаць яго ўручную або задаць пачатковы баланс.
@@ -40546,6 +40554,7 @@ Onder ongeveer 1024 pixels breed komt de bekende telefoonindeling terug, met all
 Het startscherm gebruikt de extra ruimte om te tonen wat je aandacht nodig heeft, in plaats van de kaarten van de telefoon eroverheen uit te rekken.
 
 - Een **hoofdkolom** draagt de lopende cijfers — wat je vandaag veilig kunt uitgeven, het budget van de maand, inkomsten tegenover uitgaven — en daarnaast staat een **smalle kolom met kaarten**. Op een heel breed scherm zijn dat er twee.
+- De **snelkoppelingen die je het meest gebruikt** staan in die smalle kolom: een valutawissel vastleggen, geld tussen rekeningen overboeken, de omrekenaar, je abonnementen, de boodschappenlijst en aankoopverzoeken. De eerste drie openen over het startscherm heen, de rest zijn eigen schermen. Welke snelkoppelingen verschijnen, en in welke volgorde, bepaalt dezelfde lijst **Snelle acties** in Instellingen → Widgets die je telefoon gebruikt: zet er daar één uit en hij verdwijnt hier ook.
 - **Alles wat je toevoegt opent over het startscherm** — een uitgave, een beginsaldo, een budget — zodat je op het scherm blijft dat je aan het lezen was.
 - De **bel** opent je meldingen en uitnodigingen als paneel in plaats van als aparte pagina.
 - Een **nieuwe rekening** ziet een korte lijst met eerste stappen in plaats van een scherm vol lege kaarten: een kassabon scannen, er handmatig een invoeren, of een beginsaldo instellen.

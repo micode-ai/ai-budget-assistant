@@ -59,6 +59,7 @@ En dessous d'environ 1024 pixels de large, la mise en page téléphone habituell
 Le tableau de bord se sert de la place supplémentaire pour mettre devant vous ce qui demande votre attention, plutôt que d'y étirer les cartes du téléphone.
 
 - Une **colonne principale** porte les chiffres courants — ce que vous pouvez dépenser aujourd'hui sans risque, le budget du mois, les revenus face aux dépenses — et une **colonne étroite de cartes** se tient à côté. Sur un écran très large, il y en a deux.
+- Les **raccourcis dont vous vous servez le plus** se trouvent dans cette colonne étroite : enregistrer un change de devise, transférer de l’argent entre comptes, le convertisseur, vos abonnements, la liste de courses et les demandes d’achat. Les trois premiers s’ouvrent par-dessus le tableau de bord ; les autres sont des écrans à part entière. Quels raccourcis apparaissent, et dans quel ordre, dépend de la même liste **Actions rapides** dans Réglages → Widgets que celle du téléphone : désactivez-en un là-bas et il disparaît aussi ici.
 - **Tout ce que vous ajoutez s'ouvre par-dessus le tableau de bord** — une dépense, un solde de départ, un budget — vous restez donc sur l'écran que vous lisiez.
 - La **cloche** ouvre vos alertes et vos invitations sous forme de panneau, et non de page séparée.
 - Un **compte tout neuf** voit une courte liste de premiers pas au lieu d'un écran de cartes vides : scanner un ticket, en saisir un à la main, ou définir un solde de départ.

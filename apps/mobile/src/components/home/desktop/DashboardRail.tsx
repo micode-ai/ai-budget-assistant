@@ -10,7 +10,9 @@ import {
   ROUTE_RECEIPT,
   ROUTE_VOICE,
 } from '@/features/dashboard/dashboardDialogs';
+import { RailQuickLinks } from './RailQuickLinks';
 import type { HomeWidgetContext } from '@/components/home/HomeWidgetContext';
+import type { RailQuickLink } from '@/features/dashboard/railQuickLinks';
 import type { SetupStep } from '@/features/onboarding/resolveSetupSteps';
 import type { WidgetKey } from '@/stores/widgetVisibilityStore';
 
@@ -45,6 +47,14 @@ interface DashboardRailProps {
   /** All three, from `resolveSetupSteps`, ticks included. */
   setupSteps: SetupStep[];
   /**
+   * The non-capture quick actions, already resolved by
+   * `resolveRailQuickLinks` — order, visibility, viewer and account-type
+   * filtering all decided in `DashboardDesktop`, the same way `setupSteps` and
+   * `showChecklist` are. An empty array means the card is not drawn at all,
+   * which is the right answer for a user who turned every one of them off.
+   */
+  quickLinks: RailQuickLink[];
+  /**
    * Whether to render the checklist. Decided by `DashboardDesktop`
    * (outstanding steps, not dismissed, and built on an answered pull) rather
    * than here, so this component holds no opinion about what "done" means.
@@ -71,7 +81,8 @@ interface DashboardRailProps {
  * Desktop web's fixed-width standing rail (`docs/design/2026-09-05-
  * dashboard-web.md`'s "The rail"; round 6 added a second physical column):
  * the fixed quick-action list (below), then the setup checklist while any
- * step is outstanding, then `InvestmentCard` (investment accounts only —
+ * step is outstanding, then the quick-links card (`RailQuickLinks` — the
+ * non-capture quick actions), then `InvestmentCard` (investment accounts only —
  * its pre-existing "always first, outside `widgetOrder`" special case,
  * unchanged), then every remaining `WIDGET_KEYS` entry — everything except
  * the five now living in `FocusColumn` — in the user's own stored order,
@@ -84,12 +95,12 @@ interface DashboardRailProps {
  * a preview of one.
  *
  * **Below `SECOND_RAIL_MIN_WIDTH`**: one 300px column, exactly as before
- * round 6 — quick actions, then the checklist, then `InvestmentCard`, then
- * every rail widget in order, single-file.
+ * round 6 — quick actions, then the checklist, then the quick links, then
+ * `InvestmentCard`, then every rail widget in order, single-file.
  *
  * **At/above `SECOND_RAIL_MIN_WIDTH`**: two 300px columns. Quick actions,
- * the checklist and `InvestmentCard` stay fixed at the top of the LEFT
- * column only — quick actions is an action, not information, and per the
+ * the checklist, the quick links and `InvestmentCard` stay fixed at the top
+ * of the LEFT column only — quick actions is an action, not information, and per the
  * product owner it must not be pushed below the fold by whatever the user
  * has stacked into `widgetOrder`, nor by the checklist, which is why the
  * checklist sits under it rather than over it; `InvestmentCard` was already
@@ -115,6 +126,7 @@ export function DashboardRail({
   widgetOrder,
   secondRailVisible,
   setupSteps,
+  quickLinks,
   showChecklist,
   onDismissChecklist,
   onOpenRoute,
@@ -175,6 +187,21 @@ export function DashboardRail({
           onOpenStep={(step) => onOpenRoute(step.route)}
         />
       )}
+      {/* The non-capture quick actions — see `RailQuickLinks` and the pure
+          `railQuickLinks.ts` behind it.
+
+          BELOW the checklist, not above it. The checklist is transient (it
+          disappears once its three steps are ticked) and it is aimed at
+          exactly the user who has not found anything yet, so it keeps the
+          position it was moved into; this card is permanent, and for
+          everyone past onboarding it sits directly under the capture card,
+          which is where the shortcuts belong.
+
+          Inside `fixedTop`, so at >= `SECOND_RAIL_MIN_WIDTH` it stays in the
+          LEFT column with the capture card rather than drifting into the
+          second rail, where "under the quick actions" would become "beside
+          them". */}
+      {quickLinks.length > 0 && <RailQuickLinks links={quickLinks} onOpenRoute={onOpenRoute} />}
       {investmentEl}
     </>
   );

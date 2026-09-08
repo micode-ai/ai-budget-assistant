@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { router } from 'expo-router';
 import { showAlert } from '@/utils/alert';
 import { parseAmount } from '@/utils/amount';
 import { useWalletStore } from '@/stores/walletStore';
@@ -13,13 +12,29 @@ import {
 import { exceedsAvailable, resolveAccountBalance } from '@/features/wallet/transferBalances';
 import { useTranslation } from 'react-i18next';
 
+export interface TransferFormOptions {
+  /**
+   * Called after a successful `addTransfer` — the transfer is already recorded
+   * by the time this fires, so it means "we are done here", not "save".
+   *
+   * Required, and deliberately without a `router.back()` default. This hook
+   * used to end `handleSubmit` with `router.back()` itself, which is correct
+   * for a pushed route and wrong for a dialog on the dashboard: there, back
+   * navigates the DASHBOARD away — or, on a first page load with no history,
+   * does nothing at all and leaves a submitted form sitting open. A default
+   * would let the next caller inherit that quietly; naming the callback makes
+   * every owner decide. Same shape as `SetBalanceView.onDone`.
+   */
+  onSaved: () => void;
+}
+
 /**
  * Owns all form state, FX-rate lookup, and submit logic for the transfer-creation
  * screen. Pure data/behavior layer — the screen owns only the JSX and theme/style
  * concerns. Mirrors `useExpenseMultiSelect`/`useHomeScreenData`: subscribes to the
  * stores it needs itself so the screen doesn't have to thread props through.
  */
-export function useTransferForm() {
+export function useTransferForm({ onSaved }: TransferFormOptions) {
   const { t } = useTranslation();
   const addTransfer = useWalletStore((s) => s.addTransfer);
   const transfers = useWalletStore((s) => s.transfers);
@@ -215,7 +230,7 @@ export function useTransferForm() {
       countAsIncome,
     });
 
-    router.back();
+    onSaved();
   };
 
   return {

@@ -59,6 +59,7 @@ Unterhalb von etwa 1024 Pixeln Breite kehrt das bekannte Telefon-Layout zurück,
 Die Übersicht nutzt den zusätzlichen Platz, um Ihnen das Wichtige vor Augen zu stellen, statt die Karten des Telefons darüber zu strecken.
 
 - Eine **Hauptspalte** trägt die laufenden Zahlen — was heute unbesorgt ausgegeben werden kann, das Monatsbudget, Einnahmen gegen Ausgaben — und daneben steht eine **schmale Kartenspalte**. Auf einem sehr breiten Bildschirm sind es zwei solche Spalten.
+- Die **Verknüpfungen, die Sie am häufigsten brauchen**, stehen in dieser schmalen Spalte: einen Währungstausch erfassen, Geld zwischen Konten umbuchen, der Umrechner, Ihre Abos, die Einkaufsliste und Kaufanfragen. Die ersten drei öffnen sich über der Übersicht, die übrigen sind eigene Bildschirme. Welche Verknüpfungen erscheinen und in welcher Reihenfolge, entscheidet dieselbe Liste **Schnellaktionen** unter Einstellungen → Widgets, die auch das Telefon nutzt — schalten Sie dort eine aus, verschwindet sie auch hier.
 - **Alles, was Sie hinzufügen, öffnet sich über der Übersicht** — eine Ausgabe, ein Anfangssaldo, ein Budget — Sie bleiben also auf dem Bildschirm, den Sie gerade gelesen haben.
 - Die **Glocke** öffnet Hinweise und Einladungen als Panel statt als eigene Seite.
 - Ein **ganz neues Konto** sieht eine kurze Einrichtungsliste statt eines Bildschirms voller leerer Karten: einen Kassenbon scannen, einen Betrag eintippen oder einen Anfangssaldo setzen.
