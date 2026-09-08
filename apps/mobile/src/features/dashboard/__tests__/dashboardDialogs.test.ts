@@ -1,10 +1,13 @@
 import {
   ROUTE_BUDGET_NEW,
+  ROUTE_CONVERTER,
+  ROUTE_EXCHANGE,
   ROUTE_EXPENSE_NEW,
   ROUTE_IMPORT,
   ROUTE_INCOME_NEW,
   ROUTE_RECEIPT,
   ROUTE_SET_BALANCE,
+  ROUTE_TRANSFER,
   ROUTE_VOICE,
   resolveDialogAction,
 } from '../dashboardDialogs';
@@ -35,6 +38,9 @@ describe('resolveDialogAction', () => {
     expect(resolveDialogAction(ROUTE_VOICE)).toEqual({ kind: 'dialog', dialog: 'voice' });
     expect(resolveDialogAction(ROUTE_BUDGET_NEW)).toEqual({ kind: 'dialog', dialog: 'budget' });
     expect(resolveDialogAction(ROUTE_SET_BALANCE)).toEqual({ kind: 'dialog', dialog: 'wallet' });
+    expect(resolveDialogAction(ROUTE_EXCHANGE)).toEqual({ kind: 'dialog', dialog: 'exchange' });
+    expect(resolveDialogAction(ROUTE_TRANSFER)).toEqual({ kind: 'dialog', dialog: 'transfer' });
+    expect(resolveDialogAction(ROUTE_CONVERTER)).toEqual({ kind: 'dialog', dialog: 'converter' });
   });
 
   it('gives every dialog route a distinct kind', () => {
@@ -48,11 +54,24 @@ describe('resolveDialogAction', () => {
       ROUTE_VOICE,
       ROUTE_BUDGET_NEW,
       ROUTE_SET_BALANCE,
+      ROUTE_EXCHANGE,
+      ROUTE_TRANSFER,
+      ROUTE_CONVERTER,
     ].map((route) => {
       const action = resolveDialogAction(route);
       return action.kind === 'dialog' ? action.dialog : route;
     });
     expect(new Set(kinds).size).toBe(kinds.length);
+  });
+
+  it('keeps the rail quick-links card’s three list screens pages', () => {
+    // These three are places you work, not forms — the settings shell draws
+    // the same distinction. Boxing a list screen in a dialog would make its own
+    // navigation (a shopping list opens an item, a purchase request opens a
+    // vote) happen underneath an overlay it cannot dismiss.
+    for (const route of ['/subscriptions', '/shopping-list', '/purchase-requests']) {
+      expect(resolveDialogAction(route)).toEqual({ kind: 'navigate', route });
+    }
   });
 
   it('keeps the import wizard a page', () => {

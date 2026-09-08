@@ -59,6 +59,7 @@ Poniżej około 1024 pikseli szerokości wraca znajomy układ telefoniczny, z ws
 Ekran główny wykorzystuje dodatkowe miejsce, żeby pokazać to, co wymaga uwagi, a nie rozciągać na nim kart z telefonu.
 
 - **Główna kolumna** prowadzi bieżące liczby — ile możesz dziś bezpiecznie wydać, budżet miesiąca, przychody względem wydatków — a obok stoi **wąska kolumna kart**. Na bardzo szerokim ekranie są dwie takie kolumny.
+- **Skróty, których używasz najczęściej**, stoją w tej wąskiej kolumnie: zapisanie wymiany waluty, przeniesienie pieniędzy między kontami, przelicznik, Twoje subskrypcje, lista zakupów i wnioski o zakup. Pierwsze trzy otwierają się na wierzchu ekranu głównego, pozostałe to osobne ekrany. Które skróty się pokazują i w jakiej kolejności, decyduje ta sama lista **Szybkie akcje** w Ustawieniach → Widżety, z której korzysta telefon: wyłącz coś tam, i zniknie też tutaj.
 - **Wszystko, co dodajesz, otwiera się nad ekranem głównym** — wydatek, saldo początkowe, budżet — więc zostajesz na ekranie, który właśnie czytasz.
 - **Dzwonek** otwiera alerty i zaproszenia jako panel, a nie osobną stronę.
 - **Nowo utworzone konto** widzi krótką listę kroków startowych, a nie ekran pustych kart: zeskanuj paragon, wpisz go ręcznie albo ustaw saldo początkowe.
