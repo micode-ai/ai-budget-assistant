@@ -66,6 +66,17 @@ Możesz zapytać, ile wydałeś na konkretny produkt, markę lub sklep:
 
 Asystent szuka **wewnątrz zeskanowanych paragonów**, a nie tylko w nazwie wydatku — produkt kupiony przy dużych zakupach też się liczy, a sumowana jest tylko cena tej pozycji (nie cały paragon). Rozumie **każdy język, nazwy marek i literówki** — na przykład „пиво", „beer" czy „cerveza" znajdą te same zakupy piwa. Jeśli nie podasz okresu, przeszuka całą historię.
 
+## Pytanie o kaucję za butelki
+
+W wielu krajach sklepy pobierają osobną, zwrotną kaucję za butelki, puszki i skrzynki. Możesz zapytać asystenta, ile jej zapłaciłeś:
+
+- „Ile zapłaciłem kaucji?”
+- „Ile kaucji w tym miesiącu?”
+
+Asystent podaje sumę, z ilu paragonów pochodzi i w których sklepach zapłaciłeś najwięcej. Pytaj własnymi słowami — lokalne określenie działa w każdym języku obsługiwanym przez aplikację (kaucja, Pfand, statiegeld, consigne, depósito, bottle deposit). Jeśli nie podasz okresu, obejmuje całą historię.
+
+Kwota pochodzi z pozycji kaucji wydrukowanej na **zeskanowanych paragonach**, więc liczy też paragony, których aplikacja nie podzieliła na kategorie. To kwota już **zapłacona**, a nie zwrot, który możesz jeszcze odebrać — aplikacja nie śledzi, które opakowania oddałeś. Ręcznie wpisane wydatki nie mają kaucji, a na koncie w pełni zaszyfrowanym asystent w ogóle nie odczyta kwot.
+
 ## Historia rozmów
 
 Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:

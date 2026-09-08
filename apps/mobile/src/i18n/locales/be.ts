@@ -368,6 +368,7 @@ export default {
     shoppingSuggestionsRestock: 'Заканчваецца',
     shoppingSuggestionsDeals: 'Зніжкі',
     actionInflationShield: 'Абарона ад інфляцыі',
+    actionDepositTotal: 'Закладзь за тару',
     andMore: '+{{count}} яшчэ',
     confirmTitle: 'Пацвердзіце дзеянне',
     resultSuccess: 'Паспяхова выканана',

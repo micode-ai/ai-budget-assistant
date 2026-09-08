@@ -368,6 +368,7 @@ export default {
     shoppingSuggestionsRestock: 'Bijna op',
     shoppingSuggestionsDeals: 'Aanbiedingen',
     actionInflationShield: 'Inflatieschild',
+    actionDepositTotal: 'Betaald statiegeld',
     andMore: '+{{count}} meer',
     confirmTitle: 'Actie bevestigen',
     resultSuccess: 'Succesvol afgerond',

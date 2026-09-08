@@ -66,6 +66,17 @@ Je kunt vragen hoeveel je aan een bepaald product, merk of winkel hebt uitgegeve
 
 De assistent zoekt **in je gescande bonnen**, niet alleen in de naam van de uitgave — een product dat deel uitmaakte van een grote boodschappenronde telt dus mee, en alleen de prijs van dat artikel wordt opgeteld (niet de hele bon). Hij begrijpt **elke taal, merknamen en typfouten** — zo vinden "пиво", "beer" of "cerveza" allemaal dezelfde bieraankopen. Als je geen periode noemt, doorzoekt hij je hele geschiedenis.
 
+## Vragen naar statiegeld
+
+In veel landen rekenen winkels apart statiegeld voor flessen, blikjes en kratten, dat je terugkrijgt. Je kunt de assistent vragen hoeveel je ervan hebt betaald:
+
+- "Hoeveel statiegeld heb ik betaald?"
+- "Hoeveel statiegeld deze maand?"
+
+De assistent noemt het totaal, uit hoeveel bonnen het komt en in welke winkels je het meest hebt betaald. Vraag het in je eigen woorden — de plaatselijke term werkt in elke taal die de app ondersteunt (statiegeld, kaucja, Pfand, consigne, depósito, bottle deposit). Noem je geen periode, dan wordt je hele geschiedenis meegenomen.
+
+Het bedrag komt van de statiegeldregel op je **gescande bonnen**, dus ook bonnen die de app niet in categorieën kon opsplitsen tellen mee. Het is het bedrag dat je al hebt **betaald**, niet een vergoeding die je nog kunt ophalen — de app houdt niet bij welke verpakking je hebt ingeleverd. Handmatig ingevoerde uitgaven hebben geen statiegeld, en op een volledig versleutelde account kan de assistent de bedragen helemaal niet lezen.
+
 ## Gespreksgeschiedenis
 
 Je kunt eerdere AI-gesprekken op elk moment doorbladeren en heropenen:

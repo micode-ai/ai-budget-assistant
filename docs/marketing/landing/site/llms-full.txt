@@ -3293,6 +3293,17 @@ You can ask how much you've spent on a particular product, brand, or shop:
 
 The assistant searches **inside your scanned receipts**, not just the expense name — so a product bought as part of a big grocery run is still counted, and only that item's price is added up (not the whole receipt). It understands **any language, brand names, and typos** — for example "пиво", "beer", or "cerveza" all find the same beer purchases. If you don't mention a time period, it searches your whole history.
 
+## Asking About Bottle Deposits
+
+Shops in many countries charge a separate, refundable deposit on returnable bottles, cans and crates. You can ask the assistant how much of it you have paid:
+
+- "How much have I paid in deposits?"
+- "How much kaucja this month?"
+
+The assistant answers with the total, how many receipts it came from, and the shops where you paid the most. Ask in your own words — the local term works in every language the app supports (kaucja, Pfand, statiegeld, consigne, depósito, bottle deposit). If you do not mention a time period, it covers your whole history.
+
+The figure comes from the deposit line printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. It is the amount you have already **paid**, not a refund you can still collect — the app does not track which packaging you have taken back. Manually typed expenses carry no deposit, and on a fully encrypted account the assistant cannot read the amounts at all.
+
 ## Conversation History
 
 You can browse and reopen previous AI conversations at any time:

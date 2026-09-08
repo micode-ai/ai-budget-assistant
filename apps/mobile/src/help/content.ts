@@ -1054,6 +1054,17 @@ You can ask how much you've spent on a particular product, brand, or shop:
 
 The assistant searches **inside your scanned receipts**, not just the expense name — so a product bought as part of a big grocery run is still counted, and only that item's price is added up (not the whole receipt). It understands **any language, brand names, and typos** — for example "пиво", "beer", or "cerveza" all find the same beer purchases. If you don't mention a time period, it searches your whole history.
 
+## Asking About Bottle Deposits
+
+Shops in many countries charge a separate, refundable deposit on returnable bottles, cans and crates. You can ask the assistant how much of it you have paid:
+
+- "How much have I paid in deposits?"
+- "How much kaucja this month?"
+
+The assistant answers with the total, how many receipts it came from, and the shops where you paid the most. Ask in your own words — the local term works in every language the app supports (kaucja, Pfand, statiegeld, consigne, depósito, bottle deposit). If you do not mention a time period, it covers your whole history.
+
+The figure comes from the deposit line printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. It is the amount you have already **paid**, not a refund you can still collect — the app does not track which packaging you have taken back. Manually typed expenses carry no deposit, and on a fully encrypted account the assistant cannot read the amounts at all.
+
 ## Conversation History
 
 You can browse and reopen previous AI conversations at any time:
@@ -5711,6 +5722,17 @@ iOS, Android, Web
 
 Ассистент ищет **внутри отсканированных чеков**, а не только по названию расхода — поэтому продукт, купленный в рамках большой покупки, тоже учитывается, и суммируется только цена этой позиции (а не весь чек). Он понимает **любой язык, названия брендов и опечатки** — например, «пиво», «beer» или «cerveza» найдут одни и те же покупки пива. Если не указать период, поиск идёт по всей истории.
 
+## Вопрос о залоге за тару
+
+Во многих странах магазины берут отдельный возвратный залог за бутылки, банки и ящики. Можно спросить ассистента, сколько вы его заплатили:
+
+- «Сколько я заплатил залога за тару?»
+- «Сколько кауции за этот месяц?»
+
+Ассистент назовёт сумму, из скольких чеков она собрана и в каких магазинах вы заплатили больше всего. Спрашивайте своими словами — местное название работает на любом языке, который поддерживает приложение (kaucja, Pfand, statiegeld, consigne, depósito, залог за тару). Если период не указан, берётся вся история.
+
+Сумма берётся из строки залога, напечатанной на **отсканированных чеках**, поэтому учитываются и те чеки, которые приложение не смогло разбить по категориям. Это уже **уплаченная** сумма, а не возврат, который можно получить, — приложение не отслеживает, какую тару вы сдали. У расходов, введённых вручную, залога нет, а на полностью зашифрованном аккаунте ассистент вообще не может прочитать суммы.
+
 ## История разговоров
 
 Вы можете просматривать и возвращаться к предыдущим разговорам с ИИ в любое время:
@@ -10346,6 +10368,17 @@ iOS, Android, Web
 
 Асистент шукає **всередині відсканованих чеків**, а не лише за назвою витрати — тож продукт, куплений під час великої покупки, теж враховується, і підсумовується лише ціна цієї позиції (а не весь чек). Він розуміє **будь-яку мову, назви брендів і одруки** — наприклад, «пиво», «beer» чи «cerveza» знайдуть однакові покупки пива. Якщо не вказати період, пошук іде по всій історії.
 
+## Запитання про заставу за тару
+
+У багатьох країнах магазини беруть окрему поворотну заставу за бутлі, банки та ящики. Можна запитати асистента, скільки ви її заплатили:
+
+- «Скільки я заплатив застави за тару?»
+- «Скільки кауції цього місяця?»
+
+Асистент назве суму, зі скількох чеків вона зібрана і в яких магазинах ви заплатили найбільше. Питайте своїми словами — місцева назва працює будь-якою мовою, яку підтримує застосунок (kaucja, Pfand, statiegeld, consigne, depósito, застава за тару). Якщо період не вказано, береться вся історія.
+
+Сума береться з рядка застави, надрукованого на **відсканованих чеках**, тому враховуються й ті чеки, які застосунок не зміг розбити за категоріями. Це вже **сплачена** сума, а не повернення, яке можна отримати, — застосунок не відслідковує, яку тару ви здали. У витратах, введених уручну, застави немає, а на повністю зашифрованому акаунті асистент узагалі не може прочитати суми.
+
 ## Історія розмов
 
 Ви можете переглядати та повертатися до попередніх розмов з ШІ у будь-який час:
@@ -14929,6 +14962,17 @@ Możesz zapytać, ile wydałeś na konkretny produkt, markę lub sklep:
 
 Asystent szuka **wewnątrz zeskanowanych paragonów**, a nie tylko w nazwie wydatku — produkt kupiony przy dużych zakupach też się liczy, a sumowana jest tylko cena tej pozycji (nie cały paragon). Rozumie **każdy język, nazwy marek i literówki** — na przykład „пиво", „beer" czy „cerveza" znajdą te same zakupy piwa. Jeśli nie podasz okresu, przeszuka całą historię.
 
+## Pytanie o kaucję za butelki
+
+W wielu krajach sklepy pobierają osobną, zwrotną kaucję za butelki, puszki i skrzynki. Możesz zapytać asystenta, ile jej zapłaciłeś:
+
+- „Ile zapłaciłem kaucji?”
+- „Ile kaucji w tym miesiącu?”
+
+Asystent podaje sumę, z ilu paragonów pochodzi i w których sklepach zapłaciłeś najwięcej. Pytaj własnymi słowami — lokalne określenie działa w każdym języku obsługiwanym przez aplikację (kaucja, Pfand, statiegeld, consigne, depósito, bottle deposit). Jeśli nie podasz okresu, obejmuje całą historię.
+
+Kwota pochodzi z pozycji kaucji wydrukowanej na **zeskanowanych paragonach**, więc liczy też paragony, których aplikacja nie podzieliła na kategorie. To kwota już **zapłacona**, a nie zwrot, który możesz jeszcze odebrać — aplikacja nie śledzi, które opakowania oddałeś. Ręcznie wpisane wydatki nie mają kaucji, a na koncie w pełni zaszyfrowanym asystent w ogóle nie odczyta kwot.
+
 ## Historia rozmów
 
 Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
@@ -19508,6 +19552,17 @@ Du kannst fragen, wie viel du für ein bestimmtes Produkt, eine Marke oder ein G
 
 Der Assistent sucht **in deinen gescannten Belegen**, nicht nur im Namen der Ausgabe — ein Produkt, das Teil eines großen Einkaufs war, wird also mitgezählt, und nur der Preis dieses Artikels wird summiert (nicht der ganze Beleg). Er versteht **jede Sprache, Markennamen und Tippfehler** — zum Beispiel finden „пиво", „beer" oder „cerveza" alle dieselben Bierkäufe. Wenn du keinen Zeitraum nennst, wird deine gesamte Historie durchsucht.
 
+## Nach dem Pfand fragen
+
+In vielen Ländern erheben Geschäfte ein separates, erstattungsfähiges Pfand auf Flaschen, Dosen und Kisten. Sie können den Assistenten fragen, wie viel davon Sie bezahlt haben:
+
+- „Wie viel Pfand habe ich bezahlt?"
+- „Wie viel Pfand diesen Monat?"
+
+Der Assistent nennt die Summe, aus wie vielen Belegen sie stammt und in welchen Geschäften Sie am meisten bezahlt haben. Fragen Sie in eigenen Worten — der lokale Begriff funktioniert in jeder von der App unterstützten Sprache (Pfand, kaucja, statiegeld, consigne, depósito, bottle deposit). Ohne Zeitangabe wird der gesamte Verlauf berücksichtigt.
+
+Der Betrag stammt aus der Pfandzeile auf Ihren **gescannten Belegen**, daher zählen auch Belege mit, die die App nicht in Kategorien aufteilen konnte. Es ist der bereits **bezahlte** Betrag, keine Rückerstattung, die Sie noch abholen können — die App verfolgt nicht, welche Verpackungen Sie zurückgegeben haben. Manuell eingegebene Ausgaben enthalten kein Pfand, und in einem vollständig verschlüsselten Konto kann der Assistent die Beträge überhaupt nicht lesen.
+
 ## Gesprächsverlauf
 
 Du kannst frühere KI-Gespräche jederzeit aufrufen:
@@ -24062,6 +24117,17 @@ Puedes preguntar cuánto has gastado en un producto, marca o tienda concretos:
 
 El asistente busca **dentro de tus tickets escaneados**, no solo en el nombre del gasto — así, un producto comprado dentro de una compra grande también cuenta, y solo se suma el precio de ese artículo (no todo el ticket). Entiende **cualquier idioma, marcas y erratas** — por ejemplo, «пиво», «beer» o «cerveza» encuentran las mismas compras de cerveza. Si no indicas un periodo, busca en todo tu historial.
 
+## Preguntar por el depósito de envases
+
+En muchos países las tiendas cobran un depósito aparte y reembolsable por botellas, latas y cajas. Puedes preguntar al asistente cuánto has pagado:
+
+- «¿Cuánto he pagado de depósito de envases?»
+- «¿Cuánto depósito este mes?»
+
+El asistente indica el total, de cuántos recibos procede y en qué tiendas has pagado más. Pregunta con tus propias palabras: el término local funciona en cualquier idioma que admita la aplicación (depósito, envases, kaucja, Pfand, statiegeld, consigne, bottle deposit). Si no indicas un periodo, se cubre todo tu historial.
+
+La cifra proviene de la línea de depósito impresa en tus **recibos escaneados**, así que también cuenta los recibos que la aplicación no pudo dividir en categorías. Es la cantidad que ya has **pagado**, no un reembolso que aún puedas recuperar: la aplicación no registra qué envases has devuelto. Los gastos escritos a mano no llevan depósito y, en una cuenta totalmente cifrada, el asistente no puede leer los importes.
+
 ## Historial de conversaciones
 
 Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
@@ -28605,6 +28671,17 @@ Vous pouvez demander combien vous avez dépensé pour un produit, une marque ou 
 
 L'assistant cherche **dans vos tickets scannés**, pas seulement dans le nom de la dépense — un produit acheté au sein d'un grand achat est donc bien compté, et seul le prix de cet article est additionné (pas tout le ticket). Il comprend **toutes les langues, les marques et les fautes de frappe** — par exemple « пиво », « beer » ou « cerveza » trouvent les mêmes achats de bière. Si vous n'indiquez pas de période, il cherche dans tout votre historique.
 
+## Poser une question sur la consigne
+
+Dans de nombreux pays, les magasins facturent une consigne distincte et remboursable sur les bouteilles, canettes et caisses. Vous pouvez demander à l'assistant combien vous en avez payé :
+
+- « Combien ai-je payé de consigne ? »
+- « Combien de consigne ce mois-ci ? »
+
+L'assistant donne le total, le nombre de tickets concernés et les magasins où vous avez le plus payé. Posez la question avec vos propres mots — le terme local fonctionne dans toutes les langues prises en charge par l'application (consigne, kaucja, Pfand, statiegeld, depósito, bottle deposit). Sans période précisée, tout votre historique est pris en compte.
+
+Le montant provient de la ligne de consigne imprimée sur vos **tickets scannés**, donc les tickets que l'application n'a pas pu répartir en catégories comptent aussi. C'est le montant déjà **payé**, et non un remboursement encore à récupérer : l'application ne suit pas les emballages que vous avez rapportés. Les dépenses saisies à la main ne comportent pas de consigne et, sur un compte entièrement chiffré, l'assistant ne peut pas lire les montants.
+
 ## Historique des conversations
 
 Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :
@@ -33146,6 +33223,17 @@ iOS, Android, Web
 
 Асістэнт шукае **усярэдзіне адсканаваных чэкаў**, а не толькі па назве выдатку — таму прадукт, куплены падчас вялікай пакупкі, таксама ўлічваецца, і сумуецца толькі цана гэтай пазіцыі (а не ўвесь чэк). Ён разумее **любую мову, назвы брэндаў і памылкі друку** — напрыклад, «піва», «beer» ці «cerveza» знойдуць адны і тыя ж пакупкі піва. Калі не пазначыць перыяд, пошук ідзе па ўсёй гісторыі.
 
+## Пытанне пра закладзь за тару
+
+У многіх краінах крамы бяруць асобную зваротную закладзь за бутэлькі, банкі і скрыні. Можна спытаць асістэнта, колькі вы яе заплацілі:
+
+- «Колькі я заплаціў закладзі за тару?»
+- «Колькі кауцыі за гэты месяц?»
+
+Асістэнт назве суму, са скольких чэкаў яна складзена і ў якіх крамах вы заплацілі найбольш. Пытайцеся сваімі словамі — мясцовая назва працуе на любой мове, якую падтрымлівае дадатак (kaucja, Pfand, statiegeld, consigne, depósito, закладзь за тару). Калі перыяд не пазначаны, бярэцца ўся гісторыя.
+
+Сума бярэцца з радка закладзі, надрукаванага на **адсканаваных чэках**, таму ўлічваюцца і тыя чэкі, якія дадатак не змог разбіць па катэгорыях. Гэта ўжо **заплачаная** сума, а не вяртанне, якое можна атрымаць, — дадатак не адсочвае, якую тару вы здалі. У выдаткаў, уведзеных уручную, закладзі няма, а на цалкам зашыфраваным акаўнце асістэнт зусім не можа прачытаць сумы.
+
 ## Гісторыя размоў
 
 Вы можаце праглядаць і вяртацца да папярэдніх размоў з ШІ у любы момант:
@@ -37650,6 +37738,17 @@ Je kunt vragen hoeveel je aan een bepaald product, merk of winkel hebt uitgegeve
 - "Hoeveel aan koffie dit jaar?"
 
 De assistent zoekt **in je gescande bonnen**, niet alleen in de naam van de uitgave — een product dat deel uitmaakte van een grote boodschappenronde telt dus mee, en alleen de prijs van dat artikel wordt opgeteld (niet de hele bon). Hij begrijpt **elke taal, merknamen en typfouten** — zo vinden "пиво", "beer" of "cerveza" allemaal dezelfde bieraankopen. Als je geen periode noemt, doorzoekt hij je hele geschiedenis.
+
+## Vragen naar statiegeld
+
+In veel landen rekenen winkels apart statiegeld voor flessen, blikjes en kratten, dat je terugkrijgt. Je kunt de assistent vragen hoeveel je ervan hebt betaald:
+
+- "Hoeveel statiegeld heb ik betaald?"
+- "Hoeveel statiegeld deze maand?"
+
+De assistent noemt het totaal, uit hoeveel bonnen het komt en in welke winkels je het meest hebt betaald. Vraag het in je eigen woorden — de plaatselijke term werkt in elke taal die de app ondersteunt (statiegeld, kaucja, Pfand, consigne, depósito, bottle deposit). Noem je geen periode, dan wordt je hele geschiedenis meegenomen.
+
+Het bedrag komt van de statiegeldregel op je **gescande bonnen**, dus ook bonnen die de app niet in categorieën kon opsplitsen tellen mee. Het is het bedrag dat je al hebt **betaald**, niet een vergoeding die je nog kunt ophalen — de app houdt niet bij welke verpakking je hebt ingeleverd. Handmatig ingevoerde uitgaven hebben geen statiegeld, en op een volledig versleutelde account kan de assistent de bedragen helemaal niet lezen.
 
 ## Gespreksgeschiedenis
 

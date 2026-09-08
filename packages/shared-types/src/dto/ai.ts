@@ -47,7 +47,8 @@ export type ChatActionType =
   | 'add_to_shopping_list'
   | 'remove_from_shopping_list'
   | 'get_shopping_suggestions'
-  | 'get_inflation_shield';
+  | 'get_inflation_shield'
+  | 'get_deposit_total';
 
 export interface CreateExpenseActionData {
   amount: number;

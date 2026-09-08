@@ -66,6 +66,17 @@ Vous pouvez demander combien vous avez dépensé pour un produit, une marque ou 
 
 L'assistant cherche **dans vos tickets scannés**, pas seulement dans le nom de la dépense — un produit acheté au sein d'un grand achat est donc bien compté, et seul le prix de cet article est additionné (pas tout le ticket). Il comprend **toutes les langues, les marques et les fautes de frappe** — par exemple « пиво », « beer » ou « cerveza » trouvent les mêmes achats de bière. Si vous n'indiquez pas de période, il cherche dans tout votre historique.
 
+## Poser une question sur la consigne
+
+Dans de nombreux pays, les magasins facturent une consigne distincte et remboursable sur les bouteilles, canettes et caisses. Vous pouvez demander à l'assistant combien vous en avez payé :
+
+- « Combien ai-je payé de consigne ? »
+- « Combien de consigne ce mois-ci ? »
+
+L'assistant donne le total, le nombre de tickets concernés et les magasins où vous avez le plus payé. Posez la question avec vos propres mots — le terme local fonctionne dans toutes les langues prises en charge par l'application (consigne, kaucja, Pfand, statiegeld, depósito, bottle deposit). Sans période précisée, tout votre historique est pris en compte.
+
+Le montant provient de la ligne de consigne imprimée sur vos **tickets scannés**, donc les tickets que l'application n'a pas pu répartir en catégories comptent aussi. C'est le montant déjà **payé**, et non un remboursement encore à récupérer : l'application ne suit pas les emballages que vous avez rapportés. Les dépenses saisies à la main ne comportent pas de consigne et, sur un compte entièrement chiffré, l'assistant ne peut pas lire les montants.
+
 ## Historique des conversations
 
 Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :

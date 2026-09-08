@@ -370,6 +370,7 @@ export default {
     shoppingSuggestionsRestock: 'Kończy się',
     shoppingSuggestionsDeals: 'Okazje',
     actionInflationShield: 'Tarcza antyinflacyjna',
+    actionDepositTotal: 'Zapłacona kaucja',
     andMore: '+{{count}} więcej',
     confirmTitle: 'Potwierdź akcję',
     resultSuccess: 'Zakończono pomyślnie',

@@ -66,6 +66,17 @@ Du kannst fragen, wie viel du für ein bestimmtes Produkt, eine Marke oder ein G
 
 Der Assistent sucht **in deinen gescannten Belegen**, nicht nur im Namen der Ausgabe — ein Produkt, das Teil eines großen Einkaufs war, wird also mitgezählt, und nur der Preis dieses Artikels wird summiert (nicht der ganze Beleg). Er versteht **jede Sprache, Markennamen und Tippfehler** — zum Beispiel finden „пиво", „beer" oder „cerveza" alle dieselben Bierkäufe. Wenn du keinen Zeitraum nennst, wird deine gesamte Historie durchsucht.
 
+## Nach dem Pfand fragen
+
+In vielen Ländern erheben Geschäfte ein separates, erstattungsfähiges Pfand auf Flaschen, Dosen und Kisten. Sie können den Assistenten fragen, wie viel davon Sie bezahlt haben:
+
+- „Wie viel Pfand habe ich bezahlt?"
+- „Wie viel Pfand diesen Monat?"
+
+Der Assistent nennt die Summe, aus wie vielen Belegen sie stammt und in welchen Geschäften Sie am meisten bezahlt haben. Fragen Sie in eigenen Worten — der lokale Begriff funktioniert in jeder von der App unterstützten Sprache (Pfand, kaucja, statiegeld, consigne, depósito, bottle deposit). Ohne Zeitangabe wird der gesamte Verlauf berücksichtigt.
+
+Der Betrag stammt aus der Pfandzeile auf Ihren **gescannten Belegen**, daher zählen auch Belege mit, die die App nicht in Kategorien aufteilen konnte. Es ist der bereits **bezahlte** Betrag, keine Rückerstattung, die Sie noch abholen können — die App verfolgt nicht, welche Verpackungen Sie zurückgegeben haben. Manuell eingegebene Ausgaben enthalten kein Pfand, und in einem vollständig verschlüsselten Konto kann der Assistent die Beträge überhaupt nicht lesen.
+
 ## Gesprächsverlauf
 
 Du kannst frühere KI-Gespräche jederzeit aufrufen:

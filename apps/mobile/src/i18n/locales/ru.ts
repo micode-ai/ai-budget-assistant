@@ -370,6 +370,7 @@ export default {
     shoppingSuggestionsRestock: 'Заканчивается',
     shoppingSuggestionsDeals: 'Скидки',
     actionInflationShield: 'Защита от инфляции',
+    actionDepositTotal: 'Залог за тару',
     andMore: '+{{count}} ещё',
     confirmTitle: 'Подтвердите действие',
     resultSuccess: 'Успешно выполнено',

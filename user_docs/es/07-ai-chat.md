@@ -66,6 +66,17 @@ Puedes preguntar cuánto has gastado en un producto, marca o tienda concretos:
 
 El asistente busca **dentro de tus tickets escaneados**, no solo en el nombre del gasto — así, un producto comprado dentro de una compra grande también cuenta, y solo se suma el precio de ese artículo (no todo el ticket). Entiende **cualquier idioma, marcas y erratas** — por ejemplo, «пиво», «beer» o «cerveza» encuentran las mismas compras de cerveza. Si no indicas un periodo, busca en todo tu historial.
 
+## Preguntar por el depósito de envases
+
+En muchos países las tiendas cobran un depósito aparte y reembolsable por botellas, latas y cajas. Puedes preguntar al asistente cuánto has pagado:
+
+- «¿Cuánto he pagado de depósito de envases?»
+- «¿Cuánto depósito este mes?»
+
+El asistente indica el total, de cuántos recibos procede y en qué tiendas has pagado más. Pregunta con tus propias palabras: el término local funciona en cualquier idioma que admita la aplicación (depósito, envases, kaucja, Pfand, statiegeld, consigne, bottle deposit). Si no indicas un periodo, se cubre todo tu historial.
+
+La cifra proviene de la línea de depósito impresa en tus **recibos escaneados**, así que también cuenta los recibos que la aplicación no pudo dividir en categorías. Es la cantidad que ya has **pagado**, no un reembolso que aún puedas recuperar: la aplicación no registra qué envases has devuelto. Los gastos escritos a mano no llevan depósito y, en una cuenta totalmente cifrada, el asistente no puede leer los importes.
+
 ## Historial de conversaciones
 
 Puedes explorar y reabrir conversaciones anteriores en cualquier momento:

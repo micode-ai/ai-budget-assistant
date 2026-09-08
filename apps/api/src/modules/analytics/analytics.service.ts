@@ -5,6 +5,15 @@ import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
 import { formatInTimezone, yearMonthIdInTimezone, calendarPartsInTimezone } from '../../common/utils/timezone';
 
+/**
+ * Ceiling on the receipts one deposit question reads. Deposits are a small
+ * slice of any account's receipts, so this is generous — it exists because a
+ * date window bounds the range and never the row count, and an all-time
+ * question on a long-lived account must not pull an unbounded row set into
+ * memory (the shape of failure that OOM-killed this API once already).
+ */
+const DEPOSIT_ROW_LIMIT = 5000;
+
 interface ExpenseWithCategory {
   id: string;
   amount: unknown;
@@ -758,6 +767,56 @@ export class AnalyticsService {
     return Array.from(tagMap.values())
       .map(t => ({ ...t, percentage: total > 0 ? (t.amount / total) * 100 : 0 }))
       .sort((a, b) => b.amount - a.amount);
+  }
+
+  /**
+   * The receipts in a period that printed a returnable-packaging deposit
+   * ("kaucja", "Pfand", "statiegeld", "залог за тару"), newest first.
+   *
+   * Returns ROWS, not a total: the aggregation needs the caller's display
+   * currency and its exchange rates, both of which live in the AI-tools layer,
+   * so the arithmetic sits in the pure `summariseDeposits` util instead.
+   *
+   * `depositAmount: { gt: 0 }` excludes NULL by SQL semantics, which is what
+   * makes this "the receipts that carried a deposit" rather than every receipt.
+   * `take` asks for one row past the ceiling so truncation is detectable —
+   * a capped total presented as complete would be a false statement about the
+   * user's money.
+   *
+   * A fully-encrypted (tier-2) account is refused even though `depositAmount`
+   * itself happens to be stored in clear today: that is a known privacy gap to
+   * close, not a data source to build on, and such an account's `merchant` and
+   * `description` are ciphertext anyway.
+   */
+  async getDepositRows(accountId: string, startDate: Date, endDate: Date) {
+    if (await this.isFullEncryption(accountId)) {
+      return { encryptionRestricted: true as const, rows: [], truncated: false };
+    }
+
+    const rows = await this.prisma.expense.findMany({
+      where: {
+        accountId,
+        isDeleted: false,
+        isPlanned: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
+        date: { gte: startDate, lte: endDate },
+        depositAmount: { gt: 0 },
+      },
+      select: {
+        date: true,
+        merchant: true,
+        description: true,
+        depositAmount: true,
+        currencyCode: true,
+      },
+      orderBy: { date: 'desc' },
+      take: DEPOSIT_ROW_LIMIT + 1,
+    });
+
+    return {
+      rows: rows.slice(0, DEPOSIT_ROW_LIMIT),
+      truncated: rows.length > DEPOSIT_ROW_LIMIT,
+    };
   }
 
   async getProjectBreakdown(accountId: string) {

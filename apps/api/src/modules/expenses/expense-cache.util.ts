@@ -14,6 +14,9 @@ export async function invalidateExpenseChatCache(cacheService: CacheService, acc
     cacheService.delByPrefix(`chat:get_expenses:${accountId}:`),
     cacheService.delByPrefix(`chat:get_budget_status:${accountId}:`),
     cacheService.delByPrefix(`chat:get_category_breakdown:${accountId}:`),
+    // Reads `Expense.depositAmount` — the returnable-packaging deposit — which
+    // a receipt scan writes, so it goes stale on exactly the same events.
+    cacheService.delByPrefix(`chat:get_deposit_total:${accountId}:`),
     // The AI-chat layer caches the shield tool result in FRONT of getShield, so
     // the internal `shield:` bust (post-create block) isn't enough on the chat
     // surface — bust the chat-layer shield cache on every expense mutation too.
