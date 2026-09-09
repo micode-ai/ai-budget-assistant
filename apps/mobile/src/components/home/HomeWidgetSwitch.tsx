@@ -48,7 +48,7 @@ export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext) {
 
     case 'financialHealth':
       return widgetVisibility.financialHealth
-        ? <FinancialHealthWidget key="financialHealth" />
+        ? <FinancialHealthWidget key="financialHealth" dataReady={ctx.readiness?.transactions} />
         : null;
 
     case 'gamification':
@@ -75,7 +75,9 @@ export function renderHomeWidget(key: WidgetKey, ctx: HomeWidgetContext) {
       return widgetVisibility.fatFinder ? <FatFinderCard key="fatFinder" /> : null;
 
     case 'calendar':
-      return widgetVisibility.calendar ? <CalendarWidget key="calendar" refreshKey={widgetRefreshKey} /> : null;
+      return widgetVisibility.calendar
+        ? <CalendarWidget key="calendar" refreshKey={widgetRefreshKey} dataReady={ctx.readiness?.transactions} />
+        : null;
 
     case 'goals':
       return widgetVisibility.goals ? <GoalsCard key="goals" /> : null;

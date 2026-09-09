@@ -163,6 +163,7 @@ export function FocusColumn({ ctx, onOpenSafeToSpend }: FocusColumnProps) {
               ? { data: safeToSpendData, hasEnoughData: hasSafeToSpend, onPress: onOpenSafeToSpend }
               : undefined
           }
+          dataReady={ctx.readiness?.transactions}
         />
       )}
       {showIncomeExpenses && <IncomeExpensesCard ctx={ctx} showCounts />}

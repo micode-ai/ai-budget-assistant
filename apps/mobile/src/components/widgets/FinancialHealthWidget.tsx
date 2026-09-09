@@ -130,14 +130,34 @@ function ComponentRow({ component }: { component: HealthScoreComponent }) {
  * navigation bar, and on a device with one it grows by at most ~16px, to
  * cover the bar the note underneath was sitting behind.
  */
-export function FinancialHealthWidget() {
+export interface FinancialHealthWidgetProps {
+  /**
+   * Whether the transaction pull has answered. `undefined` means ready — the
+   * phone renders this widget without the prop, and its SQLite mirror is
+   * authoritative offline (`HomeWidgetContext.readiness`).
+   *
+   * It has to be a real input rather than something the score hook works out
+   * for itself, because the score is *wrong in the flattering direction* while
+   * expenses are loading: `useFinancialHealthScore` always includes the debt
+   * component (no debts = 25/25) and includes budget adherence as soon as
+   * budgets land (no expenses = no budget exceeded = another 25/25), so a
+   * dashboard mid-load reported **"Great, 100"** on an account it knew nothing
+   * about.
+   */
+  dataReady?: boolean;
+}
+
+export function FinancialHealthWidget({ dataReady }: FinancialHealthWidgetProps = {}) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [sheetOpen, setSheetOpen] = useState(false);
 
   const healthScore = useFinancialHealthScore();
-  const { score, hasEnoughData, colorKey, components } = healthScore;
+  const { score, colorKey, components } = healthScore;
+  // An unanswered pull is treated exactly as "not enough data": same `?`
+  // gauge, same existing copy, no new i18n key — and, crucially, no score.
+  const hasEnoughData = healthScore.hasEnoughData && dataReady !== false;
 
   const scoreColor = colorKey === 'green'
     ? theme.colors.success

@@ -8,10 +8,18 @@ import { formatCurrency } from '@budget/shared-utils';
 import { useCalendarData } from '@/hooks/useCalendarData';
 
 interface CalendarWidgetProps {
+  /**
+   * Whether the transaction pull has answered. `undefined` means ready — the
+   * phone passes nothing and its SQLite mirror is authoritative offline
+   * (`HomeWidgetContext.readiness`). All three footer figures are sums over
+   * transactions, so with none loaded they read as a real month of zero
+   * activity.
+   */
+  dataReady?: boolean;
   refreshKey?: number;
 }
 
-export function CalendarWidget({ refreshKey: _refreshKey = 0 }: CalendarWidgetProps) {
+export function CalendarWidget({ refreshKey: _refreshKey = 0, dataReady }: CalendarWidgetProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -130,13 +138,13 @@ export function CalendarWidget({ refreshKey: _refreshKey = 0 }: CalendarWidgetPr
         <View style={styles.summaryItem}>
           <Text style={styles.summaryLabel}>{t('calendar.income')}</Text>
           <Text style={[styles.summaryAmount, { color: theme.colors.success }]}>
-            +{formatCurrency(totalIncome, displayCurrency)}
+            {dataReady === false ? '—' : `+${formatCurrency(totalIncome, displayCurrency)}`}
           </Text>
         </View>
         <View style={styles.summaryItem}>
           <Text style={styles.summaryLabel}>{t('calendar.expenses')}</Text>
           <Text style={styles.summaryAmount}>
-            -{formatCurrency(totalExpenses, displayCurrency)}
+            {dataReady === false ? '—' : `-${formatCurrency(totalExpenses, displayCurrency)}`}
           </Text>
         </View>
       </View>
@@ -147,7 +155,7 @@ export function CalendarWidget({ refreshKey: _refreshKey = 0 }: CalendarWidgetPr
         ]}
       >
         {t('calendar.netProfit')}: {netProfit >= 0 ? '+' : ''}
-        {formatCurrency(netProfit, displayCurrency)}
+        {dataReady === false ? '—' : formatCurrency(netProfit, displayCurrency)}
       </Text>
 
     </TouchableOpacity>
