@@ -57,6 +57,29 @@ let _lastExpensesSyncedAccountId: string | null = null;
 const EXPENSES_SYNC_SKIP_WINDOW_MS = 30_000;
 
 /**
+ * Forget "we synced this account recently".
+ *
+ * Called from `expenseStore.reset()`, which is what every teardown path
+ * (sign-out, account switch) already goes through — so a future teardown
+ * cannot forget to clear this, the way logout used to.
+ *
+ * It has to be cleared, not just left to expire: the throttle lives in module
+ * scope and survived a sign-out, while the login path emptied both the store
+ * (`reset()`) and the local DB (`accountStore.initialize` -> `clearAllExpenses`).
+ * Signing out and back in onto the same account inside the 30s window
+ * therefore skipped the first pull and left the dashboard reporting `0
+ * transactions` on an account with years of history.
+ *
+ * The in-flight promise is deliberately NOT touched: it carries its own
+ * account guards, and dropping the reference would let a second pull run
+ * beside it.
+ */
+export function resetExpenseSyncThrottle(): void {
+  _lastExpensesSyncAt = 0;
+  _lastExpensesSyncedAccountId = null;
+}
+
+/**
  * Bulk-attaches each expense's category splits (one chunked query via
  * `getSplitsForExpenses`, not one query per expense) as `expense.splits`,
  * mutating the array's elements in place — mirrors the projectId-attachment

@@ -55,7 +55,7 @@ jest.mock('../hydrateTransactions', () => ({
 }));
 
 jest.mock('../categoryStore', () => {
-  const state = { loadCategories: jest.fn().mockResolvedValue(undefined) };
+  const state = { loadCategories: jest.fn().mockResolvedValue(undefined), reset: jest.fn() };
   return { useCategoryStore: { getState: () => state } };
 });
 

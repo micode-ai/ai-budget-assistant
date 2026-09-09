@@ -76,6 +76,25 @@ describe('incomeStore.lastPullAt', () => {
     useIncomeStore.getState().reset();
   });
 
+  it('pulls again after a reset, even inside the 30s throttle window', async () => {
+    // The sign-out/sign-in case (ABA-520). The throttle lives in module scope
+    // and used to survive `reset()`, while the login path empties both this
+    // store and the local DB — so the first pull after re-login was skipped
+    // and the account looked as if it had no income at all.
+    getIncomes.mockResolvedValue({ data: [] });
+
+    await useIncomeStore.getState().loadIncomes();
+    expect(getIncomes).toHaveBeenCalledTimes(1);
+
+    // Same account, seconds later: without a reset this is correctly skipped.
+    await useIncomeStore.getState().loadIncomes();
+    expect(getIncomes).toHaveBeenCalledTimes(1);
+
+    useIncomeStore.getState().reset();
+    await useIncomeStore.getState().loadIncomes();
+    expect(getIncomes).toHaveBeenCalledTimes(2);
+  });
+
   it('starts null, because nothing has answered yet', () => {
     // Breaks if: the initial value is anything but null, or if reset() stops
     // clearing it. Either turns a fresh session into "we already heard back".

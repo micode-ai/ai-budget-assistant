@@ -486,8 +486,16 @@ export const useIncomeStore = create<IncomeState>()(
       }
     },
 
-    reset: () =>
-      set({ incomes: [], isLoading: false, error: null, lastPullAt: null, totalThisMonth: 0, incomeTotalsByCurrency: {} }),
+    reset: () => {
+      // Forget "we synced this account recently" as well. Same reason as
+      // `resetExpenseSyncThrottle`: the throttle lives in module scope and
+      // survived a sign-out, while the login path empties both this store and
+      // the local DB — so the first pull after re-login was skipped and the
+      // account looked as if it had no income at all.
+      _lastIncomesSyncAt = 0;
+      _lastIncomesSyncedAccountId = null;
+      set({ incomes: [], isLoading: false, error: null, lastPullAt: null, totalThisMonth: 0, incomeTotalsByCurrency: {} });
+    },
 
     getFilteredIncomes: () => {
       const { incomes, filters } = get();

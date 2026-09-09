@@ -44,6 +44,7 @@ interface CategoryState {
   isInitialized: boolean;
 
   loadCategories: () => Promise<void>;
+  reset: () => void;
   getCategoryById: (id: string) => Category | undefined;
   getCategoryByName: (name: string, type: 'expense' | 'income') => Category | undefined;
   getExpenseCategories: () => Category[];
@@ -58,6 +59,28 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   categories: [],
   isLoading: false,
   isInitialized: false,
+
+  /**
+   * Tear the store down at a user or account boundary.
+   *
+   * Categories are account-scoped (`getAllCategories(accountId)`,
+   * `GET /categories` under `X-Account-Id`), and this store had **no reset at
+   * all** — so the previous user's category names stayed in memory after a
+   * sign-out, readable by whoever signed in next on that browser, and the
+   * previous account's names lingered after a switch. Same class as the
+   * `chatStore` leak fixed in ABA-513.
+   *
+   * `_seededAccounts` must be cleared with the state, not just alongside it:
+   * it is keyed by account id, so after signing out and back in onto the SAME
+   * account the fast path would fire, re-read a local DB the login path had
+   * just emptied, and write an empty list back while marking itself
+   * initialised — the exact poisoning ABA-519 removed from the failure path,
+   * arriving instead through the logout path.
+   */
+  reset: () => {
+    _seededAccounts.clear();
+    set({ categories: [], isInitialized: false, isLoading: false });
+  },
 
   loadCategories: async () => {
     const accountId = useAccountStore.getState().currentAccountId;
