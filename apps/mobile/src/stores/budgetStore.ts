@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Budget, BudgetProgress, BudgetCategoryProgress, BudgetCategoryAllocation, BudgetPeriod, Currency, SyncStatus, BudgetHistoryEntry } from '@budget/shared-types';
-import { generateUUID, computeBudgetPeriod } from '@budget/shared-utils';
+import { projectBudgetSpend, generateUUID, computeBudgetPeriod } from '@budget/shared-utils';
 import { useExpenseStore } from './expenseStore';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
@@ -515,11 +515,32 @@ export const useBudgetStore = create<BudgetState>()(
 
       // Project total spending
       const daysPassed = Math.max(1, Math.ceil((now.getTime() - periodStart.getTime()) / msPerDay));
-      const dailyAverage = spent / daysPassed;
       const totalDays = Math.ceil((periodEnd.getTime() - periodStart.getTime()) / msPerDay);
-      const projectedTotal = dailyAverage * totalDays;
 
-      const dailyBurnRate = dailyAverage;
+      // One total per calendar day, so the projection can drop the largest DAY
+      // rather than extrapolating it. `spent / daysPassed * totalDays` charged
+      // a one-off rent payment again for every remaining day of the month — see
+      // `projectBudgetSpend` for the measured case.
+      const perDay = new Map<string, number>();
+      for (const e of periodExpenses) {
+        const key = new Date(e.date).toDateString();
+        perDay.set(key, (perDay.get(key) || 0) + e.amount);
+      }
+
+      const estimate = projectBudgetSpend({
+        spent,
+        dailyTotals: [...perDay.values()],
+        daysElapsed: daysPassed,
+        totalDays,
+      });
+
+      // `spent` when it declines to project (too little of the period behind
+      // us). Deliberately not a nullable field: every consumer gates its
+      // sentence on `projectedTotal > budget.amount`, so the money already
+      // spent is both the honest floor and the value that makes them all fall
+      // silent. Mirrors `budgets.service.ts`.
+      const projectedTotal = estimate.projectedTotal ?? spent;
+      const dailyBurnRate = estimate.dailyRate ?? 0;
 
       // Estimate exhaustion date
       let estimatedExhaustionDate: Date | undefined;

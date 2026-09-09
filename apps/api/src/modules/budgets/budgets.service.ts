@@ -3,6 +3,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { GamificationService } from '../gamification/gamification.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { computeBudgetPeriod } from './budget-period.util';
+import { projectBudgetSpend } from '../../common/utils/budget-projection';
 import { shiftFinancialMonth } from '../../common/utils/financial-month';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
@@ -367,8 +368,30 @@ export class BudgetsService {
     const totalDaysInPeriod = Math.max(1, Math.ceil((periodEnd.getTime() - periodStart.getTime()) / msPerDay));
     const daysRemaining = Math.max(0, Math.ceil((periodEnd.getTime() - now.getTime()) / msPerDay));
 
-    const dailyBurnRate = spentAmount / daysElapsed;
-    const projectedTotal = dailyBurnRate * totalDaysInPeriod;
+    // One row per day that had spending. Needed because the projection's rate
+    // must be able to drop the largest DAY, which a single SUM cannot express.
+    const dailyGroups = await this.prisma.expense.groupBy({
+      by: ['date'],
+      where: whereExpenses,
+      _sum: { amount: true },
+    });
+    const dailyTotals = dailyGroups.map((g) => Number(g._sum?.amount || 0));
+
+    const estimate = projectBudgetSpend({
+      spent: spentAmount,
+      dailyTotals,
+      daysElapsed,
+      totalDays: totalDaysInPeriod,
+    });
+
+    // `spentAmount` when the projection declines to answer (too little of the
+    // period elapsed). Deliberately NOT a nullable DTO field: `projectedTotal`
+    // is read by eight surfaces, all of which gate their sentence on
+    // `projectedTotal > budget.amount`, so the money already spent is both the
+    // honest floor and the value that makes every one of them fall silent
+    // without a type change. See `projectBudgetSpend`.
+    const projectedTotal = estimate.projectedTotal ?? spentAmount;
+    const dailyBurnRate = estimate.dailyRate ?? 0;
 
     // Estimate when budget will run out
     let estimatedExhaustionDate: string | undefined;
