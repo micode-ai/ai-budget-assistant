@@ -146,6 +146,30 @@ function clearAccountScopedCaches() {
   useChatStore.getState().reset();
 }
 
+/**
+ * Where the last used account is remembered — **per user**, which is the whole
+ * point of the key.
+ *
+ * `logout` clears the live `currentAccountId` on purpose: on a shared browser
+ * the next person must not inherit it. But that also meant the selection was
+ * lost on every sign-out, because `initialize` then computed
+ * `defaultAccountId || accounts[0]` and consulted nothing — in an app where
+ * every screen is account-scoped, signing out and back in silently moved the
+ * user's whole session to another account.
+ *
+ * Namespacing by user id is what lets both rules hold at once: the same person
+ * gets their account back, a different person on the same browser gets their
+ * own default. The value is only ever applied after checking it is still in
+ * THAT user's account list, so a stale id (they left the account, it was
+ * deleted) falls back rather than scoping every request to something the API
+ * will refuse.
+ *
+ * It deliberately survives logout, like `first-run\seen` and
+ * `whats-new\lastSeenId` already do. It is not a credential: an account id
+ * alone grants nothing, since `AccountContextGuard` checks membership.
+ */
+export const lastAccountKey = (userId: string) => `lastAccountId:${userId}`;
+
 async function getCurrentUserId(): Promise<string | null> {
   const userJson = await secureStorage.getItem('user');
   if (!userJson) return null;
@@ -241,16 +265,28 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
         );
       }
 
-      const currentId = defaultAccountId || localAccounts[0]?.id || null;
+      // The account this user was last on wins over their default — but only
+      // if they are still a member of it. See `lastAccountKey`.
+      const remembered = await secureStorage.getItem(lastAccountKey(userId));
+      const usableRemembered =
+        remembered && localAccounts.some((a) => a.id === remembered) ? remembered : null;
+
+      const currentId = usableRemembered || defaultAccountId || localAccounts[0]?.id || null;
 
       set({
         accounts: localAccounts,
         currentAccountId: currentId,
       });
 
-      // Persist current account selection
+      // Persist current account selection. Both keys: the live pointer that
+      // every account-scoped request reads and logout clears, and the per-user
+      // memory that outlives the session. Writing the memory HERE too (not
+      // only in `switchAccount`) matters for the user who never touches the
+      // switcher — otherwise their first session remembers nothing and their
+      // choice is re-derived from scratch every time.
       if (currentId) {
         await secureStorage.setItem('currentAccountId', currentId);
+        await secureStorage.setItem(lastAccountKey(userId), currentId);
       }
     } catch (error) {
       console.error('Failed to initialize accounts:', error);
@@ -264,6 +300,12 @@ export const useAccountStore = create<AccountState>()((set, get) => ({
 
     set({ currentAccountId: accountId });
     await secureStorage.setItem('currentAccountId', accountId);
+    // Remember it for the next sign-in as well (see `lastAccountKey`). Best
+    // effort: with no resolvable user we simply do not remember, which
+    // degrades to the previous behaviour rather than writing an unattributable
+    // key that some other user could then pick up.
+    const userId = await getCurrentUserId();
+    if (userId) await secureStorage.setItem(lastAccountKey(userId), accountId);
   },
 
   loadAccounts: async () => {
