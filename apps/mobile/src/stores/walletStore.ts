@@ -127,6 +127,12 @@ interface WalletState {
 
   // Computed
   computeWalletSummary: () => Promise<WalletSummary[]>;
+  /**
+   * The local reconstruction, kept separate so the native path can keep using
+   * it while web asks the server instead. Called directly only by
+   * `computeWalletSummary` and by its own test.
+   */
+  computeWalletSummaryLocal: () => Promise<WalletSummary[]>;
   getBalanceForCurrency: (currencyCode: Currency) => number;
 
   reset: () => void;
@@ -234,7 +240,58 @@ export const useWalletStore = create<WalletState>()(
       await syncPendingTransfersAction(set, get, accountId);
     },
 
+    /**
+     * How much money this account holds, per currency.
+     *
+     * **Native computes it; web asks the server.** The reconstruction below
+     * (`computeWalletSummaryLocal`) needs `initialAmount`, expenses, incomes,
+     * exchanges and transfers all present, which on native is guaranteed —
+     * every one of them comes from SQLite, which holds the whole account, and
+     * is available offline.
+     *
+     * On web SQLite is a no-op mock, so the same reconstruction reads the
+     * in-memory stores and is correct only if four independent network pulls
+     * have all landed first. They had not: `loadWallet` computes the summary in
+     * the same `Promise.allSettled` batch that loads expenses, so the dashboard
+     * rendered `0 + incomes - 0` and presented the account's total INCOME as its
+     * balance (measured live: PLN 106 084 shown against a real balance of
+     * 3 803,76), then never recomputed. `hydrateTransactions` already carried a
+     * web-only recompute for that race, but it repairs only the
+     * expenses/incomes half — a four-source reconstruction cannot be made
+     * reliable by patching one source, which is why this replaces the approach
+     * rather than adding a fifth patch.
+     *
+     * `GET /wallet/summary` is the server's own aggregate of exactly this
+     * number, applies `EXCLUDE_SPLIT_RECEIVABLE` itself, and answers in ~300ms.
+     * One request cannot race anything.
+     *
+     * **A failure returns the CURRENT summary, not an empty one.** The caller's
+     * `set` then becomes a no-op, so a dropped request leaves whatever is on
+     * screen instead of claiming the account is empty — the rule ABA-506 states
+     * for the account list: a failed load and a successful empty load must
+     * never leave the same state. `useHomeScreenData`'s retry is what actually
+     * repairs it.
+     *
+     * Known trade-off: on web the mutation paths (add an exchange, a transfer,
+     * an initial balance) also route through here, so the figure they show
+     * comes from the server rather than from an optimistic local sum. If their
+     * fire-and-forget write has not landed yet, the balance lags by one refresh
+     * — the wallet screen's own `loadWallet` on focus and the dashboard's retry
+     * both correct it.
+     */
     computeWalletSummary: async () => {
+      if (Platform.OS !== 'web') return get().computeWalletSummaryLocal();
+      try {
+        const result = await api.getWalletSummary();
+        return (result.balances ?? []) as WalletSummary[];
+      } catch (e) {
+        // Expected whenever the network hiccups; never an error (ABA-157).
+        console.warn('Wallet summary fetch failed, keeping the current figures:', e);
+        return get().walletSummary;
+      }
+    },
+
+    computeWalletSummaryLocal: async () => {
       const accountId = useAccountStore.getState().currentAccountId;
       if (!accountId) return [];
 

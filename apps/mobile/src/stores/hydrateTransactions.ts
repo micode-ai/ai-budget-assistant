@@ -31,16 +31,23 @@ export function hydrateTransactions(opts?: { force?: boolean }): Promise<void> {
     try {
       await useExpenseStore.getState().loadExpenses(opts);
       await useIncomeStore.getState().loadIncomes(opts);
-      // Web: walletSummary is derived from these in-memory stores (SQLite is a
-      // no-op there), and loadWallet may have computed it before transactions
-      // loaded — recompute now so NetCapital reflects actual transactions.
+      // Web: refresh the wallet figure now that transactions have changed.
+      //
+      // This block was originally a patch for a race — `walletSummary` used to
+      // be reconstructed from these very stores, and `loadWallet` could compute
+      // it before they had loaded. That reconstruction is gone on web
+      // (`computeWalletSummary` asks the server instead), so what remains here
+      // is the useful half: one cheap `/wallet/summary` per hydrate keeps the
+      // dashboard's figure current when the user returns to it, which is the
+      // only thing that re-fetches it on a revisit.
+      //
       // Dynamic import avoids a static cycle (walletStore → authStore → here).
       if (Platform.OS === 'web') {
         try {
           const { useWalletStore } = await import('./walletStore');
           const summary = await useWalletStore.getState().computeWalletSummary();
           useWalletStore.setState({ walletSummary: summary });
-        } catch { /* wallet not ready — loadWallet will compute it */ }
+        } catch { /* wallet not ready — loadWallet will fetch it */ }
       }
     } finally {
       useHydrationStore.setState({ isHydrating: false });

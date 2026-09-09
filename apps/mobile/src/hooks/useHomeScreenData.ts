@@ -75,9 +75,35 @@ export function useHomeScreenData() {
       if (!currentAccountId) return;
       loadAlerts();
       useInvitationStore.getState().loadInvitations();
+
+      // Retry the two loads that have no other second chance, and ONLY when
+      // the server has never answered for them this session (`lastPullAt ===
+      // null`, which their own stores set exclusively on a successful pull).
+      //
+      // Without this a single failed request at startup was permanent until a
+      // full page reload: nothing re-fetches `/budgets` or `/wallet/summary`
+      // when you come back to the dashboard — measured, the return trip fires
+      // `/tags`, `/expenses`, `/projects`, `/incomes` and `/alerts` and neither
+      // of these two. On web that showed as the budget widget simply missing
+      // (an empty budget store renders nothing) and wallet figures stuck on
+      // whatever partial state existed, because there is no SQLite copy to fall
+      // back on the way the phone has.
+      //
+      // Gated on `lastPullAt` rather than on "the list is empty" on purpose: an
+      // account can legitimately have no budgets, and re-requesting on every
+      // focus for that user would be a request per visit forever. Read through
+      // `.getState()` so this effect keeps its current dependencies and does
+      // not re-fire on unrelated store writes.
+      if (useBudgetStore.getState().lastPullAt === null) {
+        void useBudgetStore.getState().loadBudgets();
+      }
+      if (useWalletStore.getState().lastPullAt === null) {
+        void loadWallet();
+      }
+
       const t = setTimeout(() => loadAlerts(), 2500);
       return () => clearTimeout(t);
-    }, [loadAlerts, currentAccountId]),
+    }, [loadAlerts, loadWallet, currentAccountId]),
   );
 
   const monthlyBudgetSummary = getMonthlyBudgetSummary();

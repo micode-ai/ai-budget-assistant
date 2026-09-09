@@ -1,10 +1,16 @@
 /**
- * `computeWalletSummary`'s web branch (no real SQLite on web — totals are
- * derived from the in-memory stores instead) must exclude split-receivable
- * debt rows the same way the native path's `getExpenseTotalsByCurrency` SQL
- * does. The model is `widgetData.test.ts`: call the real store action and
- * assert on the summary it actually produced; the `filterConsumption` call
- * lives inside `computeWalletSummary` itself.
+ * `computeWalletSummaryLocal`'s store-derived branch must exclude
+ * split-receivable debt rows the same way the native path's
+ * `getExpenseTotalsByCurrency` SQL does. The model is `widgetData.test.ts`:
+ * call the real store action and assert on the summary it actually produced;
+ * the `filterConsumption` call lives inside the action itself.
+ *
+ * It is driven with `Platform.OS === 'web'` because that is the branch of the
+ * local reconstruction that sums the in-memory stores in JS, where a mistake
+ * would be invisible — the native branch delegates the same rule to SQL.
+ * Since the web SCREEN now takes its figures from the server instead
+ * (`computeWalletSummary`, see `walletSummaryWebServer.test.ts`), this suite
+ * calls the local reconstruction directly rather than through it.
  */
 jest.mock('react-native', () => ({ Platform: { OS: 'web' } }));
 
@@ -121,7 +127,7 @@ function plnBalance(initialAmount: number): WalletBalance {
   };
 }
 
-describe('computeWalletSummary (web) — split-receivable exclusion', () => {
+describe('computeWalletSummaryLocal — split-receivable exclusion', () => {
   beforeEach(() => {
     useWalletStore.setState({
       walletBalances: [plnBalance(1000)],
@@ -140,7 +146,7 @@ describe('computeWalletSummary (web) — split-receivable exclusion', () => {
       ],
     });
 
-    const summary = await useWalletStore.getState().computeWalletSummary();
+    const summary = await useWalletStore.getState().computeWalletSummaryLocal();
     const pln = summary.find((s) => s.currencyCode === 'PLN');
 
     expect(pln?.totalExpenses).toBe(200);
@@ -154,7 +160,7 @@ describe('computeWalletSummary (web) — split-receivable exclusion', () => {
       expenses: [expense({ amount: 500, isDebt: true, debtContactName: 'Anna' })],
     });
 
-    return useWalletStore.getState().computeWalletSummary().then((summary) => {
+    return useWalletStore.getState().computeWalletSummaryLocal().then((summary) => {
       const pln = summary.find((s) => s.currencyCode === 'PLN');
       expect(pln?.totalExpenses).toBe(500);
       expect(pln?.currentBalance).toBe(500);
