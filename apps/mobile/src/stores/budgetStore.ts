@@ -32,6 +32,17 @@ interface BudgetState {
   budgets: Budget[];
   isLoading: boolean;
   error: string | null;
+  /**
+   * When the SERVER last answered, or `null` if it never has this session.
+   *
+   * Mirrors `expenseStore`/`incomeStore`/`walletStore`. It exists so a caller
+   * can tell "this account genuinely has no budgets" from "the pull failed and
+   * the store is empty" — indistinguishable otherwise on web, where the local
+   * read is always `[]`. That ambiguity is what left the dashboard's budget
+   * widget missing until a full page reload: the pull failed once at startup
+   * and nothing ever retried it.
+   */
+  lastPullAt: number | null;
   budgetHistory: Record<string, BudgetHistoryEntry[]>;
 
   // Computed
@@ -65,6 +76,7 @@ export const useBudgetStore = create<BudgetState>()(
     budgets: [],
     isLoading: false,
     error: null,
+    lastPullAt: null,
     budgetHistory: {},
 
     activeBudgets: [],
@@ -185,7 +197,12 @@ export const useBudgetStore = create<BudgetState>()(
             }
 
             // Web (no real SQLite): read-back is empty — fall back to built rows.
-            set({ budgets: merged.length > 0 ? merged : builtBudgets.filter((b) => !b.isDeleted) });
+            set({
+              budgets: merged.length > 0 ? merged : builtBudgets.filter((b) => !b.isDeleted),
+              // Only here: the server actually answered. The `catch` below must
+              // not set it, or a failed pull would look like a successful one.
+              lastPullAt: Date.now(),
+            });
 
             setLastSyncTime(Date.now());
           }
@@ -605,7 +622,7 @@ export const useBudgetStore = create<BudgetState>()(
     reset: () => {
       clearAllBudgets().catch(() => {});
       clearAllBudgetCategories().catch(() => {});
-      set({ budgets: [], activeBudgets: [], isLoading: false, error: null, budgetHistory: {} });
+      set({ budgets: [], activeBudgets: [], isLoading: false, error: null, budgetHistory: {}, lastPullAt: null });
     },
   }))
 );
