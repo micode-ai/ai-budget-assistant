@@ -5,6 +5,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { NewBadgeModal } from '@/components/gamification/NewBadgeModal';
 import { useHomeScreenData } from '@/hooks/useHomeScreenData';
 import { useWebFirstRun } from '@/hooks/useWebFirstRun';
+import { useDashboardReadiness } from '@/hooks/useDashboardReadiness';
 import { SafeToSpendSheet } from '@/components/home/SafeToSpendSheet';
 import { SECOND_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import { resolveSetupSteps, shouldShowSetupChecklist } from '@/features/onboarding/resolveSetupSteps';
@@ -134,6 +135,15 @@ export function DashboardDesktop() {
   const showSecondRail = width >= SECOND_RAIL_MIN_WIDTH;
 
   const { view: firstRunView, pullAnswered, skip: skipFirstRun } = useWebFirstRun();
+
+  /**
+   * Which figures the screen may state as fact yet (ABA-521). Two uses below:
+   * one centred loader while NOTHING has answered, and a per-domain flag
+   * handed to every widget through `widgetCtx` so a partial load draws dashes
+   * rather than zeros. See `resolveDashboardReadiness` for why a partial state
+   * must still render.
+   */
+  const readiness = useDashboardReadiness();
 
   const {
     canEdit,
@@ -313,12 +323,13 @@ export function DashboardDesktop() {
     rates,
     safeToSpendData,
     hasSafeToSpend,
+    readiness,
   };
 
   return (
     <View style={styles.container}>
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.content}>
-        {firstRunView === 'wait' ? (
+        {firstRunView === 'wait' || readiness.showInitialLoader ? (
           <View style={styles.loading}>
             <ActivityIndicator size="large" color={theme.colors.primary} />
           </View>

@@ -7,6 +7,7 @@ import { formatCurrency, getStartOfMonth, getEndOfMonth } from '@budget/shared-u
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { filterConsumption } from '@/utils/consumption';
+import { PendingValue } from '../PendingValue';
 import type { HomeWidgetContext } from '../HomeWidgetContext';
 
 interface IncomeExpensesCardProps {
@@ -32,7 +33,10 @@ export function IncomeExpensesCard({ ctx, showCounts = false }: IncomeExpensesCa
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { convertedIncomeTotal, convertedExpenseTotal, currency } = ctx;
+  const { convertedIncomeTotal, convertedExpenseTotal, currency, readiness } = ctx;
+  // Absent readiness means ready — the phone passes none, and its SQLite
+  // mirror is authoritative offline. See `HomeWidgetContext.readiness`.
+  const known = readiness?.transactions !== false;
 
   // Same filter chain as `computeExpenseTotalsByCurrency` (this month,
   // filterConsumption-applied, not deleted) - "the same data the totals
@@ -58,12 +62,20 @@ export function IncomeExpensesCard({ ctx, showCounts = false }: IncomeExpensesCa
       <View style={styles.incomeExpenseRow}>
         <View style={styles.incomeExpenseCol}>
           <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalIncome')}</Text>
-          <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
+          {known ? (
+            <Text style={styles.incomeAmount}>+{formatCurrency(convertedIncomeTotal, currency)}</Text>
+          ) : (
+            <PendingValue style={styles.incomeAmount} />
+          )}
         </View>
         <View style={styles.incomeExpenseDivider} />
         <View style={styles.incomeExpenseCol}>
           <Text style={styles.incomeExpenseLabel}>{t('dashboard.totalExpenses')}</Text>
-          <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
+          {known ? (
+            <Text style={styles.expenseTotalAmount}>-{formatCurrency(convertedExpenseTotal, currency)}</Text>
+          ) : (
+            <PendingValue style={styles.expenseTotalAmount} />
+          )}
           {showCounts && (
             <Text style={styles.countSubline}>
               {t('bankImport.transactionCount', { count: expenseCount })}

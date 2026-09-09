@@ -1,21 +1,43 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Easing, StyleSheet, Platform } from 'react-native';
 import { useHydrationStore } from '@/stores/hydrateTransactions';
+import { useBudgetStore } from '@/stores/budgetStore';
+import { useCategoryStore } from '@/stores/categoryStore';
+import { useWalletStore } from '@/stores/walletStore';
+import { isDashboardRefreshing } from '@/features/dashboard/dataReadiness';
 import { useTheme } from '@/theme';
 
-// Thin sliding bar shown at the very top of the screen while a hydrate cycle
-// runs (DatabaseProvider boot, authStore session restore, account switch,
+// Thin sliding bar shown at the very top of the screen while a load runs
+// (DatabaseProvider boot, authStore session restore, account switch,
 // pull-to-refresh). Indeterminate animation — communicates "loading" without
 // claiming a specific progress.
+//
+// It used to track `isHydrating` alone, i.e. the expense+income cycle, so a
+// screen busy fetching its wallet, budgets and categories showed no activity
+// at all — which is how a dashboard mid-load looked like a finished dashboard
+// with wrong numbers on it. `isDashboardRefreshing` folds in the other three.
+//
+// Every input is an IN-FLIGHT flag, never "has not answered yet": an offline
+// native client's `lastPullAt` is `null` for ever, and a bar keyed on that
+// would animate for ever on a device that simply has a complete local mirror.
 export function HydrationProgressBar() {
   const isHydrating = useHydrationStore((s) => s.isHydrating);
+  const walletLoading = useWalletStore((s) => s.isLoading);
+  const budgetsLoading = useBudgetStore((s) => s.isLoading);
+  const categoriesLoading = useCategoryStore((s) => s.isLoading);
+  const isLoadingAnything = isDashboardRefreshing({
+    isHydrating,
+    walletLoading,
+    budgetsLoading,
+    categoriesLoading,
+  });
   const theme = useTheme();
   const slide = useRef(new Animated.Value(0)).current;
   const opacity = useRef(new Animated.Value(0)).current;
   const loopRef = useRef<Animated.CompositeAnimation | null>(null);
 
   useEffect(() => {
-    if (isHydrating) {
+    if (isLoadingAnything) {
       Animated.timing(opacity, { toValue: 1, duration: 120, useNativeDriver: true }).start();
       slide.setValue(0);
       loopRef.current = Animated.loop(
@@ -34,7 +56,7 @@ export function HydrationProgressBar() {
       });
     }
     return () => loopRef.current?.stop();
-  }, [isHydrating, slide, opacity]);
+  }, [isLoadingAnything, slide, opacity]);
 
   const translateX = slide.interpolate({ inputRange: [0, 1], outputRange: [-180, 360] });
 

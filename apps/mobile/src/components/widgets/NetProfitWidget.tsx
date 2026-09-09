@@ -59,6 +59,17 @@ interface NetProfitWidgetProps {
    */
   safeToSpend?: NetProfitWidgetSafeToSpend;
   /**
+   * Whether the transaction pull has answered. `undefined` means ready — the
+   * phone passes nothing and its SQLite mirror is authoritative offline
+   * (`HomeWidgetContext.readiness`).
+   *
+   * When `false` the headline is suppressed by nulling `currentNetProfit`
+   * below rather than by three separate conditionals: the amount already has a
+   * `!== null` guard at all three of its render sites, so one gate at the
+   * source reaches every one of them and cannot be half-applied.
+   */
+  dataReady?: boolean;
+  /**
    * Renders a 3M/6M/12M segmented control under the chart when `true`
    * (default `false`, so mobile's own call site — which passes nothing —
    * is unaffected). The component owns the selected range as its own local
@@ -96,6 +107,7 @@ export function NetProfitWidget({
   safeToSpend,
   showRangeChips = false,
   compact = false,
+  dataReady,
 }: NetProfitWidgetProps) {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
@@ -144,7 +156,7 @@ export function NetProfitWidget({
   // this is a move, not a re-derivation. What it adds is the in-range
   // populated-month count, read from the same pass. The dependency list is
   // unchanged.
-  const { points: data, currentNetProfit, populatedMonthsInRange } = useMemo(
+  const { points: data, currentNetProfit: computedNetProfit, populatedMonthsInRange } = useMemo(
     () =>
       buildNetProfitSeries({
         monthCount,
@@ -173,6 +185,11 @@ export function NetProfitWidget({
       }),
     [expenses, incomes, now],
   );
+
+  // `null` is this widget's existing "no figure" value, already handled at
+  // every render site — so an unanswered pull reuses it instead of printing
+  // `+0,00`, which reads as a real, break-even month.
+  const currentNetProfit = dataReady === false ? null : computedNetProfit;
 
   const isPositive = (currentNetProfit ?? 0) >= 0;
   const lineColor = isPositive ? theme.colors.success : theme.colors.danger;

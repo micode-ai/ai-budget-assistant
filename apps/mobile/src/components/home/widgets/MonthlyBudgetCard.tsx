@@ -9,6 +9,7 @@ import { useFinancialMonth } from '@/hooks/useFinancialMonth';
 import { SegmentedProgressBar } from '@/components/shared/SegmentedProgressBar';
 import type { MonthlyBudgetSegments } from '@/features/dashboard/monthlyBudgetSegments';
 import type { MonthlyBudgetProjection } from '@/features/dashboard/monthlyBudgetProjection';
+import { PendingValue } from '../PendingValue';
 import type { HomeWidgetContext } from '../HomeWidgetContext';
 
 interface MonthlyBudgetCardProps {
@@ -49,7 +50,18 @@ export function MonthlyBudgetCard({ ctx, segments, projection }: MonthlyBudgetCa
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { remaining, currency, totalBudget, budgetUsedPercent } = ctx;
+  const { remaining, currency, totalBudget, budgetUsedPercent, readiness } = ctx;
+  /**
+   * `remaining` and the percentage are both derived from SPENDING, so they are
+   * unknown until the transaction pull answers — with no expenses loaded they
+   * read as a full, untouched budget ("8000 of 8000", 0%), which is the most
+   * flattering possible lie. `totalBudget` comes from the budget list and is
+   * fine once that has landed, so it keeps rendering.
+   *
+   * Absent readiness means ready: the phone passes none and its SQLite mirror
+   * is authoritative offline (`HomeWidgetContext.readiness`).
+   */
+  const spentKnown = readiness?.transactions !== false;
 
   // This card's figures already follow the account's financial month, but
   // nothing said so — on an anchored account "monthly budget" silently meant
@@ -89,12 +101,16 @@ export function MonthlyBudgetCard({ ctx, segments, projection }: MonthlyBudgetCa
       </View>
       <View style={styles.budgetOverview}>
         <View style={styles.budgetAmount}>
-          <Text style={[styles.remainingAmount, remaining < 0 && { color: theme.colors.danger }]}>
-            {formatCurrency(remaining, currency)}
-          </Text>
+          {spentKnown ? (
+            <Text style={[styles.remainingAmount, remaining < 0 && { color: theme.colors.danger }]}>
+              {formatCurrency(remaining, currency)}
+            </Text>
+          ) : (
+            <PendingValue style={styles.remainingAmount} />
+          )}
           <Text style={styles.budgetTotal}>{t('common.of')} {formatCurrency(totalBudget, currency)}</Text>
         </View>
-        {segments ? (
+        {segments && spentKnown ? (
           <View style={styles.progressContainer}>
             <SegmentedProgressBar
               categories={segments.categories}
@@ -110,11 +126,15 @@ export function MonthlyBudgetCard({ ctx, segments, projection }: MonthlyBudgetCa
               <View
                 style={[
                   styles.progressFill,
-                  { width: `${Math.min(budgetUsedPercent, 100)}%`, backgroundColor: progressColor },
+                  { width: spentKnown ? `${Math.min(budgetUsedPercent, 100)}%` : 0, backgroundColor: progressColor },
                 ]}
               />
             </View>
-            <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
+            {spentKnown ? (
+              <Text style={styles.progressText}>{t('dashboard.used', { percent: budgetUsedPercent.toFixed(0) })}</Text>
+            ) : (
+              <PendingValue style={styles.progressText} />
+            )}
           </View>
         )}
         {projection && (
