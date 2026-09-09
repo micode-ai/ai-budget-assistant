@@ -631,6 +631,9 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // Reset stores
     useAccountStore.getState().reset();
     useBudgetStore.getState().reset();
+    // Categories are account-scoped and this store had no reset until ABA-520:
+    // the previous user's category names survived sign-out in memory.
+    useCategoryStore.getState().reset();
     useExpenseStore.getState().reset();
     useIncomeStore.getState().reset();
     useWalletStore.getState().reset();

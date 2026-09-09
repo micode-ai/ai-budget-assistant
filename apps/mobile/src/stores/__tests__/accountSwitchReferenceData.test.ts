@@ -67,6 +67,13 @@ jest.mock('../../services/trip.api', () => ({
 // `@/db/chatRepository`, which imports `./client` -> expo-sqlite. None of
 // these are called by the tests below (they seed `useChatStore` directly via
 // `setState`), but the module still has to resolve.
+jest.mock('../categoryStore', () => {
+  // `accountStore` imports this for `clearAccountScopedCaches`; the real module
+  // pulls in `authStore`, which wires the api client at module scope.
+  const state = { loadCategories: jest.fn().mockResolvedValue(undefined), reset: jest.fn() };
+  return { useCategoryStore: { getState: () => state } };
+});
+
 jest.mock('../../db/chatRepository', () => ({
   getConversations: jest.fn().mockResolvedValue([]),
   upsertConversation: jest.fn().mockResolvedValue(undefined),
@@ -80,6 +87,7 @@ import { secureStorage } from '../../services/secureStorage';
 import { usePriceHistoryStore } from '../priceHistoryStore';
 import { useMerchantRulesStore } from '../merchantRulesStore';
 import { useChatStore } from '../chatStore';
+import { useCategoryStore } from '../categoryStore';
 import { api } from '../../services/api';
 
 const account = (id: string) =>
@@ -368,5 +376,15 @@ describe('account switch clears the chat conversation cache (ABA-513)', () => {
 
     expect(useChatStore.getState().messages).toHaveLength(1);
     expect(useChatStore.getState().currentConversationId).toBe('conv-a');
+  });
+
+  // Catches: categories left out of `clearAccountScopedCaches`. They are
+  // account-scoped (`getAllCategories(accountId)`, `GET /categories` under
+  // `X-Account-Id`), so account A's names would otherwise keep rendering
+  // under account B until B's own fetch returned — and forever if it failed.
+  it('clears the category cache too', async () => {
+    await useAccountStore.getState().switchAccount('acc-b');
+
+    expect(useCategoryStore.getState().reset).toHaveBeenCalled();
   });
 });

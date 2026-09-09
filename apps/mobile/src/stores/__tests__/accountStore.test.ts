@@ -49,6 +49,13 @@ jest.mock('../../services/api', () => ({
   },
 }));
 
+jest.mock('../categoryStore', () => {
+  // `accountStore` imports this store for `clearAccountScopedCaches`; the real
+  // module pulls in `authStore`, which wires the api client at module scope.
+  const state = { loadCategories: jest.fn().mockResolvedValue(undefined), reset: jest.fn() };
+  return { useCategoryStore: { getState: () => state } };
+});
+
 jest.mock('../../services/trip.api', () => ({
   tripApi: {
     archiveTrip: jest.fn(),

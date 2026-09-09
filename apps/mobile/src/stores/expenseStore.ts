@@ -32,7 +32,7 @@ import { maybeEncrypt } from '@/services/encryptionHelper';
 import { getDistinctMerchants as computeDistinctMerchants, getMerchantCounts as computeMerchantCounts } from '@/utils/merchant';
 import { filterConsumption } from '@/utils/consumption';
 import { categoryLabel } from '@/utils/entityLabel';
-import { pullAndMergeExpenses, syncPendingExpenses as doSync } from './expenseSync';
+import { pullAndMergeExpenses, syncPendingExpenses as doSync, resetExpenseSyncThrottle } from './expenseSync';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
@@ -845,8 +845,13 @@ export const useExpenseStore = create<ExpenseState>()(
 
     syncPendingExpenses: () => doSync(set as any, get as any),
 
-    reset: () =>
-      set({ expenses: [], expenseItems: {}, isLoading: false, error: null, lastPullAt: null, totalThisMonth: 0, expenseTotalsByCurrency: {} }),
+    reset: () => {
+      // Clear the module-scope sync throttle too, or the next `loadExpenses`
+      // decides the (now empty) store is fresh and skips the server. See
+      // `resetExpenseSyncThrottle`.
+      resetExpenseSyncThrottle();
+      set({ expenses: [], expenseItems: {}, isLoading: false, error: null, lastPullAt: null, totalThisMonth: 0, expenseTotalsByCurrency: {} });
+    },
 
     // ── Selectors ──────────────────────────────────────────────────────────────
 

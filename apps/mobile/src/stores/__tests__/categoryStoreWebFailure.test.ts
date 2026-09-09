@@ -80,6 +80,7 @@ jest.mock('@/stores/accountStore', () => ({
 }));
 
 import { useCategoryStore } from '../categoryStore';
+import { getAllCategories } from '@/db/categoryRepository';
 import type { Category } from '@budget/shared-types';
 
 const serverCategory = (id: string, name: string): Category =>
@@ -100,7 +101,8 @@ const serverCategory = (id: string, name: string): Category =>
 describe('categoryStore.loadCategories on web when the server fetch fails', () => {
   beforeEach(() => {
     mockGetCategories.mockReset();
-    useCategoryStore.setState({ categories: [], isInitialized: false, isLoading: false });
+    useCategoryStore.getState().reset();
+    (getAllCategories as jest.Mock).mockReset().mockResolvedValue([]);
   });
 
   it('does not claim to be initialised with an empty list', async () => {
@@ -138,6 +140,41 @@ describe('categoryStore.loadCategories on web when the server fetch fails', () =
 
     expect(useCategoryStore.getState().categories.map((c) => c.name)).toEqual(['Groceries']);
     expect(useCategoryStore.getState().isInitialized).toBe(true);
+  });
+
+  it('reset clears the store and the seeded marker, so the next load really re-fetches', async () => {
+    // Two defects in one: categoryStore had NO reset at all, so the previous
+    // user's category names survived sign-out in memory; and `_seededAccounts`
+    // is module-scoped, so after signing out and back in onto the same account
+    // the fast path would fire and write an empty list back while marking
+    // itself initialised.
+    const local = getAllCategories as jest.Mock;
+    // Exactly two: `loadCategories` reads the local table once up front and
+    // once more after the seeding loop. A third queued value would leak into
+    // the NEXT call and make it look locally populated, hiding the very thing
+    // this test is checking.
+    local
+      .mockResolvedValueOnce([serverCategory('c1', 'Groceries')])
+      .mockResolvedValueOnce([serverCategory('c1', 'Groceries')]);
+
+    await useCategoryStore.getState().loadCategories();
+    // A populated local read means the server was never needed, and the tail
+    // marked this account seeded.
+    expect(mockGetCategories).not.toHaveBeenCalled();
+    expect(useCategoryStore.getState().categories.map((c) => c.name)).toEqual(['Groceries']);
+
+    useCategoryStore.getState().reset();
+    expect(useCategoryStore.getState().categories).toEqual([]);
+    expect(useCategoryStore.getState().isInitialized).toBe(false);
+
+    // Local reads are empty again (web after a login that cleared the DB). If
+    // `_seededAccounts` had survived, this would take the fast path and set an
+    // empty list instead of asking the server.
+    mockGetCategories.mockResolvedValue([serverCategory('c2', 'Rent')]);
+    await useCategoryStore.getState().loadCategories();
+
+    expect(mockGetCategories).toHaveBeenCalledTimes(1);
+    expect(useCategoryStore.getState().categories.map((c) => c.name)).toEqual(['Rent']);
   });
 
   it('clears isLoading either way', async () => {

@@ -30,6 +30,9 @@ import { useMerchantRulesStore } from './merchantRulesStore';
 import { useTagStore } from './tagStore';
 import { useProjectStore } from './projectStore';
 import { useChatStore } from './chatStore';
+// Circular by design, like the four stores above it: nothing here is
+// dereferenced at module scope, only inside `clearAccountScopedCaches`.
+import { useCategoryStore } from './categoryStore';
 
 interface AccountState {
   accounts: (Account & { myRole: AccountRole })[];
@@ -139,6 +142,9 @@ interface AccountState {
  * too, not `tagStore`/`projectStore`, which rely on the subscription alone.
  */
 function clearAccountScopedCaches() {
+  // Categories belong to an account, so the previous one's names must not
+  // linger after a switch. `AccountSwitcher` reloads them right after.
+  useCategoryStore.getState().reset();
   usePriceHistoryStore.getState().reset();
   useMerchantRulesStore.getState().reset();
   useTagStore.getState().reset();
