@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { useFocusEffect } from 'expo-router';
 import { hydrateTransactions } from '@/stores/hydrateTransactions';
 import { useBudgetStore } from '@/stores/budgetStore';
+import { useCategoryStore } from '@/stores/categoryStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useWalletStore } from '@/stores/walletStore';
@@ -99,6 +100,16 @@ export function useHomeScreenData() {
       }
       if (useWalletStore.getState().lastPullAt === null) {
         void loadWallet();
+      }
+      // Same rule for categories, and the dashboard is the one screen that
+      // needs it: the monthly-budget card renders category NAMES, but nothing
+      // here loads categories — the app's other nine retry points all sit
+      // behind a form or the analytics tab. Without this the budget card's
+      // allocations read "Uncategorized" until the user happened to open one
+      // of those screens. `isInitialized` is a truthful signal again now that
+      // `loadCategories` no longer sets it after a failed fetch.
+      if (!useCategoryStore.getState().isInitialized) {
+        void useCategoryStore.getState().loadCategories();
       }
 
       const t = setTimeout(() => loadAlerts(), 2500);

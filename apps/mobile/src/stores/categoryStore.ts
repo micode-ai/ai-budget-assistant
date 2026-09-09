@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { Platform } from 'react-native';
 import type { Category } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
 import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById } from '@/db/categoryRepository';
@@ -69,6 +70,14 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
       // upstream may have upserted new server categories).
       if (_seededAccounts.has(accountId)) {
         const categories = await getAllCategories(accountId);
+        // Never trade a populated in-memory list for an empty local read. On
+        // web that read is ALWAYS empty (`db/client.web.ts` is a mock), so
+        // this path used to wipe perfectly good categories and every name in
+        // the app started rendering as "Uncategorized".
+        if (categories.length === 0 && get().categories.length > 0) {
+          set({ isInitialized: true });
+          return;
+        }
         set({ categories, isInitialized: true });
         return;
       }
@@ -164,6 +173,24 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
       }
       if (patched) {
         categories = await getAllCategories(accountId);
+      }
+
+      // Nothing to show, and on web no local DB it could have come from: an
+      // empty list HERE means the server never answered, because the success
+      // path above returns early. Claiming success would be the ABA-506
+      // mistake — a failed load and a successful empty load must not leave the
+      // same state — and it is unusually expensive here:
+      //   * `isInitialized: true` with an empty list silently disables all
+      //     nine `if (!categoriesInitialized) loadCategories()` retries in the
+      //     app, so nothing tries again for the rest of the session;
+      //   * `_seededAccounts.add` sends every later call down the fast path,
+      //     which re-reads the empty local DB and writes `[]` again.
+      // One dropped request therefore left the whole app category-less, which
+      // is what surfaced as a monthly budget whose every allocation read
+      // "Uncategorized". Leaving both untouched is what makes the next caller
+      // genuinely retry.
+      if (Platform.OS === 'web' && categories.length === 0) {
+        return;
       }
 
       _seededAccounts.add(accountId);
