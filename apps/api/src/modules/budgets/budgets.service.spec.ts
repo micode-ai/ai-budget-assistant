@@ -296,3 +296,90 @@ describe('BudgetsService.findOne — clientId resolution (ABA-374 bug class)', (
     await expect(makeService(prisma).findOne('acc-1', 'missing')).rejects.toThrow('Budget not found');
   });
 });
+
+/**
+ * ABA-523. `getProgress` had no test at all, and the projection it returns is
+ * read by eight surfaces, so the wiring is worth pinning even though the
+ * arithmetic itself lives in `budget-projection.spec.ts`.
+ *
+ * The reported case: an 8000 PLN monthly budget where rent (4350, paid once)
+ * was 73% of the month's spend. `spent / daysElapsed * totalDays` charged that
+ * rent three times and reported a 19 795 zl month.
+ */
+describe('BudgetsService.getProgress — the projection does not re-spend a lump', () => {
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  /** Nine elapsed days of a 30-day month, one of them the rent. */
+  function prismaWithSeptember(spent: number, dailyTotals: number[]) {
+    return {
+      budget: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'b1',
+          amount: 8000,
+          currencyCode: 'PLN',
+          period: 'monthly',
+          startDate: new Date('2026-09-01T00:00:00Z'),
+          endDate: null,
+          categoryAllocations: [],
+          isActive: true,
+          isDeleted: false,
+        }),
+      },
+      expense: {
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: spent } }),
+        groupBy: jest.fn().mockResolvedValue(
+          dailyTotals.map((amount, i) => ({
+            date: new Date(Date.UTC(2026, 8, i + 1)),
+            _sum: { amount },
+          })),
+        ),
+      },
+    } as any;
+  }
+
+  it('excludes the largest day from the rate while still counting its money', async () => {
+    const dailyTotals = [119.47, 125.09, 893.87, 222.58, 4350, 96.6, 131.12];
+    const spent = dailyTotals.reduce((a, b) => a + b, 0);
+
+    const progress = await makeService(prismaWithSeptember(spent, dailyTotals)).getProgress('acc-1', 'b1');
+
+    // The old formula would have been spent/daysElapsed*totalDays, which for
+    // any elapsed count in this period lands far past the budget.
+    expect(progress.projectedTotal).toBeLessThan((spent / 9) * 30);
+    // The rent stays inside `spent`, so the projection can never dip below it.
+    expect(progress.projectedTotal).toBeGreaterThanOrEqual(spent);
+    // And the rate is not the naive mean.
+    expect(progress.dailyBurnRate).toBeLessThan(spent / 9);
+  });
+
+  it('asks the database for per-day totals, not just a sum', async () => {
+    // Without the groupBy there is no way to drop a DAY, and the fix silently
+    // degrades back to the mean.
+    const prisma = prismaWithSeptember(1000, [500, 500]);
+
+    await makeService(prisma).getProgress('acc-1', 'b1');
+
+    expect(prisma.expense.groupBy).toHaveBeenCalled();
+    expect(prisma.expense.groupBy.mock.calls[0][0].by).toEqual(['date']);
+  });
+
+  it('falls back to the money already spent when it refuses to project', async () => {
+    // A period only a day or two old has no rate worth extrapolating. The DTO
+    // field stays non-nullable, and `spent` is the value that makes all eight
+    // consumers' `projectedTotal > amount` test fall silent.
+    const prisma = prismaWithSeptember(4350, [4350]);
+    const service = makeService(prisma);
+    jest.spyOn(Date, 'now').mockReturnValue(new Date('2026-09-02T12:00:00Z').getTime());
+
+    const progress = await service.getProgress('acc-1', 'b1');
+
+    expect(progress.projectedTotal).toBe(4350);
+    expect(progress.dailyBurnRate).toBe(0);
+    expect(progress.estimatedExhaustionDate).toBeUndefined();
+    (Date.now as jest.Mock).mockRestore();
+  });
+});

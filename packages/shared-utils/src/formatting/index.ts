@@ -314,3 +314,4 @@ export function computeSafeToSpend(inputs: SafeToSpendInputs): SafeToSpendResult
     safeToSpendToday: Math.round(safeToSpendToday * 100) / 100,
   };
 }
+export * from './budget-projection';
