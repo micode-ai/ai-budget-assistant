@@ -546,3 +546,78 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
     (Date.now as jest.Mock).mockRestore();
   });
 });
+
+describe('BudgetsService.getHistory — periods count splits too', () => {
+  const HOUSEHOLD = 'cat-household';
+
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  it('reports a split-only category’s share in each period', async () => {
+    const prisma: any = {
+      budget: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'b1',
+          amount: 1000,
+          currencyCode: 'PLN',
+          period: 'monthly',
+          startDate: new Date('2026-01-01T00:00:00Z'),
+          endDate: null,
+          categoryAllocations: [{ categoryId: HOUSEHOLD, amount: 1000, category: { name: 'Household' } }],
+          isActive: true,
+          isDeleted: false,
+        }),
+      },
+      expense: {
+        findMany: jest.fn().mockResolvedValue([
+          {
+            amount: 240,
+            date: new Date('2026-09-08T00:00:00Z'),
+            categoryId: 'cat-groceries',
+            categorySplits: [
+              { categoryId: 'cat-groceries', amount: 205 },
+              { categoryId: HOUSEHOLD, amount: 35 },
+            ],
+          },
+        ]),
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
+      },
+    };
+
+    const history = await makeService(prisma).getHistory('acc-1', 'b1', 2);
+
+    expect(history).toHaveLength(2);
+    expect(history.every((p: any) => p.actual === 35)).toBe(true);
+    expect(prisma.expense.aggregate).not.toHaveBeenCalled();
+  });
+
+  it('keeps the aggregate for a budget with no allocations', async () => {
+    const prisma: any = {
+      budget: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'b1',
+          amount: 1000,
+          currencyCode: 'PLN',
+          period: 'monthly',
+          startDate: new Date('2026-01-01T00:00:00Z'),
+          endDate: null,
+          categoryAllocations: [],
+          isActive: true,
+          isDeleted: false,
+        }),
+      },
+      expense: {
+        findMany: jest.fn().mockResolvedValue([]),
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 120 } }),
+      },
+    };
+
+    const history = await makeService(prisma).getHistory('acc-1', 'b1', 1);
+
+    expect(history[0].actual).toBe(120);
+    expect(prisma.expense.findMany).not.toHaveBeenCalled();
+  });
+});

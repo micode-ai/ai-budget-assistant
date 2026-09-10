@@ -281,19 +281,52 @@ export class BudgetsService {
       const whereExpenses: any = {
         accountId,
         isDeleted: false,
+        // Same two exclusions as getProgress — a history chart that counts a
+        // different set of rows than the progress bar above it is worse than
+        // no chart.
+        isPlanned: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
         currencyCode: budget.currencyCode,
         date: { gte: periodStart, lte: periodEnd },
       };
-      if (categoryIds) {
-        whereExpenses.categoryId = { in: categoryIds };
+
+      let actual: number;
+
+      // Branch on `categoryIds` itself rather than on a derived set:
+      // `strictNullChecks` is on and TypeScript cannot correlate a derived
+      // variable's null-ness with its source's, so narrowing here is what
+      // lets `categoryIds` be passed on below without a non-null assertion.
+      if (!categoryIds) {
+        const spent = await this.prisma.expense.aggregate({
+          where: whereExpenses,
+          _sum: { amount: true },
+        });
+        actual = Number(spent._sum?.amount || 0);
+      } else {
+        const categorySet = new Set<string>(categoryIds);
+
+        Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
+
+        const rows = await this.prisma.expense.findMany({
+          where: whereExpenses,
+          select: {
+            amount: true,
+            categoryId: true,
+            categorySplits: {
+              where: { isDeleted: false },
+              select: { categoryId: true, amount: true },
+            },
+          },
+        });
+
+        actual = 0;
+        for (const row of rows) {
+          for (const part of attributeToCategories(row)) {
+            if (part.categoryId && categorySet.has(part.categoryId)) actual += part.amount;
+          }
+        }
       }
 
-      const spent = await this.prisma.expense.aggregate({
-        where: whereExpenses,
-        _sum: { amount: true },
-      });
-
-      const actual = Number(spent._sum?.amount || 0);
       const limit = Number(budget.amount);
 
       results.push({
