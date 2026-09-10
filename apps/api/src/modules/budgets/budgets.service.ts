@@ -6,6 +6,8 @@ import { computeBudgetPeriod } from './budget-period.util';
 import { projectBudgetSpend } from '../../common/utils/budget-projection';
 import { shiftFinancialMonth } from '../../common/utils/financial-month';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import { attributeToCategories } from '../../common/utils/category-attribution';
+import { EXCLUDE_SPLIT_RECEIVABLE, categoryOrSplitFilter } from '../../common/utils/expense-filters';
 
 export { computeBudgetPeriod };
 
@@ -337,6 +339,12 @@ export class BudgetsService {
     const whereExpenses: any = {
       accountId,
       isDeleted: false,
+      // A planned expense from an approved purchase request has not happened,
+      // and a receipt-split receivable is not spend. The alert cron and the
+      // mobile store already exclude both; this method did not, so the server
+      // and the phone disagreed for anyone who splits bills.
+      isPlanned: false,
+      ...EXCLUDE_SPLIT_RECEIVABLE,
       currencyCode: budget.currencyCode,
       date: {
         gte: periodStart,
@@ -344,16 +352,76 @@ export class BudgetsService {
       },
     };
 
-    if (categoryIds) {
-      whereExpenses.categoryId = { in: categoryIds };
+    // A budget with no allocations covers everything, and the live splits of an
+    // expense sum to its amount, so attribution would return the identical
+    // number — keep the cheap aggregate. Only category-scoped budgets need the
+    // rows, because an expense whose OWN category is outside the budget can
+    // still hold a split into it.
+    let spentAmount: number;
+    let dailyTotals: number[];
+    let spendingMap: Map<string, number> | null = null;
+
+    // Branch on `categoryIds` itself rather than on a derived set:
+    // `strictNullChecks` is on and TypeScript cannot correlate a derived
+    // variable's null-ness with its source's, so narrowing here is what
+    // lets `categoryIds` be passed on below without a non-null assertion.
+    if (!categoryIds) {
+      const spent = await this.prisma.expense.aggregate({
+        where: whereExpenses,
+        _sum: { amount: true },
+      });
+      spentAmount = Number(spent._sum?.amount || 0);
+
+      // One row per day that had spending. Needed because the projection's rate
+      // must be able to drop the largest DAY, which a single SUM cannot express.
+      const dailyGroups = await this.prisma.expense.groupBy({
+        by: ['date'],
+        where: whereExpenses,
+        _sum: { amount: true },
+      });
+      dailyTotals = dailyGroups.map((g) => Number(g._sum?.amount || 0));
+    } else {
+      const categorySet = new Set<string>(categoryIds);
+
+      Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
+
+      const rows = await this.prisma.expense.findMany({
+        where: whereExpenses,
+        select: {
+          amount: true,
+          date: true,
+          categoryId: true,
+          categorySplits: {
+            where: { isDeleted: false },
+            select: { categoryId: true, amount: true },
+          },
+        },
+      });
+
+      spendingMap = new Map<string, number>();
+      const perDay = new Map<string, number>();
+      spentAmount = 0;
+
+      for (const row of rows) {
+        let rowTotal = 0;
+        for (const part of attributeToCategories(row)) {
+          if (!part.categoryId || !categorySet.has(part.categoryId)) continue;
+          rowTotal += part.amount;
+          spendingMap.set(part.categoryId, (spendingMap.get(part.categoryId) ?? 0) + part.amount);
+        }
+        if (rowTotal === 0) continue;
+        spentAmount += rowTotal;
+        // `date` is @db.Date, so Prisma hands back midnight UTC and this key is
+        // stable. Grouping the ATTRIBUTED money, not the row amount: a rate
+        // built on money the budget does not own is wrong in exactly the cases
+        // this fixes.
+        const dayKey = row.date.toISOString().slice(0, 10);
+        perDay.set(dayKey, (perDay.get(dayKey) ?? 0) + rowTotal);
+      }
+
+      dailyTotals = [...perDay.values()];
     }
 
-    const spent = await this.prisma.expense.aggregate({
-      where: whereExpenses,
-      _sum: { amount: true },
-    });
-
-    const spentAmount = Number(spent._sum?.amount || 0);
     const budgetAmount = Number(budget.amount);
     const remaining = Math.max(0, budgetAmount - spentAmount);
     // Precomputed so AI consumers don't have to do (spent − amount) themselves
@@ -367,15 +435,6 @@ export class BudgetsService {
     const daysElapsed = Math.max(1, Math.ceil((now.getTime() - periodStart.getTime()) / msPerDay));
     const totalDaysInPeriod = Math.max(1, Math.ceil((periodEnd.getTime() - periodStart.getTime()) / msPerDay));
     const daysRemaining = Math.max(0, Math.ceil((periodEnd.getTime() - now.getTime()) / msPerDay));
-
-    // One row per day that had spending. Needed because the projection's rate
-    // must be able to drop the largest DAY, which a single SUM cannot express.
-    const dailyGroups = await this.prisma.expense.groupBy({
-      by: ['date'],
-      where: whereExpenses,
-      _sum: { amount: true },
-    });
-    const dailyTotals = dailyGroups.map((g) => Number(g._sum?.amount || 0));
 
     const estimate = projectBudgetSpend({
       spent: spentAmount,
@@ -403,21 +462,14 @@ export class BudgetsService {
       }
     }
 
-    // Per-category breakdown for multi-category budgets
     let categoryBreakdown: any[] | undefined;
     if (hasMultiCategory) {
-      const categorySpending = await this.prisma.expense.groupBy({
-        by: ['categoryId'],
-        where: whereExpenses,
-        _sum: { amount: true },
-      });
-
-      const spendingMap = new Map(
-        categorySpending.map((cs) => [cs.categoryId, Number(cs._sum?.amount || 0)]),
-      );
+      // `spendingMap` is always populated when `hasMultiCategory` — both are
+      // driven by the same `allocations.length > 0`.
+      const spending = spendingMap ?? new Map<string, number>();
 
       categoryBreakdown = allocations.map((alloc: any) => {
-        const catSpent = spendingMap.get(alloc.categoryId) || 0;
+        const catSpent = spending.get(alloc.categoryId) || 0;
         const catAllocated = Number(alloc.amount);
         return {
           categoryId: alloc.categoryId,

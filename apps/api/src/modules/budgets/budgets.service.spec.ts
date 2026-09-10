@@ -383,3 +383,152 @@ describe('BudgetsService.getProgress — the projection does not re-spend a lump
     (Date.now as jest.Mock).mockRestore();
   });
 });
+
+/**
+ * A budget on a category a receipt only reaches through a split used to read
+ * zero, while a budget on the receipt's own category absorbed the whole
+ * receipt. Both are the same defect: budgets scoped spend by
+ * `expense.categoryId` and never read `expense_category_splits`.
+ * See docs/superpowers/specs/2026-09-10-budget-split-attribution-design.md.
+ */
+describe('BudgetsService.getProgress — category budgets count splits', () => {
+  const GROCERIES = 'cat-groceries';
+  const HOUSEHOLD = 'cat-household';
+  const DEPOSIT = 'cat-deposit';
+
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  /** The reported receipt: 240 PLN split 180 groceries / 35 household / 25 deposit. */
+  const splitReceiptRow = {
+    amount: 240,
+    date: new Date('2026-09-08T00:00:00Z'),
+    categoryId: GROCERIES,
+    categorySplits: [
+      { categoryId: GROCERIES, amount: 180 },
+      { categoryId: HOUSEHOLD, amount: 35 },
+      { categoryId: DEPOSIT, amount: 25 },
+    ],
+  };
+
+  function prismaFor(allocations: Array<{ categoryId: string; amount: number }>, rows: any[]) {
+    return {
+      budget: {
+        findFirst: jest.fn().mockResolvedValue({
+          id: 'b1',
+          amount: 1000,
+          currencyCode: 'PLN',
+          period: 'monthly',
+          startDate: new Date('2026-09-01T00:00:00Z'),
+          endDate: null,
+          categoryAllocations: allocations.map((a) => ({ ...a, category: { name: a.categoryId } })),
+          isActive: true,
+          isDeleted: false,
+        }),
+      },
+      expense: {
+        findMany: jest.fn().mockResolvedValue(rows),
+        aggregate: jest.fn().mockResolvedValue({ _sum: { amount: 0 } }),
+        groupBy: jest.fn().mockResolvedValue([]),
+      },
+    } as any;
+  }
+
+  it('gives a split-only category its share instead of zero', async () => {
+    const prisma = prismaFor([{ categoryId: HOUSEHOLD, amount: 1000 }], [splitReceiptRow]);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    expect(progress.spent).toBe(35);
+  });
+
+  it('stops the receipt’s own category absorbing the whole receipt', async () => {
+    const prisma = prismaFor([{ categoryId: GROCERIES, amount: 1000 }], [splitReceiptRow]);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    expect(progress.spent).toBe(180);
+  });
+
+  it('still gives an unsplit expense its whole amount', async () => {
+    const plain = { amount: 90, date: new Date('2026-09-03T00:00:00Z'), categoryId: GROCERIES, categorySplits: [] };
+    const prisma = prismaFor([{ categoryId: GROCERIES, amount: 1000 }], [plain]);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    expect(progress.spent).toBe(90);
+  });
+
+  it('breaks the total down per allocation, and the rows sum to it', async () => {
+    const prisma = prismaFor(
+      [
+        { categoryId: GROCERIES, amount: 500 },
+        { categoryId: HOUSEHOLD, amount: 500 },
+      ],
+      [splitReceiptRow],
+    );
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    const byId = new Map(progress.categoryBreakdown!.map((c: any) => [c.categoryId, c.spent]));
+    expect(byId.get(GROCERIES)).toBe(180);
+    expect(byId.get(HOUSEHOLD)).toBe(35);
+    expect(progress.spent).toBe(215);
+    expect([...byId.values()].reduce((a, b) => a + b, 0)).toBe(progress.spent);
+  });
+
+  it('asks for expenses whose own category OR a split matches', async () => {
+    // Filtering on categoryId alone in SQL is the bug: an expense whose own
+    // category is not in the budget can still hold a split into it.
+    const prisma = prismaFor([{ categoryId: HOUSEHOLD, amount: 1000 }], [splitReceiptRow]);
+
+    await makeService(prisma).getProgress('acc-1', 'b1');
+
+    const where = prisma.expense.findMany.mock.calls[0][0].where;
+    expect(where.categoryId).toBeUndefined();
+    expect(where.OR).toEqual([
+      { categoryId: { in: [HOUSEHOLD] } },
+      { categorySplits: { some: { isDeleted: false, categoryId: { in: [HOUSEHOLD] } } } },
+    ]);
+  });
+
+  it('excludes split receivables and planned expenses, like the cron and the phone already do', async () => {
+    const prisma = prismaFor([{ categoryId: GROCERIES, amount: 1000 }], []);
+
+    await makeService(prisma).getProgress('acc-1', 'b1');
+
+    const where = prisma.expense.findMany.mock.calls[0][0].where;
+    expect(where.isSplitReceivable).toBe(false);
+    expect(where.isPlanned).toBe(false);
+  });
+
+  it('keeps the cheap aggregate for a budget with no category allocations', async () => {
+    // Splits sum to the expense amount, so attribution would return the same
+    // number. Loading rows for it would be pure cost.
+    const prisma = prismaFor([], []);
+    prisma.expense.aggregate.mockResolvedValue({ _sum: { amount: 240 } });
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    expect(progress.spent).toBe(240);
+    expect(prisma.expense.findMany).not.toHaveBeenCalled();
+    expect(prisma.expense.aggregate).toHaveBeenCalled();
+  });
+
+  it('feeds the projection attributed money, one total per day', async () => {
+    const rows = [
+      splitReceiptRow,
+      { ...splitReceiptRow, date: new Date('2026-09-09T00:00:00Z') },
+    ];
+    const prisma = prismaFor([{ categoryId: HOUSEHOLD, amount: 1000 }], rows);
+
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+
+    // 35 on each of two days, not 240 on each.
+    expect(progress.spent).toBe(70);
+    expect(progress.dailyBurnRate).toBeLessThanOrEqual(35);
+  });
+});
