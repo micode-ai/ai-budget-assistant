@@ -11,6 +11,7 @@ import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { readAnchorDay } from '@/hooks/useFinancialMonth';
 import { filterConsumption } from '@/utils/consumption';
 import { categoryLabel } from '@/utils/entityLabel';
+import { attributeBudgetSpend } from '@/features/budgets/budgetAttribution';
 import {
   loadAllBudgets,
   insertBudget,
@@ -478,7 +479,11 @@ export const useBudgetStore = create<BudgetState>()(
       const budget = get().budgets.find((b) => b.id === budgetId);
       if (!budget || budget.isDeleted) return null;
 
-      const expenses = filterConsumption(useExpenseStore.getState().expenses).filter((e) => !e.isDeleted);
+      const expenses = filterConsumption(useExpenseStore.getState().expenses).filter(
+        // `isPlanned` is filtered in SQL by loadAllExpenses on native, but the
+        // web build has no SQLite and takes this list from the server pull.
+        (e) => !e.isDeleted && !e.isPlanned,
+      );
 
       const now = referenceDate ?? new Date();
       // Store, not a component — reads the anchor via the shared, unit-tested
@@ -499,12 +504,12 @@ export const useBudgetStore = create<BudgetState>()(
       const allocations = budget.categoryAllocations || [];
       const hasMultiCategory = allocations.length > 0;
 
-      if (hasMultiCategory) {
-        const categoryIds = new Set(allocations.map((a) => a.categoryId));
-        periodExpenses = periodExpenses.filter((e) => categoryIds.has(e.categoryId || ''));
-      }
+      const categorySet = hasMultiCategory
+        ? new Set(allocations.map((a) => a.categoryId))
+        : null;
 
-      const spent = periodExpenses.reduce((sum, e) => sum + e.amount, 0);
+      const attribution = attributeBudgetSpend(periodExpenses, categorySet);
+      const spent = attribution.spent;
       const remaining = Math.max(0, budget.amount - spent);
       const percentageUsed = budget.amount > 0 ? (spent / budget.amount) * 100 : 0;
       const isOverBudget = spent > budget.amount;
@@ -517,19 +522,9 @@ export const useBudgetStore = create<BudgetState>()(
       const daysPassed = Math.max(1, Math.ceil((now.getTime() - periodStart.getTime()) / msPerDay));
       const totalDays = Math.ceil((periodEnd.getTime() - periodStart.getTime()) / msPerDay);
 
-      // One total per calendar day, so the projection can drop the largest DAY
-      // rather than extrapolating it. `spent / daysPassed * totalDays` charged
-      // a one-off rent payment again for every remaining day of the month — see
-      // `projectBudgetSpend` for the measured case.
-      const perDay = new Map<string, number>();
-      for (const e of periodExpenses) {
-        const key = new Date(e.date).toDateString();
-        perDay.set(key, (perDay.get(key) || 0) + e.amount);
-      }
-
       const estimate = projectBudgetSpend({
         spent,
-        dailyTotals: [...perDay.values()],
+        dailyTotals: [...attribution.byDay.values()],
         daysElapsed: daysPassed,
         totalDays,
       });
@@ -557,8 +552,7 @@ export const useBudgetStore = create<BudgetState>()(
       if (hasMultiCategory) {
         const categoriesState = useCategoryStore.getState();
         categoryBreakdown = allocations.map((alloc) => {
-          const catExpenses = periodExpenses.filter((e) => e.categoryId === alloc.categoryId);
-          const catSpent = catExpenses.reduce((sum, e) => sum + e.amount, 0);
+          const catSpent = attribution.byCategory.get(alloc.categoryId) ?? 0;
           const cat = categoriesState.categories.find((c) => c.id === alloc.categoryId);
           return {
             categoryId: alloc.categoryId,
