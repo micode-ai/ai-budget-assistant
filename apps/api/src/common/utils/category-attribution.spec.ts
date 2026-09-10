@@ -112,3 +112,58 @@ describe('attributableAmountForCategories', () => {
     expect(attributableAmountForCategories(orphan, new Set([GROCERIES]))).toBe(60);
   });
 });
+
+// The API and the mobile client each own a copy of this rule — the API has no
+// build step and cannot runtime-import @budget/shared-utils (see
+// scripts/check-no-shared-utils-runtime-import.sh, which excludes *.spec.ts,
+// which is why this import is legal here and nowhere else in apps/api).
+// Silent drift between the two is the known failure mode of that convention,
+// and it would show up as the phone and the server disagreeing about one
+// budget. A test catches it; review does not.
+import {
+  attributeToCategories as mirrorAttribute,
+  attributableAmountForCategories as mirrorAmount,
+} from '@budget/shared-utils';
+
+describe('API copy and shared-utils mirror agree', () => {
+  const cases: Array<{ name: string; expense: any; set: string[] }> = [
+    { name: 'split receipt, split-only category', expense: splitReceipt, set: [HOUSEHOLD] },
+    { name: 'split receipt, own category', expense: splitReceipt, set: [GROCERIES] },
+    { name: 'split receipt, deposit category', expense: splitReceipt, set: [DEPOSIT] },
+    { name: 'split receipt, every category', expense: splitReceipt, set: [GROCERIES, HOUSEHOLD, DEPOSIT] },
+    { name: 'unsplit expense, matching category', expense: plainExpense, set: [GROCERIES] },
+    { name: 'unsplit expense, other category', expense: plainExpense, set: [HOUSEHOLD] },
+    { name: 'empty set', expense: splitReceipt, set: [] },
+    {
+      name: 'soft-deleted split',
+      expense: {
+        amount: 100,
+        categoryId: GROCERIES,
+        categorySplits: [
+          { categoryId: GROCERIES, amount: 100 },
+          { categoryId: HOUSEHOLD, amount: 40, isDeleted: true },
+        ],
+      },
+      set: [HOUSEHOLD],
+    },
+    {
+      name: 'mobile `splits` field name',
+      expense: {
+        amount: 240,
+        categoryId: GROCERIES,
+        splits: [
+          { categoryId: GROCERIES, amount: 180 },
+          { categoryId: HOUSEHOLD, amount: 60 },
+        ],
+      },
+      set: [HOUSEHOLD],
+    },
+    { name: 'non-numeric amount', expense: { amount: 'x', categoryId: GROCERIES }, set: [GROCERIES] },
+  ];
+
+  it.each(cases)('$name', ({ expense, set }) => {
+    const ids = new Set(set);
+    expect(mirrorAmount(expense, ids)).toBe(attributableAmountForCategories(expense, ids));
+    expect(mirrorAttribute(expense)).toEqual(attributeToCategories(expense));
+  });
+});
