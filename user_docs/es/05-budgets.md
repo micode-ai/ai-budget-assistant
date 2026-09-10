@@ -50,6 +50,12 @@ En el modo **Por categorías** puedes asignar un límite de gasto a cada categor
 - El presupuesto total es igual a la suma de todos los importes por categoría
 - Puedes añadir tantas categorías como necesites
 
+## Recibos escaneados y presupuestos por categoría
+
+Cuando un recibo escaneado se divide automáticamente entre categorías — alimentación, artículos del hogar, un depósito de botella —, la parte de cada categoría ahora cuenta para el presupuesto de esa categoría, en proporción a la división. Un presupuesto de una categoría que solo aparece dentro de una división de recibo, como Alcohol o el depósito, por fin se contabiliza correctamente en lugar de mostrar siempre cero — y un presupuesto de Alimentación deja de contar los artículos del hogar o el depósito del mismo recibo.
+
+Esto también se aplica a los recibos que ya escaneaste, no solo a los nuevos — tus totales de presupuesto, incluido el Historial de gastos, se actualizan automáticamente. No hace falta volver a escanear nada.
+
 ## Detalles del presupuesto
 
 Toca cualquier presupuesto para ver sus detalles completos:

@@ -624,7 +624,7 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - Tap **Change categories** to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.
 - If the items don't add up closely enough to the receipt total, the app falls back to one category instead of guessing.
 - Bottle and can deposits are recognised and shown as their own category, so you can see how much of your spending is packaging you can get back.
-- This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt's one overall category.
+- This also counts toward your category budgets — a budget on a category that only ever shows up inside a receipt split, like Alcohol or a deposit budget, finally tracks correctly, and a Groceries budget no longer counts the household items or the deposit from the same receipt.
 - Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
@@ -708,7 +708,7 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.
 
 - **Q: Why did one receipt end up split across several categories in my charts?**
-  **A:** When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts. This never changes your budgets. Tap **Change categories** on the receipt confirmation screen to adjust it — corrections are remembered for next time.
+  **A:** When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts — and in your category budgets, too. Tap **Change categories** on the receipt confirmation screen to adjust it — corrections are remembered for next time.
 
 ---
 
@@ -770,6 +770,12 @@ In **By Category** mode, you can assign a spending limit to each expense categor
 - Enter the amount for each category
 - The total budget equals the sum of all category amounts
 - You can add as many categories as needed
+
+## Scanned Receipts and Category Budgets
+
+When a scanned receipt is automatically split across categories — groceries, household items, a bottle deposit — each category's share now counts toward that category's budget, in proportion to the split. A budget on a category that only ever shows up inside a receipt split, like Alcohol or a deposit budget, finally tracks spending instead of always reading zero — and a Groceries budget no longer counts the household items or the deposit from the same receipt.
+
+This applies to receipts you've already scanned, not just new ones — your budget totals, including Spending History, update automatically. There's nothing to rescan.
 
 ## Budget Details
 
@@ -5293,7 +5299,7 @@ iOS, Android, Web
 - Нажмите **Изменить категории**, чтобы открыть список всех позиций и указать, к какой категории относится каждая из них. Изменения применяются сразу — и запоминаются, поэтому тот же товар будет правильно распознан при следующем сканировании.
 - Если позиции недостаточно точно совпадают с итоговой суммой чека, приложение возвращается к одной категории вместо того, чтобы гадать.
 - Залог за бутылки и банки распознаётся и показывается как отдельная категория, чтобы вы видели, какая часть ваших расходов — это упаковка, которую можно вернуть.
-- Это влияет только на то, как ваши расходы отображаются в Аналитике и на графиках — бюджеты при этом никогда не меняются и по-прежнему учитываются по единой общей категории чека.
+- Это также учитывается в ваших бюджетах по категориям — бюджет на категорию, которая встречается только внутри разделения чека, например Алкоголь или залог, наконец-то учитывается правильно, а бюджет Продукты больше не включает хозтовары или залог с того же чека.
 - Иногда ни одна из ваших существующих категорий не подходит для группы товаров. В этом случае приложение предлагает совершенно новую категорию — она показывается как чип, отмеченный значком **+** (например, «+ Бытовая химия 10»). Пока она не создаётся — нажмите **Изменить категории**, чтобы перенести её позиции в существующую категорию или оставить как предложено. Новая категория действительно создаётся только после сохранения чека.
 
 Работает одинаково — как при сканировании в приложении, так и через ботов в Telegram, WhatsApp или Slack.
@@ -5377,7 +5383,7 @@ iOS, Android, Web
   **О:** Да, каждый голосовой ввод или сканирование чека использует один запрос AI из вашего ежемесячного лимита.
 
 - **В: Почему один чек оказался разделён на несколько категорий в моих графиках?**
-  **О:** Когда чек явно объединяет разные виды товаров (например, продукты и алкоголь), приложение автоматически распределяет его между подходящими категориями в графиках расходов. Бюджеты при этом никогда не меняются. Нажмите **Изменить категории** на экране подтверждения чека, чтобы это исправить — исправления запоминаются на будущее.
+  **О:** Когда чек явно объединяет разные виды товаров (например, продукты и алкоголь), приложение автоматически распределяет его между подходящими категориями в графиках расходов — и в ваших бюджетах по категориям тоже. Нажмите **Изменить категории** на экране подтверждения чека, чтобы это исправить — исправления запоминаются на будущее.
 
 ---
 
@@ -5439,6 +5445,12 @@ iOS, Android, Web
 - Введите сумму для каждой категории
 - Общая сумма бюджета равна сумме всех категорий
 - Можно добавить любое количество категорий
+
+## Отсканированные чеки и бюджеты по категориям
+
+Когда отсканированный чек автоматически разделяется между категориями — продукты, хозтовары, залог за тару — доля каждой категории теперь учитывается в бюджете этой категории, пропорционально разделению. Бюджет на категорию, которая встречается только внутри разделения чека, например Алкоголь или залог, наконец учитывается правильно вместо того, чтобы всегда показывать ноль — а бюджет Продукты больше не включает хозтовары или залог с того же чека.
+
+Это касается и уже отсканированных чеков, а не только новых — суммы ваших бюджетов, включая Историю расходов, обновляются автоматически. Пересканировать ничего не нужно.
 
 ## Детали бюджета
 
@@ -9940,7 +9952,7 @@ iOS, Android, Web
 - Натисніть **Змінити категорії**, щоб відкрити список усіх позицій і вказати, до якої категорії належить кожна з них. Ваші зміни застосовуються одразу — і запам'ятовуються, тож той самий товар буде правильно розпізнано під час наступного сканування.
 - Якщо позиції недостатньо точно збігаються із загальною сумою чека, додаток повертається до однієї категорії, а не вгадує.
 - Застава за пляшки та банки розпізнається і показується як окрема категорія, щоб ви бачили, яка частина ваших витрат — це упаковка, яку можна повернути.
-- Це змінює лише те, як ваші витрати відображаються в Аналітиці та на графіках — бюджети при цьому ніколи не змінюються і, як і раніше, враховуються за єдиною загальною категорією чека.
+- Це також враховується у ваших бюджетах за категоріями — бюджет на категорію, яка з'являється лише всередині розподілу чека, наприклад Алкоголь або застава, нарешті враховується правильно, а бюджет Продукти більше не включає побутові товари чи заставу з того самого чека.
 - Іноді жодна з ваших наявних категорій не підходить для групи товарів. У такому разі додаток пропонує зовсім нову категорію — вона показується як чип, позначений значком **+** (наприклад, «+ Побутова хімія 10»). Поки що вона не створюється — натисніть **Змінити категорії**, щоб перенести її позиції до наявної категорії або залишити як запропоновано. Нова категорія справді створюється лише після збереження чека.
 
 Працює однаково незалежно від того, скануєте ви в додатку чи через ботів Telegram, WhatsApp або Slack.
@@ -10024,7 +10036,7 @@ iOS, Android, Web
   **В:** Так, кожен голосовий ввід або сканування чека використовує один запит ШІ з вашого місячного ліміту.
 
 - **П:** Чому один чек виявився розподілений на кілька категорій на моїх графіках?
-  **В:** Коли чек явно поєднує різні види товарів (наприклад, продукти й алкоголь), додаток автоматично розподіляє його між відповідними категоріями на графіках витрат. Бюджети це ніколи не змінює. Натисніть **Змінити категорії** на екрані підтвердження чека, щоб це виправити — виправлення запам'ятовуються на майбутнє.
+  **В:** Коли чек явно поєднує різні види товарів (наприклад, продукти й алкоголь), додаток автоматично розподіляє його між відповідними категоріями на графіках витрат — і у ваших бюджетах за категоріями теж. Натисніть **Змінити категорії** на екрані підтвердження чека, щоб це виправити — виправлення запам'ятовуються на майбутнє.
 
 ---
 
@@ -10086,6 +10098,12 @@ iOS, Android, Web
 - Введіть суму для кожної категорії
 - Загальна сума бюджету дорівнює сумі всіх категорій
 - Можна додавати будь-яку кількість категорій
+
+## Відскановані чеки та бюджети за категоріями
+
+Коли відсканований чек автоматично розподіляється між категоріями — продукти, побутові товари, застава за тару — частка кожної категорії тепер враховується у бюджеті цієї категорії, пропорційно до розподілу. Бюджет на категорію, яка з'являється лише всередині розподілу чека, наприклад Алкоголь або застава, нарешті враховується правильно, замість того щоб завжди показувати нуль — а бюджет Продукти більше не включає побутові товари чи заставу з того самого чека.
+
+Це стосується і вже відсканованих чеків, а не лише нових — суми ваших бюджетів, зокрема Історія витрат, оновлюються автоматично. Пересканувати нічого не потрібно.
 
 ## Деталі бюджету
 
@@ -14535,7 +14553,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Dotknij **Zmień kategorie**, aby otworzyć listę wszystkich pozycji i dostosować, do której kategorii należy każda z nich. Twoje zmiany obowiązują od razu — i są zapamiętywane, dzięki czemu ten sam produkt zostanie poprawnie skategoryzowany przy następnym skanowaniu.
 - Jeśli pozycje nie sumują się wystarczająco blisko łącznej kwoty paragonu, aplikacja wraca do jednej kategorii zamiast zgadywać.
 - Kaucje za butelki i puszki są rozpoznawane i pokazywane jako osobna kategoria, dzięki czemu widzisz, jaka część Twoich wydatków to opakowania, które możesz odzyskać.
-- To zmienia jedynie sposób prezentacji wydatków w Analizie i na wykresach — nigdy nie zmienia Twoich budżetów, które nadal są liczone względem jednej, ogólnej kategorii paragonu.
+- To liczy się też do Twoich budżetów kategorii — budżet na kategorię, która pojawia się wyłącznie w podziałach paragonów, na przykład Alkohol albo kaucja, w końcu jest liczony poprawnie, a budżet Spożywcze przestaje uwzględniać artykuły gospodarstwa domowego czy kaucję z tego samego paragonu.
 - Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
@@ -14619,7 +14637,7 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
   **O:** Tak, kazde wprowadzenie glosowe lub skan paragonu zuzywa jedno zapytanie AI z Twojego miesiecznego limitu.
 
 - **P: Dlaczego jeden paragon został podzielony na kilka kategorii na moich wykresach?**
-  **O:** Gdy paragon wyraźnie łączy różne rodzaje pozycji (na przykład artykuły spożywcze i alkohol), aplikacja automatycznie dzieli go między pasujące kategorie na wykresach wydatków. To nigdy nie zmienia Twoich budżetów. Dotknij **Zmień kategorie** na ekranie potwierdzenia paragonu, aby to poprawić — poprawki są zapamiętywane na przyszłość.
+  **O:** Gdy paragon wyraźnie łączy różne rodzaje pozycji (na przykład artykuły spożywcze i alkohol), aplikacja automatycznie dzieli go między pasujące kategorie na wykresach wydatków — a także w Twoich budżetach kategorii. Dotknij **Zmień kategorie** na ekranie potwierdzenia paragonu, aby to poprawić — poprawki są zapamiętywane na przyszłość.
 
 ---
 
@@ -14681,6 +14699,12 @@ W trybie **Według kategorii** możesz ustawić limit wydatków dla każdej kate
 - Wprowadź kwotę dla każdej kategorii
 - Całkowity budżet równa się sumie wszystkich kategorii
 - Możesz dodać dowolną liczbę kategorii
+
+## Zeskanowane paragony a budżety kategorii
+
+Gdy zeskanowany paragon zostaje automatycznie podzielony między kategorie — artykuły spożywcze, chemię gospodarczą, kaucję za opakowania — udział każdej kategorii liczy się teraz do budżetu tej kategorii, proporcjonalnie do podziału. Budżet na kategorię, która pojawia się wyłącznie wewnątrz podziału paragonu, na przykład Alkohol albo kaucja, w końcu jest liczony poprawnie zamiast zawsze pokazywać zero — a budżet Spożywcze przestaje uwzględniać chemię gospodarczą czy kaucję z tego samego paragonu.
+
+Dotyczy to także paragonów zeskanowanych wcześniej, nie tylko nowych — Twoje sumy budżetowe, w tym Historia wydatków, aktualizują się automatycznie. Nie musisz niczego skanować ponownie.
 
 ## Szczegóły budżetu
 
@@ -19126,7 +19150,7 @@ Kassenbons vom Supermarkt enthalten oft mehrere Arten von Artikeln in einem Eink
 - Tippe auf **Kategorien ändern**, um eine Liste aller Artikel zu öffnen und anzupassen, zu welcher Kategorie sie gehören. Deine Änderungen gelten sofort — und werden gemerkt, sodass dasselbe Produkt beim nächsten Scan korrekt kategorisiert wird.
 - Wenn die Artikel nicht ausreichend genau zum Gesamtbetrag des Belegs passen, greift die App auf eine einzige Kategorie zurück, statt zu raten.
 - Pfand für Flaschen und Dosen wird erkannt und als eigene Kategorie angezeigt, damit du siehst, wie viel deiner Ausgaben aus Verpackung besteht, die du zurückbekommst.
-- Das ändert nur, wie deine Ausgaben in der Analyse und in den Diagrammen erscheinen — es ändert nie deine Budgets, die weiterhin gegen die eine Gesamtkategorie des Belegs geführt werden.
+- Das zählt jetzt auch für deine Kategorie-Budgets — ein Budget für eine Kategorie, die nur innerhalb einer Beleg-Aufteilung vorkommt, etwa Alkohol oder Pfand, wird endlich korrekt erfasst, und ein Lebensmittel-Budget zählt die Haushaltsartikel oder das Pfand vom selben Beleg nicht mehr mit.
 - Manchmal passt keine deiner bestehenden Kategorien zu einer Gruppe von Artikeln. In diesem Fall schlägt die App eine brandneue Kategorie vor, angezeigt als Chip mit einem **+**-Zeichen (zum Beispiel „+ Haushaltschemie 10"). Sie wird noch nicht angelegt — tippe auf **Kategorien ändern**, um ihre Artikel stattdessen einer bestehenden Kategorie zuzuweisen oder sie wie vorgeschlagen zu belassen. Die neue Kategorie wird erst angelegt, wenn du den Beleg speicherst.
 
 Funktioniert genauso, egal ob du über die App oder über die Telegram-, WhatsApp- oder Slack-Bots scannst.
@@ -19210,7 +19234,7 @@ Fotografiere oder lade eine Rechnung oder ein Zahlungsdokument hoch, um Einnahme
   **A:** Ja, jede Spracheingabe oder jeder Belegscan verbraucht eine KI-Anfrage aus deinem monatlichen Kontingent.
 
 - **F: Warum wurde ein Beleg in meinen Diagrammen auf mehrere Kategorien aufgeteilt?**
-  **A:** Wenn ein Beleg deutlich unterschiedliche Arten von Artikeln enthält (zum Beispiel Lebensmittel und Alkohol), teilt die App ihn automatisch auf die passenden Kategorien in deinen Ausgabendiagrammen auf. Das ändert nie deine Budgets. Tippe auf **Kategorien ändern** auf dem Bestätigungsbildschirm des Belegs, um es anzupassen — Korrekturen werden für das nächste Mal gemerkt.
+  **A:** Wenn ein Beleg deutlich unterschiedliche Arten von Artikeln enthält (zum Beispiel Lebensmittel und Alkohol), teilt die App ihn automatisch auf die passenden Kategorien in deinen Ausgabendiagrammen auf — und in deinen Kategorie-Budgets ebenso. Tippe auf **Kategorien ändern** auf dem Bestätigungsbildschirm des Belegs, um es anzupassen — Korrekturen werden für das nächste Mal gemerkt.
 
 ---
 
@@ -19272,6 +19296,12 @@ Im Modus **Nach Kategorien** kannst du für jede Ausgabenkategorie ein Limit fes
 - Gib den Betrag für jede Kategorie ein
 - Das Gesamtbudget entspricht der Summe aller Kategoriebeträge
 - Du kannst beliebig viele Kategorien hinzufügen
+
+## Gescannte Belege und Kategorie-Budgets
+
+Wenn ein gescannter Beleg automatisch auf mehrere Kategorien aufgeteilt wird — Lebensmittel, Haushaltsartikel, Pfand —, zählt der Anteil jeder Kategorie jetzt anteilig zum Budget dieser Kategorie. Ein Budget für eine Kategorie, die nur innerhalb einer Beleg-Aufteilung vorkommt, etwa Alkohol oder Pfand, wird endlich korrekt erfasst, statt immer null anzuzeigen — und ein Lebensmittel-Budget zählt die Haushaltsartikel oder das Pfand vom selben Beleg nicht mehr mit.
+
+Das gilt auch für bereits gescannte Belege, nicht nur für neue — deine Budgetsummen, einschließlich des Ausgabenverlaufs, aktualisieren sich automatisch. Du musst nichts erneut scannen.
 
 ## Budgetdetails
 
@@ -23692,7 +23722,7 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 - Toca **Cambiar categorías** para abrir una lista de todos los artículos y ajustar a qué categoría pertenece cada uno. Tus cambios se aplican de inmediato — y se recuerdan, de modo que el mismo producto se categoriza correctamente la próxima vez que lo escanees.
 - Si los artículos no suman lo suficientemente cerca del importe total del recibo, la aplicación recurre a una sola categoría en lugar de adivinar.
 - Los depósitos de botellas y latas se reconocen y se muestran como su propia categoría, para que puedas ver cuánto de tu gasto es envase que puedes recuperar.
-- Esto solo cambia cómo aparece tu gasto en Analítica y en los gráficos — nunca cambia tus presupuestos, que siguen contabilizando contra la categoría general única del recibo.
+- Esto también cuenta ahora para tus presupuestos por categoría — un presupuesto de una categoría que solo aparece dentro de una división de recibo, como Alcohol o el depósito, por fin se contabiliza correctamente, y un presupuesto de Alimentación deja de contar los artículos del hogar o el depósito del mismo recibo.
 - A veces ninguna de tus categorías existentes encaja con un grupo de artículos. En ese caso, la aplicación sugiere una categoría totalmente nueva, mostrada como un chip marcado con un **+** (por ejemplo, "+ Productos de limpieza 10"). Todavía no se crea — toca **Cambiar categorías** para reasignar sus artículos a una categoría existente, o dejarla tal como se sugirió. La nueva categoría solo se crea de verdad cuando guardas el recibo.
 
 Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
@@ -23776,7 +23806,7 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
   **R:** Si, cada entrada de voz o escaneo de recibo utiliza una solicitud IA de tu cuota mensual.
 
 - **P: ¿Por qué un recibo terminó dividido en varias categorías en mis gráficos?**
-  **R:** Cuando un recibo mezcla claramente distintos tipos de artículos (por ejemplo, alimentación y alcohol), la aplicación lo divide automáticamente entre las categorías correspondientes en tus gráficos de gasto. Esto nunca cambia tus presupuestos. Toca **Cambiar categorías** en la pantalla de confirmación del recibo para ajustarlo — las correcciones se recuerdan para la próxima vez.
+  **R:** Cuando un recibo mezcla claramente distintos tipos de artículos (por ejemplo, alimentación y alcohol), la aplicación lo divide automáticamente entre las categorías correspondientes en tus gráficos de gasto — y también en tus presupuestos por categoría. Toca **Cambiar categorías** en la pantalla de confirmación del recibo para ajustarlo — las correcciones se recuerdan para la próxima vez.
 
 ---
 
@@ -23838,6 +23868,12 @@ En el modo **Por categorías** puedes asignar un límite de gasto a cada categor
 - Introduce el importe para cada categoría
 - El presupuesto total es igual a la suma de todos los importes por categoría
 - Puedes añadir tantas categorías como necesites
+
+## Recibos escaneados y presupuestos por categoría
+
+Cuando un recibo escaneado se divide automáticamente entre categorías — alimentación, artículos del hogar, un depósito de botella —, la parte de cada categoría ahora cuenta para el presupuesto de esa categoría, en proporción a la división. Un presupuesto de una categoría que solo aparece dentro de una división de recibo, como Alcohol o el depósito, por fin se contabiliza correctamente en lugar de mostrar siempre cero — y un presupuesto de Alimentación deja de contar los artículos del hogar o el depósito del mismo recibo.
+
+Esto también se aplica a los recibos que ya escaneaste, no solo a los nuevos — tus totales de presupuesto, incluido el Historial de gastos, se actualizan automáticamente. No hace falta volver a escanear nada.
 
 ## Detalles del presupuesto
 
@@ -28247,7 +28283,7 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 - Appuyez sur **Modifier les catégories** pour ouvrir une liste de tous les articles et ajuster la catégorie de chacun. Vos modifications s'appliquent immédiatement — et sont mémorisées, afin que le même produit soit correctement catégorisé lors de votre prochain scan.
 - Si les articles ne correspondent pas suffisamment au montant total du reçu, l'application revient à une seule catégorie plutôt que de deviner.
 - Les consignes sur les bouteilles et les canettes sont reconnues et affichées comme leur propre catégorie, afin que vous puissiez voir quelle part de vos dépenses correspond à un emballage que vous pouvez récupérer.
-- Cela ne change que la façon dont vos dépenses apparaissent dans les Analyses et les graphiques — cela ne modifie jamais vos budgets, qui continuent d'être suivis par rapport à la catégorie globale unique du reçu.
+- Cela compte désormais aussi dans vos budgets par catégorie — un budget sur une catégorie qui n'apparaît que dans une répartition de reçu, comme Alcool ou la consigne, est enfin comptabilisé correctement, et un budget Alimentation ne compte plus les produits ménagers ni la consigne du même reçu.
 - Parfois, aucune de vos catégories existantes ne correspond à un groupe d'articles. Dans ce cas, l'application suggère une toute nouvelle catégorie, affichée sous forme de puce marquée d'un **+** (par exemple, « + Produits d'entretien 10 »). Elle n'est pas encore créée — appuyez sur **Modifier les catégories** pour réattribuer ses articles à une catégorie existante, ou la laisser telle quelle. La nouvelle catégorie n'est réellement créée que lorsque vous enregistrez le reçu.
 
 Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
@@ -28331,7 +28367,7 @@ Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon 
   **R :** Oui, chaque saisie vocale ou scan de recu utilise une requete IA de votre allocation mensuelle.
 
 - **Q : Pourquoi un reçu s'est-il retrouvé réparti entre plusieurs catégories dans mes graphiques ?**
-  **R :** Lorsqu'un reçu mélange clairement différents types d'articles (par exemple, alimentation et alcool), l'application le répartit automatiquement entre les catégories correspondantes dans vos graphiques de dépenses. Cela ne modifie jamais vos budgets. Appuyez sur **Modifier les catégories** sur l'écran de confirmation du reçu pour l'ajuster — les corrections sont mémorisées pour la prochaine fois.
+  **R :** Lorsqu'un reçu mélange clairement différents types d'articles (par exemple, alimentation et alcool), l'application le répartit automatiquement entre les catégories correspondantes dans vos graphiques de dépenses — et dans vos budgets par catégorie aussi. Appuyez sur **Modifier les catégories** sur l'écran de confirmation du reçu pour l'ajuster — les corrections sont mémorisées pour la prochaine fois.
 
 ---
 
@@ -28393,6 +28429,12 @@ En mode **Par catégories**, vous pouvez attribuer une limite de dépenses à ch
 - Entrez le montant pour chaque catégorie
 - Le budget total est égal à la somme de tous les montants par catégorie
 - Vous pouvez ajouter autant de catégories que nécessaire
+
+## Reçus scannés et budgets par catégorie
+
+Lorsqu'un reçu scanné est automatiquement réparti entre plusieurs catégories — alimentation, produits ménagers, une consigne de bouteille —, la part de chaque catégorie compte désormais dans le budget de cette catégorie, au prorata de la répartition. Un budget sur une catégorie qui n'apparaît que dans une répartition de reçu, comme Alcool ou la consigne, est enfin comptabilisé correctement au lieu d'afficher toujours zéro — et un budget Alimentation ne compte plus les produits ménagers ni la consigne du même reçu.
+
+Cela s'applique aussi aux reçus déjà scannés, pas seulement aux nouveaux — vos totaux de budget, y compris l'Historique des dépenses, se mettent à jour automatiquement. Il n'y a rien à rescanner.
 
 ## Détails du budget
 
@@ -32800,7 +32842,7 @@ iOS, Android, Web
 - Націсніце **Змяніць катэгорыі**, каб адкрыць спіс усіх пазіцый і паказаць, да якой катэгорыі належыць кожная з іх. Вашы змены прымяняюцца адразу — і запамінаюцца, таму той самы тавар будзе правільна распазнаны пры наступным сканаванні.
 - Калі пазіцыі недастаткова дакладна супадаюць з агульнай сумай чэка, праграма вяртаецца да адной катэгорыі замест таго, каб угадваць.
 - Закладзь за бутэлькі і банкі распазнаецца і паказваецца як асобная катэгорыя, каб вы бачылі, якая частка вашых выдаткаў — гэта ўпакоўка, якую можна вярнуць.
-- Гэта змяняе толькі тое, як вашы выдаткі адлюстроўваюцца ў Аналітыцы і на графіках — бюджэты пры гэтым ніколі не змяняюцца і, як і раней, улічваюцца па адзінай агульнай катэгорыі чэка.
+- Гэта таксама ўлічваецца ў вашых бюджэтах па катэгорыях — бюджэт на катэгорыю, якая сустракаецца толькі ўнутры падзелу чэка, напрыклад Алкаголь ці закладзь, нарэшце ўлічваецца правільна, а бюджэт Прадукты больш не ўключае гаспадарчыя тавары ці закладзь з таго ж чэка.
 - Часам ніводная з вашых наяўных катэгорый не падыходзіць для групы тавараў. У такім выпадку праграма прапануе зусім новую катэгорыю — яна паказваецца як чып, пазначаны значком **+** (напрыклад, «+ Бытавая хімія 10»). Пакуль яна не ствараецца — націсніце **Змяніць катэгорыі**, каб перанесці яе пазіцыі ў наяўную катэгорыю або пакінуць як прапанавана. Новая катэгорыя сапраўды ствараецца толькі пасля захавання чэка.
 
 Працуе аднолькава незалежна ад таго, ці скануеце вы ў праграме, ці праз ботаў Telegram, WhatsApp або Slack.
@@ -32884,7 +32926,7 @@ iOS, Android, Web
   **А:** Так, кожны галасавы ўвод або сканаванне чэка выкарыстоўвае адзін запыт AI з вашага штомесячнага ліміту.
 
 - **П: Чаму адзін чэк апынуўся падзеленым на некалькі катэгорый на маіх графіках?**
-  **А:** Калі чэк відавочна аб'ядноўвае розныя віды тавараў (напрыклад, прадукты і алкаголь), праграма аўтаматычна размяркоўвае яго паміж адпаведнымі катэгорыямі на графіках выдаткаў. Бюджэты пры гэтым ніколі не змяняюцца. Націсніце **Змяніць катэгорыі** на экране пацвярджэння чэка, каб гэта выправіць — выпраўленні запамінаюцца на будучыню.
+  **А:** Калі чэк відавочна аб'ядноўвае розныя віды тавараў (напрыклад, прадукты і алкаголь), праграма аўтаматычна размяркоўвае яго паміж адпаведнымі катэгорыямі на графіках выдаткаў — і ў вашых бюджэтах па катэгорыях таксама. Націсніце **Змяніць катэгорыі** на экране пацвярджэння чэка, каб гэта выправіць — выпраўленні запамінаюцца на будучыню.
 
 ---
 
@@ -32946,6 +32988,12 @@ iOS, Android, Web
 - Увядзіце суму для кожнай катэгорыі
 - Агульная сума бюджэту роўная суме ўсіх катэгорый
 - Можна дадаць любую колькасць катэгорый
+
+## Адсканаваныя чэкі і бюджэты па катэгорыях
+
+Калі адсканаваны чэк аўтаматычна падзяляецца паміж катэгорыямі — прадукты, гаспадарчыя тавары, закладзь за тару — доля кожнай катэгорыі цяпер улічваецца ў бюджэце гэтай катэгорыі, прапарцыйна падзелу. Бюджэт на катэгорыю, якая сустракаецца толькі ўнутры падзелу чэка, напрыклад Алкаголь ці закладзь, нарэшце ўлічваецца правільна замест таго, каб заўсёды паказваць нуль — а бюджэт Прадукты больш не ўключае гаспадарчыя тавары ці закладзь з таго ж чэка.
+
+Гэта датычыцца і ўжо адсканаваных чэкаў, а не толькі новых — сумы вашых бюджэтаў, у тым ліку Гісторыя выдаткаў, абнаўляюцца аўтаматычна. Пераскановаць нічога не трэба.
 
 ## Дэталі бюджэту
 
@@ -37317,7 +37365,7 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 - Tik op **Categorieën wijzigen** om een lijst van alle items te openen en aan te passen tot welke categorie elk item behoort. Je wijzigingen gelden meteen — en worden onthouden, zodat hetzelfde product de volgende keer dat je het scant automatisch goed wordt gecategoriseerd.
 - Als de items niet voldoende overeenkomen met het totaalbedrag van de bon, valt de app terug op één categorie in plaats van te gokken.
 - Statiegeld voor flessen en blikjes wordt herkend en als eigen categorie weergegeven, zodat je ziet hoeveel van je uitgaven verpakking is die je terugkrijgt.
-- Dit verandert alleen hoe je uitgaven verschijnen in Analyse en in grafieken — het verandert nooit je budgetten, die nog steeds worden bijgehouden tegen de ene, algemene categorie van de bon.
+- Dit telt nu ook mee voor je categoriebudgetten — een budget op een categorie die alleen binnen een bonverdeling voorkomt, zoals Alcohol of statiegeld, wordt eindelijk correct bijgehouden, en een Boodschappen-budget telt de huishoudelijke producten of het statiegeld van dezelfde bon niet meer mee.
 - Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een **+**-teken (bijvoorbeeld "+ Schoonmaakmiddelen 10"). Die wordt nog niet aangemaakt — tik op **Categorieën wijzigen** om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.
 
 Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.
@@ -37401,7 +37449,7 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
   **A:** Ja, elke spraakinvoer of bonscan gebruikt één AI-verzoek uit je maandelijkse tegoed.
 
 - **V: Waarom werd één bon over meerdere categorieën verdeeld in mijn grafieken?**
-  **A:** Wanneer een bon duidelijk verschillende soorten items combineert (bijvoorbeeld boodschappen en alcohol), verdeelt de app deze automatisch over de bijbehorende categorieën in je uitgavengrafieken. Dit verandert nooit je budgetten. Tik op **Categorieën wijzigen** op het bevestigingsscherm van de bon om dit aan te passen — correcties worden onthouden voor de volgende keer.
+  **A:** Wanneer een bon duidelijk verschillende soorten items combineert (bijvoorbeeld boodschappen en alcohol), verdeelt de app deze automatisch over de bijbehorende categorieën in je uitgavengrafieken — en ook in je categoriebudgetten. Tik op **Categorieën wijzigen** op het bevestigingsscherm van de bon om dit aan te passen — correcties worden onthouden voor de volgende keer.
 
 ---
 
@@ -37463,6 +37511,12 @@ In de modus **Per categorie** kun je aan elke uitgavencategorie een uitgavenlimi
 - Voer het bedrag voor elke categorie in
 - Het totale budget is gelijk aan de som van alle categoriebedragen
 - Je kunt zoveel categorieën toevoegen als nodig is
+
+## Gescande bonnen en categoriebudgetten
+
+Wanneer een gescande bon automatisch over meerdere categorieën wordt verdeeld — boodschappen, huishoudelijke producten, statiegeld voor flessen — telt het aandeel van elke categorie nu mee voor het budget van die categorie, naar rato van de verdeling. Een budget op een categorie die alleen binnen een bonverdeling voorkomt, zoals Alcohol of statiegeld, wordt eindelijk correct bijgehouden in plaats van altijd nul te tonen — en een Boodschappen-budget telt de huishoudelijke producten of het statiegeld van dezelfde bon niet meer mee.
+
+Dit geldt ook voor bonnen die je al eerder hebt gescand, niet alleen voor nieuwe — je budgettotalen, inclusief de Uitgavengeschiedenis, worden automatisch bijgewerkt. Je hoeft niets opnieuw te scannen.
 
 ## Budgetdetails
 

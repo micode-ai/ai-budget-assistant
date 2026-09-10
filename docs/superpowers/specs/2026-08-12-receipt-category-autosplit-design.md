@@ -49,6 +49,12 @@ skeleton, but its contract with the model changes.
    `SafeToSpendService` and the `get_budget_status` AI tool are untouched, and the
    expense keeps a single `categoryId` (the dominant category) for them to read.
    This matches how manual splits already behave — no new inconsistency is introduced.
+
+   **Superseded 2026-09-10** by
+   `docs/superpowers/specs/2026-09-10-budget-split-attribution-design.md`. The
+   stated rationale — consistency with manual splits — turned out to argue the
+   other way: manual splits share the table and the defect, so making budgets
+   split-aware removes the inconsistency rather than creating one.
 2. **Pre-filled, not opt-in.** The split arrives already computed on the receipt
    confirmation screen, editable in one tap. Bots apply it and report it as a line
    in their reply. A button nobody presses would leave the differentiator invisible,

@@ -50,6 +50,12 @@ In **By Category** mode, you can assign a spending limit to each expense categor
 - The total budget equals the sum of all category amounts
 - You can add as many categories as needed
 
+## Scanned Receipts and Category Budgets
+
+When a scanned receipt is automatically split across categories — groceries, household items, a bottle deposit — each category's share now counts toward that category's budget, in proportion to the split. A budget on a category that only ever shows up inside a receipt split, like Alcohol or a deposit budget, finally tracks spending instead of always reading zero — and a Groceries budget no longer counts the household items or the deposit from the same receipt.
+
+This applies to receipts you've already scanned, not just new ones — your budget totals, including Spending History, update automatically. There's nothing to rescan.
+
 ## Budget Details
 
 Tap any budget to see its full details:

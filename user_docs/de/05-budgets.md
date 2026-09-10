@@ -50,6 +50,12 @@ Im Modus **Nach Kategorien** kannst du für jede Ausgabenkategorie ein Limit fes
 - Das Gesamtbudget entspricht der Summe aller Kategoriebeträge
 - Du kannst beliebig viele Kategorien hinzufügen
 
+## Gescannte Belege und Kategorie-Budgets
+
+Wenn ein gescannter Beleg automatisch auf mehrere Kategorien aufgeteilt wird — Lebensmittel, Haushaltsartikel, Pfand —, zählt der Anteil jeder Kategorie jetzt anteilig zum Budget dieser Kategorie. Ein Budget für eine Kategorie, die nur innerhalb einer Beleg-Aufteilung vorkommt, etwa Alkohol oder Pfand, wird endlich korrekt erfasst, statt immer null anzuzeigen — und ein Lebensmittel-Budget zählt die Haushaltsartikel oder das Pfand vom selben Beleg nicht mehr mit.
+
+Das gilt auch für bereits gescannte Belege, nicht nur für neue — deine Budgetsummen, einschließlich des Ausgabenverlaufs, aktualisieren sich automatisch. Du musst nichts erneut scannen.
+
 ## Budgetdetails
 
 Tippe auf ein beliebiges Budget, um die vollständigen Details zu sehen:

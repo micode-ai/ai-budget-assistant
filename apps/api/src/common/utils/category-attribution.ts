@@ -12,7 +12,7 @@
  *
  * The rule is single and deliberate: when an expense has live splits, the
  * SPLITS decide and its own `categoryId` is ignored; when it has none, its own
- * category takes the whole amount. It mirrors `analytics.service.ts:225`.
+ * category takes the whole amount. It mirrors `analytics.service.ts:228`.
  *
  * Budgets read this too, as of
  * `docs/superpowers/specs/2026-09-10-budget-split-attribution-design.md`, which

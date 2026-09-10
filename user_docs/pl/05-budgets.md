@@ -50,6 +50,12 @@ W trybie **Według kategorii** możesz ustawić limit wydatków dla każdej kate
 - Całkowity budżet równa się sumie wszystkich kategorii
 - Możesz dodać dowolną liczbę kategorii
 
+## Zeskanowane paragony a budżety kategorii
+
+Gdy zeskanowany paragon zostaje automatycznie podzielony między kategorie — artykuły spożywcze, chemię gospodarczą, kaucję za opakowania — udział każdej kategorii liczy się teraz do budżetu tej kategorii, proporcjonalnie do podziału. Budżet na kategorię, która pojawia się wyłącznie wewnątrz podziału paragonu, na przykład Alkohol albo kaucja, w końcu jest liczony poprawnie zamiast zawsze pokazywać zero — a budżet Spożywcze przestaje uwzględniać chemię gospodarczą czy kaucję z tego samego paragonu.
+
+Dotyczy to także paragonów zeskanowanych wcześniej, nie tylko nowych — Twoje sumy budżetowe, w tym Historia wydatków, aktualizują się automatycznie. Nie musisz niczego skanować ponownie.
+
 ## Szczegóły budżetu
 
 Dotknij dowolny budżet, aby zobaczyć pełne szczegóły:

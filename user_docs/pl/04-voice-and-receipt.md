@@ -95,7 +95,7 @@ Paragony z sklepów spożywczych często łączą różne rodzaje zakupów w jed
 - Dotknij **Zmień kategorie**, aby otworzyć listę wszystkich pozycji i dostosować, do której kategorii należy każda z nich. Twoje zmiany obowiązują od razu — i są zapamiętywane, dzięki czemu ten sam produkt zostanie poprawnie skategoryzowany przy następnym skanowaniu.
 - Jeśli pozycje nie sumują się wystarczająco blisko łącznej kwoty paragonu, aplikacja wraca do jednej kategorii zamiast zgadywać.
 - Kaucje za butelki i puszki są rozpoznawane i pokazywane jako osobna kategoria, dzięki czemu widzisz, jaka część Twoich wydatków to opakowania, które możesz odzyskać.
-- To zmienia jedynie sposób prezentacji wydatków w Analizie i na wykresach — nigdy nie zmienia Twoich budżetów, które nadal są liczone względem jednej, ogólnej kategorii paragonu.
+- To liczy się też do Twoich budżetów kategorii — budżet na kategorię, która pojawia się wyłącznie w podziałach paragonów, na przykład Alkohol albo kaucja, w końcu jest liczony poprawnie, a budżet Spożywcze przestaje uwzględniać artykuły gospodarstwa domowego czy kaucję z tego samego paragonu.
 - Czasem żadna z Twoich istniejących kategorii nie pasuje do grupy pozycji. W takim przypadku aplikacja proponuje zupełnie nową kategorię, pokazaną jako chip oznaczony znakiem **+** (na przykład „+ Chemia gospodarcza 10"). Nie jest ona jeszcze utworzona — dotknij **Zmień kategorie**, aby przypisać jej pozycje do istniejącej kategorii albo zostawić ją tak, jak zaproponowano. Nowa kategoria zostaje faktycznie utworzona dopiero po zapisaniu paragonu.
 
 Działa tak samo niezależnie od tego, czy skanujesz w aplikacji, czy przez bota Telegram, WhatsApp lub Slack.
@@ -179,7 +179,7 @@ Przejrzyj szczegóły, dotknij ✓, aby zapisać, lub ikonę ołówka, aby otwor
   **O:** Tak, kazde wprowadzenie glosowe lub skan paragonu zuzywa jedno zapytanie AI z Twojego miesiecznego limitu.
 
 - **P: Dlaczego jeden paragon został podzielony na kilka kategorii na moich wykresach?**
-  **O:** Gdy paragon wyraźnie łączy różne rodzaje pozycji (na przykład artykuły spożywcze i alkohol), aplikacja automatycznie dzieli go między pasujące kategorie na wykresach wydatków. To nigdy nie zmienia Twoich budżetów. Dotknij **Zmień kategorie** na ekranie potwierdzenia paragonu, aby to poprawić — poprawki są zapamiętywane na przyszłość.
+  **O:** Gdy paragon wyraźnie łączy różne rodzaje pozycji (na przykład artykuły spożywcze i alkohol), aplikacja automatycznie dzieli go między pasujące kategorie na wykresach wydatków — a także w Twoich budżetach kategorii. Dotknij **Zmień kategorie** na ekranie potwierdzenia paragonu, aby to poprawić — poprawki są zapamiętywane na przyszłość.
 
 ---
 
