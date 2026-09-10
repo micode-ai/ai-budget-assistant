@@ -75,6 +75,9 @@ jobs:
           test -f apex/blog/index.html  || { echo "::error::blog/index.html missing"; exit 1; }
           test -f apex/help/en/index.html || { echo "::error::help/en/index.html missing"; exit 1; }
           test -f apex/sitemap.xml      || { echo "::error::sitemap.xml missing"; exit 1; }
+          # A missing badge asset is invisible in production - the <img> just renders blank,
+          # which is exactly the ABA-527 defect (Startup Fame silently absent for two deploys).
+          test -f apex/assets/startup-fame-badge.webp || { echo "::error::startup-fame-badge.webp missing"; exit 1; }
           test -f apex/.well-known/assetlinks.json || { echo "::error::assetlinks.json missing"; exit 1; }
           if grep -q 'REPLACE_WITH_' apex/.well-known/assetlinks.json; then
             echo "::error::docs/ops/assetlinks.json still has an unfilled REPLACE_WITH_* placeholder — fill in the real SHA-256 fingerprint(s) before this can deploy"
