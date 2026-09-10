@@ -90,15 +90,18 @@ FAZIER_BADGE = (
     '?badge_type=featured&amp;theme=light" '
     'alt="AI Budget Assistant on Fazier" width="178" height="42" loading="lazy"></a>'
 )
-# Launchstag "Featured on Launchstag" badge. Unlike the other five this links to their HOME
-# page, which is what their snippet specifies and the only real destination: /projects/<slug>
-# and /launches/<slug> are soft-404s there (a deliberately invented path returns the same
-# generic page), so do not "improve" the href into a guessed listing URL. 198x62 is their
-# stated size and matches the viewBox exactly -- the file declares width=396 height=124, i.e.
-# a clean 2x of viewBox 0 0 198 62, so 198x62 is the 1x logical size, not a downscale.
+# Launchstag "Featured on Launchstag" badge. The href is their LISTING url, taken from the
+# snippet in their own dashboard -- their listing path scheme is /p/tool-<epoch-ms>, which is
+# unguessable, and every other path on that host (including a deliberately invented one) is a
+# soft-404 serving the generic homepage, so it can only ever come from the dashboard. Their
+# "Verify badge" step looks for this snippet on a public page of ours, so the bare domain we
+# first shipped (ABA-526, copied from a pre-claim snippet) would not have satisfied it.
+# 198x62 is their stated size and matches the viewBox exactly -- the file declares width=396
+# height=124, i.e. a clean 2x of viewBox 0 0 198 62, so 198x62 is the 1x logical size; it is
+# then rendered at the row's uniform 42px height by .b-ls (ABA-527).
 # badge-light.svg because the footer ground is #fafafb; a badge-dark.svg exists too.
 LAUNCHSTAG_BADGE = (
-    '<a href="https://launchstag.com" target="_blank" rel="noopener">'
+    '<a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="noopener">'
     '<img class="b-ls" src="https://launchstag.com/badge-light.svg" '
     'alt="AI Budget Assistant - Featured on Launchstag" width="134" height="42" '
     'loading="lazy"></a>'
