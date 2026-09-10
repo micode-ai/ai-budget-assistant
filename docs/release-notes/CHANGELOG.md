@@ -8,7 +8,36 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
-## 1.26.0 - 2026-09-07
+## 1.26.0 - 2026-09-10
+
+**Budgets now count a receipt's category split**
+
+- **A scanned receipt split across categories now counts toward each of those
+  categories' budgets, in proportion.** A 240 zł supermarket trip that breaks
+  into 180 groceries, 35 household and 25 bottle deposit used to put the whole
+  240 against the groceries budget and nothing against the other two — so a
+  budget on a category that only ever appears inside receipts sat at zero,
+  while the groceries budget quietly absorbed the household items and the
+  deposit. Those are the same defect seen from two sides, and both are fixed:
+  each budget now sees its own share. It applies to receipts you already
+  scanned, so existing budgets correct themselves with nothing to rescan.
+  Budget alerts, the history chart and the AI chat all read the same figures,
+  and the Budgets screen finally agrees with the Analytics tab about the same
+  category (ABA-529).
+- **Two smaller counting errors went with it.** On the server, budgets were
+  counting the IOU rows created when you split a bill with friends, and
+  counting planned expenses from approved purchase requests. The phone
+  excluded both; now both do (ABA-529).
+
+**Ask the chat what you have paid in deposits**
+
+- **"How much have I paid in kaucja?"** is now a question the assistant can
+  answer, in whichever of the nine languages you ask it — Pfand, statiegeld,
+  consigne, залог за тару. It reads the deposit printed on your receipts
+  rather than guessing from a category, so it works even on trips where the
+  receipt produced no category split at all, and it reports what you have
+  paid, never what might be refundable — returned packaging is not something
+  the app tracks (ABA-516).
 
 **Rename, delete and pin a conversation in AI chat**
 
@@ -54,7 +83,11 @@ window. Nothing changes below that width, and nothing changes on the phone.
 - **The dashboard** became a focus column plus fixed side rails instead of
   two stretched-out columns, and a first-time web user now opens it into a
   first-run checklist and an "attention" list that resolves in place, rather
-  than nine empty cards (ABA-505, ABA-507).
+  than nine empty cards (ABA-505, ABA-507). Its side rail also carries the
+  shortcuts the desktop layout had dropped — currency exchange, the
+  converter, transfers, subscriptions, the shopping list and purchase
+  requests — governed by the same Settings → Widgets list as the phone. The
+  converter had been reachable from nowhere at all on desktop (ABA-517).
 - **Settings** became a two-pane layout — every settings screen listed on the
   left, the one you have open on the right — built out over four waves
   until the whole section lived there (ABA-508, ABA-510, ABA-511, ABA-512).
@@ -64,6 +97,23 @@ window. Nothing changes below that width, and nothing changes on the phone.
 
 **Fixed**
 
+- **A single large payment made the budget forecast predict a month you
+  were never going to have.** Paying rent on the 8th made the projection
+  treat it as your daily habit and re-spend it for every remaining day:
+  on a real 8000 zł monthly budget, one 4374 zł rent payment produced
+  "projected to exceed by 10 383 zł". The forecast now leaves the single
+  largest day out of the rate while still counting its money as spent — on
+  that same month, the overage falls from 10 383 zł to 1 913 zł. The sign
+  was always right; only the size was fiction. It declines to predict at all
+  in the first few days of a period, where there is nothing to extrapolate
+  from (ABA-523).
+- **Signing out and back in could leave the app looking empty.** Coming
+  back within half a minute, the app concluded it had just synced and
+  skipped fetching anything, so the dashboard showed no transactions on an
+  account full of them (ABA-520). Separately, signing out forgot which
+  account you had open and dropped you back into your default one, and a
+  single failed request at startup could leave every category reading
+  "Uncategorized" for the rest of the session (ABA-519).
 - **Switching accounts, or signing out, could leave a previous account's —
   or a previous person's — figures on screen.** The home screen's
   Safe-to-Spend figure and the Inflation Shield's price data could each
@@ -82,6 +132,17 @@ window. Nothing changes below that width, and nothing changes on the phone.
 - On the web build: the selected account no longer resets to the first one
   on a page refresh, including when the account list itself fails to load
   (ABA-498, ABA-506).
+- On the web build: the wallet total could be confidently wrong rather than
+  merely missing — it was rebuilt locally from four separate sources, and on
+  the browser, where there is no local database, it was summed before most
+  of them had arrived. It now comes from the server, which already knows the
+  answer. The monthly budget card could also vanish entirely after one
+  failed request at startup and never come back (ABA-518).
+- On the web build: the dashboard no longer presents figures it has not
+  loaded yet as fact. It was reporting a financial health score of "Great,
+  100", a budget at 0% used and a net profit of zero while the data was
+  still in flight; those now show a dash until the numbers are real, and the
+  activity bar reflects everything still loading (ABA-521).
 
 **Under the hood**
 
@@ -93,6 +154,18 @@ Fame (ABA-493); the Samsung Galaxy Store rollout was documented (ABA-495);
 the income detail screen was split into smaller files with no behaviour
 change (ABA-496); and the web build gained first-party product telemetry,
 with no admin-facing surface yet (ABA-497).
+
+Since then: the desktop analytics screen was split out of a 1,491-line file
+into its nine components, with no behaviour change (ABA-515); the reverse
+proxy's rate limit was raised and taught to answer with proper CORS headers,
+after it turned out to be throttling the web app's own cold start invisibly
+— the browser could only report it as a generic network failure, which is
+why the same symptom had been investigated three times (ABA-522); and the
+marketing footer gained four more directory badges, one of which needed its
+artwork self-hosted after the directory refused to serve it to our pages,
+and another of which was pointed at the real listing once it turned out the
+directory had stored our own URL malformed (ABA-524, ABA-525, ABA-526,
+ABA-527, ABA-528).
 
 ---
 
