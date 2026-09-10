@@ -64,6 +64,34 @@ FIRSTO_BADGE = (
     '<img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" '
     'alt="AI Budget Assistant | Firsto Launch" width="111" height="43" loading="lazy"></a>'
 )
+# Fazier "Featured on Fazier" badge. Their API renders whichever badge_type you ask for, and
+# they offer two for one launch URL -- badge_type=launched (103x44) and =featured (182x43); we
+# show only the FEATURED one, since both link to the same page so a second badge adds nothing
+# to the verification and only doubles the Fazier row. theme=light because the footer ground is
+# #fafafb. href + src verbatim, INCLUDING the double slash in /api/v1//public that their own
+# snippet emits (checked: the single-slash URL returns a byte-identical SVG, so this is only
+# fidelity, not a dependency) -- but the query separator is written &amp; because this string is
+# emitted into HTML. 182x43 is the SVG's own viewBox; their snippet's bare width=250 upscales it
+# to 250x59 and states no height at all, so it would also shift layout while loading.
+FAZIER_BADGE = (
+    '<a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="noopener">'
+    '<img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg'
+    '?badge_type=featured&amp;theme=light" '
+    'alt="AI Budget Assistant on Fazier" width="182" height="43" loading="lazy"></a>'
+)
+# Launchstag "Featured on Launchstag" badge. Unlike the other five this links to their HOME
+# page, which is what their snippet specifies and the only real destination: /projects/<slug>
+# and /launches/<slug> are soft-404s there (a deliberately invented path returns the same
+# generic page), so do not "improve" the href into a guessed listing URL. 198x62 is their
+# stated size and matches the viewBox exactly -- the file declares width=396 height=124, i.e.
+# a clean 2x of viewBox 0 0 198 62, so 198x62 is the 1x logical size, not a downscale.
+# badge-light.svg because the footer ground is #fafafb; a badge-dark.svg exists too.
+LAUNCHSTAG_BADGE = (
+    '<a href="https://launchstag.com" target="_blank" rel="noopener">'
+    '<img class="b-ls" src="https://launchstag.com/badge-light.svg" '
+    'alt="AI Budget Assistant - Featured on Launchstag" width="198" height="62" '
+    'loading="lazy"></a>'
+)
 SAMEAS = [
     "https://www.facebook.com/profile.php?id=61570771625318",
     "https://t.me/aibudgetassistant",
@@ -346,7 +374,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:54px;width:171px}.f-badge .b-pp{height:65px;width:230px}.f-badge .b-fo{height:43px;width:111px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:54px;width:171px}.f-badge .b-pp{height:65px;width:230px}.f-badge .b-fo{height:43px;width:111px}.f-badge .b-fz{height:43px;width:182px}.f-badge .b-ls{height:62px;width:198px}
 .cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
@@ -503,7 +531,7 @@ def foot(lang, src="blog"):
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'
             f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
             f'<a href="{app_url("footer", lang, src)}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
-            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}</div>'
+            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{FAZIER_BADGE}{LAUNCHSTAG_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'
             f'</div></footer>\n' + consent_html(lang) + '</body></html>')
