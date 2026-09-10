@@ -6,7 +6,7 @@ import { computeBudgetPeriod } from './budget-period.util';
 import { projectBudgetSpend } from '../../common/utils/budget-projection';
 import { shiftFinancialMonth } from '../../common/utils/financial-month';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
-import { attributeToCategories } from '../../common/utils/category-attribution';
+import { attributeToCategories, attributableAmountForCategories } from '../../common/utils/category-attribution';
 import { EXCLUDE_SPLIT_RECEIVABLE, categoryOrSplitFilter } from '../../common/utils/expense-filters';
 
 export { computeBudgetPeriod };
@@ -319,12 +319,13 @@ export class BudgetsService {
           },
         });
 
-        actual = 0;
-        for (const row of rows) {
-          for (const part of attributeToCategories(row)) {
-            if (part.categoryId && categorySet.has(part.categoryId)) actual += part.amount;
-          }
-        }
+        // getHistory needs only a total per period, never the per-category
+        // breakdown getProgress needs — the shared helper is the exact body
+        // this loop used to write out by hand.
+        actual = rows.reduce(
+          (sum, row) => sum + attributableAmountForCategories(row, categorySet),
+          0,
+        );
       }
 
       const limit = Number(budget.amount);

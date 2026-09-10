@@ -50,58 +50,58 @@ export class BudgetAlertService {
       budget.account?.monthAnchorDay ?? null,
     );
 
-    const whereExpenses: any = {
-      accountId,
-      isDeleted: false,
-      isPlanned: false,
-      // see common/utils/expense-filters.ts for the full rationale
-      ...EXCLUDE_SPLIT_RECEIVABLE,
-      currencyCode: budget.currencyCode,
-      date: { gte: periodStart, lte: periodEnd },
-    };
-
     // Multi-category support. An expense whose OWN category is outside the
     // budget can still hold a split into it, so the category filter cannot
     // live in SQL alone — see
     // docs/superpowers/specs/2026-09-10-budget-split-attribution-design.md.
-    const allocations = budget.categoryAllocations || [];
+    //
+    // `budget.categoryAllocations` already came off `checkBudgetsForAccount`'s
+    // `findMany` through an `include: { where: { isDeleted: false } } }`, so
+    // it never contains a soft-deleted row today — the `.filter` below is
+    // therefore a no-op against current data, kept only so this derivation
+    // can't silently start including a deleted allocation if that include
+    // ever changes, and so it stays visibly in step with the equivalent
+    // filter `checkCategoryThresholds` applies to the same field.
+    const allocations = (budget.categoryAllocations || []).filter((a: any) => !a.isDeleted);
     const categoryIds: string[] | null =
       allocations.length > 0 ? allocations.map((a: any) => a.categoryId) : null;
     let spent: number;
+    let categorySpentMap: Map<string, number> | undefined;
 
     // Branch on `categoryIds` itself rather than on a derived set:
     // `strictNullChecks` is on and TypeScript cannot correlate a derived
     // variable's null-ness with its source's, so narrowing here is what
     // lets `categoryIds` be passed on below without a non-null assertion.
     if (!categoryIds) {
+      const whereExpenses: any = {
+        accountId,
+        isDeleted: false,
+        isPlanned: false,
+        // see common/utils/expense-filters.ts for the full rationale
+        ...EXCLUDE_SPLIT_RECEIVABLE,
+        currencyCode: budget.currencyCode,
+        date: { gte: periodStart, lte: periodEnd },
+      };
       const result = await this.prisma.expense.aggregate({
         where: whereExpenses,
         _sum: { amount: true },
       });
       spent = Number(result._sum?.amount || 0);
     } else {
-      const categorySet = new Set<string>(categoryIds);
-
-      Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
-
-      const rows = await this.prisma.expense.findMany({
-        where: whereExpenses,
-        select: {
-          amount: true,
-          categoryId: true,
-          categorySplits: {
-            where: { isDeleted: false },
-            select: { categoryId: true, amount: true },
-          },
-        },
-      });
-
+      // This is the SAME query `checkCategoryThresholds` needs for its own
+      // per-category breakdown (same accountId/period/currency/exclusions,
+      // same categoryOrSplitFilter over the same allocation ids) — computed
+      // once here and handed down below, rather than run twice per expense
+      // write against a pool capped at connection_limit=10.
+      categorySpentMap = await this.computeCategorySpend(
+        accountId,
+        budget,
+        periodStart,
+        periodEnd,
+        categoryIds,
+      );
       spent = 0;
-      for (const row of rows) {
-        for (const part of attributeToCategories(row)) {
-          if (part.categoryId && categorySet.has(part.categoryId)) spent += part.amount;
-        }
-      }
+      for (const amount of categorySpentMap.values()) spent += amount;
     }
 
     const budgetAmount = Number(budget.amount);
@@ -184,21 +184,28 @@ export class BudgetAlertService {
       }
     }
 
-    await this.checkCategoryThresholds(accountId, budget, periodStart, periodEnd);
+    await this.checkCategoryThresholds(accountId, budget, periodStart, periodEnd, categorySpentMap);
   }
 
-  private async checkCategoryThresholds(
+  /**
+   * The per-category attributed spend for a set of category ids, over one
+   * budget period. Shared by the overall check (which only needs the SUM of
+   * these values) and the per-category check (which needs the breakdown) so
+   * one expense write pays for exactly one `findMany`, not two identical
+   * ones — see the ABA-529 review, "stop issuing two identical queries per
+   * budget on the expense-write path". This runs on every matching active
+   * budget on every expense create/amount-or-currency update, sequentially,
+   * against a pool capped at `connection_limit=10` (docker-compose.prod.yml)
+   * — it is not a cron path.
+   */
+  private async computeCategorySpend(
     accountId: string,
     budget: any,
     periodStart: Date,
     periodEnd: Date,
-  ): Promise<void> {
-    const allocations = (budget.categoryAllocations || []).filter((a: any) => !a.isDeleted);
-    if (allocations.length === 0) return;
-
-    const allocationCategoryIds = allocations.map((a: any) => a.categoryId);
-
-    const categorySet = new Set<string>(allocationCategoryIds);
+    categoryIds: string[],
+  ): Promise<Map<string, number>> {
+    const categorySet = new Set<string>(categoryIds);
 
     const rows = await this.prisma.expense.findMany({
       where: {
@@ -208,7 +215,7 @@ export class BudgetAlertService {
         isPlanned: false,
         ...EXCLUDE_SPLIT_RECEIVABLE,
         currencyCode: budget.currencyCode,
-        ...categoryOrSplitFilter(allocationCategoryIds),
+        ...categoryOrSplitFilter(categoryIds),
       },
       select: {
         amount: true,
@@ -227,6 +234,27 @@ export class BudgetAlertService {
         spentMap.set(part.categoryId, (spentMap.get(part.categoryId) ?? 0) + part.amount);
       }
     }
+    return spentMap;
+  }
+
+  private async checkCategoryThresholds(
+    accountId: string,
+    budget: any,
+    periodStart: Date,
+    periodEnd: Date,
+    precomputedSpentMap?: Map<string, number>,
+  ): Promise<void> {
+    const allocations = (budget.categoryAllocations || []).filter((a: any) => !a.isDeleted);
+    if (allocations.length === 0) return;
+
+    const allocationCategoryIds = allocations.map((a: any) => a.categoryId);
+
+    // `checkBudgetThresholds` already ran this exact query (same ids — both
+    // derive from `budget.categoryAllocations` filtered the same way) to get
+    // its own overall total; reuse it rather than asking Postgres again.
+    const spentMap =
+      precomputedSpentMap ??
+      (await this.computeCategorySpend(accountId, budget, periodStart, periodEnd, allocationCategoryIds));
 
     for (const allocation of allocations) {
       const categoryId: string = allocation.categoryId;

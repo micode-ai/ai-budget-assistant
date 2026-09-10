@@ -39,13 +39,4 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
   },
-  overrides: [
-    {
-      // The shell guard (scripts/check-no-shared-utils-runtime-import.sh) already
-      // exempts test files, and its comment claims to mirror this rule. The rule
-      // protects the prod ESM runtime; tests run under ts-jest and never reach it.
-      files: ['**/*.spec.ts', '**/*.test.ts'],
-      rules: { '@typescript-eslint/no-restricted-imports': 'off' },
-    },
-  ],
 };

@@ -162,22 +162,39 @@ which defeats the point.
 
 ## Rollout side effect
 
-On the first cron run after deploy, budgets on split-only categories acquire
-non-zero spend. `BudgetAlert` dedup is keyed
-`(budgetId, categoryId, thresholdPercentage, periodStart)` and the loop sends one
-push per un-alerted crossed threshold, so a single budget can emit two or three
-pushes at once (50/80/100).
+**There is no cron in `BudgetAlertService`** — `checkBudgetsForAccount` is invoked
+fire-and-forget from `ExpensesController` on every expense create (`:47`) and every
+amount/currency update (`:92`), one call per matching active budget, sequentially.
+So the burst does not arrive for every affected user at once at deploy time; it
+arrives for one user at a time, on THAT user's own next expense write after the
+deploy — staggered across however long it takes each affected account to log
+another transaction, which could be minutes or weeks apart.
 
-This is not new behaviour — any sudden jump does it — but the deploy triggers it
-for every affected user simultaneously. **Accepted.** The affected population is
-small (it needs a budget on a category fed only by splits) and the information is
-correct and until now withheld.
+The per-budget magnitude is also larger than "two or three" once split
+attribution is switched on for the first time. `BudgetAlert` dedup is keyed
+`(budgetId, categoryId, thresholdPercentage, periodStart)`, and the write path is
+two unconditional passes: `checkBudgetThresholds` sends up to 3 pushes for the
+overall budget (one per crossed threshold, 50/80/100), then always calls
+`checkCategoryThresholds`, which loops EVERY category allocation and sends up to 3
+pushes **per allocation**. Worst case per budget is `3 × (1 + allocationCount)` —
+a five-allocation budget with three previously-invisible split-only categories can
+emit around a dozen pushes from a single expense save, not the 2–3 an
+overall-only budget would.
+
+This is not new behaviour in kind — any sudden jump into a new threshold band does
+it — but split attribution's first pass over an account's existing history is
+exactly the kind of sudden jump that produces the worst case above, and it lands
+on one user at a time rather than everyone on one clock. **Accepted.** The
+affected population is small (it needs a budget on a category fed only by splits)
+and the information is correct and until now withheld.
 
 The opposite direction is silent: a budget whose spend drops crosses no threshold
 and sends nothing. Already-sent alert rows for the period stay and are harmless.
 
 Rejected alternative: a data migration pre-inserting `notificationSent: true` rows
-for the current period. Available if the burst turns out worse than expected.
+for the current period. Weighed against the real worst case of `3 × (1 +
+allocationCount)` pushes per affected budget, not the earlier 2–3 estimate.
+Available if the burst turns out worse than expected.
 
 ## Testing
 

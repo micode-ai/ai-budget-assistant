@@ -212,10 +212,17 @@ describe('BudgetAlertService — category thresholds', () => {
 
     await service.checkBudgetsForAccount('acc-1', 'PLN');
 
-    // findMany is now called twice: once for the overall spend check
-    // (checkBudgetThresholds), once for the per-category check
-    // (checkCategoryThresholds) — this test is about the latter.
-    const where = (mockPrisma.expense.findMany as jest.Mock).mock.calls[1][0].where;
+    // The overall check and the per-category check now share ONE query (the
+    // ABA-529 review's "stop issuing two identical queries" fix), so there is
+    // exactly one findMany call here, not two — asserting by index would
+    // silently start reading whatever call happens to land at that position.
+    // Find it by a marker instead: `categoryOrSplitFilter`'s `where.OR`,
+    // which only the category-scoped query carries.
+    const call = (mockPrisma.expense.findMany as jest.Mock).mock.calls.find(
+      (c: any[]) => c[0]?.where?.OR,
+    );
+    expect(call).toBeDefined();
+    const where = call![0].where;
     // The marker the split feature sets — must be filtered out.
     expect(where.isSplitReceivable).toBe(false);
     // But NOT isDebt: for a standalone cash loan the debt row IS the outflow, so
