@@ -699,13 +699,15 @@ Replace lines 337-349 — the `const whereExpenses: any = {` object literal and 
     // number — keep the cheap aggregate. Only category-scoped budgets need the
     // rows, because an expense whose OWN category is outside the budget can
     // still hold a split into it.
-    const categorySet = categoryIds ? new Set<string>(categoryIds) : null;
-
     let spentAmount: number;
     let dailyTotals: number[];
     let spendingMap: Map<string, number> | null = null;
 
-    if (!categorySet) {
+    // Branch on `categoryIds` itself rather than on a derived set:
+    // `strictNullChecks` is on and TypeScript cannot correlate a derived
+    // variable's null-ness with its source's, so narrowing here is what
+    // lets `categoryIds` be passed on below without a non-null assertion.
+    if (!categoryIds) {
       const spent = await this.prisma.expense.aggregate({
         where: whereExpenses,
         _sum: { amount: true },
@@ -721,6 +723,8 @@ Replace lines 337-349 — the `const whereExpenses: any = {` object literal and 
       });
       dailyTotals = dailyGroups.map((g) => Number(g._sum?.amount || 0));
     } else {
+      const categorySet = new Set<string>(categoryIds);
+
       Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
 
       const rows = await this.prisma.expense.findMany({
@@ -941,7 +945,6 @@ Expected: FAIL — `actual` is 0 and `aggregate` was called.
 In `getHistory`, add the set once, above the `for` loop, right after `categoryIds` is computed:
 
 ```ts
-    const categorySet = categoryIds ? new Set<string>(categoryIds) : null;
 ```
 
 Then replace the `whereExpenses` construction and the `aggregate` call inside the loop (currently lines 278-295) with:
@@ -961,13 +964,19 @@ Then replace the `whereExpenses` construction and the `aggregate` call inside th
 
       let actual: number;
 
-      if (!categorySet) {
+      // Branch on `categoryIds` itself rather than on a derived set:
+      // `strictNullChecks` is on and TypeScript cannot correlate a derived
+      // variable's null-ness with its source's, so narrowing here is what
+      // lets `categoryIds` be passed on below without a non-null assertion.
+      if (!categoryIds) {
         const spent = await this.prisma.expense.aggregate({
           where: whereExpenses,
           _sum: { amount: true },
         });
         actual = Number(spent._sum?.amount || 0);
       } else {
+        const categorySet = new Set<string>(categoryIds);
+
         Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
 
         const rows = await this.prisma.expense.findMany({
@@ -1198,17 +1207,21 @@ In `checkBudgetThresholds`, add `isPlanned: false` to `whereExpenses` and replac
     const allocations = budget.categoryAllocations || [];
     const categoryIds: string[] | null =
       allocations.length > 0 ? allocations.map((a: any) => a.categoryId) : null;
-    const categorySet = categoryIds ? new Set<string>(categoryIds) : null;
-
     let spent: number;
 
-    if (!categorySet) {
+    // Branch on `categoryIds` itself rather than on a derived set:
+    // `strictNullChecks` is on and TypeScript cannot correlate a derived
+    // variable's null-ness with its source's, so narrowing here is what
+    // lets `categoryIds` be passed on below without a non-null assertion.
+    if (!categoryIds) {
       const result = await this.prisma.expense.aggregate({
         where: whereExpenses,
         _sum: { amount: true },
       });
       spent = Number(result._sum?.amount || 0);
     } else {
+      const categorySet = new Set<string>(categoryIds);
+
       Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
 
       const rows = await this.prisma.expense.findMany({
