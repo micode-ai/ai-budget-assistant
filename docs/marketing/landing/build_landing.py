@@ -67,6 +67,16 @@ BEST_AI_BRANDS_BADGE = (
     '<div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;'
     'line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a>'
 )
+# Firsto "Find us on Firsto" badge. href + src verbatim from their snippet (the href is what
+# the directory verifies); presentation follows this row's conventions rather than their inline
+# style -- a scoped .b-fo class, rel="noopener", loading="lazy", and no title duplicating alt.
+# 111x43, NOT the 111x42 their snippet states: the SVG's own viewBox is 0 0 111 43, so 42 would
+# squash it by a pixel. Do not "correct" it back.
+FIRSTO_BADGE = (
+    '<a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="noopener">'
+    '<img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" '
+    'alt="AI Budget Assistant | Firsto Launch" width="111" height="43" loading="lazy"></a>'
+)
 SAMEAS = [
     "https://www.facebook.com/profile.php?id=61570771625318",
     "https://t.me/aibudgetassistant",
@@ -870,7 +880,7 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:#5b5b66;font-weight:600}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid #ececf0;padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:54px;width:171px}.f-badge .b-pp{height:65px;width:230px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:54px;width:171px}.f-badge .b-pp{height:65px;width:230px}.f-badge .b-fo{height:43px;width:111px}
 .langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:#5b5b66;font-weight:600;font-size:15px}
 .langmenu>summary::-webkit-details-marker{display:none}
 .langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid #ececf0;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
@@ -1039,7 +1049,7 @@ def footer_html(lang):
             f'<a href="{cookies_url(lang)}">{cl}</a>'
             f'<a href="{app_url("footer", lang)}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a>'
             f'<a href="/llms.txt">llms.txt</a></div>'
-            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}</div>'
+            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener">'
             f'<img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; '
