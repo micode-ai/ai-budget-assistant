@@ -159,6 +159,23 @@ describe('API copy and shared-utils mirror agree', () => {
       set: [HOUSEHOLD],
     },
     { name: 'non-numeric amount', expense: { amount: 'x', categoryId: GROCERIES }, set: [GROCERIES] },
+    {
+      name: 'relation-only category, no scalar id',
+      expense: { amount: 50, category: { id: GROCERIES, name: 'Groceries' } },
+      set: [GROCERIES],
+    },
+    {
+      name: 'split carrying a category relation rather than a scalar id',
+      expense: {
+        amount: 100,
+        categoryId: GROCERIES,
+        categorySplits: [
+          { amount: 60, category: { id: GROCERIES, name: 'Groceries' } },
+          { amount: 40, category: { id: HOUSEHOLD, name: 'Household' } },
+        ],
+      },
+      set: [HOUSEHOLD],
+    },
   ];
 
   it.each(cases)('$name', ({ expense, set }) => {
