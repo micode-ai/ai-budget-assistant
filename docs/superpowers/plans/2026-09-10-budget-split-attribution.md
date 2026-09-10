@@ -942,12 +942,9 @@ Expected: FAIL — `actual` is 0 and `aggregate` was called.
 
 - [ ] **Step 3: Rewrite the per-period query**
 
-In `getHistory`, add the set once, above the `for` loop, right after `categoryIds` is computed:
+`getHistory` needs no new declaration above the loop — the `Set` is built inside the branch that uses it, so that `strictNullChecks` narrows `categoryIds` before it is passed on.
 
-```ts
-```
-
-Then replace the `whereExpenses` construction and the `aggregate` call inside the loop (currently lines 278-295) with:
+Replace the `whereExpenses` construction and the `aggregate` call inside the loop (currently lines 278-295) with:
 
 ```ts
       const whereExpenses: any = {
