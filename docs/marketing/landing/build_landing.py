@@ -49,6 +49,24 @@ PEERPUSH_BADGE = (
     '<img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" '
     'alt="AI Budget Assistant on PeerPush" width="230" height="65" loading="lazy"></a>'
 )
+# Best AI Brands "Featured On" badge -- their own "Copy Light Badge" markup, verbatim apart
+# from rel="noopener" (the href is what the directory verifies, so do not tag it). Light
+# variant because our footer is #fafafb; self-contained inline CSS, so no extra image request
+# and no CLS, and it renders exactly 54px tall under the global *{box-sizing:border-box},
+# matching the Startup Fame badge beside it. Their third option, the "image badge", is a
+# 512x512 square app icon at width=250 -- a logo, not a badge -- so it is deliberately unused.
+BEST_AI_BRANDS_BADGE = (
+    '<a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="noopener" '
+    'style="text-decoration:none;">'
+    '<div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;'
+    'border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;'
+    'justify-content:center;font-family:sans-serif;'
+    'box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);">'
+    '<div style="font-size:8px;color:#999;font-weight:bold;text-transform:uppercase;'
+    'letter-spacing:0.2em;line-height:1;margin-bottom:4px;white-space:nowrap;">Featured On</div>'
+    '<div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;'
+    'line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a>'
+)
 SAMEAS = [
     "https://www.facebook.com/profile.php?id=61570771625318",
     "https://t.me/aibudgetassistant",
@@ -1021,7 +1039,7 @@ def footer_html(lang):
             f'<a href="{cookies_url(lang)}">{cl}</a>'
             f'<a href="{app_url("footer", lang)}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a>'
             f'<a href="/llms.txt">llms.txt</a></div>'
-            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}</div>'
+            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener">'
             f'<img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; '
