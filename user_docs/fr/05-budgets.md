@@ -50,6 +50,12 @@ En mode **Par catégories**, vous pouvez attribuer une limite de dépenses à ch
 - Le budget total est égal à la somme de tous les montants par catégorie
 - Vous pouvez ajouter autant de catégories que nécessaire
 
+## Reçus scannés et budgets par catégorie
+
+Lorsqu'un reçu scanné est automatiquement réparti entre plusieurs catégories — alimentation, produits ménagers, une consigne de bouteille —, la part de chaque catégorie compte désormais dans le budget de cette catégorie, au prorata de la répartition. Un budget sur une catégorie qui n'apparaît que dans une répartition de reçu, comme Alcool ou la consigne, est enfin comptabilisé correctement au lieu d'afficher toujours zéro — et un budget Alimentation ne compte plus les produits ménagers ni la consigne du même reçu.
+
+Cela s'applique aussi aux reçus déjà scannés, pas seulement aux nouveaux — vos totaux de budget, y compris l'Historique des dépenses, se mettent à jour automatiquement. Il n'y a rien à rescanner.
+
 ## Détails du budget
 
 Appuyez sur un budget pour voir ses détails complets :

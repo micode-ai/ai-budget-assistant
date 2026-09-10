@@ -95,7 +95,7 @@ Grocery-store receipts often mix several kinds of items in one trip — food, ho
 - Tap **Change categories** to open a list of every item and adjust which category it belongs to. Your changes apply right away — and are remembered, so the same product is categorized correctly next time you scan it.
 - If the items don't add up closely enough to the receipt total, the app falls back to one category instead of guessing.
 - Bottle and can deposits are recognised and shown as their own category, so you can see how much of your spending is packaging you can get back.
-- This only changes how your spending appears in Analytics and charts — it never changes your budgets, which still track against the receipt's one overall category.
+- This also counts toward your category budgets — a budget on a category that only ever shows up inside a receipt split, like Alcohol or a deposit budget, finally tracks correctly, and a Groceries budget no longer counts the household items or the deposit from the same receipt.
 - Sometimes none of your existing categories fit a group of items. When that happens, the app suggests a brand-new category, shown as a chip marked with a **+** (for example, "+ Household chemicals 10"). Nothing is created yet — tap **Change categories** to reassign its items to one of your existing categories instead, or leave it as suggested. The new category is only actually created once you save the receipt.
 
 Works the same way whether you scan through the app or through the Telegram, WhatsApp, or Slack bots.
@@ -179,7 +179,7 @@ Review the details, tap ✓ to save or the pencil icon to open the full Add Inco
   **A:** Yes, each voice input or receipt scan uses one AI request from your monthly allowance.
 
 - **Q: Why did one receipt end up split across several categories in my charts?**
-  **A:** When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts. This never changes your budgets. Tap **Change categories** on the receipt confirmation screen to adjust it — corrections are remembered for next time.
+  **A:** When a receipt clearly mixes different kinds of items (for example, groceries and alcohol), the app automatically divides it across the matching categories in your spending charts — and in your category budgets, too. Tap **Change categories** on the receipt confirmation screen to adjust it — corrections are remembered for next time.
 
 ---
 

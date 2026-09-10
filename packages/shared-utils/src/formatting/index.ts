@@ -251,6 +251,15 @@ export {
   type ResolvedWalletCurrency,
 } from './wallet-currencies';
 
+// Category attribution — which categories an expense's money belongs to
+export {
+  attributeToCategories,
+  attributableAmountForCategories,
+  type AttributableExpense,
+  type AttributableSplit,
+  type CategoryAttribution,
+} from './category-attribution';
+
 // ---------------------------------------------------------------------------
 // Safe-to-spend cashflow formula (single source of truth for API + mobile
 // offline fallback — must stay pure / no I/O).

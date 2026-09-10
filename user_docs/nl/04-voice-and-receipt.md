@@ -95,7 +95,7 @@ Kassabonnen van de supermarkt combineren vaak meerdere soorten aankopen in één
 - Tik op **Categorieën wijzigen** om een lijst van alle items te openen en aan te passen tot welke categorie elk item behoort. Je wijzigingen gelden meteen — en worden onthouden, zodat hetzelfde product de volgende keer dat je het scant automatisch goed wordt gecategoriseerd.
 - Als de items niet voldoende overeenkomen met het totaalbedrag van de bon, valt de app terug op één categorie in plaats van te gokken.
 - Statiegeld voor flessen en blikjes wordt herkend en als eigen categorie weergegeven, zodat je ziet hoeveel van je uitgaven verpakking is die je terugkrijgt.
-- Dit verandert alleen hoe je uitgaven verschijnen in Analyse en in grafieken — het verandert nooit je budgetten, die nog steeds worden bijgehouden tegen de ene, algemene categorie van de bon.
+- Dit telt nu ook mee voor je categoriebudgetten — een budget op een categorie die alleen binnen een bonverdeling voorkomt, zoals Alcohol of statiegeld, wordt eindelijk correct bijgehouden, en een Boodschappen-budget telt de huishoudelijke producten of het statiegeld van dezelfde bon niet meer mee.
 - Soms past geen van je bestaande categorieën bij een groep items. In dat geval stelt de app een gloednieuwe categorie voor, weergegeven als een chip met een **+**-teken (bijvoorbeeld "+ Schoonmaakmiddelen 10"). Die wordt nog niet aangemaakt — tik op **Categorieën wijzigen** om de items ervan aan een bestaande categorie toe te wijzen, of hem te laten zoals voorgesteld. De nieuwe categorie wordt pas echt aangemaakt zodra je de bon opslaat.
 
 Werkt hetzelfde of je nu scant via de app of via de Telegram-, WhatsApp- of Slack-bots.
@@ -179,7 +179,7 @@ Controleer de details, tik op ✓ om op te slaan of op het potloodpictogram om h
   **A:** Ja, elke spraakinvoer of bonscan gebruikt één AI-verzoek uit je maandelijkse tegoed.
 
 - **V: Waarom werd één bon over meerdere categorieën verdeeld in mijn grafieken?**
-  **A:** Wanneer een bon duidelijk verschillende soorten items combineert (bijvoorbeeld boodschappen en alcohol), verdeelt de app deze automatisch over de bijbehorende categorieën in je uitgavengrafieken. Dit verandert nooit je budgetten. Tik op **Categorieën wijzigen** op het bevestigingsscherm van de bon om dit aan te passen — correcties worden onthouden voor de volgende keer.
+  **A:** Wanneer een bon duidelijk verschillende soorten items combineert (bijvoorbeeld boodschappen en alcohol), verdeelt de app deze automatisch over de bijbehorende categorieën in je uitgavengrafieken — en ook in je categoriebudgetten. Tik op **Categorieën wijzigen** op het bevestigingsscherm van de bon om dit aan te passen — correcties worden onthouden voor de volgende keer.
 
 ---
 

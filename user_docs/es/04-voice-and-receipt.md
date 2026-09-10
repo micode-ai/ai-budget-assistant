@@ -95,7 +95,7 @@ Los recibos del supermercado a menudo mezclan varios tipos de artículos en una 
 - Toca **Cambiar categorías** para abrir una lista de todos los artículos y ajustar a qué categoría pertenece cada uno. Tus cambios se aplican de inmediato — y se recuerdan, de modo que el mismo producto se categoriza correctamente la próxima vez que lo escanees.
 - Si los artículos no suman lo suficientemente cerca del importe total del recibo, la aplicación recurre a una sola categoría en lugar de adivinar.
 - Los depósitos de botellas y latas se reconocen y se muestran como su propia categoría, para que puedas ver cuánto de tu gasto es envase que puedes recuperar.
-- Esto solo cambia cómo aparece tu gasto en Analítica y en los gráficos — nunca cambia tus presupuestos, que siguen contabilizando contra la categoría general única del recibo.
+- Esto también cuenta ahora para tus presupuestos por categoría — un presupuesto de una categoría que solo aparece dentro de una división de recibo, como Alcohol o el depósito, por fin se contabiliza correctamente, y un presupuesto de Alimentación deja de contar los artículos del hogar o el depósito del mismo recibo.
 - A veces ninguna de tus categorías existentes encaja con un grupo de artículos. En ese caso, la aplicación sugiere una categoría totalmente nueva, mostrada como un chip marcado con un **+** (por ejemplo, "+ Productos de limpieza 10"). Todavía no se crea — toca **Cambiar categorías** para reasignar sus artículos a una categoría existente, o dejarla tal como se sugirió. La nueva categoría solo se crea de verdad cuando guardas el recibo.
 
 Funciona igual tanto si escaneas desde la aplicación como desde los bots de Telegram, WhatsApp o Slack.
@@ -179,7 +179,7 @@ Revisa los detalles, toca ✓ para guardar o el icono del lápiz para abrir el f
   **R:** Si, cada entrada de voz o escaneo de recibo utiliza una solicitud IA de tu cuota mensual.
 
 - **P: ¿Por qué un recibo terminó dividido en varias categorías en mis gráficos?**
-  **R:** Cuando un recibo mezcla claramente distintos tipos de artículos (por ejemplo, alimentación y alcohol), la aplicación lo divide automáticamente entre las categorías correspondientes en tus gráficos de gasto. Esto nunca cambia tus presupuestos. Toca **Cambiar categorías** en la pantalla de confirmación del recibo para ajustarlo — las correcciones se recuerdan para la próxima vez.
+  **R:** Cuando un recibo mezcla claramente distintos tipos de artículos (por ejemplo, alimentación y alcohol), la aplicación lo divide automáticamente entre las categorías correspondientes en tus gráficos de gasto — y también en tus presupuestos por categoría. Toca **Cambiar categorías** en la pantalla de confirmación del recibo para ajustarlo — las correcciones se recuerdan para la próxima vez.
 
 ---
 

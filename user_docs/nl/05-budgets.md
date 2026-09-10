@@ -50,6 +50,12 @@ In de modus **Per categorie** kun je aan elke uitgavencategorie een uitgavenlimi
 - Het totale budget is gelijk aan de som van alle categoriebedragen
 - Je kunt zoveel categorieën toevoegen als nodig is
 
+## Gescande bonnen en categoriebudgetten
+
+Wanneer een gescande bon automatisch over meerdere categorieën wordt verdeeld — boodschappen, huishoudelijke producten, statiegeld voor flessen — telt het aandeel van elke categorie nu mee voor het budget van die categorie, naar rato van de verdeling. Een budget op een categorie die alleen binnen een bonverdeling voorkomt, zoals Alcohol of statiegeld, wordt eindelijk correct bijgehouden in plaats van altijd nul te tonen — en een Boodschappen-budget telt de huishoudelijke producten of het statiegeld van dezelfde bon niet meer mee.
+
+Dit geldt ook voor bonnen die je al eerder hebt gescand, niet alleen voor nieuwe — je budgettotalen, inclusief de Uitgavengeschiedenis, worden automatisch bijgewerkt. Je hoeft niets opnieuw te scannen.
+
 ## Budgetdetails
 
 Tik op een budget om de volledige details te zien:

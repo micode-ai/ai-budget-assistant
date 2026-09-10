@@ -28,3 +28,31 @@
  * do not add a second copy of this object literal.
  */
 export const EXCLUDE_SPLIT_RECEIVABLE = { isSplitReceivable: false } as const;
+
+/**
+ * Matches an Expense that belongs to any of `categoryIds` — by its own
+ * category, or by holding a live split into one of them.
+ *
+ * Filtering on `categoryId` alone is the defect this replaces: an expense
+ * whose own category sits outside a budget can still carry a split into it,
+ * and one whose own category sits inside can hold most of its money
+ * elsewhere. Wrong in both directions. See
+ * docs/superpowers/specs/2026-09-10-budget-split-attribution-design.md.
+ *
+ * This narrows the rows fetched; it does not decide how much of each row
+ * counts. That is `attributeToCategories`, applied in JS afterwards — the
+ * predicate and the arithmetic are deliberately separate, because SQL cannot
+ * express the "splits win when present" rule without a second copy of it.
+ *
+ * Spread into a Prisma `where` alongside the other filters. Do not add a
+ * second copy of this object literal.
+ */
+export function categoryOrSplitFilter(categoryIds: readonly string[]) {
+  const ids = [...categoryIds];
+  return {
+    OR: [
+      { categoryId: { in: ids } },
+      { categorySplits: { some: { isDeleted: false, categoryId: { in: ids } } } },
+    ],
+  };
+}

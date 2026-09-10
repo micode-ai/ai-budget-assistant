@@ -95,7 +95,7 @@ Les tickets de supermarché mélangent souvent plusieurs types d'articles en un 
 - Appuyez sur **Modifier les catégories** pour ouvrir une liste de tous les articles et ajuster la catégorie de chacun. Vos modifications s'appliquent immédiatement — et sont mémorisées, afin que le même produit soit correctement catégorisé lors de votre prochain scan.
 - Si les articles ne correspondent pas suffisamment au montant total du reçu, l'application revient à une seule catégorie plutôt que de deviner.
 - Les consignes sur les bouteilles et les canettes sont reconnues et affichées comme leur propre catégorie, afin que vous puissiez voir quelle part de vos dépenses correspond à un emballage que vous pouvez récupérer.
-- Cela ne change que la façon dont vos dépenses apparaissent dans les Analyses et les graphiques — cela ne modifie jamais vos budgets, qui continuent d'être suivis par rapport à la catégorie globale unique du reçu.
+- Cela compte désormais aussi dans vos budgets par catégorie — un budget sur une catégorie qui n'apparaît que dans une répartition de reçu, comme Alcool ou la consigne, est enfin comptabilisé correctement, et un budget Alimentation ne compte plus les produits ménagers ni la consigne du même reçu.
 - Parfois, aucune de vos catégories existantes ne correspond à un groupe d'articles. Dans ce cas, l'application suggère une toute nouvelle catégorie, affichée sous forme de puce marquée d'un **+** (par exemple, « + Produits d'entretien 10 »). Elle n'est pas encore créée — appuyez sur **Modifier les catégories** pour réattribuer ses articles à une catégorie existante, ou la laisser telle quelle. La nouvelle catégorie n'est réellement créée que lorsque vous enregistrez le reçu.
 
 Fonctionne de la même façon que vous scanniez depuis l'application ou depuis les bots Telegram, WhatsApp ou Slack.
@@ -179,7 +179,7 @@ Vérifiez les détails, appuyez sur ✓ pour sauvegarder ou sur l'icône crayon 
   **R :** Oui, chaque saisie vocale ou scan de recu utilise une requete IA de votre allocation mensuelle.
 
 - **Q : Pourquoi un reçu s'est-il retrouvé réparti entre plusieurs catégories dans mes graphiques ?**
-  **R :** Lorsqu'un reçu mélange clairement différents types d'articles (par exemple, alimentation et alcool), l'application le répartit automatiquement entre les catégories correspondantes dans vos graphiques de dépenses. Cela ne modifie jamais vos budgets. Appuyez sur **Modifier les catégories** sur l'écran de confirmation du reçu pour l'ajuster — les corrections sont mémorisées pour la prochaine fois.
+  **R :** Lorsqu'un reçu mélange clairement différents types d'articles (par exemple, alimentation et alcool), l'application le répartit automatiquement entre les catégories correspondantes dans vos graphiques de dépenses — et dans vos budgets par catégorie aussi. Appuyez sur **Modifier les catégories** sur l'écran de confirmation du reçu pour l'ajuster — les corrections sont mémorisées pour la prochaine fois.
 
 ---
 
