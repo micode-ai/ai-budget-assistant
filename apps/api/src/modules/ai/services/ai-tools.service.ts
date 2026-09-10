@@ -15,7 +15,7 @@ import { GoalPlannerService } from './goal-planner.service';
 import { SafeToSpendService } from '../../insights/safe-to-spend.service';
 import { InflationShieldService } from '../../insights/inflation-shield.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
-import { attributeToCategories } from '../utils/category-attribution';
+import { attributeToCategories } from '../../../common/utils/category-attribution';
 import { buildSearchUnits } from '../utils/semantic-filter';
 import { summariseDeposits } from '../utils/deposit-summary';
 import { getRatesSafe, convertAmount } from '../../../common/utils/fx';
