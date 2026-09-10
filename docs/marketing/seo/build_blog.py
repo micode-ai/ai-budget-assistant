@@ -26,15 +26,26 @@ COMPANY = "MICODE sp. z o.o."
 COMPANY_URL = "https://mi-code.pl/"
 YEAR = "2026"
 # Startup Fame "Featured" badge (verification requires a link to https://startupfa.me).
+# The image is SELF-HOSTED (docs/marketing/landing/assets/, copied to /assets/ by copy_assets)
+# because startupfa.me does not serve it to a cross-origin <img> from our pages: the request
+# HANGS rather than erroring (measured: Image() timeout, fetch "Failed to fetch", and curl
+# exit 000 unless a full browser header set is sent -- their bot protection catching the
+# hotlink), so the badge was silently blank in production while the other four loaded fine.
+# Only their VERIFICATION link matters, and that is the href, so rehosting the artwork is safe.
+# The other four stay remote on purpose: PeerPush's changes with launch status and Fazier's is
+# API-generated, so self-hosting those would freeze a badge that is meant to update.
+# Root-relative like build_blog.py's own /assets/mi_code_logo.svg, so one string works from all
+# three sites on the apex; it deliberately ignores LANDING_BASE (only the local preview build
+# sets that, and there the file 404s rather than being wrong).
 STARTUP_FAME_BADGE = (
     '<a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="noopener">'
-    '<img class="b-sf" src="https://startupfa.me/badges/featured-badge.webp" '
-    'alt="AI Budget - Featured on Startup Fame" width="171" height="54" loading="lazy"></a>'
+    '<img class="b-sf" src="/assets/startup-fame-badge.webp" '
+    'alt="AI Budget - Featured on Startup Fame" width="133" height="42" loading="lazy"></a>'
 )
 PEERPUSH_BADGE = (
     '<a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" '
-    'alt="AI Budget Assistant on PeerPush" width="230" height="65" loading="lazy"></a>'
+    'alt="AI Budget Assistant on PeerPush" width="149" height="42" loading="lazy"></a>'
 )
 # Best AI Brands "Featured On" badge -- their own "Copy Light Badge" markup, verbatim apart
 # from rel="noopener" (the href is what the directory verifies, so do not tag it). Light
@@ -62,7 +73,7 @@ BEST_AI_BRANDS_BADGE = (
 FIRSTO_BADGE = (
     '<a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" '
-    'alt="AI Budget Assistant | Firsto Launch" width="111" height="43" loading="lazy"></a>'
+    'alt="AI Budget Assistant | Firsto Launch" width="108" height="42" loading="lazy"></a>'
 )
 # Fazier "Featured on Fazier" badge. Their API renders whichever badge_type you ask for, and
 # they offer two for one launch URL -- badge_type=launched (103x44) and =featured (182x43); we
@@ -77,7 +88,7 @@ FAZIER_BADGE = (
     '<a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="noopener">'
     '<img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg'
     '?badge_type=featured&amp;theme=light" '
-    'alt="AI Budget Assistant on Fazier" width="182" height="43" loading="lazy"></a>'
+    'alt="AI Budget Assistant on Fazier" width="178" height="42" loading="lazy"></a>'
 )
 # Launchstag "Featured on Launchstag" badge. Unlike the other five this links to their HOME
 # page, which is what their snippet specifies and the only real destination: /projects/<slug>
@@ -89,7 +100,7 @@ FAZIER_BADGE = (
 LAUNCHSTAG_BADGE = (
     '<a href="https://launchstag.com" target="_blank" rel="noopener">'
     '<img class="b-ls" src="https://launchstag.com/badge-light.svg" '
-    'alt="AI Budget Assistant - Featured on Launchstag" width="198" height="62" '
+    'alt="AI Budget Assistant - Featured on Launchstag" width="134" height="42" '
     'loading="lazy"></a>'
 )
 SAMEAS = [
@@ -374,7 +385,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:54px;width:171px}.f-badge .b-pp{height:65px;width:230px}.f-badge .b-fo{height:43px;width:111px}.f-badge .b-fz{height:43px;width:182px}.f-badge .b-ls{height:62px;width:198px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:42px;width:133px}.f-badge .b-pp{height:42px;width:149px}.f-badge .b-fo{height:42px;width:108px}.f-badge .b-fz{height:42px;width:178px}.f-badge .b-ls{height:42px;width:134px}
 .cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
