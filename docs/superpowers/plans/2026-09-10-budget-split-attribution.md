@@ -35,8 +35,8 @@
 **Interfaces:**
 - Consumes: nothing from earlier tasks.
 - Produces:
-  - `interface AttributableExpense { amount: unknown; categoryId?: string | null; category?: { id?: string; name?: string } | null; categorySplits?: SplitLike[] | null; splits?: SplitLike[] | null }`
-  - `interface SplitLike { categoryId?: string | null; amount: unknown; isDeleted?: boolean; category?: { id?: string; name?: string } | null }`
+  - `interface AttributableSplit { categoryId?: string | null; amount: unknown; isDeleted?: boolean; category?: { id?: string; name?: string } | null }`
+  - `interface AttributableExpense { amount: unknown; categoryId?: string | null; category?: { id?: string; name?: string } | null; categorySplits?: AttributableSplit[] | null; splits?: AttributableSplit[] | null }`
   - `interface CategoryAttribution { categoryId?: string; categoryName: string; amount: number }`
   - `function attributeToCategories(expense: AttributableExpense): CategoryAttribution[]`
   - `function attributableAmountForCategories(expense: AttributableExpense, categoryIds: ReadonlySet<string>): number`
@@ -456,12 +456,51 @@ The biggest of the four call sites: `spent`, the daily totals feeding the projec
 Note the query-count change: a category-scoped budget goes from three queries (`aggregate` + `groupBy(date)` + `groupBy(categoryId)`) to one `findMany`. An overall budget is untouched and keeps its two.
 
 **Files:**
+- Modify: `apps/api/src/common/utils/expense-filters.ts`
 - Modify: `apps/api/src/modules/budgets/budgets.service.ts` (imports; `getProgress`, currently lines 323-445)
 - Test: `apps/api/src/modules/budgets/budgets.service.spec.ts`
 
 **Interfaces:**
 - Consumes: `attributeToCategories` from `../../common/utils/category-attribution` (Task 1).
-- Produces: no signature change. `getProgress(accountId, id, anchorDay)` returns the same shape.
+- Produces:
+  - `function categoryOrSplitFilter(categoryIds: readonly string[]): { OR: [...] }` in `common/utils/expense-filters.ts`, consumed by Tasks 4 and 5.
+  - No signature change to `getProgress(accountId, id, anchorDay)`.
+
+- [ ] **Step 0: Extract the shared category filter**
+
+Four call sites across this plan need the same "own category OR a split into it" predicate. `expense-filters.ts`'s own doc comment says of its sibling constant: "do not add a second copy of this object literal" — four copies would breach that rule in the very file the predicate belongs beside. It goes there rather than in `category-attribution.ts`, because that file is mirrored into `packages/shared-utils` and must stay free of Prisma shapes.
+
+Append to `apps/api/src/common/utils/expense-filters.ts`:
+
+```ts
+/**
+ * Matches an Expense that belongs to any of `categoryIds` — by its own
+ * category, or by holding a live split into one of them.
+ *
+ * Filtering on `categoryId` alone is the defect this replaces: an expense
+ * whose own category sits outside a budget can still carry a split into it,
+ * and one whose own category sits inside can hold most of its money
+ * elsewhere. Wrong in both directions. See
+ * docs/superpowers/specs/2026-09-10-budget-split-attribution-design.md.
+ *
+ * This narrows the rows fetched; it does not decide how much of each row
+ * counts. That is `attributeToCategories`, applied in JS afterwards — the
+ * predicate and the arithmetic are deliberately separate, because SQL cannot
+ * express the "splits win when present" rule without a second copy of it.
+ *
+ * Spread into a Prisma `where` alongside the other filters. Do not add a
+ * second copy of this object literal.
+ */
+export function categoryOrSplitFilter(categoryIds: readonly string[]) {
+  const ids = [...categoryIds];
+  return {
+    OR: [
+      { categoryId: { in: ids } },
+      { categorySplits: { some: { isDeleted: false, categoryId: { in: ids } } } },
+    ],
+  };
+}
+```
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -629,12 +668,14 @@ In `apps/api/src/modules/budgets/budgets.service.ts`, after the existing `budget
 
 ```ts
 import { attributeToCategories } from '../../common/utils/category-attribution';
-import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
+import { EXCLUDE_SPLIT_RECEIVABLE, categoryOrSplitFilter } from '../../common/utils/expense-filters';
 ```
 
-- [ ] **Step 4: Rewrite the spend computation in `getProgress`**
+- [ ] **Step 4a: Replace the `where` clause and the category filter**
 
-Replace everything from `const whereExpenses: any = {` down to and including the `const dailyTotals = ...` line (currently lines 337-377) with:
+This step is three separate edits, deliberately. The region between them — `const budgetAmount` through `const daysRemaining`, currently lines 357-369 — holds nine declarations that the rest of the method needs. **Do not replace the whole span in one go; that deletes them.**
+
+Replace lines 337-349 — the `const whereExpenses: any = {` object literal and the `if (categoryIds) { whereExpenses.categoryId = ... }` block that follows it — with:
 
 ```ts
     const whereExpenses: any = {
@@ -680,10 +721,7 @@ Replace everything from `const whereExpenses: any = {` down to and including the
       });
       dailyTotals = dailyGroups.map((g) => Number(g._sum?.amount || 0));
     } else {
-      whereExpenses.OR = [
-        { categoryId: { in: categoryIds } },
-        { categorySplits: { some: { isDeleted: false, categoryId: { in: categoryIds } } } },
-      ];
+      Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
 
       const rows = await this.prisma.expense.findMany({
         where: whereExpenses,
@@ -722,6 +760,38 @@ Replace everything from `const whereExpenses: any = {` down to and including the
       dailyTotals = [...perDay.values()];
     }
 ```
+
+- [ ] **Step 4b: Delete the old aggregate**
+
+The branch above now computes `spentAmount`. Delete these six lines (currently 351-356) outright:
+
+```ts
+    const spent = await this.prisma.expense.aggregate({
+      where: whereExpenses,
+      _sum: { amount: true },
+    });
+
+    const spentAmount = Number(spent._sum?.amount || 0);
+```
+
+Leave everything from `const budgetAmount = Number(budget.amount);` onward untouched.
+
+- [ ] **Step 4c: Delete the old daily grouping**
+
+The branch also computes `dailyTotals`. Delete these eight lines (currently 371-378) outright — the comment moved into the branch:
+
+```ts
+    // One row per day that had spending. Needed because the projection's rate
+    // must be able to drop the largest DAY, which a single SUM cannot express.
+    const dailyGroups = await this.prisma.expense.groupBy({
+      by: ['date'],
+      where: whereExpenses,
+      _sum: { amount: true },
+    });
+    const dailyTotals = dailyGroups.map((g) => Number(g._sum?.amount || 0));
+```
+
+The next surviving line is `const estimate = projectBudgetSpend({`.
 
 - [ ] **Step 5: Point `categoryBreakdown` at the attributed map**
 
@@ -898,10 +968,7 @@ Then replace the `whereExpenses` construction and the `aggregate` call inside th
         });
         actual = Number(spent._sum?.amount || 0);
       } else {
-        whereExpenses.OR = [
-          { categoryId: { in: categoryIds } },
-          { categorySplits: { some: { isDeleted: false, categoryId: { in: categoryIds } } } },
-        ];
+        Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
 
         const rows = await this.prisma.expense.findMany({
           where: whereExpenses,
@@ -926,7 +993,7 @@ Then replace the `whereExpenses` construction and the `aggregate` call inside th
       const limit = Number(budget.amount);
 ```
 
-Delete the now-duplicated `const actual = Number(spent._sum?.amount || 0);` and `const limit = Number(budget.amount);` lines that followed the old aggregate.
+The replaced span ends at `const limit = Number(budget.amount);`, and the block above re-declares both `actual` and `limit`, so there is nothing further to delete. The next surviving line is `results.push({`. Unlike `getProgress`, this span holds no other declarations, so it is one edit rather than three.
 
 - [ ] **Step 4: Run the tests**
 
@@ -1107,10 +1174,16 @@ Expected: FAIL — the service calls `aggregate`/`groupBy`, so `prisma.expense.f
 
 - [ ] **Step 4: Add the import**
 
-In `apps/api/src/modules/budgets/budget-alert.service.ts`, beside the existing `EXCLUDE_SPLIT_RECEIVABLE` import:
+In `apps/api/src/modules/budgets/budget-alert.service.ts`, add the attribution rule and extend the existing filters import:
 
 ```ts
 import { attributeToCategories } from '../../common/utils/category-attribution';
+```
+
+and change line 6 to:
+
+```ts
+import { EXCLUDE_SPLIT_RECEIVABLE, categoryOrSplitFilter } from '../../common/utils/expense-filters';
 ```
 
 - [ ] **Step 5: Rewrite the overall spend query**
@@ -1136,10 +1209,7 @@ In `checkBudgetThresholds`, add `isPlanned: false` to `whereExpenses` and replac
       });
       spent = Number(result._sum?.amount || 0);
     } else {
-      whereExpenses.OR = [
-        { categoryId: { in: categoryIds } },
-        { categorySplits: { some: { isDeleted: false, categoryId: { in: categoryIds } } } },
-      ];
+      Object.assign(whereExpenses, categoryOrSplitFilter(categoryIds));
 
       const rows = await this.prisma.expense.findMany({
         where: whereExpenses,
@@ -1177,10 +1247,7 @@ In `checkCategoryThresholds`, replace the `groupBy` and the `spentMap` it builds
         isPlanned: false,
         ...EXCLUDE_SPLIT_RECEIVABLE,
         currencyCode: budget.currencyCode,
-        OR: [
-          { categoryId: { in: allocationCategoryIds } },
-          { categorySplits: { some: { isDeleted: false, categoryId: { in: allocationCategoryIds } } } },
-        ],
+        ...categoryOrSplitFilter(allocationCategoryIds),
       },
       select: {
         amount: true,
