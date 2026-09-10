@@ -519,6 +519,11 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
   });
 
   it('feeds the projection attributed money, one total per day', async () => {
+    // `daysElapsed` needs to clear MIN_DAYS_FOR_BUDGET_PROJECTION (5) for the
+    // rate to be anything but null, and unlike the sibling ABA-523 block this
+    // one otherwise runs on the real wall clock — pin it, same convention.
+    jest.spyOn(Date, 'now').mockReturnValue(new Date('2026-09-10T12:00:00Z').getTime());
+
     const rows = [
       splitReceiptRow,
       { ...splitReceiptRow, date: new Date('2026-09-09T00:00:00Z') },
@@ -529,6 +534,15 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
 
     // 35 on each of two days, not 240 on each.
     expect(progress.spent).toBe(70);
-    expect(progress.dailyBurnRate).toBeLessThanOrEqual(35);
+    // A loose `<= 35` bound would pass under every regression this test
+    // exists to catch: collapsing the per-day grouping onto one bucket
+    // (dailyTotals=[70]) drops that single, largest day out of the rate
+    // entirely and yields 0; feeding the RAW 240 row amount instead of the
+    // attributed 35 (dailyTotals=[240, 240]) yields 240/9 ≈ 26.67 — both
+    // pass `<= 35`. The real number, correctly grouped by day AND
+    // attributed, is one household day's 35 spread over the 9 non-largest
+    // elapsed days of this mocked instant: 35/9.
+    expect(progress.dailyBurnRate).toBeCloseTo(3.888888888888889, 6);
+    (Date.now as jest.Mock).mockRestore();
   });
 });
