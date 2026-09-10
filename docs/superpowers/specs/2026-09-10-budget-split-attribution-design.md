@@ -14,7 +14,7 @@ Budgets scope spend by the expense's own `categoryId` and never read
 
 - `budgets.service.ts:348` — `whereExpenses.categoryId = { in: categoryIds }`, then `_sum: { amount }`
 - `budgets.service.ts:286` — the same in `getHistory`
-- `budget-alert.service.ts:64,171` — the same in the daily cron, overall and per category
+- `budget-alert.service.ts:64,171` — the same in the threshold-alert service, overall and per category (it is not a cron: it fires from `ExpensesController` on every expense write)
 - `budgetStore.ts:504,507` — the mobile client computes progress locally and does the same
 
 `analytics.service.ts:225` already does the opposite: splits when they exist,
@@ -90,7 +90,7 @@ the mobile client. This is the repo's standing duplicated-pair convention
 (`financial-month.ts`, `wallet-currencies.ts`, `budget-projection.ts`), forced by
 the API having no build step and being unable to import `@budget/shared-utils` at
 runtime — the `check-no-shared-utils-runtime-import.sh` deploy guard enforces it.
-Both copies carry the same case table.
+The two copies are held byte-identical below their headers by an `fs`-based check in `category-attribution.spec.ts`, modelled on `financial-month.spec.ts` — not by a behavioural case table, which is weaker and which this repo has already seen fail (a mirror shipped with 13 cases against the API's 16).
 
 `attributeToCategories` today reads `expense.category?.id`, the relation, because
 its existing callers need the category *name* for narration. Budgets need only
@@ -107,7 +107,7 @@ A budget with no allocations sums everything, and by the Σ invariant the splits
 of an expense sum to its amount, so attribution returns the identical number.
 Overall budgets keep the existing cheap `aggregate`; only budgets with
 `categoryAllocations` switch to `findMany({ include: { categorySplits } })`. This
-keeps the daily cron's cost bounded to the budgets that actually need it.
+keeps the row-loading cost bounded to the budgets that actually need it — which matters because the alert path runs on every expense write, not nightly.
 
 ## Call sites
 
@@ -201,9 +201,11 @@ Available if the burst turns out worse than expected.
 - `common/utils/category-attribution.spec.ts` — the new helper: splits present,
   splits absent, split-only category, own-category-with-splits, soft-deleted
   splits ignored, empty set, non-numeric amounts.
-- A parity assertion between the API copy and the shared-utils mirror. The
+- A byte-identity assertion between the API copy and the shared-utils mirror,
+  reading both files with `fs` as `financial-month.spec.ts` already does. The
   duplicated-pair convention has a known drift failure mode; a test must catch it,
-  not review.
+  not review — and a behavioural case table is not enough, having already let a
+  13-against-16 mismatch through.
 - Extend `budgets.service.spec.ts` (`getProgress` has three tests today) and
   `budget-alert.service.spec.ts` (seven).
 - `budgetStore.getBudgetProgress` has no test today. Add one for attribution if
