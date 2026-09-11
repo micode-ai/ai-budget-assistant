@@ -2282,6 +2282,52 @@ export default {
     actionLearnMore: 'Powiedz mi więcej',
     actionGotIt: 'Rozumiem',
     emptyState: 'Nic tu jeszcze nie ma — sprawdź ponownie po kolejnej aktualizacji.',
+    entries: {
+      'fat-finder': {
+        title: 'Fat Finder',
+        body: 'Audyt wydatków przez AI: znajduje zapomniane subskrypcje, podwyżki i jednorazowe obciążenia warte drugiego spojrzenia.',
+      },
+      'financial-health-score': {
+        title: 'Wskaźnik kondycji finansowej',
+        body: 'Jedna ocena od 0 do 100 na ekranie głównym: trzymanie budżetu, stopa oszczędności, postęp celów i stan długów.',
+      },
+      'safe-to-spend': {
+        title: 'Bezpieczna kwota na dziś',
+        body: 'Ile możesz dziś wydać, nie ryzykując rachunków, celów ani subskrypcji — to liczba na górze ekranu głównego.',
+      },
+      'personal-inflation-index': {
+        title: 'Osobisty wskaźnik inflacji',
+        body: 'Jak zmieniały się ceny dokładnie tych produktów, które kupujesz — na podstawie twoich zeskanowanych paragonów.',
+      },
+      'shopping-list-compare': {
+        title: 'Gdzie taniej?',
+        body: 'Porównaj listę zakupów między sklepami, do których naprawdę chodzisz — po realnych cenach z twoich paragonów.',
+      },
+      'community-price-map': {
+        title: 'Mapa cen społeczności',
+        body: 'Gdzie w okolicy znaleziono najlepszą cenę produktu: dane zbierane społecznościowo i anonimizowane — nie da się po nich dotrzeć do nikogo.',
+      },
+      'financial-wrapped': {
+        title: 'Finansowe podsumowanie roku',
+        body: 'Rok z twoimi pieniędzmi w stylu Spotify Wrapped: najczęstszy sklep, najdroższy miesiąc, stopa oszczędności i więcej.',
+      },
+      'inflation-shield': {
+        title: 'Tarcza antyinflacyjna',
+        body: 'Przewiduje, które z twoich regularnych zakupów zaraz zdrożeją, i podpowiada, by zrobić zapas teraz.',
+      },
+      'ai-chat-shopping-tools': {
+        title: 'Lista zakupów przez czat',
+        body: 'Powiedz czatowi „dodaj mleko i jajka” albo „co uzupełnić?” — sam doda, usunie i podpowie.',
+      },
+      'receipt-price-check': {
+        title: 'Kontrola cen na paragonie',
+        body: 'Każdy zeskanowany paragon jest po cichu porównywany z tym, ile płaciłeś wcześniej w tym samym sklepie — jeśli coś jest droższe niż zwykle, zobaczysz adnotację.',
+      },
+      'exchange-rate-alerts': {
+        title: 'Alerty kursowe',
+        body: 'Ustaw cel dla pary walutowej i dostań powiadomienie w godzinie, w której kurs go osiągnie — koniec ze sprawdzaniem w aplikacji.',
+      },
+    },
   },
   wrapped: {
     title: 'Podsumowanie roku',

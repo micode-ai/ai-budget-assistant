@@ -2274,6 +2274,52 @@ export default {
     actionLearnMore: 'Cuéntame más',
     actionGotIt: 'Entendido',
     emptyState: 'Todavía no hay nada aquí — vuelve después de tu próxima actualización.',
+    entries: {
+      'fat-finder': {
+        title: 'Fat Finder',
+        body: 'Una auditoría con IA de tus gastos: encuentra suscripciones olvidadas, subidas de precio y cargos puntuales que merecen un segundo vistazo.',
+      },
+      'financial-health-score': {
+        title: 'Índice de salud financiera',
+        body: 'Una puntuación de 0 a 100 en tu pantalla de inicio: cumplimiento del presupuesto, tasa de ahorro, avance de metas y estado de las deudas.',
+      },
+      'safe-to-spend': {
+        title: 'Gasto seguro de hoy',
+        body: 'Cuánto puedes gastar hoy sin poner en riesgo recibos, metas ni suscripciones: es la cifra de la cabecera de inicio.',
+      },
+      'personal-inflation-index': {
+        title: 'Índice de inflación personal',
+        body: 'Cómo han cambiado los precios de los productos que compras exactamente tú, a partir de tus propios tickets escaneados.',
+      },
+      'shopping-list-compare': {
+        title: '¿Dónde es más barato?',
+        body: 'Compara tu lista de la compra entre las tiendas a las que realmente vas, con precios reales de tus tickets.',
+      },
+      'community-price-map': {
+        title: 'Mapa de precios de la comunidad',
+        body: 'Dónde encontraron cerca el mejor precio de un producto: recogido por la comunidad y anonimizado, nunca rastreable hasta nadie.',
+      },
+      'financial-wrapped': {
+        title: 'Resumen financiero del año',
+        body: 'Tu año en dinero al estilo Spotify Wrapped: comercio más frecuente, mes más caro, tasa de ahorro y más.',
+      },
+      'inflation-shield': {
+        title: 'Escudo antiinflación',
+        body: 'Predice cuáles de tus compras habituales están a punto de subir de precio y sugiere abastecerte ahora.',
+      },
+      'ai-chat-shopping-tools': {
+        title: 'Lista de la compra por chat',
+        body: 'Dile al chat «añade leche y huevos» o «¿qué debería reponer?»: añade, quita y sugiere por su cuenta.',
+      },
+      'receipt-price-check': {
+        title: 'Control de precios del ticket',
+        body: 'Cada ticket escaneado se compara en silencio con lo que pagaste la última vez en la misma tienda: si algo cuesta más de lo habitual, verás un aviso.',
+      },
+      'exchange-rate-alerts': {
+        title: 'Alertas de tipo de cambio',
+        body: 'Fija un objetivo para un par de divisas y recibe una notificación en la hora en que se alcance: se acabó entrar a comprobarlo.',
+      },
+    },
   },
   wrapped: {
     title: 'Resumen del año',

@@ -2281,6 +2281,52 @@ export default {
     actionLearnMore: 'Tell me more',
     actionGotIt: 'Got it',
     emptyState: 'Nothing here yet — check back after your next update.',
+    entries: {
+      'fat-finder': {
+        title: 'Fat Finder',
+        body: 'An AI audit of your spending that finds forgotten subscriptions, price hikes, and one-off charges worth a second look.',
+      },
+      'financial-health-score': {
+        title: 'Financial Health Score',
+        body: 'A single 0-100 score on your home screen combining budget adherence, savings rate, goal progress, and debt health.',
+      },
+      'safe-to-spend': {
+        title: 'Safe-to-Spend',
+        body: "See exactly how much you can spend today without risking your bills, goals, or subscriptions — it's the number in your home hero.",
+      },
+      'personal-inflation-index': {
+        title: 'Personal Inflation Index',
+        body: 'Track how prices for the exact products you buy have changed over time, built from your own scanned receipts.',
+      },
+      'shopping-list-compare': {
+        title: "Where's cheapest?",
+        body: 'Compare your shopping list across stores you actually shop at, using real prices from your receipt history.',
+      },
+      'community-price-map': {
+        title: 'Community Price Map',
+        body: 'See where nearby shoppers found the best price on a product, crowdsourced and anonymized — never traceable to anyone.',
+      },
+      'financial-wrapped': {
+        title: 'Financial Wrapped',
+        body: 'A Spotify-Wrapped-style year in review of your money — top merchant, biggest month, savings rate, and more.',
+      },
+      'inflation-shield': {
+        title: 'Inflation Shield',
+        body: 'Forecasts which of your regular purchases are about to get more expensive, and suggests stocking up now.',
+      },
+      'ai-chat-shopping-tools': {
+        title: 'Ask the AI to manage your shopping list',
+        body: 'Tell the chat "add milk and eggs" or "what should I restock?" — it can add, remove, and suggest items directly.',
+      },
+      'receipt-price-check': {
+        title: 'Receipt price-check',
+        body: "Every scanned receipt is quietly compared against what you paid last time at the same store — you'll see a note if something costs more than usual.",
+      },
+      'exchange-rate-alerts': {
+        title: 'Exchange-rate alerts',
+        body: 'Set a target for a currency pair and get a notification the hour it is reached — no more opening the app to check whether the rate is good yet.',
+      },
+    },
   },
   wrapped: {
     title: 'Wrapped',

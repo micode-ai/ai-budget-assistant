@@ -1,9 +1,10 @@
 import { resolveWhatsNewOutcome } from '../resolveWhatsNewOutcome';
 import type { WhatsNewEntry } from '../whatsNewEntries';
 
+// No title/body: the copy lives in the locale files, keyed by id.
 const entries: WhatsNewEntry[] = [
-  { id: 'a', title: 'A', body: 'a', route: '/a' },
-  { id: 'b', title: 'B', body: 'b', route: '/b' },
+  { id: 'a', route: '/a' },
+  { id: 'b', route: '/b' },
 ];
 
 describe('resolveWhatsNewOutcome', () => {

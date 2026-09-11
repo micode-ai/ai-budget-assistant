@@ -42,7 +42,7 @@ export default function WhatsNewScreen() {
             activeOpacity={0.7}
           >
             <View style={styles.cardHeader}>
-              <Text style={styles.cardTitle}>{entry.title}</Text>
+              <Text style={styles.cardTitle}>{t(`whatsNew.entries.${entry.id}.title`)}</Text>
               {entry.tier && (
                 <View style={[styles.tierBadge, { backgroundColor: theme.colors.warning + '20' }]}>
                   <Text style={[styles.tierBadgeText, { color: theme.colors.warning }]}>
@@ -51,7 +51,7 @@ export default function WhatsNewScreen() {
                 </View>
               )}
             </View>
-            <Text style={styles.cardBody}>{entry.body}</Text>
+            <Text style={styles.cardBody}>{t(`whatsNew.entries.${entry.id}.body`)}</Text>
             <View style={styles.cardFooter}>
               <Text style={styles.cardCta}>{t('whatsNew.actionLearnMore')}</Text>
               <Ionicons name="chevron-forward" size={16} color={theme.colors.primary} />

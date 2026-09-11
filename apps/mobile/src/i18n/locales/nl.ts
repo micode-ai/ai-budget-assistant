@@ -2274,6 +2274,52 @@ export default {
     actionLearnMore: 'Vertel me meer',
     actionGotIt: 'Begrepen',
     emptyState: 'Hier staat nog niets — kom terug na je volgende update.',
+    entries: {
+      'fat-finder': {
+        title: 'Fat Finder',
+        body: 'Een AI-controle van je uitgaven: vindt vergeten abonnementen, prijsverhogingen en eenmalige afschrijvingen die een tweede blik verdienen.',
+      },
+      'financial-health-score': {
+        title: 'Financiële gezondheidsscore',
+        body: 'Eén score van 0 tot 100 op je startscherm: budgetdiscipline, spaarquote, voortgang van doelen en de stand van je schulden.',
+      },
+      'safe-to-spend': {
+        title: 'Veilig te besteden',
+        body: 'Hoeveel je vandaag kunt uitgeven zonder rekeningen, doelen of abonnementen in gevaar te brengen — het getal bovenaan je startscherm.',
+      },
+      'personal-inflation-index': {
+        title: 'Persoonlijke inflatie-index',
+        body: 'Hoe de prijzen van precies de producten die jij koopt zijn veranderd, opgebouwd uit je eigen gescande bonnen.',
+      },
+      'shopping-list-compare': {
+        title: 'Waar is het goedkoper?',
+        body: 'Vergelijk je boodschappenlijst tussen de winkels waar je echt komt, met echte prijzen uit je bonnen.',
+      },
+      'community-price-map': {
+        title: 'Prijzenkaart van de community',
+        body: 'Waar in de buurt de beste prijs voor een product is gevonden: door de community verzameld en geanonimiseerd — nooit tot iemand te herleiden.',
+      },
+      'financial-wrapped': {
+        title: 'Financieel jaaroverzicht',
+        body: 'Je geldjaar in Spotify-Wrapped-stijl: vaakste winkel, duurste maand, spaarquote en meer.',
+      },
+      'inflation-shield': {
+        title: 'Inflatieschild',
+        body: 'Voorspelt welke van je vaste aankopen binnenkort duurder worden en stelt voor om nu in te slaan.',
+      },
+      'ai-chat-shopping-tools': {
+        title: 'Boodschappenlijst via de chat',
+        body: 'Zeg tegen de chat „voeg melk en eieren toe” of „wat moet ik aanvullen?” — hij voegt toe, haalt weg en doet suggesties.',
+      },
+      'receipt-price-check': {
+        title: 'Prijscontrole op de bon',
+        body: 'Elke gescande bon wordt stilletjes vergeleken met wat je de vorige keer in dezelfde winkel betaalde — is iets duurder dan normaal, dan zie je een melding.',
+      },
+      'exchange-rate-alerts': {
+        title: 'Wisselkoerswaarschuwingen',
+        body: 'Stel een doel in voor een valutapaar en krijg een melding in het uur waarin het bereikt wordt — nooit meer de app openen om te kijken.',
+      },
+    },
   },
   wrapped: {
     title: 'Jaaroverzicht',

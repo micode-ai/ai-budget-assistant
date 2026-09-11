@@ -2274,6 +2274,52 @@ export default {
     actionLearnMore: 'Mehr erfahren',
     actionGotIt: 'Verstanden',
     emptyState: 'Hier gibt es noch nichts – schau nach dem nächsten Update wieder vorbei.',
+    entries: {
+      'fat-finder': {
+        title: 'Fat Finder',
+        body: 'Eine KI-Prüfung Ihrer Ausgaben: findet vergessene Abos, Preiserhöhungen und einmalige Buchungen, die einen zweiten Blick verdienen.',
+      },
+      'financial-health-score': {
+        title: 'Finanz-Gesundheitswert',
+        body: 'Ein Wert von 0 bis 100 auf Ihrem Startbildschirm: Budgettreue, Sparquote, Zielfortschritt und Schuldenlage in einer Zahl.',
+      },
+      'safe-to-spend': {
+        title: 'Sicher ausgeben',
+        body: 'Wie viel Sie heute ausgeben können, ohne Rechnungen, Ziele oder Abos zu gefährden — die Zahl oben auf dem Startbildschirm.',
+      },
+      'personal-inflation-index': {
+        title: 'Persönlicher Inflationsindex',
+        body: 'Wie sich die Preise genau der Produkte entwickelt haben, die Sie kaufen — aus Ihren eigenen gescannten Belegen.',
+      },
+      'shopping-list-compare': {
+        title: 'Wo ist es günstiger?',
+        body: 'Vergleichen Sie Ihre Einkaufsliste über die Läden, in denen Sie wirklich einkaufen — mit echten Preisen aus Ihren Belegen.',
+      },
+      'community-price-map': {
+        title: 'Community-Preiskarte',
+        body: 'Wo in der Nähe der beste Preis für ein Produkt gefunden wurde: von der Community gesammelt und anonymisiert — auf niemanden zurückführbar.',
+      },
+      'financial-wrapped': {
+        title: 'Finanzjahr im Rückblick',
+        body: 'Ihr Geldjahr im Spotify-Wrapped-Stil: häufigster Händler, teuerster Monat, Sparquote und mehr.',
+      },
+      'inflation-shield': {
+        title: 'Inflationsschutz',
+        body: 'Sagt voraus, welche Ihrer regelmäßigen Einkäufe bald teurer werden, und schlägt vor, jetzt Vorrat anzulegen.',
+      },
+      'ai-chat-shopping-tools': {
+        title: 'Einkaufsliste per Chat',
+        body: 'Sagen Sie dem Chat „Milch und Eier hinzufügen” oder „Was sollte ich nachkaufen?” — er ergänzt, entfernt und schlägt vor.',
+      },
+      'receipt-price-check': {
+        title: 'Preisprüfung für Belege',
+        body: 'Jeder gescannte Beleg wird still mit dem verglichen, was Sie zuletzt im selben Laden bezahlt haben — kostet etwas mehr als sonst, sehen Sie einen Hinweis.',
+      },
+      'exchange-rate-alerts': {
+        title: 'Wechselkurs-Alarme',
+        body: 'Setzen Sie ein Ziel für ein Währungspaar und werden Sie in der Stunde benachrichtigt, in der es erreicht wird — kein Nachsehen mehr in der App.',
+      },
+    },
   },
   wrapped: {
     title: 'Jahresrückblick',
