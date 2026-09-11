@@ -83,4 +83,8 @@ export const WHATS_NEW_ENTRIES: WhatsNewEntry[] = [
     id: 'exchange-rate-alerts',
     route: '/wallet/exchange',
   },
+  {
+    id: 'shopping-list-auto-check',
+    route: '/shopping-list',
+  },
 ];

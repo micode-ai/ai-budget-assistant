@@ -2333,6 +2333,10 @@ export default {
         title: 'Alerty kursowe',
         body: 'Ustaw cel dla pary walutowej i dostań powiadomienie w godzinie, w której kurs go osiągnie — koniec ze sprawdzaniem w aplikacji.',
       },
+      'shopping-list-auto-check': {
+        title: 'Lista zakupów odhacza się sama',
+        body: 'Zeskanuj paragon, a to, co naprawdę kupiłeś, samo odhaczy się z listy. Gdyby coś zaznaczyło się niepotrzebnie, obok jest „Cofnij”.',
+      },
     },
   },
   wrapped: {

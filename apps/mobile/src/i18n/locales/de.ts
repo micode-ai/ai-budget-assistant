@@ -2323,6 +2323,10 @@ export default {
         title: 'Wechselkurs-Alarme',
         body: 'Setzen Sie ein Ziel für ein Währungspaar und werden Sie in der Stunde benachrichtigt, in der es erreicht wird — kein Nachsehen mehr in der App.',
       },
+      'shopping-list-auto-check': {
+        title: 'Ihre Einkaufsliste hakt sich selbst ab',
+        body: 'Scannen Sie den Beleg, und was Sie wirklich gekauft haben, wird von selbst abgehakt — mit „Rückgängig”, falls etwas danebenging.',
+      },
     },
   },
   wrapped: {
