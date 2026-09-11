@@ -4388,6 +4388,16 @@ You can also **ask the AI assistant** to add items: open the **Chat** tab and sa
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
 
+## Auto-Check From Receipts
+
+When you scan a receipt with the camera, any unchecked item on your shopping list that matches something on the receipt is checked off automatically — you don't have to also tick it by hand right after you're done shopping.
+
+The match has to be exact: the receipt line's product name has to match your list item's name (after the app normalizes spacing, capitalization, and small OCR differences). A list item you typed as free text (like "milk") that doesn't match the receipt's own wording won't auto-check — you'll still need to tap it yourself.
+
+Right after saving the scanned receipt, if anything was auto-checked, the confirmation message tells you how many items were checked off, with an **Undo** button in case something was checked by mistake.
+
+You can turn this off in **Settings → Data → Shopping list** if you'd rather always check items off by hand.
+
 ## Managing the List by Chat
 
 Besides adding items, you can ask the assistant to:
@@ -9028,6 +9038,16 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Также можно **попросить ИИ-ассистента** добавить товары: откройте вкладку **Чат** и скажите, например, «добавь молоко и хлеб в список покупок». Товары сразу добавляются в активный список — без подтверждения.
 
+## Автоотметка при сканировании чеков
+
+Когда вы сканируете чек камерой, любая неотмеченная позиция в вашем списке покупок, совпадающая с чем-то на чеке, автоматически отмечается как купленная — не нужно отмечать её вручную сразу после покупок.
+
+Совпадение должно быть точным: название товара в строке чека должно совпадать с названием позиции в списке (после того как приложение унифицирует пробелы, регистр и небольшие различия распознавания). Позиция, введённая как обычный текст (например, «молоко»), которая не совпадает точно с формулировкой на чеке, не будет отмечена автоматически — её всё равно нужно отметить самостоятельно.
+
+Сразу после сохранения отсканированного чека, если что-то было отмечено автоматически, в сообщении о подтверждении будет указано, сколько позиций отмечено, с кнопкой **Отменить** на случай, если что-то отметилось по ошибке.
+
+Вы можете отключить это в **Настройки → Данные и отчёты → Список покупок**, если предпочитаете всегда отмечать позиции вручную.
+
 ## Управление списком через чат
 
 Кроме добавления, можно попросить ассистента:
@@ -13640,6 +13660,16 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Також можна **попросити ШІ-асистента** додати товари: відкрийте вкладку **Чат** і скажіть, наприклад, «додай молоко та хліб до списку покупок». Товари одразу додаються до активного списку — без підтвердження.
 
+## Автопозначення під час сканування чеків
+
+Коли ви скануєте чек камерою, будь-яка непозначена позиція у вашому списку покупок, яка збігається з чимось на чеку, автоматично позначається як куплена — не потрібно позначати її вручну одразу після покупок.
+
+Збіг має бути точним: назва товару в рядку чека повинна збігатися з назвою позиції у списку (після того як застосунок уніфікує пробіли, регістр і невеликі відмінності розпізнавання). Позиція, введена як звичайний текст (наприклад, «молоко»), яка не збігається точно з формулюванням на чеку, не буде позначена автоматично — її все одно потрібно позначити самостійно.
+
+Одразу після збереження відсканованого чека, якщо щось було позначено автоматично, повідомлення про підтвердження показує, скільки позицій позначено, із кнопкою **Скасувати** на випадок, якщо щось позначилося помилково.
+
+Ви можете вимкнути це в **Налаштування → Дані та звіти → Список покупок**, якщо надаєте перевагу завжди позначати позиції вручну.
+
 ## Керування списком через чат
 
 Окрім додавання, можна попросити асистента:
@@ -18237,6 +18267,16 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 
 Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
 
+## Automatyczne zaznaczanie po zeskanowaniu paragonu
+
+Gdy skanujesz paragon aparatem, każda niezaznaczona pozycja na Twojej liście zakupów, która odpowiada czemuś z paragonu, zostaje automatycznie oznaczona jako kupiona — nie trzeba jej też odznaczać ręcznie po zakupach.
+
+Dopasowanie musi być dokładne: nazwa produktu z linii paragonu musi zgadzać się z nazwą pozycji na liście (po tym, jak aplikacja ujednolici odstępy, wielkość liter i drobne różnice z OCR). Pozycja wpisana jako wolny tekst (np. „mleko"), która nie zgadza się dokładnie z zapisem na paragonie, nie zostanie automatycznie zaznaczona — wciąż trzeba ją zaznaczyć samodzielnie.
+
+Bezpośrednio po zapisaniu zeskanowanego paragonu, jeśli coś zostało automatycznie zaznaczone, komunikat potwierdzający pokazuje, ile pozycji oznaczono jako kupione, wraz z przyciskiem **Cofnij** na wypadek, gdyby coś zostało zaznaczone przez pomyłkę.
+
+Możesz to wyłączyć w **Ustawienia → Dane i raporty → Lista zakupów**, jeśli wolisz zawsze zaznaczać pozycje ręcznie.
+
 ## Zarządzanie listą przez czat
 
 Oprócz dodawania możesz poprosić asystenta o:
@@ -22809,6 +22849,16 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 
 Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
 
+## Automatisch abhaken beim Scannen von Belegen
+
+Wenn du einen Beleg mit der Kamera scannst, wird jeder noch nicht abgehakte Artikel auf deiner Einkaufsliste, der zu etwas auf dem Beleg passt, automatisch abgehakt — du musst ihn nach dem Einkauf nicht auch noch von Hand abhaken.
+
+Die Übereinstimmung muss exakt sein: Der Produktname auf dem Beleg muss mit dem Namen deines Listenartikels übereinstimmen (nachdem die App Leerzeichen, Groß-/Kleinschreibung und kleine OCR-Unterschiede vereinheitlicht hat). Ein Listenartikel, den du als Freitext eingegeben hast (z. B. „Milch"), der nicht mit dem genauen Wortlaut auf dem Beleg übereinstimmt, wird nicht automatisch abgehakt — den musst du weiterhin selbst antippen.
+
+Direkt nach dem Speichern des gescannten Belegs siehst du, falls etwas automatisch abgehakt wurde, wie viele Artikel es waren — mit einer Schaltfläche **Rückgängig**, falls versehentlich etwas abgehakt wurde.
+
+Du kannst das unter **Einstellungen → Daten & Berichte → Einkaufsliste** ausschalten, wenn du Artikel lieber immer manuell abhaken möchtest.
+
 ## Die Liste per Chat verwalten
 
 Neben dem Hinzufügen kannst du den Assistenten auch bitten:
@@ -27370,6 +27420,16 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 
 También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
 
+## Marcado automático al escanear recibos
+
+Cuando escaneas un recibo con la cámara, cualquier artículo sin marcar de tu lista de compras que coincida con algo del recibo se marca automáticamente como comprado — no tienes que marcarlo también a mano justo después de terminar de comprar.
+
+La coincidencia debe ser exacta: el nombre del producto en la línea del recibo tiene que coincidir con el nombre de tu artículo en la lista (después de que la app normalice espacios, mayúsculas/minúsculas y pequeñas diferencias del OCR). Un artículo que escribiste como texto libre (como "leche") que no coincide con la redacción exacta del recibo no se marcará automáticamente — seguirás teniendo que marcarlo tú mismo.
+
+Justo después de guardar el recibo escaneado, si algo se marcó automáticamente, el mensaje de confirmación te dice cuántos artículos se marcaron, con un botón **Deshacer** por si algo se marcó por error.
+
+Puedes desactivar esto en **Configuración → Datos e informes → Lista de compras** si prefieres marcar siempre los artículos a mano.
+
 ## Gestionar la lista por chat
 
 Además de añadir, puedes pedirle al asistente que:
@@ -31929,6 +31989,16 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 
 Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
 
+## Coche automatique lors du scan des reçus
+
+Lorsque vous scannez un reçu avec l'appareil photo, tout article non coché de votre liste de courses qui correspond à quelque chose sur le reçu est coché automatiquement — vous n'avez pas besoin de le cocher aussi à la main juste après vos achats.
+
+La correspondance doit être exacte : le nom du produit sur la ligne du reçu doit correspondre au nom de votre article de liste (une fois que l'application a normalisé les espaces, la casse et les petites différences d'OCR). Un article que vous avez saisi en texte libre (comme « lait ») qui ne correspond pas exactement au libellé du reçu ne sera pas coché automatiquement — vous devrez toujours le cocher vous-même.
+
+Juste après l'enregistrement du reçu scanné, si des articles ont été cochés automatiquement, le message de confirmation vous indique combien, avec un bouton **Annuler** en cas d'erreur.
+
+Vous pouvez désactiver cela dans **Paramètres → Données et rapports → Liste de courses** si vous préférez toujours cocher les articles à la main.
+
 ## Gérer la liste par chat
 
 En plus d'ajouter des articles, vous pouvez demander à l'assistant de :
@@ -36451,6 +36521,16 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Адвольны тэкст** — калі ўведзенае не супадае з ніводным адсочваемым таварам, націсніце **Дадаць «…»**, каб дадаць яго як звычайны тэкставы пункт. Такія пункты не звязаны з гісторыяй цэн, таму не будуць удзельнічаць у параўнанні цэн.
 
 Таксама можна **папрасіць ШІ-асістэнта** дадаць тавары: адкрыйце ўкладку **Чат** і скажыце, напрыклад, «дадай малако і хлеб у спіс пакупак». Тавары адразу дадаюцца ў актыўны спіс — без пацверджання.
+
+## Аўтаадзначэнне пры скануванні чэкаў
+
+Калі вы скануеце чэк камерай, любая непазначаная пазіцыя ў вашым спісе пакупак, якая супадае з чымсьці на чэку, аўтаматычна пазначаецца як купленая — не трэба пазначаць яе ўручную адразу пасля пакупак.
+
+Супадзенне павінна быць дакладным: назва тавару ў радку чэка павінна супадаць з назвай пазіцыі ў спісе (пасля таго як праграма ўніфікуе прабелы, рэгістр і невялікія адрозненні распазнавання). Пазіцыя, уведзеная як звычайны тэкст (напрыклад, «малако»), якая не супадае дакладна з фармулёўкай на чэку, не будзе пазначана аўтаматычна — яе ўсё роўна трэба пазначыць самастойна.
+
+Адразу пасля захавання адсканаванага чэка, калі нешта было пазначана аўтаматычна, паведамленне пра пацвярджэнне паказвае, колькі пазіцый пазначана, з кнопкай **Скасаваць** на выпадак, калі нешта пазначылася памылкова.
+
+Вы можаце выключыць гэта ў **Налады → Даныя і справаздачы → Спіс пакупак**, калі аддаяце перавагу заўсёды пазначаць пазіцыі ўручную.
 
 ## Кіраванне спісам праз чат
 
@@ -41089,6 +41169,16 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 - **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
 
 Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
+
+## Automatisch afvinken bij het scannen van bonnen
+
+Wanneer je een kassabon scant met de camera, wordt elk niet-afgevinkt item op je boodschappenlijst dat overeenkomt met iets op de bon automatisch afgevinkt — je hoeft het niet ook nog met de hand af te vinken na het winkelen.
+
+De match moet exact zijn: de productnaam op de bon moet overeenkomen met de naam van je lijstitem (nadat de app spaties, hoofdletters en kleine OCR-verschillen heeft genormaliseerd). Een item dat je als vrije tekst hebt getypt (zoals "melk") dat niet exact overeenkomt met de tekst op de bon, wordt niet automatisch afgevinkt — dat moet je zelf blijven aantikken.
+
+Direct na het opslaan van de gescande bon zie je, als er iets automatisch is afgevinkt, hoeveel items het waren, met een knop **Ongedaan maken** voor het geval er per ongeluk iets is afgevinkt.
+
+Je kunt dit uitschakelen bij **Instellingen → Gegevens & rapporten → Boodschappenlijst** als je items liever altijd met de hand afvinkt.
 
 ## De lijst beheren via chat
 

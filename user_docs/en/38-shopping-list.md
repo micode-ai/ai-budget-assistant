@@ -34,6 +34,16 @@ You can also **ask the AI assistant** to add items: open the **Chat** tab and sa
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
 
+## Auto-Check From Receipts
+
+When you scan a receipt with the camera, any unchecked item on your shopping list that matches something on the receipt is checked off automatically — you don't have to also tick it by hand right after you're done shopping.
+
+The match has to be exact: the receipt line's product name has to match your list item's name (after the app normalizes spacing, capitalization, and small OCR differences). A list item you typed as free text (like "milk") that doesn't match the receipt's own wording won't auto-check — you'll still need to tap it yourself.
+
+Right after saving the scanned receipt, if anything was auto-checked, the confirmation message tells you how many items were checked off, with an **Undo** button in case something was checked by mistake.
+
+You can turn this off in **Settings → Data → Shopping list** if you'd rather always check items off by hand.
+
 ## Managing the List by Chat
 
 Besides adding items, you can ask the assistant to:

@@ -22,6 +22,7 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useReportStore } from '@/stores/reportStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { useLocationSettingsStore } from '@/stores/locationSettingsStore';
+import { useShoppingListAutoCheckStore } from '@/stores/shoppingListAutoCheckStore';
 import { useAuthStore } from '@/stores/authStore';
 import { api } from '@/services/api';
 import { requestLocationPermission } from '@/services/locationCapture';
@@ -117,6 +118,8 @@ export function DataSettings() {
   const isBusinessTier = useSubscriptionStore((s) => s.isBusiness());
   const captureEnabled = useLocationSettingsStore((s) => s.captureEnabled);
   const setCaptureEnabled = useLocationSettingsStore((s) => s.setCaptureEnabled);
+  const autoCheckEnabled = useShoppingListAutoCheckStore((s) => s.enabled);
+  const setAutoCheckEnabled = useShoppingListAutoCheckStore((s) => s.setEnabled);
   const contributeCommunityPrices = useAuthStore((s) => s.user?.contributeCommunityPrices ?? false);
   const updateUser = useAuthStore((s) => s.updateUser);
 
@@ -372,6 +375,24 @@ export function DataSettings() {
             <Switch
               value={contributeCommunityPrices}
               onValueChange={handleToggleCommunityPrices}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+            />
+          </View>
+        </View>
+      </View>
+
+      {/* Shopping list auto-check (ABA shopping-list-receipt-reconciliation) */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>{t('shoppingList.autoCheckSectionTitle')}</Text>
+        <View style={styles.card}>
+          <View style={styles.fieldRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.fieldLabel}>{t('shoppingList.autoCheckFromReceipts')}</Text>
+              <Text style={styles.fieldDesc}>{t('shoppingList.autoCheckFromReceiptsDesc')}</Text>
+            </View>
+            <Switch
+              value={autoCheckEnabled}
+              onValueChange={setAutoCheckEnabled}
               trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
             />
           </View>

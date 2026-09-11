@@ -32,6 +32,16 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 
 Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
 
+## Coche automatique lors du scan des reçus
+
+Lorsque vous scannez un reçu avec l'appareil photo, tout article non coché de votre liste de courses qui correspond à quelque chose sur le reçu est coché automatiquement — vous n'avez pas besoin de le cocher aussi à la main juste après vos achats.
+
+La correspondance doit être exacte : le nom du produit sur la ligne du reçu doit correspondre au nom de votre article de liste (une fois que l'application a normalisé les espaces, la casse et les petites différences d'OCR). Un article que vous avez saisi en texte libre (comme « lait ») qui ne correspond pas exactement au libellé du reçu ne sera pas coché automatiquement — vous devrez toujours le cocher vous-même.
+
+Juste après l'enregistrement du reçu scanné, si des articles ont été cochés automatiquement, le message de confirmation vous indique combien, avec un bouton **Annuler** en cas d'erreur.
+
+Vous pouvez désactiver cela dans **Paramètres → Données et rapports → Liste de courses** si vous préférez toujours cocher les articles à la main.
+
 ## Gérer la liste par chat
 
 En plus d'ajouter des articles, vous pouvez demander à l'assistant de :

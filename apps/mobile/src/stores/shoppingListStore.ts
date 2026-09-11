@@ -31,6 +31,11 @@ import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
 import { useSubscriptionStore } from './subscriptionStore';
 import { useUpgradeStore } from './upgradeStore';
+import { useShoppingListAutoCheckStore } from './shoppingListAutoCheckStore';
+import {
+  matchReceiptToShoppingList,
+  type ReceiptReconciliationLine,
+} from '@/features/shopping-list/receiptReconciliation';
 
 const ACTIVE_LIST_KEY = 'shopping-active-list';
 const mmkv = new MMKV({ id: 'shopping-list' });
@@ -53,6 +58,19 @@ interface ShoppingListState {
   loadDeals: () => Promise<void>;
   addItem: (rawLabel: string, canonicalName?: string | null, quantity?: number) => Promise<void>;
   toggleChecked: (itemId: string) => void;
+  /**
+   * Auto-checks off every unchecked item, across all non-archived lists,
+   * whose (canonicalName-or-rawLabel) matches a line on the just-scanned
+   * receipt (ABA shopping-list-receipt-reconciliation). Reuses the same
+   * local-SQLite + fire-and-forget-server write `toggleChecked` already
+   * uses. Returns the matched items so the caller can show "N items checked
+   * off" + an Undo affordance. No-ops when the auto-check preference is off.
+   */
+  reconcileWithReceipt: (
+    receiptLines: ReceiptReconciliationLine[],
+  ) => { checked: Array<{ id: string; rawLabel: string }> };
+  /** Reverts exactly the ids `reconcileWithReceipt` returned back to unchecked. */
+  undoReceiptReconciliation: (itemIds: string[]) => void;
   updateQuantity: (itemId: string, qty: number) => void;
   removeItem: (itemId: string) => void;
   clearChecked: () => Promise<void>;
@@ -368,6 +386,62 @@ export const useShoppingListStore = create<ShoppingListState>()(
       api.updateItem(itemId, { isChecked: nextChecked }).catch((e) =>
         console.warn('Shopping list item toggle sync deferred (offline?):', e),
       );
+    },
+
+    reconcileWithReceipt: (receiptLines) => {
+      if (!useShoppingListAutoCheckStore.getState().enabled) {
+        return { checked: [] };
+      }
+
+      // Same list scope as the AI chat's `removeItemsByName` — non-archived
+      // lists only; an archived list is not something the user is actively
+      // shopping from.
+      const candidates = get()
+        .lists.filter((l) => !l.isArchived)
+        .flatMap((l) => l.items);
+
+      const matched = matchReceiptToShoppingList(candidates, receiptLines);
+      if (matched.length === 0) return { checked: [] };
+
+      const matchedIds = new Set(matched.map((m) => m.id));
+      set((state) => ({
+        lists: state.lists.map((l) => ({
+          ...l,
+          items: l.items.map((it) => (matchedIds.has(it.id) ? { ...it, isChecked: true } : it)),
+        })),
+      }));
+
+      for (const it of matched) {
+        updateShoppingListItem(it.id, { isChecked: true }).catch((e) =>
+          console.error('Failed to auto-check shopping list item in SQLite:', e),
+        );
+        api.updateItem(it.id, { isChecked: true }).catch((e) =>
+          console.warn('Shopping list item auto-check sync deferred (offline?):', e),
+        );
+      }
+
+      return { checked: matched.map((it) => ({ id: it.id, rawLabel: it.rawLabel })) };
+    },
+
+    undoReceiptReconciliation: (itemIds) => {
+      if (itemIds.length === 0) return;
+      const idSet = new Set(itemIds);
+
+      set((state) => ({
+        lists: state.lists.map((l) => ({
+          ...l,
+          items: l.items.map((it) => (idSet.has(it.id) ? { ...it, isChecked: false } : it)),
+        })),
+      }));
+
+      for (const id of itemIds) {
+        updateShoppingListItem(id, { isChecked: false }).catch((e) =>
+          console.error('Failed to undo shopping list auto-check in SQLite:', e),
+        );
+        api.updateItem(id, { isChecked: false }).catch((e) =>
+          console.warn('Shopping list item undo sync deferred (offline?):', e),
+        );
+      }
     },
 
     updateQuantity: (itemId, qty) => {

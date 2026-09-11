@@ -527,6 +527,9 @@ export default {
     itemDescriptionPlaceholder: 'Productnaam',
     itemRequiredError: 'Voer een naam en een prijs groter dan 0 in',
     removeItemA11y: 'Product verwijderen',
+    shoppingListChecked_one: '{{count}} item van je boodschappenlijst is afgevinkt',
+    shoppingListChecked_other: '{{count}} items van je boodschappenlijst zijn afgevinkt',
+    undoShoppingListCheck: 'Ongedaan maken',
   },
   incomeVoice: {
     title: 'Spraakinkomsten',
@@ -2575,6 +2578,9 @@ export default {
     distanceKm: '{{km}} km verderop',
     dealsTitle: 'Aanbiedingen voor jou',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Boodschappenlijst',
+    autoCheckFromReceipts: 'Automatisch afvinken via bonnen',
+    autoCheckFromReceiptsDesc: 'Wanneer je een overeenkomende kassabon scant, worden items die al op je boodschappenlijst staan automatisch afgevinkt.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} artikel kost meer dan gebruikelijk',

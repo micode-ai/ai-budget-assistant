@@ -531,6 +531,11 @@ export default {
     itemDescriptionPlaceholder: 'Название позиции',
     itemRequiredError: 'Укажите название и цену больше 0',
     removeItemA11y: 'Удалить позицию',
+    shoppingListChecked_one: '{{count}} позиция из вашего списка покупок отмечена как купленная',
+    shoppingListChecked_few: '{{count}} позиции из вашего списка покупок отмечены как купленные',
+    shoppingListChecked_many: '{{count}} позиций из вашего списка покупок отмечены как купленные',
+    shoppingListChecked_other: '{{count}} позиций из вашего списка покупок отмечены как купленные',
+    undoShoppingListCheck: 'Отменить',
   },
   incomeVoice: {
     title: 'Голосовой ввод дохода',
@@ -2584,6 +2589,9 @@ export default {
     distanceKm: '{{km}} км от вас',
     dealsTitle: 'Скидки для вас',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Список покупок',
+    autoCheckFromReceipts: 'Автоотметка по чекам',
+    autoCheckFromReceiptsDesc: 'При сканировании подходящего чека позиции, уже добавленные в список покупок, будут автоматически отмечены как купленные.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} товар стоит дороже, чем обычно',

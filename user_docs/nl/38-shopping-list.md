@@ -32,6 +32,16 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 
 Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
 
+## Automatisch afvinken bij het scannen van bonnen
+
+Wanneer je een kassabon scant met de camera, wordt elk niet-afgevinkt item op je boodschappenlijst dat overeenkomt met iets op de bon automatisch afgevinkt — je hoeft het niet ook nog met de hand af te vinken na het winkelen.
+
+De match moet exact zijn: de productnaam op de bon moet overeenkomen met de naam van je lijstitem (nadat de app spaties, hoofdletters en kleine OCR-verschillen heeft genormaliseerd). Een item dat je als vrije tekst hebt getypt (zoals "melk") dat niet exact overeenkomt met de tekst op de bon, wordt niet automatisch afgevinkt — dat moet je zelf blijven aantikken.
+
+Direct na het opslaan van de gescande bon zie je, als er iets automatisch is afgevinkt, hoeveel items het waren, met een knop **Ongedaan maken** voor het geval er per ongeluk iets is afgevinkt.
+
+Je kunt dit uitschakelen bij **Instellingen → Gegevens & rapporten → Boodschappenlijst** als je items liever altijd met de hand afvinkt.
+
 ## De lijst beheren via chat
 
 Naast toevoegen kun je de assistent ook vragen om:

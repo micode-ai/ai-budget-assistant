@@ -527,6 +527,9 @@ export default {
     itemDescriptionPlaceholder: 'Nombre del artículo',
     itemRequiredError: 'Introduce un nombre y un precio mayor que 0',
     removeItemA11y: 'Eliminar artículo',
+    shoppingListChecked_one: '{{count}} artículo de tu lista de compras se marcó como comprado',
+    shoppingListChecked_other: '{{count}} artículos de tu lista de compras se marcaron como comprados',
+    undoShoppingListCheck: 'Deshacer',
   },
   incomeVoice: {
     title: 'Voz Ingresos',
@@ -2575,6 +2578,9 @@ export default {
     distanceKm: 'A {{km}} km',
     dealsTitle: 'Ofertas para ti',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Lista de compras',
+    autoCheckFromReceipts: 'Marcar automáticamente desde recibos',
+    autoCheckFromReceiptsDesc: 'Cuando escaneas un recibo coincidente, los artículos que ya están en tu lista de compras se marcan automáticamente como comprados.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} artículo cuesta más de lo habitual',

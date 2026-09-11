@@ -32,6 +32,16 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 
 Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
 
+## Automatisch abhaken beim Scannen von Belegen
+
+Wenn du einen Beleg mit der Kamera scannst, wird jeder noch nicht abgehakte Artikel auf deiner Einkaufsliste, der zu etwas auf dem Beleg passt, automatisch abgehakt — du musst ihn nach dem Einkauf nicht auch noch von Hand abhaken.
+
+Die Übereinstimmung muss exakt sein: Der Produktname auf dem Beleg muss mit dem Namen deines Listenartikels übereinstimmen (nachdem die App Leerzeichen, Groß-/Kleinschreibung und kleine OCR-Unterschiede vereinheitlicht hat). Ein Listenartikel, den du als Freitext eingegeben hast (z. B. „Milch"), der nicht mit dem genauen Wortlaut auf dem Beleg übereinstimmt, wird nicht automatisch abgehakt — den musst du weiterhin selbst antippen.
+
+Direkt nach dem Speichern des gescannten Belegs siehst du, falls etwas automatisch abgehakt wurde, wie viele Artikel es waren — mit einer Schaltfläche **Rückgängig**, falls versehentlich etwas abgehakt wurde.
+
+Du kannst das unter **Einstellungen → Daten & Berichte → Einkaufsliste** ausschalten, wenn du Artikel lieber immer manuell abhaken möchtest.
+
 ## Die Liste per Chat verwalten
 
 Neben dem Hinzufügen kannst du den Assistenten auch bitten:

@@ -530,6 +530,9 @@ export default {
     itemDescriptionPlaceholder: 'Item name',
     itemRequiredError: 'Enter a name and a price greater than 0',
     removeItemA11y: 'Remove item',
+    shoppingListChecked_one: '{{count}} item from your shopping list was checked off',
+    shoppingListChecked_other: '{{count}} items from your shopping list were checked off',
+    undoShoppingListCheck: 'Undo',
   },
   incomeVoice: {
     title: 'Voice Income',
@@ -2582,6 +2585,9 @@ export default {
     distanceKm: '{{km}} km away',
     dealsTitle: 'Deals for you',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Shopping list',
+    autoCheckFromReceipts: 'Auto-check off from receipts',
+    autoCheckFromReceiptsDesc: 'When you scan a matching receipt, automatically check off items already on your shopping list.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} item costs more than usual',

@@ -529,6 +529,11 @@ export default {
     itemDescriptionPlaceholder: 'Назва пазіцыі',
     itemRequiredError: 'Укажыце назву і цану больш за 0',
     removeItemA11y: 'Выдаліць пазіцыю',
+    shoppingListChecked_one: '{{count}} пазіцыя са спісу пакупак пазначана як купленая',
+    shoppingListChecked_few: '{{count}} пазіцыі са спісу пакупак пазначаны як купленыя',
+    shoppingListChecked_many: '{{count}} пазіцый са спісу пакупак пазначаны як купленыя',
+    shoppingListChecked_other: '{{count}} пазіцый са спісу пакупак пазначаны як купленыя',
+    undoShoppingListCheck: 'Скасаваць',
   },
   incomeVoice: {
     title: 'Галасавы даход',
@@ -2552,6 +2557,9 @@ export default {
     distanceKm: '{{km}} км ад вас',
     dealsTitle: 'Зніжкі для вас',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Спіс пакупак',
+    autoCheckFromReceipts: 'Аўтаадзначэнне па чэках',
+    autoCheckFromReceiptsDesc: 'Пры скануванні адпаведнага чэка пазіцыі, якія ўжо ёсць у спісе пакупак, аўтаматычна пазначаюцца як купленыя.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} тавар каштуе даражэй, чым звычайна',

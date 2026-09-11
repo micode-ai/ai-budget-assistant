@@ -531,6 +531,11 @@ export default {
     itemDescriptionPlaceholder: 'Назва позиції',
     itemRequiredError: 'Вкажіть назву та ціну більшу за 0',
     removeItemA11y: 'Видалити позицію',
+    shoppingListChecked_one: '{{count}} позиція зі списку покупок позначена як куплена',
+    shoppingListChecked_few: '{{count}} позиції зі списку покупок позначено як куплені',
+    shoppingListChecked_many: '{{count}} позицій зі списку покупок позначено як куплені',
+    shoppingListChecked_other: '{{count}} позицій зі списку покупок позначено як куплені',
+    undoShoppingListCheck: 'Скасувати',
   },
   incomeVoice: {
     title: 'Голосовий дохід',
@@ -2584,6 +2589,9 @@ export default {
     distanceKm: '{{km}} км від вас',
     dealsTitle: 'Знижки для вас',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Список покупок',
+    autoCheckFromReceipts: 'Автопозначення за чеками',
+    autoCheckFromReceiptsDesc: 'Під час сканування відповідного чека позиції, які вже є у списку покупок, автоматично позначаються як куплені.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} товар коштує дорожче, ніж зазвичай',

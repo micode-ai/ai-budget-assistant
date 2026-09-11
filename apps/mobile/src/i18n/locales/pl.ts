@@ -531,6 +531,11 @@ export default {
     itemDescriptionPlaceholder: 'Nazwa pozycji',
     itemRequiredError: 'Podaj nazwę i cenę większą od 0',
     removeItemA11y: 'Usuń pozycję',
+    shoppingListChecked_one: '{{count}} pozycja z listy zakupów została oznaczona jako kupiona',
+    shoppingListChecked_few: '{{count}} pozycje z listy zakupów zostały oznaczone jako kupione',
+    shoppingListChecked_many: '{{count}} pozycji z listy zakupów zostało oznaczonych jako kupione',
+    shoppingListChecked_other: '{{count}} pozycji z listy zakupów zostało oznaczonych jako kupione',
+    undoShoppingListCheck: 'Cofnij',
   },
   incomeVoice: {
     title: 'Głosowy przychód',
@@ -2584,6 +2589,9 @@ export default {
     distanceKm: '{{km}} km stąd',
     dealsTitle: 'Promocje dla Ciebie',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Lista zakupów',
+    autoCheckFromReceipts: 'Automatyczne zaznaczanie z paragonów',
+    autoCheckFromReceiptsDesc: 'Po zeskanowaniu odpowiadającego paragonu pozycje już obecne na liście zakupów zostaną automatycznie oznaczone jako kupione.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} produkt kosztuje więcej niż zwykle',

@@ -32,6 +32,16 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 
 También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
 
+## Marcado automático al escanear recibos
+
+Cuando escaneas un recibo con la cámara, cualquier artículo sin marcar de tu lista de compras que coincida con algo del recibo se marca automáticamente como comprado — no tienes que marcarlo también a mano justo después de terminar de comprar.
+
+La coincidencia debe ser exacta: el nombre del producto en la línea del recibo tiene que coincidir con el nombre de tu artículo en la lista (después de que la app normalice espacios, mayúsculas/minúsculas y pequeñas diferencias del OCR). Un artículo que escribiste como texto libre (como "leche") que no coincide con la redacción exacta del recibo no se marcará automáticamente — seguirás teniendo que marcarlo tú mismo.
+
+Justo después de guardar el recibo escaneado, si algo se marcó automáticamente, el mensaje de confirmación te dice cuántos artículos se marcaron, con un botón **Deshacer** por si algo se marcó por error.
+
+Puedes desactivar esto en **Configuración → Datos e informes → Lista de compras** si prefieres marcar siempre los artículos a mano.
+
 ## Gestionar la lista por chat
 
 Además de añadir, puedes pedirle al asistente que:

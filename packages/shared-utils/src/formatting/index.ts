@@ -251,6 +251,11 @@ export {
   type ResolvedWalletCurrency,
 } from './wallet-currencies';
 
+// Product-name normalization key (mirrors the API's product-category-rule
+// cache key) — used client-side to match a shopping-list item against a
+// scanned receipt's line items.
+export { normalizeProductName } from './product-name';
+
 // Category attribution — which categories an expense's money belongs to
 export {
   attributeToCategories,

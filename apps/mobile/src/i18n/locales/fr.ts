@@ -527,6 +527,9 @@ export default {
     itemDescriptionPlaceholder: 'Nom de l\'article',
     itemRequiredError: 'Entrez un nom et un prix supérieur à 0',
     removeItemA11y: 'Supprimer l\'article',
+    shoppingListChecked_one: '{{count}} article de votre liste de courses a été coché',
+    shoppingListChecked_other: '{{count}} articles de votre liste de courses ont été cochés',
+    undoShoppingListCheck: 'Annuler',
   },
   incomeVoice: {
     title: 'Revenu vocal',
@@ -2575,6 +2578,9 @@ export default {
     distanceKm: 'À {{km}} km',
     dealsTitle: 'Promotions pour vous',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Liste de courses',
+    autoCheckFromReceipts: 'Cocher automatiquement depuis les reçus',
+    autoCheckFromReceiptsDesc: 'Lorsque vous scannez un reçu correspondant, les articles déjà présents sur votre liste de courses sont automatiquement cochés.',
   },
   receiptCheck: {
     cardTitle_one: "{{count}} article coûte plus cher que d'habitude",

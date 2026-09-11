@@ -527,6 +527,9 @@ export default {
     itemDescriptionPlaceholder: 'Artikelname',
     itemRequiredError: 'Gib einen Namen und einen Preis größer als 0 ein',
     removeItemA11y: 'Artikel entfernen',
+    shoppingListChecked_one: '{{count}} Artikel von deiner Einkaufsliste wurde abgehakt',
+    shoppingListChecked_other: '{{count}} Artikel von deiner Einkaufsliste wurden abgehakt',
+    undoShoppingListCheck: 'Rückgängig',
   },
   incomeVoice: {
     title: 'Spracheingabe Einnahmen',
@@ -2575,6 +2578,9 @@ export default {
     distanceKm: '{{km}} km entfernt',
     dealsTitle: 'Angebote für dich',
     dealDrop: '-{{pct}}%',
+    autoCheckSectionTitle: 'Einkaufsliste',
+    autoCheckFromReceipts: 'Automatisch von Belegen abhaken',
+    autoCheckFromReceiptsDesc: 'Wenn du einen passenden Beleg scannst, werden bereits auf deiner Einkaufsliste stehende Artikel automatisch abgehakt.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} Artikel kostet mehr als üblich',

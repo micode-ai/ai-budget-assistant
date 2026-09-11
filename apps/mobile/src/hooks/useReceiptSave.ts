@@ -5,6 +5,7 @@ import { showAlert } from '@/utils/alert';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
+import { useShoppingListStore } from '@/stores/shoppingListStore';
 import { resolveProposedCategories } from '@/features/receipt/resolveProposedCategories';
 import { buildReceiptPrefill } from '@/features/receipt/receiptPrefill';
 import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseCreateForm';
@@ -182,14 +183,38 @@ export function useReceiptSave({
         void maybeAskForReview();
       };
 
+      // Auto-check off any shopping-list items this receipt's own lines
+      // match (ABA shopping-list-receipt-reconciliation) — reads from the
+      // items list the user actually confirmed/edited, not the raw OCR read.
+      // No-ops (empty `checked`) when the toggle is off, nothing matched, or
+      // the receipt carries no line items.
+      const reconciliation = useShoppingListStore.getState().reconcileWithReceipt(
+        items?.map((item) => ({ description: item.description, canonicalName: item.canonicalName })) ?? [],
+      );
+      const checkedIds = reconciliation.checked.map((c) => c.id);
+      const undoButton = checkedIds.length > 0
+        ? [{
+            text: t('receipt.undoShoppingListCheck'),
+            onPress: () => {
+              useShoppingListStore.getState().undoReceiptReconciliation(checkedIds);
+              finish();
+            },
+          }]
+        : [];
+      const checkedLine = checkedIds.length > 0
+        ? '\n\n' + t('receipt.shoppingListChecked', { count: checkedIds.length })
+        : '';
+
       const session = onSaved?.();
       if (session?.isCheckpoint) {
-        showAlert(t('receipt.sessionCapTitle'), t('receipt.sessionCapBody', { count: session.count }), [
+        showAlert(t('receipt.sessionCapTitle'), t('receipt.sessionCapBody', { count: session.count }) + checkedLine, [
+          ...undoButton,
           { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
           { text: t('common.done'), onPress: finish },
         ]);
       } else {
-        showAlert(t('common.success'), t('receipt.success'), [
+        showAlert(t('common.success'), t('receipt.success') + checkedLine, [
+          ...undoButton,
           { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
           { text: t('common.done'), onPress: finish },
         ]);

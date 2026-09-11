@@ -32,6 +32,16 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 
 Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
 
+## Automatyczne zaznaczanie po zeskanowaniu paragonu
+
+Gdy skanujesz paragon aparatem, każda niezaznaczona pozycja na Twojej liście zakupów, która odpowiada czemuś z paragonu, zostaje automatycznie oznaczona jako kupiona — nie trzeba jej też odznaczać ręcznie po zakupach.
+
+Dopasowanie musi być dokładne: nazwa produktu z linii paragonu musi zgadzać się z nazwą pozycji na liście (po tym, jak aplikacja ujednolici odstępy, wielkość liter i drobne różnice z OCR). Pozycja wpisana jako wolny tekst (np. „mleko"), która nie zgadza się dokładnie z zapisem na paragonie, nie zostanie automatycznie zaznaczona — wciąż trzeba ją zaznaczyć samodzielnie.
+
+Bezpośrednio po zapisaniu zeskanowanego paragonu, jeśli coś zostało automatycznie zaznaczone, komunikat potwierdzający pokazuje, ile pozycji oznaczono jako kupione, wraz z przyciskiem **Cofnij** na wypadek, gdyby coś zostało zaznaczone przez pomyłkę.
+
+Możesz to wyłączyć w **Ustawienia → Dane i raporty → Lista zakupów**, jeśli wolisz zawsze zaznaczać pozycje ręcznie.
+
 ## Zarządzanie listą przez czat
 
 Oprócz dodawania możesz poprosić asystenta o:
