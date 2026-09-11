@@ -46,8 +46,8 @@ export function WhatsNewSpotlight({ gateOpen }: WhatsNewSpotlightProps) {
               </View>
             )}
           </View>
-          <Text style={styles.title}>{activeEntry.title}</Text>
-          <Text style={styles.body}>{activeEntry.body}</Text>
+          <Text style={styles.title}>{t(`whatsNew.entries.${activeEntry.id}.title`)}</Text>
+          <Text style={styles.body}>{t(`whatsNew.entries.${activeEntry.id}.body`)}</Text>
           <View style={styles.actions}>
             <TouchableOpacity
               onPress={dismiss}

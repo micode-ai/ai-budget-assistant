@@ -2274,6 +2274,52 @@ export default {
     actionLearnMore: 'En savoir plus',
     actionGotIt: 'Compris',
     emptyState: "Rien ici pour l'instant — revenez après votre prochaine mise à jour.",
+    entries: {
+      'fat-finder': {
+        title: 'Fat Finder',
+        body: "Un audit de vos dépenses par l'IA : il repère les abonnements oubliés, les hausses de prix et les débits ponctuels qui méritent un second regard.",
+      },
+      'financial-health-score': {
+        title: 'Indice de santé financière',
+        body: "Une note de 0 à 100 sur votre écran d'accueil : respect du budget, taux d'épargne, avancement des objectifs et état des dettes.",
+      },
+      'safe-to-spend': {
+        title: 'Montant sûr du jour',
+        body: "Combien vous pouvez dépenser aujourd'hui sans mettre en péril factures, objectifs ou abonnements : c'est le chiffre en haut de l'accueil.",
+      },
+      'personal-inflation-index': {
+        title: "Indice d'inflation personnel",
+        body: 'Comment ont évolué les prix des produits que vous achetez précisément, à partir de vos propres reçus scannés.',
+      },
+      'shopping-list-compare': {
+        title: 'Où est-ce moins cher ?',
+        body: 'Comparez votre liste de courses entre les magasins que vous fréquentez vraiment, avec les prix réels de vos reçus.',
+      },
+      'community-price-map': {
+        title: 'Carte des prix de la communauté',
+        body: "Où le meilleur prix d'un produit a été trouvé près de chez vous : collecté par la communauté et anonymisé, jamais rattachable à quiconque.",
+      },
+      'financial-wrapped': {
+        title: "Bilan financier de l'année",
+        body: "Votre année en argent façon Spotify Wrapped : commerce le plus fréquenté, mois le plus cher, taux d'épargne et plus encore.",
+      },
+      'inflation-shield': {
+        title: 'Bouclier anti-inflation',
+        body: 'Prévoit lesquels de vos achats réguliers vont bientôt augmenter et suggère de faire des stocks dès maintenant.',
+      },
+      'ai-chat-shopping-tools': {
+        title: 'Liste de courses par le chat',
+        body: 'Dites au chat « ajoute du lait et des œufs » ou « que dois-je racheter ? » : il ajoute, retire et propose tout seul.',
+      },
+      'receipt-price-check': {
+        title: 'Contrôle des prix du reçu',
+        body: "Chaque reçu scanné est discrètement comparé à ce que vous aviez payé dans le même magasin — si quelque chose coûte plus que d'habitude, vous verrez une note.",
+      },
+      'exchange-rate-alerts': {
+        title: 'Alertes de taux de change',
+        body: "Fixez un objectif pour une paire de devises et soyez notifié dans l'heure où il est atteint — fini d'ouvrir l'appli pour vérifier.",
+      },
+    },
   },
   wrapped: {
     title: "Rétro de l'année",
