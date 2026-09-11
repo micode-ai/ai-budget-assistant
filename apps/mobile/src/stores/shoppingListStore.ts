@@ -68,7 +68,7 @@ interface ShoppingListState {
    */
   reconcileWithReceipt: (
     receiptLines: ReceiptReconciliationLine[],
-  ) => { checked: Array<{ id: string; rawLabel: string }> };
+  ) => { checked: { id: string; rawLabel: string }[] };
   /** Reverts exactly the ids `reconcileWithReceipt` returned back to unchecked. */
   undoReceiptReconciliation: (itemIds: string[]) => void;
   updateQuantity: (itemId: string, qty: number) => void;
