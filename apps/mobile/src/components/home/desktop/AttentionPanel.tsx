@@ -30,7 +30,7 @@ import {
   buildAttentionItems,
   type AttentionItem,
 } from '@/features/dashboard/attentionItems';
-import { alertAction } from '@/features/dashboard/attentionActions';
+import { alertAction, buildMarkRecurringUpdate } from '@/features/dashboard/attentionActions';
 import { resolveAttentionEnrichment } from '@/features/dashboard/attentionEnrichment';
 
 /**
@@ -108,7 +108,7 @@ interface Props {
  * |---|---|---|
  * | Invitation | **yes** | hosts `InvitationCard`, `invitationStore.respond` |
  * | Alert referencing an expense | **yes** | hosts `ExpenseDialog` |
- * | `recurring_suggestion` | **yes** | inline Track button → `createSubscription`, then dismiss |
+ * | `recurring_suggestion` | **yes** | inline Track button → `createSubscription`, then dismiss; PLUS a "Mark as recurring" button → `expenseStore.updateExpense`, then dismiss (`recurring-bill-detection-nudge`) |
  * | Alert dismiss (x) | **yes** | `alertStore.dismiss`, optimistic |
  * | `+N more` | **yes** | expands the panel; see below |
  * | `possible_merge` | no | a two-expense merge is a real screen with real choices |
@@ -318,6 +318,15 @@ export function AttentionPanel({ canEdit }: Props) {
               case 'alert': {
                 const { title, body } = renderAlertBody(item.alert, t);
                 const action = alertAction(item.alert, canEdit);
+                // `recurring_suggestion` is the one alert with TWO write
+                // actions on it — Track (a UserSubscription) and Mark as
+                // recurring (this expense's own `isRecurring` flag). Gated on
+                // `canEdit` directly rather than through `alertAction`, which
+                // already returns 'none' for a viewer on this type — the
+                // `buildMarkRecurringUpdate` null-check is what actually
+                // decides whether the button renders.
+                const canMarkRecurring =
+                  action === 'track' && !!buildMarkRecurringUpdate(item.alert);
                 return (
                   <AttentionRow
                     key={item.key}
@@ -329,6 +338,10 @@ export function AttentionPanel({ canEdit }: Props) {
                       : () => alertTap.onAlertPress(item.alert)}
                     actionLabel={action === 'track' ? t('fatFinder.trackSubscription') : undefined}
                     onAction={action === 'track' ? () => void alertTap.onTrack(item.alert) : undefined}
+                    secondaryActionLabel={canMarkRecurring ? t('alerts.markAsRecurring') : undefined}
+                    onSecondaryAction={
+                      canMarkRecurring ? () => alertTap.onMarkRecurring(item.alert) : undefined
+                    }
                     onDismiss={canEdit ? () => dismiss(item.alert.id) : undefined}
                     busy={resolvingId === item.alert.id}
                     stacked={stacked}
@@ -421,6 +434,10 @@ interface RowProps {
   onPress?: () => void;
   actionLabel?: string;
   onAction?: () => void;
+  /** A second, independent write action — currently only `recurring_suggestion`'s
+   *  "Mark as recurring", beside its own "Track" (`actionLabel`/`onAction`). */
+  secondaryActionLabel?: string;
+  onSecondaryAction?: () => void;
   onDismiss?: () => void;
   busy?: boolean;
   stacked: boolean;
@@ -433,6 +450,8 @@ function AttentionRow({
   onPress,
   actionLabel,
   onAction,
+  secondaryActionLabel,
+  onSecondaryAction,
   onDismiss,
   busy,
   stacked,
@@ -468,6 +487,15 @@ function AttentionRow({
         {!!actionLabel && !!onAction && (
           <Pressable style={styles.actionButton} onPress={onAction} accessibilityRole="button">
             <Text style={styles.actionButtonText}>{actionLabel}</Text>
+          </Pressable>
+        )}
+        {!!secondaryActionLabel && !!onSecondaryAction && (
+          <Pressable
+            style={styles.secondaryActionButton}
+            onPress={onSecondaryAction}
+            accessibilityRole="button"
+          >
+            <Text style={styles.secondaryActionButtonText}>{secondaryActionLabel}</Text>
           </Pressable>
         )}
         {busy ? (
@@ -578,6 +606,21 @@ const createStyles = (theme: Theme) => ({
     // On a `primary` fill this is the accent-derived on-accent colour, which
     // is what `textInverse` is for. A semantic fill would need `onSemantic`.
     color: theme.colors.textInverse,
+  },
+  // Outlined rather than filled: two filled `primary` buttons side by side
+  // would read as equally weighted, but Track (a subscription) and Mark as
+  // recurring (this expense's own flag) are alternatives, not a pair — the
+  // outline keeps Track as the visually primary suggestion.
+  secondaryActionButton: {
+    paddingVertical: theme.spacing[1.5],
+    paddingHorizontal: theme.spacing[3],
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  secondaryActionButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
   dismissButton: {
     padding: theme.spacing[1],

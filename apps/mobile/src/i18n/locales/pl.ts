@@ -877,6 +877,7 @@ export default {
     recurringBody: 'Pobrano {{amount}} {{currency}} {{cycle}} co najmniej 3 razy. Dotknij, aby śledzić.',
     cycleMonthly: 'co miesiąc',
     cycleWeekly: 'co tydzień',
+    markAsRecurring: 'Oznacz jako cykliczne',
     mergeTitle: 'Ten sam zakup, dwie waluty?',
     mergeBody: '{{amountA}} {{currencyA}} i {{amountB}} {{currencyB}} u {{merchant}} wyglądają jak ta sama transakcja. Scalić je?',
     alreadyResolvedTitle: 'Już rozwiązane',

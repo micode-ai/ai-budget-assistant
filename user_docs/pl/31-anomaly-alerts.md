@@ -6,7 +6,7 @@
 
 - **Możliwe podwójne obciążenie** — ten sam sprzedawca naliczył tę samą kwotę dwa razy w ciągu dwóch dni. Warto sprawdzić, zanim pieniądze znikną.
 - **Podwyżka ceny** — subskrypcja lub cykliczna płatność jest o ponad 10 % droższa niż ostatnim razem (na przykład serwis streamingowy, który podniósł cenę).
-- **Wygląda jak subskrypcja** — ten sam sprzedawca naliczył Ci tę samą kwotę trzy lub więcej razy regularnie. Aplikacja sugeruje śledzenie jej w Menedżerze subskrypcji: kliknij alert, aby otworzyć wstępnie wypełniony formularz.
+- **Wygląda jak subskrypcja** — ten sam sprzedawca naliczył Ci tę samą kwotę trzy lub więcej razy regularnie. Dwie możliwości: kliknij alert, aby otworzyć wstępnie wypełniony formularz w Menedżerze subskrypcji, albo dotknij **„Oznacz jako cykliczne"** bezpośrednio w alercie, aby ten wydatek (np. czynsz) był od teraz traktowany jako cykliczny — dzięki temu przestanie co miesiąc zaburzać prognozę wydatków w Twoim budżecie.
 - **Nietypowe wydatki** — kategoria jest co najmniej 30 % powyżej Twojej średniej z poprzednich miesięcy.
 
 ## Jak alerty do Ciebie docierają

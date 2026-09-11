@@ -875,6 +875,7 @@ export default {
     recurringBody: 'Charged {{amount}} {{currency}} {{cycle}} at least 3 times. Tap to track it.',
     cycleMonthly: 'monthly',
     cycleWeekly: 'weekly',
+    markAsRecurring: 'Mark as recurring',
     mergeTitle: 'Same purchase, two currencies?',
     mergeBody: '{{amountA}} {{currencyA}} and {{amountB}} {{currencyB}} at {{merchant}} look like one transaction. Merge them?',
     alreadyResolvedTitle: 'Already resolved',

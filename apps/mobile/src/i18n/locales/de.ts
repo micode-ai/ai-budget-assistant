@@ -871,6 +871,7 @@ export default {
     recurringBody: 'Mindestens 3-mal {{amount}} {{currency}} {{cycle}} abgebucht. Tippe zum Verfolgen.',
     cycleMonthly: 'monatlich',
     cycleWeekly: 'wöchentlich',
+    markAsRecurring: 'Als wiederkehrend markieren',
     mergeTitle: 'Gleicher Kauf, zwei Währungen?',
     mergeBody: '{{amountA}} {{currencyA}} und {{amountB}} {{currencyB}} bei {{merchant}} scheinen eine Transaktion zu sein. Zusammenführen?',
     alreadyResolvedTitle: 'Bereits erledigt',

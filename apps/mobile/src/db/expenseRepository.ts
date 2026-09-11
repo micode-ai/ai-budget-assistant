@@ -212,6 +212,10 @@ export async function updateExpenseInDb(
     setClauses.push('is_recurring = ?');
     params.push(updates.isRecurring ? 1 : 0);
   }
+  if (updates.recurringId !== undefined) {
+    setClauses.push('recurring_id = ?');
+    params.push(updates.recurringId ?? null);
+  }
   if (updates.recurringPeriod !== undefined) {
     setClauses.push('recurring_period = ?');
     params.push(updates.recurringPeriod ?? null);

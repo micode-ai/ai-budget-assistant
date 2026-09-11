@@ -19,6 +19,8 @@ import { useInvitationStore } from '@/stores/invitationStore';
 import { InvitationCard } from '@/components/alerts/InvitationCard';
 import { renderAlertBody, TYPE_ICON } from '@/features/alerts/alertPresentation';
 import { openAlertTargets as openAlertTargetsImpl } from '@/features/alerts/resolveAlertExpense';
+import { buildMarkRecurringUpdate } from '@/features/dashboard/attentionActions';
+import { useExpenseStore } from '@/stores/expenseStore';
 import type { AnomalyAlert } from '@budget/shared-types';
 
 export default function AlertsScreen() {
@@ -100,10 +102,29 @@ export default function AlertsScreen() {
     [markRead, canEdit, resolvingId, openAlertTargets],
   );
 
+  // `expenseStore.updateExpense` is fire-and-forget (optimistic local write,
+  // server call swallowed to a console.warn retry), so there is nothing to
+  // await here — see `useAlertTapThrough.onMarkRecurring`'s sibling doc
+  // comment, which this mirrors for the screen that does not use that hook.
+  const handleMarkRecurring = (alert: AnomalyAlert) => {
+    const update = buildMarkRecurringUpdate(alert);
+    if (!update) return; // the button only renders when this would be non-null
+    const { expenseId, ...patch } = update;
+    useExpenseStore.getState().updateExpense(expenseId, patch);
+    if (canEdit) markRead(alert.id);
+    dismiss(alert.id);
+  };
+
   const renderAlert = ({ item }: { item: AnomalyAlert }) => {
     const { title, body } = renderAlertBody(item, t);
     const icon = TYPE_ICON[item.type] || 'alert-circle-outline';
     const isUnread = !item.readAt;
+    // `recurring_suggestion` already navigates to /subscriptions/new on a
+    // whole-card tap (see `handlePress`) — Mark as recurring is a second,
+    // independent action and gets its own small button rather than
+    // repurposing the card tap, so both remain reachable.
+    const markRecurringUpdate =
+      canEdit && item.type === 'recurring_suggestion' ? buildMarkRecurringUpdate(item) : null;
 
     return (
       <TouchableOpacity
@@ -133,6 +154,15 @@ export default function AlertsScreen() {
                 month: 'short',
               })}
             </Text>
+            {markRecurringUpdate && (
+              <TouchableOpacity
+                style={styles.markRecurringBtn}
+                onPress={() => handleMarkRecurring(item)}
+                hitSlop={8}
+              >
+                <Text style={styles.markRecurringText}>{t('alerts.markAsRecurring')}</Text>
+              </TouchableOpacity>
+            )}
           </View>
           {resolvingId === item.id ? (
             <ActivityIndicator size="small" color={theme.colors.primary} style={styles.dismissBtn} />
@@ -312,6 +342,19 @@ const createStyles = (theme: Theme) => ({
   dismissBtn: {
     padding: theme.spacing[1],
     alignSelf: 'flex-start' as const,
+  },
+  markRecurringBtn: {
+    marginTop: theme.spacing[1.5],
+    alignSelf: 'flex-start' as const,
+    paddingVertical: theme.spacing[1],
+    paddingHorizontal: theme.spacing[2.5],
+    borderRadius: theme.borderRadius.md,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  markRecurringText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.primary,
   },
   markAllRead: {
     ...theme.textStyles.bodyMedium,

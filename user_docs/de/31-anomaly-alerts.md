@@ -6,7 +6,7 @@
 
 - **Mögliche Doppelbelastung** — derselbe Händler hat denselben Betrag innerhalb von zwei Tagen zweimal berechnet. Es lohnt sich, das zu prüfen, bevor das Geld weg ist.
 - **Preiserhöhung** — ein Abonnement oder eine wiederkehrende Zahlung ist im Vergleich zum letzten Mal um mehr als 10 % teurer geworden (zum Beispiel ein Streamingdienst, der seinen Preis erhöht).
-- **Sieht wie ein Abonnement aus** — derselbe Händler hat dir denselben Betrag dreimal oder öfter in regelmäßigen Abständen berechnet. Die App schlägt vor, es im Abonnement-Manager zu verfolgen: Tippe auf den Hinweis, um ein vorausgefülltes Formular zu öffnen.
+- **Sieht wie ein Abonnement aus** — derselbe Händler hat dir denselben Betrag dreimal oder öfter in regelmäßigen Abständen berechnet. Zwei Möglichkeiten: Tippe auf den Hinweis, um ein vorausgefülltes Abonnement-Manager-Formular zu öffnen, oder tippe direkt im Hinweis auf **„Als wiederkehrend markieren"**, damit diese Ausgabe (zum Beispiel die Miete) ab sofort als wiederkehrend behandelt wird — das verhindert, dass sie die Ausgabenprognose deines Budgets jeden Monat verfälscht.
 - **Ungewöhnliche Ausgaben** — eine Kategorie liegt mindestens 30 % über deinem Durchschnitt der Vormo­nate.
 
 ## Wie Hinweise dich erreichen

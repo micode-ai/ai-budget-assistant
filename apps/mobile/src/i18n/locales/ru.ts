@@ -877,6 +877,7 @@ export default {
     recurringBody: 'Списания {{amount}} {{currency}} {{cycle}} минимум 3 раза. Нажмите, чтобы отслеживать.',
     cycleMonthly: 'ежемесячно',
     cycleWeekly: 'еженедельно',
+    markAsRecurring: 'Отметить как повторяющийся',
     mergeTitle: 'Одна покупка, две валюты?',
     mergeBody: '{{amountA}} {{currencyA}} и {{amountB}} {{currencyB}} у {{merchant}} похожи на одну транзакцию. Объединить?',
     alreadyResolvedTitle: 'Уже решено',

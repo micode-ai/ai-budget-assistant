@@ -6,7 +6,7 @@
 
 - **Possible duplicate charge** — the same merchant charged the same amount twice within two days. Worth checking before the money is gone.
 - **Price increase** — a subscription or recurring payment got more than 10% more expensive compared to last time (for example, a streaming service raising its price).
-- **Looks like a subscription** — the same merchant has charged you the same amount three or more times on a regular schedule. The app suggests tracking it in the Subscription Manager: tap the alert to open a pre-filled form.
+- **Looks like a subscription** — the same merchant has charged you the same amount three or more times on a regular schedule. Two things you can do about it: tap the alert to open a pre-filled Subscription Manager form, or tap **"Mark as recurring"** right on the alert so that expense (rent is a common example) is treated as a recurring bill going forward — this stops it from throwing off your budget's spending forecast every month.
 - **Unusual spending** — a category is at least 30% above your average for the previous months.
 
 ## How alerts reach you

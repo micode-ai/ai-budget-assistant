@@ -7,6 +7,7 @@ import { useAlertStore } from '@/stores/alertStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useUserSubscriptionStore } from '@/stores/userSubscriptionStore';
+import { useExpenseStore } from '@/stores/expenseStore';
 import {
   openAlertTargets as openAlertTargetsImpl,
   findAlertExpense,
@@ -15,6 +16,7 @@ import {
   alertAction,
   mergeTargets,
   buildTrackedSubscription,
+  buildMarkRecurringUpdate,
 } from '@/features/dashboard/attentionActions';
 import type { ExpenseDialogProps } from '@/components/expenses/desktop/ExpenseDialog';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
@@ -29,6 +31,14 @@ export interface AlertTapThrough {
   onAlertPress: (alert: AnomalyAlert) => void;
   /** The inline "Track this subscription" action for a `recurring_suggestion`. */
   onTrack: (alert: AnomalyAlert) => Promise<void>;
+  /**
+   * The inline "Mark as recurring" action for a `recurring_suggestion` —
+   * `onTrack`'s sibling, flagging the alert's own expense as recurring
+   * instead of (or as well as) tracking a `UserSubscription`. See
+   * `buildMarkRecurringUpdate`'s doc comment for why this is a second action
+   * on the same alert rather than a new alert type.
+   */
+  onMarkRecurring: (alert: AnomalyAlert) => void;
   /**
    * Ready-made props for `ExpenseDialog`, or `null` when nothing is open. The
    * caller only instantiates the element:
@@ -147,6 +157,22 @@ export function useAlertTapThrough({ canEdit }: { canEdit: boolean }): AlertTapT
     }
   };
 
+  /**
+   * Unlike `onTrack`, this never rejects (`expenseStore.updateExpense` is
+   * fire-and-forget — it applies optimistically and swallows its own server
+   * error into a `console.warn` retry-on-next-sync, the same as every other
+   * expense edit in this app), so there is no try/catch here and nothing to
+   * await: the local write and the dismiss both happen synchronously, in the
+   * same tick the button was pressed.
+   */
+  const onMarkRecurring = (alert: AnomalyAlert) => {
+    const update = buildMarkRecurringUpdate(alert);
+    if (!update) return; // the button that calls this only renders when non-null
+    const { expenseId, ...patch } = update;
+    useExpenseStore.getState().updateExpense(expenseId, patch);
+    dismiss(alert.id);
+  };
+
   const onAlertPress = (alert: AnomalyAlert) => {
     if (resolvingId) return; // a resolve pull is already in flight
     const action = alertAction(alert, canEdit);
@@ -185,6 +211,7 @@ export function useAlertTapThrough({ canEdit }: { canEdit: boolean }): AlertTapT
     resolvingId,
     onAlertPress,
     onTrack,
+    onMarkRecurring,
     dialogProps: dialogRow
       ? {
           row: dialogRow,

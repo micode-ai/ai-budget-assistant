@@ -6,7 +6,7 @@
 
 - **Posible cargo duplicado** — el mismo comercio ha cobrado el mismo importe dos veces en dos días. Vale la pena comprobarlo antes de que el dinero desaparezca.
 - **Subida de precio** — una suscripción o pago recurrente se ha encarecido más de un 10 % respecto a la última vez (por ejemplo, un servicio de streaming que sube su precio).
-- **Parece una suscripción** — el mismo comercio te ha cobrado el mismo importe tres o más veces de forma regular. La app sugiere registrarla en el Gestor de suscripciones: toca la alerta para abrir un formulario prellenado.
+- **Parece una suscripción** — el mismo comercio te ha cobrado el mismo importe tres o más veces de forma regular. Dos opciones: toca la alerta para abrir un formulario prellenado del Gestor de suscripciones, o toca **"Marcar como recurrente"** directamente en la alerta para que ese gasto (el alquiler es un ejemplo habitual) se trate como un gasto recurrente a partir de ahora — así deja de distorsionar la previsión de gasto de tu presupuesto cada mes.
 - **Gasto inusual** — una categoría está al menos un 30 % por encima de tu media de los meses anteriores.
 
 ## Cómo te llegan las alertas

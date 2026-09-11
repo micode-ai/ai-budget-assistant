@@ -1,4 +1,5 @@
-import type { AnomalyAlert, BillingCycle } from '@budget/shared-types';
+import { generateUUID } from '@budget/shared-utils';
+import type { AnomalyAlert, BillingCycle, RecurringPeriod } from '@budget/shared-types';
 
 /**
  * What a click on an ALERT row in "Needs your attention" does.
@@ -166,5 +167,82 @@ export function buildTrackedSubscription(
     // The same value `app/subscriptions/new.tsx` passes, so a subscription
     // created from this row is indistinguishable from one created there.
     detectedFrom: name,
+  };
+}
+
+/**
+ * The `expenseStore.updateExpense` patch that flags a `recurring_suggestion`
+ * alert's own triggering expense as recurring — the ABA-523 gap
+ * (`recurring-bill-detection-nudge`): the budget-projection fix excludes the
+ * single largest day's spend from the daily burn rate, but nothing ever
+ * offered to mark a genuinely recurring bill (rent, a subscription entered by
+ * hand) as such, so it kept re-arming that same heuristic every month. This
+ * is deliberately a SIBLING action on the SAME `recurring_suggestion` alert
+ * `buildTrackedSubscription` already handles, not a new alert type or a new
+ * server-side detector: the detector's 3-occurrence monthly/weekly-cadence
+ * signal is exactly the evidence this action needs too, and the fields it
+ * writes (`isRecurring`/`recurringId`/`recurringPeriod`) already exist on
+ * `Expense` and are already read by `expense-recurring.cron.ts` and
+ * `SafeToSpendService`'s upcoming-obligations input — no server change at
+ * all, just a client-side write through the existing `PATCH /expenses/:id`.
+ *
+ * Returns `null` when the alert cannot honestly identify which expense to
+ * mark (see `recurring_suggestion`'s own comment on why `expenseId` is
+ * always set by the detector — this is belt-and-braces, matching
+ * `buildTrackedSubscription`'s own defensive style) or carries a cycle this
+ * client does not recognise. `RecurringPeriod` ('weekly'|'monthly'|'yearly')
+ * and the detector's own `cycle` ('monthly'|'weekly') share their string
+ * values for both cases the detector can emit, so — unlike
+ * `buildTrackedSubscription`'s `CYCLE_STEP` table — no translation is needed
+ * here; a value outside that pair (or a future third cycle the detector
+ * learns to emit) is refused rather than guessed at.
+ *
+ * `recurringId` is generated CLIENT-SIDE and sent as-is, mirroring
+ * `ExpenseCreateForm.tsx`'s own Repeat-toggle flow (`generateUUID()`) — the
+ * server's `UpdateExpenseDto.recurringId` already accepts a client-supplied
+ * UUID (`@IsUUID()`), so there is no second round trip to learn a
+ * server-generated id before the local optimistic write can apply it.
+ *
+ * Only the TRIGGERING expense is tagged, never prior occurrences: the
+ * recurring cron clones forward from the latest dated row in a
+ * `recurringId` series regardless of what came before it, and silently
+ * rewriting historical rows the user never asked to change would be a
+ * surprise, not a fix.
+ */
+export interface MarkRecurringUpdate {
+  expenseId: string;
+  isRecurring: true;
+  recurringId: string;
+  recurringPeriod: RecurringPeriod;
+}
+
+const RECURRING_CYCLE_TO_PERIOD: Partial<Record<string, RecurringPeriod>> = {
+  monthly: 'monthly',
+  weekly: 'weekly',
+};
+
+/**
+ * `generateId` is injected (default `generateUUID`) rather than called
+ * directly, the same "inject what varies" seam `admin-metrics.util.ts`
+ * applies to `now` — it is what lets a test assert the exact id that reaches
+ * `expenseStore.updateExpense` instead of only asserting "some string came
+ * back".
+ */
+export function buildMarkRecurringUpdate(
+  alert: AnomalyAlert,
+  generateId: () => string = generateUUID,
+): MarkRecurringUpdate | null {
+  if (alert.type !== 'recurring_suggestion') return null;
+  if (!alert.expenseId) return null;
+
+  const p = alert.params as Record<string, unknown>;
+  const recurringPeriod = RECURRING_CYCLE_TO_PERIOD[typeof p.cycle === 'string' ? p.cycle : ''];
+  if (!recurringPeriod) return null;
+
+  return {
+    expenseId: alert.expenseId,
+    isRecurring: true,
+    recurringId: generateId(),
+    recurringPeriod,
   };
 }

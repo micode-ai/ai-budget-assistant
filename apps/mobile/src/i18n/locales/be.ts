@@ -868,6 +868,7 @@ export default {
     recurringBody: 'Спісанні {{amount}} {{currency}} {{cycle}} мінімум 3 разы. Націсніце, каб адсочваць.',
     cycleMonthly: 'штомесяц',
     cycleWeekly: 'штотыдзень',
+    markAsRecurring: 'Пазначыць як паўторны',
     mergeTitle: 'Тая ж пакупка, дзве валюты?',
     mergeBody: '{{amountA}} {{currencyA}} і {{amountB}} {{currencyB}} у {{merchant}} падобныя на адну транзакцыю. Аб\'яднаць?',
     alreadyResolvedTitle: 'Ужо вырашана',

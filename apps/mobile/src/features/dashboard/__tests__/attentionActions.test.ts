@@ -3,6 +3,7 @@ import {
   alertAction,
   mergeTargets,
   buildTrackedSubscription,
+  buildMarkRecurringUpdate,
 } from '../attentionActions';
 
 const alert = (over: Partial<AnomalyAlert> = {}): AnomalyAlert => ({
@@ -251,5 +252,69 @@ describe('buildTrackedSubscription', () => {
     );
     expect(built?.detectedFrom).toBe('Netflix');
     expect(built?.name).toBe('Netflix');
+  });
+});
+
+/**
+ * `recurring-bill-detection-nudge` — the second, independent write action on
+ * a `recurring_suggestion` alert, sitting beside `buildTrackedSubscription`.
+ * It reuses the SAME detector signal to flag the alert's own triggering
+ * expense as recurring, closing the ABA-523 gap without a new alert type.
+ */
+describe('buildMarkRecurringUpdate', () => {
+  const recurring = (params: Record<string, unknown>, expenseId: string | null = 'e1') =>
+    alert({ type: 'recurring_suggestion', params, expenseId });
+  const fixedId = () => 'fixed-uuid';
+
+  it('flags the alert\'s own expense, not any other id', () => {
+    const built = buildMarkRecurringUpdate(
+      recurring({ merchant: 'Mieszkanie', amount: '4374.18', cycle: 'monthly' }, 'e42'),
+      fixedId,
+    );
+    expect(built?.expenseId).toBe('e42');
+    expect(built?.isRecurring).toBe(true);
+  });
+
+  it('carries the cycle straight through — monthly and weekly share their string with RecurringPeriod', () => {
+    // Breaks if: a translation table (like buildTrackedSubscription's
+    // CYCLE_STEP) is introduced where none is needed — the detector's two
+    // possible cycle values are already valid RecurringPeriod values.
+    expect(
+      buildMarkRecurringUpdate(recurring({ cycle: 'monthly' }), fixedId)?.recurringPeriod,
+    ).toBe('monthly');
+    expect(
+      buildMarkRecurringUpdate(recurring({ cycle: 'weekly' }), fixedId)?.recurringPeriod,
+    ).toBe('weekly');
+  });
+
+  it('generates the recurringId through the injected generator', () => {
+    // Breaks if: `generateUUID` is called directly instead of through the
+    // injected `generateId` — this test would then only be able to assert
+    // "some string", not the exact id `expenseStore.updateExpense` receives.
+    expect(buildMarkRecurringUpdate(recurring({ cycle: 'monthly' }), fixedId)?.recurringId).toBe(
+      'fixed-uuid',
+    );
+  });
+
+  it('refuses a cycle it does not recognise rather than guessing a period', () => {
+    expect(buildMarkRecurringUpdate(recurring({ cycle: 'fortnightly' }), fixedId)).toBeNull();
+    expect(buildMarkRecurringUpdate(recurring({}), fixedId)).toBeNull();
+  });
+
+  it('refuses when the alert carries no expenseId to mark', () => {
+    // Belt-and-braces: the detector always sets this, but a defensive caller
+    // must not send `undefined` as a route param.
+    expect(buildMarkRecurringUpdate(recurring({ cycle: 'monthly' }, null), fixedId)).toBeNull();
+  });
+
+  it('refuses any alert that is not a recurring suggestion', () => {
+    // Breaks if: the type guard is dropped, the same class of mistake
+    // `buildTrackedSubscription`'s own equivalent test guards against.
+    expect(
+      buildMarkRecurringUpdate(
+        alert({ type: 'price_increase', params: { cycle: 'monthly' }, expenseId: 'e1' }),
+        fixedId,
+      ),
+    ).toBeNull();
   });
 });

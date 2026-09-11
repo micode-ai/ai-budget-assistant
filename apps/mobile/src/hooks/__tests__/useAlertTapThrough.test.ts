@@ -26,6 +26,7 @@
 const mockMarkRead = jest.fn();
 const mockDismiss = jest.fn();
 const mockLoadMembers = jest.fn();
+const mockUpdateExpense = jest.fn();
 
 /** Captured from the mocked `openAlertTargets`, so the test decides WHEN the
  *  target resolves — which is the whole point. */
@@ -61,6 +62,15 @@ jest.mock('@/stores/authStore', () => ({
 }));
 jest.mock('@/stores/userSubscriptionStore', () => ({
   useUserSubscriptionStore: { getState: () => ({ createSubscription: jest.fn() }) },
+}));
+// The real module transitively requires `src/i18n/index.ts` (via
+// `utils/entityLabel.ts`), which calls `i18n.use(initReactI18next)` — and
+// this file's own `react-i18next` mock below only exports `useTranslation`,
+// so a real import here fails with "You are passing an undefined module!"
+// long before any test body runs. Mocked the same way every other store in
+// this file is.
+jest.mock('@/stores/expenseStore', () => ({
+  useExpenseStore: { getState: () => ({ updateExpense: mockUpdateExpense }) },
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
@@ -168,6 +178,35 @@ describe('useAlertTapThrough — the markRead ordering rule', () => {
     view.rerender();
     expect(view.current.dialogProps).not.toBeNull();
     expect(view.current.dialogProps?.canEdit).toBe(true);
+  });
+});
+
+describe('useAlertTapThrough — onMarkRecurring (recurring-bill-detection-nudge)', () => {
+  const recurringAlert = alert({
+    type: 'recurring_suggestion',
+    id: 'a9',
+    expenseId: 'e9',
+    params: { merchant: 'Mieszkanie', amount: '4374.18', currencyCode: 'PLN', cycle: 'monthly' },
+  });
+
+  it('writes the recurring patch to the alert\'s own expense and dismisses', () => {
+    const view = renderTapThrough();
+    view.current.onMarkRecurring(recurringAlert);
+
+    expect(mockUpdateExpense).toHaveBeenCalledTimes(1);
+    const [expenseId, patch] = mockUpdateExpense.mock.calls[0];
+    expect(expenseId).toBe('e9');
+    expect(patch).toMatchObject({ isRecurring: true, recurringPeriod: 'monthly' });
+    expect(typeof patch.recurringId).toBe('string');
+    expect(mockDismiss).toHaveBeenCalledWith('a9');
+  });
+
+  it('does nothing when the alert cannot honestly build an update', () => {
+    // Wrong type — `buildMarkRecurringUpdate` returns null.
+    const view = renderTapThrough();
+    view.current.onMarkRecurring(alert({ type: 'duplicate_charge' }));
+    expect(mockUpdateExpense).not.toHaveBeenCalled();
+    expect(mockDismiss).not.toHaveBeenCalled();
   });
 });
 

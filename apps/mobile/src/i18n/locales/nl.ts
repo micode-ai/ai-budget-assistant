@@ -871,6 +871,7 @@ export default {
     recurringBody: 'Minstens 3 keer {{amount}} {{currency}} {{cycle}} afgeschreven. Tik om te volgen.',
     cycleMonthly: 'maandelijks',
     cycleWeekly: 'wekelijks',
+    markAsRecurring: 'Markeren als terugkerend',
     mergeTitle: 'Zelfde aankoop, twee valuta?',
     mergeBody: '{{amountA}} {{currencyA}} en {{amountB}} {{currencyB}} bij {{merchant}} lijken dezelfde transactie. Samenvoegen?',
     alreadyResolvedTitle: 'Al opgelost',

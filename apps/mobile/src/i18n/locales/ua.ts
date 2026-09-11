@@ -877,6 +877,7 @@ export default {
     recurringBody: 'Списання {{amount}} {{currency}} {{cycle}} щонайменше 3 рази. Натисніть, щоб відстежувати.',
     cycleMonthly: 'щомісяця',
     cycleWeekly: 'щотижня',
+    markAsRecurring: 'Позначити як повторюваний',
     mergeTitle: 'Та сама покупка, дві валюти?',
     mergeBody: '{{amountA}} {{currencyA}} та {{amountB}} {{currencyB}} у {{merchant}} схожі на одну транзакцію. Об\'єднати?',
     alreadyResolvedTitle: 'Вже вирішено',

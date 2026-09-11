@@ -3961,7 +3961,7 @@ Both stay in sync, so use whichever fits the moment.
 
 - **Possible duplicate charge** — the same merchant charged the same amount twice within two days. Worth checking before the money is gone.
 - **Price increase** — a subscription or recurring payment got more than 10% more expensive compared to last time (for example, a streaming service raising its price).
-- **Looks like a subscription** — the same merchant has charged you the same amount three or more times on a regular schedule. The app suggests tracking it in the Subscription Manager: tap the alert to open a pre-filled form.
+- **Looks like a subscription** — the same merchant has charged you the same amount three or more times on a regular schedule. Two things you can do about it: tap the alert to open a pre-filled Subscription Manager form, or tap **"Mark as recurring"** right on the alert so that expense (rent is a common example) is treated as a recurring bill going forward — this stops it from throwing off your budget's spending forecast every month.
 - **Unusual spending** — a category is at least 30% above your average for the previous months.
 
 ## How alerts reach you
@@ -8615,7 +8615,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 - **Возможное двойное списание** — один и тот же продавец снял одинаковую сумму дважды в течение двух дней. Стоит проверить, пока деньги ещё можно вернуть.
 - **Повышение цены** — подписка или регулярный платёж стал дороже более чем на 10 % по сравнению с прошлым разом (например, стриминговый сервис поднял цену).
-- **Похоже на подписку** — один и тот же продавец регулярно списывает одинаковую сумму три раза или больше. Приложение предлагает отслеживать её в менеджере подписок: нажмите на оповещение, чтобы открыть заполненную форму.
+- **Похоже на подписку** — один и тот же продавец регулярно списывает одинаковую сумму три раза или больше. Есть два варианта: нажмите на оповещение, чтобы открыть заполненную форму в менеджере подписок, или нажмите **«Отметить как повторяющийся»** прямо в оповещении, чтобы этот расход (например, аренда жилья) отныне считался повторяющимся — тогда он перестанет каждый месяц искажать прогноз расходов в вашем бюджете.
 - **Необычные расходы** — категория превышает вашу среднюю за предыдущие месяцы как минимум на 30 %.
 
 ## Как оповещения доходят до вас
@@ -13237,7 +13237,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 - **Можливе подвійне списання** — той самий продавець зняв однакову суму двічі протягом двох днів. Варто перевірити, поки гроші ще можна повернути.
 - **Підвищення ціни** — підписка або регулярний платіж подорожчав більш ніж на 10 % порівняно з минулим разом (наприклад, стрімінговий сервіс підняв ціну).
-- **Схоже на підписку** — той самий продавець регулярно знімає однакову суму тричі або більше разів. Застосунок пропонує відстежувати її в менеджері підписок: натисніть на сповіщення, щоб відкрити попередньо заповнену форму.
+- **Схоже на підписку** — той самий продавець регулярно знімає однакову суму тричі або більше разів. Є два варіанти: натисніть на сповіщення, щоб відкрити попередньо заповнену форму в менеджері підписок, або натисніть **«Позначити як повторюваний»** прямо в сповіщенні, щоб ця витрата (наприклад, оренда житла) відтепер вважалася повторюваною — тоді вона перестане щомісяця спотворювати прогноз витрат вашого бюджету.
 - **Незвичайні витрати** — категорія перевищує вашу середню за попередні місяці щонайменше на 30 %.
 
 ## Як сповіщення надходять до вас
@@ -17844,7 +17844,7 @@ Obie wersje są zsynchronizowane — używaj tej, która pasuje w danej chwili.
 
 - **Możliwe podwójne obciążenie** — ten sam sprzedawca naliczył tę samą kwotę dwa razy w ciągu dwóch dni. Warto sprawdzić, zanim pieniądze znikną.
 - **Podwyżka ceny** — subskrypcja lub cykliczna płatność jest o ponad 10 % droższa niż ostatnim razem (na przykład serwis streamingowy, który podniósł cenę).
-- **Wygląda jak subskrypcja** — ten sam sprzedawca naliczył Ci tę samą kwotę trzy lub więcej razy regularnie. Aplikacja sugeruje śledzenie jej w Menedżerze subskrypcji: kliknij alert, aby otworzyć wstępnie wypełniony formularz.
+- **Wygląda jak subskrypcja** — ten sam sprzedawca naliczył Ci tę samą kwotę trzy lub więcej razy regularnie. Dwie możliwości: kliknij alert, aby otworzyć wstępnie wypełniony formularz w Menedżerze subskrypcji, albo dotknij **„Oznacz jako cykliczne"** bezpośrednio w alercie, aby ten wydatek (np. czynsz) był od teraz traktowany jako cykliczny — dzięki temu przestanie co miesiąc zaburzać prognozę wydatków w Twoim budżecie.
 - **Nietypowe wydatki** — kategoria jest co najmniej 30 % powyżej Twojej średniej z poprzednich miesięcy.
 
 ## Jak alerty do Ciebie docierają
@@ -22426,7 +22426,7 @@ Beide bleiben synchron — nutze einfach das, was gerade passt.
 
 - **Mögliche Doppelbelastung** — derselbe Händler hat denselben Betrag innerhalb von zwei Tagen zweimal berechnet. Es lohnt sich, das zu prüfen, bevor das Geld weg ist.
 - **Preiserhöhung** — ein Abonnement oder eine wiederkehrende Zahlung ist im Vergleich zum letzten Mal um mehr als 10 % teurer geworden (zum Beispiel ein Streamingdienst, der seinen Preis erhöht).
-- **Sieht wie ein Abonnement aus** — derselbe Händler hat dir denselben Betrag dreimal oder öfter in regelmäßigen Abständen berechnet. Die App schlägt vor, es im Abonnement-Manager zu verfolgen: Tippe auf den Hinweis, um ein vorausgefülltes Formular zu öffnen.
+- **Sieht wie ein Abonnement aus** — derselbe Händler hat dir denselben Betrag dreimal oder öfter in regelmäßigen Abständen berechnet. Zwei Möglichkeiten: Tippe auf den Hinweis, um ein vorausgefülltes Abonnement-Manager-Formular zu öffnen, oder tippe direkt im Hinweis auf **„Als wiederkehrend markieren"**, damit diese Ausgabe (zum Beispiel die Miete) ab sofort als wiederkehrend behandelt wird — das verhindert, dass sie die Ausgabenprognose deines Budgets jeden Monat verfälscht.
 - **Ungewöhnliche Ausgaben** — eine Kategorie liegt mindestens 30 % über deinem Durchschnitt der Vormo­nate.
 
 ## Wie Hinweise dich erreichen
@@ -26997,7 +26997,7 @@ Ambas se mantienen sincronizadas, así que usa la que mejor te venga en cada mom
 
 - **Posible cargo duplicado** — el mismo comercio ha cobrado el mismo importe dos veces en dos días. Vale la pena comprobarlo antes de que el dinero desaparezca.
 - **Subida de precio** — una suscripción o pago recurrente se ha encarecido más de un 10 % respecto a la última vez (por ejemplo, un servicio de streaming que sube su precio).
-- **Parece una suscripción** — el mismo comercio te ha cobrado el mismo importe tres o más veces de forma regular. La app sugiere registrarla en el Gestor de suscripciones: toca la alerta para abrir un formulario prellenado.
+- **Parece una suscripción** — el mismo comercio te ha cobrado el mismo importe tres o más veces de forma regular. Dos opciones: toca la alerta para abrir un formulario prellenado del Gestor de suscripciones, o toca **"Marcar como recurrente"** directamente en la alerta para que ese gasto (el alquiler es un ejemplo habitual) se trate como un gasto recurrente a partir de ahora — así deja de distorsionar la previsión de gasto de tu presupuesto cada mes.
 - **Gasto inusual** — una categoría está al menos un 30 % por encima de tu media de los meses anteriores.
 
 ## Cómo te llegan las alertas
@@ -31566,7 +31566,7 @@ Les deux restent synchronisées : utilisez celle qui convient sur le moment.
 
 - **Possible double débit** — le même commerçant a facturé le même montant deux fois en deux jours. Cela vaut la peine de vérifier avant que l'argent soit parti.
 - **Hausse de prix** — un abonnement ou un paiement récurrent est devenu plus de 10 % plus cher par rapport à la dernière fois (par exemple, un service de streaming qui augmente ses tarifs).
-- **Ressemble à un abonnement** — le même commerçant vous a facturé le même montant trois fois ou plus à intervalles réguliers. L'application suggère de le suivre dans le Gestionnaire d'abonnements : appuyez sur l'alerte pour ouvrir un formulaire prérempli.
+- **Ressemble à un abonnement** — le même commerçant vous a facturé le même montant trois fois ou plus à intervalles réguliers. Deux options : appuyez sur l'alerte pour ouvrir un formulaire prérempli du Gestionnaire d'abonnements, ou appuyez sur **« Marquer comme récurrent »** directement dans l'alerte pour que cette dépense (le loyer, par exemple) soit désormais traitée comme récurrente — elle cessera ainsi de fausser la prévision de dépenses de votre budget chaque mois.
 - **Dépense inhabituelle** — une catégorie est au moins 30 % au-dessus de votre moyenne des mois précédents.
 
 ## Comment les alertes vous parviennent
@@ -36099,7 +36099,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 - **Магчымае двайное спісанне** — той самы прадавец зняў аднолькавую суму двойчы на працягу двух дзён. Варта праверыць, пакуль грошы яшчэ можна вярнуць.
 - **Павышэнне цаны** — падпіска або рэгулярны плацёж стаў даражэй больш чым на 10 % у параўнанні з мінулым разам (напрыклад, стрымінгавы сэрвіс падняў цану).
-- **Падобна на падпіску** — той самы прадавец рэгулярна здымае аднолькавую суму тры разы або больш. Праграма прапануе адсочваць яе ў менеджары падпісак: націсніце на апавяшчэнне, каб адкрыць запоўненую форму.
+- **Падобна на падпіску** — той самы прадавец рэгулярна здымае аднолькавую суму тры разы або больш. Ёсць два варыянты: націсніце на апавяшчэнне, каб адкрыць запоўненую форму ў менеджары падпісак, або націсніце **«Пазначыць як паўторны»** проста ў апавяшчэнні, каб гэты выдатак (напрыклад, арэнда жылля) з гэтага моманту лічыўся паўторным — тады ён перастане штомесяц скажаць прагноз выдаткаў вашага бюджэту.
 - **Незвычайныя выдаткі** — катэгорыя перавышае вашу сярэднюю за папярэднія месяцы як мінімум на 30 %.
 
 ## Як апавяшчэнні даходзяць да вас
@@ -40747,7 +40747,7 @@ Beide blijven gesynchroniseerd — gebruik wat op dat moment het beste past.
 
 - **Mogelijke dubbele afschrijving** — dezelfde handelaar heeft hetzelfde bedrag twee keer in twee dagen in rekening gebracht. Het is de moeite waard om dit te controleren voordat het geld weg is.
 - **Prijsverhoging** — een abonnement of terugkerende betaling is meer dan 10 % duurder geworden dan de vorige keer (bijvoorbeeld een streamingdienst die zijn prijs verhoogt).
-- **Ziet eruit als een abonnement** — dezelfde handelaar heeft je hetzelfde bedrag drie of meer keer op een regelmatig schema in rekening gebracht. De app stelt voor om dit bij te houden in het abonnementenbeheer: tik op de melding om een vooraf ingevuld formulier te openen.
+- **Ziet eruit als een abonnement** — dezelfde handelaar heeft je hetzelfde bedrag drie of meer keer op een regelmatig schema in rekening gebracht. Twee opties: tik op de melding om een vooraf ingevuld formulier in het abonnementenbeheer te openen, of tik op **"Markeren als terugkerend"** direct in de melding zodat deze uitgave (huur is een veelvoorkomend voorbeeld) voortaan als terugkerend wordt behandeld — zo verstoort hij niet langer elke maand de uitgavenprognose van je budget.
 - **Ongewone uitgaven** — een categorie ligt minstens 30 % boven je gemiddelde van de vorige maanden.
 
 ## Hoe meldingen je bereiken

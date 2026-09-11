@@ -871,6 +871,7 @@ export default {
     recurringBody: 'Cobró {{amount}} {{currency}} {{cycle}} al menos 3 veces. Toca para seguirla.',
     cycleMonthly: 'mensualmente',
     cycleWeekly: 'semanalmente',
+    markAsRecurring: 'Marcar como recurrente',
     mergeTitle: '¿Misma compra, dos monedas?',
     mergeBody: '{{amountA}} {{currencyA}} y {{amountB}} {{currencyB}} en {{merchant}} parecen la misma transacción. ¿Combinarlos?',
     alreadyResolvedTitle: 'Ya resuelto',

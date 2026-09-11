@@ -6,7 +6,7 @@
 
 - **Mogelijke dubbele afschrijving** — dezelfde handelaar heeft hetzelfde bedrag twee keer in twee dagen in rekening gebracht. Het is de moeite waard om dit te controleren voordat het geld weg is.
 - **Prijsverhoging** — een abonnement of terugkerende betaling is meer dan 10 % duurder geworden dan de vorige keer (bijvoorbeeld een streamingdienst die zijn prijs verhoogt).
-- **Ziet eruit als een abonnement** — dezelfde handelaar heeft je hetzelfde bedrag drie of meer keer op een regelmatig schema in rekening gebracht. De app stelt voor om dit bij te houden in het abonnementenbeheer: tik op de melding om een vooraf ingevuld formulier te openen.
+- **Ziet eruit als een abonnement** — dezelfde handelaar heeft je hetzelfde bedrag drie of meer keer op een regelmatig schema in rekening gebracht. Twee opties: tik op de melding om een vooraf ingevuld formulier in het abonnementenbeheer te openen, of tik op **"Markeren als terugkerend"** direct in de melding zodat deze uitgave (huur is een veelvoorkomend voorbeeld) voortaan als terugkerend wordt behandeld — zo verstoort hij niet langer elke maand de uitgavenprognose van je budget.
 - **Ongewone uitgaven** — een categorie ligt minstens 30 % boven je gemiddelde van de vorige maanden.
 
 ## Hoe meldingen je bereiken
