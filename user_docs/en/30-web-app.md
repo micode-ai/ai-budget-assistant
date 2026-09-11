@@ -83,6 +83,20 @@ On a wide window the AI chat gains a **list of your past conversations down the 
 
 On a narrower window, and on the phone, the conversation list stays behind the **History** button as before.
 
+## Keyboard Shortcuts on a Wide Screen
+
+On the wide Transactions screen you can work without reaching for the mouse:
+
+- **/** or **Ctrl**/**Cmd**+**K** — jump to the search box
+- **N** — open "Add expense"
+- **↑** / **↓** — move between rows
+- **Enter** — open the highlighted row
+- **Space** — check or uncheck the highlighted row
+- **Esc** — close whatever dialog is open
+- **?** — show this list of shortcuts on screen
+
+These only work when your cursor isn't inside a text box, and only on a wide screen — the phone layout doesn't use them.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:

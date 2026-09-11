@@ -78,6 +78,20 @@ Dans une fenêtre large, le chat avec l'IA gagne une **liste de vos conversation
 
 Dans une fenêtre plus étroite, et sur le téléphone, la liste des conversations reste derrière le bouton **Historique**, comme avant.
 
+## Raccourcis clavier sur un grand écran
+
+Sur l'écran large des Transactions, vous pouvez travailler sans la souris :
+
+- **/** ou **Ctrl**/**Cmd**+**K** — aller au champ de recherche
+- **N** — ouvrir « Ajouter une dépense »
+- **↑** / **↓** — se déplacer entre les lignes
+- **Entrée** — ouvrir la ligne en surbrillance
+- **Espace** — cocher ou décocher la ligne en surbrillance
+- **Échap** — fermer la boîte de dialogue ouverte
+- **?** — afficher cette liste de raccourcis à l'écran
+
+Ils ne fonctionnent que si le curseur n'est pas dans un champ de texte, et seulement sur un grand écran — la mise en page du téléphone ne les utilise pas.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :

@@ -78,6 +78,20 @@ En una ventana ancha el chat con la IA gana una **lista de tus conversaciones an
 
 En una ventana más estrecha, y en el teléfono, la lista de conversaciones sigue detrás del botón **Historial**, como antes.
 
+## Atajos de teclado en una pantalla grande
+
+En la pantalla ancha de Transacciones puedes trabajar sin usar el ratón:
+
+- **/** o **Ctrl**/**Cmd**+**K** — ir al cuadro de búsqueda
+- **N** — abrir "Añadir gasto"
+- **↑** / **↓** — moverse entre filas
+- **Intro** — abrir la fila resaltada
+- **Espacio** — marcar o desmarcar la fila resaltada
+- **Esc** — cerrar el cuadro de diálogo abierto
+- **?** — mostrar esta lista de atajos en pantalla
+
+Solo funcionan cuando el cursor no está dentro de un campo de texto, y solo en una pantalla grande — el diseño del teléfono no los usa.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:

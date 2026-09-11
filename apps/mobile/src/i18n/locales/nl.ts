@@ -2637,4 +2637,14 @@ export default {
     notSplit: 'Niet automatisch gesplitst — je kunt de categorieën zelf toewijzen',
     newCategory: 'Nieuwe categorie',
   },
+  shortcuts: {
+    helpTitle: 'Sneltoetsen',
+    showHelp: 'Sneltoetsen weergeven',
+    searchFocus: 'Focus op zoeken',
+    newExpense: 'Nieuwe uitgave',
+    navigateRows: 'Tussen rijen navigeren',
+    openRow: 'Rij openen',
+    toggleRow: 'Rij selecteren/deselecteren',
+    closeDialog: 'Dialoogvenster sluiten',
+  },
 } as const;

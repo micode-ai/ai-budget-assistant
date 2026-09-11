@@ -2651,4 +2651,14 @@ export default {
     notSplit: 'Автоматически не разделилось — категории можно назначить вручную',
     newCategory: 'Новая категория',
   },
+  shortcuts: {
+    helpTitle: 'Горячие клавиши',
+    showHelp: 'Показать горячие клавиши',
+    searchFocus: 'Перейти к поиску',
+    newExpense: 'Новый расход',
+    navigateRows: 'Перемещение между строками',
+    openRow: 'Открыть строку',
+    toggleRow: 'Выбрать / снять выбор строки',
+    closeDialog: 'Закрыть окно',
+  },
 } as const;

@@ -2644,4 +2644,14 @@ export default {
     notSplit: 'Not split automatically — assign the categories yourself if you like',
     newCategory: 'New category',
   },
+  shortcuts: {
+    helpTitle: 'Keyboard shortcuts',
+    showHelp: 'Show shortcuts',
+    searchFocus: 'Focus search',
+    newExpense: 'New expense',
+    navigateRows: 'Move between rows',
+    openRow: 'Open row',
+    toggleRow: 'Select / deselect row',
+    closeDialog: 'Close dialog',
+  },
 } as const;

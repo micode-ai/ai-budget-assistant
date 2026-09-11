@@ -2651,4 +2651,14 @@ export default {
     notSplit: 'Автоматично не поділено — категорії можна призначити вручну',
     newCategory: 'Нова категорія',
   },
+  shortcuts: {
+    helpTitle: 'Гарячі клавіші',
+    showHelp: 'Показати гарячі клавіші',
+    searchFocus: 'Перейти до пошуку',
+    newExpense: 'Нова витрата',
+    navigateRows: 'Переміщення між рядками',
+    openRow: 'Відкрити рядок',
+    toggleRow: 'Вибрати / зняти вибір рядка',
+    closeDialog: 'Закрити вікно',
+  },
 } as const;

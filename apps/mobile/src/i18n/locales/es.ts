@@ -2637,4 +2637,14 @@ export default {
     notSplit: 'No se dividió automáticamente: puedes asignar las categorías tú mismo',
     newCategory: 'Nueva categoría',
   },
+  shortcuts: {
+    helpTitle: 'Atajos de teclado',
+    showHelp: 'Mostrar atajos',
+    searchFocus: 'Enfocar la búsqueda',
+    newExpense: 'Nuevo gasto',
+    navigateRows: 'Moverse entre filas',
+    openRow: 'Abrir fila',
+    toggleRow: 'Seleccionar / deseleccionar fila',
+    closeDialog: 'Cerrar el diálogo',
+  },
 } as const;

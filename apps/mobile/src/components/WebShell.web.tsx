@@ -5,6 +5,8 @@ import { useAuthStore } from '@/stores/authStore';
 import { useTheme } from '@/theme';
 import { WebTopBar } from '@/components/WebTopBar';
 import { useIsDesktopWeb } from '@/components/webLayout.constants';
+import { useDesktopShortcutsListener } from '@/hooks/useDesktopShortcuts';
+import { ShortcutsHelpOverlay } from '@/components/shortcuts/ShortcutsHelpOverlay';
 
 export function WebShell({ children }: { children: React.ReactNode }) {
   const isDesktop = useIsDesktopWeb();
@@ -22,6 +24,14 @@ function DesktopShell({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const pathname = usePathname();
   const theme = useTheme();
+  // Called unconditionally, ABOVE the early return below — the whole reason
+  // this file's other hooks (`useAuthStore`, `usePathname`, `useTheme`) all
+  // run before the `if` is Rules-of-Hooks safety across a live auth/route
+  // change (design-language contract §1's "Rules-of-Hooks-safe when a
+  // browser resizes across 1024" applies just as much to signing out while
+  // this component stays mounted). It's a genuine no-op on the auth branch:
+  // nothing there registers a binding for it to dispatch.
+  useDesktopShortcutsListener();
 
   const onAuthRoute =
     pathname.startsWith('/(auth)') ||
@@ -45,12 +55,19 @@ function DesktopShell({ children }: { children: React.ReactNode }) {
   // content area. The active screen fills the whole area right of the sidebar,
   // so its scrollbar sits at the window's right edge (a "general" page scroll)
   // with no dead gutters. Charts stay capped via useContentWidth.
+  //
+  // The `?` help overlay mounts here — ONCE, for every authenticated desktop
+  // screen — so a screen only ever has to register its OWN bindings
+  // (`useDesktopShortcut`) and never has to remember to also render a help
+  // sheet. Not mounted on the unauthenticated/auth branch above: there is no
+  // app chrome, no search box and no composer there to bind a key to.
   return (
     <View style={[styles.root, { backgroundColor: theme.colors.background }]}>
       <WebTopBar />
       <View style={styles.body}>
         <View style={styles.contentArea}>{children}</View>
       </View>
+      <ShortcutsHelpOverlay />
     </View>
   );
 }

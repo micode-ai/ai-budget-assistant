@@ -78,6 +78,20 @@ In een breed venster krijgt de AI-chat een **lijst met je eerdere gesprekken aan
 
 In een smaller venster, en op de telefoon, blijft de gesprekkenlijst achter de knop **Geschiedenis**, zoals voorheen.
 
+## Sneltoetsen op een groot scherm
+
+Op het brede scherm Transacties kun je werken zonder de muis te gebruiken:
+
+- **/** of **Ctrl**/**Cmd**+**K** — ga naar het zoekvak
+- **N** — open "Uitgave toevoegen"
+- **↑** / **↓** — beweeg tussen rijen
+- **Enter** — open de gemarkeerde rij
+- **Spatie** — vink de gemarkeerde rij aan of uit
+- **Esc** — sluit het geopende dialoogvenster
+- **?** — toon deze lijst met sneltoetsen op het scherm
+
+Ze werken alleen als de cursor niet in een tekstveld staat, en alleen op een groot scherm — de telefoonindeling gebruikt ze niet.
+
 ## Beperkingen
 
 De webversie is een aanvulling op de mobiele app, geen volledige vervanging. Een paar functies werken anders in de browser:

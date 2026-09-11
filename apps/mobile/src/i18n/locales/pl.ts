@@ -2651,4 +2651,14 @@ export default {
     notSplit: 'Nie podzielono automatycznie — kategorie możesz przypisać samodzielnie',
     newCategory: 'Nowa kategoria',
   },
+  shortcuts: {
+    helpTitle: 'Skróty klawiszowe',
+    showHelp: 'Pokaż skróty',
+    searchFocus: 'Przejdź do wyszukiwania',
+    newExpense: 'Nowy wydatek',
+    navigateRows: 'Poruszanie się między wierszami',
+    openRow: 'Otwórz wiersz',
+    toggleRow: 'Zaznacz / odznacz wiersz',
+    closeDialog: 'Zamknij okno',
+  },
 } as const;

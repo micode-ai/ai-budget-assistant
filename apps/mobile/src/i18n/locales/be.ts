@@ -2619,4 +2619,14 @@ export default {
     notSplit: 'Аўтаматычна не падзялілася — катэгорыі можна прызначыць уручную',
     newCategory: 'Новая катэгорыя',
   },
+  shortcuts: {
+    helpTitle: 'Гарачыя клавішы',
+    showHelp: 'Паказаць гарачыя клавішы',
+    searchFocus: 'Перайсці да пошуку',
+    newExpense: 'Новая выдатка',
+    navigateRows: 'Перамяшчэнне паміж радкамі',
+    openRow: 'Адкрыць радок',
+    toggleRow: 'Выбраць / зняць выбар радка',
+    closeDialog: 'Закрыць акно',
+  },
 } as const;

@@ -78,6 +78,20 @@ W szerokim oknie czat AI zyskuje **listę wcześniejszych rozmów po lewej stron
 
 W węższym oknie i na telefonie lista rozmów pozostaje pod przyciskiem **Historia**, tak jak dotychczas.
 
+## Skróty klawiszowe na dużym ekranie
+
+Na szerokim ekranie Transakcji możesz pracować bez sięgania po myszkę:
+
+- **/** lub **Ctrl**/**Cmd**+**K** — przejdź do pola wyszukiwania
+- **N** — otwórz „Dodaj wydatek"
+- **↑** / **↓** — poruszaj się między wierszami
+- **Enter** — otwórz podświetlony wiersz
+- **Spacja** — zaznacz lub odznacz podświetlony wiersz
+- **Esc** — zamknij otwarte okno
+- **?** — pokaż tę listę skrótów na ekranie
+
+Działają tylko wtedy, gdy kursor nie znajduje się w polu tekstowym, i tylko na dużym ekranie — układ telefonu ich nie używa.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:

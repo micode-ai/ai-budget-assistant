@@ -8,6 +8,7 @@ import { useAccountStore } from '@/stores/accountStore';
 import { useExpensesScreenData, type ActiveTab } from '@/features/expenses/useExpensesScreenData';
 import { rowId, facetValue, type ActiveFacets, type LedgerRow } from '@/features/expenses/desktopTable';
 import { trimToVisible } from '@/features/expenses/desktopSelection';
+import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
 import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
@@ -78,6 +79,7 @@ export function ExpensesDesktop() {
     setViewMode,
     searchQuery,
     setSearchQuery,
+    searchInputRef,
     expenseFilters,
     setExpenseFilters,
     incomeFilters,
@@ -254,6 +256,37 @@ export function ExpensesDesktop() {
     setMenuState({ row, anchor });
   };
 
+  // True whenever nothing is already open over the table — the row cursor
+  // and its `Enter`/`Space` bindings (registered inside `TransactionTable`)
+  // are disabled while this is false, so an open dialog/menu can't have a
+  // background row silently move or get toggled underneath it.
+  const keyboardNavEnabled = !selectedRow && !createKind && !menuState;
+
+  // `/` and `Ctrl`/`Cmd`+`K` both focus the same search box — `/` is the
+  // primary, always-reachable binding; `mod+k` is a convenience some
+  // browsers may intercept for their own address-bar/search focus (product
+  // idea's own open question — documented, not solved, since there is no
+  // way to guarantee a page can win that key in every browser).
+  useDesktopShortcut('/', () => searchInputRef.current?.focus(), {
+    description: t('shortcuts.searchFocus'),
+  });
+  useDesktopShortcut('mod+k', () => searchInputRef.current?.focus(), {
+    description: t('shortcuts.searchFocus'),
+  });
+
+  // `n` opens the same "Add expense" dialog the button in this bar does.
+  // No-ops while ANY dialog or menu is already open, rather than stacking a
+  // second one — pressing `n` twice in a row must not silently reopen a
+  // fresh, empty composer over one the user is mid-way through filling in.
+  useDesktopShortcut(
+    'n',
+    () => {
+      if (!keyboardNavEnabled) return;
+      setCreateKind('expense');
+    },
+    { enabled: canEdit, description: canEdit ? t('shortcuts.newExpense') : undefined }
+  );
+
   const period = expenseFilters.dateRange;
   const customMonth = expenseFilters.customMonth ?? new Date().getMonth();
   const customYear = expenseFilters.customYear ?? new Date().getFullYear();
@@ -347,6 +380,7 @@ export function ExpensesDesktop() {
         <View style={styles.searchBox}>
           <Ionicons name="search" size={16} color={theme.colors.textTertiary} />
           <TextInput
+            ref={searchInputRef}
             style={styles.searchInput}
             value={searchQuery}
             onChangeText={handleSearchChange}
@@ -536,6 +570,7 @@ export function ExpensesDesktop() {
               onSelectIds={multiSelect.selectIds}
               onClearSelection={multiSelect.exitMultiSelect}
               onOpenRowMenu={openMenu}
+              keyboardNavEnabled={keyboardNavEnabled}
             />
           )}
           </View>

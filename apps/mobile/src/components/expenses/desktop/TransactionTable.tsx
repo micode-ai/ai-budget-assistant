@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, Pressable, ScrollView, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +8,8 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { groupByDay, rangeBetween, rowId, type LedgerRow, type DayGroup } from '@/features/expenses/desktopTable';
 import { computeHeaderCheckState } from '@/features/expenses/desktopSelection';
+import { resolveNextFocusedRow } from '@/features/expenses/rowKeyboardNav';
+import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 
 const TABLE_MIN_WIDTH = 940;
 
@@ -79,6 +81,12 @@ interface Props {
    *  Edit/Duplicate/Delete handlers behind it, are owned by `ExpensesDesktop`
    *  — this table only ever reports "open a menu for this row, here". */
   onOpenRowMenu: (row: LedgerRow, anchor: { x: number; y: number }) => void;
+  /** `false` while `ExpensesDesktop` has a dialog or the row context menu
+   *  open. The keyboard row cursor (`↑`/`↓`/`Enter`/`Space`, below) is
+   *  disabled in that state — otherwise a background row could visibly move
+   *  or get its checkbox toggled while a modal has the user's real
+   *  attention, since this table stays mounted underneath an open dialog. */
+  keyboardNavEnabled: boolean;
 }
 
 function rowDescription(r: LedgerRow): string | undefined {
@@ -141,6 +149,7 @@ export function TransactionTable({
   onSelectIds,
   onClearSelection,
   onOpenRowMenu,
+  keyboardNavEnabled,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -151,6 +160,12 @@ export function TransactionTable({
   const [sortKey, setSortKey] = useState<SortKey>('date');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  // The keyboard row cursor (Task: keyboard shortcuts) — independent of
+  // `selectedRowId` (which row's dialog is open) and `hoveredId` (the mouse).
+  // Set by `↑`/`↓` AND by a plain click, so pressing an arrow after clicking
+  // a row (then closing its dialog) continues from where the user was
+  // looking, not from the top of the table.
+  const [focusedRowId, setFocusedRowId] = useState<string | null>(null);
   // Shared by the checkbox AND the "⋯" button: whichever of the two controls
   // in a row currently HAS keyboard focus, so both can reveal themselves the
   // same way a mouse hover already does. Without this, a control that only
@@ -195,6 +210,59 @@ export function TransactionTable({
   const headerState = useMemo(
     () => computeHeaderCheckState(visibleSelectableOrder, selectedIds),
     [visibleSelectableOrder, selectedIds]
+  );
+
+  // ALL rows (income + expense), in the same rendered order — the keyboard
+  // cursor moves through everything on screen, not just the checkbox-
+  // selectable subset `visibleSelectableOrder` covers.
+  const flatRows = useMemo(() => dayGroups.flatMap((g) => g.rows), [dayGroups]);
+  const visibleRowOrder = useMemo(() => flatRows.map(rowId), [flatRows]);
+  const rowById = useMemo(() => {
+    const map = new Map<string, LedgerRow>();
+    for (const r of flatRows) map.set(rowId(r), r);
+    return map;
+  }, [flatRows]);
+
+  // If the current cursor scrolled out of view (a facet/sort change), don't
+  // keep pointing at a row that's no longer rendered — the very next arrow
+  // press already falls back to first/last via `resolveNextFocusedRow`, but
+  // clearing it here also stops the (now invisible) highlight from lingering
+  // on a row this table isn't drawing.
+  useEffect(() => {
+    if (focusedRowId && !rowById.has(focusedRowId)) setFocusedRowId(null);
+  }, [focusedRowId, rowById]);
+
+  useDesktopShortcut(
+    'arrowdown',
+    () => setFocusedRowId((current) => resolveNextFocusedRow(visibleRowOrder, current, 1)),
+    { enabled: keyboardNavEnabled, description: t('shortcuts.navigateRows') }
+  );
+  useDesktopShortcut(
+    'arrowup',
+    () => setFocusedRowId((current) => resolveNextFocusedRow(visibleRowOrder, current, -1)),
+    { enabled: keyboardNavEnabled, description: t('shortcuts.navigateRows') }
+  );
+  useDesktopShortcut(
+    'enter',
+    () => {
+      if (!focusedRowId) return;
+      const row = rowById.get(focusedRowId);
+      if (row) onSelectRow(row);
+    },
+    { enabled: keyboardNavEnabled, description: t('shortcuts.openRow') }
+  );
+  // Expense rows only — an income row has no checkbox at all (constraint 1:
+  // everything behind bulk selection ends at `PATCH /expenses/bulk`), so
+  // `Space` on a focused income row is silently a no-op rather than an error.
+  useDesktopShortcut(
+    'space',
+    () => {
+      if (!focusedRowId) return;
+      const row = rowById.get(focusedRowId);
+      if (!row || row.kind !== 'expense') return;
+      handleCheckboxPress(focusedRowId, { shiftKey: false });
+    },
+    { enabled: keyboardNavEnabled && canEdit, description: canEdit ? t('shortcuts.toggleRow') : undefined }
   );
 
   const toggleSort = (key: SortKey) => {
@@ -358,11 +426,23 @@ export function TransactionTable({
                     // what's checked, not just the row under the pointer.
                     const revealed = hovered || focusedControlId === id;
                     const checked = row.kind === 'expense' && selectedIds.has(id);
+                    // `↑`/`↓`'s current position — a separate visual from
+                    // `selected` (whose dialog is open) and `hovered` (the
+                    // mouse), so all three can be told apart on screen at
+                    // once.
+                    const keyboardFocused = keyboardNavEnabled && focusedRowId === id;
 
                     return (
                       <Pressable
                         key={id}
-                        onPress={() => onSelectRow(row)}
+                        onPress={() => {
+                          // A plain click also moves the keyboard cursor here,
+                          // so an `↑`/`↓` press after closing this row's
+                          // dialog continues from where the user was looking
+                          // rather than resetting to the top of the table.
+                          setFocusedRowId(id);
+                          onSelectRow(row);
+                        }}
                         onHoverIn={() => setHoveredId(id)}
                         onHoverOut={() => setHoveredId((current) => (current === id ? null : current))}
                         accessibilityRole="button"
@@ -370,6 +450,7 @@ export function TransactionTable({
                           styles.row,
                           hovered && styles.rowHovered,
                           selected && styles.rowSelected,
+                          keyboardFocused && styles.rowKeyboardFocused,
                         ]}
                         {...(canEdit
                           ? ({ onContextMenu: (e: unknown) => handleRowContextMenu(row, e) } as object)
@@ -722,6 +803,13 @@ const createStyles = (theme: Theme) => ({
     paddingHorizontal: theme.spacing[2],
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.divider,
+    // Reserved at 3px/transparent on every row so the keyboard-focus ring
+    // below never shifts row width by appearing/disappearing.
+    borderLeftWidth: 3,
+    borderLeftColor: 'transparent',
+  },
+  rowKeyboardFocused: {
+    borderLeftColor: theme.colors.primary,
   },
   rowHovered: {
     backgroundColor: theme.colors.surfaceSecondary,

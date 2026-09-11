@@ -3921,6 +3921,20 @@ On a wide window the AI chat gains a **list of your past conversations down the 
 
 On a narrower window, and on the phone, the conversation list stays behind the **History** button as before.
 
+## Keyboard Shortcuts on a Wide Screen
+
+On the wide Transactions screen you can work without reaching for the mouse:
+
+- **/** or **Ctrl**/**Cmd**+**K** — jump to the search box
+- **N** — open "Add expense"
+- **↑** / **↓** — move between rows
+- **Enter** — open the highlighted row
+- **Space** — check or uncheck the highlighted row
+- **Esc** — close whatever dialog is open
+- **?** — show this list of shortcuts on screen
+
+These only work when your cursor isn't inside a text box, and only on a wide screen — the phone layout doesn't use them.
+
 ## Limitations
 
 The web version is a companion to the mobile app, not a full replacement. A few features behave differently in the browser:
@@ -8575,6 +8589,20 @@ OCR иногда неверно читает цену, выдумывает ст
 
 В более узком окне и на телефоне список разговоров остаётся за кнопкой **История**, как и раньше.
 
+## Горячие клавиши на большом экране
+
+На широком экране «Транзакции» можно работать, не используя мышь:
+
+- **/** или **Ctrl**/**Cmd**+**K** — перейти к строке поиска
+- **N** — открыть «Добавить расход»
+- **↑** / **↓** — перемещение между строками
+- **Enter** — открыть выделенную строку
+- **Пробел** — отметить или снять отметку с выделенной строки
+- **Esc** — закрыть открытое окно
+- **?** — показать этот список горячих клавиш на экране
+
+Они работают только если курсор не находится в текстовом поле, и только на большом экране — телефонный интерфейс их не использует.
+
 ## Ограничения
 
 Веб-версия дополняет мобильное приложение, но не заменяет его полностью. Несколько функций в браузере работают иначе:
@@ -13197,6 +13225,20 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 У вужчому вікні та на телефоні список розмов залишається за кнопкою **Історія**, як і раніше.
 
+## Гарячі клавіші на великому екрані
+
+На широкому екрані «Транзакції» можна працювати без миші:
+
+- **/** або **Ctrl**/**Cmd**+**K** — перейти до поля пошуку
+- **N** — відкрити «Додати витрату»
+- **↑** / **↓** — переміщення між рядками
+- **Enter** — відкрити виділений рядок
+- **Пробіл** — позначити або зняти позначку з виділеного рядка
+- **Esc** — закрити відкрите вікно
+- **?** — показати цей список гарячих клавіш на екрані
+
+Вони працюють, лише якщо курсор не перебуває в текстовому полі, і лише на великому екрані — телефонний макет їх не використовує.
+
 ## Обмеження
 
 Веб-версія доповнює мобільний застосунок, але не замінює його повністю. Кілька функцій у браузері працюють інакше:
@@ -17804,6 +17846,20 @@ W szerokim oknie czat AI zyskuje **listę wcześniejszych rozmów po lewej stron
 
 W węższym oknie i na telefonie lista rozmów pozostaje pod przyciskiem **Historia**, tak jak dotychczas.
 
+## Skróty klawiszowe na dużym ekranie
+
+Na szerokim ekranie Transakcji możesz pracować bez sięgania po myszkę:
+
+- **/** lub **Ctrl**/**Cmd**+**K** — przejdź do pola wyszukiwania
+- **N** — otwórz „Dodaj wydatek"
+- **↑** / **↓** — poruszaj się między wierszami
+- **Enter** — otwórz podświetlony wiersz
+- **Spacja** — zaznacz lub odznacz podświetlony wiersz
+- **Esc** — zamknij otwarte okno
+- **?** — pokaż tę listę skrótów na ekranie
+
+Działają tylko wtedy, gdy kursor nie znajduje się w polu tekstowym, i tylko na dużym ekranie — układ telefonu ich nie używa.
+
 ## Ograniczenia
 
 Wersja webowa jest uzupełnieniem aplikacji mobilnej, a nie pełnym zamiennikiem. Kilka funkcji w przeglądarce działa inaczej:
@@ -22386,6 +22442,20 @@ In einem breiten Fenster erhält der KI-Chat eine **Liste Ihrer früheren Unterh
 
 In einem schmaleren Fenster und auf dem Telefon bleibt die Liste der Unterhaltungen wie bisher hinter der Schaltfläche **Verlauf**.
 
+## Tastenkürzel auf einem großen Bildschirm
+
+Auf dem breiten Transaktionsbildschirm kommst du ohne Maus aus:
+
+- **/** oder **Strg**/**Cmd**+**K** — zum Suchfeld springen
+- **N** — „Ausgabe hinzufügen" öffnen
+- **↑** / **↓** — zwischen Zeilen bewegen
+- **Eingabetaste** — die markierte Zeile öffnen
+- **Leertaste** — die markierte Zeile an- oder abwählen
+- **Esc** — das geöffnete Dialogfenster schließen
+- **?** — diese Liste der Tastenkürzel anzeigen
+
+Sie funktionieren nur, wenn sich der Cursor nicht in einem Textfeld befindet, und nur auf einem großen Bildschirm — das Telefon-Layout nutzt sie nicht.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:
@@ -26957,6 +27027,20 @@ En una ventana ancha el chat con la IA gana una **lista de tus conversaciones an
 
 En una ventana más estrecha, y en el teléfono, la lista de conversaciones sigue detrás del botón **Historial**, como antes.
 
+## Atajos de teclado en una pantalla grande
+
+En la pantalla ancha de Transacciones puedes trabajar sin usar el ratón:
+
+- **/** o **Ctrl**/**Cmd**+**K** — ir al cuadro de búsqueda
+- **N** — abrir "Añadir gasto"
+- **↑** / **↓** — moverse entre filas
+- **Intro** — abrir la fila resaltada
+- **Espacio** — marcar o desmarcar la fila resaltada
+- **Esc** — cerrar el cuadro de diálogo abierto
+- **?** — mostrar esta lista de atajos en pantalla
+
+Solo funcionan cuando el cursor no está dentro de un campo de texto, y solo en una pantalla grande — el diseño del teléfono no los usa.
+
 ## Limitaciones
 
 La versión web es un complemento de la app móvil, no un reemplazo completo. Algunas funciones se comportan de forma distinta en el navegador:
@@ -31526,6 +31610,20 @@ Dans une fenêtre large, le chat avec l'IA gagne une **liste de vos conversation
 
 Dans une fenêtre plus étroite, et sur le téléphone, la liste des conversations reste derrière le bouton **Historique**, comme avant.
 
+## Raccourcis clavier sur un grand écran
+
+Sur l'écran large des Transactions, vous pouvez travailler sans la souris :
+
+- **/** ou **Ctrl**/**Cmd**+**K** — aller au champ de recherche
+- **N** — ouvrir « Ajouter une dépense »
+- **↑** / **↓** — se déplacer entre les lignes
+- **Entrée** — ouvrir la ligne en surbrillance
+- **Espace** — cocher ou décocher la ligne en surbrillance
+- **Échap** — fermer la boîte de dialogue ouverte
+- **?** — afficher cette liste de raccourcis à l'écran
+
+Ils ne fonctionnent que si le curseur n'est pas dans un champ de texte, et seulement sur un grand écran — la mise en page du téléphone ne les utilise pas.
+
 ## Limitations
 
 La version web complète l’application mobile sans la remplacer entièrement. Quelques fonctions se comportent différemment dans le navigateur :
@@ -36058,6 +36156,20 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Выбар **Асабісты / Агульны** уверсе размовы паказвае абодва варыянты побач, так што той, якім вы зараз не карыстаецеся, бачны, а не схаваны.
 
 У вузейшым акне і на тэлефоне спіс размоў застаецца за кнопкай **Гісторыя**, як і раней.
+
+## Гарачыя клавішы на вялікім экране
+
+На шырокім экране «Транзакцыі» можна працаваць без мышы:
+
+- **/** або **Ctrl**/**Cmd**+**K** — перайсці да поля пошуку
+- **N** — адкрыць «Дадаць выдатак»
+- **↑** / **↓** — перамяшчэнне паміж радкамі
+- **Enter** — адкрыць вылучаны радок
+- **Прабел** — адзначыць або зняць адзнаку з вылучанага радка
+- **Esc** — закрыць адкрытае акно
+- **?** — паказаць гэты спіс гарачых клавіш на экране
+
+Яны працуюць, толькі калі курсор не знаходзіцца ў тэкставым полі, і толькі на вялікім экране — тэлефонны макет іх не выкарыстоўвае.
 
 ## Абмежаванні
 
@@ -40706,6 +40818,20 @@ In een breed venster krijgt de AI-chat een **lijst met je eerdere gesprekken aan
 - De keuze **Privé / Gedeeld** bovenaan het gesprek toont beide opties naast elkaar, zodat de optie die je niet gebruikt zichtbaar blijft in plaats van verborgen.
 
 In een smaller venster, en op de telefoon, blijft de gesprekkenlijst achter de knop **Geschiedenis**, zoals voorheen.
+
+## Sneltoetsen op een groot scherm
+
+Op het brede scherm Transacties kun je werken zonder de muis te gebruiken:
+
+- **/** of **Ctrl**/**Cmd**+**K** — ga naar het zoekvak
+- **N** — open "Uitgave toevoegen"
+- **↑** / **↓** — beweeg tussen rijen
+- **Enter** — open de gemarkeerde rij
+- **Spatie** — vink de gemarkeerde rij aan of uit
+- **Esc** — sluit het geopende dialoogvenster
+- **?** — toon deze lijst met sneltoetsen op het scherm
+
+Ze werken alleen als de cursor niet in een tekstveld staat, en alleen op een groot scherm — de telefoonindeling gebruikt ze niet.
 
 ## Beperkingen
 

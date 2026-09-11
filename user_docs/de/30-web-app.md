@@ -78,6 +78,20 @@ In einem breiten Fenster erhält der KI-Chat eine **Liste Ihrer früheren Unterh
 
 In einem schmaleren Fenster und auf dem Telefon bleibt die Liste der Unterhaltungen wie bisher hinter der Schaltfläche **Verlauf**.
 
+## Tastenkürzel auf einem großen Bildschirm
+
+Auf dem breiten Transaktionsbildschirm kommst du ohne Maus aus:
+
+- **/** oder **Strg**/**Cmd**+**K** — zum Suchfeld springen
+- **N** — „Ausgabe hinzufügen" öffnen
+- **↑** / **↓** — zwischen Zeilen bewegen
+- **Eingabetaste** — die markierte Zeile öffnen
+- **Leertaste** — die markierte Zeile an- oder abwählen
+- **Esc** — das geöffnete Dialogfenster schließen
+- **?** — diese Liste der Tastenkürzel anzeigen
+
+Sie funktionieren nur, wenn sich der Cursor nicht in einem Textfeld befindet, und nur auf einem großen Bildschirm — das Telefon-Layout nutzt sie nicht.
+
 ## Einschränkungen
 
 Die Web-Version ergänzt die mobile App, ersetzt sie aber nicht vollständig. Einige Funktionen verhalten sich im Browser anders:
