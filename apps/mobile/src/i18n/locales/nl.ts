@@ -2323,6 +2323,10 @@ export default {
         title: 'Wisselkoerswaarschuwingen',
         body: 'Stel een doel in voor een valutapaar en krijg een melding in het uur waarin het bereikt wordt — nooit meer de app openen om te kijken.',
       },
+      'shopping-list-auto-check': {
+        title: 'Je boodschappenlijst vinkt zichzelf af',
+        body: 'Scan de bon en wat je echt gekocht hebt, wordt vanzelf afgevinkt — met een „Ongedaan maken” als er iets misging.',
+      },
     },
   },
   wrapped: {

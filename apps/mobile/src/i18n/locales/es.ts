@@ -2323,6 +2323,10 @@ export default {
         title: 'Alertas de tipo de cambio',
         body: 'Fija un objetivo para un par de divisas y recibe una notificación en la hora en que se alcance: se acabó entrar a comprobarlo.',
       },
+      'shopping-list-auto-check': {
+        title: 'Tu lista de la compra se tacha sola',
+        body: 'Escanea el ticket y lo que realmente compraste se tacha solo de la lista. Si algo se marcó por error, tienes «Deshacer» al lado.',
+      },
     },
   },
   wrapped: {

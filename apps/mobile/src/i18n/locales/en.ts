@@ -2330,6 +2330,10 @@ export default {
         title: 'Exchange-rate alerts',
         body: 'Set a target for a currency pair and get a notification the hour it is reached — no more opening the app to check whether the rate is good yet.',
       },
+      'shopping-list-auto-check': {
+        title: 'Your shopping list ticks itself off',
+        body: 'Scan the receipt and anything on your list that you actually bought is checked off for you — with an Undo button in case it got something wrong.',
+      },
     },
   },
   wrapped: {

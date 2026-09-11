@@ -2323,6 +2323,10 @@ export default {
         title: 'Alertes de taux de change',
         body: "Fixez un objectif pour une paire de devises et soyez notifié dans l'heure où il est atteint — fini d'ouvrir l'appli pour vérifier.",
       },
+      'shopping-list-auto-check': {
+        title: 'Votre liste de courses se coche toute seule',
+        body: "Scannez le reçu : ce que vous avez vraiment acheté se coche tout seul. Si quelque chose s'est coché à tort, « Annuler » est juste à côté.",
+      },
     },
   },
   wrapped: {
