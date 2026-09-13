@@ -8,6 +8,53 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.27.0 - 2026-09-13
+
+**One receipt item can be shared between several people**
+
+- **Tap an item, then tap everyone who had it.** Until now a line could go to
+  exactly one person, so a bottle of wine shared by the table had nowhere to
+  go — you had to hand it to someone and settle the difference yourself. A
+  shared line is now divided equally between its claimants, their chips show a
+  checkmark while the line is selected, and tapping someone again takes them
+  off. Anything you never assign still stays as your own share (ABA-535).
+- **Each friend's link now shows their own share of every line, not its full
+  price.** A 60 zł bottle split three ways reads as 20 zł on each friend's
+  page, marked as shared, so the lines always add up to exactly the amount
+  they are being asked for rather than to something larger. The arithmetic is
+  done in whole cents against the amount already stored for that friend, so
+  the lines cannot disagree with the total by a rounding cent (ABA-535).
+- **Your friend can open the receipt itself from their link.** If you scanned
+  the bill, the page carries a link to the photo or PDF, so they can check what
+  they are paying for instead of taking your figures on trust. It is deliberate
+  that this shows the whole bill, other people's lines included — everyone on a
+  split sat at the same table (ABA-535).
+
+**Fixed: the QR code for a bill split opened an error page**
+
+- **Every scanned code failed.** The QR opened a page reading "Cannot GET" with
+  an error code instead of the list of names. The payer never opens their own
+  link, so nothing surfaced it until someone outside the app scanned one. Codes
+  you had already shown people work now too — nothing needs re-creating
+  (ABA-534).
+
+**Smaller things**
+
+- **A bill you pay every month can be marked as recurring from the alert that
+  spots it.** One tap turns it into a fixed cost, so it stops being treated as
+  ordinary day-to-day spending in your forecast, and the app starts carrying it
+  forward on its own (ABA-532).
+- **Shopping list items tick themselves off when you scan a receipt containing
+  them.** An Undo sits in the same message, and it can be switched off in
+  Settings → Data (ABA-531).
+- **In a browser, the transactions screen has keyboard shortcuts.** `/` focuses
+  search, `n` adds a transaction, arrow keys walk the rows, and `?` lists the
+  rest (ABA-533).
+- **"What's New" is now written in all nine languages** rather than English for
+  everyone (ABA-530).
+
+---
+
 ## 1.26.0 - 2026-09-10
 
 **Budgets now count a receipt's category split**
