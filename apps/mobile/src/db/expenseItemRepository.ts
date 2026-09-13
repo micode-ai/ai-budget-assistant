@@ -1,4 +1,4 @@
-import { executeSql } from './client';
+import { executeSql, withTransaction } from './client';
 import type { ExpenseItem, SyncStatus } from '@budget/shared-types';
 
 interface ExpenseItemRow {
@@ -190,4 +190,29 @@ export async function deleteItemsByExpenseId(expenseId: string): Promise<void> {
     'UPDATE expense_items SET is_deleted = 1, sync_status = ? WHERE expense_id = ?',
     ['pending', expenseId],
   );
+}
+
+/**
+ * Replaces an expense's line items with an authoritative set from the server.
+ *
+ * A receipt scanned on this device writes its lines locally under
+ * client-generated ids with `syncStatus: 'pending'`. The server then creates
+ * its OWN rows with real ids, and those ids are the only ones
+ * `receipt-split.service.ts` will accept in `itemIds` — a local id is rejected
+ * with "Item <id> does not belong to this expense". So the local rows have to
+ * be replaced, not merged alongside: `deduplicateItemsByExpenseId` keys on
+ * `description:sort_order` and keeps the row created FIRST, which is the local
+ * pending one — exactly the wrong winner.
+ *
+ * The delete is hard rather than soft on purpose. These rows are being replaced
+ * by their own server counterparts, not removed by a user, so a tombstone would
+ * carry no information and would keep turning up in dedup scans.
+ */
+export async function replaceItemsForExpense(expenseId: string, items: ExpenseItem[]): Promise<void> {
+  await withTransaction(async () => {
+    await executeSql('DELETE FROM expense_items WHERE expense_id = ?', [expenseId]);
+    for (const item of items) {
+      await insertExpenseItem(item);
+    }
+  });
 }

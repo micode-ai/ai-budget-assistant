@@ -29,6 +29,7 @@ jest.mock('../../db/expenseItemRepository', () => ({
   updateExpenseItemInDb: jest.fn().mockResolvedValue(undefined),
   softDeleteExpenseItemInDb: jest.fn().mockResolvedValue(undefined),
   deduplicateItemsByExpenseId: jest.fn().mockResolvedValue(undefined),
+  replaceItemsForExpense: jest.fn().mockResolvedValue(undefined),
 }));
 
 jest.mock('../../db/tagRepository', () => ({
@@ -103,7 +104,7 @@ jest.mock('../../services/widgetData', () => ({
 import { useExpenseStore, computeExpenseTotalsByCurrency } from '../expenseStore';
 import type { Expense } from '@budget/shared-types';
 import { api } from '../../services/api';
-import { loadItemsByExpenseId, upsertExpenseItem } from '../../db/expenseItemRepository';
+import { loadItemsByExpenseId, replaceItemsForExpense } from '../../db/expenseItemRepository';
 
 describe('expenseStore — trip shares', () => {
   beforeEach(() => {
@@ -393,10 +394,13 @@ describe('expenseStore — loadExpenseItems server-fetch mapper preserves canoni
     expect(items[0].canonicalName).toBe('Mleko Łaciate 3,2% 1L');
 
     // It must also be what gets persisted back into local SQLite, or the value
-    // is lost again the next time this expense is opened offline.
-    expect(upsertExpenseItem).toHaveBeenCalled();
-    const persisted = (upsertExpenseItem as jest.Mock).mock.calls[0][0];
-    expect(persisted.canonicalName).toBe('Mleko Łaciate 3,2% 1L');
+    // is lost again the next time this expense is opened offline. The write
+    // goes through replaceItemsForExpense rather than a per-item upsert: the
+    // server's rows carry different ids than the local ones, so they replace
+    // them instead of landing beside them (see that function's docstring).
+    expect(replaceItemsForExpense).toHaveBeenCalled();
+    const [, persistedItems] = (replaceItemsForExpense as jest.Mock).mock.calls[0];
+    expect(persistedItems[0].canonicalName).toBe('Mleko Łaciate 3,2% 1L');
   });
 
   it('leaves canonicalName undefined when the server item has none', async () => {

@@ -18,6 +18,7 @@ import {
 import {
   loadItemsByExpenseId,
   insertExpenseItems,
+  replaceItemsForExpense,
   insertExpenseItem,
   upsertExpenseItem,
   updateExpenseItemInDb,
@@ -321,6 +322,38 @@ export const useExpenseStore = create<ExpenseState>()(
         // Persist the server PK so anomaly-alert / push deep-links (which address the
         // expense by its SERVER id) can resolve this locally-created row immediately,
         // without waiting for the next full pull to backfill serverId.
+        // The response also carries the line items the server created, under
+        // the real ids that are the only ones it accepts in a split's
+        // `itemIds`. Adopting them here makes a freshly scanned receipt
+        // splittable by item straight away, instead of only after some later
+        // load happens to refetch it. Same move as `serverId` below, one level
+        // down — and the reason the lines are replaced rather than merged is in
+        // replaceItemsForExpense's docstring.
+        const createdItems: any[] = Array.isArray(created?.items) ? created.items : [];
+        if (createdItems.length > 0) {
+          const now = new Date();
+          const adopted: ExpenseItem[] = createdItems.map((si: any, index: number) => ({
+            id: si.id,
+            localId: si.id,
+            expenseId: id,
+            description: si.description,
+            canonicalName: si.canonicalName ?? undefined,
+            quantity: si.quantity ?? 1,
+            unitPrice: Number(si.unitPrice ?? 0),
+            totalPrice: Number(si.totalPrice ?? 0),
+            sortOrder: si.sortOrder ?? index,
+            isDeleted: si.isDeleted || false,
+            syncStatus: 'synced' as SyncStatus,
+            syncVersion: si.syncVersion ?? 0,
+            createdAt: si.createdAt ? new Date(si.createdAt) : now,
+            updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
+          }));
+          set((state) => ({ expenseItems: { ...state.expenseItems, [id]: adopted } }));
+          void replaceItemsForExpense(id, adopted).catch((e) =>
+            console.warn('Could not adopt the server ids for the receipt lines:', e),
+          );
+        }
+
         const serverPk = created?.id;
         if (serverPk && serverPk !== id) {
           set((state) => ({
@@ -681,7 +714,17 @@ export const useExpenseStore = create<ExpenseState>()(
 
         let items = await loadItemsByExpenseId(expenseId);
 
-        if (items.length === 0) {
+        // Refetch whenever ANY line is still pending, not only when there are
+        // none at all. A pending line carries a client-generated id, and the
+        // server rejects that id in `itemIds` ("Item <id> does not belong to
+        // this expense"), which is exactly why `deriveSplitMode` refuses
+        // item-level splitting until every line is synced. Gating this on an
+        // EMPTY table meant a receipt scanned on this device — which writes its
+        // lines locally first — could never reach that state, so splitting by
+        // item was unreachable on the device that scanned the receipt.
+        const needsServerIds = items.length === 0 || items.some((i) => i.syncStatus !== 'synced');
+
+        if (needsServerIds) {
           try {
             const serverItems: any[] = await api.getExpenseItems(expenseId);
             if (serverItems && serverItems.length > 0) {
@@ -702,9 +745,12 @@ export const useExpenseStore = create<ExpenseState>()(
                 createdAt: si.createdAt ? new Date(si.createdAt) : now,
                 updatedAt: si.updatedAt ? new Date(si.updatedAt) : now,
               }));
-              for (const item of items) {
-                await upsertExpenseItem(item);
-              }
+              // Replace, never merge: the local rows hold different (client)
+              // ids, and `deduplicateItemsByExpenseId` keeps the row created
+              // FIRST — the local one — so upserting the server rows beside
+              // them would keep the unusable id and leave the receipt
+              // unsplittable anyway.
+              await replaceItemsForExpense(expenseId, items);
             }
           } catch {
             // Offline, or the expense hasn't reached the server yet — the create
@@ -749,6 +795,32 @@ export const useExpenseStore = create<ExpenseState>()(
         };
       });
 
+      // Same reasoning as the edit above: a hand-added line kept a
+      // client-generated id, so it could never be assigned to anyone in a
+      // split. Adopt the id the server gives it.
+      api
+        .createExpenseItem(expenseId, {
+          description: itemData.description,
+          quantity: itemData.quantity,
+          unitPrice: itemData.unitPrice,
+          sortOrder: itemData.sortOrder,
+        })
+        .then((created: any) => {
+          const serverId = created?.id;
+          if (!serverId || serverId === id) return;
+          set((state) => ({
+            expenseItems: {
+              ...state.expenseItems,
+              [expenseId]: (state.expenseItems[expenseId] ?? []).map((it) =>
+                it.id === id
+                  ? { ...it, id: serverId, localId: serverId, syncStatus: 'synced' as SyncStatus }
+                  : it,
+              ),
+            },
+          }));
+        })
+        .catch((e) => console.warn('New expense item not pushed:', e));
+
       insertExpenseItem(newItem).catch((e) =>
         console.error('Failed to insert expense item:', e),
       );
@@ -771,6 +843,15 @@ export const useExpenseStore = create<ExpenseState>()(
           },
         };
       });
+
+      // Push the edit. It used to be local-only, which was survivable while
+      // nothing ever re-read the server's copy — but now that a pending line
+      // triggers a refetch, an unpushed edit would be silently reverted on the
+      // next load. api.updateExpenseItem and PATCH /expenses/:id/items/:itemId
+      // both already existed; nothing called them.
+      api
+        .updateExpenseItem(expenseId, itemId, updates as any)
+        .catch((e) => console.warn('Expense item edit not pushed:', e));
 
       updateExpenseItemInDb(itemId, updates, now, 'pending').catch((e) =>
         console.error('Failed to update expense item:', e),
