@@ -1,135 +1,189 @@
-import { AnomalyService, detectCycle, normalizeMerchant, monthKey, expensePayee, DUP_DAY_MS } from './anomaly.service';
+import { AnomalyService } from './anomaly.service';
+import { AnomalyDetectorsService } from './anomaly-detectors.service';
 
-function makeService(overrides: {
-  alertCreate?: jest.Mock;
-  alertCount?: jest.Mock;
-  sendToUser?: jest.Mock;
-  configGet?: jest.Mock;
-} = {}) {
+function makeService(overrides: { expenseFindFirst?: jest.Mock } = {}) {
   const prisma: any = {
-    anomalyAlert: {
-      create: overrides.alertCreate ?? jest.fn().mockResolvedValue({ id: 'alert-1' }),
-      count: overrides.alertCount ?? jest.fn().mockResolvedValue(0),
-      update: jest.fn().mockResolvedValue({}),
+    expense: {
+      findFirst: overrides.expenseFindFirst ?? jest.fn().mockResolvedValue(null),
       findMany: jest.fn().mockResolvedValue([]),
+    },
+    anomalyAlert: {
+      findMany: jest.fn().mockResolvedValue([]),
+      count: jest.fn().mockResolvedValue(0),
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
-    expense: { findFirst: jest.fn().mockResolvedValue(null), findMany: jest.fn().mockResolvedValue([]), aggregate: jest.fn() },
-    userSubscription: { findMany: jest.fn().mockResolvedValue([]) },
-    category: { findFirst: jest.fn().mockResolvedValue({ name: 'Food' }) },
-    expenseItem: { findMany: jest.fn().mockResolvedValue([]) },
   };
-  const notifications: any = {
-    sendToUser: overrides.sendToUser ?? jest.fn().mockResolvedValue(true),
-  };
-  const priceHistory: any = {
-    getProductTrendsFor: jest.fn().mockResolvedValue([]),
-  };
-  const config: any = {
-    get: overrides.configGet ?? jest.fn().mockReturnValue(undefined),
-  };
-  const service = new AnomalyService(prisma, notifications, priceHistory, config);
-  return { service, prisma, notifications, config };
+  const detectors = {
+    detectDuplicateCharge: jest.fn().mockResolvedValue(undefined),
+    detectPriceIncrease: jest.fn().mockResolvedValue(undefined),
+    detectRecurringSuggestion: jest.fn().mockResolvedValue(undefined),
+    detectCategorySpike: jest.fn().mockResolvedValue(undefined),
+    detectPossibleMerge: jest.fn().mockResolvedValue(undefined),
+    detectPriceOvercharge: jest.fn().mockResolvedValue(undefined),
+  } as unknown as AnomalyDetectorsService;
+  const service = new AnomalyService(prisma, detectors);
+  return { service, prisma, detectors: detectors as any };
 }
 
-describe('pure helpers', () => {
-  it('normalizeMerchant trims and lowercases', () => {
-    expect(normalizeMerchant('  Netflix ')).toBe('netflix');
+function expenseRow(overrides: Record<string, unknown> = {}) {
+  return {
+    id: 'e-new',
+    accountId: 'acc-1',
+    merchant: 'Netflix',
+    amount: 43,
+    currencyCode: 'PLN',
+    date: new Date('2026-06-10'),
+    description: 'Netflix',
+    recurringId: null,
+    isRecurring: false,
+    categoryId: 'cat-1',
+    importBatchId: null,
+    ...overrides,
+  };
+}
+
+describe('checkExpense', () => {
+  it('does nothing when the expense is not found', async () => {
+    const { service, detectors } = makeService();
+    await service.checkExpense('acc-1', 'user-1', 'missing');
+    expect(detectors.detectDuplicateCharge).not.toHaveBeenCalled();
   });
 
-  // expensePayee
-  it('expensePayee prefers merchant over description', () => {
-    expect(expensePayee({ merchant: ' Netflix ', description: 'Other' })).toBe('netflix');
+  it('fans out to every detector for a found expense', async () => {
+    const { service, detectors } = makeService({ expenseFindFirst: jest.fn().mockResolvedValue(expenseRow()) });
+    await service.checkExpense('acc-1', 'user-1', 'e-new');
+    expect(detectors.detectDuplicateCharge).toHaveBeenCalledTimes(1);
+    expect(detectors.detectPriceIncrease).toHaveBeenCalledTimes(1);
+    expect(detectors.detectRecurringSuggestion).toHaveBeenCalledTimes(1);
+    expect(detectors.detectCategorySpike).toHaveBeenCalledWith('acc-1', 'user-1', 'cat-1', 'PLN');
+    expect(detectors.detectPossibleMerge).toHaveBeenCalledTimes(1);
+    expect(detectors.detectPriceOvercharge).toHaveBeenCalledTimes(1);
   });
 
-  it('expensePayee falls back to description when merchant is absent', () => {
-    expect(expensePayee({ merchant: null, description: '  Coffee  ' })).toBe('coffee');
+  it('calls detectPossibleMerge AFTER detectDuplicateCharge', async () => {
+    const { service, detectors } = makeService({ expenseFindFirst: jest.fn().mockResolvedValue(expenseRow()) });
+    const callOrder: string[] = [];
+    detectors.detectDuplicateCharge.mockImplementation(async () => { callOrder.push('dup'); });
+    detectors.detectPossibleMerge.mockImplementation(async () => { callOrder.push('merge'); });
+    await service.checkExpense('acc-1', 'user-1', 'e-new');
+    expect(callOrder.indexOf('merge')).toBeGreaterThan(callOrder.indexOf('dup'));
   });
 
-  it('expensePayee falls back to description when merchant is empty string', () => {
-    expect(expensePayee({ merchant: '', description: 'Tea' })).toBe('tea');
-  });
-
-  it('expensePayee returns empty string when both merchant and description are absent', () => {
-    expect(expensePayee({ merchant: null, description: null })).toBe('');
-  });
-
-  it('DUP_DAY_MS equals 24 * 60 * 60 * 1000', () => {
-    expect(DUP_DAY_MS).toBe(86_400_000);
-  });
-
-  it('monthKey formats UTC year-month', () => {
-    expect(monthKey(new Date(Date.UTC(2026, 5, 10)))).toBe('2026-06');
-  });
-
-  it('detectCycle: 3 charges ~30 days apart → monthly', () => {
-    expect(detectCycle([new Date('2026-04-01'), new Date('2026-05-01'), new Date('2026-05-31')])).toBe('monthly');
-  });
-
-  it('detectCycle: 3 charges 7 days apart → weekly', () => {
-    expect(detectCycle([new Date('2026-05-17'), new Date('2026-05-24'), new Date('2026-05-31')])).toBe('weekly');
-  });
-
-  it('detectCycle: gap of 24 days → null (below monthly window)', () => {
-    expect(detectCycle([new Date('2026-04-07'), new Date('2026-05-01'), new Date('2026-05-31')])).toBe(null);
-  });
-
-  it('detectCycle: gap of 36 days → null (above monthly window)', () => {
-    expect(detectCycle([new Date('2026-03-26'), new Date('2026-05-01'), new Date('2026-05-31')])).toBe(null);
-  });
-
-  it('detectCycle: fewer than 3 dates → null', () => {
-    expect(detectCycle([new Date('2026-05-01'), new Date('2026-05-31')])).toBe(null);
+  it('never throws even when a detector rejects (fire-and-forget safety)', async () => {
+    const { service, detectors } = makeService({ expenseFindFirst: jest.fn().mockResolvedValue(expenseRow()) });
+    detectors.detectDuplicateCharge.mockRejectedValue(new Error('detector boom'));
+    await expect(service.checkExpense('acc-1', 'user-1', 'e-new')).resolves.toBeUndefined();
   });
 });
 
-describe('createAlert', () => {
-  const input = {
-    accountId: 'acc-1',
-    userId: 'user-1',
-    type: 'duplicate_charge' as const,
-    dedupKey: 'dup:e-1',
-    params: { merchant: 'Netflix' },
-    expenseId: 'e-1',
-    pushTitle: () => 'title',
-    pushBody: () => 'body',
-  };
+describe('checkExpenseBatch', () => {
+  it('skips the duplicate detector and dedups category checks', async () => {
+    const { service, prisma, detectors } = makeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([
+      expenseRow({ id: 'e-1', categoryId: 'cat-1' }),
+      expenseRow({ id: 'e-2', categoryId: 'cat-1' }),
+    ]);
 
-  it('creates the row and sends push when under the daily cap', async () => {
-    const { service, prisma, notifications } = makeService();
-    await service.createAlert(input);
-    expect(prisma.anomalyAlert.create).toHaveBeenCalledTimes(1);
-    expect(notifications.sendToUser).toHaveBeenCalledTimes(1);
-    expect(prisma.anomalyAlert.update).toHaveBeenCalledWith({
-      where: { id: 'alert-1' },
-      data: { pushSent: true },
-    });
+    await service.checkExpenseBatch('acc-1', 'user-1', ['e-1', 'e-2']);
+
+    expect(detectors.detectDuplicateCharge).not.toHaveBeenCalled();
+    expect(detectors.detectPriceIncrease).toHaveBeenCalledTimes(2);
+    expect(detectors.detectRecurringSuggestion).toHaveBeenCalledTimes(2);
+    expect(detectors.detectCategorySpike).toHaveBeenCalledTimes(1); // same category checked once
   });
 
-  it('silently skips on dedupKey collision (P2002)', async () => {
-    const err: any = new Error('unique');
-    err.code = 'P2002';
-    const { service, notifications } = makeService({ alertCreate: jest.fn().mockRejectedValue(err) });
-    await expect(service.createAlert(input)).resolves.toBeUndefined();
-    expect(notifications.sendToUser).not.toHaveBeenCalled();
+  it('no-ops on an empty id list', async () => {
+    const { service, prisma, detectors } = makeService();
+    await service.checkExpenseBatch('acc-1', 'user-1', []);
+    expect(prisma.expense.findMany).not.toHaveBeenCalled();
+    expect(detectors.detectPriceIncrease).not.toHaveBeenCalled();
   });
 
-  it('creates the feed row but skips push when the daily cap is reached', async () => {
-    const { service, prisma, notifications } = makeService({ alertCount: jest.fn().mockResolvedValue(3) });
-    await service.createAlert(input);
-    expect(prisma.anomalyAlert.create).toHaveBeenCalledTimes(1);
-    expect(notifications.sendToUser).not.toHaveBeenCalled();
+  it('never throws even when a detector rejects', async () => {
+    const { service, prisma, detectors } = makeService();
+    prisma.expense.findMany = jest.fn().mockResolvedValue([expenseRow()]);
+    detectors.detectPriceIncrease.mockRejectedValue(new Error('boom'));
+    await expect(service.checkExpenseBatch('acc-1', 'user-1', ['e-new'])).resolves.toBeUndefined();
+  });
+});
+
+describe('findAll', () => {
+  it('applies the unreadOnly filter and returns the unread count', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.findMany = jest.fn().mockResolvedValue([{ id: 'a-1' }]);
+    prisma.anomalyAlert.count = jest.fn().mockResolvedValue(2);
+
+    const result = await service.findAll('acc-1', true);
+
+    expect(result).toEqual({ alerts: [{ id: 'a-1' }], unreadCount: 2 });
+    const where = (prisma.anomalyAlert.findMany as jest.Mock).mock.calls[0][0].where;
+    expect(where.readAt).toBeNull();
+  });
+});
+
+describe('getPriceCheckSummary', () => {
+  it('sums per currency and never blends them', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.findMany = jest.fn().mockResolvedValue([
+      { params: { currencyCode: 'PLN', findings: [{ overpaidAmount: 4 }, { overpaidAmount: 2.5 }] } },
+      { params: { currencyCode: 'PLN', findings: [{ overpaidAmount: 1.5 }] } },
+      { params: { currencyCode: 'EUR', findings: [{ overpaidAmount: 3 }] } },
+    ]);
+
+    const out = await service.getPriceCheckSummary('acc-1', new Date('2026-01-01'));
+
+    expect(out.totalsByCurrency).toEqual({ PLN: 8, EUR: 3 });
+    expect(out.alertCount).toBe(3);
   });
 
-  it('does not stamp pushSent when the push fails', async () => {
-    const { service, prisma } = makeService({ sendToUser: jest.fn().mockResolvedValue(false) });
-    await service.createAlert(input);
-    expect(prisma.anomalyAlert.update).not.toHaveBeenCalled();
+  it('returns empty totals when there are no alerts', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.findMany = jest.fn().mockResolvedValue([]);
+    const out = await service.getPriceCheckSummary('acc-1', new Date('2026-01-01'));
+    expect(out.totalsByCurrency).toEqual({});
+    expect(out.alertCount).toBe(0);
   });
 
-  it('rethrows non-P2002 errors so fire-and-forget callers can log them', async () => {
-    const { service } = makeService({ alertCreate: jest.fn().mockRejectedValue(new Error('boom')) });
-    await expect(service.createAlert(input)).rejects.toThrow('boom');
+  it('ignores a malformed params blob instead of throwing', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.findMany = jest.fn().mockResolvedValue([
+      { params: null },
+      { params: { currencyCode: 'PLN', findings: 'not-an-array' } },
+      // A number is not iterable — `for...of` over it throws `is not iterable`.
+      // A string ('not-an-array' above) is iterable, so it can't by itself prove
+      // the Array.isArray guard is load-bearing; this row can.
+      { params: { currencyCode: 'PLN', findings: 42 } },
+      { params: { currencyCode: 'PLN', findings: [{ overpaidAmount: 'x' }, { overpaidAmount: 5 }] } },
+    ]);
+    const out = await service.getPriceCheckSummary('acc-1', new Date('2026-01-01'));
+    expect(out.totalsByCurrency).toEqual({ PLN: 5 });
+  });
+});
+
+describe('markRead / markAllRead / dismiss', () => {
+  it('markRead scopes by id + accountId + unread', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.updateMany = jest.fn().mockResolvedValue({ count: 1 });
+    const result = await service.markRead('acc-1', 'a-1');
+    expect(result).toEqual({ success: true, updated: 1 });
+    const where = (prisma.anomalyAlert.updateMany as jest.Mock).mock.calls[0][0].where;
+    expect(where).toEqual({ id: 'a-1', accountId: 'acc-1', readAt: null });
+  });
+
+  it('markAllRead scopes by accountId + unread', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.updateMany = jest.fn().mockResolvedValue({ count: 3 });
+    const result = await service.markAllRead('acc-1');
+    expect(result).toEqual({ success: true, updated: 3 });
+  });
+
+  it('dismiss scopes by id + accountId only', async () => {
+    const { service, prisma } = makeService();
+    prisma.anomalyAlert.updateMany = jest.fn().mockResolvedValue({ count: 1 });
+    const result = await service.dismiss('acc-1', 'a-1');
+    expect(result).toEqual({ success: true, updated: 1 });
+    const where = (prisma.anomalyAlert.updateMany as jest.Mock).mock.calls[0][0].where;
+    expect(where).toEqual({ id: 'a-1', accountId: 'acc-1' });
   });
 });
 
@@ -158,597 +212,5 @@ describe('dismissForExpense', () => {
     const { service, prisma } = makeService();
     prisma.anomalyAlert.updateMany = jest.fn().mockRejectedValue(new Error('db down'));
     await expect(service.dismissForExpense('acc-1', 'e-1')).resolves.toBeUndefined();
-  });
-});
-
-function expenseRow(overrides: Record<string, unknown> = {}) {
-  return {
-    id: 'e-new',
-    accountId: 'acc-1',
-    merchant: 'Netflix',
-    amount: 43, // Prisma Decimal arrives as Decimal; the service always wraps with Number()
-    currencyCode: 'PLN',
-    date: new Date('2026-06-10'),
-    description: 'Netflix',
-    recurringId: null,
-    isRecurring: false,
-    categoryId: 'cat-1',
-    importBatchId: null,
-    ...overrides,
-  };
-}
-
-describe('detectDuplicateCharge', () => {
-  it('alerts when another same-payee same-amount expense exists within ±1 day', async () => {
-    const { service, prisma } = makeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([{ id: 'e-old', merchant: 'Netflix', description: 'Netflix' }]);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow() as any);
-
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    const arg = createSpy.mock.calls[0][0];
-    expect(arg.type).toBe('duplicate_charge');
-    expect(arg.dedupKey).toBe('dup:e-new');
-    expect(arg.expenseId).toBe('e-new');
-    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
-    expect(where.id).toEqual({ not: 'e-new' });
-    expect(where.currencyCode).toBe('PLN');
-  });
-
-  it('matches by description when the expense has no merchant', async () => {
-    const { service, prisma } = makeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([{ id: 'e-old', merchant: null, description: 'Coffee' }]);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null, description: 'Coffee' }) as any);
-
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    expect(createSpy.mock.calls[0][0].params.merchant).toBe('Coffee');
-  });
-
-  it('does nothing when both merchant and description are empty', async () => {
-    const { service } = makeService();
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null, description: null }) as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('does nothing when no candidate matches the payee label', async () => {
-    const { service, prisma } = makeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([{ id: 'e-old', merchant: 'Spotify', description: 'Spotify' }]);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow() as any); // label "Netflix"
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('excludes rows from the same import batch', async () => {
-    const { service, prisma } = makeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([]);
-    jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ importBatchId: 'batch-1' }) as any);
-    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
-    expect(where.NOT).toEqual({ importBatchId: 'batch-1' });
-  });
-});
-
-describe('detectPriceIncrease', () => {
-  it('alerts when expense exceeds a tracked subscription amount by >10%', async () => {
-    const { service, prisma } = makeService();
-    prisma.userSubscription.findMany = jest.fn().mockResolvedValue([
-      { id: 'sub-1', name: 'netflix', amount: 29 },
-    ]);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-
-    await service.detectPriceIncrease('acc-1', 'user-1', expenseRow({ amount: 43 }) as any);
-
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    const arg = createSpy.mock.calls[0][0];
-    expect(arg.type).toBe('price_increase');
-    expect(arg.dedupKey).toBe('price:netflix:2026-06');
-    expect(arg.params).toMatchObject({ oldAmount: '29.00', newAmount: '43.00', percent: 48 });
-  });
-
-  it('does NOT alert at exactly +10%', async () => {
-    const { service, prisma } = makeService();
-    prisma.userSubscription.findMany = jest.fn().mockResolvedValue([
-      { id: 'sub-1', name: 'netflix', amount: 100 },
-    ]);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectPriceIncrease('acc-1', 'user-1', expenseRow({ amount: 110 }) as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('falls back to the recurringId series when no subscription matches', async () => {
-    const { service, prisma } = makeService();
-    prisma.userSubscription.findMany = jest.fn().mockResolvedValue([]);
-    prisma.expense.findFirst = jest.fn().mockResolvedValue({ amount: 30 });
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-
-    await service.detectPriceIncrease(
-      'acc-1',
-      'user-1',
-      expenseRow({ amount: 40, merchant: null, description: 'Gym', recurringId: 'rec-9' }) as any,
-    );
-
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    expect(createSpy.mock.calls[0][0].dedupKey).toBe('price:rec-9:2026-06');
-  });
-
-  it('does nothing when neither subscription nor series matches', async () => {
-    const { service, prisma } = makeService();
-    prisma.userSubscription.findMany = jest.fn().mockResolvedValue([]);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectPriceIncrease('acc-1', 'user-1', expenseRow() as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-});
-
-describe('detectRecurringSuggestion', () => {
-  const monthlyDates = [
-    { date: new Date('2026-04-10') },
-    { date: new Date('2026-05-10') },
-    { date: new Date('2026-06-10') },
-  ];
-
-  it('alerts on the 3rd same-amount monthly charge of an untracked merchant', async () => {
-    const { service, prisma } = makeService();
-    prisma.userSubscription.findMany = jest.fn().mockResolvedValue([]);
-    prisma.expense.findMany = jest.fn().mockResolvedValue(monthlyDates);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-
-    await service.detectRecurringSuggestion('acc-1', 'user-1', expenseRow() as any);
-
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    const arg = createSpy.mock.calls[0][0];
-    expect(arg.type).toBe('recurring_suggestion');
-    expect(arg.dedupKey).toBe('recur:netflix');
-    expect(arg.params).toMatchObject({ merchant: 'Netflix', cycle: 'monthly' });
-  });
-
-  it('skips when a tracked subscription already matches the merchant', async () => {
-    const { service, prisma } = makeService();
-    prisma.userSubscription.findMany = jest.fn().mockResolvedValue([{ name: 'NETFLIX' }]);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectRecurringSuggestion('acc-1', 'user-1', expenseRow() as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('skips expenses that are already part of a recurring series', async () => {
-    const { service } = makeService();
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectRecurringSuggestion('acc-1', 'user-1', expenseRow({ recurringId: 'rec-1' }) as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('skips with fewer than 3 charges', async () => {
-    const { service, prisma } = makeService();
-    prisma.userSubscription.findMany = jest.fn().mockResolvedValue([]);
-    prisma.expense.findMany = jest.fn().mockResolvedValue(monthlyDates.slice(1));
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    await service.detectRecurringSuggestion('acc-1', 'user-1', expenseRow() as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-});
-
-describe('checkExpenseBatch', () => {
-  it('skips the duplicate detector and dedups category checks', async () => {
-    const { service, prisma } = makeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([
-      expenseRow({ id: 'e-1', categoryId: 'cat-1' }),
-      expenseRow({ id: 'e-2', categoryId: 'cat-1' }),
-    ]);
-    const dup = jest.spyOn(service, 'detectDuplicateCharge').mockResolvedValue(undefined);
-    const price = jest.spyOn(service, 'detectPriceIncrease').mockResolvedValue(undefined);
-    const recur = jest.spyOn(service, 'detectRecurringSuggestion').mockResolvedValue(undefined);
-    const spike = jest.spyOn(service, 'detectCategorySpike').mockResolvedValue(undefined);
-
-    await service.checkExpenseBatch('acc-1', 'user-1', ['e-1', 'e-2']);
-
-    expect(dup).not.toHaveBeenCalled();
-    expect(price).toHaveBeenCalledTimes(2);
-    expect(recur).toHaveBeenCalledTimes(2);
-    expect(spike).toHaveBeenCalledTimes(1); // same category checked once
-  });
-});
-
-describe('detectCategorySpike', () => {
-  function spikeService(currentSum: number, prevRows: Array<{ amount: number; date: Date }>) {
-    const { service, prisma } = makeService();
-    prisma.expense.aggregate = jest.fn().mockResolvedValue({ _sum: { amount: currentSum } });
-    prisma.expense.findMany = jest.fn().mockResolvedValue(prevRows);
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    return { service, prisma, createSpy };
-  }
-
-  // two previous months, 100 each → avg 100
-  const twoMonths = [
-    { amount: 100, date: new Date('2026-04-15') },
-    { amount: 100, date: new Date('2026-05-15') },
-  ];
-
-  it('alerts when current month is ≥30% above the previous average (no budget required)', async () => {
-    const { service, createSpy } = spikeService(150, twoMonths);
-    await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    const arg = createSpy.mock.calls[0][0];
-    expect(arg.type).toBe('category_spike');
-    expect(arg.dedupKey).toMatch(/^spike:cat-1:\d{4}-\d{2}$/);
-    expect(arg.params).toMatchObject({ categoryName: 'Food', percent: 50 });
-  });
-
-  it('does not alert below the 30% threshold', async () => {
-    const { service, createSpy } = spikeService(129, twoMonths);
-    await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('requires at least 2 months of history', async () => {
-    const { service, createSpy } = spikeService(150, [{ amount: 100, date: new Date('2026-05-15') }]);
-    await service.detectCategorySpike('acc-1', 'user-1', 'cat-1', 'PLN');
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('no-ops on null categoryId', async () => {
-    const { service, createSpy } = spikeService(150, twoMonths);
-    await service.detectCategorySpike('acc-1', 'user-1', null, 'PLN');
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-});
-
-describe('checkExpense', () => {
-  it('never throws even when a detector rejects (fire-and-forget safety)', async () => {
-    const { service, prisma } = makeService();
-    prisma.expense.findFirst = jest.fn().mockResolvedValue(expenseRow());
-    jest.spyOn(service, 'detectDuplicateCharge').mockRejectedValue(new Error('detector boom'));
-    await expect(service.checkExpense('acc-1', 'user-1', 'e-new')).resolves.toBeUndefined();
-  });
-
-  it('calls detectPossibleMerge AFTER detectDuplicateCharge', async () => {
-    const { service, prisma } = makeService();
-    prisma.expense.findFirst = jest.fn().mockResolvedValue(expenseRow());
-    const callOrder: string[] = [];
-    jest.spyOn(service, 'detectDuplicateCharge').mockImplementation(async () => { callOrder.push('dup'); });
-    jest.spyOn(service, 'detectPriceIncrease').mockImplementation(async () => { callOrder.push('price'); });
-    jest.spyOn(service, 'detectRecurringSuggestion').mockImplementation(async () => { callOrder.push('recur'); });
-    jest.spyOn(service, 'detectCategorySpike').mockImplementation(async () => { callOrder.push('spike'); });
-    jest.spyOn(service, 'detectPossibleMerge').mockImplementation(async () => { callOrder.push('merge'); });
-    await service.checkExpense('acc-1', 'user-1', 'e-new');
-    const dupIdx = callOrder.indexOf('dup');
-    const mergeIdx = callOrder.indexOf('merge');
-    expect(dupIdx).toBeGreaterThanOrEqual(0);
-    expect(mergeIdx).toBeGreaterThan(dupIdx);
-  });
-});
-
-describe('detectPossibleMerge', () => {
-  function makeMergeService() {
-    const { service, prisma } = makeService();
-    const createSpy = jest.spyOn(service, 'createAlert').mockResolvedValue(undefined);
-    return { service, prisma, createSpy };
-  }
-
-  const baseExpense = expenseRow({ currencyCode: 'EUR', id: 'e-eur' });
-
-  it('creates a possible_merge alert when same payee + date ±1d + DIFFERENT currency', async () => {
-    const { service, prisma, createSpy } = makeMergeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([
-      { id: 'e-pln', merchant: 'Netflix', description: 'Netflix', currencyCode: 'PLN', amount: 43 },
-    ]);
-    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
-    expect(createSpy).toHaveBeenCalledTimes(1);
-    const arg = createSpy.mock.calls[0][0];
-    expect(arg.type).toBe('possible_merge');
-    expect(arg.params).toMatchObject({
-      expenseId: 'e-eur',
-      otherExpenseId: 'e-pln',
-      currencyA: 'EUR',
-      currencyB: 'PLN',
-    });
-  });
-
-  it('does NOT fire when same currency (that is detectDuplicateCharge territory)', async () => {
-    const { service, prisma, createSpy } = makeMergeService();
-    // The query filters out same currency via currencyCode:{not:...}, so findMany returns []
-    prisma.expense.findMany = jest.fn().mockResolvedValue([]);
-    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
-    expect(createSpy).not.toHaveBeenCalled();
-    // Confirm the query asked for a different currency
-    const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
-    expect(where.currencyCode).toEqual({ not: 'EUR' });
-  });
-
-  it('does NOT fire when empty payee', async () => {
-    const { service, createSpy } = makeMergeService();
-    await service.detectPossibleMerge('acc-1', 'user-1', expenseRow({ merchant: null, description: null }) as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('does NOT fire when the payees differ', async () => {
-    const { service, prisma, createSpy } = makeMergeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([
-      { id: 'e-pln', merchant: 'Spotify', description: 'Spotify', currencyCode: 'PLN', amount: 20 },
-    ]);
-    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
-    expect(createSpy).not.toHaveBeenCalled();
-  });
-
-  it('dedupKey is order-independent — sorted ids produce the same key', async () => {
-    const { service, prisma, createSpy } = makeMergeService();
-    prisma.expense.findMany = jest.fn().mockResolvedValue([
-      { id: 'e-pln', merchant: 'Netflix', description: 'Netflix', currencyCode: 'PLN', amount: 43 },
-    ]);
-
-    await service.detectPossibleMerge('acc-1', 'user-1', baseExpense as any);
-    const key1 = createSpy.mock.calls[0][0].dedupKey;
-
-    // Now swap roles: e-pln is the new expense, e-eur is the candidate.
-    const expensePln = expenseRow({ id: 'e-pln', currencyCode: 'PLN', merchant: 'Netflix', description: 'Netflix' });
-    prisma.expense.findMany = jest.fn().mockResolvedValue([
-      { id: 'e-eur', merchant: 'Netflix', description: 'Netflix', currencyCode: 'EUR', amount: 10 },
-    ]);
-    await service.detectPossibleMerge('acc-1', 'user-1', expensePln as any);
-    const key2 = createSpy.mock.calls[1][0].dedupKey;
-
-    expect(key1).toBe(key2);
-    expect(key1).toBe('merge:e-eur:e-pln'); // sorted
-  });
-});
-
-describe('detectPriceOvercharge', () => {
-  let service: AnomalyService;
-  let prisma: any;
-  let notifications: any;
-
-  const expense = {
-    id: 'exp-1',
-    merchant: 'Biedronka',
-    description: null,
-    amount: 100,
-    currencyCode: 'PLN',
-    date: new Date('2026-07-25'),
-    recurringId: null,
-    isRecurring: false,
-    categoryId: null,
-    importBatchId: null,
-  };
-
-  beforeEach(() => {
-    ({ service, prisma, notifications } = makeService());
-    (service as any).priceHistory = {
-      getProductTrendsFor: jest.fn().mockResolvedValue([
-        {
-          canonicalName: 'Kawa',
-          currency: 'PLN',
-          points: [
-            { date: '2026-07-01', price: 20 },
-            { date: '2026-07-08', price: 20 },
-          ],
-        },
-      ]),
-    };
-    (prisma as any).expenseItem = {
-      findMany: jest.fn().mockResolvedValue([
-        { canonicalName: 'Kawa', quantity: 1, unitPrice: 30, totalPrice: 30 },
-      ]),
-    };
-    prisma.anomalyAlert.create = jest.fn().mockResolvedValue({ id: 'alert-1' });
-    prisma.anomalyAlert.count = jest.fn().mockResolvedValue(0);
-    notifications.sendToUser = jest.fn();
-  });
-
-  it('creates one alert per receipt and never pushes', async () => {
-    ({ service, prisma, notifications } = makeService({ configGet: jest.fn().mockReturnValue('true') }));
-    (service as any).priceHistory = {
-      getProductTrendsFor: jest.fn().mockResolvedValue([
-        {
-          canonicalName: 'Kawa',
-          currency: 'PLN',
-          points: [
-            { date: '2026-07-01', price: 20 },
-            { date: '2026-07-08', price: 20 },
-          ],
-        },
-      ]),
-    };
-    (prisma as any).expenseItem = {
-      findMany: jest.fn().mockResolvedValue([
-        { canonicalName: 'Kawa', quantity: 1, unitPrice: 30, totalPrice: 30 },
-      ]),
-    };
-    prisma.anomalyAlert.create = jest.fn().mockResolvedValue({ id: 'alert-1' });
-    prisma.anomalyAlert.count = jest.fn().mockResolvedValue(0);
-    notifications.sendToUser = jest.fn();
-
-    await (service as any).detectPriceOvercharge('acc-1', 'user-1', expense);
-
-    const data = (prisma.anomalyAlert.create as jest.Mock).mock.calls[0][0].data;
-    expect(data.type).toBe('price_overcharge');
-    expect(data.dedupKey).toBe('overcharge:exp-1');
-    expect(data.expenseId).toBe('exp-1');
-    expect((data.params as any).findings).toHaveLength(1);
-    expect(notifications.sendToUser).not.toHaveBeenCalled();
-  });
-
-  it('passes its own expense id as the history exclusion (Fix 1: must not count the receipt being checked as its own history)', async () => {
-    await (service as any).detectPriceOvercharge('acc-1', 'user-1', expense);
-
-    expect((service as any).priceHistory.getProductTrendsFor).toHaveBeenCalledWith(
-      'acc-1',
-      ['Kawa'],
-      'biedronka',
-      expect.any(Date),
-      'PLN',
-      'exp-1',
-    );
-  });
-
-  it('writes nothing when there are no findings', async () => {
-    (prisma as any).expenseItem.findMany = jest
-      .fn()
-      .mockResolvedValue([{ canonicalName: 'Kawa', quantity: 1, unitPrice: 20, totalPrice: 20 }]);
-    await (service as any).detectPriceOvercharge('acc-1', 'user-1', expense);
-    expect(prisma.anomalyAlert.create).not.toHaveBeenCalled();
-  });
-
-  it('skips an expense with no line items', async () => {
-    (prisma as any).expenseItem.findMany = jest.fn().mockResolvedValue([]);
-    await (service as any).detectPriceOvercharge('acc-1', 'user-1', expense);
-    expect((service as any).priceHistory.getProductTrendsFor).not.toHaveBeenCalled();
-    expect(prisma.anomalyAlert.create).not.toHaveBeenCalled();
-  });
-
-  it('is silent on a duplicate dedupKey', async () => {
-    prisma.anomalyAlert.create = jest.fn().mockRejectedValue({ code: 'P2002' });
-    await expect((service as any).detectPriceOvercharge('acc-1', 'user-1', expense)).resolves.toBeUndefined();
-  });
-
-  it('is fail-silent: a thrown history query resolves without throwing and logs a warning (Fix 7)', async () => {
-    (service as any).priceHistory = { getProductTrendsFor: jest.fn().mockRejectedValue(new Error('db down')) };
-    (service as any).logger = { warn: jest.fn(), error: jest.fn(), log: jest.fn() };
-    await expect((service as any).detectPriceOvercharge('acc-1', 'user-1', expense)).resolves.toBeUndefined();
-    expect((service as any).logger.warn).toHaveBeenCalled();
-    expect(prisma.anomalyAlert.create).not.toHaveBeenCalled();
-  });
-
-  it('when RECEIPT_CHECK_ALERTS_ENABLED is off, skips the alert write and logs the findings', async () => {
-    ({ service, prisma } = makeService({ configGet: jest.fn().mockReturnValue(undefined) }));
-    (service as any).priceHistory = {
-      getProductTrendsFor: jest.fn().mockResolvedValue([
-        {
-          canonicalName: 'Kawa',
-          currency: 'PLN',
-          points: [
-            { date: '2026-07-01', price: 20 },
-            { date: '2026-07-08', price: 20 },
-          ],
-        },
-      ]),
-    };
-    (service as any).logger = { warn: jest.fn(), error: jest.fn(), log: jest.fn() };
-    (service as any).prisma = {
-      ...prisma,
-      expenseItem: {
-        findMany: jest.fn().mockResolvedValue([
-          { canonicalName: 'Kawa', quantity: 1, unitPrice: 30, totalPrice: 30 },
-        ]),
-      },
-    };
-
-    await (service as any).detectPriceOvercharge('acc-1', 'user-1', expense);
-
-    expect((service as any).prisma.anomalyAlert.create).not.toHaveBeenCalled();
-    expect((service as any).logger.log).toHaveBeenCalledWith(
-      expect.stringContaining('1 line(s) above the usual price'),
-    );
-    expect((service as any).logger.log).toHaveBeenCalledWith(
-      expect.stringContaining('alert write disabled'),
-    );
-  });
-
-  it('when RECEIPT_CHECK_ALERTS_ENABLED=true, creates the alert', async () => {
-    ({ service, prisma } = makeService({ configGet: jest.fn().mockReturnValue('true') }));
-    (service as any).priceHistory = {
-      getProductTrendsFor: jest.fn().mockResolvedValue([
-        {
-          canonicalName: 'Kawa',
-          currency: 'PLN',
-          points: [
-            { date: '2026-07-01', price: 20 },
-            { date: '2026-07-08', price: 20 },
-          ],
-        },
-      ]),
-    };
-    (service as any).prisma = {
-      ...prisma,
-      expenseItem: {
-        findMany: jest.fn().mockResolvedValue([
-          { canonicalName: 'Kawa', quantity: 1, unitPrice: 30, totalPrice: 30 },
-        ]),
-      },
-      anomalyAlert: {
-        create: jest.fn().mockResolvedValue({ id: 'alert-1' }),
-      },
-    };
-
-    await (service as any).detectPriceOvercharge('acc-1', 'user-1', expense);
-
-    expect((service as any).prisma.anomalyAlert.create).toHaveBeenCalledTimes(1);
-    const arg = (service as any).prisma.anomalyAlert.create.mock.calls[0][0].data;
-    expect(arg.type).toBe('price_overcharge');
-    expect(arg.expenseId).toBe('exp-1');
-  });
-
-  it('when flag is off and there are no findings, logs nothing', async () => {
-    ({ service, prisma } = makeService({ configGet: jest.fn().mockReturnValue(undefined) }));
-    (service as any).priceHistory = {
-      getProductTrendsFor: jest.fn().mockResolvedValue([
-        {
-          canonicalName: 'Kawa',
-          currency: 'PLN',
-          points: [
-            { date: '2026-07-01', price: 20 },
-            { date: '2026-07-08', price: 20 },
-          ],
-        },
-      ]),
-    };
-    (service as any).logger = { warn: jest.fn(), error: jest.fn(), log: jest.fn() };
-    (service as any).prisma = {
-      ...prisma,
-      expenseItem: {
-        findMany: jest.fn().mockResolvedValue([
-          { canonicalName: 'Kawa', quantity: 1, unitPrice: 20, totalPrice: 20 },
-        ]),
-      },
-    };
-
-    await (service as any).detectPriceOvercharge('acc-1', 'user-1', expense);
-
-    expect((service as any).logger.log).not.toHaveBeenCalled();
-  });
-});
-
-describe('getPriceCheckSummary', () => {
-  let service: AnomalyService;
-  let prisma: any;
-
-  beforeEach(() => {
-    ({ service, prisma } = makeService());
-  });
-
-  it('sums per currency and never blends them', async () => {
-    prisma.anomalyAlert.findMany = jest.fn().mockResolvedValue([
-      { params: { currencyCode: 'PLN', findings: [{ overpaidAmount: 4 }, { overpaidAmount: 2.5 }] } },
-      { params: { currencyCode: 'PLN', findings: [{ overpaidAmount: 1.5 }] } },
-      { params: { currencyCode: 'EUR', findings: [{ overpaidAmount: 3 }] } },
-    ]);
-
-    const out = await service.getPriceCheckSummary('acc-1', new Date('2026-01-01'));
-
-    expect(out.totalsByCurrency).toEqual({ PLN: 8, EUR: 3 });
-    expect(out.alertCount).toBe(3);
-  });
-
-  it('returns empty totals when there are no alerts', async () => {
-    prisma.anomalyAlert.findMany = jest.fn().mockResolvedValue([]);
-    const out = await service.getPriceCheckSummary('acc-1', new Date('2026-01-01'));
-    expect(out.totalsByCurrency).toEqual({});
-    expect(out.alertCount).toBe(0);
-  });
-
-  it('ignores a malformed params blob instead of throwing', async () => {
-    prisma.anomalyAlert.findMany = jest.fn().mockResolvedValue([
-      { params: null },
-      { params: { currencyCode: 'PLN', findings: 'not-an-array' } },
-      // A number is not iterable — `for...of` over it throws `is not iterable`.
-      // A string ('not-an-array' above) is iterable, so it can't by itself prove
-      // the Array.isArray guard is load-bearing; this row can.
-      { params: { currencyCode: 'PLN', findings: 42 } },
-      { params: { currencyCode: 'PLN', findings: [{ overpaidAmount: 'x' }, { overpaidAmount: 5 }] } },
-    ]);
-    const out = await service.getPriceCheckSummary('acc-1', new Date('2026-01-01'));
-    expect(out.totalsByCurrency).toEqual({ PLN: 5 });
   });
 });

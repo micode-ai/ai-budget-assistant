@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
-import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
+import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly-helpers.util';
 import { normalizeMerchantPL } from './merchants/merchants-pl';
 import { pairFxRows } from './utils/fx-pairing';
 import type { BankParser } from './parsers/parser.interface';

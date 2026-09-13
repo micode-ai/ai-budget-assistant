@@ -1,7 +1,8 @@
 import { Injectable, Logger, Optional } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
-import { AnomalyService, expensePayee, DUP_DAY_MS } from '../anomaly/anomaly.service';
+import { AnomalyService } from '../anomaly/anomaly.service';
+import { expensePayee, DUP_DAY_MS } from '../anomaly/anomaly-helpers.util';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { CommunityPriceService } from '../community-prices/community-price.service';
 import { InflationShieldTrackingService } from '../insights/inflation-shield-tracking.service';

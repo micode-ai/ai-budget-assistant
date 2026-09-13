@@ -12,9 +12,12 @@ wide.
 ## Read this before designing anything
 
 `docs/contracts/desktop-web-design-language.md` is the established language,
-derived from the one screen that shipped and was approved. It is not a wish
-list. Follow it, and when you propose departing from it, say which rule and
-why in the spec — a silent departure is how eight screens end up disagreeing.
+derived from the shipped, approved screens — its own header states how many,
+but that count grows faster than the doc is updated, so verify it against
+`docs/design/*.md` rather than trusting it at face value (see step 1 below).
+It is not a wish list. Follow it, and when you propose departing from it, say
+which rule and why in the spec — a silent departure is how eight screens end
+up disagreeing.
 
 Note it is **split into Universal and List-specific**. A screen without rows
 does not inherit a facet rail by analogy.
@@ -60,17 +63,30 @@ with more whitespace. These are the affordances that actually differ:
 
 ## How you work
 
-1. **Read the reference screen** — `src/components/expenses/desktop/*` and the
-   design language doc. Your screen should look like it belongs to the same
-   product.
+1. **Survey `docs/design/*.md` before reading any single reference.** Glob the
+   directory and skim titles/dates to find the most *structurally similar*
+   prior screen to the one you're about to design — row-based ledger vs.
+   pane-hub vs. rail+column vs. dashboard-of-widgets — and read that doc too,
+   not only the transactions screen (`src/components/expenses/desktop/*`,
+   ABA-499). The transactions screen is a reference, not *the* reference: it
+   is the oldest one, and a newer, more structurally-relevant screen may have
+   already settled the exact question you're about to re-derive. Also read
+   the design language doc itself — but note its own "derived from N shipped
+   screens" header can be stale; spot-check that N against the actual file
+   count in `docs/design/` before trusting the stated sample size. Your
+   screen should look like it belongs to the same product as the *current*
+   set of shipped screens, not just the first one.
 2. **Read the mobile screen you are redesigning**, in `apps/mobile/app/`. List
    every affordance it has and say what each becomes on desktop, in a table.
    That table is the most useful part of the spec: it is what stops an
    affordance being silently dropped.
 3. **Check what already exists** before inventing a component. Scan
-   `apps/mobile/src/components/` (glob `**/*.tsx`) — the list changes with
-   every feature, so a scan is the only accurate way. If a component does 80%
-   of the job, extend it rather than adding a sibling.
+   `apps/mobile/src/components/` broadly — glob `**/*.tsx` AND specifically
+   `**/desktop/*.tsx`, since desktop dirs now exist beyond `expenses/desktop/`
+   (alerts, analytics, budgets, chat, home, onboarding, wallet, and growing) —
+   the list changes with every feature, so a scan is the only accurate way.
+   If a component does 80% of the job, extend it rather than adding a
+   sibling.
 4. **Name the states.** Empty, loading, populated, error — a wide screen makes
    an unconsidered empty state look far worse than a phone does.
 5. **Say what a dialog hosts.** On this codebase a dialog hosts an EXISTING
@@ -108,7 +124,10 @@ each.
 <hover, keyboard, selection, dialogs — and the focusable twin of every hover>
 
 ## Departures from the design language
-<rule, and why. "None" if none.>
+<rule, and why. "None" if none. Before writing a justification from scratch,
+check whether a prior screen in `docs/design/` already made and named this
+same departure (e.g. chat's documented no-page-scroll exception to the
+Universal rule) — if so, cite that precedent instead of re-arguing it.>
 
 ## Open questions
 <what only the deployed screen can answer>

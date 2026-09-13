@@ -12,9 +12,27 @@ phone.
 ## Read these before writing code
 
 - `docs/contracts/desktop-web-design-language.md` — the established language,
-  its reasons, and a section listing what looks like a defect and is not.
-- `src/components/expenses/desktop/*` — the reference screen. Follow it rather
-  than re-deriving the same decisions.
+  its reasons, and a section listing what looks like a defect and is not. It
+  is organized by wave, each documenting a screen's shape and what it added
+  or departed from: §5 is list-specific (the expenses/ledger screen —
+  `src/components/expenses/desktop/*`, ABA-499, still the best single example
+  of "a dialog hosts an existing component"), §5c is the dashboard, §5e–§5h
+  are the settings shell (a pane/link/dialog taxonomy driven by
+  `settingsRegistry.ts` — **not** an instance of the ledger's dialog-hosts-a-
+  component pattern), §5i–§5j are chat (its own doc calls this "the first
+  deliberate departure from the one-page-scroll rule" — the opposite of what
+  §5's screen does). There is no single reference screen — before
+  implementing, identify which prior wave is the nearest shape match (a list
+  of rows → §5/§5a; a dashboard-style rail+columns → §5c; a settings-style
+  form or list → §5e–§5h; a rail+reading-column → §5i–§5j) and follow that
+  section, not whichever one you remember best. If your screen's situation
+  isn't covered by any section, defer to the newest sibling screen's actual
+  code rather than re-deriving a third answer — and flag the doc gap instead
+  of silently working around it.
+- `src/components/webLayout.constants.ts` — read before introducing any new
+  width threshold. Several waves (chat) deliberately added none, reusing an
+  existing constant instead; a new threshold should be the exception, not the
+  default.
 
 ## The rule that outranks the rest
 

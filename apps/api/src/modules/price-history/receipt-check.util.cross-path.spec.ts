@@ -1,5 +1,6 @@
 import { ReceiptFinalizerService } from '../ai/services/receipt-finalizer.service';
-import { AnomalyService } from '../anomaly/anomaly.service';
+import { AnomalyDetectorsService } from '../anomaly/anomaly-detectors.service';
+import { AnomalyAlertWriterService } from '../anomaly/anomaly-alert-writer.service';
 import { PriceHistoryService } from './price-history.service';
 
 /**
@@ -15,6 +16,10 @@ import { PriceHistoryService } from './price-history.service';
  * time detectPriceOvercharge queries history, this receipt's own items are
  * already visible in the DB — so without excluding them, the detector counts
  * the receipt it is checking as one of its own prior purchases.
+ *
+ * detectPriceOvercharge now lives on AnomalyDetectorsService (split out of
+ * AnomalyService — see docs/tech-debt/anomaly-service-god-class.md); this
+ * test constructs that service directly, same as before.
  *
  * This test does not stub `getProductTrendsFor` — it runs the REAL
  * PriceHistoryService against a fake Prisma that actually HONORS the
@@ -94,9 +99,10 @@ describe('receipt price-check: cross-path agreement (OCR scan-time vs. persisted
     };
     const anomalyNotifications: any = { sendToUser: jest.fn() };
     const anomalyConfig: any = { get: jest.fn().mockReturnValue(undefined) };
-    const anomalyService = new AnomalyService(anomalyPrisma, anomalyNotifications, detectorPriceHistory, anomalyConfig);
+    const alertWriter = new AnomalyAlertWriterService(anomalyPrisma, anomalyNotifications);
+    const detectors = new AnomalyDetectorsService(anomalyPrisma, detectorPriceHistory, anomalyConfig, alertWriter);
 
-    await (anomalyService as any).detectPriceOvercharge('acc-1', 'user-1', {
+    await detectors.detectPriceOvercharge('acc-1', 'user-1', {
       id: 'exp-1',
       merchant,
       description: null,
@@ -118,7 +124,7 @@ describe('receipt price-check: cross-path agreement (OCR scan-time vs. persisted
     // some unrelated bug made both sides empty for the wrong reason.
     expect(ocrFindings).toEqual([]);
 
-    // The actual claim under test. If AnomalyService.detectPriceOvercharge ever
+    // The actual claim under test. If AnomalyDetectorsService.detectPriceOvercharge ever
     // again omits passing `expense.id` as the exclusion (or getProductTrendsFor
     // stops honoring it), the fake Prisma above would return BOTH rows to the
     // detector — median([20, 30]) = 25, changePct = (30-25)/25 = 20% >= 15%,

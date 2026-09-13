@@ -50,6 +50,14 @@ significantly from the original sketch:
 - [x] Mobile: add `recurring_id` write support to `updateExpenseInDb` (local SQLite) — was silently missing
 - [x] i18n: `alerts.markAsRecurring` in all 9 locales
 - [x] Tests: `attentionActions.test.ts` — `buildMarkRecurringUpdate` unit tests
-- [ ] Update CLAUDE.md with feature entry
-- [ ] Update product-idea frontmatter status → building
-- [ ] Create ABA-{N} GitHub issue + update user_docs (finish-aba-task)
+- [x] Update CLAUDE.md with feature entry
+- [x] Update product-idea frontmatter status → building
+- [x] Create ABA-532 GitHub issue (https://github.com/micode-ai/ai-budget-assistant/issues/554) + update user_docs (all 9 locales, section 31-anomaly-alerts) + regenerate in-app help content + regenerate static web help site
+- [x] Committed locally (`4cf50ae5`) — NOT pushed, per standing instruction to always get explicit approval before `git push`. See `docs/plans/79260519-d0df-4fe0-bff8-ed20043d082c-questions.md`.
+
+## Status: DONE (main path implemented, awaiting push approval)
+
+All checklist items complete. `npx tsc --noEmit` (whole mobile app) is clean,
+`npx eslint` on every touched file is clean, and both affected Jest suites
+(`attentionActions.test.ts`, `useAlertTapThrough.test.ts`) pass — 34 tests
+total, 16 of them new.

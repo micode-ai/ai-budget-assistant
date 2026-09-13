@@ -107,7 +107,7 @@ export class PriceHistoryService {
    * never be called on the scan hot path.
    *
    * `excludeExpenseId` excludes one expense's own items from the returned
-   * history. The persisted detector (AnomalyService.detectPriceOvercharge)
+   * history. The persisted detector (AnomalyDetectorsService.detectPriceOvercharge)
    * runs AFTER the expense and its items are already committed, so without this
    * exclusion the receipt being checked would count as its own prior purchase —
    * the two passes (scan-time vs. persisted) would then disagree even though
