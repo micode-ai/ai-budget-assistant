@@ -35,6 +35,16 @@ export const receiptSplitApi = {
     });
   },
 
+  // ABA guest-split-item-dispute — marks a guest's open flag as dealt with.
+  // No client method exists to CREATE a flag: the guest has no app, and files
+  // one entirely through the server-rendered `/s/:token` page.
+  resolveSplitFlag(expenseId: string, flagId: string) {
+    return httpClient.request<{ success: true }>(
+      `/expenses/${expenseId}/receipt-split/flags/${flagId}/resolve`,
+      { method: 'PATCH' },
+    );
+  },
+
   // Account-wide (not per-expense) — the "people you've split with before"
   // suggestion chips on the assignment screen. Static route
   // `/expenses/receipt-split/recent-participants`, not `/expenses/:id/...`.

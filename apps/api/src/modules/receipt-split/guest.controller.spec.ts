@@ -66,6 +66,12 @@ function buildController(
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       findMany: jest.fn().mockResolvedValue(opts.roster ?? [{ itemIds: participant.itemIds }]),
     },
+    receiptSplitFlag: {
+      findMany: jest.fn().mockResolvedValue([]),
+      findFirst: jest.fn().mockResolvedValue(null),
+      create: jest.fn().mockResolvedValue({ id: 'flag-1' }),
+      update: jest.fn().mockResolvedValue(undefined),
+    },
     user: {
       findUnique: jest.fn().mockResolvedValue(
         opts.payerUser ?? { name: 'Payer Pat', paymentMethod: 'revolut', paymentHandle: 'payerpat' },
@@ -265,7 +271,10 @@ describe('GuestController.guestPage', () => {
       });
       const html = await controller.guestPage(participantFixture.token, {} as any);
 
-      const lineAmounts = [...html.matchAll(/<span>(\d+\.\d{2})<\/span><\/li>/g)].map((m) =>
+      // Each line's amount span now closes just before its wrapping `.item-row`
+      // div (not the `<li>` itself — that also holds the flag block below the
+      // row, ABA guest-split-item-dispute).
+      const lineAmounts = [...html.matchAll(/<span>(\d+\.\d{2})<\/span><\/div>/g)].map((m) =>
         Math.round(Number(m[1]) * 100),
       );
       expect(lineAmounts.reduce((a, b) => a + b, 0)).toBe(5);
@@ -546,6 +555,7 @@ describe('Legacy pair clearing on PUT /users/me/payment-methods closes the stale
         update: jest.fn().mockResolvedValue(undefined),
         findMany: jest.fn().mockResolvedValue([{ itemIds: participantFixture.itemIds }]),
       },
+      receiptSplitFlag: { findMany: jest.fn().mockResolvedValue([]) },
       accountMember: { findFirst: jest.fn().mockResolvedValue(null) },
       expense: { findFirst: jest.fn().mockResolvedValue(null) },
     };
@@ -640,6 +650,126 @@ describe('GuestController.markPaid', () => {
   });
 });
 
+describe('GuestController.flagItem (ABA guest-split-item-dispute)', () => {
+  it('answers an unknown token like every other guest route — no participant leak', async () => {
+    const { controller, prisma } = buildController();
+    prisma.receiptSplitParticipant.findUnique = jest.fn().mockResolvedValue(null);
+    const html = await controller.flagItem('0'.repeat(32), {}, {} as any);
+    expect(html).not.toContain('Alice');
+    expect(html).not.toContain('25.50');
+  });
+
+  it('creates a flag for a real claimed itemId and notifies the payer, tagged split_item_flagged', async () => {
+    const { controller, prisma, notificationsService } = buildController();
+
+    await controller.flagItem(participantFixture.token, { itemId: 'item-1', note: 'not mine' }, {} as any);
+
+    expect(prisma.receiptSplitFlag.create).toHaveBeenCalledWith({
+      data: {
+        accountId: 'acc-1',
+        participantId: 'p-1',
+        expenseId: 'exp-1',
+        itemId: 'item-1',
+        note: 'not mine',
+      },
+    });
+    expect(notificationsService.sendToUser).toHaveBeenCalledWith(
+      'payer-1',
+      expect.any(Function),
+      expect.any(Function),
+      { participantId: 'p-1' },
+      'split_item_flagged',
+    );
+
+    const [, titleFn, bodyFn] = notificationsService.sendToUser.mock.calls[0];
+    expect(titleFn('en')).toContain('Alice');
+    // Genuinely localized, not an identity function.
+    expect(titleFn('pl')).not.toBe(titleFn('en'));
+    expect(bodyFn('pl')).not.toBe(bodyFn('en'));
+  });
+
+  it("clamps an itemId that doesn't belong to this participant's own claimed items to a whole-share report, rather than erroring or leaking it", async () => {
+    const { controller, prisma } = buildController();
+
+    // 'item-2' ("Fries") belongs to a DIFFERENT participant on the same
+    // receipt (see the fixture's own comment) — a raw client value naming it
+    // must never be trusted as this guest's own item.
+    await controller.flagItem(participantFixture.token, { itemId: 'item-2' }, {} as any);
+
+    expect(prisma.receiptSplitFlag.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ itemId: null }),
+    });
+  });
+
+  it('treats an absent itemId as a whole-share report', async () => {
+    const { controller, prisma } = buildController();
+    await controller.flagItem(participantFixture.token, {}, {} as any);
+    expect(prisma.receiptSplitFlag.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ itemId: null }),
+    });
+  });
+
+  it('trims and caps the note at 500 characters, and stores null for an empty/whitespace-only note', async () => {
+    const { controller, prisma } = buildController();
+
+    await controller.flagItem(participantFixture.token, { note: '  padded  ' }, {} as any);
+    expect(prisma.receiptSplitFlag.create).toHaveBeenLastCalledWith({
+      data: expect.objectContaining({ note: 'padded' }),
+    });
+
+    const long = 'x'.repeat(600);
+    await controller.flagItem(participantFixture.token, { note: long }, {} as any);
+    expect(prisma.receiptSplitFlag.create).toHaveBeenLastCalledWith({
+      data: expect.objectContaining({ note: 'x'.repeat(500) }),
+    });
+
+    await controller.flagItem(participantFixture.token, { note: '   ' }, {} as any);
+    expect(prisma.receiptSplitFlag.create).toHaveBeenLastCalledWith({
+      data: expect.objectContaining({ note: null }),
+    });
+  });
+
+  it('dedups: a second flag on the same (participant, itemId) updates the note instead of creating a second row, and does not re-notify', async () => {
+    const { controller, prisma, notificationsService } = buildController();
+    prisma.receiptSplitFlag.findFirst = jest.fn().mockResolvedValue({ id: 'existing-flag' });
+
+    await controller.flagItem(participantFixture.token, { itemId: 'item-1', note: 'updated note' }, {} as any);
+
+    expect(prisma.receiptSplitFlag.create).not.toHaveBeenCalled();
+    expect(prisma.receiptSplitFlag.update).toHaveBeenCalledWith({
+      where: { id: 'existing-flag' },
+      data: { note: 'updated note' },
+    });
+    expect(notificationsService.sendToUser).not.toHaveBeenCalled();
+  });
+
+  it('renders a not-yet-flagged item as a live form, and a flagged one as "reported" instead', async () => {
+    const { controller: freshController } = buildController();
+    const freshHtml = await freshController.flagItem(participantFixture.token, {}, {} as any);
+    // A brand-new flag report (this call's `getActiveFlagsForParticipant`
+    // read reflects only what existed BEFORE this write — item-1 itself was
+    // never flagged in this scenario) still shows the item-1 form live.
+    expect(freshHtml).toContain('name="itemId" value="item-1"');
+    expect(freshHtml).not.toContain('class="flag-reported"');
+
+    // Once item-1 genuinely has an open flag (the guest reloading, or the
+    // payer's own status view pulling flags), the form is replaced.
+    const { controller: flaggedController, prisma: flaggedPrisma } = buildController();
+    flaggedPrisma.receiptSplitFlag.findMany = jest.fn().mockResolvedValue([{ itemId: 'item-1' }]);
+    const htmlAfter = await flaggedController.guestPage(participantFixture.token, {} as any);
+    expect(htmlAfter).toContain('class="flag-reported"');
+    expect(htmlAfter).not.toContain('name="itemId" value="item-1"');
+  });
+
+  it('is independent of payment status — a claimed/settled participant can still flag', async () => {
+    const { controller, prisma } = buildController({
+      participant: { ...participantFixture, claimedAt: new Date(), settledAt: new Date() },
+    });
+    await controller.flagItem(participantFixture.token, { itemId: 'item-1' }, {} as any);
+    expect(prisma.receiptSplitFlag.create).toHaveBeenCalled();
+  });
+});
+
 /**
  * Constructing the controller directly (as every other describe block in this file
  * does) and calling a method bypasses Nest's guard pipeline entirely — `@UseGuards` is
@@ -689,6 +819,12 @@ describe('GuestController guard metadata — the no-authentication invariant', (
   it('attaches no authentication guard on GET /g/:groupToken/:seq, and keeps ThrottlerGuard', () => {
     const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.groupConfirm) as Function[] | undefined) ?? [];
     expect(nonThrottlerGuardNames(GuestController.prototype.groupConfirm)).toEqual([]);
+    expect(guards).toContain(ThrottlerGuard);
+  });
+
+  it('attaches no authentication guard on POST /:token/flag, and keeps ThrottlerGuard', () => {
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.flagItem) as Function[] | undefined) ?? [];
+    expect(nonThrottlerGuardNames(GuestController.prototype.flagItem)).toEqual([]);
     expect(guards).toContain(ThrottlerGuard);
   });
 });
@@ -836,6 +972,8 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
     ],
     postPaidAction: '/s/token/paid',
     receiptUrl: null,
+    flagAction: '/s/token/flag',
+    wholeShareFlagged: false,
   };
   const strings = getGuestPageStrings('en');
 
@@ -953,6 +1091,8 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
     paymentMethods: [],
     postPaidAction: '/s/token/paid',
     receiptUrl: null,
+    flagAction: '/s/token/flag',
+    wholeShareFlagged: false,
   };
 
   it('renders one button per link-capable method, in order — two methods produce two buttons', () => {
@@ -1149,7 +1289,9 @@ describe('renderGuestPage — box-sizing reset keeps the pay button inside its c
         status: 'sent',
         paymentMethods: [],
         postPaidAction: '/s/token/paid',
-    receiptUrl: null,
+        receiptUrl: null,
+        flagAction: '/s/token/flag',
+        wholeShareFlagged: false,
       },
       strings,
     );
@@ -1184,6 +1326,8 @@ describe('renderGuestPage — each pay block now names its destination method an
     paymentMethods: [],
     postPaidAction: '/s/token/paid',
     receiptUrl: null,
+    flagAction: '/s/token/flag',
+    wholeShareFlagged: false,
   };
 
   it('a Revolut block\'s button says "Pay via Revolut" and shows the raw handle in a muted line underneath', () => {

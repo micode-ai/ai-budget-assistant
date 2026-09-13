@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Param,
+  Body,
   Req,
   Header,
   UseGuards,
@@ -26,7 +27,19 @@ import {
 import { getGuestPageStrings, resolveGuestLang } from './helpers/guest-page-i18n';
 import { allocateItemShares } from './split-calculator';
 import { sniffReceiptContentType } from './helpers/receipt-content-type';
-import { splitPaymentClaimedTitle, splitPaymentClaimedBody } from '../notifications/notification-i18n';
+import { FlagSplitItemDto } from './dto';
+import {
+  splitPaymentClaimedTitle,
+  splitPaymentClaimedBody,
+  splitItemFlaggedTitle,
+  splitItemFlaggedBody,
+} from '../notifications/notification-i18n';
+
+/** Cap on a guest's free-text flag note — same order of magnitude as
+ * `MAX_NAME_LENGTH` in receipt-split.service.ts, generous enough for a short
+ * explanation without letting a public unauthenticated form store arbitrary
+ * amounts of text. */
+const MAX_FLAG_NOTE_LENGTH = 500;
 
 interface GuestExpenseView {
   merchant: string | null;
@@ -233,6 +246,23 @@ export class GuestController {
   }
 
   /**
+   * This participant's OPEN (unresolved) flags, keyed by `itemId` (`null` =
+   * whole-share report) — ABA guest-split-item-dispute. Reads `itemId` only,
+   * nothing else (no note, no id, no timestamp): the guest page only needs to
+   * know WHICH lines are already reported, to swap the flag form for a
+   * "reported" note. Runs only after a token is accepted, same as
+   * `countClaimantsByItem` above — never on the invalid-token branches, so
+   * the "one query per invalid outcome" invariant is untouched.
+   */
+  private async getActiveFlagsForParticipant(participantId: string): Promise<Set<string | null>> {
+    const rows = await this.prisma.receiptSplitFlag.findMany({
+      where: { participantId, resolvedAt: null },
+      select: { itemId: true },
+    });
+    return new Set(rows.map((r) => r.itemId));
+  }
+
+  /**
    * Resolves a `groupToken` (ABA — QR-code bill split) to the anchor
    * (seq:0) participant row's `id`/`expenseId`, or `null` if the token is
    * unknown, expired, or cancelled — same three-way collapse and same
@@ -306,6 +336,7 @@ export class GuestController {
     token: string,
     claimantsByItem: Map<string, number>,
     hasReceipt: boolean,
+    flaggedKeys: Set<string | null>,
   ): GuestPageModel {
     const expense = participant.expense as GuestExpenseView;
     const amount = Number(participant.amount);
@@ -326,9 +357,11 @@ export class GuestController {
       : null;
     const items = claimed
       ? allocateItemShares(claimed, amount).map((share, index) => ({
+          id: claimed[index].id,
           description: claimed[index].description,
           amount: share.amount,
           sharedWith: share.sharedWith,
+          flagged: flaggedKeys.has(claimed[index].id),
         }))
       : null;
 
@@ -354,6 +387,8 @@ export class GuestController {
       paymentMethods,
       postPaidAction: `/s/${token}/paid`,
       receiptUrl: hasReceipt ? `/s/${token}/receipt` : null,
+      flagAction: `/s/${token}/flag`,
+      wholeShareFlagged: flaggedKeys.has(null),
     };
   }
 
@@ -384,13 +419,17 @@ export class GuestController {
     }
 
     const payer = await this.resolvePayer(participant.expense as GuestExpenseView);
-    const [claimantsByItem, hasReceipt] = await Promise.all([
+    const [claimantsByItem, hasReceipt, flaggedKeys] = await Promise.all([
       Array.isArray(participant.itemIds)
         ? this.countClaimantsByItem(participant.expenseId)
         : Promise.resolve(new Map<string, number>()),
       this.hasReceiptImage(participant.expenseId),
+      this.getActiveFlagsForParticipant(participant.id),
     ]);
-    return renderGuestPage(this.buildModel(participant, payer, token, claimantsByItem, hasReceipt), strings);
+    return renderGuestPage(
+      this.buildModel(participant, payer, token, claimantsByItem, hasReceipt, flaggedKeys),
+      strings,
+    );
   }
 
   /**
@@ -594,11 +633,12 @@ export class GuestController {
     }
 
     const payer = await this.resolvePayer(participant.expense as GuestExpenseView);
-    const [claimantsByItem, hasReceipt] = await Promise.all([
+    const [claimantsByItem, hasReceipt, flaggedKeys] = await Promise.all([
       Array.isArray(participant.itemIds)
         ? this.countClaimantsByItem(participant.expenseId)
         : Promise.resolve(new Map<string, number>()),
       this.hasReceiptImage(participant.expenseId),
+      this.getActiveFlagsForParticipant(participant.id),
     ]);
     const model = this.buildModel(
       { ...participant, claimedAt: claim.count === 1 ? claimedAt : participant.claimedAt },
@@ -606,7 +646,101 @@ export class GuestController {
       token,
       claimantsByItem,
       hasReceipt,
+      flaggedKeys,
     );
     return renderGuestPage(model, strings);
+  }
+
+  /**
+   * ABA guest-split-item-dispute. A guest reports that one line (or their
+   * whole share) is wrong — see docs/contracts/guest-split-item-dispute.md.
+   * Independent of `POST /:token/paid`: a guest may flag and pay in either
+   * order, and flagging never blocks or is blocked by payment status.
+   *
+   * `itemId` is CLAMPED, never trusted: only a value present in this
+   * participant's own `itemIds` is honored, so a raw client value can never
+   * confirm or deny another participant's item ids on the same receipt — it
+   * silently degrades to a whole-share report (`itemId: null`) instead of
+   * erroring, preserving the same indistinguishable-failure posture as every
+   * other route on this controller.
+   *
+   * Dedup: at most one OPEN flag per (participantId, itemId) — a repeat
+   * submission updates the existing row's note rather than creating a
+   * second one and does not re-notify the payer (see the schema comment on
+   * `ReceiptSplitFlag` for why this is an app-level check, not a DB unique).
+   */
+  @Post(':token/flag')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  @Header('Content-Type', 'text/html; charset=utf-8')
+  async flagItem(
+    @Param('token') token: string,
+    @Body() dto: FlagSplitItemDto,
+    @Req() req: Request,
+  ): Promise<string> {
+    const strings = getGuestPageStrings(resolveGuestLang(req));
+
+    const participant = await this.findUsableParticipant(token);
+    if (!participant) {
+      return renderNotFoundPage(strings);
+    }
+
+    const claimedItemIds = Array.isArray(participant.itemIds) ? (participant.itemIds as unknown[]) : [];
+    const rawItemId = dto.itemId?.trim();
+    const itemId = rawItemId && claimedItemIds.includes(rawItemId) ? rawItemId : null;
+    const rawNote = dto.note?.trim();
+    const note = rawNote ? rawNote.slice(0, MAX_FLAG_NOTE_LENGTH) : null;
+
+    const existing = await this.prisma.receiptSplitFlag.findFirst({
+      where: { participantId: participant.id, itemId, resolvedAt: null },
+      select: { id: true },
+    });
+
+    if (existing) {
+      await this.prisma.receiptSplitFlag.update({
+        where: { id: existing.id },
+        data: { note },
+      });
+    } else {
+      const expense = participant.expense as GuestExpenseView;
+      await this.prisma.receiptSplitFlag.create({
+        data: {
+          accountId: expense.accountId,
+          participantId: participant.id,
+          expenseId: participant.expenseId,
+          itemId,
+          note,
+        },
+      });
+
+      const payerId = expense.paidByUserId ?? expense.userId;
+      // Fire-and-forget, same posture as the split_payment_claimed push above
+      // — a failed push must never fail the guest's request. No 5th-arg
+      // preference gate, same precedent as account_invitation/
+      // split_payment_claimed: a one-off action request, not a recurring
+      // alert a user could silence.
+      void this.notificationsService
+        .sendToUser(
+          payerId,
+          (lang) => splitItemFlaggedTitle(lang, { name: participant.name }),
+          (lang) => splitItemFlaggedBody(lang),
+          { participantId: participant.id },
+          'split_item_flagged',
+        )
+        .catch(() => undefined);
+    }
+
+    const payer = await this.resolvePayer(participant.expense as GuestExpenseView);
+    const [claimantsByItem, hasReceipt, flaggedKeys] = await Promise.all([
+      Array.isArray(participant.itemIds)
+        ? this.countClaimantsByItem(participant.expenseId)
+        : Promise.resolve(new Map<string, number>()),
+      this.hasReceiptImage(participant.expenseId),
+      this.getActiveFlagsForParticipant(participant.id),
+    ]);
+    return renderGuestPage(
+      this.buildModel(participant, payer, token, claimantsByItem, hasReceipt, flaggedKeys),
+      strings,
+    );
   }
 }

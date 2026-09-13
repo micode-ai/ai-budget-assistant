@@ -2631,6 +2631,10 @@ export default {
     qrHint: 'Jeder am Tisch kann das scannen, um seinen eigenen Anteil zu sehen',
     qrShare: 'Link teilen',
     qrShareMessage: 'Scanne das, um deinen Anteil der Rechnung zu sehen:',
+    flagUnknownItem: 'Ein Artikel',
+    flagWholeShare: 'Sein/ihr ganzer Anteil',
+    flagResolve: 'Erledigt',
+    flagFixHint: 'Um zu ändern, wer wie viel schuldet, storniere die Aufteilung und erstelle sie neu.',
   },
   receiptCategorySplit: {
     title: 'Nach Kategorie aufteilen',

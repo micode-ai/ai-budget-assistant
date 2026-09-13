@@ -4672,6 +4672,10 @@ Set up how you'd like to get paid under **Settings → Profile → Payment Setti
 
 Either way, there's an **"I already paid"** button. Tapping it doesn't move any money — it just tells you they've paid.
 
+### If something's wrong with their share
+
+If your friend spots a mistake — a line they weren't actually part of, or a shared item split among the wrong number of people — they can say so right from their own page, no need to text you about it. Under each item (or under the total, if the bill was split equally) there's a small **"Something wrong with this?"** link; tapping it opens a short optional note, then **Report**. Flagging never blocks them from also tapping "I already paid" — the two are independent, in either order.
+
 ## Tracking who's paid
 
 Back in the app, each friend's row shows a status:
@@ -4682,6 +4686,8 @@ Back in the app, each friend's row shows a status:
 - **Settled** — you've confirmed the money actually arrived.
 
 A friend who hasn't paid yet simply stays at **Sent** or **Opened** — there's nothing more to it than that.
+
+If a friend flagged something wrong with their share, you'll see it right under their row, along with their note (if they added one). Tap **Resolve** once you've sorted it out — flagging never changes the split by itself, so to actually fix a wrong assignment you'll need to cancel the split and create a new one with the corrected shares.
 
 ## Confirming you've been paid
 
@@ -9338,6 +9344,10 @@ OCR иногда неверно читает цену, выдумывает ст
 
 В любом случае есть кнопка «**Я уже оплатил(а)**». Нажатие на неё не переводит никаких денег — оно просто сообщает вам, что человек заплатил.
 
+### Что-то не так с его частью?
+
+Если ваш друг заметил ошибку — позицию, к которой он на самом деле не имел отношения, или общую позицию, разделённую на неверное число людей, — он может сообщить об этом прямо со своей страницы, не переписываясь с вами. Под каждой позицией (или под итогом, если счёт был разделён поровну) есть небольшая ссылка «**Что-то не так с этим?**»; нажатие открывает короткую необязательную заметку, а затем «Сообщить». Отправка сообщения никогда не блокирует нажатие «Я уже оплатил(а)» — оба действия независимы и могут идти в любом порядке.
+
 ## Отслеживание, кто заплатил
 
 В приложении строка каждого друга показывает статус:
@@ -9348,6 +9358,8 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Рассчитано** — вы подтвердили, что деньги действительно пришли.
 
 Друг, который ещё не заплатил, просто остаётся на статусе **Отправлено** или **Открыто** — ничего больше за этим не стоит.
+
+Если друг сообщил о проблеме со своей частью, вы увидите это прямо под его строкой, вместе с его заметкой (если он её оставил). Нажмите **Решено**, как только разберётесь с этим — само сообщение не меняет разделение, поэтому, чтобы действительно исправить неверное распределение, нужно отменить разделение и создать новое с исправленными долями.
 
 ## Подтверждение получения денег
 
@@ -13974,6 +13986,10 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 У будь-якому разі є кнопка «**Я вже заплатив(ла)**». Натискання на неї не переказує жодних грошей — воно просто повідомляє вам, що людина заплатила.
 
+### Щось не так із його часткою?
+
+Якщо ваш друг помітив помилку — позицію, до якої він насправді не мав стосунку, або спільну позицію, поділену на неправильну кількість людей, — він може повідомити про це прямо зі своєї сторінки, не пишучи вам. Під кожною позицією (або під сумою, якщо рахунок поділено порівну) є невелике посилання «**Щось не так із цим?**»; натискання відкриває коротку необов'язкову примітку, а потім «Повідомити». Повідомлення ніколи не блокує натискання «Я вже заплатив(ла)» — обидві дії незалежні й можуть іти в будь-якому порядку.
+
 ## Відстеження, хто заплатив
 
 У застосунку рядок кожного друга показує статус:
@@ -13984,6 +14000,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Розраховано** — ви підтвердили, що гроші справді надійшли.
 
 Друг, який ще не заплатив, просто залишається у статусі **Надіслано** або **Відкрито** — нічого більше за цим не стоїть.
+
+Якщо друг повідомив про проблему зі своєю часткою, ви побачите це прямо під його рядком, разом із його приміткою (якщо він її залишив). Натисніть **Вирішено**, щойно розберетеся з цим — саме повідомлення не змінює розділення, тож щоб дійсно виправити неправильний розподіл, потрібно скасувати розділення та створити нове з виправленими частками.
 
 ## Підтвердження отримання грошей
 
@@ -18595,6 +18613,10 @@ Ustaw, jak chcesz otrzymywać zwrot pieniędzy, w **Ustawienia → Profil → Us
 
 Tak czy inaczej, jest przycisk „**Już zapłaciłem/am**". Stuknięcie go nie przenosi żadnych pieniędzy — po prostu informuje Cię, że znajomy zapłacił.
 
+### Coś nie zgadza się w jego części?
+
+Jeśli Twój znajomy zauważy błąd — pozycję, której w ogóle nie miał, albo wspólną pozycję podzieloną na złą liczbę osób — może dać Ci znać wprost ze swojej strony, bez pisania do Ciebie. Pod każdą pozycją (albo pod sumą, jeśli rachunek podzielono po równo) jest mały link „**Coś tu jest nie tak?**"; stuknięcie otwiera krótką, opcjonalną notatkę, a potem „Zgłoś". Zgłoszenie nigdy nie blokuje stuknięcia „Już zapłaciłem/am" — obie czynności są niezależne, w dowolnej kolejności.
+
 ## Śledzenie, kto zapłacił
 
 W aplikacji wiersz każdego znajomego pokazuje status:
@@ -18605,6 +18627,8 @@ W aplikacji wiersz każdego znajomego pokazuje status:
 - **Rozliczone** — potwierdziłeś/aś, że pieniądze faktycznie dotarły.
 
 Znajomy, który jeszcze nie zapłacił, po prostu zostaje przy statusie **Wysłano** albo **Otwarto** — nic więcej się z tym nie wiąże.
+
+Jeśli znajomy zgłosił coś nie tak ze swoją częścią, zobaczysz to zaraz pod jego wierszem, razem z jego notatką (jeśli ją dodał). Stuknij **Rozwiązano**, gdy tylko to załatwisz — samo zgłoszenie nie zmienia podziału, więc żeby faktycznie poprawić błędne przypisanie, musisz anulować podział i utworzyć nowy z poprawionymi częściami.
 
 ## Potwierdzanie otrzymania pieniędzy
 
@@ -23191,6 +23215,10 @@ Richte unter **Einstellungen → Profil → Zahlungseinstellungen** ein, wie du 
 
 So oder so gibt es einen Button „**Ich habe bereits bezahlt**". Ein Tipp darauf bewegt kein Geld — er sagt dir nur, dass bezahlt wurde.
 
+### Stimmt etwas mit seinem Anteil nicht?
+
+Bemerkt dein Freund einen Fehler — eine Position, die er gar nicht hatte, oder ein geteilter Artikel, der zwischen der falschen Anzahl Leute aufgeteilt wurde —, kann er das direkt auf seiner eigenen Seite sagen, ohne dir zu schreiben. Unter jeder Position (oder unter dem Gesamtbetrag, falls die Rechnung gleichmäßig geteilt wurde) gibt es einen kleinen Link „**Stimmt hier etwas nicht?**"; ein Tipp darauf öffnet ein kurzes, optionales Notizfeld, dann „Melden". Das Melden blockiert „Ich habe bereits bezahlt" nicht — beides ist unabhängig voneinander, in beliebiger Reihenfolge.
+
 ## Verfolgen, wer bezahlt hat
 
 Zurück in der App zeigt die Zeile jedes Freundes einen Status:
@@ -23201,6 +23229,8 @@ Zurück in der App zeigt die Zeile jedes Freundes einen Status:
 - **Beglichen** — du hast bestätigt, dass das Geld tatsächlich angekommen ist.
 
 Ein Freund, der noch nicht bezahlt hat, bleibt einfach bei **Gesendet** oder **Geöffnet** — mehr steckt nicht dahinter.
+
+Hat ein Freund etwas an seinem Anteil gemeldet, siehst du das direkt unter seiner Zeile, zusammen mit seiner Notiz (falls er eine hinzugefügt hat). Tippe auf **Erledigt**, sobald du es geklärt hast — das Melden ändert die Aufteilung selbst nicht, um eine falsche Zuordnung wirklich zu korrigieren, musst du die Aufteilung stornieren und mit den korrigierten Anteilen neu erstellen.
 
 ## Den Erhalt bestätigen
 
@@ -27776,6 +27806,10 @@ Configura cómo quieres que te paguen en **Ajustes → Perfil → Ajustes de pag
 
 En cualquier caso, hay un botón "**Ya pagué**". Tocarlo no mueve ningún dinero — solo te avisa de que esa persona ha pagado.
 
+### ¿Algo no cuadra con su parte?
+
+Si tu amigo detecta un error — una línea de la que en realidad no formaba parte, o un artículo compartido dividido entre el número equivocado de personas — puede decírtelo directamente desde su propia página, sin tener que escribirte. Debajo de cada artículo (o debajo del total, si la cuenta se dividió a partes iguales) hay un pequeño enlace "**¿Algo está mal aquí?**"; al tocarlo se abre una nota breve y opcional, y luego "Reportar". Reportar nunca bloquea que también toque "Ya pagué" — son independientes, en cualquier orden.
+
 ## Seguir quién ha pagado
 
 De vuelta en la app, la fila de cada amigo muestra un estado:
@@ -27786,6 +27820,8 @@ De vuelta en la app, la fila de cada amigo muestra un estado:
 - **Saldado** — has confirmado que el dinero ha llegado de verdad.
 
 Un amigo que todavía no ha pagado simplemente se queda en **Enviado** u **Abierto** — no hay nada más detrás de eso.
+
+Si un amigo reportó algo mal con su parte, lo verás justo debajo de su fila, junto con su nota (si añadió una). Toca **Resolver** en cuanto lo hayas solucionado — reportar no cambia la división por sí solo, así que para corregir de verdad una asignación equivocada tendrás que cancelar la división y crear una nueva con las partes corregidas.
 
 ## Confirmar que has recibido el pago
 
@@ -32359,6 +32395,10 @@ Configurez comment vous souhaitez être remboursé(e) dans **Paramètres → Pro
 
 Dans tous les cas, il y a un bouton « **J'ai déjà payé** ». Appuyer dessus ne déplace aucun argent — cela vous indique simplement que la personne a payé.
 
+### Un problème avec sa part ?
+
+Si votre ami repère une erreur — une ligne qu'il n'a en fait jamais eue, ou un article partagé divisé entre le mauvais nombre de personnes — il peut vous le signaler directement depuis sa propre page, sans avoir à vous écrire. Sous chaque article (ou sous le total, si l'addition a été partagée à parts égales), un petit lien « **Un problème avec ça ?** » ouvre une courte note facultative, puis « Signaler ». Signaler ne bloque jamais le fait d'appuyer aussi sur « J'ai déjà payé » — les deux actions sont indépendantes, dans n'importe quel ordre.
+
 ## Suivre qui a payé
 
 De retour dans l'application, la ligne de chaque ami affiche un statut :
@@ -32369,6 +32409,8 @@ De retour dans l'application, la ligne de chaque ami affiche un statut :
 - **Réglé** — vous avez confirmé que l'argent est bien arrivé.
 
 Un ami qui n'a pas encore payé reste simplement à **Envoyé** ou **Ouvert** — il n'y a rien de plus à en dire.
+
+Si un ami a signalé un problème avec sa part, vous le verrez juste sous sa ligne, avec sa note s'il en a ajouté une. Appuyez sur **Résoudre** une fois que c'est réglé — signaler ne modifie pas le partage en soi, donc pour corriger vraiment une mauvaise attribution, il faudra annuler le partage et en recréer un avec les parts corrigées.
 
 ## Confirmer que vous avez été payé
 
@@ -36906,6 +36948,10 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 У любым выпадку ёсць кнопка «**Я ўжо заплаціў(ла)**». Націск на яе не пераводзіць ніякіх грошай — ён проста паведамляе вам, што чалавек заплаціў.
 
+### Штосьці не так з яго часткай?
+
+Калі ваш сябар заўважыў памылку — пазіцыю, да якой ён на самай справе не меў дачынення, або агульную пазіцыю, падзеленую на няправільную колькасць людзей, — ён можа паведаміць пра гэта прама са сваёй старонкі, не пішучы вам. Пад кожнай пазіцыяй (або пад сумай, калі рахунак падзелены пароўну) ёсць невялікая спасылка «**Штосьці не так з гэтым?**»; націск адкрывае кароткую неабавязковую нататку, а потым «Паведаміць». Паведамленне ніколі не блакуе націск «Я ўжо заплаціў(ла)» — абодва дзеянні незалежныя і могуць ісці ў любым парадку.
+
 ## Адсочванне, хто заплаціў
 
 У праграме радок кожнага сябра паказвае статус:
@@ -36916,6 +36962,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Разлічана** — вы пацвердзілі, што грошы сапраўды прыйшлі.
 
 Сябар, які яшчэ не заплаціў, проста застаецца ў статусе **Даслана** або **Адкрыта** — нічога больш за гэтым не стаіць.
+
+Калі сябар паведаміў пра праблему са сваёй часткай, вы ўбачыце гэта прама пад яго радком, разам з яго нататкай (калі ён яе пакінуў). Націсніце **Вырашана**, як толькі разбярэцеся з гэтым — само паведамленне не змяняе падзел, таму каб сапраўды выправіць няправільны размеркаванне, трэба скасаваць падзел і стварыць новы з выпраўленымі часткамі.
 
 ## Пацвярджэнне атрымання грошай
 
@@ -41568,6 +41616,10 @@ Stel in hoe je terugbetaald wilt worden onder **Instellingen → Profiel → Bet
 
 Hoe dan ook, er is een knop "**Ik heb al betaald**". Erop tikken verplaatst geen geld — het laat je alleen weten dat diegene heeft betaald.
 
+### Klopt er iets niet met zijn deel?
+
+Merkt je vriend een fout op — een regel die hij eigenlijk niet had, of een gedeeld item dat onder het verkeerde aantal mensen is verdeeld — dan kan hij dat direct vanaf zijn eigen pagina laten weten, zonder je te hoeven appen. Onder elk item (of onder het totaal, als de rekening gelijk is verdeeld) staat een klein linkje "**Klopt dit niet?**"; erop tikken opent een korte, optionele notitie, en dan "Melden". Melden blokkeert nooit dat hij ook op "Ik heb al betaald" tikt — beide staan los van elkaar, in willekeurige volgorde.
+
 ## Bijhouden wie heeft betaald
 
 Terug in de app toont de rij van elke vriend een status:
@@ -41578,6 +41630,8 @@ Terug in de app toont de rij van elke vriend een status:
 - **Afgerekend** — jij hebt bevestigd dat het geld daadwerkelijk is binnengekomen.
 
 Een vriend die nog niet heeft betaald, blijft gewoon op **Verstuurd** of **Geopend** staan — meer zit daar niet achter.
+
+Heeft een vriend iets aan zijn deel gemeld, dan zie je dat direct onder zijn rij, samen met zijn notitie (als hij die heeft toegevoegd). Tik op **Opgelost** zodra je het hebt geregeld — melden verandert de verdeling zelf niet, dus om een verkeerde toewijzing echt te corrigeren, moet je de verdeling annuleren en opnieuw aanmaken met de gecorrigeerde delen.
 
 ## Bevestigen dat je betaald bent
 

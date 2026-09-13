@@ -35,6 +35,10 @@ Richte unter **Einstellungen → Profil → Zahlungseinstellungen** ein, wie du 
 
 So oder so gibt es einen Button „**Ich habe bereits bezahlt**". Ein Tipp darauf bewegt kein Geld — er sagt dir nur, dass bezahlt wurde.
 
+### Stimmt etwas mit seinem Anteil nicht?
+
+Bemerkt dein Freund einen Fehler — eine Position, die er gar nicht hatte, oder ein geteilter Artikel, der zwischen der falschen Anzahl Leute aufgeteilt wurde —, kann er das direkt auf seiner eigenen Seite sagen, ohne dir zu schreiben. Unter jeder Position (oder unter dem Gesamtbetrag, falls die Rechnung gleichmäßig geteilt wurde) gibt es einen kleinen Link „**Stimmt hier etwas nicht?**"; ein Tipp darauf öffnet ein kurzes, optionales Notizfeld, dann „Melden". Das Melden blockiert „Ich habe bereits bezahlt" nicht — beides ist unabhängig voneinander, in beliebiger Reihenfolge.
+
 ## Verfolgen, wer bezahlt hat
 
 Zurück in der App zeigt die Zeile jedes Freundes einen Status:
@@ -45,6 +49,8 @@ Zurück in der App zeigt die Zeile jedes Freundes einen Status:
 - **Beglichen** — du hast bestätigt, dass das Geld tatsächlich angekommen ist.
 
 Ein Freund, der noch nicht bezahlt hat, bleibt einfach bei **Gesendet** oder **Geöffnet** — mehr steckt nicht dahinter.
+
+Hat ein Freund etwas an seinem Anteil gemeldet, siehst du das direkt unter seiner Zeile, zusammen mit seiner Notiz (falls er eine hinzugefügt hat). Tippe auf **Erledigt**, sobald du es geklärt hast — das Melden ändert die Aufteilung selbst nicht, um eine falsche Zuordnung wirklich zu korrigieren, musst du die Aufteilung stornieren und mit den korrigierten Anteilen neu erstellen.
 
 ## Den Erhalt bestätigen
 

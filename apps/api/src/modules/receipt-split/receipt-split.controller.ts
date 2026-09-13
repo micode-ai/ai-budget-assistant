@@ -91,4 +91,23 @@ export class ReceiptSplitController {
   async cancel(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
     return this.receiptSplitService.cancelSplit(req.accountId, id);
   }
+
+  /**
+   * ABA guest-split-item-dispute. Marks one of a guest's open flags as dealt
+   * with — see docs/contracts/guest-split-item-dispute.md. Not itself a
+   * `:id/receipt-split/:participantId/...` route (a flag id, not a
+   * participant id, addresses the row), so it is declared with its own
+   * static `flags` segment after `:id/receipt-split` — no route-shadow risk
+   * against the sibling routes above (Express requires every segment to
+   * agree, and none of them has a static `flags` third segment).
+   */
+  @Patch(':id/receipt-split/flags/:flagId/resolve')
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
+  async resolveFlag(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Param('flagId') flagId: string,
+  ) {
+    return this.receiptSplitService.resolveFlag(req.accountId, id, flagId);
+  }
 }

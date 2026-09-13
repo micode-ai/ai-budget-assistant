@@ -2645,6 +2645,10 @@ export default {
     qrHint: 'Każdy przy stole może to zeskanować, aby zobaczyć swoją część',
     qrShare: 'Udostępnij link',
     qrShareMessage: 'Zeskanuj to, aby zobaczyć swoją część rachunku:',
+    flagUnknownItem: 'Pozycja',
+    flagWholeShare: 'Cała jego/jej część',
+    flagResolve: 'Rozwiązano',
+    flagFixHint: 'Aby zmienić, kto ile jest winien, anuluj i utwórz podział od nowa.',
   },
   receiptCategorySplit: {
     title: 'Podział na kategorie',

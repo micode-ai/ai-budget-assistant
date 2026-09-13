@@ -13,6 +13,20 @@ export interface CreateSplitDto {
 
 export type SplitParticipantStatus = 'sent' | 'opened' | 'claimed' | 'settled';
 
+/** A guest's report that one line (or their whole share) is wrong — see
+ * docs/contracts/guest-split-item-dispute.md. Only OPEN (unresolved) flags
+ * are ever included in a `SplitParticipantState` — a resolved one simply
+ * disappears from the next response. */
+export interface SplitParticipantFlag {
+  id: string;
+  /** The expense_item id this flag is about, or null for a whole-share
+   * report (equal-split mode, or "I wasn't in this split at all"). */
+  itemId: string | null;
+  /** Guest's optional free-text note. Plain text — never HTML. */
+  note: string | null;
+  createdAt: string;
+}
+
 export interface SplitParticipantState {
   id: string;
   name: string;
@@ -21,6 +35,8 @@ export interface SplitParticipantState {
   status: SplitParticipantStatus;
   /** The shareable URL. Present only to the payer, never on the guest page. */
   url: string;
+  /** Always present — empty array when there are no open flags. */
+  flags: SplitParticipantFlag[];
 }
 
 export interface SplitStateResponse {

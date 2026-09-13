@@ -2638,6 +2638,10 @@ export default {
     qrHint: 'Anyone at the table can scan this to see their own share',
     qrShare: 'Share link',
     qrShareMessage: 'Scan this to see your share of the bill:',
+    flagUnknownItem: 'An item',
+    flagWholeShare: 'Their whole share',
+    flagResolve: 'Resolve',
+    flagFixHint: 'To change who owes what, cancel and recreate the split.',
   },
   receiptCategorySplit: {
     title: 'Split by category',

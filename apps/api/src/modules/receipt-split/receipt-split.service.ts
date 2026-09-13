@@ -12,6 +12,7 @@ import {
 import { CreateSplitDto } from './dto';
 import type {
   RecentSplitParticipantsResponse,
+  SplitParticipantFlag,
   SplitParticipantState,
   SplitParticipantStatus,
   SplitStateResponse,
@@ -54,6 +55,20 @@ interface ParticipantRow {
   openedAt: Date | null;
   claimedAt: Date | null;
   settledAt: Date | null;
+}
+
+/** Raw shape of an open `ReceiptSplitFlag` row as read for state-response
+ * assembly (ABA guest-split-item-dispute) — mirrors `SplitParticipantFlag`
+ * but with a real `Date` instead of the DTO's ISO string. */
+interface RawFlag {
+  id: string;
+  itemId: string | null;
+  note: string | null;
+  createdAt: Date;
+}
+
+function toFlagDto(flag: RawFlag): SplitParticipantFlag {
+  return { id: flag.id, itemId: flag.itemId, note: flag.note, createdAt: flag.createdAt.toISOString() };
 }
 
 /**
@@ -183,10 +198,34 @@ export class ReceiptSplitService {
     return `${GUEST_LINK_BASE}/s/g/${groupToken}?lang=${lang}`;
   }
 
+  /**
+   * Every OPEN (unresolved) flag on this expense's split, grouped by
+   * `participantId` — ABA guest-split-item-dispute. One query per call site
+   * that needs it (`getSplit`, the concurrent-race re-fetch in `createSplit`)
+   * — the plain "freshly created" success path in `createSplit` passes an
+   * empty `Map` literal instead of calling this, since a split minted in the
+   * same request cannot already have a flag on it.
+   */
+  private async getActiveFlagsByParticipant(expenseId: string): Promise<Map<string, RawFlag[]>> {
+    const rows = await this.prisma.receiptSplitFlag.findMany({
+      where: { expenseId, resolvedAt: null },
+      orderBy: { createdAt: 'asc' },
+      select: { id: true, participantId: true, itemId: true, note: true, createdAt: true },
+    });
+    const map = new Map<string, RawFlag[]>();
+    for (const row of rows) {
+      const list = map.get(row.participantId) ?? [];
+      list.push({ id: row.id, itemId: row.itemId, note: row.note, createdAt: row.createdAt });
+      map.set(row.participantId, list);
+    }
+    return map;
+  }
+
   private toStateResponse(
     expense: { id: string; currencyCode: string; amount: unknown },
     participants: ParticipantRow[],
     lang: string,
+    flagsByParticipant: Map<string, RawFlag[]>,
   ): SplitStateResponse {
     const participantSum = participants.reduce((sum, p) => sum + Number(p.amount), 0);
     const ownShare = Math.round((Number(expense.amount) - participantSum) * 100) / 100;
@@ -197,6 +236,7 @@ export class ReceiptSplitService {
       currencyCode: p.currencyCode,
       status: this.statusFor(p),
       url: this.buildGuestUrl(p.token, lang),
+      flags: (flagsByParticipant.get(p.id) ?? []).map(toFlagDto),
     }));
     // The anchor row (seq:0) is the sole carrier of groupToken — find it
     // rather than assuming array order/index, since `orderBy: { createdAt: 'asc' }`
@@ -232,7 +272,8 @@ export class ReceiptSplitService {
       orderBy: { createdAt: 'asc' },
     });
     if (existing.length > 0) {
-      return this.toStateResponse(expense, existing, lang);
+      const flagsByParticipant = await this.getActiveFlagsByParticipant(expense.id);
+      return this.toStateResponse(expense, existing, lang, flagsByParticipant);
     }
 
     // --- Validation. Everything below is a read or pure computation — nothing
@@ -361,7 +402,9 @@ export class ReceiptSplitService {
         return rows;
       });
 
-      return this.toStateResponse(expense, created, lang);
+      // A split minted in THIS request cannot already carry a flag — no query
+      // needed, unlike the two re-fetch paths below.
+      return this.toStateResponse(expense, created, lang, new Map());
     } catch (err: unknown) {
       // Concurrent-race: another request for the same expense won the race and
       // already committed its split. Postgres poisons a transaction after the
@@ -381,7 +424,8 @@ export class ReceiptSplitService {
           orderBy: { createdAt: 'asc' },
         });
         if (race.length > 0) {
-          return this.toStateResponse(expense, race, lang);
+          const flagsByParticipant = await this.getActiveFlagsByParticipant(expense.id);
+          return this.toStateResponse(expense, race, lang, flagsByParticipant);
         }
       }
       throw err;
@@ -399,7 +443,8 @@ export class ReceiptSplitService {
       throw new NotFoundException('No split exists for this expense');
     }
     const lang = await this.resolvePayerLanguage(expense);
-    return this.toStateResponse(expense, participants, lang);
+    const flagsByParticipant = await this.getActiveFlagsByParticipant(expense.id);
+    return this.toStateResponse(expense, participants, lang, flagsByParticipant);
   }
 
   async confirmParticipant(
@@ -468,6 +513,11 @@ export class ReceiptSplitService {
     }
 
     const lang = await this.resolvePayerLanguage(expense);
+    const ownFlags = await this.prisma.receiptSplitFlag.findMany({
+      where: { participantId: participant.id, resolvedAt: null },
+      orderBy: { createdAt: 'asc' },
+      select: { id: true, itemId: true, note: true, createdAt: true },
+    });
     return {
       id: participant.id,
       name: participant.name,
@@ -475,7 +525,30 @@ export class ReceiptSplitService {
       currencyCode: participant.currencyCode,
       status: this.statusFor({ ...participant, settledAt: settledAtClaim }),
       url: this.buildGuestUrl(participant.token, lang),
+      flags: ownFlags.map(toFlagDto),
     };
+  }
+
+  /**
+   * Payer marks a guest's flag as dealt with (ABA guest-split-item-dispute) —
+   * explicit, never auto-resolved (see the contract doc for why: there is no
+   * in-place split-editing UI to key an auto-resolve off, only Cancel +
+   * recreate). Scoped by `accountId` via `resolveExpense`, then matched on
+   * BOTH `id` and `expenseId` so a flag id from a different expense (even one
+   * this account owns) 404s rather than silently resolving the wrong split's
+   * flag. `resolvedAt: null` in the `where` makes a double-tap a no-op rather
+   * than a race — the second call simply matches zero rows.
+   */
+  async resolveFlag(accountId: string, expenseId: string, flagId: string): Promise<{ success: true }> {
+    const expense = await this.resolveExpense(accountId, expenseId);
+    const result = await this.prisma.receiptSplitFlag.updateMany({
+      where: { id: flagId, expenseId: expense.id, resolvedAt: null },
+      data: { resolvedAt: new Date() },
+    });
+    if (result.count === 0) {
+      throw new NotFoundException('Flag not found or already resolved');
+    }
+    return { success: true };
   }
 
   /**

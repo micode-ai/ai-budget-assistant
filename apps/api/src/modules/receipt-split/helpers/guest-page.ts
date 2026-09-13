@@ -44,7 +44,7 @@ function pageShell(title: string, bodyHtml: string): string {
   // Compensated by widening `max-width` to 520px (480 + the 2×20px padding) so the
   // rendered content width stays exactly 480px either way — pixel-identical to before on
   // every viewport, not just phones.
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.items .shared{color:#6b6b73;font-size:12px;white-space:nowrap}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}.pay-method{font-weight:600;font-size:13px;margin-bottom:4px}.pay-handle{color:#6b6b73;font-size:13px;margin-bottom:8px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}.cta{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:20px;text-align:center}.cta-title{font-size:14px;font-weight:600;margin-bottom:12px}.btn-cta{background:#E37F2B;color:#fff}.cta .play{display:inline-block;margin-top:6px;font-size:13px;color:#6b6b73}.btn-receipt{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd;margin-bottom:16px}</style></head><body>${bodyHtml}</body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.item-row{display:flex;justify-content:space-between}.items .shared{color:#6b6b73;font-size:12px;white-space:nowrap}.flag{margin-top:4px}.flag summary{cursor:pointer;font-size:12px;color:#6b6b73;list-style:none}.flag summary::-webkit-details-marker{display:none}.flag textarea{width:100%;margin:6px 0;padding:8px;border:1px solid #ddd;border-radius:6px;font-family:inherit;font-size:13px;resize:vertical;min-height:50px}.btn-flag{padding:8px;font-size:13px;margin:4px 0 0}.flag-reported{font-size:12px;color:#6b6b73;margin-top:4px}.whole-share-flag{margin-top:12px}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}.pay-method{font-weight:600;font-size:13px;margin-bottom:4px}.pay-handle{color:#6b6b73;font-size:13px;margin-bottom:8px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}.cta{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:20px;text-align:center}.cta-title{font-size:14px;font-weight:600;margin-bottom:12px}.btn-cta{background:#E37F2B;color:#fff}.cta .play{display:inline-block;margin-top:6px;font-size:13px;color:#6b6b73}.btn-receipt{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd;margin-bottom:16px}</style></head><body>${bodyHtml}</body></html>`;
 }
 
 /**
@@ -61,6 +61,9 @@ export function renderNotFoundPage(strings: GuestPageStrings): string {
 }
 
 export interface GuestPageItem {
+  /** The expense_item id — used only to address the hidden `itemId` field of
+   *  this line's flag form (see `GuestPageModel.flagAction`); never shown. */
+  id: string;
   description: string;
   /** THIS guest's share of the line, never the line's outright price — a 60
    *  bottle claimed by three people is 20 here. Allocated by
@@ -70,6 +73,10 @@ export interface GuestPageItem {
    *  above 1 the renderer marks the line, so a guest can see why a 60 bottle
    *  is charged to them at 20 instead of reading it as a wrong price. */
   sharedWith: number;
+  /** True once this guest has an OPEN (unresolved) flag on this line —
+   *  renders a "reported" note instead of the flag form (ABA —
+   *  guest-split-item-dispute). */
+  flagged: boolean;
 }
 
 export type GuestPaymentStatus = 'sent' | 'opened' | 'claimed' | 'settled';
@@ -117,6 +124,12 @@ export interface GuestPageModel {
    *  when the expense carries no scan. Lets the guest check the line amounts
    *  above against the paper rather than take them on trust. */
   receiptUrl: string | null;
+  /** Relative path every flag form (per-item and whole-share) posts to, e.g.
+   *  `/s/<token>/flag` (ABA — guest-split-item-dispute). */
+  flagAction: string;
+  /** True once this guest has an OPEN whole-share flag (itemId: null) —
+   *  renders a "reported" note instead of the generic flag form. */
+  wholeShareFlagged: boolean;
 }
 
 /**
@@ -193,6 +206,23 @@ const APP_URL = 'https://app.ai-budget.pl/?src=split&loc=guest';
 export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings): string {
   const merchantLabel = model.merchant ? escapeHtml(model.merchant) : escapeHtml(strings.genericMerchant);
 
+  // One flag control per line (itemId set) and one generic whole-share control
+  // (itemId null) — ABA guest-split-item-dispute. Zero JS: `<details>` is the
+  // native disclosure widget, so a guest can open the note field without this
+  // page ever needing a `<script>` tag. Already-flagged renders a short
+  // "reported" note instead of the form, so re-opening the page (or the
+  // POST's own re-render) can't be mistaken for a fresh, unsent report.
+  const renderFlagBlock = (itemId: string | null, flagged: boolean): string => {
+    if (flagged) {
+      return `<div class="flag-reported">${escapeHtml(strings.flagReported)}</div>`;
+    }
+    const hiddenItemId = itemId
+      ? `<input type="hidden" name="itemId" value="${escapeHtml(itemId)}">`
+      : '';
+    const summary = itemId ? strings.flagSomethingWrong : strings.flagWholeShareSummary;
+    return `<details class="flag"><summary>${escapeHtml(summary)}</summary><form method="post" action="${escapeHtml(model.flagAction)}">${hiddenItemId}<textarea name="note" maxlength="500" placeholder="${escapeHtml(strings.flagNotePlaceholder)}"></textarea><button type="submit" class="btn btn-secondary btn-flag">${escapeHtml(strings.flagSubmit)}</button></form></details>`;
+  };
+
   const itemsHtml =
     model.items && model.items.length > 0
       ? `<div class="muted">${escapeHtml(strings.yourItemsHeading)}</div><ul class="items">${model.items
@@ -201,10 +231,15 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
               item.sharedWith > 1
                 ? ` <span class="shared">${escapeHtml(strings.sharedMarker(item.sharedWith))}</span>`
                 : '';
-            return `<li><span>${escapeHtml(item.description)}${shared}</span><span>${item.amount.toFixed(2)}</span></li>`;
+            return `<li><div class="item-row"><span>${escapeHtml(item.description)}${shared}</span><span>${item.amount.toFixed(2)}</span></div>${renderFlagBlock(item.id, item.flagged)}</li>`;
           })
           .join('')}</ul>`
       : `<p class="muted">${escapeHtml(strings.equalShareNote)}</p>`;
+
+  // Rendered regardless of split mode/status (see the file-level contract doc
+  // — a flag is never gated on payment status, and covers "I wasn't in this
+  // split at all" for equal-mode where there's no per-item line to flag).
+  const wholeShareFlagHtml = `<div class="whole-share-flag">${renderFlagBlock(null, model.wholeShareFlagged)}</div>`;
 
   // Once the guest has said they paid (claimed) or the payer has confirmed it
   // (settled), offering a pay button / BLIK box next to that confirmation is
@@ -279,6 +314,7 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
     <h1>${escapeHtml(strings.greeting(model.guestName))}</h1>
     <div class="muted">${escapeHtml(strings.paidByLine(model.payerName))}</div>
     ${itemsHtml}
+    ${wholeShareFlagHtml}
     ${receiptHtml}
     <div class="muted">${escapeHtml(strings.yourShareLabel)}</div>
     <div class="amount">${model.amount.toFixed(2)} ${escapeHtml(model.currencyCode)}</div>

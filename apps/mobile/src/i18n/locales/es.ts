@@ -2631,6 +2631,10 @@ export default {
     qrHint: 'Cualquiera en la mesa puede escanear esto para ver su propia parte',
     qrShare: 'Compartir enlace',
     qrShareMessage: 'Escanea esto para ver tu parte de la cuenta:',
+    flagUnknownItem: 'Un artículo',
+    flagWholeShare: 'Toda su parte',
+    flagResolve: 'Resolver',
+    flagFixHint: 'Para cambiar quién debe qué, cancela y vuelve a crear la división.',
   },
   receiptCategorySplit: {
     title: 'Dividir por categoría',

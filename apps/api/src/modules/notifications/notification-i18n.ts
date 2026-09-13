@@ -138,6 +138,15 @@ interface RateWatchHitParams {
   rate: string;
 }
 
+/** A guest flagged a line (or their whole share) of a receipt split as wrong
+ * — see docs/contracts/guest-split-item-dispute.md. Body carries no params:
+ * it is a generic "go check what they said" instruction, since the flag's
+ * own free-text note (if any) is only ever shown inside the app, never in
+ * a push body. */
+interface SplitItemFlaggedTitleParams {
+  name: string;
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -207,6 +216,8 @@ const translations: Record<string, {
   splitPaymentClaimedBody: (p: SplitPaymentClaimedBodyParams) => string;
   rateWatchHitTitle: (p: Pick<RateWatchHitParams, 'fromCurrency' | 'toCurrency'>) => string;
   rateWatchHitBody: (p: RateWatchHitParams) => string;
+  splitItemFlaggedTitle: (p: SplitItemFlaggedTitleParams) => string;
+  splitItemFlaggedBody: () => string;
 }> = {
   en: {
     sharedExpenseTitle: ({ accountName }) => `New expense in "${accountName}"`,
@@ -301,6 +312,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirm the ${amount} ${currencyCode} payment in the app.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `${fromCurrency}/${toCurrency} target reached`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} is now ${rate} ${toCurrency}. Tap to exchange.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} flagged part of the split`,
+    splitItemFlaggedBody: () => "They said something's wrong with their share. Open the app to check.",
   },
   ru: {
     sharedExpenseTitle: ({ accountName }) => `Новый расход в "${accountName}"`,
@@ -395,6 +408,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Подтвердите платёж ${amount} ${currencyCode} в приложении.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Цель по курсу ${fromCurrency}/${toCurrency} достигнута`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} теперь ${rate} ${toCurrency}. Нажмите, чтобы обменять.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} отметил(а) проблему в счёте`,
+    splitItemFlaggedBody: () => 'Говорит, что с его/её частью что-то не так. Откройте приложение, чтобы посмотреть.',
   },
   ua: {
     sharedExpenseTitle: ({ accountName }) => `Новий витрат у "${accountName}"`,
@@ -489,6 +504,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Підтвердьте платіж ${amount} ${currencyCode} у застосунку.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Ціль за курсом ${fromCurrency}/${toCurrency} досягнута`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} тепер ${rate} ${toCurrency}. Натисніть, щоб обміняти.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} повідомив(ла) про проблему в рахунку`,
+    splitItemFlaggedBody: () => 'Каже, що з його/її часткою щось не так. Відкрийте застосунок, щоб перевірити.',
   },
   pl: {
     sharedExpenseTitle: ({ accountName }) => `Nowy wydatek w "${accountName}"`,
@@ -583,6 +600,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Potwierdź płatność ${amount} ${currencyCode} w aplikacji.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Cel kursu ${fromCurrency}/${toCurrency} osiągnięty`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} to teraz ${rate} ${toCurrency}. Dotknij, aby wymienić.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} zgłosił(a) problem z podziałem`,
+    splitItemFlaggedBody: () => 'Mówi, że coś jest nie tak z jego/jej częścią. Otwórz aplikację, aby sprawdzić.',
   },
   es: {
     sharedExpenseTitle: ({ accountName }) => `Nuevo gasto en "${accountName}"`,
@@ -677,6 +696,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirma el pago de ${amount} ${currencyCode} en la app.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Objetivo de ${fromCurrency}/${toCurrency} alcanzado`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} ahora es ${rate} ${toCurrency}. Toca para cambiar.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} reportó un problema con la cuenta`,
+    splitItemFlaggedBody: () => 'Dice que algo no está bien con su parte. Abre la app para revisarlo.',
   },
   fr: {
     sharedExpenseTitle: ({ accountName }) => `Nouvelle dépense dans "${accountName}"`,
@@ -771,6 +792,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Confirmez le paiement de ${amount} ${currencyCode} dans l'application.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Objectif de taux ${fromCurrency}/${toCurrency} atteint`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} vaut maintenant ${rate} ${toCurrency}. Touchez pour échanger.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} a signalé un problème avec l'addition`,
+    splitItemFlaggedBody: () => "Il/elle dit que quelque chose ne va pas avec sa part. Ouvre l'application pour vérifier.",
   },
   de: {
     sharedExpenseTitle: ({ accountName }) => `Neue Ausgabe in "${accountName}"`,
@@ -865,6 +888,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Bestätige die Zahlung von ${amount} ${currencyCode} in der App.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Kursziel ${fromCurrency}/${toCurrency} erreicht`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} entspricht jetzt ${rate} ${toCurrency}. Zum Umtauschen tippen.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} hat ein Problem mit der Aufteilung gemeldet`,
+    splitItemFlaggedBody: () => 'Es heißt, etwas stimmt nicht mit dem Anteil. Öffne die App, um es zu prüfen.',
   },
   be: {
     sharedExpenseTitle: ({ accountName }) => `Новы расход у "${accountName}"`,
@@ -959,6 +984,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Пацвердзіце плацёж ${amount} ${currencyCode} у дадатку.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Мэта курсу ${fromCurrency}/${toCurrency} дасягнута`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} цяпер ${rate} ${toCurrency}. Націсніце, каб абмяняць.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} паведаміў(ла) пра праблему ў рахунку`,
+    splitItemFlaggedBody: () => 'Кажа, што нешта не так з яго/яе часткай. Адкрыйце дадатак, каб праверыць.',
   },
   nl: {
     sharedExpenseTitle: ({ accountName }) => `Nieuwe uitgave in "${accountName}"`,
@@ -1053,6 +1080,8 @@ const translations: Record<string, {
     splitPaymentClaimedBody: ({ amount, currencyCode }) => `Bevestig de betaling van ${amount} ${currencyCode} in de app.`,
     rateWatchHitTitle: ({ fromCurrency, toCurrency }) => `Koersdoel ${fromCurrency}/${toCurrency} bereikt`,
     rateWatchHitBody: ({ fromCurrency, toCurrency, rate }) => `1 ${fromCurrency} is nu ${rate} ${toCurrency}. Tik om te wisselen.`,
+    splitItemFlaggedTitle: ({ name }) => `${name} heeft een probleem gemeld met de rekening`,
+    splitItemFlaggedBody: () => 'Er is volgens hen iets niet in orde met hun deel. Open de app om het te bekijken.',
   },
 };
 
@@ -1304,4 +1333,12 @@ export function rateWatchHitTitle(lang: Lang, params: Pick<RateWatchHitParams, '
 
 export function rateWatchHitBody(lang: Lang, params: RateWatchHitParams): string {
   return t(lang).rateWatchHitBody(params);
+}
+
+export function splitItemFlaggedTitle(lang: Lang, params: SplitItemFlaggedTitleParams): string {
+  return t(lang).splitItemFlaggedTitle(params);
+}
+
+export function splitItemFlaggedBody(lang: Lang): string {
+  return t(lang).splitItemFlaggedBody();
 }

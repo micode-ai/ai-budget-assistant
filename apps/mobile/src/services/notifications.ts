@@ -158,13 +158,14 @@ export function handleNotificationResponse(
       } as any);
       break;
     }
-    case 'split_payment_claimed': {
-      // The push payload carries only `participantId` (see
-      // guest.controller.ts) — no `expenseId` to deep-link with directly.
-      // Resolve it from the local index recorded by receiptSplitStore's
-      // create()/load() (see receiptSplitParticipantIndex.ts). If unknown
-      // (different device, reinstall), fall back to the expenses list rather
-      // than doing nothing — same precedent as the 'shared_expense' case.
+    case 'split_payment_claimed':
+    case 'split_item_flagged': {
+      // Both carry only `participantId` (see guest.controller.ts) — no
+      // `expenseId` to deep-link with directly. Resolve it from the local
+      // index recorded by receiptSplitStore's create()/load() (see
+      // receiptSplitParticipantIndex.ts). If unknown (different device,
+      // reinstall), fall back to the expenses list rather than doing nothing
+      // — same precedent as the 'shared_expense' case.
       const participantId = data.participantId ? String(data.participantId) : undefined;
       const expenseId = participantId ? resolveExpenseIdForParticipant(participantId) : undefined;
       if (expenseId) {

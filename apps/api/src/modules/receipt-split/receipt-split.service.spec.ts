@@ -78,6 +78,13 @@ function buildDeps(
       // per-call with mockResolvedValueOnce to model a losing concurrent claim.
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
+    // ABA guest-split-item-dispute: defaults to "no open flags" everywhere.
+    // Flag-specific behavior (dedup, scoping, resolve) is covered in its own
+    // describe block below with its own overrides.
+    receiptSplitFlag: {
+      findMany: jest.fn().mockResolvedValue([]),
+      updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+    },
     $transaction: transactionMock,
   };
 
@@ -532,6 +539,81 @@ describe('ReceiptSplitService.getSplit', () => {
     expect(prisma.receiptSplitParticipant.findMany).toHaveBeenCalledWith(
       expect.objectContaining({ where: expect.objectContaining({ cancelledAt: null }) }),
     );
+  });
+
+  it('surfaces each participant\'s own OPEN flags, scoped by participantId, never another participant\'s', async () => {
+    const { service, prisma } = buildDeps({ expense: makeExpense({ amount: 100 }) });
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce([
+      {
+        id: 'p-1',
+        name: 'Alice',
+        amount: 50,
+        currencyCode: 'USD',
+        token: 'a'.repeat(32),
+        openedAt: null,
+        claimedAt: null,
+        settledAt: null,
+        cancelledAt: null,
+      },
+      {
+        id: 'p-2',
+        name: 'Bob',
+        amount: 50,
+        currencyCode: 'USD',
+        token: 'b'.repeat(32),
+        openedAt: null,
+        claimedAt: null,
+        settledAt: null,
+        cancelledAt: null,
+      },
+    ]);
+    prisma.receiptSplitFlag.findMany.mockResolvedValueOnce([
+      { id: 'flag-1', participantId: 'p-1', itemId: 'item-1', note: 'not mine', createdAt: new Date('2026-01-01') },
+    ]);
+
+    const result = await service.getSplit('acc-1', 'exp-1');
+
+    const alice = result.participants.find((p) => p.id === 'p-1')!;
+    const bob = result.participants.find((p) => p.id === 'p-2')!;
+    expect(alice.flags).toEqual([
+      { id: 'flag-1', itemId: 'item-1', note: 'not mine', createdAt: '2026-01-01T00:00:00.000Z' },
+    ]);
+    // Always present, empty when there are none — never undefined.
+    expect(bob.flags).toEqual([]);
+
+    // Only OPEN flags are ever queried — resolved ones must disappear.
+    expect(prisma.receiptSplitFlag.findMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { expenseId: 'exp-1', resolvedAt: null } }),
+    );
+  });
+});
+
+describe('ReceiptSplitService.resolveFlag (ABA guest-split-item-dispute)', () => {
+  it('resolves a flag scoped to the account\'s own expense', async () => {
+    const { service, prisma } = buildDeps({ expense: makeExpense({ id: 'exp-1', accountId: 'acc-1' }) });
+
+    const result = await service.resolveFlag('acc-1', 'exp-1', 'flag-1');
+
+    expect(result).toEqual({ success: true });
+    expect(prisma.receiptSplitFlag.updateMany).toHaveBeenCalledWith({
+      where: { id: 'flag-1', expenseId: 'exp-1', resolvedAt: null },
+      data: { resolvedAt: expect.any(Date) },
+    });
+  });
+
+  it('404s when the flag id does not exist, belongs to another expense, or is already resolved', async () => {
+    const { service, prisma } = buildDeps({ expense: makeExpense({ id: 'exp-1', accountId: 'acc-1' }) });
+    prisma.receiptSplitFlag.updateMany.mockResolvedValueOnce({ count: 0 });
+
+    await expect(service.resolveFlag('acc-1', 'exp-1', 'flag-1')).rejects.toThrow(NotFoundException);
+  });
+
+  it('404s when the expense does not belong to this account, before ever touching the flag', async () => {
+    const { service, prisma } = buildDeps();
+    prisma.expense.findFirst = jest.fn().mockResolvedValue(null);
+
+    await expect(service.resolveFlag('acc-1', 'exp-1', 'flag-1')).rejects.toThrow(NotFoundException);
+    expect(prisma.receiptSplitFlag.updateMany).not.toHaveBeenCalled();
   });
 });
 

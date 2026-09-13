@@ -35,6 +35,10 @@ Configurez comment vous souhaitez être remboursé(e) dans **Paramètres → Pro
 
 Dans tous les cas, il y a un bouton « **J'ai déjà payé** ». Appuyer dessus ne déplace aucun argent — cela vous indique simplement que la personne a payé.
 
+### Un problème avec sa part ?
+
+Si votre ami repère une erreur — une ligne qu'il n'a en fait jamais eue, ou un article partagé divisé entre le mauvais nombre de personnes — il peut vous le signaler directement depuis sa propre page, sans avoir à vous écrire. Sous chaque article (ou sous le total, si l'addition a été partagée à parts égales), un petit lien « **Un problème avec ça ?** » ouvre une courte note facultative, puis « Signaler ». Signaler ne bloque jamais le fait d'appuyer aussi sur « J'ai déjà payé » — les deux actions sont indépendantes, dans n'importe quel ordre.
+
 ## Suivre qui a payé
 
 De retour dans l'application, la ligne de chaque ami affiche un statut :
@@ -45,6 +49,8 @@ De retour dans l'application, la ligne de chaque ami affiche un statut :
 - **Réglé** — vous avez confirmé que l'argent est bien arrivé.
 
 Un ami qui n'a pas encore payé reste simplement à **Envoyé** ou **Ouvert** — il n'y a rien de plus à en dire.
+
+Si un ami a signalé un problème avec sa part, vous le verrez juste sous sa ligne, avec sa note s'il en a ajouté une. Appuyez sur **Résoudre** une fois que c'est réglé — signaler ne modifie pas le partage en soi, donc pour corriger vraiment une mauvaise attribution, il faudra annuler le partage et en recréer un avec les parts corrigées.
 
 ## Confirmer que vous avez été payé
 

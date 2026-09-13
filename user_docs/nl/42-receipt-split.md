@@ -35,6 +35,10 @@ Stel in hoe je terugbetaald wilt worden onder **Instellingen → Profiel → Bet
 
 Hoe dan ook, er is een knop "**Ik heb al betaald**". Erop tikken verplaatst geen geld — het laat je alleen weten dat diegene heeft betaald.
 
+### Klopt er iets niet met zijn deel?
+
+Merkt je vriend een fout op — een regel die hij eigenlijk niet had, of een gedeeld item dat onder het verkeerde aantal mensen is verdeeld — dan kan hij dat direct vanaf zijn eigen pagina laten weten, zonder je te hoeven appen. Onder elk item (of onder het totaal, als de rekening gelijk is verdeeld) staat een klein linkje "**Klopt dit niet?**"; erop tikken opent een korte, optionele notitie, en dan "Melden". Melden blokkeert nooit dat hij ook op "Ik heb al betaald" tikt — beide staan los van elkaar, in willekeurige volgorde.
+
 ## Bijhouden wie heeft betaald
 
 Terug in de app toont de rij van elke vriend een status:
@@ -45,6 +49,8 @@ Terug in de app toont de rij van elke vriend een status:
 - **Afgerekend** — jij hebt bevestigd dat het geld daadwerkelijk is binnengekomen.
 
 Een vriend die nog niet heeft betaald, blijft gewoon op **Verstuurd** of **Geopend** staan — meer zit daar niet achter.
+
+Heeft een vriend iets aan zijn deel gemeld, dan zie je dat direct onder zijn rij, samen met zijn notitie (als hij die heeft toegevoegd). Tik op **Opgelost** zodra je het hebt geregeld — melden verandert de verdeling zelf niet, dus om een verkeerde toewijzing echt te corrigeren, moet je de verdeling annuleren en opnieuw aanmaken met de gecorrigeerde delen.
 
 ## Bevestigen dat je betaald bent
 

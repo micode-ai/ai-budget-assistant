@@ -59,6 +59,18 @@ export interface GuestPageStrings {
   iPaidButton: string;
   claimedNotice: string;
   settledNotice: string;
+  /** Per-item flag disclosure summary text — "Something wrong with this?"
+   * (ABA — guest-split-item-dispute). */
+  flagSomethingWrong: string;
+  /** Generic (not tied to a line) flag disclosure summary text. */
+  flagWholeShareSummary: string;
+  /** Placeholder for the optional free-text note in either flag form. */
+  flagNotePlaceholder: string;
+  /** Submit button label for either flag form. */
+  flagSubmit: string;
+  /** Shown instead of a flag form once this line (or the whole share) already
+   * has an open flag — shared by both the per-item and whole-share cases. */
+  flagReported: string;
   notFoundTitle: string;
   notFoundBody: string;
   /** Doubles as the heading of the acquisition card at the foot of a guest page. */
@@ -104,6 +116,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'I already paid',
     claimedNotice: 'Marked as paid — thanks!',
     settledNotice: 'Payment confirmed. Thank you!',
+    flagSomethingWrong: 'Something wrong with this?',
+    flagWholeShareSummary: 'Something wrong with your whole share?',
+    flagNotePlaceholder: 'Optional note (e.g. "I wasn\'t there for this")',
+    flagSubmit: 'Report',
+    flagReported: "Reported — the payer's been notified.",
     notFoundTitle: "This link isn't available",
     notFoundBody: 'It may have expired, or the details may have changed.',
     poweredBy: 'Split bills easily with AI Budget Assistant',
@@ -135,6 +152,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'Я уже оплатил(а)',
     claimedNotice: 'Отмечено как оплачено — спасибо!',
     settledNotice: 'Оплата подтверждена. Спасибо!',
+    flagSomethingWrong: 'Что-то не так с этим?',
+    flagWholeShareSummary: 'Что-то не так со всей вашей частью?',
+    flagNotePlaceholder: 'Необязательная заметка (например, «меня там не было»)',
+    flagSubmit: 'Сообщить',
+    flagReported: 'Сообщение отправлено — плательщик уведомлён.',
     notFoundTitle: 'Эта ссылка недоступна',
     notFoundBody: 'Возможно, срок её действия истёк или детали изменились.',
     poweredBy: 'Делите счета легко с AI Budget Assistant',
@@ -166,6 +188,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'Я вже оплатив(ла)',
     claimedNotice: 'Позначено як оплачено — дякуємо!',
     settledNotice: 'Оплату підтверджено. Дякуємо!',
+    flagSomethingWrong: 'Щось не так із цим?',
+    flagWholeShareSummary: 'Щось не так із усією вашою часткою?',
+    flagNotePlaceholder: 'Необов’язкова примітка (наприклад, «мене там не було»)',
+    flagSubmit: 'Повідомити',
+    flagReported: 'Повідомлено — платника сповіщено.',
     notFoundTitle: 'Це посилання недоступне',
     notFoundBody: 'Можливо, термін його дії минув або деталі змінилися.',
     poweredBy: 'Діліть рахунки легко з AI Budget Assistant',
@@ -197,6 +224,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'Już zapłaciłem(am)',
     claimedNotice: 'Oznaczono jako zapłacone — dziękujemy!',
     settledNotice: 'Płatność potwierdzona. Dziękujemy!',
+    flagSomethingWrong: 'Coś tu jest nie tak?',
+    flagWholeShareSummary: 'Coś nie tak z całą Twoją częścią?',
+    flagNotePlaceholder: 'Opcjonalna notatka (np. „nie było mnie przy tym")',
+    flagSubmit: 'Zgłoś',
+    flagReported: 'Zgłoszono — płacący został powiadomiony.',
     notFoundTitle: 'Ten link jest niedostępny',
     notFoundBody: 'Mógł wygasnąć albo szczegóły mogły się zmienić.',
     poweredBy: 'Dziel rachunki łatwo z AI Budget Assistant',
@@ -228,6 +260,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'Ya pagué',
     claimedNotice: 'Marcado como pagado — ¡gracias!',
     settledNotice: '¡Pago confirmado. Gracias!',
+    flagSomethingWrong: '¿Algo está mal aquí?',
+    flagWholeShareSummary: '¿Algo está mal con toda tu parte?',
+    flagNotePlaceholder: 'Nota opcional (ej. "no estuve ahí para esto")',
+    flagSubmit: 'Reportar',
+    flagReported: 'Reportado — se ha avisado a quien pagó.',
     notFoundTitle: 'Este enlace no está disponible',
     notFoundBody: 'Puede haber caducado o los detalles pueden haber cambiado.',
     poweredBy: 'Divide cuentas fácilmente con AI Budget Assistant',
@@ -259,6 +296,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: "J'ai déjà payé",
     claimedNotice: 'Marqué comme payé — merci !',
     settledNotice: 'Paiement confirmé. Merci !',
+    flagSomethingWrong: 'Un problème avec ça ?',
+    flagWholeShareSummary: 'Un problème avec toute ta part ?',
+    flagNotePlaceholder: 'Note facultative (ex. « je n\'y étais pas »)',
+    flagSubmit: 'Signaler',
+    flagReported: 'Signalé — la personne qui a payé a été prévenue.',
     notFoundTitle: "Ce lien n'est pas disponible",
     notFoundBody: 'Il a peut-être expiré ou les détails ont changé.',
     poweredBy: 'Partagez facilement vos additions avec AI Budget Assistant',
@@ -290,6 +332,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'Ich habe bereits bezahlt',
     claimedNotice: 'Als bezahlt markiert — danke!',
     settledNotice: 'Zahlung bestätigt. Danke!',
+    flagSomethingWrong: 'Stimmt hier etwas nicht?',
+    flagWholeShareSummary: 'Stimmt etwas mit deinem ganzen Anteil nicht?',
+    flagNotePlaceholder: 'Optionale Notiz (z. B. „ich war dabei nicht dabei")',
+    flagSubmit: 'Melden',
+    flagReported: 'Gemeldet — die zahlende Person wurde benachrichtigt.',
     notFoundTitle: 'Dieser Link ist nicht verfügbar',
     notFoundBody: 'Er könnte abgelaufen sein oder sich geändert haben.',
     poweredBy: 'Rechnungen einfach teilen mit AI Budget Assistant',
@@ -321,6 +368,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'Я ўжо заплаціў(ла)',
     claimedNotice: 'Пазначана як аплачана — дзякуй!',
     settledNotice: 'Аплата пацверджана. Дзякуй!',
+    flagSomethingWrong: 'Штосьці не так з гэтым?',
+    flagWholeShareSummary: 'Штосьці не так з усёй вашай часткай?',
+    flagNotePlaceholder: 'Неабавязковая нататка (напрыклад, «мяне там не было»)',
+    flagSubmit: 'Паведаміць',
+    flagReported: 'Паведамлена — плацельшчык апавешчаны.',
     notFoundTitle: 'Гэта спасылка недаступная',
     notFoundBody: 'Магчыма, тэрмін яе дзеяння скончыўся або дэталі змяніліся.',
     poweredBy: 'Дзяліце рахункі лёгка з AI Budget Assistant',
@@ -352,6 +404,11 @@ const translations: Record<string, GuestPageStrings> = {
     iPaidButton: 'Ik heb al betaald',
     claimedNotice: 'Gemarkeerd als betaald — bedankt!',
     settledNotice: 'Betaling bevestigd. Bedankt!',
+    flagSomethingWrong: 'Klopt dit niet?',
+    flagWholeShareSummary: 'Klopt er iets niet met je hele deel?',
+    flagNotePlaceholder: 'Optionele notitie (bijv. "ik was hier niet bij")',
+    flagSubmit: 'Melden',
+    flagReported: 'Gemeld — de betaler is op de hoogte gebracht.',
     notFoundTitle: 'Deze link is niet beschikbaar',
     notFoundBody: 'Deze kan zijn verlopen of de gegevens kunnen zijn gewijzigd.',
     poweredBy: 'Deel rekeningen eenvoudig met AI Budget Assistant',

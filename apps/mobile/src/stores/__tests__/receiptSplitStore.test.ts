@@ -5,6 +5,7 @@ jest.mock('@/services/api', () => ({
     confirmSplitParticipant: jest.fn(),
     cancelSplit: jest.fn(),
     getRecentSplitParticipants: jest.fn(),
+    resolveSplitFlag: jest.fn(),
   },
 }));
 
@@ -22,6 +23,7 @@ const getSplit = jest.mocked(api.getSplit);
 const confirmSplitParticipant = jest.mocked(api.confirmSplitParticipant);
 const cancelSplit = jest.mocked(api.cancelSplit);
 const getRecentSplitParticipants = jest.mocked(api.getRecentSplitParticipants);
+const resolveSplitFlag = jest.mocked(api.resolveSplitFlag);
 const recordParticipantsMock = recordParticipants as jest.Mock;
 
 function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateResponse {
@@ -30,8 +32,8 @@ function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateRespo
     ownShare: 12.5,
     currencyCode: 'USD',
     participants: [
-      { id: 'p1', name: 'Alice', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok1' },
-      { id: 'p2', name: 'Bob', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok2' },
+      { id: 'p1', name: 'Alice', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok1', flags: [] },
+      { id: 'p2', name: 'Bob', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok2', flags: [] },
     ],
     groupUrl: 'https://x/s/g/grouptok1',
     ...overrides,
@@ -208,6 +210,55 @@ describe('receiptSplitStore', () => {
 
       expect(cancelSplit).toHaveBeenCalledWith('expense-1');
       expect(useReceiptSplitStore.getState().split).toBeNull();
+    });
+  });
+
+  describe('resolveFlag (ABA guest-split-item-dispute)', () => {
+    function splitWithFlag(): SplitStateResponse {
+      const split = makeSplit();
+      return {
+        ...split,
+        participants: split.participants.map((p) =>
+          p.id === 'p1'
+            ? { ...p, flags: [{ id: 'flag-1', itemId: 'item-1', note: 'not mine', createdAt: '2026-01-01T00:00:00.000Z' }] }
+            : p,
+        ),
+      };
+    }
+
+    it('optimistically removes the flag, then confirms via the API', async () => {
+      const split = splitWithFlag();
+      useReceiptSplitStore.setState({ expenseId: 'expense-1', split });
+      resolveSplitFlag.mockResolvedValue({ success: true });
+
+      await useReceiptSplitStore.getState().resolveFlag('expense-1', 'flag-1');
+
+      expect(resolveSplitFlag).toHaveBeenCalledWith('expense-1', 'flag-1');
+      expect(
+        useReceiptSplitStore.getState().split?.participants.find((p) => p.id === 'p1')?.flags,
+      ).toEqual([]);
+      // The other participant's (empty) flag list is untouched.
+      expect(
+        useReceiptSplitStore.getState().split?.participants.find((p) => p.id === 'p2')?.flags,
+      ).toEqual([]);
+    });
+
+    it('rolls back the optimistic removal on failure', async () => {
+      const split = splitWithFlag();
+      useReceiptSplitStore.setState({ expenseId: 'expense-1', split });
+      resolveSplitFlag.mockRejectedValue(new Error('network'));
+
+      await expect(
+        useReceiptSplitStore.getState().resolveFlag('expense-1', 'flag-1'),
+      ).rejects.toThrow('network');
+
+      expect(useReceiptSplitStore.getState().split).toEqual(split);
+    });
+
+    it('no-ops when there is no split loaded', async () => {
+      useReceiptSplitStore.setState({ expenseId: null, split: null });
+      await useReceiptSplitStore.getState().resolveFlag('expense-1', 'flag-1');
+      expect(resolveSplitFlag).not.toHaveBeenCalled();
     });
   });
 

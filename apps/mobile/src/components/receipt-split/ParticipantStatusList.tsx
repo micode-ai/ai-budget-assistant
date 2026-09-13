@@ -38,6 +38,12 @@ interface ParticipantStatusListProps {
    * `split.groupUrl` is null (a split created before this field existed),
    * in which case the button below is not rendered at all. */
   onShowQr?: () => void;
+  /** itemId -> line description, built by the screen from its own already-loaded
+   * expense items (ABA guest-split-item-dispute) — kept out of the API payload
+   * so `SplitParticipantFlag` doesn't have to carry a copy of every description. */
+  itemDescriptions?: Record<string, string>;
+  onResolveFlag?: (participantId: string, flagId: string) => void;
+  resolvingFlagId?: string | null;
 }
 
 /**
@@ -61,6 +67,9 @@ export function ParticipantStatusList({
   onCopyAll,
   onCancelPress,
   onShowQr,
+  itemDescriptions,
+  onResolveFlag,
+  resolvingFlagId,
 }: ParticipantStatusListProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -136,6 +145,41 @@ export function ParticipantStatusList({
                   </TouchableOpacity>
                 )}
               </View>
+
+              {/* ABA guest-split-item-dispute: a guest said something's wrong with
+                  a line (or their whole share) — read-only text plus an explicit
+                  "Resolve" step (never auto-resolved — there is no in-place
+                  reassignment flow to key an auto-resolve off, see the fix-hint
+                  line below). */}
+              {p.flags.length > 0 && (
+                <View style={styles.flagsBlock}>
+                  {p.flags.map((flag) => (
+                    <View key={flag.id} style={styles.flagRow}>
+                      <Ionicons name="flag-outline" size={14} color={theme.colors.danger} style={styles.flagIcon} />
+                      <Text style={styles.flagText}>
+                        {flag.itemId
+                          ? (itemDescriptions?.[flag.itemId] ?? t('receiptSplit.flagUnknownItem'))
+                          : t('receiptSplit.flagWholeShare')}
+                        {flag.note ? `: ${flag.note}` : ''}
+                      </Text>
+                      {canEdit && onResolveFlag && (
+                        <TouchableOpacity
+                          onPress={() => onResolveFlag(p.id, flag.id)}
+                          disabled={resolvingFlagId === flag.id}
+                          activeOpacity={0.7}
+                        >
+                          {resolvingFlagId === flag.id ? (
+                            <ActivityIndicator size="small" color={theme.colors.success} />
+                          ) : (
+                            <Text style={styles.flagResolveText}>{t('receiptSplit.flagResolve')}</Text>
+                          )}
+                        </TouchableOpacity>
+                      )}
+                    </View>
+                  ))}
+                  {canEdit && <Text style={styles.flagFixHint}>{t('receiptSplit.flagFixHint')}</Text>}
+                </View>
+              )}
             </View>
           ))}
         </View>
@@ -258,6 +302,35 @@ const createStyles = (theme: Theme) => ({
   },
   confirmActionText: {
     color: theme.colors.success,
+  },
+  flagsBlock: {
+    marginTop: theme.spacing[1],
+    gap: theme.spacing[1],
+    backgroundColor: theme.colors.dangerLight,
+    borderRadius: theme.borderRadius.sm,
+    padding: theme.spacing[2],
+  },
+  flagRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1.5],
+  },
+  flagIcon: {
+    marginTop: 1,
+  },
+  flagText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  flagResolveText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.danger,
+    fontFamily: theme.fonts.semiBold,
+  },
+  flagFixHint: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   showQrBtn: {
     flexDirection: 'row' as const,

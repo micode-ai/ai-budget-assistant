@@ -64,6 +64,7 @@ export default function ReceiptSplitScreen() {
     cancel,
     recentParticipantNames,
     loadRecentParticipantNames,
+    resolveFlag,
   } = useReceiptSplitStore();
 
   // Same 4-way resolution as expense/[id].tsx / expense/location.tsx — a deep
@@ -87,6 +88,15 @@ export default function ReceiptSplitScreen() {
   // `ExpenseItemsSection.tsx`), hydrated on demand via `loadExpenseItems`.
   const rawItems = expense ? expenseItems[expense.id] : undefined;
   const items = useMemo(() => (rawItems ?? []).filter((i) => !i.isDeleted), [rawItems]);
+
+  // ABA guest-split-item-dispute: a flag names an itemId, not a description —
+  // the API payload deliberately doesn't duplicate line text (see
+  // ParticipantStatusList's prop doc), so the screen resolves it from the
+  // same `items` it already loaded for the assignment editor.
+  const itemDescriptions = useMemo(
+    () => Object.fromEntries(items.map((i) => [i.id, i.description])),
+    [items],
+  );
 
   // See deriveSplitMode.ts's docstring for the full "why" — in short, only
   // server-synced items carry a real expense_item id, so a not-yet-synced
@@ -162,6 +172,8 @@ export default function ReceiptSplitScreen() {
   // cancel is in flight.
   const [confirmingId, setConfirmingId] = useState<string | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
+  // ABA guest-split-item-dispute — which flag is mid-resolve.
+  const [resolvingFlagId, setResolvingFlagId] = useState<string | null>(null);
   // ABA — QR-code bill split: the group QR modal is mounted unconditionally
   // (same pattern as every other bottom-sheet modal in this codebase) and
   // only ever opened from a "Show QR" button that is itself hidden when
@@ -250,6 +262,19 @@ export default function ReceiptSplitScreen() {
       showAlert(t('common.error'), t('errors.unknown'));
     } finally {
       setConfirmingId(null);
+    }
+  }
+
+  async function handleResolveFlag(_participantId: string, flagId: string) {
+    if (!expense || !canEdit || resolvingFlagId) return;
+    setResolvingFlagId(flagId);
+    try {
+      await resolveFlag(expense.id, flagId);
+    } catch (e) {
+      console.warn('[ReceiptSplitScreen] resolveFlag failed', e);
+      showAlert(t('common.error'), t('errors.unknown'));
+    } finally {
+      setResolvingFlagId(null);
     }
   }
 
@@ -359,6 +384,9 @@ export default function ReceiptSplitScreen() {
           onCopyAll={handleCopyAll}
           onCancelPress={handleCancelPress}
           onShowQr={split.groupUrl ? () => setQrModalVisible(true) : undefined}
+          itemDescriptions={itemDescriptions}
+          onResolveFlag={handleResolveFlag}
+          resolvingFlagId={resolvingFlagId}
           footer={
             offerInvite ? (
               <InviteFriendsCard onInvite={handleInvite} onDismiss={invitePrompt.markDismissed} />

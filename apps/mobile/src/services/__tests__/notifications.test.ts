@@ -68,3 +68,33 @@ describe('handleNotificationResponse — split_payment_claimed', () => {
     expect(push).toHaveBeenCalledWith('/(tabs)/expenses');
   });
 });
+
+describe('handleNotificationResponse — split_item_flagged (ABA guest-split-item-dispute)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('resolves the participant id the same way split_payment_claimed does, and deep-links to the split screen', () => {
+    resolveExpenseId.mockReturnValue('expense-42');
+
+    handleNotificationResponse(
+      notificationResponse({ type: 'split_item_flagged', participantId: 'participant-1' }),
+    );
+
+    expect(resolveExpenseId).toHaveBeenCalledWith('participant-1');
+    expect(push).toHaveBeenCalledWith({
+      pathname: '/expense/split',
+      params: { expenseId: 'expense-42' },
+    });
+  });
+
+  it('falls back to the expenses list when the participant is unknown locally', () => {
+    resolveExpenseId.mockReturnValue(undefined);
+
+    handleNotificationResponse(
+      notificationResponse({ type: 'split_item_flagged', participantId: 'participant-unknown' }),
+    );
+
+    expect(push).toHaveBeenCalledWith('/(tabs)/expenses');
+  });
+});

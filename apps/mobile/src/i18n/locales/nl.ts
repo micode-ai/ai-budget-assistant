@@ -2631,6 +2631,10 @@ export default {
     qrHint: 'Iedereen aan tafel kan dit scannen om zijn eigen deel te zien',
     qrShare: 'Link delen',
     qrShareMessage: 'Scan dit om jouw deel van de rekening te zien:',
+    flagUnknownItem: 'Een item',
+    flagWholeShare: 'Zijn/haar hele deel',
+    flagResolve: 'Opgelost',
+    flagFixHint: 'Om te wijzigen wie wat verschuldigd is, annuleer de verdeling en maak deze opnieuw aan.',
   },
   receiptCategorySplit: {
     title: 'Verdelen op categorie',

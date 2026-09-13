@@ -24,7 +24,7 @@ export type AccountRole = 'owner' | 'editor' | 'viewer';
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined' | 'expired';
 
-export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention' | 'subscription_renewal' | 'tracking_gap_reminder' | 'purchase_request_created' | 'purchase_request_voted' | 'purchase_request_approved' | 'purchase_request_rejected' | 'trip_settle_up' | 'account_invitation' | 'shopping_reminder' | 'shopping_deal' | 'inflation_shield' | 'split_payment_claimed' | 'rate_watch_hit';
+export type NotificationType = 'budget_alert' | 'shared_expense' | 'spending_anomaly' | 'debt_reminder' | 'recurring_expense' | 'chat_mention' | 'subscription_renewal' | 'tracking_gap_reminder' | 'purchase_request_created' | 'purchase_request_voted' | 'purchase_request_approved' | 'purchase_request_rejected' | 'trip_settle_up' | 'account_invitation' | 'shopping_reminder' | 'shopping_deal' | 'inflation_shield' | 'split_payment_claimed' | 'rate_watch_hit' | 'split_item_flagged';
 
 export type RateWatchDirection = 'above' | 'below';
 

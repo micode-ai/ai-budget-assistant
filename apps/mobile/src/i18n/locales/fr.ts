@@ -2631,6 +2631,10 @@ export default {
     qrHint: "N'importe qui à table peut scanner ceci pour voir sa propre part",
     qrShare: 'Partager le lien',
     qrShareMessage: "Scanne ceci pour voir ta part de l'addition :",
+    flagUnknownItem: 'Un article',
+    flagWholeShare: 'Toute sa part',
+    flagResolve: 'Résoudre',
+    flagFixHint: 'Pour changer qui doit quoi, annule et recrée le partage.',
   },
   receiptCategorySplit: {
     title: 'Répartir par catégorie',

@@ -35,6 +35,10 @@ Configura cómo quieres que te paguen en **Ajustes → Perfil → Ajustes de pag
 
 En cualquier caso, hay un botón "**Ya pagué**". Tocarlo no mueve ningún dinero — solo te avisa de que esa persona ha pagado.
 
+### ¿Algo no cuadra con su parte?
+
+Si tu amigo detecta un error — una línea de la que en realidad no formaba parte, o un artículo compartido dividido entre el número equivocado de personas — puede decírtelo directamente desde su propia página, sin tener que escribirte. Debajo de cada artículo (o debajo del total, si la cuenta se dividió a partes iguales) hay un pequeño enlace "**¿Algo está mal aquí?**"; al tocarlo se abre una nota breve y opcional, y luego "Reportar". Reportar nunca bloquea que también toque "Ya pagué" — son independientes, en cualquier orden.
+
 ## Seguir quién ha pagado
 
 De vuelta en la app, la fila de cada amigo muestra un estado:
@@ -45,6 +49,8 @@ De vuelta en la app, la fila de cada amigo muestra un estado:
 - **Saldado** — has confirmado que el dinero ha llegado de verdad.
 
 Un amigo que todavía no ha pagado simplemente se queda en **Enviado** u **Abierto** — no hay nada más detrás de eso.
+
+Si un amigo reportó algo mal con su parte, lo verás justo debajo de su fila, junto con su nota (si añadió una). Toca **Resolver** en cuanto lo hayas solucionado — reportar no cambia la división por sí solo, así que para corregir de verdad una asignación equivocada tendrás que cancelar la división y crear una nueva con las partes corregidas.
 
 ## Confirmar que has recibido el pago
 

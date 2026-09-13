@@ -25,6 +25,9 @@ interface ReceiptSplitState {
   confirm: (expenseId: string, participantId: string) => Promise<void>;
   cancel: (expenseId: string) => Promise<void>;
   loadRecentParticipantNames: () => Promise<void>;
+  /** ABA guest-split-item-dispute — payer marks a guest's flag as dealt with.
+   * Optimistic removal, mirrors confirm()'s rollback shape. */
+  resolveFlag: (expenseId: string, flagId: string) => Promise<void>;
 }
 
 export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
@@ -121,6 +124,29 @@ export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
   cancel: async (expenseId) => {
     await api.cancelSplit(expenseId);
     set({ split: null });
+  },
+
+  resolveFlag: async (expenseId, flagId) => {
+    const previous = get().split;
+    if (!previous) return;
+
+    set({
+      split: {
+        ...previous,
+        participants: previous.participants.map((p) =>
+          p.flags.some((f) => f.id === flagId)
+            ? { ...p, flags: p.flags.filter((f) => f.id !== flagId) }
+            : p,
+        ),
+      },
+    });
+
+    try {
+      await api.resolveSplitFlag(expenseId, flagId);
+    } catch (e) {
+      set({ split: previous });
+      throw e;
+    }
   },
 
   loadRecentParticipantNames: async () => {

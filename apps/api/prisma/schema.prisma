@@ -147,96 +147,96 @@ enum FeedEventType {
 // ---- Models ----
 
 model User {
-  id               String    @id @default(uuid())
-  email            String    @unique
-  passwordHash     String?   @map("password_hash")
-  googleId         String?   @unique @map("google_id")
-  name             String
-  currencyCode     String    @default("USD") @map("currency_code")
-  timezone         String    @default("UTC")
-  language             String    @default("en")
-  pushToken            String?   @map("push_token")
-  notifyBudgetAlerts      Boolean   @default(true) @map("notify_budget_alerts")
-  notifySharedActivity    Boolean   @default(true) @map("notify_shared_activity")
-  notifyDebtReminders     Boolean   @default(true) @map("notify_debt_reminders")
-  notifyRecurringExpenses Boolean   @default(true) @map("notify_recurring_expenses")
-  notifySubscriptionRenewals Boolean @default(true) @map("notify_subscription_renewals")
-  notifyAnomalyAlerts     Boolean   @default(true) @map("notify_anomaly_alerts")
-  notifyTrackingGap       Boolean   @default(true) @map("notify_tracking_gap")
-  notifyPurchaseRequests  Boolean   @default(true) @map("notify_purchase_requests")
-  notifyTripSettleUp      Boolean   @default(true) @map("notify_trip_settle_up")
-  notifyShoppingReminders Boolean   @default(true) @map("notify_shopping_reminders")
-  notifyShoppingDeals     Boolean   @default(true) @map("notify_shopping_deals")
-  notifyInflationShield   Boolean   @default(true) @map("notify_inflation_shield")
+  id                         String        @id @default(uuid())
+  email                      String        @unique
+  passwordHash               String?       @map("password_hash")
+  googleId                   String?       @unique @map("google_id")
+  name                       String
+  currencyCode               String        @default("USD") @map("currency_code")
+  timezone                   String        @default("UTC")
+  language                   String        @default("en")
+  pushToken                  String?       @map("push_token")
+  notifyBudgetAlerts         Boolean       @default(true) @map("notify_budget_alerts")
+  notifySharedActivity       Boolean       @default(true) @map("notify_shared_activity")
+  notifyDebtReminders        Boolean       @default(true) @map("notify_debt_reminders")
+  notifyRecurringExpenses    Boolean       @default(true) @map("notify_recurring_expenses")
+  notifySubscriptionRenewals Boolean       @default(true) @map("notify_subscription_renewals")
+  notifyAnomalyAlerts        Boolean       @default(true) @map("notify_anomaly_alerts")
+  notifyTrackingGap          Boolean       @default(true) @map("notify_tracking_gap")
+  notifyPurchaseRequests     Boolean       @default(true) @map("notify_purchase_requests")
+  notifyTripSettleUp         Boolean       @default(true) @map("notify_trip_settle_up")
+  notifyShoppingReminders    Boolean       @default(true) @map("notify_shopping_reminders")
+  notifyShoppingDeals        Boolean       @default(true) @map("notify_shopping_deals")
+  notifyInflationShield      Boolean       @default(true) @map("notify_inflation_shield")
   // ABA-335 (Community Price Map, M1): personal, opt-in consent to contribute
   // anonymized receipt price observations to the crowdsourced corpus. Default
   // false (GDPR opt-in). Consent is personal (not an Account setting) — only
   // the human who created a given expense can consent to sharing it.
-  contributeCommunityPrices Boolean @default(false) @map("contribute_community_prices")
-  themeMode                 String  @default("system") @map("theme_mode")
-  accentColor               String? @map("accent_color")
+  contributeCommunityPrices  Boolean       @default(false) @map("contribute_community_prices")
+  themeMode                  String        @default("system") @map("theme_mode")
+  accentColor                String?       @map("accent_color")
   // LEGACY single-pair payment info (receipt-split guest page). `UserPaymentMethod`
   // below is now the authoritative, multi-method source — this pair is kept only as a
   // read-fallback for existing users' data (never dropped/backfilled) and is still
   // mirrored on write so older clients/rows stay consistent. Do not add new callers.
-  paymentMethod             SettleMethod? @map("payment_method")
-  paymentHandle             String?       @map("payment_handle")
-  isActive             Boolean   @default(true) @map("is_active")
-  isVerified           Boolean   @default(false) @map("is_verified")
-  emailVerificationCode      String?   @map("email_verification_code")
-  emailVerificationExpiresAt DateTime? @map("email_verification_expires_at")
-  defaultAccountId String?   @map("default_account_id")
-  lastSyncAt       DateTime? @map("last_sync_at")
-  passwordResetCode      String?   @map("password_reset_code")
-  passwordResetExpiresAt DateTime? @map("password_reset_expires_at")
-  emailChangePending     String?   @map("email_change_pending")
-  emailChangeCode        String?   @map("email_change_code")
-  emailChangeExpiresAt   DateTime? @map("email_change_expires_at")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
-  referralCode   String?    @unique @map("referral_code")
-  referralsMade  Referral[] @relation("ReferralsMade")
-  referredBy     Referral?  @relation("ReferredBy")
+  paymentMethod              SettleMethod? @map("payment_method")
+  paymentHandle              String?       @map("payment_handle")
+  isActive                   Boolean       @default(true) @map("is_active")
+  isVerified                 Boolean       @default(false) @map("is_verified")
+  emailVerificationCode      String?       @map("email_verification_code")
+  emailVerificationExpiresAt DateTime?     @map("email_verification_expires_at")
+  defaultAccountId           String?       @map("default_account_id")
+  lastSyncAt                 DateTime?     @map("last_sync_at")
+  passwordResetCode          String?       @map("password_reset_code")
+  passwordResetExpiresAt     DateTime?     @map("password_reset_expires_at")
+  emailChangePending         String?       @map("email_change_pending")
+  emailChangeCode            String?       @map("email_change_code")
+  emailChangeExpiresAt       DateTime?     @map("email_change_expires_at")
+  createdAt                  DateTime      @default(now()) @map("created_at")
+  updatedAt                  DateTime      @updatedAt @map("updated_at")
+  referralCode               String?       @unique @map("referral_code")
+  referralsMade              Referral[]    @relation("ReferralsMade")
+  referredBy                 Referral?     @relation("ReferredBy")
 
   // Relations
-  expenses          Expense[]
-  incomes           Income[]
-  budgets           Budget[]
-  categories        Category[]
-  chatConversations ChatConversation[]
-  budgetAlerts      BudgetAlert[]
-  syncLogs          SyncLog[]
-  ownedAccounts     Account[]          @relation("OwnedAccounts")
-  accountMembers    AccountMember[]
-  walletBalances    WalletBalance[]
-  currencyExchanges CurrencyExchange[]
-  accountTransfers  AccountTransfer[]
-  subscription      Subscription?
-  usageLogs         UsageLog[]
-  achievements      UserAchievement[]
-  streaks           UserStreak[]
-  portfolioHoldings       PortfolioHolding[]
-  investmentTransactions  InvestmentTransaction[]
-  encryptionProfile       UserEncryptionProfile?
-  accountEncryptionKeys   AccountEncryptionKey[]
+  expenses               Expense[]
+  incomes                Income[]
+  budgets                Budget[]
+  categories             Category[]
+  chatConversations      ChatConversation[]
+  budgetAlerts           BudgetAlert[]
+  syncLogs               SyncLog[]
+  ownedAccounts          Account[]               @relation("OwnedAccounts")
+  accountMembers         AccountMember[]
+  walletBalances         WalletBalance[]
+  currencyExchanges      CurrencyExchange[]
+  accountTransfers       AccountTransfer[]
+  subscription           Subscription?
+  usageLogs              UsageLog[]
+  achievements           UserAchievement[]
+  streaks                UserStreak[]
+  portfolioHoldings      PortfolioHolding[]
+  investmentTransactions InvestmentTransaction[]
+  encryptionProfile      UserEncryptionProfile?
+  accountEncryptionKeys  AccountEncryptionKey[]
 
   // AI preferences
-  aiResponseMode        String    @default("balanced") @map("ai_response_mode")
-  aiModel               String    @default("balanced") @map("ai_model")
+  aiResponseMode String @default("balanced") @map("ai_response_mode")
+  aiModel        String @default("balanced") @map("ai_model")
 
   // Report preferences
-  weeklyEmailEnabled    Boolean   @default(false) @map("weekly_email_enabled")
-  weeklyEmailDay        Int       @default(1)     @map("weekly_email_day")
-  monthlyDigestEnabled  Boolean   @default(false) @map("monthly_digest_enabled")
+  weeklyEmailEnabled   Boolean @default(false) @map("weekly_email_enabled")
+  weeklyEmailDay       Int     @default(1) @map("weekly_email_day")
+  monthlyDigestEnabled Boolean @default(false) @map("monthly_digest_enabled")
 
   // Report & backup relations
-  generatedReports      GeneratedReport[]
-  backupHistory         BackupHistory[]
-  savingsGoals          SavingsGoal[]
+  generatedReports GeneratedReport[]
+  backupHistory    BackupHistory[]
+  savingsGoals     SavingsGoal[]
 
   // Admin panel relations
-  adminAuditLogs          AdminAuditLog[]
-  adminNotificationLogs   NotificationLog[]
+  adminAuditLogs              AdminAuditLog[]
+  adminNotificationLogs       NotificationLog[]
   adminScheduledNotifications ScheduledNotification[]
 
   // Telegram
@@ -251,17 +251,17 @@ model User {
   slackLink      SlackLink?
   slackLinkCodes SlackLinkCode[]
 
-  importBatches     ImportBatch[]
-  purchaseRequests      PurchaseRequest[]     @relation("PurchaseRequestCreator")
-  purchaseRequestVotes  PurchaseRequestVote[] @relation("PurchaseRequestVoter")
-  feedEvents            FamilyFeedEvent[]
-  feedReactions         FeedReaction[]
-  tripExpenseShares     TripExpenseShare[]
-  paymentMethods        UserPaymentMethod[]
-  restoreCredentials    RestoreCredential[]
-  exchangeRateWatches   ExchangeRateWatch[]
-  telemetryEvents       TelemetryEvent[]
-  chatConversationPins  ChatConversationPin[]
+  importBatches        ImportBatch[]
+  purchaseRequests     PurchaseRequest[]     @relation("PurchaseRequestCreator")
+  purchaseRequestVotes PurchaseRequestVote[] @relation("PurchaseRequestVoter")
+  feedEvents           FamilyFeedEvent[]
+  feedReactions        FeedReaction[]
+  tripExpenseShares    TripExpenseShare[]
+  paymentMethods       UserPaymentMethod[]
+  restoreCredentials   RestoreCredential[]
+  exchangeRateWatches  ExchangeRateWatch[]
+  telemetryEvents      TelemetryEvent[]
+  chatConversationPins ChatConversationPin[]
 
   // Where this signup came from, captured from the CTA query string on the visitor's
   // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
@@ -269,10 +269,10 @@ model User {
   // groupBy on Json. Nullable everywhere — every user who registered before this, every
   // native install, and anyone arriving without params has all four NULL, which is a
   // legitimate "unknown", not a defect to backfill.
-  acquisitionSource     String?               @map("acquisition_source")
-  acquisitionLocation   String?               @map("acquisition_location")
-  acquisitionLanguage   String?               @map("acquisition_language")
-  acquisitionPlan       String?               @map("acquisition_plan")
+  acquisitionSource   String? @map("acquisition_source")
+  acquisitionLocation String? @map("acquisition_location")
+  acquisitionLanguage String? @map("acquisition_language")
+  acquisitionPlan     String? @map("acquisition_plan")
 
   @@index([acquisitionSource])
   @@map("users")
@@ -343,73 +343,73 @@ model ExchangeRateWatch {
 }
 
 model Account {
-  id                String      @id @default(uuid())
-  name              String
-  type              AccountType
-  currencyCode      String      @default("USD") @map("currency_code")
-  ownerId           String      @map("owner_id")
-  icon              String?
-  isActive          Boolean     @default(true) @map("is_active")
-  encryptionEnabled Boolean     @default(false) @map("encryption_enabled")
-  encryptionTier    Int         @default(0) @map("encryption_tier")
-  keyRotationNeeded Boolean     @default(false) @map("key_rotation_needed")
-  createdAt         DateTime    @default(now()) @map("created_at")
-  updatedAt         DateTime    @updatedAt @map("updated_at")
+  id                   String       @id @default(uuid())
+  name                 String
+  type                 AccountType
+  currencyCode         String       @default("USD") @map("currency_code")
+  ownerId              String       @map("owner_id")
+  icon                 String?
+  isActive             Boolean      @default(true) @map("is_active")
+  encryptionEnabled    Boolean      @default(false) @map("encryption_enabled")
+  encryptionTier       Int          @default(0) @map("encryption_tier")
+  keyRotationNeeded    Boolean      @default(false) @map("key_rotation_needed")
+  createdAt            DateTime     @default(now()) @map("created_at")
+  updatedAt            DateTime     @updatedAt @map("updated_at")
   purchaseApprovalRule ApprovalRule @default(MAJORITY) @map("purchase_approval_rule")
   monthAnchorDay       Int?         @map("month_anchor_day")
   aiImportConsentAt    DateTime?    @map("ai_import_consent_at")
-  tripStartDate DateTime?   @db.Date @map("trip_start_date")
-  tripEndDate   DateTime?   @db.Date @map("trip_end_date")
-  tripStatus    TripStatus? @map("trip_status")
+  tripStartDate        DateTime?    @map("trip_start_date") @db.Date
+  tripEndDate          DateTime?    @map("trip_end_date") @db.Date
+  tripStatus           TripStatus?  @map("trip_status")
 
   // Relations
-  owner       User                @relation("OwnedAccounts", fields: [ownerId], references: [id], onDelete: Cascade)
-  members     AccountMember[]
-  invitations AccountInvitation[]
-  expenses    Expense[]
-  incomes     Income[]
-  budgets     Budget[]
-  categories        Category[]
-  syncLogs          SyncLog[]
-  walletBalances    WalletBalance[]
-  currencyExchanges CurrencyExchange[]
-  transfersOut      AccountTransfer[] @relation("TransfersOut")
-  transfersIn       AccountTransfer[] @relation("TransfersIn")
-  usageLogs         UsageLog[]
-  generatedInsights GeneratedInsight[]
-  spendingStories   SpendingStory[]
-  tags              Tag[]
-  projects          Project[]
-  achievements      UserAchievement[]
-  streaks           UserStreak[]
-  portfolioHoldings       PortfolioHolding[]
-  investmentTransactions  InvestmentTransaction[]
-  encryptionKeys          AccountEncryptionKey[]
-  generatedReports        GeneratedReport[]
-  backupHistory           BackupHistory[]
-  monthlyDigestCache      MonthlyDigestCache[]
-  savingsGoals            SavingsGoal[]
-  fatFinderReports        FatFinderReport[]
-  telegramLinks           TelegramLink[]
-  whatsappLinks           WhatsAppLink[]
-  slackLinks              SlackLink[]
-  csvImportMappings       CsvImportMapping[]
-  chatConversations       ChatConversation[]
-  importBatches           ImportBatch[]
-  userSubscriptions       UserSubscription[]
-  anomalyAlerts           AnomalyAlert[]
-  merchantCategoryRules   MerchantCategoryRule[]
-  productCategoryRules    ProductCategoryRule[]
-  goalContributions       GoalContribution[]
-  purchaseRequests        PurchaseRequest[]
-  feedEvents              FamilyFeedEvent[]
-  settleUpTransactions    SettleUpTransaction[]
-  productAliases          ProductAlias[]
-  shoppingLists           ShoppingList[]
-  shoppingListItems       ShoppingListItem[]
+  owner                          User                            @relation("OwnedAccounts", fields: [ownerId], references: [id], onDelete: Cascade)
+  members                        AccountMember[]
+  invitations                    AccountInvitation[]
+  expenses                       Expense[]
+  incomes                        Income[]
+  budgets                        Budget[]
+  categories                     Category[]
+  syncLogs                       SyncLog[]
+  walletBalances                 WalletBalance[]
+  currencyExchanges              CurrencyExchange[]
+  transfersOut                   AccountTransfer[]               @relation("TransfersOut")
+  transfersIn                    AccountTransfer[]               @relation("TransfersIn")
+  usageLogs                      UsageLog[]
+  generatedInsights              GeneratedInsight[]
+  spendingStories                SpendingStory[]
+  tags                           Tag[]
+  projects                       Project[]
+  achievements                   UserAchievement[]
+  streaks                        UserStreak[]
+  portfolioHoldings              PortfolioHolding[]
+  investmentTransactions         InvestmentTransaction[]
+  encryptionKeys                 AccountEncryptionKey[]
+  generatedReports               GeneratedReport[]
+  backupHistory                  BackupHistory[]
+  monthlyDigestCache             MonthlyDigestCache[]
+  savingsGoals                   SavingsGoal[]
+  fatFinderReports               FatFinderReport[]
+  telegramLinks                  TelegramLink[]
+  whatsappLinks                  WhatsAppLink[]
+  slackLinks                     SlackLink[]
+  csvImportMappings              CsvImportMapping[]
+  chatConversations              ChatConversation[]
+  importBatches                  ImportBatch[]
+  userSubscriptions              UserSubscription[]
+  anomalyAlerts                  AnomalyAlert[]
+  merchantCategoryRules          MerchantCategoryRule[]
+  productCategoryRules           ProductCategoryRule[]
+  goalContributions              GoalContribution[]
+  purchaseRequests               PurchaseRequest[]
+  feedEvents                     FamilyFeedEvent[]
+  settleUpTransactions           SettleUpTransaction[]
+  productAliases                 ProductAlias[]
+  shoppingLists                  ShoppingList[]
+  shoppingListItems              ShoppingListItem[]
   inflationShieldRecommendations InflationShieldRecommendation[]
-  shoppingNotificationLogs ShoppingNotificationLog[]
-  insightNotificationLogs InsightNotificationLog[]
+  shoppingNotificationLogs       ShoppingNotificationLog[]
+  insightNotificationLogs        InsightNotificationLog[]
 
   @@map("accounts")
 }
@@ -479,15 +479,15 @@ model AccountInvitation {
 }
 
 model Category {
-  id          String   @id @default(uuid())
-  userId      String?  @map("user_id")
-  accountId   String?  @map("account_id")
-  name        String
-  icon        String?
-  color       String?
-  type        String   @default("expense")
-  isSystem    Boolean  @default(false) @map("is_system")
-  parentId    String?  @map("parent_id")
+  id                   String   @id @default(uuid())
+  userId               String?  @map("user_id")
+  accountId            String?  @map("account_id")
+  name                 String
+  icon                 String?
+  color                String?
+  type                 String   @default("expense")
+  isSystem             Boolean  @default(false) @map("is_system")
+  parentId             String?  @map("parent_id")
   embedding            Json?    @map("embedding")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
@@ -497,12 +497,12 @@ model Category {
   updatedAt            DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user     User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account  Account?   @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
-  children Category[] @relation("CategoryHierarchy")
-  expenses Expense[]
-  incomes  Income[]
+  user                  User?                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account               Account?               @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  parent                Category?              @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children              Category[]             @relation("CategoryHierarchy")
+  expenses              Expense[]
+  incomes               Income[]
   expenseItems          ExpenseItem[]
   expenseCategorySplits ExpenseCategorySplit[]
   budgetCategories      BudgetCategory[]
@@ -516,61 +516,61 @@ model Category {
 }
 
 model Expense {
-  id           String   @id @default(uuid())
-  userId       String   @map("user_id")
-  accountId    String   @map("account_id")
-  clientId     String   @map("client_id")
-  categoryId   String?  @map("category_id")
-  amount         Decimal  @db.Decimal(12, 2)
-  discountAmount Decimal? @map("discount_amount") @db.Decimal(12, 2)
-  depositAmount  Decimal? @map("deposit_amount") @db.Decimal(12, 2)
-  currencyCode   String   @default("USD") @map("currency_code")
-  description  String?
-  notes        String?
-  merchant     String?
-  date         DateTime @db.Date
-  time         String?
-  locationLat  Decimal? @map("location_lat") @db.Decimal(10, 8)
-  locationLng  Decimal? @map("location_lng") @db.Decimal(11, 8)
-  locationName String?  @map("location_name")
-  receiptUrl   String?  @map("receipt_url")
-  isRecurring     Boolean  @default(false) @map("is_recurring")
-  recurringId     String?  @map("recurring_id")
-  recurringPeriod String?  @map("recurring_period")
-  source       String   @default("manual")
-  externalRef  String?  @map("external_ref")
-  importBatchId String? @map("import_batch_id")
-  isDebt           Boolean   @default(false) @map("is_debt")
-  isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
-  debtContactName  String?   @map("debt_contact_name")
-  debtDueDate      DateTime? @map("debt_due_date") @db.Date
-  relatedDebtIncomeId String? @map("related_debt_income_id")
-  isDeleted    Boolean  @default(false) @map("is_deleted")
-  isPlanned    Boolean  @default(false) @map("is_planned")
-  isSplitReceivable Boolean @default(false) @map("is_split_receivable")
-  syncVersion  Int      @default(0) @map("sync_version")
-  createdAt    DateTime @default(now()) @map("created_at")
-  updatedAt    DateTime @updatedAt @map("updated_at")
+  id                  String    @id @default(uuid())
+  userId              String    @map("user_id")
+  accountId           String    @map("account_id")
+  clientId            String    @map("client_id")
+  categoryId          String?   @map("category_id")
+  amount              Decimal   @db.Decimal(12, 2)
+  discountAmount      Decimal?  @map("discount_amount") @db.Decimal(12, 2)
+  depositAmount       Decimal?  @map("deposit_amount") @db.Decimal(12, 2)
+  currencyCode        String    @default("USD") @map("currency_code")
+  description         String?
+  notes               String?
+  merchant            String?
+  date                DateTime  @db.Date
+  time                String?
+  locationLat         Decimal?  @map("location_lat") @db.Decimal(10, 8)
+  locationLng         Decimal?  @map("location_lng") @db.Decimal(11, 8)
+  locationName        String?   @map("location_name")
+  receiptUrl          String?   @map("receipt_url")
+  isRecurring         Boolean   @default(false) @map("is_recurring")
+  recurringId         String?   @map("recurring_id")
+  recurringPeriod     String?   @map("recurring_period")
+  source              String    @default("manual")
+  externalRef         String?   @map("external_ref")
+  importBatchId       String?   @map("import_batch_id")
+  isDebt              Boolean   @default(false) @map("is_debt")
+  isDebtRepayment     Boolean   @default(false) @map("is_debt_repayment")
+  debtContactName     String?   @map("debt_contact_name")
+  debtDueDate         DateTime? @map("debt_due_date") @db.Date
+  relatedDebtIncomeId String?   @map("related_debt_income_id")
+  isDeleted           Boolean   @default(false) @map("is_deleted")
+  isPlanned           Boolean   @default(false) @map("is_planned")
+  isSplitReceivable   Boolean   @default(false) @map("is_split_receivable")
+  syncVersion         Int       @default(0) @map("sync_version")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
 
-  encryptedPayload     String?  @map("encrypted_payload")
-  encryptionKeyVersion Int?     @map("encryption_key_version")
+  encryptedPayload     String? @map("encrypted_payload")
+  encryptionKeyVersion Int?    @map("encryption_key_version")
 
-  receiptImage     Bytes?  @map("receipt_image")
-  receiptMimeType  String? @map("receipt_mime_type")
+  receiptImage    Bytes?  @map("receipt_image")
+  receiptMimeType String? @map("receipt_mime_type")
 
   paidByUserId String? @map("paid_by_user_id")
 
   // Relations
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account  Account       @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  category Category?     @relation(fields: [categoryId], references: [id])
-  importBatch ImportBatch? @relation(fields: [importBatchId], references: [id])
-  items    ExpenseItem[]
-  expenseTags      ExpenseTag[]
-  categorySplits   ExpenseCategorySplit[]
-  projectExpenses  ProjectExpense[]
-  purchaseRequest  PurchaseRequest? @relation("PlannedPurchase")
-  shares           TripExpenseShare[]
+  user              User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account           Account                   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category          Category?                 @relation(fields: [categoryId], references: [id])
+  importBatch       ImportBatch?              @relation(fields: [importBatchId], references: [id])
+  items             ExpenseItem[]
+  expenseTags       ExpenseTag[]
+  categorySplits    ExpenseCategorySplit[]
+  projectExpenses   ProjectExpense[]
+  purchaseRequest   PurchaseRequest?          @relation("PlannedPurchase")
+  shares            TripExpenseShare[]
   splitParticipants ReceiptSplitParticipant[]
 
   @@unique([accountId, clientId])
@@ -585,15 +585,15 @@ model Expense {
 }
 
 model ExpenseItem {
-  id          String   @id @default(uuid())
-  expenseId   String   @map("expense_id")
-  description String
-  canonicalName String? @map("canonical_name")
-  categoryId    String?  @map("category_id")
-  quantity    Decimal  @default(1) @db.Decimal(10, 3)
-  unitPrice   Decimal  @default(0) @map("unit_price") @db.Decimal(12, 2)
-  totalPrice  Decimal  @map("total_price") @db.Decimal(12, 2)
-  sortOrder   Int      @default(0) @map("sort_order")
+  id                   String   @id @default(uuid())
+  expenseId            String   @map("expense_id")
+  description          String
+  canonicalName        String?  @map("canonical_name")
+  categoryId           String?  @map("category_id")
+  quantity             Decimal  @default(1) @db.Decimal(10, 3)
+  unitPrice            Decimal  @default(0) @map("unit_price") @db.Decimal(12, 2)
+  totalPrice           Decimal  @map("total_price") @db.Decimal(12, 2)
+  sortOrder            Int      @default(0) @map("sort_order")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
   encryptedPayload     String?  @map("encrypted_payload")
@@ -660,10 +660,52 @@ model ReceiptSplitParticipant {
   createdAt     DateTime  @default(now()) @map("created_at")
   updatedAt     DateTime  @updatedAt @map("updated_at")
 
-  expense Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  expense Expense            @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  flags   ReceiptSplitFlag[]
 
   @@index([expenseId])
   @@map("receipt_split_participants")
+}
+
+// A guest's report that one line (or their whole share) is wrong — "I wasn't
+// part of this" / "this was split among the wrong number of people" (ABA —
+// guest-split-item-dispute). Public, unauthenticated write, same posture as
+// the rest of GuestController: never trusts a raw itemId, see
+// docs/contracts/guest-split-item-dispute.md.
+//
+// No FK from itemId to ExpenseItem.id — deliberately loose, same reasoning as
+// ReceiptSplitParticipant.itemIds (a raw Json array of ids, not a relation):
+// the flagged item may later be edited away by the payer recreating the
+// split, and a flag on a cancelled split's participant simply stops appearing
+// anywhere once that participant drops out of every `cancelledAt: null`
+// query — no explicit cleanup needed.
+//
+// No DB-level unique on (participantId, itemId): Postgres treats every NULL
+// as distinct, so a unique index couldn't enforce "one whole-share flag ever"
+// regardless. "At most one OPEN flag per participant+item" is an app-level
+// anti-spam property (find-then-create-or-update in the service), not a hard
+// invariant worth a partial index for.
+model ReceiptSplitFlag {
+  id            String    @id @default(uuid())
+  accountId     String    @map("account_id")
+  participantId String    @map("participant_id")
+  expenseId     String    @map("expense_id")
+  // The expense_item id this flag is about, or null for a whole-share report
+  // (equal-split mode, or "I wasn't in this split at all").
+  itemId        String?   @map("item_id")
+  // Guest's optional free-text note, trimmed + capped at 500 chars server-side.
+  // Rendered as plain text only (the payer's mobile client), never as HTML.
+  note          String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  // Set once the payer taps "Resolve". null = still open — this is what both
+  // the payer's status list and the guest page's "reported" state key off.
+  resolvedAt    DateTime? @map("resolved_at")
+
+  participant ReceiptSplitParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@index([participantId])
+  @@index([expenseId])
+  @@map("receipt_split_flags")
 }
 
 model ProductAlias {
@@ -805,39 +847,39 @@ model InsightNotificationLog {
 }
 
 model Income {
-  id           String   @id @default(uuid())
-  userId       String   @map("user_id")
-  accountId    String   @map("account_id")
-  clientId     String   @map("client_id")
-  categoryId   String?  @map("category_id")
-  amount       Decimal  @db.Decimal(12, 2)
-  currencyCode String   @default("USD") @map("currency_code")
-  description  String?
-  notes        String?
-  date         DateTime @db.Date
-  source       String   @default("manual")
-  externalRef  String?  @map("external_ref")
-  importBatchId String? @map("import_batch_id")
-  isDebt           Boolean   @default(false) @map("is_debt")
-  isDebtRepayment  Boolean   @default(false) @map("is_debt_repayment")
-  debtContactName  String?   @map("debt_contact_name")
-  debtDueDate      DateTime? @map("debt_due_date") @db.Date
-  relatedDebtExpenseId String? @map("related_debt_expense_id")
-  isDeleted            Boolean  @default(false) @map("is_deleted")
-  syncVersion          Int      @default(0) @map("sync_version")
-  encryptedPayload     String?  @map("encrypted_payload")
-  encryptionKeyVersion Int?     @map("encryption_key_version")
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @updatedAt @map("updated_at")
+  id                   String    @id @default(uuid())
+  userId               String    @map("user_id")
+  accountId            String    @map("account_id")
+  clientId             String    @map("client_id")
+  categoryId           String?   @map("category_id")
+  amount               Decimal   @db.Decimal(12, 2)
+  currencyCode         String    @default("USD") @map("currency_code")
+  description          String?
+  notes                String?
+  date                 DateTime  @db.Date
+  source               String    @default("manual")
+  externalRef          String?   @map("external_ref")
+  importBatchId        String?   @map("import_batch_id")
+  isDebt               Boolean   @default(false) @map("is_debt")
+  isDebtRepayment      Boolean   @default(false) @map("is_debt_repayment")
+  debtContactName      String?   @map("debt_contact_name")
+  debtDueDate          DateTime? @map("debt_due_date") @db.Date
+  relatedDebtExpenseId String?   @map("related_debt_expense_id")
+  isDeleted            Boolean   @default(false) @map("is_deleted")
+  syncVersion          Int       @default(0) @map("sync_version")
+  encryptedPayload     String?   @map("encrypted_payload")
+  encryptionKeyVersion Int?      @map("encryption_key_version")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
 
   // Relations
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account  Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  category Category? @relation(fields: [categoryId], references: [id])
-  importBatch ImportBatch? @relation(fields: [importBatchId], references: [id])
-  incomeTags      IncomeTag[]
-  projectIncomes  ProjectIncome[]
-  linkedTransfer  AccountTransfer? @relation("TransferLinkedIncome")
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account        Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category       Category?        @relation(fields: [categoryId], references: [id])
+  importBatch    ImportBatch?     @relation(fields: [importBatchId], references: [id])
+  incomeTags     IncomeTag[]
+  projectIncomes ProjectIncome[]
+  linkedTransfer AccountTransfer? @relation("TransferLinkedIncome")
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -848,18 +890,18 @@ model Income {
 }
 
 model Budget {
-  id             String    @id @default(uuid())
-  userId         String    @map("user_id")
-  accountId      String    @map("account_id")
-  clientId       String    @map("client_id")
-  name           String
-  amount         Decimal   @db.Decimal(12, 2)
-  currencyCode   String    @default("USD") @map("currency_code")
-  period         String    @default("monthly")
-  startDate      DateTime  @map("start_date") @db.Date
-  endDate        DateTime? @map("end_date") @db.Date
-  alertThreshold Int       @default(80) @map("alert_threshold")
-  isActive       Boolean   @default(true) @map("is_active")
+  id                   String    @id @default(uuid())
+  userId               String    @map("user_id")
+  accountId            String    @map("account_id")
+  clientId             String    @map("client_id")
+  name                 String
+  amount               Decimal   @db.Decimal(12, 2)
+  currencyCode         String    @default("USD") @map("currency_code")
+  period               String    @default("monthly")
+  startDate            DateTime  @map("start_date") @db.Date
+  endDate              DateTime? @map("end_date") @db.Date
+  alertThreshold       Int       @default(80) @map("alert_threshold")
+  isActive             Boolean   @default(true) @map("is_active")
   isDeleted            Boolean   @default(false) @map("is_deleted")
   syncVersion          Int       @default(0) @map("sync_version")
   encryptedPayload     String?   @map("encrypted_payload")
@@ -868,8 +910,8 @@ model Budget {
   updatedAt            DateTime  @updatedAt @map("updated_at")
 
   // Relations
-  user                User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account             Account            @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user                User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account             Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
   alerts              BudgetAlert[]
   categoryAllocations BudgetCategory[]
 
@@ -879,14 +921,14 @@ model Budget {
 }
 
 model BudgetCategory {
-  id                   String   @id @default(uuid())
-  budgetId             String   @map("budget_id")
-  categoryId           String   @map("category_id")
-  amount               Decimal  @db.Decimal(12, 2)
-  isDeleted            Boolean  @default(false) @map("is_deleted")
-  syncVersion          Int      @default(0) @map("sync_version")
-  createdAt            DateTime @default(now()) @map("created_at")
-  updatedAt            DateTime @updatedAt @map("updated_at")
+  id          String   @id @default(uuid())
+  budgetId    String   @map("budget_id")
+  categoryId  String   @map("category_id")
+  amount      Decimal  @db.Decimal(12, 2)
+  isDeleted   Boolean  @default(false) @map("is_deleted")
+  syncVersion Int      @default(0) @map("sync_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
   // Relations
   budget   Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
@@ -932,8 +974,8 @@ model ChatConversation {
   updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account  Account?      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user     User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account  Account?              @relation(fields: [accountId], references: [id], onDelete: Cascade)
   messages ChatMessage[]
   pins     ChatConversationPin[]
 
@@ -1010,12 +1052,12 @@ model SyncLog {
 }
 
 model WalletBalance {
-  id            String   @id @default(uuid())
-  accountId     String   @map("account_id")
-  userId        String   @map("user_id")
-  clientId      String   @map("client_id")
-  currencyCode  String   @map("currency_code")
-  initialAmount Decimal  @map("initial_amount") @db.Decimal(12, 2)
+  id                   String   @id @default(uuid())
+  accountId            String   @map("account_id")
+  userId               String   @map("user_id")
+  clientId             String   @map("client_id")
+  currencyCode         String   @map("currency_code")
+  initialAmount        Decimal  @map("initial_amount") @db.Decimal(12, 2)
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
   encryptedPayload     String?  @map("encrypted_payload")
@@ -1034,19 +1076,19 @@ model WalletBalance {
 }
 
 model CurrencyExchange {
-  id           String   @id @default(uuid())
-  accountId    String   @map("account_id")
-  userId       String   @map("user_id")
-  clientId     String   @map("client_id")
-  fromCurrency String   @map("from_currency")
-  toCurrency   String   @map("to_currency")
-  fromAmount   Decimal  @map("from_amount") @db.Decimal(12, 2)
-  toAmount     Decimal  @map("to_amount") @db.Decimal(12, 2)
-  exchangeRate Decimal  @map("exchange_rate") @db.Decimal(12, 6)
-  date         DateTime @db.Date
-  notes        String?
-  externalRef  String?  @map("external_ref")
-  importBatchId String? @map("import_batch_id")
+  id                   String   @id @default(uuid())
+  accountId            String   @map("account_id")
+  userId               String   @map("user_id")
+  clientId             String   @map("client_id")
+  fromCurrency         String   @map("from_currency")
+  toCurrency           String   @map("to_currency")
+  fromAmount           Decimal  @map("from_amount") @db.Decimal(12, 2)
+  toAmount             Decimal  @map("to_amount") @db.Decimal(12, 2)
+  exchangeRate         Decimal  @map("exchange_rate") @db.Decimal(12, 6)
+  date                 DateTime @db.Date
+  notes                String?
+  externalRef          String?  @map("external_ref")
+  importBatchId        String?  @map("import_batch_id")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
   encryptedPayload     String?  @map("encrypted_payload")
@@ -1055,8 +1097,8 @@ model CurrencyExchange {
   updatedAt            DateTime @updatedAt @map("updated_at")
 
   // Relations
-  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account     Account      @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   importBatch ImportBatch? @relation(fields: [importBatchId], references: [id])
 
   @@unique([accountId, clientId])
@@ -1066,16 +1108,16 @@ model CurrencyExchange {
 }
 
 model AccountTransfer {
-  id            String   @id @default(uuid())
-  userId        String   @map("user_id")
-  clientId      String   @map("client_id")
-  fromAccountId String   @map("from_account_id")
-  fromCurrency  String   @map("from_currency")
-  fromAmount    Decimal  @map("from_amount") @db.Decimal(12, 2)
-  toAccountId   String   @map("to_account_id")
-  toCurrency    String   @map("to_currency")
-  toAmount      Decimal  @map("to_amount") @db.Decimal(12, 2)
-  exchangeRate  Decimal  @map("exchange_rate") @db.Decimal(12, 6)
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  clientId       String   @map("client_id")
+  fromAccountId  String   @map("from_account_id")
+  fromCurrency   String   @map("from_currency")
+  fromAmount     Decimal  @map("from_amount") @db.Decimal(12, 2)
+  toAccountId    String   @map("to_account_id")
+  toCurrency     String   @map("to_currency")
+  toAmount       Decimal  @map("to_amount") @db.Decimal(12, 2)
+  exchangeRate   Decimal  @map("exchange_rate") @db.Decimal(12, 6)
   date           DateTime @db.Date
   notes          String?
   countAsIncome  Boolean  @default(false) @map("count_as_income")
@@ -1099,34 +1141,34 @@ model AccountTransfer {
 }
 
 model Subscription {
-  id                   String             @id @default(uuid())
-  userId               String             @unique @map("user_id")
-  tier                 SubscriptionTier   @default(free)
-  status               SubscriptionStatus @default(active)
+  id     String             @id @default(uuid())
+  userId String             @unique @map("user_id")
+  tier   SubscriptionTier   @default(free)
+  status SubscriptionStatus @default(active)
 
   // Stripe fields
-  stripeCustomerId     String?            @unique @map("stripe_customer_id")
-  stripeSubscriptionId String?            @unique @map("stripe_subscription_id")
-  stripePriceId        String?            @map("stripe_price_id")
+  stripeCustomerId     String? @unique @map("stripe_customer_id")
+  stripeSubscriptionId String? @unique @map("stripe_subscription_id")
+  stripePriceId        String? @map("stripe_price_id")
 
   // Billing period
-  currentPeriodStart   DateTime?          @map("current_period_start")
-  currentPeriodEnd     DateTime?          @map("current_period_end")
-  cancelAtPeriodEnd    Boolean            @default(false) @map("cancel_at_period_end")
-  canceledAt           DateTime?          @map("canceled_at")
+  currentPeriodStart DateTime? @map("current_period_start")
+  currentPeriodEnd   DateTime? @map("current_period_end")
+  cancelAtPeriodEnd  Boolean   @default(false) @map("cancel_at_period_end")
+  canceledAt         DateTime? @map("canceled_at")
 
   // Trial
-  trialStart           DateTime?          @map("trial_start")
-  trialEnd             DateTime?          @map("trial_end")
+  trialStart DateTime? @map("trial_start")
+  trialEnd   DateTime? @map("trial_end")
 
   // Usage tracking
-  aiRequestsUsed      Int                @default(0) @map("ai_requests_used")
-  aiRequestsResetAt   DateTime           @default(now()) @map("ai_requests_reset_at")
-  customAiLimit       Int?               @map("custom_ai_limit")
-  bonusAiRequests Int @default(0) @map("bonus_ai_requests")
+  aiRequestsUsed    Int      @default(0) @map("ai_requests_used")
+  aiRequestsResetAt DateTime @default(now()) @map("ai_requests_reset_at")
+  customAiLimit     Int?     @map("custom_ai_limit")
+  bonusAiRequests   Int      @default(0) @map("bonus_ai_requests")
 
-  createdAt            DateTime           @default(now()) @map("created_at")
-  updatedAt            DateTime           @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1175,18 +1217,18 @@ model GeneratedInsight {
 }
 
 model SpendingStory {
-  id          String   @id @default(uuid())
-  accountId   String   @map("account_id")
-  periodLabel String   @map("period_label")
-  periodStart DateTime @map("period_start") @db.Date
-  periodEnd   DateTime @map("period_end") @db.Date
-  blocks      Json     @db.JsonB
-  summary     String
+  id           String   @id @default(uuid())
+  accountId    String   @map("account_id")
+  periodLabel  String   @map("period_label")
+  periodStart  DateTime @map("period_start") @db.Date
+  periodEnd    DateTime @map("period_end") @db.Date
+  blocks       Json     @db.JsonB
+  summary      String
   /// Display currency the narrated amounts are expressed in. Null on rows written
   /// before ABA-387; such a row is regenerated instead of served from cache.
-  currencyCode String? @map("currency_code")
-  createdAt   DateTime @default(now()) @map("created_at")
-  expiresAt   DateTime @map("expires_at")
+  currencyCode String?  @map("currency_code")
+  createdAt    DateTime @default(now()) @map("created_at")
+  expiresAt    DateTime @map("expires_at")
 
   account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
@@ -1198,13 +1240,13 @@ model SpendingStory {
 // ---- Tags ----
 
 model Tag {
-  id          String   @id @default(uuid())
-  clientId    String?  @map("client_id")
-  accountId   String   @map("account_id")
-  name        String
-  color       String?
-  icon        String?
-  usageCount  Int      @default(0) @map("usage_count")
+  id                   String   @id @default(uuid())
+  clientId             String?  @map("client_id")
+  accountId            String   @map("account_id")
+  name                 String
+  color                String?
+  icon                 String?
+  usageCount           Int      @default(0) @map("usage_count")
   embedding            Json?    @map("embedding")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
@@ -1265,19 +1307,19 @@ model IncomeTag {
 // ---- Projects ----
 
 model Project {
-  id           String    @id @default(uuid())
-  accountId    String    @map("account_id")
-  clientId     String    @map("client_id")
-  name         String
-  description  String?
-  color        String?
-  icon         String?
-  startDate    DateTime? @map("start_date") @db.Date
-  endDate      DateTime? @map("end_date") @db.Date
-  budget       Decimal?  @db.Decimal(12, 2)
-  currencyCode String?   @map("currency_code")
-  isArchived   Boolean   @default(false) @map("is_archived")
-  embedding             Json?     @map("embedding")
+  id                   String    @id @default(uuid())
+  accountId            String    @map("account_id")
+  clientId             String    @map("client_id")
+  name                 String
+  description          String?
+  color                String?
+  icon                 String?
+  startDate            DateTime? @map("start_date") @db.Date
+  endDate              DateTime? @map("end_date") @db.Date
+  budget               Decimal?  @db.Decimal(12, 2)
+  currencyCode         String?   @map("currency_code")
+  isArchived           Boolean   @default(false) @map("is_archived")
+  embedding            Json?     @map("embedding")
   isDeleted            Boolean   @default(false) @map("is_deleted")
   syncVersion          Int       @default(0) @map("sync_version")
   encryptedPayload     String?   @map("encrypted_payload")
@@ -1337,12 +1379,12 @@ model ProjectIncome {
 // ---- Expense Category Splits ----
 
 model ExpenseCategorySplit {
-  id          String   @id @default(uuid())
-  expenseId   String   @map("expense_id")
-  categoryId  String   @map("category_id")
-  amount      Decimal  @db.Decimal(12, 2)
-  percentage  Decimal  @db.Decimal(5, 2)
-  notes       String?
+  id                   String   @id @default(uuid())
+  expenseId            String   @map("expense_id")
+  categoryId           String   @map("category_id")
+  amount               Decimal  @db.Decimal(12, 2)
+  percentage           Decimal  @db.Decimal(5, 2)
+  notes                String?
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
   encryptedPayload     String?  @map("encrypted_payload")
@@ -1403,17 +1445,17 @@ model UserStreak {
 // ---- Investments ----
 
 model Asset {
-  id               String    @id @default(uuid())
-  symbol           String
-  name             String
-  type             String    // stock, crypto, etf, bond, commodity
-  exchange         String?
-  currentPrice     Decimal?  @map("current_price") @db.Decimal(16, 6)
-  priceCurrency    String    @default("USD") @map("price_currency")
-  logoUrl          String?   @map("logo_url")
-  lastPriceUpdate  DateTime? @map("last_price_update")
-  createdAt        DateTime  @default(now()) @map("created_at")
-  updatedAt        DateTime  @updatedAt @map("updated_at")
+  id              String    @id @default(uuid())
+  symbol          String
+  name            String
+  type            String // stock, crypto, etf, bond, commodity
+  exchange        String?
+  currentPrice    Decimal?  @map("current_price") @db.Decimal(16, 6)
+  priceCurrency   String    @default("USD") @map("price_currency")
+  logoUrl         String?   @map("logo_url")
+  lastPriceUpdate DateTime? @map("last_price_update")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
   // Relations
   holdings     PortfolioHolding[]
@@ -1425,14 +1467,14 @@ model Asset {
 }
 
 model PortfolioHolding {
-  id              String   @id @default(uuid())
-  accountId       String   @map("account_id")
-  userId          String   @map("user_id")
-  clientId        String   @map("client_id")
-  assetId         String   @map("asset_id")
-  quantity        Decimal  @default(0) @db.Decimal(16, 8)
-  averageCostBasis Decimal @default(0) @map("average_cost_basis") @db.Decimal(16, 6)
-  totalInvested   Decimal  @default(0) @map("total_invested") @db.Decimal(16, 2)
+  id                   String   @id @default(uuid())
+  accountId            String   @map("account_id")
+  userId               String   @map("user_id")
+  clientId             String   @map("client_id")
+  assetId              String   @map("asset_id")
+  quantity             Decimal  @default(0) @db.Decimal(16, 8)
+  averageCostBasis     Decimal  @default(0) @map("average_cost_basis") @db.Decimal(16, 6)
+  totalInvested        Decimal  @default(0) @map("total_invested") @db.Decimal(16, 2)
   notes                String?
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
@@ -1442,9 +1484,9 @@ model PortfolioHolding {
   updatedAt            DateTime @updatedAt @map("updated_at")
 
   // Relations
-  account      Account                @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  user         User                   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  asset        Asset                  @relation(fields: [assetId], references: [id])
+  account      Account                 @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user         User                    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  asset        Asset                   @relation(fields: [assetId], references: [id])
   transactions InvestmentTransaction[]
 
   @@unique([accountId, clientId])
@@ -1454,17 +1496,17 @@ model PortfolioHolding {
 }
 
 model InvestmentTransaction {
-  id           String   @id @default(uuid())
-  holdingId    String   @map("holding_id")
-  accountId    String   @map("account_id")
-  userId       String   @map("user_id")
-  clientId     String   @map("client_id")
-  type         String   // buy, sell
-  quantity     Decimal  @db.Decimal(16, 8)
-  pricePerUnit Decimal  @map("price_per_unit") @db.Decimal(16, 6)
-  totalAmount  Decimal  @map("total_amount") @db.Decimal(16, 2)
-  fee          Decimal  @default(0) @db.Decimal(12, 2)
-  date         DateTime @db.Date
+  id                   String   @id @default(uuid())
+  holdingId            String   @map("holding_id")
+  accountId            String   @map("account_id")
+  userId               String   @map("user_id")
+  clientId             String   @map("client_id")
+  type                 String // buy, sell
+  quantity             Decimal  @db.Decimal(16, 8)
+  pricePerUnit         Decimal  @map("price_per_unit") @db.Decimal(16, 6)
+  totalAmount          Decimal  @map("total_amount") @db.Decimal(16, 2)
+  fee                  Decimal  @default(0) @db.Decimal(12, 2)
+  date                 DateTime @db.Date
   notes                String?
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
@@ -1506,18 +1548,18 @@ model AssetPriceHistory {
 // ---- E2EE (End-to-End Encryption) ----
 
 model UserEncryptionProfile {
-  id                       String   @id @default(uuid())
-  userId                   String   @unique @map("user_id")
-  pbkdf2Salt               String   @map("pbkdf2_salt")
-  publicKeyX25519          String   @map("public_key_x25519")
-  publicKeyEd25519         String   @map("public_key_ed25519")
-  wrappedPrivateKeyX25519  String   @map("wrapped_private_key_x25519")
-  wrappedPrivateKeyEd25519 String   @map("wrapped_private_key_ed25519")
-  recoveryKeyHash          String?  @map("recovery_key_hash")
-  wrappedMasterKeyByRecovery String? @map("wrapped_mk_by_recovery")
-  keyVersion               Int      @default(1) @map("key_version")
-  createdAt                DateTime @default(now()) @map("created_at")
-  updatedAt                DateTime @updatedAt @map("updated_at")
+  id                         String   @id @default(uuid())
+  userId                     String   @unique @map("user_id")
+  pbkdf2Salt                 String   @map("pbkdf2_salt")
+  publicKeyX25519            String   @map("public_key_x25519")
+  publicKeyEd25519           String   @map("public_key_ed25519")
+  wrappedPrivateKeyX25519    String   @map("wrapped_private_key_x25519")
+  wrappedPrivateKeyEd25519   String   @map("wrapped_private_key_ed25519")
+  recoveryKeyHash            String?  @map("recovery_key_hash")
+  wrappedMasterKeyByRecovery String?  @map("wrapped_mk_by_recovery")
+  keyVersion                 Int      @default(1) @map("key_version")
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
 
   // Relations
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -1591,7 +1633,7 @@ model MonthlyDigestCache {
   id          String   @id @default(uuid())
   accountId   String   @map("account_id")
   periodStart DateTime @map("period_start") @db.Date
-  periodEnd   DateTime @map("period_end")   @db.Date
+  periodEnd   DateTime @map("period_end") @db.Date
   data        Json     @db.JsonB
   createdAt   DateTime @default(now()) @map("created_at")
   expiresAt   DateTime @map("expires_at")
@@ -1665,16 +1707,16 @@ model FatFinderReport {
 // ---- Admin Panel Models ----
 
 model AdminAuditLog {
-  id          String   @id @default(uuid())
-  adminId     String?  @map("admin_id")
-  action      String   // e.g. "user.deactivate", "subscription.change_tier", "notification.send_push"
-  targetType  String   @map("target_type")  // "user", "subscription", "notification"
-  targetId    String?  @map("target_id")
-  details     Json?    @db.JsonB
-  ipAddress   String?  @map("ip_address")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(uuid())
+  adminId    String?  @map("admin_id")
+  action     String // e.g. "user.deactivate", "subscription.change_tier", "notification.send_push"
+  targetType String   @map("target_type") // "user", "subscription", "notification"
+  targetId   String?  @map("target_id")
+  details    Json?    @db.JsonB
+  ipAddress  String?  @map("ip_address")
+  createdAt  DateTime @default(now()) @map("created_at")
 
-  admin       User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  admin User? @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@index([adminId, createdAt])
   @@index([targetType, targetId])
@@ -1685,7 +1727,7 @@ model AdminAuditLog {
 model NotificationLog {
   id             String   @id @default(uuid())
   adminId        String?  @map("admin_id")
-  type           String   // "push" | "email" | "broadcast"
+  type           String // "push" | "email" | "broadcast"
   recipientCount Int      @map("recipient_count")
   successCount   Int      @default(0) @map("success_count")
   failCount      Int      @default(0) @map("fail_count")
@@ -1695,27 +1737,27 @@ model NotificationLog {
   recipientIds   Json?    @map("recipient_ids") @db.JsonB
   createdAt      DateTime @default(now()) @map("created_at")
 
-  admin          User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  admin User? @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@index([adminId, createdAt])
   @@map("notification_logs")
 }
 
 model ScheduledNotification {
-  id             String    @id @default(uuid())
-  adminId        String?   @map("admin_id")
-  type           String    // "push" | "email"
-  title          String?
-  subject        String?
-  body           String
-  filters        Json?     @db.JsonB
-  userIds        Json?     @map("user_ids") @db.JsonB
-  scheduledAt    DateTime  @map("scheduled_at")
-  executedAt     DateTime? @map("executed_at")
-  status         String    @default("pending") // "pending" | "sent" | "failed" | "cancelled"
-  createdAt      DateTime  @default(now()) @map("created_at")
+  id          String    @id @default(uuid())
+  adminId     String?   @map("admin_id")
+  type        String // "push" | "email"
+  title       String?
+  subject     String?
+  body        String
+  filters     Json?     @db.JsonB
+  userIds     Json?     @map("user_ids") @db.JsonB
+  scheduledAt DateTime  @map("scheduled_at")
+  executedAt  DateTime? @map("executed_at")
+  status      String    @default("pending") // "pending" | "sent" | "failed" | "cancelled"
+  createdAt   DateTime  @default(now()) @map("created_at")
 
-  admin          User?     @relation(fields: [adminId], references: [id], onDelete: SetNull)
+  admin User? @relation(fields: [adminId], references: [id], onDelete: SetNull)
 
   @@index([status, scheduledAt])
   @@map("scheduled_notifications")
@@ -1726,7 +1768,7 @@ model ScheduledNotification {
 model TelegramLink {
   id               String   @id @default(uuid())
   telegramUserId   String   @unique @map("telegram_user_id")
-  telegramUsername  String?  @map("telegram_username")
+  telegramUsername String?  @map("telegram_username")
   userId           String   @unique @map("user_id")
   defaultAccountId String   @map("default_account_id")
   conversationId   String?  @map("conversation_id")
@@ -1870,8 +1912,8 @@ model ImportBatch {
   rowCount   Int      @default(0) @map("row_count")
   status     String   @default("committed")
 
-  account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   expenses          Expense[]
   incomes           Income[]
@@ -1984,12 +2026,12 @@ model MerchantCategoryRule {
 }
 
 model ProductCategoryRule {
-  id                     String   @id @default(uuid())
-  accountId              String   @map("account_id")
-  canonicalNameNormalized String  @map("canonical_name_normalized")
-  categoryId             String   @map("category_id")
-  createdAt              DateTime @default(now()) @map("created_at")
-  updatedAt              DateTime @updatedAt @map("updated_at")
+  id                      String   @id @default(uuid())
+  accountId               String   @map("account_id")
+  canonicalNameNormalized String   @map("canonical_name_normalized")
+  categoryId              String   @map("category_id")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
 
   account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)

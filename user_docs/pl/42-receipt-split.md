@@ -35,6 +35,10 @@ Ustaw, jak chcesz otrzymywać zwrot pieniędzy, w **Ustawienia → Profil → Us
 
 Tak czy inaczej, jest przycisk „**Już zapłaciłem/am**". Stuknięcie go nie przenosi żadnych pieniędzy — po prostu informuje Cię, że znajomy zapłacił.
 
+### Coś nie zgadza się w jego części?
+
+Jeśli Twój znajomy zauważy błąd — pozycję, której w ogóle nie miał, albo wspólną pozycję podzieloną na złą liczbę osób — może dać Ci znać wprost ze swojej strony, bez pisania do Ciebie. Pod każdą pozycją (albo pod sumą, jeśli rachunek podzielono po równo) jest mały link „**Coś tu jest nie tak?**"; stuknięcie otwiera krótką, opcjonalną notatkę, a potem „Zgłoś". Zgłoszenie nigdy nie blokuje stuknięcia „Już zapłaciłem/am" — obie czynności są niezależne, w dowolnej kolejności.
+
 ## Śledzenie, kto zapłacił
 
 W aplikacji wiersz każdego znajomego pokazuje status:
@@ -45,6 +49,8 @@ W aplikacji wiersz każdego znajomego pokazuje status:
 - **Rozliczone** — potwierdziłeś/aś, że pieniądze faktycznie dotarły.
 
 Znajomy, który jeszcze nie zapłacił, po prostu zostaje przy statusie **Wysłano** albo **Otwarto** — nic więcej się z tym nie wiąże.
+
+Jeśli znajomy zgłosił coś nie tak ze swoją częścią, zobaczysz to zaraz pod jego wierszem, razem z jego notatką (jeśli ją dodał). Stuknij **Rozwiązano**, gdy tylko to załatwisz — samo zgłoszenie nie zmienia podziału, więc żeby faktycznie poprawić błędne przypisanie, musisz anulować podział i utworzyć nowy z poprawionymi częściami.
 
 ## Potwierdzanie otrzymania pieniędzy
 

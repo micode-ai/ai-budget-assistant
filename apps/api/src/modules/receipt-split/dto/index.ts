@@ -41,3 +41,22 @@ export class CreateSplitDto {
   @IsIn(['items', 'equal'])
   mode: 'items' | 'equal';
 }
+
+/**
+ * Body of the public, unauthenticated `POST /s/:token/flag` (guest-split-item-dispute).
+ * Both fields are optional and BOTH must still be re-validated server-side against the
+ * real participant/expense before use — `itemId` here is only "a string this form
+ * submitted", never "an item id this guest is entitled to name" (see
+ * GuestController.flagItem's clamping against `participant.itemIds`).
+ */
+export class FlagSplitItemDto {
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  itemId?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(500)
+  note?: string;
+}
