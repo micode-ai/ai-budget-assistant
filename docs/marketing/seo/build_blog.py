@@ -40,12 +40,12 @@ YEAR = "2026"
 STARTUP_FAME_BADGE = (
     '<a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="noopener">'
     '<img class="b-sf" src="/assets/startup-fame-badge.webp" '
-    'alt="AI Budget - Featured on Startup Fame" width="133" height="42" loading="lazy"></a>'
+    'alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a>'
 )
 PEERPUSH_BADGE = (
     '<a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" '
-    'alt="AI Budget Assistant on PeerPush" width="149" height="42" loading="lazy"></a>'
+    'alt="AI Budget Assistant on PeerPush" width="121" height="34" loading="lazy"></a>'
 )
 # Best AI Brands "Featured On" badge -- their own "Copy Light Badge" markup, verbatim apart
 # from rel="noopener" (the href is what the directory verifies, so do not tag it). Light
@@ -73,7 +73,7 @@ BEST_AI_BRANDS_BADGE = (
 FIRSTO_BADGE = (
     '<a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" '
-    'alt="AI Budget Assistant | Firsto Launch" width="108" height="42" loading="lazy"></a>'
+    'alt="AI Budget Assistant | Firsto Launch" width="87" height="34" loading="lazy"></a>'
 )
 # Fazier "Featured on Fazier" badge. Their API renders whichever badge_type you ask for, and
 # they offer two for one launch URL -- badge_type=launched (103x44) and =featured (182x43); we
@@ -88,7 +88,7 @@ FAZIER_BADGE = (
     '<a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="noopener">'
     '<img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg'
     '?badge_type=featured&amp;theme=light" '
-    'alt="AI Budget Assistant on Fazier" width="178" height="42" loading="lazy"></a>'
+    'alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a>'
 )
 # Launchstag "Featured on Launchstag" badge. The href is their LISTING url, taken from the
 # snippet in their own dashboard -- their listing path scheme is /p/tool-<epoch-ms>, which is
@@ -103,7 +103,23 @@ FAZIER_BADGE = (
 LAUNCHSTAG_BADGE = (
     '<a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="noopener">'
     '<img class="b-ls" src="https://launchstag.com/badge-light.svg" '
-    'alt="AI Budget Assistant - Featured on Launchstag" width="134" height="42" '
+    'alt="AI Budget Assistant - Featured on Launchstag" width="108" height="34" '
+    'loading="lazy"></a>'
+)
+# Uneed "Launching Soon" badge. Temporary by nature -- it stops being true once the
+# launch happens, unlike the six "featured on" badges around it, so it is the first
+# candidate to remove when the row next needs room.
+# The two files Uneed offers are named for the SITE theme they suit, not for their own
+# colour: EMBED3.png is a WHITE badge for a dark site, EMBED3B.png is a DARK badge for a
+# light one (measured: dominant fill luma 256 vs 24). Our footer ground is #fafafb, so
+# EMBED3B is the one. Their snippet ships an inline style="width:250px" with no height,
+# which is dropped here for a scoped class plus real width/height attributes, the same
+# treatment every other badge in this row gets (no CLS, no inline style).
+# 582x152 native, rendered at the row's uniform 34px height by .b-un.
+UNEED_BADGE = (
+    '<a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="noopener">'
+    '<img class="b-un" src="https://www.uneed.best/EMBED3B.png" '
+    'alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" '
     'loading="lazy"></a>'
 )
 SAMEAS = [
@@ -388,7 +404,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:42px;width:133px}.f-badge .b-pp{height:42px;width:149px}.f-badge .b-fo{height:42px;width:108px}.f-badge .b-fz{height:42px;width:178px}.f-badge .b-ls{height:42px;width:134px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:121px}.f-badge .b-fo{height:34px;width:87px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:108px}.f-badge .b-un{height:34px;width:130px}
 .cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
@@ -545,7 +561,7 @@ def foot(lang, src="blog"):
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'
             f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
             f'<a href="{app_url("footer", lang, src)}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
-            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{FAZIER_BADGE}{LAUNCHSTAG_BADGE}</div>'
+            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'
             f'</div></footer>\n' + consent_html(lang) + '</body></html>')
