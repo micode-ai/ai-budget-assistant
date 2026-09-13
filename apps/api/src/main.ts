@@ -4,6 +4,7 @@ import { Logger, ValidationPipe } from '@nestjs/common';
 import { json, urlencoded } from 'express';
 import * as Sentry from '@sentry/node';
 import { AppModule } from './app.module';
+import { GLOBAL_PREFIX_EXCLUDED_ROUTES } from './global-prefix-exclusions';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bodyParser: false });
@@ -36,10 +37,10 @@ async function bootstrap() {
     }),
   );
 
-  // Global prefix (exclude webhook routes from versioning)
-  app.setGlobalPrefix('api/v1', {
-    exclude: ['webhooks/stripe', 'telegram/webhook', 'whatsapp/webhook', 'slack/events', 'slack/interactivity', 'slack/install', 'slack/oauth/callback', 's/:token', 's/:token/paid'],
-  });
+  // Global prefix. The exclusion list (inbound webhooks + the receipt-split
+  // guest pages) lives in its own module so it can be unit-tested against the
+  // controllers it is supposed to cover — see global-prefix-exclusions.spec.ts.
+  app.setGlobalPrefix('api/v1', { exclude: GLOBAL_PREFIX_EXCLUDED_ROUTES });
 
   // CORS — allow only explicitly configured origins; fall back to localhost for local dev
   const corsOrigins = process.env.CORS_ORIGIN
