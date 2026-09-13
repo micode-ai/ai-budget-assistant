@@ -1,4 +1,4 @@
-import { resolveItemSplit, resolveEqualSplit } from './split-calculator';
+import { resolveItemSplit, resolveEqualSplit, allocateItemShares } from './split-calculator';
 
 const item = (id: string, totalPrice: number) => ({ id, totalPrice });
 
@@ -152,5 +152,95 @@ describe('resolveEqualSplit', () => {
     const out = resolveEqualSplit(['p1'], 3.55);
     expect(out.shares).toEqual([{ participantId: 'p1', amount: 1.77 }]);
     expect(out.ownShare).toBe(1.78);
+  });
+});
+
+describe('allocateItemShares', () => {
+  const line = (id: string, totalPrice: number, claimantCount = 1) => ({ id, totalPrice, claimantCount });
+
+  const totalOf = (shares: { amount: number }[]) =>
+    Math.round(shares.reduce((sum, s) => sum + s.amount, 0) * 100);
+
+  /** What `resolveItemSplit` would have stored on the participant row for a
+   *  guest claiming exactly these lines — the number the guest page prints as
+   *  their total, and the number the rendered lines have to add up to. */
+  const storedTotal = (lines: { id: string; totalPrice: number; claimantCount: number }[]) => {
+    const out = resolveItemSplit(
+      lines.map((l) => ({ id: l.id, totalPrice: l.totalPrice })),
+      [
+        { participantId: 'p1', itemIds: lines.map((l) => l.id) },
+        // The other claimants of each shared line, so resolveItemSplit divides
+        // by exactly the counts under test.
+        ...lines.flatMap((l) =>
+          Array.from({ length: Math.max(0, l.claimantCount - 1) }, (_, i) => ({
+            participantId: `other-${l.id}-${i}`,
+            itemIds: [l.id],
+          })),
+        ),
+      ],
+      1_000_000,
+    );
+    return out.shares.find((s) => s.participantId === 'p1')?.amount ?? 0;
+  };
+
+  it('gives an unshared line its whole price', () => {
+    expect(allocateItemShares([line('i1', 30)], 30)).toEqual([{ id: 'i1', amount: 30, sharedWith: 1 }]);
+  });
+
+  it('halves a line shared with one other person', () => {
+    expect(allocateItemShares([line('wine', 60, 2)], 30)).toEqual([
+      { id: 'wine', amount: 30, sharedWith: 2 },
+    ]);
+  });
+
+  it('never renders lines that contradict the stored total', () => {
+    // 0.05 split two ways, twice. Rounding each line on its own renders
+    // 0.03 + 0.03 = 0.06 against a stored total of 0.05 — the mismatch that
+    // made the guest page look wrong.
+    const lines = [line('a', 0.05, 2), line('b', 0.05, 2)];
+    const total = storedTotal(lines);
+    expect(total).toBe(0.05);
+    expect(totalOf(allocateItemShares(lines, total))).toBe(5);
+  });
+
+  it('keeps lines summing to the stored total across a spread of thirds', () => {
+    const lines = [line('a', 10, 3), line('b', 20, 3), line('c', 0.01, 3), line('d', 7.77, 3)];
+    const total = storedTotal(lines);
+    expect(totalOf(allocateItemShares(lines, total))).toBe(Math.round(total * 100));
+  });
+
+  it('hands each leftover cent to the line with the largest remainder', () => {
+    // 1.00/3 = 33.33c (remainder .33), 2.00/3 = 66.67c (remainder .67).
+    // Floors are 33 + 66 = 99 against a 100c total, so the one leftover cent
+    // goes to 'b'.
+    expect(allocateItemShares([line('a', 1, 3), line('b', 2, 3)], 1)).toEqual([
+      { id: 'a', amount: 0.33, sharedWith: 3 },
+      { id: 'b', amount: 0.67, sharedWith: 3 },
+    ]);
+  });
+
+  it('breaks a remainder tie by line order, so the output is deterministic', () => {
+    const shares = allocateItemShares([line('a', 1, 3), line('b', 1, 3), line('c', 1, 3)], 1);
+    expect(shares.map((s: { amount: number }) => s.amount)).toEqual([0.34, 0.33, 0.33]);
+    expect(totalOf(shares)).toBe(100);
+  });
+
+  it('leaves the lines alone when the shortfall is too big to be rounding', () => {
+    // A line the participant was charged for has since been soft-deleted, so
+    // the guest page cannot show it. Flooring two lines can lose at most one
+    // cent, so a 30.00 gap is missing data, not rounding — padding the two
+    // survivors up would misstate what each of them cost.
+    const shares = allocateItemShares([line('a', 10), line('b', 10)], 50);
+    expect(shares.map((s: { amount: number }) => s.amount)).toEqual([10, 10]);
+  });
+
+  it('returns nothing for no lines', () => {
+    expect(allocateItemShares([], 12.34)).toEqual([]);
+  });
+
+  it('treats a non-positive claimant count as a single claimant', () => {
+    // Defensive: the count comes from a DB read, and a line this participant
+    // claims always has at least one claimant — them.
+    expect(allocateItemShares([line('i1', 10, 0)], 10)).toEqual([{ id: 'i1', amount: 10, sharedWith: 1 }]);
   });
 });

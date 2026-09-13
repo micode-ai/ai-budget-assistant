@@ -13,7 +13,7 @@ Open de uitgave voor de rekening die je hebt betaald en tik op het **personen-ic
 ## Een rekening splitsen
 
 1. Tik op **Persoon toevoegen** en typ de naam van elke vriend (tot 20 personen).
-2. **Als het bonnetje items heeft:** tik op een item en dan op wie het had. Herhaal dit voor elk item — tik nogmaals op een al toegewezen item om het aan iemand anders te geven. Alles wat je niet toewijst, blijft je eigen deel.
+2. **Als het bonnetje items heeft:** tik op een item en tik daarna iedereen aan die het heeft gedeeld — tik nogmaals op een persoon om die er weer af te halen. Een item dat meerdere mensen delen, wordt gelijk over hen verdeeld. Alles wat je niet toewijst, blijft je eigen deel.
 3. **Als het bonnetje geen items heeft:** de hele rekening wordt gewoon gelijk verdeeld tussen jou en alle toegevoegde personen.
 4. Tik op **Links maken**. De app berekent ieders deel en geeft je één privélink per vriend.
 
@@ -29,7 +29,7 @@ Zit iedereen nog bij elkaar, tik dan op **QR-code tonen** in plaats van links é
 
 ## Wat je vriend ziet
 
-Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn toegewezen items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. De pagina opent in de taal van jouw app, niet per se in die van hem.
+Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. Bij elke regel staat **zijn** deel, niet de volle prijs: een item dat drie mensen deelden, is als gedeeld gemarkeerd en telt voor een derde, zodat de regels altijd optellen tot het bedrag dat van hem wordt gevraagd. Als je het bonnetje hebt gescand, is er ook een link naar de foto of pdf, zodat hij de rekening zelf kan controleren. De pagina opent in de taal van jouw app, niet per se in die van hem.
 
 Stel in hoe je terugbetaald wilt worden onder **Instellingen → Profiel → Betaalinstellingen**. Je kunt tot vijf methoden toevoegen, en de pagina van je vriend toont ze allemaal, zodat hij kan kiezen wat hem het beste uitkomt. Revolut en PayPal verschijnen allebei als een kant-en-klare knop met het bedrag al ingevuld; BLIK heeft geen manier om banken onderling te koppelen, dus toont het in plaats daarvan je nummer met instructies; contant en anders tonen wat je hebt ingevuld als instructie in plaats van een knop. Je kunt dit op elk moment instellen — of wijzigen —, ook nadat je al een link hebt verstuurd, want de pagina leest je betaalgegevens elke keer opnieuw wanneer je vriend hem opent. Heb je niets ingesteld, dan ziet je vriend alleen het bedrag, zonder betaalknop, en moeten jullie het anders regelen.
 

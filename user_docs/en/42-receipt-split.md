@@ -13,7 +13,7 @@ Open the expense for the bill you paid and tap the **people icon** in the header
 ## Splitting a bill
 
 1. Tap **Add person** and type each friend's name (up to 20 people).
-2. **If the receipt has line items:** tap an item, then tap the friend who had it. Repeat for every item — tap an already-assigned item again to hand it to someone else. Anything you never assign stays as your own share.
+2. **If the receipt has line items:** tap an item, then tap everyone who had it — tap a person again to take them off. An item shared by several people is divided equally between them. Anything you never assign stays as your own share.
 3. **If the receipt has no line items:** the whole bill is simply divided equally between you and everyone you've added.
 4. Tap **Create links**. The app works out everyone's share and gives you one private link per friend.
 
@@ -29,7 +29,7 @@ If everyone's still sitting there, tap **Show QR code** instead of sending links
 
 ## What your friend sees
 
-Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their assigned items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. The page opens in your app's language, not necessarily theirs.
+Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. Each line shows **their** share of it, not its full price — an item three people shared is marked as shared and counted at a third — so the lines always add up to the amount they're asked for. If you scanned the receipt, there's also a link to open the photo or PDF, so they can check the bill themselves. The page opens in your app's language, not necessarily theirs.
 
 Set up how you'd like to get paid under **Settings → Profile → Payment Settings**. You can add up to five methods, and your friend's page shows all of them, so they can use whichever suits them. Revolut and PayPal each appear as a ready-to-tap button with the amount already filled in; BLIK has no way to link across banks, so it shows your number with instructions instead; cash and other show whatever you typed as instructions instead of a button. You can set this up — or change it — any time, even after you've already sent a link, since the page reads your payment details fresh each time your friend opens it. If you haven't added anything, your friend just sees the amount, with no pay button, and you'll arrange payment another way.
 

@@ -1,4 +1,14 @@
-import { Controller, Get, Post, Param, Req, Header, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Param,
+  Req,
+  Header,
+  UseGuards,
+  NotFoundException,
+  StreamableFile,
+} from '@nestjs/common';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import type { Request } from 'express';
 import { PrismaService } from '../../database/prisma.service';
@@ -14,6 +24,8 @@ import {
   GuestPaymentStatus,
 } from './helpers/guest-page';
 import { getGuestPageStrings, resolveGuestLang } from './helpers/guest-page-i18n';
+import { allocateItemShares } from './split-calculator';
+import { sniffReceiptContentType } from './helpers/receipt-content-type';
 import { splitPaymentClaimedTitle, splitPaymentClaimedBody } from '../notifications/notification-i18n';
 
 interface GuestExpenseView {
@@ -27,6 +39,7 @@ interface GuestExpenseView {
 
 interface GuestParticipantRow {
   id: string;
+  expenseId: string;
   name: string;
   amount: unknown;
   currencyCode: string;
@@ -116,6 +129,9 @@ export class GuestController {
       where: { token },
       select: {
         id: true,
+        // Only used to count the other claimants of each shared line (see
+        // countClaimantsByItem) — never rendered.
+        expenseId: true,
         name: true,
         amount: true,
         currencyCode: true,
@@ -158,6 +174,62 @@ export class GuestController {
 
     if (!withExpense?.expense) return null;
     return { ...base, expense: withExpense.expense };
+  }
+
+  /**
+   * Whether the split's expense carries a receipt scan, WITHOUT loading it.
+   *
+   * `receiptImage` is a `Bytes` column holding a whole photo or PDF, so the
+   * page render must never select it just to decide whether to show a link —
+   * `IS NOT NULL` is answered from the tuple's null bitmap and never fetches
+   * the TOASTed value.
+   */
+  private async hasReceiptImage(expenseId: string): Promise<boolean> {
+    const row = await this.prisma.expense.findFirst({
+      where: { id: expenseId, isDeleted: false, receiptImage: { not: null } },
+      select: { id: true },
+    });
+    return row !== null;
+  }
+
+  /**
+   * How many participants claimed each line of this split, the caller included.
+   *
+   * A line claimed by several people is divided between them by
+   * `resolveItemSplit` at creation, so the guest page has to know the divisor
+   * to show a line's amount as THIS guest's share rather than its outright
+   * price. The participant's own row does not carry it — only the set of ids
+   * they claimed — so it is counted across the split's live rows here.
+   *
+   * Reads `itemIds` and nothing else: no name, no amount, no status, so it
+   * cannot widen what a guest link reveals about the other people on the bill
+   * beyond the number this page already has to state. Runs only after a token
+   * has been accepted, so it is outside the deliberately-one-round-trip path
+   * that keeps unknown and dead tokens indistinguishable (see
+   * `findUsableParticipant`).
+   *
+   * The count is stable for the life of a link: `cancelSplit` cancels the
+   * whole split rather than individual people, so a live split's roster cannot
+   * change after creation and this reproduces the divisor used back then.
+   */
+  private async countClaimantsByItem(expenseId: string): Promise<Map<string, number>> {
+    const rows = await this.prisma.receiptSplitParticipant.findMany({
+      where: { expenseId, cancelledAt: null },
+      select: { itemIds: true },
+    });
+
+    const counts = new Map<string, number>();
+    for (const row of rows) {
+      if (!Array.isArray(row.itemIds)) continue;
+      // One vote per participant per line, however the row happens to be
+      // shaped — a duplicated id inside one person's itemIds must not inflate
+      // the divisor and under-charge everyone on that line.
+      for (const itemId of new Set(row.itemIds as unknown[])) {
+        if (typeof itemId !== 'string') continue;
+        counts.set(itemId, (counts.get(itemId) ?? 0) + 1);
+      }
+    }
+    return counts;
   }
 
   /**
@@ -228,14 +300,36 @@ export class GuestController {
     return { name: user?.name ?? '', methods };
   }
 
-  private buildModel(participant: GuestParticipantRow, payer: ResolvedPayer, token: string): GuestPageModel {
+  private buildModel(
+    participant: GuestParticipantRow,
+    payer: ResolvedPayer,
+    token: string,
+    claimantsByItem: Map<string, number>,
+    hasReceipt: boolean,
+  ): GuestPageModel {
     const expense = participant.expense as GuestExpenseView;
     const amount = Number(participant.amount);
     const itemIds = Array.isArray(participant.itemIds) ? (participant.itemIds as unknown[]) : null;
-    const items = itemIds
+    // Each line carries the guest's OWN share, not the line's outright price:
+    // printing the full price of a line three people split contradicts the
+    // total right underneath it. allocateItemShares divides against the stored
+    // `amount`, so the lines always add up to what the guest is asked to pay.
+    const claimed = itemIds
       ? expense.items
           .filter((item) => itemIds.includes(item.id))
-          .map((item) => ({ description: item.description ?? '', amount: Number(item.totalPrice) }))
+          .map((item) => ({
+            id: item.id,
+            totalPrice: Number(item.totalPrice),
+            claimantCount: claimantsByItem.get(item.id) ?? 1,
+            description: item.description ?? '',
+          }))
+      : null;
+    const items = claimed
+      ? allocateItemShares(claimed, amount).map((share, index) => ({
+          description: claimed[index].description,
+          amount: share.amount,
+          sharedWith: share.sharedWith,
+        }))
       : null;
 
     // One block per resolved method, in the same order `payer.methods` arrived in
@@ -259,6 +353,7 @@ export class GuestController {
       status: statusFor(participant),
       paymentMethods,
       postPaidAction: `/s/${token}/paid`,
+      receiptUrl: hasReceipt ? `/s/${token}/receipt` : null,
     };
   }
 
@@ -289,7 +384,13 @@ export class GuestController {
     }
 
     const payer = await this.resolvePayer(participant.expense as GuestExpenseView);
-    return renderGuestPage(this.buildModel(participant, payer, token), strings);
+    const [claimantsByItem, hasReceipt] = await Promise.all([
+      Array.isArray(participant.itemIds)
+        ? this.countClaimantsByItem(participant.expenseId)
+        : Promise.resolve(new Map<string, number>()),
+      this.hasReceiptImage(participant.expenseId),
+    ]);
+    return renderGuestPage(this.buildModel(participant, payer, token, claimantsByItem, hasReceipt), strings);
   }
 
   /**
@@ -379,6 +480,76 @@ export class GuestController {
     );
   }
 
+  /**
+   * The payer's receipt scan, for the guest whose token this is.
+   *
+   * The page above tells a guest which lines they are being charged for and
+   * what each costs them; this is how they check that against the paper
+   * instead of taking it on trust. It widens what a guest link reveals — a
+   * scan shows the whole bill, including the total and the lines belonging to
+   * other people, which the page itself deliberately withholds — and that is
+   * the intended trade: everyone on a split sat at the same table, and the
+   * payer chose to share the bill with them.
+   *
+   * Three deliberate properties:
+   *
+   * - The same three-way collapse as every other guest route: unknown,
+   *   expired and cancelled tokens all 404, as does a valid token whose
+   *   expense has no scan, so a 404 never says which.
+   * - `Content-Type` is sniffed from the bytes, never taken from the stored
+   *   `receiptMimeType` — see receipt-content-type.ts. Unrecognized bytes are
+   *   refused rather than served under a guess.
+   * - `nosniff` on top of that, so a browser cannot re-interpret an
+   *   allow-listed type as something executable.
+   *
+   * No route-shadow risk against `GET /s/g/:groupToken` declared above, which
+   * has the same two-segment shape: this route needs a literal `receipt` as
+   * its second segment and that one needs a literal `g` as its first, and a
+   * participant token is 32 hex characters, never the string "g". The group
+   * route is declared first either way, so `/s/g/receipt` resolves as a group
+   * token rather than as a receipt for a token named "g".
+   */
+  @Get(':token/receipt')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  @Header('Cache-Control', 'no-store')
+  @Header('X-Content-Type-Options', 'nosniff')
+  async guestReceipt(@Param('token') token: string): Promise<StreamableFile> {
+    const file = await this.findReceiptFile(token);
+    if (!file) {
+      throw new NotFoundException();
+    }
+    return new StreamableFile(file.buffer, { type: file.contentType, disposition: 'inline' });
+  }
+
+  /**
+   * Loads the receipt bytes behind a guest token, or `null` for every reason a
+   * guest must not get them. Split into two reads like `findUsableParticipant`
+   * — the participant's own row first, so an invalid token never reaches a
+   * query that would pull a multi-megabyte column.
+   */
+  private async findReceiptFile(token: string): Promise<{ buffer: Buffer; contentType: string } | null> {
+    const participant = await this.prisma.receiptSplitParticipant.findUnique({
+      where: { token },
+      select: { expenseId: true, cancelledAt: true, expiresAt: true },
+    });
+    if (!participant) return null;
+    if (participant.cancelledAt) return null;
+    if (participant.expiresAt <= new Date()) return null;
+
+    const expense = await this.prisma.expense.findFirst({
+      where: { id: participant.expenseId, isDeleted: false },
+      select: { receiptImage: true, receiptMimeType: true },
+    });
+    if (!expense?.receiptImage) return null;
+
+    const buffer = Buffer.from(expense.receiptImage);
+    const contentType = sniffReceiptContentType(buffer, expense.receiptMimeType);
+    if (!contentType) return null;
+
+    return { buffer, contentType };
+  }
+
   @Post(':token/paid')
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 10, ttl: 60000 } })
@@ -423,10 +594,18 @@ export class GuestController {
     }
 
     const payer = await this.resolvePayer(participant.expense as GuestExpenseView);
+    const [claimantsByItem, hasReceipt] = await Promise.all([
+      Array.isArray(participant.itemIds)
+        ? this.countClaimantsByItem(participant.expenseId)
+        : Promise.resolve(new Map<string, number>()),
+      this.hasReceiptImage(participant.expenseId),
+    ]);
     const model = this.buildModel(
       { ...participant, claimedAt: claim.count === 1 ? claimedAt : participant.claimedAt },
       payer,
       token,
+      claimantsByItem,
+      hasReceipt,
     );
     return renderGuestPage(model, strings);
   }

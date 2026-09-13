@@ -13,7 +13,7 @@ Ouvrez la dépense correspondant à l'addition que vous avez réglée et appuyez
 ## Diviser une addition
 
 1. Appuyez sur **Ajouter une personne** et saisissez le nom de chaque ami (jusqu'à 20 personnes).
-2. **Si le ticket comporte des articles :** appuyez sur un article, puis sur la personne qui l'a pris. Répétez pour chaque article — appuyez de nouveau sur un article déjà attribué pour le donner à quelqu'un d'autre. Tout ce que vous n'attribuez pas reste votre propre part.
+2. **Si le ticket comporte des articles :** appuyez sur un article, puis sur toutes les personnes qui l'ont partagé — appuyez de nouveau sur une personne pour la retirer. Un article partagé par plusieurs personnes est divisé à parts égales entre elles. Tout ce que vous n'attribuez pas reste votre propre part.
 3. **Si le ticket ne comporte pas d'articles :** toute l'addition est simplement divisée à parts égales entre vous et toutes les personnes ajoutées.
 4. Appuyez sur **Créer les liens**. L'application calcule la part de chacun et vous donne un lien privé par ami.
 
@@ -29,7 +29,7 @@ Si tout le monde est encore là, appuyez sur **Afficher le code QR** au lieu d'e
 
 ## Ce que voit votre ami
 
-En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles attribués (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.
+En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. Chaque ligne affiche **sa** part, et non le prix entier : un article partagé par trois personnes est signalé comme tel et compté pour un tiers, de sorte que les lignes correspondent toujours au montant demandé. Si vous avez scanné le ticket, un lien permet aussi d'ouvrir la photo ou le PDF, pour qu'il puisse vérifier lui-même. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.
 
 Configurez comment vous souhaitez être remboursé(e) dans **Paramètres → Profil → Paramètres de paiement**. Vous pouvez ajouter jusqu'à cinq méthodes, et la page de votre ami les affiche toutes, pour qu'il utilise celle qui lui convient. Revolut et PayPal apparaissent chacun sous la forme d'un bouton prêt à l'emploi avec le montant déjà rempli ; BLIK n'a aucun moyen de créer un lien interbancaire, donc il affiche plutôt votre numéro avec des instructions ; espèces et autre affichent ce que vous avez saisi sous forme d'instructions à la place. Vous pouvez configurer — ou modifier — cela à tout moment, même après avoir déjà envoyé un lien, car la page relit vos informations de paiement à chaque fois que votre ami l'ouvre. Si vous n'avez rien renseigné, votre ami voit seulement le montant, sans bouton de paiement, et vous devrez vous arranger autrement.
 

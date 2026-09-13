@@ -13,7 +13,7 @@ Wenn du eine Rechnung für eine Gruppe bezahlt hast — eine Restaurantrechnung,
 ## Eine Rechnung aufteilen
 
 1. Tippe auf **Person hinzufügen** und gib den Namen jedes Freundes ein (bis zu 20 Personen).
-2. **Wenn der Kassenbon Positionen hat:** Tippe auf eine Position und dann auf die Person, die sie hatte. Wiederhole das für jede Position — tippe eine bereits zugewiesene Position erneut an, um sie jemand anderem zu geben. Alles, was du nicht zuweist, bleibt dein eigener Anteil.
+2. **Wenn der Kassenbon Positionen hat:** Tippe auf eine Position und dann auf alle, die sie geteilt haben — tippe eine Person erneut an, um sie wieder zu entfernen. Eine Position, die sich mehrere teilen, wird zu gleichen Teilen unter ihnen aufgeteilt. Alles, was du nicht zuweist, bleibt dein eigener Anteil.
 3. **Wenn der Kassenbon keine Positionen hat:** Die ganze Rechnung wird einfach gleichmäßig zwischen dir und allen hinzugefügten Personen aufgeteilt.
 4. Tippe auf **Links erstellen**. Die App berechnet den Anteil jeder Person und gibt dir für jeden Freund einen privaten Link.
 
@@ -29,7 +29,7 @@ Wenn alle noch da sitzen, tippe auf **QR-Code anzeigen**, statt Links einzeln zu
 
 ## Was dein Freund sieht
 
-Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine zugewiesenen Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.
+Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Bei jeder Zeile steht **sein** Anteil, nicht der volle Preis: eine Position, die sich drei geteilt haben, ist als geteilt markiert und zählt zu einem Drittel, sodass die Zeilen immer den Betrag ergeben, um den er gebeten wird. Wenn du den Bon gescannt hast, gibt es außerdem einen Link zum Foto oder PDF, damit er die Rechnung selbst prüfen kann. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.
 
 Richte unter **Einstellungen → Profil → Zahlungseinstellungen** ein, wie du bezahlt werden möchtest. Du kannst bis zu fünf Methoden hinterlegen, und die Seite deines Freundes zeigt sie alle an, sodass er die für ihn passende nutzen kann. Revolut und PayPal erscheinen jeweils als fertiger Zahlen-Button mit bereits eingetragenem Betrag; BLIK hat keine bankübergreifende Verknüpfung, deshalb zeigt es stattdessen deine Nummer mit einer Anleitung; Bargeld und Andere zeigen stattdessen das, was du eingegeben hast, als Anleitung. Du kannst das jederzeit einrichten oder ändern — auch nachdem du einen Link schon verschickt hast —, denn die Seite liest deine Zahlungsdetails jedes Mal neu, wenn dein Freund sie öffnet. Hast du nichts hinterlegt, sieht dein Freund nur den Betrag, ohne Zahlen-Button, und ihr müsst euch anders einigen.
 

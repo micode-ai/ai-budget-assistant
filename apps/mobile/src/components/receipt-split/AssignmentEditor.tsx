@@ -8,6 +8,14 @@ import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { ParticipantChips, type ParticipantChipItem } from '@/components/split/ParticipantChips';
 import { validateSplit, MAX_SPLIT_PARTICIPANTS, type SplitParticipantCandidate } from '@/components/split/validateSplit';
 import { computeParticipantAssignmentSummaries } from '@/components/split/participantAssignmentSummary';
+import {
+  toggleItemAssignment,
+  removeParticipantFromAssignments,
+  assigneesForItem,
+  itemIdsForParticipant,
+  assigneeLabel,
+  type ItemAssignments,
+} from '@/components/split/itemAssignments';
 import { useAddParticipant } from '@/hooks/useAddParticipant';
 import { AddPersonRow } from './AddPersonRow';
 import { formatCurrency } from '@budget/shared-utils';
@@ -55,8 +63,10 @@ export function AssignmentEditor({
   const styles = useStyles(createStyles);
 
   const [participants, setParticipants] = useState<ParticipantChipItem[]>([]);
-  // itemId -> participant.id. An item not present here stays with the payer.
-  const [assignments, setAssignments] = useState<Record<string, string>>({});
+  // itemId -> everyone who claimed it. An item not present here stays with the
+  // payer; several ids means the line is shared and its price divides between
+  // them, exactly as the server's resolveItemSplit does.
+  const [assignments, setAssignments] = useState<ItemAssignments>({});
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
   function addParticipant(name: string) {
@@ -96,13 +106,7 @@ export function AssignmentEditor({
 
   function handleRemoveParticipant(participantId: string) {
     setParticipants((prev) => prev.filter((p) => p.id !== participantId));
-    setAssignments((prev) => {
-      const next = { ...prev };
-      for (const [itemId, pid] of Object.entries(next)) {
-        if (pid === participantId) delete next[itemId];
-      }
-      return next;
-    });
+    setAssignments((prev) => removeParticipantFromAssignments(prev, participantId));
   }
 
   function handleSelectItem(itemId: string) {
@@ -110,17 +114,20 @@ export function AssignmentEditor({
     setSelectedItemId((prev) => (prev === itemId ? null : itemId));
   }
 
+  // Toggles rather than replaces, and deliberately KEEPS the line selected:
+  // claiming a shared bottle means tapping two or three people in a row, and
+  // closing the selection after the first tap would make that the slowest path
+  // through the screen instead of the natural one. Tapping the line again
+  // closes it.
   function handleSelectParticipant(participantId: string) {
     if (!canEdit || mode !== 'items' || !selectedItemId) return;
-    setAssignments((prev) => ({ ...prev, [selectedItemId]: participantId }));
-    setSelectedItemId(null);
+    setAssignments((prev) => toggleItemAssignment(prev, selectedItemId, participantId));
   }
 
-  function participantNameFor(itemId: string): string | null {
-    const pid = assignments[itemId];
-    if (!pid) return null;
-    return participants.find((p) => p.id === pid)?.name ?? null;
-  }
+  const nameById = useMemo(
+    () => new Map(participants.map((p) => [p.id, p.name])),
+    [participants],
+  );
 
   // Client-side aggregate for the overBill guard ONLY — never rendered as a
   // participant's or the payer's authoritative share. See validateSplit.ts.
@@ -129,13 +136,14 @@ export function AssignmentEditor({
       const perHead = participants.length > 0 ? billTotal / (participants.length + 1) : 0;
       return participants.map((p) => ({ name: p.name, shareAmount: perHead }));
     }
-    return participants.map((p) => {
-      const shareAmount = Object.entries(assignments)
-        .filter(([, pid]) => pid === p.id)
-        .reduce((sum, [itemId]) => sum + (priceByItemId.get(itemId) ?? 0), 0);
-      return { name: p.name, shareAmount };
-    });
-  }, [participants, assignments, mode, billTotal, priceByItemId]);
+    // Read straight off the chip summaries rather than re-aggregating here: a
+    // second copy of "what does this person owe" is a second chance for the
+    // chip and the Create button to disagree about the same split.
+    return participants.map((p) => ({
+      name: p.name,
+      shareAmount: assignmentSummaries?.[p.id]?.subtotal ?? 0,
+    }));
+  }, [participants, assignmentSummaries, mode, billTotal]);
 
   const isValid = validateSplit(validationCandidates, billTotal);
   const showTooManyHint = participants.length > MAX_SPLIT_PARTICIPANTS;
@@ -154,12 +162,7 @@ export function AssignmentEditor({
       mode,
       participants: participants.map((p) => ({
         name: p.name,
-        itemIds:
-          mode === 'items'
-            ? Object.entries(assignments)
-                .filter(([, pid]) => pid === p.id)
-                .map(([itemId]) => itemId)
-            : undefined,
+        itemIds: mode === 'items' ? itemIdsForParticipant(assignments, p.id) : undefined,
       })),
     };
     onSubmit(dto);
@@ -197,7 +200,7 @@ export function AssignmentEditor({
             <Text style={styles.sectionTitle}>{t('receiptSplit.assignHint')}</Text>
             <View style={styles.itemsCard}>
               {items.map((item, index) => {
-                const assignedName = participantNameFor(item.id);
+                const assignedLabel = assigneeLabel(assignments, item.id, nameById);
                 const selected = selectedItemId === item.id;
                 return (
                   <TouchableOpacity
@@ -224,9 +227,9 @@ export function AssignmentEditor({
                       {item.description}
                     </Text>
                     <View style={styles.itemAssignBadge}>
-                      {assignedName ? (
+                      {assignedLabel ? (
                         <Text style={styles.itemAssignedText} numberOfLines={1}>
-                          {assignedName}
+                          {assignedLabel}
                         </Text>
                       ) : (
                         <Ionicons name="person-add-outline" size={14} color={theme.colors.textTertiary} />
@@ -256,6 +259,7 @@ export function AssignmentEditor({
         <ParticipantChips
           participants={participants}
           awaitingAssignment={mode === 'items' && !!selectedItemId}
+          claimedIds={selectedItemId ? assigneesForItem(assignments, selectedItemId) : undefined}
           assignmentSummaries={assignmentSummaries}
           currencyCode={currencyCode}
           onPress={handleSelectParticipant}

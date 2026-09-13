@@ -4650,7 +4650,7 @@ Open the expense for the bill you paid and tap the **people icon** in the header
 ## Splitting a bill
 
 1. Tap **Add person** and type each friend's name (up to 20 people).
-2. **If the receipt has line items:** tap an item, then tap the friend who had it. Repeat for every item — tap an already-assigned item again to hand it to someone else. Anything you never assign stays as your own share.
+2. **If the receipt has line items:** tap an item, then tap everyone who had it — tap a person again to take them off. An item shared by several people is divided equally between them. Anything you never assign stays as your own share.
 3. **If the receipt has no line items:** the whole bill is simply divided equally between you and everyone you've added.
 4. Tap **Create links**. The app works out everyone's share and gives you one private link per friend.
 
@@ -4666,7 +4666,7 @@ If everyone's still sitting there, tap **Show QR code** instead of sending links
 
 ## What your friend sees
 
-Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their assigned items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. The page opens in your app's language, not necessarily theirs.
+Opening the link shows only that one person's own share: the merchant and date, "*You* paid for everyone," their items (or their equal share of the bill if there were no line items), and the amount they owe, in the bill's own currency. Each line shows **their** share of it, not its full price — an item three people shared is marked as shared and counted at a third — so the lines always add up to the amount they're asked for. If you scanned the receipt, there's also a link to open the photo or PDF, so they can check the bill themselves. The page opens in your app's language, not necessarily theirs.
 
 Set up how you'd like to get paid under **Settings → Profile → Payment Settings**. You can add up to five methods, and your friend's page shows all of them, so they can use whichever suits them. Revolut and PayPal each appear as a ready-to-tap button with the amount already filled in; BLIK has no way to link across banks, so it shows your number with instructions instead; cash and other show whatever you typed as instructions instead of a button. You can set this up — or change it — any time, even after you've already sent a link, since the page reads your payment details fresh each time your friend opens it. If you haven't added anything, your friend just sees the amount, with no pay button, and you'll arrange payment another way.
 
@@ -9316,7 +9316,7 @@ OCR иногда неверно читает цену, выдумывает ст
 ## Разделение чека
 
 1. Нажмите **Добавить человека** и введите имя каждого друга (максимум 20 человек).
-2. **Если в чеке есть позиции:** нажмите на позицию, а затем на того, кто её заказал. Повторите для каждой позиции — нажмите на уже назначенную позицию ещё раз, чтобы передать её другому человеку. Всё, что вы не назначите, остаётся вашей собственной долей.
+2. **Если в чеке есть позиции:** нажмите на позицию, а затем отметьте всех, кто её разделил, — нажмите на человека ещё раз, чтобы убрать его. Позиция, которую делят несколько человек, делится между ними поровну. Всё, что вы не назначите, остаётся вашей собственной долей.
 3. **Если в чеке нет позиций:** весь счёт просто делится поровну между вами и всеми добавленными людьми.
 4. Нажмите **Создать ссылки**. Приложение рассчитывает долю каждого и выдаёт вам по одной личной ссылке на каждого друга.
 
@@ -9332,7 +9332,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Что видит ваш друг
 
-Открыв ссылку, он видит только свою собственную часть: магазин/заведение и дату, «*Вы* оплатили за всех», назначенные ему позиции (или его равную долю счёта, если позиций не было) и сумму, которую он вам должен, — в валюте счёта. Страница открывается на языке вашего приложения, не обязательно на его.
+Открыв ссылку, он видит только свою собственную часть: магазин/заведение и дату, «*Вы* оплатили за всех», его позиции (или его равную долю счёта, если позиций не было) и сумму, которую он вам должен, — в валюте счёта. В каждой строке указана **его** доля, а не полная цена: позиция, которую разделили трое, помечена как общая и считается по трети, поэтому строки всегда складываются в ту сумму, которую у него просят. Если вы сканировали чек, там же будет ссылка открыть фото или PDF — чтобы он мог свериться сам. Страница открывается на языке вашего приложения, не обязательно на его.
 
 Настройте, как вы хотите получать оплату, в разделе **Настройки → Профиль → Настройки платежей**. Можно добавить до пяти способов, и на странице друга будут показаны все они — он сможет выбрать тот, который ему удобен. Revolut и PayPal отображаются как готовая кнопка с уже заполненной суммой; у BLIK нет способа связать разные банки, поэтому вместо кнопки показывается ваш номер с инструкцией; наличные и другое вместо кнопки показывают то, что вы ввели, в виде инструкции. Настроить это — или изменить — можно в любой момент, даже после того как ссылка уже отправлена, потому что страница считывает ваши платёжные данные заново каждый раз, когда друг её открывает. Если вы ничего не указали, друг просто увидит сумму без кнопки оплаты, и вам придётся договориться об оплате иначе.
 
@@ -13952,7 +13952,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 ## Поділ рахунку
 
 1. Торкніться **Додати людину** і введіть ім'я кожного друга (максимум 20 осіб).
-2. **Якщо чек має позиції:** торкніться позиції, а потім того, хто її замовив. Повторіть для кожної позиції — торкніться вже призначеної позиції ще раз, щоб передати її іншій людині. Усе, що ви не призначите, залишається вашою власною часткою.
+2. **Якщо чек має позиції:** торкніться позиції, а потім позначте всіх, хто її розділив, — торкніться людини ще раз, щоб прибрати її. Позиція, яку ділять кілька людей, ділиться між ними порівну. Усе, що ви не призначите, залишається вашою власною часткою.
 3. **Якщо чек не має позицій:** увесь рахунок просто ділиться порівну між вами і всіма доданими людьми.
 4. Торкніться **Створити посилання**. Застосунок обчислює частку кожного і видає вам по одному особистому посиланню на кожного друга.
 
@@ -13968,7 +13968,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Що бачить ваш друг
 
-Відкривши посилання, він бачить лише свою власну частку: заклад і дату, «*Ви* заплатили за всіх», призначені йому позиції (або його рівну частку рахунку, якщо позицій не було) і суму, яку він винен вам, — у валюті рахунку. Сторінка відкривається мовою вашого застосунку, не обов'язково його.
+Відкривши посилання, він бачить лише свою власну частку: заклад і дату, «*Ви* заплатили за всіх», його позиції (або його рівну частку рахунку, якщо позицій не було) і суму, яку він винен вам, — у валюті рахунку. У кожному рядку вказана **його** частка, а не повна ціна: позиція, яку розділили троє, позначена як спільна і врахована по третині, тож рядки завжди складаються в ту суму, яку в нього просять. Якщо ви сканували чек, там також буде посилання відкрити фото або PDF, щоб він міг звіритися сам. Сторінка відкривається мовою вашого застосунку, не обов'язково його.
 
 Налаштуйте, як ви хочете отримувати оплату, в розділі **Налаштування → Профіль → Налаштування платежів**. Можна додати до п'яти способів, і на сторінці друга буде показано всі вони — він зможе обрати той, який йому зручний. Revolut і PayPal відображаються як готова кнопка з уже заповненою сумою; у BLIK немає способу зв'язати різні банки, тому замість кнопки показується ваш номер з інструкцією; готівка та інше замість кнопки показують те, що ви ввели, як інструкцію. Налаштувати це — або змінити — можна в будь-який момент, навіть після того як посилання вже надіслано, бо сторінка зчитує ваші платіжні дані заново щоразу, коли друг її відкриває. Якщо ви нічого не вказали, друг просто побачить суму без кнопки оплати, і вам доведеться домовитися про оплату інакше.
 
@@ -18573,7 +18573,7 @@ Otwórz wydatek odpowiadający zapłaconemu rachunkowi i stuknij ikonę **osób*
 ## Dzielenie rachunku
 
 1. Stuknij **Dodaj osobę** i wpisz imię każdego znajomego (maksymalnie 20 osób).
-2. **Jeśli paragon ma pozycje:** dotknij pozycję, a potem osobę, która ją zamówiła. Powtórz dla każdej pozycji — dotknij ponownie już przypisaną pozycję, żeby oddać ją komuś innemu. Wszystko, czego nie przypiszesz, zostaje jako Twoja własna część.
+2. **Jeśli paragon ma pozycje:** dotknij pozycję, a potem zaznacz wszystkich, którzy ją dzielili — dotknij osobę ponownie, żeby ją usunąć. Pozycja dzielona przez kilka osób jest dzielona między nie po równo. Wszystko, czego nie przypiszesz, zostaje jako Twoja własna część.
 3. **Jeśli paragon nie ma pozycji:** cały rachunek zostaje po prostu podzielony po równo między Ciebie i wszystkich dodanych znajomych.
 4. Stuknij **Utwórz linki**. Aplikacja wylicza część każdej osoby i daje Ci jeden prywatny link na znajomego.
 
@@ -18589,7 +18589,7 @@ Jeśli wszyscy wciąż siedzą przy stole, zamiast wysyłać linki po kolei, dot
 
 ## Co widzi Twój znajomy
 
-Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", przypisane jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
+Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Przy każdej pozycji widnieje **jej** część, a nie pełna cena: pozycja dzielona przez trzy osoby jest oznaczona jako wspólna i liczona po jednej trzeciej, więc wiersze zawsze sumują się do kwoty, o którą jest proszona. Jeśli zeskanowałeś/aś paragon, jest też link do zdjęcia lub PDF-a, żeby mogła sama sprawdzić rachunek. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
 
 Ustaw, jak chcesz otrzymywać zwrot pieniędzy, w **Ustawienia → Profil → Ustawienia płatności**. Możesz dodać do pięciu metod, a strona Twojego znajomego pokaże je wszystkie, żeby mógł wybrać tę, która mu odpowiada. Revolut i PayPal pojawiają się jako gotowy do stuknięcia przycisk z już wypełnioną kwotą; BLIK nie ma możliwości połączenia między bankami, więc zamiast tego pokazuje Twój numer wraz z instrukcją; gotówka i inne pokazują to, co wpisałeś/aś, jako instrukcję zamiast przycisku. Możesz to ustawić — albo zmienić — w dowolnym momencie, nawet po wysłaniu linku, ponieważ strona za każdym razem odczytuje Twoje dane do płatności na nowo, gdy znajomy ją otwiera. Jeśli nic nie ustawiłeś/aś, znajomy widzi tylko kwotę, bez przycisku płatności, i musicie rozliczyć się w inny sposób.
 
@@ -23169,7 +23169,7 @@ Wenn du eine Rechnung für eine Gruppe bezahlt hast — eine Restaurantrechnung,
 ## Eine Rechnung aufteilen
 
 1. Tippe auf **Person hinzufügen** und gib den Namen jedes Freundes ein (bis zu 20 Personen).
-2. **Wenn der Kassenbon Positionen hat:** Tippe auf eine Position und dann auf die Person, die sie hatte. Wiederhole das für jede Position — tippe eine bereits zugewiesene Position erneut an, um sie jemand anderem zu geben. Alles, was du nicht zuweist, bleibt dein eigener Anteil.
+2. **Wenn der Kassenbon Positionen hat:** Tippe auf eine Position und dann auf alle, die sie geteilt haben — tippe eine Person erneut an, um sie wieder zu entfernen. Eine Position, die sich mehrere teilen, wird zu gleichen Teilen unter ihnen aufgeteilt. Alles, was du nicht zuweist, bleibt dein eigener Anteil.
 3. **Wenn der Kassenbon keine Positionen hat:** Die ganze Rechnung wird einfach gleichmäßig zwischen dir und allen hinzugefügten Personen aufgeteilt.
 4. Tippe auf **Links erstellen**. Die App berechnet den Anteil jeder Person und gibt dir für jeden Freund einen privaten Link.
 
@@ -23185,7 +23185,7 @@ Wenn alle noch da sitzen, tippe auf **QR-Code anzeigen**, statt Links einzeln zu
 
 ## Was dein Freund sieht
 
-Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine zugewiesenen Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.
+Öffnet er den Link, sieht er nur seinen eigenen Anteil: Geschäft/Restaurant und Datum, „*Du* hast für alle bezahlt", seine Positionen (oder seinen gleichen Anteil der Rechnung, falls es keine Positionen gab) und den Betrag, den er dir schuldet — in der Währung der Rechnung. Bei jeder Zeile steht **sein** Anteil, nicht der volle Preis: eine Position, die sich drei geteilt haben, ist als geteilt markiert und zählt zu einem Drittel, sodass die Zeilen immer den Betrag ergeben, um den er gebeten wird. Wenn du den Bon gescannt hast, gibt es außerdem einen Link zum Foto oder PDF, damit er die Rechnung selbst prüfen kann. Die Seite öffnet sich in der Sprache deiner App, nicht unbedingt in seiner.
 
 Richte unter **Einstellungen → Profil → Zahlungseinstellungen** ein, wie du bezahlt werden möchtest. Du kannst bis zu fünf Methoden hinterlegen, und die Seite deines Freundes zeigt sie alle an, sodass er die für ihn passende nutzen kann. Revolut und PayPal erscheinen jeweils als fertiger Zahlen-Button mit bereits eingetragenem Betrag; BLIK hat keine bankübergreifende Verknüpfung, deshalb zeigt es stattdessen deine Nummer mit einer Anleitung; Bargeld und Andere zeigen stattdessen das, was du eingegeben hast, als Anleitung. Du kannst das jederzeit einrichten oder ändern — auch nachdem du einen Link schon verschickt hast —, denn die Seite liest deine Zahlungsdetails jedes Mal neu, wenn dein Freund sie öffnet. Hast du nichts hinterlegt, sieht dein Freund nur den Betrag, ohne Zahlen-Button, und ihr müsst euch anders einigen.
 
@@ -27754,7 +27754,7 @@ Abre el gasto correspondiente a la cuenta que pagaste y toca el **icono de perso
 ## Dividir una cuenta
 
 1. Toca **Añadir persona** y escribe el nombre de cada amigo (hasta 20 personas).
-2. **Si el recibo tiene artículos:** toca un artículo y luego toca a quién lo tomó. Repite para cada artículo — toca de nuevo un artículo ya asignado para dárselo a otra persona. Todo lo que no asignes se queda como tu propia parte.
+2. **Si el recibo tiene artículos:** toca un artículo y luego marca a todos los que lo compartieron — toca a una persona de nuevo para quitarla. Un artículo compartido por varias personas se divide a partes iguales entre ellas. Todo lo que no asignes se queda como tu propia parte.
 3. **Si el recibo no tiene artículos:** toda la cuenta se divide simplemente a partes iguales entre tú y todas las personas que has añadido.
 4. Toca **Crear enlaces**. La app calcula la parte de cada persona y te da un enlace privado por amigo.
 
@@ -27770,7 +27770,7 @@ Si todos siguen ahí sentados, toca **Mostrar código QR** en lugar de enviar en
 
 ## Qué ve tu amigo
 
-Al abrir el enlace solo se ve la parte de esa persona: el comercio y la fecha, "*Tú* pagaste por todos", sus artículos asignados (o su parte igual de la cuenta si no había artículos) y el importe que te debe, en la moneda de la cuenta. La página se abre en el idioma de tu app, no necesariamente en el suyo.
+Al abrir el enlace solo se ve la parte de esa persona: el comercio y la fecha, "*Tú* pagaste por todos", sus artículos (o su parte igual de la cuenta si no había artículos) y el importe que te debe, en la moneda de la cuenta. En cada línea aparece **su** parte, no el precio completo: un artículo que compartieron tres personas se marca como compartido y cuenta por un tercio, así que las líneas siempre suman el importe que se le pide. Si escaneaste el recibo, también hay un enlace para abrir la foto o el PDF, para que pueda comprobar la cuenta. La página se abre en el idioma de tu app, no necesariamente en el suyo.
 
 Configura cómo quieres que te paguen en **Ajustes → Perfil → Ajustes de pago**. Puedes añadir hasta cinco métodos, y la página de tu amigo los muestra todos, para que use el que mejor le venga. Revolut y PayPal aparecen cada uno como un botón listo para tocar con el importe ya rellenado; BLIK no tiene forma de enlazar entre bancos, así que en su lugar muestra tu número con instrucciones; efectivo y otro muestran lo que escribiste como instrucciones en su lugar. Puedes configurarlo — o cambiarlo — en cualquier momento, incluso después de haber enviado ya un enlace, porque la página lee tus datos de pago de nuevo cada vez que tu amigo la abre. Si no has añadido nada, tu amigo solo ve el importe, sin botón de pago, y tendréis que arreglar el pago de otra forma.
 
@@ -32337,7 +32337,7 @@ Ouvrez la dépense correspondant à l'addition que vous avez réglée et appuyez
 ## Diviser une addition
 
 1. Appuyez sur **Ajouter une personne** et saisissez le nom de chaque ami (jusqu'à 20 personnes).
-2. **Si le ticket comporte des articles :** appuyez sur un article, puis sur la personne qui l'a pris. Répétez pour chaque article — appuyez de nouveau sur un article déjà attribué pour le donner à quelqu'un d'autre. Tout ce que vous n'attribuez pas reste votre propre part.
+2. **Si le ticket comporte des articles :** appuyez sur un article, puis sur toutes les personnes qui l'ont partagé — appuyez de nouveau sur une personne pour la retirer. Un article partagé par plusieurs personnes est divisé à parts égales entre elles. Tout ce que vous n'attribuez pas reste votre propre part.
 3. **Si le ticket ne comporte pas d'articles :** toute l'addition est simplement divisée à parts égales entre vous et toutes les personnes ajoutées.
 4. Appuyez sur **Créer les liens**. L'application calcule la part de chacun et vous donne un lien privé par ami.
 
@@ -32353,7 +32353,7 @@ Si tout le monde est encore là, appuyez sur **Afficher le code QR** au lieu d'e
 
 ## Ce que voit votre ami
 
-En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles attribués (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.
+En ouvrant le lien, il ne voit que sa propre part : le commerce et la date, « *Vous* avez payé pour tout le monde », ses articles (ou sa part égale de l'addition s'il n'y avait pas d'articles), et le montant qu'il vous doit, dans la devise de l'addition. Chaque ligne affiche **sa** part, et non le prix entier : un article partagé par trois personnes est signalé comme tel et compté pour un tiers, de sorte que les lignes correspondent toujours au montant demandé. Si vous avez scanné le ticket, un lien permet aussi d'ouvrir la photo ou le PDF, pour qu'il puisse vérifier lui-même. La page s'ouvre dans la langue de votre application, pas nécessairement dans la sienne.
 
 Configurez comment vous souhaitez être remboursé(e) dans **Paramètres → Profil → Paramètres de paiement**. Vous pouvez ajouter jusqu'à cinq méthodes, et la page de votre ami les affiche toutes, pour qu'il utilise celle qui lui convient. Revolut et PayPal apparaissent chacun sous la forme d'un bouton prêt à l'emploi avec le montant déjà rempli ; BLIK n'a aucun moyen de créer un lien interbancaire, donc il affiche plutôt votre numéro avec des instructions ; espèces et autre affichent ce que vous avez saisi sous forme d'instructions à la place. Vous pouvez configurer — ou modifier — cela à tout moment, même après avoir déjà envoyé un lien, car la page relit vos informations de paiement à chaque fois que votre ami l'ouvre. Si vous n'avez rien renseigné, votre ami voit seulement le montant, sans bouton de paiement, et vous devrez vous arranger autrement.
 
@@ -36884,7 +36884,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Падзел чэка
 
 1. Націсніце **Дадаць чалавека** і ўвядзіце імя кожнага сябра (максімум 20 чалавек).
-2. **Калі чэк мае пазіцыі:** націсніце на пазіцыю, а потым на таго, хто яе заказаў. Паўтарыце для кожнай пазіцыі — націсніце на ўжо прызначаную пазіцыю яшчэ раз, каб перадаць яе іншаму чалавеку. Усё, што вы не прызначыце, застаецца вашай уласнай доляй.
+2. **Калі чэк мае пазіцыі:** націсніце на пазіцыю, а потым адзначце ўсіх, хто яе падзяліў, — націсніце на чалавека яшчэ раз, каб прыбраць яго. Пазіцыя, якую дзеляць некалькі чалавек, дзеліцца паміж імі пароўну. Усё, што вы не прызначыце, застаецца вашай уласнай доляй.
 3. **Калі чэк не мае пазіцый:** увесь рахунак проста дзеліцца пароўну паміж вамі і ўсімі дададзенымі людзьмі.
 4. Націсніце **Стварыць спасылкі**. Праграма вылічвае долю кожнага і выдае вам па адной асабістай спасылцы на кожнага сябра.
 
@@ -36900,7 +36900,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ## Што бачыць ваш сябар
 
-Адкрыўшы спасылку, ён бачыць толькі сваю ўласную частку: установу і дату, «*Вы* заплацілі за ўсіх», прызначаныя яму пазіцыі (або яго роўную долю рахунку, калі пазіцый не было) і суму, якую ён вінны вам, — у валюце рахунку. Старонка адкрываецца на мове вашай праграмы, не абавязкова на яго.
+Адкрыўшы спасылку, ён бачыць толькі сваю ўласную частку: установу і дату, «*Вы* заплацілі за ўсіх», яго пазіцыі (або яго роўную долю рахунку, калі пазіцый не было) і суму, якую ён вінны вам, — у валюце рахунку. У кожным радку пазначана **яго** доля, а не поўная цана: пазіцыя, якую падзялілі трое, пазначана як агульная і лічыцца па трэці, таму радкі заўсёды складаюцца ў тую суму, якую ў яго просяць. Калі вы сканавалі чэк, там жа будзе спасылка адкрыць фота або PDF, каб ён мог зверыцца сам. Старонка адкрываецца на мове вашай праграмы, не абавязкова на яго.
 
 Наладзьце, як вы хочаце атрымліваць аплату, у раздзеле **Налады → Профіль → Налады плацяжоў**. Можна дадаць да пяці спосабаў, і на старонцы сябра будуць паказаны ўсе яны — ён зможа выбраць той, які яму зручны. Revolut і PayPal адлюстроўваюцца як гатовая кнопка з ужо запоўненай сумай; у BLIK няма магчымасці звязаць розныя банкі, таму замест кнопкі паказваецца ваш нумар з інструкцыяй; наяўныя і іншае замест кнопкі паказваюць тое, што вы ўвялі, як інструкцыю. Наладзіць гэта — ці змяніць — можна ў любы момант, нават пасля таго як спасылка ўжо адпраўленая, бо старонка счытвае вашы плацежныя дадзеныя нанова кожны раз, калі сябар яе адкрывае. Калі вы нічога не ўказалі, сябар проста ўбачыць суму без кнопкі аплаты, і вам давядзецца дамовіцца пра аплату іначай.
 
@@ -41546,7 +41546,7 @@ Open de uitgave voor de rekening die je hebt betaald en tik op het **personen-ic
 ## Een rekening splitsen
 
 1. Tik op **Persoon toevoegen** en typ de naam van elke vriend (tot 20 personen).
-2. **Als het bonnetje items heeft:** tik op een item en dan op wie het had. Herhaal dit voor elk item — tik nogmaals op een al toegewezen item om het aan iemand anders te geven. Alles wat je niet toewijst, blijft je eigen deel.
+2. **Als het bonnetje items heeft:** tik op een item en tik daarna iedereen aan die het heeft gedeeld — tik nogmaals op een persoon om die er weer af te halen. Een item dat meerdere mensen delen, wordt gelijk over hen verdeeld. Alles wat je niet toewijst, blijft je eigen deel.
 3. **Als het bonnetje geen items heeft:** de hele rekening wordt gewoon gelijk verdeeld tussen jou en alle toegevoegde personen.
 4. Tik op **Links maken**. De app berekent ieders deel en geeft je één privélink per vriend.
 
@@ -41562,7 +41562,7 @@ Zit iedereen nog bij elkaar, tik dan op **QR-code tonen** in plaats van links é
 
 ## Wat je vriend ziet
 
-Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn toegewezen items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. De pagina opent in de taal van jouw app, niet per se in die van hem.
+Als hij de link opent, ziet hij alleen zijn eigen deel: de winkel/zaak en de datum, "*Jij* hebt voor iedereen betaald", zijn items (of zijn gelijke deel van de rekening als er geen items waren), en het bedrag dat hij je schuldig is, in de valuta van de rekening. Bij elke regel staat **zijn** deel, niet de volle prijs: een item dat drie mensen deelden, is als gedeeld gemarkeerd en telt voor een derde, zodat de regels altijd optellen tot het bedrag dat van hem wordt gevraagd. Als je het bonnetje hebt gescand, is er ook een link naar de foto of pdf, zodat hij de rekening zelf kan controleren. De pagina opent in de taal van jouw app, niet per se in die van hem.
 
 Stel in hoe je terugbetaald wilt worden onder **Instellingen → Profiel → Betaalinstellingen**. Je kunt tot vijf methoden toevoegen, en de pagina van je vriend toont ze allemaal, zodat hij kan kiezen wat hem het beste uitkomt. Revolut en PayPal verschijnen allebei als een kant-en-klare knop met het bedrag al ingevuld; BLIK heeft geen manier om banken onderling te koppelen, dus toont het in plaats daarvan je nummer met instructies; contant en anders tonen wat je hebt ingevuld als instructie in plaats van een knop. Je kunt dit op elk moment instellen — of wijzigen —, ook nadat je al een link hebt verstuurd, want de pagina leest je betaalgegevens elke keer opnieuw wanneer je vriend hem opent. Heb je niets ingesteld, dan ziet je vriend alleen het bedrag, zonder betaalknop, en moeten jullie het anders regelen.
 
