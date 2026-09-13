@@ -6765,6 +6765,10 @@ Set up how you'd like to get paid under **Settings → Profile → Payment Setti
 
 Either way, there's an **"I already paid"** button. Tapping it doesn't move any money — it just tells you they've paid.
 
+### If something's wrong with their share
+
+If your friend spots a mistake — a line they weren't actually part of, or a shared item split among the wrong number of people — they can say so right from their own page, no need to text you about it. Under each item (or under the total, if the bill was split equally) there's a small **"Something wrong with this?"** link; tapping it opens a short optional note, then **Report**. Flagging never blocks them from also tapping "I already paid" — the two are independent, in either order.
+
 ## Tracking who's paid
 
 Back in the app, each friend's row shows a status:
@@ -6775,6 +6779,8 @@ Back in the app, each friend's row shows a status:
 - **Settled** — you've confirmed the money actually arrived.
 
 A friend who hasn't paid yet simply stays at **Sent** or **Opened** — there's nothing more to it than that.
+
+If a friend flagged something wrong with their share, you'll see it right under their row, along with their note (if they added one). Tap **Resolve** once you've sorted it out — flagging never changes the split by itself, so to actually fix a wrong assignment you'll need to cancel the split and create a new one with the corrected shares.
 
 ## Confirming you've been paid
 

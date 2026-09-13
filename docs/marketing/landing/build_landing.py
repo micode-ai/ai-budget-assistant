@@ -53,12 +53,12 @@ YEAR = "2026"
 STARTUP_FAME_BADGE = (
     '<a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="noopener">'
     '<img class="b-sf" src="/assets/startup-fame-badge.webp" '
-    'alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a>'
+    'alt="AI Budget - Featured on Startup Fame" width="92" height="29" loading="lazy"></a>'
 )
 PEERPUSH_BADGE = (
     '<a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" '
-    'alt="AI Budget Assistant on PeerPush" width="121" height="34" loading="lazy"></a>'
+    'alt="AI Budget Assistant on PeerPush" width="103" height="29" loading="lazy"></a>'
 )
 # Best AI Brands "Featured On" badge -- their own "Copy Light Badge" markup, verbatim apart
 # from rel="noopener" (the href is what the directory verifies, so do not tag it). Light
@@ -86,7 +86,7 @@ BEST_AI_BRANDS_BADGE = (
 FIRSTO_BADGE = (
     '<a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" '
-    'alt="AI Budget Assistant | Firsto Launch" width="87" height="34" loading="lazy"></a>'
+    'alt="AI Budget Assistant | Firsto Launch" width="75" height="29" loading="lazy"></a>'
 )
 # Fazier "Featured on Fazier" badge. Their API renders whichever badge_type you ask for, and
 # they offer two for one launch URL -- badge_type=launched (103x44) and =featured (182x43); we
@@ -101,7 +101,7 @@ FAZIER_BADGE = (
     '<a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="noopener">'
     '<img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg'
     '?badge_type=featured&amp;theme=light" '
-    'alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a>'
+    'alt="AI Budget Assistant on Fazier" width="123" height="29" loading="lazy"></a>'
 )
 # Launchstag "Featured on Launchstag" badge. The href is their LISTING url, taken from the
 # snippet in their own dashboard -- their listing path scheme is /p/tool-<epoch-ms>, which is
@@ -111,12 +111,12 @@ FAZIER_BADGE = (
 # first shipped (ABA-526, copied from a pre-claim snippet) would not have satisfied it.
 # 198x62 is their stated size and matches the viewBox exactly -- the file declares width=396
 # height=124, i.e. a clean 2x of viewBox 0 0 198 62, so 198x62 is the 1x logical size; it is
-# then rendered at the row's uniform 42px height by .b-ls (ABA-527).
+# then rendered at the row's uniform height by .b-ls (see the .f-badge CSS).
 # badge-light.svg because the footer ground is #fafafb; a badge-dark.svg exists too.
 LAUNCHSTAG_BADGE = (
     '<a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="noopener">'
     '<img class="b-ls" src="https://launchstag.com/badge-light.svg" '
-    'alt="AI Budget Assistant - Featured on Launchstag" width="108" height="34" '
+    'alt="AI Budget Assistant - Featured on Launchstag" width="93" height="29" '
     'loading="lazy"></a>'
 )
 # Uneed "Launching Soon" badge. Temporary by nature -- it stops being true once the
@@ -128,11 +128,33 @@ LAUNCHSTAG_BADGE = (
 # EMBED3B is the one. Their snippet ships an inline style="width:250px" with no height,
 # which is dropped here for a scoped class plus real width/height attributes, the same
 # treatment every other badge in this row gets (no CLS, no inline style).
-# 582x152 native, rendered at the row's uniform 34px height by .b-un.
+# 582x152 native, rendered at the row's uniform height by .b-un.
 UNEED_BADGE = (
     '<a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-un" src="https://www.uneed.best/EMBED3B.png" '
-    'alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" '
+    'alt="AI Budget Assistant - Launching Soon on Uneed" width="111" height="29" '
+    'loading="lazy"></a>'
+)
+
+# tools.cafe "Featured on tools.cafe" badge. href verbatim from their snippet (the href is what
+# the directory verifies); presentation follows this row's conventions rather than their inline
+# width/height -- a scoped .b-tc class, rel="noopener", loading="lazy", no title duplicating alt.
+# 256x80 is the SVG's OWN viewBox (aspect 3.2); their snippet states 180x54, i.e. aspect 3.333,
+# which would stretch it by ~4px of width at our height. Do not "correct" it back to 180x54.
+# light.svg because the footer ground is #fafafb -- the file's own plate is #FBF8F4. Unlike
+# Startup Fame it serves fine cross-origin under a plain request, so it stays remotely hosted
+# and needs no test -f deploy guard.
+# !! UNVERIFIED LISTING (ABA-543): at the time of writing this href returns HTTP 404, byte-for-byte
+# the same 11.4KB shell as a deliberately invented tool id, and our product is absent from all 336
+# URLs of their sitemap -- in which EVERY public listing uses a NAME slug (/p/frame) rather than the
+# /p/tool-<epoch-ms> form their dashboard emits, so the published URL is likely to differ. A real
+# listing (/p/frame) answers 200/69KB, so this is not merely their shell 404ing. Confirm the live
+# URL before this reaches production: a badge linking to a 404 is worse than no badge (the ABA-487
+# rule that deleted the placeholder App Store link).
+TOOLS_CAFE_BADGE = (
+    '<a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="noopener">'
+    '<img class="b-tc" src="https://tools.cafe/b/light.svg" '
+    'alt="AI Budget Assistant - Featured on tools.cafe" width="93" height="29" '
     'loading="lazy"></a>'
 )
 SAMEAS = [
@@ -938,7 +960,7 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:#5b5b66;font-weight:600}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid #ececf0;padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:121px}.f-badge .b-fo{height:34px;width:87px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:108px}.f-badge .b-un{height:34px;width:130px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:29px;width:92px}.f-badge .b-pp{height:29px;width:103px}.f-badge .b-fo{height:29px;width:75px}.f-badge .b-fz{height:29px;width:123px}.f-badge .b-ls{height:29px;width:93px}.f-badge .b-un{height:29px;width:111px}.f-badge .b-tc{height:29px;width:93px}
 .langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:#5b5b66;font-weight:600;font-size:15px}
 .langmenu>summary::-webkit-details-marker{display:none}
 .langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid #ececf0;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
@@ -1107,7 +1129,7 @@ def footer_html(lang):
             f'<a href="{cookies_url(lang)}">{cl}</a>'
             f'<a href="{app_url("footer", lang)}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a>'
             f'<a href="/llms.txt">llms.txt</a></div>'
-            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}</div>'
+            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}{TOOLS_CAFE_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener">'
             f'<img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; '
