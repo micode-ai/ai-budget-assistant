@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator, Modal, useWindowDimensions } from 'react-native';
+import { View, Text, TextInput, Pressable, ScrollView, ActivityIndicator, useWindowDimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -12,14 +12,12 @@ import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
 import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
-import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { SummaryStrip } from './SummaryStrip';
 import { TransactionTable } from './TransactionTable';
 import { FacetRail, FacetRailTrigger, type KindFacet, type PeriodFacet } from './FacetRail';
-import { ExpenseDialog } from './ExpenseDialog';
-import { CreateDialog } from './CreateDialog';
 import { RowContextMenu } from './RowContextMenu';
+import { ExpensesDesktopDialogs } from './ExpensesDesktopDialogs';
 
 /** The Map toggle only ever applied to the expenses stream (income carries no
  *  location) — mirrors the exact conditional `ExpensesMobile` uses, so a
@@ -65,6 +63,18 @@ function matchesDynamicFacet(row: LedgerRow, chosen: string[], key: 'categoryId'
  * members this rail renders — see `FacetRail.tsx`). A row click opens
  * `ExpenseDialog` (task 5); the checkbox column, shift-click, and the row
  * context menu (task 6) drive bulk actions on top of that same row set.
+ *
+ * `FacetRail` (+ `FacetRailTrigger`), `TransactionTable`, `RowContextMenu`,
+ * and `ExpensesDesktopDialogs` (the ledger-row view/edit dialog, the create
+ * dialog, and the two bulk-action pickers — every overlay this screen can
+ * have open except the row context menu, which isn't a dialog) each live in
+ * their own file in this directory, mirroring `AnalyticsDesktop.tsx`'s
+ * extraction (`docs/tech-debt/analytics-desktop-screen-god-file.md`, closed)
+ * — this component is a thin composition root that owns the facet/selection/
+ * keyboard-nav STATE those pieces render from, not their JSX. A new desktop-
+ * transactions concern should get its own file here (or a new prop on an
+ * existing one), not another inline block in this component
+ * (`docs/tech-debt/expenses-desktop-screen-god-file.md`).
  */
 export function ExpensesDesktop() {
   const { t } = useTranslation();
@@ -577,19 +587,6 @@ export function ExpensesDesktop() {
         </View>
       </ScrollView>
 
-      {selectedRow && (
-        <ExpenseDialog
-          row={selectedRow}
-          onClose={closeDialog}
-          canEdit={canEdit}
-          isTripAccount={isTripAccount}
-          tripMembers={tripMembers}
-          initialEditing={dialogInitialEditing}
-        />
-      )}
-
-      {createKind && <CreateDialog kind={createKind} onClose={() => setCreateKind(null)} />}
-
       {menuState && (
         <RowContextMenu
           anchor={menuState.anchor}
@@ -617,110 +614,24 @@ export function ExpensesDesktop() {
         />
       )}
 
-      {/* Bulk category picker — reuses `multiSelect.handleBulkSetCategory`
-          verbatim (the same list `ExpensesMobile.tsx` renders inline); only
-          the surrounding chrome is desktop's own, a centered panel mirroring
-          `ExpenseDialog.tsx`'s scrim, rather than mobile's edge-to-edge
-          bottom sheet stretched across a wide viewport. */}
-      {multiSelect.showBulkCategoryPicker && (
-        <Modal
-          visible
-          transparent
-          animationType="fade"
-          onRequestClose={() => multiSelect.setShowBulkCategoryPicker(false)}
-        >
-          <div
-            role="presentation"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) multiSelect.setShowBulkCategoryPicker(false);
-            }}
-            style={{
-              position: 'fixed',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme.colors.overlay,
-              padding: 24,
-            }}
-          >
-            <View style={styles.pickerPanel}>
-              <View style={styles.pickerHeader}>
-                <Text style={styles.pickerTitle}>{t('expenses.bulkSetCategory')}</Text>
-                <Pressable
-                  onPress={() => multiSelect.setShowBulkCategoryPicker(false)}
-                  accessibilityRole="button"
-                >
-                  <Text style={styles.pickerCancel}>{t('common.cancel')}</Text>
-                </Pressable>
-              </View>
-              <ScrollView style={styles.pickerList}>
-                {categories
-                  .filter((c) => !c.isDeleted)
-                  .map((cat) => (
-                    <Pressable
-                      key={cat.id}
-                      style={styles.pickerRow}
-                      onPress={() => multiSelect.handleBulkSetCategory(cat.id)}
-                      accessibilityRole="button"
-                    >
-                      <Ionicons
-                        name={(cat.icon as any) || 'pricetag-outline'}
-                        size={18}
-                        color={theme.colors.primary}
-                      />
-                      <Text style={styles.pickerRowText}>{cat.name}</Text>
-                    </Pressable>
-                  ))}
-                {categories.filter((c) => !c.isDeleted).length === 0 && (
-                  <Text style={styles.pickerEmpty}>{t('expenses.categoryAll')}</Text>
-                )}
-              </ScrollView>
-            </View>
-          </div>
-        </Modal>
-      )}
-
-      {/* Bulk tag picker — hosts the SAME `BulkTagPickerSheet` mobile's
-          bottom sheet already uses; only its wrapper differs. */}
-      {multiSelect.showBulkTagPicker && (
-        <Modal
-          visible
-          transparent
-          animationType="fade"
-          onRequestClose={() => multiSelect.setShowBulkTagPicker(false)}
-        >
-          <div
-            role="presentation"
-            onClick={(e) => {
-              if (e.target === e.currentTarget) multiSelect.setShowBulkTagPicker(false);
-            }}
-            style={{
-              position: 'fixed',
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: theme.colors.overlay,
-              padding: 24,
-            }}
-          >
-            <View style={styles.pickerPanel}>
-              <BulkTagPickerSheet
-                tags={allTags}
-                onConfirm={multiSelect.handleBulkAddTags}
-                onClose={() => multiSelect.setShowBulkTagPicker(false)}
-              />
-            </View>
-          </div>
-        </Modal>
-      )}
+      <ExpensesDesktopDialogs
+        selectedRow={selectedRow}
+        onCloseDialog={closeDialog}
+        canEdit={canEdit}
+        isTripAccount={isTripAccount}
+        tripMembers={tripMembers}
+        dialogInitialEditing={dialogInitialEditing}
+        createKind={createKind}
+        onCloseCreateDialog={() => setCreateKind(null)}
+        showBulkCategoryPicker={multiSelect.showBulkCategoryPicker}
+        onCloseBulkCategoryPicker={() => multiSelect.setShowBulkCategoryPicker(false)}
+        categories={categories}
+        onBulkSetCategory={multiSelect.handleBulkSetCategory}
+        showBulkTagPicker={multiSelect.showBulkTagPicker}
+        onCloseBulkTagPicker={() => multiSelect.setShowBulkTagPicker(false)}
+        allTags={allTags}
+        onBulkAddTags={multiSelect.handleBulkAddTags}
+      />
     </View>
   );
 }
@@ -872,50 +783,5 @@ const createStyles = (theme: Theme) => ({
   bulkBarButtonText: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textPrimary,
-  },
-  pickerPanel: {
-    width: '90%' as const,
-    maxWidth: 420,
-    maxHeight: '80%' as const,
-    backgroundColor: theme.colors.surface,
-    borderRadius: theme.borderRadius.xl,
-    padding: theme.spacing[4],
-    overflow: 'hidden' as const,
-    ...theme.shadows.xl,
-  },
-  pickerHeader: {
-    flexDirection: 'row' as const,
-    justifyContent: 'space-between' as const,
-    alignItems: 'center' as const,
-    marginBottom: theme.spacing[3],
-  },
-  pickerTitle: {
-    ...theme.textStyles.h3,
-    color: theme.colors.textPrimary,
-  },
-  pickerCancel: {
-    ...theme.textStyles.button,
-    color: theme.colors.primary,
-  },
-  pickerList: {
-    maxHeight: 360,
-  },
-  pickerRow: {
-    flexDirection: 'row' as const,
-    alignItems: 'center' as const,
-    gap: theme.spacing[2],
-    paddingVertical: theme.spacing[3],
-    borderBottomWidth: 1,
-    borderBottomColor: theme.colors.divider,
-  },
-  pickerRowText: {
-    ...theme.textStyles.bodyLarge,
-    color: theme.colors.textPrimary,
-  },
-  pickerEmpty: {
-    ...theme.textStyles.bodyLarge,
-    color: theme.colors.textTertiary,
-    textAlign: 'center' as const,
-    paddingVertical: theme.spacing[4],
   },
 });
