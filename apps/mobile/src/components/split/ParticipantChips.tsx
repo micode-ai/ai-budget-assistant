@@ -29,8 +29,15 @@ interface Props {
   /** Required whenever `assignmentSummaries` is passed, to format each
    * chip's subtotal. */
   currencyCode?: string;
-  /** Tapping a chip assigns the currently-selected line item to this person
-   * (no-op when nothing is selected — the screen decides that). */
+  /** Ids of the people already claiming the currently-selected line. Their
+   * chips show a checkmark, which is what makes the toggle legible: a line can
+   * be claimed by several people, so without it a tap gives no clue whether it
+   * just added someone or removed them. Empty/undefined when no line is
+   * selected. */
+  claimedIds?: string[];
+  /** Tapping a chip adds this person to the currently-selected line, or takes
+   * them off it if they were already on (no-op when nothing is selected — the
+   * screen decides that). */
   onPress: (participantId: string) => void;
   onRemove: (participantId: string) => void;
   onAddPress: () => void;
@@ -65,6 +72,7 @@ interface Props {
 export function ParticipantChips({
   participants,
   awaitingAssignment,
+  claimedIds,
   assignmentSummaries,
   currencyCode,
   onPress,
@@ -81,13 +89,17 @@ export function ParticipantChips({
       {participants.map((p) => {
         const summary = assignmentSummaries?.[p.id];
         const hasNoItems = !!summary && summary.count === 0;
+        const claimed = !!claimedIds?.includes(p.id);
         return (
           <TouchableOpacity
             key={p.id}
-            style={[styles.chip, awaitingAssignment && styles.chipAwaiting]}
+            style={[styles.chip, awaitingAssignment && styles.chipAwaiting, claimed && styles.chipClaimed]}
             onPress={canEdit ? () => onPress(p.id) : undefined}
             activeOpacity={canEdit ? 0.7 : 1}
           >
+            {claimed && (
+              <Ionicons name="checkmark-circle" size={14} color={theme.colors.primary} />
+            )}
             <View style={styles.chipBody}>
               <Text style={styles.chipText} numberOfLines={1}>
                 {p.name}
@@ -153,6 +165,14 @@ const createStyles = (theme: Theme) => ({
   // existing dashed-border treatment below.
   chipAwaiting: {
     borderStyle: 'dashed' as const,
+    borderColor: theme.colors.primary,
+  },
+  // "This person IS on the selected line" — unlike `chipAwaiting` above, a
+  // solid state is exactly right here: it describes the person, not the
+  // selection, and it is the only thing telling the payer what their next tap
+  // will do on a line several people can share.
+  chipClaimed: {
+    borderStyle: 'solid' as const,
     borderColor: theme.colors.primary,
   },
   chipBody: {

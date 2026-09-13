@@ -21,8 +21,16 @@ export interface GuestPageStrings {
   /** "«Payer» paid for everyone". */
   paidByLine: (payerName: string) => string;
   yourItemsHeading: string;
+  /** Marks a line several people claimed, e.g. "split 3 ways" — the line's amount is the
+   * guest's own share, so without this a shared 60 bottle reads as a wrong 20 price.
+   * Deliberately phrased WITHOUT a counted noun in every language: this page has no
+   * plural-form machinery, and "3 people" / "5 people" needs different agreement in
+   * ru/ua/be/pl. "divided by N" carries the meaning with none of that. */
+  sharedMarker: (count: number) => string;
   /** Shown instead of an item list when the split has no assigned line items (equal mode). */
   equalShareNote: string;
+  /** Link label for the payer's receipt scan, shown only when one exists. */
+  viewReceipt: string;
   yourShareLabel: string;
   /** Button label naming the destination METHOD (e.g. "Pay via Revolut"), not the payer —
    * the payer is already named in `paidByLine` above it on the card, so repeating it here
@@ -82,7 +90,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Hi ${guestName}!`,
     paidByLine: (payerName) => `${payerName} paid for everyone`,
     yourItemsHeading: 'Your items',
+    sharedMarker: (count: number) => `split ${count} ways`,
     equalShareNote: 'Your equal share of the bill',
+    viewReceipt: 'View the receipt',
     yourShareLabel: 'Your share',
     payButton: (methodLabel) => `Pay via ${methodLabel}`,
     methodLabel: (method) =>
@@ -111,7 +121,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Привет, ${guestName}!`,
     paidByLine: (payerName) => `${payerName} оплатил(а) за всех`,
     yourItemsHeading: 'Ваши позиции',
+    sharedMarker: (count: number) => `делится на ${count}`,
     equalShareNote: 'Ваша равная часть счёта',
+    viewReceipt: 'Посмотреть чек',
     yourShareLabel: 'Ваша часть',
     payButton: (methodLabel) => `Оплатить через ${methodLabel}`,
     methodLabel: (method) =>
@@ -140,7 +152,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Привіт, ${guestName}!`,
     paidByLine: (payerName) => `${payerName} оплатив(ла) за всіх`,
     yourItemsHeading: 'Ваші позиції',
+    sharedMarker: (count: number) => `ділиться на ${count}`,
     equalShareNote: 'Ваша рівна частка рахунку',
+    viewReceipt: 'Переглянути чек',
     yourShareLabel: 'Ваша частка',
     payButton: (methodLabel) => `Оплатити через ${methodLabel}`,
     methodLabel: (method) =>
@@ -169,7 +183,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Cześć, ${guestName}!`,
     paidByLine: (payerName) => `${payerName} zapłacił(a) za wszystkich`,
     yourItemsHeading: 'Twoje pozycje',
+    sharedMarker: (count: number) => `dzielone na ${count}`,
     equalShareNote: 'Twoja równa część rachunku',
+    viewReceipt: 'Zobacz paragon',
     yourShareLabel: 'Twoja część',
     payButton: (methodLabel) => `Zapłać przez ${methodLabel}`,
     methodLabel: (method) =>
@@ -198,7 +214,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `¡Hola ${guestName}!`,
     paidByLine: (payerName) => `${payerName} pagó por todos`,
     yourItemsHeading: 'Tus artículos',
+    sharedMarker: (count: number) => `dividido entre ${count}`,
     equalShareNote: 'Tu parte igual de la cuenta',
+    viewReceipt: 'Ver el ticket',
     yourShareLabel: 'Tu parte',
     payButton: (methodLabel) => `Pagar con ${methodLabel}`,
     methodLabel: (method) =>
@@ -227,7 +245,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Salut ${guestName} !`,
     paidByLine: (payerName) => `${payerName} a payé pour tout le monde`,
     yourItemsHeading: 'Tes articles',
+    sharedMarker: (count: number) => `partagé en ${count}`,
     equalShareNote: "Ta part égale de l'addition",
+    viewReceipt: 'Voir le ticket',
     yourShareLabel: 'Ta part',
     payButton: (methodLabel) => `Payer via ${methodLabel}`,
     methodLabel: (method) =>
@@ -256,7 +276,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Hallo ${guestName}!`,
     paidByLine: (payerName) => `${payerName} hat für alle bezahlt`,
     yourItemsHeading: 'Deine Artikel',
+    sharedMarker: (count: number) => `geteilt durch ${count}`,
     equalShareNote: 'Dein gleicher Anteil der Rechnung',
+    viewReceipt: 'Beleg ansehen',
     yourShareLabel: 'Dein Anteil',
     payButton: (methodLabel) => `Mit ${methodLabel} bezahlen`,
     methodLabel: (method) =>
@@ -285,7 +307,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Прывітанне, ${guestName}!`,
     paidByLine: (payerName) => `${payerName} заплаціў(ла) за ўсіх`,
     yourItemsHeading: 'Вашы пазіцыі',
+    sharedMarker: (count: number) => `дзеліцца на ${count}`,
     equalShareNote: 'Ваша роўная частка рахунку',
+    viewReceipt: 'Паглядзець чэк',
     yourShareLabel: 'Ваша частка',
     payButton: (methodLabel) => `Заплаціць праз ${methodLabel}`,
     methodLabel: (method) =>
@@ -314,7 +338,9 @@ const translations: Record<string, GuestPageStrings> = {
     greeting: (guestName) => `Hoi ${guestName}!`,
     paidByLine: (payerName) => `${payerName} heeft voor iedereen betaald`,
     yourItemsHeading: 'Jouw items',
+    sharedMarker: (count: number) => `gedeeld door ${count}`,
     equalShareNote: 'Jouw gelijke deel van de rekening',
+    viewReceipt: 'Bon bekijken',
     yourShareLabel: 'Jouw deel',
     payButton: (methodLabel) => `Betalen via ${methodLabel}`,
     methodLabel: (method) =>

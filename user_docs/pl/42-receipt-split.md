@@ -13,7 +13,7 @@ Otwórz wydatek odpowiadający zapłaconemu rachunkowi i stuknij ikonę **osób*
 ## Dzielenie rachunku
 
 1. Stuknij **Dodaj osobę** i wpisz imię każdego znajomego (maksymalnie 20 osób).
-2. **Jeśli paragon ma pozycje:** dotknij pozycję, a potem osobę, która ją zamówiła. Powtórz dla każdej pozycji — dotknij ponownie już przypisaną pozycję, żeby oddać ją komuś innemu. Wszystko, czego nie przypiszesz, zostaje jako Twoja własna część.
+2. **Jeśli paragon ma pozycje:** dotknij pozycję, a potem zaznacz wszystkich, którzy ją dzielili — dotknij osobę ponownie, żeby ją usunąć. Pozycja dzielona przez kilka osób jest dzielona między nie po równo. Wszystko, czego nie przypiszesz, zostaje jako Twoja własna część.
 3. **Jeśli paragon nie ma pozycji:** cały rachunek zostaje po prostu podzielony po równo między Ciebie i wszystkich dodanych znajomych.
 4. Stuknij **Utwórz linki**. Aplikacja wylicza część każdej osoby i daje Ci jeden prywatny link na znajomego.
 
@@ -29,7 +29,7 @@ Jeśli wszyscy wciąż siedzą przy stole, zamiast wysyłać linki po kolei, dot
 
 ## Co widzi Twój znajomy
 
-Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", przypisane jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
+Otwarcie linku pokazuje wyłącznie część tej jednej osoby: nazwę sklepu/restauracji i datę, „*Ty* zapłaciłeś/aś za wszystkich", jej pozycje (albo jej równą część rachunku, jeśli nie było pozycji) oraz kwotę, którą jest winna — w walucie rachunku. Przy każdej pozycji widnieje **jej** część, a nie pełna cena: pozycja dzielona przez trzy osoby jest oznaczona jako wspólna i liczona po jednej trzeciej, więc wiersze zawsze sumują się do kwoty, o którą jest proszona. Jeśli zeskanowałeś/aś paragon, jest też link do zdjęcia lub PDF-a, żeby mogła sama sprawdzić rachunek. Strona otwiera się w języku Twojej aplikacji, niekoniecznie w języku znajomego.
 
 Ustaw, jak chcesz otrzymywać zwrot pieniędzy, w **Ustawienia → Profil → Ustawienia płatności**. Możesz dodać do pięciu metod, a strona Twojego znajomego pokaże je wszystkie, żeby mógł wybrać tę, która mu odpowiada. Revolut i PayPal pojawiają się jako gotowy do stuknięcia przycisk z już wypełnioną kwotą; BLIK nie ma możliwości połączenia między bankami, więc zamiast tego pokazuje Twój numer wraz z instrukcją; gotówka i inne pokazują to, co wpisałeś/aś, jako instrukcję zamiast przycisku. Możesz to ustawić — albo zmienić — w dowolnym momencie, nawet po wysłaniu linku, ponieważ strona za każdym razem odczytuje Twoje dane do płatności na nowo, gdy znajomy ją otwiera. Jeśli nic nie ustawiłeś/aś, znajomy widzi tylko kwotę, bez przycisku płatności, i musicie rozliczyć się w inny sposób.
 

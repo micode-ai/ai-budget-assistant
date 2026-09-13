@@ -44,7 +44,7 @@ function pageShell(title: string, bodyHtml: string): string {
   // Compensated by widening `max-width` to 520px (480 + the 2×20px padding) so the
   // rendered content width stays exactly 480px either way — pixel-identical to before on
   // every viewport, not just phones.
-  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}.pay-method{font-weight:600;font-size:13px;margin-bottom:4px}.pay-handle{color:#6b6b73;font-size:13px;margin-bottom:8px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}.cta{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:20px;text-align:center}.cta-title{font-size:14px;font-weight:600;margin-bottom:12px}.btn-cta{background:#E37F2B;color:#fff}.cta .play{display:inline-block;margin-top:6px;font-size:13px;color:#6b6b73}</style></head><body>${bodyHtml}</body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><title>${escapeHtml(title)}</title><style>*,*::before,*::after{box-sizing:border-box}body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:32px auto;padding:0 20px;color:#1d1c1d;background:#fafafa}.card{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:20px;margin-bottom:16px}h1{font-size:19px;margin:8px 0 4px}.muted{color:#6b6b73;font-size:14px}.amount{font-size:36px;font-weight:700;margin:4px 0 12px}.items{margin:8px 0 16px;padding:0;list-style:none}.items li{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:14px}.items .shared{color:#6b6b73;font-size:12px;white-space:nowrap}.btn{display:block;text-align:center;padding:14px;border-radius:8px;font-weight:600;text-decoration:none;margin:8px 0;border:none;width:100%;font-size:15px;font-family:inherit;cursor:pointer}.btn-primary{background:#E37F2B;color:#fff}.btn-secondary{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd}.blik-box{background:#f8f8f8;border-radius:8px;padding:12px;margin:8px 0;font-size:14px}.pay-method{font-weight:600;font-size:13px;margin-bottom:4px}.pay-handle{color:#6b6b73;font-size:13px;margin-bottom:8px}form{margin:0}.footer{text-align:center;margin-top:20px;font-size:12px;color:#9a9aa3}.footer a{color:#9a9aa3}.cta{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-top:20px;text-align:center}.cta-title{font-size:14px;font-weight:600;margin-bottom:12px}.btn-cta{background:#E37F2B;color:#fff}.cta .play{display:inline-block;margin-top:6px;font-size:13px;color:#6b6b73}.btn-receipt{background:#f5f5f5;color:#1d1c1d;border:1px solid #ddd;margin-bottom:16px}</style></head><body>${bodyHtml}</body></html>`;
 }
 
 /**
@@ -62,7 +62,14 @@ export function renderNotFoundPage(strings: GuestPageStrings): string {
 
 export interface GuestPageItem {
   description: string;
+  /** THIS guest's share of the line, never the line's outright price — a 60
+   *  bottle claimed by three people is 20 here. Allocated by
+   *  `allocateItemShares` so the lines add up to `GuestPageModel.amount`. */
   amount: number;
+  /** How many people claimed this line, the guest included. 1 = not shared;
+   *  above 1 the renderer marks the line, so a guest can see why a 60 bottle
+   *  is charged to them at 20 instead of reading it as a wrong price. */
+  sharedWith: number;
 }
 
 export type GuestPaymentStatus = 'sent' | 'opened' | 'claimed' | 'settled';
@@ -106,6 +113,10 @@ export interface GuestPageModel {
   paymentMethods: GuestPaymentMethodBlock[];
   /** Relative path the "I paid" form posts to, e.g. `/s/<token>/paid`. */
   postPaidAction: string;
+  /** Relative path to the payer's receipt scan (`/s/<token>/receipt`), or null
+   *  when the expense carries no scan. Lets the guest check the line amounts
+   *  above against the paper rather than take them on trust. */
+  receiptUrl: string | null;
 }
 
 /**
@@ -185,10 +196,13 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
   const itemsHtml =
     model.items && model.items.length > 0
       ? `<div class="muted">${escapeHtml(strings.yourItemsHeading)}</div><ul class="items">${model.items
-          .map(
-            (item) =>
-              `<li><span>${escapeHtml(item.description)}</span><span>${item.amount.toFixed(2)}</span></li>`,
-          )
+          .map((item) => {
+            const shared =
+              item.sharedWith > 1
+                ? ` <span class="shared">${escapeHtml(strings.sharedMarker(item.sharedWith))}</span>`
+                : '';
+            return `<li><span>${escapeHtml(item.description)}${shared}</span><span>${item.amount.toFixed(2)}</span></li>`;
+          })
           .join('')}</ul>`
       : `<p class="muted">${escapeHtml(strings.equalShareNote)}</p>`;
 
@@ -242,6 +256,15 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
     payHtml = blocks.length > 0 ? blocks.join('') : `<p class="muted">${escapeHtml(strings.noPaymentInfo)}</p>`;
   }
 
+  // Opens in a new tab rather than inline: a receipt is as often a PDF as a
+  // photo in this data, and one <a> serves both without the page having to load
+  // the file just to decide how to display it. Deliberately NOT `.btn-primary`
+  // — that class means "a payment action is available" and the suite asserts on
+  // it (see the CTA comment below).
+  const receiptHtml = model.receiptUrl
+    ? `<a class="btn btn-receipt" target="_blank" rel="noopener noreferrer" href="${escapeHtml(model.receiptUrl)}">${escapeHtml(strings.viewReceipt)}</a>`
+    : '';
+
   let actionHtml: string;
   if (model.status === 'settled') {
     actionHtml = `<p class="muted">${escapeHtml(strings.settledNotice)}</p>`;
@@ -256,6 +279,7 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
     <h1>${escapeHtml(strings.greeting(model.guestName))}</h1>
     <div class="muted">${escapeHtml(strings.paidByLine(model.payerName))}</div>
     ${itemsHtml}
+    ${receiptHtml}
     <div class="muted">${escapeHtml(strings.yourShareLabel)}</div>
     <div class="amount">${model.amount.toFixed(2)} ${escapeHtml(model.currencyCode)}</div>
     ${payHtml}

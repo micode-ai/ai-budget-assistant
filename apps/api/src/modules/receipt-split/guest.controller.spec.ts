@@ -1,5 +1,6 @@
 import 'reflect-metadata';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { NotFoundException } from '@nestjs/common';
 import { GuestController } from './guest.controller';
 import { renderGuestPage, buildGuestPayLink, GuestPageModel, GuestPaymentStatus } from './helpers/guest-page';
 import { getGuestPageStrings } from './helpers/guest-page-i18n';
@@ -13,6 +14,7 @@ import { UsersService } from '../users/users.service';
  */
 const participantFixture: any = {
   id: 'p-1',
+  expenseId: 'exp-1',
   name: 'Alice',
   amount: '25.50',
   currencyCode: 'USD',
@@ -45,6 +47,14 @@ function buildController(
     participant?: any;
     payerUser?: any;
     member?: any;
+    /** Every LIVE participant row of the same split, as `countClaimantsByItem`
+     *  reads them — only `itemIds` matters. Defaults to this participant alone,
+     *  i.e. nothing is shared. */
+    roster?: { itemIds: unknown }[];
+    /** Stored receipt bytes for the split's expense; `null` = no scan on file,
+     *  which is what `hasReceiptImage` and `findReceiptFile` both read. */
+    receiptImage?: Buffer | null;
+    receiptMimeType?: string | null;
   } = {},
 ) {
   const participant = opts.participant ?? participantFixture;
@@ -54,6 +64,7 @@ function buildController(
       findUnique: jest.fn().mockResolvedValue(participant),
       update: jest.fn().mockResolvedValue(undefined),
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
+      findMany: jest.fn().mockResolvedValue(opts.roster ?? [{ itemIds: participant.itemIds }]),
     },
     user: {
       findUnique: jest.fn().mockResolvedValue(
@@ -62,6 +73,19 @@ function buildController(
     },
     accountMember: {
       findFirst: jest.fn().mockResolvedValue(opts.member ?? null),
+    },
+    expense: {
+      // Serves both hasReceiptImage (`select: { id }`) and findReceiptFile
+      // (`select: { receiptImage, receiptMimeType }`); a `null` image means the
+      // expense carries no scan, so hasReceiptImage's filtered query finds
+      // nothing.
+      findFirst: jest.fn(async (args: any) => {
+        const image = opts.receiptImage ?? null;
+        if (args?.where?.receiptImage?.not === null) {
+          return image ? { id: 'exp-1' } : null;
+        }
+        return { receiptImage: image, receiptMimeType: opts.receiptMimeType ?? null };
+      }),
     },
   };
 
@@ -162,6 +186,176 @@ describe('GuestController.guestPage', () => {
     expect(html).toContain('Burger'); // guest's own item
     expect(html).not.toContain('Fries'); // belongs to a different participant on the receipt
     expect(html).not.toContain('acc-1'); // accountId must never leak
+  });
+
+  describe('a line several people claimed', () => {
+    /** Wine at 60.00 claimed by all three diners; Alice owes 20.00 for it. */
+    const sharedFixture = {
+      ...participantFixture,
+      amount: '20.00',
+      itemIds: ['wine'],
+      expense: {
+        ...participantFixture.expense,
+        items: [{ id: 'wine', description: 'Wine', totalPrice: '60.00' }],
+      },
+    };
+    const roster = [{ itemIds: ['wine'] }, { itemIds: ['wine'] }, { itemIds: ['wine'] }];
+
+    it("shows the guest's own share of the line, not the line's full price", async () => {
+      const { controller } = buildController({ participant: sharedFixture, roster });
+      const html = await controller.guestPage(sharedFixture.token, {} as any);
+
+      // 60.00 above a total of 20.00 is the bug this replaced: the guest reads
+      // it as a wrong price, or as being asked for the whole bottle.
+      expect(html).toContain('>20.00<');
+      expect(html).not.toContain('>60.00<');
+    });
+
+    it('marks the line as shared so the smaller number is explained', async () => {
+      const { controller } = buildController({ participant: sharedFixture, roster });
+      const html = await controller.guestPage(sharedFixture.token, {} as any);
+      expect(html).toContain('split 3 ways');
+    });
+
+    it('marks nothing when the guest is the only claimant', async () => {
+      const { controller } = buildController();
+      const html = await controller.guestPage(participantFixture.token, {} as any);
+      expect(html).not.toContain('split 1 ways');
+      expect(html).not.toContain('class="shared"');
+    });
+
+    it('counts a duplicated id inside one roster row only once', async () => {
+      // A malformed itemIds array must not inflate the divisor and quietly
+      // undercharge everyone on the line.
+      const { controller } = buildController({
+        participant: sharedFixture,
+        roster: [{ itemIds: ['wine', 'wine'] }, { itemIds: ['wine'] }, { itemIds: ['wine'] }],
+      });
+      const html = await controller.guestPage(sharedFixture.token, {} as any);
+      expect(html).toContain('split 3 ways');
+    });
+
+    it('reads only itemIds off the other participants, never their names or amounts', async () => {
+      const { controller, prisma } = buildController({ participant: sharedFixture, roster });
+      await controller.guestPage(sharedFixture.token, {} as any);
+
+      expect(prisma.receiptSplitParticipant.findMany).toHaveBeenCalledWith({
+        where: { expenseId: 'exp-1', cancelledAt: null },
+        select: { itemIds: true },
+      });
+    });
+
+    it('renders line amounts that add up to the total the guest is asked to pay', async () => {
+      // Two 0.05 lines halved: rounding each line on its own prints
+      // 0.03 + 0.03 against a stored total of 0.05.
+      const { controller } = buildController({
+        participant: {
+          ...participantFixture,
+          amount: '0.05',
+          itemIds: ['a', 'b'],
+          expense: {
+            ...participantFixture.expense,
+            items: [
+              { id: 'a', description: 'Tea', totalPrice: '0.05' },
+              { id: 'b', description: 'Mint', totalPrice: '0.05' },
+            ],
+          },
+        },
+        roster: [{ itemIds: ['a', 'b'] }, { itemIds: ['a', 'b'] }],
+      });
+      const html = await controller.guestPage(participantFixture.token, {} as any);
+
+      const lineAmounts = [...html.matchAll(/<span>(\d+\.\d{2})<\/span><\/li>/g)].map((m) =>
+        Math.round(Number(m[1]) * 100),
+      );
+      expect(lineAmounts.reduce((a, b) => a + b, 0)).toBe(5);
+    });
+  });
+
+  describe('the receipt behind a guest link', () => {
+    const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46]);
+
+    it('links to the receipt on the page when the expense has one', async () => {
+      const { controller } = buildController({ receiptImage: jpeg });
+      const html = await controller.guestPage(participantFixture.token, {} as any);
+      expect(html).toContain(`href="/s/${participantFixture.token}/receipt"`);
+    });
+
+    it('shows no link when the expense has no scan', async () => {
+      const { controller } = buildController();
+      const html = await controller.guestPage(participantFixture.token, {} as any);
+      expect(html).not.toContain('/receipt"');
+    });
+
+    it('never loads the image bytes just to render the page', async () => {
+      // receiptImage is a whole photo or PDF in a Bytes column; selecting it to
+      // decide whether to show a link would pull megabytes per page view.
+      const { controller, prisma } = buildController({ receiptImage: jpeg });
+      await controller.guestPage(participantFixture.token, {} as any);
+
+      const selects = prisma.expense.findFirst.mock.calls.map((call: any[]) => call[0].select);
+      expect(selects).toEqual([{ id: true }]);
+    });
+
+    it('serves the bytes to a valid token', async () => {
+      const { controller } = buildController({ receiptImage: jpeg });
+      const file: any = await controller.guestReceipt(participantFixture.token);
+      expect(file.getStream).toBeDefined();
+      expect(file.options.type).toBe('image/jpeg');
+    });
+
+    it('types the response from the bytes, never from the stored mime type', async () => {
+      // SaveReceiptImageDto.mimeType is an unvalidated @IsString(), and this
+      // route is unauthenticated — echoing it into Content-Type would let a
+      // signed-in user choose how a browser executes their file on our origin.
+      const { controller } = buildController({ receiptImage: jpeg, receiptMimeType: 'text/html' });
+      const file: any = await controller.guestReceipt(participantFixture.token);
+      expect(file.options.type).toBe('image/jpeg');
+    });
+
+    it('refuses bytes it cannot identify, even with a plausible stored mime type', async () => {
+      const { controller } = buildController({
+        receiptImage: Buffer.from('<html><script>alert(1)</script></html>', 'ascii'),
+        receiptMimeType: 'image/jpeg',
+      });
+      await expect(controller.guestReceipt(participantFixture.token)).rejects.toThrow(NotFoundException);
+    });
+
+    it('serves a PDF receipt', async () => {
+      // A third of the receipts stored in production are PDFs.
+      const { controller } = buildController({ receiptImage: Buffer.from('%PDF-1.4\n', 'ascii') });
+      const file: any = await controller.guestReceipt(participantFixture.token);
+      expect(file.options.type).toBe('application/pdf');
+    });
+
+    it('404s on an unknown token', async () => {
+      const { controller, prisma } = buildController({ receiptImage: jpeg });
+      prisma.receiptSplitParticipant.findUnique = jest.fn().mockResolvedValue(null);
+      await expect(controller.guestReceipt('0'.repeat(32))).rejects.toThrow(NotFoundException);
+    });
+
+    it.each([
+      ['cancelled', { ...participantFixture, cancelledAt: new Date() }],
+      ['expired', { ...participantFixture, expiresAt: new Date(Date.now() - 1000) }],
+    ])('404s on a %s token', async (_label, participant) => {
+      const { controller } = buildController({ participant, receiptImage: jpeg });
+      await expect(controller.guestReceipt(participantFixture.token)).rejects.toThrow(NotFoundException);
+    });
+
+    it('404s a valid token whose expense has no scan, the same as an unknown one', async () => {
+      // A 404 must not tell a prober which of the two it hit.
+      const { controller } = buildController();
+      await expect(controller.guestReceipt(participantFixture.token)).rejects.toThrow(NotFoundException);
+    });
+
+    it('never reads the bytes for a token it has already rejected', async () => {
+      const { controller, prisma } = buildController({
+        participant: { ...participantFixture, cancelledAt: new Date() },
+        receiptImage: jpeg,
+      });
+      await expect(controller.guestReceipt(participantFixture.token)).rejects.toThrow(NotFoundException);
+      expect(prisma.expense.findFirst).not.toHaveBeenCalled();
+    });
   });
 
   it('escapes a participant name containing <script>', async () => {
@@ -350,8 +544,10 @@ describe('Legacy pair clearing on PUT /users/me/payment-methods closes the stale
       receiptSplitParticipant: {
         findUnique: jest.fn().mockResolvedValue(participantFixture),
         update: jest.fn().mockResolvedValue(undefined),
+        findMany: jest.fn().mockResolvedValue([{ itemIds: participantFixture.itemIds }]),
       },
       accountMember: { findFirst: jest.fn().mockResolvedValue(null) },
+      expense: { findFirst: jest.fn().mockResolvedValue(null) },
     };
 
     const usersService = new UsersService(prisma);
@@ -639,6 +835,7 @@ describe('renderGuestPage — pay affordance suppressed once payment is claimed'
       },
     ],
     postPaidAction: '/s/token/paid',
+    receiptUrl: null,
   };
   const strings = getGuestPageStrings('en');
 
@@ -755,6 +952,7 @@ describe('renderGuestPage — multiple payment methods (one block per method)', 
     status: 'sent',
     paymentMethods: [],
     postPaidAction: '/s/token/paid',
+    receiptUrl: null,
   };
 
   it('renders one button per link-capable method, in order — two methods produce two buttons', () => {
@@ -951,6 +1149,7 @@ describe('renderGuestPage — box-sizing reset keeps the pay button inside its c
         status: 'sent',
         paymentMethods: [],
         postPaidAction: '/s/token/paid',
+    receiptUrl: null,
       },
       strings,
     );
@@ -984,6 +1183,7 @@ describe('renderGuestPage — each pay block now names its destination method an
     status: 'sent',
     paymentMethods: [],
     postPaidAction: '/s/token/paid',
+    receiptUrl: null,
   };
 
   it('a Revolut block\'s button says "Pay via Revolut" and shows the raw handle in a muted line underneath', () => {

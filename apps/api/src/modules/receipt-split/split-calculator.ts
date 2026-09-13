@@ -131,3 +131,75 @@ export function resolveEqualSplit(participantIds: string[], billTotal: number): 
 
   return { shares, ownShare };
 }
+
+/** One line the participant claimed, plus how many people claimed it. */
+export interface ClaimedLine {
+  id: string;
+  totalPrice: number;
+  /** Total claimants of this line INCLUDING the participant being rendered.
+   *  Anything below 1 is read as 1 — a line a participant claimed always has
+   *  at least one claimant. */
+  claimantCount: number;
+}
+
+export interface LineShare {
+  id: string;
+  /** This participant's share of the line, in currency units. */
+  amount: number;
+  /** Echo of `claimantCount` after normalization; 1 means "not shared". */
+  sharedWith: number;
+}
+
+/**
+ * Splits a participant's OWN total across the lines they claimed, so the guest
+ * page can show what each line costs *them* rather than what it cost outright.
+ *
+ * Rendering `item.totalPrice` per line is only correct while nobody shares a
+ * line: a 60 bottle claimed by three people is 20 to each of them, and a page
+ * that prints "60" above a total of "20" is the reason this function exists.
+ *
+ * `totalAmount` is the participant's STORED amount (what `resolveItemSplit`
+ * computed at creation and what the page prints as their total) — it is not
+ * recomputed here. That is deliberate: recomputing means re-summing
+ * `price / claimants` in floating point, and the result depends on the order
+ * the lines happen to arrive in, so the lines could disagree with the total by
+ * a cent purely from addition order. Allocating against the stored number
+ * makes the invariant "lines add up to the total" true by construction.
+ *
+ * Each line is floored to the cent and the leftover cents are handed out by
+ * largest fractional remainder (ties by line order, so the output is
+ * deterministic). Flooring n lines can only ever lose less than n cents, so a
+ * leftover of n or more is not rounding — it means the participant was charged
+ * for something these lines do not account for, the reachable case being a
+ * claimed line soft-deleted after the split was created. Padding the survivors
+ * then would overstate what each surviving thing cost, so nothing is
+ * distributed at all and the lines honestly add up to less than the total.
+ */
+export function allocateItemShares(lines: ClaimedLine[], totalAmount: number): LineShare[] {
+  const exact = lines.map((line) => {
+    const sharedWith = line.claimantCount >= 1 ? Math.floor(line.claimantCount) : 1;
+    // Integer cents, rounded once up front — see the module docstring.
+    return { id: line.id, sharedWith, cents: Math.round(line.totalPrice * 100) / sharedWith };
+  });
+
+  const allocated = exact.map((entry) => Math.floor(entry.cents));
+  const flooredSum = allocated.reduce((sum, cents) => sum + cents, 0);
+  const rawLeftover = Math.round(totalAmount * 100) - flooredSum;
+  let leftover = rawLeftover < exact.length ? rawLeftover : 0;
+
+  const byRemainder = exact
+    .map((entry, index) => ({ index, remainder: entry.cents - Math.floor(entry.cents) }))
+    .sort((a, b) => b.remainder - a.remainder || a.index - b.index);
+
+  for (const { index } of byRemainder) {
+    if (leftover <= 0) break;
+    allocated[index] += 1;
+    leftover -= 1;
+  }
+
+  return exact.map((entry, index) => ({
+    id: entry.id,
+    amount: allocated[index] / 100,
+    sharedWith: entry.sharedWith,
+  }));
+}

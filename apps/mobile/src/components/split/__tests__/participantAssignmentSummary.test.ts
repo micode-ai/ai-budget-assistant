@@ -20,7 +20,7 @@ describe('computeParticipantAssignmentSummaries', () => {
     ]);
     const result = computeParticipantAssignmentSummaries(
       ['p1'],
-      { 'item-1': 'p1', 'item-2': 'p1' },
+      { 'item-1': ['p1'], 'item-2': ['p1'] },
       prices,
     );
     expect(result.p1).toEqual({ count: 2, subtotal: 15.5 });
@@ -33,26 +33,64 @@ describe('computeParticipantAssignmentSummaries', () => {
     ]);
     const result = computeParticipantAssignmentSummaries(
       ['p1', 'p2'],
-      { 'item-1': 'p1', 'item-2': 'p2' },
+      { 'item-1': ['p1'], 'item-2': ['p2'] },
       prices,
     );
     expect(result.p1).toEqual({ count: 1, subtotal: 10 });
     expect(result.p2).toEqual({ count: 1, subtotal: 20 });
   });
 
+  it('charges each claimant only their share of a line they share', () => {
+    // Three people on one 60 bottle owe 20 each. Charging all three the full
+    // 60 would show a number the server never agrees with, and would trip the
+    // over-bill guard on a perfectly valid split.
+    const result = computeParticipantAssignmentSummaries(
+      ['p1', 'p2', 'p3'],
+      { wine: ['p1', 'p2', 'p3'] },
+      new Map([['wine', 60]]),
+    );
+    expect(result.p1).toEqual({ count: 1, subtotal: 20 });
+    expect(result.p2).toEqual({ count: 1, subtotal: 20 });
+    expect(result.p3).toEqual({ count: 1, subtotal: 20 });
+  });
+
+  it('counts a shared line as one item for each person on it', () => {
+    const result = computeParticipantAssignmentSummaries(
+      ['p1', 'p2'],
+      { wine: ['p1', 'p2'], bread: ['p1'] },
+      new Map([
+        ['wine', 60],
+        ['bread', 4],
+      ]),
+    );
+    expect(result.p1).toEqual({ count: 2, subtotal: 34 });
+    expect(result.p2).toEqual({ count: 1, subtotal: 30 });
+  });
+
   it('ignores an assignment referencing a participant id that is not in the list (e.g. already removed), without throwing or adding a stray entry', () => {
     const prices = new Map([['item-1', 10]]);
     const result = computeParticipantAssignmentSummaries(
       ['p1'],
-      { 'item-1': 'removed-participant' },
+      { 'item-1': ['removed-participant'] },
       prices,
     );
     expect(result).toEqual({ p1: { count: 0, subtotal: 0 } });
     expect(result['removed-participant']).toBeUndefined();
   });
 
+  it('divides by the claimants who still exist, not by the removed ones', () => {
+    // Mid-edit a participant is removed but the assignment map has not caught
+    // up. Dividing by the stale count would understate what the survivor owes.
+    const result = computeParticipantAssignmentSummaries(
+      ['p1'],
+      { wine: ['p1', 'removed-participant'] },
+      new Map([['wine', 60]]),
+    );
+    expect(result.p1).toEqual({ count: 1, subtotal: 60 });
+  });
+
   it('treats a missing price lookup as 0 rather than NaN', () => {
-    const result = computeParticipantAssignmentSummaries(['p1'], { 'item-1': 'p1' }, new Map());
+    const result = computeParticipantAssignmentSummaries(['p1'], { 'item-1': ['p1'] }, new Map());
     expect(result.p1).toEqual({ count: 1, subtotal: 0 });
   });
 });
