@@ -8,6 +8,45 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.28.0 - 2026-09-13
+
+**Splitting a receipt by item now actually works**
+
+- **The feature announced in 1.27.0 was unreachable.** Assigning one line to
+  several people shipped in that build, but the split screen never offered
+  item-level assignment at all: it requires every line of the receipt to have
+  round-tripped through the server, and a receipt scanned on the phone wrote
+  its lines locally under client-side ids that nothing ever replaced. The
+  screen silently fell back to an equal split, on every receipt, on the device
+  that scanned it — which is why the previous release appeared to change
+  nothing (ABA-542).
+- **Receipts already on the phone repair themselves.** The lines are re-read
+  from the server the moment a receipt's split screen is opened, so nothing has
+  to be rescanned and no old receipt is stranded. A freshly scanned one is
+  splittable immediately, because the ids the server assigns are now taken
+  straight from its reply (ABA-542).
+- **Edits to a receipt's lines now reach the server.** Changing a line after
+  saving used to be local to one device — invisible to the server, to a second
+  device, and to the split. It had to be fixed in the same change: once the app
+  re-reads the server's copy, an unsent edit would have been visibly undone
+  (ABA-542).
+
+**A guest can say a line wasn't theirs**
+
+- **Opening a split link now offers a way to flag it.** A friend can mark a
+  single line they weren't part of, or their whole share, instead of having to
+  message you about it. The flag shows up in the app, and you mark it resolved
+  once you have sorted it out — to actually change who owes what, the split is
+  cancelled and recreated (ABA-540).
+
+**Under the hood**
+
+- Three large files were split into focused modules — the anomaly detectors,
+  the budget store, and the desktop transactions dialog dispatch (ABA-536,
+  ABA-537, ABA-538). No behaviour change.
+
+---
+
 ## 1.27.0 - 2026-09-13
 
 **One receipt item can be shared between several people**
