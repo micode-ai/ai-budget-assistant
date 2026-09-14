@@ -32,8 +32,10 @@ import { useAuthStore } from './authStore';
 import { useSubscriptionStore } from './subscriptionStore';
 import { useUpgradeStore } from './upgradeStore';
 import { useShoppingListAutoCheckStore } from './shoppingListAutoCheckStore';
+import { usePriceHistoryStore } from './priceHistoryStore';
 import {
   matchReceiptToShoppingList,
+  buildProductAliasMap,
   type ReceiptReconciliationLine,
 } from '@/features/shopping-list/receiptReconciliation';
 
@@ -400,7 +402,14 @@ export const useShoppingListStore = create<ShoppingListState>()(
         .lists.filter((l) => !l.isArchived)
         .flatMap((l) => l.items);
 
-      const matched = matchReceiptToShoppingList(candidates, receiptLines);
+      // Best-effort, opportunistic alias resolution
+      // (shopping-list-alias-aware-reconciliation): whatever product-alias
+      // data the Products/Analytics screens already loaded THIS session is
+      // reused here, read-only, in-memory — no network call is triggered by
+      // this path. Empty when nothing has been loaded yet, which makes this
+      // byte-identical to the pre-alias-aware behavior.
+      const aliasMap = buildProductAliasMap(usePriceHistoryStore.getState().products);
+      const matched = matchReceiptToShoppingList(candidates, receiptLines, aliasMap);
       if (matched.length === 0) return { checked: [] };
 
       const matchedIds = new Set(matched.map((m) => m.id));

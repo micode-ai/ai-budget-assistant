@@ -56,8 +56,24 @@ jest.mock('../../services/api', () => ({
   },
 }));
 
+// Manual mock (not the real module) so `products` can be seeded per test
+// without pulling in `api.getProducts` — mirrors this file's other
+// cross-store mocks (accountStore, authStore, ...).
+jest.mock('../priceHistoryStore', () => {
+  let state: { products: any[] } = { products: [] };
+  return {
+    usePriceHistoryStore: {
+      getState: () => state,
+      setState: (patch: Partial<{ products: any[] }>) => {
+        state = { ...state, ...patch };
+      },
+    },
+  };
+});
+
 import { useShoppingListStore } from '../shoppingListStore';
 import { useShoppingListAutoCheckStore } from '../shoppingListAutoCheckStore';
+import { usePriceHistoryStore } from '../priceHistoryStore';
 import { updateShoppingListItem } from '../../db/shoppingListItemRepository';
 import { api } from '../../services/api';
 
@@ -104,6 +120,7 @@ describe('shoppingListStore — receipt reconciliation', () => {
       error: null,
     } as any);
     useShoppingListAutoCheckStore.setState({ enabled: true });
+    usePriceHistoryStore.setState({ products: [] });
     jest.clearAllMocks();
   });
 
@@ -166,6 +183,46 @@ describe('shoppingListStore — receipt reconciliation', () => {
     expect(result.checked).toEqual([]);
     const item = useShoppingListStore.getState().lists[0].items[0];
     expect(item.isChecked).toBe(false);
+  });
+
+  // shopping-list-alias-aware-reconciliation
+  it('resolves a receipt line through the in-memory priceHistoryStore product list before matching', () => {
+    const milk = makeItem({ id: 'item-milk', rawLabel: 'Milk', canonicalName: 'Mleko Laciate' });
+    useShoppingListStore.setState({ lists: [makeList({ items: [milk] })], activeListId: 'list-1' } as any);
+    // Products screen / Analytics inflation section already loaded this
+    // session, and it knows the rename — the receipt's OCR-generated
+    // canonicalName is still the OLD raw name.
+    usePriceHistoryStore.setState({
+      products: [
+        {
+          rawName: 'MLEKO LACIATE 3,2% 1L',
+          rawNames: ['MLEKO LACIATE 3,2% 1L'],
+          canonicalName: 'Mleko Laciate',
+          purchaseCount: 3,
+          lastSeen: '2026-09-01',
+        },
+      ],
+    });
+
+    const result = useShoppingListStore.getState().reconcileWithReceipt([
+      { description: 'MLEKO LACIATE 3,2% 1L', canonicalName: 'MLEKO LACIATE 3,2% 1L' },
+    ]);
+
+    expect(result.checked).toEqual([{ id: 'item-milk', rawLabel: 'Milk' }]);
+  });
+
+  it('without the alias data loaded (empty priceHistoryStore.products), the same renamed receipt does not match', () => {
+    const milk = makeItem({ id: 'item-milk', rawLabel: 'Milk', canonicalName: 'Mleko Laciate' });
+    useShoppingListStore.setState({ lists: [makeList({ items: [milk] })], activeListId: 'list-1' } as any);
+    // usePriceHistoryStore.products defaults to [] in beforeEach — nothing
+    // loaded this session, so this must be byte-identical to the pre-alias
+    // behavior: no match.
+
+    const result = useShoppingListStore.getState().reconcileWithReceipt([
+      { description: 'MLEKO LACIATE 3,2% 1L', canonicalName: 'MLEKO LACIATE 3,2% 1L' },
+    ]);
+
+    expect(result.checked).toEqual([]);
   });
 
   it('undoReceiptReconciliation reverts exactly the given ids back to unchecked', () => {

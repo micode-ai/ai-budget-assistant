@@ -275,16 +275,51 @@ export class ShoppingListService {
    * `product_category_rules` is keyed on), against UNCHECKED items on
    * non-archived, non-deleted lists — never fuzzy/substring. A
    * false-positive auto-check (marking something bought that wasn't) is
-   * worse than a missed one. Deliberately does not resolve `ProductAlias`
-   * renames, same documented limitation as the mobile client.
+   * worse than a missed one.
+   *
+   * Alias-aware (shopping-list-alias-aware-reconciliation): a receipt
+   * line's `canonicalName` is resolved through the account's
+   * `ProductAlias` table (rawName -> canonicalName) before matching —
+   * mirroring the identical resolution `getRestockSuggestions`/`getDeals`
+   * below already apply. OCR invents a fresh `canonicalName` per scan, so
+   * without this, renaming/merging a product in Settings -> Products
+   * (Personal Inflation Index) would silently break auto-check-off for
+   * exactly that product on every later receipt. The item side of the
+   * match needs no resolution — every write path that sets a non-null
+   * `shoppingListItem.canonicalName` already stores the alias-resolved
+   * name (see the contract). A line whose resolved name is the
+   * `'__ignored__'` sentinel (the product was explicitly ignored in Price
+   * History) contributes no match key at all, same as the two sibling
+   * methods. See `docs/contracts/shopping-list-alias-aware-reconciliation.md`.
    */
   async reconcileWithReceipt(
     accountId: string,
     lines: Array<{ description?: string | null; canonicalName?: string | null }>,
   ): Promise<{ checkedLabels: string[] }> {
+    // Collect each line's raw canonical name (if any) + fallback description
+    // BEFORE touching the DB — a receipt with no usable line labels at all
+    // (a non-receipt manual/voice expense) must short-circuit with zero DB
+    // reads, same as before alias resolution was added.
+    const rawLines = (lines ?? [])
+      .map((line) => ({
+        rawCanonical: line.canonicalName?.trim() || undefined,
+        description: line.description?.trim() || '',
+      }))
+      .filter((line) => !!(line.rawCanonical || line.description));
+    if (rawLines.length === 0) return { checkedLabels: [] };
+
+    const aliases: Array<{ rawName: string; canonicalName: string }> =
+      await (this.prisma as any).productAlias.findMany({
+        where: { accountId },
+        select: { rawName: true, canonicalName: true },
+      });
+    const aliasMap = new Map(aliases.map((a) => [a.rawName, a.canonicalName]));
+
     const receiptKeys = new Set<string>();
-    for (const line of lines ?? []) {
-      const label = line.canonicalName?.trim() || line.description?.trim() || '';
+    for (const line of rawLines) {
+      const resolved = line.rawCanonical ? aliasMap.get(line.rawCanonical) ?? line.rawCanonical : undefined;
+      if (resolved === '__ignored__') continue;
+      const label = resolved || line.description;
       const key = normalizeProductName(label);
       if (key) receiptKeys.add(key);
     }

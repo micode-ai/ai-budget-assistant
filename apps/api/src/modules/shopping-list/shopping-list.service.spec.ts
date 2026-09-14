@@ -277,6 +277,7 @@ describe('ShoppingListService', () => {
   // ABA bot-receipt-shopping-list-reconciliation
   describe('reconcileWithReceipt (bot receipt -> shopping-list auto-check)', () => {
     it('checks off an exact match after normalization and returns its rawLabel', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([]);
       prisma.shoppingListItem.findMany.mockResolvedValue([
         { id: 'i1', rawLabel: 'Milk', canonicalName: null },
         { id: 'i2', rawLabel: 'Bread', canonicalName: null },
@@ -293,6 +294,7 @@ describe('ShoppingListService', () => {
     });
 
     it('prefers canonicalName over rawLabel on both sides of the match, like the mobile client', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([]);
       prisma.shoppingListItem.findMany.mockResolvedValue([
         { id: 'i1', rawLabel: 'Mleko 3.2% Łaciate', canonicalName: 'Milk' },
       ]);
@@ -306,6 +308,7 @@ describe('ShoppingListService', () => {
     });
 
     it('never matches fuzzily/substring — a near-miss is not checked off', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([]);
       prisma.shoppingListItem.findMany.mockResolvedValue([
         { id: 'i1', rawLabel: 'Milk 2%', canonicalName: null },
       ]);
@@ -314,13 +317,15 @@ describe('ShoppingListService', () => {
       expect(res.checkedLabels).toEqual([]);
     });
 
-    it('short-circuits with zero DB reads when the receipt has no usable line labels', async () => {
+    it('short-circuits with zero DB reads (including no alias lookup) when the receipt has no usable line labels', async () => {
       const res = await service.reconcileWithReceipt('a1', [{ description: '   ' }, {}]);
+      expect(prisma.productAlias.findMany).not.toHaveBeenCalled();
       expect(prisma.shoppingListItem.findMany).not.toHaveBeenCalled();
       expect(res).toEqual({ checkedLabels: [] });
     });
 
     it('returns an empty result and writes nothing when nothing matches', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([]);
       prisma.shoppingListItem.findMany.mockResolvedValue([
         { id: 'i1', rawLabel: 'Bread', canonicalName: null },
       ]);
@@ -330,6 +335,7 @@ describe('ShoppingListService', () => {
     });
 
     it('only reads unchecked items on non-archived, non-deleted lists (same scoping as removeItemsByName)', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([]);
       prisma.shoppingListItem.findMany.mockResolvedValue([]);
       await service.reconcileWithReceipt('a1', [{ description: 'Milk' }]);
       expect(prisma.shoppingListItem.findMany).toHaveBeenCalledWith({
@@ -344,6 +350,7 @@ describe('ShoppingListService', () => {
     });
 
     it('checks off multiple matches from one receipt in a single updateMany', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([]);
       prisma.shoppingListItem.findMany.mockResolvedValue([
         { id: 'i1', rawLabel: 'Milk', canonicalName: null },
         { id: 'i2', rawLabel: 'Bread', canonicalName: null },
@@ -362,6 +369,69 @@ describe('ShoppingListService', () => {
         data: { isChecked: true, syncVersion: { increment: 1 } },
       });
       expect(res.checkedLabels.sort()).toEqual(['Bread', 'Milk']);
+    });
+
+    // shopping-list-alias-aware-reconciliation
+    it('resolves a renamed/merged product through ProductAlias before matching', async () => {
+      // The receipt's OCR-generated canonicalName is still the OLD, pre-rename
+      // raw name — that is expected, OCR has no memory of a prior rename.
+      prisma.productAlias.findMany.mockResolvedValue([
+        { rawName: 'MLEKO LACIATE 3,2% 1L', canonicalName: 'Mleko Laciate' },
+      ]);
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        // The shopping-list item was added AFTER the rename, so it already
+        // carries the resolved canonical name (e.g. via restock suggestion or
+        // product search) — the item side never needs its own resolution.
+        { id: 'i1', rawLabel: 'Milk', canonicalName: 'Mleko Laciate' },
+      ]);
+      prisma.shoppingListItem.updateMany.mockResolvedValue({ count: 1 });
+
+      const res = await service.reconcileWithReceipt('a1', [
+        { description: 'MLEKO LACIATE 3,2% 1L', canonicalName: 'MLEKO LACIATE 3,2% 1L' },
+      ]);
+
+      expect(prisma.productAlias.findMany).toHaveBeenCalledWith({
+        where: { accountId: 'a1' },
+        select: { rawName: true, canonicalName: true },
+      });
+      expect(prisma.shoppingListItem.updateMany).toHaveBeenCalledWith({
+        where: { id: { in: ['i1'] } },
+        data: { isChecked: true, syncVersion: { increment: 1 } },
+      });
+      expect(res.checkedLabels).toEqual(['Milk']);
+    });
+
+    it('does not match anything when the receipt line resolves to the "ignored" sentinel', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([
+        { rawName: 'MLEKO LACIATE 3,2% 1L', canonicalName: '__ignored__' },
+      ]);
+      // Even a shopping-list item that happens to literally be named
+      // "__ignored__" must not be checked off — an ignored product
+      // contributes no match key at all.
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        { id: 'i1', rawLabel: 'Milk', canonicalName: '__ignored__' },
+      ]);
+
+      const res = await service.reconcileWithReceipt('a1', [
+        { description: 'MLEKO LACIATE 3,2% 1L', canonicalName: 'MLEKO LACIATE 3,2% 1L' },
+      ]);
+
+      expect(prisma.shoppingListItem.updateMany).not.toHaveBeenCalled();
+      expect(res).toEqual({ checkedLabels: [] });
+    });
+
+    it('an alias with no matching entry falls back to the raw canonicalName unchanged', async () => {
+      prisma.productAlias.findMany.mockResolvedValue([
+        { rawName: 'SOME OTHER PRODUCT', canonicalName: 'Something Else' },
+      ]);
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        { id: 'i1', rawLabel: 'Bread', canonicalName: null },
+      ]);
+      prisma.shoppingListItem.updateMany.mockResolvedValue({ count: 1 });
+
+      const res = await service.reconcileWithReceipt('a1', [{ description: 'Bread' }]);
+
+      expect(res.checkedLabels).toEqual(['Bread']);
     });
   });
 

@@ -58,12 +58,21 @@ Behaviour:
   that set. Already-checked candidates are always skipped, even if passed in
   (defensive — callers are expected to pre-filter, but the guard is cheap and
   makes the function safe to call with an unfiltered list).
-- Exact match only, after normalization. No fuzzy/substring matching, no
-  `ProductAlias` resolution (that needs a network round trip this
-  offline-capable client-only check doesn't otherwise need — a renamed
-  product simply won't auto-match, same as an unmatched free-text item).
-- Pure: no I/O, no store reads, no clock. Order of the returned array follows
-  the input `candidates` order.
+- Exact match only, after normalization. No fuzzy/substring matching.
+- **Updated by `shopping-list-alias-aware-reconciliation`**: the function
+  now takes an optional third `aliasMap?: ReadonlyMap<string, string>`
+  parameter that resolves a receipt line's raw `canonicalName` through the
+  account's known `ProductAlias` renames/merges before matching — built
+  opportunistically by the caller (`shoppingListStore.reconcileWithReceipt`)
+  from whatever `usePriceHistoryStore.getState().products` already holds
+  this session, with **no new network call** on this path. When omitted (or
+  when nothing has been loaded this session), behavior is unchanged from
+  the original limitation noted below. See
+  `docs/contracts/shopping-list-alias-aware-reconciliation.md` for the full
+  design and its explicit best-effort caveats.
+- Pure: no I/O, no store reads, no clock (the `aliasMap`, if any, is data the
+  caller already had in memory — this function still performs no I/O
+  itself). Order of the returned array follows the input `candidates` order.
 
 ---
 
@@ -213,4 +222,4 @@ community-price toggles already in this file.
 | SQLite write fails | Logged (`console.error`, matching every other shopping-list write in this file), optimistic in-memory state (and thus the alert/Undo) is unaffected |
 | Server `api.updateItem` fails (offline) | Logged (`console.warn`, matching `toggleChecked`), row stays queued for the next sync sweep like any other pending shopping-list edit — Undo still works locally in the meantime |
 | User presses Undo | Both matched rows revert to unchecked, locally and (fire-and-forget) on the server; `finish()` still runs — Undo does not keep the alert open |
-| Item was renamed via `ProductAlias` on another device | Not resolved — the raw `canonicalName`/`rawLabel` strings are compared as-is; a stale/renamed pair simply doesn't match (documented limitation, not a bug) |
+| Item was renamed via `ProductAlias` | Resolved on a **best-effort** basis (`shopping-list-alias-aware-reconciliation`) — matches when `usePriceHistoryStore.getState().products` already holds the rename this session (visited Products/Analytics this session, on THIS device); still doesn't match when that data hasn't been loaded, or the rename was made on another device — not a bug, a documented, deliberately-scoped limitation to avoid building a full local alias cache |
