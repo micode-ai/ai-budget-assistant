@@ -4671,6 +4671,12 @@ Open the expense for the bill you paid and tap the **people icon** in the header
 
 The app won't let the assigned shares add up to more than what you actually paid — if they do, you'll see a warning before you can continue.
 
+### Deciding who pays how much
+
+Once at least one person is on a line, an editor appears underneath showing how that line splits between them and you. Switch between **%** and **Amount** and type what each person owes. **You** are always the last row - your share is whatever is left of the line, and you never type it. Tap **Split equally** to go back to an even division.
+
+A line doesn't have to be given away completely: put your friend on 60% and the remaining 40% is simply yours. If a line's shares add up to more than the whole line, the app says so and won't let you continue.
+
 ## Sending the links
 
 Send each friend their link however you like — text message, WhatsApp, email, anything your phone can share to. There's also a **Copy all links** button that copies every friend's name and link at once. A friend never needs to install the app or create an account to use their link.
@@ -4728,6 +4734,7 @@ A link that hasn't been used within 30 days of creation simply stops working. If
 - Only account owners and editors can create, cancel, or confirm a split. Viewers don't see the split option.
 - You can't split a bill that was itself created by someone else's split.
 - Amounts are always shown in the bill's own currency — nothing is ever converted.
+- If the receipt had a **discount**, everyone's share is worked out from what you actually paid, not from the printed prices - so a friend never pays the pre-discount price of their items.
 `,
     },
   ],
@@ -9358,6 +9365,12 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Приложение не позволит назначенным долям в сумме превысить то, что вы реально заплатили, — если так случится, вы увидите предупреждение, прежде чем сможете продолжить.
 
+### Кто сколько платит
+
+Как только на позиции появляется хотя бы один человек, под ней открывается редактор: видно, как эта позиция делится между ним и вами. Переключайтесь между **%** и **Суммой** и вводите, кто сколько должен. **Я** - всегда последняя строка: ваша доля это остаток позиции, её вы не вводите. Кнопка **Поровну** возвращает равное деление.
+
+Позицию не обязательно отдавать целиком: поставьте другу 60%, и оставшиеся 40% просто ваши. Если доли позиции превысят её саму, приложение об этом скажет и не даст продолжить.
+
 ## Отправка ссылок
 
 Отправьте каждому другу его ссылку как вам удобно — SMS, WhatsApp, email, чем угодно, чем умеет делиться ваш телефон. Есть также кнопка **Скопировать все ссылки**, которая копирует имя и ссылку каждого друга сразу. Другу никогда не нужно устанавливать приложение или создавать аккаунт, чтобы воспользоваться своей ссылкой.
@@ -9415,6 +9428,7 @@ OCR иногда неверно читает цену, выдумывает ст
 - Создавать, отменять или подтверждать разделение может только владелец аккаунта и редакторы. Наблюдатели не видят этой опции.
 - Вы не можете разделить чек, который сам возник из чужого разделения.
 - Суммы всегда показываются в валюте самого счёта — ничего никогда не конвертируется.
+- Если на чеке была **скидка**, доли считаются от реально уплаченного, а не от напечатанных цен - друг никогда не платит цену своих позиций до скидки.
 `,
     },
   ],
@@ -14015,6 +14029,12 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Застосунок не дозволить призначеним часткам у сумі перевищити те, що ви реально заплатили, — якщо так станеться, ви побачите попередження, перш ніж зможете продовжити.
 
+### Хто скільки платить
+
+Щойно на позиції з'являється хоча б одна людина, під нею відкривається редактор: видно, як ця позиція ділиться між нею і вами. Перемикайтеся між **%** і **Сумою** та вводьте, хто скільки винен. **Я** - завжди останній рядок: ваша частка це залишок позиції, її ви не вводите. Кнопка **Порівну** повертає рівний поділ.
+
+Позицію не обов'язково віддавати повністю: поставте другові 60%, і решта 40% просто ваші. Якщо частки позиції перевищать її саму, застосунок про це скаже і не дасть продовжити.
+
 ## Надсилання посилань
 
 Надішліть кожному другові його посилання як вам зручно — SMS, WhatsApp, електронною поштою, будь-чим, чим уміє ділитися ваш телефон. Є також кнопка **Скопіювати всі посилання**, яка копіює ім'я та посилання кожного друга одразу. Другові ніколи не потрібно встановлювати застосунок чи створювати акаунт, щоб скористатися своїм посиланням.
@@ -14072,6 +14092,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - Створювати, скасовувати чи підтверджувати поділ може лише власник акаунту та редактори. Глядачі не бачать цієї опції.
 - Ви не можете розділити чек, який сам виник із чужого поділу.
 - Суми завжди показуються у валюті самого рахунку — нічого ніколи не конвертується.
+- Якщо на чеку була **знижка**, частки рахуються від реально сплаченого, а не від надрукованих цін - друг ніколи не платить ціну своїх позицій до знижки.
 `,
     },
   ],
@@ -18657,6 +18678,12 @@ Otwórz wydatek odpowiadający zapłaconemu rachunkowi i stuknij ikonę **osób*
 
 Aplikacja nie pozwoli, żeby przypisane części zsumowały się na więcej, niż faktycznie zapłaciłeś/aś — jeśli tak się stanie, zobaczysz ostrzeżenie, zanim będziesz mógł/mogła kontynuować.
 
+### Kto ile płaci
+
+Gdy na pozycji jest już przynajmniej jedna osoba, pod nią pojawia się edytor pokazujący, jak ta pozycja dzieli się między nią a Tobą. Przełączaj się między **%** a **Kwotą** i wpisuj, kto ile jest winien. **Ja** to zawsze ostatni wiersz: Twoja część to reszta pozycji i nigdy jej nie wpisujesz. Przycisk **Po równo** przywraca równy podział.
+
+Pozycji nie trzeba oddawać w całości: daj znajomemu 60%, a pozostałe 40% po prostu zostaje Tobie. Jeśli udziały pozycji przekroczą ją samą, aplikacja to zgłosi i nie pozwoli przejść dalej.
+
 ## Wysyłanie linków
 
 Wyślij każdemu znajomemu jego link, jak Ci wygodnie — SMS-em, przez WhatsApp, mailem, czymkolwiek, czym Twój telefon potrafi się dzielić. Jest też przycisk **Skopiuj wszystkie linki**, który kopiuje imię i link każdego znajomego naraz. Znajomy nigdy nie musi instalować aplikacji ani zakładać konta, żeby skorzystać ze swojego linku.
@@ -18714,6 +18741,7 @@ Link, z którego nikt nie skorzystał w ciągu 30 dni od utworzenia, po prostu p
 - Podział może utworzyć, anulować lub potwierdzić tylko właściciel konta i edytorzy. Widzowie nie widzą tej opcji.
 - Nie możesz podzielić rachunku, który sam powstał z podziału kogoś innego.
 - Kwoty są zawsze pokazywane w walucie rachunku — nic nigdy nie jest przeliczane.
+- Jeśli na paragonie był **rabat**, udziały liczone są od tego, co faktycznie zapłacono, a nie od wydrukowanych cen - znajomy nigdy nie płaci ceny sprzed rabatu.
 `,
     },
   ],
@@ -23274,6 +23302,12 @@ Wenn du eine Rechnung für eine Gruppe bezahlt hast — eine Restaurantrechnung,
 
 Die App lässt es nicht zu, dass die zugewiesenen Anteile zusammen mehr ergeben, als du tatsächlich bezahlt hast — falls doch, siehst du eine Warnung, bevor du fortfahren kannst.
 
+### Wer zahlt wie viel
+
+Sobald mindestens eine Person auf einer Position steht, erscheint darunter ein Editor, der zeigt, wie sich diese Position zwischen ihr und dir aufteilt. Wechsle zwischen **%** und **Betrag** und trage ein, wer wie viel schuldet. **Ich** ist immer die letzte Zeile: dein Anteil ist der Rest der Position, du trägst ihn nie selbst ein. Die Schaltfläche **Gleichmäßig** stellt die gleiche Teilung wieder her.
+
+Eine Position muss nicht ganz abgegeben werden: Setze deinen Freund auf 60%, und die restlichen 40% gehören einfach dir. Übersteigen die Anteile einer Position die Position selbst, meldet die App das und lässt dich nicht fortfahren.
+
 ## Links versenden
 
 Schick jedem Freund seinen Link, wie du möchtest — SMS, WhatsApp, E-Mail, alles, worüber dein Handy teilen kann. Es gibt außerdem den Button **Alle Links kopieren**, der Namen und Link jedes Freundes auf einmal kopiert. Ein Freund muss die App nie installieren oder ein Konto anlegen, um seinen Link zu nutzen.
@@ -23331,6 +23365,7 @@ Ein Link, der 30 Tage nach Erstellung nicht genutzt wurde, funktioniert einfach 
 - Nur Kontoinhaber und Bearbeiter können eine Aufteilung erstellen, abbrechen oder bestätigen. Betrachter sehen die Option nicht.
 - Du kannst keine Rechnung aufteilen, die selbst schon aus der Aufteilung eines anderen entstanden ist.
 - Beträge werden immer in der Währung der Rechnung angezeigt — es wird nie etwas umgerechnet.
+- Trug der Bon einen **Rabatt**, werden die Anteile aus dem tatsächlich gezahlten Betrag berechnet, nicht aus den gedruckten Preisen - ein Freund zahlt also nie den Preis vor Rabatt.
 `,
     },
   ],
@@ -27880,6 +27915,12 @@ Abre el gasto correspondiente a la cuenta que pagaste y toca el **icono de perso
 
 La app no deja que las partes asignadas sumen más de lo que realmente pagaste — si eso ocurre, verás un aviso antes de poder continuar.
 
+### Quién paga cuánto
+
+En cuanto hay al menos una persona en una línea, debajo aparece un editor que muestra cómo se reparte esa línea entre ella y tú. Cambia entre **%** e **Importe** y escribe lo que debe cada uno. **Yo** es siempre la última fila: tu parte es lo que queda de la línea y nunca la escribes. El botón **A partes iguales** vuelve al reparto equitativo.
+
+No hace falta ceder la línea entera: pon a tu amigo en el 60% y el 40% restante es simplemente tuyo. Si las partes de una línea superan la línea completa, la app lo avisa y no te deja continuar.
+
 ## Enviar los enlaces
 
 Envía a cada amigo su enlace como prefieras — mensaje de texto, WhatsApp, correo, cualquier cosa con la que tu teléfono pueda compartir. También hay un botón **Copiar todos los enlaces** que copia el nombre y el enlace de cada amigo de una vez. Un amigo nunca necesita instalar la app ni crear una cuenta para usar su enlace.
@@ -27937,6 +27978,7 @@ Un enlace que no se haya usado en los 30 días posteriores a su creación deja d
 - Solo el propietario de la cuenta y los editores pueden crear, cancelar o confirmar una división. Los espectadores no ven esta opción.
 - No puedes dividir una cuenta que ya se creó a partir de la división de otra persona.
 - Los importes siempre se muestran en la moneda propia de la cuenta — nunca se convierte nada.
+- Si el recibo tenía un **descuento**, las partes se calculan sobre lo que realmente pagaste, no sobre los precios impresos - así un amigo nunca paga el precio previo al descuento.
 `,
     },
   ],
@@ -32484,6 +32526,12 @@ Ouvrez la dépense correspondant à l'addition que vous avez réglée et appuyez
 
 L'application ne laisse pas les parts attribuées dépasser, une fois additionnées, ce que vous avez réellement payé — si c'est le cas, un avertissement s'affiche avant que vous puissiez continuer.
 
+### Qui paie combien
+
+Dès qu'au moins une personne est sur une ligne, un éditeur apparaît en dessous et montre comment cette ligne se répartit entre elle et vous. Basculez entre **%** et **Montant** et saisissez ce que chacun doit. **Moi** est toujours la dernière ligne : votre part est ce qui reste, et vous ne la saisissez jamais. Le bouton **À parts égales** revient au partage équitable.
+
+Une ligne n'a pas à être cédée entièrement : mettez votre ami à 60% et les 40% restants sont simplement à vous. Si les parts d'une ligne dépassent la ligne elle-même, l'application le signale et bloque la suite.
+
 ## Envoyer les liens
 
 Envoyez à chaque ami son lien comme vous le souhaitez — SMS, WhatsApp, e-mail, tout ce que votre téléphone sait partager. Il y a aussi un bouton **Copier tous les liens**, qui copie le nom et le lien de chaque ami en une fois. Un ami n'a jamais besoin d'installer l'application ni de créer un compte pour utiliser son lien.
@@ -32541,6 +32589,7 @@ Un lien qui n'a pas été utilisé dans les 30 jours suivant sa création cesse 
 - Seuls le propriétaire du compte et les éditeurs peuvent créer, annuler ou confirmer un partage. Les observateurs ne voient pas cette option.
 - Vous ne pouvez pas diviser une addition qui provient elle-même du partage de quelqu'un d'autre.
 - Les montants sont toujours affichés dans la devise propre de l'addition — rien n'est jamais converti.
+- Si le ticket comportait une **remise**, les parts sont calculées sur ce que vous avez réellement payé, et non sur les prix imprimés - un ami ne paie donc jamais le prix avant remise.
 `,
     },
   ],
@@ -37052,6 +37101,12 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Праграма не дазволіць прызначаным долям у суме перавысіць тое, што вы рэальна заплацілі, — калі так адбудзецца, вы ўбачыце папярэджанне, перш чым зможаце працягнуць.
 
+### Хто колькі плаціць
+
+Як толькі на пазіцыі з'яўляецца хаця б адзін чалавек, пад ёй адкрываецца рэдактар: відаць, як гэтая пазіцыя дзеліцца паміж ім і вамі. Пераключайцеся паміж **%** і **Сумай** і ўводзьце, хто колькі вінен. **Я** - заўсёды апошні радок: ваша доля гэта рэшта пазіцыі, яе вы не ўводзіце. Кнопка **Пароўну** вяртае роўны падзел.
+
+Пазіцыю не абавязкова аддаваць цалкам: пастаўце сябру 60%, і астатнія 40% проста вашы. Калі долі пазіцыі перавысяць яе саму, праграма пра гэта скажа і не дасць працягнуць.
+
 ## Адпраўка спасылак
 
 Адпраўце кожнаму сябру яго спасылку так, як вам зручна — SMS, WhatsApp, электроннай поштай, чым заўгодна, чым умее дзяліцца ваш тэлефон. Ёсць таксама кнопка **Скапіраваць усе спасылкі**, якая капіруе імя і спасылку кожнага сябра адразу. Сябру ніколі не трэба ўсталёўваць праграму ці ствараць уліковы запіс, каб скарыстацца сваёй спасылкай.
@@ -37109,6 +37164,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Ствараць, скасоўваць ці пацвярджаць падзел можа толькі ўладальнік уліковага запісу і рэдактары. Назіральнікі не бачаць гэтай опцыі.
 - Вы не можаце падзяліць чэк, які сам узнік з чужога падзелу.
 - Сумы заўсёды паказваюцца ў валюце самога рахунку — нічога ніколі не канвертуецца.
+- Калі на чэку была **зніжка**, долі лічацца ад рэальна заплачанага, а не ад надрукаваных цэнаў - сябар ніколі не плаціць цану сваіх пазіцый да зніжкі.
 `,
     },
   ],
@@ -41735,6 +41791,12 @@ Open de uitgave voor de rekening die je hebt betaald en tik op het **personen-ic
 
 De app laat niet toe dat de toegewezen delen samen meer worden dan je daadwerkelijk hebt betaald — gebeurt dat toch, dan zie je een waarschuwing voordat je verder kunt.
 
+### Wie betaalt hoeveel
+
+Zodra er minstens één persoon op een regel staat, verschijnt eronder een editor die laat zien hoe die regel tussen die persoon en jou wordt verdeeld. Wissel tussen **%** en **Bedrag** en vul in wie wat verschuldigd is. **Ik** is altijd de laatste rij: jouw deel is wat er van de regel overblijft, en dat vul je nooit zelf in. De knop **Gelijk verdelen** zet het terug naar een gelijke verdeling.
+
+Een regel hoeft niet helemaal weggegeven te worden: zet je vriend op 60% en de overige 40% is simpelweg van jou. Tellen de delen van een regel op tot meer dan de regel zelf, dan meldt de app dat en kun je niet verder.
+
 ## Links versturen
 
 Stuur elke vriend zijn link zoals jij wilt — sms, WhatsApp, e-mail, alles waarmee je telefoon kan delen. Er is ook een knop **Alle links kopiëren**, die de naam en link van elke vriend in één keer kopieert. Een vriend hoeft nooit de app te installeren of een account aan te maken om zijn link te gebruiken.
@@ -41792,6 +41854,7 @@ Een link die 30 dagen na het aanmaken niet is gebruikt, werkt gewoon niet meer. 
 - Alleen de accounteigenaar en bewerkers kunnen een splitsing aanmaken, annuleren of bevestigen. Kijkers zien deze optie niet.
 - Je kunt geen rekening splitsen die zelf al is ontstaan uit de splitsing van iemand anders.
 - Bedragen worden altijd getoond in de eigen valuta van de rekening — er wordt nooit iets omgerekend.
+- Stond er een **korting** op het bonnetje, dan worden de delen berekend over wat je werkelijk betaalde en niet over de gedrukte prijzen - een vriend betaalt dus nooit de prijs van voor de korting.
 `,
     },
   ],

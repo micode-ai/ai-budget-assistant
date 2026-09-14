@@ -19,6 +19,12 @@ Open the expense for the bill you paid and tap the **people icon** in the header
 
 The app won't let the assigned shares add up to more than what you actually paid — if they do, you'll see a warning before you can continue.
 
+### Deciding who pays how much
+
+Once at least one person is on a line, an editor appears underneath showing how that line splits between them and you. Switch between **%** and **Amount** and type what each person owes. **You** are always the last row - your share is whatever is left of the line, and you never type it. Tap **Split equally** to go back to an even division.
+
+A line doesn't have to be given away completely: put your friend on 60% and the remaining 40% is simply yours. If a line's shares add up to more than the whole line, the app says so and won't let you continue.
+
 ## Sending the links
 
 Send each friend their link however you like — text message, WhatsApp, email, anything your phone can share to. There's also a **Copy all links** button that copies every friend's name and link at once. A friend never needs to install the app or create an account to use their link.
@@ -76,3 +82,4 @@ A link that hasn't been used within 30 days of creation simply stops working. If
 - Only account owners and editors can create, cancel, or confirm a split. Viewers don't see the split option.
 - You can't split a bill that was itself created by someone else's split.
 - Amounts are always shown in the bill's own currency — nothing is ever converted.
+- If the receipt had a **discount**, everyone's share is worked out from what you actually paid, not from the printed prices - so a friend never pays the pre-discount price of their items.

@@ -19,6 +19,12 @@ Abre el gasto correspondiente a la cuenta que pagaste y toca el **icono de perso
 
 La app no deja que las partes asignadas sumen más de lo que realmente pagaste — si eso ocurre, verás un aviso antes de poder continuar.
 
+### Quién paga cuánto
+
+En cuanto hay al menos una persona en una línea, debajo aparece un editor que muestra cómo se reparte esa línea entre ella y tú. Cambia entre **%** e **Importe** y escribe lo que debe cada uno. **Yo** es siempre la última fila: tu parte es lo que queda de la línea y nunca la escribes. El botón **A partes iguales** vuelve al reparto equitativo.
+
+No hace falta ceder la línea entera: pon a tu amigo en el 60% y el 40% restante es simplemente tuyo. Si las partes de una línea superan la línea completa, la app lo avisa y no te deja continuar.
+
 ## Enviar los enlaces
 
 Envía a cada amigo su enlace como prefieras — mensaje de texto, WhatsApp, correo, cualquier cosa con la que tu teléfono pueda compartir. También hay un botón **Copiar todos los enlaces** que copia el nombre y el enlace de cada amigo de una vez. Un amigo nunca necesita instalar la app ni crear una cuenta para usar su enlace.
@@ -76,3 +82,4 @@ Un enlace que no se haya usado en los 30 días posteriores a su creación deja d
 - Solo el propietario de la cuenta y los editores pueden crear, cancelar o confirmar una división. Los espectadores no ven esta opción.
 - No puedes dividir una cuenta que ya se creó a partir de la división de otra persona.
 - Los importes siempre se muestran en la moneda propia de la cuenta — nunca se convierte nada.
+- Si el recibo tenía un **descuento**, las partes se calculan sobre lo que realmente pagaste, no sobre los precios impresos - así un amigo nunca paga el precio previo al descuento.

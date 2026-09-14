@@ -19,6 +19,12 @@ Otwórz wydatek odpowiadający zapłaconemu rachunkowi i stuknij ikonę **osób*
 
 Aplikacja nie pozwoli, żeby przypisane części zsumowały się na więcej, niż faktycznie zapłaciłeś/aś — jeśli tak się stanie, zobaczysz ostrzeżenie, zanim będziesz mógł/mogła kontynuować.
 
+### Kto ile płaci
+
+Gdy na pozycji jest już przynajmniej jedna osoba, pod nią pojawia się edytor pokazujący, jak ta pozycja dzieli się między nią a Tobą. Przełączaj się między **%** a **Kwotą** i wpisuj, kto ile jest winien. **Ja** to zawsze ostatni wiersz: Twoja część to reszta pozycji i nigdy jej nie wpisujesz. Przycisk **Po równo** przywraca równy podział.
+
+Pozycji nie trzeba oddawać w całości: daj znajomemu 60%, a pozostałe 40% po prostu zostaje Tobie. Jeśli udziały pozycji przekroczą ją samą, aplikacja to zgłosi i nie pozwoli przejść dalej.
+
 ## Wysyłanie linków
 
 Wyślij każdemu znajomemu jego link, jak Ci wygodnie — SMS-em, przez WhatsApp, mailem, czymkolwiek, czym Twój telefon potrafi się dzielić. Jest też przycisk **Skopiuj wszystkie linki**, który kopiuje imię i link każdego znajomego naraz. Znajomy nigdy nie musi instalować aplikacji ani zakładać konta, żeby skorzystać ze swojego linku.
@@ -76,3 +82,4 @@ Link, z którego nikt nie skorzystał w ciągu 30 dni od utworzenia, po prostu p
 - Podział może utworzyć, anulować lub potwierdzić tylko właściciel konta i edytorzy. Widzowie nie widzą tej opcji.
 - Nie możesz podzielić rachunku, który sam powstał z podziału kogoś innego.
 - Kwoty są zawsze pokazywane w walucie rachunku — nic nigdy nie jest przeliczane.
+- Jeśli na paragonie był **rabat**, udziały liczone są od tego, co faktycznie zapłacono, a nie od wydrukowanych cen - znajomy nigdy nie płaci ceny sprzed rabatu.

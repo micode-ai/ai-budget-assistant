@@ -19,6 +19,12 @@ Ouvrez la dépense correspondant à l'addition que vous avez réglée et appuyez
 
 L'application ne laisse pas les parts attribuées dépasser, une fois additionnées, ce que vous avez réellement payé — si c'est le cas, un avertissement s'affiche avant que vous puissiez continuer.
 
+### Qui paie combien
+
+Dès qu'au moins une personne est sur une ligne, un éditeur apparaît en dessous et montre comment cette ligne se répartit entre elle et vous. Basculez entre **%** et **Montant** et saisissez ce que chacun doit. **Moi** est toujours la dernière ligne : votre part est ce qui reste, et vous ne la saisissez jamais. Le bouton **À parts égales** revient au partage équitable.
+
+Une ligne n'a pas à être cédée entièrement : mettez votre ami à 60% et les 40% restants sont simplement à vous. Si les parts d'une ligne dépassent la ligne elle-même, l'application le signale et bloque la suite.
+
 ## Envoyer les liens
 
 Envoyez à chaque ami son lien comme vous le souhaitez — SMS, WhatsApp, e-mail, tout ce que votre téléphone sait partager. Il y a aussi un bouton **Copier tous les liens**, qui copie le nom et le lien de chaque ami en une fois. Un ami n'a jamais besoin d'installer l'application ni de créer un compte pour utiliser son lien.
@@ -76,3 +82,4 @@ Un lien qui n'a pas été utilisé dans les 30 jours suivant sa création cesse 
 - Seuls le propriétaire du compte et les éditeurs peuvent créer, annuler ou confirmer un partage. Les observateurs ne voient pas cette option.
 - Vous ne pouvez pas diviser une addition qui provient elle-même du partage de quelqu'un d'autre.
 - Les montants sont toujours affichés dans la devise propre de l'addition — rien n'est jamais converti.
+- Si le ticket comportait une **remise**, les parts sont calculées sur ce que vous avez réellement payé, et non sur les prix imprimés - un ami ne paie donc jamais le prix avant remise.

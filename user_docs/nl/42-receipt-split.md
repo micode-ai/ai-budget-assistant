@@ -19,6 +19,12 @@ Open de uitgave voor de rekening die je hebt betaald en tik op het **personen-ic
 
 De app laat niet toe dat de toegewezen delen samen meer worden dan je daadwerkelijk hebt betaald — gebeurt dat toch, dan zie je een waarschuwing voordat je verder kunt.
 
+### Wie betaalt hoeveel
+
+Zodra er minstens één persoon op een regel staat, verschijnt eronder een editor die laat zien hoe die regel tussen die persoon en jou wordt verdeeld. Wissel tussen **%** en **Bedrag** en vul in wie wat verschuldigd is. **Ik** is altijd de laatste rij: jouw deel is wat er van de regel overblijft, en dat vul je nooit zelf in. De knop **Gelijk verdelen** zet het terug naar een gelijke verdeling.
+
+Een regel hoeft niet helemaal weggegeven te worden: zet je vriend op 60% en de overige 40% is simpelweg van jou. Tellen de delen van een regel op tot meer dan de regel zelf, dan meldt de app dat en kun je niet verder.
+
 ## Links versturen
 
 Stuur elke vriend zijn link zoals jij wilt — sms, WhatsApp, e-mail, alles waarmee je telefoon kan delen. Er is ook een knop **Alle links kopiëren**, die de naam en link van elke vriend in één keer kopieert. Een vriend hoeft nooit de app te installeren of een account aan te maken om zijn link te gebruiken.
@@ -76,3 +82,4 @@ Een link die 30 dagen na het aanmaken niet is gebruikt, werkt gewoon niet meer. 
 - Alleen de accounteigenaar en bewerkers kunnen een splitsing aanmaken, annuleren of bevestigen. Kijkers zien deze optie niet.
 - Je kunt geen rekening splitsen die zelf al is ontstaan uit de splitsing van iemand anders.
 - Bedragen worden altijd getoond in de eigen valuta van de rekening — er wordt nooit iets omgerekend.
+- Stond er een **korting** op het bonnetje, dan worden de delen berekend over wat je werkelijk betaalde en niet over de gedrukte prijzen - een vriend betaalt dus nooit de prijs van voor de korting.

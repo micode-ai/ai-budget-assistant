@@ -19,6 +19,12 @@ Wenn du eine Rechnung für eine Gruppe bezahlt hast — eine Restaurantrechnung,
 
 Die App lässt es nicht zu, dass die zugewiesenen Anteile zusammen mehr ergeben, als du tatsächlich bezahlt hast — falls doch, siehst du eine Warnung, bevor du fortfahren kannst.
 
+### Wer zahlt wie viel
+
+Sobald mindestens eine Person auf einer Position steht, erscheint darunter ein Editor, der zeigt, wie sich diese Position zwischen ihr und dir aufteilt. Wechsle zwischen **%** und **Betrag** und trage ein, wer wie viel schuldet. **Ich** ist immer die letzte Zeile: dein Anteil ist der Rest der Position, du trägst ihn nie selbst ein. Die Schaltfläche **Gleichmäßig** stellt die gleiche Teilung wieder her.
+
+Eine Position muss nicht ganz abgegeben werden: Setze deinen Freund auf 60%, und die restlichen 40% gehören einfach dir. Übersteigen die Anteile einer Position die Position selbst, meldet die App das und lässt dich nicht fortfahren.
+
 ## Links versenden
 
 Schick jedem Freund seinen Link, wie du möchtest — SMS, WhatsApp, E-Mail, alles, worüber dein Handy teilen kann. Es gibt außerdem den Button **Alle Links kopieren**, der Namen und Link jedes Freundes auf einmal kopiert. Ein Freund muss die App nie installieren oder ein Konto anlegen, um seinen Link zu nutzen.
@@ -76,3 +82,4 @@ Ein Link, der 30 Tage nach Erstellung nicht genutzt wurde, funktioniert einfach 
 - Nur Kontoinhaber und Bearbeiter können eine Aufteilung erstellen, abbrechen oder bestätigen. Betrachter sehen die Option nicht.
 - Du kannst keine Rechnung aufteilen, die selbst schon aus der Aufteilung eines anderen entstanden ist.
 - Beträge werden immer in der Währung der Rechnung angezeigt — es wird nie etwas umgerechnet.
+- Trug der Bon einen **Rabatt**, werden die Anteile aus dem tatsächlich gezahlten Betrag berechnet, nicht aus den gedruckten Preisen - ein Freund zahlt also nie den Preis vor Rabatt.
