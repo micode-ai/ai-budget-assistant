@@ -103,6 +103,37 @@ export function equalBp(claimantCount: number): number {
   return Math.floor(BP_FULL / Math.floor(claimantCount));
 }
 
+/** What a line's shares ACTUALLY are right now, for display: the hand-set ones
+ * once it has been touched, otherwise the equal division it is still using.
+ *
+ * The payer's remainder has to be derived from THIS, never from the stored map:
+ * an untouched line stores nothing, so reading the map directly reports the
+ * payer as taking the whole line while the claimant rows above it already show
+ * an equal split — a screen that adds up to 200%.
+ */
+export function effectiveLineShares(
+  shares: ItemShares,
+  itemId: string,
+  claimantIds: string[],
+): Record<string, number> {
+  if (hasExplicitShares(shares, itemId)) {
+    const stored = shares[itemId] ?? {};
+    const out: Record<string, number> = {};
+    for (const id of claimantIds) out[id] = clampBp(stored[id] ?? 0);
+    return out;
+  }
+  const each = equalBp(claimantIds.length);
+  const out: Record<string, number> = {};
+  for (const id of claimantIds) out[id] = each;
+  return out;
+}
+
+/** The payer's share of a line given what is actually displayed on it. */
+export function payerBpFrom(effective: Record<string, number>): number {
+  const allocated = Object.values(effective).reduce((sum, bp) => sum + clampBp(bp), 0);
+  return Math.max(0, BP_FULL - allocated);
+}
+
 /** Seed a line with the equal split it already had, so opening the editor shows
  * today's numbers and the user edits from there rather than from zero. */
 export function seedEqualShares(

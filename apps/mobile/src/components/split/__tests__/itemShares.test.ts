@@ -1,5 +1,7 @@
 import {
   BP_FULL,
+  effectiveLineShares,
+  payerBpFrom,
   allocatedBp,
   amountFromBp,
   bpFromAmount,
@@ -121,6 +123,40 @@ describe('itemShares', () => {
       expect(sharesForParticipant(shares, 'edik')).toEqual({ wine: 6000 });
       expect(sharesForParticipant(shares, 'olya')).toEqual({ bread: 5000 });
       expect(sharesForParticipant(shares, 'nobody')).toEqual({});
+    });
+  });
+
+  describe('what the editor shows before the line is touched', () => {
+    it('shows the equal division the line is still using, not a column of zeros', () => {
+      expect(effectiveLineShares({}, 'wine', ['a', 'b'])).toEqual({ a: 5000, b: 5000 });
+    });
+
+    it('leaves the payer nothing once the claimants already take the whole line', () => {
+      // The bug this guards: reading the STORED map for the payer reports 100%
+      // while the rows above already show 50/50, a screen adding up to 200%.
+      const effective = effectiveLineShares({}, 'wine', ['a', 'b']);
+      expect(payerBpFrom(effective)).toBe(0);
+    });
+
+    it('gives the payer the remainder once the line has been hand-split', () => {
+      const shares = setShare({}, 'wine', 'a', 6000);
+      const effective = effectiveLineShares(shares, 'wine', ['a']);
+      expect(effective).toEqual({ a: 6000 });
+      expect(payerBpFrom(effective)).toBe(4000);
+    });
+
+    it('reads a claimant with no hand-set share on a split line as nothing', () => {
+      const shares = setShare({}, 'wine', 'a', 7000);
+      const effective = effectiveLineShares(shares, 'wine', ['a', 'b']);
+      expect(effective).toEqual({ a: 7000, b: 0 });
+      expect(payerBpFrom(effective)).toBe(3000);
+    });
+
+    it('hands the payer the stray basis points of an uneven equal split', () => {
+      // 3 claimants floor to 3333 each; the spare point stays with the payer,
+      // never overshoots the line.
+      const effective = effectiveLineShares({}, 'wine', ['a', 'b', 'c']);
+      expect(payerBpFrom(effective)).toBe(1);
     });
   });
 });

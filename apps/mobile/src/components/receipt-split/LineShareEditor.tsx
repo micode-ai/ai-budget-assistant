@@ -7,9 +7,10 @@ import {
   BP_FULL,
   amountFromBp,
   bpFromAmount,
+  effectiveLineShares,
   hasExplicitShares,
   isLineOverAllocated,
-  payerBp,
+  payerBpFrom,
   type ItemShares,
 } from '@/components/split/itemShares';
 
@@ -60,12 +61,15 @@ export function LineShareEditor({
 
   const manual = hasExplicitShares(shares, item.id);
   const overAllocated = isLineOverAllocated(shares, item.id);
-  const remainderBp = payerBp(shares, item.id);
 
   // Until the line is touched it still divides equally, so show that rather
-  // than a column of zeros the user would have to overwrite.
-  const effectiveBp = (participantId: string) =>
-    manual ? shares[item.id]?.[participantId] ?? 0 : Math.floor(BP_FULL / claimants.length);
+  // than a column of zeros the user would have to overwrite. The payer's row is
+  // derived from the SAME values the rows above display — reading the stored map
+  // instead would report the payer as taking the whole line while the claimants
+  // already show an equal split, a screen adding up to 200%.
+  const effective = effectiveLineShares(shares, item.id, claimants.map((c) => c.id));
+  const remainderBp = payerBpFrom(effective);
+  const effectiveBp = (participantId: string) => effective[participantId] ?? 0;
 
   const handleType = (participantId: string, raw: string) => {
     const parsed = Number(raw.replace(',', '.'));
