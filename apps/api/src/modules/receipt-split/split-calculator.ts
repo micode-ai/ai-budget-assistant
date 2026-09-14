@@ -208,8 +208,11 @@ export interface ClaimedLine {
   totalPrice: number;
   /** Total claimants of this line INCLUDING the participant being rendered.
    *  Anything below 1 is read as 1 — a line a participant claimed always has
-   *  at least one claimant. */
+   *  at least one claimant. Ignored when `shareBp` is set. */
   claimantCount: number;
+  /** This participant's explicit share of the line in basis points (ABA-550).
+   *  Absent = the line is divided equally among `claimantCount` claimants. */
+  shareBp?: number;
 }
 
 export interface LineShare {
@@ -218,6 +221,9 @@ export interface LineShare {
   amount: number;
   /** Echo of `claimantCount` after normalization; 1 means "not shared". */
   sharedWith: number;
+  /** Echo of the explicit share in basis points when the payer set one, so the
+   *  guest page can say "your 60%" instead of the untrue "divided by 2". */
+  shareBp?: number;
 }
 
 /**
@@ -288,15 +294,45 @@ export function reassignSplitItem(
 }
 
 export function allocateItemShares(lines: ClaimedLine[], totalAmount: number): LineShare[] {
-  const exact = lines.map((line) => {
+  const totalCents = Math.round(totalAmount * 100);
+
+  // Each line's honest weight: its price times this participant's share of it —
+  // an explicit hand-set share when the payer gave one, otherwise an equal slice
+  // among the line's claimants.
+  const weighted = lines.map((line) => {
     const sharedWith = line.claimantCount >= 1 ? Math.floor(line.claimantCount) : 1;
+    const hasShare = typeof line.shareBp === 'number' && Number.isFinite(line.shareBp);
+    const fraction = hasShare
+      ? Math.min(10000, Math.max(0, line.shareBp as number)) / 10000
+      : 1 / sharedWith;
     // Integer cents, rounded once up front — see the module docstring.
-    return { id: line.id, sharedWith, cents: Math.round(line.totalPrice * 100) / sharedWith };
+    return {
+      id: line.id,
+      sharedWith,
+      shareBp: hasShare ? Math.min(10000, Math.max(0, line.shareBp as number)) : undefined,
+      weight: Math.round(line.totalPrice * 100) * fraction,
+    };
   });
+
+  // The stored amount is authoritative, and a receipt-wide discount (ABA-549)
+  // makes it SMALLER than the gross line weights add up to. Without this cap the
+  // page would show lines summing to more than the guest is being asked for —
+  // the one thing this function exists to prevent.
+  //
+  // Capped at 1 rather than scaled both ways on purpose: when the weights fall
+  // SHORT of the stored total it is not rounding but a claimed line that was
+  // soft-deleted after the split was created, and inflating the survivors to
+  // cover the gap would overstate what each of them actually cost. In that case
+  // the lines honestly add up to less than the total, which is the behaviour the
+  // leftover guard below was written for.
+  const weightSum = weighted.reduce((sum, w) => sum + w.weight, 0);
+  const cap = weightSum > 0 ? Math.min(1, totalCents / weightSum) : 0;
+
+  const exact = weighted.map((w) => ({ ...w, cents: w.weight * cap }));
 
   const allocated = exact.map((entry) => Math.floor(entry.cents));
   const flooredSum = allocated.reduce((sum, cents) => sum + cents, 0);
-  const rawLeftover = Math.round(totalAmount * 100) - flooredSum;
+  const rawLeftover = totalCents - flooredSum;
   let leftover = rawLeftover < exact.length ? rawLeftover : 0;
 
   const byRemainder = exact
@@ -313,5 +349,6 @@ export function allocateItemShares(lines: ClaimedLine[], totalAmount: number): L
     id: entry.id,
     amount: allocated[index] / 100,
     sharedWith: entry.sharedWith,
+    shareBp: entry.shareBp,
   }));
 }

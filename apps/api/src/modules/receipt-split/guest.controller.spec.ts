@@ -230,6 +230,60 @@ describe('GuestController.guestPage', () => {
       expect(html).not.toContain('class="shared"');
     });
 
+    it('says "your 60%" instead of "split 2 ways" when the payer set the share by hand', async () => {
+      // ABA-550. A hand-set 60/40 is not an equal division, so the equal-split
+      // marker would be an untrue explanation of the smaller number.
+      const handSplit = {
+        ...participantFixture,
+        amount: '9.59',
+        itemIds: ['chicken'],
+        itemShareBp: { chicken: 6000 },
+        expense: {
+          ...participantFixture.expense,
+          items: [{ id: 'chicken', description: 'Chicken', totalPrice: '15.99' }],
+        },
+      };
+      const { controller } = buildController({
+        participant: handSplit,
+        roster: [{ itemIds: ['chicken'] }, { itemIds: ['chicken'] }],
+      });
+      const html = await controller.guestPage(handSplit.token, {} as any);
+
+      expect(html).toContain('your 60%');
+      expect(html).not.toContain('split 2 ways');
+      // The line shows the guest's own 60%, matching the total they are asked for.
+      expect(html).toContain('>9.59<');
+      expect(html).not.toContain('>15.99<');
+    });
+
+    it('keeps the lines adding up to the total after a discount shrank it', async () => {
+      // ABA-549 discounts the stored amount while line prices stay gross; an
+      // uncapped allocation would print lines summing to MORE than the total.
+      const discounted = {
+        ...participantFixture,
+        amount: '21.44',
+        itemIds: ['legs', 'halves'],
+        expense: {
+          ...participantFixture.expense,
+          items: [
+            { id: 'legs', description: 'Legs', totalPrice: '13.25' },
+            { id: 'halves', description: 'Halves', totalPrice: '15.99' },
+          ],
+        },
+      };
+      const { controller } = buildController({
+        participant: discounted,
+        roster: [{ itemIds: ['legs', 'halves'] }],
+      });
+      const html = await controller.guestPage(discounted.token, {} as any);
+
+      // Neither gross price may appear: together they would read as 29.24.
+      expect(html).not.toContain('>13.25<');
+      expect(html).not.toContain('>15.99<');
+      expect(html).toContain('9.72');
+      expect(html).toContain('11.72');
+    });
+
     it('counts a duplicated id inside one roster row only once', async () => {
       // A malformed itemIds array must not inflate the divisor and quietly
       // undercharge everyone on the line.

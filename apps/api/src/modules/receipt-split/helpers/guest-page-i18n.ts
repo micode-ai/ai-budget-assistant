@@ -27,6 +27,10 @@ export interface GuestPageStrings {
    * plural-form machinery, and "3 people" / "5 people" needs different agreement in
    * ru/ua/be/pl. "divided by N" carries the meaning with none of that. */
   sharedMarker: (count: number) => string;
+  /** Shown instead of `sharedMarker` when the payer set this guest's share of a
+   *  line by hand (ABA-550) — "divided by 2" would be untrue for a 60/40 split.
+   *  `percent` is already rounded to a whole number. */
+  shareMarker: (percent: number) => string;
   /** Shown instead of an item list when the split has no assigned line items (equal mode). */
   equalShareNote: string;
   /** Link label for the payer's receipt scan, shown only when one exists. */
@@ -103,6 +107,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} paid for everyone`,
     yourItemsHeading: 'Your items',
     sharedMarker: (count: number) => `split ${count} ways`,
+    shareMarker: (percent: number) => `your ${percent}%`,
     equalShareNote: 'Your equal share of the bill',
     viewReceipt: 'View the receipt',
     yourShareLabel: 'Your share',
@@ -139,6 +144,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} оплатил(а) за всех`,
     yourItemsHeading: 'Ваши позиции',
     sharedMarker: (count: number) => `делится на ${count}`,
+    shareMarker: (percent: number) => `ваша доля ${percent}%`,
     equalShareNote: 'Ваша равная часть счёта',
     viewReceipt: 'Посмотреть чек',
     yourShareLabel: 'Ваша часть',
@@ -175,6 +181,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} оплатив(ла) за всіх`,
     yourItemsHeading: 'Ваші позиції',
     sharedMarker: (count: number) => `ділиться на ${count}`,
+    shareMarker: (percent: number) => `ваша частка ${percent}%`,
     equalShareNote: 'Ваша рівна частка рахунку',
     viewReceipt: 'Переглянути чек',
     yourShareLabel: 'Ваша частка',
@@ -211,6 +218,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} zapłacił(a) za wszystkich`,
     yourItemsHeading: 'Twoje pozycje',
     sharedMarker: (count: number) => `dzielone na ${count}`,
+    shareMarker: (percent: number) => `twoja część ${percent}%`,
     equalShareNote: 'Twoja równa część rachunku',
     viewReceipt: 'Zobacz paragon',
     yourShareLabel: 'Twoja część',
@@ -247,6 +255,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} pagó por todos`,
     yourItemsHeading: 'Tus artículos',
     sharedMarker: (count: number) => `dividido entre ${count}`,
+    shareMarker: (percent: number) => `tu parte ${percent}%`,
     equalShareNote: 'Tu parte igual de la cuenta',
     viewReceipt: 'Ver el ticket',
     yourShareLabel: 'Tu parte',
@@ -283,6 +292,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} a payé pour tout le monde`,
     yourItemsHeading: 'Tes articles',
     sharedMarker: (count: number) => `partagé en ${count}`,
+    shareMarker: (percent: number) => `votre part ${percent}%`,
     equalShareNote: "Ta part égale de l'addition",
     viewReceipt: 'Voir le ticket',
     yourShareLabel: 'Ta part',
@@ -319,6 +329,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} hat für alle bezahlt`,
     yourItemsHeading: 'Deine Artikel',
     sharedMarker: (count: number) => `geteilt durch ${count}`,
+    shareMarker: (percent: number) => `dein Anteil ${percent}%`,
     equalShareNote: 'Dein gleicher Anteil der Rechnung',
     viewReceipt: 'Beleg ansehen',
     yourShareLabel: 'Dein Anteil',
@@ -355,6 +366,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} заплаціў(ла) за ўсіх`,
     yourItemsHeading: 'Вашы пазіцыі',
     sharedMarker: (count: number) => `дзеліцца на ${count}`,
+    shareMarker: (percent: number) => `ваша доля ${percent}%`,
     equalShareNote: 'Ваша роўная частка рахунку',
     viewReceipt: 'Паглядзець чэк',
     yourShareLabel: 'Ваша частка',
@@ -391,6 +403,7 @@ const translations: Record<string, GuestPageStrings> = {
     paidByLine: (payerName) => `${payerName} heeft voor iedereen betaald`,
     yourItemsHeading: 'Jouw items',
     sharedMarker: (count: number) => `gedeeld door ${count}`,
+    shareMarker: (percent: number) => `jouw ${percent}%`,
     equalShareNote: 'Jouw gelijke deel van de rekening',
     viewReceipt: 'Bon bekijken',
     yourShareLabel: 'Jouw deel',

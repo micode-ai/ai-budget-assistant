@@ -57,6 +57,7 @@ interface GuestParticipantRow {
   amount: unknown;
   currencyCode: string;
   itemIds: unknown;
+  itemShareBp?: unknown;
   openedAt: Date | null;
   claimedAt: Date | null;
   settledAt: Date | null;
@@ -149,6 +150,7 @@ export class GuestController {
         amount: true,
         currencyCode: true,
         itemIds: true,
+        itemShareBp: true,
         openedAt: true,
         claimedAt: true,
         settledAt: true,
@@ -341,6 +343,16 @@ export class GuestController {
     const expense = participant.expense as GuestExpenseView;
     const amount = Number(participant.amount);
     const itemIds = Array.isArray(participant.itemIds) ? (participant.itemIds as unknown[]) : null;
+    const rawShares = participant.itemShareBp;
+    const shareBpByItem: Record<string, number> =
+      rawShares && typeof rawShares === 'object' && !Array.isArray(rawShares)
+        ? Object.fromEntries(
+            Object.entries(rawShares as Record<string, unknown>).filter(
+              (entry): entry is [string, number] =>
+                typeof entry[1] === 'number' && Number.isFinite(entry[1]),
+            ),
+          )
+        : {};
     // Each line carries the guest's OWN share, not the line's outright price:
     // printing the full price of a line three people split contradicts the
     // total right underneath it. allocateItemShares divides against the stored
@@ -352,6 +364,8 @@ export class GuestController {
             id: item.id,
             totalPrice: Number(item.totalPrice),
             claimantCount: claimantsByItem.get(item.id) ?? 1,
+            // An explicit hand-set share (ABA-550) overrides the equal division.
+            shareBp: shareBpByItem[item.id],
             description: item.description ?? '',
           }))
       : null;
@@ -361,6 +375,7 @@ export class GuestController {
           description: claimed[index].description,
           amount: share.amount,
           sharedWith: share.sharedWith,
+          shareBp: share.shareBp,
           flagged: flaggedKeys.has(claimed[index].id),
         }))
       : null;

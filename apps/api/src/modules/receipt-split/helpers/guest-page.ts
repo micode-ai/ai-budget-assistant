@@ -73,6 +73,10 @@ export interface GuestPageItem {
    *  above 1 the renderer marks the line, so a guest can see why a 60 bottle
    *  is charged to them at 20 instead of reading it as a wrong price. */
   sharedWith: number;
+  /** Set only when the payer gave this guest an explicit share of the line
+   *  (ABA-550); drives a "your 60%" marker in place of "divided by N", which
+   *  would be untrue for an uneven split. */
+  shareBp?: number;
   /** True once this guest has an OPEN (unresolved) flag on this line —
    *  renders a "reported" note instead of the flag form (ABA —
    *  guest-split-item-dispute). */
@@ -228,7 +232,9 @@ export function renderGuestPage(model: GuestPageModel, strings: GuestPageStrings
       ? `<div class="muted">${escapeHtml(strings.yourItemsHeading)}</div><ul class="items">${model.items
           .map((item) => {
             const shared =
-              item.sharedWith > 1
+              typeof item.shareBp === 'number' && item.shareBp < 10000
+                ? ` <span class="shared">${escapeHtml(strings.shareMarker(Math.round(item.shareBp / 100)))}</span>`
+                : item.sharedWith > 1
                 ? ` <span class="shared">${escapeHtml(strings.sharedMarker(item.sharedWith))}</span>`
                 : '';
             return `<li><div class="item-row"><span>${escapeHtml(item.description)}${shared}</span><span>${item.amount.toFixed(2)}</span></div>${renderFlagBlock(item.id, item.flagged)}</li>`;

@@ -462,6 +462,52 @@ describe('allocateItemShares', () => {
   });
 });
 
+describe('allocateItemShares — explicit shares and the discount (ABA-549/550)', () => {
+  it('prices a line from its hand-set share, not from an equal division', () => {
+    const [line] = allocateItemShares(
+      [{ id: 'chicken', totalPrice: 15.99, claimantCount: 2, shareBp: 6000 }],
+      9.59,
+    );
+    expect(line.amount).toBe(9.59);
+    // Echoed so the page can say "your 60%" rather than the untrue "divided by 2".
+    expect(line.shareBp).toBe(6000);
+  });
+
+  it('keeps the lines summing to the stored total once a discount has shrunk it', () => {
+    // The real regression: after ABA-549 the stored amount is discounted while
+    // the line prices stay gross, so an uncapped allocation showed a guest lines
+    // adding up to MORE than they were being asked to pay.
+    const lines = [
+      { id: 'chicken-legs', totalPrice: 13.25, claimantCount: 1 },
+      { id: 'chicken-halves', totalPrice: 15.99, claimantCount: 1 },
+    ];
+    const out = allocateItemShares(lines, 21.44); // 29.24 gross, discounted
+    const sum = out.reduce((acc, l) => acc + l.amount, 0);
+    expect(Math.round(sum * 100) / 100).toBe(21.44);
+    // Still proportional to the gross prices between themselves.
+    expect(out[0].amount).toBeLessThan(out[1].amount);
+  });
+
+  it('still lets the lines fall short when a claimed line was deleted', () => {
+    // Weights below the stored total is NOT rounding — a line vanished. The
+    // survivors must not be inflated to cover the gap.
+    const out = allocateItemShares([{ id: 'i1', totalPrice: 10, claimantCount: 1 }], 30);
+    expect(out[0].amount).toBe(10);
+  });
+
+  it('treats a zero share as no money for that line', () => {
+    const out = allocateItemShares(
+      [
+        { id: 'i1', totalPrice: 10, claimantCount: 2, shareBp: 0 },
+        { id: 'i2', totalPrice: 10, claimantCount: 1, shareBp: 10000 },
+      ],
+      10,
+    );
+    expect(out[0].amount).toBe(0);
+    expect(out[1].amount).toBe(10);
+  });
+});
+
 describe('reassignSplitItem', () => {
   it('replaces one item’s claimants and leaves every other item untouched', () => {
     const items = [item('bread', 10), item('wine', 60)];
