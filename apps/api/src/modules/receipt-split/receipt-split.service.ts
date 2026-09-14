@@ -41,6 +41,10 @@ interface ExpenseForSplit {
   merchant: string | null;
   userId: string;
   paidByUserId: string | null;
+  /** Receipt-wide money off the basket. Line prices are GROSS of it, so every
+   * item-mode share has to be scaled by it — see resolveItemSplit. Null on
+   * every expense that never carried one. */
+  discountAmount: unknown;
   items: { id: string; totalPrice: unknown }[];
 }
 
@@ -144,6 +148,7 @@ export class ReceiptSplitService {
         merchant: true,
         userId: true,
         paidByUserId: true,
+        discountAmount: true,
         items: { where: { isDeleted: false }, select: { id: true, totalPrice: true } },
       },
     });
@@ -332,6 +337,7 @@ export class ReceiptSplitService {
               itemIds: p.itemIds ?? [],
             })),
             billTotal,
+            Number(expense.discountAmount ?? 0),
           )
         : resolveEqualSplit(participantKeys, billTotal);
 
@@ -628,6 +634,7 @@ export class ReceiptSplitService {
       itemId,
       participantIds,
       Number(expense.amount),
+      Number(expense.discountAmount ?? 0),
     );
 
     const shareByParticipant = new Map(result.shares.map((s) => [s.participantId, s.amount]));

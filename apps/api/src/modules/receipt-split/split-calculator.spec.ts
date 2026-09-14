@@ -124,6 +124,106 @@ describe('resolveItemSplit', () => {
   });
 });
 
+describe('resolveItemSplit — receipt-wide discount (ABA-549)', () => {
+  // The real production split that exposed this: Lidl, 5 lines summing to
+  // 74.88 gross, a 19.96 Lidl Plus discount, 54.92 actually paid. One
+  // participant claimed the two chicken lines (13.25 + 15.99 = 29.24 gross).
+  const lidl = [
+    item('beer-heineken', 28.74),
+    item('beer-gosciniec', 13.98),
+    item('chicken-legs', 13.25),
+    item('chicken-halves', 15.99),
+    item('bags', 2.92),
+  ];
+
+  it('charges a proportional share of what was PAID, not the gross line prices', () => {
+    const out = resolveItemSplit(
+      lidl,
+      [{ participantId: 'edik', itemIds: ['chicken-legs', 'chicken-halves'] }],
+      54.92,
+      19.96,
+    );
+    // 29.24 gross / 74.88 lines = 39.05% of the basket; 39.05% of 54.92 paid
+    // is 21.4458, floored to 21.44 — shares round DOWN in this module so they
+    // can never exceed the bill, and the spare cent lands on the payer.
+    expect(out.shares).toEqual([{ participantId: 'edik', amount: 21.44 }]);
+    // The payer keeps the rest of what they actually paid, no longer absorbing
+    // the entire discount on their own (it was 25.68 before this fix).
+    expect(out.ownShare).toBe(33.48);
+  });
+
+  it('leaves the shares untouched when there is no discount', () => {
+    const undiscounted = resolveItemSplit(
+      lidl,
+      [{ participantId: 'edik', itemIds: ['chicken-legs', 'chicken-halves'] }],
+      74.88,
+    );
+    expect(undiscounted.shares).toEqual([{ participantId: 'edik', amount: 29.24 }]);
+  });
+
+  it('still divides a shared line equally after discounting it', () => {
+    const out = resolveItemSplit(
+      [item('wine', 60), item('bread', 40)],
+      [
+        { participantId: 'p1', itemIds: ['wine'] },
+        { participantId: 'p2', itemIds: ['wine'] },
+      ],
+      80,
+      20,
+    );
+    // wine is 60 gross -> 30 each; the basket was discounted 20%, so 24 each.
+    expect(out.shares).toEqual([
+      { participantId: 'p1', amount: 24 },
+      { participantId: 'p2', amount: 24 },
+    ]);
+  });
+
+  it('never lets the shares exceed what was paid', () => {
+    const out = resolveItemSplit(
+      lidl,
+      [{ participantId: 'p1', itemIds: lidl.map((i) => i.id) }],
+      54.92,
+      19.96,
+    );
+    const sum = out.shares.reduce((acc, sh) => acc + sh.amount, 0);
+    expect(sum).toBeLessThanOrEqual(54.92);
+    expect(out.ownShare).toBeGreaterThanOrEqual(0);
+  });
+
+  it('ignores nonsense discount data rather than zeroing everyone out', () => {
+    // A discount at or above the line sum cannot be real; scaling by it would
+    // drive every share to zero and trip the caller's "positive share" guard,
+    // so the amounts are deliberately left exactly as they were.
+    const swallowed = resolveItemSplit(
+      [item('i1', 30)],
+      [{ participantId: 'p1', itemIds: ['i1'] }],
+      30,
+      30,
+    );
+    expect(swallowed.shares).toEqual([{ participantId: 'p1', amount: 30 }]);
+
+    const negative = resolveItemSplit(
+      [item('i1', 30)],
+      [{ participantId: 'p1', itemIds: ['i1'] }],
+      30,
+      -5,
+    );
+    expect(negative.shares).toEqual([{ participantId: 'p1', amount: 30 }]);
+  });
+
+  it('carries the discount through an in-place reassignment (ABA-546 path)', () => {
+    const { result } = reassignSplitItem(
+      lidl,
+      [{ participantId: 'edik', itemIds: ['chicken-legs'] }],
+      'chicken-halves',
+      ['edik'],
+      54.92,
+      19.96,
+    );
+    expect(result.shares).toEqual([{ participantId: 'edik', amount: 21.44 }]);
+  });
+});
+
 describe('resolveEqualSplit', () => {
   it('divides the bill among the participants and the payer', () => {
     const out = resolveEqualSplit(['p1', 'p2', 'p3'], 100);

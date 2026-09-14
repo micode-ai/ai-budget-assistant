@@ -55,6 +55,7 @@ export function resolveItemSplit(
   items: SplitItem[],
   assignments: ItemAssignment[],
   billTotal: number,
+  discountAmount = 0,
 ): SplitResult {
   const claimantCountByItem = new Map<string, number>();
   for (const assignment of assignments) {
@@ -87,10 +88,37 @@ export function resolveItemSplit(
   // `assignments` — a participant can legally appear in more than one
   // assignment entry, and re-walking would emit one row per occurrence,
   // each carrying the participant's already-summed (full) total.
+  // A receipt-wide discount (Lidl Plus, Biedronka coupons...) is money off the
+  // basket AFTER the lines were priced, so the stored line prices are GROSS and
+  // sum to more than what was actually paid. Charging a participant the gross
+  // price of their lines makes them pay the undiscounted price while the payer
+  // -- whose own share is only ever the remainder (`ownShare`) -- silently
+  // absorbs the whole discount. Scale every claim by the same ratio the basket
+  // was discounted by, so each person pays their proportional share of what was
+  // really paid. Mirrors buildCategorySplits' proportional discount spreading
+  // (ABA-440).
+  //
+  // The factor is deliberately (lines - discount) / lines and NOT
+  // billTotal / lines: a returnable-packaging DEPOSIT (kaucja) is also part of
+  // billTotal but is not a line item, and ABA-440 established that a deposit is
+  // never spread across lines -- it stays with the payer. Dividing by the paid
+  // total would quietly charge participants a slice of it.
+  //
+  // Only a discount strictly between zero and the line sum scales anything;
+  // anything else (no discount, no lines, or data where the discount swallows
+  // the whole basket) leaves the amounts exactly as they were, so this can
+  // never introduce a new failure mode on odd data.
+  const linesSumCents = [...priceCentsById.values()].reduce((sum, c) => sum + c, 0);
+  const discountCents = Math.round(discountAmount * 100);
+  const discountFactor =
+    discountCents > 0 && linesSumCents > 0 && discountCents < linesSumCents
+      ? (linesSumCents - discountCents) / linesSumCents
+      : 1;
+
   const shares: ParticipantShare[] = [];
   let participantCentsSum = 0;
   for (const [participantId, cents] of participantCentsTotals) {
-    const flooredCents = Math.floor(cents);
+    const flooredCents = Math.floor(cents * discountFactor);
     shares.push({ participantId, amount: flooredCents / 100 });
     participantCentsSum += flooredCents;
   }
@@ -205,6 +233,7 @@ export function reassignSplitItem(
   itemId: string,
   newClaimantIds: string[],
   billTotal: number,
+  discountAmount = 0,
 ): { assignments: ItemAssignment[]; result: SplitResult } {
   const claimantSet = new Set(newClaimantIds);
   const assignments: ItemAssignment[] = current.map((p) => {
@@ -213,7 +242,7 @@ export function reassignSplitItem(
     return { participantId: p.participantId, itemIds };
   });
 
-  return { assignments, result: resolveItemSplit(items, assignments, billTotal) };
+  return { assignments, result: resolveItemSplit(items, assignments, billTotal, discountAmount) };
 }
 
 export function allocateItemShares(lines: ClaimedLine[], totalAmount: number): LineShare[] {
