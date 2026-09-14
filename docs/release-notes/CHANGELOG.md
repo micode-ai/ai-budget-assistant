@@ -8,6 +8,50 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.29.0 - 2026-09-14
+
+**Splitting a receipt line in any proportion you like**
+
+- **You can now set who pays how much on a single line.** Tap a line, tap the
+  people who had it, and an editor appears underneath: type each person's part
+  as a percentage or as money. Previously a line could only ever be given to
+  someone in full, or divided equally between everyone on it (ABA-550).
+- **Taking a share yourself is one tap.** Your own chip sits alongside your
+  friends' — tap it and the line divides equally between you and them. Tap it
+  again to give the whole line back to them. A line does not have to be handed
+  over completely: put a friend on 60% and the remaining 40% is simply yours
+  (ABA-552).
+- **A discounted receipt no longer overcharges your friends.** Line prices on a
+  receipt are printed before a basket discount, so a friend was being asked for
+  the pre-discount price of their items while the payer quietly absorbed the
+  whole discount. On one real receipt that was 29.24 instead of 21.44 - 36% too
+  much. Everyone's share is now worked out from what was actually paid
+  (ABA-549).
+- **Fixed:** the share editor showed a line adding up to 200% before it had been
+  touched - your own row reported the whole line while the rows above it already
+  showed an equal split (ABA-551).
+- **A disputed line can be fixed in place.** When a friend flags a line that was
+  not theirs, the claimants can be corrected directly instead of cancelling the
+  whole split and starting again (ABA-546).
+
+**Shopping list**
+
+- **Save a list as a reusable template** - your weekly staples become one tap
+  instead of being retyped (ABA-548).
+- **Receipts scanned through the Telegram, WhatsApp and Slack bots** now tick
+  items off the shopping list too, which previously only worked in the app
+  (ABA-545).
+- **Renamed products are recognised.** Auto-check-off now follows a product
+  rename instead of matching only the raw text printed on the receipt
+  (ABA-547).
+
+**Site**
+
+- New directory badges in the footer of the landing, blog and help sites; the
+  badge row became two rows so they stay legible (ABA-543, ABA-544).
+
+---
+
 ## 1.28.0 - 2026-09-13
 
 **Splitting a receipt by item now actually works**
