@@ -6766,7 +6766,7 @@ The app won't let the assigned shares add up to more than what you actually paid
 
 ### Deciding who pays how much
 
-Once at least one person is on a line, an editor appears underneath showing how that line splits between them and you. Switch between **%** and **Amount** and type what each person owes. **You** are always the last row - your share is whatever is left of the line, and you never type it. Tap **Split equally** to go back to an even division.
+Once at least one person is on a line, an editor appears underneath showing how that line splits between them and you. **If you had some of it too, tap your own chip — «You» — and the line divides equally between you and them, in one tap.** Switch between **%** and **Amount** and type what each person owes. **You** are always the last row - your share is whatever is left of the line, and you never type it. Tap **Split equally** to go back to an even division.
 
 A line doesn't have to be given away completely: put your friend on 60% and the remaining 40% is simply yours. If a line's shares add up to more than the whole line, the app says so and won't let you continue.
 

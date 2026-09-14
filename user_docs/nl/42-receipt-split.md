@@ -21,7 +21,7 @@ De app laat niet toe dat de toegewezen delen samen meer worden dan je daadwerkel
 
 ### Wie betaalt hoeveel
 
-Zodra er minstens één persoon op een regel staat, verschijnt eronder een editor die laat zien hoe die regel tussen die persoon en jou wordt verdeeld. Wissel tussen **%** en **Bedrag** en vul in wie wat verschuldigd is. **Ik** is altijd de laatste rij: jouw deel is wat er van de regel overblijft, en dat vul je nooit zelf in. De knop **Gelijk verdelen** zet het terug naar een gelijke verdeling.
+Zodra er minstens één persoon op een regel staat, verschijnt eronder een editor die laat zien hoe die regel tussen die persoon en jou wordt verdeeld. **Had jij er ook van, tik dan je eigen chip «Ik» aan — de regel wordt dan met één tik gelijk tussen jullie verdeeld.** Wissel tussen **%** en **Bedrag** en vul in wie wat verschuldigd is. **Ik** is altijd de laatste rij: jouw deel is wat er van de regel overblijft, en dat vul je nooit zelf in. De knop **Gelijk verdelen** zet het terug naar een gelijke verdeling.
 
 Een regel hoeft niet helemaal weggegeven te worden: zet je vriend op 60% en de overige 40% is simpelweg van jou. Tellen de delen van een regel op tot meer dan de regel zelf, dan meldt de app dat en kun je niet verder.
 

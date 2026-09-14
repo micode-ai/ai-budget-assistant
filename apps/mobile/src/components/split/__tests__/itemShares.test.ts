@@ -2,6 +2,7 @@ import {
   BP_FULL,
   effectiveLineShares,
   payerBpFrom,
+  payerClaimsLine,
   allocatedBp,
   amountFromBp,
   bpFromAmount,
@@ -157,6 +158,45 @@ describe('itemShares', () => {
       // never overshoots the line.
       const effective = effectiveLineShares({}, 'wine', ['a', 'b', 'c']);
       expect(payerBpFrom(effective)).toBe(1);
+    });
+  });
+
+  describe('the payer taking a part of a line (ABA-552)', () => {
+    it('is not claiming anything on an untouched line', () => {
+      expect(payerClaimsLine({}, 'wine', ['a'])).toBe(false);
+    });
+
+    it('claims an equal part once seeded with the payer counted', () => {
+      const shares = seedEqualShares({}, 'wine', ['a'], true);
+      // One friend plus the payer: half each, and the half left over is theirs.
+      expect(shares.wine).toEqual({ a: 5000 });
+      expect(payerBpFrom(effectiveLineShares(shares, 'wine', ['a']))).toBe(5000);
+      expect(payerClaimsLine(shares, 'wine', ['a'])).toBe(true);
+    });
+
+    it('splits three ways when two friends are on the line with the payer', () => {
+      const shares = seedEqualShares({}, 'wine', ['a', 'b'], true);
+      expect(shares.wine).toEqual({ a: 3333, b: 3333 });
+      expect(payerBpFrom(effectiveLineShares(shares, 'wine', ['a', 'b']))).toBe(3334);
+    });
+
+    it('reads a hand-typed share that falls short as the payer taking the rest', () => {
+      // "The payer has 40%" and "the shares add up to 60%" are the same
+      // statement, so this must not need a separate flag to be true.
+      const shares = setShare({}, 'wine', 'a', 6000);
+      expect(payerClaimsLine(shares, 'wine', ['a'])).toBe(true);
+    });
+
+    it('stops claiming once the friends take the whole line again', () => {
+      const shares = setShare({}, 'wine', 'a', BP_FULL);
+      expect(payerClaimsLine(shares, 'wine', ['a'])).toBe(false);
+    });
+
+    it('leaves the line dividing equally among friends alone once cleared', () => {
+      const seeded = seedEqualShares({}, 'wine', ['a'], true);
+      const cleared = clearShares(seeded, 'wine');
+      expect(payerClaimsLine(cleared, 'wine', ['a'])).toBe(false);
+      expect(effectiveLineShares(cleared, 'wine', ['a'])).toEqual({ a: BP_FULL });
     });
   });
 });

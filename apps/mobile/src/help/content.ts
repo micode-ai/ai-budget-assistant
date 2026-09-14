@@ -4673,7 +4673,7 @@ The app won't let the assigned shares add up to more than what you actually paid
 
 ### Deciding who pays how much
 
-Once at least one person is on a line, an editor appears underneath showing how that line splits between them and you. Switch between **%** and **Amount** and type what each person owes. **You** are always the last row - your share is whatever is left of the line, and you never type it. Tap **Split equally** to go back to an even division.
+Once at least one person is on a line, an editor appears underneath showing how that line splits between them and you. **If you had some of it too, tap your own chip — «You» — and the line divides equally between you and them, in one tap.** Switch between **%** and **Amount** and type what each person owes. **You** are always the last row - your share is whatever is left of the line, and you never type it. Tap **Split equally** to go back to an even division.
 
 A line doesn't have to be given away completely: put your friend on 60% and the remaining 40% is simply yours. If a line's shares add up to more than the whole line, the app says so and won't let you continue.
 
@@ -9367,7 +9367,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ### Кто сколько платит
 
-Как только на позиции появляется хотя бы один человек, под ней открывается редактор: видно, как эта позиция делится между ним и вами. Переключайтесь между **%** и **Суммой** и вводите, кто сколько должен. **Я** - всегда последняя строка: ваша доля это остаток позиции, её вы не вводите. Кнопка **Поровну** возвращает равное деление.
+Как только на позиции появляется хотя бы один человек, под ней открывается редактор: видно, как эта позиция делится между ним и вами. **Если вы тоже её брали, нажмите свою фишку «Я» — позиция разделится между вами поровну одним касанием.** Переключайтесь между **%** и **Суммой** и вводите, кто сколько должен. **Я** - всегда последняя строка: ваша доля это остаток позиции, её вы не вводите. Кнопка **Поровну** возвращает равное деление.
 
 Позицию не обязательно отдавать целиком: поставьте другу 60%, и оставшиеся 40% просто ваши. Если доли позиции превысят её саму, приложение об этом скажет и не даст продолжить.
 
@@ -14031,7 +14031,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ### Хто скільки платить
 
-Щойно на позиції з'являється хоча б одна людина, під нею відкривається редактор: видно, як ця позиція ділиться між нею і вами. Перемикайтеся між **%** і **Сумою** та вводьте, хто скільки винен. **Я** - завжди останній рядок: ваша частка це залишок позиції, її ви не вводите. Кнопка **Порівну** повертає рівний поділ.
+Щойно на позиції з'являється хоча б одна людина, під нею відкривається редактор: видно, як ця позиція ділиться між нею і вами. **Якщо ви теж її брали, натисніть свою фішку «Я» — позиція розділиться між вами порівну одним дотиком.** Перемикайтеся між **%** і **Сумою** та вводьте, хто скільки винен. **Я** - завжди останній рядок: ваша частка це залишок позиції, її ви не вводите. Кнопка **Порівну** повертає рівний поділ.
 
 Позицію не обов'язково віддавати повністю: поставте другові 60%, і решта 40% просто ваші. Якщо частки позиції перевищать її саму, застосунок про це скаже і не дасть продовжити.
 
@@ -18680,7 +18680,7 @@ Aplikacja nie pozwoli, żeby przypisane części zsumowały się na więcej, ni�
 
 ### Kto ile płaci
 
-Gdy na pozycji jest już przynajmniej jedna osoba, pod nią pojawia się edytor pokazujący, jak ta pozycja dzieli się między nią a Tobą. Przełączaj się między **%** a **Kwotą** i wpisuj, kto ile jest winien. **Ja** to zawsze ostatni wiersz: Twoja część to reszta pozycji i nigdy jej nie wpisujesz. Przycisk **Po równo** przywraca równy podział.
+Gdy na pozycji jest już przynajmniej jedna osoba, pod nią pojawia się edytor pokazujący, jak ta pozycja dzieli się między nią a Tobą. **Jeśli Ty też ją brałeś/brałaś, dotknij swojego żetonu «Ja» — pozycja podzieli się po równo jednym dotknięciem.** Przełączaj się między **%** a **Kwotą** i wpisuj, kto ile jest winien. **Ja** to zawsze ostatni wiersz: Twoja część to reszta pozycji i nigdy jej nie wpisujesz. Przycisk **Po równo** przywraca równy podział.
 
 Pozycji nie trzeba oddawać w całości: daj znajomemu 60%, a pozostałe 40% po prostu zostaje Tobie. Jeśli udziały pozycji przekroczą ją samą, aplikacja to zgłosi i nie pozwoli przejść dalej.
 
@@ -23304,7 +23304,7 @@ Die App lässt es nicht zu, dass die zugewiesenen Anteile zusammen mehr ergeben,
 
 ### Wer zahlt wie viel
 
-Sobald mindestens eine Person auf einer Position steht, erscheint darunter ein Editor, der zeigt, wie sich diese Position zwischen ihr und dir aufteilt. Wechsle zwischen **%** und **Betrag** und trage ein, wer wie viel schuldet. **Ich** ist immer die letzte Zeile: dein Anteil ist der Rest der Position, du trägst ihn nie selbst ein. Die Schaltfläche **Gleichmäßig** stellt die gleiche Teilung wieder her.
+Sobald mindestens eine Person auf einer Position steht, erscheint darunter ein Editor, der zeigt, wie sich diese Position zwischen ihr und dir aufteilt. **Hattest du auch davon, tippe deinen eigenen Chip «Ich» an — die Position teilt sich dann mit einem Tipp gleichmäßig zwischen euch auf.** Wechsle zwischen **%** und **Betrag** und trage ein, wer wie viel schuldet. **Ich** ist immer die letzte Zeile: dein Anteil ist der Rest der Position, du trägst ihn nie selbst ein. Die Schaltfläche **Gleichmäßig** stellt die gleiche Teilung wieder her.
 
 Eine Position muss nicht ganz abgegeben werden: Setze deinen Freund auf 60%, und die restlichen 40% gehören einfach dir. Übersteigen die Anteile einer Position die Position selbst, meldet die App das und lässt dich nicht fortfahren.
 
@@ -27917,7 +27917,7 @@ La app no deja que las partes asignadas sumen más de lo que realmente pagaste �
 
 ### Quién paga cuánto
 
-En cuanto hay al menos una persona en una línea, debajo aparece un editor que muestra cómo se reparte esa línea entre ella y tú. Cambia entre **%** e **Importe** y escribe lo que debe cada uno. **Yo** es siempre la última fila: tu parte es lo que queda de la línea y nunca la escribes. El botón **A partes iguales** vuelve al reparto equitativo.
+En cuanto hay al menos una persona en una línea, debajo aparece un editor que muestra cómo se reparte esa línea entre ella y tú. **Si tú también la tomaste, toca tu propia ficha «Yo» y la línea se reparte a partes iguales entre ambos, de un solo toque.** Cambia entre **%** e **Importe** y escribe lo que debe cada uno. **Yo** es siempre la última fila: tu parte es lo que queda de la línea y nunca la escribes. El botón **A partes iguales** vuelve al reparto equitativo.
 
 No hace falta ceder la línea entera: pon a tu amigo en el 60% y el 40% restante es simplemente tuyo. Si las partes de una línea superan la línea completa, la app lo avisa y no te deja continuar.
 
@@ -32528,7 +32528,7 @@ L'application ne laisse pas les parts attribuées dépasser, une fois additionn�
 
 ### Qui paie combien
 
-Dès qu'au moins une personne est sur une ligne, un éditeur apparaît en dessous et montre comment cette ligne se répartit entre elle et vous. Basculez entre **%** et **Montant** et saisissez ce que chacun doit. **Moi** est toujours la dernière ligne : votre part est ce qui reste, et vous ne la saisissez jamais. Le bouton **À parts égales** revient au partage équitable.
+Dès qu'au moins une personne est sur une ligne, un éditeur apparaît en dessous et montre comment cette ligne se répartit entre elle et vous. **Si vous en avez pris aussi, touchez votre propre jeton « Moi » : la ligne se partage alors à parts égales entre vous, en une seule touche.** Basculez entre **%** et **Montant** et saisissez ce que chacun doit. **Moi** est toujours la dernière ligne : votre part est ce qui reste, et vous ne la saisissez jamais. Le bouton **À parts égales** revient au partage équitable.
 
 Une ligne n'a pas à être cédée entièrement : mettez votre ami à 60% et les 40% restants sont simplement à vous. Si les parts d'une ligne dépassent la ligne elle-même, l'application le signale et bloque la suite.
 
@@ -37103,7 +37103,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ### Хто колькі плаціць
 
-Як толькі на пазіцыі з'яўляецца хаця б адзін чалавек, пад ёй адкрываецца рэдактар: відаць, як гэтая пазіцыя дзеліцца паміж ім і вамі. Пераключайцеся паміж **%** і **Сумай** і ўводзьце, хто колькі вінен. **Я** - заўсёды апошні радок: ваша доля гэта рэшта пазіцыі, яе вы не ўводзіце. Кнопка **Пароўну** вяртае роўны падзел.
+Як толькі на пазіцыі з'яўляецца хаця б адзін чалавек, пад ёй адкрываецца рэдактар: відаць, як гэтая пазіцыя дзеліцца паміж ім і вамі. **Калі вы таксама яе бралі, націсніце сваю фішку «Я» — пазіцыя падзеліцца паміж вамі пароўну адным націскам.** Пераключайцеся паміж **%** і **Сумай** і ўводзьце, хто колькі вінен. **Я** - заўсёды апошні радок: ваша доля гэта рэшта пазіцыі, яе вы не ўводзіце. Кнопка **Пароўну** вяртае роўны падзел.
 
 Пазіцыю не абавязкова аддаваць цалкам: пастаўце сябру 60%, і астатнія 40% проста вашы. Калі долі пазіцыі перавысяць яе саму, праграма пра гэта скажа і не дасць працягнуць.
 
@@ -41793,7 +41793,7 @@ De app laat niet toe dat de toegewezen delen samen meer worden dan je daadwerkel
 
 ### Wie betaalt hoeveel
 
-Zodra er minstens één persoon op een regel staat, verschijnt eronder een editor die laat zien hoe die regel tussen die persoon en jou wordt verdeeld. Wissel tussen **%** en **Bedrag** en vul in wie wat verschuldigd is. **Ik** is altijd de laatste rij: jouw deel is wat er van de regel overblijft, en dat vul je nooit zelf in. De knop **Gelijk verdelen** zet het terug naar een gelijke verdeling.
+Zodra er minstens één persoon op een regel staat, verschijnt eronder een editor die laat zien hoe die regel tussen die persoon en jou wordt verdeeld. **Had jij er ook van, tik dan je eigen chip «Ik» aan — de regel wordt dan met één tik gelijk tussen jullie verdeeld.** Wissel tussen **%** en **Bedrag** en vul in wie wat verschuldigd is. **Ik** is altijd de laatste rij: jouw deel is wat er van de regel overblijft, en dat vul je nooit zelf in. De knop **Gelijk verdelen** zet het terug naar een gelijke verdeling.
 
 Een regel hoeft niet helemaal weggegeven te worden: zet je vriend op 60% en de overige 40% is simpelweg van jou. Tellen de delen van een regel op tot meer dan de regel zelf, dan meldt de app dat en kun je niet verder.
 

@@ -21,7 +21,7 @@ L'application ne laisse pas les parts attribuées dépasser, une fois additionn�
 
 ### Qui paie combien
 
-Dès qu'au moins une personne est sur une ligne, un éditeur apparaît en dessous et montre comment cette ligne se répartit entre elle et vous. Basculez entre **%** et **Montant** et saisissez ce que chacun doit. **Moi** est toujours la dernière ligne : votre part est ce qui reste, et vous ne la saisissez jamais. Le bouton **À parts égales** revient au partage équitable.
+Dès qu'au moins une personne est sur une ligne, un éditeur apparaît en dessous et montre comment cette ligne se répartit entre elle et vous. **Si vous en avez pris aussi, touchez votre propre jeton « Moi » : la ligne se partage alors à parts égales entre vous, en une seule touche.** Basculez entre **%** et **Montant** et saisissez ce que chacun doit. **Moi** est toujours la dernière ligne : votre part est ce qui reste, et vous ne la saisissez jamais. Le bouton **À parts égales** revient au partage équitable.
 
 Une ligne n'a pas à être cédée entièrement : mettez votre ami à 60% et les 40% restants sont simplement à vous. Si les parts d'une ligne dépassent la ligne elle-même, l'application le signale et bloque la suite.
 

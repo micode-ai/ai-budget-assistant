@@ -19,6 +19,7 @@ import {
 import {
   clearShares,
   overAllocatedItemIds,
+  payerClaimsLine,
   removeParticipantFromShares,
   removeShare,
   seedEqualShares,
@@ -143,6 +144,21 @@ export function AssignmentEditor({
         : seedEqualShares(prev, selectedItemId, selectedClaimants.map((c) => c.id));
       return setShare(base, selectedItemId, participantId, bp);
     });
+  }
+
+  // Tapping the payer's own chip takes, or gives back, an equal part of the
+  // selected line. Taking a part writes the line's shares out explicitly with
+  // the payer counted in the division; giving it back clears them, which returns
+  // the line to dividing equally among the friends alone — the original
+  // behaviour. Nothing about the payer is stored: their part is the remainder.
+  function handleTogglePayerShare() {
+    if (!canEdit || !selectedItemId || selectedClaimants.length === 0) return;
+    const ids = selectedClaimants.map((c) => c.id);
+    setItemShares((prev) =>
+      payerClaimsLine(prev, selectedItemId, ids)
+        ? clearShares(prev, selectedItemId)
+        : seedEqualShares(prev, selectedItemId, ids, true),
+    );
   }
 
   function handleResetShares() {
@@ -325,6 +341,19 @@ export function AssignmentEditor({
           participants={participants}
           awaitingAssignment={mode === 'items' && !!selectedItemId}
           claimedIds={selectedItemId ? assigneesForItem(assignments, selectedItemId) : undefined}
+          payerChip={
+            mode === 'items' && selectedItemId && selectedClaimants.length > 0
+              ? {
+                  label: t('receiptSplit.shareYou'),
+                  claimed: payerClaimsLine(
+                    itemShares,
+                    selectedItemId,
+                    selectedClaimants.map((c) => c.id),
+                  ),
+                  onPress: handleTogglePayerShare,
+                }
+              : undefined
+          }
           assignmentSummaries={assignmentSummaries}
           currencyCode={currencyCode}
           onPress={handleSelectParticipant}

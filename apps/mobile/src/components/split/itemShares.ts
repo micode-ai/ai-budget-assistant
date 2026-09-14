@@ -140,9 +140,14 @@ export function seedEqualShares(
   shares: ItemShares,
   itemId: string,
   participantIds: string[],
+  includePayer = false,
 ): ItemShares {
   if (participantIds.length === 0) return shares;
-  const each = equalBp(participantIds.length);
+  // Counting the payer is the whole of "I had some of this too": each friend
+  // simply gets a smaller equal slice, and what is left over is the payer's by
+  // the same remainder rule the server already uses. No payer row is stored,
+  // and nothing about the wire format changes.
+  const each = equalBp(participantIds.length + (includePayer ? 1 : 0));
   const line: Record<string, number> = {};
   for (const id of participantIds) line[id] = each;
   return { ...shares, [itemId]: line };
@@ -159,6 +164,20 @@ export function bpFromAmount(amount: number, linePrice: number): number {
 export function amountFromBp(bp: number, linePrice: number): number {
   if (!Number.isFinite(linePrice)) return 0;
   return Math.round((clampBp(bp) / BP_FULL) * linePrice * 100) / 100;
+}
+
+/** Whether the payer is currently taking a part of this line: true exactly when
+ * the line has been split by hand and the friends on it do not take all of it.
+ * Derived rather than stored — "the payer has 40% of this line" and "the shares
+ * add up to 60%" are the same statement, so a second flag could only ever
+ * disagree with the numbers. */
+export function payerClaimsLine(
+  shares: ItemShares,
+  itemId: string,
+  claimantIds: string[],
+): boolean {
+  if (!hasExplicitShares(shares, itemId)) return false;
+  return payerBpFrom(effectiveLineShares(shares, itemId, claimantIds)) > 0;
 }
 
 /** The `itemShareBp` map to send for one participant: only the lines they were

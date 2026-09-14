@@ -21,7 +21,7 @@ Die App lässt es nicht zu, dass die zugewiesenen Anteile zusammen mehr ergeben,
 
 ### Wer zahlt wie viel
 
-Sobald mindestens eine Person auf einer Position steht, erscheint darunter ein Editor, der zeigt, wie sich diese Position zwischen ihr und dir aufteilt. Wechsle zwischen **%** und **Betrag** und trage ein, wer wie viel schuldet. **Ich** ist immer die letzte Zeile: dein Anteil ist der Rest der Position, du trägst ihn nie selbst ein. Die Schaltfläche **Gleichmäßig** stellt die gleiche Teilung wieder her.
+Sobald mindestens eine Person auf einer Position steht, erscheint darunter ein Editor, der zeigt, wie sich diese Position zwischen ihr und dir aufteilt. **Hattest du auch davon, tippe deinen eigenen Chip «Ich» an — die Position teilt sich dann mit einem Tipp gleichmäßig zwischen euch auf.** Wechsle zwischen **%** und **Betrag** und trage ein, wer wie viel schuldet. **Ich** ist immer die letzte Zeile: dein Anteil ist der Rest der Position, du trägst ihn nie selbst ein. Die Schaltfläche **Gleichmäßig** stellt die gleiche Teilung wieder her.
 
 Eine Position muss nicht ganz abgegeben werden: Setze deinen Freund auf 60%, und die restlichen 40% gehören einfach dir. Übersteigen die Anteile einer Position die Position selbst, meldet die App das und lässt dich nicht fortfahren.
 

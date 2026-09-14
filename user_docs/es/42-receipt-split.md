@@ -21,7 +21,7 @@ La app no deja que las partes asignadas sumen más de lo que realmente pagaste �
 
 ### Quién paga cuánto
 
-En cuanto hay al menos una persona en una línea, debajo aparece un editor que muestra cómo se reparte esa línea entre ella y tú. Cambia entre **%** e **Importe** y escribe lo que debe cada uno. **Yo** es siempre la última fila: tu parte es lo que queda de la línea y nunca la escribes. El botón **A partes iguales** vuelve al reparto equitativo.
+En cuanto hay al menos una persona en una línea, debajo aparece un editor que muestra cómo se reparte esa línea entre ella y tú. **Si tú también la tomaste, toca tu propia ficha «Yo» y la línea se reparte a partes iguales entre ambos, de un solo toque.** Cambia entre **%** e **Importe** y escribe lo que debe cada uno. **Yo** es siempre la última fila: tu parte es lo que queda de la línea y nunca la escribes. El botón **A partes iguales** vuelve al reparto equitativo.
 
 No hace falta ceder la línea entera: pon a tu amigo en el 60% y el 40% restante es simplemente tuyo. Si las partes de una línea superan la línea completa, la app lo avisa y no te deja continuar.
 

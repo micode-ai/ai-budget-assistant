@@ -21,7 +21,7 @@ Aplikacja nie pozwoli, żeby przypisane części zsumowały się na więcej, ni�
 
 ### Kto ile płaci
 
-Gdy na pozycji jest już przynajmniej jedna osoba, pod nią pojawia się edytor pokazujący, jak ta pozycja dzieli się między nią a Tobą. Przełączaj się między **%** a **Kwotą** i wpisuj, kto ile jest winien. **Ja** to zawsze ostatni wiersz: Twoja część to reszta pozycji i nigdy jej nie wpisujesz. Przycisk **Po równo** przywraca równy podział.
+Gdy na pozycji jest już przynajmniej jedna osoba, pod nią pojawia się edytor pokazujący, jak ta pozycja dzieli się między nią a Tobą. **Jeśli Ty też ją brałeś/brałaś, dotknij swojego żetonu «Ja» — pozycja podzieli się po równo jednym dotknięciem.** Przełączaj się między **%** a **Kwotą** i wpisuj, kto ile jest winien. **Ja** to zawsze ostatni wiersz: Twoja część to reszta pozycji i nigdy jej nie wpisujesz. Przycisk **Po równo** przywraca równy podział.
 
 Pozycji nie trzeba oddawać w całości: daj znajomemu 60%, a pozostałe 40% po prostu zostaje Tobie. Jeśli udziały pozycji przekroczą ją samą, aplikacja to zgłosi i nie pozwoli przejść dalej.
 

@@ -35,6 +35,11 @@ interface Props {
    * just added someone or removed them. Empty/undefined when no line is
    * selected. */
   claimedIds?: string[];
+  /** The payer's own chip (ABA-552). Rendered first, alongside the friends, so
+   * taking a share of a line is the same single tap as giving someone else one
+   * — rather than typing a number into the share editor. Omitted in equal mode
+   * and whenever no line is selected, where the payer has nothing to claim. */
+  payerChip?: { label: string; claimed: boolean; onPress: () => void };
   /** Tapping a chip adds this person to the currently-selected line, or takes
    * them off it if they were already on (no-op when nothing is selected — the
    * screen decides that). */
@@ -79,6 +84,7 @@ export function ParticipantChips({
   onRemove,
   onAddPress,
   canEdit,
+  payerChip,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -86,6 +92,26 @@ export function ParticipantChips({
 
   return (
     <View style={styles.row}>
+      {payerChip && (
+        <TouchableOpacity
+          style={[
+            styles.chip,
+            awaitingAssignment && styles.chipAwaiting,
+            payerChip.claimed && styles.chipClaimed,
+          ]}
+          onPress={canEdit ? payerChip.onPress : undefined}
+          activeOpacity={canEdit ? 0.7 : 1}
+        >
+          {payerChip.claimed && (
+            <Ionicons name="checkmark-circle" size={14} color={theme.colors.primary} />
+          )}
+          <View style={styles.chipBody}>
+            <Text style={styles.chipText} numberOfLines={1}>
+              {payerChip.label}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )}
       {participants.map((p) => {
         const summary = assignmentSummaries?.[p.id];
         const hasNoItems = !!summary && summary.count === 0;
