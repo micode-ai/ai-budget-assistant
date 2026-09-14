@@ -53,12 +53,12 @@ YEAR = "2026"
 STARTUP_FAME_BADGE = (
     '<a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="noopener">'
     '<img class="b-sf" src="/assets/startup-fame-badge.webp" '
-    'alt="AI Budget - Featured on Startup Fame" width="92" height="29" loading="lazy"></a>'
+    'alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a>'
 )
 PEERPUSH_BADGE = (
     '<a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" '
-    'alt="AI Budget Assistant on PeerPush" width="103" height="29" loading="lazy"></a>'
+    'alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a>'
 )
 # Best AI Brands "Featured On" badge -- their own "Copy Light Badge" markup, verbatim apart
 # from rel="noopener" (the href is what the directory verifies, so do not tag it). Light
@@ -86,7 +86,7 @@ BEST_AI_BRANDS_BADGE = (
 FIRSTO_BADGE = (
     '<a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" '
-    'alt="AI Budget Assistant | Firsto Launch" width="75" height="29" loading="lazy"></a>'
+    'alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a>'
 )
 # Fazier "Featured on Fazier" badge. Their API renders whichever badge_type you ask for, and
 # they offer two for one launch URL -- badge_type=launched (103x44) and =featured (182x43); we
@@ -101,7 +101,7 @@ FAZIER_BADGE = (
     '<a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="noopener">'
     '<img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg'
     '?badge_type=featured&amp;theme=light" '
-    'alt="AI Budget Assistant on Fazier" width="123" height="29" loading="lazy"></a>'
+    'alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a>'
 )
 # Launchstag "Featured on Launchstag" badge. The href is their LISTING url, taken from the
 # snippet in their own dashboard -- their listing path scheme is /p/tool-<epoch-ms>, which is
@@ -116,7 +116,7 @@ FAZIER_BADGE = (
 LAUNCHSTAG_BADGE = (
     '<a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="noopener">'
     '<img class="b-ls" src="https://launchstag.com/badge-light.svg" '
-    'alt="AI Budget Assistant - Featured on Launchstag" width="93" height="29" '
+    'alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" '
     'loading="lazy"></a>'
 )
 # Uneed "Launching Soon" badge. Temporary by nature -- it stops being true once the
@@ -132,7 +132,7 @@ LAUNCHSTAG_BADGE = (
 UNEED_BADGE = (
     '<a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="noopener">'
     '<img class="b-un" src="https://www.uneed.best/EMBED3B.png" '
-    'alt="AI Budget Assistant - Launching Soon on Uneed" width="111" height="29" '
+    'alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" '
     'loading="lazy"></a>'
 )
 
@@ -154,7 +154,26 @@ UNEED_BADGE = (
 TOOLS_CAFE_BADGE = (
     '<a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="noopener">'
     '<img class="b-tc" src="https://tools.cafe/b/light.svg" '
-    'alt="AI Budget Assistant - Featured on tools.cafe" width="93" height="29" '
+    'alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" '
+    'loading="lazy"></a>'
+)
+
+# Sell With Boost "Listed on SWB" badge. Their snippet's href is their BARE DOMAIN, not a listing
+# URL -- unusually, that is all they give: their listings are name-slugged (/scrappier answers 200,
+# an invented slug 404s) but we are in none of their 1590 sitemap URLs and no slug of ours resolves,
+# so there is no per-listing URL to point at yet. Kept verbatim because the href is what a directory
+# verifies; unlike the tools.cafe href it is at least a live 200 page rather than a 404.
+# rel is OUR "noopener", not their "noopener noreferrer": every other badge in this row uses it, and
+# noreferrer would hide from SWB that the click came from ai-budget.pl -- which is the one signal
+# that might get us listed. alt and sizing follow this row's conventions over their inline style.
+# 160x40 native. NOTE it carries NO viewBox, so the usual expectation is that it will not scale and
+# will clip when CSS-sized -- MEASURED IN CHROME AND THAT IS WRONG: an <img> applies the default
+# sizing algorithm and scales it cleanly at 34px (and at 29px). Do not "fix" this by self-hosting a
+# viewBox-patched copy; nothing is broken.
+SELL_WITH_BOOST_BADGE = (
+    '<a href="https://sellwithboost.com" target="_blank" rel="noopener">'
+    '<img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" '
+    'alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" '
     'loading="lazy"></a>'
 )
 SAMEAS = [
@@ -960,7 +979,7 @@ footer .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:ce
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:#5b5b66;font-weight:600}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid #ececf0;padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:29px;width:92px}.f-badge .b-pp{height:29px;width:103px}.f-badge .b-fo{height:29px;width:75px}.f-badge .b-fz{height:29px;width:123px}.f-badge .b-ls{height:29px;width:93px}.f-badge .b-un{height:29px;width:111px}.f-badge .b-tc{height:29px;width:93px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}
 .langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:#5b5b66;font-weight:600;font-size:15px}
 .langmenu>summary::-webkit-details-marker{display:none}
 .langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid #ececf0;border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
@@ -1129,7 +1148,8 @@ def footer_html(lang):
             f'<a href="{cookies_url(lang)}">{cl}</a>'
             f'<a href="{app_url("footer", lang)}">{t["nav_login"]}</a><a href="{PLAY}">Google Play</a>'
             f'<a href="/llms.txt">llms.txt</a></div>'
-            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}{TOOLS_CAFE_BADGE}</div>'
+            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}</div>'
+            f'<div class="f-badge">{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}{TOOLS_CAFE_BADGE}{SELL_WITH_BOOST_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener">'
             f'<img src="{BASE}/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; '
