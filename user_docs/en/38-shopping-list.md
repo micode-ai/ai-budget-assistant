@@ -22,6 +22,19 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
 
+## Save a List as a Template ("My Weekly Staples")
+
+If you buy roughly the same groceries every week, save your usual list once and re-add all of it in one tap next time — no need to retype "milk, eggs, bread, coffee…" over and over.
+
+Tap the **bookmark icon** next to the list name pill to open **Templates**:
+
+- **Save current list as template** — saves every item currently on your active list (checked or not) under a name you choose. Any account member can save a template.
+- Tap a saved template to **apply** it — its items are added to your active list right away. Anything already on the list (matched by name, not exact spelling) is skipped rather than duplicated, and a confirmation tells you how many items were added.
+- Tap the **pencil icon** on a template to rename it. Any account member can rename a template.
+- Tap the **trash icon** to delete a template. Editors and the account owner only.
+
+Templates hold item names only — no prices or quantities — and there's no separate management screen: everything happens in the same **Templates** sheet. A template doesn't need purchase history to work, so it's useful from the very first list you build.
+
 ## Adding Items
 
 Tap **Add item** to open the add sheet. You can add an item three ways:

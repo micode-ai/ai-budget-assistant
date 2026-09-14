@@ -22,6 +22,19 @@ Toca la píldora con el nombre de la lista en la parte superior de la pantalla p
 
 Los observadores pueden ver, cambiar entre listas, añadir artículos y marcarlos como comprados en cualquier lista, pero no pueden archivar ni eliminar una.
 
+## Guardar una lista como plantilla («Mis productos habituales»)
+
+Si compras más o menos los mismos productos cada semana, guarda tu lista habitual una vez y vuelve a añadirla entera de un toque la próxima vez, sin tener que volver a escribir «leche, huevos, pan, café…».
+
+Toca el **icono de marcador** junto a la píldora con el nombre de la lista para abrir **Plantillas**:
+
+- **Guardar lista actual como plantilla** — guarda todos los artículos que hay ahora en tu lista activa (marcados o no) con el nombre que elijas. Cualquier miembro de la cuenta puede guardar una plantilla.
+- Toca una plantilla guardada para **aplicarla**: sus artículos se añaden de inmediato a tu lista activa. Lo que ya esté en la lista (comparado por nombre, no por ortografía exacta) se omite en lugar de duplicarse, y una confirmación te indica cuántos artículos se añadieron.
+- Toca el **icono de lápiz** de una plantilla para renombrarla. Cualquier miembro de la cuenta puede renombrar una plantilla.
+- Toca el **icono de papelera** para eliminar una plantilla. Solo editores y el propietario de la cuenta.
+
+Las plantillas solo guardan nombres de artículos —sin precios ni cantidades— y no hay una pantalla de gestión aparte: todo ocurre en el mismo panel de **Plantillas**. Una plantilla no necesita historial de compras para funcionar, así que es útil desde tu primerísima lista.
+
 ## Añadir artículos
 
 Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un artículo de tres formas:

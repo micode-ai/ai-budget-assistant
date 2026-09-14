@@ -22,6 +22,19 @@ Touchez la pastille du nom de liste en haut de l'écran pour ouvrir **Gérer les
 
 Les observateurs peuvent consulter les listes, en changer, ajouter des articles et les cocher sur n'importe quelle liste, mais ne peuvent ni archiver ni supprimer une liste.
 
+## Enregistrer une liste comme modèle (« Mes produits de base hebdomadaires »)
+
+Si vous achetez à peu près les mêmes courses chaque semaine, enregistrez votre liste habituelle une seule fois et rajoutez-la en entier en un geste la prochaine fois — plus besoin de retaper « lait, œufs, pain, café… ».
+
+Appuyez sur l'**icône de marque-page** à côté de la pastille du nom de liste pour ouvrir **Modèles** :
+
+- **Enregistrer la liste actuelle comme modèle** — enregistre tous les articles actuellement sur votre liste active (cochés ou non) sous le nom de votre choix. N'importe quel membre du compte peut enregistrer un modèle.
+- Appuyez sur un modèle enregistré pour l'**appliquer** — ses articles sont ajoutés immédiatement à votre liste active. Ce qui figure déjà sur la liste (comparé par nom, pas par orthographe exacte) est ignoré plutôt que dupliqué, et une confirmation indique combien d'articles ont été ajoutés.
+- Appuyez sur l'**icône crayon** d'un modèle pour le renommer. N'importe quel membre du compte peut renommer un modèle.
+- Appuyez sur l'**icône corbeille** pour supprimer un modèle. Réservé aux éditeurs et au propriétaire du compte.
+
+Les modèles ne contiennent que des noms d'articles — ni prix ni quantités — et il n'y a pas d'écran de gestion séparé : tout se passe dans le même panneau **Modèles**. Un modèle n'a pas besoin d'historique d'achats pour fonctionner, il est donc utile dès votre toute première liste.
+
 ## Ajouter des articles
 
 Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajouter un article de trois façons :

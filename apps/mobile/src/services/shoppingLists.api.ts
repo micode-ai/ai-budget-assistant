@@ -10,6 +10,10 @@ import type {
   BasketCompareItem,
   RestockSuggestion,
   DealSuggestion,
+  ShoppingListTemplate,
+  CreateShoppingListTemplateDto,
+  UpdateShoppingListTemplateDto,
+  ApplyShoppingListTemplateResponse,
 } from '@budget/shared-types';
 
 export const shoppingListsApi = {
@@ -72,5 +76,36 @@ export const shoppingListsApi = {
 
   getDeals() {
     return httpClient.request<DealSuggestion[]>('/shopping-list/deals');
+  },
+
+  // --- "my weekly staples" templates ---
+
+  getShoppingListTemplates() {
+    return httpClient.request<ShoppingListTemplate[]>('/shopping-list/templates');
+  },
+
+  createShoppingListTemplate(dto: CreateShoppingListTemplateDto) {
+    return httpClient.request<ShoppingListTemplate>('/shopping-list/templates', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  renameShoppingListTemplate(id: string, dto: UpdateShoppingListTemplateDto) {
+    return httpClient.request<ShoppingListTemplate>(`/shopping-list/templates/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    });
+  },
+
+  deleteShoppingListTemplate(id: string) {
+    return httpClient.request<void>(`/shopping-list/templates/${id}`, { method: 'DELETE' });
+  },
+
+  applyShoppingListTemplate(id: string, listId: string) {
+    return httpClient.request<ApplyShoppingListTemplateResponse>(
+      `/shopping-list/templates/${id}/apply`,
+      { method: 'POST', body: JSON.stringify({ listId }) },
+    );
   },
 };

@@ -22,6 +22,19 @@ Tippe oben auf dem Bildschirm auf die Pille mit dem Listennamen, um **Listen ver
 
 Betrachter können jede Liste ansehen, zwischen ihnen wechseln, Artikel hinzufügen und abhaken, aber keine Liste archivieren oder löschen.
 
+## Eine Liste als Vorlage speichern („Meine wöchentlichen Grundnahrungsmittel")
+
+Wenn du jede Woche ungefähr die gleichen Lebensmittel kaufst, speichere deine übliche Liste einmal und füge sie beim nächsten Mal mit einem Tipp wieder hinzu — kein erneutes Eintippen von „Milch, Eier, Brot, Kaffee …" mehr nötig.
+
+Tippe auf das **Lesezeichen-Symbol** neben der Listenname-Pille, um **Vorlagen** zu öffnen:
+
+- **Aktuelle Liste als Vorlage speichern** — speichert alle Artikel, die sich gerade auf deiner aktiven Liste befinden (egal ob abgehakt oder nicht), unter einem von dir gewählten Namen. Jedes Kontomitglied kann eine Vorlage speichern.
+- Tippe auf eine gespeicherte Vorlage, um sie **anzuwenden** — ihre Artikel werden sofort zu deiner aktiven Liste hinzugefügt. Bereits vorhandene Artikel (nach Name abgeglichen, nicht nach exakter Schreibweise) werden übersprungen statt dupliziert, und eine Bestätigung zeigt an, wie viele Artikel hinzugefügt wurden.
+- Tippe auf das **Stift-Symbol** einer Vorlage, um sie umzubenennen. Jedes Kontomitglied kann eine Vorlage umbenennen.
+- Tippe auf das **Papierkorb-Symbol**, um eine Vorlage zu löschen. Nur Bearbeiter und der Kontoinhaber.
+
+Vorlagen enthalten nur Artikelnamen — keine Preise oder Mengen — und es gibt keinen separaten Verwaltungsbildschirm: Alles passiert im selben **Vorlagen**-Fenster. Eine Vorlage braucht keinen Kaufverlauf, um zu funktionieren — sie ist also schon ab deiner ersten Liste nützlich.
+
 ## Artikel hinzufügen
 
 Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kannst einen Artikel auf drei Arten hinzufügen:

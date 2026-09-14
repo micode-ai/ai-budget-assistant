@@ -6,13 +6,16 @@ import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useShoppingListStore } from '@/stores/shoppingListStore';
+import { useShoppingListTemplateStore } from '@/stores/shoppingListTemplateStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { AddItemModal } from '@/components/shopping-list/AddItemModal';
 import { ListSwitcherModal } from '@/components/shopping-list/ListSwitcherModal';
+import { TemplatesModal } from '@/components/shopping-list/TemplatesModal';
 import { ListNameModal, type NameModalState } from '@/components/shopping-list/ListNameModal';
 import type {
   ShoppingList,
   ShoppingListItem,
+  ShoppingListTemplate,
   ProductListItem,
   RestockSuggestion,
   DealSuggestion,
@@ -47,6 +50,14 @@ export default function ShoppingListScreen() {
   const renameList = useShoppingListStore((s) => s.renameList);
   const archiveList = useShoppingListStore((s) => s.archiveList);
   const deleteList = useShoppingListStore((s) => s.deleteList);
+
+  const templates = useShoppingListTemplateStore((s) => s.templates);
+  const templatesLoading = useShoppingListTemplateStore((s) => s.isLoading);
+  const loadTemplates = useShoppingListTemplateStore((s) => s.loadTemplates);
+  const saveAsTemplate = useShoppingListTemplateStore((s) => s.saveAsTemplate);
+  const renameTemplateAction = useShoppingListTemplateStore((s) => s.renameTemplate);
+  const deleteTemplateAction = useShoppingListTemplateStore((s) => s.deleteTemplate);
+  const applyTemplateAction = useShoppingListTemplateStore((s) => s.applyTemplate);
 
   useEffect(() => {
     hydrate();
@@ -121,8 +132,18 @@ export default function ShoppingListScreen() {
     }
     if (nameModal.mode === 'create') {
       createList(trimmed);
-    } else if (nameModal.id) {
+    } else if (nameModal.mode === 'rename' && nameModal.id) {
       renameList(nameModal.id, trimmed);
+    } else if (nameModal.mode === 'saveTemplate') {
+      const activeList = lists.find((l) => l.id === activeListId);
+      if (activeList && activeList.items.length > 0) {
+        saveAsTemplate(
+          trimmed,
+          activeList.items.map((it) => ({ rawLabel: it.rawLabel, canonicalName: it.canonicalName })),
+        );
+      }
+    } else if (nameModal.mode === 'renameTemplate' && nameModal.id) {
+      renameTemplateAction(nameModal.id, trimmed);
     }
     closeNameModal();
   };
@@ -142,6 +163,51 @@ export default function ShoppingListScreen() {
     showAlert(t('shoppingList.deleteList'), t('shoppingList.deleteListConfirm'), [
       { text: t('common.cancel'), style: 'cancel' },
       { text: t('common.delete'), style: 'destructive', onPress: () => deleteList(list.id) },
+    ]);
+  };
+
+  // ─── "My weekly staples" templates bottom sheet ────────────────────────────
+  // Save/rename/apply: all members. Delete: canEdit only — mirrors the list
+  // switcher's own archive/delete split above.
+  const [templatesVisible, setTemplatesVisible] = useState(false);
+  const activeList = lists.find((l) => l.id === activeListId);
+  const canSaveCurrentAsTemplate = (activeList?.items.length ?? 0) > 0;
+
+  const openTemplates = () => {
+    setTemplatesVisible(true);
+    loadTemplates();
+  };
+  const closeTemplates = () => setTemplatesVisible(false);
+
+  const openSaveCurrentAsTemplate = () => setNameModal({ mode: 'saveTemplate', value: '' });
+  const openRenameTemplate = (template: ShoppingListTemplate) =>
+    setNameModal({ mode: 'renameTemplate', id: template.id, value: template.name });
+
+  const handleApplyTemplate = async (template: ShoppingListTemplate) => {
+    if (!activeListId) return;
+    closeTemplates();
+    const result = await applyTemplateAction(template.id, activeListId);
+    if (!result) return;
+    // The apply happened server-side (not through the offline-first item
+    // queue), so pull the active list's new state before showing it.
+    await hydrate();
+    if (result.addedCount === 0) {
+      showAlert(t('shoppingList.templateApplied'), t('shoppingList.templateAllAlreadyOnList'));
+    } else if (result.skippedCount > 0) {
+      showAlert(
+        t('shoppingList.templateApplied'),
+        t('shoppingList.templateAppliedSomeSkipped', {
+          added: result.addedCount,
+          skipped: result.skippedCount,
+        }),
+      );
+    }
+  };
+
+  const handleDeleteTemplateRow = (template: ShoppingListTemplate) => {
+    showAlert(t('shoppingList.deleteTemplate'), t('shoppingList.deleteTemplateConfirm'), [
+      { text: t('common.cancel'), style: 'cancel' },
+      { text: t('common.delete'), style: 'destructive', onPress: () => deleteTemplateAction(template.id) },
     ]);
   };
 
@@ -212,17 +278,28 @@ export default function ShoppingListScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={styles.listHeaderRow}>
-          <TouchableOpacity
-            style={styles.switcherPill}
-            onPress={openSwitcher}
-            hitSlop={8}
-            accessibilityLabel={t('shoppingList.switchList')}
-          >
-            <Text style={styles.switcherPillText} numberOfLines={1}>
-              {activeListName}
-            </Text>
-            <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
-          </TouchableOpacity>
+          <View style={styles.listHeaderLeft}>
+            <TouchableOpacity
+              style={styles.switcherPill}
+              onPress={openSwitcher}
+              hitSlop={8}
+              accessibilityLabel={t('shoppingList.switchList')}
+            >
+              <Text style={styles.switcherPillText} numberOfLines={1}>
+                {activeListName}
+              </Text>
+              <Ionicons name="chevron-down" size={16} color={theme.colors.textSecondary} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.templatesIconBtn}
+              onPress={openTemplates}
+              hitSlop={8}
+              accessibilityLabel={t('shoppingList.templates')}
+            >
+              <Ionicons name="bookmark-outline" size={18} color={theme.colors.primary} />
+            </TouchableOpacity>
+          </View>
 
           {checkedCount > 0 && (
             <TouchableOpacity style={styles.clearCheckedBtn} onPress={() => clearChecked()} hitSlop={8}>
@@ -383,6 +460,20 @@ export default function ShoppingListScreen() {
         onClose={closeNameModal}
         bottomInset={insets.bottom}
       />
+
+      <TemplatesModal
+        visible={templatesVisible}
+        onClose={closeTemplates}
+        templates={templates}
+        isLoading={templatesLoading}
+        canEdit={canEdit}
+        canSaveCurrent={canSaveCurrentAsTemplate}
+        onApplyTemplate={handleApplyTemplate}
+        onRenameTemplate={openRenameTemplate}
+        onDeleteTemplate={handleDeleteTemplateRow}
+        onSaveCurrentAsTemplate={openSaveCurrentAsTemplate}
+        bottomInset={insets.bottom}
+      />
     </SafeAreaView>
   );
 }
@@ -403,6 +494,29 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'space-between' as const,
     gap: theme.spacing[2],
     marginBottom: theme.spacing[3],
+  },
+  // Groups the switcher + templates buttons so `justifyContent: space-between`
+  // above only ever splits the row into two slots (this group vs. the
+  // conditional clear-checked button) — a bare third sibling would let
+  // space-between spread it into the middle of the row instead of hugging
+  // the switcher pill.
+  listHeaderLeft: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    flex: 1,
+    flexShrink: 1,
+  },
+  templatesIconBtn: {
+    width: 36,
+    height: 36,
+    flexShrink: 0,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    borderRadius: theme.borderRadius.full,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    backgroundColor: theme.colors.surface,
   },
   clearCheckedBtn: {
     flexDirection: 'row' as const,

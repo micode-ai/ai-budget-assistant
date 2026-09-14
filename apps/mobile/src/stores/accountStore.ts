@@ -30,7 +30,8 @@ import { useMerchantRulesStore } from './merchantRulesStore';
 import { useTagStore } from './tagStore';
 import { useProjectStore } from './projectStore';
 import { useChatStore } from './chatStore';
-// Circular by design, like the four stores above it: nothing here is
+import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
+// Circular by design, like the stores above it: nothing here is
 // dereferenced at module scope, only inside `clearAccountScopedCaches`.
 import { useCategoryStore } from './categoryStore';
 
@@ -150,6 +151,7 @@ function clearAccountScopedCaches() {
   useTagStore.getState().reset();
   useProjectStore.getState().reset();
   useChatStore.getState().reset();
+  useShoppingListTemplateStore.getState().reset();
 }
 
 /**

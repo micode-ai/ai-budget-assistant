@@ -66,3 +66,47 @@ export interface DealSuggestion {
   dropPct: number;    // e.g. 18 = 18% below average
   currency: string;
 }
+
+// --- "my weekly staples" saved templates ---
+
+export interface ShoppingListTemplateItem {
+  id: string;
+  templateId: string;
+  canonicalName: string | null;
+  rawLabel: string;
+  sortOrder: number;
+}
+
+export interface ShoppingListTemplate {
+  id: string;
+  accountId: string;
+  name: string;
+  sortOrder: number;
+  createdByUserId: string;
+  items: ShoppingListTemplateItem[];
+}
+
+export interface CreateShoppingListTemplateItemDto {
+  rawLabel: string;
+  canonicalName?: string | null;
+}
+
+export interface CreateShoppingListTemplateDto {
+  name: string;
+  items: CreateShoppingListTemplateItemDto[];
+}
+
+export interface UpdateShoppingListTemplateDto {
+  name: string;
+}
+
+export interface ApplyShoppingListTemplateDto {
+  listId: string;
+}
+
+export interface ApplyShoppingListTemplateResponse {
+  listId: string;
+  listName: string;
+  addedLabels: string[];
+  skippedLabels: string[];
+}

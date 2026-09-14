@@ -5,6 +5,7 @@ import { PrismaService } from '../../database/prisma.service';
 import { predictRestock } from './restock-predictor';
 import { detectDeals, DealRow } from './deal-detector';
 import { normalizeProductName } from '../merchant-rules/product-rules.service';
+import { resolveShoppingList } from './shopping-list.util';
 import type {
   ShoppingList, ShoppingListItem,
   CreateShoppingListDto, UpdateShoppingListDto,
@@ -100,9 +101,7 @@ export class ShoppingListService {
   }
 
   private async resolveList(accountId: string, idOrClientId: string) {
-    return this.prisma.shoppingList.findFirst({
-      where: { accountId, isDeleted: false, OR: [{ id: idOrClientId }, { clientId: idOrClientId }] },
-    });
+    return resolveShoppingList(this.prisma, accountId, idOrClientId);
   }
 
   private async resolveItem(accountId: string, idOrClientId: string) {

@@ -22,6 +22,7 @@ import { useInflationShieldStore } from './inflationShieldStore';
 import { useGoalStore } from './goalStore';
 import { usePriceHistoryStore } from './priceHistoryStore';
 import { useMerchantRulesStore } from './merchantRulesStore';
+import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
 import { useChatStore } from './chatStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
@@ -657,6 +658,7 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     // products and merchant rules.
     usePriceHistoryStore.getState().reset();
     useMerchantRulesStore.getState().reset();
+    useShoppingListTemplateStore.getState().reset();
     // `accountStore` also clears this on an account switch (ABA-513) — this
     // call is deliberately redundant with that, not a duplicate to prune. A
     // conversation can carry another person's name, amounts, anything the

@@ -22,6 +22,19 @@ Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te ope
 
 Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
 
+## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
+
+Als je elke week ongeveer dezelfde boodschappen koopt, sla je je gebruikelijke lijst één keer op en voeg je hem de volgende keer met één tik weer helemaal toe — geen "melk, eieren, brood, koffie…" meer opnieuw typen.
+
+Tik op het **bladwijzer-icoon** naast de lijstnaam-pil om **Sjablonen** te openen:
+
+- **Huidige lijst opslaan als sjabloon** — slaat alle items die momenteel op je actieve lijst staan (afgevinkt of niet) op onder een naam die je zelf kiest. Elk accountlid kan een sjabloon opslaan.
+- Tik op een opgeslagen sjabloon om het toe te **passen** — de items worden meteen aan je actieve lijst toegevoegd. Wat al op de lijst staat (vergeleken op naam, niet op exacte spelling) wordt overgeslagen in plaats van gedupliceerd, en een bevestiging laat zien hoeveel items zijn toegevoegd.
+- Tik op het **potlood-icoon** van een sjabloon om het te hernoemen. Elk accountlid kan een sjabloon hernoemen.
+- Tik op het **prullenbak-icoon** om een sjabloon te verwijderen. Alleen voor bewerkers en de accounteigenaar.
+
+Sjablonen bevatten alleen itemnamen — geen prijzen of hoeveelheden — en er is geen apart beheerscherm: alles gebeurt in hetzelfde **Sjablonen**-venster. Een sjabloon heeft geen aankoopgeschiedenis nodig om te werken, dus is al bruikbaar vanaf je allereerste lijst.
+
 ## Artikelen toevoegen
 
 Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artikel op drie manieren toevoegen:

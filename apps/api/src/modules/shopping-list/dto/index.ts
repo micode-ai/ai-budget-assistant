@@ -1,4 +1,18 @@
-import { IsBoolean, IsInt, IsNotEmpty, IsNumber, IsOptional, IsString, Min } from 'class-validator';
+import {
+  ArrayMaxSize,
+  ArrayMinSize,
+  IsArray,
+  IsBoolean,
+  IsInt,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  MaxLength,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class CreateListDto {
   @IsString() clientId: string;
@@ -22,4 +36,30 @@ export class UpdateItemDto {
   @IsOptional() @IsString() rawLabel?: string;
   @IsOptional() @IsString() note?: string | null;
   @IsOptional() @IsInt() sortOrder?: number;
+}
+
+// --- "my weekly staples" templates ---
+
+export class CreateTemplateItemDto {
+  @IsOptional() @IsString() canonicalName?: string | null;
+  @IsString() @IsNotEmpty() @MaxLength(120) rawLabel: string;
+}
+
+export class CreateTemplateDto {
+  @IsString() @IsNotEmpty() @MaxLength(60) name: string;
+
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(200)
+  @ValidateNested({ each: true })
+  @Type(() => CreateTemplateItemDto)
+  items: CreateTemplateItemDto[];
+}
+
+export class UpdateTemplateDto {
+  @IsString() @IsNotEmpty() @MaxLength(60) name: string;
+}
+
+export class ApplyTemplateDto {
+  @IsString() @IsNotEmpty() listId: string;
 }

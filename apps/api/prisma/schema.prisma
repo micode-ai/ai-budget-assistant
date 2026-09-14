@@ -407,6 +407,7 @@ model Account {
   productAliases                 ProductAlias[]
   shoppingLists                  ShoppingList[]
   shoppingListItems              ShoppingListItem[]
+  shoppingListTemplates          ShoppingListTemplate[]
   inflationShieldRecommendations InflationShieldRecommendation[]
   shoppingNotificationLogs       ShoppingNotificationLog[]
   insightNotificationLogs        InsightNotificationLog[]
@@ -816,6 +817,41 @@ model ShoppingListItem {
   @@unique([accountId, clientId])
   @@index([shoppingListId, isChecked])
   @@map("shopping_list_items")
+}
+
+// "My weekly staples" — a named, ordered set of item labels a member can
+// re-apply (merge) into any list in one tap. Deliberately NOT shaped like
+// ShoppingList/ShoppingListItem: no clientId/syncVersion/isDeleted, because
+// this is a small, rarely-edited, server-only reference object (not
+// offline-first — see docs/contracts/shopping-list-templates.md). Hard
+// delete cascades to items, mirroring MerchantCategoryRule.
+model ShoppingListTemplate {
+  id              String   @id @default(uuid())
+  accountId       String   @map("account_id")
+  name            String
+  sortOrder       Int      @default(0) @map("sort_order")
+  createdByUserId String   @map("created_by_user_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  account Account                    @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  items   ShoppingListTemplateItem[]
+
+  @@index([accountId])
+  @@map("shopping_list_templates")
+}
+
+model ShoppingListTemplateItem {
+  id            String  @id @default(uuid())
+  templateId    String  @map("template_id")
+  canonicalName String? @map("canonical_name")
+  rawLabel      String  @map("raw_label")
+  sortOrder     Int     @default(0) @map("sort_order")
+
+  template ShoppingListTemplate @relation(fields: [templateId], references: [id], onDelete: Cascade)
+
+  @@index([templateId])
+  @@map("shopping_list_template_items")
 }
 
 model ShoppingNotificationLog {

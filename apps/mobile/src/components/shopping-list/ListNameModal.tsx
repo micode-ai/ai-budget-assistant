@@ -4,10 +4,24 @@ import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/Key
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 export interface NameModalState {
-  mode: 'create' | 'rename';
+  mode: 'create' | 'rename' | 'saveTemplate' | 'renameTemplate';
   id?: string;
   value: string;
 }
+
+const TITLE_KEY: Record<NameModalState['mode'], string> = {
+  create: 'shoppingList.newList',
+  rename: 'shoppingList.renameList',
+  saveTemplate: 'shoppingList.saveAsTemplate',
+  renameTemplate: 'shoppingList.renameTemplate',
+};
+
+const PLACEHOLDER_KEY: Record<NameModalState['mode'], string> = {
+  create: 'shoppingList.listName',
+  rename: 'shoppingList.listName',
+  saveTemplate: 'shoppingList.templateNamePlaceholder',
+  renameTemplate: 'shoppingList.templateNamePlaceholder',
+};
 
 interface ListNameModalProps {
   nameModal: NameModalState | null;
@@ -35,13 +49,13 @@ export function ListNameModal({
         <View style={[styles.sheet, { paddingBottom: Math.max(bottomInset, 24) + 16 }]}>
           <View style={styles.handle} />
           <Text style={styles.modalTitle}>
-            {nameModal?.mode === 'create' ? t('shoppingList.newList') : t('shoppingList.renameList')}
+            {t(TITLE_KEY[nameModal?.mode ?? 'create'])}
           </Text>
           <TextInput
             style={styles.nameInput}
             value={nameModal?.value ?? ''}
             onChangeText={onChangeValue}
-            placeholder={t('shoppingList.listName')}
+            placeholder={t(PLACEHOLDER_KEY[nameModal?.mode ?? 'create'])}
             placeholderTextColor={theme.colors.textTertiary}
             autoFocus
             autoCapitalize="words"

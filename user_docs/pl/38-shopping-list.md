@@ -22,6 +22,19 @@ Stuknij w pigułkę z nazwą listy u góry ekranu, aby otworzyć **Zarządzaj li
 
 Obserwatorzy mogą przeglądać listy, przełączać się między nimi, dodawać produkty i odznaczać je na dowolnej liście, ale nie mogą jej zarchiwizować ani usunąć.
 
+## Zapisz listę jako szablon („Moje cotygodniowe zakupy")
+
+Jeśli co tydzień kupujesz mniej więcej te same produkty, zapisz swoją zwykłą listę raz i za następnym razem dodaj ją całą jednym dotknięciem — bez wpisywania od nowa „mleko, jajka, chleb, kawa…".
+
+Dotknij **ikony zakładki** obok pigułki z nazwą listy, aby otworzyć **Szablony**:
+
+- **Zapisz bieżącą listę jako szablon** — zapisuje wszystkie produkty aktualnie znajdujące się na Twojej aktywnej liście (odznaczone lub nie) pod wybraną nazwą. Każdy członek konta może zapisać szablon.
+- Dotknij zapisanego szablonu, aby go **zastosować** — jego produkty zostają od razu dodane do Twojej aktywnej listy. Produkty już obecne na liście (dopasowane po nazwie, nie po dokładnej pisowni) są pomijane zamiast duplikowane, a potwierdzenie pokazuje, ile produktów dodano.
+- Dotknij **ikony ołówka** przy szablonie, aby zmienić jego nazwę. Każdy członek konta może zmienić nazwę szablonu.
+- Dotknij **ikony kosza**, aby usunąć szablon. Tylko edytorzy i właściciel konta.
+
+Szablony przechowują wyłącznie nazwy produktów — bez cen i ilości — i nie ma osobnego ekranu zarządzania: wszystko odbywa się w tym samym panelu **Szablony**. Szablon nie wymaga historii zakupów, aby działać, więc jest przydatny już od pierwszej stworzonej listy.
+
 ## Dodawanie produktów
 
 Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać na trzy sposoby:

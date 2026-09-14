@@ -4390,6 +4390,19 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
 
+## Save a List as a Template ("My Weekly Staples")
+
+If you buy roughly the same groceries every week, save your usual list once and re-add all of it in one tap next time — no need to retype "milk, eggs, bread, coffee…" over and over.
+
+Tap the **bookmark icon** next to the list name pill to open **Templates**:
+
+- **Save current list as template** — saves every item currently on your active list (checked or not) under a name you choose. Any account member can save a template.
+- Tap a saved template to **apply** it — its items are added to your active list right away. Anything already on the list (matched by name, not exact spelling) is skipped rather than duplicated, and a confirmation tells you how many items were added.
+- Tap the **pencil icon** on a template to rename it. Any account member can rename a template.
+- Tap the **trash icon** to delete a template. Editors and the account owner only.
+
+Templates hold item names only — no prices or quantities — and there's no separate management screen: everything happens in the same **Templates** sheet. A template doesn't need purchase history to work, so it's useful from the very first list you build.
+
 ## Adding Items
 
 Tap **Add item** to open the add sheet. You can add an item three ways:
@@ -9064,6 +9077,19 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Наблюдатели могут просматривать списки, переключаться между ними, добавлять товары и отмечать их в любом списке, но не могут архивировать или удалять списки.
 
+## Сохранить список как шаблон («Мои еженедельные покупки»)
+
+Если каждую неделю вы покупаете примерно одни и те же продукты, сохраните свой обычный список один раз и в следующий раз добавляйте его целиком одним касанием — не нужно снова печатать «молоко, яйца, хлеб, кофе…».
+
+Нажмите на **значок закладки** рядом с плашкой названия списка, чтобы открыть **Шаблоны**:
+
+- **Сохранить текущий список как шаблон** — сохраняет все товары, которые сейчас есть в вашем активном списке (отмеченные или нет), под выбранным вами названием. Сохранить шаблон может любой участник счёта.
+- Нажмите на сохранённый шаблон, чтобы **применить** его — его товары сразу добавляются в ваш активный список. То, что уже есть в списке (сравнивается по названию, а не по точному написанию), пропускается, а не дублируется, и подтверждение показывает, сколько товаров добавлено.
+- Нажмите **значок карандаша** у шаблона, чтобы переименовать его. Переименовать шаблон может любой участник счёта.
+- Нажмите **значок корзины**, чтобы удалить шаблон. Только для редакторов и владельца счёта.
+
+Шаблоны хранят только названия товаров — без цен и количеств — и отдельного экрана управления нет: всё происходит в том же окне **Шаблоны**. Шаблону не нужна история покупок, чтобы работать, поэтому он полезен уже с самого первого созданного списка.
+
 ## Добавление товаров
 
 Нажмите **Добавить товар**, чтобы открыть панель добавления. Товар можно добавить тремя способами:
@@ -13708,6 +13734,19 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Спостерігачі можуть переглядати списки, перемикатися між ними, додавати товари та позначати їх у будь-якому списку, але не можуть архівувати чи видаляти списки.
 
+## Зберегти список як шаблон («Мої щотижневі покупки»)
+
+Якщо щотижня ви купуєте приблизно одні й ті самі продукти, збережіть свій звичний список один раз і наступного разу додавайте його цілком одним дотиком — не потрібно знову набирати «молоко, яйця, хліб, кава…».
+
+Торкніться **значка закладки** біля пігулки з назвою списку, щоб відкрити **Шаблони**:
+
+- **Зберегти поточний список як шаблон** — зберігає всі товари, які зараз є у вашому активному списку (позначені чи ні), під обраною вами назвою. Зберегти шаблон може будь-який учасник рахунку.
+- Торкніться збереженого шаблону, щоб **застосувати** його — його товари одразу додаються до вашого активного списку. Те, що вже є у списку (порівнюється за назвою, а не за точним написанням), пропускається, а не дублюється, а підтвердження показує, скільки товарів додано.
+- Торкніться **значка олівця** біля шаблону, щоб перейменувати його. Перейменувати шаблон може будь-який учасник рахунку.
+- Торкніться **значка кошика**, щоб видалити шаблон. Тільки для редакторів і власника рахунку.
+
+Шаблони містять лише назви товарів — без цін і кількості — і окремого екрана керування немає: усе відбувається в тому самому вікні **Шаблони**. Шаблону не потрібна історія покупок, щоб працювати, тож він корисний уже з першого створеного списку.
+
 ## Додавання товарів
 
 Натисніть **Додати товар**, щоб відкрити панель додавання. Товар можна додати трьома способами:
@@ -18337,6 +18376,19 @@ Stuknij w pigułkę z nazwą listy u góry ekranu, aby otworzyć **Zarządzaj li
 
 Obserwatorzy mogą przeglądać listy, przełączać się między nimi, dodawać produkty i odznaczać je na dowolnej liście, ale nie mogą jej zarchiwizować ani usunąć.
 
+## Zapisz listę jako szablon („Moje cotygodniowe zakupy")
+
+Jeśli co tydzień kupujesz mniej więcej te same produkty, zapisz swoją zwykłą listę raz i za następnym razem dodaj ją całą jednym dotknięciem — bez wpisywania od nowa „mleko, jajka, chleb, kawa…".
+
+Dotknij **ikony zakładki** obok pigułki z nazwą listy, aby otworzyć **Szablony**:
+
+- **Zapisz bieżącą listę jako szablon** — zapisuje wszystkie produkty aktualnie znajdujące się na Twojej aktywnej liście (odznaczone lub nie) pod wybraną nazwą. Każdy członek konta może zapisać szablon.
+- Dotknij zapisanego szablonu, aby go **zastosować** — jego produkty zostają od razu dodane do Twojej aktywnej listy. Produkty już obecne na liście (dopasowane po nazwie, nie po dokładnej pisowni) są pomijane zamiast duplikowane, a potwierdzenie pokazuje, ile produktów dodano.
+- Dotknij **ikony ołówka** przy szablonie, aby zmienić jego nazwę. Każdy członek konta może zmienić nazwę szablonu.
+- Dotknij **ikony kosza**, aby usunąć szablon. Tylko edytorzy i właściciel konta.
+
+Szablony przechowują wyłącznie nazwy produktów — bez cen i ilości — i nie ma osobnego ekranu zarządzania: wszystko odbywa się w tym samym panelu **Szablony**. Szablon nie wymaga historii zakupów, aby działać, więc jest przydatny już od pierwszej stworzonej listy.
+
 ## Dodawanie produktów
 
 Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać na trzy sposoby:
@@ -22941,6 +22993,19 @@ Tippe oben auf dem Bildschirm auf die Pille mit dem Listennamen, um **Listen ver
 
 Betrachter können jede Liste ansehen, zwischen ihnen wechseln, Artikel hinzufügen und abhaken, aber keine Liste archivieren oder löschen.
 
+## Eine Liste als Vorlage speichern („Meine wöchentlichen Grundnahrungsmittel")
+
+Wenn du jede Woche ungefähr die gleichen Lebensmittel kaufst, speichere deine übliche Liste einmal und füge sie beim nächsten Mal mit einem Tipp wieder hinzu — kein erneutes Eintippen von „Milch, Eier, Brot, Kaffee …" mehr nötig.
+
+Tippe auf das **Lesezeichen-Symbol** neben der Listenname-Pille, um **Vorlagen** zu öffnen:
+
+- **Aktuelle Liste als Vorlage speichern** — speichert alle Artikel, die sich gerade auf deiner aktiven Liste befinden (egal ob abgehakt oder nicht), unter einem von dir gewählten Namen. Jedes Kontomitglied kann eine Vorlage speichern.
+- Tippe auf eine gespeicherte Vorlage, um sie **anzuwenden** — ihre Artikel werden sofort zu deiner aktiven Liste hinzugefügt. Bereits vorhandene Artikel (nach Name abgeglichen, nicht nach exakter Schreibweise) werden übersprungen statt dupliziert, und eine Bestätigung zeigt an, wie viele Artikel hinzugefügt wurden.
+- Tippe auf das **Stift-Symbol** einer Vorlage, um sie umzubenennen. Jedes Kontomitglied kann eine Vorlage umbenennen.
+- Tippe auf das **Papierkorb-Symbol**, um eine Vorlage zu löschen. Nur Bearbeiter und der Kontoinhaber.
+
+Vorlagen enthalten nur Artikelnamen — keine Preise oder Mengen — und es gibt keinen separaten Verwaltungsbildschirm: Alles passiert im selben **Vorlagen**-Fenster. Eine Vorlage braucht keinen Kaufverlauf, um zu funktionieren — sie ist also schon ab deiner ersten Liste nützlich.
+
 ## Artikel hinzufügen
 
 Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kannst einen Artikel auf drei Arten hinzufügen:
@@ -27534,6 +27599,19 @@ Toca la píldora con el nombre de la lista en la parte superior de la pantalla p
 
 Los observadores pueden ver, cambiar entre listas, añadir artículos y marcarlos como comprados en cualquier lista, pero no pueden archivar ni eliminar una.
 
+## Guardar una lista como plantilla («Mis productos habituales»)
+
+Si compras más o menos los mismos productos cada semana, guarda tu lista habitual una vez y vuelve a añadirla entera de un toque la próxima vez, sin tener que volver a escribir «leche, huevos, pan, café…».
+
+Toca el **icono de marcador** junto a la píldora con el nombre de la lista para abrir **Plantillas**:
+
+- **Guardar lista actual como plantilla** — guarda todos los artículos que hay ahora en tu lista activa (marcados o no) con el nombre que elijas. Cualquier miembro de la cuenta puede guardar una plantilla.
+- Toca una plantilla guardada para **aplicarla**: sus artículos se añaden de inmediato a tu lista activa. Lo que ya esté en la lista (comparado por nombre, no por ortografía exacta) se omite en lugar de duplicarse, y una confirmación te indica cuántos artículos se añadieron.
+- Toca el **icono de lápiz** de una plantilla para renombrarla. Cualquier miembro de la cuenta puede renombrar una plantilla.
+- Toca el **icono de papelera** para eliminar una plantilla. Solo editores y el propietario de la cuenta.
+
+Las plantillas solo guardan nombres de artículos —sin precios ni cantidades— y no hay una pantalla de gestión aparte: todo ocurre en el mismo panel de **Plantillas**. Una plantilla no necesita historial de compras para funcionar, así que es útil desde tu primerísima lista.
+
 ## Añadir artículos
 
 Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un artículo de tres formas:
@@ -32125,6 +32203,19 @@ Touchez la pastille du nom de liste en haut de l'écran pour ouvrir **Gérer les
 
 Les observateurs peuvent consulter les listes, en changer, ajouter des articles et les cocher sur n'importe quelle liste, mais ne peuvent ni archiver ni supprimer une liste.
 
+## Enregistrer une liste comme modèle (« Mes produits de base hebdomadaires »)
+
+Si vous achetez à peu près les mêmes courses chaque semaine, enregistrez votre liste habituelle une seule fois et rajoutez-la en entier en un geste la prochaine fois — plus besoin de retaper « lait, œufs, pain, café… ».
+
+Appuyez sur l'**icône de marque-page** à côté de la pastille du nom de liste pour ouvrir **Modèles** :
+
+- **Enregistrer la liste actuelle comme modèle** — enregistre tous les articles actuellement sur votre liste active (cochés ou non) sous le nom de votre choix. N'importe quel membre du compte peut enregistrer un modèle.
+- Appuyez sur un modèle enregistré pour l'**appliquer** — ses articles sont ajoutés immédiatement à votre liste active. Ce qui figure déjà sur la liste (comparé par nom, pas par orthographe exacte) est ignoré plutôt que dupliqué, et une confirmation indique combien d'articles ont été ajoutés.
+- Appuyez sur l'**icône crayon** d'un modèle pour le renommer. N'importe quel membre du compte peut renommer un modèle.
+- Appuyez sur l'**icône corbeille** pour supprimer un modèle. Réservé aux éditeurs et au propriétaire du compte.
+
+Les modèles ne contiennent que des noms d'articles — ni prix ni quantités — et il n'y a pas d'écran de gestion séparé : tout se passe dans le même panneau **Modèles**. Un modèle n'a pas besoin d'historique d'achats pour fonctionner, il est donc utile dès votre toute première liste.
+
 ## Ajouter des articles
 
 Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajouter un article de trois façons :
@@ -36679,6 +36770,19 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Выдаліць** — незваротна выдаляе спіс і ўсе яго тавары. Толькі для рэдактараў і ўладальніка рахунку.
 
 Назіральнікі могуць праглядаць спісы, пераключацца паміж імі, дадаваць тавары і адзначаць іх у любым спісе, але не могуць архіваваць ці выдаляць спісы.
+
+## Захаваць спіс як шаблон («Мае штотыднёвыя пакупкі»)
+
+Калі кожны тыдзень вы купляеце прыблізна адны і тыя ж прадукты, захавайце свой звычайны спіс адзін раз і наступным разам дадавайце яго цалкам адным дакрананнем — не трэба зноў набіраць «малако, яйкі, хлеб, кава…».
+
+Дакраніцеся да **значка закладкі** побач з пілюляй назвы спісу, каб адкрыць **Шаблоны**:
+
+- **Захаваць бягучы спіс як шаблон** — захоўвае ўсе тавары, якія зараз ёсць у вашым актыўным спісе (адзначаныя ці не), пад абранай вамі назвай. Захаваць шаблон можа любы ўдзельнік рахунку.
+- Дакраніцеся да захаванага шаблону, каб **ужыць** яго — яго тавары адразу дадаюцца ў ваш актыўны спіс. Тое, што ўжо ёсць у спісе (параўноўваецца па назве, а не па дакладным напісанні), прапускаецца, а не дублюецца, а пацвярджэнне паказвае, колькі тавараў дададзена.
+- Дакраніцеся да **значка алоўка** каля шаблону, каб перайменаваць яго. Перайменаваць шаблон можа любы ўдзельнік рахунку.
+- Дакраніцеся да **значка сметніцы**, каб выдаліць шаблон. Толькі для рэдактараў і ўладальніка рахунку.
+
+Шаблоны ўтрымліваюць толькі назвы тавараў — без цэн і колькасці — і асобнага экрана кіравання няма: усё адбываецца ў тым жа акне **Шаблоны**. Шаблону не патрэбна гісторыя пакупак, каб працаваць, таму ён карысны ўжо з першага створанага спісу.
 
 ## Даданне тавараў
 
@@ -41349,6 +41453,19 @@ Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te ope
 - **Verwijderen** — verwijdert de lijst en alle artikelen definitief. Alleen voor bewerkers en de accounteigenaar.
 
 Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
+
+## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
+
+Als je elke week ongeveer dezelfde boodschappen koopt, sla je je gebruikelijke lijst één keer op en voeg je hem de volgende keer met één tik weer helemaal toe — geen "melk, eieren, brood, koffie…" meer opnieuw typen.
+
+Tik op het **bladwijzer-icoon** naast de lijstnaam-pil om **Sjablonen** te openen:
+
+- **Huidige lijst opslaan als sjabloon** — slaat alle items die momenteel op je actieve lijst staan (afgevinkt of niet) op onder een naam die je zelf kiest. Elk accountlid kan een sjabloon opslaan.
+- Tik op een opgeslagen sjabloon om het toe te **passen** — de items worden meteen aan je actieve lijst toegevoegd. Wat al op de lijst staat (vergeleken op naam, niet op exacte spelling) wordt overgeslagen in plaats van gedupliceerd, en een bevestiging laat zien hoeveel items zijn toegevoegd.
+- Tik op het **potlood-icoon** van een sjabloon om het te hernoemen. Elk accountlid kan een sjabloon hernoemen.
+- Tik op het **prullenbak-icoon** om een sjabloon te verwijderen. Alleen voor bewerkers en de accounteigenaar.
+
+Sjablonen bevatten alleen itemnamen — geen prijzen of hoeveelheden — en er is geen apart beheerscherm: alles gebeurt in hetzelfde **Sjablonen**-venster. Een sjabloon heeft geen aankoopgeschiedenis nodig om te werken, dus is al bruikbaar vanaf je allereerste lijst.
 
 ## Artikelen toevoegen
 
