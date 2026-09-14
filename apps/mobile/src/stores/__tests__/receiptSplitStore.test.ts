@@ -6,6 +6,7 @@ jest.mock('@/services/api', () => ({
     cancelSplit: jest.fn(),
     getRecentSplitParticipants: jest.fn(),
     resolveSplitFlag: jest.fn(),
+    reassignSplitItem: jest.fn(),
   },
 }));
 
@@ -24,6 +25,7 @@ const confirmSplitParticipant = jest.mocked(api.confirmSplitParticipant);
 const cancelSplit = jest.mocked(api.cancelSplit);
 const getRecentSplitParticipants = jest.mocked(api.getRecentSplitParticipants);
 const resolveSplitFlag = jest.mocked(api.resolveSplitFlag);
+const reassignSplitItem = jest.mocked(api.reassignSplitItem);
 const recordParticipantsMock = recordParticipants as jest.Mock;
 
 function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateResponse {
@@ -32,8 +34,8 @@ function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateRespo
     ownShare: 12.5,
     currencyCode: 'USD',
     participants: [
-      { id: 'p1', name: 'Alice', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok1', flags: [] },
-      { id: 'p2', name: 'Bob', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok2', flags: [] },
+      { id: 'p1', name: 'Alice', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok1', flags: [], itemIds: [] },
+      { id: 'p2', name: 'Bob', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok2', flags: [], itemIds: [] },
     ],
     groupUrl: 'https://x/s/g/grouptok1',
     ...overrides,
@@ -259,6 +261,52 @@ describe('receiptSplitStore', () => {
       useReceiptSplitStore.setState({ expenseId: null, split: null });
       await useReceiptSplitStore.getState().resolveFlag('expense-1', 'flag-1');
       expect(resolveSplitFlag).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('reassignItem (ABA-546, in-place line reassignment)', () => {
+    it('is non-optimistic: replaces the whole split with the server response only after it resolves', async () => {
+      const before = makeSplit();
+      useReceiptSplitStore.setState({ expenseId: 'expense-1', split: before });
+
+      let resolveReassign: (value: SplitStateResponse) => void = () => {};
+      reassignSplitItem.mockImplementation(
+        () =>
+          new Promise((resolve) => {
+            resolveReassign = resolve;
+          }),
+      );
+
+      const pending = useReceiptSplitStore.getState().reassignItem('expense-1', 'item-1', ['p2']);
+
+      // Nothing changes before the server responds — a reassignment
+      // recomputes every participant's amount, not just the touched one, so
+      // there is no safe partial optimistic update to apply here.
+      expect(useReceiptSplitStore.getState().split).toEqual(before);
+
+      const after = makeSplit({
+        participants: [
+          { ...before.participants[0], amount: 0, itemIds: [] },
+          { ...before.participants[1], amount: 20, itemIds: ['item-1'] },
+        ],
+      });
+      resolveReassign(after);
+      await pending;
+
+      expect(reassignSplitItem).toHaveBeenCalledWith('expense-1', 'item-1', ['p2']);
+      expect(useReceiptSplitStore.getState().split).toEqual(after);
+    });
+
+    it('rethrows on failure, leaving the previous split untouched', async () => {
+      const split = makeSplit();
+      useReceiptSplitStore.setState({ expenseId: 'expense-1', split });
+      reassignSplitItem.mockRejectedValue(new Error('Cannot change this split — someone has already confirmed a payment'));
+
+      await expect(
+        useReceiptSplitStore.getState().reassignItem('expense-1', 'item-1', ['p2']),
+      ).rejects.toThrow('already confirmed a payment');
+
+      expect(useReceiptSplitStore.getState().split).toEqual(split);
     });
   });
 

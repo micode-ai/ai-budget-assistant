@@ -10,7 +10,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import type { SplitParticipantInput } from '@budget/shared-types';
+import type { SplitParticipantInput, ReassignSplitItemInput } from '@budget/shared-types';
 
 // The shared-types CreateSplitDto/SplitParticipantInput are plain interfaces with no
 // class-validator decorators, so NestJS's ValidationPipe silently skips them (same gap
@@ -40,6 +40,19 @@ export class CreateSplitDto {
 
   @IsIn(['items', 'equal'])
   mode: 'items' | 'equal';
+}
+
+/**
+ * Body of `PATCH :id/receipt-split/items/:itemId/reassign` (ABA-546, in-place
+ * line reassignment). See docs/contracts/receipt-split-in-place-reassignment.md.
+ * `participantIds` is the FULL new claimant list for the item — the service
+ * re-validates every id against the split's live participants independently.
+ */
+export class ReassignSplitItemDto implements ReassignSplitItemInput {
+  @IsArray()
+  @ArrayMaxSize(20)
+  @IsString({ each: true })
+  participantIds: string[];
 }
 
 /**

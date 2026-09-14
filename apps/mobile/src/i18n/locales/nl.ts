@@ -2635,6 +2635,10 @@ export default {
     flagWholeShare: 'Zijn/haar hele deel',
     flagResolve: 'Opgelost',
     flagFixHint: 'Om te wijzigen wie wat verschuldigd is, annuleer de verdeling en maak deze opnieuw aan.',
+    editAssignment: 'Toewijzing bewerken',
+    editAssignmentTitle: 'Wie had dit?',
+    editAssignmentSave: 'Opslaan',
+    editBlockedConfirmed: 'Dit kan niet worden gewijzigd — iemand heeft al een betaling voor deze verdeling bevestigd. Annuleer en maak de verdeling in plaats daarvan opnieuw aan.',
   },
   receiptCategorySplit: {
     title: 'Verdelen op categorie',

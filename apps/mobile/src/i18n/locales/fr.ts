@@ -2635,6 +2635,10 @@ export default {
     flagWholeShare: 'Toute sa part',
     flagResolve: 'Résoudre',
     flagFixHint: 'Pour changer qui doit quoi, annule et recrée le partage.',
+    editAssignment: "Modifier l'attribution",
+    editAssignmentTitle: 'Qui avait ça ?',
+    editAssignmentSave: 'Enregistrer',
+    editBlockedConfirmed: "Impossible de modifier ce partage — quelqu'un a déjà confirmé un paiement. Annule-le et recrée-le à la place.",
   },
   receiptCategorySplit: {
     title: 'Répartir par catégorie',

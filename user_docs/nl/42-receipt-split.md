@@ -50,7 +50,7 @@ Terug in de app toont de rij van elke vriend een status:
 
 Een vriend die nog niet heeft betaald, blijft gewoon op **Verstuurd** of **Geopend** staan — meer zit daar niet achter.
 
-Heeft een vriend iets aan zijn deel gemeld, dan zie je dat direct onder zijn rij, samen met zijn notitie (als hij die heeft toegevoegd). Tik op **Opgelost** zodra je het hebt geregeld — melden verandert de verdeling zelf niet, dus om een verkeerde toewijzing echt te corrigeren, moet je de verdeling annuleren en opnieuw aanmaken met de gecorrigeerde delen.
+Heeft een vriend iets aan zijn deel gemeld, dan zie je dat direct onder zijn rij, samen met zijn notitie (als hij die heeft toegevoegd). Gaat de melding over één specifiek artikel, tik dan direct op **Toewijzing bewerken** om te wijzigen wie dat artikel heeft — de correctie werkt meteen en de melding verdwijnt vanzelf, zonder dat je iets hoeft te annuleren. Gaat de melding over zijn hele deel (alleen mogelijk als de rekening gelijk verdeeld was, of als hij aangaf helemaal niet bij de verdeling te horen), dan is er geen losse regel om zo te corrigeren — tik op **Opgelost** zodra je het op een andere manier hebt geregeld, en om echt te wijzigen wie wat verschuldigd is, moet je de verdeling annuleren en opnieuw aanmaken met de gecorrigeerde delen. Geen van beide correcties is mogelijk zodra iemand in de verdeling al heeft aangegeven te hebben betaald of als afgehandeld is bevestigd — annuleer in dat geval de verdeling en maak deze opnieuw aan.
 
 ## Bevestigen dat je betaald bent
 

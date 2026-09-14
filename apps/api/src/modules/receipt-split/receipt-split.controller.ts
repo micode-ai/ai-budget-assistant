@@ -4,7 +4,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { TripArchivedGuard } from '../accounts/guards/trip-archived.guard';
-import { CreateSplitDto } from './dto';
+import { CreateSplitDto, ReassignSplitItemDto } from './dto';
 import { AuthenticatedRequest } from '../../common/types';
 
 /**
@@ -109,5 +109,25 @@ export class ReceiptSplitController {
     @Param('flagId') flagId: string,
   ) {
     return this.receiptSplitService.resolveFlag(req.accountId, id, flagId);
+  }
+
+  /**
+   * ABA-546 — in-place line reassignment (docs/contracts/receipt-split-in-place-reassignment.md).
+   * Reassigns ONE item's claimants among the split's EXISTING participants
+   * (never adds/removes a participant or touches another line), and
+   * auto-resolves every open dispute flag on that item. Not itself a
+   * `:id/receipt-split/:participantId/...` route — the `items`/`reassign`
+   * static segments keep it distinct from every sibling route above, so
+   * there is no route-shadow risk regardless of declaration order.
+   */
+  @Patch(':id/receipt-split/items/:itemId/reassign')
+  @UseGuards(new ViewerBlockGuard(), TripArchivedGuard)
+  async reassignItem(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+    @Param('itemId') itemId: string,
+    @Body() dto: ReassignSplitItemDto,
+  ) {
+    return this.receiptSplitService.reassignItem(req.accountId, id, itemId, dto.participantIds);
   }
 }

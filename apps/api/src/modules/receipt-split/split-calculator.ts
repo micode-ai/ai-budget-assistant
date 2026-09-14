@@ -175,6 +175,47 @@ export interface LineShare {
  * then would overstate what each surviving thing cost, so nothing is
  * distributed at all and the lines honestly add up to less than the total.
  */
+/** One live participant's current line-item claims, as stored on
+ * `ReceiptSplitParticipant.itemIds` — the snapshot `reassignSplitItem` needs
+ * to know what to leave untouched. */
+export interface ParticipantAssignmentSnapshot {
+  participantId: string;
+  itemIds: string[];
+}
+
+/**
+ * Reassigns ONE item's claimants within an existing item-mode split, leaving
+ * every OTHER item's claims exactly as they were, then recomputes every
+ * participant's share via the existing `resolveItemSplit` (ABA-546, in-place
+ * line reassignment — see docs/contracts/receipt-split-in-place-reassignment.md).
+ *
+ * Pure — no IO, no clock. `current` MUST include every LIVE participant of
+ * the split, not just the ones already on `itemId`: a participant omitted
+ * here would silently lose their existing claims on every OTHER item too,
+ * since `resolveItemSplit` only sees the `assignments` array this function
+ * builds.
+ *
+ * `newClaimantIds` REPLACES `itemId`'s claimant list outright (not a
+ * toggle/merge) — the caller (the service layer) is responsible for deciding
+ * what the new full list should be; this function only applies it.
+ */
+export function reassignSplitItem(
+  items: SplitItem[],
+  current: ParticipantAssignmentSnapshot[],
+  itemId: string,
+  newClaimantIds: string[],
+  billTotal: number,
+): { assignments: ItemAssignment[]; result: SplitResult } {
+  const claimantSet = new Set(newClaimantIds);
+  const assignments: ItemAssignment[] = current.map((p) => {
+    const withoutTarget = p.itemIds.filter((id) => id !== itemId);
+    const itemIds = claimantSet.has(p.participantId) ? [...withoutTarget, itemId] : withoutTarget;
+    return { participantId: p.participantId, itemIds };
+  });
+
+  return { assignments, result: resolveItemSplit(items, assignments, billTotal) };
+}
+
 export function allocateItemShares(lines: ClaimedLine[], totalAmount: number): LineShare[] {
   const exact = lines.map((line) => {
     const sharedWith = line.claimantCount >= 1 ? Math.floor(line.claimantCount) : 1;

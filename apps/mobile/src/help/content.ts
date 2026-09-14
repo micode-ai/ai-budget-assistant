@@ -4689,7 +4689,7 @@ Back in the app, each friend's row shows a status:
 
 A friend who hasn't paid yet simply stays at **Sent** or **Opened** — there's nothing more to it than that.
 
-If a friend flagged something wrong with their share, you'll see it right under their row, along with their note (if they added one). Tap **Resolve** once you've sorted it out — flagging never changes the split by itself, so to actually fix a wrong assignment you'll need to cancel the split and create a new one with the corrected shares.
+If a friend flagged something wrong with their share, you'll see it right under their row, along with their note (if they added one). If the flag is about one specific item, tap **Edit assignment** right there to change who's on that line — the fix is instant and clears the flag on its own, no need to cancel anything. If the flag is about their whole share instead (only possible when the bill was split equally, or if they said they weren't part of it at all), there's no single line to fix that way — tap **Resolve** once you've sorted it out another way, and to actually change who owes what you'll need to cancel the split and create a new one with the corrected shares. Either kind of fix is blocked once anyone on the split has said they've paid or been confirmed as settled — cancel and recreate the split in that case instead.
 
 ## Confirming you've been paid
 
@@ -9363,7 +9363,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Друг, который ещё не заплатил, просто остаётся на статусе **Отправлено** или **Открыто** — ничего больше за этим не стоит.
 
-Если друг сообщил о проблеме со своей частью, вы увидите это прямо под его строкой, вместе с его заметкой (если он её оставил). Нажмите **Решено**, как только разберётесь с этим — само сообщение не меняет разделение, поэтому, чтобы действительно исправить неверное распределение, нужно отменить разделение и создать новое с исправленными долями.
+Если друг сообщил о проблеме со своей частью, вы увидите это прямо под его строкой, вместе с его заметкой (если он её оставил). Если жалоба касается конкретной позиции, нажмите прямо там **Изменить назначение**, чтобы поменять, кто отвечает за эту позицию — исправление применяется мгновенно, а жалоба исчезает сама, без необходимости что-либо отменять. Если жалоба касается всей его доли (это возможно только при равном разделении или если он указал, что вообще не участвовал в разделении), поправить одну конкретную позицию так не получится — нажмите **Решено**, как только разберётесь с этим иначе, а чтобы действительно изменить, кто сколько должен, нужно отменить разделение и создать новое с исправленными долями. Ни одно из этих исправлений недоступно, если кто-то в разделении уже отметил, что заплатил, или был подтверждён как рассчитавшийся — в этом случае отмените и создайте разделение заново.
 
 ## Подтверждение получения денег
 
@@ -14007,7 +14007,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Друг, який ще не заплатив, просто залишається у статусі **Надіслано** або **Відкрито** — нічого більше за цим не стоїть.
 
-Якщо друг повідомив про проблему зі своєю часткою, ви побачите це прямо під його рядком, разом із його приміткою (якщо він її залишив). Натисніть **Вирішено**, щойно розберетеся з цим — саме повідомлення не змінює розділення, тож щоб дійсно виправити неправильний розподіл, потрібно скасувати розділення та створити нове з виправленими частками.
+Якщо друг повідомив про проблему зі своєю часткою, ви побачите це прямо під його рядком, разом із його приміткою (якщо він її залишив). Якщо повідомлення стосується конкретної позиції, натисніть прямо там **Змінити призначення**, щоб змінити, хто відповідає за цю позицію — виправлення діє миттєво, а повідомлення зникає само, без потреби щось скасовувати. Якщо повідомлення стосується всієї його частки (можливо лише при рівному розділенні або якщо він вказав, що взагалі не брав участі в розділенні), виправити одну конкретну позицію так не вийде — натисніть **Вирішено**, щойно розберетеся з цим інакше, а щоб дійсно змінити, хто скільки винен, потрібно скасувати розділення та створити нове з виправленими частками. Жодне з цих виправлень недоступне, якщо хтось у розділенні вже позначив, що заплатив, або був підтверджений як розрахований — у такому разі скасуйте та створіть розділення заново.
 
 ## Підтвердження отримання грошей
 
@@ -18636,7 +18636,7 @@ W aplikacji wiersz każdego znajomego pokazuje status:
 
 Znajomy, który jeszcze nie zapłacił, po prostu zostaje przy statusie **Wysłano** albo **Otwarto** — nic więcej się z tym nie wiąże.
 
-Jeśli znajomy zgłosił coś nie tak ze swoją częścią, zobaczysz to zaraz pod jego wierszem, razem z jego notatką (jeśli ją dodał). Stuknij **Rozwiązano**, gdy tylko to załatwisz — samo zgłoszenie nie zmienia podziału, więc żeby faktycznie poprawić błędne przypisanie, musisz anulować podział i utworzyć nowy z poprawionymi częściami.
+Jeśli znajomy zgłosił coś nie tak ze swoją częścią, zobaczysz to zaraz pod jego wierszem, razem z jego notatką (jeśli ją dodał). Jeśli zgłoszenie dotyczy konkretnej pozycji, stuknij od razu **Edytuj przypisanie**, żeby zmienić, kto ma tę pozycję — poprawka działa natychmiast, a zgłoszenie samo znika, bez konieczności anulowania czegokolwiek. Jeśli zgłoszenie dotyczy całej jego części (możliwe tylko przy podziale równym albo gdy ktoś napisał, że w ogóle nie brał udziału w podziale), nie ma jednej pozycji do poprawienia w ten sposób — stuknij **Rozwiązano**, gdy tylko załatwisz to inaczej, a żeby faktycznie zmienić, kto ile jest winien, musisz anulować podział i utworzyć nowy z poprawionymi częściami. Żadna z tych poprawek nie jest dostępna, gdy ktokolwiek w podziale zdążył już zaznaczyć, że zapłacił, lub został potwierdzony jako rozliczony — w takim przypadku zamiast tego anuluj podział i utwórz go od nowa.
 
 ## Potwierdzanie otrzymania pieniędzy
 
@@ -23240,7 +23240,7 @@ Zurück in der App zeigt die Zeile jedes Freundes einen Status:
 
 Ein Freund, der noch nicht bezahlt hat, bleibt einfach bei **Gesendet** oder **Geöffnet** — mehr steckt nicht dahinter.
 
-Hat ein Freund etwas an seinem Anteil gemeldet, siehst du das direkt unter seiner Zeile, zusammen mit seiner Notiz (falls er eine hinzugefügt hat). Tippe auf **Erledigt**, sobald du es geklärt hast — das Melden ändert die Aufteilung selbst nicht, um eine falsche Zuordnung wirklich zu korrigieren, musst du die Aufteilung stornieren und mit den korrigierten Anteilen neu erstellen.
+Hat ein Freund etwas an seinem Anteil gemeldet, siehst du das direkt unter seiner Zeile, zusammen mit seiner Notiz (falls er eine hinzugefügt hat). Geht es um eine bestimmte Position, tippe direkt dort auf **Zuordnung bearbeiten**, um zu ändern, wer diese Position hat — die Korrektur wirkt sofort und die Meldung verschwindet von selbst, ganz ohne stornieren. Geht es stattdessen um den gesamten Anteil (nur möglich, wenn gleichmäßig aufgeteilt wurde, oder wenn jemand sagt, er sei gar nicht dabei gewesen), lässt sich das nicht an einer einzelnen Position korrigieren — tippe auf **Erledigt**, sobald du es anderweitig geklärt hast, und storniere die Aufteilung, um sie mit den korrigierten Anteilen neu zu erstellen. Beide Korrekturen sind gesperrt, sobald jemand in der Aufteilung bereits bezahlt hat oder als beglichen bestätigt wurde — storniere in diesem Fall stattdessen und erstelle sie neu.
 
 ## Den Erhalt bestätigen
 
@@ -27833,7 +27833,7 @@ De vuelta en la app, la fila de cada amigo muestra un estado:
 
 Un amigo que todavía no ha pagado simplemente se queda en **Enviado** u **Abierto** — no hay nada más detrás de eso.
 
-Si un amigo reportó algo mal con su parte, lo verás justo debajo de su fila, junto con su nota (si añadió una). Toca **Resolver** en cuanto lo hayas solucionado — reportar no cambia la división por sí solo, así que para corregir de verdad una asignación equivocada tendrás que cancelar la división y crear una nueva con las partes corregidas.
+Si un amigo reportó algo mal con su parte, lo verás justo debajo de su fila, junto con su nota (si añadió una). Si el aviso es sobre un artículo concreto, toca **Editar asignación** ahí mismo para cambiar quién tiene esa línea — el cambio se aplica al instante y el aviso desaparece solo, sin necesidad de cancelar nada. Si el aviso es sobre toda su parte (solo posible cuando la división fue igualitaria, o si dijo que no formaba parte de ella en absoluto), no hay una sola línea que corregir así — toca **Resolver** en cuanto lo hayas solucionado de otra forma, y para cambiar de verdad quién debe qué tendrás que cancelar la división y crear una nueva con las partes corregidas. Ninguna de las dos correcciones está disponible una vez que alguien en la división ya dijo que pagó o fue confirmado como saldado — en ese caso, cancela y vuelve a crear la división.
 
 ## Confirmar que has recibido el pago
 
@@ -32424,7 +32424,7 @@ De retour dans l'application, la ligne de chaque ami affiche un statut :
 
 Un ami qui n'a pas encore payé reste simplement à **Envoyé** ou **Ouvert** — il n'y a rien de plus à en dire.
 
-Si un ami a signalé un problème avec sa part, vous le verrez juste sous sa ligne, avec sa note s'il en a ajouté une. Appuyez sur **Résoudre** une fois que c'est réglé — signaler ne modifie pas le partage en soi, donc pour corriger vraiment une mauvaise attribution, il faudra annuler le partage et en recréer un avec les parts corrigées.
+Si un ami a signalé un problème avec sa part, vous le verrez juste sous sa ligne, avec sa note s'il en a ajouté une. Si le signalement concerne un article précis, appuyez directement sur **Modifier l'attribution** pour changer qui a cet article — la correction est immédiate et le signalement disparaît de lui-même, sans avoir à annuler quoi que ce soit. Si le signalement concerne toute sa part (possible seulement si le partage était égal, ou si la personne indique ne pas avoir du tout fait partie du partage), il n'y a pas une seule ligne à corriger de cette façon — appuyez sur **Résoudre** une fois que c'est réglé autrement, et pour vraiment changer qui doit quoi, il faudra annuler le partage et en recréer un avec les parts corrigées. Aucune des deux corrections n'est possible une fois que quelqu'un dans le partage a déjà indiqué avoir payé ou a été confirmé comme réglé — dans ce cas, annulez et recréez le partage à la place.
 
 ## Confirmer que vous avez été payé
 
@@ -36979,7 +36979,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Сябар, які яшчэ не заплаціў, проста застаецца ў статусе **Даслана** або **Адкрыта** — нічога больш за гэтым не стаіць.
 
-Калі сябар паведаміў пра праблему са сваёй часткай, вы ўбачыце гэта прама пад яго радком, разам з яго нататкай (калі ён яе пакінуў). Націсніце **Вырашана**, як толькі разбярэцеся з гэтым — само паведамленне не змяняе падзел, таму каб сапраўды выправіць няправільны размеркаванне, трэба скасаваць падзел і стварыць новы з выпраўленымі часткамі.
+Калі сябар паведаміў пра праблему са сваёй часткай, вы ўбачыце гэта прама пад яго радком, разам з яго нататкай (калі ён яе пакінуў). Калі паведамленне тычыцца канкрэтнай пазіцыі, націсніце прама там **Змяніць прызначэнне**, каб змяніць, хто адказвае за гэтую пазіцыю — выпраўленне дзейнічае адразу, а паведамленне знікае само, без патрэбы нешта скасоўваць. Калі паведамленне тычыцца ўсёй яго часткі (магчыма толькі пры роўным падзеле або калі ён указаў, што наогул не ўдзельнічаў у падзеле), выправіць адну канкрэтную пазіцыю так не атрымаецца — націсніце **Вырашана**, як толькі разбярэцеся з гэтым інакш, а каб сапраўды змяніць, хто колькі павінен, трэба скасаваць падзел і стварыць новы з выпраўленымі часткамі. Ніводнае з гэтых выпраўленняў недаступнае, калі хтосьці ў падзеле ўжо адзначыў, што заплаціў, або быў пацверджаны як разлічаны — у такім выпадку скасуйце і стварыце падзел нанова.
 
 ## Пацвярджэнне атрымання грошай
 
@@ -41649,7 +41649,7 @@ Terug in de app toont de rij van elke vriend een status:
 
 Een vriend die nog niet heeft betaald, blijft gewoon op **Verstuurd** of **Geopend** staan — meer zit daar niet achter.
 
-Heeft een vriend iets aan zijn deel gemeld, dan zie je dat direct onder zijn rij, samen met zijn notitie (als hij die heeft toegevoegd). Tik op **Opgelost** zodra je het hebt geregeld — melden verandert de verdeling zelf niet, dus om een verkeerde toewijzing echt te corrigeren, moet je de verdeling annuleren en opnieuw aanmaken met de gecorrigeerde delen.
+Heeft een vriend iets aan zijn deel gemeld, dan zie je dat direct onder zijn rij, samen met zijn notitie (als hij die heeft toegevoegd). Gaat de melding over één specifiek artikel, tik dan direct op **Toewijzing bewerken** om te wijzigen wie dat artikel heeft — de correctie werkt meteen en de melding verdwijnt vanzelf, zonder dat je iets hoeft te annuleren. Gaat de melding over zijn hele deel (alleen mogelijk als de rekening gelijk verdeeld was, of als hij aangaf helemaal niet bij de verdeling te horen), dan is er geen losse regel om zo te corrigeren — tik op **Opgelost** zodra je het op een andere manier hebt geregeld, en om echt te wijzigen wie wat verschuldigd is, moet je de verdeling annuleren en opnieuw aanmaken met de gecorrigeerde delen. Geen van beide correcties is mogelijk zodra iemand in de verdeling al heeft aangegeven te hebben betaald of als afgehandeld is bevestigd — annuleer in dat geval de verdeling en maak deze opnieuw aan.
 
 ## Bevestigen dat je betaald bent
 

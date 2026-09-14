@@ -3,7 +3,7 @@ import { BadRequestException, Injectable, Logger, NotFoundException } from '@nes
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { DebtsService } from '../debts/debts.service';
-import { resolveEqualSplit, resolveItemSplit } from './split-calculator';
+import { resolveEqualSplit, resolveItemSplit, reassignSplitItem } from './split-calculator';
 import {
   dedupeRecentParticipantNames,
   resolveRecentParticipantsLimit,
@@ -55,6 +55,15 @@ interface ParticipantRow {
   openedAt: Date | null;
   claimedAt: Date | null;
   settledAt: Date | null;
+  itemIds?: unknown;
+}
+
+/** `ReceiptSplitParticipant.itemIds` is a Prisma `Json?` column — normalizes
+ * whatever comes back (null, a real array, or anything malformed) into a
+ * plain `string[]`, never throwing. Shared by every read site that needs a
+ * participant's current claims (ABA-546, in-place line reassignment). */
+function normalizeItemIds(value: unknown): string[] {
+  return Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
 }
 
 /** Raw shape of an open `ReceiptSplitFlag` row as read for state-response
@@ -237,6 +246,10 @@ export class ReceiptSplitService {
       status: this.statusFor(p),
       url: this.buildGuestUrl(p.token, lang),
       flags: (flagsByParticipant.get(p.id) ?? []).map(toFlagDto),
+      // ABA-546: payer-only view of this participant's current claims — never
+      // rendered on the guest page (guest.controller.ts builds its own view
+      // straight from the stored row, not from this DTO).
+      itemIds: normalizeItemIds(p.itemIds),
     }));
     // The anchor row (seq:0) is the sole carrier of groupToken — find it
     // rather than assuming array order/index, since `orderBy: { createdAt: 'asc' }`
@@ -526,6 +539,7 @@ export class ReceiptSplitService {
       status: this.statusFor({ ...participant, settledAt: settledAtClaim }),
       url: this.buildGuestUrl(participant.token, lang),
       flags: ownFlags.map(toFlagDto),
+      itemIds: normalizeItemIds(participant.itemIds),
     };
   }
 
@@ -549,6 +563,126 @@ export class ReceiptSplitService {
       throw new NotFoundException('Flag not found or already resolved');
     }
     return { success: true };
+  }
+
+  /**
+   * Lets the payer fix ONE line's claimants in place instead of the
+   * cancel-and-recreate `flagFixHint` used to require (ABA-546 — see
+   * docs/contracts/receipt-split-in-place-reassignment.md). Reassigns exactly
+   * one item's claimants among the split's EXISTING participants — never adds
+   * or removes a participant, never touches another line — then
+   * auto-resolves every OPEN flag on that item.
+   *
+   * Everything below is a read or pure computation until the final
+   * `$transaction` — a rejection at any check point leaves nothing written,
+   * same discipline as `createSplit`.
+   */
+  async reassignItem(
+    accountId: string,
+    expenseId: string,
+    itemId: string,
+    participantIds: string[],
+  ): Promise<SplitStateResponse> {
+    const expense = await this.resolveExpense(accountId, expenseId);
+
+    const participants = await this.prisma.receiptSplitParticipant.findMany({
+      where: { expenseId: expense.id, cancelledAt: null },
+      orderBy: { createdAt: 'asc' },
+    });
+    if (participants.length === 0) {
+      throw new NotFoundException('No split exists for this expense');
+    }
+
+    // Equal-mode guard: a split created with mode:'equal' carries no
+    // itemIds on ANY participant (createSplit only sets itemIds when
+    // dto.mode === 'items'), so there is no line here to reassign.
+    const isItemModeSplit = participants.some((p) => normalizeItemIds(p.itemIds).length > 0);
+    if (!isItemModeSplit) {
+      throw new BadRequestException('This split has no line items to reassign');
+    }
+
+    // Locked-split guard: reassigning changes an amount someone may have
+    // already acted on. Coarse (whole-split, not per-participant) on
+    // purpose — see the contract doc's "Why the whole-split lock" section.
+    if (participants.some((p) => p.claimedAt || p.settledAt)) {
+      throw new BadRequestException(
+        'Cannot change this split — someone has already confirmed a payment. Cancel and recreate instead.',
+      );
+    }
+
+    const validItemIds = new Set(expense.items.map((i) => i.id));
+    if (!validItemIds.has(itemId)) {
+      throw new BadRequestException(`Item ${itemId} does not belong to this expense`);
+    }
+
+    const liveParticipantIds = new Set(participants.map((p) => p.id));
+    for (const id of participantIds) {
+      if (!liveParticipantIds.has(id)) {
+        throw new BadRequestException(`Participant ${id} is not part of this split`);
+      }
+    }
+
+    const { assignments, result } = reassignSplitItem(
+      expense.items.map((i) => ({ id: i.id, totalPrice: Number(i.totalPrice) })),
+      participants.map((p) => ({ participantId: p.id, itemIds: normalizeItemIds(p.itemIds) })),
+      itemId,
+      participantIds,
+      Number(expense.amount),
+    );
+
+    const shareByParticipant = new Map(result.shares.map((s) => [s.participantId, s.amount]));
+    for (const p of participants) {
+      const amount = shareByParticipant.get(p.id) ?? 0;
+      if (amount <= 0) {
+        // Mirrors createSplit's "every participant must have a positive
+        // share" — a participant driven to (or left at) zero by this edit
+        // needs removing from the split entirely, which this flow does not
+        // offer (see the contract doc's scope section).
+        throw new BadRequestException(
+          `This change would leave ${p.name} with nothing assigned — remove them via Cancel + recreate instead`,
+        );
+      }
+    }
+
+    await this.prisma.$transaction(async (tx: PrismaClient) => {
+      for (const p of participants) {
+        const newItemIds = assignments.find((a) => a.participantId === p.id)?.itemIds ?? [];
+        const newAmount = shareByParticipant.get(p.id) ?? 0;
+        const oldItemIds = normalizeItemIds(p.itemIds);
+        const changed =
+          newAmount !== Number(p.amount) ||
+          newItemIds.length !== oldItemIds.length ||
+          newItemIds.some((id: string) => !oldItemIds.includes(id));
+        if (!changed) continue;
+
+        await tx.receiptSplitParticipant.update({
+          where: { id: p.id },
+          data: { itemIds: newItemIds, amount: newAmount },
+        });
+        if (p.debtExpenseId) {
+          await tx.expense.update({
+            where: { id: p.debtExpenseId },
+            data: { amount: newAmount, syncVersion: { increment: 1 } },
+          });
+        }
+      }
+
+      // Resolves every OPEN flag on this exact line, for every participant —
+      // the concrete gap this feature closes. Same transaction as the amount
+      // change so the two can never disagree.
+      await tx.receiptSplitFlag.updateMany({
+        where: { expenseId: expense.id, itemId, resolvedAt: null },
+        data: { resolvedAt: new Date() },
+      });
+    });
+
+    const lang = await this.resolvePayerLanguage(expense);
+    const refreshed = await this.prisma.receiptSplitParticipant.findMany({
+      where: { expenseId: expense.id, cancelledAt: null },
+      orderBy: { createdAt: 'asc' },
+    });
+    const flagsByParticipant = await this.getActiveFlagsByParticipant(expense.id);
+    return this.toStateResponse(expense, refreshed, lang, flagsByParticipant);
   }
 
   /**

@@ -28,6 +28,13 @@ interface ReceiptSplitState {
   /** ABA guest-split-item-dispute — payer marks a guest's flag as dealt with.
    * Optimistic removal, mirrors confirm()'s rollback shape. */
   resolveFlag: (expenseId: string, flagId: string) => Promise<void>;
+  /** ABA-546 — reassigns ONE line's claimants in place instead of
+   * cancel-and-recreate. NON-optimistic (unlike confirm/resolveFlag): a
+   * reassignment recomputes EVERY participant's amount, not just the
+   * touched one, and the client never computes an authoritative share (see
+   * app/expense/split.tsx's header comment) — so there is no safe partial
+   * update to apply before the server responds. Rethrows on failure. */
+  reassignItem: (expenseId: string, itemId: string, participantIds: string[]) => Promise<void>;
 }
 
 export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
@@ -147,6 +154,11 @@ export const useReceiptSplitStore = create<ReceiptSplitState>()((set, get) => ({
       set({ split: previous });
       throw e;
     }
+  },
+
+  reassignItem: async (expenseId, itemId, participantIds) => {
+    const split = await api.reassignSplitItem(expenseId, itemId, participantIds);
+    set({ expenseId, split });
   },
 
   loadRecentParticipantNames: async () => {

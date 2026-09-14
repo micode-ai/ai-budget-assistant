@@ -2649,6 +2649,10 @@ export default {
     flagWholeShare: 'Cała jego/jej część',
     flagResolve: 'Rozwiązano',
     flagFixHint: 'Aby zmienić, kto ile jest winien, anuluj i utwórz podział od nowa.',
+    editAssignment: 'Edytuj przypisanie',
+    editAssignmentTitle: 'Kto to miał?',
+    editAssignmentSave: 'Zapisz',
+    editBlockedConfirmed: 'Nie można tego zmienić — ktoś już potwierdził płatność w tym podziale. Zamiast tego anuluj i utwórz podział od nowa.',
   },
   receiptCategorySplit: {
     title: 'Podział na kategorie',

@@ -50,7 +50,7 @@ Zurück in der App zeigt die Zeile jedes Freundes einen Status:
 
 Ein Freund, der noch nicht bezahlt hat, bleibt einfach bei **Gesendet** oder **Geöffnet** — mehr steckt nicht dahinter.
 
-Hat ein Freund etwas an seinem Anteil gemeldet, siehst du das direkt unter seiner Zeile, zusammen mit seiner Notiz (falls er eine hinzugefügt hat). Tippe auf **Erledigt**, sobald du es geklärt hast — das Melden ändert die Aufteilung selbst nicht, um eine falsche Zuordnung wirklich zu korrigieren, musst du die Aufteilung stornieren und mit den korrigierten Anteilen neu erstellen.
+Hat ein Freund etwas an seinem Anteil gemeldet, siehst du das direkt unter seiner Zeile, zusammen mit seiner Notiz (falls er eine hinzugefügt hat). Geht es um eine bestimmte Position, tippe direkt dort auf **Zuordnung bearbeiten**, um zu ändern, wer diese Position hat — die Korrektur wirkt sofort und die Meldung verschwindet von selbst, ganz ohne stornieren. Geht es stattdessen um den gesamten Anteil (nur möglich, wenn gleichmäßig aufgeteilt wurde, oder wenn jemand sagt, er sei gar nicht dabei gewesen), lässt sich das nicht an einer einzelnen Position korrigieren — tippe auf **Erledigt**, sobald du es anderweitig geklärt hast, und storniere die Aufteilung, um sie mit den korrigierten Anteilen neu zu erstellen. Beide Korrekturen sind gesperrt, sobald jemand in der Aufteilung bereits bezahlt hat oder als beglichen bestätigt wurde — storniere in diesem Fall stattdessen und erstelle sie neu.
 
 ## Den Erhalt bestätigen
 

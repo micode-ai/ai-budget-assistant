@@ -2642,6 +2642,10 @@ export default {
     flagWholeShare: 'Their whole share',
     flagResolve: 'Resolve',
     flagFixHint: 'To change who owes what, cancel and recreate the split.',
+    editAssignment: 'Edit assignment',
+    editAssignmentTitle: 'Who had this?',
+    editAssignmentSave: 'Save',
+    editBlockedConfirmed: "Can't change this — someone has already confirmed a payment on this split. Cancel and recreate instead.",
   },
   receiptCategorySplit: {
     title: 'Split by category',

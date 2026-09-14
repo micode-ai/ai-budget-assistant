@@ -37,6 +37,22 @@ export interface SplitParticipantState {
   url: string;
   /** Always present — empty array when there are no open flags. */
   flags: SplitParticipantFlag[];
+  /** This participant's currently-claimed expense_item ids (ABA-546,
+   * in-place line reassignment). Payer-view only — never rendered on the
+   * guest page. Empty for an equal-mode split. */
+  itemIds: string[];
+}
+
+/**
+ * Body of `PATCH :id/receipt-split/items/:itemId/reassign` (ABA-546) — lets
+ * the payer fix ONE line's claimants in place instead of cancel-and-recreate.
+ * See docs/contracts/receipt-split-in-place-reassignment.md.
+ */
+export interface ReassignSplitItemInput {
+  /** The FULL new set of claimants for this line — replaces, not appends.
+   * Empty array = nobody claims it any more (reverts fully to the payer).
+   * Every id must be a live (non-cancelled) participant of this split. */
+  participantIds: string[];
 }
 
 export interface SplitStateResponse {

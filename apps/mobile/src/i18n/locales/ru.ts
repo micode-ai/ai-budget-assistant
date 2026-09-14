@@ -2649,6 +2649,10 @@ export default {
     flagWholeShare: 'Вся его/её часть',
     flagResolve: 'Решено',
     flagFixHint: 'Чтобы изменить, кто сколько должен, отмените и создайте разделение заново.',
+    editAssignment: 'Изменить назначение',
+    editAssignmentTitle: 'Кто это заказывал?',
+    editAssignmentSave: 'Сохранить',
+    editBlockedConfirmed: 'Это нельзя изменить — кто-то уже подтвердил оплату в этом разделении. Вместо этого отмените и создайте разделение заново.',
   },
   receiptCategorySplit: {
     title: 'Разделение по категориям',

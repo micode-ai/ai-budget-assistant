@@ -2635,6 +2635,10 @@ export default {
     flagWholeShare: 'Toda su parte',
     flagResolve: 'Resolver',
     flagFixHint: 'Para cambiar quién debe qué, cancela y vuelve a crear la división.',
+    editAssignment: 'Editar asignación',
+    editAssignmentTitle: '¿Quién tenía esto?',
+    editAssignmentSave: 'Guardar',
+    editBlockedConfirmed: 'No se puede cambiar esto: alguien ya confirmó un pago en esta división. Cancélala y vuelve a crearla.',
   },
   receiptCategorySplit: {
     title: 'Dividir por categoría',

@@ -43,6 +43,7 @@ import { shouldOfferInvite } from '@/features/referral/shouldOfferInvite';
 import { useInvitePromptStore } from '@/stores/invitePromptStore';
 import { useReferralStore } from '@/stores/referralStore';
 import { GroupQrModal } from '@/components/receipt-split/GroupQrModal';
+import { ItemReassignSheet } from '@/components/receipt-split/ItemReassignSheet';
 import { deriveSplitMode } from '@/components/split/deriveSplitMode';
 import { showAlert } from '@/utils/alert';
 import type { CreateSplitDto, SplitParticipantState } from '@budget/shared-types';
@@ -65,6 +66,7 @@ export default function ReceiptSplitScreen() {
     recentParticipantNames,
     loadRecentParticipantNames,
     resolveFlag,
+    reassignItem,
   } = useReceiptSplitStore();
 
   // Same 4-way resolution as expense/[id].tsx / expense/location.tsx — a deep
@@ -174,6 +176,10 @@ export default function ReceiptSplitScreen() {
   const [isCancelling, setIsCancelling] = useState(false);
   // ABA guest-split-item-dispute — which flag is mid-resolve.
   const [resolvingFlagId, setResolvingFlagId] = useState<string | null>(null);
+  // ABA-546 — in-place line reassignment: which item's sheet is open (null =
+  // closed), and whether a save is currently in flight.
+  const [reassignItemId, setReassignItemId] = useState<string | null>(null);
+  const [isReassigning, setIsReassigning] = useState(false);
   // ABA — QR-code bill split: the group QR modal is mounted unconditionally
   // (same pattern as every other bottom-sheet modal in this codebase) and
   // only ever opened from a "Show QR" button that is itself hidden when
@@ -275,6 +281,46 @@ export default function ReceiptSplitScreen() {
       showAlert(t('common.error'), t('errors.unknown'));
     } finally {
       setResolvingFlagId(null);
+    }
+  }
+
+  // ABA-546 — in-place line reassignment. True only when the split was
+  // created in item mode (some live participant carries a non-empty
+  // itemIds) — an equal-mode split has no line to reassign.
+  const isItemModeSplit = !!split?.participants.some((p) => p.itemIds.length > 0);
+
+  const reassignParticipants = split?.participants.map((p) => ({ id: p.id, name: p.name })) ?? [];
+  const reassignInitialClaimantIds =
+    reassignItemId != null
+      ? (split?.participants.filter((p) => p.itemIds.includes(reassignItemId)).map((p) => p.id) ?? [])
+      : [];
+  const reassignItemDescription = reassignItemId != null ? (itemDescriptions[reassignItemId] ?? '') : '';
+  const reassignItemPrice =
+    reassignItemId != null ? (items.find((i) => i.id === reassignItemId)?.totalPrice ?? 0) : 0;
+
+  function handleEditAssignment(itemId: string) {
+    setReassignItemId(itemId);
+  }
+
+  async function handleSaveReassignment(participantIds: string[]) {
+    if (!expense || !reassignItemId || isReassigning) return;
+    setIsReassigning(true);
+    try {
+      await reassignItem(expense.id, reassignItemId, participantIds);
+      setReassignItemId(null);
+    } catch (e) {
+      console.warn('[ReceiptSplitScreen] reassignItem failed', e);
+      const message = (e as { message?: string } | null)?.message ?? '';
+      // The server's coarse whole-split lock (see the contract doc) rejects
+      // with a message this pattern-matches — same convention as
+      // handleCreate's "encrypted account" branch above.
+      if (/already confirmed/i.test(message)) {
+        showAlert(t('common.error'), t('receiptSplit.editBlockedConfirmed'));
+      } else {
+        showAlert(t('common.error'), t('errors.unknown'));
+      }
+    } finally {
+      setIsReassigning(false);
     }
   }
 
@@ -387,6 +433,8 @@ export default function ReceiptSplitScreen() {
           itemDescriptions={itemDescriptions}
           onResolveFlag={handleResolveFlag}
           resolvingFlagId={resolvingFlagId}
+          isItemModeSplit={isItemModeSplit}
+          onEditAssignment={handleEditAssignment}
           footer={
             offerInvite ? (
               <InviteFriendsCard onInvite={handleInvite} onDismiss={invitePrompt.markDismissed} />
@@ -401,6 +449,17 @@ export default function ReceiptSplitScreen() {
             onShare={handleShareGroupQr}
           />
         )}
+        <ItemReassignSheet
+          itemId={reassignItemId}
+          itemDescription={reassignItemDescription}
+          itemPrice={reassignItemPrice}
+          currencyCode={split.currencyCode}
+          participants={reassignParticipants}
+          initialClaimantIds={reassignInitialClaimantIds}
+          isSaving={isReassigning}
+          onSave={handleSaveReassignment}
+          onClose={() => setReassignItemId(null)}
+        />
       </>
     );
   }

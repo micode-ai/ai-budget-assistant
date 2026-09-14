@@ -39,6 +39,9 @@ function buildDeps(
     return Promise.resolve({ id: `debt-${expenseCreateCount}`, ...data });
   });
   const txExpenseUpdateMany = jest.fn().mockResolvedValue({ count: 0 });
+  // ABA-546 — reassignItem updates a single debt Expense by its own id, not a
+  // batch updateMany.
+  const txExpenseUpdate = jest.fn().mockImplementation(({ data }: any) => Promise.resolve({ ...data }));
 
   const createdParticipantRows: any[] = [];
   const txParticipantCreate = jest.fn().mockImplementation(({ data }: any) => {
@@ -53,10 +56,20 @@ function buildDeps(
     return Promise.resolve(row);
   });
   const txParticipantUpdateMany = jest.fn().mockResolvedValue({ count: 0 });
+  // ABA-546 — reassignItem updates a single participant row by its own id.
+  const txParticipantUpdate = jest.fn().mockImplementation(({ data }: any) => Promise.resolve({ ...data }));
+  // ABA-546 — reassignItem auto-resolves every open flag on the reassigned
+  // item, inside the same transaction as the amount change.
+  const txFlagUpdateMany = jest.fn().mockResolvedValue({ count: 0 });
 
   const tx = {
-    expense: { create: txExpenseCreate, updateMany: txExpenseUpdateMany },
-    receiptSplitParticipant: { create: txParticipantCreate, updateMany: txParticipantUpdateMany },
+    expense: { create: txExpenseCreate, updateMany: txExpenseUpdateMany, update: txExpenseUpdate },
+    receiptSplitParticipant: {
+      create: txParticipantCreate,
+      updateMany: txParticipantUpdateMany,
+      update: txParticipantUpdate,
+    },
+    receiptSplitFlag: { updateMany: txFlagUpdateMany },
   };
 
   const transactionMock = jest.fn(async (cb: any) => cb(tx));
@@ -824,6 +837,179 @@ describe('ReceiptSplitService.cancelSplit', () => {
     expect(tx.expense.updateMany).not.toHaveBeenCalled();
     expect(tx.receiptSplitParticipant.updateMany).not.toHaveBeenCalled();
     expect(result).toEqual({ success: true });
+  });
+});
+
+describe('ReceiptSplitService.reassignItem (ABA-546, in-place line reassignment)', () => {
+  // p1 currently claims bread+wine (amount 40 = 10 + half of 60), p2 claims
+  // wine (amount 30). Reassigning 'wine' to p2 alone drops p1 to bread-only
+  // (10) and gives p2 the whole wine (60).
+  const preEdit = [
+    {
+      id: 'p-1',
+      name: 'Alice',
+      amount: 40,
+      currencyCode: 'USD',
+      token: 'a'.repeat(32),
+      debtExpenseId: 'debt-1',
+      openedAt: null,
+      claimedAt: null,
+      settledAt: null,
+      cancelledAt: null,
+      itemIds: ['bread', 'wine'],
+    },
+    {
+      id: 'p-2',
+      name: 'Bob',
+      amount: 30,
+      currencyCode: 'USD',
+      token: 'b'.repeat(32),
+      debtExpenseId: 'debt-2',
+      openedAt: null,
+      claimedAt: null,
+      settledAt: null,
+      cancelledAt: null,
+      itemIds: ['wine'],
+    },
+  ];
+  const postEdit = [
+    { ...preEdit[0], amount: 10, itemIds: ['bread'] },
+    { ...preEdit[1], amount: 60, itemIds: ['wine'] },
+  ];
+  const itemModeExpense = makeExpense({
+    amount: 70,
+    items: [
+      { id: 'bread', totalPrice: 10 },
+      { id: 'wine', totalPrice: 60 },
+    ],
+  });
+
+  it('recomputes shares, updates each changed participant and their linked debt Expense, and auto-resolves every open flag on that item', async () => {
+    const { service, prisma, tx, transactionMock } = buildDeps({ expense: itemModeExpense });
+    prisma.receiptSplitParticipant.findMany
+      .mockResolvedValueOnce(preEdit) // initial live-participant fetch
+      .mockResolvedValueOnce(postEdit); // post-transaction refresh
+
+    const result = await service.reassignItem('acc-1', 'exp-1', 'wine', ['p-2']);
+
+    expect(transactionMock).toHaveBeenCalledTimes(1);
+
+    expect(tx.receiptSplitParticipant.update).toHaveBeenCalledWith({
+      where: { id: 'p-1' },
+      data: { itemIds: ['bread'], amount: 10 },
+    });
+    expect(tx.receiptSplitParticipant.update).toHaveBeenCalledWith({
+      where: { id: 'p-2' },
+      data: { itemIds: ['wine'], amount: 60 },
+    });
+    expect(tx.expense.update).toHaveBeenCalledWith({
+      where: { id: 'debt-1' },
+      data: { amount: 10, syncVersion: { increment: 1 } },
+    });
+    expect(tx.expense.update).toHaveBeenCalledWith({
+      where: { id: 'debt-2' },
+      data: { amount: 60, syncVersion: { increment: 1 } },
+    });
+
+    // The whole point of the feature: fixing the line resolves the dispute
+    // about it, in the same transaction as the amount change.
+    expect(tx.receiptSplitFlag.updateMany).toHaveBeenCalledWith({
+      where: { expenseId: 'exp-1', itemId: 'wine', resolvedAt: null },
+      data: { resolvedAt: expect.any(Date) },
+    });
+
+    // Response reflects the refreshed (post-edit) rows, not the pre-edit ones.
+    const alice = result.participants.find((p) => p.id === 'p-1')!;
+    const bob = result.participants.find((p) => p.id === 'p-2')!;
+    expect(alice.amount).toBe(10);
+    expect(alice.itemIds).toEqual(['bread']);
+    expect(bob.amount).toBe(60);
+    expect(bob.itemIds).toEqual(['wine']);
+  });
+
+  it('skips the update for a participant whose amount and itemIds are both unchanged by the edit', async () => {
+    // Reassigning to the SAME claimant list changes nothing for anyone.
+    const { service, prisma, tx } = buildDeps({ expense: itemModeExpense });
+    prisma.receiptSplitParticipant.findMany
+      .mockResolvedValueOnce(preEdit)
+      .mockResolvedValueOnce(preEdit);
+
+    await service.reassignItem('acc-1', 'exp-1', 'wine', ['p-1', 'p-2']);
+
+    expect(tx.receiptSplitParticipant.update).not.toHaveBeenCalled();
+    expect(tx.expense.update).not.toHaveBeenCalled();
+    // Still resolves any open flag on the line even when nothing else moved —
+    // the payer may be fixing a flag whose report was itself a false alarm.
+    expect(tx.receiptSplitFlag.updateMany).toHaveBeenCalled();
+  });
+
+  it('rejects when the split has no line items to reassign (created in equal mode)', async () => {
+    const equalModeParticipants = preEdit.map((p) => ({ ...p, itemIds: undefined }));
+    const { service, prisma, transactionMock } = buildDeps({ expense: itemModeExpense });
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce(equalModeParticipants);
+
+    await expect(service.reassignItem('acc-1', 'exp-1', 'wine', ['p-2'])).rejects.toThrow(
+      BadRequestException,
+    );
+    expect(transactionMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects an itemId that does not belong to this expense', async () => {
+    const { service, prisma, transactionMock } = buildDeps({ expense: itemModeExpense });
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce(preEdit);
+
+    await expect(
+      service.reassignItem('acc-1', 'exp-1', 'nonexistent-item', ['p-2']),
+    ).rejects.toThrow(BadRequestException);
+    expect(transactionMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects a participantId that is not a live participant of this split', async () => {
+    const { service, prisma, transactionMock } = buildDeps({ expense: itemModeExpense });
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce(preEdit);
+
+    await expect(
+      service.reassignItem('acc-1', 'exp-1', 'wine', ['someone-else']),
+    ).rejects.toThrow(BadRequestException);
+    expect(transactionMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects outright once any participant has claimed or settled — the coarse whole-split lock', async () => {
+    const { service, prisma, transactionMock } = buildDeps({ expense: itemModeExpense });
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce([
+      preEdit[0],
+      { ...preEdit[1], claimedAt: new Date('2026-01-01') },
+    ]);
+
+    await expect(service.reassignItem('acc-1', 'exp-1', 'wine', ['p-1'])).rejects.toThrow(
+      BadRequestException,
+    );
+    expect(transactionMock).not.toHaveBeenCalled();
+  });
+
+  it('rejects an edit that would leave a participant with a zero (or negative) share', async () => {
+    // p1's only item is dropped from them entirely, and they claim nothing else.
+    const soloParticipant = [{ ...preEdit[0], amount: 10, itemIds: ['wine'] }];
+    const soleItemExpense = makeExpense({
+      amount: 60,
+      items: [{ id: 'wine', totalPrice: 60 }],
+    });
+    const { service, prisma, transactionMock } = buildDeps({ expense: soleItemExpense });
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce(soloParticipant);
+
+    await expect(service.reassignItem('acc-1', 'exp-1', 'wine', [])).rejects.toThrow(
+      BadRequestException,
+    );
+    expect(transactionMock).not.toHaveBeenCalled();
+  });
+
+  it('404s when no split exists for the expense', async () => {
+    const { service, prisma } = buildDeps({ expense: itemModeExpense });
+    prisma.receiptSplitParticipant.findMany.mockResolvedValueOnce([]);
+
+    await expect(service.reassignItem('acc-1', 'exp-1', 'wine', ['p-1'])).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });
 

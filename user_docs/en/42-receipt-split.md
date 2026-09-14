@@ -50,7 +50,7 @@ Back in the app, each friend's row shows a status:
 
 A friend who hasn't paid yet simply stays at **Sent** or **Opened** — there's nothing more to it than that.
 
-If a friend flagged something wrong with their share, you'll see it right under their row, along with their note (if they added one). Tap **Resolve** once you've sorted it out — flagging never changes the split by itself, so to actually fix a wrong assignment you'll need to cancel the split and create a new one with the corrected shares.
+If a friend flagged something wrong with their share, you'll see it right under their row, along with their note (if they added one). If the flag is about one specific item, tap **Edit assignment** right there to change who's on that line — the fix is instant and clears the flag on its own, no need to cancel anything. If the flag is about their whole share instead (only possible when the bill was split equally, or if they said they weren't part of it at all), there's no single line to fix that way — tap **Resolve** once you've sorted it out another way, and to actually change who owes what you'll need to cancel the split and create a new one with the corrected shares. Either kind of fix is blocked once anyone on the split has said they've paid or been confirmed as settled — cancel and recreate the split in that case instead.
 
 ## Confirming you've been paid
 

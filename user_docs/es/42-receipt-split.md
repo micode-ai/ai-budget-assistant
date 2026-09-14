@@ -50,7 +50,7 @@ De vuelta en la app, la fila de cada amigo muestra un estado:
 
 Un amigo que todavía no ha pagado simplemente se queda en **Enviado** u **Abierto** — no hay nada más detrás de eso.
 
-Si un amigo reportó algo mal con su parte, lo verás justo debajo de su fila, junto con su nota (si añadió una). Toca **Resolver** en cuanto lo hayas solucionado — reportar no cambia la división por sí solo, así que para corregir de verdad una asignación equivocada tendrás que cancelar la división y crear una nueva con las partes corregidas.
+Si un amigo reportó algo mal con su parte, lo verás justo debajo de su fila, junto con su nota (si añadió una). Si el aviso es sobre un artículo concreto, toca **Editar asignación** ahí mismo para cambiar quién tiene esa línea — el cambio se aplica al instante y el aviso desaparece solo, sin necesidad de cancelar nada. Si el aviso es sobre toda su parte (solo posible cuando la división fue igualitaria, o si dijo que no formaba parte de ella en absoluto), no hay una sola línea que corregir así — toca **Resolver** en cuanto lo hayas solucionado de otra forma, y para cambiar de verdad quién debe qué tendrás que cancelar la división y crear una nueva con las partes corregidas. Ninguna de las dos correcciones está disponible una vez que alguien en la división ya dijo que pagó o fue confirmado como saldado — en ese caso, cancela y vuelve a crear la división.
 
 ## Confirmar que has recibido el pago
 

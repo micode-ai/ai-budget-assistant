@@ -1,4 +1,4 @@
-import { resolveItemSplit, resolveEqualSplit, allocateItemShares } from './split-calculator';
+import { resolveItemSplit, resolveEqualSplit, allocateItemShares, reassignSplitItem } from './split-calculator';
 
 const item = (id: string, totalPrice: number) => ({ id, totalPrice });
 
@@ -242,5 +242,62 @@ describe('allocateItemShares', () => {
     // Defensive: the count comes from a DB read, and a line this participant
     // claims always has at least one claimant — them.
     expect(allocateItemShares([line('i1', 10, 0)], 10)).toEqual([{ id: 'i1', amount: 10, sharedWith: 1 }]);
+  });
+});
+
+describe('reassignSplitItem', () => {
+  it('replaces one item’s claimants and leaves every other item untouched', () => {
+    const items = [item('bread', 10), item('wine', 60)];
+    const current = [
+      { participantId: 'p1', itemIds: ['bread'] },
+      { participantId: 'p2', itemIds: ['wine'] },
+    ];
+    // p1 joins the wine, p2 keeps it too — bread stays exactly with p1.
+    const { assignments, result } = reassignSplitItem(items, current, 'wine', ['p1', 'p2'], 70);
+
+    expect(assignments).toEqual([
+      { participantId: 'p1', itemIds: ['bread', 'wine'] },
+      { participantId: 'p2', itemIds: ['wine'] },
+    ]);
+    expect(result.shares).toEqual([
+      { participantId: 'p1', amount: 40 }, // 10 (bread) + 30 (half of wine)
+      { participantId: 'p2', amount: 30 },
+    ]);
+    expect(result.ownShare).toBe(0);
+  });
+
+  it('reverts an item fully to the payer when the new claimant list is empty', () => {
+    const items = [item('wine', 60)];
+    const current = [{ participantId: 'p1', itemIds: ['wine'] }];
+    const { assignments, result } = reassignSplitItem(items, current, 'wine', [], 60);
+
+    expect(assignments).toEqual([{ participantId: 'p1', itemIds: [] }]);
+    expect(result.shares).toEqual([{ participantId: 'p1', amount: 0 }]);
+    expect(result.ownShare).toBe(60);
+  });
+
+  it('drops the target item from a participant not in the new claimant list, keeping their other claims', () => {
+    const items = [item('bread', 10), item('wine', 60)];
+    const current = [
+      { participantId: 'p1', itemIds: ['bread', 'wine'] },
+      { participantId: 'p2', itemIds: [] },
+    ];
+    // p1 is removed from the wine; p2 takes it over. p1's bread claim survives.
+    const { assignments } = reassignSplitItem(items, current, 'wine', ['p2'], 70);
+
+    expect(assignments).toEqual([
+      { participantId: 'p1', itemIds: ['bread'] },
+      { participantId: 'p2', itemIds: ['wine'] },
+    ]);
+  });
+
+  it('is idempotent: reassigning to the same claimant list changes nothing', () => {
+    const items = [item('wine', 60)];
+    const current = [
+      { participantId: 'p1', itemIds: ['wine'] },
+      { participantId: 'p2', itemIds: ['wine'] },
+    ];
+    const { assignments } = reassignSplitItem(items, current, 'wine', ['p1', 'p2'], 60);
+    expect(assignments).toEqual(current);
   });
 });

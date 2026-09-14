@@ -50,7 +50,7 @@ De retour dans l'application, la ligne de chaque ami affiche un statut :
 
 Un ami qui n'a pas encore payé reste simplement à **Envoyé** ou **Ouvert** — il n'y a rien de plus à en dire.
 
-Si un ami a signalé un problème avec sa part, vous le verrez juste sous sa ligne, avec sa note s'il en a ajouté une. Appuyez sur **Résoudre** une fois que c'est réglé — signaler ne modifie pas le partage en soi, donc pour corriger vraiment une mauvaise attribution, il faudra annuler le partage et en recréer un avec les parts corrigées.
+Si un ami a signalé un problème avec sa part, vous le verrez juste sous sa ligne, avec sa note s'il en a ajouté une. Si le signalement concerne un article précis, appuyez directement sur **Modifier l'attribution** pour changer qui a cet article — la correction est immédiate et le signalement disparaît de lui-même, sans avoir à annuler quoi que ce soit. Si le signalement concerne toute sa part (possible seulement si le partage était égal, ou si la personne indique ne pas avoir du tout fait partie du partage), il n'y a pas une seule ligne à corriger de cette façon — appuyez sur **Résoudre** une fois que c'est réglé autrement, et pour vraiment changer qui doit quoi, il faudra annuler le partage et en recréer un avec les parts corrigées. Aucune des deux corrections n'est possible une fois que quelqu'un dans le partage a déjà indiqué avoir payé ou a été confirmé comme réglé — dans ce cas, annulez et recréez le partage à la place.
 
 ## Confirmer que vous avez été payé
 

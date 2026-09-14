@@ -2635,6 +2635,10 @@ export default {
     flagWholeShare: 'Sein/ihr ganzer Anteil',
     flagResolve: 'Erledigt',
     flagFixHint: 'Um zu ändern, wer wie viel schuldet, storniere die Aufteilung und erstelle sie neu.',
+    editAssignment: 'Zuordnung bearbeiten',
+    editAssignmentTitle: 'Wer hatte das?',
+    editAssignmentSave: 'Speichern',
+    editBlockedConfirmed: 'Das kann nicht geändert werden — jemand hat bereits eine Zahlung für diese Aufteilung bestätigt. Storniere sie stattdessen und erstelle sie neu.',
   },
   receiptCategorySplit: {
     title: 'Nach Kategorie aufteilen',

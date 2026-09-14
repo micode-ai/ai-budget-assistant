@@ -2617,6 +2617,10 @@ export default {
     flagWholeShare: 'Уся яго/яе частка',
     flagResolve: 'Вырашана',
     flagFixHint: 'Каб змяніць, хто колькі павінен, скасуйце і стварыце падзел нанова.',
+    editAssignment: 'Змяніць прызначэнне',
+    editAssignmentTitle: 'Хто гэта заказваў?',
+    editAssignmentSave: 'Захаваць',
+    editBlockedConfirmed: 'Гэта нельга змяніць — хтосьці ўжо пацвердзіў аплату ў гэтым падзеле. Замест гэтага скасуйце і стварыце падзел нанова.',
   },
   receiptCategorySplit: {
     title: 'Падзел па катэгорыях',

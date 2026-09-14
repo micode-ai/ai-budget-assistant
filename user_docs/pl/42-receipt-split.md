@@ -50,7 +50,7 @@ W aplikacji wiersz każdego znajomego pokazuje status:
 
 Znajomy, który jeszcze nie zapłacił, po prostu zostaje przy statusie **Wysłano** albo **Otwarto** — nic więcej się z tym nie wiąże.
 
-Jeśli znajomy zgłosił coś nie tak ze swoją częścią, zobaczysz to zaraz pod jego wierszem, razem z jego notatką (jeśli ją dodał). Stuknij **Rozwiązano**, gdy tylko to załatwisz — samo zgłoszenie nie zmienia podziału, więc żeby faktycznie poprawić błędne przypisanie, musisz anulować podział i utworzyć nowy z poprawionymi częściami.
+Jeśli znajomy zgłosił coś nie tak ze swoją częścią, zobaczysz to zaraz pod jego wierszem, razem z jego notatką (jeśli ją dodał). Jeśli zgłoszenie dotyczy konkretnej pozycji, stuknij od razu **Edytuj przypisanie**, żeby zmienić, kto ma tę pozycję — poprawka działa natychmiast, a zgłoszenie samo znika, bez konieczności anulowania czegokolwiek. Jeśli zgłoszenie dotyczy całej jego części (możliwe tylko przy podziale równym albo gdy ktoś napisał, że w ogóle nie brał udziału w podziale), nie ma jednej pozycji do poprawienia w ten sposób — stuknij **Rozwiązano**, gdy tylko załatwisz to inaczej, a żeby faktycznie zmienić, kto ile jest winien, musisz anulować podział i utworzyć nowy z poprawionymi częściami. Żadna z tych poprawek nie jest dostępna, gdy ktokolwiek w podziale zdążył już zaznaczyć, że zapłacił, lub został potwierdzony jako rozliczony — w takim przypadku zamiast tego anuluj podział i utwórz go od nowa.
 
 ## Potwierdzanie otrzymania pieniędzy
 

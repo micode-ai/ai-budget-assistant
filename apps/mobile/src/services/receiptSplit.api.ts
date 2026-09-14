@@ -4,6 +4,7 @@ import type {
   RecentSplitParticipantsResponse,
   SplitStateResponse,
   SplitParticipantState,
+  ReassignSplitItemInput,
 } from '@budget/shared-types';
 
 // Payer-facing `/expenses/:id/receipt-split*` routes. Named `receipt-split`,
@@ -42,6 +43,18 @@ export const receiptSplitApi = {
     return httpClient.request<{ success: true }>(
       `/expenses/${expenseId}/receipt-split/flags/${flagId}/resolve`,
       { method: 'PATCH' },
+    );
+  },
+
+  // ABA-546 — in-place line reassignment: fixes ONE line's claimants instead
+  // of cancel-and-recreate. `participantIds` REPLACES the item's claimant
+  // list outright (not a toggle/append). See
+  // docs/contracts/receipt-split-in-place-reassignment.md.
+  reassignSplitItem(expenseId: string, itemId: string, participantIds: string[]) {
+    const dto: ReassignSplitItemInput = { participantIds };
+    return httpClient.request<SplitStateResponse>(
+      `/expenses/${expenseId}/receipt-split/items/${itemId}/reassign`,
+      { method: 'PATCH', body: JSON.stringify(dto) },
     );
   },
 

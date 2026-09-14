@@ -44,6 +44,15 @@ interface ParticipantStatusListProps {
   itemDescriptions?: Record<string, string>;
   onResolveFlag?: (participantId: string, flagId: string) => void;
   resolvingFlagId?: string | null;
+  /** True when this split was created in item mode (some participant carries
+   * a non-empty `itemIds`) — ABA-546. Only THEN can a per-item flag be fixed
+   * in place; an equal-mode split has no line to reassign and keeps the
+   * plain `flagFixHint` text. */
+  isItemModeSplit?: boolean;
+  /** Opens the in-place reassignment sheet for one flagged line (ABA-546) —
+   * undefined/omitted for a whole-share flag (`flag.itemId === null`), which
+   * this feature does not cover. */
+  onEditAssignment?: (itemId: string) => void;
 }
 
 /**
@@ -70,6 +79,8 @@ export function ParticipantStatusList({
   itemDescriptions,
   onResolveFlag,
   resolvingFlagId,
+  isItemModeSplit,
+  onEditAssignment,
 }: ParticipantStatusListProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -148,36 +159,57 @@ export function ParticipantStatusList({
 
               {/* ABA guest-split-item-dispute: a guest said something's wrong with
                   a line (or their whole share) — read-only text plus an explicit
-                  "Resolve" step (never auto-resolved — there is no in-place
-                  reassignment flow to key an auto-resolve off, see the fix-hint
-                  line below). */}
+                  "Resolve" step, and — for a per-item flag on an item-mode split
+                  (ABA-546) — an "Edit assignment" action that fixes the line in
+                  place and auto-resolves the flag as part of saving, instead of
+                  requiring Cancel + recreate. A whole-share flag (equal mode, or
+                  "I wasn't in this split at all") has no single line to reassign
+                  and keeps the plain fix-hint below. */}
               {p.flags.length > 0 && (
                 <View style={styles.flagsBlock}>
-                  {p.flags.map((flag) => (
-                    <View key={flag.id} style={styles.flagRow}>
-                      <Ionicons name="flag-outline" size={14} color={theme.colors.danger} style={styles.flagIcon} />
-                      <Text style={styles.flagText}>
-                        {flag.itemId
-                          ? (itemDescriptions?.[flag.itemId] ?? t('receiptSplit.flagUnknownItem'))
-                          : t('receiptSplit.flagWholeShare')}
-                        {flag.note ? `: ${flag.note}` : ''}
-                      </Text>
-                      {canEdit && onResolveFlag && (
-                        <TouchableOpacity
-                          onPress={() => onResolveFlag(p.id, flag.id)}
-                          disabled={resolvingFlagId === flag.id}
-                          activeOpacity={0.7}
-                        >
-                          {resolvingFlagId === flag.id ? (
-                            <ActivityIndicator size="small" color={theme.colors.success} />
-                          ) : (
-                            <Text style={styles.flagResolveText}>{t('receiptSplit.flagResolve')}</Text>
-                          )}
-                        </TouchableOpacity>
-                      )}
-                    </View>
-                  ))}
-                  {canEdit && <Text style={styles.flagFixHint}>{t('receiptSplit.flagFixHint')}</Text>}
+                  {p.flags.map((flag) => {
+                    const canEditThisLine =
+                      canEdit && isItemModeSplit && !!flag.itemId && !!onEditAssignment;
+                    return (
+                      <View key={flag.id} style={styles.flagRow}>
+                        <Ionicons name="flag-outline" size={14} color={theme.colors.danger} style={styles.flagIcon} />
+                        <Text style={styles.flagText}>
+                          {flag.itemId
+                            ? (itemDescriptions?.[flag.itemId] ?? t('receiptSplit.flagUnknownItem'))
+                            : t('receiptSplit.flagWholeShare')}
+                          {flag.note ? `: ${flag.note}` : ''}
+                        </Text>
+                        {canEditThisLine && (
+                          <TouchableOpacity
+                            onPress={() => onEditAssignment!(flag.itemId!)}
+                            activeOpacity={0.7}
+                          >
+                            <Text style={styles.flagEditText}>{t('receiptSplit.editAssignment')}</Text>
+                          </TouchableOpacity>
+                        )}
+                        {canEdit && onResolveFlag && (
+                          <TouchableOpacity
+                            onPress={() => onResolveFlag(p.id, flag.id)}
+                            disabled={resolvingFlagId === flag.id}
+                            activeOpacity={0.7}
+                          >
+                            {resolvingFlagId === flag.id ? (
+                              <ActivityIndicator size="small" color={theme.colors.success} />
+                            ) : (
+                              <Text style={styles.flagResolveText}>{t('receiptSplit.flagResolve')}</Text>
+                            )}
+                          </TouchableOpacity>
+                        )}
+                      </View>
+                    );
+                  })}
+                  {/* Only shown when at least one open flag here has no edit path
+                      (a whole-share flag, or the whole split is equal-mode) —
+                      a per-item flag's own "Edit assignment" action above makes
+                      this generic hint redundant for it. */}
+                  {canEdit && (!isItemModeSplit || p.flags.some((f) => !f.itemId)) && (
+                    <Text style={styles.flagFixHint}>{t('receiptSplit.flagFixHint')}</Text>
+                  )}
                 </View>
               )}
             </View>
@@ -312,6 +344,7 @@ const createStyles = (theme: Theme) => ({
   },
   flagRow: {
     flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
     alignItems: 'center' as const,
     gap: theme.spacing[1.5],
   },
@@ -326,6 +359,11 @@ const createStyles = (theme: Theme) => ({
   flagResolveText: {
     ...theme.textStyles.caption,
     color: theme.colors.danger,
+    fontFamily: theme.fonts.semiBold,
+  },
+  flagEditText: {
+    ...theme.textStyles.caption,
+    color: theme.colors.primary,
     fontFamily: theme.fonts.semiBold,
   },
   flagFixHint: {
