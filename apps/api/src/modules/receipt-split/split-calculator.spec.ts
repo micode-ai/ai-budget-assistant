@@ -224,6 +224,123 @@ describe('resolveItemSplit — receipt-wide discount (ABA-549)', () => {
   });
 });
 
+describe('resolveItemSplit — explicit per-line shares (ABA-550)', () => {
+  it('honours a hand-set share and leaves the rest of the line to the payer', () => {
+    // The payer's own picture: "Половинки куриные 15.99 — Эдик 60%, я 40%".
+    // The payer is never a participant row; their 40% simply is not claimed.
+    const out = resolveItemSplit(
+      [item('chicken', 15.99)],
+      [{ participantId: 'edik', itemIds: ['chicken'], itemShareBp: { chicken: 6000 } }],
+      15.99,
+    );
+    expect(out.shares).toEqual([{ participantId: 'edik', amount: 9.59 }]);
+    expect(out.ownShare).toBe(6.4);
+  });
+
+  it('accepts a share entered as money by converting it to basis points upstream', () => {
+    // 6.40 of 15.99 is 4002.5bp; the service rounds, so 4003 here. The point of
+    // the assertion is that the money comes back out again.
+    const out = resolveItemSplit(
+      [item('chicken', 15.99)],
+      [{ participantId: 'edik', itemIds: ['chicken'], itemShareBp: { chicken: 4003 } }],
+      15.99,
+    );
+    expect(out.shares).toEqual([{ participantId: 'edik', amount: 6.4 }]);
+  });
+
+  it('splits three ways by hand, leaving the remainder to the payer', () => {
+    const out = resolveItemSplit(
+      [item('wine', 100)],
+      [
+        { participantId: 'edik', itemIds: ['wine'], itemShareBp: { wine: 4000 } },
+        { participantId: 'olya', itemIds: ['wine'], itemShareBp: { wine: 3000 } },
+      ],
+      100,
+    );
+    expect(out.shares).toEqual([
+      { participantId: 'edik', amount: 40 },
+      { participantId: 'olya', amount: 30 },
+    ]);
+    expect(out.ownShare).toBe(30);
+  });
+
+  it('mixes a hand-split line and an equally-divided one on the same receipt', () => {
+    const out = resolveItemSplit(
+      [item('wine', 100), item('bread', 20)],
+      [
+        { participantId: 'p1', itemIds: ['wine', 'bread'], itemShareBp: { wine: 6000 } },
+        { participantId: 'p2', itemIds: ['wine', 'bread'] },
+      ],
+      120,
+    );
+    // wine: hand-split, p1 60 / p2 nothing (40 stays with the payer)
+    // bread: no explicit share anywhere on that line -> still equal, 10 each
+    expect(out.shares).toEqual([
+      { participantId: 'p1', amount: 70 },
+      { participantId: 'p2', amount: 10 },
+    ]);
+    expect(out.ownShare).toBe(40);
+  });
+
+  it('leaves every pre-existing split untouched when no share is set', () => {
+    const out = resolveItemSplit(
+      [item('wine', 60)],
+      [
+        { participantId: 'p1', itemIds: ['wine'] },
+        { participantId: 'p2', itemIds: ['wine'] },
+      ],
+      60,
+    );
+    expect(out.shares).toEqual([
+      { participantId: 'p1', amount: 30 },
+      { participantId: 'p2', amount: 30 },
+    ]);
+  });
+
+  it('composes with the receipt-wide discount', () => {
+    // 60% of a 100 line is 60 gross; the basket was discounted 20%, so 48.
+    const out = resolveItemSplit(
+      [item('wine', 100)],
+      [{ participantId: 'p1', itemIds: ['wine'], itemShareBp: { wine: 6000 } }],
+      80,
+      20,
+    );
+    expect(out.shares).toEqual([{ participantId: 'p1', amount: 48 }]);
+  });
+
+  it('cannot invent money from a nonsense share', () => {
+    const over = resolveItemSplit(
+      [item('i1', 10)],
+      [{ participantId: 'p1', itemIds: ['i1'], itemShareBp: { i1: 99999 } }],
+      10,
+    );
+    expect(over.shares).toEqual([{ participantId: 'p1', amount: 10 }]);
+    expect(over.ownShare).toBe(0);
+
+    const negative = resolveItemSplit(
+      [item('i1', 10)],
+      [{ participantId: 'p1', itemIds: ['i1'], itemShareBp: { i1: -500 } }],
+      10,
+    );
+    expect(negative.shares).toEqual([{ participantId: 'p1', amount: 0 }]);
+  });
+
+  it('gives nothing to a claimant left without a share on a hand-split line', () => {
+    const out = resolveItemSplit(
+      [item('wine', 100)],
+      [
+        { participantId: 'p1', itemIds: ['wine'], itemShareBp: { wine: 7000 } },
+        { participantId: 'p2', itemIds: ['wine'] },
+      ],
+      100,
+    );
+    expect(out.shares).toEqual([
+      { participantId: 'p1', amount: 70 },
+      { participantId: 'p2', amount: 0 },
+    ]);
+  });
+});
+
 describe('resolveEqualSplit', () => {
   it('divides the bill among the participants and the payer', () => {
     const out = resolveEqualSplit(['p1', 'p2', 'p3'], 100);

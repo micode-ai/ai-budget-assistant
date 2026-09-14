@@ -27,6 +27,21 @@ export interface SplitItem {
 export interface ItemAssignment {
   participantId: string;
   itemIds: string[];
+  /** Explicit share of a given line, in basis points (1/100th of a percent, so
+   * 6000 = 60%). Keyed by item id; an entry is only present for a line whose
+   * split the payer set by hand.
+   *
+   * A line with NO explicit share anywhere divides equally among its claimants
+   * — the behaviour every split created before this field existed relies on,
+   * and still the default. A line with ANY explicit share uses the explicit
+   * numbers, and a claimant without one on that line takes nothing.
+   *
+   * The shares of one line deliberately need not add up to 10000: whatever is
+   * left over belongs to the PAYER, exactly as an entirely unclaimed line does
+   * and exactly as `ownShare` is the remainder of the whole bill. That is what
+   * lets "60% his, 40% mine" be expressed without the payer having to exist as
+   * a participant row. */
+  itemShareBp?: Record<string, number>;
 }
 
 export interface ParticipantShare {
@@ -51,6 +66,15 @@ export interface SplitResult {
  * (that lives in the service layer), so callers should not assume the
  * result is always non-negative.
  */
+/** Coerce a stored basis-point share into [0, 10000]. Anything absent or
+ * non-finite reads as zero rather than throwing: this module is pure
+ * arithmetic over data the service has already validated, and a share it
+ * cannot make sense of must never be able to invent money. */
+function clampBp(value: number | undefined): number {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
+  return Math.min(10000, Math.max(0, value));
+}
+
 export function resolveItemSplit(
   items: SplitItem[],
   assignments: ItemAssignment[],
@@ -67,6 +91,17 @@ export function resolveItemSplit(
   // Integer cents, rounded once up front — see the module docstring.
   const priceCentsById = new Map(items.map((item) => [item.id, Math.round(item.totalPrice * 100)]));
 
+  // A line is "hand-split" when anyone claiming it carries an explicit share for
+  // it. Deciding this per LINE (not per participant, and not per split) is what
+  // lets one receipt mix both: the wine divided 60/40 by hand sits happily next
+  // to the bread left to divide equally.
+  const handSplitItems = new Set<string>();
+  for (const assignment of assignments) {
+    for (const itemId of Object.keys(assignment.itemShareBp ?? {})) {
+      handSplitItems.add(itemId);
+    }
+  }
+
   const participantCentsTotals = new Map<string, number>();
   for (const assignment of assignments) {
     // Ensure every participant appears in the output even if every item id
@@ -79,8 +114,15 @@ export function resolveItemSplit(
       const priceCents = priceCentsById.get(itemId);
       if (priceCents === undefined) continue; // unknown item id: no charge, no payer credit
       const claimants = claimantCountByItem.get(itemId) ?? 1;
+      // Explicit share wins; on a hand-split line a claimant with no share of
+      // its own takes nothing (their part was given away to someone else or
+      // kept by the payer), rather than silently falling back to an equal
+      // slice that would double-charge the line.
+      const fraction = handSplitItems.has(itemId)
+        ? clampBp(assignment.itemShareBp?.[itemId]) / 10000
+        : 1 / claimants;
       const current = participantCentsTotals.get(assignment.participantId) ?? 0;
-      participantCentsTotals.set(assignment.participantId, current + priceCents / claimants);
+      participantCentsTotals.set(assignment.participantId, current + priceCents * fraction);
     }
   }
 
