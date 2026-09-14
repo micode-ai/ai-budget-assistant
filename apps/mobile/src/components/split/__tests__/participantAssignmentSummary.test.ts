@@ -94,3 +94,43 @@ describe('computeParticipantAssignmentSummaries', () => {
     expect(result.p1).toEqual({ count: 1, subtotal: 0 });
   });
 });
+
+describe('hand-set shares (ABA-550)', () => {
+  it('prices a line by its hand-set shares instead of dividing it equally', () => {
+    const out = computeParticipantAssignmentSummaries(
+      ['a', 'b'],
+      { chicken: ['a', 'b'] },
+      new Map([['chicken', 15.99]]),
+      { chicken: { a: 6000, b: 4000 } },
+    );
+    expect(out.a.subtotal).toBeCloseTo(9.594, 3);
+    expect(out.b.subtotal).toBeCloseTo(6.396, 3);
+  });
+
+  it('gives a claimant nothing when the line was hand-split without them', () => {
+    // Mirrors the server: on a hand-split line, no share means no money. An
+    // equal-slice fallback here would put a number on the chip that the server
+    // will never agree with.
+    const out = computeParticipantAssignmentSummaries(
+      ['a', 'b'],
+      { wine: ['a', 'b'] },
+      new Map([['wine', 100]]),
+      { wine: { a: 7000 } },
+    );
+    expect(out.a.subtotal).toBe(70);
+    expect(out.b.subtotal).toBe(0);
+    // Still counted as a line they are on — "1 item" is the honest answer.
+    expect(out.b.count).toBe(1);
+  });
+
+  it('leaves a line with no hand-set shares dividing equally', () => {
+    const out = computeParticipantAssignmentSummaries(
+      ['a', 'b'],
+      { wine: ['a', 'b'] },
+      new Map([['wine', 60]]),
+      {},
+    );
+    expect(out.a.subtotal).toBe(30);
+    expect(out.b.subtotal).toBe(30);
+  });
+});

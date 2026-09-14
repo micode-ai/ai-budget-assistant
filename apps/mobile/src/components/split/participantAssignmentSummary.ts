@@ -1,4 +1,5 @@
 import type { ItemAssignments } from './itemAssignments';
+import { BP_FULL, hasExplicitShares, type ItemShares } from './itemShares';
 
 export interface ParticipantAssignmentSummary {
   count: number;
@@ -19,7 +20,8 @@ export interface ParticipantAssignmentSummary {
  * collide if two participants happened to share a name).
  *
  * A line several people claimed contributes only this participant's SHARE of
- * it — `price / claimants`, mirroring the server's `resolveItemSplit`. Adding
+ * it — a hand-set share when the payer gave one (ABA-550), otherwise
+ * `price / claimants`, mirroring the server's `resolveItemSplit`. Adding
  * the whole price to each of them would put a number on the chip that the
  * server will never agree with, and would trip the over-bill guard on a split
  * that is perfectly valid (three people on one bottle would read as three
@@ -38,6 +40,7 @@ export function computeParticipantAssignmentSummaries(
   participantIds: string[],
   assignments: ItemAssignments,
   priceByItemId: Map<string, number>,
+  itemShares: ItemShares = {},
 ): Record<string, ParticipantAssignmentSummary> {
   const summaries: Record<string, ParticipantAssignmentSummary> = {};
   for (const id of participantIds) {
@@ -48,11 +51,18 @@ export function computeParticipantAssignmentSummaries(
     // divide by the people actually still on the line.
     const claimants = participantIds_.filter((id) => summaries[id] !== undefined);
     if (claimants.length === 0) continue;
-    const share = (priceByItemId.get(itemId) ?? 0) / claimants.length;
+    const price = priceByItemId.get(itemId) ?? 0;
+    // A hand-split line prices each claimant by their own share; a claimant left
+    // without one on such a line takes nothing, exactly as the server does —
+    // falling back to an equal slice here would put a number on the chip the
+    // server will never agree with.
+    const manual = hasExplicitShares(itemShares, itemId);
     for (const participantId of claimants) {
       const summary = summaries[participantId];
       summary.count += 1;
-      summary.subtotal += share;
+      summary.subtotal += manual
+        ? (price * ((itemShares[itemId]?.[participantId] ?? 0) / BP_FULL))
+        : price / claimants.length;
     }
   }
   return summaries;

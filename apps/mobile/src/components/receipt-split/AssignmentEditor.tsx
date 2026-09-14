@@ -16,6 +16,17 @@ import {
   assigneeLabel,
   type ItemAssignments,
 } from '@/components/split/itemAssignments';
+import {
+  clearShares,
+  overAllocatedItemIds,
+  removeParticipantFromShares,
+  removeShare,
+  seedEqualShares,
+  setShare,
+  sharesForParticipant,
+  type ItemShares,
+} from '@/components/split/itemShares';
+import { LineShareEditor } from './LineShareEditor';
 import { useAddParticipant } from '@/hooks/useAddParticipant';
 import { AddPersonRow } from './AddPersonRow';
 import { formatCurrency } from '@budget/shared-utils';
@@ -68,6 +79,10 @@ export function AssignmentEditor({
   // them, exactly as the server's resolveItemSplit does.
   const [assignments, setAssignments] = useState<ItemAssignments>({});
   const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
+  // itemId -> participantId -> basis points (ABA-550). A line absent here still
+  // divides equally among its claimants; whatever is NOT handed out on a line
+  // belongs to the payer, which is why the payer is never a participant row.
+  const [itemShares, setItemShares] = useState<ItemShares>({});
 
   function addParticipant(name: string) {
     setParticipants((prev) => [...prev, { id: `p-${Date.now()}-${prev.length}`, name }]);
@@ -99,14 +114,47 @@ export function AssignmentEditor({
             participants.map((p) => p.id),
             assignments,
             priceByItemId,
+            itemShares,
           )
         : undefined,
-    [mode, participants, assignments, priceByItemId],
+    [mode, participants, assignments, priceByItemId, itemShares],
   );
+
+  const selectedItem = useMemo(
+    () => (selectedItemId ? items.find((i) => i.id === selectedItemId) ?? null : null),
+    [items, selectedItemId],
+  );
+
+  const selectedClaimants = useMemo(() => {
+    if (!selectedItemId) return [];
+    const claimedIds = assigneesForItem(assignments, selectedItemId);
+    // Keeps the chip order rather than the tap order, so the rows do not
+    // rearrange themselves as the payer taps people onto the line.
+    return participants.filter((p) => claimedIds.includes(p.id)).map((p) => ({ id: p.id, name: p.name }));
+  }, [participants, assignments, selectedItemId]);
+
+  // The first edit seeds the line with the equal split it already had, so the
+  // payer adjusts from today's numbers instead of from a column of zeros.
+  function handleChangeShare(participantId: string, bp: number) {
+    if (!selectedItemId) return;
+    setItemShares((prev) => {
+      const base = prev[selectedItemId]
+        ? prev
+        : seedEqualShares(prev, selectedItemId, selectedClaimants.map((c) => c.id));
+      return setShare(base, selectedItemId, participantId, bp);
+    });
+  }
+
+  function handleResetShares() {
+    if (!selectedItemId) return;
+    setItemShares((prev) => clearShares(prev, selectedItemId));
+  }
 
   function handleRemoveParticipant(participantId: string) {
     setParticipants((prev) => prev.filter((p) => p.id !== participantId));
     setAssignments((prev) => removeParticipantFromAssignments(prev, participantId));
+    // Or a share set for someone no longer in the split keeps charging the line.
+    setItemShares((prev) => removeParticipantFromShares(prev, participantId));
   }
 
   function handleSelectItem(itemId: string) {
@@ -121,7 +169,13 @@ export function AssignmentEditor({
   // closes it.
   function handleSelectParticipant(participantId: string) {
     if (!canEdit || mode !== 'items' || !selectedItemId) return;
+    const wasClaiming = assigneesForItem(assignments, selectedItemId).includes(participantId);
     setAssignments((prev) => toggleItemAssignment(prev, selectedItemId, participantId));
+    // Un-tapping someone takes their hand-set share of THIS line with them;
+    // leaving it behind would keep billing a person who no longer claims it.
+    if (wasClaiming) {
+      setItemShares((prev) => removeShare(prev, selectedItemId, participantId));
+    }
   }
 
   const nameById = useMemo(
@@ -145,7 +199,12 @@ export function AssignmentEditor({
     }));
   }, [participants, assignmentSummaries, mode, billTotal]);
 
-  const isValid = validateSplit(validationCandidates, billTotal);
+  // A line handed out beyond 100% is rejected outright by the server, so the
+  // screen must not let it be sent — named per line, not as a bottom-of-screen
+  // generic hint, since the payer needs to know WHICH line to fix.
+  const overAllocatedLines = overAllocatedItemIds(itemShares);
+  const isValid =
+    validateSplit(validationCandidates, billTotal) && overAllocatedLines.length === 0;
   const showTooManyHint = participants.length > MAX_SPLIT_PARTICIPANTS;
   const showOverBillHint =
     validationCandidates.reduce((sum, p) => sum + p.shareAmount, 0) > billTotal + OVER_BILL_TOLERANCE;
@@ -160,10 +219,16 @@ export function AssignmentEditor({
     if (!canEdit || !isValid || isEncryptedAccount || isSubmitting) return;
     const dto: CreateSplitDto = {
       mode,
-      participants: participants.map((p) => ({
-        name: p.name,
-        itemIds: mode === 'items' ? itemIdsForParticipant(assignments, p.id) : undefined,
-      })),
+      participants: participants.map((p) => {
+        const shares = mode === 'items' ? sharesForParticipant(itemShares, p.id) : {};
+        return {
+          name: p.name,
+          itemIds: mode === 'items' ? itemIdsForParticipant(assignments, p.id) : undefined,
+          // Omitted entirely when nothing was hand-split, so an ordinary split
+          // keeps the exact wire shape it had before this feature.
+          itemShareBp: Object.keys(shares).length > 0 ? shares : undefined,
+        };
+      }),
     };
     onSubmit(dto);
   }
@@ -267,6 +332,27 @@ export function AssignmentEditor({
           onAddPress={openAdd}
           canEdit={canEdit}
         />
+
+        {/* Only once the line actually has someone on it: there is nothing to
+            divide between a payer and nobody, and showing an empty editor would
+            read as a step the payer has to complete. */}
+        {mode === 'items' &&
+          selectedItem &&
+          selectedClaimants.length > 0 && (
+            <LineShareEditor
+              item={{
+                id: selectedItem.id,
+                description: selectedItem.description,
+                totalPrice: Number(selectedItem.totalPrice),
+              }}
+              claimants={selectedClaimants}
+              shares={itemShares}
+              currencyCode={currencyCode}
+              canEdit={canEdit}
+              onChangeShare={handleChangeShare}
+              onReset={handleResetShares}
+            />
+          )}
 
         {isAddingPerson && canEdit && (
           <AddPersonRow

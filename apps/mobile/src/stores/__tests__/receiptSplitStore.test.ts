@@ -34,8 +34,8 @@ function makeSplit(overrides: Partial<SplitStateResponse> = {}): SplitStateRespo
     ownShare: 12.5,
     currencyCode: 'USD',
     participants: [
-      { id: 'p1', name: 'Alice', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok1', flags: [], itemIds: [] },
-      { id: 'p2', name: 'Bob', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok2', flags: [], itemIds: [] },
+      { id: 'p1', name: 'Alice', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok1', flags: [], itemIds: [], itemShareBp: {} },
+      { id: 'p2', name: 'Bob', amount: 10, currencyCode: 'USD', status: 'sent', url: 'https://x/s/tok2', flags: [], itemIds: [], itemShareBp: {} },
     ],
     groupUrl: 'https://x/s/g/grouptok1',
     ...overrides,
