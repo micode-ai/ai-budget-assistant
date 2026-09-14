@@ -3,6 +3,7 @@ import {
   createBotT,
   buildCategorySplitLine as buildSharedCategorySplitLine,
   buildItemListBlock as buildSharedItemListBlock,
+  buildShoppingListReconciliationLine as buildSharedShoppingListReconciliationLine,
   type CategorySplitLineItem,
 } from '../../../common/bot-i18n/shared-messages';
 import type { EditableItem } from '../../../common/utils/receipt-item-edit';
@@ -82,4 +83,8 @@ export function buildItemListBlock(
   lang?: string,
 ): string {
   return buildSharedItemListBlock(t, items, currencyCode, total, lang);
+}
+
+export function buildShoppingListReconciliationLine(checkedLabels: string[], lang?: string): string {
+  return buildSharedShoppingListReconciliationLine(t, checkedLabels, lang);
 }

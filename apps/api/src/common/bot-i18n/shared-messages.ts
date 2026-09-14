@@ -74,6 +74,26 @@ export function buildCategorySplitLine(
 }
 
 /**
+ * One line reporting how many shopping-list items a just-confirmed receipt
+ * auto-checked off (bot receipt -> shopping-list reconciliation). Empty
+ * string when nothing was checked — same "byte-identical reply when there's
+ * nothing to report" convention as `buildCategorySplitLine`/
+ * `buildPriceCheckLine`. `checkedLabels` carries each item's own label but
+ * this line only reports the COUNT (the dictionary's `t()` has no plural
+ * support, same reasoning as `priceCheckSummary`/`categorySplit`'s
+ * "count after label" phrasing) — callers that want the names can read
+ * `checkedLabels` directly.
+ */
+export function buildShoppingListReconciliationLine(
+  t: (key: string, lang?: string, params?: Record<string, string>) => string,
+  checkedLabels: string[],
+  lang?: string,
+): string {
+  if (!checkedLabels || checkedLabels.length === 0) return '';
+  return t('shoppingListChecked', lang, { count: String(checkedLabels.length) });
+}
+
+/**
  * The numbered line list the bot item-edit mode works on, plus a "lines add up to
  * X, receipt says Y" footer — that gap is the only signal the user has that a
  * misread is still there.
@@ -315,6 +335,17 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: '🗂️ Podział na kategorie: {{list}}',
     be: '🗂️ Разбіўка па катэгорыях: {{list}}',
     nl: '🗂️ Verdeling over categorieën: {{list}}',
+  },
+  shoppingListChecked: {
+    en: '🛒 Checked off your shopping list: {{count}}',
+    ru: '🛒 Отмечено в списке покупок: {{count}}',
+    ua: '🛒 Позначено у списку покупок: {{count}}',
+    de: '🛒 Auf der Einkaufsliste abgehakt: {{count}}',
+    es: '🛒 Marcados en tu lista de compras: {{count}}',
+    fr: '🛒 Coché sur votre liste de courses : {{count}}',
+    pl: '🛒 Odhaczono na liście zakupów: {{count}}',
+    be: '🛒 Адзначана ў спісе пакупак: {{count}}',
+    nl: '🛒 Afgevinkt op je boodschappenlijst: {{count}}',
   },
   confirm: {
     en: '✅ Confirm',

@@ -4,6 +4,7 @@ import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { predictRestock } from './restock-predictor';
 import { detectDeals, DealRow } from './deal-detector';
+import { normalizeProductName } from '../merchant-rules/product-rules.service';
 import type {
   ShoppingList, ShoppingListItem,
   CreateShoppingListDto, UpdateShoppingListDto,
@@ -254,6 +255,65 @@ export class ShoppingListService {
     }
 
     return { removedLabels, notFoundLabels };
+  }
+
+  /**
+   * Auto-check-off matching shopping-list items when a receipt is confirmed
+   * via a bot (Telegram/WhatsApp/Slack) — the server-side counterpart of the
+   * mobile app's own client-side `matchReceiptToShoppingList`
+   * (`apps/mobile/src/features/shopping-list/receiptReconciliation.ts`).
+   *
+   * Deliberately NOT wired into `ExpensesService.create()` / the generic
+   * post-create hook chain — see the plan's "Decision" section
+   * (docs/plans/bot-receipt-shopping-list-reconciliation-plan.md) for why.
+   * Each bot's `PhotoHandler.handleReceiptAddCallback` calls this directly,
+   * awaited, right after `expensesService.create()` succeeds, so it can
+   * report what got checked off in the SAME confirmation message.
+   *
+   * Same conservative match as the mobile client: EXACT match, after
+   * `normalizeProductName` (the same normalization
+   * `product_category_rules` is keyed on), against UNCHECKED items on
+   * non-archived, non-deleted lists — never fuzzy/substring. A
+   * false-positive auto-check (marking something bought that wasn't) is
+   * worse than a missed one. Deliberately does not resolve `ProductAlias`
+   * renames, same documented limitation as the mobile client.
+   */
+  async reconcileWithReceipt(
+    accountId: string,
+    lines: Array<{ description?: string | null; canonicalName?: string | null }>,
+  ): Promise<{ checkedLabels: string[] }> {
+    const receiptKeys = new Set<string>();
+    for (const line of lines ?? []) {
+      const label = line.canonicalName?.trim() || line.description?.trim() || '';
+      const key = normalizeProductName(label);
+      if (key) receiptKeys.add(key);
+    }
+    if (receiptKeys.size === 0) return { checkedLabels: [] };
+
+    const candidates: Array<{ id: string; rawLabel: string; canonicalName: string | null }> =
+      await this.prisma.shoppingListItem.findMany({
+        where: {
+          accountId,
+          isDeleted: false,
+          isChecked: false,
+          shoppingList: { isArchived: false, isDeleted: false },
+        },
+        select: { id: true, rawLabel: true, canonicalName: true },
+      });
+
+    const matched = candidates.filter((it) => {
+      const label = it.canonicalName?.trim() || it.rawLabel?.trim() || '';
+      const key = normalizeProductName(label);
+      return key.length > 0 && receiptKeys.has(key);
+    });
+    if (matched.length === 0) return { checkedLabels: [] };
+
+    await this.prisma.shoppingListItem.updateMany({
+      where: { id: { in: matched.map((m) => m.id) } },
+      data: { isChecked: true, syncVersion: { increment: 1 } },
+    });
+
+    return { checkedLabels: matched.map((m) => m.rawLabel) };
   }
 
   private async resolveOrCreateDefaultForAdd(accountId: string, userId: string) {

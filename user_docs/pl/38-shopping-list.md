@@ -40,6 +40,8 @@ Dopasowanie musi być dokładne: nazwa produktu z linii paragonu musi zgadzać s
 
 Bezpośrednio po zapisaniu zeskanowanego paragonu, jeśli coś zostało automatycznie zaznaczone, komunikat potwierdzający pokazuje, ile pozycji oznaczono jako kupione, wraz z przyciskiem **Cofnij** na wypadek, gdyby coś zostało zaznaczone przez pomyłkę.
 
+To samo automatyczne zaznaczanie działa też przy skanowaniu paragonu przez asystenta w Telegramie, WhatsAppie lub Slacku. Po utworzeniu wydatku przez bota jego odpowiedź informuje, ile pozycji zaznaczył. W czacie nie ma przycisku **Cofnij** — jeśli coś zostało zaznaczone przez pomyłkę, po prostu odznacz to na ekranie listy.
+
 Możesz to wyłączyć w **Ustawienia → Dane i raporty → Lista zakupów**, jeśli wolisz zawsze zaznaczać pozycje ręcznie.
 
 ## Zarządzanie listą przez czat

@@ -14,23 +14,24 @@ You are the mobile engineer for the AI Budget Assistant Expo app. You write code
 - `apps/mobile/src/db/` — SQLite repositories (`*Repository.ts`) and schema (`schema/index.ts`).
 - `apps/mobile/src/services/` — `api.ts`, `notifications.ts`, `secureStorage.*.ts`, etc.
 - `apps/mobile/src/components/` — shared UI components.
-- `apps/mobile/src/features/` — composable feature logic. Existing modules (14, verify with `ls -d apps/mobile/src/features/*/` — don't trust this list without re-checking, see Workflow step 0):
+- `apps/mobile/src/features/` — composable feature logic. **This list has now drifted three times** (see the Open Questions entry documenting the history), so it is no longer hand-enumerated in full — always get the ground truth from:
+  ```bash
+  ls -d apps/mobile/src/features/*/
+  ```
+  (25 directories as of 2026-09-13 — verify with the command above before relying on any name below, and before assuming a feature doesn't exist here.) A few representative examples, not an exhaustive list:
   - `analytics/` — `useAnalytics`, `useDrillDown`
   - `auth/` — `useBiometric` (platform-split: `.native.ts` / `.web.ts`)
-  - `budgets/` — budget-tab feature logic
   - `chat/` — `useChat`
+  - `dashboard/` — home-screen widget/attention-panel/setup-checklist logic
+  - `expenses/` — desktop transactions-table grouping/selection + shared `useExpensesScreenData`
   - `import/` — bank/Wise CSV import flow helpers
   - `insights/` — safe-to-spend, inflation shield, wrapped helpers
-  - `onboarding/` — first-run onboarding predicate/hook
-  - `receipt/` — `useReceiptScanner`
-  - `reports/` — report date-range resolution helpers
-  - `scenario/` — `useScenarioProjection`
-  - `shopping-mode/` — shopping-mode session/snapshot logic
-  - `stores/` — store-arrival matching helpers
-  - `voice/` — `useVoiceInput`
+  - `receipt/` — `useReceiptScanner`, receipt-image sizing/reconciliation
+  - `settings/` — desktop settings-pane registry and windowing
+  - `shopping-list/` — the real shopping-list feature (receipt-scan reconciliation, etc.). **Not to be confused with `shopping-mode/`** — that directory was deliberately removed from `development` per ABA-438 (the `FOREGROUND_SERVICE_LOCATION` manifest permission was blocking every Play Store submit) and lives only on `feature/shopping-mode`. See CLAUDE.md's "Store Arrival card + Shopping Mode live on `feature/shopping-mode`, NOT on `development`" entry before creating anything under that name on `development` — it does not exist here and should not be recreated without first checking that entry.
   - `wallet/` — wallet balance/transfer helpers
 
-  Before relying on this list for "does X already exist", re-run the `ls -d` command above — this file has repeatedly gone stale between self-study passes while new feature directories shipped (`budgets`/`import`/`shopping-mode`/`onboarding` were all missing here at one point). Platform-variant features use `.native.ts` / `.web.ts` suffixes — the bare `.ts` file is the web/shared fallback.
+  Platform-variant features use `.native.ts` / `.web.ts` suffixes — the bare `.ts` file is the web/shared fallback.
 - `apps/mobile/src/hooks/` — shared hooks. For AI-cost-bearing operations (cost ≥ 2.0), use `useAiCostConfirmation` from `src/hooks/useAiCostConfirmation.ts` — shows a one-time confirmation dialog and stores dismissal per feature in AsyncStorage.
 - `apps/mobile/src/i18n/locales/` — 9 locale files (mandatory keep-in-sync).
 
@@ -220,4 +221,5 @@ Confirm the app boots without "module not found" or "cannot resolve" errors befo
 
 - CLAUDE.md's "Local-first tab hydration" note documents `hydrateTransactions()` covering `(tabs)/index`, `expenses`, and `analytics` only — it does not mention the `budgets` tab. This agent file previously listed `budgets` alongside those three under the same "BOTH `useEffect` AND `useFocusEffect`" rule now removed. Confirm whether the `budgets` tab hydrates via its own `budgetStore.loadXxx()` + `useFocusEffect` (unaffected by this change, since it's not one of the three tabs `hydrateTransactions()` covers) or should also be folded into `hydrateTransactions()`. Until clarified, treat `budgets` as following the general store/screen pattern described elsewhere in this file, not the `hydrateTransactions()` path.
 - The 2026-06-09 evolution proposal `store-count-and-import-store-missing` (count "22 → 26" plus naming `goalStore`/`quickActionStore`/`userSubscriptionStore` individually) was already superseded by a later update, and is now further superseded by the 2026-08-17 `scope-inventory-drift` evolution: this file's "Your scope" section no longer states a hardcoded store count at all (the repeated staleness of "verified on <date>" numbers is the exact problem that evolution addressed) — it instead points at the `ls | grep -v | wc -l` command in Workflow step 0. The section still deliberately does not enumerate all stores by name (CLAUDE.md's mobile stores list is the exhaustive one) — `goalStore`/`quickActionStore`/`userSubscriptionStore` remain unlisted here by design, only `importStore` is called out explicitly per that older proposal's specific concern.
-- The 2026-08-17 `scope-inventory-drift` evolution's own proposed `src/features/` catch-up list (13 dirs) omitted `reports/`, which is already present on disk alongside the other 13. The list applied here uses the real 14-directory disk state instead of the evolution file's 13, to avoid reintroducing the same staleness the evolution was meant to fix.
+- The 2026-08-17 `scope-inventory-drift` evolution's own proposed `src/features/` catch-up list (13 dirs) omitted `reports/`, which was already present on disk alongside the other 13; the list applied at that time used the real 14-directory disk state instead of the evolution file's 13.
+- 2026-09-13 update (`features-list-stale-and-wrong-branch`): that 14-entry list itself went stale within about a month — by 2026-09-13, `ls -d apps/mobile/src/features/*/` on `development` showed **25** directories, and two of the 14 previously listed (`shopping-mode/`, `stores/`) were not among them at all, because ABA-438 forward-removed that pair to `feature/shopping-mode` (blocked Play Store submit via the `FOREGROUND_SERVICE_LOCATION` manifest permission). Given this is now the **third** documented drift of this same list (2026-06-05, 2026-08-17, 2026-09-13), the "Your scope" entry above no longer hand-enumerates every directory — it points at the `ls -d` command and lists only a handful of representative examples, on the theory (per the evolution's own rationale) that a static full enumeration will keep drifting regardless of how carefully it's refreshed. If a future pass finds this still drifting even in its reduced form, consider whether the command itself should be run as part of a lint/CI check rather than left to self-study passes.

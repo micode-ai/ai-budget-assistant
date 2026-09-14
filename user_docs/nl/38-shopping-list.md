@@ -40,6 +40,8 @@ De match moet exact zijn: de productnaam op de bon moet overeenkomen met de naam
 
 Direct na het opslaan van de gescande bon zie je, als er iets automatisch is afgevinkt, hoeveel items het waren, met een knop **Ongedaan maken** voor het geval er per ongeluk iets is afgevinkt.
 
+Hetzelfde automatisch afvinken gebeurt ook als je een bon scant via de Telegram-, WhatsApp- of Slack-assistent. Nadat de bot de uitgave heeft aangemaakt, laat het antwoord zien hoeveel items zijn afgevinkt. Er is geen **Ongedaan maken**-knop in de chat — als er per ongeluk iets is afgevinkt, vink het dan gewoon uit op het lijstscherm.
+
 Je kunt dit uitschakelen bij **Instellingen → Gegevens & rapporten → Boodschappenlijst** als je items liever altijd met de hand afvinkt.
 
 ## De lijst beheren via chat

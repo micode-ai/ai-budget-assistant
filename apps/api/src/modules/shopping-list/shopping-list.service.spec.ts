@@ -274,6 +274,97 @@ describe('ShoppingListService', () => {
     expect(res).toEqual({ removedLabels: [], notFoundLabels: ['Milk', 'Bread'] });
   });
 
+  // ABA bot-receipt-shopping-list-reconciliation
+  describe('reconcileWithReceipt (bot receipt -> shopping-list auto-check)', () => {
+    it('checks off an exact match after normalization and returns its rawLabel', async () => {
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        { id: 'i1', rawLabel: 'Milk', canonicalName: null },
+        { id: 'i2', rawLabel: 'Bread', canonicalName: null },
+      ]);
+      prisma.shoppingListItem.updateMany.mockResolvedValue({ count: 1 });
+
+      const res = await service.reconcileWithReceipt('a1', [{ description: 'MILK  ' }]);
+
+      expect(prisma.shoppingListItem.updateMany).toHaveBeenCalledWith({
+        where: { id: { in: ['i1'] } },
+        data: { isChecked: true, syncVersion: { increment: 1 } },
+      });
+      expect(res.checkedLabels).toEqual(['Milk']);
+    });
+
+    it('prefers canonicalName over rawLabel on both sides of the match, like the mobile client', async () => {
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        { id: 'i1', rawLabel: 'Mleko 3.2% Łaciate', canonicalName: 'Milk' },
+      ]);
+      prisma.shoppingListItem.updateMany.mockResolvedValue({ count: 1 });
+
+      const res = await service.reconcileWithReceipt('a1', [
+        { description: 'MLEKO 3,2% LACIATE 1L', canonicalName: 'Milk' },
+      ]);
+
+      expect(res.checkedLabels).toEqual(['Mleko 3.2% Łaciate']);
+    });
+
+    it('never matches fuzzily/substring — a near-miss is not checked off', async () => {
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        { id: 'i1', rawLabel: 'Milk 2%', canonicalName: null },
+      ]);
+      const res = await service.reconcileWithReceipt('a1', [{ description: 'Milk' }]);
+      expect(prisma.shoppingListItem.updateMany).not.toHaveBeenCalled();
+      expect(res.checkedLabels).toEqual([]);
+    });
+
+    it('short-circuits with zero DB reads when the receipt has no usable line labels', async () => {
+      const res = await service.reconcileWithReceipt('a1', [{ description: '   ' }, {}]);
+      expect(prisma.shoppingListItem.findMany).not.toHaveBeenCalled();
+      expect(res).toEqual({ checkedLabels: [] });
+    });
+
+    it('returns an empty result and writes nothing when nothing matches', async () => {
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        { id: 'i1', rawLabel: 'Bread', canonicalName: null },
+      ]);
+      const res = await service.reconcileWithReceipt('a1', [{ description: 'Milk' }]);
+      expect(prisma.shoppingListItem.updateMany).not.toHaveBeenCalled();
+      expect(res).toEqual({ checkedLabels: [] });
+    });
+
+    it('only reads unchecked items on non-archived, non-deleted lists (same scoping as removeItemsByName)', async () => {
+      prisma.shoppingListItem.findMany.mockResolvedValue([]);
+      await service.reconcileWithReceipt('a1', [{ description: 'Milk' }]);
+      expect(prisma.shoppingListItem.findMany).toHaveBeenCalledWith({
+        where: {
+          accountId: 'a1',
+          isDeleted: false,
+          isChecked: false,
+          shoppingList: { isArchived: false, isDeleted: false },
+        },
+        select: { id: true, rawLabel: true, canonicalName: true },
+      });
+    });
+
+    it('checks off multiple matches from one receipt in a single updateMany', async () => {
+      prisma.shoppingListItem.findMany.mockResolvedValue([
+        { id: 'i1', rawLabel: 'Milk', canonicalName: null },
+        { id: 'i2', rawLabel: 'Bread', canonicalName: null },
+        { id: 'i3', rawLabel: 'Eggs', canonicalName: null },
+      ]);
+      prisma.shoppingListItem.updateMany.mockResolvedValue({ count: 2 });
+
+      const res = await service.reconcileWithReceipt('a1', [
+        { description: 'Milk' },
+        { description: 'Bread' },
+      ]);
+
+      expect(prisma.shoppingListItem.updateMany).toHaveBeenCalledTimes(1);
+      expect(prisma.shoppingListItem.updateMany).toHaveBeenCalledWith({
+        where: { id: { in: ['i1', 'i2'] } },
+        data: { isChecked: true, syncVersion: { increment: 1 } },
+      });
+      expect(res.checkedLabels.sort()).toEqual(['Bread', 'Milk']);
+    });
+  });
+
   it('getDeals excludes deals for products already on a list', async () => {
     prisma.productAlias.findMany.mockResolvedValue([]);
     prisma.expenseItem.findMany.mockResolvedValue([

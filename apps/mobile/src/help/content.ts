@@ -4410,6 +4410,8 @@ The match has to be exact: the receipt line's product name has to match your lis
 
 Right after saving the scanned receipt, if anything was auto-checked, the confirmation message tells you how many items were checked off, with an **Undo** button in case something was checked by mistake.
 
+The same auto-check happens when you scan a receipt through the Telegram, WhatsApp, or Slack assistant. After the bot creates the expense, its reply tells you how many items it checked off. There's no Undo button in chat — if something was matched by mistake, just uncheck it on the list screen.
+
 You can turn this off in **Settings → Data → Shopping list** if you'd rather always check items off by hand.
 
 ## Managing the List by Chat
@@ -9080,6 +9082,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Сразу после сохранения отсканированного чека, если что-то было отмечено автоматически, в сообщении о подтверждении будет указано, сколько позиций отмечено, с кнопкой **Отменить** на случай, если что-то отметилось по ошибке.
 
+То же автоматическое отмечание работает и при сканировании чека через ассистента в Telegram, WhatsApp или Slack. После того как бот создаст расход, в ответном сообщении будет указано, сколько позиций он отметил. В чате нет кнопки «Отменить» — если что-то отметилось по ошибке, просто снимите отметку на экране списка.
+
 Вы можете отключить это в **Настройки → Данные и отчёты → Список покупок**, если предпочитаете всегда отмечать позиции вручную.
 
 ## Управление списком через чат
@@ -13722,6 +13726,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Одразу після збереження відсканованого чека, якщо щось було позначено автоматично, повідомлення про підтвердження показує, скільки позицій позначено, із кнопкою **Скасувати** на випадок, якщо щось позначилося помилково.
 
+Те саме автопозначення працює й під час сканування чека через асистента в Telegram, WhatsApp або Slack. Після того як бот створить витрату, у відповіді буде вказано, скільки позицій він позначив. У чаті немає кнопки «Скасувати» — якщо щось позначилося помилково, просто зніміть позначку на екрані списку.
+
 Ви можете вимкнути це в **Налаштування → Дані та звіти → Список покупок**, якщо надаєте перевагу завжди позначати позиції вручну.
 
 ## Керування списком через чат
@@ -18349,6 +18355,8 @@ Dopasowanie musi być dokładne: nazwa produktu z linii paragonu musi zgadzać s
 
 Bezpośrednio po zapisaniu zeskanowanego paragonu, jeśli coś zostało automatycznie zaznaczone, komunikat potwierdzający pokazuje, ile pozycji oznaczono jako kupione, wraz z przyciskiem **Cofnij** na wypadek, gdyby coś zostało zaznaczone przez pomyłkę.
 
+To samo automatyczne zaznaczanie działa też przy skanowaniu paragonu przez asystenta w Telegramie, WhatsAppie lub Slacku. Po utworzeniu wydatku przez bota jego odpowiedź informuje, ile pozycji zaznaczył. W czacie nie ma przycisku **Cofnij** — jeśli coś zostało zaznaczone przez pomyłkę, po prostu odznacz to na ekranie listy.
+
 Możesz to wyłączyć w **Ustawienia → Dane i raporty → Lista zakupów**, jeśli wolisz zawsze zaznaczać pozycje ręcznie.
 
 ## Zarządzanie listą przez czat
@@ -22951,6 +22959,8 @@ Die Übereinstimmung muss exakt sein: Der Produktname auf dem Beleg muss mit dem
 
 Direkt nach dem Speichern des gescannten Belegs siehst du, falls etwas automatisch abgehakt wurde, wie viele Artikel es waren — mit einer Schaltfläche **Rückgängig**, falls versehentlich etwas abgehakt wurde.
 
+Dasselbe automatische Abhaken passiert auch, wenn du einen Beleg über den Telegram-, WhatsApp- oder Slack-Assistenten scannst. Nachdem der Bot die Ausgabe angelegt hat, teilt dir seine Antwort mit, wie viele Artikel er abgehakt hat. Im Chat gibt es keine Schaltfläche „Rückgängig" — falls etwas versehentlich abgehakt wurde, hake es einfach auf dem Listen-Bildschirm wieder ab.
+
 Du kannst das unter **Einstellungen → Daten & Berichte → Einkaufsliste** ausschalten, wenn du Artikel lieber immer manuell abhaken möchtest.
 
 ## Die Liste per Chat verwalten
@@ -27542,6 +27552,8 @@ La coincidencia debe ser exacta: el nombre del producto en la línea del recibo 
 
 Justo después de guardar el recibo escaneado, si algo se marcó automáticamente, el mensaje de confirmación te dice cuántos artículos se marcaron, con un botón **Deshacer** por si algo se marcó por error.
 
+El mismo marcado automático ocurre cuando escaneas un recibo a través del asistente de Telegram, WhatsApp o Slack. Después de que el bot crea el gasto, su respuesta te indica cuántos artículos marcó. No hay botón **Deshacer** en el chat — si algo se marcó por error, simplemente desmárcalo en la pantalla de la lista.
+
 Puedes desactivar esto en **Configuración → Datos e informes → Lista de compras** si prefieres marcar siempre los artículos a mano.
 
 ## Gestionar la lista por chat
@@ -32131,6 +32143,8 @@ La correspondance doit être exacte : le nom du produit sur la ligne du reçu do
 
 Juste après l'enregistrement du reçu scanné, si des articles ont été cochés automatiquement, le message de confirmation vous indique combien, avec un bouton **Annuler** en cas d'erreur.
 
+Le même cochage automatique se produit lorsque vous scannez un reçu via l'assistant Telegram, WhatsApp ou Slack. Une fois que le bot a créé la dépense, sa réponse vous indique combien d'articles il a cochés. Il n'y a pas de bouton **Annuler** dans le chat — si un article a été coché par erreur, il suffit de le décocher sur l'écran de la liste.
+
 Vous pouvez désactiver cela dans **Paramètres → Données et rapports → Liste de courses** si vous préférez toujours cocher les articles à la main.
 
 ## Gérer la liste par chat
@@ -36683,6 +36697,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 Супадзенне павінна быць дакладным: назва тавару ў радку чэка павінна супадаць з назвай пазіцыі ў спісе (пасля таго як праграма ўніфікуе прабелы, рэгістр і невялікія адрозненні распазнавання). Пазіцыя, уведзеная як звычайны тэкст (напрыклад, «малако»), якая не супадае дакладна з фармулёўкай на чэку, не будзе пазначана аўтаматычна — яе ўсё роўна трэба пазначыць самастойна.
 
 Адразу пасля захавання адсканаванага чэка, калі нешта было пазначана аўтаматычна, паведамленне пра пацвярджэнне паказвае, колькі пазіцый пазначана, з кнопкай **Скасаваць** на выпадак, калі нешта пазначылася памылкова.
+
+Тое ж аўтаматычнае адзначэнне працуе і пры скануванні чэка праз асістэнта ў Telegram, WhatsApp або Slack. Пасля таго як бот створыць выдатак, у адказе будзе паказана, колькі пазіцый ён адзначыў. У чаце няма кнопкі «Скасаваць» — калі нешта пазначылася памылкова, проста здыміце адзнаку на экране спіса.
 
 Вы можаце выключыць гэта ў **Налады → Даныя і справаздачы → Спіс пакупак**, калі аддаяце перавагу заўсёды пазначаць пазіцыі ўручную.
 
@@ -41351,6 +41367,8 @@ Wanneer je een kassabon scant met de camera, wordt elk niet-afgevinkt item op je
 De match moet exact zijn: de productnaam op de bon moet overeenkomen met de naam van je lijstitem (nadat de app spaties, hoofdletters en kleine OCR-verschillen heeft genormaliseerd). Een item dat je als vrije tekst hebt getypt (zoals "melk") dat niet exact overeenkomt met de tekst op de bon, wordt niet automatisch afgevinkt — dat moet je zelf blijven aantikken.
 
 Direct na het opslaan van de gescande bon zie je, als er iets automatisch is afgevinkt, hoeveel items het waren, met een knop **Ongedaan maken** voor het geval er per ongeluk iets is afgevinkt.
+
+Hetzelfde automatisch afvinken gebeurt ook als je een bon scant via de Telegram-, WhatsApp- of Slack-assistent. Nadat de bot de uitgave heeft aangemaakt, laat het antwoord zien hoeveel items zijn afgevinkt. Er is geen **Ongedaan maken**-knop in de chat — als er per ongeluk iets is afgevinkt, vink het dan gewoon uit op het lijstscherm.
 
 Je kunt dit uitschakelen bij **Instellingen → Gegevens & rapporten → Boodschappenlijst** als je items liever altijd met de hand afvinkt.
 

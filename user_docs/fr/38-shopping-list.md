@@ -40,6 +40,8 @@ La correspondance doit être exacte : le nom du produit sur la ligne du reçu do
 
 Juste après l'enregistrement du reçu scanné, si des articles ont été cochés automatiquement, le message de confirmation vous indique combien, avec un bouton **Annuler** en cas d'erreur.
 
+Le même cochage automatique se produit lorsque vous scannez un reçu via l'assistant Telegram, WhatsApp ou Slack. Une fois que le bot a créé la dépense, sa réponse vous indique combien d'articles il a cochés. Il n'y a pas de bouton **Annuler** dans le chat — si un article a été coché par erreur, il suffit de le décocher sur l'écran de la liste.
+
 Vous pouvez désactiver cela dans **Paramètres → Données et rapports → Liste de courses** si vous préférez toujours cocher les articles à la main.
 
 ## Gérer la liste par chat

@@ -6,11 +6,12 @@ import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
+import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
-import { t, buildCategorySplitLine, buildItemListBlock } from '../helpers/i18n';
+import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
 import {
   parseItemEditCommand,
   applyItemEditCommand,
@@ -83,6 +84,7 @@ export class PhotoHandler {
     private readonly expensesService: ExpensesService,
     private readonly subscriptionsService: SubscriptionsService,
     private readonly categoriesService: CategoriesService,
+    private readonly shoppingListService: ShoppingListService,
     private readonly cache: CacheService,
   ) {}
 
@@ -402,20 +404,29 @@ export class PhotoHandler {
       // by the correction parser instead of reaching the AI.
       await this.cache.del(awaitingItemEditKey(String(ctx.from!.id)));
 
+      // Auto-check-off matching shopping-list items (ABA bot-receipt-shopping-list-reconciliation).
+      // Awaited so its count can ride the SAME confirmation message, but its own
+      // failure must never be reported as an expense-creation failure — the
+      // expense was already created successfully by this point.
+      const reconciled = await this.shoppingListService
+        .reconcileWithReceipt(data.accountId, data.items)
+        .catch((e) => {
+          this.logger.warn(`shoppingListService.reconcileWithReceipt failed: ${e}`);
+          return { checkedLabels: [] as string[] };
+        });
+      const shoppingLine = buildShoppingListReconciliationLine(reconciled.checkedLabels, data.language);
+      const confirmationText =
+        `✅ Expense created: <b>${formatCurrency(data.amount, data.currencyCode)}</b> — ${escapeHtml(data.description)}` +
+        (shoppingLine ? `\n${escapeHtml(shoppingLine)}` : '');
+
       try {
-        await ctx.editMessageText(
-          `✅ Expense created: <b>${formatCurrency(data.amount, data.currencyCode)}</b> — ${escapeHtml(data.description)}`,
-          { parse_mode: 'HTML' },
-        );
+        await ctx.editMessageText(confirmationText, { parse_mode: 'HTML' });
       } catch (e) {
         // editMessageText can fail (message too old, deleted, etc.) — expense
         // is already created, fall back to a plain reply.
         this.logger.warn(`editMessageText failed after expense create: ${e}`);
         try {
-          await ctx.reply(
-            `✅ Expense created: <b>${formatCurrency(data.amount, data.currencyCode)}</b> — ${escapeHtml(data.description)}`,
-            { parse_mode: 'HTML' },
-          );
+          await ctx.reply(confirmationText, { parse_mode: 'HTML' });
         } catch {}
       }
     } catch (error) {

@@ -21,6 +21,11 @@ function makeCache() {
   };
 }
 
+/** In-memory stand-in for ShoppingListService — reconciles nothing by default. */
+function makeShoppingList() {
+  return { reconcileWithReceipt: jest.fn().mockResolvedValue({ checkedLabels: [] }) };
+}
+
 const RECEIPT_LOCATION = { lat: 52.2297, lng: 21.0122, name: 'Sucha 31, Sucha' };
 
 function baseReceipt(location: typeof RECEIPT_LOCATION | null) {
@@ -68,7 +73,14 @@ describe('Telegram PhotoHandler — geocoded location wiring (ABA-310 bot photo 
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
     const categories = { create: jest.fn() };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      makeShoppingList() as never,
+      makeCache() as never,
+    );
     return { handler, expenses };
   }
 
@@ -105,7 +117,14 @@ describe('Telegram PhotoHandler — buildPriceCheckLine (receipt price-check sum
     const expenses = { create: jest.fn() };
     const subs = { trackAiUsage: jest.fn() };
     const categories = { create: jest.fn() };
-    return new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
+    return new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      makeShoppingList() as never,
+      makeCache() as never,
+    );
   }
 
   it('appends a price-check line when the scan returned findings', async () => {
@@ -181,7 +200,14 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
     const categories = { create: jest.fn() };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      makeShoppingList() as never,
+      makeCache() as never,
+    );
     return { handler, expenses };
   }
 
@@ -278,7 +304,14 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
     const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
     const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
     const categories = { create: jest.fn().mockResolvedValue({ id: 'cat-chemia' }) };
-    const handler = new PhotoHandler(ocr as never, expenses as never, subs as never, categories as never, makeCache() as never);
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      makeShoppingList() as never,
+      makeCache() as never,
+    );
     const ctx = makeCtx();
 
     await handler.handleDocument(ctx as never);
@@ -325,6 +358,7 @@ describe('Telegram PhotoHandler — line-item editing (ABA-482)', () => {
       expenses as never,
       subs as never,
       categories as never,
+      makeShoppingList() as never,
       cache as never,
     );
     return { handler, expenses, cache };

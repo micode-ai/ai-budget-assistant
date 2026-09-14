@@ -40,6 +40,8 @@ Die Übereinstimmung muss exakt sein: Der Produktname auf dem Beleg muss mit dem
 
 Direkt nach dem Speichern des gescannten Belegs siehst du, falls etwas automatisch abgehakt wurde, wie viele Artikel es waren — mit einer Schaltfläche **Rückgängig**, falls versehentlich etwas abgehakt wurde.
 
+Dasselbe automatische Abhaken passiert auch, wenn du einen Beleg über den Telegram-, WhatsApp- oder Slack-Assistenten scannst. Nachdem der Bot die Ausgabe angelegt hat, teilt dir seine Antwort mit, wie viele Artikel er abgehakt hat. Im Chat gibt es keine Schaltfläche „Rückgängig" — falls etwas versehentlich abgehakt wurde, hake es einfach auf dem Listen-Bildschirm wieder ab.
+
 Du kannst das unter **Einstellungen → Daten & Berichte → Einkaufsliste** ausschalten, wenn du Artikel lieber immer manuell abhaken möchtest.
 
 ## Die Liste per Chat verwalten

@@ -40,6 +40,8 @@ La coincidencia debe ser exacta: el nombre del producto en la línea del recibo 
 
 Justo después de guardar el recibo escaneado, si algo se marcó automáticamente, el mensaje de confirmación te dice cuántos artículos se marcaron, con un botón **Deshacer** por si algo se marcó por error.
 
+El mismo marcado automático ocurre cuando escaneas un recibo a través del asistente de Telegram, WhatsApp o Slack. Después de que el bot crea el gasto, su respuesta te indica cuántos artículos marcó. No hay botón **Deshacer** en el chat — si algo se marcó por error, simplemente desmárcalo en la pantalla de la lista.
+
 Puedes desactivar esto en **Configuración → Datos e informes → Lista de compras** si prefieres marcar siempre los artículos a mano.
 
 ## Gestionar la lista por chat

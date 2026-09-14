@@ -72,6 +72,7 @@ For each state (empty, loading, populated, error):
 
 ## Accessibility
 - Color contrast (AA minimum for body text)
+- If this design pairs a fixed color against an accent-derived surface, state the calculated contrast ratio — not just "looks fine on default accent" (see Constraints — ABA-450, ABA-507)
 - Touch targets (44pt minimum on iOS, 48dp on Android)
 - Screen-reader labels for icon-only buttons
 - Dynamic type support if applicable
@@ -115,7 +116,7 @@ After writing the spec:
 
 - The mobile app supports 9 locales (`en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`) — every new string adds 9 translation entries. Prefer using existing strings when semantically equivalent.
 - Phones are portrait-locked via `useOrientationLock`. Tablets/foldables are NOT locked — large-screen layouts must be considered if the screen is reachable on a tablet.
-- Dark mode is supported via `themeStore`. Every color decision must have a dark-mode counterpart. Color decisions also need an accent-mode counterpart: verify the choice still reads correctly across at least the default accent (`#E37F2B`) and one contrasting preset from `presetAccents.ts`.
+- Dark mode is supported via `themeStore`. Every color decision must have a dark-mode counterpart. Color decisions also need an accent-mode counterpart — and a **single spot-checked preset is not enough**: `PRESET_ACCENTS` entries can share lightness and differ only in hue, which passes an eyeball check on one preset while failing a real contrast ratio against most of the other 12 in production. This is not hypothetical — it has shipped twice: **ABA-450** (header actions painted `theme.colors.primary`/`danger` against a header background that was *also* `theme.colors.primary` — orange-on-orange at 1.0:1, invisible regardless of which accent was active) and **ABA-507** (a hardcoded `#E53935` alerts badge measured 1.00–1.61 contrast across all 13 accent presets against an accent-derived ground, still live on the phone as of that entry). So: any fixed/semantic color (`success`, `danger`, `warning`, `onSemantic`, or a literal hex) that renders on top of or beside an accent-derived surface must be checked for **WCAG contrast against the accent's lightness**, not just visually against one preset. Prefer delegating the decision to an accent-derived token (`textInverse`/`onSemantic`) over inventing a new fixed pairing; if a fixed color must be used, state the calculated worst-case contrast ratio across `PRESET_ACCENTS`. `deriveAccent.ts`'s `relativeLuminance`/`readableOn` helpers are the reference implementation already in the codebase for this calculation — don't reinvent it.
 - Subscription tiers (`free`, `pro`, `business`) gate certain features. If your design is for a Pro/Business feature, include the paywall state.
 - Charts use `Recharts` on admin and the in-house chart components on mobile. Don't propose a new chart library.
 

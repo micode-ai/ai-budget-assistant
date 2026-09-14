@@ -70,23 +70,35 @@ with more whitespace. These are the affordances that actually differ:
    not only the transactions screen (`src/components/expenses/desktop/*`,
    ABA-499). The transactions screen is a reference, not *the* reference: it
    is the oldest one, and a newer, more structurally-relevant screen may have
-   already settled the exact question you're about to re-derive. Also read
-   the design language doc itself — but note its own "derived from N shipped
-   screens" header can be stale; spot-check that N against the actual file
-   count in `docs/design/` before trusting the stated sample size. Your
-   screen should look like it belongs to the same product as the *current*
-   set of shipped screens, not just the first one.
+   already settled the exact question you're about to re-derive. If the
+   screen you're designing is hub-like (a list of rows, most opening inline,
+   a few navigating), the canonical pane-hub precedent is Settings
+   (`docs/design/2026-09-06-settings-desktop-web.md`, ABA-508/510/511/512,
+   four waves covering ~17 rows and its own pane/link/child-route taxonomy)
+   — read that before re-deriving the taxonomy yourself. Also read the design
+   language doc itself — but note its own "derived from N shipped screens"
+   header can be stale; spot-check that N against the actual file count in
+   `docs/design/` before trusting the stated sample size. Your screen should
+   look like it belongs to the same product as the *current* set of shipped
+   screens, not just the first one.
 2. **Read the mobile screen you are redesigning**, in `apps/mobile/app/`. List
    every affordance it has and say what each becomes on desktop, in a table.
    That table is the most useful part of the spec: it is what stops an
    affordance being silently dropped.
 3. **Check what already exists** before inventing a component. Scan
-   `apps/mobile/src/components/` broadly — glob `**/*.tsx` AND specifically
-   `**/desktop/*.tsx`, since desktop dirs now exist beyond `expenses/desktop/`
-   (alerts, analytics, budgets, chat, home, onboarding, wallet, and growing) —
-   the list changes with every feature, so a scan is the only accurate way.
-   If a component does 80% of the job, extend it rather than adding a
-   sibling.
+   `apps/mobile/src/components/` broadly — glob `**/*.tsx` AND, since a
+   screen's desktop-only code is named one of two ways in this repo and no
+   single glob finds both, specifically `**/desktop/*.tsx` AND `**/*.web.tsx`.
+   The `desktop/*.tsx` convention covers desktop dirs beyond
+   `expenses/desktop/` (alerts, analytics, budgets, chat, home, onboarding,
+   wallet, and growing) — the list changes with every feature, so a scan is
+   the only accurate way. **Settings has no `desktop/` path segment at all**:
+   it lives flat under `components/settings/<pane>/PaneNameSettings.tsx`, and
+   its platform split is expressed via `.web.tsx`-suffixed files instead
+   (`SettingsRoute.web.tsx`, `ChangeEmailDialog.web.tsx`,
+   `SettingsIndexView.web.tsx`) — the `**/desktop/*.tsx` glob alone will never
+   surface it. If a component does 80% of the job, extend it rather than
+   adding a sibling.
 4. **Name the states.** Empty, loading, populated, error — a wide screen makes
    an unconsidered empty state look far worse than a phone does.
 5. **Say what a dialog hosts.** On this codebase a dialog hosts an EXISTING

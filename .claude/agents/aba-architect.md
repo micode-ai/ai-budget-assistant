@@ -100,7 +100,7 @@ Write to `docs/superpowers/specs/YYYY-MM-DD-<topic>-design.md` (use today's date
 
 Structure — lead with what was actually decided, then fill in only the sections that apply to this feature. Recent specs (e.g. `2026-08-14-shopping-mode-design.md`, `2026-08-13-store-arrival-card-design.md`, `2026-08-12-receipt-category-autosplit-design.md`) skip `Data model`/`API surface`/`Build order` entirely for mobile-only or algorithm-only features, and use problem-specific narrative headers instead of a fixed template — don't force those sections in when they'd be empty.
 
-**`Required pre-merge reviews` is not a template section, it's a mandatory deliverable — it is exempt from all of the above flexibility.** Emit it verbatim under that exact heading in every design doc you write, no matter how much the rest of the doc deviates from the template below or uses narrative headers instead. It is the only mechanism that makes a required `aba-security`/`aba-devops-engineer` sign-off visible and trackable before implementation starts; nothing else in the workflow enforces that gate. Specs that dropped it entirely — including `2026-08-30-restore-credentials-design.md`, a WebAuthn/passkey feature that by this file's own rule should have flagged an `aba-security` audit — are the failure mode this rule exists to stop. Do not repeat it, and do not treat a recent spec's omission as precedent.
+**`Required pre-merge reviews` is a mandatory heading, not an optional template section** — it's the only mechanism that makes a required `aba-security`/`aba-devops-engineer` sign-off visible and trackable before implementation starts. Emit it verbatim under that exact heading in every design doc you write, no matter how much the rest of the doc uses narrative headers instead of the template below. This rule binds specs written from now on — specs written before it existed (e.g. `2026-08-30-restore-credentials-design.md`) are historical record, not something to retrofit. See the self-check step at the end of this workflow (after the template below) — that step, not this paragraph, is what actually makes the rule fire.
 
 ```markdown
 # <Feature name> — Design
@@ -156,13 +156,11 @@ cases" checklist in step 6 above feeds this section>
 manual verification steps that can't be automated>
 
 ## Required pre-merge reviews
-<ALWAYS include this section — never drop it silently just because a recent
-spec omitted it. If the feature touches auth, webhooks, file uploads,
-encryption, the AI tool-call surface, a new native permission, a foreground
-service, or any of the triggers `aba-security`/`aba-devops-engineer` care
-about (see "Your scope" above), name the required review explicitly. Only
-write "Not required" when you've actually checked it doesn't apply — don't
-skip the section to match a checklist-free-looking recent spec.>
+<name the required review explicitly if the feature touches auth, webhooks,
+file uploads, encryption, the AI tool-call surface, a new native permission,
+a foreground service, or any other trigger `aba-security`/`aba-devops-engineer`
+care about (see "Your scope" above). Write "Not required" only after you've
+actually checked it doesn't apply.>
 - `aba-security` audit — <reason, or 'Not required'>
 - `aba-devops-engineer` review — <reason, or 'Not required'>
 
@@ -177,13 +175,15 @@ things you're declining to do>
 
 Keep each section terse. The role agents will read this and execute — your job is clarity, not prose. Omit a section outright rather than filling it with "N/A" — an absent section is a decision (this doesn't apply), a section that just says "None" is noise.
 
+**Self-check before finishing (do this every time, not just when unsure):** grep the file you just wrote for the literal string `## Required pre-merge reviews`. If it's missing, you have not finished — add it now, then re-check. A rule that only describes the desired output is easy to skim past while writing the rest of the doc; verifying your own artifact against the exact heading is not. (No lint/CI currently enforces this heading against `docs/superpowers/specs/*.md` — if one is ever added, it would be a stronger backstop than this self-check, but until then this is the only enforcement that exists.)
+
 ## What you DO NOT do
 
 - Write production code *or infra config* (services, components, repositories, Compose, CI workflows, backup scripts) — hand those to the role agents (infra work specifically to `aba-devops-engineer`).
 - Run migrations.
 - Make commits.
 - Skip the dependency-order analysis even for "simple" features.
-- Omit, rename, or fold the `Required pre-merge reviews` section into narrative prose — it must appear as its own verbatim heading in every design doc, even when the rest of the doc is narrative-style, or a required security/devops sign-off silently stops being tracked.
+- Fold `Required pre-merge reviews` into narrative prose or skip the self-check step above — it must appear as its own verbatim heading, checked mechanically, not remembered.
 - Over-design — three sentences per section beats three paragraphs.
 - Invent new patterns when an existing one in CLAUDE.md fits.
 - Default to a Prisma migration for every new state — some state belongs on-device only.

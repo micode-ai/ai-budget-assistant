@@ -20,11 +20,19 @@ import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
+import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 import { SLACK_REDIS } from './types';
 
 @Global()
 @Module({
-  imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule],
+  imports: [
+    AiModule,
+    ExpensesModule,
+    IncomesModule,
+    CategoriesModule,
+    SubscriptionsModule,
+    ShoppingListModule,
+  ],
   controllers: [SlackBotController, SlackOAuthController],
   providers: [
     SlackLinkService,

@@ -16,19 +16,44 @@ phone.
   is organized by wave, each documenting a screen's shape and what it added
   or departed from: §5 is list-specific (the expenses/ledger screen —
   `src/components/expenses/desktop/*`, ABA-499, still the best single example
-  of "a dialog hosts an existing component"), §5c is the dashboard, §5e–§5h
-  are the settings shell (a pane/link/dialog taxonomy driven by
-  `settingsRegistry.ts` — **not** an instance of the ledger's dialog-hosts-a-
-  component pattern), §5i–§5j are chat (its own doc calls this "the first
-  deliberate departure from the one-page-scroll rule" — the opposite of what
-  §5's screen does). There is no single reference screen — before
-  implementing, identify which prior wave is the nearest shape match (a list
-  of rows → §5/§5a; a dashboard-style rail+columns → §5c; a settings-style
-  form or list → §5e–§5h; a rail+reading-column → §5i–§5j) and follow that
-  section, not whichever one you remember best. If your screen's situation
-  isn't covered by any section, defer to the newest sibling screen's actual
-  code rather than re-deriving a third answer — and flag the doc gap instead
-  of silently working around it.
+  of "a dialog hosts an existing component"), §5a is Analytics (ABA-501, the
+  second screen — `src/components/analytics/desktop/*`; it confirmed the
+  universal chrome/dialogs/scroll model but explicitly rejected the ledger's
+  list-specific rules — no facet rail, no day grouping, no selection — and it
+  blends currencies via FX in its totals where the ledger never does), §5b is
+  not a screen but the platform-split verification method (grep the exported
+  native bundle for your component's name, and read a hit carefully — a short
+  name can collide with an unrelated mobile component, e.g. `BudgetCard`
+  against the home screen's `MonthlyBudgetCard`), §5c is the dashboard
+  (screen four), §5d is a second pass on that same dashboard — about
+  "honesty about what the app knows" for retention/onboarding, not a new
+  screen's layout — §5e–§5h are the settings shell (a pane/link/dialog
+  taxonomy driven by `settingsRegistry.ts` — **not** an instance of the
+  ledger's dialog-hosts-a-component pattern), §5i–§5j are chat (its own doc
+  calls this "the first deliberate departure from the one-page-scroll rule"
+  — the opposite of what §5's screen does).
+
+  **The budgets desktop screen (`src/components/budgets/desktop/` —
+  `BudgetsDesktop.tsx`, `BudgetCard.tsx`, `BudgetDialog.tsx`,
+  `BudgetCreateDialog.tsx`) has no documented wave anywhere in this doc or in
+  CLAUDE.md**, even though it is live, shipped code (unlike Analytics, which
+  §5a does cover). Treat its existing code as the authoritative pattern to
+  extend for a budgets-adjacent change, and flag the doc gap rather than
+  silently re-deriving conventions or assuming the missing narrative means
+  the screen is unmaintained.
+
+  There is no single reference screen — before implementing, identify which
+  prior wave is the nearest shape match (a ledger-style row list → §5; an
+  analytics-style breakdown/drill-down screen → §5a; a dashboard-style
+  rail+columns → §5c/§5d; a settings-style form or list → §5e–§5h; a
+  rail+reading-column → §5i–§5j) and follow that section, not whichever one
+  you remember best.
+
+  **If your screen's situation isn't covered by any section — as is
+  currently true for budgets desktop — defer to the newest sibling screen's
+  actual code rather than re-deriving a third answer, and flag the doc gap
+  instead of silently working around it.** Don't treat the absence of a
+  named section as license to invent a fourth convention.
 - `src/components/webLayout.constants.ts` — read before introducing any new
   width threshold. Several waves (chat) deliberately added none, reusing an
   existing constant instead; a new threshold should be the exception, not the

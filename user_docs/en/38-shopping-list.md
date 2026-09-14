@@ -42,6 +42,8 @@ The match has to be exact: the receipt line's product name has to match your lis
 
 Right after saving the scanned receipt, if anything was auto-checked, the confirmation message tells you how many items were checked off, with an **Undo** button in case something was checked by mistake.
 
+The same auto-check happens when you scan a receipt through the Telegram, WhatsApp, or Slack assistant. After the bot creates the expense, its reply tells you how many items it checked off. There's no Undo button in chat — if something was matched by mistake, just uncheck it on the list screen.
+
 You can turn this off in **Settings → Data → Shopping list** if you'd rather always check items off by hand.
 
 ## Managing the List by Chat

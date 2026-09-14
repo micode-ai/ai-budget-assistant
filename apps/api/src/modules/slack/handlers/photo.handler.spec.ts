@@ -16,6 +16,11 @@ function makeFakeRedis() {
   };
 }
 
+/** In-memory stand-in for ShoppingListService — reconciles nothing by default. */
+function makeShoppingList() {
+  return { reconcileWithReceipt: jest.fn().mockResolvedValue({ checkedLabels: [] }) };
+}
+
 const RECEIPT_LOCATION = { lat: 52.2297, lng: 21.0122, name: 'Sucha 31, Sucha' };
 
 function baseReceipt(location: typeof RECEIPT_LOCATION | null) {
@@ -77,6 +82,7 @@ describe('Slack PhotoHandler — geocoded location wiring (ABA-310 bot photo geo
       expenses as never,
       subs as never,
       categories as never,
+      makeShoppingList() as never,
       client as never,
       redis as never,
     );
@@ -167,6 +173,7 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
       expenses as never,
       subs as never,
       categories as never,
+      makeShoppingList() as never,
       client as never,
       redis as never,
     );
@@ -260,6 +267,7 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
       expenses as never,
       subs as never,
       categories as never,
+      makeShoppingList() as never,
       client as never,
       redis as never,
     );
@@ -315,6 +323,7 @@ describe('Slack PhotoHandler — line-item editing (ABA-482)', () => {
       expenses as never,
       subs as never,
       categories as never,
+      makeShoppingList() as never,
       client as never,
       redis as never,
     );

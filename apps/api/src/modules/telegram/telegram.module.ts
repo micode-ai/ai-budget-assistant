@@ -17,10 +17,19 @@ import { IncomesModule } from '../incomes/incomes.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { PurchaseRequestsModule } from '../purchase-requests/purchase-requests.module';
+import { ShoppingListModule } from '../shopping-list/shopping-list.module';
 
 @Global()
 @Module({
-  imports: [AiModule, ExpensesModule, IncomesModule, CategoriesModule, SubscriptionsModule, PurchaseRequestsModule],
+  imports: [
+    AiModule,
+    ExpensesModule,
+    IncomesModule,
+    CategoriesModule,
+    SubscriptionsModule,
+    PurchaseRequestsModule,
+    ShoppingListModule,
+  ],
   controllers: [TelegramBotController],
   providers: [
     TelegramService,

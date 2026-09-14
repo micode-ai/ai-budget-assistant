@@ -6,9 +6,10 @@ import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
+import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
 import { WA_REDIS, WaMediaMessage, WhatsAppUserState } from '../types';
-import { t, buildCategorySplitLine, buildItemListBlock } from '../helpers/i18n';
+import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
 import {
   parseItemEditCommand,
   applyItemEditCommand,
@@ -60,6 +61,7 @@ export class PhotoHandler {
     private readonly expensesService: ExpensesService,
     private readonly subscriptionsService: SubscriptionsService,
     private readonly categoriesService: CategoriesService,
+    private readonly shoppingListService: ShoppingListService,
     private readonly client: WhatsAppClientService,
     @Inject(WA_REDIS) private readonly redis: Redis,
   ) {}
@@ -332,10 +334,23 @@ export class PhotoHandler {
       // correction parser instead of reaching the AI.
       await this.redis.del(`wa:awaiting_item_edit:${waPhoneNumber}`);
 
+      // Auto-check-off matching shopping-list items (ABA bot-receipt-shopping-list-reconciliation).
+      // Awaited so its count can ride the SAME confirmation message, but its own
+      // failure must never be reported as an expense-creation failure — the
+      // expense was already created successfully by this point.
+      const reconciled = await this.shoppingListService
+        .reconcileWithReceipt(data.accountId, data.items)
+        .catch((e) => {
+          this.logger.warn(`shoppingListService.reconcileWithReceipt failed: ${e}`);
+          return { checkedLabels: [] as string[] };
+        });
+      const shoppingLine = buildShoppingListReconciliationLine(reconciled.checkedLabels, language);
+
       const amountStr = `${data.amount} ${data.currencyCode}`;
       await this.client.sendText(
         waPhoneNumber,
-        `${t('expenseCreated', language)}: *${amountStr}* — ${data.description}`,
+        `${t('expenseCreated', language)}: *${amountStr}* — ${data.description}` +
+          (shoppingLine ? `\n${shoppingLine}` : ''),
       );
     } catch (error) {
       this.logger.error(`PhotoHandler.handleReceiptAddCallback error for ${userState.waPhoneNumber}: ${error}`);
