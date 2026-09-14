@@ -2,6 +2,7 @@ import {
   IsArray,
   IsIn,
   IsNotEmpty,
+  IsObject,
   IsOptional,
   IsString,
   MaxLength,
@@ -28,6 +29,15 @@ export class SplitParticipantInputDto implements SplitParticipantInput {
   @IsArray()
   @IsString({ each: true })
   itemIds?: string[];
+
+  /** Explicit per-line shares in basis points (ABA-550). class-validator has no
+   * "record of bounded integers" rule, so the shape is only checked to be an
+   * object here; the real validation — keys claimed by this participant, values
+   * integer 0..10000, and no line over-allocated across participants — lives in
+   * ReceiptSplitService, which is unit-tested directly and is the authority. */
+  @IsOptional()
+  @IsObject()
+  itemShareBp?: Record<string, number>;
 }
 
 export class CreateSplitDto {

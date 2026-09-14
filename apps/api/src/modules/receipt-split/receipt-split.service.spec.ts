@@ -229,6 +229,68 @@ describe('ReceiptSplitService.createSplit', () => {
       expect(transactionMock).not.toHaveBeenCalled();
     });
 
+    // --- ABA-550: explicit per-line shares -------------------------------
+    it('rejects a share set for a line the participant does not claim', async () => {
+      const expense = makeExpense({
+        amount: 30,
+        items: [
+          { id: 'item-1', totalPrice: 20 },
+          { id: 'item-2', totalPrice: 10 },
+        ],
+      });
+      const { service, transactionMock } = buildDeps({ expense });
+      await expect(
+        service.createSplit('acc-1', 'user-1', 'exp-1', {
+          mode: 'items',
+          participants: [{ name: 'Alice', itemIds: ['item-1'], itemShareBp: { 'item-2': 5000 } }],
+        } as any),
+      ).rejects.toThrow(BadRequestException);
+      expect(transactionMock).not.toHaveBeenCalled();
+    });
+
+    it('rejects a share outside 0..10000 or one that is not a whole number', async () => {
+      const expense = makeExpense({ amount: 30, items: [{ id: 'item-1', totalPrice: 30 }] });
+      for (const bad of [10001, -1, 50.5]) {
+        const { service, transactionMock } = buildDeps({ expense });
+        await expect(
+          service.createSplit('acc-1', 'user-1', 'exp-1', {
+            mode: 'items',
+            participants: [{ name: 'Alice', itemIds: ['item-1'], itemShareBp: { 'item-1': bad } }],
+          } as any),
+        ).rejects.toThrow(BadRequestException);
+        expect(transactionMock).not.toHaveBeenCalled();
+      }
+    });
+
+    it('rejects a line whose shares add up to more than 100% across participants', async () => {
+      const expense = makeExpense({ amount: 30, items: [{ id: 'item-1', totalPrice: 30 }] });
+      const { service, transactionMock } = buildDeps({ expense });
+      await expect(
+        service.createSplit('acc-1', 'user-1', 'exp-1', {
+          mode: 'items',
+          participants: [
+            { name: 'Alice', itemIds: ['item-1'], itemShareBp: { 'item-1': 6000 } },
+            { name: 'Bob', itemIds: ['item-1'], itemShareBp: { 'item-1': 5000 } },
+          ],
+        } as any),
+      ).rejects.toThrow(BadRequestException);
+      expect(transactionMock).not.toHaveBeenCalled();
+    });
+
+    it('accepts shares that fall short of 100% — the remainder is the payer share', async () => {
+      // This is the whole point of the feature: "60% his, 40% mine" is expressed
+      // by allocating only 60%, never by giving the payer a participant row.
+      const expense = makeExpense({ amount: 15.99, items: [{ id: 'item-1', totalPrice: 15.99 }] });
+      const { service, transactionMock } = buildDeps({ expense });
+      await expect(
+        service.createSplit('acc-1', 'user-1', 'exp-1', {
+          mode: 'items',
+          participants: [{ name: 'Edik', itemIds: ['item-1'], itemShareBp: { 'item-1': 6000 } }],
+        } as any),
+      ).resolves.toBeDefined();
+      expect(transactionMock).toHaveBeenCalled();
+    });
+
     it('rejects an itemIds entry that does not belong to this expense', async () => {
       const expense = makeExpense({ amount: 30, items: [{ id: 'item-1', totalPrice: 30 }] });
       const { service, transactionMock } = buildDeps({ expense });

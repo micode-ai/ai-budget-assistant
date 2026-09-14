@@ -1,6 +1,6 @@
 import { randomBytes, randomUUID } from 'crypto';
 import { BadRequestException, Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { DebtsService } from '../debts/debts.service';
 import { resolveEqualSplit, resolveItemSplit, reassignSplitItem } from './split-calculator';
@@ -25,6 +25,8 @@ const SPLIT_EXPIRY_MS = 30 * 24 * 60 * 60 * 1000;
 const AMOUNT_TOLERANCE = 0.01;
 const MAX_PARTICIPANTS = 20;
 const MAX_NAME_LENGTH = 60;
+/** One whole share in basis points — 10000bp = 100% of a line (ABA-550). */
+const BP_FULL = 10000;
 // Falls back to the API origin, which serves GET /s/:token today. The pretty
 // apex form (https://ai-budget.pl/s/:token) needs a dedicated nginx block that
 // does not exist yet — defaulting to it would 404 every guest link until
@@ -60,6 +62,7 @@ interface ParticipantRow {
   claimedAt: Date | null;
   settledAt: Date | null;
   itemIds?: unknown;
+  itemShareBp?: unknown;
 }
 
 /** `ReceiptSplitParticipant.itemIds` is a Prisma `Json?` column — normalizes
@@ -68,6 +71,20 @@ interface ParticipantRow {
  * participant's current claims (ABA-546, in-place line reassignment). */
 function normalizeItemIds(value: unknown): string[] {
   return Array.isArray(value) ? value.filter((v): v is string => typeof v === 'string') : [];
+}
+
+/** `ReceiptSplitParticipant.itemShareBp` is a Prisma `Json?` column (ABA-550) —
+ * normalizes whatever is stored into a plain {itemId: basisPoints} map, dropping
+ * anything that is not a finite number. NULL, and every split created before the
+ * column existed, reads as an empty map, i.e. "divide every claimed line
+ * equally" — the original behaviour. */
+function normalizeItemShareBp(value: unknown): Record<string, number> {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return {};
+  const out: Record<string, number> = {};
+  for (const [itemId, bp] of Object.entries(value as Record<string, unknown>)) {
+    if (typeof bp === 'number' && Number.isFinite(bp)) out[itemId] = bp;
+  }
+  return out;
 }
 
 /** Raw shape of an open `ReceiptSplitFlag` row as read for state-response
@@ -255,6 +272,7 @@ export class ReceiptSplitService {
       // rendered on the guest page (guest.controller.ts builds its own view
       // straight from the stored row, not from this DTO).
       itemIds: normalizeItemIds(p.itemIds),
+      itemShareBp: normalizeItemShareBp(p.itemShareBp),
     }));
     // The anchor row (seq:0) is the sole carrier of groupToken — find it
     // rather than assuming array order/index, since `orderBy: { createdAt: 'asc' }`
@@ -322,6 +340,33 @@ export class ReceiptSplitService {
       }
     }
 
+    // Explicit per-line shares (ABA-550). The DTO only checks that this is an
+    // object; the real rules live here, because the service is unit-tested
+    // directly and callers that bypass the HTTP pipe must not skip them.
+    // Deliberately NOT checked: that a line's shares reach 10000. Falling short
+    // is the whole point — the remainder is the payer's share of that line.
+    const allocatedBpByItem = new Map<string, number>();
+    for (const p of participants) {
+      const claimed = new Set(p.itemIds ?? []);
+      for (const [itemId, bp] of Object.entries(p.itemShareBp ?? {})) {
+        if (!claimed.has(itemId)) {
+          throw new BadRequestException(
+            `Cannot set a share of item ${itemId} for a participant who does not claim it`,
+          );
+        }
+        if (!Number.isInteger(bp) || bp < 0 || bp > BP_FULL) {
+          throw new BadRequestException(
+            `Share of item ${itemId} must be a whole number of basis points between 0 and ${BP_FULL}`,
+          );
+        }
+        const running = (allocatedBpByItem.get(itemId) ?? 0) + bp;
+        if (running > BP_FULL) {
+          throw new BadRequestException(`Shares of item ${itemId} add up to more than 100%`);
+        }
+        allocatedBpByItem.set(itemId, running);
+      }
+    }
+
     // Deliberately the expense's PAID amount, not the sum of its line items — a
     // receipt carrying a discount makes those differ, and the split must validate
     // against what was actually paid, not against the pre-discount line total.
@@ -335,6 +380,7 @@ export class ReceiptSplitService {
             participants.map((p, index) => ({
               participantId: String(index),
               itemIds: p.itemIds ?? [],
+              itemShareBp: p.itemShareBp,
             })),
             billTotal,
             Number(expense.discountAmount ?? 0),
@@ -412,6 +458,8 @@ export class ReceiptSplitService {
               amount,
               currencyCode: expense.currencyCode,
               itemIds: p.itemIds && p.itemIds.length > 0 ? p.itemIds : undefined,
+              itemShareBp:
+                p.itemShareBp && Object.keys(p.itemShareBp).length > 0 ? p.itemShareBp : undefined,
               debtExpenseId: debtExpense.id,
               expiresAt,
             },
@@ -546,6 +594,7 @@ export class ReceiptSplitService {
       url: this.buildGuestUrl(participant.token, lang),
       flags: ownFlags.map(toFlagDto),
       itemIds: normalizeItemIds(participant.itemIds),
+      itemShareBp: normalizeItemShareBp(participant.itemShareBp),
     };
   }
 
@@ -630,7 +679,19 @@ export class ReceiptSplitService {
 
     const { assignments, result } = reassignSplitItem(
       expense.items.map((i) => ({ id: i.id, totalPrice: Number(i.totalPrice) })),
-      participants.map((p) => ({ participantId: p.id, itemIds: normalizeItemIds(p.itemIds) })),
+      // Carry every OTHER line's explicit share through untouched, but drop the
+      // reassigned line's own: its claimants have just changed, and this flow
+      // has no share input, so keeping a share set for a different set of people
+      // would silently bill the wrong amounts. The line reverts to an equal
+      // division among its new claimants, which is what the UI here shows.
+      participants.map((p) => {
+        const { [itemId]: _replaced, ...keptShares } = normalizeItemShareBp(p.itemShareBp);
+        return {
+          participantId: p.id,
+          itemIds: normalizeItemIds(p.itemIds),
+          itemShareBp: keptShares,
+        };
+      }),
       itemId,
       participantIds,
       Number(expense.amount),
@@ -656,15 +717,33 @@ export class ReceiptSplitService {
         const newItemIds = assignments.find((a) => a.participantId === p.id)?.itemIds ?? [];
         const newAmount = shareByParticipant.get(p.id) ?? 0;
         const oldItemIds = normalizeItemIds(p.itemIds);
+        // The reassigned line's explicit share (ABA-550) was pruned before the
+        // recompute above; it has to be pruned in STORAGE too, or the stale
+        // entry survives and the next read silently re-applies a share that was
+        // set for a different set of claimants.
+        const oldShares = normalizeItemShareBp(p.itemShareBp);
+        const { [itemId]: droppedShare, ...newShares } = oldShares;
         const changed =
           newAmount !== Number(p.amount) ||
           newItemIds.length !== oldItemIds.length ||
-          newItemIds.some((id: string) => !oldItemIds.includes(id));
+          newItemIds.some((id: string) => !oldItemIds.includes(id)) ||
+          droppedShare !== undefined;
         if (!changed) continue;
 
         await tx.receiptSplitParticipant.update({
           where: { id: p.id },
-          data: { itemIds: newItemIds, amount: newAmount },
+          data: {
+            itemIds: newItemIds,
+            amount: newAmount,
+            // Only written when this line actually carried a share, so an
+            // ordinary reassignment keeps its minimal two-field update.
+            ...(droppedShare !== undefined
+              ? {
+                  itemShareBp:
+                    Object.keys(newShares).length > 0 ? newShares : Prisma.DbNull,
+                }
+              : {}),
+          },
         });
         if (p.debtExpenseId) {
           await tx.expense.update({

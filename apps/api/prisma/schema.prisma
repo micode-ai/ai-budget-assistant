@@ -646,6 +646,15 @@ model ReceiptSplitParticipant {
   amount        Decimal   @db.Decimal(12, 2)
   currencyCode  String    @map("currency_code")
   itemIds       Json?     @map("item_ids")
+  // Explicit per-line share, in basis points (6000 = 60%), keyed by item id —
+  // ABA-550. Sits BESIDE itemIds rather than reshaping it: itemIds is read as a
+  // flat string array in eight places in guest.controller.ts plus the flag
+  // clamping and ABA-546's reassignment, and every split created before this
+  // column exists carries one. NULL (and any line absent from the map) means
+  // "divide this line equally among its claimants", the original behaviour.
+  // A line's shares need not add up to 10000: the remainder is the PAYER's,
+  // which is what lets "60% his, 40% mine" exist without a payer row.
+  itemShareBp   Json?     @map("item_share_bp")
   debtExpenseId String?   @map("debt_expense_id")
   openedAt      DateTime? @map("opened_at")
   claimedAt     DateTime? @map("claimed_at")

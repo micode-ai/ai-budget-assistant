@@ -3,6 +3,15 @@ export interface SplitParticipantInput {
   name: string;
   /** Ids of the expense_items assigned to this person. Empty = an equal-split share. */
   itemIds?: string[];
+  /** Explicit share of a line, in basis points (6000 = 60%), keyed by item id
+   * (ABA-550). Every key must also appear in `itemIds` — you cannot set a share
+   * of a line you do not claim. A line left out here divides equally among its
+   * claimants, which is what every split before this field did.
+   *
+   * The shares of one line need NOT add up to 10000: the remainder is the
+   * payer's, the same way an unclaimed line already is. That is how "60% his,
+   * 40% mine" is expressed — the payer is never a participant row. */
+  itemShareBp?: Record<string, number>;
 }
 
 export interface CreateSplitDto {
@@ -41,6 +50,10 @@ export interface SplitParticipantState {
    * in-place line reassignment). Payer-view only — never rendered on the
    * guest page. Empty for an equal-mode split. */
   itemIds: string[];
+  /** This participant's explicit per-line shares in basis points (ABA-550),
+   * keyed by item id. Always present — an empty object means every line they
+   * claim is divided equally. Payer-view only, like `itemIds`. */
+  itemShareBp: Record<string, number>;
 }
 
 /**
