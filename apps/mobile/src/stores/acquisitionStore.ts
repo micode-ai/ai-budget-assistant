@@ -1,5 +1,5 @@
 import { MMKV } from 'react-native-mmkv';
-import { ACQUISITION_KEYS, type Acquisition } from '@/services/attribution.types';
+import { ACQUISITION_KEYS, SAFE, type Acquisition } from '@/services/attribution.types';
 
 const mmkv = new MMKV({ id: 'acquisition' });
 
@@ -11,8 +11,6 @@ const PUSHED_KEY = 'acquisitionPushed';
 /** The API's own bound. Longer than this is truncated, never dropped: a clipped
  *  referrer still identifies a source, an absent one identifies nothing. */
 export const MAX_RAW_LENGTH = 200;
-
-const SAFE = /^[A-Za-z0-9_-]{1,20}$/;
 
 /** Pure so the defaults can be tested without mocking MMKV (firstRunStore's shape). */
 export function resolveStored(read: (key: string) => string | undefined): Acquisition | undefined {
@@ -42,8 +40,20 @@ export function resolvePushed(read: (key: string) => string | undefined): boolea
   return read(PUSHED_KEY) === 'true';
 }
 
-/** Same default and same reason as `resolvePushed`: a transient SERVICE_UNAVAILABLE
- *  must be retried on the next launch, not recorded as "this install has no referrer". */
+/**
+ * Same default and same reason as `resolvePushed`: `READ_KEY` is set only when the
+ * native call resolved to a STRING — including the empty string, which is a genuine
+ * "this install has no referrer" answer — never on `null`. The native module folds
+ * every non-terminal cause into that one `null` alike (a transient
+ * SERVICE_UNAVAILABLE, FEATURE_NOT_SUPPORTED, a thrown exception), so a `null`
+ * retries on the next launch instead of being recorded as terminal. See
+ * `captureAcquisition` in `attribution.native.ts`, the only writer of this flag.
+ *
+ * Accepted cost: a device that can NEVER get a non-null answer — no Play Services,
+ * or a non-Play build such as the Samsung Galaxy Store release this repo plans —
+ * retries one cheap failed bind every launch, forever. That is fire-and-forget and
+ * such a device has no attribution to lose.
+ */
 export function resolveRead(read: (key: string) => string | undefined): boolean {
   return read(READ_KEY) === 'true';
 }
@@ -59,7 +69,12 @@ export const acquisitionFlag = {
   hasRead: (): boolean => resolveRead((k) => mmkv.getString(k)),
   hasPushed: (): boolean => resolvePushed((k) => mmkv.getString(k)),
   markPushed: (): void => mmkv.set(PUSHED_KEY, 'true'),
-  /** First touch wins: an existing record is never replaced. */
+  /**
+   * First touch wins: an existing record is never replaced. Always marks the read
+   * flag as a side effect — safe only because this is called ONLY on a terminal
+   * (non-null) native answer; see `captureAcquisition`, the only caller, and
+   * `resolveRead` above for why a `null` answer must never reach here.
+   */
   save: (value: Acquisition | undefined, raw: string | undefined): void => {
     if (!mmkv.getString(VALUE_KEY) && value) mmkv.set(VALUE_KEY, JSON.stringify(value));
     if (!mmkv.getString(RAW_KEY) && raw) mmkv.set(RAW_KEY, raw);

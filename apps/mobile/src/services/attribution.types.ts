@@ -15,8 +15,12 @@ export interface Acquisition {
 export const ACQUISITION_KEYS = ['src', 'loc', 'lang', 'plan'] as const;
 
 /** Charset the API also enforces. A value that fails it is dropped rather than sent:
- * attribution must never be the reason a registration is rejected. */
-const SAFE = /^[A-Za-z0-9_-]{1,20}$/;
+ * attribution must never be the reason a registration is rejected. Exported so
+ * `acquisitionStore.ts`'s re-validation-on-read uses this SAME regex object rather
+ * than a byte-identical second copy — both files are in `apps/mobile/src/`, so
+ * there is no build-boundary reason (unlike the API/shared-utils "duplicated pair"
+ * convention) for the two to ever diverge. */
+export const SAFE = /^[A-Za-z0-9_-]{1,20}$/;
 
 /** Pure: pull the acquisition fields out of a query string, keeping only values that
  * will survive the API's own validation. Returns undefined when nothing usable is

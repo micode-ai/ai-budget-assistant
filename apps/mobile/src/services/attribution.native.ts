@@ -15,8 +15,14 @@ export type { Acquisition } from './attribution.types';
  * is simply omitted, exactly as before this existed.
  *
  * `hasRead()` guards the native call, not the value — Play's referrer never changes
- * for an install, so one SUCCESSFUL read is final. A failed read leaves the flag
- * unset so the next launch tries again.
+ * for an install, so one TERMINAL read is final. A terminal read is any resolved
+ * STRING, including the empty string: that is Play's genuine "no referrer" answer,
+ * not a failure. `null` is different — the native module (Task 3) collapses every
+ * non-terminal cause into that one value alike (a transient SERVICE_UNAVAILABLE,
+ * FEATURE_NOT_SUPPORTED, a thrown exception), so `null` must NOT mark the flag: it
+ * leaves the next launch free to try again. A device that can never get anything
+ * but `null` (no Play Services, a non-Play build) simply retries one cheap failed
+ * bind forever — fire-and-forget, and such a device has no attribution to lose.
  */
 export function captureAcquisition(): void {
   if (Platform.OS !== 'android') return;
@@ -28,8 +34,11 @@ export function captureAcquisition(): void {
   native
     .getInstallReferrer()
     .then((referrer) => {
+      // See the doc comment above: `null` is retryable and must not touch the
+      // store at all, not even to mark the read flag.
+      if (referrer === null) return;
       const raw = truncateReferrer(referrer);
-      // An empty referrer is still a successful read: store the flag, not a value,
+      // An empty referrer is still a terminal read: store the flag, not a value,
       // so we stop asking Play on every launch.
       acquisitionFlag.save(raw ? parseAcquisition(raw) : undefined, raw);
     })
