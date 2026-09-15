@@ -103,8 +103,25 @@ describe('runDelayedAuthenticatedBootstrap', () => {
   });
 });
 
+// Fix round 1 (ABA-553): drains the `.then()/.catch()` chain
+// `runDelayedAuthenticatedBootstrap` fires for the acquisition PATCH without
+// returning or awaiting it — same shape as `attribution.native.test.ts` /
+// `telemetry.native.test.ts`'s own `flushMicrotasks`.
+const flushMicrotasks = async () => {
+  for (let i = 0; i < 5; i += 1) await Promise.resolve();
+};
+
 describe('acquisition backfill', () => {
   beforeEach(() => {
+    // This block's own tests don't care about the user id, but leaving
+    // `mockGetState` unset means they'd silently inherit whatever the LAST
+    // test of the describe block above happened to leave in the shared mock
+    // — `jest.clearAllMocks()` in the top-level `beforeEach` resets call
+    // history, not a previously-set `mockReturnValue`. Fix round 1 caught
+    // this: running this block in isolation
+    // (`-t "acquisition backfill"`) used to throw `Cannot read properties
+    // of undefined (reading 'user')` from `useAuthStore.getState().user?.id`.
+    mockGetState.mockReturnValue({ user: undefined });
     (api.updateAcquisition as jest.Mock).mockResolvedValue(undefined);
   });
 
@@ -128,5 +145,45 @@ describe('acquisition backfill', () => {
     (getAcquisition as jest.Mock).mockReturnValue(undefined);
     runDelayedAuthenticatedBootstrap();
     expect(api.updateAcquisition).not.toHaveBeenCalled();
+  });
+
+  // Fix round 1 (ABA-553): the invariant this whole task turns on had no
+  // assertion protecting it — moving `markPushed()` ahead of the `.then()`
+  // would have passed every test above unchanged. `runDelayedAuthenticatedBootstrap`
+  // never awaits the PATCH (deliberately fire-and-forget), so the test drains
+  // the promise chain itself via `flushMicrotasks`.
+  it('marks pushed only after the request resolves', async () => {
+    (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
+    (getAcquisition as jest.Mock).mockReturnValue({ src: 'google-play' });
+    (api.updateAcquisition as jest.Mock).mockResolvedValue(undefined);
+
+    runDelayedAuthenticatedBootstrap();
+    await flushMicrotasks();
+
+    expect(acquisitionFlag.markPushed).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not mark pushed when the request rejects, and never throws out of the caller', async () => {
+    (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
+    (getAcquisition as jest.Mock).mockReturnValue({ src: 'google-play' });
+    const failure = new Error('network down');
+    // The production `.catch()` is chained synchronously in the same call
+    // that produces this rejection, so it must never surface here as an
+    // unhandled-rejection warning — test output must stay pristine.
+    (api.updateAcquisition as jest.Mock).mockRejectedValue(failure);
+    const warnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    expect(() => runDelayedAuthenticatedBootstrap()).not.toThrow();
+    await flushMicrotasks();
+
+    expect(acquisitionFlag.markPushed).not.toHaveBeenCalled();
+    // ABA-157: a fire-and-forget failure warns, it never errors — a red
+    // LogBox overlay for a failed analytics write is a bug in this codebase.
+    expect(warnSpy).toHaveBeenCalledWith('[Attribution] acquisition backfill failed:', failure);
+    expect(errorSpy).not.toHaveBeenCalled();
+
+    warnSpy.mockRestore();
+    errorSpy.mockRestore();
   });
 });
