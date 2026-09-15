@@ -24,7 +24,7 @@ jest.mock('@/services/notifications', () => ({
   registerForPushNotifications: jest.fn(),
 }));
 jest.mock('@/services/api', () => ({
-  api: { updateProfile: jest.fn().mockResolvedValue(undefined) },
+  api: { updateProfile: jest.fn().mockResolvedValue(undefined), updateAcquisition: jest.fn() },
 }));
 jest.mock('@/i18n', () => ({ language: 'en' }));
 jest.mock('@/features/auth/restoreCredential', () => ({
@@ -33,12 +33,18 @@ jest.mock('@/features/auth/restoreCredential', () => ({
 jest.mock('@/stores/restoreCredentialStore', () => ({
   restoreCredentialFlag: { hasSynced: jest.fn() },
 }));
+jest.mock('@/stores/acquisitionStore', () => ({
+  acquisitionFlag: { hasPushed: jest.fn(), markPushed: jest.fn() },
+}));
+jest.mock('@/services/attribution', () => ({ getAcquisition: jest.fn() }));
 
 import { useAuthStore } from '@/stores/authStore';
 import { registerForPushNotifications } from '@/services/notifications';
 import { api } from '@/services/api';
 import { registerRestoreCredential } from '@/features/auth/restoreCredential';
 import { restoreCredentialFlag } from '@/stores/restoreCredentialStore';
+import { acquisitionFlag } from '@/stores/acquisitionStore';
+import { getAcquisition } from '@/services/attribution';
 import { runDelayedAuthenticatedBootstrap } from '../useAuthenticatedBootstrap';
 
 const mockGetState = useAuthStore.getState as jest.Mock;
@@ -94,5 +100,33 @@ describe('runDelayedAuthenticatedBootstrap', () => {
 
     expect(registerForPushNotifications).toHaveBeenCalledTimes(1);
     expect(api.updateProfile).toHaveBeenCalledWith({ language: 'en' });
+  });
+});
+
+describe('acquisition backfill', () => {
+  beforeEach(() => {
+    (api.updateAcquisition as jest.Mock).mockResolvedValue(undefined);
+  });
+
+  it('sends the stored acquisition once, for a user who registered before capture existed', () => {
+    (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
+    (getAcquisition as jest.Mock).mockReturnValue({ src: 'google-play', loc: 'organic' });
+
+    runDelayedAuthenticatedBootstrap();
+
+    expect(api.updateAcquisition).toHaveBeenCalledWith({ src: 'google-play', loc: 'organic' });
+  });
+
+  it('does not send twice', () => {
+    (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(true);
+    runDelayedAuthenticatedBootstrap();
+    expect(api.updateAcquisition).not.toHaveBeenCalled();
+  });
+
+  it('sends nothing when there is no referrer to report', () => {
+    (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
+    (getAcquisition as jest.Mock).mockReturnValue(undefined);
+    runDelayedAuthenticatedBootstrap();
+    expect(api.updateAcquisition).not.toHaveBeenCalled();
   });
 });

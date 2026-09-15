@@ -7,6 +7,8 @@ import { api } from '@/services/api';
 import i18n from '@/i18n';
 import { registerRestoreCredential } from '@/features/auth/restoreCredential';
 import { restoreCredentialFlag } from '@/stores/restoreCredentialStore';
+import { acquisitionFlag } from '@/stores/acquisitionStore';
+import { getAcquisition } from '@/services/attribution';
 
 /** Not exported: nothing outside this file references it. Kept as a named
  * constant purely so the `setTimeout` call below reads as "the bootstrap
@@ -43,6 +45,19 @@ export function runDelayedAuthenticatedBootstrap(): void {
   const userId = useAuthStore.getState().user?.id;
   if (userId && !restoreCredentialFlag.hasSynced(userId)) {
     void registerRestoreCredential(userId);
+  }
+
+  // Late attribution for users who registered before install-referrer capture shipped.
+  // A new registration already carries this in its own request body, so for everyone
+  // else this is a single no-op PATCH the server refuses via its first-touch guard.
+  if (!acquisitionFlag.hasPushed()) {
+    const acquisition = getAcquisition();
+    if (acquisition) {
+      api
+        .updateAcquisition(acquisition)
+        .then(() => acquisitionFlag.markPushed())
+        .catch((e) => console.warn('[Attribution] acquisition backfill failed:', e));
+    }
   }
 }
 
