@@ -468,7 +468,7 @@ def parse(path):
         body = m.group(2)
     return meta, body
 
-def to_html(body, lang=None):
+def to_html(body, lang=None, src="blog"):
     out = md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
     # wrap tables so wide ones scroll horizontally on mobile (CSS .tablewrap)
     out = re.sub(r"<table>(.*?)</table>", r'<div class="tablewrap"><table>\1</table></div>',
@@ -482,8 +482,21 @@ def to_html(body, lang=None):
     # don't read, and /en/, /fr/, /nl/ got no in-body inbound links at all. Same defect
     # class as ABA-280's cross-site language preservation, one level down in the body.
     # Only the bare apex is rewritten; a deep link (/pricing/, /blog/...) keeps its path.
+    #
+    # Same reasoning, one level down again (ABA-553): 191 articles write the bare Play
+    # listing link in prose ("[Google Play](https://play.google.com/store/apps/details?
+    # id=com.budget.assistant)"). Left as-is, an install from one of those pages arrives
+    # wearing Play's own organic referrer, indistinguishable from someone who found us by
+    # searching the Store - on the one channel this whole feature was built to measure.
+    # Rewritten here, at render time, so a newly written article gets it for free, exactly
+    # like the apex rewrite above. Only the EXACT bare href is matched (nothing after
+    # ?id=com.budget.assistant inside the quotes) - a link that already carries its own
+    # query string is left untouched rather than risk double-tagging or corrupting it.
+    # `play_url` already returns its `&` as `&amp;` for this exact HTML-attribute context,
+    # so this is a plain string substitution, not a second escaping pass.
     if lang:
         out = re.sub(r'href="https://ai-budget\.pl/?"', f'href="{home_url(lang)}"', out)
+        out = re.sub(rf'href="{re.escape(PLAY)}"', f'href="{play_url("body", lang, src)}"', out)
     return out
 
 _QLINE = re.compile(r"^\*\*(.+\?)\*\*\s*$")
