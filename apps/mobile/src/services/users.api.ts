@@ -1,5 +1,6 @@
 import type { TelegramLinkCodeResponse, TelegramLinkStatusResponse, SettleMethod, UserPaymentMethod } from '@budget/shared-types';
 import { httpClient } from './http-client';
+import type { Acquisition } from './attribution.types';
 
 export const usersApi = {
   getProfile() {
@@ -16,6 +17,13 @@ export const usersApi = {
     return httpClient.request<any>('/users/me', {
       method: 'PATCH',
       body: JSON.stringify(data),
+    });
+  },
+
+  async updateAcquisition(acquisition: Acquisition): Promise<void> {
+    await httpClient.request<void>('/users/me/acquisition', {
+      method: 'PATCH',
+      body: JSON.stringify(acquisition),
     });
   },
 

@@ -87,6 +87,7 @@ export class AuthService {
       acquisitionLocation: dto.acquisition?.loc,
       acquisitionLanguage: dto.acquisition?.lang,
       acquisitionPlan: dto.acquisition?.plan,
+      acquisitionReferrerRaw: dto.acquisition?.referrerRaw,
     });
 
     // Send verification email
@@ -255,6 +256,7 @@ export class AuthService {
         acquisitionLocation: dto.acquisition?.loc,
         acquisitionLanguage: dto.acquisition?.lang,
         acquisitionPlan: dto.acquisition?.plan,
+        acquisitionReferrerRaw: dto.acquisition?.referrerRaw,
       });
 
       this.telegramService.notifyNewUser(user.name, user.email);

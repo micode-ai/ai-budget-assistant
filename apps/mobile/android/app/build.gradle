@@ -178,6 +178,10 @@ dependencies {
     implementation("androidx.credentials:credentials:1.6.0")
     implementation("androidx.credentials:credentials-play-services-auth:1.6.0")
 
+    // Play Install Referrer (ABA-553). Reads the referrer of the original install so a
+    // signup can be traced to the link or the Play search that produced it.
+    implementation("com.android.installreferrer:installreferrer:2.2")
+
     def isGifEnabled = (findProperty('expo.gif.enabled') ?: "") == "true";
     def isWebpEnabled = (findProperty('expo.webp.enabled') ?: "") == "true";
     def isWebpAnimatedEnabled = (findProperty('expo.webp.animated') ?: "") == "true";

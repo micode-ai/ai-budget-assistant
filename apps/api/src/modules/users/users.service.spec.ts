@@ -268,3 +268,51 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
     expect(prisma._legacyPair('user-1')).toEqual({ paymentMethod: null, paymentHandle: null });
   });
 });
+
+describe('UsersService.updateAcquisition', () => {
+  let service: UsersService;
+  let prisma: any;
+
+  beforeEach(async () => {
+    prisma = {
+      user: {
+        updateMany: jest.fn(),
+      },
+    };
+
+    const module = await Test.createTestingModule({
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+    }).compile();
+    service = module.get(UsersService);
+  });
+
+  describe('updateAcquisition', () => {
+    it('writes only when acquisitionSource is still null, so first touch cannot be overwritten', async () => {
+      prisma.user.updateMany.mockResolvedValue({ count: 1 });
+
+      await service.updateAcquisition('user-1', {
+        src: 'google-play',
+        loc: 'organic',
+        referrerRaw: 'utm_source=google-play&utm_medium=organic',
+      });
+
+      expect(prisma.user.updateMany).toHaveBeenCalledWith({
+        where: { id: 'user-1', acquisitionSource: null },
+        data: {
+          acquisitionSource: 'google-play',
+          acquisitionLocation: 'organic',
+          acquisitionLanguage: undefined,
+          acquisitionPlan: undefined,
+          acquisitionReferrerRaw: 'utm_source=google-play&utm_medium=organic',
+        },
+      });
+    });
+
+    it('resolves without throwing when the guard matched nothing', async () => {
+      // An already-attributed user. The client has nothing to do with this
+      // information, so it must not surface as an error.
+      prisma.user.updateMany.mockResolvedValue({ count: 0 });
+      await expect(service.updateAcquisition('user-1', { src: 'blog' })).resolves.toBeUndefined();
+    });
+  });
+});

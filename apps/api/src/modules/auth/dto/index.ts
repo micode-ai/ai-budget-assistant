@@ -36,6 +36,19 @@ export class AcquisitionDto {
   @MaxLength(20)
   @Matches(/^[A-Za-z0-9_-]*$/)
   plan?: string;
+
+  /**
+   * The raw Play Install Referrer string, stored as evidence rather than as a label.
+   *
+   * Deliberately NOT held to the 20-character `[A-Za-z0-9_-]` charset the four
+   * fields above use: that guard exists to keep a hostile value out of a column the
+   * admin groups by, and applying it here would discard exactly the unparseable
+   * referrers this field exists to preserve. Bounded by length instead.
+   */
+  @IsOptional()
+  @IsString()
+  @MaxLength(200)
+  referrerRaw?: string;
 }
 
 export class RegisterDto {

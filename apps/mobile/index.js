@@ -20,9 +20,12 @@ if (Platform.OS === 'android') {
 // Mode registration above depends on), so this is early enough without depending on
 // import-hoisting order.
 //
-// Native resolves `./src/services/attribution` to a no-op — an install has no landing
-// query string to read. Wrapped because attribution is optional by design and must never
-// be the reason the app fails to start.
+// On web this reads the CTA params out of the query string. On native there is no
+// query string to read — `captureAcquisition` instead reads the Play Install
+// Referrer (ABA-553) and `captureReferralCode` stays a no-op, since a referral code
+// only reaches a native signup by the user typing the code from the share message.
+// Wrapped because attribution is optional by design and must never be the reason the
+// app fails to start.
 try {
   const attribution = require('./src/services/attribution');
   attribution.captureAcquisition();

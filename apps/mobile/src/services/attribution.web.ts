@@ -1,5 +1,6 @@
 import {
   ACQUISITION_KEYS,
+  SAFE,
   parseAcquisition,
   parseReferralCode,
   type Acquisition,
@@ -47,7 +48,7 @@ export function getAcquisition(): Acquisition | undefined {
     let found = false;
     for (const k of ACQUISITION_KEYS) {
       const v = parsed?.[k];
-      if (typeof v === 'string' && /^[A-Za-z0-9_-]{1,20}$/.test(v)) {
+      if (typeof v === 'string' && SAFE.test(v)) {
         clean[k] = v;
         found = true;
       }

@@ -1,6 +1,7 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import type { SettleMethod } from '@budget/shared-types';
+import { AcquisitionDto } from '../auth/dto';
 
 interface CreateUserData {
   email: string;
@@ -22,6 +23,7 @@ interface CreateUserData {
   acquisitionLocation?: string;
   acquisitionLanguage?: string;
   acquisitionPlan?: string;
+  acquisitionReferrerRaw?: string;
 }
 
 @Injectable()
@@ -45,6 +47,7 @@ export class UsersService {
         acquisitionLocation: data.acquisitionLocation,
         acquisitionLanguage: data.acquisitionLanguage,
         acquisitionPlan: data.acquisitionPlan,
+        acquisitionReferrerRaw: data.acquisitionReferrerRaw,
       },
     });
   }
@@ -127,6 +130,28 @@ export class UsersService {
     return this.prisma.user.update({
       where: { id },
       data: { pushToken },
+    });
+  }
+
+  /**
+   * Late attribution for a user who registered before install-referrer capture shipped.
+   *
+   * The `acquisitionSource: null` filter is doing real work: it makes first-touch
+   * STRUCTURAL rather than a read-then-write that two concurrent calls could race,
+   * and it means an already-attributed user can never be relabelled by a later claim.
+   * A no-op write is a success — whether this call won is not something the caller
+   * can act on, so nothing is returned.
+   */
+  async updateAcquisition(userId: string, dto: AcquisitionDto): Promise<void> {
+    await this.prisma.user.updateMany({
+      where: { id: userId, acquisitionSource: null },
+      data: {
+        acquisitionSource: dto.src,
+        acquisitionLocation: dto.loc,
+        acquisitionLanguage: dto.lang,
+        acquisitionPlan: dto.plan,
+        acquisitionReferrerRaw: dto.referrerRaw,
+      },
     });
   }
 

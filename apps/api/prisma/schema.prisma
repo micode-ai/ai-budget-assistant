@@ -269,10 +269,11 @@ model User {
   // groupBy on Json. Nullable everywhere — every user who registered before this, every
   // native install, and anyone arriving without params has all four NULL, which is a
   // legitimate "unknown", not a defect to backfill.
-  acquisitionSource   String? @map("acquisition_source")
-  acquisitionLocation String? @map("acquisition_location")
-  acquisitionLanguage String? @map("acquisition_language")
-  acquisitionPlan     String? @map("acquisition_plan")
+  acquisitionSource      String? @map("acquisition_source")
+  acquisitionLocation    String? @map("acquisition_location")
+  acquisitionLanguage    String? @map("acquisition_language")
+  acquisitionPlan        String? @map("acquisition_plan")
+  acquisitionReferrerRaw String? @map("acquisition_referrer_raw")
 
   @@index([acquisitionSource])
   @@map("users")

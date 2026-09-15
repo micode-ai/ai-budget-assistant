@@ -99,3 +99,29 @@ describe('parseAcquisition — utm_* fallback', () => {
     expect(parseAcquisition('?utm_source=...')).toBeUndefined();
   });
 });
+
+describe('parseAcquisition on Play Install Referrer strings', () => {
+  it('reads an organic Play install, the shape Play supplies with no tagging from us', () => {
+    expect(parseAcquisition('utm_source=google-play&utm_medium=organic')).toEqual({
+      src: 'google-play',
+      loc: 'organic',
+    });
+  });
+
+  it('prefers our own tags over the utm half of the same string', () => {
+    // play_url emits both; ours carry the language, which fromUtm cannot.
+    expect(
+      parseAcquisition('src=blog&loc=footer&lang=pl&utm_source=blog&utm_medium=footer'),
+    ).toEqual({ src: 'blog', loc: 'footer', lang: 'pl' });
+  });
+
+  it('returns undefined for a gclid-only referrer, leaving the labels empty', () => {
+    // The raw string is stored separately, so the case stays diagnosable.
+    expect(parseAcquisition('gclid=EAIaIQobChMI')).toBeUndefined();
+  });
+
+  it('accepts a referrer string with no leading question mark', () => {
+    // Play hands over a bare query string; URLSearchParams tolerates both.
+    expect(parseAcquisition('src=landing&loc=hero')).toEqual({ src: 'landing', loc: 'hero' });
+  });
+});

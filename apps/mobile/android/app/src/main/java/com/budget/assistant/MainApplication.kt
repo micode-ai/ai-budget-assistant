@@ -14,6 +14,7 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.budget.assistant.notifications.NotificationCapturePackage
 import com.budget.assistant.restorecredentials.RestoreCredentialPackage
+import com.budget.assistant.installreferrer.InstallReferrerPackage
 
 import expo.modules.ApplicationLifecycleDispatcher
 import expo.modules.ReactNativeHostWrapper
@@ -28,6 +29,7 @@ class MainApplication : Application(), ReactApplication {
               // Manually registered packages (no autolink / no TurboModule codegen):
               add(NotificationCapturePackage())
               add(RestoreCredentialPackage())
+              add(InstallReferrerPackage())
             }
 
           override fun getJSMainModuleName(): String = ".expo/.virtual-metro-entry"
