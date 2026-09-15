@@ -22,6 +22,7 @@ interface CreateUserData {
   acquisitionLocation?: string;
   acquisitionLanguage?: string;
   acquisitionPlan?: string;
+  acquisitionReferrerRaw?: string;
 }
 
 @Injectable()
@@ -45,6 +46,7 @@ export class UsersService {
         acquisitionLocation: data.acquisitionLocation,
         acquisitionLanguage: data.acquisitionLanguage,
         acquisitionPlan: data.acquisitionPlan,
+        acquisitionReferrerRaw: data.acquisitionReferrerRaw,
       },
     });
   }
