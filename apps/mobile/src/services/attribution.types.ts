@@ -5,6 +5,10 @@ export interface Acquisition {
   loc?: string;
   lang?: string;
   plan?: string;
+  /** The raw Play referrer, carried as evidence. NOT in `ACQUISITION_KEYS` — the
+   *  SAFE-charset loops must never touch it, or the unparseable values it exists to
+   *  preserve would be the first thing dropped. */
+  referrerRaw?: string;
 }
 
 /** The query keys we read, and the only ones we keep. */
