@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Patch, Delete, Body, Query, UseGuards, Req, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Put, Patch, Delete, Body, Query, UseGuards, Req, NotFoundException, BadRequestException, HttpCode } from '@nestjs/common';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -10,6 +10,7 @@ import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
 import type { SettleMethod } from '@budget/shared-types';
 import { ReplaceUserPaymentMethodsDto } from './dto';
+import { AcquisitionDto } from '../auth/dto';
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
 const THEME_MODES = ['light', 'dark', 'system'];
@@ -135,6 +136,12 @@ export class UsersController {
   async updatePushToken(@Req() req: AuthenticatedRequest, @Body() body: { pushToken: string | null }) {
     await this.usersService.updatePushToken(req.user.id, body.pushToken);
     return { success: true };
+  }
+
+  @Patch('me/acquisition')
+  @HttpCode(204)
+  async updateAcquisition(@Req() req: AuthenticatedRequest, @Body() body: AcquisitionDto) {
+    await this.usersService.updateAcquisition(req.user.id, body);
   }
 
   @Get('me/notification-preferences')
