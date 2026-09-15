@@ -16,8 +16,9 @@ import { getAcquisition } from '@/services/attribution';
 const AUTHENTICATED_BOOTSTRAP_DELAY_MS = 1500;
 
 /**
- * The delayed half of the bootstrap — push registration, language sync, and
- * the restore-credential re-check (ABA-465). Deliberately a plain, exported
+ * The delayed half of the bootstrap — push registration, language sync, the
+ * restore-credential re-check (ABA-465), and the install-referrer acquisition
+ * backfill (ABA-553). Deliberately a plain, exported
  * function rather than inline in the `useEffect` below: it is what the
  * `setTimeout` callback IS, not a closure the effect happens to build, so a
  * test can call it directly, without needing to render the hook — this
@@ -38,6 +39,16 @@ const AUTHENTICATED_BOOTSTRAP_DELAY_MS = 1500;
  * storage indefinitely, so without this the whole installed base would
  * silently never get a restore credential. Gated on `hasSynced` so this is a
  * cheap synchronous MMKV read on every launch, not a network call.
+ *
+ * Also backfills the install-referrer acquisition data (ABA-553) for the same
+ * reason — a fresh registration already carries it in the request body, but
+ * an already-signed-in user never registers again. `acquisitionFlag.hasPushed()`
+ * is deliberately per-INSTALL (one MMKV flag for the device), unlike
+ * `restoreCredentialFlag.hasSynced(userId)` right above it, which is
+ * per-USER: attribution belongs to the install that captured the Play
+ * referrer, not to whichever account happens to be signed in, so a second
+ * account signing in on the same device correctly never re-backfills its own
+ * (nonexistent) copy of this install's referrer.
  */
 export function runDelayedAuthenticatedBootstrap(): void {
   registerForPushNotifications();
@@ -50,9 +61,19 @@ export function runDelayedAuthenticatedBootstrap(): void {
   // Late attribution for users who registered before install-referrer capture shipped.
   // A new registration already carries this in its own request body, so for everyone
   // else this is a single no-op PATCH the server refuses via its first-touch guard.
+  //
+  // Gated on `referrerRaw`, not just any truthy `acquisition` — `getAcquisition()` is
+  // platform-resolved, and on web a stored value is a `src`/`loc`/`lang`/`plan` record
+  // written on the FIRST param-carrying visit, with no timestamp. Backfilling from that
+  // would let a user who registered months ago via a param-less visit get retroactively
+  // labelled by whatever channel they happened to click today — biased toward whatever
+  // we promote most, i.e. exactly the channels this feature exists to measure. Only the
+  // native path ever sets `referrerRaw` (see `attribution.native.ts`'s `captureAcquisition`),
+  // and only from Play's own Install Referrer for THIS install, so it is real evidence
+  // rather than a browsing-session artifact.
   if (!acquisitionFlag.hasPushed()) {
     const acquisition = getAcquisition();
-    if (acquisition) {
+    if (acquisition?.referrerRaw) {
       api
         .updateAcquisition(acquisition)
         .then(() => acquisitionFlag.markPushed())

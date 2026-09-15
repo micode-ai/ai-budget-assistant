@@ -266,3 +266,19 @@ the feature still works, it just answers nothing about the existing 44.
   only one leaves the policy a user accepts at signup contradicting the policy
   the site publishes — the exact gap ABA-497 had to close.
 - Re-read the Play Data Safety declaration against the collected-data categories.
+
+## Outstanding action — human required before the next store submission
+
+**Not done by this feature, and not doable by an agent.** This feature reads a
+value off the device (the Play Install Referrer), sends it to our server, and
+links it to the user's account. That is exactly the shape of thing Google
+Play's Data Safety form asks a developer to declare per app, in the Play
+Console web UI — a form no agent can open or submit.
+
+Before the next production submission that ships this feature, a human must
+open Play Console → the app → Policy → App content → Data safety, and confirm
+whether the already-declared collected-data categories cover install-source /
+referrer data, adding or amending the declaration if not. This is a release
+gate, not a nice-to-have: an inaccurate Data Safety declaration is itself a
+Play policy violation, independent of whether the feature's engineering is
+correct.

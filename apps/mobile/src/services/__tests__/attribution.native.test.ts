@@ -108,6 +108,37 @@ describe('attribution.native — captureAcquisition/getAcquisition gating', () =
     expect(getInstallReferrer).toHaveBeenCalledTimes(2);
   });
 
+  // I4 (ABA-553 final review): the library is documented to decode the referrer
+  // before returning it, but if it ever handed back the raw percent-encoded form,
+  // a plain `URLSearchParams` parse would see one key with no `=` and silently
+  // find nothing — this retries the decoded form so a tagged-link install still
+  // gets its labels.
+  it('retries decoding when the referrer is still percent-encoded', async () => {
+    getInstallReferrer.mockResolvedValue('src%3Dblog%26loc%3Dcta');
+
+    captureAcquisition();
+    await flushMicrotasks();
+
+    expect(getAcquisition()).toEqual({
+      src: 'blog',
+      loc: 'cta',
+      referrerRaw: 'src%3Dblog%26loc%3Dcta',
+    });
+  });
+
+  it('stores the raw string as evidence even when neither the plain nor decoded form parses', async () => {
+    // Contains `%26` so the decode-retry gate fires, but the decoded form still
+    // has nothing `parseAcquisition` recognizes.
+    getInstallReferrer.mockResolvedValue('gclid%3Dabc123%26foo%3Dbar');
+
+    captureAcquisition();
+    await flushMicrotasks();
+
+    expect(getAcquisition()).toEqual({
+      referrerRaw: 'gclid%3Dabc123%26foo%3Dbar',
+    });
+  });
+
   it('first touch wins: an already-stored record is not overwritten by a later, different referrer', async () => {
     // Two captures before either native call has resolved — the genuine race
     // `save`'s own first-touch guard (not `hasRead()`) exists to protect against,

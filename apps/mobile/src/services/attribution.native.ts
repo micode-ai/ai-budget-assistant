@@ -40,7 +40,25 @@ export function captureAcquisition(): void {
       const raw = truncateReferrer(referrer);
       // An empty referrer is still a terminal read: store the flag, not a value,
       // so we stop asking Play on every launch.
-      acquisitionFlag.save(raw ? parseAcquisition(raw) : undefined, raw);
+      let parsed = raw ? parseAcquisition(raw) : undefined;
+      // I4 (ABA-553 final review): the Install Referrer library is documented to
+      // hand back a DECODED value, and almost certainly does. But if it ever
+      // returned the still-percent-encoded form (`src%3Dblog%26loc%3D...`),
+      // `URLSearchParams` would see one key with no `=`, `parseAcquisition` would
+      // return `undefined`, and every tagged-link install would silently land
+      // with empty labels while Play-organic installs kept working — reading as
+      // "our links produce nothing, ASO carries everything", the exact wrong
+      // conclusion this feature exists to prevent. This can only RESCUE a read,
+      // never degrade one: `raw` is stored as evidence below regardless of which
+      // form (or neither) parses.
+      if (!parsed && raw && /%3D|%26/i.test(raw)) {
+        try {
+          parsed = parseAcquisition(decodeURIComponent(raw));
+        } catch {
+          /* malformed percent-encoding — keep `parsed` undefined, `raw` still saved */
+        }
+      }
+      acquisitionFlag.save(parsed, raw);
     })
     .catch((e) => {
       // The native side resolves rather than rejects, so this is defensive only.
@@ -59,9 +77,10 @@ export function getAcquisition(): Acquisition | undefined {
 }
 
 /**
- * Native no-op, for the same reason as `captureAcquisition`: an install carries
- * no query string. A referral code reaches a native signup only by the user
- * typing the code printed in the share message.
+ * Native no-op: an install carries no query string, so there is nothing here
+ * to parse — unlike `captureAcquisition` above, which reads the Play Install
+ * Referrer directly rather than a URL. A referral code reaches a native
+ * signup only by the user typing the code printed in the share message.
  */
 export function captureReferralCode(): void {}
 

@@ -127,11 +127,19 @@ describe('acquisition backfill', () => {
 
   it('sends the stored acquisition once, for a user who registered before capture existed', () => {
     (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
-    (getAcquisition as jest.Mock).mockReturnValue({ src: 'google-play', loc: 'organic' });
+    (getAcquisition as jest.Mock).mockReturnValue({
+      src: 'google-play',
+      loc: 'organic',
+      referrerRaw: 'utm_source=google-play&utm_medium=organic',
+    });
 
     runDelayedAuthenticatedBootstrap();
 
-    expect(api.updateAcquisition).toHaveBeenCalledWith({ src: 'google-play', loc: 'organic' });
+    expect(api.updateAcquisition).toHaveBeenCalledWith({
+      src: 'google-play',
+      loc: 'organic',
+      referrerRaw: 'utm_source=google-play&utm_medium=organic',
+    });
   });
 
   it('does not send twice', () => {
@@ -147,6 +155,17 @@ describe('acquisition backfill', () => {
     expect(api.updateAcquisition).not.toHaveBeenCalled();
   });
 
+  // I1 (ABA-553 final review): a web-sourced record can carry `src`/`loc` labels
+  // with no `referrerRaw` at all (localStorage, first-touch, no timestamp) — that
+  // must NOT be backfilled, or a months-old registration could be retroactively
+  // relabelled by whatever the user happens to click today.
+  it('sends nothing when the acquisition has labels but no referrerRaw', () => {
+    (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
+    (getAcquisition as jest.Mock).mockReturnValue({ src: 'landing', loc: 'hero' });
+    runDelayedAuthenticatedBootstrap();
+    expect(api.updateAcquisition).not.toHaveBeenCalled();
+  });
+
   // Fix round 1 (ABA-553): the invariant this whole task turns on had no
   // assertion protecting it — moving `markPushed()` ahead of the `.then()`
   // would have passed every test above unchanged. `runDelayedAuthenticatedBootstrap`
@@ -154,7 +173,10 @@ describe('acquisition backfill', () => {
   // the promise chain itself via `flushMicrotasks`.
   it('marks pushed only after the request resolves', async () => {
     (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
-    (getAcquisition as jest.Mock).mockReturnValue({ src: 'google-play' });
+    (getAcquisition as jest.Mock).mockReturnValue({
+      src: 'google-play',
+      referrerRaw: 'utm_source=google-play',
+    });
     (api.updateAcquisition as jest.Mock).mockResolvedValue(undefined);
 
     runDelayedAuthenticatedBootstrap();
@@ -165,7 +187,10 @@ describe('acquisition backfill', () => {
 
   it('does not mark pushed when the request rejects, and never throws out of the caller', async () => {
     (acquisitionFlag.hasPushed as jest.Mock).mockReturnValue(false);
-    (getAcquisition as jest.Mock).mockReturnValue({ src: 'google-play' });
+    (getAcquisition as jest.Mock).mockReturnValue({
+      src: 'google-play',
+      referrerRaw: 'utm_source=google-play',
+    });
     const failure = new Error('network down');
     // The production `.catch()` is chained synchronously in the same call
     // that produces this rejection, so it must never surface here as an

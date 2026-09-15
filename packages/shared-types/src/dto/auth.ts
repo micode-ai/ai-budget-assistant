@@ -1,13 +1,21 @@
 import type { Currency, ThemeMode, SettleMethod, Account } from '../entities';
 
-/** Where a signup came from. Captured on the visitor's FIRST arrival at the web app
- * from the query string the marketing generators put on every CTA (see `app_url()` in
- * build_landing.py / build_blog.py) and replayed at registration, which can happen much
- * later — after email verification, or after a round trip through Google.
+/** Where a signup came from. `src`/`loc`/`lang`/`plan` are captured on the visitor's
+ * FIRST arrival at the web app from the query string the marketing generators put on
+ * every CTA (see `app_url()` in build_landing.py / build_blog.py) and replayed at
+ * registration, which can happen much later — after email verification, or after a
+ * round trip through Google. `referrerRaw` (ABA-553) comes from a different source
+ * entirely — the Android Play Install Referrer, read once per install — and is
+ * replayed the same way.
  *
- * Every field is a closed vocabulary those generators emit, never free text: the values
- * are stored on the user row and later grouped on in the admin, so the API validates them
- * against an allow-list rather than trusting the URL a client happens to send.
+ * `src`/`loc`/`lang`/`plan` are a closed vocabulary those generators emit, never free
+ * text: the values are stored on the user row and later grouped on in the admin, so
+ * the API validates them by CHARSET (a tight `[A-Za-z0-9_-]` allow-list), not against
+ * an enumerated list of the values we emit today. `referrerRaw` is the one exception —
+ * it is free text by design (Play's referrer string, including whatever a Google Ads
+ * `gclid` or campaign tag it happens to carry) and is bounded by length only, so a
+ * value that would fail the other fields' charset check is kept here as evidence
+ * rather than discarded.
  *
  * First touch wins and is never overwritten, so this says where a visit started. It is
  * NOT cross-session attribution and must not be reported as such. */
@@ -22,6 +30,10 @@ export interface AcquisitionDto {
   lang?: string;
   /** Tier of the pricing card clicked, when the click came from one. */
   plan?: string;
+  /** The raw Play Install Referrer string, carried as evidence rather than a label —
+   * free text, bounded by length (200 chars) rather than charset. See the interface
+   * doc comment above. */
+  referrerRaw?: string;
 }
 
 export interface RegisterDto {
