@@ -13,7 +13,7 @@ language URL; /blog/ is a noindex JS dispatcher (navigator.language) NOT in site
 Sources: docs/marketing/seo/*.md (pl) + docs/marketing/seo/<lang>/*.md (en/de/...);
 lang/pair/slug come from frontmatter. Run: python build_blog.py
 """
-import os, re, json, html, glob, shutil, subprocess
+import os, re, json, html, glob, shutil, subprocess, urllib.parse
 import markdown as md_lib
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
@@ -569,6 +569,23 @@ def app_url(loc, lang, src="blog"):
     # hands the tracker the decoded value either way, so cta_click detection is unaffected.
     return f"{APP}?src={src}&amp;loc={loc}&amp;lang={bcp47(lang)}"
 
+def play_url(loc, lang, src="blog"):
+    """Link to the Play listing, tagged so an INSTALL can be traced back the way a web
+    signup already is. Two schemes on purpose: our own src/loc/lang is what
+    parseAcquisition prefers and is the only one carrying the language, while the utm
+    pair is what Play Console's own acquisition reports read. A referrer is written
+    once, at install, and can never be re-tagged afterwards, so emitting both now is
+    cheaper than discovering later that the breakdown we want was never recorded.
+
+    The bare PLAY prefix must stay first: build_landing's GA4 tracker detects a store
+    click with indexOf(PLAY) === 0. And `&amp;`, not `&`, for the same reason as
+    app_url — this lands inside an HTML attribute."""
+    ref = urllib.parse.urlencode({
+        "src": src, "loc": loc, "lang": bcp47(lang),
+        "utm_source": src, "utm_medium": loc,
+    })
+    return f"{PLAY}&amp;referrer={urllib.parse.quote(ref, safe='')}"
+
 def head(lang, title, desc, url, jsonld, alternates, og_path, langmenu, og_type="article",
          robots="index,follow,max-image-preview:large", src="blog"):
     alt_tags = "\n".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alternates)
@@ -601,7 +618,7 @@ def foot(lang, src="blog"):
             f'<a href="{priv_url(lang)}">{LEGAL_LABELS[lang][0]}</a>'
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'
             f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
-            f'<a href="{app_url("footer", lang, src)}">{t["login"]}</a><a href="{PLAY}">Google Play</a></div>'
+            f'<a href="{app_url("footer", lang, src)}">{t["login"]}</a><a href="{play_url("footer", lang, src)}">Google Play</a></div>'
             f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}</div>'
             f'<div class="f-badge">{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}{TOOLS_CAFE_BADGE}{SELL_WITH_BOOST_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
@@ -612,7 +629,7 @@ def cta_block(lang, src="blog"):
     t = I18N[lang]
     return (f'<aside class="cta"><h3>{t["ctaTitle"]}</h3><p>{t["ctaText"]}</p>'
             f'<a class="btn p" href="{app_url("cta", lang, src)}">{t["btnWeb"]}</a>'
-            f'<a class="btn s" href="{PLAY}">{t["btnPlay"]}</a></aside>')
+            f'<a class="btn s" href="{play_url("cta", lang, src)}">{t["btnPlay"]}</a></aside>')
 
 def article_jsonld(lang, title, desc, url, og_path, src_path=None, pub=None):
     t = I18N[lang]
