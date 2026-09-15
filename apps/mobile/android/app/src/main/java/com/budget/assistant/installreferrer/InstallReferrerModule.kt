@@ -32,7 +32,6 @@ class InstallReferrerModule(private val reactContext: ReactApplicationContext) :
         // The listener can fire twice — a disconnect can arrive alongside or after
         // the setup callback — and settling a Promise twice is a hard error in RN.
         val settled = AtomicBoolean(false)
-        val client = InstallReferrerClient.newBuilder(reactContext).build()
 
         fun finish(value: String?, client: InstallReferrerClient?) {
             if (!settled.compareAndSet(false, true)) return
@@ -45,6 +44,11 @@ class InstallReferrerModule(private val reactContext: ReactApplicationContext) :
         }
 
         try {
+            // Constructed inside the guarded region on purpose: .build() itself can
+            // throw (e.g. NoClassDefFoundError/ExceptionInInitializerError from the
+            // AAR), and that must resolve null like every other failure path here,
+            // not escape getInstallReferrer and leave the promise unsettled.
+            val client = InstallReferrerClient.newBuilder(reactContext).build()
             client.startConnection(object : InstallReferrerStateListener {
                 override fun onInstallReferrerSetupFinished(responseCode: Int) {
                     if (responseCode != InstallReferrerClient.InstallReferrerResponse.OK) {
@@ -69,9 +73,12 @@ class InstallReferrerModule(private val reactContext: ReactApplicationContext) :
                 }
             })
         } catch (_: Throwable) {
-            // A synchronous failure must not race an already-scheduled callback into
+            // Covers both a synchronous failure from .build() (no client was ever
+            // constructed, so there is nothing to close — finish() tolerates a null
+            // client for exactly this) and one from startConnection() itself; either
+            // way this must not race an already-scheduled callback into
             // double-settling the promise — the settled flag covers that too.
-            finish(null, client)
+            finish(null, null)
         }
     }
 }
