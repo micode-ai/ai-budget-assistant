@@ -163,6 +163,22 @@ SELL_WITH_BOOST_BADGE = (
     'alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" '
     'loading="lazy"></a>'
 )
+# Lifto "Featured on Lifto" badge. The vendor ships featured-dark.svg and
+# featured-light.svg, and unlike Uneed — whose file names describe the SITE theme —
+# these describe the badge's OWN artwork: -dark is a #09090B card, -light a #FFFFFF
+# one (checked, they differ only in that one fill). The footer ground is #fafafb, so
+# the DARK file is the legible one; the light card on near-white would read as nothing
+# but its orange 1.5px stroke. Their snippet says rel="noopener noreferrer" and
+# width=200 height=54; this row drops noreferrer (so Lifto can see the click came from
+# ai-budget.pl, which is what gets a listing verified) and scales to the row's uniform
+# 34px — 126px is 200/54 at that height, and the file carries a matching viewBox.
+LIFTO_BADGE = (
+    '<a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="noopener">'
+    '<img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" '
+    'alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" '
+    'loading="lazy"></a>'
+)
+
 SAMEAS = [
     "https://www.facebook.com/profile.php?id=61570771625318",
     "https://t.me/aibudgetassistant",
@@ -445,7 +461,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}
 .cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
@@ -632,7 +648,7 @@ def foot(lang, src="blog"):
             f'<a href="{terms_url(lang)}">{LEGAL_LABELS[lang][1]}</a>'
             f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
             f'<a href="{app_url("footer", lang, src)}">{t["login"]}</a><a href="{play_url("footer", lang, src)}">Google Play</a></div>'
-            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}</div>'
+            f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{LIFTO_BADGE}</div>'
             f'<div class="f-badge">{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}{TOOLS_CAFE_BADGE}{SELL_WITH_BOOST_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'
