@@ -174,6 +174,7 @@ export default {
     bulkCategoryApplied: 'Категорія застосована до {{count}} витрат',
     bulkTagsApplied: 'Теги додані до {{count}} витрат',
     bulkDeleted: '{{count}} витрат видалено',
+    receivable: 'Дебіторська',
     merge: {
       title: 'Об\'єднати транзакції',
       subtitle: 'Оберіть транзакцію для збереження та поля для об\'єднання.',

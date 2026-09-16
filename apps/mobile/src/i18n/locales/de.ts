@@ -174,6 +174,7 @@ export default {
     bulkCategoryApplied: 'Kategorie auf {{count}} Ausgaben angewendet',
     bulkTagsApplied: 'Tags zu {{count}} Ausgaben hinzugefügt',
     bulkDeleted: '{{count}} Ausgaben gelöscht',
+    receivable: 'Forderung',
     merge: {
       title: 'Ausgaben zusammenführen',
       subtitle: 'Diese Ausgaben könnten derselbe Kauf in verschiedenen Währungen sein.',

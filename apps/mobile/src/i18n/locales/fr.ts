@@ -174,6 +174,7 @@ export default {
     bulkCategoryApplied: 'Catégorie appliquée à {{count}} dépenses',
     bulkTagsApplied: 'Tags ajoutés à {{count}} dépenses',
     bulkDeleted: '{{count}} dépenses supprimées',
+    receivable: 'À recevoir',
     merge: {
       title: 'Fusionner les transactions',
       subtitle: 'Choisissez la transaction à conserver et les champs à combiner.',

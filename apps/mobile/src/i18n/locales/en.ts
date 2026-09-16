@@ -174,6 +174,7 @@ export default {
     bulkCategoryApplied: 'Category applied to {{count}} expenses',
     bulkTagsApplied: 'Tags added to {{count}} expenses',
     bulkDeleted: '{{count}} expenses deleted',
+    receivable: 'Receivable',
     merge: {
       title: 'Merge Expenses',
       subtitle: 'These expenses may be the same purchase recorded in different currencies.',

@@ -174,6 +174,7 @@ export default {
     bulkCategoryApplied: 'Kategoria zastosowana do {{count}} wydatków',
     bulkTagsApplied: 'Tagi dodane do {{count}} wydatków',
     bulkDeleted: '{{count}} wydatków usuniętych',
+    receivable: 'Należność',
     merge: {
       title: 'Scal transakcje',
       subtitle: 'Wybierz transakcję do zachowania i pola do połączenia.',

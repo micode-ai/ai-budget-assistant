@@ -174,6 +174,7 @@ export default {
     bulkCategoryApplied: 'Categorie toegepast op {{count}} uitgaven',
     bulkTagsApplied: 'Tags toegevoegd aan {{count}} uitgaven',
     bulkDeleted: '{{count}} uitgaven verwijderd',
+    receivable: 'Te ontvangen',
     merge: {
       title: 'Transacties samenvoegen',
       subtitle: 'Kies welke transactie je wilt behouden en welke velden je wilt combineren.',

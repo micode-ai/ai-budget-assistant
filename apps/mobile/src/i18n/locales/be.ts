@@ -172,6 +172,7 @@ export default {
     bulkCategoryApplied: 'Катэгорыя прыменена да {{count}} выдаткаў',
     bulkTagsApplied: 'Тэгі дададзены да {{count}} выдаткаў',
     bulkDeleted: '{{count}} выдаткаў выдалена',
+    receivable: 'Дебіторка',
     merge: {
       title: 'Аб\'яднаць транзакцыі',
       subtitle: 'Выберыце транзакцыю для захавання і палі для аб\'яднання.',

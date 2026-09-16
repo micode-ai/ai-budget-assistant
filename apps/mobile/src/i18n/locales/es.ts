@@ -174,6 +174,7 @@ export default {
     bulkCategoryApplied: 'Categoría aplicada a {{count}} gastos',
     bulkTagsApplied: 'Etiquetas añadidas a {{count}} gastos',
     bulkDeleted: '{{count}} gastos eliminados',
+    receivable: 'Por cobrar',
     merge: {
       title: 'Combinar gastos',
       subtitle: 'Estos gastos pueden ser la misma compra registrada en monedas diferentes.',

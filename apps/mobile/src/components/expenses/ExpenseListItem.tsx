@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import { getIntlLocale } from '@/i18n';
+import { useTranslation } from 'react-i18next';
 import type { Expense } from '@budget/shared-types';
 import { useTheme } from '@/theme';
 
@@ -17,6 +18,7 @@ interface Props {
 
 export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelect, onLongPress }: Props) {
   const theme = useTheme();
+  const { t } = useTranslation();
 
   return (
     <TouchableOpacity
@@ -49,13 +51,15 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
           </View>
         </View>
       )}
-      <View style={[styles.icon, { backgroundColor: theme.colors.primaryLight }]}>
+      <View style={[styles.icon, { backgroundColor: theme.colors.surfaceSecondary }]}>
         {item.source === 'ocr' ? (
           <Image
             source={require('../../../assets/icons/scan-receipt.png')}
             style={{ width: 24, height: 24 }}
             resizeMode="contain"
           />
+        ) : item.isSplitReceivable ? (
+          <Ionicons name="md-warning-outline" size={24} color={theme.colors.textSecondary} />
         ) : (
           <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
         )}
@@ -73,9 +77,16 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
           {formatDate(item.date, undefined, getIntlLocale())}
         </Text>
       </View>
-      <Text style={[styles.amount, { color: theme.colors.danger }]}>
-        -{formatCurrency(item.amount, item.currencyCode)}
-      </Text>
+      <View style={styles.amountContainer}>
+        {item.isSplitReceivable && (
+          <Text style={[styles.receivableBadge, { color: theme.colors.textSecondary }]}>
+            {t('expenses.receivable')}
+          </Text>
+        )}
+        <Text style={[styles.amount, { color: theme.colors.danger }]}>
+          -{formatCurrency(item.amount, item.currencyCode)}
+        </Text>
+      </View>
     </TouchableOpacity>
   );
 }
@@ -123,6 +134,16 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 13,
+  },
+  amountContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  receivableBadge: {
+    fontSize: 11,
+    fontWeight: '600',
+    textTransform: 'uppercase',
   },
   amount: {
     fontSize: 15,
