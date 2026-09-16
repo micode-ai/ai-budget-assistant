@@ -38,6 +38,12 @@ export interface ReceiptItem {
    */
   categoryId?: string | null;
   categoryName?: string | null;
+  /**
+   * Per-line discount applied to this item (if the discount was per-item rather
+   * than basket-wide). Populated by extractReceiptDiscounts when it can match
+   * discount lines to products.
+   */
+  lineDiscount?: number;
 }
 
 /** One line's classification, applied onto `ReceiptItem` by `finalizeReceipt`. */

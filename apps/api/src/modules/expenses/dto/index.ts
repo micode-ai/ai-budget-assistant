@@ -58,6 +58,11 @@ export class CreateExpenseItemDto {
 
   @IsOptional()
   @IsNumber()
+  @Min(0)
+  lineDiscount?: number;
+
+  @IsOptional()
+  @IsNumber()
   sortOrder?: number;
 
   @IsOptional()
@@ -84,6 +89,11 @@ export class UpdateExpenseItemDto {
   @IsNumber()
   @Min(0)
   totalPrice?: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  lineDiscount?: number;
 
   @IsOptional()
   @IsNumber()

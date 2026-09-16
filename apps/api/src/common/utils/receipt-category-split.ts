@@ -26,6 +26,8 @@ export interface SplitInputItem {
   index: number;
   /** The line's total price, in the receipt's currency. */
   amount: number;
+  /** Per-line discount for this item, if any. */
+  lineDiscount?: number;
   categoryId: string | null;
   categoryName: string | null;
 }
@@ -84,7 +86,14 @@ export function buildCategorySplits(params: {
 
   // Every line counts toward the tolerance check, assigned or not: an
   // unassigned line's money is still part of this receipt.
+  // Compute net prices: amount minus per-line discount (if any).
+  const usableNetCents = usable.map((i) => {
+    const amountCents = toCents(i.amount);
+    const lineDiscountCents = i.lineDiscount ? toCents(i.lineDiscount) : 0;
+    return Math.max(0, amountCents - lineDiscountCents);
+  });
   const itemsCents = usable.reduce((sum, i) => sum + toCents(i.amount), 0);
+  const netItemsCents = usableNetCents.reduce((sum, c) => sum + c, 0);
 
   // A basket-level discount is money taken off after the lines were priced: the
   // lines keep their full price and only the total reflects it. Measuring the
@@ -109,8 +118,9 @@ export function buildCategorySplits(params: {
   const depositCents =
     typeof deposit === 'number' && Number.isFinite(deposit) && deposit > 0 ? toCents(deposit) : 0;
 
+  // Tolerance check uses NET prices: sum of net items + deposit should be close to total
   const gapPct =
-    (Math.abs(itemsCents - discountCents + depositCents - totalCents) / totalCents) * 100;
+    (Math.abs(netItemsCents - discountCents + depositCents - totalCents) / totalCents) * 100;
   if (gapPct > config.tolerancePct) return [];
 
   const groups = new Map<string, { categoryName: string; cents: number; itemIndexes: number[] }>();
@@ -121,7 +131,11 @@ export function buildCategorySplits(params: {
       cents: 0,
       itemIndexes: [],
     };
-    group.cents += toCents(line.amount);
+    // Use net price (gross minus per-line discount) for each line
+    const amountCents = toCents(line.amount);
+    const lineDiscountCents = line.lineDiscount ? toCents(line.lineDiscount) : 0;
+    const netCents = Math.max(0, amountCents - lineDiscountCents);
+    group.cents += netCents;
     group.itemIndexes.push(line.index);
     groups.set(line.categoryId, group);
   }
@@ -141,20 +155,20 @@ export function buildCategorySplits(params: {
     .sort((a, b) => b.cents - a.cents || a.categoryId.localeCompare(b.categoryId));
 
   // The known discount is spread across the groups in proportion to what each
-  // contributed to the basket, because that is how a basket coupon actually
-  // works — it is not a price cut on the largest department. The share computed
-  // for unassigned lines is deliberately left out of the groups; it stays part
-  // of the residual below.
+  // contributed to the basket (using net prices), because that is how a basket
+  // coupon actually works — it is not a price cut on the largest department.
+  // The share computed for unassigned lines is deliberately left out of the
+  // groups; it stays part of the residual below.
   //
   // Only the KNOWN discount is spread. Whatever remains unexplained — a line the
   // OCR misread, a deposit it never listed — still lands on the largest group,
   // so a bad read stays concentrated and visible instead of being smeared
   // invisibly across every category.
-  if (discountCents > 0) {
+  if (discountCents > 0 && netItemsCents > 0) {
     for (const group of ordered) {
-      group.cents -= Math.round((group.cents / itemsCents) * discountCents);
+      group.cents -= Math.round((group.cents / netItemsCents) * discountCents);
     }
-    // The gate above guarantees discountCents < itemsCents, so a group can only
+    // The gate above guarantees discountCents < netItemsCents, so a group can only
     // reach zero through rounding, and only if it was worth a cent or two to
     // begin with. Publishing a zero-value category is nonsense; refusing is the
     // same answer this function gives everywhere else it cannot describe the

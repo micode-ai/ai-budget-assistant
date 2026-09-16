@@ -22,6 +22,7 @@
 export interface SplitItem {
   id: string;
   totalPrice: number;
+  lineDiscount?: number;
 }
 
 export interface ItemAssignment {
@@ -89,7 +90,15 @@ export function resolveItemSplit(
   }
 
   // Integer cents, rounded once up front — see the module docstring.
-  const priceCentsById = new Map(items.map((item) => [item.id, Math.round(item.totalPrice * 100)]));
+  // For each item, compute the net price after applying its per-line discount (if any).
+  // lineDiscount is the amount OFF that line, so net = gross - discount.
+  const netPriceCentsById = new Map<string, number>();
+  for (const item of items) {
+    const grossCents = Math.round(item.totalPrice * 100);
+    const lineDiscountCents = Math.round((item.lineDiscount ?? 0) * 100);
+    const netCents = grossCents - lineDiscountCents;
+    netPriceCentsById.set(item.id, Math.max(0, netCents)); // floor at 0
+  }
 
   // A line is "hand-split" when anyone claiming it carries an explicit share for
   // it. Deciding this per LINE (not per participant, and not per split) is what
@@ -111,8 +120,8 @@ export function resolveItemSplit(
       participantCentsTotals.set(assignment.participantId, 0);
     }
     for (const itemId of assignment.itemIds) {
-      const priceCents = priceCentsById.get(itemId);
-      if (priceCents === undefined) continue; // unknown item id: no charge, no payer credit
+      const netPriceCents = netPriceCentsById.get(itemId);
+      if (netPriceCents === undefined) continue; // unknown item id: no charge, no payer credit
       const claimants = claimantCountByItem.get(itemId) ?? 1;
       // Explicit share wins; on a hand-split line a claimant with no share of
       // its own takes nothing (their part was given away to someone else or
@@ -122,7 +131,7 @@ export function resolveItemSplit(
         ? clampBp(assignment.itemShareBp?.[itemId]) / 10000
         : 1 / claimants;
       const current = participantCentsTotals.get(assignment.participantId) ?? 0;
-      participantCentsTotals.set(assignment.participantId, current + priceCents * fraction);
+      participantCentsTotals.set(assignment.participantId, current + netPriceCents * fraction);
     }
   }
 
@@ -130,31 +139,24 @@ export function resolveItemSplit(
   // `assignments` — a participant can legally appear in more than one
   // assignment entry, and re-walking would emit one row per occurrence,
   // each carrying the participant's already-summed (full) total.
-  // A receipt-wide discount (Lidl Plus, Biedronka coupons...) is money off the
-  // basket AFTER the lines were priced, so the stored line prices are GROSS and
-  // sum to more than what was actually paid. Charging a participant the gross
-  // price of their lines makes them pay the undiscounted price while the payer
-  // -- whose own share is only ever the remainder (`ownShare`) -- silently
-  // absorbs the whole discount. Scale every claim by the same ratio the basket
-  // was discounted by, so each person pays their proportional share of what was
-  // really paid. Mirrors buildCategorySplits' proportional discount spreading
-  // (ABA-440).
   //
-  // The factor is deliberately (lines - discount) / lines and NOT
-  // billTotal / lines: a returnable-packaging DEPOSIT (kaucja) is also part of
-  // billTotal but is not a line item, and ABA-440 established that a deposit is
-  // never spread across lines -- it stays with the payer. Dividing by the paid
-  // total would quietly charge participants a slice of it.
+  // Discount handling: there are two types of discounts on receipts:
+  // 1. Per-line discounts (e.g., "OPUST PIWO -7.59") - already subtracted from
+  //    the line's net price in netPriceCentsById
+  // 2. Basket-wide discounts (e.g., Lidl Plus coupon) - applied to the whole
+  //    basket after per-line discounts.
   //
-  // Only a discount strictly between zero and the line sum scales anything;
+  // The participant's charge for a line is: netPrice * fraction * discountFactor
+  // where discountFactor = (sumOfNetPrices - basketDiscount) / sumOfNetPrices
+  //
+  // Only a basket discount strictly between zero and the net line sum scales anything;
   // anything else (no discount, no lines, or data where the discount swallows
-  // the whole basket) leaves the amounts exactly as they were, so this can
-  // never introduce a new failure mode on odd data.
-  const linesSumCents = [...priceCentsById.values()].reduce((sum, c) => sum + c, 0);
-  const discountCents = Math.round(discountAmount * 100);
+  // the whole basket) leaves the amounts exactly as they were.
+  const linesSumNetCents = [...netPriceCentsById.values()].reduce((sum, c) => sum + c, 0);
+  const basketDiscountCents = Math.round(discountAmount * 100);
   const discountFactor =
-    discountCents > 0 && linesSumCents > 0 && discountCents < linesSumCents
-      ? (linesSumCents - discountCents) / linesSumCents
+    basketDiscountCents > 0 && linesSumNetCents > 0 && basketDiscountCents < linesSumNetCents
+      ? (linesSumNetCents - basketDiscountCents) / linesSumNetCents
       : 1;
 
   const shares: ParticipantShare[] = [];
@@ -206,6 +208,8 @@ export function resolveEqualSplit(participantIds: string[], billTotal: number): 
 export interface ClaimedLine {
   id: string;
   totalPrice: number;
+  /** Per-line discount for this item, if any. */
+  lineDiscount?: number;
   /** Total claimants of this line INCLUDING the participant being rendered.
    *  Anything below 1 is read as 1 — a line a participant claimed always has
    *  at least one claimant. Ignored when `shareBp` is set. */
@@ -296,8 +300,9 @@ export function reassignSplitItem(
 export function allocateItemShares(lines: ClaimedLine[], totalAmount: number): LineShare[] {
   const totalCents = Math.round(totalAmount * 100);
 
-  // Each line's honest weight: its price times this participant's share of it —
-  // an explicit hand-set share when the payer gave one, otherwise an equal slice
+  // Each line's honest weight: its NET price times this participant's share of it —
+  // a per-line discount (if any) is subtracted first, then the participant's share.
+  // An explicit hand-set share when the payer gave one, otherwise an equal slice
   // among the line's claimants.
   const weighted = lines.map((line) => {
     const sharedWith = line.claimantCount >= 1 ? Math.floor(line.claimantCount) : 1;
@@ -305,12 +310,16 @@ export function allocateItemShares(lines: ClaimedLine[], totalAmount: number): L
     const fraction = hasShare
       ? Math.min(10000, Math.max(0, line.shareBp as number)) / 10000
       : 1 / sharedWith;
+    // Net price: gross minus per-line discount (if any)
+    const lineGrossCents = Math.round(line.totalPrice * 100);
+    const lineDiscountCents = Math.round((line.lineDiscount ?? 0) * 100);
+    const lineNetCents = Math.max(0, lineGrossCents - lineDiscountCents);
     // Integer cents, rounded once up front — see the module docstring.
     return {
       id: line.id,
       sharedWith,
       shareBp: hasShare ? Math.min(10000, Math.max(0, line.shareBp as number)) : undefined,
-      weight: Math.round(line.totalPrice * 100) * fraction,
+      weight: lineNetCents * fraction,
     };
   });
 

@@ -123,6 +123,7 @@ export class ExpensesService {
       orderBy: { sortOrder: 'asc' },
       select: {
         totalPrice: true,
+        lineDiscount: true,
         categoryId: true,
         category: { select: { name: true } },
       },
@@ -146,6 +147,7 @@ export class ExpensesService {
           items: items.map((item, index) => ({
             index,
             amount: Number(item.totalPrice),
+            lineDiscount: item.lineDiscount ? Number(item.lineDiscount) : undefined,
             categoryId: item.categoryId,
             categoryName: item.category?.name ?? null,
           })),
@@ -300,6 +302,7 @@ export class ExpensesService {
             quantity: item.quantity ?? 1,
             unitPrice: item.unitPrice ?? 0,
             totalPrice: item.totalPrice,
+            lineDiscount: item.lineDiscount ?? 0,
             sortOrder: item.sortOrder ?? index,
           })),
           skipDuplicates: true,
@@ -801,6 +804,7 @@ export class ExpensesService {
         quantity: dto.quantity ?? 1,
         unitPrice: dto.unitPrice ?? 0,
         totalPrice: dto.totalPrice,
+        lineDiscount: dto.lineDiscount ?? 0,
         sortOrder: dto.sortOrder ?? 0,
       },
     });
@@ -824,6 +828,7 @@ export class ExpensesService {
         quantity: dto.quantity,
         unitPrice: dto.unitPrice,
         totalPrice: dto.totalPrice,
+        lineDiscount: dto.lineDiscount,
         sortOrder: dto.sortOrder,
         syncVersion: { increment: 1 },
       },

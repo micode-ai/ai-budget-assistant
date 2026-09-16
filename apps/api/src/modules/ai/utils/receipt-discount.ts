@@ -20,6 +20,7 @@ const DISCOUNT_LABEL =
 export interface DiscountLineItem {
   description?: string | null;
   totalPrice: number;
+  lineDiscount?: number;
 }
 
 /**
@@ -42,24 +43,66 @@ export function isDiscountLine(item: DiscountLineItem): boolean {
 export function extractReceiptDiscounts<T extends DiscountLineItem>(
   items: T[],
   existingDiscount: number | null,
-): { items: T[]; discount: number | null; removedCount: number } {
+): { items: T[]; discount: number | null; removedCount: number; basketDiscount: number | null } {
   const products: T[] = [];
   let fromLines = 0;
   let removedCount = 0;
+  let basketDiscount = 0;
+  const discountLines: { description?: string | null; amount: number }[] = [];
 
+  // First pass: collect discount lines
   for (const it of items) {
     if (isDiscountLine(it)) {
       fromLines += Math.abs(Number(it.totalPrice));
+      discountLines.push({ description: it.description, amount: Math.abs(Number(it.totalPrice)) });
       removedCount += 1;
-    } else {
-      products.push(it);
     }
   }
 
-  let discount = existingDiscount;
-  if (fromLines > 0) {
-    discount = Math.round(Math.max(existingDiscount ?? 0, fromLines) * 100) / 100;
+  // Second pass: apply per-line discounts to products by matching description
+  // A discount line is assumed to apply to the NEXT non-discount line that contains
+  // its description (case-insensitive substring match).
+  let discountIdx = 0;
+  for (const it of items) {
+    if (isDiscountLine(it)) continue;
+
+    // Try to find a matching discount line that hasn't been applied yet
+    let matchedDiscount: number | null = null;
+    if (discountIdx < discountLines.length) {
+      const discountLine = discountLines[discountIdx];
+      // Check if discount line description is contained in product description
+      // or vice versa (case-insensitive)
+      const discountDesc = discountLine.description?.toLowerCase() ?? '';
+      const itemDesc = it.description?.toLowerCase() ?? '';
+      if (itemDesc.includes(discountDesc) || discountDesc.includes(itemDesc)) {
+        matchedDiscount = discountLine.amount;
+        discountIdx++;
+      }
+    }
+
+    // Apply the matched discount (if any) and create a copy with lineDiscount
+    if (matchedDiscount !== null) {
+      products.push({
+        ...it,
+        lineDiscount: (it.lineDiscount ?? 0) + matchedDiscount,
+      });
+    } else {
+      products.push({ ...it });
+    }
   }
 
-  return { items: products, discount, removedCount };
+  // Any remaining discount lines are basket-wide discounts
+  for (let i = discountIdx; i < discountLines.length; i++) {
+    basketDiscount += discountLines[i].amount;
+  }
+
+  // Use the larger value between existing discount and basket discount to avoid double-counting
+  // (they normally describe the same money; if the model already summed them into `existingDiscount`,
+  // we keep it; if it didn't, the lines restore it).
+  const finalBasketDiscount =
+    basketDiscount > 0
+      ? Math.round((Math.max(existingDiscount ?? 0, basketDiscount)) * 100) / 100
+      : existingDiscount;
+
+  return { items: products, discount: finalBasketDiscount, removedCount, basketDiscount: finalBasketDiscount };
 }
