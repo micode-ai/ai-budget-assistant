@@ -333,8 +333,17 @@ export class AuthService {
 
       const tokens = await this.generateTokens(user.id, user.email);
 
+      // Sliding session (client "do aplikacji ciągle trzeba się logować"):
+      // return a FRESH refresh token with the new access token. The mobile/web
+      // clients already persist `data.refreshToken` when present
+      // (http-client.refreshToken), so any user active at least once per
+      // JWT_REFRESH_EXPIRES_IN window never sees a forced re-login. The tokens
+      // are stateless JWTs — there is no revocation list, so the previous
+      // refresh token simply remains valid until its own expiry; issuing a new
+      // one extends the window without invalidating the old.
       return {
         accessToken: tokens.accessToken,
+        refreshToken: tokens.refreshToken,
       };
     } catch {
       throw new UnauthorizedException('Invalid refresh token');

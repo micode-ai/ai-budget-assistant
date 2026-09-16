@@ -539,3 +539,33 @@ describe('AuthService — buildAuthResponse', () => {
     expect(res.user.defaultAccountId).toBe('fresh-acc');
   });
 });
+
+describe('AuthService — refreshToken (sliding session)', () => {
+  it('returns a FRESH refresh token alongside the access token', async () => {
+    // "do aplikacji ciągle trzeba się logować": the refresh response used to
+    // carry only a new access token, so the refresh token stayed pinned to
+    // its original 7-day expiry and active users were force-logged-out.
+    // Clients already persist `data.refreshToken` when present — the sliding
+    // session is what makes that persistence meaningful.
+    const { service, usersService, jwtService } = makeService();
+    jwtService.verify.mockReturnValue({ sub: 'u1', email: 'a@b.c' });
+    usersService.findById.mockResolvedValue({ id: 'u1', email: 'a@b.c', isActive: true });
+
+    const res = await service.refreshToken('old-refresh-token');
+
+    expect(res.accessToken).toBe('jwt-token');
+    expect(res.refreshToken).toBe('jwt-token');
+    // Verified against the refresh secret, not the access secret.
+    expect(jwtService.verify).toHaveBeenCalledWith('old-refresh-token', { secret: 'secret' });
+  });
+
+  it('still rejects an invalid refresh token', async () => {
+    const { service, jwtService } = makeService();
+    jwtService.verify.mockImplementation(() => {
+      throw new Error('jwt expired');
+    });
+
+    await expect(service.refreshToken('expired')).rejects.toThrow(UnauthorizedException);
+  });
+});
+

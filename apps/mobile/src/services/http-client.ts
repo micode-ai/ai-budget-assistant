@@ -11,6 +11,11 @@ export class HttpClient {
   accountIdGetter: (() => string | null) | null = null;
   logoutHandler: (() => void) | null = null;
   isLoggingOut = false;
+  // Single-flight refresh: when an access token expires, MANY parallel API
+  // calls 401 at once and each used to fire its own POST /auth/refresh —
+  // N redundant network calls per expiry. All concurrent callers now await
+  // one shared in-flight refresh promise.
+  private refreshInFlight: Promise<boolean> | null = null;
 
   constructor(baseUrl: string) {
     this.baseUrl = baseUrl;
@@ -33,6 +38,16 @@ export class HttpClient {
   }
 
   async refreshToken(): Promise<boolean> {
+    // Coalesce concurrent refreshes into one in-flight call.
+    if (this.refreshInFlight) return this.refreshInFlight;
+
+    this.refreshInFlight = this.doRefreshToken().finally(() => {
+      this.refreshInFlight = null;
+    });
+    return this.refreshInFlight;
+  }
+
+  private async doRefreshToken(): Promise<boolean> {
     try {
       const refreshToken = await secureStorage.getItem('refreshToken');
       if (!refreshToken) return false;
@@ -47,6 +62,9 @@ export class HttpClient {
 
       const data = await response.json();
       await secureStorage.setItem('accessToken', data.accessToken);
+      // The server now returns a fresh refresh token with every refresh
+      // (sliding session) — persist it so an active user's window keeps
+      // extending and they are never force-logged-out by the 7-day expiry.
       if (data.refreshToken) {
         await secureStorage.setItem('refreshToken', data.refreshToken);
       }
