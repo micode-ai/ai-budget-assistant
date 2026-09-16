@@ -59,7 +59,7 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
             resizeMode="contain"
           />
         ) : item.isSplitReceivable ? (
-          <Ionicons name="md-warning-outline" size={24} color={theme.colors.textSecondary} />
+          <Ionicons name="warning-outline" size={24} color={theme.colors.textSecondary} />
         ) : (
           <Ionicons name="receipt-outline" size={24} color={theme.colors.primary} />
         )}
