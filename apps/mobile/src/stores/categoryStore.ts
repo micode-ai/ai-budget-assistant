@@ -338,16 +338,50 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   },
 
   updateCategory: async (id: string, data: { name?: string; color?: string }) => {
-    await api.updateCategory(id, data);
-    await upsertCategory({
-      ...get().categories.find((c) => c.id === id)!,
-      ...data,
-      updatedAt: new Date(),
-    });
-    const accountId = useAccountStore.getState().currentAccountId;
-    if (accountId) {
-      const categories = await getAllCategories(accountId);
-      set({ categories });
+    // Save locally FIRST (Sentry/prod-nginx 2026-09: 13 of 15 PATCH
+    // /categories/:id calls in 72h returned 404). Locally-created and seeded
+    // rows carry a device-generated id and Category has no clientId for the
+    // server to reconcile it by (see the deleteCategory 404 comment). The old
+    // order — `await api.updateCategory` before the local upsert — threw on
+    // that 404 BEFORE anything was saved, so every edit to such a category
+    // silently vanished on the next reload: the "my category edits disappear
+    // after restart" report.
+    const current = get().categories.find((c) => c.id === id);
+    const merged = { ...current, ...data, updatedAt: new Date() };
+    set((state) => ({
+      categories: state.categories.map((c) => (c.id === id ? (merged as typeof c) : c)),
+    }));
+    if (current) {
+      await upsertCategory({ ...current, ...data, updatedAt: new Date() });
+      // Native only — on web the read-back is empty (see loadCategories' guard)
+      // and must not wipe the in-memory list we just updated.
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (accountId) {
+        const categories = await getAllCategories(accountId);
+        if (categories.length > 0) set({ categories });
+      }
+    }
+
+    // Server best-effort. 404 = the row exists only on this device (delete
+    // already tolerates this); patch the server twin by name+type instead so
+    // the edit survives the next server pull. Other failures propagate.
+    try {
+      await api.updateCategory(id, data);
+    } catch (error: any) {
+      if (error?.status !== 404) throw error;
+      try {
+        const serverCategories = await api.getCategories();
+        const names = new Set([current?.name, data.name].filter(Boolean) as string[]);
+        const twin = serverCategories.find(
+          (c: any) => !c.isDeleted && c.type === merged.type && names.has(c.name),
+        );
+        if (twin) {
+          await api.updateCategory(twin.id, data);
+          await get().syncFromServer(serverCategories);
+        }
+      } catch {
+        // Best-effort only — the local edit above already persisted.
+      }
     }
   },
 }));
