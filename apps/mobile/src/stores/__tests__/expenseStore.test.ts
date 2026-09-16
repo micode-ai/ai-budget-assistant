@@ -101,7 +101,7 @@ jest.mock('../../services/widgetData', () => ({
   refreshWidgetData: jest.fn(),
 }));
 
-import { useExpenseStore, computeExpenseTotalsByCurrency } from '../expenseStore';
+import { useExpenseStore, computeExpenseTotalsByCurrency, UNCATEGORIZED_CATEGORY_FILTER } from '../expenseStore';
 import type { Expense } from '@budget/shared-types';
 import { api } from '../../services/api';
 import { loadItemsByExpenseId, replaceItemsForExpense } from '../../db/expenseItemRepository';
@@ -423,3 +423,52 @@ describe('expenseStore — loadExpenseItems server-fetch mapper preserves canoni
     expect(items[0].canonicalName).toBeUndefined();
   });
 });
+
+describe('expenseStore — getFilteredExpenses "uncategorized" filter', () => {
+  const catExpense = (id: string, categoryId: string | null): Expense =>
+    ({
+      id,
+      amount: 10,
+      categoryId,
+      date: new Date('2026-09-15T12:00:00Z'),
+      isDeleted: false,
+      merchant: null,
+      description: null,
+      notes: null,
+    }) as unknown as Expense;
+
+  beforeEach(() => {
+    useExpenseStore.setState({
+      expenses: [
+        catExpense('e1', 'cat-1'),
+        catExpense('e2', null),
+        catExpense('e3', ''),
+      ],
+      filters: {
+        dateRange: 'all',
+        categoryId: null,
+        merchants: [],
+        searchQuery: '',
+      },
+    } as any);
+  });
+
+  it('returns everything when no category filter is set', () => {
+    expect(useExpenseStore.getState().getFilteredExpenses().map((e) => e.id)).toEqual(['e1', 'e2', 'e3']);
+  });
+
+  it('returns only expenses WITHOUT a category when the uncategorized sentinel is set', () => {
+    useExpenseStore.setState({
+      filters: { dateRange: 'all', categoryId: UNCATEGORIZED_CATEGORY_FILTER, merchants: [], searchQuery: '' },
+    } as any);
+    expect(useExpenseStore.getState().getFilteredExpenses().map((e) => e.id)).toEqual(['e2', 'e3']);
+  });
+
+  it('still filters by a real category id normally', () => {
+    useExpenseStore.setState({
+      filters: { dateRange: 'all', categoryId: 'cat-1', merchants: [], searchQuery: '' },
+    } as any);
+    expect(useExpenseStore.getState().getFilteredExpenses().map((e) => e.id)).toEqual(['e1']);
+  });
+});
+

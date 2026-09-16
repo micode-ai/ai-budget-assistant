@@ -156,6 +156,8 @@ export default {
     periodAll: 'Alle',
     periodCustom: 'Benutzerdefiniert',
     categoryAll: 'Alle',
+    categoryNone: 'Ohne Kategorie',
+
     searchPlaceholder: 'Transaktionen suchen...',
     merchant: 'Händler',
     merchantPlaceholder: 'z. B. Biedronka, Amazon',

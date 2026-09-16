@@ -156,6 +156,8 @@ export default {
     periodAll: 'Alles',
     periodCustom: 'Aangepast',
     categoryAll: 'Alles',
+    categoryNone: 'Zonder categorie',
+
     searchPlaceholder: 'Transacties zoeken...',
     merchant: 'Verkoper',
     merchantPlaceholder: 'bijv. Albert Heijn, Amazon',

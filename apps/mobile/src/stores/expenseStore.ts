@@ -38,6 +38,15 @@ import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
 
+/**
+ * Sentinel for the "Uncategorized" filter option in the expenses screen's
+ * category picker (ABA-5xx client request: filter expenses that have NO
+ * category). Stored in `filters.categoryId` alongside real category ids;
+ * `getFilteredExpenses` resolves it to "categoryId is empty". Chosen to be
+ * impossible as a real category id (not a UUID / not the `default-*` shape).
+ */
+export const UNCATEGORIZED_CATEGORY_FILTER = '__uncategorized__';
+
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
   categoryId: string | null;
@@ -974,7 +983,10 @@ export const useExpenseStore = create<ExpenseState>()(
         });
       }
 
-      if (filters.categoryId) {
+      if (filters.categoryId === UNCATEGORIZED_CATEGORY_FILTER) {
+        // "Без категории" — expenses with no category assigned.
+        filtered = filtered.filter((e) => !e.categoryId);
+      } else if (filters.categoryId) {
         filtered = filtered.filter((e) => e.categoryId === filters.categoryId);
       }
 

@@ -11,6 +11,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme } from '@/theme';
+import { UNCATEGORIZED_CATEGORY_FILTER } from '@/stores/expenseStore';
 
 type DateRange = 'week' | 'month' | 'year' | 'all' | 'custom';
 
@@ -88,6 +89,8 @@ export function ExpenseFilterBar({
   const accent = isExpense ? theme.colors.primary : theme.colors.success;
 
   const selectedCategory = categories.find((c) => c.id === currentFilters.categoryId);
+  // "Без категории" — an expenses-tab-only picker option stored as a sentinel id.
+  const isUncategorized = isExpense && currentFilters.categoryId === UNCATEGORIZED_CATEGORY_FILTER;
   const hasCat = currentFilters.categoryId !== null;
   const hasMerchants = expenseFilters.merchants.length > 0;
 
@@ -171,7 +174,11 @@ export function ExpenseFilterBar({
             style={[styles.pillText, { color: hasCat ? accent : theme.colors.textTertiary }]}
             numberOfLines={1}
           >
-            {selectedCategory ? selectedCategory.name : t('expenses.categoryAll')}
+            {isUncategorized
+              ? t('expenses.categoryNone')
+              : selectedCategory
+                ? selectedCategory.name
+                : t('expenses.categoryAll')}
           </Text>
           <Ionicons
             name={showCategoryPicker ? 'chevron-up' : 'chevron-down'}
@@ -250,6 +257,30 @@ export function ExpenseFilterBar({
                 </Text>
                 {!hasCat && <Ionicons name="checkmark" size={18} color={accent} />}
               </TouchableOpacity>
+
+              {isExpense && (
+                <TouchableOpacity
+                  style={[
+                    styles.categoryRow,
+                    { borderBottomColor: theme.colors.borderLight },
+                    isUncategorized && { backgroundColor: theme.colors.surfaceSecondary },
+                  ]}
+                  onPress={() => {
+                    setCurrentFilters({ categoryId: UNCATEGORIZED_CATEGORY_FILTER });
+                    setShowCategoryPicker(false);
+                  }}
+                >
+                  <Ionicons
+                    name="pricetag-outline"
+                    size={18}
+                    color={isUncategorized ? accent : theme.colors.textSecondary}
+                  />
+                  <Text style={[styles.categoryRowText, { color: isUncategorized ? accent : theme.colors.textPrimary, flex: 1 }]}>
+                    {t('expenses.categoryNone')}
+                  </Text>
+                  {isUncategorized && <Ionicons name="checkmark" size={18} color={accent} />}
+                </TouchableOpacity>
+              )}
 
               {categories.map((cat) => {
                 const isSelected = currentFilters.categoryId === cat.id;
