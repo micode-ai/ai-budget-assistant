@@ -152,6 +152,95 @@ describe('BudgetsService.create — offline-first idempotency (ABA-316)', () => 
     await expect(makeService(prisma).create('acc-1', 'u1', dto)).rejects.toBe(boom);
   });
 });
+describe('BudgetsService.update — Sentry 2026-09-16 regressions', () => {
+  const existingBudget = {
+    id: 'b-1',
+    accountId: 'acc-1',
+    isDeleted: false,
+    categoryAllocations: [],
+  };
+
+  function makeService(prisma: any) {
+    const gamification: any = { checkAchievements: jest.fn().mockResolvedValue(undefined) };
+    const cache: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    return new BudgetsService(prisma, gamification, cache);
+  }
+
+  function makePrisma(existing: any, tx: any): any {
+    return {
+      budget: { findFirst: jest.fn().mockResolvedValue(existing) },
+      $transaction: jest.fn(async (cb: any) => cb(tx)),
+    };
+  }
+
+  it('converts the ISO-string startDate into a Date before prisma.budget.update', async () => {
+    // The mobile PATCHes the full budget object; `startDate` arrives as an ISO
+    // string (UpdateBudgetDto) and used to hit Prisma unconverted via the
+    // budgetFields spread — PrismaClientValidationError on every such PATCH.
+    const tx = {
+      budget: {
+        update: jest.fn().mockResolvedValue({ id: 'b-1' }),
+        findUnique: jest.fn().mockResolvedValue({ id: 'b-1', categoryAllocations: [] }),
+      },
+      budgetCategory: {
+        deleteMany: jest.fn(),
+        createMany: jest.fn(),
+      },
+    };
+    const prisma = makePrisma(existingBudget, tx);
+
+    await makeService(prisma).update('acc-1', 'b-1', {
+      name: 'Miesięczne wyjścia do restauracji',
+      amount: 400,
+      currencyCode: 'PLN',
+      period: 'monthly',
+      startDate: '2026-09-01',
+    } as any);
+
+    const updateArg = tx.budget.update.mock.calls[0][0];
+    expect(updateArg.data.startDate).toEqual(new Date('2026-09-01'));
+  });
+
+  it('dedupes category allocations that resolve to the same category id (P2002)', async () => {
+    // Two allocations whose names both resolve to the same account category
+    // used to violate @@unique([budgetId, categoryId]) inside createMany.
+    const tx = {
+      budget: {
+        update: jest.fn().mockResolvedValue({ id: 'b-1' }),
+        findUnique: jest.fn().mockResolvedValue({ id: 'b-1', categoryAllocations: [] }),
+      },
+      budgetCategory: {
+        deleteMany: jest.fn(),
+        createMany: jest.fn().mockResolvedValue({ count: 1 }),
+      },
+    };
+    const prisma: any = {
+      budget: { findFirst: jest.fn().mockResolvedValue(existingBudget) },
+      category: {
+        // Both ids AND the name resolve to one shared category row.
+        findFirst: jest
+          .fn()
+          .mockImplementation(({ where }: any) =>
+            Promise.resolve({ id: 'cat-1' }),
+          ),
+      },
+      $transaction: jest.fn(async (cb: any) => cb(tx)),
+    };
+
+    await makeService(prisma).update('acc-1', 'b-1', {
+      categories: [
+        { categoryId: 'cat-1', amount: 100 },
+        { categoryId: 'cat-1', amount: 300 },
+      ],
+    } as any);
+
+    expect(tx.budgetCategory.createMany).toHaveBeenCalledTimes(1);
+    expect(tx.budgetCategory.createMany).toHaveBeenCalledWith({
+      data: [{ budgetId: 'b-1', categoryId: 'cat-1', amount: 300 }],
+    });
+  });
+});
+
 
 describe('getHistory month stepping', () => {
   function makeHistoryService(prisma: any) {

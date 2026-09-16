@@ -59,14 +59,19 @@ export class BudgetsService {
     categories: { categoryId: string; amount: number }[],
     accountId: string,
   ): Promise<{ categoryId: string; amount: number }[]> {
-    const resolved: { categoryId: string; amount: number }[] = [];
+    // Dedupe by the RESOLVED id (Sentry 2026-09-16 P2002): the client maps its
+    // local allocations through `resolveCategoryName` and can send two entries
+    // that both resolve to the same account category — `createMany` then
+    // violates @@unique([budgetId, categoryId]). Last entry wins, matching the
+    // client's own final-write semantics.
+    const byId = new Map<string, number>();
     for (const cat of categories) {
       const resolvedId = await this.resolveCategoryId(cat.categoryId, accountId);
       if (resolvedId) {
-        resolved.push({ categoryId: resolvedId, amount: cat.amount });
+        byId.set(resolvedId, cat.amount);
       }
     }
-    return resolved;
+    return [...byId].map(([categoryId, amount]) => ({ categoryId, amount }));
   }
 
   private findByClientId(accountId: string, clientId: string) {
@@ -183,6 +188,12 @@ export class BudgetsService {
         where: { id: budget.id },
         data: {
           ...budgetFields,
+          // Both date fields arrive as ISO strings from the UpdateBudgetDto —
+          // Prisma rejects a raw string for a DateTime column
+          // (PrismaClientValidationError, Sentry 2026-09-16). endDate used to
+          // be converted here but startDate passed through the spread as-is
+          // and crashed every PATCH that touched it.
+          startDate: dto.startDate ? new Date(dto.startDate) : undefined,
           endDate: dto.endDate ? new Date(dto.endDate) : undefined,
           syncVersion: { increment: 1 },
         },
