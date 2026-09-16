@@ -235,12 +235,11 @@ export class BudgetsService {
     return { success: true };
   }
 
-  async getHistory(accountId: string, id: string, periods: number = 6, anchorDay: number | null = null) {
+  async getHistory(accountId: string, id: string, periods: number = 6, anchorDay: number | null = null, now: Date = new Date()) {
     const budget = await this.findOne(accountId, id);
     if (budget.period === 'custom') return [];
 
     const periodsCount = Math.min(Math.max(1, periods), 12);
-    const now = new Date();
 
     const allocations = (budget as any).categoryAllocations || [];
     const hasMultiCategory = allocations.length > 0;
@@ -356,11 +355,10 @@ export class BudgetsService {
     return account?.monthAnchorDay ?? null;
   }
 
-  async getProgress(accountId: string, id: string, anchorDay: number | null = null) {
+  async getProgress(accountId: string, id: string, anchorDay: number | null = null, now: Date = new Date()) {
     const budget = await this.findOne(accountId, id);
 
     // Calculate spent amount for this budget period
-    const now = new Date();
     const { periodStart, periodEnd } = computeBudgetPeriod(budget, now, anchorDay);
 
     // Determine which categories this budget covers

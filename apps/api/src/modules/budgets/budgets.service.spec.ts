@@ -200,7 +200,7 @@ describe('getHistory month stepping', () => {
   it('returns contiguous, non-overlapping periods when anchored to day 31, walking back across short months and a year boundary', async () => {
     // 31 March 2026, 10:00 local -- matches financialMonth()'s "now >=
     // thisAnchor" branch (thisAnchor for March 31 is midnight the same day).
-    jest.useFakeTimers().setSystemTime(new Date(2026, 2, 31, 10, 0, 0));
+    const now = new Date(2026, 2, 31, 10, 0, 0);
 
     const budget = {
       id: 'b1',
@@ -218,7 +218,7 @@ describe('getHistory month stepping', () => {
     const service = makeHistoryService(prisma);
     jest.spyOn(service, 'findOne').mockResolvedValue(budget as any);
 
-    const history = await service.getHistory('acc1', 'b1', 6, 31);
+    const history = await service.getHistory('acc1', 'b1', 6, 31, now);
     expect(history).toHaveLength(6);
 
     // Derived by hand (not read off a passing run) from financialMonth()'s
@@ -373,14 +373,13 @@ describe('BudgetsService.getProgress — the projection does not re-spend a lump
     // consumers' `projectedTotal > amount` test fall silent.
     const prisma = prismaWithSeptember(4350, [4350]);
     const service = makeService(prisma);
-    jest.spyOn(Date, 'now').mockReturnValue(new Date('2026-09-02T12:00:00Z').getTime());
+    const now = new Date('2026-09-02T12:00:00Z');
 
-    const progress = await service.getProgress('acc-1', 'b1');
+    const progress = await service.getProgress('acc-1', 'b1', null, now);
 
     expect(progress.projectedTotal).toBe(4350);
     expect(progress.dailyBurnRate).toBe(0);
     expect(progress.estimatedExhaustionDate).toBeUndefined();
-    (Date.now as jest.Mock).mockRestore();
   });
 });
 
@@ -522,7 +521,7 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
     // `daysElapsed` needs to clear MIN_DAYS_FOR_BUDGET_PROJECTION (5) for the
     // rate to be anything but null, and unlike the sibling ABA-523 block this
     // one otherwise runs on the real wall clock — pin it, same convention.
-    jest.spyOn(Date, 'now').mockReturnValue(new Date('2026-09-10T12:00:00Z').getTime());
+    const now = new Date('2026-09-10T12:00:00Z');
 
     const rows = [
       splitReceiptRow,
@@ -530,7 +529,7 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
     ];
     const prisma = prismaFor([{ categoryId: HOUSEHOLD, amount: 1000 }], rows);
 
-    const progress = await makeService(prisma).getProgress('acc-1', 'b1');
+    const progress = await makeService(prisma).getProgress('acc-1', 'b1', null, now);
 
     // 35 on each of two days, not 240 on each.
     expect(progress.spent).toBe(70);
@@ -543,7 +542,6 @@ describe('BudgetsService.getProgress — category budgets count splits', () => {
     // attributed, is one household day's 35 spread over the 9 non-largest
     // elapsed days of this mocked instant: 35/9.
     expect(progress.dailyBurnRate).toBeCloseTo(3.888888888888889, 6);
-    (Date.now as jest.Mock).mockRestore();
   });
 });
 
