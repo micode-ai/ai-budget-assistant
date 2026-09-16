@@ -1,0 +1,13 @@
+-- Per-line receipt discount (ABA-556). The column was added to schema.prisma
+-- in that commit but no migration was authored with it, so `prisma generate`
+-- produced a client selecting `line_discount` while `prisma migrate deploy`
+-- had nothing to apply -- every `expense.findMany` that selects line items
+-- then failed in production with "column does not exist".
+--
+-- `line_discount` is the money off THAT line (net = total_price - line_discount),
+-- as distinct from the basket-level `expenses.discount_amount` a coupon applies
+-- after the lines were priced. NOT NULL DEFAULT 0 needs no backfill: every row
+-- written before this shipped was scanned when per-line discounts were folded
+-- into the basket discount by extractReceiptDiscounts, so "no per-line discount"
+-- is the correct value for all of them.
+ALTER TABLE "expense_items" ADD COLUMN "line_discount" DECIMAL(12,2) NOT NULL DEFAULT 0;
