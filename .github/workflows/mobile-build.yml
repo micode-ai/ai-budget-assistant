@@ -53,7 +53,13 @@ jobs:
         with:
           cmdline-tools-version: 13114758
           accept-android-sdk-licenses: true
-          packages: platform-tools "platforms;android-35" "build-tools;35.0.0"
+          # Multi-line, NO quotes: the action splits this input on whitespace,
+          # so quotes would become part of the package name and sdkmanager
+          # fails with `Failed to find package '"platforms;android-35"'`.
+          packages: |
+            platform-tools
+            platforms;android-35
+            build-tools;35.0.0
 
       - run: npm ci
 
