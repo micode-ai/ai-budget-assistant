@@ -49,6 +49,29 @@ describe('receipt-discount util', () => {
       expect(r.discount).toBe(14.87);
     });
 
+    it('prefers sum of per-line discounts over model discount when model missed some', () => {
+      // Simulates Lidl receipt: model returned discount 29.63 (Lidl Plus summary)
+      // but there are additional RABAT lines summing to 37.74 total
+      const itemsWithRabat = [
+        { description: 'Heineken piwo but.', totalPrice: 28.74 },
+        { description: 'Gościszewo piwo', totalPrice: 13.98 },
+        { description: 'Podudz. z kurcz.XXL', totalPrice: 13.25 },
+        { description: 'Polędwiczki w maryn.', totalPrice: 15.99 },
+        { description: 'Bagietka duża', totalPrice: 2.92 },
+        { description: 'Orzeszki ziemne 500g', totalPrice: 8.98 },
+        { description: 'Vifon Zupa błyskaw.2', totalPrice: 4.18 },
+        // Lidl Plus kupon lines (model missed these in discount summary)
+        { description: 'Lidl Plus kupon', totalPrice: -14.52 },
+        { description: 'Lidl Plus kupon', totalPrice: -7.06 },
+        { description: 'Lidl Plus kupon', totalPrice: -8.16 },
+        // RABAT 50% line (model missed this entirely)
+        { description: 'RABAT 50%', totalPrice: -8.00 },
+      ];
+      const r = extractReceiptDiscounts(itemsWithRabat, 29.63);
+      // fromLines = 14.52 + 7.06 + 8.16 + 8.00 = 37.74 > existingDiscount 29.63
+      expect(r.discount).toBeCloseTo(37.74, 5);
+    });
+
     it('leaves items and discount untouched when there are no discount lines', () => {
       const clean = [
         { description: 'PIWO HEINEKEN', totalPrice: 49.9 },

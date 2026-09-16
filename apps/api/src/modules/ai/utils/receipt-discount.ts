@@ -15,7 +15,7 @@
 // NEGATIVE lines, so a positive product that happens to contain one of these stems
 // (e.g. a brand name) is never misclassified.
 const DISCOUNT_LABEL =
-  /(rabat|opust|upust|zni[żz]k|obni[żz]k|promocj|kupon|coupon|voucher|gutschein|descuento|sconto|remise|скидк|знижк|savings)/i;
+  /(rabat|opust|upust|zni[żz]k|obni[żz]k|promocj|kupon|coupon|voucher|gutschein|descuento|sconto|remise|zaoszczędzono|zaoszczędził|saved|скидк|знижк|savings)/i;
 
 export interface DiscountLineItem {
   description?: string | null;
@@ -96,12 +96,14 @@ export function extractReceiptDiscounts<T extends DiscountLineItem>(
     basketDiscount += discountLines[i].amount;
   }
 
-  // Use the larger value between existing discount and basket discount to avoid double-counting
-  // (they normally describe the same money; if the model already summed them into `existingDiscount`,
-  // we keep it; if it didn't, the lines restore it).
+  // Use the larger value between existing discount and FROM-LINES to avoid double-counting
+  // (they normally describe the same money; if the model already summed them into
+  // `existingDiscount`, we keep it; if it didn't, the lines restore it).
+  // This also handles the case where the model returns a "Lidl Plus zaoszczędzono"
+  // summary that omits other promos like RABAT — fromLines captures ALL discounts.
   const finalBasketDiscount =
-    basketDiscount > 0
-      ? Math.round((Math.max(existingDiscount ?? 0, basketDiscount)) * 100) / 100
+    fromLines > 0
+      ? Math.round((Math.max(existingDiscount ?? 0, fromLines)) * 100) / 100
       : existingDiscount;
 
   return { items: products, discount: finalBasketDiscount, removedCount, basketDiscount: finalBasketDiscount };

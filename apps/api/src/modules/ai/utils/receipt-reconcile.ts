@@ -31,7 +31,7 @@
 export const RECEIPT_RECONCILE_TOLERANCE_PCT = 5;
 
 export interface ReconcilableReceipt {
-  items?: Array<{ totalPrice?: number | null }> | null;
+  items?: Array<{ totalPrice?: number | null; lineDiscount?: number | null }> | null;
   discount?: number | null;
   deposit?: number | null;
   total?: number | null;
@@ -67,7 +67,18 @@ export function reconciliationGapPct(receipt: ReconcilableReceipt): number | nul
   if (linesTotal <= 0) return null;
 
   // Lines are gross: a discount comes off them, a deposit is added on top.
-  const expected = linesTotal - positive(receipt.discount) + positive(receipt.deposit);
+  // Per-line discounts (e.g. Lidl "Opust" lines) are already reflected in the
+  // line's totalPrice, so we need to add them back to get the gross amount.
+  const lineDiscounts = lines.reduce((sum, line) => {
+    const discount = Number(line?.lineDiscount);
+    return sum + (Number.isFinite(discount) ? discount : 0);
+  }, 0);
+  const basketDiscount = positive(receipt.discount) ?? 0;
+  // Expected = linesTotal - basketDiscount (line discounts are already in the line total)
+  // But if the model's discount is smaller than the sum of per-line discounts,
+  // use the per-line total as the more accurate signal (Lidl with RABAT lines)
+  const effectiveDiscount = Math.max(basketDiscount, lineDiscounts);
+  const expected = linesTotal - effectiveDiscount + positive(receipt.deposit);
   return (Math.abs(expected - total) / total) * 100;
 }
 
@@ -96,6 +107,9 @@ export function reconciliationGapPct(receipt: ReconcilableReceipt): number | nul
  * neither form reconciles, it says nothing and leaves the re-read to decide.
  */
 export function isDiscountAlreadyInLines(receipt: ReconcilableReceipt, tolerancePct: number): boolean {
+  // Per-line discounts are already reflected in the line totals, so only
+  // basket-wide discounts need to be tested. If a basket discount is already
+  // in the lines, removing it should make the receipt reconcile better.
   if (!positive(receipt.discount)) return false;
 
   const withDiscount = reconciliationGapPct(receipt);
@@ -182,7 +196,15 @@ export function buildCorrectionNote(receipt: ReconcilableReceipt, gapPct: number
   //     Every quantity on that receipt was correct, so telling the model to
   //     re-check the Ilosc column sends it to look at the one column that was
   //     already right.
-  const expected = linesTotal - positive(receipt.discount) + positive(receipt.deposit);
+  // Per-line discounts (e.g. Lidl "Opust" lines) are already reflected in the
+  // line's totalPrice, so we need to add them back to get the gross amount.
+  const lineDiscounts = lines.reduce((sum, line) => {
+    const discount = Number(line?.lineDiscount);
+    return sum + (Number.isFinite(discount) ? discount : 0);
+  }, 0);
+  const basketDiscount = positive(receipt.discount) ?? 0;
+  const effectiveDiscount = Math.max(basketDiscount, lineDiscounts);
+  const expected = linesTotal - effectiveDiscount + positive(receipt.deposit);
   if (expected > positive(receipt.total)) {
     parts.push(
       'Your line values came out too high. The error is almost always in the quantity column (Ilość), not in the prices: a pack size printed inside the product NAME ("3x72szt", "4x130G") is NOT a quantity, and a line bought once must have quantity 1 even when its name contains a multiplier.',
