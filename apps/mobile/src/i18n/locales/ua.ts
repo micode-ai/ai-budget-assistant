@@ -2146,6 +2146,7 @@ export default {
     deleteConfirmMessage: 'Ви впевнені, що хочете видалити "{{name}}"?',
     deleteErrorHasRecords: 'Неможливо видалити категорію. Вона використовується у {{expenses}} витратах, {{incomes}} доходах, {{budgets}} бюджетах та {{other}} інших записах.',
     deleteSuccess: 'Категорію видалено',
+    iconLabel: 'Значок',
     empty: 'Немає категорій',
     system: 'Системна',
     edit: 'Редагувати категорію',

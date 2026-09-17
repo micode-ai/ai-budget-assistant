@@ -102,6 +102,7 @@ export const categories = sqliteTable('categories', {
   id: text('id').primaryKey(),
   userId: text('user_id'),
   accountId: text('account_id'),
+  clientId: text('client_id'),
   name: text('name').notNull(),
   icon: text('icon'),
   color: text('color'),

@@ -31,6 +31,19 @@ const PRESET_COLORS = [
 ];
 
 /**
+ * Emoji set for the icon picker. Emoji (not Ionicons names) on purpose: they
+ * render identically on native + web + desktop with no font dependency, and
+ * `CategoryIcon` already draws a stored emoji as-is. Covers the default
+ * category names so an icon can always be found without typing.
+ */
+const PRESET_ICONS = [
+  '🍔', '🚗', '🛒', '🎮', '🏥', '💡',
+  '📚', '✈️', '🥦', '☕', '🔁', '👕',
+  '💅', '💰', '💻', '📈', '🎁', '🏠',
+  '🍕', '⛽', '🎬', '💊', '🐾', '⚽',
+];
+
+/**
  * The categories screen's body: the expense and income category lists, plus
  * the sheet that creates and edits one.
  *
@@ -87,6 +100,7 @@ export function CategoriesSettings() {
   const [modalType, setModalType] = useState<'expense' | 'income'>('expense');
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState(PRESET_COLORS[0]);
+  const [selectedIcon, setSelectedIcon] = useState<string | undefined>(undefined);
   const [isSaving, setIsSaving] = useState(false);
 
   const openCreateModal = (type: 'expense' | 'income') => {
@@ -94,6 +108,7 @@ export function CategoriesSettings() {
     setModalType(type);
     setName('');
     setSelectedColor(PRESET_COLORS[0]);
+    setSelectedIcon(undefined);
     setModalVisible(true);
   };
 
@@ -102,6 +117,7 @@ export function CategoriesSettings() {
     setModalType(category.type as 'expense' | 'income');
     setName(category.name);
     setSelectedColor(category.color || PRESET_COLORS[0]);
+    setSelectedIcon(category.icon || undefined);
     setModalVisible(true);
   };
 
@@ -110,6 +126,7 @@ export function CategoriesSettings() {
     setEditingCategory(null);
     setName('');
     setSelectedColor(PRESET_COLORS[0]);
+    setSelectedIcon(undefined);
   };
 
   const handleSave = async () => {
@@ -122,9 +139,9 @@ export function CategoriesSettings() {
     setIsSaving(true);
     try {
       if (editingCategory) {
-        await updateCategory(editingCategory.id, { name: trimmed, color: selectedColor });
+        await updateCategory(editingCategory.id, { name: trimmed, color: selectedColor, icon: selectedIcon });
       } else {
-        await createCategory(trimmed, modalType, undefined, selectedColor);
+        await createCategory(trimmed, modalType, selectedIcon, selectedColor);
       }
       closeModal();
     } catch {
@@ -255,6 +272,32 @@ export function CategoriesSettings() {
           maxLength={50}
         />
 
+        <Text style={[styles.modalTitle, styles.sectionLabel]}>
+          {t('categories.iconLabel')}
+        </Text>
+
+        <View style={styles.iconGrid}>
+          {PRESET_ICONS.map((emoji) => {
+            const isSelected = selectedIcon === emoji;
+            return (
+              <TouchableOpacity
+                key={emoji}
+                style={[
+                  styles.iconCircle,
+                  { backgroundColor: theme.colors.surfaceSecondary },
+                  isSelected && [
+                    styles.colorCircleSelected,
+                    { borderColor: theme.colors.primary },
+                  ],
+                ]}
+                onPress={() => setSelectedIcon(isSelected ? undefined : emoji)}
+              >
+                <Text style={styles.iconEmoji}>{emoji}</Text>
+              </TouchableOpacity>
+            );
+          })}
+        </View>
+
         <View style={styles.colorGrid}>
           {PRESET_COLORS.map((color) => (
             <TouchableOpacity
@@ -370,7 +413,27 @@ const createStyles = (theme: Theme) => ({
     flexDirection: 'row' as const,
     flexWrap: 'wrap' as const,
     gap: theme.spacing[2.5],
-    marginBottom: theme.spacing[6],
+    marginBottom: theme.spacing[4],
+  },
+  iconGrid: {
+    flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
+    gap: theme.spacing[2],
+    marginBottom: theme.spacing[4],
+  },
+  iconCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+  },
+  iconEmoji: {
+    fontSize: 22,
+  },
+  sectionLabel: {
+    fontSize: 14,
+    marginBottom: theme.spacing[2],
   },
   colorCircle: {
     width: 36,

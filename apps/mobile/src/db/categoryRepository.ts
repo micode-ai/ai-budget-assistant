@@ -3,6 +3,7 @@ import type { Category } from '@budget/shared-types';
 
 interface CategoryRow {
   id: string;
+  client_id: string | null;
   user_id: string | null;
   account_id: string | null;
   name: string;
@@ -20,6 +21,7 @@ interface CategoryRow {
 function rowToCategory(row: CategoryRow): Category {
   return {
     id: row.id,
+    clientId: row.client_id ?? undefined,
     userId: row.user_id ?? undefined,
     accountId: row.account_id ?? undefined,
     name: row.name,
@@ -38,6 +40,7 @@ function rowToCategory(row: CategoryRow): Category {
 function categoryToParams(category: Category): (string | number | null)[] {
   return [
     category.id,
+    category.clientId ?? null,
     category.userId ?? null,
     category.accountId ?? null,
     category.name,
@@ -56,9 +59,9 @@ function categoryToParams(category: Category): (string | number | null)[] {
 export async function insertCategory(category: Category): Promise<void> {
   await executeSql(
     `INSERT INTO categories (
-      id, user_id, account_id, name, icon, color, type, is_system, parent_id,
+      id, client_id, user_id, account_id, name, icon, color, type, is_system, parent_id,
       created_at, updated_at, is_deleted, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     categoryToParams(category),
   );
 }
@@ -66,10 +69,11 @@ export async function insertCategory(category: Category): Promise<void> {
 export async function upsertCategory(category: Category): Promise<void> {
   await executeSql(
     `INSERT INTO categories (
-      id, user_id, account_id, name, icon, color, type, is_system, parent_id,
+      id, client_id, user_id, account_id, name, icon, color, type, is_system, parent_id,
       created_at, updated_at, is_deleted, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
+      client_id = excluded.client_id,
       user_id = excluded.user_id,
       account_id = excluded.account_id,
       name = excluded.name,
@@ -127,4 +131,47 @@ export async function categoryExistsById(id: string): Promise<boolean> {
     [id],
   );
   return rows.length > 0 && rows[0].cnt > 0;
+}
+
+export async function getCategoryByClientId(
+  accountId: string,
+  clientId: string,
+): Promise<Category | null> {
+  const rows = await executeSql<CategoryRow>(
+    'SELECT * FROM categories WHERE account_id = ? AND client_id = ?',
+    [accountId, clientId],
+  );
+  return rows.length > 0 ? rowToCategory(rows[0]) : null;
+}
+
+/**
+ * Adopt the server PK for a category that was created locally (offline-first).
+ *
+ * The row was saved under its device-generated id, so every reference
+ * (`expenses.category_id`, `incomes.category_id`, `budget_categories.category_id`,
+ * `expense_category_splits.category_id`) points at that local id. The server
+ * row has its own PK — and the server resolves a budget's allocation by NAME to
+ * that PK — so leaving the local id in place makes the app and the server
+ * disagree about which category an expense belongs to: a budget on the new
+ * category then reports 0,00 after the next pull, while the list still shows
+ * the category. Re-point everything at the server id in one pass.
+ *
+ * `clientId` is kept on the row so an idempotent resend of the create (and the
+ * pull, which matches by clientId) still finds this row.
+ */
+export async function remapCategoryId(
+  oldId: string,
+  newId: string,
+  clientId: string,
+): Promise<void> {
+  if (oldId === newId) return;
+
+  await executeSql(
+    'UPDATE categories SET id = ?, client_id = ? WHERE id = ?',
+    [newId, clientId, oldId],
+  );
+  await executeSql('UPDATE expenses SET category_id = ? WHERE category_id = ?', [newId, oldId]);
+  await executeSql('UPDATE incomes SET category_id = ? WHERE category_id = ?', [newId, oldId]);
+  await executeSql('UPDATE budget_categories SET category_id = ? WHERE category_id = ?', [newId, oldId]);
+  await executeSql('UPDATE expense_category_splits SET category_id = ? WHERE category_id = ?', [newId, oldId]);
 }

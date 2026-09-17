@@ -115,6 +115,39 @@ describe('CategoriesService.create', () => {
     );
   });
 
+  it('returns the row created earlier for the same clientId (idempotent resend)', async () => {
+    // Offline-first: the mobile resends the same create on a sync retry and
+    // would otherwise violate @@unique([accountId, clientId]).
+    const existing = { id: 'server-1', clientId: 'local-1', name: 'Kawa', type: 'expense' };
+    const { service, prisma } = makeService({ findFirstResult: existing });
+
+    const result = await service.create('acc-1', 'user-1', {
+      name: 'Kawa',
+      type: 'expense',
+      clientId: 'local-1',
+    } as any);
+
+    expect(result).toBe(existing);
+    expect(prisma.category.findFirst).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', clientId: 'local-1' },
+    });
+    expect(prisma.category.create).not.toHaveBeenCalled();
+  });
+
+  it('stores the clientId on a brand-new create', async () => {
+    const { service, prisma } = makeService({ findFirstResult: null });
+
+    await service.create('acc-1', 'user-1', {
+      name: 'Kawa',
+      type: 'expense',
+      clientId: 'local-1',
+    } as any);
+
+    expect(prisma.category.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ clientId: 'local-1' }),
+    });
+  });
+
   it('defaults a missing type to expense so the lookup cannot match the other type', async () => {
     const { service, prisma } = makeService({ findFirstResult: null });
 
@@ -134,8 +167,30 @@ describe('CategoriesService.update', () => {
     const { service, prisma } = makeService({ findFirstResult: null });
 
     await expect(service.update('acc-1', 'cat-x', { name: 'New' })).rejects.toThrow(NotFoundException);
+    // `id` may be the server PK or the mobile's local clientId — one lookup
+    // resolves either, scoped to the account's own rows + system categories.
     expect(prisma.category.findFirst).toHaveBeenCalledWith({
-      where: { id: 'cat-x', OR: [{ accountId: 'acc-1' }, { isSystem: true }] },
+      where: {
+        AND: [
+          { OR: [{ accountId: 'acc-1' }, { isSystem: true }] },
+          { OR: [{ id: 'cat-x' }, { clientId: 'cat-x' }] },
+        ],
+      },
+    });
+  });
+
+  it('updates the resolved row and strips clientId out of the patch', async () => {
+    // The mobile sends its local id as the path param and the row is matched by
+    // clientId; `clientId` itself must never reach prisma.update (it is not
+    // patchable and would be a needless write).
+    const found = { id: 'server-1', clientId: 'local-1', name: 'Kawa' };
+    const { service, prisma } = makeService({ findFirstResult: found });
+
+    await service.update('acc-1', 'local-1', { name: 'Kawa i ciasto', clientId: 'local-1' } as any);
+
+    expect(prisma.category.update).toHaveBeenCalledWith({
+      where: { id: 'server-1' },
+      data: { name: 'Kawa i ciasto' },
     });
   });
 

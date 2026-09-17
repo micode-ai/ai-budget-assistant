@@ -6,7 +6,17 @@ export const categoriesApi = {
     return httpClient.request<Category[]>('/categories');
   },
 
-  createCategory(data: { name: string; icon?: string; color?: string; type: string; parentId?: string }) {
+  createCategory(data: {
+    name: string;
+    icon?: string;
+    color?: string;
+    type: string;
+    parentId?: string;
+    /** Device-generated id — makes a resent create idempotent server-side. */
+    clientId?: string;
+    encryptedPayload?: string;
+    encryptionKeyVersion?: number;
+  }) {
     return httpClient.request<Category>('/categories', {
       method: 'POST',
       body: JSON.stringify(data),

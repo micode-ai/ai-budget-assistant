@@ -10,6 +10,10 @@ export class CreateCategoryDto {
 
   @IsOptional()
   @IsString()
+  clientId?: string;
+
+  @IsOptional()
+  @IsString()
   icon?: string;
 
   @IsOptional()

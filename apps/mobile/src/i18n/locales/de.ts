@@ -2136,6 +2136,7 @@ export default {
     deleteConfirmMessage: 'Möchten Sie "{{name}}" wirklich löschen?',
     deleteErrorHasRecords: 'Kategorie kann nicht gelöscht werden. Sie wird in {{expenses}} Ausgaben, {{incomes}} Einnahmen, {{budgets}} Budgets und {{other}} weiteren Einträgen verwendet.',
     deleteSuccess: 'Kategorie gelöscht',
+    iconLabel: 'Symbol',
     empty: 'Keine Kategorien',
     system: 'System',
     edit: 'Kategorie bearbeiten',

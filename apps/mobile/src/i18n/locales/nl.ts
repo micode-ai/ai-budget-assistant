@@ -2136,6 +2136,7 @@ export default {
     deleteConfirmMessage: 'Weet je zeker dat je "{{name}}" wilt verwijderen?',
     deleteErrorHasRecords: 'Kan deze categorie niet verwijderen. Hij wordt gebruikt in {{expenses}} uitgaven, {{incomes}} inkomsten, {{budgets}} budgetten en {{other}} andere records.',
     deleteSuccess: 'Categorie verwijderd',
+    iconLabel: 'Pictogram',
     empty: 'Geen categorieën',
     system: 'Systeem',
     edit: 'Categorie bewerken',

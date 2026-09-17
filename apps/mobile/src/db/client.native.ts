@@ -64,6 +64,7 @@ export async function initializeDatabase(): Promise<void> {
       CREATE TABLE IF NOT EXISTS categories (
         id TEXT PRIMARY KEY,
         user_id TEXT,
+        client_id TEXT,
         name TEXT NOT NULL,
         icon TEXT,
         color TEXT,
@@ -549,6 +550,16 @@ export async function initializeDatabase(): Promise<void> {
     // Add account_id column to categories
     try {
       expoDb.execSync(`ALTER TABLE categories ADD COLUMN account_id TEXT`);
+    } catch {
+      // Column already exists, ignore
+    }
+
+    // Add client_id to categories (ABA-564): lets the server reconcile a
+    // category this device created offline, so adopting the server PK can
+    // re-point expenses/incomes/budget allocations instead of leaving two rows
+    // for the same category.
+    try {
+      expoDb.execSync(`ALTER TABLE categories ADD COLUMN client_id TEXT`);
     } catch {
       // Column already exists, ignore
     }

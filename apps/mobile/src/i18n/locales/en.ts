@@ -2143,6 +2143,7 @@ export default {
     deleteConfirmMessage: 'Are you sure you want to delete "{{name}}"?',
     deleteErrorHasRecords: 'Cannot delete this category. It is used by {{expenses}} expenses, {{incomes}} incomes, {{budgets}} budgets, and {{other}} other records.',
     deleteSuccess: 'Category deleted',
+    iconLabel: 'Icon',
     empty: 'No categories',
     system: 'System',
     edit: 'Edit Category',

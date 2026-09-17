@@ -493,6 +493,7 @@ model Category {
   embedding            Json?    @map("embedding")
   isDeleted            Boolean  @default(false) @map("is_deleted")
   syncVersion          Int      @default(0) @map("sync_version")
+  clientId             String?  @map("client_id")
   encryptedPayload     String?  @map("encrypted_payload")
   encryptionKeyVersion Int?     @map("encryption_key_version")
   createdAt            DateTime @default(now()) @map("created_at")
@@ -514,6 +515,7 @@ model Category {
   productCategoryRules  ProductCategoryRule[]
 
   @@unique([accountId, name, type])
+  @@unique([accountId, clientId])
   @@map("categories")
 }
 

@@ -6,6 +6,8 @@ export interface CreateCategoryDto {
   color?: string;
   type: CategoryType;
   parentId?: string;
+  /** Device-generated id, so a sync retry of the same create is idempotent. */
+  clientId?: string;
 }
 
 export interface UpdateCategoryDto {

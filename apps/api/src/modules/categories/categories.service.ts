@@ -64,6 +64,16 @@ export class CategoriesService {
     // lookup below and match a same-named category of the OTHER type.
     const type = dto.type ?? 'expense';
 
+    // Offline-first idempotency: the mobile client may resend the same create
+    // (sync retry, double-tap, lost response) with the same clientId. Return
+    // the already-created row instead of violating @@unique([accountId, clientId]).
+    if (dto.clientId) {
+      const byClientId = await this.prisma.category.findFirst({
+        where: { accountId, clientId: dto.clientId },
+      });
+      if (byClientId) return byClientId;
+    }
+
     // @@unique([accountId, name, type]) does not exclude soft-deleted rows, so
     // ANY existing row with this name+type blocks the insert — look for it
     // without filtering isDeleted. Only checking for soft-deleted ones (what
@@ -85,6 +95,7 @@ export class CategoriesService {
           color: dto.color,
           type,
           parentId: dto.parentId,
+          clientId: dto.clientId ?? undefined,
         },
       });
       void this.embeddingService.embedAndStore('category', created.id, created.name);
@@ -96,6 +107,12 @@ export class CategoriesService {
       // add). Re-read and reuse instead of surfacing a 500. Safe to catch
       // here because there is no $transaction to poison (ABA-313).
       if (e?.code !== 'P2002') throw e;
+      if (dto.clientId) {
+        const racedByClientId = await this.prisma.category.findFirst({
+          where: { accountId, clientId: dto.clientId },
+        });
+        if (racedByClientId) return racedByClientId;
+      }
       const raced = await this.prisma.category.findFirst({
         where: { accountId, name: dto.name, type },
       });
@@ -104,19 +121,27 @@ export class CategoriesService {
     }
   }
 
-  async update(accountId: string, id: string, dto: any) {
-    const category = await this.prisma.category.findFirst({
+  /**
+   * `identifier` is the server PK or the mobile's local clientId
+   * (offline-first). Scoped to the account's own rows plus system categories.
+   */
+  private async resolveCategory(accountId: string, identifier: string) {
+    return this.prisma.category.findFirst({
       where: {
-        id,
-        OR: [{ accountId }, { isSystem: true }],
+        AND: [{ OR: [{ accountId }, { isSystem: true }] }, { OR: [{ id: identifier }, { clientId: identifier }] }],
       },
     });
+  }
+
+  async update(accountId: string, id: string, dto: any) {
+    const category = await this.resolveCategory(accountId, id);
     if (!category) throw new NotFoundException('Category not found');
+    const { clientId: _ignoredClientId, ...rest } = dto ?? {};
     const updated = await this.prisma.category.update({
-      where: { id },
-      data: dto,
+      where: { id: category.id },
+      data: rest,
     });
-    if (dto.name && dto.name !== category.name) {
+    if (rest.name && rest.name !== category.name) {
       // Name changed — refresh embedding.
       void this.embeddingService.embedAndStore('category', updated.id, updated.name);
     }
@@ -129,31 +154,29 @@ export class CategoriesService {
     // On the API side, system categories are global. Soft-deleting a system category
     // hides it for ALL accounts (findAll filters isDeleted: false).
     // This is intentional per spec — system categories can be deleted.
-    const category = await this.prisma.category.findFirst({
-      where: {
-        id,
-        OR: [{ accountId }, { isSystem: true }],
-      },
-    });
+    // `id` may be the server PK or the mobile's local id — always act on the
+    // RESOLVED row's PK (same rule as update).
+    const category = await this.resolveCategory(accountId, id);
     if (!category) throw new NotFoundException('Category not found');
+    const resolvedId = category.id;
 
     // Check for related records
     const [expenses, incomes, budgetCategories, splits, children] =
       await Promise.all([
         this.prisma.expense.count({
-          where: { categoryId: id, isDeleted: false },
+          where: { categoryId: resolvedId, isDeleted: false },
         }),
         this.prisma.income.count({
-          where: { categoryId: id, isDeleted: false },
+          where: { categoryId: resolvedId, isDeleted: false },
         }),
         this.prisma.budgetCategory.count({
-          where: { categoryId: id, isDeleted: false },
+          where: { categoryId: resolvedId, isDeleted: false },
         }),
         this.prisma.expenseCategorySplit.count({
-          where: { categoryId: id, isDeleted: false },
+          where: { categoryId: resolvedId, isDeleted: false },
         }),
         this.prisma.category.count({
-          where: { parentId: id, isDeleted: false },
+          where: { parentId: resolvedId, isDeleted: false },
         }),
       ]);
 
@@ -167,7 +190,7 @@ export class CategoriesService {
     }
 
     const removed = await this.prisma.category.update({
-      where: { id },
+      where: { id: resolvedId },
       data: { isDeleted: true },
     });
     this.invalidateChatCache(accountId);

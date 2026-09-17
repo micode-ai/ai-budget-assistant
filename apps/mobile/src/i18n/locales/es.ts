@@ -2136,6 +2136,7 @@ export default {
     deleteConfirmMessage: '¿Estás seguro de que quieres eliminar "{{name}}"?',
     deleteErrorHasRecords: 'No se puede eliminar la categoría. Se usa en {{expenses}} gastos, {{incomes}} ingresos, {{budgets}} presupuestos y {{other}} otros registros.',
     deleteSuccess: 'Categoría eliminada',
+    iconLabel: 'Icono',
     empty: 'Sin categorías',
     system: 'Sistema',
     edit: 'Editar categoría',
