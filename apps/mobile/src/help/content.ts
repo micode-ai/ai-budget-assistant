@@ -3714,6 +3714,7 @@ Categories classify your expenses and income. Each has a name and a color.
   - Deletion is blocked if the category is in use by active expenses or budgets
   - System (predefined) categories cannot be deleted
 - If a category you assigned does not appear on your other devices, open the app once while online — assignments are re-sent automatically
+- A category that is still used by expenses, budgets or sub-categories cannot be deleted — delete or reassign those first
 
 **Tip:** Use distinct colors for categories you want to spot quickly in charts.
 
@@ -8420,6 +8421,7 @@ OCR иногда неверно читает цену, выдумывает ст
   - Удаление заблокировано, если категория используется активными расходами или бюджетами
   - Системные (предустановленные) категории удалить нельзя
 - Если назначенная категория не появляется на других устройствах, откройте приложение один раз при интернете — назначения отправятся повторно автоматически
+- Категорию, которая ещё используется расходами, бюджетами или подкатегориями, удалить нельзя — сначала удалите или переназначьте их
 
 **Совет:** Используйте яркие цвета для категорий, которые важно быстро находить на графиках.
 
@@ -13086,6 +13088,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
   - Видалення заблоковано, якщо категорія використовується активними витратами або бюджетами
   - Системні (попередньо встановлені) категорії видалити не можна
 - Якщо призначена категорія не з'являється на інших пристроях, відкрийте застосунок один раз з інтернетом — призначення надішлються повторно автоматично
+- Категорію, яка ще використовується витратами, бюджетами або підкатегоріями, видалити не можна — спочатку видаліть або перепризначте їх
 
 **Порада:** Використовуйте яскраві кольори для категорій, які важливо швидко знаходити на графіках.
 
@@ -17741,6 +17744,7 @@ Kategorie klasyfikują wydatki i dochody. Każda ma nazwę i kolor.
   - Usunięcie jest zablokowane, jeśli kategoria jest używana przez aktywne wydatki lub budżety
   - Kategorii systemowych (predefiniowanych) nie można usunąć
 - Jeśli przypisana kategoria nie pojawia się na innych urządzeniach, otwórz aplikację raz z dostępem do internetu — przypisania zostaną wysłane ponownie automatycznie
+- Kategorii używanej przez wydatki, budżety lub podkategorie nie można usunąć — najpierw usuń je lub przypisz gdzie indziej
 
 ## Sklepy
 
@@ -22370,6 +22374,7 @@ Kategorien klassifizieren Ausgaben und Einnahmen. Jede hat einen Namen und eine 
   - Löschen ist gesperrt, wenn die Kategorie von aktiven Ausgaben oder Budgets verwendet wird
   - Systemkategorien können nicht gelöscht werden
 - Erscheint eine zugewiesene Kategorie nicht auf Ihren anderen Geräten, öffnen Sie die App einmal online — die Zuordnungen werden automatisch erneut gesendet
+- Eine Kategorie, die noch von Ausgaben, Budgets oder Unterkategorien genutzt wird, lässt sich nicht löschen — ändern oder entfernen Sie diese zuerst
 
 ## Händler
 
@@ -26985,6 +26990,7 @@ Las categorías clasifican gastos e ingresos. Cada una tiene un nombre y un colo
 - Toca el icono de papelera para eliminar (bloqueado si está en uso)
 - Las categorías del sistema no se pueden eliminar
 - Si una categoría que asignaste no aparece en tus otros dispositivos, abre la aplicación una vez con conexión — las asignaciones se reenvían automáticamente
+- Una categoría que aún usan gastos, presupuestos o subcategorías no se puede eliminar: primero elimínalos o reasígnalos
 
 ## Comercios
 
@@ -31598,6 +31604,7 @@ Les catégories classifient les dépenses et revenus. Chacune a un nom et une co
 - Appuyez sur la poubelle pour supprimer (bloqué si la catégorie est utilisée)
 - Les catégories système ne peuvent pas être supprimées
 - Si une catégorie que vous avez attribuée n'apparaît pas sur vos autres appareils, ouvrez l'application une fois en ligne : les attributions sont renvoyées automatiquement
+- Une catégorie encore utilisée par des dépenses, des budgets ou des sous-catégories ne peut pas être supprimée : supprimez-les ou réaffectez-les d'abord
 
 ## Commerçants
 
@@ -36183,6 +36190,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Націсніце **+** для стварэння новай катэгорыі
 - Націсніце іконку кошыка для выдалення
 - Калі прызначаная катэгорыя не з'яўляецца на іншых прыладах, адкрыйце дастасаванне адзін раз з інтэрнэтам — прызначэнні адправяцца паўторна аўтаматычна
+- Катэгорыю, якая яшчэ выкарыстоўваецца выдаткамі, бюджэтамі ці падкатэгорыямі, выдаліць нельга — спачатку выдаліце або перапрызначце іх
 
 ## Крамы
 
@@ -40868,6 +40876,7 @@ Categorieën classificeren je uitgaven en inkomsten. Elke categorie heeft een na
   - Verwijderen is geblokkeerd als de categorie wordt gebruikt door actieve uitgaven of budgetten
   - Systeemcategorieën (vooraf gedefinieerd) kunnen niet worden verwijderd
 - Verschijnt een toegewezen categorie niet op je andere apparaten, open de app dan één keer online — toewijzingen worden automatisch opnieuw verzonden
+- Een categorie die nog wordt gebruikt door uitgaven, budgetten of subcategorieën kan niet worden verwijderd — verwijder of verplaats die eerst
 
 **Tip:** Gebruik onderscheidende kleuren voor categorieën die je snel wilt herkennen in grafieken.
 

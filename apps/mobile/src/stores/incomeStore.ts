@@ -19,6 +19,7 @@ import { useAccountStore } from './accountStore';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
+import { UNCATEGORIZED_CATEGORY_FILTER } from './categoryFilter';
 
 interface IncomeFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
@@ -535,7 +536,11 @@ export const useIncomeStore = create<IncomeState>()(
         });
       }
 
-      if (filters.categoryId) {
+      if (filters.categoryId === UNCATEGORIZED_CATEGORY_FILTER) {
+        // "Without category" - incomes with nothing assigned. Mirrors the
+        // expense list; the picker offers it on both tabs (ABA-567).
+        filtered = filtered.filter((i) => !i.categoryId);
+      } else if (filters.categoryId) {
         filtered = filtered.filter((i) => i.categoryId === filters.categoryId);
       }
 

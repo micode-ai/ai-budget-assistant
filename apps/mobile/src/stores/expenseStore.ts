@@ -45,7 +45,9 @@ import { useGamificationStore } from './gamificationStore';
  * `getFilteredExpenses` resolves it to "categoryId is empty". Chosen to be
  * impossible as a real category id (not a UUID / not the `default-*` shape).
  */
-export const UNCATEGORIZED_CATEGORY_FILTER = '__uncategorized__';
+import { UNCATEGORIZED_CATEGORY_FILTER } from './categoryFilter';
+// Re-exported so existing importers (the filter bar, tests) keep working.
+export { UNCATEGORIZED_CATEGORY_FILTER };
 
 interface ExpenseFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';

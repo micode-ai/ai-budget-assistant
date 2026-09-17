@@ -20,6 +20,7 @@ Les catégories classifient les dépenses et revenus. Chacune a un nom et une co
 - Appuyez sur la poubelle pour supprimer (bloqué si la catégorie est utilisée)
 - Les catégories système ne peuvent pas être supprimées
 - Si une catégorie que vous avez attribuée n'apparaît pas sur vos autres appareils, ouvrez l'application une fois en ligne : les attributions sont renvoyées automatiquement
+- Une catégorie encore utilisée par des dépenses, des budgets ou des sous-catégories ne peut pas être supprimée : supprimez-les ou réaffectez-les d'abord
 
 ## Commerçants
 

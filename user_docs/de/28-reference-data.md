@@ -21,6 +21,7 @@ Kategorien klassifizieren Ausgaben und Einnahmen. Jede hat einen Namen und eine 
   - Löschen ist gesperrt, wenn die Kategorie von aktiven Ausgaben oder Budgets verwendet wird
   - Systemkategorien können nicht gelöscht werden
 - Erscheint eine zugewiesene Kategorie nicht auf Ihren anderen Geräten, öffnen Sie die App einmal online — die Zuordnungen werden automatisch erneut gesendet
+- Eine Kategorie, die noch von Ausgaben, Budgets oder Unterkategorien genutzt wird, lässt sich nicht löschen — ändern oder entfernen Sie diese zuerst
 
 ## Händler
 

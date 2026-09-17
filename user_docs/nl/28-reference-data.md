@@ -21,6 +21,7 @@ Categorieën classificeren je uitgaven en inkomsten. Elke categorie heeft een na
   - Verwijderen is geblokkeerd als de categorie wordt gebruikt door actieve uitgaven of budgetten
   - Systeemcategorieën (vooraf gedefinieerd) kunnen niet worden verwijderd
 - Verschijnt een toegewezen categorie niet op je andere apparaten, open de app dan één keer online — toewijzingen worden automatisch opnieuw verzonden
+- Een categorie die nog wordt gebruikt door uitgaven, budgetten of subcategorieën kan niet worden verwijderd — verwijder of verplaats die eerst
 
 **Tip:** Gebruik onderscheidende kleuren voor categorieën die je snel wilt herkennen in grafieken.
 

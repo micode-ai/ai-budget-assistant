@@ -21,6 +21,7 @@ Kategorie klasyfikują wydatki i dochody. Każda ma nazwę i kolor.
   - Usunięcie jest zablokowane, jeśli kategoria jest używana przez aktywne wydatki lub budżety
   - Kategorii systemowych (predefiniowanych) nie można usunąć
 - Jeśli przypisana kategoria nie pojawia się na innych urządzeniach, otwórz aplikację raz z dostępem do internetu — przypisania zostaną wysłane ponownie automatycznie
+- Kategorii używanej przez wydatki, budżety lub podkategorie nie można usunąć — najpierw usuń je lub przypisz gdzie indziej
 
 ## Sklepy
 

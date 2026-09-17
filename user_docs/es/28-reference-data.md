@@ -20,6 +20,7 @@ Las categorías clasifican gastos e ingresos. Cada una tiene un nombre y un colo
 - Toca el icono de papelera para eliminar (bloqueado si está en uso)
 - Las categorías del sistema no se pueden eliminar
 - Si una categoría que asignaste no aparece en tus otros dispositivos, abre la aplicación una vez con conexión — las asignaciones se reenvían automáticamente
+- Una categoría que aún usan gastos, presupuestos o subcategorías no se puede eliminar: primero elimínalos o reasígnalos
 
 ## Comercios
 

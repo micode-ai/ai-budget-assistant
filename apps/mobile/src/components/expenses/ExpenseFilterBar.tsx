@@ -89,8 +89,8 @@ export function ExpenseFilterBar({
   const accent = isExpense ? theme.colors.primary : theme.colors.success;
 
   const selectedCategory = categories.find((c) => c.id === currentFilters.categoryId);
-  // "Без категории" — an expenses-tab-only picker option stored as a sentinel id.
-  const isUncategorized = isExpense && currentFilters.categoryId === UNCATEGORIZED_CATEGORY_FILTER;
+  // "Без категории" — offered on BOTH tabs and stored as a sentinel id.
+  const isUncategorized = currentFilters.categoryId === UNCATEGORIZED_CATEGORY_FILTER;
   const hasCat = currentFilters.categoryId !== null;
   const hasMerchants = expenseFilters.merchants.length > 0;
 
@@ -258,29 +258,29 @@ export function ExpenseFilterBar({
                 {!hasCat && <Ionicons name="checkmark" size={18} color={accent} />}
               </TouchableOpacity>
 
-              {isExpense && (
-                <TouchableOpacity
-                  style={[
-                    styles.categoryRow,
-                    { borderBottomColor: theme.colors.borderLight },
-                    isUncategorized && { backgroundColor: theme.colors.surfaceSecondary },
-                  ]}
-                  onPress={() => {
-                    setCurrentFilters({ categoryId: UNCATEGORIZED_CATEGORY_FILTER });
-                    setShowCategoryPicker(false);
-                  }}
-                >
-                  <Ionicons
-                    name="pricetag-outline"
-                    size={18}
-                    color={isUncategorized ? accent : theme.colors.textSecondary}
-                  />
-                  <Text style={[styles.categoryRowText, { color: isUncategorized ? accent : theme.colors.textPrimary, flex: 1 }]}>
-                    {t('expenses.categoryNone')}
-                  </Text>
-                  {isUncategorized && <Ionicons name="checkmark" size={18} color={accent} />}
-                </TouchableOpacity>
-              )}
+              {/* Offered on both tabs: income entries need sorting just as
+                  much as expenses do (ABA-567). */}
+              <TouchableOpacity
+                style={[
+                  styles.categoryRow,
+                  { borderBottomColor: theme.colors.borderLight },
+                  isUncategorized && { backgroundColor: theme.colors.surfaceSecondary },
+                ]}
+                onPress={() => {
+                  setCurrentFilters({ categoryId: UNCATEGORIZED_CATEGORY_FILTER });
+                  setShowCategoryPicker(false);
+                }}
+              >
+                <Ionicons
+                  name="pricetag-outline"
+                  size={18}
+                  color={isUncategorized ? accent : theme.colors.textSecondary}
+                />
+                <Text style={[styles.categoryRowText, { color: isUncategorized ? accent : theme.colors.textPrimary, flex: 1 }]}>
+                  {t('expenses.categoryNone')}
+                </Text>
+                {isUncategorized && <Ionicons name="checkmark" size={18} color={accent} />}
+              </TouchableOpacity>
 
               {categories.map((cat) => {
                 const isSelected = currentFilters.categoryId === cat.id;

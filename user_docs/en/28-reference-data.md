@@ -21,6 +21,7 @@ Categories classify your expenses and income. Each has a name and a color.
   - Deletion is blocked if the category is in use by active expenses or budgets
   - System (predefined) categories cannot be deleted
 - If a category you assigned does not appear on your other devices, open the app once while online — assignments are re-sent automatically
+- A category that is still used by expenses, budgets or sub-categories cannot be deleted — delete or reassign those first
 
 **Tip:** Use distinct colors for categories you want to spot quickly in charts.
 

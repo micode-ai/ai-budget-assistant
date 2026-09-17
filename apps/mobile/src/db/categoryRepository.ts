@@ -177,6 +177,45 @@ export async function mergeCategoryInto(staleId: string, survivingId: string): P
   await executeSql('DELETE FROM categories WHERE id = ?', [staleId]);
 }
 
+export interface CategoryReferenceCounts {
+  expenses: number;
+  incomes: number;
+  budgetCategories: number;
+  splits: number;
+  children: number;
+}
+
+/**
+ * What still points at this category on THIS device.
+ *
+ * Mirrors the five checks the server runs before allowing a category to be
+ * deleted. It exists because the server's guard can only protect a category the
+ * server can find: for a row it cannot resolve it answers 404, and the client
+ * used to swallow that and delete locally with no check at all (ABA-567).
+ * Counting locally also makes the guard work offline and for a category that
+ * only ever existed on this device, which the server could never vouch for.
+ *
+ * On web every read resolves to `[]`, so all five come back 0 and the guard
+ * defers to the server - which is correct there, since a web client only ever
+ * holds ids the server issued.
+ */
+export async function countCategoryReferences(categoryId: string): Promise<CategoryReferenceCounts> {
+  const count = async (sql: string): Promise<number> => {
+    const rows = await executeSql<{ cnt: number }>(sql, [categoryId]);
+    return rows.length > 0 ? Number(rows[0].cnt) || 0 : 0;
+  };
+
+  const [expenses, incomes, budgetCategories, splits, children] = await Promise.all([
+    count('SELECT COUNT(*) as cnt FROM expenses WHERE category_id = ? AND is_deleted = 0'),
+    count('SELECT COUNT(*) as cnt FROM incomes WHERE category_id = ? AND is_deleted = 0'),
+    count('SELECT COUNT(*) as cnt FROM budget_categories WHERE category_id = ? AND is_deleted = 0'),
+    count('SELECT COUNT(*) as cnt FROM expense_category_splits WHERE category_id = ? AND is_deleted = 0'),
+    count('SELECT COUNT(*) as cnt FROM categories WHERE parent_id = ? AND is_deleted = 0'),
+  ]);
+
+  return { expenses, incomes, budgetCategories, splits, children };
+}
+
 export async function deleteCategory(id: string): Promise<void> {
   await executeSql(
     'UPDATE categories SET is_deleted = 1, updated_at = ? WHERE id = ?',

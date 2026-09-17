@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Platform } from 'react-native';
 import type { Category } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
-import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById, getCategoryByClientId, getCategoryById, remapCategoryId, getCategoryByNameExcludingId, mergeCategoryInto } from '@/db/categoryRepository';
+import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById, getCategoryByClientId, getCategoryById, remapCategoryId, getCategoryByNameExcludingId, mergeCategoryInto, countCategoryReferences } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
@@ -53,6 +53,34 @@ interface CategoryState {
   syncFromServer: (serverCategories: any[]) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
   updateCategory: (id: string, data: { name?: string; color?: string; icon?: string }) => Promise<void>;
+}
+
+/**
+ * The server's copy of a locally-addressed category, matched on name+type.
+ *
+ * Categories created before `clientId` support carry a device id here and a
+ * different primary key on the server with nothing linking them, so an id from
+ * this device can 404 while the row is alive server-side. Name+type is the only
+ * thing both sides still share. Returns `null` when the server genuinely has no
+ * such category - i.e. when a 404 really does mean "local only" (ABA-567).
+ *
+ * Never throws: if the lookup itself fails there is nothing to compare against,
+ * and the caller must not be blocked from deleting a local row by a network
+ * problem.
+ */
+async function findServerCategoryTwin(
+  category: Category | undefined,
+): Promise<{ id: string } | null> {
+  if (!category?.name) return null;
+  try {
+    const serverCategories = await api.getCategories();
+    const twin = serverCategories.find(
+      (c: any) => !c.isDeleted && c.type === category.type && c.name === category.name && c.id !== category.id,
+    );
+    return twin ? { id: twin.id } : null;
+  } catch {
+    return null;
+  }
 }
 
 export const useCategoryStore = create<CategoryState>((set, get) => ({
@@ -393,13 +421,47 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
   },
 
   deleteCategory: async (id: string) => {
-    // Await API — may throw 409 with details (error.status and error.details preserved by api.ts)
-    // 404 means category exists only locally (e.g. seeded default with local ID) — delete locally only
+    const category = get().categories.find((c) => c.id === id);
+
+    // Guard locally FIRST (ABA-567). The server refuses to delete a category
+    // that still has expenses, budgets or child categories behind it - but that
+    // guard can only run for a category the server can FIND. For an id it
+    // cannot resolve it answers 404, and this method used to swallow the 404
+    // and delete locally with no check at all, so a category with a year of
+    // expenses behind it could be removed by one accidental tap and never
+    // announced. (The scale of those 404s was already on record next to
+    // `updateCategory`: 13 of 15 category PATCHes in 72h.)
+    //
+    // Checking here rather than only on the server also makes the rule hold
+    // offline, and for a category that has never left this device - which the
+    // server could not vouch for either way.
+    const refs = await countCategoryReferences(id);
+    const referenced = refs.expenses + refs.incomes + refs.budgetCategories + refs.splits + refs.children;
+    if (referenced > 0) {
+      // Same shape the API raises, so the screen renders one message for both
+      // and no new copy is needed.
+      throw Object.assign(new Error('Category has related records'), {
+        status: 409,
+        details: refs,
+      });
+    }
+
     try {
       await api.deleteCategory(id);
     } catch (error: any) {
       if (error?.status !== 404) throw error;
+
+      // A 404 is legitimate for a category that only ever existed here, but it
+      // is ALSO exactly what a diverged id looks like - and in that case the
+      // server still holds the row, so deleting only locally would leave it
+      // live and let the next pull hand it straight back ("categories I
+      // deleted came back"). Look for the server's own copy by name+type, the
+      // same signal `updateCategory` uses below, and delete THAT so the
+      // server's guard actually runs. A 409 from it propagates.
+      const twin = await findServerCategoryTwin(category);
+      if (twin) await api.deleteCategory(twin.id);
     }
+
     await deleteCategoryFromDb(id);
     set((state) => ({
       categories: state.categories.filter((c) => c.id !== id),
