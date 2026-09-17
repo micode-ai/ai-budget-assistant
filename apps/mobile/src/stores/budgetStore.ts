@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { subscribeWithSelector } from 'zustand/middleware';
 import type { Budget, BudgetProgress, BudgetHistoryEntry } from '@budget/shared-types';
 import { useAccountStore } from './accountStore';
+import { useExpenseStore } from './expenseStore';
 import {
   loadAllBudgets,
   clearAllBudgets,
@@ -46,6 +47,9 @@ interface BudgetState {
   // Computed
   activeBudgets: Budget[];
 
+  // Version counter to trigger re-renders when expenses change
+  budgetVersion: number;
+
   // Actions
   loadBudgets: () => Promise<void>;
   syncPendingBudgets: () => Promise<void>;
@@ -81,6 +85,7 @@ export const useBudgetStore = create<BudgetState>()(
     budgetHistory: {},
 
     activeBudgets: [],
+    budgetVersion: 0,
 
     loadBudgets: async () => {
       const accountId = useAccountStore.getState().currentAccountId;
@@ -143,7 +148,7 @@ export const useBudgetStore = create<BudgetState>()(
     reset: () => {
       clearAllBudgets().catch(() => {});
       clearAllBudgetCategories().catch(() => {});
-      set({ budgets: [], activeBudgets: [], isLoading: false, error: null, budgetHistory: {}, lastPullAt: null });
+      set({ budgets: [], activeBudgets: [], isLoading: false, error: null, budgetHistory: {}, lastPullAt: null, budgetVersion: 0 });
     },
   }))
 );
@@ -155,5 +160,18 @@ useBudgetStore.subscribe(
     const accountId = useAccountStore.getState().currentAccountId;
     const activeBudgets = budgets.filter((b) => b.isActive && !b.isDeleted && b.accountId === accountId);
     useBudgetStore.setState({ activeBudgets });
+  },
+);
+
+// Auto-recompute progress when expenses change
+// The budget store doesn't store expenses itself, but getBudgetProgress reads
+// from expenseStore, so we need to trigger a state update when expenses change
+// to force components using getBudgetProgress to re-render with fresh data.
+useBudgetStore.subscribe(
+  () => useExpenseStore.getState().expenses,
+  (expenses, oldExpenses) => {
+    // Force a state update to trigger re-renders of components using getBudgetProgress
+    // Use a counter to ensure the subscription actually triggers state updates
+    useBudgetStore.setState({ budgetVersion: (useBudgetStore.getState().budgetVersion || 0) + 1 });
   },
 );
