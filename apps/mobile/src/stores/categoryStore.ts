@@ -417,6 +417,19 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     try {
       await api.updateCategory(id, data);
     } catch (error: any) {
+      // 409 = the server refused the name because another category of this
+      // account and type already holds it. Unlike a transport failure this is
+      // authoritative and will never succeed on a retry, so the optimistic
+      // write above has to be undone: leaving it would show two categories
+      // under one name until the next pull silently reverted the edit, and the
+      // local row would disagree with the server in the meantime (ABA-565).
+      if (error?.status === 409 && current) {
+        await upsertCategory(current);
+        set((state) => ({
+          categories: state.categories.map((c) => (c.id === id ? (current as typeof c) : c)),
+        }));
+        throw error;
+      }
       if (error?.status !== 404) throw error;
       try {
         const serverCategories = await api.getCategories();

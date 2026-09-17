@@ -15,6 +15,7 @@ Les quatre types de données de référence sont gérés depuis un emplacement u
 Les catégories classifient les dépenses et revenus. Chacune a un nom et une couleur.
 
 - Appuyez sur une catégorie pour la renommer ou changer sa couleur
+- Les noms de catégorie doivent être uniques au sein d'un type : renommer une catégorie avec un nom déjà utilisé est refusé, avec une explication
 - Appuyez sur **+** pour créer une nouvelle catégorie (Dépenses ou Revenus)
 - Appuyez sur la poubelle pour supprimer (bloqué si la catégorie est utilisée)
 - Les catégories système ne peuvent pas être supprimées

@@ -2135,6 +2135,8 @@ export default {
     deleteConfirmTitle: 'Supprimer la catégorie',
     deleteConfirmMessage: 'Êtes-vous sûr de vouloir supprimer "{{name}}" ?',
     deleteErrorHasRecords: 'Impossible de supprimer la catégorie. Elle est utilisée dans {{expenses}} dépenses, {{incomes}} revenus, {{budgets}} budgets et {{other}} autres enregistrements.',
+    nameTaken: 'Une catégorie nommée « {{name}} » existe déjà. Choisissez un autre nom.',
+    nameTakenByDeleted: 'Une catégorie supprimée nommée « {{name}} » existe toujours. Choisissez un autre nom.',
     deleteSuccess: 'Catégorie supprimée',
     iconLabel: 'Icône',
     empty: 'Aucune catégorie',

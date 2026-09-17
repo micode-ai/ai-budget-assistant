@@ -144,8 +144,20 @@ export function CategoriesSettings() {
         await createCategory(trimmed, modalType, selectedIcon, selectedColor);
       }
       closeModal();
-    } catch {
-      showAlert(t('common.error'), t('errors.saveFailed'));
+    } catch (error: any) {
+      // A name clash is the one save failure the user can actually act on, so
+      // it gets its own message — and a clash against a category they deleted
+      // is worded differently, because they will look for it and find nothing.
+      if (error?.status === 409) {
+        showAlert(
+          t('common.error'),
+          error?.details?.conflictIsDeleted
+            ? t('categories.nameTakenByDeleted', { name: trimmed })
+            : t('categories.nameTaken', { name: trimmed }),
+        );
+      } else {
+        showAlert(t('common.error'), t('errors.saveFailed'));
+      }
     } finally {
       setIsSaving(false);
     }

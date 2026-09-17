@@ -3708,6 +3708,7 @@ All four types of reference data are managed from a single hub in Settings. The 
 Categories classify your expenses and income. Each has a name and a color.
 
 - Tap a category row to rename it or change its color
+- Category names must be unique within a type, so renaming one to a name another category already uses is rejected with an explanation
 - Tap **+** next to "Expense Categories" or "Income Categories" to create a new one
 - Tap the trash icon to delete a category
   - Deletion is blocked if the category is in use by active expenses or budgets
@@ -8412,6 +8413,7 @@ OCR иногда неверно читает цену, выдумывает ст
 Категории классифицируют расходы и доходы. Каждая имеет название и цвет.
 
 - Нажмите на строку категории, чтобы переименовать или изменить цвет
+- Названия категорий должны быть уникальны внутри типа, поэтому переименование в название, уже занятое другой категорией, отклоняется с пояснением
 - Нажмите **+** рядом с «Категории расходов» или «Категории доходов» для создания новой
 - Нажмите иконку корзины для удаления категории
   - Удаление заблокировано, если категория используется активными расходами или бюджетами
@@ -13076,6 +13078,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Категорії класифікують витрати та доходи. Кожна має назву та колір.
 
 - Натисніть на рядок категорії, щоб перейменувати або змінити колір
+- Назви категорій мають бути унікальними в межах типу, тому перейменування на назву, яку вже зайнято іншою категорією, відхиляється з поясненням
 - Натисніть **+** поруч з «Категорії витрат» або «Категорії доходів» для створення нової
 - Натисніть іконку кошика для видалення категорії
   - Видалення заблоковано, якщо категорія використовується активними витратами або бюджетами
@@ -17729,6 +17732,7 @@ Wszystkie cztery typy danych referencyjnych zarządzane są z jednego miejsca w 
 Kategorie klasyfikują wydatki i dochody. Każda ma nazwę i kolor.
 
 - Dotknij wiersza kategorii, aby zmienić nazwę lub kolor
+- Nazwy kategorii muszą być unikalne w obrębie typu, więc zmiana nazwy na taką, której używa już inna kategoria, zostanie odrzucona wraz z wyjaśnieniem
 - Dotknij **+** przy „Kategorie wydatków" lub „Kategorie dochodów" aby utworzyć nową
 - Dotknij ikony kosza aby usunąć kategorię
   - Usunięcie jest zablokowane, jeśli kategoria jest używana przez aktywne wydatki lub budżety
@@ -22356,6 +22360,7 @@ Alle vier Typen von Referenzdaten werden an einem zentralen Ort in den Einstellu
 Kategorien klassifizieren Ausgaben und Einnahmen. Jede hat einen Namen und eine Farbe.
 
 - Tippe auf eine Kategorie zum Umbenennen oder Farbwechsel
+- Kategorienamen müssen innerhalb eines Typs eindeutig sein. Eine Umbenennung auf einen bereits vergebenen Namen wird daher mit einer Erklärung abgelehnt
 - Tippe **+** bei „Ausgabenkategorien" oder „Einnahmenkategorien" um eine neue zu erstellen
 - Tippe auf den Mülleimer um eine Kategorie zu löschen
   - Löschen ist gesperrt, wenn die Kategorie von aktiven Ausgaben oder Budgets verwendet wird
@@ -26970,6 +26975,7 @@ Los cuatro tipos de datos de referencia se gestionan desde un único lugar en Aj
 Las categorías clasifican gastos e ingresos. Cada una tiene un nombre y un color.
 
 - Toca una categoría para cambiar el nombre o el color
+- Los nombres de categoría deben ser únicos dentro de cada tipo, por lo que cambiar el nombre a uno que ya usa otra categoría se rechaza con una explicación
 - Toca **+** junto a «Categorías de gastos» o «Categorías de ingresos» para crear una nueva
 - Toca el icono de papelera para eliminar (bloqueado si está en uso)
 - Las categorías del sistema no se pueden eliminar
@@ -31581,6 +31587,7 @@ Les quatre types de données de référence sont gérés depuis un emplacement u
 Les catégories classifient les dépenses et revenus. Chacune a un nom et une couleur.
 
 - Appuyez sur une catégorie pour la renommer ou changer sa couleur
+- Les noms de catégorie doivent être uniques au sein d'un type : renommer une catégorie avec un nom déjà utilisé est refusé, avec une explication
 - Appuyez sur **+** pour créer une nouvelle catégorie (Dépenses ou Revenus)
 - Appuyez sur la poubelle pour supprimer (bloqué si la catégorie est utilisée)
 - Les catégories système ne peuvent pas être supprimées
@@ -36165,6 +36172,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Катэгорыі
 
 - Націсніце на катэгорыю для перайменавання або змены колеру
+- Назвы катэгорый павінны быць унікальнымі ў межах тыпу, таму перайменаванне ў назву, якая ўжо занятая іншай катэгорыяй, адхіляецца з тлумачэннем
 - Націсніце **+** для стварэння новай катэгорыі
 - Націсніце іконку кошыка для выдалення
 
@@ -40846,6 +40854,7 @@ Alle vier de soorten referentiegegevens worden beheerd vanuit één centrale ple
 Categorieën classificeren je uitgaven en inkomsten. Elke categorie heeft een naam en een kleur.
 
 - Tik op een categorierij om deze te hernoemen of de kleur te wijzigen
+- Categorienamen moeten uniek zijn binnen een type, dus hernoemen naar een naam die een andere categorie al gebruikt wordt geweigerd met uitleg
 - Tik op **+** naast "Uitgavencategorieën" of "Inkomstencategorieën" om een nieuwe aan te maken
 - Tik op het prullenbakpictogram om een categorie te verwijderen
   - Verwijderen is geblokkeerd als de categorie wordt gebruikt door actieve uitgaven of budgetten

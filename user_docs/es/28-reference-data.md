@@ -15,6 +15,7 @@ Los cuatro tipos de datos de referencia se gestionan desde un único lugar en Aj
 Las categorías clasifican gastos e ingresos. Cada una tiene un nombre y un color.
 
 - Toca una categoría para cambiar el nombre o el color
+- Los nombres de categoría deben ser únicos dentro de cada tipo, por lo que cambiar el nombre a uno que ya usa otra categoría se rechaza con una explicación
 - Toca **+** junto a «Categorías de gastos» o «Categorías de ingresos» para crear una nueva
 - Toca el icono de papelera para eliminar (bloqueado si está en uso)
 - Las categorías del sistema no se pueden eliminar

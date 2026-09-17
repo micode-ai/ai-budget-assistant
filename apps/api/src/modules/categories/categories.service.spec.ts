@@ -3,15 +3,22 @@ import { NotFoundException, ConflictException } from '@nestjs/common';
 
 function makeService(overrides: {
   findFirstResult?: any;
+  conflictResult?: any;
+  updateError?: any;
 } = {}) {
   const category = {
     findMany: jest.fn().mockResolvedValue([]),
-    findFirst: jest.fn().mockResolvedValue(overrides.findFirstResult ?? null),
-    update: jest
-      .fn()
-      .mockImplementation(({ where, data }: any) =>
-        Promise.resolve({ ...(overrides.findFirstResult ?? {}), id: where.id, ...data }),
-      ),
+    // The name-collision probe is the only lookup that excludes a row by id,
+    // which is what lets it be routed to `conflictResult`. Without that split
+    // an existing-category fixture would come back from the probe too, and
+    // every colour-only edit would read as a clash with itself.
+    findFirst: jest.fn().mockImplementation(({ where }: any) =>
+      Promise.resolve(where?.id?.not ? overrides.conflictResult ?? null : overrides.findFirstResult ?? null),
+    ),
+    update: jest.fn().mockImplementation(({ where, data }: any) => {
+      if (overrides.updateError) return Promise.reject(overrides.updateError);
+      return Promise.resolve({ ...(overrides.findFirstResult ?? {}), id: where.id, ...data });
+    }),
     create: jest.fn().mockImplementation(({ data }: any) => Promise.resolve({ id: 'new-cat-id', ...data })),
     count: jest.fn().mockResolvedValue(0),
   };
@@ -217,6 +224,94 @@ describe('CategoriesService.update', () => {
     await service.update('acc-1', 'cat-1', { color: '#000' });
 
     expect(cacheService.delByPrefix).toHaveBeenCalledWith('chat:get_category_breakdown:acc-1:');
+  });
+
+  // @@unique([accountId, name, type]) covers BOTH columns this PATCH can
+  // change. `create` has guarded it since ABA-392; `update` never did and let
+  // P2002 escape as a 500 (ABA-565).
+  it('rejects a rename onto an existing category with 409 rather than letting P2002 escape', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Groceries', type: 'expense' };
+    const clash = { id: 'cat-2', name: 'Food', type: 'expense', isDeleted: false };
+    const { service, prisma } = makeService({ findFirstResult: found, conflictResult: clash });
+
+    await expect(service.update('acc-1', 'cat-1', { name: 'Food' })).rejects.toThrow(ConflictException);
+
+    // Excluding the row being renamed is what keeps a no-op rename legal.
+    expect(prisma.category.findFirst).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', name: 'Food', type: 'expense', id: { not: 'cat-1' } },
+    });
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+
+  it('reports a soft-deleted clash distinctly, since the user cannot see that category', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Groceries', type: 'expense' };
+    const clash = { id: 'cat-2', name: 'Food', type: 'expense', isDeleted: true };
+    const { service } = makeService({ findFirstResult: found, conflictResult: clash });
+
+    // "Already exists" about a category the user deleted and cannot find is
+    // the exact confusion ABA-392 called out, so the flag has to travel.
+    await expect(service.update('acc-1', 'cat-1', { name: 'Food' })).rejects.toMatchObject({
+      response: { details: { name: 'Food', type: 'expense', conflictIsDeleted: true } },
+    });
+  });
+
+  it('checks the collision on a type switch too, not just a rename', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Bonus', type: 'expense' };
+    const clash = { id: 'cat-2', name: 'Bonus', type: 'income', isDeleted: false };
+    const { service, prisma } = makeService({ findFirstResult: found, conflictResult: clash });
+
+    await expect(service.update('acc-1', 'cat-1', { type: 'income' })).rejects.toThrow(ConflictException);
+    expect(prisma.category.findFirst).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', name: 'Bonus', type: 'income', id: { not: 'cat-1' } },
+    });
+  });
+
+  it('does not probe at all when neither name nor type changes', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Same', type: 'expense' };
+    const { service, prisma } = makeService({ findFirstResult: found });
+
+    await service.update('acc-1', 'cat-1', { color: '#000' });
+
+    const probes = prisma.category.findFirst.mock.calls.filter((c: any[]) => c[0]?.where?.id?.not);
+    expect(probes).toHaveLength(0);
+    expect(prisma.category.update).toHaveBeenCalled();
+  });
+
+  it('skips the probe for a system category, whose null accountId cannot trip the unique', async () => {
+    // Postgres treats NULLs in a unique as distinct, so the constraint cannot
+    // fire for a system row - probing would 409 where the DB would not.
+    const found = { id: 'sys-1', accountId: null, name: 'Food', type: 'expense', isSystem: true };
+    const { service, prisma } = makeService({ findFirstResult: found });
+
+    await service.update('acc-1', 'sys-1', { name: 'Groceries' });
+
+    const probes = prisma.category.findFirst.mock.calls.filter((c: any[]) => c[0]?.where?.id?.not);
+    expect(probes).toHaveLength(0);
+    expect(prisma.category.update).toHaveBeenCalled();
+  });
+
+  it('converts a racing P2002 into the same 409 instead of a 500', async () => {
+    // A concurrent write can take the name between the probe and the update,
+    // so the probe alone is not enough. Safe to catch: there is no
+    // $transaction to poison (ABA-313), same backstop shape as create().
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Groceries', type: 'expense' };
+    const { service } = makeService({
+      findFirstResult: found,
+      conflictResult: null,
+      updateError: Object.assign(new Error('Unique constraint failed'), { code: 'P2002' }),
+    });
+
+    await expect(service.update('acc-1', 'cat-1', { name: 'Food' })).rejects.toThrow(ConflictException);
+  });
+
+  it('still propagates a non-P2002 prisma failure', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Groceries', type: 'expense' };
+    const { service } = makeService({
+      findFirstResult: found,
+      updateError: Object.assign(new Error('connection lost'), { code: 'P1001' }),
+    });
+
+    await expect(service.update('acc-1', 'cat-1', { name: 'Food' })).rejects.toThrow('connection lost');
   });
 });
 

@@ -15,6 +15,7 @@ Alle vier de soorten referentiegegevens worden beheerd vanuit één centrale ple
 Categorieën classificeren je uitgaven en inkomsten. Elke categorie heeft een naam en een kleur.
 
 - Tik op een categorierij om deze te hernoemen of de kleur te wijzigen
+- Categorienamen moeten uniek zijn binnen een type, dus hernoemen naar een naam die een andere categorie al gebruikt wordt geweigerd met uitleg
 - Tik op **+** naast "Uitgavencategorieën" of "Inkomstencategorieën" om een nieuwe aan te maken
 - Tik op het prullenbakpictogram om een categorie te verwijderen
   - Verwijderen is geblokkeerd als de categorie wordt gebruikt door actieve uitgaven of budgetten

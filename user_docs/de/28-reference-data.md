@@ -15,6 +15,7 @@ Alle vier Typen von Referenzdaten werden an einem zentralen Ort in den Einstellu
 Kategorien klassifizieren Ausgaben und Einnahmen. Jede hat einen Namen und eine Farbe.
 
 - Tippe auf eine Kategorie zum Umbenennen oder Farbwechsel
+- Kategorienamen müssen innerhalb eines Typs eindeutig sein. Eine Umbenennung auf einen bereits vergebenen Namen wird daher mit einer Erklärung abgelehnt
 - Tippe **+** bei „Ausgabenkategorien" oder „Einnahmenkategorien" um eine neue zu erstellen
 - Tippe auf den Mülleimer um eine Kategorie zu löschen
   - Löschen ist gesperrt, wenn die Kategorie von aktiven Ausgaben oder Budgets verwendet wird

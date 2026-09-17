@@ -2145,6 +2145,8 @@ export default {
     deleteConfirmTitle: 'Удалить категорию',
     deleteConfirmMessage: 'Вы уверены, что хотите удалить "{{name}}"?',
     deleteErrorHasRecords: 'Невозможно удалить категорию. Она используется в {{expenses}} расходах, {{incomes}} доходах, {{budgets}} бюджетах и {{other}} других записях.',
+    nameTaken: 'Категория «{{name}}» уже существует. Выберите другое название.',
+    nameTakenByDeleted: 'Удалённая категория «{{name}}» всё ещё существует. Выберите другое название.',
     deleteSuccess: 'Категория удалена',
     iconLabel: 'Значок',
     empty: 'Нет категорий',

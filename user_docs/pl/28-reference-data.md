@@ -15,6 +15,7 @@ Wszystkie cztery typy danych referencyjnych zarządzane są z jednego miejsca w 
 Kategorie klasyfikują wydatki i dochody. Każda ma nazwę i kolor.
 
 - Dotknij wiersza kategorii, aby zmienić nazwę lub kolor
+- Nazwy kategorii muszą być unikalne w obrębie typu, więc zmiana nazwy na taką, której używa już inna kategoria, zostanie odrzucona wraz z wyjaśnieniem
 - Dotknij **+** przy „Kategorie wydatków" lub „Kategorie dochodów" aby utworzyć nową
 - Dotknij ikony kosza aby usunąć kategorię
   - Usunięcie jest zablokowane, jeśli kategoria jest używana przez aktywne wydatki lub budżety

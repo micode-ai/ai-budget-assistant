@@ -15,6 +15,7 @@ All four types of reference data are managed from a single hub in Settings. The 
 Categories classify your expenses and income. Each has a name and a color.
 
 - Tap a category row to rename it or change its color
+- Category names must be unique within a type, so renaming one to a name another category already uses is rejected with an explanation
 - Tap **+** next to "Expense Categories" or "Income Categories" to create a new one
 - Tap the trash icon to delete a category
   - Deletion is blocked if the category is in use by active expenses or budgets

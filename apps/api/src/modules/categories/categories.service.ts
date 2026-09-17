@@ -133,14 +133,73 @@ export class CategoriesService {
     });
   }
 
+  /**
+   * A rename collided with another of the account's categories. Deliberately a
+   * 409 rather than a silent merge or a silent no-op: merging two categories
+   * re-homes every expense, budget allocation and split behind them, which is
+   * not a decision a PATCH should take on the user's behalf, and returning the
+   * other category would answer a different question than the one asked.
+   * Mirrors `remove()`'s existing conflict shape so the client reads both the
+   * same way.
+   *
+   * `conflictIsDeleted` travels because the unique covers soft-deleted rows
+   * too (ABA-392): "already exists" about a category the user deleted and can
+   * no longer see is exactly the confusion that note documented, and only the
+   * client can word it usefully.
+   */
+  private nameConflict(name: string, type: string, conflictIsDeleted: boolean | null) {
+    return new ConflictException({
+      statusCode: 409,
+      message: 'A category with this name already exists',
+      details: { name, type, conflictIsDeleted: conflictIsDeleted ?? false },
+    });
+  }
+
   async update(accountId: string, id: string, dto: any) {
     const category = await this.resolveCategory(accountId, id);
     if (!category) throw new NotFoundException('Category not found');
     const { clientId: _ignoredClientId, ...rest } = dto ?? {};
-    const updated = await this.prisma.category.update({
-      where: { id: category.id },
-      data: rest,
-    });
+
+    // `@@unique([accountId, name, type])` covers BOTH columns this PATCH can
+    // change, so a rename — or a type switch — onto another of the account's
+    // categories violates it. `create` has guarded that since ABA-392; this
+    // method never did, so the violation escaped as an unhandled P2002, i.e. a
+    // 500, on a path the UI offers with no duplicate-name validation of its
+    // own (ABA-565).
+    const name = rest.name ?? category.name;
+    const type = rest.type ?? category.type;
+    // A system category carries `accountId: null`, and Postgres treats NULLs in
+    // a unique as distinct, so the constraint cannot fire for one — probing
+    // would reject what the database would accept.
+    const touchesUnique = category.accountId != null && (name !== category.name || type !== category.type);
+
+    if (touchesUnique) {
+      // Excluding the row being edited is load-bearing: the edit form re-sends
+      // `name` on every save, so a colour-only change would otherwise find
+      // itself and reject a patch that changes nothing about the unique.
+      const clash = await this.prisma.category.findFirst({
+        where: { accountId: category.accountId, name, type, id: { not: category.id } },
+      });
+      if (clash) throw this.nameConflict(name, type, clash.isDeleted);
+    }
+
+    let updated: Category;
+    try {
+      updated = await this.prisma.category.update({
+        where: { id: category.id },
+        data: rest,
+      });
+    } catch (e: any) {
+      // A concurrent write took the name between the probe and this update.
+      // `clientId` is stripped above, so `@@unique([accountId, name, type])` is
+      // the only constraint this write can trip. Safe to catch here because
+      // there is no $transaction to poison (ABA-313), same backstop as
+      // `create`. Reported as a live clash: nothing renames a row *into* a
+      // deleted state, so a soft-deleted row cannot appear in this window.
+      if (e?.code !== 'P2002') throw e;
+      throw this.nameConflict(name, type, null);
+    }
+
     if (rest.name && rest.name !== category.name) {
       // Name changed — refresh embedding.
       void this.embeddingService.embedAndStore('category', updated.id, updated.name);

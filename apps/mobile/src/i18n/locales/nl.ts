@@ -2135,6 +2135,8 @@ export default {
     deleteConfirmTitle: 'Categorie verwijderen',
     deleteConfirmMessage: 'Weet je zeker dat je "{{name}}" wilt verwijderen?',
     deleteErrorHasRecords: 'Kan deze categorie niet verwijderen. Hij wordt gebruikt in {{expenses}} uitgaven, {{incomes}} inkomsten, {{budgets}} budgetten en {{other}} andere records.',
+    nameTaken: 'Er bestaat al een categorie met de naam “{{name}}”. Kies een andere naam.',
+    nameTakenByDeleted: 'Er bestaat nog een verwijderde categorie met de naam “{{name}}”. Kies een andere naam.',
     deleteSuccess: 'Categorie verwijderd',
     iconLabel: 'Pictogram',
     empty: 'Geen categorieën',

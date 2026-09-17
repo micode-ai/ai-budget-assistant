@@ -2135,6 +2135,8 @@ export default {
     deleteConfirmTitle: 'Kategorie löschen',
     deleteConfirmMessage: 'Möchten Sie "{{name}}" wirklich löschen?',
     deleteErrorHasRecords: 'Kategorie kann nicht gelöscht werden. Sie wird in {{expenses}} Ausgaben, {{incomes}} Einnahmen, {{budgets}} Budgets und {{other}} weiteren Einträgen verwendet.',
+    nameTaken: 'Eine Kategorie namens „{{name}}“ existiert bereits. Wählen Sie einen anderen Namen.',
+    nameTakenByDeleted: 'Eine gelöschte Kategorie namens „{{name}}“ existiert noch. Wählen Sie einen anderen Namen.',
     deleteSuccess: 'Kategorie gelöscht',
     iconLabel: 'Symbol',
     empty: 'Keine Kategorien',
