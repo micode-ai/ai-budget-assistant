@@ -8,6 +8,66 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.30.0 - 2026-09-17
+
+**Categories that stay where you put them**
+
+- **A category you assign now actually reaches the server.** The app sends a
+  category by its own id, and an id the server could not recognise was written
+  as "no category" - erasing what the row already had. On one real account that
+  silently stripped the category from 31 imported expenses, 7 182,13 zl of a
+  single month, while the phone went on showing them categorised. An
+  unrecognised id is now left alone instead of overwriting anything, and the
+  server also matches the app's own id, so offline-first edits land (ABA-566).
+- **A budget for a category no longer falls to zero.** It showed the right
+  figure when created and dropped to 0,00 after a pull-to-refresh, because the
+  budget's category came back from the server under a different id than the one
+  the expenses carried. The two are now reconciled on the next sync (ABA-566).
+- **Category edits survive a restart.** An edit was saved only after the server
+  replied, so on a category that existed only on the device it was lost on the
+  next launch (ABA-560).
+- **Renaming a category to a name that is already taken** now says so, instead
+  of failing with an error that explained nothing (ABA-565).
+- **Fixed:** in the new-budget form the amount field sat below the mode switch,
+  so the "Amount" label captioned a lone currency chip and the field you type in
+  had no label at all (ABA-566).
+
+**Budgets**
+
+- **A budget updates as soon as you add an expense**, including an expense filed
+  under a brand-new category.
+
+**Expenses**
+
+- **New "Without category" filter** in the expenses category picker, so the
+  entries still waiting to be sorted are one tap away (ABA-562).
+
+**Receipts**
+
+- **A discount line is no longer lost.** A Lidl receipt with "RABAT 50%" dropped
+  that line and misread two prices, and the re-read that is supposed to catch a
+  receipt that does not add up did not catch it (ABA-557).
+- **A per-item discount is no longer spread across the whole basket** when a
+  receipt is split, so a friend is charged for their own discounted item rather
+  than a share of everyone's discount (ABA-556).
+
+**Account**
+
+- **You stay signed in for longer.** Refreshing a session now issues a fresh
+  refresh token as well, so an active user is not signed out on a fixed
+  schedule (ABA-563).
+
+**Under the hood**
+
+- Android installs are attributed through the Play Install Referrer, so a signup
+  that started from a link is no longer recorded as "direct" (ABA-553).
+- A column added to the schema without its migration broke every expense read in
+  production until the migration was written and applied (ABA-558).
+- Income category lookups matched names across *every* account and accepted any
+  account's id - two cross-account defects found while fixing ABA-566.
+
+---
+
 ## 1.29.0 - 2026-09-14
 
 **Splitting a receipt line in any proportion you like**
