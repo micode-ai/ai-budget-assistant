@@ -47,7 +47,10 @@ export class ExpenseBulkService {
           updateData.categoryId = null;
         } else {
           const resolved = await resolveExpenseCategoryId(this.prisma, categoryId, accountId);
-          updateData.categoryId = resolved;
+          // Leave the field out entirely when it does not resolve, rather than
+          // writing `null` over the existing category of every selected row -
+          // this path patches up to 500 expenses in one statement (ABA-566).
+          if (resolved) updateData.categoryId = resolved;
         }
       }
     }

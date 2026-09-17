@@ -19,6 +19,7 @@ Las categorías clasifican gastos e ingresos. Cada una tiene un nombre y un colo
 - Toca **+** junto a «Categorías de gastos» o «Categorías de ingresos» para crear una nueva
 - Toca el icono de papelera para eliminar (bloqueado si está en uso)
 - Las categorías del sistema no se pueden eliminar
+- Si una categoría que asignaste no aparece en tus otros dispositivos, abre la aplicación una vez con conexión — las asignaciones se reenvían automáticamente
 
 ## Comercios
 

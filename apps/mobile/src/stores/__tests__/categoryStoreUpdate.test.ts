@@ -39,6 +39,8 @@ const mockGetAll = jest.fn();
 const mockUpsert = jest.fn();
 const mockGetById = jest.fn();
 jest.mock('@/db/categoryRepository', () => ({
+  getCategoryByNameExcludingId: jest.fn().mockResolvedValue(null),
+  mergeCategoryInto: jest.fn().mockResolvedValue(undefined),
   getAllCategories: (...a: any[]) => mockGetAll(...a),
   upsertCategory: (...a: any[]) => mockUpsert(...a),
   getCategoryById: (...a: any[]) => mockGetById(...a),

@@ -71,7 +71,7 @@ describe('IncomesService.create', () => {
     );
   });
 
-  it('resolves a UUID categoryId only if it exists, else nulls it out', async () => {
+  it('resolves a UUID categoryId only if this account owns it, else nulls it out on create', async () => {
     const { service, tx } = makeService({ categoryFindUnique: null });
 
     await service.create('acc-1', 'user-1', {
@@ -82,7 +82,12 @@ describe('IncomesService.create', () => {
       categoryId: '11111111-1111-4111-8111-111111111111',
     });
 
-    expect(tx.category.findUnique).toHaveBeenCalledWith({ where: { id: '11111111-1111-4111-8111-111111111111' } });
+    // `accountId` is selected so ownership can be checked: the old private copy
+    // accepted ANY account's category id (ABA-566).
+    expect(tx.category.findUnique).toHaveBeenCalledWith({
+      where: { id: '11111111-1111-4111-8111-111111111111' },
+      select: { id: true, accountId: true },
+    });
     const createArgs = tx.income.upsert.mock.calls[0][0].create;
     expect(createArgs.categoryId).toBeNull();
   });
@@ -98,8 +103,10 @@ describe('IncomesService.create', () => {
       categoryId: 'Salary',
     });
 
+    // Scoped to the account. Without the filter this matched a same-named
+    // category belonging to somebody else entirely (ABA-566).
     expect(tx.category.findFirst).toHaveBeenCalledWith({
-      where: { name: { equals: 'Salary', mode: 'insensitive' } },
+      where: { accountId: 'acc-1', name: { equals: 'Salary', mode: 'insensitive' } },
     });
     const createArgs = tx.income.upsert.mock.calls[0][0].create;
     expect(createArgs.categoryId).toBe('cat-salary');

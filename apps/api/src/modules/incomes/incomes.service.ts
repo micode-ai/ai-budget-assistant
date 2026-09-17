@@ -7,6 +7,10 @@ import { GamificationService } from '../gamification/gamification.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import {
+  resolveExpenseCategoryId,
+  resolveCategoryIdForUpdate,
+} from '../expenses/expense-category-resolver.util';
 
 const incomeInclude = {
   category: true,
@@ -35,44 +39,14 @@ export class IncomesService {
     return { ...rest, createdByUserName: user?.name ?? null };
   }
 
+  /**
+   * Delegates to the shared resolver. This used to be a third private copy
+   * that matched a name across EVERY account and accepted any account's UUID,
+   * so an income could be filed under another account's category (ABA-566).
+   * `kind: 'income'` keeps auto-created categories on the income side.
+   */
   private async resolveCategoryId(categoryId: string | undefined | null, accountId: string): Promise<string | null> {
-    if (!categoryId) return null;
-    // UUID v4 pattern — verify it exists, return null if not
-    if (/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(categoryId)) {
-      const exists = await this.prisma.category.findUnique({ where: { id: categoryId } });
-      return exists ? categoryId : null;
-    }
-    // Try exact name match
-    const category = await this.prisma.category.findFirst({
-      where: { name: { equals: categoryId, mode: 'insensitive' } },
-    });
-    if (category) return category.id;
-
-    // Handle mobile default IDs (e.g. "default-inc-salary")
-    const defaultMatch = categoryId.match(/^default-(?:exp|inc)-(.+)$/);
-    if (defaultMatch) {
-      const words = defaultMatch[1].split(/-+/).filter(w => w.length > 0);
-      if (words.length > 0) {
-        const matched = await this.prisma.category.findFirst({
-          where: {
-            accountId,
-            isDeleted: false,
-            AND: words.map(word => ({ name: { contains: word, mode: 'insensitive' as const } })),
-          },
-        });
-        if (matched) return matched.id;
-      }
-    }
-
-    // Auto-create category if it looks like a real name (not a default ID)
-    if (!categoryId.startsWith('default-')) {
-      const created = await this.prisma.category.create({
-        data: { accountId, name: categoryId, type: 'income' },
-      });
-      return created.id;
-    }
-
-    return null;
+    return resolveExpenseCategoryId(this.prisma, categoryId, accountId, 'income');
   }
 
   async create(accountId: string, userId: string, dto: CreateIncomeDto) {
@@ -275,9 +249,14 @@ export class IncomesService {
 
   async update(accountId: string, id: string, dto: UpdateIncomeDto) {
     const income = await this.findOne(accountId, id);
-    const resolvedCategoryId = dto.categoryId !== undefined
-      ? await this.resolveCategoryId(dto.categoryId, accountId)
-      : undefined;
+    // Tri-state, see resolveCategoryIdForUpdate: an unresolvable id must not
+    // erase the stored category (ABA-566).
+    const resolvedCategoryId = await resolveCategoryIdForUpdate(
+      this.prisma,
+      dto.categoryId,
+      accountId,
+      'income',
+    );
 
     const result = await this.prisma.$transaction(async (tx: PrismaClient) => {
       const incomeUpdData = {

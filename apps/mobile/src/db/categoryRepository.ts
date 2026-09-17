@@ -118,6 +118,65 @@ export async function getCategoryByName(
   return rows.length > 0 ? rowToCategory(rows[0]) : null;
 }
 
+/**
+ * The account's category with this name+type that is NOT the given id.
+ *
+ * Used to spot the stale local twin of a server category: both sides hold the
+ * same name and type, and that is the only thing linking them once `clientId`
+ * is absent on both (ABA-566).
+ */
+export async function getCategoryByNameExcludingId(
+  accountId: string,
+  name: string,
+  type: 'expense' | 'income',
+  excludeId: string,
+): Promise<Category | null> {
+  const rows = await executeSql<CategoryRow>(
+    'SELECT * FROM categories WHERE account_id = ? AND name = ? AND type = ? AND id != ? AND is_deleted = 0',
+    [accountId, name, type, excludeId],
+  );
+  return rows.length > 0 ? rowToCategory(rows[0]) : null;
+}
+
+/**
+ * Fold a stale duplicate category into the row the server owns.
+ *
+ * A category created before `clientId` support carries a device-generated id
+ * here and a different primary key on the server, with nothing linking the two.
+ * A pull therefore inserted the server's row ALONGSIDE the local one, and every
+ * expense kept pointing at the local id — an id the server cannot resolve, so
+ * the categorisation never arrived and the server stored no category at all
+ * (ABA-566).
+ *
+ * Deletes rather than renames: the surviving row has already been written by
+ * the pull, so renaming the stale one onto its id would collide on the primary
+ * key. Re-pointed transactions are marked `pending` because their stored
+ * category is, by definition, not what the server has — without that nothing
+ * would ever push the correction and the rows would stay uncategorised on the
+ * server forever.
+ */
+export async function mergeCategoryInto(staleId: string, survivingId: string): Promise<void> {
+  if (!staleId || !survivingId || staleId === survivingId) return;
+
+  await executeSql(
+    "UPDATE expenses SET category_id = ?, sync_status = 'pending' WHERE category_id = ?",
+    [survivingId, staleId],
+  );
+  await executeSql(
+    "UPDATE incomes SET category_id = ?, sync_status = 'pending' WHERE category_id = ?",
+    [survivingId, staleId],
+  );
+  await executeSql('UPDATE budget_categories SET category_id = ? WHERE category_id = ?', [
+    survivingId,
+    staleId,
+  ]);
+  await executeSql('UPDATE expense_category_splits SET category_id = ? WHERE category_id = ?', [
+    survivingId,
+    staleId,
+  ]);
+  await executeSql('DELETE FROM categories WHERE id = ?', [staleId]);
+}
+
 export async function deleteCategory(id: string): Promise<void> {
   await executeSql(
     'UPDATE categories SET is_deleted = 1, updated_at = ? WHERE id = ?',

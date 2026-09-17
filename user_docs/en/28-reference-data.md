@@ -20,6 +20,7 @@ Categories classify your expenses and income. Each has a name and a color.
 - Tap the trash icon to delete a category
   - Deletion is blocked if the category is in use by active expenses or budgets
   - System (predefined) categories cannot be deleted
+- If a category you assigned does not appear on your other devices, open the app once while online — assignments are re-sent automatically
 
 **Tip:** Use distinct colors for categories you want to spot quickly in charts.
 

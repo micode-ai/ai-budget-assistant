@@ -10,7 +10,10 @@ import { resolveShares } from './trip-share-calculator';
 import { buildCategorySplits, rescaleSplits } from '../../common/utils/receipt-category-split';
 import { buildLocationColumns } from './expense-location.util';
 import { invalidateExpenseChatCache } from './expense-cache.util';
-import { resolveExpenseCategoryId } from './expense-category-resolver.util';
+import {
+  resolveExpenseCategoryId,
+  resolveCategoryIdForUpdate,
+} from './expense-category-resolver.util';
 import { ReceiptSplitService } from '../receipt-split/receipt-split.service';
 import { ExpenseCreatedHooksService, LearnableExpenseItem } from './expense-created-hooks.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
@@ -576,9 +579,15 @@ export class ExpensesService {
 
   async update(accountId: string, id: string, dto: UpdateExpenseDto) {
     const expense = await this.findOne(accountId, id);
-    const resolvedCategoryId = dto.categoryId !== undefined
-      ? await this.resolveCategoryId(dto.categoryId, accountId)
-      : undefined;
+    // Tri-state on purpose: a string sets the category, `null` clears it on an
+    // explicit request, and `undefined` leaves it alone. The old code mapped an
+    // UNRESOLVABLE id to `null` as well, which erased a category the row
+    // already had (ABA-566).
+    const resolvedCategoryId = await resolveCategoryIdForUpdate(
+      this.prisma,
+      dto.categoryId,
+      accountId,
+    );
 
     return this.prisma.$transaction(async (tx: PrismaClient) => {
       const expenseUpdateData = {

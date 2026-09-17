@@ -42,7 +42,16 @@ export class BudgetsService {
         where: { id: categoryId, OR: [{ accountId }, { accountId: null }] },
         select: { id: true },
       });
-      return cat?.id ?? null;
+      if (cat) return cat.id;
+      // The mobile addresses a category by its local id, which it also sends as
+      // `clientId` on create (ABA-564) - without this an allocation from an
+      // offline-first client resolved to nothing and was silently dropped,
+      // turning a category budget into one that counts everything (ABA-566).
+      const byClientId = await this.prisma.category.findFirst({
+        where: { accountId, clientId: categoryId },
+        select: { id: true },
+      });
+      return byClientId?.id ?? null;
     }
     // Try exact name match
     const category = await this.prisma.category.findFirst({

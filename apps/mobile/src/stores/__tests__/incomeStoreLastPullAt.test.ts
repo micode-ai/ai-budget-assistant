@@ -29,6 +29,8 @@ jest.mock('@/db/tagRepository', () => ({
 }));
 
 jest.mock('@/db/categoryRepository', () => ({
+  getCategoryByNameExcludingId: jest.fn().mockResolvedValue(null),
+  mergeCategoryInto: jest.fn().mockResolvedValue(undefined),
   getCategoryById: jest.fn().mockResolvedValue(null),
   upsertCategory: jest.fn().mockResolvedValue(undefined),
 }));

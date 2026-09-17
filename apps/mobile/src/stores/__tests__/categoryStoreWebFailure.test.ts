@@ -56,6 +56,8 @@ jest.mock('@/services/api', () => ({
 }));
 
 jest.mock('@/db/categoryRepository', () => ({
+  getCategoryByNameExcludingId: jest.fn().mockResolvedValue(null),
+  mergeCategoryInto: jest.fn().mockResolvedValue(undefined),
   getAllCategories: jest.fn().mockResolvedValue([]),
   upsertCategory: jest.fn().mockResolvedValue(undefined),
   getCategoryById: jest.fn().mockResolvedValue(null),

@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Platform } from 'react-native';
 import type { Category } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
-import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById, getCategoryByClientId, getCategoryById, remapCategoryId } from '@/db/categoryRepository';
+import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById, getCategoryByClientId, getCategoryById, remapCategoryId, getCategoryByNameExcludingId, mergeCategoryInto } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
@@ -361,6 +361,26 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
         syncVersion: cat.syncVersion || 0,
       };
       await upsertCategory(entity);
+
+      // Legacy convergence (ABA-566). The branch above only fires when the
+      // server row carries a clientId, which rows created before that support
+      // do not have — on one production account all 38 categories had none. For
+      // those the phone kept its own id, the pull added the server's row beside
+      // it, and every expense went on pointing at an id the server cannot
+      // resolve. Name+type is the only thing both sides still share, so use it
+      // to fold the stale twin into the server's row. Runs AFTER the upsert so
+      // the surviving row exists and the merge can delete rather than rename,
+      // which would collide on the primary key.
+      if (!cat.clientId && accountIdForRow && !entity.isDeleted) {
+        const stale = await getCategoryByNameExcludingId(
+          accountIdForRow,
+          entity.name,
+          entity.type === 'income' ? 'income' : 'expense',
+          entity.id,
+        );
+        if (stale) await mergeCategoryInto(stale.id, entity.id);
+      }
+
       if (!entity.isDeleted) built.push(entity);
     }
     // Reload without recursive fetch

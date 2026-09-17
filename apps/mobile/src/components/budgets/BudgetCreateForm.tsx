@@ -169,19 +169,38 @@ export function BudgetCreateForm({ onDone }: BudgetCreateFormProps) {
             />
           </View>
 
-          {/* Currency */}
+          {/* Amount: the currency belongs to both modes, the figure only to
+              `overall` (by-category totals its allocations). They share one row
+              under the one label, which is what `amountRow`/`currencyButton`/
+              `amountInput` were always styled for — a row, a chip that hugs its
+              content and an input that takes the rest. The input used to render
+              further down, AFTER the mode toggle, so on screen the "Amount"
+              label captioned a lone currency chip and the field the user types
+              into had no label at all (ABA-566). */}
           <View style={styles.fieldContainer}>
             <Text style={styles.fieldLabel}>{t('budgetNew.amount')}</Text>
-            <TouchableOpacity
-              style={styles.currencyButton}
-              onPress={() => setShowCurrencyPicker(!showCurrencyPicker)}
-            >
-              <Text style={styles.currencyText}>
-                {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.symbol || '$'}{' '}
-                {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.code || 'USD'}
-              </Text>
-              <Ionicons name="chevron-down" size={14} color={theme.colors.textSecondary} />
-            </TouchableOpacity>
+            <View style={styles.amountRow}>
+              <TouchableOpacity
+                style={styles.currencyButton}
+                onPress={() => setShowCurrencyPicker(!showCurrencyPicker)}
+              >
+                <Text style={styles.currencyText}>
+                  {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.symbol || '$'}{' '}
+                  {SUPPORTED_CURRENCIES.find((c) => c.code === currencyCode)?.code || 'USD'}
+                </Text>
+                <Ionicons name="chevron-down" size={14} color={theme.colors.textSecondary} />
+              </TouchableOpacity>
+              {budgetMode === 'overall' && (
+                <TextInput
+                  style={styles.amountInput}
+                  value={amount}
+                  onChangeText={setAmount}
+                  placeholder={t('budgetNew.amountPlaceholder')}
+                  placeholderTextColor={theme.colors.textTertiary}
+                  keyboardType="decimal-pad"
+                />
+              )}
+            </View>
           </View>
 
           {showCurrencyPicker && (
@@ -231,22 +250,10 @@ export function BudgetCreateForm({ onDone }: BudgetCreateFormProps) {
             </View>
           </View>
 
-          {/* Overall mode: Amount + optional single category */}
+          {/* Overall mode: one optional category. The amount moved up into the
+              Amount field above, where its label is (ABA-566). */}
           {budgetMode === 'overall' && (
             <>
-              <View style={styles.fieldContainer}>
-                <View style={styles.amountRow}>
-                  <TextInput
-                    style={styles.amountInput}
-                    value={amount}
-                    onChangeText={setAmount}
-                    placeholder={t('budgetNew.amountPlaceholder')}
-                    placeholderTextColor={theme.colors.textTertiary}
-                    keyboardType="decimal-pad"
-                  />
-                </View>
-              </View>
-
               {/* Category (optional) */}
               <View style={styles.fieldContainer}>
                 <Text style={styles.fieldLabel}>{t('budgetNew.categoryOptional')}</Text>

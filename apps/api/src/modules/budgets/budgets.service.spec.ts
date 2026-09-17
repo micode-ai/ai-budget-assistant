@@ -218,11 +218,7 @@ describe('BudgetsService.update — Sentry 2026-09-16 regressions', () => {
       budget: { findFirst: jest.fn().mockResolvedValue(existingBudget) },
       category: {
         // Both ids AND the name resolve to one shared category row.
-        findFirst: jest
-          .fn()
-          .mockImplementation(({ where }: any) =>
-            Promise.resolve({ id: 'cat-1' }),
-          ),
+        findFirst: jest.fn().mockResolvedValue({ id: 'cat-1' }),
       },
       $transaction: jest.fn(async (cb: any) => cb(tx)),
     };

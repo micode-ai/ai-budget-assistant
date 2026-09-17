@@ -20,6 +20,7 @@ Categorieën classificeren je uitgaven en inkomsten. Elke categorie heeft een na
 - Tik op het prullenbakpictogram om een categorie te verwijderen
   - Verwijderen is geblokkeerd als de categorie wordt gebruikt door actieve uitgaven of budgetten
   - Systeemcategorieën (vooraf gedefinieerd) kunnen niet worden verwijderd
+- Verschijnt een toegewezen categorie niet op je andere apparaten, open de app dan één keer online — toewijzingen worden automatisch opnieuw verzonden
 
 **Tip:** Gebruik onderscheidende kleuren voor categorieën die je snel wilt herkennen in grafieken.
 

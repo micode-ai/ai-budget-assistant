@@ -809,6 +809,14 @@ function makeSplitDefenceService(opts: {
   const expenseFindUnique = jest.fn().mockResolvedValue({ discountAmount: opts.discount ?? null });
 
   const prisma: any = {
+    // Nothing resolves: `findUnique` is the server-PK lookup and `findFirst`
+    // serves both the clientId and the name lookups, so a categoryId patched in
+    // by a test is unresolvable unless the test overrides these.
+    category: {
+      findUnique: jest.fn().mockResolvedValue(null),
+      findFirst: jest.fn().mockResolvedValue(null),
+      create: jest.fn().mockResolvedValue({ id: 'c-created' }),
+    },
     expense: {
       findFirst: jest.fn().mockResolvedValue(expenseRow),
       update: jest.fn().mockResolvedValue({}),
@@ -857,6 +865,31 @@ function createdSplitTotal(createMany: jest.Mock): number {
 
 describe('split invariant is defended after creation', () => {
   describe('update() — amount edit', () => {
+    // ABA-566. An id the server could not resolve was mapped to `null` and
+    // written straight into `data.categoryId`, ERASING the stored category. On
+    // one production account that silently stripped the category from 31
+    // imported expenses (7 182,13 zl) while the phone kept showing them
+    // categorised, so every server-side number disagreed with the app.
+    it('leaves the stored category alone when the patched categoryId cannot be resolved', async () => {
+      const { service, tx } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', {
+        categoryId: '11111111-1111-4111-8111-111111111111',
+      } as any);
+
+      const data = tx.expense.update.mock.calls[0][0].data;
+      expect(data.categoryId).toBeUndefined();
+    });
+
+    it('still clears the category when the caller explicitly asks for it', async () => {
+      const { service, tx } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', { categoryId: null } as any);
+
+      const data = tx.expense.update.mock.calls[0][0].data;
+      expect(data.categoryId).toBeNull();
+    });
+
     it('removes the split when the corrected amount no longer reconciles with the items', async () => {
       // OCR read 240; the user corrects it to 200. The items still say 240, a 20%
       // gap — far outside the 5% tolerance — so there is no honest split to show.
