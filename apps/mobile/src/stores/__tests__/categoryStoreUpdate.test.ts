@@ -37,9 +37,11 @@ jest.mock('react-native-mmkv', () => {
 
 const mockGetAll = jest.fn();
 const mockUpsert = jest.fn();
+const mockGetById = jest.fn();
 jest.mock('@/db/categoryRepository', () => ({
   getAllCategories: (...a: any[]) => mockGetAll(...a),
   upsertCategory: (...a: any[]) => mockUpsert(...a),
+  getCategoryById: (...a: any[]) => mockGetById(...a),
   categoryExistsById: jest.fn().mockResolvedValue(false),
   deleteCategory: jest.fn().mockResolvedValue(undefined),
   getCategoryByNameFromDb: jest.fn().mockResolvedValue(null),

@@ -41,11 +41,13 @@ const mockGetAll = jest.fn();
 const mockUpsert = jest.fn();
 const mockRemap = jest.fn();
 const mockGetByClientId = jest.fn();
+const mockGetById = jest.fn();
 jest.mock('@/db/categoryRepository', () => ({
   getAllCategories: (...a: any[]) => mockGetAll(...a),
   upsertCategory: (...a: any[]) => mockUpsert(...a),
   remapCategoryId: (...a: any[]) => mockRemap(...a),
   getCategoryByClientId: (...a: any[]) => mockGetByClientId(...a),
+  getCategoryById: (...a: any[]) => mockGetById(...a),
   categoryExistsById: jest.fn().mockResolvedValue(true),
   deleteCategory: jest.fn().mockResolvedValue(undefined),
   getCategoryByNameFromDb: jest.fn().mockResolvedValue(null),
@@ -84,6 +86,7 @@ beforeEach(() => {
   mockUpsert.mockResolvedValue(undefined);
   mockGetAll.mockResolvedValue([]);
   mockRemap.mockResolvedValue(undefined);
+  mockGetById.mockResolvedValue(null);
   useCategoryStore.setState({ categories: [], isInitialized: true, isLoading: false });
 });
 
