@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { Platform } from 'react-native';
 import type { Category } from '@budget/shared-types';
 import { generateUUID } from '@budget/shared-utils';
-import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById } from '@/db/categoryRepository';
+import { getAllCategories, upsertCategory, deleteCategory as deleteCategoryFromDb, categoryExistsById, getCategoryByClientId, getCategoryById, remapCategoryId } from '@/db/categoryRepository';
 import { setLastSyncTime } from '@/db/syncMetadataRepository';
 import { useAccountStore } from './accountStore';
 import { useAuthStore } from './authStore';
@@ -52,7 +52,7 @@ interface CategoryState {
   createCategory: (name: string, type: 'expense' | 'income', icon?: string, color?: string) => Promise<Category>;
   syncFromServer: (serverCategories: any[]) => Promise<void>;
   deleteCategory: (id: string) => Promise<void>;
-  updateCategory: (id: string, data: { name?: string; color?: string }) => Promise<void>;
+  updateCategory: (id: string, data: { name?: string; color?: string; icon?: string }) => Promise<void>;
 }
 
 export const useCategoryStore = create<CategoryState>((set, get) => ({
@@ -244,19 +244,20 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     const userId = useAuthStore.getState().user?.id;
     if (!accountId || !userId) throw new Error('No account or user');
 
-    // The server enforces a (accountId, name, type) unique and the POST below is
-    // fire-and-forget with its result discarded, so a duplicate name would leave
-    // a local row the server never accepted — permanently, since Category has no
-    // clientId for a pull to reconcile it by. Return the one that already exists,
-    // which is also what the server now does for a duplicate create.
+    // The server enforces a (accountId, name, type) unique. Return the category
+    // that already exists locally, which is also what the server does for a
+    // duplicate create.
     const existing = get().getCategoryByName(name, type);
     if (existing) return existing;
 
     const now = new Date();
+    // Same value in both roles: the local row id IS the clientId, so the server
+    // can match a resend and a pull can match the row back.
     const id = generateUUID();
 
     const category: Category = {
       id,
+      clientId: id,
       userId,
       accountId,
       name,
@@ -280,10 +281,36 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     const categories = await getAllCategories(accountId);
     set({ categories: categories.length > 0 ? categories : [...get().categories, category] });
 
-    // Encrypt sensitive fields before sending to server
-    maybeEncrypt('category', { name }, accountId).then(({ payload: encPayload, encryptedPayload, encryptionKeyVersion }) => {
-      api.createCategory({ name: encPayload.name ?? name, icon, color, type, encryptedPayload, encryptionKeyVersion } as any);
-    }).catch(() => {});
+    // AWAITED, not fire-and-forget (was the opposite before). Discarding the
+    // response left the local row on its device id forever while the server
+    // created its own row with its own PK: a budget allocation was then stored
+    // server-side against the server PK while the device's expenses kept the
+    // local id, so the budget read 0,00 (or "everything") after the next pull.
+    // Adopting the response id and re-pointing every local reference closes
+    // that split. Offline: the local create stands and the next sync retries
+    // (the server is idempotent on clientId), so nothing is lost.
+    try {
+      const { payload: encPayload, encryptedPayload, encryptionKeyVersion } =
+        await maybeEncrypt('category', { name }, accountId);
+      const created = await api.createCategory({
+        name: encPayload.name ?? name,
+        icon,
+        color,
+        type,
+        clientId: id,
+        encryptedPayload,
+        encryptionKeyVersion,
+      } as any);
+
+      if (created?.id && created.id !== id) {
+        await remapCategoryId(id, created.id, id);
+        await get().syncFromServer([created]);
+        return { ...category, id: created.id, clientId: id };
+      }
+    } catch {
+      // Offline / server unavailable — the local row above is the source of
+      // truth until the next successful sync.
+    }
 
     return category;
   },
@@ -295,9 +322,31 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     for (const cat of serverCategories) {
       // Decrypt encrypted fields if present
       const decrypted = await maybeDecrypt('category', cat, cat.accountId);
+      const accountIdForRow = cat.accountId || useAccountStore.getState().currentAccountId || '';
+
+      // A row this device created offline is stored under its clientId as the
+      // id. When the server sends that row back with its own PK, adopt the PK
+      // and re-point local references instead of inserting a second row for the
+      // same category (which is what used to make a budget on a new category
+      // read 0,00 after a pull while the list still showed it).
+      if (cat.clientId && cat.clientId !== cat.id && accountIdForRow) {
+        const local = await getCategoryByClientId(accountIdForRow, cat.clientId);
+        if (local && local.id === cat.clientId) {
+          await remapCategoryId(cat.clientId, cat.id, cat.clientId);
+        }
+      }
+
+      // Preserve existing clientId if server didn't return one - this prevents
+      // losing the remapped clientId when syncFromServer is called with a
+      // category that has null/undefined clientId (server echo without clientId).
+      // The remap in createCategory sets client_id on the row; if syncFromServer
+      // later receives the same row with no clientId, we must preserve it.
+      const existingCategory = cat.id ? await getCategoryById(cat.id) : null;
+      const clientIdToUse = cat.clientId ?? existingCategory?.clientId ?? undefined;
 
       const entity: Category = {
         id: cat.id,
+        clientId: clientIdToUse,
         userId: cat.userId || undefined,
         accountId: cat.accountId || undefined,
         name: decrypted.name,
@@ -337,7 +386,7 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
     }));
   },
 
-  updateCategory: async (id: string, data: { name?: string; color?: string }) => {
+  updateCategory: async (id: string, data: { name?: string; color?: string; icon?: string }) => {
     // Save locally FIRST (Sentry/prod-nginx 2026-09: 13 of 15 PATCH
     // /categories/:id calls in 72h returned 404). Locally-created and seeded
     // rows carry a device-generated id and Category has no clientId for the
