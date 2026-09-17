@@ -16,6 +16,9 @@ export function useBudgetsScreenData() {
   const canEdit = useAccountStore((s) => s.canEdit());
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
+  // Subscribe to budgetVersion to trigger re-renders when expenses change
+  useBudgetStore((s) => s.getBudgetVersion());
+
   useEffect(() => {
     if (currentAccountId) loadBudgets();
   }, [currentAccountId, loadBudgets]);

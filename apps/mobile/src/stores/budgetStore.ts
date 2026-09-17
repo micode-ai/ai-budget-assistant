@@ -62,6 +62,7 @@ interface BudgetState {
   // Selectors
   getBudgetProgress: (budgetId: string, referenceDate?: Date) => BudgetProgress | null;
   getMonthlyBudgetSummary: () => MonthlyBudgetSummary;
+  getBudgetVersion: () => number;
   reset: () => void;
 }
 
@@ -144,6 +145,7 @@ export const useBudgetStore = create<BudgetState>()(
     getBudgetProgress: (budgetId, referenceDate) =>
       computeBudgetProgress(get().budgets, budgetId, referenceDate),
     getMonthlyBudgetSummary: () => computeMonthlyBudgetSummary(get().budgets),
+    getBudgetVersion: () => get().budgetVersion,
 
     reset: () => {
       clearAllBudgets().catch(() => {});

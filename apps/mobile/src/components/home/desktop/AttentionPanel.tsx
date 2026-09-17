@@ -160,6 +160,8 @@ export function AttentionPanel({ canEdit }: Props) {
   // on the same hazard, which was a reproduced bug there, not a theory.
   const expenses = useExpenseStore((s) => s.expenses);
   const categories = useCategoryStore((s) => s.categories);
+  // Also subscribe to budgetVersion to trigger re-renders when expenses change
+  useBudgetStore((s) => s.getBudgetVersion());
 
   // The two Phase B kinds. `DashboardDesktop` issues both reads (see its own
   // note on why they are not in `useHomeScreenData`); this panel only reads

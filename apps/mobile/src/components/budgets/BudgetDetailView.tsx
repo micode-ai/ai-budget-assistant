@@ -79,6 +79,8 @@ export function BudgetDetailView({
   const { deleteBudget, getBudgetProgress } = useBudgetStore();
   const canEdit = useAccountStore((s) => s.canEdit());
   const { anchorDay } = useFinancialMonth();
+  // Subscribe to budgetVersion to trigger re-renders when expenses change
+  useBudgetStore((s) => s.getBudgetVersion());
   const progress = getBudgetProgress(budget.id, referenceDate);
 
   // --- Period navigation helpers ---
