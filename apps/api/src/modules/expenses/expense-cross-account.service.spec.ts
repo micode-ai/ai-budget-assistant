@@ -17,6 +17,7 @@ function makeMergeService(overrides: {
     categoryId: null,
     receiptImage: null,
     receiptMimeType: null,
+    items: [],
     expenseTags: [],
     projectExpenses: [],
   };
@@ -28,6 +29,7 @@ function makeMergeService(overrides: {
     categoryId: 'cat-food',
     receiptImage: null,
     receiptMimeType: null,
+    items: [],
     expenseTags: [{ tagId: 'tag-1' }],
     projectExpenses: [{ projectId: 'proj-1' }],
   };
@@ -35,6 +37,7 @@ function makeMergeService(overrides: {
   const expenseUpdateMock = jest.fn().mockResolvedValue({});
   const expenseTagUpsertMock = jest.fn().mockResolvedValue({});
   const projectExpenseUpsertMock = jest.fn().mockResolvedValue({});
+  const expenseItemUpdateManyMock = jest.fn().mockResolvedValue({});
 
   const tx: any = {
     expense: {
@@ -45,6 +48,7 @@ function makeMergeService(overrides: {
     },
     expenseTag: { upsert: expenseTagUpsertMock },
     projectExpense: { upsert: projectExpenseUpsertMock },
+    expenseItem: { updateMany: expenseItemUpdateManyMock },
   };
 
   const prisma: any = {
@@ -57,7 +61,7 @@ function makeMergeService(overrides: {
   };
   const anomalyService: any = { dismissForExpense: jest.fn().mockResolvedValue(undefined) };
   const service = new ExpenseCrossAccountService(prisma, anomalyService, cacheService);
-  return { service, prisma, tx, anomalyService, expenseUpdateMock, expenseTagUpsertMock, projectExpenseUpsertMock };
+  return { service, prisma, tx, anomalyService, expenseUpdateMock, expenseTagUpsertMock, projectExpenseUpsertMock, expenseItemUpdateManyMock };
 }
 
 describe('mergeExpenses (Tier 2)', () => {
@@ -90,7 +94,7 @@ describe('mergeExpenses (Tier 2)', () => {
       keepRow: {
         id: 'keep-1', accountId: 'acc-1',
         merchant: 'Existing', notes: 'existing note', categoryId: 'cat-existing',
-        receiptImage: null, receiptMimeType: null, expenseTags: [], projectExpenses: [],
+        receiptImage: null, receiptMimeType: null, items: [], expenseTags: [], projectExpenses: [],
       },
     });
     await service.mergeExpenses('acc-1', 'user-1', { keepId: 'keep-1', mergeId: 'merge-1' });
@@ -115,6 +119,44 @@ describe('mergeExpenses (Tier 2)', () => {
     expect(projectExpenseUpsertMock).toHaveBeenCalledWith(
       expect.objectContaining({ create: { projectId: 'proj-1', expenseId: 'keep-1' } }),
     );
+  });
+
+  it('carries over receipt line items from the merged row when the survivor has none', async () => {
+    const { service, expenseItemUpdateManyMock } = makeMergeService({
+      mergeRow: {
+        id: 'merge-1', accountId: 'acc-1',
+        merchant: null, notes: null, categoryId: null,
+        receiptImage: null, receiptMimeType: null,
+        items: [{ id: 'item-1' }, { id: 'item-2' }],
+        expenseTags: [], projectExpenses: [],
+      },
+    });
+    await service.mergeExpenses('acc-1', 'user-1', { keepId: 'keep-1', mergeId: 'merge-1' });
+    expect(expenseItemUpdateManyMock).toHaveBeenCalledWith({
+      where: { id: { in: ['item-1', 'item-2'] } },
+      data: { expenseId: 'keep-1', syncVersion: { increment: 1 } },
+    });
+  });
+
+  it('does NOT move line items when the survivor already has its own', async () => {
+    const { service, expenseItemUpdateManyMock } = makeMergeService({
+      keepRow: {
+        id: 'keep-1', accountId: 'acc-1',
+        merchant: 'Existing', notes: null, categoryId: null,
+        receiptImage: null, receiptMimeType: null,
+        items: [{ id: 'item-keep' }],
+        expenseTags: [], projectExpenses: [],
+      },
+      mergeRow: {
+        id: 'merge-1', accountId: 'acc-1',
+        merchant: null, notes: null, categoryId: null,
+        receiptImage: null, receiptMimeType: null,
+        items: [{ id: 'item-merge' }],
+        expenseTags: [], projectExpenses: [],
+      },
+    });
+    await service.mergeExpenses('acc-1', 'user-1', { keepId: 'keep-1', mergeId: 'merge-1' });
+    expect(expenseItemUpdateManyMock).not.toHaveBeenCalled();
   });
 
   it('resolves keepId and mergeId by clientId (the OR:[{id},{clientId}] pattern)', async () => {

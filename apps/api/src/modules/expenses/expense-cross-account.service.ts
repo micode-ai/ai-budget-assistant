@@ -42,6 +42,7 @@ export class ExpenseCrossAccountService {
         tx.expense.findFirst({
           where: { accountId, isDeleted: false, OR: [{ id: keepId }, { clientId: keepId }] },
           include: {
+            items: { where: { isDeleted: false }, select: { id: true } },
             expenseTags: { where: { isDeleted: false }, select: { tagId: true } },
             projectExpenses: { where: { isDeleted: false }, select: { projectId: true } },
           },
@@ -49,6 +50,7 @@ export class ExpenseCrossAccountService {
         tx.expense.findFirst({
           where: { accountId, isDeleted: false, OR: [{ id: mergeId }, { clientId: mergeId }] },
           include: {
+            items: { where: { isDeleted: false }, select: { id: true } },
             expenseTags: { where: { isDeleted: false }, select: { tagId: true } },
             projectExpenses: { where: { isDeleted: false }, select: { projectId: true } },
           },
@@ -106,6 +108,17 @@ export class ExpenseCrossAccountService {
             update: { isDeleted: false },
           });
         }
+      }
+
+      // Line items: when the merged row is the one carrying the receipt's
+      // positions (e.g. the survivor is an auto-captured/imported stub and the
+      // merged row is a scanned receipt) and the survivor has none, re-point
+      // them at the survivor so the merged record keeps the itemized receipt.
+      if (keepRow.items.length === 0 && mergeRow.items.length > 0) {
+        await tx.expenseItem.updateMany({
+          where: { id: { in: mergeRow.items.map((it: any) => it.id) } },
+          data: { expenseId: keepRow.id, syncVersion: { increment: 1 } },
+        });
       }
 
       // Soft-delete the secondary row and bump its syncVersion.

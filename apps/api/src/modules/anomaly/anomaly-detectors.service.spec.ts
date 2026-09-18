@@ -83,6 +83,45 @@ describe('detectDuplicateCharge', () => {
     const where = (prisma.expense.findMany as jest.Mock).mock.calls[0][0].where;
     expect(where.NOT).toEqual({ importBatchId: 'batch-1' });
   });
+
+  it('sets suggestMerge when an imported expense meets a scanned receipt of the same purchase', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-ocr', merchant: 'Netflix', description: 'Netflix', source: 'ocr' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ source: 'import' }) as any);
+
+    expect(alertWriter.createAlert).toHaveBeenCalledTimes(1);
+    const arg = alertWriter.createAlert.mock.calls[0][0];
+    expect(arg.type).toBe('duplicate_charge');
+    expect(arg.params.otherExpenseId).toBe('e-ocr');
+    expect(arg.params.suggestMerge).toBe(true);
+  });
+
+  it('sets suggestMerge when a scanned receipt meets an auto-captured row (OCR side fires first)', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-auto', merchant: 'Netflix', description: 'Netflix', source: 'notification' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ source: 'ocr' }) as any);
+
+    const arg = alertWriter.createAlert.mock.calls[0][0];
+    expect(arg.params.suggestMerge).toBe(true);
+  });
+
+  it('omits suggestMerge for two manual duplicates (plain double-charge warning)', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-old', merchant: 'Netflix', description: 'Netflix', source: 'manual' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ source: 'manual' }) as any);
+
+    const arg = alertWriter.createAlert.mock.calls[0][0];
+    expect(arg.params.suggestMerge).toBeUndefined();
+  });
 });
 
 describe('detectPriceIncrease', () => {

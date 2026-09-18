@@ -36,6 +36,19 @@ export type AlertAction =
   | 'none';
 
 /**
+ * Whether a `duplicate_charge` alert is really "same purchase logged twice,
+ * once by hand/import and once by receipt scan" — the API marks that pair
+ * with `params.suggestMerge` (one side `notification`/`import`, the other
+ * `ocr`), in which case the alert wants the merge screen, not the expense it
+ * points at.
+ */
+export function isMergeableDuplicate(alert: AnomalyAlert): boolean {
+  if (alert.type !== 'duplicate_charge') return false;
+  const p = alert.params as Record<string, unknown> | null | undefined;
+  return p?.suggestMerge === true && typeof p?.otherExpenseId === 'string';
+}
+
+/**
  * `canEdit` is part of the decision, not a wrapper around it. `track` and
  * `merge` both end in a write the server blocks for a viewer
  * (`ViewerBlockGuard`), so offering either to a viewer is offering a button
@@ -47,14 +60,20 @@ export type AlertAction =
 export function alertAction(alert: AnomalyAlert, canEdit: boolean): AlertAction {
   if (alert.type === 'recurring_suggestion') return canEdit ? 'track' : 'none';
   if (alert.type === 'possible_merge') return canEdit ? 'merge' : 'none';
+  // `possible_merge`'s sibling: the duplicate pair is autocapture/import vs a
+  // scanned receipt, so offer the merge screen (a viewer gets the read-only
+  // expense dialog for the same row).
+  if (isMergeableDuplicate(alert)) return canEdit ? 'merge' : 'expense';
   return alert.expenseId ? 'expense' : 'none';
 }
 
 /**
- * The two expense ids a `possible_merge` row hands the merge screen, in the
+ * The two expense ids a merge row hands the merge screen, in the
  * order it expects them: `aId` is the expense that triggered the alert, `bId`
  * the other candidate. Read from `params` first with the column as fallback,
- * exactly as `app/alerts/index.tsx` reads them.
+ * exactly as `app/alerts/index.tsx` reads them. Covers `possible_merge` and
+ * the mergeable form of `duplicate_charge` (`isMergeableDuplicate`) — both
+ * carry `otherExpenseId` in `params`.
  */
 export function mergeTargets(alert: AnomalyAlert): { aId: string; bId: string } {
   const p = alert.params as Record<string, string>;

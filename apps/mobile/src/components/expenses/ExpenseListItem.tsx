@@ -76,6 +76,13 @@ export function ExpenseListItem({ item, isMultiSelect, isSelected, onToggleSelec
         <Text style={[styles.date, { color: theme.colors.textTertiary }]}>
           {formatDate(item.date, undefined, getIntlLocale())}
         </Text>
+        {(item.source === 'import' || item.source === 'notification') && (
+          <Text style={[styles.sourceBadge, { color: theme.colors.textTertiary }]}>
+            {item.source === 'import'
+              ? t('expenseDetail.sourceImport')
+              : t('expenseDetail.sourceNotification')}
+          </Text>
+        )}
       </View>
       <View style={styles.amountContainer}>
         {item.isSplitReceivable && (
@@ -134,6 +141,12 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 13,
+  },
+  sourceBadge: {
+    fontSize: 11,
+    marginTop: 1,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   amountContainer: {
     flexDirection: 'row',

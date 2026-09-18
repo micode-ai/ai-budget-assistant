@@ -4,7 +4,7 @@
 
 ## Qué detecta la app
 
-- **Posible cargo duplicado** — el mismo comercio ha cobrado el mismo importe dos veces en dos días. Vale la pena comprobarlo antes de que el dinero desaparezca.
+- **Posible cargo duplicado** — el mismo comercio ha cobrado el mismo importe dos veces en dos días. Vale la pena comprobarlo antes de que el dinero desaparezca. Si un registro proviene de una notificación bancaria o de una importación y el otro es un recibo escaneado, la alerta ofrece además **fusionarlos**: tócala para abrir la pantalla de fusión — los artículos del recibo y su imagen pasan al gasto que conserves.
 - **Subida de precio** — una suscripción o pago recurrente se ha encarecido más de un 10 % respecto a la última vez (por ejemplo, un servicio de streaming que sube su precio).
 - **Parece una suscripción** — el mismo comercio te ha cobrado el mismo importe tres o más veces de forma regular. Dos opciones: toca la alerta para abrir un formulario prellenado del Gestor de suscripciones, o toca **"Marcar como recurrente"** directamente en la alerta para que ese gasto (el alquiler es un ejemplo habitual) se trate como un gasto recurrente a partir de ahora — así deja de distorsionar la previsión de gasto de tu presupuesto cada mes.
 - **Gasto inusual** — una categoría está al menos un 30 % por encima de tu media de los meses anteriores.

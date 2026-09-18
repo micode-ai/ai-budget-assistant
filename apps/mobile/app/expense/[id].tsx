@@ -52,6 +52,7 @@ export default function ExpenseDetailScreen() {
   const [isEditing, setIsEditing] = useState(false);
   const [showMovePicker, setShowMovePicker] = useState(false);
   const [isMoving, setIsMoving] = useState(false);
+  const [hasReceipt, setHasReceipt] = useState(false);
   const detailsCardRef = useRef<ExpenseDetailsCardHandle>(null);
 
   // Accounts the caller can move this expense into (non-viewer, not the current one).
@@ -172,6 +173,7 @@ export default function ExpenseDetailScreen() {
     voice: t('expenseDetail.sourceVoice'),
     ocr: t('expenseDetail.sourceOcr'),
     import: t('expenseDetail.sourceImport'),
+    notification: t('expenseDetail.sourceNotification'),
   };
 
   const sourceIcon: Record<string, string> = {
@@ -179,6 +181,7 @@ export default function ExpenseDetailScreen() {
     voice: 'mic-outline',
     ocr: 'camera-outline',
     import: 'download-outline',
+    notification: 'notifications-outline',
   };
 
   return (
@@ -294,13 +297,14 @@ export default function ExpenseDetailScreen() {
           tripMembers={tripMembers}
         />
 
-        {/* Receipt Items (OCR expenses only) */}
-        {expense.source === 'ocr' && (
+        {/* Receipt Items — OCR expenses carry them from the scan; any expense
+            can gain them by attaching a receipt and running "Extract items". */}
+        {(expense.source === 'ocr' || hasReceipt) && (
           <ExpenseItemsSection expenseId={id!} currencyCode={expense.currencyCode} />
         )}
 
         {/* Receipt Image */}
-        <ReceiptSection expenseId={id!} />
+        <ReceiptSection expenseId={id!} canEdit={canEdit} onReceiptLoaded={setHasReceipt} />
 
         {/* Location (map card / add-location affordance) */}
         <LocationSection expense={expense} canEdit={canEdit} />

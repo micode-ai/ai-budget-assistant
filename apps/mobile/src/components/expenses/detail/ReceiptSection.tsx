@@ -19,17 +19,27 @@ import * as MediaLibrary from 'expo-media-library';
 import { compressAndEncodeImage } from '@/features/receipt/receiptImage';
 import { materializeReceipt, releaseReceipt } from '@/features/receipt/receiptImageCache';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { api } from '@/services/api';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface ReceiptSectionProps {
   expenseId: string;
+  canEdit?: boolean;
+  /** Notifies the parent whether a receipt is attached, so the receipt-items
+   * section can render for non-OCR expenses too. */
+  onReceiptLoaded?: (hasReceipt: boolean) => void;
 }
 
-export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
+export function ReceiptSection({
+  expenseId,
+  canEdit = false,
+  onReceiptLoaded,
+}: ReceiptSectionProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const { loadReceiptImage, saveReceiptImage, deleteReceiptImage } = useExpenseStore();
+  const { loadReceiptImage, saveReceiptImage, deleteReceiptImage, loadExpenseItems, addExpenseItem, deleteExpenseItem } =
+    useExpenseStore();
 
   // The receipt lives on disk, not in state. Holding the base64 here kept a
   // multi-megabyte string alive for as long as the screen did, and rendering it
@@ -38,7 +48,12 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
   // actually on screen.
   const [receiptUri, setReceiptUri] = useState<string | null>(null);
   const [receiptMimeType, setReceiptMimeType] = useState<string>('image/jpeg');
+  // Kept ONLY in a ref (not state) so a multi-MB base64 blob never triggers a
+  // re-render — it is read once per "Extract items" tap. Same lifecycle as the
+  // materialized file URI below.
+  const receiptBase64Ref = useRef<string | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
+  const [extracting, setExtracting] = useState(false);
   const [imageViewVisible, setImageViewVisible] = useState(false);
   const receiptUriRef = useRef<string | null>(null);
 
@@ -49,11 +64,13 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
       const previous = receiptUriRef.current;
       const next = base64 ? (await materializeReceipt(expenseId, base64, mimeType)).uri : null;
       receiptUriRef.current = next;
+      receiptBase64Ref.current = base64;
       setReceiptMimeType(mimeType);
       setReceiptUri(next);
+      onReceiptLoaded?.(!!base64);
       if (previous && previous !== next) void releaseReceipt(previous);
     },
-    [expenseId],
+    [expenseId, onReceiptLoaded],
   );
 
   const handleLoadReceiptImage = useCallback(async () => {
@@ -136,6 +153,58 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
     await showReceipt(base64, 'application/pdf');
   };
 
+  // Re-run OCR over the attached receipt and apply its line items to this
+  // expense — the "regenerate" flow: the expense was logged first (manually or
+  // captured by a push/import) and the receipt came later.
+  const handleExtractItems = async () => {
+    const base64 = receiptBase64Ref.current;
+    if (!base64 || extracting) return;
+    setExtracting(true);
+    try {
+      const receipt = await api.scanReceipt(base64, undefined, isPdf ? 'application/pdf' : undefined);
+      const scannedItems = receipt?.receiptItems ?? [];
+      if (scannedItems.length === 0) {
+        showAlert('', t('expenseDetail.extractItemsNoItems'));
+        return;
+      }
+
+      const existing = await loadExpenseItems(expenseId);
+      const apply = () => {
+        // Replace, never append: re-running the OCR twice would duplicate lines.
+        for (const item of existing) deleteExpenseItem(expenseId, item.id);
+        scannedItems.forEach((it, index) => {
+          const qty = it.quantity && it.quantity > 0 ? it.quantity : 1;
+          addExpenseItem(expenseId, {
+            description: it.description,
+            quantity: qty,
+            unitPrice: it.unitPrice ?? Math.round((it.totalPrice / qty) * 100) / 100,
+            totalPrice: it.totalPrice,
+            sortOrder: index,
+          });
+        });
+        showAlert('', t('expenseDetail.extractItemsDone', { count: scannedItems.length }));
+      };
+
+      if (existing.length > 0) {
+        showAlert(
+          t('expenseDetail.extractItemsTitle'),
+          t('expenseDetail.extractItemsConfirm', { count: existing.length }),
+          [
+            { text: t('common.cancel'), style: 'cancel' },
+            { text: t('expenses.merge.confirm'), onPress: apply },
+          ],
+        );
+      } else {
+        apply();
+      }
+    } catch (e) {
+      console.warn('[ReceiptSection] Extract items failed:', e);
+      showAlert(t('common.error'), t('expenseDetail.extractItemsFailed'));
+    } finally {
+      setExtracting(false);
+    }
+  };
+
   const handleShowAttachOptions = () => {
     showAlert(
       t('expenseDetail.attachReceipt'),
@@ -202,6 +271,22 @@ export function ReceiptSection({ expenseId }: ReceiptSectionProps) {
               <TouchableOpacity style={styles.imageActionBtn} onPress={handleSaveImage}>
                 <Ionicons name="download-outline" size={18} color={theme.colors.primary} />
                 <Text style={styles.imageActionText}>{t('expenseDetail.saveImage')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.imageActionBtn}
+                onPress={handleExtractItems}
+                disabled={extracting}
+              >
+                {extracting ? (
+                  <ActivityIndicator size="small" color={theme.colors.primary} />
+                ) : (
+                  <Ionicons name="document-text-outline" size={18} color={theme.colors.primary} />
+                )}
+                <Text style={styles.imageActionText}>
+                  {extracting
+                    ? t('expenseDetail.extractingItems')
+                    : t('expenseDetail.extractItems')}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.imageActionBtn} onPress={handleShowAttachOptions}>
                 <Ionicons name="swap-horizontal-outline" size={18} color={theme.colors.secondary} />

@@ -11,7 +11,7 @@ A pure TypeScript package (`packages/shared-types`) that exports entity interfac
 
 ## Key concepts
 - **Naming conventions** — interfaces use `PascalCase`; enums use string literal unions (not TypeScript `enum` keyword)
-- **Key union types** — `Currency` (`USD|EUR|PLN|GBP|UAH|RUB`), `AccountRole` (`owner|editor|viewer`), `AccountType` (`personal|business|shared|investment`), `ExpenseSource` (`manual|voice|ocr|import`), `BudgetPeriod` (`daily|weekly|monthly|yearly|custom`), `SubscriptionTier` (`free|pro|business`), `SyncStatus` (`pending|synced|conflict|error`)
+- **Key union types** — `Currency` (`USD|EUR|PLN|GBP|UAH|RUB`), `AccountRole` (`owner|editor|viewer`), `AccountType` (`personal|business|shared|investment`), `ExpenseSource` (`manual|voice|ocr|import|telegram|whatsapp|slack|notification` — `import`/`notification` also drive the merge suggestion for a duplicate pair that meets a scanned `ocr` receipt), `BudgetPeriod` (`daily|weekly|monthly|yearly|custom`), `SubscriptionTier` (`free|pro|business`), `SyncStatus` (`pending|synced|conflict|error`)
 - **No runtime code** — this package is types-only; no functions, no classes, no imports from Node/React
 
 ## Cross-references

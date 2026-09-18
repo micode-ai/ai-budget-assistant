@@ -4,7 +4,7 @@
 
 ## Was die App erkennt
 
-- **Mögliche Doppelbelastung** — derselbe Händler hat denselben Betrag innerhalb von zwei Tagen zweimal berechnet. Es lohnt sich, das zu prüfen, bevor das Geld weg ist.
+- **Mögliche Doppelbelastung** — derselbe Händler hat denselben Betrag innerhalb von zwei Tagen zweimal berechnet. Es lohnt sich, das zu prüfen, bevor das Geld weg ist. Stammt die eine Buchung aus einem Bank-Push oder Bank-Import und die andere aus einem gescannten Beleg, schlägt die Warnung außerdem das **Zusammenführen** vor: tippe sie an, um den Merge-Bildschirm zu öffnen — Belegpositionen und Bild werden auf die Ausgabe übertragen, die du behältst.
 - **Preiserhöhung** — ein Abonnement oder eine wiederkehrende Zahlung ist im Vergleich zum letzten Mal um mehr als 10 % teurer geworden (zum Beispiel ein Streamingdienst, der seinen Preis erhöht).
 - **Sieht wie ein Abonnement aus** — derselbe Händler hat dir denselben Betrag dreimal oder öfter in regelmäßigen Abständen berechnet. Zwei Möglichkeiten: Tippe auf den Hinweis, um ein vorausgefülltes Abonnement-Manager-Formular zu öffnen, oder tippe direkt im Hinweis auf **„Als wiederkehrend markieren"**, damit diese Ausgabe (zum Beispiel die Miete) ab sofort als wiederkehrend behandelt wird — das verhindert, dass sie die Ausgabenprognose deines Budgets jeden Monat verfälscht.
 - **Ungewöhnliche Ausgaben** — eine Kategorie liegt mindestens 30 % über deinem Durchschnitt der Vormo­nate.

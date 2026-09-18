@@ -120,9 +120,9 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Notities** (indien toegevoegd)
 - **Toegevoegd door** — wordt getoond in gedeelde accounts; toont de naam van het accountlid dat deze post heeft aangemaakt
 - **Synchronisatiestatus** — in behandeling, gesynchroniseerd, conflict of fout
-- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen of Geïmporteerd
-- **Bonitems** — afzonderlijke items (voor gescande bonnen)
-- **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde
+- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen, Geïmporteerd of Automatisch vastgelegd (boekingen uit een bankmelding of import zijn gemarkeerd, zodat je ze herkent)
+- **Bonitems** — afzonderlijke items (voor gescande bonnen, of later geëxtraheerd via **Artikelen extraheren**)
+- **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde. Is de bon pas na het aanmaken van de uitgave gekoppeld, tik dan op **Artikelen extraheren** in de bonkaart om de bon opnieuw door AI te laten lezen en de regels in de uitgave te zetten (met bevestiging als er al items zijn; elke lezing verbruikt één AI-verzoek)
 
 ### Acties op uitgavedetails:
 - **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld)

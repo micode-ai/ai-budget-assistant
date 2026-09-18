@@ -485,9 +485,9 @@ Tap any expense to view its full details:
 - **Notes** (if added)
 - **Added by** — shown in shared accounts; displays the name of the account member who created this entry
 - **Sync Status** — pending, synced, conflict, or error
-- **Source** — Manual Entry, Voice Input, Receipt Scan, or Imported
-- **Receipt Items** — individual items (for scanned receipts)
-- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually
+- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart)
+- **Receipt Items** — individual items (for scanned receipts, or extracted later via **Extract items**)
+- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 
 ### Actions on expense details:
 - **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)
@@ -3976,7 +3976,7 @@ Both stay in sync, so use whichever fits the moment.
 
 ## What the app detects
 
-- **Possible duplicate charge** — the same merchant charged the same amount twice within two days. Worth checking before the money is gone.
+- **Possible duplicate charge** — the same merchant charged the same amount twice within two days. Worth checking before the money is gone. When one record came from a bank push or bank import and the other is a scanned receipt, the alert also offers to **merge** them: tap it to open the merge screen, and the receipt's items and image move onto the expense you keep.
 - **Price increase** — a subscription or recurring payment got more than 10% more expensive compared to last time (for example, a streaming service raising its price).
 - **Looks like a subscription** — the same merchant has charged you the same amount three or more times on a regular schedule. Two things you can do about it: tap the alert to open a pre-filled Subscription Manager form, or tap **"Mark as recurring"** right on the alert so that expense (rent is a common example) is treated as a recurring bill going forward — this stops it from throwing off your budget's spending forecast every month.
 - **Unusual spending** — a category is at least 30% above your average for the previous months.
@@ -5215,9 +5215,9 @@ iOS, Android, Web
 - **Заметки** (если добавлены)
 - **Добавил(а)** — отображается в общих счетах; имя участника счёта, создавшего эту запись
 - **Статус синхронизации** — ожидает, синхронизировано, конфликт или ошибка
-- **Источник** — Ручной ввод, Голосовой ввод, Сканирование чека или Импортировано
-- **Позиции чека** — отдельные позиции (для отсканированных чеков)
-- **Фото чека** — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите **Прикрепить чек** — выберите **Сфотографировать**, **Из галереи** или **Выбрать PDF**. Работает для любого расхода, в том числе добавленного вручную
+- **Источник** — Ручной ввод, Голосовой ввод, Сканирование чека, Импортировано или Автозахват (записи из банковского пуша или импорта помечены, чтобы их было видно)
+- **Позиции чека** — отдельные позиции (для отсканированных чеков или извлечённые позже через **Извлечь позиции**)
+- **Фото чека** — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите **Прикрепить чек** — выберите **Сфотографировать**, **Из галереи** или **Выбрать PDF**. Работает для любого расхода, в том числе добавленного вручную. Если чек был прикреплён после создания расхода, нажмите **Извлечь позиции** в карточке чека, чтобы повторно прочитать его ИИ и подтянуть позиции в расход (с подтверждением, если позиции уже есть; каждый запуск тратит один ИИ-запрос)
 
 ### Действия с деталями расхода:
 - **Редактировать** — изменить расход, включая его **валюту** (нажмите на чип валюты рядом с суммой; сама сумма не пересчитывается, меняется только её обозначение)
@@ -8675,7 +8675,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Что обнаруживает приложение
 
-- **Возможное двойное списание** — один и тот же продавец снял одинаковую сумму дважды в течение двух дней. Стоит проверить, пока деньги ещё можно вернуть.
+- **Возможное двойное списание** — один и тот же продавец снял одинаковую сумму дважды в течение двух дней. Стоит проверить, пока деньги ещё можно вернуть. Если одна запись пришла из банковского пуша или импорта, а другая — отсканированный чек, оповещение предложит **объединить** их: нажмите на него, чтобы открыть экран объединения, — позиции чека и его изображение перенесутся на расход, который вы оставите.
 - **Повышение цены** — подписка или регулярный платёж стал дороже более чем на 10 % по сравнению с прошлым разом (например, стриминговый сервис поднял цену).
 - **Похоже на подписку** — один и тот же продавец регулярно списывает одинаковую сумму три раза или больше. Есть два варианта: нажмите на оповещение, чтобы открыть заполненную форму в менеджере подписок, или нажмите **«Отметить как повторяющийся»** прямо в оповещении, чтобы этот расход (например, аренда жилья) отныне считался повторяющимся — тогда он перестанет каждый месяц искажать прогноз расходов в вашем бюджете.
 - **Необычные расходы** — категория превышает вашу среднюю за предыдущие месяцы как минимум на 30 %.
@@ -9923,9 +9923,9 @@ iOS, Android, Web
 - **Нотатки** (якщо додані)
 - **Додав(ла)** — відображається у спільних рахунках; ім'я учасника рахунку, який створив цей запис
 - **Статус синхронізації** — очікує, синхронізовано, конфлікт або помилка
-- **Джерело** — Ручне введення, Голосовий ввід, Сканування чеку або Імпортовано
-- **Позиції чеку** — окремі позиції (для сканованих чеків)
-- **Фото чеку** — перегляд, пересилання, збереження в галерею, заміна або видалення фото чека. PDF-чеки показуються як документ з можливістю відкриття. Якщо чек ще не додано, натисніть **Додати чек** — оберіть **Сфотографувати**, **З галереї** або **Обрати PDF**. Працює для будь-якої витрати, у тому числі доданої вручну
+- **Джерело** — Ручне введення, Голосовий ввід, Сканування чеку, Імпортовано або Автозахоплення (записи з банківського пуша або імпорту позначені, щоб їх було видно)
+- **Позиції чеку** — окремі позиції (для сканованих чеків або витягнуті пізніше через **Витягти позиції**)
+- **Фото чеку** — перегляд, пересилання, збереження в галерею, заміна або видалення фото чека. PDF-чеки показуються як документ з можливістю відкриття. Якщо чек ще не додано, натисніть **Додати чек** — оберіть **Сфотографувати**, **З галереї** або **Обрати PDF**. Працює для будь-якої витрати, у тому числі доданої вручну. Якщо чек було прикріплено після створення витрати, натисніть **Витягти позиції** в картці чека, щоб повторно прочитати його ШІ та підтягнути позиції у витрату (з підтвердженням, якщо позиції вже є; кожен запуск витрачає один ШІ-запит)
 
 ### Дії з деталями витрати:
 - **Редагувати** — змінити витрату, включно з її **валютою** (натисніть чип валюти біля суми; сама сума не перераховується, змінюється лише її позначення)
@@ -13342,7 +13342,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Що виявляє застосунок
 
-- **Можливе подвійне списання** — той самий продавець зняв однакову суму двічі протягом двох днів. Варто перевірити, поки гроші ще можна повернути.
+- **Можливе подвійне списання** — той самий продавець зняв однакову суму двічі протягом двох днів. Варто перевірити, поки гроші ще можна повернути. Якщо один запис прийшов з банківського пуша або імпорту, а інший — відсканований чек, сповіщення запропонує **об'єднати** їх: натисніть на нього, щоб відкрити екран об'єднання, — позиції чека та його зображення перенесуться на витрату, яку ви залишите.
 - **Підвищення ціни** — підписка або регулярний платіж подорожчав більш ніж на 10 % порівняно з минулим разом (наприклад, стрімінговий сервіс підняв ціну).
 - **Схоже на підписку** — той самий продавець регулярно знімає однакову суму тричі або більше разів. Є два варіанти: натисніть на сповіщення, щоб відкрити попередньо заповнену форму в менеджері підписок, або натисніть **«Позначити як повторюваний»** прямо в сповіщенні, щоб ця витрата (наприклад, оренда житла) відтепер вважалася повторюваною — тоді вона перестане щомісяця спотворювати прогноз витрат вашого бюджету.
 - **Незвичайні витрати** — категорія перевищує вашу середню за попередні місяці щонайменше на 30 %.
@@ -14579,9 +14579,9 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Notatki** (jezeli dodano)
 - **Dodane przez** — w udostępnionych kontach; wyświetla nazwę członka konta, który utworzył ten wpis
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
-- **Zrodlo** — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
-- **Pozycje paragonu** — poszczegolne pozycje (dla zeskanowanych paragonow)
-- **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF pokazują podgląd dokumentu do otwarcia. Jeśli paragon nie jest jeszcze dołączony, dotknij **Dołącz paragon** — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, także dodanego ręcznie
+- **Źródło** — Ręczne wprowadzanie, Głosowo, Skan paragonu, Zaimportowano lub Autozapis (transakcje z powiadomienia bankowego lub importu są oznaczone, by było widać, skąd pochodzą)
+- **Pozycje paragonu** — poszczególne pozycje (dla zeskanowanych paragonów lub wyodrębnione później przez **Wyodrębnij pozycje**)
+- **Zdjęcie paragonu** — przeglądanie, udostępnianie, zapisywanie do galerii, podmiana lub usunięcie zdjęcia paragonu. Paragony PDF są pokazywane jako dokument z możliwością otwarcia. Jeśli paragon nie jest jeszcze dołączony, kliknij **Dołącz paragon**, by go dodać — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, w tym dodanego ręcznie. Jeśli paragon został dołączony po utworzeniu wydatku, kliknij **Wyodrębnij pozycje** w karcie paragonu, aby ponownie odczytać go AI i pobrać pozycje do wydatku (z potwierdzeniem, gdy pozycje już istnieją; każde uruchomienie zużywa jedno zapytanie AI)
 
 ### Dostepne akcje w szczegolach wydatku:
 - **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie)
@@ -17994,7 +17994,7 @@ Obie wersje są zsynchronizowane — używaj tej, która pasuje w danej chwili.
 
 ## Co wykrywa aplikacja
 
-- **Możliwe podwójne obciążenie** — ten sam sprzedawca naliczył tę samą kwotę dwa razy w ciągu dwóch dni. Warto sprawdzić, zanim pieniądze znikną.
+- **Możliwe podwójne obciążenie** — ten sam sprzedawca naliczył tę samą kwotę dwa razy w ciągu dwóch dni. Warto sprawdzić, zanim pieniądze znikną. Gdy jedna transakcja pochodzi z powiadomienia bankowego lub importu, a druga to zeskanowany paragon, alert zaproponuje ich **scal** — kliknij go, aby otworzyć ekran scalania, a pozycje paragonu i jego zdjęcie trafią na wydatek, który zostawisz.
 - **Podwyżka ceny** — subskrypcja lub cykliczna płatność jest o ponad 10 % droższa niż ostatnim razem (na przykład serwis streamingowy, który podniósł cenę).
 - **Wygląda jak subskrypcja** — ten sam sprzedawca naliczył Ci tę samą kwotę trzy lub więcej razy regularnie. Dwie możliwości: kliknij alert, aby otworzyć wstępnie wypełniony formularz w Menedżerze subskrypcji, albo dotknij **„Oznacz jako cykliczne"** bezpośrednio w alercie, aby ten wydatek (np. czynsz) był od teraz traktowany jako cykliczny — dzięki temu przestanie co miesiąc zaburzać prognozę wydatków w Twoim budżecie.
 - **Nietypowe wydatki** — kategoria jest co najmniej 30 % powyżej Twojej średniej z poprzednich miesięcy.
@@ -19231,9 +19231,9 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Notizen** (falls hinzugefugt)
 - **Hinzugefügt von** — in geteilten Konten; zeigt den Namen des Kontomitglieds, das diesen Eintrag erstellt hat
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
-- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan oder Importiert
-- **Belegpositionen** — einzelne Artikel (fur gescannte Belege)
-- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefugte
+- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan, Importiert oder Automatisch erfasst (Buchungen aus Bank-Push oder Bank-Import sind markiert, damit man sie erkennt)
+- **Belegpositionen** — einzelne Artikel (für gescannte Belege oder später über **Positionen extrahieren** gezogen)
+- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefügte. Wurde der Beleg erst nach dem Anlegen der Ausgabe angehängt, tippe in der Belegkarte auf **Positionen extrahieren**, um den Beleg erneut von der KI lesen zu lassen und die Positionen in die Ausgabe zu ziehen (mit Bestätigung, falls bereits Positionen vorhanden sind; jeder Lauf verbraucht eine KI-Anfrage)
 
 ### Aktionen bei Ausgabendetails:
 - **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet)
@@ -22621,7 +22621,7 @@ Beide bleiben synchron — nutze einfach das, was gerade passt.
 
 ## Was die App erkennt
 
-- **Mögliche Doppelbelastung** — derselbe Händler hat denselben Betrag innerhalb von zwei Tagen zweimal berechnet. Es lohnt sich, das zu prüfen, bevor das Geld weg ist.
+- **Mögliche Doppelbelastung** — derselbe Händler hat denselben Betrag innerhalb von zwei Tagen zweimal berechnet. Es lohnt sich, das zu prüfen, bevor das Geld weg ist. Stammt die eine Buchung aus einem Bank-Push oder Bank-Import und die andere aus einem gescannten Beleg, schlägt die Warnung außerdem das **Zusammenführen** vor: tippe sie an, um den Merge-Bildschirm zu öffnen — Belegpositionen und Bild werden auf die Ausgabe übertragen, die du behältst.
 - **Preiserhöhung** — ein Abonnement oder eine wiederkehrende Zahlung ist im Vergleich zum letzten Mal um mehr als 10 % teurer geworden (zum Beispiel ein Streamingdienst, der seinen Preis erhöht).
 - **Sieht wie ein Abonnement aus** — derselbe Händler hat dir denselben Betrag dreimal oder öfter in regelmäßigen Abständen berechnet. Zwei Möglichkeiten: Tippe auf den Hinweis, um ein vorausgefülltes Abonnement-Manager-Formular zu öffnen, oder tippe direkt im Hinweis auf **„Als wiederkehrend markieren"**, damit diese Ausgabe (zum Beispiel die Miete) ab sofort als wiederkehrend behandelt wird — das verhindert, dass sie die Ausgabenprognose deines Budgets jeden Monat verfälscht.
 - **Ungewöhnliche Ausgaben** — eine Kategorie liegt mindestens 30 % über deinem Durchschnitt der Vormo­nate.
@@ -23858,9 +23858,9 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Notas** (si se agregaron)
 - **Agregado por** — en cuentas compartidas; muestra el nombre del miembro de la cuenta que creó esta entrada
 - **Estado de sincronizacion** — pendiente, sincronizado, conflicto o error
-- **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo o Importado
-- **Articulos del recibo** — articulos individuales (para recibos escaneados)
-- **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente
+- **Fuente** — Entrada manual, Entrada de voz, Escaneo de recibo, Importado o Captura automática (los registros de una notificación bancaria o de una importación están marcados para que se distingan)
+- **Articulos del recibo** — articulos individuales (para recibos escaneados, o extraídos después mediante **Extraer artículos**)
+- **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente. Si el recibo se adjuntó después de crear el gasto, toca **Extraer artículos** en la tarjeta del recibo para que la IA lo vuelva a leer y añada sus líneas al gasto (con confirmación si ya hay artículos; cada ejecución consume una petición de IA)
 
 ### Acciones en los detalles del gasto:
 - **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta)
@@ -27237,7 +27237,7 @@ Ambas se mantienen sincronizadas, así que usa la que mejor te venga en cada mom
 
 ## Qué detecta la app
 
-- **Posible cargo duplicado** — el mismo comercio ha cobrado el mismo importe dos veces en dos días. Vale la pena comprobarlo antes de que el dinero desaparezca.
+- **Posible cargo duplicado** — el mismo comercio ha cobrado el mismo importe dos veces en dos días. Vale la pena comprobarlo antes de que el dinero desaparezca. Si un registro proviene de una notificación bancaria o de una importación y el otro es un recibo escaneado, la alerta ofrece además **fusionarlos**: tócala para abrir la pantalla de fusión — los artículos del recibo y su imagen pasan al gasto que conserves.
 - **Subida de precio** — una suscripción o pago recurrente se ha encarecido más de un 10 % respecto a la última vez (por ejemplo, un servicio de streaming que sube su precio).
 - **Parece una suscripción** — el mismo comercio te ha cobrado el mismo importe tres o más veces de forma regular. Dos opciones: toca la alerta para abrir un formulario prellenado del Gestor de suscripciones, o toca **"Marcar como recurrente"** directamente en la alerta para que ese gasto (el alquiler es un ejemplo habitual) se trate como un gasto recurrente a partir de ahora — así deja de distorsionar la previsión de gasto de tu presupuesto cada mes.
 - **Gasto inusual** — una categoría está al menos un 30 % por encima de tu media de los meses anteriores.
@@ -28474,9 +28474,9 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Notes** (si ajoutees)
 - **Ajouté par** — dans les comptes partagés; affiche le nom du membre du compte qui a créé cette entrée
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
-- **Source** — Saisie manuelle, Saisie vocale, Scan de recu ou Importe
-- **Articles du recu** — articles individuels (pour les recus scannes)
-- **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu. Les reçus PDF affichent un aperçu du document à ouvrir. Si aucun reçu n'est encore joint, appuyez sur **Joindre un reçu** — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles ajoutées manuellement
+- **Source** — Saisie manuelle, Saisie vocale, Scan de reçu, Importé ou Capture automatique (les écritures issues d'une notification bancaire ou d'un import sont marquées pour qu'on les distingue)
+- **Articles du reçu** — articles individuels (pour les reçus scannés, ou extraits plus tard via **Extraire les articles**)
+- **Photo du reçu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du reçu. Les reçus PDF affichent un aperçu de document qui s'ouvre au toucher. Si aucun reçu n'est encore joint, touchez **Joindre un reçu** pour en ajouter un — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles créées à la main. Si le reçu a été joint après la création de la dépense, touchez **Extraire les articles** dans la carte du reçu pour le relire par l'IA et en intégrer les lignes à la dépense (avec confirmation si des articles existent déjà ; chaque lecture consomme une requête IA)
 
 ### Actions sur les details de la depense :
 - **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté)
@@ -31851,7 +31851,7 @@ Les deux restent synchronisées : utilisez celle qui convient sur le moment.
 
 ## Ce que l'application détecte
 
-- **Possible double débit** — le même commerçant a facturé le même montant deux fois en deux jours. Cela vaut la peine de vérifier avant que l'argent soit parti.
+- **Possible double débit** — le même commerçant a facturé le même montant deux fois en deux jours. Cela vaut la peine de vérifier avant que l'argent soit parti. Si une écriture vient d'une notification bancaire ou d'un import et l'autre est un reçu scanné, l'alerte propose en outre de les **fusionner** : touchez-la pour ouvrir l'écran de fusion — les articles du reçu et son image passent sur la dépense que vous conservez.
 - **Hausse de prix** — un abonnement ou un paiement récurrent est devenu plus de 10 % plus cher par rapport à la dernière fois (par exemple, un service de streaming qui augmente ses tarifs).
 - **Ressemble à un abonnement** — le même commerçant vous a facturé le même montant trois fois ou plus à intervalles réguliers. Deux options : appuyez sur l'alerte pour ouvrir un formulaire prérempli du Gestionnaire d'abonnements, ou appuyez sur **« Marquer comme récurrent »** directement dans l'alerte pour que cette dépense (le loyer, par exemple) soit désormais traitée comme récurrente — elle cessera ainsi de fausser la prévision de dépenses de votre budget chaque mois.
 - **Dépense inhabituelle** — une catégorie est au moins 30 % au-dessus de votre moyenne des mois précédents.
@@ -33088,9 +33088,9 @@ iOS, Android, Web
 - **Нататкі** (калі дададзены)
 - **Дадаў(ла)** — адлюстроўваецца ў агульных рахунках; імя ўдзельніка рахунку, які стварыў гэты запіс
 - **Статус сінхранізацыі** — чакае, сінхранізавана, канфлікт або памылка
-- **Крыніца** — Ручны ўвод, Галасавы ўвод, Сканаванне чэка або Імпартавана
-- **Пазіцыі чэка** — асобныя пазіцыі (для адсканаваных чэкаў)
-- **Фота чэка** — прагляд, перасылка, захаванне ў галерэю, замена або выдаленне фота чэка. PDF-чэкі паказваюцца як дакумент з магчымасцю адкрыцця. Калі чэк яшчэ не дададзены, націсніце **Дадаць чэк** — выберыце **Сфатаграфаваць**, **З галерэі** або **Выбраць PDF**. Працуе для любога выдатку, у тым ліку дададзенага ўручную
+- **Крыніца** — Ручны ўвод, Галасавы ўвод, Сканаванне чэка, Імпартавана або Аўтазахват (запісы з банкаўскага пуша або імпарту пазначаныя, каб іх было відаць)
+- **Пазіцыі чэка** — асобныя пазіцыі (для адсканаваных чэкаў або выцягнутыя пазней праз **Выцягнуць пазіцыі**)
+- **Фота чэка** — прагляд, перасылка, захаванне ў галерэю, замена або выдаленне фота чэка. PDF-чэкі паказваюцца як дакумент з магчымасцю адкрыцця. Калі чэк яшчэ не дададзены, націсніце **Дадаць чэк** — выберыце **Сфатаграфаваць**, **З галерэі** або **Выбраць PDF**. Працуе для любога выдатку, у тым ліку дададзенага ўручную. Калі чэк быў прымацаваны пасля стварэння выдатку, націсніце **Выцягнуць пазіцыі** ў картцы чэка, каб паўторна прачытаць яго ШІ і падцягнуць пазіцыі ў выдатак (з пацвярджэннем, калі пазіцыі ўжо ёсць; кожны запуск выдаткоўвае адзін ШІ-запыт)
 
 ### Дзеянні з дэталямі выдатку:
 - **Рэдагаваць** — змяніць выдатак, разам з яго **валютай** (націсніце чып валюты побач з сумай; сама сума не пералічваецца, змяняецца толькі яе абазначэнне)
@@ -36429,7 +36429,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ## Што выяўляе праграма
 
-- **Магчымае двайное спісанне** — той самы прадавец зняў аднолькавую суму двойчы на працягу двух дзён. Варта праверыць, пакуль грошы яшчэ можна вярнуць.
+- **Магчымае двайное спісанне** — той самы прадавец зняў аднолькавую суму двойчы на працягу двух дзён. Варта праверыць, пакуль грошы яшчэ можна вярнуць. Калі адзін запіс прыйшоў з банкаўскага пуша або імпарту, а другі — адсканаваны чэк, апавяшчэнне прапануе **аб'яднаць** іх: націсніце на яго, каб адкрыць экран аб'яднання, — пазіцыі чэка і яго фота перанясуцца на выдатак, які вы пакінеце.
 - **Павышэнне цаны** — падпіска або рэгулярны плацёж стаў даражэй больш чым на 10 % у параўнанні з мінулым разам (напрыклад, стрымінгавы сэрвіс падняў цану).
 - **Падобна на падпіску** — той самы прадавец рэгулярна здымае аднолькавую суму тры разы або больш. Ёсць два варыянты: націсніце на апавяшчэнне, каб адкрыць запоўненую форму ў менеджары падпісак, або націсніце **«Пазначыць як паўторны»** проста ў апавяшчэнні, каб гэты выдатак (напрыклад, арэнда жылля) з гэтага моманту лічыўся паўторным — тады ён перастане штомесяц скажаць прагноз выдаткаў вашага бюджэту.
 - **Незвычайныя выдаткі** — катэгорыя перавышае вашу сярэднюю за папярэднія месяцы як мінімум на 30 %.
@@ -37666,9 +37666,9 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Notities** (indien toegevoegd)
 - **Toegevoegd door** — wordt getoond in gedeelde accounts; toont de naam van het accountlid dat deze post heeft aangemaakt
 - **Synchronisatiestatus** — in behandeling, gesynchroniseerd, conflict of fout
-- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen of Geïmporteerd
-- **Bonitems** — afzonderlijke items (voor gescande bonnen)
-- **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde
+- **Bron** — Handmatige invoer, Spraakinvoer, Bon scannen, Geïmporteerd of Automatisch vastgelegd (boekingen uit een bankmelding of import zijn gemarkeerd, zodat je ze herkent)
+- **Bonitems** — afzonderlijke items (voor gescande bonnen, of later geëxtraheerd via **Artikelen extraheren**)
+- **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde. Is de bon pas na het aanmaken van de uitgave gekoppeld, tik dan op **Artikelen extraheren** in de bonkaart om de bon opnieuw door AI te laten lezen en de regels in de uitgave te zetten (met bevestiging als er al items zijn; elke lezing verbruikt één AI-verzoek)
 
 ### Acties op uitgavedetails:
 - **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld)
@@ -41122,7 +41122,7 @@ Beide blijven gesynchroniseerd — gebruik wat op dat moment het beste past.
 
 ## Wat de app detecteert
 
-- **Mogelijke dubbele afschrijving** — dezelfde handelaar heeft hetzelfde bedrag twee keer in twee dagen in rekening gebracht. Het is de moeite waard om dit te controleren voordat het geld weg is.
+- **Mogelijke dubbele afschrijving** — dezelfde handelaar heeft hetzelfde bedrag twee keer in twee dagen in rekening gebracht. Het is de moeite waard om dit te controleren voordat het geld weg is. Komt de ene boeking uit een bankmelding of import en is de andere een gescande bon, dan stelt de melding ook voor ze **samen te voegen**: tik erop om het samenvoegscherm te openen — de bonregels en de afbeelding worden overgezet naar de uitgave die je behoudt.
 - **Prijsverhoging** — een abonnement of terugkerende betaling is meer dan 10 % duurder geworden dan de vorige keer (bijvoorbeeld een streamingdienst die zijn prijs verhoogt).
 - **Ziet eruit als een abonnement** — dezelfde handelaar heeft je hetzelfde bedrag drie of meer keer op een regelmatig schema in rekening gebracht. Twee opties: tik op de melding om een vooraf ingevuld formulier in het abonnementenbeheer te openen, of tik op **"Markeren als terugkerend"** direct in de melding zodat deze uitgave (huur is een veelvoorkomend voorbeeld) voortaan als terugkerend wordt behandeld — zo verstoort hij niet langer elke maand de uitgavenprognose van je budget.
 - **Ongewone uitgaven** — een categorie ligt minstens 30 % boven je gemiddelde van de vorige maanden.

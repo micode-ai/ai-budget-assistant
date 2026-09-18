@@ -227,6 +227,12 @@ export class AnomalyDetectorsService {
    * Same payee + amount + currency within ±1 calendar day → possible double billing.
    * The "payee" is the merchant, or the description when no merchant is set, so a
    * duplicated expense without a merchant (just a description) is still caught.
+   *
+   * When the duplicate pair is an auto-captured / imported expense vs a scanned
+   * receipt (source 'ocr'), the alert carries `suggestMerge: true` — the receipt
+   * is the richer record, so the feed offers to MERGE the two expenses (carrying
+   * the receipt's items + image onto the survivor) instead of just flagging a
+   * double charge.
    */
   async detectDuplicateCharge(accountId: string, userId: string, expense: DetectorExpense): Promise<void> {
     const label = expensePayee(expense);
@@ -247,16 +253,27 @@ export class AnomalyDetectorsService {
         },
         ...(expense.importBatchId ? { NOT: { importBatchId: expense.importBatchId } } : {}),
       },
-      select: { id: true, merchant: true, description: true },
+      select: { id: true, merchant: true, description: true, source: true },
     });
     const other = candidates.find((c: { merchant?: string | null; description?: string | null }) => expensePayee(c) === label);
     if (!other) return;
+
+    // Receipt-scan vs auto-captured/imported row → the same purchase recorded
+    // twice by different capture channels. Offer the merge instead of a plain
+    // duplicate warning (the receipt carries the line items and the image).
+    const autoSources = new Set(['notification', 'import']);
+    const expenseIsAuto = autoSources.has(expense.source ?? '');
+    const otherIsAuto = autoSources.has((other as { source?: string | null }).source ?? '');
+    const expenseIsReceipt = expense.source === 'ocr';
+    const otherIsReceipt = (other as { source?: string | null }).source === 'ocr';
+    const suggestMerge = (expenseIsAuto && otherIsReceipt) || (otherIsAuto && expenseIsReceipt);
 
     const params = {
       merchant: expense.merchant?.trim() || expense.description?.trim() || '',
       amount: Number(expense.amount).toFixed(2),
       currencyCode: expense.currencyCode,
       otherExpenseId: other.id,
+      ...(suggestMerge ? { suggestMerge: true } : {}),
     };
     await this.alertWriter.createAlert({
       accountId,

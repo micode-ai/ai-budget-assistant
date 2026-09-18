@@ -120,9 +120,9 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Notatki** (jezeli dodano)
 - **Dodane przez** — w udostępnionych kontach; wyświetla nazwę członka konta, który utworzył ten wpis
 - **Status synchronizacji** — oczekujacy, zsynchronizowany, konflikt lub blad
-- **Zrodlo** — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano
-- **Pozycje paragonu** — poszczegolne pozycje (dla zeskanowanych paragonow)
-- **Zdjecie paragonu** — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF pokazują podgląd dokumentu do otwarcia. Jeśli paragon nie jest jeszcze dołączony, dotknij **Dołącz paragon** — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, także dodanego ręcznie
+- **Źródło** — Ręczne wprowadzanie, Głosowo, Skan paragonu, Zaimportowano lub Autozapis (transakcje z powiadomienia bankowego lub importu są oznaczone, by było widać, skąd pochodzą)
+- **Pozycje paragonu** — poszczególne pozycje (dla zeskanowanych paragonów lub wyodrębnione później przez **Wyodrębnij pozycje**)
+- **Zdjęcie paragonu** — przeglądanie, udostępnianie, zapisywanie do galerii, podmiana lub usunięcie zdjęcia paragonu. Paragony PDF są pokazywane jako dokument z możliwością otwarcia. Jeśli paragon nie jest jeszcze dołączony, kliknij **Dołącz paragon**, by go dodać — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, w tym dodanego ręcznie. Jeśli paragon został dołączony po utworzeniu wydatku, kliknij **Wyodrębnij pozycje** w karcie paragonu, aby ponownie odczytać go AI i pobrać pozycje do wydatku (z potwierdzeniem, gdy pozycje już istnieją; każde uruchomienie zużywa jedno zapytanie AI)
 
 ### Dostepne akcje w szczegolach wydatku:
 - **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie)

@@ -120,9 +120,9 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Notes** (si ajoutees)
 - **Ajouté par** — dans les comptes partagés; affiche le nom du membre du compte qui a créé cette entrée
 - **Statut de synchronisation** — en attente, synchronise, conflit ou erreur
-- **Source** — Saisie manuelle, Saisie vocale, Scan de recu ou Importe
-- **Articles du recu** — articles individuels (pour les recus scannes)
-- **Image du recu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du recu. Les reçus PDF affichent un aperçu du document à ouvrir. Si aucun reçu n'est encore joint, appuyez sur **Joindre un reçu** — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles ajoutées manuellement
+- **Source** — Saisie manuelle, Saisie vocale, Scan de reçu, Importé ou Capture automatique (les écritures issues d'une notification bancaire ou d'un import sont marquées pour qu'on les distingue)
+- **Articles du reçu** — articles individuels (pour les reçus scannés, ou extraits plus tard via **Extraire les articles**)
+- **Photo du reçu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du reçu. Les reçus PDF affichent un aperçu de document qui s'ouvre au toucher. Si aucun reçu n'est encore joint, touchez **Joindre un reçu** pour en ajouter un — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles créées à la main. Si le reçu a été joint après la création de la dépense, touchez **Extraire les articles** dans la carte du reçu pour le relire par l'IA et en intégrer les lignes à la dépense (avec confirmation si des articles existent déjà ; chaque lecture consomme une requête IA)
 
 ### Actions sur les details de la depense :
 - **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté)

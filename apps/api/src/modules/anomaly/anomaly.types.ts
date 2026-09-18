@@ -34,4 +34,6 @@ export interface DetectorExpense {
   isRecurring: boolean;
   categoryId: string | null;
   importBatchId: string | null;
+  /** Present on full Prisma rows; only detectDuplicateCharge's merge-suggestion reads it. */
+  source?: string | null;
 }

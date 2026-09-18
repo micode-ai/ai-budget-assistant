@@ -19,7 +19,7 @@ import { useInvitationStore } from '@/stores/invitationStore';
 import { InvitationCard } from '@/components/alerts/InvitationCard';
 import { renderAlertBody, TYPE_ICON } from '@/features/alerts/alertPresentation';
 import { openAlertTargets as openAlertTargetsImpl } from '@/features/alerts/resolveAlertExpense';
-import { buildMarkRecurringUpdate } from '@/features/dashboard/attentionActions';
+import { buildMarkRecurringUpdate, isMergeableDuplicate } from '@/features/dashboard/attentionActions';
 import { useExpenseStore } from '@/stores/expenseStore';
 import type { AnomalyAlert } from '@budget/shared-types';
 
@@ -88,6 +88,20 @@ export default function AlertsScreen() {
         // Navigate to the merge screen; both ids come from the alert params.
         // aId = the expense that triggered the alert; bId = the other candidate.
         const aId = p.expenseId ?? alert.expenseId ?? '';
+        const bId = p.otherExpenseId ?? '';
+        void openAlertTargets(alert, [aId, bId], () =>
+          router.push({ pathname: '/expense/merge' as any, params: { aId, bId } }),
+        );
+      } else if (alert.type === 'duplicate_charge' && canEdit && isMergeableDuplicate(alert)) {
+        // duplicate_charge where one side is auto-captured/imported and the other
+        // is a scanned receipt — the feed suggests merging the two records (the
+        // receipt's items + image travel to the survivor) instead of just
+        // flagging a double charge. Same navigation contract as possible_merge.
+        // `isMergeableDuplicate` (attentionActions) is the shared predicate —
+        // desktop's `alertAction` already routes this pair to the merge screen,
+        // so this branch keeps the alerts screen in agreement with it.
+        const p = alert.params as Record<string, string>;
+        const aId = alert.expenseId ?? '';
         const bId = p.otherExpenseId ?? '';
         void openAlertTargets(alert, [aId, bId], () =>
           router.push({ pathname: '/expense/merge' as any, params: { aId, bId } }),

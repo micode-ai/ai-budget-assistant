@@ -506,6 +506,20 @@ export function TransactionTable({
                               {t('common.uncategorized')}
                             </Text>
                           )}
+                          {/* Origin badge — mirrors `ExpenseListItem`'s own
+                              source badge on mobile, so an import or an
+                              auto-captured (notification-push) row carries the
+                              same mark on desktop. Only these two sources get
+                              a badge, for the same reason: manual/voice/ocr
+                              need no disambiguation in the feed. */}
+                          {!isIncome &&
+                          (row.expense.source === 'import' || row.expense.source === 'notification') ? (
+                            <Text style={styles.sourceBadge} numberOfLines={1}>
+                              {row.expense.source === 'import'
+                                ? t('expenseDetail.sourceImport')
+                                : t('expenseDetail.sourceNotification')}
+                            </Text>
+                          ) : null}
                         </View>
                         <View style={styles.cellAccount}>
                           <Text style={styles.cellText} numberOfLines={1}>
@@ -882,6 +896,13 @@ const createStyles = (theme: Theme) => ({
   cellTextMuted: {
     ...theme.textStyles.bodySm,
     color: theme.colors.textTertiary,
+  },
+  sourceBadge: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    marginTop: 1,
   },
   amountText: {
     ...theme.textStyles.bodyLargeMedium,

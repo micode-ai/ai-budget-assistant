@@ -4,7 +4,7 @@
 
 ## Ce que l'application détecte
 
-- **Possible double débit** — le même commerçant a facturé le même montant deux fois en deux jours. Cela vaut la peine de vérifier avant que l'argent soit parti.
+- **Possible double débit** — le même commerçant a facturé le même montant deux fois en deux jours. Cela vaut la peine de vérifier avant que l'argent soit parti. Si une écriture vient d'une notification bancaire ou d'un import et l'autre est un reçu scanné, l'alerte propose en outre de les **fusionner** : touchez-la pour ouvrir l'écran de fusion — les articles du reçu et son image passent sur la dépense que vous conservez.
 - **Hausse de prix** — un abonnement ou un paiement récurrent est devenu plus de 10 % plus cher par rapport à la dernière fois (par exemple, un service de streaming qui augmente ses tarifs).
 - **Ressemble à un abonnement** — le même commerçant vous a facturé le même montant trois fois ou plus à intervalles réguliers. Deux options : appuyez sur l'alerte pour ouvrir un formulaire prérempli du Gestionnaire d'abonnements, ou appuyez sur **« Marquer comme récurrent »** directement dans l'alerte pour que cette dépense (le loyer, par exemple) soit désormais traitée comme récurrente — elle cessera ainsi de fausser la prévision de dépenses de votre budget chaque mois.
 - **Dépense inhabituelle** — une catégorie est au moins 30 % au-dessus de votre moyenne des mois précédents.

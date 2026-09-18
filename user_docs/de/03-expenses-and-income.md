@@ -120,9 +120,9 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Notizen** (falls hinzugefugt)
 - **Hinzugefügt von** — in geteilten Konten; zeigt den Namen des Kontomitglieds, das diesen Eintrag erstellt hat
 - **Synchronisierungsstatus** — Ausstehend, Synchronisiert, Konflikt oder Fehler
-- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan oder Importiert
-- **Belegpositionen** — einzelne Artikel (fur gescannte Belege)
-- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefugte
+- **Quelle** — Manuelle Eingabe, Spracheingabe, Belegscan, Importiert oder Automatisch erfasst (Buchungen aus Bank-Push oder Bank-Import sind markiert, damit man sie erkennt)
+- **Belegpositionen** — einzelne Artikel (für gescannte Belege oder später über **Positionen extrahieren** gezogen)
+- **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefügte. Wurde der Beleg erst nach dem Anlegen der Ausgabe angehängt, tippe in der Belegkarte auf **Positionen extrahieren**, um den Beleg erneut von der KI lesen zu lassen und die Positionen in die Ausgabe zu ziehen (mit Bestätigung, falls bereits Positionen vorhanden sind; jeder Lauf verbraucht eine KI-Anfrage)
 
 ### Aktionen bei Ausgabendetails:
 - **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet)

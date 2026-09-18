@@ -123,6 +123,7 @@ export function ExpenseDialog({
   const styles = useStyles(createStyles);
 
   const [isEditing, setIsEditing] = useState(initialEditing);
+  const [hasReceipt, setHasReceipt] = useState(false);
   const expenseRef = useRef<ExpenseDetailsCardHandle>(null);
   const incomeRef = useRef<IncomeDetailsCardHandle>(null);
 
@@ -265,18 +266,26 @@ export function ExpenseDialog({
                   tripMembers={tripMembers}
                 />
 
-                {/* Mirrors `app/expense/[id].tsx:296-306` exactly — same three
+                {/* Mirrors `app/expense/[id].tsx:300-307` exactly — same three
                     sections, same conditions, same order. Decision 4 replaced
                     navigating to that screen with this dialog, so anything it
                     shows and this dialog didn't would be unreachable from
                     desktop entirely; there is no "open full detail" path left
                     to fall back to. `row.expense.id` is the same LOCAL id
                     `[id].tsx` passes as its route param — these sections
-                    already key off that, never the server id. */}
-                {row.expense.source === 'ocr' && (
+                    already key off that, never the server id. Receipt Items
+                    render for OCR expenses OR when a receipt is attached
+                    (reported via `ReceiptSection`'s `onReceiptLoaded`), so the
+                    desktop dialog also gains the "Extract items" flow that
+                    appears in the mobile receipt card. */}
+                {(row.expense.source === 'ocr' || hasReceipt) && (
                   <ExpenseItemsSection expenseId={row.expense.id} currencyCode={row.expense.currencyCode} />
                 )}
-                <ReceiptSection expenseId={row.expense.id} />
+                <ReceiptSection
+                  expenseId={row.expense.id}
+                  canEdit={canEdit}
+                  onReceiptLoaded={setHasReceipt}
+                />
                 <LocationSection expense={row.expense} canEdit={canEdit} />
               </>
             )}

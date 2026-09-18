@@ -1,6 +1,7 @@
 import type { AnomalyAlert } from '@budget/shared-types';
 import {
   alertAction,
+  isMergeableDuplicate,
   mergeTargets,
   buildTrackedSubscription,
   buildMarkRecurringUpdate,
@@ -67,6 +68,33 @@ describe('alertAction', () => {
     // two write branches. A viewer would lose the one alert action that is
     // legitimately theirs.
     expect(alertAction(alert({ type: 'duplicate_charge', expenseId: 'e1' }), false)).toBe('expense');
+  });
+
+  it('offers the merge screen for a mergeable duplicate (autocapture/import vs scanned receipt)', () => {
+    // Breaks if: `alertAction` only knows `possible_merge` as a merge row. A
+    // `duplicate_charge` whose params carry `suggestMerge` (API:
+    // `detectDuplicateCharge`'s autocapture/import-vs-ocr pair) opens the
+    // merge screen for an editor so the two records can be reconciled.
+    const mergeable = alert({
+      type: 'duplicate_charge',
+      expenseId: 'e1',
+      params: { otherExpenseId: 'e2', suggestMerge: true },
+    });
+    expect(isMergeableDuplicate(mergeable)).toBe(true);
+    expect(alertAction(mergeable, true)).toBe('merge');
+    expect(mergeTargets(mergeable)).toEqual({ aId: 'e1', bId: 'e2' });
+  });
+
+  it('keeps a plain duplicate as an expense, and a viewer read-only on a mergeable one', () => {
+    const plain = alert({ type: 'duplicate_charge', expenseId: 'e1', params: { otherExpenseId: 'e2' } });
+    expect(isMergeableDuplicate(plain)).toBe(false);
+    expect(alertAction(plain, true)).toBe('expense');
+    const mergeable = alert({
+      type: 'duplicate_charge',
+      expenseId: 'e1',
+      params: { otherExpenseId: 'e2', suggestMerge: true },
+    });
+    expect(alertAction(mergeable, false)).toBe('expense');
   });
 });
 

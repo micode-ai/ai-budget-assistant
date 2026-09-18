@@ -4,7 +4,7 @@
 
 ## Wat de app detecteert
 
-- **Mogelijke dubbele afschrijving** — dezelfde handelaar heeft hetzelfde bedrag twee keer in twee dagen in rekening gebracht. Het is de moeite waard om dit te controleren voordat het geld weg is.
+- **Mogelijke dubbele afschrijving** — dezelfde handelaar heeft hetzelfde bedrag twee keer in twee dagen in rekening gebracht. Het is de moeite waard om dit te controleren voordat het geld weg is. Komt de ene boeking uit een bankmelding of import en is de andere een gescande bon, dan stelt de melding ook voor ze **samen te voegen**: tik erop om het samenvoegscherm te openen — de bonregels en de afbeelding worden overgezet naar de uitgave die je behoudt.
 - **Prijsverhoging** — een abonnement of terugkerende betaling is meer dan 10 % duurder geworden dan de vorige keer (bijvoorbeeld een streamingdienst die zijn prijs verhoogt).
 - **Ziet eruit als een abonnement** — dezelfde handelaar heeft je hetzelfde bedrag drie of meer keer op een regelmatig schema in rekening gebracht. Twee opties: tik op de melding om een vooraf ingevuld formulier in het abonnementenbeheer te openen, of tik op **"Markeren als terugkerend"** direct in de melding zodat deze uitgave (huur is een veelvoorkomend voorbeeld) voortaan als terugkerend wordt behandeld — zo verstoort hij niet langer elke maand de uitgavenprognose van je budget.
 - **Ongewone uitgaven** — een categorie ligt minstens 30 % boven je gemiddelde van de vorige maanden.
