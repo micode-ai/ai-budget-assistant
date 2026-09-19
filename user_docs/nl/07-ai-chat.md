@@ -77,6 +77,17 @@ De assistent noemt het totaal, uit hoeveel bonnen het komt en in welke winkels j
 
 Het bedrag komt van de statiegeldregel op je **gescande bonnen**, dus ook bonnen die de app niet in categorieën kon opsplitsen tellen mee. Het is het bedrag dat je al hebt **betaald**, niet een vergoeding die je nog kunt ophalen — de app houdt niet bij welke verpakking je hebt ingeleverd. Handmatig ingevoerde uitgaven hebben geen statiegeld, en op een volledig versleutelde account kan de assistent de bedragen helemaal niet lezen.
 
+## Vragen naar kortingen
+
+Veel winkels trekken korting direct van het bonnetje af. Je kunt de assistent vragen hoeveel je in totaal hebt bespaard:
+
+- "Hoeveel korting heb ik deze maand gekregen?"
+- "Hoeveel korting in totaal?"
+
+De assistent noemt het totaal, uit hoeveel bonnen het komt en in welke winkels je het meest hebt bespaard. Vraag het in je eigen woorden — de plaatselijke term werkt in elke taal die de app ondersteunt (korting, rabat, Rabatt, réduction, discount). Noem je geen periode, dan wordt je hele geschiedenis meegenomen.
+
+Het bedrag komt van de korting op je **gescande bonnen**, dus ook bonnen die de app niet in categorieën kon opsplitsen tellen mee. Handmatig ingevoerde uitgaven en bank-/Wise-imports hebben geen kortingsbedrag, en op een volledig versleutelde account kan de assistent de bedragen helemaal niet lezen.
+
 ## Gespreksgeschiedenis
 
 Je kunt eerdere AI-gesprekken op elk moment doorbladeren en heropenen:

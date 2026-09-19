@@ -374,6 +374,7 @@ export default {
     shoppingSuggestionsDeals: 'Скидки',
     actionInflationShield: 'Защита от инфляции',
     actionDepositTotal: 'Залог за тару',
+    actionDiscountTotal: 'Скидки получено',
     andMore: '+{{count}} ещё',
     confirmTitle: 'Подтвердите действие',
     resultSuccess: 'Успешно выполнено',

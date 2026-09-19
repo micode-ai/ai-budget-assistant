@@ -18,6 +18,7 @@ import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { attributeToCategories } from '../../../common/utils/category-attribution';
 import { buildSearchUnits } from '../utils/semantic-filter';
 import { summariseDeposits } from '../utils/deposit-summary';
+import { summariseDiscounts } from '../utils/discount-summary';
 import { getRatesSafe, convertAmount } from '../../../common/utils/fx';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
@@ -328,6 +329,28 @@ export class AiToolsService {
           },
         },
       },
+      {
+        type: 'function',
+        function: {
+          name: 'get_discount_total',
+          description:
+            'Get how much the user has been given in discounts on their purchases — money already taken off a receipt\'s basket, from per-item markdowns or a store coupon. Use for ANY question about this in any language: "rabat"/"zniżka"/"opust" (PL), "Rabatt" (DE), "korting" (NL), "réduction"/"remise" (FR), "descuento" (ES), "скидка" (RU), "знижка" (UA), "зніжка" (BE), "discount" (EN). Returns the total, the number of receipts, the top stores and the most recent receipts. Read-only. Both dates are OPTIONAL — omit them unless the user named a period, and the whole history is searched.',
+          parameters: {
+            type: 'object',
+            properties: {
+              startDate: {
+                type: 'string',
+                description: 'Start of the period, YYYY-MM-DD. Omit unless the user named a period.',
+              },
+              endDate: {
+                type: 'string',
+                description: 'End of the period, YYYY-MM-DD. Omit unless the user named a period.',
+              },
+            },
+            required: [],
+          },
+        },
+      },
     ];
   }
 
@@ -395,6 +418,8 @@ export class AiToolsService {
           return await this.executeGetShoppingSuggestions(accountId);
         case 'get_deposit_total':
           return await this.executeGetDepositTotal(data, accountId, baseCurrency);
+        case 'get_discount_total':
+          return await this.executeGetDiscountTotal(data, accountId, baseCurrency);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }
@@ -1045,6 +1070,83 @@ export class AiToolsService {
         // Native per-currency totals, so an amount dropped for want of a rate
         // is still visible instead of silently missing.
         depositsByCurrency: summary.totalsByCurrency,
+        period: { startDate, endDate },
+        ...(baseCurrency ? { baseCurrency } : {}),
+        ...(fxConverted ? { fxConverted: true } : {}),
+        ...(summary.unconvertedCount > 0 ? { fxApproximate: true, unconvertedCount: summary.unconvertedCount } : {}),
+        ...(result.truncated ? { truncated: true } : {}),
+      },
+    };
+  }
+
+  /**
+   * How much the user has been given in discounts on their purchases.
+   *
+   * Reads `Expense.discountAmount`, NOT the category split — the split only
+   * exists when it survived (>= 2 categories and reconciling arithmetic), so
+   * a chat answer built on it is silent for exactly the shopping trips where
+   * the discount is the whole question. A number carries no language, so this
+   * answers a Polish "rabat" question and a German "Rabatt" one through one
+   * code path. Mirrors `executeGetDepositTotal` deliberately.
+   *
+   * Default period is the WHOLE history, same rationale as the deposit tool:
+   * a bare "how much have I saved in discounts" carries no period, and
+   * defaulting to a narrow window is the known first cause of "found nothing"
+   * answers (see `executeGetExpenses`).
+   */
+  private async executeGetDiscountTotal(
+    data: Record<string, unknown>,
+    accountId: string,
+    baseCurrency?: string,
+  ): Promise<ChatActionResult> {
+    const todayIso = new Date().toISOString().slice(0, 10);
+    const startDate = data.startDate ? String(data.startDate) : ALL_TIME_START;
+    const endDate = data.endDate ? String(data.endDate) : todayIso;
+
+    const result = await this.analyticsService.getDiscountRows(
+      accountId,
+      new Date(startDate),
+      new Date(endDate),
+    );
+
+    // Answering "0" for an account whose amounts we cannot read would be a
+    // false statement, not a missing feature — say which it is.
+    if ('encryptionRestricted' in result && result.encryptionRestricted) {
+      return {
+        actionType: 'get_discount_total',
+        success: true,
+        data: { encryptionRestricted: true, period: { startDate, endDate } },
+      };
+    }
+
+    const rates = await this.getRatesSafe(baseCurrency);
+    let fxConverted = false;
+    // A row in the display currency needs no rate at all, so a single-currency
+    // account is answered exactly even when the rate provider is down. A
+    // foreign row with no rate returns null and the util drops it from the
+    // total rather than adding it in the wrong currency.
+    const convert = (amount: number, from: string): number | null => {
+      if (!baseCurrency || !from || from === baseCurrency) return amount;
+      if (!rates) return null;
+      const converted = convertAmount(amount, from, baseCurrency, rates);
+      if (converted == null) return null;
+      fxConverted = true;
+      return converted;
+    };
+
+    const summary = summariseDiscounts(result.rows, convert);
+
+    return {
+      actionType: 'get_discount_total',
+      success: true,
+      data: {
+        total: summary.total,
+        receiptCount: summary.receiptCount,
+        byMerchant: summary.byMerchant,
+        recent: summary.recent,
+        // Native per-currency totals, so an amount dropped for want of a rate
+        // is still visible instead of silently missing.
+        discountsByCurrency: summary.totalsByCurrency,
         period: { startDate, endDate },
         ...(baseCurrency ? { baseCurrency } : {}),
         ...(fxConverted ? { fxConverted: true } : {}),

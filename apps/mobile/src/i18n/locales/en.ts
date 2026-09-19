@@ -372,6 +372,7 @@ export default {
     shoppingSuggestionsDeals: 'Deals',
     actionInflationShield: 'Inflation Shield',
     actionDepositTotal: 'Deposits paid',
+    actionDiscountTotal: 'Discounts saved',
     // ABA-513: was hardcoded English "+{n} more" in ActionResultCard.tsx
     // (four call sites) in all nine locales; copied verbatim from the
     // already-identical `expensesDesktop.showMore`/`priceHistory.showMore`.

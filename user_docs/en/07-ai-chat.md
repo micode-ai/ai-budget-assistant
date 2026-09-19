@@ -77,6 +77,17 @@ The assistant answers with the total, how many receipts it came from, and the sh
 
 The figure comes from the deposit line printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. It is the amount you have already **paid**, not a refund you can still collect — the app does not track which packaging you have taken back. Manually typed expenses carry no deposit, and on a fully encrypted account the assistant cannot read the amounts at all.
 
+## Asking About Discounts
+
+You can ask the assistant how much you have been given in discounts on your purchases:
+
+- "How much did I save in discounts this month?"
+- "How much rabat this year?"
+
+The assistant answers with the total, how many receipts it came from, and the shops that gave you the biggest discounts. Ask in your own words — the local term works in every language the app supports (rabat, Rabatt, korting, réduction, descuento, discount). If you do not mention a time period, it covers your whole history.
+
+The figure comes from the discount printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. Manually typed expenses and bank/Wise imports carry no discount figure, and on a fully encrypted account the assistant cannot read the amounts at all.
+
 ## Conversation History
 
 You can browse and reopen previous AI conversations at any time:

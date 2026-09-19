@@ -77,6 +77,17 @@ Asystent podaje sumę, z ilu paragonów pochodzi i w których sklepach zapłaci�
 
 Kwota pochodzi z pozycji kaucji wydrukowanej na **zeskanowanych paragonach**, więc liczy też paragony, których aplikacja nie podzieliła na kategorie. To kwota już **zapłacona**, a nie zwrot, który możesz jeszcze odebrać — aplikacja nie śledzi, które opakowania oddałeś. Ręcznie wpisane wydatki nie mają kaucji, a na koncie w pełni zaszyfrowanym asystent w ogóle nie odczyta kwot.
 
+## Pytanie o rabaty
+
+Wiele sklepów odejmuje rabat bezpośrednio na paragonie. Możesz zapytać asystenta, ile łącznie zaoszczędziłeś:
+
+- „Ile rabatu dostałem w tym miesiącu?”
+- „Ile rabatu łącznie?”
+
+Asystent podaje sumę, z ilu paragonów pochodzi i w których sklepach zaoszczędziłeś najwięcej. Pytaj własnymi słowami — lokalne określenie działa w każdym języku obsługiwanym przez aplikację (rabat, zniżka, opust, Rabatt, korting, discount). Jeśli nie podasz okresu, obejmuje całą historię.
+
+Kwota pochodzi z rabatu wydrukowanego na **zeskanowanych paragonach**, więc liczy też paragony, których aplikacja nie podzieliła na kategorie. Ręcznie wpisane wydatki oraz importy bankowe czy z Wise nie mają kwoty rabatu, a na koncie w pełni zaszyfrowanym asystent w ogóle nie odczyta kwot.
+
 ## Historia rozmów
 
 Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:

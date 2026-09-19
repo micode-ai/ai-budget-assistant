@@ -372,6 +372,7 @@ export default {
     shoppingSuggestionsDeals: 'Aanbiedingen',
     actionInflationShield: 'Inflatieschild',
     actionDepositTotal: 'Betaald statiegeld',
+    actionDiscountTotal: 'Ontvangen korting',
     andMore: '+{{count}} meer',
     confirmTitle: 'Actie bevestigen',
     resultSuccess: 'Succesvol afgerond',

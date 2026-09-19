@@ -372,6 +372,7 @@ export default {
     shoppingSuggestionsDeals: 'Ofertas',
     actionInflationShield: 'Escudo antiinflación',
     actionDepositTotal: 'Depósito pagado',
+    actionDiscountTotal: 'Descuentos obtenidos',
     andMore: '+{{count}} más',
     confirmTitle: 'Confirmar acción',
     resultSuccess: 'Completado con éxito',

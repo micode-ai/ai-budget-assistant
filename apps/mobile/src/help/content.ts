@@ -1071,6 +1071,17 @@ The assistant answers with the total, how many receipts it came from, and the sh
 
 The figure comes from the deposit line printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. It is the amount you have already **paid**, not a refund you can still collect — the app does not track which packaging you have taken back. Manually typed expenses carry no deposit, and on a fully encrypted account the assistant cannot read the amounts at all.
 
+## Asking About Discounts
+
+You can ask the assistant how much you have been given in discounts on your purchases:
+
+- "How much did I save in discounts this month?"
+- "How much rabat this year?"
+
+The assistant answers with the total, how many receipts it came from, and the shops that gave you the biggest discounts. Ask in your own words — the local term works in every language the app supports (rabat, Rabatt, korting, réduction, descuento, discount). If you do not mention a time period, it covers your whole history.
+
+The figure comes from the discount printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. Manually typed expenses and bank/Wise imports carry no discount figure, and on a fully encrypted account the assistant cannot read the amounts at all.
+
 ## Conversation History
 
 You can browse and reopen previous AI conversations at any time:
@@ -5801,6 +5812,17 @@ iOS, Android, Web
 
 Сумма берётся из строки залога, напечатанной на **отсканированных чеках**, поэтому учитываются и те чеки, которые приложение не смогло разбить по категориям. Это уже **уплаченная** сумма, а не возврат, который можно получить, — приложение не отслеживает, какую тару вы сдали. У расходов, введённых вручную, залога нет, а на полностью зашифрованном аккаунте ассистент вообще не может прочитать суммы.
 
+## Вопрос о скидках
+
+Многие магазины вычитают скидку прямо на чеке. Можно спросить ассистента, сколько вы всего сэкономили:
+
+- «Сколько скидки я получил в этом месяце?»
+- «Сколько скидок всего?»
+
+Ассистент назовёт сумму, из скольких чеков она собрана и в каких магазинах вы сэкономили больше всего. Спрашивайте своими словами — местное название работает на любом языке, который поддерживает приложение (скидка, rabat, Rabatt, korting, discount). Если период не указан, берётся вся история.
+
+Сумма берётся из скидки, напечатанной на **отсканированных чеках**, поэтому учитываются и те чеки, которые приложение не смогло разбить по категориям. У расходов, введённых вручную, и у импортов из банка или Wise суммы скидки нет, а на полностью зашифрованном аккаунте ассистент вообще не может прочитать суммы.
+
 ## История разговоров
 
 Вы можете просматривать и возвращаться к предыдущим разговорам с ИИ в любое время:
@@ -10509,6 +10531,17 @@ iOS, Android, Web
 
 Сума береться з рядка застави, надрукованого на **відсканованих чеках**, тому враховуються й ті чеки, які застосунок не зміг розбити за категоріями. Це вже **сплачена** сума, а не повернення, яке можна отримати, — застосунок не відслідковує, яку тару ви здали. У витратах, введених уручну, застави немає, а на повністю зашифрованому акаунті асистент узагалі не може прочитати суми.
 
+## Запитання про знижки
+
+Багато магазинів віднімають знижку прямо на чеку. Можна запитати асистента, скільки ви загалом заощадили:
+
+- «Скільки знижки я отримав цього місяця?»
+- «Скільки знижок загалом?»
+
+Асистент назве суму, зі скількох чеків вона зібрана і в яких магазинах ви заощадили найбільше. Питайте своїми словами — місцева назва працює будь-якою мовою, яку підтримує застосунок (знижка, rabat, Rabatt, korting, discount). Якщо період не вказано, береться вся історія.
+
+Сума береться зі знижки, надрукованої на **відсканованих чеках**, тому враховуються й ті чеки, які застосунок не зміг розбити за категоріями. У витратах, введених уручну, і в імпортах з банку чи Wise суми знижки немає, а на повністю зашифрованому акаунті асистент узагалі не може прочитати суми.
+
 ## Історія розмов
 
 Ви можете переглядати та повертатися до попередніх розмов з ШІ у будь-який час:
@@ -15165,6 +15198,17 @@ Asystent podaje sumę, z ilu paragonów pochodzi i w których sklepach zapłaci�
 
 Kwota pochodzi z pozycji kaucji wydrukowanej na **zeskanowanych paragonach**, więc liczy też paragony, których aplikacja nie podzieliła na kategorie. To kwota już **zapłacona**, a nie zwrot, który możesz jeszcze odebrać — aplikacja nie śledzi, które opakowania oddałeś. Ręcznie wpisane wydatki nie mają kaucji, a na koncie w pełni zaszyfrowanym asystent w ogóle nie odczyta kwot.
 
+## Pytanie o rabaty
+
+Wiele sklepów odejmuje rabat bezpośrednio na paragonie. Możesz zapytać asystenta, ile łącznie zaoszczędziłeś:
+
+- „Ile rabatu dostałem w tym miesiącu?”
+- „Ile rabatu łącznie?”
+
+Asystent podaje sumę, z ilu paragonów pochodzi i w których sklepach zaoszczędziłeś najwięcej. Pytaj własnymi słowami — lokalne określenie działa w każdym języku obsługiwanym przez aplikację (rabat, zniżka, opust, Rabatt, korting, discount). Jeśli nie podasz okresu, obejmuje całą historię.
+
+Kwota pochodzi z rabatu wydrukowanego na **zeskanowanych paragonach**, więc liczy też paragony, których aplikacja nie podzieliła na kategorie. Ręcznie wpisane wydatki oraz importy bankowe czy z Wise nie mają kwoty rabatu, a na koncie w pełni zaszyfrowanym asystent w ogóle nie odczyta kwot.
+
 ## Historia rozmów
 
 Możesz przeglądać i wznawiać poprzednie rozmowy z AI w dowolnym momencie:
@@ -19817,6 +19861,17 @@ Der Assistent nennt die Summe, aus wie vielen Belegen sie stammt und in welchen 
 
 Der Betrag stammt aus der Pfandzeile auf Ihren **gescannten Belegen**, daher zählen auch Belege mit, die die App nicht in Kategorien aufteilen konnte. Es ist der bereits **bezahlte** Betrag, keine Rückerstattung, die Sie noch abholen können — die App verfolgt nicht, welche Verpackungen Sie zurückgegeben haben. Manuell eingegebene Ausgaben enthalten kein Pfand, und in einem vollständig verschlüsselten Konto kann der Assistent die Beträge überhaupt nicht lesen.
 
+## Nach Rabatten fragen
+
+In vielen Geschäften wird ein Rabatt direkt auf dem Kassenbon abgezogen. Sie können den Assistenten fragen, wie viel Sie insgesamt gespart haben:
+
+- „Wie viel Rabatt habe ich diesen Monat bekommen?"
+- „Wie viel Rabatt insgesamt?"
+
+Der Assistent nennt die Summe, aus wie vielen Belegen sie stammt und in welchen Geschäften Sie am meisten gespart haben. Fragen Sie in eigenen Worten — der lokale Begriff funktioniert in jeder von der App unterstützten Sprache (Rabatt, rabat, korting, réduction, descuento, discount). Ohne Zeitangabe wird der gesamte Verlauf berücksichtigt.
+
+Der Betrag stammt aus dem Rabatt auf Ihren **gescannten Belegen**, daher zählen auch Belege mit, die die App nicht in Kategorien aufteilen konnte. Manuell eingegebene Ausgaben und Bank-/Wise-Importe enthalten keinen Rabatt, und in einem vollständig verschlüsselten Konto kann der Assistent die Beträge überhaupt nicht lesen.
+
 ## Gesprächsverlauf
 
 Du kannst frühere KI-Gespräche jederzeit aufrufen:
@@ -24444,6 +24499,17 @@ El asistente indica el total, de cuántos recibos procede y en qué tiendas has 
 
 La cifra proviene de la línea de depósito impresa en tus **recibos escaneados**, así que también cuenta los recibos que la aplicación no pudo dividir en categorías. Es la cantidad que ya has **pagado**, no un reembolso que aún puedas recuperar: la aplicación no registra qué envases has devuelto. Los gastos escritos a mano no llevan depósito y, en una cuenta totalmente cifrada, el asistente no puede leer los importes.
 
+## Preguntar por los descuentos
+
+Muchas tiendas descuentan directamente en el ticket. Puedes preguntar al asistente cuánto has ahorrado en total:
+
+- «¿Cuánto descuento he obtenido este mes?»
+- «¿Cuánto descuento en total?»
+
+El asistente indica el total, de cuántos recibos procede y en qué tiendas has ahorrado más. Pregunta con tus propias palabras: el término local funciona en cualquier idioma que admita la aplicación (descuento, rabat, Rabatt, korting, réduction, discount). Si no indicas un periodo, se cubre todo tu historial.
+
+La cifra proviene del descuento impreso en tus **recibos escaneados**, así que también cuenta los recibos que la aplicación no pudo dividir en categorías. Los gastos escritos a mano y las importaciones bancarias o de Wise no llevan cifra de descuento, y en una cuenta totalmente cifrada el asistente no puede leer los importes.
+
 ## Historial de conversaciones
 
 Puedes explorar y reabrir conversaciones anteriores en cualquier momento:
@@ -29060,6 +29126,17 @@ L'assistant donne le total, le nombre de tickets concernés et les magasins où 
 
 Le montant provient de la ligne de consigne imprimée sur vos **tickets scannés**, donc les tickets que l'application n'a pas pu répartir en catégories comptent aussi. C'est le montant déjà **payé**, et non un remboursement encore à récupérer : l'application ne suit pas les emballages que vous avez rapportés. Les dépenses saisies à la main ne comportent pas de consigne et, sur un compte entièrement chiffré, l'assistant ne peut pas lire les montants.
 
+## Poser une question sur les réductions
+
+De nombreux magasins déduisent une réduction directement sur le ticket de caisse. Vous pouvez demander à l'assistant combien vous avez économisé au total :
+
+- « Combien de réduction ai-je obtenue ce mois-ci ? »
+- « Combien de réduction au total ? »
+
+L'assistant donne le total, le nombre de tickets concernés et les magasins où vous avez le plus économisé. Posez la question avec vos propres mots — le terme local fonctionne dans toutes les langues prises en charge par l'application (réduction, remise, rabat, Rabatt, korting, discount). Sans période précisée, tout votre historique est pris en compte.
+
+Le montant provient de la réduction imprimée sur vos **tickets scannés**, donc les tickets que l'application n'a pas pu répartir en catégories comptent aussi. Les dépenses saisies à la main et les imports bancaires ou Wise ne comportent pas de réduction, et sur un compte entièrement chiffré, l'assistant ne peut pas lire les montants.
+
 ## Historique des conversations
 
 Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :
@@ -33674,6 +33751,17 @@ iOS, Android, Web
 
 Сума бярэцца з радка закладзі, надрукаванага на **адсканаваных чэках**, таму ўлічваюцца і тыя чэкі, якія дадатак не змог разбіць па катэгорыях. Гэта ўжо **заплачаная** сума, а не вяртанне, якое можна атрымаць, — дадатак не адсочвае, якую тару вы здалі. У выдаткаў, уведзеных уручную, закладзі няма, а на цалкам зашыфраваным акаўнце асістэнт зусім не можа прачытаць сумы.
 
+## Пытанне пра зніжкі
+
+Многія крамы адымаюць зніжку проста на чэку. Можна спытаць асістэнта, колькі вы агулам зэканомілі:
+
+- «Колькі зніжкі я атрымаў у гэтым месяцы?»
+- «Колькі зніжак агулам?»
+
+Асістэнт назаве суму, са скольких чэкаў яна складзена і ў якіх крамах вы зэканомілі найбольш. Пытайцеся сваімі словамі — мясцовая назва працуе на любой мове, якую падтрымлівае дадатак (зніжка, rabat, Rabatt, korting, discount). Калі перыяд не пазначаны, бярэцца ўся гісторыя.
+
+Сума бярэцца са зніжкі, надрукаванай на **адсканаваных чэках**, таму ўлічваюцца і тыя чэкі, якія дадатак не змог разбіць па катэгорыях. У выдаткаў, уведзеных уручную, і ў імпартах з банка ці Wise сумы зніжкі няма, а на цалкам зашыфраваным акаўнце асістэнт зусім не можа прачытаць сумы.
+
 ## Гісторыя размоў
 
 Вы можаце праглядаць і вяртацца да папярэдніх размоў з ШІ у любы момант:
@@ -38251,6 +38339,17 @@ In veel landen rekenen winkels apart statiegeld voor flessen, blikjes en kratten
 De assistent noemt het totaal, uit hoeveel bonnen het komt en in welke winkels je het meest hebt betaald. Vraag het in je eigen woorden — de plaatselijke term werkt in elke taal die de app ondersteunt (statiegeld, kaucja, Pfand, consigne, depósito, bottle deposit). Noem je geen periode, dan wordt je hele geschiedenis meegenomen.
 
 Het bedrag komt van de statiegeldregel op je **gescande bonnen**, dus ook bonnen die de app niet in categorieën kon opsplitsen tellen mee. Het is het bedrag dat je al hebt **betaald**, niet een vergoeding die je nog kunt ophalen — de app houdt niet bij welke verpakking je hebt ingeleverd. Handmatig ingevoerde uitgaven hebben geen statiegeld, en op een volledig versleutelde account kan de assistent de bedragen helemaal niet lezen.
+
+## Vragen naar kortingen
+
+Veel winkels trekken korting direct van het bonnetje af. Je kunt de assistent vragen hoeveel je in totaal hebt bespaard:
+
+- "Hoeveel korting heb ik deze maand gekregen?"
+- "Hoeveel korting in totaal?"
+
+De assistent noemt het totaal, uit hoeveel bonnen het komt en in welke winkels je het meest hebt bespaard. Vraag het in je eigen woorden — de plaatselijke term werkt in elke taal die de app ondersteunt (korting, rabat, Rabatt, réduction, discount). Noem je geen periode, dan wordt je hele geschiedenis meegenomen.
+
+Het bedrag komt van de korting op je **gescande bonnen**, dus ook bonnen die de app niet in categorieën kon opsplitsen tellen mee. Handmatig ingevoerde uitgaven en bank-/Wise-imports hebben geen kortingsbedrag, en op een volledig versleutelde account kan de assistent de bedragen helemaal niet lezen.
 
 ## Gespreksgeschiedenis
 

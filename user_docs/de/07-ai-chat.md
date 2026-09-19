@@ -77,6 +77,17 @@ Der Assistent nennt die Summe, aus wie vielen Belegen sie stammt und in welchen 
 
 Der Betrag stammt aus der Pfandzeile auf Ihren **gescannten Belegen**, daher zählen auch Belege mit, die die App nicht in Kategorien aufteilen konnte. Es ist der bereits **bezahlte** Betrag, keine Rückerstattung, die Sie noch abholen können — die App verfolgt nicht, welche Verpackungen Sie zurückgegeben haben. Manuell eingegebene Ausgaben enthalten kein Pfand, und in einem vollständig verschlüsselten Konto kann der Assistent die Beträge überhaupt nicht lesen.
 
+## Nach Rabatten fragen
+
+In vielen Geschäften wird ein Rabatt direkt auf dem Kassenbon abgezogen. Sie können den Assistenten fragen, wie viel Sie insgesamt gespart haben:
+
+- „Wie viel Rabatt habe ich diesen Monat bekommen?"
+- „Wie viel Rabatt insgesamt?"
+
+Der Assistent nennt die Summe, aus wie vielen Belegen sie stammt und in welchen Geschäften Sie am meisten gespart haben. Fragen Sie in eigenen Worten — der lokale Begriff funktioniert in jeder von der App unterstützten Sprache (Rabatt, rabat, korting, réduction, descuento, discount). Ohne Zeitangabe wird der gesamte Verlauf berücksichtigt.
+
+Der Betrag stammt aus dem Rabatt auf Ihren **gescannten Belegen**, daher zählen auch Belege mit, die die App nicht in Kategorien aufteilen konnte. Manuell eingegebene Ausgaben und Bank-/Wise-Importe enthalten keinen Rabatt, und in einem vollständig verschlüsselten Konto kann der Assistent die Beträge überhaupt nicht lesen.
+
 ## Gesprächsverlauf
 
 Du kannst frühere KI-Gespräche jederzeit aufrufen:

@@ -30,6 +30,8 @@ describe('invalidateExpenseChatCache', () => {
         // Reads `Expense.depositAmount`, so a receipt scanned right after the
         // question must not leave the deposit total 10 minutes stale.
         'chat:get_deposit_total:a1:',
+        // Same reasoning, reads `Expense.discountAmount`.
+        'chat:get_discount_total:a1:',
       ]),
     );
   });

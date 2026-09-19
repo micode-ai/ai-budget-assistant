@@ -374,6 +374,7 @@ export default {
     shoppingSuggestionsDeals: 'Знижки',
     actionInflationShield: 'Захист від інфляції',
     actionDepositTotal: 'Застава за тару',
+    actionDiscountTotal: 'Знижки отримано',
     andMore: '+{{count}} більше',
     confirmTitle: 'Підтвердіть дію',
     resultSuccess: 'Успішно виконано',

@@ -374,6 +374,7 @@ export default {
     shoppingSuggestionsDeals: 'Okazje',
     actionInflationShield: 'Tarcza antyinflacyjna',
     actionDepositTotal: 'Zapłacona kaucja',
+    actionDiscountTotal: 'Uzyskane rabaty',
     andMore: '+{{count}} więcej',
     confirmTitle: 'Potwierdź akcję',
     resultSuccess: 'Zakończono pomyślnie',

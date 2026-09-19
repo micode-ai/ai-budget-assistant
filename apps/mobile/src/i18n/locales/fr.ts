@@ -372,6 +372,7 @@ export default {
     shoppingSuggestionsDeals: 'Bonnes affaires',
     actionInflationShield: 'Bouclier anti-inflation',
     actionDepositTotal: 'Consigne payée',
+    actionDiscountTotal: 'Réductions obtenues',
     andMore: '+{{count}} de plus',
     confirmTitle: 'Confirmer l\'action',
     resultSuccess: 'Terminé avec succès',

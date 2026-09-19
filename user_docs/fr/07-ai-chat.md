@@ -77,6 +77,17 @@ L'assistant donne le total, le nombre de tickets concernés et les magasins où 
 
 Le montant provient de la ligne de consigne imprimée sur vos **tickets scannés**, donc les tickets que l'application n'a pas pu répartir en catégories comptent aussi. C'est le montant déjà **payé**, et non un remboursement encore à récupérer : l'application ne suit pas les emballages que vous avez rapportés. Les dépenses saisies à la main ne comportent pas de consigne et, sur un compte entièrement chiffré, l'assistant ne peut pas lire les montants.
 
+## Poser une question sur les réductions
+
+De nombreux magasins déduisent une réduction directement sur le ticket de caisse. Vous pouvez demander à l'assistant combien vous avez économisé au total :
+
+- « Combien de réduction ai-je obtenue ce mois-ci ? »
+- « Combien de réduction au total ? »
+
+L'assistant donne le total, le nombre de tickets concernés et les magasins où vous avez le plus économisé. Posez la question avec vos propres mots — le terme local fonctionne dans toutes les langues prises en charge par l'application (réduction, remise, rabat, Rabatt, korting, discount). Sans période précisée, tout votre historique est pris en compte.
+
+Le montant provient de la réduction imprimée sur vos **tickets scannés**, donc les tickets que l'application n'a pas pu répartir en catégories comptent aussi. Les dépenses saisies à la main et les imports bancaires ou Wise ne comportent pas de réduction, et sur un compte entièrement chiffré, l'assistant ne peut pas lire les montants.
+
 ## Historique des conversations
 
 Vous pouvez parcourir et rouvrir des conversations précédentes à tout moment :

@@ -372,6 +372,7 @@ export default {
     shoppingSuggestionsDeals: 'Angebote',
     actionInflationShield: 'Inflationsschutz',
     actionDepositTotal: 'Gezahltes Pfand',
+    actionDiscountTotal: 'Erhaltener Rabatt',
     andMore: '+{{count}} mehr',
     confirmTitle: 'Aktion bestätigen',
     resultSuccess: 'Erfolgreich abgeschlossen',

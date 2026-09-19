@@ -77,6 +77,17 @@ El asistente indica el total, de cuántos recibos procede y en qué tiendas has 
 
 La cifra proviene de la línea de depósito impresa en tus **recibos escaneados**, así que también cuenta los recibos que la aplicación no pudo dividir en categorías. Es la cantidad que ya has **pagado**, no un reembolso que aún puedas recuperar: la aplicación no registra qué envases has devuelto. Los gastos escritos a mano no llevan depósito y, en una cuenta totalmente cifrada, el asistente no puede leer los importes.
 
+## Preguntar por los descuentos
+
+Muchas tiendas descuentan directamente en el ticket. Puedes preguntar al asistente cuánto has ahorrado en total:
+
+- «¿Cuánto descuento he obtenido este mes?»
+- «¿Cuánto descuento en total?»
+
+El asistente indica el total, de cuántos recibos procede y en qué tiendas has ahorrado más. Pregunta con tus propias palabras: el término local funciona en cualquier idioma que admita la aplicación (descuento, rabat, Rabatt, korting, réduction, discount). Si no indicas un periodo, se cubre todo tu historial.
+
+La cifra proviene del descuento impreso en tus **recibos escaneados**, así que también cuenta los recibos que la aplicación no pudo dividir en categorías. Los gastos escritos a mano y las importaciones bancarias o de Wise no llevan cifra de descuento, y en una cuenta totalmente cifrada el asistente no puede leer los importes.
+
 ## Historial de conversaciones
 
 Puedes explorar y reabrir conversaciones anteriores en cualquier momento:

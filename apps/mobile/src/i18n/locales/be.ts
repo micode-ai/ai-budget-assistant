@@ -372,6 +372,7 @@ export default {
     shoppingSuggestionsDeals: 'Зніжкі',
     actionInflationShield: 'Абарона ад інфляцыі',
     actionDepositTotal: 'Закладзь за тару',
+    actionDiscountTotal: 'Зніжкі атрымана',
     andMore: '+{{count}} яшчэ',
     confirmTitle: 'Пацвердзіце дзеянне',
     resultSuccess: 'Паспяхова выканана',

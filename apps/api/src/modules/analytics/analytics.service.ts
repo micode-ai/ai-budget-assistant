@@ -14,6 +14,9 @@ import { formatInTimezone, yearMonthIdInTimezone, calendarPartsInTimezone } from
  */
 const DEPOSIT_ROW_LIMIT = 5000;
 
+/** Same reasoning as `DEPOSIT_ROW_LIMIT`, one row per receipt that carried a discount. */
+const DISCOUNT_ROW_LIMIT = 5000;
+
 interface ExpenseWithCategory {
   id: string;
   amount: unknown;
@@ -816,6 +819,57 @@ export class AnalyticsService {
     return {
       rows: rows.slice(0, DEPOSIT_ROW_LIMIT),
       truncated: rows.length > DEPOSIT_ROW_LIMIT,
+    };
+  }
+
+  /**
+   * The receipts in a period that carried a discount ("rabat"/"zniżka",
+   * "Rabatt", "скидка"...), newest first.
+   *
+   * Returns ROWS, not a total — same division of labour as `getDepositRows`:
+   * the aggregation needs the caller's display currency and its exchange
+   * rates, both of which live in the AI-tools layer, so the arithmetic sits
+   * in the pure `summariseDiscounts` util instead.
+   *
+   * `discountAmount: { gt: 0 }` excludes NULL by SQL semantics, which is what
+   * makes this "the receipts that carried a discount" rather than every
+   * receipt. `take` asks for one row past the ceiling so truncation is
+   * detectable — a capped total presented as complete would be a false
+   * statement about the user's money.
+   *
+   * Unlike `depositAmount`, `discountAmount` genuinely IS zeroed client-side
+   * for a fully-encrypted (tier-2) account (it rides `maybeEncrypt`'s tier-2
+   * field list) — so refusing tier-2 here isn't only policy, the plaintext
+   * column is not readable at all for such an account.
+   */
+  async getDiscountRows(accountId: string, startDate: Date, endDate: Date) {
+    if (await this.isFullEncryption(accountId)) {
+      return { encryptionRestricted: true as const, rows: [], truncated: false };
+    }
+
+    const rows = await this.prisma.expense.findMany({
+      where: {
+        accountId,
+        isDeleted: false,
+        isPlanned: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
+        date: { gte: startDate, lte: endDate },
+        discountAmount: { gt: 0 },
+      },
+      select: {
+        date: true,
+        merchant: true,
+        description: true,
+        discountAmount: true,
+        currencyCode: true,
+      },
+      orderBy: { date: 'desc' },
+      take: DISCOUNT_ROW_LIMIT + 1,
+    });
+
+    return {
+      rows: rows.slice(0, DISCOUNT_ROW_LIMIT),
+      truncated: rows.length > DISCOUNT_ROW_LIMIT,
     };
   }
 
