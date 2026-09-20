@@ -1,6 +1,6 @@
 ---
 title: "Presupuesto familiar con hijos: un plan que funciona"
-meta_description: "Un presupuesto familiar con hijos que aguanta los gastos irregulares: fondos para imprevistos, una vista compartida y cómo enseñar a los niños sobre dinero."
+meta_description: "Un presupuesto familiar con hijos que aguanta los gastos irregulares: fondo para imprevistos, vista compartida y cómo enseñar a los niños sobre dinero."
 target_keyword: "presupuesto familiar con hijos"
 slug: "presupuesto-familiar-con-hijos"
 pair: "family"

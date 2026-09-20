@@ -1,6 +1,6 @@
 ---
 title: "Samen budgetteren met je partner zonder ruzie"
-meta_description: "Leer samen budgetteren met je partner zonder ruzie. Modellen die werken, een eigen potje voor ieder en een gedeeld overzicht dat jullie allebei realtime zien."
+meta_description: "Samen budgetteren met je partner zonder ruzie: modellen die werken, een eigen potje voor ieder en een gedeeld overzicht dat jullie allebei realtime zien."
 target_keyword: "samen budgetteren"
 slug: "samen-budgetteren"
 pair: "shared-budget"

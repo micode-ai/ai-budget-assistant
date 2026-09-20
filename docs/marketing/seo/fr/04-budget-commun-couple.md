@@ -1,6 +1,6 @@
 ---
 title: "Budget commun en couple : un plan sans disputes"
-meta_description: "Construire un budget commun en couple qui résiste au quotidien. Les modèles qui marchent, l'argent personnel, et une vue partagée que chacun voit en temps réel."
+meta_description: "Un budget commun en couple qui résiste au quotidien : modèles qui marchent, argent personnel, et vue partagée que chacun voit en temps réel."
 target_keyword: "budget commun couple"
 slug: "budget-commun-couple"
 pair: "shared-budget"

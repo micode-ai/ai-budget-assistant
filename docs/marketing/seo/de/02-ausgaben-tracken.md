@@ -1,5 +1,5 @@
 ---
-title: "Ausgaben tracken: So behältst du die Kontrolle über dein Geld"
+title: "Ausgaben tracken: So behältst du die Kontrolle"
 meta_description: "Ausgaben tracken ohne täglichen Aufwand: Methoden, die wirklich funktionieren, Bankimport und Belegscan sowie ein gemeinsames System für Paare."
 target_keyword: "Ausgaben tracken"
 slug: "ausgaben-tracken"

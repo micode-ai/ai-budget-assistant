@@ -1,6 +1,6 @@
 ---
 title: "Cómo ahorrar dinero con un plan que realmente funciona"
-meta_description: "Aprende cómo ahorrar dinero aunque el presupuesto esté justo. Pasos prácticos, estrategias de objetivos de ahorro y herramientas que crean el hábito sin culpa."
+meta_description: "Cómo ahorrar dinero aunque el presupuesto esté justo. Pasos prácticos, estrategias de ahorro y herramientas que crean el hábito sin culpa."
 target_keyword: "cómo ahorrar dinero"
 slug: "como-ahorrar-dinero"
 pair: "saving"

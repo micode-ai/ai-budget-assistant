@@ -1,6 +1,6 @@
 ---
 title: "How AI Can Help You Budget (Honestly)"
-meta_description: "How AI can help you budget: it removes the capture friction that kills most budgets, answers plain-language questions, and flags problems before you notice."
+meta_description: "How AI can help you budget: it removes the capture friction that kills most budgets, answers plain-language questions, and flags problems early."
 target_keyword: "how AI can help you budget"
 slug: "how-ai-helps-budgeting"
 pair: "ai-budget"

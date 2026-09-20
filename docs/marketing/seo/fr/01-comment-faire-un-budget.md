@@ -1,6 +1,6 @@
 ---
 title: "Comment faire un budget personnel qui tient dans la durée"
-meta_description: "Apprendre comment faire un budget n'est pas compliqué. Voici une méthode concrète, étape par étape, pour planifier ses dépenses et gérer ses finances en couple."
+meta_description: "Comment faire un budget : une méthode concrète, étape par étape, pour planifier ses dépenses et gérer ses finances en couple."
 target_keyword: "comment faire un budget"
 slug: "comment-faire-un-budget"
 pair: "budget"

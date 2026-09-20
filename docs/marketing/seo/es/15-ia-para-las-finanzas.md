@@ -1,6 +1,6 @@
 ---
 title: "IA para las finanzas personales: cómo te ayuda de verdad"
-meta_description: "La IA para las finanzas personales elimina la fricción del registro y da respuestas, no solo gráficos. Voz, foto del recibo, preguntas y alertas proactivas."
+meta_description: "La IA para las finanzas elimina la fricción del registro y da respuestas, no solo gráficos. Voz, foto del recibo, preguntas y alertas proactivas."
 target_keyword: "IA para las finanzas personales"
 slug: "ia-para-las-finanzas"
 pair: "ai-budget"

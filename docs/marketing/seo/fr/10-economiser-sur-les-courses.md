@@ -1,6 +1,6 @@
 ---
 title: "Économiser sur les courses : la méthode qui marche"
-meta_description: "Comment économiser sur les courses sans coupons ni privations. Connaître son vrai chiffre, planifier ses repas, et suivre le poste alimentation en temps réel."
+meta_description: "Économiser sur les courses sans coupons ni privations : connaître son vrai chiffre, planifier ses repas, et suivre le poste alimentation en temps réel."
 target_keyword: "économiser sur les courses"
 slug: "economiser-sur-les-courses"
 pair: "groceries"

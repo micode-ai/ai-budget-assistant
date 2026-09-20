@@ -1,6 +1,6 @@
 ---
 title: "Cómo importar un extracto bancario a tu app de presupuesto"
-meta_description: "Importar el extracto bancario rellena meses de gastos en minutos. Cómo exportar el archivo, mapear columnas, revisar la previsualización y evitar duplicados."
+meta_description: "Importar el extracto bancario rellena meses de gastos en minutos: exportar el archivo, mapear columnas, revisar la previsualización y evitar duplicados."
 target_keyword: "importar extracto bancario"
 slug: "importar-extracto-bancario"
 pair: "bank-import"

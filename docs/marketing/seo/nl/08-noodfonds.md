@@ -1,6 +1,6 @@
 ---
 title: "Noodfonds: hoeveel je nodig hebt en hoe je het opbouwt"
-meta_description: "Ontdek hoeveel een noodfonds moet bevatten, waar je het bewaart en hoe je er stap voor stap een opbouwt, ook met een krap budget, zonder halverwege te stoppen."
+meta_description: "Hoeveel een noodfonds moet bevatten, waar je het bewaart en hoe je er stap voor stap een opbouwt, ook met een krap budget, zonder halverwege te stoppen."
 target_keyword: "noodfonds"
 slug: "noodfonds"
 pair: "emergency-fund"

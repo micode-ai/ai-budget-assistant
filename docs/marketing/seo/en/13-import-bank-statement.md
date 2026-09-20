@@ -1,6 +1,6 @@
 ---
 title: "How to Import a Bank Statement Into a Budget App"
-meta_description: "Import a bank statement to a budget app and backfill months of spending in minutes. Step-by-step: export, upload, auto-detect, review, and avoid duplicates."
+meta_description: "Import a bank statement to a budget app and backfill months of spending in minutes. Export, upload, auto-detect, review, and avoid duplicates."
 target_keyword: "import bank statement to a budget app"
 slug: "import-bank-statement"
 pair: "bank-import"

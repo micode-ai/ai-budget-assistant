@@ -1,6 +1,6 @@
 ---
 title: "Wspólny budżet dla par - plan bez kłótni"
-meta_description: "Jak zbudować wspólny budżet dla par, który przetrwa zderzenie z życiem. Sprawdzone modele, kieszonkowe dla każdego i jeden wspólny widok w czasie rzeczywistym."
+meta_description: "Wspólny budżet dla par, który przetrwa zderzenie z życiem: sprawdzone modele, kieszonkowe dla każdego i jeden wspólny widok w czasie rzeczywistym."
 target_keyword: "wspólny budżet"
 slug: "wspolny-budzet-dla-par"
 pair: "shared-budget"

@@ -1,6 +1,6 @@
 ---
 title: "Mejores apps de presupuesto en 2026: guía honesta"
-meta_description: "Guía práctica de las mejores apps de presupuesto en 2026. Compara apps del banco, hojas de cálculo, de sobres y con IA por fricción, uso compartido y precio."
+meta_description: "Guía de las mejores apps de presupuesto en 2026. Compara apps del banco, hojas de cálculo, de sobres y con IA por fricción, uso compartido y precio."
 target_keyword: "mejores apps de presupuesto"
 slug: "mejores-apps-de-presupuesto"
 pair: "best-apps"

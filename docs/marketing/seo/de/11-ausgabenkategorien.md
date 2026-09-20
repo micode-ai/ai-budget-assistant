@@ -1,6 +1,6 @@
 ---
 title: "Ausgabenkategorien, die im Budget wirklich funktionieren"
-meta_description: "Ausgabenkategorien sind das Rückgrat jedes Budgets. Eine sofort nutzbare Starterliste, die Fix-Variabel-Trennung und die häufigsten Fehler, die du vermeidest."
+meta_description: "Ausgabenkategorien sind das Rückgrat jedes Budgets: eine Starterliste, die Fix-Variabel-Trennung und die häufigsten Fehler, die du vermeidest."
 target_keyword: "ausgabenkategorien"
 slug: "ausgabenkategorien"
 pair: "categories"

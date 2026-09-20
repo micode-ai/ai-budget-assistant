@@ -1,6 +1,6 @@
 ---
 title: "Método de sobres: el sistema que frena el gasto"
-meta_description: "El método de sobres explicado: asigna cada euro a una categoría, gasta solo lo que hay en cada sobre y deja de gastar de más. Guía paso a paso sin efectivo."
+meta_description: "El método de sobres: asigna cada euro a una categoría, gasta solo lo que hay en cada sobre y deja de gastar de más. Guía paso a paso sin efectivo."
 target_keyword: "método de sobres"
 slug: "metodo-de-sobres"
 pair: "envelope"

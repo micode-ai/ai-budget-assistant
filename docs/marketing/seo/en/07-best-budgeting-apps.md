@@ -1,6 +1,6 @@
 ---
 title: "Best Budgeting Apps in 2026: An Honest Buyer's Guide"
-meta_description: "A practical guide to the best budgeting apps in 2026. Compare bank-native, spreadsheet, envelope, and AI-first apps by friction, sharing, import, and price."
+meta_description: "A practical guide to the best budgeting apps in 2026. Compare bank-native, spreadsheet, envelope, and AI apps by friction, sharing, import, and price."
 target_keyword: "best budgeting apps"
 slug: "best-budgeting-apps"
 pair: "best-apps"
