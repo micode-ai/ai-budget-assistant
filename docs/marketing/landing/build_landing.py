@@ -1460,40 +1460,69 @@ def legal_page(lang, kind):
             f'<main class="wrap legal">{body}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 
-def write_llms_full():
-    """llms-full.txt: an English markdown mirror of the blog + help content so AI answer
-    engines (ChatGPT / Perplexity / Claude / Gemini) can ground and cite answers. Built
-    from the same markdown sources on disk. English-only in v1 (per-language deferred)."""
+# Per-language intro line for a llms-full-<lang>.txt mirror (ABA GEO follow-up). English
+# stays the canonical `llms-full.txt` (unchanged filename/content-shape, referenced from
+# llms.txt) so nothing that already links to it breaks; these are ADDITIVE siblings only,
+# picked for markets where AEO/GEO coverage was requested (DE/NL/PL/RU) rather than all 9,
+# to keep this a bounded, reviewable change -- add more languages here later the same way.
+LLMS_FULL_INTRO = {
+    "en": ("English", "English markdown mirror of the ai-budget.pl blog and help center, for AI "
+           "answer engines. See llms.txt for the product summary."),
+    "de": ("Deutsch", "Deutschsprachiges Markdown-Spiegel des ai-budget.pl-Blogs und -Hilfecenters, "
+           "fuer KI-Antwortmaschinen. Siehe llms.txt fuer die Produktzusammenfassung (Englisch)."),
+    "nl": ("Nederlands", "Nederlandstalige markdown-spiegel van de ai-budget.pl blog en het "
+           "helpcentrum, voor AI-antwoordmachines. Zie llms.txt voor de productsamenvatting (Engels)."),
+    "pl": ("Polski", "Polskojezyczne lustro markdown bloga i centrum pomocy ai-budget.pl, dla "
+           "silnikow odpowiedzi AI. Podsumowanie produktu (po angielsku) w llms.txt."),
+    "ru": ("Русский", "Зеркало "
+           "в markdown блога и центра "
+           "помощи ai-budget.pl на русском "
+           "языке, для AI-поисковых "
+           "систем. Краткое описание "
+           "продукта (на английском) "
+           "в llms.txt."),
+}
+# Languages that get a llms-full-<lang>.txt sibling, beyond the canonical English one.
+LLMS_FULL_LANGS = ["de", "nl", "pl", "ru"]
+
+def write_llms_full(lang="en"):
+    """llms-full.txt (English, canonical) / llms-full-<lang>.txt (mirrors): a markdown
+    mirror of the blog + help content in ONE language so AI answer engines (ChatGPT /
+    Perplexity / Claude / Gemini) can ground and cite answers in that language. Built from
+    the same markdown sources on disk. Per-language files are purely additive siblings of
+    the English one -- they change nothing about llms.txt, robots.txt or any other
+    language's output, so adding one can't regress another market's SEO/AEO/GEO."""
     def _strip(md):
         md = re.sub(r"^#[^\n]*\n", "", md.lstrip(), count=1)   # drop the leading H1 (re-added as ## header)
         md = re.sub(r"!\[[^\]]*\]\([^)]+\)\n?", "", md)        # drop image markdown
         return md.strip()
-    out = ["# AI Budget Assistant - Full content (English)", "",
-           "> English markdown mirror of the ai-budget.pl blog and help center, for AI "
-           "answer engines. See llms.txt for the product summary.", "",
+    label, intro = LLMS_FULL_INTRO.get(lang, LLMS_FULL_INTRO["en"])
+    filename = "llms-full.txt" if lang == "en" else f"llms-full-{lang}.txt"
+    out = [f"# AI Budget Assistant - Full content ({label})", "",
+           f"> {intro}", "",
            f"Source: {SITE}/llms.txt", ""]
     try:
-        blog_en = sorted((a for a in bb.read_articles() if a["lang"] == "en"),
-                         key=lambda a: a["m"]["slug"])
+        blog_lang = sorted((a for a in bb.read_articles() if a["lang"] == lang),
+                            key=lambda a: a["m"]["slug"])
     except Exception:
-        blog_en = []
-    if blog_en:
+        blog_lang = []
+    if blog_lang:
         out += ["", "# Blog", ""]
-        for a in blog_en:
+        for a in blog_lang:
             out += [f"## {a['m'].get('title', a['m']['slug'])}",
-                    f"URL: {SITE}/blog/en/{a['m']['slug']}/", "", _strip(a["body"]), ""]
-    help_en = []
+                    f"URL: {SITE}/blog/{lang}/{a['m']['slug']}/", "", _strip(a["body"]), ""]
+    help_lang = []
     for section in bh.SECTIONS:
-        p = os.path.join(bh.DOCS, "en", f"{section}.md")
+        p = os.path.join(bh.DOCS, lang, f"{section}.md")
         if os.path.isfile(p):
             title, _desc, raw = bh.parse_doc(p)
             if title:
-                help_en.append((bh.slug_of(section), title, raw))
-    if help_en:
+                help_lang.append((bh.slug_of(section), title, raw))
+    if help_lang:
         out += ["", "# Help center", ""]
-        for slug, title, raw in help_en:
-            out += [f"## {title}", f"URL: {SITE}/help/en/{slug}/", "", _strip(raw), ""]
-    open(os.path.join(OUT, "llms-full.txt"), "w", encoding="utf-8", newline="\n").write("\n".join(out))
+        for slug, title, raw in help_lang:
+            out += [f"## {title}", f"URL: {SITE}/help/{lang}/{slug}/", "", _strip(raw), ""]
+    open(os.path.join(OUT, filename), "w", encoding="utf-8", newline="\n").write("\n".join(out))
 
 def build():
     shutil.rmtree(OUT, ignore_errors=True)
@@ -1630,14 +1659,19 @@ def build():
             f"- [Blog]({SITE}/blog/en/): budgeting, expense-tracking and saving guides in 9 languages\n"
             f"- [Help center]({SITE}/help/en/): how to use every feature of the app\n"
             f"- [Pricing]({SITE}/pricing/): Free, Pro and Business plans\n"
-            f"- [Full content for LLMs]({SITE}/llms-full.txt): English markdown mirror of the blog and help center\n\n"
+            f"- [Full content for LLMs]({SITE}/llms-full.txt): English markdown mirror of the blog and help center\n"
+            f"- Full content mirrors in other languages: "
+            + ", ".join(f"[{LLMS_FULL_INTRO[l][0]}]({SITE}/llms-full-{l}.txt)"
+                         for l in LLMS_FULL_LANGS) + "\n\n"
             f"## Links\n\n"
             f"- [Web app]({APP}): sign in and use AI Budget Assistant in the browser\n"
             f"- [Google Play]({PLAY}): Android app\n"
             f"- [Company: {COMPANY}]({COMPANY_URL}): the company behind the app\n"
             f"- [Sitemap]({SITE}/sitemap.xml): all indexable URLs\n"
         )
-        write_llms_full()
+        write_llms_full()  # canonical English llms-full.txt, unchanged shape/filename
+        for l in LLMS_FULL_LANGS:
+            write_llms_full(l)  # additive llms-full-<lang>.txt siblings
         open(os.path.join(OUT, "404.html"), "w", encoding="utf-8", newline="\n").write(
             '<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'

@@ -2745,9 +2745,9 @@ Tap any expense to view its full details:
 - **Notes** (if added)
 - **Added by** — shown in shared accounts; displays the name of the account member who created this entry
 - **Sync Status** — pending, synced, conflict, or error
-- **Source** — Manual Entry, Voice Input, Receipt Scan, or Imported
-- **Receipt Items** — individual items (for scanned receipts)
-- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually
+- **Source** — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart)
+- **Receipt Items** — individual items (for scanned receipts, or extracted later via **Extract items**)
+- **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 
 ### Actions on expense details:
 - **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)
@@ -3309,6 +3309,17 @@ Shops in many countries charge a separate, refundable deposit on returnable bott
 The assistant answers with the total, how many receipts it came from, and the shops where you paid the most. Ask in your own words — the local term works in every language the app supports (kaucja, Pfand, statiegeld, consigne, depósito, bottle deposit). If you do not mention a time period, it covers your whole history.
 
 The figure comes from the deposit line printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. It is the amount you have already **paid**, not a refund you can still collect — the app does not track which packaging you have taken back. Manually typed expenses carry no deposit, and on a fully encrypted account the assistant cannot read the amounts at all.
+
+## Asking About Discounts
+
+You can ask the assistant how much you have been given in discounts on your purchases:
+
+- "How much did I save in discounts this month?"
+- "How much rabat this year?"
+
+The assistant answers with the total, how many receipts it came from, and the shops that gave you the biggest discounts. Ask in your own words — the local term works in every language the app supports (rabat, Rabatt, korting, réduction, descuento, discount). If you do not mention a time period, it covers your whole history.
+
+The figure comes from the discount printed on your **scanned receipts**, so it also counts receipts the app could not split into categories. Manually typed expenses and bank/Wise imports carry no discount figure, and on a fully encrypted account the assistant cannot read the amounts at all.
 
 ## Conversation History
 
@@ -5858,10 +5869,13 @@ All four types of reference data are managed from a single hub in Settings. The 
 Categories classify your expenses and income. Each has a name and a color.
 
 - Tap a category row to rename it or change its color
+- Category names must be unique within a type, so renaming one to a name another category already uses is rejected with an explanation
 - Tap **+** next to "Expense Categories" or "Income Categories" to create a new one
 - Tap the trash icon to delete a category
   - Deletion is blocked if the category is in use by active expenses or budgets
   - System (predefined) categories cannot be deleted
+- If a category you assigned does not appear on your other devices, open the app once while online — assignments are re-sent automatically
+- A category that is still used by expenses, budgets or sub-categories cannot be deleted — delete or reassign those first
 
 **Tip:** Use distinct colors for categories you want to spot quickly in charts.
 
@@ -6110,7 +6124,7 @@ URL: https://ai-budget.pl/help/en/anomaly-alerts/
 
 ## What the app detects
 
-- **Possible duplicate charge** — the same merchant charged the same amount twice within two days. Worth checking before the money is gone.
+- **Possible duplicate charge** — the same merchant charged the same amount twice within two days. Worth checking before the money is gone. When one record came from a bank push or bank import and the other is a scanned receipt, the alert also offers to **merge** them: tap it to open the merge screen, and the receipt's items and image move onto the expense you keep.
 - **Price increase** — a subscription or recurring payment got more than 10% more expensive compared to last time (for example, a streaming service raising its price).
 - **Looks like a subscription** — the same merchant has charged you the same amount three or more times on a regular schedule. Two things you can do about it: tap the alert to open a pre-filled Subscription Manager form, or tap **"Mark as recurring"** right on the alert so that expense (rent is a common example) is treated as a recurring bill going forward — this stops it from throwing off your budget's spending forecast every month.
 - **Unusual spending** — a category is at least 30% above your average for the previous months.
