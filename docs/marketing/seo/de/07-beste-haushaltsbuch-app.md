@@ -65,6 +65,10 @@ Eine neuere Kategorie, gebaut darum, manuelle Arbeit zu entfernen. Du fügst Aus
 
 Alles-in-einem-Apps gehen weiter und verbinden Tracking, Budgets, Ziele, Abonnements und Berichte, sodass du keine Werkzeuge zusammenflicken musst. Das Risiko ist Überladung. Die guten halten das Erfassen schnell und legen den Rest einen Fingertipp entfernt.
 
+### Konkrete Namen, die in Deutschland auftauchen
+
+Die Typen oben sind abstrakt — hier ein paar Namen, die in deutschsprachigen Vergleichen und Foren häufig genannt werden: **Finanzguru** (Verträge und Abos automatisch erkennen, sobald ein Konto verbunden ist), **Outbank** (mehrere Banken in einer App zusammenführen) und **Numbrs**, ein weiterer bekannter Name im Multibanking-Bereich. Alle drei sind solide für das, wofür sie gebaut sind. Prüfe sie an den Kriterien weiter oben — Teilen zu zweit mit Rollen, Sprach- oder Belegerfassung, Offline-Nutzung — statt dich allein auf den Namen zu verlassen.
+
 ## Wo AI Budget Assistant hineinpasst
 
 AI Budget Assistant sitzt an der Überschneidung der KI-first- und Alles-in-einem-Kategorien. Der Kerngedanke ist, dass das Erfassen nahezu mühelos sein soll und der Rest da, wenn du ihn brauchst.

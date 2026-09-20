@@ -65,6 +65,10 @@ Een nieuwere categorie, gebouwd rond het wegnemen van handwerk. Je voegt uitgave
 
 Alles-in-een-apps gaan verder en combineren bijhouden, budgetten, doelen, abonnementen en rapporten, zodat je geen losse gereedschappen aan elkaar hoeft te knopen. Het risico is overdaad. De goede houden het invoeren snel en zetten de rest een tik verderop.
 
+### Bekende namen in Nederland
+
+De types hierboven zijn abstract — dit zijn namen die in Nederland vaak in dit rijtje vallen: **Grip**, het budgetinzicht ingebouwd in de ING- en ABN AMRO-app, de gratis tools van **Nibud** (het Nationaal Instituut voor Budgetvoorlichting), en internationale apps als **Toshl Finance**. Alle drie zijn nuttig voor waar ze voor gebouwd zijn. Toets ze aan de criteria hierboven — delen met een partner via rollen, spraak- of bonnetjesinvoer, offline gebruik — in plaats van op naam alleen te vertrouwen.
+
 ## Waar AI Budget Assistant past
 
 AI Budget Assistant zit op de overlap van de AI-app- en de alles-in-een-categorie. Het kernidee is dat invoeren vrijwel moeiteloos moet zijn en de rest er moet zijn wanneer je het nodig hebt.
