@@ -10,7 +10,7 @@ date: "2026-06-19"
 
 # Hoe geld besparen als er aan het einde van de maand niets over lijkt te zijn
 
-Ieder artikel over hoe geld besparen eindigt uiteindelijk bij dezelfde tips: minder koffie kopen en minder uit eten gaan. Die tips zijn zelden fout en bijna nooit het eigenlijke probleem. Als je financien echt krap zijn, lost 30 euro besparen op cappuccino's een structureel tekort niet op. Je hebt een systeem nodig, geen lijst met kleine opofferingen.
+Ieder artikel over hoe geld besparen eindigt uiteindelijk bij dezelfde tips: minder koffie kopen en minder uit eten gaan. Die tips zijn zelden fout en bijna nooit het eigenlijke probleem. Als je financiën echt krap zijn, lost 30 euro besparen op cappuccino's een structureel tekort niet op. Je hebt een systeem nodig, geen lijst met kleine opofferingen.
 
 Dit artikel gaat over de echte redenen waarom mensen niet sparen ook al zijn ze dat van plan, hoe je geld vindt dat nu al ongemerkt weglekt, en hoe je spaardoelen opzet die maanden en jaren standhouden.
 
@@ -46,7 +46,7 @@ Sparen zonder doel is als rennen zonder bestemming. Je beweegt misschien, maar j
 
 Structureer je doelen in lagen:
 
-**Laag 1: Noodfonds.** Dit is de basis, niet optioneel. De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Als dat ver weg voelt, begin dan met minimaal 1.000 euro. Die buffer voorkomt al dat de meeste kleine financiele tegenvallers grote problemen worden. Een kapotte auto of een onverwachte tandartsnota mag geen creditcardschuld vereisen.
+**Laag 1: Noodfonds.** Dit is de basis, niet optioneel. De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Als dat ver weg voelt, begin dan met minimaal 1.000 euro. Die buffer voorkomt al dat de meeste kleine financiële tegenvallers grote problemen worden. Een kapotte auto of een onverwachte tandartsnota mag geen creditcardschuld vereisen.
 
 **Laag 2: Kortetermijndoelen.** Een vakantie volgend jaar, een nieuwe laptop, verbouwingskosten, een bruiloft. Geef elk doel een bedrag en een datum, en bereken hoeveel je maandelijks opzij moet zetten om er te komen. Dit maakt het doel concreet in plaats van vaag.
 

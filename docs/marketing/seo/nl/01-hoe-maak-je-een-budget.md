@@ -65,9 +65,9 @@ AI Budget Assistant, beschikbaar op Android en via de browser op [ai-budget.pl](
 
 ## Stap 5: Bouw eerst een kleine buffer op
 
-Voordat je grote spaardoelen nastreeft, zorg je voor een financiele buffer. De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Dat voelt overweldigend als startpunt. Een realistischer eerste doel is een tot twee maanden, of zelfs gewoon 1.000 tot 2.000 euro.
+Voordat je grote spaardoelen nastreeft, zorg je voor een financiële buffer. De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Dat voelt overweldigend als startpunt. Een realistischer eerste doel is een tot twee maanden, of zelfs gewoon 1.000 tot 2.000 euro.
 
-Het doel van een noodfonds is dat een onverwachte autoreparatie of medische rekening je budget niet volledig opblaast. Zonder buffer wordt elke verrassing een financiele crisis.
+Het doel van een noodfonds is dat een onverwachte autoreparatie of medische rekening je budget niet volledig opblaast. Zonder buffer wordt elke verrassing een financiële crisis.
 
 Zet dit geld op een aparte rekening, los van je dagelijkse bestedingen. De kleine drempel van een aparte rekening is genoeg om te voorkomen dat je het gebruikt voor alledaagse aankopen.
 

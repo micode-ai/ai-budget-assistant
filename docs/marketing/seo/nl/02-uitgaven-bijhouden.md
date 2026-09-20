@@ -61,7 +61,7 @@ Dit is het gat dat de meeste apps voor uitgaven bijhouden laten vallen. Als jij 
 
 De oplossing is een enkel gedeeld account waar jullie allebei uitgaven invoeren vanaf eigen telefoon. Als een van jullie boodschappen betaalt, ziet de ander het binnen seconden. Als iemand tankt, raakt dat direct het gedeelde budget. Aan het einde van de maand zijn er geen verrassingen, alleen het werkelijke totaal.
 
-AI Budget Assistant biedt gedeelde gezinsaccounts. Iedereen heeft een eigen login en ziet hetzelfde realtime overzicht. De ingebouwde AI-assistent werkt over het hele account, zodat je kunt vragen "hoeveel hebben we dit maand uitgegeven aan uit eten gaan?" en een antwoord krijgt op basis van ieders transacties. Denk eraan als een gedeelde financiele assistent die altijd beschikbaar is en nooit bijgepraat hoeft te worden.
+AI Budget Assistant biedt gedeelde gezinsaccounts. Iedereen heeft een eigen login en ziet hetzelfde realtime overzicht. De ingebouwde AI-assistent werkt over het hele account, zodat je kunt vragen "hoeveel hebben we dit maand uitgegeven aan uit eten gaan?" en een antwoord krijgt op basis van ieders transacties. Denk eraan als een gedeelde financiële assistent die altijd beschikbaar is en nooit bijgepraat hoeft te worden.
 
 Een nuttig budget opbouwen bovenop deze data is de logische volgende stap. Het artikel [hoe maak je een budget](/blog/nl/hoe-maak-je-een-budget/) behandelt dat in detail.
 

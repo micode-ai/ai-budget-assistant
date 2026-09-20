@@ -26,13 +26,13 @@ Dit onderscheid telt, omdat de meest voorkomende manier waarop mensen hun noodfo
 
 ## Hoeveel moet je hebben?
 
-De gangbare aanbeveling is drie tot zes maanden aan essentiele uitgaven. Let op het woord essentieel. Dit is geen drie tot zes maanden van je volledige levensstijl. Het is huur, energie, boodschappen, verzekeringen, vervoer en minimale aflossingen. De dingen die het licht aanhouden als je inkomen wegvalt.
+De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Let op het woord essentieel. Dit is geen drie tot zes maanden van je volledige levensstijl. Het is huur, energie, boodschappen, verzekeringen, vervoer en minimale aflossingen. De dingen die het licht aanhouden als je inkomen wegvalt.
 
 Drie maanden is redelijk als je een stabiele baan hebt en een partner die ook verdient. Zes maanden is logischer als je inkomen onregelmatig is, je zelfstandig bent, of je de enige kostwinner in huis bent.
 
-Dat doel kan onbereikbaar ver voelen als je bij nul begint. Begin er dus niet. Begin met een mijlpaal van 1.000 euro, of een maand aan essentiele uitgaven, wat je het eerst haalt. Die eerste 1.000 euro vangt al het merendeel van de kleine financiele schokken op, juist die welke anders creditcardschuld worden. Haal dat, en ga dan door richting de volledige drie tot zes maanden. Een klein fonds dat je echt opbouwt verslaat een groot fonds dat je opgeeft.
+Dat doel kan onbereikbaar ver voelen als je bij nul begint. Begin er dus niet. Begin met een mijlpaal van 1.000 euro, of een maand aan essentiële uitgaven, wat je het eerst haalt. Die eerste 1.000 euro vangt al het merendeel van de kleine financiële schokken op, juist die welke anders creditcardschuld worden. Haal dat, en ga dan door richting de volledige drie tot zes maanden. Een klein fonds dat je echt opbouwt verslaat een groot fonds dat je opgeeft.
 
-Weet je nog niet eens wat je essentiele maandkosten zijn, dan loopt de bijbehorende gids over [hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) je eerst door het categoriseren van je uitgaven.
+Weet je nog niet eens wat je essentiële maandkosten zijn, dan loopt de bijbehorende gids over [hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) je eerst door het categoriseren van je uitgaven.
 
 ## Waar je het bewaart
 
@@ -44,7 +44,7 @@ Drie regels voor waar je noodfonds woont:
 
 **Niet belegd in iets dat in waarde kan dalen.** Dit is de grote. Een noodfonds is geen belegging, het is een verzekering. Het in aandelen, crypto of iets anders volatiels stoppen ondermijnt het doel, want noodgevallen hebben de gewoonte precies aan te komen als de markt laag staat. Je wilt niet gedwongen worden met verlies te verkopen om een autoreparatie te dekken. Saai en stabiel is hier de hele functieomschrijving.
 
-## Stap 1: Bereken je essentiele maandkosten
+## Stap 1: Bereken je essentiële maandkosten
 
 Voordat je een doel kunt stellen, heb je een getal nodig. Loop je uitgaven van de afgelopen een tot drie maanden door en tel alleen de essentialia op: wonen, energie, boodschappen, verzekeringen, vervoer, minimale aflossingen, en elke andere rekening die je echt niet kunt overslaan. Laat restaurants, abonnementen en winkelen weg.
 
@@ -88,7 +88,7 @@ Dit bijhouden is waar een doel met een zichtbaar saldo helpt. Zakt het fonds van
 
 **Hoeveel moet er in een noodfonds zitten?**
 
-Drie tot zes maanden aan essentiele uitgaven is het gangbare doel, waarbij essentialia betekenen huur, energie, boodschappen, verzekeringen en minimale aflossingen, niet je volledige levensstijl. Begin je bij nul, mik dan eerst op een startmijlpaal van 1.000 euro of een maand, die al de meeste kleine schokken dekt, en bouw daarna naar het volledige bereik. Neig naar zes maanden als je inkomen onregelmatig is of je de enige kostwinner bent.
+Drie tot zes maanden aan essentiële uitgaven is het gangbare doel, waarbij essentialia betekenen huur, energie, boodschappen, verzekeringen en minimale aflossingen, niet je volledige levensstijl. Begin je bij nul, mik dan eerst op een startmijlpaal van 1.000 euro of een maand, die al de meeste kleine schokken dekt, en bouw daarna naar het volledige bereik. Neig naar zes maanden als je inkomen onregelmatig is of je de enige kostwinner bent.
 
 **Waar moet ik mijn noodfonds bewaren?**
 

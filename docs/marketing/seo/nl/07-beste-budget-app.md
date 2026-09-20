@@ -111,7 +111,7 @@ De beste gratis app is degene wier gratis versie dekt wat je nodig hebt en die j
 
 **Heb ik een app nodig, of volstaat een spreadsheet?**
 
-Een spreadsheet volstaat als je het oprecht leuk vindt hem bij te houden en je financien eenvoudig zijn. Zodra je bonnetjes scannen, spraakinvoer, realtime delen met een partner of bankimport wilt, bespaart een app echte tijd. De meeste mensen die spreadsheets laten varen, doen dat vanwege de handmatige moeite die een app wegneemt.
+Een spreadsheet volstaat als je het oprecht leuk vindt hem bij te houden en je financiën eenvoudig zijn. Zodra je bonnetjes scannen, spraakinvoer, realtime delen met een partner of bankimport wilt, bespaart een app echte tijd. De meeste mensen die spreadsheets laten varen, doen dat vanwege de handmatige moeite die een app wegneemt.
 
 **Zijn budget-apps veilig in gebruik?**
 

@@ -40,7 +40,7 @@ Je verdeelt de gezamenlijke kosten naar rato van wat ieder verdient. Brengt de e
 
 ### Van jou, van mij en van ons
 
-Ieder houdt een eigen rekening, en jullie storten allebei een vast bedrag op een gezamenlijke rekening die de gedeelde kosten en doelen dekt. Zo blijft de zelfstandigheid behouden terwijl het gezamenlijke leven toch betaald wordt. Populair bij stellen die met gevestigde financiele gewoonten de relatie ingingen en niet alles willen samenvoegen.
+Ieder houdt een eigen rekening, en jullie storten allebei een vast bedrag op een gezamenlijke rekening die de gedeelde kosten en doelen dekt. Zo blijft de zelfstandigheid behouden terwijl het gezamenlijke leven toch betaald wordt. Populair bij stellen die met gevestigde financiële gewoonten de relatie ingingen en niet alles willen samenvoegen.
 
 Wat je ook kiest, het doel is hetzelfde: een heldere, afgesproken verdeling, zodat geen enkele aankoop een discussie wordt.
 
@@ -84,7 +84,7 @@ Houd de toon samenwerkend. Jullie zijn twee mensen die naar hetzelfde scherm kij
 
 ## Veelgestelde vragen over samen budgetteren
 
-**Moeten stellen hun financien volledig samenvoegen of gescheiden houden?**
+**Moeten stellen hun financiën volledig samenvoegen of gescheiden houden?**
 
 Er is geen universeel juist antwoord. Alles samenvoegen is het simpelst en past bij stellen met vergelijkbare inkomens en veel vertrouwen. Een deel van het geld gescheiden houden, via het "van jou, van mij en van ons"-model, behoudt zelfstandigheid en vermindert meestal de wrijving bij stellen die met gevestigde gewoonten kwamen. Het model naar verhouding van inkomen is het eerlijkst als de inkomens flink verschillen. Kies op basis van jullie situatie, en herzie het als het niet meer werkt.
 
