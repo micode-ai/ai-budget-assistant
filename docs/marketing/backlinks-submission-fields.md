@@ -282,8 +282,46 @@ Core fields:
 
 ---
 
+## 10. LinkedIn Company Page  (linkedin.com → "Create a Company Page")
+
+**Registration: Free.** Needs a personal LinkedIn account as the page admin — use whichever
+account belongs to MICODE / the founder. No paid tier required.
+
+**Why this one matters beyond a listing:** it is one of the two entity/brand profiles this
+project's `sameAs` (Organization JSON-LD on every landing/blog/help page) still lacks —
+see `docs/marketing/landing/build_landing.py`'s `SAMEAS` list. Filling it in strengthens the
+Google Knowledge Graph / AI-answer-engine confidence that "AI Budget Assistant" is a real,
+identifiable product — a GEO signal, not just a backlink.
+
+**How to register & submit:**
+1. Log in to LinkedIn with the admin account → **Work icon (top right) → Create a Company Page**.
+2. Choose **Small business** (or **Company**, if the size tiers differ at signup time).
+3. Fill the fields below.
+4. Publish, then add the logo (`/assets/mi_code_logo.svg` exported as PNG, square) and a cover image.
+5. Post the blog's newest article as the first post (gives the page initial activity signal).
+6. **Send me the published page URL** — it's a one-line addition to `SAMEAS` in
+   `build_landing.py` and I can wire it into the structured data immediately.
+
+| Field | Value |
+|---|---|
+| Page name | AI Budget Assistant |
+| LinkedIn public URL | pick something close to `linkedin.com/company/ai-budget-assistant` |
+| Website | https://ai-budget.pl |
+| Industry | Software Development / Financial Services |
+| Company size | 2-10 employees (or whatever is accurate) |
+| Company type | Privately held |
+| Headquarters | Poland |
+| Operated by | MICODE sp. z o.o. (https://mi-code.pl/) |
+| Tagline | AI budget app for expenses, budgets & shared family money |
+
+**About section:**
+> AI Budget Assistant is an AI-powered personal finance app for individuals and families. Add expenses by voice, receipt photo, or plain-language chat; set budgets and savings goals; track subscriptions; import bank statements; and share one real-time budget across family members with role-based access. Free tier, multi-currency, 9 languages (including German and Dutch), on Android and the web at ai-budget.pl. Built by MICODE sp. z o.o.
+
+---
+
 ### After these
 - **Dofollow first:** SaaSHub and AlternativeTo pass the most authority — get those approved before anything else. F6S and G2 (profile page) also carry dofollow links.
 - Product Hunt + Crunchbase are nofollow but build the brand entity / SERP and feed `sameAs`.
+- **LinkedIn (#10) and Crunchbase (#4) are the two still-open `sameAs` entries** — send their URLs once live and they go straight into the Organization structured data on every page.
 - Then continue down `backlinks-tracker.csv` (Toolify/BetaList/Slant + the curated free AI-dir lists), and the content routes in `backlinks-outreach.md` (Reddit/Quora + Medium/dev.to reposts).
 - Record each live URL + date in the tracker; re-pitch any that get rejected.
