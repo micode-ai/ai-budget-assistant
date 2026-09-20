@@ -124,3 +124,4 @@ Fange mit einem Gespräch über Ziele an, nicht über Budgets. "Wir möchten im 
 - [Familienbudget mit Kindern, das im Alltag hält](/blog/de/familienbudget-mit-kindern/)
 - [KI für die Finanzen: weniger Aufwand, mehr Einblick](/blog/de/ki-fuer-die-finanzen/)
 - [Schulanfang: Was die Ausstattung wirklich kostet](/blog/de/schulanfang-kosten/)
+- [Budget bei unregelmäßigem Einkommen: was hilft](/blog/de/budget-bei-unregelmaessigem-einkommen/)

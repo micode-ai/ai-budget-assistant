@@ -122,3 +122,4 @@ Begin met een gesprek over doelen, niet over het budget zelf. "We willen in okto
 - [Gezinsbudget met kinderen dat echt werkt](/blog/nl/gezinsbudget-met-kinderen/)
 - [Hoe AI je helpt met budgetteren (eerlijk uitgelegd)](/blog/nl/ai-voor-je-budget/)
 - [Nieuw schooljaar: wat kosten schoolspullen echt](/blog/nl/schoolspullen-kosten/)
+- [Budgetteren met onregelmatig inkomen: wat werkt](/blog/nl/budgetteren-onregelmatig-inkomen/)

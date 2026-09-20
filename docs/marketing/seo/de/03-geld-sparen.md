@@ -126,3 +126,4 @@ Für die meisten Menschen: ja. Den Abstand zwischen dem geplanten und dem tatsä
 - [Dein Finanzjahr, Wrapped: Was es zeigt](/blog/de/finanzjahr-wrapped/)
 - [Vorrat anlegen, bevor die Preise steigen: Inflationsschutz](/blog/de/inflationsschutz-vorrat/)
 - [Wechselkurs-Alarm: Push bei deinem Zielkurs](/blog/de/wechselkurs-alarm/)
+- [Budget in zwei Währungen: So behältst du den Überblick](/blog/de/budget-in-zwei-waehrungen/)

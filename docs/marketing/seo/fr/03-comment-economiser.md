@@ -126,3 +126,4 @@ Pour la plupart des gens, oui. Voir en temps réel l'écart entre ce qu'on avait
 - [Ton année financière résumée : ce qu'elle révèle](/blog/fr/bilan-annuel-financier/)
 - [Faire des réserves avant la hausse des prix](/blog/fr/bouclier-anti-inflation/)
 - [Alerte de taux de change : notification à ton objectif](/blog/fr/alerte-taux-de-change/)
+- [Budget en deux devises : comment garder le contrôle](/blog/fr/budget-en-deux-devises/)

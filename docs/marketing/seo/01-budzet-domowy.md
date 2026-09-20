@@ -120,3 +120,4 @@ Zacznij od jednej rozmowy o celach, nie o wydatkach. "Chcemy pojechać za rok na
 - [Budżet domowy z dziećmi, który się spina](/blog/pl/budzet-domowy-z-dziecmi/)
 - [AI w zarządzaniu finansami: jak naprawdę pomaga](/blog/pl/ai-w-zarzadzaniu-finansami/)
 - [Wyprawka szkolna: ile kosztuje i jak ją rozplanować](/blog/pl/wyprawka-szkolna-ile-kosztuje/)
+- [Budżet przy nieregularnych dochodach: co działa](/blog/pl/budzet-przy-nieregularnych-dochodach/)

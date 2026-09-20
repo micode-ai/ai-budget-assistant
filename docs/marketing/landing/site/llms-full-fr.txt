@@ -74,6 +74,61 @@ Tu peux avoir jusqu'à vingt alertes actives à la fois, sur n'importe quel nomb
 
 *Articles liés : [Comment économiser de l'argent](/blog/fr/comment-economiser/) | [Faire des réserves avant la hausse des prix](/blog/fr/bouclier-anti-inflation/)*
 
+## Application budget gratuite : ce que 'gratuit' veut dire
+URL: https://ai-budget.pl/blog/fr/application-budget-gratuite/
+
+Vous cherchez une application de budget gratuite parce que vous ne voulez pas payer avant de savoir si l'habitude va vraiment tenir. C'est raisonnable. Le problème, c'est que le mot "gratuit" cache pas mal de choses dans cette phrase : il couvre au moins quatre modèles économiques différents, et un seul d'entre eux se comporte comme vous l'imaginez probablement. Ce texte explique ce que "gratuit" recouvre vraiment, ce qu'il faut vérifier avant de faire confiance à l'étiquette, et où se situe l'offre gratuite d'AI Budget Assistant dans tout ça, comme un exemple honnête parmi d'autres, pas comme la seule bonne réponse.
+
+## Les quatre choses que "gratuit" peut vraiment vouloir dire
+
+Avant de comparer quoi que ce soit, autant nommer le schéma. Un seul mot recouvre plusieurs modèles qui, en pratique, ne se ressemblent en rien.
+
+**Un essai gratuit avec une échéance.** Accès complet pendant un nombre de jours fixé (une semaine, deux, un mois), puis un mur payant, parfois avec une carte débitée automatiquement si vous n'annulez pas à temps. C'est un abonnement à démarrage différé, pas un produit gratuit.
+
+**Gratuit pour toujours, avec un plafond.** Une vraie offre gratuite permanente, utilisable indéfiniment, mais plafonnée sur un point précis : moins de requêtes à l'IA par mois, pas d'import bancaire, moins de membres partagés, un historique plus court. C'est à quoi devrait ressembler un freemium fait honnêtement.
+
+**Gratuit parce que la publicité paie.** Aucun abonnement nulle part, mais votre attention est le produit, et pour une application de finances personnelles en particulier, cela veut souvent dire concrètement que vos données de dépenses valent quelque chose pour quelqu'un d'autre.
+
+**Gratuit parce que ce n'est pas vraiment une activité à part entière.** Le suivi intégré de votre banque, par exemple : réellement gratuit, sans piège, mais qui ne voit que ce seul compte et n'a jamais été pensé pour être un outil de budget complet.
+
+Voilà ce que l'étiquette "gratuit" cache vraiment : pas si vous finirez par payer, mais ce qui paie réellement les serveurs et les personnes derrière l'application avant même que vous ne lui confiiez un mois entier de vos dépenses.
+
+## Ce qu'il faut vérifier avant de croire un "gratuit"
+
+- Démarrer l'offre "gratuite" demande-t-il un numéro de carte ? Si oui, notez la date exacte de fin d'essai : une carte enregistrée s'annule rarement toute seule.
+- Que devient l'application, et l'historique que vous avez déjà saisi, une fois la fenêtre gratuite refermée : perdez-vous seulement des fonctionnalités en plus, ou perdez-vous l'accès à vos propres données ?
+- Les fonctionnalités qui décident vraiment si vous garderez le [suivi de vos dépenses](/blog/fr/suivi-des-depenses/) au-delà de deux semaines (scan de ticket, import bancaire, partage avec un conjoint) sont-elles incluses dans l'offre gratuite, ou n'apparaissent-elles qu'une fois que vous butez sur un mur ?
+- S'il n'y a d'abonnement nulle part dans l'application, de quoi vit réellement l'entreprise, et cette réponse vous convient-elle ?
+- Existe-t-il un plafond dur qui rend discrètement l'application inutilisable une fois franchi (un nombre fixe de transactions, quelques mois d'historique), plutôt qu'une limite que vous remarqueriez dès le départ ?
+
+## Où se situe l'offre gratuite d'AI Budget Assistant
+
+Pour être honnête : AI Budget Assistant est le deuxième type de la liste ci-dessus, gratuit pour toujours avec un plafond précis, pas un essai avec une échéance. Vous démarrez sans carte, dans le navigateur sur ai-budget.pl ou dans l'application Android. L'offre gratuite inclut l'ajout d'une dépense à la voix, en photographiant un ticket et, sur Android, directement à partir de la notification de paiement de votre banque sans rien taper, un import unique de votre relevé bancaire au lieu de le retaper, ainsi qu'un compte partagé pour la famille ou le couple.
+
+Le plafond est lui aussi précis, pas caché : le chat avec l'IA a une limite de requêtes mensuelle sur l'offre gratuite, et quelques fonctionnalités d'IA plus poussées (analyses de dépenses plus détaillées, un bilan complet de l'année) sont réservées à l'offre payante. Les mêmes questions que dans la liste ci-dessus s'appliquent à AI Budget Assistant exactement comme à n'importe quelle autre application de cette liste : vérifiez ce que l'offre gratuite couvre réellement avant d'y construire une habitude mensuelle. Pour un comparatif plus complet des critères à peser au-delà du prix, voyez [notre guide des meilleures applications de budget](/blog/fr/meilleures-applications-budget/).
+
+Si ce qui compte le plus pour vous, c'est un coût nul et aucune entreprise derrière, [un tableur que vous construisez vous-même](/blog/fr/modele-budget-excel/) est l'option la plus littéralement gratuite qui existe : pas d'inscription, pas de plafond, et aucun modèle économique auquel il faudrait faire confiance. Le prix à payer, c'est que chaque ligne dépend de vous pour être tapée.
+
+Vous pouvez installer l'application Android depuis [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), ou commencer tout de suite, sans rien installer, dans votre navigateur sur [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ : application de budget gratuite
+
+**Existe-t-il une application de budget vraiment gratuite, sans aucune limite ?**
+Un produit gratuit de façon permanente et sans la moindre limite n'existe quasiment jamais comme activité pérenne, parce que quelqu'un doit bien payer les serveurs et les personnes qui l'entretiennent. Ce qui existe, honnêtement, c'est "gratuit pour toujours avec un plafond raisonnable" ou un modèle financé par la publicité. La combinaison à surveiller, c'est "aucune limite, pour toujours" plus "une entreprise derrière, sans publicité".
+
+**Les applications de budget gratuites revendent-elles mes données ?**
+Cela dépend entièrement du modèle économique derrière le mot "gratuit". Les applications financées par la publicité le font en général, au sens où vos données alimentent le ciblage publicitaire, même si elles ne sont vendues à personne comme un fichier brut. L'offre gratuite d'une application financée par abonnement n'en a généralement pas besoin, puisque les utilisateurs payants couvrent le coût. Vérifiez directement dans la politique de confidentialité si vos données quittent l'appareil, et si l'application fonctionne hors ligne.
+
+**Quelle est la vraie différence entre "essai gratuit" et "freemium" ?**
+Un essai gratuit est temporaire : accès complet pendant un nombre de jours fixé, puis un mur payant. Le freemium est permanent : une version plus réduite mais réellement utilisable du produit, disponible aussi longtemps que vous voulez, à côté d'une offre payante optionnelle pour qui en veut plus. Si une fiche indique "gratuit" sans préciser pour combien de temps, cela vaut la peine de vérifier directement sur la page tarifs avant d'y saisir tout un mois de dépenses.
+
+**Vais-je perdre mes données si je ne passe jamais à une offre payante ?**
+Sur une offre gratuite pour toujours bien construite : non. Rester sur l'offre gratuite devrait vous coûter des fonctionnalités en plus, pas l'accès à votre propre historique de dépenses. Certaines applications brouillent cela en verrouillant vos propres données passées derrière un mur payant au-delà d'un certain volume, ce qui vaut la peine d'être vérifié spécifiquement, car c'est bien plus facile à manquer qu'une fonctionnalité simplement grisée.
+
+---
+
+*Articles liés : [Suivi des dépenses : reprendre le contrôle de son argent](/blog/fr/suivi-des-depenses/) | [Meilleures applications de budget en 2026 : guide honnête](/blog/fr/meilleures-applications-budget/) | [Modèle de budget Excel : structure et ses limites](/blog/fr/modele-budget-excel/)*
+
 ## Ton année financière résumée : ce qu'elle révèle
 URL: https://ai-budget.pl/blog/fr/bilan-annuel-financier/
 
@@ -324,6 +379,57 @@ Utilisez le modèle au prorata. Répartissez les charges communes selon la part 
 
 *Articles liés : [Comment faire un budget personnel étape par étape](/blog/fr/comment-faire-un-budget/) | [Comment économiser de l'argent avec un plan concret](/blog/fr/comment-economiser/)*
 
+## Budget en deux devises : comment garder le contrôle
+URL: https://ai-budget.pl/blog/fr/budget-en-deux-devises/
+
+Vous êtes indépendant pour des clients à l'étranger et vous êtes payé en dollars ou en livres, mais le loyer, les courses et tout le reste se paient dans la devise du pays où vous vivez. Ou bien vous êtes frontalier, votre salaire arrive en francs suisses, mais le loyer, l'assurance et le quotidien se règlent en euros. Dans les deux cas, c'est le même problème : votre argent vit dans deux devises à la fois, et vous n'avez pas un seul chiffre qui vous dit ce que vous possédez réellement. À cela s'ajoute autre chose : chaque conversion que vous faites sans y réfléchir, au moment qui arrange, vous coûte un peu plus que nécessaire.
+
+## Pourquoi calculer de tête ne fonctionne pas
+
+Le même réflexe qui se cache derrière toute vraie façon d'[économiser](/blog/fr/comment-economiser/), regarder les chiffres réels avant de décider plutôt que deviner, s'applique aussi au change, sauf que presque personne n'y pense de cette façon. Il y a en réalité deux problèmes distincts qui se mélangent. D'abord : sans vue d'ensemble sur les deux soldes, il est facile de perdre le fil de ce que vous avez réellement, vous calculez de tête avec le taux que vous avez vu la dernière fois, et il a déjà bougé au moment où vous vous en servez. Ensuite : comme vous ne voyez pas la situation clairement, vous changez de devise quand c'est nécessaire, pas quand le taux vous est favorable, et sur un virement qui se répète, même un petit écart de taux finit par s'accumuler mois après mois.
+
+## Le portefeuille affiche un solde séparé par devise, tout seul
+
+Dans AI Budget Assistant, pas besoin de créer à la main un "compte en francs" ou un "compte en livres". Dès qu'une transaction dans une devise donnée apparaît chez vous, une carte de solde séparée pour cette devise s'affiche automatiquement dans votre Portefeuille, à part du reste. Votre solde en francs reste votre solde en francs, votre solde en euros reste votre solde en euros, et aucun des deux ne se mélange à l'autre en un chiffre confus.
+
+## Un seul total, même si votre argent vit dans plusieurs devises
+
+Les soldes séparés sont utiles, mais parfois vous voulez simplement savoir combien vous avez au total, pour l'analyse des dépenses, votre budget ou une réponse du chat IA. Pour ça, l'application convertit tout dans une seule devise d'affichage que vous choisissez, au taux actuel d'un fournisseur externe de données de change, et affiche un chiffre cohérent plutôt que plusieurs montants que vous devriez additionner vous-même. Si le taux d'une devise est momentanément indisponible, le total est marqué comme approximatif plutôt que de faire semblant d'une précision qu'il n'a pas. Vous changez votre devise d'affichage à tout moment dans les réglages, cela ne change que la façon dont le total s'affiche, pas ce que vous avez déjà enregistré.
+
+## Enregistrez le change quand il a vraiment lieu
+
+Quand vous convertissez réellement une devise en une autre, via votre banque, un bureau de change ou un service de virement, il vaut la peine d'enregistrer ce change dans [AI Budget Assistant](https://ai-budget.pl), sur l'écran Change de votre Portefeuille. Les deux soldes se mettent alors à jour exactement selon ce qui s'est vraiment passé, pas selon ce que l'application aurait supposé à partir d'un taux général. C'est la seule façon pour que les deux soldes correspondent à la réalité, et non à une simple estimation.
+
+## Arrêtez de vérifier le taux à la main, réglez une alerte
+
+C'est là qu'intervient l'[alerte](/blog/fr/alerte-taux-de-change/) de taux de change : vous choisissez une paire de devises, disons EUR contre CHF, vous saisissez un seuil et une direction, et l'application vérifie le taux en arrière-plan une fois par heure auprès d'un fournisseur externe de données de change. Une fois le seuil franchi, vous recevez une seule notification push, ce n'est pas un taux en direct ni une prévision d'IA, juste une comparaison simple entre deux chiffres à intervalle régulier. L'alerte se déclenche une seule fois et vous est liée personnellement, pas à un compte partagé, donc si vous partagez un compte avec quelqu'un, ses alertes ne vous sont pas visibles et inversement. Vous pouvez avoir jusqu'à vingt alertes actives à la fois, surveiller plusieurs paires en même temps n'est donc pas un problème.
+
+Il vaut mieux dire clairement ce que cette fonction ne fait pas : elle n'envoie ni ne reçoit d'argent réel à travers les frontières. C'est un outil de suivi et de rappel, le change ou le virement lui-même passe toujours par votre banque ou le service que vous utilisez déjà.
+
+## Comment assembler tout ça
+
+Enregistrez vos revenus et dépenses dans les deux devises au fur et à mesure, à la voix ou en photographiant un reçu ou une facture. Choisissez la devise d'affichage dans laquelle vous voulez voir votre total combiné. Enregistrez le change réel dès qu'il a lieu, plutôt que de laisser l'application deviner un taux à votre place. Et réglez une alerte sur la paire que vous changez régulièrement, pour arrêter de vérifier par habitude et commencer à agir exactement quand ça vaut la peine. Si la devise dans laquelle vous épargnez perd de la valeur plus vite qu'il n'y paraît au quotidien, c'est un autre sujet, à lire dans notre article sur l'[inflation personnelle](/blog/fr/inflation-personnelle/).
+
+Vous pouvez commencer sans carte enregistrée, directement dans le navigateur sur [ai-budget.pl](https://ai-budget.pl), ou installer l'application Android depuis [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ : budget en deux devises
+
+**L'application affiche-t-elle un taux de change en direct, en temps réel ?**
+Non. Le taux utilisé pour convertir les totaux et pour vérifier une alerte provient d'un fournisseur externe de données de change, et l'alerte le vérifie précisément une fois par heure, pas en continu. Cela suffit pour repérer un bon moment pour changer, mais ce n'est pas un ticker de marché en direct.
+
+**Dois-je ajouter une nouvelle devise à mon portefeuille avant de pouvoir m'en servir ?**
+Non. Une carte de solde pour une devise apparaît toute seule dans votre portefeuille dès votre première transaction dans cette devise, il n'y a rien à configurer à l'avance.
+
+**Les autres membres d'un compte partagé voient-ils mes alertes de taux de change ?**
+Non. Une alerte de taux de change vous est liée en tant qu'utilisateur individuel, pas à un compte partagé, les autres membres ne voient pas vos alertes et n'ont pas besoin de configurer les leurs.
+
+**L'application peut-elle envoyer de l'argent à l'étranger ou changer de devise à ma place ?**
+Non. C'est un outil de suivi des soldes, de conversion des totaux et de rappel d'un bon moment pour changer, le change ou le virement lui-même passe toujours par votre banque, un bureau de change ou le service que vous utilisez déjà, et vous enregistrez ensuite dans l'application ce qui s'est réellement passé.
+
+---
+
+*Articles liés : [Comment économiser quand les fins de mois sont serrées](/blog/fr/comment-economiser/) | [Alerte de taux de change : notification à ton objectif](/blog/fr/alerte-taux-de-change/) | [Inflation personnelle : comment la calculer](/blog/fr/inflation-personnelle/)*
+
 ## Budget familial avec enfants : le gérer sans stress
 URL: https://ai-budget.pl/blog/fr/budget-familial-avec-enfants/
 
@@ -392,6 +498,59 @@ Donnez-leur une somme régulière, même petite, pour qu'ils apprennent à arbit
 ---
 
 *Articles liés : [Comment faire un budget personnel étape par étape](/blog/fr/comment-faire-un-budget/) | [Budget commun en couple : un plan sans disputes](/blog/fr/budget-commun-couple/)*
+
+## Budget avec des revenus irréguliers : ce qui marche
+URL: https://ai-budget.pl/blog/fr/budget-revenus-irreguliers/
+
+Vous êtes indépendant, vous travaillez en mission, à la commission, ou vos heures et votre revenu changent chaque mois. La plupart des conseils de budget supposent quelque chose qui n'est tout simplement pas vrai chez vous : un montant connu qui arrive le même jour chaque mois. La règle 50/30/20, "payez-vous en premier", la méthode des enveloppes : tous commencent par répartir un salaire que vous n'avez pas. Ce n'est pas un problème de discipline. C'est que la première étape du conseil standard ne s'applique pas à vous.
+
+## Pourquoi les règles de budget habituelles échouent précisément chez vous
+
+Toute méthode de budget répandue, y compris notre propre [comment faire un budget](/blog/fr/comment-faire-un-budget/), part d'un point fixe : un montant mensuel connu, réparti ensuite en catégories. Avec un salaire, cela fonctionne parce que le chiffre est donné. Avec des revenus irréguliers, cette première étape devient une supposition, et elle va généralement dans un sens : vous faites la moyenne de vos derniers mois, ce bon contrat inclus, et vous bâtissez dessus des engagements fixes. Un mois plus tard, le budget comptait sur de l'argent qui n'est jamais arrivé.
+
+## Partez de votre pire mois réel, pas de la moyenne
+
+C'est le seul vrai changement à faire. Plutôt que de calculer la moyenne de votre revenu sur l'année écoulée, regardez le mois le plus faible qui s'est réellement produit sur une période raisonnable, disons les six à douze derniers mois. C'est votre point de départ réel, pas un scénario hypothétique, mais quelque chose qui s'est déjà produit.
+
+Vos dépenses fixes (loyer, mensualités, assurance, courses) doivent tenir dans ce mois le plus faible, pas dans le mois moyen. Tout ce que vous gagnez au-delà de ce plancher un bon mois n'est pas un budget plus large, c'est un tampon ou de l'épargne. Ce seul changement règle la plus grande partie du problème avant même de toucher à une application ou à un tableur.
+
+## Lissez vos revenus via un tampon, plutôt que de réagir à chaque paiement
+
+La deuxième étape consiste à séparer le moment où vous encaissez de celui où vous dépensez. Les paiements de clients ou les commissions atterrissent sur un compte à part, un tampon, et chaque mois vous virez de là vers votre compte de dépenses un montant fixe, proche de votre pire mois. Un bon mois, l'excédent reste dans le tampon ; un mois faible, il comble l'écart et vous vous versez le même montant. C'est ce qui rend vos dépenses quotidiennes indépendantes d'une facture tombée ou non cette semaine.
+
+Si vous gérez deux comptes de cette façon, un pour les encaissements et un pour les dépenses, AI Budget Assistant vous permet de virer de l'un à l'autre directement dans l'application et de voir les soldes mis à jour aussitôt, plutôt qu'à la main ou dans un second tableur.
+
+## Laissez un chiffre répondre à "combien puis-je dépenser aujourd'hui", pas une supposition
+
+C'est là qu'une fonctionnalité précise convient mieux à ce problème que n'importe quelle limite mensuelle fixe. L'écran d'accueil d'AI Budget Assistant affiche un montant quotidien prudent à dépenser, calculé à partir de votre solde réel, de votre revenu attendu et de vos engagements à venir (abonnements, factures récurrentes, contributions à des objectifs d'épargne), divisé par les jours restants de la période. C'est l'inverse d'un budget mensuel fixe : le chiffre se recalcule dès que votre solde change, donc vous n'avez jamais besoin de savoir à l'avance ce que vous gagnerez ce mois-ci, il suffit que l'application connaisse votre solde réel. C'est gratuit, sans plafond dans l'offre payante, et toucher le chiffre montre exactement de quoi il se compose.
+
+## Testez un mauvais mois avant qu'il n'arrive vraiment
+
+L'onglet Analyse a un Simulateur de scénarios : vous déplacez un curseur pour n'importe quelle catégorie de dépense, ou pour votre revenu, et vous voyez instantanément comment change la projection d'épargne à 3, 6 et 12 mois. Pour quelqu'un aux revenus irréguliers, cela a une utilité très concrète : baissez le curseur de revenu de ce qu'un trimestre creux pourrait vous coûter, et regardez l'effet sur votre épargne dans six mois, avant qu'il n'arrive. Les scénarios sont calculés localement sur votre téléphone ; vous pouvez en enregistrer jusqu'à cinq gratuitement (illimité en Pro et Business) et y revenir quand la situation change.
+
+## Comment assembler tout ça
+
+Trouvez votre pire mois réel de l'année écoulée. Fixez un montant de "salaire" que vous vous versez depuis le tampon, proche de ce niveau. Construisez votre budget de dépenses fixes autour de ce chiffre, pas de la moyenne. Enregistrez les paiements de clients comme revenu dès qu'ils arrivent, à la voix ou en photographiant la facture, et laissez le chiffre quotidien de ce que vous pouvez dépenser s'occuper du reste, plutôt qu'une limite de catégorie rigide qui ne correspondait jamais à un mois imprévisible.
+
+Vous pouvez commencer sans carte bancaire, directement dans votre navigateur sur [ai-budget.pl](https://ai-budget.pl), ou installer l'application Android depuis [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ : budget avec des revenus irréguliers
+
+**Quelle taille doit avoir mon tampon avant que j'arrête de m'inquiéter d'un mois faible ?**
+Il n'y a pas un seul bon chiffre : cela dépend de la variabilité réelle de vos revenus et de la durée habituelle de vos périodes creuses. Un point de départ raisonnable est un tampon qui couvre votre pire mois répété une ou deux fois de suite, pas une seule fois. C'est une question différente de la taille de votre fonds d'urgence en cas de perte totale de revenu.
+
+**Peut-on quand même appliquer la règle 50/30/20 avec des revenus irréguliers ?**
+Oui, tant que vous calculez les pourcentages à partir de votre pire mois, pas de votre moyenne annuelle. La [règle 50/30/20](/blog/fr/regle-50-30-20/) ne suppose en elle-même rien sur la stabilité du revenu, elle suppose seulement que vous connaissez le chiffre dont vous tirez des pourcentages. Remplacez-le par votre plancher réel plutôt que par une supposition, et le reste de la méthode fonctionne pareil.
+
+**Une application de budget a-t-elle un sens si je ne touche pas de salaire fixe ?**
+Oui, c'est même l'inverse : un budget mensuel fixe est là où vous perdez le plus avec un revenu variable, et un chiffre quotidien recalculé est là où vous gagnez le plus. Vous enregistrez le revenu de chaque contrat dès qu'il arrive, à la voix ou en photographiant la facture, si bien que l'application travaille à partir de votre solde réel, plutôt que d'une hypothèse de salaire qui ne s'appliquait jamais à vous.
+
+**L'IA d'une application de budget aide-t-elle vraiment, concrètement, avec des revenus irréguliers ?**
+Indirectement, oui. Nous détaillons cela dans notre article sur [comment l'IA aide](/blog/fr/ia-pour-gerer-son-budget/) : reconnaître une dépense depuis une note vocale ou une photo de ticket, et recalculer le solde tout seul, vous enlèvent la tâche la plus pénible quand votre revenu n'arrête pas de changer, tout remettre à jour à la main.
+
+---
+
+*Articles liés : [Comment faire un budget personnel qui tient dans la durée](/blog/fr/comment-faire-un-budget/) | [La règle 50/30/20 : un guide pratique](/blog/fr/regle-50-30-20/) | [Comment l'IA peut vous aider à gérer votre budget](/blog/fr/ia-pour-gerer-son-budget/)*
 
 ## Carte des dépenses : voir où va votre argent
 URL: https://ai-budget.pl/blog/fr/carte-des-depenses/
@@ -746,6 +905,7 @@ Pour la plupart des gens, oui. Voir en temps réel l'écart entre ce qu'on avait
 - [Ton année financière résumée : ce qu'elle révèle](/blog/fr/bilan-annuel-financier/)
 - [Faire des réserves avant la hausse des prix](/blog/fr/bouclier-anti-inflation/)
 - [Alerte de taux de change : notification à ton objectif](/blog/fr/alerte-taux-de-change/)
+- [Budget en deux devises : comment garder le contrôle](/blog/fr/budget-en-deux-devises/)
 
 ## Comment faire un budget personnel qui tient dans la durée
 URL: https://ai-budget.pl/blog/fr/comment-faire-un-budget/
@@ -864,6 +1024,7 @@ Commencez par une conversation sur vos objectifs communs, pas sur le budget. "On
 - [Budget familial avec enfants : le gérer sans stress](/blog/fr/budget-familial-avec-enfants/)
 - [Comment l'IA peut vous aider à gérer votre budget](/blog/fr/ia-pour-gerer-son-budget/)
 - [Rentrée scolaire : combien elle coûte vraiment](/blog/fr/cout-de-la-rentree-scolaire/)
+- [Budget avec des revenus irréguliers : ce qui marche](/blog/fr/budget-revenus-irreguliers/)
 
 ## Rentrée scolaire : combien elle coûte vraiment
 URL: https://ai-budget.pl/blog/fr/cout-de-la-rentree-scolaire/
@@ -1813,6 +1974,78 @@ Elles résolvent des problèmes différents et fonctionnent bien ensemble. La r�
 
 *Articles liés : [Comment faire un budget personnel étape par étape](/blog/fr/comment-faire-un-budget/) | [La règle 50/30/20 expliquée](/blog/fr/regle-50-30-20/)*
 
+## Modèle de budget Excel : structure et ses limites
+URL: https://ai-budget.pl/blog/fr/modele-budget-excel/
+
+Vous cherchez un modèle de budget Excel parce que vous voulez commencer aujourd'hui, pas lire un article de plus sur la motivation. Vous avez raison : un tableur suffit vraiment pour démarrer, c'est gratuit, et vous voyez chaque formule vous-même. Ce texte vous donne une structure à copier en dix minutes, puis dit honnêtement à quel moment un tableur commence à vous freiner.
+
+## Ce qu'un bon modèle de budget Excel doit vraiment contenir
+
+La plupart des tableurs de budget familial que j'ai vus font la même erreur : trop d'onglets, pas assez de structure. Un modèle qui fonctionne a besoin de quatre choses.
+
+**Un seul onglet de transactions.** Pas trois feuilles pour trois comptes et un post-it à part pour les espèces. Une liste continue, une ligne par dépense.
+
+**Une liste fixe de catégories.** Dix à quinze catégories est le bon nombre : logement, courses, restaurants, transport, factures, santé, abonnements, shopping, enfants (le cas échéant), épargne, remboursement de dette, loisirs. Moins, et vous perdez le détail qui rend un budget utile. Plus, et noter une dépense devient une corvée en soi.
+
+**Un onglet de synthèse.** Une simple liste de transactions ne dit rien en elle-même. Il faut un endroit qui totalise les dépenses par catégorie et par mois, pour que les chiffres disent enfin quelque chose.
+
+**Une colonne de solde.** Voir ce qu'il reste, pas seulement ce que vous avez dépensé, c'est exactement la différence entre un journal et un budget.
+
+## Une structure simple à copier
+
+Votre onglet "Transactions" a besoin de cinq colonnes : **Date**, **Catégorie**, **Description**, **Montant**, **Compte/moyen de paiement**. Rien de plus n'est nécessaire au départ. N'ajoutez une colonne que lorsque son absence se fait vraiment sentir.
+
+Pour la synthèse, utilisez une formule de somme conditionnelle : `SOMME.SI` dans la version française d'Excel, `SUMIF` dans la version anglaise et dans Google Sheets (le nom exact dépend de la langue de votre tableur). Une ligne par catégorie, une colonne par mois, et chaque cellule additionne les montants de l'onglet transactions qui remplissent les deux conditions à la fois.
+
+Le solde se calcule le plus simplement comme une somme cumulée : solde de départ plus revenus moins dépenses, reporté ligne par ligne ou mois par mois dans l'onglet de synthèse. Il n'a pas besoin d'être sophistiqué, il doit juste vous dire si vous êtes dans le vert avant que la fin du mois ne vous surprenne.
+
+Et c'est à peu près tout. Excel et Google Sheets se comportent de façon identique ici, alors utilisez celui que vous avez déjà ouvert.
+
+## Où un tableur commence à montrer ses limites
+
+Soyons honnêtes : pour quelqu'un qui aime le tenir et dont les finances sont simples, un tableur tient des années. Le problème n'est pas dans les formules. Il est dans le fait que chaque ligne doit être tapée par une personne, à la main, à chaque fois.
+
+Un gros achat par mois ne pose aucun problème. Vingt petits (un café, un ticket de bus, un paquet de chips, une livraison de repas) et l'effort de noter chacun séparément finit par peser plus lourd que l'intérêt de les suivre. C'est exactement pour ça qu'un budget échoue : [la friction](/blog/fr/suivi-des-depenses/), pas un manque de discipline. La plupart des gens démarrent un tableur de budget avec un réel enthousiasme et l'abandonnent en silence au bout de quelques semaines, épuisés par la saisie manuelle à laquelle ils s'étaient engagés.
+
+Le deuxième problème apparaît quand deux personnes budgétisent ensemble. L'une devient propriétaire du fichier et l'envoie par e-mail, l'autre saisit ses dépenses en retard ou pas du tout, et au bout d'un mois vous avez deux versions différentes de ce qu'il reste réellement à dépenser.
+
+## Quand il vaut la peine d'aller plus loin
+
+Quelques signes que ce n'est plus un problème de discipline, mais un problème d'outil :
+
+- Quatre ou cinq jours passent régulièrement avant que vous n'ouvriez le fichier pour rattraper le retard.
+- Votre partenaire a discrètement arrêté de saisir quoi que ce soit, parce que le fichier "vous appartient".
+- Vous voulez voir une dépense au moment où elle se produit, pas la reconstituer à partir d'un ticket une semaine plus tard.
+- Presque tout passe par carte ou par téléphone, si bien que retaper chaque transaction dans le tableur ressemble à un travail en double.
+
+Aucun de ces signes ne signifie que le budget ne fonctionne pas pour vous. Ils signifient que le tableur ne correspond plus à la façon dont vous dépensez réellement.
+
+## Ce qui remplace le tableur
+
+Ce qui prend le relais d'un tableur devrait garder ce qui fonctionnait (des catégories claires, des totaux mensuels, un solde visible) et retirer exactement ce qui le tuait : taper chaque ligne à la main. C'est la même friction que traite plus en détail [notre guide des meilleures applications de budget](/blog/fr/meilleures-applications-budget/), et c'est elle, plus que la liste de fonctionnalités, qui décide si un outil survit au-delà de deux semaines.
+
+Dans AI Budget Assistant, vous ajoutez une dépense à la voix ("douze euros pour le déjeuner"), en photographiant un ticket, ou, sur Android, sans même toucher votre téléphone, parce que l'application lit la notification de paiement de votre propre banque et enregistre la dépense elle-même. L'historique que vous avez déjà dans votre banque, vous l'importez une fois pour toutes en CSV ou en PDF au lieu de le retaper ligne par ligne ; [notre guide pour importer un relevé bancaire](/blog/fr/importer-releve-bancaire/) détaille exactement cette étape. Pour les couples, le principe est le même, sauf que vous vous connectez chacun depuis votre propre téléphone à une vue partagée en temps réel, au lieu de vous envoyer un fichier par e-mail.
+
+Vous pouvez commencer sans carte bancaire, directement dans votre navigateur sur [ai-budget.pl](https://ai-budget.pl), ou l'installer sur Android depuis [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ : modèle de budget Excel
+
+**Existe-t-il un modèle de budget Excel gratuit ?**
+Vous pouvez construire le vôtre en une dizaine de minutes en suivant la structure de cet article : un onglet transactions à cinq colonnes, une liste fixe de catégories et un onglet de synthèse avec une formule de somme conditionnelle. Les modèles prêts à l'emploi de la galerie Excel ou Google Sheets fonctionnent aussi, mais comptent généralement plus d'onglets que ce dont vous avez besoin pour démarrer.
+
+**Excel ou Google Sheets : lequel choisir pour un budget familial ?**
+Pour un budget familial, la différence est surtout cosmétique. Les deux gèrent les mêmes formules de somme conditionnelle et les tableaux croisés dynamiques. Google Sheets a l'avantage si vous budgétisez à deux et voulez modifier le même fichier en même temps depuis des appareils différents.
+
+**Comment ne plus oublier de mettre à jour mon budget Excel ?**
+C'est réellement difficile. Fixer un moment précis, un dimanche soir par exemple, aide, mais la vraie solution consiste à réduire à quelques secondes le temps nécessaire pour noter une dépense. C'est exactement pour ça que le scan de tickets et la saisie vocale existent dans les applications de budget : ils suppriment l'étape que les gens finissent par sauter.
+
+**Quand passer d'un tableur à une application de budget ?**
+Quand vous remarquez des trous réguliers dans votre suivi, quand l'autre personne de votre budget a arrêté de saisir ses dépenses, ou quand la majorité de vos achats passe déjà par carte et que vous préféreriez les importer plutôt que les retaper. Le tableur en lui-même n'a jamais été le problème ; la saisie manuelle qui le fait tourner l'est généralement.
+
+---
+
+*Articles liés : [Suivi des dépenses : reprendre le contrôle de son argent](/blog/fr/suivi-des-depenses/) | [Meilleures applications de budget en 2026 : guide honnête](/blog/fr/meilleures-applications-budget/) | [Importer un relevé bancaire dans une appli de budget](/blog/fr/importer-releve-bancaire/)*
+
 ## Comment partager l'addition entre amis et être remboursé
 URL: https://ai-budget.pl/blog/fr/partager-addition-entre-amis/
 
@@ -2335,6 +2568,8 @@ Vous aurez une image claire de vos habitudes de dépenses après un mois. Des ch
 - [Comment partager l'addition entre amis et être remboursé](/blog/fr/partager-addition-entre-amis/)
 - [Pourquoi on supprime les applis de budget en une semaine](/blog/fr/pourquoi-on-supprime-les-applis-de-budget/)
 - [Changer de Monefy, Wallet ou Money Manager en minutes](/blog/fr/changer-de-monefy-wallet-moneymanager/)
+- [Modèle de budget Excel : structure et ses limites](/blog/fr/modele-budget-excel/)
+- [Application budget gratuite : ce que 'gratuit' veut dire](/blog/fr/application-budget-gratuite/)
 
 
 # Help center

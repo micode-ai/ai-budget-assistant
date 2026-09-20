@@ -124,3 +124,4 @@ Commencez par une conversation sur vos objectifs communs, pas sur le budget. "On
 - [Budget familial avec enfants : le gérer sans stress](/blog/fr/budget-familial-avec-enfants/)
 - [Comment l'IA peut vous aider à gérer votre budget](/blog/fr/ia-pour-gerer-son-budget/)
 - [Rentrée scolaire : combien elle coûte vraiment](/blog/fr/cout-de-la-rentree-scolaire/)
+- [Budget avec des revenus irréguliers : ce qui marche](/blog/fr/budget-revenus-irreguliers/)

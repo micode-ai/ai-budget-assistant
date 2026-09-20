@@ -124,3 +124,4 @@ Start with a goals conversation, not a budget conversation. "We want to take a v
 - [Family Budgeting With Kids: A Practical Guide](/blog/en/family-budget-with-kids/)
 - [How AI Can Help You Budget (Honestly)](/blog/en/how-ai-helps-budgeting/)
 - [Back-to-School Budget: What It Really Costs](/blog/en/back-to-school-budget/)
+- [Budgeting With Irregular Income: What Actually Works](/blog/en/irregular-income-budgeting/)

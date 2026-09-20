@@ -127,3 +127,5 @@ Vous aurez une image claire de vos habitudes de dépenses après un mois. Des ch
 - [Comment partager l'addition entre amis et être remboursé](/blog/fr/partager-addition-entre-amis/)
 - [Pourquoi on supprime les applis de budget en une semaine](/blog/fr/pourquoi-on-supprime-les-applis-de-budget/)
 - [Changer de Monefy, Wallet ou Money Manager en minutes](/blog/fr/changer-de-monefy-wallet-moneymanager/)
+- [Modèle de budget Excel : structure et ses limites](/blog/fr/modele-budget-excel/)
+- [Application budget gratuite : ce que 'gratuit' veut dire](/blog/fr/application-budget-gratuite/)

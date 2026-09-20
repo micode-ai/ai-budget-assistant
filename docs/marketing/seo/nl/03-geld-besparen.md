@@ -126,3 +126,4 @@ Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te spare
 - [Jouw financiële jaar, gewrapt: wat het onthult](/blog/nl/financieel-jaaroverzicht/)
 - [Voorraad aanleggen vóór prijsstijgingen: inflatieschild](/blog/nl/inflatieschild/)
 - [Wisselkoersalert: melding bij jouw doelkoers](/blog/nl/wisselkoersalert/)
+- [Budget in twee valuta's: grip houden op je geld](/blog/nl/budget-in-twee-valutas/)

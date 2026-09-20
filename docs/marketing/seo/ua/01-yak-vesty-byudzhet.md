@@ -122,3 +122,4 @@ AI Budget Assistant (доступний на Android і в браузері на
 - [Сімейний бюджет з дітьми: як усе впорядкувати](/blog/ua/simejnyj-byudzhet-z-ditmy/)
 - [ШІ для управління фінансами: чесний погляд](/blog/ua/ai-dlya-byudzhetu/)
 - [Скільки коштує зібрати дитину до школи](/blog/ua/skilky-koshtuye-zibraty-dytynu-do-shkoly/)
+- [Бюджет при нерегулярному доході: що реально працює](/blog/ua/byudzhet-pry-neregulyarnomu-dokhodi/)

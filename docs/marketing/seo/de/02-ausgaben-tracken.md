@@ -127,3 +127,5 @@ Nach einem Monat hast du ein klares Bild deiner Ausgabenmuster. Spürbare Verhal
 - [Rechnung teilen mit Freunden und wirklich zurückbekommen](/blog/de/rechnung-teilen-mit-freunden/)
 - [Warum Haushaltsbuch-Apps schon nach einer Woche fliegen](/blog/de/warum-haushaltsbuch-apps-schnell-fliegen/)
 - [Wechsel von Monefy, Wallet oder Money Manager in Minuten](/blog/de/wechsel-von-monefy-wallet-moneymanager/)
+- [Excel Haushaltsbuch Vorlage: Aufbau und ihre Grenzen](/blog/de/excel-haushaltsbuch-vorlage/)
+- [Kostenlose Haushaltsbuch App: Was 'kostenlos' bedeutet](/blog/de/kostenlose-haushaltsbuch-app/)

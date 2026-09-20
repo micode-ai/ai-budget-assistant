@@ -126,3 +126,4 @@ Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas 
 - [Tu año financiero, resumido: qué revela](/blog/es/resumen-del-ano-financiero/)
 - [Haz acopio antes de que suban los precios: tu escudo](/blog/es/escudo-antiinflacion/)
 - [Alerta de tipo de cambio: aviso al llegar a tu objetivo](/blog/es/alerta-tipo-cambio/)
+- [Presupuesto en dos monedas: cómo no perder el control](/blog/es/presupuesto-en-dos-monedas/)

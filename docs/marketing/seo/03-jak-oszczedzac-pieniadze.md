@@ -138,3 +138,4 @@ Tak, szczególnie jeśli trudno ci wyrobić nawyk. Aplikacja daje natychmiastowy
 - [Twój rok w finansach: co pokazuje podsumowanie](/blog/pl/podsumowanie-roku-finansowego/)
 - [Zapasy przed podwyżką: tarcza antyinflacyjna w budżecie](/blog/pl/tarcza-antyinflacyjna/)
 - [Alert kursu walut: powiadomienie o wymarzonym kursie](/blog/pl/alert-kursu-walut/)
+- [Budżet w dwóch walutach: jak nie gubić się w przeliczeniach](/blog/pl/budzet-w-dwoch-walutach/)

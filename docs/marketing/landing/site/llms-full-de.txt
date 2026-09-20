@@ -479,6 +479,8 @@ Nach einem Monat hast du ein klares Bild deiner Ausgabenmuster. Spürbare Verhal
 - [Rechnung teilen mit Freunden und wirklich zurückbekommen](/blog/de/rechnung-teilen-mit-freunden/)
 - [Warum Haushaltsbuch-Apps schon nach einer Woche fliegen](/blog/de/warum-haushaltsbuch-apps-schnell-fliegen/)
 - [Wechsel von Monefy, Wallet oder Money Manager in Minuten](/blog/de/wechsel-von-monefy-wallet-moneymanager/)
+- [Excel Haushaltsbuch Vorlage: Aufbau und ihre Grenzen](/blog/de/excel-haushaltsbuch-vorlage/)
+- [Kostenlose Haushaltsbuch App: Was 'kostenlos' bedeutet](/blog/de/kostenlose-haushaltsbuch-app/)
 
 ## Ausgabenkategorien, die im Budget wirklich funktionieren
 URL: https://ai-budget.pl/blog/de/ausgabenkategorien/
@@ -753,6 +755,182 @@ Achte auf echte geteilte Konten, bei denen beide vom eigenen Handy aus in eine E
 
 *Verwandte Artikel: [Ausgaben tracken - so behältst du die Kontrolle](/blog/de/ausgaben-tracken/) | [Haushaltsbuch führen - die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/)*
 
+## Budget bei unregelmäßigem Einkommen: was hilft
+URL: https://ai-budget.pl/blog/de/budget-bei-unregelmaessigem-einkommen/
+
+Du arbeitest freiberuflich, auf Honorarbasis, auf Provision oder mit wechselnden Stunden, und dein Einkommen sieht jeden Monat anders aus. Die meisten Budget-Ratschläge setzen etwas voraus, das bei dir nicht zutrifft: einen bekannten Betrag, der jeden Monat am selben Tag eintrifft. Die 50-30-20-Regel, "zahl dir zuerst selbst", die Umschlagmethode - alle fangen damit an, ein Gehalt aufzuteilen, das du gar nicht hast. Das ist kein Disziplinproblem. Der erste Schritt der üblichen Ratschläge trifft auf dich einfach gar nicht zu.
+
+## Warum die üblichen Budgetregeln bei dir versagen
+
+Jede verbreitete Budgetmethode - auch unser allgemeiner [Leitfaden zum Haushaltsbuch führen](/blog/de/haushaltsbuch-fuehren/) - geht von einem festen Ausgangspunkt aus: einem bekannten Monatsbetrag, den du danach auf Kategorien verteilst. Bei einem festen Gehalt funktioniert das, weil die Zahl feststeht. Bei unregelmäßigem Einkommen wird genau dieser erste Schritt zur Schätzung, und die Schätzung geht meist in eine Richtung: Du mittelst deine letzten Monate, samt diesem einen guten Auftrag, und baust darauf feste Verpflichtungen auf. Einen Monat später zeigt sich, dass das Budget mit Geld gerechnet hat, das nie gekommen ist.
+
+## Rechne vom schlechtesten realen Monat, nicht vom Durchschnitt
+
+Das ist die eine echte Änderung, die du vornehmen musst. Statt dein Einkommen über das letzte Jahr zu mitteln, schau dir den schwächsten Monat an, der in einem sinnvollen Zeitraum tatsächlich vorkam, etwa in den letzten sechs bis zwölf Monaten. Das ist dein realer Ausgangspunkt, kein hypothetisches Worst-Case-Szenario, sondern etwas, das schon passiert ist und wieder passieren kann.
+
+Deine festen Ausgaben - Miete, Raten, Versicherung, Lebensmittel - müssen in diesen schwächsten Monat passen, nicht in den durchschnittlichen. Alles, was du in einem besseren Monat darüber hinaus verdienst, ist kein größeres Budget zum Ausgeben, sondern Puffer oder Ersparnis. Diese eine Änderung löst den größten Teil des Problems, noch bevor du überhaupt eine App oder eine Tabelle anfasst.
+
+## Glätte dein Einkommen über einen Puffer, statt auf jede Zahlung zu reagieren
+
+Der zweite Schritt trennt, wann du verdienst, von dem, wann du ausgibst. Zahlungen von Kunden oder Provisionen landen auf einem eigenen Konto, einem Puffer, und du überweist dir jeden Monat von dort einen festen Betrag auf dein Ausgabenkonto, ungefähr in der Höhe deines schlechtesten Monats. In einem guten Monat bleibt der Überschuss im Puffer, in einem schwachen Monat gleicht der Puffer die Lücke aus, und du zahlst dir trotzdem denselben Betrag aus. Genau das macht dein tägliches Ausgeben unabhängig davon, ob gerade eine Rechnung bezahlt wurde oder nicht.
+
+Wenn du auf diese Weise zwei Konten führst, eines für eingehende Zahlungen und eines für Ausgaben, kannst du in AI Budget Assistant direkt in der App zwischen ihnen überweisen und siehst beide Salden sofort aktualisiert, statt es von Hand oder in einer zweiten Tabelle mitzuverfolgen.
+
+## Lass eine Zahl beantworten, wie viel du heute ausgeben kannst, keine Schätzung
+
+Hier passt eine bestimmte Funktion besser zu diesem Problem als jedes feste Monatslimit. Die Startseite von AI Budget Assistant zeigt eine tägliche Zahl, wie viel sicher ausgegeben werden kann, berechnet aus deinem tatsächlichen Kontostand, deinem erwarteten Einkommen und anstehenden Verpflichtungen - Abos, wiederkehrende Rechnungen, Sparzielbeiträge -, geteilt durch die verbleibenden Tage bis zum Periodenende. Das ist im Grunde das Gegenteil eines festen Monatsbudgets: Die Zahl rechnet sich selbst neu, sobald sich dein tatsächlicher Kontostand ändert, sodass du nie im Voraus wissen musst, was du diesen Monat verdienst. Die App muss nur wissen, was gerade wirklich auf deinem Konto liegt. Die Funktion ist kostenlos, ohne Deckel im bezahlten Tarif, und ein Antippen der Zahl auf der Startseite zeigt genau, woraus sie sich zusammensetzt.
+
+## Teste einen schlechten Monat, bevor er wirklich kommt
+
+Im Analyse-Tab gibt es einen Szenario-Simulator: Du bewegst einen Regler für eine beliebige Ausgabenkategorie oder für dein Einkommen und siehst sofort, wie sich die Sparprognose für 3, 6 und 12 Monate verändert. Für jemanden mit unregelmäßigem Einkommen hat das eine ganz konkrete Anwendung: Zieh den Einkommensregler so weit herunter, wie ein schwaches Quartal realistisch ausfallen könnte, und sieh dir an, was das mit deinen Ersparnissen in einem halben Jahr macht, bevor dieses schwache Quartal tatsächlich kommt. Szenarien werden lokal auf deinem Handy berechnet; du kannst bis zu fünf kostenlos speichern (unbegrenzt in Pro und Business) und später wieder darauf zurückkommen, wenn sich etwas ändert.
+
+## So setzt du es zusammen
+
+Finde deinen schwächsten realen Monat aus dem letzten Jahr. Lege einen festen "Gehalts"-Betrag fest, den du dir aus dem Puffer auszahlst, nahe an diesem Niveau. Bau dein Budget für feste Ausgaben um diese Zahl herum, nicht um den Durchschnitt. Trage Kundenzahlungen laufend als Einkommen ein, per Sprache oder mit einem Foto der Rechnung, und lass die tägliche Zahl, wie viel du ausgeben kannst, den Rest übernehmen, statt eines starren Kategorielimits, das ohnehin nie zu einem Monat passte, den du gar nicht kanntest.
+
+Du kannst ohne Kartendaten direkt im Browser starten, auf [ai-budget.pl](https://ai-budget.pl), oder die Android-App über [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) installieren.
+
+## FAQ: Budget bei unregelmäßigem Einkommen
+
+**Wie groß sollte mein Puffer sein, bevor ich mir um einen schwachen Monat keine Sorgen mehr machen muss?**
+Es gibt keine einzelne richtige Zahl - es hängt davon ab, wie stark dein Einkommen tatsächlich schwankt und wie lange deine schwachen Phasen üblicherweise dauern. Ein vernünftiger Startpunkt ist ein Puffer, der deinen schlechtesten Monat ein- oder zweimal hintereinander abdeckt, nicht nur einmal. Das ist eine andere Frage als die, wie groß dein Notgroschen gegen einen kompletten Einkommensausfall sein sollte.
+
+**Kann ich bei unregelmäßigem Einkommen trotzdem die 50-30-20-Regel anwenden?**
+Ja, solange du die Prozentsätze von deinem schlechtesten Monat berechnest, nicht von deinem Jahresdurchschnitt. Die [50-30-20-Regel](/blog/de/50-30-20-regel/) setzt für sich genommen nichts über Einkommensstabilität voraus, sie setzt nur voraus, dass du die Zahl kennst, von der du Prozente nimmst. Setz deinen echten Boden anstelle einer Schätzung ein, und der Rest der Methode funktioniert genauso.
+
+**Ergibt eine Budget-App überhaupt Sinn, wenn ich kein festes Gehalt bekomme?**
+Ja, eher im Gegenteil: Ein festes Monatsbudget ist genau dort, wo du bei schwankendem Einkommen am meisten verlierst, und eine täglich neu berechnete Zahl, wie viel sicher ist, ist dort, wo du am meisten gewinnst. Du trägst das Einkommen aus jedem Auftrag ein, sobald es eintrifft, per Sprache oder mit einem Foto der Rechnung, sodass die App immer mit deinem echten, aktuellen Kontostand arbeitet, statt mit einer Gehaltsannahme, die für dich ohnehin nie galt.
+
+**Hilft KI in einer Budget-App tatsächlich konkret bei unregelmäßigem Einkommen?**
+Indirekt schon. Ausführlicher gehen wir darauf in unserem Beitrag zu [KI für die Finanzen](/blog/de/ki-fuer-die-finanzen/) ein: Eine Ausgabe aus einer Sprachnotiz oder einem Kassenbonfoto zu erkennen und den Kontostand automatisch neu zu berechnen, nimmt dir genau die Arbeit ab, die bei wechselndem Einkommen am meisten stört, nämlich alles von Hand nachzutragen, sobald sich etwas ändert.
+
+---
+
+*Ähnliche Artikel: [Haushaltsbuch führen: Die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/) | [Die 50-30-20-Regel: Ein praktischer Leitfaden](/blog/de/50-30-20-regel/) | [KI für die Finanzen: weniger Aufwand, mehr Einblick](/blog/de/ki-fuer-die-finanzen/)*
+
+## Budget in zwei Währungen: So behältst du den Überblick
+URL: https://ai-budget.pl/blog/de/budget-in-zwei-waehrungen/
+
+Du arbeitest freiberuflich für Kunden im Ausland und wirst in Dollar oder Euro bezahlt, aber Miete, Einkauf und alles andere zahlst du in der Währung, in der du lebst. Oder du pendelst für die Arbeit in die Schweiz, dein Lohn kommt in Franken, aber Miete, Versicherung und der Alltag laufen in Euro. Beides läuft auf dasselbe Problem hinaus: Dein Geld liegt gleichzeitig in zwei Währungen, und du hast keine einzige Zahl, die dir sagt, was du eigentlich besitzt. Dazu kommt noch etwas: Jeder Umtausch, den du ohne nachzudenken macht, in einem beliebigen Moment, kostet ein bisschen mehr, als er müsste.
+
+## Warum Kopfrechnen nicht funktioniert
+
+Derselbe Grundsatz, der hinter jedem echten [Geld sparen](/blog/de/geld-sparen/) steckt, die tatsächlichen Zahlen anzuschauen, statt zu raten, gilt auch beim Währungsumtausch, nur denkt kaum jemand so darüber nach. Es sind eigentlich zwei getrennte Probleme, die sich vermischen. Erstens: Ohne eine gemeinsame Sicht auf beide Salden verlierst du leicht den Überblick, was du wirklich hast, du rechnest im Kopf mit dem Kurs, den du zuletzt gesehen hast, und der hat sich längst wieder verschoben. Zweitens: Weil du die Lage nicht klar siehst, tauschst du dann um, wenn es gerade nötig ist, nicht dann, wenn der Kurs für dich günstig steht, und bei regelmäßigen Überweisungen summiert sich selbst ein kleiner Kursunterschied Monat für Monat.
+
+## Deine Geldbörse zeigt jede Währung automatisch getrennt an
+
+Du musst in AI Budget Assistant kein "Eurokonto" oder "Frankenkonto" von Hand anlegen. Sobald eine Transaktion in einer bestimmten Währung bei dir auftaucht, erscheint in deiner Geldbörse automatisch eine eigene Saldokarte dafür, getrennt vom Rest. Dein Saldo in Euro bleibt dein Saldo in Euro, dein Saldo in Franken bleibt dein Saldo in Franken, und keins verschmilzt mit dem anderen zu einer unklaren Zahl.
+
+## Eine Gesamtsumme, obwohl dein Geld in mehreren Währungen liegt
+
+Getrennte Salden sind wichtig, aber manchmal willst du einfach wissen, wie viel du insgesamt hast, für die Ausgabenanalyse, dein Budget oder eine Antwort im KI-Chat. Dafür rechnet die App alles in eine von dir gewählte Anzeigewährung um, zum aktuellen Kurs eines externen Wechselkurs-Anbieters, und zeigt dir eine einzige, stimmige Zahl statt mehrerer Beträge, die du sonst selbst zusammenrechnen müsstest. Falls ein einzelner Kurs gerade kurz nicht verfügbar ist, wird die Summe als ungefähr markiert, statt eine Genauigkeit vorzutäuschen, die sie nicht hat. Deine Anzeigewährung änderst du jederzeit in den Einstellungen, das betrifft nur die Darstellung der Summe, nicht das, was du bereits eingetragen hast.
+
+## Trag den Umtausch ein, wenn er tatsächlich passiert
+
+Wenn du wirklich eine Währung in eine andere tauschst, über deine Bank, eine Wechselstube oder einen Überweisungsdienst, solltest du diesen Umtausch in [AI Budget Assistant](https://ai-budget.pl) eintragen, auf dem Umtausch-Bildschirm unter deiner Geldbörse. Beide Salden aktualisieren sich dann genau um das, was wirklich passiert ist, nicht um das, was die App sonst aus einem allgemeinen Kurs angenommen hätte. Nur so stimmen beide Salden wirklich mit der Realität überein, statt nur mit einer Schätzung.
+
+## Statt manuell nachzuschauen, einen Alarm setzen
+
+Genau dafür gibt es den [Wechselkurs-Alarm](/blog/de/wechselkurs-alarm/): Du wählst ein Währungspaar, zum Beispiel EUR zu CHF, gibst einen Schwellenwert und eine Richtung ein, und die App prüft den Kurs im Hintergrund einmal pro Stunde gegen einen externen Wechselkurs-Anbieter. Sobald der Schwellenwert überschritten wird, bekommst du eine einzige Push-Benachrichtigung, das ist kein Live-Kurs und keine KI-Prognose, sondern ein einfacher Zahlenvergleich in regelmäßigen Abständen. Der Alarm löst genau einmal aus und ist an dich persönlich gebunden, nicht an ein gemeinsames Konto, teilst du also ein Konto mit jemandem, siehst du dessen Alarme nicht und umgekehrt. Du kannst bis zu zwanzig Alarme gleichzeitig aktiv haben, mehrere Paare gleichzeitig im Blick zu behalten ist also kein Problem.
+
+Es lohnt sich, klar zu sagen, was diese Funktion nicht tut: Sie schickt und empfängt kein echtes Geld über Grenzen hinweg. Es ist ein Werkzeug zum Verfolgen und Erinnern, den eigentlichen Umtausch oder die Überweisung machst du weiterhin über deine Bank oder den Dienst, den du bereits nutzt.
+
+## Alles zusammengefasst
+
+Trag Einnahmen und Ausgaben in beiden Währungen laufend ein, per Sprachnotiz oder Foto von Beleg oder Rechnung. Stell die Anzeigewährung ein, in der du deine Gesamtsumme sehen willst. Trag den echten Umtausch ein, sobald er passiert, statt die App einen Kurs für dich raten zu lassen. Und setz einen Alarm für das Paar, das du regelmäßig tauschst, damit du aufhörst, aus Gewohnheit nachzuschauen, und genau dann reagierst, wenn es sich lohnt. Falls die Währung, in der du sparst, gerade schneller an Wert verliert, als es sich im Alltag anfühlt, ist das ein eigenes Thema, mehr dazu in unserem Beitrag zur [persönlichen Inflation](/blog/de/persoenliche-inflation/).
+
+Du kannst ohne hinterlegte Karte starten, direkt im Browser auf [ai-budget.pl](https://ai-budget.pl), oder die Android-App über [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) installieren.
+
+## FAQ: Budget in zwei Währungen
+
+**Zeigt die App einen Live-Wechselkurs in Echtzeit?**
+Nein. Der Kurs, der für Gesamtsummen und für den Kursalarm verwendet wird, stammt von einem externen Wechselkurs-Anbieter, und der Alarm prüft ihn konkret einmal pro Stunde, nicht laufend. Das reicht, um einen guten Umtauschmoment zu erkennen, ist aber kein Live-Ticker.
+
+**Muss ich eine neue Währung erst manuell zu meiner Geldbörse hinzufügen?**
+Nein. Eine Saldokarte für eine Währung erscheint in deiner Geldbörse von selbst, sobald deine erste Transaktion in dieser Währung eingetragen ist, es gibt nichts vorab einzurichten.
+
+**Sehen andere Mitglieder eines gemeinsamen Kontos meine Kursalarme?**
+Nein. Ein Wechselkurs-Alarm ist an dich als einzelne Nutzerin oder einzelnen Nutzer gebunden, nicht an ein gemeinsames Konto, andere Mitglieder sehen deine Alarme nicht und müssen auch keine eigenen einrichten.
+
+**Kann die App selbst Geld ins Ausland schicken oder für mich umtauschen?**
+Nein. Es ist ein Werkzeug zum Verfolgen von Salden, Umrechnen von Summen und Erinnern an einen guten Umtauschmoment, der eigentliche Umtausch oder die Überweisung läuft weiterhin über deine Bank, eine Wechselstube oder einen Dienst, den du bereits nutzt, und danach trägst du ein, was tatsächlich passiert ist.
+
+---
+
+*Verwandte Artikel: [Geld sparen: Ein konkreter Plan, der wirklich aufgeht](/blog/de/geld-sparen/) | [Wechselkurs-Alarm: Push bei deinem Zielkurs](/blog/de/wechselkurs-alarm/) | [Persönliche Inflation berechnen: so geht's](/blog/de/persoenliche-inflation/)*
+
+## Excel Haushaltsbuch Vorlage: Aufbau und ihre Grenzen
+URL: https://ai-budget.pl/blog/de/excel-haushaltsbuch-vorlage/
+
+Du suchst eine Excel Haushaltsbuch Vorlage, weil du heute anfangen willst, nicht noch einen Artikel über Motivation lesen. Zu Recht: Eine Tabelle reicht wirklich zum Start, sie ist kostenlos, und du siehst jede Formel selbst. Dieser Text gibt dir einen Aufbau, den du in zehn Minuten kopieren kannst, und sagt dir danach ehrlich, an welchem Punkt eine Tabelle anfängt, dich auszubremsen, und was dann meistens passiert.
+
+## Was eine gute Excel Haushaltsbuch Vorlage wirklich braucht
+
+Die meisten Haushaltsbuch-Tabellen, die ich gesehen habe, machen denselben Fehler: zu viele Tabellenblätter, zu wenig Struktur. Eine funktionierende Vorlage braucht eigentlich vier Dinge.
+
+**Ein Blatt für Transaktionen.** Nicht drei Blätter für drei Konten und ein extra Zettel für Bargeld. Eine durchgehende Liste, eine Zeile pro Ausgabe.
+
+**Eine feste Kategorienliste.** Zehn bis fünfzehn Kategorien sind ideal: Wohnen, Lebensmittel, Essen gehen, Transport, Nebenkosten, Gesundheit, Abos, Shopping, Kinder (falls zutreffend), Sparen, Schuldentilgung, Freizeit. Weniger, und du verlierst genau die Details, die ein Budget nützlich machen. Mehr, und jede Eingabe wird selbst zur Arbeit.
+
+**Ein Übersichtsblatt.** Eine reine Liste von Transaktionen sagt für sich genommen nichts. Du brauchst eine Stelle, die Ausgaben nach Kategorie und Monat summiert, damit die Zahlen tatsächlich etwas aussagen.
+
+**Eine Saldospalte.** Zu sehen, was übrig bleibt, nicht nur was ausgegeben wurde, ist genau der Unterschied zwischen einem Tagebuch und einem Budget.
+
+## Ein einfacher Aufbau zum Nachbauen
+
+Dein Blatt "Transaktionen" braucht fünf Spalten: **Datum**, **Kategorie**, **Beschreibung**, **Betrag**, **Konto/Zahlungsart**. Mehr ist zum Start nicht nötig. Weitere Spalten fügst du erst hinzu, wenn dir eine wirklich fehlt.
+
+Für das Übersichtsblatt nutzt du eine bedingte Summenformel: `SUMMEWENN` in der deutschen Excel-Version, `SUMIF` in der englischen und in Google Sheets (der genaue Name hängt von der Spracheinstellung deiner Tabelle ab). Eine Zeile pro Kategorie, eine Spalte pro Monat, und jede Zelle summiert die Beträge aus dem Transaktionsblatt, die beide Bedingungen gleichzeitig erfüllen.
+
+Den Saldo trackst du am einfachsten als laufende Summe: Startsaldo plus Einnahmen minus Ausgaben, zeilenweise oder monatsweise im Übersichtsblatt fortgeschrieben. Er muss nicht raffiniert sein, er soll dir nur zeigen, ob du im Plus bist, bevor dich das Monatsende überrascht.
+
+Das war es auch schon. Excel und Google Sheets verhalten sich hier identisch, also nimm einfach, was du gerade offen hast.
+
+## Wo eine Tabelle an ihre Grenzen kommt
+
+Ehrlich gesagt: Für jemanden, der sie gern pflegt und einfache Finanzen hat, hält eine Tabelle jahrelang. Das Problem liegt nicht in den Formeln. Es liegt daran, dass jede einzelne Eingabe ein Mensch von Hand tippen muss, jedes Mal aufs Neue.
+
+Ein größerer Einkauf im Monat ist kein Problem. Zwanzig kleine (Kaffee, ein Busticket, eine Tüte Chips, ein Lieferdienst) und der Aufwand, jede einzeln einzutragen, übersteigt schnell den Nutzen, sie überhaupt zu tracken. Genau das ist der Grund, warum Budgets scheitern: [Reibung](/blog/de/ausgaben-tracken/), nicht fehlende Disziplin. Die meisten Menschen starten eine Haushaltsbuch-Tabelle mit echtem Elan und lassen sie nach ein paar Wochen leise einschlafen, ausgebremst genau durch das manuelle Eintippen, auf das sie sich eingelassen haben.
+
+Das zweite Problem taucht auf, sobald zwei Personen zusammen budgetieren. Eine von euch wird zur Besitzerin der Datei und schickt sie per Mail herum, die andere trägt Ausgaben verspätet ein oder gar nicht, und nach einem Monat habt ihr zwei verschiedene Versionen davon, wie viel wirklich noch übrig ist.
+
+## Woran du merkst, dass es Zeit für mehr ist
+
+Ein paar Signale, dass das kein Disziplinproblem mehr ist, sondern ein Werkzeugproblem:
+
+- Regelmäßig vergehen vier, fünf Tage, bevor du die Datei öffnest und nachträgst.
+- Dein Partner oder deine Partnerin trägt still nichts mehr ein, weil die Datei "dir gehört".
+- Du willst eine Ausgabe sehen, sobald sie passiert, nicht sie eine Woche später aus einem Kassenbon rekonstruieren.
+- Fast alles läuft über Karte oder Handy, sodass jede Transaktion nochmal von Hand in die Tabelle zu tippen wie doppelte Arbeit wirkt.
+
+Keins dieser Signale heißt, dass Budgetieren bei dir nicht funktioniert. Es heißt, dass die Tabelle nicht mehr zu deinem echten Ausgabeverhalten passt.
+
+## Was nach der Tabelle kommt
+
+Was eine Tabelle ablöst, sollte behalten, was an ihr funktioniert hat, also klare Kategorien, Monatssummen, ein sichtbarer Saldo, und genau das entfernen, was sie umgebracht hat: das manuelle Eintippen jeder einzelnen Position. Das ist dieselbe Reibung, die [unser Leitfaden zur besten Haushaltsbuch App](/blog/de/beste-haushaltsbuch-app/) ausführlicher behandelt, und sie entscheidet, ob ein Werkzeug länger als zwei Wochen überlebt, nicht die Länge der Funktionsliste.
+
+In AI Budget Assistant fügst du eine Ausgabe per Sprache hinzu ("zwölf Euro fürs Mittagessen"), indem du einen Kassenbon fotografierst, oder auf Android, ohne dein Handy überhaupt anzufassen, weil die App die Zahlungsbenachrichtigung deiner Bank selbst liest und die Ausgabe einträgt. Die Historie, die du ohnehin schon bei deiner Bank hast, lädst du einmalig als CSV oder PDF hoch, statt sie Zeile für Zeile abzutippen. Unser [Leitfaden zum Import eines Kontoauszugs](/blog/de/kontoauszug-importieren/) zeigt genau diesen Schritt. Für Paare gilt dasselbe Prinzip, nur loggt ihr euch beide von euren eigenen Handys in eine gemeinsame Echtzeit-Ansicht ein, statt eine Datei hin- und herzuschicken.
+
+Du kannst ohne Kartendaten direkt im Browser starten, auf [ai-budget.pl](https://ai-budget.pl), oder auf Android über [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) installieren.
+
+## FAQ: Excel Haushaltsbuch Vorlage
+
+**Gibt es eine kostenlose Excel Haushaltsbuch Vorlage?**
+Du kannst dir in etwa zehn Minuten eine eigene bauen, nach dem Aufbau aus diesem Artikel: ein Transaktionsblatt mit fünf Spalten, eine feste Kategorienliste und ein Übersichtsblatt mit einer bedingten Summenformel. Fertige Vorlagen aus der Excel- oder Google-Sheets-Galerie funktionieren auch, haben aber meist mehr Tabellenblätter, als du zum Start brauchst.
+
+**Excel oder Google Sheets: Was eignet sich besser fürs Haushaltsbuch?**
+Für ein Haushaltsbuch ist der Unterschied eher kosmetisch. Beide beherrschen dieselben bedingten Summenformeln und Pivot-Tabellen. Google Sheets hat die Nase vorn, wenn zwei Personen zusammen budgetieren und gleichzeitig von verschiedenen Geräten aus an derselben Datei arbeiten wollen, ohne sie per Mail hin- und herzuschicken.
+
+**Wie schaffe ich es, mein Haushaltsbuch in Excel nicht zu vergessen?**
+Ehrlich gesagt: schwer. Ein fester Zeitpunkt, zum Beispiel Sonntagabend, hilft, aber die eigentliche Lösung ist, die Zeit für eine Eingabe auf ein paar Sekunden zu verkürzen. Genau dafür gibt es Kassenbon-Scan und Spracheingabe in Budget-Apps: Sie entfernen genau den Schritt, den Leute überspringen.
+
+**Wann lohnt sich der Wechsel von der Tabelle zu einer App?**
+Wenn dir regelmäßige Lücken in deinen Einträgen auffallen, wenn die andere Person in eurem Budget aufgehört hat, Ausgaben einzutragen, oder wenn fast alles ohnehin Kartenzahlungen sind, die du lieber importieren als abtippen würdest. Die Tabelle selbst war nie das Problem, das manuelle Eintippen dahinter meistens schon.
+
+---
+
+*Ähnliche Artikel: [Ausgaben tracken: So behältst du die Kontrolle](/blog/de/ausgaben-tracken/) | [Beste Haushaltsbuch App 2026: Ein ehrlicher Vergleich](/blog/de/beste-haushaltsbuch-app/) | [Kontoauszug importieren statt alles abzutippen](/blog/de/kontoauszug-importieren/)*
+
 ## Familienbudget mit Kindern, das im Alltag hält
 URL: https://ai-budget.pl/blog/de/familienbudget-mit-kindern/
 
@@ -1019,6 +1197,7 @@ Für die meisten Menschen: ja. Den Abstand zwischen dem geplanten und dem tatsä
 - [Dein Finanzjahr, Wrapped: Was es zeigt](/blog/de/finanzjahr-wrapped/)
 - [Vorrat anlegen, bevor die Preise steigen: Inflationsschutz](/blog/de/inflationsschutz-vorrat/)
 - [Wechselkurs-Alarm: Push bei deinem Zielkurs](/blog/de/wechselkurs-alarm/)
+- [Budget in zwei Währungen: So behältst du den Überblick](/blog/de/budget-in-zwei-waehrungen/)
 
 ## Gemeinsames Haushaltsbuch für Paare ohne Streit
 URL: https://ai-budget.pl/blog/de/gemeinsames-haushaltsbuch/
@@ -1234,6 +1413,7 @@ Fange mit einem Gespräch über Ziele an, nicht über Budgets. "Wir möchten im 
 - [Familienbudget mit Kindern, das im Alltag hält](/blog/de/familienbudget-mit-kindern/)
 - [KI für die Finanzen: weniger Aufwand, mehr Einblick](/blog/de/ki-fuer-die-finanzen/)
 - [Schulanfang: Was die Ausstattung wirklich kostet](/blog/de/schulanfang-kosten/)
+- [Budget bei unregelmäßigem Einkommen: was hilft](/blog/de/budget-bei-unregelmaessigem-einkommen/)
 
 ## Vorrat anlegen, bevor die Preise steigen: Inflationsschutz
 URL: https://ai-budget.pl/blog/de/inflationsschutz-vorrat/
@@ -1596,6 +1776,61 @@ Das hängt vom Dateiformat ab, aber der Mechanismus ist darauf ausgelegt, mit de
 ---
 
 *Ähnliche Beiträge: [Kontoauszug importieren statt alles abzutippen](/blog/de/kontoauszug-importieren/) | [Ausgaben automatisch erfassen statt alles selbst eintippen](/blog/de/ausgaben-automatisch-erfassen/)*
+
+## Kostenlose Haushaltsbuch App: Was 'kostenlos' bedeutet
+URL: https://ai-budget.pl/blog/de/kostenlose-haushaltsbuch-app/
+
+Du suchst eine kostenlose Haushaltsbuch App, weil du nicht zahlen willst, bevor du weißt, ob dir die Gewohnheit überhaupt bleibt. Nachvollziehbar. Das Problem ist, dass das Wort "kostenlos" dabei ziemlich viel verdeckt: Es steht für mindestens vier verschiedene Geschäftsmodelle, und nur eines davon verhält sich so, wie du es wahrscheinlich erwartest. Dieser Text zeigt, was kostenlos tatsächlich abdeckt, worauf du prüfen solltest, bevor du dem Label traust, und wo der kostenlose Tarif von AI Budget Assistant in diesem Bild steht, als ein ehrliches Beispiel, nicht als die einzig richtige Antwort.
+
+## Die vier Dinge, die "kostenlos" tatsächlich bedeuten kann
+
+Bevor du irgendetwas vergleichst, lohnt es sich, das Muster zu benennen. Ein Wort steht für mehrere Modelle, die sich in der Praxis völlig unterschiedlich verhalten.
+
+**Ein kostenloser Testzeitraum mit Frist.** Voller Zugang für eine feste Anzahl Tage - eine Woche, zwei, einen Monat -, danach eine Paywall, manchmal mit einer Karte, die automatisch belastet wird, wenn du nicht rechtzeitig kündigst. Das ist ein Abo mit verzögertem Start, kein kostenloses Produkt.
+
+**Für immer kostenlos, mit einer Grenze.** Ein echter, dauerhafter Gratis-Tarif, der unbegrenzt nutzbar bleibt, aber an einer konkreten Stelle gedeckelt ist: weniger KI-Anfragen im Monat, kein Bankimport, weniger gemeinsame Mitglieder, ein kürzeres Verlaufsfenster. So sollte ehrliches Freemium aussehen.
+
+**Kostenlos, weil Werbung dafür zahlt.** Nirgendwo ein Abo, aber deine Aufmerksamkeit ist das Produkt, und bei einer App für persönliche Finanzen bedeutet das konkret meistens auch, dass deine Ausgabendaten für jemand anderen etwas wert sind.
+
+**Kostenlos, weil es gar kein eigenständiges Geschäft ist.** Der eingebaute Tracker deiner Bank-App zum Beispiel: wirklich kostenlos, ohne Haken, aber er sieht nur dieses eine Konto und war nie dafür gedacht, ein vollständiges Budget-Tool zu sein.
+
+Genau das verbirgt das Label "kostenlos" wirklich: nicht ob du irgendwann zahlst, sondern wovon die Server und die Leute hinter der App tatsächlich bezahlt werden, bevor du ihr einen Monat Transaktionen anvertraust.
+
+## Worauf du prüfen solltest, bevor du "kostenlos" glaubst
+
+- Verlangt der Start des "kostenlosen" Tarifs überhaupt eine Kartennummer? Falls ja, notiere dir das genaue Enddatum des Testzeitraums - eine hinterlegte Karte kündigt sich selten von selbst.
+- Was passiert mit der App und mit dem Verlauf, den du schon eingetragen hast, sobald das kostenlose Fenster endet: verlierst du nur Zusatzfunktionen, oder verlierst du den Zugriff auf deine eigenen Daten?
+- Sind die Funktionen, die tatsächlich entscheiden, ob du länger als zwei Wochen bei der [Ausgabenkontrolle](/blog/de/ausgaben-tracken/) bleibst - Kassenbon-Scan, Bankimport, gemeinsames Konto mit dem Partner - im kostenlosen Tarif enthalten, oder zeigen sie sich erst, wenn du an eine Wand läufst?
+- Wenn es in der App nirgendwo ein Abo gibt: Womit verdient die Firma dann eigentlich ihr Geld, und ist dir diese Antwort recht?
+- Gibt es eine harte Grenze, die die App leise unbrauchbar macht, sobald du sie überschreitest - eine feste Zahl an Transaktionen, wenige Monate Verlauf - statt einer Grenze, die dir gleich beim Anlegen des Kontos auffällt?
+
+## Wo der kostenlose Tarif von AI Budget Assistant hinpasst
+
+Ehrlich gesagt: AI Budget Assistant ist der zweite Typ aus der Liste oben, für immer kostenlos mit einer konkreten Grenze, kein Testzeitraum mit Frist. Start ohne Karte, im Browser auf ai-budget.pl oder in der Android-App. Der kostenlose Tarif umfasst das Hinzufügen von Ausgaben per Sprache, durch das Fotografieren eines Kassenbons und, auf Android, direkt aus der Zahlungsbenachrichtigung deiner Bank ganz ohne Tippen, einen einmaligen Kontoauszug-Import statt manuellem Abtippen der Historie, sowie ein gemeinsames Konto für Familie oder Paar.
+
+Auch die Grenze ist konkret, nicht versteckt: Der KI-Chat hat im kostenlosen Tarif ein monatliches Anfragelimit, und einige tiefergehende KI-Funktionen (ausführlichere Ausgabenanalysen, ein Jahresrückblick) liegen hinter einem bezahlten Tarif. Dieselben Fragen aus der Checkliste oben gelten für AI Budget Assistant genauso wie für jede andere App auf dieser Liste: prüfe, was der kostenlose Tarif tatsächlich abdeckt, bevor du einen monatlichen Gewohnheit darauf aufbaust. Wie du eine App insgesamt bewertest, nicht nur nach dem Preis, steht in [unserem Leitfaden zur besten Haushaltsbuch App](/blog/de/beste-haushaltsbuch-app/).
+
+Wenn dir null Kosten und keine Firma im Hintergrund am wichtigsten sind, ist [eine Tabelle, die du selbst baust](/blog/de/excel-haushaltsbuch-vorlage/), die wortwörtlich kostenloseste Option überhaupt: keine Anmeldung, keine Grenze und kein Geschäftsmodell, dem du überhaupt vertrauen müsstest. Der Preis dafür ist, dass jede einzelne Eingabe an dir hängt.
+
+Du kannst die Android-App über [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) installieren, oder sofort, ganz ohne Installation, im Browser auf [ai-budget.pl](https://ai-budget.pl) starten.
+
+## FAQ: kostenlose Haushaltsbuch App
+
+**Gibt es eine wirklich kostenlose Haushaltsbuch App ganz ohne Grenzen?**
+Ein dauerhaft kostenloses Produkt völlig ohne jede Grenze gibt es als laufendes Geschäft so gut wie nie, weil irgendjemand die Server und die Leute bezahlen muss, die es pflegen. Was es ehrlich gesagt gibt, ist "für immer kostenlos mit einer vernünftigen Grenze" oder ein werbefinanziertes Modell. Skeptisch solltest du bei der Kombination sein: "gar keine Grenzen, für immer" plus "eine Firma dahinter, keine Werbung".
+
+**Verkaufen kostenlose Haushaltsbuch Apps meine Daten?**
+Das hängt vollständig vom Geschäftsmodell hinter dem Wort "kostenlos" ab. Werbefinanzierte Apps tun das in der Regel in dem Sinn, dass deine Daten in die Anzeigenauswahl einfließen, auch wenn sie nicht als rohe Datei an jemanden verkauft werden. Der kostenlose Tarif einer abofinanzierten App braucht das meist nicht, weil zahlende Nutzer die Kosten decken. Prüfe in der Datenschutzerklärung direkt, ob Daten das Gerät verlassen und ob die App überhaupt offline funktioniert.
+
+**Was ist der tatsächliche Unterschied zwischen "kostenloser Testzeitraum" und "Freemium"?**
+Ein Testzeitraum ist befristet: voller Zugang für eine feste Anzahl Tage, danach eine Paywall. Freemium ist dauerhaft: eine kleinere, aber wirklich brauchbare Version des Produkts, so lange du willst, neben einem optionalen bezahlten Tarif für alle, die mehr wollen. Steht bei einem Angebot "kostenlos", aber nicht wie lange, lohnt es sich, das direkt auf der Preisseite nachzuprüfen, bevor du einen ganzen Monat Transaktionen einträgst.
+
+**Verliere ich meine Daten, wenn ich nie auf einen bezahlten Tarif wechsle?**
+Bei einem sauber gebauten Für-immer-kostenlos-Tarif: nein. Im kostenlosen Tarif zu bleiben sollte dich Zusatzfunktionen kosten, nicht den Zugriff auf deine eigene Transaktionshistorie. Manche Apps verwischen das, indem sie ab einem bestimmten Umfang deine eigenen früheren Daten hinter eine Paywall sperren - das lohnt sich, gezielt zu prüfen, weil es viel leichter zu übersehen ist als eine schlicht ausgegraute Funktion.
+
+---
+
+*Verwandte Artikel: [Ausgaben tracken: wie es dranbleibt](/blog/de/ausgaben-tracken/) | [Beste Haushaltsbuch App 2026: Ein ehrlicher Vergleich](/blog/de/beste-haushaltsbuch-app/) | [Excel Haushaltsbuch Vorlage: Aufbau und ihre Grenzen](/blog/de/excel-haushaltsbuch-vorlage/)*
 
 ## Notgroschen: Wie viel du brauchst und wie du ihn aufbaust
 URL: https://ai-budget.pl/blog/de/notgroschen/

@@ -122,3 +122,4 @@ date: "2026-06-19"
 - [Финансовые итоги года: что они показывают](/blog/ru/finansovye-itogi-goda/)
 - [Запас впрок до подорожания: щит от инфляции](/blog/ru/shchit-ot-inflyatsii/)
 - [Оповещение о курсе валют, когда он достигнет цели](/blog/ru/opoveshchenie-o-kurse-valyut/)
+- [Бюджет в двух валютах: как не терять деньги на курсе](/blog/ru/byudzhet-v-dvukh-valyutakh/)

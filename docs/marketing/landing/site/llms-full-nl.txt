@@ -677,6 +677,110 @@ Ja. Een bonfoto die je naar Telegram, WhatsApp of de bot op Slack stuurt, wordt 
 
 *Gerelateerde artikelen: [Uitgaven bijhouden](/blog/nl/uitgaven-bijhouden/) | [Jouw persoonlijke inflatie](/blog/nl/persoonlijke-inflatie/) | [Besparen op boodschappen](/blog/nl/besparen-op-boodschappen/)*
 
+## Budget in twee valuta's: grip houden op je geld
+URL: https://ai-budget.pl/blog/nl/budget-in-twee-valutas/
+
+Je werkt als freelancer voor klanten in het buitenland en wordt betaald in dollars of ponden, maar huur, boodschappen en al het andere betaal je in de valuta van het land waar je woont. Of je bent grensarbeider, je salaris komt binnen in Zwitserse frank of Britse ponden, maar huur, verzekering en de dagelijkse uitgaven lopen gewoon in euro's. In beide gevallen is het hetzelfde probleem: je geld leeft in twee valuta's tegelijk, en je hebt geen enkel getal dat je vertelt wat je eigenlijk hebt. Daar komt nog iets bij: elke omwisseling die je zonder nadenken doet, op welk moment dan ook, kost een beetje meer dan nodig.
+
+## Waarom rekenen uit je hoofd niet werkt
+
+Hetzelfde instinct dat achter elke echte manier van [geld besparen](/blog/nl/geld-besparen/) zit, naar de werkelijke cijfers kijken voordat je beslist in plaats van gokken, geldt ook voor het wisselen van valuta, alleen denkt bijna niemand er zo over na. Er zijn eigenlijk twee losse problemen die door elkaar lopen. Ten eerste: zonder één gecombineerd overzicht van beide saldi verlies je makkelijk het overzicht over wat je echt hebt, je rekent uit je hoofd met de koers die je de laatste keer zag, en die is alweer verschoven tegen de tijd dat je hem gebruikt. Ten tweede: omdat je de situatie niet duidelijk ziet, wissel je om wanneer het nodig is, niet wanneer de koers gunstig voor je staat, en bij een terugkerende overboeking telt zelfs een klein koersverschil maand na maand op.
+
+## Je portemonnee toont vanzelf een apart saldo per valuta
+
+Je hoeft in AI Budget Assistant niet handmatig een "eurorekening" of "pondenrekening" aan te maken. Zodra er een transactie in een bepaalde valuta bij je opduikt, verschijnt er automatisch een aparte saldokaart voor die valuta in je Portemonnee, los van de rest. Je saldo in ponden blijft je saldo in ponden, je saldo in euro's blijft je saldo in euro's, en geen van beide vermengt zich met de andere tot een verwarrend getal.
+
+## Eén totaal, ook al leeft je geld in meerdere valuta's
+
+Aparte saldi zijn belangrijk, maar soms wil je gewoon weten hoeveel je in totaal hebt, voor de uitgavenanalyse, je budget of een antwoord in de AI-chat. Daarvoor rekent de app alles om naar één weergavevaluta die jij kiest, tegen de actuele koers van een externe wisselkoersaanbieder, en toont één consistent getal in plaats van losse bedragen die je zelf bij elkaar zou moeten optellen. Als de koers van een bepaalde valuta even niet beschikbaar is, wordt het totaal gemarkeerd als een benadering in plaats van een precisie voor te wenden die er niet is. Je verandert je weergavevaluta op elk moment in de instellingen, dat verandert alleen hoe het totaal wordt getoond, niet wat je al hebt vastgelegd.
+
+## Leg de omwisseling vast wanneer die echt plaatsvindt
+
+Als je écht de ene valuta in de andere omwisselt, via je bank, een wisselkantoor of een overboekingsdienst, is het de moeite waard om die omwisseling vast te leggen in [AI Budget Assistant](https://ai-budget.pl), op het scherm Omwisselen onder je Portemonnee. Beide saldi worden dan bijgewerkt met precies wat er echt gebeurd is, niet met wat de app anders zou hebben aangenomen op basis van een algemene koers. Dat is de enige manier waarop beide saldi overeenkomen met de werkelijkheid, en niet alleen met een schatting.
+
+## Stop met zelf de koers checken, stel een alert in
+
+Daar past de [wisselkoersalert](/blog/nl/wisselkoersalert/) precies bij: je kiest een valutapaar, bijvoorbeeld EUR naar GBP, vult een drempel en een richting in, en de app checkt de koers op de achtergrond eens per uur tegen een externe wisselkoersaanbieder. Zodra de drempel wordt overschreden, krijg je één pushmelding, het is geen live koers en ook geen AI-voorspelling, gewoon een simpele vergelijking van getal met getal op een vast interval. De alert gaat precies één keer af en is aan jou persoonlijk gekoppeld, niet aan een gedeeld account, dus als je een account deelt met iemand, zie jij diens alerts niet en andersom ook niet. Je kunt tot twintig actieve alerts tegelijk hebben, meerdere paren tegelijk in de gaten houden is dus geen probleem.
+
+Het is de moeite waard om duidelijk te zeggen wat deze functie niet doet: ze stuurt of ontvangt geen echt geld over grenzen heen. Het is een volg- en herinneringstool, de daadwerkelijke omwisseling of overboeking loopt nog steeds via je bank of de dienst die je al gebruikt.
+
+## Hoe je dit samenvoegt
+
+Leg inkomsten en uitgaven in beide valuta's meteen vast, via spraak of door een bon of factuur te fotograferen. Stel de weergavevaluta in waarin je je gecombineerde totaal wilt zien. Leg de echte omwisseling vast zodra die plaatsvindt, in plaats van de app voor jou een koers te laten raden. En stel een alert in voor het paar dat je regelmatig omwisselt, zodat je stopt met checken uit gewoonte en precies reageert wanneer het de moeite waard is. Als de valuta waarin je spaart sneller waarde verliest dan het dagelijks aanvoelt, is dat een apart onderwerp, meer daarover in ons artikel over [persoonlijke inflatie](/blog/nl/persoonlijke-inflatie/).
+
+Je kunt starten zonder kaartgegevens, direct in de browser op [ai-budget.pl](https://ai-budget.pl), of de Android-app installeren via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: budget in twee valuta's
+
+**Toont de app een live wisselkoers, in realtime?**
+Nee. De koers die wordt gebruikt om totalen om te rekenen en een koersalert te checken, komt van een externe wisselkoersaanbieder, en de alert checkt hem specifiek eens per uur, niet continu. Dat is genoeg om een goed moment om te wisselen op te merken, maar het is geen live beurskoers.
+
+**Moet ik zelf een nieuwe valuta toevoegen aan mijn portemonnee voordat ik hem kan gebruiken?**
+Nee. Een saldokaart voor een valuta verschijnt vanzelf in je portemonnee zodra je er je eerste transactie in hebt, er is niets vooraf in te stellen.
+
+**Zien andere leden van een gedeeld account mijn wisselkoersalerts?**
+Nee. Een wisselkoersalert is aan jou als individuele gebruiker gekoppeld, niet aan een gedeeld account, andere leden zien je alerts niet en hoeven ook geen eigen alerts in te stellen.
+
+**Kan de app zelf geld naar het buitenland sturen of voor mij wisselen?**
+Nee. Het is een tool om saldi bij te houden, totalen om te rekenen en je te herinneren aan een goed moment om te wisselen, de omwisseling of overboeking zelf loopt nog steeds via je bank, een wisselkantoor of de dienst die je al gebruikt, en daarna leg je in de app vast wat er echt gebeurd is.
+
+---
+
+*Gerelateerde artikelen: [Hoe geld besparen: een concreet plan dat je bijhoudt](/blog/nl/geld-besparen/) | [Wisselkoersalert: melding bij jouw doelkoers](/blog/nl/wisselkoersalert/) | [Persoonlijke inflatie berekenen: jouw echte prijsstijging](/blog/nl/persoonlijke-inflatie/)*
+
+## Budgetteren met onregelmatig inkomen: wat werkt
+URL: https://ai-budget.pl/blog/nl/budgetteren-onregelmatig-inkomen/
+
+Je werkt als zzp'er, op projectbasis, op commissie, of je uren (en je inkomen) veranderen elke maand. De meeste budgetadviezen gaan uit van iets dat bij jou gewoon niet klopt: een bekend bedrag dat elke maand op dezelfde dag binnenkomt. De 50/30/20-regel, "betaal eerst jezelf", de envelopmethode: ze beginnen allemaal met het verdelen van een salaris dat je niet hebt. Dit is geen disciplineprobleem. Het is dat de eerste stap van het standaardadvies gewoon helemaal niet op jou van toepassing is.
+
+## Waarom de gebruikelijke budgetregels bij jou juist stuklopen
+
+Elke populaire budgetmethode, inclusief onze eigen gids over [hoe je budgetteert](/blog/nl/hoe-maak-je-een-budget/), begint bij een vast punt: een bekend maandbedrag dat je daarna over categorieën verdeelt. Bij een vast salaris werkt dat, omdat het getal al gegeven is. Bij onregelmatig inkomen wordt diezelfde eerste stap een gok, en die gok gaat meestal één kant op: je middelt je laatste paar maanden, inclusief die ene goede opdracht, en bouwt daar vaste verplichtingen op. Een maand later blijkt dat het budget rekende op geld dat er nooit is gekomen.
+
+## Reken vanaf je slechtste echte maand, niet het gemiddelde
+
+Dit is de enige echte verandering die je hoeft door te voeren. In plaats van je inkomen over het afgelopen jaar te middelen, kijk je naar de zwakste maand die daadwerkelijk voorkwam in een redelijke periode, zeg de laatste zes tot twaalf maanden. Dat is je echte startpunt, geen hypothetisch ergste geval, maar iets dat al is gebeurd en weer kan gebeuren.
+
+Je vaste lasten (huur, aflossingen, verzekering, boodschappen) moeten passen binnen die zwakste maand, niet het gemiddelde. Alles wat je in een betere maand daarboven verdient, is geen groter budget om uit te geven, maar buffer of spaargeld. Deze ene verandering lost het grootste deel van het probleem al op voordat je ook maar een app of spreadsheet aanraakt.
+
+## Vlak je inkomen af via een buffer, in plaats van op elke betaling te reageren
+
+De tweede stap is het loskoppelen van wanneer je verdient en wanneer je uitgeeft. Betalingen van klanten of commissies komen binnen op een aparte rekening, een buffer, en elke maand maak je daarvandaan een vast bedrag over naar je uitgavenrekening, ongeveer ter grootte van je slechtste maand. In een goede maand blijft het overschot in de buffer; in een zwakke maand vult de buffer het gat, en betaal je jezelf toch hetzelfde bedrag. Precies dat maakt je dagelijkse uitgaven onafhankelijk van of er die week toevallig een factuur is binnengekomen.
+
+Als je op deze manier twee rekeningen aanhoudt, een voor inkomsten en een voor uitgaven, kun je in AI Budget Assistant rechtstreeks in de app tussen die twee overboeken en zie je beide saldi meteen bijgewerkt, in plaats van dit met de hand of in een tweede spreadsheet bij te houden.
+
+## Laat een getal antwoorden hoeveel je vandaag kunt uitgeven, geen gok
+
+Hier past een specifieke functie beter bij dit probleem dan welk vast maandlimiet dan ook. Het startscherm van AI Budget Assistant toont een dagelijks bedrag van wat veilig is om uit te geven, berekend uit je werkelijke saldo, je verwachte inkomen en aankomende verplichtingen (abonnementen, terugkerende rekeningen, bijdragen aan spaardoelen), gedeeld door de resterende dagen van de periode. Dat is in feite het omgekeerde van een vast maandbudget: het getal berekent zichzelf opnieuw zodra je werkelijke saldo verandert, dus je hoeft nooit vooraf te weten wat je deze maand gaat verdienen, de app hoeft alleen te weten wat er nu echt op je rekening staat. Het is een gratis functie, zonder plafond in het betaalde plan, en op het getal op het startscherm tikken laat precies zien waaruit het is opgebouwd.
+
+## Test een slechte maand voordat hij echt komt
+
+Het tabblad Analyse heeft een Scenario Simulator: je verschuift een schuif voor een willekeurige uitgavencategorie, of voor je inkomen, en ziet meteen hoe de spaarprognose voor 3, 6 en 12 maanden verandert. Voor iemand met onregelmatig inkomen heeft dat één heel concreet nut: trek de inkomensschuif zo ver naar beneden als een zwak kwartaal je realistisch zou kunnen kosten, en kijk wat dat over een half jaar met je spaargeld doet, voordat dat zwakke kwartaal daadwerkelijk aanbreekt. Scenario's worden lokaal op je telefoon berekend; je kunt er gratis tot vijf opslaan (onbeperkt bij Pro en Business) en er later op terugkomen als de situatie verandert.
+
+## Hoe je dit samenvoegt
+
+Zoek je slechtste echte maand van het afgelopen jaar op. Stel een vast "salaris"bedrag in dat je uit de buffer aan jezelf uitbetaalt, rond dat niveau. Bouw je budget voor vaste lasten rond dat getal, niet het gemiddelde. Leg betalingen van klanten meteen vast als inkomen zodra ze binnenkomen, met je stem of door de factuur te fotograferen, en laat het dagelijkse bedrag van wat je kunt uitgeven de rest regelen, in plaats van een star categorielimiet dat toch nooit paste bij een maand die je van tevoren niet kon voorspellen.
+
+Je kunt zonder kaartgegevens beginnen, rechtstreeks in je browser op [ai-budget.pl](https://ai-budget.pl), of de Android-app installeren via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: budgetteren met onregelmatig inkomen
+
+**Hoe groot moet mijn buffer zijn voordat ik me geen zorgen meer maak over een zwakke maand?**
+Er is geen enkel juist getal: het hangt af van hoe wisselvallig je inkomen echt is en hoe lang je zwakke periodes doorgaans duren. Een redelijk startpunt is een buffer die je slechtste maand een of twee keer achter elkaar dekt, niet slechts één keer. Dat is een andere vraag dan hoe groot je noodfonds zou moeten zijn tegen het volledig wegvallen van je inkomen.
+
+**Kan ik de 50/30/20-regel nog steeds gebruiken bij onregelmatig inkomen?**
+Ja, zolang je de percentages berekent vanaf je slechtste maand, niet je jaargemiddelde. De [50/30/20-regel](/blog/nl/50-30-20-regel/) veronderstelt op zichzelf niets over de stabiliteit van je inkomen, ze veronderstelt alleen dat je het getal kent waar je percentages van neemt. Vul daar je echte bodem in in plaats van een gok, en de rest van de methode werkt hetzelfde.
+
+**Heeft een budget-app eigenlijk zin als ik geen vast salaris krijg?**
+Ja, eerder het tegenovergestelde: een vast maandbudget is precies waar je het meeste verliest bij wisselend inkomen, en een dagelijks herberekend bedrag van wat je kunt uitgeven is waar je het meeste wint. Je legt het inkomen van elke opdracht vast zodra het binnenkomt, met je stem of door de factuur te fotograferen, zodat de app altijd werkt vanuit je echte, actuele saldo in plaats van een salarisaanname die voor jou toch nooit klopte.
+
+**Helpt AI in een budget-app echt concreet bij onregelmatig inkomen?**
+Indirect wel. We gaan daar dieper op in in ons artikel over [hoe AI je helpt](/blog/nl/ai-voor-je-budget/): een uitgave herkennen uit een spraakbericht of een bonnetjesfoto, en het saldo automatisch herberekenen, nemen je precies het werk uit handen dat het meeste pijn doet als je inkomen blijft veranderen, namelijk alles handmatig bijwerken zodra er iets verschuift.
+
+---
+
+*Gerelateerde artikelen: [Hoe maak je een budget dat je ook echt bijhoudt](/blog/nl/hoe-maak-je-een-budget/) | [De 50/30/20-regel: een praktische gids](/blog/nl/50-30-20-regel/) | [Hoe AI je helpt met budgetteren (eerlijk uitgelegd)](/blog/nl/ai-voor-je-budget/)*
+
 ## Enveloppenmethode: het systeem tegen te veel uitgeven
 URL: https://ai-budget.pl/blog/nl/enveloppenmethode/
 
@@ -963,6 +1067,7 @@ Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te spare
 - [Jouw financiële jaar, gewrapt: wat het onthult](/blog/nl/financieel-jaaroverzicht/)
 - [Voorraad aanleggen vóór prijsstijgingen: inflatieschild](/blog/nl/inflatieschild/)
 - [Wisselkoersalert: melding bij jouw doelkoers](/blog/nl/wisselkoersalert/)
+- [Budget in twee valuta's: grip houden op je geld](/blog/nl/budget-in-twee-valutas/)
 
 ## Gezinsbudget met kinderen dat echt werkt
 URL: https://ai-budget.pl/blog/nl/gezinsbudget-met-kinderen/
@@ -1030,6 +1135,61 @@ Geef een vast, klein zakgeld waarover je kind zelf beslist, zodat het het echte 
 ---
 
 *Verwante artikelen: [Samen budgetteren zonder ruzie](/blog/nl/samen-budgetteren/) | [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/)*
+
+## Gratis huishoudboekje app: wat 'gratis' betekent
+URL: https://ai-budget.pl/blog/nl/gratis-huishoudboekje-app/
+
+Je zoekt een gratis huishoudboekje app omdat je niet wilt betalen voordat je weet of de gewoonte er überhaupt in blijft. Logisch. Het probleem is dat het woord "gratis" in die zoekopdracht best veel verbergt: het dekt minstens vier verschillende verdienmodellen, en maar één daarvan gedraagt zich zoals je waarschijnlijk verwacht. Dit stuk legt uit wat gratis echt inhoudt, wat je moet checken voor je het label vertrouwt, en waar het gratis plan van AI Budget Assistant in dat plaatje past, als één eerlijk voorbeeld, niet als het enige juiste antwoord.
+
+## De vier dingen die "gratis" echt kunnen betekenen
+
+Voor je iets gaat vergelijken, helpt het om het patroon te benoemen. Eén woord dekt meerdere modellen die zich in de praktijk totaal anders gedragen.
+
+**Een gratis proefperiode met een deadline.** Volledige toegang voor een vast aantal dagen (een week, twee, een maand), en daarna een betaalmuur, soms met een kaart die automatisch wordt belast als je niet op tijd opzegt. Dit is een abonnement met een uitgestelde start, geen gratis product.
+
+**Voor altijd gratis, met een plafond.** Een echt, permanent gratis plan dat onbeperkt bruikbaar blijft, maar begrensd op iets specifieks: minder AI-verzoeken per maand, geen bankimport, minder gedeelde leden, een korter historieoverzicht. Zo hoort eerlijke freemium eruit te zien.
+
+**Gratis omdat advertenties ervoor betalen.** Nergens een abonnement, maar jouw aandacht is het product, en bij een app voor persoonlijke financiën betekent dat meestal ook concreet dat je uitgavengegevens voor iemand anders iets waard zijn.
+
+**Gratis omdat het eigenlijk geen apart bedrijf is.** De ingebouwde tracker van je bank-app bijvoorbeeld: écht gratis, zonder addertje, maar die ziet alleen die ene rekening en is nooit bedoeld geweest als volwaardig budgethulpmiddel.
+
+Dat is wat het label "gratis" eigenlijk verbergt: niet of je uiteindelijk gaat betalen, maar waar de servers en de mensen achter de app dan wél van leven, voordat je hem een maand aan transacties toevertrouwt.
+
+## Wat je moet checken voor je een "gratis" claim vertrouwt
+
+- Vraagt het starten van het "gratis" plan om een kaartnummer? Zo ja, noteer dan de exacte einddatum van de proefperiode: een opgeslagen kaart zegt zichzelf zelden op.
+- Wat gebeurt er met de app en met de historie die je al hebt ingevoerd zodra het gratis venster sluit: verlies je alleen extra functies, of verlies je toegang tot je eigen gegevens?
+- Zitten de functies die echt bepalen of je langer dan twee weken bij [uitgaven bijhouden](/blog/nl/uitgaven-bijhouden/) blijft (bonnetjes scannen, bankimport, delen met een partner) in het gratis plan, of verschijnen ze pas zodra je tegen een muur loopt?
+- Als er nergens in de app een abonnement zit, waar verdient het bedrijf dan wél aan, en zit je goed bij dat antwoord?
+- Is er een harde grens die de app stilletjes onbruikbaar maakt zodra je hem overschrijdt (een vast aantal transacties, een paar maanden historie), in plaats van een grens die je meteen zou opvallen?
+
+## Waar het gratis plan van AI Budget Assistant past
+
+Eerlijk gezegd: AI Budget Assistant is het tweede type uit het lijstje hierboven, voor altijd gratis met een concreet plafond, geen proefperiode met een deadline. Je start zonder kaart, in de browser op ai-budget.pl of in de Android-app. Het gratis plan omvat uitgaven toevoegen met je stem, door een bonnetje te fotograferen en, op Android, rechtstreeks vanuit de betaalmelding van je bank zonder dat je iets hoeft te typen, een eenmalige bankafschrift-import in plaats van geschiedenis overtypen, en een gedeelde rekening voor gezin of stel.
+
+Het plafond is ook concreet, niet verborgen: de AI-chat heeft een maandelijkse verzoeklimiet op het gratis plan, en een paar diepere AI-functies (uitgebreidere uitgavenanalyse, een jaaroverzicht) zitten achter een betaald plan. Dezelfde vragen uit het lijstje hierboven gelden voor AI Budget Assistant precies zoals voor elke andere app op deze lijst: check wat het gratis plan echt dekt voordat je er een maandelijkse gewoonte op bouwt. Voor een breder afwegingskader dan alleen de prijs, zie [onze gids over de beste budget app](/blog/nl/beste-budget-app/).
+
+Als nul kosten en geen bedrijf op de achtergrond het belangrijkst voor je zijn, is [een spreadsheet die je zelf bouwt](/blog/nl/huishoudboekje-excel-sjabloon/) de meest letterlijk gratis optie die er is: geen registratie, geen plafond en geen verdienmodel om te vertrouwen. De prijs is dat elke regel op jou aankomt om te typen.
+
+Je kunt de Android-app installeren via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), of meteen, zonder iets te installeren, beginnen in je browser op [ai-budget.pl](https://ai-budget.pl).
+
+## FAQ: gratis huishoudboekje app
+
+**Bestaat er echt een gratis huishoudboekje app zonder enige limiet?**
+Een permanent gratis product zonder ook maar één limiet bestaat vrijwel nooit als doorlopend bedrijf, omdat iemand toch de servers en de mensen erachter moet betalen. Wat eerlijk gezegd wél bestaat, is "voor altijd gratis met een redelijk plafond" of een advertentiemodel. De combinatie om achterdochtig over te zijn is "helemaal geen limieten, voor altijd" plus "een bedrijf erachter, geen advertenties".
+
+**Verkopen gratis huishoudboekje-apps mijn gegevens?**
+Dat hangt volledig af van het verdienmodel achter het woord "gratis". Advertentie-apps doen dat over het algemeen wel, in de zin dat jouw gegevens de advertentietargeting voeden, ook al worden ze aan niemand als los bestand verkocht. Het gratis plan van een op abonnementen gebaseerde app heeft dat meestal niet nodig, omdat betalende gebruikers de kosten dekken. Check rechtstreeks in het privacybeleid of gegevens het apparaat verlaten, en of de app überhaupt offline werkt.
+
+**Wat is het echte verschil tussen een "gratis proefperiode" en "freemium"?**
+Een gratis proefperiode is tijdelijk: volledige toegang voor een vast aantal dagen, en dan een betaalmuur. Freemium is permanent: een kleinere, maar écht bruikbare versie van het product, zo lang je wilt, naast een optioneel betaald plan voor wie meer wil. Staat er "gratis" maar niet hoe lang, dan loont het om dat rechtstreeks op de prijspagina na te kijken voordat je er een hele maand aan transacties in invoert.
+
+**Raak ik mijn gegevens kwijt als ik nooit naar een betaald plan overstap?**
+Bij een goed gebouwd voor-altijd-gratis-plan: nee. Op het gratis plan blijven zou je extra functies moeten kosten, niet de toegang tot je eigen transactiegeschiedenis. Sommige apps vertroebelen dat door je eigen oude gegevens vanaf een bepaald volume achter een betaalmuur te zetten, wat het waard is om apart te checken, want dat mis je veel makkelijker dan een simpelweg grijs gemaakte functie.
+
+---
+
+*Gerelateerde artikelen: [Uitgaven bijhouden: zo doe je het zonder gedoe](/blog/nl/uitgaven-bijhouden/) | [Beste budget app in 2026: een eerlijke koopgids](/blog/nl/beste-budget-app/) | [Huishoudboekje in Excel: sjabloon en de grens ervan](/blog/nl/huishoudboekje-excel-sjabloon/)*
 
 ## Hoe maak je een budget dat je ook echt bijhoudt
 URL: https://ai-budget.pl/blog/nl/hoe-maak-je-een-budget/
@@ -1146,6 +1306,79 @@ Begin met een gesprek over doelen, niet over het budget zelf. "We willen in okto
 - [Gezinsbudget met kinderen dat echt werkt](/blog/nl/gezinsbudget-met-kinderen/)
 - [Hoe AI je helpt met budgetteren (eerlijk uitgelegd)](/blog/nl/ai-voor-je-budget/)
 - [Nieuw schooljaar: wat kosten schoolspullen echt](/blog/nl/schoolspullen-kosten/)
+- [Budgetteren met onregelmatig inkomen: wat werkt](/blog/nl/budgetteren-onregelmatig-inkomen/)
+
+## Huishoudboekje in Excel: sjabloon en de grens ervan
+URL: https://ai-budget.pl/blog/nl/huishoudboekje-excel-sjabloon/
+
+Je zoekt een sjabloon voor je huishoudboekje in Excel, omdat je vandaag wilt beginnen, niet nog een artikel over motivatie wilt lezen. Terecht: een spreadsheet is echt genoeg om te starten, hij is gratis en je ziet elke formule zelf. Dit stuk geeft je een opzet die je in tien minuten kunt overnemen, en zegt daarna eerlijk op welk moment een spreadsheet je begint te beperken en wat er dan meestal gebeurt.
+
+## Wat een goed Excel-sjabloon voor je huishoudboekje echt nodig heeft
+
+De meeste huishoudboekje-spreadsheets die ik heb gezien, maken dezelfde fout: te veel tabbladen, te weinig structuur. Een werkend sjabloon heeft eigenlijk vier dingen nodig.
+
+**Eén tabblad met transacties.** Niet drie bladen voor drie rekeningen en een apart briefje voor contant geld. Eén doorlopende lijst, één rij per uitgave.
+
+**Een vaste lijst met categorieën.** Tien tot vijftien categorieën is de juiste maat: wonen, boodschappen, uit eten, vervoer, vaste lasten, gezondheid, abonnementen, shoppen, kinderen (indien van toepassing), sparen, schuldaflossing, ontspanning. Minder, en je verliest precies het detail dat een budget nuttig maakt. Meer, en het invoeren van een uitgave wordt zelf een klusje.
+
+**Een overzichtstabblad.** Een kale lijst met transacties zegt op zichzelf niets. Je hebt een plek nodig die uitgaven per categorie en per maand optelt, zodat de cijfers ook echt iets zeggen.
+
+**Een saldokolom.** Zien wat er nog over is, niet alleen wat je uitgaf, is precies het verschil tussen een dagboek en een budget.
+
+## Een simpele opzet die je kunt overnemen
+
+Je tabblad "Transacties" heeft vijf kolommen nodig: **Datum**, **Categorie**, **Omschrijving**, **Bedrag**, **Rekening/betaalmethode**. Meer is bij de start niet nodig. Voeg pas een kolom toe zodra je het gemis echt voelt.
+
+Gebruik voor het overzicht een voorwaardelijke somformule: `SOM.ALS` in de Nederlandse versie van Excel, `SUMIF` in de Engelse en in Google Spreadsheets (de exacte naam hangt af van de taalinstelling van je bestand). Eén rij per categorie, één kolom per maand, en elke cel telt de bedragen op het transactietabblad op die aan beide voorwaarden tegelijk voldoen.
+
+Je saldo bereken je het simpelst als een lopende som: startsaldo plus inkomsten min uitgaven, oplopend bijgehouden per rij of per maand op het overzichtstabblad. Het hoeft niet slim te zijn, het moet je alleen laten zien of je in de plus staat voordat het einde van de maand je verrast.
+
+Dat is het zo ongeveer. Excel en Google Spreadsheets gedragen zich hier identiek, dus gebruik wat je toch al open hebt staan.
+
+## Waar een spreadsheet begint te haperen
+
+Eerlijk is eerlijk: voor wie het leuk vindt om hem bij te houden en simpele financiën heeft, houdt een spreadsheet jarenlang stand. Het probleem zit niet in de formules. Het zit erin dat iedere regel door een mens met de hand moet worden ingetypt, elke keer opnieuw.
+
+Eén grote aankoop per maand is geen probleem. Twintig kleintjes (een koffie, een buskaartje, een zak chips, een bezorgmaaltijd) en de moeite om elke apart in te voeren begint zwaarder te wegen dan het nut van het bijhouden. Precies daarom loopt een budget vast: [wrijving](/blog/nl/uitgaven-bijhouden/), niet een gebrek aan wilskracht. De meeste mensen beginnen vol enthousiasme aan een budgetspreadsheet en laten hem binnen een paar weken stilletjes varen, uitgeput door precies het handmatige invoeren waar ze zelf aan begonnen.
+
+Het tweede probleem duikt op zodra twee mensen samen budgetteren. De een wordt de eigenaar van het bestand en mailt het rond, de ander vult uitgaven met vertraging in of helemaal niet, en na een maand hebben jullie twee verschillende versies van hoeveel er echt nog over is.
+
+## Wanneer het de moeite waard is om verder te gaan
+
+Een paar signalen dat dit geen disciplineprobleem meer is, maar een gereedschapsprobleem:
+
+- Er gaan regelmatig vier, vijf dagen voorbij voordat je het bestand opent en inhaalt.
+- Je partner is stilletjes gestopt met invullen, omdat het bestand "van jou" is.
+- Je wilt een uitgave zien op het moment dat hij gebeurt, niet hem een week later uit een bonnetje reconstrueren.
+- Bijna alles betaal je met kaart of telefoon, waardoor elke transactie opnieuw met de hand in de spreadsheet zetten dubbel werk begint te voelen.
+
+Geen van deze signalen betekent dat budgetteren niet voor je werkt. Ze betekenen dat de spreadsheet niet meer past bij hoe je echt geld uitgeeft.
+
+## Wat er na de spreadsheet komt
+
+Wat een spreadsheet overneemt, moet bewaren wat erin werkte, dus duidelijke categorieën, maandtotalen, een zichtbaar saldo, en precies weghalen wat hem de das omdeed: elke regel met de hand intypen. Dat is dezelfde wrijving die [onze gids over de beste budget app](/blog/nl/beste-budget-app/) uitgebreider behandelt, en die bepaalt of een tool langer dan twee weken overleeft, niet de lengte van de functielijst.
+
+In AI Budget Assistant voeg je een uitgave toe met je stem ("tien euro voor de lunch"), door een bonnetje te fotograferen, of, op Android, zonder je telefoon aan te raken, omdat de app zelf de betaalmelding van je bank leest en de uitgave vastlegt. De geschiedenis die je al bij je bank hebt staan, upload je één keer als CSV of PDF in plaats van hem regel voor regel over te typen; [onze gids over het importeren van een bankafschrift](/blog/nl/bankafschrift-importeren/) laat precies die stap zien. Voor stellen werkt hetzelfde idee, alleen loggen jullie allebei vanaf je eigen telefoon in op één gedeeld, realtime overzicht, in plaats van een bestand heen en weer te mailen.
+
+Je kunt zonder kaartgegevens beginnen, rechtstreeks in je browser op [ai-budget.pl](https://ai-budget.pl), of hem op Android installeren via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: huishoudboekje in Excel
+
+**Is er een gratis Excel-sjabloon voor een huishoudboekje?**
+Je kunt er zelf een in ongeveer tien minuten bouwen volgens de opzet uit dit artikel: een transactietabblad met vijf kolommen, een vaste lijst met categorieën en een overzichtstabblad met een voorwaardelijke somformule. Kant-en-klare sjablonen uit de Excel- of Google Spreadsheets-galerij werken ook, maar die hebben meestal meer tabbladen dan je nodig hebt om te starten.
+
+**Excel of Google Spreadsheets: wat is beter voor een huishoudboekje?**
+Voor een huishoudboekje is het verschil vooral cosmetisch. Beide kennen dezelfde voorwaardelijke somformules en draaitabellen. Google Spreadsheets wint het als jullie met z'n tweeën budgetteren en tegelijk vanaf verschillende apparaten in hetzelfde bestand willen werken, zonder het rond te mailen.
+
+**Hoe zorg ik dat ik niet vergeet mijn huishoudboekje in Excel bij te werken?**
+Dat is echt lastig. Een vast moment kiezen, bijvoorbeeld zondagavond, helpt, maar de echte oplossing is de tijd om één uitgave in te voeren terugbrengen tot een paar seconden. Precies daarom bestaan bonnetjes scannen en spraakinvoer in budget-apps: ze halen exact de stap weg die mensen overslaan.
+
+**Wanneer stap ik over van een spreadsheet naar een budget app?**
+Als je regelmatig gaten in je invoer opmerkt, als de ander in jullie budget is gestopt met uitgaven invullen, of als bijna alles al kaartbetalingen zijn die je liever zou importeren dan overtypen. De spreadsheet zelf was nooit het probleem, het handmatige invoeren erachter meestal wel.
+
+---
+
+*Gerelateerde artikelen: [Uitgaven bijhouden: zo doe je het zonder gedoe](/blog/nl/uitgaven-bijhouden/) | [Beste budget app in 2026: een eerlijke koopgids](/blog/nl/beste-budget-app/) | [Bankafschriften automatisch importeren in je budget-app](/blog/nl/bankafschrift-importeren/)*
 
 ## Voorraad aanleggen vóór prijsstijgingen: inflatieschild
 URL: https://ai-budget.pl/blog/nl/inflatieschild/
@@ -2053,6 +2286,8 @@ Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedrags
 - [Rekening splitsen met vrienden en je geld echt terugzien](/blog/nl/rekening-splitsen-met-vrienden/)
 - [Waarom budget-apps binnen een week weer verdwijnen](/blog/nl/waarom-budget-apps-snel-verwijderd-worden/)
 - [Overstappen van Monefy, Wallet of Money Manager in minuten](/blog/nl/overstappen-van-monefy-wallet-moneymanager/)
+- [Huishoudboekje in Excel: sjabloon en de grens ervan](/blog/nl/huishoudboekje-excel-sjabloon/)
+- [Gratis huishoudboekje app: wat 'gratis' betekent](/blog/nl/gratis-huishoudboekje-app/)
 
 ## Uitgavencategorieën die echt werken in je budget
 URL: https://ai-budget.pl/blog/nl/uitgavencategorieen/

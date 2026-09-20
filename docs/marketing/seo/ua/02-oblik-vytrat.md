@@ -127,3 +127,5 @@ AI Budget Assistant вирішує це через спільні сімейні
 - [Як поділити рахунок з друзями і реально отримати гроші](/blog/ua/yak-podilyty-rahunok-z-druzyami/)
 - [Чому додатки для бюджету видаляють за тиждень](/blog/ua/chomu-vydalyayut-dodatky-dlya-byudzhetu/)
 - [Перехід з Monefy, Wallet або Money Manager за кілька хвилин](/blog/ua/perekhid-z-monefy-wallet-moneymanager/)
+- [Шаблон бюджету в Excel: структура та її межі](/blog/ua/shablon-byudzhetu-v-excel/)
+- [Безкоштовний застосунок для обліку витрат: що значить](/blog/ua/bezkoshtovnyy-zastosunok-dlya-obliku-vytrat/)

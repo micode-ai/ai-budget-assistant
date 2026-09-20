@@ -124,3 +124,4 @@ date: "2026-06-19"
 - [Сямейны бюджэт з дзецьмі: план для ўсёй сям'і](/blog/be/semejny-budzet-z-dzecmi/)
 - [ШІ для кіравання фінансамі: як ён дапамагае з бюджэтам](/blog/be/ai-dlya-budzetu/)
 - [Колькі коштуе сабраць дзіця ў школу](/blog/be/kolki-koshtue-sabrats-dzicya-u-shkolu/)
+- [Бюджэт пры нерэгулярным даходзе: што дапамагае](/blog/be/byudzhet-pry-neregulyarnym-dakhodze/)

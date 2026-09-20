@@ -128,3 +128,4 @@ date: "2026-06-19"
 - [Фінансавыя вынікі году: што яны паказваюць](/blog/be/finansavyya-vyniki-goda/)
 - [Запас угодных да падаражэння: шчыт ад інфляцыі](/blog/be/shchyt-ad-infliatsyi/)
 - [Апавяшчэнне пра курс валют, калі ён дасягне мэты](/blog/be/apavyashchenne-pra-kurs-valyut/)
+- [Бюджэт у дзвюх валютах: як не губляць грошы на курсе](/blog/be/byudzhet-u-dzvyukh-valyutakh/)

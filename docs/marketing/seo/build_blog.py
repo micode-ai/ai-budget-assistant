@@ -289,9 +289,9 @@ PAIR_TO_HELP = {
 # A `pair` missing from every list gets no category chip and no pillar down-link, so add
 # new topics here.
 CLUSTERS = {
-    "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school"],
-    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps"],
-    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert"],
+    "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school", "irregular-income"],
+    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app"],
+    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency"],
 }
 def category_of(pair):
     """The pillar a topic belongs to; a pillar is its own category."""

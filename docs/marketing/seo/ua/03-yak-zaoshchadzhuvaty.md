@@ -126,3 +126,4 @@ date: "2026-06-19"
 - [Фінансові підсумки року: що вони показують](/blog/ua/finansovi-pidsumky-roku/)
 - [Запас про запас до подорожчання: щит від інфляції](/blog/ua/shchyt-vid-infliatsii/)
 - [Сповіщення про курс валют, коли він досягне цілі](/blog/ua/spovishchennya-pro-kurs-valyut/)
+- [Бюджет у двох валютах: як не втрачати гроші на курсі](/blog/ua/byudzhet-u-dvokh-valyutakh/)

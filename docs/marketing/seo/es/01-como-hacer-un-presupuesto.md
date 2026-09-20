@@ -124,3 +124,4 @@ Empieza con una conversación sobre objetivos, no sobre el presupuesto. "Queremo
 - [Presupuesto familiar con hijos: un plan que funciona](/blog/es/presupuesto-familiar-con-hijos/)
 - [IA para las finanzas personales: cómo te ayuda de verdad](/blog/es/ia-para-las-finanzas/)
 - [Vuelta al colegio: cuánto cuesta y cómo planificarla](/blog/es/cuanto-cuesta-la-vuelta-al-colegio/)
+- [Presupuesto con ingresos irregulares: qué funciona](/blog/es/presupuesto-ingresos-irregulares/)
