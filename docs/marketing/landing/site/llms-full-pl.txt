@@ -1,6 +1,6 @@
 # AI Budget Assistant - Full content (Polski)
 
-> Polskojezyczne lustro markdown bloga i centrum pomocy ai-budget.pl, dla silnikow odpowiedzi AI. Podsumowanie produktu (po angielsku) w llms.txt.
+> Polskojęzyczne lustro markdown bloga i centrum pomocy ai-budget.pl, dla silników odpowiedzi AI. Podsumowanie produktu (po angielsku) w llms.txt.
 
 Source: https://ai-budget.pl/llms.txt
 

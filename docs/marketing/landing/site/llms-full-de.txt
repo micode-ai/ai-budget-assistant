@@ -1,6 +1,6 @@
 # AI Budget Assistant - Full content (Deutsch)
 
-> Deutschsprachiges Markdown-Spiegel des ai-budget.pl-Blogs und -Hilfecenters, fuer KI-Antwortmaschinen. Siehe llms.txt fuer die Produktzusammenfassung (Englisch).
+> Deutschsprachiger Markdown-Spiegel des ai-budget.pl-Blogs und -Hilfecenters, für KI-Antwortmaschinen. Siehe llms.txt für die Produktzusammenfassung (Englisch).
 
 Source: https://ai-budget.pl/llms.txt
 

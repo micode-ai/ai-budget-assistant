@@ -1468,12 +1468,12 @@ def legal_page(lang, kind):
 LLMS_FULL_INTRO = {
     "en": ("English", "English markdown mirror of the ai-budget.pl blog and help center, for AI "
            "answer engines. See llms.txt for the product summary."),
-    "de": ("Deutsch", "Deutschsprachiges Markdown-Spiegel des ai-budget.pl-Blogs und -Hilfecenters, "
-           "fuer KI-Antwortmaschinen. Siehe llms.txt fuer die Produktzusammenfassung (Englisch)."),
+    "de": ("Deutsch", "Deutschsprachiger Markdown-Spiegel des ai-budget.pl-Blogs und -Hilfecenters, "
+           "für KI-Antwortmaschinen. Siehe llms.txt für die Produktzusammenfassung (Englisch)."),
     "nl": ("Nederlands", "Nederlandstalige markdown-spiegel van de ai-budget.pl blog en het "
            "helpcentrum, voor AI-antwoordmachines. Zie llms.txt voor de productsamenvatting (Engels)."),
-    "pl": ("Polski", "Polskojezyczne lustro markdown bloga i centrum pomocy ai-budget.pl, dla "
-           "silnikow odpowiedzi AI. Podsumowanie produktu (po angielsku) w llms.txt."),
+    "pl": ("Polski", "Polskojęzyczne lustro markdown bloga i centrum pomocy ai-budget.pl, dla "
+           "silników odpowiedzi AI. Podsumowanie produktu (po angielsku) w llms.txt."),
     "ru": ("Русский", "Зеркало "
            "в markdown блога и центра "
            "помощи ai-budget.pl на русском "
@@ -1484,6 +1484,185 @@ LLMS_FULL_INTRO = {
 }
 # Languages that get a llms-full-<lang>.txt sibling, beyond the canonical English one.
 LLMS_FULL_LANGS = ["de", "nl", "pl", "ru"]
+
+# Localized llms-<lang>.txt manifests (product summary, mirrors the canonical English
+# llms.txt written inline in build()). ADDITIVE ONLY: the English llms.txt is untouched by
+# this dict/function, so a mistake here cannot regress the file every crawler already
+# reads. Section headers (## Product / ## Key Features / ## Documentation / ## Links) stay
+# in English on purpose, matching the "# Blog" / "# Help center" headers LLMS_FULL_INTRO's
+# mirrors already keep untranslated -- only the prose that carries product information is
+# localized. Feature-bullet wording reuses terms already established on this site (the
+# DE/NL blog articles' own vocabulary: "Bankauszug-Import", "Bankafschrift importeren",
+# etc.) rather than inventing fresh translations.
+LLMS_TXT_I18N = {
+    "de": {
+        "tagline": "Kostenlose KI-gestützte Haushaltsbuch-App für Einzelpersonen und Familien. "
+                   "Erfasse Ausgaben per Sprache oder Kassenbon-Foto, plane Budgets und Sparziele, "
+                   "verwalte Abos, importiere Bankauszüge und führe gemeinsam in Echtzeit "
+                   "Haushaltsbuch. Mehrwährungsfähig, 9 Sprachen, Android und Web.",
+        "name_label": "Name", "launched_label": "Start", "pricing_label": "Preise",
+        "platforms_label": "Plattformen", "languages_label": "Sprachen", "currencies_label": "Währungen",
+        "pricing_value": "Kostenloser Kern; Pro- und Business-Abo",
+        "features": [
+            "Spracherfassung von Ausgaben: Ausgaben durch natürliches Sprechen erfassen, per KI transkribiert",
+            "Kassenbon-Scan: einen Kassenbon fotografieren, um Betrag, Händler und Kategorie per OCR zu erkennen",
+            "Bank-Benachrichtigungs-Erfassung: Die Android-App liest Bank-Push-Benachrichtigungen mit und legt Ausgaben direkt auf dem Gerät an (40+ europäische Banken, keine Zugangsdaten nötig)",
+            "Bankauszug-Import: CSV- und PDF-Auszüge von Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "KI-Chat-Assistent: Finanzfragen stellen und Befehle in normaler Sprache geben (GPT-4)",
+            "Geteilte Familienkonten mit Rollen (Inhaber/Bearbeiter/Betrachter) und Live-Aktivitätsfeed",
+            "Gemeinsame Kaufanfragen mit Abstimmung und Freigabe",
+            "Kategorie-Budgets mit Verlauf, Warnungen und Zeitraum-Tracking",
+            "Sparziele mit Beitragsverlauf",
+            "Abonnement-Manager mit Verlängerungserinnerungen und Abbuchungssimulation",
+            "Telegram-, WhatsApp- und Slack-Bots",
+            "Offline-first-Architektur mit Ende-zu-Ende-Verschlüsselung",
+            "Safe-to-Spend-Rechner: täglich verfügbarer Betrag aus Kontostand minus anstehenden Verpflichtungen",
+            "Anomalie-Erkennung: doppelte Abbuchungen, Preiserhöhungen, Ausgabenspitzen",
+        ],
+        "blog_desc": "Anleitungen zu Haushaltsbuch, Ausgaben-Tracking und Sparen in 9 Sprachen",
+        "help_desc": "so nutzt du jede Funktion der App",
+        "pricing_desc": "Kostenlos-, Pro- und Business-Tarif",
+        "full_desc": "deutschsprachiges Markdown-Spiegel von Blog und Hilfecenter",
+        "full_en_note": "Englische Version",
+        "webapp_desc": "in AI Budget Assistant im Browser anmelden und nutzen",
+        "play_desc": "Android-App",
+        "company_desc": "das Unternehmen hinter der App",
+        "sitemap_desc": "alle indexierbaren URLs",
+    },
+    "nl": {
+        "tagline": "Gratis AI-gestuurde budget-app voor individuen en gezinnen. Leg uitgaven vast "
+                   "via spraak of een foto van het bonnetje, plan budgetten en spaardoelen, beheer "
+                   "abonnementen, importeer bankafschriften en budgetteer samen in realtime. "
+                   "Meerdere valuta, 9 talen, Android en web.",
+        "name_label": "Naam", "launched_label": "Gelanceerd", "pricing_label": "Prijzen",
+        "platforms_label": "Platforms", "languages_label": "Talen", "currencies_label": "Valuta",
+        "pricing_value": "Gratis kern; Pro- en Business-abonnement",
+        "features": [
+            "Spraakinvoer van uitgaven: uitgaven vastleggen door natuurlijk te spreken, getranscribeerd door AI",
+            "Bonnetjes scannen: fotografeer een bonnetje om bedrag, winkel en categorie via OCR te herkennen",
+            "Bankmelding-detectie: de Android-app leest bank-pushmeldingen mee en maakt uitgaven op het toestel zelf aan (40+ Europese banken, geen inloggegevens nodig)",
+            "Bankimport: CSV- en PDF-afschriften van Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "AI-chatassistent: stel financiële vragen en geef opdrachten in gewone taal (GPT-4)",
+            "Gedeelde gezinsaccounts met rollen (eigenaar/bewerker/kijker) en live activiteitenfeed",
+            "Gezamenlijke aankoopverzoeken met stemmen en goedkeuring",
+            "Categoriebudgetten met geschiedenis, meldingen en periode-tracking",
+            "Spaardoelen met bijdragegeschiedenis",
+            "Abonnementenbeheerder met verlengingsherinneringen en incasso-simulatie",
+            "Telegram-, WhatsApp- en Slack-bots",
+            "Offline-first-architectuur met end-to-end-encryptie",
+            "Safe-to-spend-motor: dagelijks besteedbaar bedrag op basis van saldo minus aankomende verplichtingen",
+            "Anomaliedetectie: dubbele afschrijvingen, prijsstijgingen, uitgavenpieken",
+        ],
+        "blog_desc": "gidsen over budgetteren, uitgaven bijhouden en sparen in 9 talen",
+        "help_desc": "hoe je elke functie van de app gebruikt",
+        "pricing_desc": "Gratis, Pro en Business",
+        "full_desc": "Nederlandstalige markdown-spiegel van blog en helpcentrum",
+        "full_en_note": "Engelse versie",
+        "webapp_desc": "log in en gebruik AI Budget Assistant in de browser",
+        "play_desc": "Android-app",
+        "company_desc": "het bedrijf achter de app",
+        "sitemap_desc": "alle indexeerbare URL's",
+    },
+    "pl": {
+        "tagline": "Darmowa aplikacja budżetowa oparta na AI dla osób i rodzin. Dodawaj wydatki "
+                   "głosem lub zdjęciem paragonu, planuj budżety i cele oszczędnościowe, zarządzaj "
+                   "subskrypcjami, importuj wyciągi bankowe i prowadź wspólny budżet w czasie "
+                   "rzeczywistym. Wiele walut, 9 języków, Android i przeglądarka.",
+        "name_label": "Nazwa", "launched_label": "Premiera", "pricing_label": "Cena",
+        "platforms_label": "Platformy", "languages_label": "Języki", "currencies_label": "Waluty",
+        "pricing_value": "darmowy rdzeń; plany Pro i Business",
+        "features": [
+            "Dodawanie wydatków głosem: rejestruj wydatki, mówiąc naturalnie - AI transkrybuje i kategoryzuje",
+            "Skanowanie paragonów: zrób zdjęcie paragonu, aby OCR odczytał kwotę, sprzedawcę i kategorię",
+            "Wykrywanie powiadomień bankowych: aplikacja na Androida odczytuje powiadomienia push z banku i tworzy wydatki lokalnie na urządzeniu (40+ europejskich banków, bez podawania danych logowania)",
+            "Import wyciągów bankowych: pliki CSV i PDF z Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "Asystent czatu AI: zadawaj pytania finansowe i wydawaj polecenia zwykłym językiem (GPT-4)",
+            "Wspólne konta rodzinne z rolami (właściciel/edytor/obserwator) i kanałem aktywności na żywo",
+            "Głosowanie nad wspólnymi zakupami i zatwierdzanie",
+            "Budżety kategorii z historią, alertami i śledzeniem okresu",
+            "Cele oszczędnościowe z historią wpłat",
+            "Menedżer subskrypcji z przypomnieniami o odnowieniu i symulacją obciążenia",
+            "Boty na Telegramie, WhatsApp i Slacku",
+            "Architektura offline-first z szyfrowaniem end-to-end",
+            "Silnik Safe-to-Spend: dzienna kwota do wydania na podstawie salda pomniejszonego o nadchodzące zobowiązania",
+            "Wykrywanie anomalii: podwójne obciążenia, podwyżki cen, skoki wydatków",
+        ],
+        "blog_desc": "poradniki o budżetowaniu, kontroli wydatków i oszczędzaniu w 9 językach",
+        "help_desc": "jak korzystać z każdej funkcji aplikacji",
+        "pricing_desc": "Darmowy, Pro i Business",
+        "full_desc": "polskojęzyczne lustro bloga i centrum pomocy",
+        "full_en_note": "wersja angielska",
+        "webapp_desc": "zaloguj się i korzystaj z AI Budget Assistant w przeglądarce",
+        "play_desc": "aplikacja na Androida",
+        "company_desc": "firma stojąca za aplikacją",
+        "sitemap_desc": "wszystkie indeksowalne adresy URL",
+    },
+    "ru": {
+        "tagline": "Бесплатное AI-приложение для ведения бюджета — для отдельных пользователей и семей. Добавляйте расходы голосом или фото чека, планируйте бюджеты и накопительные цели, управляйте подписками, импортируйте банковские выписки и ведите общий бюджет в реальном времени. Мультивалютность, 9 языков, Android и веб.",
+        "name_label": "Название", "launched_label": "Запуск",
+        "pricing_label": "Цена", "platforms_label": "Платформы",
+        "languages_label": "Языки", "currencies_label": "Валюты",
+        "pricing_value": "бесплатное ядро; тарифы Pro и Business",
+        "features": [
+            "Голосовой ввод расходов: добавляйте расходы, просто произнося их вслух — AI распознаёт и категоризирует",
+            "Сканирование чеков: сфотографируйте чек, чтобы OCR распознал сумму, продавца и категорию",
+            "Распознавание банковских уведомлений: приложение на Android перехватывает push-уведомления банка и создаёт расход прямо на устройстве (40+ европейских банков, без ввода логина и пароля)",
+            "Импорт банковских выписок: файлы CSV и PDF из Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "AI-чат-ассистент: задавайте финансовые вопросы и отдавайте команды обычным языком (GPT-4)",
+            "Общие семейные счета с ролями (владелец/редактор/наблюдатель) и лентой активности в реальном времени",
+            "Голосование за групповые покупки и их одобрение",
+            "Бюджеты по категориям с историей, оповещениями и отслеживанием периода",
+            "Накопительные цели с историей взносов",
+            "Менеджер подписок с напоминаниями о продлении и симуляцией автосписания",
+            "Боты в Telegram, WhatsApp и Slack",
+            "Офлайн-архитектура со сквозным шифрованием",
+            "Safe-to-Spend: сколько можно потратить сегодня, исходя из баланса за вычетом предстоящих обязательств",
+            "Обнаружение аномалий: повторные списания, рост цен, всплески расходов",
+        ],
+        "blog_desc": "статьи о бюджете, учёте расходов и накоплениях на 9 языках",
+        "help_desc": "как пользоваться каждой функцией приложения",
+        "pricing_desc": "бесплатный, Pro и Business",
+        "full_desc": "зеркало блога и центра помощи на русском языке",
+        "full_en_note": "английская версия",
+        "webapp_desc": "войдите и пользуйтесь AI Budget Assistant в браузере",
+        "play_desc": "приложение для Android",
+        "company_desc": "компания, стоящая за приложением",
+        "sitemap_desc": "все индексируемые URL",
+    },
+}
+
+def write_llms_txt_localized(lang):
+    """llms-<lang>.txt: a localized sibling of the canonical (English) llms.txt written
+    inline in build(). Purely additive -- does not touch llms.txt itself, so this can only
+    ever add a discovery surface, never regress the one every crawler already knows about."""
+    t = LLMS_TXT_I18N[lang]
+    langs_line = ", ".join(LANG_NAMES.values())
+    out = (
+        f"# AI Budget Assistant\n\n"
+        f"> {t['tagline']}\n\n"
+        f"## Product\n\n"
+        f"- {t['name_label']}: AI Budget Assistant\n"
+        f"- {t['launched_label']}: 2026-04\n"
+        f"- {t['pricing_label']}: {t['pricing_value']}\n"
+        f"- {t['platforms_label']}: Android, Web\n"
+        f"- {t['languages_label']}: {langs_line}\n"
+        f"- {t['currencies_label']}: USD, EUR, PLN, GBP, UAH, RUB\n\n"
+        f"## Key Features\n\n"
+        + "".join(f"- {feat}\n" for feat in t["features"])
+        + "\n"
+        f"## Documentation\n\n"
+        f"- [Blog]({SITE}/blog/{lang}/): {t['blog_desc']}\n"
+        f"- [{HELP_LABELS.get(lang, 'Help')}]({SITE}/help/{lang}/): {t['help_desc']}\n"
+        f"- [{PRICING_LABELS.get(lang, 'Pricing')}]({SITE}{pricing_url(lang)}): {t['pricing_desc']}\n"
+        f"- [llms-full-{lang}.txt]({SITE}/llms-full-{lang}.txt): {t['full_desc']}\n"
+        f"- [llms.txt]({SITE}/llms.txt): {t['full_en_note']}\n\n"
+        f"## Links\n\n"
+        f"- [{APP.split('//')[1]}]({APP}): {t['webapp_desc']}\n"
+        f"- [Google Play]({PLAY}): {t['play_desc']}\n"
+        f"- [{COMPANY}]({COMPANY_URL}): {t['company_desc']}\n"
+        f"- [Sitemap]({SITE}/sitemap.xml): {t['sitemap_desc']}\n"
+    )
+    open(os.path.join(OUT, f"llms-{lang}.txt"), "w", encoding="utf-8", newline="\n").write(out)
 
 def write_llms_full(lang="en"):
     """llms-full.txt (English, canonical) / llms-full-<lang>.txt (mirrors): a markdown
@@ -1672,6 +1851,7 @@ def build():
         write_llms_full()  # canonical English llms-full.txt, unchanged shape/filename
         for l in LLMS_FULL_LANGS:
             write_llms_full(l)  # additive llms-full-<lang>.txt siblings
+            write_llms_txt_localized(l)  # additive llms-<lang>.txt manifest siblings
         open(os.path.join(OUT, "404.html"), "w", encoding="utf-8", newline="\n").write(
             '<!DOCTYPE html><html lang="pl"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'

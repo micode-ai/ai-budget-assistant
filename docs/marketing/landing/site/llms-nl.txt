@@ -1,0 +1,44 @@
+# AI Budget Assistant
+
+> Gratis AI-gestuurde budget-app voor individuen en gezinnen. Leg uitgaven vast via spraak of een foto van het bonnetje, plan budgetten en spaardoelen, beheer abonnementen, importeer bankafschriften en budgetteer samen in realtime. Meerdere valuta, 9 talen, Android en web.
+
+## Product
+
+- Naam: AI Budget Assistant
+- Gelanceerd: 2026-04
+- Prijzen: Gratis kern; Pro- en Business-abonnement
+- Platforms: Android, Web
+- Talen: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
+- Valuta: USD, EUR, PLN, GBP, UAH, RUB
+
+## Key Features
+
+- Spraakinvoer van uitgaven: uitgaven vastleggen door natuurlijk te spreken, getranscribeerd door AI
+- Bonnetjes scannen: fotografeer een bonnetje om bedrag, winkel en categorie via OCR te herkennen
+- Bankmelding-detectie: de Android-app leest bank-pushmeldingen mee en maakt uitgaven op het toestel zelf aan (40+ Europese banken, geen inloggegevens nodig)
+- Bankimport: CSV- en PDF-afschriften van Wise, mBank, PKO BP, Revolut, Erste, Alior
+- AI-chatassistent: stel financiële vragen en geef opdrachten in gewone taal (GPT-4)
+- Gedeelde gezinsaccounts met rollen (eigenaar/bewerker/kijker) en live activiteitenfeed
+- Gezamenlijke aankoopverzoeken met stemmen en goedkeuring
+- Categoriebudgetten met geschiedenis, meldingen en periode-tracking
+- Spaardoelen met bijdragegeschiedenis
+- Abonnementenbeheerder met verlengingsherinneringen en incasso-simulatie
+- Telegram-, WhatsApp- en Slack-bots
+- Offline-first-architectuur met end-to-end-encryptie
+- Safe-to-spend-motor: dagelijks besteedbaar bedrag op basis van saldo minus aankomende verplichtingen
+- Anomaliedetectie: dubbele afschrijvingen, prijsstijgingen, uitgavenpieken
+
+## Documentation
+
+- [Blog](https://ai-budget.pl/blog/nl/): gidsen over budgetteren, uitgaven bijhouden en sparen in 9 talen
+- [Help](https://ai-budget.pl/help/nl/): hoe je elke functie van de app gebruikt
+- [Prijzen](https://ai-budget.pl/nl/pricing/): Gratis, Pro en Business
+- [llms-full-nl.txt](https://ai-budget.pl/llms-full-nl.txt): Nederlandstalige markdown-spiegel van blog en helpcentrum
+- [llms.txt](https://ai-budget.pl/llms.txt): Engelse versie
+
+## Links
+
+- [app.ai-budget.pl](https://app.ai-budget.pl): log in en gebruik AI Budget Assistant in de browser
+- [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): Android-app
+- [MICODE sp. z o.o.](https://mi-code.pl/): het bedrijf achter de app
+- [Sitemap](https://ai-budget.pl/sitemap.xml): alle indexeerbare URL's

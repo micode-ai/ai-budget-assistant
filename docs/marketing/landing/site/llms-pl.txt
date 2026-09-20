@@ -1,0 +1,44 @@
+# AI Budget Assistant
+
+> Darmowa aplikacja budżetowa oparta na AI dla osób i rodzin. Dodawaj wydatki głosem lub zdjęciem paragonu, planuj budżety i cele oszczędnościowe, zarządzaj subskrypcjami, importuj wyciągi bankowe i prowadź wspólny budżet w czasie rzeczywistym. Wiele walut, 9 języków, Android i przeglądarka.
+
+## Product
+
+- Nazwa: AI Budget Assistant
+- Premiera: 2026-04
+- Cena: darmowy rdzeń; plany Pro i Business
+- Platformy: Android, Web
+- Języki: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
+- Waluty: USD, EUR, PLN, GBP, UAH, RUB
+
+## Key Features
+
+- Dodawanie wydatków głosem: rejestruj wydatki, mówiąc naturalnie - AI transkrybuje i kategoryzuje
+- Skanowanie paragonów: zrób zdjęcie paragonu, aby OCR odczytał kwotę, sprzedawcę i kategorię
+- Wykrywanie powiadomień bankowych: aplikacja na Androida odczytuje powiadomienia push z banku i tworzy wydatki lokalnie na urządzeniu (40+ europejskich banków, bez podawania danych logowania)
+- Import wyciągów bankowych: pliki CSV i PDF z Wise, mBank, PKO BP, Revolut, Erste, Alior
+- Asystent czatu AI: zadawaj pytania finansowe i wydawaj polecenia zwykłym językiem (GPT-4)
+- Wspólne konta rodzinne z rolami (właściciel/edytor/obserwator) i kanałem aktywności na żywo
+- Głosowanie nad wspólnymi zakupami i zatwierdzanie
+- Budżety kategorii z historią, alertami i śledzeniem okresu
+- Cele oszczędnościowe z historią wpłat
+- Menedżer subskrypcji z przypomnieniami o odnowieniu i symulacją obciążenia
+- Boty na Telegramie, WhatsApp i Slacku
+- Architektura offline-first z szyfrowaniem end-to-end
+- Silnik Safe-to-Spend: dzienna kwota do wydania na podstawie salda pomniejszonego o nadchodzące zobowiązania
+- Wykrywanie anomalii: podwójne obciążenia, podwyżki cen, skoki wydatków
+
+## Documentation
+
+- [Blog](https://ai-budget.pl/blog/pl/): poradniki o budżetowaniu, kontroli wydatków i oszczędzaniu w 9 językach
+- [Pomoc](https://ai-budget.pl/help/pl/): jak korzystać z każdej funkcji aplikacji
+- [Cennik](https://ai-budget.pl/pricing/): Darmowy, Pro i Business
+- [llms-full-pl.txt](https://ai-budget.pl/llms-full-pl.txt): polskojęzyczne lustro bloga i centrum pomocy
+- [llms.txt](https://ai-budget.pl/llms.txt): wersja angielska
+
+## Links
+
+- [app.ai-budget.pl](https://app.ai-budget.pl): zaloguj się i korzystaj z AI Budget Assistant w przeglądarce
+- [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): aplikacja na Androida
+- [MICODE sp. z o.o.](https://mi-code.pl/): firma stojąca za aplikacją
+- [Sitemap](https://ai-budget.pl/sitemap.xml): wszystkie indeksowalne adresy URL

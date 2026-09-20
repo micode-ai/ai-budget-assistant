@@ -1,0 +1,44 @@
+# AI Budget Assistant
+
+> Kostenlose KI-gestützte Haushaltsbuch-App für Einzelpersonen und Familien. Erfasse Ausgaben per Sprache oder Kassenbon-Foto, plane Budgets und Sparziele, verwalte Abos, importiere Bankauszüge und führe gemeinsam in Echtzeit Haushaltsbuch. Mehrwährungsfähig, 9 Sprachen, Android und Web.
+
+## Product
+
+- Name: AI Budget Assistant
+- Start: 2026-04
+- Preise: Kostenloser Kern; Pro- und Business-Abo
+- Plattformen: Android, Web
+- Sprachen: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
+- Währungen: USD, EUR, PLN, GBP, UAH, RUB
+
+## Key Features
+
+- Spracherfassung von Ausgaben: Ausgaben durch natürliches Sprechen erfassen, per KI transkribiert
+- Kassenbon-Scan: einen Kassenbon fotografieren, um Betrag, Händler und Kategorie per OCR zu erkennen
+- Bank-Benachrichtigungs-Erfassung: Die Android-App liest Bank-Push-Benachrichtigungen mit und legt Ausgaben direkt auf dem Gerät an (40+ europäische Banken, keine Zugangsdaten nötig)
+- Bankauszug-Import: CSV- und PDF-Auszüge von Wise, mBank, PKO BP, Revolut, Erste, Alior
+- KI-Chat-Assistent: Finanzfragen stellen und Befehle in normaler Sprache geben (GPT-4)
+- Geteilte Familienkonten mit Rollen (Inhaber/Bearbeiter/Betrachter) und Live-Aktivitätsfeed
+- Gemeinsame Kaufanfragen mit Abstimmung und Freigabe
+- Kategorie-Budgets mit Verlauf, Warnungen und Zeitraum-Tracking
+- Sparziele mit Beitragsverlauf
+- Abonnement-Manager mit Verlängerungserinnerungen und Abbuchungssimulation
+- Telegram-, WhatsApp- und Slack-Bots
+- Offline-first-Architektur mit Ende-zu-Ende-Verschlüsselung
+- Safe-to-Spend-Rechner: täglich verfügbarer Betrag aus Kontostand minus anstehenden Verpflichtungen
+- Anomalie-Erkennung: doppelte Abbuchungen, Preiserhöhungen, Ausgabenspitzen
+
+## Documentation
+
+- [Blog](https://ai-budget.pl/blog/de/): Anleitungen zu Haushaltsbuch, Ausgaben-Tracking und Sparen in 9 Sprachen
+- [Hilfe](https://ai-budget.pl/help/de/): so nutzt du jede Funktion der App
+- [Preise](https://ai-budget.pl/de/pricing/): Kostenlos-, Pro- und Business-Tarif
+- [llms-full-de.txt](https://ai-budget.pl/llms-full-de.txt): deutschsprachiges Markdown-Spiegel von Blog und Hilfecenter
+- [llms.txt](https://ai-budget.pl/llms.txt): Englische Version
+
+## Links
+
+- [app.ai-budget.pl](https://app.ai-budget.pl): in AI Budget Assistant im Browser anmelden und nutzen
+- [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): Android-App
+- [MICODE sp. z o.o.](https://mi-code.pl/): das Unternehmen hinter der App
+- [Sitemap](https://ai-budget.pl/sitemap.xml): alle indexierbaren URLs
