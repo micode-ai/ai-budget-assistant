@@ -1481,9 +1481,21 @@ LLMS_FULL_INTRO = {
            "систем. Краткое описание "
            "продукта (на английском) "
            "в llms.txt."),
+    "es": ("Español", "Espejo en markdown del blog y el centro de ayuda de ai-budget.pl en "
+           "español, para motores de respuesta de IA. Consulta llms.txt para el resumen del "
+           "producto (en inglés)."),
+    "fr": ("Français", "Miroir markdown en français du blog et du centre d'aide ai-budget.pl, "
+           "pour les moteurs de réponse IA. Voir llms.txt pour le résumé du produit (en "
+           "anglais)."),
+    "ua": ("Українська", "Дзеркало у форматі markdown блогу та центру допомоги ai-budget.pl "
+           "українською мовою, для AI-пошукових систем. Короткий опис продукту (англійською) "
+           "в llms.txt."),
+    "be": ("Беларуская", "Люстэрка ў фармаце markdown блога і цэнтра дапамогі ai-budget.pl на "
+           "беларускай мове, для AI-пошукавых сістэм. Кароткае апісанне прадукту (на "
+           "англійскай) у llms.txt."),
 }
 # Languages that get a llms-full-<lang>.txt sibling, beyond the canonical English one.
-LLMS_FULL_LANGS = ["de", "nl", "pl", "ru"]
+LLMS_FULL_LANGS = ["de", "nl", "pl", "ru", "es", "fr", "ua", "be"]
 
 # Localized llms-<lang>.txt manifests (product summary, mirrors the canonical English
 # llms.txt written inline in build()). ADDITIVE ONLY: the English llms.txt is untouched by
@@ -1628,6 +1640,144 @@ LLMS_TXT_I18N = {
         "play_desc": "приложение для Android",
         "company_desc": "компания, стоящая за приложением",
         "sitemap_desc": "все индексируемые URL",
+    },
+    "es": {
+        "tagline": "Aplicación de presupuesto gratuita con IA para personas y familias. Registra "
+                   "gastos por voz o foto del recibo, planifica presupuestos y metas de ahorro, "
+                   "gestiona suscripciones, importa extractos bancarios y lleva un presupuesto "
+                   "compartido en tiempo real. Múltiples divisas, 9 idiomas, Android y web.",
+        "name_label": "Nombre", "launched_label": "Lanzamiento", "pricing_label": "Precio",
+        "platforms_label": "Plataformas", "languages_label": "Idiomas", "currencies_label": "Divisas",
+        "pricing_value": "Núcleo gratuito; planes Pro y Business",
+        "features": [
+            "Registro de gastos por voz: registra un gasto hablando de forma natural, transcrito por IA",
+            "Escaneo de recibos: fotografía un recibo para extraer el importe, el comercio y la categoría mediante OCR",
+            "Detección de notificaciones bancarias: la app de Android lee las notificaciones push del banco y crea el gasto directamente en el dispositivo (40+ bancos europeos, sin credenciales)",
+            "Importación de extractos bancarios: archivos CSV y PDF de Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "Asistente de chat con IA: haz preguntas financieras y da órdenes en lenguaje natural (GPT-4)",
+            "Cuentas familiares compartidas con roles (propietario/editor/observador) y un feed de actividad en tiempo real",
+            "Votación y aprobación de compras en grupo",
+            "Presupuestos por categoría con historial, alertas y seguimiento por periodo",
+            "Metas de ahorro con historial de aportaciones",
+            "Gestor de suscripciones con recordatorios de renovación y simulación de cobro",
+            "Bots de Telegram, WhatsApp y Slack",
+            "Arquitectura offline-first con cifrado de extremo a extremo",
+            "Motor Safe-to-Spend: cuánto puedes gastar hoy según el saldo menos las obligaciones próximas",
+            "Detección de anomalías: cargos duplicados, subidas de precio, picos de gasto",
+        ],
+        "blog_desc": "guías sobre presupuesto, control de gastos y ahorro en 9 idiomas",
+        "help_desc": "cómo usar cada función de la app",
+        "pricing_desc": "Gratis, Pro y Business",
+        "full_desc": "espejo en markdown del blog y el centro de ayuda en español",
+        "full_en_note": "versión en inglés",
+        "webapp_desc": "inicia sesión y usa AI Budget Assistant en el navegador",
+        "play_desc": "app para Android",
+        "company_desc": "la empresa detrás de la app",
+        "sitemap_desc": "todas las URL indexables",
+    },
+    "fr": {
+        "tagline": "Application de budget gratuite propulsée par l'IA pour particuliers et "
+                   "familles. Enregistrez vos dépenses par la voix ou en photographiant un "
+                   "ticket de caisse, planifiez budgets et objectifs d'épargne, gérez vos "
+                   "abonnements, importez vos relevés bancaires et gérez un budget partagé en "
+                   "temps réel. Multidevises, 9 langues, Android et web.",
+        "name_label": "Nom", "launched_label": "Lancement", "pricing_label": "Tarifs",
+        "platforms_label": "Plateformes", "languages_label": "Langues", "currencies_label": "Devises",
+        "pricing_value": "Cœur gratuit ; formules Pro et Business",
+        "features": [
+            "Saisie vocale des dépenses : enregistrez une dépense en parlant naturellement, transcrite par l'IA",
+            "Scan de tickets de caisse : photographiez un ticket pour en extraire le montant, le commerçant et la catégorie par OCR",
+            "Détection des notifications bancaires : l'appli Android lit les notifications push de la banque et crée la dépense directement sur l'appareil (40+ banques européennes, sans identifiants)",
+            "Import de relevés bancaires : fichiers CSV et PDF de Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "Assistant de chat IA : posez des questions financières et donnez des commandes en langage naturel (GPT-4)",
+            "Comptes familiaux partagés avec des rôles (propriétaire/éditeur/observateur) et un fil d'activité en temps réel",
+            "Vote et approbation des achats de groupe",
+            "Budgets par catégorie avec historique, alertes et suivi par période",
+            "Objectifs d'épargne avec historique des contributions",
+            "Gestionnaire d'abonnements avec rappels de renouvellement et simulation de prélèvement",
+            "Bots Telegram, WhatsApp et Slack",
+            "Architecture offline-first avec chiffrement de bout en bout",
+            "Moteur Safe-to-Spend : montant dépensable aujourd'hui à partir du solde moins les engagements à venir",
+            "Détection d'anomalies : doublons de charges, hausses de prix, pics de dépenses",
+        ],
+        "blog_desc": "guides sur le budget, le suivi des dépenses et l'épargne en 9 langues",
+        "help_desc": "comment utiliser chaque fonctionnalité de l'appli",
+        "pricing_desc": "Gratuit, Pro et Business",
+        "full_desc": "miroir markdown du blog et du centre d'aide en français",
+        "full_en_note": "version anglaise",
+        "webapp_desc": "connectez-vous et utilisez AI Budget Assistant dans le navigateur",
+        "play_desc": "appli Android",
+        "company_desc": "l'entreprise derrière l'appli",
+        "sitemap_desc": "toutes les URL indexables",
+    },
+    "ua": {
+        "tagline": "Безкоштовний AI-застосунок для ведення бюджету — для окремих користувачів і "
+                   "родин. Додавайте витрати голосом або фото чека, плануйте бюджети та "
+                   "накопичувальні цілі, керуйте підписками, імпортуйте банківські виписки та "
+                   "ведіть спільний бюджет у реальному часі. Мультивалютність, 9 мов, Android і веб.",
+        "name_label": "Назва", "launched_label": "Запуск", "pricing_label": "Ціна",
+        "platforms_label": "Платформи", "languages_label": "Мови", "currencies_label": "Валюти",
+        "pricing_value": "безкоштовне ядро; тарифи Pro та Business",
+        "features": [
+            "Голосове введення витрат: додавайте витрати, просто промовляючи їх — AI розпізнає й категоризує",
+            "Сканування чеків: сфотографуйте чек, щоб OCR розпізнав суму, продавця і категорію",
+            "Розпізнавання банківських сповіщень: застосунок на Android перехоплює push-сповіщення банку і створює витрату прямо на пристрої (40+ європейських банків, без введення логіна і пароля)",
+            "Імпорт банківських виписок: файли CSV і PDF з Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "AI-чат-асистент: ставте фінансові питання та віддавайте команди звичайною мовою (GPT-4)",
+            "Спільні сімейні рахунки з ролями (власник/редактор/спостерігач) і стрічкою активності в реальному часі",
+            "Голосування за групові покупки та їх схвалення",
+            "Бюджети за категоріями з історією, сповіщеннями та відстеженням періоду",
+            "Накопичувальні цілі з історією внесків",
+            "Менеджер підписок з нагадуваннями про продовження та симуляцією автосписання",
+            "Боти в Telegram, WhatsApp і Slack",
+            "Офлайн-архітектура з наскрізним шифруванням",
+            "Safe-to-Spend: скільки можна витратити сьогодні, виходячи з балансу за вирахуванням майбутніх зобов'язань",
+            "Виявлення аномалій: повторні списання, зростання цін, сплески витрат",
+        ],
+        "blog_desc": "статті про бюджет, облік витрат і накопичення на 9 мовах",
+        "help_desc": "як користуватися кожною функцією застосунку",
+        "pricing_desc": "безкоштовний, Pro та Business",
+        "full_desc": "дзеркало блогу і центру допомоги українською мовою",
+        "full_en_note": "англійська версія",
+        "webapp_desc": "увійдіть і користуйтеся AI Budget Assistant у браузері",
+        "play_desc": "застосунок для Android",
+        "company_desc": "компанія, що стоїть за застосунком",
+        "sitemap_desc": "усі індексовані URL",
+    },
+    "be": {
+        "tagline": "Бясплатны дадатак для вядзення бюджэту на аснове ШІ — для асобных "
+                   "карыстальнікаў і сем'яў. Дадавайце выдаткі голасам або фота чэка, плануйце "
+                   "бюджэты і мэты па назапашванні, кіруйце падпіскамі, імпартуйце банкаўскія "
+                   "выпіскі і вядзіце супольны бюджэт у рэальным часе. Розныя валюты, 9 моў, "
+                   "Android і вэб.",
+        "name_label": "Назва", "launched_label": "Запуск", "pricing_label": "Цана",
+        "platforms_label": "Платформы", "languages_label": "Мовы", "currencies_label": "Валюты",
+        "pricing_value": "бясплатнае ядро; тарыфы Pro і Business",
+        "features": [
+            "Галасавая фіксацыя выдаткаў: дадавайце выдаткі, проста прамаўляючы іх услых — ШІ распазнае і катэгарызуе",
+            "Сканаванне чэкаў: сфатаграфуйце чэк, каб OCR распазнаў суму, прадаўца і катэгорыю",
+            "Распазнаванне банкаўскіх апавяшчэнняў: дадатак на Android перахоплівае push-апавяшчэнні банка і стварае выдатак проста на прыладзе (40+ еўрапейскіх банкаў, без уводу логіна і пароля)",
+            "Імпарт банкаўскіх выпісак: файлы CSV і PDF з Wise, mBank, PKO BP, Revolut, Erste, Alior",
+            "Чат-асістэнт са ШІ: задавайце фінансавыя пытанні і аддавайце каманды звычайнай мовай (GPT-4)",
+            "Супольныя сямейныя рахункі з ролямі (уладальнік/рэдактар/назіральнік) і стужкай актыўнасці ў рэальным часе",
+            "Галасаванне за групавыя пакупкі і іх зацвярджэнне",
+            "Бюджэты па катэгорыях з гісторыяй, апавяшчэннямі і адсочваннем перыяду",
+            "Мэты па назапашванні з гісторыяй унёскаў",
+            "Мэнэджар падпісак з напамінамі аб падаўжэнні і сімуляцыяй спісання",
+            "Боты ў Telegram, WhatsApp і Slack",
+            "Афлайн-архітэктура са скразным шыфраваннем",
+            "Safe-to-Spend: колькі можна патраціць сёння, зыходзячы з балансу за вылікам будучых абавязацельстваў",
+            "Выяўленне анамалій: паўторныя спісанні, рост цэн, ускокі выдаткаў",
+        ],
+        "blog_desc": "артыкулы пра бюджэт, улік выдаткаў і назапашванне на 9 мовах",
+        "help_desc": "як карыстацца кожнай функцыяй дадатку",
+        "pricing_desc": "бясплатны, Pro і Business",
+        "full_desc": "люстэрка блога і цэнтра дапамогі на беларускай мове",
+        "full_en_note": "англійская версія",
+        "webapp_desc": "увайдзіце і карыстайцеся AI Budget Assistant у браўзеры",
+        "play_desc": "дадатак для Android",
+        "company_desc": "кампанія, якая стаіць за дадаткам",
+        "sitemap_desc": "усе індэксуемыя URL",
     },
 }
 

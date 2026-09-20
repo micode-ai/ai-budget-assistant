@@ -1,0 +1,44 @@
+# AI Budget Assistant
+
+> Aplicación de presupuesto gratuita con IA para personas y familias. Registra gastos por voz o foto del recibo, planifica presupuestos y metas de ahorro, gestiona suscripciones, importa extractos bancarios y lleva un presupuesto compartido en tiempo real. Múltiples divisas, 9 idiomas, Android y web.
+
+## Product
+
+- Nombre: AI Budget Assistant
+- Lanzamiento: 2026-04
+- Precio: Núcleo gratuito; planes Pro y Business
+- Plataformas: Android, Web
+- Idiomas: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
+- Divisas: USD, EUR, PLN, GBP, UAH, RUB
+
+## Key Features
+
+- Registro de gastos por voz: registra un gasto hablando de forma natural, transcrito por IA
+- Escaneo de recibos: fotografía un recibo para extraer el importe, el comercio y la categoría mediante OCR
+- Detección de notificaciones bancarias: la app de Android lee las notificaciones push del banco y crea el gasto directamente en el dispositivo (40+ bancos europeos, sin credenciales)
+- Importación de extractos bancarios: archivos CSV y PDF de Wise, mBank, PKO BP, Revolut, Erste, Alior
+- Asistente de chat con IA: haz preguntas financieras y da órdenes en lenguaje natural (GPT-4)
+- Cuentas familiares compartidas con roles (propietario/editor/observador) y un feed de actividad en tiempo real
+- Votación y aprobación de compras en grupo
+- Presupuestos por categoría con historial, alertas y seguimiento por periodo
+- Metas de ahorro con historial de aportaciones
+- Gestor de suscripciones con recordatorios de renovación y simulación de cobro
+- Bots de Telegram, WhatsApp y Slack
+- Arquitectura offline-first con cifrado de extremo a extremo
+- Motor Safe-to-Spend: cuánto puedes gastar hoy según el saldo menos las obligaciones próximas
+- Detección de anomalías: cargos duplicados, subidas de precio, picos de gasto
+
+## Documentation
+
+- [Blog](https://ai-budget.pl/blog/es/): guías sobre presupuesto, control de gastos y ahorro en 9 idiomas
+- [Ayuda](https://ai-budget.pl/help/es/): cómo usar cada función de la app
+- [Precios](https://ai-budget.pl/es/pricing/): Gratis, Pro y Business
+- [llms-full-es.txt](https://ai-budget.pl/llms-full-es.txt): espejo en markdown del blog y el centro de ayuda en español
+- [llms.txt](https://ai-budget.pl/llms.txt): versión en inglés
+
+## Links
+
+- [app.ai-budget.pl](https://app.ai-budget.pl): inicia sesión y usa AI Budget Assistant en el navegador
+- [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): app para Android
+- [MICODE sp. z o.o.](https://mi-code.pl/): la empresa detrás de la app
+- [Sitemap](https://ai-budget.pl/sitemap.xml): todas las URL indexables

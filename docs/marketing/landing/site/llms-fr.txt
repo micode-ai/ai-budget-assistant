@@ -1,0 +1,44 @@
+# AI Budget Assistant
+
+> Application de budget gratuite propulsée par l'IA pour particuliers et familles. Enregistrez vos dépenses par la voix ou en photographiant un ticket de caisse, planifiez budgets et objectifs d'épargne, gérez vos abonnements, importez vos relevés bancaires et gérez un budget partagé en temps réel. Multidevises, 9 langues, Android et web.
+
+## Product
+
+- Nom: AI Budget Assistant
+- Lancement: 2026-04
+- Tarifs: Cœur gratuit ; formules Pro et Business
+- Plateformes: Android, Web
+- Langues: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
+- Devises: USD, EUR, PLN, GBP, UAH, RUB
+
+## Key Features
+
+- Saisie vocale des dépenses : enregistrez une dépense en parlant naturellement, transcrite par l'IA
+- Scan de tickets de caisse : photographiez un ticket pour en extraire le montant, le commerçant et la catégorie par OCR
+- Détection des notifications bancaires : l'appli Android lit les notifications push de la banque et crée la dépense directement sur l'appareil (40+ banques européennes, sans identifiants)
+- Import de relevés bancaires : fichiers CSV et PDF de Wise, mBank, PKO BP, Revolut, Erste, Alior
+- Assistant de chat IA : posez des questions financières et donnez des commandes en langage naturel (GPT-4)
+- Comptes familiaux partagés avec des rôles (propriétaire/éditeur/observateur) et un fil d'activité en temps réel
+- Vote et approbation des achats de groupe
+- Budgets par catégorie avec historique, alertes et suivi par période
+- Objectifs d'épargne avec historique des contributions
+- Gestionnaire d'abonnements avec rappels de renouvellement et simulation de prélèvement
+- Bots Telegram, WhatsApp et Slack
+- Architecture offline-first avec chiffrement de bout en bout
+- Moteur Safe-to-Spend : montant dépensable aujourd'hui à partir du solde moins les engagements à venir
+- Détection d'anomalies : doublons de charges, hausses de prix, pics de dépenses
+
+## Documentation
+
+- [Blog](https://ai-budget.pl/blog/fr/): guides sur le budget, le suivi des dépenses et l'épargne en 9 langues
+- [Aide](https://ai-budget.pl/help/fr/): comment utiliser chaque fonctionnalité de l'appli
+- [Tarifs](https://ai-budget.pl/fr/pricing/): Gratuit, Pro et Business
+- [llms-full-fr.txt](https://ai-budget.pl/llms-full-fr.txt): miroir markdown du blog et du centre d'aide en français
+- [llms.txt](https://ai-budget.pl/llms.txt): version anglaise
+
+## Links
+
+- [app.ai-budget.pl](https://app.ai-budget.pl): connectez-vous et utilisez AI Budget Assistant dans le navigateur
+- [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant): appli Android
+- [MICODE sp. z o.o.](https://mi-code.pl/): l'entreprise derrière l'appli
+- [Sitemap](https://ai-budget.pl/sitemap.xml): toutes les URL indexables

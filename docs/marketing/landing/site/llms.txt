@@ -34,7 +34,7 @@
 - [Help center](https://ai-budget.pl/help/en/): how to use every feature of the app
 - [Pricing](https://ai-budget.pl/pricing/): Free, Pro and Business plans
 - [Full content for LLMs](https://ai-budget.pl/llms-full.txt): English markdown mirror of the blog and help center
-- Full content mirrors in other languages: [Deutsch](https://ai-budget.pl/llms-full-de.txt), [Nederlands](https://ai-budget.pl/llms-full-nl.txt), [Polski](https://ai-budget.pl/llms-full-pl.txt), [Русский](https://ai-budget.pl/llms-full-ru.txt)
+- Full content mirrors in other languages: [Deutsch](https://ai-budget.pl/llms-full-de.txt), [Nederlands](https://ai-budget.pl/llms-full-nl.txt), [Polski](https://ai-budget.pl/llms-full-pl.txt), [Русский](https://ai-budget.pl/llms-full-ru.txt), [Español](https://ai-budget.pl/llms-full-es.txt), [Français](https://ai-budget.pl/llms-full-fr.txt), [Українська](https://ai-budget.pl/llms-full-ua.txt), [Беларуская](https://ai-budget.pl/llms-full-be.txt)
 
 ## Links
 

@@ -359,7 +359,7 @@ Ja. Eine Reise ist genau der Fall, in dem sich eine Karte auszahlt, weil sich de
 
 *Verwandte Artikel: [Ausgaben tracken: So behältst du die Kontrolle über dein Geld](/blog/de/ausgaben-tracken/) | [Ein gemeinsames Haushaltsbuch, das keine Streitgespräche auslöst](/blog/de/gemeinsames-haushaltsbuch/)*
 
-## Ausgaben tracken: So behältst du die Kontrolle über dein Geld
+## Ausgaben tracken: So behältst du die Kontrolle
 URL: https://ai-budget.pl/blog/de/ausgaben-tracken/
 
 Die meisten Menschen haben irgendwann versucht, ihre Ausgaben zu tracken. Die Geschichte ist jedes Mal ähnlich: du startest sorgfältig, erfasst alles für eine Woche oder zwei, verpasst ein paar Buchungen - und gibst dann still auf. Nicht weil die Idee schlecht war, sondern weil die Methode zu viel Reibung für den Alltag erzeugt hat.
@@ -562,7 +562,7 @@ Ein kleines "Sonstiges" für echte Einzelfälle ist in Ordnung. Problematisch wi
 
 *Verwandte Artikel: [Ausgaben tracken, ohne aufzugeben](/blog/de/ausgaben-tracken/) | [Haushaltsbuch führen - die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/)*
 
-## Geld sparen beim Einkaufen ohne staendig Coupons
+## Geld sparen beim Einkaufen ohne ständig Coupons
 URL: https://ai-budget.pl/blog/de/beim-einkaufen-sparen/
 
 Für die meisten Haushalte sind Lebensmittel der größte Ausgabenposten, den man tatsächlich selbst steuern kann. Die Miete steht fest, die Stromrechnung schwankt kaum, aber was im Einkaufswagen landet, entscheidest du Woche für Woche neu. Genau darin liegt die Chance. Dieser Artikel zeigt, wie du beim Einkaufen sparst, ohne Stunden mit Couponheften oder Rabatt-Apps zu verbringen, denn der eigentliche Hebel ist nicht der Coupon, sondern das Bewusstsein für deine Zahlen.
@@ -753,7 +753,7 @@ Achte auf echte geteilte Konten, bei denen beide vom eigenen Handy aus in eine E
 
 *Verwandte Artikel: [Ausgaben tracken - so behältst du die Kontrolle](/blog/de/ausgaben-tracken/) | [Haushaltsbuch führen - die Methode, die wirklich hält](/blog/de/haushaltsbuch-fuehren/)*
 
-## Familienbudget mit Kindern, das im Alltag haelt
+## Familienbudget mit Kindern, das im Alltag hält
 URL: https://ai-budget.pl/blog/de/familienbudget-mit-kindern/
 
 Kinder bringen nicht nur höhere Kosten, sondern auch mehr Komplexität ins Budget. Plötzlich geben zwei Erwachsene Geld aus, und ein guter Teil der Kinderkosten kommt unregelmäßig: neue Schuhe, der Schulbeitrag, die Sportvereinsgebühr, der überraschende Arztbesuch. Dieser Artikel zeigt, wie ihr ein Familienbudget aufbaut, das diese lumpigen Kosten verkraftet, das beide Partner gemeinsam tragen und das ganz nebenbei euren Kindern etwas über Geld beibringt.
@@ -1011,7 +1011,7 @@ Für die meisten Menschen: ja. Den Abstand zwischen dem geplanten und dem tatsä
 
 ## Verwandte Ratgeber
 
-- [Geld sparen beim Einkaufen ohne staendig Coupons](/blog/de/beim-einkaufen-sparen/)
+- [Geld sparen beim Einkaufen ohne ständig Coupons](/blog/de/beim-einkaufen-sparen/)
 - [Notgroschen: Wie viel du brauchst und wie du ihn aufbaust](/blog/de/notgroschen/)
 - [Abos verwalten, bevor sie dein Konto leerräumen](/blog/de/abos-verwalten/)
 - [Schulden abbezahlen: Schneeball oder Lawine?](/blog/de/schulden-abbezahlen/)
@@ -1231,7 +1231,7 @@ Fange mit einem Gespräch über Ziele an, nicht über Budgets. "Wir möchten im 
 - [Umschlagmethode: Das System gegen Mehrausgaben](/blog/de/umschlagmethode/)
 - [Die 50-30-20-Regel: Ein praktischer Leitfaden](/blog/de/50-30-20-regel/)
 - [Ausgabenkategorien, die im Budget wirklich funktionieren](/blog/de/ausgabenkategorien/)
-- [Familienbudget mit Kindern, das im Alltag haelt](/blog/de/familienbudget-mit-kindern/)
+- [Familienbudget mit Kindern, das im Alltag hält](/blog/de/familienbudget-mit-kindern/)
 - [KI für die Finanzen: weniger Aufwand, mehr Einblick](/blog/de/ki-fuer-die-finanzen/)
 - [Schulanfang: Was die Ausstattung wirklich kostet](/blog/de/schulanfang-kosten/)
 
