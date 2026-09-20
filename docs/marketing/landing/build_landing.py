@@ -1923,19 +1923,42 @@ def build():
         lp_date = git_date(landing_py)  # landing/pricing/about pages share this generator
         # landing-side entries: (url, lastmod, changefreq, priority)
         entries = []
+        landing_urls = {}  # url -> lang, so the homepage's own feature screenshots can be
+                            # attached as <image:image> entries below (Google Images channel).
+                            # Scoped to the homepage only -- it's the one page whose images are
+                            # verified real, distinct, alt-texted content (the per-language
+                            # feature lightbox screenshots); about/pricing/legal pages carry no
+                            # equivalent content images, so they're deliberately not claimed here.
         for l in langs:
             u = SITE + lp(l)
             entries.append((u, lp_date, "weekly", "1.0" if u == SITE + "/" else "0.8"))
+            landing_urls[u] = l
         entries += [(SITE + about_url(l), lp_date, "monthly", "0.5") for l in LANG_NAMES if l in ABOUT]
         entries += [(SITE + pricing_url(l), lp_date, "monthly", "0.7") for l in LANG_NAMES if l in PRICING]
         for k in ("cookies", "privacy", "terms"):                        # legal (pl + en)
             src = os.path.join(LEGAL_DIR, "en", k + ".html") if k in ("privacy", "terms") else landing_py
             kdate = git_date(src, lp_date)
             entries += [(f"{SITE}/{k}/", kdate, "yearly", "0.3"), (f"{SITE}/en/{k}/", kdate, "yearly", "0.3")]
-        sm = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+
+        def landing_image_xml(lang):
+            """<image:image> entries for a language's homepage feature-lightbox screenshots
+            (copy_assets() publishes them at /assets/screens/<lang>/<shot>). Caption mirrors
+            the same alt text the <img> itself already carries, so the two never disagree."""
+            parts = []
+            for h, _desc, shot in C[lang]["features"]:
+                loc = f"{SITE}/assets/screens/{lang}/{shot}"
+                caption = html.escape(f"{h} - AI Budget Assistant")
+                parts.append(f'<image:image><image:loc>{loc}</image:loc>'
+                             f'<image:caption>{caption}</image:caption></image:image>')
+            return "".join(parts)
+
+        sm = ['<?xml version="1.0" encoding="UTF-8"?>',
+              '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+              'xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">']
         for u, lm, cf, pr in entries:
+            img_xml = landing_image_xml(landing_urls[u]) if u in landing_urls else ""
             sm.append(f'<url><loc>{u}</loc><lastmod>{lm}</lastmod>'
-                      f'<changefreq>{cf}</changefreq><priority>{pr}</priority></url>')
+                      f'<changefreq>{cf}</changefreq><priority>{pr}</priority>{img_xml}</url>')
         # blog + help: carry their per-URL <lastmod>/<changefreq>/<priority> through verbatim
         # (the blog/help generators compute real git dates; don't flatten them on merge)
         for sub, needle in ((os.path.join(ROOT, "..", "seo", "site", "sitemap.xml"), "/blog/"),
