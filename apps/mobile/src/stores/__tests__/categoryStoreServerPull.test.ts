@@ -88,7 +88,7 @@ import { api } from '@/services/api';
 const localRow = {
   id: 'local-legacy',
   accountId: 'acc-1',
-  name: 'Restauracja',
+  name: 'Sample Category',
   type: 'expense' as const,
   isSystem: false,
   createdAt: new Date(),
@@ -101,7 +101,7 @@ const serverRow = {
   id: 'server-1',
   clientId: null,
   accountId: 'acc-1',
-  name: 'Restauracja',
+  name: 'Sample Category',
   type: 'expense',
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
