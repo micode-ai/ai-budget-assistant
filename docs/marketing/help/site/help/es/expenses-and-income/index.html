@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/expenses-and-income/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/expenses-and-income/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/expenses-and-income/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Gastos e Ingresos | AI Budget Assistant", "description": "Visualiza, agrega y gestiona todas tus transacciones. Alterna entre las pestanas de Gastos e Ingresos, con soporte para multiples monedas, categorias, etiquetas, proyectos y division de gastos.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-08-20", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Gastos e Ingresos | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/expenses-and-income/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Gastos e Ingresos | AI Budget Assistant", "description": "Visualiza, agrega y gestiona todas tus transacciones. Alterna entre las pestanas de Gastos e Ingresos, con soporte para multiples monedas, categorias, etiquetas, proyectos y division de gastos.", "inLanguage": "es", "datePublished": "2026-06-19", "dateModified": "2026-09-18", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/es/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/es/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/es/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Inicio", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Ayuda", "item": "https://ai-budget.pl/help/es/"}, {"@type": "ListItem", "position": 3, "name": "Gastos e Ingresos | AI Budget Assistant", "item": "https://ai-budget.pl/help/es/expenses-and-income/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -138,6 +138,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ol>
 <h3>Categorias</h3>
 <p>La aplicacion incluye 14 categorias de gastos predefinidas. Tambien puedes crear categorias personalizadas tocando el boton <strong>+</strong> en el selector de categorias. Cada categoria tiene un color unico para facilitar su identificacion en graficos y listas.</p>
+<p>Toca el filtro de categoría encima de la lista de transacciones para filtrar por categoría. Funciona en ambas pestañas, Gastos e Ingresos:</p>
+<ul>
+<li>Elige una categoría para ver solo esas transacciones</li>
+<li>Elige <strong>Sin categoría</strong> para ver todo lo que aún está sin clasificar</li>
+<li>Elige <strong>Todo</strong> para quitar el filtro</li>
+</ul>
+<p>El filtro de categoría se combina con el periodo de arriba, así que para encontrar entradas antiguas sin categoría, pon primero el periodo en <strong>Todos</strong>.</p>
 <h3>Etiquetas</h3>
 <p>Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:
 - Busca etiquetas existentes usando el campo de busqueda
@@ -189,9 +196,9 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Notas</strong> (si se agregaron)</li>
 <li><strong>Agregado por</strong> — en cuentas compartidas; muestra el nombre del miembro de la cuenta que creó esta entrada</li>
 <li><strong>Estado de sincronizacion</strong> — pendiente, sincronizado, conflicto o error</li>
-<li><strong>Fuente</strong> — Entrada manual, Entrada de voz, Escaneo de recibo o Importado</li>
-<li><strong>Articulos del recibo</strong> — articulos individuales (para recibos escaneados)</li>
-<li><strong>Imagen del recibo</strong> — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca <strong>Adjuntar recibo</strong> — elige <strong>Tomar foto</strong>, <strong>Desde la galería</strong> o <strong>Elegir PDF</strong>. Funciona para cualquier gasto, incluidos los agregados manualmente</li>
+<li><strong>Fuente</strong> — Entrada manual, Entrada de voz, Escaneo de recibo, Importado o Captura automática (los registros de una notificación bancaria o de una importación están marcados para que se distingan)</li>
+<li><strong>Articulos del recibo</strong> — articulos individuales (para recibos escaneados, o extraídos después mediante <strong>Extraer artículos</strong>)</li>
+<li><strong>Imagen del recibo</strong> — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca <strong>Adjuntar recibo</strong> — elige <strong>Tomar foto</strong>, <strong>Desde la galería</strong> o <strong>Elegir PDF</strong>. Funciona para cualquier gasto, incluidos los agregados manualmente. Si el recibo se adjuntó después de crear el gasto, toca <strong>Extraer artículos</strong> en la tarjeta del recibo para que la IA lo vuelva a leer y añada sus líneas al gasto (con confirmación si ya hay artículos; cada ejecución consume una petición de IA)</li>
 </ul>
 <h3>Acciones en los detalles del gasto:</h3>
 <ul>

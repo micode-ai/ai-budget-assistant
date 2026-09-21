@@ -161,9 +161,11 @@ describe('categoryStore.loadCategories on web when the server fetch fails', () =
       .mockResolvedValueOnce([serverCategory('c1', 'Groceries')]);
 
     await useCategoryStore.getState().loadCategories();
-    // A populated local read means the server was never needed, and the tail
-    // marked this account seeded.
-    expect(mockGetCategories).not.toHaveBeenCalled();
+    // One pull, even though the local read was populated: the server list is
+    // what `syncFromServer` needs to fold a diverged category back together,
+    // so it is no longer gated on an empty local table (ABA-575). The tail
+    // still marked this account seeded.
+    expect(mockGetCategories).toHaveBeenCalledTimes(1);
     expect(useCategoryStore.getState().categories.map((c) => c.name)).toEqual(['Groceries']);
 
     useCategoryStore.getState().reset();
@@ -176,7 +178,9 @@ describe('categoryStore.loadCategories on web when the server fetch fails', () =
     mockGetCategories.mockResolvedValue([serverCategory('c2', 'Rent')]);
     await useCategoryStore.getState().loadCategories();
 
-    expect(mockGetCategories).toHaveBeenCalledTimes(1);
+    // A second pull: the fast path would have served the (empty) local read
+    // instead had `_seededAccounts` survived the reset.
+    expect(mockGetCategories).toHaveBeenCalledTimes(2);
     expect(useCategoryStore.getState().categories.map((c) => c.name)).toEqual(['Rent']);
   });
 

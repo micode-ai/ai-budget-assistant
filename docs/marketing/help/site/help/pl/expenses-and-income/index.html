@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/expenses-and-income/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/expenses-and-income/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/expenses-and-income/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Wydatki i przychody | AI Budget Assistant", "description": "Przegladaj, dodawaj i zarzadzaj wszystkimi transakcjami. Przelaczaj miedzy zakladkami Wydatki i Przychody, z obsluga wielu walut, kategorii, tagow, projektow i podzialu wydatkow.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-08-20", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Wydatki i przychody | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/expenses-and-income/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Wydatki i przychody | AI Budget Assistant", "description": "Przegladaj, dodawaj i zarzadzaj wszystkimi transakcjami. Przelaczaj miedzy zakladkami Wydatki i Przychody, z obsluga wielu walut, kategorii, tagow, projektow i podzialu wydatkow.", "inLanguage": "pl", "datePublished": "2026-06-19", "dateModified": "2026-09-18", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/pl/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/pl/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Strona główna", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Pomoc", "item": "https://ai-budget.pl/help/pl/"}, {"@type": "ListItem", "position": 3, "name": "Wydatki i przychody | AI Budget Assistant", "item": "https://ai-budget.pl/help/pl/expenses-and-income/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -138,6 +138,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ol>
 <h3>Kategorie</h3>
 <p>Aplikacja udostepnia 13 wbudowanych kategorii wydatkow. Mozesz rowniez tworzyc wlasne kategorie, dotykajac przycisk <strong>+</strong> w selektorze kategorii. Kazda kategoria ma unikatowy kolor do latwej identyfikacji na wykresach i listach.</p>
+<p>Dotknij filtra kategorii nad listą transakcji, aby filtrować według kategorii. Działa na obu kartach — Wydatki i Przychody:</p>
+<ul>
+<li>Wybierz kategorię, aby zobaczyć tylko te transakcje</li>
+<li>Wybierz <strong>Bez kategorii</strong>, aby zobaczyć wszystko, co wciąż czeka na uporządkowanie</li>
+<li>Wybierz <strong>Wszystkie</strong>, aby wyczyścić filtr</li>
+</ul>
+<p>Filtr kategorii łączy się z okresem wybranym powyżej, więc aby znaleźć starsze pozycje bez kategorii, najpierw ustaw okres na <strong>Wszystko</strong>.</p>
 <h3>Tagi</h3>
 <p>Tagi pomagaja organizowac wydatki za pomoca niestandardowych etykiet:
 - Wyszukuj istniejace tagi za pomoca pola wyszukiwania
@@ -189,9 +196,9 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Notatki</strong> (jezeli dodano)</li>
 <li><strong>Dodane przez</strong> — w udostępnionych kontach; wyświetla nazwę członka konta, który utworzył ten wpis</li>
 <li><strong>Status synchronizacji</strong> — oczekujacy, zsynchronizowany, konflikt lub blad</li>
-<li><strong>Zrodlo</strong> — Reczne wprowadzanie, Glosowo, Skan paragonu lub Zaimportowano</li>
-<li><strong>Pozycje paragonu</strong> — poszczegolne pozycje (dla zeskanowanych paragonow)</li>
-<li><strong>Zdjecie paragonu</strong> — wyswietl, udostepnij, zapisz w galerii, zmien lub usun zdjecie paragonu. Paragony PDF pokazują podgląd dokumentu do otwarcia. Jeśli paragon nie jest jeszcze dołączony, dotknij <strong>Dołącz paragon</strong> — wybierz <strong>Zrób zdjęcie</strong>, <strong>Z galerii</strong> lub <strong>Wybierz PDF</strong>. Działa dla każdego wydatku, także dodanego ręcznie</li>
+<li><strong>Źródło</strong> — Ręczne wprowadzanie, Głosowo, Skan paragonu, Zaimportowano lub Autozapis (transakcje z powiadomienia bankowego lub importu są oznaczone, by było widać, skąd pochodzą)</li>
+<li><strong>Pozycje paragonu</strong> — poszczególne pozycje (dla zeskanowanych paragonów lub wyodrębnione później przez <strong>Wyodrębnij pozycje</strong>)</li>
+<li><strong>Zdjęcie paragonu</strong> — przeglądanie, udostępnianie, zapisywanie do galerii, podmiana lub usunięcie zdjęcia paragonu. Paragony PDF są pokazywane jako dokument z możliwością otwarcia. Jeśli paragon nie jest jeszcze dołączony, kliknij <strong>Dołącz paragon</strong>, by go dodać — wybierz <strong>Zrób zdjęcie</strong>, <strong>Z galerii</strong> lub <strong>Wybierz PDF</strong>. Działa dla każdego wydatku, w tym dodanego ręcznie. Jeśli paragon został dołączony po utworzeniu wydatku, kliknij <strong>Wyodrębnij pozycje</strong> w karcie paragonu, aby ponownie odczytać go AI i pobrać pozycje do wydatku (z potwierdzeniem, gdy pozycje już istnieją; każde uruchomienie zużywa jedno zapytanie AI)</li>
 </ul>
 <h3>Dostepne akcje w szczegolach wydatku:</h3>
 <ul>

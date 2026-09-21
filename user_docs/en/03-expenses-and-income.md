@@ -60,6 +60,14 @@ Use the floating **+** button (bottom-right) to add a new transaction.
 
 The app provides 14 built-in expense categories. You can also create custom categories by tapping the **+** button in the category selector. Each category has a unique color for easy identification in charts and lists.
 
+Tap the category filter above the transaction list to filter by category. It works on both the Expenses and the Income tab:
+
+- Pick a category to see only those transactions
+- Pick **Uncategorized** to see everything still waiting to be sorted
+- Pick **All** to clear the filter
+
+The category filter combines with the period above it, so to find older entries that still have no category, set the period to **All** first.
+
 ### Tags
 
 Tags help you organize expenses with custom labels:

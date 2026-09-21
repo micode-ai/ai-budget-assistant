@@ -2917,6 +2917,14 @@ Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle tr
 
 L'application fournit 14 categories de depenses integrees. Vous pouvez egalement creer des categories personnalisees en appuyant sur le bouton **+** dans le selecteur de categories. Chaque categorie a une couleur unique pour une identification facile dans les graphiques et les listes.
 
+Touchez le filtre de catégorie au-dessus de la liste des transactions pour filtrer par catégorie. Il fonctionne sur les deux onglets, Dépenses et Revenus :
+
+- Choisissez une catégorie pour ne voir que ces transactions
+- Choisissez **Sans catégorie** pour voir tout ce qui reste à trier
+- Choisissez **Tout** pour effacer le filtre
+
+Le filtre de catégorie se combine avec la période au-dessus : pour retrouver d'anciennes entrées sans catégorie, réglez d'abord la période sur **Tout**.
+
 ### Etiquettes
 
 Les etiquettes vous aident a organiser les depenses avec des libelles personnalises :

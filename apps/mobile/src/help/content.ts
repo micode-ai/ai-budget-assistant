@@ -425,6 +425,14 @@ Use the floating **+** button (bottom-right) to add a new transaction.
 
 The app provides 14 built-in expense categories. You can also create custom categories by tapping the **+** button in the category selector. Each category has a unique color for easy identification in charts and lists.
 
+Tap the category filter above the transaction list to filter by category. It works on both the Expenses and the Income tab:
+
+- Pick a category to see only those transactions
+- Pick **Uncategorized** to see everything still waiting to be sorted
+- Pick **All** to clear the filter
+
+The category filter combines with the period above it, so to find older entries that still have no category, set the period to **All** first.
+
 ### Tags
 
 Tags help you organize expenses with custom labels:
@@ -5166,6 +5174,14 @@ iOS, Android, Web
 
 Приложение предоставляет 14 встроенных категорий расходов. Вы также можете создать пользовательские категории, нажав кнопку **+** в выборе категорий. Каждая категория имеет уникальный цвет для простой идентификации в графиках и списках.
 
+Нажмите на фильтр категорий над списком транзакций, чтобы отфильтровать по категории. Работает на обеих вкладках — Расходы и Доходы:
+
+- Выберите категорию, чтобы увидеть только эти транзакции
+- Выберите **Без категории**, чтобы увидеть всё, что ещё не разнесено по категориям
+- Выберите **Все**, чтобы снять фильтр
+
+Фильтр категорий работает вместе с периодом выше, поэтому, чтобы найти старые записи без категории, сначала переключите период на **Все**.
+
 ### Теги
 
 Теги помогают организовать расходы с помощью пользовательских меток:
@@ -9885,6 +9901,14 @@ iOS, Android, Web
 
 Додаток надає 14 вбудованих категорій витрат. Ви також можете створювати власні категорії, натиснувши кнопку **+** у списку категорій. Кожна категорія має унікальний колір для легкого розпізнавання на графіках та в списках.
 
+Натисніть фільтр категорій над списком транзакцій, щоб відфільтрувати за категорією. Працює на обох вкладках — Витрати та Доходи:
+
+- Виберіть категорію, щоб побачити лише ці транзакції
+- Виберіть **Без категорії**, щоб побачити все, що ще не розібрано за категоріями
+- Виберіть **Всі**, щоб зняти фільтр
+
+Фільтр категорій діє разом із періодом вище, тож щоб знайти старі записи без категорії, спершу перемкніть період на **Усі**.
+
 ### Теги
 
 Теги допомагають організовувати витрати за допомогою власних міток:
@@ -14552,6 +14576,14 @@ Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
 Aplikacja udostepnia 13 wbudowanych kategorii wydatkow. Mozesz rowniez tworzyc wlasne kategorie, dotykajac przycisk **+** w selektorze kategorii. Kazda kategoria ma unikatowy kolor do latwej identyfikacji na wykresach i listach.
 
+Dotknij filtra kategorii nad listą transakcji, aby filtrować według kategorii. Działa na obu kartach — Wydatki i Przychody:
+
+- Wybierz kategorię, aby zobaczyć tylko te transakcje
+- Wybierz **Bez kategorii**, aby zobaczyć wszystko, co wciąż czeka na uporządkowanie
+- Wybierz **Wszystkie**, aby wyczyścić filtr
+
+Filtr kategorii łączy się z okresem wybranym powyżej, więc aby znaleźć starsze pozycje bez kategorii, najpierw ustaw okres na **Wszystko**.
+
 ### Tagi
 
 Tagi pomagaja organizowac wydatki za pomoca niestandardowych etykiet:
@@ -19215,6 +19247,14 @@ Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transakt
 
 Die App bietet 14 integrierte Ausgabenkategorien. Du kannst auch benutzerdefinierte Kategorien erstellen, indem du auf die **+**-Schaltflache im Kategorieauswahler tippst. Jede Kategorie hat eine einzigartige Farbe fur einfache Identifizierung in Diagrammen und Listen.
 
+Tippe auf den Kategoriefilter über der Transaktionsliste, um nach Kategorie zu filtern. Das funktioniert auf beiden Tabs — Ausgaben und Einkommen:
+
+- Wähle eine Kategorie, um nur diese Transaktionen zu sehen
+- Wähle **Ohne Kategorie**, um alles zu sehen, was noch einsortiert werden muss
+- Wähle **Alle**, um den Filter zu löschen
+
+Der Kategoriefilter wird mit dem Zeitraum darüber kombiniert. Um ältere Einträge ohne Kategorie zu finden, stelle den Zeitraum zuerst auf **Alle**.
+
 ### Tags
 
 Tags helfen dir, Ausgaben mit benutzerdefinierten Labels zu organisieren:
@@ -23853,6 +23893,14 @@ Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva tr
 
 La aplicacion incluye 14 categorias de gastos predefinidas. Tambien puedes crear categorias personalizadas tocando el boton **+** en el selector de categorias. Cada categoria tiene un color unico para facilitar su identificacion en graficos y listas.
 
+Toca el filtro de categoría encima de la lista de transacciones para filtrar por categoría. Funciona en ambas pestañas, Gastos e Ingresos:
+
+- Elige una categoría para ver solo esas transacciones
+- Elige **Sin categoría** para ver todo lo que aún está sin clasificar
+- Elige **Todo** para quitar el filtro
+
+El filtro de categoría se combina con el periodo de arriba, así que para encontrar entradas antiguas sin categoría, pon primero el periodo en **Todos**.
+
 ### Etiquetas
 
 Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:
@@ -28480,6 +28528,14 @@ Utilisez le bouton flottant **+** (en bas a droite) pour ajouter une nouvelle tr
 
 L'application fournit 14 categories de depenses integrees. Vous pouvez egalement creer des categories personnalisees en appuyant sur le bouton **+** dans le selecteur de categories. Chaque categorie a une couleur unique pour une identification facile dans les graphiques et les listes.
 
+Touchez le filtre de catégorie au-dessus de la liste des transactions pour filtrer par catégorie. Il fonctionne sur les deux onglets, Dépenses et Revenus :
+
+- Choisissez une catégorie pour ne voir que ces transactions
+- Choisissez **Sans catégorie** pour voir tout ce qui reste à trier
+- Choisissez **Tout** pour effacer le filtre
+
+Le filtre de catégorie se combine avec la période au-dessus : pour retrouver d'anciennes entrées sans catégorie, réglez d'abord la période sur **Tout**.
+
 ### Etiquettes
 
 Les etiquettes vous aident a organiser les depenses avec des libelles personnalises :
@@ -33105,6 +33161,14 @@ iOS, Android, Web
 
 Праграма прадастаўляе 14 убудаваных катэгорый выдаткаў. Вы таксама можаце стварыць карыстальніцкія катэгорыі, націснуўшы кнопку **+** у выбары катэгорый. Кожная катэгорыя мае ўнікальны колер для простай ідэнтыфікацыі ў графіках і спісах.
 
+Націсніце фільтр катэгорый над спісам транзакцый, каб адфільтраваць па катэгорыі. Працуе на абедзвюх укладках — Выдаткі і Даходы:
+
+- Выберыце катэгорыю, каб убачыць толькі гэтыя транзакцыі
+- Выберыце **Без катэгорыі**, каб убачыць усё, што яшчэ не разабрана па катэгорыях
+- Выберыце **Усе**, каб зняць фільтр
+
+Фільтр катэгорый дзейнічае разам з перыядам вышэй, таму каб знайсці старыя запісы без катэгорыі, спачатку пераключыце перыяд на **Усё**.
+
 ### Тэгі
 
 Тэгі дапамагаюць арганізаваць выдаткі з дапамогай карыстальніцкіх метак:
@@ -37693,6 +37757,14 @@ Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voe
 ### Categorieën
 
 De app biedt 14 ingebouwde uitgavencategorieën. Je kunt ook aangepaste categorieën maken door op de **+**-knop in de categoriekiezer te tikken. Elke categorie heeft een unieke kleur, zodat je ze makkelijk herkent in grafieken en lijsten.
+
+Tik op het categoriefilter boven de transactielijst om op categorie te filteren. Het werkt op beide tabbladen — Uitgaven en Inkomsten:
+
+- Kies een categorie om alleen die transacties te zien
+- Kies **Zonder categorie** om alles te zien wat nog gesorteerd moet worden
+- Kies **Alles** om het filter te wissen
+
+Het categoriefilter werkt samen met de periode erboven. Zet de periode eerst op **Alles** om oudere items zonder categorie te vinden.
 
 ### Tags
 

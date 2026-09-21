@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/expenses-and-income/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/expenses-and-income/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/expenses-and-income/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Расходы и доходы | AI Budget Assistant", "description": "Просматривайте, добавляйте и управляйте всеми транзакциями. Переключайтесь между вкладками Расходы и Доходы с поддержкой нескольких валют, категорий, тегов, проектов и разделения расходов.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-08-20", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Расходы и доходы | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/expenses-and-income/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Расходы и доходы | AI Budget Assistant", "description": "Просматривайте, добавляйте и управляйте всеми транзакциями. Переключайтесь между вкладками Расходы и Доходы с поддержкой нескольких валют, категорий, тегов, проектов и разделения расходов.", "inLanguage": "ru", "datePublished": "2026-06-19", "dateModified": "2026-09-18", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/ru/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/ru/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/ru/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Главная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Помощь", "item": "https://ai-budget.pl/help/ru/"}, {"@type": "ListItem", "position": 3, "name": "Расходы и доходы | AI Budget Assistant", "item": "https://ai-budget.pl/help/ru/expenses-and-income/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -138,6 +138,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ol>
 <h3>Категории</h3>
 <p>Приложение предоставляет 14 встроенных категорий расходов. Вы также можете создать пользовательские категории, нажав кнопку <strong>+</strong> в выборе категорий. Каждая категория имеет уникальный цвет для простой идентификации в графиках и списках.</p>
+<p>Нажмите на фильтр категорий над списком транзакций, чтобы отфильтровать по категории. Работает на обеих вкладках — Расходы и Доходы:</p>
+<ul>
+<li>Выберите категорию, чтобы увидеть только эти транзакции</li>
+<li>Выберите <strong>Без категории</strong>, чтобы увидеть всё, что ещё не разнесено по категориям</li>
+<li>Выберите <strong>Все</strong>, чтобы снять фильтр</li>
+</ul>
+<p>Фильтр категорий работает вместе с периодом выше, поэтому, чтобы найти старые записи без категории, сначала переключите период на <strong>Все</strong>.</p>
 <h3>Теги</h3>
 <p>Теги помогают организовать расходы с помощью пользовательских меток:
 - Ищите существующие теги с помощью поля поиска
@@ -189,9 +196,9 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Заметки</strong> (если добавлены)</li>
 <li><strong>Добавил(а)</strong> — отображается в общих счетах; имя участника счёта, создавшего эту запись</li>
 <li><strong>Статус синхронизации</strong> — ожидает, синхронизировано, конфликт или ошибка</li>
-<li><strong>Источник</strong> — Ручной ввод, Голосовой ввод, Сканирование чека или Импортировано</li>
-<li><strong>Позиции чека</strong> — отдельные позиции (для отсканированных чеков)</li>
-<li><strong>Фото чека</strong> — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите <strong>Прикрепить чек</strong> — выберите <strong>Сфотографировать</strong>, <strong>Из галереи</strong> или <strong>Выбрать PDF</strong>. Работает для любого расхода, в том числе добавленного вручную</li>
+<li><strong>Источник</strong> — Ручной ввод, Голосовой ввод, Сканирование чека, Импортировано или Автозахват (записи из банковского пуша или импорта помечены, чтобы их было видно)</li>
+<li><strong>Позиции чека</strong> — отдельные позиции (для отсканированных чеков или извлечённые позже через <strong>Извлечь позиции</strong>)</li>
+<li><strong>Фото чека</strong> — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите <strong>Прикрепить чек</strong> — выберите <strong>Сфотографировать</strong>, <strong>Из галереи</strong> или <strong>Выбрать PDF</strong>. Работает для любого расхода, в том числе добавленного вручную. Если чек был прикреплён после создания расхода, нажмите <strong>Извлечь позиции</strong> в карточке чека, чтобы повторно прочитать его ИИ и подтянуть позиции в расход (с подтверждением, если позиции уже есть; каждый запуск тратит один ИИ-запрос)</li>
 </ul>
 <h3>Действия с деталями расхода:</h3>
 <ul>

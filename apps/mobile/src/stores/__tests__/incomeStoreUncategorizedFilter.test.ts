@@ -42,8 +42,19 @@ jest.mock('@/services/encryptionHelper', () => ({
 jest.mock('@/stores/accountStore', () => ({
   useAccountStore: { getState: jest.fn(() => ({ currentAccountId: 'acc-1' })) },
 }));
+// A healthy device: loaded, and every `cat-*` id below resolves. The full
+// shape matters — `getFilteredIncomes` reads `isInitialized` and `categories`
+// as well, to tell a genuinely uncategorized row apart from one whose category
+// this device cannot resolve (ABA-575).
 jest.mock('@/stores/categoryStore', () => ({
-  useCategoryStore: { getState: jest.fn(() => ({ loadCategories: jest.fn().mockResolvedValue(undefined) })) },
+  useCategoryStore: {
+    getState: jest.fn(() => ({
+      loadCategories: jest.fn().mockResolvedValue(undefined),
+      isInitialized: true,
+      categories: [{ id: 'cat-salary' }, { id: 'cat-bonus' }],
+      getCategoryById: (id: string) => (id.startsWith('cat-') ? { id } : undefined),
+    })),
+  },
 }));
 jest.mock('@/stores/gamificationStore', () => ({ useGamificationStore: { getState: jest.fn(() => ({})) } }));
 

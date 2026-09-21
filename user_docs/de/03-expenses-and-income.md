@@ -60,6 +60,14 @@ Verwende die schwebende **+**-Schaltflache (unten rechts), um eine neue Transakt
 
 Die App bietet 14 integrierte Ausgabenkategorien. Du kannst auch benutzerdefinierte Kategorien erstellen, indem du auf die **+**-Schaltflache im Kategorieauswahler tippst. Jede Kategorie hat eine einzigartige Farbe fur einfache Identifizierung in Diagrammen und Listen.
 
+Tippe auf den Kategoriefilter über der Transaktionsliste, um nach Kategorie zu filtern. Das funktioniert auf beiden Tabs — Ausgaben und Einkommen:
+
+- Wähle eine Kategorie, um nur diese Transaktionen zu sehen
+- Wähle **Ohne Kategorie**, um alles zu sehen, was noch einsortiert werden muss
+- Wähle **Alle**, um den Filter zu löschen
+
+Der Kategoriefilter wird mit dem Zeitraum darüber kombiniert. Um ältere Einträge ohne Kategorie zu finden, stelle den Zeitraum zuerst auf **Alle**.
+
 ### Tags
 
 Tags helfen dir, Ausgaben mit benutzerdefinierten Labels zu organisieren:

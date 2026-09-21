@@ -75,9 +75,17 @@ jest.mock('../accountStore', () => ({
   },
 }));
 
+// A healthy device: the category store has loaded, and every `cat-*` id these
+// tests use resolves. The full shape matters — `getFilteredExpenses` reads
+// `isInitialized` and `categories` too, so a mock exposing only
+// `getCategoryById` would put the store in a state it can never really be in.
 jest.mock('../categoryStore', () => ({
   useCategoryStore: {
-    getState: () => ({ getCategoryById: () => undefined }),
+    getState: () => ({
+      isInitialized: true,
+      categories: [{ id: 'cat-1', name: 'Category 1' }],
+      getCategoryById: (id: string) => (id.startsWith('cat-') ? { id, name: id } : undefined),
+    }),
   },
 }));
 

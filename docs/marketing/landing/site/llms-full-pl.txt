@@ -2923,6 +2923,14 @@ Uzyj plywajacego przycisku **+** (prawy dolny rog), aby dodac nowa transakcje.
 
 Aplikacja udostepnia 13 wbudowanych kategorii wydatkow. Mozesz rowniez tworzyc wlasne kategorie, dotykajac przycisk **+** w selektorze kategorii. Kazda kategoria ma unikatowy kolor do latwej identyfikacji na wykresach i listach.
 
+Dotknij filtra kategorii nad listą transakcji, aby filtrować według kategorii. Działa na obu kartach — Wydatki i Przychody:
+
+- Wybierz kategorię, aby zobaczyć tylko te transakcje
+- Wybierz **Bez kategorii**, aby zobaczyć wszystko, co wciąż czeka na uporządkowanie
+- Wybierz **Wszystkie**, aby wyczyścić filtr
+
+Filtr kategorii łączy się z okresem wybranym powyżej, więc aby znaleźć starsze pozycje bez kategorii, najpierw ustaw okres na **Wszystko**.
+
 ### Tagi
 
 Tagi pomagaja organizowac wydatki za pomoca niestandardowych etykiet:

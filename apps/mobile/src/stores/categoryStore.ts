@@ -135,8 +135,24 @@ export const useCategoryStore = create<CategoryState>((set, get) => ({
 
       let categories = await getAllCategories(accountId);
 
-      // If local DB is empty, try to fetch from server first
-      if (categories.length === 0) {
+      // Pull the server's categories on the first `loadCategories` of this
+      // session for this account — NOT only when the local table is empty.
+      //
+      // That gate used to read `if (categories.length === 0)`, which is true
+      // exactly once in a device's life. Everything that repairs a diverged
+      // install lives in `syncFromServer` (the clientId remap, and ABA-564's
+      // fold-the-stale-twin branch), and nothing else ever passes it the
+      // server's list — so on a device that had already seeded, the repair
+      // could never run. A category created before clientId support keeps a
+      // device id locally while the server holds a different primary key, and
+      // every expense pulled back carries the server's id, which then resolves
+      // to no local row: the detail screen falls back to "uncategorized" and
+      // the without-category filter finds nothing (ABA-575).
+      //
+      // The `_seededAccounts` fast path above is what keeps this to one
+      // request per account per session; a failure leaves the local rows
+      // untouched, so an offline launch behaves exactly as before.
+      {
         try {
           const serverCategories = await api.getCategories();
           if (serverCategories && serverCategories.length > 0) {

@@ -19,7 +19,7 @@ import { useAccountStore } from './accountStore';
 import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
-import { UNCATEGORIZED_CATEGORY_FILTER } from './categoryFilter';
+import { UNCATEGORIZED_CATEGORY_FILTER, countsAsUncategorized } from './categoryFilter';
 
 interface IncomeFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
@@ -537,9 +537,16 @@ export const useIncomeStore = create<IncomeState>()(
       }
 
       if (filters.categoryId === UNCATEGORIZED_CATEGORY_FILTER) {
-        // "Without category" - incomes with nothing assigned. Mirrors the
-        // expense list; the picker offers it on both tabs (ABA-567).
-        filtered = filtered.filter((i) => !i.categoryId);
+        // "Without category" — mirrors the expense list exactly, including a
+        // row whose category id this device cannot resolve, which the UI
+        // already labels as uncategorized. See `countsAsUncategorized`.
+        const catState = useCategoryStore.getState();
+        const resolution = {
+          isInitialized: catState.isInitialized,
+          hasCategories: catState.categories.length > 0,
+          resolve: (id: string) => catState.getCategoryById(id),
+        };
+        filtered = filtered.filter((i) => countsAsUncategorized(i.categoryId, resolution));
       } else if (filters.categoryId) {
         filtered = filtered.filter((i) => i.categoryId === filters.categoryId);
       }

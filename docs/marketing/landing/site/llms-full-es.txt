@@ -2937,6 +2937,14 @@ Usa el boton flotante **+** (esquina inferior derecha) para agregar una nueva tr
 
 La aplicacion incluye 14 categorias de gastos predefinidas. Tambien puedes crear categorias personalizadas tocando el boton **+** en el selector de categorias. Cada categoria tiene un color unico para facilitar su identificacion en graficos y listas.
 
+Toca el filtro de categoría encima de la lista de transacciones para filtrar por categoría. Funciona en ambas pestañas, Gastos e Ingresos:
+
+- Elige una categoría para ver solo esas transacciones
+- Elige **Sin categoría** para ver todo lo que aún está sin clasificar
+- Elige **Todo** para quitar el filtro
+
+El filtro de categoría se combina con el periodo de arriba, así que para encontrar entradas antiguas sin categoría, pon primero el periodo en **Todos**.
+
 ### Etiquetas
 
 Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:

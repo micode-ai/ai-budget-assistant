@@ -45,7 +45,7 @@ import { useGamificationStore } from './gamificationStore';
  * `getFilteredExpenses` resolves it to "categoryId is empty". Chosen to be
  * impossible as a real category id (not a UUID / not the `default-*` shape).
  */
-import { UNCATEGORIZED_CATEGORY_FILTER } from './categoryFilter';
+import { UNCATEGORIZED_CATEGORY_FILTER, countsAsUncategorized } from './categoryFilter';
 // Re-exported so existing importers (the filter bar, tests) keep working.
 export { UNCATEGORIZED_CATEGORY_FILTER };
 
@@ -986,8 +986,16 @@ export const useExpenseStore = create<ExpenseState>()(
       }
 
       if (filters.categoryId === UNCATEGORIZED_CATEGORY_FILTER) {
-        // "Без категории" — expenses with no category assigned.
-        filtered = filtered.filter((e) => !e.categoryId);
+        // "Без категории" — every row the UI already labels that way, which
+        // includes one carrying a category id this device cannot resolve, not
+        // only one with no category at all. See `countsAsUncategorized`.
+        const catState = useCategoryStore.getState();
+        const resolution = {
+          isInitialized: catState.isInitialized,
+          hasCategories: catState.categories.length > 0,
+          resolve: (id: string) => catState.getCategoryById(id),
+        };
+        filtered = filtered.filter((e) => countsAsUncategorized(e.categoryId, resolution));
       } else if (filters.categoryId) {
         filtered = filtered.filter((e) => e.categoryId === filters.categoryId);
       }

@@ -20,7 +20,7 @@
 <link rel="alternate" hreflang="be" href="https://ai-budget.pl/help/be/expenses-and-income/">
 <link rel="alternate" hreflang="nl" href="https://ai-budget.pl/help/nl/expenses-and-income/">
 <link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/help/en/expenses-and-income/">
-<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Expenses & Income | AI Budget Assistant", "description": "View, add, and manage all your transactions. Switch between Expenses and Income tabs, with support for multiple currencies, categories, tags, projects, and expense splits.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-08-20", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Expenses & Income | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/expenses-and-income/"}]}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "url": "https://mi-code.pl/", "sameAs": ["https://www.facebook.com/profile.php?id=61570771625318", "https://t.me/aibudgetassistant", "https://t.me/aibudgetassistantEn", "https://t.me/aibudgetassistantBy", "https://play.google.com/store/apps/details?id=com.budget.assistant"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "TechArticle", "headline": "Expenses & Income | AI Budget Assistant", "description": "View, add, and manage all your transactions. Switch between Expenses and Income tabs, with support for multiple currencies, categories, tags, projects, and expense splits.", "inLanguage": "en", "datePublished": "2026-06-19", "dateModified": "2026-09-18", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/help/en/expenses-and-income/"}, "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": "https://ai-budget.pl/en/about/"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/help/en/assets/og-default.png"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Help", "item": "https://ai-budget.pl/help/en/"}, {"@type": "ListItem", "position": 3, "name": "Expenses & Income | AI Budget Assistant", "item": "https://ai-budget.pl/help/en/expenses-and-income/"}]}]}</script>
 <style>
 :root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
 *{box-sizing:border-box}
@@ -138,6 +138,13 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ol>
 <h3>Categories</h3>
 <p>The app provides 14 built-in expense categories. You can also create custom categories by tapping the <strong>+</strong> button in the category selector. Each category has a unique color for easy identification in charts and lists.</p>
+<p>Tap the category filter above the transaction list to filter by category. It works on both the Expenses and the Income tab:</p>
+<ul>
+<li>Pick a category to see only those transactions</li>
+<li>Pick <strong>Uncategorized</strong> to see everything still waiting to be sorted</li>
+<li>Pick <strong>All</strong> to clear the filter</li>
+</ul>
+<p>The category filter combines with the period above it, so to find older entries that still have no category, set the period to <strong>All</strong> first.</p>
 <h3>Tags</h3>
 <p>Tags help you organize expenses with custom labels:
 - Search for existing tags using the search field
@@ -189,9 +196,9 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 <li><strong>Notes</strong> (if added)</li>
 <li><strong>Added by</strong> — shown in shared accounts; displays the name of the account member who created this entry</li>
 <li><strong>Sync Status</strong> — pending, synced, conflict, or error</li>
-<li><strong>Source</strong> — Manual Entry, Voice Input, Receipt Scan, or Imported</li>
-<li><strong>Receipt Items</strong> — individual items (for scanned receipts)</li>
-<li><strong>Receipt Image</strong> — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap <strong>Attach Receipt</strong> to add one — choose <strong>Take Photo</strong>, <strong>Choose from Gallery</strong>, or <strong>Choose PDF</strong>. Works for any expense, including ones added manually</li>
+<li><strong>Source</strong> — Manual Entry, Voice Input, Receipt Scan, Imported, or Auto-captured (bank push or bank import rows are marked so you can tell them apart)</li>
+<li><strong>Receipt Items</strong> — individual items (for scanned receipts, or extracted later via <strong>Extract items</strong>)</li>
+<li><strong>Receipt Image</strong> — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap <strong>Attach Receipt</strong> to add one — choose <strong>Take Photo</strong>, <strong>Choose from Gallery</strong>, or <strong>Choose PDF</strong>. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap <strong>Extract items</strong> in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)</li>
 </ul>
 <h3>Actions on expense details:</h3>
 <ul>

@@ -2928,6 +2928,14 @@ Gebruik de zwevende **+**-knop (rechtsonder) om een nieuwe transactie toe te voe
 
 De app biedt 14 ingebouwde uitgavencategorieën. Je kunt ook aangepaste categorieën maken door op de **+**-knop in de categoriekiezer te tikken. Elke categorie heeft een unieke kleur, zodat je ze makkelijk herkent in grafieken en lijsten.
 
+Tik op het categoriefilter boven de transactielijst om op categorie te filteren. Het werkt op beide tabbladen — Uitgaven en Inkomsten:
+
+- Kies een categorie om alleen die transacties te zien
+- Kies **Zonder categorie** om alles te zien wat nog gesorteerd moet worden
+- Kies **Alles** om het filter te wissen
+
+Het categoriefilter werkt samen met de periode erboven. Zet de periode eerst op **Alles** om oudere items zonder categorie te vinden.
+
 ### Tags
 
 Tags helpen je uitgaven te ordenen met aangepaste labels:
