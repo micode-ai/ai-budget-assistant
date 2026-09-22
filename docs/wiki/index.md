@@ -48,6 +48,8 @@ the section you came for — it states what must not break and why. A missing se
   idempotency, and why some bugs reproduce only on web
 
 ### Receipts
+- [receipt-price-check](features/receipt-price-check.md) — comparing each scanned line against the
+  median of what this user paid for it before, at that store
 - [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items
   across categories at scan time, the deposit group, category proposals
 
@@ -67,6 +69,17 @@ the section you came for — it states what must not break and why. A missing se
 ### AI chat
 - [chat-conversation-management](features/chat-conversation-management.md) — rename, delete, pin,
   and the sharing control
+
+### Screens and platform surfaces
+- [expense-location-and-map](features/expense-location-and-map.md) — geocoding, the pin picker, and
+  a map with no native map module
+- [settings-desktop-shell](features/settings-desktop-shell.md) — the two-pane settings layout and
+  its pane-vs-link rule
+- [report-periods](features/report-periods.md) — range selection, report generation, file export
+
+### Auth
+- [restore-credentials](features/restore-credentials.md) — WebAuthn so a session survives an Android
+  device transfer
 
 ### Working in the mobile app
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is

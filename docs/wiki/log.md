@@ -45,6 +45,10 @@ Newest last within each section.
   `features/web-telemetry.md`, `features/chat-conversation-management.md`,
   `features/account-transfers.md`, `features/shopping-list.md` (all new).
   CLAUDE.md 59 394 → 52 484 words; the twelve heaviest bullets are now all drained.
+- 2026-09-22 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — third batch:
+  five features. → `features/expense-location-and-map.md`, `features/restore-credentials.md`,
+  `features/receipt-price-check.md`, `features/settings-desktop-shell.md`,
+  `features/report-periods.md` (all new). CLAUDE.md 52 484 → 47 758 words.
 
 ## Queries
 
