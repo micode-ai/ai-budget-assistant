@@ -1,13 +1,19 @@
 # Wiki log
 
-Append-only. **One line per task** — date, ABA link, what was learned or changed, pages touched.
+Append-only, three kinds of entry, **one line each**. This is a search target ("did we look at this
+before?"), not a second wiki: a line that retells the work defeats the purpose. The detail belongs
+on the page, the reasoning in the ABA issue.
 
-This is a search target ("did we look at this before?"), not a second wiki. A line that retells
-the work defeats the purpose; the detail belongs on the page, the reasoning in the ABA issue.
+- **Ingests** — a task changed something and the wiki absorbed it (`finish-aba-task`).
+- **Queries** — a question was answered and the answer was filed back, whether or not code
+  changed (`wiki-query`). These are the entries the pattern lives on and the easiest to skip.
+- **Lint passes** — a reading audit happened (`wiki-audit`), so the next one knows where to start.
 
-Newest last.
+Newest last within each section.
 
 ---
+
+## Ingests
 
 - 2026-09-22 · [ABA-575](https://github.com/micode-ai/ai-budget-assistant/issues/598) — the
   without-category filter found nothing on a device whose category ids had diverged from the
@@ -39,3 +45,13 @@ Newest last.
   `features/web-telemetry.md`, `features/chat-conversation-management.md`,
   `features/account-transfers.md`, `features/shopping-list.md` (all new).
   CLAUDE.md 59 394 → 52 484 words; the twelve heaviest bullets are now all drained.
+
+## Queries
+
+_None yet. The first entry here is the point at which the wiki starts accumulating from questions
+and not only from changes — see the `wiki-query` skill._
+
+## Lint passes
+
+_None yet. `python scripts/wiki-lint.py` and `scripts/wiki-staleness.py` run weekly in CI and
+comment on the **Wiki audit** issue; a reading pass is recorded here._

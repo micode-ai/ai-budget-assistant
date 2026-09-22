@@ -11,9 +11,18 @@ feature's description here** — it goes on a wiki page. When you touch a featur
 described in this file, move it to its page as part of that task and leave a short pointer behind
 (design decision 2: the migration runs one feature per task, never as a big-bang pass).
 
-The ritual that keeps it alive is the `finish-aba-task` skill: issue → wiki page → one line in
-[`docs/wiki/log.md`](docs/wiki/log.md) → this file only if a repo-wide rule changed → user docs.
-`python scripts/wiki-lint.py` checks links, cited paths and orphan pages.
+Three rituals keep it alive, one per operation:
+
+- **Ingest** — the `finish-aba-task` skill: issue → wiki page → one line in
+  [`docs/wiki/log.md`](docs/wiki/log.md) → this file only if a repo-wide rule changed → user docs.
+- **Query** — the `wiki-query` skill: **read the wiki before the code**, answer with the page path
+  cited, and file the finding back when the investigation cost real effort — *even if no code
+  changed*. A diagnosis ending in "this is working correctly" leaves no commit and no issue behind
+  it, so without this it leaves nothing at all and gets re-investigated.
+- **Lint** — `python scripts/wiki-lint.py` (links, cited paths, orphans) and
+  `scripts/wiki-staleness.py` (pages the code has moved past) run weekly via `wiki-audit.yml` and
+  comment on the **Wiki audit** issue. They run no model — this project's Claude Code is on a
+  subscription, so CI has no key. The reading half is the `wiki-audit` skill, run in a session.
 
 Why: this file reached 77k words (~104k tokens) loaded whole into every session, while
 `docs/wiki/` — bootstrapped once in May and never ingested into again — had drifted into stating

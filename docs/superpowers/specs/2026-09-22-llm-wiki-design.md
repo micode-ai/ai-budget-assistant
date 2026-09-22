@@ -74,24 +74,43 @@ the shape — an absent section reads as "not yet examined", which is honest.
 for the features touched, create the page if the feature is new, move that feature's bullet out
 of `CLAUDE.md` if it is still there, and append one line to `log.md`.
 
-**Query** — an agent reads `index.md` → hub → feature page. `CLAUDE.md` stays short enough to
-carry in every session.
+**Query** — the `wiki-query` skill. Read `index.md` → hub → feature page **before** the code,
+answer with the page path cited, and file the finding back when the investigation cost real effort,
+*even if no code changed*.
 
-**Lint** — two tiers:
-- A weekly agent compares the wiki against the code and files an issue listing divergences.
-- A cheap script (no LLM) checks what is machine-checkable: that every file path a page cites
-  exists, and that every wiki link resolves. Numbers are deliberately NOT asserted by script —
-  a page should avoid stating a count in the first place (`CLAUDE.md` already carries "the list
-  is the count — do not restate it as a numeral", which has been wrong at 44, 45 and 47).
+That last clause is the whole point and was missing from the first draft of this design. Ingest
+accumulates from changes; without Query the wiki never accumulates from *questions*, and a session
+that spends an hour proving why something behaves as it does — then changes nothing — leaves no
+trace. A diagnosis ending in "this is working correctly" is the worst case: a fix at least leaves a
+commit and an issue behind it.
+
+**Lint** — two tiers, split by what can run where:
+
+- **Machine-checkable, weekly in CI** (`wiki-audit.yml`): `scripts/wiki-lint.py` (every wiki link
+  resolves, every cited repo path exists, no orphan pages) and `scripts/wiki-staleness.py` (pages
+  whose cited files have had 3+ commits since the page was last touched). Output goes as a comment
+  on one long-lived **Wiki audit** issue, never as a new issue per week. It fails nothing: a page
+  being a week behind must not block a merge.
+- **Reading pass, in a session** (`wiki-audit` skill): contradictions between pages, stale claims,
+  missing cross-references, data gaps. **This cannot run in CI** — the project's Claude Code is on
+  a subscription, so there is no API key to put in a workflow, and a job needing one would simply
+  never run. The staleness report is its priority order.
+
+Numbers are deliberately NOT asserted by script — a page should avoid stating a count in the first
+place (`CLAUDE.md` already carries "the list is the count — do not restate it as a numeral", which
+has been wrong at 44, 45 and 47). When an audit finds a count, the fix is to delete it, not update
+it.
 
 ## `index.md` and `log.md`
 
 `index.md` is a catalog with a one-line summary per page, grouped by domain — not a bare table
 of filenames like today's `README.md`.
 
-`log.md` is append-only, one line per task: date, ABA link, what was learned or changed. Its
-value is as a search target ("did we look at this before?"), so it stays one line — a log that
-retells the work becomes a second wiki nobody reads.
+`log.md` is append-only with **three sections, one line per entry**: `Ingests` (a task changed
+something), `Queries` (a question was answered and filed back) and `Lint passes` (a reading audit
+happened, so the next one knows where to start). Its value is as a search target ("did we look at
+this before?"), so entries stay one line — a log that retells the work becomes a second wiki nobody
+reads.
 
 ## Costs, accepted
 
@@ -109,3 +128,4 @@ retells the work becomes a second wiki nobody reads.
 - No RAG, embeddings or vector store. The wiki is read by path, the way an agent reads code.
 - No implementation plan document. The work is incremental by construction and rides
   `finish-aba-task`.
+- No LLM call in CI, now or later, unless the billing model changes.
