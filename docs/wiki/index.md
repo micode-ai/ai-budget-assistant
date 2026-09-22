@@ -10,11 +10,6 @@ Ingest ritual: the `finish-aba-task` skill. Journal: [`log.md`](log.md).
 > (design decision 2). A subject with no page here is still described in `CLAUDE.md` — that file
 > remains authoritative for anything not yet listed below. A migrated subject leaves behind only a
 > pointer, so it is never described in two places.
->
-> One exception today: [category-id-resolution](features/category-id-resolution.md) consolidates
-> knowledge that is still also spread through `CLAUDE.md`'s **Offline-first** bullet, because that
-> bullet covers five unrelated subjects and splitting it is its own task. The page is the better
-> source; the bullet will be drained next.
 
 ## How to read a page
 
@@ -45,6 +40,20 @@ the section you came for — it states what must not break and why. A missing se
   split-receivable accounting, payment-method resolution
 - [receipt-split-item-shares](features/receipt-split-item-shares.md) — per-line claims, shared
   lines, explicit percentages, discount scaling, guest disputes and reassignment
+
+### Offline-first and identity
+- [offline-first-sync](features/offline-first-sync.md) — the write/push convention, `SyncService`'s
+  per-entity handlers, which entity types actually travel through the queue
+- [client-id-resolution](features/client-id-resolution.md) — local id vs server primary key, create
+  idempotency, and why some bugs reproduce only on web
+
+### Receipts
+- [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items
+  across categories at scan time, the deposit group, category proposals
+
+### Documentation and content
+- [help-content-pipeline](features/help-content-pipeline.md) — one markdown source feeding the
+  in-app help screen and the public help center, and the three places a new section is registered
 
 ### Working in the mobile app
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
