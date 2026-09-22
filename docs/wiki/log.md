@@ -49,6 +49,10 @@ Newest last within each section.
   five features. → `features/expense-location-and-map.md`, `features/restore-credentials.md`,
   `features/receipt-price-check.md`, `features/settings-desktop-shell.md`,
   `features/report-periods.md` (all new). CLAUDE.md 52 484 → 47 758 words.
+- 2026-09-22 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — fourth batch.
+  → `features/anomaly-alerts.md`, `features/desktop-transactions-screen.md`,
+  `features/trip-wallet.md`, `features/first-run-onboarding.md`, `features/inflation-shield.md`
+  (all new). CLAUDE.md 47 758 → 44 053 words; 44 pages.
 
 ## Queries
 

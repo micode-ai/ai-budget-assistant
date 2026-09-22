@@ -73,6 +73,10 @@ the section you came for — it states what must not break and why. A missing se
 ### Screens and platform surfaces
 - [expense-location-and-map](features/expense-location-and-map.md) — geocoding, the pin picker, and
   a map with no native map module
+- [desktop-transactions-screen](features/desktop-transactions-screen.md) — the reference screen of
+  the desktop design language
+- [first-run-onboarding](features/first-run-onboarding.md) — routing a brand-new user, and the web
+  dashboard state that replaces it there
 - [settings-desktop-shell](features/settings-desktop-shell.md) — the two-pane settings layout and
   its pane-vs-link rule
 - [report-periods](features/report-periods.md) — range selection, report generation, file export
@@ -94,6 +98,13 @@ the section you came for — it states what must not break and why. A missing se
 ### Importing
 - [ai-statement-import](features/ai-statement-import.md) — inferring a column mapping when no bank
   parser recognises the file, and extracting PDF rows
+
+### Alerts and insights
+- [anomaly-alerts](features/anomaly-alerts.md) — rule-based alerts fired on expense write
+- [inflation-shield](features/inflation-shield.md) — price forecasting and stock-up advice
+
+### Trips
+- [trip-wallet](features/trip-wallet.md) — the trip account type, multi-way splitting, settle-up
 
 ### Instrumentation
 - [web-telemetry](features/web-telemetry.md) — first-party product analytics for the web build only
