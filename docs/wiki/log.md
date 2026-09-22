@@ -34,3 +34,8 @@ Newest last.
   → `features/web-build-and-hosting.md`, `features/marketing-site.md`,
   `features/acquisition-tracking.md`, `features/directory-badges.md` (all new).
   CLAUDE.md 63 916 → 59 394 words.
+- 2026-09-22 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — second batch:
+  five single features, no clusters this time. → `features/ai-statement-import.md`,
+  `features/web-telemetry.md`, `features/chat-conversation-management.md`,
+  `features/account-transfers.md`, `features/shopping-list.md` (all new).
+  CLAUDE.md 59 394 → 52 484 words; the twelve heaviest bullets are now all drained.

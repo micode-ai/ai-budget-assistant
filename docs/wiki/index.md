@@ -64,9 +64,26 @@ the section you came for — it states what must not break and why. A missing se
 - [help-content-pipeline](features/help-content-pipeline.md) — one markdown source feeding the
   in-app help screen and the public help center, and the three places a new section is registered
 
+### AI chat
+- [chat-conversation-management](features/chat-conversation-management.md) — rename, delete, pin,
+  and the sharing control
+
 ### Working in the mobile app
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
   wired, why nothing renders a component, and how module-scope side effects leak between files
+
+### Money movement and lists
+- [account-transfers](features/account-transfers.md) — moving money between accounts, and the only
+  feature with its own offline write queue
+- [shopping-list](features/shopping-list.md) — offline-first lists, basket comparison, restock and
+  deal pushes, receipt reconciliation
+
+### Importing
+- [ai-statement-import](features/ai-statement-import.md) — inferring a column mapping when no bank
+  parser recognises the file, and extracting PDF rows
+
+### Instrumentation
+- [web-telemetry](features/web-telemetry.md) — first-party product analytics for the web build only
 
 ### Categories
 - [category-id-resolution](features/category-id-resolution.md) — how a category id is resolved
