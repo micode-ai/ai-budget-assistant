@@ -30,9 +30,20 @@ entry point.
 mode — a keyed parse silently collapses the pair. Wallet states Expense/Income explicitly, marks
 `transfer` rows (dropped: not spending, and mapping them needs account mapping this import lacks),
 and restates amounts in its own base currency via `refAmount`/`refCurrency` (ignored; the
-transaction's own currency wins). Money Manager writes every amount unsigned, so its
-`Income/Expense` column is the only source of direction; Category and Subcategory are joined
-(`"Food / Groceries"`).
+transaction's own currency wins).
+
+**"Money Manager" is two unrelated apps, and one parser reads both.** Users pick the same entry
+for either. The *full* shape (Realbyte, and 1Money) is
+`Date,Account,Category,Subcategory,Note,Amount,Income/Expense,Description,Currency,Account Type`;
+Category and Subcategory are joined (`"Food / Groceries"`). The *simple* shape, from a real
+user's export (ABA-582), is `ID,Date,Type,Title,Amount,Note`: UTF-8 BOM, a date with a time
+(`dd/MM/yyyy - hh:mm AM`), a currency **symbol** inside the amount (`$ 10`) instead of a currency
+column, `Title` as the category, and `Expenses` in the plural. Both write amounts unsigned, so the
+direction column is the only source of direction. Columns are read by lower-cased name.
+
+**Slash-date order is decided per file, from the data**: a first field above 12 means day-first,
+a second above 12 means month-first, and an all-ambiguous file defaults to day-first. A month
+outside 1..12 drops the row rather than producing an invalid ISO date.
 
 **Categories are created before the transaction.** `preloadCategories` resolves every distinct
 `(suggestedCategoryName, kind)` before the commit `$transaction` opens and creates the missing
@@ -71,10 +82,12 @@ leaves the user nowhere to go, and it leaves nothing in the API log either — t
 
 ## Known gaps
 
-- **The parsers were written without real export files.** Money Manager's was modelled on
-  Realbyte's *import* template, and a real export did not match it (ABA-581). Expect corrections on
-  first contact with each format, most likely in the date: a slash date is read day-first and the
-  month is never validated, while Money Manager is documented to write `mm/dd/yyyy`.
+- **Monefy, Wallet and the full Money Manager shape are still unverified against real files.**
+  The simple Money Manager shape is the only one checked against a real export (ABA-582). Monefy
+  and Wallet still use the shared `parsePolishDate`, which reads a slash date day-first and never
+  validates the month; the per-file order detection lives only in the Money Manager parser.
+- An amount with no currency symbol falls back to `PLN`: `parsePreview` does not pass the
+  user's display currency to a named parser (only the AI path resolves one).
 - The picked-parser fallback exists on the CSV/XLSX path only, not on `parsePdfPreview`.
 - `importSourceLabel` must search both `IMPORT_ENTRIES` and `MIGRATION_ENTRIES`, or a past
   migration import renders its raw parser id.
@@ -84,3 +97,4 @@ leaves the user nowhere to go, and it leaves nothing in the API log either — t
 - ABA-401 — the three parsers, category creation before the transaction, the migration card.
 - ABA-581 — a real Money Manager export produced an empty preview; picked-parser fallback, commit
   DTO derived from the registry, commit records the detected parser.
+- ABA-582 — the Money Manager parser reads the simple export shape, with per-file date order.

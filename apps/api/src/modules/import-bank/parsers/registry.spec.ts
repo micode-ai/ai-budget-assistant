@@ -84,6 +84,7 @@ describe('cross-detection between every CSV fixture and every parser', () => {
     { file: 'monefy.csv', expected: 'monefy' },
     { file: 'wallet.csv', expected: 'wallet' },
     { file: 'moneymanager.csv', expected: 'moneymanager' },
+    { file: 'moneymanager-simple.csv', expected: 'moneymanager' },
   ];
 
   function headersOf(file: string): string[] {
