@@ -53,5 +53,8 @@ and not only from changes — see the `wiki-query` skill._
 
 ## Lint passes
 
-_None yet. `python scripts/wiki-lint.py` and `scripts/wiki-staleness.py` run weekly in CI and
-comment on the **Wiki audit** issue; a reading pass is recorded here._
+- 2026-09-22 · first pass, targets taken from `wiki-staleness.py`. Read `ai-features.md` and
+  `offline-sync.md` against the code: 10 stale claims, all rewritten — worst was `offline-sync.md`
+  describing the generic `/sync` queue as the mobile sync path when `pushChanges`/`pullChanges` have
+  **zero call sites**. Three of the same errors were live in `CLAUDE.md` and were fixed there too.
+  **Next target: `api.md`** (46 commits behind on `schema.prisma`), not yet read.
