@@ -58,3 +58,9 @@ and not only from changes — see the `wiki-query` skill._
   describing the generic `/sync` queue as the mobile sync path when `pushChanges`/`pullChanges` have
   **zero call sites**. Three of the same errors were live in `CLAUDE.md` and were fixed there too.
   **Next target: `api.md`** (46 commits behind on `schema.prisma`), not yet read.
+- 2026-09-22 · second pass: `api.md`. Four wrong claims — module count (35 vs 48, deleted),
+  `AccountContextGuard` called middleware (it is a guard in a file named `*.middleware.ts`, and
+  `AccountContextMiddleware` does not exist), `ViewerBlockGuard` absent although 20 controllers
+  use it, and the prefix-exclusion list given as WhatsApp+Slack when it also covers Stripe,
+  Telegram, Slack OAuth and the whole guest subtree. The naming error was live in `CLAUDE.md`
+  too, in two places. **Next target: `mobile-app.md`** (38 commits behind on `_layout.tsx`).
