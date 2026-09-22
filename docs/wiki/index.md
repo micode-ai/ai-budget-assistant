@@ -46,6 +46,10 @@ the section you came for — it states what must not break and why. A missing se
 - [receipt-split-item-shares](features/receipt-split-item-shares.md) — per-line claims, shared
   lines, explicit percentages, discount scaling, guest disputes and reassignment
 
+### Working in the mobile app
+- [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
+  wired, why nothing renders a component, and how module-scope side effects leak between files
+
 ### Categories
 - [category-id-resolution](features/category-id-resolution.md) — how a category id is resolved
   between phone and server, and the five bugs that came from getting it wrong

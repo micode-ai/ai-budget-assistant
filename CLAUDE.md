@@ -1,5 +1,25 @@
 # AI Budget Assistant
 
+## This file is the schema; the knowledge lives in `docs/wiki/`
+
+Start at **[`docs/wiki/index.md`](docs/wiki/index.md)** — a hub per domain, a page per feature,
+one shape per page whose `Invariants` section states what must not break and why.
+
+This file keeps only what belongs to no single feature: repo-wide rules and conventions,
+cross-cutting patterns, environment variables, deploy and release procedure. **Do not append a new
+feature's description here** — it goes on a wiki page. When you touch a feature that is still
+described in this file, move it to its page as part of that task and leave a short pointer behind
+(design decision 2: the migration runs one feature per task, never as a big-bang pass).
+
+The ritual that keeps it alive is the `finish-aba-task` skill: issue → wiki page → one line in
+[`docs/wiki/log.md`](docs/wiki/log.md) → this file only if a repo-wide rule changed → user docs.
+`python scripts/wiki-lint.py` checks links, cited paths and orphan pages.
+
+Why: this file reached 77k words (~104k tokens) loaded whole into every session, while
+`docs/wiki/` — bootstrapped once in May and never ingested into again — had drifted into stating
+"11 AI functions" when there were 18. The artifact was never the problem; the missing loop was.
+Design: [`docs/superpowers/specs/2026-09-22-llm-wiki-design.md`](docs/superpowers/specs/2026-09-22-llm-wiki-design.md).
+
 ## Architecture
 
 Turborepo monorepo with 5 packages:
