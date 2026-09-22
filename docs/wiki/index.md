@@ -75,6 +75,9 @@ the section you came for — it states what must not break and why. A missing se
   a map with no native map module
 - [desktop-transactions-screen](features/desktop-transactions-screen.md) — the reference screen of
   the desktop design language
+- [desktop-dashboard](features/desktop-dashboard.md) — the home tab's rail layout, its readiness
+  rules, and the chart traps behind them
+- [desktop-chat-screen](features/desktop-chat-screen.md) — the conversation rail and reading column
 - [first-run-onboarding](features/first-run-onboarding.md) — routing a brand-new user, and the web
   dashboard state that replaces it there
 - [settings-desktop-shell](features/settings-desktop-shell.md) — the two-pane settings layout and
@@ -84,6 +87,10 @@ the section you came for — it states what must not break and why. A missing se
 ### Auth
 - [restore-credentials](features/restore-credentials.md) — WebAuthn so a session survives an Android
   device transfer
+
+### Telling users about things
+- [whats-new-spotlight](features/whats-new-spotlight.md) — the one-time nudge for already-shipped
+  features
 
 ### Working in the mobile app
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
@@ -100,6 +107,10 @@ the section you came for — it states what must not break and why. A missing se
   parser recognises the file, and extracting PDF rows
 
 ### Alerts and insights
+- [exchange-rate-alerts](features/exchange-rate-alerts.md) — a personal one-shot watch on a currency
+  pair
+- [community-prices](features/community-prices.md) — the k-anonymized crowdsourced price map,
+  currently dark in production
 - [anomaly-alerts](features/anomaly-alerts.md) — rule-based alerts fired on expense write
 - [inflation-shield](features/inflation-shield.md) — price forecasting and stock-up advice
 

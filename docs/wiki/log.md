@@ -53,6 +53,13 @@ Newest last within each section.
   → `features/anomaly-alerts.md`, `features/desktop-transactions-screen.md`,
   `features/trip-wallet.md`, `features/first-run-onboarding.md`, `features/inflation-shield.md`
   (all new). CLAUDE.md 47 758 → 44 053 words; 44 pages.
+- 2026-09-22 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — fifth batch.
+  Eight bullets, six pages: the three desktop-dashboard bullets became ONE page, and receipt-scan
+  reconciliation extended `features/shopping-list.md` rather than minting a page of its own.
+  → `features/desktop-dashboard.md`, `features/desktop-chat-screen.md`,
+  `features/exchange-rate-alerts.md`, `features/community-prices.md`,
+  `features/whats-new-spotlight.md` (new) + `features/shopping-list.md` (extended).
+  CLAUDE.md 44 053 → 39 234 words; 49 pages.
 
 ## Queries
 

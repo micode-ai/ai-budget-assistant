@@ -81,9 +81,29 @@ run.
 `NotificationsService.sendToUser`'s per-type gate, so a deal-only opt-in still receives deal pushes.
 
 **Receipt reconciliation is exact-match-after-normalization, never fuzzy.** A false-positive
-auto-check is worse than a missed one. The server-side path (for bots) is deliberately separate from
-the mobile one and is **not** wired into `ExpensesService.create` — both the app's own scans and
-every bot use `source: 'ocr'` with nothing to tell them apart, so a shared hook would double-run.
+auto-check is worse than a missed one. `normalizeProductName` is mirrored from the API's canonical
+copy into `shared-utils`, so the client keys on the exact same rule the server's product-category
+rules do.
+
+**Reconcile after the expense exists, never at OCR-preview time.** Nothing is "on the list" until
+the expense is actually saved, so the mobile call sits in the save handler right after `addExpense`
+succeeds — and it reuses the *existing* item-update endpoint a manual checkbox tap already uses, so
+it works offline with no new API surface. Candidates are unchecked items across **non-archived**
+lists only.
+
+**The alias map is opportunistic on mobile and complete on the server.** OCR invents a fresh
+`canonicalName` per scan and has no memory of a prior rename, so the client resolves through
+whatever the price-history store happens to hold this session, adding no network call. The server
+path always has the account's full alias table.
+
+**Auto-check is undoable and opt-out.** The success alert carries an Undo that reverts exactly those
+ids unconditionally — safe even if the user has since toggled one by hand — and a device-local MMKV
+toggle defaults **ON**, unlike location capture, because this is a convenience automation rather
+than a privacy-sensitive capture.
+
+**The mobile and server implementations are deliberately separate**, and the server one is **not**
+wired into `ExpensesService.create`: both the app's own scans and every bot use `source: 'ocr'` with
+nothing to tell them apart, so a shared hook would double-run reconciliation for the app path.
 
 **The bot reconciliation call has its own `.catch()`, separate from the surrounding try/catch**,
 because by the time it runs the expense already exists — its failure must never be reported as an
