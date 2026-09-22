@@ -51,6 +51,15 @@ the section you came for — it states what must not break and why. A missing se
 - [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items
   across categories at scan time, the deposit group, category proposals
 
+### Web, marketing site and growth
+- [web-build-and-hosting](features/web-build-and-hosting.md) — the Expo web build, platform splits,
+  the two nginx containers, and the deploy traps that have bitten
+- [marketing-site](features/marketing-site.md) — the three static generators, nine languages, and
+  the regeneration commands that must not be run with the wrong environment
+- [acquisition-tracking](features/acquisition-tracking.md) — link tagging, first-touch capture,
+  GA4 events, Play install referrer
+- [directory-badges](features/directory-badges.md) — the footer badge row and its width arithmetic
+
 ### Documentation and content
 - [help-content-pipeline](features/help-content-pipeline.md) — one markdown source feeding the
   in-app help screen and the public help center, and the three places a new section is registered

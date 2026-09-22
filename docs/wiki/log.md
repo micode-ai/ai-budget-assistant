@@ -29,3 +29,8 @@ Newest last.
   → `features/receipt-category-split.md`, `features/offline-first-sync.md`,
   `features/client-id-resolution.md`, `features/help-content-pipeline.md`,
   `features/mobile-test-infrastructure.md` (all new). CLAUDE.md 77 100 → 63 916 words.
+- 2026-09-22 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — drained the
+  single heaviest bullet, Platforms (4 629 words), which was four subjects wearing one heading.
+  → `features/web-build-and-hosting.md`, `features/marketing-site.md`,
+  `features/acquisition-tracking.md`, `features/directory-badges.md` (all new).
+  CLAUDE.md 63 916 → 59 394 words.
