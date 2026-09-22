@@ -5,7 +5,7 @@ A NestJS module (`modules/slack/`) embedded in the API that lets users interact 
 
 ## Entry points
 - `apps/api/src/modules/slack/slack.module.ts` — module registration
-- `apps/api/src/modules/slack/slack.controller.ts` — `POST /slack/events` and `POST /slack/interactivity` (both excluded from `/api/v1` prefix in `main.ts`)
+- `apps/api/src/modules/slack/slack-bot.controller.ts` — `POST /slack/events` and `POST /slack/interactivity` (both excluded from `/api/v1` prefix in `main.ts`)
 - `apps/api/src/modules/slack/handlers/` — `ChatHandler`, `VoiceHandler`, `PhotoHandler`, `CommandHandler`, `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`
 - `apps/api/src/modules/slack/helpers/i18n.ts` — system-message localisation (8 languages)
 - `apps/api/src/modules/slack/helpers/verify-signature.ts` — `v0=` HMAC-SHA256 signature verification

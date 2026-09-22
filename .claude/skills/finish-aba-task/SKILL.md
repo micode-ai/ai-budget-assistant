@@ -1,23 +1,34 @@
 ---
 name: finish-aba-task
-description: Use at the END of every coding task to create an ABA-{N} GitHub issue and update CLAUDE.md + user_docs/. Required even for small or internal changes. Triggers when work is "done" — before stopping, before committing PRs.
+description: Use at the END of every coding task to create an ABA-{N} GitHub issue, ingest what was learned into the wiki, and update user docs. Required even for small or internal changes. Triggers when work is "done" — before stopping, before committing PRs.
 ---
 
 # Finishing an ABA Task
 
-When a coding task is complete (feature added, bug fixed, refactor done), you MUST do three things — in order:
+When a coding task is complete (feature added, bug fixed, refactor done), you MUST do these, in
+order:
 
 1. Create a GitHub issue `ABA-{N}` describing what was done.
-2. Update technical docs (`CLAUDE.md` and any module-level docs).
-3. Update user docs (`user_docs/<lang>/NN-slug.md`) for all 8 locales — if the change is user-visible.
+2. **Ingest into the wiki** — update or create the page(s) for the features you touched, and
+   append one line to `docs/wiki/log.md`.
+3. Update `CLAUDE.md` **only if a repo-wide rule changed** (see step 4 — it is the schema now, not
+   the content store).
+4. Update user docs (`user_docs/<lang>/NN-slug.md`) for all 9 locales — if the change is
+   user-visible.
 
 Skip only when the change has **zero** user-visible behavior. When in doubt, document.
 
 ## Critical Conventions
 
-- **GitHub artifacts are always in English**, even if the chat is in another language. Issue titles, bodies, and commit messages must be English. Reply to the user in their language as usual.
-- **N is the latest existing issue number + 1**, not "the next ABA number". Get the latest with `gh issue list --limit 1 --state all --json number,title`.
-- **Order matters**: code → issue → tech docs → user docs → `npm run generate:help`.
+- **GitHub artifacts are always in English**, even if the chat is in another language. Issue
+  titles, bodies, and commit messages must be English. Reply to the user in their language as usual.
+- **N is the highest `ABA-N` in existing issue TITLES plus 1.** Use
+  `gh issue list --state all --limit 400 --json title` — the bare `gh issue list` hides closed
+  issues. Cross-check against recent commit subjects. The title has no colon after the number.
+- **Never quote a user's real data** — merchant names, category names, amounts, emails — in an
+  issue, a commit message, the wiki, or `CLAUDE.md`. Describe the shape of the data instead.
+  A commit message cannot be corrected without rewriting pushed history.
+- **Order matters**: code → issue → wiki → CLAUDE.md (if needed) → user docs → `npm run generate:help`.
 
 ## Checklist
 
@@ -26,62 +37,108 @@ Convert each step into a task with TaskCreate, then do them in order.
 ### 1. Find the next issue number
 
 ```bash
-gh issue list --limit 1 --state all --json number,title
+gh issue list --state all --limit 400 --json title -q '.[].title' | grep -oE '^ABA-[0-9]+' | sort -t- -k2 -n | tail -1
 ```
 
-Take the `number` from the result and add 1. That's your N. Title format: `ABA-{N}: <short imperative description>`.
+Add 1. Title format: `ABA-{N} <short imperative description>`.
 
 ### 2. Compose the issue body (English)
 
-Structure:
-
 ```markdown
 ## Problem
-<what was broken or missing — 1-3 sentences>
+<what was broken or missing — 1-3 sentences, including how it was noticed>
 
 ## Implementation
 <what changed, key files, key decisions — bullets are fine>
 
 ## Out of scope / Follow-ups
-<anything noticed but not done — or "None" if nothing>
+<anything noticed but not done — or "None">
 ```
 
-### 3. Create the issue
+Create it with `gh issue create --title "..." --body "$(cat <<'EOF' ... EOF)"`.
 
-```bash
-gh issue create --title "ABA-{N}: ..." --body "$(cat <<'EOF'
-... body here ...
-EOF
-)"
+### 3. Ingest into the wiki
+
+This is the step that keeps the repo's knowledge alive. `docs/wiki/` died once already because it
+was written and never ingested into again.
+
+Read [`docs/superpowers/specs/2026-09-22-llm-wiki-design.md`](../../../docs/superpowers/specs/2026-09-22-llm-wiki-design.md)
+if you have not this session. Then:
+
+1. **Find the page.** Start at `docs/wiki/index.md` → the hub for the area → the feature page.
+2. **No page yet?** Create one at `docs/wiki/features/<slug>.md` using the template below, and add
+   it to `index.md` under its hub.
+3. **Still described in `CLAUDE.md`?** Move that bullet's content onto the page and leave a short
+   pointer in its place — two or three sentences naming the page and carrying only the invariants
+   worth seeing without opening it. This is how the migration progresses: one feature per task, by
+   whoever touches it.
+4. **Append one line to `docs/wiki/log.md`**: date, ABA link, what was learned, pages touched. One
+   line. The detail belongs on the page, the reasoning in the issue.
+
+Page template:
+
+```markdown
+# <Name>
+
+## What this is
+Two or three sentences. What problem it solves, for whom.
+
+## Entry points
+Files with paths. Where to start reading.
+
+## Key concepts
+How it works. The mechanism, not a tutorial.
+
+## Invariants
+What must not break, stated as a rule, with the reason.
+
+## Known gaps
+What is deliberately not done, and why.
+
+## History
+ABA links. Why it is this way.
 ```
 
-### 4. Update technical docs
+Omit a section that is genuinely empty rather than writing "None" to fill the shape — an absent
+section honestly reads as "not yet examined".
 
-Update `CLAUDE.md` at the project root if any of these changed:
-- A module's purpose, file layout, or public API surface
-- A pattern (auth, account scoping, sync, offline-first)
-- Environment variables, deploy commands, observability hooks
-- A directory or file that the CLAUDE.md references by path
+**Avoid stating a count** ("18 functions", "48 modules"). Counts go stale silently and are the
+single most common way the old wiki lied. Name the list or point at the source instead.
 
-Also update any module-level `CLAUDE.md` or `docs/` markdown that touches the changed area. Do NOT add tutorial-style prose — keep CLAUDE.md a terse pattern reference.
+### 4. Update CLAUDE.md — only for schema-level changes
+
+`CLAUDE.md` is the **schema**: repo-wide rules, conventions, invariants belonging to no single
+feature, environment variables, deploy and release procedure. Feature detail goes to the wiki.
+
+Update it when you changed: a cross-cutting pattern (auth, account scoping, sync, offline-first),
+the build/deploy/release procedure, environment variables, or a convention other tasks must follow.
+Do NOT append a new feature description to it — that is what the wiki is for.
 
 ### 5. Update user docs (if user-visible)
 
-For each user-visible behavior change:
-- Edit `user_docs/<lang>/NN-slug.md` for all 8 locales: `en`, `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`.
-- New section? Pick the next free `NN-` prefix consistent with the existing numbering.
-- After editing, run from the project root:
+- Edit `user_docs/<lang>/NN-slug.md` for **all 9 locales**: `en`, `de`, `es`, `fr`, `pl`, `ru`,
+  `ua`, `be`, `nl`.
+- Visible text uses each language's real orthography — only slugs are ASCII.
+- Extending an existing section needs no registration. A **new** section must be registered in
+  three places: `scripts/generate-help-content.js` SECTIONS, `src/help/sections.ts`, and
+  `docs/marketing/help/build_help.py` SECTIONS. Missing the third silently omits it from the public
+  help site.
+- Then, from the project root:
   ```bash
   npm run generate:help
+  python docs/marketing/help/build_help.py
+  LANDING_BASE= ROBOTS="index,follow,max-image-preview:large" python docs/marketing/landing/build_landing.py
   ```
-  This regenerates `apps/mobile/src/help/content.ts`. NEVER edit that file by hand.
-
-If you added a new help section (not just edited existing ones), also follow the `add-help-section` skill — there are extra files to update (`scripts/generate-help-content.js` SECTIONS array and `src/help/sections.ts`).
+  NEVER edit `apps/mobile/src/help/content.ts` by hand. The env-less landing build produces a
+  `noindex` preview that will clobber production.
 
 ## Common mistakes
 
 - Writing the issue body in the user's chat language. It must be English.
-- Forgetting to add 1 to the latest issue number (so the new issue collides or skips).
-- Editing only `en.ts` user docs and leaving the other 7 locales stale.
-- Editing `apps/mobile/src/help/content.ts` directly instead of regenerating.
-- Skipping CLAUDE.md updates for "small" pattern changes — internal refactors that change patterns still need a CLAUDE.md update.
+- Appending a new feature's description to `CLAUDE.md` instead of creating a wiki page.
+- Creating the wiki page but forgetting to link it from `index.md` — an orphan page is a page
+  nobody finds.
+- Leaving the old `CLAUDE.md` bullet in place alongside the new page, so the same subject is
+  described twice and the two drift apart.
+- Editing only `en` user docs and leaving the other 8 locales stale.
+- Quoting a real user's merchant, category or amount as evidence.

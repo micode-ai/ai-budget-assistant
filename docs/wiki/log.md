@@ -1,0 +1,22 @@
+# Wiki log
+
+Append-only. **One line per task** — date, ABA link, what was learned or changed, pages touched.
+
+This is a search target ("did we look at this before?"), not a second wiki. A line that retells
+the work defeats the purpose; the detail belongs on the page, the reasoning in the ABA issue.
+
+Newest last.
+
+---
+
+- 2026-09-22 · [ABA-575](https://github.com/micode-ai/ai-budget-assistant/issues/598) — the
+  without-category filter found nothing on a device whose category ids had diverged from the
+  server; the convergence code existed but its only caller was gated on an empty local table.
+  → `features/category-id-resolution.md` (new)
+- 2026-09-22 · [ABA-577](https://github.com/micode-ai/ai-budget-assistant/issues/600) — the mobile
+  suite leaked a 1s widget-refresh timer across test files, charging the failure to whichever
+  suite was running. Fixed at the file boundary via `setupFilesAfterEnv`. → no page yet
+  (belongs on a future `mobile-app` testing section)
+- 2026-09-22 · wiki bootstrap — `index.md`, `log.md`, page template, `finish-aba-task` rewritten
+  to ingest here. First migration out of `CLAUDE.md`: receipt splitting.
+  → `features/receipt-split.md`, `features/receipt-split-item-shares.md` (both new)

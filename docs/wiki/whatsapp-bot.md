@@ -5,10 +5,10 @@ A NestJS module (`modules/whatsapp/`) embedded in the API that lets users intera
 
 ## Entry points
 - `apps/api/src/modules/whatsapp/whatsapp.module.ts` — `@Global()` module
-- `apps/api/src/modules/whatsapp/whatsapp.controller.ts` — `GET/POST /whatsapp/webhook` (excluded from `/api/v1` prefix in `main.ts`)
+- `apps/api/src/modules/whatsapp/whatsapp-bot.controller.ts` — `GET/POST /whatsapp/webhook` (excluded from `/api/v1` prefix in `main.ts`)
 - `apps/api/src/modules/whatsapp/handlers/` — `ChatHandler`, `VoiceHandler`, `PhotoHandler`, `CommandHandler`, `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`
 - `apps/api/src/modules/whatsapp/helpers/i18n.ts` — system-message localisation (8 languages, ported from telegram with HTML→WA-markdown substitutions)
-- `apps/mobile/app/settings/whatsapp.tsx` — QR code + 6-hex link code + deep-link to `wa.me`
+- `apps/mobile/app/settings/bots.tsx` — QR code + 6-hex link code + deep-link to `wa.me`
 
 ## Key concepts
 - **Webhook-only** — Meta pushes events to `POST /whatsapp/webhook`. No long-polling. Returns `200` immediately to avoid Meta retries.
@@ -73,4 +73,4 @@ Verify env names inside container without exposing values: `docker exec budget-a
 - Webhook signature pattern follows Stripe wiring in `main.ts` — `rawBody` capture for HMAC verification
 
 ## Where to look first
-Webhook handler → `whatsapp.controller.ts`. Outbound message construction → `WhatsAppClientService`. Localised replies → `helpers/i18n.ts`. Mobile linking UX → `apps/mobile/app/settings/whatsapp.tsx`.
+Webhook handler → `whatsapp.controller.ts`. Outbound message construction → `WhatsAppClientService`. Localised replies → `helpers/i18n.ts`. Mobile linking UX → `apps/mobile/app/settings/bots.tsx`.
