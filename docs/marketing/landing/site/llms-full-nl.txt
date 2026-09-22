@@ -3457,7 +3457,10 @@ Onder de grafieken vind je tekstgebaseerde snelle inzichten:
 - **Topcategorie** — je categorie met de hoogste uitgaven deze periode
 - **Piekdag voor uitgaven** — de dag met de meeste uitgaven
 - **Dagelijkse budgettip** — aanbevolen dagelijkse uitgaven om op schema te blijven
-- **Bonbesparingen** — totaalbedrag bespaard met kortingen
+- **Bonbesparingen** — totaalbedrag bespaard met kortingen. Tik erop om te zien welke winkels je de grootste kortingen gaven en van welke bonnen ze afkomstig zijn.
+- **Betaald statiegeld** — totaalbedrag aan statiegeld voor retourverpakkingen op gescande bonnen. Tik erop voor dezelfde uitsplitsing per winkel/bon. Dit is wat je aan de kassa hebt betaald, geen terugbetaling — teruggebrachte flessen en blikjes worden niet bijgehouden.
+
+Beide regels verschijnen alleen als er voor de periode een korting of statiegeld is geregistreerd, en alleen als je account niet volledig versleuteld is (anders kan de app de bedragen niet uitlezen om ze uit te splitsen).
 
 ## Top-bonitems
 

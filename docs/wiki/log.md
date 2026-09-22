@@ -79,3 +79,4 @@ and not only from changes — see the `wiki-query` skill._
   use it, and the prefix-exclusion list given as WhatsApp+Slack when it also covers Stripe,
   Telegram, Slack OAuth and the whole guest subtree. The naming error was live in `CLAUDE.md`
   too, in two places. **Next target: `mobile-app.md`** (38 commits behind on `_layout.tsx`).
+- 2026-09-22 [ABA-580](https://github.com/micode-ai/ai-budget-assistant/issues/603) — AlphaShot footer badge. The image is API-generated (live upvotes) and CORS-open, so it stays hotlinked; the second row measures 838px of 996. Pages: `features/directory-badges.md`.

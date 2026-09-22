@@ -3449,7 +3449,10 @@ Below the charts, you'll find text-based quick insights:
 - **Top Category** — your highest spending category this period
 - **Peak Spending Day** — the day with the most spending
 - **Daily Budget Tip** — recommended daily spending to stay on track
-- **Receipt Savings** — total amount saved from discounts
+- **Receipt Savings** — total amount saved from discounts. Tap it to see which stores gave you the biggest discounts and the receipts they came from.
+- **Deposits Paid** — total returnable-packaging deposit ("kaucja"/"Pfand"/"statiegeld") paid on scanned receipts. Tap it for the same store/receipt breakdown. This is what you paid at checkout, not a refund — returned bottles and cans aren't tracked.
+
+Both rows only appear once you have a discount or deposit recorded for the period, and only when your account isn't fully encrypted (in that case the app can't read the figures to break them down).
 
 ## Top Receipt Items
 

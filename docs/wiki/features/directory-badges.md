@@ -69,10 +69,11 @@ height at all. Use the native ratio.
   the first candidate to remove when the row next needs room. Removing our link back may un-verify
   the listing.
 - One badge shipped before its listing URL could be confirmed and still needs checking.
-- Adding a tenth badge reopens the same four options — drop one, escape the width cap, shrink
-  again, or a third row. Add it to the **shorter** row and re-measure.
+- Both rows still have room at the uniform height: add a new badge to the **shorter** row and
+  re-measure. Only once neither row fits do the four options reopen — drop one, escape the width
+  cap, shrink again, or a third row.
 
 ## History
 
 ABA-367 (the first badge) and the additions since, each of which re-ran the width arithmetic —
-ABA-493, 524, 525, 526, 527, 528, 539, 543, 544.
+ABA-493, 524, 525, 526, 527, 528, 539, 543, 544, 580.

@@ -3450,7 +3450,10 @@ Unterhalb der Diagramme findest du textbasierte Schnelle Einblicke:
 - **Top-Kategorie** — deine hochste Ausgabenkategorie in diesem Zeitraum
 - **Ausgabenstarkster Tag** — der Tag mit den meisten Ausgaben
 - **Taglicher Budgettipp** — empfohlene tagliche Ausgaben, um im Plan zu bleiben
-- **Quittungsersparnisse** — Gesamtbetrag, der durch Rabatte gespart wurde
+- **Quittungsersparnisse** — Gesamtbetrag, der durch Rabatte gespart wurde. Tippe darauf, um zu sehen, welche Geschafte dir die grossten Rabatte gegeben haben und aus welchen Belegen sie stammen.
+- **Gezahltes Pfand** — Gesamtbetrag an Pfand fur Mehrwegverpackungen auf gescannten Belegen. Tippe darauf fur dieselbe Aufschlusselung nach Geschaft/Beleg. Das ist, was du an der Kasse gezahlt hast — keine Ruckerstattung, zuruckgegebene Flaschen und Dosen werden nicht erfasst.
+
+Beide Zeilen erscheinen nur, wenn fur den Zeitraum ein Rabatt bzw. Pfand erfasst wurde, und nur, wenn dein Konto nicht vollstandig verschlusselt ist (sonst kann die App die Betrage nicht aufschlusseln).
 
 ## Haufigste Artikel
 

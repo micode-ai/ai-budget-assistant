@@ -178,6 +178,19 @@ LIFTO_BADGE = (
     'alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" '
     'loading="lazy"></a>'
 )
+# AlphaShot "Featured on AlphaShot" badge. href verbatim from their snippet, UTM tags included
+# (the href is what the directory verifies); '&' written '&amp;' because this is emitted into HTML.
+# Presentation follows this row's conventions over their inline width/height: a scoped .b-as
+# class, loading="lazy". 207x54 matches the SVG's own viewBox, so 130px is 207/54 at 34px. The
+# image is API-generated (it renders a live upvote count) and is served with
+# Access-Control-Allow-Origin: *, so it stays remotely hosted -- self-hosting would freeze it.
+ALPHASHOT_BADGE = (
+    '<a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot'
+    '&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="noopener">'
+    '<img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" '
+    'alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" '
+    'loading="lazy"></a>'
+)
 
 SAMEAS = [
     "https://www.facebook.com/profile.php?id=61570771625318",
@@ -461,7 +474,7 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 .f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
 .f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
 .f-co img{height:30px;width:30px}
-.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}.f-badge .b-as{height:34px;width:130px}
 .cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
 .cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
 .cc .row{display:flex;gap:10px;justify-content:flex-end}
@@ -649,7 +662,7 @@ def foot(lang, src="blog"):
             f'<a href="{cookies_url(lang)}">{LEGAL_LABELS[lang][2]}</a>'
             f'<a href="{app_url("footer", lang, src)}">{t["login"]}</a><a href="{play_url("footer", lang, src)}">Google Play</a></div>'
             f'<div class="f-badge">{STARTUP_FAME_BADGE}{PEERPUSH_BADGE}{BEST_AI_BRANDS_BADGE}{FIRSTO_BADGE}{LIFTO_BADGE}</div>'
-            f'<div class="f-badge">{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}{TOOLS_CAFE_BADGE}{SELL_WITH_BOOST_BADGE}</div>'
+            f'<div class="f-badge">{FAZIER_BADGE}{LAUNCHSTAG_BADGE}{UNEED_BADGE}{TOOLS_CAFE_BADGE}{SELL_WITH_BOOST_BADGE}{ALPHASHOT_BADGE}</div>'
             f'<div class="f-co"><a href="{COMPANY_URL}" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="{COMPANY}" width="30" height="30"></a>'
             f'<span>&copy; {YEAR} AI Budget Assistant &mdash; <a href="{COMPANY_URL}" target="_blank" rel="noopener" style="color:inherit">{COMPANY}</a>. {html.escape(t["rights"])}</span></div>'
             f'</div></footer>\n' + consent_html(lang) + '</body></html>')
