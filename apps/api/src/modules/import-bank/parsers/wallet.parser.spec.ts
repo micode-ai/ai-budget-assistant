@@ -74,3 +74,31 @@ describe('WalletParser', () => {
     });
   });
 });
+
+describe('WalletParser — unverified header spellings', () => {
+  const parser = new WalletParser();
+  const snake = [
+    'account,category,currency,amount,ref_currency_amount,type,payment_type,note,date,transfer,payee,labels',
+    'Cash,Food,PLN,-25.50,-25.50,Expense,Cash,Lunch,2024-02-01T18:20:00Z,false,Bistro,',
+    'Bank,Salary,PLN,5000,5000,Income,Transfer,Pay,2024-02-02T09:00:00Z,false,Employer,',
+  ].join('\n');
+
+  it('detects the single ref_currency_amount column as well as the refCurrency/refAmount pair', () => {
+    expect(parser.detect(snake.split('\n')[0].split(','), [])).toBe(true);
+  });
+
+  it('parses that shape with direction, currency and category intact', () => {
+    const { rows } = parser.parse(snake);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]).toMatchObject({ kind: 'expense', amount: 25.5, currencyCode: 'PLN', date: '2024-02-01', suggestedCategoryName: 'Food' });
+    expect(rows[1]).toMatchObject({ kind: 'income', amount: 5000 });
+  });
+
+  it('reads capitalised headers', () => {
+    const text = [
+      'Account,Category,Currency,Amount,RefCurrency,RefAmount,Type,PaymentType,Note,Date,Transfer,Payee,Labels',
+      'Cash,Food,EUR,-3,PLN,-13,Expenses,Cash,Coffee,2024-02-01 08:00:00,false,Cafe,',
+    ].join('\n');
+    expect(parser.parse(text).rows[0]).toMatchObject({ kind: 'expense', amount: 3, currencyCode: 'EUR', merchant: 'Cafe' });
+  });
+});

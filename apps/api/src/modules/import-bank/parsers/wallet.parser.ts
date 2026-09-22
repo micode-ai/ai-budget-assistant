@@ -33,7 +33,12 @@ export class WalletParser implements BankParser {
     // statement or simpler tracker emits all three. Detection stays tight so an
     // unrecognised file falls through to AI inference instead of being parsed
     // into plausible-looking garbage.
-    return lower.has('refamount') && lower.has('type') && lower.has('transfer');
+    // Two spellings of the base-currency column are in circulation — the
+    // `refCurrency`/`refAmount` pair this parser was written for and a single
+    // `ref_currency_amount` — and neither has been checked against a real
+    // export (Wallet's export is a paid feature), so both are accepted.
+    const hasRef = lower.has('refamount') || lower.has('ref_currency_amount');
+    return hasRef && lower.has('type') && lower.has('transfer');
   }
 
   parse(text: string, opts?: ParserOptions): ParserResult {
@@ -46,7 +51,14 @@ export class WalletParser implements BankParser {
     });
 
     const detectedHeaders = result.meta.fields ?? [];
+    // Read by lower-cased name, so a capitalised or snake_case header still
+    // resolves (`Payee`, `Note` …) — the column names are unverified.
     const rows = result.data
+      .map((r) => {
+        const lowered: Record<string, string> = {};
+        for (const [k, v] of Object.entries(r)) lowered[k.toLowerCase()] = v;
+        return lowered;
+      })
       .map((r, i) => this.toRow(r, i))
       .filter((r): r is NonNullable<ReturnType<typeof this.toRow>> => r != null);
 
@@ -66,9 +78,15 @@ export class WalletParser implements BankParser {
 
     const type = get('type').toLowerCase();
     // The explicit column wins; the sign is only a fallback for an export whose
-    // type cell is blank.
+    // type cell is blank. Plural forms accepted for the same reason as above.
     const kind: 'expense' | 'income' =
-      type === 'income' ? 'income' : type === 'expense' ? 'expense' : amount < 0 ? 'expense' : 'income';
+      type === 'income' || type === 'incomes'
+        ? 'income'
+        : type === 'expense' || type === 'expenses'
+          ? 'expense'
+          : amount < 0
+            ? 'expense'
+            : 'income';
 
     const note = get('note');
     const payee = get('payee');

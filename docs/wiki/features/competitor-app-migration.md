@@ -30,7 +30,10 @@ entry point.
 mode — a keyed parse silently collapses the pair. Wallet states Expense/Income explicitly, marks
 `transfer` rows (dropped: not spending, and mapping them needs account mapping this import lacks),
 and restates amounts in its own base currency via `refAmount`/`refCurrency` (ignored; the
-transaction's own currency wins).
+transaction's own currency wins). Its header is known in two spellings, the
+`refCurrency`/`refAmount` pair and a single `ref_currency_amount`, and `detect()` accepts either
+(ABA-583). Wallet's export is a paid feature, which is why neither has been checked against a
+real file.
 
 **"Money Manager" is two unrelated apps, and one parser reads both.** Users pick the same entry
 for either. The *full* shape (Realbyte, and 1Money) is
@@ -98,3 +101,4 @@ leaves the user nowhere to go, and it leaves nothing in the API log either — t
 - ABA-581 — a real Money Manager export produced an empty preview; picked-parser fallback, commit
   DTO derived from the registry, commit records the detected parser.
 - ABA-582 — the Money Manager parser reads the simple export shape, with per-file date order.
+- ABA-583 — Wallet detection accepts both header spellings in circulation.
