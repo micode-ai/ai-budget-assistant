@@ -3,6 +3,7 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import type { ImportRowKind, ColumnMapping } from '@budget/shared-types';
+import { PARSERS } from '../parsers/registry';
 
 export class ImportRowDto {
   @IsNumber()
@@ -83,8 +84,11 @@ export class BankImportCommitBodyDto {
   @Type(() => SaveMappingDto)
   saveMapping?: SaveMappingDto;
 
+  // Derived from the registry: a hand-written list missed monefy/wallet/
+  // moneymanager when those parsers were added, so a commit naming one would
+  // have been rejected with a 400.
   @IsOptional()
-  @IsIn(['mbank', 'pko', 'revolut', 'ing', 'millennium', 'pekao', 'erste', 'alior', 'universal', 'ai'])
+  @IsIn(PARSERS.map((p) => p.id))
   bankId?: string;
 
   @IsOptional()

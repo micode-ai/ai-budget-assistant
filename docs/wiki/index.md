@@ -105,6 +105,8 @@ the section you came for — it states what must not break and why. A missing se
 ### Importing
 - [ai-statement-import](features/ai-statement-import.md) — inferring a column mapping when no bank
   parser recognises the file, and extracting PDF rows
+- [competitor-app-migration](features/competitor-app-migration.md) — Monefy, Wallet and Money
+  Manager exports, carrying the user's own categories across
 
 ### Alerts and insights
 - [exchange-rate-alerts](features/exchange-rate-alerts.md) — a personal one-shot watch on a currency

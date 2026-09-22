@@ -174,6 +174,11 @@ export default function ImportPreviewScreen() {
 
       const result = await api.importBankCommit({
         rows: rowsToCommit,
+        // The parser that actually read the file, so the batch is labelled with
+        // it in "Past imports" rather than as "universal". Not the picked id:
+        // the server may have fallen back to another parser or to AI mapping.
+        // A mapper trip below overrides it with its own bankId.
+        ...(preview.detectedBankId ? { bankId: preview.detectedBankId } : {}),
         ...buildCommitMappingContext(preview, pending, bankId),
       });
 

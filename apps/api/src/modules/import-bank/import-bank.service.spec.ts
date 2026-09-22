@@ -100,6 +100,40 @@ describe('ImportBankService.parsePreview', () => {
     expect(res.rows![0].externalRef).toMatch(/^bank:mbank:2026-01-16:-8745:/);
   });
 
+  describe('a parser the user picked that parses nothing', () => {
+    const MONEFY_CSV = [
+      'date;account;category;amount;currency;converted amount;currency;description',
+      '16/01/2026;Cash;Food;-12,50;PLN;-12,50;PLN;Lunch',
+    ].join('\n');
+
+    it('keeps the picked parser when it reads the file', async () => {
+      const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(MBANK_CSV, 'utf-8'), {
+        bankId: 'mbank',
+      });
+      expect(res.status).toBe('parsed');
+      expect(res.detectedBankId).toBe('mbank');
+    });
+
+    it('re-detects the real format instead of returning an empty preview', async () => {
+      const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(MONEFY_CSV, 'utf-8'), {
+        bankId: 'moneymanager',
+      });
+      expect(res.status).toBe('parsed');
+      expect(res.detectedBankId).toBe('monefy');
+      expect(res.rows).toHaveLength(1);
+    });
+
+    it('falls through to the unrecognised-file path when no parser claims it', async () => {
+      const text = 'Period;Accounts;Kategoria;Kwota\n2026-01-16;Cash;Food;12,50';
+      const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(text, 'utf-8'), {
+        bankId: 'moneymanager',
+      });
+      // AI is disabled in this suite, so the unrecognised path ends at the picker.
+      expect(res.status).toBe('needs_picker');
+      expect(res.headers).toContain('Period');
+    });
+  });
+
   it('returns needs_picker for unrecognized CSV', async () => {
     const text = 'Col1;Col2\nfoo;bar';
     const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(text, 'utf-8'), {});

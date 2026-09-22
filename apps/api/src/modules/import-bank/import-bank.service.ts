@@ -181,6 +181,29 @@ export class ImportBankService {
       throw new BadRequestException({ code: 'PARSE_FAILED', message: e.message });
     }
 
+    // A parser the USER picked is forced without detect(), so a file that is
+    // not in the shape it expects yields zero rows with no error at all — the
+    // user sees an empty preview and has nowhere to go. Money Manager exports
+    // did exactly that: our parser was written from Realbyte's import template,
+    // and a real export named its columns differently. Hand such a file to the
+    // path an unrecognised upload would take (another parser's detect(), then
+    // AI mapping) instead of returning the empty result.
+    const userPicked = Boolean(opts.bankId) && !opts.mappingId && !opts.inlineMapping;
+    if (userPicked && parsed.rows.length === 0) {
+      this.logger.warn(
+        `Picked parser "${parser.id}" parsed 0 rows; falling back (headers: ${headers.length})`,
+      );
+      const detected = detectParser(headers, sampleRows);
+      if (detected && detected.id !== parser.id) {
+        const reparsed = detected.parse(text, { delimiter: opts.delimiter });
+        if (reparsed.rows.length > 0) {
+          const errors = countParseFailures(text, reparsed.rows.length);
+          return this.dedup.buildPreviewResponse(accountId, detected, reparsed.rows, errors, fingerprint);
+        }
+      }
+      return this.aiPreview.tryAiMapping(accountId, userId, text, headers, fingerprint, delimiter);
+    }
+
     const parseErrors = countParseFailures(text, parsed.rows.length);
     return this.dedup.buildPreviewResponse(accountId, parser, parsed.rows, parseErrors, fingerprint);
   }
