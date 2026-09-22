@@ -102,7 +102,10 @@ Debajo de los graficos, encontraras informacion rapida en formato de texto:
 - **Categoria principal** — tu categoria con mayor gasto en este periodo
 - **Dia de mayor gasto** — el dia con mas gastos
 - **Consejo de presupuesto diario** — gasto diario recomendado para mantenerte en el objetivo
-- **Ahorros en recibos** — importe total ahorrado en descuentos
+- **Ahorros en recibos** — importe total ahorrado en descuentos. Tocalo para ver que tiendas te dieron los mayores descuentos y de que recibos provienen.
+- **Depositos pagados** — importe total de deposito de envases retornables en los recibos escaneados. Tocalo para ver el mismo desglose por tienda/recibo. Esto es lo que pagaste en caja, no un reembolso; los envases devueltos no se registran.
+
+Ambas filas solo aparecen si hay un descuento o deposito registrado para el periodo, y solo si tu cuenta no esta totalmente cifrada (en ese caso la app no puede leer los importes para desglosarlos).
 
 ## Articulos principales de recibos
 

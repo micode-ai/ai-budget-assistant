@@ -1,7 +1,8 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
+import type { SavingsKind } from '@budget/shared-types';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import type { AnalyticsSummary, SpendingAnomalyItem, BudgetPredictionItem, TimeRange } from '@/features/analytics/useAnalytics';
@@ -12,9 +13,19 @@ interface Props {
   predictions: BudgetPredictionItem[];
   selectedRange: TimeRange;
   currency: string;
+  /**
+   * Additive, default `undefined`. When passed, the "Discount savings"/
+   * "Deposits paid" rows become tappable and open `SavingsDetailSheet` for
+   * the given kind. When absent, both rows render exactly as before — a
+   * plain, non-interactive card (no other consumer of this component passes
+   * it today; the desktop analytics screen builds its own independent tile
+   * markup in `InsightsCluster.tsx` rather than reusing this component for
+   * these two rows).
+   */
+  onOpenSavings?: (kind: SavingsKind) => void;
 }
 
-export function QuickInsights({ summary, anomalies, predictions, selectedRange, currency }: Props) {
+export function QuickInsights({ summary, anomalies, predictions, selectedRange, currency, onOpenSavings }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -66,18 +77,29 @@ export function QuickInsights({ summary, anomalies, predictions, selectedRange, 
         </View>
 
         {summary.totalDiscountSavings > 0 && (
-          <View style={styles.insightCard}>
-            <Ionicons name="pricetag-outline" size={24} color={theme.colors.success} />
-            <View style={styles.insightContent}>
-              <Text style={styles.insightTitle}>{t('analytics.totalSavings')}</Text>
-              <Text style={styles.insightText}>
-                {t('analytics.totalSavingsText', {
-                  amount: formatCurrency(summary.totalDiscountSavings, currency),
-                  range: t(`analytics.${selectedRange}`),
-                })}
-              </Text>
-            </View>
-          </View>
+          <SavingsCard
+            onPress={onOpenSavings ? () => onOpenSavings('discount') : undefined}
+            icon="pricetag-outline"
+            iconColor={theme.colors.success}
+            title={t('analytics.totalSavings')}
+            text={t('analytics.totalSavingsText', {
+              amount: formatCurrency(summary.totalDiscountSavings, currency),
+              range: t(`analytics.${selectedRange}`),
+            })}
+          />
+        )}
+
+        {summary.totalDepositsPaid > 0 && (
+          <SavingsCard
+            onPress={onOpenSavings ? () => onOpenSavings('deposit') : undefined}
+            icon="wine-outline"
+            iconColor={theme.colors.info}
+            title={t('analytics.totalDepositsPaid')}
+            text={t('analytics.totalDepositsPaidText', {
+              amount: formatCurrency(summary.totalDepositsPaid, currency),
+              range: t(`analytics.${selectedRange}`),
+            })}
+          />
         )}
       </View>
 
@@ -135,6 +157,48 @@ export function QuickInsights({ summary, anomalies, predictions, selectedRange, 
         </View>
       )}
     </>
+  );
+}
+
+interface SavingsCardProps {
+  onPress?: () => void;
+  icon: keyof typeof Ionicons.glyphMap;
+  iconColor: string;
+  title: string;
+  text: string;
+}
+
+/**
+ * The discount/deposit insight rows, factored out because they're the only
+ * two rows in this file that can become tappable — every other tile here
+ * (top category, peak day, predictions, anomalies) has no drill-down. Renders
+ * a plain `View` (today's behavior, byte-for-byte) when `onPress` is absent,
+ * or a `TouchableOpacity` with a trailing chevron when a caller wants a
+ * drill-down (see `onOpenSavings` on this component's own props).
+ */
+function SavingsCard({ onPress, icon, iconColor, title, text }: SavingsCardProps) {
+  const styles = useStyles(createStyles);
+  const theme = useTheme();
+
+  const inner = (
+    <>
+      <Ionicons name={icon} size={24} color={iconColor} />
+      <View style={styles.insightContent}>
+        <Text style={styles.insightTitle}>{title}</Text>
+        <Text style={styles.insightText}>{text}</Text>
+      </View>
+      {onPress && <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />}
+    </>
+  );
+
+  if (!onPress) {
+    return <View style={styles.insightCard}>{inner}</View>;
+  }
+
+  return (
+    <TouchableOpacity style={styles.insightCard} onPress={onPress} activeOpacity={0.7}>
+      {inner}
+    </TouchableOpacity>
   );
 }
 

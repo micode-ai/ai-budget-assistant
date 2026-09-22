@@ -38,6 +38,15 @@ export interface CategorySpending {
 export interface AnalyticsSummary {
   totalSpent: number;
   totalDiscountSavings: number;
+  /**
+   * Sum of `Expense.depositAmount` over the filtered period, in the display
+   * currency. Local, single-pass, no cross-currency conversion (same caveat
+   * `totalDiscountSavings` already carries) — only used to gate whether the
+   * "Deposits paid" Quick Insights row shows at all; the tapped-through
+   * breakdown always comes from `GET /analytics/savings-detail`, which does
+   * real FX conversion.
+   */
+  totalDepositsPaid: number;
   averagePerDay: number;
   transactionCount: number;
   trend: number;

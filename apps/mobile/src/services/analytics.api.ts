@@ -1,9 +1,21 @@
-import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SafeToSpendResponse, WrappedResponse, InflationShieldResponse } from '@budget/shared-types';
+import type { DrillDownRequest, DrillDownResponse, AIInsightsResponse, StoryDashboardResponse, SafeToSpendResponse, WrappedResponse, InflationShieldResponse, SavingsKind, SavingsSummaryResponse } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const analyticsApi = {
   getAnalyticsSummary(startDate: string, endDate: string) {
     return httpClient.request<any>(`/analytics/summary?startDate=${startDate}&endDate=${endDate}`);
+  },
+
+  /**
+   * The tappable "Discount savings"/"Deposits paid" drill-down behind
+   * `SavingsDetailSheet` — same underlying columns/arithmetic the AI chat's
+   * `get_discount_total`/`get_deposit_total` tools already answer from, now
+   * a plain read (`docs/contracts/quick-insights-savings-drilldown.md`).
+   */
+  getSavingsDetail(kind: SavingsKind, startDate: string, endDate: string) {
+    return httpClient.request<SavingsSummaryResponse>(
+      `/analytics/savings-detail?kind=${kind}&startDate=${startDate}&endDate=${endDate}`,
+    );
   },
 
   getAnalyticsTrends(startDate: string, endDate: string) {

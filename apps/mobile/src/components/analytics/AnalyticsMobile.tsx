@@ -8,9 +8,10 @@ import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
   IncomeCategoryBreakdown, MerchantBreakdown, TagBreakdown, ProjectBreakdown,
   DayOfWeekSection, QuickInsights, TopReceiptItems, AiInsightsSection,
-  InflationIndexSection,
+  InflationIndexSection, SavingsDetailSheet,
 } from '@/components/analytics';
 import { useAnalyticsScreenData } from '@/features/analytics/useAnalyticsScreenData';
+import { useSavingsDetail } from '@/hooks/useSavingsDetail';
 
 if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -50,7 +51,12 @@ export function AnalyticsMobile() {
     aiInsights,
     aiInsightsProGated,
     openDrillDown,
+    drillDownParams,
   } = useAnalyticsScreenData();
+
+  const savingsDetail = useSavingsDetail();
+  const handleOpenSavings = (kind: 'discount' | 'deposit') =>
+    savingsDetail.open(kind, drillDownParams.startDate, drillDownParams.endDate);
 
   return (
     <SafeAreaView style={styles.container} edges={[]}>
@@ -121,7 +127,14 @@ export function AnalyticsMobile() {
         {tagSpending.length > 0 && <TagBreakdown tagSpending={tagSpending} currency={currency} />}
         {projectSpending.length > 0 && <ProjectBreakdown projectSpending={projectSpending} currency={currency} />}
         {dayOfWeekSpending.some((d) => d.totalAmount > 0) && <DayOfWeekSection dayOfWeekSpending={dayOfWeekSpending} />}
-        <QuickInsights summary={summary} anomalies={anomalies} predictions={predictions} selectedRange={selectedRange} currency={currency} />
+        <QuickInsights
+          summary={summary}
+          anomalies={anomalies}
+          predictions={predictions}
+          selectedRange={selectedRange}
+          currency={currency}
+          onOpenSavings={handleOpenSavings}
+        />
         {itemBreakdown.length > 0 && <TopReceiptItems itemBreakdown={itemBreakdown} currency={currency} />}
 
         <TouchableOpacity
@@ -141,6 +154,14 @@ export function AnalyticsMobile() {
           <Text style={styles.exportButtonText}>{t('analytics.exportReport')}</Text>
         </TouchableOpacity>
       </ScrollView>
+
+      <SavingsDetailSheet
+        visible={savingsDetail.kind !== null}
+        onClose={savingsDetail.close}
+        kind={savingsDetail.kind}
+        data={savingsDetail.data}
+        loading={savingsDetail.loading}
+      />
     </SafeAreaView>
   );
 }

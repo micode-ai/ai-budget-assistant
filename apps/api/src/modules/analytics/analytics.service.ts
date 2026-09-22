@@ -2,8 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
-import type { DrillDownLevel, ChartConfig, ChartDataPoint } from '@budget/shared-types';
+import type { DrillDownLevel, ChartConfig, ChartDataPoint, SavingsSummaryResponse } from '@budget/shared-types';
 import { formatInTimezone, yearMonthIdInTimezone, calendarPartsInTimezone } from '../../common/utils/timezone';
+import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { getRatesSafe, convertAmount } from '../../common/utils/fx';
+import { summariseDeposits, type DepositConverter } from '../ai/utils/deposit-summary';
+import { summariseDiscounts, type DiscountConverter } from '../ai/utils/discount-summary';
 
 /**
  * Ceiling on the receipts one deposit question reads. Deposits are a small
@@ -16,6 +20,38 @@ const DEPOSIT_ROW_LIMIT = 5000;
 
 /** Same reasoning as `DEPOSIT_ROW_LIMIT`, one row per receipt that carried a discount. */
 const DISCOUNT_ROW_LIMIT = 5000;
+
+const formatIsoDate = (date: Date): string => date.toISOString().slice(0, 10);
+
+/**
+ * The placeholder `SavingsSummaryResponse` for a fully-encrypted (tier-2)
+ * account — every numeric/list field is a zero/empty placeholder, never a
+ * real (but wrong) figure. Callers must check `encryptionRestricted` first,
+ * the same rule the AI tool's own narration follows for
+ * `get_deposit_total`/`get_discount_total`.
+ */
+function emptySavingsResponse(
+  kind: SavingsSummaryResponse['kind'],
+  baseCurrency: string,
+  period: SavingsSummaryResponse['period'],
+  encryptionRestricted: boolean,
+): SavingsSummaryResponse {
+  return {
+    kind,
+    encryptionRestricted,
+    total: 0,
+    receiptCount: 0,
+    byMerchant: [],
+    recent: [],
+    totalsByCurrency: {},
+    baseCurrency,
+    fxConverted: false,
+    fxApproximate: false,
+    unconvertedCount: 0,
+    truncated: false,
+    period,
+  };
+}
 
 interface ExpenseWithCategory {
   id: string;
@@ -60,6 +96,12 @@ export class AnalyticsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
+    // Optional (not just DI-optional) so the ~13 existing
+    // `new AnalyticsService(prisma, cache)` call sites in
+    // `analytics.service.spec.ts` keep compiling unchanged — only the new
+    // `getDepositSummary`/`getDiscountSummary` methods (added for the
+    // `/analytics/savings-detail` endpoint) need it.
+    private readonly exchangeRateService?: ExchangeRateService,
   ) {}
 
   /**
@@ -806,6 +848,7 @@ export class AnalyticsService {
         depositAmount: { gt: 0 },
       },
       select: {
+        id: true,
         date: true,
         merchant: true,
         description: true,
@@ -819,6 +862,64 @@ export class AnalyticsService {
     return {
       rows: rows.slice(0, DEPOSIT_ROW_LIMIT),
       truncated: rows.length > DEPOSIT_ROW_LIMIT,
+    };
+  }
+
+  /**
+   * The `getDepositRows` summary, ready to render — same rows, FX-converted
+   * into `baseCurrency` (`common/utils/fx.ts`, the shared helper, not a new
+   * copy) and reduced through the same pure `summariseDeposits` the AI tool's
+   * `get_deposit_total` reads from. This is the "expose what the chat tool
+   * already computes as a plain REST read" surface for
+   * `GET /analytics/savings-detail?kind=deposit`.
+   *
+   * `baseCurrency` is optional only in the type sense that a caller could
+   * theoretically omit it; in practice the controller always passes the
+   * requester's own `currencyCode`, since a display total with no display
+   * currency is meaningless.
+   */
+  async getDepositSummary(
+    accountId: string,
+    baseCurrency: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<SavingsSummaryResponse> {
+    const result = await this.getDepositRows(accountId, startDate, endDate);
+    const period = { startDate: formatIsoDate(startDate), endDate: formatIsoDate(endDate) };
+
+    if ('encryptionRestricted' in result && result.encryptionRestricted) {
+      return emptySavingsResponse('deposit', baseCurrency, period, true);
+    }
+
+    const rates = this.exchangeRateService
+      ? await getRatesSafe(this.exchangeRateService, baseCurrency)
+      : null;
+    let fxConverted = false;
+    const convert: DepositConverter = (amount, from) => {
+      if (!from || from === baseCurrency) return amount;
+      if (!rates) return null;
+      const converted = convertAmount(amount, from, baseCurrency, rates);
+      if (converted == null) return null;
+      fxConverted = true;
+      return converted;
+    };
+
+    const summary = summariseDeposits(result.rows, convert);
+
+    return {
+      kind: 'deposit',
+      encryptionRestricted: false,
+      total: summary.total,
+      receiptCount: summary.receiptCount,
+      byMerchant: summary.byMerchant,
+      recent: summary.recent,
+      totalsByCurrency: summary.totalsByCurrency,
+      baseCurrency,
+      fxConverted,
+      fxApproximate: summary.unconvertedCount > 0,
+      unconvertedCount: summary.unconvertedCount,
+      truncated: result.truncated,
+      period,
     };
   }
 
@@ -857,6 +958,7 @@ export class AnalyticsService {
         discountAmount: { gt: 0 },
       },
       select: {
+        id: true,
         date: true,
         merchant: true,
         description: true,
@@ -870,6 +972,56 @@ export class AnalyticsService {
     return {
       rows: rows.slice(0, DISCOUNT_ROW_LIMIT),
       truncated: rows.length > DISCOUNT_ROW_LIMIT,
+    };
+  }
+
+  /**
+   * The `getDiscountRows` summary, ready to render — mirrors
+   * `getDepositSummary` deliberately (same reasoning, same shape, the
+   * discount half of `GET /analytics/savings-detail?kind=discount`).
+   */
+  async getDiscountSummary(
+    accountId: string,
+    baseCurrency: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<SavingsSummaryResponse> {
+    const result = await this.getDiscountRows(accountId, startDate, endDate);
+    const period = { startDate: formatIsoDate(startDate), endDate: formatIsoDate(endDate) };
+
+    if ('encryptionRestricted' in result && result.encryptionRestricted) {
+      return emptySavingsResponse('discount', baseCurrency, period, true);
+    }
+
+    const rates = this.exchangeRateService
+      ? await getRatesSafe(this.exchangeRateService, baseCurrency)
+      : null;
+    let fxConverted = false;
+    const convert: DiscountConverter = (amount, from) => {
+      if (!from || from === baseCurrency) return amount;
+      if (!rates) return null;
+      const converted = convertAmount(amount, from, baseCurrency, rates);
+      if (converted == null) return null;
+      fxConverted = true;
+      return converted;
+    };
+
+    const summary = summariseDiscounts(result.rows, convert);
+
+    return {
+      kind: 'discount',
+      encryptionRestricted: false,
+      total: summary.total,
+      receiptCount: summary.receiptCount,
+      byMerchant: summary.byMerchant,
+      recent: summary.recent,
+      totalsByCurrency: summary.totalsByCurrency,
+      baseCurrency,
+      fxConverted,
+      fxApproximate: summary.unconvertedCount > 0,
+      unconvertedCount: summary.unconvertedCount,
+      truncated: result.truncated,
+      period,
     };
   }
 

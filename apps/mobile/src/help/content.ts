@@ -970,7 +970,10 @@ Below the charts, you'll find text-based quick insights:
 - **Top Category** — your highest spending category this period
 - **Peak Spending Day** — the day with the most spending
 - **Daily Budget Tip** — recommended daily spending to stay on track
-- **Receipt Savings** — total amount saved from discounts
+- **Receipt Savings** — total amount saved from discounts. Tap it to see which stores gave you the biggest discounts and the receipts they came from.
+- **Deposits Paid** — total returnable-packaging deposit ("kaucja"/"Pfand"/"statiegeld") paid on scanned receipts. Tap it for the same store/receipt breakdown. This is what you paid at checkout, not a refund — returned bottles and cans aren't tracked.
+
+Both rows only appear once you have a discount or deposit recorded for the period, and only when your account isn't fully encrypted (in that case the app can't read the figures to break them down).
 
 ## Top Receipt Items
 
@@ -5719,7 +5722,10 @@ iOS, Android, Web
 - **Топ категория** — ваша категория с наибольшими расходами за этот период
 - **Пиковый день расходов** — день с наибольшими расходами
 - **Совет по дневному бюджету** — рекомендуемые ежедневные расходы, чтобы уложиться в бюджет
-- **Экономия по чекам** — общая сумма экономии по скидкам
+- **Экономия по чекам** — общая сумма экономии по скидкам. Нажмите, чтобы увидеть, какие магазины дали наибольшие скидки и из каких чеков они получены.
+- **Уплаченный залог** — общая сумма залога за тару по отсканированным чекам. Нажмите, чтобы увидеть такую же разбивку по магазинам/чекам. Это то, что вы заплатили на кассе, а не возврат — сданная тара нигде не отслеживается.
+
+Обе строки появляются, только если за период зафиксирована скидка или залог, и только если ваш аккаунт не полностью зашифрован (иначе приложение не может прочитать суммы, чтобы разбить их на детали).
 
 ## Часто покупаемые товары
 
@@ -10446,7 +10452,10 @@ iOS, Android, Web
 - **Топ категорія** — ваша найбільша категорія витрат за цей період
 - **Пік витрат** — день з найбільшими витратами
 - **Порада щодо денного бюджету** — рекомендовані щоденні витрати для утримання в рамках бюджету
-- **Заощадження по чеках** — загальна сума заощаджена на знижках
+- **Заощадження по чеках** — загальна сума заощаджена на знижках. Торкніться, щоб побачити, які магазини дали найбільші знижки і з яких чеків вони походять.
+- **Сплачена застава** — загальна сума застави за тару за відсканованими чеками. Торкніться, щоб побачити такий самий розподіл за магазинами/чеками. Це те, що ви сплатили на касі, а не повернення коштів — здана тара ніде не відстежується.
+
+Обидва рядки з'являються лише тоді, коли за період зафіксовано знижку або заставу, і лише якщо ваш обліковий запис не повністю зашифрований (інакше застосунок не може прочитати суми, щоб розбити їх на деталі).
 
 ## Часто купувані товари
 
@@ -15121,7 +15130,10 @@ Ponizej wykresow znajdziesz tekstowe szybkie wnioski:
 - **Glowna kategoria** — Twoja najwyzsza kategoria wydatkow w tym okresie
 - **Dzien najwiekszych wydatkow** — dzien z najwyzszymi wydatkami
 - **Dzienna wskazowka budzetowa** — zalecane dzienne wydatki, aby utrzymac sie w budzecie
-- **Oszczednosci z paragonow** — laczna kwota zaoszczedzona na rabatach
+- **Oszczednosci z paragonow** — laczna kwota zaoszczedzona na rabatach. Stuknij, aby zobaczyc, ktore sklepy dawaly Ci najwieksze rabaty i z jakich paragonow one pochodza.
+- **Zaplacona kaucja** — laczna kwota kaucji za opakowania zwrotne z zeskanowanych paragonow. Stuknij, aby zobaczyc taki sam podzial wedlug sklepu/paragonu. To kwota zaplacona przy kasie, a nie zwrot — zwrocone butelki i puszki nie sa sledzone.
+
+Obie pozycje pojawiaja sie tylko wtedy, gdy w danym okresie zarejestrowano rabat lub kaucje, i tylko gdy Twoje konto nie jest w pelni zaszyfrowane (w przeciwnym razie aplikacja nie moze odczytac kwot, aby je rozbic na szczegoly).
 
 ## Najczesciej kupowane
 
@@ -19792,7 +19804,10 @@ Unterhalb der Diagramme findest du textbasierte Schnelle Einblicke:
 - **Top-Kategorie** — deine hochste Ausgabenkategorie in diesem Zeitraum
 - **Ausgabenstarkster Tag** — der Tag mit den meisten Ausgaben
 - **Taglicher Budgettipp** — empfohlene tagliche Ausgaben, um im Plan zu bleiben
-- **Quittungsersparnisse** — Gesamtbetrag, der durch Rabatte gespart wurde
+- **Quittungsersparnisse** — Gesamtbetrag, der durch Rabatte gespart wurde. Tippe darauf, um zu sehen, welche Geschafte dir die grossten Rabatte gegeben haben und aus welchen Belegen sie stammen.
+- **Gezahltes Pfand** — Gesamtbetrag an Pfand fur Mehrwegverpackungen auf gescannten Belegen. Tippe darauf fur dieselbe Aufschlusselung nach Geschaft/Beleg. Das ist, was du an der Kasse gezahlt hast — keine Ruckerstattung, zuruckgegebene Flaschen und Dosen werden nicht erfasst.
+
+Beide Zeilen erscheinen nur, wenn fur den Zeitraum ein Rabatt bzw. Pfand erfasst wurde, und nur, wenn dein Konto nicht vollstandig verschlusselt ist (sonst kann die App die Betrage nicht aufschlusseln).
 
 ## Haufigste Artikel
 
@@ -24438,7 +24453,10 @@ Debajo de los graficos, encontraras informacion rapida en formato de texto:
 - **Categoria principal** — tu categoria con mayor gasto en este periodo
 - **Dia de mayor gasto** — el dia con mas gastos
 - **Consejo de presupuesto diario** — gasto diario recomendado para mantenerte en el objetivo
-- **Ahorros en recibos** — importe total ahorrado en descuentos
+- **Ahorros en recibos** — importe total ahorrado en descuentos. Tocalo para ver que tiendas te dieron los mayores descuentos y de que recibos provienen.
+- **Depositos pagados** — importe total de deposito de envases retornables en los recibos escaneados. Tocalo para ver el mismo desglose por tienda/recibo. Esto es lo que pagaste en caja, no un reembolso; los envases devueltos no se registran.
+
+Ambas filas solo aparecen si hay un descuento o deposito registrado para el periodo, y solo si tu cuenta no esta totalmente cifrada (en ese caso la app no puede leer los importes para desglosarlos).
 
 ## Articulos principales de recibos
 
@@ -29073,7 +29091,10 @@ Sous les graphiques, vous trouverez des aperçus rapides sous forme de texte :
 - **Categorie principale** — votre categorie de depenses la plus elevee sur cette periode
 - **Jour de depense maximal** — le jour avec le plus de depenses
 - **Conseil de budget quotidien** — depense quotidienne recommandee pour rester dans les limites
-- **Economies sur les recus** — montant total economise grace aux remises
+- **Economies sur les recus** — montant total economise grace aux remises. Appuyez pour voir quels magasins vous ont donne les plus grosses remises et de quels recus elles proviennent.
+- **Consignes payees** — montant total des consignes sur emballages consignes releve sur les recus scannes. Appuyez pour la meme repartition par magasin/recu. C'est ce que vous avez paye en caisse, pas un remboursement ; les bouteilles et canettes rendues ne sont pas suivies.
+
+Ces deux lignes n'apparaissent que si une remise ou une consigne a ete enregistree sur la periode, et seulement si votre compte n'est pas entierement chiffre (sinon l'application ne peut pas lire les montants pour les detailler).
 
 ## Articles de recus les plus frequents
 
@@ -33706,7 +33727,10 @@ iOS, Android, Web
 - **Топ катэгорыя** — ваша катэгорыя з найбольшымі выдаткамі за гэты перыяд
 - **Пікавы дзень выдаткаў** — дзень з найбольшымі выдаткамі
 - **Парада па дзённым бюджэце** — рэкамендаваныя штодзённыя выдаткі, каб укласціся ў бюджэт
-- **Эканомія па чэках** — агульная сума эканоміі па зніжках
+- **Эканомія па чэках** — агульная сума эканоміі па зніжках. Націсніце, каб убачыць, якія крамы давалі найбольшыя зніжкі і з якіх чэкаў яны паходзяць.
+- **Заплачаная закладзь** — агульная сума закладзі за тару па сканаваных чэках. Націсніце, каб убачыць такі ж падзел па крамах/чэках. Гэта тое, што вы заплацілі на касе, а не вяртанне сродкаў — зданая тара нідзе не адсочваецца.
+
+Абодва радкі з'яўляюцца толькі тады, калі за перыяд зафіксавана зніжка ці закладзь, і толькі калі ваш акаўнт не цалкам зашыфраваны (інакш праграма не можа прачытаць сумы, каб разбіць іх на дэталі).
 
 ## Часта набываемыя тавары
 
@@ -38303,7 +38327,10 @@ Onder de grafieken vind je tekstgebaseerde snelle inzichten:
 - **Topcategorie** — je categorie met de hoogste uitgaven deze periode
 - **Piekdag voor uitgaven** — de dag met de meeste uitgaven
 - **Dagelijkse budgettip** — aanbevolen dagelijkse uitgaven om op schema te blijven
-- **Bonbesparingen** — totaalbedrag bespaard met kortingen
+- **Bonbesparingen** — totaalbedrag bespaard met kortingen. Tik erop om te zien welke winkels je de grootste kortingen gaven en van welke bonnen ze afkomstig zijn.
+- **Betaald statiegeld** — totaalbedrag aan statiegeld voor retourverpakkingen op gescande bonnen. Tik erop voor dezelfde uitsplitsing per winkel/bon. Dit is wat je aan de kassa hebt betaald, geen terugbetaling — teruggebrachte flessen en blikjes worden niet bijgehouden.
+
+Beide regels verschijnen alleen als er voor de periode een korting of statiegeld is geregistreerd, en alleen als je account niet volledig versleuteld is (anders kan de app de bedragen niet uitlezen om ze uit te splitsen).
 
 ## Top-bonitems
 

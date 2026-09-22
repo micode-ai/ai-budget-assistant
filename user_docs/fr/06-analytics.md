@@ -102,7 +102,10 @@ Sous les graphiques, vous trouverez des aperçus rapides sous forme de texte :
 - **Categorie principale** — votre categorie de depenses la plus elevee sur cette periode
 - **Jour de depense maximal** — le jour avec le plus de depenses
 - **Conseil de budget quotidien** — depense quotidienne recommandee pour rester dans les limites
-- **Economies sur les recus** — montant total economise grace aux remises
+- **Economies sur les recus** — montant total economise grace aux remises. Appuyez pour voir quels magasins vous ont donne les plus grosses remises et de quels recus elles proviennent.
+- **Consignes payees** — montant total des consignes sur emballages consignes releve sur les recus scannes. Appuyez pour la meme repartition par magasin/recu. C'est ce que vous avez paye en caisse, pas un remboursement ; les bouteilles et canettes rendues ne sont pas suivies.
+
+Ces deux lignes n'apparaissent que si une remise ou une consigne a ete enregistree sur la periode, et seulement si votre compte n'est pas entierement chiffre (sinon l'application ne peut pas lire les montants pour les detailler).
 
 ## Articles de recus les plus frequents
 

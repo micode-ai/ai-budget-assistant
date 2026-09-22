@@ -27,6 +27,13 @@ export const DISCOUNT_TOP_MERCHANTS = 5;
 export const DISCOUNT_RECENT_RECEIPTS = 5;
 
 export interface DiscountRow {
+  /**
+   * The expense's server PK, so a caller (the `/analytics/savings-detail`
+   * REST read) can tap a receipt through to its detail screen. Optional
+   * because the AI tool's own unit tests build rows without one — see
+   * `DiscountReceipt.expenseId`.
+   */
+  id?: string;
   /** `Expense.date` is `@db.Date`, so a Date here is midnight UTC. */
   date: Date | string;
   merchant?: string | null;
@@ -48,6 +55,13 @@ export interface DiscountReceipt {
   /** Null when the receipt named neither a merchant nor a description. */
   merchant: string | null;
   amount: number;
+  /**
+   * Carried through from `DiscountRow.id` when present. Left `undefined`
+   * (not `null`) rather than defaulted, so existing `toEqual` fixtures with
+   * no `id` on their rows keep matching unchanged — Jest's `toEqual` ignores
+   * `undefined`-valued keys.
+   */
+  expenseId?: string;
 }
 
 export interface DiscountSummary {
@@ -117,7 +131,7 @@ export function summariseDiscounts(
       merchantMap.set(payee, entry);
     }
 
-    receipts.push({ date: isoDay(row.date), merchant: payee, amount: round2(converted) });
+    receipts.push({ date: isoDay(row.date), merchant: payee, amount: round2(converted), expenseId: row.id });
   }
 
   for (const code of Object.keys(totalsByCurrency)) {

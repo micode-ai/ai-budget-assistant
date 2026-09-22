@@ -18,6 +18,10 @@ export function useSummaryAnalytics(
       (sum, e) => sum + toDisplayCurrency(e.discountAmount || 0, e.currencyCode),
       0,
     );
+    const totalDepositsPaid = filteredExpenses.reduce(
+      (sum, e) => sum + toDisplayCurrency(e.depositAmount || 0, e.currencyCode),
+      0,
+    );
     const transactionCount = filteredExpenses.length;
 
     const msPerDay = 24 * 60 * 60 * 1000;
@@ -82,6 +86,7 @@ export function useSummaryAnalytics(
     return {
       totalSpent,
       totalDiscountSavings,
+      totalDepositsPaid,
       averagePerDay,
       transactionCount,
       trend: 0,

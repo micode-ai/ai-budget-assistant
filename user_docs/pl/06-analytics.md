@@ -102,7 +102,10 @@ Ponizej wykresow znajdziesz tekstowe szybkie wnioski:
 - **Glowna kategoria** — Twoja najwyzsza kategoria wydatkow w tym okresie
 - **Dzien najwiekszych wydatkow** — dzien z najwyzszymi wydatkami
 - **Dzienna wskazowka budzetowa** — zalecane dzienne wydatki, aby utrzymac sie w budzecie
-- **Oszczednosci z paragonow** — laczna kwota zaoszczedzona na rabatach
+- **Oszczednosci z paragonow** — laczna kwota zaoszczedzona na rabatach. Stuknij, aby zobaczyc, ktore sklepy dawaly Ci najwieksze rabaty i z jakich paragonow one pochodza.
+- **Zaplacona kaucja** — laczna kwota kaucji za opakowania zwrotne z zeskanowanych paragonow. Stuknij, aby zobaczyc taki sam podzial wedlug sklepu/paragonu. To kwota zaplacona przy kasie, a nie zwrot — zwrocone butelki i puszki nie sa sledzone.
+
+Obie pozycje pojawiaja sie tylko wtedy, gdy w danym okresie zarejestrowano rabat lub kaucje, i tylko gdy Twoje konto nie jest w pelni zaszyfrowane (w przeciwnym razie aplikacja nie moze odczytac kwot, aby je rozbic na szczegoly).
 
 ## Najczesciej kupowane
 

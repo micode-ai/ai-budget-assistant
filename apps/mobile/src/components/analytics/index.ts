@@ -11,3 +11,4 @@ export { TopReceiptItems } from './TopReceiptItems';
 export { AiInsightsSection } from './AiInsightsSection';
 export { IncomeCategoryBreakdown } from './IncomeCategoryBreakdown';
 export { InflationIndexSection } from './InflationIndexSection';
+export { SavingsDetailSheet } from './SavingsDetailSheet';
