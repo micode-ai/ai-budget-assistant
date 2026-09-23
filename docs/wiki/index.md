@@ -115,6 +115,8 @@ the section you came for — it states what must not break and why. A missing se
   deal pushes, receipt reconciliation
 
 ### Importing
+- [bank-statement-import](features/bank-statement-import.md) — Polish banks, Revolut and Wise: the
+  parser registry, dedup, the commit transaction, batch rollback
 - [ai-statement-import](features/ai-statement-import.md) — inferring a column mapping when no bank
   parser recognises the file, and extracting PDF rows
 - [competitor-app-migration](features/competitor-app-migration.md) — Monefy, Wallet and Money
@@ -127,10 +129,16 @@ the section you came for — it states what must not break and why. A missing se
   currently dark in production
 - [anomaly-alerts](features/anomaly-alerts.md) — rule-based alerts fired on expense write
 - [inflation-shield](features/inflation-shield.md) — price forecasting and stock-up advice
+- [personal-inflation-index](features/personal-inflation-index.md) — price history from receipt
+  lines, canonical product names, the Laspeyres index
 
 ### Budgets
 - [budgets](features/budgets.md) — periods, the financial month, split-aware progress, the
   projection, threshold pushes
+
+### Pricing
+- [subscription-pricing](features/subscription-pricing.md) — where prices live, displayed vs
+  charged, and how to change a live Stripe price
 
 ### Trips
 - [trip-wallet](features/trip-wallet.md) — the trip account type, multi-way splitting, settle-up

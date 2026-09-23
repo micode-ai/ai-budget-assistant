@@ -7,7 +7,7 @@ A NestJS module (`modules/slack/`) embedded in the API that lets users interact 
 - `apps/api/src/modules/slack/slack.module.ts` — module registration
 - `apps/api/src/modules/slack/slack-bot.controller.ts` — `POST /slack/events` and `POST /slack/interactivity` (both excluded from `/api/v1` prefix in `main.ts`)
 - `apps/api/src/modules/slack/handlers/` — `ChatHandler`, `VoiceHandler`, `PhotoHandler`, `CommandHandler`, `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`
-- `apps/api/src/modules/slack/helpers/i18n.ts` — system-message localisation (8 languages)
+- `apps/api/src/modules/slack/helpers/i18n.ts` — Slack-specific copy only, spread over the shared 9-language dictionary in `apps/api/src/common/bot-i18n/shared-messages.ts`
 - `apps/api/src/modules/slack/helpers/verify-signature.ts` — `v0=` HMAC-SHA256 signature verification
 - `apps/mobile/app/settings/bots.tsx` — "Slack" section with 6-char link code + status + unlink
 
@@ -25,6 +25,22 @@ A NestJS module (`modules/slack/`) embedded in the API that lets users interact 
 - **Bot user loop guard** — `auth.test` is called on module init to obtain the bot's own user id; incoming events from that user id are silently ignored to prevent the bot from replying to itself.
 - **Account linking** — mobile screen shows a 6-char hex code the user sends to the bot as `link <code>`. `CommandHandler.handleLink` is the only command accepted from unlinked Slack users. Link data is stored in `SlackLink` and `SlackLinkCode` tables (migration `20260604103259_add_slack_links`). Link endpoints live on `UsersController` (`POST/GET/DELETE /users/me/slack-link[-code]`).
 - **Expense source** — bot-created expenses carry `source: 'slack'`. `ExpenseSource` in `packages/shared-types/src/entities/primitives.ts` includes `'telegram' | 'whatsapp' | 'slack'` as the bot-channel values.
+
+## Invariants
+
+- **Let `subtype === 'file_share'` through (ABA-256).** `SlackBotService.handleEvent` drops bot/self
+  messages and edit/delete/system subtypes, but Slack tags *every* uploaded file message — image,
+  voice, PDF — with `file_share`. The old `if (event.subtype) return;` silently broke all receipt,
+  voice and PDF handling. The guard is `if (event.bot_id) return; if (event.subtype && event.subtype
+  !== 'file_share') return;`, pinned by a regression test in `slack-bot.service.spec.ts`; files are
+  then dispatched from `event.files[0]`.
+- **A thinking placeholder is replaced in place (ABA-196).** Slow paths (AI chat, voice, OCR) post
+  a `💭` placeholder via `postPlaceholder` and replace it with `chat.update`. `updateText` passes **no**
+  `blocks` — `blocks: []` would blank the body; `updateButtons` rebuilds Block Kit through the shared
+  `buildButtonBlocks`. Voice turns its placeholder into the permanent `🎤 "transcript"` echo and the
+  chat reply gets its own.
+- **Receipt line editing is typed, not tapped** — see
+  [bot-receipt-editing](features/bot-receipt-editing.md).
 
 ## Multi-workspace install (OAuth)
 
@@ -97,7 +113,7 @@ Every outbound method on `SlackClientService` takes `teamId` as its **first para
 
 ### Mobile "Add to Slack" button
 
-`app/settings/bots.tsx` shows an "Add to Slack" button in the Slack section that opens `<API_ORIGIN>/slack/install` in the system browser (via `Linking.openURL`). i18n keys: `slackBot.addToSlack` (button label) and `slackBot.addToSlackHint` (subtitle explaining the flow) — all 8 locales.
+`app/settings/bots.tsx` shows an "Add to Slack" button in the Slack section that opens `<API_ORIGIN>/slack/install` in the system browser (via `Linking.openURL`). i18n keys: `slackBot.addToSlack` (button label) and `slackBot.addToSlackHint` (subtitle explaining the flow) — all 9 locales.
 
 ## Required env vars
 - `SLACK_BOT_TOKEN` — Bot User OAuth Token (`xoxb-...`), scope `chat:write` + `files:read`
@@ -144,4 +160,4 @@ Verify env names inside container without exposing values: `docker exec budget-a
 - Webhook signature pattern follows the Stripe/WhatsApp wiring in `main.ts` — `rawBody` capture for HMAC verification
 
 ## Where to look first
-Webhook handler → `slack.controller.ts`. Outbound message construction → `SlackClientService`. Localised replies → `helpers/i18n.ts`. Signature verification → `helpers/verify-signature.ts`. Mobile linking UX → `apps/mobile/app/settings/bots.tsx`.
+Webhook handler → `slack-bot.controller.ts`, dispatch → `slack-bot.service.ts`. Outbound message construction → `SlackClientService`. Localised replies → `helpers/i18n.ts`. Signature verification → `helpers/verify-signature.ts`. Mobile linking UX → `apps/mobile/app/settings/bots.tsx`.

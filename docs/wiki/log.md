@@ -73,6 +73,15 @@ Newest last within each section.
   defined twice. → `features/deposit-and-discount-totals.md`, `features/chat-spending-questions.md`,
   `features/desktop-keyboard-shortcuts.md`, `features/bot-receipt-editing.md` (all new).
   CLAUDE.md 34 171 → 31 243 words; 56 pages.
+- 2026-09-23 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — eighth batch.
+  Seven bullets, three new pages and one hub: four import bullets (Polish banks, Wise, batch history,
+  the service split) became `features/bank-statement-import.md`; the Slack bullet was absorbed into
+  the existing `slack-bot.md` hub, which gained an Invariants section and lost two stale claims
+  (8 languages, a controller file name). Two CLAUDE.md errors found: Pro's yearly discount is 50%,
+  not ~69%, and the "one file per price change" claim misses the hand-typed `MRR_MONTHLY_USD`.
+  → `features/bank-statement-import.md`, `features/personal-inflation-index.md`,
+  `features/subscription-pricing.md` (new) + `slack-bot.md` (extended). CLAUDE.md 31 243 → 29 100 words;
+  59 pages.
 
 ## Queries
 
