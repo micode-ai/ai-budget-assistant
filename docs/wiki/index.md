@@ -71,6 +71,14 @@ the section you came for — it states what must not break and why. A missing se
 ### AI chat
 - [chat-conversation-management](features/chat-conversation-management.md) — rename, delete, pin,
   and the sharing control
+- [chat-spending-questions](features/chat-spending-questions.md) — split-aware category answers and
+  line-item product search
+- [deposit-and-discount-totals](features/deposit-and-discount-totals.md) — deposit and discount
+  answers from the columns, in chat and on the Analytics tab
+
+### Bots
+- [bot-receipt-editing](features/bot-receipt-editing.md) — typed line-item and total corrections to a
+  scanned receipt, on all three bots
 
 ### Screens and platform surfaces
 - [expense-location-and-map](features/expense-location-and-map.md) — geocoding, the pin picker, and
@@ -80,6 +88,8 @@ the section you came for — it states what must not break and why. A missing se
 - [desktop-dashboard](features/desktop-dashboard.md) — the home tab's rail layout, its readiness
   rules, and the chart traps behind them
 - [desktop-chat-screen](features/desktop-chat-screen.md) — the conversation rail and reading column
+- [desktop-keyboard-shortcuts](features/desktop-keyboard-shortcuts.md) — the fixed key bindings, the
+  registry behind them, and the cheat sheet
 - [first-run-onboarding](features/first-run-onboarding.md) — routing a brand-new user, and the web
   dashboard state that replaces it there
 - [settings-desktop-shell](features/settings-desktop-shell.md) — the two-pane settings layout and

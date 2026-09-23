@@ -66,6 +66,13 @@ Newest last within each section.
   one page; ABA-521 extended `features/desktop-dashboard.md`, which already stated its rule.
   → `features/web-data-loading.md`, `features/budgets.md` (new) +
   `features/desktop-dashboard.md` (extended). CLAUDE.md 38 893 → 34 171 words; 52 pages.
+- 2026-09-23 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — seventh batch.
+  Seven bullets, four pages: the deposit tool, the discount tool and the Analytics drill-down are one
+  mechanism (column → pure summary → FX), and split-aware categories + line-item search are the two
+  halves of how `get_expenses` answers. Found while checking: `ALL_TIME_START` is not shared, it is
+  defined twice. → `features/deposit-and-discount-totals.md`, `features/chat-spending-questions.md`,
+  `features/desktop-keyboard-shortcuts.md`, `features/bot-receipt-editing.md` (all new).
+  CLAUDE.md 34 171 → 31 243 words; 56 pages.
 
 ## Queries
 
