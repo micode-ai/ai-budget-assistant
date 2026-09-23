@@ -18,7 +18,8 @@ The spending analysis layer: server-side aggregations (`modules/analytics/`, `mo
 - **Dual computation** — heavy aggregations happen server-side via the `analytics` module; lightweight / offline aggregations happen client-side in `useAnalytics.ts` using data already in the Zustand stores
 - **Calendar view** — `useCalendarData.ts` is a shared hook used in both the home widget and the full-screen calendar page; handles multi-currency conversion for per-day totals
 - **Scenario simulator** — `src/features/scenario/useScenarioProjection.ts` is pure client-side; reads expense/income stores and projects savings over 3/6/12 months
-- **Fat Finder** — `app/fat-finder.tsx` identifies large or recurring expenses; computation is client-side
+- **Fat Finder** — `app/fat-finder.tsx` renders a report generated **server-side** by `modules/insights/fat-finder.service.ts` (LLM-written, Pro-gated), not computed on the client
+- **Trailing-average deltas** — `useAnalytics` returns `vsAverage` on the summary (signed % vs the trailing 3-month average) and per category; a category's value is `null` when it is new or the view is not a month, and deltas inside ±5% are treated as noise and not shown
 - **Insights** — `insightsStore.ts` polls `GET /insights`; server generates rule-based tips (e.g., "you spent 30% more on dining this month")
 
 ## Cross-references

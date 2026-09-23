@@ -91,6 +91,16 @@ Newest last within each section.
   → `features/desktop-web-shell.md`, `features/wallet-currencies.md`,
   `features/receipt-image-memory.md`, `features/admin-revenue-metrics.md` (all new).
   CLAUDE.md 29 100 → 26 964 words; 63 pages.
+- 2026-09-23 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — tenth batch,
+  the inventories. Fourteen structural bullets (stores, repositories, services, screens, components,
+  hooks, features, navigation, three store splits, the visibility factory, headers) into a rewritten
+  `mobile-app.md` hub. Every list had rotted — ~20 stores missing, 18 repositories claimed vs 22, the
+  hub itself saying 22 stores / 14 api modules / 8 locales — so the hub replaces enumerations with
+  **naming conventions** and states "the directory is the list". Found: the comment above `header:`
+  in `(tabs)/_layout.tsx` contradicts its own JSX (title is below the divider), and
+  `analytics-insights.md` called Fat Finder client-side when it is a server LLM report — both fixed
+  or recorded. → `mobile-app.md` (rewritten), `analytics-insights.md` (corrected).
+  CLAUDE.md 26 964 → 24 971 words; 63 pages.
 
 ## Queries
 
