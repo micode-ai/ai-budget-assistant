@@ -46,6 +46,8 @@ the section you came for — it states what must not break and why. A missing se
   per-entity handlers, which entity types actually travel through the queue
 - [client-id-resolution](features/client-id-resolution.md) — local id vs server primary key, create
   idempotency, and why some bugs reproduce only on web
+- [web-data-loading](features/web-data-loading.md) — loading with no local database: failed vs
+  empty loads, retries, sign-out resets, and the proxy limit behind `Failed to fetch`
 
 ### Receipts
 - [receipt-price-check](features/receipt-price-check.md) — comparing each scanned line against the
@@ -115,6 +117,10 @@ the section you came for — it states what must not break and why. A missing se
   currently dark in production
 - [anomaly-alerts](features/anomaly-alerts.md) — rule-based alerts fired on expense write
 - [inflation-shield](features/inflation-shield.md) — price forecasting and stock-up advice
+
+### Budgets
+- [budgets](features/budgets.md) — periods, the financial month, split-aware progress, the
+  projection, threshold pushes
 
 ### Trips
 - [trip-wallet](features/trip-wallet.md) — the trip account type, multi-way splitting, settle-up

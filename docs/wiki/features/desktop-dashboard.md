@@ -68,6 +68,25 @@ loader fires only when **nothing** has answered — covering already-correct fig
 worse — and is bounded by its own timer armed **once on mount**, since re-arming per pull is the
 opposite of a bound.
 
+**Readiness is not the first-run decision.** `resolveDashboardReadiness` and `resolveWebFirstRun`
+are separate on purpose: first-run's `'wait'` answers "is this user new", and whether the wallet has
+answered has no bearing on that. Folding them together would make onboarding depend on unrelated
+requests. The loader timer (`DASHBOARD_LOADER_TIMEOUT_MS`) equals the first-run wait in value but is
+its own knob, so a change made for onboarding cannot silently retune it.
+
+**Readiness travels as an optional `readiness` on `HomeWidgetContext`, and absent means ready.**
+`DashboardMobile` passes nothing, so the phone is unchanged by construction. Gate at the source
+where one exists: `NetProfitWidget` nulls `currentNetProfit` (three render sites already guard
+`!== null`) and `FinancialHealthWidget` ANDs into `hasEnoughData` (reusing the existing `?` gauge
+and its copy). `MonthlyBudgetCard` gates only the spending-derived parts; the budget total still
+renders, since it comes from the budget list. Safe-to-Spend, Net Capital and the wallet cards are
+not gated — they are server-computed and already either correct or absent.
+
+**The progress bar reads in-flight flags only.** `HydrationProgressBar` folds in expenses, incomes,
+wallet, budgets and categories through `isDashboardRefreshing`, and every input is an
+`isLoading`/`isHydrating` flag, never "has not answered yet" — an offline native client's
+`lastPullAt` is `null` forever, and a bar keyed on it would animate forever.
+
 **An em dash, not a zero, for an unknown figure.** One shared `PendingValue` inherits the replaced
 number's text style; five widgets each inventing a placeholder is how a screen ends up with a dash, a
 zero and a spinner all meaning the same thing.

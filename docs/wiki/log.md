@@ -60,6 +60,12 @@ Newest last within each section.
   `features/exchange-rate-alerts.md`, `features/community-prices.md`,
   `features/whats-new-spotlight.md` (new) + `features/shopping-list.md` (extended).
   CLAUDE.md 44 053 → 39 234 words; 49 pages.
+- 2026-09-23 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — sixth batch.
+  Fourteen bullets, two new pages: six web data-loading bullets (ABA-498/506/518/519/520/522) are
+  one subject — "a failed load must not look like an empty one" — and seven budget bullets became
+  one page; ABA-521 extended `features/desktop-dashboard.md`, which already stated its rule.
+  → `features/web-data-loading.md`, `features/budgets.md` (new) +
+  `features/desktop-dashboard.md` (extended). CLAUDE.md 38 893 → 34 171 words; 52 pages.
 
 ## Queries
 
