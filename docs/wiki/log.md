@@ -82,6 +82,15 @@ Newest last within each section.
   → `features/bank-statement-import.md`, `features/personal-inflation-index.md`,
   `features/subscription-pricing.md` (new) + `slack-bot.md` (extended). CLAUDE.md 31 243 → 29 100 words;
   59 pages.
+- 2026-09-23 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — ninth batch.
+  Six bullets, four pages; the three admin revenue bullets (comped tiers, investor metrics,
+  acquisition) became one. The desktop-layout bullet was **stale**, not just long: it described a
+  left sidebar that the ABA-499 → 514 work removed, a two-column home screen the desktop dashboard
+  replaced, and `InteractiveLineChart` as a `useContentWidth` caller when it no longer is — the page
+  describes the code, and says which history is unrecoverable from a squash merge.
+  → `features/desktop-web-shell.md`, `features/wallet-currencies.md`,
+  `features/receipt-image-memory.md`, `features/admin-revenue-metrics.md` (all new).
+  CLAUDE.md 29 100 → 26 964 words; 63 pages.
 
 ## Queries
 

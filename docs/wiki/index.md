@@ -54,6 +54,8 @@ the section you came for — it states what must not break and why. A missing se
   median of what this user paid for it before, at that store
 - [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items
   across categories at scan time, the deposit group, category proposals
+- [receipt-image-memory](features/receipt-image-memory.md) — downscaling receipt photos to stay
+  under Google Play's memory thresholds
 
 ### Web, marketing site and growth
 - [web-build-and-hosting](features/web-build-and-hosting.md) — the Expo web build, platform splits,
@@ -81,6 +83,8 @@ the section you came for — it states what must not break and why. A missing se
   scanned receipt, on all three bots
 
 ### Screens and platform surfaces
+- [desktop-web-shell](features/desktop-web-shell.md) — the top bar and content area every desktop
+  screen sits in, and the one width gate
 - [expense-location-and-map](features/expense-location-and-map.md) — geocoding, the pin picker, and
   a map with no native map module
 - [desktop-transactions-screen](features/desktop-transactions-screen.md) — the reference screen of
@@ -109,6 +113,8 @@ the section you came for — it states what must not break and why. A missing se
   wired, why nothing renders a component, and how module-scope side effects leak between files
 
 ### Money movement and lists
+- [wallet-currencies](features/wallet-currencies.md) — which currencies get a balance card, and why a
+  hidden one stays hidden
 - [account-transfers](features/account-transfers.md) — moving money between accounts, and the only
   feature with its own offline write queue
 - [shopping-list](features/shopping-list.md) — offline-first lists, basket comparison, restock and
@@ -136,9 +142,11 @@ the section you came for — it states what must not break and why. A missing se
 - [budgets](features/budgets.md) — periods, the financial month, split-aware progress, the
   projection, threshold pushes
 
-### Pricing
+### Pricing and revenue
 - [subscription-pricing](features/subscription-pricing.md) — where prices live, displayed vs
   charged, and how to change a live Stripe price
+- [admin-revenue-metrics](features/admin-revenue-metrics.md) — investor metrics, acquisition, and
+  keeping admin-granted tiers out of revenue
 
 ### Trips
 - [trip-wallet](features/trip-wallet.md) — the trip account type, multi-way splitting, settle-up
