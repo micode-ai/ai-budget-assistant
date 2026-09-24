@@ -17,6 +17,11 @@ server pull follows. On web there is no SQLite (see
 - `apps/mobile/src/services/api.ts` — the composed `api` singleton
 - `apps/mobile/src/i18n/locales/` — nine locales
 
+## Feature pages
+
+- [categorize-uncategorized](features/categorize-uncategorized.md) — the review screen and dialog
+  that turn a batch of uncategorized expenses into a handful of categories
+
 ## The directory is the list
 
 Do not keep a count or an enumeration of stores, repositories, API files, hooks, components or
