@@ -192,13 +192,20 @@ ALPHASHOT_BADGE = (
     'loading="lazy"></a>'
 )
 
-SAMEAS = [
+# Two entities, two sets of profiles. The app's own channels identify the SoftwareApplication;
+# the company is identified by its own site and GitHub org. Mixing them made the Organization
+# node claim the app's Telegram channels, and gave AI engines no way to tie it to the MiCode
+# described on mi-code.pl (which spells the name "MiCode Sp. z o.o.").
+APP_SAMEAS = [
     "https://www.facebook.com/profile.php?id=61570771625318",
     "https://t.me/aibudgetassistant",
     "https://t.me/aibudgetassistantEn",
     "https://t.me/aibudgetassistantBy",
     "https://play.google.com/store/apps/details?id=com.budget.assistant",
 ]
+ORG_SAMEAS = ["https://mi-code.pl/", "https://github.com/micode-ai"]
+ORG_ALT_NAMES = ["MiCode Sp. z o.o.", "MiCode"]
+ORG_TAX_ID = "5833510147"  # NIP, as published on mi-code.pl
 GA_ID = "G-WMEFHYETVX"
 CONSENT = {
  "en": ("We use cookies to measure traffic and improve the site.", "Accept", "Decline"),
@@ -279,7 +286,8 @@ def org_node():
     """Shared Organization entity with a stable @id so every page references one node
     (better Knowledge-Graph / AI-engine entity consolidation than ~500 inline duplicates)."""
     return {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY,
-            "url": COMPANY_URL, "sameAs": SAMEAS,
+            "alternateName": ORG_ALT_NAMES, "taxID": ORG_TAX_ID,
+            "url": COMPANY_URL, "sameAs": ORG_SAMEAS,
             "logo": {"@type": "ImageObject", "url": f"{SITE}/assets/mi_code_logo.svg",
                      "width": 512, "height": 512}}
 

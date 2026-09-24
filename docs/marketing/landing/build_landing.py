@@ -205,13 +205,20 @@ ALPHASHOT_BADGE = (
     'loading="lazy"></a>'
 )
 
-SAMEAS = [
+# Two entities, two sets of profiles. The app's own channels identify the SoftwareApplication;
+# the company is identified by its own site and GitHub org. Mixing them made the Organization
+# node claim the app's Telegram channels, and gave AI engines no way to tie it to the MiCode
+# described on mi-code.pl (which spells the name "MiCode Sp. z o.o.").
+APP_SAMEAS = [
     "https://www.facebook.com/profile.php?id=61570771625318",
     "https://t.me/aibudgetassistant",
     "https://t.me/aibudgetassistantEn",
     "https://t.me/aibudgetassistantBy",
     "https://play.google.com/store/apps/details?id=com.budget.assistant",
 ]
+ORG_SAMEAS = ["https://mi-code.pl/", "https://github.com/micode-ai"]
+ORG_ALT_NAMES = ["MiCode Sp. z o.o.", "MiCode"]
+ORG_TAX_ID = "5833510147"  # NIP, as published on mi-code.pl
 GA_ID = "G-WMEFHYETVX"
 CONSENT = {
  "en": ("We use cookies to measure traffic and improve the site.", "Accept", "Decline"),
@@ -687,10 +694,11 @@ def org_node():
     """Shared Organization entity with a stable @id so every page references one node
     instead of inlining a duplicate (mirrors build_blog.org_node, but keeps BASE so the
     /preview build points at its own copy of the logo)."""
-    return {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY, "url": COMPANY_URL,
+    return {"@type": "Organization", "@id": f"{SITE}/#organization", "name": COMPANY,
+            "alternateName": ORG_ALT_NAMES, "taxID": ORG_TAX_ID, "url": COMPANY_URL,
             "logo": {"@type": "ImageObject", "url": f"{SITE}{BASE}/assets/mi_code_logo.svg",
                      "width": 512, "height": 512},
-            "sameAs": SAMEAS}
+            "sameAs": ORG_SAMEAS}
 
 # UN/CEFACT codes for the billing period of a recurring plan.
 BILLING_UNIT = {"MON": "monthly", "ANN": "yearly"}
@@ -1290,7 +1298,7 @@ def pricing_page(lang):
          "alternateName": ["AI Budget", "AI Budget App"], "description": t["meta"], "image": og, "applicationCategory": "FinanceApplication",
          "operatingSystem": "Android, Web", "inLanguage": bcp47(lang), "url": url,
          "brand": {"@id": f"{SITE}/#organization"}, "publisher": {"@id": f"{SITE}/#organization"},
-         "downloadUrl": PLAY, "sameAs": [PLAY], "offers": tier_offers},
+         "downloadUrl": PLAY, "sameAs": APP_SAMEAS, "offers": tier_offers},
     ] + [
         {"@type": "FAQPage", "mainEntity": [
             {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in t["faq"]]},
@@ -1331,7 +1339,7 @@ def jsonld(lang, langs):
          "name": "AI Budget Assistant", "alternateName": ["AI Budget", "AI Budget App"], "applicationCategory": "FinanceApplication",
          "operatingSystem": "Android, Web", "inLanguage": bcp47(lang), "url": url, "image": og,
          "publisher": {"@id": f"{SITE}/#organization"},
-         "downloadUrl": PLAY, "sameAs": [PLAY],
+         "downloadUrl": PLAY, "sameAs": APP_SAMEAS,
          "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
          "featureList": [
              "Voice expense capture via AI transcription",
