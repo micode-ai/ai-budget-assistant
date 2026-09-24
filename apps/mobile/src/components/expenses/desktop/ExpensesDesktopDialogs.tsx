@@ -7,6 +7,7 @@ import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import type { LedgerRow } from '@/features/expenses/desktopTable';
 import { ExpenseDialog } from './ExpenseDialog';
 import { CreateDialog } from './CreateDialog';
+import { CategorizeDialog } from './CategorizeDialog';
 
 interface Props {
   /** The ledger-row view/edit dialog (design decisions 4/5) — `null` renders
@@ -30,6 +31,11 @@ interface Props {
   createKind: 'expense' | 'income' | null;
   onCloseCreateDialog: () => void;
 
+  /** The categorize review, opened from the uncategorized banner above
+   *  `SummaryStrip`. */
+  showCategorize: boolean;
+  onCloseCategorize: () => void;
+
   /** Bulk category picker, spawned from the selection bar. Reuses
    *  `multiSelect.handleBulkSetCategory` verbatim (the same list
    *  `ExpensesMobile.tsx` renders inline) — only the surrounding chrome is
@@ -50,7 +56,7 @@ interface Props {
 }
 
 /**
- * The four overlay "dialogs" `ExpensesDesktop` can have open — never more
+ * The five overlay "dialogs" `ExpensesDesktop` can have open — never more
  * than one at a time, since opening any of them requires closing whatever
  * was open before (`ExpenseDialog`'s scrim covers the row list, the bulk
  * pickers only open from the selection bar which itself sits under any open
@@ -67,7 +73,7 @@ interface Props {
  * triggers a dialog stays in `ExpensesDesktop`, and an edit to HOW a dialog
  * looks stays here.
  *
- * The row context menu (`RowContextMenu`) is deliberately NOT one of the four
+ * The row context menu (`RowContextMenu`) is deliberately NOT one of the five
  * slots here — it isn't a dialog (no scrim, no focus trap, it's a small
  * anchored popover), it's already its own presentational component with its
  * own viewport-clamped positioning, and the state it needs (`menuState`,
@@ -84,6 +90,8 @@ export function ExpensesDesktopDialogs({
   dialogInitialEditing,
   createKind,
   onCloseCreateDialog,
+  showCategorize,
+  onCloseCategorize,
   showBulkCategoryPicker,
   onCloseBulkCategoryPicker,
   categories,
@@ -111,6 +119,8 @@ export function ExpensesDesktopDialogs({
       )}
 
       {createKind && <CreateDialog kind={createKind} onClose={onCloseCreateDialog} />}
+
+      {showCategorize && <CategorizeDialog onClose={onCloseCategorize} />}
 
       {showBulkCategoryPicker && (
         <Modal visible transparent animationType="fade" onRequestClose={onCloseBulkCategoryPicker}>
