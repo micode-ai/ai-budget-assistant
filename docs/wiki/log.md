@@ -110,6 +110,14 @@ Newest last within each section.
   → `features/bank-notification-capture.md`, `features/referral-program.md`,
   `features/store-rating-prompt.md` (new) + `features/web-build-and-hosting.md`,
   `features/receipt-split.md`, `index.md` (extended). CLAUDE.md 24 971 → 22 751 words; 66 pages.
+- 2026-09-24 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — twelfth batch.
+  Five bullets, five pages. Found: the approval rule is snapshotted per purchase request; members who
+  never vote still count in the denominator (the bullet claimed otherwise); `familyFeed` is first in
+  `WIDGET_KEYS`, not after `safeToSpend`; purchase requests listed "9 endpoints" but have 10 and
+  "Family Feed integration" as deferred though it shipped; two stale widget counts and a
+  `storeArrival` reference fixed elsewhere in CLAUDE.md. → `features/purchase-requests.md`,
+  `features/family-feed.md`, `features/invite-by-search.md`, `features/subscription-manager.md`,
+  `features/theme-customization.md` (all new). CLAUDE.md 22 751 → 21 032 words; 71 pages.
 
 ## Queries
 

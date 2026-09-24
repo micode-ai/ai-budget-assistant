@@ -112,6 +112,10 @@ the section you came for — it states what must not break and why. A missing se
 - [store-rating-prompt](features/store-rating-prompt.md) — the Play rating request, its two
   throttles, and why it is marked before it fires
 
+### Appearance
+- [theme-customization](features/theme-customization.md) — mode and accent colour, derived brand
+  tokens, and the precedence rule between server and device
+
 ### Working in the mobile app
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
   wired, why nothing renders a component, and how module-scope side effects leak between files
@@ -155,6 +159,18 @@ the section you came for — it states what must not break and why. A missing se
   charged, and how to change a live Stripe price
 - [admin-revenue-metrics](features/admin-revenue-metrics.md) — investor metrics, acquisition, and
   keeping admin-granted tiers out of revenue
+
+### Shared accounts
+- [purchase-requests](features/purchase-requests.md) — proposing a purchase, approval rules, voting
+  from the app and the bots, planned expenses
+- [family-feed](features/family-feed.md) — the activity feed, grouping, live request status,
+  reactions, retention
+- [invite-by-search](features/invite-by-search.md) — inviting a registered user by push, and the
+  three checks `respondToInvitation` must make
+
+### Recurring charges
+- [subscription-manager](features/subscription-manager.md) — tracking the user's own subscriptions,
+  renewal reminders, auto-booked renewals (not Stripe)
 
 ### Trips
 - [trip-wallet](features/trip-wallet.md) — the trip account type, multi-way splitting, settle-up
