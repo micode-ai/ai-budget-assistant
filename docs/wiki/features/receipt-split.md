@@ -85,6 +85,15 @@ failure; `receiptSplitStore.load` treats a 404 as "no split" and warns only on a
 uses to prove the pay affordance disappears once a share is claimed; a CTA borrowing it silently
 defeated seven of those assertions. The CTA has its own `.btn-cta`, and a test pins the separation.
 
+**The guest page is the one surface a non-user opens unprompted**, often paying through it, so its
+footer is an acquisition card: `poweredBy` as the heading, a primary button to the web app
+(`?src=split&loc=guest`, in `helpers/guest-page.ts`), Google Play as a secondary link. The button
+says what the reader just experienced ("Split your own bill"), not "try the app". **There is no iOS
+link and none may be re-added until a real App Store id exists** — the old one pointed at
+`apps.apple.com/app/id000000000`, a placeholder that never resolved, handed to plausibly half of
+every bill's recipients; a test asserts the placeholder is absent. The group-picker and confirm pages
+have no footer.
+
 ## Known gaps
 
 - `APP_PUBLIC_URL` is unset in production, so links fall back to `https://api.ai-budget.pl`. The
@@ -99,6 +108,8 @@ defeated seven of those assertions. The CTA has its own `.btn-cta`, and a test p
 - **ABA-422** — screen decomposition: `split.tsx` was 972 lines mixing both states; now a thin
   composition over `AssignmentEditor` and `ParticipantStatusList`, with `useAddParticipant` +
   `AddPersonRow` for the add-person sub-flow.
+- **ABA-487** — the guest-page CTA card; the dead iOS store link deleted from the type and all nine
+  locale blocks.
 - **ABA-534** — the global-prefix exclusion collapsed to one wildcard after every QR 404'd.
 - **ABA-540** — guest dispute flags.
 - **QR group split** — `groupToken` on the `seq:0` anchor row, names-only picker page, confirm

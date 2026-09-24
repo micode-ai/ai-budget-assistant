@@ -101,6 +101,15 @@ Newest last within each section.
   `analytics-insights.md` called Fat Finder client-side when it is a server LLM report — both fixed
   or recorded. → `mobile-app.md` (rewritten), `analytics-insights.md` (corrected).
   CLAUDE.md 26 964 → 24 971 words; 63 pages.
+- 2026-09-24 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — eleventh batch.
+  Eight bullets, three new pages, three extended: the three notification-capture bullets are one
+  pipeline; referral link + invite nudge are one program. PWA and guest CTA were mostly on pages
+  already, so they extended them. Found: the store-rating prompt is ABA-485, cited as ABA-492 in two
+  places; the capture subscription moved into `useBankNotificationCapture`; three server paths
+  (`reconcileNotificationStub`, `flagPossibleMerges`, `expensePayee`) had moved since the bullets.
+  → `features/bank-notification-capture.md`, `features/referral-program.md`,
+  `features/store-rating-prompt.md` (new) + `features/web-build-and-hosting.md`,
+  `features/receipt-split.md`, `index.md` (extended). CLAUDE.md 24 971 → 22 751 words; 66 pages.
 
 ## Queries
 

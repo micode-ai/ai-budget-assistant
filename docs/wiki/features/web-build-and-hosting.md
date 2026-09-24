@@ -57,6 +57,21 @@ file. Verified by building with `--clear` and diffing, not assumed. PWA tags are
 script instead, which fails the build when `</head>` is absent, and `build-web.sh` greps the result
 afterwards: a silent no-op would ship an app nobody can install.
 
+**The PWA exists because there is no native iOS app.** "Add to Home Screen" is the only way an
+iPhone gets an app-shaped AI Budget Assistant, so the manifest and icons are not decoration. The
+manifest's `background_color: #000000` matches `expo-splash-screen.backgroundColor` in `app.json` so
+launch does not flash; `orientation` is deliberately **omitted**, because `useOrientationLock`
+already locks phones to portrait and unlocks tablets from JS, and a manifest value would fight it.
+`apple-mobile-web-app-status-bar-style` is `default`, never `black-translucent` — translucent puts
+content under the status bar, and the web layout has none of the native app's safe-area handling.
+
+**Icons come in three shapes for three consumers**, all regenerated from `assets/icon.png` by
+`apps/mobile/scripts/generate-web-icons.py`: `icon-192`/`icon-512` for the manifest;
+`icon-maskable-512` scaled into the inner **80% safe zone**, because a maskable slot is cropped to
+the launcher's shape and a full-bleed icon loses the top of the wallet; and `apple-touch-icon.png`
+flattened opaque, because **iOS reads none of the manifest** — without that `<link>` an installed
+shortcut uses a screenshot of the page as its icon.
+
 **A single-file bind mount does not survive `sed -i`.** `nginx.conf` is mounted as one file, so an
 edit that replaces the inode leaves the container reading the old one — truncate in place. And
 neither `nginx -s reload` nor `SIGHUP` reliably cycles the workers here; only
@@ -74,7 +89,8 @@ unused-but-tagged images are another project's rollback target.
   that gates on a local-row count behaves as if the account were empty. Several bugs have come from
   code that reads a persisted value on a path only native reaches.
 - No service worker, so Chrome shows "Add to home screen" rather than an install prompt; iOS
-  installs from the manifest alone.
+  installs from the manifest alone. Deliberate: a naive shell-caching worker risks serving a stale
+  JS bundle, and the web app has no offline story to cache for (no SQLite on web).
 - Logging limits are set on the four compose-managed containers only; the two hand-created
   ai-budget web containers and `shared-nginx` have no `max-size`, and one had reached 244 MB.
 

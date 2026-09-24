@@ -104,9 +104,13 @@ the section you came for — it states what must not break and why. A missing se
 - [restore-credentials](features/restore-credentials.md) — WebAuthn so a session survives an Android
   device transfer
 
-### Telling users about things
+### Telling users about things, and asking them for something
 - [whats-new-spotlight](features/whats-new-spotlight.md) — the one-time nudge for already-shipped
   features
+- [referral-program](features/referral-program.md) — the share link, and the one moment the app
+  asks a user to invite a friend
+- [store-rating-prompt](features/store-rating-prompt.md) — the Play rating request, its two
+  throttles, and why it is marked before it fires
 
 ### Working in the mobile app
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
@@ -119,6 +123,10 @@ the section you came for — it states what must not break and why. A missing se
   feature with its own offline write queue
 - [shopping-list](features/shopping-list.md) — offline-first lists, basket comparison, restock and
   deal pushes, receipt reconciliation
+
+### Capturing expenses automatically
+- [bank-notification-capture](features/bank-notification-capture.md) — Android bank pushes parsed on
+  the device, the spend gate, and reconciliation with receipts and imports
 
 ### Importing
 - [bank-statement-import](features/bank-statement-import.md) — Polish banks, Revolut and Wise: the
