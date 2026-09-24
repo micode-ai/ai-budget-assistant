@@ -15,7 +15,11 @@ Laspeyres inflation index over the products this user actually buys. Free for ev
 - `apps/api/src/modules/ai/services/ocr.service.ts` — the `canonicalName rules` prompt block and
   `buildCanonicalNameFallback`
 - Mobile: `apps/mobile/src/stores/priceHistoryStore.ts`, `src/services/priceHistory.api.ts`,
-  `src/components/analytics/InflationIndexSection.tsx`, `app/settings/products.tsx`
+  `src/components/analytics/InflationIndexSection.tsx`, `app/settings/products.tsx` →
+  `src/components/settings/products/ProductsSettings.tsx`
+- `src/components/analytics/ProductDetailSheet.tsx` — the trend-chart + cheapest-store content,
+  hosted by TWO chromes: `InflationIndexSection`'s own hand-rolled sheet/dialog, and (ABA-588)
+  `src/components/settings/ProductDetailModal.tsx`'s `SheetDialog`
 
 ## Key concepts
 
@@ -41,6 +45,23 @@ is **negative AND** carries a discount label in one of the supported languages �
 stops a positive product with a label-like brand name from being pulled — and folds it into
 `parsed.discount` as `max(existing, Σ pulled)`. The paid total is never touched.
 
+**Two ways to reach a product's detail, on two different data sources (ABA-588).**
+`InflationIndexSection`'s top-3-movers list opens `ProductDetailSheet` from a `PriceHistoryProduct`
+already in `GET /price-history?period=X`'s `products[]` — which only includes a product with
+purchases on BOTH sides of that period's base/current midpoint (needed for `priceChangePct`).
+Settings → Products' full, unfiltered catalog (`GET /price-history/products`, no such gate) opens
+the SAME `ProductDetailSheet`, but sourced from a separate, narrower endpoint,
+`GET /price-history/products/:canonicalName/detail` → `PriceHistoryService.getProductDetail`,
+which groups the account's full item history for that one product with no qualification at all.
+This is why the search screen needed a new endpoint rather than reusing `getPriceHistory`: a
+product bought once, or bought a few times all on one side of every period's midpoint (the common
+case right after a first purchase), can never appear in `products[]` for ANY period, not even
+`all` — a single purchase timestamp is always on exactly one side of a split point.
+`getProductDetail` restricts to the product's own majority currency (not the account-wide one
+`getPriceHistory` uses), and fills `priceChangePct`/`baseAvgPrice`/`currentAvgPrice` best-effort
+(whole-history split at the midpoint) purely to satisfy the shared type — `ProductDetailSheet`
+never reads those three fields.
+
 ## Invariants
 
 **`PriceHistoryProduct.rawName` carries the pre-alias key** so a rename always updates the right
@@ -64,4 +85,5 @@ at most 500 per call.
 
 ## History
 
-ABA-307 · ABA-308 (AI backfill) · ABA-343 (discount-line folding).
+ABA-307 · ABA-308 (AI backfill) · ABA-343 (discount-line folding) · ABA-588 (search →
+detail on Settings → Products; the `getProductDetail` endpoint with no base/current gate).

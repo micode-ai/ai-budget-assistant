@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
-import type { PriceHistoryResponse, ProductListItem } from '@budget/shared-types';
+import type { PriceHistoryResponse, PriceHistoryProduct, ProductListItem } from '@budget/shared-types';
 
 interface PriceHistoryState {
   history: PriceHistoryResponse | null;
@@ -9,6 +9,11 @@ interface PriceHistoryState {
   isLoadingProducts: boolean;
   hasAttemptedLoad: boolean;
   selectedPeriod: '3m' | '6m' | '12m' | 'all';
+  /** The product opened from `ProductsSettings`' search → detail flow — NOT
+   *  fed by `history` (see `loadProductDetail`'s doc), so it needs its own
+   *  loading/selection state independent of the period-scoped `history`. */
+  selectedProductDetail: PriceHistoryProduct | null;
+  isLoadingProductDetail: boolean;
 
   loadPriceHistory: (period?: '3m' | '6m' | '12m' | 'all') => Promise<void>;
   loadProducts: () => Promise<void>;
@@ -18,6 +23,8 @@ interface PriceHistoryState {
   ignoreProduct: (rawName: string) => Promise<void>;
   mergeProducts: (rawNames: string[], canonicalName: string) => Promise<void>;
   deletePricePoint: (itemId: string) => Promise<void>;
+  loadProductDetail: (canonicalName: string) => Promise<void>;
+  clearProductDetail: () => void;
   reset: () => void;
 }
 
@@ -28,6 +35,8 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
   isLoadingProducts: false,
   hasAttemptedLoad: false,
   selectedPeriod: '6m',
+  selectedProductDetail: null,
+  isLoadingProductDetail: false,
 
   loadPriceHistory: async (period) => {
     const resolvedPeriod = period ?? get().selectedPeriod;
@@ -121,11 +130,40 @@ export const usePriceHistoryStore = create<PriceHistoryState>()((set, get) => ({
     try {
       await api.deletePricePoint(itemId);
       await get().loadPriceHistory();
+      // Keep the open detail sheet (if any) in sync — it is not derived from
+      // `history`, so deleting a point there would otherwise leave a stale
+      // row visible until the modal is closed and reopened.
+      const detail = get().selectedProductDetail;
+      if (detail) await get().loadProductDetail(detail.canonicalName);
     } catch (e) {
       console.warn('[priceHistoryStore] deletePricePoint failed', e);
       throw e;
     }
   },
 
-  reset: () => set({ history: null, products: [], isLoading: false, isLoadingProducts: false, hasAttemptedLoad: false, selectedPeriod: '6m' }),
+  // Fetch-and-set, warns on failure rather than throwing — mirrors
+  // `loadPriceHistory`/`loadProducts` (a read), not the mutation actions above.
+  loadProductDetail: async (canonicalName) => {
+    set({ isLoadingProductDetail: true });
+    try {
+      const detail = await api.getProductDetail(canonicalName);
+      set({ selectedProductDetail: detail, isLoadingProductDetail: false });
+    } catch (e) {
+      console.warn('[priceHistoryStore] loadProductDetail failed', e);
+      set({ selectedProductDetail: null, isLoadingProductDetail: false });
+    }
+  },
+
+  clearProductDetail: () => set({ selectedProductDetail: null, isLoadingProductDetail: false }),
+
+  reset: () => set({
+    history: null,
+    products: [],
+    isLoading: false,
+    isLoadingProducts: false,
+    hasAttemptedLoad: false,
+    selectedPeriod: '6m',
+    selectedProductDetail: null,
+    isLoadingProductDetail: false,
+  }),
 }));

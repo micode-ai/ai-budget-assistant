@@ -41,6 +41,14 @@ export class PriceHistoryController {
     return this.priceHistoryService.listProducts(req.accountId);
   }
 
+  // GET /price-history/products/:canonicalName/detail — full purchase history
+  // for one product, unfiltered by the inflation-index base/current gate.
+  // Read-only, so no ViewerBlockGuard.
+  @Get('products/:canonicalName/detail')
+  getProductDetail(@Req() req: AuthenticatedRequest, @Param('canonicalName') canonicalName: string) {
+    return this.priceHistoryService.getProductDetail(req.accountId, canonicalName);
+  }
+
   // PATCH /price-history/products/alias — declared BEFORE DELETE /products/alias/:rawName
   @Patch('products/alias')
   @UseGuards(new ViewerBlockGuard())

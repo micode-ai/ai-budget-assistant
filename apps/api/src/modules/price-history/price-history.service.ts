@@ -266,6 +266,80 @@ export class PriceHistoryService {
       .sort((a, b) => b.purchaseCount - a.purchaseCount);
   }
 
+  /**
+   * Full purchase history for ONE product, with no base/current-window
+   * qualification — unlike `getPriceHistory`'s `products[]`, which only
+   * includes a product with rows on both sides of the chosen period's
+   * midpoint (needed for `priceChangePct`). A product bought once, or bought
+   * a few times all before or all after every period's midpoint, can never
+   * appear there for ANY period — not even `all`, since one purchase always
+   * lands on exactly one side of a split point. This is the data source for
+   * the products-screen search → detail flow, where the product is known to
+   * exist (it came from `listProducts`) but may not have qualified for the
+   * inflation index.
+   *
+   * `priceChangePct`/`baseAvgPrice`/`currentAvgPrice` are filled best-effort
+   * (whole-history split at the midpoint when both halves have data, else a
+   * flat 0%/latest-avg) purely to satisfy the shared `PriceHistoryProduct`
+   * shape — `ProductDetailSheet` never reads them.
+   */
+  async getProductDetail(accountId: string, canonicalName: string): Promise<PriceHistoryProduct> {
+    const allRows = await this.fetchRows(accountId);
+    const matched = allRows.filter((r) => r.resolvedName === canonicalName);
+    if (matched.length === 0) throw new Error('Not found');
+
+    // Never mix currencies in one product's chart/store list — same rule as
+    // `getPriceHistory`, but scoped to this product's own rows rather than
+    // the account-wide majority.
+    const currency = this.resolveMajorityCurrency(matched);
+    const items = matched
+      .filter((r) => r.currency === currency)
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    const rawName = items[0]?.rawName ?? canonicalName;
+
+    const storeMap = new Map<string, StoreLatestPrice>();
+    for (const item of items) {
+      storeMap.set(item.merchant, {
+        merchantName: item.merchant,
+        latestPrice: item.unitPrice,
+        latestDate: item.date.toISOString().slice(0, 10),
+      });
+    }
+
+    const midMs = (items[0].date.getTime() + items[items.length - 1].date.getTime()) / 2;
+    const mid = new Date(midMs);
+    const baseItems = items.filter((i) => i.date < mid);
+    const currentItems = items.filter((i) => i.date >= mid);
+    const overallAvg = items.reduce((s, i) => s + i.unitPrice, 0) / items.length;
+    const baseAvgPrice =
+      baseItems.length > 0
+        ? baseItems.reduce((s, i) => s + i.unitPrice, 0) / baseItems.length
+        : overallAvg;
+    const currentAvgPrice =
+      currentItems.length > 0
+        ? currentItems.reduce((s, i) => s + i.unitPrice, 0) / currentItems.length
+        : overallAvg;
+    const priceChangePct = baseAvgPrice > 0 ? ((currentAvgPrice - baseAvgPrice) / baseAvgPrice) * 100 : 0;
+
+    return {
+      rawName,
+      canonicalName,
+      priceChangePct: Math.round(priceChangePct * 10) / 10,
+      currentAvgPrice: Math.round(currentAvgPrice * 100) / 100,
+      baseAvgPrice: Math.round(baseAvgPrice * 100) / 100,
+      currency,
+      purchaseCount: items.length,
+      stores: [...storeMap.values()].sort((a, b) => a.latestPrice - b.latestPrice),
+      pricePoints: items.map((i) => ({
+        itemId: i.id,
+        date: i.date.toISOString().slice(0, 10),
+        price: i.unitPrice,
+        merchant: i.merchant,
+      })),
+    };
+  }
+
   async upsertAlias(accountId: string, rawName: string, canonicalName: string): Promise<void> {
     await (this.prisma as any).productAlias.upsert({
       where: { accountId_rawName: { accountId, rawName } },

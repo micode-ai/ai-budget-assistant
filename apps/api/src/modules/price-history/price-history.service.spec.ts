@@ -73,6 +73,53 @@ describe('PriceHistoryService', () => {
     });
   });
 
+  describe('getProductDetail', () => {
+    const makeSvc = (rows: any[]) => {
+      const svc = new PriceHistoryService(null as any, null as any);
+      (svc as any).fetchRows = jest.fn().mockResolvedValue(rows);
+      return svc;
+    };
+
+    it('throws when the account has no rows for the product', async () => {
+      const svc = makeSvc([{ resolvedName: 'Other', date: new Date('2026-01-01'), unitPrice: 1, merchant: 'M', currency: 'PLN', rawName: 'Other', id: 'i1' }]);
+      await expect(svc.getProductDetail('acc-1', 'Olive Oil')).rejects.toThrow('Not found');
+    });
+
+    it('includes a product bought only once — no base/current gate, unlike getPriceHistory', async () => {
+      const svc = makeSvc([
+        { id: 'i1', resolvedName: 'Olive Oil', rawName: 'Olive Oil', date: new Date('2026-06-01'), unitPrice: 12.5, merchant: 'Biedronka', currency: 'PLN' },
+      ]);
+      const result = await svc.getProductDetail('acc-1', 'Olive Oil');
+      expect(result.purchaseCount).toBe(1);
+      expect(result.priceChangePct).toBe(0);
+      expect(result.pricePoints).toEqual([{ itemId: 'i1', date: '2026-06-01', price: 12.5, merchant: 'Biedronka' }]);
+    });
+
+    it('sorts stores cheapest-first is left to the caller — service returns latest price per merchant', async () => {
+      const svc = makeSvc([
+        { id: 'i1', resolvedName: 'Olive Oil', rawName: 'Olive Oil', date: new Date('2026-01-01'), unitPrice: 15, merchant: 'Kaufland', currency: 'PLN' },
+        { id: 'i2', resolvedName: 'Olive Oil', rawName: 'Olive Oil', date: new Date('2026-06-01'), unitPrice: 11, merchant: 'Lidl', currency: 'PLN' },
+      ]);
+      const result = await svc.getProductDetail('acc-1', 'Olive Oil');
+      expect(result.stores).toEqual([
+        { merchantName: 'Lidl', latestPrice: 11, latestDate: '2026-06-01' },
+        { merchantName: 'Kaufland', latestPrice: 15, latestDate: '2026-01-01' },
+      ]);
+    });
+
+    it('restricts to the product\'s own majority currency, not the account-wide one', async () => {
+      const svc = makeSvc([
+        { id: 'i1', resolvedName: 'Olive Oil', rawName: 'Olive Oil', date: new Date('2026-01-01'), unitPrice: 15, merchant: 'Kaufland', currency: 'PLN' },
+        { id: 'i2', resolvedName: 'Olive Oil', rawName: 'Olive Oil', date: new Date('2026-02-01'), unitPrice: 16, merchant: 'Kaufland', currency: 'PLN' },
+        { id: 'i3', resolvedName: 'Olive Oil', rawName: 'Olive Oil', date: new Date('2026-03-01'), unitPrice: 4, merchant: 'DutyFree', currency: 'EUR' },
+      ]);
+      const result = await svc.getProductDetail('acc-1', 'Olive Oil');
+      expect(result.currency).toBe('PLN');
+      expect(result.purchaseCount).toBe(2);
+      expect(result.pricePoints.every((p) => p.merchant !== 'DutyFree')).toBe(true);
+    });
+  });
+
   describe('backfillWithAi query (ABA-315)', () => {
     const OLD = process.env.OPENAI_API_KEY;
     afterEach(() => {

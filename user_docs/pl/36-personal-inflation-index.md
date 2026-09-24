@@ -32,6 +32,15 @@ Stuknij w dowolny produkt, aby zobaczyć:
 - Tabelę z najnowszą ceną w każdym sklepie, w którym kupowałeś ten produkt, posortowaną od najtańszej
 - Opcję zmiany nazwy produktu (patrz niżej)
 
+## Wyszukiwanie historii cen produktu
+
+Karta Analityka pokazuje tylko produkty z największymi zmianami cen. Aby sprawdzić historię
+**dowolnego** zeskanowanego produktu, przejdź do **Ustawienia → Dane referencyjne → Produkty**
+i skorzystaj z pola wyszukiwania (np. wpisz "oliwa"). Stuknij wynik, aby zobaczyć ten sam wykres
+historii cen i porównanie sklepów — nawet dla produktu kupionego tylko raz czy dwa razy. Ten
+ekran nie wymaga minimalnej liczby zakupów, więc nowy produkt pojawi się od razu po zeskanowaniu
+pierwszego paragonu.
+
 ## Zarządzanie nazwami produktów
 
 Aplikacja automatycznie przypisuje krótką, czystą nazwę do każdego produktu (np. "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"). Możesz korygować lub dostosowywać te nazwy.
@@ -44,7 +53,8 @@ Stuknij w dowolną pozycję produktu w sekcji inflacji, a następnie wybierz opc
 
 Przejdź do **Ustawienia → Dane referencyjne → Produkty**, aby zobaczyć wszystkie śledzone produkty. Stąd możesz:
 
-- **Zmienić nazwę** dowolnego produktu (stuknij w wiersz)
+- **Zobaczyć historię cen i najtańszy sklep** dla dowolnego produktu (stuknij w wiersz)
+- **Zmienić nazwę** dowolnego produktu (stuknij ikonę ołówka w wierszu)
 - **Scalić** wiele wariantów produktu w jeden (przytrzymaj, aby zaznaczyć, następnie stuknij Scal) — przydatne, gdy ten sam produkt pojawia się pod nieco różnymi nazwami
 - **Zresetować** niestandardową nazwę do oryginalnej (stuknij ikonę resetowania w wierszu, który został przemianowany)
 

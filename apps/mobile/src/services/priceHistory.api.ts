@@ -1,6 +1,7 @@
 import { httpClient } from './http-client';
 import type {
   PriceHistoryResponse,
+  PriceHistoryProduct,
   ProductListItem,
   UpsertAliasDto,
   MergeProductsDto,
@@ -13,6 +14,12 @@ export const priceHistoryApi = {
 
   getProducts() {
     return httpClient.request<ProductListItem[]>('/price-history/products');
+  },
+
+  getProductDetail(canonicalName: string) {
+    return httpClient.request<PriceHistoryProduct>(
+      `/price-history/products/${encodeURIComponent(canonicalName)}/detail`,
+    );
   },
 
   upsertAlias(body: UpsertAliasDto) {

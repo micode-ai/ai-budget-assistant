@@ -6558,6 +6558,15 @@ Tippe auf ein beliebiges Produkt, um Folgendes zu sehen:
 - Eine Tabelle mit dem aktuellen Preis in jeder Filiale, in der du das Produkt gekauft hast, sortiert vom günstigsten Preis
 - Eine Option, das Produkt umzubenennen (siehe unten)
 
+## Preisverlauf eines Produkts suchen
+
+Die Registerkarte Analysen zeigt nur die Produkte mit den größten Preisänderungen. Um den
+Preisverlauf für **jedes beliebige** gescannte Produkt nachzuschlagen, gehe zu **Einstellungen →
+Referenzdaten → Produkte** und nutze das Suchfeld (z. B. „Olivenöl"). Tippe auf ein Ergebnis, um
+dasselbe Preisverlaufdiagramm und denselben Filialvergleich zu sehen — auch für ein Produkt, das
+du erst ein- oder zweimal gekauft hast. Dieser Bildschirm hat keine Mindestanzahl an Käufen, ein
+neues Produkt erscheint also sofort, sobald der erste Kassenbon dafür gescannt wurde.
+
 ## Produktnamen verwalten
 
 Die App vergibt jedem Produkt automatisch einen kurzen, übersichtlichen Namen (z. B. „PIWO TYSKIE 0,5L 4,7%" → „Tyskie Piwo"). Du kannst diese Namen korrigieren oder anpassen.
@@ -6570,7 +6579,8 @@ Tippe auf eine beliebige Produktzeile im Inflationsbereich und dann auf die Umbe
 
 Gehe zu **Einstellungen → Referenzdaten → Produkte**, um alle erfassten Produkte zu sehen. Von hier aus kannst du:
 
-- **Umbenennen** eines beliebigen Produkts (tippe auf eine Zeile)
+- **Preisverlauf und günstigste Filiale ansehen** für ein beliebiges Produkt (tippe auf eine Zeile)
+- **Umbenennen** eines beliebigen Produkts (tippe auf das Stiftsymbol einer Zeile)
 - **Zusammenführen** mehrerer Produktvarianten zu einem Eintrag (lang drücken zum Auswählen, dann auf „Zusammenführen" tippen) — nützlich, wenn dasselbe Produkt unter leicht unterschiedlichen Namen erscheint
 - **Zurücksetzen** eines benutzerdefinierten Namens auf den ursprünglichen Namen (tippe auf das Zurücksetzen-Symbol einer umbenannten Zeile)
 

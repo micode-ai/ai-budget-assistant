@@ -32,6 +32,15 @@ Tap any product to see:
 - A table showing the latest price at each store you've bought that product, sorted cheapest first
 - An option to rename the product (see below)
 
+## Search a Product's Price History
+
+The Analytics tab only lists your top movers — the products whose price has changed the most.
+To look up **any** product you've ever scanned, go to **Settings → Reference Data → Products** and
+use the search box (e.g. search "olive oil"). Tap a result to see the same price history chart and
+cheapest-store comparison, even for a product you've only bought once or twice — this screen has no
+minimum-purchase requirement, so a brand-new product shows up the moment its first receipt is
+scanned.
+
 ## Managing Product Names
 
 The app assigns a short, clean name to each product automatically (e.g. "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"). You can correct or customize these names.
@@ -44,7 +53,8 @@ Tap any product row in the inflation section, then tap the rename option. Enter 
 
 Go to **Settings → Reference Data → Products** to see all tracked products. From here you can:
 
-- **Rename** any product (tap a row)
+- **View price history and the cheapest store** for any product (tap a row)
+- **Rename** any product (tap the pencil icon on a row)
 - **Merge** multiple product variants into one (long-press to select, then tap Merge) — useful when the same product appears under slightly different names
 - **Reset** a custom name back to the original (tap the reset icon on a row that has been renamed)
 

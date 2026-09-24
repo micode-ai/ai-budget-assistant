@@ -17,6 +17,7 @@ import { useProductMultiSelect } from '@/hooks/useProductMultiSelect';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { RenameProductModal } from '@/components/settings/RenameProductModal';
 import { MergeProductsModal } from '@/components/settings/MergeProductsModal';
+import { ProductDetailModal } from '@/components/settings/ProductDetailModal';
 import { SettingsScreenList } from '../SettingsScreenList';
 import { useSettingsPane } from '../SettingsPaneContext';
 import type { ProductListItem } from '@budget/shared-types';
@@ -145,8 +146,21 @@ export function ProductsSettings() {
   const canEdit = useAccountStore((s) => s.canEdit());
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
-  const { products, isLoadingProducts, loadProducts, upsertAlias, deleteAlias, ignoreProduct, mergeProducts, backfillWithAi } =
-    usePriceHistoryStore();
+  const {
+    products,
+    isLoadingProducts,
+    loadProducts,
+    upsertAlias,
+    deleteAlias,
+    ignoreProduct,
+    mergeProducts,
+    backfillWithAi,
+    selectedProductDetail,
+    isLoadingProductDetail,
+    loadProductDetail,
+    clearProductDetail,
+    deletePricePoint,
+  } = usePriceHistoryStore();
 
   // Keyed on the account, matching the analytics screen's cadence for the same
   // store: the list is scoped server-side to `X-Account-Id`, so a switch has to
@@ -159,6 +173,39 @@ export function ProductsSettings() {
   const [editing, setEditing] = useState<ProductListItem | null>(null);
   const [renameName, setRenameName] = useState('');
   const [saving, setSaving] = useState(false);
+
+  // Detail view (search → price trend + cheapest store) — a separate flow
+  // from rename above: the row's main tap opens this, the pencil icon opens
+  // rename. `detailItem` (not just `selectedProductDetail`) is what the sheet
+  // is keyed on, since it must open immediately on tap, before the
+  // `loadProductDetail` fetch resolves.
+  const [detailItem, setDetailItem] = useState<ProductListItem | null>(null);
+  const [detailRenameValue, setDetailRenameValue] = useState('');
+  const [isDetailRenaming, setIsDetailRenaming] = useState(false);
+
+  const openDetail = useCallback((item: ProductListItem) => {
+    setDetailItem(item);
+    setDetailRenameValue(item.canonicalName);
+    loadProductDetail(item.canonicalName);
+  }, [loadProductDetail]);
+
+  const closeDetail = useCallback(() => {
+    setDetailItem(null);
+    clearProductDetail();
+  }, [clearProductDetail]);
+
+  const handleDetailRename = async () => {
+    if (!detailItem || !detailRenameValue.trim()) return;
+    setIsDetailRenaming(true);
+    try {
+      await upsertAlias(detailItem.rawName, detailRenameValue.trim());
+      closeDetail();
+    } catch {
+      // warn'd in store
+    } finally {
+      setIsDetailRenaming(false);
+    }
+  };
 
   const [isBackfilling, setIsBackfilling] = useState(false);
 
@@ -374,8 +421,8 @@ export function ProductsSettings() {
               <>
                 <TouchableOpacity
                   style={styles.rowInner}
-                  onPress={canEdit ? () => openRename(item) : undefined}
-                  activeOpacity={canEdit ? 0.7 : 1}
+                  onPress={() => openDetail(item)}
+                  activeOpacity={0.7}
                 >
                   <View style={styles.iconCircle}>
                     <Ionicons name="bar-chart-outline" size={16} color={theme.colors.primary} />
@@ -390,10 +437,17 @@ export function ProductsSettings() {
                       </Text>
                     )}
                   </View>
-                  {canEdit && (
-                    <Ionicons name="create-outline" size={17} color={theme.colors.textTertiary} />
-                  )}
+                  <Ionicons name="chevron-forward" size={17} color={theme.colors.textTertiary} />
                 </TouchableOpacity>
+                {canEdit && (
+                  <TouchableOpacity
+                    onPress={() => openRename(item)}
+                    hitSlop={10}
+                    style={styles.resetBtn}
+                  >
+                    <Ionicons name="create-outline" size={18} color={theme.colors.textTertiary} />
+                  </TouchableOpacity>
+                )}
                 {canEdit && hasAlias && (
                   <TouchableOpacity
                     onPress={() => handleResetAlias(item)}
@@ -409,7 +463,7 @@ export function ProductsSettings() {
         </View>
       );
     },
-    [filteredProducts.length, selected, selecting, canEdit, toggleSelect, openRename, handleResetAlias, t, theme, styles],
+    [filteredProducts.length, selected, selecting, canEdit, toggleSelect, openDetail, openRename, handleResetAlias, t, theme, styles],
   );
 
   const ListHeader = useMemo(
@@ -609,6 +663,18 @@ export function ProductsSettings() {
         saving={saving}
         onClose={closeMerge}
         onConfirm={handleConfirmMerge}
+      />
+
+      <ProductDetailModal
+        product={selectedProductDetail}
+        isLoading={detailItem !== null && isLoadingProductDetail}
+        canEdit={canEdit}
+        renameValue={detailRenameValue}
+        onRenameValueChange={setDetailRenameValue}
+        onRename={handleDetailRename}
+        isRenaming={isDetailRenaming}
+        deletePricePoint={deletePricePoint}
+        onClose={closeDetail}
       />
     </>
   );

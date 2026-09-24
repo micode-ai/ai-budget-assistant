@@ -6563,6 +6563,15 @@ Toca cualquier producto para ver:
 - Una tabla con el último precio en cada tienda donde has comprado ese producto, ordenada del más barato al más caro
 - Una opción para renombrar el producto (ver más abajo)
 
+## Buscar el historial de precios de un producto
+
+La pestaña Análisis solo muestra los productos con mayores cambios de precio. Para consultar el
+historial de **cualquier** producto que hayas escaneado, ve a **Ajustes → Datos de referencia →
+Productos** y usa el cuadro de búsqueda (p. ej., «aceite de oliva»). Toca un resultado para ver el
+mismo gráfico de historial de precios y comparación de tiendas — incluso para un producto que solo
+hayas comprado una o dos veces. Esta pantalla no tiene un número mínimo de compras, así que un
+producto nuevo aparece en cuanto se escanea su primer tique.
+
 ## Gestión de nombres de productos
 
 La app asigna automáticamente un nombre corto y limpio a cada producto (p. ej., «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Puedes corregir o personalizar estos nombres.
@@ -6575,7 +6584,8 @@ Toca cualquier fila de producto en la sección de inflación y luego toca la opc
 
 Ve a **Ajustes → Datos de referencia → Productos** para ver todos los productos rastreados. Desde aquí puedes:
 
-- **Renombrar** cualquier producto (toca una fila)
+- **Ver el historial de precios y la tienda más barata** de cualquier producto (toca una fila)
+- **Renombrar** cualquier producto (toca el icono de lápiz de una fila)
 - **Combinar** varias variantes de un producto en una sola (mantén pulsado para seleccionar, luego toca Combinar) — útil cuando el mismo producto aparece con nombres ligeramente diferentes
 - **Restablecer** un nombre personalizado al original (toca el icono de restablecer en una fila que haya sido renombrada)
 

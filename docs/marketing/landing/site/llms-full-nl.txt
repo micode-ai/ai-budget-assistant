@@ -6634,6 +6634,15 @@ Tik op een product om te zien:
 - Een tabel met de laatste prijs in elke winkel waar je dat product hebt gekocht, gesorteerd van goedkoopst naar duurste
 - Een optie om het product te hernoemen (zie hieronder)
 
+## Prijsgeschiedenis van een product opzoeken
+
+Het tabblad Analyses toont alleen de producten met de grootste prijswijzigingen. Om de
+geschiedenis van **elk** gescand product op te zoeken, ga je naar **Instellingen →
+Referentiegegevens → Producten** en gebruik je het zoekvak (bijv. "olijfolie"). Tik op een
+resultaat om dezelfde prijshistoriegrafiek en winkelvergelijking te zien — zelfs voor een product
+dat je maar één of twee keer hebt gekocht. Dit scherm heeft geen minimumaantal aankopen nodig, dus
+een nieuw product verschijnt zodra het eerste bonnetje ervoor is gescand.
+
 ## Productnamen beheren
 
 De app geeft elk product automatisch een korte, duidelijke naam (bijv. « PIWO TYSKIE 0,5L 4,7% » → « Tyskie Piwo »). Je kunt deze namen corrigeren of aanpassen.
@@ -6646,7 +6655,8 @@ Tik op een productrij in de inflatiesectie en tik daarna op de hernoemoptie. Voe
 
 Ga naar **Instellingen → Referentiegegevens → Producten** om alle bijgehouden producten te zien. Vanaf hier kun je:
 
-- **Hernoemen** van een willekeurig product (tik op een rij)
+- **Prijsgeschiedenis en goedkoopste winkel bekijken** van een willekeurig product (tik op een rij)
+- **Hernoemen** van een willekeurig product (tik op het potloodicoon van een rij)
 - **Samenvoegen** van meerdere productvarianten tot één (lang indrukken om te selecteren, tik daarna op Samenvoegen) — handig wanneer hetzelfde product onder iets verschillende namen verschijnt
 - **Terugzetten** van een aangepaste naam naar de oorspronkelijke naam (tik op het terugstelicoon van een hernoemde rij)
 

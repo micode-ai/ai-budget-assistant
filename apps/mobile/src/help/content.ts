@@ -4307,6 +4307,15 @@ Tap any product to see:
 - A table showing the latest price at each store you've bought that product, sorted cheapest first
 - An option to rename the product (see below)
 
+## Search a Product's Price History
+
+The Analytics tab only lists your top movers — the products whose price has changed the most.
+To look up **any** product you've ever scanned, go to **Settings → Reference Data → Products** and
+use the search box (e.g. search "olive oil"). Tap a result to see the same price history chart and
+cheapest-store comparison, even for a product you've only bought once or twice — this screen has no
+minimum-purchase requirement, so a brand-new product shows up the moment its first receipt is
+scanned.
+
 ## Managing Product Names
 
 The app assigns a short, clean name to each product automatically (e.g. "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"). You can correct or customize these names.
@@ -4319,7 +4328,8 @@ Tap any product row in the inflation section, then tap the rename option. Enter 
 
 Go to **Settings → Reference Data → Products** to see all tracked products. From here you can:
 
-- **Rename** any product (tap a row)
+- **View price history and the cheapest store** for any product (tap a row)
+- **Rename** any product (tap the pencil icon on a row)
 - **Merge** multiple product variants into one (long-press to select, then tap Merge) — useful when the same product appears under slightly different names
 - **Reset** a custom name back to the original (tap the reset icon on a row that has been renamed)
 
@@ -9044,6 +9054,15 @@ OCR иногда неверно читает цену, выдумывает ст
 - Таблицу с последней ценой в каждом магазине, где вы покупали этот товар, отсортированную от дешёвого к дорогому
 - Возможность переименовать товар (см. ниже)
 
+## Поиск истории цен товара
+
+На вкладке «Аналитика» показаны только товары с наибольшими изменениями цены. Чтобы посмотреть
+историю **любого** отсканированного товара, перейдите в **Настройки → Справочные данные →
+Товары** и воспользуйтесь строкой поиска (например, введите «оливковое масло»). Нажмите на
+результат, чтобы увидеть тот же график истории цен и сравнение магазинов — даже для товара,
+купленного всего один-два раза. У этого экрана нет минимального требования по числу покупок,
+поэтому новый товар появится сразу после сканирования первого чека.
+
 ## Управление названиями товаров
 
 Приложение автоматически присваивает каждому товару короткое и понятное название (например, «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Вы можете исправить или настроить эти названия.
@@ -9056,7 +9075,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Перейдите в **Настройки → Справочные данные → Товары**, чтобы увидеть все отслеживаемые товары. Отсюда вы можете:
 
-- **Переименовать** любой товар (нажмите на строку)
+- **Посмотреть историю цен и самый дешёвый магазин** для любого товара (нажмите на строку)
+- **Переименовать** любой товар (нажмите на значок карандаша в строке)
 - **Объединить** несколько вариантов одного товара в один (удерживайте для выбора, затем нажмите «Объединить») — полезно, когда один и тот же товар встречается под немного разными названиями
 - **Сбросить** пользовательское название к исходному (нажмите на значок сброса в строке с переименованным товаром)
 
@@ -13751,6 +13771,15 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - Таблицю з останньою ціною в кожному магазині, де ви купували цей товар, відсортовану від найдешевшого до найдорожчого
 - Можливість перейменувати товар (див. нижче)
 
+## Пошук історії цін товару
+
+На вкладці «Аналітика» показані лише товари з найбільшими змінами ціни. Щоб переглянути історію
+**будь-якого** відсканованого товару, перейдіть до **Налаштування → Довідкові дані → Товари** і
+скористайтеся рядком пошуку (наприклад, введіть «оливкова олія»). Натисніть на результат, щоб
+побачити той самий графік історії цін і порівняння магазинів — навіть для товару, купленого лише
+раз чи два. У цього екрана немає мінімальної кількості покупок, тож новий товар з'явиться одразу
+після сканування першого чека.
+
 ## Управління назвами товарів
 
 Застосунок автоматично присвоює кожному товару коротку і зрозумілу назву (наприклад, «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Ви можете виправити або налаштувати ці назви.
@@ -13763,7 +13792,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Перейдіть до **Налаштування → Довідкові дані → Товари**, щоб побачити всі відстежувані товари. Звідси ви можете:
 
-- **Перейменувати** будь-який товар (натисніть на рядок)
+- **Переглянути історію цін і найдешевший магазин** для будь-якого товару (натисніть на рядок)
+- **Перейменувати** будь-який товар (натисніть на значок олівця в рядку)
 - **Об'єднати** кілька варіантів одного товару в один (утримуйте для вибору, потім натисніть «Об'єднати») — корисно, коли один і той самий товар зустрічається під дещо різними назвами
 - **Скинути** користувацьку назву до початкової (натисніть на значок скидання в рядку з перейменованим товаром)
 
@@ -18443,6 +18473,15 @@ Stuknij w dowolny produkt, aby zobaczyć:
 - Tabelę z najnowszą ceną w każdym sklepie, w którym kupowałeś ten produkt, posortowaną od najtańszej
 - Opcję zmiany nazwy produktu (patrz niżej)
 
+## Wyszukiwanie historii cen produktu
+
+Karta Analityka pokazuje tylko produkty z największymi zmianami cen. Aby sprawdzić historię
+**dowolnego** zeskanowanego produktu, przejdź do **Ustawienia → Dane referencyjne → Produkty**
+i skorzystaj z pola wyszukiwania (np. wpisz "oliwa"). Stuknij wynik, aby zobaczyć ten sam wykres
+historii cen i porównanie sklepów — nawet dla produktu kupionego tylko raz czy dwa razy. Ten
+ekran nie wymaga minimalnej liczby zakupów, więc nowy produkt pojawi się od razu po zeskanowaniu
+pierwszego paragonu.
+
 ## Zarządzanie nazwami produktów
 
 Aplikacja automatycznie przypisuje krótką, czystą nazwę do każdego produktu (np. "PIWO TYSKIE 0,5L 4,7%" → "Tyskie Piwo"). Możesz korygować lub dostosowywać te nazwy.
@@ -18455,7 +18494,8 @@ Stuknij w dowolną pozycję produktu w sekcji inflacji, a następnie wybierz opc
 
 Przejdź do **Ustawienia → Dane referencyjne → Produkty**, aby zobaczyć wszystkie śledzone produkty. Stąd możesz:
 
-- **Zmienić nazwę** dowolnego produktu (stuknij w wiersz)
+- **Zobaczyć historię cen i najtańszy sklep** dla dowolnego produktu (stuknij w wiersz)
+- **Zmienić nazwę** dowolnego produktu (stuknij ikonę ołówka w wierszu)
 - **Scalić** wiele wariantów produktu w jeden (przytrzymaj, aby zaznaczyć, następnie stuknij Scal) — przydatne, gdy ten sam produkt pojawia się pod nieco różnymi nazwami
 - **Zresetować** niestandardową nazwę do oryginalnej (stuknij ikonę resetowania w wierszu, który został przemianowany)
 
@@ -23110,6 +23150,15 @@ Tippe auf ein beliebiges Produkt, um Folgendes zu sehen:
 - Eine Tabelle mit dem aktuellen Preis in jeder Filiale, in der du das Produkt gekauft hast, sortiert vom günstigsten Preis
 - Eine Option, das Produkt umzubenennen (siehe unten)
 
+## Preisverlauf eines Produkts suchen
+
+Die Registerkarte Analysen zeigt nur die Produkte mit den größten Preisänderungen. Um den
+Preisverlauf für **jedes beliebige** gescannte Produkt nachzuschlagen, gehe zu **Einstellungen →
+Referenzdaten → Produkte** und nutze das Suchfeld (z. B. „Olivenöl"). Tippe auf ein Ergebnis, um
+dasselbe Preisverlaufdiagramm und denselben Filialvergleich zu sehen — auch für ein Produkt, das
+du erst ein- oder zweimal gekauft hast. Dieser Bildschirm hat keine Mindestanzahl an Käufen, ein
+neues Produkt erscheint also sofort, sobald der erste Kassenbon dafür gescannt wurde.
+
 ## Produktnamen verwalten
 
 Die App vergibt jedem Produkt automatisch einen kurzen, übersichtlichen Namen (z. B. „PIWO TYSKIE 0,5L 4,7%" → „Tyskie Piwo"). Du kannst diese Namen korrigieren oder anpassen.
@@ -23122,7 +23171,8 @@ Tippe auf eine beliebige Produktzeile im Inflationsbereich und dann auf die Umbe
 
 Gehe zu **Einstellungen → Referenzdaten → Produkte**, um alle erfassten Produkte zu sehen. Von hier aus kannst du:
 
-- **Umbenennen** eines beliebigen Produkts (tippe auf eine Zeile)
+- **Preisverlauf und günstigste Filiale ansehen** für ein beliebiges Produkt (tippe auf eine Zeile)
+- **Umbenennen** eines beliebigen Produkts (tippe auf das Stiftsymbol einer Zeile)
 - **Zusammenführen** mehrerer Produktvarianten zu einem Eintrag (lang drücken zum Auswählen, dann auf „Zusammenführen" tippen) — nützlich, wenn dasselbe Produkt unter leicht unterschiedlichen Namen erscheint
 - **Zurücksetzen** eines benutzerdefinierten Namens auf den ursprünglichen Namen (tippe auf das Zurücksetzen-Symbol einer umbenannten Zeile)
 
@@ -27766,6 +27816,15 @@ Toca cualquier producto para ver:
 - Una tabla con el último precio en cada tienda donde has comprado ese producto, ordenada del más barato al más caro
 - Una opción para renombrar el producto (ver más abajo)
 
+## Buscar el historial de precios de un producto
+
+La pestaña Análisis solo muestra los productos con mayores cambios de precio. Para consultar el
+historial de **cualquier** producto que hayas escaneado, ve a **Ajustes → Datos de referencia →
+Productos** y usa el cuadro de búsqueda (p. ej., «aceite de oliva»). Toca un resultado para ver el
+mismo gráfico de historial de precios y comparación de tiendas — incluso para un producto que solo
+hayas comprado una o dos veces. Esta pantalla no tiene un número mínimo de compras, así que un
+producto nuevo aparece en cuanto se escanea su primer tique.
+
 ## Gestión de nombres de productos
 
 La app asigna automáticamente un nombre corto y limpio a cada producto (p. ej., «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Puedes corregir o personalizar estos nombres.
@@ -27778,7 +27837,8 @@ Toca cualquier fila de producto en la sección de inflación y luego toca la opc
 
 Ve a **Ajustes → Datos de referencia → Productos** para ver todos los productos rastreados. Desde aquí puedes:
 
-- **Renombrar** cualquier producto (toca una fila)
+- **Ver el historial de precios y la tienda más barata** de cualquier producto (toca una fila)
+- **Renombrar** cualquier producto (toca el icono de lápiz de una fila)
 - **Combinar** varias variantes de un producto en una sola (mantén pulsado para seleccionar, luego toca Combinar) — útil cuando el mismo producto aparece con nombres ligeramente diferentes
 - **Restablecer** un nombre personalizado al original (toca el icono de restablecer en una fila que haya sido renombrada)
 
@@ -32420,6 +32480,15 @@ Appuyez sur un produit pour voir :
 - Un tableau affichant le dernier prix dans chaque magasin où vous avez acheté ce produit, trié du moins cher au plus cher
 - Une option pour renommer le produit (voir ci-dessous)
 
+## Rechercher l'historique des prix d'un produit
+
+L'onglet Analyses n'affiche que les produits dont le prix a le plus varié. Pour consulter
+l'historique de **n'importe quel** produit scanné, allez dans **Paramètres → Données de référence
+→ Produits** et utilisez le champ de recherche (p. ex. « huile d'olive »). Appuyez sur un résultat
+pour voir le même graphique d'historique des prix et la même comparaison des magasins — même pour
+un produit acheté seulement une ou deux fois. Cet écran n'a pas de nombre minimum d'achats requis,
+un nouveau produit apparaît donc dès que son premier ticket est scanné.
+
 ## Gestion des noms de produits
 
 L'application attribue automatiquement un nom court et lisible à chaque produit (p. ex. « PIWO TYSKIE 0,5L 4,7% » → « Tyskie Piwo »). Vous pouvez corriger ou personnaliser ces noms.
@@ -32432,7 +32501,8 @@ Appuyez sur une ligne de produit dans la section inflation, puis sur l'option de
 
 Allez dans **Paramètres → Données de référence → Produits** pour voir tous les produits suivis. Depuis là, vous pouvez :
 
-- **Renommer** n'importe quel produit (appuyez sur une ligne)
+- **Voir l'historique des prix et le magasin le moins cher** pour n'importe quel produit (appuyez sur une ligne)
+- **Renommer** n'importe quel produit (appuyez sur l'icône crayon d'une ligne)
 - **Fusionner** plusieurs variantes d'un même produit en un seul (appui long pour sélectionner, puis appuyez sur Fusionner) — utile quand le même produit apparaît sous des noms légèrement différents
 - **Réinitialiser** un nom personnalisé vers l'original (appuyez sur l'icône de réinitialisation d'une ligne renommée)
 
@@ -37038,6 +37108,15 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Табліцу з апошняй цаной у кожнай краме, дзе вы куплялі гэты тавар, адсартаваную ад самай танной да самай дарагой
 - Магчымасць перайменаваць тавар (гл. ніжэй)
 
+## Пошук гісторыі цэн тавару
+
+На ўкладцы «Аналітыка» паказаны толькі тавары з найбольшымі змяненнямі цаны. Каб паглядзець
+гісторыю **любога** адсканаванага тавару, перайдзіце ў **Налады → Даведачныя дадзеныя → Тавары**
+і скарыстайцеся радком пошуку (напрыклад, увядзіце «аліўкавы алей»). Націсніце на вынік, каб
+убачыць той жа графік гісторыі цэн і параўнанне крам — нават для тавару, купленага толькі раз ці
+два. У гэтага экрана няма мінімальнай колькасці пакупак, таму новы тавар з'явіцца адразу пасля
+сканавання першага чэка.
+
 ## Кіраванне назвамі тавараў
 
 Праграма аўтаматычна прысвойвае кожнаму тавару кароткую і зразумелую назву (напрыклад, «PIWO TYSKIE 0,5L 4,7%» → «Tyskie Piwo»). Вы можаце выправіць або наладзіць гэтыя назвы.
@@ -37050,7 +37129,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Перайдзіце ў **Налады → Даведачныя дадзеныя → Тавары**, каб убачыць усе адсочваемыя тавары. Адсюль вы можаце:
 
-- **Перайменаваць** любы тавар (націсніце на радок)
+- **Паглядзець гісторыю цэн і найдзяшоўшую краму** для любога тавару (націсніце на радок)
+- **Перайменаваць** любы тавар (націсніце на значок алоўка ў радку)
 - **Аб'яднаць** некалькі варыянтаў аднаго тавару ў адзін (утрымлівайце для выбару, затым націсніце «Аб'яднаць») — карысна, калі адзін і той жа тавар сустракаецца пад крыху рознымі назвамі
 - **Скінуць** карыстальніцкую назву да зыходнай (націсніце на значок скіду ў радку з перайменаваным таварам)
 
@@ -41771,6 +41851,15 @@ Tik op een product om te zien:
 - Een tabel met de laatste prijs in elke winkel waar je dat product hebt gekocht, gesorteerd van goedkoopst naar duurste
 - Een optie om het product te hernoemen (zie hieronder)
 
+## Prijsgeschiedenis van een product opzoeken
+
+Het tabblad Analyses toont alleen de producten met de grootste prijswijzigingen. Om de
+geschiedenis van **elk** gescand product op te zoeken, ga je naar **Instellingen →
+Referentiegegevens → Producten** en gebruik je het zoekvak (bijv. "olijfolie"). Tik op een
+resultaat om dezelfde prijshistoriegrafiek en winkelvergelijking te zien — zelfs voor een product
+dat je maar één of twee keer hebt gekocht. Dit scherm heeft geen minimumaantal aankopen nodig, dus
+een nieuw product verschijnt zodra het eerste bonnetje ervoor is gescand.
+
 ## Productnamen beheren
 
 De app geeft elk product automatisch een korte, duidelijke naam (bijv. « PIWO TYSKIE 0,5L 4,7% » → « Tyskie Piwo »). Je kunt deze namen corrigeren of aanpassen.
@@ -41783,7 +41872,8 @@ Tik op een productrij in de inflatiesectie en tik daarna op de hernoemoptie. Voe
 
 Ga naar **Instellingen → Referentiegegevens → Producten** om alle bijgehouden producten te zien. Vanaf hier kun je:
 
-- **Hernoemen** van een willekeurig product (tik op een rij)
+- **Prijsgeschiedenis en goedkoopste winkel bekijken** van een willekeurig product (tik op een rij)
+- **Hernoemen** van een willekeurig product (tik op het potloodicoon van een rij)
 - **Samenvoegen** van meerdere productvarianten tot één (lang indrukken om te selecteren, tik daarna op Samenvoegen) — handig wanneer hetzelfde product onder iets verschillende namen verschijnt
 - **Terugzetten** van een aangepaste naam naar de oorspronkelijke naam (tik op het terugstelicoon van een hernoemde rij)
 

@@ -32,6 +32,15 @@ Appuyez sur un produit pour voir :
 - Un tableau affichant le dernier prix dans chaque magasin où vous avez acheté ce produit, trié du moins cher au plus cher
 - Une option pour renommer le produit (voir ci-dessous)
 
+## Rechercher l'historique des prix d'un produit
+
+L'onglet Analyses n'affiche que les produits dont le prix a le plus varié. Pour consulter
+l'historique de **n'importe quel** produit scanné, allez dans **Paramètres → Données de référence
+→ Produits** et utilisez le champ de recherche (p. ex. « huile d'olive »). Appuyez sur un résultat
+pour voir le même graphique d'historique des prix et la même comparaison des magasins — même pour
+un produit acheté seulement une ou deux fois. Cet écran n'a pas de nombre minimum d'achats requis,
+un nouveau produit apparaît donc dès que son premier ticket est scanné.
+
 ## Gestion des noms de produits
 
 L'application attribue automatiquement un nom court et lisible à chaque produit (p. ex. « PIWO TYSKIE 0,5L 4,7% » → « Tyskie Piwo »). Vous pouvez corriger ou personnaliser ces noms.
@@ -44,7 +53,8 @@ Appuyez sur une ligne de produit dans la section inflation, puis sur l'option de
 
 Allez dans **Paramètres → Données de référence → Produits** pour voir tous les produits suivis. Depuis là, vous pouvez :
 
-- **Renommer** n'importe quel produit (appuyez sur une ligne)
+- **Voir l'historique des prix et le magasin le moins cher** pour n'importe quel produit (appuyez sur une ligne)
+- **Renommer** n'importe quel produit (appuyez sur l'icône crayon d'une ligne)
 - **Fusionner** plusieurs variantes d'un même produit en un seul (appui long pour sélectionner, puis appuyez sur Fusionner) — utile quand le même produit apparaît sous des noms légèrement différents
 - **Réinitialiser** un nom personnalisé vers l'original (appuyez sur l'icône de réinitialisation d'une ligne renommée)
 
