@@ -84,11 +84,21 @@ vocabulary to one of two competing articles **did not** — the NL pair still sp
 78–94. `/en/` rose 23.4→10.0. Rank without clicks is now the problem: `/fr/` took 500 impressions
 and no clicks, "ai budget" sits at 5.7 with none (ABA-584).
 
+The 2026-09-24 index audit found nothing broken: `noindex` is the app, admin and the `/blog/`
+language stub; the 404s are pre-rename slugs; 36 of the 40 "Discovered — not indexed" were four
+days old. The same rank-without-clicks pattern held for the app-migration article (all nine
+versions at 5–7.5, zero clicks), retitled around "Monefy alternative" rather than joined by a new
+"alternatives" page, which would have competed with it.
+
 ## Known gaps
 
 - The three generators keep parallel notions of the language list and of which topics exist;
   nothing cross-checks them.
-- `sameAs` still lacks LinkedIn, Crunchbase and Wikidata.
+- `sameAs` still lacks Wikidata, LinkedIn and Crunchbase. The Organization and the app now carry
+  separate profile lists (`ORG_SAMEAS` / `APP_SAMEAS`, duplicated in the landing and blog
+  generators); a Wikidata QID goes into both once the items exist. mi-code.pl spells the company
+  "MiCode Sp. z o.o." and has no `@id`, so the two sites still meet only through `alternateName`
+  and the shared URL.
 - Below-fold lightbox images are not served as WebP/AVIF.
 
 ## History
