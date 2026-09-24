@@ -7,8 +7,12 @@ import {
   buildApplyPlan, deriveGroups, initReview, reviewReducer, type ReviewState,
 } from './categorizeReview';
 import { applyCategorization } from './applyCategorization';
+import { shareInFlight } from './shareInFlight';
 
 const EMPTY: ReviewState = { targets: {}, drafts: {}, excludedGroups: [] };
+
+// Module scope, so two mounts of the screen share one request (see shareInFlight).
+const fetchSuggestions = shareInFlight(() => api.categorizeUncategorized());
 
 /** Loads suggestions once on mount, holds the review, applies it. */
 export function useCategorizeSuggestions() {
@@ -24,7 +28,7 @@ export function useCategorizeSuggestions() {
   const load = useCallback(async () => {
     setStatus('loading');
     try {
-      const r = await api.categorizeUncategorized();
+      const r = await fetchSuggestions();
       setResponse(r);
       dispatch({ type: 'reset', state: initReview(r) });
       setStatus('ready');

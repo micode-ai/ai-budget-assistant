@@ -102,3 +102,43 @@ export function validateCategorization(
 
   return { assignments, proposals, unassigned };
 }
+
+/** A merchant as lowercase words; anything that is not a letter or digit separates them. */
+export function merchantWords(merchant: string | null | undefined): string[] {
+  return (merchant ?? '').toLowerCase().split(/[^\p{L}\p{N}]+/u).filter((w) => w.length > 0);
+}
+
+const isPrefix = (short: string[], long: string[]) => short.every((w, i) => long[i] === w);
+
+/**
+ * Joins an unassigned expense to a suggested group when its merchant is the
+ * same store as one already in that group — equal words, or one word list
+ * extending the other ("leroy merlin gdynia" → "leroy merlin"). The model
+ * misses these variants between runs; this makes them deterministic.
+ *
+ * Deliberately narrow: the shorter list must start with a word of at least
+ * three letters, and a merchant matching more than one group is left alone —
+ * a wrong auto-grouping is worse than one the user picks by hand.
+ */
+export function matchByMerchant(
+  unassigned: Array<{ id: string; merchant: string | null }>,
+  groups: Array<{ key: string; merchants: Array<string | null> }>,
+): Map<string, string> {
+  const groupWords = groups.map((g) => ({
+    key: g.key,
+    words: g.merchants.map(merchantWords).filter((w) => w.length > 0),
+  }));
+  const result = new Map<string, string>();
+  for (const e of unassigned) {
+    const words = merchantWords(e.merchant);
+    if (words.length === 0) continue;
+    const matches = groupWords.filter((g) =>
+      g.words.some((gw) => {
+        const [short, long] = gw.length <= words.length ? [gw, words] : [words, gw];
+        return short[0].length >= 3 && isPrefix(short, long);
+      }),
+    );
+    if (matches.length === 1) result.set(e.id, matches[0].key);
+  }
+  return result;
+}

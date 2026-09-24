@@ -134,6 +134,17 @@ trusted as the key to write with.
   `suggestedCategory` field is now explicitly "or null if none of them genuinely fits… never pick
   the closest wrong one"; `receipt-finalizer.service.ts` already mapped a missing suggestion to
   `categoryId: null`, so this needed no downstream change.
+- **Same input, same answer, one pass.** The validated model answer is cached for 30 minutes
+  under `aicatres:{accountId}:{sha1(unresolved candidate ids + category id:name)}`, and the call runs
+  at `temperature: 0`. Reopening the review — or the web screen mounting twice, which happened on the
+  first live run and spent two of the day's five passes on two different answers — must neither
+  spend another pass nor reshuffle the groups. Any change to the candidates or the category list
+  misses the cache. On the client, `shareInFlight` makes concurrent mounts share one request.
+- **A store variant joins its store's group without the model.** After the model (and also when it
+  was skipped or failed), `matchByMerchant` adds an unassigned expense to the one group holding an
+  expense whose merchant words equal or are extended by its own (a chain name with the city
+  appended). Narrow on purpose: the shorter word list must start with a word of at least three
+  letters, and a merchant matching more than one group is left for the user.
 - **The suggestions carry SERVER ids.** The client resolves them via `serverId → id → clientId`,
   falling back to the server id itself when none of the three match a locally-held row.
 - **The native route owns the bottom safe-area inset; `CategorizeReview` itself stays inset-free.**
@@ -169,3 +180,7 @@ Also not done:
 
 ABA-589 — the feature: the batched categorize pass, the scan-time `null` prompt change, and
 merchant-rule learning on bulk recategorization.
+[ABA-590](https://github.com/micode-ai/ai-budget-assistant/issues/614) — the first live run spent two
+passes per open with two different answers and left a store variant ungrouped: result cache,
+`temperature: 0`, merchant top-up, shared in-flight request. New category names follow the owner's
+language by design; whether the reviewing member's language should win is open.

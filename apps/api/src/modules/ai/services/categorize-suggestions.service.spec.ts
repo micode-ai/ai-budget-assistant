@@ -30,9 +30,11 @@ function makeService(opts: {
     account: { findUnique: jest.fn().mockResolvedValue({ name: 'House' }) },
     accountMember: { findFirst: jest.fn().mockResolvedValue({ user: { language: 'pl' } }) },
   };
+  // Keyed like Redis: the daily counter reads `used`, everything else reads back what was set.
+  const store = new Map<string, unknown>();
   const cache: any = {
-    get: jest.fn().mockResolvedValue(opts.used ?? 0),
-    set: jest.fn().mockResolvedValue(undefined),
+    get: jest.fn(async (key: string) => (key.startsWith('aicat:') ? (opts.used ?? 0) : store.get(key) ?? null)),
+    set: jest.fn(async (key: string, value: unknown) => { store.set(key, value); }),
   };
   const merchantRules: any = { getRulesMap: jest.fn().mockResolvedValue(opts.rules ?? new Map()) };
   const config: any = { get: () => 'test-key' };
@@ -162,5 +164,55 @@ describe('CategorizeSuggestionsService.suggest', () => {
       encryptedPayload: null,
     });
     expect(prisma.expense.findMany.mock.calls[0][0].take).toBe(100);
+  });
+
+  it('asks the model deterministically', async () => {
+    const { service, create } = makeService({ candidates: [expense('e1', 'OBI')], modelAnswer: {} });
+    await service.suggest('acc');
+    expect(create.mock.calls[0][0].temperature).toBe(0);
+  });
+
+  it('reuses the model answer for the same input without spending another pass', async () => {
+    const { service, create, cache } = makeService({
+      candidates: [expense('e1', 'OBI'), expense('e2', 'Castorama')],
+      modelAnswer: { newCategories: [{ name: 'Materiały budowlane', indexes: [0, 1] }] },
+    });
+    const first = await service.suggest('acc');
+    const second = await service.suggest('acc');
+    expect(create).toHaveBeenCalledTimes(1);
+    expect(second.groups).toEqual(first.groups);
+    const quotaWrites = cache.set.mock.calls.filter((c: any[]) => String(c[0]).startsWith('aicat:'));
+    expect(quotaWrites).toHaveLength(1);
+  });
+
+  it('asks again once the candidates change', async () => {
+    const { service, create, prisma } = makeService({
+      candidates: [expense('e1', 'OBI'), expense('e2', 'Castorama')],
+      modelAnswer: {},
+    });
+    await service.suggest('acc');
+    prisma.expense.findMany.mockResolvedValue([expense('e1', 'OBI')]);
+    await service.suggest('acc');
+    expect(create).toHaveBeenCalledTimes(2);
+  });
+
+  it('adds a store variant the model left out to the group holding that store', async () => {
+    const { service } = makeService({
+      candidates: [expense('e1', 'Leroy Merlin'), expense('e2', 'OBI'), expense('e3', 'LEROY MERLIN GDYNIA')],
+      modelAnswer: { newCategories: [{ name: 'Materiały budowlane', indexes: [0, 1] }] },
+    });
+    const r = await service.suggest('acc');
+    expect(r.groups).toEqual([{ categoryId: null, proposedName: 'Materiały budowlane', expenseIds: ['e1', 'e2', 'e3'] }]);
+    expect(r.unassigned).toEqual([]);
+  });
+
+  it('tops up rule groups too when the model is unavailable', async () => {
+    const { service } = makeService({
+      candidates: [expense('e1', 'OBI'), expense('e2', 'OBI Gdańsk')],
+      rules: new Map([['obi', 'c-tax']]),
+      modelThrows: true,
+    });
+    const r = await service.suggest('acc');
+    expect(r.groups).toEqual([{ categoryId: 'c-tax', proposedName: null, expenseIds: ['e1', 'e2'] }]);
   });
 });

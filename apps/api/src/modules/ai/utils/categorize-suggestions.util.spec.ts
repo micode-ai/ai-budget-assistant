@@ -2,6 +2,8 @@ import {
   validateCategorization,
   normalizeProposalName,
   MAX_NEW_CATEGORIES,
+  merchantWords,
+  matchByMerchant,
 } from './categorize-suggestions.util';
 
 const CATS = [
@@ -134,5 +136,50 @@ describe('normalizeProposalName', () => {
   });
   it('accepts Cyrillic', () => {
     expect(normalizeProposalName('Стройматериалы')).toBe('Стройматериалы');
+  });
+});
+
+describe('merchantWords', () => {
+  it('lowercases and splits on anything that is not a letter or digit', () => {
+    expect(merchantWords('LEROY MERLIN Gdynia')).toEqual(['leroy', 'merlin', 'gdynia']);
+    expect(merchantWords('  Kantor - Łódź ')).toEqual(['kantor', 'łódź']);
+    expect(merchantWords(null)).toEqual([]);
+  });
+});
+
+describe('matchByMerchant', () => {
+  const groups = [
+    { key: 'g-build', merchants: ['Leroy Merlin', 'OBI'] },
+    { key: 'g-travel', merchants: ['Bilety Brest', 'Bilety Warszawa'] },
+  ];
+
+  it('joins a store variant whose words extend a grouped merchant', () => {
+    const r = matchByMerchant([{ id: 'e1', merchant: 'LEROY MERLIN GDYNIA' }], groups);
+    expect(r.get('e1')).toBe('g-build');
+  });
+
+  it('matches the same merchant regardless of case and spacing', () => {
+    expect(matchByMerchant([{ id: 'e1', merchant: ' obi ' }], groups).get('e1')).toBe('g-build');
+  });
+
+  it('does not match merchants that only share a first word', () => {
+    // "Bilety Kraków" shares only "bilety" with the travel rows — neither word list is a prefix of the other.
+    expect(matchByMerchant([{ id: 'e1', merchant: 'Bilety Kraków' }], groups).size).toBe(0);
+  });
+
+  it('skips a merchant that would match more than one group', () => {
+    const ambiguous = [
+      { key: 'a', merchants: ['Leroy Merlin'] },
+      { key: 'b', merchants: ['Leroy Merlin Oliwa'] },
+    ];
+    expect(matchByMerchant([{ id: 'e1', merchant: 'Leroy Merlin' }], ambiguous).size).toBe(0);
+  });
+
+  it('ignores expenses with no merchant and merchants shorter than three letters', () => {
+    const r = matchByMerchant(
+      [{ id: 'e1', merchant: null }, { id: 'e2', merchant: 'AB' }],
+      [{ key: 'g', merchants: ['AB Foods', null] }],
+    );
+    expect(r.size).toBe(0);
   });
 });

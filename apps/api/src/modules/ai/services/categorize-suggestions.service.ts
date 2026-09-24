@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
@@ -16,11 +17,24 @@ import { sanitizeForPrompt } from '../utils/sanitize';
 import {
   MAX_NEW_CATEGORIES,
   MIN_EXPENSES_PER_NEW_CATEGORY,
+  matchByMerchant,
   validateCategorization,
 } from '../utils/categorize-suggestions.util';
 
 const MAX_CANDIDATES = 100;
 const DAY_SECONDS = 24 * 60 * 60;
+/**
+ * How long a model answer is reused for the same candidates and categories.
+ * Reopening the review (or the screen mounting twice) must not spend another
+ * daily pass and must not show a different answer for identical input.
+ */
+const RESULT_TTL_SECONDS = 30 * 60;
+
+/** A model answer expressed in expense ids, so it survives being cached. */
+interface ModelOutcome {
+  assignments: Array<[expenseId: string, categoryId: string]>;
+  proposals: Array<{ name: string; ids: string[] }>;
+}
 
 const LANGUAGE_NAMES: Record<string, string> = {
   en: 'English', pl: 'Polish', de: 'German', es: 'Spanish', fr: 'French',
@@ -118,18 +132,60 @@ export class CategorizeSuggestionsService {
     }
     const ruleCount = rows.length - remaining.length;
 
-    const buildGroups = (proposals: Array<{ name: string; ids: string[] }>): CategorizeSuggestionGroup[] => [
-      ...[...byCategory.entries()].map(([categoryId, expenseIds]) => ({ categoryId, proposedName: null, expenseIds })),
-      ...proposals.map((p) => ({ categoryId: null, proposedName: p.name, expenseIds: p.ids })),
-    ];
+    // Rule groups, model assignments and proposals, then a deterministic
+    // top-up: an unassigned expense from the same store as a grouped one
+    // joins that group.
+    const finish = (
+      outcome: ModelOutcome | null,
+      extra: Partial<CategorizeSuggestionsResponse>,
+      log: string,
+    ): CategorizeSuggestionsResponse => {
+      const groups = new Map<string, CategorizeSuggestionGroup>();
+      for (const [categoryId, ids] of byCategory) groups.set(`c:${categoryId}`, { categoryId, proposedName: null, expenseIds: [...ids] });
+      const claimed = new Set(rows.filter((r) => !remaining.includes(r)).map((r) => r.id));
+      for (const [expenseId, categoryId] of outcome?.assignments ?? []) {
+        if (!validIds.has(categoryId)) continue;
+        const key = `c:${categoryId}`;
+        const g = groups.get(key) ?? { categoryId, proposedName: null, expenseIds: [] };
+        g.expenseIds.push(expenseId);
+        groups.set(key, g);
+        claimed.add(expenseId);
+      }
+      (outcome?.proposals ?? []).forEach((p, i) => {
+        groups.set(`p:${i}`, { categoryId: null, proposedName: p.name, expenseIds: [...p.ids] });
+        p.ids.forEach((id) => claimed.add(id));
+      });
+
+      const merchantOf = new Map(rows.map((r) => [r.id, r.merchant as string | null]));
+      const leftover = remaining.filter((r) => !claimed.has(r.id));
+      const topUp = matchByMerchant(
+        leftover.map((r) => ({ id: r.id, merchant: r.merchant })),
+        [...groups.entries()].map(([key, g]) => ({ key, merchants: g.expenseIds.map((id) => merchantOf.get(id) ?? null) })),
+      );
+      for (const [expenseId, key] of topUp) groups.get(key)!.expenseIds.push(expenseId);
+
+      this.logger.log(`[Categorize] ${log} merchant_topup=${topUp.size}`);
+      return {
+        ...empty,
+        ...extra,
+        groups: [...groups.entries()]
+          .sort(([a], [b]) => (a.startsWith('c:') === b.startsWith('c:') ? 0 : a.startsWith('c:') ? -1 : 1))
+          .map(([, g]) => g),
+        unassigned: leftover.filter((r) => !topUp.has(r.id)).map((r) => r.id),
+      };
+    };
 
     if (remaining.length === 0) {
-      this.logger.log(`[Categorize] all_rules candidates=${rows.length} rules=${ruleCount}`);
-      return { ...empty, groups: buildGroups([]) };
+      return finish(null, {}, `all_rules candidates=${rows.length} rules=${ruleCount}`);
+    }
+
+    const resultKey = this.resultKey(accountId, remaining.map((r) => r.id), categories);
+    const cached = await this.cache.get<ModelOutcome>(resultKey);
+    if (cached) {
+      return finish(cached, {}, `cached candidates=${rows.length} rules=${ruleCount}`);
     }
     if (used >= limit) {
-      this.logger.log(`[Categorize] limit_reached candidates=${rows.length} rules=${ruleCount}`);
-      return { ...empty, groups: buildGroups([]), unassigned: remaining.map((r) => r.id), remainingToday: 0, limitReached: true };
+      return finish(null, { remainingToday: 0, limitReached: true }, `limit_reached candidates=${rows.length} rules=${ruleCount}`);
     }
 
     // 2. One model call for the rest.
@@ -137,29 +193,24 @@ export class CategorizeSuggestionsService {
     try {
       raw = await this.askModel(accountId, remaining, categories);
     } catch (err) {
-      this.logger.warn(`[Categorize] ai_error candidates=${rows.length} rules=${ruleCount}: ${err instanceof Error ? err.message : String(err)}`);
-      return { ...empty, groups: buildGroups([]), unassigned: remaining.map((r) => r.id) };
+      const reason = err instanceof Error ? err.message : String(err);
+      this.logger.warn(`[Categorize] ai_error: ${reason}`);
+      return finish(null, {}, `ai_error candidates=${rows.length} rules=${ruleCount}`);
     }
     await this.cache.set(this.quotaKey(accountId), used + 1, DAY_SECONDS);
 
     const validated = validateCategorization(raw, remaining.length, categories);
-    for (const [index, categoryId] of validated.assignments) {
-      byCategory.set(categoryId, [...(byCategory.get(categoryId) ?? []), remaining[index].id]);
-    }
-    const proposals = validated.proposals.map((p) => ({ name: p.name, ids: p.indexes.map((i) => remaining[i].id) }));
-    const unassigned = validated.unassigned.map((i) => remaining[i].id);
-
-    this.logger.log(
-      `[Categorize] candidates=${rows.length} rules=${ruleCount} ai=${validated.assignments.size + proposals.reduce((s, p) => s + p.ids.length, 0)} proposed=${proposals.length} unassigned=${unassigned.length}`,
-    );
-    return {
-      expenses,
-      groups: buildGroups(proposals),
-      unassigned,
-      skippedEncrypted,
-      remainingToday: Math.max(0, limit - used - 1),
-      limitReached: false,
+    const outcome: ModelOutcome = {
+      assignments: [...validated.assignments].map(([index, categoryId]) => [remaining[index].id, categoryId]),
+      proposals: validated.proposals.map((p) => ({ name: p.name, ids: p.indexes.map((i) => remaining[i].id) })),
     };
+    await this.cache.set(resultKey, outcome, RESULT_TTL_SECONDS);
+
+    return finish(
+      outcome,
+      { remainingToday: Math.max(0, limit - used - 1) },
+      `candidates=${rows.length} rules=${ruleCount} ai=${validated.assignments.size + outcome.proposals.reduce((s, p) => s + p.ids.length, 0)} proposed=${outcome.proposals.length}`,
+    );
   }
 
   private async askModel(
@@ -224,10 +275,21 @@ Return JSON: {"assignments":[{"index":0,"categoryName":"..."}],"newCategories":[
       model: resolveCheapModel(),
       messages: [{ role: 'user', content: prompt }],
       response_format: { type: 'json_object' },
+      // Same input, same suggestion: a review the user reopens must not reshuffle.
+      temperature: 0,
     });
     const content = response.choices[0]?.message?.content;
     if (!content) throw new Error('empty model response');
     return JSON.parse(content);
+  }
+
+  /** Keyed on exactly what the model saw: the unresolved candidates and the category list. */
+  private resultKey(accountId: string, candidateIds: string[], categories: Array<{ id: string; name: string }>): string {
+    const input = JSON.stringify([
+      [...candidateIds].sort(),
+      categories.map((c) => `${c.id}:${c.name}`).sort(),
+    ]);
+    return `aicatres:${accountId}:${createHash('sha1').update(input).digest('hex')}`;
   }
 
   private quotaKey(accountId: string): string {
