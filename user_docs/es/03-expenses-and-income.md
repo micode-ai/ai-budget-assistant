@@ -68,6 +68,33 @@ Toca el filtro de categoría encima de la lista de transacciones para filtrar po
 
 El filtro de categoría se combina con el periodo de arriba, así que para encontrar entradas antiguas sin categoría, pon primero el periodo en **Todos**.
 
+### Sugerir categorías para gastos sin categoría
+
+Cuando tu cuenta tiene gastos sin categoría — algo habitual tras escanear varios recibos — aparece un banner encima de la lista de transacciones: **Gastos sin categoría: N**, con un botón **Sugerir categorías**.
+
+Tócalo para abrir **Categorizar gastos**. La app analiza tus gastos sin categoría (verás **Analizando gastos…**) y los agrupa:
+
+- ✚ **Nueva categoría** — solo se creará si aplicas los cambios
+- ● **Categoría existente** — una que ya tienes
+- **No se pudo determinar** — todo aquello de lo que el asistente no estaba seguro; elige tú la categoría o déjalo así
+
+Para cada grupo puedes:
+- Tocar el nombre del grupo para renombrar una nueva categoría antes de crearla
+- Tocar **▾** junto a un grupo para redirigir todo el grupo — a otra categoría existente, a otro nombre de categoría nueva, o a **+ Crear nueva categoría**
+- Tocar **Elegir** (o **▾**) junto a un gasto individual para mover solo ese
+- Desmarcar un grupo para dejar esos gastos sin cambios
+
+No se crea ni cambia nada hasta que toques **Aplicar (N)** — que se muestra como **Aplicar (N) · categorías nuevas: K** cuando el plan incluye categorías nuevas. Después verás **Categorizados: N · categorías nuevas: K**.
+
+Algunas cosas útiles de saber:
+- Las sugerencias basadas en IA están limitadas a unas pocas pasadas por cuenta y día. Cuando se agotan, un aviso indica que el resto del día solo se muestran sugerencias basadas en reglas — las sugerencias que vienen de un comerciante que ya le enseñaste a la app (recategorizándolo antes) siguen funcionando siempre, sin límite diario.
+- Los gastos cifrados no pueden ser leídos por el servidor para esta función y se omiten; verás cuántos, si los hay.
+- Si no queda nada por sugerir, verás **Por ahora no hay nada que sugerir.**
+- Si la carga falla, toca **Reintentar**.
+- Los miembros con el rol de **Observador** en una cuenta compartida no ven este banner — categorizar es un cambio que solo pueden hacer los Editores y el Propietario.
+
+En la pantalla de escritorio (web), la misma revisión se abre como un cuadro de diálogo.
+
 ### Etiquetas
 
 Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:

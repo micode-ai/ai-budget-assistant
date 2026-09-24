@@ -68,6 +68,33 @@ Tik op het categoriefilter boven de transactielijst om op categorie te filteren.
 
 Het categoriefilter werkt samen met de periode erboven. Zet de periode eerst op **Alles** om oudere items zonder categorie te vinden.
 
+### Categorieën voorstellen voor uitgaven zonder categorie
+
+Als je account uitgaven zonder categorie heeft — vaak na het scannen van meerdere bonnetjes — verschijnt er boven de transactielijst een banner: **Uitgaven zonder categorie: N**, met een knop **Categorieën voorstellen**.
+
+Tik erop om **Uitgaven categoriseren** te openen. De app analyseert je uitgaven zonder categorie (je ziet **Uitgaven analyseren…**) en groepeert ze:
+
+- ✚ **Nieuwe categorie** — wordt alleen aangemaakt als je toepast
+- ● **Bestaande categorie** — een categorie die je al hebt
+- **Kon niet bepalen** — alles waar de assistent niet zeker van was; kies zelf een categorie of laat het zo
+
+Voor elke groep kun je:
+- Op de naam van de groep tikken om een nieuwe categorie te hernoemen voordat die wordt aangemaakt
+- Op **▾** naast een groep tikken om de hele groep om te leiden — naar een andere bestaande categorie, een andere naam voor de nieuwe categorie, of **+ Nieuwe categorie maken**
+- Op **Kiezen** (of **▾**) naast één uitgave tikken om alleen die te verplaatsen
+- Het vinkje van een groep uitzetten om die uitgaven ongewijzigd te laten
+
+Er wordt niets aangemaakt of gewijzigd totdat je op **Toepassen (N)** tikt — weergegeven als **Toepassen (N) · nieuwe categorieën: K** wanneer het plan nieuwe categorieën bevat. Daarna zie je **Gecategoriseerd: N · nieuwe categorieën: K**.
+
+Een paar dingen om te weten:
+- Op AI gebaseerde suggesties zijn beperkt tot een paar keer per account per dag. Zodra dat op is, verschijnt er een melding dat voor de rest van de dag alleen suggesties op basis van regels worden getoond — suggesties van een winkel die je de app al eerder hebt geleerd (door die eerder handmatig te categoriseren) blijven altijd werken, zonder daglimiet.
+- Versleutelde uitgaven kan de server voor deze functie niet lezen; die worden overgeslagen. Je ziet hoeveel dat er eventueel waren.
+- Als er niets meer voor te stellen is, zie je **Er valt nu niets voor te stellen.**
+- Als laden mislukt, tik dan op **Opnieuw proberen**.
+- **Kijkers** op een gedeeld account zien deze banner niet — categoriseren is een wijziging die alleen Bewerkers en de Eigenaar kunnen doen.
+
+Op het transactiescherm voor desktop (web) opent hetzelfde overzicht als een dialoogvenster.
+
 ### Tags
 
 Tags helpen je uitgaven te ordenen met aangepaste labels:

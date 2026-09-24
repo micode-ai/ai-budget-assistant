@@ -56,6 +56,10 @@ the section you came for — it states what must not break and why. A missing se
   across categories at scan time, the deposit group, category proposals
 - [receipt-image-memory](features/receipt-image-memory.md) — downscaling receipt photos to stay
   under Google Play's memory thresholds
+- [categorize-uncategorized](features/categorize-uncategorized.md) — one batched review that turns a
+  pile of uncategorized expenses into a handful of categories, reviewed before anything is written
+- [merchant-category-rules](features/merchant-category-rules.md) — learning a merchant's category
+  from a manual edit or a bulk recategorization, and applying it at import and categorize time
 
 ### Web, marketing site and growth
 - [web-build-and-hosting](features/web-build-and-hosting.md) — the Expo web build, platform splits,

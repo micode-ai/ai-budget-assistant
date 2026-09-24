@@ -68,6 +68,33 @@ Tippe auf den Kategoriefilter über der Transaktionsliste, um nach Kategorie zu 
 
 Der Kategoriefilter wird mit dem Zeitraum darüber kombiniert. Um ältere Einträge ohne Kategorie zu finden, stelle den Zeitraum zuerst auf **Alle**.
 
+### Kategorien für unkategorisierte Ausgaben vorschlagen
+
+Wenn dein Konto Ausgaben ohne Kategorie enthält — oft nach dem Scannen mehrerer Belege — erscheint über der Transaktionsliste ein Banner: **Ausgaben ohne Kategorie: N**, mit einer Schaltfläche **Kategorien vorschlagen**.
+
+Tippe darauf, um **Ausgaben kategorisieren** zu öffnen. Die App analysiert deine unkategorisierten Ausgaben (du siehst **Ausgaben werden analysiert…**) und gruppiert sie:
+
+- ✚ **Neue Kategorie** — wird nur erstellt, wenn du übernimmst
+- ● **Bestehende Kategorie** — eine, die du bereits hast
+- **Nicht zuordenbar** — alles, bei dem sich die Assistenz nicht sicher war; wähle selbst eine Kategorie oder lass es so
+
+Für jede Gruppe kannst du:
+- den Namen der Gruppe antippen, um eine neue Kategorie umzubenennen, bevor sie erstellt wird
+- **▾** neben einer Gruppe antippen, um die ganze Gruppe umzulenken — zu einer anderen bestehenden Kategorie, einem anderen neuen Namen oder **+ Neue Kategorie erstellen**
+- **Auswählen** (oder **▾**) neben einer einzelnen Ausgabe antippen, um nur diese zu verschieben
+- eine Gruppe abwählen, um diese Ausgaben unverändert zu lassen
+
+Es wird nichts erstellt oder geändert, bevor du **Übernehmen (N)** antippst — angezeigt als **Übernehmen (N) · neue Kategorien: K**, wenn neue Kategorien Teil des Plans sind. Danach siehst du **Kategorisiert: N · neue Kategorien: K**.
+
+Ein paar Dinge, die gut zu wissen sind:
+- KI-basierte Vorschläge sind auf wenige Durchläufe pro Konto und Tag begrenzt. Sind sie für heute aufgebraucht, weist ein Hinweis darauf hin, dass für den Rest des Tages nur regelbasierte Vorschläge angezeigt werden — Vorschläge, die von einem Händler stammen, den du der App bereits beigebracht hast (indem du ihn zuvor umkategorisiert hast), funktionieren immer weiter, ohne Tageslimit.
+- Verschlüsselte Ausgaben kann der Server für diese Funktion nicht lesen und überspringt sie; du siehst, wie viele es gegebenenfalls waren.
+- Wenn nichts mehr vorzuschlagen ist, siehst du **Im Moment gibt es nichts vorzuschlagen.**
+- Schlägt das Laden fehl, tippe auf **Erneut versuchen**.
+- **Betrachter** in einem gemeinsamen Konto sehen dieses Banner nicht — Kategorisieren ist eine Änderung, die nur Bearbeiter und der Eigentümer vornehmen können.
+
+Auf dem Desktop (Web) öffnet sich dieselbe Übersicht als Dialog auf dem Transaktionsbildschirm.
+
 ### Tags
 
 Tags helfen dir, Ausgaben mit benutzerdefinierten Labels zu organisieren:

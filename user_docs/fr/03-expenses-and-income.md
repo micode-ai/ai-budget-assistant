@@ -68,6 +68,33 @@ Touchez le filtre de catégorie au-dessus de la liste des transactions pour filt
 
 Le filtre de catégorie se combine avec la période au-dessus : pour retrouver d'anciennes entrées sans catégorie, réglez d'abord la période sur **Tout**.
 
+### Suggérer des catégories pour les dépenses sans catégorie
+
+Lorsque votre compte contient des dépenses sans catégorie — souvent après avoir scanné plusieurs reçus — une bannière apparaît au-dessus de la liste des transactions : **Dépenses sans catégorie : N**, avec un bouton **Suggérer des catégories**.
+
+Touchez-le pour ouvrir **Catégoriser les dépenses**. L'application analyse vos dépenses sans catégorie (vous verrez **Analyse des dépenses…**) et les regroupe :
+
+- ✚ **Nouvelle catégorie** — ne sera créée que si vous appliquez
+- ● **Catégorie existante** — une catégorie que vous avez déjà
+- **Impossible à déterminer** — tout ce dont l'assistant n'était pas sûr ; choisissez vous-même une catégorie ou laissez tel quel
+
+Pour chaque groupe, vous pouvez :
+- Toucher le nom du groupe pour renommer une nouvelle catégorie avant sa création
+- Toucher **▾** à côté d'un groupe pour rediriger tout le groupe — vers une autre catégorie existante, un autre nom de nouvelle catégorie, ou **+ Créer une catégorie**
+- Toucher **Choisir** (ou **▾**) à côté d'une dépense pour ne déplacer que celle-ci
+- Décocher un groupe pour laisser ces dépenses inchangées
+
+Rien n'est créé ni modifié tant que vous n'avez pas touché **Appliquer (N)** — affiché **Appliquer (N) · nouvelles catégories : K** lorsque le plan inclut de nouvelles catégories. Vous verrez ensuite **Catégorisées : N · nouvelles catégories : K**.
+
+Quelques points à connaître :
+- Les suggestions basées sur l'IA sont limitées à quelques passages par compte et par jour. Une fois ce quota atteint, une note indique que seules les suggestions issues des règles sont affichées pour le reste de la journée — les suggestions provenant d'un commerçant que vous avez déjà appris à l'application (en le recatégorisant auparavant) continuent toujours de fonctionner, sans limite quotidienne.
+- Les dépenses chiffrées ne peuvent pas être lues par le serveur pour cette fonctionnalité et sont ignorées ; vous verrez leur nombre, le cas échéant.
+- S'il n'y a plus rien à suggérer, vous verrez **Rien à suggérer pour le moment.**
+- Si le chargement échoue, touchez **Réessayer**.
+- Les membres avec le rôle **Observateur** d'un compte partagé ne voient pas cette bannière — catégoriser est une modification réservée aux Éditeurs et au Propriétaire.
+
+Sur l'écran des transactions de bureau (web), la même revue s'ouvre dans une boîte de dialogue.
+
 ### Etiquettes
 
 Les etiquettes vous aident a organiser les depenses avec des libelles personnalises :

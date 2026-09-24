@@ -156,6 +156,11 @@ confidently wrong two times out of three.
 
 ## Known gaps
 
+- **The scan prompt may now return no category at all.** `ocr.service.ts`'s `suggestedCategory`
+  field can answer `null` when nothing genuinely fits, instead of forcing the nearest wrong pick;
+  `receipt-finalizer.service.ts` already mapped a missing suggestion to `categoryId: null`. Cleaning
+  up what that leaves uncategorized is a separate, after-the-fact pass — see
+  [categorize-uncategorized](categorize-uncategorized.md).
 - **Encryption.** `discountAmount` is in `ENCRYPTION_FIELDS.expense.tier2` but `depositAmount` is in
   **neither** tier and is not fed into `maybeEncrypt`, so a tier-2 account stores its deposit in
   clear. That partially leaks the encrypted `amount`: a deposit is a fixed per-unit charge, so its
