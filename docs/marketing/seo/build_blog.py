@@ -202,8 +202,10 @@ APP_SAMEAS = [
     "https://t.me/aibudgetassistantEn",
     "https://t.me/aibudgetassistantBy",
     "https://play.google.com/store/apps/details?id=com.budget.assistant",
+    "https://www.wikidata.org/wiki/Q141551014",
 ]
-ORG_SAMEAS = ["https://mi-code.pl/", "https://github.com/micode-ai"]
+ORG_SAMEAS = ["https://mi-code.pl/", "https://github.com/micode-ai",
+              "https://www.wikidata.org/wiki/Q141551004"]
 ORG_ALT_NAMES = ["MiCode Sp. z o.o.", "MiCode"]
 ORG_TAX_ID = "5833510147"  # NIP, as published on mi-code.pl
 GA_ID = "G-WMEFHYETVX"

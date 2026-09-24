@@ -94,9 +94,11 @@ versions at 5–7.5, zero clicks), retitled around "Monefy alternative" rather t
 
 - The three generators keep parallel notions of the language list and of which topics exist;
   nothing cross-checks them.
-- `sameAs` still lacks Wikidata, LinkedIn and Crunchbase. The Organization and the app now carry
-  separate profile lists (`ORG_SAMEAS` / `APP_SAMEAS`, duplicated in the landing and blog
-  generators); a Wikidata QID goes into both once the items exist. mi-code.pl spells the company
+- `sameAs` still lacks LinkedIn and Crunchbase. The Organization and the app carry separate
+  profile lists (`ORG_SAMEAS` / `APP_SAMEAS`, duplicated in the landing and blog generators),
+  each ending in its Wikidata item: MiCode Sp. z o.o. is Q141551004, the app Q141551014 (created
+  2026-09-24; not to be confused with Q110126846 "Micode", a French YouTuber). Wikidata may still
+  delete the app item as non-notable — press coverage as "described at URL" is what keeps it. mi-code.pl spells the company
   "MiCode Sp. z o.o." and has no `@id`, so the two sites still meet only through `alternateName`
   and the shared URL.
 - Below-fold lightbox images are not served as WebP/AVIF.
