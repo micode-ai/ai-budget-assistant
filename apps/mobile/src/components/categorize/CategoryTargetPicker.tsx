@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, Modal, Pressable, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +35,16 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
   const insets = useSafeAreaInsets();
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
+
+  // Selecting an existing category or a draft closes the picker via `onSelect`
+  // without going through `handleClose` — reset here too, keyed on `visible`,
+  // so the next open never shows a stale expanded create-panel/typed name.
+  useEffect(() => {
+    if (visible) {
+      setCreating(false);
+      setNewName('');
+    }
+  }, [visible]);
 
   const handleClose = () => {
     setCreating(false);
