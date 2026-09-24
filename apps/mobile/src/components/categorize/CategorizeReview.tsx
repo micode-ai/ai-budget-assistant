@@ -441,13 +441,16 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'center' as const,
     borderRadius: theme.borderRadius.md,
     paddingVertical: theme.spacing[3],
+    paddingHorizontal: theme.spacing[3],
     backgroundColor: theme.colors.primary,
   },
   applyButtonDisabled: {
     opacity: 0.4,
   },
+  // Centred: in Polish/Russian the label wraps to two lines on a phone.
   applyButtonText: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textInverse,
+    textAlign: 'center' as const,
   },
 });

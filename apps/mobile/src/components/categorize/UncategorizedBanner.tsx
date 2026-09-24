@@ -23,7 +23,7 @@ export function UncategorizedBanner({ onPress }: { onPress: () => void }) {
   return (
     <View style={styles.banner}>
       <Ionicons name="pricetags-outline" size={18} color={theme.colors.primary} />
-      <Text style={styles.text} numberOfLines={2}>{t('categorize.bannerText', { count })}</Text>
+      <Text style={styles.text}>{t('categorize.bannerText', { count })}</Text>
       <Pressable onPress={onPress} accessibilityRole="button" style={styles.action}>
         <Text style={styles.actionText}>{t('categorize.bannerAction')}</Text>
       </Pressable>
@@ -32,8 +32,12 @@ export function UncategorizedBanner({ onPress }: { onPress: () => void }) {
 }
 
 const createStyles = (theme: Theme) => ({
+  // Wraps instead of truncating: on a phone the button drops to its own line
+  // (pushed right by marginLeft: 'auto') so the count stays readable; on a wide
+  // screen everything fits in one row.
   banner: {
     flexDirection: 'row' as const,
+    flexWrap: 'wrap' as const,
     alignItems: 'center' as const,
     gap: theme.spacing[2],
     marginHorizontal: theme.spacing[4],
@@ -44,12 +48,13 @@ const createStyles = (theme: Theme) => ({
     borderWidth: 1,
     borderColor: theme.colors.divider,
   },
-  text: { ...theme.textStyles.body, color: theme.colors.textPrimary, flex: 1 },
+  text: { ...theme.textStyles.body, color: theme.colors.textPrimary, flexGrow: 1, flexShrink: 1, flexBasis: 160 },
   action: {
+    marginLeft: 'auto' as const,
     paddingHorizontal: theme.spacing[3],
     paddingVertical: theme.spacing[1.5],
     borderRadius: theme.borderRadius.md,
     backgroundColor: theme.colors.primary,
   },
-  actionText: { ...theme.textStyles.label, color: theme.colors.textInverse },
+  actionText: { ...theme.textStyles.bodySmMedium, color: theme.colors.textInverse },
 });
