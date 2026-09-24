@@ -753,8 +753,8 @@ C = {
    "rights": "Wszelkie prawa zastrzeżone.",
  },
  "en": {
-   "title": "AI Budget Assistant - budget app & expense tracker",
-   "desc": "AI budget app and expense tracker: add expenses by voice or a receipt photo, plan budgets and save money, together with your family. Free to start.",
+   "title": "AI budget app & expense tracker - AI Budget Assistant",
+   "desc": "Free AI budget app: say an expense or snap a receipt and the AI files it. Budgets, savings goals and one shared account for the whole family.",
    "nav_blog": "Blog", "nav_login": "Log in",
    "hero_h1": "AI budget app and expense tracker",
    "hero_sub": "Track expenses, plan budgets, hit savings goals and manage money together with your family, in one app. The AI does the boring work. Start free.",
@@ -844,8 +844,8 @@ C = {
    "footer": "AI Budget Assistant - app de finanzas todo en uno con asistente de IA.", "rights": "Todos los derechos reservados.",
  },
  "fr": {
-   "title": "AI Budget Assistant - appli de budget et suivi des dépenses",
-   "desc": "Appli de budget et de suivi des dépenses avec IA : ajoutez des dépenses à la voix ou par photo de reçu, gérez budgets et épargne, en famille. Gratuit.",
+   "title": "Gestion des dépenses avec IA - AI Budget Assistant",
+   "desc": "Gestion des dépenses avec IA, gratuite : dictez une dépense ou photographiez un reçu, l'IA la classe. Budgets, épargne et compte partagé en famille.",
    "nav_blog": "Blog", "nav_login": "Se connecter",
    "hero_h1": "Appli de budget et suivi des dépenses avec IA",
    "hero_sub": "Dépenses, budgets, objectifs d'épargne et finances familiales partagées dans une appli. L'IA fait le travail ennuyeux. Commencez gratuitement.",
