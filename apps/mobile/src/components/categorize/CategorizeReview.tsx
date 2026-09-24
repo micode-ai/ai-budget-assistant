@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
 import type { CategorizeCandidateExpense } from '@budget/shared-types';
 import { getIntlLocale } from '@/i18n';
+import { fromDateInputValue } from '@/utils/dateInput';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { showAlert } from '@/utils/alert';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -125,6 +126,14 @@ export function CategorizeReview({ onDone }: Props) {
     return (
       <View style={styles.centered}>
         <Text style={styles.centeredText}>{t('categorize.nothingToSuggest')}</Text>
+        {response?.limitReached ? (
+          <Text style={styles.centeredText}>{t('categorize.limitReached')}</Text>
+        ) : null}
+        {response && response.skippedEncrypted > 0 ? (
+          <Text style={styles.centeredText}>
+            {t('categorize.skippedEncrypted', { count: response.skippedEncrypted })}
+          </Text>
+        ) : null}
       </View>
     );
   }
@@ -200,7 +209,9 @@ export function CategorizeReview({ onDone }: Props) {
                 <Text style={styles.expenseTitle} numberOfLines={1}>
                   {e.merchant || e.description || '—'}
                 </Text>
-                <Text style={styles.expenseDate}>{formatDate(e.date, undefined, locale)}</Text>
+                <Text style={styles.expenseDate}>
+                  {formatDate(fromDateInputValue(e.date, new Date()) ?? e.date, undefined, locale)}
+                </Text>
               </View>
               <Text style={styles.expenseAmount}>{formatCurrency(e.amount, e.currencyCode)}</Text>
               <Pressable

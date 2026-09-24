@@ -66,9 +66,16 @@ object, so a category literally named `constructor` can't collide with `Object.p
 
 **Resolution order for a proposed name.** A proposal whose (case-insensitive) name matches an
 *existing* category folds into that category as if it had been an assignment — the model naming an
-existing category back at itself is treated as an assignment, not a duplicate creation. A proposal
-whose name matches a *default* category name (from `getDefaultCategories`) is still a proposal — it
-gets created on Apply, since this account has never had it seeded in.
+existing category back at itself is treated as an assignment, not a duplicate creation. This is the
+*validator's* rule, and it knows nothing about `getDefaultCategories`. Default names are steered at
+the *prompt* stage instead: `askModel` sends the owner-language `getDefaultCategories()` list — minus
+names that already match an existing category (case-insensitive) and minus the deposit name via
+`isDepositCategoryName` — as a `Standard category names` line, with the rules text spelling out the
+preference order existing → standard name → invented name. A default name the model uses is a plain
+string like any invented one by the time it reaches the validator: it is created on Apply exactly the
+same way, since this account was never seeded with it. `default-categories.ts` has no field marking a
+name as income-only (`Salary`/`Freelance` sit in the same per-language array as `Groceries`), so both
+kinds are currently offered — a known imprecision, not fixed in this pass.
 
 **Groups are derived, not stored.** The mobile/desktop review holds one map from expense id to a
 chosen `Target` (`existing:<categoryId>` | `new:<draftKey>` | `skip`); `deriveGroups` recomputes the
@@ -151,6 +158,12 @@ Also not done:
   category creation (existing categories resolve by id) and for the bulk update (setting the same
   `categoryId` again is a no-op), so a retry is safe — but nothing surfaces "this partially
   succeeded" to the user beyond the toast reflecting the final counts.
+- **`categoryStore.createCategory` swallows a server error and returns a local-only category.** If
+  the create-category call in `applyCategorization`'s first phase fails on the server (but not
+  locally), the caller never sees it — it gets back a category that exists on-device only, and the
+  bulk-assignment calls that follow reference an id the server doesn't have. `bulkUpdateExpenses`'s
+  new `awaitServer` option (ABA-589 F2) only makes the *assignment* half of Apply honest about a
+  server failure; category creation's honesty is a separate, still-open gap.
 
 ## History
 

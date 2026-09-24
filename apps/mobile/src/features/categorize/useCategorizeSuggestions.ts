@@ -49,7 +49,8 @@ export function useCategorizeSuggestions() {
       const categoryStore = useCategoryStore.getState();
       return await applyCategorization(plan, response.expenses, {
         createCategory: (name) => categoryStore.createCategory(name, 'expense'),
-        bulkSetCategory: (ids, categoryId) => useExpenseStore.getState().bulkUpdateExpenses(ids, { categoryId }),
+        bulkSetCategory: (ids, categoryId) =>
+          useExpenseStore.getState().bulkUpdateExpenses(ids, { categoryId }, { awaitServer: true }),
         localExpenses: useExpenseStore.getState().expenses,
         existingCategoryIds: new Set(categoryStore.categories.map((c) => c.id)),
       });

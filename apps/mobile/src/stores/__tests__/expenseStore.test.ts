@@ -432,6 +432,43 @@ describe('expenseStore — loadExpenseItems server-fetch mapper preserves canoni
   });
 });
 
+describe('expenseStore — bulkUpdateExpenses awaitServer option', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+    useExpenseStore.setState({
+      expenses: [],
+      isLoading: false,
+      error: null,
+      expenseItems: {},
+    } as any);
+    jest.clearAllMocks();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+  });
+
+  it('stays fire-and-forget when the option is omitted — existing callers (useExpenseMultiSelect) must see no change', async () => {
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    (api.bulkUpdateExpenses as jest.Mock).mockRejectedValue(new Error('network down'));
+
+    await expect(
+      useExpenseStore.getState().bulkUpdateExpenses(['e1'], { categoryId: 'cat-1' }),
+    ).resolves.toBeUndefined();
+
+    expect(warn).toHaveBeenCalledWith('[expenseStore] bulkUpdate server error:', 'network down');
+  });
+
+  it('rejects when awaitServer is true and the server write fails, so a caller can catch it', async () => {
+    (api.bulkUpdateExpenses as jest.Mock).mockRejectedValue(new Error('network down'));
+
+    await expect(
+      useExpenseStore.getState().bulkUpdateExpenses(['e1'], { categoryId: 'cat-1' }, { awaitServer: true }),
+    ).rejects.toThrow('network down');
+  });
+});
+
 describe('expenseStore — getFilteredExpenses "uncategorized" filter', () => {
   const catExpense = (id: string, categoryId: string | null): Expense =>
     ({

@@ -109,6 +109,24 @@ describe('CategorizeSuggestionsService.suggest', () => {
     expect(r.unassigned).toEqual(['e1']);
   });
 
+  it('offers the owner-language default category names as fill-ins, excluding ones that already exist', async () => {
+    // pl default list (default-categories.ts): includes both 'Transport' and
+    // 'Zakupy spożywcze' (Groceries). The account already has 'Transport', so
+    // it must not be re-offered as a "standard" name, but 'Zakupy spożywcze'
+    // (unrelated to any existing category) must be.
+    const { service, create } = makeService({
+      candidates: [expense('e1', 'Zabka')],
+      categories: [{ id: 'c-transport', name: 'Transport' }],
+      modelAnswer: {},
+    });
+    await service.suggest('acc');
+    const prompt: string = create.mock.calls[0][0].messages[0].content;
+    const standardLine = prompt.split('\n').find((l) => l.startsWith('Standard category names'));
+    expect(standardLine).toBeDefined();
+    expect(standardLine).toContain('Zakupy spożywcze');
+    expect(standardLine).not.toContain('Transport');
+  });
+
   it('does not spend a pass when the model throws', async () => {
     const { service, cache } = makeService({ candidates: [expense('e1', 'OBI')], modelThrows: true });
     const r = await service.suggest('acc');

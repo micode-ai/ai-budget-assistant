@@ -61,4 +61,18 @@ describe('applyCategorization', () => {
     expect(deps.createCategory).not.toHaveBeenCalled();
     expect(r).toEqual({ categorized: 0, created: 0 });
   });
+
+  // ABA-589 F2: on web there's no SQLite fallback, so the review's try/catch is
+  // the only thing that can tell the user a server write failed — it only fires
+  // if bulkSetCategory's rejection actually propagates out of applyCategorization.
+  it('propagates a rejecting bulkSetCategory so the caller\'s catch fires', async () => {
+    const deps = {
+      createCategory: jest.fn(async () => ({ id: 'new-cat' })),
+      bulkSetCategory: jest.fn(async () => { throw new Error('server rejected the write'); }),
+      localExpenses: [],
+    };
+    await expect(applyCategorization(plan, [ref('srv-1'), ref('srv-2'), ref('srv-9')], deps)).rejects.toThrow(
+      'server rejected the write',
+    );
+  });
 });

@@ -10,6 +10,7 @@ import { PrismaService } from '../../../database/prisma.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { MerchantRulesService } from '../../merchant-rules/merchant-rules.service';
 import { isDepositCategoryName } from '../../../common/utils/deposit-category';
+import { getDefaultCategories } from '../../accounts/default-categories';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import {
@@ -173,8 +174,26 @@ export class CategorizeSuggestionsService {
         select: { user: { select: { language: true } } },
       }),
     ]);
-    const language = LANGUAGE_NAMES[owner?.user.language ?? ''] ?? 'English';
+    const languageCode = owner?.user.language ?? 'en';
+    const language = LANGUAGE_NAMES[languageCode] ?? 'English';
     const names = categories.map((c) => sanitizeForPrompt(c.name, 50)).join(', ') || '(none)';
+
+    // Spec input: nudge the model toward this language's standard budgeting
+    // category names instead of inventing near-duplicates. Excludes names that
+    // already exist on the account (case-insensitive) and the deposit name.
+    // default-categories.ts has no field marking a name as income-only (e.g.
+    // "Salary"/"Freelance" sit in the same array as "Groceries"), so both kinds
+    // are offered here — a known imprecision, harmless in practice since a
+    // standard name is still just a candidate the user reviews before Apply.
+    const existingLower = new Set(categories.map((c) => c.name.trim().toLowerCase()));
+    const standardNames =
+      getDefaultCategories(languageCode)
+        .map((c) => c.name)
+        .filter((name) => !existingLower.has(name.trim().toLowerCase()))
+        .filter((name) => !isDepositCategoryName(name))
+        .map((name) => sanitizeForPrompt(name, 50))
+        .join(', ') || '(none)';
+
     const lines = remaining
       .map((r, i) => {
         const items = r.items.map((it) => it.description).filter(Boolean).slice(0, 5).join('; ');
@@ -187,13 +206,14 @@ export class CategorizeSuggestionsService {
 --- INPUT DATA ---
 Account name: "${sanitizeForPrompt(account?.name ?? '', 60)}"
 Existing categories: ${names}
+Standard category names (use one of these as a NEW category name when it genuinely fits, instead of inventing one): ${standardNames}
 Expenses:
 ${lines}
 --- END INPUT DATA ---
 
 Rules:
 - Prefer an EXISTING category whenever it genuinely fits. Put those in "assignments".
-- Only when no existing category fits, group expenses into a NEW shared category in "newCategories". A new category must hold at least ${MIN_EXPENSES_PER_NEW_CATEGORY} expenses; never create one for a single expense. At most ${MAX_NEW_CATEGORIES} new categories. Prefer broad, conventional names (a standard budgeting category) over narrow ones, and use the account's purpose (its name and existing categories) to choose them.
+- Only when no existing category fits, group expenses into a NEW shared category in "newCategories". Prefer one of the standard category names above when it genuinely fits; only invent a new name when none of those fit either. A new category must hold at least ${MIN_EXPENSES_PER_NEW_CATEGORY} expenses; never create one for a single expense. At most ${MAX_NEW_CATEGORIES} new categories. Prefer broad, conventional names (a standard budgeting category) over narrow ones, and use the account's purpose (its name and existing categories) to choose them.
 - Name new categories in ${language}, as a short noun phrase of at most 30 characters, never restating an existing name.
 - If you are not confident about an expense, leave it out entirely.
 - Refer to expenses ONLY by their number.
