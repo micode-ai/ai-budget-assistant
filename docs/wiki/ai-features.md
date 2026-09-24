@@ -30,6 +30,8 @@ above.
 
 - [chat-conversation-management](features/chat-conversation-management.md) — rename, delete, pin,
   sharing
+- [chat-undo-last-action](features/chat-undo-last-action.md) — reverting the most recent confirmed
+  write from inside the same conversation
 - [receipt-category-split](features/receipt-category-split.md) — the OCR funnel's category splitting
 - [ai-statement-import](features/ai-statement-import.md) — inferring a bank statement's column
   mapping when no parser recognises it

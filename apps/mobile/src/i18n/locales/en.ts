@@ -391,6 +391,7 @@ export default {
     confirmTitle: 'Confirm Action',
     resultSuccess: 'Successfully completed',
     resultFailed: 'Action failed',
+    resultUndone: 'Undone',
     amount: 'Amount',
     category: 'Category',
     date: 'Date',

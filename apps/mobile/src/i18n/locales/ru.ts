@@ -390,6 +390,7 @@ export default {
     confirmTitle: 'Подтвердите действие',
     resultSuccess: 'Успешно выполнено',
     resultFailed: 'Ошибка выполнения',
+    resultUndone: 'Отменено',
     amount: 'Сумма',
     category: 'Категория',
     date: 'Дата',

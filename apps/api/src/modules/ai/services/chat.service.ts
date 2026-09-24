@@ -20,13 +20,32 @@ import {
   type FilterExpense,
 } from '../utils/semantic-filter';
 import { mergeConversationLists } from '../utils/conversation-list';
-import type { ChatActionType, ChatPendingAction } from '@budget/shared-types';
+import type { ChatActionType, ChatActionResult, ChatPendingAction, UndoLastActionData } from '@budget/shared-types';
 
 interface ChatMessageRecord {
   role: string;
   content: string;
   senderUserId?: string | null;
 }
+
+// The 5 write types docs/product-ideas/chat-undo-last-action.md scopes "undo" to. create_budget
+// and create_category are deliberately excluded — no clean single-row revert for either, and the
+// sketch this feature was built from names exactly these 5.
+const UNDOABLE_ACTION_TYPES = new Set<ChatActionType>([
+  'create_expense',
+  'create_income',
+  'create_debt',
+  'record_debt_repayment',
+  'update_goal_balance',
+]);
+
+// Top of the product idea's "10-15 minutes" window — a stale undo reaching back through several
+// turns risks reverting something the user has already built on top of.
+const UNDO_WINDOW_MS = 15 * 60 * 1000;
+
+type UndoLookup =
+  | { status: 'ok'; messageId: string; actionType: ChatActionType; result: ChatActionResult }
+  | { status: 'nothing' | 'stale' };
 
 @Injectable()
 export class ChatService {
@@ -247,6 +266,15 @@ export class ChatService {
             assistantCreatedAt: assistantMsg.createdAt.toISOString(),
           };
         }
+        // undo_last_action resolves its target from conversation history (there are no model
+        // args to act on — see the tool's schema) before it can be turned into a pending action,
+        // so it needs its own handler rather than going straight into handleWriteActionRequest
+        // like every other write. Placed AFTER the viewer check above: undoing a write is a
+        // mutation too, so a viewer must be refused it exactly like any other write.
+        if (functionName === 'undo_last_action') {
+          const r = await this.handleUndoLastActionRequest(conversation, systemPrompt, history, message, aiModel, accountId, userId, user?.language);
+          return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
+        }
         const r = await this.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
@@ -314,15 +342,34 @@ export class ChatService {
       },
     });
 
+    // A successful undo must stamp its SOURCE action_executed message so a second "undo" can't
+    // re-fire the same write — findLastUndoableAction refuses any row carrying `undoneAt`.
+    // Best-effort: a malformed/already-modified source message must not roll back the undo that
+    // already happened, so a parse failure here is swallowed, not thrown.
+    if (pendingData.actionType === 'undo_last_action' && result.success) {
+      const sourceMessageId = String((pendingData.data as Record<string, unknown>)?.sourceMessageId || '');
+      if (sourceMessageId) {
+        try {
+          const sourceMsg = await this.prisma.chatMessage.findUnique({ where: { id: sourceMessageId } });
+          if (sourceMsg) {
+            const sourceParsed = JSON.parse(sourceMsg.content);
+            await this.prisma.chatMessage.update({
+              where: { id: sourceMessageId },
+              data: { content: JSON.stringify({ ...sourceParsed, undoneAt: new Date().toISOString() }) },
+            });
+          }
+        } catch (err) {
+          this.logger.warn(`[ai/chat] failed to stamp undoneAt on source message ${sourceMessageId}: ${err}`);
+        }
+      }
+    }
+
     const lang = await this.detectConversationLanguage(conversationId);
-    const localizedSummary = this.promptBuilder.buildActionSummary(
-      pendingData.actionType,
-      pendingData.data as Record<string, unknown>,
-      lang,
-    );
 
     const confirmText = result.success
-      ? this.promptBuilder.getConfirmText(lang, localizedSummary)
+      ? (pendingData.actionType === 'undo_last_action'
+          ? this.promptBuilder.getUndoConfirmText(lang, result.data || {})
+          : this.promptBuilder.getConfirmText(lang, this.promptBuilder.buildActionSummary(pendingData.actionType, pendingData.data as Record<string, unknown>, lang)))
       : this.promptBuilder.getFailText(lang, result.errorMessage);
 
     const assistantMsg = await this.prisma.chatMessage.create({
@@ -584,6 +631,88 @@ export class ChatService {
     if (recentMessages.length === 0) return 'English';
     const allText = recentMessages.map((m: { content: string }) => m.content).join(' ');
     return this.promptBuilder.detectLanguage(allText);
+  }
+
+  /**
+   * Resolves "the single most recent write in this conversation" from the persisted
+   * `action_executed` ChatMessage rows chat() already writes for every confirmed write — no
+   * schema change needed. Only ever looks at the SINGLE latest row: if it's already undone,
+   * unsupported, or failed, there is nothing undoable, even if an earlier row would qualify —
+   * "only the single most recent write is undoable" per the product idea.
+   */
+  private async findLastUndoableAction(conversationId: string): Promise<UndoLookup> {
+    const last = await this.prisma.chatMessage.findFirst({
+      where: { conversationId, role: 'action_executed' },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!last) return { status: 'nothing' };
+
+    let parsed: (ChatPendingAction & { result?: ChatActionResult; undoneAt?: string }) | undefined;
+    try {
+      parsed = JSON.parse(last.content);
+    } catch {
+      return { status: 'nothing' };
+    }
+    if (!parsed || parsed.undoneAt || !parsed.result?.success) return { status: 'nothing' };
+    if (!UNDOABLE_ACTION_TYPES.has(parsed.actionType)) return { status: 'nothing' };
+
+    const ageMs = Date.now() - last.createdAt.getTime();
+    if (ageMs > UNDO_WINDOW_MS) return { status: 'stale' };
+
+    return { status: 'ok', messageId: last.id, actionType: parsed.actionType, result: parsed.result };
+  }
+
+  private async handleUndoLastActionRequest(
+    conversation: { id: string },
+    systemPrompt: string,
+    history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
+    userMessage: string,
+    aiModel: string,
+    accountId: string | undefined,
+    userId: string,
+    uiLanguage?: string | null,
+  ) {
+    const lookup = await this.findLastUndoableAction(conversation.id);
+
+    if (lookup.status !== 'ok') {
+      const lang = this.promptBuilder.detectUserLanguage(userMessage, history, uiLanguage);
+      const text = this.promptBuilder.getUndoUnavailableText(lang, lookup.status);
+      const assistantMsg = await this.prisma.chatMessage.create({
+        data: { conversationId: conversation.id, role: 'assistant', content: text, mentionedUserIds: [] },
+      });
+      return {
+        message: text,
+        conversationId: conversation.id,
+        assistantMessageId: assistantMsg.id,
+        assistantCreatedAt: assistantMsg.createdAt.toISOString(),
+      };
+    }
+
+    const od = lookup.result.data || {};
+    const undoArgs: UndoLastActionData = {
+      sourceMessageId: lookup.messageId,
+      originalActionType: lookup.actionType,
+      originalResultData: od,
+      // Flattened purely so ActionConfirmationCard's existing generic detail rows render for
+      // this action too — see the shared-types contract. Server logic reads originalResultData.
+      amount: typeof od.amount === 'number' ? od.amount : undefined,
+      currencyCode: typeof od.currencyCode === 'string' ? (od.currencyCode as UndoLastActionData['currencyCode']) : undefined,
+      categoryName: typeof od.category === 'string' ? od.category : undefined,
+      date: typeof od.date === 'string' ? od.date : undefined,
+      description: typeof od.description === 'string' ? od.description : undefined,
+    };
+
+    return this.handleWriteActionRequest(
+      conversation,
+      'undo_last_action',
+      undoArgs as unknown as Record<string, unknown>,
+      systemPrompt,
+      history,
+      userMessage,
+      aiModel,
+      accountId,
+      userId,
+    );
   }
 
   private async handleWriteActionRequest(

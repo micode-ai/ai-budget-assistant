@@ -196,6 +196,16 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
 - **"Pokaz podzial wedlug kategorii za ten miesiac"** → wyswietla wydatki wedlug kategorii z procentami
 - **"Pokaz moje dlugi"** → lista aktywnych dlugow z kwotami
 
+### Cofanie ostatniej akcji
+
+Pomylka zaraz po potwierdzeniu czegos — zla kwota, zla kategoria, albo po prostu zmieniles zdanie? Powiedz **"cofnij"**, **"cofnij to"** albo **"anuluj to"** w tej samej rozmowie.
+
+1. Wpisz **"cofnij"** (dowolne sformulowanie dziala, w dowolnym jezyku)
+2. AI pokazuje karte potwierdzenia opisujaca, co zamierza cofnac
+3. Dotknij **Potwierdz**, aby to cofnac, albo **Anuluj**, aby zostawic bez zmian
+
+Cofniecie siega tylko do **jednej, najnowszej** akcji, ktora potwierdziles w tej rozmowie, i tylko w ciagu okolo **15 minut** od jej potwierdzenia. Dziala dla wlasnie utworzonego wydatku, przychodu lub dlugu, splaty dlugu oraz aktualizacji salda celu oszczednosciowego. Jesli edytowales juz ten wpis od momentu utworzenia, albo minelo zbyt duzo czasu, AI to powie i wskaze edycje reczna zamiast tego.
+
 ## FAQ
 
 - **P: Czy AI ma dostep do wszystkich moich danych finansowych?**
@@ -208,7 +218,7 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
   **O:** Odpowiedzi AI bazuja na Twoich danych, ale moga okazjonalnie byc niedokladne. Mozesz przeformulowac pytanie, aby uzyskac lepsze wyniki, lub zweryfikowac dane w zakladce Analityka.
 
 - **P: Czy moge cofnac potwierdzona akcje?**
-  **O:** Po potwierdzeniu akcji (takiej jak utworzenie wydatku) jest ona zapisywana na Twoim koncie. Mozesz ja usunac recznie z zakladki Wydatki.
+  **O:** Tak — powiedz "cofnij" albo "cofnij to" w tej samej rozmowie, zaraz po potwierdzeniu. To cofa jedna, najnowsza akcje, ktora potwierdziles, w ciagu okolo 15 minut od potwierdzenia. Zobacz "Cofanie ostatniej akcji" powyzej. Po uplywie tego czasu, albo dla starszego wpisu, usun go recznie z zakladki Wydatki.
 
 - **P: Co sie stanie, jezeli odrzuce akcje?**
   **O:** Jezeli dotkniesz "Anuluj" na karcie potwierdzenia, akcja zostaje odrzucona i nic nie jest zapisywane. AI potwierdzi odrzucenie.

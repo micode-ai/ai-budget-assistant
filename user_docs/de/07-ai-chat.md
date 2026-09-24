@@ -196,6 +196,16 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
 - **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
 - **"Zeige meine Schulden"** → listet aktive Schulden mit Beträgen auf
 
+### Die letzte Aktion rückgängig machen
+
+Direkt nach dem Bestätigen einen Fehler gemacht — falscher Betrag, falsche Kategorie, oder du hast es dir einfach anders überlegt? Sag **"rückgängig"**, **"mach das rückgängig"** oder **"nimm das zurück"** in derselben Unterhaltung.
+
+1. Tippe **"rückgängig"** ein (jede Formulierung funktioniert, in jeder Sprache)
+2. Die KI zeigt eine Bestätigungskarte mit einer Beschreibung dessen, was sie rückgängig machen wird
+3. Tippe **Bestätigen**, um es rückgängig zu machen, oder **Abbrechen**, um es so zu lassen
+
+Rückgängig machen erreicht nur die **letzte** Aktion, die du in dieser Unterhaltung bestätigt hast, und nur innerhalb von etwa **15 Minuten** nach der Bestätigung. Es funktioniert für eine gerade erstellte Ausgabe, ein Einkommen oder einen Schuldeneintrag, eine Schuldenrückzahlung und eine Aktualisierung des Sparziel-Kontostands. Wenn du den Eintrag seitdem bereits bearbeitet hast oder zu viel Zeit vergangen ist, sagt dir die KI das und verweist dich auf die manuelle Bearbeitung.
+
 ## FAQ
 
 - **F: Hat die KI Zugriff auf alle meine Finanzdaten?**
@@ -208,7 +218,7 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
   **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse oder die Daten im Analysen-Tab uberprufen.
 
 - **F: Kann ich eine bestätigte Aktion rückgängig machen?**
-  **A:** Nachdem du eine Aktion bestätigt hast (wie das Erstellen einer Ausgabe), wird sie in deinem Konto gespeichert. Du kannst sie manuell im Ausgaben-Tab löschen.
+  **A:** Ja — sag "rückgängig" oder "mach das rückgängig" in derselben Unterhaltung, direkt nach dem Bestätigen. Das macht die letzte von dir bestätigte Aktion rückgängig, innerhalb von etwa 15 Minuten nach der Bestätigung. Siehe "Die letzte Aktion rückgängig machen" oben. Nach diesem Zeitfenster, oder für ältere Einträge, lösche sie manuell im Ausgaben-Tab.
 
 - **F: Was passiert, wenn ich eine Aktion ablehne?**
   **A:** Wenn du auf "Abbrechen" auf einer Bestätigungskarte tippst, wird die Aktion abgelehnt und nichts wird gespeichert. Die KI wird die Ablehnung bestätigen.

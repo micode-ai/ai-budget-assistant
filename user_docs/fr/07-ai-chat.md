@@ -196,6 +196,16 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
 - **"Montrer la repartition par categories pour ce mois"** → affiche les depenses par categorie avec pourcentages
 - **"Montrer mes dettes"** → liste les dettes actives avec les montants dus
 
+### Annuler la derniere action
+
+Une erreur juste apres avoir confirme quelque chose — mauvais montant, mauvaise categorie, ou vous avez simplement change d'avis ? Dites **"annule"**, **"annule ca"** ou **"reviens en arriere"** dans la meme conversation.
+
+1. Tapez **"annule"** (n'importe quelle formulation fonctionne, dans n'importe quelle langue)
+2. L'IA affiche une carte de confirmation decrivant ce qu'elle s'apprete a annuler
+3. Appuyez sur **Confirmer** pour l'annuler, ou **Annuler** pour la laisser telle quelle
+
+L'annulation ne remonte qu'a la **seule action la plus recente** que vous avez confirmee dans cette conversation, et seulement dans les **15 minutes** environ suivant la confirmation. Elle fonctionne pour une depense, un revenu ou une dette qui viennent d'etre crees, un remboursement de dette, et une mise a jour du solde d'un objectif d'epargne. Si vous avez deja modifie cette entree depuis sa creation, ou si trop de temps s'est ecoule, l'IA vous le dira et vous invitera a la modifier manuellement.
+
 ## FAQ
 
 - **Q : L'IA a-t-elle acces a toutes mes donnees financieres ?**
@@ -208,7 +218,7 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
   **R :** Les reponses de l'IA sont basees sur vos donnees mais peuvent parfois etre inexactes. Vous pouvez reformuler votre question pour de meilleurs resultats, ou verifier les donnees dans l'onglet Analyses.
 
 - **Q : Puis-je annuler une action confirmee ?**
-  **R :** Apres avoir confirme une action (comme la creation d'une depense), elle est enregistree dans votre compte. Vous pouvez la supprimer manuellement depuis l'onglet Depenses.
+  **R :** Oui — dites "annule" ou "annule ca" dans la meme conversation, juste apres avoir confirme. Cela annule la seule action la plus recente que vous avez confirmee, dans les 15 minutes environ suivant la confirmation. Voir "Annuler la derniere action" ci-dessus. Passe ce delai, ou pour une action plus ancienne, supprimez-la manuellement depuis l'onglet Depenses.
 
 - **Q : Que se passe-t-il si je rejette une action ?**
   **R :** Si vous appuyez sur "Annuler" sur une carte de confirmation, l'action est rejetee et rien n'est enregistre. L'IA accusera reception du rejet.

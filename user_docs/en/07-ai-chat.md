@@ -211,6 +211,16 @@ These commands execute **immediately** and show results:
 - **"Show category breakdown for this month"** → displays spending by category with percentages
 - **"Show my debts"** → lists all active debts with amounts owed
 
+### Undoing the Last Action
+
+Made a mistake right after confirming something — wrong amount, wrong category, or you just changed your mind? Say **"undo"**, **"undo that"**, or **"cancel that"** in the same conversation.
+
+1. Type **"undo"** (or "cancel that", "delete the last one" — any phrasing works, in any language)
+2. AI shows a confirmation card describing what it's about to undo
+3. Tap **Confirm** to revert it, or **Cancel** to leave it as is
+
+Undo only reaches back to the **single most recent** action you confirmed in that conversation, and only within about **15 minutes** of confirming it — it won't reach back through several turns to something you may have already built on top of. It works for a just-created expense, income, or debt entry, a debt repayment, and a savings goal balance update. If you've already edited that entry since creating it, or too much time has passed, the assistant will say so and point you to editing it manually instead.
+
 ## FAQ
 
 - **Q: Does the AI have access to all my financial data?**
@@ -223,7 +233,7 @@ These commands execute **immediately** and show results:
   **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, or verify the data in the Analytics tab.
 
 - **Q: Can I undo a confirmed action?**
-  **A:** After you confirm an action (like creating an expense), it's saved to your account. You can delete it manually from the Expenses tab.
+  **A:** Yes — say "undo" or "cancel that" in the same conversation, right after confirming. This reverts the single most recent action you confirmed, within about 15 minutes of confirming it. See [Undoing the Last Action](#undoing-the-last-action) above. Past that window, or for anything older, delete it manually from the Expenses tab.
 
 - **Q: What happens if I reject an action?**
   **A:** If you tap "Cancel" on a confirmation card, the action is rejected and nothing is saved. The AI will acknowledge the rejection.

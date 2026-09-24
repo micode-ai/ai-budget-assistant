@@ -390,6 +390,7 @@ export default {
     confirmTitle: 'Potwierdź akcję',
     resultSuccess: 'Zakończono pomyślnie',
     resultFailed: 'Akcja nie powiodła się',
+    resultUndone: 'Cofnięto',
     amount: 'Kwota',
     category: 'Kategoria',
     date: 'Data',

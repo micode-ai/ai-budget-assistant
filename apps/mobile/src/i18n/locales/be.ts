@@ -388,6 +388,7 @@ export default {
     confirmTitle: 'Пацвердзіце дзеянне',
     resultSuccess: 'Паспяхова выканана',
     resultFailed: 'Памылка выканання',
+    resultUndone: 'Адменена',
     amount: 'Сума',
     category: 'Катэгорыя',
     date: 'Дата',

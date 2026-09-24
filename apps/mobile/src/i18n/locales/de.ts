@@ -388,6 +388,7 @@ export default {
     confirmTitle: 'Aktion bestätigen',
     resultSuccess: 'Erfolgreich abgeschlossen',
     resultFailed: 'Aktion fehlgeschlagen',
+    resultUndone: 'Rückgängig gemacht',
     amount: 'Betrag',
     category: 'Kategorie',
     date: 'Datum',

@@ -351,13 +351,22 @@ export class AiToolsService {
           },
         },
       },
+      {
+        type: 'function',
+        function: {
+          name: 'undo_last_action',
+          description:
+            'Revert the single most recent write action in THIS conversation — a just-created expense, income, or debt, a debt repayment, or a savings-goal balance update. Use when the user says "undo", "undo that", "undo it", "cancel that", "delete the last one", "that\'s wrong, remove it", "I made a mistake, take it back" — in ANY language. No parameters: the server automatically finds and resolves the action to revert. Does NOT undo budgets, categories, or anything more than one step back — only the most recent write is ever undoable.',
+          parameters: { type: 'object', properties: {}, required: [] },
+        },
+      },
     ];
   }
 
   // 'check_affordability' is intentionally NOT in this list — it is a READ action
   // (no confirmation required, executes immediately via executeWithCache).
   isWriteAction(actionType: string): boolean {
-    return ['create_expense', 'create_income', 'create_budget', 'create_category', 'record_debt_repayment', 'create_debt', 'update_goal_balance'].includes(actionType);
+    return ['create_expense', 'create_income', 'create_budget', 'create_category', 'record_debt_repayment', 'create_debt', 'update_goal_balance', 'undo_last_action'].includes(actionType);
   }
 
   buildToolCacheKey(
@@ -420,6 +429,8 @@ export class AiToolsService {
           return await this.executeGetDepositTotal(data, accountId, baseCurrency);
         case 'get_discount_total':
           return await this.executeGetDiscountTotal(data, accountId, baseCurrency);
+        case 'undo_last_action':
+          return await this.executeUndoLastAction(data, accountId);
         default:
           return { actionType, success: false, errorMessage: 'Unknown action type' };
       }
@@ -1206,6 +1217,10 @@ export class AiToolsService {
           recordId: result.record.id,
           amount,
           date: date || new Date().toISOString().split('T')[0],
+          // Additive — read off the created record itself, not the request args. Needed by the
+          // chat "undo" tool's narration (executeUndoLastAction); harmless for every other caller.
+          currencyCode: result.record.currencyCode,
+          contactName: result.record.debtContactName ?? undefined,
         },
       };
     } catch (error) {
@@ -1266,12 +1281,23 @@ export class AiToolsService {
     }
 
     try {
+      // Snapshot BEFORE the write — this is what the chat "undo" tool restores. Mirrors
+      // GoalPlannerService.updateGoal's own `shouldRecordContribution` condition below, so
+      // `contributionId` only gets set when a contribution row actually exists to clean up.
+      const before = await this.goalPlannerService.getGoal(accountId, goalId);
       const updated = await this.goalPlannerService.updateGoal(
         accountId,
         goalId,
         { currentAmount: newAmount },
         { userId, note: 'AI update' },
       );
+
+      let contributionId: string | undefined;
+      if (newAmount > Number(before.currentAmount)) {
+        const contributions = await this.goalPlannerService.getContributions(accountId, goalId);
+        contributionId = contributions[0]?.id;
+      }
+
       return {
         actionType: 'update_goal_balance',
         success: true,
@@ -1281,6 +1307,11 @@ export class AiToolsService {
           newAmount: updated.currentAmount,
           targetAmount: updated.targetAmount,
           status: updated.status,
+          // Additive — needed by the chat "undo" tool (executeUndoLastAction /
+          // revertGoalBalance); no other caller reads these.
+          previousAmount: Number(before.currentAmount),
+          previousStatus: before.status,
+          contributionId,
         },
       };
     } catch (error) {
@@ -1290,6 +1321,146 @@ export class AiToolsService {
         errorMessage: error instanceof Error ? error.message : 'Failed to update goal',
       };
     }
+  }
+
+  /**
+   * Resolves which table + row an undo must revert, from the ORIGINAL write's own actionType and
+   * captured ChatActionResult.data (`od`). `create_debt`/`record_debt_repayment` can each land on
+   * either table depending on `od.type` ('lent' vs 'borrowed') — see debts.service.ts
+   * createDebt/recordRepayment, which this mirrors exactly. Returns null for any actionType this
+   * feature doesn't support undoing (update_goal_balance is handled separately by the caller, not
+   * through this table).
+   */
+  private resolveUndoEntity(
+    originalActionType: string,
+    od: Record<string, unknown>,
+  ): { kind: 'expense' | 'income'; id: string } | null {
+    switch (originalActionType) {
+      case 'create_expense':
+        return { kind: 'expense', id: String(od.id || '') };
+      case 'create_income':
+        return { kind: 'income', id: String(od.id || '') };
+      case 'create_debt':
+        return { kind: od.type === 'lent' ? 'expense' : 'income', id: String(od.recordId || '') };
+      case 'record_debt_repayment':
+        return { kind: od.type === 'lent' ? 'income' : 'expense', id: String(od.recordId || '') };
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * Reverts a create_expense/create_income/create_debt/record_debt_repayment write by
+   * soft-deleting the row it created — the exact same soft-delete every entity already supports
+   * via its own service's `remove()`. Refuses (success:false, never throws to the caller) when the
+   * row no longer exists (already deleted — findOne filters `isDeleted:false` and throws) or was
+   * edited since creation: `updatedAt` more than 5s past `createdAt` means something touched it
+   * after the insert (Prisma sets both together at create time), so undoing now would discard an
+   * edit the user made on purpose.
+   */
+  private async revertEntityCreate(
+    kind: 'expense' | 'income',
+    id: string,
+    accountId: string,
+  ): Promise<ChatActionResult> {
+    if (!id) {
+      return { actionType: 'undo_last_action', success: false, errorMessage: 'Nothing to undo' };
+    }
+    let row: { id: string; amount: unknown; currencyCode: string; description: string | null; createdAt: Date; updatedAt: Date };
+    try {
+      row = kind === 'expense'
+        ? await this.expensesService.findOne(accountId, id)
+        : await this.incomesService.findOne(accountId, id);
+    } catch {
+      return { actionType: 'undo_last_action', success: false, errorMessage: 'That entry no longer exists' };
+    }
+    if (Math.abs(row.updatedAt.getTime() - row.createdAt.getTime()) > 5000) {
+      return {
+        actionType: 'undo_last_action',
+        success: false,
+        errorMessage: 'That entry was edited since it was created — undo it manually from the Transactions tab instead',
+      };
+    }
+    if (kind === 'expense') {
+      await this.expensesService.remove(accountId, id);
+    } else {
+      await this.incomesService.remove(accountId, id);
+    }
+    return {
+      actionType: 'undo_last_action',
+      success: true,
+      data: {
+        undoneEntityType: kind,
+        amount: Number(row.amount),
+        currencyCode: row.currencyCode,
+        description: row.description,
+      },
+    };
+  }
+
+  /**
+   * Reverts an update_goal_balance write: restores the pre-write currentAmount/status and removes
+   * the GoalContribution row it created (if any). Refuses if the goal's CURRENT currentAmount no
+   * longer equals the newAmount our write set it to — something else changed it since (another
+   * manual edit, or a second undo racing this one), so the snapshot in `od` is stale.
+   */
+  private async revertGoalBalance(od: Record<string, unknown>, accountId: string): Promise<ChatActionResult> {
+    const goalId = String(od.goalId || '');
+    const previousAmount = od.previousAmount != null ? Number(od.previousAmount) : null;
+    const previousStatus = od.previousStatus != null ? String(od.previousStatus) : 'active';
+    const contributionId = od.contributionId ? String(od.contributionId) : undefined;
+    const newAmount = od.newAmount != null ? Number(od.newAmount) : null;
+
+    if (!goalId || previousAmount == null) {
+      return { actionType: 'undo_last_action', success: false, errorMessage: 'Nothing to undo' };
+    }
+    try {
+      const current = await this.goalPlannerService.getGoal(accountId, goalId);
+      if (newAmount != null && Number(current.currentAmount) !== newAmount) {
+        return {
+          actionType: 'undo_last_action',
+          success: false,
+          errorMessage: 'That goal has changed since — undo it manually from the goal screen instead',
+        };
+      }
+      const reverted = await this.goalPlannerService.revertGoalUpdate(
+        accountId,
+        goalId,
+        previousAmount,
+        previousStatus,
+        contributionId,
+      );
+      return {
+        actionType: 'undo_last_action',
+        success: true,
+        data: { undoneEntityType: 'goal', goalName: reverted.name, restoredAmount: previousAmount },
+      };
+    } catch (error) {
+      return {
+        actionType: 'undo_last_action',
+        success: false,
+        errorMessage: error instanceof Error ? error.message : 'Failed to undo goal update',
+      };
+    }
+  }
+
+  /**
+   * Dispatcher for the chat "undo" tool (see docs/contracts/chat-undo-last-action.md). `data` is
+   * the `UndoLastActionData` the request-time resolution in ChatService built — already scoped to
+   * exactly one of the 5 supported original action types.
+   */
+  private async executeUndoLastAction(data: Record<string, unknown>, accountId: string): Promise<ChatActionResult> {
+    const originalActionType = String(data.originalActionType || '');
+    const od = (data.originalResultData as Record<string, unknown>) || {};
+
+    if (originalActionType === 'update_goal_balance') {
+      return this.revertGoalBalance(od, accountId);
+    }
+    const entity = this.resolveUndoEntity(originalActionType, od);
+    if (!entity) {
+      return { actionType: 'undo_last_action', success: false, errorMessage: 'This action can no longer be undone' };
+    }
+    return this.revertEntityCreate(entity.kind, entity.id, accountId);
   }
 
   /**

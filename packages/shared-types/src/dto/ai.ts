@@ -49,7 +49,8 @@ export type ChatActionType =
   | 'get_shopping_suggestions'
   | 'get_inflation_shield'
   | 'get_deposit_total'
-  | 'get_discount_total';
+  | 'get_discount_total'
+  | 'undo_last_action';
 
 export interface CreateExpenseActionData {
   amount: number;
@@ -143,6 +144,30 @@ export interface CheckAffordabilityActionData {
   suggestedDate?: AffordabilityVerdict['suggestedDate'];
 }
 
+// undo_last_action takes no user-supplied parameters — the server resolves the target from
+// conversation history (see ChatService.findLastUndoableAction). This shape is what the server
+// resolves it INTO before building the pending-action confirmation.
+export interface UndoLastActionData {
+  /** id of the `action_executed` ChatMessage row this undo targets — the server stamps
+   *  `undoneAt` back onto it on success so a second "undo" can't re-fire the same write. */
+  sourceMessageId: string;
+  /** the ChatActionType of the write being undone (one of: create_expense, create_income,
+   *  create_debt, record_debt_repayment, update_goal_balance). */
+  originalActionType: ChatActionType;
+  /** the ChatActionResult.data captured when the original write executed — the authoritative
+   *  source the server reverts from. Opaque to clients. */
+  originalResultData: Record<string, unknown>;
+  // Flattened, display-only mirrors of fields inside originalResultData. They exist ONLY so
+  // ActionConfirmationCard's existing generic detail rows ('amount' in data, 'categoryName' in
+  // data, 'date' in data) render for this action too, with no new UI code — server logic never
+  // reads these, only originalResultData.
+  amount?: number;
+  currencyCode?: Currency;
+  categoryName?: string;
+  date?: string;
+  description?: string;
+}
+
 export type ChatActionData =
   | CreateExpenseActionData
   | CreateIncomeActionData
@@ -155,7 +180,8 @@ export type ChatActionData =
   | CreateDebtActionData
   | GetDebtSummaryActionData
   | UpdateGoalBalanceActionData
-  | CheckAffordabilityActionData;
+  | CheckAffordabilityActionData
+  | UndoLastActionData;
 
 export interface ChatPendingAction {
   id: string;

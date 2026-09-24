@@ -196,6 +196,16 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
 - **"Toon categorie-uitsplitsing voor deze maand"** → toont uitgaven per categorie met percentages
 - **"Toon mijn schulden"** → toont alle actieve schulden met verschuldigde bedragen
 
+### De laatste actie ongedaan maken
+
+Een fout gemaakt vlak nadat je iets bevestigde — verkeerd bedrag, verkeerde categorie, of je hebt gewoon van gedachten veranderd? Zeg **"ongedaan maken"**, **"maak dat ongedaan"** of **"annuleer dat"** in hetzelfde gesprek.
+
+1. Typ **"ongedaan maken"** (elke formulering werkt, in elke taal)
+2. De AI toont een bevestigingskaart die beschrijft wat het gaat terugdraaien
+3. Tik op **Bevestigen** om het terug te draaien, of **Annuleren** om het zo te laten
+
+Ongedaan maken reikt alleen terug tot de **enige, meest recente** actie die je in dat gesprek hebt bevestigd, en alleen binnen ongeveer **15 minuten** na bevestiging. Het werkt voor een net aangemaakte uitgave, inkomst of schuld, een schuldaflossing, en een update van een spaardoelsaldo. Als je die invoer al hebt bewerkt sinds het aanmaken, of er is te veel tijd verstreken, zegt de AI dat en verwijst je naar handmatig bewerken.
+
 ## Veelgestelde vragen
 
 - **V: Heeft de AI toegang tot al mijn financiële gegevens?**
@@ -208,7 +218,7 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
   **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, of de gegevens controleren op het tabblad Analyse.
 
 - **V: Kan ik een bevestigde actie ongedaan maken?**
-  **A:** Nadat je een actie hebt bevestigd (zoals het aanmaken van een uitgave), wordt deze opgeslagen in je account. Je kunt deze handmatig verwijderen op het tabblad Uitgaven.
+  **A:** Ja — zeg "ongedaan maken" of "maak dat ongedaan" in hetzelfde gesprek, vlak na het bevestigen. Dit draait de enige, meest recente actie terug die je hebt bevestigd, binnen ongeveer 15 minuten na bevestiging. Zie "De laatste actie ongedaan maken" hierboven. Na die tijd, of voor iets ouders, verwijder je het handmatig op het tabblad Uitgaven.
 
 - **V: Wat gebeurt er als ik een actie verwerp?**
   **A:** Als je op een bevestigingskaart op "Annuleren" tikt, wordt de actie verworpen en wordt er niets opgeslagen. De AI bevestigt de verwerping.

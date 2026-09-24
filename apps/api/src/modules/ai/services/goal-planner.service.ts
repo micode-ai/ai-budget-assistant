@@ -320,6 +320,35 @@ Return ONLY valid JSON:
     return this.mapGoal(updated);
   }
 
+  /**
+   * Reverts an `updateGoal` write for the chat "undo" tool: restores the pre-write
+   * `currentAmount`/`status` and removes the `GoalContribution` row that write created (if any).
+   * `contributionId` is a `deleteMany` (not `delete`) so a row already gone — e.g. a duplicate
+   * undo attempt — is a no-op, not a thrown error. The caller (`AiToolsService.revertGoalBalance`)
+   * is responsible for verifying the goal hasn't moved again since the write being undone.
+   */
+  async revertGoalUpdate(
+    accountId: string,
+    goalId: string,
+    previousAmount: number,
+    previousStatus: string,
+    contributionId?: string,
+  ) {
+    const goal = await this.prisma.savingsGoal.findFirst({ where: { id: goalId, accountId } });
+    if (!goal) throw new NotFoundException('Goal not found');
+
+    const [updated] = await this.prisma.$transaction([
+      this.prisma.savingsGoal.update({
+        where: { id: goalId },
+        data: { currentAmount: previousAmount, status: previousStatus },
+      }),
+      ...(contributionId
+        ? [this.prisma.goalContribution.deleteMany({ where: { id: contributionId, goalId } })]
+        : []),
+    ]);
+    return this.mapGoal(updated);
+  }
+
   async getContributions(accountId: string, goalId: string) {
     const goal = await this.prisma.savingsGoal.findFirst({
       where: { id: goalId, accountId },

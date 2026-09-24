@@ -22,7 +22,7 @@ function buildDeps() {
     account: { findUnique: jest.fn().mockResolvedValue({ encryptionTier: 0 }) },
     chatConversation: { findFirst: jest.fn(), findUnique: jest.fn(), create: jest.fn(), update: jest.fn(), findMany: jest.fn(), delete: jest.fn() },
     chatConversationPin: { createMany: jest.fn(), deleteMany: jest.fn() },
-    chatMessage: { create: jest.fn().mockResolvedValue({ id: 'm1', createdAt: new Date('2026-05-25T10:00:00Z') }), findFirst: jest.fn(), findMany: jest.fn(), update: jest.fn(), deleteMany: jest.fn() },
+    chatMessage: { create: jest.fn().mockResolvedValue({ id: 'm1', createdAt: new Date('2026-05-25T10:00:00Z') }), findFirst: jest.fn(), findUnique: jest.fn(), findMany: jest.fn(), update: jest.fn(), deleteMany: jest.fn() },
     user: { findUnique: jest.fn().mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice' }) },
     accountMember: { findMany: jest.fn().mockResolvedValue([]) },
   };
@@ -58,6 +58,8 @@ describe('ChatService', () => {
           getRejectText: () => 'rejected',
           getShoppingListAddText: (_lang: string, listName: string, labels: string[]) => `added ${labels.join(',')} to ${listName}`,
           getShoppingListRemoveText: (_lang: string, removed: string[], notFound: string[]) => `removed ${removed.join(',')} notFound ${notFound.join(',')}`,
+          getUndoConfirmText: (_lang: string, data: Record<string, unknown>) => `undone: ${JSON.stringify(data)}`,
+          getUndoUnavailableText: (_lang: string, kind: string) => `nothing-to-undo:${kind}`,
         } },
       ],
     }).compile();
@@ -419,6 +421,145 @@ describe('ChatService', () => {
     it('rejects confirming in a conversation outside the account', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
       await expect(service.confirmAction('owner-1', 'c-other', 'act-1', 'acc-1')).rejects.toThrow();
+    });
+  });
+
+  describe('undo_last_action', () => {
+    beforeEach(() => {
+      deps.aiTools.isWriteAction = jest.fn((name: string) => name === 'undo_last_action') as any;
+    });
+
+    it('answers "nothing to undo" and creates no pending action when there is no action_executed message', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      deps.prisma.user.findUnique.mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice', currencyCode: 'USD' });
+      deps.prisma.chatMessage.findFirst.mockResolvedValue(null); // no action_executed row yet
+      mockChatCreate.mockResolvedValueOnce({
+        choices: [{ message: { tool_calls: [{ id: 'tc1', function: { name: 'undo_last_action', arguments: '{}' } }] } }],
+        usage: { total_tokens: 5 },
+      });
+
+      const res = await service.chat('owner-1', 'undo that', 'conv-1', 'acc-1', 'Personal', 'owner', 'Alice', []);
+
+      expect(res.message).toBe('nothing-to-undo:nothing');
+      expect((res as any).pendingAction).toBeUndefined();
+      // Only the tool-call round-trip — no second OpenAI call to phrase a confirmation,
+      // since there is nothing to confirm.
+      expect(mockChatCreate).toHaveBeenCalledTimes(1);
+    });
+
+    it('answers "too much time has passed" when the last write is older than the undo window', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      deps.prisma.user.findUnique.mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice', currencyCode: 'USD' });
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({
+        id: 'am1',
+        createdAt: new Date(Date.now() - 20 * 60 * 1000), // 20 minutes ago — past the 15-minute window
+        content: JSON.stringify({
+          id: 'pa1', actionType: 'create_expense', data: { amount: 50 }, displaySummary: 'x',
+          status: 'executed', result: { actionType: 'create_expense', success: true, data: { id: 'e1', amount: 50, currencyCode: 'PLN' } },
+        }),
+      });
+      mockChatCreate.mockResolvedValueOnce({
+        choices: [{ message: { tool_calls: [{ id: 'tc1', function: { name: 'undo_last_action', arguments: '{}' } }] } }],
+        usage: { total_tokens: 5 },
+      });
+
+      const res = await service.chat('owner-1', 'undo that', 'conv-1', 'acc-1', 'Personal', 'owner', 'Alice', []);
+
+      expect(res.message).toBe('nothing-to-undo:stale');
+      expect((res as any).pendingAction).toBeUndefined();
+    });
+
+    it('builds a pending action for a fresh undoable write and routes through the normal confirmation pipeline', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      deps.prisma.user.findUnique.mockResolvedValue({ aiResponseMode: 'balanced', aiModel: null, name: 'Alice', currencyCode: 'USD' });
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({
+        id: 'am1',
+        createdAt: new Date(), // fresh, well within the window
+        content: JSON.stringify({
+          id: 'pa1', actionType: 'create_expense', data: { amount: 50, currencyCode: 'PLN' }, displaySummary: 'expense 50 PLN',
+          status: 'executed', result: { actionType: 'create_expense', success: true, data: { id: 'e1', amount: 50, currencyCode: 'PLN', description: 'Groceries', category: 'Food' } },
+        }),
+      });
+      mockChatCreate
+        .mockResolvedValueOnce({
+          choices: [{ message: { tool_calls: [{ id: 'tc1', function: { name: 'undo_last_action', arguments: '{}' } }] } }],
+          usage: { total_tokens: 5 },
+        })
+        .mockResolvedValueOnce({
+          choices: [{ message: { content: "I'd like to undo your last expense. Confirm?" } }],
+          usage: { total_tokens: 8 },
+        });
+
+      const res = await service.chat('owner-1', 'undo that', 'conv-1', 'acc-1', 'Personal', 'owner', 'Alice', []);
+
+      expect((res as any).pendingAction).toMatchObject({ actionType: 'undo_last_action' });
+      expect(((res as any).pendingAction as any).data).toMatchObject({
+        sourceMessageId: 'am1',
+        originalActionType: 'create_expense',
+        amount: 50,
+        currencyCode: 'PLN',
+        categoryName: 'Food',
+        description: 'Groceries',
+      });
+      expect(deps.prisma.chatMessage.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ role: 'pending_action' }) }),
+      );
+    });
+  });
+
+  describe('confirmAction — undo_last_action', () => {
+    it('uses the undo confirm text and stamps undoneAt on the source action_executed message', async () => {
+      const pendingContent = JSON.stringify({
+        id: 'act-1', actionType: 'undo_last_action', accountId: 'acc-1',
+        data: { sourceMessageId: 'am1', originalActionType: 'create_expense', originalResultData: { id: 'e1' } },
+        displaySummary: 'undo the last action',
+      });
+      const sourceContent = JSON.stringify({
+        id: 'pa1', actionType: 'create_expense', data: { amount: 50 }, displaySummary: 'x',
+        status: 'executed', result: { actionType: 'create_expense', success: true, data: { id: 'e1' } },
+      });
+
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', isShared: false, userId: 'owner-1' });
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'pending-1', content: pendingContent });
+      deps.prisma.chatMessage.findUnique.mockResolvedValue({ id: 'am1', content: sourceContent });
+      deps.prisma.chatMessage.findMany.mockResolvedValue([]); // detectConversationLanguage — no history, defaults to English
+      deps.aiTools.executeAction = jest.fn().mockResolvedValue({
+        actionType: 'undo_last_action',
+        success: true,
+        data: { undoneEntityType: 'expense', amount: 50, currencyCode: 'PLN', description: 'Groceries' },
+      });
+
+      const res = await service.confirmAction('owner-1', 'c1', 'act-1', 'acc-1');
+
+      expect(res.message).toContain('undone:');
+      expect(deps.prisma.chatMessage.update).toHaveBeenCalledWith({
+        where: { id: 'am1' },
+        data: { content: expect.stringContaining('"undoneAt"') },
+      });
+    });
+
+    it('does not stamp anything when the revert itself failed', async () => {
+      const pendingContent = JSON.stringify({
+        id: 'act-1', actionType: 'undo_last_action', accountId: 'acc-1',
+        data: { sourceMessageId: 'am1', originalActionType: 'create_expense', originalResultData: { id: 'e1' } },
+        displaySummary: 'undo the last action',
+      });
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', isShared: false, userId: 'owner-1' });
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'pending-1', content: pendingContent });
+      deps.prisma.chatMessage.findMany.mockResolvedValue([]); // detectConversationLanguage — no history, defaults to English
+      deps.aiTools.executeAction = jest.fn().mockResolvedValue({
+        actionType: 'undo_last_action',
+        success: false,
+        errorMessage: 'That entry no longer exists',
+      });
+
+      const res = await service.confirmAction('owner-1', 'c1', 'act-1', 'acc-1');
+
+      expect(res.message).toBe('fail: That entry no longer exists');
+      expect(deps.prisma.chatMessage.findUnique).not.toHaveBeenCalled();
     });
   });
 

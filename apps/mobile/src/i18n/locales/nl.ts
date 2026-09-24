@@ -388,6 +388,7 @@ export default {
     confirmTitle: 'Actie bevestigen',
     resultSuccess: 'Succesvol afgerond',
     resultFailed: 'Actie mislukt',
+    resultUndone: 'Ongedaan gemaakt',
     amount: 'Bedrag',
     category: 'Categorie',
     date: 'Datum',

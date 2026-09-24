@@ -292,6 +292,41 @@ ${JSON.stringify(contextData, null, 2)}
   }
 
   buildActionSummary(actionType: ChatActionType, args: Record<string, unknown>, lang = 'English'): string {
+    // Checked first, before the per-language switch below, so the 5 original-write branches
+    // never need an "undo" case of their own — this just re-describes the original write (via a
+    // recursive call, reconstructing its own arg shape from the captured originalResultData) and
+    // prefixes it. Used for the PRE-confirmation prompt only; the POST-confirm text is
+    // getUndoConfirmText below (different tense — "undo the last action: X" reads wrong once it's
+    // already done).
+    if (actionType === 'undo_last_action') {
+      const originalActionType = args.originalActionType as ChatActionType | undefined;
+      const od = (args.originalResultData as Record<string, unknown>) || {};
+      const mappedArgs: Record<string, unknown> = {
+        amount: od.amount,
+        currencyCode: od.currencyCode,
+        description: od.description,
+        categoryName: od.category,
+        contactName: od.contactName,
+        direction: od.direction,
+        goalName: od.goalName,
+        newAmount: od.newAmount,
+      };
+      const inner = originalActionType ? this.buildActionSummary(originalActionType, mappedArgs, lang) : '';
+      const prefixes: Record<string, string> = {
+        Russian: 'отмена последнего действия',
+        Ukrainian: 'скасування останньої дії',
+        Belarusian: 'адмена апошняга дзеяння',
+        German: 'die letzte Aktion rückgängig machen',
+        Spanish: 'deshacer la última acción',
+        French: 'annuler la dernière action',
+        Polish: 'cofnięcie ostatniej akcji',
+        Dutch: 'de laatste actie ongedaan maken',
+        English: 'undo the last action',
+      };
+      const prefix = prefixes[lang] ?? prefixes.English;
+      return inner ? `${prefix}: ${inner}` : prefix;
+    }
+
     const safeDesc = sanitizeForPrompt(typeof args.description === 'string' ? args.description : '', 150);
     const safeName = sanitizeForPrompt(typeof args.name === 'string' ? args.name : '', 100);
     const safeCat = sanitizeForPrompt(typeof args.categoryName === 'string' ? args.categoryName : '', 50);
@@ -539,6 +574,70 @@ ${JSON.stringify(contextData, null, 2)}
       case 'Polish': return 'Anulowano. Daj znać, jeśli potrzebujesz czegoś jeszcze.';
       case 'Dutch': return 'Actie geannuleerd. Laat het me weten als je nog iets nodig hebt.';
       default: return 'Action cancelled. Let me know if you need anything else.';
+    }
+  }
+
+  /**
+   * POST-confirm text for a successful undo — takes the ChatActionResult.data that
+   * executeUndoLastAction actually returned (the authoritative record of what was reverted), NOT
+   * buildActionSummary's output, which is phrased for the pre-confirm prompt and would read wrong
+   * here ("undo the last action: …" after the action already happened).
+   */
+  getUndoConfirmText(lang: string, data: Record<string, unknown>): string {
+    const kind = String(data.undoneEntityType || '');
+    const amount = data.amount != null ? Number(data.amount) : null;
+    const currency = data.currencyCode ? String(data.currencyCode) : '';
+    const desc = data.description ? sanitizeForPrompt(String(data.description), 100) : '';
+    const goalName = data.goalName ? sanitizeForPrompt(String(data.goalName), 100) : '';
+    const detail = kind === 'goal'
+      ? goalName
+      : amount != null
+        ? `${amount.toFixed(2)} ${currency}${desc ? ` — ${desc}` : ''}`
+        : '';
+    const suffix = detail ? `: ${detail}` : '';
+    switch (lang) {
+      case 'Russian': return `↩️ Отменено${suffix}.`;
+      case 'Ukrainian': return `↩️ Скасовано${suffix}.`;
+      case 'Belarusian': return `↩️ Адменена${suffix}.`;
+      case 'German': return `↩️ Rückgängig gemacht${suffix}.`;
+      case 'Spanish': return `↩️ Deshecho${suffix}.`;
+      case 'French': return `↩️ Annulé${suffix}.`;
+      case 'Polish': return `↩️ Cofnięto${suffix}.`;
+      case 'Dutch': return `↩️ Ongedaan gemaakt${suffix}.`;
+      default: return `↩️ Undone${suffix}.`;
+    }
+  }
+
+  /**
+   * "Nothing to undo" narration — the ONLY two shapes findLastUndoableAction's outcome can take
+   * once it isn't 'ok' (see ChatService). 'nothing' covers no write yet / already undone /
+   * unsupported type / the write itself failed — all read the same to the user ("there's nothing
+   * recent I can undo"), so they share one string rather than 4 near-identical ones.
+   */
+  getUndoUnavailableText(lang: string, kind: 'nothing' | 'stale'): string {
+    if (kind === 'stale') {
+      switch (lang) {
+        case 'Russian': return 'Прошло слишком много времени, чтобы отменить это. Отредактируйте или удалите запись вручную на вкладке "Транзакции".';
+        case 'Ukrainian': return 'Минуло забагато часу, щоб скасувати це. Відредагуйте або видаліть запис вручну на вкладці "Транзакції".';
+        case 'Belarusian': return 'Прайшло занадта шмат часу, каб адмяніць гэта. Адрэдагуйце або выдаліце запіс уручную ва ўкладцы "Транзакцыі".';
+        case 'German': return 'Dafür ist zu viel Zeit vergangen. Bearbeiten oder löschen Sie den Eintrag manuell im Tab "Transaktionen".';
+        case 'Spanish': return 'Ha pasado demasiado tiempo para deshacer eso. Edita o elimina el registro manualmente en la pestaña "Transacciones".';
+        case 'French': return 'Trop de temps s\'est écoulé pour annuler cela. Modifiez ou supprimez l\'entrée manuellement dans l\'onglet "Transactions".';
+        case 'Polish': return 'Minęło zbyt dużo czasu, aby to cofnąć. Edytuj lub usuń wpis ręcznie w zakładce "Transakcje".';
+        case 'Dutch': return 'Er is te veel tijd verstreken om dat ongedaan te maken. Bewerk of verwijder de invoer handmatig in het tabblad "Transacties".';
+        default: return 'Too much time has passed to undo that. Edit or delete the entry manually from the Transactions tab.';
+      }
+    }
+    switch (lang) {
+      case 'Russian': return 'Отменять пока нечего.';
+      case 'Ukrainian': return 'Наразі нема чого скасовувати.';
+      case 'Belarusian': return 'Пакуль няма чаго адмяняць.';
+      case 'German': return 'Es gibt gerade nichts rückgängig zu machen.';
+      case 'Spanish': return 'No hay nada que deshacer por ahora.';
+      case 'French': return 'Il n\'y a rien à annuler pour le moment.';
+      case 'Polish': return 'Nie ma teraz nic do cofnięcia.';
+      case 'Dutch': return 'Er is nu niets om ongedaan te maken.';
+      default: return "There's nothing recent I can undo.";
     }
   }
 }

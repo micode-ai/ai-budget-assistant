@@ -390,6 +390,7 @@ export default {
     confirmTitle: 'Підтвердіть дію',
     resultSuccess: 'Успішно виконано',
     resultFailed: 'Помилка виконання',
+    resultUndone: 'Скасовано',
     amount: 'Сума',
     category: 'Категорія',
     date: 'Дата',

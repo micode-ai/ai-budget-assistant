@@ -1216,6 +1216,16 @@ These commands execute **immediately** and show results:
 - **"Show category breakdown for this month"** → displays spending by category with percentages
 - **"Show my debts"** → lists all active debts with amounts owed
 
+### Undoing the Last Action
+
+Made a mistake right after confirming something — wrong amount, wrong category, or you just changed your mind? Say **"undo"**, **"undo that"**, or **"cancel that"** in the same conversation.
+
+1. Type **"undo"** (or "cancel that", "delete the last one" — any phrasing works, in any language)
+2. AI shows a confirmation card describing what it's about to undo
+3. Tap **Confirm** to revert it, or **Cancel** to leave it as is
+
+Undo only reaches back to the **single most recent** action you confirmed in that conversation, and only within about **15 minutes** of confirming it — it won't reach back through several turns to something you may have already built on top of. It works for a just-created expense, income, or debt entry, a debt repayment, and a savings goal balance update. If you've already edited that entry since creating it, or too much time has passed, the assistant will say so and point you to editing it manually instead.
+
 ## FAQ
 
 - **Q: Does the AI have access to all my financial data?**
@@ -1228,7 +1238,7 @@ These commands execute **immediately** and show results:
   **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, or verify the data in the Analytics tab.
 
 - **Q: Can I undo a confirmed action?**
-  **A:** After you confirm an action (like creating an expense), it's saved to your account. You can delete it manually from the Expenses tab.
+  **A:** Yes — say "undo" or "cancel that" in the same conversation, right after confirming. This reverts the single most recent action you confirmed, within about 15 minutes of confirming it. See [Undoing the Last Action](#undoing-the-last-action) above. Past that window, or for anything older, delete it manually from the Expenses tab.
 
 - **Q: What happens if I reject an action?**
   **A:** If you tap "Cancel" on a confirmation card, the action is rejected and nothing is saved. The AI will acknowledge the rejection.
@@ -5953,6 +5963,16 @@ iOS, Android, Web
 - **«Покажи разбивку по категориям за этот месяц»** → отображает расходы по категориям с процентами
 - **«Покажи мои долги»** → список активных долгов с суммами
 
+### Отмена последнего действия
+
+Ошиблись сразу после подтверждения — не та сумма, не та категория, или просто передумали? Напишите **«отмени»**, **«отмени это»** или **«отмени последнее»** в том же разговоре.
+
+1. Введите **«отмени»** (подойдёт любая формулировка, на любом языке)
+2. ИИ покажет карточку подтверждения с описанием того, что будет отменено
+3. Нажмите **Подтвердить**, чтобы отменить, или **Отмена**, чтобы оставить как есть
+
+Отмена затрагивает только **одно, самое последнее** действие, которое вы подтвердили в этом разговоре, и только в течение примерно **15 минут** после подтверждения. Она работает для только что созданного расхода, дохода или долга, погашения долга и обновления баланса цели накопления. Если вы уже отредактировали эту запись после её создания, или прошло слишком много времени, ИИ сообщит об этом и предложит отредактировать вручную.
+
 ## Часто задаваемые вопросы
 
 - **В: Имеет ли ИИ доступ ко всем моим финансовым данным?**
@@ -5965,7 +5985,7 @@ iOS, Android, Web
   **О:** Ответы ИИ основаны на ваших данных, но иногда могут быть неточными. Вы можете переформулировать вопрос для лучших результатов или проверить данные во вкладке Аналитика.
 
 - **В: Можно ли отменить подтверждённое действие?**
-  **О:** После того как вы подтвердили действие (например, создание расхода), оно сохраняется в вашем счёте. Вы можете удалить его вручную во вкладке Расходы.
+  **О:** Да — напишите «отмени» или «отмени это» в том же разговоре, сразу после подтверждения. Это отменяет одно, самое последнее подтверждённое вами действие, в течение примерно 15 минут после подтверждения. См. «Отмена последнего действия» выше. По истечении этого времени, или для более старой записи, удалите её вручную во вкладке Расходы.
 
 - **В: Что происходит, если я отклоняю действие?**
   **О:** Если вы нажмёте «Отменить» на карточке подтверждения, действие отклоняется и ничего не сохраняется. ИИ подтвердит отклонение.
@@ -10683,6 +10703,16 @@ iOS, Android, Web
 - **"Покажи розбивку за категоріями за цей місяць"** → відображає витрати за категоріями з відсотками
 - **"Покажи мої борги"** → список активних боргів із сумами
 
+### Скасування останньої дії
+
+Помилилися одразу після підтвердження — не та сума, не та категорія, або просто передумали? Напишіть **«скасуй»**, **«скасуй це»** або **«відміни останнє»** в тій самій розмові.
+
+1. Введіть **«скасуй»** (підійде будь-яке формулювання, будь-якою мовою)
+2. ШІ покаже картку підтвердження з описом того, що буде скасовано
+3. Натисніть **Підтвердити**, щоб скасувати, або **Скасувати**, щоб залишити як є
+
+Скасування стосується лише **однієї, найновішої** дії, яку ви підтвердили в цій розмові, і лише протягом приблизно **15 хвилин** після підтвердження. Це працює для щойно створеної витрати, доходу чи боргу, погашення боргу та оновлення балансу цілі накопичення. Якщо ви вже відредагували цей запис після створення, або минуло забагато часу, ШІ повідомить про це і запропонує відредагувати вручну.
+
 ## Часті запитання
 
 - **П:** Чи має ШІ доступ до всіх моїх фінансових даних?
@@ -10695,7 +10725,7 @@ iOS, Android, Web
   **В:** Відповіді ШІ базуються на ваших даних, але іноді можуть бути неточними. Ви можете перефразувати запитання для кращих результатів або перевірити дані у вкладці Аналітика.
 
 - **П:** Чи можу я скасувати підтверджену дію?
-  **В:** Після того як ви підтвердили дію (наприклад, створення витрати), вона зберігається у вашому рахунку. Ви можете видалити її вручну у вкладці Витрати.
+  **В:** Так — напишіть «скасуй» або «скасуй це» в тій самій розмові, одразу після підтвердження. Це скасовує одну, найновішу підтверджену вами дію, протягом приблизно 15 хвилин після підтвердження. Див. «Скасування останньої дії» вище. Після цього часу, або для старішого запису, видаліть його вручну у вкладці Витрати.
 
 - **П:** Що відбувається, якщо я відхиляю дію?
   **В:** Якщо ви натиснете "Скасувати" на картці підтвердження, дію буде відхилено, і нічого не збережеться. ШІ підтвердить відхилення.
@@ -15361,6 +15391,16 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
 - **"Pokaz podzial wedlug kategorii za ten miesiac"** → wyswietla wydatki wedlug kategorii z procentami
 - **"Pokaz moje dlugi"** → lista aktywnych dlugow z kwotami
 
+### Cofanie ostatniej akcji
+
+Pomylka zaraz po potwierdzeniu czegos — zla kwota, zla kategoria, albo po prostu zmieniles zdanie? Powiedz **"cofnij"**, **"cofnij to"** albo **"anuluj to"** w tej samej rozmowie.
+
+1. Wpisz **"cofnij"** (dowolne sformulowanie dziala, w dowolnym jezyku)
+2. AI pokazuje karte potwierdzenia opisujaca, co zamierza cofnac
+3. Dotknij **Potwierdz**, aby to cofnac, albo **Anuluj**, aby zostawic bez zmian
+
+Cofniecie siega tylko do **jednej, najnowszej** akcji, ktora potwierdziles w tej rozmowie, i tylko w ciagu okolo **15 minut** od jej potwierdzenia. Dziala dla wlasnie utworzonego wydatku, przychodu lub dlugu, splaty dlugu oraz aktualizacji salda celu oszczednosciowego. Jesli edytowales juz ten wpis od momentu utworzenia, albo minelo zbyt duzo czasu, AI to powie i wskaze edycje reczna zamiast tego.
+
 ## FAQ
 
 - **P: Czy AI ma dostep do wszystkich moich danych finansowych?**
@@ -15373,7 +15413,7 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
   **O:** Odpowiedzi AI bazuja na Twoich danych, ale moga okazjonalnie byc niedokladne. Mozesz przeformulowac pytanie, aby uzyskac lepsze wyniki, lub zweryfikowac dane w zakladce Analityka.
 
 - **P: Czy moge cofnac potwierdzona akcje?**
-  **O:** Po potwierdzeniu akcji (takiej jak utworzenie wydatku) jest ona zapisywana na Twoim koncie. Mozesz ja usunac recznie z zakladki Wydatki.
+  **O:** Tak — powiedz "cofnij" albo "cofnij to" w tej samej rozmowie, zaraz po potwierdzeniu. To cofa jedna, najnowsza akcje, ktora potwierdziles, w ciagu okolo 15 minut od potwierdzenia. Zobacz "Cofanie ostatniej akcji" powyzej. Po uplywie tego czasu, albo dla starszego wpisu, usun go recznie z zakladki Wydatki.
 
 - **P: Co sie stanie, jezeli odrzuce akcje?**
   **O:** Jezeli dotkniesz "Anuluj" na karcie potwierdzenia, akcja zostaje odrzucona i nic nie jest zapisywane. AI potwierdzi odrzucenie.
@@ -20035,6 +20075,16 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
 - **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
 - **"Zeige meine Schulden"** → listet aktive Schulden mit Beträgen auf
 
+### Die letzte Aktion rückgängig machen
+
+Direkt nach dem Bestätigen einen Fehler gemacht — falscher Betrag, falsche Kategorie, oder du hast es dir einfach anders überlegt? Sag **"rückgängig"**, **"mach das rückgängig"** oder **"nimm das zurück"** in derselben Unterhaltung.
+
+1. Tippe **"rückgängig"** ein (jede Formulierung funktioniert, in jeder Sprache)
+2. Die KI zeigt eine Bestätigungskarte mit einer Beschreibung dessen, was sie rückgängig machen wird
+3. Tippe **Bestätigen**, um es rückgängig zu machen, oder **Abbrechen**, um es so zu lassen
+
+Rückgängig machen erreicht nur die **letzte** Aktion, die du in dieser Unterhaltung bestätigt hast, und nur innerhalb von etwa **15 Minuten** nach der Bestätigung. Es funktioniert für eine gerade erstellte Ausgabe, ein Einkommen oder einen Schuldeneintrag, eine Schuldenrückzahlung und eine Aktualisierung des Sparziel-Kontostands. Wenn du den Eintrag seitdem bereits bearbeitet hast oder zu viel Zeit vergangen ist, sagt dir die KI das und verweist dich auf die manuelle Bearbeitung.
+
 ## FAQ
 
 - **F: Hat die KI Zugriff auf alle meine Finanzdaten?**
@@ -20047,7 +20097,7 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
   **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse oder die Daten im Analysen-Tab uberprufen.
 
 - **F: Kann ich eine bestätigte Aktion rückgängig machen?**
-  **A:** Nachdem du eine Aktion bestätigt hast (wie das Erstellen einer Ausgabe), wird sie in deinem Konto gespeichert. Du kannst sie manuell im Ausgaben-Tab löschen.
+  **A:** Ja — sag "rückgängig" oder "mach das rückgängig" in derselben Unterhaltung, direkt nach dem Bestätigen. Das macht die letzte von dir bestätigte Aktion rückgängig, innerhalb von etwa 15 Minuten nach der Bestätigung. Siehe "Die letzte Aktion rückgängig machen" oben. Nach diesem Zeitfenster, oder für ältere Einträge, lösche sie manuell im Ausgaben-Tab.
 
 - **F: Was passiert, wenn ich eine Aktion ablehne?**
   **A:** Wenn du auf "Abbrechen" auf einer Bestätigungskarte tippst, wird die Aktion abgelehnt und nichts wird gespeichert. Die KI wird die Ablehnung bestätigen.
@@ -24684,6 +24734,16 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
 - **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
 - **"Mostrar mis deudas"** → lista las deudas activas con importes pendientes
 
+### Deshacer la ultima accion
+
+Cometiste un error justo despues de confirmar algo — importe equivocado, categoria equivocada, o simplemente cambiaste de opinion? Di **"deshacer"**, **"deshaz eso"** o **"cancela eso"** en la misma conversacion.
+
+1. Escribe **"deshacer"** (cualquier formulacion funciona, en cualquier idioma)
+2. La IA muestra una tarjeta de confirmacion describiendo lo que va a deshacer
+3. Toca **Confirmar** para revertirlo, o **Cancelar** para dejarlo como esta
+
+Deshacer solo alcanza la **unica accion mas reciente** que confirmaste en esa conversacion, y solo dentro de unos **15 minutos** desde que la confirmaste. Funciona para un gasto, ingreso o deuda recien creados, un pago de deuda, y una actualizacion del saldo de una meta de ahorro. Si ya editaste esa entrada desde que la creaste, o ha pasado demasiado tiempo, la IA te lo dira y te indicara que la edites manualmente.
+
 ## Preguntas frecuentes
 
 - **P: La IA tiene acceso a todos mis datos financieros?**
@@ -24696,7 +24756,7 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
   **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, o verificar los datos en la pestana de Analisis.
 
 - **P: Puedo deshacer una accion confirmada?**
-  **R:** Despues de confirmar una accion (como crear un gasto), se guarda en tu cuenta. Puedes eliminarlo manualmente desde la pestana de Gastos.
+  **R:** Si — di "deshacer" o "deshaz eso" en la misma conversacion, justo despues de confirmar. Esto revierte la accion mas reciente que confirmaste, dentro de unos 15 minutos desde la confirmacion. Ver "Deshacer la ultima accion" arriba. Pasado ese tiempo, o para algo mas antiguo, eliminalo manualmente desde la pestana de Gastos.
 
 - **P: Que sucede si rechazo una accion?**
   **R:** Si tocas "Cancelar" en una tarjeta de confirmacion, la accion se rechaza y no se guarda nada. La IA reconocera el rechazo.
@@ -29322,6 +29382,16 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
 - **"Montrer la repartition par categories pour ce mois"** → affiche les depenses par categorie avec pourcentages
 - **"Montrer mes dettes"** → liste les dettes actives avec les montants dus
 
+### Annuler la derniere action
+
+Une erreur juste apres avoir confirme quelque chose — mauvais montant, mauvaise categorie, ou vous avez simplement change d'avis ? Dites **"annule"**, **"annule ca"** ou **"reviens en arriere"** dans la meme conversation.
+
+1. Tapez **"annule"** (n'importe quelle formulation fonctionne, dans n'importe quelle langue)
+2. L'IA affiche une carte de confirmation decrivant ce qu'elle s'apprete a annuler
+3. Appuyez sur **Confirmer** pour l'annuler, ou **Annuler** pour la laisser telle quelle
+
+L'annulation ne remonte qu'a la **seule action la plus recente** que vous avez confirmee dans cette conversation, et seulement dans les **15 minutes** environ suivant la confirmation. Elle fonctionne pour une depense, un revenu ou une dette qui viennent d'etre crees, un remboursement de dette, et une mise a jour du solde d'un objectif d'epargne. Si vous avez deja modifie cette entree depuis sa creation, ou si trop de temps s'est ecoule, l'IA vous le dira et vous invitera a la modifier manuellement.
+
 ## FAQ
 
 - **Q : L'IA a-t-elle acces a toutes mes donnees financieres ?**
@@ -29334,7 +29404,7 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
   **R :** Les reponses de l'IA sont basees sur vos donnees mais peuvent parfois etre inexactes. Vous pouvez reformuler votre question pour de meilleurs resultats, ou verifier les donnees dans l'onglet Analyses.
 
 - **Q : Puis-je annuler une action confirmee ?**
-  **R :** Apres avoir confirme une action (comme la creation d'une depense), elle est enregistree dans votre compte. Vous pouvez la supprimer manuellement depuis l'onglet Depenses.
+  **R :** Oui — dites "annule" ou "annule ca" dans la meme conversation, juste apres avoir confirme. Cela annule la seule action la plus recente que vous avez confirmee, dans les 15 minutes environ suivant la confirmation. Voir "Annuler la derniere action" ci-dessus. Passe ce delai, ou pour une action plus ancienne, supprimez-la manuellement depuis l'onglet Depenses.
 
 - **Q : Que se passe-t-il si je rejette une action ?**
   **R :** Si vous appuyez sur "Annuler" sur une carte de confirmation, l'action est rejetee et rien n'est enregistre. L'IA accusera reception du rejet.
@@ -33958,6 +34028,16 @@ iOS, Android, Web
 - **«Пакажы разбіўку па катэгорыях за гэты месяц»** → адлюстроўвае выдаткі па катэгорыях з адсоткамі
 - **«Пакажы мае даўгі»** → спіс актыўных даўгоў з сумамі
 
+### Адмена апошняга дзеяння
+
+Памыліліся адразу пасля пацвярджэння — не тая сума, не тая катэгорыя, або проста перадумалі? Напішыце **«адмяні»**, **«адмяні гэта»** або **«скасуй апошняе»** у той жа размове.
+
+1. Увядзіце **«адмяні»** (падыдзе любая фармулёўка, на любой мове)
+2. ІІ пакажа картку пацверджання з апісаннем таго, што будзе адменена
+3. Націсніце **Пацвердзіць**, каб адмяніць, або **Скасаваць**, каб пакінуць як ёсць
+
+Адмена тычыцца толькі **аднаго, самага апошняга** дзеяння, якое вы пацвердзілі ў гэтай размове, і толькі на працягу прыкладна **15 хвілін** пасля пацвярджэння. Яна працуе для толькі што створанага выдатку, даходу ці доўгу, пагашэння доўгу і абнаўлення балансу мэты назапашвання. Калі вы ўжо адрэдагавалі гэты запіс пасля стварэння, або прайшло занадта шмат часу, ІІ паведаміць пра гэта і прапануе адрэдагаваць уручную.
+
 ## Частыя пытанні
 
 - **П: Ці мае ІІ доступ да ўсіх маіх фінансавых даных?**
@@ -33970,7 +34050,7 @@ iOS, Android, Web
   **А:** Адказы ІІ заснаваны на вашых данях, але часам могуць быць недакладнымі. Вы можаце перафармуляваць пытанне для лепшых вынікаў або праверыць даныя ва ўкладцы Аналітыка.
 
 - **П: Ці можна адмяніць пацверджанае дзеянне?**
-  **А:** Пасля таго, як вы пацвердзіце дзеянне (напрыклад, стварэнне выдатку), яно захоўваецца ў вашым рахунку. Вы можаце выдаліць яго ўручную з укладкі Выдаткі.
+  **А:** Так — напішыце «адмяні» або «адмяні гэта» у той жа размове, адразу пасля пацвярджэння. Гэта адмяняе адно, самае апошняе пацверджанае вамі дзеянне, на працягу прыкладна 15 хвілін пасля пацвярджэння. Гл. «Адмена апошняга дзеяння» вышэй. Пасля гэтага часу, або для больш старога запісу, выдаліце яго ўручную з укладкі Выдаткі.
 
 - **П: Што адбудзецца, калі я адхілю дзеянне?**
   **А:** Калі вы націснеце «Адмяніць» на картцы пацверджання, дзеянне адхіляецца і нічога не захоўваецца. ІІ пацвердзіць адхіленне.
@@ -38558,6 +38638,16 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
 - **"Toon categorie-uitsplitsing voor deze maand"** → toont uitgaven per categorie met percentages
 - **"Toon mijn schulden"** → toont alle actieve schulden met verschuldigde bedragen
 
+### De laatste actie ongedaan maken
+
+Een fout gemaakt vlak nadat je iets bevestigde — verkeerd bedrag, verkeerde categorie, of je hebt gewoon van gedachten veranderd? Zeg **"ongedaan maken"**, **"maak dat ongedaan"** of **"annuleer dat"** in hetzelfde gesprek.
+
+1. Typ **"ongedaan maken"** (elke formulering werkt, in elke taal)
+2. De AI toont een bevestigingskaart die beschrijft wat het gaat terugdraaien
+3. Tik op **Bevestigen** om het terug te draaien, of **Annuleren** om het zo te laten
+
+Ongedaan maken reikt alleen terug tot de **enige, meest recente** actie die je in dat gesprek hebt bevestigd, en alleen binnen ongeveer **15 minuten** na bevestiging. Het werkt voor een net aangemaakte uitgave, inkomst of schuld, een schuldaflossing, en een update van een spaardoelsaldo. Als je die invoer al hebt bewerkt sinds het aanmaken, of er is te veel tijd verstreken, zegt de AI dat en verwijst je naar handmatig bewerken.
+
 ## Veelgestelde vragen
 
 - **V: Heeft de AI toegang tot al mijn financiële gegevens?**
@@ -38570,7 +38660,7 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
   **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, of de gegevens controleren op het tabblad Analyse.
 
 - **V: Kan ik een bevestigde actie ongedaan maken?**
-  **A:** Nadat je een actie hebt bevestigd (zoals het aanmaken van een uitgave), wordt deze opgeslagen in je account. Je kunt deze handmatig verwijderen op het tabblad Uitgaven.
+  **A:** Ja — zeg "ongedaan maken" of "maak dat ongedaan" in hetzelfde gesprek, vlak na het bevestigen. Dit draait de enige, meest recente actie terug die je hebt bevestigd, binnen ongeveer 15 minuten na bevestiging. Zie "De laatste actie ongedaan maken" hierboven. Na die tijd, of voor iets ouders, verwijder je het handmatig op het tabblad Uitgaven.
 
 - **V: Wat gebeurt er als ik een actie verwerp?**
   **A:** Als je op een bevestigingskaart op "Annuleren" tikt, wordt de actie verworpen en wordt er niets opgeslagen. De AI bevestigt de verwerping.

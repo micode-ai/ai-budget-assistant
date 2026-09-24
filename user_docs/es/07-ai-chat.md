@@ -196,6 +196,16 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
 - **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
 - **"Mostrar mis deudas"** → lista las deudas activas con importes pendientes
 
+### Deshacer la ultima accion
+
+Cometiste un error justo despues de confirmar algo — importe equivocado, categoria equivocada, o simplemente cambiaste de opinion? Di **"deshacer"**, **"deshaz eso"** o **"cancela eso"** en la misma conversacion.
+
+1. Escribe **"deshacer"** (cualquier formulacion funciona, en cualquier idioma)
+2. La IA muestra una tarjeta de confirmacion describiendo lo que va a deshacer
+3. Toca **Confirmar** para revertirlo, o **Cancelar** para dejarlo como esta
+
+Deshacer solo alcanza la **unica accion mas reciente** que confirmaste en esa conversacion, y solo dentro de unos **15 minutos** desde que la confirmaste. Funciona para un gasto, ingreso o deuda recien creados, un pago de deuda, y una actualizacion del saldo de una meta de ahorro. Si ya editaste esa entrada desde que la creaste, o ha pasado demasiado tiempo, la IA te lo dira y te indicara que la edites manualmente.
+
 ## Preguntas frecuentes
 
 - **P: La IA tiene acceso a todos mis datos financieros?**
@@ -208,7 +218,7 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
   **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, o verificar los datos en la pestana de Analisis.
 
 - **P: Puedo deshacer una accion confirmada?**
-  **R:** Despues de confirmar una accion (como crear un gasto), se guarda en tu cuenta. Puedes eliminarlo manualmente desde la pestana de Gastos.
+  **R:** Si — di "deshacer" o "deshaz eso" en la misma conversacion, justo despues de confirmar. Esto revierte la accion mas reciente que confirmaste, dentro de unos 15 minutos desde la confirmacion. Ver "Deshacer la ultima accion" arriba. Pasado ese tiempo, o para algo mas antiguo, eliminalo manualmente desde la pestana de Gastos.
 
 - **P: Que sucede si rechazo una accion?**
   **R:** Si tocas "Cancelar" en una tarjeta de confirmacion, la accion se rechaza y no se guarda nada. La IA reconocera el rechazo.
