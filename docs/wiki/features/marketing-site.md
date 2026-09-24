@@ -75,6 +75,15 @@ exists locally and nowhere else.
 and in the landing's "From the blog" section, so correcting one means re-running
 `build_pillar_links.py` and the landing build.
 
+## Measured results
+
+The ABA-435 check (2026-09-24, 28 days after vs 28 before): site 37→55 clicks, 3.09K→5.79K
+impressions, position 24.8→17.0. Retitling a competing article to an informational question
+**worked** — on the FR query the landing rose 34.9→26.0 and the article fell to 96.6. Adding
+vocabulary to one of two competing articles **did not** — the NL pair still splits the query at
+78–94. `/en/` rose 23.4→10.0. Rank without clicks is now the problem: `/fr/` took 500 impressions
+and no clicks, "ai budget" sits at 5.7 with none (ABA-584).
+
 ## Known gaps
 
 - The three generators keep parallel notions of the language list and of which topics exist;
@@ -88,4 +97,4 @@ ABA-267 (the blog) · ABA-269 (landing at the apex) · ABA-280 (cross-site langu
 ABA-281 (internal linking, index schema) · ABA-320 (pricing driven from one JSON) · ABA-393/394/395
 (waves, index listing, orthography) · ABA-397 (`SoftwareApplication`) · ABA-435 (in-body links
 pointed at the Polish homepage for every language) · ABA-571/572 (diacritics, meta budgets) ·
-ABA-574 (wave 5).
+ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet).

@@ -91,8 +91,9 @@ without the gate, first-touch-wins then kept it over a real friend's later link.
 
 - The product itself is otherwise unmeasured: `app.ai-budget.pl` serves no analytics and the mobile
   app has no analytics SDK. Web telemetry exists but is a separate, narrower thing.
-- `cta_click` is still not a Key event in GA4 — that version only lets you star an event already
-  collected, and no custom event has been recorded yet.
+- `plan`/`billing_period` are registered but unverified — no pricing-card click had been collected
+  by 2026-09-24. `cta_click` itself was starred as a Key event that day (13 events / 5 users in the
+  first 28 days; GA4 only lets you star an event it has already collected).
 - No internal-traffic filter (needs the office IP).
 - The landing and blog generators do not forward `?ref=` through their CTAs, so a referral routed
   via the marketing site loses the code.
@@ -101,4 +102,6 @@ without the gate, first-touch-wins then kept it over a real friend's later link.
 
 ABA-434 (GA4 events — the property had `config` and zero `event` calls, so the Key events report
 was permanently empty) · ABA-436 (link tagging and capture) · ABA-452 (the admin read surface) ·
-ABA-486 (referral links) · ABA-492 (`utm_*` fallback) · ABA-553 (Play Install Referrer).
+ABA-486 (referral links) · ABA-492 (`utm_*` fallback) · ABA-553 (Play Install Referrer) ·
+ABA-584 (the 90-day check: 30 signups since ABA-436, only one NULL after the Install Referrer
+shipped — native rows now read `not-set`/`google-play`, so "native stays NULL" is no longer true).
