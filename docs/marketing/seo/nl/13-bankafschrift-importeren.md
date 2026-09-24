@@ -1,6 +1,6 @@
 ---
 title: "Bankafschriften automatisch importeren in je budget-app"
-meta_description: "Bankafschriften automatisch importeren vult maanden aan transacties in minuten. Zo exporteer je het bestand, koppel je kolommen en voorkom je dubbelingen."
+meta_description: "Bankafschriften of rekeningafschriften automatisch importeren: maanden aan transacties in minuten, zonder dubbelingen. Zo werkt het, stap voor stap."
 target_keyword: "bankafschriften importeren"
 slug: "bankafschrift-importeren"
 pair: "bank-import"
@@ -13,6 +13,10 @@ date: "2026-06-27"
 Handmatig elke transactie overtikken is de nummer-een reden dat budgetten sneuvelen. Niemand houdt dat weken vol. Het mooie is dat je het helemaal niet hoeft te doen: door je bankafschrift te importeren, vul je in een paar minuten maanden aan uitgaven in, automatisch ingedeeld en zonder typwerk.
 
 In dit artikel lees je waarom importeren beter is dan handmatig invoeren, hoe je het bestand uit je bank haalt, en hoe je stap voor stap een afschrift inleest zonder dubbele transacties te krijgen.
+
+## Bankafschrift, rekeningafschrift of rekeninguittreksel?
+
+Het zijn drie woorden voor hetzelfde. In Nederland spreek je meestal van een bankafschrift of rekeningafschrift, in België van een rekeninguittreksel. In de bankomgeving zelf heet de export vaak nog anders: "transacties downloaden", "af- en bijschrijvingen" of "mutaties downloaden". Welk woord je bank ook gebruikt, het gaat om hetzelfde bestand met je bankmutaties, en je importeert het op precies dezelfde manier.
 
 ## Waarom importeren handmatig invoeren verslaat
 
@@ -50,7 +54,7 @@ Bij een nieuwe import herkent de software transacties die al bestaan, op basis v
 
 ## Hoe AI Budget Assistant het importeren regelt
 
-AI Budget Assistant is gebouwd om importeren moeiteloos te maken. Het leest CSV-bestanden van banken als mBank, PKO en Revolut, ondersteunt Wise, en kan zelfs PDF-afschriften van Erste en Alior inlezen. Bij een herkende bank weet de app meteen welke kolom wat is; bij een onbekend formaat koppel je de kolommen één keer en daarna gaat het vanzelf.
+AI Budget Assistant is gebouwd om importeren moeiteloos te maken. Revolut en Wise herkent de app direct. Voor een bank die niet in de lijst staat, zoals ING, Rabobank, ABN AMRO, KBC of Belfius, bekijkt de AI de kolommen van je CSV- of Excel-bestand en stelt de koppeling voor; een PDF-afschrift leest hij rechtstreeks uit. Je controleert het voorbeeld en bevestigt, en daarna onthoudt de app het formaat. Hoe dat precies werkt, lees je in [wat er gebeurt als je bank niet op de lijst staat](/blog/nl/bankafschrift-van-elke-bank-importeren/).
 
 Tijdens het importeren doet de app het zware werk: transacties worden automatisch ingedeeld op basis van de omschrijving en de winkel, gekoppelde valutaregels worden netjes aan elkaar geplakt, en dubbele transacties worden herkend zodat een nieuwe import nooit verdubbelt. Corrigeer je een keer een categorie, dan onthoudt de app die voorkeur voor toekomstige imports van diezelfde winkel.
 
@@ -68,7 +72,7 @@ Niet bij een app met dubbeldetectie. AI Budget Assistant herkent transacties die
 
 **Kan ik afschriften van elke bank importeren?**
 
-Dat hangt van de app af. AI Budget Assistant ondersteunt onder meer mBank, PKO en Revolut via CSV, plus Wise en PDF-afschriften van Erste en Alior. Voor een bank die niet automatisch wordt herkend, kun je de kolommen van het CSV-bestand eenmalig zelf koppelen, waarna de app dat formaat onthoudt. Zo werkt importeren ook met afschriften die niet standaard in de lijst staan.
+Dat hangt van de app af. AI Budget Assistant herkent onder meer Revolut en Wise direct. Voor andere banken, ook ING, Rabobank, ABN AMRO, KBC en Belfius, herkent de AI de kolommen van je CSV- of Excel-export of leest hij het PDF-afschrift uit; je kunt de kolommen ook eenmalig zelf koppelen. Daarna onthoudt de app dat formaat, zodat je rekeningafschriften of rekeninguittreksels van vrijwel elke bank kunt importeren.
 
 **Is het veilig om mijn bankafschrift te importeren?**
 
@@ -76,4 +80,4 @@ Bij het importeren upload je alleen een bestand met transactiegegevens dat je ze
 
 ---
 
-*Verwante artikelen: [Uitgaven bijhouden zonder gedoe](/blog/nl/uitgaven-bijhouden/) | [Uitgavencategorieën die echt werken](/blog/nl/uitgavencategorieen/)*
+*Verwante artikelen: [Uitgaven bijhouden zonder gedoe](/blog/nl/uitgaven-bijhouden/) | [Uitgavencategorieën die echt werken](/blog/nl/uitgavencategorieen/) | [Bankafschrift van elke bank importeren](/blog/nl/bankafschrift-van-elke-bank-importeren/)*
