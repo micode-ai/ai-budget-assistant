@@ -2603,6 +2603,11 @@ export default {
     renameTemplate: 'Перайменаваць шаблон',
     deleteTemplate: 'Выдаліць шаблон',
     deleteTemplateConfirm: 'Выдаліць гэты шаблон? Гэтае дзеянне нельга скасаваць.',
+    shareList: 'Падзяліцца спісам',
+    shareListAction: 'Падзяліцца спасылкай',
+    revokeLinkAction: 'Адклікаць спасылку',
+    linkRevoked: 'Спасылка адклікана',
+    shareLinkFailed: 'Не ўдалося стварыць або абнавіць спасылку для доступу. Паспрабуйце яшчэ раз.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} тавар каштуе даражэй, чым звычайна',

@@ -451,4 +451,49 @@ describe('ShoppingListService', () => {
     const res = await service.getDeals('a1');
     expect(res.every((d) => d.canonicalName !== 'Milk')).toBe(true);
   });
+
+  describe('guest share link (shopping-list-guest-share-link)', () => {
+    it('createGuestLink generates and persists a fresh token when the list has none', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue({ id: 'l1', accountId: 'a1', guestToken: null });
+      prisma.shoppingList.update.mockResolvedValue({});
+      const res = await service.createGuestLink('a1', 'l1');
+      expect(res.token).toMatch(/^[0-9a-f]{32}$/);
+      expect(res.url).toContain(res.token);
+      expect(prisma.shoppingList.update).toHaveBeenCalledWith({
+        where: { id: 'l1' },
+        data: { guestToken: res.token },
+      });
+    });
+
+    it('createGuestLink is idempotent — returns the existing token without writing', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue({ id: 'l1', accountId: 'a1', guestToken: 'abc123' });
+      const res = await service.createGuestLink('a1', 'l1');
+      expect(res.token).toBe('abc123');
+      expect(res.url).toContain('abc123');
+      expect(prisma.shoppingList.update).not.toHaveBeenCalled();
+    });
+
+    it('createGuestLink 404s on a list the account does not own', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue(null);
+      await expect(service.createGuestLink('a1', 'missing')).rejects.toThrow('List not found');
+    });
+
+    it('revokeGuestLink clears an active token', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue({ id: 'l1', accountId: 'a1', guestToken: 'abc123' });
+      prisma.shoppingList.update.mockResolvedValue({});
+      await service.revokeGuestLink('a1', 'l1');
+      expect(prisma.shoppingList.update).toHaveBeenCalledWith({ where: { id: 'l1' }, data: { guestToken: null } });
+    });
+
+    it('revokeGuestLink no-ops when there is no active token (safe to call blindly)', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue({ id: 'l1', accountId: 'a1', guestToken: null });
+      await service.revokeGuestLink('a1', 'l1');
+      expect(prisma.shoppingList.update).not.toHaveBeenCalled();
+    });
+
+    it('revokeGuestLink 404s on a list the account does not own', async () => {
+      prisma.shoppingList.findFirst.mockResolvedValue(null);
+      await expect(service.revokeGuestLink('a1', 'missing')).rejects.toThrow('List not found');
+    });
+  });
 });

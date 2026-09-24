@@ -22,6 +22,14 @@ Toca la píldora con el nombre de la lista en la parte superior de la pantalla p
 
 Los observadores pueden ver, cambiar entre listas, añadir artículos y marcarlos como comprados en cualquier lista, pero no pueden archivar ni eliminar una.
 
+## Compartir una lista con alguien que no tiene la app
+
+¿Necesitas que tu pareja o compañero de piso compre un par de cosas, pero no tiene la app? Toca el **icono de compartir** junto a la píldora con el nombre de la lista (solo editores y el propietario de la cuenta) y elige **Compartir enlace** — esto abre el panel de compartir de tu teléfono con un enlace público a esa lista.
+
+Cualquiera que abra el enlace ve la lista y puede marcar artículos mientras compra, sin registrarse ni ser añadido a tu cuenta. No puede añadir, renombrar ni eliminar artículos — solo marcarlos, así que lo que marque aparecerá en tu propia lista la próxima vez que se sincronice.
+
+El enlace sigue funcionando hasta que archives o elimines la lista, o toques **Revocar enlace** en el mismo menú para desactivarlo explícitamente. Compartir de nuevo después de eso crea un enlace completamente nuevo. Volver a compartir sin revocar antes es seguro — entrega el mismo enlace en lugar de invalidar el que ya enviaste.
+
 ## Guardar una lista como plantilla («Mis productos habituales»)
 
 Si compras más o menos los mismos productos cada semana, guarda tu lista habitual una vez y vuelve a añadirla entera de un toque la próxima vez, sin tener que volver a escribir «leche, huevos, pan, café…».

@@ -110,3 +110,11 @@ export interface ApplyShoppingListTemplateResponse {
   addedLabels: string[];
   skippedLabels: string[];
 }
+
+// --- guest share link (shopping-list-guest-share-link) ---
+
+export interface ShoppingListGuestLinkResponse {
+  token: string;
+  /** Absolute URL — hand this straight to a share sheet. */
+  url: string;
+}

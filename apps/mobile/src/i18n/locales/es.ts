@@ -2624,6 +2624,11 @@ export default {
     renameTemplate: 'Renombrar plantilla',
     deleteTemplate: 'Eliminar plantilla',
     deleteTemplateConfirm: '¿Eliminar esta plantilla? Esta acción no se puede deshacer.',
+    shareList: 'Compartir lista',
+    shareListAction: 'Compartir enlace',
+    revokeLinkAction: 'Revocar enlace',
+    linkRevoked: 'Enlace revocado',
+    shareLinkFailed: 'No se pudo crear o actualizar el enlace para compartir. Inténtalo de nuevo.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} artículo cuesta más de lo habitual',

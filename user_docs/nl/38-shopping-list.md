@@ -22,6 +22,14 @@ Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te ope
 
 Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
 
+## Een lijst delen met iemand zonder de app
+
+Heb je een partner of huisgenoot nodig die een paar dingen haalt, maar heeft die de app niet? Tik op het **deelicoon** naast de lijstnaam-pil (alleen voor bewerkers en de accounteigenaar) en kies **Link delen** — dit opent het deelmenu van je telefoon met een openbare link naar die lijst.
+
+Iedereen die de link opent, ziet de lijst en kan artikelen aanvinken tijdens het winkelen, zonder een account aan te maken of aan jouw account te worden toegevoegd. Ze kunnen geen artikelen toevoegen, hernoemen of verwijderen — alleen aanvinken, en wat zij aanvinken verschijnt bij de volgende synchronisatie ook op jouw eigen lijst.
+
+De link blijft werken totdat je de lijst archiveert of verwijdert, of in hetzelfde menu op **Link intrekken** tikt om hem expliciet uit te schakelen. Opnieuw delen daarna maakt een gloednieuwe link aan. Opnieuw delen zonder eerst in te trekken is veilig — je geeft dan gewoon dezelfde link door in plaats van de al verstuurde link te breken.
+
 ## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
 
 Als je elke week ongeveer dezelfde boodschappen koopt, sla je je gebruikelijke lijst één keer op en voeg je hem de volgende keer met één tik weer helemaal toe — geen "melk, eieren, brood, koffie…" meer opnieuw typen.

@@ -35,4 +35,8 @@ export const GLOBAL_PREFIX_EXCLUDED_ROUTES: string[] = [
   // Every GuestController route: /s/:token, /s/:token/paid,
   // /s/g/:groupToken, /s/g/:groupToken/:seq, and anything added later.
   's/(.*)',
+  // Every ShoppingListGuestController route (shopping-list-guest-share-link):
+  // /sl/:token, /sl/:token/items/:itemId/toggle. Same wildcard reasoning as
+  // 's/(.*)' above — one controller, one entry, nothing to fall behind.
+  'sl/(.*)',
 ];

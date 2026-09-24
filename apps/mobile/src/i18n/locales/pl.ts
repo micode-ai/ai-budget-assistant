@@ -2635,6 +2635,11 @@ export default {
     renameTemplate: 'Zmień nazwę szablonu',
     deleteTemplate: 'Usuń szablon',
     deleteTemplateConfirm: 'Usunąć ten szablon? Tej operacji nie można cofnąć.',
+    shareList: 'Udostępnij listę',
+    shareListAction: 'Udostępnij link',
+    revokeLinkAction: 'Cofnij link',
+    linkRevoked: 'Link cofnięty',
+    shareLinkFailed: 'Nie udało się utworzyć ani zaktualizować linku do udostępniania. Spróbuj ponownie.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} produkt kosztuje więcej niż zwykle',

@@ -2635,6 +2635,11 @@ export default {
     renameTemplate: 'Переименовать шаблон',
     deleteTemplate: 'Удалить шаблон',
     deleteTemplateConfirm: 'Удалить этот шаблон? Это действие нельзя отменить.',
+    shareList: 'Поделиться списком',
+    shareListAction: 'Поделиться ссылкой',
+    revokeLinkAction: 'Отозвать ссылку',
+    linkRevoked: 'Ссылка отозвана',
+    shareLinkFailed: 'Не удалось создать или обновить ссылку для доступа. Попробуйте ещё раз.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} товар стоит дороже, чем обычно',

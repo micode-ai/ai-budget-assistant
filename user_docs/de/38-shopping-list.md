@@ -22,6 +22,14 @@ Tippe oben auf dem Bildschirm auf die Pille mit dem Listennamen, um **Listen ver
 
 Betrachter können jede Liste ansehen, zwischen ihnen wechseln, Artikel hinzufügen und abhaken, aber keine Liste archivieren oder löschen.
 
+## Eine Liste mit jemandem teilen, der die App nicht hat
+
+Dein Partner oder Mitbewohner soll ein paar Dinge besorgen, hat aber die App nicht? Tippe auf das **Teilen-Symbol** neben der Listennamen-Pille (nur für Bearbeiter und den Kontoinhaber) und wähle **Link teilen** — das öffnet das Freigabemenü deines Telefons mit einem öffentlichen Link zu dieser Liste.
+
+Wer den Link öffnet, sieht die Liste und kann Artikel beim Einkaufen abhaken, ganz ohne Registrierung oder Zugang zu deinem Konto. Artikel hinzufügen, umbenennen oder löschen geht nicht — nur Abhaken. Was abgehakt wird, erscheint bei der nächsten Synchronisierung auch auf deiner eigenen Liste.
+
+Der Link funktioniert weiter, bis du die Liste archivierst oder löschst, oder im selben Menü auf **Link widerrufen** tippst, um ihn ausdrücklich abzuschalten. Teilst du danach erneut, wird ein komplett neuer Link erstellt. Erneutes Teilen ohne vorherigen Widerruf ist unbedenklich — es wird derselbe Link weitergegeben, statt den bereits verschickten ungültig zu machen.
+
 ## Eine Liste als Vorlage speichern („Meine wöchentlichen Grundnahrungsmittel")
 
 Wenn du jede Woche ungefähr die gleichen Lebensmittel kaufst, speichere deine übliche Liste einmal und füge sie beim nächsten Mal mit einem Tipp wieder hinzu — kein erneutes Eintippen von „Milch, Eier, Brot, Kaffee …" mehr nötig.

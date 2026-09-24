@@ -2624,6 +2624,11 @@ export default {
     renameTemplate: 'Renommer le modèle',
     deleteTemplate: 'Supprimer le modèle',
     deleteTemplateConfirm: 'Supprimer ce modèle ? Cette action est irréversible.',
+    shareList: 'Partager la liste',
+    shareListAction: 'Partager le lien',
+    revokeLinkAction: 'Révoquer le lien',
+    linkRevoked: 'Lien révoqué',
+    shareLinkFailed: "Impossible de créer ou de mettre à jour le lien de partage. Veuillez réessayer.",
   },
   receiptCheck: {
     cardTitle_one: "{{count}} article coûte plus cher que d'habitude",

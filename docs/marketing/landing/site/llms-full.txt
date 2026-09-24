@@ -3690,6 +3690,16 @@ These commands execute **immediately** and show results:
 - **"Show category breakdown for this month"** → displays spending by category with percentages
 - **"Show my debts"** → lists all active debts with amounts owed
 
+### Undoing the Last Action
+
+Made a mistake right after confirming something — wrong amount, wrong category, or you just changed your mind? Say **"undo"**, **"undo that"**, or **"cancel that"** in the same conversation.
+
+1. Type **"undo"** (or "cancel that", "delete the last one" — any phrasing works, in any language)
+2. AI shows a confirmation card describing what it's about to undo
+3. Tap **Confirm** to revert it, or **Cancel** to leave it as is
+
+Undo only reaches back to the **single most recent** action you confirmed in that conversation, and only within about **15 minutes** of confirming it — it won't reach back through several turns to something you may have already built on top of. It works for a just-created expense, income, or debt entry, a debt repayment, and a savings goal balance update. If you've already edited that entry since creating it, or too much time has passed, the assistant will say so and point you to editing it manually instead.
+
 ## FAQ
 
 - **Q: Does the AI have access to all my financial data?**
@@ -3702,7 +3712,7 @@ These commands execute **immediately** and show results:
   **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, or verify the data in the Analytics tab.
 
 - **Q: Can I undo a confirmed action?**
-  **A:** After you confirm an action (like creating an expense), it's saved to your account. You can delete it manually from the Expenses tab.
+  **A:** Yes — say "undo" or "cancel that" in the same conversation, right after confirming. This reverts the single most recent action you confirmed, within about 15 minutes of confirming it. See [Undoing the Last Action](#undoing-the-last-action) above. Past that window, or for anything older, delete it manually from the Expenses tab.
 
 - **Q: What happens if I reject an action?**
   **A:** If you tap "Cancel" on a confirmation card, the action is rejected and nothing is saved. The AI will acknowledge the rejection.
@@ -6758,6 +6768,14 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 - **Delete** — permanently removes the list and all its items. Editors and the account owner only.
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
+
+## Share a List with Someone Who Doesn't Have the App
+
+Need your partner or roommate to grab a few things, but they don't have the app? Tap the **share icon** next to the list name pill (editors and the account owner only) and choose **Share link** — this opens your phone's share sheet with a public link to that list.
+
+Anyone who opens the link sees the list and can check items off as they shop, without signing up or being added to your account. They can't add, rename, or delete items — just tick things off, so what they check off shows up on your own list the next time it syncs.
+
+The link keeps working until you archive or delete the list, or tap **Revoke link** in the same menu to turn it off explicitly. Sharing again after that creates a brand-new link. Re-sharing without revoking first is safe — it hands out the same link rather than breaking the one you already sent.
 
 ## Save a List as a Template ("My Weekly Staples")
 

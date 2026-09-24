@@ -22,6 +22,14 @@ Stuknij w pigułkę z nazwą listy u góry ekranu, aby otworzyć **Zarządzaj li
 
 Obserwatorzy mogą przeglądać listy, przełączać się między nimi, dodawać produkty i odznaczać je na dowolnej liście, ale nie mogą jej zarchiwizować ani usunąć.
 
+## Udostępnij listę komuś, kto nie ma aplikacji
+
+Chcesz, żeby partner lub współlokator kupił kilka rzeczy, ale nie ma aplikacji? Stuknij **ikonę udostępniania** obok pigułki z nazwą listy (tylko edytorzy i właściciel konta) i wybierz **Udostępnij link** — otworzy się menu udostępniania telefonu z publicznym linkiem do tej listy.
+
+Każdy, kto otworzy link, zobaczy listę i będzie mógł odznaczać produkty podczas zakupów, bez zakładania konta i bez dostępu do Twojego konta. Nie może dodawać, zmieniać nazw ani usuwać produktów — tylko je odznaczać, więc to, co odznaczy, pojawi się na Twojej liście przy najbliższej synchronizacji.
+
+Link działa, dopóki nie zarchiwizujesz lub nie usuniesz listy albo nie stukniesz **Cofnij link** w tym samym menu, aby wyraźnie go wyłączyć. Ponowne udostępnienie tworzy wtedy zupełnie nowy link. Ponowne udostępnienie bez wcześniejszego cofnięcia jest bezpieczne — przekazuje ten sam link zamiast unieważniać ten, który już wysłałeś.
+
 ## Zapisz listę jako szablon („Moje cotygodniowe zakupy")
 
 Jeśli co tydzień kupujesz mniej więcej te same produkty, zapisz swoją zwykłą listę raz i za następnym razem dodaj ją całą jednym dotknięciem — bez wpisywania od nowa „mleko, jajka, chleb, kawa…".

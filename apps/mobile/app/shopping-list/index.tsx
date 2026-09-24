@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Share } from 'react-native';
 import { showAlert } from '@/utils/alert';
 import { Stack, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -50,6 +50,8 @@ export default function ShoppingListScreen() {
   const renameList = useShoppingListStore((s) => s.renameList);
   const archiveList = useShoppingListStore((s) => s.archiveList);
   const deleteList = useShoppingListStore((s) => s.deleteList);
+  const shareList = useShoppingListStore((s) => s.shareList);
+  const revokeShareLink = useShoppingListStore((s) => s.revokeShareLink);
 
   const templates = useShoppingListTemplateStore((s) => s.templates);
   const templatesLoading = useShoppingListTemplateStore((s) => s.isLoading);
@@ -75,6 +77,42 @@ export default function ShoppingListScreen() {
     () => lists.find((l) => l.id === activeListId)?.name ?? t('shoppingList.title'),
     [lists, activeListId, t],
   );
+
+  // ─── Guest share link (shopping-list-guest-share-link) ────────────────────
+  // No local "is a link active" state — Share always creates-or-returns the
+  // active token, Revoke is a safe no-op when there is none. See
+  // docs/contracts/shopping-list-guest-share-link.md.
+  const handleShareList = () => {
+    if (!activeListId) return;
+    showAlert(t('shoppingList.shareList'), undefined, [
+      {
+        text: t('shoppingList.shareListAction'),
+        onPress: async () => {
+          try {
+            const url = await shareList(activeListId);
+            await Share.share({ message: url });
+          } catch (e) {
+            console.warn('Failed to create shopping list share link:', e);
+            showAlert(t('common.error'), t('shoppingList.shareLinkFailed'));
+          }
+        },
+      },
+      {
+        text: t('shoppingList.revokeLinkAction'),
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            await revokeShareLink(activeListId);
+            showAlert(t('shoppingList.linkRevoked'));
+          } catch (e) {
+            console.warn('Failed to revoke shopping list share link:', e);
+            showAlert(t('common.error'), t('shoppingList.shareLinkFailed'));
+          }
+        },
+      },
+      { text: t('common.cancel'), style: 'cancel' },
+    ]);
+  };
 
   const checkedCount = useMemo(() => items.filter((i) => i.isChecked).length, [items]);
   const comparableCount = useMemo(
@@ -299,6 +337,17 @@ export default function ShoppingListScreen() {
             >
               <Ionicons name="bookmark-outline" size={18} color={theme.colors.primary} />
             </TouchableOpacity>
+
+            {canEdit && lists.length > 0 && (
+              <TouchableOpacity
+                style={styles.templatesIconBtn}
+                onPress={handleShareList}
+                hitSlop={8}
+                accessibilityLabel={t('shoppingList.shareList')}
+              >
+                <Ionicons name="share-social-outline" size={18} color={theme.colors.primary} />
+              </TouchableOpacity>
+            )}
           </View>
 
           {checkedCount > 0 && (

@@ -2624,6 +2624,11 @@ export default {
     renameTemplate: 'Sjabloon hernoemen',
     deleteTemplate: 'Sjabloon verwijderen',
     deleteTemplateConfirm: 'Dit sjabloon verwijderen? Dit kan niet ongedaan worden gemaakt.',
+    shareList: 'Lijst delen',
+    shareListAction: 'Link delen',
+    revokeLinkAction: 'Link intrekken',
+    linkRevoked: 'Link ingetrokken',
+    shareLinkFailed: 'De deellink kon niet worden aangemaakt of bijgewerkt. Probeer het opnieuw.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} artikel kost meer dan gebruikelijk',

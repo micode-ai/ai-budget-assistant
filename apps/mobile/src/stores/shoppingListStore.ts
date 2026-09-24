@@ -80,6 +80,11 @@ interface ShoppingListState {
   deleteList: (id: string) => Promise<void>;
   renameList: (id: string, name: string) => Promise<void>;
   archiveList: (id: string) => Promise<void>;
+  /** Creates (or returns the already-active) guest share link, returning its
+   * URL — shopping-list-guest-share-link. Throws on failure; caller alerts. */
+  shareList: (id: string) => Promise<string>;
+  /** Revokes the list's active guest link, if any. Safe to call blindly. */
+  revokeShareLink: (id: string) => Promise<void>;
   setActiveList: (id: string) => void;
   compareBasket: (origin?: { lat: number; lng: number }) => Promise<void>;
 }
@@ -305,6 +310,21 @@ export const useShoppingListStore = create<ShoppingListState>()(
         // from the server (activeListId/lists were already cleared above).
         await get().hydrate();
       }
+    },
+
+    // --- guest share link (shopping-list-guest-share-link) ---
+    // Deliberately online-only, no SQLite mirror and no optimistic local
+    // state (unlike every action above): the guest link is a server-side
+    // bearer token this module has no offline notion of, same precedent as
+    // account-transfers' moveExpense. Callers await and catch to alert.
+
+    shareList: async (id) => {
+      const res = await api.createShoppingListGuestLink(id);
+      return res.url;
+    },
+
+    revokeShareLink: async (id) => {
+      await api.revokeShoppingListGuestLink(id);
     },
 
     addItem: async (rawLabel, canonicalName = null, quantity = 1) => {

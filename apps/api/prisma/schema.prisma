@@ -796,6 +796,13 @@ model ShoppingList {
   createdByUserId String   @map("created_by_user_id")
   isDeleted       Boolean  @default(false) @map("is_deleted")
   syncVersion     Int      @default(0) @map("sync_version")
+  // Bearer token for the public guest view (GET /sl/:token,
+  // shopping-list-guest-share-link). Null = no active share link. One active
+  // token per list: "Share" is idempotent (returns the existing token rather
+  // than rotating it), "Revoke" clears it back to null. No expiresAt — the
+  // link also dies implicitly once isArchived/isDeleted flips true (see
+  // ShoppingListGuestController.findUsableList), never on a timer.
+  guestToken      String?  @unique @map("guest_token")
   createdAt       DateTime @default(now()) @map("created_at")
   updatedAt       DateTime @updatedAt @map("updated_at")
 

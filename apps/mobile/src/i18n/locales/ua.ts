@@ -2635,6 +2635,11 @@ export default {
     renameTemplate: 'Перейменувати шаблон',
     deleteTemplate: 'Видалити шаблон',
     deleteTemplateConfirm: 'Видалити цей шаблон? Цю дію неможливо скасувати.',
+    shareList: 'Поділитися списком',
+    shareListAction: 'Поділитися посиланням',
+    revokeLinkAction: 'Відкликати посилання',
+    linkRevoked: 'Посилання відкликано',
+    shareLinkFailed: 'Не вдалося створити або оновити посилання для доступу. Спробуйте ще раз.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} товар коштує дорожче, ніж зазвичай',

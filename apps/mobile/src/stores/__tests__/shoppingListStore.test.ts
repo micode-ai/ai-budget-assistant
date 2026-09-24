@@ -79,6 +79,8 @@ jest.mock('../../services/api', () => ({
   api: {
     createList: jest.fn(() => mockCreateListDeferred.promise),
     addItem: jest.fn(() => mockAddItemDeferred.promise),
+    createShoppingListGuestLink: jest.fn(),
+    revokeShoppingListGuestLink: jest.fn(),
   },
 }));
 
@@ -165,5 +167,43 @@ describe('shoppingListStore — hydrate-race fix', () => {
     await Promise.resolve();
 
     expect(markShoppingListItemSynced).toHaveBeenCalledWith(item.id);
+  });
+});
+
+describe('shoppingListStore — guest share link (shopping-list-guest-share-link)', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('shareList returns the URL from the API', async () => {
+    (api.createShoppingListGuestLink as jest.Mock).mockResolvedValue({
+      token: 'abc123',
+      url: 'https://api.ai-budget.pl/sl/abc123',
+    });
+
+    const url = await useShoppingListStore.getState().shareList('list-1');
+
+    expect(api.createShoppingListGuestLink).toHaveBeenCalledWith('list-1');
+    expect(url).toBe('https://api.ai-budget.pl/sl/abc123');
+  });
+
+  it('shareList propagates a failure so the screen can alert', async () => {
+    (api.createShoppingListGuestLink as jest.Mock).mockRejectedValue(new Error('network down'));
+
+    await expect(useShoppingListStore.getState().shareList('list-1')).rejects.toThrow('network down');
+  });
+
+  it('revokeShareLink calls the API', async () => {
+    (api.revokeShoppingListGuestLink as jest.Mock).mockResolvedValue(undefined);
+
+    await useShoppingListStore.getState().revokeShareLink('list-1');
+
+    expect(api.revokeShoppingListGuestLink).toHaveBeenCalledWith('list-1');
+  });
+
+  it('revokeShareLink propagates a failure so the screen can alert', async () => {
+    (api.revokeShoppingListGuestLink as jest.Mock).mockRejectedValue(new Error('network down'));
+
+    await expect(useShoppingListStore.getState().revokeShareLink('list-1')).rejects.toThrow('network down');
   });
 });

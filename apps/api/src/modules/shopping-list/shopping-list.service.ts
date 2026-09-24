@@ -1,17 +1,18 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { randomUUID } from 'crypto';
+import { randomUUID, randomBytes } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { predictRestock } from './restock-predictor';
 import { detectDeals, DealRow } from './deal-detector';
 import { normalizeProductName } from '../merchant-rules/product-rules.service';
-import { resolveShoppingList } from './shopping-list.util';
+import { resolveShoppingList, buildGuestListUrl } from './shopping-list.util';
 import type {
   ShoppingList, ShoppingListItem,
   CreateShoppingListDto, UpdateShoppingListDto,
   CreateShoppingListItemDto, UpdateShoppingListItemDto,
   RestockSuggestion,
   DealSuggestion,
+  ShoppingListGuestLinkResponse,
 } from '@budget/shared-types';
 
 function isP2002(e: unknown): boolean {
@@ -128,6 +129,38 @@ export class ShoppingListService {
       this.prisma.shoppingList.update({ where: { id: list.id }, data: { isDeleted: true, syncVersion: { increment: 1 } } }),
       this.prisma.shoppingListItem.updateMany({ where: { accountId, shoppingListId: list.id, isDeleted: false }, data: { isDeleted: true, syncVersion: { increment: 1 } } }),
     ]);
+  }
+
+  /**
+   * Issues (or returns the already-active) public guest-share token for this
+   * list — shopping-list-guest-share-link. Idempotent on purpose: re-tapping
+   * "Share" after the link was already sent to someone must not invalidate
+   * it, so an existing token is returned as-is rather than rotated. See
+   * docs/contracts/shopping-list-guest-share-link.md.
+   */
+  async createGuestLink(accountId: string, id: string): Promise<ShoppingListGuestLinkResponse> {
+    const list = await this.resolveList(accountId, id);
+    if (!list) throw new NotFoundException('List not found');
+    if (list.guestToken) {
+      return { token: list.guestToken, url: buildGuestListUrl(list.guestToken) };
+    }
+    // 32 hex chars — same shape as ReceiptSplitParticipant.token.
+    const token = randomBytes(16).toString('hex');
+    await this.prisma.shoppingList.update({ where: { id: list.id }, data: { guestToken: token } });
+    return { token, url: buildGuestListUrl(token) };
+  }
+
+  /**
+   * Revokes this list's active guest link, if any. Safe no-op shape — the
+   * mobile client tracks no local "is a link active" state (see the
+   * contract's Mobile section), so this is called freely without first
+   * checking whether a link exists.
+   */
+  async revokeGuestLink(accountId: string, id: string): Promise<void> {
+    const list = await this.resolveList(accountId, id);
+    if (!list) throw new NotFoundException('List not found');
+    if (!list.guestToken) return;
+    await this.prisma.shoppingList.update({ where: { id: list.id }, data: { guestToken: null } });
   }
 
   async addItem(accountId: string, userId: string, listId: string, dto: CreateShoppingListItemDto): Promise<ShoppingListItem> {

@@ -2631,6 +2631,11 @@ export default {
     renameTemplate: 'Rename template',
     deleteTemplate: 'Delete template',
     deleteTemplateConfirm: 'Delete this template? This cannot be undone.',
+    shareList: 'Share list',
+    shareListAction: 'Share link',
+    revokeLinkAction: 'Revoke link',
+    linkRevoked: 'Link revoked',
+    shareLinkFailed: "Couldn't create or update the share link. Please try again.",
   },
   receiptCheck: {
     cardTitle_one: '{{count}} item costs more than usual',

@@ -2624,6 +2624,11 @@ export default {
     renameTemplate: 'Vorlage umbenennen',
     deleteTemplate: 'Vorlage löschen',
     deleteTemplateConfirm: 'Diese Vorlage löschen? Das kann nicht rückgängig gemacht werden.',
+    shareList: 'Liste teilen',
+    shareListAction: 'Link teilen',
+    revokeLinkAction: 'Link widerrufen',
+    linkRevoked: 'Link widerrufen',
+    shareLinkFailed: 'Der Freigabelink konnte nicht erstellt oder aktualisiert werden. Bitte versuche es erneut.',
   },
   receiptCheck: {
     cardTitle_one: '{{count}} Artikel kostet mehr als üblich',

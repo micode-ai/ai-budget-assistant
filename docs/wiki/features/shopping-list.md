@@ -16,9 +16,11 @@ on the receipt price-history corpus, restock predictions, and deal detection.
 - `common/utils/notification-dedup-ledger.ts` — the generic ledger
 - `apps/mobile/src/stores/shoppingListStore.ts`, `shoppingListSync.ts`
 - `apps/mobile/app/shopping-list/{index,compare,map}.tsx`
+- `apps/api/src/modules/shopping-list/shopping-list-guest.controller.ts` — the public guest
+  surface, `apps/api/src/modules/shopping-list/helpers/guest-list-page{,-i18n}.ts`
 
 Migrations: `20260707173751_add_shopping_lists`, `20260717120000_add_shopping_notification_log`,
-`20260914000000_add_shopping_list_templates`.
+`20260914000000_add_shopping_list_templates`, `20260924000000_add_shopping_list_guest_token`.
 
 ## Key concepts
 
@@ -136,6 +138,48 @@ Confirmations are deterministic in nine languages (`PromptBuilder.getShoppingLis
 `…RemoveText`), and the phone renders its own result cards. The phone sees a chat-added item on its
 next pull.
 
+### Guest share link (ABA-587)
+
+A public, unauthenticated link so someone with no account — "can you grab milk on your way
+home" — can see one list and check items off, without becoming a member. Reuses the isolation
+pattern of receipt-split's `GuestController` (`docs/contracts/shopping-list-guest-share-link.md`
+has the full contract), but is its own self-contained implementation — own `sl/(.*)` prefix
+exclusion, own i18n/HTML helpers, no shared code with the receipt-split guest surface.
+
+**One token per list, on the list row itself** (`ShoppingList.guestToken`), not a participant
+table — unlike a receipt split's many payers, a shopping list guest link has only one shared
+view, so a second table would model a distinction this feature doesn't have. `POST
+/shopping-list/:id/guest-link` is **idempotent**: re-sharing returns the existing token rather
+than rotating it, so a link already handed to someone keeps working. `DELETE .../guest-link` is
+a safe no-op when there is no active link — the mobile client tracks no local "is a link active"
+state, so it calls Revoke freely.
+
+**No expiry.** The link dies implicitly when the list is archived or soft-deleted (`findUsableList`
+filters `isArchived:false, isDeleted:false`), or explicitly via Revoke — never on a timer.
+
+**Guest capability is read + check-off only** — no add, rename, or delete. `POST
+/sl/:token/items/:itemId/toggle` re-scopes the item lookup to `shoppingListId: list.id`: a token
+only proves "you may act on THIS list," so a bare `itemId` is never trusted on its own (the one
+IDOR-shaped risk in the feature). A guest's toggle bumps `syncVersion` exactly like an authenticated
+`updateItem` does, so it reaches real members through the ordinary REST pull-merge above — no
+`/sync` involvement, no Family Feed event (the base feature has none for its own authenticated
+writes either, so adding one only for the guest path would be new scope).
+
+**`findUsableList` is a single query**, deliberately NOT the two-query split
+`GuestController.findUsableParticipant` uses to keep an unknown-vs-dead receipt-split token from
+being a timing oracle — that split exists because a receipt split's liveness carries a
+payment-status signal worth hiding. A shopping-list guest link protects no money and no other
+party's financial data, so the worst a timing difference could leak here ("a token existed at some
+point") isn't sensitive.
+
+**No amounts, ever.** A shopping list item has no price, so unlike the receipt-split guest page
+this surface has structurally less to leak — no accountId, no member names, no financial figures,
+only this one list's own item labels.
+
+**Mobile is online-only, no SQLite mirror.** `shoppingListStore.shareList`/`revokeShareLink` are
+thin passthroughs to the API — the guest token is a server-side bearer credential this module's
+own offline-first mirror has no notion of, same precedent as account-transfers' `moveExpense`.
+
 ## Known gaps
 
 - Alias-aware reconciliation on mobile is best-effort: it uses whatever the price-history store
@@ -143,10 +187,13 @@ next pull.
   The server-side path always has the full alias table.
 - No quantity parsing and no named-list targeting for the three AI chat tools.
 - Templates have no management screen — rename and delete are inline in the same sheet.
+- The guest share link has no rotate-without-revoking: "Revoke" then "Share" again is the
+  rotation path. No QR code (receipt-split has one for its own group-split flow; not built here).
 
 ## History
 
 ABA-330 (M1–M6) · ABA-332 (the shopping hub quick action) · ABA-348 (archive-to-empty-state; the
 AI chat add tool) · ABA-350 (push de-duplication) · ABA-352 and ABA-429 (screen decomposition,
 twice — it grew back once) · ABA-360 (remove and query chat tools) · ABA-455 (the ledger
-generalised) · ABA-531 and ABA-545 (receipt reconciliation, mobile then bots) · ABA-548 (templates).
+generalised) · ABA-531 and ABA-545 (receipt reconciliation, mobile then bots) · ABA-548
+(templates) · ABA-587 (guest share link).

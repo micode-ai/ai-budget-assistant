@@ -14,6 +14,7 @@ import type {
   CreateShoppingListTemplateDto,
   UpdateShoppingListTemplateDto,
   ApplyShoppingListTemplateResponse,
+  ShoppingListGuestLinkResponse,
 } from '@budget/shared-types';
 
 export const shoppingListsApi = {
@@ -107,5 +108,17 @@ export const shoppingListsApi = {
       `/shopping-list/templates/${id}/apply`,
       { method: 'POST', body: JSON.stringify({ listId }) },
     );
+  },
+
+  // --- guest share link (shopping-list-guest-share-link) ---
+
+  createShoppingListGuestLink(listId: string) {
+    return httpClient.request<ShoppingListGuestLinkResponse>(`/shopping-list/${listId}/guest-link`, {
+      method: 'POST',
+    });
+  },
+
+  revokeShoppingListGuestLink(listId: string) {
+    return httpClient.request<void>(`/shopping-list/${listId}/guest-link`, { method: 'DELETE' });
   },
 };

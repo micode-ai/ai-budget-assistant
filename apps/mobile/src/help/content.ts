@@ -4425,6 +4425,14 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
 
+## Share a List with Someone Who Doesn't Have the App
+
+Need your partner or roommate to grab a few things, but they don't have the app? Tap the **share icon** next to the list name pill (editors and the account owner only) and choose **Share link** — this opens your phone's share sheet with a public link to that list.
+
+Anyone who opens the link sees the list and can check items off as they shop, without signing up or being added to your account. They can't add, rename, or delete items — just tick things off, so what they check off shows up on your own list the next time it syncs.
+
+The link keeps working until you archive or delete the list, or tap **Revoke link** in the same menu to turn it off explicitly. Sharing again after that creates a brand-new link. Re-sharing without revoking first is safe — it hands out the same link rather than breaking the one you already sent.
+
 ## Save a List as a Template ("My Weekly Staples")
 
 If you buy roughly the same groceries every week, save your usual list once and re-add all of it in one tap next time — no need to retype "milk, eggs, bread, coffee…" over and over.
@@ -9154,6 +9162,14 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Наблюдатели могут просматривать списки, переключаться между ними, добавлять товары и отмечать их в любом списке, но не могут архивировать или удалять списки.
 
+## Поделиться списком с тем, у кого нет приложения
+
+Нужно, чтобы партнёр или сосед по квартире купил пару вещей, но у него нет приложения? Нажмите на **значок «поделиться»** рядом с названием списка (доступно только редакторам и владельцу аккаунта) и выберите **Поделиться ссылкой** — откроется меню обмена вашего телефона с публичной ссылкой на этот список.
+
+Любой, кто откроет ссылку, увидит список и сможет отмечать товары по мере покупок — без регистрации и без доступа к вашему аккаунту. Добавлять, переименовывать или удалять товары нельзя — только отмечать, и то, что будет отмечено, появится в вашем собственном списке при следующей синхронизации.
+
+Ссылка продолжает работать, пока вы не заархивируете или не удалите список, либо не нажмёте **Отозвать ссылку** в том же меню, чтобы явно её отключить. Повторное «поделиться» после этого создаёт совершенно новую ссылку. Поделиться повторно, не отзывая ссылку заранее, безопасно — вы просто передадите ту же самую ссылку, а не сломаете уже отправленную.
+
 ## Сохранить список как шаблон («Мои еженедельные покупки»)
 
 Если каждую неделю вы покупаете примерно одни и те же продукты, сохраните свой обычный список один раз и в следующий раз добавляйте его целиком одним касанием — не нужно снова печатать «молоко, яйца, хлеб, кофе…».
@@ -13853,6 +13869,14 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Спостерігачі можуть переглядати списки, перемикатися між ними, додавати товари та позначати їх у будь-якому списку, але не можуть архівувати чи видаляти списки.
 
+## Поділитися списком із тим, у кого немає застосунку
+
+Потрібно, щоб партнер або сусід по квартирі купив кілька речей, але в нього немає застосунку? Торкніться **значка «поділитися»** біля назви списку (доступно лише редакторам і власнику акаунта) і виберіть **Поділитися посиланням** — відкриється меню обміну вашого телефона з публічним посиланням на цей список.
+
+Будь-хто, хто відкриє посилання, побачить список і зможе позначати товари під час покупок — без реєстрації та без доступу до вашого акаунта. Додавати, перейменовувати чи видаляти товари не можна — лише позначати, і те, що буде позначено, з'явиться у вашому власному списку під час наступної синхронізації.
+
+Посилання продовжує працювати, доки ви не заархівуєте або не видалите список, або не натиснете **Відкликати посилання** у тому самому меню, щоб явно його вимкнути. Повторне «поділитися» після цього створює абсолютно нове посилання. Поділитися повторно, не відкликавши посилання заздалегідь, безпечно — ви просто передасте те саме посилання, а не зламаєте вже надіслане.
+
 ## Зберегти список як шаблон («Мої щотижневі покупки»)
 
 Якщо щотижня ви купуєте приблизно одні й ті самі продукти, збережіть свій звичний список один раз і наступного разу додавайте його цілком одним дотиком — не потрібно знову набирати «молоко, яйця, хліб, кава…».
@@ -18537,6 +18561,14 @@ Stuknij w pigułkę z nazwą listy u góry ekranu, aby otworzyć **Zarządzaj li
 
 Obserwatorzy mogą przeglądać listy, przełączać się między nimi, dodawać produkty i odznaczać je na dowolnej liście, ale nie mogą jej zarchiwizować ani usunąć.
 
+## Udostępnij listę komuś, kto nie ma aplikacji
+
+Chcesz, żeby partner lub współlokator kupił kilka rzeczy, ale nie ma aplikacji? Stuknij **ikonę udostępniania** obok pigułki z nazwą listy (tylko edytorzy i właściciel konta) i wybierz **Udostępnij link** — otworzy się menu udostępniania telefonu z publicznym linkiem do tej listy.
+
+Każdy, kto otworzy link, zobaczy listę i będzie mógł odznaczać produkty podczas zakupów, bez zakładania konta i bez dostępu do Twojego konta. Nie może dodawać, zmieniać nazw ani usuwać produktów — tylko je odznaczać, więc to, co odznaczy, pojawi się na Twojej liście przy najbliższej synchronizacji.
+
+Link działa, dopóki nie zarchiwizujesz lub nie usuniesz listy albo nie stukniesz **Cofnij link** w tym samym menu, aby wyraźnie go wyłączyć. Ponowne udostępnienie tworzy wtedy zupełnie nowy link. Ponowne udostępnienie bez wcześniejszego cofnięcia jest bezpieczne — przekazuje ten sam link zamiast unieważniać ten, który już wysłałeś.
+
 ## Zapisz listę jako szablon („Moje cotygodniowe zakupy")
 
 Jeśli co tydzień kupujesz mniej więcej te same produkty, zapisz swoją zwykłą listę raz i za następnym razem dodaj ją całą jednym dotknięciem — bez wpisywania od nowa „mleko, jajka, chleb, kawa…".
@@ -23196,6 +23228,14 @@ Tippe oben auf dem Bildschirm auf die Pille mit dem Listennamen, um **Listen ver
 
 Betrachter können jede Liste ansehen, zwischen ihnen wechseln, Artikel hinzufügen und abhaken, aber keine Liste archivieren oder löschen.
 
+## Eine Liste mit jemandem teilen, der die App nicht hat
+
+Dein Partner oder Mitbewohner soll ein paar Dinge besorgen, hat aber die App nicht? Tippe auf das **Teilen-Symbol** neben der Listennamen-Pille (nur für Bearbeiter und den Kontoinhaber) und wähle **Link teilen** — das öffnet das Freigabemenü deines Telefons mit einem öffentlichen Link zu dieser Liste.
+
+Wer den Link öffnet, sieht die Liste und kann Artikel beim Einkaufen abhaken, ganz ohne Registrierung oder Zugang zu deinem Konto. Artikel hinzufügen, umbenennen oder löschen geht nicht — nur Abhaken. Was abgehakt wird, erscheint bei der nächsten Synchronisierung auch auf deiner eigenen Liste.
+
+Der Link funktioniert weiter, bis du die Liste archivierst oder löschst, oder im selben Menü auf **Link widerrufen** tippst, um ihn ausdrücklich abzuschalten. Teilst du danach erneut, wird ein komplett neuer Link erstellt. Erneutes Teilen ohne vorherigen Widerruf ist unbedenklich — es wird derselbe Link weitergegeben, statt den bereits verschickten ungültig zu machen.
+
 ## Eine Liste als Vorlage speichern („Meine wöchentlichen Grundnahrungsmittel")
 
 Wenn du jede Woche ungefähr die gleichen Lebensmittel kaufst, speichere deine übliche Liste einmal und füge sie beim nächsten Mal mit einem Tipp wieder hinzu — kein erneutes Eintippen von „Milch, Eier, Brot, Kaffee …" mehr nötig.
@@ -27844,6 +27884,14 @@ Toca la píldora con el nombre de la lista en la parte superior de la pantalla p
 
 Los observadores pueden ver, cambiar entre listas, añadir artículos y marcarlos como comprados en cualquier lista, pero no pueden archivar ni eliminar una.
 
+## Compartir una lista con alguien que no tiene la app
+
+¿Necesitas que tu pareja o compañero de piso compre un par de cosas, pero no tiene la app? Toca el **icono de compartir** junto a la píldora con el nombre de la lista (solo editores y el propietario de la cuenta) y elige **Compartir enlace** — esto abre el panel de compartir de tu teléfono con un enlace público a esa lista.
+
+Cualquiera que abra el enlace ve la lista y puede marcar artículos mientras compra, sin registrarse ni ser añadido a tu cuenta. No puede añadir, renombrar ni eliminar artículos — solo marcarlos, así que lo que marque aparecerá en tu propia lista la próxima vez que se sincronice.
+
+El enlace sigue funcionando hasta que archives o elimines la lista, o toques **Revocar enlace** en el mismo menú para desactivarlo explícitamente. Compartir de nuevo después de eso crea un enlace completamente nuevo. Volver a compartir sin revocar antes es seguro — entrega el mismo enlace en lugar de invalidar el que ya enviaste.
+
 ## Guardar una lista como plantilla («Mis productos habituales»)
 
 Si compras más o menos los mismos productos cada semana, guarda tu lista habitual una vez y vuelve a añadirla entera de un toque la próxima vez, sin tener que volver a escribir «leche, huevos, pan, café…».
@@ -32490,6 +32538,14 @@ Touchez la pastille du nom de liste en haut de l'écran pour ouvrir **Gérer les
 
 Les observateurs peuvent consulter les listes, en changer, ajouter des articles et les cocher sur n'importe quelle liste, mais ne peuvent ni archiver ni supprimer une liste.
 
+## Partager une liste avec quelqu'un qui n'a pas l'application
+
+Besoin que votre partenaire ou colocataire achète quelques articles, mais il ou elle n'a pas l'application ? Appuyez sur l'**icône de partage** à côté de la pastille du nom de la liste (éditeurs et propriétaire du compte uniquement) et choisissez **Partager le lien** — cela ouvre le menu de partage de votre téléphone avec un lien public vers cette liste.
+
+Toute personne qui ouvre le lien voit la liste et peut cocher les articles au fur et à mesure de ses achats, sans inscription ni accès à votre compte. Elle ne peut ni ajouter, ni renommer, ni supprimer d'articles — seulement les cocher, et ce qu'elle coche apparaît sur votre propre liste à la prochaine synchronisation.
+
+Le lien continue de fonctionner jusqu'à ce que vous archiviez ou supprimiez la liste, ou que vous appuyiez sur **Révoquer le lien** dans le même menu pour le désactiver explicitement. Le repartager ensuite crée un tout nouveau lien. Le repartager sans le révoquer d'abord est sans risque — cela redonne le même lien plutôt que d'invalider celui déjà envoyé.
+
 ## Enregistrer une liste comme modèle (« Mes produits de base hebdomadaires »)
 
 Si vous achetez à peu près les mêmes courses chaque semaine, enregistrez votre liste habituelle une seule fois et rajoutez-la en entier en un geste la prochaine fois — plus besoin de retaper « lait, œufs, pain, café… ».
@@ -37099,6 +37155,14 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Выдаліць** — незваротна выдаляе спіс і ўсе яго тавары. Толькі для рэдактараў і ўладальніка рахунку.
 
 Назіральнікі могуць праглядаць спісы, пераключацца паміж імі, дадаваць тавары і адзначаць іх у любым спісе, але не могуць архіваваць ці выдаляць спісы.
+
+## Падзяліцца спісам з тым, у каго няма праграмы
+
+Трэба, каб партнёр ці сусед па кватэры купіў пару рэчаў, але ў яго няма праграмы? Націсніце на **значок «падзяліцца»** побач з назвай спіса (даступна толькі рэдактарам і ўладальніку акаунта) і выберыце **Падзяліцца спасылкай** — адкрыецца меню абмену вашага тэлефона з публічнай спасылкай на гэты спіс.
+
+Кожны, хто адкрые спасылку, убачыць спіс і зможа адзначаць тавары падчас пакупак — без рэгістрацыі і без доступу да вашага акаунта. Дадаваць, пераймяноўваць ці выдаляць тавары нельга — толькі адзначаць, і тое, што будзе адзначана, з'явіцца ў вашым уласным спісе пры наступнай сінхранізацыі.
+
+Спасылка працягвае працаваць, пакуль вы не заархівуеце ці не выдаліце спіс, або не націснеце **Адклікаць спасылку** у тым жа меню, каб яўна яе адключыць. Паўторнае «падзяліцца» пасля гэтага стварае зусім новую спасылку. Падзяліцца паўторна, не адклікаўшы спасылку загадзя, бяспечна — вы проста перадасце тую ж спасылку, а не зламаеце ўжо адпраўленую.
 
 ## Захаваць спіс як шаблон («Мае штотыднёвыя пакупкі»)
 
@@ -41824,6 +41888,14 @@ Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te ope
 - **Verwijderen** — verwijdert de lijst en alle artikelen definitief. Alleen voor bewerkers en de accounteigenaar.
 
 Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
+
+## Een lijst delen met iemand zonder de app
+
+Heb je een partner of huisgenoot nodig die een paar dingen haalt, maar heeft die de app niet? Tik op het **deelicoon** naast de lijstnaam-pil (alleen voor bewerkers en de accounteigenaar) en kies **Link delen** — dit opent het deelmenu van je telefoon met een openbare link naar die lijst.
+
+Iedereen die de link opent, ziet de lijst en kan artikelen aanvinken tijdens het winkelen, zonder een account aan te maken of aan jouw account te worden toegevoegd. Ze kunnen geen artikelen toevoegen, hernoemen of verwijderen — alleen aanvinken, en wat zij aanvinken verschijnt bij de volgende synchronisatie ook op jouw eigen lijst.
+
+De link blijft werken totdat je de lijst archiveert of verwijdert, of in hetzelfde menu op **Link intrekken** tikt om hem expliciet uit te schakelen. Opnieuw delen daarna maakt een gloednieuwe link aan. Opnieuw delen zonder eerst in te trekken is veilig — je geeft dan gewoon dezelfde link door in plaats van de al verstuurde link te breken.
 
 ## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
 

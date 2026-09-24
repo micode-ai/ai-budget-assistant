@@ -117,6 +117,20 @@ export class ShoppingListController {
     return this.service.clearChecked(req.accountId, id);
   }
 
+  // POST /shopping-list/:id/guest-link (shopping-list-guest-share-link)
+  @Post(':id/guest-link')
+  @UseGuards(new ViewerBlockGuard())
+  createGuestLink(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.service.createGuestLink(req.accountId, id);
+  }
+
+  // DELETE /shopping-list/:id/guest-link (shopping-list-guest-share-link)
+  @Delete(':id/guest-link')
+  @UseGuards(new ViewerBlockGuard())
+  revokeGuestLink(@Req() req: AuthenticatedRequest, @Param('id') id: string) {
+    return this.service.revokeGuestLink(req.accountId, id);
+  }
+
   // PATCH /shopping-list/:id
   @Patch(':id')
   updateList(@Req() req: AuthenticatedRequest, @Param('id') id: string, @Body() dto: UpdateListDto) {

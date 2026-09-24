@@ -22,6 +22,14 @@ Touchez la pastille du nom de liste en haut de l'écran pour ouvrir **Gérer les
 
 Les observateurs peuvent consulter les listes, en changer, ajouter des articles et les cocher sur n'importe quelle liste, mais ne peuvent ni archiver ni supprimer une liste.
 
+## Partager une liste avec quelqu'un qui n'a pas l'application
+
+Besoin que votre partenaire ou colocataire achète quelques articles, mais il ou elle n'a pas l'application ? Appuyez sur l'**icône de partage** à côté de la pastille du nom de la liste (éditeurs et propriétaire du compte uniquement) et choisissez **Partager le lien** — cela ouvre le menu de partage de votre téléphone avec un lien public vers cette liste.
+
+Toute personne qui ouvre le lien voit la liste et peut cocher les articles au fur et à mesure de ses achats, sans inscription ni accès à votre compte. Elle ne peut ni ajouter, ni renommer, ni supprimer d'articles — seulement les cocher, et ce qu'elle coche apparaît sur votre propre liste à la prochaine synchronisation.
+
+Le lien continue de fonctionner jusqu'à ce que vous archiviez ou supprimiez la liste, ou que vous appuyiez sur **Révoquer le lien** dans le même menu pour le désactiver explicitement. Le repartager ensuite crée un tout nouveau lien. Le repartager sans le révoquer d'abord est sans risque — cela redonne le même lien plutôt que d'invalider celui déjà envoyé.
+
 ## Enregistrer une liste comme modèle (« Mes produits de base hebdomadaires »)
 
 Si vous achetez à peu près les mêmes courses chaque semaine, enregistrez votre liste habituelle une seule fois et rajoutez-la en entier en un geste la prochaine fois — plus besoin de retaper « lait, œufs, pain, café… ».

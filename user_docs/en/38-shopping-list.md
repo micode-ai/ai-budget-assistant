@@ -22,6 +22,14 @@ Tap the list name pill at the top of the screen to open **Manage lists**, where 
 
 Viewers can view, switch between, add to, and check off items on any list, but cannot archive or delete one.
 
+## Share a List with Someone Who Doesn't Have the App
+
+Need your partner or roommate to grab a few things, but they don't have the app? Tap the **share icon** next to the list name pill (editors and the account owner only) and choose **Share link** — this opens your phone's share sheet with a public link to that list.
+
+Anyone who opens the link sees the list and can check items off as they shop, without signing up or being added to your account. They can't add, rename, or delete items — just tick things off, so what they check off shows up on your own list the next time it syncs.
+
+The link keeps working until you archive or delete the list, or tap **Revoke link** in the same menu to turn it off explicitly. Sharing again after that creates a brand-new link. Re-sharing without revoking first is safe — it hands out the same link rather than breaking the one you already sent.
+
 ## Save a List as a Template ("My Weekly Staples")
 
 If you buy roughly the same groceries every week, save your usual list once and re-add all of it in one tap next time — no need to retype "milk, eggs, bread, coffee…" over and over.

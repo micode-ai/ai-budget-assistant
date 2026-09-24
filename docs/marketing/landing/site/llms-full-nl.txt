@@ -3687,6 +3687,16 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
 - **"Toon categorie-uitsplitsing voor deze maand"** → toont uitgaven per categorie met percentages
 - **"Toon mijn schulden"** → toont alle actieve schulden met verschuldigde bedragen
 
+### De laatste actie ongedaan maken
+
+Een fout gemaakt vlak nadat je iets bevestigde — verkeerd bedrag, verkeerde categorie, of je hebt gewoon van gedachten veranderd? Zeg **"ongedaan maken"**, **"maak dat ongedaan"** of **"annuleer dat"** in hetzelfde gesprek.
+
+1. Typ **"ongedaan maken"** (elke formulering werkt, in elke taal)
+2. De AI toont een bevestigingskaart die beschrijft wat het gaat terugdraaien
+3. Tik op **Bevestigen** om het terug te draaien, of **Annuleren** om het zo te laten
+
+Ongedaan maken reikt alleen terug tot de **enige, meest recente** actie die je in dat gesprek hebt bevestigd, en alleen binnen ongeveer **15 minuten** na bevestiging. Het werkt voor een net aangemaakte uitgave, inkomst of schuld, een schuldaflossing, en een update van een spaardoelsaldo. Als je die invoer al hebt bewerkt sinds het aanmaken, of er is te veel tijd verstreken, zegt de AI dat en verwijst je naar handmatig bewerken.
+
 ## Veelgestelde vragen
 
 - **V: Heeft de AI toegang tot al mijn financiële gegevens?**
@@ -3699,7 +3709,7 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
   **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, of de gegevens controleren op het tabblad Analyse.
 
 - **V: Kan ik een bevestigde actie ongedaan maken?**
-  **A:** Nadat je een actie hebt bevestigd (zoals het aanmaken van een uitgave), wordt deze opgeslagen in je account. Je kunt deze handmatig verwijderen op het tabblad Uitgaven.
+  **A:** Ja — zeg "ongedaan maken" of "maak dat ongedaan" in hetzelfde gesprek, vlak na het bevestigen. Dit draait de enige, meest recente actie terug die je hebt bevestigd, binnen ongeveer 15 minuten na bevestiging. Zie "De laatste actie ongedaan maken" hierboven. Na die tijd, of voor iets ouders, verwijder je het handmatig op het tabblad Uitgaven.
 
 - **V: Wat gebeurt er als ik een actie verwerp?**
   **A:** Als je op een bevestigingskaart op "Annuleren" tikt, wordt de actie verworpen en wordt er niets opgeslagen. De AI bevestigt de verwerping.
@@ -6733,6 +6743,14 @@ Tik op de pil met de lijstnaam bovenaan het scherm om **Lijsten beheren** te ope
 - **Verwijderen** — verwijdert de lijst en alle artikelen definitief. Alleen voor bewerkers en de accounteigenaar.
 
 Kijkers kunnen elke lijst bekijken, ertussen wisselen, artikelen toevoegen en aanvinken, maar kunnen geen lijst archiveren of verwijderen.
+
+## Een lijst delen met iemand zonder de app
+
+Heb je een partner of huisgenoot nodig die een paar dingen haalt, maar heeft die de app niet? Tik op het **deelicoon** naast de lijstnaam-pil (alleen voor bewerkers en de accounteigenaar) en kies **Link delen** — dit opent het deelmenu van je telefoon met een openbare link naar die lijst.
+
+Iedereen die de link opent, ziet de lijst en kan artikelen aanvinken tijdens het winkelen, zonder een account aan te maken of aan jouw account te worden toegevoegd. Ze kunnen geen artikelen toevoegen, hernoemen of verwijderen — alleen aanvinken, en wat zij aanvinken verschijnt bij de volgende synchronisatie ook op jouw eigen lijst.
+
+De link blijft werken totdat je de lijst archiveert of verwijdert, of in hetzelfde menu op **Link intrekken** tikt om hem expliciet uit te schakelen. Opnieuw delen daarna maakt een gloednieuwe link aan. Opnieuw delen zonder eerst in te trekken is veilig — je geeft dan gewoon dezelfde link door in plaats van de al verstuurde link te breken.
 
 ## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
 
