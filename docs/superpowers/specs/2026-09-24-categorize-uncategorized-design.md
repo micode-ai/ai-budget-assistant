@@ -67,18 +67,42 @@ UI can say why they were skipped.
 Response (new DTOs in `packages/shared-types/src/dto/`):
 
 ```ts
-interface CategorizeSuggestionGroup {
-  categoryId: string | null;      // existing category, or null for a proposal
-  proposedName: string | null;    // set only when categoryId is null
-  source: 'rule' | 'ai';
-  expenseIds: string[];           // server PKs
+/** One uncategorized expense offered for review by POST /ai/categorize-uncategorized. */
+export interface CategorizeCandidateExpense {
+  /** Server PK. */
+  id: string;
+  /** The creating device's local id, when it had one — lets a client find its own row. */
+  clientId: string | null;
+  merchant: string | null;
+  description: string | null;
+  amount: number;
+  currencyCode: string;
+  /** YYYY-MM-DD */
+  date: string;
 }
-interface CategorizeSuggestionsResponse {
+
+/**
+ * A suggested destination for some expenses. Exactly one of `categoryId` /
+ * `proposedName` is set: an existing category, or a new one the user may create.
+ */
+export interface CategorizeSuggestionGroup {
+  categoryId: string | null;
+  proposedName: string | null;
+  /** Server PKs, each present in `expenses`. */
+  expenseIds: string[];
+}
+
+export interface CategorizeSuggestionsResponse {
+  expenses: CategorizeCandidateExpense[];
   groups: CategorizeSuggestionGroup[];
+  /** Server PKs nothing confident was found for. */
   unassigned: string[];
+  /** E2EE expenses the server cannot read and therefore skipped. */
   skippedEncrypted: number;
+  /** Model passes left today for this account after this one. */
   remainingToday: number;
-  limitReached: boolean;          // true → the AI step was skipped, rules still applied
+  /** True when the daily ceiling stopped the model step; rule-based groups are still returned. */
+  limitReached: boolean;
 }
 ```
 
@@ -186,6 +210,11 @@ Expense ids from the response are server PKs; the store matches rows by `id` or 
 - Same action in the existing "without category" filter (`ExpenseFilterBar` / `FacetRail`).
 - Offline: banner button disabled with a hint (suggestions need the server); applying an
   already-loaded review works offline on native.
+
+Planning deltas (2026-09-24): the response carries `expenses` so the review renders rows the client
+has not loaded; `source` was dropped (nothing reads it); no second button inside the "without
+category" filter (the banner sits directly above it); no offline detection — the app has no
+network-status hook, so a failed request shows the error state with Retry.
 
 ### States
 

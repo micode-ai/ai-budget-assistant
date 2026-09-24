@@ -274,3 +274,41 @@ export interface ChatMessageResponse {
 export interface SetConversationSharedRequest {
   isShared: boolean;
 }
+
+/** One uncategorized expense offered for review by POST /ai/categorize-uncategorized. */
+export interface CategorizeCandidateExpense {
+  /** Server PK. */
+  id: string;
+  /** The creating device's local id, when it had one — lets a client find its own row. */
+  clientId: string | null;
+  merchant: string | null;
+  description: string | null;
+  amount: number;
+  currencyCode: string;
+  /** YYYY-MM-DD */
+  date: string;
+}
+
+/**
+ * A suggested destination for some expenses. Exactly one of `categoryId` /
+ * `proposedName` is set: an existing category, or a new one the user may create.
+ */
+export interface CategorizeSuggestionGroup {
+  categoryId: string | null;
+  proposedName: string | null;
+  /** Server PKs, each present in `expenses`. */
+  expenseIds: string[];
+}
+
+export interface CategorizeSuggestionsResponse {
+  expenses: CategorizeCandidateExpense[];
+  groups: CategorizeSuggestionGroup[];
+  /** Server PKs nothing confident was found for. */
+  unassigned: string[];
+  /** E2EE expenses the server cannot read and therefore skipped. */
+  skippedEncrypted: number;
+  /** Model passes left today for this account after this one. */
+  remainingToday: number;
+  /** True when the daily ceiling stopped the model step; rule-based groups are still returned. */
+  limitReached: boolean;
+}
