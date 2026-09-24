@@ -3,6 +3,7 @@ import type { CategorizeSuggestionsResponse } from '@budget/shared-types';
 import { api } from '@/services/api';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useCategoryStore } from '@/stores/categoryStore';
+import { useAccountStore } from '@/stores/accountStore';
 import {
   buildApplyPlan, deriveGroups, initReview, reviewReducer, type ReviewState,
 } from './categorizeReview';
@@ -11,7 +12,9 @@ import { shareInFlight } from './shareInFlight';
 
 const EMPTY: ReviewState = { targets: {}, drafts: {}, excludedGroups: [] };
 
-// Module scope, so two mounts of the screen share one request (see shareInFlight).
+// Module scope, so two mounts of the screen share one request per account (see
+// shareInFlight). The key is only for sharing — the request itself is scoped by
+// the X-Account-Id header the http client stamps when it runs.
 const fetchSuggestions = shareInFlight(() => api.categorizeUncategorized());
 
 /** Loads suggestions once on mount, holds the review, applies it. */
@@ -28,7 +31,7 @@ export function useCategorizeSuggestions() {
   const load = useCallback(async () => {
     setStatus('loading');
     try {
-      const r = await fetchSuggestions();
+      const r = await fetchSuggestions(useAccountStore.getState().currentAccountId ?? '');
       setResponse(r);
       dispatch({ type: 'reset', state: initReview(r) });
       setStatus('ready');

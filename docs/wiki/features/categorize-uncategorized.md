@@ -139,12 +139,15 @@ trusted as the key to write with.
   at `temperature: 0`. Reopening the review — or the web screen mounting twice, which happened on the
   first live run and spent two of the day's five passes on two different answers — must neither
   spend another pass nor reshuffle the groups. Any change to the candidates or the category list
-  misses the cache. On the client, `shareInFlight` makes concurrent mounts share one request.
+  misses the cache. On the client, `shareInFlight` makes concurrent mounts share one request —
+  keyed by account id, so a request started for one account is never shown on a screen that has
+  since switched to another.
 - **A store variant joins its store's group without the model.** After the model (and also when it
   was skipped or failed), `matchByMerchant` adds an unassigned expense to the one group holding an
-  expense whose merchant words equal or are extended by its own (a chain name with the city
-  appended). Narrow on purpose: the shorter word list must start with a word of at least three
-  letters, and a merchant matching more than one group is left for the user.
+  expense whose merchant words equal its own, or whose name of at least two words it extends (a
+  chain name with the city appended). A one-word name is never extended — "Uber" → "Uber Eats" is a
+  different service, not a branch. The first word needs at least three letters, and a merchant
+  matching more than one group is left for the user.
 - **The suggestions carry SERVER ids.** The client resolves them via `serverId → id → clientId`,
   falling back to the server id itself when none of the three match a locally-held row.
 - **The native route owns the bottom safe-area inset; `CategorizeReview` itself stays inset-free.**
@@ -169,6 +172,10 @@ Also not done:
   category creation (existing categories resolve by id) and for the bulk update (setting the same
   `categoryId` again is a no-op), so a retry is safe — but nothing surfaces "this partially
   succeeded" to the user beyond the toast reflecting the final counts.
+- **Two clients opening the review at the same moment still spend two passes.** The result cache
+  only helps once the first answer is stored, and `shareInFlight` only dedupes inside one JS
+  instance; a web tab and the phone opened together both miss the cache (with `temperature: 0`
+  they at least get the same answer).
 - **`categoryStore.createCategory` swallows a server error and returns a local-only category.** If
   the create-category call in `applyCategorization`'s first phase fails on the server (but not
   locally), the caller never sees it — it gets back a category that exists on-device only, and the

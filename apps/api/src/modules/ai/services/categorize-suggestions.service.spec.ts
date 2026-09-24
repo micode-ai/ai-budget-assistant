@@ -208,8 +208,8 @@ describe('CategorizeSuggestionsService.suggest', () => {
 
   it('tops up rule groups too when the model is unavailable', async () => {
     const { service } = makeService({
-      candidates: [expense('e1', 'OBI'), expense('e2', 'OBI Gdańsk')],
-      rules: new Map([['obi', 'c-tax']]),
+      candidates: [expense('e1', 'Leroy Merlin'), expense('e2', 'Leroy Merlin Gdańsk')],
+      rules: new Map([['leroy merlin', 'c-tax']]),
       modelThrows: true,
     });
     const r = await service.suggest('acc');

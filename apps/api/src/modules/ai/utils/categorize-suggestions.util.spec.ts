@@ -162,6 +162,14 @@ describe('matchByMerchant', () => {
     expect(matchByMerchant([{ id: 'e1', merchant: ' obi ' }], groups).get('e1')).toBe('g-build');
   });
 
+  it('does not extend a one-word merchant into a different service', () => {
+    const r = matchByMerchant(
+      [{ id: 'e1', merchant: 'Uber Eats' }, { id: 'e2', merchant: 'OBI Gdańsk' }],
+      [{ key: 'g-transport', merchants: ['Uber'] }, { key: 'g-build', merchants: ['OBI'] }],
+    );
+    expect(r.size).toBe(0);
+  });
+
   it('does not match merchants that only share a first word', () => {
     // "Bilety Kraków" shares only "bilety" with the travel rows — neither word list is a prefix of the other.
     expect(matchByMerchant([{ id: 'e1', merchant: 'Bilety Kraków' }], groups).size).toBe(0);
