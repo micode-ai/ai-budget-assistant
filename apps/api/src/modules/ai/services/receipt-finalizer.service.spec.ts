@@ -64,6 +64,12 @@ describe('ReceiptFinalizerService', () => {
     return service.finalizeReceipt({ ...BASE_PARSED_RECEIPT, ...overrides }, [], 'acc-1', 'user-1');
   }
 
+  it('leaves the expense uncategorized when the model says no category fits', async () => {
+    const result = await runFinalize({ suggestedCategory: null } as any);
+    expect(result.categoryId).toBeNull();
+    expect(result.categorySuggestion).toBeNull();
+  });
+
   describe('receipt location (geocoding)', () => {
     it('geocodes the STRUCTURED store address (not the noisy raw blob) and composes a clean display name', async () => {
       geocodingMock.geocodeStructured.mockResolvedValue({ lat: 53.889, lng: 17.715, displayName: 'Brusy, PL' });

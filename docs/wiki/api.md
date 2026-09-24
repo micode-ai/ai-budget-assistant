@@ -24,6 +24,10 @@ dashboard.
 - [account-transfers](features/account-transfers.md) · [shopping-list](features/shopping-list.md)
 - [ai-statement-import](features/ai-statement-import.md)
 - [client-id-resolution](features/client-id-resolution.md) · [category-id-resolution](features/category-id-resolution.md)
+- [categorize-uncategorized](features/categorize-uncategorized.md) — the read-only
+  `POST /ai/categorize-uncategorized` batch classifier
+- [merchant-category-rules](features/merchant-category-rules.md) — the learned per-account
+  merchant → category table
 
 ## Key concepts
 

@@ -68,6 +68,33 @@ Tap the category filter above the transaction list to filter by category. It wor
 
 The category filter combines with the period above it, so to find older entries that still have no category, set the period to **All** first.
 
+### Suggest Categories for Uncategorized Expenses
+
+When your account has expenses with no category — common after scanning a batch of receipts — a banner appears above the transaction list: **Expenses without a category: N**, with a **Suggest categories** button.
+
+Tap it to open **Categorize expenses**. The app analyzes your uncategorized expenses (you'll see **Analyzing expenses…**) and groups them:
+
+- ✚ **New category** — will be created only if you apply
+- ● **Existing category** — one you already have
+- **Couldn't determine** — anything the assistant wasn't confident about; pick a category by hand or leave it as is
+
+For each group, you can:
+- Tap the group's name to rename a new category before it's created
+- Tap **▾** next to a group to retarget the whole group — to a different existing category, a different new-category name, or **+ Create new category**
+- Tap **Choose** (or **▾**) next to any single expense to move just that one
+- Uncheck a group to leave those expenses alone
+
+Nothing is created or changed until you tap **Apply (N)** — shown as **Apply (N) · new categories: K** when new categories are part of the plan. Afterwards you'll see **Categorized: N · new categories: K**.
+
+A few things worth knowing:
+- AI-based suggestions are limited to a few passes per account per day. Once you use them up, a note explains that only rule-based suggestions are shown for the rest of the day — suggestions that come from a merchant you've already taught the app (by recategorizing it before) always keep working, with no daily limit.
+- Encrypted expenses can't be read by the server for this feature and are skipped; you'll see how many, if any.
+- If there's nothing left to suggest, you'll see **Nothing to suggest right now.**
+- If loading fails, tap **Retry**.
+- Viewers on a shared account don't see this banner — categorizing is a change only Editors and the Owner can make.
+
+On the desktop (web) transactions screen, the same review opens as a dialog.
+
 ### Tags
 
 Tags help you organize expenses with custom labels:

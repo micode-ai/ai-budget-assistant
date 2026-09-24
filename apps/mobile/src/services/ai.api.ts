@@ -1,5 +1,5 @@
 import { httpClient } from './http-client';
-import type { ReceiptCheckFinding } from '@budget/shared-types';
+import type { CategorizeSuggestionsResponse, ReceiptCheckFinding } from '@budget/shared-types';
 
 export const aiApi = {
   transcribeAudio(audioBase64: string, language?: string) {
@@ -290,5 +290,13 @@ export const aiApi = {
       url += `&lat=${origin.lat}&lng=${origin.lng}`;
     }
     return httpClient.request<{ results: { lat: number; lng: number; name: string }[] }>(url);
+  },
+
+  /** Read-only suggestions for this account's uncategorized expenses. */
+  categorizeUncategorized() {
+    return httpClient.request<CategorizeSuggestionsResponse>('/ai/categorize-uncategorized', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
   },
 };

@@ -94,7 +94,7 @@ interface ExpenseState {
   updateExpense: (id: string, updates: Partial<Expense> & { splitType?: ShareType; shares?: ExpenseShareDto[] }) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
-  bulkUpdateExpenses: (ids: string[], patch: { categoryId?: string | null; tagIds?: string[]; isDeleted?: boolean }) => Promise<void>;
+  bulkUpdateExpenses: (ids: string[], patch: { categoryId?: string | null; tagIds?: string[]; isDeleted?: boolean }, options?: { awaitServer?: boolean }) => Promise<void>;
   mergeExpenses: (keepId: string, mergeId: string, fieldChoices?: MergeExpensesFieldChoices) => Promise<void>;
   moveExpense: (id: string, targetAccountId: string) => Promise<void>;
   stopRecurringExpense: (id: string) => Promise<void>;
@@ -501,7 +501,7 @@ export const useExpenseStore = create<ExpenseState>()(
       );
     },
 
-    bulkUpdateExpenses: async (ids, patch) => {
+    bulkUpdateExpenses: async (ids, patch, options) => {
       const { expenses } = get();
       const now = new Date();
 
@@ -553,9 +553,19 @@ export const useExpenseStore = create<ExpenseState>()(
         }
       }
 
-      api.bulkUpdateExpenses({ ids, ...patch }).catch((e: any) =>
-        console.warn('[expenseStore] bulkUpdate server error:', e?.message || e)
-      );
+      // Default: fire-and-forget, same as every other optimistic write in this
+      // store — existing callers (e.g. useExpenseMultiSelect) keep exactly this
+      // behavior. `awaitServer` is opt-in for a caller (the categorize review)
+      // that needs to know a server failure happened before it tells the user
+      // "done" — on web there is no SQLite to fall back on, so a lost write is
+      // otherwise invisible until the next reload.
+      if (options?.awaitServer) {
+        await api.bulkUpdateExpenses({ ids, ...patch });
+      } else {
+        api.bulkUpdateExpenses({ ids, ...patch }).catch((e: any) =>
+          console.warn('[expenseStore] bulkUpdate server error:', e?.message || e)
+        );
+      }
     },
 
     mergeExpenses: async (keepId, mergeId, fieldChoices) => {

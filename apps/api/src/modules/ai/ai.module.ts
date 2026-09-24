@@ -10,6 +10,7 @@ import { GeocodingModule } from './geocoding.module';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { ReceiptCategorySplitService } from './services/receipt-category-split.service';
+import { CategorizeSuggestionsService } from './services/categorize-suggestions.service';
 import { GoalPlannerService } from './services/goal-planner.service';
 import { UserContextBuilder } from './services/user-context-builder.service';
 import { AiToolsService } from './services/ai-tools.service';
@@ -42,6 +43,7 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     TagSuggestionService,
     ProjectSuggestionService,
     ReceiptCategorySplitService,
+    CategorizeSuggestionsService,
     GoalPlannerService,
     UserContextBuilder,
     AiToolsService,

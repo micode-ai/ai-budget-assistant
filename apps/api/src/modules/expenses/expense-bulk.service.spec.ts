@@ -85,3 +85,40 @@ describe('ExpenseBulkService.bulkUpdate id resolution', () => {
     );
   });
 });
+
+describe('ExpenseBulkService.bulkUpdate merchant-rule learning', () => {
+  function make(owned: Array<{ id: string; merchant: string | null }>) {
+    const tx = { expense: { updateMany: jest.fn().mockResolvedValue({ count: owned.length }) } };
+    const prisma: any = {
+      expense: { findMany: jest.fn().mockResolvedValue(owned) },
+      category: {
+        findFirst: jest.fn().mockResolvedValue({ id: 'cat-1' }),
+        findUnique: jest.fn().mockResolvedValue({ id: 'cat-1', accountId: 'acc' }),
+      },
+      $transaction: jest.fn(async (cb: any) => cb(tx)),
+    };
+    const cacheService: any = { delByPrefix: jest.fn(), del: jest.fn() };
+    const merchantRules: any = { upsertRule: jest.fn().mockResolvedValue(undefined) };
+    return { service: new ExpenseBulkService(prisma, cacheService, merchantRules), merchantRules };
+  }
+
+  it('upserts one rule per distinct non-empty merchant when a category is set', async () => {
+    const { service, merchantRules } = make([
+      { id: 'e1', merchant: 'OBI' },
+      { id: 'e2', merchant: ' obi ' },
+      { id: 'e3', merchant: null },
+      { id: 'e4', merchant: 'Castorama' },
+    ]);
+    await service.bulkUpdate('acc', { ids: ['e1', 'e2', 'e3', 'e4'], categoryId: 'cat-1' });
+    await new Promise((r) => setImmediate(r));
+    const calls = merchantRules.upsertRule.mock.calls.map((c: any[]) => c.slice(1));
+    expect(calls).toEqual([['obi', 'cat-1'], ['castorama', 'cat-1']]);
+  });
+
+  it('learns nothing when clearing a category or deleting', async () => {
+    const { service, merchantRules } = make([{ id: 'e1', merchant: 'OBI' }]);
+    await service.bulkUpdate('acc', { ids: ['e1'], categoryId: null });
+    await service.bulkUpdate('acc', { ids: ['e1'], isDeleted: true });
+    expect(merchantRules.upsertRule).not.toHaveBeenCalled();
+  });
+});

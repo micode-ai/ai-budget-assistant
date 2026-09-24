@@ -27,6 +27,7 @@ import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { GoalPlannerService } from './services/goal-planner.service';
 import { GeocodingService } from './services/geocoding.service';
+import { CategorizeSuggestionsService } from './services/categorize-suggestions.service';
 import { ScanReceiptRequestSchema } from './utils/sanitize';
 import { UpdateConversationTitleDto } from './dto';
 
@@ -42,6 +43,7 @@ export class AiController {
     private readonly projectSuggestionService: ProjectSuggestionService,
     private readonly goalPlannerService: GoalPlannerService,
     private readonly geocodingService: GeocodingService,
+    private readonly categorizeSuggestionsService: CategorizeSuggestionsService,
   ) {}
 
   // Forward-geocode a typed query into up to 5 candidate places for the expense
@@ -226,6 +228,18 @@ export class AiController {
   @TrackAiUsage('ocr', 2.0)
   async extractText(@Req() req: AuthenticatedRequest, @Body() body: { imageBase64: string }) {
     return { text: await this.ocrService.extractTextFromImage(body.imageBase64, req.user.id) };
+  }
+
+  /**
+   * Suggests categories for this account's uncategorized expenses. Read-only —
+   * the client applies the reviewed result through the ordinary category and
+   * bulk-update endpoints. Outside the monthly AI quota; its own daily ceiling
+   * (AI_CATEGORIZE_MAX_PER_DAY) lives in the service.
+   */
+  @Post('categorize-uncategorized')
+  @UseGuards(new ViewerBlockGuard())
+  async categorizeUncategorized(@Req() req: AuthenticatedRequest) {
+    return this.categorizeSuggestionsService.suggest(req.accountId);
   }
 
   @Get('suggest-category')

@@ -23,6 +23,7 @@ import { IncomeListItem } from '@/components/expenses/IncomeListItem';
 import { ExpenseFilterBar } from '@/components/expenses/ExpenseFilterBar';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
+import { UncategorizedBanner } from '@/components/categorize/UncategorizedBanner';
 import { useExpensesScreenData } from '@/features/expenses/useExpensesScreenData';
 
 export function ExpensesMobile() {
@@ -221,6 +222,10 @@ export function ExpensesMobile() {
             </TouchableOpacity>
           )}
         </View>
+      )}
+
+      {activeTab === 'expenses' && (
+        <UncategorizedBanner onPress={() => router.push('/expense/categorize')} />
       )}
 
       {/* Period chips + category/merchant filters + month navigator */}

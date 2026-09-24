@@ -35,6 +35,10 @@ above.
 - [receipt-category-split](features/receipt-category-split.md) — the OCR funnel's category splitting
 - [ai-statement-import](features/ai-statement-import.md) — inferring a bank statement's column
   mapping when no parser recognises it
+- [categorize-uncategorized](features/categorize-uncategorized.md) — one batched model call that
+  clusters an account's uncategorized expenses into a reviewed set of categories
+- [merchant-category-rules](features/merchant-category-rules.md) — learning a merchant's category
+  from a manual edit or a bulk recategorization, applied at import and categorize time
 
 ## Key concepts
 

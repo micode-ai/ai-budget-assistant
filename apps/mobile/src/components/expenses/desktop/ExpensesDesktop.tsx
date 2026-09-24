@@ -11,6 +11,7 @@ import { trimToVisible } from '@/features/expenses/desktopSelection';
 import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
+import { UncategorizedBanner } from '@/components/categorize/UncategorizedBanner';
 import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { SummaryStrip } from './SummaryStrip';
@@ -143,6 +144,9 @@ export function ExpensesDesktop() {
   // buttons open `CreateDialog` in place instead, so they set this directly
   // rather than calling that handler.
   const [createKind, setCreateKind] = useState<'expense' | 'income' | null>(null);
+  // Task 10: the categorize review, opened from the uncategorized banner
+  // above `SummaryStrip`.
+  const [showCategorize, setShowCategorize] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [kind, setKind] = useState<KindFacet>('all');
   const [active, setActive] = useState<ActiveFacets>({ categoryId: [], accountId: [], merchant: [] });
@@ -489,6 +493,8 @@ export function ExpensesDesktop() {
           {!collapsed && <FacetRail layout="stack" {...facetRailProps} />}
 
         <View style={styles.mainColumn}>
+          <UncategorizedBanner onPress={() => setShowCategorize(true)} />
+
           <SummaryStrip rows={visibleRows} baseCurrency={baseCurrency} />
 
           {canEdit && multiSelect.selectedIds.size > 0 && (
@@ -623,6 +629,8 @@ export function ExpensesDesktop() {
         dialogInitialEditing={dialogInitialEditing}
         createKind={createKind}
         onCloseCreateDialog={() => setCreateKind(null)}
+        showCategorize={showCategorize}
+        onCloseCategorize={() => setShowCategorize(false)}
         showBulkCategoryPicker={multiSelect.showBulkCategoryPicker}
         onCloseBulkCategoryPicker={() => multiSelect.setShowBulkCategoryPicker(false)}
         categories={categories}

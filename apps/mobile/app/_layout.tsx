@@ -164,6 +164,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="expense/categorize"
+          options={{
+            headerShown: true,
+            title: t('categorize.title'),
+          }}
+        />
+        <Stack.Screen
           name="expense/split"
           options={{
             headerShown: true,

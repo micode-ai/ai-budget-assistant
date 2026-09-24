@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { BulkUpdateExpensesDto } from './dto';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 import { resolveExpenseCategoryId } from './expense-category-resolver.util';
+import { MerchantRulesService } from '../merchant-rules/merchant-rules.service';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 /**
  * Bulk expense mutations (multi-select category/tag/delete from the mobile
@@ -14,9 +16,14 @@ import { resolveExpenseCategoryId } from './expense-category-resolver.util';
  */
 @Injectable()
 export class ExpenseBulkService {
+  private readonly logger = new Logger(ExpenseBulkService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
+    // Optional so the many two-argument test constructions keep compiling;
+    // ExpensesModule imports MerchantRulesModule, so Nest always supplies it.
+    @Optional() private readonly merchantRules?: MerchantRulesService,
   ) {}
 
   async bulkUpdate(accountId: string, dto: BulkUpdateExpensesDto): Promise<{ updated: number }> {
@@ -31,7 +38,7 @@ export class ExpenseBulkService {
         isDeleted: false,
         OR: [{ id: { in: ids } }, { clientId: { in: ids } }],
       },
-      select: { id: true },
+      select: { id: true, merchant: true },
     });
     const ownedIds = owned.map((e) => e.id);
     if (ownedIds.length === 0) return { updated: 0 };
@@ -82,6 +89,21 @@ export class ExpenseBulkService {
     });
 
     await invalidateExpenseChatCache(this.cacheService, accountId);
+
+    // A bulk recategorization is the same signal as a single edit
+    // (ExpensesService.update learns from it): teach merchant → category, so
+    // the next import or categorize pass resolves these merchants for free.
+    if (!isDeleted && typeof updateData.categoryId === 'string' && this.merchantRules) {
+      const merchants = new Set(
+        owned.map((e) => (e.merchant ?? '').trim().toLowerCase()).filter((m) => m.length > 0),
+      );
+      for (const merchant of merchants) {
+        void this.merchantRules
+          .upsertRule(accountId, merchant, updateData.categoryId)
+          .catch(logFireAndForget(this.logger, 'ExpenseBulkService.learnMerchantRule'));
+      }
+    }
+
     return { updated: ownedIds.length };
   }
 }

@@ -433,6 +433,33 @@ Tap the category filter above the transaction list to filter by category. It wor
 
 The category filter combines with the period above it, so to find older entries that still have no category, set the period to **All** first.
 
+### Suggest Categories for Uncategorized Expenses
+
+When your account has expenses with no category — common after scanning a batch of receipts — a banner appears above the transaction list: **Expenses without a category: N**, with a **Suggest categories** button.
+
+Tap it to open **Categorize expenses**. The app analyzes your uncategorized expenses (you'll see **Analyzing expenses…**) and groups them:
+
+- ✚ **New category** — will be created only if you apply
+- ● **Existing category** — one you already have
+- **Couldn't determine** — anything the assistant wasn't confident about; pick a category by hand or leave it as is
+
+For each group, you can:
+- Tap the group's name to rename a new category before it's created
+- Tap **▾** next to a group to retarget the whole group — to a different existing category, a different new-category name, or **+ Create new category**
+- Tap **Choose** (or **▾**) next to any single expense to move just that one
+- Uncheck a group to leave those expenses alone
+
+Nothing is created or changed until you tap **Apply (N)** — shown as **Apply (N) · new categories: K** when new categories are part of the plan. Afterwards you'll see **Categorized: N · new categories: K**.
+
+A few things worth knowing:
+- AI-based suggestions are limited to a few passes per account per day. Once you use them up, a note explains that only rule-based suggestions are shown for the rest of the day — suggestions that come from a merchant you've already taught the app (by recategorizing it before) always keep working, with no daily limit.
+- Encrypted expenses can't be read by the server for this feature and are skipped; you'll see how many, if any.
+- If there's nothing left to suggest, you'll see **Nothing to suggest right now.**
+- If loading fails, tap **Retry**.
+- Viewers on a shared account don't see this banner — categorizing is a change only Editors and the Owner can make.
+
+On the desktop (web) transactions screen, the same review opens as a dialog.
+
 ### Tags
 
 Tags help you organize expenses with custom labels:
@@ -5213,6 +5240,33 @@ iOS, Android, Web
 
 Фильтр категорий работает вместе с периодом выше, поэтому, чтобы найти старые записи без категории, сначала переключите период на **Все**.
 
+### Предложить категории для расходов без категории
+
+Когда на счёте есть расходы без категории — часто после сканирования нескольких чеков — над списком транзакций появляется баннер: **Расходов без категории: N**, с кнопкой **Предложить категории**.
+
+Нажмите её, чтобы открыть экран «**Разложить по категориям**». Приложение анализирует расходы без категории (вы увидите **Анализирую расходы…**) и группирует их:
+
+- ✚ **Новая категория** — будет создана, только если вы примените изменения
+- ● **Существующая категория** — та, что у вас уже есть
+- **Не удалось определить** — всё, в чём ассистент не был уверен; выберите категорию вручную или оставьте как есть
+
+Для каждой группы можно:
+- Нажать на название группы, чтобы переименовать новую категорию перед созданием
+- Нажать **▾** рядом с группой, чтобы перенаправить всю группу — на другую существующую категорию, на другое название новой категории или на **+ Создать новую категорию**
+- Нажать **Выбрать** (или **▾**) рядом с отдельным расходом, чтобы переместить только его
+- Снять отметку с группы, чтобы оставить эти расходы без изменений
+
+Ничего не создаётся и не меняется, пока вы не нажмёте **Применить (N)** — она показывается как **Применить (N) · новых категорий: K**, если в плане есть новые категории. После этого вы увидите **Разложено: N · новых категорий: K**.
+
+Что полезно знать:
+- Подсказки на основе ИИ ограничены несколькими проходами на счёт в день. Когда лимит на сегодня исчерпан, появится сообщение, что до конца дня показываются только подсказки по правилам — подсказки от продавца, которому вы уже один раз вручную назначили категорию, работают всегда, без дневного лимита.
+- Зашифрованные расходы сервер не может прочитать для этой функции, поэтому они пропускаются; вы увидите, сколько их было, если такие были.
+- Если предлагать больше нечего, вы увидите **Пока нечего предложить.**
+- Если загрузка не удалась, нажмите **Повторить**.
+- Участники с ролью **Наблюдатель** в общем счёте не видят этот баннер — раскладывание по категориям могут делать только Редактор и Владелец.
+
+На экране транзакций на компьютере (веб) тот же обзор открывается как диалоговое окно.
+
 ### Теги
 
 Теги помогают организовать расходы с помощью пользовательских меток:
@@ -9971,6 +10025,33 @@ iOS, Android, Web
 
 Фільтр категорій діє разом із періодом вище, тож щоб знайти старі записи без категорії, спершу перемкніть період на **Усі**.
 
+### Запропонувати категорії для витрат без категорії
+
+Коли на рахунку є витрати без категорії — часто після сканування кількох чеків — над списком транзакцій з'являється банер: **Витрат без категорії: N**, із кнопкою **Запропонувати категорії**.
+
+Натисніть її, щоб відкрити екран «**Розкласти за категоріями**». Застосунок аналізує витрати без категорії (ви побачите **Аналізую витрати…**) і групує їх:
+
+- ✚ **Нова категорія** — буде створена, лише якщо ви застосуєте зміни
+- ● **Наявна категорія** — та, яку ви вже маєте
+- **Не вдалося визначити** — усе, у чому асистент не був упевнений; виберіть категорію вручну або залиште як є
+
+Для кожної групи можна:
+- Натиснути назву групи, щоб перейменувати нову категорію до її створення
+- Натиснути **▾** біля групи, щоб перенаправити всю групу — на іншу наявну категорію, на іншу назву нової категорії або на **+ Створити нову категорію**
+- Натиснути **Вибрати** (або **▾**) біля окремої витрати, щоб перемістити лише її
+- Зняти позначку з групи, щоб залишити ці витрати без змін
+
+Нічого не створюється й не змінюється, доки ви не натиснете **Застосувати (N)** — вона показується як **Застосувати (N) · нових категорій: K**, якщо в плані є нові категорії. Після цього ви побачите **Розкладено: N · нових категорій: K**.
+
+Що корисно знати:
+- Підказки на основі ШІ обмежені кількома проходами на рахунок за день. Коли ліміт на сьогодні вичерпано, з'явиться повідомлення, що до кінця дня показуються лише підказки за правилами — підказки від продавця, якому ви вже раз вручну призначили категорію, працюють завжди, без денного ліміту.
+- Зашифровані витрати сервер не може прочитати для цієї функції, тому вони пропускаються; ви побачите, скільки їх було, якщо такі є.
+- Якщо пропонувати більше нічого, ви побачите **Поки що нічого запропонувати.**
+- Якщо завантаження не вдалося, натисніть **Повторити**.
+- Учасники з роллю **Спостерігач** у спільному рахунку не бачать цей банер — розкладання за категоріями можуть робити лише Редактор і Власник.
+
+На екрані транзакцій на комп'ютері (веб) той самий огляд відкривається як діалогове вікно.
+
 ### Теги
 
 Теги допомагають організовувати витрати за допомогою власних міток:
@@ -14677,6 +14758,33 @@ Dotknij filtra kategorii nad listą transakcji, aby filtrować według kategorii
 
 Filtr kategorii łączy się z okresem wybranym powyżej, więc aby znaleźć starsze pozycje bez kategorii, najpierw ustaw okres na **Wszystko**.
 
+### Sugerowanie kategorii dla wydatków bez kategorii
+
+Gdy na koncie są wydatki bez kategorii — często po zeskanowaniu kilku paragonów — nad listą transakcji pojawia się baner: **Wydatki bez kategorii: N**, z przyciskiem **Zaproponuj kategorie**.
+
+Dotknij go, aby otworzyć **Kategoryzuj wydatki**. Aplikacja analizuje wydatki bez kategorii (zobaczysz **Analizuję wydatki…**) i grupuje je:
+
+- ✚ **Nowa kategoria** — zostanie utworzona tylko po zastosowaniu zmian
+- ● **Istniejąca kategoria** — taka, którą już masz
+- **Nie udało się ustalić** — wszystko, co do czego asystent nie był pewny; wybierz kategorię ręcznie albo zostaw bez zmian
+
+Dla każdej grupy możesz:
+- Dotknąć nazwy grupy, aby zmienić nazwę nowej kategorii przed jej utworzeniem
+- Dotknąć **▾** obok grupy, aby przekierować całą grupę — do innej istniejącej kategorii, pod inną nazwą nowej kategorii, albo wybrać **+ Utwórz nową kategorię**
+- Dotknąć **Wybierz** (albo **▾**) obok pojedynczego wydatku, aby przenieść tylko ten jeden
+- Odznaczyć grupę, aby zostawić te wydatki bez zmian
+
+Nic nie zostaje utworzone ani zmienione, dopóki nie dotkniesz **Zastosuj (N)** — pokazywanego jako **Zastosuj (N) · nowe kategorie: K**, gdy plan obejmuje nowe kategorie. Potem zobaczysz **Skategoryzowano: N · nowe kategorie: K**.
+
+Kilka rzeczy wartych wiedzy:
+- Podpowiedzi oparte na AI są ograniczone do kilku przebiegów na konto dziennie. Gdy limit się wyczerpie, pojawi się informacja, że do końca dnia pokazywane są tylko podpowiedzi z reguł — podpowiedzi pochodzące od sprzedawcy, którego już nauczyłeś aplikację (przypisując mu wcześniej kategorię ręcznie), działają zawsze, bez dziennego limitu.
+- Zaszyfrowanych wydatków serwer nie może odczytać na potrzeby tej funkcji, więc są pomijane; zobaczysz, ile ich było, jeśli w ogóle.
+- Jeśli nie ma już nic do zaproponowania, zobaczysz **Na razie nie ma czego proponować.**
+- Jeśli wczytywanie się nie powiedzie, dotknij **Spróbuj ponownie**.
+- Osoby z rolą **Obserwatora** na wspólnym koncie nie widzą tego banera — kategoryzowanie to zmiana, którą mogą wykonać tylko Edytorzy i Właściciel.
+
+Na ekranie transakcji na komputerze (web) ten sam przegląd otwiera się jako okno dialogowe.
+
 ### Tagi
 
 Tagi pomagaja organizowac wydatki za pomoca niestandardowych etykiet:
@@ -19379,6 +19487,33 @@ Tippe auf den Kategoriefilter über der Transaktionsliste, um nach Kategorie zu 
 
 Der Kategoriefilter wird mit dem Zeitraum darüber kombiniert. Um ältere Einträge ohne Kategorie zu finden, stelle den Zeitraum zuerst auf **Alle**.
 
+### Kategorien für unkategorisierte Ausgaben vorschlagen
+
+Wenn dein Konto Ausgaben ohne Kategorie enthält — oft nach dem Scannen mehrerer Belege — erscheint über der Transaktionsliste ein Banner: **Ausgaben ohne Kategorie: N**, mit einer Schaltfläche **Kategorien vorschlagen**.
+
+Tippe darauf, um **Ausgaben kategorisieren** zu öffnen. Die App analysiert deine unkategorisierten Ausgaben (du siehst **Ausgaben werden analysiert…**) und gruppiert sie:
+
+- ✚ **Neue Kategorie** — wird nur erstellt, wenn du übernimmst
+- ● **Bestehende Kategorie** — eine, die du bereits hast
+- **Nicht zuordenbar** — alles, bei dem sich die Assistenz nicht sicher war; wähle selbst eine Kategorie oder lass es so
+
+Für jede Gruppe kannst du:
+- den Namen der Gruppe antippen, um eine neue Kategorie umzubenennen, bevor sie erstellt wird
+- **▾** neben einer Gruppe antippen, um die ganze Gruppe umzulenken — zu einer anderen bestehenden Kategorie, einem anderen neuen Namen oder **+ Neue Kategorie erstellen**
+- **Auswählen** (oder **▾**) neben einer einzelnen Ausgabe antippen, um nur diese zu verschieben
+- eine Gruppe abwählen, um diese Ausgaben unverändert zu lassen
+
+Es wird nichts erstellt oder geändert, bevor du **Übernehmen (N)** antippst — angezeigt als **Übernehmen (N) · neue Kategorien: K**, wenn neue Kategorien Teil des Plans sind. Danach siehst du **Kategorisiert: N · neue Kategorien: K**.
+
+Ein paar Dinge, die gut zu wissen sind:
+- KI-basierte Vorschläge sind auf wenige Durchläufe pro Konto und Tag begrenzt. Sind sie für heute aufgebraucht, weist ein Hinweis darauf hin, dass für den Rest des Tages nur regelbasierte Vorschläge angezeigt werden — Vorschläge, die von einem Händler stammen, den du der App bereits beigebracht hast (indem du ihn zuvor umkategorisiert hast), funktionieren immer weiter, ohne Tageslimit.
+- Verschlüsselte Ausgaben kann der Server für diese Funktion nicht lesen und überspringt sie; du siehst, wie viele es gegebenenfalls waren.
+- Wenn nichts mehr vorzuschlagen ist, siehst du **Im Moment gibt es nichts vorzuschlagen.**
+- Schlägt das Laden fehl, tippe auf **Erneut versuchen**.
+- **Betrachter** in einem gemeinsamen Konto sehen dieses Banner nicht — Kategorisieren ist eine Änderung, die nur Bearbeiter und der Eigentümer vornehmen können.
+
+Auf dem Desktop (Web) öffnet sich dieselbe Übersicht als Dialog auf dem Transaktionsbildschirm.
+
 ### Tags
 
 Tags helfen dir, Ausgaben mit benutzerdefinierten Labels zu organisieren:
@@ -24056,6 +24191,33 @@ Toca el filtro de categoría encima de la lista de transacciones para filtrar po
 
 El filtro de categoría se combina con el periodo de arriba, así que para encontrar entradas antiguas sin categoría, pon primero el periodo en **Todos**.
 
+### Sugerir categorías para gastos sin categoría
+
+Cuando tu cuenta tiene gastos sin categoría — algo habitual tras escanear varios recibos — aparece un banner encima de la lista de transacciones: **Gastos sin categoría: N**, con un botón **Sugerir categorías**.
+
+Tócalo para abrir **Categorizar gastos**. La app analiza tus gastos sin categoría (verás **Analizando gastos…**) y los agrupa:
+
+- ✚ **Nueva categoría** — solo se creará si aplicas los cambios
+- ● **Categoría existente** — una que ya tienes
+- **No se pudo determinar** — todo aquello de lo que el asistente no estaba seguro; elige tú la categoría o déjalo así
+
+Para cada grupo puedes:
+- Tocar el nombre del grupo para renombrar una nueva categoría antes de crearla
+- Tocar **▾** junto a un grupo para redirigir todo el grupo — a otra categoría existente, a otro nombre de categoría nueva, o a **+ Crear nueva categoría**
+- Tocar **Elegir** (o **▾**) junto a un gasto individual para mover solo ese
+- Desmarcar un grupo para dejar esos gastos sin cambios
+
+No se crea ni cambia nada hasta que toques **Aplicar (N)** — que se muestra como **Aplicar (N) · categorías nuevas: K** cuando el plan incluye categorías nuevas. Después verás **Categorizados: N · categorías nuevas: K**.
+
+Algunas cosas útiles de saber:
+- Las sugerencias basadas en IA están limitadas a unas pocas pasadas por cuenta y día. Cuando se agotan, un aviso indica que el resto del día solo se muestran sugerencias basadas en reglas — las sugerencias que vienen de un comerciante que ya le enseñaste a la app (recategorizándolo antes) siguen funcionando siempre, sin límite diario.
+- Los gastos cifrados no pueden ser leídos por el servidor para esta función y se omiten; verás cuántos, si los hay.
+- Si no queda nada por sugerir, verás **Por ahora no hay nada que sugerir.**
+- Si la carga falla, toca **Reintentar**.
+- Los miembros con el rol de **Observador** en una cuenta compartida no ven este banner — categorizar es un cambio que solo pueden hacer los Editores y el Propietario.
+
+En la pantalla de escritorio (web), la misma revisión se abre como un cuadro de diálogo.
+
 ### Etiquetas
 
 Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:
@@ -28722,6 +28884,33 @@ Touchez le filtre de catégorie au-dessus de la liste des transactions pour filt
 
 Le filtre de catégorie se combine avec la période au-dessus : pour retrouver d'anciennes entrées sans catégorie, réglez d'abord la période sur **Tout**.
 
+### Suggérer des catégories pour les dépenses sans catégorie
+
+Lorsque votre compte contient des dépenses sans catégorie — souvent après avoir scanné plusieurs reçus — une bannière apparaît au-dessus de la liste des transactions : **Dépenses sans catégorie : N**, avec un bouton **Suggérer des catégories**.
+
+Touchez-le pour ouvrir **Catégoriser les dépenses**. L'application analyse vos dépenses sans catégorie (vous verrez **Analyse des dépenses…**) et les regroupe :
+
+- ✚ **Nouvelle catégorie** — ne sera créée que si vous appliquez
+- ● **Catégorie existante** — une catégorie que vous avez déjà
+- **Impossible à déterminer** — tout ce dont l'assistant n'était pas sûr ; choisissez vous-même une catégorie ou laissez tel quel
+
+Pour chaque groupe, vous pouvez :
+- Toucher le nom du groupe pour renommer une nouvelle catégorie avant sa création
+- Toucher **▾** à côté d'un groupe pour rediriger tout le groupe — vers une autre catégorie existante, un autre nom de nouvelle catégorie, ou **+ Créer une catégorie**
+- Toucher **Choisir** (ou **▾**) à côté d'une dépense pour ne déplacer que celle-ci
+- Décocher un groupe pour laisser ces dépenses inchangées
+
+Rien n'est créé ni modifié tant que vous n'avez pas touché **Appliquer (N)** — affiché **Appliquer (N) · nouvelles catégories : K** lorsque le plan inclut de nouvelles catégories. Vous verrez ensuite **Catégorisées : N · nouvelles catégories : K**.
+
+Quelques points à connaître :
+- Les suggestions basées sur l'IA sont limitées à quelques passages par compte et par jour. Une fois ce quota atteint, une note indique que seules les suggestions issues des règles sont affichées pour le reste de la journée — les suggestions provenant d'un commerçant que vous avez déjà appris à l'application (en le recatégorisant auparavant) continuent toujours de fonctionner, sans limite quotidienne.
+- Les dépenses chiffrées ne peuvent pas être lues par le serveur pour cette fonctionnalité et sont ignorées ; vous verrez leur nombre, le cas échéant.
+- S'il n'y a plus rien à suggérer, vous verrez **Rien à suggérer pour le moment.**
+- Si le chargement échoue, touchez **Réessayer**.
+- Les membres avec le rôle **Observateur** d'un compte partagé ne voient pas cette bannière — catégoriser est une modification réservée aux Éditeurs et au Propriétaire.
+
+Sur l'écran des transactions de bureau (web), la même revue s'ouvre dans une boîte de dialogue.
+
 ### Etiquettes
 
 Les etiquettes vous aident a organiser les depenses avec des libelles personnalises :
@@ -33386,6 +33575,33 @@ iOS, Android, Web
 
 Фільтр катэгорый дзейнічае разам з перыядам вышэй, таму каб знайсці старыя запісы без катэгорыі, спачатку пераключыце перыяд на **Усё**.
 
+### Прапанаваць катэгорыі для выдаткаў без катэгорыі
+
+Калі на рахунку ёсць выдаткі без катэгорыі — часта пасля сканавання некалькіх чэкаў — над спісам транзакцый з'яўляецца банер: **Выдаткаў без катэгорыі: N**, з кнопкай **Прапанаваць катэгорыі**.
+
+Націсніце яе, каб адкрыць экран «**Раскласці па катэгорыях**». Праграма аналізуе выдаткі без катэгорыі (вы ўбачыце **Аналізую выдаткі…**) і групуе іх:
+
+- ✚ **Новая катэгорыя** — будзе створана, толькі калі вы ўжывеце змены
+- ● **Існуючая катэгорыя** — тая, якую вы ўжо маеце
+- **Не ўдалося вызначыць** — усё, у чым асістэнт не быў упэўнены; выберыце катэгорыю ўручную або пакіньце як ёсць
+
+Для кожнай групы можна:
+- Націснуць назву групы, каб перайменаваць новую катэгорыю перад яе стварэннем
+- Націснуць **▾** побач з групай, каб перанакіраваць усю групу — на іншую існуючую катэгорыю, на іншую назву новай катэгорыі або на **+ Стварыць новую катэгорыю**
+- Націснуць **Выбраць** (або **▾**) побач з асобным выдаткам, каб перамясціць толькі яго
+- Зняць адзнаку з групы, каб пакінуць гэтыя выдаткі без змен
+
+Нічога не ствараецца і не змяняецца, пакуль вы не націснеце **Ужыць (N)** — яна паказваецца як **Ужыць (N) · новых катэгорый: K**, калі ў плане ёсць новыя катэгорыі. Пасля гэтага вы ўбачыце **Раскладзена: N · новых катэгорый: K**.
+
+Што карысна ведаць:
+- Падказкі на аснове ШІ абмежаваныя некалькімі праходамі на рахунак за дзень. Калі ліміт на сёння вычарпаны, з'явіцца паведамленне, што да канца дня паказваюцца толькі падказкі па правілах — падказкі ад прадаўца, якому вы ўжо раз уручную прызначылі катэгорыю, працуюць заўсёды, без дзённага ліміту.
+- Зашыфраваныя выдаткі сервер не можа прачытаць для гэтай функцыі, таму яны прапускаюцца; вы ўбачыце, колькі іх было, калі такія ёсць.
+- Калі прапаноўваць больш няма чаго, вы ўбачыце **Пакуль няма чаго прапанаваць.**
+- Калі загрузка не ўдалася, націсніце **Паўтарыць**.
+- Удзельнікі з роляй **Назіральнік** у агульным рахунку не бачаць гэты банер — раскладанне па катэгорыях могуць рабіць толькі Рэдактар і Уладальнік.
+
+На экране транзакцый на камп'ютары (вэб) той жа агляд адкрываецца як дыялогавае акно.
+
 ### Тэгі
 
 Тэгі дапамагаюць арганізаваць выдаткі з дапамогай карыстальніцкіх метак:
@@ -38013,6 +38229,33 @@ Tik op het categoriefilter boven de transactielijst om op categorie te filteren.
 - Kies **Alles** om het filter te wissen
 
 Het categoriefilter werkt samen met de periode erboven. Zet de periode eerst op **Alles** om oudere items zonder categorie te vinden.
+
+### Categorieën voorstellen voor uitgaven zonder categorie
+
+Als je account uitgaven zonder categorie heeft — vaak na het scannen van meerdere bonnetjes — verschijnt er boven de transactielijst een banner: **Uitgaven zonder categorie: N**, met een knop **Categorieën voorstellen**.
+
+Tik erop om **Uitgaven categoriseren** te openen. De app analyseert je uitgaven zonder categorie (je ziet **Uitgaven analyseren…**) en groepeert ze:
+
+- ✚ **Nieuwe categorie** — wordt alleen aangemaakt als je toepast
+- ● **Bestaande categorie** — een categorie die je al hebt
+- **Kon niet bepalen** — alles waar de assistent niet zeker van was; kies zelf een categorie of laat het zo
+
+Voor elke groep kun je:
+- Op de naam van de groep tikken om een nieuwe categorie te hernoemen voordat die wordt aangemaakt
+- Op **▾** naast een groep tikken om de hele groep om te leiden — naar een andere bestaande categorie, een andere naam voor de nieuwe categorie, of **+ Nieuwe categorie maken**
+- Op **Kiezen** (of **▾**) naast één uitgave tikken om alleen die te verplaatsen
+- Het vinkje van een groep uitzetten om die uitgaven ongewijzigd te laten
+
+Er wordt niets aangemaakt of gewijzigd totdat je op **Toepassen (N)** tikt — weergegeven als **Toepassen (N) · nieuwe categorieën: K** wanneer het plan nieuwe categorieën bevat. Daarna zie je **Gecategoriseerd: N · nieuwe categorieën: K**.
+
+Een paar dingen om te weten:
+- Op AI gebaseerde suggesties zijn beperkt tot een paar keer per account per dag. Zodra dat op is, verschijnt er een melding dat voor de rest van de dag alleen suggesties op basis van regels worden getoond — suggesties van een winkel die je de app al eerder hebt geleerd (door die eerder handmatig te categoriseren) blijven altijd werken, zonder daglimiet.
+- Versleutelde uitgaven kan de server voor deze functie niet lezen; die worden overgeslagen. Je ziet hoeveel dat er eventueel waren.
+- Als er niets meer voor te stellen is, zie je **Er valt nu niets voor te stellen.**
+- Als laden mislukt, tik dan op **Opnieuw proberen**.
+- **Kijkers** op een gedeeld account zien deze banner niet — categoriseren is een wijziging die alleen Bewerkers en de Eigenaar kunnen doen.
+
+Op het transactiescherm voor desktop (web) opent hetzelfde overzicht als een dialoogvenster.
 
 ### Tags
 
