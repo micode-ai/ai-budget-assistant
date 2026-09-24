@@ -1,5 +1,5 @@
 ---
-title: "Wechsel von Monefy, Wallet oder Money Manager in Minuten"
+title: "Monefy-Alternative: Daten samt Kategorien übernehmen"
 meta_description: "Nutzt du Monefy, Wallet oder Money Manager? Exportiere deine Daten und importiere sie in AI Budget Assistant - deine Kategorien bleiben dabei erhalten."
 target_keyword: "monefy alternative"
 slug: "wechsel-von-monefy-wallet-moneymanager"
@@ -38,7 +38,7 @@ Beim Import aus Monefy, Wallet oder Money Manager entfällt das Schätzen komple
 
 Der ganze Vorgang läuft in wenigen, einfachen Schritten ab.
 
-**Aus der alten App exportieren.** Suche in den Einstellungen von Monefy, Wallet oder Money Manager nach einer Option zum Datenexport oder Backup und wähle CSV. Die genaue Bezeichnung unterscheidet sich zwischen den drei Apps, aber alle bieten einen Dateiexport ohne Zusatzwerkzeuge.
+**Aus der alten App exportieren.** Suche in den Einstellungen von Monefy, Wallet oder Money Manager nach einer Option zum Datenexport oder Backup und wähle CSV. Die genaue Bezeichnung unterscheidet sich zwischen den drei Apps, aber alle bieten einen Dateiexport ohne Zusatzwerkzeuge. Bei Wallet ist der Datenexport Teil des kostenpflichtigen Tarifs.
 
 **Import in AI Budget Assistant öffnen.** Im Importbereich findest du eine Karte "Wechselst du von einer anderen App?" mit den unterstützten Quellen, darunter Monefy, Wallet und Money Manager, neben Banken wie mBank oder Wise.
 

@@ -128,6 +128,6 @@ Pierwsze obserwacje masz po jednym miesiącu śledzenia. Pierwsze realne oszczę
 - [Skanowanie paragonów: liczą się pozycje, nie suma](/blog/pl/skanowanie-paragonow/)
 - [Jak podzielić rachunek ze znajomymi i dostać zwrot](/blog/pl/jak-podzielic-rachunek/)
 - [Dlaczego usuwamy aplikacje do budżetu po tygodniu](/blog/pl/dlaczego-usuwamy-aplikacje-do-budzetu/)
-- [Zmiana z Monefy, Wallet lub Money Manager w kilka minut](/blog/pl/zmiana-z-monefy-wallet-money-manager/)
+- [Alternatywa dla Monefy: przenieś dane razem z kategoriami](/blog/pl/zmiana-z-monefy-wallet-money-manager/)
 - [Budżet domowy w Excelu: szablon i kiedy przestaje wystarczać](/blog/pl/budzet-domowy-w-excelu/)
 - [Darmowa aplikacja do budżetu domowego: co to znaczy](/blog/pl/darmowa-aplikacja-do-budzetu-domowego/)

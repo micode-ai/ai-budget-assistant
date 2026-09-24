@@ -1558,7 +1558,7 @@ Iets onverwachts, noodzakelijks en dringends: baanverlies, een dringende medisch
 
 *Verwante artikelen: [Hoe geld besparen met een concreet plan](/blog/nl/geld-besparen/) | [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/)*
 
-## Overstappen van Monefy, Wallet of Money Manager in minuten
+## Monefy-alternatief: overstappen met behoud van categorieën
 URL: https://ai-budget.pl/blog/nl/overstappen-van-monefy-wallet-moneymanager/
 
 Je gebruikt Monefy, Wallet by BudgetBakers of Money Manager, en iets bevalt je niet meer - de prijs, een ontbrekende functie, of gewoon de zin om iets anders te proberen. Het probleem is altijd hetzelfde: er zit al een jaar of twee zorgvuldig gecategoriseerde uitgavengeschiedenis in, en alleen al de gedachte om dat allemaal met de hand over te typen in een nieuwe app is genoeg om te blijven waar je bent, ook al ben je niet echt tevreden.
@@ -1589,7 +1589,7 @@ Bij een import vanuit Monefy, Wallet of Money Manager hoeft er helemaal niet geg
 
 Het hele proces past in een paar eenvoudige stappen.
 
-**Exporteer vanuit je oude app.** Zoek in de instellingen van Monefy, Wallet of Money Manager naar een optie voor gegevensexport of backup en kies CSV. De exacte naam verschilt tussen de drie apps, maar allemaal bieden ze een export naar een bestand zonder extra hulpmiddelen.
+**Exporteer vanuit je oude app.** Zoek in de instellingen van Monefy, Wallet of Money Manager naar een optie voor gegevensexport of backup en kies CSV. De exacte naam verschilt tussen de drie apps, maar allemaal bieden ze een export naar een bestand zonder extra hulpmiddelen. In Wallet hoort gegevensexport bij het betaalde abonnement.
 
 **Open de import in AI Budget Assistant.** In het importgedeelte vind je een kaart "Kom je van een andere app?" met ondersteunde bronnen, waaronder Monefy, Wallet en Money Manager, naast banken zoals mBank of Wise.
 
@@ -2289,7 +2289,7 @@ Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedrags
 - [Bonnetjes scannen: de regels tellen, niet het totaal](/blog/nl/bonnetjes-scannen/)
 - [Rekening splitsen met vrienden en je geld echt terugzien](/blog/nl/rekening-splitsen-met-vrienden/)
 - [Waarom budget-apps binnen een week weer verdwijnen](/blog/nl/waarom-budget-apps-snel-verwijderd-worden/)
-- [Overstappen van Monefy, Wallet of Money Manager in minuten](/blog/nl/overstappen-van-monefy-wallet-moneymanager/)
+- [Monefy-alternatief: overstappen met behoud van categorieën](/blog/nl/overstappen-van-monefy-wallet-moneymanager/)
 - [Huishoudboekje in Excel: sjabloon en de grens ervan](/blog/nl/huishoudboekje-excel-sjabloon/)
 - [Gratis huishoudboekje app: wat 'gratis' betekent](/blog/nl/gratis-huishoudboekje-app/)
 

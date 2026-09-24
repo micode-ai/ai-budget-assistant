@@ -126,6 +126,6 @@ AI Budget Assistant працуе па прынцыпе offline-first: выдат
 - [Сканаванне чэкаў: важныя пазіцыі, а не сума](/blog/be/skanavanne-chekau/)
 - [Як падзяліць рахунак з сябрамі і рэальна атрымаць грошы](/blog/be/yak-padzialic-rahunak-z-siabrami/)
 - [Чаму праграмы для бюджету выдаляюць за тыдзень](/blog/be/chamu-vydalyayuc-prahramy-dlya-budzetu/)
-- [Пераход з Monefy, Wallet або Money Manager за пару хвілін](/blog/be/perakhod-z-monefy-wallet-moneymanager/)
+- [Альтэрнатыва Monefy: пераход без страты катэгорый](/blog/be/perakhod-z-monefy-wallet-moneymanager/)
 - [Шаблон бюджэту ў Excel: структура і яе межы](/blog/be/shablon-budzetu-u-excel/)
 - [Бясплатны дадатак для ўліку выдаткаў: што гэта значыць](/blog/be/byasplatny-dadatak-dlya-uliku-vydatkau/)

@@ -1,5 +1,5 @@
 ---
-title: "Switching from Monefy, Wallet, or Money Manager in one tap"
+title: "Monefy alternative: switch and keep your categories"
 meta_description: "Moving from Monefy, Wallet by BudgetBakers, or Money Manager? Export your CSV and import it into AI Budget Assistant with your original categories intact."
 target_keyword: "monefy alternative"
 slug: "switch-from-monefy-wallet-moneymanager"
@@ -8,7 +8,7 @@ lang: "en"
 date: "2026-08-27"
 ---
 
-# Switching From Monefy, Wallet, or Money Manager in One Tap
+# Switching From Monefy, Wallet, or Money Manager Without Losing Your Categories
 
 You're on Monefy, Wallet by BudgetBakers, or Money Manager, and something about it isn't working for you anymore - the price, a missing feature, or just the itch to try something else. The problem is always the same: you've already got a year or two of categorized spending history sitting in there, and retyping all of it into a new app is enough to make you stay put, even though you're not really happy.
 
@@ -38,7 +38,7 @@ Importing from Monefy, Wallet, or Money Manager skips the guessing entirely, bec
 
 The whole thing takes a few straightforward steps.
 
-**Export from your old app.** In the settings of Monefy, Wallet, or Money Manager, look for a data export or backup option and choose CSV. The exact wording differs between the three, but all of them offer a file export with no extra tools.
+**Export from your old app.** In the settings of Monefy, Wallet, or Money Manager, look for a data export or backup option and choose CSV. The exact wording differs between the three, but all of them offer a file export with no extra tools. In Wallet, data export is part of its paid plan.
 
 **Open import in AI Budget Assistant.** In the import section, you'll find a "Moving from another app?" card listing supported sources, including Monefy, Wallet, and Money Manager, alongside banks like mBank or Wise.
 

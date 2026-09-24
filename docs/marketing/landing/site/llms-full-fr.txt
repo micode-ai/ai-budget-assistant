@@ -709,7 +709,7 @@ Une petite catégorie "Autres" pour les dépenses vraiment ponctuelles est accep
 
 *Articles liés : [Suivi des dépenses : garder le contrôle au quotidien](/blog/fr/suivi-des-depenses/) | [Comment faire un budget personnel étape par étape](/blog/fr/comment-faire-un-budget/)*
 
-## Changer de Monefy, Wallet ou Money Manager en minutes
+## Alternative à Monefy : changez sans perdre vos catégories
 URL: https://ai-budget.pl/blog/fr/changer-de-monefy-wallet-moneymanager/
 
 Vous utilisez Monefy, Wallet by BudgetBakers ou Money Manager, et quelque chose ne vous convient plus : le prix, une fonctionnalité manquante, ou simplement l'envie d'essayer autre chose. Le problème est toujours le même : vous avez déjà un an ou deux de dépenses soigneusement catégorisées là-dedans, et la seule idée de tout ressaisir à la main dans une nouvelle application suffit à vous faire rester, même si vous n'êtes plus vraiment satisfait.
@@ -740,7 +740,7 @@ En important depuis Monefy, Wallet ou Money Manager, il n'y a rien à deviner, c
 
 L'ensemble du processus tient en quelques étapes simples.
 
-**Exportez depuis votre ancienne application.** Dans les réglages de Monefy, Wallet ou Money Manager, cherchez une option d'export de données ou de sauvegarde et choisissez le format CSV. Le libellé exact varie selon les trois applications, mais toutes proposent un export vers un fichier sans outil supplémentaire.
+**Exportez depuis votre ancienne application.** Dans les réglages de Monefy, Wallet ou Money Manager, cherchez une option d'export de données ou de sauvegarde et choisissez le format CSV. Le libellé exact varie selon les trois applications, mais toutes proposent un export vers un fichier sans outil supplémentaire. Dans Wallet, l'export des données fait partie de l'offre payante.
 
 **Ouvrez l'import dans AI Budget Assistant.** Dans la section d'import, vous trouverez une carte "Vous venez d'une autre application ?" listant les sources prises en charge, dont Monefy, Wallet et Money Manager, aux côtés de banques comme mBank ou Wise.
 
@@ -2567,7 +2567,7 @@ Vous aurez une image claire de vos habitudes de dépenses après un mois. Des ch
 - [Scanner ses tickets de caisse : les lignes comptent plus](/blog/fr/scanner-tickets-de-caisse/)
 - [Comment partager l'addition entre amis et être remboursé](/blog/fr/partager-addition-entre-amis/)
 - [Pourquoi on supprime les applis de budget en une semaine](/blog/fr/pourquoi-on-supprime-les-applis-de-budget/)
-- [Changer de Monefy, Wallet ou Money Manager en minutes](/blog/fr/changer-de-monefy-wallet-moneymanager/)
+- [Alternative à Monefy : changez sans perdre vos catégories](/blog/fr/changer-de-monefy-wallet-moneymanager/)
 - [Modèle de budget Excel : structure et ses limites](/blog/fr/modele-budget-excel/)
 - [Application budget gratuite : ce que 'gratuit' veut dire](/blog/fr/application-budget-gratuite/)
 

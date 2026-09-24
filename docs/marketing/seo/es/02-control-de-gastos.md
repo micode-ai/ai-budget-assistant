@@ -128,6 +128,6 @@ Tendrás una imagen clara de tus patrones de gasto después de un mes. Los cambi
 - [Escanear tickets de compra: importan las líneas, no el total](/blog/es/escanear-tickets-de-compra/)
 - [Cómo dividir la cuenta entre amigos y cobrar de verdad](/blog/es/dividir-la-cuenta-entre-amigos/)
 - [Por qué borramos las apps de presupuesto tan rápido](/blog/es/por-que-borramos-apps-de-presupuesto/)
-- [Cambiar de Monefy, Wallet o Money Manager en minutos](/blog/es/cambiar-de-monefy-wallet-moneymanager/)
+- [Alternativa a Monefy: cambia sin perder tus categorías](/blog/es/cambiar-de-monefy-wallet-moneymanager/)
 - [Plantilla de presupuesto en Excel: estructura y sus límites](/blog/es/plantilla-presupuesto-excel/)
 - [App gratis de control de gastos: qué es 'gratis' de verdad](/blog/es/app-gratis-control-de-gastos/)

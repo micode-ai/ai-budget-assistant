@@ -478,7 +478,7 @@ Nach einem Monat hast du ein klares Bild deiner Ausgabenmuster. Spürbare Verhal
 - [Kassenbons scannen: warum die Posten zählen, nicht die Summe](/blog/de/kassenbons-scannen/)
 - [Rechnung teilen mit Freunden und wirklich zurückbekommen](/blog/de/rechnung-teilen-mit-freunden/)
 - [Warum Haushaltsbuch-Apps schon nach einer Woche fliegen](/blog/de/warum-haushaltsbuch-apps-schnell-fliegen/)
-- [Wechsel von Monefy, Wallet oder Money Manager in Minuten](/blog/de/wechsel-von-monefy-wallet-moneymanager/)
+- [Monefy-Alternative: Daten samt Kategorien übernehmen](/blog/de/wechsel-von-monefy-wallet-moneymanager/)
 - [Excel Haushaltsbuch Vorlage: Aufbau und ihre Grenzen](/blog/de/excel-haushaltsbuch-vorlage/)
 - [Kostenlose Haushaltsbuch App: Was 'kostenlos' bedeutet](/blog/de/kostenlose-haushaltsbuch-app/)
 
@@ -2431,7 +2431,7 @@ Danach. Einen Preisbildschirm zu zeigen, bevor jemand gesehen hat, wie die App m
 
 *Ähnliche Artikel: [Ausgaben tracken: so bleibt es dauerhaft dran](/blog/de/ausgaben-tracken/) | [Die beste Haushaltsbuch-App 2026 im ehrlichen Vergleich](/blog/de/beste-haushaltsbuch-app/) | [Wie KI dir wirklich beim Budget hilft](/blog/de/ki-fuer-die-finanzen/)*
 
-## Wechsel von Monefy, Wallet oder Money Manager in Minuten
+## Monefy-Alternative: Daten samt Kategorien übernehmen
 URL: https://ai-budget.pl/blog/de/wechsel-von-monefy-wallet-moneymanager/
 
 Du nutzt Monefy, Wallet by BudgetBakers oder Money Manager, und irgendetwas daran stört dich nicht mehr - der Preis, eine fehlende Funktion, oder einfach die Lust, etwas anderes auszuprobieren. Das Problem ist immer dasselbe: In der App steckt bereits ein Jahr oder zwei sorgfältig kategorisierter Ausgabenhistorie, und allein der Gedanke, das alles von Hand in eine neue App zu übertragen, reicht, um doch zu bleiben, obwohl du eigentlich nicht mehr zufrieden bist.
@@ -2462,7 +2462,7 @@ Beim Import aus Monefy, Wallet oder Money Manager entfällt das Schätzen komple
 
 Der ganze Vorgang läuft in wenigen, einfachen Schritten ab.
 
-**Aus der alten App exportieren.** Suche in den Einstellungen von Monefy, Wallet oder Money Manager nach einer Option zum Datenexport oder Backup und wähle CSV. Die genaue Bezeichnung unterscheidet sich zwischen den drei Apps, aber alle bieten einen Dateiexport ohne Zusatzwerkzeuge.
+**Aus der alten App exportieren.** Suche in den Einstellungen von Monefy, Wallet oder Money Manager nach einer Option zum Datenexport oder Backup und wähle CSV. Die genaue Bezeichnung unterscheidet sich zwischen den drei Apps, aber alle bieten einen Dateiexport ohne Zusatzwerkzeuge. Bei Wallet ist der Datenexport Teil des kostenpflichtigen Tarifs.
 
 **Import in AI Budget Assistant öffnen.** Im Importbereich findest du eine Karte "Wechselst du von einer anderen App?" mit den unterstützten Quellen, darunter Monefy, Wallet und Money Manager, neben Banken wie mBank oder Wise.
 

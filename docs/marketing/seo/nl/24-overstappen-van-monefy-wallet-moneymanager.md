@@ -1,5 +1,5 @@
 ---
-title: "Overstappen van Monefy, Wallet of Money Manager in minuten"
+title: "Monefy-alternatief: overstappen met behoud van categorieën"
 meta_description: "Gebruik je Monefy, Wallet by BudgetBakers of Money Manager? Exporteer je gegevens en importeer ze in AI Budget Assistant - je categorieën blijven behouden."
 target_keyword: "monefy alternatief"
 slug: "overstappen-van-monefy-wallet-moneymanager"
@@ -38,7 +38,7 @@ Bij een import vanuit Monefy, Wallet of Money Manager hoeft er helemaal niet geg
 
 Het hele proces past in een paar eenvoudige stappen.
 
-**Exporteer vanuit je oude app.** Zoek in de instellingen van Monefy, Wallet of Money Manager naar een optie voor gegevensexport of backup en kies CSV. De exacte naam verschilt tussen de drie apps, maar allemaal bieden ze een export naar een bestand zonder extra hulpmiddelen.
+**Exporteer vanuit je oude app.** Zoek in de instellingen van Monefy, Wallet of Money Manager naar een optie voor gegevensexport of backup en kies CSV. De exacte naam verschilt tussen de drie apps, maar allemaal bieden ze een export naar een bestand zonder extra hulpmiddelen. In Wallet hoort gegevensexport bij het betaalde abonnement.
 
 **Open de import in AI Budget Assistant.** In het importgedeelte vind je een kaart "Kom je van een andere app?" met ondersteunde bronnen, waaronder Monefy, Wallet en Money Manager, naast banken zoals mBank of Wise.
 

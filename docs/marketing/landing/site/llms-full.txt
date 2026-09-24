@@ -1062,7 +1062,7 @@ You'll have a clear picture of your spending patterns after one month. Meaningfu
 - [Receipt Scanner App: Why Line Items Beat the Total](/blog/en/receipt-scanner-app/)
 - [How to Split Bills With Friends and Get Paid Back](/blog/en/split-bill-with-friends/)
 - [Why Most Budgeting Apps Get Deleted in the First Week](/blog/en/why-budget-apps-abandoned-first-week/)
-- [Switching from Monefy, Wallet, or Money Manager in one tap](/blog/en/switch-from-monefy-wallet-moneymanager/)
+- [Monefy alternative: switch and keep your categories](/blog/en/switch-from-monefy-wallet-moneymanager/)
 - [Excel Budget Template: A Real Structure You Can Copy Today](/blog/en/excel-budget-template/)
 - [Free Budgeting App: What 'Free' Actually Means](/blog/en/free-budgeting-app/)
 
@@ -2341,7 +2341,7 @@ No. What friends owe you is tracked separately from your own expenses, so coveri
 
 *Related articles: [Expense Tracker: How to Actually Keep Up With Spending](/blog/en/expense-tracker/) | [Shared Budget for Couples](/blog/en/shared-budget-for-couples/) | [Family Budgeting With Kids](/blog/en/family-budget-with-kids/)*
 
-## Switching from Monefy, Wallet, or Money Manager in one tap
+## Monefy alternative: switch and keep your categories
 URL: https://ai-budget.pl/blog/en/switch-from-monefy-wallet-moneymanager/
 
 You're on Monefy, Wallet by BudgetBakers, or Money Manager, and something about it isn't working for you anymore - the price, a missing feature, or just the itch to try something else. The problem is always the same: you've already got a year or two of categorized spending history sitting in there, and retyping all of it into a new app is enough to make you stay put, even though you're not really happy.
@@ -2372,7 +2372,7 @@ Importing from Monefy, Wallet, or Money Manager skips the guessing entirely, bec
 
 The whole thing takes a few straightforward steps.
 
-**Export from your old app.** In the settings of Monefy, Wallet, or Money Manager, look for a data export or backup option and choose CSV. The exact wording differs between the three, but all of them offer a file export with no extra tools.
+**Export from your old app.** In the settings of Monefy, Wallet, or Money Manager, look for a data export or backup option and choose CSV. The exact wording differs between the three, but all of them offer a file export with no extra tools. In Wallet, data export is part of its paid plan.
 
 **Open import in AI Budget Assistant.** In the import section, you'll find a "Moving from another app?" card listing supported sources, including Monefy, Wallet, and Money Manager, alongside banks like mBank or Wise.
 

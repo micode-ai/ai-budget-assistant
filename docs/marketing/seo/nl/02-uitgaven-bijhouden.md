@@ -122,6 +122,6 @@ Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedrags
 - [Bonnetjes scannen: de regels tellen, niet het totaal](/blog/nl/bonnetjes-scannen/)
 - [Rekening splitsen met vrienden en je geld echt terugzien](/blog/nl/rekening-splitsen-met-vrienden/)
 - [Waarom budget-apps binnen een week weer verdwijnen](/blog/nl/waarom-budget-apps-snel-verwijderd-worden/)
-- [Overstappen van Monefy, Wallet of Money Manager in minuten](/blog/nl/overstappen-van-monefy-wallet-moneymanager/)
+- [Monefy-alternatief: overstappen met behoud van categorieën](/blog/nl/overstappen-van-monefy-wallet-moneymanager/)
 - [Huishoudboekje in Excel: sjabloon en de grens ervan](/blog/nl/huishoudboekje-excel-sjabloon/)
 - [Gratis huishoudboekje app: wat 'gratis' betekent](/blog/nl/gratis-huishoudboekje-app/)

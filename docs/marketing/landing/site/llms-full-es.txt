@@ -204,7 +204,7 @@ En un plan gratis-para-siempre bien construido: no. Quedarte en el plan gratuito
 
 *Artículos relacionados: [Control de gastos: cómo llevar un seguimiento que dure](/blog/es/control-de-gastos/) | [Mejores apps de presupuesto en 2026: guía honesta](/blog/es/mejores-apps-de-presupuesto/) | [Plantilla de presupuesto en Excel: estructura y sus límites](/blog/es/plantilla-presupuesto-excel/)*
 
-## Cambiar de Monefy, Wallet o Money Manager en minutos
+## Alternativa a Monefy: cambia sin perder tus categorías
 URL: https://ai-budget.pl/blog/es/cambiar-de-monefy-wallet-moneymanager/
 
 Usas Monefy, Wallet by BudgetBakers o Money Manager, y algo ha dejado de convencerte: el precio, una función que falta, o simplemente las ganas de probar otra cosa. El problema siempre es el mismo: ya tienes ahí un año o dos de gastos categorizados con esmero, y solo pensar en volver a escribir todo eso a mano en otra app basta para quedarte donde estás, aunque ya no estés del todo contento.
@@ -235,7 +235,7 @@ Al importar desde Monefy, Wallet o Money Manager no hay nada que adivinar, porqu
 
 Todo el proceso cabe en unos pocos pasos sencillos.
 
-**Exporta desde tu app anterior.** En los ajustes de Monefy, Wallet o Money Manager, busca una opción de exportar datos o copia de seguridad y elige CSV. El nombre exacto varía entre las tres, pero todas ofrecen exportar a un archivo sin herramientas adicionales.
+**Exporta desde tu app anterior.** En los ajustes de Monefy, Wallet o Money Manager, busca una opción de exportar datos o copia de seguridad y elige CSV. El nombre exacto varía entre las tres, pero todas ofrecen exportar a un archivo sin herramientas adicionales. En Wallet, la exportación de datos forma parte del plan de pago.
 
 **Abre la importación en AI Budget Assistant.** En la sección de importación encontrarás una tarjeta "¿Vienes de otra app?" con las fuentes admitidas, incluyendo Monefy, Wallet y Money Manager, junto a bancos como mBank o Wise.
 
@@ -894,7 +894,7 @@ Tendrás una imagen clara de tus patrones de gasto después de un mes. Los cambi
 - [Escanear tickets de compra: importan las líneas, no el total](/blog/es/escanear-tickets-de-compra/)
 - [Cómo dividir la cuenta entre amigos y cobrar de verdad](/blog/es/dividir-la-cuenta-entre-amigos/)
 - [Por qué borramos las apps de presupuesto tan rápido](/blog/es/por-que-borramos-apps-de-presupuesto/)
-- [Cambiar de Monefy, Wallet o Money Manager en minutos](/blog/es/cambiar-de-monefy-wallet-moneymanager/)
+- [Alternativa a Monefy: cambia sin perder tus categorías](/blog/es/cambiar-de-monefy-wallet-moneymanager/)
 - [Plantilla de presupuesto en Excel: estructura y sus límites](/blog/es/plantilla-presupuesto-excel/)
 - [App gratis de control de gastos: qué es 'gratis' de verdad](/blog/es/app-gratis-control-de-gastos/)
 

@@ -1546,7 +1546,7 @@ Pierwsze obserwacje masz po jednym miesiącu śledzenia. Pierwsze realne oszczę
 - [Skanowanie paragonów: liczą się pozycje, nie suma](/blog/pl/skanowanie-paragonow/)
 - [Jak podzielić rachunek ze znajomymi i dostać zwrot](/blog/pl/jak-podzielic-rachunek/)
 - [Dlaczego usuwamy aplikacje do budżetu po tygodniu](/blog/pl/dlaczego-usuwamy-aplikacje-do-budzetu/)
-- [Zmiana z Monefy, Wallet lub Money Manager w kilka minut](/blog/pl/zmiana-z-monefy-wallet-money-manager/)
+- [Alternatywa dla Monefy: przenieś dane razem z kategoriami](/blog/pl/zmiana-z-monefy-wallet-money-manager/)
 - [Budżet domowy w Excelu: szablon i kiedy przestaje wystarczać](/blog/pl/budzet-domowy-w-excelu/)
 - [Darmowa aplikacja do budżetu domowego: co to znaczy](/blog/pl/darmowa-aplikacja-do-budzetu-domowego/)
 
@@ -2500,7 +2500,7 @@ Zasada 50/30/20 daje ci trzy szerokie koszyki i pozwala wydawać swobodnie wewn�
 
 *Powiązane artykuły: [Jak prowadzić budżet domowy krok po kroku](/blog/pl/jak-prowadzic-budzet-domowy/) | [Metoda kopertowa w praktyce](/blog/pl/metoda-kopertowa/)*
 
-## Zmiana z Monefy, Wallet lub Money Manager w kilka minut
+## Alternatywa dla Monefy: przenieś dane razem z kategoriami
 URL: https://ai-budget.pl/blog/pl/zmiana-z-monefy-wallet-money-manager/
 
 Masz w telefonie Monefy, Wallet by BudgetBakers albo Money Managera i coś ci w nim przeszkadza - może cena, może brakująca funkcja, może po prostu chcesz spróbować czegoś innego. Problem jest zawsze ten sam: masz tam już rok albo dwa historii wydatków, starannie poukładanej w kategorie, i sama myśl o przepisywaniu tego ręcznie w nowej aplikacji wystarcza, żeby zostać tam, gdzie jesteś, nawet jeśli już cię to nie satysfakcjonuje.
@@ -2531,7 +2531,7 @@ Przy imporcie z Monefy, Wallet czy Money Managera nic nie trzeba zgadywać, bo k
 
 Cały proces mieści się w kilku prostych krokach.
 
-**Wyeksportuj dane ze starej aplikacji.** W ustawieniach Monefy, Wallet albo Money Managera poszukaj opcji eksportu danych lub kopii zapasowej i wybierz format CSV. Dokładna nazwa opcji różni się między aplikacjami, ale wszystkie trzy udostępniają eksport do pliku bez dodatkowych narzędzi.
+**Wyeksportuj dane ze starej aplikacji.** W ustawieniach Monefy, Wallet albo Money Managera poszukaj opcji eksportu danych lub kopii zapasowej i wybierz format CSV. Dokładna nazwa opcji różni się między aplikacjami, ale wszystkie trzy udostępniają eksport do pliku bez dodatkowych narzędzi. W Wallet eksport danych jest częścią płatnego planu.
 
 **Otwórz import w AI Budget Assistant.** W sekcji importu transakcji znajdziesz kartę "Przenosisz się z innej aplikacji?" z listą obsługiwanych źródeł, w tym Monefy, Wallet i Money Manager, obok banków takich jak mBank czy Wise.
 
