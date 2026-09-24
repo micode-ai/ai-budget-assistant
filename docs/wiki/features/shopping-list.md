@@ -109,6 +109,33 @@ nothing to tell them apart, so a shared hook would double-run reconciliation for
 because by the time it runs the expense already exists — its failure must never be reported as an
 expense-creation failure.
 
+### From the AI chat
+
+Three tools reach the list from chat: `add_to_shopping_list({ items })`,
+`remove_from_shopping_list({ items })` and `get_shopping_suggestions()`.
+
+**The two writes execute immediately** — no confirmation card and no read cache. `chat.service.ts`
+routes them in dedicated branches **before** the `isWriteAction` confirmation/viewer check, because
+item writes are not `ViewerBlockGuard`-gated in the app either, so viewers may add and remove too.
+Add goes through `ShoppingListService.addItemsByName` — the first non-archived list, else it revives
+or creates `default-{accountId}` — one item per name with a fresh server `clientId`. The executor
+also tolerates a lone `item` string.
+
+**Remove matches, it never fails.** `removeItemsByName` matches case-insensitively on `rawLabel`
+(falling back to `canonicalName`) among **unchecked**, non-deleted items across every non-archived
+list, soft-deletes the first match per name with a `syncVersion` bump, and returns the rest as
+`notFoundLabels` — one bad name does not fail the others. There is no "mark as bought" tool:
+removing via chat is how "I already bought X" is handled.
+
+**Suggestions are an ordinary read tool** — cached 10 minutes through the generic
+`executeWithCache` path with no dedicated branch; top 5 each of `getRestockSuggestions` and
+`getDeals` (both free endpoints, so the tool bypasses no gate). The system prompt separates it from
+`get_inflation_shield`: this is today's restock and deals, the shield is long-term stock-up advice.
+
+Confirmations are deterministic in nine languages (`PromptBuilder.getShoppingListAddText` /
+`…RemoveText`), and the phone renders its own result cards. The phone sees a chat-added item on its
+next pull.
+
 ## Known gaps
 
 - Alias-aware reconciliation on mobile is best-effort: it uses whatever the price-history store

@@ -118,6 +118,15 @@ Newest last within each section.
   `storeArrival` reference fixed elsewhere in CLAUDE.md. → `features/purchase-requests.md`,
   `features/family-feed.md`, `features/invite-by-search.md`, `features/subscription-manager.md`,
   `features/theme-customization.md` (all new). CLAUDE.md 22 751 → 21 032 words; 71 pages.
+- 2026-09-24 · [ABA-578](https://github.com/micode-ai/ai-budget-assistant/issues/601) — thirteenth
+  batch. Seven bullets, three new pages, one extended: chat currency labelling + Fat Finder + Spending
+  Story are one rule; date pickers + the create-form date are one. Found two live violations of
+  documented rules: `report-scheduler.service.ts` keeps a sixth private `convertAmount` that sums an
+  unknown-rate amount raw, and `subscriptions/new.tsx` + `investment/transaction.tsx` still build
+  default dates via `toISOString()`. Both recorded as gaps, not fixed here.
+  → `features/shared-conversations.md`, `features/date-pickers.md`,
+  `features/display-currency-conversion.md` (new) + `features/shopping-list.md` (extended).
+  CLAUDE.md 21 032 → 19 390 words; 74 pages.
 
 ## Queries
 

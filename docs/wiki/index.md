@@ -77,6 +77,10 @@ the section you came for — it states what must not break and why. A missing se
   line-item product search
 - [deposit-and-discount-totals](features/deposit-and-discount-totals.md) — deposit and discount
   answers from the columns, in chat and on the Analytics tab
+- [shared-conversations](features/shared-conversations.md) — group chat per conversation,
+  mentions that silence the AI, presence, polling, the cold-start deep link
+- [display-currency-conversion](features/display-currency-conversion.md) — one display currency for
+  every server-side total and narration, `common/utils/fx.ts`, currency-aware caches
 
 ### Bots
 - [bot-receipt-editing](features/bot-receipt-editing.md) — typed line-item and total corrections to a
@@ -117,6 +121,8 @@ the section you came for — it states what must not break and why. A missing se
   tokens, and the precedence rule between server and device
 
 ### Working in the mobile app
+- [date-pickers](features/date-pickers.md) — the one date component (the native library renders
+  nothing on web), and converting date-only values without UTC
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
   wired, why nothing renders a component, and how module-scope side effects leak between files
 
@@ -126,7 +132,7 @@ the section you came for — it states what must not break and why. A missing se
 - [account-transfers](features/account-transfers.md) — moving money between accounts, and the only
   feature with its own offline write queue
 - [shopping-list](features/shopping-list.md) — offline-first lists, basket comparison, restock and
-  deal pushes, receipt reconciliation
+  deal pushes, receipt reconciliation, the three AI chat tools
 
 ### Capturing expenses automatically
 - [bank-notification-capture](features/bank-notification-capture.md) — Android bank pushes parsed on
