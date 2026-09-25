@@ -1,12 +1,16 @@
-import { AiToolsService } from './ai-tools.service';
+import { AiUndoToolsService } from './ai-undo-tools.service';
 
 /**
  * `undo_last_action` reverts the single most recent write in a conversation
  * (see docs/wiki/features/chat-undo-last-action.md). ChatService resolves
  * WHICH write to undo from conversation history; these tests cover only
- * AiToolsService's execution half — given an already-resolved
+ * AiUndoToolsService's execution half — given an already-resolved
  * `{ originalActionType, originalResultData }`, does it revert the right row,
  * and does it refuse safely when it shouldn't.
+ *
+ * Split off AiToolsService (tech-debt ai-tools-service-god-file) — was
+ * ai-tools.undo.spec.ts, constructing the whole dispatcher; now constructs
+ * AiUndoToolsService directly since the dispatcher is a pure pass-through.
  */
 function makeService(overrides: {
   expensesService?: Record<string, jest.Mock>;
@@ -17,42 +21,20 @@ function makeService(overrides: {
   const incomesService = { findOne: jest.fn(), remove: jest.fn(), ...overrides.incomesService };
   const goalPlannerService = { getGoal: jest.fn(), revertGoalUpdate: jest.fn(), ...overrides.goalPlannerService };
 
-  const svc = new AiToolsService(
+  const svc = new AiUndoToolsService(
     expensesService as any,
     incomesService as any,
-    undefined as any, // budgetsService
-    undefined as any, // categoriesService
-    undefined as any, // analyticsService
-    undefined as any, // cacheService
-    undefined as any, // debtsService
     goalPlannerService as any,
-    undefined as any, // exchangeRateService
-    undefined as any, // safeToSpendService
-    undefined as any, // shoppingListService
-    undefined as any, // inflationShieldService
   );
   return { svc, expensesService, incomesService, goalPlannerService };
 }
 
-const run = (svc: AiToolsService, data: Record<string, unknown>) =>
-  (svc as any).executeAction('undo_last_action', data, 'a1', 'u1');
+const run = (svc: AiUndoToolsService, data: Record<string, unknown>) =>
+  (svc as any).executeUndoLastAction(data, 'a1');
 
 const NOW = new Date('2026-09-24T12:00:00Z');
 
-describe('AiToolsService undo_last_action', () => {
-  it('is a write action requiring confirmation', () => {
-    const { svc } = makeService();
-    expect(svc.isWriteAction('undo_last_action')).toBe(true);
-  });
-
-  it('is exposed to the model with no parameters', () => {
-    const { svc } = makeService();
-    const tool = svc.getToolDefinitions().find((t: any) => t.function.name === 'undo_last_action');
-    expect(tool).toBeDefined();
-    expect(Object.keys((tool as any).function.parameters.properties)).toEqual([]);
-    expect((tool as any).function.parameters.required).toEqual([]);
-  });
-
+describe('AiUndoToolsService.executeUndoLastAction', () => {
   describe('create_expense / create_income', () => {
     it('soft-deletes the expense row create_expense made', async () => {
       const { svc, expensesService } = makeService({

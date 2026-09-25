@@ -14,6 +14,11 @@ import { CategorizeSuggestionsService } from './services/categorize-suggestions.
 import { GoalPlannerService } from './services/goal-planner.service';
 import { UserContextBuilder } from './services/user-context-builder.service';
 import { AiToolsService } from './services/ai-tools.service';
+import { AiExpenseToolsService } from './services/ai-expense-tools.service';
+import { AiBudgetToolsService } from './services/ai-budget-tools.service';
+import { AiDebtGoalToolsService } from './services/ai-debt-goal-tools.service';
+import { AiShoppingToolsService } from './services/ai-shopping-tools.service';
+import { AiUndoToolsService } from './services/ai-undo-tools.service';
 import { PromptBuilder } from './services/prompt-builder.service';
 import { EmbeddingModule } from './embedding.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
@@ -47,6 +52,11 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     GoalPlannerService,
     UserContextBuilder,
     AiToolsService,
+    AiExpenseToolsService,
+    AiBudgetToolsService,
+    AiDebtGoalToolsService,
+    AiShoppingToolsService,
+    AiUndoToolsService,
     PromptBuilder,
   ],
   exports: [

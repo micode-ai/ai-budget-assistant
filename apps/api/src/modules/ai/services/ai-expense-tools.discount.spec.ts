@@ -1,4 +1,4 @@
-import { AiToolsService } from './ai-tools.service';
+import { AiExpenseToolsService } from './ai-expense-tools.service';
 
 /**
  * `get_discount_total` answers "how much have I saved in discounts" — rabat,
@@ -6,7 +6,11 @@ import { AiToolsService } from './ai-tools.service';
  * split, because the split only exists when the receipt's split survived
  * (>= 2 categories and reconciled arithmetic), which is precisely why the
  * chat used to say nothing about a discount it had in fact recorded. Mirrors
- * `ai-tools.deposit.spec.ts` deliberately.
+ * `ai-expense-tools.deposit.spec.ts` deliberately.
+ *
+ * Split off AiToolsService (tech-debt ai-tools-service-god-file) — was
+ * ai-tools.discount.spec.ts; the schema/isWriteAction checks moved to
+ * ai-tools.service.spec.ts since AiExpenseToolsService has no schema surface.
  */
 function makeService(
   discountResult: unknown,
@@ -19,25 +23,18 @@ function makeService(
     ? { getRates: jest.fn().mockResolvedValue({ rates }) }
     : undefined;
 
-  const svc = new AiToolsService(
+  const svc = new AiExpenseToolsService(
     undefined as any, // expensesService
     undefined as any, // incomesService
-    undefined as any, // budgetsService
     undefined as any, // categoriesService
     analyticsService as any,
-    undefined as any, // cacheService
-    undefined as any, // debtsService
-    undefined as any, // goalPlannerService
     exchangeRateService as any,
-    undefined as any, // safeToSpendService
-    undefined as any, // shoppingListService
-    undefined as any, // inflationShieldService
   );
   return { svc, analyticsService };
 }
 
-const run = (svc: AiToolsService, args: Record<string, unknown>, baseCurrency?: string) =>
-  (svc as any).executeAction('get_discount_total', args, 'a1', 'u1', baseCurrency);
+const run = (svc: AiExpenseToolsService, args: Record<string, unknown>, baseCurrency?: string) =>
+  (svc as any).executeGetDiscountTotal(args, 'a1', baseCurrency);
 
 const rows = (extra: unknown[] = []) => ({
   rows: [
@@ -48,22 +45,7 @@ const rows = (extra: unknown[] = []) => ({
   truncated: false,
 });
 
-describe('AiToolsService get_discount_total', () => {
-  it('is a read action, so it never asks for confirmation', () => {
-    const { svc } = makeService(rows());
-    expect(svc.isWriteAction('get_discount_total')).toBe(false);
-  });
-
-  it('is exposed to the model with both dates optional', () => {
-    const { svc } = makeService(rows());
-    const tool = svc.getToolDefinitions().find((t: any) => t.function.name === 'get_discount_total');
-
-    expect(tool).toBeDefined();
-    // A bare "how much discount?" carries no period, so the model must be able
-    // to call this with no arguments at all.
-    expect((tool as any).function.parameters.required ?? []).toEqual([]);
-  });
-
+describe('AiExpenseToolsService.executeGetDiscountTotal', () => {
   it('totals the discounts and says where they came from', async () => {
     const { svc } = makeService(rows());
 

@@ -1,4 +1,4 @@
-import { AiToolsService } from './ai-tools.service';
+import { AiExpenseToolsService } from './ai-expense-tools.service';
 
 /**
  * `get_category_breakdown` is an ANALYTICS surface, so it must attribute a
@@ -7,6 +7,9 @@ import { AiToolsService } from './ai-tools.service';
  * alcohol while the Analytics tab showed 25 zł for the same period — the app
  * contradicting its own chart. Budgets and `get_budget_status` stay
  * deliberately split-blind (design spec, locked decision 1).
+ *
+ * Split off AiToolsService (tech-debt ai-tools-service-god-file) — was
+ * ai-tools.category-breakdown.spec.ts.
  */
 function makeService(expenses: any[], rates?: Record<string, number>) {
   const expensesService = {
@@ -16,29 +19,20 @@ function makeService(expenses: any[], rates?: Record<string, number>) {
     ? { getRates: jest.fn().mockResolvedValue({ rates }) }
     : undefined;
 
-  const svc = new AiToolsService(
+  const svc = new AiExpenseToolsService(
     expensesService as any,
     undefined as any, // incomesService
-    undefined as any, // budgetsService
     undefined as any, // categoriesService
     undefined as any, // analyticsService
-    undefined as any, // cacheService
-    undefined as any, // debtsService
-    undefined as any, // goalPlannerService
     exchangeRateService as any,
-    undefined as any, // safeToSpendService
-    undefined as any, // shoppingListService
-    undefined as any, // inflationShieldService
   );
   return { svc, expensesService };
 }
 
-const run = (svc: AiToolsService, baseCurrency?: string) =>
-  (svc as any).executeAction(
-    'get_category_breakdown',
+const run = (svc: AiExpenseToolsService, baseCurrency?: string) =>
+  svc.executeGetCategoryBreakdown(
     { startDate: '2026-08-01', endDate: '2026-08-31' },
     'a1',
-    'u1',
     baseCurrency,
   );
 
@@ -63,7 +57,7 @@ const plainExpense = {
   categorySplits: [],
 };
 
-describe('AiToolsService get_category_breakdown honours category splits', () => {
+describe('AiExpenseToolsService.executeGetCategoryBreakdown honours category splits', () => {
   it('attributes each split to its own category instead of the expense category', async () => {
     const { svc } = makeService([splitReceipt]);
 

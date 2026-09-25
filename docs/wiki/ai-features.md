@@ -14,8 +14,12 @@ receipt OCR.
 - `apps/api/src/modules/ai/ai.controller.ts` — `POST /ai/chat`, `/ai/chat/confirm`, `/ai/chat/reject`
 - `apps/api/src/modules/ai/services/chat.service.ts` — the orchestrator for the call lifecycle
   (message assembly → API call → response parsing → pending-action management)
-- `apps/api/src/modules/ai/services/ai-tools.service.ts` — the function schemas, the `executeAction`
-  dispatcher and the read-action cache wrapper
+- `apps/api/src/modules/ai/services/ai-tools.service.ts` — the thin `executeAction` dispatcher,
+  `isWriteAction`, and the read-action cache wrapper (`executeWithCache`). The 18 function schemas
+  are data-only in `ai-tool-schemas.ts`; the 18 handlers are split by domain across
+  `ai-expense-tools.service.ts`, `ai-budget-tools.service.ts`, `ai-debt-goal-tools.service.ts`,
+  `ai-shopping-tools.service.ts` and `ai-undo-tools.service.ts` (ABA-591 — the file was 1,521 lines
+  mixing all of it before this split)
 - `apps/api/src/modules/ai/services/user-context-builder.service.ts` — builds `UserContext`
 - `apps/api/src/modules/ai/services/prompt-builder.service.ts` — system prompt, language detection
 - `apps/api/src/modules/ai/services/embedding.service.ts` — cosine matching of free text against the
@@ -44,8 +48,11 @@ above.
 
 **The function list is the count.** Do not restate it as a numeral here — this page said "11 AI
 functions" for four months while the real number reached 18. `CLAUDE.md` carries the authoritative
-list; the schemas and dispatch live in `ai-tools.service.ts`, which is the only place that cannot
-go stale.
+list; the schemas live in `ai-tool-schemas.ts` and dispatch in `ai-tools.service.ts`, which are the
+only places that cannot go stale. Adding a new function touches: one schema object in
+`ai-tool-schemas.ts`, one handler on whichever domain provider it belongs to (or a new provider if
+it starts a new domain), and one `case` in `ai-tools.service.ts`'s switch — never a single
+thousand-line file.
 
 **Confirmation flow.** Write actions return a pending confirmation and the client shows
 `ActionConfirmationCard`; read actions execute immediately and are cached. A few write-shaped tools

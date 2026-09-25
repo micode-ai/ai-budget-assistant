@@ -1,4 +1,4 @@
-import { AiToolsService } from './ai-tools.service';
+import { AiExpenseToolsService } from './ai-expense-tools.service';
 
 /**
  * Asking the chat "how much did I spend on deposits this month" answered
@@ -12,24 +12,20 @@ import { AiToolsService } from './ai-tools.service';
  * tools answer the same kind of question and must agree. Budgets and
  * `get_budget_status` stay deliberately split-blind (design spec, locked
  * decision 1).
+ *
+ * Split off AiToolsService (tech-debt ai-tools-service-god-file) — was
+ * ai-tools.get-expenses-category.spec.ts.
  */
 function makeService(expenses: any[], categories: any[]) {
   const expensesService = { findAll: jest.fn().mockResolvedValue({ data: expenses, pagination: { total: expenses.length } }) };
   const categoriesService = { findAll: jest.fn().mockResolvedValue(categories) };
 
-  const svc = new AiToolsService(
+  const svc = new AiExpenseToolsService(
     expensesService as any,
     undefined as any, // incomesService
-    undefined as any, // budgetsService
     categoriesService as any,
     undefined as any, // analyticsService
-    undefined as any, // cacheService
-    undefined as any, // debtsService
-    undefined as any, // goalPlannerService
     undefined as any, // exchangeRateService
-    undefined as any, // safeToSpendService
-    undefined as any, // shoppingListService
-    undefined as any, // inflationShieldService
   );
   return { svc, expensesService };
 }
@@ -77,10 +73,10 @@ const otherReceipt = {
   ],
 };
 
-const run = (svc: AiToolsService, args: Record<string, unknown>) =>
-  (svc as any).executeAction('get_expenses', { startDate: '2026-08-01', endDate: '2026-08-31', ...args }, 'a1', 'u1');
+const run = (svc: AiExpenseToolsService, args: Record<string, unknown>) =>
+  (svc as any).executeGetExpenses({ startDate: '2026-08-01', endDate: '2026-08-31', ...args }, 'a1');
 
-describe('get_expenses with a categoryName that only exists as a receipt split', () => {
+describe('AiExpenseToolsService.executeGetExpenses with a categoryName that only exists as a receipt split', () => {
   it('finds the receipt whose deposit lives in a split', async () => {
     const { svc } = makeService([receipt, otherReceipt], CATEGORIES);
 

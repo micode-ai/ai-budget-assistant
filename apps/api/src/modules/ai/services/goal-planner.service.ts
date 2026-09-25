@@ -324,7 +324,7 @@ Return ONLY valid JSON:
    * Reverts an `updateGoal` write for the chat "undo" tool: restores the pre-write
    * `currentAmount`/`status` and removes the `GoalContribution` row that write created (if any).
    * `contributionId` is a `deleteMany` (not `delete`) so a row already gone — e.g. a duplicate
-   * undo attempt — is a no-op, not a thrown error. The caller (`AiToolsService.revertGoalBalance`)
+   * undo attempt — is a no-op, not a thrown error. The caller (`AiUndoToolsService.revertGoalBalance`)
    * is responsible for verifying the goal hasn't moved again since the write being undone.
    */
   async revertGoalUpdate(
