@@ -13,6 +13,8 @@ import { ReceiptCategorySplitService } from './services/receipt-category-split.s
 import { CategorizeSuggestionsService } from './services/categorize-suggestions.service';
 import { GoalPlannerService } from './services/goal-planner.service';
 import { UserContextBuilder } from './services/user-context-builder.service';
+import { ChatConversationService } from './services/chat-conversation.service';
+import { ChatActionLifecycleService } from './services/chat-action-lifecycle.service';
 import { AiToolsService } from './services/ai-tools.service';
 import { AiExpenseToolsService } from './services/ai-expense-tools.service';
 import { AiBudgetToolsService } from './services/ai-budget-tools.service';
@@ -51,6 +53,8 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     CategorizeSuggestionsService,
     GoalPlannerService,
     UserContextBuilder,
+    ChatConversationService,
+    ChatActionLifecycleService,
     AiToolsService,
     AiExpenseToolsService,
     AiBudgetToolsService,

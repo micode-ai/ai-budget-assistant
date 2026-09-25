@@ -1,9 +1,7 @@
-import { Injectable, Logger, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { randomUUID } from 'crypto';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { CacheService } from '../../../common/cache/cache.service';
 import { NotificationsService } from '../../notifications/notifications.service';
 import * as ni18n from '../../notifications/notification-i18n';
 import { AiResponseMode } from './response-mode.helper';
@@ -11,6 +9,8 @@ import { resolveAiModel, resolveCheapModel } from './model-resolver';
 import { UserContextBuilder } from './user-context-builder.service';
 import { AiToolsService } from './ai-tools.service';
 import { PromptBuilder } from './prompt-builder.service';
+import { ChatConversationService } from './chat-conversation.service';
+import { ChatActionLifecycleService } from './chat-action-lifecycle.service';
 import {
   buildCandidateLines,
   parseMatchedIndices,
@@ -19,33 +19,14 @@ import {
   computeCategoryTotals,
   type FilterExpense,
 } from '../utils/semantic-filter';
-import { mergeConversationLists } from '../utils/conversation-list';
-import type { ChatActionType, ChatActionResult, ChatPendingAction, UndoLastActionData } from '@budget/shared-types';
+import { logCacheUsage } from '../utils/log-cache-usage';
+import type { ChatActionType } from '@budget/shared-types';
 
 interface ChatMessageRecord {
   role: string;
   content: string;
   senderUserId?: string | null;
 }
-
-// The 5 write types docs/product-ideas/chat-undo-last-action.md scopes "undo" to. create_budget
-// and create_category are deliberately excluded — no clean single-row revert for either, and the
-// sketch this feature was built from names exactly these 5.
-const UNDOABLE_ACTION_TYPES = new Set<ChatActionType>([
-  'create_expense',
-  'create_income',
-  'create_debt',
-  'record_debt_repayment',
-  'update_goal_balance',
-]);
-
-// Top of the product idea's "10-15 minutes" window — a stale undo reaching back through several
-// turns risks reverting something the user has already built on top of.
-const UNDO_WINDOW_MS = 15 * 60 * 1000;
-
-type UndoLookup =
-  | { status: 'ok'; messageId: string; actionType: ChatActionType; result: ChatActionResult }
-  | { status: 'nothing' | 'stale' };
 
 @Injectable()
 export class ChatService {
@@ -55,23 +36,16 @@ export class ChatService {
   constructor(
     private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
-    private readonly cache: CacheService,
     private readonly notifications: NotificationsService,
     private readonly userContextBuilder: UserContextBuilder,
     private readonly aiToolsService: AiToolsService,
     private readonly promptBuilder: PromptBuilder,
+    private readonly chatConversationService: ChatConversationService,
+    private readonly chatActionLifecycle: ChatActionLifecycleService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
     });
-  }
-
-  private logCacheUsage(label: string, usage: OpenAI.Completions.CompletionUsage | undefined): void {
-    if (!usage) return;
-    const cached = usage.prompt_tokens_details?.cached_tokens ?? 0;
-    const total = usage.prompt_tokens ?? 0;
-    const ratio = total > 0 ? (cached / total).toFixed(2) : '0.00';
-    this.logger.log(`[ai/${label}] prompt_tokens=${total} cached_tokens=${cached} hit_ratio=${ratio}`);
   }
 
   private async getEncryptionTier(accountId?: string): Promise<number> {
@@ -83,16 +57,12 @@ export class ChatService {
     return account?.encryptionTier ?? 0;
   }
 
-  private presenceKey(conversationId: string, userId: string): string {
-    return `chat:presence:${conversationId}:${userId}`;
-  }
-
   async touchPresence(conversationId: string, userId: string): Promise<void> {
-    await this.cache.set(this.presenceKey(conversationId, userId), new Date().toISOString(), 45);
+    return this.chatConversationService.touchPresence(conversationId, userId);
   }
 
   async isPresent(conversationId: string, userId: string): Promise<boolean> {
-    return (await this.cache.get<string>(this.presenceKey(conversationId, userId))) !== null;
+    return this.chatConversationService.isPresent(conversationId, userId);
   }
 
   private sanitizeName(name: string | null | undefined): string {
@@ -155,7 +125,7 @@ export class ChatService {
       const preview = message.length > 120 ? message.slice(0, 120) + '…' : message;
       await Promise.allSettled(
         mentionedUserIds.map(async (mid) => {
-          if (await this.isPresent(conversation.id, mid)) return;
+          if (await this.chatConversationService.isPresent(conversation.id, mid)) return;
           await this.notifications.sendToUser(
             mid,
             (lang) => ni18n.chatMentionTitle(lang, { senderName, preview }),
@@ -210,7 +180,7 @@ export class ChatService {
       max_tokens: 1000,
     });
 
-    this.logCacheUsage('chat', response.usage);
+    logCacheUsage(this.logger, 'chat', response.usage);
     const choice = response.choices[0];
 
     if (choice?.message?.tool_calls && choice.message.tool_calls.length > 0) {
@@ -272,10 +242,10 @@ export class ChatService {
         // like every other write. Placed AFTER the viewer check above: undoing a write is a
         // mutation too, so a viewer must be refused it exactly like any other write.
         if (functionName === 'undo_last_action') {
-          const r = await this.handleUndoLastActionRequest(conversation, systemPrompt, history, message, aiModel, accountId, userId, user?.language);
+          const r = await this.chatActionLifecycle.handleUndoLastActionRequest(conversation, systemPrompt, history, message, aiModel, accountId, userId, user?.language);
           return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
         }
-        const r = await this.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
+        const r = await this.chatActionLifecycle.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
       const r = await this.handleReadAction(conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, userId, user?.currencyCode);
@@ -300,484 +270,39 @@ export class ChatService {
   }
 
   async confirmAction(userId: string, conversationId: string, actionId: string, accountId?: string) {
-    const conversation = await this.prisma.chatConversation.findFirst({
-      where: { id: conversationId, accountId, OR: [{ isShared: true }, { userId }] },
-    });
-    if (!conversation) {
-      throw new NotFoundException('Conversation not found');
-    }
-
-    const pendingMessage = await this.prisma.chatMessage.findFirst({
-      where: {
-        conversationId,
-        role: 'pending_action',
-        senderUserId: userId,
-      },
-      orderBy: { createdAt: 'desc' },
-    });
-
-    if (!pendingMessage) {
-      throw new NotFoundException('Pending action not found or expired');
-    }
-
-    const pendingData = JSON.parse(pendingMessage.content) as ChatPendingAction & { accountId?: string };
-    if (pendingData.id !== actionId) {
-      throw new NotFoundException('Pending action not found');
-    }
-
-    const effectiveAccountId = pendingData.accountId || accountId || '';
-
-    const result = await this.aiToolsService.executeAction(
-      pendingData.actionType,
-      pendingData.data as Record<string, unknown>,
-      effectiveAccountId,
-      userId,
-    );
-
-    await this.prisma.chatMessage.update({
-      where: { id: pendingMessage.id },
-      data: {
-        role: 'action_executed',
-        content: JSON.stringify({ ...pendingData, status: 'executed', result }),
-      },
-    });
-
-    // A successful undo must stamp its SOURCE action_executed message so a second "undo" can't
-    // re-fire the same write — findLastUndoableAction refuses any row carrying `undoneAt`.
-    // Best-effort: a malformed/already-modified source message must not roll back the undo that
-    // already happened, so a parse failure here is swallowed, not thrown.
-    if (pendingData.actionType === 'undo_last_action' && result.success) {
-      const sourceMessageId = String((pendingData.data as Record<string, unknown>)?.sourceMessageId || '');
-      if (sourceMessageId) {
-        try {
-          const sourceMsg = await this.prisma.chatMessage.findUnique({ where: { id: sourceMessageId } });
-          if (sourceMsg) {
-            const sourceParsed = JSON.parse(sourceMsg.content);
-            await this.prisma.chatMessage.update({
-              where: { id: sourceMessageId },
-              data: { content: JSON.stringify({ ...sourceParsed, undoneAt: new Date().toISOString() }) },
-            });
-          }
-        } catch (err) {
-          this.logger.warn(`[ai/chat] failed to stamp undoneAt on source message ${sourceMessageId}: ${err}`);
-        }
-      }
-    }
-
-    const lang = await this.detectConversationLanguage(conversationId);
-
-    const confirmText = result.success
-      ? (pendingData.actionType === 'undo_last_action'
-          ? this.promptBuilder.getUndoConfirmText(lang, result.data || {})
-          : this.promptBuilder.getConfirmText(lang, this.promptBuilder.buildActionSummary(pendingData.actionType, pendingData.data as Record<string, unknown>, lang)))
-      : this.promptBuilder.getFailText(lang, result.errorMessage);
-
-    const assistantMsg = await this.prisma.chatMessage.create({
-      data: {
-        conversationId,
-        role: 'assistant',
-        content: confirmText,
-        mentionedUserIds: [],
-      },
-    });
-
-    return {
-      message: confirmText,
-      conversationId,
-      actionResult: result,
-      assistantMessageId: assistantMsg.id,
-      assistantCreatedAt: assistantMsg.createdAt.toISOString(),
-    };
+    return this.chatActionLifecycle.confirmAction(userId, conversationId, actionId, accountId);
   }
 
   async rejectAction(userId: string, conversationId: string, actionId: string, reason?: string, accountId?: string) {
-    const conversation = await this.prisma.chatConversation.findFirst({
-      where: { id: conversationId, accountId, OR: [{ isShared: true }, { userId }] },
-    });
-    if (!conversation) {
-      throw new NotFoundException('Conversation not found');
-    }
-
-    const pendingMessage = await this.prisma.chatMessage.findFirst({
-      where: {
-        conversationId,
-        role: 'pending_action',
-        senderUserId: userId,
-      },
-      orderBy: { createdAt: 'desc' },
-    });
-
-    if (!pendingMessage) {
-      throw new NotFoundException('Pending action not found');
-    }
-
-    const pendingData = JSON.parse(pendingMessage.content) as ChatPendingAction;
-    if (pendingData.id !== actionId) {
-      throw new NotFoundException('Pending action not found');
-    }
-
-    await this.prisma.chatMessage.update({
-      where: { id: pendingMessage.id },
-      data: {
-        role: 'action_rejected',
-        content: JSON.stringify({ ...pendingData, status: 'rejected', reason }),
-      },
-    });
-
-    const lang = await this.detectConversationLanguage(conversationId);
-    const rejectText = this.promptBuilder.getRejectText(lang);
-    const assistantMsg = await this.prisma.chatMessage.create({
-      data: {
-        conversationId,
-        role: 'assistant',
-        content: rejectText,
-        mentionedUserIds: [],
-      },
-    });
-
-    return {
-      message: rejectText,
-      conversationId,
-      assistantMessageId: assistantMsg.id,
-      assistantCreatedAt: assistantMsg.createdAt.toISOString(),
-    };
+    return this.chatActionLifecycle.rejectAction(userId, conversationId, actionId, reason, accountId);
   }
 
   async getConversations(userId: string, accountId?: string) {
-    // Two queries, not one: `take: 20` ordered by `updatedAt desc` means a
-    // conversation pinned three months ago is not in that payload at all, so
-    // a client-side (or even server-side) sort of a single query's results
-    // can never surface it. The pinned query is therefore separate and
-    // deliberately UNBOUNDED (no `take`) — see
-    // docs/design/2026-09-07-chat-conversation-management.md, "The pin has to
-    // be in the query". Both queries start from `chatConversation` (never the
-    // pin table) and select the SAME columns, so exactly one mapper below
-    // turns the merged, deduped rows into the response shape — two mappers
-    // over the two blocks is how they'd end up disagreeing on shape.
-    const where = { accountId, OR: [{ isShared: true }, { userId }] };
-    const select = { id: true, title: true, isShared: true, userId: true, createdAt: true, updatedAt: true };
-
-    const [pinned, recent] = await Promise.all([
-      this.prisma.chatConversation.findMany({
-        where: { ...where, pins: { some: { userId } } },
-        orderBy: { updatedAt: 'desc' },
-        select,
-      }),
-      this.prisma.chatConversation.findMany({
-        where,
-        orderBy: { updatedAt: 'desc' },
-        take: 20,
-        select,
-      }),
-    ]);
-
-    const pinnedIds = new Set(pinned.map((c: any) => c.id));
-    const merged = mergeConversationLists(pinned, recent);
-
-    return merged.map((c: any) => ({
-      id: c.id,
-      title: c.title,
-      isShared: c.isShared,
-      isOwner: c.userId === userId,
-      isPinned: pinnedIds.has(c.id),
-      createdAt: c.createdAt,
-      updatedAt: c.updatedAt,
-    }));
+    return this.chatConversationService.getConversations(userId, accountId);
   }
 
   async getConversationMessages(userId: string, conversationId: string, accountId?: string, since?: string) {
-    const conversation = await this.prisma.chatConversation.findFirst({
-      where: { id: conversationId, accountId, OR: [{ isShared: true }, { userId }] },
-    });
-    if (!conversation) {
-      throw new NotFoundException('Conversation not found');
-    }
-
-    const members = accountId
-      ? await this.prisma.accountMember.findMany({ where: { accountId }, select: { userId: true, user: { select: { name: true } } } })
-      : [];
-    const nameByUserId = new Map<string, string | null>(members.map((m: any) => [m.userId, m.user?.name ?? null]));
-
-    const sinceDate = since ? new Date(since) : null;
-    const validSince = sinceDate && !Number.isNaN(sinceDate.getTime()) ? sinceDate : null;
-
-    const messages = await this.prisma.chatMessage.findMany({
-      where: {
-        conversationId,
-        role: { in: ['user', 'assistant'] },
-        ...(validSince ? { createdAt: { gt: validSince } } : {}),
-      },
-      orderBy: { createdAt: 'asc' },
-      take: 50,
-      select: { id: true, conversationId: true, role: true, content: true, senderUserId: true, mentionedUserIds: true, tokensUsed: true, createdAt: true },
-    });
-
-    return messages.map((m: any) => ({
-      ...m,
-      senderName: m.senderUserId ? nameByUserId.get(m.senderUserId) ?? null : null,
-    }));
+    return this.chatConversationService.getConversationMessages(userId, conversationId, accountId, since);
   }
 
-  async setConversationShared(userId: string, conversationId: string, accountId: string | undefined, _accountRole: string | undefined, isShared: boolean) {
-    const conversation = await this.prisma.chatConversation.findFirst({ where: { id: conversationId, accountId } });
-    if (!conversation) {
-      throw new NotFoundException('Conversation not found');
-    }
-    // Any account member may share/unshare a conversation THEY created — but not
-    // someone else's conversation, even an account owner's.
-    if (conversation.userId !== userId) {
-      throw new ForbiddenException('Only the conversation creator can change sharing');
-    }
-    const updated = await this.prisma.chatConversation.update({ where: { id: conversationId, accountId }, data: { isShared } });
-    return { id: updated.id, isShared: updated.isShared };
+  async setConversationShared(userId: string, conversationId: string, accountId: string | undefined, accountRole: string | undefined, isShared: boolean) {
+    return this.chatConversationService.setConversationShared(userId, conversationId, accountId, accountRole, isShared);
   }
 
-  // Rename mirrors setConversationShared's shape exactly, including the order
-  // that matters: findFirst({ id, accountId }) -> 404, THEN the creator check
-  // -> 403. That order is deliberate existence non-disclosure (a foreign
-  // account's conversation id must 404, never 403) — do not collapse it into
-  // one query.
   async renameConversation(userId: string, conversationId: string, accountId: string | undefined, title: string) {
-    const conversation = await this.prisma.chatConversation.findFirst({ where: { id: conversationId, accountId } });
-    if (!conversation) {
-      throw new NotFoundException('Conversation not found');
-    }
-    if (conversation.userId !== userId) {
-      throw new ForbiddenException('Only the conversation creator can rename it');
-    }
-    // A plain `update({ data: { title } })` would let @updatedAt bump
-    // updatedAt to now, teleporting a three-week-old conversation to the top
-    // of both the rail and the phone's history sheet — unlike sharing (which
-    // we DO let bump it), a rename is not itself an activity event. Writing
-    // the conversation's own current updatedAt back explicitly is honored by
-    // Prisma: verified directly against this repo's exact
-    // prisma/@prisma-client version (5.22.0) with a throwaway SQLite schema —
-    // an explicit value present in `data` is used as-is; only an ABSENT
-    // updatedAt is auto-bumped by the query engine. See
-    // docs/design/2026-09-07-chat-conversation-management.md, "What this
-    // design leaves unproven".
-    const updated = await this.prisma.chatConversation.update({
-      where: { id: conversationId, accountId },
-      data: { title, updatedAt: conversation.updatedAt },
-    });
-    return { id: updated.id, title: updated.title };
+    return this.chatConversationService.renameConversation(userId, conversationId, accountId, title);
   }
 
-  // Same predicate and order as rename: 404 before the creator check.
   async deleteConversation(userId: string, conversationId: string, accountId: string | undefined) {
-    const conversation = await this.prisma.chatConversation.findFirst({ where: { id: conversationId, accountId } });
-    if (!conversation) {
-      throw new NotFoundException('Conversation not found');
-    }
-    if (conversation.userId !== userId) {
-      throw new ForbiddenException('Only the conversation creator can delete it');
-    }
-    // ChatMessage.conversation and ChatConversationPin.conversation are both
-    // onDelete: Cascade, so its messages and every member's pins on it go
-    // with it in one statement. No soft delete, no undo, no bot cleanup:
-    // chat() self-heals an unresolvable conversationId by silently creating a
-    // new conversation (see the OR-scoped findFirst near the top of chat()),
-    // which is what makes a hard delete safe for the three bots that persist
-    // a conversationId in their own link state.
-    await this.prisma.chatConversation.delete({ where: { id: conversationId, accountId } });
+    return this.chatConversationService.deleteConversation(userId, conversationId, accountId);
   }
 
-  // NOT a sibling of setConversationShared/rename/delete — its permission is
-  // READ VISIBILITY, not the creator rule. Anyone who can see the
-  // conversation (its own creator, or any member of a SHARED one) may
-  // pin/unpin it for themselves; a creator-only gate would leave the
-  // non-creator who reads a shared conversation daily with no way to pin it
-  // at all (see "The pin fork" in the design doc). Using the /shared
-  // predicate (findFirst({ id, accountId }), no OR) here would let a member
-  // pin — and, via the 404-vs-200 response, thereby confirm the existence of
-  // — a co-member's PRIVATE conversation.
   async setConversationPinned(userId: string, conversationId: string, accountId: string | undefined, pinned: boolean) {
-    const conversation = await this.prisma.chatConversation.findFirst({
-      where: { id: conversationId, accountId, OR: [{ isShared: true }, { userId }] },
-    });
-    if (!conversation) {
-      throw new NotFoundException('Conversation not found');
-    }
-    if (pinned) {
-      // The composite PK (userId, conversationId) IS the uniqueness
-      // constraint and the dedup, so pinning is idempotent as
-      // createMany({ skipDuplicates: true }) — the
-      // WalletCurrencyService.ensureCurrencies convention. Not run inside a
-      // $transaction: a constraint violation there would poison it
-      // (ABA-313/401), and there is nothing else to make atomic with it.
-      await this.prisma.chatConversationPin.createMany({
-        data: [{ userId, conversationId }],
-        skipDuplicates: true,
-      });
-    } else {
-      // Idempotent and 404-free: unpinning something never pinned is a no-op.
-      await this.prisma.chatConversationPin.deleteMany({ where: { userId, conversationId } });
-    }
-    return { id: conversationId, isPinned: pinned };
+    return this.chatConversationService.setConversationPinned(userId, conversationId, accountId, pinned);
   }
 
   async pollMessages(userId: string, conversationId: string, accountId: string | undefined, since?: string) {
-    await this.touchPresence(conversationId, userId);
-    return this.getConversationMessages(userId, conversationId, accountId, since);
-  }
-
-  private async detectConversationLanguage(conversationId: string): Promise<string> {
-    const recentMessages = await this.prisma.chatMessage.findMany({
-      where: { conversationId, role: 'user' },
-      orderBy: { createdAt: 'desc' },
-      take: 3,
-      select: { content: true },
-    });
-    if (recentMessages.length === 0) return 'English';
-    const allText = recentMessages.map((m: { content: string }) => m.content).join(' ');
-    return this.promptBuilder.detectLanguage(allText);
-  }
-
-  /**
-   * Resolves "the single most recent write in this conversation" from the persisted
-   * `action_executed` ChatMessage rows chat() already writes for every confirmed write — no
-   * schema change needed. Only ever looks at the SINGLE latest row: if it's already undone,
-   * unsupported, or failed, there is nothing undoable, even if an earlier row would qualify —
-   * "only the single most recent write is undoable" per the product idea.
-   */
-  private async findLastUndoableAction(conversationId: string): Promise<UndoLookup> {
-    const last = await this.prisma.chatMessage.findFirst({
-      where: { conversationId, role: 'action_executed' },
-      orderBy: { createdAt: 'desc' },
-    });
-    if (!last) return { status: 'nothing' };
-
-    let parsed: (ChatPendingAction & { result?: ChatActionResult; undoneAt?: string }) | undefined;
-    try {
-      parsed = JSON.parse(last.content);
-    } catch {
-      return { status: 'nothing' };
-    }
-    if (!parsed || parsed.undoneAt || !parsed.result?.success) return { status: 'nothing' };
-    if (!UNDOABLE_ACTION_TYPES.has(parsed.actionType)) return { status: 'nothing' };
-
-    const ageMs = Date.now() - last.createdAt.getTime();
-    if (ageMs > UNDO_WINDOW_MS) return { status: 'stale' };
-
-    return { status: 'ok', messageId: last.id, actionType: parsed.actionType, result: parsed.result };
-  }
-
-  private async handleUndoLastActionRequest(
-    conversation: { id: string },
-    systemPrompt: string,
-    history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
-    userMessage: string,
-    aiModel: string,
-    accountId: string | undefined,
-    userId: string,
-    uiLanguage?: string | null,
-  ) {
-    const lookup = await this.findLastUndoableAction(conversation.id);
-
-    if (lookup.status !== 'ok') {
-      const lang = this.promptBuilder.detectUserLanguage(userMessage, history, uiLanguage);
-      const text = this.promptBuilder.getUndoUnavailableText(lang, lookup.status);
-      const assistantMsg = await this.prisma.chatMessage.create({
-        data: { conversationId: conversation.id, role: 'assistant', content: text, mentionedUserIds: [] },
-      });
-      return {
-        message: text,
-        conversationId: conversation.id,
-        assistantMessageId: assistantMsg.id,
-        assistantCreatedAt: assistantMsg.createdAt.toISOString(),
-      };
-    }
-
-    const od = lookup.result.data || {};
-    const undoArgs: UndoLastActionData = {
-      sourceMessageId: lookup.messageId,
-      originalActionType: lookup.actionType,
-      originalResultData: od,
-      // Flattened purely so ActionConfirmationCard's existing generic detail rows render for
-      // this action too — see the shared-types contract. Server logic reads originalResultData.
-      amount: typeof od.amount === 'number' ? od.amount : undefined,
-      currencyCode: typeof od.currencyCode === 'string' ? (od.currencyCode as UndoLastActionData['currencyCode']) : undefined,
-      categoryName: typeof od.category === 'string' ? od.category : undefined,
-      date: typeof od.date === 'string' ? od.date : undefined,
-      description: typeof od.description === 'string' ? od.description : undefined,
-    };
-
-    return this.handleWriteActionRequest(
-      conversation,
-      'undo_last_action',
-      undoArgs as unknown as Record<string, unknown>,
-      systemPrompt,
-      history,
-      userMessage,
-      aiModel,
-      accountId,
-      userId,
-    );
-  }
-
-  private async handleWriteActionRequest(
-    conversation: { id: string },
-    actionType: ChatActionType,
-    args: Record<string, unknown>,
-    systemPrompt: string,
-    history: Array<{ role: 'user' | 'assistant' | 'system'; content: string }>,
-    userMessage: string,
-    aiModel: string,
-    accountId?: string,
-    userId?: string,
-  ) {
-    const displaySummary = this.promptBuilder.buildActionSummary(actionType, args);
-    const pendingAction: ChatPendingAction = {
-      id: randomUUID(),
-      actionType,
-      data: args as any,
-      displaySummary,
-    };
-
-    await this.prisma.chatMessage.create({
-      data: {
-        conversationId: conversation.id,
-        role: 'pending_action',
-        content: JSON.stringify({ ...pendingAction, accountId }),
-        senderUserId: userId,
-        mentionedUserIds: [],
-      },
-    });
-
-    const confirmationSystemPrompt = `${systemPrompt}\n\nThe user wants to perform this action: ${displaySummary}. Generate a SHORT confirmation message (1-2 sentences max) asking them to confirm or cancel. Format: "I'd like to [action]. Please confirm or cancel." Use the SAME language as the conversation.`;
-
-    const confirmResponse = await this.openai.chat.completions.create({
-      // Confirmation rendering is single-language formatting — no reasoning
-      // needed, so we always use the cheap model regardless of user preference.
-      model: resolveCheapModel(),
-      messages: [
-        { role: 'system', content: confirmationSystemPrompt },
-        ...history,
-        { role: 'user', content: userMessage },
-      ],
-      max_tokens: 150,
-    });
-
-    this.logCacheUsage('chat-confirm', confirmResponse.usage);
-
-    const confirmMessage = confirmResponse.choices[0]?.message?.content || `I'd like to ${displaySummary}. Please confirm or cancel this action.`;
-
-    const confirmMsg = await this.prisma.chatMessage.create({
-      data: {
-        conversationId: conversation.id,
-        role: 'assistant',
-        content: confirmMessage,
-        mentionedUserIds: [],
-      },
-    });
-
-    return {
-      message: confirmMessage,
-      conversationId: conversation.id,
-      pendingAction,
-      assistantMessageId: confirmMsg.id,
-      assistantCreatedAt: confirmMsg.createdAt.toISOString(),
-    };
+    return this.chatConversationService.pollMessages(userId, conversationId, accountId, since);
   }
 
   /**
@@ -974,7 +499,7 @@ ${lines}`;
       max_tokens: 1000,
     });
 
-    this.logCacheUsage('chat-readaction', followUpResponse.usage);
+    logCacheUsage(this.logger, 'chat-readaction', followUpResponse.usage);
 
     const summaryText = followUpResponse.choices[0]?.message?.content || 'Here are your results.';
     const tokensUsed = followUpResponse.usage?.total_tokens || 0;
