@@ -8,6 +8,8 @@ import { SubscriptionsService } from '../../subscriptions/subscriptions.service'
 import { CategoriesService } from '../../categories/categories.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { CacheService } from '../../../common/cache/cache.service';
+import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
+import { TelegramLinkService } from '../telegram-link.service';
 import { BotContext } from '../types';
 import { formatCurrency, escapeHtml } from '../helpers/format-telegram';
 import { downloadFile } from '../helpers/download-file';
@@ -21,6 +23,7 @@ import {
   type ItemEditError,
 } from '../../../common/utils/receipt-item-edit';
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
+import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
 // `ctx.answerCbQuery` throws if Telegram considers the callback query expired
 // (15s window). When called from a `catch` block, an unhandled rethrow would
@@ -86,6 +89,8 @@ export class PhotoHandler {
     private readonly categoriesService: CategoriesService,
     private readonly shoppingListService: ShoppingListService,
     private readonly cache: CacheService,
+    private readonly chatActionRecorder: ChatActionRecorderService,
+    private readonly linkService: TelegramLinkService,
   ) {}
 
   async handlePhoto(ctx: BotContext): Promise<void> {
@@ -369,7 +374,7 @@ export class PhotoHandler {
         (name) => this.categoriesService.create(data.accountId, data.userId, { name, type: 'expense', icon: '🏷️' }),
       );
       const itemCategoryIds = buildItemCategoryMap(resolvedSplits);
-      await this.expensesService.create(
+      const { expense } = await this.expensesService.create(
         data.accountId,
         data.userId,
         {
@@ -428,6 +433,39 @@ export class PhotoHandler {
         try {
           await ctx.reply(confirmationText, { parse_mode: 'HTML' });
         } catch {}
+      }
+
+      // Makes this write undoable via chat's "undo" (ABA-599) — a receipt-confirm
+      // callback never touches ChatActionLifecycleService.confirmAction. Uses
+      // data.userId/data.accountId (how this handler already resolves the user)
+      // rather than ctx.userState, which may be stale or absent by the time the
+      // callback fires. Fire-and-forget: must never affect the reply already sent.
+      // Guarded on `expense` truthy — defensive only, ExpensesService.create()
+      // always resolves one.
+      if (expense) {
+        const currentConversationId = ctx.userState?.conversationId ?? null;
+        const telegramUserId = String(ctx.from!.id);
+        void this.chatActionRecorder
+          .recordExternalWrite({
+            userId: data.userId,
+            accountId: data.accountId,
+            conversationId: currentConversationId,
+            actionType: 'create_expense',
+            resultData: {
+              id: expense.id,
+              amount: Number(expense.amount),
+              currencyCode: expense.currencyCode,
+              description: expense.description,
+              category: (expense as any)?.category?.name,
+              date: expense.date,
+            },
+          })
+          .then((newConversationId) => {
+            if (newConversationId !== currentConversationId) {
+              return this.linkService.updateConversationId(telegramUserId, newConversationId);
+            }
+          })
+          .catch(logFireAndForget(this.logger, 'PhotoHandler.recordUndoable'));
       }
     } catch (error) {
       this.logger.error(`Error creating receipt expense: ${error}`);

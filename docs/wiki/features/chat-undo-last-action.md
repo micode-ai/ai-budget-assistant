@@ -13,10 +13,16 @@ idea: `docs/product-ideas/chat-undo-last-action.md`. Plan/contracts:
 ## Entry points
 
 - `apps/api/src/modules/ai/services/ai-tools.service.ts` — `undo_last_action` tool schema,
-  `executeUndoLastAction`/`resolveUndoEntity`/`revertEntityCreate`/`revertGoalBalance`
-- `apps/api/src/modules/ai/services/chat.service.ts` — `findLastUndoableAction`,
-  `handleUndoLastActionRequest`, the `confirmAction()` special-case for undo's confirm text and
-  the `undoneAt` stamp
+  dispatches to `AiUndoToolsService`
+- `apps/api/src/modules/ai/services/ai-undo-tools.service.ts` — `executeUndoLastAction`/
+  `resolveUndoEntity`/`revertEntityCreate`/`revertGoalBalance` (split out of `ai-tools.service.ts`,
+  tech-debt `ai-tools-service-god-file`)
+- `apps/api/src/modules/ai/services/chat-action-lifecycle.service.ts` — `findLastUndoableAction`
+  (private), `handleUndoLastActionRequest`, the `confirmAction()` special-case for undo's confirm
+  text and the `undoneAt` stamp (split out of `chat.service.ts`, same tech-debt)
+- `apps/api/src/modules/ai/services/chat-action-recorder.service.ts` — `ChatActionRecorderService
+  .recordExternalWrite` (ABA-599) — writes the same `action_executed` ChatMessage row shape
+  `confirmAction` writes, for a write that never went through it
 - `apps/api/src/modules/ai/services/goal-planner.service.ts` — `revertGoalUpdate`
 - `apps/api/src/modules/ai/services/prompt-builder.service.ts` — the `undo_last_action` branch of
   `buildActionSummary`, `getUndoConfirmText`, `getUndoUnavailableText`
@@ -53,7 +59,15 @@ its `createdAt` (edited since creation — Prisma sets both together at insert, 
 later write touched it) or if it's already gone; `revertGoalBalance` refuses if the goal's CURRENT
 `currentAmount` no longer equals the `newAmount` the write set (something else changed it since).
 Both failure paths return a normal `{success:false, errorMessage}`, narrated through the existing
-generic `getFailText` — no new i18n needed there.
+generic `getFailText` — no new i18n needed there. Verified (ABA-599) that this 5s guard doesn't
+false-positive on a receipt-scanned expense: neither `ExpensesService.create()`'s transaction nor
+`ExpenseCreatedHooksService.onExpenseCreated()`'s post-create fire-and-forget chain ever
+`prisma.expense.update()`s the row the OCR path just inserted — the one `expense.update` in that
+chain (`reconcileNotificationStub`) targets a *different*, pre-existing `source:'notification'` stub
+row. The only thing that legitimately bumps a fresh expense's `updatedAt` outside an explicit user
+edit is `MerchantRulesService.reapply()` (retroactive rule application, `merchant-category-rules.md`)
+— an unrelated, user-triggered action, and refusing undo on a row it just touched is the guard
+working as intended, not a bug.
 
 **The entity table for `create_debt`/`record_debt_repayment` depends on direction, not the action
 name.** `debts.service.ts` puts a "lent" debt/repayment on `Expense` and a "borrowed" one on
@@ -66,6 +80,17 @@ of row.
 confirmed the original write; anyone who can act in the conversation can undo the last write in it,
 mirroring how shared conversations already work. This is a deliberate v1 tradeoff, not an oversight
 — a family member undoing another member's just-confirmed write is a real edge case, left open.
+
+**A write is undoable exactly when it left an `action_executed` ChatMessage row — and since ABA-599,
+that's no longer only chat's own confirmed writes.** Undoable: a chat-confirmed
+`create_expense`/`create_income`/`create_debt`/`record_debt_repayment`/`update_goal_balance`
+(always was); a bot's receipt-scan confirm button and its `/expense`/`/income` quick commands
+(Telegram/WhatsApp/Slack — ABA-599, via `ChatActionRecorderService.recordExternalWrite`, fired
+fire-and-forget right after the create succeeds, never blocking or altering the bot's own success
+reply). Still NOT undoable: `/categorize`'s per-item accept/skip steps (a bulk review loop, not one
+write with a single row to revert) and anything created from the mobile/web app's own screens
+(manual entry, in-app receipt scan, voice capture) — none of those ever touch a `ChatConversation` at
+all, so there is no row for "undo" to find.
 
 **Confirm text and pre-confirm summary are deliberately two different code paths.**
 `buildActionSummary`'s `undo_last_action` branch (used only to build the PRE-confirmation LLM
@@ -94,6 +119,12 @@ twice — for the two entity-revert paths this is caught anyway (the row is alre
 goal's `currentAmount` no longer matches), but the stamp is what makes `findLastUndoableAction`
 refuse it cleanly instead of relying on that downstream catch.
 
+**A `ChatActionRecorderService`-written row must parse exactly like a `confirmAction`-written one**
+(ABA-599) — same `{id, actionType, data, displaySummary, status:'executed', result:{actionType,
+success, data}}` JSON shape, `role: 'action_executed'`. `findLastUndoableAction` doesn't care where a
+row came from, only that it parses; a recorder that drifted from this shape would silently make every
+bot-side write invisible to undo again, with no error anywhere to point at why.
+
 ## Known gaps (deliberately out of scope for v1)
 
 - No UI affordance to trigger undo other than typing it — no swipe/long-press "undo" on the
@@ -102,3 +133,15 @@ refuse it cleanly instead of relying on that downstream catch.
   `update_goal_balance` themselves (pre-existing gap, unrelated to this feature — only the new
   `undo_last_action` result got a card).
 - No cross-device/cross-user scoping (see "Key concepts" above).
+- **Still not undoable from a bot (ABA-599 scoped to only 2 of the bots' several write paths):**
+  `record_debt_repayment`/`create_debt`/`update_goal_balance` have no bot quick-command equivalent
+  today, so this is a non-issue in practice; `/categorize`'s bulk accept/skip review; anything typed
+  as free-form chat text that the AI itself turns into a write (those already go through
+  `confirmAction` and were always undoable — only the bots' OWN direct-write handlers needed this).
+
+## History
+
+ABA-586 (the feature) · ABA-599 (bot receipt confirm and `/expense`/`/income` quick commands
+recorded as undoable too — root cause: those write paths call `ExpensesService`/`IncomesService`
+directly and never touched `ChatActionLifecycleService.confirmAction`, so `findLastUndoableAction`
+had no row to find).

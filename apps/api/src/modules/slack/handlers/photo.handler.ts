@@ -8,6 +8,7 @@ import { SubscriptionsService } from '../../subscriptions/subscriptions.service'
 import { CategoriesService } from '../../categories/categories.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 import { SlackClientService } from '../slack-client.service';
+import { SlackLinkService } from '../slack-link.service';
 import { SLACK_REDIS, SlackFile, SlackUserState } from '../types';
 import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
 import {
@@ -20,6 +21,8 @@ import {
 } from '../../../common/utils/receipt-item-edit';
 
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
+import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
+import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
 interface PendingReceiptData {
   userId: string;
@@ -63,6 +66,8 @@ export class PhotoHandler {
     private readonly categoriesService: CategoriesService,
     private readonly shoppingListService: ShoppingListService,
     private readonly client: SlackClientService,
+    private readonly chatActionRecorder: ChatActionRecorderService,
+    private readonly linkService: SlackLinkService,
     @Inject(SLACK_REDIS) private readonly redis: Redis,
   ) {}
 
@@ -327,7 +332,7 @@ export class PhotoHandler {
       );
       const itemCategoryIds = buildItemCategoryMap(resolvedSplits);
 
-      await this.expensesService.create(data.accountId, data.userId, {
+      const { expense } = await this.expensesService.create(data.accountId, data.userId, {
         localId: randomUUID(),
         amount: data.amount,
         discountAmount: data.discountAmount || undefined,
@@ -378,6 +383,35 @@ export class PhotoHandler {
         `${t('expenseCreated', language)}: *${amountStr}* — ${data.description}` +
           (shoppingLine ? `\n${shoppingLine}` : ''),
       );
+
+      // Makes this write undoable via chat's "undo" (ABA-599) — a receipt-confirm
+      // button never touches ChatActionLifecycleService.confirmAction. Fire-and-forget:
+      // must never affect the reply already sent above. Guarded on `expense` truthy —
+      // defensive only, ExpensesService.create() always resolves one.
+      if (expense) {
+        const currentConversationId = userState.conversationId;
+        void this.chatActionRecorder
+          .recordExternalWrite({
+            userId: data.userId,
+            accountId: data.accountId,
+            conversationId: currentConversationId,
+            actionType: 'create_expense',
+            resultData: {
+              id: expense.id,
+              amount: Number(expense.amount),
+              currencyCode: expense.currencyCode,
+              description: expense.description,
+              category: (expense as any)?.category?.name,
+              date: expense.date,
+            },
+          })
+          .then((newConversationId) => {
+            if (newConversationId !== currentConversationId) {
+              return this.linkService.updateConversationId(userState.slackUserId, newConversationId);
+            }
+          })
+          .catch(logFireAndForget(this.logger, 'PhotoHandler.recordUndoable'));
+      }
     } catch (error) {
       this.logger.error(`PhotoHandler.handleReceiptAddCallback error for ${userState.channel}: ${error}`);
       await this.client.sendText(teamId, channel, t('somethingWrong', language));

@@ -26,6 +26,19 @@ function makeShoppingList() {
   return { reconcileWithReceipt: jest.fn().mockResolvedValue({ checkedLabels: [] }) };
 }
 
+/** ABA-599: stand-in for ChatActionRecorderService — reuses whatever conversationId
+ * it's given by default, as if the write landed back in the same conversation. */
+function makeChatActionRecorder(impl?: (params: any) => Promise<string>) {
+  return {
+    recordExternalWrite: jest.fn(impl ?? ((params: any) => Promise.resolve(params.conversationId ?? 'conv-new'))),
+  };
+}
+
+/** ABA-599: stand-in for TelegramLinkService — only updateConversationId is used here. */
+function makeLinkService() {
+  return { updateConversationId: jest.fn().mockResolvedValue(undefined) };
+}
+
 const RECEIPT_LOCATION = { lat: 52.2297, lng: 21.0122, name: 'Sucha 31, Sucha' };
 
 function baseReceipt(location: typeof RECEIPT_LOCATION | null) {
@@ -80,6 +93,8 @@ describe('Telegram PhotoHandler — geocoded location wiring (ABA-310 bot photo 
       categories as never,
       makeShoppingList() as never,
       makeCache() as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
     );
     return { handler, expenses };
   }
@@ -124,6 +139,8 @@ describe('Telegram PhotoHandler — buildPriceCheckLine (receipt price-check sum
       categories as never,
       makeShoppingList() as never,
       makeCache() as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
     );
   }
 
@@ -207,6 +224,8 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
       categories as never,
       makeShoppingList() as never,
       makeCache() as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
     );
     return { handler, expenses };
   }
@@ -311,6 +330,8 @@ describe('Telegram PhotoHandler — receipt category splits reported to the bot 
       categories as never,
       makeShoppingList() as never,
       makeCache() as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
     );
     const ctx = makeCtx();
 
@@ -360,6 +381,8 @@ describe('Telegram PhotoHandler — line-item editing (ABA-482)', () => {
       categories as never,
       makeShoppingList() as never,
       cache as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
     );
     return { handler, expenses, cache };
   }
@@ -494,5 +517,91 @@ describe('Telegram PhotoHandler — line-item editing (ABA-482)', () => {
     await handler.handleItemsCallback(ctx as never, receiptId);
 
     expect(await cache.get('telegram:awaiting_date:123')).toBeNull();
+  });
+});
+
+describe('Telegram PhotoHandler — records the write for chat undo (ABA-599)', () => {
+  const CREATED_EXPENSE = {
+    id: 'exp-99',
+    amount: 42.5,
+    currencyCode: 'PLN',
+    description: 'Biedronka',
+    category: { name: 'Groceries' },
+    date: '2026-07-07',
+  };
+
+  function setup(recorderImpl?: (params: any) => Promise<string>) {
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue(baseReceipt(null)),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ expense: CREATED_EXPENSE, isNew: true }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
+    const chatActionRecorder = makeChatActionRecorder(recorderImpl);
+    const linkService = makeLinkService();
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      makeShoppingList() as never,
+      makeCache() as never,
+      chatActionRecorder as never,
+      linkService as never,
+    );
+    return { handler, expenses, chatActionRecorder, linkService };
+  }
+
+  /** Flushes the fire-and-forget recorder promise chain, which is never awaited
+   * by the handler itself. */
+  const flush = () => new Promise((resolve) => setImmediate(resolve));
+
+  it('records the created expense as undoable, using the created row id', async () => {
+    const { handler, chatActionRecorder } = setup();
+    const ctx = makeCtx();
+
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+
+    expect(chatActionRecorder.recordExternalWrite).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: 'user-1',
+        accountId: 'acc-1',
+        actionType: 'create_expense',
+        resultData: expect.objectContaining({
+          id: 'exp-99',
+          amount: 42.5,
+          currencyCode: 'PLN',
+          category: 'Groceries',
+        }),
+      }),
+    );
+  });
+
+  it('never affects the success reply, even when recording rejects', async () => {
+    const { handler } = setup(() => Promise.reject(new Error('boom')));
+    const ctx = makeCtx();
+
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+    await flush();
+
+    expect(ctx.editMessageText).toHaveBeenCalledTimes(1);
+    expect(ctx.editMessageText.mock.calls[0][0] as string).toContain('Expense created');
+  });
+
+  it('persists the new conversation id back onto the link when the recorder created one', async () => {
+    const { handler, linkService } = setup(() => Promise.resolve('conv-brand-new'));
+    const ctx = makeCtx(); // ctx.userState carries no conversationId at all
+
+    await handler.handleDocument(ctx as never);
+    const receiptId = receiptIdFromReply(ctx);
+    await handler.handleReceiptAddCallback(ctx as never, receiptId);
+    await flush();
+
+    expect(linkService.updateConversationId).toHaveBeenCalledWith('123', 'conv-brand-new');
   });
 });

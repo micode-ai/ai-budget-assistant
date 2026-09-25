@@ -1,16 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { ExpensesService } from '../../expenses/expenses.service';
+import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
+import { TelegramLinkService } from '../telegram-link.service';
 import { BotContext } from '../types';
 import { parseAmount } from '../helpers/parse-amount';
 import { formatCurrency } from '../helpers/format-telegram';
 import { t } from '../helpers/i18n';
+import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
 @Injectable()
 export class ExpenseHandler {
   private readonly logger = new Logger(ExpenseHandler.name);
 
-  constructor(private readonly expensesService: ExpensesService) {}
+  constructor(
+    private readonly expensesService: ExpensesService,
+    private readonly chatActionRecorder: ChatActionRecorderService,
+    private readonly linkService: TelegramLinkService,
+  ) {}
 
   async handle(ctx: BotContext): Promise<void> {
     try {
@@ -66,6 +73,38 @@ export class ExpenseHandler {
         `✅ Expense added: <b>${formatCurrency(parsed.amount, currencyCode)}</b>${parsed.description ? ` — ${parsed.description}` : ''}${categoryName}`,
         { parse_mode: 'HTML' },
       );
+
+      // Makes this write undoable via chat's "undo" (ABA-599) — a /expense command
+      // never touches ChatActionLifecycleService.confirmAction, so without this
+      // recording, undo_last_action would never find it. Fire-and-forget: must
+      // never affect the reply already sent above. Guarded on `expense` truthy —
+      // defensive only, ExpensesService.create() always resolves one — so a
+      // malformed/unexpected result skips recording rather than throwing here.
+      if (expense) {
+        const currentConversationId = ctx.userState.conversationId;
+        const telegramUserId = ctx.userState.telegramUserId;
+        void this.chatActionRecorder
+          .recordExternalWrite({
+            userId: ctx.userState.userId,
+            accountId: ctx.userState.accountId,
+            conversationId: currentConversationId,
+            actionType: 'create_expense',
+            resultData: {
+              id: expense.id,
+              amount: Number(expense.amount),
+              currencyCode: expense.currencyCode,
+              description: expense.description,
+              category: (expense as any)?.category?.name,
+              date: expense.date,
+            },
+          })
+          .then((newConversationId) => {
+            if (newConversationId !== currentConversationId) {
+              return this.linkService.updateConversationId(telegramUserId, newConversationId);
+            }
+          })
+          .catch(logFireAndForget(this.logger, 'ExpenseHandler.recordUndoable'));
+      }
     } catch (error) {
       this.logger.error(`Error creating expense: ${error}`);
       await ctx.reply('❌ Could not add expense. Please try again.');

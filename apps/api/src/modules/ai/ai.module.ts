@@ -17,6 +17,7 @@ import { GoalPlannerService } from './services/goal-planner.service';
 import { UserContextBuilder } from './services/user-context-builder.service';
 import { ChatConversationService } from './services/chat-conversation.service';
 import { ChatActionLifecycleService } from './services/chat-action-lifecycle.service';
+import { ChatActionRecorderService } from './services/chat-action-recorder.service';
 import { AiToolsService } from './services/ai-tools.service';
 import { AiExpenseToolsService } from './services/ai-expense-tools.service';
 import { AiBudgetToolsService } from './services/ai-budget-tools.service';
@@ -59,6 +60,7 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     UserContextBuilder,
     ChatConversationService,
     ChatActionLifecycleService,
+    ChatActionRecorderService,
     AiToolsService,
     AiExpenseToolsService,
     AiBudgetToolsService,
@@ -77,6 +79,7 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     ReceiptCategorySplitService,
     GoalPlannerService,
     CategorizeBotService,
+    ChatActionRecorderService,
   ],
 })
 export class AiModule {}

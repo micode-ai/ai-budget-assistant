@@ -21,6 +21,19 @@ function makeShoppingList() {
   return { reconcileWithReceipt: jest.fn().mockResolvedValue({ checkedLabels: [] }) };
 }
 
+/** ABA-599: stand-in for ChatActionRecorderService — reuses whatever conversationId
+ * it's given by default, as if the write landed back in the same conversation. */
+function makeChatActionRecorder(impl?: (params: any) => Promise<string>) {
+  return {
+    recordExternalWrite: jest.fn(impl ?? ((params: any) => Promise.resolve(params.conversationId ?? 'conv-new'))),
+  };
+}
+
+/** ABA-599: stand-in for SlackLinkService — only updateConversationId is used here. */
+function makeLinkService() {
+  return { updateConversationId: jest.fn().mockResolvedValue(undefined) };
+}
+
 const RECEIPT_LOCATION = { lat: 52.2297, lng: 21.0122, name: 'Sucha 31, Sucha' };
 
 function baseReceipt(location: typeof RECEIPT_LOCATION | null) {
@@ -84,6 +97,8 @@ describe('Slack PhotoHandler — geocoded location wiring (ABA-310 bot photo geo
       categories as never,
       makeShoppingList() as never,
       client as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
       redis as never,
     );
     return { handler, redis, expenses };
@@ -175,6 +190,8 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
       categories as never,
       makeShoppingList() as never,
       client as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
       redis as never,
     );
     return { handler, redis, expenses, client };
@@ -269,6 +286,8 @@ describe('Slack PhotoHandler — receipt category splits reported to the bot (bo
       categories as never,
       makeShoppingList() as never,
       client as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
       redis as never,
     );
 
@@ -325,6 +344,8 @@ describe('Slack PhotoHandler — line-item editing (ABA-482)', () => {
       categories as never,
       makeShoppingList() as never,
       client as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
       redis as never,
     );
     return { handler, redis, expenses, client };
@@ -377,5 +398,104 @@ describe('Slack PhotoHandler — line-item editing (ABA-482)', () => {
     await handler.handleReceiptAddCallback(shortId, userState);
 
     await expect(handler.handleItemEditInput('1 -', userState)).resolves.toBe(false);
+  });
+});
+
+describe('Slack PhotoHandler — records the write for chat undo (ABA-599)', () => {
+  const CREATED_EXPENSE = {
+    id: 'exp-99',
+    amount: 42.5,
+    currencyCode: 'PLN',
+    description: 'Biedronka',
+    category: { name: 'Groceries' },
+    date: '2026-07-07',
+  };
+
+  function setup(recorderImpl?: (params: any) => Promise<string>) {
+    const redis = makeFakeRedis();
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue(baseReceipt(null)),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ expense: CREATED_EXPENSE, isNew: true }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
+    const client = {
+      postPlaceholder: jest.fn().mockResolvedValue('1700000000.000100'),
+      downloadFile: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      replyText: jest.fn().mockResolvedValue(undefined),
+      replyButtons: jest.fn().mockResolvedValue(undefined),
+      sendText: jest.fn().mockResolvedValue(undefined),
+      sendButtons: jest.fn().mockResolvedValue(undefined),
+    };
+    const chatActionRecorder = makeChatActionRecorder(recorderImpl);
+    const linkService = makeLinkService();
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      makeShoppingList() as never,
+      client as never,
+      chatActionRecorder as never,
+      linkService as never,
+      redis as never,
+    );
+    return { handler, redis, client, chatActionRecorder, linkService };
+  }
+
+  function shortIdFrom(redis: ReturnType<typeof makeFakeRedis>): string {
+    const key = [...redis.store.keys()].find((k) => k.startsWith('slack:receipt:'));
+    return key!.slice('slack:receipt:'.length);
+  }
+
+  /** Flushes the fire-and-forget recorder promise chain, which is never awaited
+   * by the handler itself. */
+  const flush = () => new Promise((resolve) => setImmediate(resolve));
+
+  it('records the created expense as undoable, using the created row id', async () => {
+    const { handler, redis, chatActionRecorder } = setup();
+
+    await handler.handleDocument(pdfFile(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleReceiptAddCallback(shortId, userState);
+
+    expect(chatActionRecorder.recordExternalWrite).toHaveBeenCalledWith(
+      expect.objectContaining({
+        userId: 'user-1',
+        accountId: 'acc-1',
+        actionType: 'create_expense',
+        resultData: expect.objectContaining({
+          id: 'exp-99',
+          amount: 42.5,
+          currencyCode: 'PLN',
+          category: 'Groceries',
+        }),
+      }),
+    );
+  });
+
+  it('never affects the success reply, even when recording rejects', async () => {
+    const { handler, redis, client } = setup(() => Promise.reject(new Error('boom')));
+
+    await handler.handleDocument(pdfFile(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleReceiptAddCallback(shortId, userState);
+    await flush();
+
+    const lastCall = client.sendText.mock.calls[client.sendText.mock.calls.length - 1];
+    expect(lastCall[2]).toContain('42.5 PLN');
+    expect(lastCall[2]).toContain('Biedronka');
+  });
+
+  it('persists the new conversation id back onto the link when the recorder created one', async () => {
+    const { handler, redis, linkService } = setup(() => Promise.resolve('conv-brand-new'));
+
+    await handler.handleDocument(pdfFile(), userState);
+    const shortId = shortIdFrom(redis);
+    await handler.handleReceiptAddCallback(shortId, userState);
+    await flush();
+
+    expect(linkService.updateConversationId).toHaveBeenCalledWith('U1', 'conv-brand-new');
   });
 });

@@ -1,16 +1,23 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { IncomesService } from '../../incomes/incomes.service';
+import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
+import { TelegramLinkService } from '../telegram-link.service';
 import { BotContext } from '../types';
 import { parseAmount } from '../helpers/parse-amount';
 import { formatCurrency } from '../helpers/format-telegram';
 import { t } from '../helpers/i18n';
+import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
 @Injectable()
 export class IncomeHandler {
   private readonly logger = new Logger(IncomeHandler.name);
 
-  constructor(private readonly incomesService: IncomesService) {}
+  constructor(
+    private readonly incomesService: IncomesService,
+    private readonly chatActionRecorder: ChatActionRecorderService,
+    private readonly linkService: TelegramLinkService,
+  ) {}
 
   async handle(ctx: BotContext): Promise<void> {
     try {
@@ -64,6 +71,37 @@ export class IncomeHandler {
         `✅ Income added: <b>${formatCurrency(parsed.amount, currencyCode)}</b>${parsed.description ? ` — ${parsed.description}` : ''}${categoryName}`,
         { parse_mode: 'HTML' },
       );
+
+      // Makes this write undoable via chat's "undo" (ABA-599) — see ExpenseHandler
+      // for the full rationale. Fire-and-forget: must never affect the reply above.
+      // Guarded on `income` truthy — defensive only, IncomesService.create() always
+      // resolves one — so a malformed/unexpected result skips recording rather than
+      // throwing here.
+      if (income) {
+        const currentConversationId = ctx.userState.conversationId;
+        const telegramUserId = ctx.userState.telegramUserId;
+        void this.chatActionRecorder
+          .recordExternalWrite({
+            userId: ctx.userState.userId,
+            accountId: ctx.userState.accountId,
+            conversationId: currentConversationId,
+            actionType: 'create_income',
+            resultData: {
+              id: income.id,
+              amount: Number(income.amount),
+              currencyCode: income.currencyCode,
+              description: income.description,
+              category: (income as any)?.category?.name,
+              date: income.date,
+            },
+          })
+          .then((newConversationId) => {
+            if (newConversationId !== currentConversationId) {
+              return this.linkService.updateConversationId(telegramUserId, newConversationId);
+            }
+          })
+          .catch(logFireAndForget(this.logger, 'IncomeHandler.recordUndoable'));
+      }
     } catch (error) {
       this.logger.error(`Error creating income: ${error}`);
       await ctx.reply('❌ Could not add income. Please try again.');

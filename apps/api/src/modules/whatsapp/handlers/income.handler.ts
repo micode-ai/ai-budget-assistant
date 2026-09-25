@@ -2,9 +2,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { IncomesService } from '../../incomes/incomes.service';
 import { WhatsAppClientService } from '../whatsapp-client.service';
+import { WhatsAppLinkService } from '../whatsapp-link.service';
+import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
 import { WhatsAppUserState } from '../types';
 import { parseAmount } from '../helpers/parse-amount';
 import { t } from '../helpers/i18n';
+import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 
 @Injectable()
 export class IncomeHandler {
@@ -13,6 +16,8 @@ export class IncomeHandler {
   constructor(
     private readonly incomesService: IncomesService,
     private readonly whatsappClient: WhatsAppClientService,
+    private readonly chatActionRecorder: ChatActionRecorderService,
+    private readonly linkService: WhatsAppLinkService,
   ) {}
 
   async handle(args: string, userState: WhatsAppUserState): Promise<void> {
@@ -65,6 +70,35 @@ export class IncomeHandler {
         userState.waPhoneNumber,
         `${t('incomeCreated', lang)}: *${amountStr}*${descPart}${categoryName}`,
       );
+
+      // Makes this write undoable via chat's "undo" (ABA-599) — see ExpenseHandler
+      // for the full rationale. Fire-and-forget: must never affect the reply above.
+      // Guarded on `income` truthy — defensive only, IncomesService.create() always
+      // resolves one.
+      if (income) {
+        const currentConversationId = userState.conversationId;
+        void this.chatActionRecorder
+          .recordExternalWrite({
+            userId: userState.userId,
+            accountId: userState.accountId,
+            conversationId: currentConversationId,
+            actionType: 'create_income',
+            resultData: {
+              id: income.id,
+              amount: Number(income.amount),
+              currencyCode: income.currencyCode,
+              description: income.description,
+              category: (income as any)?.category?.name,
+              date: income.date,
+            },
+          })
+          .then((newConversationId) => {
+            if (newConversationId !== currentConversationId) {
+              return this.linkService.updateConversationId(userState.waPhoneNumber, newConversationId);
+            }
+          })
+          .catch(logFireAndForget(this.logger, 'IncomeHandler.recordUndoable'));
+      }
     } catch (error) {
       this.logger.error(`Error creating income: ${error}`);
       await this.whatsappClient.sendText(
