@@ -148,6 +148,11 @@ trusted as the key to write with.
   chain name with the city appended). A one-word name is never extended — "Uber" → "Uber Eats" is a
   different service, not a branch. The first word needs at least three letters, and a merchant
   matching more than one group is left for the user.
+- **A category created from the review gets a real icon and colour.** `categoryStyle(name, t)`
+  matches the proposed name against the default expense categories by English name OR localized
+  display name and returns their Ionicons icon + colour; anything else gets `folder-outline` and the
+  same neutral grey `createCategory` already defaults to. The "couldn't determine" group starts
+  collapsed — its rows are the heterogeneous leftovers and should not compete with the main action.
 - **The suggestions carry SERVER ids.** The client resolves them via `serverId → id → clientId`,
   falling back to the server id itself when none of the three match a locally-held row.
 - **The native route owns the bottom safe-area inset; `CategorizeReview` itself stays inset-free.**
