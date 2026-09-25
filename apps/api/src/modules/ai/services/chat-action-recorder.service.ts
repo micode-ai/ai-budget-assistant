@@ -60,8 +60,12 @@ export class ChatActionRecorderService {
     title: string,
   ): Promise<string> {
     if (conversationId) {
+      // Scoped by account as well as user, like ChatService.chat()'s own lookup: a bot
+      // link can point at a conversation the user opened for ANOTHER account (by naming
+      // it mid-chat). Writing this account's action there would hide it from undo, because
+      // the next chat for this account never reuses that conversation.
       const existing = await this.prisma.chatConversation.findFirst({
-        where: { id: conversationId, userId },
+        where: { id: conversationId, userId, accountId },
         select: { id: true },
       });
       if (existing) return existing.id;

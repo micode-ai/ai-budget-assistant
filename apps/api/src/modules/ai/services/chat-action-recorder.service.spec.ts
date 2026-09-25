@@ -47,7 +47,7 @@ describe('ChatActionRecorderService.recordExternalWrite', () => {
 
     expect(conversationId).toBe('conv-1');
     expect(prisma.chatConversation.findFirst).toHaveBeenCalledWith({
-      where: { id: 'conv-1', userId: 'user-1' },
+      where: { id: 'conv-1', userId: 'user-1', accountId: 'acc-1' },
       select: { id: true },
     });
     expect(prisma.chatConversation.create).not.toHaveBeenCalled();
@@ -77,6 +77,29 @@ describe('ChatActionRecorderService.recordExternalWrite', () => {
     });
     expect(prisma.chatMessage.create).toHaveBeenCalledWith({
       data: expect.objectContaining({ conversationId: 'conv-new' }),
+    });
+  });
+
+  it('does not reuse a conversation the caller opened for a different account', async () => {
+    const prisma = makePrisma();
+    // The lookup includes accountId, so the other account's conversation never matches.
+    prisma.chatConversation.findFirst.mockResolvedValue(null);
+    prisma.chatConversation.create.mockResolvedValue({ id: 'conv-acc-1' });
+    prisma.chatMessage.create.mockResolvedValue({ id: 'msg-1' });
+    const service = new ChatActionRecorderService(prisma as never);
+
+    const conversationId = await service.recordExternalWrite({
+      userId: 'user-1',
+      accountId: 'acc-1',
+      conversationId: 'conv-of-acc-2',
+      actionType: 'create_expense',
+      resultData: RESULT_DATA,
+    });
+
+    expect(prisma.chatConversation.findFirst.mock.calls[0][0].where).toEqual({ id: 'conv-of-acc-2', userId: 'user-1', accountId: 'acc-1' });
+    expect(conversationId).toBe('conv-acc-1');
+    expect(prisma.chatConversation.create).toHaveBeenCalledWith({
+      data: expect.objectContaining({ userId: 'user-1', accountId: 'acc-1' }),
     });
   });
 
