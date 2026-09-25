@@ -11,6 +11,7 @@ import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { ReceiptCategorySplitService } from './services/receipt-category-split.service';
 import { CategorizeSuggestionsService } from './services/categorize-suggestions.service';
+import { CategorizeBotService } from './services/categorize-bot.service';
 import { GoalPlannerService } from './services/goal-planner.service';
 import { UserContextBuilder } from './services/user-context-builder.service';
 import { ChatConversationService } from './services/chat-conversation.service';
@@ -51,6 +52,7 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     ProjectSuggestionService,
     ReceiptCategorySplitService,
     CategorizeSuggestionsService,
+    CategorizeBotService,
     GoalPlannerService,
     UserContextBuilder,
     ChatConversationService,
@@ -72,6 +74,7 @@ import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
     ProjectSuggestionService,
     ReceiptCategorySplitService,
     GoalPlannerService,
+    CategorizeBotService,
   ],
 })
 export class AiModule {}

@@ -16,7 +16,9 @@ Laspeyres inflation index over the products this user actually buys. Free for ev
   `buildCanonicalNameFallback`
 - Mobile: `apps/mobile/src/stores/priceHistoryStore.ts`, `src/services/priceHistory.api.ts`,
   `src/components/analytics/InflationIndexSection.tsx`, `app/settings/products.tsx` →
-  `src/components/settings/products/ProductsSettings.tsx`
+  `src/components/settings/products/ProductsSettings.tsx`, which delegates its rename and merge
+  state to `src/hooks/useProductRename.ts` / `src/hooks/useProductMerge.ts` (ABA-593) — a new
+  rename/merge feature on this screen extends one of those two hooks, not the screen inline
 - `src/components/analytics/ProductDetailSheet.tsx` — the trend-chart + cheapest-store content,
   hosted by TWO chromes: `InflationIndexSection`'s own hand-rolled sheet/dialog, and (ABA-588)
   `src/components/settings/ProductDetailModal.tsx`'s `SheetDialog`
@@ -86,4 +88,6 @@ at most 500 per call.
 ## History
 
 ABA-307 · ABA-308 (AI backfill) · ABA-343 (discount-line folding) · ABA-588 (search →
-detail on Settings → Products; the `getProductDetail` endpoint with no base/current gate).
+detail on Settings → Products; the `getProductDetail` endpoint with no base/current gate) ·
+ABA-593 (`ProductsSettings.tsx` regrowth after ABA-478's modal extraction — rename/merge state
+moved into `useProductRename`/`useProductMerge` hooks; pure refactor, no behavior change).

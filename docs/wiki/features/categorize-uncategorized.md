@@ -164,8 +164,10 @@ trusted as the key to write with.
 ## Known gaps
 
 Out of scope for this pass, matching the design's stated boundaries: re-reviewing expenses that are
-already (mis)categorized; incomes; a bot command; applying merchant rules at notification-capture
-or receipt-scan time; seeding default categories into non-first accounts.
+already (mis)categorized; incomes; applying merchant rules at notification-capture or
+receipt-scan time; seeding default categories into non-first accounts. A bot command was out of
+scope for THIS pass specifically because chat has no room for the review UI — it shipped
+separately as a simplified, sequential variant: [bot-categorize-command](bot-categorize-command.md).
 
 Also not done:
 

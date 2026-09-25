@@ -32,6 +32,7 @@ Los comandos funcionan con o sin `/` — `expense 50 almuerzo` y `/expense 50 al
 | `income MONTO DESC` | Añadir ingreso rápido |
 | `category [TIPO] NOMBRE` | Crear categoría |
 | `categories` | Listar y eliminar categorías |
+| `categorize` | Clasificar tus gastos sin categoria, un grupo a la vez |
 | `usage` | Uso de IA y límites |
 | `account` | Cambiar de cuenta |
 | `newchat` | Nueva conversación IA |

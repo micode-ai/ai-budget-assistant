@@ -36,6 +36,7 @@ function makeService() {
     noop, // categoryHandler
     voiceHandler as never,
     photoHandler as never,
+    noop, // categorizeHandler
     redis as never,
   );
   return { service, photoHandler, voiceHandler, chatHandler, client, linkService };

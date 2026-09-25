@@ -32,6 +32,7 @@ Les commandes fonctionnent avec ou sans `/` — `expense 50 déjeuner` et `/expe
 | `income MONTANT DESC` | Ajouter un revenu |
 | `category [TYPE] NOM` | Créer une catégorie |
 | `categories` | Lister/supprimer catégories |
+| `categorize` | Trier vos depenses sans categorie, un groupe a la fois |
 | `usage` | Utilisation IA et limites |
 | `account` | Changer de compte |
 | `newchat` | Nouvelle conversation IA |

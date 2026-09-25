@@ -14,6 +14,8 @@ import { usePriceHistoryStore } from '@/stores/priceHistoryStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useProductMultiSelect } from '@/hooks/useProductMultiSelect';
+import { useProductRename } from '@/hooks/useProductRename';
+import { useProductMerge } from '@/hooks/useProductMerge';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { RenameProductModal } from '@/components/settings/RenameProductModal';
 import { MergeProductsModal } from '@/components/settings/MergeProductsModal';
@@ -151,9 +153,6 @@ export function ProductsSettings() {
     isLoadingProducts,
     loadProducts,
     upsertAlias,
-    deleteAlias,
-    ignoreProduct,
-    mergeProducts,
     backfillWithAi,
     selectedProductDetail,
     isLoadingProductDetail,
@@ -169,10 +168,17 @@ export function ProductsSettings() {
   // fetch is in flight, nor leave them on screen if it fails.
   useEffect(() => { loadProducts(); }, [currentAccountId]);
 
-  // Single rename
-  const [editing, setEditing] = useState<ProductListItem | null>(null);
-  const [renameName, setRenameName] = useState('');
-  const [saving, setSaving] = useState(false);
+  const {
+    editing,
+    renameName,
+    setRenameName,
+    saving: renameSaving,
+    openRename,
+    closeRename,
+    handleSaveRename,
+    handleResetAlias,
+    handleIgnore,
+  } = useProductRename();
 
   // Detail view (search → price trend + cheapest store) — a separate flow
   // from rename above: the row's main tap opens this, the pencil icon opens
@@ -263,108 +269,20 @@ export function ProductsSettings() {
   const [searchQuery, setSearchQuery] = useState('');
   const deferredQuery = useDeferredValue(searchQuery);
 
-  // Multi-select + merge
+  // Multi-select + merge. `useProductMerge` owns the merge sheet's own state
+  // (sources/target name/in-flight flag); `selected`/`exitSelect` above are
+  // the sibling `useProductMultiSelect` hook's "is a row checked" state.
   const { selecting, selected, toggleSelect, enterSelect, exitSelect } = useProductMultiSelect();
-  const [mergeSources, setMergeSources] = useState<string[] | null>(null);
-  const [mergeName, setMergeName] = useState('');
-
-  // `useCallback` with no deps, not a plain function: `renderItem` lists this
-  // in its own dep array, so while it was redefined every render `renderItem`
-  // was too, and its memo never held. Both setters are stable.
-  const openRename = useCallback((item: ProductListItem) => {
-    setEditing(item);
-    setRenameName(item.canonicalName);
-  }, []);
-  const closeRename = () => {
-    setEditing(null);
-    setRenameName('');
-  };
-
-  const handleSaveRename = async () => {
-    if (!editing) return;
-    const next = renameName.trim();
-    if (!next || next === editing.canonicalName) { closeRename(); return; }
-    setSaving(true);
-    try { await upsertAlias(editing.rawName, next); } catch { /* warn'd */ }
-    setSaving(false);
-    closeRename();
-  };
-
-  const handleResetAlias = useCallback((item: ProductListItem) => {
-    showAlert(
-      t('priceHistory.resetAliasTitle'),
-      t('priceHistory.resetAliasBody', { name: item.rawName }),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('priceHistory.resetAlias'),
-          onPress: async () => {
-            // Delete all aliases in this group (merged products share a canonicalName)
-            try {
-              await Promise.all(item.rawNames.map((rn) => deleteAlias(rn)));
-            } catch { /* warn'd */ }
-          },
-        },
-      ],
-    );
-  }, [deleteAlias, t]);
-
-  const handleIgnore = useCallback((item: ProductListItem) => {
-    showAlert(
-      t('priceHistory.ignoreProduct'),
-      t('priceHistory.ignoreConfirm', { name: item.canonicalName }),
-      [
-        { text: t('common.cancel'), style: 'cancel' },
-        {
-          text: t('priceHistory.ignoreProduct'),
-          style: 'destructive',
-          onPress: async () => {
-            closeRename();
-            try {
-              await Promise.all(item.rawNames.map((rn) => ignoreProduct(rn)));
-            } catch { /* warn'd */ }
-          },
-        },
-      ],
-    );
-  }, [ignoreProduct, t]);
-
-  const defaultMergeName = (sources: string[]) => {
-    const byCount = new Map(products.map((p) => [p.rawName, p.purchaseCount]));
-    return [...sources].sort((a, b) => (byCount.get(b) ?? 0) - (byCount.get(a) ?? 0))[0] ?? '';
-  };
-
-  const openMerge = () => {
-    const sources = [...selected];
-    if (sources.length < 2) return;
-    setMergeSources(sources);
-    setMergeName(defaultMergeName(sources));
-  };
-  const closeMerge = () => { setMergeSources(null); setMergeName(''); };
-
-  const mergeLabel = useMemo(
-    () =>
-      mergeSources
-        ?.map((s) => products.find((x) => x.rawName === s)?.canonicalName ?? s)
-        .join(' + ') ?? '',
-    [mergeSources, products],
-  );
-
-  const handleConfirmMerge = async () => {
-    if (!mergeSources) return;
-    const target = mergeName.trim();
-    if (!target) return;
-    // Expand each selected primary rawName to all rawNames in its group
-    const allRawNames = mergeSources.flatMap(
-      (primaryRaw) => products.find((p) => p.rawName === primaryRaw)?.rawNames ?? [primaryRaw],
-    );
-    setSaving(true);
-    try { await mergeProducts(allRawNames, target); } catch { /* warn'd */ }
-    setSaving(false);
-    closeMerge();
-    exitSelect();
-    showAlert('', t('priceHistory.merged'));
-  };
+  const {
+    mergeSources,
+    mergeName,
+    setMergeName,
+    saving: mergeSaving,
+    mergeLabel,
+    openMerge,
+    closeMerge,
+    handleConfirmMerge,
+  } = useProductMerge(selected, exitSelect);
 
   // The deferred copy: `q` feeds `filteredProducts`, the rows, and `ListEmpty`,
   // so the empty message can never describe a query the rows have not caught up
@@ -648,7 +566,7 @@ export function ProductsSettings() {
         editing={editing}
         renameName={renameName}
         onChangeName={setRenameName}
-        saving={saving}
+        saving={renameSaving}
         canEdit={canEdit}
         onClose={closeRename}
         onSave={handleSaveRename}
@@ -660,7 +578,7 @@ export function ProductsSettings() {
         mergeLabel={mergeLabel}
         mergeName={mergeName}
         onChangeName={setMergeName}
-        saving={saving}
+        saving={mergeSaving}
         onClose={closeMerge}
         onConfirm={handleConfirmMerge}
       />

@@ -32,6 +32,7 @@ Commands work with or without a leading `/` — both `expense 50 lunch` and `/ex
 | `income AMOUNT DESC` | Quick-add an income (e.g., `income 3000 salary`) |
 | `category [TYPE] NAME` | Create a category (e.g., `category expense Food`) |
 | `categories` | List and delete categories |
+| `categorize` | Sort your uncategorized expenses one group at a time |
 | `usage` | View your AI usage, limits, and breakdown |
 | `account` | Switch between your accounts |
 | `newchat` | Start a fresh AI conversation |

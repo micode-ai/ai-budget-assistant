@@ -9,6 +9,7 @@ const COMMANDS = [
   'usage',
   'category',
   'categories',
+  'categorize',
   'link',
 ];
 

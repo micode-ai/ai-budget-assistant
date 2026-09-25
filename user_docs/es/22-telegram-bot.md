@@ -27,6 +27,7 @@ El **Bot de Telegram** te permite interactuar con tu Asistente de presupuesto IA
 | `/income CANTIDAD DESC` | Anadir un ingreso rapidamente (por ejemplo, `/income 3000 salario`) |
 | `/category [TIPO] NOMBRE` | Crear una categoria (por ejemplo, `/category expense Comida`) |
 | `/categories` | Listar y eliminar categorias |
+| `/categorize` | Clasificar tus gastos sin categoria, un grupo a la vez |
 | `/usage` | Ver uso de AI, límites y desglose |
 | `/account` | Cambiar entre tus cuentas |
 | `/newchat` | Iniciar una nueva conversacion con la IA |

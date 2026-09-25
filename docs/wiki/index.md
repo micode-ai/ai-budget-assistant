@@ -58,6 +58,8 @@ the section you came for — it states what must not break and why. A missing se
   under Google Play's memory thresholds
 - [categorize-uncategorized](features/categorize-uncategorized.md) — one batched review that turns a
   pile of uncategorized expenses into a handful of categories, reviewed before anything is written
+- [bot-categorize-command](features/bot-categorize-command.md) — the same review as a sequential
+  Yes/Skip/Stop chat flow for Telegram, WhatsApp and Slack
 - [merchant-category-rules](features/merchant-category-rules.md) — learning a merchant's category
   from a manual edit or a bulk recategorization, and applying it at import and categorize time
 

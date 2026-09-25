@@ -27,6 +27,7 @@
 | `/income KWOTA OPIS` | Szybko dodaj przychod (np. `/income 3000 wynagrodzenie`) |
 | `/category [TYP] NAZWA` | Utworz kategorie (np. `/category expense Jedzenie`) |
 | `/categories` | Lista i usuwanie kategorii |
+| `/categorize` | Uporzadkuj wydatki bez kategorii grupa po grupie |
 | `/usage` | Pokaż użycie AI, limity i podział |
 | `/account` | Przelacz miedzy kontami |
 | `/newchat` | Rozpocznij nowa rozmowe z AI |

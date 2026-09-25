@@ -32,6 +32,7 @@ Befehle funktionieren mit oder ohne `/` — `expense 50 Mittagessen` und `/expen
 | `income BETRAG BESCHR` | Einnahme schnell hinzufügen |
 | `category [TYP] NAME` | Kategorie erstellen |
 | `categories` | Kategorien auflisten und löschen |
+| `categorize` | Unkategorisierte Ausgaben Gruppe für Gruppe sortieren |
 | `usage` | KI-Nutzung und Limits ansehen |
 | `account` | Zwischen Konten wechseln |
 | `newchat` | Neues KI-Gespräch starten |

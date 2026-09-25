@@ -13,6 +13,7 @@ import { CategoryHandler } from './handlers/category.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
+import { CategorizeHandler } from './handlers/categorize.handler';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
@@ -46,6 +47,7 @@ import { WA_REDIS } from './types';
     VoiceHandler,
     PhotoHandler,
     PurchaseRequestHandler,
+    CategorizeHandler,
     {
       provide: WA_REDIS,
       useFactory: (config: ConfigService) =>

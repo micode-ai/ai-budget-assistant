@@ -27,6 +27,7 @@ Met de **Telegram-bot** kun je je AI Budget Assistant gebruiken vanuit Telegram.
 | `/income AMOUNT DESC` | Snel inkomsten toevoegen (bijv. `/income 3000 salary`) |
 | `/category [TYPE] NAME` | Maak een categorie aan (bijv. `/category expense Food`) |
 | `/categories` | Categorieën weergeven en verwijderen |
+| `/categorize` | Sorteer je ongecategoriseerde uitgaven groep voor groep |
 | `/usage` | Bekijk je AI-gebruik, limieten en uitsplitsing |
 | `/account` | Wissel tussen je accounts |
 | `/newchat` | Start een nieuw AI-gesprek |

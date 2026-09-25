@@ -27,6 +27,7 @@ Le **Bot Telegram** vous permet d'interagir avec votre Assistant Budget IA direc
 | `/income MONTANT DESC` | Ajouter rapidement un revenu (par ex., `/income 3000 salaire`) |
 | `/category [TYPE] NOM` | Creer une categorie (par ex., `/category expense Alimentation`) |
 | `/categories` | Lister et supprimer les categories |
+| `/categorize` | Trier vos depenses sans categorie, un groupe a la fois |
 | `/usage` | Voir l'utilisation AI, limites et ventilation |
 | `/account` | Basculer entre vos comptes |
 | `/newchat` | Demarrer une nouvelle conversation avec l'IA |

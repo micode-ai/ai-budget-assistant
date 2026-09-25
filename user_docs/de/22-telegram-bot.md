@@ -27,6 +27,7 @@ Der **Telegram-Bot** ermoglicht die Interaktion mit deinem KI-Budgetassistenten 
 | `/income BETRAG BESCHR` | Schnell ein Einkommen hinzufugen (z. B. `/income 3000 Gehalt`) |
 | `/category [TYP] NAME` | Kategorie erstellen (z. B. `/category expense Essen`) |
 | `/categories` | Kategorien auflisten und loschen |
+| `/categorize` | Unkategorisierte Ausgaben Gruppe für Gruppe sortieren |
 | `/usage` | AI-Nutzung, Limits und Aufschlüsselung anzeigen |
 | `/account` | Zwischen Konten wechseln |
 | `/newchat` | Ein neues KI-Gesprach starten |

@@ -32,6 +32,7 @@ Polecenia działają z `/` lub bez — `expense 50 obiad` i `/expense 50 obiad` 
 | `income KWOTA OPIS` | Szybko dodaj dochód |
 | `category [TYP] NAZWA` | Utwórz kategorię |
 | `categories` | Lista i usuwanie kategorii |
+| `categorize` | Uporzadkuj wydatki bez kategorii grupa po grupie |
 | `usage` | Użycie AI i limity |
 | `account` | Zmiana konta |
 | `newchat` | Nowa rozmowa z AI |

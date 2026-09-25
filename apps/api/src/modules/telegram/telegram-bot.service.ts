@@ -11,6 +11,7 @@ import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
+import { CategorizeHandler } from './handlers/categorize.handler';
 import { BotContext } from './types';
 
 @Injectable()
@@ -32,6 +33,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     private readonly photoHandler: PhotoHandler,
     private readonly categoryHandler: CategoryHandler,
     private readonly purchaseRequestHandler: PurchaseRequestHandler,
+    private readonly categorizeHandler: CategorizeHandler,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -150,6 +152,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     this.bot.command('category', (ctx) => this.categoryHandler.handle(ctx));
     this.bot.command('categories', (ctx) => this.categoryHandler.handleList(ctx));
     this.bot.command('usage', (ctx) => this.commandHandler.handleUsage(ctx));
+    this.bot.command('categorize', (ctx) => this.categorizeHandler.handle(ctx));
 
     // Callback queries (inline keyboard buttons)
     this.bot.on('callback_query', async (ctx) => {
@@ -228,6 +231,20 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
         const action = data.substring(0, colonIdx);
         const requestId = data.substring(colonIdx + 1);
         await this.purchaseRequestHandler.handleCallback(ctx, action, requestId);
+        return;
+      }
+
+      // /categorize Yes/Skip/Stop callbacks — payload is the step index the button was sent for
+      if (data.startsWith('catz_y:')) {
+        await this.categorizeHandler.handleYes(ctx, Number(data.slice('catz_y:'.length)));
+        return;
+      }
+      if (data.startsWith('catz_n:')) {
+        await this.categorizeHandler.handleNo(ctx, Number(data.slice('catz_n:'.length)));
+        return;
+      }
+      if (data.startsWith('catz_s:')) {
+        await this.categorizeHandler.handleStop(ctx, Number(data.slice('catz_s:'.length)));
         return;
       }
     });

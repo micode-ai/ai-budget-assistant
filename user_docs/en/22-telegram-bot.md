@@ -27,6 +27,7 @@ The **Telegram Bot** lets you interact with your AI Budget Assistant from Telegr
 | `/income AMOUNT DESC` | Quick-add an income (e.g., `/income 3000 salary`) |
 | `/category [TYPE] NAME` | Create a category (e.g., `/category expense Food`) |
 | `/categories` | List and delete categories |
+| `/categorize` | Sort your uncategorized expenses one group at a time |
 | `/usage` | View your AI usage, limits, and breakdown |
 | `/account` | Switch between your accounts |
 | `/newchat` | Start a fresh AI conversation |

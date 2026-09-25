@@ -15,6 +15,7 @@ import { IncomeHandler } from './handlers/income.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
+import { CategorizeHandler } from './handlers/categorize.handler';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
@@ -47,6 +48,7 @@ import { SLACK_REDIS } from './types';
     CategoryHandler,
     VoiceHandler,
     PhotoHandler,
+    CategorizeHandler,
     {
       provide: SLACK_REDIS,
       useFactory: (config: ConfigService) =>

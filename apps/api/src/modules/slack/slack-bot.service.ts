@@ -9,6 +9,7 @@ import { IncomeHandler } from './handlers/income.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
+import { CategorizeHandler } from './handlers/categorize.handler';
 import { parseCommand } from './helpers/parse-command';
 import { t } from './helpers/i18n';
 import {
@@ -33,6 +34,7 @@ export class SlackBotService {
     private readonly categoryHandler: CategoryHandler,
     private readonly voiceHandler: VoiceHandler,
     private readonly photoHandler: PhotoHandler,
+    private readonly categorizeHandler: CategorizeHandler,
     @Inject(SLACK_REDIS) private readonly redis: Redis,
   ) {}
 
@@ -186,6 +188,7 @@ export class SlackBotService {
         case 'usage': return this.commandHandler.handleUsage(userState);
         case 'category': return this.categoryHandler.handle(parsed.args, userState);
         case 'categories': return this.categoryHandler.handleList(userState);
+        case 'categorize': return this.categorizeHandler.handle(userState);
       }
     }
 
@@ -212,6 +215,9 @@ export class SlackBotService {
       case 'receipt_items': return this.photoHandler.handleItemsCallback(payload, userState);
       case 'receipt_date': return this.photoHandler.handleDateCallback(payload, userState);
       case 'receipt_cancel': return this.photoHandler.handleReceiptCancelCallback(payload, userState);
+      case 'catz_y': return this.categorizeHandler.handleYes(Number(payload), userState);
+      case 'catz_n': return this.categorizeHandler.handleNo(Number(payload), userState);
+      case 'catz_s': return this.categorizeHandler.handleStop(Number(payload), userState);
       default: this.logger.warn(`Unknown callback prefix: ${prefix}`);
     }
   }
