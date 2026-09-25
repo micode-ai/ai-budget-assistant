@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
-import type { MerchantCategoryRule } from '@budget/shared-types';
+import type { MerchantCategoryRule, MerchantRuleReapplyPreview } from '@budget/shared-types';
 
 interface MerchantRulesState {
   rules: MerchantCategoryRule[];
@@ -8,6 +8,12 @@ interface MerchantRulesState {
   loadRules: () => Promise<void>;
   getRuleForMerchant: (merchant: string) => string | null;
   deleteRule: (id: string) => Promise<void>;
+  /** Read-only fetch — the caller (the reapply sheet) holds the preview in its
+   *  own local state, same as every other modal-with-a-fetch in this screen. */
+  previewReapply: (ruleId: string) => Promise<MerchantRuleReapplyPreview>;
+  /** Moves expenses server-side; does NOT mutate `rules` (the rule itself is
+   *  unchanged — only expenses moved). Returns the count of updated expenses. */
+  reapplyRule: (ruleId: string, categoryIds: string[]) => Promise<number>;
   /**
    * Cleared by `accountStore` whenever the active account changes. Resetting
    * `isLoaded` is the load-bearing half: it is a lazy-load guard read by the
@@ -46,6 +52,13 @@ export const useMerchantRulesStore = create<MerchantRulesState>((set, get) => ({
       // Re-sync on failure so UI reflects server truth
       get().loadRules();
     }
+  },
+
+  previewReapply: (ruleId: string) => api.previewReapplyRule(ruleId),
+
+  reapplyRule: async (ruleId: string, categoryIds: string[]) => {
+    const { updated } = await api.reapplyRule(ruleId, categoryIds);
+    return updated;
   },
 
   reset: () => set({ rules: [], isLoaded: false }),

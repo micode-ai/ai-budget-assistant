@@ -26,6 +26,10 @@ same merchant twice.
 - `apps/mobile/src/stores/merchantRulesStore.ts`, `apps/mobile/app/settings/merchants.tsx`
   ("Category rules" section)
 - Table `merchant_category_rules`, migration `20260615000000_add_merchant_category_rules`
+- **Reapply (ABA-596)**: `MerchantRulesService.previewReapply`/`.reapply` — `GET
+  /merchant-rules/:id/reapply-preview`, `POST /merchant-rules/:id/reapply` (`ViewerBlockGuard`) —
+  and `apps/mobile/src/components/settings/merchants/MerchantsSettings.tsx`'s per-rule "Reapply"
+  action
 
 ## Key concepts
 
@@ -44,12 +48,29 @@ what makes `upsertRule` idempotent per account.
 3. Nothing else writes a rule — a bot-confirmed receipt, a notification capture, or a scan-time
    category suggestion never does, by design (see Known gaps on the categorize-uncategorized page).
 
-**Three readers, in priority order over static hints.** Both import commits
+**Three automatic readers, in priority order over static hints.** Both import commits
 (`import-wise`/`import-bank`) and the categorize pass call `getRulesMap(accountId)` and treat a
 matching rule as a **higher-priority override** over the static `MERCHANT_CATEGORY_HINTS` /
 `suggestCategoryFromMerchantPL` heuristics — a learned rule always wins over a guess. The categorize
 pass additionally treats a rule hit as free: an expense resolved by rule never reaches the model and
 never counts against that feature's daily ceiling.
+
+**A 4th reader, but not automatic: Reapply (ABA-596).** The three readers above only ever apply a
+rule going forward — to a future import row or a future categorize pass — never to an expense from
+that merchant already sitting in some other category from before the rule was learned. "Reapply"
+closes that gap on demand: from the merchant's row in "Category rules", `previewReapply` finds every
+expense of that merchant currently filed under a category *other than* the rule's target (same
+spend-eligibility filter as [categorize-uncategorized](categorize-uncategorized.md):
+`isDeleted:false`, `isPlanned:false`, `isSplitReceivable:false`, `isDebt:false`, plus
+`encryptedPayload: null` — a tier-1-encrypted expense's `merchant` column holds no server-readable
+plaintext to match against, the identical reason that page excludes E2EE rows), groups them by
+their *current* category, and the user picks which groups to move by unchecking any they know they
+moved on purpose. `reapply` then does one plain `updateMany` over the selected groups' expense ids
+— not through `ExpenseBulkService` (that would need `MerchantRulesModule` to import
+`ExpensesModule`, which already imports `MerchantRulesModule`) — and busts the chat cache the same
+way any other expense-category write does. No model call, so it shares no daily counter with
+`categorize-uncategorized`. There is no schema flag for "the user deliberately overrode this" — the
+per-group checkbox is the entire mitigation.
 
 ## Invariants
 
@@ -70,4 +91,6 @@ never counts against that feature's daily ceiling.
 
 ABA-261 — the feature (learning from a single manual edit; applying at import time). ABA-589 —
 added learning from bulk recategorization, and reading rules as the first, free step of a
-categorize-uncategorized pass.
+categorize-uncategorized pass. ABA-596 — Reapply: a per-rule, user-triggered, retroactive pass
+that moves already-(mis)categorized expenses into a learned rule's target category, the one gap
+`categorize-uncategorized` explicitly left open (it only ever looks at `categoryId: null`).

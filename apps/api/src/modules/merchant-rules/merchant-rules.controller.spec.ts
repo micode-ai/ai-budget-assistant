@@ -6,7 +6,12 @@ import { AccountContextGuard } from '../../common/middleware/account-context.mid
 
 describe('MerchantRulesController', () => {
   let controller: MerchantRulesController;
-  let svc: { listRules: jest.Mock; deleteRule: jest.Mock };
+  let svc: {
+    listRules: jest.Mock;
+    deleteRule: jest.Mock;
+    previewReapply: jest.Mock;
+    reapply: jest.Mock;
+  };
 
   const req = { accountId: 'acc1' } as any;
 
@@ -17,6 +22,15 @@ describe('MerchantRulesController', () => {
     svc = {
       listRules: jest.fn().mockResolvedValue([]),
       deleteRule: jest.fn().mockResolvedValue(undefined),
+      previewReapply: jest.fn().mockResolvedValue({
+        ruleId: 'rule1',
+        merchantNormalized: 'biedronka',
+        targetCategoryId: 'cat-target',
+        targetCategoryName: 'Groceries',
+        totalCount: 0,
+        groups: [],
+      }),
+      reapply: jest.fn().mockResolvedValue({ updated: 0 }),
     };
     const module = await Test.createTestingModule({
       controllers: [MerchantRulesController],
@@ -39,5 +53,30 @@ describe('MerchantRulesController', () => {
   it('DELETE /merchant-rules/:id delegates to deleteRule with the account and rule id', async () => {
     await controller.deleteRule(req, 'rule1');
     expect(svc.deleteRule).toHaveBeenCalledWith('acc1', 'rule1');
+  });
+
+  it('GET /merchant-rules/:id/reapply-preview delegates to previewReapply with the account and rule id', async () => {
+    const result = await controller.previewReapply(req, 'rule1');
+    expect(svc.previewReapply).toHaveBeenCalledWith('acc1', 'rule1');
+    expect(result).toEqual({
+      ruleId: 'rule1',
+      merchantNormalized: 'biedronka',
+      targetCategoryId: 'cat-target',
+      targetCategoryName: 'Groceries',
+      totalCount: 0,
+      groups: [],
+    });
+  });
+
+  it('POST /merchant-rules/:id/reapply delegates to reapply with the account, rule id and selected category ids', async () => {
+    const result = await controller.reapply(req, 'rule1', { categoryIds: ['cat-a', 'cat-b'] });
+    expect(svc.reapply).toHaveBeenCalledWith('acc1', 'rule1', ['cat-a', 'cat-b']);
+    expect(result).toEqual({ updated: 0 });
+  });
+
+  it('the reapply route is guarded by ViewerBlockGuard', () => {
+    const guards = Reflect.getMetadata('__guards__', MerchantRulesController.prototype.reapply);
+    expect(guards).toBeDefined();
+    expect(guards.some((g: any) => (g?.constructor?.name ?? g?.name) === 'ViewerBlockGuard')).toBe(true);
   });
 });

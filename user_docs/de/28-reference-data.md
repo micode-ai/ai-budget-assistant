@@ -39,6 +39,7 @@ Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Aus
 
 - Erlernte Regeln erscheinen im Abschnitt **Kategorieregeln** unten auf dem Händler-Bildschirm
 - Tippe auf den Mülleimer, um eine Regel zu löschen
+- Tippe auf das Aktualisieren-Symbol neben einer Regel, um sie **erneut anzuwenden** — dabei werden die Ausgaben dieses Händlers gesucht, die bereits einer anderen Kategorie zugeordnet sind, und es wird angeboten, sie ebenfalls in die Kategorie der Regel zu verschieben, damit ältere Ausgaben mit später gelernten Regeln nachziehen
 - Regeln werden auf dem Server gespeichert und auf allen Geräten synchronisiert
 
 ## Tags

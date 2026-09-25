@@ -2252,6 +2252,11 @@ export default {
     noRules: 'No learned rules yet',
     ruleDeleteConfirm: 'Delete auto-category rule for "{{merchant}}"?',
     ruleDeleted: 'Rule deleted',
+    reapplyNothingToDo: 'All {{merchant}} expenses are already in the right category.',
+    reapplyTitle: 'Reapply rule',
+    reapplyGroupLabel: '{{count}} from {{category}}',
+    reapplySummary: '{{count}} expenses will move to {{category}}',
+    reapplyApplied: 'Moved {{count}} expenses to {{category}}',
   },
   aiUsage: {
     confirmTitle: 'AI Usage',

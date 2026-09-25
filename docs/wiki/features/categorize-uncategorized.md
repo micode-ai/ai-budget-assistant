@@ -218,7 +218,9 @@ Deliberate simplifications versus the expense pass, not oversights:
 ## Known gaps
 
 Out of scope for this pass, matching the design's stated boundaries: re-reviewing expenses/incomes
-that are already (mis)categorized; applying merchant rules at notification-capture or
+that are already (mis)categorized (a narrower, rule-only slice of this exists now — see
+[merchant-category-rules](merchant-category-rules.md)'s "Reapply" reader, ABA-596; a model-assisted
+re-review of a whole category remains unscoped); applying merchant rules at notification-capture or
 receipt-scan time; seeding default categories into non-first accounts; a bot command for either
 entity type (chat has no room for the review UI — the expense side shipped a simplified, sequential
 bot variant instead: [bot-categorize-command](bot-categorize-command.md); incomes have no bot

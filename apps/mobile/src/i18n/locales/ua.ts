@@ -2255,6 +2255,11 @@ export default {
     noRules: 'Вивчених правил поки немає',
     ruleDeleteConfirm: 'Видалити правило автокатегорії для «{{merchant}}»?',
     ruleDeleted: 'Правило видалено',
+    reapplyNothingToDo: 'Усі витрати {{merchant}} вже в правильній категорії.',
+    reapplyTitle: 'Застосувати правило',
+    reapplyGroupLabel: '{{count}} з категорії {{category}}',
+    reapplySummary: '{{count}} витрат буде переміщено до {{category}}',
+    reapplyApplied: 'Переміщено {{count}} витрат до {{category}}',
   },
   aiUsage: {
     confirmTitle: 'Використання AI',

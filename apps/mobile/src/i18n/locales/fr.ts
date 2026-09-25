@@ -2245,6 +2245,11 @@ export default {
     noRules: "Aucune règle apprise pour l'instant",
     ruleDeleteConfirm: 'Supprimer la règle automatique pour « {{merchant}} » ?',
     ruleDeleted: 'Règle supprimée',
+    reapplyNothingToDo: 'Toutes les dépenses de {{merchant}} sont déjà dans la bonne catégorie.',
+    reapplyTitle: 'Réappliquer la règle',
+    reapplyGroupLabel: '{{count}} de {{category}}',
+    reapplySummary: '{{count}} dépenses seront déplacées vers {{category}}',
+    reapplyApplied: '{{count}} dépenses déplacées vers {{category}}',
   },
   aiUsage: {
     confirmTitle: 'Utilisation AI',

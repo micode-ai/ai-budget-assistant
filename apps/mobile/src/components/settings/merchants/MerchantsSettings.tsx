@@ -14,14 +14,16 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
 import { useSettingsPane } from '../SettingsPaneContext';
+import type { MerchantCategoryRule, MerchantRuleReapplyPreview } from '@budget/shared-types';
 
 /**
- * Stable accessible-name ids for the two sheets' titles, wired to the desktop
- * dialogs' `aria-labelledby`. Fixed ids are safe for the same reason
+ * Stable accessible-name ids for the three sheets' titles, wired to the
+ * desktop dialogs' `aria-labelledby`. Fixed ids are safe for the same reason
  * `ExpenseDialog.tsx`'s is: only one sheet is ever open at a time.
  */
 const RENAME_SHEET_TITLE_ID = 'merchant-rename-sheet-title';
 const MERGE_SHEET_TITLE_ID = 'merchant-merge-sheet-title';
+const REAPPLY_SHEET_TITLE_ID = 'merchant-reapply-sheet-title';
 
 /**
  * The merchants screen's body: the merchant list with its rename / merge /
@@ -102,6 +104,8 @@ export function MerchantsSettings() {
   const isRulesLoaded = useMerchantRulesStore((s) => s.isLoaded);
   const loadRules = useMerchantRulesStore((s) => s.loadRules);
   const deleteRule = useMerchantRulesStore((s) => s.deleteRule);
+  const previewReapply = useMerchantRulesStore((s) => s.previewReapply);
+  const reapplyRule = useMerchantRulesStore((s) => s.reapplyRule);
 
   // Keyed on the account: the rules are scoped server-side to `X-Account-Id`.
   // `accountStore` clears `isLoaded` on a switch, so this re-fetches then while
@@ -135,6 +139,11 @@ export function MerchantsSettings() {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [mergeSources, setMergeSources] = useState<string[] | null>(null);
   const [mergeName, setMergeName] = useState('');
+
+  // Reapply rule
+  const [reapplyPreview, setReapplyPreview] = useState<MerchantRuleReapplyPreview | null>(null);
+  const [reapplySelected, setReapplySelected] = useState<Set<string>>(new Set());
+  const [reapplyLoading, setReapplyLoading] = useState(false);
 
   // Suggestions — dismissals persist across sessions (MMKV), keyed by fingerprint.
   const dismissed = useMerchantSuggestionStore((s) => s.dismissed);
@@ -229,6 +238,57 @@ export function MerchantsSettings() {
     closeMerge();
     exitSelect();
     showAlert('', t('merchants.merged', { name: target, count }));
+  };
+
+  const closeReapply = () => {
+    setReapplyPreview(null);
+    setReapplySelected(new Set());
+  };
+
+  const handleReapply = async (rule: MerchantCategoryRule) => {
+    setReapplyLoading(true);
+    try {
+      const preview = await previewReapply(rule.id);
+      if (preview.totalCount === 0) {
+        showAlert('', t('merchants.reapplyNothingToDo', { merchant: preview.merchantNormalized }));
+        return;
+      }
+      setReapplyPreview(preview);
+      setReapplySelected(new Set(preview.groups.map((g) => g.categoryId)));
+    } finally {
+      setReapplyLoading(false);
+    }
+  };
+
+  const toggleReapplyGroup = (categoryId: string) => {
+    setReapplySelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(categoryId)) next.delete(categoryId); else next.add(categoryId);
+      return next;
+    });
+  };
+
+  const reapplySelectedCount = useMemo(() => {
+    if (!reapplyPreview) return 0;
+    return reapplyPreview.groups.reduce(
+      (sum, g) => sum + (reapplySelected.has(g.categoryId) ? g.count : 0),
+      0,
+    );
+  }, [reapplyPreview, reapplySelected]);
+
+  const handleConfirmReapply = async () => {
+    if (!reapplyPreview) return;
+    setSaving(true);
+    const targetCategoryName = reapplyPreview.targetCategoryName;
+    const updated = await reapplyRule(reapplyPreview.ruleId, [...reapplySelected]);
+    setSaving(false);
+    closeReapply();
+    // Fire-and-forget: this write happened server-side in one bulk update, not
+    // through expenseStore's normal optimistic-local-then-push path, so
+    // nothing has told the local store yet — same posture as renameMerchant's
+    // syncPendingExpenses() call above.
+    useExpenseStore.getState().loadExpenses({ force: true });
+    showAlert('', t('merchants.reapplyApplied', { count: updated, category: targetCategoryName }));
   };
 
   return (
@@ -379,6 +439,16 @@ export function MerchantsSettings() {
                   </View>
                   {canEdit && (
                     <TouchableOpacity
+                      onPress={() => handleReapply(rule)}
+                      hitSlop={8}
+                      style={styles.ruleActionSpacing}
+                      disabled={reapplyLoading}
+                    >
+                      <Ionicons name="refresh-outline" size={20} color={theme.colors.primary} />
+                    </TouchableOpacity>
+                  )}
+                  {canEdit && (
+                    <TouchableOpacity
                       onPress={() => handleDeleteRule(rule.id, rule.merchantNormalized)}
                       hitSlop={8}
                     >
@@ -478,6 +548,70 @@ export function MerchantsSettings() {
           </TouchableOpacity>
         </View>
       </SheetDialog>
+
+      {/* Reapply rule sheet */}
+      <SheetDialog
+        visible={reapplyPreview !== null}
+        onClose={closeReapply}
+        titleId={REAPPLY_SHEET_TITLE_ID}
+        padBottom={theme.spacing[4]}
+        insetFloor={theme.spacing[6]}
+        scrimColor="rgba(0,0,0,0.4)"
+      >
+        {reapplyPreview && (
+          <>
+            <Text nativeID={REAPPLY_SHEET_TITLE_ID} style={styles.modalTitle}>
+              {t('merchants.reapplyTitle', {
+                merchant: reapplyPreview.merchantNormalized,
+                category: reapplyPreview.targetCategoryName,
+              })}
+            </Text>
+            {reapplyPreview.groups.map((g) => {
+              const isChecked = reapplySelected.has(g.categoryId);
+              return (
+                <TouchableOpacity
+                  key={g.categoryId}
+                  style={styles.row}
+                  onPress={() => toggleReapplyGroup(g.categoryId)}
+                  activeOpacity={0.7}
+                >
+                  <Ionicons
+                    name={isChecked ? 'checkbox' : 'square-outline'}
+                    size={22}
+                    color={isChecked ? theme.colors.primary : theme.colors.textTertiary}
+                  />
+                  <View style={styles.nameContainer}>
+                    <Text style={styles.name} numberOfLines={1}>
+                      {t('merchants.reapplyGroupLabel', { count: g.count, category: g.categoryName })}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            })}
+            <Text style={styles.mergeCount}>
+              {t('merchants.reapplySummary', {
+                count: reapplySelectedCount,
+                category: reapplyPreview.targetCategoryName,
+              })}
+            </Text>
+            <View style={styles.actions}>
+              <TouchableOpacity style={styles.cancelButton} onPress={closeReapply}>
+                <Text style={styles.cancelText}>{t('common.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.saveButton,
+                  (saving || reapplySelectedCount === 0) && styles.saveButtonDisabled,
+                ]}
+                onPress={handleConfirmReapply}
+                disabled={saving || reapplySelectedCount === 0}
+              >
+                <Text style={styles.saveText}>{t('common.apply', { count: reapplySelectedCount })}</Text>
+              </TouchableOpacity>
+            </View>
+          </>
+        )}
+      </SheetDialog>
     </>
   );
 }
@@ -513,6 +647,8 @@ const createStyles = (theme: Theme) => ({
     justifyContent: 'center' as const, alignItems: 'center' as const,
   },
   nameContainer: { flex: 1, marginLeft: theme.spacing[3] },
+  // Spacing between the rule row's Reapply and Delete icon actions.
+  ruleActionSpacing: { marginRight: theme.spacing[3] },
   name: { ...theme.textStyles.body, color: theme.colors.textPrimary },
   sub: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary, marginTop: 2 },
   divider: {

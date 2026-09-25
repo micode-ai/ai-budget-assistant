@@ -39,6 +39,7 @@ Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz
 
 - Nauczone reguły wyświetlają się w sekcji **Reguły kategorii** na dole ekranu Sklepy
 - Dotknij ikony kosza, aby usunąć regułę
+- Dotknij ikony odświeżania obok reguły, aby ją **ponownie zastosować** — znajdzie to wydatki tego sklepu już przypisane do innej kategorii i zaproponuje przeniesienie ich także do kategorii reguły, dzięki czemu starsze wydatki nadrobią reguły nauczone później
 - Reguły są przechowywane na serwerze i synchronizowane na wszystkich Twoich urządzeniach
 
 ## Tagi

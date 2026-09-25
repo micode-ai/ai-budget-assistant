@@ -42,6 +42,7 @@ The app learns from your corrections. Every time you change the category of an e
 - Learned rules appear in the **Category rules** section at the bottom of the Merchants screen
 - Each row shows the merchant name and the category it maps to
 - Tap the trash icon to delete a rule (the app will no longer auto-assign that category)
+- Tap the refresh icon next to a rule to **reapply** it — this finds that merchant's expenses already filed under a different category and offers to move them into the rule's category too, so older expenses catch up with rules you taught later
 - Rules are stored on the server and sync across all your devices
 
 **Example:** You import a Revolut statement and fix "AMAZON" → Shopping. Next month's import automatically puts Amazon transactions in Shopping.

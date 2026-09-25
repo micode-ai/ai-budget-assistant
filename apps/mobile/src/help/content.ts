@@ -3796,6 +3796,7 @@ The app learns from your corrections. Every time you change the category of an e
 - Learned rules appear in the **Category rules** section at the bottom of the Merchants screen
 - Each row shows the merchant name and the category it maps to
 - Tap the trash icon to delete a rule (the app will no longer auto-assign that category)
+- Tap the refresh icon next to a rule to **reapply** it — this finds that merchant's expenses already filed under a different category and offers to move them into the rule's category too, so older expenses catch up with rules you taught later
 - Rules are stored on the server and sync across all your devices
 
 **Example:** You import a Revolut statement and fix "AMAZON" → Shopping. Next month's import automatically puts Amazon transactions in Shopping.
@@ -8581,6 +8582,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 - Выученные правила отображаются в разделе **Правила категорий** внизу экрана Магазины
 - Нажмите иконку корзины, чтобы удалить правило
+- Нажмите иконку обновления рядом с правилом, чтобы **применить его повторно** — это найдёт расходы этого магазина, уже отнесённые к другой категории, и предложит перенести их в категорию правила тоже, чтобы старые расходы подтянулись под правила, выученные позже
 - Правила хранятся на сервере и синхронизируются на всех устройствах
 
 ## Теги
@@ -13327,6 +13329,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 - Вивчені правила відображаються в розділі **Правила категорій** внизу екрана Магазини
 - Натисніть іконку кошика, щоб видалити правило
+- Натисніть іконку оновлення поруч із правилом, щоб **застосувати його повторно** — це знайде витрати цього магазину, які вже віднесено до іншої категорії, і запропонує перенести їх також у категорію правила, щоб старіші витрати підтягнулися під правила, вивчені пізніше
 - Правила зберігаються на сервері і синхронізуються на всіх ваших пристроях
 
 ## Теги
@@ -18060,6 +18063,7 @@ Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz
 
 - Nauczone reguły wyświetlają się w sekcji **Reguły kategorii** na dole ekranu Sklepy
 - Dotknij ikony kosza, aby usunąć regułę
+- Dotknij ikony odświeżania obok reguły, aby ją **ponownie zastosować** — znajdzie to wydatki tego sklepu już przypisane do innej kategorii i zaproponuje przeniesienie ich także do kategorii reguły, dzięki czemu starsze wydatki nadrobią reguły nauczone później
 - Reguły są przechowywane na serwerze i synchronizowane na wszystkich Twoich urządzeniach
 
 ## Tagi
@@ -22769,6 +22773,7 @@ Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Aus
 
 - Erlernte Regeln erscheinen im Abschnitt **Kategorieregeln** unten auf dem Händler-Bildschirm
 - Tippe auf den Mülleimer, um eine Regel zu löschen
+- Tippe auf das Aktualisieren-Symbol neben einer Regel, um sie **erneut anzuwenden** — dabei werden die Ausgaben dieses Händlers gesucht, die bereits einer anderen Kategorie zugeordnet sind, und es wird angeboten, sie ebenfalls in die Kategorie der Regel zu verschieben, damit ältere Ausgaben mit später gelernten Regeln nachziehen
 - Regeln werden auf dem Server gespeichert und auf allen Geräten synchronisiert
 
 ## Tags
@@ -27464,6 +27469,7 @@ La app aprende de tus correcciones. Cada vez que cambias la categoría de un gas
 
 - Las reglas aprendidas aparecen en la sección **Reglas de categoría** al final de la pantalla Comercios
 - Toca el icono de papelera para eliminar una regla
+- Toca el icono de actualizar junto a una regla para **reaplicarla** — esto busca los gastos de ese comercio ya archivados bajo otra categoría y ofrece moverlos también a la categoría de la regla, para que los gastos antiguos se pongan al día con las reglas que aprendiste más tarde
 - Las reglas se guardan en el servidor y se sincronizan en todos tus dispositivos
 
 ## Etiquetas
@@ -32157,6 +32163,7 @@ L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'
 
 - Les règles apprises apparaissent dans la section **Règles de catégorie** en bas de l'écran Commerçants
 - Appuyez sur la corbeille pour supprimer une règle
+- Appuyez sur l'icône d'actualisation à côté d'une règle pour la **réappliquer** — cela retrouve les dépenses de ce commerçant déjà classées dans une autre catégorie et propose de les déplacer aussi vers la catégorie de la règle, afin que les anciennes dépenses rattrapent les règles apprises plus tard
 - Les règles sont stockées sur le serveur et synchronisées sur tous vos appareils
 
 ## Étiquettes
@@ -36820,6 +36827,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 - Вывучаныя правілы адлюстроўваюцца ў раздзеле **Правілы катэгорый** ўнізе экрана Крамы
 - Націсніце кошык для выдалення правіла
+- Націсніце іконку абнаўлення побач з правілам, каб **ужыць яго паўторна** — гэта знойдзе выдаткі гэтай крамы, якія ўжо аднесены да іншай катэгорыі, і прапануе перанесці іх таксама ў катэгорыю правіла, каб старыя выдаткі падцягнуліся пад правілы, вывучаныя пазней
 - Правілы захоўваюцца на серверы і сінхранізуюцца на ўсіх прыладах
 
 ## Тэгі
@@ -41582,6 +41590,18 @@ Verkopers worden automatisch aangemaakt wanneer je uitgaven toevoegt — via han
 - Verwijderen haalt de verkopernaam uit alle bijpassende uitgaven (de uitgaven zelf blijven behouden)
 
 > Je kunt verkopers niet handmatig aanmaken — ze verschijnen automatisch terwijl je uitgaven toevoegt.
+
+### Categorieregels
+
+De app leert van je correcties. Elke keer dat je de categorie wijzigt van een uitgave met een verkopernaam, wordt automatisch een **categorieregel** opgeslagen. De volgende keer dat je een bankafschrift of Wise-CSV importeert met die verkoper, past de app je regel toe en wijst de categorie automatisch toe, zonder handmatige correctie.
+
+- Geleerde regels verschijnen in de sectie **Categorieregels** onderaan het scherm Verkopers
+- Elke rij toont de verkopernaam en de categorie waarnaar deze wordt toegewezen
+- Tik op het prullenbakpictogram om een regel te verwijderen (de app wijst die categorie dan niet meer automatisch toe)
+- Tik op het vernieuwingspictogram naast een regel om deze **opnieuw toe te passen** — dit zoekt uitgaven van die verkoper die al onder een andere categorie zijn ingedeeld en biedt aan om ze ook naar de categorie van de regel te verplaatsen, zodat oudere uitgaven meegaan met regels die je later hebt aangeleerd
+- Regels worden op de server opgeslagen en gesynchroniseerd op al je apparaten
+
+**Voorbeeld:** Je importeert een Revolut-afschrift en corrigeert "AMAZON" → Shopping. Bij de volgende import worden Amazon-transacties automatisch onder Shopping geplaatst.
 
 ## Tags
 

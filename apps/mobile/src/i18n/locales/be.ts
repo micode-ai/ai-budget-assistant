@@ -2223,6 +2223,11 @@ export default {
     noRules: 'Вывучаных правілаў пакуль няма',
     ruleDeleteConfirm: 'Выдаліць правіла аўтакатэгорыі для «{{merchant}}»?',
     ruleDeleted: 'Правіла выдалена',
+    reapplyNothingToDo: 'Усе выдаткі {{merchant}} ужо ў правільнай катэгорыі.',
+    reapplyTitle: 'Прымяніць правіла',
+    reapplyGroupLabel: '{{count}} з катэгорыі {{category}}',
+    reapplySummary: '{{count}} выдаткаў будзе перанесена ў {{category}}',
+    reapplyApplied: 'Перанесена {{count}} выдаткаў у {{category}}',
   },
   aiUsage: {
     confirmTitle: 'Выкарыстанне AI',

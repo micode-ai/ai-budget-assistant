@@ -2245,6 +2245,11 @@ export default {
     noRules: 'Aún no hay reglas aprendidas',
     ruleDeleteConfirm: '¿Eliminar la regla automática para "{{merchant}}"?',
     ruleDeleted: 'Regla eliminada',
+    reapplyNothingToDo: 'Todos los gastos de {{merchant}} ya están en la categoría correcta.',
+    reapplyTitle: 'Reaplicar regla',
+    reapplyGroupLabel: '{{count}} de {{category}}',
+    reapplySummary: '{{count}} gastos se moverán a {{category}}',
+    reapplyApplied: 'Se movieron {{count}} gastos a {{category}}',
   },
   aiUsage: {
     confirmTitle: 'Uso de AI',

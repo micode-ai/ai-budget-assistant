@@ -38,6 +38,7 @@ La app aprende de tus correcciones. Cada vez que cambias la categoría de un gas
 
 - Las reglas aprendidas aparecen en la sección **Reglas de categoría** al final de la pantalla Comercios
 - Toca el icono de papelera para eliminar una regla
+- Toca el icono de actualizar junto a una regla para **reaplicarla** — esto busca los gastos de ese comercio ya archivados bajo otra categoría y ofrece moverlos también a la categoría de la regla, para que los gastos antiguos se pongan al día con las reglas que aprendiste más tarde
 - Las reglas se guardan en el servidor y se sincronizan en todos tus dispositivos
 
 ## Etiquetas

@@ -35,6 +35,18 @@ Verkopers worden automatisch aangemaakt wanneer je uitgaven toevoegt — via han
 
 > Je kunt verkopers niet handmatig aanmaken — ze verschijnen automatisch terwijl je uitgaven toevoegt.
 
+### Categorieregels
+
+De app leert van je correcties. Elke keer dat je de categorie wijzigt van een uitgave met een verkopernaam, wordt automatisch een **categorieregel** opgeslagen. De volgende keer dat je een bankafschrift of Wise-CSV importeert met die verkoper, past de app je regel toe en wijst de categorie automatisch toe, zonder handmatige correctie.
+
+- Geleerde regels verschijnen in de sectie **Categorieregels** onderaan het scherm Verkopers
+- Elke rij toont de verkopernaam en de categorie waarnaar deze wordt toegewezen
+- Tik op het prullenbakpictogram om een regel te verwijderen (de app wijst die categorie dan niet meer automatisch toe)
+- Tik op het vernieuwingspictogram naast een regel om deze **opnieuw toe te passen** — dit zoekt uitgaven van die verkoper die al onder een andere categorie zijn ingedeeld en biedt aan om ze ook naar de categorie van de regel te verplaatsen, zodat oudere uitgaven meegaan met regels die je later hebt aangeleerd
+- Regels worden op de server opgeslagen en gesynchroniseerd op al je apparaten
+
+**Voorbeeld:** Je importeert een Revolut-afschrift en corrigeert "AMAZON" → Shopping. Bij de volgende import worden Amazon-transacties automatisch onder Shopping geplaatst.
+
 ## Tags
 
 Met tags kun je uitgaven labelen met vrije trefwoorden die categorieën overstijgen.

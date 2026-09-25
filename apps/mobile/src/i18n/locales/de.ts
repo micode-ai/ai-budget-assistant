@@ -2245,6 +2245,11 @@ export default {
     noRules: 'Noch keine erlernten Regeln',
     ruleDeleteConfirm: 'Auto-Kategorieregel für „{{merchant}}" löschen?',
     ruleDeleted: 'Regel gelöscht',
+    reapplyNothingToDo: 'Alle Ausgaben bei {{merchant}} sind bereits in der richtigen Kategorie.',
+    reapplyTitle: 'Regel erneut anwenden',
+    reapplyGroupLabel: '{{count}} aus {{category}}',
+    reapplySummary: '{{count}} Ausgaben werden nach {{category}} verschoben',
+    reapplyApplied: '{{count}} Ausgaben nach {{category}} verschoben',
   },
   aiUsage: {
     confirmTitle: 'AI-Nutzung',

@@ -38,6 +38,7 @@ L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'
 
 - Les règles apprises apparaissent dans la section **Règles de catégorie** en bas de l'écran Commerçants
 - Appuyez sur la corbeille pour supprimer une règle
+- Appuyez sur l'icône d'actualisation à côté d'une règle pour la **réappliquer** — cela retrouve les dépenses de ce commerçant déjà classées dans une autre catégorie et propose de les déplacer aussi vers la catégorie de la règle, afin que les anciennes dépenses rattrapent les règles apprises plus tard
 - Les règles sont stockées sur le serveur et synchronisées sur tous vos appareils
 
 ## Étiquettes

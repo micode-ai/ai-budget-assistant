@@ -2255,6 +2255,11 @@ export default {
     noRules: 'Brak zapamiętanych reguł',
     ruleDeleteConfirm: 'Usunąć regułę auto-kategorii dla „{{merchant}}"?',
     ruleDeleted: 'Reguła usunięta',
+    reapplyNothingToDo: 'Wszystkie wydatki {{merchant}} są już w odpowiedniej kategorii.',
+    reapplyTitle: 'Zastosuj regułę ponownie',
+    reapplyGroupLabel: '{{count}} z {{category}}',
+    reapplySummary: '{{count}} wydatków zostanie przeniesionych do {{category}}',
+    reapplyApplied: 'Przeniesiono {{count}} wydatków do {{category}}',
   },
   aiUsage: {
     confirmTitle: 'Użycie AI',

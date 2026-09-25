@@ -2245,6 +2245,11 @@ export default {
     noRules: 'Nog geen geleerde regels',
     ruleDeleteConfirm: 'Automatische categorieregel voor "{{merchant}}" verwijderen?',
     ruleDeleted: 'Regel verwijderd',
+    reapplyNothingToDo: 'Alle uitgaven bij {{merchant}} staan al in de juiste categorie.',
+    reapplyTitle: 'Regel opnieuw toepassen',
+    reapplyGroupLabel: '{{count}} uit {{category}}',
+    reapplySummary: '{{count}} uitgaven worden verplaatst naar {{category}}',
+    reapplyApplied: '{{count}} uitgaven verplaatst naar {{category}}',
   },
   aiUsage: {
     confirmTitle: 'AI-gebruik',
