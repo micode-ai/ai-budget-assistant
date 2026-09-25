@@ -198,6 +198,13 @@ export default {
   categorize: {
     bannerText: 'Expenses without a category: {{count}}',
     bannerAction: 'Suggest categories',
+    bannerShort: 'Without a category: {{count}}',
+    summary: '{{assigned}} of {{total}} assigned',
+    summaryNew: 'new categories: {{count}}',
+    newBadge: 'New',
+    change: 'Change',
+    searchPlaceholder: 'Search categories',
+    applyShort: 'Apply · {{count}}',
     title: 'Categorize expenses',
     analyzing: 'Analyzing expenses…',
     newCategory: 'New category',

@@ -198,6 +198,13 @@ export default {
   categorize: {
     bannerText: 'Wydatki bez kategorii: {{count}}',
     bannerAction: 'Zaproponuj kategorie',
+    bannerShort: 'Bez kategorii: {{count}}',
+    summary: 'Przypisano {{assigned}} z {{total}}',
+    summaryNew: 'nowe kategorie: {{count}}',
+    newBadge: 'Nowa',
+    change: 'Zmień',
+    searchPlaceholder: 'Szukaj kategorii',
+    applyShort: 'Zastosuj · {{count}}',
     title: 'Kategoryzuj wydatki',
     analyzing: 'Analizuję wydatki…',
     newCategory: 'Nowa kategoria',

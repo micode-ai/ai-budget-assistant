@@ -1,14 +1,21 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View, Text, Modal, Pressable, ScrollView, TextInput } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Target } from '@/features/categorize/categorizeReview';
+import { categoryStyle, tintOf } from '@/features/categorize/categoryStyle';
+import { CategoryIcon } from '@/components/CategoryIcon';
+
+/** Above this many options the sheet gets a search field. */
+const SEARCH_THRESHOLD = 8;
 
 export interface CategoryTargetPickerOption {
   id: string;
   name: string;
   icon?: string;
+  color?: string;
 }
 
 interface Props {
@@ -35,6 +42,7 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
   const insets = useSafeAreaInsets();
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
+  const [query, setQuery] = useState('');
 
   // Selecting an existing category or a draft closes the picker via `onSelect`
   // without going through `handleClose` — reset here too, keyed on `visible`,
@@ -43,14 +51,37 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
     if (visible) {
       setCreating(false);
       setNewName('');
+      setQuery('');
     }
   }, [visible]);
 
   const handleClose = () => {
     setCreating(false);
     setNewName('');
+    setQuery('');
     onClose();
   };
+
+  const draftEntries = Object.entries(drafts);
+  const showSearch = draftEntries.length + categories.length > SEARCH_THRESHOLD;
+  const needle = showSearch ? query.trim().toLocaleLowerCase() : '';
+  const matches = (name: string) => !needle || name.toLocaleLowerCase().includes(needle);
+  const visibleDrafts = draftEntries.filter(([, name]) => matches(name));
+  const visibleCategories = useMemo(
+    () => categories.filter((c) => !needle || c.name.toLocaleLowerCase().includes(needle)),
+    [categories, needle],
+  );
+
+  const renderIcon = (icon: string | undefined, color: string | undefined) => (
+    <View style={[styles.iconCircle, { backgroundColor: tintOf(color, theme.colors.surfaceSecondary) }]}>
+      <CategoryIcon
+        icon={icon}
+        size={16}
+        color={color && /^#[0-9a-f]{6}$/i.test(color) ? color : theme.colors.textSecondary}
+        fallback="folder-outline"
+      />
+    </View>
+  );
 
   const handleCreateConfirm = () => {
     const trimmed = newName.trim();
@@ -73,36 +104,58 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
             StyleSheet, so there is one source for the padding formula. */}
         <View style={[styles.sheet, { paddingBottom: theme.spacing[4] + insets.bottom }]}>
           <View style={styles.handle} />
-          <ScrollView style={styles.scroll}>
-            {Object.entries(drafts).map(([draftKey, name]) => (
-              <Pressable
-                key={`draft-${draftKey}`}
-                style={styles.row}
-                onPress={() => onSelect({ kind: 'new', draftKey })}
-                accessibilityRole="button"
-              >
-                <Text style={styles.rowText} numberOfLines={1}>
-                  ✚ {name || t('categorize.newNamePlaceholder')}
-                </Text>
-              </Pressable>
-            ))}
-            {categories.map((c) => (
+          {showSearch && (
+            <View style={styles.searchRow}>
+              <Ionicons name="search" size={16} color={theme.colors.textTertiary} />
+              <TextInput
+                style={styles.searchInput}
+                value={query}
+                onChangeText={setQuery}
+                placeholder={t('categorize.searchPlaceholder')}
+                placeholderTextColor={theme.colors.textTertiary}
+                autoCorrect={false}
+              />
+            </View>
+          )}
+          <ScrollView style={styles.scroll} keyboardShouldPersistTaps="handled">
+            {visibleDrafts.map(([draftKey, name]) => {
+              const style = categoryStyle(name, t);
+              return (
+                <Pressable
+                  key={`draft-${draftKey}`}
+                  style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
+                  onPress={() => onSelect({ kind: 'new', draftKey })}
+                  accessibilityRole="button"
+                >
+                  {renderIcon(style.icon, style.color)}
+                  <Text style={styles.rowText} numberOfLines={1}>
+                    {name || t('categorize.newNamePlaceholder')}
+                  </Text>
+                  <View style={styles.badge}>
+                    <Text style={styles.badgeText}>{t('categorize.newBadge')}</Text>
+                  </View>
+                </Pressable>
+              );
+            })}
+            {visibleCategories.map((c) => (
               <Pressable
                 key={c.id}
-                style={styles.row}
+                style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
                 onPress={() => onSelect({ kind: 'existing', categoryId: c.id })}
                 accessibilityRole="button"
               >
-                <Text style={styles.rowText} numberOfLines={1}>
-                  {c.icon ? `${c.icon} ` : ''}{c.name}
-                </Text>
+                {renderIcon(c.icon, c.color)}
+                <Text style={styles.rowText} numberOfLines={1}>{c.name}</Text>
               </Pressable>
             ))}
             <Pressable
-              style={styles.row}
+              style={({ pressed }) => [styles.row, pressed && styles.rowPressed]}
               onPress={() => setCreating((v) => !v)}
               accessibilityRole="button"
             >
+              <View style={[styles.iconCircle, { backgroundColor: theme.colors.primaryLight }]}>
+                <Ionicons name="add" size={18} color={theme.colors.primary} />
+              </View>
               <Text style={[styles.rowText, styles.createNewText]}>{t('categorize.createNew')}</Text>
             </Pressable>
             {creating && (
@@ -164,14 +217,55 @@ const createStyles = (theme: Theme) => ({
   scroll: {
     flexGrow: 0,
   },
+  searchRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surfaceSecondary,
+    paddingHorizontal: theme.spacing[3],
+    marginBottom: theme.spacing[2],
+  },
+  searchInput: {
+    flex: 1,
+    ...theme.textStyles.body,
+    color: theme.colors.textPrimary,
+    paddingVertical: theme.spacing[2.5],
+  },
   row: {
-    paddingVertical: theme.spacing[3],
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    minHeight: 52,
+    paddingVertical: theme.spacing[2],
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.divider,
+  },
+  rowPressed: {
+    backgroundColor: theme.colors.surfaceSecondary,
+  },
+  iconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: theme.borderRadius.full,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
   },
   rowText: {
     ...theme.textStyles.body,
     color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  badge: {
+    paddingHorizontal: theme.spacing[2],
+    paddingVertical: theme.spacing[0.5],
+    borderRadius: theme.borderRadius.full,
+    backgroundColor: theme.colors.primaryLight,
+  },
+  badgeText: {
+    ...theme.textStyles.caption,
+    fontFamily: theme.fonts.semiBold,
+    color: theme.colors.primary,
   },
   createNewText: {
     color: theme.colors.primary,

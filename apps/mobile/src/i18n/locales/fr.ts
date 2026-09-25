@@ -198,6 +198,13 @@ export default {
   categorize: {
     bannerText: 'Dépenses sans catégorie : {{count}}',
     bannerAction: 'Suggérer des catégories',
+    bannerShort: 'Sans catégorie : {{count}}',
+    summary: '{{assigned}} sur {{total}} attribuées',
+    summaryNew: 'nouvelles catégories : {{count}}',
+    newBadge: 'Nouvelle',
+    change: 'Modifier',
+    searchPlaceholder: 'Rechercher une catégorie',
+    applyShort: 'Appliquer · {{count}}',
     title: 'Catégoriser les dépenses',
     analyzing: 'Analyse des dépenses…',
     newCategory: 'Nouvelle catégorie',

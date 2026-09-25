@@ -196,6 +196,13 @@ export default {
   categorize: {
     bannerText: 'Выдаткаў без катэгорыі: {{count}}',
     bannerAction: 'Прапанаваць катэгорыі',
+    bannerShort: 'Без катэгорыі: {{count}}',
+    summary: 'Раскладзена {{assigned}} з {{total}}',
+    summaryNew: 'новых катэгорый: {{count}}',
+    newBadge: 'Новая',
+    change: 'Змяніць',
+    searchPlaceholder: 'Пошук катэгорый',
+    applyShort: 'Ужыць · {{count}}',
     title: 'Раскласці па катэгорыях',
     analyzing: 'Аналізую выдаткі…',
     newCategory: 'Новая катэгорыя',

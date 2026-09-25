@@ -198,6 +198,13 @@ export default {
   categorize: {
     bannerText: 'Gastos sin categoría: {{count}}',
     bannerAction: 'Sugerir categorías',
+    bannerShort: 'Sin categoría: {{count}}',
+    summary: '{{assigned}} de {{total}} asignados',
+    summaryNew: 'categorías nuevas: {{count}}',
+    newBadge: 'Nueva',
+    change: 'Cambiar',
+    searchPlaceholder: 'Buscar categorías',
+    applyShort: 'Aplicar · {{count}}',
     title: 'Categorizar gastos',
     analyzing: 'Analizando gastos…',
     newCategory: 'Nueva categoría',

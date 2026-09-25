@@ -14,7 +14,7 @@ import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 // color-patch loop on every `loadCategories` call (used to cost 60-600ms each).
 const _seededAccounts = new Set<string>();
 
-const DEFAULT_EXPENSE_CATEGORIES = [
+export const DEFAULT_EXPENSE_CATEGORIES = [
   { name: 'Food & Dining', icon: 'restaurant', color: '#E53E3E' },
   { name: 'Transport', icon: 'car', color: '#2C9E96' },
   { name: 'Shopping', icon: 'cart', color: '#2B8ABD' },

@@ -198,6 +198,13 @@ export default {
   categorize: {
     bannerText: 'Uitgaven zonder categorie: {{count}}',
     bannerAction: 'Categorieën voorstellen',
+    bannerShort: 'Zonder categorie: {{count}}',
+    summary: '{{assigned}} van {{total}} toegewezen',
+    summaryNew: 'nieuwe categorieën: {{count}}',
+    newBadge: 'Nieuw',
+    change: 'Wijzigen',
+    searchPlaceholder: 'Categorieën zoeken',
+    applyShort: 'Toepassen · {{count}}',
     title: 'Uitgaven categoriseren',
     analyzing: 'Uitgaven analyseren…',
     newCategory: 'Nieuwe categorie',

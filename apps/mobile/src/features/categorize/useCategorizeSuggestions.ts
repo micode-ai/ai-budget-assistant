@@ -9,6 +9,8 @@ import {
 } from './categorizeReview';
 import { applyCategorization } from './applyCategorization';
 import { shareInFlight } from './shareInFlight';
+import { categoryStyle } from './categoryStyle';
+import i18n from '@/i18n';
 
 const EMPTY: ReviewState = { targets: {}, drafts: {}, excludedGroups: [] };
 
@@ -55,7 +57,12 @@ export function useCategorizeSuggestions() {
     try {
       const categoryStore = useCategoryStore.getState();
       return await applyCategorization(plan, response.expenses, {
-        createCategory: (name) => categoryStore.createCategory(name, 'expense'),
+        createCategory: (name) => {
+          // A proposal named like a default category borrows its icon/colour;
+          // anything else gets the neutral folder the review showed for it.
+          const style = categoryStyle(name, i18n.t.bind(i18n));
+          return categoryStore.createCategory(name, 'expense', style.icon, style.color);
+        },
         bulkSetCategory: (ids, categoryId) =>
           useExpenseStore.getState().bulkUpdateExpenses(ids, { categoryId }, { awaitServer: true }),
         localExpenses: useExpenseStore.getState().expenses,

@@ -198,6 +198,13 @@ export default {
   categorize: {
     bannerText: 'Витрат без категорії: {{count}}',
     bannerAction: 'Запропонувати категорії',
+    bannerShort: 'Без категорії: {{count}}',
+    summary: 'Розкладено {{assigned}} з {{total}}',
+    summaryNew: 'нових категорій: {{count}}',
+    newBadge: 'Нова',
+    change: 'Змінити',
+    searchPlaceholder: 'Пошук категорій',
+    applyShort: 'Застосувати · {{count}}',
     title: 'Розкласти за категоріями',
     analyzing: 'Аналізую витрати…',
     newCategory: 'Нова категорія',
