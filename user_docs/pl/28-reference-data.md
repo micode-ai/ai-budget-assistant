@@ -35,7 +35,7 @@ Sklepy są tworzone automatycznie podczas dodawania wydatków. Ekran Sklepy słu
 
 ### Reguły kategorii
 
-Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz kategorię wydatku z nazwą sklepu, automatycznie zapisywana jest **reguła kategorii**. Przy następnym imporcie wyciągu bankowego lub CSV Wise aplikacja zastosuje Twoją regułę i przypisze kategorię bez ręcznej korekty.
+Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz kategorię wydatku z nazwą sklepu, automatycznie zapisywana jest **reguła kategorii**. Gdy ten sklep pojawi się ponownie — w zaimportowanym wyciągu bankowym lub CSV Wise, na zeskanowanym paragonie albo w automatycznie przechwyconym powiadomieniu bankowym (Android) — aplikacja zastosuje Twoją regułę i przypisze kategorię bez ręcznej korekty.
 
 - Nauczone reguły wyświetlają się w sekcji **Reguły kategorii** na dole ekranu Sklepy
 - Dotknij ikony kosza, aby usunąć regułę

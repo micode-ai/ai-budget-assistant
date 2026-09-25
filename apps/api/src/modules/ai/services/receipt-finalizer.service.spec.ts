@@ -32,6 +32,7 @@ describe('ReceiptFinalizerService', () => {
   let geocodingMock: { geocode: jest.Mock; geocodeStructured: jest.Mock };
   let priceHistoryMock: { getProductTrendsFor: jest.Mock };
   let categorySplitterMock: { classify: jest.Mock };
+  let merchantRulesMock: { getRulesMap: jest.Mock };
 
   beforeEach(() => {
     prisma = {
@@ -49,25 +50,88 @@ describe('ReceiptFinalizerService', () => {
     categorySplitterMock = {
       classify: jest.fn().mockResolvedValue({ assignments: new Map(), proposals: [] }),
     };
+    // Default: no rules for this account — every pre-existing test (written
+    // before merchant rules were consulted here) must keep passing unchanged.
+    merchantRulesMock = {
+      getRulesMap: jest.fn().mockResolvedValue(new Map()),
+    };
     service = new ReceiptFinalizerService(
       prisma,
       geocodingMock as any,
       priceHistoryMock as any,
       categorySplitterMock as any,
+      merchantRulesMock as any,
     );
     // Silence the real Nest Logger's console output (same convention as
     // anomaly.service.spec.ts / receipt-check.util.cross-path.spec.ts).
     (service as any).logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
   });
 
-  function runFinalize(overrides: Partial<ParsedReceipt> = {}) {
-    return service.finalizeReceipt({ ...BASE_PARSED_RECEIPT, ...overrides }, [], 'acc-1', 'user-1');
+  function runFinalize(
+    overrides: Partial<ParsedReceipt & { suggestedCategory?: string | null }> = {},
+    categories: Array<{ id: string; name: string }> = [],
+  ) {
+    return service.finalizeReceipt({ ...BASE_PARSED_RECEIPT, ...overrides } as any, categories, 'acc-1', 'user-1');
   }
 
   it('leaves the expense uncategorized when the model says no category fits', async () => {
     const result = await runFinalize({ suggestedCategory: null } as any);
     expect(result.categoryId).toBeNull();
     expect(result.categorySuggestion).toBeNull();
+  });
+
+  describe('merchant rules (learned category wins over the model guess)', () => {
+    it('a merchant rule wins over the model\'s suggested category', async () => {
+      merchantRulesMock.getRulesMap.mockResolvedValue(new Map([['zabka', 'cat-groceries']]));
+      const categories = [
+        { id: 'cat-groceries', name: 'Groceries' },
+        { id: 'cat-transport', name: 'Transport' },
+      ];
+      // Mixed case + surrounding whitespace on the parsed name proves the
+      // same trim().toLowerCase() normalization every other reader uses.
+      const result = await runFinalize(
+        { merchantName: ' Zabka ', suggestedCategory: 'Transport' },
+        categories,
+      );
+      expect(result.categoryId).toBe('cat-groceries');
+      // categorySuggestion still reflects the model's own raw answer, not the rule.
+      expect(result.categorySuggestion).toBe('Transport');
+    });
+
+    it('a rule hit still applies when the model itself found no category', async () => {
+      merchantRulesMock.getRulesMap.mockResolvedValue(new Map([['zabka', 'cat-groceries']]));
+      const result = await runFinalize(
+        { merchantName: 'Zabka', suggestedCategory: null } as any,
+        [{ id: 'cat-groceries', name: 'Groceries' }],
+      );
+      expect(result.categoryId).toBe('cat-groceries');
+    });
+
+    it('no rule for the merchant falls back to the existing suggestedCategory match', async () => {
+      merchantRulesMock.getRulesMap.mockResolvedValue(new Map([['some other store', 'cat-household']]));
+      const categories = [{ id: 'cat-transport', name: 'Transport' }];
+      const result = await runFinalize(
+        { merchantName: 'Shell', suggestedCategory: 'Transport' },
+        categories,
+      );
+      expect(result.categoryId).toBe('cat-transport');
+    });
+
+    it('no merchant name never looks up a rule and falls back to existing behavior', async () => {
+      merchantRulesMock.getRulesMap.mockResolvedValue(new Map([['zabka', 'cat-groceries']]));
+      const categories = [{ id: 'cat-transport', name: 'Transport' }];
+      const result = await runFinalize(
+        { merchantName: null, suggestedCategory: 'Transport' },
+        categories,
+      );
+      expect(result.categoryId).toBe('cat-transport');
+    });
+
+    it('fetches the rules map once per finalizeReceipt call, not per line', async () => {
+      await runFinalize({});
+      expect(merchantRulesMock.getRulesMap).toHaveBeenCalledTimes(1);
+      expect(merchantRulesMock.getRulesMap).toHaveBeenCalledWith('acc-1');
+    });
   });
 
   describe('receipt location (geocoding)', () => {
@@ -215,11 +279,13 @@ describe('finalizeReceipt category splits', () => {
       geocodeStructured: jest.fn().mockResolvedValue(null),
     };
     const priceHistoryMock = { getProductTrendsFor: jest.fn().mockResolvedValue([]) };
+    const merchantRulesMock = { getRulesMap: jest.fn().mockResolvedValue(new Map()) };
     service = new ReceiptFinalizerService(
       prisma,
       geocodingMock as any,
       priceHistoryMock as any,
       categorySplitterMock as any,
+      merchantRulesMock as any,
     );
     // Silence the real Nest Logger's console output — the nested
     // 'runCategorySplit with proposals' tests below still spy on this

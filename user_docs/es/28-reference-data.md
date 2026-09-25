@@ -34,7 +34,7 @@ Los comercios se crean automáticamente al añadir gastos. Usa la pantalla de Co
 
 ### Reglas de categoría
 
-La app aprende de tus correcciones. Cada vez que cambias la categoría de un gasto que tiene nombre de comercio, se guarda automáticamente una **regla de categoría**. La próxima vez que importes un extracto bancario o CSV de Wise, la app aplica tu regla y asigna la categoría sin corrección manual.
+La app aprende de tus correcciones. Cada vez que cambias la categoría de un gasto que tiene nombre de comercio, se guarda automáticamente una **regla de categoría**. La próxima vez que ese comercio aparezca — en un extracto bancario o CSV de Wise importado, en un recibo escaneado o en una notificación bancaria capturada automáticamente (Android) —, la app aplica tu regla y asigna la categoría sin corrección manual.
 
 - Las reglas aprendidas aparecen en la sección **Reglas de categoría** al final de la pantalla Comercios
 - Toca el icono de papelera para eliminar una regla

@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../../../database/prisma.service';
 import { GeocodingService, GeocodeResult } from './geocoding.service';
+import { MerchantRulesService } from '../../merchant-rules/merchant-rules.service';
 import type { ReceiptCheckFinding } from '@budget/shared-types';
 import {
   checkReceiptPrices,
@@ -37,7 +38,11 @@ const MIN_PROPOSAL_SHARE_PCT = 10;
  * (`ReceiptCategorySplitService`) — over the already-parsed, already-geocoded
  * receipt. `OcrService.finalizeReceipt` callers all go through this one
  * entry point so neither analysis can be forgotten when a new scan path is
- * added.
+ * added. This also makes it the one place a learned merchant rule
+ * (`MerchantRulesService`) is applied at receipt-scan time — see
+ * `buildReceiptExpense`; a rule hit always wins over the model's own
+ * `suggestedCategory` guess, mirroring bank/Wise import and the
+ * categorize-uncategorized pass (docs/wiki/features/merchant-category-rules.md).
  */
 @Injectable()
 export class ReceiptFinalizerService {
@@ -48,12 +53,22 @@ export class ReceiptFinalizerService {
     private readonly geocoding: GeocodingService,
     private readonly priceHistory: PriceHistoryService,
     private readonly categorySplitter: ReceiptCategorySplitService,
+    private readonly merchantRules: MerchantRulesService,
   ) {}
 
   private async buildReceiptExpense(
     parsed: ParsedReceipt & { suggestedCategory?: string },
     categories: CategoryWithName[],
+    merchantRulesMap: Map<string, string>,
   ): Promise<ReceiptExpense> {
+    // A learned merchant rule always wins over the model's own guess — same
+    // invariant bank/Wise import and the categorize-uncategorized pass already
+    // enforce (see docs/wiki/features/merchant-category-rules.md). Checked
+    // first, unconditionally: a rule hit is never second-guessed by
+    // `suggestedCategory` below, even when the model itself answered `null`.
+    const merchantKey = parsed.merchantName?.trim().toLowerCase();
+    const ruleCategoryId = merchantKey ? merchantRulesMap.get(merchantKey) : undefined;
+
     const matchedCategory = categories.find(
       (c: CategoryWithName) => c.name.toLowerCase() === parsed.suggestedCategory?.toLowerCase(),
     );
@@ -98,7 +113,7 @@ export class ReceiptFinalizerService {
       depositAmount: parsed.deposit || null,
       currencyCode: parsed.currency || 'USD',
       description,
-      categoryId: matchedCategory?.id || null,
+      categoryId: ruleCategoryId ?? matchedCategory?.id ?? null,
       categorySuggestion: parsed.suggestedCategory || null,
       merchant: parsed.merchantName,
       date: parsed.date,
@@ -395,7 +410,10 @@ export class ReceiptFinalizerService {
     accountId: string,
     userId: string,
   ): Promise<ReceiptExpense> {
-    const receipt = await this.buildReceiptExpense(parsed, categories);
+    // One fetch per scan, not per line — mirrors import-bank.service.ts and
+    // categorize-suggestions.service.ts's own single getRulesMap() call per batch.
+    const merchantRulesMap = await this.merchantRules.getRulesMap(accountId);
+    const receipt = await this.buildReceiptExpense(parsed, categories, merchantRulesMap);
     receipt.priceFindings = await this.runPriceCheck(accountId, receipt);
 
     const { splits, itemCategories } = await this.runCategorySplit(accountId, receipt, userId);

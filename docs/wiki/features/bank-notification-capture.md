@@ -46,8 +46,14 @@ that a push *may* be a spend — hence the gate below.
 template, then falls back to `generic.ts`: amount in EU comma-decimal or Anglo dot-decimal,
 currency by symbol or ISO code, merchant via language-aware connectors (`bei`, `chez`, `à`, `en`,
 `bij`, `at`, `в`, `у`, `w`). `normalizeMerchantWithPLOverride` layers the PL brand map over the
-generic normaliser, so a Polish brand in a German bank's push still canonicalises. Category
-suggestion is PL-only; other merchants land uncategorised and merchant rules learn them.
+generic normaliser, so a Polish brand in a German bank's push still canonicalises. **Category
+resolution checks the learned rule table first**: `captureService.ts`'s `handleBankNotification()`
+calls `merchantRulesStore.getRuleForMerchant(merchant)` and uses a hit unconditionally; only when
+there is no rule does it fall back to the PL-only static `suggestedCategory` heuristic, and only
+then does a merchant land genuinely uncategorised for
+[merchant rules](merchant-category-rules.md) to learn from later. This all happens client-side,
+before the expense is even written to SQLite — there is no separate server-side rule lookup for
+notification capture, unlike receipt scanning (see that page's "Five automatic readers").
 
 **`source: 'notification'`** marks a captured expense (a plain string column, no migration). It is
 written offline-first through `expenseStore.addExpense` with an `externalRef` of
@@ -137,6 +143,9 @@ fires once per pair regardless of which side arrived first.
 
 ## History
 
-ABA-294 (the listener and the PL templates) · ABA-295 (multi-country allow-list, generic parser) ·
+ABA-294 (the listener and the PL templates — merchant-rule category resolution shipped here too,
+client-side) · ABA-295 (multi-country allow-list, generic parser) ·
 ABA-296 (two-tier dedup, `POST /expenses/merge`) · ABA-297 (New-Arch emission, subscribe-on-mount,
-PKO template) · ABA-387 (the spend gate, percentage masking, the `EUR` and `brutto` fixes).
+PKO template) · ABA-387 (the spend gate, percentage masking, the `EUR` and `brutto` fixes) · ABA-597
+(documentation-only: this page previously understated the category resolution above, found while
+investigating why merchant rules weren't yet applied at receipt-scan time).

@@ -37,7 +37,7 @@ Verkopers worden automatisch aangemaakt wanneer je uitgaven toevoegt — via han
 
 ### Categorieregels
 
-De app leert van je correcties. Elke keer dat je de categorie wijzigt van een uitgave met een verkopernaam, wordt automatisch een **categorieregel** opgeslagen. De volgende keer dat je een bankafschrift of Wise-CSV importeert met die verkoper, past de app je regel toe en wijst de categorie automatisch toe, zonder handmatige correctie.
+De app leert van je correcties. Elke keer dat je de categorie wijzigt van een uitgave met een verkopernaam, wordt automatisch een **categorieregel** opgeslagen. Zodra die verkoper weer opduikt — in een geïmporteerd bankafschrift of Wise-CSV, op een gescande bon, of via een automatisch vastgelegde bankmelding (Android) — past de app je regel toe en wijst de categorie automatisch toe, zonder handmatige correctie.
 
 - Geleerde regels verschijnen in de sectie **Categorieregels** onderaan het scherm Verkopers
 - Elke rij toont de verkopernaam en de categorie waarnaar deze wordt toegewezen

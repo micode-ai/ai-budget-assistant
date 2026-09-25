@@ -35,7 +35,7 @@ Händler werden automatisch erstellt wenn du Ausgaben hinzufügst. Der Händler-
 
 ### Kategorieregeln
 
-Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Ausgabe mit Händlernamen änderst, wird automatisch eine **Kategorieregel** gespeichert. Beim nächsten Import eines Kontoauszugs oder Wise-CSV wendet die App deine Regel an und weist die Kategorie automatisch zu.
+Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Ausgabe mit Händlernamen änderst, wird automatisch eine **Kategorieregel** gespeichert. Sobald dieser Händler das nächste Mal auftaucht — beim Import eines Kontoauszugs oder einer Wise-CSV, beim Scannen eines Kassenbons oder bei einer automatisch erfassten Bank-Benachrichtigung (Android) — wendet die App deine Regel an und weist die Kategorie automatisch zu.
 
 - Erlernte Regeln erscheinen im Abschnitt **Kategorieregeln** unten auf dem Händler-Bildschirm
 - Tippe auf den Mülleimer, um eine Regel zu löschen

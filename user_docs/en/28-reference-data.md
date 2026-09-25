@@ -37,7 +37,7 @@ Merchants are created automatically when you add expenses — from manual entry,
 
 ### Category rules
 
-The app learns from your corrections. Every time you change the category of an expense that has a merchant name, a **category rule** is saved automatically. The next time you import a bank statement or Wise CSV containing that merchant, the app applies your rule and assigns the category without any manual fix.
+The app learns from your corrections. Every time you change the category of an expense that has a merchant name, a **category rule** is saved automatically. The next time that merchant shows up — in an imported bank statement or Wise CSV, a scanned receipt, or an auto-captured bank notification (Android) — the app applies your rule and assigns the category without any manual fix.
 
 - Learned rules appear in the **Category rules** section at the bottom of the Merchants screen
 - Each row shows the merchant name and the category it maps to

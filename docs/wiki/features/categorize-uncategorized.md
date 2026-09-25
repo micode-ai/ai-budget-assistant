@@ -219,12 +219,15 @@ Deliberate simplifications versus the expense pass, not oversights:
 
 Out of scope for this pass, matching the design's stated boundaries: re-reviewing expenses/incomes
 that are already (mis)categorized (a narrower, rule-only slice of this exists now — see
-[merchant-category-rules](merchant-category-rules.md)'s "Reapply" reader, ABA-596; a model-assisted
-re-review of a whole category remains unscoped); applying merchant rules at notification-capture or
-receipt-scan time; seeding default categories into non-first accounts; a bot command for either
-entity type (chat has no room for the review UI — the expense side shipped a simplified, sequential
-bot variant instead: [bot-categorize-command](bot-categorize-command.md); incomes have no bot
-equivalent at all).
+[merchant-category-rules](merchant-category-rules.md)'s "Reapply" reader, ABA-596); seeding default
+categories into non-first accounts; a bot command for either entity type (chat has no room for the
+review UI — the expense side shipped a simplified, sequential bot variant instead:
+[bot-categorize-command](bot-categorize-command.md); incomes have no bot equivalent at all).
+Applying merchant rules at notification-capture or receipt-scan time — previously listed here as a
+gap — is now done: notification capture turned out to already do it client-side (shipped with the
+original ABA-294/295 capture feature, just undocumented), and receipt scanning gained a server-side
+rule lookup in `ReceiptFinalizerService` (ABA-597). See
+[merchant-category-rules](merchant-category-rules.md)'s "Five automatic readers".
 
 Also not done:
 

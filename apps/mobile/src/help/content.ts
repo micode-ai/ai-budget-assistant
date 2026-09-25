@@ -3791,7 +3791,7 @@ Merchants are created automatically when you add expenses — from manual entry,
 
 ### Category rules
 
-The app learns from your corrections. Every time you change the category of an expense that has a merchant name, a **category rule** is saved automatically. The next time you import a bank statement or Wise CSV containing that merchant, the app applies your rule and assigns the category without any manual fix.
+The app learns from your corrections. Every time you change the category of an expense that has a merchant name, a **category rule** is saved automatically. The next time that merchant shows up — in an imported bank statement or Wise CSV, a scanned receipt, or an auto-captured bank notification (Android) — the app applies your rule and assigns the category without any manual fix.
 
 - Learned rules appear in the **Category rules** section at the bottom of the Merchants screen
 - Each row shows the merchant name and the category it maps to
@@ -8578,7 +8578,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ### Правила категорий
 
-Приложение учится на ваших исправлениях. Каждый раз, когда вы меняете категорию расхода с названием магазина, автоматически сохраняется **правило категории**. При следующем импорте выписки или CSV-файла Wise приложение применяет ваше правило и назначает категорию без ручной правки.
+Приложение учится на ваших исправлениях. Каждый раз, когда вы меняете категорию расхода с названием магазина, автоматически сохраняется **правило категории**. Когда этот магазин появится снова — в импортированной выписке или CSV-файле Wise, на отсканированном чеке или в автоматически захваченном банковском уведомлении (Android), — приложение применит ваше правило и назначит категорию без ручной правки.
 
 - Выученные правила отображаются в разделе **Правила категорий** внизу экрана Магазины
 - Нажмите иконку корзины, чтобы удалить правило
@@ -13325,7 +13325,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ### Правила категорій
 
-Додаток навчається на ваших виправленнях. Щоразу, коли ви змінюєте категорію витрати з назвою магазину, автоматично зберігається **правило категорії**. При наступному імпорті виписки або CSV-файлу Wise додаток застосує ваше правило і призначить категорію без ручного виправлення.
+Додаток навчається на ваших виправленнях. Щоразу, коли ви змінюєте категорію витрати з назвою магазину, автоматично зберігається **правило категорії**. Коли цей магазин з'явиться знову — в імпортованій виписці чи CSV-файлі Wise, на відсканованому чеку або в автоматично захопленому банківському сповіщенні (Android), — додаток застосує ваше правило і призначить категорію без ручного виправлення.
 
 - Вивчені правила відображаються в розділі **Правила категорій** внизу екрана Магазини
 - Натисніть іконку кошика, щоб видалити правило
@@ -18059,7 +18059,7 @@ Sklepy są tworzone automatycznie podczas dodawania wydatków. Ekran Sklepy słu
 
 ### Reguły kategorii
 
-Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz kategorię wydatku z nazwą sklepu, automatycznie zapisywana jest **reguła kategorii**. Przy następnym imporcie wyciągu bankowego lub CSV Wise aplikacja zastosuje Twoją regułę i przypisze kategorię bez ręcznej korekty.
+Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz kategorię wydatku z nazwą sklepu, automatycznie zapisywana jest **reguła kategorii**. Gdy ten sklep pojawi się ponownie — w zaimportowanym wyciągu bankowym lub CSV Wise, na zeskanowanym paragonie albo w automatycznie przechwyconym powiadomieniu bankowym (Android) — aplikacja zastosuje Twoją regułę i przypisze kategorię bez ręcznej korekty.
 
 - Nauczone reguły wyświetlają się w sekcji **Reguły kategorii** na dole ekranu Sklepy
 - Dotknij ikony kosza, aby usunąć regułę
@@ -22769,7 +22769,7 @@ Händler werden automatisch erstellt wenn du Ausgaben hinzufügst. Der Händler-
 
 ### Kategorieregeln
 
-Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Ausgabe mit Händlernamen änderst, wird automatisch eine **Kategorieregel** gespeichert. Beim nächsten Import eines Kontoauszugs oder Wise-CSV wendet die App deine Regel an und weist die Kategorie automatisch zu.
+Die App lernt aus deinen Korrekturen. Jedes Mal, wenn du die Kategorie einer Ausgabe mit Händlernamen änderst, wird automatisch eine **Kategorieregel** gespeichert. Sobald dieser Händler das nächste Mal auftaucht — beim Import eines Kontoauszugs oder einer Wise-CSV, beim Scannen eines Kassenbons oder bei einer automatisch erfassten Bank-Benachrichtigung (Android) — wendet die App deine Regel an und weist die Kategorie automatisch zu.
 
 - Erlernte Regeln erscheinen im Abschnitt **Kategorieregeln** unten auf dem Händler-Bildschirm
 - Tippe auf den Mülleimer, um eine Regel zu löschen
@@ -27465,7 +27465,7 @@ Los comercios se crean automáticamente al añadir gastos. Usa la pantalla de Co
 
 ### Reglas de categoría
 
-La app aprende de tus correcciones. Cada vez que cambias la categoría de un gasto que tiene nombre de comercio, se guarda automáticamente una **regla de categoría**. La próxima vez que importes un extracto bancario o CSV de Wise, la app aplica tu regla y asigna la categoría sin corrección manual.
+La app aprende de tus correcciones. Cada vez que cambias la categoría de un gasto que tiene nombre de comercio, se guarda automáticamente una **regla de categoría**. La próxima vez que ese comercio aparezca — en un extracto bancario o CSV de Wise importado, en un recibo escaneado o en una notificación bancaria capturada automáticamente (Android) —, la app aplica tu regla y asigna la categoría sin corrección manual.
 
 - Las reglas aprendidas aparecen en la sección **Reglas de categoría** al final de la pantalla Comercios
 - Toca el icono de papelera para eliminar una regla
@@ -32159,7 +32159,7 @@ Les commerçants sont créés automatiquement lors de l'ajout de dépenses. Util
 
 ### Règles de catégorie
 
-L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'une dépense ayant un nom de commerçant, une **règle de catégorie** est enregistrée automatiquement. Lors du prochain import de relevé bancaire ou CSV Wise, l'app applique votre règle et attribue la catégorie sans correction manuelle.
+L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'une dépense ayant un nom de commerçant, une **règle de catégorie** est enregistrée automatiquement. La prochaine fois que ce commerçant apparaît — dans un relevé bancaire ou CSV Wise importé, sur un reçu scanné, ou via une notification bancaire capturée automatiquement (Android) —, l'app applique votre règle et attribue la catégorie sans correction manuelle.
 
 - Les règles apprises apparaissent dans la section **Règles de catégorie** en bas de l'écran Commerçants
 - Appuyez sur la corbeille pour supprimer une règle
@@ -36823,7 +36823,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ### Правілы катэгорый
 
-Дадатак вучыцца на вашых выпраўленнях. Кожны раз, калі вы мяняеце катэгорыю расходу з назвай крамы, аўтаматычна захоўваецца **правіла катэгорыі**. Пры наступным імпарце выпіскі або CSV-файла Wise дадатак ужые ваша правіла і прызначыць катэгорыю без ручнога выпраўлення.
+Дадатак вучыцца на вашых выпраўленнях. Кожны раз, калі вы мяняеце катэгорыю расходу з назвай крамы, аўтаматычна захоўваецца **правіла катэгорыі**. Калі гэтая крама з'явіцца зноў — у імпартаванай выпісцы ці CSV-файле Wise, на сканаваным чэку або ў аўтаматычна захопленым банкаўскім апавяшчэнні (Android), — дадатак ужые ваша правіла і прызначыць катэгорыю без ручнога выпраўлення.
 
 - Вывучаныя правілы адлюстроўваюцца ў раздзеле **Правілы катэгорый** ўнізе экрана Крамы
 - Націсніце кошык для выдалення правіла
@@ -41593,7 +41593,7 @@ Verkopers worden automatisch aangemaakt wanneer je uitgaven toevoegt — via han
 
 ### Categorieregels
 
-De app leert van je correcties. Elke keer dat je de categorie wijzigt van een uitgave met een verkopernaam, wordt automatisch een **categorieregel** opgeslagen. De volgende keer dat je een bankafschrift of Wise-CSV importeert met die verkoper, past de app je regel toe en wijst de categorie automatisch toe, zonder handmatige correctie.
+De app leert van je correcties. Elke keer dat je de categorie wijzigt van een uitgave met een verkopernaam, wordt automatisch een **categorieregel** opgeslagen. Zodra die verkoper weer opduikt — in een geïmporteerd bankafschrift of Wise-CSV, op een gescande bon, of via een automatisch vastgelegde bankmelding (Android) — past de app je regel toe en wijst de categorie automatisch toe, zonder handmatige correctie.
 
 - Geleerde regels verschijnen in de sectie **Categorieregels** onderaan het scherm Verkopers
 - Elke rij toont de verkopernaam en de categorie waarnaar deze wordt toegewezen

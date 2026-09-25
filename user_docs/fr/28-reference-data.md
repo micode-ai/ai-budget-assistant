@@ -34,7 +34,7 @@ Les commerçants sont créés automatiquement lors de l'ajout de dépenses. Util
 
 ### Règles de catégorie
 
-L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'une dépense ayant un nom de commerçant, une **règle de catégorie** est enregistrée automatiquement. Lors du prochain import de relevé bancaire ou CSV Wise, l'app applique votre règle et attribue la catégorie sans correction manuelle.
+L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'une dépense ayant un nom de commerçant, une **règle de catégorie** est enregistrée automatiquement. La prochaine fois que ce commerçant apparaît — dans un relevé bancaire ou CSV Wise importé, sur un reçu scanné, ou via une notification bancaire capturée automatiquement (Android) —, l'app applique votre règle et attribue la catégorie sans correction manuelle.
 
 - Les règles apprises apparaissent dans la section **Règles de catégorie** en bas de l'écran Commerçants
 - Appuyez sur la corbeille pour supprimer une règle
