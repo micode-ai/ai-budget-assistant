@@ -6,6 +6,8 @@ import {
   IsDateString,
   IsBoolean,
   IsArray,
+  ArrayMinSize,
+  ArrayMaxSize,
   Min,
   Max,
 } from 'class-validator';
@@ -180,4 +182,21 @@ export class IncomeFiltersDto {
   @IsOptional()
   @Transform(({ value }) => value === 'true')
   isDebtRepayment?: boolean;
+}
+
+/**
+ * PATCH /incomes/bulk — mirrors BulkUpdateExpensesDto, minus tagIds/isDeleted
+ * (no tag junction table on the income side in v1; out of scope for this
+ * feature, see docs/contracts/categorize-uncategorized-incomes.md).
+ */
+export class BulkUpdateIncomesDto {
+  @IsArray()
+  @IsString({ each: true })
+  @ArrayMinSize(1)
+  @ArrayMaxSize(500)
+  ids: string[];
+
+  @IsOptional()
+  @IsString()
+  categoryId?: string | null;
 }

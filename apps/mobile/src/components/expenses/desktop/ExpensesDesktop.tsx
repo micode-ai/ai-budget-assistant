@@ -144,9 +144,10 @@ export function ExpensesDesktop() {
   // buttons open `CreateDialog` in place instead, so they set this directly
   // rather than calling that handler.
   const [createKind, setCreateKind] = useState<'expense' | 'income' | null>(null);
-  // Task 10: the categorize review, opened from the uncategorized banner
-  // above `SummaryStrip`.
-  const [showCategorize, setShowCategorize] = useState(false);
+  // Task 10: the categorize review, opened from one of the two uncategorized
+  // banners above `SummaryStrip`. Tri-state like `createKind` — `null` means
+  // closed, `'expense'`/`'income'` says which banner opened it.
+  const [showCategorize, setShowCategorize] = useState<'expense' | 'income' | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [kind, setKind] = useState<KindFacet>('all');
   const [active, setActive] = useState<ActiveFacets>({ categoryId: [], accountId: [], merchant: [] });
@@ -493,7 +494,8 @@ export function ExpensesDesktop() {
           {!collapsed && <FacetRail layout="stack" {...facetRailProps} />}
 
         <View style={styles.mainColumn}>
-          <UncategorizedBanner onPress={() => setShowCategorize(true)} />
+          <UncategorizedBanner onPress={() => setShowCategorize('expense')} />
+          <UncategorizedBanner entityType="income" onPress={() => setShowCategorize('income')} />
 
           <SummaryStrip rows={visibleRows} baseCurrency={baseCurrency} />
 
@@ -630,7 +632,7 @@ export function ExpensesDesktop() {
         createKind={createKind}
         onCloseCreateDialog={() => setCreateKind(null)}
         showCategorize={showCategorize}
-        onCloseCategorize={() => setShowCategorize(false)}
+        onCloseCategorize={() => setShowCategorize(null)}
         showBulkCategoryPicker={multiSelect.showBulkCategoryPicker}
         onCloseBulkCategoryPicker={() => multiSelect.setShowBulkCategoryPicker(false)}
         categories={categories}

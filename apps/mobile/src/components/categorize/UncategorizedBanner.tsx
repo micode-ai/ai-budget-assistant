@@ -3,22 +3,34 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
 import { useAccountStore } from '@/stores/accountStore';
 
+interface Props {
+  onPress: () => void;
+  /** Defaults to `'expense'` so every existing call site keeps compiling unchanged. */
+  entityType?: 'expense' | 'income';
+}
+
 /**
- * Shown above the expense list while the current account has uncategorized
- * expenses. Counts from the loaded list with the same exclusions the server
- * applies (planned, split receivables, debts), so the number matches what the
+ * Shown above the expense (or income) list while the current account has
+ * uncategorized rows of that type. Counts from the loaded list with the same
+ * exclusions the server applies — expenses: planned, split receivables,
+ * debts; incomes: debts, debt repayments — so the number matches what the
  * review will offer for everything loaded.
  */
-export function UncategorizedBanner({ onPress }: { onPress: () => void }) {
+export function UncategorizedBanner({ onPress, entityType = 'expense' }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const canEdit = useAccountStore((s) => s.canEdit());
-  const count = useExpenseStore(
+  const expenseCount = useExpenseStore(
     (s) => s.expenses.filter((e) => !e.categoryId && !e.isPlanned && !e.isSplitReceivable && !e.isDebt).length,
   );
+  const incomeCount = useIncomeStore(
+    (s) => s.incomes.filter((i) => !i.categoryId && !i.isDebt && !i.isDebtRepayment).length,
+  );
+  const count = entityType === 'income' ? incomeCount : expenseCount;
   if (!canEdit || count === 0) return null;
 
   // The count is emphasised, so the label is split around it. Every locale puts

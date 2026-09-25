@@ -28,6 +28,7 @@ import { ProjectSuggestionService } from './services/project-suggestion.service'
 import { GoalPlannerService } from './services/goal-planner.service';
 import { GeocodingService } from './services/geocoding.service';
 import { CategorizeSuggestionsService } from './services/categorize-suggestions.service';
+import { CategorizeIncomeSuggestionsService } from './services/categorize-income-suggestions.service';
 import { ScanReceiptRequestSchema } from './utils/sanitize';
 import { UpdateConversationTitleDto } from './dto';
 
@@ -44,6 +45,7 @@ export class AiController {
     private readonly goalPlannerService: GoalPlannerService,
     private readonly geocodingService: GeocodingService,
     private readonly categorizeSuggestionsService: CategorizeSuggestionsService,
+    private readonly categorizeIncomeSuggestionsService: CategorizeIncomeSuggestionsService,
   ) {}
 
   // Forward-geocode a typed query into up to 5 candidate places for the expense
@@ -240,6 +242,17 @@ export class AiController {
   @UseGuards(new ViewerBlockGuard())
   async categorizeUncategorized(@Req() req: AuthenticatedRequest) {
     return this.categorizeSuggestionsService.suggest(req.accountId);
+  }
+
+  /**
+   * Income counterpart of categorize-uncategorized. Read-only, same posture —
+   * the client applies the reviewed result via PATCH /incomes/bulk. Shares
+   * the expense pass's daily ceiling (AI_CATEGORIZE_MAX_PER_DAY).
+   */
+  @Post('categorize-uncategorized-income')
+  @UseGuards(new ViewerBlockGuard())
+  async categorizeUncategorizedIncome(@Req() req: AuthenticatedRequest) {
+    return this.categorizeIncomeSuggestionsService.suggest(req.accountId);
   }
 
   @Get('suggest-category')

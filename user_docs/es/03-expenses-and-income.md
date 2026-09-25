@@ -95,6 +95,8 @@ Algunas cosas útiles de saber:
 
 En la pantalla de escritorio (web), la misma revisión se abre como un cuadro de diálogo.
 
+La misma revisión también está disponible en la pestaña Ingresos — toca **Sugerir categorías** ahí para las entradas de ingresos sin categoría.
+
 ### Etiquetas
 
 Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:

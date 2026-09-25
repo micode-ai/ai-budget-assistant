@@ -64,6 +64,11 @@ interface IncomeState {
     relatedDebtExpenseId?: string;
   }) => Promise<Income>;
   updateIncome: (id: string, updates: Partial<Income>) => void;
+  bulkUpdateIncomes: (
+    ids: string[],
+    patch: { categoryId: string | null },
+    options?: { awaitServer?: boolean },
+  ) => Promise<void>;
   deleteIncome: (id: string) => void;
   setFilters: (filters: Partial<IncomeFilters>) => void;
 
@@ -411,6 +416,46 @@ export const useIncomeStore = create<IncomeState>()(
         api.updateIncome(id, updates).catch((e) =>
           // Expected offline; local SQLite already updated + marked pending.
           console.warn('Income update sync deferred (offline?):', e),
+        );
+      }
+    },
+
+    bulkUpdateIncomes: async (ids, patch, options) => {
+      const { incomes } = get();
+      const now = new Date();
+
+      set({
+        incomes: incomes.map((i) =>
+          ids.includes(i.id)
+            ? {
+                ...i,
+                categoryId: patch.categoryId ?? undefined,
+                updatedAt: now,
+                syncStatus: 'pending' as SyncStatus,
+              }
+            : i
+        ),
+      });
+
+      const accountId = useAccountStore.getState().currentAccountId;
+      if (!accountId) return;
+
+      const updates: Record<string, any> = { categoryId: patch.categoryId };
+      for (const id of ids) {
+        await updateIncomeInDb(id, updates, now, 'pending');
+      }
+
+      // Default: fire-and-forget, same as every other optimistic write in this
+      // store. `awaitServer` is opt-in for a caller (the categorize review)
+      // that needs to know a server failure happened before it tells the user
+      // "done" — on web there is no SQLite to fall back on, so a lost write is
+      // otherwise invisible until the next reload. Mirrors
+      // `expenseStore.bulkUpdateExpenses`.
+      if (options?.awaitServer) {
+        await api.bulkUpdateIncomes({ ids, categoryId: patch.categoryId });
+      } else {
+        api.bulkUpdateIncomes({ ids, categoryId: patch.categoryId }).catch((e: any) =>
+          console.warn('[incomeStore] bulkUpdate server error:', e?.message || e)
         );
       }
     },

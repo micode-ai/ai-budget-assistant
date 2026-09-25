@@ -3,13 +3,15 @@ import { View, Text, ScrollView, Pressable, TextInput, ActivityIndicator } from 
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency, formatDate } from '@budget/shared-utils';
-import type { CategorizeCandidateExpense } from '@budget/shared-types';
 import { getIntlLocale } from '@/i18n';
 import { fromDateInputValue } from '@/utils/dateInput';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { showAlert } from '@/utils/alert';
 import { useTheme, useStyles, type Theme } from '@/theme';
-import { useCategorizeSuggestions } from '@/features/categorize/useCategorizeSuggestions';
+import {
+  useCategorizeSuggestions,
+  type CategorizeCandidate,
+} from '@/features/categorize/useCategorizeSuggestions';
 import type { ReviewGroup, Target } from '@/features/categorize/categorizeReview';
 import { categoryStyle, tintOf } from '@/features/categorize/categoryStyle';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
@@ -18,6 +20,8 @@ import { CategoryTargetPicker } from './CategoryTargetPicker';
 
 interface Props {
   onDone: () => void;
+  /** Defaults to `'expense'` so every existing call site keeps compiling unchanged. */
+  entityType?: 'expense' | 'income';
 }
 
 type PickerState = { mode: 'row' | 'group'; key: string } | null;
@@ -25,7 +29,7 @@ type PickerState = { mode: 'row' | 'group'; key: string } | null;
 const isHex = (c: string | null | undefined): c is string => !!c && /^#[0-9a-f]{6}$/i.test(c);
 
 /** Sums a group's amounts when every row shares one currency; count-only otherwise. */
-function summarizeGroup(expenseIds: string[], expenseById: Map<string, CategorizeCandidateExpense>) {
+function summarizeGroup(expenseIds: string[], expenseById: Map<string, CategorizeCandidate>) {
   let sum = 0;
   let currency: string | null = null;
   let mixed = false;
@@ -49,7 +53,7 @@ function summarizeGroup(expenseIds: string[], expenseById: Map<string, Categoriz
  * (`CategorizeDialog.tsx`), so it owns no navigation of its own beyond
  * `onDone` — and no safe-area inset: the native route supplies that.
  */
-export function CategorizeReview({ onDone }: Props) {
+export function CategorizeReview({ onDone, entityType = 'expense' }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -60,20 +64,21 @@ export function CategorizeReview({ onDone }: Props) {
   const expenseCategoryOptions = useMemo(
     () =>
       categories
-        .filter((c) => c.type === 'expense' && !c.isDeleted)
+        .filter((c) => c.type === entityType && !c.isDeleted)
         .map((c) => ({ id: c.id, name: getCategoryDisplayName(c, t), icon: c.icon, color: c.color })),
-    [categories, t],
+    [categories, t, entityType],
   );
 
-  const { status, response, state, dispatch, groups, plan, apply, applying, retry } = useCategorizeSuggestions();
+  const { status, response, items, state, dispatch, groups, plan, apply, applying, retry } =
+    useCategorizeSuggestions(entityType);
   const [picker, setPicker] = useState<PickerState>(null);
   // The "couldn't determine" group starts collapsed: it is the leftovers, and
   // expanded it can be longer than every suggestion above it combined.
   const [skipExpanded, setSkipExpanded] = useState(false);
 
   const expenseById = useMemo(
-    () => new Map((response?.expenses ?? []).map((e) => [e.id, e])),
-    [response],
+    () => new Map(items.map((e) => [e.id, e])),
+    [items],
   );
 
   const setTargetForPicker = (target: Target) => {
@@ -113,7 +118,9 @@ export function CategorizeReview({ onDone }: Props) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator color={theme.colors.primary} />
-        <Text style={styles.centeredText}>{t('categorize.analyzing')}</Text>
+        <Text style={styles.centeredText}>
+          {t(entityType === 'income' ? 'categorize.analyzingIncome' : 'categorize.analyzing')}
+        </Text>
       </View>
     );
   }
@@ -138,7 +145,10 @@ export function CategorizeReview({ onDone }: Props) {
         ) : null}
         {response && response.skippedEncrypted > 0 ? (
           <Text style={styles.centeredText}>
-            {t('categorize.skippedEncrypted', { count: response.skippedEncrypted })}
+            {t(
+              entityType === 'income' ? 'categorize.skippedEncryptedIncome' : 'categorize.skippedEncrypted',
+              { count: response.skippedEncrypted },
+            )}
           </Text>
         ) : null}
       </View>
@@ -159,7 +169,8 @@ export function CategorizeReview({ onDone }: Props) {
   const renderExpenseRow = (id: string, isSkip: boolean) => {
     const e = expenseById.get(id);
     if (!e) return null;
-    const label = e.merchant || e.description || '';
+    // Income candidates carry no `merchant` field — narrow rather than assume.
+    const label = ('merchant' in e ? e.merchant : null) || e.description || '';
     const initial = label.trim().charAt(0).toLocaleUpperCase() || '?';
     return (
       <Pressable
@@ -196,7 +207,7 @@ export function CategorizeReview({ onDone }: Props) {
     if (group.target.kind === 'new') {
       const draftKey = group.target.draftKey;
       const name = state.drafts[draftKey] ?? '';
-      const style = categoryStyle(name, t);
+      const style = categoryStyle(name, t, entityType);
       icon = renderIconCircle(style.icon, style.color);
       title = (
         <DraftTitle
@@ -301,7 +312,7 @@ export function CategorizeReview({ onDone }: Props) {
   }
 
   // assigned = what Apply will write; total = every candidate the pass offered.
-  const total = response?.expenses.length ?? 0;
+  const total = items.length;
   const assigned = plan.expenseCount;
   const progress = total > 0 ? Math.min(1, assigned / total) : 0;
   const newCount = plan.newCategories.length;
@@ -324,7 +335,10 @@ export function CategorizeReview({ onDone }: Props) {
         ) : null}
         {response && response.skippedEncrypted > 0 ? (
           <Text style={styles.notice}>
-            {t('categorize.skippedEncrypted', { count: response.skippedEncrypted })}
+            {t(
+              entityType === 'income' ? 'categorize.skippedEncryptedIncome' : 'categorize.skippedEncrypted',
+              { count: response.skippedEncrypted },
+            )}
           </Text>
         ) : null}
 

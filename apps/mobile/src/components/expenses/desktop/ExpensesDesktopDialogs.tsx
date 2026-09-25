@@ -31,9 +31,10 @@ interface Props {
   createKind: 'expense' | 'income' | null;
   onCloseCreateDialog: () => void;
 
-  /** The categorize review, opened from the uncategorized banner above
-   *  `SummaryStrip`. */
-  showCategorize: boolean;
+  /** The categorize review, opened from one of the two uncategorized banners
+   *  above `SummaryStrip` — `null` renders nothing, `'expense'`/`'income'`
+   *  says which one (mirrors `createKind`'s tri-state convention). */
+  showCategorize: 'expense' | 'income' | null;
   onCloseCategorize: () => void;
 
   /** Bulk category picker, spawned from the selection bar. Reuses
@@ -120,7 +121,7 @@ export function ExpensesDesktopDialogs({
 
       {createKind && <CreateDialog kind={createKind} onClose={onCloseCreateDialog} />}
 
-      {showCategorize && <CategorizeDialog onClose={onCloseCategorize} />}
+      {showCategorize && <CategorizeDialog entityType={showCategorize} onClose={onCloseCategorize} />}
 
       {showBulkCategoryPicker && (
         <Modal visible transparent animationType="fade" onRequestClose={onCloseBulkCategoryPicker}>

@@ -95,6 +95,8 @@ Kilka rzeczy wartych wiedzy:
 
 Na ekranie transakcji na komputerze (web) ten sam przegląd otwiera się jako okno dialogowe.
 
+Ten sam przegląd jest dostępny też na karcie Przychody — dotknij tam **Zaproponuj kategorie** dla przychodów bez kategorii.
+
 ### Tagi
 
 Tagi pomagaja organizowac wydatki za pomoca niestandardowych etykiet:

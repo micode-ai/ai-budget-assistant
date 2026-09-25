@@ -95,6 +95,8 @@ Een paar dingen om te weten:
 
 Op het transactiescherm voor desktop (web) opent hetzelfde overzicht als een dialoogvenster.
 
+Hetzelfde overzicht is ook beschikbaar op het tabblad Inkomsten — tik daar op **Categorieën voorstellen** voor inkomsten zonder categorie.
+
 ### Tags
 
 Tags helpen je uitgaven te ordenen met aangepaste labels:

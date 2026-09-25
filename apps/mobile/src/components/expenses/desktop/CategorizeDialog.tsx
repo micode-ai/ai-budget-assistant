@@ -8,6 +8,8 @@ const TITLE_ID = 'categorize-dialog-title';
 
 interface Props {
   onClose: () => void;
+  /** Defaults to `'expense'` so every existing call site keeps compiling unchanged. */
+  entityType?: 'expense' | 'income';
 }
 
 /**
@@ -26,7 +28,7 @@ interface Props {
  * as the panel's second flex child, unwrapped, exactly as `CreateDialog`
  * hosts `ExpenseCreateForm`/`IncomeCreateForm`.
  */
-export function CategorizeDialog({ onClose }: Props) {
+export function CategorizeDialog({ onClose, entityType = 'expense' }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -57,7 +59,7 @@ export function CategorizeDialog({ onClose }: Props) {
         <View style={styles.panel}>
           <View style={styles.header}>
             <Text nativeID={TITLE_ID} style={styles.title} numberOfLines={1}>
-              {t('categorize.title')}
+              {t(entityType === 'income' ? 'categorize.titleIncome' : 'categorize.title')}
             </Text>
             <Pressable
               onPress={onClose}
@@ -69,7 +71,7 @@ export function CategorizeDialog({ onClose }: Props) {
             </Pressable>
           </View>
 
-          <CategorizeReview onDone={onClose} />
+          <CategorizeReview entityType={entityType} onDone={onClose} />
         </View>
       </div>
     </Modal>

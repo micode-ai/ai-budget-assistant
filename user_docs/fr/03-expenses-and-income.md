@@ -95,6 +95,8 @@ Quelques points à connaître :
 
 Sur l'écran des transactions de bureau (web), la même revue s'ouvre dans une boîte de dialogue.
 
+La même revue est aussi disponible depuis l'onglet Revenus — touchez-y **Suggérer des catégories** pour les entrées de revenus sans catégorie.
+
 ### Etiquettes
 
 Les etiquettes vous aident a organiser les depenses avec des libelles personnalises :

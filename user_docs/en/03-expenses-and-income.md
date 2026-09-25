@@ -95,6 +95,8 @@ A few things worth knowing:
 
 On the desktop (web) transactions screen, the same review opens as a dialog.
 
+The same review is available from the Income tab too — tap **Suggest categories** there for uncategorized income entries.
+
 ### Tags
 
 Tags help you organize expenses with custom labels:

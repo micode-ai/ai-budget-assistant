@@ -460,6 +460,8 @@ A few things worth knowing:
 
 On the desktop (web) transactions screen, the same review opens as a dialog.
 
+The same review is available from the Income tab too — tap **Suggest categories** there for uncategorized income entries.
+
 ### Tags
 
 Tags help you organize expenses with custom labels:
@@ -5267,6 +5269,8 @@ iOS, Android, Web
 
 На экране транзакций на компьютере (веб) тот же обзор открывается как диалоговое окно.
 
+Тот же обзор доступен и на вкладке «Доходы» — нажмите там **Предложить категории** для доходов без категории.
+
 ### Теги
 
 Теги помогают организовать расходы с помощью пользовательских меток:
@@ -10052,6 +10056,8 @@ iOS, Android, Web
 
 На екрані транзакцій на комп'ютері (веб) той самий огляд відкривається як діалогове вікно.
 
+Той самий огляд доступний і на вкладці «Доходи» — натисніть там **Запропонувати категорії** для доходів без категорії.
+
 ### Теги
 
 Теги допомагають організовувати витрати за допомогою власних міток:
@@ -14785,6 +14791,8 @@ Kilka rzeczy wartych wiedzy:
 
 Na ekranie transakcji na komputerze (web) ten sam przegląd otwiera się jako okno dialogowe.
 
+Ten sam przegląd jest dostępny też na karcie Przychody — dotknij tam **Zaproponuj kategorie** dla przychodów bez kategorii.
+
 ### Tagi
 
 Tagi pomagaja organizowac wydatki za pomoca niestandardowych etykiet:
@@ -19514,6 +19522,8 @@ Ein paar Dinge, die gut zu wissen sind:
 
 Auf dem Desktop (Web) öffnet sich dieselbe Übersicht als Dialog auf dem Transaktionsbildschirm.
 
+Dieselbe Übersicht ist auch im Tab „Einkommen" verfügbar — tippe dort auf **Kategorien vorschlagen** für unkategorisierte Einkommenseinträge.
+
 ### Tags
 
 Tags helfen dir, Ausgaben mit benutzerdefinierten Labels zu organisieren:
@@ -24218,6 +24228,8 @@ Algunas cosas útiles de saber:
 
 En la pantalla de escritorio (web), la misma revisión se abre como un cuadro de diálogo.
 
+La misma revisión también está disponible en la pestaña Ingresos — toca **Sugerir categorías** ahí para las entradas de ingresos sin categoría.
+
 ### Etiquetas
 
 Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:
@@ -28911,6 +28923,8 @@ Quelques points à connaître :
 
 Sur l'écran des transactions de bureau (web), la même revue s'ouvre dans une boîte de dialogue.
 
+La même revue est aussi disponible depuis l'onglet Revenus — touchez-y **Suggérer des catégories** pour les entrées de revenus sans catégorie.
+
 ### Etiquettes
 
 Les etiquettes vous aident a organiser les depenses avec des libelles personnalises :
@@ -33602,6 +33616,8 @@ iOS, Android, Web
 
 На экране транзакцый на камп'ютары (вэб) той жа агляд адкрываецца як дыялогавае акно.
 
+Той жа агляд даступны і на ўкладцы «Даходы» — націсніце там **Прапанаваць катэгорыі** для даходаў без катэгорыі.
+
 ### Тэгі
 
 Тэгі дапамагаюць арганізаваць выдаткі з дапамогай карыстальніцкіх метак:
@@ -38256,6 +38272,8 @@ Een paar dingen om te weten:
 - **Kijkers** op een gedeeld account zien deze banner niet — categoriseren is een wijziging die alleen Bewerkers en de Eigenaar kunnen doen.
 
 Op het transactiescherm voor desktop (web) opent hetzelfde overzicht als een dialoogvenster.
+
+Hetzelfde overzicht is ook beschikbaar op het tabblad Inkomsten — tik daar op **Categorieën voorstellen** voor inkomsten zonder categorie.
 
 ### Tags
 

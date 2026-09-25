@@ -30,7 +30,7 @@ export const DEFAULT_EXPENSE_CATEGORIES = [
   { name: 'Personal Care', icon: 'happy', color: '#2471A3' },
 ];
 
-const DEFAULT_INCOME_CATEGORIES = [
+export const DEFAULT_INCOME_CATEGORIES = [
   { name: 'Salary', icon: 'cash', color: '#27AE60' },
   { name: 'Freelance', icon: 'laptop', color: '#2ECC71' },
   { name: 'Investments', icon: 'trending-up', color: '#1ABC9C' },

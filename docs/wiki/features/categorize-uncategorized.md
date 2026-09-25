@@ -1,4 +1,4 @@
-# Categorize uncategorized expenses
+# Categorize uncategorized expenses (and incomes)
 
 *Hub: [ai-features](../ai-features.md) · [api](../api.md) · [mobile-app](../mobile-app.md)*
 
@@ -33,7 +33,18 @@ empty.
 - `packages/shared-types/src/dto/ai.ts` — `CategorizeCandidateExpense`, `CategorizeSuggestionGroup`,
   `CategorizeSuggestionsResponse`
 
-Design: `docs/superpowers/specs/2026-09-24-categorize-uncategorized-design.md`.
+Design: `docs/superpowers/specs/2026-09-24-categorize-uncategorized-design.md`. Income extension
+(ABA-595) design: `docs/contracts/categorize-uncategorized-incomes.md`.
+
+**Income entry points**, mirroring every expense one above:
+- `apps/api/src/modules/ai/services/categorize-income-suggestions.service.ts` —
+  `CategorizeIncomeSuggestionsService.suggest()`
+- `apps/api/src/modules/ai/ai.controller.ts` — `POST /ai/categorize-uncategorized-income`
+- `apps/api/src/modules/incomes/income-bulk.service.ts` — `IncomeBulkService.bulkUpdate` (new
+  `PATCH /incomes/bulk`, no merchant-rule learning — income has no merchant field)
+- `apps/mobile/app/income/categorize.tsx` — the native route
+- `apps/mobile/src/components/expenses/ExpensesMobile.tsx` / `.../desktop/ExpensesDesktop.tsx` —
+  the income-tab / second desktop `UncategorizedBanner`
 
 ## Key concepts
 
@@ -161,13 +172,57 @@ trusted as the key to write with.
   `CategorizeDialog.tsx` on desktop hosts the same component with no such wrapper — adding an inset
   inside `CategorizeReview` would double it on native and misplace it inside the desktop panel.
 
+## Incomes (ABA-595)
+
+Same review, same component tree, a second entity type. The split: the CLIENT layer
+(`CategorizeReview`, `UncategorizedBanner`, `useCategorizeSuggestions`, `categoryStyle`,
+`CategorizeDialog`/`ExpensesDesktopDialogs`) takes an `entityType: 'expense' | 'income'` prop/arg
+and is genuinely shared — `categorizeReview.ts` (the reducer), `applyCategorization.ts`,
+`shareInFlight.ts` and `CategoryTargetPicker.tsx` needed ZERO changes, because they already spoke
+only in opaque ids and injected deps. The SERVER layer is a fork, not a parametrization:
+`CategorizeIncomeSuggestionsService` is its own file, not a generic branch inside
+`CategorizeSuggestionsService` — `Income` and `Expense` are different Prisma delegates with
+different candidate shapes (no `merchant`, no `items`, a `source` enum instead), and forcing one
+generic service to branch on entity type throughout would cost as much complexity as two small,
+readable services. Both DO share `validateCategorization`/`MAX_NEW_CATEGORIES`/
+`MIN_EXPENSES_PER_NEW_CATEGORY` from `categorize-suggestions.util.ts` unchanged — that file already
+spoke only in candidate indexes and category names, so nothing about it was expense-specific.
+
+Deliberate simplifications versus the expense pass, not oversights:
+- **No merchant-rule pre-pass, no deterministic top-up.** Income has no merchant field, so
+  `CategorizeIncomeSuggestionsService.suggest()` goes straight from candidates to the one batched
+  model call — no `MerchantRulesService` lookup, no `matchByMerchant` step.
+- **No "standard category names" prompt line.** The expense prompt nudges the model toward
+  `getDefaultCategories()`'s per-language names; the income prompt does not, since that list mixes
+  expense-only names into the same array (a pre-existing imprecision, see above) and splitting it
+  was out of scope here. The income model only ever sees the account's own existing income
+  categories — it invents any new name outright.
+- **Shares the expense pass's daily counter.** `AI_CATEGORIZE_MAX_PER_DAY` /
+  `aicat:{accountId}:{date}` is an account-level throttle, not an expense-specific one — the income
+  service reads and increments the SAME Redis key. There is no separate income quota knob. The
+  result-answer cache is namespaced separately though (`aicatinc:` vs. the expense service's
+  `aicatres:`), purely so the two can never collide even though their hashed inputs never overlap
+  in practice.
+- **`PATCH /incomes/bulk` is v1-scoped to `categoryId` only** — no `tagIds`/`isDeleted`, unlike its
+  `PATCH /expenses/bulk` sibling. Declared before `@Patch(':id')` in `incomes.controller.ts` for the
+  same Express route-ordering reason `expenses.controller.ts` already documents (ABA-166) — getting
+  this wrong silently 400s the whole bulk op.
+- **`CategoryTargetPicker.tsx`'s draft-name preview icon is expense-only.** It calls
+  `categoryStyle(name, t)` with the default `entityType` (`'expense'`) when live-previewing a
+  not-yet-created category's icon while the user types a name in the picker — an income draft named
+  exactly "Salary" won't borrow that default's icon there (falls through to the neutral folder).
+  `CategorizeReview.tsx` itself calls `categoryStyle(name, t, entityType)` correctly everywhere it
+  matters (the group card icon actually shown), so this is a cosmetic gap in one preview surface,
+  not a functional one.
+
 ## Known gaps
 
-Out of scope for this pass, matching the design's stated boundaries: re-reviewing expenses that are
-already (mis)categorized; incomes; applying merchant rules at notification-capture or
-receipt-scan time; seeding default categories into non-first accounts. A bot command was out of
-scope for THIS pass specifically because chat has no room for the review UI — it shipped
-separately as a simplified, sequential variant: [bot-categorize-command](bot-categorize-command.md).
+Out of scope for this pass, matching the design's stated boundaries: re-reviewing expenses/incomes
+that are already (mis)categorized; applying merchant rules at notification-capture or
+receipt-scan time; seeding default categories into non-first accounts; a bot command for either
+entity type (chat has no room for the review UI — the expense side shipped a simplified, sequential
+bot variant instead: [bot-categorize-command](bot-categorize-command.md); incomes have no bot
+equivalent at all).
 
 Also not done:
 
@@ -198,3 +253,6 @@ merchant-rule learning on bulk recategorization.
 passes per open with two different answers and left a store variant ungrouped: result cache,
 `temperature: 0`, merchant top-up, shared in-flight request. New category names follow the owner's
 language by design; whether the reviewing member's language should win is open.
+ABA-595 — extended the pass to incomes: `POST /ai/categorize-uncategorized-income`,
+`PATCH /incomes/bulk`, and an `entityType` prop threaded through the whole client component tree
+(see **Incomes** above for the fork/parametrize split).

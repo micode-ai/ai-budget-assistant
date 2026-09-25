@@ -95,6 +95,8 @@ Ein paar Dinge, die gut zu wissen sind:
 
 Auf dem Desktop (Web) öffnet sich dieselbe Übersicht als Dialog auf dem Transaktionsbildschirm.
 
+Dieselbe Übersicht ist auch im Tab „Einkommen" verfügbar — tippe dort auf **Kategorien vorschlagen** für unkategorisierte Einkommenseinträge.
+
 ### Tags
 
 Tags helfen dir, Ausgaben mit benutzerdefinierten Labels zu organisieren:

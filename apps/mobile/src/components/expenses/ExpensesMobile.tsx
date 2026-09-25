@@ -227,6 +227,9 @@ export function ExpensesMobile() {
       {activeTab === 'expenses' && (
         <UncategorizedBanner onPress={() => router.push('/expense/categorize')} />
       )}
+      {activeTab === 'income' && (
+        <UncategorizedBanner entityType="income" onPress={() => router.push('/income/categorize')} />
+      )}
 
       {/* Period chips + category/merchant filters + month navigator */}
       <ExpenseFilterBar

@@ -622,6 +622,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="income/categorize"
+          options={{
+            headerShown: true,
+            title: t('categorize.titleIncome'),
+          }}
+        />
+        <Stack.Screen
           name="projects/index"
           options={{
             headerShown: settingsHeaderShown('/projects'),

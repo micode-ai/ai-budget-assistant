@@ -37,4 +37,11 @@ export const incomesApi = {
   deleteIncome(id: string) {
     return httpClient.request<void>(`/incomes/${id}`, { method: 'DELETE' });
   },
+
+  bulkUpdateIncomes(data: { ids: string[]; categoryId?: string | null }) {
+    return httpClient.request<{ updated: number }>('/incomes/bulk', {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+  },
 };

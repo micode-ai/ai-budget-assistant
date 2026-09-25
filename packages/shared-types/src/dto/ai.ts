@@ -312,3 +312,36 @@ export interface CategorizeSuggestionsResponse {
   /** True when the daily ceiling stopped the model step; rule-based groups are still returned. */
   limitReached: boolean;
 }
+
+/** One uncategorized income offered for review by POST /ai/categorize-uncategorized-income. */
+export interface CategorizeCandidateIncome {
+  /** Server PK. */
+  id: string;
+  /** The creating device's local id, when it had one — lets a client find its own row. */
+  clientId: string | null;
+  description: string | null;
+  amount: number;
+  currencyCode: string;
+  /** YYYY-MM-DD */
+  date: string;
+  /** manual | voice | ocr | import — a weak hint to the model; income has no merchant/items. */
+  source: string;
+}
+
+/**
+ * Same shape as {@link CategorizeSuggestionsResponse}, over incomes instead of expenses.
+ * `groups[].expenseIds` is reused verbatim (holds income ids here) rather than duplicating
+ * `CategorizeSuggestionGroup` for one renamed field.
+ */
+export interface CategorizeIncomeSuggestionsResponse {
+  incomes: CategorizeCandidateIncome[];
+  groups: CategorizeSuggestionGroup[];
+  /** Server PKs nothing confident was found for. */
+  unassigned: string[];
+  /** E2EE incomes the server cannot read and therefore skipped. */
+  skippedEncrypted: number;
+  /** Model passes left today for this account after this one (shares the expense pass's daily counter). */
+  remainingToday: number;
+  /** True when the daily ceiling stopped the model step; rule-based groups are still returned. */
+  limitReached: boolean;
+}
