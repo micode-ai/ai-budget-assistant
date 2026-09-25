@@ -193,6 +193,8 @@ the section you came for — it states what must not break and why. A missing se
 ### Categories
 - [category-id-resolution](features/category-id-resolution.md) — how a category id is resolved
   between phone and server, and the five bugs that came from getting it wrong
+- [default-category-seeding](features/default-category-seeding.md) — every new account (not just a
+  user's first) gets the localized default category set; `investment` accounts don't
 
 ## Health
 

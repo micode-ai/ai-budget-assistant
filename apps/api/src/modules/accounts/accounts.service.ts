@@ -71,7 +71,31 @@ export class AccountsService {
         },
       });
 
+      // Seed default categories for every new account except `investment` —
+      // portfolio-holdings-centric accounts have no use for a
+      // Groceries/Alcohol/Household-style category set. Uses the creating
+      // user's language, same field the first-account seed below reads.
+      if (dto.type !== 'investment') {
+        const user = await tx.user.findUnique({
+          where: { id: userId },
+          select: { language: true },
+        });
+        await this.seedDefaultCategoriesForAccount(tx, account.id, user?.language ?? 'en');
+      }
+
       return account;
+    });
+  }
+
+  private async seedDefaultCategoriesForAccount(tx: PrismaClient, accountId: string, language: string) {
+    const defaultCategories = getDefaultCategories(language);
+    await tx.category.createMany({
+      data: defaultCategories.map((cat) => ({
+        accountId,
+        name: cat.name,
+        icon: cat.icon,
+        color: cat.color,
+      })),
     });
   }
 
@@ -635,15 +659,7 @@ export class AccountsService {
       });
 
       // Seed default categories for the new account (localized)
-      const defaultCategories = getDefaultCategories(language);
-      await tx.category.createMany({
-        data: defaultCategories.map((cat) => ({
-          accountId: account.id,
-          name: cat.name,
-          icon: cat.icon,
-          color: cat.color,
-        })),
-      });
+      await this.seedDefaultCategoriesForAccount(tx, account.id, language);
 
       return account;
     });

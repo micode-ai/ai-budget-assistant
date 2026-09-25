@@ -24,6 +24,9 @@ const mockPrisma: any = {
     create: jest.fn(),
     findUnique: jest.fn(),
   },
+  category: {
+    createMany: jest.fn(),
+  },
   user: {
     findUnique: jest.fn(),
   },
@@ -65,6 +68,8 @@ describe('AccountsService', () => {
       ...data,
     }));
     mockPrisma.accountMember.create.mockResolvedValue({ id: 'member-1' });
+    mockPrisma.user.findUnique.mockResolvedValue({ language: 'en' });
+    mockPrisma.category.createMany.mockResolvedValue({ count: 17 });
   });
 
   describe('create — trip accounts', () => {
@@ -83,6 +88,50 @@ describe('AccountsService', () => {
 
       expect(account.tripStatus).toBe('active');
       expect(account.tripStartDate).toBeDefined();
+    });
+  });
+
+  describe('create — default category seeding', () => {
+    it.each(['personal', 'business', 'shared', 'trip'] as const)(
+      'seeds the localized default categories for a new %s account',
+      async (type) => {
+        mockPrisma.user.findUnique.mockResolvedValue({ language: 'pl' });
+
+        const dto = {
+          name: 'Account',
+          type,
+          ...(type === 'trip' ? { tripEndDate: '2026-08-10' } : {}),
+        } as CreateAccountDto;
+
+        await service.create(userId, dto);
+
+        expect(mockPrisma.user.findUnique).toHaveBeenCalledWith({
+          where: { id: userId },
+          select: { language: true },
+        });
+        expect(mockPrisma.category.createMany).toHaveBeenCalledTimes(1);
+        const call = mockPrisma.category.createMany.mock.calls[0][0];
+        expect(call.data.length).toBeGreaterThan(0);
+        expect(call.data.every((c: { accountId: string }) => c.accountId === 'account-1')).toBe(true);
+        // Spot-check localization actually took effect (Polish, not English)
+        expect(call.data.some((c: { name: string }) => c.name === 'Zakupy spożywcze')).toBe(true);
+      },
+    );
+
+    it('does NOT seed categories for an investment account', async () => {
+      await service.create(userId, { name: 'Portfolio', type: 'investment' } as CreateAccountDto);
+
+      expect(mockPrisma.category.createMany).not.toHaveBeenCalled();
+      expect(mockPrisma.user.findUnique).not.toHaveBeenCalled();
+    });
+
+    it('falls back to English defaults when the user has no language set', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ language: null });
+
+      await service.create(userId, { name: 'Personal 2', type: 'personal' } as CreateAccountDto);
+
+      const call = mockPrisma.category.createMany.mock.calls[0][0];
+      expect(call.data.some((c: { name: string }) => c.name === 'Groceries')).toBe(true);
     });
   });
 

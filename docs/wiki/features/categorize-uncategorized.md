@@ -9,9 +9,11 @@ account's uncategorized expenses into one review: existing categories where they
 handful of new shared categories where nothing does, and an honest "couldn't determine" pile for
 the rest. Nothing is written until the user reviews the whole picture and taps Apply. Written
 because receipt scanning tends to leave most expenses uncategorized (the scan prompt used to force
-a pick from the list and land things in the nearest wrong category instead), and because only the
-first account a user creates gets seeded with default categories — every later account starts
-empty.
+a pick from the list and land things in the nearest wrong category instead), and because — before
+[default-category-seeding](default-category-seeding.md) (which now covers every account created
+going forward) — only the first account a user creates got seeded with default categories, so this
+pass is still what an account created before that change, or any account backfilling old
+uncategorized expenses, relies on.
 
 ## Entry points
 
@@ -219,10 +221,12 @@ Deliberate simplifications versus the expense pass, not oversights:
 
 Out of scope for this pass, matching the design's stated boundaries: re-reviewing expenses/incomes
 that are already (mis)categorized (a narrower, rule-only slice of this exists now — see
-[merchant-category-rules](merchant-category-rules.md)'s "Reapply" reader, ABA-596); seeding default
-categories into non-first accounts; a bot command for either entity type (chat has no room for the
-review UI — the expense side shipped a simplified, sequential bot variant instead:
-[bot-categorize-command](bot-categorize-command.md); incomes have no bot equivalent at all).
+[merchant-category-rules](merchant-category-rules.md)'s "Reapply" reader, ABA-596); a bot command
+for either entity type (chat has no room for the review UI — the expense side shipped a simplified,
+sequential bot variant instead: [bot-categorize-command](bot-categorize-command.md); incomes have no
+bot equivalent at all). Seeding default categories into non-first accounts — previously listed here
+as a gap — is now done, going forward only (no backfill for accounts created before it shipped): see
+[default-category-seeding](default-category-seeding.md).
 Applying merchant rules at notification-capture or receipt-scan time — previously listed here as a
 gap — is now done: notification capture turned out to already do it client-side (shipped with the
 original ABA-294/295 capture feature, just undocumented), and receipt scanning gained a server-side
