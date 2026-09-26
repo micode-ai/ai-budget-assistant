@@ -24,6 +24,7 @@ import { useBankNotificationCapture } from '@/hooks/useBankNotificationCapture';
 import { useAuthenticatedBootstrap } from '@/hooks/useAuthenticatedBootstrap';
 import { useNotificationDeepLink } from '@/hooks/useNotificationDeepLink';
 import { useTripInviteDeepLink } from '@/hooks/useTripInviteDeepLink';
+import { useShareIntake } from '@/hooks/useShareIntake';
 import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
 import { useFirstRunOnboarding } from '@/hooks/useFirstRunOnboarding';
 import { useTelemetryScreenViews } from '@/hooks/useTelemetryScreenViews';
@@ -56,6 +57,7 @@ function RootNavigator() {
   // stranded by a crash must be cleaned up whether or not anyone signs in.
   useNotificationDeepLink(coldStartGateReady);
   useTripInviteDeepLink(coldStartGateReady, t);
+  useShareIntake(coldStartGateReady);
   useFirstRunOnboarding(coldStartGateReady);
   useGenericDeepLink(isInitializing, isAuthenticated);
   useTelemetryScreenViews(coldStartGateReady);
