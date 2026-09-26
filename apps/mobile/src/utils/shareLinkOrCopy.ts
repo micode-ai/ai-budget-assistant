@@ -8,6 +8,11 @@
  */
 export type ShareOutcome = 'shared' | 'dismissed' | 'copied' | 'manual';
 
+/** How long to wait for the clipboard. In a browser `clipboard.writeText` can
+ *  stay pending indefinitely (no user activation left after the network call),
+ *  which left the user with neither a link nor an error. */
+export const COPY_TIMEOUT_MS = 1500;
+
 export interface ShareLinkDeps {
   share: (url: string) => Promise<{ action?: string } | void>;
   copy: (url: string) => Promise<unknown>;
@@ -26,8 +31,11 @@ export async function shareLinkOrCopy(url: string, deps: ShareLinkDeps): Promise
   } catch (e) {
     if ((e as { name?: string } | null)?.name === 'AbortError') return 'dismissed';
     try {
-      await deps.copy(url);
-      return 'copied';
+      const copied = await Promise.race([
+        Promise.resolve(deps.copy(url)).then(() => true),
+        new Promise<boolean>((resolve) => setTimeout(() => resolve(false), COPY_TIMEOUT_MS)),
+      ]);
+      return copied ? 'copied' : 'manual';
     } catch {
       return 'manual';
     }

@@ -1,4 +1,4 @@
-import { shareLinkOrCopy } from '../shareLinkOrCopy';
+import { shareLinkOrCopy, COPY_TIMEOUT_MS } from '../shareLinkOrCopy';
 
 const URL_ = 'https://api.example/sl/tok';
 
@@ -32,5 +32,18 @@ describe('shareLinkOrCopy', () => {
       copy: jest.fn().mockRejectedValue(new Error('clipboard blocked')),
     });
     expect(r).toBe('manual');
+  });
+
+  it('reports manual when copying never settles, instead of leaving the user with nothing', async () => {
+    jest.useFakeTimers();
+    const pending = shareLinkOrCopy(URL_, {
+      share: jest.fn().mockRejectedValue(Object.assign(new Error('denied'), { name: 'NotAllowedError' })),
+      copy: () => new Promise(() => {}),
+    });
+    await Promise.resolve();
+    await Promise.resolve();
+    jest.advanceTimersByTime(COPY_TIMEOUT_MS + 1);
+    await expect(pending).resolves.toBe('manual');
+    jest.useRealTimers();
   });
 });
