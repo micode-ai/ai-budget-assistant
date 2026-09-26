@@ -81,4 +81,4 @@ all apply unchanged. The server has no share-specific code.
   `docs/superpowers/plans/2026-09-26-share-to-capture.md`, Task 8).
 
 ## History
-Share-to-capture (2026-09-26).
+[ABA-607](https://github.com/micode-ai/ai-budget-assistant/issues/631) — share-to-capture (2026-09-26); spec `docs/superpowers/specs/2026-09-26-share-to-capture-design.md`.

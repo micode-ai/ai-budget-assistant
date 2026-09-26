@@ -19,7 +19,7 @@
 <url><loc>https://ai-budget.pl/help/en/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/en/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/en/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/en/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/en/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/en/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/en/gamification/</loc><lastmod>2026-06-29</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/en/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -59,7 +59,7 @@
 <url><loc>https://ai-budget.pl/help/pl/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/pl/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/pl/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/pl/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/pl/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/pl/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/pl/gamification/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/pl/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -99,7 +99,7 @@
 <url><loc>https://ai-budget.pl/help/de/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/de/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/de/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/de/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/de/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/de/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/de/gamification/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/de/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -139,7 +139,7 @@
 <url><loc>https://ai-budget.pl/help/es/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/es/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/es/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/es/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/es/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/es/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/es/gamification/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/es/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -179,7 +179,7 @@
 <url><loc>https://ai-budget.pl/help/fr/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/fr/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/fr/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/fr/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/fr/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/fr/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/fr/gamification/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/fr/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -219,7 +219,7 @@
 <url><loc>https://ai-budget.pl/help/ru/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ru/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ru/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/ru/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/ru/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ru/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ru/gamification/</loc><lastmod>2026-06-29</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ru/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -259,7 +259,7 @@
 <url><loc>https://ai-budget.pl/help/ua/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/ua/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/ua/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/gamification/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/ua/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -299,7 +299,7 @@
 <url><loc>https://ai-budget.pl/help/be/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/be/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/be/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/be/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/be/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/be/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/be/gamification/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/be/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
@@ -339,7 +339,7 @@
 <url><loc>https://ai-budget.pl/help/nl/spending-story/</loc><lastmod>2026-08-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/nl/accounts/</loc><lastmod>2026-08-02</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/nl/wallet-and-exchange/</loc><lastmod>2026-09-03</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
-<url><loc>https://ai-budget.pl/help/nl/settings/</loc><lastmod>2026-07-22</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+<url><loc>https://ai-budget.pl/help/nl/settings/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/nl/subscription/</loc><lastmod>2026-08-17</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/nl/gamification/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
 <url><loc>https://ai-budget.pl/help/nl/investments/</loc><lastmod>2026-06-27</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
