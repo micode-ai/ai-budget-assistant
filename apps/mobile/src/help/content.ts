@@ -684,6 +684,18 @@ The app warns you before a receipt ends up in your expenses twice:
 
 The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
 
+### Sharing from Another App (Android)
+
+Got a receipt as a screenshot, a banking-app confirmation or an e-receipt PDF? You don't have to open the scanner:
+
+1. In any app (gallery, Gmail, your bank, a store app), tap **Share**
+2. Choose **AI Budget**
+3. The app opens straight on the filled-in confirmation screen — check it and tap **Save**
+
+You can share **images and PDFs**, up to **10 files at a time** (a PDF up to 10 MB). Several files become separate expenses, one after another — the title shows your progress ("Receipt 2 of 5") and **Next** takes you to the following file. If a file can't be read, choose **Skip** or **Enter manually**. Closing the screen asks before discarding the files still waiting. Each file counts as one receipt scan against your AI limit; if the limit runs out, the remaining files are left for later.
+
+Sharing works on Android only. On iPhone and in the web app, use **Scan Receipt** instead.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.
@@ -5505,6 +5517,18 @@ iOS, Android, Web
 
 Боты в Telegram, WhatsApp и Slack предупреждают так же и предлагают кнопку **Всё равно распознать**.
 
+### Поделиться из другого приложения (Android)
+
+Чек пришёл скриншотом, подтверждением из банковского приложения или электронным чеком в PDF? Открывать сканер не нужно:
+
+1. В любом приложении (галерея, Gmail, банк, приложение магазина) нажмите **Поделиться**
+2. Выберите **AI Budget**
+3. Приложение сразу откроет заполненный экран подтверждения — проверьте и нажмите **Сохранить**
+
+Можно делиться **фото и PDF**, до **10 файлов за раз** (PDF до 10 МБ). Несколько файлов становятся отдельными расходами, по очереди: в заголовке виден прогресс («Чек 2 из 5»), а **Дальше** переходит к следующему файлу. Если файл не распознался, выберите **Пропустить** или **Ввести вручную**. При закрытии экрана приложение спросит, прежде чем отменить оставшиеся файлы. Каждый файл — одно сканирование чека в лимите AI; если лимит закончился, оставшиеся файлы откладываются на потом.
+
+Функция работает только на Android. На iPhone и в веб-версии используйте **Сканировать чек**.
+
 ## Голосовой ввод дохода
 
 Регистрируйте полученные платежи голосом — тот же процесс, что и для голосового расхода, оптимизированный для доходов.
@@ -10304,6 +10328,18 @@ iOS, Android, Web
 
 Боти в Telegram, WhatsApp і Slack попереджають так само й пропонують кнопку **Все одно розпізнати**.
 
+### Поділитися з іншого застосунку (Android)
+
+Чек прийшов скриншотом, підтвердженням із банківського застосунку або електронним чеком у PDF? Відкривати сканер не потрібно:
+
+1. У будь-якому застосунку (галерея, Gmail, банк, застосунок магазину) натисніть **Поділитися**
+2. Оберіть **AI Budget**
+3. Застосунок одразу відкриє заповнений екран підтвердження — перевірте й натисніть **Зберегти**
+
+Можна ділитися **фото та PDF**, до **10 файлів за раз** (PDF до 10 МБ). Кілька файлів стають окремими витратами, по черзі: у заголовку видно прогрес («Чек 2 з 5»), а **Далі** переходить до наступного файлу. Якщо файл не розпізнано, оберіть **Пропустити** або **Ввести вручну**. Під час закриття екрана застосунок запитає, перш ніж скасувати решту файлів. Кожен файл — одне сканування чека в ліміті AI; якщо ліміт вичерпано, решта файлів лишається на потім.
+
+Функція працює лише на Android. На iPhone і у вебверсії використовуйте **Сканувати чек**.
+
 ## Голосовий дохід
 
 Реєструйте отримані платежі голосом — той самий процес, що й для голосової витрати, оптимізований для доходів.
@@ -15051,6 +15087,18 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 
 Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
 
+### Udostępnianie z innej aplikacji (Android)
+
+Masz paragon jako zrzut ekranu, potwierdzenie z aplikacji banku albo e-paragon w PDF? Nie musisz otwierać skanera:
+
+1. W dowolnej aplikacji (galeria, Gmail, bank, aplikacja sklepu) stuknij **Udostępnij**
+2. Wybierz **AI Budget**
+3. Aplikacja otworzy od razu wypełniony ekran potwierdzenia — sprawdź go i stuknij **Zapisz**
+
+Możesz udostępniać **zdjęcia i pliki PDF**, maksymalnie **10 plików naraz** (PDF do 10 MB). Kilka plików to osobne wydatki, jeden po drugim — tytuł pokazuje postęp („Paragon 2 z 5”), a **Dalej** przechodzi do kolejnego pliku. Jeśli pliku nie da się odczytać, wybierz **Pomiń** albo **Wpisz ręcznie**. Zamknięcie ekranu wymaga potwierdzenia, zanim oczekujące pliki zostaną odrzucone. Każdy plik to jedno skanowanie paragonu w limicie AI; gdy limit się wyczerpie, pozostałe pliki zostają na później.
+
+Udostępnianie działa tylko na Androidzie. Na iPhonie i w aplikacji webowej użyj **Skanuj paragon**.
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.
@@ -19794,6 +19842,18 @@ Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
 
 Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
 
+### Aus einer anderen App teilen (Android)
+
+Du hast einen Beleg als Screenshot, eine Bestätigung aus der Banking-App oder einen E-Beleg als PDF? Den Scanner musst du nicht öffnen:
+
+1. Tippe in einer beliebigen App (Galerie, Gmail, Bank, Händler-App) auf **Teilen**
+2. Wähle **AI Budget**
+3. Die App öffnet direkt den ausgefüllten Bestätigungsbildschirm — prüfen und **Speichern** tippen
+
+Du kannst **Bilder und PDFs** teilen, bis zu **10 Dateien auf einmal** (PDF bis 10 MB). Mehrere Dateien werden nacheinander zu einzelnen Ausgaben — der Titel zeigt den Fortschritt („Beleg 2 von 5“), **Weiter** führt zur nächsten Datei. Kann eine Datei nicht gelesen werden, wähle **Überspringen** oder **Manuell eingeben**. Beim Schließen fragt die App, bevor wartende Dateien verworfen werden. Jede Datei zählt als ein Belegscan gegen dein KI-Limit; ist es aufgebraucht, bleiben die übrigen Dateien für später.
+
+Teilen funktioniert nur unter Android. Auf dem iPhone und in der Web-App nutze **Beleg scannen**.
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
@@ -24512,6 +24572,18 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 
 Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
 
+### Compartir desde otra app (Android)
+
+¿Tienes un recibo como captura de pantalla, una confirmación de la app del banco o un recibo electrónico en PDF? No hace falta abrir el escáner:
+
+1. En cualquier app (galería, Gmail, tu banco, la app de una tienda), toca **Compartir**
+2. Elige **AI Budget**
+3. La app se abre directamente en la pantalla de confirmación ya rellenada: revísala y toca **Guardar**
+
+Puedes compartir **imágenes y PDF**, hasta **10 archivos a la vez** (PDF de hasta 10 MB). Varios archivos se convierten en gastos separados, uno tras otro: el título muestra el progreso («Recibo 2 de 5») y **Siguiente** pasa al archivo siguiente. Si un archivo no se puede leer, elige **Omitir** o **Introducir a mano**. Al cerrar la pantalla, la app pregunta antes de descartar los archivos pendientes. Cada archivo cuenta como un escaneo de recibo en tu límite de IA; si se agota, los archivos restantes quedan para más tarde.
+
+Compartir solo funciona en Android. En iPhone y en la app web usa **Escanear recibo**.
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
@@ -29219,6 +29291,18 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 
 Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
 
+### Partager depuis une autre app (Android)
+
+Vous avez un ticket en capture d'écran, une confirmation de l'app bancaire ou un ticket électronique en PDF ? Inutile d'ouvrir le scanner :
+
+1. Dans n'importe quelle app (galerie, Gmail, banque, app d'enseigne), touchez **Partager**
+2. Choisissez **AI Budget**
+3. L'app s'ouvre directement sur l'écran de confirmation pré-rempli — vérifiez et touchez **Enregistrer**
+
+Vous pouvez partager des **images et des PDF**, jusqu'à **10 fichiers à la fois** (PDF jusqu'à 10 Mo). Plusieurs fichiers deviennent des dépenses séparées, l'une après l'autre : le titre indique la progression (« Ticket 2 sur 5 ») et **Suivant** passe au fichier suivant. Si un fichier ne peut pas être lu, choisissez **Passer** ou **Saisir à la main**. À la fermeture, l'app demande confirmation avant d'abandonner les fichiers en attente. Chaque fichier compte comme un scan de ticket dans votre limite d'IA ; si elle est atteinte, les fichiers restants attendent.
+
+Le partage fonctionne uniquement sur Android. Sur iPhone et dans l'app web, utilisez **Scanner un reçu**.
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.
@@ -33924,6 +34008,18 @@ iOS, Android, Web
 
 Боты ў Telegram, WhatsApp і Slack папярэджваюць гэтак жа і прапануюць кнопку **Усё роўна распазнаць**.
 
+### Падзяліцца з іншай праграмы (Android)
+
+Чэк прыйшоў скрыншотам, пацверджаннем з банкаўскай праграмы або электронным чэкам у PDF? Адкрываць сканер не трэба:
+
+1. У любой праграме (галерэя, Gmail, банк, праграма крамы) націсніце **Падзяліцца**
+2. Выберыце **AI Budget**
+3. Праграма адразу адкрые запоўнены экран пацверджання — праверце і націсніце **Захаваць**
+
+Можна дзяліцца **фота і PDF**, да **10 файлаў за раз** (PDF да 10 МБ). Некалькі файлаў становяцца асобнымі выдаткамі, па чарзе: у загалоўку відаць прагрэс («Чэк 2 з 5»), а **Далей** пераходзіць да наступнага файла. Калі файл не распазнаны, выберыце **Прапусціць** або **Увесці ўручную**. Пры закрыцці экрана праграма спытае, перш чым адмяніць астатнія файлы. Кожны файл — адно сканаванне чэка ў ліміце AI; калі ліміт скончыўся, астатнія файлы застаюцца на потым.
+
+Функцыя працуе толькі на Android. На iPhone і ў вэб-версіі выкарыстоўвайце **Сканаваць чэк**.
+
 ## Галасавы даход
 
 Рэгіструйце атрыманыя плацяжы голасам — той самы працэс, што і для галасавога выдатку, аптымізаваны для даходаў.
@@ -38592,6 +38688,18 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 - **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
 
 De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
+
+### Delen vanuit een andere app (Android)
+
+Heb je een bon als screenshot, een bevestiging uit je bank-app of een e-bon als pdf? Je hoeft de scanner niet te openen:
+
+1. Tik in een willekeurige app (galerij, Gmail, je bank, een winkel-app) op **Delen**
+2. Kies **AI Budget**
+3. De app opent meteen het ingevulde bevestigingsscherm — controleer het en tik op **Opslaan**
+
+Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 10 MB). Meerdere bestanden worden na elkaar losse uitgaven — de titel toont de voortgang ('Bon 2 van 5') en **Volgende** gaat naar het volgende bestand. Kan een bestand niet worden gelezen, kies dan **Overslaan** of **Handmatig invoeren**. Bij sluiten vraagt de app eerst voordat wachtende bestanden worden weggegooid. Elk bestand telt als één bonscan binnen je AI-limiet; is die op, dan blijven de overige bestanden voor later.
+
+Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
 
 ## Spraakinkomsten
 

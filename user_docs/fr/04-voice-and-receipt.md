@@ -118,6 +118,18 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 
 Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
 
+### Partager depuis une autre app (Android)
+
+Vous avez un ticket en capture d'écran, une confirmation de l'app bancaire ou un ticket électronique en PDF ? Inutile d'ouvrir le scanner :
+
+1. Dans n'importe quelle app (galerie, Gmail, banque, app d'enseigne), touchez **Partager**
+2. Choisissez **AI Budget**
+3. L'app s'ouvre directement sur l'écran de confirmation pré-rempli — vérifiez et touchez **Enregistrer**
+
+Vous pouvez partager des **images et des PDF**, jusqu'à **10 fichiers à la fois** (PDF jusqu'à 10 Mo). Plusieurs fichiers deviennent des dépenses séparées, l'une après l'autre : le titre indique la progression (« Ticket 2 sur 5 ») et **Suivant** passe au fichier suivant. Si un fichier ne peut pas être lu, choisissez **Passer** ou **Saisir à la main**. À la fermeture, l'app demande confirmation avant d'abandonner les fichiers en attente. Chaque fichier compte comme un scan de ticket dans votre limite d'IA ; si elle est atteinte, les fichiers restants attendent.
+
+Le partage fonctionne uniquement sur Android. Sur iPhone et dans l'app web, utilisez **Scanner un reçu**.
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.

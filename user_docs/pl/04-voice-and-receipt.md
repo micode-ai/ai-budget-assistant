@@ -118,6 +118,18 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 
 Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
 
+### Udostępnianie z innej aplikacji (Android)
+
+Masz paragon jako zrzut ekranu, potwierdzenie z aplikacji banku albo e-paragon w PDF? Nie musisz otwierać skanera:
+
+1. W dowolnej aplikacji (galeria, Gmail, bank, aplikacja sklepu) stuknij **Udostępnij**
+2. Wybierz **AI Budget**
+3. Aplikacja otworzy od razu wypełniony ekran potwierdzenia — sprawdź go i stuknij **Zapisz**
+
+Możesz udostępniać **zdjęcia i pliki PDF**, maksymalnie **10 plików naraz** (PDF do 10 MB). Kilka plików to osobne wydatki, jeden po drugim — tytuł pokazuje postęp („Paragon 2 z 5”), a **Dalej** przechodzi do kolejnego pliku. Jeśli pliku nie da się odczytać, wybierz **Pomiń** albo **Wpisz ręcznie**. Zamknięcie ekranu wymaga potwierdzenia, zanim oczekujące pliki zostaną odrzucone. Każdy plik to jedno skanowanie paragonu w limicie AI; gdy limit się wyczerpie, pozostałe pliki zostają na później.
+
+Udostępnianie działa tylko na Androidzie. Na iPhonie i w aplikacji webowej użyj **Skanuj paragon**.
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.

@@ -118,6 +118,18 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 
 De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
 
+### Delen vanuit een andere app (Android)
+
+Heb je een bon als screenshot, een bevestiging uit je bank-app of een e-bon als pdf? Je hoeft de scanner niet te openen:
+
+1. Tik in een willekeurige app (galerij, Gmail, je bank, een winkel-app) op **Delen**
+2. Kies **AI Budget**
+3. De app opent meteen het ingevulde bevestigingsscherm — controleer het en tik op **Opslaan**
+
+Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 10 MB). Meerdere bestanden worden na elkaar losse uitgaven — de titel toont de voortgang ('Bon 2 van 5') en **Volgende** gaat naar het volgende bestand. Kan een bestand niet worden gelezen, kies dan **Overslaan** of **Handmatig invoeren**. Bij sluiten vraagt de app eerst voordat wachtende bestanden worden weggegooid. Elk bestand telt als één bonscan binnen je AI-limiet; is die op, dan blijven de overige bestanden voor later.
+
+Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
+
 ## Spraakinkomsten
 
 Leg ontvangen betalingen vast met spraak — dezelfde flow als Spraakuitgave, geoptimaliseerd voor inkomsten.

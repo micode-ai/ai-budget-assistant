@@ -54,6 +54,8 @@ the section you came for — it states what must not break and why. A missing se
   is recorded twice (same file before OCR, same receipt after)
 - [receipt-price-check](features/receipt-price-check.md) — comparing each scanned line against the
   median of what this user paid for it before, at that store
+- [share-to-capture](features/share-to-capture.md) — Android "Share → AI Budget": shared images and
+  PDFs become expenses on the receipt confirm card, one after another
 - [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items
   across categories at scan time, the deposit group, category proposals
 - [receipt-image-memory](features/receipt-image-memory.md) — downscaling receipt photos to stay
