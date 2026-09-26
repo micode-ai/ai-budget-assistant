@@ -32,8 +32,8 @@ export function round1(x: number): number {
 export function computePersonalInflation(
   i: InflationInputs,
 ): { inflationPct: number; breakdown: RealSalaryBreakdownRow[]; topDrivers: CoicopDivision[] } | null {
-  const receiptsOk = i.receiptIndexPct !== null && i.receiptProductCount >= RECEIPT_MIN_PRODUCTS;
-  const hasOfficial = i.officialRates.TOTAL !== undefined;
+  const receiptsOk = i.receiptIndexPct !== null && Number.isFinite(i.receiptIndexPct) && i.receiptProductCount >= RECEIPT_MIN_PRODUCTS;
+  const hasOfficial = i.officialRates.TOTAL !== undefined && Number.isFinite(i.officialRates.TOTAL);
 
   const totals = new Map<CoicopDivision, number>();
   for (const row of i.spend) {
@@ -46,7 +46,8 @@ export function computePersonalInflation(
     if (division === 'CP01' && receiptsOk) {
       rows.push({ division, amount, ratePct: i.receiptIndexPct as number, source: 'receipts' });
     } else if (hasOfficial) {
-      const rate = i.officialRates[division] ?? (i.officialRates.TOTAL as number);
+      const divisionRate = i.officialRates[division];
+      const rate = Number.isFinite(divisionRate) ? (divisionRate as number) : (i.officialRates.TOTAL as number);
       rows.push({ division, amount, ratePct: rate, source: 'official' });
     }
   }

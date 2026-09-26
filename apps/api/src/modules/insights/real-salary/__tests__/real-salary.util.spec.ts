@@ -76,6 +76,35 @@ describe('computePersonalInflation', () => {
     })!;
     expect(r.topDrivers).toEqual(['CP07', 'CP04', 'CP11']);
   });
+
+  it('a NaN division rate falls back to TOTAL', () => {
+    const r = computePersonalInflation({
+      spend: [{ division: 'CP04', amount: 1000 }],
+      officialRates: { TOTAL: 3.5, CP04: NaN },
+      receiptIndexPct: null,
+      receiptProductCount: 0,
+    })!;
+    expect(r.breakdown[0]).toEqual({ division: 'CP04', weight: 1, ratePct: 3.5, source: 'official' });
+  });
+
+  it('a NaN TOTAL means no official data', () => {
+    expect(computePersonalInflation({
+      spend: [{ division: 'CP04', amount: 1000 }],
+      officialRates: { TOTAL: NaN, CP04: 5.1 },
+      receiptIndexPct: null,
+      receiptProductCount: 0,
+    })).toBeNull();
+  });
+
+  it('a NaN receipt index is ignored', () => {
+    const r = computePersonalInflation({
+      spend: [{ division: 'CP01', amount: 1000 }],
+      officialRates: PL,
+      receiptIndexPct: NaN,
+      receiptProductCount: 50,
+    })!;
+    expect(r.breakdown[0]).toEqual({ division: 'CP01', weight: 1, ratePct: -0.8, source: 'official' });
+  });
 });
 
 describe('realChange', () => {
