@@ -1,7 +1,8 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { router } from 'expo-router';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { ChatActionResult } from '@budget/shared-types';
 
@@ -128,6 +129,7 @@ function DepositTotalResult({ data, desktop }: { data: Record<string, unknown>; 
   const total = Number(data.total ?? 0);
   const baseCurrency = String(data.baseCurrency ?? '');
   const merchants = (data.byMerchant as any[]) || [];
+  const recent = (data.recent as any[]) || [];
 
   return (
     <View style={styles.card}>
@@ -148,6 +150,7 @@ function DepositTotalResult({ data, desktop }: { data: Record<string, unknown>; 
           </Text>
         </View>
       ))}
+      <RecentReceiptsSection recent={recent} desktop={desktop} />
     </View>
   );
 }
@@ -174,6 +177,7 @@ function DiscountTotalResult({ data, desktop }: { data: Record<string, unknown>;
   const total = Number(data.total ?? 0);
   const baseCurrency = String(data.baseCurrency ?? '');
   const merchants = (data.byMerchant as any[]) || [];
+  const recent = (data.recent as any[]) || [];
 
   return (
     <View style={styles.card}>
@@ -194,7 +198,50 @@ function DiscountTotalResult({ data, desktop }: { data: Record<string, unknown>;
           </Text>
         </View>
       ))}
+      <RecentReceiptsSection recent={recent} desktop={desktop} />
     </View>
+  );
+}
+
+/**
+ * The "Recent" tap-through list shared by `DepositTotalResult`/
+ * `DiscountTotalResult` — reuses `analytics.savingsDetailRecent` (no new
+ * i18n key) and mirrors `SavingsDetailSheet.tsx`'s recent-receipts row
+ * exactly: disabled + no chevron when a row has no `expenseId` (rare, an
+ * underlying row with no id), tappable through to `/expense/:id` otherwise.
+ */
+function RecentReceiptsSection({ recent, desktop }: { recent: any[]; desktop: boolean }) {
+  const { t } = useTranslation();
+  const theme = useTheme();
+  const styles = useStyles(createStyles);
+
+  if (recent.length === 0) return null;
+
+  return (
+    <>
+      <Text style={styles.sectionLabel}>{t('analytics.savingsDetailRecent')}</Text>
+      {recent.map((r: any, idx: number) => (
+        <TouchableOpacity
+          key={idx}
+          style={styles.listItem}
+          disabled={!r.expenseId}
+          onPress={() => r.expenseId && router.push(`/expense/${r.expenseId}` as any)}
+        >
+          <View style={styles.recentTextWrap}>
+            <Text style={styles.listItemText} numberOfLines={1}>
+              {r.merchant || '—'}
+            </Text>
+            <Text style={styles.recentDate}>{r.date}</Text>
+          </View>
+          <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
+            {Number(r.amount ?? 0).toFixed(2)}
+          </Text>
+          {!!r.expenseId && (
+            <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+          )}
+        </TouchableOpacity>
+      ))}
+    </>
   );
 }
 
@@ -370,16 +417,24 @@ function ExpensesResult({ data, desktop }: { data: Record<string, unknown>; desk
           {t('chat.actionGetExpenses')} ({count})
         </Text>
       </View>
-      {expenses.slice(0, 5).map((exp: any, idx: number) => (
-        <View key={idx} style={styles.listItem}>
-          <Text style={styles.listItemText} numberOfLines={1}>
-            {exp.description || exp.category || '—'}
-          </Text>
-          <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
-            {Number(exp.amount).toFixed(2)} {exp.currencyCode}
-          </Text>
-        </View>
-      ))}
+      {expenses.slice(0, 5).map((exp: any, idx: number) => {
+        const expenseId = exp.expenseId ?? exp.id;
+        return (
+          <TouchableOpacity
+            key={idx}
+            style={styles.listItem}
+            onPress={() => router.push(`/expense/${expenseId}` as any)}
+          >
+            <Text style={styles.listItemText} numberOfLines={1}>
+              {exp.description || exp.category || '—'}
+            </Text>
+            <Text style={[styles.listItemAmount, desktop && styles.listItemAmountDesktop]}>
+              {Number(exp.amount).toFixed(2)} {exp.currencyCode}
+            </Text>
+            <Ionicons name="chevron-forward" size={16} color={theme.colors.textTertiary} />
+          </TouchableOpacity>
+        );
+      })}
       {expenses.length > 5 && (
         <Text style={styles.moreText}>{t('chat.andMore', { count: expenses.length - 5 })}</Text>
       )}
@@ -630,6 +685,18 @@ const createStyles = (theme: Theme) => ({
   listItemAmount: {
     ...theme.textStyles.bodySmMedium,
     color: theme.colors.textPrimary,
+  },
+  // `DepositTotalResult`/`DiscountTotalResult`'s "Recent" section — mirrors
+  // `SavingsDetailSheet.tsx`'s `recentTextWrap`/`rowDate` (merchant + date
+  // stacked on the left, amount + chevron on the right, same `listItem` row).
+  recentTextWrap: {
+    flex: 1,
+    minWidth: 0,
+    marginRight: theme.spacing[2],
+  },
+  recentDate: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   // Design's "The action cards" — Q5, point 2: money that lines up in a
   // column carries `tabular-nums`. Gated behind `desktop` so the phone's

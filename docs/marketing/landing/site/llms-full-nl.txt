@@ -3725,6 +3725,8 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
 - **"Toon categorie-uitsplitsing voor deze maand"** → toont uitgaven per categorie met percentages
 - **"Toon mijn schulden"** → toont alle actieve schulden met verschuldigde bedragen
 
+> Wil je een bedrag controleren? Tik op een uitgave in het antwoord van de AI (ook op de recente bonnetjes onder een statiegeld- of kortingstotaal) om het volledige detailscherm te openen, inclusief bonnetje.
+
 ### De laatste actie ongedaan maken
 
 Een fout gemaakt vlak nadat je iets bevestigde — verkeerd bedrag, verkeerde categorie, of je hebt gewoon van gedachten veranderd? Zeg **"ongedaan maken"**, **"maak dat ongedaan"** of **"annuleer dat"** in hetzelfde gesprek.
@@ -3744,7 +3746,7 @@ Ongedaan maken reikt alleen terug tot de **enige, meest recente** actie die je i
   **A:** Nee, AI-chat vereist een internetverbinding om je vragen te verwerken.
 
 - **V: De AI gaf een onjuist antwoord. Wat moet ik doen?**
-  **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, of de gegevens controleren op het tabblad Analyse.
+  **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, op een vermelde uitgave tikken om die te controleren op het eigen detailscherm met bonnetje, of de gegevens controleren op het tabblad Analyse.
 
 - **V: Kan ik een bevestigde actie ongedaan maken?**
   **A:** Ja — zeg "ongedaan maken" of "maak dat ongedaan" in hetzelfde gesprek, vlak na het bevestigen. Dit draait de enige, meest recente actie terug die je hebt bevestigd, binnen ongeveer 15 minuten na bevestiging. Zie "De laatste actie ongedaan maken" hierboven. Na die tijd, of voor iets ouders, verwijder je het handmatig op het tabblad Uitgaven.

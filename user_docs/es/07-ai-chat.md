@@ -196,6 +196,8 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
 - **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
 - **"Mostrar mis deudas"** → lista las deudas activas con importes pendientes
 
+> ¿Quieres comprobar una cifra? Toca cualquier gasto listado en la respuesta de la IA (incluidos los recibos recientes bajo un total de deposito o descuento) para abrir su pantalla de detalle completa, recibo incluido.
+
 ### Deshacer la ultima accion
 
 Cometiste un error justo despues de confirmar algo — importe equivocado, categoria equivocada, o simplemente cambiaste de opinion? Di **"deshacer"**, **"deshaz eso"** o **"cancela eso"** en la misma conversacion.
@@ -215,7 +217,7 @@ Deshacer solo alcanza la **unica accion mas reciente** que confirmaste en esa co
   **R:** No, el Chat IA requiere una conexion a internet para procesar tus preguntas.
 
 - **P: La IA dio una respuesta incorrecta. Que debo hacer?**
-  **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, o verificar los datos en la pestana de Analisis.
+  **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, tocar un gasto listado para comprobarlo con su propia pantalla de detalle y recibo, o verificar los datos en la pestana de Analisis.
 
 - **P: Puedo deshacer una accion confirmada?**
   **R:** Si — di "deshacer" o "deshaz eso" en la misma conversacion, justo despues de confirmar. Esto revierte la accion mas reciente que confirmaste, dentro de unos 15 minutos desde la confirmacion. Ver "Deshacer la ultima accion" arriba. Pasado ese tiempo, o para algo mas antiguo, eliminalo manualmente desde la pestana de Gastos.

@@ -196,6 +196,8 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
 - **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
 - **"Zeige meine Schulden"** → listet aktive Schulden mit Beträgen auf
 
+> Willst du eine Zahl nachprüfen? Tippe auf eine in der KI-Antwort aufgelistete Ausgabe (auch auf die letzten Belege unter einer Pfand- oder Rabatt-Summe), um den vollständigen Detailbildschirm samt Beleg zu öffnen.
+
 ### Die letzte Aktion rückgängig machen
 
 Direkt nach dem Bestätigen einen Fehler gemacht — falscher Betrag, falsche Kategorie, oder du hast es dir einfach anders überlegt? Sag **"rückgängig"**, **"mach das rückgängig"** oder **"nimm das zurück"** in derselben Unterhaltung.
@@ -215,7 +217,7 @@ Rückgängig machen erreicht nur die **letzte** Aktion, die du in dieser Unterha
   **A:** Nein, der KI-Chat benotigt eine Internetverbindung, um deine Fragen zu verarbeiten.
 
 - **F: Die KI hat eine falsche Antwort gegeben. Was soll ich tun?**
-  **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse oder die Daten im Analysen-Tab uberprufen.
+  **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse, auf eine aufgelistete Ausgabe tippen, um sie mit ihrem eigenen Detailbildschirm und Beleg abzugleichen, oder die Daten im Analysen-Tab uberprufen.
 
 - **F: Kann ich eine bestätigte Aktion rückgängig machen?**
   **A:** Ja — sag "rückgängig" oder "mach das rückgängig" in derselben Unterhaltung, direkt nach dem Bestätigen. Das macht die letzte von dir bestätigte Aktion rückgängig, innerhalb von etwa 15 Minuten nach der Bestätigung. Siehe "Die letzte Aktion rückgängig machen" oben. Nach diesem Zeitfenster, oder für ältere Einträge, lösche sie manuell im Ausgaben-Tab.

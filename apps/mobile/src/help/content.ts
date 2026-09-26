@@ -1254,6 +1254,8 @@ These commands execute **immediately** and show results:
 - **"Show category breakdown for this month"** → displays spending by category with percentages
 - **"Show my debts"** → lists all active debts with amounts owed
 
+> Want to double-check a number? Tap any expense listed in the AI's answer (including the recent receipts under a deposit or discount total) to open its full detail screen, receipt included.
+
 ### Undoing the Last Action
 
 Made a mistake right after confirming something — wrong amount, wrong category, or you just changed your mind? Say **"undo"**, **"undo that"**, or **"cancel that"** in the same conversation.
@@ -1273,7 +1275,7 @@ Undo only reaches back to the **single most recent** action you confirmed in tha
   **A:** No, AI Chat requires an internet connection to process your questions.
 
 - **Q: The AI gave an incorrect answer. What should I do?**
-  **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, or verify the data in the Analytics tab.
+  **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, tap any listed expense to check it against its own detail screen and receipt, or verify the data in the Analytics tab.
 
 - **Q: Can I undo a confirmed action?**
   **A:** Yes — say "undo" or "cancel that" in the same conversation, right after confirming. This reverts the single most recent action you confirmed, within about 15 minutes of confirming it. See [Undoing the Last Action](#undoing-the-last-action) above. Past that window, or for anything older, delete it manually from the Expenses tab.
@@ -6058,6 +6060,8 @@ iOS, Android, Web
 - **«Покажи разбивку по категориям за этот месяц»** → отображает расходы по категориям с процентами
 - **«Покажи мои долги»** → список активных долгов с суммами
 
+> Хотите проверить цифру? Нажмите на любой расход в ответе ИИ (включая недавние чеки под суммой залога или скидки), чтобы открыть его полный экран деталей вместе с чеком.
+
 ### Отмена последнего действия
 
 Ошиблись сразу после подтверждения — не та сумма, не та категория, или просто передумали? Напишите **«отмени»**, **«отмени это»** или **«отмени последнее»** в том же разговоре.
@@ -6077,7 +6081,7 @@ iOS, Android, Web
   **О:** Нет, ИИ Чат требует подключения к интернету для обработки ваших вопросов.
 
 - **В: ИИ дал неточный ответ. Что делать?**
-  **О:** Ответы ИИ основаны на ваших данных, но иногда могут быть неточными. Вы можете переформулировать вопрос для лучших результатов или проверить данные во вкладке Аналитика.
+  **О:** Ответы ИИ основаны на ваших данных, но иногда могут быть неточными. Вы можете переформулировать вопрос для лучших результатов, нажать на расход из списка, чтобы сверить его с полным экраном деталей и чеком, или проверить данные во вкладке Аналитика.
 
 - **В: Можно ли отменить подтверждённое действие?**
   **О:** Да — напишите «отмени» или «отмени это» в том же разговоре, сразу после подтверждения. Это отменяет одно, самое последнее подтверждённое вами действие, в течение примерно 15 минут после подтверждения. См. «Отмена последнего действия» выше. По истечении этого времени, или для более старой записи, удалите её вручную во вкладке Расходы.
@@ -10855,6 +10859,8 @@ iOS, Android, Web
 - **"Покажи розбивку за категоріями за цей місяць"** → відображає витрати за категоріями з відсотками
 - **"Покажи мої борги"** → список активних боргів із сумами
 
+> Хочете перевірити цифру? Торкніться будь-якої витрати у відповіді ШІ (включно з нещодавніми чеками під сумою застави чи знижки), щоб відкрити її повний екран деталей разом із чеком.
+
 ### Скасування останньої дії
 
 Помилилися одразу після підтвердження — не та сума, не та категорія, або просто передумали? Напишіть **«скасуй»**, **«скасуй це»** або **«відміни останнє»** в тій самій розмові.
@@ -10874,7 +10880,7 @@ iOS, Android, Web
   **В:** Ні, ШІ Чат потребує підключення до інтернету для обробки ваших запитань.
 
 - **П:** ШІ дав неправильну відповідь. Що робити?
-  **В:** Відповіді ШІ базуються на ваших даних, але іноді можуть бути неточними. Ви можете перефразувати запитання для кращих результатів або перевірити дані у вкладці Аналітика.
+  **В:** Відповіді ШІ базуються на ваших даних, але іноді можуть бути неточними. Ви можете перефразувати запитання для кращих результатів, торкнутися витрати зі списку, щоб звірити її з повним екраном деталей і чеком, або перевірити дані у вкладці Аналітика.
 
 - **П:** Чи можу я скасувати підтверджену дію?
   **В:** Так — напишіть «скасуй» або «скасуй це» в тій самій розмові, одразу після підтвердження. Це скасовує одну, найновішу підтверджену вами дію, протягом приблизно 15 хвилин після підтвердження. Див. «Скасування останньої дії» вище. Після цього часу, або для старішого запису, видаліть його вручну у вкладці Витрати.
@@ -15600,6 +15606,8 @@ Te polecenia wykonuja sie **natychmiast** i pokazuja wyniki:
 - **"Pokaz podzial wedlug kategorii za ten miesiac"** → wyswietla wydatki wedlug kategorii z procentami
 - **"Pokaz moje dlugi"** → lista aktywnych dlugow z kwotami
 
+> Chcesz sprawdzic jakas kwote? Stuknij dowolny wydatek wymieniony w odpowiedzi AI (takze ostatnie paragony pod suma kaucji lub rabatu), aby otworzyc jego pelny ekran szczegolow wraz z paragonem.
+
 ### Cofanie ostatniej akcji
 
 Pomylka zaraz po potwierdzeniu czegos — zla kwota, zla kategoria, albo po prostu zmieniles zdanie? Powiedz **"cofnij"**, **"cofnij to"** albo **"anuluj to"** w tej samej rozmowie.
@@ -15619,7 +15627,7 @@ Cofniecie siega tylko do **jednej, najnowszej** akcji, ktora potwierdziles w tej
   **O:** Nie, Czat AI wymaga polaczenia z internetem do przetwarzania Twoich pytan.
 
 - **P: AI podal bledna odpowiedz. Co powinienem zrobic?**
-  **O:** Odpowiedzi AI bazuja na Twoich danych, ale moga okazjonalnie byc niedokladne. Mozesz przeformulowac pytanie, aby uzyskac lepsze wyniki, lub zweryfikowac dane w zakladce Analityka.
+  **O:** Odpowiedzi AI bazuja na Twoich danych, ale moga okazjonalnie byc niedokladne. Mozesz przeformulowac pytanie, aby uzyskac lepsze wyniki, stuknac wymieniony wydatek, aby sprawdzic go na jego wlasnym ekranie szczegolow wraz z paragonem, lub zweryfikowac dane w zakladce Analityka.
 
 - **P: Czy moge cofnac potwierdzona akcje?**
   **O:** Tak — powiedz "cofnij" albo "cofnij to" w tej samej rozmowie, zaraz po potwierdzeniu. To cofa jedna, najnowsza akcje, ktora potwierdziles, w ciagu okolo 15 minut od potwierdzenia. Zobacz "Cofanie ostatniej akcji" powyzej. Po uplywie tego czasu, albo dla starszego wpisu, usun go recznie z zakladki Wydatki.
@@ -20341,6 +20349,8 @@ Diese Befehle werden **sofort** ausgeführt und zeigen Ergebnisse:
 - **"Zeige Kategorie-Aufschlüsselung für diesen Monat"** → zeigt Ausgaben nach Kategorie mit Prozentsätzen
 - **"Zeige meine Schulden"** → listet aktive Schulden mit Beträgen auf
 
+> Willst du eine Zahl nachprüfen? Tippe auf eine in der KI-Antwort aufgelistete Ausgabe (auch auf die letzten Belege unter einer Pfand- oder Rabatt-Summe), um den vollständigen Detailbildschirm samt Beleg zu öffnen.
+
 ### Die letzte Aktion rückgängig machen
 
 Direkt nach dem Bestätigen einen Fehler gemacht — falscher Betrag, falsche Kategorie, oder du hast es dir einfach anders überlegt? Sag **"rückgängig"**, **"mach das rückgängig"** oder **"nimm das zurück"** in derselben Unterhaltung.
@@ -20360,7 +20370,7 @@ Rückgängig machen erreicht nur die **letzte** Aktion, die du in dieser Unterha
   **A:** Nein, der KI-Chat benotigt eine Internetverbindung, um deine Fragen zu verarbeiten.
 
 - **F: Die KI hat eine falsche Antwort gegeben. Was soll ich tun?**
-  **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse oder die Daten im Analysen-Tab uberprufen.
+  **A:** KI-Antworten basieren auf deinen Daten, konnen aber gelegentlich ungenau sein. Du kannst deine Frage umformulieren fur bessere Ergebnisse, auf eine aufgelistete Ausgabe tippen, um sie mit ihrem eigenen Detailbildschirm und Beleg abzugleichen, oder die Daten im Analysen-Tab uberprufen.
 
 - **F: Kann ich eine bestätigte Aktion rückgängig machen?**
   **A:** Ja — sag "rückgängig" oder "mach das rückgängig" in derselben Unterhaltung, direkt nach dem Bestätigen. Das macht die letzte von dir bestätigte Aktion rückgängig, innerhalb von etwa 15 Minuten nach der Bestätigung. Siehe "Die letzte Aktion rückgängig machen" oben. Nach diesem Zeitfenster, oder für ältere Einträge, lösche sie manuell im Ausgaben-Tab.
@@ -25057,6 +25067,8 @@ Estos comandos se ejecutan **inmediatamente** y muestran resultados:
 - **"Mostrar desglose por categorias de este mes"** → muestra gastos por categoria con porcentajes
 - **"Mostrar mis deudas"** → lista las deudas activas con importes pendientes
 
+> ¿Quieres comprobar una cifra? Toca cualquier gasto listado en la respuesta de la IA (incluidos los recibos recientes bajo un total de deposito o descuento) para abrir su pantalla de detalle completa, recibo incluido.
+
 ### Deshacer la ultima accion
 
 Cometiste un error justo despues de confirmar algo — importe equivocado, categoria equivocada, o simplemente cambiaste de opinion? Di **"deshacer"**, **"deshaz eso"** o **"cancela eso"** en la misma conversacion.
@@ -25076,7 +25088,7 @@ Deshacer solo alcanza la **unica accion mas reciente** que confirmaste en esa co
   **R:** No, el Chat IA requiere una conexion a internet para procesar tus preguntas.
 
 - **P: La IA dio una respuesta incorrecta. Que debo hacer?**
-  **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, o verificar los datos en la pestana de Analisis.
+  **R:** Las respuestas de IA se basan en tus datos pero pueden ser inexactas en ocasiones. Puedes reformular tu pregunta para obtener mejores resultados, tocar un gasto listado para comprobarlo con su propia pantalla de detalle y recibo, o verificar los datos en la pestana de Analisis.
 
 - **P: Puedo deshacer una accion confirmada?**
   **R:** Si — di "deshacer" o "deshaz eso" en la misma conversacion, justo despues de confirmar. Esto revierte la accion mas reciente que confirmaste, dentro de unos 15 minutos desde la confirmacion. Ver "Deshacer la ultima accion" arriba. Pasado ese tiempo, o para algo mas antiguo, eliminalo manualmente desde la pestana de Gastos.
@@ -29762,6 +29774,8 @@ Ces commandes s'executent **immediatement** et affichent les resultats :
 - **"Montrer la repartition par categories pour ce mois"** → affiche les depenses par categorie avec pourcentages
 - **"Montrer mes dettes"** → liste les dettes actives avec les montants dus
 
+> Envie de verifier un montant ? Touchez une depense listee dans la reponse de l'IA (y compris les recus recents sous un total de consigne ou de remise) pour ouvrir son ecran de detail complet, recu inclus.
+
 ### Annuler la derniere action
 
 Une erreur juste apres avoir confirme quelque chose — mauvais montant, mauvaise categorie, ou vous avez simplement change d'avis ? Dites **"annule"**, **"annule ca"** ou **"reviens en arriere"** dans la meme conversation.
@@ -29781,7 +29795,7 @@ L'annulation ne remonte qu'a la **seule action la plus recente** que vous avez c
   **R :** Non, le Chat IA necessite une connexion internet pour traiter vos questions.
 
 - **Q : L'IA a donne une reponse incorrecte. Que dois-je faire ?**
-  **R :** Les reponses de l'IA sont basees sur vos donnees mais peuvent parfois etre inexactes. Vous pouvez reformuler votre question pour de meilleurs resultats, ou verifier les donnees dans l'onglet Analyses.
+  **R :** Les reponses de l'IA sont basees sur vos donnees mais peuvent parfois etre inexactes. Vous pouvez reformuler votre question pour de meilleurs resultats, toucher une depense listee pour la verifier avec son propre ecran de detail et son recu, ou verifier les donnees dans l'onglet Analyses.
 
 - **Q : Puis-je annuler une action confirmee ?**
   **R :** Oui — dites "annule" ou "annule ca" dans la meme conversation, juste apres avoir confirme. Cela annule la seule action la plus recente que vous avez confirmee, dans les 15 minutes environ suivant la confirmation. Voir "Annuler la derniere action" ci-dessus. Passe ce delai, ou pour une action plus ancienne, supprimez-la manuellement depuis l'onglet Depenses.
@@ -34465,6 +34479,8 @@ iOS, Android, Web
 - **«Пакажы разбіўку па катэгорыях за гэты месяц»** → адлюстроўвае выдаткі па катэгорыях з адсоткамі
 - **«Пакажы мае даўгі»** → спіс актыўных даўгоў з сумамі
 
+> Хочаце праверыць лічбу? Націсніце на любы выдатак у адказе ІІ (у тым ліку апошнія чэкі пад сумай заклада ці зніжкі), каб адкрыць яго поўны экран дэталяў разам з чэкам.
+
 ### Адмена апошняга дзеяння
 
 Памыліліся адразу пасля пацвярджэння — не тая сума, не тая катэгорыя, або проста перадумалі? Напішыце **«адмяні»**, **«адмяні гэта»** або **«скасуй апошняе»** у той жа размове.
@@ -34484,7 +34500,7 @@ iOS, Android, Web
   **А:** Не, ІІ Чат патрабуе падключэння да інтэрнэту для апрацоўкі вашых пытанняў.
 
 - **П: ІІ даў недакладны адказ. Што рабіць?**
-  **А:** Адказы ІІ заснаваны на вашых данях, але часам могуць быць недакладнымі. Вы можаце перафармуляваць пытанне для лепшых вынікаў або праверыць даныя ва ўкладцы Аналітыка.
+  **А:** Адказы ІІ заснаваны на вашых данях, але часам могуць быць недакладнымі. Вы можаце перафармуляваць пытанне для лепшых вынікаў, націснуць на выдатак са спісу, каб звярыць яго з поўным экранам дэталяў і чэкам, або праверыць даныя ва ўкладцы Аналітыка.
 
 - **П: Ці можна адмяніць пацверджанае дзеянне?**
   **А:** Так — напішыце «адмяні» або «адмяні гэта» у той жа размове, адразу пасля пацвярджэння. Гэта адмяняе адно, самае апошняе пацверджанае вамі дзеянне, на працягу прыкладна 15 хвілін пасля пацвярджэння. Гл. «Адмена апошняга дзеяння» вышэй. Пасля гэтага часу, або для больш старога запісу, выдаліце яго ўручную з укладкі Выдаткі.
@@ -39132,6 +39148,8 @@ Deze commando's worden **direct** uitgevoerd en tonen resultaten:
 - **"Toon categorie-uitsplitsing voor deze maand"** → toont uitgaven per categorie met percentages
 - **"Toon mijn schulden"** → toont alle actieve schulden met verschuldigde bedragen
 
+> Wil je een bedrag controleren? Tik op een uitgave in het antwoord van de AI (ook op de recente bonnetjes onder een statiegeld- of kortingstotaal) om het volledige detailscherm te openen, inclusief bonnetje.
+
 ### De laatste actie ongedaan maken
 
 Een fout gemaakt vlak nadat je iets bevestigde — verkeerd bedrag, verkeerde categorie, of je hebt gewoon van gedachten veranderd? Zeg **"ongedaan maken"**, **"maak dat ongedaan"** of **"annuleer dat"** in hetzelfde gesprek.
@@ -39151,7 +39169,7 @@ Ongedaan maken reikt alleen terug tot de **enige, meest recente** actie die je i
   **A:** Nee, AI-chat vereist een internetverbinding om je vragen te verwerken.
 
 - **V: De AI gaf een onjuist antwoord. Wat moet ik doen?**
-  **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, of de gegevens controleren op het tabblad Analyse.
+  **A:** AI-antwoorden zijn gebaseerd op je gegevens, maar kunnen af en toe onnauwkeurig zijn. Je kunt je vraag herformuleren voor een beter resultaat, op een vermelde uitgave tikken om die te controleren op het eigen detailscherm met bonnetje, of de gegevens controleren op het tabblad Analyse.
 
 - **V: Kan ik een bevestigde actie ongedaan maken?**
   **A:** Ja — zeg "ongedaan maken" of "maak dat ongedaan" in hetzelfde gesprek, vlak na het bevestigen. Dit draait de enige, meest recente actie terug die je hebt bevestigd, binnen ongeveer 15 minuten na bevestiging. Zie "De laatste actie ongedaan maken" hierboven. Na die tijd, of voor iets ouders, verwijder je het handmatig op het tabblad Uitgaven.

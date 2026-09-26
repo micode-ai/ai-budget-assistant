@@ -18,6 +18,7 @@ which searches receipt line items).
 - `apps/api/src/modules/ai/utils/semantic-filter.ts` — `buildSearchUnits`, `parseMatchedIndices`,
   `deterministicMatchIndices`
 - `apps/api/src/modules/ai/services/chat.service.ts` — `semanticFilterExpenses`
+- Mobile: `apps/mobile/src/components/chat/ActionResultCard.tsx` — `ExpensesResult` (tap-through)
 
 ## Key concepts
 
@@ -48,6 +49,13 @@ filter degrades to substring-only — **never** "return everything".
 **The matched set is the single source of truth** for `matchedExpenses`, `recentExpenses`, `count`,
 `totalsByCurrency` and `categoryTotals`, so the card, the narration and the total cannot disagree.
 
+**Every rendered row resolves to a real expense id (ABA-605).** `ExpensesResult` taps a row through
+to `/expense/:id`, resolving `expenseId ?? id` — `recentExpenses`/`expenses` rows carry the expense
+id directly under `.id`, while `matchedExpenses` (the `buildSearchUnits` shape) carries it under
+`.expenseId` since `.id` there can be a line-item id instead. This is the one place the two row
+shapes must be reconciled by the mobile component; a fix to one shape without the other silently
+breaks tap-through for whichever query path wasn't touched.
+
 **Keyword queries default to full history.** Dates are optional in the schema and the prompt tells
 the model to omit them unless the user names a period — "use today's date" produced a narrow window
 and "found nothing".
@@ -63,4 +71,5 @@ loses that.
 
 ## History
 
-ABA-343 (item search) · ABA-446 (split-aware categories) · ABA-529 (budgets follow).
+ABA-343 (item search) · ABA-446 (split-aware categories) · ABA-529 (budgets follow) · ABA-605
+(rows tappable through to their expense detail screen).

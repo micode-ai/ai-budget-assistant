@@ -86,6 +86,13 @@ sentence says which it is and a "0.00" card would contradict it. Counts render a
 forms are needed. The Analytics rows are additive-only: `onOpenSavings` absent means a plain card,
 which is what the desktop `InsightsCluster` (its own tile markup) gets.
 
+**The chat card's own "recent" receipts are tappable through to `/expense/:id` (ABA-605).** Both
+tools already returned `data.recent` (each row optionally carrying `expenseId`); `ActionResultCard.tsx`
+never rendered it. `DepositTotalResult`/`DiscountTotalResult` now render it via one shared
+`RecentReceiptsSection`, disabled/no chevron when a row has no `expenseId` — the same interaction
+`SavingsDetailSheet.tsx` already used for the Analytics-tab drill-down, so the chat card and the
+Analytics sheet read as one mechanism rather than two. No new backend field.
+
 ## Known gaps
 
 - No backfill: receipts scanned before the columns existed are NULL, and the printed figure is not
@@ -100,4 +107,5 @@ which is what the desktop `InsightsCluster` (its own tile markup) gets.
 
 ## History
 
-ABA-516 (deposit tool) · ABA-569 (discount tool) · ABA-576 (Analytics drill-down).
+ABA-516 (deposit tool) · ABA-569 (discount tool) · ABA-576 (Analytics drill-down) · ABA-605 (chat
+card's own recent-receipts tap-through).

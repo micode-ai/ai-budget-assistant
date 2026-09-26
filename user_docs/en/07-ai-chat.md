@@ -211,6 +211,8 @@ These commands execute **immediately** and show results:
 - **"Show category breakdown for this month"** → displays spending by category with percentages
 - **"Show my debts"** → lists all active debts with amounts owed
 
+> Want to double-check a number? Tap any expense listed in the AI's answer (including the recent receipts under a deposit or discount total) to open its full detail screen, receipt included.
+
 ### Undoing the Last Action
 
 Made a mistake right after confirming something — wrong amount, wrong category, or you just changed your mind? Say **"undo"**, **"undo that"**, or **"cancel that"** in the same conversation.
@@ -230,7 +232,7 @@ Undo only reaches back to the **single most recent** action you confirmed in tha
   **A:** No, AI Chat requires an internet connection to process your questions.
 
 - **Q: The AI gave an incorrect answer. What should I do?**
-  **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, or verify the data in the Analytics tab.
+  **A:** AI responses are based on your data but may occasionally be inaccurate. You can rephrase your question for better results, tap any listed expense to check it against its own detail screen and receipt, or verify the data in the Analytics tab.
 
 - **Q: Can I undo a confirmed action?**
   **A:** Yes — say "undo" or "cancel that" in the same conversation, right after confirming. This reverts the single most recent action you confirmed, within about 15 minutes of confirming it. See [Undoing the Last Action](#undoing-the-last-action) above. Past that window, or for anything older, delete it manually from the Expenses tab.
