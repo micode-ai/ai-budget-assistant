@@ -1997,7 +1997,7 @@ Manage your report and email preferences:
 ## About
 
 - **Version** — current app version number
-- **Help** — opens the in-app help center
+- **Help** — opens the in-app help center; use the search bar at the top to jump straight to an article instead of scrolling the full list
 - **Support** — send an email to the support team
 - **Privacy Policy** — view the privacy policy
 - **Terms of Service** — view the terms of service
@@ -6803,7 +6803,7 @@ Email обновляется мгновенно, выдаются новые т�
 ## О приложении
 
 - **Версия** — номер текущей версии приложения
-- **Помощь** — открывает встроенный центр помощи
+- **Помощь** — открывает встроенный центр помощи; используйте строку поиска сверху, чтобы сразу перейти к нужной статье, не прокручивая весь список
 - **Поддержка** — отправить email в службу поддержки
 - **Политика конфиденциальности** — просмотр политики конфиденциальности
 - **Условия использования** — просмотр условий использования
@@ -11597,7 +11597,7 @@ iOS, Android, Web
 ## Про додаток
 
 - **Версія** — поточний номер версії додатку
-- **Довідка** — відкриває вбудований центр допомоги
+- **Довідка** — відкриває вбудований центр допомоги; скористайтеся рядком пошуку зверху, щоб одразу перейти до потрібної статті, не прокручуючи весь список
 - **Підтримка** — надіслати email команді підтримки
 - **Політика конфіденційності** — переглянути політику конфіденційності
 - **Умови використання** — переглянути умови використання
@@ -16340,7 +16340,7 @@ Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
 ## Informacje
 
 - **Wersja** — aktualny numer wersji aplikacji
-- **Pomoc** — otwiera wbudowane centrum pomocy
+- **Pomoc** — otwiera wbudowane centrum pomocy; uzyj paska wyszukiwania u gory, zeby od razu przejsc do artykulu zamiast przewijac cala liste
 - **Wsparcie** — wyslij e-mail do zespolu wsparcia
 - **Polityka prywatnosci** — przegladaj polityke prywatnosci
 - **Regulamin** — przegladaj regulamin uslug
@@ -21080,7 +21080,7 @@ Verwalte Berichts- und E-Mail-Einstellungen:
 ## Uber
 
 - **Version** — aktuelle App-Versionsnummer
-- **Hilfe** — offnet das integrierte Hilfezentrum
+- **Hilfe** — offnet das integrierte Hilfezentrum; mit der Suchleiste oben findest du einen Artikel direkt, ohne die ganze Liste durchzuscrollen
 - **Support** — sende eine E-Mail an das Support-Team
 - **Datenschutzrichtlinie** — Datenschutzrichtlinie anzeigen
 - **Nutzungsbedingungen** — Nutzungsbedingungen anzeigen
@@ -25799,7 +25799,7 @@ Configura la generacion de informes automaticos y exportacion de datos:
 ## Acerca de
 
 - **Version** — numero de version actual de la aplicacion
-- **Ayuda** — abre el centro de ayuda integrado
+- **Ayuda** — abre el centro de ayuda integrado; usa la barra de busqueda de arriba para ir directo a un articulo sin desplazarte por toda la lista
 - **Soporte** — envia un correo al equipo de soporte
 - **Politica de privacidad** — ver la politica de privacidad
 - **Terminos de servicio** — ver los terminos de servicio
@@ -30504,7 +30504,7 @@ Gerez vos preferences de rapports et d'emails :
 ## A propos
 
 - **Version** — numero de version actuel de l'application
-- **Aide** — ouvre le centre d'aide integre
+- **Aide** — ouvre le centre d'aide integre ; utilisez la barre de recherche en haut pour acceder directement a un article sans faire defiler toute la liste
 - **Support** — envoyer un e-mail a l'equipe de support
 - **Politique de confidentialite** — consulter la politique de confidentialite
 - **Conditions d'utilisation** — consulter les conditions d'utilisation
@@ -35211,7 +35211,7 @@ iOS, Android, Web
 ## Пра праграму
 
 - **Версія** — нумар бягучай версіі праграмы
-- **Дапамога** — адкрывае ўбудаваны цэнтр дапамогі
+- **Дапамога** — адкрывае ўбудаваны цэнтр дапамогі; скарыстайцеся радком пошуку зверху, каб адразу перайсці да патрэбнага артыкула, не пракручваючы ўвесь спіс
 - **Падтрымка** — адправіць email камандзе падтрымкі
 - **Палітыка канфідэнцыяльнасці** — праглядзець палітыку канфідэнцыяльнасці
 - **Умовы выкарыстання** — праглядзець умовы выкарыстання
@@ -39891,7 +39891,7 @@ Beheer je rapport- en e-mailvoorkeuren:
 ## Over
 
 - **Versie** — huidig versienummer van de app
-- **Hulp** — opent het ingebouwde helpcentrum
+- **Hulp** — opent het ingebouwde helpcentrum; gebruik de zoekbalk bovenaan om direct naar een artikel te gaan in plaats van de hele lijst te doorscrollen
 - **Ondersteuning** — stuur een e-mail naar het ondersteuningsteam
 - **Privacybeleid** — bekijk het privacybeleid
 - **Servicevoorwaarden** — bekijk de servicevoorwaarden

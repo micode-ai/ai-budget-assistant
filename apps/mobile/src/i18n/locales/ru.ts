@@ -1895,6 +1895,11 @@ export default {
   help: {
     title: 'Помощь',
     articleTitle: 'Помощь',
+    searchPlaceholder: 'Поиск по разделам справки',
+    noResults: 'Ничего не найдено',
+    noResultsBody: 'Попробуйте другое слово или спросите ИИ-ассистента — он обычно отвечает сразу.',
+    askAssistant: 'Спросить ассистента',
+    clearSearch: 'Очистить поиск',
     widgets: {
       title: 'Виджеты главного экрана',
       subtitle: 'Только Android',

@@ -1886,6 +1886,11 @@ export default {
   help: {
     title: 'Help & Documentatie',
     articleTitle: 'Help',
+    searchPlaceholder: 'Zoek in help-artikelen',
+    noResults: 'Geen overeenkomende artikelen',
+    noResultsBody: 'Probeer een ander woord, of vraag het de AI-assistent — die kan meestal direct antwoorden.',
+    askAssistant: 'Vraag de assistent',
+    clearSearch: 'Zoekopdracht wissen',
     widgets: {
       title: 'Startscherm-widgets',
       subtitle: 'Alleen Android',

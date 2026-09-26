@@ -1886,6 +1886,11 @@ export default {
   help: {
     title: 'Ayuda',
     articleTitle: 'Ayuda',
+    searchPlaceholder: 'Buscar artículos de ayuda',
+    noResults: 'No hay artículos que coincidan',
+    noResultsBody: 'Prueba otra palabra o pregúntale al asistente de IA — suele responder directamente.',
+    askAssistant: 'Preguntar al asistente',
+    clearSearch: 'Borrar búsqueda',
     widgets: {
       title: 'Widgets de pantalla de inicio',
       subtitle: 'Solo Android',

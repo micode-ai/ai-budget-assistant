@@ -1886,6 +1886,11 @@ export default {
   help: {
     title: 'Aide',
     articleTitle: 'Aide',
+    searchPlaceholder: "Rechercher dans l'aide",
+    noResults: 'Aucun article correspondant',
+    noResultsBody: "Essayez un autre mot, ou demandez à l'assistant IA — il peut souvent répondre directement.",
+    askAssistant: "Demander à l'assistant",
+    clearSearch: 'Effacer la recherche',
     widgets: {
       title: "Widgets de l'écran d'accueil",
       subtitle: 'Android uniquement',

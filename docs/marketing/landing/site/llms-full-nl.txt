@@ -4445,7 +4445,7 @@ Beheer je rapport- en e-mailvoorkeuren:
 ## Over
 
 - **Versie** — huidig versienummer van de app
-- **Hulp** — opent het ingebouwde helpcentrum
+- **Hulp** — opent het ingebouwde helpcentrum; gebruik de zoekbalk bovenaan om direct naar een artikel te gaan in plaats van de hele lijst te doorscrollen
 - **Ondersteuning** — stuur een e-mail naar het ondersteuningsteam
 - **Privacybeleid** — bekijk het privacybeleid
 - **Servicevoorwaarden** — bekijk de servicevoorwaarden

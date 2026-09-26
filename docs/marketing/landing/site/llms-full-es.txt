@@ -4439,7 +4439,7 @@ Configura la generacion de informes automaticos y exportacion de datos:
 ## Acerca de
 
 - **Version** — numero de version actual de la aplicacion
-- **Ayuda** — abre el centro de ayuda integrado
+- **Ayuda** — abre el centro de ayuda integrado; usa la barra de busqueda de arriba para ir directo a un articulo sin desplazarte por toda la lista
 - **Soporte** — envia un correo al equipo de soporte
 - **Politica de privacidad** — ver la politica de privacidad
 - **Terminos de servicio** — ver los terminos de servicio

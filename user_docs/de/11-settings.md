@@ -181,7 +181,7 @@ Verwalte Berichts- und E-Mail-Einstellungen:
 ## Uber
 
 - **Version** — aktuelle App-Versionsnummer
-- **Hilfe** — offnet das integrierte Hilfezentrum
+- **Hilfe** — offnet das integrierte Hilfezentrum; mit der Suchleiste oben findest du einen Artikel direkt, ohne die ganze Liste durchzuscrollen
 - **Support** — sende eine E-Mail an das Support-Team
 - **Datenschutzrichtlinie** — Datenschutzrichtlinie anzeigen
 - **Nutzungsbedingungen** — Nutzungsbedingungen anzeigen

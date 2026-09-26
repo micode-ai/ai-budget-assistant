@@ -4427,7 +4427,7 @@ Skonfiguruj automatyczne raporty e-mail i zarzadzaj eksportami danych:
 ## Informacje
 
 - **Wersja** — aktualny numer wersji aplikacji
-- **Pomoc** — otwiera wbudowane centrum pomocy
+- **Pomoc** — otwiera wbudowane centrum pomocy; uzyj paska wyszukiwania u gory, zeby od razu przejsc do artykulu zamiast przewijac cala liste
 - **Wsparcie** — wyslij e-mail do zespolu wsparcia
 - **Polityka prywatnosci** — przegladaj polityke prywatnosci
 - **Regulamin** — przegladaj regulamin uslug

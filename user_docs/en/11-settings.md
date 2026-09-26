@@ -194,7 +194,7 @@ Manage your report and email preferences:
 ## About
 
 - **Version** — current app version number
-- **Help** — opens the in-app help center
+- **Help** — opens the in-app help center; use the search bar at the top to jump straight to an article instead of scrolling the full list
 - **Support** — send an email to the support team
 - **Privacy Policy** — view the privacy policy
 - **Terms of Service** — view the terms of service

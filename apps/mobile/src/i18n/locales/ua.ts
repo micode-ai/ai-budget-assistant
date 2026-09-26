@@ -1895,6 +1895,11 @@ export default {
   help: {
     title: 'Допомога',
     articleTitle: 'Допомога',
+    searchPlaceholder: 'Пошук у розділах довідки',
+    noResults: 'Нічого не знайдено',
+    noResultsBody: 'Спробуйте інше слово або запитайте ШІ-асистента — він зазвичай відповідає одразу.',
+    askAssistant: 'Запитати асистента',
+    clearSearch: 'Очистити пошук',
     widgets: {
       title: 'Віджети головного екрана',
       subtitle: 'Тільки Android',

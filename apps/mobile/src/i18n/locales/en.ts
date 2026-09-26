@@ -1893,6 +1893,11 @@ export default {
   help: {
     title: 'Help & Docs',
     articleTitle: 'Help',
+    searchPlaceholder: 'Search help articles',
+    noResults: 'No matching articles',
+    noResultsBody: 'Try a different word, or ask the AI assistant — it can usually answer directly.',
+    askAssistant: 'Ask the assistant',
+    clearSearch: 'Clear search',
     widgets: {
       title: 'Home Screen Widgets',
       subtitle: 'Android only',

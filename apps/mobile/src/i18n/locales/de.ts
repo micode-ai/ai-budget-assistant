@@ -1886,6 +1886,11 @@ export default {
   help: {
     title: 'Hilfe',
     articleTitle: 'Hilfe',
+    searchPlaceholder: 'Hilfeartikel durchsuchen',
+    noResults: 'Keine passenden Artikel',
+    noResultsBody: 'Versuche einen anderen Begriff oder frag den KI-Assistenten — er kann meist direkt antworten.',
+    askAssistant: 'Assistenten fragen',
+    clearSearch: 'Suche löschen',
     widgets: {
       title: 'Startbildschirm-Widgets',
       subtitle: 'Nur Android',
