@@ -1,4 +1,7 @@
-import { ActivityIndicator, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, ScrollView, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useTranslation } from 'react-i18next';
+import { useIsDesktopWeb } from '@/components/webLayout.constants';
 import { SheetDialog } from '@/components/SheetDialog';
 import { ProductDetailSheet, PRODUCT_DETAIL_TITLE_ID } from '@/components/analytics/ProductDetailSheet';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -51,6 +54,12 @@ export function ProductDetailModal({
 }: ProductDetailModalProps) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
+  const { t } = useTranslation();
+  // `desktopScroll={false}` also drops the panel padding SheetDialog puts on its
+  // own scroller, so on desktop this ScrollView supplies it — and a close
+  // button, since the panel has no header of its own. The phone sheet already
+  // has both (its padding and the scrim), so nothing changes there.
+  const isDesktop = useIsDesktopWeb();
 
   return (
     <SheetDialog
@@ -63,7 +72,11 @@ export function ProductDetailModal({
       desktopScroll={false}
     >
       {product ? (
-        <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps="handled">
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={isDesktop ? styles.desktopPad : undefined}
+        >
           <ProductDetailSheet
             product={product}
             canEdit={canEdit}
@@ -79,6 +92,17 @@ export function ProductDetailModal({
           <ActivityIndicator color={theme.colors.primary} />
         </View>
       )}
+      {isDesktop ? (
+        <Pressable
+          onPress={onClose}
+          accessibilityRole="button"
+          accessibilityLabel={t('expensesDesktop.dialogClose')}
+          style={styles.closeButton}
+          hitSlop={8}
+        >
+          <Ionicons name="close" size={20} color={theme.colors.textSecondary} />
+        </Pressable>
+      ) : null}
     </SheetDialog>
   );
 }
@@ -86,6 +110,19 @@ export function ProductDetailModal({
 const createStyles = (theme: Theme) => ({
   sheetBox: { maxHeight: '80%' as const },
   desktopContent: { minHeight: 200 },
+  desktopPad: {
+    paddingHorizontal: theme.spacing[5],
+    paddingTop: theme.spacing[5],
+    paddingBottom: theme.spacing[5],
+  },
+  closeButton: {
+    position: 'absolute' as const,
+    top: theme.spacing[3],
+    right: theme.spacing[3],
+    padding: theme.spacing[1.5],
+    borderRadius: theme.borderRadius.md,
+    backgroundColor: theme.colors.surface,
+  },
   loadingWrap: {
     paddingVertical: theme.spacing[8],
     alignItems: 'center' as const,
