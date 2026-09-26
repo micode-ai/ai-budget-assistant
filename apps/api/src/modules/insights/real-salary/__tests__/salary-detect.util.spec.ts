@@ -15,7 +15,6 @@ const monthly = (fromYm: string, months: number, amount: number, extra: Partial<
     return row({ date: d, amount, ...extra });
   });
 };
-const same = (a: number, from: string) => (from === 'PLN' ? a : null);
 
 describe('descriptionKey / salaryKeyOf', () => {
   it('normalises case, digits and whitespace so monthly references do not split the series', () => {
@@ -97,19 +96,19 @@ describe('nominalChange', () => {
 
   it('compares the mean monthly salary of the last 12 months with the 12 before', () => {
     const rows = [...monthly('2024-10', 12, 8000), ...monthly('2025-10', 12, 8400)];
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }))
-      .toEqual({ nominalChangePct: 5, fxApproximate: false });
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: null }))
+      .toEqual({ nominalChangePct: 5 });
   });
 
   it('uses the manual previous salary when the prior year is too thin', () => {
     const rows = monthly('2026-04', 6, 8400);
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: 8000 }))
-      .toEqual({ nominalChangePct: 5, fxApproximate: false });
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: 8000 }))
+      .toEqual({ nominalChangePct: 5 });
   });
 
   it('returns null when the prior year is thin and there is no manual figure', () => {
     const rows = monthly('2026-04', 6, 8400);
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: null }).nominalChangePct)
       .toBeNull();
   });
 
@@ -119,20 +118,20 @@ describe('nominalChange', () => {
       ...monthly('2025-10', 12, 4200),
       ...monthly('2025-10', 12, 4200).map((r) => ({ ...r, date: new Date(r.date.getTime() + 14 * 86400000) })),
     ];
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: null }).nominalChangePct)
       .toBe(5);
   });
 
-  it('salary rows with no rate are excluded, not counted as zero', () => {
+  it('a salary in a foreign currency needs no FX rate', () => {
     const rows = [...monthly('2024-10', 12, 2000, { currencyCode: 'EUR' }), ...monthly('2025-10', 12, 2100, { currencyCode: 'EUR' })];
     const eurKey = 'cat-salary|wynagrodzenie acme|EUR';
-    expect(nominalChange({ rows, salaryKey: eurKey, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }))
-      .toEqual({ nominalChangePct: null, fxApproximate: true });
+    expect(nominalChange({ rows, salaryKey: eurKey, now: NOW, manualPreviousMonthly: null }))
+      .toEqual({ nominalChangePct: 5 });
   });
 
   it('ignores rows that do not belong to the confirmed key', () => {
     const rows = [...monthly('2024-10', 12, 8000), ...monthly('2025-10', 12, 8400), ...monthly('2025-10', 12, 99999, { description: 'Bonus' })];
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: null }).nominalChangePct)
       .toBe(5);
   });
 
@@ -140,7 +139,7 @@ describe('nominalChange', () => {
     const baseRows = [...monthly('2024-10', 12, 8000), ...monthly('2025-10', 12, 8000)];
     const lastCurrentRow = baseRows[baseRows.length - 1];
     const rows = [...baseRows, { ...lastCurrentRow }];
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: null }).nominalChangePct)
       .toBe(0);
   });
 
@@ -158,7 +157,7 @@ describe('nominalChange', () => {
       return row({ date: moved[iso] ? day(moved[iso]) : d, amount: 8000 });
     });
     const rows = [...prevRows, ...curRows];
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: null }).nominalChangePct)
       .toBe(0);
   });
 
@@ -166,7 +165,7 @@ describe('nominalChange', () => {
     const currentRows = monthly('2025-10', 12, 4200);
     const currentWithExtra = currentRows.flatMap((r) => [r, { ...r, amount: 4200.01 }]);
     const rows = [...monthly('2024-10', 12, 8000), ...currentWithExtra];
-    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, manualPreviousMonthly: null }).nominalChangePct)
       .toBe(5);
   });
 });

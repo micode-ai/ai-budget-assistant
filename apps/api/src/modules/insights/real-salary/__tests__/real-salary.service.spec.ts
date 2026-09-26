@@ -196,6 +196,18 @@ describe('RealSalaryService.compute — cache scoping and correctness', () => {
     expect(r.personalInflationPct).toBe(baseline.personalInflationPct);
   });
 
+  it('a foreign-currency salary is compared in its own currency', async () => {
+    const eurKey = 'cat-sal|wynagrodzenie acme|EUR';
+    const { svc } = make({
+      profile: { salaryKey: eurKey, manualPreviousMonthly: 2000 },
+      incomes: [1, 2, 3, 4].map((n) => ({ ...salary(n, 2100), currencyCode: 'EUR' })),
+      expenses: spend,
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(r.status).toBe('ready');
+    expect(r.nominalChangePct).toBe(5);
+  });
+
   it('an invalid inflationCountry falls back to the timezone guess', async () => {
     const { svc, official } = make({
       inflationCountry: 'GR', timezone: 'Europe/Warsaw',

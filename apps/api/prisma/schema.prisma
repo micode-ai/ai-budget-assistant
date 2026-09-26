@@ -2277,6 +2277,7 @@ model SalaryProfile {
   accountId             String   @map("account_id")
   /// `${categoryId ?? ''}|${descriptionKey}|${currencyCode}` — see salary-detect.util.ts.
   salaryKey             String?  @map("salary_key")
+  /// Monthly salary a year ago, typed by the user, in the salary's own currency (the salaryKey's currency), not the base currency.
   manualPreviousMonthly Decimal? @map("manual_previous_monthly") @db.Decimal(12, 2)
   createdAt             DateTime @default(now()) @map("created_at")
   updatedAt             DateTime @updatedAt @map("updated_at")

@@ -97,17 +97,12 @@ export function findSalaryCandidates(rows: IncomeRow[], now: Date): SalaryCandid
  * joins it (a split salary, two amounts on one day), otherwise it opens a new one.
  * mean = window total ÷ number of periods; null below the minimum.
  */
-function windowMean(
-  rows: IncomeRow[], from: number, to: number, convert: (a: number, c: string) => number | null,
-): { mean: number | null; fxMissing: boolean } {
-  let fxMissing = false;
+function windowMean(rows: IncomeRow[], from: number, to: number): number | null {
   const inWindow: { t: number; v: number }[] = [];
   for (const r of rows) {
     const t = r.date.getTime();
     if (t < from || t >= to) continue;
-    const v = convert(r.amount, r.currencyCode);
-    if (v === null) { fxMissing = true; continue; }
-    inWindow.push({ t, v });
+    inWindow.push({ t, v: r.amount });
   }
   inWindow.sort((a, b) => a.t - b.t);
   let periods = 0;
@@ -117,35 +112,33 @@ function windowMean(
     if (t - periodStart >= PERIOD_JOIN_DAYS * DAY_MS) { periods++; periodStart = t; }
     sum += v;
   }
-  if (periods < MIN_PERIODS_PER_WINDOW) return { mean: null, fxMissing };
-  return { mean: sum / periods, fxMissing };
+  if (periods < MIN_PERIODS_PER_WINDOW) return null;
+  return sum / periods;
 }
 
 /**
  * Nominal pay change: mean monthly salary of the last 12 months vs the 12 before
  * (or vs the user's manual "a year ago" figure when the prior window is thin).
- * Amounts are converted to the base currency; a row with no rate is excluded and
- * flags fxApproximate — it never counts as zero.
+ * Everything stays in the salary's OWN currency — every row of one salary key
+ * shares a currency by construction (the key includes it), and the manual figure
+ * is typed in that currency — so no FX rate is needed or used.
  */
 export function nominalChange(input: {
   rows: IncomeRow[];
   salaryKey: string;
   now: Date;
-  baseCurrency: string;
-  convert: (amount: number, from: string) => number | null;
   manualPreviousMonthly: number | null;
-}): { nominalChangePct: number | null; fxApproximate: boolean } {
+}): { nominalChangePct: number | null } {
   const eligible = input.rows.filter((r) => isSalaryEligible(r) && salaryKeyOf(r) === input.salaryKey);
   const mine = removeDuplicates(eligible);
   const end = input.now.getTime() + DAY_MS;
   const mid = end - 365 * DAY_MS;
   const start = mid - 365 * DAY_MS;
 
-  const cur = windowMean(mine, mid, end, input.convert);
-  const prev = windowMean(mine, start, mid, input.convert);
-  const fxApproximate = cur.fxMissing || prev.fxMissing;
+  const cur = windowMean(mine, mid, end);
+  const prev = windowMean(mine, start, mid);
 
-  const previous = prev.mean ?? (input.manualPreviousMonthly && input.manualPreviousMonthly > 0 ? input.manualPreviousMonthly : null);
-  if (cur.mean === null || previous === null) return { nominalChangePct: null, fxApproximate };
-  return { nominalChangePct: round1((cur.mean / previous - 1) * 100), fxApproximate };
+  const previous = prev ?? (input.manualPreviousMonthly && input.manualPreviousMonthly > 0 ? input.manualPreviousMonthly : null);
+  if (cur === null || previous === null) return { nominalChangePct: null };
+  return { nominalChangePct: round1((cur / previous - 1) * 100) };
 }

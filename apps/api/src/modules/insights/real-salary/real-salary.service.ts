@@ -74,11 +74,11 @@ export class RealSalaryService {
 
     const incomes = await this.loadIncomes(accountId, new Date(now.getTime() - 2 * 366 * DAY_MS));
     const nominal = nominalChange({
-      rows: incomes, salaryKey: profile.salaryKey, now, baseCurrency, convert,
+      rows: incomes, salaryKey: profile.salaryKey, now,
       manualPreviousMonthly: profile.manualPreviousMonthly === null ? null : Number(profile.manualPreviousMonthly),
     });
     if (nominal.nominalChangePct === null) {
-      return empty('salary_history_short', { country, countryGuessed, fxApproximate: nominal.fxApproximate });
+      return empty('salary_history_short', { country, countryGuessed });
     }
 
     // ── spend weights ─────────────────────────────────────────────────────
@@ -95,7 +95,7 @@ export class RealSalaryService {
       receiptIndexPct: receipt.inflationIndex,
       receiptProductCount: receipt.productCount,
     });
-    const fxApproximate = nominal.fxApproximate || spendFx;
+    const fxApproximate = spendFx;
     if (!inflation) {
       return empty('no_inflation_source', {
         country: officialData ? country : null, countryGuessed, fxApproximate,

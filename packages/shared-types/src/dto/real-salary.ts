@@ -54,6 +54,11 @@ export interface SalaryCandidate {
 
 export interface SalaryProfileDto {
   salaryKey: string | null;
+  /**
+   * The monthly salary a year ago, typed by the user, in the salary's OWN
+   * currency (the `currencyCode` of the confirmed candidate) — not the base
+   * currency. Used only when the prior 12 months of salary history are thin.
+   */
   manualPreviousMonthly: number | null;
 }
 
