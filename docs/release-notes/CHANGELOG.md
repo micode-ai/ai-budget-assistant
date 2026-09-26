@@ -8,6 +8,93 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.31.0 - 2026-09-26
+
+**Sorting what has no category**
+
+- **Suggest categories for everything uncategorized, in one reviewed pass.** A
+  "Sort expenses" banner opens a review where each group of similar expenses gets
+  a suggested category: keep it, pick another one, or create a new one. New
+  categories are only proposed for at least two expenses and at most five per
+  pass, so the list does not sprawl. Works on the phone and the web (ABA-589).
+- **The same review for incomes**, behind its own "Sort incomes" banner, told apart
+  from the expense one by colour and arrow (ABA-595, ABA-600).
+- **The suggestions are stable.** Opening the review twice gives the same answer
+  and no longer spends two passes; a merchant you already sorted is filed without
+  asking the model (ABA-590).
+- **`/categorize` in the Telegram, WhatsApp and Slack bots** runs the same review
+  in the chat (ABA-594).
+- **A merchant rule can be reapplied to past expenses**, not only to new ones
+  (ABA-596), and learned merchant rules now apply when a receipt is scanned
+  (ABA-597).
+- **Every new account starts with the standard categories**, not only the first
+  one created at sign-up; accounts created before that got them once as well.
+  Salary and Freelance are income categories (ABA-598, ABA-600, ABA-601).
+- **Transfers between your own accounts** counted as income are no longer offered
+  for sorting (ABA-604).
+
+**Receipts**
+
+- **A warning before the same receipt is added twice.** Picking a photo or PDF that
+  was already saved asks first - before it is read, so no AI request is spent. A new
+  photo of a receipt that matches a saved expense (same store, amount and date)
+  shows a notice with an "Open" button. The bots warn the same way (ABA-603).
+- **Groceries no longer land in an unrelated category.** On an account without a
+  fitting category, lines were forced into whatever category shared a word with
+  them; the scan now proposes a proper one and the receipt's own category follows
+  its lines (ABA-601).
+- **Moving a wrongly-scanned expense to another account** also makes the first
+  account forget what that receipt taught it about those products (ABA-602).
+- **"Extract items" on an existing expense** reads the attached receipt again and
+  fills in its line items, and a receipt that duplicates an auto-captured or
+  imported expense offers to merge the two (ABA-568).
+
+**AI chat**
+
+- **"Undo" in the chat** reverts the last expense, income, debt, repayment or goal
+  change it just made (ABA-586) - including a receipt or a quick command confirmed
+  in a bot (ABA-599).
+- **Questions about discounts get an answer** ("how much did I save on discounts
+  this month?") (ABA-569).
+
+**Shopping and prices**
+
+- **Share a shopping list with someone who does not have the app** through a link
+  (ABA-587).
+- **Search a product's price history** in Settings and see where it was cheapest
+  (ABA-588).
+- **Discount and deposit figures in Analytics are tappable** and open the expenses
+  behind them (ABA-576).
+
+**Imports**
+
+- **Money Manager and Wallet exports import without manual column mapping**, and a
+  file the chosen parser cannot read falls back to automatic detection instead of
+  showing an empty preview (ABA-581, ABA-582, ABA-583).
+
+**Fixes**
+
+- **Deleting a category that still has expenses** is refused again in every case;
+  a category the server could not match used to slip past the check (ABA-567).
+- **The "Without category" filter** found nothing on a device whose category ids
+  had diverged from the server's (ABA-575).
+- Six defects from a manual acceptance run: shortcuts reacting under the
+  categorize dialog, a web share reported as a failure, the shopping-list guest
+  page, an untranslated button label, and the price-history dialog's padding and
+  close button on desktop (ABA-600).
+
+**Under the hood**
+
+- The AI chat's two largest services were split into focused ones with no change in
+  behaviour (ABA-591, ABA-592); a test timer leak fixed (ABA-577).
+- Project knowledge moved to a maintained wiki with a lint loop (ABA-578, ABA-579,
+  ABA-584).
+- Marketing site: 36 new blog articles in 9 languages, DE/NL localisation and
+  typo passes, localized `llms.txt`, an image sitemap, fixed over-long titles, and a
+  directory badge (ABA-570 - ABA-574, ABA-580).
+
+---
+
 ## 1.30.0 - 2026-09-17
 
 **Categories that stay where you put them**
