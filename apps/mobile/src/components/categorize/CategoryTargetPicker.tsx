@@ -7,6 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import type { Target } from '@/features/categorize/categorizeReview';
 import { categoryStyle, tintOf } from '@/features/categorize/categoryStyle';
 import { CategoryIcon } from '@/components/CategoryIcon';
+import { useIsDesktopWeb } from '@/components/webLayout.constants';
 
 /** Above this many options the sheet gets a search field. */
 const SEARCH_THRESHOLD = 8;
@@ -40,6 +41,10 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const insets = useSafeAreaInsets();
+  // On desktop a bottom sheet pinned to the viewport's bottom edge landed on
+  // top of the review dialog's footer, was clipped, and its scrim only dimmed
+  // the column above it. There it is a centred panel like every other dialog.
+  const isDesktop = useIsDesktopWeb();
   const [creating, setCreating] = useState(false);
   const [newName, setNewName] = useState('');
   const [query, setQuery] = useState('');
@@ -92,18 +97,23 @@ export function CategoryTargetPicker({ visible, categories, drafts, onSelect, on
   };
 
   return (
-    <Modal visible={visible} transparent animationType="slide" onRequestClose={handleClose}>
-      <View style={styles.overlay}>
+    <Modal visible={visible} transparent animationType={isDesktop ? 'fade' : 'slide'} onRequestClose={handleClose}>
+      <View style={[styles.overlay, isDesktop && styles.overlayDesktop]}>
         <Pressable
-          style={styles.backdrop}
+          style={isDesktop ? styles.backdropFill : styles.backdrop}
           onPress={handleClose}
           accessibilityRole="button"
         />
         {/* The system navigation bar overlays this window, so the base padding
             has to clear it (ABA-483) — the inset is added here, not in the
             StyleSheet, so there is one source for the padding formula. */}
-        <View style={[styles.sheet, { paddingBottom: theme.spacing[4] + insets.bottom }]}>
-          <View style={styles.handle} />
+        <View
+          style={[
+            styles.sheet,
+            isDesktop ? styles.sheetDesktop : { paddingBottom: theme.spacing[4] + insets.bottom },
+          ]}
+        >
+          {!isDesktop && <View style={styles.handle} />}
           {showSearch && (
             <View style={styles.searchRow}>
               <Ionicons name="search" size={16} color={theme.colors.textTertiary} />
@@ -194,6 +204,28 @@ const createStyles = (theme: Theme) => ({
   backdrop: {
     flex: 1,
     backgroundColor: theme.colors.overlay,
+  },
+  overlayDesktop: {
+    justifyContent: 'center' as const,
+    alignItems: 'center' as const,
+    padding: theme.spacing[6],
+  },
+  backdropFill: {
+    position: 'absolute' as const,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
+    backgroundColor: theme.colors.overlay,
+  },
+  sheetDesktop: {
+    maxWidth: 440,
+    width: '90%' as const,
+    maxHeight: '70%' as const,
+    borderRadius: theme.borderRadius.xl,
+    paddingTop: theme.spacing[4],
+    paddingBottom: theme.spacing[4],
+    ...theme.shadows.xl,
   },
   sheet: {
     maxWidth: 520,
