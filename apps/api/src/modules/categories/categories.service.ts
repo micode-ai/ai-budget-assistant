@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
 import type { Category } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { EmbeddingService } from '../ai/services/embedding.service';
@@ -158,6 +158,17 @@ export class CategoriesService {
   async update(accountId: string, id: string, dto: any) {
     const category = await this.resolveCategory(accountId, id);
     if (!category) throw new NotFoundException('Category not found');
+
+    // A system category has accountId: null and is global across every
+    // account. RealSalaryService reads coicopDivision account-wide, so
+    // letting an editor of ANY account set it on a system row would silently
+    // change every OTHER account's real-salary weights — the one field here
+    // whose effect is cross-tenant. Every other field on a system category
+    // (rename, recolor, even soft-delete) is deliberately unchanged.
+    if (dto?.coicopDivision !== undefined && category.accountId == null) {
+      throw new ForbiddenException('coicopDivision can only be set on an account category');
+    }
+
     const { clientId: _ignoredClientId, ...rest } = dto ?? {};
 
     // `@@unique([accountId, name, type])` covers BOTH columns this PATCH can

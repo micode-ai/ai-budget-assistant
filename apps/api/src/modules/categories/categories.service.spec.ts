@@ -1,5 +1,5 @@
 import { CategoriesService } from './categories.service';
-import { NotFoundException, ConflictException } from '@nestjs/common';
+import { NotFoundException, ConflictException, ForbiddenException } from '@nestjs/common';
 
 function makeService(overrides: {
   findFirstResult?: any;
@@ -312,6 +312,30 @@ describe('CategoriesService.update', () => {
     });
 
     await expect(service.update('acc-1', 'cat-1', { name: 'Food' })).rejects.toThrow('connection lost');
+  });
+
+  // A system category has accountId: null and is global — RealSalaryService
+  // reads coicopDivision account-wide, so letting any account's editor set it
+  // on a system row would silently change every OTHER account's real-salary
+  // weights. Every other field stays editable on a system category as before.
+  it('rejects coicopDivision on a system category', async () => {
+    const found = { id: 'sys-1', accountId: null, name: 'Food', type: 'expense', isSystem: true };
+    const { service, prisma } = makeService({ findFirstResult: found });
+
+    await expect(service.update('acc-1', 'sys-1', { coicopDivision: 'CP01' })).rejects.toThrow(ForbiddenException);
+    expect(prisma.category.update).not.toHaveBeenCalled();
+  });
+
+  it('allows coicopDivision on an account category', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Groceries', type: 'expense' };
+    const { service, prisma } = makeService({ findFirstResult: found });
+
+    await service.update('acc-1', 'cat-1', { coicopDivision: 'CP01' });
+
+    expect(prisma.category.update).toHaveBeenCalledWith({
+      where: { id: 'cat-1' },
+      data: { coicopDivision: 'CP01' },
+    });
   });
 });
 
