@@ -145,7 +145,6 @@ describe('nominalChange', () => {
   });
 
   it('two different amounts on one day are both counted', () => {
-    const baseRows = [...monthly('2024-10', 12, 8000), ...monthly('2025-10', 12, 4200)];
     const currentRows = monthly('2025-10', 12, 4200);
     const currentWithExtra = currentRows.flatMap((r) => [r, { ...r, amount: 4200.01 }]);
     const rows = [...monthly('2024-10', 12, 8000), ...currentWithExtra];
