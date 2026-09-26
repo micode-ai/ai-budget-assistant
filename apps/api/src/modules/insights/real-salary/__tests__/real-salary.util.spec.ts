@@ -1,4 +1,4 @@
-import { computePersonalInflation, realChange, round1, RECEIPT_MIN_PRODUCTS } from '../real-salary.util';
+import { annualiseHalfYearPct, computePersonalInflation, realChange, round1, RECEIPT_MIN_PRODUCTS } from '../real-salary.util';
 
 const PL = { TOTAL: 3.5, CP01: -0.8, CP04: 5.1, CP07: 5.4, CP11: 4.1 } as const;
 
@@ -126,5 +126,13 @@ describe('round1', () => {
   it('rounds to one decimal and never returns -0', () => {
     expect(round1(3.14159)).toBe(3.1);
     expect(Object.is(round1(-0.04), -0)).toBe(false);
+  });
+});
+
+describe('annualiseHalfYearPct', () => {
+  it('annualises a half-year change', () => {
+    expect(annualiseHalfYearPct(3)).toBeCloseTo(6.09, 2);
+    expect(annualiseHalfYearPct(null)).toBeNull();
+    expect(annualiseHalfYearPct(0)).toBe(0);
   });
 });

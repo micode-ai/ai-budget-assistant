@@ -10,7 +10,7 @@ import { PriceHistoryService } from '../../price-history/price-history.service';
 import { convertAmount, getRatesSafe } from '../../../common/utils/fx';
 import { attributeToCategories } from '../../../common/utils/category-attribution';
 import { countryFromTimezone, isDivision, isEurostatCountry } from './coicop';
-import { computePersonalInflation, realChange, type SpendByDivision } from './real-salary.util';
+import { annualiseHalfYearPct, computePersonalInflation, realChange, type SpendByDivision } from './real-salary.util';
 import { findSalaryCandidates, nominalChange, type IncomeRow } from './salary-detect.util';
 import { OfficialInflationService } from './official-inflation.service';
 import { CoicopClassifierService } from './coicop-classifier.service';
@@ -92,7 +92,7 @@ export class RealSalaryService {
     const inflation = computePersonalInflation({
       spend,
       officialRates: officialData?.rates ?? {},
-      receiptIndexPct: receipt.inflationIndex,
+      receiptIndexPct: annualiseHalfYearPct(receipt.inflationIndex),
       receiptProductCount: receipt.productCount,
     });
     const fxApproximate = spendFx;

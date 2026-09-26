@@ -208,6 +208,17 @@ describe('RealSalaryService.compute — cache scoping and correctness', () => {
     expect(r.nominalChangePct).toBe(5);
   });
 
+  it('the half-year receipt index is annualised before it replaces CP01', async () => {
+    const foodSpend = spend.map((e) => ({ ...e, categoryId: 'cat-food', category: { id: 'cat-food', name: 'Food', coicopDivision: 'CP01' } }));
+    const { svc } = make({
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: foodSpend,
+      receipt: { inflationIndex: 3, productCount: 25 },
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(r.breakdown.find((b) => b.division === 'CP01')).toMatchObject({ ratePct: 6.1, source: 'receipts' });
+  });
+
   it('an invalid inflationCountry falls back to the timezone guess', async () => {
     const { svc, official } = make({
       inflationCountry: 'GR', timezone: 'Europe/Warsaw',

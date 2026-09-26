@@ -72,6 +72,17 @@ export function computePersonalInflation(
   return { inflationPct: round1(inflation), breakdown, topDrivers };
 }
 
+/**
+ * PriceHistoryService's '12m' inflationIndex compares mean prices in
+ * [12 months ago .. 6 months ago] with [6 months ago .. now] — the two window
+ * midpoints are ~6 months apart, so it is a HALF-YEAR change. Official rates
+ * (Eurostat RCH_A) are year-on-year, so compound it over two half-years before
+ * it may stand in for CP01: (1 + p)² − 1.
+ */
+export function annualiseHalfYearPct(pct: number | null): number | null {
+  return pct === null ? null : ((1 + pct / 100) ** 2 - 1) * 100;
+}
+
 /** Real change divides (the honest formula); required raise is on CURRENT pay. */
 export function realChange(nominalPct: number, inflationPct: number): { realChangePct: number; requiredRaisePct: number } {
   const n = 1 + nominalPct / 100;
