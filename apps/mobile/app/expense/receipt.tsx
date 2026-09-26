@@ -1,11 +1,14 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useEffect } from 'react';
+import { router, useLocalSearchParams, useNavigation } from 'expo-router';
+import { useIsFocused } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { ReceiptExpenseView } from '@/components/receipt/ReceiptExpenseView';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { AiUsageBadge } from '@/components/AiUsageBadge';
+import { AccountSwitcher } from '@/components/AccountSwitcher';
 import { useShareIntakeStore } from '@/stores/shareIntakeStore';
 import { position, remaining } from '@/features/share-intake/shareIntakeQueue';
 import { deleteSharedFile } from '@/services/shareIntake';
@@ -35,6 +38,18 @@ export default function ReceiptExpenseScreen() {
   const discardQueue = () => {
     useShareIntakeStore.getState().discardAll().forEach((f) => void deleteSharedFile(f.uri));
   };
+
+  const isFocused = useIsFocused();
+  const navigation = useNavigation();
+
+  // Hardware back / the back gesture leave without the X's prompt. Whatever is
+  // still queued goes with the screen — otherwise the next share would append
+  // to it and a fresh mount would re-scan the abandoned head first.
+  useEffect(() => {
+    if (!shareMode) return;
+    return navigation.addListener('beforeRemove', discardQueue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shareMode, navigation]);
 
   const close = () => {
     if (!shareMode) {
@@ -74,7 +89,16 @@ export default function ReceiptExpenseScreen() {
         <AiUsageBadge />
       </View>
 
-      <ReceiptExpenseView onDone={() => router.back()} shareMode={shareMode} />
+      {shareMode && (
+        // A shared file lands in whatever account is current — say which, and
+        // let the user switch before saving.
+        <View style={styles.accountRow}>
+          <Text style={styles.accountLabel}>{t('shareIntake.savingTo')}</Text>
+          <AccountSwitcher compact showCurrency={false} />
+        </View>
+      )}
+
+      <ReceiptExpenseView onDone={() => router.back()} shareMode={shareMode} paused={shareMode && !isFocused} />
     </SafeAreaView>
   );
 }
@@ -91,6 +115,19 @@ const createStyles = (theme: Theme) => ({
     padding: theme.spacing[4],
     borderBottomWidth: 1,
     borderBottomColor: theme.colors.border,
+  },
+  accountRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.border,
+  },
+  accountLabel: {
+    ...theme.textStyles.body,
+    color: theme.colors.textSecondary,
   },
   closeButton: {
     padding: theme.spacing[1],

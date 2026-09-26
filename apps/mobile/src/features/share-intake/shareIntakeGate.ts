@@ -21,3 +21,17 @@ export function decideShareNavigation(i: {
   if (!i.canEdit) return 'block_viewer';
   return 'navigate';
 }
+
+/**
+ * A share whose every file was dropped (too big, wrong type) opens no screen,
+ * so the receipt screen never gets to report it — the root hook must, or the
+ * count lingers and surfaces on some later, unrelated share.
+ */
+export function shouldAnnounceDropped(i: {
+  lastDropped: number;
+  pendingNavigation: boolean;
+  screenOpen: boolean;
+  coldStartGateReady: boolean;
+}): boolean {
+  return i.lastDropped > 0 && !i.pendingNavigation && !i.screenOpen && i.coldStartGateReady;
+}

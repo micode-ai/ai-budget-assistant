@@ -548,6 +548,7 @@ export default {
   },
   // Share-to-capture: images/PDFs shared from another app (Android)
   shareIntake: {
+    savingTo: "Зберегти в:",
     progress: "Чек {{n}} з {{of}}",
     next: "Далі",
     skip: "Пропустити",

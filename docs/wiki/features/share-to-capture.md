@@ -51,6 +51,23 @@ all apply unchanged. The server has no share-specific code.
   paywall; other errors offer Skip / Enter manually per file.
 - **Warm events use `emitDeviceEvent`**, never `getJSModule(...).emit()` (swallowed under New
   Architecture). The module is legacy Old-Arch with no codegen (Windows MAX_PATH).
+- **A SEND intent is handled only on a fresh launch** — `MainActivity` skips it when there is
+  saved state or `FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY`: a share-started task keeps the SEND
+  intent as its root, and after process death Android recreates the Activity from it, which
+  re-queued receipts already saved.
+- **Nothing is emitted before JS asks** — the module exists from bundle evaluation, long before
+  the root hook subscribes; until the first `getInitialShare()` (`jsReady`) payloads are held,
+  and several held shares are merged, never overwritten.
+- **Only a foreign `content://` URI is copied** — a `file://` or our own provider could point
+  at this app's private storage and get it uploaded for OCR. Typed parcelable getters are used
+  only on SDK 34+ (Android 13 bug, same gate as `IntentCompat`).
+- **Scans wait while the screen is not focused** (`paused`), so the next file's alerts never pop
+  over the manual form; "Edit" takes the file off the queue; "Scan again" re-scans the head
+  explicitly; "Open" from the duplicate prompt discards the run and `router.replace`s.
+- **Back gesture / hardware back discard the rest** (`beforeRemove`) — only ✕ asks first.
+- **A share where every file is dropped is reported by the root hook** (`shouldAnnounceDropped`),
+  since no screen opens to report it.
+- **The confirm screen shows the target account** with the `AccountSwitcher`.
 - **The queue is in-memory by design** and reset on sign-out; process death loses it (saved
   expenses stay). `purgeStale(24h)` on launch removes leftover copies.
 

@@ -9,7 +9,7 @@ import {
 import { useShareIntakeStore } from '@/stores/shareIntakeStore';
 import { useFirstRunStore } from '@/stores/firstRunStore';
 import { useAccountStore } from '@/stores/accountStore';
-import { decideShareNavigation } from '@/features/share-intake/shareIntakeGate';
+import { decideShareNavigation, shouldAnnounceDropped } from '@/features/share-intake/shareIntakeGate';
 
 const STALE_MS = 24 * 60 * 60 * 1000;
 
@@ -31,6 +31,7 @@ export async function ingestInitialShare(): Promise<void> {
 export function useShareIntake(coldStartGateReady: boolean): void {
   const pendingNavigation = useShareIntakeStore((s) => s.pendingNavigation);
   const screenOpen = useShareIntakeStore((s) => s.screenOpen);
+  const lastDropped = useShareIntakeStore((s) => s.lastDropped);
   const firstRunSeen = useFirstRunStore((s) => s.seen);
   const canEdit = useAccountStore((s) => s.canEdit());
 
@@ -56,7 +57,15 @@ export function useShareIntake(coldStartGateReady: boolean): void {
       const left = useShareIntakeStore.getState().discardAll();
       useShareIntakeStore.getState().consumeNavigation();
       left.forEach((f) => void deleteSharedFile(f.uri));
+      useShareIntakeStore.getState().clearDropped();
       showAlert(i18n.t('shareIntake.viewerBlockedTitle'), i18n.t('shareIntake.viewerBlockedBody'));
     }
   }, [pendingNavigation, screenOpen, coldStartGateReady, firstRunSeen, canEdit]);
+
+  // A share where every file was dropped opens no screen — report it here.
+  useEffect(() => {
+    if (!shouldAnnounceDropped({ lastDropped, pendingNavigation, screenOpen, coldStartGateReady })) return;
+    useShareIntakeStore.getState().clearDropped();
+    showAlert(i18n.t('shareIntake.droppedTitle'), i18n.t('shareIntake.droppedBody', { count: lastDropped }));
+  }, [lastDropped, pendingNavigation, screenOpen, coldStartGateReady]);
 }

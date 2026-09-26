@@ -31,7 +31,14 @@ class MainActivity : ReactActivity() {
     // own screen state on the JS side, so native fragment restoration must be
     // disabled. See react-native-screens issue #17.
     super.onCreate(null)
-    ShareIntakeModule.handleIntent(this, intent)
+    // A task started by a share keeps that SEND intent as its root: after the
+    // process dies, Android recreates this Activity from it (restored state, or
+    // relaunched from Recents). Handling it again would re-copy and re-queue
+    // receipts that were already saved. Only a fresh launch is a new share.
+    val fromHistory = ((intent?.flags ?: 0) and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
+    if (savedInstanceState == null && !fromHistory) {
+      ShareIntakeModule.handleIntent(this, intent)
+    }
   }
 
   /** Warm share-to-capture: the app is already running (launchMode singleTask). */

@@ -67,6 +67,12 @@ interface ReceiptExpenseViewProps {
    * save / skip. Omitted by every other host — the view is then unchanged.
    */
   shareMode?: boolean;
+  /**
+   * Share mode only: the route is not focused (the user went to the manual
+   * form, or opened an expense on top). The next queued file waits instead of
+   * scanning underneath — its alerts would pop up over the other screen.
+   */
+  paused?: boolean;
 }
 
 /**
@@ -86,7 +92,7 @@ interface ReceiptExpenseViewProps {
  * `_layout.tsx` alone will find a `title` that is never rendered and no badge
  * at all. The route keeps drawing its own, unchanged.
  */
-export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpense, shareMode }: ReceiptExpenseViewProps) {
+export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpense, shareMode, paused }: ReceiptExpenseViewProps) {
   useEffect(() => {
     trackAction('expense_receipt', 'started');
   }, []);
@@ -151,11 +157,16 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
           {
             text: t('receipt.duplicateOpen'),
             onPress: () => {
-              declinedRef.current = true;
               resolve(false);
-              // Leaving for the saved expense ends a share run: the user must not
-              // come back to a half-finished queue under it.
-              if (shareMode) discardShareQueue();
+              if (shareMode) {
+                // Leaving for the saved expense ends the share run. Replace, not
+                // push: the queue is gone, so there is nothing to come back to —
+                // and NOT marking it declined keeps advanceQueue (whose onDone
+                // would pop the expense just opened) from running.
+                discardShareQueue();
+                router.replace(`/expense/${match.expenseId}`);
+                return;
+              }
               openExpense(match.expenseId);
             },
           },
@@ -300,16 +311,29 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     useShareIntakeStore.getState().clearDropped();
   }, [shareMode, shareDropped, t]);
 
-  // Scan the head whenever it changes (first file, or after advancing).
-  useEffect(() => {
-    if (!shareHead || scannedUriRef.current === shareHead.uri) return;
-    scannedUriRef.current = shareHead.uri;
+  function scanShareHead(head: NonNullable<typeof shareHead>) {
+    scannedUriRef.current = head.uri;
     declinedRef.current = false;
-    void processSharedFile(shareHead.uri, shareHead.mimeType, shareHead.name, shareHead.size).then((r) => {
+    void processSharedFile(head.uri, head.mimeType, head.name, head.size).then((r) => {
       if (r === null && declinedRef.current) advanceQueue();
     });
+  }
+
+  // Scan the head whenever it changes (first file, or after advancing) — but
+  // only while this screen is focused.
+  useEffect(() => {
+    if (!shareHead || paused || scannedUriRef.current === shareHead.uri) return;
+    scanShareHead(shareHead);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [shareHead?.uri]);
+  }, [shareHead?.uri, paused]);
+
+  /** "Scan again" on the confirm card: the head's URI has not changed, so the
+   *  effect above would never re-run — re-scan it explicitly. */
+  const retryShareHead = () => {
+    handleReset();
+    const head = current(useShareIntakeStore.getState().queue);
+    if (head) scanShareHead(head);
+  };
 
   const { handleConfirmExpense, handleEditExpense } = useReceiptSave({
     scannedReceipt,
@@ -321,7 +345,10 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     currentSplits,
     itemCategories,
     proposedNamesToCreate,
-    onReset: handleReset,
+    // In share mode the only caller of onReset is "Edit" (there is no "Scan
+    // another"): the file becomes the manual form's expense, so it leaves the
+    // queue — otherwise the user returns to a stuck, already-handled head.
+    onReset: shareMode ? advanceQueue : handleReset,
     onDone,
     onEdit,
     queue: shareMode
@@ -385,7 +412,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
             onOpenDuplicate={openExpense}
             onEdit={handleEditExpense}
             onConfirm={handleConfirmExpense}
-            onRetry={handleReset}
+            onRetry={shareMode ? retryShareHead : handleReset}
           />
 
           <ItemCategorySheet

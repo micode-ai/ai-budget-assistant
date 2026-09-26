@@ -39,13 +39,27 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
     }
 
     override fun invalidate() {
-        if (instance === this) instance = null
+        if (instance === this) {
+            instance = null
+            // A reload re-runs the bundle; the new JS must ask again before we emit.
+            synchronized(lock) { jsReady = false }
+        }
         super.invalidate()
     }
 
+    /**
+     * Also marks JS as listening: the module (and [instance]) exists from bundle
+     * evaluation, well before the root hook subscribes, so until JS has called
+     * this once every payload is held rather than emitted into the void.
+     */
     @ReactMethod
     fun getInitialShare(promise: Promise) {
-        val held = synchronized(lock) { pending.also { pending = null } }
+        val held = synchronized(lock) {
+            jsReady = true
+            val out = pending?.let { toWritable(it) }
+            pending = null
+            out
+        }
         promise.resolve(held)
     }
 
@@ -90,9 +104,27 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
         const val MAX_IMAGE_BYTES = 25L * 1024 * 1024
 
         private val lock = Any()
-        private var pending: WritableMap? = null
+        /** Held until JS reads it; several shares before that are merged, never overwritten. */
+        private var pending: Held? = null
+        private var jsReady = false
         @Volatile private var instance: ShareIntakeModule? = null
         private val io = Executors.newSingleThreadExecutor()
+
+        private class Held(val files: MutableList<Map<String, Any>>, var dropped: Int)
+
+        private fun toWritable(h: Held): WritableMap = Arguments.createMap().apply {
+            val arr = Arguments.createArray()
+            h.files.forEach { f ->
+                arr.pushMap(Arguments.createMap().apply {
+                    putString("uri", f["uri"] as String)
+                    putString("mimeType", f["mimeType"] as String)
+                    putString("name", f["name"] as String)
+                    putDouble("size", f["size"] as Double)
+                })
+            }
+            putArray("files", arr)
+            putInt("droppedCount", h.dropped)
+        }
 
         private fun intakeDir(ctx: Context): File =
             File(ctx.cacheDir, "shared-intake").apply { mkdirs() }
@@ -115,15 +147,23 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
             }
         }
 
+        /**
+         * Only another app's content:// stream is accepted. A file:// URI (or one
+         * of our own providers) could point at this app's private storage and get
+         * it uploaded for OCR.
+         */
+        private fun isForeignContent(ctx: Context, uri: Uri): Boolean =
+            uri.scheme == "content" && uri.authority?.startsWith(ctx.packageName) != true
+
         @Suppress("DEPRECATION")
         private fun extractUris(intent: Intent): List<Uri> = try {
             if (intent.action == Intent.ACTION_SEND) {
-                val u: Uri? = if (Build.VERSION.SDK_INT >= 33)
+                val u: Uri? = if (Build.VERSION.SDK_INT >= 34)
                     intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
                 else intent.getParcelableExtra(Intent.EXTRA_STREAM)
                 listOfNotNull(u)
             } else {
-                val list: ArrayList<Uri>? = if (Build.VERSION.SDK_INT >= 33)
+                val list: ArrayList<Uri>? = if (Build.VERSION.SDK_INT >= 34)
                     intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
                 else intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
                 list?.toList() ?: emptyList()
@@ -137,11 +177,12 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
             return if (sub.matches(Regex("[a-z0-9]{2,5}"))) sub else "jpg"
         }
 
-        private fun copyAll(ctx: Context, uris: List<Uri>, intentType: String?): WritableMap {
-            val files = Arguments.createArray()
+        private fun copyAll(ctx: Context, uris: List<Uri>, intentType: String?): Held {
+            val files = mutableListOf<Map<String, Any>>()
             var dropped = 0
             uris.forEachIndexed { i, uri ->
                 if (i >= MAX_FILES) { dropped++; return@forEachIndexed }
+                if (!isForeignContent(ctx, uri)) { dropped++; return@forEachIndexed }
                 try {
                     val resolver = ctx.contentResolver
                     val mime = resolver.getType(uri) ?: intentType ?: ""
@@ -168,20 +209,17 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
                         }
                     }
                     if (tooBig || size == 0L) { out.delete(); dropped++; return@forEachIndexed }
-                    files.pushMap(Arguments.createMap().apply {
-                        putString("uri", Uri.fromFile(out).toString())
-                        putString("mimeType", if (isPdf) "application/pdf" else mime)
-                        putString("name", name)
-                        putDouble("size", size.toDouble())
-                    })
+                    files.add(mapOf(
+                        "uri" to Uri.fromFile(out).toString(),
+                        "mimeType" to (if (isPdf) "application/pdf" else mime),
+                        "name" to name,
+                        "size" to size.toDouble(),
+                    ))
                 } catch (_: Throwable) {
                     dropped++
                 }
             }
-            return Arguments.createMap().apply {
-                putArray("files", files)
-                putInt("droppedCount", dropped)
-            }
+            return Held(files, dropped)
         }
 
         private fun queryName(ctx: Context, uri: Uri): String? = try {
@@ -192,17 +230,25 @@ class ShareIntakeModule(private val reactContext: ReactApplicationContext) :
             null
         }
 
-        private fun deliver(payload: WritableMap) {
-            val ctx = instance?.reactContext
-            if (ctx != null && ctx.hasActiveReactInstance()) {
-                try {
-                    ctx.emitDeviceEvent(EVENT_NAME, payload)
-                    return
-                } catch (_: Throwable) {
-                    // Fall through and hold it for getInitialShare().
+        private fun deliver(payload: Held) {
+            synchronized(lock) {
+                val ctx = instance?.reactContext
+                if (jsReady && pending == null && ctx != null && ctx.hasActiveReactInstance()) {
+                    try {
+                        ctx.emitDeviceEvent(EVENT_NAME, toWritable(payload))
+                        return
+                    } catch (_: Throwable) {
+                        // Fall through and hold it for getInitialShare().
+                    }
+                }
+                val held = pending
+                if (held == null) {
+                    pending = payload
+                } else {
+                    held.files.addAll(payload.files)
+                    held.dropped += payload.dropped
                 }
             }
-            synchronized(lock) { pending = payload }
         }
     }
 }
