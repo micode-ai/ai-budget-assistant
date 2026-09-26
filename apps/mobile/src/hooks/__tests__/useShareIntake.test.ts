@@ -4,6 +4,13 @@ jest.mock('@/services/shareIntake', () => ({
   purgeStaleSharedFiles: jest.fn(),
   deleteSharedFile: jest.fn(),
 }));
+// The hook module imports these for its navigation effect; ingestInitialShare
+// needs none of them. Mocked so the real stores' import-time timers (e.g.
+// exchangeRateStore's deferred dynamic import) cannot outlive the test run.
+jest.mock('@/stores/accountStore', () => ({ useAccountStore: jest.fn() }));
+jest.mock('@/stores/firstRunStore', () => ({ useFirstRunStore: jest.fn() }));
+jest.mock('@/utils/alert', () => ({ showAlert: jest.fn() }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 import { getInitialShare } from '@/services/shareIntake';
 import { ingestInitialShare } from '@/hooks/useShareIntake';
