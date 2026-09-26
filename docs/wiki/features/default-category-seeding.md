@@ -25,7 +25,7 @@ feature's own page. It's closed now, for account creation only — see **Known g
 
 ## Invariants
 
-- **Salary and Freelance are seeded as `income`.** `DefaultCategory.type` marks them in every language; the seeder writes it. Before [ABA-600](https://github.com/micode-ai/ai-budget-assistant/issues/624) all 17 defaults were `expense`, so a new account had no income category and the income review had to invent one. Existing accounts were not backfilled.
+- **Salary and Freelance are seeded as `income`.** `DefaultCategory.type` marks them in every language; the seeder writes it. Before [ABA-600](https://github.com/micode-ai/ai-budget-assistant/issues/624) all 17 defaults were `expense`, so a new account had no income category and the income review had to invent one. Existing accounts were backfilled once by ABA-601 (see **Known gaps**).
 
 
 - **Seeding happens inside the same `$transaction` as the account + owner-membership create.** A
@@ -45,9 +45,13 @@ feature's own page. It's closed now, for account creation only — see **Known g
 
 ## Known gaps
 
-- **No backfill.** Accounts created before this shipped stay empty; there is no admin/cron job or
-  user-facing "seed my categories" action that retroactively seeds them. If that's ever wanted, the
-  existing `seedDefaultCategoriesForAccount` helper is reusable — check the target account currently
-  has zero categories before calling it, or it duplicates the set on a second run.
+- **Backfilled once, not continuously (ABA-601).** Migration
+  `20260926000000_backfill_default_categories` seeded the owner-language set into every active,
+  non-investment account holding fewer than 5 default names in any language (seeded accounts hold
+  11+, so the gap is clean). It skips every name the account already has, **including soft-deleted
+  rows** — a category the user deleted is never resurrected — and it is idempotent. Why it was
+  needed: an account with no groceries category made the receipt classifiers force food into
+  whatever unrelated category it did have. The SQL is generated from `default-categories.ts`; a
+  later change to the default set does not reach it.
 - **No empty-state banner** on the categories settings screen nudging a user toward the categorize
   pass or a manual seed for an account that predates this change.
