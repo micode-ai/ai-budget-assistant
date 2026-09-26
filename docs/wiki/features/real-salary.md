@@ -17,9 +17,9 @@ the one-page PDF "brief" download (`POST /insights/real-salary/brief`) is Pro-ga
 ## Entry points
 
 - `apps/api/src/modules/insights/real-salary/real-salary.service.ts` — `RealSalaryService.compute`
-  (the assembly), `getProfile`/`saveProfile`/`listCategories`, `bustAccount`/`bustUser`
+  (the assembly), `getProfile`/`saveProfile`/`listCategories`, `bustAccount`
 - `apps/api/src/modules/insights/real-salary/real-salary.util.ts` — pure
-  `computePersonalInflation`/`realChange`/`round1`
+  `computePersonalInflation`/`realChange`/`round1`/`annualiseHalfYearPct`
 - `apps/api/src/modules/insights/real-salary/salary-detect.util.ts` — pure `findSalaryCandidates`
   (setup-screen suggestions), `nominalChange`, `salaryKeyOf`/`descriptionKey`, `isSalaryEligible`
 - `apps/api/src/modules/insights/real-salary/official-inflation.service.ts` — the only writer of
@@ -31,7 +31,8 @@ the one-page PDF "brief" download (`POST /insights/real-salary/brief`) is Pro-ga
   `CoicopClassifierService.ensureClassified`
 - `apps/api/src/modules/insights/real-salary/real-salary.validation.ts` — `validateSalaryProfile`,
   `validateInflationCountry`
-- `apps/api/src/modules/insights/real-salary/real-salary-brief.pdf.ts` — `RealSalaryBriefPdf`
+- `apps/api/src/modules/insights/real-salary/real-salary-brief.pdf.ts` — `RealSalaryBriefPdf`,
+  `sourcesLine`
 - `apps/api/src/modules/insights/insights.controller.ts` — `GET /insights/real-salary`,
   `GET`/`PUT /insights/real-salary/profile`, `GET /insights/real-salary/categories`,
   `POST /insights/real-salary/brief`
@@ -77,12 +78,20 @@ double-entered salary neither breaks detection nor inflates the measured change.
 (`clientId` starting `transfer-income-`, the convention `account-transfers` writes) — neither is
 pay.
 
-**Nominal pay change** (`nominalChange`) compares the mean monthly total of the confirmed
-`salaryKey`'s rows over the last 12 months against the 12 before that, each window needing
-payments in **at least 3 distinct months** to count; below that, the prior window falls back to
-the user's manual `SalaryProfile.manualPreviousMonthly` figure if one was entered, else the
-response status is `salary_history_short`. A row with no FX rate is **excluded and flags
-`fxApproximate`** — it never counts as zero.
+**Nominal pay change** (`nominalChange`) compares the mean salary **per pay period** of the
+confirmed `salaryKey`'s rows over the last 12 months against the 12 before that. Inside each window
+the rows are sorted by date and grouped into pay periods — a row less than 15 days after the first
+row of the current period joins it (a split salary, two amounts on one day), otherwise it opens a
+new one — and the mean is the window total ÷ the number of periods. Calendar months would not do:
+a salary paid on the 1st and moved to the previous working day when the 1st is a weekend or holiday
+puts two payments in one month and none in the next, and "sum ÷ months with a payment" read that
+flat salary as ±10–12 %. Each window needs **at least 3 pay periods** (`MIN_PERIODS_PER_WINDOW`);
+below that, the prior window falls back to the user's manual `SalaryProfile.manualPreviousMonthly`
+figure if one was entered, else the status is `salary_history_short`. **Everything is in the
+salary's own currency, with no FX conversion**: every row of one salary key shares a currency by
+construction (the key includes it), and `manualPreviousMonthly` is typed in that same currency —
+comparing it against a mean converted to the base currency once turned 2000 EUR vs PLN into
++350 %. FX conversion is used only for spend weights.
 
 **Spend is classified into COICOP divisions.** `CoicopClassifierService.ensureClassified` runs
 before every `compute()`/`listCategories()` call: seed categories map by their (language-stable)
@@ -101,7 +110,10 @@ all `false`) — none of those are money the user actually spent.
 **The personal inflation rate** (`computePersonalInflation`, `real-salary.util.ts`) is a
 Laspeyres-style weighted mean over the account's own spend, `Σ(weight × rate) / Σweight`: CP01
 (food) is priced from `PriceHistoryService.getPriceHistory('12m').inflationIndex` **only** when it
-rests on at least `RECEIPT_MIN_PRODUCTS` (10) products; every other division, and CP01 itself below
+rests on at least `RECEIPT_MIN_PRODUCTS` (10) products — and only after `annualiseHalfYearPct`
+turns it into a year-on-year figure: that index compares mean prices in [12..6 months ago] with
+[6 months ago..now], window midpoints ~6 months apart, so it is a half-year change and is
+compounded, `(1 + p)² − 1`, before it stands in for Eurostat's year-on-year rate; every other division, and CP01 itself below
 that floor, is priced from the official rate for that division, falling back to the country's
 `TOTAL` rate when the division has no official cell of its own — **never 0**, since an unpriced
 division silently reading as "no inflation" would understate the answer. **Non-finite official or
@@ -122,11 +134,11 @@ order in `compute()`; every non-`ready` status still returns whatever it already
 **Country resolution.** An explicit `User.inflationCountry` (validated against
 `isEurostatCountry` — EU/EEA/Switzerland; Greece is spelled `EL`) wins; otherwise
 `countryFromTimezone` maps the user's IANA timezone to a country and the response sets
-`countryGuessed: true`. This raw `country`/`countryGuessed` pair is what an early `no_salary_confirmed`
-or `salary_history_short`/`spend_under_3_months` return carries — official data hasn't been looked up
-yet at that point. Once it has been (the `no_inflation_source`/`ready` outcomes), `country` is
-re-gated to `officialData ? country : null` — a guessed-or-explicit country Eurostat has no data for
-is reported as no country, not a wrong one.
+`countryGuessed: true`. One rule holds in **every** status: `country` is that resolved country
+(explicit, else the timezone guess, else `null`) and `countryGuessed = !explicit && country !== null`
+— it is not nulled when no official data exists for it. A receipts-only answer is recognisable by
+`dataMonth: null` instead, and the brief's sources line then says "receipts only — no official
+data" rather than citing Eurostat (`sourcesLine`).
 
 ## Invariants
 
@@ -142,8 +154,9 @@ member's salary/country result to every other member reading the same key. Exter
 on the account **prefix** `rs:{accountId}:` (`CacheService.delByPrefix`, a `SCAN`, not `KEYS`),
 which clears every member's cached answer for that account at once: `saveProfile` (`PUT
 /insights/real-salary/profile`, one account), `PATCH /categories/:id` when `coicopDivision` is in
-the body, and `PATCH /users/me` when `inflationCountry` is in the body — the latter loops over
-**every account the user belongs to**, since a user's own country affects their answer in every
+the body, and `PATCH /users/me` when `inflationCountry` **or `timezone`** is in the body (the country is
+guessed from the timezone) — the latter loops over **every account the user belongs to**
+(`UsersService.listAccountIds`), since a user's own country affects their answer in every
 account they're a member of, not just the one they happened to be in when they changed it.
 
 **`coicopDivision` can only be set on an ACCOUNT category.** `CategoriesService.update` throws
@@ -153,7 +166,8 @@ category (`accountId === null`) — a system category is shared across every acc
 it would silently change every other account's spend weights too. Every other field on a system
 category (rename, recolor, even soft-delete) is deliberately unaffected by this guard.
 
-**The classifier sees category names only**, never amounts or merchant data, and an unresolved or
+**The classifier sees category names only**, never amounts or merchant data (its client has a
+10 s timeout, no retries, and a 400-token completion cap), and an unresolved or
 invalid model answer is stored as `TOTAL` rather than left to retry forever — a category is asked
 about at most once per account (until its `coicopDivision` is cleared, which nothing currently
 does).
@@ -193,11 +207,13 @@ plausible byte length, not glyph rendering.
   through `InsightsController`/`CategoriesController`/`UsersController` to assert the `409` body,
   the `Content-Disposition`/`X-Report-Filename`/`Content-Length` headers, or that a profile save,
   a `coicopDivision` edit or an `inflationCountry` edit actually clears a warm cache end-to-end.
-- **`?lang=__proto__` on the brief endpoint falls through to a generic 500.** `RealSalaryBriefPdf`'s
-  `L[lang] ?? L.en` and `coicop.ts`'s `divisionLabel`'s `LABELS[lang] ?? LABELS.en` are plain
-  object property lookups with no allow-list check; `'__proto__'` resolves to `Object.prototype`
-  (truthy, so it isn't treated as "unknown") rather than `undefined`, and the render then throws
-  when it reaches a label field `Object.prototype` doesn't have.
+- **Tier-1 encrypted accounts detect salary by category only.** Tier-1 encryption strips income
+  descriptions and category names from the server, so `descriptionKey` is empty for every row —
+  salary series group by category + currency alone — and the COICOP classifier sees empty or
+  placeholder names (its answers for those categories are likely `TOTAL`).
+- **Expenses in global system categories stay weighted as `TOTAL`.** A system category
+  (`accountId === null`) is not classified per account and its `coicopDivision` cannot be set
+  (`PATCH /categories/:id` returns 403), so its spend is priced at the national `TOTAL` rate.
 
 ## History
 
