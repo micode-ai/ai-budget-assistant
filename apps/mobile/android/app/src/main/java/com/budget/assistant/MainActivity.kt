@@ -1,6 +1,7 @@
 package com.budget.assistant
 import expo.modules.splashscreen.SplashScreenManager
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 
@@ -10,6 +11,8 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnable
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 import expo.modules.ReactActivityDelegateWrapper
+
+import com.budget.assistant.share.ShareIntakeModule
 
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +31,14 @@ class MainActivity : ReactActivity() {
     // own screen state on the JS side, so native fragment restoration must be
     // disabled. See react-native-screens issue #17.
     super.onCreate(null)
+    ShareIntakeModule.handleIntent(this, intent)
+  }
+
+  /** Warm share-to-capture: the app is already running (launchMode singleTask). */
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+    ShareIntakeModule.handleIntent(this, intent)
   }
 
   /**
