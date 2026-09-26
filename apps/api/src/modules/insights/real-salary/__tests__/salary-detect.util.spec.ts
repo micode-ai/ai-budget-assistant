@@ -144,6 +144,24 @@ describe('nominalChange', () => {
       .toBe(0);
   });
 
+  it('a payday moved into the previous month does not inflate the change', () => {
+    const firsts = (fromYm: string) => {
+      const [y, m] = fromYm.split('-').map(Number);
+      return Array.from({ length: 12 }, (_, i) => new Date(Date.UTC(y, m - 1 + i, 1)));
+    };
+    const moved: Record<string, string> = {
+      '2026-02-01': '2026-01-31', '2026-03-01': '2026-02-28', '2026-05-01': '2026-04-30', '2026-08-01': '2026-07-31',
+    };
+    const prevRows = firsts('2024-10').map((d) => row({ date: d, amount: 8000 }));
+    const curRows = firsts('2025-10').map((d) => {
+      const iso = d.toISOString().split('T')[0];
+      return row({ date: moved[iso] ? day(moved[iso]) : d, amount: 8000 });
+    });
+    const rows = [...prevRows, ...curRows];
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+      .toBe(0);
+  });
+
   it('two different amounts on one day are both counted', () => {
     const currentRows = monthly('2025-10', 12, 4200);
     const currentWithExtra = currentRows.flatMap((r) => [r, { ...r, amount: 4200.01 }]);

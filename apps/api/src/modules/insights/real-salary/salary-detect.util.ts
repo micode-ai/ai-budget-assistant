@@ -18,8 +18,10 @@ const LOOKBACK_DAYS = 90;
 const GAP_MIN = 20; // Allow shifted paydays across weekends/holidays
 const GAP_MAX = 40;
 const MIN_OCCURRENCES = 2;
-/** Minimum number of months with a salary payment for a 12-month window to be usable. */
-const MIN_MONTHS_PER_WINDOW = 3;
+/** Minimum number of pay periods for a 12-month window to be usable. */
+const MIN_PERIODS_PER_WINDOW = 3;
+/** A payment this soon after the first payment of a pay period belongs to that period. */
+const PERIOD_JOIN_DAYS = 15;
 
 /** Digits and punctuation vary month to month ("Salary 09/2026") — drop them. */
 export function descriptionKey(description: string | null): string {
@@ -87,24 +89,36 @@ export function findSalaryCandidates(rows: IncomeRow[], now: Date): SalaryCandid
   return out.sort((a, b) => b.typicalAmount - a.typicalAmount);
 }
 
-/** Mean monthly salary over months that had a salary payment; null below the minimum. */
+/**
+ * Mean salary per PAY PERIOD, not per calendar month: a payday moved to the
+ * previous working day can put two payments in one month and none in the next,
+ * which "sum ÷ months with a payment" would read as a raise. Rows are sorted by
+ * date; a row under PERIOD_JOIN_DAYS after the first row of the current period
+ * joins it (a split salary, two amounts on one day), otherwise it opens a new one.
+ * mean = window total ÷ number of periods; null below the minimum.
+ */
 function windowMean(
   rows: IncomeRow[], from: number, to: number, convert: (a: number, c: string) => number | null,
 ): { mean: number | null; fxMissing: boolean } {
-  const perMonth = new Map<string, number>();
   let fxMissing = false;
+  const inWindow: { t: number; v: number }[] = [];
   for (const r of rows) {
     const t = r.date.getTime();
     if (t < from || t >= to) continue;
     const v = convert(r.amount, r.currencyCode);
     if (v === null) { fxMissing = true; continue; }
-    const ym = `${r.date.getUTCFullYear()}-${r.date.getUTCMonth()}`;
-    perMonth.set(ym, (perMonth.get(ym) ?? 0) + v);
+    inWindow.push({ t, v });
   }
-  if (perMonth.size < MIN_MONTHS_PER_WINDOW) return { mean: null, fxMissing };
+  inWindow.sort((a, b) => a.t - b.t);
+  let periods = 0;
+  let periodStart = -Infinity;
   let sum = 0;
-  for (const v of perMonth.values()) sum += v;
-  return { mean: sum / perMonth.size, fxMissing };
+  for (const { t, v } of inWindow) {
+    if (t - periodStart >= PERIOD_JOIN_DAYS * DAY_MS) { periods++; periodStart = t; }
+    sum += v;
+  }
+  if (periods < MIN_PERIODS_PER_WINDOW) return { mean: null, fxMissing };
+  return { mean: sum / periods, fxMissing };
 }
 
 /**
