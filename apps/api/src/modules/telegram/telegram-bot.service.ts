@@ -219,6 +219,17 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
         return;
       }
 
+      // Duplicate-warning callbacks (ABA-603).
+      if (data.startsWith('receipt_rescan:')) {
+        await this.photoHandler.handleRescanCallback(ctx, data.slice('receipt_rescan:'.length));
+        return;
+      }
+
+      if (data.startsWith('receipt_rescan_x:')) {
+        await this.photoHandler.handleRescanCancelCallback(ctx, data.slice('receipt_rescan_x:'.length));
+        return;
+      }
+
       if (data.startsWith('receipt_cancel:')) {
         const receiptId = data.slice('receipt_cancel:'.length);
         await this.photoHandler.handleReceiptCancelCallback(ctx, receiptId);

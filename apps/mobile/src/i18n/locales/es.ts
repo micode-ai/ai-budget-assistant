@@ -545,6 +545,12 @@ export default {
     saveFailed: 'Error al guardar el gasto',
   },
   receipt: {
+    // ABA-603: the receipt was already scanned
+    duplicateExactTitle: 'Este recibo ya se añadió',
+    duplicateExactBody: 'Ya se escaneó y guardó: {{what}}. ¿Escanearlo de nuevo de todos modos?',
+    duplicateLikelyTitle: 'Ya existe un gasto coincidente',
+    duplicateOpen: 'Abrir',
+    scanAnyway: 'Escanear igualmente',
     title: 'Escanear recibo',
     instructions: 'Toma una foto, elige de la galería o sube un PDF',
     hint: 'Apunta tu cámara a un recibo para mejores resultados',

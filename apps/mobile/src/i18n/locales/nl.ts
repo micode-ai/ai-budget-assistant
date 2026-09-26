@@ -545,6 +545,12 @@ export default {
     saveFailed: 'Uitgave opslaan mislukt',
   },
   receipt: {
+    // ABA-603: the receipt was already scanned
+    duplicateExactTitle: 'Deze bon is al toegevoegd',
+    duplicateExactBody: 'Hij is al gescand en opgeslagen: {{what}}. Toch opnieuw scannen?',
+    duplicateLikelyTitle: 'Er bestaat al een overeenkomende uitgave',
+    duplicateOpen: 'Openen',
+    scanAnyway: 'Toch scannen',
     title: 'Bon scannen',
     instructions: 'Maak een foto, kies uit de galerij of upload een PDF',
     hint: 'Richt je camera op een bon voor het beste resultaat',

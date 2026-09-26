@@ -1,5 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
+import { router } from 'expo-router';
 import { showAlert } from '@/utils/alert';
+import { getIntlLocale } from '@/i18n';
+import { describeDuplicateMatch } from '@/features/receipt/receiptDuplicate';
+import type { ReceiptDuplicateMatch } from '@budget/shared-types';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useTranslation } from 'react-i18next';
 import { useReceiptScanner } from '@/features/receipt/useReceiptScanner';
@@ -47,6 +51,12 @@ interface ReceiptExpenseViewProps {
    * guarding those would put a confirmation in front of an ordinary cancel.
    */
   onDirtyChange?: (dirty: boolean) => void;
+  /**
+   * Opens a saved expense this scan duplicates (ABA-603). Omitted by the
+   * route, which pushes `/expense/[id]`; a dialog host closes itself first so
+   * the expense is not opened underneath it.
+   */
+  onOpenExpense?: (expenseId: string) => void;
 }
 
 /**
@@ -66,7 +76,7 @@ interface ReceiptExpenseViewProps {
  * `_layout.tsx` alone will find a `title` that is never rendered and no badge
  * at all. The route keeps drawing its own, unchanged.
  */
-export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange }: ReceiptExpenseViewProps) {
+export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpense }: ReceiptExpenseViewProps) {
   useEffect(() => {
     trackAction('expense_receipt', 'started');
   }, []);
@@ -95,6 +105,37 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange }: ReceiptExp
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { getExpenseCategories } = useCategoryStore();
 
+  const openExpense = (expenseId: string) => {
+    if (onOpenExpense) onOpenExpense(expenseId);
+    else router.push(`/expense/${expenseId}`);
+  };
+
+  /**
+   * Stage 1 of the duplicate warning (ABA-603): the same file was already
+   * scanned and saved. Asked BEFORE the file is uploaded, so declining costs
+   * no AI request. Every button settles the promise; a dismissal without one
+   * (web scrim, Android back) reads as "don't scan".
+   */
+  const confirmDuplicateScan = (match: ReceiptDuplicateMatch) =>
+    new Promise<boolean>((resolve) => {
+      showAlert(
+        t('receipt.duplicateExactTitle'),
+        t('receipt.duplicateExactBody', { what: describeDuplicateMatch(match, getIntlLocale()) }),
+        [
+          { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
+          {
+            text: t('receipt.duplicateOpen'),
+            onPress: () => {
+              resolve(false);
+              openExpense(match.expenseId);
+            },
+          },
+          { text: t('receipt.scanAnyway'), onPress: () => resolve(true) },
+        ],
+        { cancelable: true, onDismiss: () => resolve(false) },
+      );
+    });
+
   const {
     isProcessing,
     error,
@@ -105,7 +146,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange }: ReceiptExp
     pickFromGallery,
     pickPdfDocument,
     reset,
-  } = useReceiptScanner();
+  } = useReceiptScanner({ onDuplicate: confirmDuplicateScan });
 
   /**
    * Report the unsaved-scan state outward. An effect rather than a call beside
@@ -232,6 +273,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange }: ReceiptExp
             onOpenSplitSheet={() => setShowSplitSheet(true)}
             saveImage={saveImage}
             onToggleSaveImage={() => setSaveImage(!saveImage)}
+            onOpenDuplicate={openExpense}
             onEdit={handleEditExpense}
             onConfirm={handleConfirmExpense}
             onRetry={handleReset}

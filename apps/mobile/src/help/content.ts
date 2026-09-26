@@ -675,6 +675,15 @@ Caught up on a week of paper receipts? After you save one, the confirmation prom
 
 While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
 
+### Already-Scanned Receipts
+
+The app warns you before a receipt ends up in your expenses twice:
+
+- **The same file again** — if you pick a photo or PDF that was already scanned and saved, you are asked *before* it is read, so no AI request is spent. Choose **Open** to see the saved expense, **Scan anyway** to read it again, or **Cancel**.
+- **The same receipt, new photo** — after reading, if an expense with the same store, amount and date (±1 day) already exists, the confirmation screen shows a yellow notice with an **Open** button. You can still save: it may be a genuine second purchase.
+
+The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.
@@ -5485,6 +5494,15 @@ iOS, Android, Web
 
 Пока вы сканируете, небольшой счётчик показывает, сколько чеков сохранено в этой сессии. Каждые 15 чеков приложение дружелюбно напоминает, что можно продолжить или сделать перерыв — прогресс в любом случае уже сохранён. Счётчик сбрасывается при выходе с экрана; он нужен только для ощущения прогресса в рамках одной сессии.
 
+### Уже отсканированные чеки
+
+Приложение предупредит, прежде чем чек попадёт в расходы дважды:
+
+- **Тот же файл ещё раз** — если выбрать фото или PDF, который уже сканировали и сохранили, вы увидите вопрос *до* распознавания, поэтому AI-запрос не тратится. **Открыть** покажет сохранённый расход, **Всё равно распознать** прочитает чек заново, **Отмена** — отменит.
+- **Тот же чек, новое фото** — если после распознавания уже есть расход с тем же магазином, суммой и датой (±1 день), на экране подтверждения появится жёлтая плашка с кнопкой **Открыть**. Сохранить всё равно можно: это может быть действительно вторая покупка.
+
+Боты в Telegram, WhatsApp и Slack предупреждают так же и предлагают кнопку **Всё равно распознать**.
+
 ## Голосовой ввод дохода
 
 Регистрируйте полученные платежи голосом — тот же процесс, что и для голосового расхода, оптимизированный для доходов.
@@ -10273,6 +10291,15 @@ iOS, Android, Web
 
 Поки ви скануєте, невеликий лічильник показує, скільки чеків збережено в цій сесії. Кожні 15 чеків додаток дружньо нагадує, що можна продовжити або зробити перерву — прогрес у будь-якому разі вже збережено. Лічильник скидається після виходу з екрана; він потрібен лише для відчуття прогресу в межах однієї сесії.
 
+### Уже відскановані чеки
+
+Застосунок попередить, перш ніж чек потрапить у витрати двічі:
+
+- **Той самий файл ще раз** — якщо обрати фото чи PDF, який уже сканували й зберегли, ви побачите запитання *до* розпізнавання, тож AI-запит не витрачається. **Відкрити** покаже збережену витрату, **Все одно розпізнати** прочитає чек знову, **Скасувати** — скасує.
+- **Той самий чек, нове фото** — якщо після розпізнавання вже є витрата з тим самим магазином, сумою й датою (±1 день), на екрані підтвердження з'явиться жовта плашка з кнопкою **Відкрити**. Зберегти все одно можна: це може бути справді друга покупка.
+
+Боти в Telegram, WhatsApp і Slack попереджають так само й пропонують кнопку **Все одно розпізнати**.
+
 ## Голосовий дохід
 
 Реєструйте отримані платежі голосом — той самий процес, що й для голосової витрати, оптимізований для доходів.
@@ -15009,6 +15036,15 @@ Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potw
 
 Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.
 
+### Paragony już zeskanowane
+
+Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
+
+- **Ten sam plik ponownie** — jeśli wybierzesz zdjęcie lub PDF, który został już zeskanowany i zapisany, zobaczysz pytanie *przed* odczytem, więc żadne zapytanie AI nie zostanie zużyte. **Otwórz** pokaże zapisany wydatek, **Skanuj mimo to** odczyta paragon ponownie, **Anuluj** — anuluje.
+- **Ten sam paragon, nowe zdjęcie** — jeśli po odczycie istnieje już wydatek z tym samym sklepem, kwotą i datą (±1 dzień), na ekranie potwierdzenia pojawi się żółty komunikat z przyciskiem **Otwórz**. Nadal możesz zapisać: to może być naprawdę drugi zakup.
+
+Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.
@@ -19741,6 +19777,15 @@ Hast du eine Woche Papierbelege gesammelt? Nach dem Speichern bietet die Bestät
 
 Während du scannst, zeigt ein kleiner Zähler, wie viele Belege du in dieser Sitzung bereits gespeichert hast. Alle 15 Belege meldet sich die App mit einer freundlichen Erinnerung, dass du weitermachen oder eine Pause einlegen kannst — dein Fortschritt ist so oder so schon gespeichert. Der Zähler setzt sich zurück, sobald du den Bildschirm verlässt; er dient nur dazu, dir während einer Sitzung ein Gefühl für den Fortschritt zu geben.
 
+### Bereits gescannte Belege
+
+Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
+
+- **Dieselbe Datei erneut** — wählst du ein Foto oder PDF, das schon gescannt und gespeichert wurde, wirst du *vor* dem Auslesen gefragt, sodass keine KI-Anfrage verbraucht wird. **Öffnen** zeigt die gespeicherte Ausgabe, **Trotzdem scannen** liest den Beleg erneut, **Abbrechen** bricht ab.
+- **Derselbe Beleg, neues Foto** — gibt es nach dem Auslesen schon eine Ausgabe mit demselben Geschäft, Betrag und Datum (±1 Tag), zeigt der Bestätigungsbildschirm einen gelben Hinweis mit einer **Öffnen**-Schaltfläche. Speichern bleibt möglich: Es kann ein echter zweiter Einkauf sein.
+
+Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
@@ -24448,6 +24493,15 @@ Funciona igual tanto si escaneas desde la aplicación como desde los bots de Tel
 
 Mientras escaneas, un pequeño contador muestra cuántos recibos has guardado en esta sesión. Cada 15 recibos, la app te avisa con un recordatorio amistoso de que puedes seguir o tomar un descanso — tu progreso ya está guardado de cualquier forma. El contador se reinicia al salir de la pantalla; solo está para darte una sensación de progreso durante una sesión.
 
+### Recibos ya escaneados
+
+La app te avisa antes de que un recibo acabe dos veces en tus gastos:
+
+- **El mismo archivo otra vez** — si eliges una foto o un PDF que ya se escaneó y guardó, se te pregunta *antes* de leerlo, así que no se gasta ninguna solicitud de IA. **Abrir** muestra el gasto guardado, **Escanear igualmente** lo vuelve a leer y **Cancelar** lo cancela.
+- **El mismo recibo, foto nueva** — si tras leerlo ya existe un gasto con la misma tienda, importe y fecha (±1 día), la pantalla de confirmación muestra un aviso amarillo con un botón **Abrir**. Aun así puedes guardarlo: puede ser una segunda compra real.
+
+Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
@@ -29144,6 +29198,15 @@ Vous avez accumulé une semaine de reçus papier ? Après en avoir enregistré u
 
 Pendant que vous scannez, un petit compteur indique combien de reçus vous avez enregistrés dans cette session. Tous les 15 reçus, l'application vous rappelle amicalement que vous pouvez continuer ou faire une pause — votre progression est déjà enregistrée dans tous les cas. Le compteur se réinitialise dès que vous quittez l'écran ; il sert uniquement à donner un sentiment de progression pendant une session.
 
+### Reçus déjà scannés
+
+L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos dépenses :
+
+- **Le même fichier à nouveau** — si vous choisissez une photo ou un PDF déjà scanné et enregistré, la question vous est posée *avant* la lecture, donc aucune requête IA n'est consommée. **Ouvrir** affiche la dépense enregistrée, **Scanner quand même** relit le reçu, **Annuler** annule.
+- **Le même reçu, nouvelle photo** — si, après lecture, une dépense avec le même magasin, le même montant et la même date (±1 jour) existe déjà, l'écran de confirmation affiche un avis jaune avec un bouton **Ouvrir**. Vous pouvez tout de même enregistrer : il peut s'agir d'un vrai second achat.
+
+Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.
@@ -33838,6 +33901,15 @@ iOS, Android, Web
 
 Пакуль вы скануеце, невялікі лічыльнік паказвае, колькі чэкаў захавана ў гэтай сесіі. Кожныя 15 чэкаў праграма сяброўска нагадвае, што можна працягнуць або зрабіць перапынак — прагрэс у любым выпадку ўжо захаваны. Лічыльнік скідаецца пасля выхаду з экрана; ён патрэбны толькі для адчування прагрэсу ў межах адной сесіі.
 
+### Ужо адсканаваныя чэкі
+
+Праграма папярэдзіць, перш чым чэк трапіць у выдаткі двойчы:
+
+- **Той жа файл яшчэ раз** — калі выбраць фота ці PDF, які ўжо сканавалі і захавалі, вы ўбачыце пытанне *да* распазнавання, таму AI-запыт не марнуецца. **Адкрыць** пакажа захаваны выдатак, **Усё роўна распазнаць** прачытае чэк нанова, **Скасаваць** — скасуе.
+- **Той жа чэк, новае фота** — калі пасля распазнавання ўжо ёсць выдатак з той жа крамай, сумай і датай (±1 дзень), на экране пацверджання з'явіцца жоўтая плашка з кнопкай **Адкрыць**. Захаваць усё роўна можна: гэта можа быць сапраўды другая пакупка.
+
+Боты ў Telegram, WhatsApp і Slack папярэджваюць гэтак жа і прапануюць кнопку **Усё роўна распазнаць**.
+
 ## Галасавы даход
 
 Рэгіструйце атрыманыя плацяжы голасам — той самы працэс, што і для галасавога выдатку, аптымізаваны для даходаў.
@@ -38495,6 +38567,15 @@ Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg 
 - **Klaar** — rondt af en brengt je terug naar waar je begon
 
 Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.
+
+### Al gescande bonnen
+
+De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
+
+- **Hetzelfde bestand opnieuw** — kies je een foto of PDF die al gescand en opgeslagen is, dan krijg je de vraag *vóór* het uitlezen, zodat er geen AI-verzoek wordt verbruikt. **Openen** toont de opgeslagen uitgave, **Toch scannen** leest de bon opnieuw, **Annuleren** annuleert.
+- **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
+
+De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
 
 ## Spraakinkomsten
 

@@ -3,6 +3,8 @@ import type {
   CategorizeSuggestionsResponse,
   CategorizeIncomeSuggestionsResponse,
   ReceiptCheckFinding,
+  ReceiptDuplicateCheckResponse,
+  ReceiptDuplicateMatch,
 } from '@budget/shared-types';
 
 export const aiApi = {
@@ -201,6 +203,8 @@ export const aiApi = {
         percentage: number;
         itemIndexes: number[];
       }[];
+      fingerprint?: string;
+      possibleDuplicate?: ReceiptDuplicateMatch | null;
     }>('/ai/scan-receipt', {
       method: 'POST',
       body: JSON.stringify({
@@ -209,6 +213,14 @@ export const aiApi = {
         ...(mimeType ? { mimeType } : {}),
       }),
     });
+  },
+
+  /** Free pre-scan check (ABA-603): has this exact file been saved before?
+   *  Sends only the device-computed fingerprint, never the file. */
+  findReceiptDuplicate(fingerprint: string) {
+    return httpClient.request<ReceiptDuplicateCheckResponse>(
+      `/ai/receipt-duplicate?fingerprint=${encodeURIComponent(fingerprint)}`,
+    );
   },
 
   extractTextFromImage(imageBase64: string) {

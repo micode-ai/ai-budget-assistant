@@ -545,6 +545,12 @@ export default {
     saveFailed: 'Échec de l\'enregistrement de la dépense',
   },
   receipt: {
+    // ABA-603: the receipt was already scanned
+    duplicateExactTitle: 'Ce reçu a déjà été ajouté',
+    duplicateExactBody: 'Il a déjà été scanné et enregistré : {{what}}. Le scanner quand même ?',
+    duplicateLikelyTitle: 'Une dépense correspondante existe déjà',
+    duplicateOpen: 'Ouvrir',
+    scanAnyway: 'Scanner quand même',
     title: 'Scanner un reçu',
     instructions: 'Prenez une photo, choisissez depuis la galerie ou importez un PDF',
     hint: 'Dirigez votre caméra vers un reçu pour de meilleurs résultats',

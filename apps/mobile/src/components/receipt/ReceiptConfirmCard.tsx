@@ -7,6 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { getIntlLocale } from '@/i18n';
 import { MerchantInput } from '@/components/MerchantInput';
 import PriceFindingsCard from '@/components/receipt/PriceFindingsCard';
+import DuplicateReceiptBanner from '@/components/receipt/DuplicateReceiptBanner';
 import CategorySplitChips from '@/components/receipt/CategorySplitChips';
 import ReceiptItemsEditor from '@/components/receipt/ReceiptItemsEditor';
 import type { ReceiptItem, ScannedReceipt } from '@/features/receipt/useReceiptScanner';
@@ -34,6 +35,8 @@ interface Props {
   onOpenSplitSheet: () => void;
   saveImage: boolean;
   onToggleSaveImage: () => void;
+  /** Opens a saved expense the scan probably duplicates (ABA-603). */
+  onOpenDuplicate: (expenseId: string) => void;
   onEdit: () => void;
   onConfirm: () => void;
   onRetry: () => void;
@@ -65,6 +68,7 @@ export default function ReceiptConfirmCard({
   onOpenSplitSheet,
   saveImage,
   onToggleSaveImage,
+  onOpenDuplicate,
   onEdit,
   onConfirm,
   onRetry,
@@ -80,6 +84,8 @@ export default function ReceiptConfirmCard({
       {!isPdf && imageUri && (
         <Image source={{ uri: imageUri }} style={styles.receiptImage} />
       )}
+
+      <DuplicateReceiptBanner match={scannedReceipt?.possibleDuplicate} onOpen={onOpenDuplicate} />
 
       <View style={styles.expenseCard}>
         <View style={styles.expenseRow}>

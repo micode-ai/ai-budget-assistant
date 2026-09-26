@@ -248,6 +248,11 @@ export class WhatsAppBotService {
         return this.photoHandler.handleItemsCallback(payload, userState);
       case 'receipt_date':
         return this.photoHandler.handleDateCallback(payload, userState);
+      // Duplicate-warning callbacks (ABA-603).
+      case 'receipt_rescan':
+        return this.photoHandler.handleRescanCallback(payload, userState);
+      case 'receipt_rescan_x':
+        return this.photoHandler.handleRescanCancelCallback(payload, userState);
       case 'receipt_cancel':
         return this.photoHandler.handleReceiptCancelCallback(payload, userState);
       case 'pr_approve':

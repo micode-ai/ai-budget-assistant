@@ -2967,6 +2967,8 @@ Een paar dingen om te weten:
 
 Op het transactiescherm voor desktop (web) opent hetzelfde overzicht als een dialoogvenster.
 
+Hetzelfde overzicht is ook beschikbaar op het tabblad Inkomsten — tik daar op **Categorieën voorstellen** voor inkomsten zonder categorie.
+
 ### Tags
 
 Tags helpen je uitgaven te ordenen met aangepaste labels:
@@ -3173,6 +3175,15 @@ Heb je een week aan papieren bonnen verzameld? Na het opslaan van een bon krijg 
 - **Klaar** — rondt af en brengt je terug naar waar je begon
 
 Terwijl je scant, laat een kleine teller zien hoeveel bonnen je deze sessie al hebt opgeslagen. Elke 15 bonnen geeft de app een vriendelijke herinnering dat je door kunt gaan of een pauze kunt nemen — je voortgang is sowieso al opgeslagen. De teller wordt gereset zodra je het scherm verlaat; hij is er alleen om je een gevoel van voortgang te geven tijdens één sessie.
+
+### Al gescande bonnen
+
+De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
+
+- **Hetzelfde bestand opnieuw** — kies je een foto of PDF die al gescand en opgeslagen is, dan krijg je de vraag *vóór* het uitlezen, zodat er geen AI-verzoek wordt verbruikt. **Openen** toont de opgeslagen uitgave, **Toch scannen** leest de bon opnieuw, **Annuleren** annuleert.
+- **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
+
+De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
 
 ## Spraakinkomsten
 
@@ -6164,6 +6175,18 @@ Verkopers worden automatisch aangemaakt wanneer je uitgaven toevoegt — via han
 - Verwijderen haalt de verkopernaam uit alle bijpassende uitgaven (de uitgaven zelf blijven behouden)
 
 > Je kunt verkopers niet handmatig aanmaken — ze verschijnen automatisch terwijl je uitgaven toevoegt.
+
+### Categorieregels
+
+De app leert van je correcties. Elke keer dat je de categorie wijzigt van een uitgave met een verkopernaam, wordt automatisch een **categorieregel** opgeslagen. Zodra die verkoper weer opduikt — in een geïmporteerd bankafschrift of Wise-CSV, op een gescande bon, of via een automatisch vastgelegde bankmelding (Android) — past de app je regel toe en wijst de categorie automatisch toe, zonder handmatige correctie.
+
+- Geleerde regels verschijnen in de sectie **Categorieregels** onderaan het scherm Verkopers
+- Elke rij toont de verkopernaam en de categorie waarnaar deze wordt toegewezen
+- Tik op het prullenbakpictogram om een regel te verwijderen (de app wijst die categorie dan niet meer automatisch toe)
+- Tik op het vernieuwingspictogram naast een regel om deze **opnieuw toe te passen** — dit zoekt uitgaven van die verkoper die al onder een andere categorie zijn ingedeeld en biedt aan om ze ook naar de categorie van de regel te verplaatsen, zodat oudere uitgaven meegaan met regels die je later hebt aangeleerd
+- Regels worden op de server opgeslagen en gesynchroniseerd op al je apparaten
+
+**Voorbeeld:** Je importeert een Revolut-afschrift en corrigeert "AMAZON" → Shopping. Bij de volgende import worden Amazon-transacties automatisch onder Shopping geplaatst.
 
 ## Tags
 

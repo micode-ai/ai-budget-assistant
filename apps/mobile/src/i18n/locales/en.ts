@@ -548,6 +548,12 @@ export default {
     saveFailed: 'Failed to save expense',
   },
   receipt: {
+    // ABA-603: the receipt was already scanned
+    duplicateExactTitle: 'This receipt was already added',
+    duplicateExactBody: 'It was scanned and saved before: {{what}}. Scan it again anyway?',
+    duplicateLikelyTitle: 'A matching expense already exists',
+    duplicateOpen: 'Open',
+    scanAnyway: 'Scan anyway',
     title: 'Scan Receipt',
     instructions: 'Take a photo, choose from gallery, or upload PDF',
     hint: 'Point your camera at a receipt for best results',

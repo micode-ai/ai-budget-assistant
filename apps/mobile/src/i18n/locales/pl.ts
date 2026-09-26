@@ -547,6 +547,12 @@ export default {
     saveFailed: 'Nie udało się zapisać wydatku',
   },
   receipt: {
+    // ABA-603: the receipt was already scanned
+    duplicateExactTitle: 'Ten paragon został już dodany',
+    duplicateExactBody: 'Został już zeskanowany i zapisany: {{what}}. Zeskanować go mimo to?',
+    duplicateLikelyTitle: 'Pasujący wydatek już istnieje',
+    duplicateOpen: 'Otwórz',
+    scanAnyway: 'Skanuj mimo to',
     title: 'Skanuj paragon',
     instructions: 'Zrób zdjęcie, wybierz z galerii lub wgraj PDF',
     hint: 'Skieruj aparat na paragon, aby uzyskać najlepsze wyniki',

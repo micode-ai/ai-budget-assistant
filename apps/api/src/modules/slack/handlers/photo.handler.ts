@@ -1,9 +1,10 @@
-import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import Redis from 'ioredis';
 import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
+import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
@@ -11,6 +12,7 @@ import { SlackClientService } from '../slack-client.service';
 import { SlackLinkService } from '../slack-link.service';
 import { SLACK_REDIS, SlackFile, SlackUserState } from '../types';
 import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
+import { buildDuplicateLine, describeDuplicate } from '../../../common/bot-i18n/shared-messages';
 import {
   parseItemEditCommand,
   applyItemEditCommand,
@@ -23,6 +25,20 @@ import {
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
+
+/**
+ * A scan held back by the same-file duplicate warning (ABA-603), kept so
+ * "Scan anyway" needs no re-upload. Mirrors Telegram's `PendingScanData`.
+ */
+interface PendingScanData {
+  userId: string;
+  accountId: string;
+  slackTeamId: string;
+  channel: string;
+  base64: string;
+  mimeType: string;
+  language: string;
+}
 
 interface PendingReceiptData {
   userId: string;
@@ -52,6 +68,7 @@ interface PendingReceiptData {
   }>;
   receiptImageBase64: string;
   receiptMimeType: string;
+  receiptFingerprint?: string;
   language: string;
 }
 
@@ -69,27 +86,16 @@ export class PhotoHandler {
     private readonly chatActionRecorder: ChatActionRecorderService,
     private readonly linkService: SlackLinkService,
     @Inject(SLACK_REDIS) private readonly redis: Redis,
+    @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
   ) {}
 
   async handleImage(file: SlackFile, userState: SlackUserState): Promise<void> {
     const { userId, accountId, channel, language } = userState;
     const teamId = userState.slackTeamId;
-    let ts: string | undefined;
     try {
       if (userState.accountRole === 'viewer') {
         await this.client.sendText(teamId, channel, t('viewerRestricted', language));
         return;
-      }
-
-      // Track AI usage before downloading — cheap fast-fail
-      try {
-        await this.subscriptionsService.trackAiUsage(userId, 'ocr', 2.0, accountId);
-      } catch (e) {
-        if (e instanceof ForbiddenException) {
-          await this.client.sendText(teamId, channel, t('aiLimitReached', language));
-          return;
-        }
-        throw e;
       }
 
       const imageUrl = file.url_private_download;
@@ -99,9 +105,6 @@ export class PhotoHandler {
         return;
       }
 
-      // Post placeholder before OCR — the slow part
-      ts = await this.client.postPlaceholder(teamId, channel, t('thinking', language));
-
       const { buffer, mimeType } = await this.client.downloadFile(
         teamId,
         imageUrl,
@@ -109,59 +112,24 @@ export class PhotoHandler {
       );
       const base64 = buffer.toString('base64');
 
-      const receipt = await this.ocrService.parseReceipt(base64, userId, accountId);
-
-      if (!receipt || receipt.amount <= 0) {
-        await this.client.replyText(teamId, channel, ts, t('receiptScanFailed', language));
-        return;
-      }
-
-      const shortId = randomUUID().slice(0, 8);
-      const data: PendingReceiptData = {
+      await this.scanOrWarn({
         userId,
         accountId,
-        amount: receipt.amount,
-        currencyCode: receipt.currencyCode,
-        description: receipt.description,
-        categoryId: receipt.categoryId,
-        date: receipt.date,
-        discountAmount: receipt.discountAmount,
-        depositAmount: receipt.depositAmount,
-        merchant: receipt.merchant,
-        location: receipt.location,
-        categorySplits: receipt.categorySplits ?? [],
-        items: receipt.receiptItems || [],
-        receiptImageBase64: base64,
-        receiptMimeType: mimeType || 'image/jpeg',
+        slackTeamId: teamId,
+        channel,
         language,
-      };
-      await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
-
-      let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
-      const priceCheckLine = this.buildPriceCheckLine(receipt, language);
-      if (priceCheckLine) {
-        summary += `\n${priceCheckLine}`;
-      }
-      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, language);
-      if (categorySplitLine) {
-        summary += `\n${categorySplitLine}`;
-      }
-      await this.client.replyButtons(teamId, channel, ts, summary, [
-        { id: `receipt_add:${shortId}`, title: t('addExpense', language) },
-        { id: `receipt_items:${shortId}`, title: t('editItems', language) },
-        { id: `receipt_date:${shortId}`, title: t('changeDate', language) },
-        { id: `receipt_cancel:${shortId}`, title: t('cancel', language) },
-      ]);
+        base64,
+        mimeType: mimeType || 'image/jpeg',
+      });
     } catch (error) {
       this.logger.error(`PhotoHandler.handleImage error for ${userState.channel}: ${error}`);
-      await this.client.replyText(userState.slackTeamId, userState.channel, ts, t('receiptScanFailed', userState.language));
+      await this.client.sendText(userState.slackTeamId, userState.channel, t('receiptScanFailed', userState.language));
     }
   }
 
   async handleDocument(file: SlackFile, userState: SlackUserState): Promise<void> {
     const { userId, accountId, channel, language } = userState;
     const teamId = userState.slackTeamId;
-    let ts: string | undefined;
     try {
       if (userState.accountRole === 'viewer') {
         await this.client.sendText(teamId, channel, t('viewerRestricted', language));
@@ -175,7 +143,97 @@ export class PhotoHandler {
         return;
       }
 
-      // Track AI usage before downloading — cheap fast-fail
+      const docUrl = file.url_private_download;
+      if (!docUrl) {
+        this.logger.warn(`Document file ${file.id} has no url_private_download`);
+        await this.client.sendText(teamId, channel, t('receiptScanFailed', language));
+        return;
+      }
+
+      const { buffer } = await this.client.downloadFile(
+        teamId,
+        docUrl,
+        file.mimetype,
+      );
+      const base64 = buffer.toString('base64');
+
+      await this.scanOrWarn({
+        userId,
+        accountId,
+        slackTeamId: teamId,
+        channel,
+        language,
+        base64,
+        mimeType,
+      });
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleDocument error for ${userState.channel}: ${error}`);
+      await this.client.sendText(userState.slackTeamId, userState.channel, t('receiptScanFailed', userState.language));
+    }
+  }
+
+  /**
+   * Stage 1 of the duplicate warning (ABA-603): before any AI request is spent,
+   * ask whether this exact file was already scanned and saved. On a match the
+   * scan is parked in Redis and the user chooses; otherwise it runs straight on.
+   */
+  private async scanOrWarn(scan: PendingScanData): Promise<void> {
+    const { slackTeamId: teamId, channel, language, accountId, base64 } = scan;
+    const duplicate =
+      (await this.receiptDuplicates?.findByFingerprint(accountId, receiptFingerprint(base64))) ?? null;
+    if (!duplicate) {
+      await this.runScan(scan);
+      return;
+    }
+    const scanId = randomUUID().slice(0, 8);
+    await this.redis.set(`slack:dupscan:${scanId}`, JSON.stringify(scan), 'EX', 1800);
+    await this.client.sendButtons(
+      teamId,
+      channel,
+      t('receiptDuplicateExact', language, { what: describeDuplicate(duplicate) }),
+      [
+        { id: `receipt_rescan:${scanId}`, title: t('scanAnyway', language) },
+        { id: `receipt_rescan_x:${scanId}`, title: t('cancel', language) },
+      ],
+    );
+  }
+
+  async handleRescanCallback(scanId: string, userState: SlackUserState): Promise<void> {
+    const { channel, language } = userState;
+    const teamId = userState.slackTeamId;
+    try {
+      const raw = await this.redis.get(`slack:dupscan:${scanId}`);
+      if (!raw) {
+        await this.client.sendText(teamId, channel, t('scanRequestExpired', language));
+        return;
+      }
+      await this.redis.del(`slack:dupscan:${scanId}`);
+      const scan: PendingScanData = JSON.parse(raw);
+      await this.runScan(scan);
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleRescanCallback error for ${channel}: ${error}`);
+      await this.client.sendText(teamId, channel, t('receiptScanFailed', language));
+    }
+  }
+
+  async handleRescanCancelCallback(scanId: string, userState: SlackUserState): Promise<void> {
+    const { channel, language } = userState;
+    const teamId = userState.slackTeamId;
+    try {
+      await this.redis.del(`slack:dupscan:${scanId}`);
+      await this.client.sendText(teamId, channel, t('receiptCancelled', language));
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleRescanCancelCallback error for ${channel}: ${error}`);
+      await this.client.sendText(teamId, channel, t('somethingWrong', language));
+    }
+  }
+
+  /** OCR + preview, shared by images, documents and "Scan anyway". */
+  private async runScan(scan: PendingScanData): Promise<void> {
+    const { userId, accountId, slackTeamId: teamId, channel, language, base64, mimeType } = scan;
+    let ts: string | undefined;
+    try {
+      // Track AI usage before OCR — cheap fast-fail
       try {
         await this.subscriptionsService.trackAiUsage(userId, 'ocr', 2.0, accountId);
       } catch (e) {
@@ -186,29 +244,13 @@ export class PhotoHandler {
         throw e;
       }
 
-      const docUrl = file.url_private_download;
-      if (!docUrl) {
-        this.logger.warn(`Document file ${file.id} has no url_private_download`);
-        await this.client.sendText(teamId, channel, t('receiptScanFailed', language));
-        return;
-      }
-
       // Post placeholder before OCR — the slow part
       ts = await this.client.postPlaceholder(teamId, channel, t('thinking', language));
 
-      const { buffer } = await this.client.downloadFile(
-        teamId,
-        docUrl,
-        file.mimetype,
-      );
-      const base64 = buffer.toString('base64');
-
-      let receipt;
-      if (mimeType === 'application/pdf') {
-        receipt = await this.ocrService.parseReceiptPdf(base64, userId, accountId);
-      } else {
-        receipt = await this.ocrService.parseReceipt(base64, userId, accountId);
-      }
+      const receipt =
+        mimeType === 'application/pdf'
+          ? await this.ocrService.parseReceiptPdf(base64, userId, accountId)
+          : await this.ocrService.parseReceipt(base64, userId, accountId);
 
       if (!receipt || receipt.amount <= 0) {
         await this.client.replyText(teamId, channel, ts, t('receiptScanFailed', language));
@@ -232,6 +274,7 @@ export class PhotoHandler {
         items: receipt.receiptItems || [],
         receiptImageBase64: base64,
         receiptMimeType: mimeType,
+        receiptFingerprint: receipt.fingerprint,
         language,
       };
       await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
@@ -245,6 +288,11 @@ export class PhotoHandler {
       if (categorySplitLine) {
         summary += `\n${categorySplitLine}`;
       }
+      // Stage 2 (ABA-603): the same receipt in a different file, found by what it says.
+      const duplicateLine = buildDuplicateLine(t, receipt.possibleDuplicate, language);
+      if (duplicateLine) {
+        summary += `\n${duplicateLine}`;
+      }
       await this.client.replyButtons(teamId, channel, ts, summary, [
         { id: `receipt_add:${shortId}`, title: t('addExpense', language) },
         { id: `receipt_items:${shortId}`, title: t('editItems', language) },
@@ -252,8 +300,8 @@ export class PhotoHandler {
         { id: `receipt_cancel:${shortId}`, title: t('cancel', language) },
       ]);
     } catch (error) {
-      this.logger.error(`PhotoHandler.handleDocument error for ${userState.channel}: ${error}`);
-      await this.client.replyText(userState.slackTeamId, userState.channel, ts, t('receiptScanFailed', userState.language));
+      this.logger.error(`PhotoHandler.runScan error for ${channel}: ${error}`);
+      await this.client.replyText(teamId, channel, ts, t('receiptScanFailed', language));
     }
   }
 
@@ -347,6 +395,7 @@ export class PhotoHandler {
         splits: resolvedSplits.length ? resolvedSplits : undefined,
         receiptImageBase64: data.receiptImageBase64,
         receiptMimeType: data.receiptMimeType,
+        receiptFingerprint: data.receiptFingerprint,
         items: data.items.map((item, index) => ({
           description: item.description,
           canonicalName: item.canonicalName,

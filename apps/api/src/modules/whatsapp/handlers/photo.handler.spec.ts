@@ -1,6 +1,6 @@
 import { PhotoHandler } from './photo.handler';
 import type { WaMediaMessage, WhatsAppUserState } from '../types';
-import { buildCategorySplitLine } from '../helpers/i18n';
+import { buildCategorySplitLine, t } from '../helpers/i18n';
 
 /** Minimal in-memory stand-in for the ioredis client the handler uses. */
 function makeFakeRedis() {
@@ -498,5 +498,138 @@ describe('WhatsApp PhotoHandler — records the write for chat undo (ABA-599)', 
     await flush();
 
     expect(linkService.updateConversationId).toHaveBeenCalledWith('48123456789', 'conv-brand-new');
+  });
+});
+
+describe('WhatsApp PhotoHandler — same-file duplicate warning (ABA-603)', () => {
+  const DUPLICATE_MATCH = {
+    kind: 'exact' as const,
+    expenseId: 'exp-old',
+    clientId: 'client-old',
+    merchant: 'Biedronka',
+    description: null,
+    amount: 42.5,
+    currencyCode: 'PLN',
+    date: '2026-07-01T00:00:00.000Z',
+  };
+
+  const STAGE2_MATCH = {
+    kind: 'likely' as const,
+    expenseId: 'exp-older',
+    clientId: 'client-older',
+    merchant: 'Duplicate Shop',
+    description: null,
+    amount: 42.5,
+    currencyCode: 'PLN',
+    date: '2026-07-06T00:00:00.000Z',
+  };
+
+  /** Pull the generated scanId out of the duplicate-warning button ids. */
+  function scanIdFromButtons(client: { sendButtons: jest.Mock }, callIndex = 0): string {
+    const buttons = client.sendButtons.mock.calls[callIndex][2] as Array<{ id: string }>;
+    return buttons[0].id.split('--')[1];
+  }
+
+  function setup(duplicate: typeof DUPLICATE_MATCH | null, receiptOverrides: Record<string, unknown> = {}) {
+    const redis = makeFakeRedis();
+    const ocr = {
+      parseReceipt: jest.fn(),
+      parseReceiptPdf: jest.fn().mockResolvedValue({ ...baseReceipt(null), ...receiptOverrides }),
+    };
+    const expenses = { create: jest.fn().mockResolvedValue({ id: 'exp-1' }) };
+    const subs = { trackAiUsage: jest.fn().mockResolvedValue(undefined) };
+    const categories = { create: jest.fn() };
+    const client = {
+      downloadMedia: jest.fn().mockResolvedValue({ buffer: Buffer.from('pdf'), mimeType: 'application/pdf' }),
+      sendText: jest.fn().mockResolvedValue(undefined),
+      sendButtons: jest.fn().mockResolvedValue(undefined),
+    };
+    const receiptDuplicates = { findByFingerprint: jest.fn().mockResolvedValue(duplicate) };
+    const handler = new PhotoHandler(
+      ocr as never,
+      expenses as never,
+      subs as never,
+      categories as never,
+      makeShoppingList() as never,
+      client as never,
+      makeChatActionRecorder() as never,
+      makeLinkService() as never,
+      redis as never,
+      receiptDuplicates as never,
+    );
+    return { handler, redis, ocr, expenses, subs, client, receiptDuplicates };
+  }
+
+  it('warns instead of scanning when the fingerprint already matches a saved expense', async () => {
+    const { handler, ocr, subs, client, redis } = setup(DUPLICATE_MATCH);
+
+    await handler.handleDocument(pdfMessage(), userState);
+
+    expect(subs.trackAiUsage).not.toHaveBeenCalled();
+    expect(ocr.parseReceiptPdf).not.toHaveBeenCalled();
+    expect(client.sendButtons).toHaveBeenCalledTimes(1);
+    const [, text] = client.sendButtons.mock.calls[0];
+    expect(text).toContain('Biedronka');
+    expect([...redis.store.keys()].some((k) => k.startsWith('wa:dupscan:'))).toBe(true);
+  });
+
+  it('runs the scan normally when there is no fingerprint match', async () => {
+    const { handler, ocr, subs } = setup(null);
+
+    await handler.handleDocument(pdfMessage(), userState);
+
+    expect(subs.trackAiUsage).toHaveBeenCalledTimes(1);
+    expect(ocr.parseReceiptPdf).toHaveBeenCalledTimes(1);
+  });
+
+  it('"Scan anyway" runs OCR on the parked scan', async () => {
+    const { handler, ocr, subs, client } = setup(DUPLICATE_MATCH);
+
+    await handler.handleDocument(pdfMessage(), userState);
+    const scanId = scanIdFromButtons(client);
+    await handler.handleRescanCallback(scanId, userState);
+
+    expect(subs.trackAiUsage).toHaveBeenCalledTimes(1);
+    expect(ocr.parseReceiptPdf).toHaveBeenCalledTimes(1);
+    // First call is the duplicate warning; the second is the OCR preview.
+    expect(client.sendButtons).toHaveBeenCalledTimes(2);
+  });
+
+  it('reports the request expired when "Scan anyway" is tapped after the parked scan is gone', async () => {
+    const { handler, client } = setup(DUPLICATE_MATCH);
+
+    await handler.handleRescanCallback('not-a-real-scan-id', userState);
+
+    expect(client.sendText).toHaveBeenCalledWith(userState.waPhoneNumber, t('scanRequestExpired', userState.language));
+  });
+
+  it('cancelling the duplicate warning discards the parked scan', async () => {
+    const { handler, ocr, client, redis } = setup(DUPLICATE_MATCH);
+
+    await handler.handleDocument(pdfMessage(), userState);
+    const scanId = scanIdFromButtons(client);
+    await handler.handleRescanCancelCallback(scanId, userState);
+
+    expect(redis.store.has(`wa:dupscan:${scanId}`)).toBe(false);
+    await handler.handleRescanCallback(scanId, userState);
+    expect(ocr.parseReceiptPdf).not.toHaveBeenCalled();
+  });
+
+  it('adds the stage-2 warning line to the preview when OCR itself reports a possible duplicate', async () => {
+    const { handler, client } = setup(null, { possibleDuplicate: STAGE2_MATCH });
+
+    await handler.handleDocument(pdfMessage(), userState);
+
+    const summary = client.sendButtons.mock.calls[0][1] as string;
+    expect(summary).toContain('Duplicate Shop');
+  });
+
+  it('replies exactly as before when OCR reports no possible duplicate', async () => {
+    const { handler, client } = setup(null, { possibleDuplicate: null });
+
+    await handler.handleDocument(pdfMessage(), userState);
+
+    const summary = client.sendButtons.mock.calls[0][1] as string;
+    expect(summary).not.toContain('Duplicate Shop');
   });
 });

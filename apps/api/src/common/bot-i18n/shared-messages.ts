@@ -126,6 +126,36 @@ export function buildItemListBlock(
   return `${lines.join('\n')}\n${sumLine}`;
 }
 
+/** Minimal shape of a duplicate match — structurally `ReceiptDuplicateMatch`. */
+export interface BotDuplicateMatch {
+  merchant: string | null;
+  description: string | null;
+  amount: number;
+  currencyCode: string;
+  date: string;
+}
+
+/** "Biedronka, 40.85 PLN, 2026-09-25" — what the duplicate warnings name. */
+export function describeDuplicate(match: BotDuplicateMatch): string {
+  const who = match.merchant?.trim() || match.description?.trim() || '';
+  const parts = [who, `${Number(match.amount).toFixed(2)} ${match.currencyCode}`, (match.date ?? '').slice(0, 10)];
+  return parts.filter(Boolean).join(', ');
+}
+
+/**
+ * The post-OCR warning line for a scan preview (ABA-603). Empty string when
+ * there is no match — same "byte-identical reply when there's nothing to
+ * report" convention as `buildCategorySplitLine`.
+ */
+export function buildDuplicateLine(
+  t: (key: string, lang?: string, params?: Record<string, string>) => string,
+  match: BotDuplicateMatch | null | undefined,
+  lang?: string,
+): string {
+  if (!match) return '';
+  return t('receiptDuplicateLikely', lang, { what: describeDuplicate(match) });
+}
+
 export const sharedMessages: Record<string, Record<string, string>> = {
   editItems: {
     en: '\u270f\ufe0f Items',
@@ -951,5 +981,52 @@ export const sharedMessages: Record<string, Record<string, string>> = {
     pl: 'Ten krok już się zakończył. Uruchom nowe przejście poleceniem categorize.',
     be: 'Гэты крок ужо апрацаваны. Запусціце разбор зноў камандай categorize.',
     nl: 'Die stap is al afgerond. Start een nieuwe ronde met het categorize-commando.',
+  },
+  // ABA-603: the receipt was already scanned. No markup in these — callers
+  // escape the whole line (Telegram HTML), as with `categorySplit`.
+  receiptDuplicateExact: {
+    en: '⚠️ This receipt has already been added: {{what}}. Scan it again anyway?',
+    ru: '⚠️ Этот чек уже добавлен: {{what}}. Всё равно распознать заново?',
+    ua: '⚠️ Цей чек уже додано: {{what}}. Все одно розпізнати знову?',
+    de: '⚠️ Dieser Beleg wurde bereits erfasst: {{what}}. Trotzdem erneut scannen?',
+    es: '⚠️ Este recibo ya se añadió: {{what}}. ¿Escanearlo de nuevo de todos modos?',
+    fr: '⚠️ Ce reçu a déjà été ajouté : {{what}}. Le scanner quand même ?',
+    pl: '⚠️ Ten paragon został już dodany: {{what}}. Zeskanować go mimo to?',
+    be: '⚠️ Гэты чэк ужо дададзены: {{what}}. Усё роўна распазнаць нанова?',
+    nl: '⚠️ Deze bon is al toegevoegd: {{what}}. Toch opnieuw scannen?',
+  },
+  receiptDuplicateLikely: {
+    en: '⚠️ A matching expense already exists: {{what}}. This may be the same receipt.',
+    ru: '⚠️ Похожий расход уже есть: {{what}}. Возможно, это тот же чек.',
+    ua: '⚠️ Схожа витрата вже є: {{what}}. Можливо, це той самий чек.',
+    de: '⚠️ Eine passende Ausgabe gibt es bereits: {{what}}. Das könnte derselbe Beleg sein.',
+    es: '⚠️ Ya existe un gasto coincidente: {{what}}. Puede ser el mismo recibo.',
+    fr: '⚠️ Une dépense correspondante existe déjà : {{what}}. Il s\'agit peut-être du même reçu.',
+    pl: '⚠️ Pasujący wydatek już istnieje: {{what}}. To może być ten sam paragon.',
+    be: '⚠️ Падобны выдатак ужо ёсць: {{what}}. Магчыма, гэта той жа чэк.',
+    nl: '⚠️ Er bestaat al een overeenkomende uitgave: {{what}}. Dit kan dezelfde bon zijn.',
+  },
+  // Button label — WhatsApp caps reply buttons at 20 characters.
+  scanAnyway: {
+    en: 'Scan anyway',
+    ru: 'Всё равно распознать',
+    ua: 'Все одно розпізнати',
+    de: 'Trotzdem scannen',
+    es: 'Escanear igualmente',
+    fr: 'Scanner quand même',
+    pl: 'Skanuj mimo to',
+    be: 'Усё роўна распазнаць',
+    nl: 'Toch scannen',
+  },
+  scanRequestExpired: {
+    en: 'This request has expired. Please send the receipt again.',
+    ru: 'Запрос устарел. Отправьте чек ещё раз.',
+    ua: 'Запит застарів. Надішліть чек ще раз.',
+    de: 'Diese Anfrage ist abgelaufen. Bitte sende den Beleg erneut.',
+    es: 'Esta solicitud ha caducado. Vuelve a enviar el recibo.',
+    fr: 'Cette demande a expiré. Renvoyez le reçu.',
+    pl: 'To żądanie wygasło. Wyślij paragon ponownie.',
+    be: 'Запыт састарэў. Адпраўце чэк яшчэ раз.',
+    nl: 'Dit verzoek is verlopen. Stuur de bon opnieuw.',
   },
 };

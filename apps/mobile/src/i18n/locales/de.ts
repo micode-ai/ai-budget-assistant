@@ -545,6 +545,12 @@ export default {
     saveFailed: 'Ausgabe konnte nicht gespeichert werden',
   },
   receipt: {
+    // ABA-603: the receipt was already scanned
+    duplicateExactTitle: 'Dieser Beleg wurde bereits erfasst',
+    duplicateExactBody: 'Er wurde schon gescannt und gespeichert: {{what}}. Trotzdem erneut scannen?',
+    duplicateLikelyTitle: 'Eine passende Ausgabe gibt es bereits',
+    duplicateOpen: 'Öffnen',
+    scanAnyway: 'Trotzdem scannen',
     title: 'Beleg scannen',
     instructions: 'Foto aufnehmen, aus Galerie wählen oder PDF hochladen',
     hint: 'Richte deine Kamera auf einen Beleg für beste Ergebnisse',

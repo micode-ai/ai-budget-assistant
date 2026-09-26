@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { Modal, View, Text, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
@@ -156,6 +157,10 @@ export function ReceiptDialog({ onClose, onEdit }: Props) {
             onDone={onClose}
             onEdit={onEdit}
             onDirtyChange={handleDirtyChange}
+            onOpenExpense={(expenseId) => {
+              onClose();
+              router.push(`/expense/${expenseId}`);
+            }}
           />
         </View>
       </div>

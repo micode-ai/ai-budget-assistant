@@ -109,6 +109,15 @@ Caught up on a week of paper receipts? After you save one, the confirmation prom
 
 While you're scanning, a small counter shows how many receipts you've saved this session. Every 15 receipts, the app checks in with a friendly reminder that you can keep going or take a break — your progress is already saved either way. The counter resets once you leave the screen; it's just there to give you a sense of progress during one sitting.
 
+### Already-Scanned Receipts
+
+The app warns you before a receipt ends up in your expenses twice:
+
+- **The same file again** — if you pick a photo or PDF that was already scanned and saved, you are asked *before* it is read, so no AI request is spent. Choose **Open** to see the saved expense, **Scan anyway** to read it again, or **Cancel**.
+- **The same receipt, new photo** — after reading, if an expense with the same store, amount and date (±1 day) already exists, the confirmation screen shows a yellow notice with an **Open** button. You can still save: it may be a genuine second purchase.
+
+The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.

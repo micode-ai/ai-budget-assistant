@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
@@ -14,7 +14,8 @@ import {
   reconciliationGapPct,
   withCorrection,
 } from '../utils/receipt-reconcile';
-import type { ReceiptCheckFinding } from '@budget/shared-types';
+import type { ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
+import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
 import { ReceiptFinalizerService } from './receipt-finalizer.service';
 import { ReceiptPdfService } from './receipt-pdf.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
@@ -145,6 +146,12 @@ export interface ReceiptExpense {
   priceFindings: ReceiptCheckFinding[];
   /** Category groups derived from the receipt's own lines. Always present; empty when there is nothing to split. */
   categorySplits: ReceiptCategorySplitPayload[];
+  /** SHA-256 of the scanned file's base64 text; the client hands it back on
+   *  create so a later re-upload of the same file is caught before OCR (ABA-603). */
+  fingerprint?: string;
+  /** A saved expense this receipt probably duplicates — same file, or same
+   *  merchant/amount/currency/date ±1 day. A warning only; null when none. */
+  possibleDuplicate?: ReceiptDuplicateMatch | null;
 }
 
 export interface CategoryWithName {
@@ -253,6 +260,7 @@ export class OcrService {
     private readonly receiptFinalizer: ReceiptFinalizerService,
     private readonly receiptPdf: ReceiptPdfService,
     private readonly subscriptions: SubscriptionsService,
+    @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
   ) {
     this.openai = new OpenAI({
       apiKey: this.configService.get<string>('OPENAI_API_KEY'),
@@ -752,7 +760,24 @@ Important:
       max_tokens: ocrMaxTokens,
       response_format: { type: 'json_object' },
     }, context, userId, accountId);
-    return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
+    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), imageBase64, accountId);
+  }
+
+  /**
+   * Stage 2 of the duplicate warning (ABA-603): after OCR, before any save. The
+   * same-file check runs again here too, so a client that skipped the free
+   * pre-check (an older app build, the income or re-extract flows) still learns
+   * of an exact re-upload. Never throws — a failed check reads as "none".
+   */
+  private async withDuplicateInfo(receipt: ReceiptExpense, base64: string, accountId: string): Promise<ReceiptExpense> {
+    const fingerprint = receiptFingerprint(base64);
+    let possibleDuplicate: ReceiptDuplicateMatch | null = null;
+    if (this.receiptDuplicates) {
+      possibleDuplicate =
+        (await this.receiptDuplicates.findByFingerprint(accountId, fingerprint)) ??
+        (await this.receiptDuplicates.findLikely(accountId, receipt));
+    }
+    return { ...receipt, fingerprint, possibleDuplicate };
   }
 
   async parseReceiptPdf(
@@ -783,7 +808,7 @@ Important:
         max_tokens: ocrMaxTokens,
         response_format: { type: 'json_object' },
       }, context, userId, accountId);
-      return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
+      return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
     }
 
     // Scanned PDF — send the full PDF as a file
@@ -835,7 +860,7 @@ Important:
         max_tokens: resolvedMaxTokens,
         response_format: { type: 'json_object' },
       }, context, userId, accountId);
-      return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
+      return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
     }
 
     const normalized = await this.readReceipt('PDF-File', {
@@ -849,7 +874,7 @@ Important:
       max_tokens: resolvedMaxTokens,
       response_format: { type: 'json_object' },
     }, context, userId, accountId);
-    return await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId);
+    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {

@@ -163,6 +163,7 @@ export function useReceiptSave({
         isDebtRepayment: false,
         items,
         receiptImageBase64,
+        receiptFingerprint: scannedReceipt.fingerprint,
         location: scannedReceipt.location ?? gpsLocationRef.current ?? undefined,
         splits: currentSplits.length > 1
           ? currentSplits.map((s) => ({

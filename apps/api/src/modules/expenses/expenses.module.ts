@@ -1,3 +1,4 @@
+import { ReceiptDuplicateService } from './receipt-duplicate.service';
 import { Module } from '@nestjs/common';
 import { ExpensesController } from './expenses.controller';
 import { ExpensesService } from './expenses.service';
@@ -23,7 +24,7 @@ import { WalletCurrencyModule } from '../wallet/wallet-currency.module';
 @Module({
   imports: [WalletCurrencyModule, BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule, ReceiptSplitModule],
   controllers: [ExpensesController],
-  providers: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseCreatedHooksService, ExpenseRecurringCron],
-  exports: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService],
+  providers: [ReceiptDuplicateService, ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseCreatedHooksService, ExpenseRecurringCron],
+  exports: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ReceiptDuplicateService],
 })
 export class ExpensesModule {}

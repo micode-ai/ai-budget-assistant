@@ -40,6 +40,8 @@ export interface CreateExpenseDto {
   };
   source: ExpenseSource;
   items?: CreateExpenseItemDto[];
+  /** SHA-256 of the scanned receipt file, from the scan response (ABA-603). */
+  receiptFingerprint?: string;
   tagIds?: string[];
   projectId?: string;
   isDebt?: boolean;
@@ -108,6 +110,29 @@ export interface MoveExpenseResponse {
   id: string;
   accountId: string;
   categoryId: string | null;
+}
+
+/**
+ * An already-saved expense a receipt being scanned probably duplicates (ABA-603).
+ * `exact` — the very same file was scanned and saved before (fingerprint match,
+ * found BEFORE OCR); `likely` — a different file whose merchant, amount, currency
+ * and date (±1 day) match a saved expense (found after OCR).
+ */
+export interface ReceiptDuplicateMatch {
+  kind: 'exact' | 'likely';
+  expenseId: string;
+  /** The row's clientId — what the app routes an expense by. */
+  clientId: string;
+  merchant: string | null;
+  description: string | null;
+  amount: number;
+  currencyCode: string;
+  /** ISO date of the saved expense. */
+  date: string;
+}
+
+export interface ReceiptDuplicateCheckResponse {
+  duplicate: ReceiptDuplicateMatch | null;
 }
 
 export interface CreateExpenseCategorySplitDto {

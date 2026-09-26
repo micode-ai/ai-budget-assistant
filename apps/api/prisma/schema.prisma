@@ -561,6 +561,8 @@ model Expense {
 
   receiptImage    Bytes?  @map("receipt_image")
   receiptMimeType String? @map("receipt_mime_type")
+  /// SHA-256 of the receipt file as scanned (base64 text) — spots a re-upload of the same file before OCR (ABA-603).
+  receiptFingerprint String? @map("receipt_fingerprint")
 
   paidByUserId String? @map("paid_by_user_id")
 
@@ -583,6 +585,7 @@ model Expense {
   @@index([categoryId])
   @@index([accountId, isDebt])
   @@index([accountId, merchant])
+  @@index([accountId, receiptFingerprint])
   @@index([accountId, source])
   @@index([accountId, isPlanned])
   @@map("expenses")

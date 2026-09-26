@@ -109,6 +109,15 @@ Hast du eine Woche Papierbelege gesammelt? Nach dem Speichern bietet die Bestät
 
 Während du scannst, zeigt ein kleiner Zähler, wie viele Belege du in dieser Sitzung bereits gespeichert hast. Alle 15 Belege meldet sich die App mit einer freundlichen Erinnerung, dass du weitermachen oder eine Pause einlegen kannst — dein Fortschritt ist so oder so schon gespeichert. Der Zähler setzt sich zurück, sobald du den Bildschirm verlässt; er dient nur dazu, dir während einer Sitzung ein Gefühl für den Fortschritt zu geben.
 
+### Bereits gescannte Belege
+
+Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
+
+- **Dieselbe Datei erneut** — wählst du ein Foto oder PDF, das schon gescannt und gespeichert wurde, wirst du *vor* dem Auslesen gefragt, sodass keine KI-Anfrage verbraucht wird. **Öffnen** zeigt die gespeicherte Ausgabe, **Trotzdem scannen** liest den Beleg erneut, **Abbrechen** bricht ab.
+- **Derselbe Beleg, neues Foto** — gibt es nach dem Auslesen schon eine Ausgabe mit demselben Geschäft, Betrag und Datum (±1 Tag), zeigt der Bestätigungsbildschirm einen gelben Hinweis mit einer **Öffnen**-Schaltfläche. Speichern bleibt möglich: Es kann ein echter zweiter Einkauf sein.
+
+Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.

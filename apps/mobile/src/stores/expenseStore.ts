@@ -90,7 +90,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: (opts?: { force?: boolean }) => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items' | 'splits'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number; categoryId?: string }[]; receiptImageBase64?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items' | 'splits'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number; categoryId?: string }[]; receiptImageBase64?: string; receiptFingerprint?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense> & { splitType?: ShareType; shares?: ExpenseShareDto[] }) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
@@ -148,7 +148,7 @@ export const useExpenseStore = create<ExpenseState>()(
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: async (expenseData) => {
-      const { items, receiptImageBase64, tagIds, projectId, splits, shares, splitType, ...coreData } = expenseData;
+      const { items, receiptImageBase64, receiptFingerprint, tagIds, projectId, splits, shares, splitType, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
@@ -314,6 +314,9 @@ export const useExpenseStore = create<ExpenseState>()(
           externalRef: newExpense.externalRef,
           items: sanitizedItems,
           receiptImageBase64,
+          // Only on this first push, like the image: an offline retry through
+          // syncPendingExpenses does not carry it (ABA-603 known gap).
+          receiptFingerprint,
           splits: splits?.length ? splits.map(s => ({ ...s, categoryId: resolveCatId(s.categoryId) || s.categoryId })) : undefined,
           isDebt: newExpense.isDebt || undefined,
           isDebtRepayment: newExpense.isDebtRepayment || undefined,

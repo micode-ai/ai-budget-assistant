@@ -2972,6 +2972,8 @@ Algunas cosas útiles de saber:
 
 En la pantalla de escritorio (web), la misma revisión se abre como un cuadro de diálogo.
 
+La misma revisión también está disponible en la pestaña Ingresos — toca **Sugerir categorías** ahí para las entradas de ingresos sin categoría.
+
 ### Etiquetas
 
 Las etiquetas te ayudan a organizar gastos con etiquetas personalizadas:
@@ -3178,6 +3180,15 @@ Funciona igual tanto si escaneas desde la aplicación como desde los bots de Tel
 - **Listo** — termina y te devuelve a donde empezaste
 
 Mientras escaneas, un pequeño contador muestra cuántos recibos has guardado en esta sesión. Cada 15 recibos, la app te avisa con un recordatorio amistoso de que puedes seguir o tomar un descanso — tu progreso ya está guardado de cualquier forma. El contador se reinicia al salir de la pantalla; solo está para darte una sensación de progreso durante una sesión.
+
+### Recibos ya escaneados
+
+La app te avisa antes de que un recibo acabe dos veces en tus gastos:
+
+- **El mismo archivo otra vez** — si eliges una foto o un PDF que ya se escaneó y guardó, se te pregunta *antes* de leerlo, así que no se gasta ninguna solicitud de IA. **Abrir** muestra el gasto guardado, **Escanear igualmente** lo vuelve a leer y **Cancelar** lo cancela.
+- **El mismo recibo, foto nueva** — si tras leerlo ya existe un gasto con la misma tienda, importe y fecha (±1 día), la pantalla de confirmación muestra un aviso amarillo con un botón **Abrir**. Aun así puedes guardarlo: puede ser una segunda compra real.
+
+Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
 
 ## Ingresos por voz
 
@@ -6093,10 +6104,11 @@ Los comercios se crean automáticamente al añadir gastos. Usa la pantalla de Co
 
 ### Reglas de categoría
 
-La app aprende de tus correcciones. Cada vez que cambias la categoría de un gasto que tiene nombre de comercio, se guarda automáticamente una **regla de categoría**. La próxima vez que importes un extracto bancario o CSV de Wise, la app aplica tu regla y asigna la categoría sin corrección manual.
+La app aprende de tus correcciones. Cada vez que cambias la categoría de un gasto que tiene nombre de comercio, se guarda automáticamente una **regla de categoría**. La próxima vez que ese comercio aparezca — en un extracto bancario o CSV de Wise importado, en un recibo escaneado o en una notificación bancaria capturada automáticamente (Android) —, la app aplica tu regla y asigna la categoría sin corrección manual.
 
 - Las reglas aprendidas aparecen en la sección **Reglas de categoría** al final de la pantalla Comercios
 - Toca el icono de papelera para eliminar una regla
+- Toca el icono de actualizar junto a una regla para **reaplicarla** — esto busca los gastos de ese comercio ya archivados bajo otra categoría y ofrece moverlos también a la categoría de la regla, para que los gastos antiguos se pongan al día con las reglas que aprendiste más tarde
 - Las reglas se guardan en el servidor y se sincronizan en todos tus dispositivos
 
 ## Etiquetas

@@ -547,6 +547,12 @@ export default {
     saveFailed: 'Не удалось сохранить расход',
   },
   receipt: {
+    // ABA-603: the receipt was already scanned
+    duplicateExactTitle: 'Этот чек уже добавлен',
+    duplicateExactBody: 'Он уже был отсканирован и сохранён: {{what}}. Всё равно распознать заново?',
+    duplicateLikelyTitle: 'Похожий расход уже есть',
+    duplicateOpen: 'Открыть',
+    scanAnyway: 'Всё равно распознать',
     title: 'Сканировать чек',
     instructions: 'Сфотографируйте, выберите из галереи или загрузите PDF',
     hint: 'Наведите камеру на чек для лучшего результата',

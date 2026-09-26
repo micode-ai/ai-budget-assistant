@@ -23,6 +23,8 @@ import { WhisperService } from './services/whisper.service';
 import { ChatService } from './services/chat.service';
 import { CategorizationService } from './services/categorization.service';
 import { OcrService } from './services/ocr.service';
+import { ReceiptDuplicateService } from '../expenses/receipt-duplicate.service';
+import type { ReceiptDuplicateCheckResponse } from '@budget/shared-types';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { GoalPlannerService } from './services/goal-planner.service';
@@ -46,6 +48,7 @@ export class AiController {
     private readonly geocodingService: GeocodingService,
     private readonly categorizeSuggestionsService: CategorizeSuggestionsService,
     private readonly categorizeIncomeSuggestionsService: CategorizeIncomeSuggestionsService,
+    private readonly receiptDuplicates: ReceiptDuplicateService,
   ) {}
 
   // Forward-geocode a typed query into up to 5 candidate places for the expense
@@ -203,6 +206,20 @@ export class AiController {
     @Body() body: { pinned: boolean },
   ) {
     return this.chatService.setConversationPinned(req.user.id, id, req.accountId, body.pinned);
+  }
+
+  /**
+   * Stage 1 of the duplicate warning (ABA-603): has this exact file been scanned
+   * and saved before? The client sends only the fingerprint it computed on the
+   * device, so the file is not uploaded twice, and there is deliberately no
+   * AiUsageGuard — asking must never cost the AI request it exists to save.
+   */
+  @Get('receipt-duplicate')
+  async findReceiptDuplicate(
+    @Req() req: AuthenticatedRequest,
+    @Query('fingerprint') fingerprint?: string,
+  ): Promise<ReceiptDuplicateCheckResponse> {
+    return { duplicate: await this.receiptDuplicates.findByFingerprint(req.accountId, fingerprint ?? '') };
   }
 
   @Post('scan-receipt')

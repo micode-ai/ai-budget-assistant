@@ -13,6 +13,7 @@ import {
   ValidateNested,
   ArrayMinSize,
   ArrayMaxSize,
+  Matches,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import type { ShareType, ExpenseShareDto } from '@budget/shared-types';
@@ -188,6 +189,12 @@ export class CreateExpenseDto {
   @IsOptional()
   @IsString()
   receiptMimeType?: string;
+
+  /** SHA-256 hex of the scanned receipt file (from the scan response); lets a
+   *  later upload of the same file be flagged before OCR (ABA-603). */
+  @IsOptional()
+  @Matches(/^[0-9a-f]{64}$/)
+  receiptFingerprint?: string;
 
   @IsOptional()
   @IsArray()

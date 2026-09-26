@@ -610,6 +610,24 @@ describe('create with categorized receipt items', () => {
       }),
     );
   });
+
+  // ABA-603: the fingerprint is what flags a later re-upload of the same file,
+  // so it must land on both upsert branches — and an absent one must never
+  // overwrite a fingerprint an earlier push already stored.
+  it('stores the receipt fingerprint on both upsert branches, and never clears one', async () => {
+    const fp = 'c'.repeat(64);
+    const { service, prisma } = makeCategorizedItemsCreateService();
+    await service.create('a1', 'u1', { ...baseDto, receiptFingerprint: fp } as any);
+    const args = prisma.expense.upsert.mock.calls[0][0];
+    expect(args.create.receiptFingerprint).toBe(fp);
+    expect(args.update.receiptFingerprint).toBe(fp);
+
+    const again = makeCategorizedItemsCreateService();
+    await again.service.create('a1', 'u1', { ...baseDto } as any);
+    const bare = again.prisma.expense.upsert.mock.calls[0][0];
+    expect('receiptFingerprint' in bare.create).toBe(false);
+    expect('receiptFingerprint' in bare.update).toBe(false);
+  });
 });
 
 // ---------------------------------------------------------------------------

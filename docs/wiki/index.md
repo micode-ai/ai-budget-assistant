@@ -50,6 +50,8 @@ the section you came for — it states what must not break and why. A missing se
   empty loads, retries, sign-out resets, and the proxy limit behind `Failed to fetch`
 
 ### Receipts
+- [receipt-duplicate-warning](features/receipt-duplicate-warning.md) — warning before the same receipt
+  is recorded twice (same file before OCR, same receipt after)
 - [receipt-price-check](features/receipt-price-check.md) — comparing each scanned line against the
   median of what this user paid for it before, at that store
 - [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items

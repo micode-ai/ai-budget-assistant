@@ -2952,6 +2952,8 @@ Quelques points à connaître :
 
 Sur l'écran des transactions de bureau (web), la même revue s'ouvre dans une boîte de dialogue.
 
+La même revue est aussi disponible depuis l'onglet Revenus — touchez-y **Suggérer des catégories** pour les entrées de revenus sans catégorie.
+
 ### Etiquettes
 
 Les etiquettes vous aident a organiser les depenses avec des libelles personnalises :
@@ -3158,6 +3160,15 @@ Vous avez accumulé une semaine de reçus papier ? Après en avoir enregistré u
 - **Terminé** — termine et vous ramène là où vous avez commencé
 
 Pendant que vous scannez, un petit compteur indique combien de reçus vous avez enregistrés dans cette session. Tous les 15 reçus, l'application vous rappelle amicalement que vous pouvez continuer ou faire une pause — votre progression est déjà enregistrée dans tous les cas. Le compteur se réinitialise dès que vous quittez l'écran ; il sert uniquement à donner un sentiment de progression pendant une session.
+
+### Reçus déjà scannés
+
+L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos dépenses :
+
+- **Le même fichier à nouveau** — si vous choisissez une photo ou un PDF déjà scanné et enregistré, la question vous est posée *avant* la lecture, donc aucune requête IA n'est consommée. **Ouvrir** affiche la dépense enregistrée, **Scanner quand même** relit le reçu, **Annuler** annule.
+- **Le même reçu, nouvelle photo** — si, après lecture, une dépense avec le même magasin, le même montant et la même date (±1 jour) existe déjà, l'écran de confirmation affiche un avis jaune avec un bouton **Ouvrir**. Vous pouvez tout de même enregistrer : il peut s'agir d'un vrai second achat.
+
+Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
 
 ## Revenus vocaux
 
@@ -6071,10 +6082,11 @@ Les commerçants sont créés automatiquement lors de l'ajout de dépenses. Util
 
 ### Règles de catégorie
 
-L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'une dépense ayant un nom de commerçant, une **règle de catégorie** est enregistrée automatiquement. Lors du prochain import de relevé bancaire ou CSV Wise, l'app applique votre règle et attribue la catégorie sans correction manuelle.
+L'app apprend de vos corrections. Chaque fois que vous modifiez la catégorie d'une dépense ayant un nom de commerçant, une **règle de catégorie** est enregistrée automatiquement. La prochaine fois que ce commerçant apparaît — dans un relevé bancaire ou CSV Wise importé, sur un reçu scanné, ou via une notification bancaire capturée automatiquement (Android) —, l'app applique votre règle et attribue la catégorie sans correction manuelle.
 
 - Les règles apprises apparaissent dans la section **Règles de catégorie** en bas de l'écran Commerçants
 - Appuyez sur la corbeille pour supprimer une règle
+- Appuyez sur l'icône d'actualisation à côté d'une règle pour la **réappliquer** — cela retrouve les dépenses de ce commerçant déjà classées dans une autre catégorie et propose de les déplacer aussi vers la catégorie de la règle, afin que les anciennes dépenses rattrapent les règles apprises plus tard
 - Les règles sont stockées sur le serveur et synchronisées sur tous vos appareils
 
 ## Étiquettes

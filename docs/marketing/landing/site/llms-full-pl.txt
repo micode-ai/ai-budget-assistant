@@ -2958,6 +2958,8 @@ Kilka rzeczy wartych wiedzy:
 
 Na ekranie transakcji na komputerze (web) ten sam przegląd otwiera się jako okno dialogowe.
 
+Ten sam przegląd jest dostępny też na karcie Przychody — dotknij tam **Zaproponuj kategorie** dla przychodów bez kategorii.
+
 ### Tagi
 
 Tagi pomagaja organizowac wydatki za pomoca niestandardowych etykiet:
@@ -3164,6 +3166,15 @@ Uzbierał się tydzień papierowych paragonów? Po zapisaniu jednego z nich potw
 - **Gotowe** — kończy skanowanie i wraca tam, skąd zacząłeś
 
 Podczas skanowania mały licznik pokazuje, ile paragonów zapisano w tej sesji. Co 15 paragonów aplikacja przypomina, że można kontynuować lub zrobić przerwę — postęp jest już zapisany niezależnie od wyboru. Licznik resetuje się po opuszczeniu ekranu; służy tylko do pokazania postępu w trakcie jednej sesji.
+
+### Paragony już zeskanowane
+
+Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
+
+- **Ten sam plik ponownie** — jeśli wybierzesz zdjęcie lub PDF, który został już zeskanowany i zapisany, zobaczysz pytanie *przed* odczytem, więc żadne zapytanie AI nie zostanie zużyte. **Otwórz** pokaże zapisany wydatek, **Skanuj mimo to** odczyta paragon ponownie, **Anuluj** — anuluje.
+- **Ten sam paragon, nowe zdjęcie** — jeśli po odczycie istnieje już wydatek z tym samym sklepem, kwotą i datą (±1 dzień), na ekranie potwierdzenia pojawi się żółty komunikat z przyciskiem **Otwórz**. Nadal możesz zapisać: to może być naprawdę drugi zakup.
+
+Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
 
 ## Głosowe przychody
 
@@ -6112,10 +6123,11 @@ Sklepy są tworzone automatycznie podczas dodawania wydatków. Ekran Sklepy słu
 
 ### Reguły kategorii
 
-Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz kategorię wydatku z nazwą sklepu, automatycznie zapisywana jest **reguła kategorii**. Przy następnym imporcie wyciągu bankowego lub CSV Wise aplikacja zastosuje Twoją regułę i przypisze kategorię bez ręcznej korekty.
+Aplikacja uczy się na podstawie Twoich poprawek. Za każdym razem, gdy zmienisz kategorię wydatku z nazwą sklepu, automatycznie zapisywana jest **reguła kategorii**. Gdy ten sklep pojawi się ponownie — w zaimportowanym wyciągu bankowym lub CSV Wise, na zeskanowanym paragonie albo w automatycznie przechwyconym powiadomieniu bankowym (Android) — aplikacja zastosuje Twoją regułę i przypisze kategorię bez ręcznej korekty.
 
 - Nauczone reguły wyświetlają się w sekcji **Reguły kategorii** na dole ekranu Sklepy
 - Dotknij ikony kosza, aby usunąć regułę
+- Dotknij ikony odświeżania obok reguły, aby ją **ponownie zastosować** — znajdzie to wydatki tego sklepu już przypisane do innej kategorii i zaproponuje przeniesienie ich także do kategorii reguły, dzięki czemu starsze wydatki nadrobią reguły nauczone później
 - Reguły są przechowywane na serwerze i synchronizowane na wszystkich Twoich urządzeniach
 
 ## Tagi

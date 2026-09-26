@@ -232,7 +232,41 @@ describe('OcrService', () => {
         'acc-1',
         'user-1',
       );
-      expect(result).toEqual({ receiptItems: [], categorySplits: [], priceFindings: [] });
+      expect(result).toEqual({
+        receiptItems: [],
+        categorySplits: [],
+        priceFindings: [],
+        fingerprint: expect.stringMatching(/^[0-9a-f]{64}$/),
+        possibleDuplicate: null,
+      });
+    });
+
+    it('reports an already-saved duplicate: the same file first, else a likely match (ABA-603)', async () => {
+      const exact = { kind: 'exact', expenseId: 'srv-9' };
+      const likely = { kind: 'likely', expenseId: 'srv-7' };
+      const receiptDuplicates = {
+        findByFingerprint: jest.fn().mockResolvedValueOnce(exact).mockResolvedValueOnce(null),
+        findLikely: jest.fn().mockResolvedValue(likely),
+      };
+      const withDup = new OcrService(
+        configService,
+        prisma,
+        receiptFinalizerMock as any,
+        receiptPdfMock as any,
+        subscriptionsMock as any,
+        receiptDuplicates as any,
+      );
+      (withDup as any).logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
+
+      mockOpenAiResponse({ merchantName: 'Biedronka' });
+      const first = await withDup.parseReceipt('base64imagedata', 'user-1', 'acc-1');
+      expect(first.possibleDuplicate).toBe(exact);
+      expect(receiptDuplicates.findByFingerprint).toHaveBeenCalledWith('acc-1', first.fingerprint);
+      expect(receiptDuplicates.findLikely).not.toHaveBeenCalled();
+
+      mockOpenAiResponse({ merchantName: 'Biedronka' });
+      const second = await withDup.parseReceipt('base64imagedata', 'user-1', 'acc-1');
+      expect(second.possibleDuplicate).toBe(likely);
     });
 
     it('throws when OpenAI returns no content', async () => {

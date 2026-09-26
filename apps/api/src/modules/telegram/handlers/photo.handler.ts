@@ -1,9 +1,11 @@
-import { Injectable, Logger, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger, ForbiddenException, Optional } from '@nestjs/common';
 import { Markup } from 'telegraf';
 import { randomUUID } from 'crypto';
 import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
+import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
+import { buildDuplicateLine, describeDuplicate } from '../../../common/bot-i18n/shared-messages';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
@@ -42,6 +44,19 @@ const PENDING_RECEIPT_TTL_SEC = 1800;
 const AWAITING_DATE_TTL_SEC = 600;
 const AWAITING_ITEM_EDIT_TTL_SEC = 600;
 const pendingReceiptKey = (receiptId: string) => `telegram:receipt:${receiptId}`;
+// A scan held back by the same-file duplicate warning (ABA-603), kept so
+// "Scan anyway" needs no re-upload.
+const PENDING_SCAN_TTL_SEC = 1800;
+const pendingScanKey = (scanId: string) => `telegram:dupscan:${scanId}`;
+
+interface PendingScanData {
+  userId: string;
+  accountId: string;
+  base64: string;
+  mimeType: string;
+  caption?: string;
+  language?: string;
+}
 const awaitingDateKey = (telegramUserId: string) => `telegram:awaiting_date:${telegramUserId}`;
 const awaitingItemEditKey = (telegramUserId: string) =>
   `telegram:awaiting_item_edit:${telegramUserId}`;
@@ -75,6 +90,7 @@ interface PendingReceiptData {
   }>;
   receiptImageBase64: string;
   receiptMimeType: string;
+  receiptFingerprint?: string;
   language?: string;
 }
 
@@ -91,6 +107,7 @@ export class PhotoHandler {
     private readonly cache: CacheService,
     private readonly chatActionRecorder: ChatActionRecorderService,
     private readonly linkService: TelegramLinkService,
+    @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
   ) {}
 
   async handlePhoto(ctx: BotContext): Promise<void> {
@@ -124,101 +141,9 @@ export class PhotoHandler {
 
       const base64 = buffer.toString('base64');
 
-      // Track AI usage for OCR (2.0)
-      try {
-        await this.subscriptionsService.trackAiUsage(ctx.userState.userId, 'ocr', 2.0, ctx.userState.accountId);
-      } catch (e) {
-        if (e instanceof ForbiddenException) {
-          await ctx.reply(t('aiLimitReached', ctx.userState?.language));
-          return;
-        }
-        throw e;
-      }
-
       // Get caption as optional user prompt
       const caption = ('caption' in ctx.message) ? ctx.message.caption : undefined;
-
-      // Parse receipt using OCR service
-      const receipt = await this.ocrService.parseReceipt(
-        base64,
-        ctx.userState.userId,
-        ctx.userState.accountId,
-        caption || undefined,
-      );
-
-      // Build summary message
-      const receiptId = randomUUID().slice(0, 8);
-      const lang = ctx.userState?.language;
-      let summary = `${t('receiptScanned', lang)}\n\n`;
-      summary += `<b>Amount:</b> ${formatCurrency(receipt.amount, receipt.currencyCode)}\n`;
-      if (receipt.discountAmount) {
-        summary += `<b>Discount:</b> ${formatCurrency(receipt.discountAmount, receipt.currencyCode)}\n`;
-      }
-      if (receipt.merchant) {
-        summary += `<b>Merchant:</b> ${escapeHtml(receipt.merchant)}\n`;
-      }
-      if (receipt.description) {
-        summary += `<b>Description:</b> ${escapeHtml(receipt.description)}\n`;
-      }
-      if (receipt.categorySuggestion) {
-        summary += `<b>Category:</b> ${escapeHtml(receipt.categorySuggestion)}\n`;
-      }
-      if (receipt.date) {
-        summary += `<b>Date:</b> ${receipt.date}\n`;
-      }
-      if (receipt.receiptItems && receipt.receiptItems.length > 0 && receipt.receiptItems.length <= 10) {
-        summary += `\n<b>Items:</b>\n`;
-        for (const item of receipt.receiptItems) {
-          const qty = item.quantity && item.quantity > 1 ? `${item.quantity}× ` : '';
-          summary += `  • ${qty}${escapeHtml(item.description)} — ${formatCurrency(item.totalPrice, receipt.currencyCode)}\n`;
-        }
-      } else if (receipt.receiptItems && receipt.receiptItems.length > 10) {
-        summary += `\n<i>${receipt.receiptItems.length} items found</i>\n`;
-      }
-      const priceCheckLine = this.buildPriceCheckLine(receipt, lang);
-      if (priceCheckLine) {
-        summary += `\n${priceCheckLine}\n`;
-      }
-      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, lang);
-      if (categorySplitLine) {
-        summary += `\n${escapeHtml(categorySplitLine)}\n`;
-      }
-
-      // Store pending receipt data
-      await this.cache.set<PendingReceiptData>(
-        pendingReceiptKey(receiptId),
-        {
-          userId: ctx.userState.userId,
-          accountId: ctx.userState.accountId,
-          amount: receipt.amount,
-          currencyCode: receipt.currencyCode,
-          description: receipt.description,
-          merchant: receipt.merchant ?? undefined,
-          location: receipt.location,
-          categorySplits: receipt.categorySplits ?? [],
-          categoryId: receipt.categoryId,
-          date: receipt.date,
-          discountAmount: receipt.discountAmount,
-          depositAmount: receipt.depositAmount,
-          receiptMimeType: 'image/jpeg',
-          items: receipt.receiptItems || [],
-          receiptImageBase64: base64,
-          language: lang,
-        },
-        PENDING_RECEIPT_TTL_SEC,
-      );
-
-      await ctx.reply(summary, {
-        parse_mode: 'HTML',
-        ...Markup.inlineKeyboard([
-          [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
-          [
-            Markup.button.callback(t('editItems', lang), `receipt_items:${receiptId}`),
-            Markup.button.callback(t('changeDate', lang), `receipt_date:${receiptId}`),
-          ],
-          [Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`)],
-        ]),
-      });
+      await this.scanOrWarn(ctx, base64, 'image/jpeg', caption || undefined);
     } catch (error) {
       this.logger.error(`Error processing photo: ${error}`, error instanceof Error ? error.stack : undefined);
       await ctx.reply(t('receiptScanFailed', ctx.userState?.language));
@@ -258,103 +183,165 @@ export class PhotoHandler {
 
       const base64 = buffer.toString('base64');
 
-      // Track AI usage for OCR (2.0)
-      try {
-        await this.subscriptionsService.trackAiUsage(ctx.userState!.userId, 'ocr', 2.0, ctx.userState!.accountId);
-      } catch (e) {
-        if (e instanceof ForbiddenException) {
-          await ctx.reply(t('aiLimitReached', ctx.userState?.language));
-          return;
-        }
-        throw e;
-      }
-
       const caption = ('caption' in ctx.message) ? ctx.message.caption : undefined;
-
-      let receipt;
-      if (mime_type === 'application/pdf') {
-        receipt = await this.ocrService.parseReceiptPdf(
-          base64,
-          ctx.userState.userId,
-          ctx.userState.accountId,
-          caption || undefined,
-        );
-      } else {
-        receipt = await this.ocrService.parseReceipt(
-          base64,
-          ctx.userState.userId,
-          ctx.userState.accountId,
-          caption || undefined,
-        );
-      }
-
-      // Build summary
-      const receiptId = randomUUID().slice(0, 8);
-      const lang = ctx.userState?.language;
-      let summary = `${t('receiptScanned', lang)}\n\n`;
-      summary += `<b>Amount:</b> ${formatCurrency(receipt.amount, receipt.currencyCode)}\n`;
-      if (receipt.discountAmount) {
-        summary += `<b>Discount:</b> ${formatCurrency(receipt.discountAmount, receipt.currencyCode)}\n`;
-      }
-      if (receipt.merchant) {
-        summary += `<b>Merchant:</b> ${escapeHtml(receipt.merchant)}\n`;
-      }
-      if (receipt.description) {
-        summary += `<b>Description:</b> ${escapeHtml(receipt.description)}\n`;
-      }
-      if (receipt.categorySuggestion) {
-        summary += `<b>Category:</b> ${escapeHtml(receipt.categorySuggestion)}\n`;
-      }
-      if (receipt.date) {
-        summary += `<b>Date:</b> ${receipt.date}\n`;
-      }
-      const priceCheckLine = this.buildPriceCheckLine(receipt, lang);
-      if (priceCheckLine) {
-        summary += `\n${priceCheckLine}\n`;
-      }
-      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, lang);
-      if (categorySplitLine) {
-        summary += `\n${escapeHtml(categorySplitLine)}\n`;
-      }
-
-      await this.cache.set<PendingReceiptData>(
-        pendingReceiptKey(receiptId),
-        {
-          userId: ctx.userState!.userId,
-          accountId: ctx.userState!.accountId,
-          amount: receipt.amount,
-          currencyCode: receipt.currencyCode,
-          description: receipt.description,
-          merchant: receipt.merchant ?? undefined,
-          location: receipt.location,
-          categorySplits: receipt.categorySplits ?? [],
-          categoryId: receipt.categoryId,
-          date: receipt.date,
-          discountAmount: receipt.discountAmount,
-          depositAmount: receipt.depositAmount,
-          receiptMimeType: mime_type || 'application/pdf',
-          items: receipt.receiptItems || [],
-          receiptImageBase64: base64,
-          language: lang,
-        },
-        PENDING_RECEIPT_TTL_SEC,
-      );
-
-      await ctx.reply(summary, {
-        parse_mode: 'HTML',
-        ...Markup.inlineKeyboard([
-          [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
-          [
-            Markup.button.callback(t('editItems', lang), `receipt_items:${receiptId}`),
-            Markup.button.callback(t('changeDate', lang), `receipt_date:${receiptId}`),
-          ],
-          [Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`)],
-        ]),
-      });
+      await this.scanOrWarn(ctx, base64, mime_type || 'application/pdf', caption || undefined);
     } catch (error) {
       this.logger.error(`Error processing document: ${error}`, error instanceof Error ? error.stack : undefined);
       await ctx.reply('❌ Could not scan the document. Please try again.');
     }
+  }
+
+  /**
+   * Stage 1 of the duplicate warning (ABA-603): before any AI request is spent,
+   * ask whether this exact file was already scanned and saved. On a match the
+   * scan is parked in Redis and the user chooses; otherwise it runs straight on.
+   */
+  private async scanOrWarn(ctx: BotContext, base64: string, mimeType: string, caption?: string): Promise<void> {
+    const state = ctx.userState!;
+    const scan: PendingScanData = {
+      userId: state.userId,
+      accountId: state.accountId,
+      base64,
+      mimeType,
+      caption,
+      language: state.language,
+    };
+    const duplicate =
+      (await this.receiptDuplicates?.findByFingerprint(state.accountId, receiptFingerprint(base64))) ?? null;
+    if (!duplicate) {
+      await this.runScan(ctx, scan);
+      return;
+    }
+    const scanId = randomUUID().slice(0, 8);
+    await this.cache.set<PendingScanData>(pendingScanKey(scanId), scan, PENDING_SCAN_TTL_SEC);
+    const lang = state.language;
+    await ctx.reply(escapeHtml(t('receiptDuplicateExact', lang, { what: describeDuplicate(duplicate) })), {
+      parse_mode: 'HTML',
+      ...Markup.inlineKeyboard([
+        [Markup.button.callback(t('scanAnyway', lang), `receipt_rescan:${scanId}`)],
+        [Markup.button.callback(t('cancel', lang), `receipt_rescan_x:${scanId}`)],
+      ]),
+    });
+  }
+
+  async handleRescanCallback(ctx: BotContext, scanId: string): Promise<void> {
+    const scan = await this.cache.get<PendingScanData>(pendingScanKey(scanId));
+    if (!scan) {
+      await safeAnswerCb(ctx, t('scanRequestExpired', ctx.userState?.language));
+      return;
+    }
+    await this.cache.del(pendingScanKey(scanId));
+    await safeAnswerCb(ctx);
+    try {
+      await ctx.sendChatAction('typing');
+      await this.runScan(ctx, scan);
+    } catch (error) {
+      this.logger.error(`Error re-scanning receipt: ${error}`, error instanceof Error ? error.stack : undefined);
+      await ctx.reply(t('receiptScanFailed', scan.language));
+    }
+  }
+
+  async handleRescanCancelCallback(ctx: BotContext, scanId: string): Promise<void> {
+    await this.cache.del(pendingScanKey(scanId));
+    await safeAnswerCb(ctx);
+    await ctx.editMessageText(t('receiptCancelled', ctx.userState?.language));
+  }
+
+  /** OCR + preview, shared by photos, documents and "Scan anyway". */
+  private async runScan(ctx: BotContext, scan: PendingScanData): Promise<void> {
+    const lang = scan.language;
+    // Track AI usage for OCR (2.0)
+    try {
+      await this.subscriptionsService.trackAiUsage(scan.userId, 'ocr', 2.0, scan.accountId);
+    } catch (e) {
+      if (e instanceof ForbiddenException) {
+        await ctx.reply(t('aiLimitReached', lang));
+        return;
+      }
+      throw e;
+    }
+
+    const receipt =
+      scan.mimeType === 'application/pdf'
+        ? await this.ocrService.parseReceiptPdf(scan.base64, scan.userId, scan.accountId, scan.caption)
+        : await this.ocrService.parseReceipt(scan.base64, scan.userId, scan.accountId, scan.caption);
+
+    const receiptId = randomUUID().slice(0, 8);
+    let summary = `${t('receiptScanned', lang)}\n\n`;
+    summary += `<b>Amount:</b> ${formatCurrency(receipt.amount, receipt.currencyCode)}\n`;
+    if (receipt.discountAmount) {
+      summary += `<b>Discount:</b> ${formatCurrency(receipt.discountAmount, receipt.currencyCode)}\n`;
+    }
+    if (receipt.merchant) {
+      summary += `<b>Merchant:</b> ${escapeHtml(receipt.merchant)}\n`;
+    }
+    if (receipt.description) {
+      summary += `<b>Description:</b> ${escapeHtml(receipt.description)}\n`;
+    }
+    if (receipt.categorySuggestion) {
+      summary += `<b>Category:</b> ${escapeHtml(receipt.categorySuggestion)}\n`;
+    }
+    if (receipt.date) {
+      summary += `<b>Date:</b> ${receipt.date}\n`;
+    }
+    if (receipt.receiptItems && receipt.receiptItems.length > 0 && receipt.receiptItems.length <= 10) {
+      summary += `\n<b>Items:</b>\n`;
+      for (const item of receipt.receiptItems) {
+        const qty = item.quantity && item.quantity > 1 ? `${item.quantity}× ` : '';
+        summary += `  • ${qty}${escapeHtml(item.description)} — ${formatCurrency(item.totalPrice, receipt.currencyCode)}\n`;
+      }
+    } else if (receipt.receiptItems && receipt.receiptItems.length > 10) {
+      summary += `\n<i>${receipt.receiptItems.length} items found</i>\n`;
+    }
+    const priceCheckLine = this.buildPriceCheckLine(receipt, lang);
+    if (priceCheckLine) {
+      summary += `\n${priceCheckLine}\n`;
+    }
+    const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, lang);
+    if (categorySplitLine) {
+      summary += `\n${escapeHtml(categorySplitLine)}\n`;
+    }
+    // Stage 2 (ABA-603): the same receipt in a different file, found by what it says.
+    const duplicateLine = buildDuplicateLine(t, receipt.possibleDuplicate, lang);
+    if (duplicateLine) {
+      summary += `\n${escapeHtml(duplicateLine)}\n`;
+    }
+
+    await this.cache.set<PendingReceiptData>(
+      pendingReceiptKey(receiptId),
+      {
+        userId: scan.userId,
+        accountId: scan.accountId,
+        amount: receipt.amount,
+        currencyCode: receipt.currencyCode,
+        description: receipt.description,
+        merchant: receipt.merchant ?? undefined,
+        location: receipt.location,
+        categorySplits: receipt.categorySplits ?? [],
+        categoryId: receipt.categoryId,
+        date: receipt.date,
+        discountAmount: receipt.discountAmount,
+        depositAmount: receipt.depositAmount,
+        receiptMimeType: scan.mimeType,
+        items: receipt.receiptItems || [],
+        receiptImageBase64: scan.base64,
+        receiptFingerprint: receipt.fingerprint,
+        language: lang,
+      },
+      PENDING_RECEIPT_TTL_SEC,
+    );
+
+    await ctx.reply(summary, {
+      parse_mode: 'HTML',
+      ...Markup.inlineKeyboard([
+        [Markup.button.callback(t('addExpense', lang), `receipt_add:${receiptId}`)],
+        [
+          Markup.button.callback(t('editItems', lang), `receipt_items:${receiptId}`),
+          Markup.button.callback(t('changeDate', lang), `receipt_date:${receiptId}`),
+        ],
+        [Markup.button.callback(t('cancel', lang), `receipt_cancel:${receiptId}`)],
+      ]),
+    });
   }
 
   async handleReceiptAddCallback(ctx: BotContext, receiptId: string): Promise<void> {
@@ -392,6 +379,7 @@ export class PhotoHandler {
           splits: resolvedSplits.length ? resolvedSplits : undefined,
           receiptMimeType: data.receiptMimeType,
           receiptImageBase64: data.receiptImageBase64,
+          receiptFingerprint: data.receiptFingerprint,
           items: data.items.map((item, index) => ({
             description: item.description,
             canonicalName: item.canonicalName,

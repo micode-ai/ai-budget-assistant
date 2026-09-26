@@ -1,9 +1,10 @@
-import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
+import { ForbiddenException, Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import Redis from 'ioredis';
 import { OcrService } from '../../ai/services/ocr.service';
 import type { ReceiptExpense } from '../../ai/services/ocr.service';
 import { ExpensesService } from '../../expenses/expenses.service';
+import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 import { CategoriesService } from '../../categories/categories.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
@@ -11,6 +12,7 @@ import { WhatsAppClientService } from '../whatsapp-client.service';
 import { WhatsAppLinkService } from '../whatsapp-link.service';
 import { WA_REDIS, WaMediaMessage, WhatsAppUserState } from '../types';
 import { t, buildCategorySplitLine, buildItemListBlock, buildShoppingListReconciliationLine } from '../helpers/i18n';
+import { buildDuplicateLine, describeDuplicate } from '../../../common/bot-i18n/shared-messages';
 import {
   parseItemEditCommand,
   applyItemEditCommand,
@@ -23,6 +25,19 @@ import {
 import { buildItemCategoryMap, resolveProposedSplits } from '../../ai/utils/receipt-split-items';
 import { ChatActionRecorderService } from '../../ai/services/chat-action-recorder.service';
 import { logFireAndForget } from '../../../common/utils/fire-and-forget';
+
+/**
+ * A scan held back by the same-file duplicate warning (ABA-603), kept so
+ * "Scan anyway" needs no re-upload. Mirrors Telegram's `PendingScanData`.
+ */
+interface PendingScanData {
+  userId: string;
+  accountId: string;
+  waPhoneNumber: string;
+  base64: string;
+  mimeType: string;
+  language: string;
+}
 
 interface PendingReceiptData {
   userId: string;
@@ -52,6 +67,7 @@ interface PendingReceiptData {
   }>;
   receiptImageBase64: string;
   receiptMimeType: string;
+  receiptFingerprint?: string;
   language: string;
 }
 
@@ -69,6 +85,7 @@ export class PhotoHandler {
     private readonly chatActionRecorder: ChatActionRecorderService,
     private readonly linkService: WhatsAppLinkService,
     @Inject(WA_REDIS) private readonly redis: Redis,
+    @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
   ) {}
 
   async handleImage(msg: WaMediaMessage, userState: WhatsAppUserState): Promise<void> {
@@ -85,62 +102,17 @@ export class PhotoHandler {
         return;
       }
 
-      // Track AI usage before downloading — cheap fast-fail
-      try {
-        await this.subscriptionsService.trackAiUsage(userId, 'ocr', 2.0, accountId);
-      } catch (e) {
-        if (e instanceof ForbiddenException) {
-          await this.client.sendText(waPhoneNumber, t('aiLimitReached', language));
-          return;
-        }
-        throw e;
-      }
-
       const { buffer, mimeType } = await this.client.downloadMedia(media.id);
       const base64 = buffer.toString('base64');
 
-      const receipt = await this.ocrService.parseReceipt(base64, userId, accountId);
-
-      if (!receipt || receipt.amount <= 0) {
-        await this.client.sendText(waPhoneNumber, t('receiptScanFailed', language));
-        return;
-      }
-
-      const shortId = randomUUID().slice(0, 8);
-      const data: PendingReceiptData = {
+      await this.scanOrWarn({
         userId,
         accountId,
-        amount: receipt.amount,
-        currencyCode: receipt.currencyCode,
-        description: receipt.description,
-        categoryId: receipt.categoryId,
-        date: receipt.date,
-        discountAmount: receipt.discountAmount,
-        depositAmount: receipt.depositAmount,
-        merchant: receipt.merchant,
-        location: receipt.location,
-        categorySplits: receipt.categorySplits ?? [],
-        items: receipt.receiptItems || [],
-        receiptImageBase64: base64,
-        receiptMimeType: mimeType || 'image/jpeg',
+        waPhoneNumber,
         language,
-      };
-      await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
-
-      let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
-      const priceCheckLine = this.buildPriceCheckLine(receipt, language);
-      if (priceCheckLine) {
-        summary += `\n${priceCheckLine}`;
-      }
-      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, language);
-      if (categorySplitLine) {
-        summary += `\n${categorySplitLine}`;
-      }
-      await this.client.sendButtons(waPhoneNumber, summary, [
-        { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
-        { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
-        { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
-      ]);
+        base64,
+        mimeType: mimeType || 'image/jpeg',
+      });
     } catch (error) {
       this.logger.error(`PhotoHandler.handleImage error for ${userState.waPhoneNumber}: ${error}`);
       await this.client.sendText(userState.waPhoneNumber, t('receiptScanFailed', userState.language));
@@ -168,71 +140,140 @@ export class PhotoHandler {
         return;
       }
 
-      // Track AI usage before downloading — cheap fast-fail
-      try {
-        await this.subscriptionsService.trackAiUsage(userId, 'ocr', 2.0, accountId);
-      } catch (e) {
-        if (e instanceof ForbiddenException) {
-          await this.client.sendText(waPhoneNumber, t('aiLimitReached', language));
-          return;
-        }
-        throw e;
-      }
-
       const { buffer } = await this.client.downloadMedia(media.id);
       const base64 = buffer.toString('base64');
 
-      let receipt;
-      if (mimeType === 'application/pdf') {
-        receipt = await this.ocrService.parseReceiptPdf(base64, userId, accountId);
-      } else {
-        receipt = await this.ocrService.parseReceipt(base64, userId, accountId);
-      }
-
-      if (!receipt || receipt.amount <= 0) {
-        await this.client.sendText(waPhoneNumber, t('receiptScanFailed', language));
-        return;
-      }
-
-      const shortId = randomUUID().slice(0, 8);
-      const data: PendingReceiptData = {
+      await this.scanOrWarn({
         userId,
         accountId,
-        amount: receipt.amount,
-        currencyCode: receipt.currencyCode,
-        description: receipt.description,
-        categoryId: receipt.categoryId,
-        date: receipt.date,
-        discountAmount: receipt.discountAmount,
-        depositAmount: receipt.depositAmount,
-        merchant: receipt.merchant,
-        location: receipt.location,
-        categorySplits: receipt.categorySplits ?? [],
-        items: receipt.receiptItems || [],
-        receiptImageBase64: base64,
-        receiptMimeType: mimeType,
+        waPhoneNumber,
         language,
-      };
-      await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
-
-      let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
-      const priceCheckLine = this.buildPriceCheckLine(receipt, language);
-      if (priceCheckLine) {
-        summary += `\n${priceCheckLine}`;
-      }
-      const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, language);
-      if (categorySplitLine) {
-        summary += `\n${categorySplitLine}`;
-      }
-      await this.client.sendButtons(waPhoneNumber, summary, [
-        { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
-        { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
-        { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
-      ]);
+        base64,
+        mimeType,
+      });
     } catch (error) {
       this.logger.error(`PhotoHandler.handleDocument error for ${userState.waPhoneNumber}: ${error}`);
       await this.client.sendText(userState.waPhoneNumber, t('receiptScanFailed', userState.language));
     }
+  }
+
+  /**
+   * Stage 1 of the duplicate warning (ABA-603): before any AI request is spent,
+   * ask whether this exact file was already scanned and saved. On a match the
+   * scan is parked in Redis and the user chooses; otherwise it runs straight on.
+   */
+  private async scanOrWarn(scan: PendingScanData): Promise<void> {
+    const { waPhoneNumber, language, accountId, base64 } = scan;
+    const duplicate =
+      (await this.receiptDuplicates?.findByFingerprint(accountId, receiptFingerprint(base64))) ?? null;
+    if (!duplicate) {
+      await this.runScan(scan);
+      return;
+    }
+    const scanId = randomUUID().slice(0, 8);
+    await this.redis.set(`wa:dupscan:${scanId}`, JSON.stringify(scan), 'EX', 1800);
+    await this.client.sendButtons(
+      waPhoneNumber,
+      t('receiptDuplicateExact', language, { what: describeDuplicate(duplicate) }),
+      [
+        { id: `receipt_rescan--${scanId}`, title: t('scanAnyway', language) },
+        { id: `receipt_rescan_x--${scanId}`, title: t('cancel', language) },
+      ],
+    );
+  }
+
+  async handleRescanCallback(scanId: string, userState: WhatsAppUserState): Promise<void> {
+    const { waPhoneNumber, language } = userState;
+    try {
+      const raw = await this.redis.get(`wa:dupscan:${scanId}`);
+      if (!raw) {
+        await this.client.sendText(waPhoneNumber, t('scanRequestExpired', language));
+        return;
+      }
+      await this.redis.del(`wa:dupscan:${scanId}`);
+      const scan: PendingScanData = JSON.parse(raw);
+      await this.runScan(scan);
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleRescanCallback error for ${waPhoneNumber}: ${error}`);
+      await this.client.sendText(waPhoneNumber, t('receiptScanFailed', language));
+    }
+  }
+
+  async handleRescanCancelCallback(scanId: string, userState: WhatsAppUserState): Promise<void> {
+    const { waPhoneNumber, language } = userState;
+    try {
+      await this.redis.del(`wa:dupscan:${scanId}`);
+      await this.client.sendText(waPhoneNumber, t('receiptCancelled', language));
+    } catch (error) {
+      this.logger.error(`PhotoHandler.handleRescanCancelCallback error for ${waPhoneNumber}: ${error}`);
+      await this.client.sendText(waPhoneNumber, t('somethingWrong', language));
+    }
+  }
+
+  /** OCR + preview, shared by images, documents and "Scan anyway". */
+  private async runScan(scan: PendingScanData): Promise<void> {
+    const { userId, accountId, waPhoneNumber, language, base64, mimeType } = scan;
+    try {
+      await this.subscriptionsService.trackAiUsage(userId, 'ocr', 2.0, accountId);
+    } catch (e) {
+      if (e instanceof ForbiddenException) {
+        await this.client.sendText(waPhoneNumber, t('aiLimitReached', language));
+        return;
+      }
+      throw e;
+    }
+
+    const receipt =
+      mimeType === 'application/pdf'
+        ? await this.ocrService.parseReceiptPdf(base64, userId, accountId)
+        : await this.ocrService.parseReceipt(base64, userId, accountId);
+
+    if (!receipt || receipt.amount <= 0) {
+      await this.client.sendText(waPhoneNumber, t('receiptScanFailed', language));
+      return;
+    }
+
+    const shortId = randomUUID().slice(0, 8);
+    const data: PendingReceiptData = {
+      userId,
+      accountId,
+      amount: receipt.amount,
+      currencyCode: receipt.currencyCode,
+      description: receipt.description,
+      categoryId: receipt.categoryId,
+      date: receipt.date,
+      discountAmount: receipt.discountAmount,
+      depositAmount: receipt.depositAmount,
+      merchant: receipt.merchant,
+      location: receipt.location,
+      categorySplits: receipt.categorySplits ?? [],
+      items: receipt.receiptItems || [],
+      receiptImageBase64: base64,
+      receiptMimeType: mimeType,
+      receiptFingerprint: receipt.fingerprint,
+      language,
+    };
+    await this.redis.set(`wa:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
+
+    let summary = this.buildSummaryText(receipt.amount, receipt.currencyCode, receipt.date, receipt.merchant, language);
+    const priceCheckLine = this.buildPriceCheckLine(receipt, language);
+    if (priceCheckLine) {
+      summary += `\n${priceCheckLine}`;
+    }
+    const categorySplitLine = buildCategorySplitLine(receipt.categorySplits ?? [], receipt.currencyCode, language);
+    if (categorySplitLine) {
+      summary += `\n${categorySplitLine}`;
+    }
+    // Stage 2 (ABA-603): the same receipt in a different file, found by what it says.
+    const duplicateLine = buildDuplicateLine(t, receipt.possibleDuplicate, language);
+    if (duplicateLine) {
+      summary += `\n${duplicateLine}`;
+    }
+    await this.client.sendButtons(waPhoneNumber, summary, [
+      { id: `receipt_add--${shortId}`, title: t('addExpense', language) },
+      { id: `receipt_edit--${shortId}`, title: t('editReceipt', language) },
+      { id: `receipt_cancel--${shortId}`, title: t('cancel', language) },
+    ]);
   }
 
   /** Returns true if the text was consumed by the "awaiting date" mode. */
@@ -322,6 +363,7 @@ export class PhotoHandler {
         splits: resolvedSplits.length ? resolvedSplits : undefined,
         receiptImageBase64: data.receiptImageBase64,
         receiptMimeType: data.receiptMimeType,
+        receiptFingerprint: data.receiptFingerprint,
         items: data.items.map((item, index) => ({
           description: item.description,
           canonicalName: item.canonicalName,

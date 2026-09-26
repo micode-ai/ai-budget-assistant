@@ -5,7 +5,8 @@ import { uriToBase64 } from '@/utils/fileBase64';
 import { downscaleForOcr } from './receiptImage';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
-import type { ReceiptCheckFinding } from '@budget/shared-types';
+import type { ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
+import { computeReceiptFingerprint } from './receiptFingerprint';
 
 export interface ReceiptItem {
   description: string;
@@ -47,6 +48,21 @@ export interface ScannedReceipt {
    * the wire (empty when there is nothing to split), optional here for the
    * same defensive-typing reason as `priceFindings` above. */
   categorySplits?: ReceiptCategorySplitItem[];
+  /** Fingerprint of the scanned file — handed back on create so a later
+   *  re-upload of the same file is caught before OCR (ABA-603). */
+  fingerprint?: string;
+  /** A saved expense this receipt probably duplicates; a warning, never a block. */
+  possibleDuplicate?: ReceiptDuplicateMatch | null;
+}
+
+export interface ReceiptScannerOptions {
+  /**
+   * Stage 1 of the duplicate warning (ABA-603). When given, the scanner checks
+   * the file's fingerprint BEFORE uploading it for OCR and, on a match, asks
+   * this callback — resolve `true` to scan anyway, `false` to stop. Omitted
+   * (income receipts), nothing is checked. A failed check never blocks a scan.
+   */
+  onDuplicate?: (match: ReceiptDuplicateMatch) => Promise<boolean>;
 }
 
 export interface ReceiptScannerState {
@@ -59,7 +75,10 @@ export interface ReceiptScannerState {
 
 const MAX_PDF_SIZE = 10 * 1024 * 1024; // 10MB
 
-export function useReceiptScanner() {
+export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
+
   const [state, setState] = useState<ReceiptScannerState>({
     isProcessing: false,
     error: null,
@@ -68,6 +87,26 @@ export function useReceiptScanner() {
     scannedReceipt: null,
   });
   const pickingRef = useRef(false);
+
+  /** `true` = go ahead with OCR. Resets the scanner when the user declines. */
+  const passesDuplicateCheck = async (base64: string): Promise<boolean> => {
+    const onDuplicate = optionsRef.current.onDuplicate;
+    if (!onDuplicate) return true;
+    let match: ReceiptDuplicateMatch | null = null;
+    try {
+      const fingerprint = await computeReceiptFingerprint(base64);
+      match = (await api.findReceiptDuplicate(fingerprint)).duplicate;
+    } catch (error) {
+      console.warn('[ReceiptScanner] duplicate pre-check skipped:', error);
+      return true;
+    }
+    if (!match) return true;
+    const proceed = await onDuplicate(match);
+    if (!proceed) {
+      setState({ isProcessing: false, error: null, imageUri: null, isPdf: false, scannedReceipt: null });
+    }
+    return proceed;
+  };
 
   const pickFromCamera = useCallback(async (userPrompt?: string): Promise<ScannedReceipt | null> => {
     try {
@@ -170,6 +209,7 @@ export function useReceiptScanner() {
       }));
 
       const base64 = await uriToBase64(asset.uri);
+      if (!(await passesDuplicateCheck(base64))) return null;
 
       const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined, 'application/pdf');
 
@@ -217,6 +257,7 @@ export function useReceiptScanner() {
       setState((s) => ({ ...s, imageUri: scanUri }));
 
       const base64 = await uriToBase64(scanUri);
+      if (!(await passesDuplicateCheck(base64))) return null;
 
       // Send to API for OCR
       const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined);
