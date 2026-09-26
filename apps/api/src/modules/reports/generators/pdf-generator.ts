@@ -5,8 +5,8 @@ import { planTransactionRows } from './pdf-row-layout.util';
 
 // Inter covers Latin, Cyrillic, Latin-Extended — already in node_modules via @expo-google-fonts/inter
 const INTER_DIR = path.dirname(require.resolve('@expo-google-fonts/inter/package.json'));
-const FONT_REGULAR = path.join(INTER_DIR, '400Regular', 'Inter_400Regular.ttf');
-const FONT_BOLD = path.join(INTER_DIR, '700Bold', 'Inter_700Bold.ttf');
+export const FONT_REGULAR = path.join(INTER_DIR, '400Regular', 'Inter_400Regular.ttf');
+export const FONT_BOLD = path.join(INTER_DIR, '700Bold', 'Inter_700Bold.ttf');
 
 /** Single-line transaction row height. Taller rows are measured, not assumed. */
 const ROW_MIN_HEIGHT = 14;
