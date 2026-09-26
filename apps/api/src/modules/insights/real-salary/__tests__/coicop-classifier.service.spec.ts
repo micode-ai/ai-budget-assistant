@@ -1,4 +1,7 @@
+import OpenAI from 'openai';
 import { CoicopClassifierService, CLASSIFY_BATCH } from '../coicop-classifier.service';
+
+jest.mock('openai', () => ({ __esModule: true, default: jest.fn().mockImplementation(() => ({})) }));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function make(cats: any[], modelJson?: unknown, fail = false) {
@@ -38,6 +41,21 @@ describe('CoicopClassifierService', () => {
     expect(create.mock.calls[0][0].model).toBe('gpt-4o-mini');
     expect(update).toHaveBeenCalledWith({ where: { id: 'c1' }, data: { coicopDivision: 'CP04' } });
     expect(update).toHaveBeenCalledWith({ where: { id: 'c2' }, data: { coicopDivision: 'CP13' } });
+  });
+
+  it('caps the completion at 400 tokens', async () => {
+    const { svc, create } = make([{ id: 'c1', name: 'Kot', icon: null }], { '0': 'CP13' });
+    await svc.ensureClassified('acc');
+    expect(create.mock.calls[0][0].max_tokens).toBe(400);
+  });
+
+  it('builds its own client with a 10 s timeout and no retries', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const prisma: any = {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const config: any = { get: jest.fn().mockReturnValue('sk-test') };
+    new CoicopClassifierService(prisma, config);
+    expect(OpenAI).toHaveBeenCalledWith({ apiKey: 'sk-test', timeout: 10_000, maxRetries: 0 });
   });
 
   it('stores TOTAL for an invented or missing answer so it is never re-asked', async () => {

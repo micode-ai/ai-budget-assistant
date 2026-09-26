@@ -60,6 +60,9 @@ export class RealSalaryService {
     });
     const explicit = isEurostatCountry(user?.inflationCountry) ? user!.inflationCountry! : null;
     const country = explicit ?? countryFromTimezone(user?.timezone);
+    // One rule for every status: `country` is the resolved country (explicit,
+    // else the timezone guess, else null) even when no official data exists for
+    // it — a receipts-only answer is recognisable by `dataMonth: null`.
     const countryGuessed = !explicit && country !== null;
 
     const rates = await getRatesSafe(this.exchangeRateService, baseCurrency);
@@ -97,17 +100,15 @@ export class RealSalaryService {
     });
     const fxApproximate = spendFx;
     if (!inflation) {
-      return empty('no_inflation_source', {
-        country: officialData ? country : null, countryGuessed, fxApproximate,
-      });
+      return empty('no_inflation_source', { country, countryGuessed, fxApproximate });
     }
 
     const change = realChange(nominal.nominalChangePct, inflation.inflationPct);
     const result: RealSalaryResponse = {
       status: 'ready',
       baseCurrency,
-      country: officialData ? country : null,
-      countryGuessed: officialData ? countryGuessed : false,
+      country,
+      countryGuessed,
       dataMonth: officialData?.month ?? null,
       nominalChangePct: nominal.nominalChangePct,
       personalInflationPct: inflation.inflationPct,
@@ -166,11 +167,6 @@ export class RealSalaryService {
 
   async bustAccount(accountId: string): Promise<void> {
     await this.cache.delByPrefix(`rs:${accountId}:`);
-  }
-
-  async bustUser(userId: string): Promise<void> {
-    const memberships = await this.prisma.accountMember.findMany({ where: { userId }, select: { accountId: true } });
-    for (const m of memberships) await this.bustAccount(m.accountId);
   }
 
   private async loadIncomes(accountId: string, since: Date): Promise<IncomeRow[]> {

@@ -1,4 +1,4 @@
-import { RealSalaryBriefPdf, BRIEF_LANGS } from '../real-salary-brief.pdf';
+import { RealSalaryBriefPdf, BRIEF_LANGS, sourcesLine } from '../real-salary-brief.pdf';
 import type { RealSalaryResponse } from '@budget/shared-types';
 
 const DATA: RealSalaryResponse = {
@@ -25,6 +25,21 @@ describe('RealSalaryBriefPdf', () => {
   it('falls back to English for an unknown language', async () => {
     const buf = await new RealSalaryBriefPdf().render(DATA, 'xx');
     expect(buf.subarray(0, 5).toString()).toBe('%PDF-');
+  });
+
+  it('an inherited property name as the language falls back to English', async () => {
+    const buf = await new RealSalaryBriefPdf().render(DATA, '__proto__');
+    expect(buf.subarray(0, 5).toString()).toBe('%PDF-');
+  });
+
+  it('a receipts-only brief renders and its sources line does not claim official data', async () => {
+    const receiptsOnly: RealSalaryResponse = {
+      ...DATA, dataMonth: null, breakdown: [{ division: 'CP01', weight: 1, ratePct: 8.3, source: 'receipts' }], topDrivers: ['CP01'],
+    };
+    const buf = await new RealSalaryBriefPdf().render(receiptsOnly, 'en');
+    expect(buf.subarray(0, 5).toString()).toBe('%PDF-');
+    for (const lang of BRIEF_LANGS) expect(sourcesLine(receiptsOnly, lang)).not.toContain('Eurostat');
+    expect(sourcesLine(DATA, 'en')).toContain('Eurostat');
   });
 
   it('refuses a response that is not ready', async () => {

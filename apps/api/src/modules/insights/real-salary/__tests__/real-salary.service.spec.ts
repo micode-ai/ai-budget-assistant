@@ -24,7 +24,6 @@ function make(o: {
     income: { findMany: jest.fn().mockResolvedValue(o.incomes ?? []) },
     expense: { findMany: jest.fn().mockResolvedValue(o.expenses ?? []) },
     category: { findMany: jest.fn().mockResolvedValue([]) },
-    accountMember: { findMany: jest.fn().mockResolvedValue([{ accountId: 'acc' }, { accountId: 'acc2' }]) },
   };
   const cache: any = { get: jest.fn().mockResolvedValue(o.cached ?? null), set: cacheSet, delByPrefix: jest.fn() };
   const fx: any = { getRates: jest.fn().mockResolvedValue({ rates: {} }) };
@@ -102,6 +101,26 @@ describe('RealSalaryService.compute', () => {
     const r = await svc.compute('acc', 'u1', 'PLN');
     expect(r.status).toBe('no_inflation_source');
     expect(r.country).toBeNull();
+  });
+
+  it('the resolved country is reported even when there is no official data for it', async () => {
+    const { svc } = make({
+      official: null, profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: spend,
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(r).toMatchObject({ status: 'no_inflation_source', country: 'PL', countryGuessed: true });
+  });
+
+  it('a receipts-only answer keeps the country and flags only dataMonth', async () => {
+    const foodSpend = spend.map((e) => ({ ...e, categoryId: 'cat-food', category: { id: 'cat-food', name: 'Food', coicopDivision: 'CP01' } }));
+    const { svc } = make({
+      official: null, profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: foodSpend,
+      receipt: { inflationIndex: 3, productCount: 25 },
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(r).toMatchObject({ status: 'ready', country: 'PL', countryGuessed: true, dataMonth: null });
   });
 
   it('returns the cached response without recomputing', async () => {
@@ -241,13 +260,6 @@ describe('RealSalaryService profile + cache', () => {
       update: { salaryKey: KEY, manualPreviousMonthly: 8000 },
     });
     expect(cache.delByPrefix).toHaveBeenCalledWith('rs:acc:');
-  });
-
-  it('bustUser clears every account the user belongs to', async () => {
-    const { svc, cache } = make();
-    await svc.bustUser('u1');
-    expect(cache.delByPrefix).toHaveBeenCalledWith('rs:acc:');
-    expect(cache.delByPrefix).toHaveBeenCalledWith('rs:acc2:');
   });
 
   it('getProfile returns the stored profile and the detected candidates', async () => {

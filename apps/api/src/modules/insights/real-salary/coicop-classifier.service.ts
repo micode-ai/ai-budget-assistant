@@ -36,7 +36,7 @@ export class CoicopClassifierService {
     @Optional() openai?: OpenAILike | null,
   ) {
     const key = config.get<string>('OPENAI_API_KEY');
-    this.openai = openai ?? (key ? (new OpenAI({ apiKey: key }) as unknown as OpenAILike) : null);
+    this.openai = openai ?? (key ? (new OpenAI({ apiKey: key, timeout: 10_000, maxRetries: 0 }) as unknown as OpenAILike) : null);
   }
 
   async ensureClassified(accountId: string): Promise<void> {
@@ -59,6 +59,7 @@ export class CoicopClassifierService {
         const res = await this.openai.chat.completions.create({
           model: CHEAP_MODEL,
           temperature: 0,
+          max_tokens: 400,
           response_format: { type: 'json_object' },
           messages: [
             { role: 'system', content: SYSTEM },

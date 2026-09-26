@@ -49,5 +49,7 @@ describe('coicop', () => {
       for (const d of DIVISIONS) expect(divisionLabel(d, lang).length).toBeGreaterThan(2);
     }
     expect(divisionLabel('CP01', 'xx')).toBe(divisionLabel('CP01', 'en'));
+    expect(divisionLabel('CP01', 'constructor')).toBe(divisionLabel('CP01', 'en'));
+    expect(divisionLabel('CP01', '__proto__')).toBe(divisionLabel('CP01', 'en'));
   });
 });

@@ -135,5 +135,5 @@ const LABELS: Record<string, Labels> = {
 };
 
 export function divisionLabel(division: CoicopDivision, lang: string): string {
-  return (LABELS[lang] ?? LABELS.en)[division];
+  return (Object.prototype.hasOwnProperty.call(LABELS, lang) ? LABELS[lang] : LABELS.en)[division];
 }

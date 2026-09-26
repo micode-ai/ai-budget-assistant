@@ -70,6 +70,30 @@ describe('UsersController.updateProfile theme prefs', () => {
   });
 });
 
+describe('UsersController.updateProfile real-salary cache', () => {
+  function makeWithCache() {
+    const update = jest.fn().mockResolvedValue({ id: 'u1', email: 'a@b.c', name: 'A', timezone: 'Europe/Berlin' });
+    const usersService = { update, listAccountIds: jest.fn().mockResolvedValue(['acc1', 'acc2']) } as any;
+    const cache = { delByPrefix: jest.fn().mockResolvedValue(undefined) } as any;
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, cache);
+    return { controller, usersService, cache };
+  }
+
+  it('a timezone change busts the real-salary answer of every account (the country is guessed from it)', async () => {
+    const { controller, usersService, cache } = makeWithCache();
+    await controller.updateProfile(req, { timezone: 'Europe/Berlin' });
+    expect(usersService.listAccountIds).toHaveBeenCalledWith('u1');
+    expect(cache.delByPrefix).toHaveBeenCalledWith('rs:acc1:');
+    expect(cache.delByPrefix).toHaveBeenCalledWith('rs:acc2:');
+  });
+
+  it('a change that affects neither country nor timezone busts nothing', async () => {
+    const { controller, cache } = makeWithCache();
+    await controller.updateProfile(req, { name: 'B' });
+    expect(cache.delByPrefix).not.toHaveBeenCalled();
+  });
+});
+
 describe('UsersController.updateProfile payment handle', () => {
   it('rejects an invalid paymentMethod', async () => {
     const { controller } = makeController();

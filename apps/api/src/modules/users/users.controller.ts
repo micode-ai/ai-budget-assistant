@@ -113,8 +113,9 @@ export class UsersController {
       body.inflationCountry = validateInflationCountry(body.inflationCountry);
     }
     const user = await this.usersService.update(req.user.id, body);
-    if (body.inflationCountry !== undefined) {
-      // Every account's real-salary answer depends on the user's country.
+    if (body.inflationCountry !== undefined || body.timezone !== undefined) {
+      // Every account's real-salary answer depends on the user's country, which
+      // is guessed from the timezone when no inflationCountry is set.
       for (const accountId of await this.usersService.listAccountIds(req.user.id)) {
         await this.cache.delByPrefix(`rs:${accountId}:`);
       }
