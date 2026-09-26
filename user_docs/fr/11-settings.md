@@ -181,7 +181,7 @@ Gerez vos preferences de rapports et d'emails :
 ## A propos
 
 - **Version** — numero de version actuel de l'application
-- **Aide** — ouvre le centre d'aide integre
+- **Aide** — ouvre le centre d'aide integre ; utilisez la barre de recherche en haut pour acceder directement a un article sans faire defiler toute la liste
 - **Support** — envoyer un e-mail a l'equipe de support
 - **Politique de confidentialite** — consulter la politique de confidentialite
 - **Conditions d'utilisation** — consulter les conditions d'utilisation

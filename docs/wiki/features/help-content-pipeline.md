@@ -14,6 +14,7 @@ generated, and the generated artifacts are committed.
 - `scripts/generate-help-content.js` — builds the in-app bundle; its `SECTIONS` array
 - `apps/mobile/src/help/sections.ts` — the in-app section registry
 - `apps/mobile/src/help/content.ts` — **generated**; never edit
+- `apps/mobile/src/help/helpSearch.ts` — pure in-app search ranking (ABA-606)
 - `apps/mobile/app/help/index.tsx`, `app/help/[id].tsx` — the in-app screens
 - `docs/marketing/help/build_help.py` — builds the public site; its own `SECTIONS` list
 
@@ -32,6 +33,19 @@ Cross-document links written as `./NN-slug.md` become real `/help/<lang>/<slug>/
 **Extending an existing section needs no registration at all** — edit its nine markdown files and
 re-run both generators. The registration dance below applies only to a brand-new section.
 Mistaking the two is how a feature ships with no user documentation at all.
+
+**In-app search (ABA-606).** `app/help/index.tsx` filters/ranks `helpContent[lang]` through
+`searchHelpSections` — pure, no store, no API call, since the whole corpus is already in memory
+for the detail screen. Three tiers, checked in order per section: title match, else description
+match, else body match (which also renders a short matched-text snippet in place of the normal
+description line). An empty/whitespace query returns every section unranked in its original
+order — this is what makes clearing the search box restore the exact pre-search list with no
+special-casing in the screen. Scoped to the current UI language only (`helpContent[lang]`, the
+same set the screen already resolves) — no fallback to English hits, since every locale is a full
+translation of the same section set, not a thinner one. Matching is plain case-insensitive
+substring, deliberately not fuzzy — the corpus is small (~40 articles) and local. Zero matches
+renders an empty state with a button into the AI chat tab, since the app can usually answer the
+same question conversationally.
 
 ## Invariants
 
@@ -82,4 +96,5 @@ expect a large, boring diff and check it is only that.
 
 ABA-284 (the public help center) · ABA-288 (mobile rendering: portrait screenshots overflow without
 the shared `article img` constraint) · ABA-342 (help↔blog internal linking, real `lastmod` dates) ·
-ABA-366 (PageSpeed and contrast pass).
+ABA-366 (PageSpeed and contrast pass) · ABA-606 (in-app search bar over the ~40-article list —
+in-app only, public help center search deferred as a separate idea).

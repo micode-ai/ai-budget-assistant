@@ -546,6 +546,23 @@ export default {
     addAnother: 'Dodaj kolejny',
     saveFailed: 'Nie udało się zapisać wydatku',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    savingTo: "Zapis do:",
+    progress: "Paragon {{n}} z {{of}}",
+    next: "Dalej",
+    skip: "Pomiń",
+    enterManually: "Wpisz ręcznie",
+    discard: "Odrzuć",
+    discardTitle: "Zakończyć?",
+    discardBody: "Nie dodano jeszcze udostępnionych plików: {{count}}. Odrzucić je?",
+    droppedTitle: "Część plików pominięto",
+    droppedBody: "Nie dodano plików: {{count}}. Tylko zdjęcia i PDF, maks. 10 naraz (PDF do 10 MB).",
+    limitStoppedTitle: "Limit AI wyczerpany",
+    limitStoppedBody: "Nieprzetworzone pliki: {{count}}. Udostępnij je ponownie później.",
+    viewerBlockedTitle: "Nie można tu dodawać wydatków",
+    viewerBlockedBody: "W tym koncie możesz tylko przeglądać. Przełącz konto i udostępnij ponownie.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'Ten paragon został już dodany',
@@ -1895,6 +1912,11 @@ export default {
   help: {
     title: 'Pomoc',
     articleTitle: 'Pomoc',
+    searchPlaceholder: 'Szukaj w artykułach pomocy',
+    noResults: 'Brak pasujących artykułów',
+    noResultsBody: 'Spróbuj innego słowa albo zapytaj asystenta AI — zwykle odpowie od razu.',
+    askAssistant: 'Zapytaj asystenta',
+    clearSearch: 'Wyczyść wyszukiwanie',
     widgets: {
       title: 'Widżety ekranu głównego',
       subtitle: 'Tylko Android',

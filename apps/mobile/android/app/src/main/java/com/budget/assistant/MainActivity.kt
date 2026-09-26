@@ -1,6 +1,7 @@
 package com.budget.assistant
 import expo.modules.splashscreen.SplashScreenManager
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 
@@ -10,6 +11,8 @@ import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnable
 import com.facebook.react.defaults.DefaultReactActivityDelegate
 
 import expo.modules.ReactActivityDelegateWrapper
+
+import com.budget.assistant.share.ShareIntakeModule
 
 class MainActivity : ReactActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +31,21 @@ class MainActivity : ReactActivity() {
     // own screen state on the JS side, so native fragment restoration must be
     // disabled. See react-native-screens issue #17.
     super.onCreate(null)
+    // A task started by a share keeps that SEND intent as its root: after the
+    // process dies, Android recreates this Activity from it (restored state, or
+    // relaunched from Recents). Handling it again would re-copy and re-queue
+    // receipts that were already saved. Only a fresh launch is a new share.
+    val fromHistory = ((intent?.flags ?: 0) and Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) != 0
+    if (savedInstanceState == null && !fromHistory) {
+      ShareIntakeModule.handleIntent(this, intent)
+    }
+  }
+
+  /** Warm share-to-capture: the app is already running (launchMode singleTask). */
+  override fun onNewIntent(intent: Intent) {
+    super.onNewIntent(intent)
+    setIntent(intent)
+    ShareIntakeModule.handleIntent(this, intent)
   }
 
   /**

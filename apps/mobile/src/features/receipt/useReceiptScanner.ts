@@ -7,6 +7,7 @@ import { api } from '@/services/api';
 import i18n from '@/i18n';
 import type { ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
 import { computeReceiptFingerprint } from './receiptFingerprint';
+import { sharedFileKind } from '@/features/share-intake/sharedFileKind';
 
 export interface ReceiptItem {
   description: string;
@@ -71,6 +72,8 @@ export interface ReceiptScannerState {
   imageUri: string | null;
   isPdf: boolean;
   scannedReceipt: ScannedReceipt | null;
+  /** HTTP status of the last failed scan (403 = AI limit / tier), else null. */
+  errorStatus: number | null;
 }
 
 const MAX_PDF_SIZE = 10 * 1024 * 1024; // 10MB
@@ -85,6 +88,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     imageUri: null,
     isPdf: false,
     scannedReceipt: null,
+    errorStatus: null,
   });
   const pickingRef = useRef(false);
 
@@ -103,7 +107,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     if (!match) return true;
     const proceed = await onDuplicate(match);
     if (!proceed) {
-      setState({ isProcessing: false, error: null, imageUri: null, isPdf: false, scannedReceipt: null });
+      setState({ isProcessing: false, error: null, imageUri: null, isPdf: false, scannedReceipt: null, errorStatus: null });
     }
     return proceed;
   };
@@ -194,31 +198,48 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
         return processImage(asset.uri, userPrompt);
       }
 
-      if (asset.size && asset.size > MAX_PDF_SIZE) {
-        setState((s) => ({ ...s, error: i18n.t('errors.pdfTooLarge') }));
-        return null;
-      }
+      return processPdf(asset.uri, asset.size, userPrompt);
+    } catch (error) {
+      console.error('[ReceiptScanner] Failed to pick PDF:', error);
+      setState((s) => ({
+        ...s,
+        isProcessing: false,
+        error: error instanceof Error ? error.message : i18n.t('errors.processReceiptFailed'),
+        errorStatus: null,
+      }));
+      return null;
+    } finally {
+      pickingRef.current = false;
+    }
+  }, []);
 
+  /** Uploads a PDF for OCR. Shared by the document picker and share-to-capture. */
+  const processPdf = async (
+    uri: string,
+    size: number | undefined,
+    userPrompt?: string,
+  ): Promise<ScannedReceipt | null> => {
+    if (size && size > MAX_PDF_SIZE) {
+      setState((s) => ({ ...s, error: i18n.t('errors.pdfTooLarge'), errorStatus: null }));
+      return null;
+    }
+    try {
       setState((s) => ({
         ...s,
         isProcessing: true,
         error: null,
+        errorStatus: null,
         imageUri: null,
         isPdf: true,
         scannedReceipt: null,
       }));
 
-      const base64 = await uriToBase64(asset.uri);
+      const base64 = await uriToBase64(uri);
       if (!(await passesDuplicateCheck(base64))) return null;
 
       const scannedReceipt = await api.scanReceipt(base64, userPrompt || undefined, 'application/pdf');
 
-      setState((s) => ({
-        ...s,
-        isProcessing: false,
-        scannedReceipt,
-      }));
-
+      setState((s) => ({ ...s, isProcessing: false, scannedReceipt }));
       return scannedReceipt;
     } catch (error) {
       console.error('[ReceiptScanner] Failed to process PDF:', error);
@@ -227,12 +248,11 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
         isProcessing: false,
         isPdf: false,
         error: error instanceof Error ? error.message : i18n.t('errors.processReceiptFailed'),
+        errorStatus: (error as { status?: number }).status ?? null,
       }));
       return null;
-    } finally {
-      pickingRef.current = false;
     }
-  }, []);
+  };
 
   const processImage = async (
     imageUri: string,
@@ -243,6 +263,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
       ...s,
       isProcessing: true,
       error: null,
+      errorStatus: null,
       imageUri: null,
       isPdf: false,
       scannedReceipt: null,
@@ -275,6 +296,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
         ...s,
         isProcessing: false,
         error: error instanceof Error ? error.message : i18n.t('errors.processReceiptFailed'),
+        errorStatus: (error as { status?: number }).status ?? null,
       }));
       return null;
     }
@@ -287,6 +309,14 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     [],
   );
 
+  /** Share-to-capture entry: a file:// copy made by ShareIntakeModule. */
+  const processSharedFile = useCallback(
+    async (uri: string, mimeType: string, name: string, size: number): Promise<ScannedReceipt | null> =>
+      sharedFileKind(mimeType, name) === 'pdf' ? processPdf(uri, size) : processImage(uri),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
   const reset = useCallback(() => {
     setState({
       isProcessing: false,
@@ -294,6 +324,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
       imageUri: null,
       isPdf: false,
       scannedReceipt: null,
+      errorStatus: null,
     });
   }, []);
 
@@ -303,6 +334,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     pickFromGallery,
     pickPdfDocument,
     processExistingImage,
+    processSharedFile,
     reset,
   };
 }

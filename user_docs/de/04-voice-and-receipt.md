@@ -118,6 +118,18 @@ Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
 
 Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
 
+### Aus einer anderen App teilen (Android)
+
+Du hast einen Beleg als Screenshot, eine Bestätigung aus der Banking-App oder einen E-Beleg als PDF? Den Scanner musst du nicht öffnen:
+
+1. Tippe in einer beliebigen App (Galerie, Gmail, Bank, Händler-App) auf **Teilen**
+2. Wähle **AI Budget**
+3. Die App öffnet direkt den ausgefüllten Bestätigungsbildschirm — prüfen und **Speichern** tippen
+
+Du kannst **Bilder und PDFs** teilen, bis zu **10 Dateien auf einmal** (PDF bis 10 MB). Mehrere Dateien werden nacheinander zu einzelnen Ausgaben — der Titel zeigt den Fortschritt („Beleg 2 von 5“), **Weiter** führt zur nächsten Datei. Kann eine Datei nicht gelesen werden, wähle **Überspringen** oder **Manuell eingeben**. Beim Schließen fragt die App, bevor wartende Dateien verworfen werden. Jede Datei zählt als ein Belegscan gegen dein KI-Limit; ist es aufgebraucht, bleiben die übrigen Dateien für später.
+
+Teilen funktioniert nur unter Android. Auf dem iPhone und in der Web-App nutze **Beleg scannen**.
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.

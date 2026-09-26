@@ -544,6 +544,23 @@ export default {
     addAnother: 'Дадаць яшчэ',
     saveFailed: 'Не ўдалося захаваць расход',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    savingTo: "Захаваць у:",
+    progress: "Чэк {{n}} з {{of}}",
+    next: "Далей",
+    skip: "Прапусціць",
+    enterManually: "Увесці ўручную",
+    discard: "Адмяніць",
+    discardTitle: "Спыніцца?",
+    discardBody: "Яшчэ не дададзена файлаў: {{count}}. Адмяніць іх?",
+    droppedTitle: "Частку файлаў прапушчана",
+    droppedBody: "Не дададзена файлаў: {{count}}. Толькі фота і PDF, не больш за 10 за раз (PDF да 10 МБ).",
+    limitStoppedTitle: "Ліміт AI вычарпаны",
+    limitStoppedBody: "Не апрацавана файлаў: {{count}}. Падзяліцеся імі пазней яшчэ раз.",
+    viewerBlockedTitle: "Тут нельга дадаваць выдаткі",
+    viewerBlockedBody: "У гэтым акаўнце ў вас толькі прагляд. Пераключыце акаўнт і падзяліцеся зноў.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'Гэты чэк ужо дададзены',
@@ -1863,6 +1880,11 @@ export default {
   help: {
     title: 'Дапамога',
     articleTitle: 'Дапамога',
+    searchPlaceholder: 'Пошук у раздзелах даведкі',
+    noResults: 'Нічога не знойдзена',
+    noResultsBody: 'Паспрабуйце іншае слова або спытайце ШІ-асістэнта — ён звычайна адказвае адразу.',
+    askAssistant: 'Спытаць асістэнта',
+    clearSearch: 'Ачысціць пошук',
     widgets: {
       title: 'Віджэты галоўнага экрана',
       subtitle: 'Толькі Android',

@@ -118,6 +118,18 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 
 Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
 
+### Compartir desde otra app (Android)
+
+¿Tienes un recibo como captura de pantalla, una confirmación de la app del banco o un recibo electrónico en PDF? No hace falta abrir el escáner:
+
+1. En cualquier app (galería, Gmail, tu banco, la app de una tienda), toca **Compartir**
+2. Elige **AI Budget**
+3. La app se abre directamente en la pantalla de confirmación ya rellenada: revísala y toca **Guardar**
+
+Puedes compartir **imágenes y PDF**, hasta **10 archivos a la vez** (PDF de hasta 10 MB). Varios archivos se convierten en gastos separados, uno tras otro: el título muestra el progreso («Recibo 2 de 5») y **Siguiente** pasa al archivo siguiente. Si un archivo no se puede leer, elige **Omitir** o **Introducir a mano**. Al cerrar la pantalla, la app pregunta antes de descartar los archivos pendientes. Cada archivo cuenta como un escaneo de recibo en tu límite de IA; si se agota, los archivos restantes quedan para más tarde.
+
+Compartir solo funciona en Android. En iPhone y en la app web usa **Escanear recibo**.
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.

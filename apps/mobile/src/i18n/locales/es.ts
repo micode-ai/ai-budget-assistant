@@ -544,6 +544,23 @@ export default {
     addAnother: 'Agregar otro',
     saveFailed: 'Error al guardar el gasto',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    savingTo: "Guardar en:",
+    progress: "Recibo {{n}} de {{of}}",
+    next: "Siguiente",
+    skip: "Omitir",
+    enterManually: "Introducir a mano",
+    discard: "Descartar",
+    discardTitle: "¿Parar aquí?",
+    discardBody: "Archivos compartidos sin añadir: {{count}}. ¿Descartarlos?",
+    droppedTitle: "Se omitieron algunos archivos",
+    droppedBody: "Archivos no añadidos: {{count}}. Solo imágenes y PDF, hasta 10 a la vez (PDF hasta 10 MB).",
+    limitStoppedTitle: "Límite de IA alcanzado",
+    limitStoppedBody: "Archivos sin procesar: {{count}}. Compártelos de nuevo más tarde.",
+    viewerBlockedTitle: "No puedes añadir gastos aquí",
+    viewerBlockedBody: "En esta cuenta solo puedes ver. Cambia de cuenta y vuelve a compartir.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'Este recibo ya se añadió',
@@ -1886,6 +1903,11 @@ export default {
   help: {
     title: 'Ayuda',
     articleTitle: 'Ayuda',
+    searchPlaceholder: 'Buscar artículos de ayuda',
+    noResults: 'No hay artículos que coincidan',
+    noResultsBody: 'Prueba otra palabra o pregúntale al asistente de IA — suele responder directamente.',
+    askAssistant: 'Preguntar al asistente',
+    clearSearch: 'Borrar búsqueda',
     widgets: {
       title: 'Widgets de pantalla de inicio',
       subtitle: 'Solo Android',

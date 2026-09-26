@@ -544,6 +544,23 @@ export default {
     addAnother: 'Weitere hinzufügen',
     saveFailed: 'Ausgabe konnte nicht gespeichert werden',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    savingTo: "Speichern in:",
+    progress: "Beleg {{n}} von {{of}}",
+    next: "Weiter",
+    skip: "Überspringen",
+    enterManually: "Manuell eingeben",
+    discard: "Verwerfen",
+    discardTitle: "Hier aufhören?",
+    discardBody: "Noch nicht hinzugefügte Dateien: {{count}}. Verwerfen?",
+    droppedTitle: "Einige Dateien wurden übersprungen",
+    droppedBody: "Nicht hinzugefügte Dateien: {{count}}. Nur Bilder und PDFs, höchstens 10 auf einmal (PDF bis 10 MB).",
+    limitStoppedTitle: "KI-Limit erreicht",
+    limitStoppedBody: "Nicht verarbeitete Dateien: {{count}}. Teile sie später erneut.",
+    viewerBlockedTitle: "Hier kannst du keine Ausgaben hinzufügen",
+    viewerBlockedBody: "Dieses Konto kannst du nur ansehen. Wechsle das Konto und teile erneut.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'Dieser Beleg wurde bereits erfasst',
@@ -1886,6 +1903,11 @@ export default {
   help: {
     title: 'Hilfe',
     articleTitle: 'Hilfe',
+    searchPlaceholder: 'Hilfeartikel durchsuchen',
+    noResults: 'Keine passenden Artikel',
+    noResultsBody: 'Versuche einen anderen Begriff oder frag den KI-Assistenten — er kann meist direkt antworten.',
+    askAssistant: 'Assistenten fragen',
+    clearSearch: 'Suche löschen',
     widgets: {
       title: 'Startbildschirm-Widgets',
       subtitle: 'Nur Android',

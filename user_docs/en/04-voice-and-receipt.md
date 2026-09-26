@@ -118,6 +118,18 @@ The app warns you before a receipt ends up in your expenses twice:
 
 The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
 
+### Sharing from Another App (Android)
+
+Got a receipt as a screenshot, a banking-app confirmation or an e-receipt PDF? You don't have to open the scanner:
+
+1. In any app (gallery, Gmail, your bank, a store app), tap **Share**
+2. Choose **AI Budget**
+3. The app opens straight on the filled-in confirmation screen — check it and tap **Save**
+
+You can share **images and PDFs**, up to **10 files at a time** (a PDF up to 10 MB). Several files become separate expenses, one after another — the title shows your progress ("Receipt 2 of 5") and **Next** takes you to the following file. If a file can't be read, choose **Skip** or **Enter manually**. Closing the screen asks before discarding the files still waiting. Each file counts as one receipt scan against your AI limit; if the limit runs out, the remaining files are left for later.
+
+Sharing works on Android only. On iPhone and in the web app, use **Scan Receipt** instead.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.

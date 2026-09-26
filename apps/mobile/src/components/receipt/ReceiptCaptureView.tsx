@@ -14,6 +14,11 @@ interface Props {
   onPdfPress: () => void;
   /** Receipts saved so far in this continuous scanning session; 0/undefined renders nothing. */
   sessionCount?: number;
+  /**
+   * Share-to-capture: the file is already chosen (it came from another app),
+   * so neither the capture buttons nor the free-text prompt apply.
+   */
+  hideCaptureButtons?: boolean;
 }
 
 /**
@@ -33,6 +38,7 @@ export default function ReceiptCaptureView({
   onGalleryPress,
   onPdfPress,
   sessionCount,
+  hideCaptureButtons,
 }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -59,6 +65,7 @@ export default function ReceiptCaptureView({
         </Text>
       </View>
 
+      {!hideCaptureButtons && (
       <TextInput
         style={styles.userPromptInput}
         placeholder={t('receipt.userPromptPlaceholder')}
@@ -69,6 +76,7 @@ export default function ReceiptCaptureView({
         numberOfLines={2}
         textAlignVertical="top"
       />
+      )}
 
       {isProcessing ? (
         <View style={styles.processingContainer}>
@@ -83,7 +91,7 @@ export default function ReceiptCaptureView({
             {isPdf ? t('receipt.analyzingPdf') : t('receipt.extracting')}
           </Text>
         </View>
-      ) : (
+      ) : hideCaptureButtons ? null : (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.scanButton}
