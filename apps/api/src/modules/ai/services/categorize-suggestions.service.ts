@@ -239,6 +239,7 @@ export class CategorizeSuggestionsService {
     const existingLower = new Set(categories.map((c) => c.name.trim().toLowerCase()));
     const standardNames =
       getDefaultCategories(languageCode)
+        .filter((c) => c.type !== 'income')
         .map((c) => c.name)
         .filter((name) => !existingLower.has(name.trim().toLowerCase()))
         .filter((name) => !isDepositCategoryName(name))

@@ -197,6 +197,7 @@ export default {
   },
   categorize: {
     bannerText: 'Dépenses sans catégorie : {{count}}',
+    bannerTextIncome: 'Revenus sans catégorie : {{count}}',
     bannerAction: 'Suggérer des catégories',
     bannerShort: 'Sans catégorie : {{count}}',
     summary: '{{assigned}} sur {{total}} attribuées',
@@ -2250,6 +2251,7 @@ export default {
     reapplyGroupLabel: '{{count}} de {{category}}',
     reapplySummary: '{{count}} dépenses seront déplacées vers {{category}}',
     reapplyApplied: '{{count}} dépenses déplacées vers {{category}}',
+    reapplyApply: 'Appliquer ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'Utilisation AI',
@@ -2663,6 +2665,7 @@ export default {
     shareListAction: 'Partager le lien',
     revokeLinkAction: 'Révoquer le lien',
     linkRevoked: 'Lien révoqué',
+    linkCopied: 'Lien copié dans le presse-papiers',
     shareLinkFailed: "Impossible de créer ou de mettre à jour le lien de partage. Veuillez réessayer.",
   },
   receiptCheck: {

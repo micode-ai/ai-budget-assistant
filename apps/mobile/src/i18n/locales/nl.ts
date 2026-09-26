@@ -197,6 +197,7 @@ export default {
   },
   categorize: {
     bannerText: 'Uitgaven zonder categorie: {{count}}',
+    bannerTextIncome: 'Inkomsten zonder categorie: {{count}}',
     bannerAction: 'Categorieën voorstellen',
     bannerShort: 'Zonder categorie: {{count}}',
     summary: '{{assigned}} van {{total}} toegewezen',
@@ -2250,6 +2251,7 @@ export default {
     reapplyGroupLabel: '{{count}} uit {{category}}',
     reapplySummary: '{{count}} uitgaven worden verplaatst naar {{category}}',
     reapplyApplied: '{{count}} uitgaven verplaatst naar {{category}}',
+    reapplyApply: 'Toepassen ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'AI-gebruik',
@@ -2663,6 +2665,7 @@ export default {
     shareListAction: 'Link delen',
     revokeLinkAction: 'Link intrekken',
     linkRevoked: 'Link ingetrokken',
+    linkCopied: 'Link gekopieerd naar klembord',
     shareLinkFailed: 'De deellink kon niet worden aangemaakt of bijgewerkt. Probeer het opnieuw.',
   },
   receiptCheck: {

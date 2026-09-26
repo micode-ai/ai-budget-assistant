@@ -35,7 +35,9 @@ export function UncategorizedBanner({ onPress, entityType = 'expense' }: Props) 
 
   // The count is emphasised, so the label is split around it. Every locale puts
   // the number last, but lastIndexOf keeps a digit earlier in a translation safe.
-  const label = t('categorize.bannerShort', { count });
+  // Named, not the bare "Without a category": the desktop screen shows the
+  // expense and income banners one above the other.
+  const label = t(entityType === 'income' ? 'categorize.bannerTextIncome' : 'categorize.bannerText', { count });
   const countText = String(count);
   const at = label.lastIndexOf(countText);
   const before = at >= 0 ? label.slice(0, at) : label;

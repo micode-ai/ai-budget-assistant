@@ -197,6 +197,7 @@ export default {
   },
   categorize: {
     bannerText: 'Gastos sin categoría: {{count}}',
+    bannerTextIncome: 'Ingresos sin categoría: {{count}}',
     bannerAction: 'Sugerir categorías',
     bannerShort: 'Sin categoría: {{count}}',
     summary: '{{assigned}} de {{total}} asignados',
@@ -2250,6 +2251,7 @@ export default {
     reapplyGroupLabel: '{{count}} de {{category}}',
     reapplySummary: '{{count}} gastos se moverán a {{category}}',
     reapplyApplied: 'Se movieron {{count}} gastos a {{category}}',
+    reapplyApply: 'Aplicar ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'Uso de AI',
@@ -2663,6 +2665,7 @@ export default {
     shareListAction: 'Compartir enlace',
     revokeLinkAction: 'Revocar enlace',
     linkRevoked: 'Enlace revocado',
+    linkCopied: 'Enlace copiado al portapapeles',
     shareLinkFailed: 'No se pudo crear o actualizar el enlace para compartir. Inténtalo de nuevo.',
   },
   receiptCheck: {

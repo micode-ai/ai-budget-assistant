@@ -25,6 +25,9 @@ feature's own page. It's closed now, for account creation only — see **Known g
 
 ## Invariants
 
+- **Salary and Freelance are seeded as `income`.** `DefaultCategory.type` marks them in every language; the seeder writes it. Before [ABA-600](https://github.com/micode-ai/ai-budget-assistant/issues/624) all 17 defaults were `expense`, so a new account had no income category and the income review had to invent one. Existing accounts were not backfilled.
+
+
 - **Seeding happens inside the same `$transaction` as the account + owner-membership create.** A
   category set that lands after the account's create-response has already gone out would race the
   client's first `GET /categories` for that account.

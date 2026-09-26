@@ -118,6 +118,18 @@ describe('AccountsService', () => {
       },
     );
 
+    it('seeds Salary and Freelance as income categories and everything else as expense', async () => {
+      mockPrisma.user.findUnique.mockResolvedValue({ language: 'en' });
+      await service.create(userId, { name: 'Family', type: 'shared' } as CreateAccountDto);
+
+      const data: Array<{ name: string; type: string }> = mockPrisma.category.createMany.mock.calls[0][0].data;
+      const typeOf = (name: string) => data.find((c) => c.name === name)?.type;
+      expect(typeOf('Salary')).toBe('income');
+      expect(typeOf('Freelance')).toBe('income');
+      expect(typeOf('Groceries')).toBe('expense');
+      expect(data.filter((c) => c.type === 'income')).toHaveLength(2);
+    });
+
     it('does NOT seed categories for an investment account', async () => {
       await service.create(userId, { name: 'Portfolio', type: 'investment' } as CreateAccountDto);
 

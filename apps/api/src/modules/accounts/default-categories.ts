@@ -2,6 +2,10 @@ interface DefaultCategory {
   name: string;
   icon: string;
   color: string;
+  /** Omitted means expense. Salary and Freelance are income categories: seeding
+   *  them without a type made every new account's only "income" categories
+   *  expense-typed, so the income category picker and review had nothing. */
+  type?: 'expense' | 'income';
 }
 
 const CATEGORIES: Record<string, DefaultCategory[]> = {
@@ -20,8 +24,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Gifts', icon: '🎁', color: '#E17055' },
     { name: 'Travel', icon: '✈️', color: '#00B894' },
     { name: 'Subscriptions', icon: '📱', color: '#0984E3' },
-    { name: 'Salary', icon: '💰', color: '#00B894' },
-    { name: 'Freelance', icon: '💻', color: '#6C5CE7' },
+    { name: 'Salary', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Freelance', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Other', icon: '📦', color: '#636E72' },
   ],
   ru: [
@@ -39,8 +43,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Подарки', icon: '🎁', color: '#E17055' },
     { name: 'Путешествия', icon: '✈️', color: '#00B894' },
     { name: 'Подписки', icon: '📱', color: '#0984E3' },
-    { name: 'Зарплата', icon: '💰', color: '#00B894' },
-    { name: 'Фриланс', icon: '💻', color: '#6C5CE7' },
+    { name: 'Зарплата', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Фриланс', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Другое', icon: '📦', color: '#636E72' },
   ],
   ua: [
@@ -58,8 +62,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Подарунки', icon: '🎁', color: '#E17055' },
     { name: 'Подорожі', icon: '✈️', color: '#00B894' },
     { name: 'Підписки', icon: '📱', color: '#0984E3' },
-    { name: 'Зарплата', icon: '💰', color: '#00B894' },
-    { name: 'Фріланс', icon: '💻', color: '#6C5CE7' },
+    { name: 'Зарплата', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Фріланс', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Інше', icon: '📦', color: '#636E72' },
   ],
   pl: [
@@ -77,8 +81,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Prezenty', icon: '🎁', color: '#E17055' },
     { name: 'Podróże', icon: '✈️', color: '#00B894' },
     { name: 'Subskrypcje', icon: '📱', color: '#0984E3' },
-    { name: 'Wynagrodzenie', icon: '💰', color: '#00B894' },
-    { name: 'Freelance', icon: '💻', color: '#6C5CE7' },
+    { name: 'Wynagrodzenie', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Freelance', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Inne', icon: '📦', color: '#636E72' },
   ],
   de: [
@@ -96,8 +100,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Geschenke', icon: '🎁', color: '#E17055' },
     { name: 'Reisen', icon: '✈️', color: '#00B894' },
     { name: 'Abonnements', icon: '📱', color: '#0984E3' },
-    { name: 'Gehalt', icon: '💰', color: '#00B894' },
-    { name: 'Freelance', icon: '💻', color: '#6C5CE7' },
+    { name: 'Gehalt', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Freelance', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Sonstiges', icon: '📦', color: '#636E72' },
   ],
   es: [
@@ -115,8 +119,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Regalos', icon: '🎁', color: '#E17055' },
     { name: 'Viajes', icon: '✈️', color: '#00B894' },
     { name: 'Suscripciones', icon: '📱', color: '#0984E3' },
-    { name: 'Salario', icon: '💰', color: '#00B894' },
-    { name: 'Freelance', icon: '💻', color: '#6C5CE7' },
+    { name: 'Salario', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Freelance', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Otros', icon: '📦', color: '#636E72' },
   ],
   fr: [
@@ -134,8 +138,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Cadeaux', icon: '🎁', color: '#E17055' },
     { name: 'Voyages', icon: '✈️', color: '#00B894' },
     { name: 'Abonnements', icon: '📱', color: '#0984E3' },
-    { name: 'Salaire', icon: '💰', color: '#00B894' },
-    { name: 'Freelance', icon: '💻', color: '#6C5CE7' },
+    { name: 'Salaire', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Freelance', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Autres', icon: '📦', color: '#636E72' },
   ],
   be: [
@@ -153,8 +157,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Падарункі', icon: '🎁', color: '#E17055' },
     { name: 'Падарожжы', icon: '✈️', color: '#00B894' },
     { name: 'Падпіскі', icon: '📱', color: '#0984E3' },
-    { name: 'Зарплата', icon: '💰', color: '#00B894' },
-    { name: 'Фрыланс', icon: '💻', color: '#6C5CE7' },
+    { name: 'Зарплата', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Фрыланс', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Іншае', icon: '📦', color: '#636E72' },
   ],
   // Dutch was missing entirely, so every Dutch account has been seeded with the
@@ -174,8 +178,8 @@ const CATEGORIES: Record<string, DefaultCategory[]> = {
     { name: 'Cadeaus', icon: '🎁', color: '#E17055' },
     { name: 'Reizen', icon: '✈️', color: '#00B894' },
     { name: 'Abonnementen', icon: '📱', color: '#0984E3' },
-    { name: 'Salaris', icon: '💰', color: '#00B894' },
-    { name: 'Freelance', icon: '💻', color: '#6C5CE7' },
+    { name: 'Salaris', icon: '💰', color: '#00B894', type: 'income' },
+    { name: 'Freelance', icon: '💻', color: '#6C5CE7', type: 'income' },
     { name: 'Overig', icon: '📦', color: '#636E72' },
   ],
 };

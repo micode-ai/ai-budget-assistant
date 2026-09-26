@@ -606,7 +606,7 @@ export function MerchantsSettings() {
                 onPress={handleConfirmReapply}
                 disabled={saving || reapplySelectedCount === 0}
               >
-                <Text style={styles.saveText}>{t('common.apply', { count: reapplySelectedCount })}</Text>
+                <Text style={styles.saveText}>{t('merchants.reapplyApply', { count: reapplySelectedCount })}</Text>
               </TouchableOpacity>
             </View>
           </>

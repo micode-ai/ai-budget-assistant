@@ -39,6 +39,10 @@ soft delete. They mirror the in-memory `merchantRulesStore` precedent rather tha
 
 ## Invariants
 
+- **The guest toggle is Post/Redirect/Get.** `POST /sl/:token/items/:itemId/toggle` answers 303 to `/sl/:token`; rendering the page straight from the POST let a refresh re-submit and flip the item back ([ABA-600](https://github.com/micode-ai/ai-budget-assistant/issues/624)). Each row is one submit button with a drawn tick box — a `disabled` checkbox inside the button swallowed clicks on the box.
+- **On web the share button copies the link.** `shareLinkOrCopy` falls back to the clipboard when `Share.share` rejects (a desktop browser); only a failed create is reported as an error.
+
+
 **The local row `id` is the `clientId`, permanently.** It never adopts the server PK.
 
 **Mark synced ONLY on the server ack.** Marking before it caused a hydrate-during-create silent

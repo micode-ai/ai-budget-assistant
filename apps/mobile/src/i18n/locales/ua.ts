@@ -197,6 +197,7 @@ export default {
   },
   categorize: {
     bannerText: 'Витрат без категорії: {{count}}',
+    bannerTextIncome: 'Доходів без категорії: {{count}}',
     bannerAction: 'Запропонувати категорії',
     bannerShort: 'Без категорії: {{count}}',
     summary: 'Розкладено {{assigned}} з {{total}}',
@@ -2260,6 +2261,7 @@ export default {
     reapplyGroupLabel: '{{count}} з категорії {{category}}',
     reapplySummary: '{{count}} витрат буде переміщено до {{category}}',
     reapplyApplied: 'Переміщено {{count}} витрат до {{category}}',
+    reapplyApply: 'Застосувати ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'Використання AI',
@@ -2674,6 +2676,7 @@ export default {
     shareListAction: 'Поділитися посиланням',
     revokeLinkAction: 'Відкликати посилання',
     linkRevoked: 'Посилання відкликано',
+    linkCopied: 'Посилання скопійовано в буфер обміну',
     shareLinkFailed: 'Не вдалося створити або оновити посилання для доступу. Спробуйте ще раз.',
   },
   receiptCheck: {

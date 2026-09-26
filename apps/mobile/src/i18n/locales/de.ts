@@ -197,6 +197,7 @@ export default {
   },
   categorize: {
     bannerText: 'Ausgaben ohne Kategorie: {{count}}',
+    bannerTextIncome: 'Einnahmen ohne Kategorie: {{count}}',
     bannerAction: 'Kategorien vorschlagen',
     bannerShort: 'Ohne Kategorie: {{count}}',
     summary: '{{assigned}} von {{total}} zugeordnet',
@@ -2250,6 +2251,7 @@ export default {
     reapplyGroupLabel: '{{count}} aus {{category}}',
     reapplySummary: '{{count}} Ausgaben werden nach {{category}} verschoben',
     reapplyApplied: '{{count}} Ausgaben nach {{category}} verschoben',
+    reapplyApply: 'Übernehmen ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'AI-Nutzung',
@@ -2663,6 +2665,7 @@ export default {
     shareListAction: 'Link teilen',
     revokeLinkAction: 'Link widerrufen',
     linkRevoked: 'Link widerrufen',
+    linkCopied: 'Link in die Zwischenablage kopiert',
     shareLinkFailed: 'Der Freigabelink konnte nicht erstellt oder aktualisiert werden. Bitte versuche es erneut.',
   },
   receiptCheck: {

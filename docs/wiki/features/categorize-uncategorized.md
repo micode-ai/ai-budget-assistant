@@ -117,6 +117,9 @@ trusted as the key to write with.
 
 ## Invariants
 
+- **Desktop shortcuts are off while the review is open.** `keyboardNavEnabled` includes `!showCategorize`; without it a keystroke that missed the name field fired `n` and replaced the review with "New Expense" ([ABA-600](https://github.com/micode-ai/ai-budget-assistant/issues/624)). The two desktop banners are labelled "Expenses …" / "Incomes …", since they sit one above the other.
+
+
 - **The endpoint writes nothing.** `POST /ai/categorize-uncategorized` only ever reads; every
   category is created, and every expense updated, by the client after the user hits Apply, through
   the same `categoryStore.createCategory` / `expenseStore.bulkUpdateExpenses` any other mobile flow

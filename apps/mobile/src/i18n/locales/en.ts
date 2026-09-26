@@ -197,6 +197,7 @@ export default {
   },
   categorize: {
     bannerText: 'Expenses without a category: {{count}}',
+    bannerTextIncome: 'Incomes without a category: {{count}}',
     bannerAction: 'Suggest categories',
     bannerShort: 'Without a category: {{count}}',
     summary: '{{assigned}} of {{total}} assigned',
@@ -2257,6 +2258,7 @@ export default {
     reapplyGroupLabel: '{{count}} from {{category}}',
     reapplySummary: '{{count}} expenses will move to {{category}}',
     reapplyApplied: 'Moved {{count}} expenses to {{category}}',
+    reapplyApply: 'Apply ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'AI Usage',
@@ -2670,6 +2672,7 @@ export default {
     shareListAction: 'Share link',
     revokeLinkAction: 'Revoke link',
     linkRevoked: 'Link revoked',
+    linkCopied: 'Link copied to clipboard',
     shareLinkFailed: "Couldn't create or update the share link. Please try again.",
   },
   receiptCheck: {

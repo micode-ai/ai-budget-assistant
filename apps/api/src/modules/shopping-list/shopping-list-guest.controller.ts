@@ -1,6 +1,6 @@
-import { Controller, Get, Post, Param, Req, Header, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Param, Req, Res, Header, UseGuards } from '@nestjs/common';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import { PrismaService } from '../../database/prisma.service';
 import { renderGuestListPage, renderListNotFoundPage, GuestListPageModel } from './helpers/guest-list-page';
 import { getGuestListPageStrings, resolveGuestListLang } from './helpers/guest-list-page-i18n';
@@ -88,16 +88,19 @@ export class ShoppingListGuestController {
   @Post(':token/items/:itemId/toggle')
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 30, ttl: 60000 } })
-  @Header('Content-Type', 'text/html; charset=utf-8')
-  @Header('Cache-Control', 'no-store')
   async toggleItem(
     @Param('token') token: string,
     @Param('itemId') itemId: string,
     @Req() req: Request,
-  ): Promise<string> {
+    @Res() res: Response,
+  ): Promise<void> {
     const strings = getGuestListPageStrings(resolveGuestListLang(req));
     const list = await this.findUsableList(token);
-    if (!list) return renderListNotFoundPage(strings);
+    if (!list) {
+      res.set({ 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+      res.send(renderListNotFoundPage(strings));
+      return;
+    }
 
     const item = list.items.find((i) => i.id === itemId);
     if (item) {
@@ -105,14 +108,17 @@ export class ShoppingListGuestController {
       // so a real member's next pull picks up the change through the
       // ordinary REST pull-merge this module already uses — no `/sync`
       // machinery involved. A double-submit toggling twice is harmless (no
-      // visible net change), so no extra guard against a repeat POST.
+      // visible net change), and the redirect below stops a refresh from repeating it.
       await this.prisma.shoppingListItem.update({
         where: { id: item.id },
         data: { isChecked: !item.isChecked, syncVersion: { increment: 1 } },
       });
-      item.isChecked = !item.isChecked;
     }
 
-    return renderGuestListPage(this.buildModel(list, token), strings);
+    // Post/Redirect/Get: rendering the page straight from the POST left the
+    // browser on the toggle URL, so a refresh re-submitted the form and flipped
+    // the item straight back.
+    res.set('Cache-Control', 'no-store');
+    res.redirect(303, `/sl/${encodeURIComponent(token)}`);
   }
 }

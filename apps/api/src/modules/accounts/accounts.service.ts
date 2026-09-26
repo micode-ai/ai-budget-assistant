@@ -95,6 +95,7 @@ export class AccountsService {
         name: cat.name,
         icon: cat.icon,
         color: cat.color,
+        type: cat.type ?? 'expense',
       })),
     });
   }

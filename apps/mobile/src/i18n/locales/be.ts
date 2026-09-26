@@ -195,6 +195,7 @@ export default {
   },
   categorize: {
     bannerText: 'Выдаткаў без катэгорыі: {{count}}',
+    bannerTextIncome: 'Даходаў без катэгорыі: {{count}}',
     bannerAction: 'Прапанаваць катэгорыі',
     bannerShort: 'Без катэгорыі: {{count}}',
     summary: 'Раскладзена {{assigned}} з {{total}}',
@@ -2228,6 +2229,7 @@ export default {
     reapplyGroupLabel: '{{count}} з катэгорыі {{category}}',
     reapplySummary: '{{count}} выдаткаў будзе перанесена ў {{category}}',
     reapplyApplied: 'Перанесена {{count}} выдаткаў у {{category}}',
+    reapplyApply: 'Ужыць ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'Выкарыстанне AI',
@@ -2642,6 +2644,7 @@ export default {
     shareListAction: 'Падзяліцца спасылкай',
     revokeLinkAction: 'Адклікаць спасылку',
     linkRevoked: 'Спасылка адклікана',
+    linkCopied: 'Спасылка скапіравана ў буфер абмену',
     shareLinkFailed: 'Не ўдалося стварыць або абнавіць спасылку для доступу. Паспрабуйце яшчэ раз.',
   },
   receiptCheck: {

@@ -197,6 +197,7 @@ export default {
   },
   categorize: {
     bannerText: 'Wydatki bez kategorii: {{count}}',
+    bannerTextIncome: 'Przychody bez kategorii: {{count}}',
     bannerAction: 'Zaproponuj kategorie',
     bannerShort: 'Bez kategorii: {{count}}',
     summary: 'Przypisano {{assigned}} z {{total}}',
@@ -2260,6 +2261,7 @@ export default {
     reapplyGroupLabel: '{{count}} z {{category}}',
     reapplySummary: '{{count}} wydatków zostanie przeniesionych do {{category}}',
     reapplyApplied: 'Przeniesiono {{count}} wydatków do {{category}}',
+    reapplyApply: 'Zastosuj ({{count}})',
   },
   aiUsage: {
     confirmTitle: 'Użycie AI',
@@ -2674,6 +2676,7 @@ export default {
     shareListAction: 'Udostępnij link',
     revokeLinkAction: 'Cofnij link',
     linkRevoked: 'Link cofnięty',
+    linkCopied: 'Link skopiowany do schowka',
     shareLinkFailed: 'Nie udało się utworzyć ani zaktualizować linku do udostępniania. Spróbuj ponownie.',
   },
   receiptCheck: {

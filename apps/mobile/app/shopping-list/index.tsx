@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Share } from 'react-native';
+import * as Clipboard from 'expo-clipboard';
 import { showAlert } from '@/utils/alert';
+import { shareLinkOrCopy } from '@/utils/shareLinkOrCopy';
 import { Stack, router } from 'expo-router';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -88,13 +90,22 @@ export default function ShoppingListScreen() {
       {
         text: t('shoppingList.shareListAction'),
         onPress: async () => {
+          let url: string;
           try {
-            const url = await shareList(activeListId);
-            await Share.share({ message: url });
+            url = await shareList(activeListId);
           } catch (e) {
             console.warn('Failed to create shopping list share link:', e);
             showAlert(t('common.error'), t('shoppingList.shareLinkFailed'));
+            return;
           }
+          // Only a failed create is an error. A desktop browser has no share
+          // sheet, so the link is copied (or shown) instead of being lost.
+          const outcome = await shareLinkOrCopy(url, {
+            share: (u) => Share.share({ message: u }),
+            copy: (u) => Clipboard.setStringAsync(u),
+          });
+          if (outcome === 'copied') showAlert(t('shoppingList.linkCopied'), url);
+          else if (outcome === 'manual') showAlert(t('shoppingList.shareList'), url);
         },
       },
       {

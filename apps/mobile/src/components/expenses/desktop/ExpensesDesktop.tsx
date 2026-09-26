@@ -275,7 +275,9 @@ export function ExpensesDesktop() {
   // and its `Enter`/`Space` bindings (registered inside `TransactionTable`)
   // are disabled while this is false, so an open dialog/menu can't have a
   // background row silently move or get toggled underneath it.
-  const keyboardNavEnabled = !selectedRow && !createKind && !menuState;
+  // `showCategorize` too: typing a new category name while focus had left the
+  // field (`n`) opened "New Expense" underneath the review and closed it.
+  const keyboardNavEnabled = !selectedRow && !createKind && !menuState && !showCategorize;
 
   // `/` and `Ctrl`/`Cmd`+`K` both focus the same search box — `/` is the
   // primary, always-reachable binding; `mod+k` is a convenience some
