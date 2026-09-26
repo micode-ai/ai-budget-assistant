@@ -19,6 +19,7 @@ interface CreateUserData {
   accentColor?: string | null;
   paymentMethod?: SettleMethod | null;
   paymentHandle?: string | null;
+  inflationCountry?: string | null;
   acquisitionSource?: string;
   acquisitionLocation?: string;
   acquisitionLanguage?: string;
@@ -246,6 +247,12 @@ export class UsersService {
       where: { id },
       data: { isActive: false },
     });
+  }
+
+  /** Every account this user belongs to — used to bust per-account real-salary caches. */
+  async listAccountIds(userId: string): Promise<string[]> {
+    const rows = await this.prisma.accountMember.findMany({ where: { userId }, select: { accountId: true } });
+    return rows.map((r) => r.accountId);
   }
 
   /** Ordered by `sortOrder` — the order the caller set via `replacePaymentMethods`. */

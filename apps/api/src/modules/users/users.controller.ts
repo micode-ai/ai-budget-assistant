@@ -8,6 +8,8 @@ import { TelegramLinkService } from '../telegram/telegram-link.service';
 import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
+import { CacheService } from '../../common/cache/cache.service';
+import { validateInflationCountry } from '../insights/real-salary/real-salary.validation';
 import type { SettleMethod } from '@budget/shared-types';
 import { ReplaceUserPaymentMethodsDto } from './dto';
 import { AcquisitionDto } from '../auth/dto';
@@ -31,6 +33,7 @@ export class UsersController {
     private readonly telegramBotService: TelegramBotService,
     private readonly whatsAppLinkService: WhatsAppLinkService,
     private readonly slackLinkService: SlackLinkService,
+    private readonly cache: CacheService,
   ) {}
 
   @Get('me')
@@ -61,6 +64,7 @@ export class UsersController {
       paymentMethod: user.paymentMethod,
       paymentHandle: user.paymentHandle,
       paymentMethods,
+      inflationCountry: user.inflationCountry,
       createdAt: user.createdAt,
       isAdmin: adminEmails.includes(user.email.toLowerCase()),
     };
@@ -91,7 +95,7 @@ export class UsersController {
   @Patch('me')
   async updateProfile(
     @Req() req: AuthenticatedRequest,
-    @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null },
+    @Body() body: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null; inflationCountry?: string | null },
   ) {
     if (body.themeMode !== undefined && !THEME_MODES.includes(body.themeMode)) {
       throw new BadRequestException('Invalid themeMode');
@@ -105,7 +109,16 @@ export class UsersController {
     if (body.paymentHandle !== undefined && body.paymentHandle !== null && !PAYMENT_HANDLE_REGEX.test(body.paymentHandle)) {
       throw new BadRequestException('Invalid paymentHandle');
     }
+    if (body.inflationCountry !== undefined) {
+      body.inflationCountry = validateInflationCountry(body.inflationCountry);
+    }
     const user = await this.usersService.update(req.user.id, body);
+    if (body.inflationCountry !== undefined) {
+      // Every account's real-salary answer depends on the user's country.
+      for (const accountId of await this.usersService.listAccountIds(req.user.id)) {
+        await this.cache.delByPrefix(`rs:${accountId}:`);
+      }
+    }
     return {
       id: user.id,
       email: user.email,
@@ -117,6 +130,7 @@ export class UsersController {
       accentColor: user.accentColor,
       paymentMethod: user.paymentMethod,
       paymentHandle: user.paymentHandle,
+      inflationCountry: user.inflationCountry,
     };
   }
 

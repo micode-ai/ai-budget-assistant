@@ -10,6 +10,7 @@ import { TelegramLinkService } from '../telegram/telegram-link.service';
 import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
+import { CacheService } from '../../common/cache/cache.service';
 
 function makeController(update = jest.fn()) {
   const usersService = {
@@ -23,6 +24,7 @@ function makeController(update = jest.fn()) {
     {} as any, // telegramBotService
     {} as any, // whatsAppLinkService
     {} as any, // slackLinkService
+    {} as any, // cache
   );
   return { controller, usersService, update };
 }
@@ -135,7 +137,7 @@ describe('UsersController.getProfile payment handle', () => {
     });
     const getPaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(res.paymentMethod).toBe('paypal');
     expect(res.paymentHandle).toBe('user@paypal.com');
@@ -150,7 +152,7 @@ describe('UsersController.getProfile payment handle', () => {
     });
     const getPaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(res.paymentMethod).toBeNull();
     expect(res.paymentHandle).toBeNull();
@@ -168,7 +170,7 @@ describe('UsersController.getProfile payment handle', () => {
       { method: 'blik', handle: '+48 123 456 789' },
     ]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(getPaymentMethods).toHaveBeenCalledWith('u1');
     expect(res.paymentMethods).toEqual([
@@ -185,7 +187,7 @@ describe('UsersController.replacePaymentMethods', () => {
       { method: 'paypal', handle: 'pp-handle' },
     ]);
     const usersService = { replacePaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
 
     const res = await controller.replacePaymentMethods(req, {
       paymentMethods: [
@@ -209,7 +211,7 @@ describe('UsersController.replacePaymentMethods', () => {
   it('accepts an empty list (clears every configured method)', async () => {
     const replacePaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { replacePaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
 
     const res = await controller.replacePaymentMethods(req, { paymentMethods: [] });
 
@@ -248,6 +250,7 @@ describe('PUT /users/me/payment-methods — DTO validation (real ValidationPipe)
         { provide: TelegramBotService, useValue: {} },
         { provide: WhatsAppLinkService, useValue: {} },
         { provide: SlackLinkService, useValue: {} },
+        { provide: CacheService, useValue: {} },
       ],
     })
       .overrideGuard(JwtAuthGuard)
