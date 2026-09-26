@@ -6,6 +6,7 @@ import { ProductRulesService, normalizeProductName } from '../../merchant-rules/
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { depositCategoryName, isDepositCategoryName } from '../../../common/utils/deposit-category';
+import { getDefaultCategories } from '../../accounts/default-categories';
 
 export interface ClassifyLine {
   index: number;
@@ -170,6 +171,17 @@ export class ReceiptCategorySplitService {
   ): Promise<ClassifyResult> {
     const numbered = lines.map((line, i) => `${i + 1}. ${sanitizeForPrompt(line.label)}`).join('\n');
     const categoryNames = categories.map((c) => c.name).join(', ');
+    // Standard spending categories this account does not have yet, in the
+    // owner's language: the names a new category should take instead of the
+    // model inventing one. Income defaults and the deposit name are not
+    // spending categories for a receipt line.
+    const existing = new Set(categories.map((c) => c.name.trim().toLowerCase()));
+    const standardNames =
+      getDefaultCategories(language ?? 'en')
+        .filter((c) => c.type !== 'income' && !isDepositCategoryName(c.name))
+        .map((c) => c.name)
+        .filter((name) => !existing.has(name.trim().toLowerCase()))
+        .join(', ') || '(none)';
 
     const prompt = `Assign each receipt line to exactly one category.
 
@@ -177,11 +189,13 @@ Lines:
 ${numbered}
 
 Categories: ${categoryNames}
+Standard category names (for a new category): ${standardNames}
 
 Return JSON: {"assignments":[{"line":1,"category":"<one of the categories above>"}],"newCategories":[{"name":"<new category>","lines":[2,3]}]}
 Use only the category names listed, spelled exactly as given.
 Omit a line entirely if you are not confident.
-Alcohol, tobacco, household chemicals, cosmetics, pet supplies and baby goods are each a separate kind of spending. NEVER put such a line in a general groceries or food category. Assign it to a listed category that names its kind, and when no listed category names it, group those lines into a new one in "newCategories" — up to ${MAX_PROPOSED_CATEGORIES}, each named in ${languageName(language)} as a short noun phrase, never restating a listed name. Beer, wine and spirits are alcohol, not groceries. Everything else goes in "assignments"; leave "newCategories" empty when there is no such group.
+Assign a line only to a listed category whose meaning genuinely covers that product. A category that merely shares a generic word with it is NOT a fit — food or everyday shopping never belongs in, say, a building-supplies category just because both are "purchases" ("Zakupy …"). When no listed category genuinely fits a group of ordinary lines, put them in "newCategories" under one of the standard category names above (or, if none fits, a short name in ${languageName(language)}) instead of forcing them into a listed one.
+Alcohol, tobacco, household chemicals, cosmetics, pet supplies and baby goods are each a separate kind of spending. NEVER put such a line in a general groceries or food category. Assign it to a listed category that names its kind, and when no listed category names it, group those lines into a new one in "newCategories" — up to ${MAX_PROPOSED_CATEGORIES}, each named in ${languageName(language)} as a short noun phrase, never restating a listed name. Beer, wine and spirits are alcohol, not groceries. Lines that genuinely fit a listed category go in "assignments"; leave "newCategories" empty when every line fits a listed category.
 Do not return any amounts, prices, totals or percentages.`;
 
     const response = await this.openai.chat.completions.create({

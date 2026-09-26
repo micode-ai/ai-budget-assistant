@@ -659,3 +659,63 @@ describe('finalizeReceipt category splits', () => {
     });
   });
 });
+
+describe('ReceiptFinalizerService overall category', () => {
+  const makeService = (split: { splits: unknown[]; itemCategories: unknown[] }, rules = new Map<string, string>()) => {
+    const service = Object.create(ReceiptFinalizerService.prototype) as any;
+    service.logger = { warn: jest.fn(), log: jest.fn(), error: jest.fn() };
+    service.merchantRules = { getRulesMap: jest.fn().mockResolvedValue(rules) };
+    service.buildReceiptExpense = jest.fn().mockResolvedValue({
+      merchant: 'Biedronka',
+      categoryId: 'c-build',
+      categorySuggestion: 'Zakupy budowlane',
+      receiptItems: [
+        { description: 'Tost', totalPrice: 2.99 },
+        { description: 'Śmietana', totalPrice: 3.85 },
+        { description: 'Chusteczki', totalPrice: 9.99 },
+      ],
+      categorySplits: [],
+    });
+    service.runPriceCheck = jest.fn().mockResolvedValue([]);
+    service.runCategorySplit = jest.fn().mockResolvedValue(split);
+    return service;
+  };
+
+  it('drops the model pick when the lines were proposed into a new category', async () => {
+    const service = makeService({
+      splits: [],
+      itemCategories: [
+        { index: 0, categoryId: null, categoryName: 'Zakupy spożywcze' },
+        { index: 1, categoryId: null, categoryName: 'Zakupy spożywcze' },
+        { index: 2, categoryId: 'c-hyg', categoryName: 'Higiena osobista' },
+      ],
+    });
+    // 6.84 proposed vs 9.99 hygiene: the largest group is hygiene, an existing
+    // category the model did not pick, so the overall category follows it.
+    const result = await service.finalizeReceipt({}, [], 'acc-1', 'user-1');
+    expect(result.categoryId).toBe('c-hyg');
+    expect(result.categorySuggestion).toBe('Higiena osobista');
+  });
+
+  it('leaves the receipt uncategorized when a proposal carries most of it', async () => {
+    const service = makeService({
+      splits: [
+        { categoryId: null, categoryName: 'Zakupy spożywcze', amount: 30, percentage: 75, itemIndexes: [0, 1] },
+        { categoryId: 'c-hyg', categoryName: 'Higiena osobista', amount: 10, percentage: 25, itemIndexes: [2] },
+      ],
+      itemCategories: [],
+    });
+    const result = await service.finalizeReceipt({}, [], 'acc-1', 'user-1');
+    expect(result.categoryId).toBeNull();
+    expect(result.categorySuggestion).toBe('Zakupy spożywcze');
+  });
+
+  it('never overrides a learned merchant rule', async () => {
+    const service = makeService(
+      { splits: [{ categoryId: null, categoryName: 'Zakupy spożywcze', amount: 30, percentage: 100, itemIndexes: [0] }], itemCategories: [] },
+      new Map([['biedronka', 'c-rule']]),
+    );
+    const result = await service.finalizeReceipt({}, [], 'acc-1', 'user-1');
+    expect(result.categoryId).toBe('c-rule');
+  });
+});

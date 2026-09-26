@@ -71,6 +71,20 @@ and seeds the `claimed` set. At most `MAX_PROPOSED_CATEGORIES` (3) survive one s
 check sits at the top of the loop, so a 4th valid proposal is dropped outright. Names are requested
 in the account owner's language, not generated in English and translated after.
 
+**Standard names first, and no forced fits (ABA-601).** The prompt lists the default category
+names (`getDefaultCategories`, owner language, expense-type, deposit and already-present names
+removed) as the preferred names for a proposal, and says a category that only shares a generic word
+with a product (“Zakupy …”) is not a fit. Before this, “everything else goes in assignments” made the
+model file groceries into a renovation account's building-supplies category rather than propose one.
+
+**The overall category must agree with the split (ABA-601).** `reconcileReceiptCategory`
+(`apps/api/src/modules/ai/utils/receipt-overall-category.util.ts`), called from
+`finalizeReceipt`, ranks a learned merchant rule over the split over the scan model's single guess:
+if the largest non-deposit group is a proposal, the receipt gets no category and the proposal's name
+as its suggestion; if the guess is not one of the split's groups, the largest existing group wins.
+The scan model's “null if none fits” is routinely ignored, so it is never trusted alone when there is
+per-line evidence.
+
 **Two sentinel prefixes, never confused.** The server groups a proposal under `proposed:<name>`
 inside `runCategorySplit` alone, rewriting it to `categoryId: null` before anything leaves the
 function. The mobile client separately holds the same idea as `new:<name>` in local screen state.
@@ -184,4 +198,5 @@ ABA-449 (drop a discount the lines already reflect; aim the re-read by sign) · 
 a line into the deposit category) · ABA-453 (Telegram handlers became real DI providers — they were
 hand-constructed, so a new constructor dependency silently arrived as `undefined`) · ABA-459
 (the re-read tracked as its own AI-COGS line, `ocr_reread`) · ABA-529 (category budgets attribute
-splits — see [category-id-resolution](category-id-resolution.md) and the budget attribution util).
+splits — see [category-id-resolution](category-id-resolution.md) and the budget attribution util) ·
+ABA-601 (standard names for proposals; the overall category vetoed by the split).

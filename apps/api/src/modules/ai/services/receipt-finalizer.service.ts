@@ -18,6 +18,8 @@ import {
   depositCategoryName,
 } from './receipt-category-split.service';
 import { buildCategorySplits } from '../../../common/utils/receipt-category-split';
+import { isDepositCategoryName } from '../../../common/utils/deposit-category';
+import { reconcileReceiptCategory } from '../utils/receipt-overall-category.util';
 import type {
   CategoryWithName,
   ParsedReceipt,
@@ -424,6 +426,34 @@ export class ReceiptFinalizerService {
       item.categoryId = line.categoryId;
       item.categoryName = line.categoryName;
     }
+
+    // The overall category must agree with the per-line evidence: the model's
+    // single guess is vetoed when the split puts most of the receipt somewhere
+    // else. Groups come from the reconciled split when there is one, else from
+    // the line categories weighted by line total (a split the arithmetic
+    // refused still says what the lines ARE). The deposit group is not goods.
+    const groups = (splits.length > 0
+      ? splits.map((s) => ({ categoryId: s.categoryId, categoryName: s.categoryName, amount: s.amount }))
+      : Array.from(
+          itemCategories
+            .reduce((acc, line) => {
+              const key = line.categoryId ?? `proposed:${line.categoryName}`;
+              const prev = acc.get(key) ?? { categoryId: line.categoryId, categoryName: line.categoryName, amount: 0 };
+              prev.amount += Number(receipt.receiptItems[line.index]?.totalPrice) || 0;
+              acc.set(key, prev);
+              return acc;
+            }, new Map<string, { categoryId: string | null; categoryName: string; amount: number }>())
+            .values(),
+        )
+    ).filter((g) => !isDepositCategoryName(g.categoryName));
+    const merchantKey = receipt.merchant?.trim().toLowerCase();
+    const overall = reconcileReceiptCategory({
+      ruleCategoryId: merchantKey ? merchantRulesMap.get(merchantKey) : undefined,
+      model: { categoryId: receipt.categoryId, name: receipt.categorySuggestion },
+      groups,
+    });
+    receipt.categoryId = overall.categoryId;
+    receipt.categorySuggestion = overall.categorySuggestion;
 
     return receipt;
   }

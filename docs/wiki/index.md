@@ -81,6 +81,8 @@ the section you came for — it states what must not break and why. A missing se
   and the sharing control
 - [chat-spending-questions](features/chat-spending-questions.md) — split-aware category answers and
   line-item product search
+- [chat-undo-last-action](features/chat-undo-last-action.md) — revert the most recent confirmed
+  chat or bot write
 - [deposit-and-discount-totals](features/deposit-and-discount-totals.md) — deposit and discount
   answers from the columns, in chat and on the Analytics tab
 - [shared-conversations](features/shared-conversations.md) — group chat per conversation,

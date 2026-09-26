@@ -321,7 +321,7 @@ Return a JSON object with the following structure:
   "total": total amount the customer actually pays (after discount, including tax) — REQUIRED,
   "currency": "USD/EUR/PLN/etc",
   "paymentMethod": "cash/card/etc or null",
-  "suggestedCategory": "a category from the available list, or null if none of them genuinely fits this purchase — never pick the closest wrong one",
+  "suggestedCategory": "a category from the available list, or null if none of them genuinely fits this purchase — never pick the closest wrong one; a category that only shares a generic word with the purchase (e.g. 'Zakupy …' / 'Shopping …') is NOT a fit — groceries never go into a building-supplies category",
   "confidence": 0-1 confidence score,
   "rawText": "all readable text from receipt"
 }

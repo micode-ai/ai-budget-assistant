@@ -339,4 +339,27 @@ describe('ReceiptCategorySplitService — the deposit category is not assignable
     expect(JSON.stringify(create.mock.calls[0][0])).toContain('Alcohol');
     expect(result.assignments.get(0)).toBe('c-food');
   });
+
+  it('does not force ordinary goods into an unrelated category: it offers standard names for a new one', async () => {
+    const { service, create } = makeService({
+      completion: { newCategories: [{ name: 'Zakupy spożywcze', lines: [1, 2] }] },
+    });
+
+    const result = await service.classify({
+      accountId: 'a1',
+      items: ITEMS,
+      categories: [{ id: 'c-build', name: 'Zakupy budowlane' }, { id: 'c-transport', name: 'Transport' }],
+      language: 'pl',
+    });
+
+    const prompt = create.mock.calls[0][0].messages[0].content as string;
+    const standardLine = prompt.split(/\r?\n/).find((l) => l.startsWith('Standard category names'))!;
+    expect(standardLine).toContain('Zakupy spożywcze');
+    // Already on the account: never offered again. Income defaults are not spending categories.
+    expect(standardLine).not.toContain('Transport');
+    expect(standardLine).not.toContain('Wynagrodzenie');
+    expect(prompt).toMatch(/shares a generic word/);
+    expect(result.assignments.size).toBe(0);
+    expect(result.proposals).toEqual([{ name: 'Zakupy spożywcze', itemIndexes: [0, 1] }]);
+  });
 });
