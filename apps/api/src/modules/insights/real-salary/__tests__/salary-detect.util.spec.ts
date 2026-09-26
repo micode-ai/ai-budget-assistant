@@ -67,6 +67,29 @@ describe('findSalaryCandidates', () => {
     ];
     expect(findSalaryCandidates(rows, NOW).map((c) => c.categoryId)).toEqual(['cat-salary', 'cat-rent']);
   });
+
+  it('a salary entered twice on the same day is still one monthly series', () => {
+    const rows = [
+      row({ date: day('2026-07-10'), amount: 8000 }),
+      row({ date: day('2026-08-10'), amount: 8000 }),
+      row({ date: day('2026-08-10'), amount: 8000 }),
+      row({ date: day('2026-09-10'), amount: 8000 }),
+    ];
+    const c = findSalaryCandidates(rows, NOW);
+    expect(c).toHaveLength(1);
+    expect(c[0].occurrences).toBe(3);
+  });
+
+  it('a payday shifted across a holiday keeps the series', () => {
+    const rows = [
+      row({ date: day('2026-07-01'), amount: 8000 }),
+      row({ date: day('2026-08-08'), amount: 8000 }),
+      row({ date: day('2026-09-06'), amount: 8000 }),
+    ];
+    const c = findSalaryCandidates(rows, NOW);
+    expect(c).toHaveLength(1);
+    expect(c[0].occurrences).toBe(3);
+  });
 });
 
 describe('nominalChange', () => {
@@ -109,6 +132,23 @@ describe('nominalChange', () => {
 
   it('ignores rows that do not belong to the confirmed key', () => {
     const rows = [...monthly('2024-10', 12, 8000), ...monthly('2025-10', 12, 8400), ...monthly('2025-10', 12, 99999, { description: 'Bonus' })];
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+      .toBe(5);
+  });
+
+  it('a duplicated month does not inflate the change', () => {
+    const baseRows = [...monthly('2024-10', 12, 8000), ...monthly('2025-10', 12, 8000)];
+    const lastCurrentRow = baseRows[baseRows.length - 1];
+    const rows = [...baseRows, { ...lastCurrentRow }];
+    expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
+      .toBe(0);
+  });
+
+  it('two different amounts on one day are both counted', () => {
+    const baseRows = [...monthly('2024-10', 12, 8000), ...monthly('2025-10', 12, 4200)];
+    const currentRows = monthly('2025-10', 12, 4200);
+    const currentWithExtra = currentRows.flatMap((r) => [r, { ...r, amount: 4200.01 }]);
+    const rows = [...monthly('2024-10', 12, 8000), ...currentWithExtra];
     expect(nominalChange({ rows, salaryKey: key, now: NOW, baseCurrency: 'PLN', convert: same, manualPreviousMonthly: null }).nominalChangePct)
       .toBe(5);
   });

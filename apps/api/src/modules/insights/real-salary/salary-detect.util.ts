@@ -15,10 +15,10 @@ export interface IncomeRow {
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const LOOKBACK_DAYS = 90;
-const GAP_MIN = 25;
-const GAP_MAX = 35;
+const GAP_MIN = 20; // Allow shifted paydays across weekends/holidays
+const GAP_MAX = 40;
 const MIN_OCCURRENCES = 2;
-/** A window needs this many months with salary to count as a year of pay. */
+/** Minimum number of months with a salary payment for a 12-month window to be usable. */
 const MIN_MONTHS_PER_WINDOW = 3;
 
 /** Digits and punctuation vary month to month ("Salary 09/2026") — drop them. */
@@ -40,11 +40,23 @@ export function isSalaryEligible(r: IncomeRow): boolean {
   return r.amount > 0 && !r.isDebt && !r.isDebtRepayment && !r.clientId.startsWith('transfer-income-');
 }
 
+/** Remove same-day duplicate income (same salary key, same calendar day, same amount). */
+function removeDuplicates(rows: IncomeRow[]): IncomeRow[] {
+  const seen = new Set<string>();
+  return rows.filter((r) => {
+    const key = `${salaryKeyOf(r)}|${r.date.toISOString().split('T')[0]}|${r.amount}`;
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
 export function findSalaryCandidates(rows: IncomeRow[], now: Date): SalaryCandidate[] {
   const since = now.getTime() - LOOKBACK_DAYS * DAY_MS;
+  const eligible = rows.filter((r) => isSalaryEligible(r) && r.date.getTime() >= since && r.date.getTime() <= now.getTime());
+  const deduped = removeDuplicates(eligible);
   const groups = new Map<string, IncomeRow[]>();
-  for (const r of rows) {
-    if (!isSalaryEligible(r) || r.date.getTime() < since || r.date.getTime() > now.getTime()) continue;
+  for (const r of deduped) {
     const k = salaryKeyOf(r);
     const g = groups.get(k);
     if (g) g.push(r);
@@ -109,7 +121,8 @@ export function nominalChange(input: {
   convert: (amount: number, from: string) => number | null;
   manualPreviousMonthly: number | null;
 }): { nominalChangePct: number | null; fxApproximate: boolean } {
-  const mine = input.rows.filter((r) => isSalaryEligible(r) && salaryKeyOf(r) === input.salaryKey);
+  const eligible = input.rows.filter((r) => isSalaryEligible(r) && salaryKeyOf(r) === input.salaryKey);
+  const mine = removeDuplicates(eligible);
   const end = input.now.getTime() + DAY_MS;
   const mid = end - 365 * DAY_MS;
   const start = mid - 365 * DAY_MS;
