@@ -117,6 +117,13 @@ trusted as the key to write with.
 
 ## Invariants
 
+- **Transfers counted as income are never income candidates (ABA-604).** The server excludes
+  incomes linked to an `AccountTransfer` by the relation (`linkedTransfer: { is: null }`), never by a
+  clientId pattern — `NOT startsWith` on a nullable column also drops rows with no clientId. The
+  banner (`isCategorizableIncome`) has no relation on the device, so it reads the `transfer-income-`
+  clientId both sides give those rows. Keep the two exclusion lists equal, or the banner's count and
+  the review disagree.
+
 - **Desktop shortcuts are off while the review is open.** `keyboardNavEnabled` includes `!showCategorize`; without it a keystroke that missed the name field fired `n` and replaced the review with "New Expense" ([ABA-600](https://github.com/micode-ai/ai-budget-assistant/issues/624)). The two desktop banners are labelled "Expenses …" / "Incomes …", since they sit one above the other.
 
 

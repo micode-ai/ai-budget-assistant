@@ -64,8 +64,12 @@ describe('CategorizeIncomeSuggestionsService.suggest', () => {
       isDeleted: false,
       isDebt: false,
       isDebtRepayment: false,
+      // A transfer counted as income is own money, not income to sort (ABA-604).
+      linkedTransfer: { is: null },
       encryptedPayload: null,
     });
+    // The encrypted-skip count must apply the same exclusions.
+    expect(prisma.income.count.mock.calls[0][0].where).toMatchObject({ linkedTransfer: { is: null } });
     expect(call.take).toBe(100);
     expect(call.orderBy).toEqual({ date: 'desc' });
     expect(call.select).not.toHaveProperty('items');

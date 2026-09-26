@@ -75,6 +75,9 @@ export class CategorizeIncomeSuggestionsService {
       isDeleted: false,
       isDebt: false,
       isDebtRepayment: false,
+      // A transfer counted as income (ABA-604) is the user's own money moving
+      // between their accounts — there is no income category it belongs to.
+      linkedTransfer: { is: null },
     };
     const [rows, skippedEncrypted] = await Promise.all([
       this.prisma.income.findMany({
