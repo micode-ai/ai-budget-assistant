@@ -47,17 +47,22 @@ export class OfficialInflationService implements OnApplicationBootstrap {
       return 0;
     }
     const now = new Date();
-    await this.prisma.$transaction(
-      rows.map((r) =>
-        this.prisma.officialInflationRate.upsert({
-          where: { country_division_month: { country: r.country, division: r.division, month: r.month } },
-          create: { country: r.country, division: r.division, month: r.month, annualRatePct: r.annualRatePct },
-          update: { annualRatePct: r.annualRatePct, fetchedAt: now },
-        }),
-      ),
-    );
-    this.logger.log(`Eurostat refresh stored ${rows.length} rows`);
-    return rows.length;
+    try {
+      await this.prisma.$transaction(
+        rows.map((r) =>
+          this.prisma.officialInflationRate.upsert({
+            where: { country_division_month: { country: r.country, division: r.division, month: r.month } },
+            create: { country: r.country, division: r.division, month: r.month, annualRatePct: r.annualRatePct },
+            update: { annualRatePct: r.annualRatePct, fetchedAt: now },
+          }),
+        ),
+      );
+      this.logger.log(`Eurostat refresh stored ${rows.length} rows`);
+      return rows.length;
+    } catch (e) {
+      this.logger.warn(`Storing Eurostat rates failed, keeping stored data: ${String(e)}`);
+      return 0;
+    }
   }
 
   async latestFor(country: string): Promise<{ month: string; rates: Partial<Record<CoicopDivision, number>> } | null> {

@@ -1,15 +1,26 @@
 import { OfficialInflationService } from '../official-inflation.service';
 
-function make(opts: { rows?: any[]; fetchError?: Error; stored?: any[]; count?: number } = {}) {
+function make(opts: {
+  rows?: any[];
+  fetchError?: Error;
+  stored?: any[];
+  count?: number;
+  countError?: Error;
+  transactionError?: Error;
+} = {}) {
   const upsert = jest.fn().mockResolvedValue({});
+  const countFn = opts.countError ? jest.fn().mockRejectedValue(opts.countError) : jest.fn().mockResolvedValue(opts.count ?? 1);
+  const transactionFn = opts.transactionError
+    ? jest.fn().mockRejectedValue(opts.transactionError)
+    : jest.fn(async (ops: any[]) => Promise.all(ops));
   const prisma: any = {
     officialInflationRate: {
       upsert,
-      count: jest.fn().mockResolvedValue(opts.count ?? 1),
+      count: countFn,
       findFirst: jest.fn().mockResolvedValue(opts.stored?.[0] ?? null),
       findMany: jest.fn().mockResolvedValue(opts.stored ?? []),
     },
-    $transaction: jest.fn(async (ops: any[]) => Promise.all(ops)),
+    $transaction: transactionFn,
   };
   const client: any = {
     fetchLatest: opts.fetchError ? jest.fn().mockRejectedValue(opts.fetchError) : jest.fn().mockResolvedValue(opts.rows ?? []),
@@ -53,5 +64,32 @@ describe('OfficialInflationService', () => {
   it('latestFor is null when nothing is stored for the country', async () => {
     const { svc } = make({ stored: [] });
     await expect(svc.latestFor('PL')).resolves.toBeNull();
+  });
+
+  it('bootstrap fills an empty table', async () => {
+    const rows = [{ country: 'PL', division: 'TOTAL', month: '2026-08', annualRatePct: 3.5 }];
+    const { svc, client } = make({ count: 0, rows });
+    expect(() => svc.onApplicationBootstrap()).not.toThrow();
+    await new Promise((r) => setImmediate(r));
+    expect(client.fetchLatest).toHaveBeenCalledTimes(1);
+  });
+
+  it('bootstrap skips a table that already has rows', async () => {
+    const { svc, client } = make({ count: 5 });
+    expect(() => svc.onApplicationBootstrap()).not.toThrow();
+    await new Promise((r) => setImmediate(r));
+    expect(client.fetchLatest).not.toHaveBeenCalled();
+  });
+
+  it('bootstrap never throws when counting fails', async () => {
+    const { svc } = make({ countError: new Error('DB connection lost') });
+    expect(() => svc.onApplicationBootstrap()).not.toThrow();
+    await new Promise((r) => setImmediate(r));
+  });
+
+  it('a failed write keeps stored data and does not throw', async () => {
+    const rows = [{ country: 'PL', division: 'TOTAL', month: '2026-08', annualRatePct: 3.5 }];
+    const { svc } = make({ rows, transactionError: new Error('DB deadlock') });
+    await expect(svc.refresh()).resolves.toBe(0);
   });
 });
