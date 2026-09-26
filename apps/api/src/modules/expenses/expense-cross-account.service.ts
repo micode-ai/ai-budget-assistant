@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException, ForbiddenException, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaClient } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
@@ -6,6 +6,8 @@ import { CacheService } from '../../common/cache/cache.service';
 import { AnomalyService } from '../anomaly/anomaly.service';
 import { MergeExpensesDto, MoveExpenseDto } from './dto';
 import { invalidateExpenseChatCache } from './expense-cache.util';
+import { ProductRulesService } from '../merchant-rules/product-rules.service';
+import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 /**
  * Self-contained, already-tested behaviors that don't participate in the
@@ -16,10 +18,13 @@ import { invalidateExpenseChatCache } from './expense-cache.util';
  */
 @Injectable()
 export class ExpenseCrossAccountService {
+  private readonly logger = new Logger(ExpenseCrossAccountService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly anomalyService: AnomalyService,
     private readonly cacheService: CacheService,
+    @Optional() private readonly productRules?: ProductRulesService,
   ) {}
 
   /**
@@ -259,7 +264,25 @@ export class ExpenseCrossAccountService {
     ]);
     // Any anomaly alert deep-linking to this expense in the source account is stale.
     void this.anomalyService.dismissForExpense(sourceAccountId, expense.id);
+    // Moving the expense out says it never belonged here, so the product rules
+    // its save taught the SOURCE account are unlearned (ABA-602).
+    void this.forgetSourceRules(sourceAccountId, expense.id).catch(
+      logFireAndForget(this.logger, 'ExpenseCrossAccountService.forgetSourceRules'),
+    );
 
     return { id: expense.id, accountId: targetAccountId, categoryId: remappedCategoryId };
+  }
+
+  private async forgetSourceRules(sourceAccountId: string, expenseId: string): Promise<void> {
+    if (!this.productRules) return;
+    const items = await this.prisma.expenseItem.findMany({
+      where: { expenseId, isDeleted: false, categoryId: { not: null } },
+      select: { description: true, canonicalName: true, categoryId: true },
+    });
+    // Same key the save-time learner used: printed line first.
+    const rules = items
+      .map((i) => ({ ruleKey: (i.description?.trim() || i.canonicalName?.trim() || '') as string, categoryId: i.categoryId as string }))
+      .filter((r) => r.ruleKey);
+    if (rules.length > 0) await this.productRules.forgetRules(sourceAccountId, rules);
   }
 }

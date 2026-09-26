@@ -32,6 +32,13 @@ first (`product_category_rules`, keyed by `normalizeProductName`), and sends onl
 rules did not cover to GPT. Every model answer is written back as a rule, which is why this is
 free enough to sit outside the monthly AI quota.
 
+**A save is a lesson, and a move takes it back (ABA-602).** Rules are learned at save time from
+every categorized line (`ExpenseCreatedHooksService`), never at scan time — so accepting a wrong
+suggestion teaches it, and since rules are consulted before the model, it then repeats forever.
+Moving the expense to another account unlearns what it taught the source account
+(`ProductRulesService.forgetRules`, called from `moveToAccount`), deleting a rule only while it still
+points at that category. Deleting an expense does not unlearn yet.
+
 **The model never emits money.** It receives each line's index plus label and the account's
 category *names*, and returns `[{itemIndex, categoryName}]` only — no amount, percentage or total
 anywhere in the exchange. The response is validated against a `Set` of the account's real names
@@ -199,4 +206,5 @@ a line into the deposit category) · ABA-453 (Telegram handlers became real DI p
 hand-constructed, so a new constructor dependency silently arrived as `undefined`) · ABA-459
 (the re-read tracked as its own AI-COGS line, `ocr_reread`) · ABA-529 (category budgets attribute
 splits — see [category-id-resolution](category-id-resolution.md) and the budget attribution util) ·
-ABA-601 (standard names for proposals; the overall category vetoed by the split).
+ABA-601 (standard names for proposals; the overall category vetoed by the split) · ABA-602
+(a moved expense unlearns its product rules).

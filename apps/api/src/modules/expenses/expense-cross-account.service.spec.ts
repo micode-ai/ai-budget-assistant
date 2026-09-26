@@ -206,6 +206,8 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
     sourceCategoryName?: string | null;
     targetCategoryMatch?: { id: string } | null;
     clientIdClash?: { id: string } | null;
+    items?: any[];
+    productRules?: any;
   }) {
     const tx = {
       expenseTag: { updateMany: jest.fn().mockResolvedValue({}) },
@@ -227,6 +229,7 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
           .mockResolvedValueOnce(opts.clientIdClash ?? null),
         update: jest.fn().mockResolvedValue({}),
       },
+      expenseItem: { findMany: jest.fn().mockResolvedValue(opts.items ?? []) },
       accountMember: {
         findUnique: jest.fn().mockResolvedValue(
           opts.targetMember === undefined ? { role: 'editor' } : opts.targetMember,
@@ -249,7 +252,7 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
       del: jest.fn().mockResolvedValue(undefined),
     };
     const anomalyService: any = { dismissForExpense: jest.fn().mockResolvedValue(undefined) };
-    const service = new ExpenseCrossAccountService(prisma, anomalyService, cacheService);
+    const service = new ExpenseCrossAccountService(prisma, anomalyService, cacheService, opts.productRules);
     return { service, prisma, tx };
   }
 
@@ -273,6 +276,25 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
     expect(tx.projectExpense.updateMany).toHaveBeenCalledTimes(1);
     expect(tx.expenseCategorySplit.updateMany).toHaveBeenCalledTimes(1);
     expect(tx.tripExpenseShare.deleteMany).toHaveBeenCalledTimes(1);
+  });
+
+  it('unlearns the product rules this expense taught the source account', async () => {
+    const productRules = { forgetRules: jest.fn().mockResolvedValue(undefined) };
+    const { service } = makeService({
+      productRules,
+      items: [
+        { description: 'Chleb 450g', canonicalName: 'Chleb', categoryId: 'cat-build' },
+        { description: '  ', canonicalName: 'Marchew', categoryId: 'cat-build' },
+      ],
+    });
+
+    await service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' });
+    await new Promise((r) => setImmediate(r));
+
+    expect(productRules.forgetRules).toHaveBeenCalledWith('acc-src', [
+      { ruleKey: 'Chleb 450g', categoryId: 'cat-build' },
+      { ruleKey: 'Marchew', categoryId: 'cat-build' },
+    ]);
   });
 
   it('clears the category when the target account has no same-named category', async () => {

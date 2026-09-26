@@ -77,4 +77,32 @@ export class ProductRulesService {
       }
     }
   }
+
+  /**
+   * Forgets what one expense taught. Deletes a rule only while it still points
+   * at the category this expense taught it — a later, different lesson for the
+   * same product (a user correction elsewhere) is left alone.
+   *
+   * Why it exists: saving a scan with the suggested categories counts as a
+   * lesson, so a receipt scanned into the wrong account and then moved out of
+   * it left that account believing bread is a building supply — and rules are
+   * consulted before the model, so every later receipt repeated it (ABA-602).
+   * Never throws, same as `upsertRules`.
+   */
+  async forgetRules(
+    accountId: string,
+    rules: Array<{ ruleKey: string; categoryId: string }>,
+  ): Promise<void> {
+    for (const rule of rules) {
+      const canonicalNameNormalized = normalizeProductName(rule.ruleKey ?? '');
+      if (!canonicalNameNormalized || !rule.categoryId) continue;
+      try {
+        await (this.prisma as any).productCategoryRule.deleteMany({
+          where: { accountId, canonicalNameNormalized, categoryId: rule.categoryId },
+        });
+      } catch (error) {
+        this.logger.warn(`[ProductRules] forget skipped for "${canonicalNameNormalized}": ${error}`);
+      }
+    }
+  }
 }

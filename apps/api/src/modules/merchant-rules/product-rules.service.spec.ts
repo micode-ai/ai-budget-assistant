@@ -16,6 +16,7 @@ describe('ProductRulesService', () => {
         { canonicalNameNormalized: 'piwozywiec500ml', categoryId: 'c-alc' },
       ]),
       upsert: jest.fn().mockResolvedValue({}),
+      deleteMany: jest.fn().mockResolvedValue({ count: 1 }),
     },
   });
 
@@ -58,5 +59,27 @@ describe('ProductRulesService', () => {
     ).resolves.toBeUndefined();
 
     expect(prisma.productCategoryRule.upsert).toHaveBeenCalledTimes(1);
+  });
+
+  it('forgets a rule only while it still points at the category the expense taught', async () => {
+    const prisma = makePrisma();
+    const service = new ProductRulesService(prisma as any);
+
+    await service.forgetRules('acc-1', [
+      { ruleKey: 'Chleb Wieloz. 450g', categoryId: 'c-build' },
+      { ruleKey: '', categoryId: 'c-build' },
+    ]);
+
+    expect(prisma.productCategoryRule.deleteMany).toHaveBeenCalledTimes(1);
+    expect(prisma.productCategoryRule.deleteMany).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', canonicalNameNormalized: 'chlebwieloz450g', categoryId: 'c-build' },
+    });
+  });
+
+  it('never throws when forgetting fails', async () => {
+    const prisma = makePrisma();
+    prisma.productCategoryRule.deleteMany.mockRejectedValueOnce(new Error('db down'));
+    const service = new ProductRulesService(prisma as any);
+    await expect(service.forgetRules('acc-1', [{ ruleKey: 'x', categoryId: 'c' }])).resolves.toBeUndefined();
   });
 });
