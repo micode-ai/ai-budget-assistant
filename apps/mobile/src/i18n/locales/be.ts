@@ -197,6 +197,8 @@ export default {
     bannerText: 'Выдаткаў без катэгорыі: {{count}}',
     bannerTextIncome: 'Даходаў без катэгорыі: {{count}}',
     bannerAction: 'Прапанаваць катэгорыі',
+    bannerActionExpense: 'Раскласці выдаткі',
+    bannerActionIncome: 'Раскласці даходы',
     bannerShort: 'Без катэгорыі: {{count}}',
     summary: 'Раскладзена {{assigned}} з {{total}}',
     summaryNew: 'новых катэгорый: {{count}}',

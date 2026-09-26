@@ -199,6 +199,8 @@ export default {
     bannerText: 'Ausgaben ohne Kategorie: {{count}}',
     bannerTextIncome: 'Einnahmen ohne Kategorie: {{count}}',
     bannerAction: 'Kategorien vorschlagen',
+    bannerActionExpense: 'Ausgaben zuordnen',
+    bannerActionIncome: 'Einnahmen zuordnen',
     bannerShort: 'Ohne Kategorie: {{count}}',
     summary: '{{assigned}} von {{total}} zugeordnet',
     summaryNew: 'neue Kategorien: {{count}}',

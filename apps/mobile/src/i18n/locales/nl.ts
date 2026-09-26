@@ -199,6 +199,8 @@ export default {
     bannerText: 'Uitgaven zonder categorie: {{count}}',
     bannerTextIncome: 'Inkomsten zonder categorie: {{count}}',
     bannerAction: 'Categorieën voorstellen',
+    bannerActionExpense: 'Uitgaven indelen',
+    bannerActionIncome: 'Inkomsten indelen',
     bannerShort: 'Zonder categorie: {{count}}',
     summary: '{{assigned}} van {{total}} toegewezen',
     summaryNew: 'nieuwe categorieën: {{count}}',

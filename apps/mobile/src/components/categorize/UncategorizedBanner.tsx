@@ -30,7 +30,8 @@ export function UncategorizedBanner({ onPress, entityType = 'expense' }: Props) 
   const incomeCount = useIncomeStore(
     (s) => s.incomes.filter((i) => !i.categoryId && !i.isDebt && !i.isDebtRepayment).length,
   );
-  const count = entityType === 'income' ? incomeCount : expenseCount;
+  const isIncome = entityType === 'income';
+  const count = isIncome ? incomeCount : expenseCount;
   if (!canEdit || count === 0) return null;
 
   // The count is emphasised, so the label is split around it. Every locale puts
@@ -46,8 +47,14 @@ export function UncategorizedBanner({ onPress, entityType = 'expense' }: Props) 
   return (
     <View style={styles.banner}>
       <View style={styles.lead}>
+        {/* Direction, not just wording, tells the two desktop banners apart:
+            money out is red and points down, money in is green and points up. */}
         <View style={styles.iconCircle}>
-          <Ionicons name="pricetags-outline" size={16} color={theme.colors.primary} />
+          <Ionicons
+            name={isIncome ? 'arrow-up-circle-outline' : 'arrow-down-circle-outline'}
+            size={18}
+            color={isIncome ? theme.colors.success : theme.colors.danger}
+          />
         </View>
         <Text style={styles.text}>
           {before}
@@ -61,7 +68,9 @@ export function UncategorizedBanner({ onPress, entityType = 'expense' }: Props) 
         style={({ pressed }) => [styles.action, pressed && styles.actionPressed]}
       >
         <Ionicons name="sparkles" size={14} color={theme.colors.textInverse} />
-        <Text style={styles.actionText} numberOfLines={1}>{t('categorize.bannerAction')}</Text>
+        <Text style={styles.actionText} numberOfLines={1}>
+          {t(isIncome ? 'categorize.bannerActionIncome' : 'categorize.bannerActionExpense')}
+        </Text>
         <Ionicons name="chevron-forward" size={14} color={theme.colors.textInverse} />
       </Pressable>
     </View>

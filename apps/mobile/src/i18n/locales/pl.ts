@@ -199,6 +199,8 @@ export default {
     bannerText: 'Wydatki bez kategorii: {{count}}',
     bannerTextIncome: 'Przychody bez kategorii: {{count}}',
     bannerAction: 'Zaproponuj kategorie',
+    bannerActionExpense: 'Rozłóż wydatki',
+    bannerActionIncome: 'Rozłóż przychody',
     bannerShort: 'Bez kategorii: {{count}}',
     summary: 'Przypisano {{assigned}} z {{total}}',
     summaryNew: 'nowe kategorie: {{count}}',

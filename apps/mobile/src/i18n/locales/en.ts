@@ -199,6 +199,8 @@ export default {
     bannerText: 'Expenses without a category: {{count}}',
     bannerTextIncome: 'Incomes without a category: {{count}}',
     bannerAction: 'Suggest categories',
+    bannerActionExpense: 'Sort expenses',
+    bannerActionIncome: 'Sort incomes',
     bannerShort: 'Without a category: {{count}}',
     summary: '{{assigned}} of {{total}} assigned',
     summaryNew: 'new categories: {{count}}',

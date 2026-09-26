@@ -199,6 +199,8 @@ export default {
     bannerText: 'Gastos sin categoría: {{count}}',
     bannerTextIncome: 'Ingresos sin categoría: {{count}}',
     bannerAction: 'Sugerir categorías',
+    bannerActionExpense: 'Ordenar gastos',
+    bannerActionIncome: 'Ordenar ingresos',
     bannerShort: 'Sin categoría: {{count}}',
     summary: '{{assigned}} de {{total}} asignados',
     summaryNew: 'categorías nuevas: {{count}}',

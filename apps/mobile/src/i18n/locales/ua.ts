@@ -199,6 +199,8 @@ export default {
     bannerText: 'Витрат без категорії: {{count}}',
     bannerTextIncome: 'Доходів без категорії: {{count}}',
     bannerAction: 'Запропонувати категорії',
+    bannerActionExpense: 'Розкласти витрати',
+    bannerActionIncome: 'Розкласти доходи',
     bannerShort: 'Без категорії: {{count}}',
     summary: 'Розкладено {{assigned}} з {{total}}',
     summaryNew: 'нових категорій: {{count}}',

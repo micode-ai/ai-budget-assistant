@@ -199,6 +199,8 @@ export default {
     bannerText: 'Dépenses sans catégorie : {{count}}',
     bannerTextIncome: 'Revenus sans catégorie : {{count}}',
     bannerAction: 'Suggérer des catégories',
+    bannerActionExpense: 'Classer les dépenses',
+    bannerActionIncome: 'Classer les revenus',
     bannerShort: 'Sans catégorie : {{count}}',
     summary: '{{assigned}} sur {{total}} attribuées',
     summaryNew: 'nouvelles catégories : {{count}}',
