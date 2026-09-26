@@ -544,6 +544,22 @@ export default {
     addAnother: 'Nog een toevoegen',
     saveFailed: 'Uitgave opslaan mislukt',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    progress: "Bon {{n}} van {{of}}",
+    next: "Volgende",
+    skip: "Overslaan",
+    enterManually: "Handmatig invoeren",
+    discard: "Weggooien",
+    discardTitle: "Hier stoppen?",
+    discardBody: "Nog niet toegevoegde bestanden: {{count}}. Weggooien?",
+    droppedTitle: "Sommige bestanden zijn overgeslagen",
+    droppedBody: "Niet toegevoegde bestanden: {{count}}. Alleen afbeeldingen en pdf’s, maximaal 10 tegelijk (pdf tot 10 MB).",
+    limitStoppedTitle: "AI-limiet bereikt",
+    limitStoppedBody: "Niet verwerkte bestanden: {{count}}. Deel ze later opnieuw.",
+    viewerBlockedTitle: "Je kunt hier geen uitgaven toevoegen",
+    viewerBlockedBody: "Dit account kun je alleen bekijken. Wissel van account en deel opnieuw.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'Deze bon is al toegevoegd',

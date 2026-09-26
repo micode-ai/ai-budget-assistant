@@ -544,6 +544,22 @@ export default {
     addAnother: 'En ajouter une autre',
     saveFailed: 'Échec de l\'enregistrement de la dépense',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    progress: "Ticket {{n}} sur {{of}}",
+    next: "Suivant",
+    skip: "Passer",
+    enterManually: "Saisir à la main",
+    discard: "Abandonner",
+    discardTitle: "Arrêter ici ?",
+    discardBody: "Fichiers partagés pas encore ajoutés : {{count}}. Les abandonner ?",
+    droppedTitle: "Certains fichiers ont été ignorés",
+    droppedBody: "Fichiers non ajoutés : {{count}}. Images et PDF uniquement, 10 maximum à la fois (PDF jusqu’à 10 Mo).",
+    limitStoppedTitle: "Limite d’IA atteinte",
+    limitStoppedBody: "Fichiers non traités : {{count}}. Partagez-les à nouveau plus tard.",
+    viewerBlockedTitle: "Impossible d’ajouter des dépenses ici",
+    viewerBlockedBody: "Vous ne pouvez que consulter ce compte. Changez de compte et partagez à nouveau.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'Ce reçu a déjà été ajouté',

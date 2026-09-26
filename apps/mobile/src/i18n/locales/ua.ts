@@ -546,6 +546,22 @@ export default {
     addAnother: 'Додати ще',
     saveFailed: 'Не вдалося зберегти витрату',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    progress: "Чек {{n}} з {{of}}",
+    next: "Далі",
+    skip: "Пропустити",
+    enterManually: "Ввести вручну",
+    discard: "Скасувати",
+    discardTitle: "Зупинитися?",
+    discardBody: "Ще не додано файлів: {{count}}. Скасувати їх?",
+    droppedTitle: "Частину файлів пропущено",
+    droppedBody: "Не додано файлів: {{count}}. Лише фото та PDF, не більше 10 за раз (PDF до 10 МБ).",
+    limitStoppedTitle: "Ліміт AI вичерпано",
+    limitStoppedBody: "Не оброблено файлів: {{count}}. Поділіться ними пізніше ще раз.",
+    viewerBlockedTitle: "Тут не можна додавати витрати",
+    viewerBlockedBody: "У цьому акаунті у вас лише перегляд. Перемкніть акаунт і поділіться знову.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'Цей чек уже додано',

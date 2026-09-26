@@ -21,6 +21,10 @@ import { useStyles, type Theme } from '@/theme';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import { trackAction } from '@/services/telemetry';
 import type { ExpenseCreatePrefill } from '@/components/expenses/create/ExpenseCreateForm';
+import { useShareIntakeStore } from '@/stores/shareIntakeStore';
+import { useUpgradeStore } from '@/stores/upgradeStore';
+import { current, remaining } from '@/features/share-intake/shareIntakeQueue';
+import { deleteSharedFile } from '@/services/shareIntake';
 
 interface ReceiptExpenseViewProps {
   /**
@@ -57,6 +61,12 @@ interface ReceiptExpenseViewProps {
    * the expense is not opened underneath it.
    */
   onOpenExpense?: (expenseId: string) => void;
+  /**
+   * Share-to-capture (`expense/receipt?source=share`): scan the share queue's
+   * head instead of offering capture buttons, and advance through the queue on
+   * save / skip. Omitted by every other host — the view is then unchanged.
+   */
+  shareMode?: boolean;
 }
 
 /**
@@ -76,7 +86,7 @@ interface ReceiptExpenseViewProps {
  * `_layout.tsx` alone will find a `title` that is never rendered and no badge
  * at all. The route keeps drawing its own, unchanged.
  */
-export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpense }: ReceiptExpenseViewProps) {
+export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpense, shareMode }: ReceiptExpenseViewProps) {
   useEffect(() => {
     trackAction('expense_receipt', 'started');
   }, []);
@@ -105,6 +115,14 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { getExpenseCategories } = useCategoryStore();
 
+  /** Set when the user declines the ABA-603 duplicate prompt, so a `null` scan
+   *  result can be told apart from a failed scan (which sets `error` instead). */
+  const declinedRef = useRef(false);
+
+  const discardShareQueue = () => {
+    useShareIntakeStore.getState().discardAll().forEach((f) => void deleteSharedFile(f.uri));
+  };
+
   const openExpense = (expenseId: string) => {
     if (onOpenExpense) onOpenExpense(expenseId);
     else router.push(`/expense/${expenseId}`);
@@ -122,29 +140,48 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
         t('receipt.duplicateExactTitle'),
         t('receipt.duplicateExactBody', { what: describeDuplicateMatch(match, getIntlLocale()) }),
         [
-          { text: t('common.cancel'), style: 'cancel', onPress: () => resolve(false) },
+          {
+            text: t('common.cancel'),
+            style: 'cancel',
+            onPress: () => {
+              declinedRef.current = true;
+              resolve(false);
+            },
+          },
           {
             text: t('receipt.duplicateOpen'),
             onPress: () => {
+              declinedRef.current = true;
               resolve(false);
+              // Leaving for the saved expense ends a share run: the user must not
+              // come back to a half-finished queue under it.
+              if (shareMode) discardShareQueue();
               openExpense(match.expenseId);
             },
           },
           { text: t('receipt.scanAnyway'), onPress: () => resolve(true) },
         ],
-        { cancelable: true, onDismiss: () => resolve(false) },
+        {
+          cancelable: true,
+          onDismiss: () => {
+            declinedRef.current = true;
+            resolve(false);
+          },
+        },
       );
     });
 
   const {
     isProcessing,
     error,
+    errorStatus,
     imageUri,
     isPdf,
     scannedReceipt,
     pickFromCamera,
     pickFromGallery,
     pickPdfDocument,
+    processSharedFile,
     reset,
   } = useReceiptScanner({ onDuplicate: confirmDuplicateScan });
 
@@ -160,16 +197,40 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
   }, [showConfirm, onDirtyChange]);
 
   useEffect(() => {
-    if (error) {
-      // `failed` covers only this scan-error branch. A SAVE failure inside
-      // `useReceiptSave.handleConfirmExpense`'s own `catch` reports neither
-      // `completed` nor `failed`, so it lands in the admin funnel's derived
-      // `abandoned` bucket — this flow's abandoned count over-represents true
-      // save failures relative to the other flows.
-      trackAction('expense_receipt', 'failed');
+    if (!error) return;
+    // `failed` covers only this scan-error branch. A SAVE failure inside
+    // `useReceiptSave.handleConfirmExpense`'s own `catch` reports neither
+    // `completed` nor `failed`, so it lands in the admin funnel's derived
+    // `abandoned` bucket — this flow's abandoned count over-represents true
+    // save failures relative to the other flows.
+    trackAction('expense_receipt', 'failed');
+    if (!shareMode) {
       showAlert(t('common.error'), error, [{ text: 'OK', onPress: reset }]);
+      return;
     }
-  }, [error, reset, t]);
+    if (errorStatus === 403) {
+      // AI limit: every remaining file would fail identically — stop the run.
+      const left = useShareIntakeStore.getState().discardAll();
+      left.forEach((f) => void deleteSharedFile(f.uri));
+      useUpgradeStore.getState().show(t('subscription.limitReachedBody'), 'pro');
+      showAlert(t('shareIntake.limitStoppedTitle'), t('shareIntake.limitStoppedBody', { count: left.length }), [
+        { text: 'OK', onPress: onDone },
+      ]);
+      return;
+    }
+    showAlert(t('common.error'), error, [
+      { text: t('shareIntake.skip'), onPress: advanceQueue },
+      {
+        text: t('shareIntake.enterManually'),
+        onPress: () => {
+          advanceQueue();
+          router.push('/expense/new');
+        },
+      },
+    ]);
+    // Keyed on `error` alone: the handlers read the live queue from the store.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [error]);
 
   useEffect(() => {
     if (scannedReceipt) {
@@ -206,6 +267,50 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
 
   const { count: sessionCount, recordSaved } = useReceiptScanSession();
 
+  // ── Share-to-capture ────────────────────────────────────────────────────
+  const shareQueue = useShareIntakeStore((s) => s.queue);
+  const sharePendingNavigation = useShareIntakeStore((s) => s.pendingNavigation);
+  const shareDropped = useShareIntakeStore((s) => s.lastDropped);
+  const shareHead = shareMode ? current(shareQueue) : null;
+  const scannedUriRef = useRef<string | null>(null);
+
+  /** Finish the queue head (saved, skipped or declined) and move on. */
+  function advanceQueue() {
+    const finished = useShareIntakeStore.getState().next();
+    if (finished) void deleteSharedFile(finished.uri);
+    handleReset();
+    if (!current(useShareIntakeStore.getState().queue)) onDone();
+  }
+
+  // While open, the root hook stays idle (`decideShareNavigation`) and this view
+  // consumes warm shares itself — they append, never stack a second route.
+  useEffect(() => {
+    if (!shareMode) return;
+    useShareIntakeStore.getState().setScreenOpen(true);
+    return () => useShareIntakeStore.getState().setScreenOpen(false);
+  }, [shareMode]);
+
+  useEffect(() => {
+    if (shareMode && sharePendingNavigation) useShareIntakeStore.getState().consumeNavigation();
+  }, [shareMode, sharePendingNavigation]);
+
+  useEffect(() => {
+    if (!shareMode || shareDropped === 0) return;
+    showAlert(t('shareIntake.droppedTitle'), t('shareIntake.droppedBody', { count: shareDropped }));
+    useShareIntakeStore.getState().clearDropped();
+  }, [shareMode, shareDropped, t]);
+
+  // Scan the head whenever it changes (first file, or after advancing).
+  useEffect(() => {
+    if (!shareHead || scannedUriRef.current === shareHead.uri) return;
+    scannedUriRef.current = shareHead.uri;
+    declinedRef.current = false;
+    void processSharedFile(shareHead.uri, shareHead.mimeType, shareHead.name, shareHead.size).then((r) => {
+      if (r === null && declinedRef.current) advanceQueue();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shareHead?.uri]);
+
   const { handleConfirmExpense, handleEditExpense } = useReceiptSave({
     scannedReceipt,
     merchant,
@@ -219,6 +324,9 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     onReset: handleReset,
     onDone,
     onEdit,
+    queue: shareMode
+      ? { hasNext: remaining(shareQueue).length > 1, onNext: advanceQueue }
+      : undefined,
     onSaved: () => {
       if (!completedRef.current) {
         completedRef.current = true;
@@ -254,6 +362,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
           onGalleryPress={handleGalleryPress}
           onPdfPress={handlePdfPress}
           sessionCount={sessionCount}
+          hideCaptureButtons={shareMode}
         />
       ) : (
         <>

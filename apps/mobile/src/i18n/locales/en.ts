@@ -547,6 +547,22 @@ export default {
     addAnother: 'Add Another',
     saveFailed: 'Failed to save expense',
   },
+  // Share-to-capture: images/PDFs shared from another app (Android)
+  shareIntake: {
+    progress: "Receipt {{n}} of {{of}}",
+    next: "Next",
+    skip: "Skip",
+    enterManually: "Enter manually",
+    discard: "Discard",
+    discardTitle: "Stop here?",
+    discardBody: "Shared files not added yet: {{count}}. Discard them?",
+    droppedTitle: "Some files were skipped",
+    droppedBody: "Files not added: {{count}}. Only images and PDFs, up to 10 at a time (PDF up to 10 MB).",
+    limitStoppedTitle: "AI limit reached",
+    limitStoppedBody: "Files left unprocessed: {{count}}. Share them again later.",
+    viewerBlockedTitle: "Can't add expenses here",
+    viewerBlockedBody: "You can only view this account. Switch to another account and share again.",
+  },
   receipt: {
     // ABA-603: the receipt was already scanned
     duplicateExactTitle: 'This receipt was already added',

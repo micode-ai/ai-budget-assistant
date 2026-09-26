@@ -58,6 +58,13 @@ interface UseReceiptSaveParams {
    * they cannot drift on what "Edit" carries over.
    */
   onEdit?: (prefill: ExpenseCreatePrefill) => void;
+  /**
+   * Share-to-capture queue (spec 2026-09-26-share-to-capture-design). When
+   * present, the success alert offers "Next" (more shared files wait) or
+   * "Done" instead of "Scan another" — a shared file has no camera to go back
+   * to. Omitted, the alert is exactly as before.
+   */
+  queue?: { hasNext: boolean; onNext: () => void };
 }
 
 /**
@@ -83,6 +90,7 @@ export function useReceiptSave({
   onSaved,
   onDone,
   onEdit,
+  queue,
 }: UseReceiptSaveParams) {
   const { t } = useTranslation();
   const { addExpense } = useExpenseStore();
@@ -193,12 +201,21 @@ export function useReceiptSave({
         items?.map((item) => ({ description: item.description, canonicalName: item.canonicalName })) ?? [],
       );
       const checkedIds = reconciliation.checked.map((c) => c.id);
+      // In a share queue every exit goes through the queue: the file must be
+      // taken off it (and its cache copy deleted) even on the last "Done",
+      // otherwise the next share would re-scan an already saved file. The
+      // queue closes the screen itself once it is empty.
+      const finishQueue = () => {
+        queue?.onNext();
+        if (!queue?.hasNext) void maybeAskForReview();
+      };
+      const proceed = queue ? finishQueue : finish;
       const undoButton = checkedIds.length > 0
         ? [{
             text: t('receipt.undoShoppingListCheck'),
             onPress: () => {
               useShoppingListStore.getState().undoReceiptReconciliation(checkedIds);
-              finish();
+              proceed();
             },
           }]
         : [];
@@ -207,19 +224,17 @@ export function useReceiptSave({
         : '';
 
       const session = onSaved?.();
-      if (session?.isCheckpoint) {
-        showAlert(t('receipt.sessionCapTitle'), t('receipt.sessionCapBody', { count: session.count }) + checkedLine, [
-          ...undoButton,
-          { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
-          { text: t('common.done'), onPress: finish },
-        ]);
-      } else {
-        showAlert(t('common.success'), t('receipt.success') + checkedLine, [
-          ...undoButton,
-          { text: t('receipt.scanAnother'), style: 'cancel', onPress: onReset },
-          { text: t('common.done'), onPress: finish },
-        ]);
-      }
+      const title = session?.isCheckpoint ? t('receipt.sessionCapTitle') : t('common.success');
+      const body = (session?.isCheckpoint
+        ? t('receipt.sessionCapBody', { count: session.count })
+        : t('receipt.success')) + checkedLine;
+      const actions = queue
+        ? [{ text: queue.hasNext ? t('shareIntake.next') : t('common.done'), onPress: finishQueue }]
+        : [
+            { text: t('receipt.scanAnother'), style: 'cancel' as const, onPress: onReset },
+            { text: t('common.done'), onPress: finish },
+          ];
+      showAlert(title, body, [...undoButton, ...actions]);
     } catch {
       showAlert(t('common.error'), t('receipt.saveFailed'));
     }
