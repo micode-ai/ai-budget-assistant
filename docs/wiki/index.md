@@ -167,6 +167,8 @@ the section you came for — it states what must not break and why. A missing se
 - [inflation-shield](features/inflation-shield.md) — price forecasting and stock-up advice
 - [personal-inflation-index](features/personal-inflation-index.md) — price history from receipt
   lines, canonical product names, the Laspeyres index
+- [real-salary](features/real-salary.md) — personal inflation vs. pay: Eurostat HICP by COICOP
+  division plus the personal receipt index, weighted by the account's own spend
 
 ### Budgets
 - [budgets](features/budgets.md) — periods, the financial month, split-aware progress, the

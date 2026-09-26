@@ -2,7 +2,7 @@
 
 *Hub: [analytics-insights](../analytics-insights.md) · related:
 [inflation-shield](inflation-shield.md), [receipt-price-check](receipt-price-check.md),
-[community-prices](community-prices.md)*
+[community-prices](community-prices.md), [real-salary](real-salary.md)*
 
 ## What this is
 
