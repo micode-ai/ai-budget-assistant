@@ -19,8 +19,8 @@ const CACHE_TTL_SEC = 3600;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MIN_SPEND_MONTHS = 3;
 
-export function realSalaryCacheKey(accountId: string, currency: string): string {
-  return `rs:${accountId}:${currency}`;
+export function realSalaryCacheKey(accountId: string, userId: string, currency: string): string {
+  return `rs:${accountId}:${userId}:${currency}`;
 }
 
 @Injectable()
@@ -35,10 +35,6 @@ export class RealSalaryService {
   ) {}
 
   async compute(accountId: string, userId: string, baseCurrency: string): Promise<RealSalaryResponse> {
-    const key = realSalaryCacheKey(accountId, baseCurrency);
-    const cached = await this.cache.get<RealSalaryResponse>(key);
-    if (cached) return cached;
-
     const now = new Date();
     const empty = (status: RealSalaryStatus, extra: Partial<RealSalaryResponse> = {}): RealSalaryResponse => ({
       status, baseCurrency, country: null, countryGuessed: false, dataMonth: null,
@@ -46,8 +42,18 @@ export class RealSalaryService {
       breakdown: [], topDrivers: [], fxApproximate: false, computedAt: now.toISOString(), ...extra,
     });
 
+    // Encryption must be checked BEFORE the cache read: a tier-2 account must
+    // never be served a cached pre-encryption answer computed before the
+    // account was encrypted.
     const account = await this.prisma.account.findUnique({ where: { id: accountId }, select: { encryptionTier: true } });
     if ((account?.encryptionTier ?? 0) >= 2) return empty('encrypted');
+
+    // Cache is keyed per (account, user, currency): the answer depends on the
+    // CALLER's own SalaryProfile and country, so one member's answer must
+    // never be served to another member of the same shared account.
+    const key = realSalaryCacheKey(accountId, userId, baseCurrency);
+    const cached = await this.cache.get<RealSalaryResponse>(key);
+    if (cached) return cached;
 
     const user = await this.prisma.user.findUnique({
       where: { id: userId }, select: { timezone: true, inflationCountry: true },

@@ -81,7 +81,7 @@ describe('RealSalaryService.compute', () => {
     });
     expect(official.latestFor).toHaveBeenCalledWith('PL');
     expect(classifier.ensureClassified).toHaveBeenCalledWith('acc');
-    expect(cacheSet).toHaveBeenCalledWith(realSalaryCacheKey('acc', 'PLN'), r, 3600);
+    expect(cacheSet).toHaveBeenCalledWith(realSalaryCacheKey('acc', 'u1', 'PLN'), r, 3600);
   });
 
   it('an explicit country beats the timezone guess', async () => {
@@ -108,6 +108,7 @@ describe('RealSalaryService.compute', () => {
     const cached = { status: 'ready' };
     const { svc, prisma } = make({ cached });
     await expect(svc.compute('acc', 'u1', 'PLN')).resolves.toBe(cached);
+    expect(prisma.account.findUnique).toHaveBeenCalled();
     expect(prisma.expense.findMany).not.toHaveBeenCalled();
   });
 
@@ -121,6 +122,89 @@ describe('RealSalaryService.compute', () => {
       accountId: 'acc', isDeleted: false, isDebt: false, isDebtRepayment: false, isPlanned: false, isSplitReceivable: false,
     });
     expect(where.date.gte).toBeInstanceOf(Date);
+  });
+});
+
+describe('RealSalaryService.compute — cache scoping and correctness', () => {
+  it('two members of one account do not share a cached answer', async () => {
+    const { svc, cache, cacheSet } = make({
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: spend,
+    });
+    await svc.compute('acc', 'u1', 'PLN');
+    await svc.compute('acc', 'u2', 'PLN');
+    expect(cache.get).toHaveBeenCalledWith(realSalaryCacheKey('acc', 'u1', 'PLN'));
+    expect(cache.get).toHaveBeenCalledWith(realSalaryCacheKey('acc', 'u2', 'PLN'));
+    expect(cacheSet).toHaveBeenCalledWith(realSalaryCacheKey('acc', 'u1', 'PLN'), expect.anything(), 3600);
+    expect(cacheSet).toHaveBeenCalledWith(realSalaryCacheKey('acc', 'u2', 'PLN'), expect.anything(), 3600);
+  });
+
+  it('a non-ready answer is not cached', async () => {
+    const { svc, cacheSet } = make({
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: spend.slice(0, 2),
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(r.status).toBe('spend_under_3_months');
+    expect(cacheSet).not.toHaveBeenCalled();
+  });
+
+  it('an encrypted account is never served from the cache', async () => {
+    const { svc, cache } = make({ encryptionTier: 2, cached: { status: 'ready' } });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(r.status).toBe('encrypted');
+    expect(cache.get).not.toHaveBeenCalled();
+  });
+
+  it("a split weighs the split's own category division", async () => {
+    const splitSpend = Array.from({ length: 3 }, (_, i) => ({
+      amount: 1000, currencyCode: 'PLN', date: monthsAgo(i + 1), categoryId: 'cat-food',
+      category: { id: 'cat-food', name: 'Food', coicopDivision: 'CP01' },
+      categorySplits: [
+        { categoryId: 'cat-rent', amount: 1000, category: { id: 'cat-rent', name: 'Rent', coicopDivision: 'CP04' } },
+      ],
+    }));
+    const { svc } = make({
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)),
+      expenses: splitSpend,
+      official: { month: '2026-08', rates: { TOTAL: 3.5, CP01: -0.8, CP04: 5.1 } },
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    const divisions = r.breakdown.map((b) => b.division);
+    expect(divisions).toContain('CP04');
+    expect(divisions).not.toContain('CP01');
+  });
+
+  it('an expense with no FX rate is excluded and flagged', async () => {
+    const { svc: baselineSvc } = make({
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: spend,
+    });
+    const baseline = await baselineSvc.compute('acc', 'u1', 'PLN');
+
+    const foreignSpend = [{
+      amount: 500, currencyCode: 'EUR', date: monthsAgo(1), categoryId: 'cat-rent',
+      category: { id: 'cat-rent', name: 'Rent', coicopDivision: 'CP04' }, categorySplits: [],
+    }];
+    const { svc } = make({
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: [...spend, ...foreignSpend],
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(r.fxApproximate).toBe(true);
+    expect(r.personalInflationPct).toBe(baseline.personalInflationPct);
+  });
+
+  it('an invalid inflationCountry falls back to the timezone guess', async () => {
+    const { svc, official } = make({
+      inflationCountry: 'GR', timezone: 'Europe/Warsaw',
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 },
+      incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: spend,
+    });
+    const r = await svc.compute('acc', 'u1', 'PLN');
+    expect(official.latestFor).toHaveBeenCalledWith('PL');
+    expect(r.countryGuessed).toBe(true);
   });
 });
 
