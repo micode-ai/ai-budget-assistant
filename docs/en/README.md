@@ -50,7 +50,7 @@ AI Budget Assistant is a cross-platform mobile application that helps users trac
 
 | Layer | Technology |
 |-------|------------|
-| Mobile | React Native / Expo 50 |
+| Mobile | React Native 0.81 / Expo 54 (iOS, Android, web) |
 | State Management | Zustand |
 | Data Fetching | TanStack React Query |
 | Local Database | SQLite + Drizzle ORM |

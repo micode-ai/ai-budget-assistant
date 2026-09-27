@@ -50,7 +50,7 @@ AI Budget Assistant — кроссплатформенное мобильное 
 
 | Слой | Технология |
 |------|------------|
-| Мобильное приложение | React Native / Expo 50 |
+| Мобильное приложение | React Native 0.81 / Expo 54 (iOS, Android, web) |
 | Управление состоянием | Zustand |
 | Получение данных | TanStack React Query |
 | Локальная БД | SQLite + Drizzle ORM |
