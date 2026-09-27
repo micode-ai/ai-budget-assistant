@@ -60,6 +60,68 @@ export function manualCurrency(candidates: SalaryCandidate[], salaryKey: string 
   return suffix && /^[A-Z]{3}$/.test(suffix) ? suffix : null;
 }
 
+/** 1–3 digits, then every remaining part exactly 3 digits — a valid thousands grouping. */
+function isValidGrouping(parts: string[]): boolean {
+  return parts.length > 1 && /^\d{1,3}$/.test(parts[0]) && parts.slice(1).every((p) => /^\d{3}$/.test(p));
+}
+
+/**
+ * Parses a monthly amount typed in any of the European number formats this
+ * app's users write salaries in — comma OR dot as the decimal separator,
+ * dot/comma/space/NBSP/apostrophe as a thousands grouping mark — into a
+ * plain number.
+ *
+ * Returns `null` for an empty/whitespace-only input (nothing typed — a valid,
+ * absent answer). Returns `NaN` for anything that cannot be read as a single
+ * non-negative amount; callers treat NaN the same as a failed `Number()`
+ * parse (invalid input).
+ */
+export function parseMonthlyAmount(text: string): number | null {
+  if (text.trim() === '') return null;
+
+  // Strip whitespace (incl. NBSP / narrow NBSP) and apostrophes used as a
+  // thousands grouping mark ("8'400") — none of these carry meaning here.
+  const s0 = text.replace(/[\s  '’]/g, '');
+
+  const hasDot = s0.includes('.');
+  const hasComma = s0.includes(',');
+
+  let s: string;
+
+  if (hasDot && hasComma) {
+    // The later of the two separators is the decimal point; the earlier kind
+    // is a thousands grouping mark over the integer part — but only if that
+    // integer part actually groups validly ("84.00,5" does not: "00" is not
+    // a 3-digit group), otherwise the whole thing is unparsable.
+    const decimalChar = s0.lastIndexOf(',') > s0.lastIndexOf('.') ? ',' : '.';
+    const otherChar = decimalChar === ',' ? '.' : ',';
+    const halves = s0.split(decimalChar);
+    if (halves.length !== 2) return NaN;
+    const [integerPart, decimalPart] = halves;
+    const groups = integerPart.split(otherChar);
+    if (groups.length > 1 && !isValidGrouping(groups)) return NaN;
+    s = `${groups.join('')}.${decimalPart}`;
+  } else if (hasDot || hasComma) {
+    const sep = hasDot ? '.' : ',';
+    const parts = s0.split(sep);
+    if (parts.length > 2) {
+      // The separator occurs more than once: only a valid thousands grouping
+      // ("1.234.567") collapses it. Anything else ("8.4.0") is left as-is,
+      // which then fails the final shape check below.
+      s = isValidGrouping(parts) ? parts.join('') : s0;
+    } else {
+      const [whole, frac] = parts;
+      // A single occurrence followed by exactly 3 digits at the end is a
+      // thousands separator ("8.400"), not a decimal point.
+      s = /^\d{3}$/.test(frac) ? whole + frac : `${whole}.${frac}`;
+    }
+  } else {
+    s = s0;
+  }
+
+  return /^\d+(\.\d+)?$/.test(s) ? Number(s) : NaN;
+}
+
 export interface ShareLine {
   emoji: string;
   label: string;

@@ -1,7 +1,7 @@
 import type { RealSalaryResponse, SalaryCandidate } from '@budget/shared-types';
 import {
   REAL_SALARY_COUNTRIES, countryName, formatSignedPct, toneOf, statusCopy, requiredRaiseKey,
-  manualCurrency, buildShareLines, briefErrorKind,
+  manualCurrency, buildShareLines, briefErrorKind, parseMonthlyAmount,
 } from '../realSalary';
 
 const READY: RealSalaryResponse = {
@@ -86,6 +86,28 @@ describe('briefErrorKind', () => {
     expect(briefErrorKind(Object.assign(new Error('x'), { status: 409 }))).toBe('not_ready');
     expect(briefErrorKind(Object.assign(new Error('x'), { status: 500 }))).toBe('failed');
     expect(briefErrorKind('nope')).toBe('failed');
+  });
+});
+
+describe('parseMonthlyAmount handles European number formats', () => {
+  it('parses grouping and decimal separators in either order, and rejects the rest', () => {
+    expect(parseMonthlyAmount('8400')).toBe(8400);
+    expect(parseMonthlyAmount('8 400')).toBe(8400);
+    expect(parseMonthlyAmount('8 400')).toBe(8400);
+    expect(parseMonthlyAmount('8.400')).toBe(8400);
+    expect(parseMonthlyAmount('8,400')).toBe(8400);
+    expect(parseMonthlyAmount('8.400,50')).toBe(8400.5);
+    expect(parseMonthlyAmount('8,400.50')).toBe(8400.5);
+    expect(parseMonthlyAmount('8400,5')).toBe(8400.5);
+    expect(parseMonthlyAmount('8400.55')).toBe(8400.55);
+    expect(parseMonthlyAmount('1.234.567')).toBe(1234567);
+    expect(parseMonthlyAmount("8'400")).toBe(8400);
+    expect(parseMonthlyAmount('')).toBeNull();
+    expect(parseMonthlyAmount('   ')).toBeNull();
+    expect(Number.isNaN(parseMonthlyAmount('abc'))).toBe(true);
+    expect(Number.isNaN(parseMonthlyAmount('8.4.0'))).toBe(true);
+    expect(Number.isNaN(parseMonthlyAmount('-100'))).toBe(true);
+    expect(Number.isNaN(parseMonthlyAmount('84.00,5'))).toBe(true);
   });
 });
 

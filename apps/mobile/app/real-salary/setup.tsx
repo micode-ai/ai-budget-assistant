@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { formatCurrency } from '@budget/shared-utils';
 import type { SalaryCandidate } from '@budget/shared-types';
-import { manualCurrency } from '@/features/insights/realSalary';
+import { manualCurrency, parseMonthlyAmount } from '@/features/insights/realSalary';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { api } from '@/services/api';
 import { showAlert } from '@/utils/alert';
@@ -28,6 +28,11 @@ export default function RealSalarySetupScreen() {
   const [candidates, setCandidates] = useState<SalaryCandidate[]>([]);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [previous, setPrevious] = useState('');
+  // The confirmed salary key from a PREVIOUS save, when it no longer matches
+  // any freshly-detected candidate (a category was renamed, the income
+  // stopped recurring, etc.) — kept so the user's existing choice stays
+  // visible and selected instead of silently falling back to candidates[0].
+  const [missingSavedKey, setMissingSavedKey] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -35,7 +40,10 @@ export default function RealSalarySetupScreen() {
     try {
       const { profile, candidates: list } = await api.getRealSalaryProfile();
       setCandidates(list);
-      setSelectedKey(profile.salaryKey ?? list[0]?.key ?? null);
+      const savedKey = profile.salaryKey;
+      const savedKeyMissing = !!savedKey && !list.some((c) => c.key === savedKey);
+      setMissingSavedKey(savedKeyMissing ? savedKey : null);
+      setSelectedKey(savedKey ?? list[0]?.key ?? null);
       setPrevious(profile.manualPreviousMonthly != null ? String(profile.manualPreviousMonthly) : '');
     } catch (e) {
       console.warn('Failed to load real-salary profile', e);
@@ -50,14 +58,14 @@ export default function RealSalarySetupScreen() {
   }, [load]);
 
   const handleSave = useCallback(async () => {
-    const raw = previous.trim().replace(',', '.');
-    let manualPreviousMonthly: number | null = null;
-    if (raw !== '') {
-      const parsed = Number(raw);
-      if (!Number.isFinite(parsed) || parsed <= 0 || parsed > MAX_MANUAL_PREVIOUS) {
-        showAlert(t('common.error'), t('realSalary.setup.invalid'));
-        return;
-      }
+    const parsed = parseMonthlyAmount(previous);
+    let manualPreviousMonthly: number | null;
+    if (parsed === null) {
+      manualPreviousMonthly = null;
+    } else if (Number.isNaN(parsed) || parsed <= 0 || parsed > MAX_MANUAL_PREVIOUS) {
+      showAlert(t('common.error'), t('realSalary.setup.invalid'));
+      return;
+    } else {
       manualPreviousMonthly = parsed;
     }
 
@@ -74,6 +82,13 @@ export default function RealSalarySetupScreen() {
   }, [previous, selectedKey, t]);
 
   const currency = manualCurrency(candidates, selectedKey);
+
+  // Built straight from the key (`${categoryId ?? ''}|${descriptionKey}|${currencyCode}`) —
+  // there is no candidate row to read a name/amount from any more.
+  const missingSavedSegments = missingSavedKey?.split('|') ?? null;
+  const missingSavedDescription = missingSavedSegments?.[1] ?? '';
+  const missingSavedCurrency = missingSavedSegments?.[2] ?? '';
+  const missingSavedTitle = missingSavedDescription || missingSavedCurrency;
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -97,12 +112,32 @@ export default function RealSalarySetupScreen() {
             ) : (
               <>
                 <View style={styles.card}>
+                  {missingSavedKey && (
+                    <TouchableOpacity
+                      style={styles.row}
+                      onPress={() => setSelectedKey(missingSavedKey)}
+                      accessibilityRole="radio"
+                      accessibilityState={{ checked: selectedKey === missingSavedKey }}
+                    >
+                      <Ionicons
+                        name={selectedKey === missingSavedKey ? 'radio-button-on' : 'radio-button-off'}
+                        size={20}
+                        color={selectedKey === missingSavedKey ? theme.colors.primary : theme.colors.textTertiary}
+                      />
+                      <View style={styles.rowText}>
+                        <Text style={styles.rowTitle} numberOfLines={1}>
+                          {missingSavedTitle}
+                        </Text>
+                        <Text style={styles.rowSubtitle}>{missingSavedCurrency}</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
                   {candidates.map((c, index) => {
                     const checked = c.key === selectedKey;
                     return (
                       <TouchableOpacity
                         key={c.key}
-                        style={[styles.row, index > 0 && styles.rowDivider]}
+                        style={[styles.row, (index > 0 || !!missingSavedKey) && styles.rowDivider]}
                         onPress={() => setSelectedKey(c.key)}
                         accessibilityRole="radio"
                         accessibilityState={{ checked }}
