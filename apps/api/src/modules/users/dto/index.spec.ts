@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { validate, ValidationError } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
-import { ReplaceUserPaymentMethodsDto } from './index';
+import { ReplaceUserPaymentMethodsDto, UpdateVoiceDigestDto } from './index';
 
 /**
  * Direct class-validator tests against the DTO — these isolate each decorator's own
@@ -83,5 +83,24 @@ describe('ReplaceUserPaymentMethodsDto — class-validator decorators (isolated 
     });
     const errors = await validate(dto);
     expect(flattenConstraintKeys(errors)).toContain('isIn');
+  });
+});
+
+describe('UpdateVoiceDigestDto — null is not "absent"', () => {
+  async function errorsFor(body: Record<string, unknown>) {
+    return validate(plainToInstance(UpdateVoiceDigestDto, body));
+  }
+
+  it.each([['enabled'], ['day'], ['hour'], ['channel']])('rejects %s: null', async (field) => {
+    const errors = await errorsFor({ [field]: null });
+    expect(errors.map((e) => e.property)).toContain(field);
+  });
+
+  it('accepts an empty body and absent fields', async () => {
+    expect(await errorsFor({})).toHaveLength(0);
+  });
+
+  it('accepts a full valid body', async () => {
+    expect(await errorsFor({ enabled: true, day: 1, hour: 8, channel: 'telegram' })).toHaveLength(0);
   });
 });

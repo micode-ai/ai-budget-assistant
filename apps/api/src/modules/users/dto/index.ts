@@ -1,4 +1,4 @@
-import { IsArray, IsIn, ArrayMaxSize, ArrayUnique, ValidateNested, IsString, MaxLength, Matches, IsOptional, IsBoolean, IsInt, Min, Max } from 'class-validator';
+import { IsArray, IsIn, ArrayMaxSize, ArrayUnique, ValidateNested, IsString, MaxLength, Matches, IsBoolean, IsInt, Min, Max, ValidateIf } from 'class-validator';
 import { Type } from 'class-transformer';
 import type {
   SettleMethod,
@@ -54,26 +54,32 @@ const VOICE_DIGEST_CHANNEL_VALUES: VoiceDigestChannel[] = ['telegram', 'whatsapp
  * global `ValidationPipe` (whitelist + forbidNonWhitelisted + transform) actually enforces
  * the shape before it ever reaches `VoiceDigestService.updateSettings`.
  */
+/**
+ * `@IsOptional()` also skips `null`, which let `{ enabled: null }` reach a
+ * non-nullable column (500 instead of 400). Only a truly absent field is skipped.
+ */
+const presentIncludingNull = (_: object, value: unknown): boolean => value !== undefined;
+
 export class UpdateVoiceDigestDto implements UpdateVoiceDigestDtoShape {
-  @IsOptional()
+  @ValidateIf(presentIncludingNull)
   @IsBoolean()
   enabled?: boolean;
 
   /** 0 = Sunday … 6 = Saturday, in the user's own time zone. */
-  @IsOptional()
+  @ValidateIf(presentIncludingNull)
   @IsInt()
   @Min(0)
   @Max(6)
   day?: number;
 
   /** 0–23, in the user's own time zone. */
-  @IsOptional()
+  @ValidateIf(presentIncludingNull)
   @IsInt()
   @Min(0)
   @Max(23)
   hour?: number;
 
-  @IsOptional()
+  @ValidateIf(presentIncludingNull)
   @IsIn(VOICE_DIGEST_CHANNEL_VALUES)
   channel?: VoiceDigestChannel;
 }
