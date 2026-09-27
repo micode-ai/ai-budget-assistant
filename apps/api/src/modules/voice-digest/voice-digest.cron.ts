@@ -3,7 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { DEFAULT_PAGINATE_BATCH_SIZE, paginateById } from '../../common/utils/paginate';
-import { isDue, isoWeekKey, RESEND_GUARD_MS } from './digest-schedule.util';
+import { isDue, isoWeekKey } from './digest-schedule.util';
 import { VoiceDigestService } from './voice-digest.service';
 
 const LOCK_TTL_SEC = 8 * 24 * 60 * 60; // 8 days — comfortably outlives the weekly cadence
@@ -14,8 +14,8 @@ function errorMessage(err: unknown): string {
 
 /**
  * Hourly sweep over every user with the voice digest enabled: for each one
- * still eligible for a new week (`voiceDigestLastSentAt` null or older than
- * the resend guard), checks `isDue` against their own day/hour/timezone,
+ * checks `isDue` (their own day/hour/timezone plus the resend guard on
+ * `voiceDigestLastSentAt`),
  * claims a per-ISO-week Redis lock so two overlapping cron runs (or an
  * unclean restart) can't double-send, then hands off to
  * `VoiceDigestService.runForUser`. One user's failure — a throw that
@@ -34,14 +34,19 @@ export class VoiceDigestCron {
 
   @Cron('5 * * * *')
   async run(now: Date = new Date()): Promise<number> {
-    const cutoff = new Date(now.getTime() - RESEND_GUARD_MS);
     let attempted = 0;
 
+    // Page over `id > cursor` with NO predicate the loop itself mutates. A
+    // send stamps `voiceDigestLastSentAt` and a block clears
+    // `voiceDigestEnabled`; had either been in the SQL filter together with
+    // Prisma's `cursor` + `skip: 1`, a cursor row that stopped matching would
+    // make `skip: 1` drop the NEXT eligible user. The resend guard is applied
+    // in JS by `isDue`; a user disabled mid-run is simply never revisited.
     const pages = paginateById((cursor) =>
       this.prisma.user.findMany({
         where: {
           voiceDigestEnabled: true,
-          OR: [{ voiceDigestLastSentAt: null }, { voiceDigestLastSentAt: { lt: cutoff } }],
+          ...(cursor ? { id: { gt: cursor } } : {}),
         },
         select: {
           id: true,
@@ -52,7 +57,6 @@ export class VoiceDigestCron {
         },
         take: DEFAULT_PAGINATE_BATCH_SIZE,
         orderBy: { id: 'asc' },
-        ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
       }),
     );
 

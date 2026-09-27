@@ -94,3 +94,91 @@ describe('VoiceDigestCron.run', () => {
     expect(service.runForUser).not.toHaveBeenCalled();
   });
 });
+
+/**
+ * A `user.findMany` double that honours what Prisma actually does: applies
+ * `where` (voiceDigestEnabled, the lastSentAt OR, `id.gt`), orders by id,
+ * resolves `cursor` as "rows with id >= cursor that match the filter" and
+ * then applies `skip` — so a cursor row that stopped matching the filter
+ * makes `skip: 1` drop the NEXT row, exactly like the real query.
+ */
+function filteringPrisma(rows: Array<ReturnType<typeof userRow> & { voiceDigestEnabled: boolean }>) {
+  const matches = (r: (typeof rows)[number], where: any): boolean => {
+    if (where.voiceDigestEnabled !== undefined && r.voiceDigestEnabled !== where.voiceDigestEnabled) return false;
+    if (where.id?.gt !== undefined && !(r.id > where.id.gt)) return false;
+    if (where.OR) {
+      const ok = where.OR.some((c: any) =>
+        c.voiceDigestLastSentAt === null
+          ? r.voiceDigestLastSentAt === null
+          : r.voiceDigestLastSentAt !== null && r.voiceDigestLastSentAt < c.voiceDigestLastSentAt.lt,
+      );
+      if (!ok) return false;
+    }
+    return true;
+  };
+  return {
+    user: {
+      findMany: jest.fn().mockImplementation(async (args: any) => {
+        let list = rows.filter((r) => matches(r, args.where)).sort((a, b) => (a.id < b.id ? -1 : 1));
+        if (args.cursor) list = list.filter((r) => r.id >= args.cursor.id);
+        list = list.slice(args.skip ?? 0, (args.skip ?? 0) + args.take);
+        return list.map((r) => ({ ...r }));
+      }),
+    },
+  };
+}
+
+describe('VoiceDigestCron.run — pagination while rows are being sent', () => {
+  it('still processes the first row of page 2 after the last row of page 1 was sent', async () => {
+    const rows = Array.from({ length: 501 }, (_, i) => ({
+      ...userRow({ id: `u${String(i).padStart(4, '0')}` }),
+      voiceDigestEnabled: true,
+    }));
+    const prisma = filteringPrisma(rows);
+    const cache: any = { setIfAbsent: jest.fn().mockResolvedValue(true) };
+    const service: any = {
+      runForUser: jest.fn().mockImplementation(async (id: string, opts: { now: Date }) => {
+        const row = rows.find((r) => r.id === id)!;
+        row.voiceDigestLastSentAt = opts.now; // what a real send stamps
+        return 'sent';
+      }),
+    };
+    const cron = new VoiceDigestCron(prisma as any, cache, service);
+
+    const attempted = await cron.run(NOW);
+
+    expect(attempted).toBe(501);
+    expect(service.runForUser).toHaveBeenCalledWith('u0500', { now: NOW });
+  });
+
+  it('still processes the next row when the cursor row got disabled (blocked) mid-run', async () => {
+    const rows = Array.from({ length: 501 }, (_, i) => ({
+      ...userRow({ id: `u${String(i).padStart(4, '0')}` }),
+      voiceDigestEnabled: true,
+    }));
+    const prisma = filteringPrisma(rows);
+    const cache: any = { setIfAbsent: jest.fn().mockResolvedValue(true) };
+    const service: any = {
+      runForUser: jest.fn().mockImplementation(async (id: string) => {
+        rows.find((r) => r.id === id)!.voiceDigestEnabled = false;
+        return 'blocked';
+      }),
+    };
+    const cron = new VoiceDigestCron(prisma as any, cache, service);
+
+    await cron.run(NOW);
+
+    expect(service.runForUser).toHaveBeenCalledWith('u0500', { now: NOW });
+  });
+
+  it('skips a user sent within the resend guard (checked in JS, not in SQL)', async () => {
+    const recent = new Date(NOW.getTime() - 24 * 60 * 60 * 1000);
+    const prisma = filteringPrisma([{ ...userRow({ id: 'u1', lastSentAt: recent }), voiceDigestEnabled: true }]);
+    const service: any = { runForUser: jest.fn() };
+    const cron = new VoiceDigestCron(prisma as any, { setIfAbsent: jest.fn().mockResolvedValue(true) } as any, service);
+
+    await cron.run(NOW);
+
+    expect(service.runForUser).not.toHaveBeenCalled();
+  });
+});
