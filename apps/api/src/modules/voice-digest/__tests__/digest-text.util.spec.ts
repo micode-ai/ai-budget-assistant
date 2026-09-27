@@ -34,6 +34,32 @@ const weekOnlyFacts: DigestFacts = {
   realChangePct: null,
 };
 
+const largeAmountFacts: DigestFacts = {
+  currency: 'PLN',
+  weekTotal: 1234,
+  usualWeek: null,
+  changePct: null,
+  topRise: null,
+  safeToSpendToday: null,
+  daysToIncome: null,
+  shieldItem: null,
+  restock: [],
+  realChangePct: null,
+};
+
+const digitBearingNamesFacts: DigestFacts = {
+  currency: 'PLN',
+  weekTotal: 100,
+  usualWeek: null,
+  changePct: null,
+  topRise: { category: 'Kategoria 24', changePct: 40 },
+  safeToSpendToday: null,
+  daysToIncome: null,
+  shieldItem: null,
+  restock: ['Cola 0,5L'],
+  realChangePct: null,
+};
+
 describe('fallbackText', () => {
   it('en: contains the week total, change percentage and direction', () => {
     const text = fallbackText(fullFacts, 'en');
@@ -59,6 +85,13 @@ describe('fallbackText', () => {
     const text = fallbackText(weekOnlyFacts, 'en');
     expect((text.match(/\./g) ?? []).length).toBe(1);
     expect(text).toContain('820 PLN');
+  });
+
+  it('a larger weekTotal (1234) renders as-is and stays faithful, including with a space-grouped rendering', () => {
+    const text = fallbackText(largeAmountFacts, 'pl');
+    expect(text).toContain('1234');
+    expect(isFaithful(text, largeAmountFacts)).toBe(true);
+    expect(isFaithful('Wydałeś 1 234 PLN', largeAmountFacts)).toBe(true);
   });
 });
 
@@ -112,6 +145,12 @@ describe('isFaithful', () => {
     for (const lang of DIGEST_LANGS) {
       expect(isFaithful(fallbackText(weekOnlyFacts, lang), weekOnlyFacts)).toBe(true);
     }
+  });
+
+  it('allows digits embedded in topRise.category and a restock name', () => {
+    expect(
+      isFaithful('Kategoria 24 wzrosła o 40%. Kończy się Cola 0,5L.', digitBearingNamesFacts),
+    ).toBe(true);
   });
 });
 
