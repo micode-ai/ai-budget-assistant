@@ -118,6 +118,15 @@ export function AnalyticsMobile() {
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
         </TouchableOpacity>
 
+        <TouchableOpacity style={styles.storyBanner} onPress={() => router.push('/real-salary')}>
+          <Ionicons name="trending-up-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.storyBannerContent}>
+            <Text style={styles.storyBannerTitle}>{t('realSalary.entryTitle')}</Text>
+            <Text style={styles.storyBannerSubtext}>{t('realSalary.entrySub')}</Text>
+          </View>
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
+
         <AiInsightsSection aiInsights={aiInsights} proGated={aiInsightsProGated} />
         <InflationIndexSection />
         {incomeByCategory.length > 0 && <IncomeCategoryBreakdown incomeByCategory={incomeByCategory} currency={currency} />}
