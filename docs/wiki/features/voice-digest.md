@@ -142,9 +142,31 @@ the body — verified against the code while planning); plan:
   `runForUser` drops `topRise`, `shieldItem` and `restock` from the facts before narrating; the
   totals, safe-to-spend and income countdown are plain numbers and stay.
 - **Spend uses the standard exclusion set, not `isDebt`.** `VoiceDigestFactsService.loadSpend`'s
-  `where` is `{accountId, isDeleted:false, isPlanned:false, ...EXCLUDE_SPLIT_RECEIVABLE, date:
-  {gte:...}}` (`common/utils/expense-filters.ts` — the same exclusion analytics uses). A
-  standalone lent/borrowed debt row **is** counted as an outflow, and a planned expense never is.
+  `where` is `{accountId, isDeleted:false, isPlanned:false, isRecurring:false,
+  ...EXCLUDE_SPLIT_RECEIVABLE, date:{gte:...}}` (`common/utils/expense-filters.ts` — the same
+  exclusion analytics uses, plus `isRecurring:false` — see the next invariant). A standalone
+  lent/borrowed debt row **is** counted as an outflow, and a planned expense never is.
+- **The weekly comparison is everyday spend only — excludes `isRecurring` and CP04
+  housing/utilities; the usual week is the median of active weeks, not the mean.** A real user's
+  week once narrated as "you spent 250 PLN, usually 2753 PLN, 91% less" purely because monthly rent
+  landed in 2 of the 8 prior windows: a MEAN drags the "usual" figure up for every week rent
+  appears in and reports a false underspend the other 6 weeks (and, symmetrically, a false huge
+  overspend in the 2 rent weeks themselves). Two independent fixes, both in
+  `VoiceDigestFactsService.gather`/`loadSpend`: (1) `isRecurring:true` rows are excluded from the
+  Prisma `where` outright, and any attributed part (own category, or a split part) whose category's
+  `coicopDivision === 'CP04'` is dropped in JS after `attributeToCategories` — a split whose ONE
+  part is CP04 drops only that part, keeping the rest. `CoicopClassifierService.ensureClassified`
+  is called (try/catch, `Logger.warn` with no amounts, continue unclassified on failure) before the
+  query so newly-created categories have a division to check; `CoicopClassifierService` is exported
+  from `InsightsModule` for this. (2) `digest-facts.util.ts`'s `usualWeek` is now the MEDIAN of
+  active prior weeks (still requiring ≥4), not their mean — for an even count, the mean of the two
+  middle values — so an outlier week can shift the comparison for the weeks it lands in, but can no
+  longer drag every OTHER week's "usual" figure toward it. `categoryUsual` (the per-category
+  `topRise` comparison) is unchanged — still a mean over prior windows, and still reads whatever
+  spend survives the same isRecurring/CP04 exclusion. The fallback wording and narrator prompt both
+  state the comparison is everyday spending, name the direction on THIS week only (never on the
+  usual amount), and state the usual amount alongside it (`digest-text.util.ts`,
+  `voice-digest-narrator.service.ts`).
 - **`/digest now` is a preview, throttled once per 24h, on the command's own channel.** Each bot's
   `handleDigest` calls `runForUser(userId, {force:true, channel:<this bot>, preview:true})` after
   claiming a `vd:now:{userId}` Redis key (24h TTL). `preview:true` skips the
@@ -164,6 +186,12 @@ the body — verified against the code while planning); plan:
   `DigestSender` and a registration call, not a new case anywhere in the core module.
 
 ## Known gaps
+- **Subscription renewals are not excludable from the everyday-spend comparison.**
+  `subscription-renewal.cron.ts` books a renewal's cloned expense with `source:'manual'` and no
+  `isRecurring` flag — nothing on the `Expense` row marks it as a subscription renewal — so the
+  `isRecurring:false` filter in `VoiceDigestFactsService.loadSpend` cannot catch it, and a
+  subscription (Netflix, gym, etc.) still counts as everyday spend in the weekly comparison even
+  though it recurs exactly like an `isRecurring:true` expense does.
 - The WhatsApp template must be approved in Meta before `WHATSAPP_DIGEST_TEMPLATE` is set — until
   then WhatsApp is never offered as a digest channel (`whatsappAvailable` stays `false` even for a
   linked user) and cannot be enabled.
