@@ -18,6 +18,7 @@ export default function RealSalarySettingsScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const canEdit = useAccountStore((s) => s.canEdit());
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
   const locale = getIntlLocale();
 
   const [loading, setLoading] = useState(true);
@@ -35,20 +36,40 @@ export default function RealSalarySettingsScreen() {
   const [categorySavingId, setCategorySavingId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    // Capture the account at request time. If it changes while the request is
+    // in flight, ignore the response — it belongs to a previous account.
+    const accountId = useAccountStore.getState().currentAccountId;
+
     setLoading(true);
     setError(false);
     try {
       const [salary, categoryRows] = await Promise.all([api.getRealSalary(), api.getRealSalaryCategories()]);
+      if (useAccountStore.getState().currentAccountId !== accountId) return;
       setCountry(salary.country);
       setCountryGuessed(salary.countryGuessed);
       setCategories(categoryRows);
     } catch (e) {
+      if (useAccountStore.getState().currentAccountId !== accountId) return;
       console.warn('Failed to load real-salary settings', e);
       setError(true);
     } finally {
-      setLoading(false);
+      // Only clear loading if the account hasn't changed.
+      if (useAccountStore.getState().currentAccountId === accountId) {
+        setLoading(false);
+      }
     }
-  }, []);
+    // currentAccountId: a switch must refetch (X-Account-Id changes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAccountId]);
+
+  // Clear the previous account's data immediately when the account changes,
+  // before the new load fires — so nothing stale is tappable meanwhile.
+  useEffect(() => {
+    setCountry(null);
+    setCountryGuessed(false);
+    setCategories([]);
+    setDivisionCategoryId(null);
+  }, [currentAccountId]);
 
   useEffect(() => {
     void load();

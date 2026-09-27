@@ -21,6 +21,7 @@ export default function RealSalarySetupScreen() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const canEdit = useAccountStore((s) => s.canEdit());
+  const currentAccountId = useAccountStore((s) => s.currentAccountId);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -35,10 +36,18 @@ export default function RealSalarySetupScreen() {
   const [missingSavedKey, setMissingSavedKey] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    // Capture the account at request time. If it changes while the request is
+    // in flight, ignore the response — it belongs to a previous account.
+    const accountId = useAccountStore.getState().currentAccountId;
+
     setLoading(true);
     setError(false);
     try {
       const { profile, candidates: list } = await api.getRealSalaryProfile();
+      if (useAccountStore.getState().currentAccountId !== accountId) return;
+      // Reset the local selection/input state from the freshly-loaded profile
+      // (not just the candidate list) so a leftover selection from the
+      // previous account's profile never survives the switch.
       setCandidates(list);
       const savedKey = profile.salaryKey;
       const savedKeyMissing = !!savedKey && !list.some((c) => c.key === savedKey);
@@ -46,12 +55,27 @@ export default function RealSalarySetupScreen() {
       setSelectedKey(savedKey ?? list[0]?.key ?? null);
       setPrevious(profile.manualPreviousMonthly != null ? String(profile.manualPreviousMonthly) : '');
     } catch (e) {
+      if (useAccountStore.getState().currentAccountId !== accountId) return;
       console.warn('Failed to load real-salary profile', e);
       setError(true);
     } finally {
-      setLoading(false);
+      // Only clear loading if the account hasn't changed.
+      if (useAccountStore.getState().currentAccountId === accountId) {
+        setLoading(false);
+      }
     }
-  }, []);
+    // currentAccountId: a switch must refetch (X-Account-Id changes)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentAccountId]);
+
+  // Clear the previous account's data immediately when the account changes,
+  // before the new load fires — so nothing stale is tappable meanwhile.
+  useEffect(() => {
+    setCandidates([]);
+    setSelectedKey(null);
+    setPrevious('');
+    setMissingSavedKey(null);
+  }, [currentAccountId]);
 
   useEffect(() => {
     void load();
