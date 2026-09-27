@@ -13,7 +13,7 @@ export const usersApi = {
     );
   },
 
-  updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null }) {
+  updateProfile(data: { name?: string; currencyCode?: string; timezone?: string; language?: string; contributeCommunityPrices?: boolean; themeMode?: string; accentColor?: string | null; paymentMethod?: SettleMethod | null; paymentHandle?: string | null; inflationCountry?: string | null }) {
     return httpClient.request<any>('/users/me', {
       method: 'PATCH',
       body: JSON.stringify(data),
