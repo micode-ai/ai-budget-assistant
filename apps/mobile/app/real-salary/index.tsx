@@ -70,7 +70,8 @@ export default function RealSalaryScreen() {
     setBriefBusy(true);
     try {
       const { blob, fileName } = await api.downloadRealSalaryBrief(i18n.language);
-      await saveFile(blob, fileName);
+      const result = await saveFile(blob, fileName);
+      if (result.status === 'error') showAlert(t('common.error'), t('realSalary.briefFailed'));
     } catch (e) {
       const kind = briefErrorKind(e);
       if (kind === 'paywall') {
