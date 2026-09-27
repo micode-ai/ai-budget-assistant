@@ -1,6 +1,28 @@
 # Weekly voice digest in the chat bots — design
 
-Date: 2026-09-26 · Status: approved in brainstorming, awaiting spec review
+Date: 2026-09-26 · Status: approved; corrected 2026-09-27 while planning (see *Corrections*)
+
+## Corrections (verified against the code while planning)
+
+- **WhatsApp 24-hour window is known**: `WhatsAppLink.lastInboundAt` is stamped on every inbound
+  message. If it is within the last 23 hours, the digest is sent directly (audio + text) with no
+  template and no "Listen" tap; only outside the window is the template used.
+- **WhatsApp template languages**: Meta has no Belarusian template locale. The template is sent in
+  `be` users' fallback language `ru`; the digest itself (text + voice after "Listen") stays in
+  Belarusian. Template language codes: en, pl, de, es, fr, ru, uk (for `ua`), nl.
+- **Nothing sends audio or detects a blocked bot today** — both are new. Blocked detection is at send
+  time: Telegram error 403; Slack `channel_not_found` / `is_archived` / `account_inactive` /
+  `not_in_channel`; WhatsApp Graph error `131026` (undeliverable) or `131047` (window closed —
+  retried as the template, not treated as blocked).
+- **Slack**: a proactive DM needs `conversations.open({ users })` to get the DM channel id; audio goes
+  up with `files.uploadV2` to that channel.
+- **Telegram**: the private chat id equals `TelegramLink.telegramUserId`.
+- **Cost logging** uses the existing `SubscriptionsService.recordAdditionalUsage(userId, 'voice_digest',
+  units, accountId)` — audit only, never touches the user's quota.
+- **Weekly spend** has no shared helper; the facts service queries it with the standard exclusions
+  (isDeleted, isDebt, isDebtRepayment, isPlanned, isSplitReceivable) and `common/utils/fx.ts`.
+- **Implementation is two plans**: API (`plans/2026-09-27-voice-digest-api.md`), then mobile.
+
 
 ## Goal
 
