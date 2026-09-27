@@ -153,15 +153,28 @@ export class RealSalaryService {
     };
   }
 
-  async listCategories(accountId: string): Promise<RealSalaryCategoryRow[]> {
+  /**
+   * The settings screen's category list, each with its spend over the SAME
+   * 12-month window and filters `compute()` weighs, so the user can see which
+   * unassigned categories actually move the answer (ABA-617).
+   */
+  async listCategories(accountId: string, baseCurrency: string): Promise<RealSalaryCategoryRow[]> {
     await this.classifier.ensureClassified(accountId);
     const rows = await this.prisma.category.findMany({
       where: { accountId, type: 'expense', isDeleted: false },
       select: { id: true, name: true, icon: true, coicopDivision: true },
       orderBy: { name: 'asc' },
     });
+    const rates = await getRatesSafe(this.exchangeRateService, baseCurrency);
+    const { parts } = await this.loadSpendParts(accountId, new Date(), (a, c) => convertAmount(a, c, baseCurrency, rates));
+    const byCategory = new Map<string, number>();
+    for (const p of parts) {
+      if (p.categoryId) byCategory.set(p.categoryId, (byCategory.get(p.categoryId) ?? 0) + p.amount);
+    }
     return rows.map((r: { id: string; name: string; icon: string | null; coicopDivision: string | null }) => ({
       id: r.id, name: r.name, icon: r.icon, coicopDivision: isDivision(r.coicopDivision) ? r.coicopDivision : null,
+      spend: Math.round((byCategory.get(r.id) ?? 0) * 100) / 100,
+      spendCurrency: baseCurrency,
     }));
   }
 
@@ -201,6 +214,21 @@ export class RealSalaryService {
   private async loadSpend(
     accountId: string, now: Date, convert: (a: number, c: string) => number | null,
   ): Promise<{ spend: SpendByDivision[]; months: number; fxApproximate: boolean }> {
+    const { parts, months, fxApproximate } = await this.loadSpendParts(accountId, now, convert);
+    const spend = parts.map((p) => ({ division: p.division, amount: p.amount }));
+    return { spend, months, fxApproximate };
+  }
+
+  /**
+   * The spend real salary weighs: the open account's last 365 days, excluding
+   * debts, repayments, planned expenses and split-receivables, attributed to
+   * categories by the one split rule and converted to the base currency (an
+   * unknown rate drops the amount and flags fxApproximate). Shared by the
+   * weights and the settings list so both read the same money.
+   */
+  private async loadSpendParts(
+    accountId: string, now: Date, convert: (a: number, c: string) => number | null,
+  ): Promise<{ parts: { categoryId: string | null; division: CoicopDivision; amount: number }[]; months: number; fxApproximate: boolean }> {
     const rows = await this.prisma.expense.findMany({
       where: {
         accountId, isDeleted: false, isDebt: false, isDebtRepayment: false, isPlanned: false,
@@ -218,7 +246,7 @@ export class RealSalaryService {
 
     const divisionOf = new Map<string, CoicopDivision>();
     const months = new Set<string>();
-    const spend: SpendByDivision[] = [];
+    const parts: { categoryId: string | null; division: CoicopDivision; amount: number }[] = [];
     let fxApproximate = false;
     for (const e of rows) {
       const d = new Date(e.date);
@@ -231,9 +259,9 @@ export class RealSalaryService {
         const v = convert(part.amount, e.currencyCode);
         if (v === null) { fxApproximate = true; continue; }
         const division = (part.categoryId && divisionOf.get(part.categoryId)) || 'TOTAL';
-        spend.push({ division, amount: v });
+        parts.push({ categoryId: part.categoryId ?? null, division, amount: v });
       }
     }
-    return { spend, months: months.size, fxApproximate };
+    return { parts, months: months.size, fxApproximate };
   }
 }

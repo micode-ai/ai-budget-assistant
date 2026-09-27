@@ -2776,6 +2776,8 @@ export default {
       countryNone: 'Nie ustawiono',
       categories: 'Czym jest każda kategoria',
       categoriesHint: 'Służy do dopasowania wydatków do oficjalnych grup cen.',
+      unassignedHeader: 'Jeszcze nieprzypisane — od największych wydatków',
+      assignedHeader: 'Przypisane — od największych wydatków',
       auto: 'Automatycznie',
       pickCountry: 'Wybierz kraj',
       pickDivision: 'Wybierz grupę cen',

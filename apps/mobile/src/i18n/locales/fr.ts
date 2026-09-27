@@ -2764,6 +2764,8 @@ export default {
       countryNone: 'Non défini',
       categories: 'À quoi correspond chaque catégorie',
       categoriesHint: 'Sert à rapprocher vos dépenses des groupes de prix officiels.',
+      unassignedHeader: 'Pas encore attribuées — les plus grosses dépenses d’abord',
+      assignedHeader: 'Attribuées — les plus grosses dépenses d’abord',
       auto: 'Automatique',
       pickCountry: 'Choisir un pays',
       pickDivision: 'Choisir un groupe de prix',

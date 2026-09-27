@@ -2764,6 +2764,8 @@ export default {
       countryNone: 'Sin definir',
       categories: 'A qué corresponde cada categoría',
       categoriesHint: 'Sirve para relacionar tus gastos con los grupos oficiales de precios.',
+      unassignedHeader: 'Sin asignar — primero los de mayor gasto',
+      assignedHeader: 'Asignadas — primero las de mayor gasto',
       auto: 'Automático',
       pickCountry: 'Elige un país',
       pickDivision: 'Elige un grupo de precios',

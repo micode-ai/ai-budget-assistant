@@ -153,7 +153,7 @@ export class InsightsController {
 
   @Get('real-salary/categories')
   async getRealSalaryCategories(@Req() req: AuthenticatedRequest) {
-    return this.realSalaryService.listCategories(req.accountId);
+    return this.realSalaryService.listCategories(req.accountId, req.user.currencyCode || 'USD');
   }
 
   @Post('real-salary/brief')

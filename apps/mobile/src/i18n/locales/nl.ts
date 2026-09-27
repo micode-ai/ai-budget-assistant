@@ -2764,6 +2764,8 @@ export default {
       countryNone: 'Niet ingesteld',
       categories: 'Waar elke categorie bij hoort',
       categoriesHint: 'Hiermee koppelen we je uitgaven aan de officiële prijsgroepen.',
+      unassignedHeader: 'Nog niet toegewezen — hoogste uitgaven eerst',
+      assignedHeader: 'Toegewezen — hoogste uitgaven eerst',
       auto: 'Automatisch',
       pickCountry: 'Kies een land',
       pickDivision: 'Kies een prijsgroep',

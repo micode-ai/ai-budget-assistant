@@ -1,4 +1,4 @@
-import type { RealSalaryResponse, RealSalaryStatus, SalaryCandidate } from '@budget/shared-types';
+import type { RealSalaryCategoryRow, RealSalaryResponse, RealSalaryStatus, SalaryCandidate } from '@budget/shared-types';
 
 /** Same list as the API's EUROSTAT_COUNTRIES (Greece is EL in Eurostat). */
 export const REAL_SALARY_COUNTRIES: readonly string[] = [
@@ -153,4 +153,21 @@ export function briefErrorKind(e: unknown): 'paywall' | 'not_ready' | 'failed' {
   if (err.status === 403 && err.code === 'TIER_REQUIRED') return 'paywall';
   if (err.status === 409) return 'not_ready';
   return 'failed';
+}
+
+/**
+ * Settings list order (ABA-617): the categories priced at the national TOTAL
+ * rate — never assigned, or assigned "Everything else" — come first, biggest
+ * spend first, because those are the ones worth assigning; then the rest, also
+ * biggest first. A row without `spend` (an API older than the app) counts as 0.
+ */
+export function groupSettingsCategories(rows: RealSalaryCategoryRow[]): {
+  unassigned: RealSalaryCategoryRow[];
+  assigned: RealSalaryCategoryRow[];
+} {
+  const bySpend = (a: RealSalaryCategoryRow, b: RealSalaryCategoryRow) =>
+    (b.spend ?? 0) - (a.spend ?? 0) || a.name.localeCompare(b.name);
+  const unassigned = rows.filter((r) => r.coicopDivision === null || r.coicopDivision === 'TOTAL').sort(bySpend);
+  const assigned = rows.filter((r) => r.coicopDivision !== null && r.coicopDivision !== 'TOTAL').sort(bySpend);
+  return { unassigned, assigned };
 }

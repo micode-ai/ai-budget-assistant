@@ -6,7 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import type { CoicopDivision, RealSalaryCategoryRow } from '@budget/shared-types';
-import { countryName } from '@/features/insights/realSalary';
+import { formatCurrency } from '@budget/shared-utils';
+import { countryName, groupSettingsCategories } from '@/features/insights/realSalary';
 import { getIntlLocale } from '@/i18n';
 import { CountryPickerSheet } from '@/components/real-salary/CountryPickerSheet';
 import { DivisionPickerSheet } from '@/components/real-salary/DivisionPickerSheet';
@@ -103,6 +104,7 @@ export default function RealSalarySettingsScreen() {
   );
 
   const divisionCategory = categories.find((c) => c.id === divisionCategoryId) ?? null;
+  const { unassigned, assigned } = groupSettingsCategories(categories);
 
   const handleSelectDivision = useCallback(
     async (division: CoicopDivision) => {
@@ -121,6 +123,49 @@ export default function RealSalarySettingsScreen() {
     },
     [divisionCategory, t],
   );
+
+  const renderCategory = (cat: RealSalaryCategoryRow, index: number) => {
+    const isSaving = categorySavingId === cat.id;
+    const rowInner = (
+      <>
+        <View style={styles.rowText}>
+          <Text style={styles.rowLabel} numberOfLines={1}>
+            {`${cat.icon ?? ''} ${cat.name}`.trim()}
+          </Text>
+          {cat.spend !== undefined && cat.spendCurrency && (
+            <Text style={styles.rowAmount} numberOfLines={1}>
+              {formatCurrency(cat.spend, cat.spendCurrency)}
+            </Text>
+          )}
+        </View>
+        <View style={styles.rowValueContainer}>
+          {isSaving ? (
+            <ActivityIndicator size="small" color={theme.colors.primary} />
+          ) : (
+            <Text style={styles.rowValue} numberOfLines={1}>
+              {cat.coicopDivision ? t(`realSalary.division.${cat.coicopDivision}`) : t('realSalary.config.auto')}
+            </Text>
+          )}
+          {canEdit && <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />}
+        </View>
+      </>
+    );
+    return canEdit ? (
+      <TouchableOpacity
+        key={cat.id}
+        style={[styles.row, index > 0 && styles.rowDivider]}
+        accessibilityRole="button"
+        onPress={() => setDivisionCategoryId(cat.id)}
+        disabled={isSaving}
+      >
+        {rowInner}
+      </TouchableOpacity>
+    ) : (
+      <View key={cat.id} style={[styles.row, index > 0 && styles.rowDivider]}>
+        {rowInner}
+      </View>
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
@@ -178,43 +223,18 @@ export default function RealSalarySettingsScreen() {
 
             <Text style={styles.sectionLabel}>{t('realSalary.config.categories')}</Text>
             <Text style={styles.hint}>{t('realSalary.config.categoriesHint')}</Text>
-            <View style={styles.card}>
-              {categories.map((cat, index) => {
-                const isSaving = categorySavingId === cat.id;
-                const rowInner = (
-                  <>
-                    <Text style={styles.rowLabel} numberOfLines={1}>
-                      {`${cat.icon ?? ''} ${cat.name}`.trim()}
-                    </Text>
-                    <View style={styles.rowValueContainer}>
-                      {isSaving ? (
-                        <ActivityIndicator size="small" color={theme.colors.primary} />
-                      ) : (
-                        <Text style={styles.rowValue} numberOfLines={1}>
-                          {cat.coicopDivision ? t(`realSalary.division.${cat.coicopDivision}`) : t('realSalary.config.auto')}
-                        </Text>
-                      )}
-                      {canEdit && <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />}
-                    </View>
-                  </>
-                );
-                return canEdit ? (
-                  <TouchableOpacity
-                    key={cat.id}
-                    style={[styles.row, index > 0 && styles.rowDivider]}
-                    accessibilityRole="button"
-                    onPress={() => setDivisionCategoryId(cat.id)}
-                    disabled={isSaving}
-                  >
-                    {rowInner}
-                  </TouchableOpacity>
-                ) : (
-                  <View key={cat.id} style={[styles.row, index > 0 && styles.rowDivider]}>
-                    {rowInner}
-                  </View>
-                );
-              })}
-            </View>
+            {unassigned.length > 0 && (
+              <>
+                <Text style={styles.groupLabel}>{t('realSalary.config.unassignedHeader')}</Text>
+                <View style={styles.card}>{unassigned.map(renderCategory)}</View>
+              </>
+            )}
+            {assigned.length > 0 && (
+              <>
+                <Text style={styles.groupLabel}>{t('realSalary.config.assignedHeader')}</Text>
+                <View style={styles.card}>{assigned.map(renderCategory)}</View>
+              </>
+            )}
           </>
         )}
       </ScrollView>
@@ -287,6 +307,13 @@ const createStyles = (theme: Theme) => ({
     borderTopColor: theme.colors.border,
   },
   rowLabel: { ...theme.textStyles.bodyMedium, color: theme.colors.textPrimary, flex: 1 },
+  rowText: { flex: 1, minWidth: 0 },
+  rowAmount: { ...theme.textStyles.caption, color: theme.colors.textTertiary, marginTop: 2 },
+  groupLabel: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[1.5],
+  },
   rowValueContainer: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

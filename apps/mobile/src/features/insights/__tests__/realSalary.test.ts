@@ -1,7 +1,7 @@
-import type { RealSalaryResponse, SalaryCandidate } from '@budget/shared-types';
+import type { RealSalaryCategoryRow, RealSalaryResponse, SalaryCandidate } from '@budget/shared-types';
 import {
   REAL_SALARY_COUNTRIES, countryName, formatSignedPct, toneOf, statusCopy, requiredRaiseKey,
-  manualCurrency, buildShareLines, briefErrorKind, parseMonthlyAmount,
+  manualCurrency, buildShareLines, briefErrorKind, parseMonthlyAmount, groupSettingsCategories,
 } from '../realSalary';
 
 const READY: RealSalaryResponse = {
@@ -133,5 +133,24 @@ describe('countryName falls back to a static English table without Intl.DisplayN
     } finally {
       IntlWithDisplayNames.DisplayNames = original;
     }
+  });
+});
+
+describe('groupSettingsCategories', () => {
+  const row = (id: string, coicopDivision: RealSalaryCategoryRow['coicopDivision'], spend?: number): RealSalaryCategoryRow =>
+    ({ id, name: id, icon: null, coicopDivision, spend, spendCurrency: 'PLN' });
+
+  it('puts TOTAL and unassigned first, each group biggest spend first', () => {
+    const g = groupSettingsCategories([
+      row('a', 'CP01', 50), row('b', 'TOTAL', 10), row('c', null, 300), row('d', 'CP09', 900), row('e', 'TOTAL', 40),
+    ]);
+    expect(g.unassigned.map((r) => r.id)).toEqual(['c', 'e', 'b']);
+    expect(g.assigned.map((r) => r.id)).toEqual(['d', 'a']);
+  });
+
+  it('treats a missing spend (older API) as zero and breaks ties by name', () => {
+    const g = groupSettingsCategories([row('z', null), row('m', null, 0), row('k', 'CP04')]);
+    expect(g.unassigned.map((r) => r.id)).toEqual(['m', 'z']);
+    expect(g.assigned.map((r) => r.id)).toEqual(['k']);
   });
 });

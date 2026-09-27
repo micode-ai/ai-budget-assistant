@@ -298,3 +298,53 @@ describe('RealSalaryService profile + cache', () => {
     expect(r.candidates.map((c) => c.key)).toEqual([KEY]);
   });
 });
+
+describe('RealSalaryService.listCategories — spend per category (ABA-617)', () => {
+  const cats = [
+    { id: 'cat-fun', name: 'Fun', icon: null, coicopDivision: 'CP09' },
+    { id: 'cat-mix', name: 'Mixed', icon: null, coicopDivision: 'TOTAL' },
+    { id: 'cat-new', name: 'Fresh', icon: null, coicopDivision: null },
+  ];
+
+  it('returns each category with its 12-month spend in the base currency, splits honoured', async () => {
+    const { svc, prisma } = make({
+      expenses: [
+        { amount: 100, currencyCode: 'PLN', date: monthsAgo(1), categoryId: 'cat-fun', category: { id: 'cat-fun', name: 'Fun', coicopDivision: 'CP09' }, categorySplits: [] },
+        { amount: 40, currencyCode: 'EUR', date: monthsAgo(2), categoryId: 'cat-mix', category: { id: 'cat-mix', name: 'Mixed', coicopDivision: 'TOTAL' }, categorySplits: [] },
+        {
+          amount: 50, currencyCode: 'PLN', date: monthsAgo(3), categoryId: 'cat-fun', category: { id: 'cat-fun', name: 'Fun', coicopDivision: 'CP09' },
+          categorySplits: [
+            { categoryId: 'cat-fun', amount: 20, category: { id: 'cat-fun', name: 'Fun', coicopDivision: 'CP09' } },
+            { categoryId: 'cat-mix', amount: 30, category: { id: 'cat-mix', name: 'Mixed', coicopDivision: 'TOTAL' } },
+          ],
+        },
+      ],
+    });
+    prisma.category.findMany.mockResolvedValue(cats);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (svc as any).exchangeRateService.getRates.mockResolvedValue({ rates: { PLN: 1, EUR: 0.25 } });
+
+    const rows = await svc.listCategories('acc', 'PLN');
+
+    expect(rows).toEqual([
+      { id: 'cat-fun', name: 'Fun', icon: null, coicopDivision: 'CP09', spend: 120, spendCurrency: 'PLN' },
+      { id: 'cat-mix', name: 'Mixed', icon: null, coicopDivision: 'TOTAL', spend: 190, spendCurrency: 'PLN' },
+      { id: 'cat-new', name: 'Fresh', icon: null, coicopDivision: null, spend: 0, spendCurrency: 'PLN' },
+    ]);
+    const where = prisma.expense.findMany.mock.calls[0][0].where;
+    expect(where).toMatchObject({ accountId: 'acc', isDeleted: false, isDebt: false, isPlanned: false, isSplitReceivable: false });
+    const since: Date = where.date.gte;
+    expect(Math.round((Date.now() - since.getTime()) / 86_400_000)).toBe(365);
+  });
+
+  it('leaves an amount with an unknown FX rate out rather than summing it unconverted', async () => {
+    const { svc, prisma } = make({
+      expenses: [
+        { amount: 70, currencyCode: 'XYZ', date: monthsAgo(1), categoryId: 'cat-fun', category: { id: 'cat-fun', name: 'Fun', coicopDivision: 'CP09' }, categorySplits: [] },
+      ],
+    });
+    prisma.category.findMany.mockResolvedValue(cats.slice(0, 1));
+    const rows = await svc.listCategories('acc', 'PLN');
+    expect(rows[0].spend).toBe(0);
+  });
+});

@@ -2764,6 +2764,8 @@ export default {
       countryNone: 'Nicht festgelegt',
       categories: 'Wozu jede Kategorie zählt',
       categoriesHint: 'Damit deine Ausgaben den amtlichen Preisgruppen zugeordnet werden.',
+      unassignedHeader: 'Noch nicht zugeordnet – höchste Ausgaben zuerst',
+      assignedHeader: 'Zugeordnet – höchste Ausgaben zuerst',
       auto: 'Automatisch',
       pickCountry: 'Land wählen',
       pickDivision: 'Preisgruppe wählen',

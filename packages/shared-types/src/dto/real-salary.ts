@@ -72,4 +72,12 @@ export interface RealSalaryCategoryRow {
   name: string;
   icon: string | null;
   coicopDivision: CoicopDivision | null;
+  /**
+   * The account's spend in this category over the same 12-month window real
+   * salary weighs (category splits honoured), in `spendCurrency` — the
+   * caller's base currency. An amount with an unknown FX rate is left out.
+   * Optional only so an app build newer than its API still renders (ABA-617).
+   */
+  spend?: number;
+  spendCurrency?: string;
 }

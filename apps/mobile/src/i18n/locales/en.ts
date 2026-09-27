@@ -2771,6 +2771,8 @@ export default {
       countryNone: 'Not set',
       categories: 'What each category counts as',
       categoriesHint: 'Used to match your spending with official price groups.',
+      unassignedHeader: 'Not assigned yet — biggest spend first',
+      assignedHeader: 'Assigned — biggest spend first',
       auto: 'Automatic',
       pickCountry: 'Choose a country',
       pickDivision: 'Choose a price group',
