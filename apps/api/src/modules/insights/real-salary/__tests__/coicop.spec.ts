@@ -24,6 +24,7 @@ describe('coicop', () => {
     expect(divisionForSeedIcon('📱')).toBe('CP08');
     expect(divisionForSeedIcon('👕')).toBe('CP03');
     expect(divisionForSeedIcon('📦')).toBe('TOTAL');
+    expect(divisionForSeedIcon('🎁')).toBe('CP09');
     expect(divisionForSeedIcon('🦄')).toBeNull();
     expect(divisionForSeedIcon(null)).toBeNull();
   });

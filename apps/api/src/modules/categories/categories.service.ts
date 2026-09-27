@@ -170,6 +170,9 @@ export class CategoriesService {
     }
 
     const { clientId: _ignoredClientId, ...rest } = dto ?? {};
+    // A division picked here is the user's own answer (ABA-617): marked 'user'
+    // so it is told apart from a seed-icon or classifier guess.
+    if (rest.coicopDivision !== undefined) rest.coicopSource = 'user';
 
     // `@@unique([accountId, name, type])` covers BOTH columns this PATCH can
     // change, so a rename — or a type switch — onto another of the account's

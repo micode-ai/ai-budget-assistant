@@ -497,6 +497,8 @@ model Category {
   icon                 String?
   color                String?
   coicopDivision       String?  @map("coicop_division")
+  /// Who set coicopDivision: 'seed' (icon map) | 'model' (classifier) | 'user' (PATCH). ABA-617
+  coicopSource         String?  @map("coicop_source")
   type                 String   @default("expense")
   isSystem             Boolean  @default(false) @map("is_system")
   parentId             String?  @map("parent_id")

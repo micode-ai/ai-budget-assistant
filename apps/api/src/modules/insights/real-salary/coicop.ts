@@ -27,7 +27,7 @@ const SEED_ICON_DIVISION: Record<string, CoicopDivision> = {
   '💊': 'CP06', // Health
   '📚': 'CP10', // Education
   '👕': 'CP03', // Clothing
-  '🎁': 'TOTAL', // Gifts
+  '🎁': 'CP09', // Gifts — same answer the classifier prompt gives (ABA-617)
   '✈️': 'CP09', // Travel — package holidays sit in CP09 in COICOP 2018
   '📱': 'CP08', // Subscriptions — information and communication
   '📦': 'TOTAL', // Other

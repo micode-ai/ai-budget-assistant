@@ -334,8 +334,31 @@ describe('CategoriesService.update', () => {
 
     expect(prisma.category.update).toHaveBeenCalledWith({
       where: { id: 'cat-1' },
-      data: { coicopDivision: 'CP01' },
+      data: { coicopDivision: 'CP01', coicopSource: 'user' },
     });
+  });
+
+  // ABA-617: a hand-picked division is marked 'user' so no later
+  // reclassification pass may treat it as a model answer and overwrite it.
+  it('marks a user-cleared division as user-set too', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Groceries', type: 'expense' };
+    const { service, prisma } = makeService({ findFirstResult: found });
+
+    await service.update('acc-1', 'cat-1', { coicopDivision: 'TOTAL' });
+
+    expect(prisma.category.update).toHaveBeenCalledWith({
+      where: { id: 'cat-1' },
+      data: { coicopDivision: 'TOTAL', coicopSource: 'user' },
+    });
+  });
+
+  it('leaves coicopSource alone when the PATCH does not touch coicopDivision', async () => {
+    const found = { id: 'cat-1', accountId: 'acc-1', name: 'Groceries', type: 'expense' };
+    const { service, prisma } = makeService({ findFirstResult: found });
+
+    await service.update('acc-1', 'cat-1', { color: '#fff' });
+
+    expect(prisma.category.update.mock.calls[0][0].data).not.toHaveProperty('coicopSource');
   });
 });
 

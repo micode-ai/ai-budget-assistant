@@ -9,14 +9,47 @@ export const CLASSIFY_BATCH = 50;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type OpenAILike = { chat: { completions: { create(args: any): Promise<any> } } };
 
+/**
+ * Completion budget per answered category. A pretty-printed pair
+ * `  "49": "CP09",` is ~8 tokens; a flat 400-token cap truncated a full
+ * 50-item batch mid-JSON, the parse failed, nothing was stored, and the same
+ * batch was re-asked — and truncated again — on every request (ABA-617).
+ */
+export const TOKENS_PER_CATEGORY = 12;
+const TOKENS_OVERHEAD = 30;
+
+export function completionBudget(count: number): number {
+  return TOKENS_OVERHEAD + count * TOKENS_PER_CATEGORY;
+}
+
 const SYSTEM = `You map personal-finance expense category names to COICOP 2018 divisions.
-Answer with a JSON object mapping each given index to one code from:
+Names may be in any language (Polish, Russian, Ukrainian, Belarusian, German, English, Dutch,
+French, Spanish...). Answer with a JSON object mapping each given index to one code from:
 ${DIVISIONS.join(', ')}.
-CP01 food & non-alcoholic drinks, CP02 alcohol & tobacco, CP03 clothing & footwear,
-CP04 housing, rent & utilities, CP05 furnishings & household, CP06 health, CP07 transport,
-CP08 phone, internet & digital subscriptions, CP09 recreation, culture & holidays,
-CP10 education, CP11 restaurants & accommodation, CP12 insurance & financial services,
-CP13 personal care & miscellaneous. Use TOTAL when a name fits no single division.`;
+CP01 food & non-alcoholic drinks, groceries, supermarket.
+CP02 alcohol & tobacco.
+CP03 clothing & footwear.
+CP04 housing: rent, utilities, electricity, gas, water, heating, repairs of the dwelling.
+CP05 furnishings & household: furniture, appliances, home goods, shopping for the home, cleaning supplies, garden.
+CP06 health: pharmacy, medicine, doctor, dentist, optician.
+CP07 transport: fuel, car, parking, taxi, public transport, tickets, car service.
+CP08 phone, internet & digital subscriptions: mobile plan, streaming, apps, software subscriptions.
+CP09 recreation, culture & holidays: entertainment, hobbies, sport, gym, games, books, cinema, concerts,
+     pets & pet food, toys, gifts, flowers, travel & holidays, package tours.
+CP10 education: school, university, courses, tutoring.
+CP11 restaurants & accommodation: restaurants, cafes, bars, takeaway, food delivery, hotels.
+CP12 insurance & financial services: insurance, bank fees, commissions.
+CP13 personal care & miscellaneous: beauty, cosmetics, hairdresser, barber, hygiene, kids' care and
+     childcare, jewellery, other personal items.
+Use TOTAL only when the name is a person's name (a family member, a friend), a pet's own name,
+or a genuinely mixed or unknown category ("Other", "Misc", "Various", "Cash"). A generic name that
+points at one kind of spending always gets that division, never TOTAL.
+Examples: "Entertainment" → CP09, "Rozrywka" → CP09, "Развлечения" → CP09, "Розваги" → CP09,
+"Freizeit" → CP09, "Sport" → CP09, "Подарки" → CP09, "Prezenty" → CP09, "Podróże" → CP09,
+"Urlaub" → CP09, "Zwierzęta" → CP09, "Subskrypcje" → CP08, "Подписки" → CP08, "Abos" → CP08,
+"Dom" → CP05, "Для дома" → CP05, "Haushalt" → CP05, "Uroda" → CP13, "Красота" → CP13,
+"Dzieci" → CP13, "Дети" → CP13, "Kinder" → CP13, "Anna" → TOTAL, "Мама" → TOTAL,
+"Burek" → TOTAL, "Inne" → TOTAL, "Разное" → TOTAL, "Sonstiges" → TOTAL.`;
 
 /**
  * Gives each expense category a COICOP division once. Seed categories are
@@ -49,7 +82,7 @@ export class CoicopClassifierService {
       const rest: { id: string; name: string }[] = [];
       for (const c of cats) {
         const d = divisionForSeedIcon(c.icon);
-        if (d) await this.prisma.category.update({ where: { id: c.id }, data: { coicopDivision: d } });
+        if (d) await this.prisma.category.update({ where: { id: c.id }, data: { coicopDivision: d, coicopSource: 'seed' } });
         else rest.push(c);
       }
       if (rest.length === 0 || !this.openai) return;
@@ -59,7 +92,7 @@ export class CoicopClassifierService {
         const res = await this.openai.chat.completions.create({
           model: CHEAP_MODEL,
           temperature: 0,
-          max_tokens: 400,
+          max_tokens: completionBudget(rest.length),
           response_format: { type: 'json_object' },
           messages: [
             { role: 'system', content: SYSTEM },
@@ -75,7 +108,7 @@ export class CoicopClassifierService {
         const v = answer[String(i)];
         await this.prisma.category.update({
           where: { id: rest[i].id },
-          data: { coicopDivision: isDivision(v) ? v : 'TOTAL' },
+          data: { coicopDivision: isDivision(v) ? v : 'TOTAL', coicopSource: 'model' },
         });
       }
     } catch (e) {
