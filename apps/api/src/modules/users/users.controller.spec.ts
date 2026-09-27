@@ -11,6 +11,7 @@ import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { VoiceDigestService } from '../voice-digest/voice-digest.service';
 
 function makeController(update = jest.fn()) {
   const usersService = {
@@ -25,6 +26,7 @@ function makeController(update = jest.fn()) {
     {} as any, // whatsAppLinkService
     {} as any, // slackLinkService
     {} as any, // cache
+    {} as any, // voiceDigestService
   );
   return { controller, usersService, update };
 }
@@ -75,7 +77,7 @@ describe('UsersController.updateProfile real-salary cache', () => {
     const update = jest.fn().mockResolvedValue({ id: 'u1', email: 'a@b.c', name: 'A', timezone: 'Europe/Berlin' });
     const usersService = { update, listAccountIds: jest.fn().mockResolvedValue(['acc1', 'acc2']) } as any;
     const cache = { delByPrefix: jest.fn().mockResolvedValue(undefined) } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, cache);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, cache, {} as any);
     return { controller, usersService, cache };
   }
 
@@ -161,7 +163,7 @@ describe('UsersController.getProfile payment handle', () => {
     });
     const getPaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(res.paymentMethod).toBe('paypal');
     expect(res.paymentHandle).toBe('user@paypal.com');
@@ -176,7 +178,7 @@ describe('UsersController.getProfile payment handle', () => {
     });
     const getPaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(res.paymentMethod).toBeNull();
     expect(res.paymentHandle).toBeNull();
@@ -194,7 +196,7 @@ describe('UsersController.getProfile payment handle', () => {
       { method: 'blik', handle: '+48 123 456 789' },
     ]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(getPaymentMethods).toHaveBeenCalledWith('u1');
     expect(res.paymentMethods).toEqual([
@@ -211,7 +213,7 @@ describe('UsersController.replacePaymentMethods', () => {
       { method: 'paypal', handle: 'pp-handle' },
     ]);
     const usersService = { replacePaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any);
 
     const res = await controller.replacePaymentMethods(req, {
       paymentMethods: [
@@ -235,7 +237,7 @@ describe('UsersController.replacePaymentMethods', () => {
   it('accepts an empty list (clears every configured method)', async () => {
     const replacePaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { replacePaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any, {} as any);
 
     const res = await controller.replacePaymentMethods(req, { paymentMethods: [] });
 
@@ -275,6 +277,7 @@ describe('PUT /users/me/payment-methods — DTO validation (real ValidationPipe)
         { provide: WhatsAppLinkService, useValue: {} },
         { provide: SlackLinkService, useValue: {} },
         { provide: CacheService, useValue: {} },
+        { provide: VoiceDigestService, useValue: {} },
       ],
     })
       .overrideGuard(JwtAuthGuard)
@@ -364,5 +367,164 @@ describe('PUT /users/me/payment-methods — DTO validation (real ValidationPipe)
 
     expect(res.status).toBe(200);
     expect(usersService.replacePaymentMethods).toHaveBeenCalledWith('user-1', []);
+  });
+});
+
+describe('UsersController voice digest settings', () => {
+  function makeWithVoiceDigest() {
+    const getSettings = jest.fn();
+    const updateSettings = jest.fn();
+    const voiceDigestService = { getSettings, updateSettings } as any;
+    const controller = new UsersController(
+      {} as any, // usersService
+      {} as any, // telegramLinkService
+      {} as any, // telegramBotService
+      {} as any, // whatsAppLinkService
+      {} as any, // slackLinkService
+      {} as any, // cache
+      voiceDigestService,
+    );
+    return { controller, getSettings, updateSettings };
+  }
+
+  it('GET me/voice-digest delegates to VoiceDigestService.getSettings and returns its result', async () => {
+    const { controller, getSettings } = makeWithVoiceDigest();
+    const settings = {
+      enabled: true, day: 1, hour: 8, channel: 'telegram',
+      availableChannels: ['telegram'], whatsappAvailable: false,
+    };
+    getSettings.mockResolvedValue(settings);
+
+    const res = await controller.getVoiceDigestSettings(req);
+
+    expect(getSettings).toHaveBeenCalledWith('u1');
+    expect(res).toEqual(settings);
+  });
+
+  it('PATCH me/voice-digest delegates to VoiceDigestService.updateSettings with the caller id and body, and returns its result', async () => {
+    const { controller, updateSettings } = makeWithVoiceDigest();
+    const settings = {
+      enabled: true, day: 3, hour: 20, channel: 'whatsapp',
+      availableChannels: ['telegram', 'whatsapp'], whatsappAvailable: true,
+    };
+    updateSettings.mockResolvedValue(settings);
+
+    const res = await controller.updateVoiceDigestSettings(req, { day: 3, hour: 20, channel: 'whatsapp' });
+
+    expect(updateSettings).toHaveBeenCalledWith('u1', { day: 3, hour: 20, channel: 'whatsapp' });
+    expect(res).toEqual(settings);
+  });
+});
+
+/**
+ * Real `ValidationPipe`, same reasoning as the payment-methods suite above: an inline
+ * TS type has no decorators, so only a real class-validator `UpdateVoiceDigestDto` proves
+ * the global pipe actually rejects an out-of-range day/hour or an unknown channel before
+ * `VoiceDigestService.updateSettings` (which enforces its own, dynamic "is this channel
+ * actually linked" rule) ever sees the body.
+ */
+describe('PATCH /users/me/voice-digest — DTO validation (real ValidationPipe)', () => {
+  let app: INestApplication;
+  const voiceDigestService = {
+    updateSettings: jest.fn().mockResolvedValue({
+      enabled: true, day: 1, hour: 8, channel: 'telegram',
+      availableChannels: ['telegram'], whatsappAvailable: false,
+    }),
+  };
+
+  const passThroughGuard: CanActivate = {
+    canActivate: (ctx: ExecutionContext) => {
+      const httpReq = ctx.switchToHttp().getRequest();
+      httpReq.user = { id: 'user-1' };
+      return true;
+    },
+  };
+
+  beforeAll(async () => {
+    const moduleRef: TestingModule = await Test.createTestingModule({
+      controllers: [UsersController],
+      providers: [
+        { provide: UsersService, useValue: {} },
+        { provide: TelegramLinkService, useValue: {} },
+        { provide: TelegramBotService, useValue: {} },
+        { provide: WhatsAppLinkService, useValue: {} },
+        { provide: SlackLinkService, useValue: {} },
+        { provide: CacheService, useValue: {} },
+        { provide: VoiceDigestService, useValue: voiceDigestService },
+      ],
+    })
+      .overrideGuard(JwtAuthGuard)
+      .useValue(passThroughGuard)
+      .overrideGuard(ThrottlerGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(AccountContextGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
+
+    app = moduleRef.createNestApplication();
+    app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));
+    await app.init();
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  beforeEach(() => jest.clearAllMocks());
+
+  it('happy path: a valid partial body returns 200', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({ enabled: true, day: 1, hour: 8 });
+
+    expect(res.status).toBe(200);
+    expect(voiceDigestService.updateSettings).toHaveBeenCalledWith('user-1', { enabled: true, day: 1, hour: 8 });
+  });
+
+  it('rejects day out of range (7)', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({ day: 7 });
+
+    expect(res.status).toBe(400);
+    expect(voiceDigestService.updateSettings).not.toHaveBeenCalled();
+  });
+
+  it('rejects a negative day', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({ day: -1 });
+
+    expect(res.status).toBe(400);
+    expect(voiceDigestService.updateSettings).not.toHaveBeenCalled();
+  });
+
+  it('rejects hour out of range (24)', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({ hour: 24 });
+
+    expect(res.status).toBe(400);
+    expect(voiceDigestService.updateSettings).not.toHaveBeenCalled();
+  });
+
+  it('rejects a non-integer hour', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({ hour: 8.5 });
+
+    expect(res.status).toBe(400);
+    expect(voiceDigestService.updateSettings).not.toHaveBeenCalled();
+  });
+
+  it('rejects an unknown channel value', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({ channel: 'sms' });
+
+    expect(res.status).toBe(400);
+    expect(voiceDigestService.updateSettings).not.toHaveBeenCalled();
+  });
+
+  it('rejects an unexpected extra field (whitelist)', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({ enabled: true, foo: 'bar' });
+
+    expect(res.status).toBe(400);
+    expect(voiceDigestService.updateSettings).not.toHaveBeenCalled();
+  });
+
+  it('accepts an empty body (no fields to change)', async () => {
+    const res = await request(app.getHttpServer()).patch('/users/me/voice-digest').send({});
+
+    expect(res.status).toBe(200);
+    expect(voiceDigestService.updateSettings).toHaveBeenCalledWith('user-1', {});
   });
 });

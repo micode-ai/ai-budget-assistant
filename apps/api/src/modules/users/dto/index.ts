@@ -1,6 +1,12 @@
-import { IsArray, IsIn, ArrayMaxSize, ArrayUnique, ValidateNested, IsString, MaxLength, Matches } from 'class-validator';
+import { IsArray, IsIn, ArrayMaxSize, ArrayUnique, ValidateNested, IsString, MaxLength, Matches, IsOptional, IsBoolean, IsInt, Min, Max } from 'class-validator';
 import { Type } from 'class-transformer';
-import type { SettleMethod, UserPaymentMethod, ReplaceUserPaymentMethodsDto as ReplaceUserPaymentMethodsShape } from '@budget/shared-types';
+import type {
+  SettleMethod,
+  UserPaymentMethod,
+  ReplaceUserPaymentMethodsDto as ReplaceUserPaymentMethodsShape,
+  UpdateVoiceDigestDto as UpdateVoiceDigestDtoShape,
+  VoiceDigestChannel,
+} from '@budget/shared-types';
 
 // Must stay byte-for-byte identical to users.controller.ts's PAYMENT_METHODS /
 // PAYMENT_HANDLE_REGEX (and AccountMemberPaymentInfoDto's in modules/accounts/dto/index.ts,
@@ -35,4 +41,39 @@ export class ReplaceUserPaymentMethodsDto implements ReplaceUserPaymentMethodsSh
   @ValidateNested({ each: true })
   @Type(() => UserPaymentMethodItemDto)
   paymentMethods: UserPaymentMethodItemDto[];
+}
+
+// Must stay in sync with VoiceDigestChannel in packages/shared-types/src/dto/voice-digest.ts.
+// This is only the HTTP-level shape check (type + range); VoiceDigestService.updateSettings
+// still owns the business rule that the channel must be one this user has actually linked.
+const VOICE_DIGEST_CHANNEL_VALUES: VoiceDigestChannel[] = ['telegram', 'whatsapp', 'slack'];
+
+/**
+ * Body for `PATCH /users/me/voice-digest`. A real class-validator class (not the bare
+ * shared-types interface, same reasoning as `ReplaceUserPaymentMethodsDto` above) so the
+ * global `ValidationPipe` (whitelist + forbidNonWhitelisted + transform) actually enforces
+ * the shape before it ever reaches `VoiceDigestService.updateSettings`.
+ */
+export class UpdateVoiceDigestDto implements UpdateVoiceDigestDtoShape {
+  @IsOptional()
+  @IsBoolean()
+  enabled?: boolean;
+
+  /** 0 = Sunday … 6 = Saturday, in the user's own time zone. */
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(6)
+  day?: number;
+
+  /** 0–23, in the user's own time zone. */
+  @IsOptional()
+  @IsInt()
+  @Min(0)
+  @Max(23)
+  hour?: number;
+
+  @IsOptional()
+  @IsIn(VOICE_DIGEST_CHANNEL_VALUES)
+  channel?: VoiceDigestChannel;
 }

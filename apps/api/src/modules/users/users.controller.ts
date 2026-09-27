@@ -10,8 +10,9 @@ import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { validateInflationCountry } from '../insights/real-salary/real-salary.validation';
+import { VoiceDigestService } from '../voice-digest/voice-digest.service';
 import type { SettleMethod } from '@budget/shared-types';
-import { ReplaceUserPaymentMethodsDto } from './dto';
+import { ReplaceUserPaymentMethodsDto, UpdateVoiceDigestDto } from './dto';
 import { AcquisitionDto } from '../auth/dto';
 
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
@@ -34,6 +35,7 @@ export class UsersController {
     private readonly whatsAppLinkService: WhatsAppLinkService,
     private readonly slackLinkService: SlackLinkService,
     private readonly cache: CacheService,
+    private readonly voiceDigestService: VoiceDigestService,
   ) {}
 
   @Get('me')
@@ -170,6 +172,24 @@ export class UsersController {
     @Body() body: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean },
   ) {
     return this.usersService.updateNotificationPreferences(req.user.id, body);
+  }
+
+  /**
+   * Weekly voice digest settings (ABA voice-digest Tasks 9/11) — user-level, no
+   * `AccountContextGuard`: the digest already resolves its own account per run
+   * (the channel link's `defaultAccountId`, re-checked for membership), so
+   * these routes don't need `X-Account-Id` at all. Declared here, before the
+   * literal Telegram/WhatsApp/Slack sub-paths below and well before any future
+   * `:id`-style route, so a param route can never swallow `me/voice-digest`.
+   */
+  @Get('me/voice-digest')
+  async getVoiceDigestSettings(@Req() req: AuthenticatedRequest) {
+    return this.voiceDigestService.getSettings(req.user.id);
+  }
+
+  @Patch('me/voice-digest')
+  async updateVoiceDigestSettings(@Req() req: AuthenticatedRequest, @Body() body: UpdateVoiceDigestDto) {
+    return this.voiceDigestService.updateSettings(req.user.id, body);
   }
 
   @Delete('me')
