@@ -498,6 +498,18 @@ Divide a single expense across multiple categories:
 
 > **Tip:** Use **Suggest Split** to let AI recommend how to divide the expense.
 
+### Recurring Expenses
+
+Turn any expense into an auto-logging series — on the create form, or later on an expense you already saved:
+
+1. Tap **Repeat**
+2. Choose how often it repeats: **Weekly**, **Monthly**, or **Yearly**
+3. Save — the app automatically logs a new copy of this expense each period, on the day it's due
+
+> **Tip:** You don't have to decide this when you first log the expense. Open any expense that isn't part of a series yet, tap **Edit**, turn on **Repeat**, pick a period, and save — the same toggle as on the create form.
+
+An expense that's already part of a series shows a **Part of a recurring series** banner on its details screen instead of the toggle, with the period (e.g., "Repeats Monthly"). Tap **Stop Recurring** to end the series — past copies stay, only future auto-logging stops.
+
 ## Adding Income
 
 ### Step-by-step
@@ -527,7 +539,7 @@ Tap any expense to view its full details:
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 
 ### Actions on expense details:
-- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)
+- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled); if it isn't already part of a recurring series, you can also turn on **Repeat** here to start one
 - **Copy** — create a duplicate
 - **Delete** — remove the expense (with confirmation)
 
@@ -5424,6 +5436,18 @@ iOS, Android, Web
 
 > **Совет:** Используйте **Предложить разделение**, чтобы ИИ порекомендовал, как разделить расход.
 
+### Периодические расходы
+
+Превратите любой расход в автоматически регистрируемую серию — в форме создания или позже, у уже сохранённого расхода:
+
+1. Нажмите **Повторять**
+2. Выберите, как часто он будет повторяться: **Еженедельно**, **Ежемесячно** или **Ежегодно**
+3. Сохраните — приложение будет автоматически записывать новую копию этого расхода каждый период, в день, когда она должна появиться
+
+> **Совет:** Не обязательно решать это сразу при добавлении расхода. Откройте любой расход, который ещё не входит в серию, нажмите **Редактировать**, включите **Повторять**, выберите период и сохраните — тот же переключатель, что и в форме создания.
+
+Расход, который уже входит в серию, показывает на экране деталей баннер **Часть повторяющейся серии** вместо переключателя, с указанием периода (например, «Повторяется Ежемесячно»). Нажмите **Остановить повтор**, чтобы завершить серию — уже созданные копии сохраняются, останавливается только будущее автоматическое добавление.
+
 ## Добавление дохода
 
 ### Пошагово: Добавление дохода
@@ -5453,7 +5477,7 @@ iOS, Android, Web
 - **Фото чека** — просмотр, пересылка, сохранение в галерею, замена или удаление фото чека. PDF-чеки показываются как документ с возможностью открытия. Если чек ещё не прикреплён, нажмите **Прикрепить чек** — выберите **Сфотографировать**, **Из галереи** или **Выбрать PDF**. Работает для любого расхода, в том числе добавленного вручную. Если чек был прикреплён после создания расхода, нажмите **Извлечь позиции** в карточке чека, чтобы повторно прочитать его ИИ и подтянуть позиции в расход (с подтверждением, если позиции уже есть; каждый запуск тратит один ИИ-запрос)
 
 ### Действия с деталями расхода:
-- **Редактировать** — изменить расход, включая его **валюту** (нажмите на чип валюты рядом с суммой; сама сумма не пересчитывается, меняется только её обозначение)
+- **Редактировать** — изменить расход, включая его **валюту** (нажмите на чип валюты рядом с суммой; сама сумма не пересчитывается, меняется только её обозначение); если расход ещё не входит в повторяющуюся серию, здесь же можно включить **Повторять**, чтобы начать её
 - **Копировать** — создать дубликат
 - **Удалить** — удалить расход (с подтверждением)
 
@@ -10328,6 +10352,18 @@ iOS, Android, Web
 
 > **Порада:** Використовуйте **Запропонувати розподіл**, щоб ШІ рекомендував, як розділити витрату.
 
+### Регулярні витрати
+
+Перетворіть будь-яку витрату на серію, що реєструється автоматично, — у формі створення або пізніше, у вже збереженій витраті:
+
+1. Натисніть **Повторювати**
+2. Оберіть, як часто вона повторюється: **Щотижня**, **Щомісяця** або **Щороку**
+3. Збережіть — застосунок автоматично реєструватиме нову копію цієї витрати щоперіоду, у день, коли вона має настати
+
+> **Порада:** Не обов'язково вирішувати це одразу під час додавання витрати. Відкрийте будь-яку витрату, яка ще не є частиною серії, натисніть **Редагувати**, увімкніть **Повторювати**, оберіть період і збережіть — той самий перемикач, що й у формі створення.
+
+Витрата, яка вже є частиною серії, показує на екрані деталей банер **Частина серії, що повторюється** замість перемикача, із зазначенням періоду (наприклад, «Повторюється Щомісяця»). Натисніть **Зупинити повторення**, щоб завершити серію — вже створені копії залишаються, зупиняється лише майбутнє автоматичне додавання.
+
 ## Додавання доходу
 
 ### Покроково: Додати дохід
@@ -10357,7 +10393,7 @@ iOS, Android, Web
 - **Фото чеку** — перегляд, пересилання, збереження в галерею, заміна або видалення фото чека. PDF-чеки показуються як документ з можливістю відкриття. Якщо чек ще не додано, натисніть **Додати чек** — оберіть **Сфотографувати**, **З галереї** або **Обрати PDF**. Працює для будь-якої витрати, у тому числі доданої вручну. Якщо чек було прикріплено після створення витрати, натисніть **Витягти позиції** в картці чека, щоб повторно прочитати його ШІ та підтягнути позиції у витрату (з підтвердженням, якщо позиції вже є; кожен запуск витрачає один ШІ-запит)
 
 ### Дії з деталями витрати:
-- **Редагувати** — змінити витрату, включно з її **валютою** (натисніть чип валюти біля суми; сама сума не перераховується, змінюється лише її позначення)
+- **Редагувати** — змінити витрату, включно з її **валютою** (натисніть чип валюти біля суми; сама сума не перераховується, змінюється лише її позначення); якщо витрата ще не є частиною серії, що повторюється, тут само можна увімкнути **Повторювати**, щоб її розпочати
 - **Копіювати** — створити дублікат
 - **Видалити** — видалити витрату (з підтвердженням)
 
@@ -15180,6 +15216,18 @@ Rozdziel pojedynczy wydatek miedzy wiele kategorii:
 
 > **Wskazowka:** Uzyj **Zasugeruj podzial**, aby AI zaproponowal, jak rozdzielic wydatek.
 
+### Cykliczne wydatki
+
+Zamień dowolny wydatek w automatycznie rejestrowaną serię — w formularzu tworzenia lub później, w już zapisanym wydatku:
+
+1. Dotknij **Powtarzaj**
+2. Wybierz, jak często ma się powtarzać: **Co tydzień**, **Co miesiąc** lub **Co rok**
+3. Zapisz — aplikacja automatycznie rejestruje nową kopię tego wydatku co okres, w dniu, w którym jest należny
+
+> **Wskazówka:** Nie musisz decydować o tym od razu przy dodawaniu wydatku. Otwórz dowolny wydatek, który nie jest jeszcze częścią serii, dotknij **Edytuj**, włącz **Powtarzaj**, wybierz okres i zapisz — ten sam przełącznik, co w formularzu tworzenia.
+
+Wydatek, który jest już częścią serii, pokazuje na ekranie szczegółów baner **Część serii cyklicznej** zamiast przełącznika, wraz z okresem (np. „Powtarza się Co miesiąc"). Dotknij **Zatrzymaj powtarzanie**, aby zakończyć serię — już utworzone kopie pozostają, zatrzymuje się tylko przyszłe automatyczne rejestrowanie.
+
 ## Dodawanie przychodu
 
 ### Krok po kroku
@@ -15209,7 +15257,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Zdjęcie paragonu** — przeglądanie, udostępnianie, zapisywanie do galerii, podmiana lub usunięcie zdjęcia paragonu. Paragony PDF są pokazywane jako dokument z możliwością otwarcia. Jeśli paragon nie jest jeszcze dołączony, kliknij **Dołącz paragon**, by go dodać — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, w tym dodanego ręcznie. Jeśli paragon został dołączony po utworzeniu wydatku, kliknij **Wyodrębnij pozycje** w karcie paragonu, aby ponownie odczytać go AI i pobrać pozycje do wydatku (z potwierdzeniem, gdy pozycje już istnieją; każde uruchomienie zużywa jedno zapytanie AI)
 
 ### Dostepne akcje w szczegolach wydatku:
-- **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie)
+- **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie); jeśli wydatek nie jest jeszcze częścią cyklicznej serii, możesz tu też włączyć **Powtarzaj**, aby ją rozpocząć
 - **Kopiuj** — utworz duplikat
 - **Usun** — usun wydatek (z potwierdzeniem)
 
@@ -20028,6 +20076,18 @@ Teile eine einzelne Ausgabe auf mehrere Kategorien auf:
 
 > **Tipp:** Verwende **Aufteilung vorschlagen**, um die KI empfehlen zu lassen, wie die Ausgabe aufgeteilt werden soll.
 
+### Wiederkehrende Ausgaben
+
+Verwandle jede Ausgabe in eine automatisch protokollierte Serie — im Erstellungsformular oder später bei einer bereits gespeicherten Ausgabe:
+
+1. Tippe auf **Wiederholen**
+2. Wähle, wie oft sie sich wiederholt: **Wöchentlich**, **Monatlich** oder **Jährlich**
+3. Speichern — die App protokolliert automatisch jeden Zeitraum eine neue Kopie dieser Ausgabe, am fälligen Tag
+
+> **Tipp:** Du musst dich nicht sofort beim Anlegen der Ausgabe entscheiden. Öffne eine beliebige Ausgabe, die noch nicht Teil einer Serie ist, tippe auf **Bearbeiten**, aktiviere **Wiederholen**, wähle einen Zeitraum und speichere — derselbe Schalter wie im Erstellungsformular.
+
+Eine Ausgabe, die bereits Teil einer Serie ist, zeigt auf ihrer Detailseite statt des Schalters ein Banner **Teil einer wiederkehrenden Serie** mit dem Zeitraum (z. B. „Wiederholt sich Monatlich"). Tippe auf **Wiederholung stoppen**, um die Serie zu beenden — bereits erstellte Kopien bleiben erhalten, nur das künftige automatische Protokollieren endet.
+
 ## Einkommen hinzufugen
 
 ### Schritt fur Schritt
@@ -20057,7 +20117,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefügte. Wurde der Beleg erst nach dem Anlegen der Ausgabe angehängt, tippe in der Belegkarte auf **Positionen extrahieren**, um den Beleg erneut von der KI lesen zu lassen und die Positionen in die Ausgabe zu ziehen (mit Bestätigung, falls bereits Positionen vorhanden sind; jeder Lauf verbraucht eine KI-Anfrage)
 
 ### Aktionen bei Ausgabendetails:
-- **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet)
+- **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet); ist sie noch nicht Teil einer wiederkehrenden Serie, kannst du hier auch **Wiederholen** aktivieren, um eine zu starten
 - **Kopieren** — ein Duplikat erstellen
 - **Loschen** — die Ausgabe entfernen (mit Bestatigung)
 
@@ -24851,6 +24911,18 @@ Divide un gasto individual entre multiples categorias:
 
 > **Consejo:** Usa **Sugerir division** para que la IA recomiende como dividir el gasto.
 
+### Gastos recurrentes
+
+Convierte cualquier gasto en una serie que se registra automáticamente — en el formulario de creación o más tarde, en un gasto que ya guardaste:
+
+1. Toca **Repetir**
+2. Elige con qué frecuencia se repite: **Semanal**, **Mensual** o **Anual**
+3. Guarda — la app registra automáticamente una nueva copia de este gasto cada período, el día que corresponda
+
+> **Consejo:** No hace falta decidirlo al registrar el gasto. Abre cualquier gasto que aún no forme parte de una serie, toca **Editar**, activa **Repetir**, elige un período y guarda — el mismo interruptor que en el formulario de creación.
+
+Un gasto que ya forma parte de una serie muestra en su pantalla de detalles un aviso **Parte de una serie recurrente** en lugar del interruptor, con el período (por ejemplo, «Se repite Mensual»). Toca **Detener repetición** para terminar la serie — las copias ya creadas se mantienen, solo se detiene el registro automático futuro.
+
 ## Agregar ingresos
 
 ### Paso a paso
@@ -24880,7 +24952,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente. Si el recibo se adjuntó después de crear el gasto, toca **Extraer artículos** en la tarjeta del recibo para que la IA lo vuelva a leer y añada sus líneas al gasto (con confirmación si ya hay artículos; cada ejecución consume una petición de IA)
 
 ### Acciones en los detalles del gasto:
-- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta)
+- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta); si aún no forma parte de una serie recurrente, también puedes activar **Repetir** aquí para iniciar una
 - **Copiar** — crear un duplicado
 - **Eliminar** — eliminar el gasto (con confirmacion)
 
@@ -29663,6 +29735,18 @@ Repartissez une depense unique entre plusieurs categories :
 
 > **Astuce :** Utilisez **Suggerer une repartition** pour laisser l'IA recommander comment diviser la depense.
 
+### Dépenses récurrentes
+
+Transformez n'importe quelle dépense en une série enregistrée automatiquement — depuis le formulaire de création, ou plus tard sur une dépense déjà enregistrée :
+
+1. Appuyez sur **Répéter**
+2. Choisissez la fréquence : **Hebdomadaire**, **Mensuel** ou **Annuel**
+3. Enregistrez — l'application enregistre automatiquement une nouvelle copie de cette dépense à chaque période, le jour où elle est due
+
+> **Astuce :** Vous n'êtes pas obligé de le décider dès la création de la dépense. Ouvrez une dépense qui ne fait pas encore partie d'une série, appuyez sur **Modifier**, activez **Répéter**, choisissez une période, puis enregistrez — le même interrupteur que sur le formulaire de création.
+
+Une dépense qui fait déjà partie d'une série affiche, sur son écran de détails, une bannière **Fait partie d'une série récurrente** à la place de l'interrupteur, avec la période (par ex. « Se répète Mensuel »). Appuyez sur **Arrêter la répétition** pour mettre fin à la série — les copies déjà créées restent, seul l'enregistrement automatique futur s'arrête.
+
 ## Ajouter un revenu
 
 ### Etape par etape
@@ -29692,7 +29776,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Photo du reçu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du reçu. Les reçus PDF affichent un aperçu de document qui s'ouvre au toucher. Si aucun reçu n'est encore joint, touchez **Joindre un reçu** pour en ajouter un — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles créées à la main. Si le reçu a été joint après la création de la dépense, touchez **Extraire les articles** dans la carte du reçu pour le relire par l'IA et en intégrer les lignes à la dépense (avec confirmation si des articles existent déjà ; chaque lecture consomme une requête IA)
 
 ### Actions sur les details de la depense :
-- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté)
+- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté) ; si elle ne fait pas encore partie d'une série récurrente, vous pouvez aussi activer **Répéter** ici pour en démarrer une
 - **Copier** — creer un doublon
 - **Supprimer** — supprimer la depense (avec confirmation)
 
@@ -34473,6 +34557,18 @@ iOS, Android, Web
 
 > **Парада:** Выкарыстоўвайце **Прапанаваць падзел**, каб ІІ парэкамендаваў, як падзяліць выдатак.
 
+### Паўтаральныя выдаткі
+
+Ператварыце любы выдатак у аўтаматычна зарэгістраваную серыю — у форме стварэння або пазней, у ўжо захаваным выдатку:
+
+1. Націсніце **Паўтараць**
+2. Абярыце, як часта ён будзе паўтарацца: **Штотыдзень**, **Штомесяц** або **Штогод**
+3. Захавайце — праграма аўтаматычна будзе запісваць новую копію гэтага выдатку кожны перыяд, у дзень, калі яна павінна з'явіцца
+
+> **Парада:** Не абавязкова вырашаць гэта адразу пры даданні выдатку. Адкрыйце любы выдатак, які яшчэ не ўваходзіць у серыю, націсніце **Рэдагаваць**, уключыце **Паўтараць**, абярыце перыяд і захавайце — той самы пераключальнік, што і ў форме стварэння.
+
+Выдатак, які ўжо ўваходзіць у серыю, паказвае на экране дэталяў банер **Частка паўтаральнай серыі** замест пераключальніка, з указаннем перыяду (напрыклад, «Паўтараецца Штомесяц»). Націсніце **Спыніць паўтарэнне**, каб завяршыць серыю — ужо створаныя копіі застаюцца, спыняецца толькі будучае аўтаматычнае даданне.
+
 ## Даданне даходу
 
 ### Пакрокава: Даданне даходу
@@ -34502,7 +34598,7 @@ iOS, Android, Web
 - **Фота чэка** — прагляд, перасылка, захаванне ў галерэю, замена або выдаленне фота чэка. PDF-чэкі паказваюцца як дакумент з магчымасцю адкрыцця. Калі чэк яшчэ не дададзены, націсніце **Дадаць чэк** — выберыце **Сфатаграфаваць**, **З галерэі** або **Выбраць PDF**. Працуе для любога выдатку, у тым ліку дададзенага ўручную. Калі чэк быў прымацаваны пасля стварэння выдатку, націсніце **Выцягнуць пазіцыі** ў картцы чэка, каб паўторна прачытаць яго ШІ і падцягнуць пазіцыі ў выдатак (з пацвярджэннем, калі пазіцыі ўжо ёсць; кожны запуск выдаткоўвае адзін ШІ-запыт)
 
 ### Дзеянні з дэталямі выдатку:
-- **Рэдагаваць** — змяніць выдатак, разам з яго **валютай** (націсніце чып валюты побач з сумай; сама сума не пералічваецца, змяняецца толькі яе абазначэнне)
+- **Рэдагаваць** — змяніць выдатак, разам з яго **валютай** (націсніце чып валюты побач з сумай; сама сума не пералічваецца, змяняецца толькі яе абазначэнне); калі выдатак яшчэ не ўваходзіць у паўтаральную серыю, тут жа можна ўключыць **Паўтараць**, каб яе распачаць
 - **Капіяваць** — стварыць дублікат
 - **Выдаліць** — выдаліць выдатак (з пацвярджэннем)
 
@@ -39247,6 +39343,18 @@ Verdeel één uitgave over meerdere categorieën:
 
 > **Tip:** Gebruik **Splitsing voorstellen** om de AI te laten aanbevelen hoe je de uitgave verdeelt.
 
+### Terugkerende uitgaven
+
+Maak van elke uitgave een automatisch geregistreerde reeks — in het aanmaakformulier of later, bij een uitgave die je al hebt opgeslagen:
+
+1. Tik op **Herhalen**
+2. Kies hoe vaak deze zich herhaalt: **Wekelijks**, **Maandelijks** of **Jaarlijks**
+3. Sla op — de app registreert automatisch elke periode een nieuwe kopie van deze uitgave, op de dag dat deze verschuldigd is
+
+> **Tip:** Je hoeft dit niet meteen te beslissen bij het toevoegen van de uitgave. Open een uitgave die nog geen deel uitmaakt van een reeks, tik op **Bewerken**, zet **Herhalen** aan, kies een periode en sla op — dezelfde schakelaar als in het aanmaakformulier.
+
+Een uitgave die al deel uitmaakt van een reeks toont op het detailscherm een banner **Onderdeel van een terugkerende reeks** in plaats van de schakelaar, met de periode (bijv. "Herhaalt Maandelijks"). Tik op **Herhaling stoppen** om de reeks te beëindigen — al gemaakte kopieën blijven staan, alleen de toekomstige automatische registratie stopt.
+
 ## Inkomsten toevoegen
 
 ### Stap voor stap
@@ -39276,7 +39384,7 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde. Is de bon pas na het aanmaken van de uitgave gekoppeld, tik dan op **Artikelen extraheren** in de bonkaart om de bon opnieuw door AI te laten lezen en de regels in de uitgave te zetten (met bevestiging als er al items zijn; elke lezing verbruikt één AI-verzoek)
 
 ### Acties op uitgavedetails:
-- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld)
+- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld); als de uitgave nog geen deel uitmaakt van een terugkerende reeks, kun je hier ook **Herhalen** aanzetten om er een te starten
 - **Kopiëren** — een duplicaat maken
 - **Verwijderen** — de uitgave verwijderen (met bevestiging)
 

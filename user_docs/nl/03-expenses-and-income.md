@@ -133,6 +133,18 @@ Verdeel één uitgave over meerdere categorieën:
 
 > **Tip:** Gebruik **Splitsing voorstellen** om de AI te laten aanbevelen hoe je de uitgave verdeelt.
 
+### Terugkerende uitgaven
+
+Maak van elke uitgave een automatisch geregistreerde reeks — in het aanmaakformulier of later, bij een uitgave die je al hebt opgeslagen:
+
+1. Tik op **Herhalen**
+2. Kies hoe vaak deze zich herhaalt: **Wekelijks**, **Maandelijks** of **Jaarlijks**
+3. Sla op — de app registreert automatisch elke periode een nieuwe kopie van deze uitgave, op de dag dat deze verschuldigd is
+
+> **Tip:** Je hoeft dit niet meteen te beslissen bij het toevoegen van de uitgave. Open een uitgave die nog geen deel uitmaakt van een reeks, tik op **Bewerken**, zet **Herhalen** aan, kies een periode en sla op — dezelfde schakelaar als in het aanmaakformulier.
+
+Een uitgave die al deel uitmaakt van een reeks toont op het detailscherm een banner **Onderdeel van een terugkerende reeks** in plaats van de schakelaar, met de periode (bijv. "Herhaalt Maandelijks"). Tik op **Herhaling stoppen** om de reeks te beëindigen — al gemaakte kopieën blijven staan, alleen de toekomstige automatische registratie stopt.
+
 ## Inkomsten toevoegen
 
 ### Stap voor stap
@@ -162,7 +174,7 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde. Is de bon pas na het aanmaken van de uitgave gekoppeld, tik dan op **Artikelen extraheren** in de bonkaart om de bon opnieuw door AI te laten lezen en de regels in de uitgave te zetten (met bevestiging als er al items zijn; elke lezing verbruikt één AI-verzoek)
 
 ### Acties op uitgavedetails:
-- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld)
+- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld); als de uitgave nog geen deel uitmaakt van een terugkerende reeks, kun je hier ook **Herhalen** aanzetten om er een te starten
 - **Kopiëren** — een duplicaat maken
 - **Verwijderen** — de uitgave verwijderen (met bevestiging)
 

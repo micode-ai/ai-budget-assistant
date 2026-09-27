@@ -170,6 +170,16 @@ export async function syncPendingExpenses(
             : String(expense.debtDueDate)
           : undefined,
         relatedDebtIncomeId: expense.relatedDebtIncomeId || undefined,
+        // ABA-615: this create-upsert is also the retry path for an EDIT made
+        // while offline (updateExpense flips syncStatus back to 'pending' on
+        // an already-synced row). Without these, the upsert's update: branch
+        // falls back to `dto.isRecurring ?? false` server-side and silently
+        // un-recurs a series the user just started — the create-path's own
+        // first push (addExpense, above in this file's sibling) already
+        // carries these three; this retry path was missing them.
+        isRecurring: expense.isRecurring || undefined,
+        recurringId: expense.recurringId,
+        recurringPeriod: expense.recurringPeriod,
         encryptedPayload,
         encryptionKeyVersion,
       } as any);

@@ -27,6 +27,8 @@ import {
   validateTripSplit,
   type TripExpenseShareValue,
 } from '@/components/expenses/TripExpenseSplitPicker';
+import { RecurringExpenseFields } from '@/components/expenses/RecurringExpenseFields';
+import { useRecurringExpenseFields } from '@/hooks/useRecurringExpenseFields';
 import * as tripExpenseShareRepository from '@/db/tripExpenseShareRepository';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { categoryLabel } from '@/utils/entityLabel';
@@ -77,6 +79,14 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
     const [editMerchant, setEditMerchant] = useState(expense?.merchant || '');
     const [editDate, setEditDate] = useState(expense?.date ? new Date(expense.date) : new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
+
+    // Start a recurring series from edit mode (ABA-615). Only ever rendered
+    // for an expense that is NOT already recurring — the hook's defaults
+    // (false/'monthly') are always the right starting point, since there is
+    // no existing recurring state on this expense to seed from. An already-
+    // recurring expense keeps its "Part of a recurring series" banner +
+    // Stop Recurring button (rendered by app/expense/[id].tsx) instead.
+    const recurring = useRecurringExpenseFields();
 
     // Splits and tags
     const [splits, setSplits] = useState<ExpenseCategorySplit[]>([]);
@@ -137,6 +147,8 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
         setEditMerchant(expense?.merchant || '');
         setEditDate(expense?.date ? new Date(expense.date) : new Date());
         setShowDatePicker(false);
+        recurring.setIsRecurring(false);
+        recurring.setRecurringPeriod('monthly');
         setTripSplitType(persistedTripSplitType);
         setTripShares(persistedTripShares);
       }
@@ -193,6 +205,13 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
 
         const oldAmount = expense.amount;
 
+        // Start a new recurring series (ABA-615). Only reachable when the
+        // toggle is actually rendered (expense not already recurring — see
+        // where `RecurringExpenseFields` is rendered below), so this can
+        // never re-roll an existing series' recurringId. Same UUID
+        // generator the create form uses for the same field.
+        const startingRecurring = !expense.isRecurring && recurring.isRecurring;
+
         updateExpense(expense.id, {
           amount: numericAmount,
           currencyCode: editCurrencyCode,
@@ -200,6 +219,13 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
           categoryId: editCategory || undefined,
           merchant: editMerchant.trim() === '' ? '' : editMerchant.trim(),
           date: editDate,
+          ...(startingRecurring
+            ? {
+                isRecurring: true,
+                recurringId: generateUUID(),
+                recurringPeriod: recurring.recurringPeriod,
+              }
+            : {}),
           ...(isTripAccount ? { splitType: tripSplitType, shares: tripShares } : {}),
         });
 
@@ -480,6 +506,17 @@ export const ExpenseDetailsCard = forwardRef<ExpenseDetailsCardHandle, ExpenseDe
             ) : null;
           })()
         ) : null}
+
+        {/* Start a recurring series (ABA-615). Only offered while editing an
+            expense that isn't already part of one — an existing series shows
+            its own banner + Stop Recurring button instead (app/expense/[id].tsx),
+            and a debt/repayment row can't be recurring, same rule the create
+            form applies. */}
+        {isEditing && !expense.isRecurring && !expense.isDebt && !expense.isDebtRepayment && (
+          <View style={styles.detailRow}>
+            <RecurringExpenseFields {...recurring} />
+          </View>
+        )}
 
         {/* Category splits display */}
         {splits.length > 0 && !showSplitEditor && (

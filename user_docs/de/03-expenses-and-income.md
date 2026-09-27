@@ -133,6 +133,18 @@ Teile eine einzelne Ausgabe auf mehrere Kategorien auf:
 
 > **Tipp:** Verwende **Aufteilung vorschlagen**, um die KI empfehlen zu lassen, wie die Ausgabe aufgeteilt werden soll.
 
+### Wiederkehrende Ausgaben
+
+Verwandle jede Ausgabe in eine automatisch protokollierte Serie — im Erstellungsformular oder später bei einer bereits gespeicherten Ausgabe:
+
+1. Tippe auf **Wiederholen**
+2. Wähle, wie oft sie sich wiederholt: **Wöchentlich**, **Monatlich** oder **Jährlich**
+3. Speichern — die App protokolliert automatisch jeden Zeitraum eine neue Kopie dieser Ausgabe, am fälligen Tag
+
+> **Tipp:** Du musst dich nicht sofort beim Anlegen der Ausgabe entscheiden. Öffne eine beliebige Ausgabe, die noch nicht Teil einer Serie ist, tippe auf **Bearbeiten**, aktiviere **Wiederholen**, wähle einen Zeitraum und speichere — derselbe Schalter wie im Erstellungsformular.
+
+Eine Ausgabe, die bereits Teil einer Serie ist, zeigt auf ihrer Detailseite statt des Schalters ein Banner **Teil einer wiederkehrenden Serie** mit dem Zeitraum (z. B. „Wiederholt sich Monatlich"). Tippe auf **Wiederholung stoppen**, um die Serie zu beenden — bereits erstellte Kopien bleiben erhalten, nur das künftige automatische Protokollieren endet.
+
 ## Einkommen hinzufugen
 
 ### Schritt fur Schritt
@@ -162,7 +174,7 @@ Tippe auf eine beliebige Ausgabe, um die vollstandigen Details anzuzeigen:
 - **Kassenbon-Bild** — Anzeigen, Teilen, in Galerie speichern, Ersetzen oder Löschen des Belegfotos. PDF-Belege zeigen eine Dokumentvorschau zum Öffnen. Wenn noch kein Beleg angehängt ist, tippe auf **Beleg anhängen** — wähle **Foto aufnehmen**, **Aus Galerie** oder **PDF auswählen**. Funktioniert für jede Ausgabe, auch für manuell hinzugefügte. Wurde der Beleg erst nach dem Anlegen der Ausgabe angehängt, tippe in der Belegkarte auf **Positionen extrahieren**, um den Beleg erneut von der KI lesen zu lassen und die Positionen in die Ausgabe zu ziehen (mit Bestätigung, falls bereits Positionen vorhanden sind; jeder Lauf verbraucht eine KI-Anfrage)
 
 ### Aktionen bei Ausgabendetails:
-- **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet)
+- **Bearbeiten** — die Ausgabe ändern, einschließlich ihrer **Währung** (tippe auf den Währungs-Chip neben dem Betrag; der Betrag selbst wird nicht umgerechnet, nur neu beschriftet); ist sie noch nicht Teil einer wiederkehrenden Serie, kannst du hier auch **Wiederholen** aktivieren, um eine zu starten
 - **Kopieren** — ein Duplikat erstellen
 - **Loschen** — die Ausgabe entfernen (mit Bestatigung)
 

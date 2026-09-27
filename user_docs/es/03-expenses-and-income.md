@@ -133,6 +133,18 @@ Divide un gasto individual entre multiples categorias:
 
 > **Consejo:** Usa **Sugerir division** para que la IA recomiende como dividir el gasto.
 
+### Gastos recurrentes
+
+Convierte cualquier gasto en una serie que se registra automáticamente — en el formulario de creación o más tarde, en un gasto que ya guardaste:
+
+1. Toca **Repetir**
+2. Elige con qué frecuencia se repite: **Semanal**, **Mensual** o **Anual**
+3. Guarda — la app registra automáticamente una nueva copia de este gasto cada período, el día que corresponda
+
+> **Consejo:** No hace falta decidirlo al registrar el gasto. Abre cualquier gasto que aún no forme parte de una serie, toca **Editar**, activa **Repetir**, elige un período y guarda — el mismo interruptor que en el formulario de creación.
+
+Un gasto que ya forma parte de una serie muestra en su pantalla de detalles un aviso **Parte de una serie recurrente** en lugar del interruptor, con el período (por ejemplo, «Se repite Mensual»). Toca **Detener repetición** para terminar la serie — las copias ya creadas se mantienen, solo se detiene el registro automático futuro.
+
 ## Agregar ingresos
 
 ### Paso a paso
@@ -162,7 +174,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente. Si el recibo se adjuntó después de crear el gasto, toca **Extraer artículos** en la tarjeta del recibo para que la IA lo vuelva a leer y añada sus líneas al gasto (con confirmación si ya hay artículos; cada ejecución consume una petición de IA)
 
 ### Acciones en los detalles del gasto:
-- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta)
+- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta); si aún no forma parte de una serie recurrente, también puedes activar **Repetir** aquí para iniciar una
 - **Copiar** — crear un duplicado
 - **Eliminar** — eliminar el gasto (con confirmacion)
 

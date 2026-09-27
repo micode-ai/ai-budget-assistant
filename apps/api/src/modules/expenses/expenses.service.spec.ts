@@ -1023,6 +1023,31 @@ describe('split invariant is defended after creation', () => {
         }),
       );
     });
+
+    // ABA-615: starting a recurring series from the EDIT screen (previously
+    // only possible on the create form) goes through this same PATCH, so
+    // UpdateExpenseDto's isRecurring/recurringId/recurringPeriod must actually
+    // reach the write — pinning the current (correct) behavior against a
+    // regression, since nothing else in this file exercised it.
+    it('persists isRecurring/recurringId/recurringPeriod', async () => {
+      const { service, tx } = makeSplitDefenceService({ amount: 240 });
+
+      await service.update('acc-1', 'e-split-1', {
+        isRecurring: true,
+        recurringId: 'r-1234',
+        recurringPeriod: 'monthly',
+      } as any);
+
+      expect(tx.expense.update).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({
+            isRecurring: true,
+            recurringId: 'r-1234',
+            recurringPeriod: 'monthly',
+          }),
+        }),
+      );
+    });
   });
 
   describe('item edits', () => {

@@ -133,6 +133,18 @@ Rozdziel pojedynczy wydatek miedzy wiele kategorii:
 
 > **Wskazowka:** Uzyj **Zasugeruj podzial**, aby AI zaproponowal, jak rozdzielic wydatek.
 
+### Cykliczne wydatki
+
+Zamień dowolny wydatek w automatycznie rejestrowaną serię — w formularzu tworzenia lub później, w już zapisanym wydatku:
+
+1. Dotknij **Powtarzaj**
+2. Wybierz, jak często ma się powtarzać: **Co tydzień**, **Co miesiąc** lub **Co rok**
+3. Zapisz — aplikacja automatycznie rejestruje nową kopię tego wydatku co okres, w dniu, w którym jest należny
+
+> **Wskazówka:** Nie musisz decydować o tym od razu przy dodawaniu wydatku. Otwórz dowolny wydatek, który nie jest jeszcze częścią serii, dotknij **Edytuj**, włącz **Powtarzaj**, wybierz okres i zapisz — ten sam przełącznik, co w formularzu tworzenia.
+
+Wydatek, który jest już częścią serii, pokazuje na ekranie szczegółów baner **Część serii cyklicznej** zamiast przełącznika, wraz z okresem (np. „Powtarza się Co miesiąc"). Dotknij **Zatrzymaj powtarzanie**, aby zakończyć serię — już utworzone kopie pozostają, zatrzymuje się tylko przyszłe automatyczne rejestrowanie.
+
 ## Dodawanie przychodu
 
 ### Krok po kroku
@@ -162,7 +174,7 @@ Dotknij dowolny wydatek, aby zobaczyc jego pelne szczegoly:
 - **Zdjęcie paragonu** — przeglądanie, udostępnianie, zapisywanie do galerii, podmiana lub usunięcie zdjęcia paragonu. Paragony PDF są pokazywane jako dokument z możliwością otwarcia. Jeśli paragon nie jest jeszcze dołączony, kliknij **Dołącz paragon**, by go dodać — wybierz **Zrób zdjęcie**, **Z galerii** lub **Wybierz PDF**. Działa dla każdego wydatku, w tym dodanego ręcznie. Jeśli paragon został dołączony po utworzeniu wydatku, kliknij **Wyodrębnij pozycje** w karcie paragonu, aby ponownie odczytać go AI i pobrać pozycje do wydatku (z potwierdzeniem, gdy pozycje już istnieją; każde uruchomienie zużywa jedno zapytanie AI)
 
 ### Dostepne akcje w szczegolach wydatku:
-- **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie)
+- **Edytuj** — zmodyfikuj wydatek, w tym jego **walutę** (dotknij plakietki waluty obok kwoty; sama kwota nie jest przeliczana, zmienia się tylko jej oznaczenie); jeśli wydatek nie jest jeszcze częścią cyklicznej serii, możesz tu też włączyć **Powtarzaj**, aby ją rozpocząć
 - **Kopiuj** — utworz duplikat
 - **Usun** — usun wydatek (z potwierdzeniem)
 

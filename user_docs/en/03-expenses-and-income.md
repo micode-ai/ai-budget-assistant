@@ -133,6 +133,18 @@ Divide a single expense across multiple categories:
 
 > **Tip:** Use **Suggest Split** to let AI recommend how to divide the expense.
 
+### Recurring Expenses
+
+Turn any expense into an auto-logging series — on the create form, or later on an expense you already saved:
+
+1. Tap **Repeat**
+2. Choose how often it repeats: **Weekly**, **Monthly**, or **Yearly**
+3. Save — the app automatically logs a new copy of this expense each period, on the day it's due
+
+> **Tip:** You don't have to decide this when you first log the expense. Open any expense that isn't part of a series yet, tap **Edit**, turn on **Repeat**, pick a period, and save — the same toggle as on the create form.
+
+An expense that's already part of a series shows a **Part of a recurring series** banner on its details screen instead of the toggle, with the period (e.g., "Repeats Monthly"). Tap **Stop Recurring** to end the series — past copies stay, only future auto-logging stops.
+
 ## Adding Income
 
 ### Step-by-step
@@ -162,7 +174,7 @@ Tap any expense to view its full details:
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 
 ### Actions on expense details:
-- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)
+- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled); if it isn't already part of a recurring series, you can also turn on **Repeat** here to start one
 - **Copy** — create a duplicate
 - **Delete** — remove the expense (with confirmation)
 

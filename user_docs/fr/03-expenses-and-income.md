@@ -133,6 +133,18 @@ Repartissez une depense unique entre plusieurs categories :
 
 > **Astuce :** Utilisez **Suggerer une repartition** pour laisser l'IA recommander comment diviser la depense.
 
+### Dépenses récurrentes
+
+Transformez n'importe quelle dépense en une série enregistrée automatiquement — depuis le formulaire de création, ou plus tard sur une dépense déjà enregistrée :
+
+1. Appuyez sur **Répéter**
+2. Choisissez la fréquence : **Hebdomadaire**, **Mensuel** ou **Annuel**
+3. Enregistrez — l'application enregistre automatiquement une nouvelle copie de cette dépense à chaque période, le jour où elle est due
+
+> **Astuce :** Vous n'êtes pas obligé de le décider dès la création de la dépense. Ouvrez une dépense qui ne fait pas encore partie d'une série, appuyez sur **Modifier**, activez **Répéter**, choisissez une période, puis enregistrez — le même interrupteur que sur le formulaire de création.
+
+Une dépense qui fait déjà partie d'une série affiche, sur son écran de détails, une bannière **Fait partie d'une série récurrente** à la place de l'interrupteur, avec la période (par ex. « Se répète Mensuel »). Appuyez sur **Arrêter la répétition** pour mettre fin à la série — les copies déjà créées restent, seul l'enregistrement automatique futur s'arrête.
+
 ## Ajouter un revenu
 
 ### Etape par etape
@@ -162,7 +174,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Photo du reçu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du reçu. Les reçus PDF affichent un aperçu de document qui s'ouvre au toucher. Si aucun reçu n'est encore joint, touchez **Joindre un reçu** pour en ajouter un — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles créées à la main. Si le reçu a été joint après la création de la dépense, touchez **Extraire les articles** dans la carte du reçu pour le relire par l'IA et en intégrer les lignes à la dépense (avec confirmation si des articles existent déjà ; chaque lecture consomme une requête IA)
 
 ### Actions sur les details de la depense :
-- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté)
+- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté) ; si elle ne fait pas encore partie d'une série récurrente, vous pouvez aussi activer **Répéter** ici pour en démarrer une
 - **Copier** — creer un doublon
 - **Supprimer** — supprimer la depense (avec confirmation)
 
