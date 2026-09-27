@@ -1,14 +1,18 @@
 # Setup Guide
 
+Last updated: 2026-09-27
+
 ## Prerequisites
 
 - **Node.js** >= 20.0.0
 - **npm** >= 10.0.0
 - **PostgreSQL** 14+
-- **Redis** (optional, for caching)
+- **Redis** 7 (rate limiting, caches, bot state; most caching degrades gracefully without it, security rate limits fail closed)
 - **OpenAI API Key**
 - **Expo CLI** (for mobile development)
 - **Android Studio** or **Xcode** (for native builds)
+- **Python 3** (optional — wiki lint scripts and the marketing-site generators)
+- **Docker** (only for the production stack)
 
 ## Installation
 
@@ -38,31 +42,61 @@ Create `apps/api/.env`:
 # (matches docker-compose.prod.yml), e.g. ...:5432/ai_budget?connection_limit=10
 DATABASE_URL=postgresql://user:password@localhost:5432/budget_assistant
 
-# Redis (optional)
+# Redis — rate limits, caches, bot state, OAuth state
 REDIS_URL=redis://localhost:6379
 
-# JWT
+# JWT. Access tokens live JWT_EXPIRES_IN (default 7d); refresh tokens are signed
+# with JWT_REFRESH_SECRET and live 30 days (fixed in code), renewed on every refresh.
 JWT_SECRET=your-super-secret-key-minimum-32-characters
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_EXPIRES_IN=7d
+JWT_REFRESH_SECRET=another-long-random-secret
+JWT_EXPIRES_IN=7d
+
+# Google Sign-In — comma-separated OAuth client IDs accepted as ID-token audiences (web,ios,android)
+GOOGLE_OAUTH_CLIENT_IDS=
 
 # OpenAI
 OPENAI_API_KEY=sk-your-openai-api-key
 
 # Server
 PORT=3000
-# Dev can use '*'. PRODUCTION must be an explicit comma-separated origin list
-# (never '*'): with credentials enabled, cors matches '*' as a literal origin,
-# so the admin browser gets no Access-Control-Allow-Origin and login breaks.
-# e.g. CORS_ORIGIN=https://admin.ai-budget.pl,https://ai-budget.pl
-CORS_ORIGIN=*
+# Leave unset for local dev (defaults to localhost:8081 and localhost:3001).
+# PRODUCTION must be an explicit comma-separated origin list, never '*':
+# with credentials enabled, cors matches '*' as a literal origin, so the admin
+# browser gets no Access-Control-Allow-Origin and login breaks.
+# e.g. CORS_ORIGIN=https://admin.ai-budget.pl,https://app.ai-budget.pl
+CORS_ORIGIN=
+# E-mails allowed into the admin dashboard
+ADMIN_EMAILS=admin@example.com
+# Base URL of receipt-split guest links; leave unset (defaults to https://api.ai-budget.pl)
+APP_PUBLIC_URL=
+
+# E-mail (SMTP) for verification codes, reports and admin e-mails
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+SMTP_FROM=
 
 # Push notifications use Expo Push API — no additional config required.
 
-# Telegram (bot for in-app commands; same token used by the
-# uptime-check GitHub Actions workflow for downtime alerts)
+# Telegram — the USER-FACING assistant bot only (chat, expenses, voice, photo)
 TELEGRAM_BOT_TOKEN=your-telegram-bot-token
-TELEGRAM_CHAT_ID=your-chat-id
+TELEGRAM_BOT_USERNAME=
+# Webhook mode when set (otherwise long polling, for development)
+TELEGRAM_WEBHOOK_URL=
+# Secret Telegram sends in X-Telegram-Bot-Api-Secret-Token (required in webhook mode)
+TELEGRAM_WEBHOOK_SECRET=
+# Legacy — no longer read by the API (ops alerts moved to the ops bot below)
+TELEGRAM_CHAT_ID=
+
+# Ops bot — SEPARATE from the assistant bot. New registrations, payments,
+# referrals and request-a-bank alerts go here. No fallback: unset = not sent.
+# The same names must also exist as GitHub Actions secrets for
+# uptime-check.yml / backup-db.yml / infra-watch.yml / docker-gc.yml.
+OPS_TELEGRAM_BOT_TOKEN=
+OPS_TELEGRAM_CHAT_ID=
+# Optional prefix so a shared ops channel can tell projects apart
+OPS_PROJECT_NAME=AI Budget
 
 # WhatsApp Business Cloud API (Meta). Token scope: whatsapp_business_messaging.
 WHATSAPP_ACCESS_TOKEN=your-meta-access-token
@@ -74,14 +108,45 @@ WHATSAPP_APP_SECRET=your-app-secret
 # Shown in the mobile app as a wa.me deep link.
 WHATSAPP_BUSINESS_PHONE_NUMBER=+1234567890
 WHATSAPP_API_VERSION=v21.0
+# Meta-approved template that reopens the 24h window for the weekly voice digest.
+# Unset = WhatsApp is not offered as a voice-digest channel.
+WHATSAPP_DIGEST_TEMPLATE=
+
+# Slack DM bot. Bot token scopes: chat:write, im:history, im:read, im:write,
+# files:read, files:write (files:write uploads the voice-digest audio; without it
+# the digest falls back to text). Event subscription: message.im.
+SLACK_BOT_TOKEN=
+SLACK_SIGNING_SECRET=
+SLACK_APP_ID=
+SLACK_BOT_USER=
+# Slack OAuth (multi-workspace install)
+SLACK_CLIENT_ID=
+SLACK_CLIENT_SECRET=
+SLACK_OAUTH_REDIRECT_URL=https://api.ai-budget.pl/slack/oauth/callback
+# 32-byte key (openssl rand -hex 32) encrypting per-workspace bot tokens at rest
+SLACK_TOKEN_ENC_KEY=
 
 # Stripe (subscriptions). apiVersion in code is pinned to
 # '2026-01-28.clover' to match the SDK locked in package-lock.json.
 STRIPE_SECRET_KEY=sk_live_or_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_REFERRAL_COUPON_ID=
+# Price ids are read per currency: STRIPE_{PRO,BUSINESS}_{MONTHLY,YEARLY}_PRICE_ID_<CURRENCY>
+
+# Investments — market data provider
+TWELVE_DATA_API_KEY=
+
+# Restore credentials (Android session restore). SHA-256 fingerprint(s) of every
+# signing certificate allowed; unset = the feature refuses to start its ceremonies.
+RESTORE_CREDENTIAL_CERT_FINGERPRINTS=
+RESTORE_CREDENTIAL_RP_ID=ai-budget.pl
+RESTORE_CREDENTIAL_RP_NAME=
 
 # Sentry (optional, for production error capture)
 SENTRY_DSN=https://<key>@<org>.ingest.<region>.sentry.io/<project>
 ```
+
+The root [`.env.example`](../../.env.example) is the full, commented reference. Beyond the above it documents optional tuning knobs with safe defaults — `COMMUNITY_*` (community price map: salt, k-anonymity, the read kill-switch `COMMUNITY_PRICE_READ_ENABLED` that must stay off, anti-Sybil thresholds), `RECEIPT_CHECK_*` (receipt price check; `RECEIPT_CHECK_ALERTS_ENABLED` stays off until the rollout in `docs/ops/receipt-price-check-rollout.md`), `SHOPPING_REMINDER_MIN_GAP_DAYS`, and the per-account daily AI ceilings `AI_IMPORT_MAX_PDF_PAGES`, `AI_IMPORT_MAX_INFERENCES_PER_DAY`, `AI_SPLIT_MAX_INFERENCES_PER_DAY`, `AI_CATEGORIZE_MAX_PER_DAY`. The Inflation Shield `SHIELD_*` knobs are listed under [Configuration Options](#configuration-options).
 
 #### Mobile (.env)
 
@@ -89,6 +154,22 @@ Create `apps/mobile/.env`:
 
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
+# Google Sign-In client IDs (the web one is used on web and, through the
+# ai-budget.pl/oauth/callback relay, on Android too)
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=
+```
+
+#### Admin (.env)
+
+Create `apps/admin/.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3000
+# Only when the dashboard is served under a sub-path
+NEXT_PUBLIC_BASE_PATH=
 ```
 
 #### Firebase (`google-services.json`)
@@ -119,14 +200,16 @@ secret — the `mobile-build` and `mobile-eas-build` workflows write it into
 cd apps/api
 
 # Generate Prisma client
-npm run prisma generate
+npm run db:generate          # = npx prisma generate
 
 # Run migrations
-npm run prisma migrate dev
+npm run db:migrate           # = npx prisma migrate dev
 
 # (Optional) Seed database with sample data
-npm run prisma db seed
+npm run db:seed
 ```
+
+A change to `schema.prisma` always ships with its migration in the same commit (`npx prisma migrate dev --name <name>`): nothing in CI or the deploy catches a missing one, and `/health` stays green while the first query touching the new column fails.
 
 ### 5. Start Development Servers
 
@@ -142,7 +225,14 @@ npm run dev
 
 # Terminal 2 - Mobile
 cd apps/mobile
-npm start
+npm run dev                  # expo start
+
+# Terminal 3 - Admin dashboard (port 3001)
+cd apps/admin
+npm run dev
+
+# Or the web build of the mobile app in a browser (http://localhost:8081)
+npm run dev:web              # from the root
 ```
 
 ## Development
@@ -157,11 +247,11 @@ npm run dev
 
 # Production build
 npm run build
-npm start:prod
+npm run start:prod
 
 # Run tests
 npm test
-npm test:e2e
+npm run test:e2e
 ```
 
 ### Running the Mobile App
@@ -170,7 +260,7 @@ npm test:e2e
 cd apps/mobile
 
 # Start Expo development server
-npm start
+npm run dev
 
 # Run on iOS Simulator
 npm run ios
@@ -191,11 +281,14 @@ npm test
 # API tests only
 cd apps/api && npm test
 
-# Watch mode
-npm test:watch
+# Watch mode (API)
+cd apps/api && npm run test:watch
 
-# Coverage report
-npm test:coverage
+# Coverage report (API)
+cd apps/api && npm run test:cov
+
+# Type-check everything
+npm run typecheck
 ```
 
 ### Building for Production
@@ -299,6 +392,8 @@ eas submit --platform android
 ```
 
 ## Docker Deployment
+
+The files actually used are `docker/Dockerfile.api`, `docker/Dockerfile.admin` and `docker-compose.prod.yml` (see [Production Deployment](#production-deployment)); the repo has no development compose file. The snippets in this section are illustrative only.
 
 ### Backend
 
@@ -412,6 +507,10 @@ touches `apps/api/**`, `apps/admin/**`, `packages/**`, `docker/**`,
 2. Verify-step polls `https://api.ai-budget.pl/api/v1/health` for up to 120s
    and fails the run with log dump if the service does not become healthy.
 
+Before the SSH step the runner executes `scripts/check-no-shared-utils-runtime-import.sh`: a runtime `import`/`require` of `@budget/shared-utils` in `apps/api/src` fails the deploy, because the API has no build step for workspace packages (`import type` is fine).
+
+The web build is deployed separately by `.github/workflows/web-deploy.yml` on every push to `development` (not path-filtered); it sets `EXPO_PUBLIC_BUILD_SHA` so the About screen shows `<version>+<short sha>`. Details: `docs/wiki/features/web-build-and-hosting.md`.
+
 ### Snap Docker is held
 
 After the 2026-04-27 outage caused by `snap` auto-refreshing the Docker
@@ -440,6 +539,8 @@ docker builder prune -af         # all build cache (safe; no volumes)
 docker image prune -f            # dangling untagged images
 # NEVER: docker system prune --volumes  (would wipe postgres data)
 ```
+
+Because `deploy.yml` is path-filtered, a stretch of mobile/marketing/docs work means the per-deploy prune never runs; the scheduled **`.github/workflows/docker-gc.yml`** (`scripts/docker-gc.sh`, Sundays 01:00 UTC plus `workflow_dispatch`) is what actually bounds the build cache — it does nothing below 70% disk and alerts only when the disk is still above 85% after cleaning. The Docker daemon is shared with other projects' containers, so `docker volume prune` (with any filter) and `docker image prune -a` are both forbidden. Runbook: `docs/ops/disk-pressure.md`.
 
 To investigate what is consuming disk without SSHing in yourself, run the
 **Infra Diagnostics** workflow (`.github/workflows/infra-diagnostics.yml`,
@@ -470,8 +571,8 @@ runner (not the VPS) and performs:
 5. Prune old backups with GFS retention (`scripts/prune-backups.sh`):
    **7 daily** + **4 weekly** (Sunday anchors) + **6 monthly** (1st-of-month
    anchors); everything else is deleted.
-6. On failure, send a Telegram alert via `TELEGRAM_BOT_TOKEN` /
-   `TELEGRAM_CHAT_ID`.
+6. On failure, send a Telegram alert to the ops channel via
+   `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID`.
 
 ### Scope and RPO
 
@@ -496,7 +597,7 @@ decrypt → verify into a scratch DB → restore to production) lives in
 | `BACKUP_REPO` | `owner/repo` of the private backup repo holding the Release assets |
 | `BACKUP_REPO_TOKEN` | PAT with `contents:write` on the backup repo (publish + prune) |
 | `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY` | VPS access for the dump (reused from deploy) |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | Failure alerts (reused from uptime/ops) |
+| `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID` | Failure alerts to the ops channel (shared with uptime, infra-watch and docker-gc) |
 
 ## Monitoring & Observability
 
@@ -525,8 +626,8 @@ Used by:
 `.github/workflows/uptime-check.yml` runs every 5 minutes:
 
 1. Curls the public `/api/v1/health` with retries.
-2. On non-200 or transport failure, sends a Telegram message to
-   `TELEGRAM_CHAT_ID` via `TELEGRAM_BOT_TOKEN` (both stored as GitHub
+2. On non-200 or transport failure, sends a Telegram message to the ops
+   channel via `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID` (GitHub
    Actions secrets, NOT in repo env files).
 3. Run is marked `failure` so it shows up red in Actions UI.
 
@@ -599,14 +700,26 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `DATABASE_URL` | PostgreSQL connection string | required |
 | `REDIS_URL` | Redis connection string | optional |
 | `JWT_SECRET` | Secret for signing JWTs | required |
-| `JWT_EXPIRES_IN` | Access token expiry | `15m` |
-| `JWT_REFRESH_EXPIRES_IN` | Refresh token expiry | `7d` |
+| `JWT_REFRESH_SECRET` | Secret for signing refresh tokens (30-day lifetime, fixed in code) | required |
+| `JWT_EXPIRES_IN` | Access token expiry | `7d` |
+| `GOOGLE_OAUTH_CLIENT_IDS` | Comma-separated Google OAuth client IDs accepted by `POST /auth/google` | required for Google sign-in |
+| `ADMIN_EMAILS` | Comma-separated e-mails `AdminGuard` admits to `/admin/*` (and the admin Socket.io namespace) | required for the admin dashboard |
+| `APP_PUBLIC_URL` | Base URL of receipt-split guest links | `https://api.ai-budget.pl` |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | Outgoing e-mail | required for e-mail |
 | `OPENAI_API_KEY` | OpenAI API key | required |
 | `PORT` | Server port | `3000` |
 | `CORS_ORIGIN` | Allowed origins. Prod: explicit comma-separated list, never `*` | `*` |
 | `STRIPE_SECRET_KEY` | Stripe key (apiVersion pinned to `2026-01-28.clover`) | required for billing |
-| `TELEGRAM_BOT_TOKEN` | Telegram bot token (in-app + ops alerts) | optional |
-| `TELEGRAM_CHAT_ID` | Chat ID for system/uptime notifications | optional |
+| `STRIPE_WEBHOOK_SECRET` | Verifies `POST /webhooks/stripe` | required for billing |
+| `STRIPE_{PRO,BUSINESS}_{MONTHLY,YEARLY}_PRICE_ID_<CUR>` | Stripe price id per plan, period and currency | required for checkout |
+| `STRIPE_REFERRAL_COUPON_ID` | Coupon for the referral free-month reward | optional |
+| `TELEGRAM_BOT_TOKEN` | User-facing assistant bot token | optional |
+| `TELEGRAM_BOT_USERNAME` | Bot username shown with link codes | optional |
+| `TELEGRAM_WEBHOOK_URL` | Enables webhook mode (else long polling) | optional |
+| `TELEGRAM_WEBHOOK_SECRET` | Expected `X-Telegram-Bot-Api-Secret-Token` | required in webhook mode |
+| `TELEGRAM_CHAT_ID` | Legacy, no longer read by the API | — |
+| `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID` | Ops bot for system alerts (no fallback to the assistant bot) | optional |
+| `OPS_PROJECT_NAME` | Prefix on every ops message | optional |
 | `WHATSAPP_ACCESS_TOKEN` | Meta Cloud API access token (`whatsapp_business_messaging` scope) | optional |
 | `WHATSAPP_PHONE_NUMBER_ID` | WhatsApp phone number ID | optional |
 | `WHATSAPP_BUSINESS_ACCOUNT_ID` | WhatsApp Business Account ID | optional |
@@ -614,6 +727,19 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `WHATSAPP_APP_SECRET` | HMAC key for inbound webhook signature verification | optional |
 | `WHATSAPP_BUSINESS_PHONE_NUMBER` | Phone number shown as a `wa.me` deep link in the app | optional |
 | `WHATSAPP_API_VERSION` | Meta Graph API version (e.g. `v21.0`) | optional |
+| `WHATSAPP_DIGEST_TEMPLATE` | Approved template for the weekly voice digest; unset = WhatsApp not offered | optional |
+| `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_APP_ID`, `SLACK_BOT_USER` | Slack DM bot (no-op when unset); needs the `files:write` scope for voice-digest audio | optional |
+| `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_OAUTH_REDIRECT_URL` | Slack multi-workspace OAuth | optional |
+| `SLACK_TOKEN_ENC_KEY` | 32-byte key encrypting stored workspace tokens | required with Slack OAuth |
+| `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` | Signing-cert SHA-256 fingerprints allowed to use restore credentials | required for the feature |
+| `RESTORE_CREDENTIAL_RP_ID`, `RESTORE_CREDENTIAL_RP_NAME` | WebAuthn relying party | `ai-budget.pl`, `AI Budget Assistant` |
+| `TWELVE_DATA_API_KEY` | Market data for investments | optional |
+| `AI_CATEGORIZE_MAX_PER_DAY` | Daily model passes of categorize-uncategorized per account | `5` |
+| `AI_IMPORT_MAX_PDF_PAGES`, `AI_IMPORT_MAX_INFERENCES_PER_DAY` | AI statement-import limits | `20`, `20` |
+| `AI_SPLIT_MAX_INFERENCES_PER_DAY` | Daily receipt auto-split classifications per account | `20` |
+| `COMMUNITY_PRICE_SALT`, `COMMUNITY_PRICE_K`, `COMMUNITY_PRICE_READ_ENABLED`, `COMMUNITY_*` | Community price map (reads stay off) — see `.env.example` | off |
+| `RECEIPT_CHECK_*` | Receipt price check tuning; `RECEIPT_CHECK_ALERTS_ENABLED` stays off | see `.env.example` |
+| `SHOPPING_REMINDER_MIN_GAP_DAYS` | Minimum days between shopping pushes | `2` |
 | `SENTRY_DSN` | Sentry DSN; absence makes the SDK a no-op | optional |
 | `SHIELD_MIN_MONTHLY_RISE_PCT` | Inflation Shield: minimum forecast monthly price rise (%) to recommend a product | `5` |
 | `SHIELD_MIN_CADENCE_DAYS` | Inflation Shield: minimum purchase cadence (days) for a product to be considered stockpileable | `14` |
@@ -622,6 +748,7 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `SHIELD_MIN_POINTS` | Inflation Shield: minimum price data points required before forecasting a product | `3` |
 | `SHIELD_FORECAST_LOOKBACK_WEEKS` | Inflation Shield: regression window (weeks) used to forecast a product's price trend | `12` |
 | `SHIELD_MIN_SPAN_DAYS` | Inflation Shield: minimum time span (days) covered by the lookback window for a forecast to be trusted | `14` |
+| `SHIELD_HORIZON_WEEKS` | Inflation Shield: forecast horizon (weeks) | `4` |
 
 All `SHIELD_*` variables are optional overrides of `SHIELD_DEFAULTS` (`apps/api/src/modules/insights/inflation-shield.util.ts`) — set only when tuning the Inflation Shield engine.
 
@@ -629,7 +756,9 @@ All `SHIELD_*` variables are optional overrides of `SHIELD_DEFAULTS` (`apps/api/
 
 | Variable | Description | Default |
 |----------|-------------|---------|
-| `EXPO_PUBLIC_API_URL` | Backend API URL | required |
+| `EXPO_PUBLIC_API_URL` | Backend API URL (including `/api/v1`) | `http://localhost:3000/api/v1` |
+| `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` | Google OAuth client used for sign-in (web, and Android via the relay) | required for Google sign-in |
+| `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`, `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID` | Per-platform client IDs — set in `eas.json`/`.env.example` but not read by the current code | optional |
 | `EXPO_PUBLIC_BUILD_SHA` | Git commit sha shown on the About screen as `1.26.0+<7-char sha>` instead of the bare version. `web-deploy.yml` sets it to `github.sha` for the web build; a local build normally leaves it unset, and native never sets it | optional |
 
 ### Expo App Configuration
@@ -682,7 +811,7 @@ Error: @prisma/client did not initialize yet
 
 ```bash
 cd apps/api
-npm run prisma generate
+npm run db:generate
 ```
 
 #### Metro Bundler Cache Issues
@@ -695,7 +824,7 @@ Error: Unable to resolve module
 
 ```bash
 cd apps/mobile
-npm start --clear
+npx expo start --clear
 ```
 
 #### iOS Build Failed
@@ -740,10 +869,16 @@ cd apps/mobile/android
 | Script | Description |
 |--------|-------------|
 | `npm run dev` | Start all services in development |
+| `npm run dev:web` | Start the mobile app in a browser (Expo web) |
 | `npm run build` | Build all packages |
 | `npm test` | Run all tests |
 | `npm run lint` | Lint all packages |
+| `npm run typecheck` | Type-check all packages |
+| `npm run format` | Prettier format |
+| `npm run generate:help` | Regenerate `apps/mobile/src/help/content.ts` from `user_docs/` (never edit that file by hand) |
 | `npm run clean` | Clean all build artifacts |
+
+Documentation checks (Python, no model): `python scripts/wiki-lint.py` and `python scripts/wiki-staleness.py` — the same checks `wiki-audit.yml` runs weekly.
 
 ### API Package
 
@@ -751,18 +886,30 @@ cd apps/mobile/android
 |--------|-------------|
 | `npm run dev` | Start with hot reload |
 | `npm run build` | Build for production |
-| `npm start:prod` | Run production build |
+| `npm run start:prod` | Run production build |
 | `npm test` | Run unit tests |
-| `npm test:e2e` | Run E2E tests |
-| `npm run prisma studio` | Open Prisma Studio |
+| `npm run test:watch` / `npm run test:cov` | Watch mode / coverage |
+| `npm run test:e2e` | Run E2E tests |
+| `npm run typecheck` | Type-check |
+| `npm run db:generate` / `db:migrate` / `db:push` / `db:seed` | Prisma generate / migrate dev / db push / seed |
+| `npm run db:studio` | Open Prisma Studio |
 
 ### Mobile Package
 
 | Script | Description |
 |--------|-------------|
-| `npm start` | Start Expo server |
+| `npm run dev` | Start Expo server |
 | `npm run ios` | Run on iOS |
 | `npm run android` | Run on Android |
 | `npm run web` | Run on Web |
 | `npm run build:ios` | Build iOS app |
 | `npm run build:android` | Build Android app |
+| `npm run typecheck` / `npm run lint` / `npm test` | Type-check / lint / Jest |
+
+### Admin Package
+
+| Script | Description |
+|--------|-------------|
+| `npm run dev` | Start the dashboard on port 3001 |
+| `npm run build` / `npm start` | Production build / serve |
+| `npm run typecheck` / `npm run lint` | Type-check / lint |

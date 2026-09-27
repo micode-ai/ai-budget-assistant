@@ -1,14 +1,18 @@
 # Руководство по установке
 
+Последнее обновление: 2026-09-27
+
 ## Требования
 
 - **Node.js** >= 20.0.0
 - **npm** >= 10.0.0
 - **PostgreSQL** 14+
-- **Redis** (опционально, для кэширования)
+- **Redis** 7 (ограничения частоты, кэши, состояние ботов; большинство кэшей без него деградирует мягко, а защитные лимиты отказывают)
 - **OpenAI API ключ**
 - **Expo CLI** (для мобильной разработки)
 - **Android Studio** или **Xcode** (для нативных сборок)
+- **Python 3** (необязательно — скрипты проверки wiki и генераторы маркетингового сайта)
+- **Docker** (только для продакшен-стека)
 
 ## Установка
 
@@ -39,52 +43,111 @@ npm install
 # например ...:5432/ai_budget?connection_limit=10
 DATABASE_URL=postgresql://user:password@localhost:5432/budget_assistant
 
-# Redis (опционально)
+# Redis — ограничения частоты, кэши, состояние ботов, state OAuth
 REDIS_URL=redis://localhost:6379
 
-# JWT
-JWT_SECRET=ваш-супер-секретный-ключ-минимум-32-символа
-JWT_EXPIRES_IN=15m
-JWT_REFRESH_EXPIRES_IN=7d
+# JWT. Access-токен живёт JWT_EXPIRES_IN (по умолчанию 7d); refresh-токены
+# подписываются JWT_REFRESH_SECRET и живут 30 дней (задано в коде), обновляясь при каждом refresh.
+JWT_SECRET=your-super-secret-key-minimum-32-characters
+JWT_REFRESH_SECRET=another-long-random-secret
+JWT_EXPIRES_IN=7d
+
+# Вход через Google — client ID OAuth через запятую, принимаемые как audience ID-токена (web,ios,android)
+GOOGLE_OAUTH_CLIENT_IDS=
 
 # OpenAI
-OPENAI_API_KEY=sk-ваш-openai-api-ключ
+OPENAI_API_KEY=sk-your-openai-api-key
 
 # Сервер
 PORT=3000
-# В dev можно использовать '*'. В ПРОДАКШЕНЕ это должен быть явный список
-# источников через запятую (никогда не '*'): при включённых credentials cors
-# трактует '*' как буквальный origin, поэтому браузер админки не получает
-# Access-Control-Allow-Origin и логин ломается.
-# напр. CORS_ORIGIN=https://admin.ai-budget.pl,https://ai-budget.pl
-CORS_ORIGIN=*
+# Для локальной разработки не задавайте (по умолчанию localhost:8081 и localhost:3001).
+# В ПРОДАКШЕНЕ — только явный список origin через запятую, никогда '*':
+# при включённых credentials cors сравнивает '*' как буквальный origin, поэтому
+# браузер админки не получает Access-Control-Allow-Origin и вход ломается.
+# Например: CORS_ORIGIN=https://admin.ai-budget.pl,https://app.ai-budget.pl
+CORS_ORIGIN=
+# E-mail, которым разрешён вход в админ-панель
+ADMIN_EMAILS=admin@example.com
+# Базовый URL гостевых ссылок разделения чека; не задавайте (по умолчанию https://api.ai-budget.pl)
+APP_PUBLIC_URL=
 
-# Push-уведомления используют Expo Push API — дополнительная настройка не требуется.
+# Почта (SMTP) для кодов подтверждения, отчётов и писем из админки
+SMTP_HOST=
+SMTP_PORT=
+SMTP_USER=
+SMTP_PASS=
+SMTP_FROM=
 
-# Telegram (опционально, для системных уведомлений)
-# Telegram (бот для in-app команд; этот же токен использует
-# uptime-check GitHub Actions workflow для алертов о падениях)
-TELEGRAM_BOT_TOKEN=ваш-токен-telegram-бота
-TELEGRAM_CHAT_ID=ваш-chat-id
+# Push-уведомления идут через Expo Push API — дополнительная настройка не нужна.
+
+# Telegram — ТОЛЬКО пользовательский бот-ассистент (чат, расходы, голос, фото)
+TELEGRAM_BOT_TOKEN=your-telegram-bot-token
+TELEGRAM_BOT_USERNAME=
+# Если задан — режим webhook (иначе long polling, для разработки)
+TELEGRAM_WEBHOOK_URL=
+# Секрет, который Telegram присылает в X-Telegram-Bot-Api-Secret-Token (обязателен в режиме webhook)
+TELEGRAM_WEBHOOK_SECRET=
+# Устаревшая — API её больше не читает (служебные алерты переехали в ops-бота ниже)
+TELEGRAM_CHAT_ID=
+
+# Ops-бот — ОТДЕЛЬНО от бота-ассистента. Сюда идут алерты о регистрациях,
+# платежах, рефералах и запросах на новый банк. Без запасного варианта: не задано — не отправляется.
+# Те же имена нужны и как секреты GitHub Actions для
+# uptime-check.yml / backup-db.yml / infra-watch.yml / docker-gc.yml.
+OPS_TELEGRAM_BOT_TOKEN=
+OPS_TELEGRAM_CHAT_ID=
+# Необязательный префикс, чтобы в общем ops-канале различать проекты
+OPS_PROJECT_NAME=AI Budget
 
 # WhatsApp Business Cloud API (Meta). Scope токена: whatsapp_business_messaging.
-WHATSAPP_ACCESS_TOKEN=ваш-meta-access-token
-WHATSAPP_PHONE_NUMBER_ID=ваш-phone-number-id
-WHATSAPP_BUSINESS_ACCOUNT_ID=ваш-business-account-id
-WHATSAPP_VERIFY_TOKEN=ваш-webhook-verify-token
+WHATSAPP_ACCESS_TOKEN=your-meta-access-token
+WHATSAPP_PHONE_NUMBER_ID=your-phone-number-id
+WHATSAPP_BUSINESS_ACCOUNT_ID=your-business-account-id
+WHATSAPP_VERIFY_TOKEN=your-webhook-verify-token
 # HMAC-ключ для проверки подписи входящих вебхуков.
-WHATSAPP_APP_SECRET=ваш-app-secret
-# Показывается в мобильном приложении как wa.me deep link.
+WHATSAPP_APP_SECRET=your-app-secret
+# Показывается в мобильном приложении как deep-link wa.me.
 WHATSAPP_BUSINESS_PHONE_NUMBER=+1234567890
 WHATSAPP_API_VERSION=v21.0
+# Одобренный Meta шаблон, заново открывающий 24-часовое окно для еженедельного голосового дайджеста.
+# Не задан — WhatsApp не предлагается как канал голосового дайджеста.
+WHATSAPP_DIGEST_TEMPLATE=
 
-# Stripe (подписки). apiVersion в коде зафиксирован на
-# '2026-01-28.clover' — должен совпадать с SDK из package-lock.json.
+# DM-бот Slack. Scopes bot-токена: chat:write, im:history, im:read, im:write,
+# files:read, files:write (files:write загружает аудио голосового дайджеста; без него
+# дайджест приходит текстом). Подписка на события: message.im.
+SLACK_BOT_TOKEN=
+SLACK_SIGNING_SECRET=
+SLACK_APP_ID=
+SLACK_BOT_USER=
+# Slack OAuth (установка в несколько workspace)
+SLACK_CLIENT_ID=
+SLACK_CLIENT_SECRET=
+SLACK_OAUTH_REDIRECT_URL=https://api.ai-budget.pl/slack/oauth/callback
+# 32-байтный ключ (openssl rand -hex 32) для шифрования токенов workspace при хранении
+SLACK_TOKEN_ENC_KEY=
+
+# Stripe (подписки). apiVersion в коде закреплена на
+# '2026-01-28.clover', чтобы совпадать с SDK из package-lock.json.
 STRIPE_SECRET_KEY=sk_live_or_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+STRIPE_REFERRAL_COUPON_ID=
+# Price id читаются по валютам: STRIPE_{PRO,BUSINESS}_{MONTHLY,YEARLY}_PRICE_ID_<CURRENCY>
 
-# Sentry (опционально, для ловли необработанных ошибок в проде)
+# Инвестиции — провайдер рыночных данных
+TWELVE_DATA_API_KEY=
+
+# Учётные данные восстановления (восстановление сессии на Android). SHA-256 отпечатки
+# всех допустимых сертификатов подписи; не задано — функция не запускает свои церемонии.
+RESTORE_CREDENTIAL_CERT_FINGERPRINTS=
+RESTORE_CREDENTIAL_RP_ID=ai-budget.pl
+RESTORE_CREDENTIAL_RP_NAME=
+
+# Sentry (опционально, для сбора ошибок в продакшене)
 SENTRY_DSN=https://<key>@<org>.ingest.<region>.sentry.io/<project>
 ```
+
+Полный справочник с комментариями — корневой [`.env.example`](../../.env.example). Помимо перечисленного, в нём описаны необязательные параметры настройки с безопасными значениями по умолчанию — `COMMUNITY_*` (карта цен сообщества: соль, k-анонимность, выключатель чтения `COMMUNITY_PRICE_READ_ENABLED`, который должен оставаться выключенным, пороги защиты от Sybil), `RECEIPT_CHECK_*` (проверка цен по чеку; `RECEIPT_CHECK_ALERTS_ENABLED` остаётся выключенным до выката по `docs/ops/receipt-price-check-rollout.md`), `SHOPPING_REMINDER_MIN_GAP_DAYS` и суточные лимиты AI на аккаунт `AI_IMPORT_MAX_PDF_PAGES`, `AI_IMPORT_MAX_INFERENCES_PER_DAY`, `AI_SPLIT_MAX_INFERENCES_PER_DAY`, `AI_CATEGORIZE_MAX_PER_DAY`. Параметры Inflation Shield `SHIELD_*` перечислены в разделе [Параметры конфигурации](#параметры-конфигурации).
 
 #### Мобильное приложение (.env)
 
@@ -92,6 +155,22 @@ SENTRY_DSN=https://<key>@<org>.ingest.<region>.sentry.io/<project>
 
 ```env
 EXPO_PUBLIC_API_URL=http://localhost:3000/api/v1
+# Client ID для входа через Google (web-клиент используется на вебе и, через
+# relay ai-budget.pl/oauth/callback, на Android)
+EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID=
+EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID=
+```
+
+#### Админ-панель (.env)
+
+Создайте файл `apps/admin/.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
+NEXT_PUBLIC_SOCKET_URL=http://localhost:3000
+# Только если панель обслуживается по вложенному пути
+NEXT_PUBLIC_BASE_PATH=
 ```
 
 #### Firebase (`google-services.json`)
@@ -122,14 +201,16 @@ API‑ключ Firebase распознаётся GitHub как секрет. К�
 cd apps/api
 
 # Сгенерировать Prisma клиент
-npm run prisma generate
+npm run db:generate          # = npx prisma generate
 
 # Выполнить миграции
-npm run prisma migrate dev
+npm run db:migrate           # = npx prisma migrate dev
 
 # (Опционально) Заполнить тестовыми данными
-npm run prisma db seed
+npm run db:seed
 ```
+
+Изменение `schema.prisma` всегда идёт в одном коммите со своей миграцией (`npx prisma migrate dev --name <name>`): ни CI, ни деплой не поймают пропущенную миграцию, а `/health` остаётся зелёным, пока первый же запрос к новой колонке падает.
 
 ### 5. Запуск серверов разработки
 
@@ -145,7 +226,14 @@ npm run dev
 
 # Терминал 2 — Мобильное приложение
 cd apps/mobile
-npm start
+npm run dev                  # expo start
+
+# Терминал 3 — Админ-панель (порт 3001)
+cd apps/admin
+npm run dev
+
+# Или веб-сборка мобильного приложения в браузере (http://localhost:8081)
+npm run dev:web              # из корня
 ```
 
 ## Разработка
@@ -160,11 +248,11 @@ npm run dev
 
 # Продакшен сборка
 npm run build
-npm start:prod
+npm run start:prod
 
 # Запуск тестов
 npm test
-npm test:e2e
+npm run test:e2e
 ```
 
 ### Запуск мобильного приложения
@@ -173,7 +261,7 @@ npm test:e2e
 cd apps/mobile
 
 # Запустить Expo сервер разработки
-npm start
+npm run dev
 
 # Запустить на iOS симуляторе
 npm run ios
@@ -194,11 +282,14 @@ npm test
 # Только тесты API
 cd apps/api && npm test
 
-# Режим наблюдения
-npm test:watch
+# Режим наблюдения (API)
+cd apps/api && npm run test:watch
 
-# Отчёт о покрытии
-npm test:coverage
+# Отчёт о покрытии (API)
+cd apps/api && npm run test:cov
+
+# Проверка типов во всех пакетах
+npm run typecheck
 ```
 
 ### Сборка для продакшена
@@ -302,6 +393,8 @@ eas submit --platform android
 ```
 
 ## Развёртывание через Docker
+
+Реально используются файлы `docker/Dockerfile.api`, `docker/Dockerfile.admin` и `docker-compose.prod.yml` (см. [Production-деплой](#production-деплой)); compose-файла для разработки в репозитории нет. Фрагменты в этом разделе — только иллюстрация.
 
 ### Бэкенд
 
@@ -416,6 +509,10 @@ Hetzner VPS. Ключевые отличия от dev compose выше:
 2. Verify-step опрашивает `https://api.ai-budget.pl/api/v1/health` до 120с
    и валит run с дампом логов, если сервис не стал healthy.
 
+Перед шагом SSH раннер выполняет `scripts/check-no-shared-utils-runtime-import.sh`: runtime-`import`/`require` из `@budget/shared-utils` в `apps/api/src` валит деплой, потому что у API нет шага сборки для пакетов воркспейса (`import type` допустим).
+
+Веб-сборка деплоится отдельно — `.github/workflows/web-deploy.yml` на каждый push в `development` (без фильтра по путям); он задаёт `EXPO_PUBLIC_BUILD_SHA`, чтобы экран «О приложении» показывал `<version>+<short sha>`. Подробности: `docs/wiki/features/web-build-and-hosting.md`.
+
 ### Snap-докер заморожен
 
 После аварии 2026-04-27, когда `snap` авто-обновил Docker и угнал
@@ -443,6 +540,8 @@ docker builder prune -af         # весь build-cache (без volumes)
 docker image prune -f            # dangling untagged образы
 # НИКОГДА: docker system prune --volumes  (затрёт данные postgres)
 ```
+
+Поскольку `deploy.yml` фильтруется по путям, серия правок в мобильном приложении, маркетинге или документации означает, что очистка на деплое не запускается вовсе; реально размер build-кэша ограничивает плановый **`.github/workflows/docker-gc.yml`** (`scripts/docker-gc.sh`, по воскресеньям в 01:00 UTC плюс `workflow_dispatch`) — ниже 70% заполнения диска он ничего не делает и шлёт алерт, только если после чистки диск всё ещё заполнен больше чем на 85%. Docker-демон общий с контейнерами других проектов, поэтому `docker volume prune` (с любым фильтром) и `docker image prune -a` запрещены. Ранбук: `docs/ops/disk-pressure.md`.
 
 Чтобы понять, что занимает диск, не заходя по SSH вручную, запустите workflow
 **Infra Diagnostics** (`.github/workflows/infra-diagnostics.yml`, ручной
@@ -474,8 +573,8 @@ Production-PostgreSQL резервируется каждую ночь и вне
 5. Очистка старых бэкапов по схеме GFS (`scripts/prune-backups.sh`):
    **7 daily** + **4 weekly** (якоря по воскресеньям) + **6 monthly** (якоря на
    1-е число); всё остальное удаляется.
-6. При сбое — алерт в Telegram через `TELEGRAM_BOT_TOKEN` /
-   `TELEGRAM_CHAT_ID`.
+6. При сбое — алерт в ops-канал Telegram через
+   `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID`.
 
 ### Охват и RPO
 
@@ -501,7 +600,7 @@ Production-PostgreSQL резервируется каждую ночь и вне
 | `BACKUP_REPO` | `owner/repo` приватного репозитория бэкапов с Release-ассетами |
 | `BACKUP_REPO_TOKEN` | PAT с правом `contents:write` на репо бэкапов (публикация + очистка) |
 | `SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY` | доступ к VPS для дампа (переиспользуются из deploy) |
-| `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` | алерты о сбоях (переиспользуются из uptime/ops) |
+| `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID` | алерты о сбоях в ops-канал (общие с uptime, infra-watch и docker-gc) |
 
 ## Мониторинг и observability
 
@@ -530,9 +629,9 @@ Production-PostgreSQL резервируется каждую ночь и вне
 `.github/workflows/uptime-check.yml` запускается каждые 5 минут:
 
 1. Curl-ит публичный `/api/v1/health` с retries.
-2. При не-200 или транспортной ошибке шлёт сообщение в Telegram через
-   `TELEGRAM_BOT_TOKEN` в `TELEGRAM_CHAT_ID` (оба хранятся как GitHub
-   Actions secrets, НЕ в repo env).
+2. При не-200 или транспортной ошибке шлёт сообщение в ops-канал Telegram
+   через `OPS_TELEGRAM_BOT_TOKEN` / `OPS_TELEGRAM_CHAT_ID` (секреты GitHub
+   Actions, НЕ в repo env).
 3. Run помечается `failure` — красный в Actions UI.
 
 Чтобы переопределить URL (например, для staging-пинга), задай repo-переменную
@@ -604,14 +703,26 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `DATABASE_URL` | Строка подключения PostgreSQL | обязательно |
 | `REDIS_URL` | Строка подключения Redis | опционально |
 | `JWT_SECRET` | Секрет для подписи JWT | обязательно |
-| `JWT_EXPIRES_IN` | Время жизни access токена | `15m` |
-| `JWT_REFRESH_EXPIRES_IN` | Время жизни refresh токена | `7d` |
+| `JWT_REFRESH_SECRET` | Секрет для подписи refresh-токенов (срок жизни 30 дней, задан в коде) | обязательно |
+| `JWT_EXPIRES_IN` | Время жизни access-токена | `7d` |
+| `GOOGLE_OAUTH_CLIENT_IDS` | Client ID Google OAuth через запятую, которые принимает `POST /auth/google` | обязательно для входа через Google |
+| `ADMIN_EMAILS` | E-mail через запятую, которых `AdminGuard` пускает в `/admin/*` (и в namespace Socket.io админки) | обязательно для админ-панели |
+| `APP_PUBLIC_URL` | Базовый URL гостевых ссылок разделения чека | `https://api.ai-budget.pl` |
+| `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `SMTP_FROM` | Исходящая почта | обязательно для e-mail |
 | `OPENAI_API_KEY` | API ключ OpenAI | обязательно |
 | `PORT` | Порт сервера | `3000` |
 | `CORS_ORIGIN` | Разрешённые источники. Прод: явный список через запятую, никогда `*` | `*` |
 | `STRIPE_SECRET_KEY` | Ключ Stripe (apiVersion закреплён `2026-01-28.clover`) | для биллинга |
-| `TELEGRAM_BOT_TOKEN` | Токен Telegram бота (in-app + ops-алерты) | опционально |
-| `TELEGRAM_CHAT_ID` | Chat ID для системных и uptime-уведомлений | опционально |
+| `STRIPE_WEBHOOK_SECRET` | Проверяет `POST /webhooks/stripe` | обязательно для оплаты |
+| `STRIPE_{PRO,BUSINESS}_{MONTHLY,YEARLY}_PRICE_ID_<CUR>` | Price id Stripe для тарифа, периода и валюты | обязательно для checkout |
+| `STRIPE_REFERRAL_COUPON_ID` | Купон для реферальной награды «бесплатный месяц» | опционально |
+| `TELEGRAM_BOT_TOKEN` | Токен пользовательского бота-ассистента | опционально |
+| `TELEGRAM_BOT_USERNAME` | Имя бота, показываемое вместе с кодом привязки | опционально |
+| `TELEGRAM_WEBHOOK_URL` | Включает режим webhook (иначе long polling) | опционально |
+| `TELEGRAM_WEBHOOK_SECRET` | Ожидаемый `X-Telegram-Bot-Api-Secret-Token` | обязательно в режиме webhook |
+| `TELEGRAM_CHAT_ID` | Устаревшая, API её больше не читает | — |
+| `OPS_TELEGRAM_BOT_TOKEN`, `OPS_TELEGRAM_CHAT_ID` | Ops-бот для системных алертов (без отката на бота-ассистента) | опционально |
+| `OPS_PROJECT_NAME` | Префикс каждого ops-сообщения | опционально |
 | `WHATSAPP_ACCESS_TOKEN` | Access-токен Meta Cloud API (scope `whatsapp_business_messaging`) | опционально |
 | `WHATSAPP_PHONE_NUMBER_ID` | ID номера телефона WhatsApp | опционально |
 | `WHATSAPP_BUSINESS_ACCOUNT_ID` | ID бизнес-аккаунта WhatsApp | опционально |
@@ -619,6 +730,19 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `WHATSAPP_APP_SECRET` | HMAC-ключ для проверки подписи входящих вебхуков | опционально |
 | `WHATSAPP_BUSINESS_PHONE_NUMBER` | Номер, показываемый как `wa.me` deep link в приложении | опционально |
 | `WHATSAPP_API_VERSION` | Версия Meta Graph API (напр. `v21.0`) | опционально |
+| `WHATSAPP_DIGEST_TEMPLATE` | Одобренный шаблон для еженедельного голосового дайджеста; не задан — WhatsApp не предлагается | опционально |
+| `SLACK_BOT_TOKEN`, `SLACK_SIGNING_SECRET`, `SLACK_APP_ID`, `SLACK_BOT_USER` | DM-бот Slack (без них ничего не делает); для аудио голосового дайджеста нужен scope `files:write` | опционально |
+| `SLACK_CLIENT_ID`, `SLACK_CLIENT_SECRET`, `SLACK_OAUTH_REDIRECT_URL` | OAuth Slack для нескольких workspace | опционально |
+| `SLACK_TOKEN_ENC_KEY` | 32-байтный ключ шифрования сохранённых токенов workspace | обязательно вместе с Slack OAuth |
+| `RESTORE_CREDENTIAL_CERT_FINGERPRINTS` | SHA-256 отпечатки сертификатов подписи, которым разрешены учётные данные восстановления | обязательно для функции |
+| `RESTORE_CREDENTIAL_RP_ID`, `RESTORE_CREDENTIAL_RP_NAME` | Relying party WebAuthn | `ai-budget.pl`, `AI Budget Assistant` |
+| `TWELVE_DATA_API_KEY` | Рыночные данные для инвестиций | опционально |
+| `AI_CATEGORIZE_MAX_PER_DAY` | Суточное число проходов модели для категоризации без категории на аккаунт | `5` |
+| `AI_IMPORT_MAX_PDF_PAGES`, `AI_IMPORT_MAX_INFERENCES_PER_DAY` | Лимиты AI-импорта выписок | `20`, `20` |
+| `AI_SPLIT_MAX_INFERENCES_PER_DAY` | Суточное число классификаций авторазбивки чека на аккаунт | `20` |
+| `COMMUNITY_PRICE_SALT`, `COMMUNITY_PRICE_K`, `COMMUNITY_PRICE_READ_ENABLED`, `COMMUNITY_*` | Карта цен сообщества (чтение остаётся выключенным) — см. `.env.example` | выкл. |
+| `RECEIPT_CHECK_*` | Настройка проверки цен по чеку; `RECEIPT_CHECK_ALERTS_ENABLED` остаётся выключенным | см. `.env.example` |
+| `SHOPPING_REMINDER_MIN_GAP_DAYS` | Минимум дней между push-уведомлениями о покупках | `2` |
 | `SENTRY_DSN` | DSN Sentry; без него SDK работает no-op | опционально |
 | `SHIELD_MIN_MONTHLY_RISE_PCT` | Inflation Shield: минимальный прогнозный рост цены в месяц (%) для рекомендации товара | `5` |
 | `SHIELD_MIN_CADENCE_DAYS` | Inflation Shield: минимальная периодичность покупки (дней), при которой товар считается пригодным для запаса впрок | `14` |
@@ -627,6 +751,7 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 | `SHIELD_MIN_POINTS` | Inflation Shield: минимальное число ценовых точек, необходимое перед прогнозированием товара | `3` |
 | `SHIELD_FORECAST_LOOKBACK_WEEKS` | Inflation Shield: окно регрессии (недель) для прогноза ценового тренда товара | `12` |
 | `SHIELD_MIN_SPAN_DAYS` | Inflation Shield: минимальный временной охват (дней) окна ретроспективы, при котором прогнозу можно доверять | `14` |
+| `SHIELD_HORIZON_WEEKS` | Inflation Shield: горизонт прогноза (недель) | `4` |
 
 Все переменные `SHIELD_*` опциональны и переопределяют `SHIELD_DEFAULTS` (`apps/api/src/modules/insights/inflation-shield.util.ts`) — задавайте их только при настройке движка Inflation Shield.
 
@@ -634,7 +759,9 @@ docker exec -e SENTRY_DSN="$DSN" budget-api-prod node -e \
 
 | Переменная | Описание | По умолчанию |
 |------------|----------|--------------|
-| `EXPO_PUBLIC_API_URL` | URL бэкенда API | обязательно |
+| `EXPO_PUBLIC_API_URL` | URL бэкенда API (включая `/api/v1`) | `http://localhost:3000/api/v1` |
+| `EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID` | Client Google OAuth для входа (веб и Android через relay) | обязательно для входа через Google |
+| `EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID`, `EXPO_PUBLIC_GOOGLE_ANDROID_CLIENT_ID` | Client ID по платформам — заданы в `eas.json`/`.env.example`, но текущий код их не читает | опционально |
 | `EXPO_PUBLIC_BUILD_SHA` | SHA коммита git, отображаемый на экране «О приложении» как `1.26.0+<sha из 7 символов>` вместо голого номера версии. `web-deploy.yml` устанавливает его в `github.sha` для веб-сборки; локальная сборка обычно оставляет его незаданным, а нативные сборки не задают его никогда | опционально |
 
 ### Конфигурация Expo приложения
@@ -687,7 +814,7 @@ Error: @prisma/client did not initialize yet
 
 ```bash
 cd apps/api
-npm run prisma generate
+npm run db:generate
 ```
 
 #### Проблемы с кэшем Metro Bundler
@@ -700,7 +827,7 @@ Error: Unable to resolve module
 
 ```bash
 cd apps/mobile
-npm start --clear
+npx expo start --clear
 ```
 
 #### Ошибка сборки iOS
@@ -745,10 +872,16 @@ cd apps/mobile/android
 | Скрипт | Описание |
 |--------|----------|
 | `npm run dev` | Запустить все сервисы в режиме разработки |
+| `npm run dev:web` | Запустить мобильное приложение в браузере (Expo web) |
 | `npm run build` | Собрать все пакеты |
 | `npm test` | Запустить все тесты |
 | `npm run lint` | Линтинг всех пакетов |
+| `npm run typecheck` | Проверка типов во всех пакетах |
+| `npm run format` | Форматирование Prettier |
+| `npm run generate:help` | Перегенерировать `apps/mobile/src/help/content.ts` из `user_docs/` (руками этот файл не правится) |
 | `npm run clean` | Очистить артефакты сборки |
+
+Проверки документации (Python, без модели): `python scripts/wiki-lint.py` и `python scripts/wiki-staleness.py` — те же проверки, что еженедельно запускает `wiki-audit.yml`.
 
 ### API пакет
 
@@ -756,18 +889,30 @@ cd apps/mobile/android
 |--------|----------|
 | `npm run dev` | Запустить с hot reload |
 | `npm run build` | Собрать для продакшена |
-| `npm start:prod` | Запустить продакшен сборку |
+| `npm run start:prod` | Запустить продакшен сборку |
 | `npm test` | Запустить юнит-тесты |
-| `npm test:e2e` | Запустить E2E тесты |
-| `npm run prisma studio` | Открыть Prisma Studio |
+| `npm run test:watch` / `npm run test:cov` | Режим наблюдения / покрытие |
+| `npm run test:e2e` | Запустить E2E тесты |
+| `npm run typecheck` | Проверка типов |
+| `npm run db:generate` / `db:migrate` / `db:push` / `db:seed` | Prisma generate / migrate dev / db push / seed |
+| `npm run db:studio` | Открыть Prisma Studio |
 
 ### Мобильный пакет
 
 | Скрипт | Описание |
 |--------|----------|
-| `npm start` | Запустить Expo сервер |
+| `npm run dev` | Запустить Expo сервер |
 | `npm run ios` | Запустить на iOS |
 | `npm run android` | Запустить на Android |
 | `npm run web` | Запустить в браузере |
 | `npm run build:ios` | Собрать iOS приложение |
 | `npm run build:android` | Собрать Android приложение |
+| `npm run typecheck` / `npm run lint` / `npm test` | Проверка типов / линтинг / Jest |
+
+### Пакет админ-панели
+
+| Скрипт | Описание |
+|--------|----------|
+| `npm run dev` | Запустить панель на порту 3001 |
+| `npm run build` / `npm start` | Продакшен-сборка / запуск |
+| `npm run typecheck` / `npm run lint` | Проверка типов / линтинг |
