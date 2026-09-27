@@ -593,3 +593,46 @@ describe('VoiceDigestService.handleBlocked (async WhatsApp 131026)', () => {
     expect(notifications.sendToUser).not.toHaveBeenCalled();
   });
 });
+
+describe('VoiceDigestService.runForUser — tier-1 (text-encrypted) accounts', () => {
+  // Category and product names are ENCRYPTION_FIELDS tier-1 text: on such an
+  // account they can be ciphertext and must never reach the narration.
+  const richWeek = async () => ({
+    currency: 'PLN',
+    weekTotal: 300,
+    priorWeekTotals: [100, 100, 100, 100],
+    categoryWeek: [{ name: 'enc:v1:Zm9vZA==', total: 250 }],
+    categoryUsual: [{ name: 'enc:v1:Zm9vZA==', total: 50 }],
+    safeToSpendToday: 40,
+    daysToIncome: 5,
+    shieldItem: { name: 'enc:v1:bWlsaw==', monthlyChangePct: 12 },
+    restockNames: ['enc:v1:YnJlYWQ='],
+    realChangePct: null,
+  });
+
+  it('drops topRise, shieldItem and restock before narrating', async () => {
+    const { service, narrator } = make({ account: { encryptionTier: 1 }, gatherImpl: richWeek });
+
+    const outcome = await service.runForUser('u1', { now: NOW });
+
+    expect(outcome).toBe('sent');
+    const facts = narrator.narrate.mock.calls[0][0];
+    expect(facts.topRise).toBeNull();
+    expect(facts.shieldItem).toBeNull();
+    expect(facts.restock).toEqual([]);
+    expect(facts.weekTotal).toBe(300);
+    expect(facts.safeToSpendToday).toBe(40);
+    expect(JSON.stringify(facts)).not.toContain('enc:v1');
+  });
+
+  it('keeps them on a tier-0 account', async () => {
+    const { service, narrator } = make({ account: { encryptionTier: 0 }, gatherImpl: richWeek });
+
+    await service.runForUser('u1', { now: NOW });
+
+    const facts = narrator.narrate.mock.calls[0][0];
+    expect(facts.topRise).not.toBeNull();
+    expect(facts.shieldItem).not.toBeNull();
+    expect(facts.restock).toHaveLength(1);
+  });
+});

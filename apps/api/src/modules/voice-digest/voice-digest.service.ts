@@ -17,6 +17,7 @@ export type DigestOutcome = 'sent' | 'template' | 'empty' | 'encrypted' | 'no_ch
 const USAGE_FEATURE_TYPE = 'voice_digest';
 const USAGE_COST_UNITS = 0.5;
 const ENCRYPTED_TIER_THRESHOLD = 2;
+const TEXT_ENCRYPTED_TIER_THRESHOLD = 1;
 
 function errorMessage(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
@@ -88,8 +89,14 @@ export class VoiceDigestService {
 
       const lang = user.language || 'en';
       const inputs = await this.factsService.gather(accountId, userId, user.currencyCode, now);
-      const facts = assembleDigestFacts(inputs);
-      if (!facts) return 'empty';
+      const assembled = assembleDigestFacts(inputs);
+      if (!assembled) return 'empty';
+      // Tier-1 encrypts text fields (category and product names) — they may be
+      // ciphertext here, so the name-bearing facts are dropped, never narrated.
+      const facts =
+        account.encryptionTier >= TEXT_ENCRYPTED_TIER_THRESHOLD
+          ? { ...assembled, topRise: null, shieldItem: null, restock: [] }
+          : assembled;
 
       const { text } = await this.narrator.narrate(facts, lang);
       const audio = await this.tts.synthesize(text, lang);
