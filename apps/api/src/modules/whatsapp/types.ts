@@ -86,6 +86,15 @@ export interface WaContact {
   wa_id: string;
 }
 
+/** An async delivery status for a message WE sent (sent/delivered/read/failed). */
+export interface WaStatus {
+  id: string;
+  status: 'sent' | 'delivered' | 'read' | 'failed' | string;
+  timestamp: string;
+  recipient_id: string;
+  errors?: Array<{ code: number; title?: string; message?: string }>;
+}
+
 export interface WaWebhookBody {
   object: string;
   entry: Array<{
@@ -96,7 +105,7 @@ export interface WaWebhookBody {
         metadata: { display_phone_number: string; phone_number_id: string };
         contacts?: WaContact[];
         messages?: WaMessage[];
-        statuses?: unknown[];
+        statuses?: WaStatus[];
       };
       field: 'messages';
     }>;

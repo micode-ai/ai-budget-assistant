@@ -99,16 +99,7 @@ export class VoiceDigestService {
         result = await sender.send({ userId, lang, text, audio });
       } catch (err) {
         if (err instanceof DigestBlockedError) {
-          await this.prisma.user.update({ where: { id: userId }, data: { voiceDigestEnabled: false } });
-          this.notifications
-            .sendToUser(
-              userId,
-              (l) => blockedDigestPushTitle(l),
-              (l) => blockedDigestPushBody(l, channel),
-              { type: 'voice_digest_disabled' },
-              'voice_digest_disabled',
-            )
-            .catch(logFireAndForget(this.logger, 'VoiceDigestService.blockedPush'));
+          await this.disableAndNotify(userId, channel);
           return 'blocked';
         }
         if (err instanceof DigestUnavailableError) {
@@ -127,6 +118,35 @@ export class VoiceDigestService {
       this.logger.warn(`VoiceDigestService.runForUser failed for user ${userId}: ${errorMessage(err)}`);
       return 'failed';
     }
+  }
+
+  /**
+   * A block reported after the fact — WhatsApp's async `statuses[]` 131026
+   * for a digest message. Disables and pushes exactly like a send-time block,
+   * but only while the digest is still on AND still on that channel: a late
+   * status must not switch off a digest the user has since moved elsewhere.
+   */
+  async handleBlocked(userId: string, channel: VoiceDigestChannel): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { voiceDigestEnabled: true, voiceDigestChannel: true },
+    });
+    if (!user?.voiceDigestEnabled || user.voiceDigestChannel !== channel) return false;
+    await this.disableAndNotify(userId, channel);
+    return true;
+  }
+
+  private async disableAndNotify(userId: string, channel: VoiceDigestChannel): Promise<void> {
+    await this.prisma.user.update({ where: { id: userId }, data: { voiceDigestEnabled: false } });
+    this.notifications
+      .sendToUser(
+        userId,
+        (l) => blockedDigestPushTitle(l),
+        (l) => blockedDigestPushBody(l, channel),
+        { type: 'voice_digest_disabled' },
+        'voice_digest_disabled',
+      )
+      .catch(logFireAndForget(this.logger, 'VoiceDigestService.blockedPush'));
   }
 
   /**

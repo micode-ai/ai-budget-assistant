@@ -12,9 +12,9 @@ function makeClient() {
   return {
     isConfigured: jest.fn().mockReturnValue(true),
     uploadMedia: jest.fn().mockResolvedValue('media-1'),
-    sendAudio: jest.fn().mockResolvedValue(undefined),
-    sendText: jest.fn().mockResolvedValue(undefined),
-    sendTemplate: jest.fn().mockResolvedValue(undefined),
+    sendAudio: jest.fn().mockResolvedValue('wamid.audio'),
+    sendText: jest.fn().mockResolvedValue('wamid.text'),
+    sendTemplate: jest.fn().mockResolvedValue('wamid.template'),
   };
 }
 
@@ -318,5 +318,72 @@ describe('WhatsAppDigestSender', () => {
     expect(client.sendText).not.toHaveBeenCalled();
     // The entry must be untouched — still there for a retry once configured.
     expect(redis.store.get('wa:vd:user-1')).toBe(JSON.stringify({ text: 'hi', audioB64: null }));
+  });
+
+  describe('wamid to userId map for async statuses (wa:vdmsg:*)', () => {
+    const TTL = 259200;
+
+    it('direct send stores every returned wamid for the user', async () => {
+      const redis = makeRedis();
+      const sender = new WhatsAppDigestSender(
+        new DigestChannelRegistry(),
+        makeClient() as any,
+        makeLinkService({ waPhoneNumber: '48500000000', defaultAccountId: 'acc-1', lastInboundAt: RECENT }) as any,
+        makeConfig('voice_digest_ready') as any,
+        redis as any,
+      );
+
+      await sender.send({ userId: 'user-1', lang: 'en', text: 'Weekly digest', audio: Buffer.from('v') });
+
+      expect(redis.set).toHaveBeenCalledWith('wa:vdmsg:wamid.audio', 'user-1', 'EX', TTL);
+      expect(redis.set).toHaveBeenCalledWith('wa:vdmsg:wamid.text', 'user-1', 'EX', TTL);
+    });
+
+    it('template send stores the template wamid', async () => {
+      const redis = makeRedis();
+      const sender = new WhatsAppDigestSender(
+        new DigestChannelRegistry(),
+        makeClient() as any,
+        makeLinkService({ waPhoneNumber: '48500000000', defaultAccountId: 'acc-1', lastInboundAt: STALE }) as any,
+        makeConfig('voice_digest_ready') as any,
+        redis as any,
+      );
+
+      await sender.send({ userId: 'user-1', lang: 'en', text: 'Weekly digest', audio: null });
+
+      expect(redis.store.get('wa:vdmsg:wamid.template')).toBe('user-1');
+    });
+
+    it('deliverPending stores the wamids of the delivered messages', async () => {
+      const redis = makeRedis();
+      redis.store.set('wa:vd:user-1', JSON.stringify({ text: 'Weekly digest', audioB64: null }));
+      const sender = new WhatsAppDigestSender(
+        new DigestChannelRegistry(),
+        makeClient() as any,
+        makeLinkService({ waPhoneNumber: '48500000000', defaultAccountId: 'acc-1', lastInboundAt: STALE }) as any,
+        makeConfig('voice_digest_ready') as any,
+        redis as any,
+      );
+
+      await sender.deliverPending('user-1');
+
+      expect(redis.store.get('wa:vdmsg:wamid.text')).toBe('user-1');
+    });
+
+    it('takeDigestRecipient returns the mapped user once (GETDEL) and null for unknown ids', async () => {
+      const redis = makeRedis();
+      redis.store.set('wa:vdmsg:wamid.x', 'user-1');
+      const sender = new WhatsAppDigestSender(
+        new DigestChannelRegistry(),
+        makeClient() as any,
+        makeLinkService(null) as any,
+        makeConfig(undefined) as any,
+        redis as any,
+      );
+
+      await expect(sender.takeDigestRecipient('wamid.x')).resolves.toBe('user-1');
+      await expect(sender.takeDigestRecipient('wamid.x')).resolves.toBeNull();
+      await expect(sender.takeDigestRecipient('wamid.other')).resolves.toBeNull();
+    });
   });
 });

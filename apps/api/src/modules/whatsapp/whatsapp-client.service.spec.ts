@@ -59,6 +59,22 @@ describe('WhatsAppClientService — Graph error parsing (ABA voice-digest Task 8
     await expect(client.sendText('+1234567890', 'hi')).resolves.toBeUndefined();
   });
 
+  it('send methods return the wamid the Graph API echoes back', async () => {
+    const graphOk = {
+      messaging_product: 'whatsapp',
+      contacts: [{ input: '1234567890', wa_id: '1234567890' }],
+      messages: [{ id: 'wamid.HBgLMTIzNDU2Nzg5MBUCABEYEjQ=' }],
+    };
+    fetchMock.mockResolvedValue(fakeResponse(true, 200, JSON.stringify(graphOk), graphOk));
+    const client = new WhatsAppClientService(makeConfig());
+
+    await expect(client.sendText('+1234567890', 'hi')).resolves.toBe('wamid.HBgLMTIzNDU2Nzg5MBUCABEYEjQ=');
+    await expect(client.sendAudio('+1234567890', 'media-1')).resolves.toBe('wamid.HBgLMTIzNDU2Nzg5MBUCABEYEjQ=');
+    await expect(client.sendTemplate('+1234567890', 'vd', 'en', 'vd--listen')).resolves.toBe(
+      'wamid.HBgLMTIzNDU2Nzg5MBUCABEYEjQ=',
+    );
+  });
+
   it('uploadMedia posts multipart form data and returns the media id', async () => {
     fetchMock.mockResolvedValue(fakeResponse(true, 200, '', { id: 'media-abc' }));
     const client = new WhatsAppClientService(makeConfig());

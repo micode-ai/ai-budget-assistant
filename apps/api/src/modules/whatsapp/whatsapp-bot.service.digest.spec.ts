@@ -32,8 +32,15 @@ function makeRedis() {
   return { set: jest.fn().mockResolvedValue('OK') };
 }
 
-function makeDigestSender(deliverPending: jest.Mock = jest.fn().mockResolvedValue(true)) {
-  return { deliverPending };
+function makeDigestSender(
+  deliverPending: jest.Mock = jest.fn().mockResolvedValue(true),
+  takeDigestRecipient: jest.Mock = jest.fn().mockResolvedValue(null),
+) {
+  return { deliverPending, takeDigestRecipient };
+}
+
+function makeVoiceDigestService() {
+  return { handleBlocked: jest.fn().mockResolvedValue(true) };
 }
 
 function makeCommandHandler() {
@@ -52,7 +59,9 @@ function makeService(overrides: {
   commandHandler?: ReturnType<typeof makeCommandHandler>;
   linkService?: ReturnType<typeof makeLinkService>;
   client?: ReturnType<typeof makeClient>;
+  voiceDigestService?: ReturnType<typeof makeVoiceDigestService>;
 } = {}) {
+  const voiceDigestService = overrides.voiceDigestService ?? makeVoiceDigestService();
   const linkService = overrides.linkService ?? makeLinkService();
   const client = overrides.client ?? makeClient();
   const commandHandler = overrides.commandHandler ?? makeCommandHandler();
@@ -76,9 +85,10 @@ function makeService(overrides: {
     unused as never, // categorizeHandler
     digestSender as never,
     redis as never,
+    voiceDigestService as never,
   );
 
-  return { service, linkService, client, commandHandler, digestSender, redis };
+  return { service, linkService, client, commandHandler, digestSender, redis, voiceDigestService };
 }
 
 function interactiveBody(buttonId: string, from = '48500600700', msgId = 'wamid.btn.1') {
@@ -218,5 +228,94 @@ describe('WhatsAppBotService — digest command dispatch', () => {
     await service.handleUpdate(textBody('digest now') as never);
 
     expect(commandHandler.handleDigest).toHaveBeenCalledWith('now', expect.objectContaining({ userId: 'user-1' }));
+  });
+});
+
+/** The real Cloud API shape of an async delivery-status webhook. */
+function statusesBody(statuses: unknown[]) {
+  return {
+    object: 'whatsapp_business_account',
+    entry: [
+      {
+        id: 'WABA_ID',
+        changes: [
+          {
+            field: 'messages',
+            value: {
+              messaging_product: 'whatsapp',
+              metadata: { display_phone_number: '48123456789', phone_number_id: 'PNID' },
+              statuses,
+            },
+          },
+        ],
+      },
+    ],
+  };
+}
+
+function failedStatus(id: string, code: number) {
+  return {
+    id,
+    status: 'failed',
+    timestamp: '1727420000',
+    recipient_id: '48500600700',
+    errors: [
+      {
+        code,
+        title: code === 131026 ? 'Message undeliverable' : 'Re-engagement message',
+        message: code === 131026 ? 'Message undeliverable' : 'Re-engagement message',
+        error_data: { details: 'Message failed to send.' },
+        href: 'https://developers.facebook.com/docs/whatsapp/cloud-api/support/error-codes/',
+      },
+    ],
+  };
+}
+
+describe('WhatsAppBotService — async digest delivery statuses', () => {
+  it('a failed 131026 status for a digest message disables the digest via handleBlocked', async () => {
+    const digestSender = makeDigestSender(undefined, jest.fn().mockResolvedValue('user-1'));
+    const { service, voiceDigestService } = makeService({ digestSender });
+
+    await service.handleUpdate(statusesBody([failedStatus('wamid.digest.1', 131026)]) as never);
+
+    expect(digestSender.takeDigestRecipient).toHaveBeenCalledWith('wamid.digest.1');
+    expect(voiceDigestService.handleBlocked).toHaveBeenCalledWith('user-1', 'whatsapp');
+  });
+
+  it('a failed 131026 status for a non-digest message does nothing', async () => {
+    const digestSender = makeDigestSender(undefined, jest.fn().mockResolvedValue(null));
+    const { service, voiceDigestService } = makeService({ digestSender });
+
+    await service.handleUpdate(statusesBody([failedStatus('wamid.chat.1', 131026)]) as never);
+
+    expect(voiceDigestService.handleBlocked).not.toHaveBeenCalled();
+  });
+
+  it('a failed 131047 status only logs a warning, without consuming the mapping or disabling', async () => {
+    const digestSender = makeDigestSender(undefined, jest.fn().mockResolvedValue('user-1'));
+    const { service, voiceDigestService } = makeService({ digestSender });
+    const warn = jest.spyOn((service as any).logger, 'warn').mockImplementation(() => undefined);
+
+    await service.handleUpdate(statusesBody([failedStatus('wamid.digest.2', 131047)]) as never);
+
+    expect(voiceDigestService.handleBlocked).not.toHaveBeenCalled();
+    expect(digestSender.takeDigestRecipient).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).toContain('131047');
+  });
+
+  it('delivered/read statuses are ignored', async () => {
+    const digestSender = makeDigestSender();
+    const { service, voiceDigestService } = makeService({ digestSender });
+
+    await service.handleUpdate(
+      statusesBody([
+        { id: 'wamid.a', status: 'delivered', timestamp: '1', recipient_id: '48500600700' },
+        { id: 'wamid.a', status: 'read', timestamp: '2', recipient_id: '48500600700' },
+      ]) as never,
+    );
+
+    expect(digestSender.takeDigestRecipient).not.toHaveBeenCalled();
+    expect(voiceDigestService.handleBlocked).not.toHaveBeenCalled();
   });
 });

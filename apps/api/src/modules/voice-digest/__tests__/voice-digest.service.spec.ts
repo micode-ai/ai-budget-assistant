@@ -556,3 +556,40 @@ describe('VoiceDigestService — WhatsApp without an approved template', () => {
     });
   });
 });
+
+describe('VoiceDigestService.handleBlocked (async WhatsApp 131026)', () => {
+  it('disables the digest and sends the blocked push when the user is still enabled on that channel', async () => {
+    const { service, prisma, notifications } = make();
+    prisma.user.findUnique.mockResolvedValue({ voiceDigestEnabled: true, voiceDigestChannel: 'whatsapp' });
+
+    await expect(service.handleBlocked('u1', 'whatsapp')).resolves.toBe(true);
+
+    expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 'u1' }, data: { voiceDigestEnabled: false } });
+    expect(notifications.sendToUser).toHaveBeenCalledWith(
+      'u1',
+      expect.any(Function),
+      expect.any(Function),
+      { type: 'voice_digest_disabled' },
+      'voice_digest_disabled',
+    );
+  });
+
+  it('does nothing when the user has since moved the digest to another channel', async () => {
+    const { service, prisma, notifications } = make();
+    prisma.user.findUnique.mockResolvedValue({ voiceDigestEnabled: true, voiceDigestChannel: 'telegram' });
+
+    await expect(service.handleBlocked('u1', 'whatsapp')).resolves.toBe(false);
+
+    expect(prisma.user.update).not.toHaveBeenCalled();
+    expect(notifications.sendToUser).not.toHaveBeenCalled();
+  });
+
+  it('does nothing when the digest is already off', async () => {
+    const { service, prisma, notifications } = make();
+    prisma.user.findUnique.mockResolvedValue({ voiceDigestEnabled: false, voiceDigestChannel: 'whatsapp' });
+
+    await expect(service.handleBlocked('u1', 'whatsapp')).resolves.toBe(false);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+    expect(notifications.sendToUser).not.toHaveBeenCalled();
+  });
+});

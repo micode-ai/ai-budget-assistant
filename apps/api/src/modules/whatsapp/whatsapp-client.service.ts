@@ -50,12 +50,13 @@ export class WhatsAppClientService {
     return Boolean(this.accessToken && this.phoneNumberId);
   }
 
-  async sendText(to: string, body: string): Promise<void> {
+  /** Resolves the sent message's wamid (undefined when unconfigured or absent). */
+  async sendText(to: string, body: string): Promise<string | undefined> {
     if (!this.isConfigured()) {
       this.logger.warn('WhatsApp client not configured — skipping outbound message');
-      return;
+      return undefined;
     }
-    await this.post({
+    return this.post({
       messaging_product: 'whatsapp',
       to: this.normalize(to),
       type: 'text',
@@ -152,9 +153,9 @@ export class WhatsAppClientService {
   }
 
   /** Sends a previously-uploaded media file (see `uploadMedia`) as an audio message. */
-  async sendAudio(to: string, mediaId: string): Promise<void> {
-    if (!this.isConfigured()) return;
-    await this.post({
+  async sendAudio(to: string, mediaId: string): Promise<string | undefined> {
+    if (!this.isConfigured()) return undefined;
+    return this.post({
       messaging_product: 'whatsapp',
       to: this.normalize(to),
       type: 'audio',
@@ -173,9 +174,9 @@ export class WhatsAppClientService {
     name: string,
     languageCode: string,
     quickReplyPayload: string,
-  ): Promise<void> {
-    if (!this.isConfigured()) return;
-    await this.post({
+  ): Promise<string | undefined> {
+    if (!this.isConfigured()) return undefined;
+    return this.post({
       messaging_product: 'whatsapp',
       to: this.normalize(to),
       type: 'template',
@@ -202,7 +203,11 @@ export class WhatsAppClientService {
     return to.startsWith('+') ? to.slice(1) : to;
   }
 
-  private async post(body: unknown): Promise<void> {
+  /**
+   * POSTs to `/messages` and returns the wamid Meta assigns
+   * (`messages[0].id`) — the id later echoed in async `statuses[]` webhooks.
+   */
+  private async post(body: unknown): Promise<string | undefined> {
     const res = await fetch(`${this.baseUrl}/messages`, {
       method: 'POST',
       headers: {
@@ -213,6 +218,13 @@ export class WhatsAppClientService {
     });
     if (!res.ok) {
       throw await this.toGraphError(res, 'WhatsApp send failed');
+    }
+    try {
+      const json = (await res.json()) as { messages?: Array<{ id?: unknown }> } | undefined;
+      const id = json?.messages?.[0]?.id;
+      return typeof id === 'string' ? id : undefined;
+    } catch {
+      return undefined;
     }
   }
 

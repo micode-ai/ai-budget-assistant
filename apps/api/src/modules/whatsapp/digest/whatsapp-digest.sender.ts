@@ -26,6 +26,9 @@ const CUSTOMER_SERVICE_WINDOW_MS = 23 * 60 * 60 * 1000;
 /** TTL for a pending digest awaiting the "Listen" quick reply: 48h. */
 const PENDING_DIGEST_TTL_SEC = 172800;
 
+/** TTL for the wamid → userId map read by async `statuses[]` webhooks: 3 days. */
+const DIGEST_MESSAGE_TTL_SEC = 259200;
+
 interface PendingDigest {
   text: string;
   audioB64: string | null;
@@ -33,6 +36,10 @@ interface PendingDigest {
 
 function pendingKey(userId: string): string {
   return `wa:vd:${userId}`;
+}
+
+function messageKey(wamid: string): string {
+  return `wa:vdmsg:${wamid}`;
 }
 
 @Injectable()
@@ -76,7 +83,7 @@ export class WhatsAppDigestSender implements DigestSender, OnModuleInit {
 
     if (withinWindow) {
       try {
-        await this.deliverDirect(link.waPhoneNumber, payload.text, payload.audio);
+        await this.deliverDirect(payload.userId, link.waPhoneNumber, payload.text, payload.audio);
         return 'sent';
       } catch (err) {
         const code = err instanceof WhatsAppGraphError ? err.code : null;
@@ -92,6 +99,16 @@ export class WhatsAppDigestSender implements DigestSender, OnModuleInit {
     }
 
     return this.sendViaTemplate(link.waPhoneNumber, payload);
+  }
+
+  /**
+   * Meta usually reports a block (131026) asynchronously, in a `statuses[]`
+   * webhook carrying only the wamid. Returns the digest recipient for a wamid
+   * this sender sent — once (`GETDEL`, so a redelivered status can't
+   * disable/push twice) — or null for any message that was not a digest.
+   */
+  async takeDigestRecipient(wamid: string): Promise<string | null> {
+    return this.redis.getdel(messageKey(wamid));
   }
 
   /**
@@ -122,7 +139,7 @@ export class WhatsAppDigestSender implements DigestSender, OnModuleInit {
     const audio = pending.audioB64 ? Buffer.from(pending.audioB64, 'base64') : null;
 
     try {
-      await this.deliverDirect(link.waPhoneNumber, pending.text, audio);
+      await this.deliverDirect(userId, link.waPhoneNumber, pending.text, audio);
     } catch (err) {
       await this.redis.set(key, raw, 'EX', PENDING_DIGEST_TTL_SEC);
       throw err;
@@ -131,12 +148,17 @@ export class WhatsAppDigestSender implements DigestSender, OnModuleInit {
     return true;
   }
 
-  private async deliverDirect(to: string, text: string, audio: Buffer | null): Promise<void> {
+  private async deliverDirect(userId: string, to: string, text: string, audio: Buffer | null): Promise<void> {
     if (audio) {
       const mediaId = await this.client.uploadMedia(audio, 'audio/ogg', 'digest.ogg');
-      await this.client.sendAudio(to, mediaId);
+      await this.rememberMessage(await this.client.sendAudio(to, mediaId), userId);
     }
-    await this.client.sendText(to, text);
+    await this.rememberMessage(await this.client.sendText(to, text), userId);
+  }
+
+  private async rememberMessage(wamid: string | undefined, userId: string): Promise<void> {
+    if (!wamid) return;
+    await this.redis.set(messageKey(wamid), userId, 'EX', DIGEST_MESSAGE_TTL_SEC);
   }
 
   private async sendViaTemplate(to: string, payload: DigestPayload): Promise<'template'> {
@@ -152,7 +174,8 @@ export class WhatsAppDigestSender implements DigestSender, OnModuleInit {
     await this.redis.set(pendingKey(payload.userId), JSON.stringify(pending), 'EX', PENDING_DIGEST_TTL_SEC);
 
     try {
-      await this.client.sendTemplate(to, templateName, templateLanguage(payload.lang), 'vd--listen');
+      const wamid = await this.client.sendTemplate(to, templateName, templateLanguage(payload.lang), 'vd--listen');
+      await this.rememberMessage(wamid, payload.userId);
     } catch (err) {
       const code = err instanceof WhatsAppGraphError ? err.code : null;
       if (code === GRAPH_CODE_RECIPIENT_BLOCKED) {
