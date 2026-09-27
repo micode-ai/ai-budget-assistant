@@ -249,7 +249,7 @@ All endpoints require `Authorization: Bearer <jwt>` header.
 | `/encryption/account/:id/grant-key` | POST | Grant AK to new member (ECDH-wrapped). Requires `owner` role |
 | `/encryption/account/:id/pending-grants` | GET | List members awaiting key grant |
 | `/encryption/account/:id/rotate-key` | POST | Key rotation (new wrapped keys for all members). Requires `owner` role |
-| `/encryption/account/:id/member-keys` | GET | Get all members' public X25519 keys |
+| `/encryption/members/:id/public-keys` | GET | Get all members' public X25519 keys |
 | `/encryption/recovery/setup` | POST | Set up recovery key (server stores bcrypt hash + wrapped MK) |
 | `/encryption/recovery/recover` | POST | Recover access with recovery key |
 
@@ -303,7 +303,7 @@ addExpense() --> maybeEncrypt('expense', data, accountId)
 Owner                           Server                      New Member
   |                               |                            |
   |  1. Get member's public key   |                            |
-  |  GET /member-keys ----------> |                            |
+  |  GET /public-keys ----------> |                            |
   |  <--- publicKeyX25519 ------  |                            |
   |                               |                            |
   |  2. ECDH shared secret        |                            |

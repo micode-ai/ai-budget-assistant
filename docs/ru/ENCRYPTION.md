@@ -249,7 +249,7 @@ CREATE TABLE IF NOT EXISTS encryption_keys (
 | `/encryption/account/:id/grant-key` | POST | Выдача AK участнику (обёрнутый через ECDH). Требует роль `owner` |
 | `/encryption/account/:id/pending-grants` | GET | Список участников, ожидающих выдачи ключа |
 | `/encryption/account/:id/rotate-key` | POST | Ротация ключей (новые обёрнутые ключи для всех участников). Требует роль `owner` |
-| `/encryption/account/:id/member-keys` | GET | Публичные X25519-ключи всех участников |
+| `/encryption/members/:id/public-keys` | GET | Публичные X25519-ключи всех участников |
 | `/encryption/recovery/setup` | POST | Настройка ключа восстановления (сервер хранит bcrypt-хеш + обёрнутый MK) |
 | `/encryption/recovery/recover` | POST | Восстановление доступа по ключу восстановления |
 
@@ -303,7 +303,7 @@ addExpense() --> maybeEncrypt('expense', data, accountId)
 Владелец                        Сервер                      Новый участник
   |                               |                            |
   |  1. Получить публичный ключ   |                            |
-  |  GET /member-keys ----------> |                            |
+  |  GET /public-keys ----------> |                            |
   |  <--- publicKeyX25519 ------  |                            |
   |                               |                            |
   |  2. ECDH общий секрет         |                            |
