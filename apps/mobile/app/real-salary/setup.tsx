@@ -107,10 +107,13 @@ export default function RealSalarySetupScreen() {
           <>
             <Text style={styles.header}>{t('realSalary.setup.pick')}</Text>
 
-            {candidates.length === 0 ? (
+            {candidates.length === 0 && !missingSavedKey ? (
               <Text style={styles.emptyText}>{t('realSalary.setup.none')}</Text>
             ) : (
               <>
+                {candidates.length === 0 && missingSavedKey && (
+                  <Text style={styles.emptyNote}>{t('realSalary.setup.none')}</Text>
+                )}
                 <View style={styles.card}>
                   {missingSavedKey && (
                     <TouchableOpacity
@@ -226,6 +229,11 @@ const createStyles = (theme: Theme) => ({
   emptyText: {
     ...theme.textStyles.body,
     color: theme.colors.textSecondary,
+  },
+  emptyNote: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[3],
   },
 
   card: {
