@@ -1,6 +1,12 @@
 # Справочник API
 
+Последнее обновление: 2026-09-27
+
 Базовый URL: `/api/v1`
+
+Несколько маршрутов обслуживаются **без** префикса `/api/v1`, потому что их URL зарегистрирован у третьей стороны или передаётся людям вне приложения. Авторитетный список — `GLOBAL_PREFIX_EXCLUDED_ROUTES` в `apps/api/src/global-prefix-exclusions.ts`: вебхуки Stripe, Telegram, WhatsApp и Slack (`/webhooks/stripe`, `/telegram/webhook`, `/whatsapp/webhook`, `/slack/events`, `/slack/interactivity`), установка Slack (`/slack/install`, `/slack/oauth/callback`) и два поддерева гостевых страниц, покрытых шаблонами — `/s/...` (гостевые ссылки разделения чека) и `/sl/...` (гостевые ссылки списка покупок).
+
+Обозначения гардов ниже: **JWT** = `JwtAuthGuard`; **контекст аккаунта** = `AccountContextGuard` (нужен `X-Account-Id`); **закрыто для viewer** = `ViewerBlockGuard` (403 для роли `viewer`); **Pro** = `SubscriptionTierGuard` + `@RequireTier('pro')` (403 с `code: "TIER_REQUIRED"`); **с учётом AI** = `AiUsageGuard` + `@TrackAiUsage(feature, cost)` (списывается из месячной квоты AI-запросов).
 
 Все эндпоинты, кроме аутентификации, требуют валидный JWT токен в заголовке Authorization:
 ```
@@ -40,17 +46,30 @@ Content-Type: application/json
 }
 ```
 
+Необязательные поля: `currencyCode`, `timezone`, `language`, `referralCode` (`^[A-Z0-9]{4,10}$`) и `acquisition` (`{ src?, loc?, lang?, plan?, referrerRaw? }` — атрибуция первого касания, которую собирают веб и лендинг, см. `docs/wiki/features/acquisition-tracking.md`). Вместе с пользователем создаётся личный аккаунт по умолчанию.
+
 **Ответ** `201 Created`
 ```json
 {
-  "id": "uuid",
-  "email": "user@example.com",
-  "name": "Иван Иванов",
-  "currencyCode": "RUB",
-  "timezone": "UTC",
-  "createdAt": "2024-01-15T10:30:00Z"
+  "accessToken": "",
+  "refreshToken": "",
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "name": "Иван Иванов",
+    "currencyCode": "RUB",
+    "defaultAccountId": "uuid",
+    "isVerified": false,
+    "themeMode": "system",
+    "accentColor": null,
+    "paymentMethod": null,
+    "paymentHandle": null
+  },
+  "accounts": []
 }
 ```
+
+Новый пользователь не подтверждён: оба токена — пустые строки, а `accounts` пуст, пока 6-значный код из письма при регистрации не подтверждён через **Подтверждение e-mail** ниже — оно и возвращает настоящие токены.
 
 ### Вход в систему
 
@@ -69,14 +88,23 @@ Content-Type: application/json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
   "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-  "expiresIn": 900,
   "user": {
     "id": "uuid",
     "email": "user@example.com",
-    "name": "Иван Иванов"
-  }
+    "name": "Иван Иванов",
+    "currencyCode": "RUB",
+    "defaultAccountId": "uuid",
+    "isVerified": true,
+    "themeMode": "system",
+    "accentColor": null,
+    "paymentMethod": null,
+    "paymentHandle": null
+  },
+  "accounts": [ { "id": "uuid", "name": "Personal", "type": "personal", "myRole": "owner" } ]
 }
 ```
+
+Неподтверждённый пользователь получает `200` с пустыми токенами и `isVerified: false` (приложение переводит его на экран подтверждения). Деактивированный аккаунт, неверный пароль и аккаунт только через Google (без пароля — «Use Google sign-in for this account») — `401`. Access-токен живёт `JWT_EXPIRES_IN` (по умолчанию `7d`), refresh-токен — 30 дней.
 
 ### Обновление токена
 
@@ -93,10 +121,11 @@ Content-Type: application/json
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-  "expiresIn": 900
+  "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
 }
 ```
+
+**Скользящая сессия**: каждое обновление возвращает **новый** refresh-токен вместе с новым access-токеном, и клиенты его сохраняют, поэтому пользователь, активный хотя бы раз за время жизни refresh-токена (30 дней), никогда не вынужден входить заново. Токены — stateless JWT без списка отзыва: предыдущий refresh-токен остаётся действительным до своего срока. Заодно обновляется отметка последней активности пользователя. `401` — для недействительного токена или неактивного пользователя.
 
 ### Восстановление пароля
 
@@ -148,6 +177,111 @@ Content-Type: application/json
 
 **Требования к паролю:** Минимум 8 символов, хотя бы одна заглавная буква, одна строчная буква и одна цифра.
 
+### Подтверждение e-mail
+
+```http
+POST /auth/verify-email
+Content-Type: application/json
+
+{ "email": "user@example.com", "code": "123456" }
+```
+
+Подтверждает 6-значный код, отправленный при регистрации, и возвращает полноценную сессию, чтобы пользователь продолжил без повторного входа.
+
+**Ответ** `200 OK` — `{ "message": "Email verified successfully", "accessToken": "...", "refreshToken": "...", "user": { ... }, "accounts": [ ... ] }` (тот же блок `user`, что и при входе). `400` — для неверного или просроченного кода.
+
+### Повторная отправка кода подтверждения
+
+```http
+POST /auth/resend-verification
+Content-Type: application/json
+
+{ "email": "user@example.com" }
+```
+
+**Ответ** `200 OK` — всегда `{ "message": "If this email is unverified, a new code has been sent" }` (без перебора e-mail).
+
+### Вход через Google
+
+```http
+POST /auth/google
+Content-Type: application/json
+
+{
+  "idToken": "<Google ID token>",
+  "language": "pl",
+  "currencyCode": "PLN",
+  "referralCode": "ABCD12",
+  "acquisition": { "src": "landing", "lang": "pl" }
+}
+```
+
+Публичный. Клиент получает Google **ID token** (мобильное приложение и веб — через `expo-auth-session`), сервер его проверяет (`GoogleTokenVerifier`, audiences из `GOOGLE_OAUTH_CLIENT_IDS`, обязателен `email_verified`). Порядок: по `googleId` → автопривязка по подтверждённому e-mail (деактивированный аккаунт отклоняется, а не привязывается) → иначе новый подтверждённый пользователь без пароля и аккаунт по умолчанию. Обязателен только `idToken`. Подробности: `docs/wiki/auth.md`.
+
+**Ответ** `200 OK` — та же форма, что и при входе.
+
+### Смена e-mail
+
+Оба шага защищены JWT.
+
+```http
+POST /auth/change-email/request
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "newEmail": "new@example.com", "currentPassword": "securePassword123" }
+```
+
+Отправляет 6-значный код на новый адрес. **Ответ** `200 OK` — `{ "message": "Verification code sent to new email address" }`. Для аккаунта только через Google (без пароля) отклоняется.
+
+```http
+POST /auth/change-email/confirm
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "code": "123456" }
+```
+
+**Ответ** `200 OK` — `{ "message": "Email changed successfully", "accessToken": "...", "refreshToken": "..." }` (токены выпускаются заново, потому что e-mail входит в payload JWT).
+
+### Учётные данные восстановления (восстановление сессии на Android)
+
+WebAuthn-учётные данные, благодаря которым сессия переживает перенос на новое Android-устройство (требование Google Play). Регистрация защищена JWT; церемония входа публичная, потому что у восстановленного устройства ещё нет токена. `503`, если relying party не настроен. Подробности: `docs/wiki/features/restore-credentials.md`.
+
+```http
+GET /auth/restore/register/options
+Authorization: Bearer <token>
+```
+Возвращает WebAuthn `PublicKeyCredentialCreationOptionsJSON` (из `@simplewebauthn/server`).
+
+```http
+POST /auth/restore/register
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "response": { /* RegistrationResponseJSON */ } }
+```
+**Ответ** `200 OK` — `{ "ok": true }`. `401`, если регистрация не начата или проверка не прошла.
+
+```http
+DELETE /auth/restore
+Authorization: Bearer <token>
+```
+Удаляет учётные данные восстановления пользователя (очистка при выходе; работает даже при ненастроенном relying party).
+
+```http
+GET /auth/restore/options
+```
+Публичный, ограничение 20 запросов/мин с IP. Возвращает `PublicKeyCredentialRequestOptionsJSON`.
+
+```http
+POST /auth/restore
+Content-Type: application/json
+
+{ "response": { /* AuthenticationResponseJSON */ } }
+```
+Публичный, ограничение 10 запросов/мин с IP. **Ответ** `200 OK` — та же форма, что и при входе. `401` — для неизвестного/просроченного challenge, неизвестных учётных данных, непрошедшей проверки подписи или деактивированного/неподтверждённого пользователя.
+
 ---
 
 ## Пользователи
@@ -191,10 +325,15 @@ Content-Type: application/json
   "name": "Иван Петров",
   "currencyCode": "EUR",
   "timezone": "Europe/Moscow",
-  "notifyBudgetAlerts": true,
-  "notifySharedActivity": false
+  "language": "ru",
+  "themeMode": "dark",
+  "accentColor": "#FF8A00",
+  "contributeCommunityPrices": true,
+  "inflationCountry": "PL"
 }
 ```
+
+Все поля необязательны: `name`, `currencyCode`, `timezone`, `language`, `contributeCommunityPrices`, `themeMode`, `accentColor` (`null` сбрасывает), `paymentMethod`/`paymentHandle` (устаревшая одиночная пара — лучше **Заменить способы оплаты**), `inflationCountry` (страна для [реальной зарплаты](#реальная-зарплата), `null` — определить по часовому поясу). Переключателей уведомлений здесь **нет** — они в `PATCH /users/me/notification-preferences` (см. [Оповещения об аномалиях](#оповещения-об-аномалиях)).
 
 **Ответ** `200 OK`
 
@@ -270,6 +409,83 @@ Content-Type: application/json
   ]
 }
 ```
+
+### Обновить push-токен
+
+```http
+PATCH /users/me/push-token
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "pushToken": "ExponentPushToken[...]" }
+```
+
+`null` очищает токен. **Ответ** `200 OK` — `{ "success": true }`.
+
+### Записать источник привлечения
+
+```http
+PATCH /users/me/acquisition
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "src": "referral", "loc": "hero", "lang": "pl", "plan": "pro", "referrerRaw": "https://..." }
+```
+
+Атрибуция первого касания для пользователя, пришедшего до регистрации (все поля необязательны). **Ответ** `204 No Content`. См. `docs/wiki/features/acquisition-tracking.md`.
+
+### Поиск пользователей
+
+```http
+GET /users/search?q=anna
+Authorization: Bearer <token>
+```
+
+Ищет активных пользователей (кроме самого вызывающего) по подстроке имени или e-mail без учёта регистра — чтобы пригласить их в аккаунт. Запрос короче 2 символов возвращает `[]`. Ограничение 20 запросов/мин.
+
+**Ответ** `200 OK` — до 20 строк `{ "id", "name", "email" }`. См. `docs/wiki/features/invite-by-search.md`.
+
+### Настройки голосового дайджеста
+
+Еженедельный голосовой дайджест — короткая озвученная сводка недели, отправляемая в привязанный бот (Telegram, WhatsApp или Slack). На уровне пользователя: `X-Account-Id` **не** нужен. Подробности: `docs/wiki/features/voice-digest.md`.
+
+```http
+GET /users/me/voice-digest
+Authorization: Bearer <token>
+```
+
+**Ответ** `200 OK` — `VoiceDigestSettings` (`packages/shared-types/src/dto/voice-digest.ts`):
+```json
+{
+  "enabled": true,
+  "day": 0,
+  "hour": 19,
+  "channel": "telegram",
+  "availableChannels": ["telegram", "slack"],
+  "whatsappAvailable": false
+}
+```
+
+`day` — 0 = воскресенье … 6 = суббота, `hour` — 0–23, оба в часовом поясе пользователя. `availableChannels` перечисляет только привязанные боты; `channel` равен `null`, если сохранённый канал больше не привязан. `whatsappAvailable` равен `false`, пока WhatsApp не привязан **и** не задан `WHATSAPP_DIGEST_TEMPLATE`.
+
+```http
+PATCH /users/me/voice-digest
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "enabled": true, "day": 5, "hour": 18, "channel": "slack" }
+```
+
+Все поля необязательны. `400` — если `channel` не привязан, если выбран WhatsApp до настройки шаблона или если включение невозможно из-за отсутствия канала доставки (без `channel` выбирается первый привязанный канал, способный доставить дайджест). **Ответ** `200 OK` — обновлённые настройки.
+
+### Удалить аккаунт пользователя
+
+```http
+DELETE /users/me
+Authorization: Bearer <token>
+```
+
+Деактивирует пользователя. **Ответ** `200 OK` — `{ "success": true }`.
 
 ---
 
@@ -472,6 +688,93 @@ POST /accounts/:id/leave
 Authorization: Bearer <token>
 ```
 
+### Мои ожидающие приглашения
+
+```http
+GET /accounts/invitations/mine
+Authorization: Bearer <token>
+```
+
+Ожидающие непросроченные приглашения на e-mail пользователя (при отсутствии строки пользователя возвращает `[]` — никогда не все ожидающие приглашения).
+
+### Ответить на приглашение
+
+```http
+PATCH /accounts/invitations/:id/respond
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "action": "accept" }
+```
+
+`action` — `accept` или `decline`. Приглашение должно быть адресовано вызывающему (проверяется первым делом) и не должно быть просрочено.
+
+### Обновить мои платёжные данные (кошелёк поездки)
+
+```http
+PATCH /accounts/:id/members/me/payment-info
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "paymentMethod": "blik", "paymentHandle": "+48 600 100 200" }
+```
+
+Собственные платёжные данные участника в этом аккаунте, используемые при расчёте поездки. `paymentMethod`: `blik`, `revolut`, `paypal`, `cash`, `other`; `paymentHandle` должен соответствовать `^[A-Za-z0-9+ ._-]{1,50}$`.
+
+### Архивировать поездку
+
+```http
+PATCH /accounts/:id/archive-trip
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "force": false }
+```
+
+Только владелец (иначе `403`). Архивирует аккаунт типа `trip`, делая его доступным только для чтения. `400`, пока есть неподтверждённые транзакции расчёта, если не передан `force: true`. См. `docs/wiki/features/trip-wallet.md`.
+
+### Расчёт поездки (settle-up)
+
+JWT + контекст аккаунта. Id аккаунта всегда берётся из проверенного гардом `X-Account-Id`, никогда из сегмента пути `:id`.
+
+```http
+GET /accounts/:id/settle-up
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK` — `SettleUpResponse` (`packages/shared-types/src/dto/expense.ts`):
+```json
+{
+  "balances": [ { "userId": "uuid", "userName": "Anna", "netAmount": -42.50 } ],
+  "suggestedTransfers": [ { "fromUserId": "uuid-a", "toUserId": "uuid-b", "amount": 42.50 } ],
+  "currencyCode": "EUR",
+  "fxApproximate": false,
+  "pendingTransactions": []
+}
+```
+
+`netAmount` — в валюте аккаунта: положительное — участнику должны, отрицательное — должен он.
+
+```http
+POST /accounts/:id/settle-up/pay
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "fromUserId": "uuid-a", "toUserId": "uuid-b", "amount": 42.50 }
+```
+
+После архивации поездки блокируется `TripArchivedGuard` (в статусе `settling` разрешено). **Ответ** — `{ "transactionId", "paymentLink", "manualInstructions", "paymentHandle" }` (`paymentLink` — deep-ссылка Revolut/PayPal, если у получателя она есть).
+
+```http
+PATCH /accounts/:id/settle-up/:txnId/confirm
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Подтвердить может только получатель. Намеренно без гарда архивации, чтобы платёж «в полёте» в принудительно заархивированной поездке всё ещё можно было подтвердить.
+
 ---
 
 ## Расходы
@@ -558,6 +861,8 @@ Content-Type: application/json
 ```
 
 **Примечание:** `tagIds` — опциональное поле. Теги автоматически привязываются к расходу.
+
+**Отпечаток чека:** `receiptFingerprint` (необязательно, 64 символа SHA-256 в нижнем регистре, возвращается [сканированием чека](#сканирование-чека)) сохраняется, чтобы повторную загрузку того же файла можно было отметить ещё до OCR — см. [Проверка дубликата чека](#проверка-дубликата-чека).
 
 **Локация:** `location` — опциональный объект `{ lat, lng, name? }` (хранится в отдельных колонках `locationLat`/`locationLng`/`locationName`, которые возвращают эндпоинты чтения). В `PATCH /expenses/:id` отправьте `"location": null`, чтобы очистить локацию. Она проставляется автоматически по адресу магазина с отсканированного чека (см. [Сканирование чека](#сканирование-чека)) или, если пользователь включил опцию, по GPS устройства в момент создания.
 
@@ -669,9 +974,12 @@ Content-Type: application/json
   "quantity": 1,
   "unitPrice": 249.00,
   "totalPrice": 249.00,
+  "lineDiscount": 25.00,
   "sortOrder": 1
 }
 ```
+
+`lineDiscount` (необязательно, ≥ 0, принимается и при обновлении) — скидка, напечатанная на этой строке; разделение чека пропорционально учитывает её в долях.
 
 #### Обновить позицию
 
@@ -735,6 +1043,50 @@ DELETE /expenses/:id/receipt-image
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
+
+### Остановить повторение
+
+```http
+PATCH /expenses/:id/stop-recurring
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Закрыто для viewer. Ставит расходу `isRecurring: false`, и ежедневный cron повторяющихся расходов перестаёт клонировать серию; история сохраняется.
+
+### Перенести расход в другой аккаунт
+
+```http
+POST /expenses/:id/move
+Authorization: Bearer <token>
+X-Account-Id: <source-account-uuid>
+Content-Type: application/json
+
+{ "targetAccountId": "uuid" }
+```
+
+Закрыто для viewer и для заархивированной поездки на стороне источника; вызывающий должен быть не-viewer участником целевого аккаунта. Категория переносится по имени без учёта регистра (иначе очищается); теги, связи с проектами и разбиения по категориям снимаются; конфликт `clientId` в целевом аккаунте решается новым UUID. Расходы со сквозным шифрованием отклоняются с `400`.
+
+**Ответ** `200 OK` — `{ "id": "uuid", "accountId": "target-uuid", "categoryId": "uuid-or-null" }`.
+
+### Объединить два расхода
+
+```http
+POST /expenses/merge
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "keepId": "uuid",
+  "mergeId": "uuid",
+  "fieldChoices": { "merchant": true, "notes": false, "categoryId": true, "projectId": false, "tagIds": true, "receiptImage": true }
+}
+```
+
+Закрыто для viewer. Вливает `mergeId` в `keepId` (например, автоматически захваченное банковское уведомление и отсканированный чек той же покупки). Каждый флаг `fieldChoices`, равный `true`, берёт это поле у объединяемой строки; остающаяся строка сохраняет свою сумму и валюту. Позиции чека переходят к ней, если своих у неё нет.
+
+**Ответ** `200 OK` — `{ "keptId": "uuid", "mergedId": "uuid" }`.
 
 ---
 
@@ -839,6 +1191,21 @@ X-Account-Id: <account-uuid>
 ```
 
 **Ответ** `204 No Content`
+
+### Массовое обновление доходов
+
+```http
+PATCH /incomes/bulk
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "ids": ["uuid-1", "uuid-2"], "categoryId": "uuid" }
+```
+
+Закрыто для viewer. От 1 до 500 id (серверные PK или `clientId`), в рамках аккаунта; применяет проверенный результат `POST /ai/categorize-uncategorized-income`.
+
+**Ответ** `200 OK` — `{ "updated": 2 }`.
 
 ---
 
@@ -959,6 +1326,31 @@ X-Account-Id: <account-uuid>
 
 **Ответ** `204 No Content`
 
+### Получить бюджет
+
+```http
+GET /budgets/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### История бюджета
+
+```http
+GET /budgets/:id/history?periods=6
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Прошлые периоды бюджета, от старых к новым. `periods` по умолчанию 6, ограничивается диапазоном 1–12; месячные периоды учитывают день начала финансового месяца аккаунта. Бюджет `custom` возвращает `[]`.
+
+**Ответ** `200 OK`
+```json
+[
+  { "periodStart": "2026-08-01", "periodEnd": "2026-08-31", "limit": 2000, "actual": 2140.50, "isOverBudget": true }
+]
+```
+
 ---
 
 ## Категории
@@ -1010,6 +1402,8 @@ Content-Type: application/json
 
 **Значения type**: `expense`, `income`
 
+Необязательный `clientId` (локальный id устройства) делает создание **идемпотентным**: повторная отправка с тем же `clientId` возвращает строку, созданную в первый раз. Обновление и удаление понимают `:id` и как серверный PK, и как этот `clientId`.
+
 ### Обновить категорию
 
 ```http
@@ -1020,9 +1414,12 @@ Content-Type: application/json
 
 {
   "name": "Кофе и чай",
-  "color": "#654321"
+  "color": "#654321",
+  "coicopDivision": "CP01"
 }
 ```
+
+`coicopDivision` (`TOTAL`, `CP01` … `CP13`) задаёт ценовую группу, с весом которой категория учитывается в [реальной зарплате](#реальная-зарплата); изменение сбрасывает кэш реальной зарплаты аккаунта.
 
 ### Удалить категорию
 
@@ -1126,25 +1523,7 @@ X-Account-Id: <account-uuid>
 
 **Ответ** `204 No Content`
 
-### Добавить тег к доходу
-
-```http
-POST /tags/:id/incomes/:incomeId
-Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
-```
-
-**Ответ** `201 Created`
-
-### Удалить тег с дохода
-
-```http
-DELETE /tags/:id/incomes/:incomeId
-Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
-```
-
-**Ответ** `204 No Content`
+REST-маршрута для тегов **дохода** нет: методы `TagsService.addToIncome`/`removeFromIncome` существуют, но ни один контроллер их не открывает.
 
 ---
 
@@ -1478,6 +1857,18 @@ X-Account-Id: <account-uuid>
 оно должно переживать следующую транзакцию в ней. Чтобы вернуть, задайте для неё
 баланс заново.
 
+### Сводки по всем моим аккаунтам
+
+```http
+GET /wallet/summaries
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Балансы кошелька для **всех** аккаунтов пользователя за один запрос — форме перевода нужен баланс и другого аккаунта. Гард контекста аккаунта на уровне класса остаётся, но `X-Account-Id` намеренно игнорируется: членства перечисляются по пользователю; каждая строка строится тем же `buildWalletBalanceRow`, что и в `GET /wallet/summary`, поэтому оба экрана показывают одинаковый баланс. См. `docs/wiki/features/account-transfers.md`.
+
+**Ответ** `200 OK` — `{ "accounts": [ { "accountId": "uuid", "balances": [ /* как в сводке кошелька */ ] } ] }`.
+
 ### История баланса (по дням)
 
 ```http
@@ -1578,6 +1969,41 @@ X-Account-Id: <account-uuid>
 
 **Ответ** `200 OK`
 
+### Предпросмотр повторного применения правила
+
+```http
+GET /merchant-rules/:id/reapply-preview
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Сколько существующих расходов этого продавца лежит в других категориях и перейдёт в категорию правила.
+
+**Ответ** `200 OK`
+```json
+{
+  "ruleId": "uuid",
+  "merchantNormalized": "amazon",
+  "targetCategoryId": "uuid",
+  "targetCategoryName": "Shopping",
+  "totalCount": 7,
+  "groups": [ { "categoryId": "uuid", "categoryName": "Other", "count": 5 } ]
+}
+```
+
+### Повторно применить правило
+
+```http
+POST /merchant-rules/:id/reapply
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "categoryIds": ["uuid"] }
+```
+
+Закрыто для viewer. Переносит расходы продавца из перечисленных исходных категорий в категорию правила. **Ответ** `200 OK` — `{ "updated": 5 }`.
+
 ---
 
 ## Обмен валют
@@ -1647,6 +2073,19 @@ DELETE /currency-exchanges/:id
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
+
+### Обновить обмен
+
+```http
+PATCH /currency-exchanges/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "toAmount": 925.00, "exchangeRate": 0.925, "notes": "Исправлено" }
+```
+
+Закрыто для viewer. Любые из `fromCurrency`, `toCurrency`, `fromAmount`, `toAmount`, `exchangeRate`, `date`, `notes`.
 
 ---
 
@@ -1949,6 +2388,122 @@ X-Account-Id: <account-uuid>
 `items[].projectedSaving` — это оценка по модели «наполовину пройденной линейной рампы»: `(projectedPrice − currentPrice) / 2 × quantity`, а не полный разрыв на конец горизонта. `store` в Plan 1 равен `null` (только персональные данные; community-буст отложен). `savedSoFar` — реализованная экономия, засчитанная при фактической покупке рекомендованного товара, просуммированная с конвертацией валют в `baseCurrency`. При `hasEnoughData: false` возвращается пустой массив `items` — данных ниже порога (≥3 ценовые точки на товар).
 
 **DTO** (`packages/shared-types/src/dto/insights.ts`): `InflationShieldResponse`, `ShieldItem`.
+
+### Можно потратить сегодня (Safe-to-Spend)
+
+```http
+GET /insights/safe-to-spend
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Бесплатно (без гарда тарифа). Главное число на домашнем экране: `max(0, (walletBalance + expectedIncome − obligations − buffer) / daysRemaining)` до конца месяца или до следующего ожидаемого дохода — что наступит раньше. Кэшируется на 5 минут по аккаунту и валюте.
+
+**Ответ** `200 OK` — `SafeToSpendResponse` (`packages/shared-types/src/dto/insights.ts`):
+```json
+{
+  "baseCurrency": "PLN",
+  "safeToSpendToday": 84.20,
+  "projectedAvailable": 1010.40,
+  "daysRemaining": 12,
+  "horizonDate": "2026-10-10",
+  "incomeInferred": true,
+  "fxApproximate": false,
+  "breakdown": { "walletBalance": 2400, "expectedIncome": 0, "upcomingSubscriptions": 120, "upcomingRecurring": 800, "goalContributions": 469.60, "buffer": 0 },
+  "computedAt": "2026-09-27T10:00:00.000Z"
+}
+```
+
+### Финансовые итоги года (Wrapped)
+
+```http
+GET /insights/wrapped?year=2026
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Бесплатно. Колода карточек «итоги года», собранная из существующих данных; `year` ограничивается диапазоном `[2000, текущий год]`. Включаются только карточки с данными; `hasEnoughData: false` с пустыми `cards` — если записей меньше 5 или аккаунт tier-2 зашифрован. Кэшируется на 1 час.
+
+**Ответ** `200 OK` — `WrappedResponse`: `{ "year", "baseCurrency", "generatedAt", "hasEnoughData", "fxApproximate", "cards": WrappedCard[] }`, где каждая карточка — размеченное объединение по `type` (`intro`, `total_tracked`, `top_merchant`, `biggest_month`, `top_category`, `category_mix`, `receipts_scanned`, `savings`, `personal_inflation`, `streak`).
+
+### Реальная зарплата
+
+«Поспевает ли моя прибавка за тем, что реально можно купить на мои деньги»: подтверждённый доход-зарплата пользователя (12 месяцев против предыдущих 12) против персональной инфляции из официальных данных Eurostat HICP и собственного индекса цен по чекам, взвешенной по его тратам в разделах COICOP. Всё бесплатно, кроме PDF-справки. Подробности: `docs/wiki/features/real-salary.md`; типы: `packages/shared-types/src/dto/real-salary.ts`.
+
+```http
+GET /insights/real-salary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK` — `RealSalaryResponse`:
+```json
+{
+  "status": "ready",
+  "baseCurrency": "PLN",
+  "country": "PL",
+  "countryGuessed": false,
+  "dataMonth": "2026-08",
+  "nominalChangePct": 6.0,
+  "personalInflationPct": 4.8,
+  "realChangePct": 1.1,
+  "requiredRaisePct": 4.8,
+  "breakdown": [ { "division": "CP01", "weight": 0.31, "ratePct": 5.2, "source": "receipts" } ],
+  "topDrivers": ["CP01", "CP04"],
+  "fxApproximate": false,
+  "computedAt": "2026-09-27T10:00:00.000Z"
+}
+```
+
+`status`, отличный от `ready` (`no_salary_confirmed`, `salary_history_short`, `spend_under_3_months`, `no_inflation_source`, `encrypted`), означает, что показатели `null`/пусты и клиент показывает соответствующий шаг настройки.
+
+```http
+GET /insights/real-salary/profile
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK` — `{ "profile": { "salaryKey": "string-or-null", "manualPreviousMonthly": null }, "candidates": [ { "key", "categoryId", "categoryName", "descriptionKey", "currencyCode", "typicalAmount", "occurrences" } ] }` — сохранённый выбор и найденные серии доходов, похожие на зарплату, из которых можно выбрать.
+
+```http
+PUT /insights/real-salary/profile
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "salaryKey": "<candidate key>", "manualPreviousMonthly": 7200 }
+```
+
+Закрыто для viewer. `manualPreviousMonthly` — месячная зарплата год назад, когда истории не хватает.
+
+```http
+GET /insights/real-salary/categories
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK` — `[{ "id", "name", "icon", "coicopDivision" }]`: категории аккаунта и ценовая группа COICOP, с весом которой учитывается каждая (меняется полем `coicopDivision` в `PATCH /categories/:id`).
+
+```http
+POST /insights/real-salary/brief?lang=pl
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Pro.** Возвращает одностраничный PDF (`Content-Type: application/pdf`, `Content-Disposition: attachment; filename="real-salary-YYYY-MM-DD.pdf"`). `409` с `{ "message", "status" }`, если показатель не `ready`.
+
+### Fat Finder
+
+```http
+POST /insights/fat-finder
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "month": 9, "year": 2026, "language": "ru", "forceRegenerate": false }
+```
+
+**Pro.** AI-аудит трат за месяц; типы находок — `subscription`, `recurring_splurge`, `large_one_off`, `category_excess`, `service_overuse`. Все поля необязательны (по умолчанию — текущий месяц). Считается и подписывается в `user.currencyCode`, а не в валюте какой-либо строки. **Ответ** — `FatFinderResponse` (`packages/shared-types/src/dto/fat-finder.ts`).
 
 ---
 
@@ -2677,6 +3232,129 @@ Content-Type: application/json
 }
 ```
 
+### Разбор дохода из текста
+
+```http
+POST /ai/parse-income
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "text": "сегодня пришла зарплата 5000 zł" }
+```
+
+С учётом AI (`parse`, 1.0). Аналог разбора расхода для доходов — сопоставляет с категориями **доходов**.
+
+### Извлечь текст из изображения
+
+```http
+POST /ai/extract-text
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "imageBase64": "<base64>" }
+```
+
+С учётом AI (`ocr`, 2.0). Простой OCR — возвращает `{ "text": "..." }` без разбора чека.
+
+### Подсказать категорию
+
+```http
+GET /ai/suggest-category?description=Uber%20ride
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Сначала ищет в истории аккаунта, затем обращается к модели. **Ответ** `200 OK` — `{ "categoryId", "categoryName", "confidence", "source": "history" | "ai" }`.
+
+### Проверка дубликата чека
+
+```http
+GET /ai/receipt-duplicate?fingerprint=<sha>
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Первый этап предупреждения о дубликате чека: сканировали ли и сохраняли ли уже этот самый файл? Клиент отправляет только отпечаток, посчитанный на устройстве. Намеренно **не** учитывается в квоте AI. Второй этап (другой файл с тем же продавцом/суммой/валютой/датой ±1 день) сообщает сам `POST /ai/scan-receipt`. См. `docs/wiki/features/receipt-duplicate-warning.md`.
+
+**Ответ** `200 OK`
+```json
+{
+  "duplicate": {
+    "kind": "exact",
+    "expenseId": "uuid",
+    "clientId": "uuid",
+    "merchant": "Lidl",
+    "description": null,
+    "amount": 84.37,
+    "currencyCode": "PLN",
+    "date": "2026-09-20"
+  }
+}
+```
+
+`duplicate` равен `null`, если совпадений нет.
+
+### Категоризация расходов / доходов без категории
+
+```http
+POST /ai/categorize-uncategorized
+POST /ai/categorize-uncategorized-income
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Закрыто для viewer, **только чтение**: предлагает категории для строк аккаунта без категории; клиент применяет проверенный результат через эндпоинты категорий и `PATCH /expenses/bulk` / `PATCH /incomes/bulk`. Правила категорий продавцов применяются первыми, до любого обращения к модели. Вне месячной квоты AI, со своим суточным лимитом на аккаунт (`AI_CATEGORIZE_MAX_PER_DAY`, общий для обоих проходов). См. `docs/wiki/features/categorize-uncategorized.md`.
+
+**Ответ** `200 OK` — `CategorizeSuggestionsResponse` (для доходов — `incomes` вместо `expenses`, `packages/shared-types/src/dto/ai.ts`):
+```json
+{
+  "expenses": [ { "id": "uuid", "clientId": "uuid", "merchant": "Orlen", "description": null, "amount": 250, "currencyCode": "PLN", "date": "2026-09-12" } ],
+  "groups": [ { "categoryId": "uuid", "proposedName": null, "expenseIds": ["uuid"] } ],
+  "unassigned": [],
+  "skippedEncrypted": 0,
+  "remainingToday": 4,
+  "limitReached": false
+}
+```
+
+Группа с `categoryId: null` содержит `proposedName` для ещё не существующей категории.
+
+### Цели накоплений
+
+Всё под JWT + контекстом аккаунта. Типы: `packages/shared-types/src/dto/goal.ts`.
+
+```http
+POST /ai/goals
+Content-Type: application/json
+
+{ "name": "Отпуск", "targetAmount": 5000, "currencyCode": "EUR", "deadline": "2027-06-01" }
+```
+Закрыто для viewer, с учётом AI (`goal_plan`, 2.0). Создаёт цель и AI-план накоплений. **Ответ** — `{ "goal": SavingsGoal, "plan": GoalPlan }`.
+
+```http
+GET /ai/goals
+GET /ai/goals/:id
+GET /ai/goals/:id/progress
+```
+`progress` возвращает `{ "goal", "percentComplete", "onTrack", "projectedCompletionDate", "monthlyNeeded", "behindByAmount" }`.
+
+```http
+PATCH /ai/goals/:id
+Content-Type: application/json
+
+{ "currentAmount": 1200 }
+```
+Закрыто для viewer. Любые из `name`, `targetAmount`, `deadline`, `currentAmount`, `status`. Рост `currentAmount` записывается ещё и как взнос; достижение `targetAmount` завершает цель.
+
+```http
+DELETE /ai/goals/:id
+GET /ai/goals/:id/contributions
+POST /ai/goals/:id/regenerate-plan
+```
+`DELETE` закрыт для viewer. `contributions` возвращает последние 20 взносов, от новых к старым. `regenerate-plan` закрыт для viewer и учитывается в квоте AI (`goal_plan`, 2.0).
+
 ---
 
 ## Аналитика
@@ -2767,7 +3445,7 @@ X-Account-Id: <account-uuid>
 ### Разбивка по тегам
 
 ```http
-GET /analytics/tags
+GET /analytics/by-tag?startDate=2026-09-01&endDate=2026-09-30
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
@@ -2778,50 +3456,112 @@ X-Account-Id: <account-uuid>
 | `startDate` | ISO 8601 | Начало периода (обязательно) |
 | `endDate` | ISO 8601 | Конец периода (обязательно) |
 
-**Ответ** `200 OK`
+**Ответ** `200 OK` — простой массив, отсортированный по `amount` по убыванию:
 ```json
-{
-  "tags": [
-    {
-      "tagId": "uuid",
-      "tagName": "командировка",
-      "color": "#3498DB",
-      "amount": 75000.00,
-      "count": 8,
-      "percentage": 35.2
-    }
-  ]
-}
+[
+  {
+    "tagId": "uuid",
+    "tagName": "командировка",
+    "color": "#3498DB",
+    "amount": 75000.00,
+    "count": 8,
+    "percentage": 35.2
+  }
+]
 ```
+
+Для полностью зашифрованного (tier-2) аккаунта ответ вместо этого — `{ "encryptionRestricted": true, "data": [] }`.
 
 ### Разбивка по проектам
 
 ```http
-GET /analytics/projects
+GET /analytics/by-project
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
 
-**Параметры запроса**
-| Параметр | Тип | Описание |
-|----------|-----|----------|
-| `startDate` | ISO 8601 | Начало периода (обязательно) |
-| `endDate` | ISO 8601 | Конец периода (обязательно) |
+Без параметров запроса — суммы охватывают всё время жизни каждого проекта.
+
+**Ответ** `200 OK` — простой массив (или `{ "encryptionRestricted": true, "data": [] }` для tier-2 аккаунта):
+```json
+[
+  {
+    "projectId": "uuid",
+    "projectName": "Ремонт кухни",
+    "color": "#E67E22",
+    "totalExpenses": 192000.00,
+    "totalIncome": 0,
+    "expenseCount": 8,
+    "budget": 300000.00,
+    "isArchived": false
+  }
+]
+```
+
+### Разбивка по позициям чеков
+
+```http
+GET /analytics/items?startDate=2026-09-01&endDate=2026-09-30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Топ-50 позиций чеков за период по сумме трат, сгруппированных по описанию.
+
+**Ответ** `200 OK`
+```json
+[
+  { "description": "Молоко 2%", "totalSpent": 42.60, "count": 12, "avgPrice": 3.55 }
+]
+```
+
+### Сводка по всем аккаунтам
+
+```http
+GET /analytics/aggregated?startDate=2026-09-01&endDate=2026-09-30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Сводка по **всем** аккаунтам, в которых состоит пользователь (кроме tier-2 зашифрованных), а не только по аккаунту из `X-Account-Id`.
 
 **Ответ** `200 OK`
 ```json
 {
-  "projects": [
-    {
-      "projectId": "uuid",
-      "projectName": "Ремонт кухни",
-      "totalExpenses": 192000.00,
-      "totalIncome": 0,
-      "expenseCount": 8,
-      "budget": 300000.00,
-      "isArchived": false
-    }
-  ]
+  "period": { "start": "2026-09-01T00:00:00.000Z", "end": "2026-09-30T00:00:00.000Z" },
+  "totalIncome": 5200,
+  "totalExpenses": 3100,
+  "netSavings": 2100,
+  "expensesByCategory": [],
+  "topExpenses": [],
+  "trends": { "vsLastPeriod": 0, "vsAverage": 0 },
+  "accountCount": 3
+}
+```
+
+### Детализация экономии (скидки / залоги)
+
+```http
+GET /analytics/savings-detail?kind=discount&startDate=2026-01-01&endDate=2026-09-30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Источник для нажимаемых строк «Экономия на скидках» / «Оплаченные залоги» во вкладке аналитики — те же колонки `Expense.discountAmount` / `Expense.depositAmount`, что читают чат-инструменты `get_discount_total` / `get_deposit_total`. `kind` обязателен (`discount` или `deposit`, иначе `400`); `startDate` по умолчанию — за всё время, `endDate` — сегодня. Суммы переводятся в `user.currencyCode`; строка без курса исключается из `total` и помечается. Подробности: `docs/wiki/features/deposit-and-discount-totals.md`.
+
+**Ответ** `200 OK` — `SavingsSummaryResponse` (`packages/shared-types/src/dto/analytics.ts`):
+```json
+{
+  "kind": "discount",
+  "encryptionRestricted": false,
+  "total": 184.20,
+  "receiptCount": 37,
+  "byMerchant": [ { "merchant": "Biedronka", "amount": 96.10, "receiptCount": 21 } ],
+  "recent": [ { "date": "2026-09-26", "merchant": "Lidl", "amount": 4.50, "expenseId": "uuid" } ],
+  "totalsByCurrency": { "PLN": 184.20 },
+  "baseCurrency": "PLN",
+  "fxConverted": false,
+  "fxApproximate": false
 }
 ```
 
@@ -3065,6 +3805,16 @@ notes=CSV-экспорт из мобильного приложения
 { "ok": true }
 ```
 
+### Дать согласие на AI-импорт
+
+```http
+POST /import/bank/ai-consent
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Закрыто для viewer, ограничение 20 запросов/мин. Записывает однократное согласие аккаунта на отправку фрагментов выписки AI-провайдеру, когда ни один банковский парсер не распознал файл. Предпросмотр согласие не выдаёт: поток такой — предпросмотр → `needs_ai_consent` → пользователь соглашается → этот вызов → снова предпросмотр. См. `docs/wiki/features/ai-statement-import.md`.
+
 ---
 
 ## Партии импорта
@@ -3195,6 +3945,59 @@ Authorization: Bearer <token>
 ```json
 { "success": true }
 ```
+
+## Боты Telegram и Slack
+
+Оба бота устроены как WhatsApp выше: неаутентифицированный вебхук, проверяемый секретом, и защищённые JWT эндпоинты привязки в `/users/me`. Подробности о ботах: `docs/wiki/telegram-bot.md`, `docs/wiki/slack-bot.md`.
+
+### Вебхук Telegram
+
+```http
+POST /telegram/webhook
+X-Telegram-Bot-Api-Secret-Token: <secret>
+```
+
+Без префикса `/api/v1`. `403`, если заголовок-секрет не совпадает; иначе апдейт обрабатывается и возвращается `200`.
+
+### Привязка Telegram
+
+```http
+POST /users/me/telegram-link-code      (JWT + X-Account-Id)
+GET /users/me/telegram-link            (JWT)
+DELETE /users/me/telegram-link         (JWT)
+```
+
+`POST` возвращает `{ "code", "expiresAt", "botUsername" }` — пользователь отправляет боту `/link <code>`; привязка связывается с аккаунтом из `X-Account-Id`. `GET` возвращает `{ "linked": true, "telegramUsername", "linkedAt" }` или `{ "linked": false }`. `DELETE` возвращает `{ "success": true }`.
+
+### События и интерактивность Slack
+
+```http
+POST /slack/events
+POST /slack/interactivity
+X-Slack-Signature: v0=<hmac>
+X-Slack-Request-Timestamp: <unix>
+```
+
+Без префикса `/api/v1`. Проверяются по схеме HMAC `v0=` над сырым телом с `SLACK_SIGNING_SECRET` (`401` при неудаче); `url_verification` возвращает challenge. `interactivity` приходит в form-encoded виде (нажатия кнопок).
+
+### Установка Slack (OAuth для нескольких workspace)
+
+```http
+GET /slack/install
+GET /slack/oauth/callback?code=...&state=...
+```
+
+Без префикса `/api/v1`, публичные. `install` сохраняет одноразовый state в Redis (10 мин) и перенаправляет на страницу авторизации Slack (страница `503`, если OAuth не настроен); `callback` проверяет state, обменивает code и сохраняет зашифрованную установку, отдавая HTML-страницу с результатом.
+
+### Привязка Slack
+
+```http
+POST /users/me/slack-link-code         (JWT + X-Account-Id)
+GET /users/me/slack-link               (JWT)
+DELETE /users/me/slack-link            (JWT)
+```
+
+`POST` возвращает `{ "code", "expiresAt" }`; `GET` — `{ "linked": true, "slackProfileName", "linkedAt" }` или `{ "linked": false }`.
 
 ---
 
@@ -3986,6 +4789,24 @@ Content-Type: application/json
 - `weeklyEmailEnabled` доступно на всех тарифах подписки
 - `monthlyDigestEnabled` доступно на всех тарифах подписки
 
+### Удалить отчёт
+
+```http
+DELETE /reports/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Отправить еженедельный отчёт сейчас
+
+```http
+POST /reports/trigger-weekly
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Немедленно запускает еженедельный отчёт по e-mail для пользователя. **Ответ** `200 OK` — `{ "success": true }`.
+
 ---
 
 ## Резервное копирование
@@ -4104,6 +4925,205 @@ X-Account-Id: <account-uuid>
   }
 ]
 ```
+
+## Подписки и оплата
+
+Наша собственная оплата через Stripe (тарифы Free / Pro / Business). Все маршруты ниже защищены JWT, кроме `redirect` и вебхука. Цены и правила тарифов: `docs/wiki/features/subscription-pricing.md`, `docs/wiki/subscriptions.md`.
+
+### Список тарифов
+
+```http
+GET /subscriptions/plans
+Authorization: Bearer <token>
+```
+
+Цены в `user.currencyCode`. **Ответ** — `PlansResponse`: `{ "currency", "symbol", "plans": [ { "tier": "pro", "name", "monthly": { "amount", "display", "priceEnvKey" }, "yearly": { ... }, "monthlyEquivalent", "features": [] } ] }`.
+
+### Текущая подписка
+
+```http
+GET /subscriptions/current
+Authorization: Bearer <token>
+```
+
+**Ответ** — `{ "id", "tier", "status", "currentPeriodStart", "currentPeriodEnd", "cancelAtPeriodEnd", "trialStart", "trialEnd" }`. Строка создаётся при первом чтении.
+
+### Использование
+
+```http
+GET /subscriptions/usage
+Authorization: Bearer <token>
+```
+
+**Ответ** — `{ "tier", "aiRequestsUsed", "aiRequestsLimit", "resetAt", "percentUsed", "isTrialing", "bonusAiRequests" }`.
+
+### Создать сессию оплаты
+
+```http
+POST /subscriptions/checkout
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "priceId": "price_...", "successUrl": "https://api.ai-budget.pl/api/v1/subscriptions/redirect?target=budget://subscription/success", "cancelUrl": "https://api.ai-budget.pl/api/v1/subscriptions/redirect?target=budget://subscription/cancel" }
+```
+
+**Ответ** — `{ "sessionId", "url" }`.
+
+### Создать сессию портала оплаты
+
+```http
+POST /subscriptions/portal
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "returnUrl": "https://..." }
+```
+
+**Ответ** — `{ "url" }`.
+
+### Редирект после оплаты
+
+```http
+GET /subscriptions/redirect?target=budget://subscription/success
+```
+
+Публичный. Stripe требует return URL с `https://`, поэтому этот маршрут перенаправляет на deep-ссылку приложения. Принимаются только `budget://subscription/success`, `budget://subscription/cancel` и `budget://subscription`; всё остальное перенаправляется на `budget://subscription`.
+
+### Вебхук Stripe
+
+```http
+POST /webhooks/stripe
+Stripe-Signature: t=...,v1=...
+```
+
+Без префикса `/api/v1`. Проверяется по сырому телу (`400` при отсутствующей или неверной подписи). Обрабатывает `checkout.session.completed`, `customer.subscription.created/updated/deleted`, `invoice.paid`, `invoice.payment_succeeded` и `invoice.payment_failed`; остальные события игнорируются. **Ответ** — `{ "received": true }`.
+
+---
+
+## Менеджер подписок
+
+Собственные регулярные платежи пользователя (Netflix, спортзал и т. п.) — **не** наша оплата через Stripe. JWT + контекст аккаунта. См. `docs/wiki/features/subscription-manager.md`.
+
+```http
+GET /user-subscriptions
+POST /user-subscriptions
+PATCH /user-subscriptions/:id
+DELETE /user-subscriptions/:id
+```
+
+Запись закрыта для viewer; `DELETE` возвращает `204`. Тело создания:
+```json
+{
+  "name": "Netflix",
+  "amount": 43.00,
+  "currencyCode": "PLN",
+  "billingCycle": "monthly",
+  "nextRenewalDate": "2026-10-05",
+  "categoryId": "uuid",
+  "notes": "Семейный тариф",
+  "detectedFrom": "anomaly"
+}
+```
+
+`billingCycle`: `weekly`, `monthly`, `quarterly`, `yearly`. `PATCH` принимает те же поля плюс `isActive`; `categoryId: null` очищает категорию. Ежедневный cron записывает каждое продление как расход и сдвигает `nextRenewalDate` в одной транзакции.
+
+---
+
+## Рефералы
+
+Все реферальные эндпоинты требуют JWT. Заголовок `X-Account-Id` не нужен.
+
+### Мой реферальный код
+
+```http
+GET /referrals/my-code
+Authorization: Bearer <access_token>
+```
+
+**Ответ:**
+```json
+{
+  "code": "AB3XK7"
+}
+```
+
+При первом вызове генерирует уникальный 6-символьный код, при последующих возвращает существующий.
+
+### Статистика рефералов
+
+```http
+GET /referrals/stats
+Authorization: Bearer <access_token>
+```
+
+**Ответ:**
+```json
+{
+  "referralCode": "AB3XK7",
+  "totalReferrals": 3,
+  "qualifiedReferrals": 1,
+  "pendingReferrals": 2,
+  "bonusAiRequests": 30,
+  "nextMilestone": {
+    "count": 5,
+    "reward": "free_pro_month"
+  }
+}
+```
+
+`nextMilestone` равен `null`, когда все рубежи достигнуты.
+
+Рубежи:
+- 5 квалифицированных рефералов → `free_pro_month` (промокод Stripe приходит по e-mail)
+- 10 квалифицированных рефералов → `ambassador_badge`
+
+### Список рефералов
+
+```http
+GET /referrals/list
+Authorization: Bearer <access_token>
+```
+
+**Ответ:**
+```json
+[
+  {
+    "id": "uuid",
+    "referredName": "Jane Doe",
+    "status": "qualified",
+    "createdAt": "2026-03-28T10:00:00.000Z",
+    "qualifiedAt": "2026-04-04T03:00:00.000Z"
+  }
+]
+```
+
+**Статусы рефералов:**
+| Статус | Описание |
+|---|---|
+| `pending` | Зарегистрирован, ждёт 7 дней + подтверждения активности |
+| `qualified` | Активность подтверждена, пригласившему начислено +30 AI-запросов |
+| `expired` | Прошло 30 дней без квалификации |
+
+### Реферальный код при регистрации
+
+Реферальный код применяется при регистрации через необязательное поле `referralCode`:
+
+```http
+POST /auth/register
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "securePassword123",
+  "name": "Jane Doe",
+  "referralCode": "AB3XK7"
+}
+```
+
+При валидном коде:
+- создаётся запись реферала со статусом `pending`
+- пробный период приглашённого продлевается на 7 дней (всего 14 дней)
+- пригласивший получает push-уведомление
 
 ---
 
@@ -4451,6 +5471,58 @@ Content-Type: application/json
 
 **DTO** (`packages/shared-types/src/dto/price-history.ts`): `PriceHistoryResponse`, `PriceHistoryProduct`, `StoreLatestPrice`, `ProductListItem`, `UpsertAliasDto`, `MergeProductsDto`.
 
+### Детали продукта
+
+```http
+GET /price-history/products/:canonicalName/detail
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Полная история покупок одного продукта, без ограничения базовым/текущим окном индекса инфляции.
+
+### Игнорировать продукт
+
+```http
+POST /price-history/products/ignore/:rawName
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Закрыто для viewer. Прекращает отслеживание сырого имени из OCR (например, пакета или строки залога).
+
+### Удалить ценовую точку
+
+```http
+DELETE /price-history/price-points/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Закрыто для viewer. Исключает цену одной позиции чека из отслеживания.
+
+### Переанализировать названия продуктов с AI
+
+```http
+POST /price-history/products/backfill-ai
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Закрыто для viewer. Заново генерирует канонические имена для однословных или отсутствующих записей; пользовательский псевдоним никогда не перезаписывается. См. `docs/wiki/features/personal-inflation-index.md`.
+
+### Цены сообщества (Pro)
+
+```http
+GET /price-history/community?product=milk&region=PL-14&period=1w
+GET /price-history/community/products?q=mil
+GET /price-history/community/map?product=milk&region=PL-14&period=4w
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Pro** и дополнительно за флагом `COMMUNITY_PRICE_READ_ENABLED`, который по умолчанию **выключен** — в продакшене эта поверхность скрыта. `period` — `1w` (по умолчанию) или `4w`. Краудсорсинговые k-анонимизированные цены из позиций чеков всех аккаунтов; таблица наблюдений не хранит ни аккаунт, ни пользователя, ни координаты. См. `docs/wiki/features/community-prices.md`.
+
 ---
 
 ## Список покупок
@@ -4698,6 +5770,62 @@ Content-Type: application/json
 
 **DTO** (`packages/shared-types/src/dto/shopping-list.ts`, `.../price-history.ts`): `ShoppingList`, `ShoppingListItem`, `CreateShoppingListDto`, `UpdateShoppingListDto`, `CreateShoppingListItemDto`, `UpdateShoppingListItemDto`, `RestockSuggestion`, `DealSuggestion`, `BasketCompareRequestDto`, `BasketCompareResponse`.
 
+### Шаблоны («мои еженедельные покупки»)
+
+Переиспользуемые наборы позиций, которые можно добавить в любой список. JWT + контекст аккаунта; закрыт для viewer только `DELETE` (как и у списков). Объявлены до динамических маршрутов `:id`. Типы: `packages/shared-types/src/dto/shopping-list.ts`.
+
+```http
+GET /shopping-list/templates
+```
+**Ответ** — `ShoppingListTemplate[]`: `{ "id", "accountId", "name", "sortOrder", "createdByUserId", "items": [ { "id", "templateId", "canonicalName", "rawLabel", "sortOrder" } ] }`.
+
+```http
+POST /shopping-list/templates
+Content-Type: application/json
+
+{ "name": "Еженедельные покупки", "items": [ { "rawLabel": "Молоко", "canonicalName": "milk" }, { "rawLabel": "Хлеб" } ] }
+```
+`name` — до 60 символов, от 1 до 200 позиций.
+
+```http
+POST /shopping-list/templates/:templateId/apply
+Content-Type: application/json
+
+{ "listId": "uuid" }
+```
+**Ответ** — `{ "listId", "listName", "addedLabels": [], "skippedLabels": [] }` (позиции, уже присутствующие в списке, пропускаются).
+
+```http
+PATCH /shopping-list/templates/:templateId
+Content-Type: application/json
+
+{ "name": "Закупка в субботу" }
+```
+
+```http
+DELETE /shopping-list/templates/:templateId
+```
+
+### Гостевая ссылка на список
+
+```http
+POST /shopping-list/:id/guest-link
+DELETE /shopping-list/:id/guest-link
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Закрыто для viewer. `POST` возвращает `{ "token", "url" }` (идемпотентно — возвращается существующая ссылка); `DELETE` отзывает её.
+
+### Гостевая страница списка — без аутентификации
+
+```http
+GET /sl/:token
+POST /sl/:token/items/:itemId/toggle
+```
+
+Без префикса `/api/v1` (шаблон `sl/(.*)`). Страница — HTML, отрисованный на сервере (`Cache-Control: no-store`), с названием списка и его текущими позициями — без сумм и имён участников; ограничение 20 запросов/мин с IP. `toggle` (30/мин) переключает отметку одной позиции — id позиции проверяется в рамках списка этого токена — и перенаправляет `303` обратно на страницу (Post/Redirect/Get). Неизвестный, отозванный, заархивированный или удалённый список отдаёт одинаковую страницу «не найдено».
+
 ---
 
 ## Разделение чека
@@ -4723,7 +5851,7 @@ Content-Type: application/json
 }
 ```
 
-`:id` — серверный PK расхода или локальный `clientId` мобильного клиента. `mode: "items"` назначает позиции чека участникам (любая неназначенная позиция остаётся плательщику); `mode: "equal"` делит весь счёт поровну между плательщиком и всеми участниками (`itemIds` в этом режиме игнорируется). От 1 до 20 участников, имя каждого — от 1 до 60 символов, обрезается по пробелам. **Идемпотентно**: повторный вызов для расхода, у которого уже есть живое разделение, возвращает это существующее разделение вместо создания второго набора токенов/строк. Отклоняется с `400` для полностью зашифрованного (E2EE, tier-2) аккаунта — сервер не может прочитать зашифрованные позиции чека, чтобы отрисовать гостевую страницу.
+`:id` — серверный PK расхода или локальный `clientId` мобильного клиента. `mode: "items"` назначает позиции чека участникам (любая неназначенная позиция остаётся плательщику; позиция, выбранная несколькими участниками, делится между ними; необязательная карта `itemShareBp` у участника — `{ "<itemId>": 6000 }` = 60%, в базисных пунктах — задаёт явную долю позиции, остаток остаётся плательщику); `mode: "equal"` делит весь счёт поровну между плательщиком и всеми участниками (`itemIds` в этом режиме игнорируется). От 1 до 20 участников, имя каждого — от 1 до 60 символов, обрезается по пробелам. **Идемпотентно**: повторный вызов для расхода, у которого уже есть живое разделение, возвращает это существующее разделение вместо создания второго набора токенов/строк. Отклоняется с `400` для полностью зашифрованного (E2EE, tier-2) аккаунта — сервер не может прочитать зашифрованные позиции чека, чтобы отрисовать гостевую страницу.
 
 Записывает одну строку `receipt_split_participants` и один расход `isDebt: true, isSplitReceivable: true` на каждого участника (дебиторская задолженность) рядом с исходным расходом-чеком (реальным оттоком денег) — всё в одной транзакции.
 
@@ -4740,11 +5868,17 @@ Content-Type: application/json
       "amount": 28.90,
       "currencyCode": "PLN",
       "status": "sent",
-      "url": "https://api.ai-budget.pl/s/3f9a2b7c1e4d5a6b7c8d9e0f1a2b3c4d?lang=en"
+      "url": "https://api.ai-budget.pl/s/3f9a2b7c1e4d5a6b7c8d9e0f1a2b3c4d?lang=en",
+      "flags": [],
+      "itemIds": ["item-uuid-1"],
+      "itemShareBp": {}
     }
-  ]
+  ],
+  "groupUrl": "https://api.ai-budget.pl/s/g/9c1e...?lang=en"
 }
 ```
+
+`flags` — открытые претензии участника (см. **Гость отмечает позицию** ниже); `itemIds`/`itemShareBp` видны только плательщику и никогда не показываются на гостевой странице. `groupUrl` — единая QR-ссылка, отсканировав которую, каждый участник выбирает своё имя (`null` для разделений, созданных до появления этого поля).
 
 ### Получить разделение
 
@@ -4795,6 +5929,39 @@ X-Account-Id: <account-uuid>
 { "success": true }
 ```
 
+### Недавние участники
+
+```http
+GET /expenses/receipt-split/recent-participants?limit=8
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Уникальные имена, с которыми этот аккаунт уже делил счета, от недавних к старым (чипы-подсказки). `limit` по умолчанию 8, максимум 20. **Ответ** — `{ "names": ["Anna", "Marek"] }`.
+
+### Закрыть претензию
+
+```http
+PATCH /expenses/:id/receipt-split/flags/:flagId/resolve
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Отмечает одну из открытых претензий гостя (см. **Гость отмечает позицию**) как разобранную.
+
+### Переназначить позицию
+
+```http
+PATCH /expenses/:id/receipt-split/items/:itemId/reassign
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "participantIds": ["participant-uuid-1", "participant-uuid-2"] }
+```
+
+Переназначает претендентов ОДНОЙ позиции среди **существующих** участников разделения (никогда не добавляет и не удаляет людей и не трогает другие позиции; до 20 id, пустой список оставляет позицию плательщику) и автоматически закрывает все открытые претензии по этой позиции. `400`, как только кто-то из участников отметил или подтвердил оплату — тогда разделение нужно отменить и создать заново. Возвращает обновлённое состояние разделения.
+
 ### Гостевая страница — без аутентификации
 
 ```http
@@ -4819,9 +5986,217 @@ POST /s/:token/paid
 
 **Ответ** `200 OK` — HTML (та же гостевая страница).
 
-**DTO** (`packages/shared-types/src/dto/receipt-split.ts`): `SplitParticipantInput`, `CreateSplitDto`, `SplitParticipantStatus`, `SplitParticipantState`, `SplitStateResponse`.
+### Гость смотрит скан чека — без аутентификации
+
+```http
+GET /s/:token/receipt
+```
+
+Изображение или PDF чека плательщика, чтобы гость мог сверить свои позиции с бумагой. Ограничение 20/мин. `Content-Type` определяется по байтам (никогда не по сохранённому MIME-типу; нераспознанные байты не отдаются) и отправляется с `X-Content-Type-Options: nosniff`. Неизвестный, просроченный и отменённый токены — как и валидный токен, у расхода которого нет скана, — все дают `404`.
+
+### Гость отмечает позицию — без аутентификации
+
+```http
+POST /s/:token/flag
+Content-Type: application/x-www-form-urlencoded
+
+itemId=<item-uuid>&note=I+did+not+have+this
+```
+
+Ограничение 10/мин. Сообщает, что одна позиция (или, без `itemId`, вся доля) указана неверно; `note` — до 500 символов. `itemId` ограничивается собственными позициями гостя — любое другое значение превращается в претензию ко всей доле. Не больше одной открытой претензии на участника и позицию (повтор обновляет заметку и не уведомляет повторно). Не зависит от оплаты. Заново отрисовывает гостевую страницу.
+
+### Групповая QR-ссылка — без аутентификации
+
+```http
+GET /s/g/:groupToken
+GET /s/g/:groupToken/:seq
+```
+
+Ограничение 20/мин, HTML, `no-store`. Общий QR-код разделения открывает страницу выбора имени; выбор имени ведёт на шаг «Это вы?» (`:seq` — порядковый индекс, имеющий смысл только вместе с секретным `groupToken`), а оттуда — на собственную гостевую страницу участника. Для неизвестных, просроченных и отменённых токенов — одинаковая страница «не найдено».
+
+**DTO** (`packages/shared-types/src/dto/receipt-split.ts`): `SplitParticipantInput`, `CreateSplitDto`, `SplitParticipantStatus`, `SplitParticipantFlag`, `SplitParticipantState`, `SplitStateResponse`, `ReassignSplitItemInput`, `RecentSplitParticipantsResponse`. Страницы фичи: `docs/wiki/features/receipt-split.md`, `docs/wiki/features/receipt-split-item-shares.md`.
 
 ---
+
+## Долги
+
+JWT + контекст аккаунта. Отдельные долги — это обычные расходы/доходы с `isDebt: true` (дал в долг — расход, взял в долг — доход); возвраты — связанные доходы/расходы.
+
+### Сводка по долгам
+
+```http
+GET /debts/summary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Ответ** `200 OK` — `DebtSummaryResponse` (`packages/shared-types/src/dto/debt.ts`): `{ "lent": DebtSummary[], "borrowed": DebtSummary[], "totals": { "totalLent", "totalBorrowed", "totalLentRemaining", "totalBorrowedRemaining", "currencyCode" } }`.
+
+---
+
+## Запросы на покупку
+
+Групповое согласование покупок в общих аккаунтах. JWT + контекст аккаунта. Голосовать могут и viewer, поэтому `vote` намеренно **не** закрыт для viewer. Подробности: `docs/wiki/features/purchase-requests.md`.
+
+```http
+GET /purchase-requests?status=PENDING
+GET /purchase-requests/pending-count
+GET /purchase-requests/:id
+```
+
+`status`: `PENDING`, `APPROVED`, `REJECTED`, `PURCHASED`, `EXPIRED`.
+
+```http
+POST /purchase-requests
+Content-Type: application/json
+
+{ "title": "Новая коляска", "amount": 1200, "currency": "PLN", "description": "...", "categoryId": "uuid", "merchant": "...", "imageUrl": "https://...", "expiresAt": "2026-10-10T00:00:00Z" }
+```
+Закрыто для viewer. Правило согласования аккаунта копируется в запрос при создании.
+
+```http
+POST /purchase-requests/:id/vote
+Content-Type: application/json
+
+{ "vote": "APPROVE", "comment": "Берём" }
+```
+`vote`: `APPROVE`, `REJECT`, `ABSTAIN`.
+
+```http
+PATCH /purchase-requests/:id
+POST /purchase-requests/:id/convert
+POST /purchase-requests/:id/mark-purchased
+DELETE /purchase-requests/:id
+PATCH /purchase-requests/settings/approval-rule
+```
+
+`PATCH /:id` (title, amount, currency, description, merchant, imageUrl), `convert` (создаёт запланированный расход — он никогда не считается тратой) и `mark-purchased` закрыты для viewer. `DELETE` отменяет запрос; это может только автор или владелец аккаунта (иначе `403`). `approval-rule` закрыт для viewer и принимает `{ "rule": "MAJORITY" | "UNANIMOUS" | "OWNER_ONLY" }`.
+
+---
+
+## Семейная лента
+
+Лента активности и реакции в общих аккаунтах. JWT + контекст аккаунта. См. `docs/wiki/features/family-feed.md`.
+
+```http
+GET /family-feed?limit=100
+```
+`limit` ограничивается диапазоном 1–100. **Ответ** — `FeedGroup[]` (`packages/shared-types/src/entities/family-feed.ts`): активность по расходам/доходам, сгруппированная по участнику и дню, плюс события запросов на покупку, с реакциями.
+
+```http
+POST /family-feed/:eventId/react
+Content-Type: application/json
+
+{ "emoji": "👍" }
+```
+`emoji` должен входить в разрешённый набор (`ALLOWED_EMOJIS`). `DELETE /family-feed/:eventId/react` удаляет реакцию пользователя (`204`).
+
+---
+
+## Шифрование
+
+Управление ключами сквозного шифрования. Все маршруты защищены JWT; маршруты уровня аккаунта используют ещё и контекст аккаунта, а `enable`, `grant-key`, `pending-grants` и `rotate-key` требуют роли `owner` (`AccountRoleGuard`). Полный протокол и тела запросов: [ENCRYPTION.md](ENCRYPTION.md).
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `POST` | `/encryption/setup` | Создать/обновить профиль шифрования |
+| `GET` | `/encryption/profile` | Получить профиль (вход с нового устройства) |
+| `DELETE` | `/encryption/profile` | Сбросить профиль |
+| `POST` | `/encryption/account/:accountId/enable` | Включить E2EE для аккаунта (владелец) |
+| `GET` | `/encryption/account/:accountId/key` | Обёрнутый ключ аккаунта для пользователя |
+| `GET` | `/encryption/account/:accountId/status` | Уровень, версия ключа, нужна ли ротация |
+| `POST` | `/encryption/account/:accountId/grant-key` | Выдать ключ новому участнику (владелец) |
+| `GET` | `/encryption/account/:accountId/pending-grants` | Участники, ожидающие ключа (владелец) |
+| `POST` | `/encryption/account/:accountId/rotate-key` | Ротация ключа аккаунта (владелец) |
+| `GET` | `/encryption/members/:accountId/public-keys` | Публичные ключи X25519 участников |
+| `POST` | `/encryption/recovery/setup` | Сохранить хэш ключа восстановления и обёрнутый мастер-ключ |
+| `POST` | `/encryption/recovery/recover` | Восстановить доступ ключом восстановления (лимит в Redis: 5 попыток за 15 мин на e-mail) |
+
+---
+
+## Телеметрия
+
+Собственные события использования продукта — **только из веб-сборки**. См. `docs/wiki/features/web-telemetry.md`.
+
+```http
+POST /telemetry/events
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "platform": "web",
+  "sessionId": "random-session-id",
+  "events": [
+    { "name": "screen_view", "screen": "/(tabs)/expenses", "ts": 1790000000000 },
+    { "name": "action", "screen": "/expense/new", "props": { "flow": "add_expense", "status": "completed" } }
+  ]
+}
+```
+
+JWT, ограничение 30 запросов/мин. `name`: `session_start`, `screen_view`, `action`; `screen` — **шаблон** маршрута, а не подставленный путь. Валидацию проходит не более 200 событий в запросе, сохраняется не более 40 за пакет. **Ответ** `204 No Content` независимо от того, сколько событий прошло проверку — клиент никогда не повторяет запрос.
+
+---
+
+## Версии приложения
+
+### Проверка обновлений
+
+```http
+GET /app-versions/check?platform=android&version=1.25.0
+```
+
+Публичный (вызывается до входа). **Ответ** — `{ "latestVersion", "minSupportedVersion", "isUpdateAvailable", "isUpdateRequired", "releaseNotes": { "en": "..." } | null, "storeUrl" }`. Последней для платформы считается запись с самой поздней датой публикации.
+
+CRUD для администратора — в `/admin/app-versions` (см. [Администрирование](#администрирование)).
+
+---
+
+## Health
+
+```http
+GET /health
+GET /health/ai
+```
+
+Публичные. `/health` выполняет `SELECT 1` и возвращает `{ "status": "ok", "db": "ok", "uptimeSeconds", "timestamp" }` либо `503` со `status: "degraded"`; его опрашивают Docker `HEALTHCHECK`, шаг проверки деплоя и `uptime-check.yml`. Таблиц приложения он не касается, поэтому отсутствующая миграция здесь не видна. `/health/ai` проверяет ключ OpenAI — `{ "status": "ok", "openai": "ok", "timestamp" }`, `503`, если ключ не задан или вызов провайдера не удался.
+
+---
+
+## Администрирование
+
+Каждый маршрут ниже требует JWT + `AdminGuard` (`user.isAdmin`); используется админ-панелью на Next.js. См. `docs/wiki/admin-dashboard.md` и `docs/wiki/features/admin-revenue-metrics.md`.
+
+| Метод | Путь | Назначение |
+|-------|------|------------|
+| `GET` | `/admin/dashboard` | KPI-карточки, графики, начальные данные живой ленты |
+| `GET` | `/admin/metrics/investor` | Метрики для инвесторов (MRR, отток, когорты; кэш в Redis) |
+| `GET` | `/admin/users` | Пользователи с пагинацией (`page`, `limit`, `search`, `tier`, `billing`, `isActive`, `sortBy` = `name`/`email`/`createdAt`/`lastSyncAt`, `order`) |
+| `GET` | `/admin/users/:id` | Карточка пользователя |
+| `PATCH` | `/admin/users/:id` | Обновить пользователя |
+| `PATCH` | `/admin/users/:id/subscription` | Сменить тариф (подарок — без Stripe id) |
+| `PATCH` | `/admin/users/:id/ai-limit` | Задать индивидуальный месячный лимит AI |
+| `DELETE` | `/admin/users/:id` | Деактивировать или удалить |
+| `POST` | `/admin/notifications/push` | Push одному пользователю |
+| `POST` | `/admin/notifications/email` | E-mail одному пользователю |
+| `POST` | `/admin/notifications/broadcast` | Push/e-mail отфильтрованной аудитории |
+| `GET` | `/admin/notifications/history` | История доставки |
+| `POST` | `/admin/notifications/schedule` | Запланировать уведомление |
+| `GET` | `/admin/notifications/scheduled` | Запланированные уведомления |
+| `DELETE` | `/admin/notifications/scheduled/:id` | Отменить запланированное уведомление |
+| `GET` | `/admin/analytics/overview` | Обзор аналитики |
+| `GET` | `/admin/analytics/ai-usage` | Тренды использования и стоимости AI |
+| `GET` | `/admin/analytics/subscriptions` | Статистика подписок |
+| `GET` | `/admin/analytics/acquisition` | Разбивка привлечения по источникам |
+| `GET` | `/admin/telemetry/funnel?days=30` | Воронка веб-телеметрии (`flows`, `screens`, `lastScreens`) |
+| `GET` | `/admin/audit-log` | Журнал действий администраторов |
+| `GET` / `PATCH` | `/admin/config` | Настройки времени выполнения |
+| `GET` | `/admin/system/health` | Состояние системы |
+| `GET` | `/admin/referrals/stats` | Статистика рефералов |
+| `GET` | `/admin/referrals` | Список рефералов |
+| `GET` / `POST` | `/admin/app-versions` | Список / публикация версий приложения (`platform`, `latestVersion`, `minSupportedVersion`, `releaseNotes`, `storeUrl`, `publishedAt`) |
+| `PATCH` / `DELETE` | `/admin/app-versions/:id` | Изменить / удалить релиз |
+
+События в реальном времени приходят через Socket.io namespace `/admin` (`new_user`, `ai_request`, `error`, `subscription_change`).
 
 ## Ответы с ошибками
 

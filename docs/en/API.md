@@ -1,6 +1,12 @@
 # API Reference
 
+Last updated: 2026-09-27
+
 Base URL: `/api/v1`
+
+A handful of routes are served **without** the `/api/v1` prefix because their URL is registered with a third party or handed to people outside the app. The authoritative list is `GLOBAL_PREFIX_EXCLUDED_ROUTES` in `apps/api/src/global-prefix-exclusions.ts`: the Stripe, Telegram, WhatsApp and Slack webhooks (`/webhooks/stripe`, `/telegram/webhook`, `/whatsapp/webhook`, `/slack/events`, `/slack/interactivity`), the Slack install flow (`/slack/install`, `/slack/oauth/callback`), and two guest-page subtrees covered by wildcards — `/s/...` (receipt-split guest links) and `/sl/...` (shopping-list guest links).
+
+Guard vocabulary used below: **JWT** = `JwtAuthGuard`; **account context** = `AccountContextGuard` (needs `X-Account-Id`); **viewer-blocked** = `ViewerBlockGuard` (403 for the `viewer` role); **Pro** = `SubscriptionTierGuard` + `@RequireTier('pro')` (403 with `code: "TIER_REQUIRED"`); **AI-metered** = `AiUsageGuard` + `@TrackAiUsage(feature, cost)` (counts against the monthly AI quota).
 
 All endpoints except authentication require a valid JWT token in the Authorization header:
 ```
@@ -40,17 +46,30 @@ Content-Type: application/json
 }
 ```
 
+Optional fields: `currencyCode`, `timezone`, `language`, `referralCode` (`^[A-Z0-9]{4,10}$`) and `acquisition` (`{ src?, loc?, lang?, plan?, referrerRaw? }` — first-touch attribution captured by the web/landing, see `docs/wiki/features/acquisition-tracking.md`). A default personal account is created with the user.
+
 **Response** `201 Created`
 ```json
 {
-  "id": "uuid",
-  "email": "user@example.com",
-  "name": "John Doe",
-  "currencyCode": "USD",
-  "timezone": "UTC",
-  "createdAt": "2024-01-15T10:30:00Z"
+  "accessToken": "",
+  "refreshToken": "",
+  "user": {
+    "id": "uuid",
+    "email": "user@example.com",
+    "name": "John Doe",
+    "currencyCode": "USD",
+    "defaultAccountId": "uuid",
+    "isVerified": false,
+    "themeMode": "system",
+    "accentColor": null,
+    "paymentMethod": null,
+    "paymentHandle": null
+  },
+  "accounts": []
 }
 ```
+
+A new user is unverified: both tokens are empty strings and `accounts` is empty until the 6-digit code e-mailed at registration is confirmed via **Verify Email** below, which returns the real tokens.
 
 ### Login
 
@@ -69,14 +88,23 @@ Content-Type: application/json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
   "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-  "expiresIn": 900,
   "user": {
     "id": "uuid",
     "email": "user@example.com",
-    "name": "John Doe"
-  }
+    "name": "John Doe",
+    "currencyCode": "USD",
+    "defaultAccountId": "uuid",
+    "isVerified": true,
+    "themeMode": "system",
+    "accentColor": null,
+    "paymentMethod": null,
+    "paymentHandle": null
+  },
+  "accounts": [ { "id": "uuid", "name": "Personal", "type": "personal", "myRole": "owner" } ]
 }
 ```
+
+An unverified user gets `200` with empty tokens and `isVerified: false` (the app routes them to verification). A deactivated account, a wrong password, and a Google-only account (no password — "Use Google sign-in for this account") are `401`. The access token lives for `JWT_EXPIRES_IN` (default `7d`); the refresh token for 30 days.
 
 ### Refresh Token
 
@@ -93,10 +121,11 @@ Content-Type: application/json
 ```json
 {
   "accessToken": "eyJhbGciOiJIUzI1NiIs...",
-  "refreshToken": "eyJhbGciOiJIUzI1NiIs...",
-  "expiresIn": 900
+  "refreshToken": "eyJhbGciOiJIUzI1NiIs..."
 }
 ```
+
+**Sliding session**: every refresh returns a **fresh** refresh token alongside the new access token, and the clients persist it, so a user active at least once per refresh-token lifetime (30 days) is never forced to log in again. Tokens are stateless JWTs with no revocation list — the previous refresh token stays valid until its own expiry. Also stamps the user's last-active time. `401` for an invalid token or an inactive user.
 
 ### Forgot Password
 
@@ -148,6 +177,111 @@ Content-Type: application/json
 
 **Password requirements:** Minimum 8 characters, at least one uppercase letter, one lowercase letter, and one number.
 
+### Verify Email
+
+```http
+POST /auth/verify-email
+Content-Type: application/json
+
+{ "email": "user@example.com", "code": "123456" }
+```
+
+Confirms the 6-digit code sent at registration and returns a full session so the user proceeds without logging in again.
+
+**Response** `200 OK` — `{ "message": "Email verified successfully", "accessToken": "...", "refreshToken": "...", "user": { ... }, "accounts": [ ... ] }` (same `user` block as Login). `400` for an invalid or expired code.
+
+### Resend Verification Code
+
+```http
+POST /auth/resend-verification
+Content-Type: application/json
+
+{ "email": "user@example.com" }
+```
+
+**Response** `200 OK` — always `{ "message": "If this email is unverified, a new code has been sent" }` (no e-mail enumeration).
+
+### Google Sign-In
+
+```http
+POST /auth/google
+Content-Type: application/json
+
+{
+  "idToken": "<Google ID token>",
+  "language": "pl",
+  "currencyCode": "PLN",
+  "referralCode": "ABCD12",
+  "acquisition": { "src": "landing", "lang": "pl" }
+}
+```
+
+Public. The client obtains a Google **ID token** (mobile and web via `expo-auth-session`) and the server verifies it (`GoogleTokenVerifier`, audiences from `GOOGLE_OAUTH_CLIENT_IDS`, `email_verified` required). Resolution: by `googleId` → auto-link by verified e-mail (a deactivated account is rejected, not linked) → otherwise a new verified, passwordless user plus default account. Only `idToken` is required. Details: `docs/wiki/auth.md`.
+
+**Response** `200 OK` — same shape as Login.
+
+### Change Email
+
+Both steps are JWT-guarded.
+
+```http
+POST /auth/change-email/request
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "newEmail": "new@example.com", "currentPassword": "securePassword123" }
+```
+
+Sends a 6-digit code to the new address. **Response** `200 OK` — `{ "message": "Verification code sent to new email address" }`. Rejected for a Google-only account (no password).
+
+```http
+POST /auth/change-email/confirm
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "code": "123456" }
+```
+
+**Response** `200 OK` — `{ "message": "Email changed successfully", "accessToken": "...", "refreshToken": "..." }` (tokens are re-issued because the e-mail is in the JWT payload).
+
+### Restore Credentials (Android session restore)
+
+A WebAuthn credential that lets a signed-in session survive an Android device transfer (Google Play requirement). Registration is JWT-guarded; the sign-in ceremony is public because the restored device has no token yet. `503` when the relying party is not configured. Details: `docs/wiki/features/restore-credentials.md`.
+
+```http
+GET /auth/restore/register/options
+Authorization: Bearer <token>
+```
+Returns WebAuthn `PublicKeyCredentialCreationOptionsJSON` (from `@simplewebauthn/server`).
+
+```http
+POST /auth/restore/register
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "response": { /* RegistrationResponseJSON */ } }
+```
+**Response** `200 OK` — `{ "ok": true }`. `401` if no registration is pending or verification fails.
+
+```http
+DELETE /auth/restore
+Authorization: Bearer <token>
+```
+Deletes the caller's restore credential (sign-out cleanup; works even when the relying party is not configured).
+
+```http
+GET /auth/restore/options
+```
+Public, throttled 20/min per IP. Returns `PublicKeyCredentialRequestOptionsJSON`.
+
+```http
+POST /auth/restore
+Content-Type: application/json
+
+{ "response": { /* AuthenticationResponseJSON */ } }
+```
+Public, throttled 10/min per IP. **Response** `200 OK` — same shape as Login. `401` for an unknown/expired challenge, an unknown credential, a failed assertion, or a deactivated/unverified user.
+
 ---
 
 ## Users
@@ -191,10 +325,15 @@ Content-Type: application/json
   "name": "John Smith",
   "currencyCode": "EUR",
   "timezone": "Europe/London",
-  "notifyBudgetAlerts": true,
-  "notifySharedActivity": false
+  "language": "en",
+  "themeMode": "dark",
+  "accentColor": "#FF8A00",
+  "contributeCommunityPrices": true,
+  "inflationCountry": "PL"
 }
 ```
+
+All fields optional: `name`, `currencyCode`, `timezone`, `language`, `contributeCommunityPrices`, `themeMode`, `accentColor` (`null` resets it), `paymentMethod`/`paymentHandle` (legacy single pair — prefer **Replace Payment Methods**), `inflationCountry` (country for [Real Salary](#real-salary), `null` = guess from the timezone). Notification toggles are **not** here — they live on `PATCH /users/me/notification-preferences` (see [Alerts](#alerts)).
 
 **Response** `200 OK`
 
@@ -270,6 +409,83 @@ This is what a [Receipt Splitting](#receipt-splitting) guest link resolves first
   ]
 }
 ```
+
+### Update Push Token
+
+```http
+PATCH /users/me/push-token
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "pushToken": "ExponentPushToken[...]" }
+```
+
+`null` clears it. **Response** `200 OK` — `{ "success": true }`.
+
+### Record Acquisition Source
+
+```http
+PATCH /users/me/acquisition
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "src": "referral", "loc": "hero", "lang": "pl", "plan": "pro", "referrerRaw": "https://..." }
+```
+
+First-touch attribution for a user who arrived before signing up (all fields optional). **Response** `204 No Content`. See `docs/wiki/features/acquisition-tracking.md`.
+
+### Search Users
+
+```http
+GET /users/search?q=anna
+Authorization: Bearer <token>
+```
+
+Finds active users (never the caller) by name or e-mail substring, case-insensitive, for inviting them to an account. Fewer than 2 characters returns `[]`. Throttled 20/min.
+
+**Response** `200 OK` — up to 20 `{ "id", "name", "email" }` rows. See `docs/wiki/features/invite-by-search.md`.
+
+### Voice Digest Settings
+
+The weekly voice digest — a short spoken summary of the week sent to a linked bot (Telegram, WhatsApp or Slack). User-level: **no** `X-Account-Id` needed. Details: `docs/wiki/features/voice-digest.md`.
+
+```http
+GET /users/me/voice-digest
+Authorization: Bearer <token>
+```
+
+**Response** `200 OK` — `VoiceDigestSettings` (`packages/shared-types/src/dto/voice-digest.ts`):
+```json
+{
+  "enabled": true,
+  "day": 0,
+  "hour": 19,
+  "channel": "telegram",
+  "availableChannels": ["telegram", "slack"],
+  "whatsappAvailable": false
+}
+```
+
+`day` is 0 = Sunday … 6 = Saturday and `hour` 0–23, both in the user's own timezone. `availableChannels` lists only the bots the user has linked; `channel` is `null` when the stored one is no longer linked. `whatsappAvailable` is `false` until WhatsApp is linked **and** `WHATSAPP_DIGEST_TEMPLATE` is configured.
+
+```http
+PATCH /users/me/voice-digest
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "enabled": true, "day": 5, "hour": 18, "channel": "slack" }
+```
+
+All fields optional. `400` when `channel` is not linked, when WhatsApp is chosen before its template is configured, or when enabling with no deliverable channel (with no `channel` given, the first deliverable linked one is picked). **Response** `200 OK` — the updated settings.
+
+### Delete Account
+
+```http
+DELETE /users/me
+Authorization: Bearer <token>
+```
+
+Deactivates the caller's user. **Response** `200 OK` — `{ "success": true }`.
 
 ---
 
@@ -472,6 +688,93 @@ POST /accounts/:id/leave
 Authorization: Bearer <token>
 ```
 
+### My Pending Invitations
+
+```http
+GET /accounts/invitations/mine
+Authorization: Bearer <token>
+```
+
+Pending, unexpired invitations addressed to the caller's e-mail (returns `[]` if the user row is missing — never every pending invitation).
+
+### Respond to Invitation
+
+```http
+PATCH /accounts/invitations/:id/respond
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "action": "accept" }
+```
+
+`action` is `accept` or `decline`. The invitation must be addressed to the caller (checked before anything else) and not expired.
+
+### Update My Payment Info (trip wallet)
+
+```http
+PATCH /accounts/:id/members/me/payment-info
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "paymentMethod": "blik", "paymentHandle": "+48 600 100 200" }
+```
+
+The caller's own per-account payment details used by trip settle-up. `paymentMethod`: `blik`, `revolut`, `paypal`, `cash`, `other`; `paymentHandle` matches `^[A-Za-z0-9+ ._-]{1,50}$`.
+
+### Archive Trip
+
+```http
+PATCH /accounts/:id/archive-trip
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "force": false }
+```
+
+Owner only (`403` otherwise). Archives a `trip` account, making it read-only. `400` while settle-up transactions are still unconfirmed unless `force: true`. See `docs/wiki/features/trip-wallet.md`.
+
+### Trip Settle-Up
+
+JWT + account context. The account id is always taken from the guard-validated `X-Account-Id`, never from the `:id` path segment.
+
+```http
+GET /accounts/:id/settle-up
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK` — `SettleUpResponse` (`packages/shared-types/src/dto/expense.ts`):
+```json
+{
+  "balances": [ { "userId": "uuid", "userName": "Anna", "netAmount": -42.50 } ],
+  "suggestedTransfers": [ { "fromUserId": "uuid-a", "toUserId": "uuid-b", "amount": 42.50 } ],
+  "currencyCode": "EUR",
+  "fxApproximate": false,
+  "pendingTransactions": []
+}
+```
+
+`netAmount` is in the account currency — positive = is owed, negative = owes.
+
+```http
+POST /accounts/:id/settle-up/pay
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "fromUserId": "uuid-a", "toUserId": "uuid-b", "amount": 42.50 }
+```
+
+Blocked by `TripArchivedGuard` once the trip is archived (allowed while `settling`). **Response** — `{ "transactionId", "paymentLink", "manualInstructions", "paymentHandle" }` (`paymentLink` is a Revolut/PayPal deep link when the receiver has one).
+
+```http
+PATCH /accounts/:id/settle-up/:txnId/confirm
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Only the receiving member can confirm. Deliberately not archive-guarded, so an in-flight payment on a force-archived trip can still be confirmed.
+
 ---
 
 ## Expenses
@@ -558,6 +861,8 @@ Content-Type: application/json
 ```
 
 **Note:** `tagIds` is optional. Tags will be associated with the expense automatically.
+
+**Receipt fingerprint:** `receiptFingerprint` (optional, 64-char lowercase SHA-256 hex, returned by [Scan Receipt](#scan-receipt)) is stored so a later upload of the same file is flagged before OCR — see [Receipt Duplicate Check](#receipt-duplicate-check).
 
 **Location:** `location` is an optional `{ lat, lng, name? }` object (persisted as the flat `locationLat`/`locationLng`/`locationName` columns returned by read endpoints). On `PATCH /expenses/:id`, send `"location": null` to clear it. It is set automatically from a scanned receipt's store address (see [Scan Receipt](#scan-receipt)) or, when the user opts in, from the device's GPS at creation time.
 
@@ -669,9 +974,12 @@ Content-Type: application/json
   "quantity": 1,
   "unitPrice": 4.49,
   "totalPrice": 4.49,
+  "lineDiscount": 0.50,
   "sortOrder": 1
 }
 ```
+
+`lineDiscount` (optional, ≥ 0, also accepted on update) is the discount printed against that line; receipt splitting scales shares by it.
 
 #### Update Item
 
@@ -735,6 +1043,50 @@ DELETE /expenses/:id/receipt-image
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
+
+### Stop Recurring
+
+```http
+PATCH /expenses/:id/stop-recurring
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Viewer-blocked. Sets `isRecurring: false` on the expense so the daily recurring-expense cron stops cloning the series; history is kept.
+
+### Move Expense to Another Account
+
+```http
+POST /expenses/:id/move
+Authorization: Bearer <token>
+X-Account-Id: <source-account-uuid>
+Content-Type: application/json
+
+{ "targetAccountId": "uuid" }
+```
+
+Viewer-blocked and archive-guarded on the source; the caller must be a non-viewer member of the target. The category is remapped by case-insensitive name into the target (else cleared); tags, project links and category splits are dropped; a `clientId` clash in the target is resolved with a fresh UUID. End-to-end encrypted expenses are rejected with `400`.
+
+**Response** `200 OK` — `{ "id": "uuid", "accountId": "target-uuid", "categoryId": "uuid-or-null" }`.
+
+### Merge Two Expenses
+
+```http
+POST /expenses/merge
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{
+  "keepId": "uuid",
+  "mergeId": "uuid",
+  "fieldChoices": { "merchant": true, "notes": false, "categoryId": true, "projectId": false, "tagIds": true, "receiptImage": true }
+}
+```
+
+Viewer-blocked. Folds `mergeId` into `keepId` (e.g. an auto-captured bank notification and the scanned receipt of the same charge). Each `fieldChoices` flag set to `true` takes that field from the merged row; the survivor keeps its own amount and currency. Line items move to the survivor when it has none.
+
+**Response** `200 OK` — `{ "keptId": "uuid", "mergedId": "uuid" }`.
 
 ---
 
@@ -839,6 +1191,21 @@ X-Account-Id: <account-uuid>
 ```
 
 **Response** `204 No Content`
+
+### Bulk Update Incomes
+
+```http
+PATCH /incomes/bulk
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "ids": ["uuid-1", "uuid-2"], "categoryId": "uuid" }
+```
+
+Viewer-blocked. 1–500 ids (server PKs or `clientId`s), scoped to the account; used to apply the reviewed result of `POST /ai/categorize-uncategorized-income`.
+
+**Response** `200 OK` — `{ "updated": 2 }`.
 
 ---
 
@@ -959,6 +1326,31 @@ X-Account-Id: <account-uuid>
 
 **Response** `204 No Content`
 
+### Get Budget
+
+```http
+GET /budgets/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Get Budget History
+
+```http
+GET /budgets/:id/history?periods=6
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Past periods of a budget, oldest first. `periods` defaults to 6, clamped to 1–12; monthly periods follow the account's financial-month anchor day. A `custom` budget returns `[]`.
+
+**Response** `200 OK`
+```json
+[
+  { "periodStart": "2026-08-01", "periodEnd": "2026-08-31", "limit": 2000, "actual": 2140.50, "isOverBudget": true }
+]
+```
+
 ---
 
 ## Categories
@@ -1010,6 +1402,8 @@ Content-Type: application/json
 
 **Type Values**: `expense`, `income`
 
+An optional `clientId` (the device's local id) makes the create **idempotent**: a resend with the same `clientId` returns the row created the first time. Update and delete resolve `:id` as either the server PK or that `clientId`.
+
 ### Update Category
 
 ```http
@@ -1020,9 +1414,12 @@ Content-Type: application/json
 
 {
   "name": "Coffee & Tea",
-  "color": "#654321"
+  "color": "#654321",
+  "coicopDivision": "CP01"
 }
 ```
+
+`coicopDivision` (`TOTAL`, `CP01` … `CP13`) sets the price group the category is weighed under in [Real Salary](#real-salary); changing it invalidates that account's real-salary cache.
 
 ### Delete Category
 
@@ -1154,25 +1551,7 @@ X-Account-Id: <account-uuid>
 
 **Response** `204 No Content`
 
-### Add Tag to Income
-
-```http
-POST /tags/:id/incomes/:incomeId
-Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
-```
-
-**Response** `201 Created`
-
-### Remove Tag from Income
-
-```http
-DELETE /tags/:id/incomes/:incomeId
-Authorization: Bearer <token>
-X-Account-Id: <account-uuid>
-```
-
-**Response** `204 No Content`
+There is no REST route for tagging an **income**: `TagsService.addToIncome`/`removeFromIncome` exist, but no controller exposes them.
 
 ---
 
@@ -1506,6 +1885,18 @@ the response even if it still has movements — removing a currency is a deliber
 "hide it", and that has to survive the next transaction in it. Set a balance for
 it again to bring it back.
 
+### Get Summaries for All My Accounts
+
+```http
+GET /wallet/summaries
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Wallet balances for **every** account the caller is a member of, in one round trip — the transfer form needs the other account's balance too. Keeps the class-level account-context guard but deliberately ignores `X-Account-Id`, enumerating memberships from the user; each row is built by the same `buildWalletBalanceRow` as `GET /wallet/summary`, so both screens quote the same balance. See `docs/wiki/features/account-transfers.md`.
+
+**Response** `200 OK` — `{ "accounts": [ { "accountId": "uuid", "balances": [ /* as in Get Wallet Summary */ ] } ] }`.
+
 ### Balance History (daily)
 
 ```http
@@ -1606,6 +1997,41 @@ Stops auto-assigning that category. **Viewer role blocked** (403).
 
 **Response** `200 OK`
 
+### Preview Re-apply Rule
+
+```http
+GET /merchant-rules/:id/reapply-preview
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+How many existing expenses from this merchant sit in other categories and would move to the rule's category.
+
+**Response** `200 OK`
+```json
+{
+  "ruleId": "uuid",
+  "merchantNormalized": "amazon",
+  "targetCategoryId": "uuid",
+  "targetCategoryName": "Shopping",
+  "totalCount": 7,
+  "groups": [ { "categoryId": "uuid", "categoryName": "Other", "count": 5 } ]
+}
+```
+
+### Re-apply Rule
+
+```http
+POST /merchant-rules/:id/reapply
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "categoryIds": ["uuid"] }
+```
+
+Viewer-blocked. Moves the merchant's expenses from the listed source categories into the rule's category. **Response** `200 OK` — `{ "updated": 5 }`.
+
 ---
 
 ## Currency Exchange
@@ -1675,6 +2101,19 @@ DELETE /currency-exchanges/:id
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
+
+### Update Exchange
+
+```http
+PATCH /currency-exchanges/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "toAmount": 925.00, "exchangeRate": 0.925, "notes": "Corrected" }
+```
+
+Viewer-blocked. Any of `fromCurrency`, `toCurrency`, `fromAmount`, `toAmount`, `exchangeRate`, `date`, `notes`.
 
 ---
 
@@ -2014,6 +2453,122 @@ X-Account-Id: <account-uuid>
 `items[].projectedSaving` is a halved linear-ramp estimate `(projectedPrice − currentPrice) / 2 × quantity`, not the full end-of-horizon gap. `store` is `null` in Plan 1 (personal-only; community-boost is deferred). `savedSoFar` is the realized saving credited when a recommended product was actually purchased, FX-summed into `baseCurrency`. `hasEnoughData: false` returns an empty `items` array below the data threshold (≥3 price points per product).
 
 **DTOs** (`packages/shared-types/src/dto/insights.ts`): `InflationShieldResponse`, `ShieldItem`.
+
+### Safe-to-Spend
+
+```http
+GET /insights/safe-to-spend
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Free (no tier guard). The home hero number: `max(0, (walletBalance + expectedIncome − obligations − buffer) / daysRemaining)` up to the end of the month or the next inferred income, whichever is sooner. Cached 5 minutes per account and currency.
+
+**Response** `200 OK` — `SafeToSpendResponse` (`packages/shared-types/src/dto/insights.ts`):
+```json
+{
+  "baseCurrency": "PLN",
+  "safeToSpendToday": 84.20,
+  "projectedAvailable": 1010.40,
+  "daysRemaining": 12,
+  "horizonDate": "2026-10-10",
+  "incomeInferred": true,
+  "fxApproximate": false,
+  "breakdown": { "walletBalance": 2400, "expectedIncome": 0, "upcomingSubscriptions": 120, "upcomingRecurring": 800, "goalContributions": 469.60, "buffer": 0 },
+  "computedAt": "2026-09-27T10:00:00.000Z"
+}
+```
+
+### Financial Wrapped
+
+```http
+GET /insights/wrapped?year=2026
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Free. A year-in-review card deck assembled from existing data; `year` is clamped to `[2000, current year]`. Only cards that have data are included; `hasEnoughData: false` with empty `cards` below 5 tracked rows or on a tier-2 encrypted account. Cached 1 hour.
+
+**Response** `200 OK` — `WrappedResponse`: `{ "year", "baseCurrency", "generatedAt", "hasEnoughData", "fxApproximate", "cards": WrappedCard[] }` where each card is a discriminated union on `type` (`intro`, `total_tracked`, `top_merchant`, `biggest_month`, `top_category`, `category_mix`, `receipts_scanned`, `savings`, `personal_inflation`, `streak`).
+
+### Real Salary
+
+"Is my raise keeping up with what my own money buys": the caller's confirmed salary income (12 months vs the prior 12) against a personal inflation rate from official Eurostat HICP data plus their own receipt price index, weighted by their spend across COICOP divisions. Everything is free except the PDF brief. Details: `docs/wiki/features/real-salary.md`; types: `packages/shared-types/src/dto/real-salary.ts`.
+
+```http
+GET /insights/real-salary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK` — `RealSalaryResponse`:
+```json
+{
+  "status": "ready",
+  "baseCurrency": "PLN",
+  "country": "PL",
+  "countryGuessed": false,
+  "dataMonth": "2026-08",
+  "nominalChangePct": 6.0,
+  "personalInflationPct": 4.8,
+  "realChangePct": 1.1,
+  "requiredRaisePct": 4.8,
+  "breakdown": [ { "division": "CP01", "weight": 0.31, "ratePct": 5.2, "source": "receipts" } ],
+  "topDrivers": ["CP01", "CP04"],
+  "fxApproximate": false,
+  "computedAt": "2026-09-27T10:00:00.000Z"
+}
+```
+
+`status` other than `ready` (`no_salary_confirmed`, `salary_history_short`, `spend_under_3_months`, `no_inflation_source`, `encrypted`) means the figures are `null`/empty and the client shows the matching setup state.
+
+```http
+GET /insights/real-salary/profile
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK` — `{ "profile": { "salaryKey": "string-or-null", "manualPreviousMonthly": null }, "candidates": [ { "key", "categoryId", "categoryName", "descriptionKey", "currencyCode", "typicalAmount", "occurrences" } ] }` — the saved choice plus detected salary-like income series to pick from.
+
+```http
+PUT /insights/real-salary/profile
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "salaryKey": "<candidate key>", "manualPreviousMonthly": 7200 }
+```
+
+Viewer-blocked. `manualPreviousMonthly` is last year's monthly pay when the history is too short.
+
+```http
+GET /insights/real-salary/categories
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK` — `[{ "id", "name", "icon", "coicopDivision" }]`, the account's categories with the COICOP price group each is weighed under (changed with `coicopDivision` on `PATCH /categories/:id`).
+
+```http
+POST /insights/real-salary/brief?lang=pl
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Pro.** Returns a one-page PDF (`Content-Type: application/pdf`, `Content-Disposition: attachment; filename="real-salary-YYYY-MM-DD.pdf"`). `409` with `{ "message", "status" }` when the figure is not `ready`.
+
+### Fat Finder
+
+```http
+POST /insights/fat-finder
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "month": 9, "year": 2026, "language": "en", "forceRegenerate": false }
+```
+
+**Pro.** An AI audit of a month's spending; finding types are `subscription`, `recurring_splurge`, `large_one_off`, `category_excess`, `service_overuse`. All fields optional (defaults: current month). Computed and labelled in the caller's `user.currencyCode`, never a row's currency. **Response** — `FatFinderResponse` (`packages/shared-types/src/dto/fat-finder.ts`).
 
 ---
 
@@ -2742,6 +3297,129 @@ Content-Type: application/json
 }
 ```
 
+### Parse Income from Text
+
+```http
+POST /ai/parse-income
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "text": "got 5000 zł salary today" }
+```
+
+AI-metered (`parse`, 1.0). Income counterpart of Parse Expense — matches against **income-type** categories.
+
+### Extract Text from Image
+
+```http
+POST /ai/extract-text
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "imageBase64": "<base64>" }
+```
+
+AI-metered (`ocr`, 2.0). Plain OCR — returns `{ "text": "..." }` without receipt parsing.
+
+### Suggest Category
+
+```http
+GET /ai/suggest-category?description=Uber%20ride
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Tries the account's own history first, then falls back to the model. **Response** `200 OK` — `{ "categoryId", "categoryName", "confidence", "source": "history" | "ai" }`.
+
+### Receipt Duplicate Check
+
+```http
+GET /ai/receipt-duplicate?fingerprint=<sha>
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Stage 1 of the duplicate-receipt warning: has this exact file been scanned and saved before? The client sends only the fingerprint it computed on the device. Deliberately **not** AI-metered. Stage 2 (a different file with the same merchant/amount/currency/date ±1 day) is reported by `POST /ai/scan-receipt` itself. See `docs/wiki/features/receipt-duplicate-warning.md`.
+
+**Response** `200 OK`
+```json
+{
+  "duplicate": {
+    "kind": "exact",
+    "expenseId": "uuid",
+    "clientId": "uuid",
+    "merchant": "Lidl",
+    "description": null,
+    "amount": 84.37,
+    "currencyCode": "PLN",
+    "date": "2026-09-20"
+  }
+}
+```
+
+`duplicate` is `null` when nothing matches.
+
+### Categorize Uncategorized Expenses / Incomes
+
+```http
+POST /ai/categorize-uncategorized
+POST /ai/categorize-uncategorized-income
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Viewer-blocked, **read-only**: suggests categories for the account's uncategorized rows; the client applies the reviewed result through the category endpoints and `PATCH /expenses/bulk` / `PATCH /incomes/bulk`. Merchant category rules are applied first, before any model call. Outside the monthly AI quota, with its own per-account daily ceiling (`AI_CATEGORIZE_MAX_PER_DAY`, shared by both passes). See `docs/wiki/features/categorize-uncategorized.md`.
+
+**Response** `200 OK` — `CategorizeSuggestionsResponse` (`incomes` instead of `expenses` for the income pass, `packages/shared-types/src/dto/ai.ts`):
+```json
+{
+  "expenses": [ { "id": "uuid", "clientId": "uuid", "merchant": "Orlen", "description": null, "amount": 250, "currencyCode": "PLN", "date": "2026-09-12" } ],
+  "groups": [ { "categoryId": "uuid", "proposedName": null, "expenseIds": ["uuid"] } ],
+  "unassigned": [],
+  "skippedEncrypted": 0,
+  "remainingToday": 4,
+  "limitReached": false
+}
+```
+
+A group with `categoryId: null` carries a `proposedName` for a category that does not exist yet.
+
+### Savings Goals
+
+All under JWT + account context. Types: `packages/shared-types/src/dto/goal.ts`.
+
+```http
+POST /ai/goals
+Content-Type: application/json
+
+{ "name": "Vacation", "targetAmount": 5000, "currencyCode": "EUR", "deadline": "2027-06-01" }
+```
+Viewer-blocked, AI-metered (`goal_plan`, 2.0). Creates the goal and an AI savings plan. **Response** — `{ "goal": SavingsGoal, "plan": GoalPlan }`.
+
+```http
+GET /ai/goals
+GET /ai/goals/:id
+GET /ai/goals/:id/progress
+```
+`progress` returns `{ "goal", "percentComplete", "onTrack", "projectedCompletionDate", "monthlyNeeded", "behindByAmount" }`.
+
+```http
+PATCH /ai/goals/:id
+Content-Type: application/json
+
+{ "currentAmount": 1200 }
+```
+Viewer-blocked. Any of `name`, `targetAmount`, `deadline`, `currentAmount`, `status`. An increase of `currentAmount` is also recorded as a contribution; reaching `targetAmount` completes the goal.
+
+```http
+DELETE /ai/goals/:id
+GET /ai/goals/:id/contributions
+POST /ai/goals/:id/regenerate-plan
+```
+`DELETE` is viewer-blocked. `contributions` returns the last 20 contributions, newest first. `regenerate-plan` is viewer-blocked and AI-metered (`goal_plan`, 2.0).
+
 ---
 
 ## Analytics
@@ -2832,7 +3510,7 @@ X-Account-Id: <account-uuid>
 ### Get Tag Breakdown
 
 ```http
-GET /analytics/tags
+GET /analytics/by-tag?startDate=2026-09-01&endDate=2026-09-30
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
@@ -2843,50 +3521,112 @@ X-Account-Id: <account-uuid>
 | `startDate` | ISO 8601 | Period start (required) |
 | `endDate` | ISO 8601 | Period end (required) |
 
-**Response** `200 OK`
+**Response** `200 OK` — a bare array, sorted by `amount` descending:
 ```json
-{
-  "tags": [
-    {
-      "tagId": "uuid",
-      "tagName": "business-trip",
-      "color": "#3498DB",
-      "amount": 1250.00,
-      "count": 8,
-      "percentage": 35.2
-    }
-  ]
-}
+[
+  {
+    "tagId": "uuid",
+    "tagName": "business-trip",
+    "color": "#3498DB",
+    "amount": 1250.00,
+    "count": 8,
+    "percentage": 35.2
+  }
+]
 ```
+
+On a fully end-to-end encrypted (tier-2) account the response is `{ "encryptionRestricted": true, "data": [] }` instead.
 
 ### Get Project Breakdown
 
 ```http
-GET /analytics/projects
+GET /analytics/by-project
 Authorization: Bearer <token>
 X-Account-Id: <account-uuid>
 ```
 
-**Query Parameters**
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `startDate` | ISO 8601 | Period start (required) |
-| `endDate` | ISO 8601 | Period end (required) |
+No query parameters — totals cover each project's whole lifetime.
+
+**Response** `200 OK` — a bare array (or `{ "encryptionRestricted": true, "data": [] }` on a tier-2 account):
+```json
+[
+  {
+    "projectId": "uuid",
+    "projectName": "Kitchen Renovation",
+    "color": "#E67E22",
+    "totalExpenses": 3200.00,
+    "totalIncome": 0,
+    "expenseCount": 8,
+    "budget": 5000.00,
+    "isArchived": false
+  }
+]
+```
+
+### Get Item Breakdown
+
+```http
+GET /analytics/items?startDate=2026-09-01&endDate=2026-09-30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Top 50 receipt line items in the period by spend, grouped by description.
+
+**Response** `200 OK`
+```json
+[
+  { "description": "Milk 2%", "totalSpent": 42.60, "count": 12, "avgPrice": 3.55 }
+]
+```
+
+### Get Aggregated Summary (all accounts)
+
+```http
+GET /analytics/aggregated?startDate=2026-09-01&endDate=2026-09-30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Summary across **every** account the caller is a member of (tier-2 encrypted accounts excluded), not just the one in `X-Account-Id`.
 
 **Response** `200 OK`
 ```json
 {
-  "projects": [
-    {
-      "projectId": "uuid",
-      "projectName": "Kitchen Renovation",
-      "totalExpenses": 3200.00,
-      "totalIncome": 0,
-      "expenseCount": 8,
-      "budget": 5000.00,
-      "isArchived": false
-    }
-  ]
+  "period": { "start": "2026-09-01T00:00:00.000Z", "end": "2026-09-30T00:00:00.000Z" },
+  "totalIncome": 5200,
+  "totalExpenses": 3100,
+  "netSavings": 2100,
+  "expensesByCategory": [],
+  "topExpenses": [],
+  "trends": { "vsLastPeriod": 0, "vsAverage": 0 },
+  "accountCount": 3
+}
+```
+
+### Get Savings Detail (discounts / deposits)
+
+```http
+GET /analytics/savings-detail?kind=discount&startDate=2026-01-01&endDate=2026-09-30
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Backs the tappable "Discount savings" / "Deposits paid" rows on the Analytics tab — the same `Expense.discountAmount` / `Expense.depositAmount` columns the chat tools `get_discount_total` / `get_deposit_total` read. `kind` is required (`discount` or `deposit`, else `400`); `startDate` defaults to all time, `endDate` to today. Amounts are converted to the caller's `user.currencyCode`; a row with no exchange rate is excluded from `total` and flagged. Details: `docs/wiki/features/deposit-and-discount-totals.md`.
+
+**Response** `200 OK` — `SavingsSummaryResponse` (`packages/shared-types/src/dto/analytics.ts`):
+```json
+{
+  "kind": "discount",
+  "encryptionRestricted": false,
+  "total": 184.20,
+  "receiptCount": 37,
+  "byMerchant": [ { "merchant": "Biedronka", "amount": 96.10, "receiptCount": 21 } ],
+  "recent": [ { "date": "2026-09-26", "merchant": "Lidl", "amount": 4.50, "expenseId": "uuid" } ],
+  "totalsByCurrency": { "PLN": 184.20 },
+  "baseCurrency": "PLN",
+  "fxConverted": false,
+  "fxApproximate": false
 }
 ```
 
@@ -3130,6 +3870,16 @@ Max file size: 5 MB.
 { "ok": true }
 ```
 
+### Grant AI Import Consent
+
+```http
+POST /import/bank/ai-consent
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Viewer-blocked, throttled 20/min. Records the account's one-time consent to send statement fragments to the AI provider when no bank parser recognises a file. Preview never grants it: the flow is preview → `needs_ai_consent` → user accepts → this call → preview again. See `docs/wiki/features/ai-statement-import.md`.
+
 ---
 
 ## Import Batches
@@ -3260,6 +4010,59 @@ Authorization: Bearer <token>
 ```json
 { "success": true }
 ```
+
+## Telegram and Slack Bots
+
+Both bots mirror the WhatsApp section above: an unauthenticated webhook verified by a secret, plus JWT-guarded linking endpoints under `/users/me`. Bot details: `docs/wiki/telegram-bot.md`, `docs/wiki/slack-bot.md`.
+
+### Telegram Webhook
+
+```http
+POST /telegram/webhook
+X-Telegram-Bot-Api-Secret-Token: <secret>
+```
+
+Excluded from `/api/v1`. `403` when the secret header does not match; otherwise the update is handled and `200` returned.
+
+### Telegram Linking
+
+```http
+POST /users/me/telegram-link-code      (JWT + X-Account-Id)
+GET /users/me/telegram-link            (JWT)
+DELETE /users/me/telegram-link         (JWT)
+```
+
+`POST` returns `{ "code", "expiresAt", "botUsername" }` — the user sends `/link <code>` to the bot; the link is bound to the account in `X-Account-Id`. `GET` returns `{ "linked": true, "telegramUsername", "linkedAt" }` or `{ "linked": false }`. `DELETE` returns `{ "success": true }`.
+
+### Slack Events and Interactivity
+
+```http
+POST /slack/events
+POST /slack/interactivity
+X-Slack-Signature: v0=<hmac>
+X-Slack-Request-Timestamp: <unix>
+```
+
+Excluded from `/api/v1`. Verified with the `v0=` HMAC scheme over the raw body using `SLACK_SIGNING_SECRET` (`401` on failure); `url_verification` echoes the challenge. `interactivity` is form-encoded (button presses).
+
+### Slack Install (multi-workspace OAuth)
+
+```http
+GET /slack/install
+GET /slack/oauth/callback?code=...&state=...
+```
+
+Excluded from `/api/v1`, public. `install` stores a one-time state in Redis (10 min) and redirects to Slack's authorize URL (`503` page when OAuth is not configured); `callback` validates the state, exchanges the code and stores the encrypted installation, rendering an HTML result page.
+
+### Slack Linking
+
+```http
+POST /users/me/slack-link-code         (JWT + X-Account-Id)
+GET /users/me/slack-link               (JWT)
+DELETE /users/me/slack-link            (JWT)
+```
+
+`POST` returns `{ "code", "expiresAt" }`; `GET` returns `{ "linked": true, "slackProfileName", "linkedAt" }` or `{ "linked": false }`.
 
 ---
 
@@ -4051,6 +4854,24 @@ Content-Type: application/json
 - `weeklyEmailEnabled` is available on all subscription tiers
 - `monthlyDigestEnabled` is available on all subscription tiers
 
+### Delete Report
+
+```http
+DELETE /reports/:id
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+### Send Weekly Report Now
+
+```http
+POST /reports/trigger-weekly
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Runs the weekly e-mail report for the caller immediately. **Response** `200 OK` — `{ "success": true }`.
+
 ---
 
 ## Backups
@@ -4169,6 +4990,107 @@ X-Account-Id: <account-uuid>
   }
 ]
 ```
+
+## Subscriptions and Billing
+
+Our own Stripe billing (tiers Free / Pro / Business). Every route below is JWT-guarded except `redirect` and the webhook. Pricing and tier rules: `docs/wiki/features/subscription-pricing.md`, `docs/wiki/subscriptions.md`.
+
+### List Plans
+
+```http
+GET /subscriptions/plans
+Authorization: Bearer <token>
+```
+
+Prices in the caller's `user.currencyCode`. **Response** — `PlansResponse`: `{ "currency", "symbol", "plans": [ { "tier": "pro", "name", "monthly": { "amount", "display", "priceEnvKey" }, "yearly": { ... }, "monthlyEquivalent", "features": [] } ] }`.
+
+### Get Current Subscription
+
+```http
+GET /subscriptions/current
+Authorization: Bearer <token>
+```
+
+**Response** — `{ "id", "tier", "status", "currentPeriodStart", "currentPeriodEnd", "cancelAtPeriodEnd", "trialStart", "trialEnd" }`. The row is created on first read.
+
+### Get Usage
+
+```http
+GET /subscriptions/usage
+Authorization: Bearer <token>
+```
+
+**Response** — `{ "tier", "aiRequestsUsed", "aiRequestsLimit", "resetAt", "percentUsed", "isTrialing", "bonusAiRequests" }`.
+
+### Create Checkout Session
+
+```http
+POST /subscriptions/checkout
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "priceId": "price_...", "successUrl": "https://api.ai-budget.pl/api/v1/subscriptions/redirect?target=budget://subscription/success", "cancelUrl": "https://api.ai-budget.pl/api/v1/subscriptions/redirect?target=budget://subscription/cancel" }
+```
+
+**Response** — `{ "sessionId", "url" }`.
+
+### Create Billing Portal Session
+
+```http
+POST /subscriptions/portal
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{ "returnUrl": "https://..." }
+```
+
+**Response** — `{ "url" }`.
+
+### Checkout Redirect
+
+```http
+GET /subscriptions/redirect?target=budget://subscription/success
+```
+
+Public. Stripe requires `https://` return URLs, so this redirects to the app deep link. Only `budget://subscription/success`, `budget://subscription/cancel` and `budget://subscription` are honoured; anything else redirects to `budget://subscription`.
+
+### Stripe Webhook
+
+```http
+POST /webhooks/stripe
+Stripe-Signature: t=...,v1=...
+```
+
+Excluded from `/api/v1`. Verified against the raw body (`400` on a missing or bad signature). Handles `checkout.session.completed`, `customer.subscription.created/updated/deleted`, `invoice.paid`, `invoice.payment_succeeded` and `invoice.payment_failed`; other events are a no-op. **Response** — `{ "received": true }`.
+
+---
+
+## Subscription Manager
+
+The user's own recurring charges (Netflix, gym, …) — **not** our Stripe billing. JWT + account context. See `docs/wiki/features/subscription-manager.md`.
+
+```http
+GET /user-subscriptions
+POST /user-subscriptions
+PATCH /user-subscriptions/:id
+DELETE /user-subscriptions/:id
+```
+
+Writes are viewer-blocked; `DELETE` returns `204`. Create body:
+```json
+{
+  "name": "Netflix",
+  "amount": 43.00,
+  "currencyCode": "PLN",
+  "billingCycle": "monthly",
+  "nextRenewalDate": "2026-10-05",
+  "categoryId": "uuid",
+  "notes": "Family plan",
+  "detectedFrom": "anomaly"
+}
+```
+
+`billingCycle`: `weekly`, `monthly`, `quarterly`, `yearly`. `PATCH` accepts the same fields plus `isActive`; `categoryId: null` clears the category. A daily cron books each renewal as an expense and advances `nextRenewalDate` in one transaction.
 
 ---
 
@@ -4614,6 +5536,58 @@ Content-Type: application/json
 
 **DTOs** (`packages/shared-types/src/dto/price-history.ts`): `PriceHistoryResponse`, `PriceHistoryProduct`, `StoreLatestPrice`, `ProductListItem`, `UpsertAliasDto`, `MergeProductsDto`.
 
+### Get Product Detail
+
+```http
+GET /price-history/products/:canonicalName/detail
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Full purchase history of one product, not limited by the inflation-index base/current window.
+
+### Ignore a Product
+
+```http
+POST /price-history/products/ignore/:rawName
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Viewer-blocked. Stops tracking a raw OCR name (e.g. a bag or a deposit line).
+
+### Delete a Price Point
+
+```http
+DELETE /price-history/price-points/:itemId
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Viewer-blocked. Excludes one line item's price from tracking.
+
+### Re-analyse Product Names with AI
+
+```http
+POST /price-history/products/backfill-ai
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Viewer-blocked. Regenerates canonical names for single-word or missing entries; never overwrites a user alias. See `docs/wiki/features/personal-inflation-index.md`.
+
+### Community Prices (Pro)
+
+```http
+GET /price-history/community?product=milk&region=PL-14&period=1w
+GET /price-history/community/products?q=mil
+GET /price-history/community/map?product=milk&region=PL-14&period=4w
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Pro**, and additionally behind `COMMUNITY_PRICE_READ_ENABLED`, which defaults **off** — the surface is dark in production. `period` is `1w` (default) or `4w`. Crowdsourced, k-anonymised prices from every account's receipt lines; the observation table holds no account, user or coordinates. See `docs/wiki/features/community-prices.md`.
+
 ---
 
 ## Shopping List
@@ -4861,6 +5835,62 @@ Content-Type: application/json
 
 **DTOs** (`packages/shared-types/src/dto/shopping-list.ts`, `.../price-history.ts`): `ShoppingList`, `ShoppingListItem`, `CreateShoppingListDto`, `UpdateShoppingListDto`, `CreateShoppingListItemDto`, `UpdateShoppingListItemDto`, `RestockSuggestion`, `DealSuggestion`, `BasketCompareRequestDto`, `BasketCompareResponse`.
 
+### Templates ("my weekly staples")
+
+Reusable item lists that can be poured into any list. JWT + account context; only `DELETE` is viewer-blocked (mirroring lists). Declared before the dynamic `:id` routes. Types: `packages/shared-types/src/dto/shopping-list.ts`.
+
+```http
+GET /shopping-list/templates
+```
+**Response** — `ShoppingListTemplate[]`: `{ "id", "accountId", "name", "sortOrder", "createdByUserId", "items": [ { "id", "templateId", "canonicalName", "rawLabel", "sortOrder" } ] }`.
+
+```http
+POST /shopping-list/templates
+Content-Type: application/json
+
+{ "name": "Weekly staples", "items": [ { "rawLabel": "Milk", "canonicalName": "milk" }, { "rawLabel": "Bread" } ] }
+```
+`name` up to 60 characters, 1–200 items.
+
+```http
+POST /shopping-list/templates/:templateId/apply
+Content-Type: application/json
+
+{ "listId": "uuid" }
+```
+**Response** — `{ "listId", "listName", "addedLabels": [], "skippedLabels": [] }` (items already on the list are skipped).
+
+```http
+PATCH /shopping-list/templates/:templateId
+Content-Type: application/json
+
+{ "name": "Saturday shop" }
+```
+
+```http
+DELETE /shopping-list/templates/:templateId
+```
+
+### Guest Share Link
+
+```http
+POST /shopping-list/:id/guest-link
+DELETE /shopping-list/:id/guest-link
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Viewer-blocked. `POST` returns `{ "token", "url" }` (idempotent — an existing link is returned); `DELETE` revokes it.
+
+### Shopping-List Guest Page — unauthenticated
+
+```http
+GET /sl/:token
+POST /sl/:token/items/:itemId/toggle
+```
+
+Excluded from `/api/v1` (the `sl/(.*)` wildcard). The page is server-rendered HTML (`Cache-Control: no-store`) showing the list name and its live items — no amounts, no member names; throttled 20/min per IP. `toggle` (30/min) flips one item's checked state — the item id is re-scoped to the token's list — and redirects `303` back to the page (Post/Redirect/Get). An unknown, revoked, archived or deleted list renders the same not-found page.
+
 ---
 
 ## Receipt Splitting
@@ -4886,7 +5916,7 @@ Content-Type: application/json
 }
 ```
 
-`:id` = expense server PK or the mobile's local `clientId`. `mode: "items"` assigns line items to participants (any item left unassigned stays with the payer); `mode: "equal"` divides the whole bill evenly among the payer plus every participant (`itemIds` is ignored in this mode). 1–20 participants, each name 1–60 characters, trimmed. **Idempotent**: a second call for an expense that already has a live split returns that existing split instead of minting a second set of tokens/rows. Rejected with `400` for a fully end-to-end encrypted (tier-2) account — the server cannot read encrypted line items to render a guest page.
+`:id` = expense server PK or the mobile's local `clientId`. `mode: "items"` assigns line items to participants (any item left unassigned stays with the payer; a line claimed by several participants is divided between them; an optional per-participant `itemShareBp` map — `{ "<itemId>": 6000 }` = 60%, in basis points — sets an explicit share of a line, the remainder staying with the payer); `mode: "equal"` divides the whole bill evenly among the payer plus every participant (`itemIds` is ignored in this mode). 1–20 participants, each name 1–60 characters, trimmed. **Idempotent**: a second call for an expense that already has a live split returns that existing split instead of minting a second set of tokens/rows. Rejected with `400` for a fully end-to-end encrypted (tier-2) account — the server cannot read encrypted line items to render a guest page.
 
 Writes one `receipt_split_participants` row plus one `isDebt: true, isSplitReceivable: true` Expense per participant (the receivable) alongside the original receipt Expense (the outflow), all in a single transaction.
 
@@ -4903,11 +5933,17 @@ Writes one `receipt_split_participants` row plus one `isDebt: true, isSplitRecei
       "amount": 28.90,
       "currencyCode": "PLN",
       "status": "sent",
-      "url": "https://api.ai-budget.pl/s/3f9a2b7c1e4d5a6b7c8d9e0f1a2b3c4d?lang=en"
+      "url": "https://api.ai-budget.pl/s/3f9a2b7c1e4d5a6b7c8d9e0f1a2b3c4d?lang=en",
+      "flags": [],
+      "itemIds": ["item-uuid-1"],
+      "itemShareBp": {}
     }
-  ]
+  ],
+  "groupUrl": "https://api.ai-budget.pl/s/g/9c1e...?lang=en"
 }
 ```
+
+`flags` are the participant's open disputes (see **Guest Flags an Item** below); `itemIds`/`itemShareBp` are payer-view only and never rendered on a guest page. `groupUrl` is the one QR-code link every participant can scan to pick their own name (`null` for splits created before it existed).
 
 ### Get Split
 
@@ -4958,6 +5994,39 @@ Soft-deletes every participant's linked receivable Expense and expires all of th
 { "success": true }
 ```
 
+### Recent Participants
+
+```http
+GET /expenses/receipt-split/recent-participants?limit=8
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Distinct names this account has split with, most recent first (the suggestion chips). `limit` defaults to 8, max 20. **Response** — `{ "names": ["Anna", "Marek"] }`.
+
+### Resolve a Dispute Flag
+
+```http
+PATCH /expenses/:id/receipt-split/flags/:flagId/resolve
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+Marks one of a guest's open flags (see **Guest Flags an Item**) as dealt with.
+
+### Reassign a Line
+
+```http
+PATCH /expenses/:id/receipt-split/items/:itemId/reassign
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+Content-Type: application/json
+
+{ "participantIds": ["participant-uuid-1", "participant-uuid-2"] }
+```
+
+Reassigns ONE line's claimants among the split's **existing** participants (never adds or removes a person, never touches another line; up to 20 ids, an empty list leaves the line with the payer) and auto-resolves every open flag on that line. `400` once any participant has claimed or settled — cancel and recreate instead. Returns the updated split state.
+
 ### Guest Page — unauthenticated
 
 ```http
@@ -4982,9 +6051,217 @@ Also excluded from `/api/v1`. The guest's one write action: flips their particip
 
 **Response** `200 OK` — HTML (same guest page).
 
-**DTOs** (`packages/shared-types/src/dto/receipt-split.ts`): `SplitParticipantInput`, `CreateSplitDto`, `SplitParticipantStatus`, `SplitParticipantState`, `SplitStateResponse`.
+### Guest Views the Receipt Scan — unauthenticated
+
+```http
+GET /s/:token/receipt
+```
+
+The payer's receipt image or PDF, so a guest can check their lines against the paper. Throttled 20/min. `Content-Type` is sniffed from the bytes (never the stored MIME type; unrecognised bytes are refused) and sent with `X-Content-Type-Options: nosniff`. Unknown, expired and cancelled tokens — and a valid token whose expense has no scan — all `404`.
+
+### Guest Flags an Item — unauthenticated
+
+```http
+POST /s/:token/flag
+Content-Type: application/x-www-form-urlencoded
+
+itemId=<item-uuid>&note=I+did+not+have+this
+```
+
+Throttled 10/min. Reports one line (or, without `itemId`, the whole share) as wrong; `note` up to 500 characters. `itemId` is clamped to the guest's own lines — anything else degrades to a whole-share report. At most one open flag per participant and line (a repeat updates the note and does not re-notify). Independent of paying. Re-renders the guest page.
+
+### Group QR Link — unauthenticated
+
+```http
+GET /s/g/:groupToken
+GET /s/g/:groupToken/:seq
+```
+
+Throttled 20/min, HTML, `no-store`. The shared QR code of a split opens a names-only picker; choosing a name opens a "Is this you?" confirm step (`:seq` is a position index, meaningful only under the secret `groupToken`) that leads to that participant's own guest page. Same indistinguishable not-found page for unknown, expired and cancelled tokens.
+
+**DTOs** (`packages/shared-types/src/dto/receipt-split.ts`): `SplitParticipantInput`, `CreateSplitDto`, `SplitParticipantStatus`, `SplitParticipantFlag`, `SplitParticipantState`, `SplitStateResponse`, `ReassignSplitItemInput`, `RecentSplitParticipantsResponse`. Feature pages: `docs/wiki/features/receipt-split.md`, `docs/wiki/features/receipt-split-item-shares.md`.
 
 ---
+
+## Debts
+
+JWT + account context. Individual debts are ordinary expenses/incomes with `isDebt: true` (lent = expense, borrowed = income); repayments are linked incomes/expenses.
+
+### Get Debt Summary
+
+```http
+GET /debts/summary
+Authorization: Bearer <token>
+X-Account-Id: <account-uuid>
+```
+
+**Response** `200 OK` — `DebtSummaryResponse` (`packages/shared-types/src/dto/debt.ts`): `{ "lent": DebtSummary[], "borrowed": DebtSummary[], "totals": { "totalLent", "totalBorrowed", "totalLentRemaining", "totalBorrowedRemaining", "currencyCode" } }`.
+
+---
+
+## Purchase Requests
+
+Group purchase approval for shared accounts. JWT + account context. Voting is open to viewers, so `vote` is deliberately **not** viewer-blocked. Details: `docs/wiki/features/purchase-requests.md`.
+
+```http
+GET /purchase-requests?status=PENDING
+GET /purchase-requests/pending-count
+GET /purchase-requests/:id
+```
+
+`status`: `PENDING`, `APPROVED`, `REJECTED`, `PURCHASED`, `EXPIRED`.
+
+```http
+POST /purchase-requests
+Content-Type: application/json
+
+{ "title": "New stroller", "amount": 1200, "currency": "PLN", "description": "...", "categoryId": "uuid", "merchant": "...", "imageUrl": "https://...", "expiresAt": "2026-10-10T00:00:00Z" }
+```
+Viewer-blocked. The account's approval rule is copied onto the request at creation.
+
+```http
+POST /purchase-requests/:id/vote
+Content-Type: application/json
+
+{ "vote": "APPROVE", "comment": "Go for it" }
+```
+`vote`: `APPROVE`, `REJECT`, `ABSTAIN`.
+
+```http
+PATCH /purchase-requests/:id
+POST /purchase-requests/:id/convert
+POST /purchase-requests/:id/mark-purchased
+DELETE /purchase-requests/:id
+PATCH /purchase-requests/settings/approval-rule
+```
+
+`PATCH /:id` (title, amount, currency, description, merchant, imageUrl), `convert` (creates a planned expense — never counted as spend) and `mark-purchased` are viewer-blocked. `DELETE` cancels; only the creator or an account owner may (`403` otherwise). `approval-rule` is viewer-blocked and takes `{ "rule": "MAJORITY" | "UNANIMOUS" | "OWNER_ONLY" }`.
+
+---
+
+## Family Feed
+
+Activity feed and reactions for shared accounts. JWT + account context. See `docs/wiki/features/family-feed.md`.
+
+```http
+GET /family-feed?limit=100
+```
+`limit` clamped to 1–100. **Response** — `FeedGroup[]` (`packages/shared-types/src/entities/family-feed.ts`): grouped expense/income activity per member per day plus purchase-request events, with reactions.
+
+```http
+POST /family-feed/:eventId/react
+Content-Type: application/json
+
+{ "emoji": "👍" }
+```
+`emoji` must be one of the allowed set (`ALLOWED_EMOJIS`). `DELETE /family-feed/:eventId/react` removes the caller's reaction (`204`).
+
+---
+
+## Encryption
+
+End-to-end encryption key management. All routes are JWT-guarded; the per-account routes also use account context, and `enable`, `grant-key`, `pending-grants` and `rotate-key` require the `owner` role (`AccountRoleGuard`). Full protocol and request bodies: [ENCRYPTION.md](ENCRYPTION.md).
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/encryption/setup` | Create/update the caller's encryption profile |
+| `GET` | `/encryption/profile` | Fetch the profile (new-device login) |
+| `DELETE` | `/encryption/profile` | Reset the profile |
+| `POST` | `/encryption/account/:accountId/enable` | Enable E2EE for an account (owner) |
+| `GET` | `/encryption/account/:accountId/key` | Caller's wrapped account key |
+| `GET` | `/encryption/account/:accountId/status` | Tier, key version, rotation needed |
+| `POST` | `/encryption/account/:accountId/grant-key` | Grant the key to a new member (owner) |
+| `GET` | `/encryption/account/:accountId/pending-grants` | Members awaiting a key grant (owner) |
+| `POST` | `/encryption/account/:accountId/rotate-key` | Rotate the account key (owner) |
+| `GET` | `/encryption/members/:accountId/public-keys` | Members' public X25519 keys |
+| `POST` | `/encryption/recovery/setup` | Store the recovery-key hash and wrapped master key |
+| `POST` | `/encryption/recovery/recover` | Recover with the recovery key (rate-limited in Redis, 5 per 15 min per e-mail) |
+
+---
+
+## Telemetry
+
+First-party product-usage events from the **web build only**. See `docs/wiki/features/web-telemetry.md`.
+
+```http
+POST /telemetry/events
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "platform": "web",
+  "sessionId": "random-session-id",
+  "events": [
+    { "name": "screen_view", "screen": "/(tabs)/expenses", "ts": 1790000000000 },
+    { "name": "action", "screen": "/expense/new", "props": { "flow": "add_expense", "status": "completed" } }
+  ]
+}
+```
+
+JWT, throttled 30/min. `name`: `session_start`, `screen_view`, `action`; `screen` is the route **pattern**, never a resolved path. At most 200 events per request pass the pipe and 40 per batch are kept. **Response** `204 No Content` regardless of how many events survived validation — the client never retries.
+
+---
+
+## App Versions
+
+### Check for Updates
+
+```http
+GET /app-versions/check?platform=android&version=1.25.0
+```
+
+Public (called before login). **Response** — `{ "latestVersion", "minSupportedVersion", "isUpdateAvailable", "isUpdateRequired", "releaseNotes": { "en": "..." } | null, "storeUrl" }`. The latest row per platform is the most recently published one.
+
+Admin CRUD lives under `/admin/app-versions` (see [Admin](#admin)).
+
+---
+
+## Health
+
+```http
+GET /health
+GET /health/ai
+```
+
+Public. `/health` runs `SELECT 1` and returns `{ "status": "ok", "db": "ok", "uptimeSeconds", "timestamp" }`, or `503` with `status: "degraded"`; it is what the Docker `HEALTHCHECK`, the deploy verify step and `uptime-check.yml` poll. It never touches an application table, so a missing migration does not show up here. `/health/ai` checks the OpenAI key — `{ "status": "ok", "openai": "ok", "timestamp" }`, `503` when unconfigured or when the provider call fails.
+
+---
+
+## Admin
+
+Every route below requires JWT + `AdminGuard` (`user.isAdmin`); used by the Next.js admin dashboard. See `docs/wiki/admin-dashboard.md` and `docs/wiki/features/admin-revenue-metrics.md`.
+
+| Method | Path | Purpose |
+|--------|------|---------|
+| `GET` | `/admin/dashboard` | KPI cards, charts, live-activity seed |
+| `GET` | `/admin/metrics/investor` | Investor metrics (MRR, churn, cohorts; Redis-cached) |
+| `GET` | `/admin/users` | Paginated users (`page`, `limit`, `search`, `tier`, `billing`, `isActive`, `sortBy` = `name`/`email`/`createdAt`/`lastSyncAt`, `order`) |
+| `GET` | `/admin/users/:id` | User detail |
+| `PATCH` | `/admin/users/:id` | Update a user |
+| `PATCH` | `/admin/users/:id/subscription` | Change tier (a comp — no Stripe id) |
+| `PATCH` | `/admin/users/:id/ai-limit` | Set a custom monthly AI limit |
+| `DELETE` | `/admin/users/:id` | Deactivate or delete |
+| `POST` | `/admin/notifications/push` | Push to one user |
+| `POST` | `/admin/notifications/email` | E-mail one user |
+| `POST` | `/admin/notifications/broadcast` | Push/e-mail to a filtered audience |
+| `GET` | `/admin/notifications/history` | Delivery history |
+| `POST` | `/admin/notifications/schedule` | Schedule a notification |
+| `GET` | `/admin/notifications/scheduled` | List scheduled notifications |
+| `DELETE` | `/admin/notifications/scheduled/:id` | Cancel a scheduled notification |
+| `GET` | `/admin/analytics/overview` | Analytics overview |
+| `GET` | `/admin/analytics/ai-usage` | AI usage and cost trends |
+| `GET` | `/admin/analytics/subscriptions` | Subscription stats |
+| `GET` | `/admin/analytics/acquisition` | Acquisition breakdown by source |
+| `GET` | `/admin/telemetry/funnel?days=30` | Web telemetry funnel (`flows`, `screens`, `lastScreens`) |
+| `GET` | `/admin/audit-log` | Admin audit log |
+| `GET` / `PATCH` | `/admin/config` | Runtime config |
+| `GET` | `/admin/system/health` | System health |
+| `GET` | `/admin/referrals/stats` | Referral stats |
+| `GET` | `/admin/referrals` | Referral list |
+| `GET` / `POST` | `/admin/app-versions` | List / publish app versions (`platform`, `latestVersion`, `minSupportedVersion`, `releaseNotes`, `storeUrl`, `publishedAt`) |
+| `PATCH` / `DELETE` | `/admin/app-versions/:id` | Edit / delete a release |
+
+Real-time events are pushed over Socket.io namespace `/admin` (`new_user`, `ai_request`, `error`, `subscription_change`).
 
 ## Error Responses
 
