@@ -122,6 +122,32 @@ export class SlackClientService {
     return downloadSlackFile(urlPrivateDownload, token, mimeType);
   }
 
+  /** Opens (or reopens, idempotently) a DM channel with the user and returns its channel id. */
+  async openDm(teamId: string, slackUserId: string): Promise<string> {
+    const c = await this.clientFor(teamId);
+    if (!c) {
+      throw new Error(`No Slack client available for team ${teamId}`);
+    }
+    const res = await c.conversations.open({ users: slackUserId });
+    const channelId = res.channel?.id;
+    if (!channelId) {
+      throw new Error('Slack conversations.open returned no channel id');
+    }
+    return channelId;
+  }
+
+  /** Uploads an audio file to a channel/DM with `text` as the message's initial comment. */
+  async uploadAudio(teamId: string, channelId: string, audio: Buffer, text: string): Promise<void> {
+    const c = await this.clientFor(teamId);
+    if (!c) return;
+    await c.files.uploadV2({
+      channel_id: channelId,
+      file: audio,
+      filename: 'digest.ogg',
+      initial_comment: text,
+    });
+  }
+
   private buildButtonBlocks(bodyText: string, buttons: SlackButton[]) {
     return [
       { type: 'section', text: { type: 'mrkdwn', text: bodyText } },

@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import { Telegraf } from 'telegraf';
 import { PrismaService } from '../../database/prisma.service';
+import { DigestUnavailableError } from '../voice-digest/digest-channel.registry';
 import { TelegramLinkService } from './telegram-link.service';
 import { CommandHandler } from './handlers/command.handler';
 import { ExpenseHandler } from './handlers/expense.handler';
@@ -98,6 +99,23 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     return this.botUsername;
   }
 
+  /**
+   * Sends the weekly voice digest: the audio (when narration produced one),
+   * then the text. Used by `TelegramDigestSender` — kept on the bot service
+   * (not the sender) because only this class holds the live `Telegraf`
+   * instance. A Telegraf send failure (e.g. 403 = user blocked the bot)
+   * propagates to the caller unchanged; the sender is what classifies it.
+   */
+  async sendDigest(chatId: string, audio: Buffer | null, text: string): Promise<void> {
+    if (!this.bot) {
+      throw new DigestUnavailableError('Telegram bot is not configured');
+    }
+    if (audio) {
+      await this.bot.telegram.sendVoice(chatId, { source: audio, filename: 'digest.ogg' });
+    }
+    await this.bot.telegram.sendMessage(chatId, text);
+  }
+
   verifyWebhookSecret(token: string | undefined): boolean {
     // If no secret is configured (long-polling / dev mode), allow all requests
     if (!this.webhookSecret) return true;
@@ -153,6 +171,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     this.bot.command('categories', (ctx) => this.categoryHandler.handleList(ctx));
     this.bot.command('usage', (ctx) => this.commandHandler.handleUsage(ctx));
     this.bot.command('categorize', (ctx) => this.categorizeHandler.handle(ctx));
+    this.bot.command('digest', (ctx) => this.commandHandler.handleDigest(ctx));
 
     // Callback queries (inline keyboard buttons)
     this.bot.on('callback_query', async (ctx) => {

@@ -51,6 +51,15 @@ import { InflationShieldTrackingModule } from './inflation-shield-tracking.modul
     CoicopClassifierService,
     EurostatClient,
   ],
-  exports: [InsightsService, AiInsightsService, StoryService, FatFinderService, SafeToSpendService, WrappedService, InflationShieldService],
+  exports: [
+    InsightsService,
+    AiInsightsService,
+    StoryService,
+    FatFinderService,
+    SafeToSpendService,
+    WrappedService,
+    InflationShieldService,
+    RealSalaryService,
+  ],
 })
 export class InsightsModule {}

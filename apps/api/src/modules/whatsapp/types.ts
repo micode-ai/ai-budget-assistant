@@ -42,6 +42,20 @@ export interface WaInteractiveMessage {
   interactive: WaButtonReply | WaListReply;
 }
 
+/**
+ * A tap on a TEMPLATE quick-reply button. Meta delivers it as `type: 'button'`
+ * with the button's payload — NOT as `interactive.button_reply`, which is only
+ * used for session-message interactive buttons.
+ */
+export interface WaTemplateButtonMessage {
+  from: string;
+  id: string;
+  timestamp: string;
+  type: 'button';
+  button: { payload: string; text: string };
+  context?: { from?: string; id?: string };
+}
+
 export interface WaMediaRef {
   id: string;
   mime_type: string;
@@ -61,11 +75,24 @@ export interface WaMediaMessage {
   context?: { referred_product?: unknown };
 }
 
-export type WaMessage = WaTextMessage | WaInteractiveMessage | WaMediaMessage;
+export type WaMessage =
+  | WaTextMessage
+  | WaInteractiveMessage
+  | WaTemplateButtonMessage
+  | WaMediaMessage;
 
 export interface WaContact {
   profile: { name: string };
   wa_id: string;
+}
+
+/** An async delivery status for a message WE sent (sent/delivered/read/failed). */
+export interface WaStatus {
+  id: string;
+  status: 'sent' | 'delivered' | 'read' | 'failed' | string;
+  timestamp: string;
+  recipient_id: string;
+  errors?: Array<{ code: number; title?: string; message?: string }>;
 }
 
 export interface WaWebhookBody {
@@ -78,7 +105,7 @@ export interface WaWebhookBody {
         metadata: { display_phone_number: string; phone_number_id: string };
         contacts?: WaContact[];
         messages?: WaMessage[];
-        statuses?: unknown[];
+        statuses?: WaStatus[];
       };
       field: 'messages';
     }>;

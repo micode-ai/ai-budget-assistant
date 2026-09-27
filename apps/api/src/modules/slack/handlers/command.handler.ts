@@ -3,8 +3,14 @@ import { SlackLinkService } from '../slack-link.service';
 import { SlackClientService } from '../slack-client.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { VoiceDigestService, DigestOutcome } from '../../voice-digest/voice-digest.service';
+import { CacheService } from '../../../common/cache/cache.service';
+import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import { SlackUserState } from '../types';
 import { t } from '../helpers/i18n';
+
+const DIGEST_NOW_TTL_SEC = 86400;
+const DIGEST_NOW_UNAVAILABLE_OUTCOMES: DigestOutcome[] = ['unavailable', 'no_channel', 'failed', 'encrypted'];
 
 @Injectable()
 export class CommandHandler {
@@ -15,6 +21,8 @@ export class CommandHandler {
     private readonly slackClient: SlackClientService,
     private readonly prisma: PrismaService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly voiceDigestService: VoiceDigestService,
+    private readonly cache: CacheService,
   ) {}
 
   /**
@@ -41,7 +49,8 @@ export class CommandHandler {
         // Reload the link to get the user's language preference
         const link = await this.linkService.getLink(slackUserId);
         const lang = link?.user?.language || 'en';
-        await this.slackClient.sendText(slackTeamId, channel, t('linkSuccess', lang));
+        const message = `${t('linkSuccess', lang)}\n\n${t('digestOffer', lang, { command: 'digest on' })}`;
+        await this.slackClient.sendText(slackTeamId, channel, message);
       } else {
         // User language unknown pre-link — reply in English
         await this.slackClient.sendText(slackTeamId, channel, `❌ ${result.error}`);
@@ -57,6 +66,65 @@ export class CommandHandler {
       await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('helpText', userState.language));
     } catch (error) {
       this.logger.error(`Error in handleHelp: ${error}`);
+      await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
+    }
+  }
+
+  /**
+   * `digest on|off|now` — the weekly voice digest (ABA voice-digest Task 10).
+   * Viewer role is allowed (read-only, no account-scoped write). `now` is
+   * throttled to once per 24h via `CacheService.setIfAbsent` and runs in the
+   * background after the `digestPreparing` acknowledgement — it must never
+   * block the webhook handler.
+   */
+  async handleDigest(args: string, userState: SlackUserState): Promise<void> {
+    try {
+      const lang = userState.language;
+      const userId = userState.userId;
+      const teamId = userState.slackTeamId;
+      const channel = userState.channel;
+      const sub = args.trim().toLowerCase();
+
+      if (sub === 'on') {
+        await this.voiceDigestService.enableFrom(userId, 'slack');
+        const settings = await this.voiceDigestService.getSettings(userId);
+        const day = t(`weekday${settings.day}`, lang);
+        const hour = `${String(settings.hour).padStart(2, '0')}:00`;
+        await this.slackClient.sendText(teamId, channel, t('digestOn', lang, { day, hour }));
+        return;
+      }
+
+      if (sub === 'off') {
+        await this.voiceDigestService.disable(userId);
+        await this.slackClient.sendText(teamId, channel, t('digestOff', lang));
+        return;
+      }
+
+      if (sub === 'now') {
+        const taken = await this.cache.setIfAbsent(`vd:now:${userId}`, DIGEST_NOW_TTL_SEC);
+        if (!taken) {
+          await this.slackClient.sendText(teamId, channel, t('digestNowLimit', lang));
+          return;
+        }
+
+        await this.slackClient.sendText(teamId, channel, t('digestPreparing', lang));
+
+        // Fire-and-forget: the caller (webhook handler) must not wait on this.
+        this.voiceDigestService
+          .runForUser(userId, { force: true, channel: 'slack', preview: true })
+          .then(async (outcome) => {
+            if (outcome === 'empty') {
+              await this.slackClient.sendText(teamId, channel, t('digestEmpty', lang));
+            } else if (DIGEST_NOW_UNAVAILABLE_OUTCOMES.includes(outcome)) {
+              await this.slackClient.sendText(teamId, channel, t('digestUnavailable', lang));
+            }
+            // 'sent' | 'template' | 'blocked' — no extra reply.
+          })
+          .catch(logFireAndForget(this.logger, 'CommandHandler.handleDigest'));
+        return;
+      }
+    } catch (error) {
+      this.logger.error(`Error in handleDigest: ${error}`);
       await this.slackClient.sendText(userState.slackTeamId, userState.channel, t('somethingWrong', userState.language));
     }
   }

@@ -29,6 +29,10 @@ In https://api.slack.com/apps → your app → **Basic Information → App Crede
       `https://api.ai-budget.pl/slack/oauth/callback` → **Save URLs**
 - [ ] **OAuth & Permissions → Bot Token Scopes** — confirm these exist
       (already configured): `chat:write`, `im:history`, `im:read`, `im:write`, `files:read`
+- [ ] **Add `files:write`** (voice digest audio upload). It is not yet in `SCOPES` in
+      `slack-oauth.service.ts` or on already-installed workspaces; without it the weekly
+      voice digest falls back to a text-only message (the audio upload fails `missing_scope`).
+      After adding it here, add it to `SCOPES` and have workspaces re-install.
 - [ ] **Manage Distribution → Activate Public Distribution**
       (required so other workspaces can install; the shareable "Add to Slack" link lives here)
 

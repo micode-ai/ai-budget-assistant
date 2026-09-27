@@ -169,6 +169,11 @@ model User {
   notifyShoppingReminders    Boolean       @default(true) @map("notify_shopping_reminders")
   notifyShoppingDeals        Boolean       @default(true) @map("notify_shopping_deals")
   notifyInflationShield      Boolean       @default(true) @map("notify_inflation_shield")
+  voiceDigestEnabled         Boolean       @default(false) @map("voice_digest_enabled")
+  voiceDigestDay             Int           @default(1) @map("voice_digest_day")
+  voiceDigestHour            Int           @default(8) @map("voice_digest_hour")
+  voiceDigestChannel         String?       @map("voice_digest_channel")
+  voiceDigestLastSentAt      DateTime?     @map("voice_digest_last_sent_at")
   // ABA-335 (Community Price Map, M1): personal, opt-in consent to contribute
   // anonymized receipt price observations to the crowdsourced corpus. Default
   // false (GDPR opt-in). Consent is personal (not an Account setting) — only
@@ -278,6 +283,7 @@ model User {
   acquisitionReferrerRaw String? @map("acquisition_referrer_raw")
 
   @@index([acquisitionSource])
+  @@index([voiceDigestEnabled])
   @@map("users")
 }
 

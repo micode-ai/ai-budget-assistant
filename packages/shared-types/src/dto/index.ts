@@ -24,6 +24,7 @@ export * from './referral';
 export * from './app-version';
 export * from './import';
 export * from './notification';
+export * from './voice-digest';
 export * from './subscription';
 export * from './wallet';
 export * from './insights';

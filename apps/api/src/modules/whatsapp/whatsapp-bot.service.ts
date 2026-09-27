@@ -11,11 +11,17 @@ import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { WhatsAppDigestSender } from './digest/whatsapp-digest.sender';
+import { VoiceDigestService } from '../voice-digest/voice-digest.service';
 import { parseCommand } from './helpers/parse-command';
 import { t } from './helpers/i18n';
-import { WA_REDIS, WaMessage, WaWebhookBody, WhatsAppUserState } from './types';
+import { WA_REDIS, WaMessage, WaStatus, WaWebhookBody, WhatsAppUserState } from './types';
 
 const PHONE_RE = /^\d{7,15}$/;
+
+/** Graph error codes seen in async `statuses[]` for a digest message. */
+const GRAPH_CODE_RECIPIENT_BLOCKED = 131026;
+const GRAPH_CODE_OUTSIDE_WINDOW = 131047;
 
 @Injectable()
 export class WhatsAppBotService {
@@ -33,14 +39,21 @@ export class WhatsAppBotService {
     private readonly photoHandler: PhotoHandler,
     private readonly purchaseRequestHandler: PurchaseRequestHandler,
     private readonly categorizeHandler: CategorizeHandler,
+    private readonly digestSender: WhatsAppDigestSender,
     @Inject(WA_REDIS) private readonly redis: Redis,
+    private readonly voiceDigestService: VoiceDigestService,
   ) {}
 
   async handleUpdate(body: WaWebhookBody): Promise<void> {
     const value = body?.entry?.[0]?.changes?.[0]?.value;
     if (!value) return;
 
-    // Ignore statuses[] (delivery/read receipts) — same subscription, not user messages
+    // statuses[] are delivery receipts for messages WE sent. Only failed
+    // digest messages matter (a block usually arrives here, not at send time).
+    for (const status of value.statuses ?? []) {
+      await this.handleStatus(status);
+    }
+
     const messages = value.messages ?? [];
     if (messages.length === 0) return;
 
@@ -66,6 +79,26 @@ export class WhatsAppBotService {
 
       const profileName = contacts.find((c) => c.wa_id === msg.from)?.profile?.name;
       await this.processMessage(msg, profileName);
+    }
+  }
+
+  private async handleStatus(status: WaStatus): Promise<void> {
+    if (status?.status !== 'failed' || typeof status.id !== 'string') return;
+    const codes = (status.errors ?? []).map((e) => e?.code);
+    try {
+      if (codes.includes(GRAPH_CODE_RECIPIENT_BLOCKED)) {
+        const userId = await this.digestSender.takeDigestRecipient(status.id);
+        if (userId) await this.voiceDigestService.handleBlocked(userId, 'whatsapp');
+        return;
+      }
+      if (codes.includes(GRAPH_CODE_OUTSIDE_WINDOW)) {
+        // Rare given the 23 h window margin; no template retry from a status.
+        this.logger.warn(`WhatsApp message ${status.id} failed async with 131047 (outside the 24h window)`);
+      }
+    } catch (err) {
+      this.logger.warn(
+        `WhatsApp status handling failed for ${status.id}: ${err instanceof Error ? err.message : String(err)}`,
+      );
     }
   }
 
@@ -130,6 +163,17 @@ export class WhatsAppBotService {
           ? msg.interactive.button_reply.id
           : msg.interactive.list_reply.id;
       await this.routeCallback(id, userState);
+      return;
+    }
+
+    // Template quick-reply taps (e.g. the digest's "Listen") arrive as
+    // `type: 'button'` carrying the payload — same callback router.
+    if (msg.type === 'button') {
+      if (!userState) {
+        await this.client.sendText(waPhone, t('linkFirst'));
+        return;
+      }
+      await this.routeCallback(msg.button.payload, userState);
       return;
     }
 
@@ -210,6 +254,8 @@ export class WhatsAppBotService {
             return this.categoryHandler.handleList(userState);
           case 'categorize':
             return this.categorizeHandler.handle(userState);
+          case 'digest':
+            return this.commandHandler.handleDigest(parsed.args, userState);
         }
       }
 
@@ -264,8 +310,29 @@ export class WhatsAppBotService {
         return this.categorizeHandler.handleNo(Number(payload), userState);
       case 'catz_s':
         return this.categorizeHandler.handleStop(Number(payload), userState);
+      case 'vd':
+        return this.handleDigestCallback(payload, userState);
       default:
         this.logger.warn(`Unknown callback prefix: ${prefix}`);
+    }
+  }
+
+  /**
+   * `vd--listen` — the WhatsApp digest template's quick-reply button (see
+   * `WhatsAppDigestSender.deliverPending`, ABA voice-digest Task 8/10).
+   * `deliverPending` returns false when the pending digest already expired
+   * (or another concurrent tap already claimed it) — reply `digestExpired`
+   * so the user isn't left staring at a button that silently did nothing.
+   */
+  private async handleDigestCallback(payload: string, userState: WhatsAppUserState): Promise<void> {
+    if (payload !== 'listen') {
+      this.logger.warn(`Unknown vd callback payload: ${payload}`);
+      return;
+    }
+
+    const delivered = await this.digestSender.deliverPending(userState.userId);
+    if (!delivered) {
+      await this.client.sendText(userState.waPhoneNumber, t('digestExpired', userState.language));
     }
   }
 }

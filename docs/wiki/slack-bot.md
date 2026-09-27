@@ -158,6 +158,7 @@ Verify env names inside container without exposing values: `docker exec budget-a
 - Mirrors [`telegram-bot`](telegram-bot.md) and [`whatsapp-bot`](whatsapp-bot.md) — same handlers, same shared services, same i18n contract
 - Calls [`ai-features`](ai-features.md) — `ChatHandler` and `VoiceHandler` go through the same `ChatService` / `WhisperService`
 - Webhook signature pattern follows the Stripe/WhatsApp wiring in `main.ts` — `rawBody` capture for HMAC verification
+- [`voice-digest`](features/voice-digest.md) — `modules/slack/digest/slack-digest.sender.ts` and `/digest on|off|now` in `handlers/command.handler.ts`; sending the digest's audio needs the `files:write` scope, not yet in the Bot Token Scopes list above (Known gap)
 
 ## Where to look first
 Webhook handler → `slack-bot.controller.ts`, dispatch → `slack-bot.service.ts`. Outbound message construction → `SlackClientService`. Localised replies → `helpers/i18n.ts`. Signature verification → `helpers/verify-signature.ts`. Mobile linking UX → `apps/mobile/app/settings/bots.tsx`.
