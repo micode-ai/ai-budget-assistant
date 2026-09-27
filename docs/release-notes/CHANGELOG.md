@@ -8,6 +8,59 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.32.0 - 2026-09-27
+
+**Is your salary keeping up?**
+
+- **Real salary.** A new screen, opened from the Analytics tab, compares how your pay
+  grew over the last 12 months with your own inflation. That inflation combines the
+  official prices for your country, weighted by what you actually spend on, with your
+  scanned receipts for groceries. It shows where prices rose for you, a shareable card,
+  and a one-page PDF brief to take into a raise conversation (Pro) (ABA-608, ABA-609).
+- **The salary is found in any of your accounts.** Pay received on a personal account
+  and moved to a shared family account now counts there too; the family account's
+  spending still sets the inflation (ABA-612).
+- **Fewer categories left in "Other".** Categories are sorted into price groups more
+  accurately, and the settings list the unassigned ones first, biggest spend first,
+  with the amount beside each (ABA-617).
+- **A suspicious grocery rate from receipts is no longer trusted.** With only a few
+  tracked products, one product changing pack size could show groceries rising by a
+  third; such a figure now falls back to official prices (ABA-618).
+- **Readable price-rise rows on a narrow screen** (ABA-611).
+
+**Adding expenses**
+
+- **Share to AI Budget from any app (Android).** Share a receipt photo, a screenshot
+  or a PDF from the gallery, Gmail or a bank app, and it opens straight on the receipt
+  confirmation, already filled in. Share several at once and they come one after
+  another, "Receipt 2 of 5" (ABA-607).
+- **Mark an existing expense as recurring** while editing it, not only when creating
+  it (ABA-615). An expense edited offline no longer loses its recurring series when
+  it syncs.
+
+**Chat and help**
+
+- **Tap an expense in a chat answer** to open it (ABA-605).
+- **Search the Help center** by title or text, with a way into the AI chat when
+  nothing matches (ABA-606).
+
+**Chat bots**
+
+- **A weekly voice summary in Telegram, WhatsApp and Slack.** Turn it on with
+  `/digest on`: once a week, at the day and hour you choose, a short voice note and
+  the same text sum up your everyday spending against a usual week, what you can
+  safely spend today, a price rise worth knowing about, what to restock, and your
+  salary against your inflation. `/digest now` sends a preview, `/digest off` stops
+  it. Rent, utilities and recurring payments are left out of the weekly comparison
+  (ABA-610, ABA-614).
+
+**Behind the scenes**
+
+- The technical documentation (API, architecture, setup) was brought up to date with
+  the code (ABA-616).
+
+---
+
 ## 1.31.0 - 2026-09-26
 
 **Sorting what has no category**
