@@ -135,6 +135,17 @@ export class WhatsAppBotService {
       return;
     }
 
+    // Template quick-reply taps (e.g. the digest's "Listen") arrive as
+    // `type: 'button'` carrying the payload — same callback router.
+    if (msg.type === 'button') {
+      if (!userState) {
+        await this.client.sendText(waPhone, t('linkFirst'));
+        return;
+      }
+      await this.routeCallback(msg.button.payload, userState);
+      return;
+    }
+
     // Voice / audio
     if (msg.type === 'voice' || msg.type === 'audio') {
       if (!userState) {

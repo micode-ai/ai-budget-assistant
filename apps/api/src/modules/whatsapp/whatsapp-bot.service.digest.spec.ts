@@ -106,6 +106,41 @@ function interactiveBody(buttonId: string, from = '48500600700', msgId = 'wamid.
   };
 }
 
+/**
+ * The real Cloud API shape of a TEMPLATE quick-reply tap: `type: 'button'` with
+ * `button: { payload, text }` — not the session-message `interactive.button_reply`.
+ */
+function templateButtonBody(payload: string, from = '48500600700', msgId = 'wamid.tpl.1') {
+  return {
+    object: 'whatsapp_business_account',
+    entry: [
+      {
+        id: 'WABA_ID',
+        changes: [
+          {
+            field: 'messages',
+            value: {
+              messaging_product: 'whatsapp',
+              metadata: { display_phone_number: '48123456789', phone_number_id: 'PNID' },
+              contacts: [{ profile: { name: 'Anna' }, wa_id: from }],
+              messages: [
+                {
+                  context: { from: '48123456789', id: 'wamid.template.sent' },
+                  from,
+                  id: msgId,
+                  timestamp: '1727420000',
+                  type: 'button' as const,
+                  button: { payload, text: 'Listen' },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  };
+}
+
 function textBody(text: string, from = '48500600700', msgId = 'wamid.txt.1') {
   return {
     entry: [
@@ -141,6 +176,28 @@ describe('WhatsAppBotService — vd--listen callback (ABA voice-digest Task 10)'
     await service.handleUpdate(interactiveBody('vd--listen') as never);
 
     expect(client.sendText).toHaveBeenCalledWith('+48500600700', t('digestExpired', 'en'));
+  });
+});
+
+describe('WhatsAppBotService — template quick-reply button (type: button)', () => {
+  it('routes a template "Listen" tap (button.payload vd--listen) to deliverPending', async () => {
+    const digestSender = makeDigestSender(jest.fn().mockResolvedValue(true));
+    const { service, client } = makeService({ digestSender });
+
+    await service.handleUpdate(templateButtonBody('vd--listen') as never);
+
+    expect(digestSender.deliverPending).toHaveBeenCalledWith('user-1');
+    expect(client.sendText).not.toHaveBeenCalled();
+  });
+
+  it('asks an unlinked sender to link first on a template button tap', async () => {
+    const digestSender = makeDigestSender();
+    const { service, client } = makeService({ digestSender, linkService: makeLinkService(null) });
+
+    await service.handleUpdate(templateButtonBody('vd--listen') as never);
+
+    expect(digestSender.deliverPending).not.toHaveBeenCalled();
+    expect(client.sendText).toHaveBeenCalledWith('+48500600700', t('linkFirst'));
   });
 });
 
