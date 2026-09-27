@@ -13,6 +13,25 @@ export interface WaListRow {
   description?: string;
 }
 
+/**
+ * A failed Graph API call, carrying the numeric `error.code` parsed from the
+ * response body (when the body was JSON shaped like one) so callers (the
+ * digest senders) can classify specific codes — e.g. 131026 "message
+ * undeliverable" (recipient blocked us) or 131047 "re-engagement message"
+ * (outside the 24h customer-service window) — without re-parsing anything.
+ * `code` is `null` when the body wasn't parseable Graph-error JSON.
+ */
+export class WhatsAppGraphError extends Error {
+  constructor(
+    message: string,
+    readonly status: number,
+    readonly code: number | null,
+  ) {
+    super(message);
+    this.name = 'WhatsAppGraphError';
+  }
+}
+
 @Injectable()
 export class WhatsAppClientService {
   private readonly logger = new Logger(WhatsAppClientService.name);
@@ -105,6 +124,76 @@ export class WhatsAppClientService {
     return downloadMedia(mediaId, this.accessToken);
   }
 
+  /** Uploads a media file (e.g. the digest's TTS audio) and returns its media id. */
+  async uploadMedia(buffer: Buffer, mimeType: string, filename: string): Promise<string> {
+    if (!this.isConfigured()) {
+      throw new Error('WhatsApp client not configured — cannot upload media');
+    }
+
+    const form = new FormData();
+    form.append('messaging_product', 'whatsapp');
+    form.append('type', mimeType);
+    form.append('file', new Blob([new Uint8Array(buffer)], { type: mimeType }), filename);
+
+    const res = await fetch(`${this.baseUrl}/media`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${this.accessToken}` },
+      body: form,
+    });
+    if (!res.ok) {
+      throw await this.toGraphError(res, 'WhatsApp media upload failed');
+    }
+
+    const json = (await res.json()) as { id?: string };
+    if (!json.id) {
+      throw new Error('WhatsApp media upload returned no media id');
+    }
+    return json.id;
+  }
+
+  /** Sends a previously-uploaded media file (see `uploadMedia`) as an audio message. */
+  async sendAudio(to: string, mediaId: string): Promise<void> {
+    if (!this.isConfigured()) return;
+    await this.post({
+      messaging_product: 'whatsapp',
+      to: this.normalize(to),
+      type: 'audio',
+      audio: { id: mediaId },
+    });
+  }
+
+  /**
+   * Sends an approved template message with a single quick-reply button —
+   * the only message type Meta allows once the 24h customer-service window
+   * has closed. `quickReplyPayload` is what a tap on that button echoes back
+   * on the webhook (routed by the callback dispatcher, not this client).
+   */
+  async sendTemplate(
+    to: string,
+    name: string,
+    languageCode: string,
+    quickReplyPayload: string,
+  ): Promise<void> {
+    if (!this.isConfigured()) return;
+    await this.post({
+      messaging_product: 'whatsapp',
+      to: this.normalize(to),
+      type: 'template',
+      template: {
+        name,
+        language: { code: languageCode },
+        components: [
+          {
+            type: 'button',
+            sub_type: 'quick_reply',
+            index: '0',
+            parameters: [{ type: 'payload', payload: quickReplyPayload }],
+          },
+        ],
+      },
+    });
+  }
+
   /**
    * WhatsApp expects the recipient phone in E.164 *without* a leading '+'.
    * Webhook payloads also come without '+'. Strip it defensively.
@@ -123,9 +212,25 @@ export class WhatsAppClientService {
       body: JSON.stringify(body),
     });
     if (!res.ok) {
-      const text = await res.text();
-      this.logger.error(`WhatsApp send failed ${res.status}: ${text}`);
-      throw new Error(`WhatsApp send failed: ${res.status}`);
+      throw await this.toGraphError(res, 'WhatsApp send failed');
     }
+  }
+
+  /**
+   * Builds the error to throw for a failed Graph response: logs status +
+   * parsed code only (never the body — it can echo back request content),
+   * and carries the numeric `error.code` for callers to classify.
+   */
+  private async toGraphError(res: Response, label: string): Promise<WhatsAppGraphError> {
+    let code: number | null = null;
+    try {
+      const text = await res.text();
+      const parsed = JSON.parse(text) as { error?: { code?: number } };
+      code = typeof parsed?.error?.code === 'number' ? parsed.error.code : null;
+    } catch {
+      // Body wasn't parseable Graph-error JSON — code stays null.
+    }
+    this.logger.error(`${label}: status=${res.status} code=${code ?? 'unknown'}`);
+    return new WhatsAppGraphError(`${label}: ${res.status}`, res.status, code);
   }
 }

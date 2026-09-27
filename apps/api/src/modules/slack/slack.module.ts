@@ -16,6 +16,7 @@ import { CategoryHandler } from './handlers/category.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { SlackDigestSender } from './digest/slack-digest.sender';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
@@ -49,6 +50,7 @@ import { SLACK_REDIS } from './types';
     VoiceHandler,
     PhotoHandler,
     CategorizeHandler,
+    SlackDigestSender,
     {
       provide: SLACK_REDIS,
       useFactory: (config: ConfigService) =>

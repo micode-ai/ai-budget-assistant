@@ -12,6 +12,7 @@ import { PhotoHandler } from './handlers/photo.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { TelegramDigestSender } from './digest/telegram-digest.sender';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
 import { IncomesModule } from '../incomes/incomes.module';
@@ -45,6 +46,7 @@ import { ShoppingListModule } from '../shopping-list/shopping-list.module';
     CategoryHandler,
     PurchaseRequestHandler,
     CategorizeHandler,
+    TelegramDigestSender,
   ],
   exports: [TelegramService, TelegramLinkService, TelegramBotService],
 })

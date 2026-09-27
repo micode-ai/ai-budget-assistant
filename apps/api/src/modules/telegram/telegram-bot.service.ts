@@ -2,6 +2,7 @@ import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/commo
 import { ConfigService } from '@nestjs/config';
 import { Telegraf } from 'telegraf';
 import { PrismaService } from '../../database/prisma.service';
+import { DigestUnavailableError } from '../voice-digest/digest-channel.registry';
 import { TelegramLinkService } from './telegram-link.service';
 import { CommandHandler } from './handlers/command.handler';
 import { ExpenseHandler } from './handlers/expense.handler';
@@ -96,6 +97,23 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
 
   getBotUsername(): string {
     return this.botUsername;
+  }
+
+  /**
+   * Sends the weekly voice digest: the audio (when narration produced one),
+   * then the text. Used by `TelegramDigestSender` — kept on the bot service
+   * (not the sender) because only this class holds the live `Telegraf`
+   * instance. A Telegraf send failure (e.g. 403 = user blocked the bot)
+   * propagates to the caller unchanged; the sender is what classifies it.
+   */
+  async sendDigest(chatId: string, audio: Buffer | null, text: string): Promise<void> {
+    if (!this.bot) {
+      throw new DigestUnavailableError('Telegram bot is not configured');
+    }
+    if (audio) {
+      await this.bot.telegram.sendVoice(chatId, { source: audio, filename: 'digest.ogg' });
+    }
+    await this.bot.telegram.sendMessage(chatId, text);
   }
 
   verifyWebhookSecret(token: string | undefined): boolean {

@@ -55,6 +55,7 @@ import { CommunityPriceModule } from './modules/community-prices/community-price
 import { ReceiptSplitModule } from './modules/receipt-split/receipt-split.module';
 import { RestoreCredentialsModule } from './modules/restore-credentials/restore-credentials.module';
 import { TelemetryModule } from './modules/telemetry/telemetry.module';
+import { VoiceDigestModule } from './modules/voice-digest/voice-digest.module';
 
 @Module({
   imports: [
@@ -82,6 +83,11 @@ import { TelemetryModule } from './modules/telemetry/telemetry.module';
 
     // Caching (global)
     CacheModule,
+
+    // Global digest-channel registry — the telegram/whatsapp/slack digest
+    // senders register themselves into it, so it must be in the graph
+    // before (or alongside) those bot modules.
+    VoiceDigestModule,
 
     // Infrastructure
     MailModule,
