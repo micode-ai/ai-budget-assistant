@@ -120,3 +120,18 @@ describe('countries', () => {
     expect(typeof countryName('EL', 'en')).toBe('string');
   });
 });
+
+describe('countryName falls back to a static English table without Intl.DisplayNames', () => {
+  it('still names countries, in English, regardless of the requested locale', () => {
+    const IntlWithDisplayNames = Intl as unknown as { DisplayNames?: unknown };
+    const original = IntlWithDisplayNames.DisplayNames;
+    IntlWithDisplayNames.DisplayNames = undefined;
+    try {
+      expect(countryName('EL', 'pl')).toBe('Greece');
+      expect(countryName('PL', 'de')).toBe('Poland');
+      expect(countryName('XX', 'en')).toBe('XX');
+    } finally {
+      IntlWithDisplayNames.DisplayNames = original;
+    }
+  });
+});

@@ -65,7 +65,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[3],
   },
   discoveryCard: {
-    flexBasis: '31%' as const,
+    flexBasis: '22%' as const,
     flexGrow: 1,
     flexShrink: 1,
     minWidth: 220,

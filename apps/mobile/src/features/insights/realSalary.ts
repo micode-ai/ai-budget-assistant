@@ -7,15 +7,25 @@ export const REAL_SALARY_COUNTRIES: readonly string[] = [
   'IS', 'NO', 'CH',
 ];
 
-/** Intl names where the runtime has them (web, recent Hermes); the code otherwise. */
+/** English fallback for REAL_SALARY_COUNTRIES when Intl.DisplayNames is unavailable, throws, or is unresolved. */
+const COUNTRY_NAMES_EN: Readonly<Record<string, string>> = {
+  AT: 'Austria', BE: 'Belgium', BG: 'Bulgaria', CY: 'Cyprus', CZ: 'Czechia', DE: 'Germany', DK: 'Denmark',
+  EE: 'Estonia', EL: 'Greece', ES: 'Spain', FI: 'Finland', FR: 'France', HR: 'Croatia', HU: 'Hungary',
+  IE: 'Ireland', IT: 'Italy', LT: 'Lithuania', LU: 'Luxembourg', LV: 'Latvia', MT: 'Malta', NL: 'Netherlands',
+  PL: 'Poland', PT: 'Portugal', RO: 'Romania', SE: 'Sweden', SI: 'Slovenia', SK: 'Slovakia',
+  IS: 'Iceland', NO: 'Norway', CH: 'Switzerland',
+};
+
+/** Intl names where the runtime has them (web, recent Hermes); a static English table otherwise, then the code. */
 export function countryName(code: string, locale: string): string {
+  const fallback = COUNTRY_NAMES_EN[code] ?? code;
   try {
     const DN = (Intl as unknown as { DisplayNames?: new (l: string[], o: { type: 'region' }) => { of(c: string): string | undefined } }).DisplayNames;
-    if (!DN) return code;
+    if (!DN) return fallback;
     const name = new DN([locale], { type: 'region' }).of(code === 'EL' ? 'GR' : code);
-    return name && name !== code ? name : code;
+    return name && name !== code ? name : fallback;
   } catch {
-    return code;
+    return fallback;
   }
 }
 

@@ -96,7 +96,11 @@ export default function RealSalarySetupScreen() {
     setSaving(true);
     try {
       await api.saveRealSalaryProfile({ salaryKey: selectedKey, manualPreviousMonthly });
-      router.back();
+      if (router.canGoBack()) {
+        router.back();
+      } else {
+        router.replace('/real-salary');
+      }
     } catch (e) {
       console.warn('Failed to save real-salary profile', e);
       showAlert(t('common.error'), e instanceof Error ? e.message : t('common.error'));

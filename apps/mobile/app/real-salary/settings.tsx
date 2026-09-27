@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
@@ -136,6 +137,21 @@ export default function RealSalarySettingsScreen() {
           </View>
         ) : (
           <>
+            {canEdit && (
+              <View style={styles.card}>
+                <TouchableOpacity
+                  style={styles.row}
+                  accessibilityRole="button"
+                  onPress={() => router.push('/real-salary/setup')}
+                >
+                  <Text style={styles.rowLabel} numberOfLines={1}>
+                    {t('realSalary.setup.title')}
+                  </Text>
+                  <Ionicons name="chevron-forward" size={18} color={theme.colors.textTertiary} />
+                </TouchableOpacity>
+              </View>
+            )}
+
             <Text style={styles.sectionLabel}>{t('realSalary.config.country')}</Text>
             <View style={styles.card}>
               <TouchableOpacity
