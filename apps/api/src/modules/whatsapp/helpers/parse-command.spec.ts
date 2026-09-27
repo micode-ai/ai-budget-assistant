@@ -34,4 +34,22 @@ describe('parseCommand', () => {
   it('trims whitespace', () => {
     expect(parseCommand('  /help  ')).toEqual({ command: 'help', args: '' });
   });
+
+  describe('digest', () => {
+    it.each(['digest on', 'digest off', 'digest now', '  DIGEST Now  ', 'Digest   OFF', '/digest now'])(
+      'treats %p as the digest command',
+      (text) => {
+        const parsed = parseCommand(text);
+        expect(parsed?.command).toBe('digest');
+        expect(['on', 'off', 'now']).toContain(parsed?.args.toLowerCase());
+      },
+    );
+
+    it.each(['digest my receipts', 'digest', 'digest now please', 'digest on off', 'Digest everything from last week'])(
+      'sends %p to normal chat',
+      (text) => {
+        expect(parseCommand(text)).toBeNull();
+      },
+    );
+  });
 });

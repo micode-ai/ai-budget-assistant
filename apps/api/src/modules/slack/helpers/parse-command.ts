@@ -16,6 +16,9 @@ const COMMANDS = [
 
 const NUMBER_RE = /^\d+([.,]\d+)?/;
 
+/** `digest` is a command ONLY as the whole message — "digest my receipts" is chat. */
+const DIGEST_RE = /^digest\s+(on|off|now)$/i;
+
 export interface ParsedCommand {
   command: string;
   args: string;
@@ -28,6 +31,11 @@ export function parseCommand(text: string): ParsedCommand | null {
   const stripped = trimmed.startsWith('/') ? trimmed.slice(1) : trimmed;
   const firstWord = stripped.split(/\s+/)[0];
   const lowerFirst = firstWord.toLowerCase();
+
+  if (lowerFirst === 'digest') {
+    const match = DIGEST_RE.exec(stripped);
+    return match ? { command: 'digest', args: match[1].toLowerCase() } : null;
+  }
 
   if (COMMANDS.includes(lowerFirst)) {
     return {
