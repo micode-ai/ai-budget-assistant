@@ -78,7 +78,11 @@ export class CommandHandler {
       const sub = args.trim().toLowerCase();
 
       if (sub === 'on') {
-        await this.voiceDigestService.enableFrom(userId, 'whatsapp');
+        const enabled = await this.voiceDigestService.enableFrom(userId, 'whatsapp');
+        if (!enabled) {
+          await this.client.sendText(phone, t('digestUnavailable', lang));
+          return;
+        }
         const settings = await this.voiceDigestService.getSettings(userId);
         const day = t(`weekday${settings.day}`, lang);
         const hour = `${String(settings.hour).padStart(2, '0')}:00`;

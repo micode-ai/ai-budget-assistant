@@ -498,3 +498,61 @@ describe('VoiceDigestService enableFrom/disable', () => {
     });
   });
 });
+
+describe('VoiceDigestService — WhatsApp without an approved template', () => {
+  const disabledRow = { voiceDigestEnabled: false, voiceDigestDay: 1, voiceDigestHour: 8, voiceDigestChannel: null };
+
+  it('enableFrom("whatsapp") returns false and writes nothing while WHATSAPP_DIGEST_TEMPLATE is unset', async () => {
+    const { service, prisma } = make({ sender: makeSender({ channel: 'whatsapp' }) });
+
+    await expect(service.enableFrom('u1', 'whatsapp')).resolves.toBe(false);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it('enableFrom("whatsapp") enables once the template is configured', async () => {
+    const { service, prisma } = make({ sender: makeSender({ channel: 'whatsapp' }) });
+    (service as any).config.get = jest.fn().mockReturnValue('vd_template');
+
+    await expect(service.enableFrom('u1', 'whatsapp')).resolves.toBe(true);
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: 'u1' },
+      data: { voiceDigestEnabled: true, voiceDigestChannel: 'whatsapp' },
+    });
+  });
+
+  it('enableFrom on another channel is unaffected by the template', async () => {
+    const { service } = make();
+    await expect(service.enableFrom('u1', 'telegram')).resolves.toBe(true);
+  });
+
+  it('updateSettings rejects channel whatsapp with BadRequestException', async () => {
+    const { service, prisma } = make({ sender: makeSender({ channel: 'whatsapp' }) });
+    prisma.user.findUnique.mockResolvedValue(disabledRow);
+
+    await expect(service.updateSettings('u1', { channel: 'whatsapp', enabled: true })).rejects.toBeInstanceOf(
+      BadRequestException,
+    );
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it('updateSettings does not auto-pick whatsapp when enabling with no channel', async () => {
+    const { service, prisma } = make({ sender: makeSender({ channel: 'whatsapp' }) });
+    prisma.user.findUnique.mockResolvedValue(disabledRow);
+
+    await expect(service.updateSettings('u1', { enabled: true })).rejects.toBeInstanceOf(BadRequestException);
+    expect(prisma.user.update).not.toHaveBeenCalled();
+  });
+
+  it('updateSettings auto-picks a deliverable channel over whatsapp', async () => {
+    const { service, prisma, registry } = make({ sender: makeSender({ channel: 'whatsapp' }) });
+    registry.register(makeSender({ channel: 'telegram' }) as any);
+    prisma.user.findUnique.mockResolvedValue(disabledRow);
+
+    await service.updateSettings('u1', { enabled: true });
+
+    expect(prisma.user.update).toHaveBeenCalledWith({
+      where: { id: 'u1' },
+      data: { voiceDigestChannel: 'telegram', voiceDigestEnabled: true },
+    });
+  });
+});

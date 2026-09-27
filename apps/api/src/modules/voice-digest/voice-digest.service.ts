@@ -170,7 +170,7 @@ export class VoiceDigestService {
     }
 
     const whatsappLinked = availableChannels.includes('whatsapp');
-    const whatsappTemplateConfigured = !!this.config.get<string>('WHATSAPP_DIGEST_TEMPLATE');
+    const whatsappTemplateConfigured = this.isWhatsAppTemplateConfigured();
 
     const storedChannel = user.voiceDigestChannel as VoiceDigestChannel | null;
     const channel = storedChannel && availableChannels.includes(storedChannel) ? storedChannel : null;
@@ -198,6 +198,9 @@ export class VoiceDigestService {
     if (dto.channel !== undefined && !current.availableChannels.includes(dto.channel)) {
       throw new BadRequestException('channel is not linked for this user');
     }
+    if (dto.channel !== undefined && !this.isDeliverable(dto.channel)) {
+      throw new BadRequestException('the WhatsApp voice digest is not available yet');
+    }
 
     const data: { voiceDigestDay?: number; voiceDigestHour?: number; voiceDigestChannel?: string; voiceDigestEnabled?: boolean } = {};
     if (dto.day !== undefined) data.voiceDigestDay = dto.day;
@@ -207,8 +210,11 @@ export class VoiceDigestService {
     const willBeEnabled = dto.enabled ?? current.enabled;
     if (willBeEnabled) {
       const resolvedChannel = dto.channel ?? current.channel;
+      if (resolvedChannel && !this.isDeliverable(resolvedChannel)) {
+        throw new BadRequestException('the WhatsApp voice digest is not available yet');
+      }
       if (!resolvedChannel) {
-        const pick = current.availableChannels[0];
+        const pick = current.availableChannels.find((c) => this.isDeliverable(c));
         if (!pick) throw new BadRequestException('no linked channel available to enable the voice digest');
         data.voiceDigestChannel = pick;
       }
@@ -220,11 +226,28 @@ export class VoiceDigestService {
     return this.getSettings(userId);
   }
 
-  async enableFrom(userId: string, channel: VoiceDigestChannel): Promise<void> {
+  /**
+   * Returns false — and changes nothing — when the channel cannot deliver a
+   * weekly digest at all: WhatsApp before `WHATSAPP_DIGEST_TEMPLATE` is set,
+   * where every send outside the 23 h window would be `'unavailable'` and the
+   * user would opt in to silence. The bot replies `digestUnavailable` then.
+   */
+  async enableFrom(userId: string, channel: VoiceDigestChannel): Promise<boolean> {
+    if (!this.isDeliverable(channel)) return false;
     await this.prisma.user.update({
       where: { id: userId },
       data: { voiceDigestEnabled: true, voiceDigestChannel: channel },
     });
+    return true;
+  }
+
+  private isWhatsAppTemplateConfigured(): boolean {
+    return !!this.config.get<string>('WHATSAPP_DIGEST_TEMPLATE');
+  }
+
+  /** WhatsApp needs the approved template; the other channels can always deliver. */
+  private isDeliverable(channel: VoiceDigestChannel): boolean {
+    return channel !== 'whatsapp' || this.isWhatsAppTemplateConfigured();
   }
 
   async disable(userId: string): Promise<void> {
