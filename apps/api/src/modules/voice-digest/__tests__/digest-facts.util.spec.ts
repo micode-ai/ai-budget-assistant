@@ -58,4 +58,41 @@ describe('assembleDigestFacts', () => {
     expect(f.restock).toEqual(['milk', 'bread', 'eggs']);
     expect(f.realChangePct).toBe(-3);
   });
+
+  it('nulls usualWeek, changePct and topRise when rounded usual is <= 0', () => {
+    const f = assembleDigestFacts({
+      ...base,
+      weekTotal: 5,
+      priorWeekTotals: [0.1, 0.1, 0.1, 0.1],
+    })!;
+    expect(f.usualWeek).toBeNull();
+    expect(f.changePct).toBeNull();
+    expect(f.topRise).toBeNull();
+  });
+
+  it('includes exactly 4 active prior weeks in usual calculation', () => {
+    const f = assembleDigestFacts({
+      ...base,
+      priorWeekTotals: [900, 950, 930, 960],
+    })!;
+    expect(f.usualWeek).toBe(935); // mean of 4 weeks
+  });
+
+  it('includes categories at exactly 1.2x their usual in topRise', () => {
+    const f = assembleDigestFacts({
+      ...base,
+      categoryWeek: [{ name: 'Groceries', total: 360 }],
+      categoryUsual: [{ name: 'Groceries', total: 300 }],
+    })!;
+    expect(f.topRise).toEqual({ category: 'Groceries', changePct: 20 }); // 360 / 300 - 1 = 0.2 = 20%
+  });
+
+  it('normalizes -0 to 0 in changePct', () => {
+    const f = assembleDigestFacts({
+      ...base,
+      weekTotal: 996,
+      priorWeekTotals: [1000, 1000, 1000, 1000],
+    })!;
+    expect(Object.is(f.changePct, 0)).toBe(true);
+  });
 });

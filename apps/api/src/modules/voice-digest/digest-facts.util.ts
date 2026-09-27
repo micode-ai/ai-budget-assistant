@@ -32,6 +32,14 @@ function roundToInteger(v: number): number {
   return Math.round(v);
 }
 
+function normalizeNegativeZero(v: number): number {
+  // Normalize -0 to 0
+  if (v === 0 && Object.is(v, -0)) {
+    return 0;
+  }
+  return v;
+}
+
 export function assembleDigestFacts(i: DigestInputs): DigestFacts | null {
   // Rule: weekTotal <= 0 → null
   if (!isFiniteNumber(i.weekTotal) || i.weekTotal <= 0) {
@@ -42,17 +50,24 @@ export function assembleDigestFacts(i: DigestInputs): DigestFacts | null {
   const activeWeeks = i.priorWeekTotals.filter((w) => isFiniteNumber(w) && w > 0);
   let usualWeek: number | null = null;
   let changePct: number | null = null;
+  let topRise: { category: string; changePct: number } | null = null;
 
   if (activeWeeks.length >= 4) {
     const sum = activeWeeks.reduce((a, b) => a + b, 0);
     usualWeek = roundToInteger(sum / activeWeeks.length);
-    changePct = roundToInteger(((i.weekTotal / usualWeek - 1) * 100));
+
+    // If rounded usualWeek is <= 0, treat as no usual week (avoid division by 0 and noise)
+    if (usualWeek <= 0) {
+      usualWeek = null;
+      changePct = null;
+      topRise = null;
+    } else {
+      changePct = normalizeNegativeZero(roundToInteger(((i.weekTotal / usualWeek - 1) * 100)));
+    }
   }
 
   // Calculate topRise: largest positive change among qualifying categories
-  let topRise: { category: string; changePct: number } | null = null;
-
-  if (usualWeek !== null) {
+  if (usualWeek !== null && topRise === null) {
     const threshold5Percent = usualWeek * 0.05;
     let maxRise = 0;
     let maxCategory: string | null = null;
@@ -76,7 +91,7 @@ export function assembleDigestFacts(i: DigestInputs): DigestFacts | null {
       }
 
       // Calculate change percentage
-      const changePctForCat = roundToInteger((catWeek.total / catUsual.total - 1) * 100);
+      const changePctForCat = normalizeNegativeZero(roundToInteger((catWeek.total / catUsual.total - 1) * 100));
 
       // Track the maximum rise
       if (changePctForCat > maxRise) {
@@ -98,14 +113,14 @@ export function assembleDigestFacts(i: DigestInputs): DigestFacts | null {
   const shieldItemRounded = i.shieldItem && isFiniteNumber(i.shieldItem.monthlyChangePct)
     ? {
         name: i.shieldItem.name,
-        monthlyChangePct: roundToInteger(i.shieldItem.monthlyChangePct),
+        monthlyChangePct: normalizeNegativeZero(roundToInteger(i.shieldItem.monthlyChangePct)),
       }
     : null;
 
   const restockCapped = i.restockNames.slice(0, 3);
 
-  const realChangePctRounded = i.realChangePct !== null && isFiniteNumber(i.realChangePct)
-    ? roundToInteger(i.realChangePct)
+  const realChangePctRounded: number | null = i.realChangePct !== null && isFiniteNumber(i.realChangePct)
+    ? normalizeNegativeZero(roundToInteger(i.realChangePct))
     : null;
 
   return {
