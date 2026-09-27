@@ -256,7 +256,7 @@ the two.
   (`PATCH /categories/:id` returns 403), so its spend is priced at the national `TOTAL` rate.
 
 ## History
-[ABA-608](https://github.com/micode-ai/ai-budget-assistant/issues/633) — API half.
+[ABA-608](https://github.com/micode-ai/ai-budget-assistant/issues/633) — API half. [ABA-609](https://github.com/micode-ai/ai-budget-assistant/issues/635) — mobile half (screens, setup, settings, share card, brief download, help section).
 
 Built as one task set against `docs/superpowers/specs/2026-09-26-real-salary-design.md`: the
 Eurostat HICP client and the cron-fed `official_inflation_rates` table · COICOP division seed-icon
