@@ -75,7 +75,7 @@ export class RealSalaryService {
     });
     if (!profile?.salaryKey) return empty('no_salary_confirmed', { country, countryGuessed });
 
-    const incomes = await this.loadIncomes(accountId, new Date(now.getTime() - 2 * 366 * DAY_MS));
+    const incomes = await this.loadIncomes(userId, new Date(now.getTime() - 2 * 366 * DAY_MS));
     const nominal = nominalChange({
       rows: incomes, salaryKey: profile.salaryKey, now,
       manualPreviousMonthly: profile.manualPreviousMonthly === null ? null : Number(profile.manualPreviousMonthly),
@@ -129,7 +129,7 @@ export class RealSalaryService {
       select: { salaryKey: true, manualPreviousMonthly: true },
     });
     const now = new Date();
-    const incomes = await this.loadIncomes(accountId, new Date(now.getTime() - 120 * DAY_MS));
+    const incomes = await this.loadIncomes(userId, new Date(now.getTime() - 120 * DAY_MS));
     return {
       profile: {
         salaryKey: profile?.salaryKey ?? null,
@@ -169,9 +169,22 @@ export class RealSalaryService {
     await this.cache.delByPrefix(`rs:${accountId}:`);
   }
 
-  private async loadIncomes(accountId: string, since: Date): Promise<IncomeRow[]> {
+  /**
+   * Salary is the caller's own, not the open account's: it is often paid into
+   * a personal account and moved to a shared one by transfer, which is not an
+   * income there. So read the incomes THIS user recorded in every account they
+   * are still an active member of (a left or deleted account drops out), and
+   * never from a fully-encrypted one, whose descriptions are ciphertext.
+   * Spend stays the open account's — that is what the salary is spent on.
+   */
+  private async loadIncomes(userId: string, since: Date): Promise<IncomeRow[]> {
     const rows = await this.prisma.income.findMany({
-      where: { accountId, isDeleted: false, date: { gte: since } },
+      where: {
+        userId,
+        isDeleted: false,
+        date: { gte: since },
+        account: { isActive: true, encryptionTier: { lt: 2 }, members: { some: { userId } } },
+      },
       select: {
         amount: true, currencyCode: true, date: true, description: true, categoryId: true,
         category: { select: { name: true } }, isDebt: true, isDebtRepayment: true, clientId: true,

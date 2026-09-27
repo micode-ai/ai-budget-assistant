@@ -144,6 +144,35 @@ describe('RealSalaryService.compute', () => {
   });
 });
 
+describe('RealSalaryService — salary comes from every account the caller belongs to', () => {
+  // A salary paid into a personal account and moved to a shared Family account
+  // by transfer is not an income there — the Family view must still find it.
+  const expectedIncomeWhere = {
+    userId: 'u1',
+    isDeleted: false,
+    account: { isActive: true, encryptionTier: { lt: 2 }, members: { some: { userId: 'u1' } } },
+  };
+
+  it('compute reads the caller\'s own incomes across their active accounts, not the open account\'s', async () => {
+    const { svc, prisma } = make({
+      profile: { salaryKey: KEY, manualPreviousMonthly: 8000 }, incomes: [1, 2, 3, 4].map((n) => salary(n, 8400)), expenses: spend,
+    });
+    await svc.compute('family', 'u1', 'PLN');
+    const where = prisma.income.findMany.mock.calls[0][0].where;
+    expect(where).toMatchObject(expectedIncomeWhere);
+    expect(where.accountId).toBeUndefined();
+    // Spend still weighs the open account.
+    expect(prisma.expense.findMany.mock.calls[0][0].where.accountId).toBe('family');
+  });
+
+  it('getProfile suggests candidates from the same cross-account income set', async () => {
+    const { svc, prisma } = make({ incomes: [1, 2, 3].map((n) => salary(n, 8400)) });
+    const r = await svc.getProfile('family', 'u1');
+    expect(prisma.income.findMany.mock.calls[0][0].where).toMatchObject(expectedIncomeWhere);
+    expect(r.candidates.map((c) => c.key)).toContain(KEY);
+  });
+});
+
 describe('RealSalaryService.compute — cache scoping and correctness', () => {
   it('two members of one account do not share a cached answer', async () => {
     const { svc, cache, cacheSet } = make({

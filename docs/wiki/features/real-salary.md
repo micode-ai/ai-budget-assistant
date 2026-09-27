@@ -153,6 +153,13 @@ data" rather than citing Eurostat (`sourcesLine`).
 
 ## Invariants
 
+**Salary is read from all of the caller's accounts; spend only from the open one.** A salary is
+often paid into a personal account and moved to a shared account by transfer, which is not an income
+there, so `loadIncomes` filters on the caller's `userId` across every account they are still an
+active member of (`isActive`, `members.some`), never a tier-2 one — not on the open `accountId`.
+Spend weights and the receipt index stay the open account's. The answer and `SalaryProfile` stay
+per user, so other members never see the salary. (ABA-612)
+
 **The encryption-tier check runs BEFORE the cache read.** A tier-2 (full-encryption) account must
 never be served a cached answer computed before encryption was turned on — `compute()` fetches
 `Account.encryptionTier` and short-circuits to `status: 'encrypted'` first, and only then reads the
