@@ -60,6 +60,39 @@ describe('SlackDigestSender', () => {
     expect(client.sendText).toHaveBeenCalledWith('T1', 'D12345', 'Weekly digest');
   });
 
+  it('audio upload failing with missing_scope falls back to text and logs one warn without the text', async () => {
+    const client = makeClient();
+    client.uploadAudio.mockRejectedValueOnce(slackPlatformError('missing_scope'));
+    const linkService = makeLinkService({ slackUserId: 'U1', slackTeamId: 'T1', defaultAccountId: 'acc-1' });
+    const sender = new SlackDigestSender(new DigestChannelRegistry(), client as any, linkService as any);
+    const warn = jest.spyOn((sender as any).logger, 'warn').mockImplementation(() => undefined);
+
+    const result = await sender.send({
+      userId: 'user-1',
+      lang: 'en',
+      text: 'You spent 120 on groceries',
+      audio: Buffer.from('voice'),
+    });
+
+    expect(result).toBe('sent');
+    expect(client.sendText).toHaveBeenCalledWith('T1', 'D12345', 'You spent 120 on groceries');
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(String(warn.mock.calls[0][0])).not.toContain('groceries');
+    expect(String(warn.mock.calls[0][0])).toContain('missing_scope');
+  });
+
+  it('audio upload failing with a blocked code still maps to DigestBlockedError (no text fallback)', async () => {
+    const client = makeClient();
+    client.uploadAudio.mockRejectedValueOnce(slackPlatformError('channel_not_found'));
+    const linkService = makeLinkService({ slackUserId: 'U1', slackTeamId: 'T1', defaultAccountId: 'acc-1' });
+    const sender = new SlackDigestSender(new DigestChannelRegistry(), client as any, linkService as any);
+
+    await expect(
+      sender.send({ userId: 'user-1', lang: 'en', text: 'hi', audio: Buffer.from('v') }),
+    ).rejects.toBeInstanceOf(DigestBlockedError);
+    expect(client.sendText).not.toHaveBeenCalled();
+  });
+
   it('channel_not_found maps to DigestBlockedError', async () => {
     const client = makeClient();
     client.openDm.mockRejectedValueOnce(slackPlatformError('channel_not_found'));

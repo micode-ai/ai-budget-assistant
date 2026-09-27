@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import type { VoiceDigestChannel } from '@budget/shared-types';
 import {
   DigestBlockedError,
@@ -28,6 +28,7 @@ const BLOCKED_ERROR_CODES = new Set([
 @Injectable()
 export class SlackDigestSender implements DigestSender, OnModuleInit {
   readonly channel: VoiceDigestChannel = 'slack';
+  private readonly logger = new Logger(SlackDigestSender.name);
 
   constructor(
     private readonly registry: DigestChannelRegistry,
@@ -58,7 +59,18 @@ export class SlackDigestSender implements DigestSender, OnModuleInit {
     try {
       const channelId = await this.client.openDm(link.slackTeamId, link.slackUserId);
       if (payload.audio) {
-        await this.client.uploadAudio(link.slackTeamId, channelId, payload.audio, payload.text);
+        try {
+          await this.client.uploadAudio(link.slackTeamId, channelId, payload.audio, payload.text);
+        } catch (uploadErr) {
+          if (this.isBlocked(uploadErr)) throw uploadErr;
+          // Upload failed for a non-permanent reason — most often `missing_scope`
+          // on a workspace installed before `files:write` was requested. The
+          // text always goes out; the audio degrades away, same as a TTS failure.
+          this.logger.warn(
+            `Slack digest audio upload failed for user ${payload.userId} (${this.errorCode(uploadErr)}); sending text only`,
+          );
+          await this.client.sendText(link.slackTeamId, channelId, payload.text);
+        }
       } else {
         await this.client.sendText(link.slackTeamId, channelId, payload.text);
       }
@@ -72,7 +84,12 @@ export class SlackDigestSender implements DigestSender, OnModuleInit {
   }
 
   private isBlocked(err: unknown): boolean {
-    const code = (err as { data?: { error?: string } } | null)?.data?.error;
+    const code = this.errorCode(err);
     return typeof code === 'string' && BLOCKED_ERROR_CODES.has(code);
+  }
+
+  private errorCode(err: unknown): string | undefined {
+    const code = (err as { data?: { error?: string } } | null)?.data?.error;
+    return typeof code === 'string' ? code : undefined;
   }
 }
