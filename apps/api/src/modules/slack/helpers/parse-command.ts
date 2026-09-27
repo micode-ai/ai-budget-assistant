@@ -11,6 +11,7 @@ const COMMANDS = [
   'categories',
   'categorize',
   'link',
+  'digest',
 ];
 
 const NUMBER_RE = /^\d+([.,]\d+)?/;

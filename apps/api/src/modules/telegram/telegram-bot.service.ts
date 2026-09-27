@@ -171,6 +171,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     this.bot.command('categories', (ctx) => this.categoryHandler.handleList(ctx));
     this.bot.command('usage', (ctx) => this.commandHandler.handleUsage(ctx));
     this.bot.command('categorize', (ctx) => this.categorizeHandler.handle(ctx));
+    this.bot.command('digest', (ctx) => this.commandHandler.handleDigest(ctx));
 
     // Callback queries (inline keyboard buttons)
     this.bot.on('callback_query', async (ctx) => {

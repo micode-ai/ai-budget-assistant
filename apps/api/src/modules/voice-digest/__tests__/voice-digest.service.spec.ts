@@ -224,6 +224,61 @@ describe('VoiceDigestService.runForUser', () => {
     const { service } = make({ sender: null });
     expect(await service.runForUser('u1', { force: true, now: NOW })).toBe('no_channel');
   });
+
+  it('opts.channel overrides a stored channel that differs', async () => {
+    const whatsappSender = makeSender({ channel: 'whatsapp' });
+    const { service, prisma, registry } = make({ sender: null });
+    registry.register(whatsappSender as any);
+    // Stored channel is 'telegram' (no sender registered for it), but the
+    // command came in over WhatsApp — opts.channel must win.
+    prisma.user.findUnique.mockResolvedValue({
+      id: 'u1',
+      timezone: 'Europe/Warsaw',
+      language: 'en',
+      currencyCode: 'PLN',
+      voiceDigestChannel: 'telegram',
+    });
+
+    const outcome = await service.runForUser('u1', { now: NOW, channel: 'whatsapp' });
+
+    expect(outcome).toBe('sent');
+    expect(whatsappSender.send).toHaveBeenCalledTimes(1);
+  });
+
+  it('opts.channel is used when the user has no stored channel at all', async () => {
+    const slackSender = makeSender({ channel: 'slack' });
+    const { service, prisma, registry } = make({ sender: null });
+    registry.register(slackSender as any);
+    prisma.user.findUnique.mockResolvedValue({
+      id: 'u1',
+      timezone: 'UTC',
+      language: 'en',
+      currencyCode: 'USD',
+      voiceDigestChannel: null,
+    });
+
+    const outcome = await service.runForUser('u1', { now: NOW, channel: 'slack' });
+
+    expect(outcome).toBe('sent');
+    expect(slackSender.send).toHaveBeenCalledTimes(1);
+  });
+
+  it('opts.preview skips the lastSentAt write but still records usage', async () => {
+    const { service, prisma, subscriptions } = make();
+    const outcome = await service.runForUser('u1', { now: NOW, preview: true });
+
+    expect(outcome).toBe('sent');
+    expect(prisma.user.update).not.toHaveBeenCalled();
+    expect(subscriptions.recordAdditionalUsage).toHaveBeenCalledWith('u1', 'voice_digest', 0.5, 'acc-1');
+    expect(subscriptions.recordAdditionalUsage).toHaveBeenCalledTimes(1);
+  });
+
+  it('without opts.preview, lastSentAt is still stamped (unaffected default)', async () => {
+    const { service, prisma } = make();
+    await service.runForUser('u1', { now: NOW, channel: 'telegram' });
+
+    expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 'u1' }, data: { voiceDigestLastSentAt: NOW } });
+  });
 });
 
 describe('VoiceDigestService.getSettings', () => {

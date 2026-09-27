@@ -2,9 +2,15 @@ import { Injectable, Logger } from '@nestjs/common';
 import { TelegramLinkService } from '../telegram-link.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
+import { VoiceDigestService, DigestOutcome } from '../../voice-digest/voice-digest.service';
+import { CacheService } from '../../../common/cache/cache.service';
+import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import { BotContext } from '../types';
 import { Markup } from 'telegraf';
 import { t } from '../helpers/i18n';
+
+const DIGEST_NOW_TTL_SEC = 86400;
+const DIGEST_NOW_UNAVAILABLE_OUTCOMES: DigestOutcome[] = ['unavailable', 'no_channel', 'failed', 'encrypted'];
 
 @Injectable()
 export class CommandHandler {
@@ -14,6 +20,8 @@ export class CommandHandler {
     private readonly linkService: TelegramLinkService,
     private readonly prisma: PrismaService,
     private readonly subscriptionsService: SubscriptionsService,
+    private readonly voiceDigestService: VoiceDigestService,
+    private readonly cache: CacheService,
   ) {}
 
   async handleStart(ctx: BotContext): Promise<void> {
@@ -55,7 +63,8 @@ export class CommandHandler {
           include: { user: { select: { language: true } } },
         });
         const userLang = link?.user?.language || lang;
-        await ctx.reply(t('linkSuccess', userLang), { parse_mode: 'HTML' });
+        const message = `${t('linkSuccess', userLang)}\n\n${t('digestOffer', userLang, { command: '/digest on' })}`;
+        await ctx.reply(message, { parse_mode: 'HTML' });
       } else {
         await ctx.reply(`❌ ${result.error}`);
       }
@@ -191,6 +200,69 @@ export class CommandHandler {
       await ctx.reply(message, { parse_mode: 'HTML' });
     } catch (error) {
       this.logger.error(`Error in /usage: ${error}`);
+      await ctx.reply(t('somethingWrong', ctx.userState?.language));
+    }
+  }
+
+  /**
+   * `/digest on|off|now` — the weekly voice digest (ABA voice-digest Task 10).
+   * Viewer role is allowed (read-only, no account-scoped write). `now` is
+   * throttled to once per 24h via `CacheService.setIfAbsent` and runs in the
+   * background after the `digestPreparing` acknowledgement — it must never
+   * block the webhook handler.
+   */
+  async handleDigest(ctx: BotContext): Promise<void> {
+    try {
+      const lang = ctx.userState?.language;
+      if (!ctx.userState) {
+        await ctx.reply(t('linkFirst', lang), { parse_mode: 'HTML' });
+        return;
+      }
+
+      const userId = ctx.userState.userId;
+      const text = (ctx.message && 'text' in ctx.message) ? ctx.message.text : '';
+      const sub = text.split(/\s+/)[1]?.toLowerCase() ?? '';
+
+      if (sub === 'on') {
+        await this.voiceDigestService.enableFrom(userId, 'telegram');
+        const settings = await this.voiceDigestService.getSettings(userId);
+        const day = t(`weekday${settings.day}`, lang);
+        const hour = `${String(settings.hour).padStart(2, '0')}:00`;
+        await ctx.reply(t('digestOn', lang, { day, hour }), { parse_mode: 'HTML' });
+        return;
+      }
+
+      if (sub === 'off') {
+        await this.voiceDigestService.disable(userId);
+        await ctx.reply(t('digestOff', lang), { parse_mode: 'HTML' });
+        return;
+      }
+
+      if (sub === 'now') {
+        const taken = await this.cache.setIfAbsent(`vd:now:${userId}`, DIGEST_NOW_TTL_SEC);
+        if (!taken) {
+          await ctx.reply(t('digestNowLimit', lang), { parse_mode: 'HTML' });
+          return;
+        }
+
+        await ctx.reply(t('digestPreparing', lang), { parse_mode: 'HTML' });
+
+        // Fire-and-forget: the caller (webhook handler) must not wait on this.
+        this.voiceDigestService
+          .runForUser(userId, { force: true, channel: 'telegram', preview: true })
+          .then(async (outcome) => {
+            if (outcome === 'empty') {
+              await ctx.reply(t('digestEmpty', lang), { parse_mode: 'HTML' });
+            } else if (DIGEST_NOW_UNAVAILABLE_OUTCOMES.includes(outcome)) {
+              await ctx.reply(t('digestUnavailable', lang), { parse_mode: 'HTML' });
+            }
+            // 'sent' | 'template' | 'blocked' — no extra reply.
+          })
+          .catch(logFireAndForget(this.logger, 'CommandHandler.handleDigest'));
+        return;
+      }
+    } catch (error) {
+      this.logger.error(`Error in /digest: ${error}`);
       await ctx.reply(t('somethingWrong', ctx.userState?.language));
     }
   }

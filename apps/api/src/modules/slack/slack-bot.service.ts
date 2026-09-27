@@ -189,6 +189,7 @@ export class SlackBotService {
         case 'category': return this.categoryHandler.handle(parsed.args, userState);
         case 'categories': return this.categoryHandler.handleList(userState);
         case 'categorize': return this.categorizeHandler.handle(userState);
+        case 'digest': return this.commandHandler.handleDigest(parsed.args, userState);
       }
     }
 

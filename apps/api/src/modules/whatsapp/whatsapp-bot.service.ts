@@ -11,6 +11,7 @@ import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { WhatsAppDigestSender } from './digest/whatsapp-digest.sender';
 import { parseCommand } from './helpers/parse-command';
 import { t } from './helpers/i18n';
 import { WA_REDIS, WaMessage, WaWebhookBody, WhatsAppUserState } from './types';
@@ -33,6 +34,7 @@ export class WhatsAppBotService {
     private readonly photoHandler: PhotoHandler,
     private readonly purchaseRequestHandler: PurchaseRequestHandler,
     private readonly categorizeHandler: CategorizeHandler,
+    private readonly digestSender: WhatsAppDigestSender,
     @Inject(WA_REDIS) private readonly redis: Redis,
   ) {}
 
@@ -210,6 +212,8 @@ export class WhatsAppBotService {
             return this.categoryHandler.handleList(userState);
           case 'categorize':
             return this.categorizeHandler.handle(userState);
+          case 'digest':
+            return this.commandHandler.handleDigest(parsed.args, userState);
         }
       }
 
@@ -264,8 +268,29 @@ export class WhatsAppBotService {
         return this.categorizeHandler.handleNo(Number(payload), userState);
       case 'catz_s':
         return this.categorizeHandler.handleStop(Number(payload), userState);
+      case 'vd':
+        return this.handleDigestCallback(payload, userState);
       default:
         this.logger.warn(`Unknown callback prefix: ${prefix}`);
+    }
+  }
+
+  /**
+   * `vd--listen` — the WhatsApp digest template's quick-reply button (see
+   * `WhatsAppDigestSender.deliverPending`, ABA voice-digest Task 8/10).
+   * `deliverPending` returns false when the pending digest already expired
+   * (or another concurrent tap already claimed it) — reply `digestExpired`
+   * so the user isn't left staring at a button that silently did nothing.
+   */
+  private async handleDigestCallback(payload: string, userState: WhatsAppUserState): Promise<void> {
+    if (payload !== 'listen') {
+      this.logger.warn(`Unknown vd callback payload: ${payload}`);
+      return;
+    }
+
+    const delivered = await this.digestSender.deliverPending(userState.userId);
+    if (!delivered) {
+      await this.client.sendText(userState.waPhoneNumber, t('digestExpired', userState.language));
     }
   }
 }

@@ -46,7 +46,19 @@ export class VoiceDigestService {
     private readonly config: ConfigService,
   ) {}
 
-  async runForUser(userId: string, opts?: { force?: boolean; now?: Date }): Promise<DigestOutcome> {
+  /**
+   * `opts.channel` overrides `user.voiceDigestChannel` for this run only —
+   * used by `/digest now`, which must run over the channel the command
+   * arrived on, not whatever channel the user has stored (which may differ,
+   * or be unset). `opts.preview` skips the `voiceDigestLastSentAt` stamp (a
+   * preview is not the weekly send — the real one must still fire on
+   * schedule) while still recording usage, since the narration/TTS cost was
+   * incurred either way.
+   */
+  async runForUser(
+    userId: string,
+    opts?: { force?: boolean; now?: Date; channel?: VoiceDigestChannel; preview?: boolean },
+  ): Promise<DigestOutcome> {
     const now = opts?.now ?? new Date();
 
     try {
@@ -54,9 +66,11 @@ export class VoiceDigestService {
         where: { id: userId },
         select: { id: true, timezone: true, language: true, currencyCode: true, voiceDigestChannel: true },
       });
-      if (!user || !user.voiceDigestChannel) return 'no_channel';
+      if (!user) return 'no_channel';
 
-      const channel = user.voiceDigestChannel as VoiceDigestChannel;
+      const channel = (opts?.channel ?? user.voiceDigestChannel) as VoiceDigestChannel | null;
+      if (!channel) return 'no_channel';
+
       const sender = this.registry.get(channel);
       if (!sender) return 'no_channel';
 
@@ -100,7 +114,9 @@ export class VoiceDigestService {
         throw err;
       }
 
-      await this.prisma.user.update({ where: { id: userId }, data: { voiceDigestLastSentAt: now } });
+      if (!opts?.preview) {
+        await this.prisma.user.update({ where: { id: userId }, data: { voiceDigestLastSentAt: now } });
+      }
       await this.subscriptions.recordAdditionalUsage(userId, USAGE_FEATURE_TYPE, USAGE_COST_UNITS, accountId);
 
       return result;
