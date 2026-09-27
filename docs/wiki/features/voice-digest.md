@@ -69,6 +69,13 @@ the body — verified against the code while planning); plan:
   AND the cron must win a per-ISO-week Redis lock (`vd:{userId}:{isoWeekKey}`, 8-day TTL, via
   `CacheService.setIfAbsent`) before it calls `runForUser`. A Redis outage makes `setIfAbsent`
   return `false` — the run is skipped, never sent unlocked. A missed week beats a duplicate.
+- **The cron pages over a predicate the sweep never mutates.** The page query is
+  `{voiceDigestEnabled:true, id:{gt:cursor}}` ordered by id — no `voiceDigestLastSentAt` filter
+  and no Prisma `cursor`+`skip:1`. The resend guard is applied in JS by `isDue`. The sweep itself
+  stamps `voiceDigestLastSentAt` (a send) and clears `voiceDigestEnabled` (a block); with either
+  in the SQL filter, a cursor row that stopped matching made `skip:1` drop the NEXT eligible user
+  — silently, once per page boundary (final review I2). Any `paginateById` caller whose loop
+  writes a column its own filter reads has the same hazard.
 - **Every narrated number is checked; an unfaithful reply falls back.** `VoiceDigestNarratorService`
   accepts the model's text only when every number in it is within 0.5 of some number in
   `allowedNumbers(facts)`, and it contains no URL-like substring and no `@`. Any rejection, a
@@ -87,6 +94,26 @@ the body — verified against the code while planning); plan:
   approved template with a "Listen" quick-reply. `templateLanguage` remaps `ua`→`uk` and `be`→`ru`
   for the **template call only** (Meta has no `be` locale); the digest itself, after "Listen", is
   still narrated and voiced in the user's real language.
+- **A template quick-reply tap arrives as `type: 'button'`, not `interactive`.** Meta delivers a
+  tap on a TEMPLATE button as `{type:'button', button:{payload, text}}`;
+  `interactive.button_reply` is only for session-message buttons. `WhatsAppBotService.dispatch`
+  routes `msg.button.payload` through the same `routeCallback` as interactive ids, so
+  `vd--listen` reaches `deliverPending`. Before this (final review C1) every outside-window "Listen"
+  tap was dropped and the digest expired unheard — the test had built the tap in the wrong shape.
+- **WhatsApp is never enabled while it cannot deliver.** With `WHATSAPP_DIGEST_TEMPLATE` unset,
+  every send outside the 23 h window is `'unavailable'`, so `enableFrom(userId, 'whatsapp')`
+  returns `false` without writing (the bot's `digest on` replies `digestUnavailable`), and
+  `updateSettings` rejects `channel:'whatsapp'` — explicit or stored — with a 400 and never
+  auto-picks it. Opting in to silence is worse than being told no.
+- **A WhatsApp block usually arrives asynchronously, and is handled there.** Graph returns 200
+  on `POST /messages` and reports 131026 later in a `statuses[]` webhook carrying only the wamid.
+  So every digest message the sender sends (audio, text, template) stores
+  `wa:vdmsg:{wamid}` → userId (3-day TTL, from the `messages[0].id` the client now returns).
+  `WhatsAppBotService.handleUpdate` processes `statuses[]` before messages: a `failed` status with
+  error code 131026 whose wamid maps to a user (claimed with `GETDEL`, so a redelivered status
+  acts once) calls `VoiceDigestService.handleBlocked(userId, 'whatsapp')` — the same
+  disable-and-push as a send-time block, but only while the digest is still on AND still on
+  WhatsApp, so a late status never switches off a digest the user has since moved.
 - **The "Listen" delivery is exactly-once, and a failed delivery is restored.** The pending
   digest (text + base64 audio) sits in Redis (`wa:vd:{userId}`, 48h TTL) until the button callback
   claims it with an atomic `GETDEL` — two simultaneous taps, or a webhook redelivery, can only
@@ -110,6 +137,10 @@ the body — verified against the code while planning); plan:
   `'no_channel'`. This exists because a stale `link.defaultAccountId` — the user left the account,
   was removed from it, or it was soft-deleted, and nothing updates the link when that happens —
   was found leaking a left account's data in review (Task 9).
+- **Tier-1 accounts never narrate a name.** Tier ≥ 2 is skipped outright (`'encrypted'`). At
+  tier 1, category and product names are encrypted text fields and may be ciphertext, so
+  `runForUser` drops `topRise`, `shieldItem` and `restock` from the facts before narrating; the
+  totals, safe-to-spend and income countdown are plain numbers and stay.
 - **Spend uses the standard exclusion set, not `isDebt`.** `VoiceDigestFactsService.loadSpend`'s
   `where` is `{accountId, isDeleted:false, isPlanned:false, ...EXCLUDE_SPLIT_RECEIVABLE, date:
   {gte:...}}` (`common/utils/expense-filters.ts` — the same exclusion analytics uses). A
@@ -135,10 +166,15 @@ the body — verified against the code while planning); plan:
 ## Known gaps
 - The WhatsApp template must be approved in Meta before `WHATSAPP_DIGEST_TEMPLATE` is set — until
   then WhatsApp is never offered as a digest channel (`whatsappAvailable` stays `false` even for a
-  linked user).
-- The Slack app's token needs the `files:write` scope to upload the audio note — not yet added to
-  the scope list on [`slack-bot.md`](../slack-bot.md) (`chat:write, im:history, im:read, im:write,
-  files:read`); without it, sending the digest's audio on Slack will fail.
+  linked user) and cannot be enabled.
+- The Slack app's token needs the `files:write` scope to upload the audio note. It is not yet in
+  `SCOPES` (`slack-oauth.service.ts`) or on installed workspaces (see
+  [`slack-bot.md`](../slack-bot.md) and `docs/ops/slack-oauth-setup.md`). Without it,
+  `files.uploadV2` fails `missing_scope` and `SlackDigestSender` falls back to a text-only message
+  with one warn line — the digest still arrives, just without the voice note.
+- An async WhatsApp `131047` ("outside the window") in `statuses[]` is only logged: no template
+  retry is attempted from a status. Rare, since the direct path already keeps a 1 h margin under
+  Meta's 24 h window.
 - A claimed weekly lock followed by a failure inside `runForUser` loses that week — the lock and
   the `lastSentAt` guard both assume a run either succeeds or is retried by next week's own
   schedule match, not a same-week retry.
