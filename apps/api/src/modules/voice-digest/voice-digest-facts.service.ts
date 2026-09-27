@@ -5,8 +5,9 @@ import { SafeToSpendService } from '../insights/safe-to-spend.service';
 import { InflationShieldService } from '../insights/inflation-shield.service';
 import { ShoppingListService } from '../shopping-list/shopping-list.service';
 import { RealSalaryService } from '../insights/real-salary/real-salary.service';
+import { CoicopClassifierService } from '../insights/real-salary/coicop-classifier.service';
 import { convertAmount, getRatesSafe } from '../../common/utils/fx';
-import { attributeToCategories, type AttributableExpense } from '../../common/utils/category-attribution';
+import { attributeToCategories } from '../../common/utils/category-attribution';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import type { DigestInputs } from './digest-facts.util';
 
@@ -24,7 +25,50 @@ const WINDOW_DAYS = 7;
 const WINDOW_COUNT = 9; // window 0 (most recent) .. window 8 (oldest)
 const PRIOR_WINDOW_COUNT = WINDOW_COUNT - 1;
 
-type ExpenseRow = AttributableExpense & { date: Date; currencyCode: string };
+/**
+ * The "everyday spend" comparison excludes housing & utilities (COICOP
+ * division CP04 — rent, mortgage, electricity, gas, water...): a monthly rent
+ * payment landing in only 2 of 8 prior weeks otherwise skews the whole
+ * comparison — see digest-facts.util.ts's median fix and this feature's wiki
+ * page for the concrete example (a real user's week read as "91% less than
+ * usual" purely because of rent timing).
+ */
+const HOUSING_UTILITIES_DIVISION = 'CP04';
+
+interface CoicopCategoryRef {
+  id?: string;
+  name?: string;
+  coicopDivision?: string | null;
+}
+
+interface ExpenseRow {
+  amount: unknown;
+  currencyCode: string;
+  date: Date;
+  categoryId?: string | null;
+  category?: CoicopCategoryRef | null;
+  categorySplits?:
+    | {
+        categoryId?: string | null;
+        amount: unknown;
+        category?: CoicopCategoryRef | null;
+      }[]
+    | null;
+}
+
+/**
+ * The COICOP division of each attributed part of an expense, in the same
+ * order `attributeToCategories` returns them (split parts when live splits
+ * exist, else the expense's own category as a single part) — so callers can
+ * zip the two arrays by index to know which attributed amount to drop.
+ */
+function partDivisions(row: ExpenseRow): (string | null)[] {
+  const splits = row.categorySplits ?? [];
+  if (splits.length > 0) {
+    return splits.map((s) => s.category?.coicopDivision ?? null);
+  }
+  return [row.category?.coicopDivision ?? null];
+}
 
 /**
  * window 0 = [now-7d, now); window k = [now-7(k+1)d, now-7k*d).
@@ -64,11 +108,22 @@ export class VoiceDigestFactsService {
     private readonly inflationShield: InflationShieldService,
     private readonly shoppingList: ShoppingListService,
     private readonly realSalary: RealSalaryService,
+    private readonly coicopClassifier: CoicopClassifierService,
   ) {}
 
   async gather(accountId: string, userId: string, baseCurrency: string, now: Date): Promise<DigestInputs> {
     const rates = await getRatesSafe(this.exchangeRateService, baseCurrency);
     const convert = (amount: number, from: string): number | null => convertAmount(amount, from, baseCurrency, rates);
+
+    // Classify any not-yet-classified categories before reading spend, so the
+    // CP04 (housing/utilities) exclusion below has divisions to check. Never
+    // blocks the digest: a classification failure just leaves this run's
+    // spend comparison including whatever categories are still unclassified.
+    try {
+      await this.coicopClassifier.ensureClassified(accountId);
+    } catch (err) {
+      this.logger.warn(`VoiceDigestFactsService.ensureClassified failed: ${errorMessage(err)}`);
+    }
 
     const spend = await this.loadSpend(accountId, baseCurrency, now, convert);
     const { safeToSpendToday, daysToIncome } = await this.loadSafeToSpend(accountId, userId, baseCurrency);
@@ -110,6 +165,7 @@ export class VoiceDigestFactsService {
           accountId,
           isDeleted: false,
           isPlanned: false,
+          isRecurring: false,
           ...EXCLUDE_SPLIT_RECEIVABLE,
           date: { gte: new Date(now.getTime() - WINDOW_COUNT * WINDOW_DAYS * DAY_MS) },
         },
@@ -118,10 +174,14 @@ export class VoiceDigestFactsService {
           currencyCode: true,
           date: true,
           categoryId: true,
-          category: { select: { id: true, name: true } },
+          category: { select: { id: true, name: true, coicopDivision: true } },
           categorySplits: {
             where: { isDeleted: false },
-            select: { categoryId: true, amount: true, category: { select: { id: true, name: true } } },
+            select: {
+              categoryId: true,
+              amount: true,
+              category: { select: { id: true, name: true, coicopDivision: true } },
+            },
           },
         },
       })) as unknown as ExpenseRow[];
@@ -137,7 +197,13 @@ export class VoiceDigestFactsService {
       const idx = windowIndexFor(new Date(row.date), now);
       if (idx === null) continue;
 
-      for (const part of attributeToCategories(row)) {
+      const parts = attributeToCategories(row);
+      const divisions = partDivisions(row);
+
+      for (let i = 0; i < parts.length; i += 1) {
+        if (divisions[i] === HOUSING_UTILITIES_DIVISION) continue; // drop this housing/utilities part
+
+        const part = parts[i];
         const converted = convert(part.amount, row.currencyCode);
         if (converted === null) continue; // unknown rate → skip this attributed part
 

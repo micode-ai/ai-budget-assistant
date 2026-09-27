@@ -61,11 +61,19 @@ const digitBearingNamesFacts: DigestFacts = {
 };
 
 describe('fallbackText', () => {
-  it('en: contains the week total, change percentage and direction', () => {
+  it('en: names it everyday spending, and compares this week to usual (direction attaches to this week)', () => {
     const text = fallbackText(fullFacts, 'en');
     expect(text).toContain('820 PLN');
-    expect(text).toContain('12%');
-    expect(text).toContain('below');
+    expect(text).toContain('everyday spending');
+    expect(text).toContain('12% less than usual');
+    expect(text).toContain('usually about 936 PLN');
+  });
+
+  it('en: real-salary line states what it is and signs a positive change with +', () => {
+    const text = fallbackText(fullFacts, 'en');
+    expect(text).toContain('Salary after your inflation: -3% over the year.');
+    const positiveText = fallbackText({ ...fullFacts, realChangePct: 3 }, 'en');
+    expect(positiveText).toContain('Salary after your inflation: +3% over the year.');
   });
 
   it('pl differs from en but still contains the week total', () => {

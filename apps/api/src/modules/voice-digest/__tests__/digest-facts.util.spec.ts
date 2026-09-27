@@ -26,10 +26,24 @@ describe('assembleDigestFacts', () => {
     expect(assembleDigestFacts({ ...base, weekTotal: 0 })).toBeNull();
   });
 
-  it('computes the usual week from active prior weeks only', () => {
+  it('computes the usual week as the median of active prior weeks only', () => {
     const f = assembleDigestFacts(base)!;
-    expect(f.usualWeek).toBe(936); // mean of 900,950,930,960,940
-    expect(f.changePct).toBe(-12); // 820/936 - 1 = -12.4 %
+    // active weeks sorted: 900,930,940,950,960 (5, odd) -> median = 940
+    expect(f.usualWeek).toBe(940);
+    expect(f.changePct).toBe(-13); // 820/940 - 1 = -12.77 %, rounds to -13
+  });
+
+  it('a rent-like outlier in 2 of 8 prior weeks does not drag the median toward it', () => {
+    // 6 ordinary weeks (~250) + 2 rent weeks (~2750): the mean would be ~877,
+    // but the median must stay near the ordinary weeks, not the outlier.
+    const f = assembleDigestFacts({
+      ...base,
+      weekTotal: 250,
+      priorWeekTotals: [250, 260, 240, 255, 245, 265, 2750, 2750],
+    })!;
+    // sorted: 240,245,250,255,260,265,2750,2750 -> even count -> mean of the two middles (255,260)
+    expect(f.usualWeek).toBe(258); // (255 + 260) / 2 = 257.5, rounds to 258
+    expect(f.changePct).toBe(-3); // 250/258 - 1 = -3.1 %
   });
 
   it('has no usual week with fewer than 4 active prior weeks', () => {
@@ -70,12 +84,13 @@ describe('assembleDigestFacts', () => {
     expect(f.topRise).toBeNull();
   });
 
-  it('includes exactly 4 active prior weeks in usual calculation', () => {
+  it('includes exactly 4 active prior weeks in usual calculation, as an even-count median', () => {
     const f = assembleDigestFacts({
       ...base,
       priorWeekTotals: [900, 950, 930, 960],
     })!;
-    expect(f.usualWeek).toBe(935); // mean of 4 weeks
+    // sorted: 900,930,950,960 -> even count -> mean of the two middles (930,950)
+    expect(f.usualWeek).toBe(940);
   });
 
   it('includes categories at exactly 1.2x their usual in topRise', () => {

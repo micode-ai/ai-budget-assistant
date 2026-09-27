@@ -5,7 +5,9 @@ export const DIGEST_LANGS: readonly string[] = ['en', 'pl', 'de', 'es', 'fr', 'r
 
 interface LangTemplates {
   weekOnly: (amt: number, cur: string) => string;
-  weekWithChange: (amt: number, cur: string, absPct: number, dir: string) => string;
+  // `usualAmt` is the (rounded) usual week amount — the direction word (dir)
+  // describes THIS week relative to usual, and must never attach to usualAmt.
+  weekWithChange: (amt: number, cur: string, absPct: number, dir: string, usualAmt: number) => string;
   dirBelow: string;
   dirAbove: string;
   topRise: (category: string, pct: number) => string;
@@ -15,9 +17,9 @@ interface LangTemplates {
   dirRise: string;
   dirFall: string;
   restock: (list: string) => string;
-  realChange: (absPct: number, dir: string) => string;
-  dirLower: string;
-  dirHigher: string;
+  // `signedPct` is a pre-formatted signed percentage string, e.g. "-2%" or
+  // "+3%" — the sign already states direction, so no separate dir word.
+  realChange: (signedPct: string) => string;
 }
 
 // Every sentence embeds only the numbers passed to it (amounts, percentages,
@@ -27,10 +29,11 @@ interface LangTemplates {
 // singular/plural branching) per the brief's "no pluralisation tricks" rule.
 const TEMPLATES: Record<string, LangTemplates> = {
   en: {
-    weekOnly: (amt, cur) => `You spent ${amt} ${cur} this week.`,
-    weekWithChange: (amt, cur, absPct, dir) => `You spent ${amt} ${cur} this week, ${absPct}% ${dir} usual.`,
-    dirBelow: 'below',
-    dirAbove: 'above',
+    weekOnly: (amt, cur) => `You spent ${amt} ${cur} on everyday spending this week.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `You spent ${amt} ${cur} on everyday spending this week, ${absPct}% ${dir} than usual (usually about ${usualAmt} ${cur}).`,
+    dirBelow: 'less',
+    dirAbove: 'more',
     topRise: (category, pct) => `${category} rose ${pct}%.`,
     safeToSpend: (amt, cur) => `You can safely spend ${amt} ${cur} today.`,
     payday: (days) => `Payday in ${days} days.`,
@@ -38,14 +41,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'rise',
     dirFall: 'fall',
     restock: (list) => `Running low: ${list}.`,
-    realChange: (absPct, dir) => `Your real income is ${absPct}% ${dir} than last year.`,
-    dirLower: 'lower',
-    dirHigher: 'higher',
+    realChange: (signedPct) => `Salary after your inflation: ${signedPct} over the year.`,
   },
   pl: {
-    weekOnly: (amt, cur) => `Wydałeś ${amt} ${cur} w tym tygodniu.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Wydałeś ${amt} ${cur} w tym tygodniu, to o ${absPct}% ${dir} niż zwykle.`,
+    weekOnly: (amt, cur) => `Wydałeś ${amt} ${cur} na codzienne wydatki w tym tygodniu.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Wydałeś ${amt} ${cur} na codzienne wydatki w tym tygodniu, to o ${absPct}% ${dir} niż zwykle (zwykle około ${usualAmt} ${cur}).`,
     dirBelow: 'mniej',
     dirAbove: 'więcej',
     topRise: (category, pct) => `Wydatki w kategorii ${category} wzrosły o ${pct}%.`,
@@ -55,14 +56,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'wzrosnąć',
     dirFall: 'spaść',
     restock: (list) => `Kończy się: ${list}.`,
-    realChange: (absPct, dir) => `Twoje realne zarobki są o ${absPct}% ${dir} niż rok temu.`,
-    dirLower: 'niższe',
-    dirHigher: 'wyższe',
+    realChange: (signedPct) => `Pensja po Twojej inflacji: ${signedPct} w ciągu roku.`,
   },
   de: {
-    weekOnly: (amt, cur) => `Du hast diese Woche ${amt} ${cur} ausgegeben.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Du hast diese Woche ${amt} ${cur} ausgegeben, das sind ${absPct}% ${dir} als üblich.`,
+    weekOnly: (amt, cur) => `Du hast diese Woche ${amt} ${cur} für alltägliche Ausgaben ausgegeben.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Du hast diese Woche ${amt} ${cur} für alltägliche Ausgaben ausgegeben, das sind ${absPct}% ${dir} als üblich (normalerweise etwa ${usualAmt} ${cur}).`,
     dirBelow: 'weniger',
     dirAbove: 'mehr',
     topRise: (category, pct) => `${category} ist um ${pct}% gestiegen.`,
@@ -72,14 +71,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'teurer',
     dirFall: 'günstiger',
     restock: (list) => `Vorrat wird knapp: ${list}.`,
-    realChange: (absPct, dir) => `Dein Realeinkommen ist ${absPct}% ${dir} als im letzten Jahr.`,
-    dirLower: 'niedriger',
-    dirHigher: 'höher',
+    realChange: (signedPct) => `Gehalt nach deiner Inflation: ${signedPct} im Jahresverlauf.`,
   },
   es: {
-    weekOnly: (amt, cur) => `Gastaste ${amt} ${cur} esta semana.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Gastaste ${amt} ${cur} esta semana, un ${absPct}% ${dir} de lo habitual.`,
+    weekOnly: (amt, cur) => `Gastaste ${amt} ${cur} en gastos cotidianos esta semana.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Gastaste ${amt} ${cur} en gastos cotidianos esta semana, un ${absPct}% ${dir} de lo habitual (normalmente unos ${usualAmt} ${cur}).`,
     dirBelow: 'menos',
     dirAbove: 'más',
     topRise: (category, pct) => `${category} subió un ${pct}%.`,
@@ -89,14 +86,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'subir',
     dirFall: 'bajar',
     restock: (list) => `Se están agotando: ${list}.`,
-    realChange: (absPct, dir) => `Tu ingreso real es un ${absPct}% ${dir} que el año pasado.`,
-    dirLower: 'más bajo',
-    dirHigher: 'más alto',
+    realChange: (signedPct) => `Salario tras tu inflación: ${signedPct} en el último año.`,
   },
   fr: {
-    weekOnly: (amt, cur) => `Vous avez dépensé ${amt} ${cur} cette semaine.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Vous avez dépensé ${amt} ${cur} cette semaine, soit ${absPct}% de ${dir} que d'habitude.`,
+    weekOnly: (amt, cur) => `Vous avez dépensé ${amt} ${cur} en dépenses courantes cette semaine.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Vous avez dépensé ${amt} ${cur} en dépenses courantes cette semaine, soit ${absPct}% de ${dir} que d'habitude (généralement environ ${usualAmt} ${cur}).`,
     dirBelow: 'moins',
     dirAbove: 'plus',
     topRise: (category, pct) => `${category} a augmenté de ${pct}%.`,
@@ -106,14 +101,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'augmenter',
     dirFall: 'baisser',
     restock: (list) => `Stock faible : ${list}.`,
-    realChange: (absPct, dir) => `Votre revenu réel est ${absPct}% ${dir} que l'an dernier.`,
-    dirLower: 'plus bas',
-    dirHigher: 'plus élevé',
+    realChange: (signedPct) => `Salaire après votre inflation : ${signedPct} sur l'année.`,
   },
   ru: {
-    weekOnly: (amt, cur) => `Вы потратили ${amt} ${cur} за эту неделю.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Вы потратили ${amt} ${cur} за эту неделю, это на ${absPct}% ${dir} обычного.`,
+    weekOnly: (amt, cur) => `Вы потратили ${amt} ${cur} на повседневные траты за эту неделю.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Вы потратили ${amt} ${cur} на повседневные траты за эту неделю, это на ${absPct}% ${dir} обычного (обычно около ${usualAmt} ${cur}).`,
     dirBelow: 'меньше',
     dirAbove: 'больше',
     topRise: (category, pct) => `${category}: рост на ${pct}%.`,
@@ -123,14 +116,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'вырасти',
     dirFall: 'упасть',
     restock: (list) => `Заканчивается: ${list}.`,
-    realChange: (absPct, dir) => `Ваш реальный доход на ${absPct}% ${dir}, чем год назад.`,
-    dirLower: 'меньше',
-    dirHigher: 'больше',
+    realChange: (signedPct) => `Зарплата с учётом вашей инфляции: ${signedPct} за год.`,
   },
   ua: {
-    weekOnly: (amt, cur) => `Ви витратили ${amt} ${cur} за цей тиждень.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Ви витратили ${amt} ${cur} за цей тиждень, це на ${absPct}% ${dir} звичайного.`,
+    weekOnly: (amt, cur) => `Ви витратили ${amt} ${cur} на щоденні витрати за цей тиждень.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Ви витратили ${amt} ${cur} на щоденні витрати за цей тиждень, це на ${absPct}% ${dir} звичайного (зазвичай близько ${usualAmt} ${cur}).`,
     dirBelow: 'менше',
     dirAbove: 'більше',
     topRise: (category, pct) => `${category}: зростання на ${pct}%.`,
@@ -140,14 +131,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'зрости',
     dirFall: 'впасти',
     restock: (list) => `Закінчується: ${list}.`,
-    realChange: (absPct, dir) => `Ваш реальний дохід на ${absPct}% ${dir}, ніж рік тому.`,
-    dirLower: 'менше',
-    dirHigher: 'більше',
+    realChange: (signedPct) => `Зарплата з урахуванням вашої інфляції: ${signedPct} за рік.`,
   },
   be: {
-    weekOnly: (amt, cur) => `Вы патрацілі ${amt} ${cur} за гэты тыдзень.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Вы патрацілі ${amt} ${cur} за гэты тыдзень, гэта на ${absPct}% ${dir} звычайнага.`,
+    weekOnly: (amt, cur) => `Вы патрацілі ${amt} ${cur} на штодзённыя выдаткі за гэты тыдзень.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Вы патрацілі ${amt} ${cur} на штодзённыя выдаткі за гэты тыдзень, гэта на ${absPct}% ${dir} звычайнага (звычайна каля ${usualAmt} ${cur}).`,
     dirBelow: 'менш',
     dirAbove: 'больш',
     topRise: (category, pct) => `${category}: рост на ${pct}%.`,
@@ -157,14 +146,12 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'вырасці',
     dirFall: 'упасці',
     restock: (list) => `Заканчваецца: ${list}.`,
-    realChange: (absPct, dir) => `Ваш рэальны даход на ${absPct}% ${dir}, чым год таму.`,
-    dirLower: 'менш',
-    dirHigher: 'больш',
+    realChange: (signedPct) => `Заробак з улікам вашай інфляцыі: ${signedPct} за год.`,
   },
   nl: {
-    weekOnly: (amt, cur) => `Je hebt deze week ${amt} ${cur} uitgegeven.`,
-    weekWithChange: (amt, cur, absPct, dir) =>
-      `Je hebt deze week ${amt} ${cur} uitgegeven, dat is ${absPct}% ${dir} dan normaal.`,
+    weekOnly: (amt, cur) => `Je hebt deze week ${amt} ${cur} uitgegeven aan dagelijkse uitgaven.`,
+    weekWithChange: (amt, cur, absPct, dir, usualAmt) =>
+      `Je hebt deze week ${amt} ${cur} uitgegeven aan dagelijkse uitgaven, dat is ${absPct}% ${dir} dan normaal (meestal ongeveer ${usualAmt} ${cur}).`,
     dirBelow: 'minder',
     dirAbove: 'meer',
     topRise: (category, pct) => `${category} steeg met ${pct}%.`,
@@ -174,9 +161,7 @@ const TEMPLATES: Record<string, LangTemplates> = {
     dirRise: 'duurder',
     dirFall: 'goedkoper',
     restock: (list) => `Bijna op: ${list}.`,
-    realChange: (absPct, dir) => `Je reële inkomen is ${absPct}% ${dir} dan vorig jaar.`,
-    dirLower: 'lager',
-    dirHigher: 'hoger',
+    realChange: (signedPct) => `Salaris na jouw inflatie: ${signedPct} over het jaar.`,
   },
 };
 
@@ -192,9 +177,13 @@ export function fallbackText(f: DigestFacts, lang: string): string {
   const sentences: string[] = [];
 
   const weekAmt = Math.round(f.weekTotal);
-  if (f.changePct !== null && f.changePct !== 0) {
+  // changePct is only ever non-null when usualWeek is also non-null (see
+  // assembleDigestFacts) — the direction word describes THIS week's amount,
+  // never usualAmt, which is stated plainly alongside it instead.
+  if (f.changePct !== null && f.changePct !== 0 && f.usualWeek !== null) {
     const dir = f.changePct < 0 ? t.dirBelow : t.dirAbove;
-    sentences.push(t.weekWithChange(weekAmt, f.currency, Math.abs(f.changePct), dir));
+    const usualAmt = Math.round(f.usualWeek);
+    sentences.push(t.weekWithChange(weekAmt, f.currency, Math.abs(f.changePct), dir, usualAmt));
   } else {
     sentences.push(t.weekOnly(weekAmt, f.currency));
   }
@@ -221,8 +210,8 @@ export function fallbackText(f: DigestFacts, lang: string): string {
   }
 
   if (f.realChangePct !== null) {
-    const dir = f.realChangePct < 0 ? t.dirLower : t.dirHigher;
-    sentences.push(t.realChange(Math.abs(f.realChangePct), dir));
+    const signedPct = `${f.realChangePct > 0 ? '+' : ''}${f.realChangePct}%`;
+    sentences.push(t.realChange(signedPct));
   }
 
   return sentences.join(' ');

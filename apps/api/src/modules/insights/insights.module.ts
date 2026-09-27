@@ -60,6 +60,7 @@ import { InflationShieldTrackingModule } from './inflation-shield-tracking.modul
     WrappedService,
     InflationShieldService,
     RealSalaryService,
+    CoicopClassifierService,
   ],
 })
 export class InsightsModule {}

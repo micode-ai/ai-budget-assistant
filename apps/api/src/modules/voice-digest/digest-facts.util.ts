@@ -40,6 +40,23 @@ function normalizeNegativeZero(v: number): number {
   return v;
 }
 
+/**
+ * Median of active prior weeks, not the mean: a recurring monthly cost (rent,
+ * a big utility bill) landing in only 2 of 8 prior windows drags a MEAN up
+ * for every week it appears in, then reports a huge false "you underspent"
+ * outlier the other 6 weeks and a false "you overspent" in the 2 rent weeks
+ * themselves. The median sits with the typical weeks either way. For an even
+ * count, the mean of the two middle values (standard median definition).
+ */
+function median(nums: readonly number[]): number {
+  const sorted = [...nums].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  if (sorted.length % 2 === 0) {
+    return (sorted[mid - 1] + sorted[mid]) / 2;
+  }
+  return sorted[mid];
+}
+
 export function assembleDigestFacts(i: DigestInputs): DigestFacts | null {
   // Rule: weekTotal <= 0 → null
   if (!isFiniteNumber(i.weekTotal) || i.weekTotal <= 0) {
@@ -53,8 +70,7 @@ export function assembleDigestFacts(i: DigestInputs): DigestFacts | null {
   let topRise: { category: string; changePct: number } | null = null;
 
   if (activeWeeks.length >= 4) {
-    const sum = activeWeeks.reduce((a, b) => a + b, 0);
-    usualWeek = roundToInteger(sum / activeWeeks.length);
+    usualWeek = roundToInteger(median(activeWeeks));
 
     // If rounded usualWeek is <= 0, treat as no usual week (avoid division by 0 and noise)
     if (usualWeek <= 0) {

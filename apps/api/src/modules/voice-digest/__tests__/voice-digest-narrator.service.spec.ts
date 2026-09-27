@@ -124,6 +124,17 @@ describe('VoiceDigestNarratorService.narrate', () => {
     );
   });
 
+  it('states that spending figures exclude rent/utilities/recurring, the percent compares to the usual week, and realChangePct is the post-inflation salary change', async () => {
+    const openai = fakeOpenAI('You spent 500 PLN this week, 25% above usual.');
+    const svc = new VoiceDigestNarratorService(configWithKey('key'), openai);
+    await svc.narrate(FACTS, 'en');
+    const call = (openai.chat.completions.create as jest.Mock).mock.calls[0][0];
+    const systemMessage = call.messages.find((m: { role: string }) => m.role === 'system');
+    expect(systemMessage.content).toMatch(/exclud(e|es).*rent.*utilit.*recurring/i);
+    expect(systemMessage.content).toMatch(/percent.*compares.*usual week/i);
+    expect(systemMessage.content).toMatch(/realChangePct.*salary.*12 months.*personal inflation/i);
+  });
+
   it('falls back when the model output contains a URL-like token (https://)', async () => {
     const openai = fakeOpenAI('You spent 500 PLN this week, 25% above usual. Details at https://x.y');
     const svc = new VoiceDigestNarratorService(configWithKey('key'), openai);

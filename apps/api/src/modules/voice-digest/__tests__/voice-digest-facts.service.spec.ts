@@ -10,18 +10,23 @@ function expenseRow(o: {
   date: Date;
   categoryId?: string | null;
   categoryName?: string | null;
-  splits?: Array<{ categoryId: string; amount: number; categoryName: string }>;
+  coicopDivision?: string | null;
+  isRecurring?: boolean;
+  splits?: Array<{ categoryId: string; amount: number; categoryName: string; coicopDivision?: string | null }>;
 }) {
   return {
     amount: o.amount,
     currencyCode: o.currencyCode ?? 'PLN',
     date: o.date,
     categoryId: o.categoryId ?? null,
-    category: o.categoryName ? { id: o.categoryId ?? 'cat', name: o.categoryName } : null,
+    isRecurring: o.isRecurring ?? false,
+    category: o.categoryName
+      ? { id: o.categoryId ?? 'cat', name: o.categoryName, coicopDivision: o.coicopDivision ?? null }
+      : null,
     categorySplits: (o.splits ?? []).map((s) => ({
       categoryId: s.categoryId,
       amount: s.amount,
-      category: { id: s.categoryId, name: s.categoryName },
+      category: { id: s.categoryId, name: s.categoryName, coicopDivision: s.coicopDivision ?? null },
     })),
   };
 }
@@ -36,6 +41,7 @@ function make(o: {
   shieldImpl?: () => Promise<unknown>;
   restock?: any;
   realSalary?: any;
+  coicopClassifier?: any;
 } = {}) {
   const prisma: any = {
     expense: {
@@ -65,8 +71,17 @@ function make(o: {
   const realSalary: any = {
     compute: jest.fn().mockResolvedValue(o.realSalary ?? { status: 'no_salary_confirmed', realChangePct: null }),
   };
-  const svc = new VoiceDigestFactsService(prisma, exchangeRateService, safeToSpend, inflationShield, shoppingList, realSalary);
-  return { svc, prisma, exchangeRateService, safeToSpend, inflationShield, shoppingList, realSalary };
+  const coicopClassifier: any = o.coicopClassifier ?? { ensureClassified: jest.fn().mockResolvedValue(undefined) };
+  const svc = new VoiceDigestFactsService(
+    prisma,
+    exchangeRateService,
+    safeToSpend,
+    inflationShield,
+    shoppingList,
+    realSalary,
+    coicopClassifier,
+  );
+  return { svc, prisma, exchangeRateService, safeToSpend, inflationShield, shoppingList, realSalary, coicopClassifier };
 }
 
 describe('VoiceDigestFactsService.gather — spend window bucketing', () => {
@@ -191,7 +206,7 @@ describe('VoiceDigestFactsService.gather — FX', () => {
 });
 
 describe('VoiceDigestFactsService.gather — Prisma where clause', () => {
-  it('excludes deleted/planned/split-receivable rows, not isDebt/isDebtRepayment, and filters the 63-day range', async () => {
+  it('excludes deleted/planned/split-receivable/recurring rows, not isDebt/isDebtRepayment, and filters the 63-day range', async () => {
     const { svc, prisma } = make();
     await svc.gather('acc', 'u1', 'PLN', NOW);
     const where = prisma.expense.findMany.mock.calls[0][0].where;
@@ -199,10 +214,86 @@ describe('VoiceDigestFactsService.gather — Prisma where clause', () => {
       accountId: 'acc',
       isDeleted: false,
       isPlanned: false,
+      isRecurring: false,
       isSplitReceivable: false,
       date: { gte: expect.any(Date) },
     });
     expect(where.date.gte.getTime()).toBe(NOW.getTime() - 63 * DAY_MS);
+  });
+
+  it('selects coicopDivision for both the expense category and each split category', async () => {
+    const { svc, prisma } = make();
+    await svc.gather('acc', 'u1', 'PLN', NOW);
+    const select = prisma.expense.findMany.mock.calls[0][0].select;
+    expect(select.category.select.coicopDivision).toBe(true);
+    expect(select.categorySplits.select.category.select.coicopDivision).toBe(true);
+  });
+});
+
+describe('VoiceDigestFactsService.gather — everyday spend only (recurring & CP04 housing/utilities exclusion)', () => {
+  it('calls CoicopClassifierService.ensureClassified(accountId) before loading spend', async () => {
+    const { svc, coicopClassifier } = make({ expenses: [] });
+    await svc.gather('acc-1', 'u1', 'PLN', NOW);
+    expect(coicopClassifier.ensureClassified).toHaveBeenCalledWith('acc-1');
+  });
+
+  it('continues gathering facts when ensureClassified rejects (logged, not thrown)', async () => {
+    const coicopClassifier: any = { ensureClassified: jest.fn().mockRejectedValue(new Error('classify down')) };
+    const { svc } = make({
+      expenses: [expenseRow({ amount: 40, date: daysAgo(1), categoryId: 'c1', categoryName: 'Food' })],
+      coicopClassifier,
+    });
+    const r = await svc.gather('acc', 'u1', 'PLN', NOW);
+    expect(r.weekTotal).toBe(40);
+  });
+
+  it('drops the whole amount of an expense whose own category is CP04 (housing/utilities)', async () => {
+    const { svc } = make({
+      expenses: [
+        expenseRow({ amount: 2000, date: daysAgo(1), categoryId: 'cat-rent', categoryName: 'Rent', coicopDivision: 'CP04' }),
+        expenseRow({ amount: 50, date: daysAgo(1), categoryId: 'cat-food', categoryName: 'Food', coicopDivision: 'CP01' }),
+      ],
+    });
+    const r = await svc.gather('acc', 'u1', 'PLN', NOW);
+    expect(r.weekTotal).toBe(50);
+    const byName = Object.fromEntries(r.categoryWeek.map((c) => [c.name, c.total]));
+    expect(byName).toEqual({ Food: 50 });
+    expect(byName.Rent).toBeUndefined();
+  });
+
+  it('drops only the CP04 part of a split expense, keeping the rest', async () => {
+    const { svc } = make({
+      expenses: [
+        expenseRow({
+          amount: 100,
+          date: daysAgo(1),
+          categoryId: 'cat-receipt',
+          categoryName: 'Receipt',
+          splits: [
+            { categoryId: 'cat-rent', amount: 70, categoryName: 'Rent', coicopDivision: 'CP04' },
+            { categoryId: 'cat-food', amount: 30, categoryName: 'Food', coicopDivision: 'CP01' },
+          ],
+        }),
+      ],
+    });
+    const r = await svc.gather('acc', 'u1', 'PLN', NOW);
+    expect(r.weekTotal).toBe(30);
+    const byName = Object.fromEntries(r.categoryWeek.map((c) => [c.name, c.total]));
+    expect(byName).toEqual({ Food: 30 });
+    expect(byName.Rent).toBeUndefined();
+  });
+
+  it('excludes CP04 parts from categoryUsual (prior windows) too', async () => {
+    const { svc } = make({
+      expenses: [
+        expenseRow({ amount: 2000, date: daysAgo(10), categoryId: 'cat-rent', categoryName: 'Rent', coicopDivision: 'CP04' }),
+        expenseRow({ amount: 100, date: daysAgo(10), categoryId: 'cat-food', categoryName: 'Food', coicopDivision: 'CP01' }),
+      ],
+    });
+    const r = await svc.gather('acc', 'u1', 'PLN', NOW);
+    const byName = Object.fromEntries(r.categoryUsual.map((c) => [c.name, c.total]));
+    expect(byName).toEqual({ Food: 100 / 8 });
+    expect(byName.Rent).toBeUndefined();
   });
 });
 
@@ -247,6 +338,7 @@ describe('VoiceDigestFactsService.gather — external service failures degrade g
       { getShield: jest.fn().mockResolvedValue({ items: [] }) } as any,
       shoppingListFailing,
       { compute: jest.fn().mockResolvedValue({ status: 'no_salary_confirmed', realChangePct: null }) } as any,
+      { ensureClassified: jest.fn().mockResolvedValue(undefined) } as any,
     );
     const r = await svc.gather('acc', 'u1', 'PLN', NOW);
     expect(r.restockNames).toEqual([]);
@@ -261,6 +353,7 @@ describe('VoiceDigestFactsService.gather — external service failures degrade g
       { getShield: jest.fn().mockResolvedValue({ items: [] }) } as any,
       { getRestockSuggestions: jest.fn().mockResolvedValue([]) } as any,
       realSalaryFailing,
+      { ensureClassified: jest.fn().mockResolvedValue(undefined) } as any,
     );
     const r = await svc.gather('acc', 'u1', 'PLN', NOW);
     expect(r.realChangePct).toBeNull();
