@@ -191,7 +191,7 @@ the body — verified against the code while planning); plan:
 - No in-app audio player and no daily variant — out of scope for v1 by design.
 
 ## History
-[ABA-TBD](https://github.com/micode-ai/ai-budget-assistant/issues) — weekly voice digest across
+[ABA-610](https://github.com/micode-ai/ai-budget-assistant/issues/637) — weekly voice digest across
 Telegram, WhatsApp and Slack: opt-in schedule, deterministic facts narrated by a cheap model
 (number-checked, deterministic fallback), OpenAI TTS, and the WhatsApp 24h-window/template split.
 Learned in review: a stale channel-link account id had leaked a left account's data (now
