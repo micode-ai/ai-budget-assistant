@@ -1,6 +1,6 @@
 ---
-title: "Jak podzielić rachunek ze znajomymi i dostać zwrot"
-meta_description: "Jak podzielić rachunek ze znajomymi bez kalkulatora i wysyłania przypomnień. Podział po pozycjach, link bez rejestracji i realne pilnowanie zwrotów."
+title: "Jak podzielić rachunek ze znajomymi: 3 sposoby"
+meta_description: "Po równo, po pozycjach albo prosto z paragonu. Znajomi płacą przez link bez instalowania aplikacji: BLIK, Revolut lub PayPal. Za darmo."
 target_keyword: "jak podzielić rachunek"
 slug: "jak-podzielic-rachunek"
 pair: "split-bill"

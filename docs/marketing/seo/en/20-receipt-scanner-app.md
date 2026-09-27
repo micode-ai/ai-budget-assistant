@@ -1,6 +1,6 @@
 ---
-title: "Receipt Scanner App: Why Line Items Beat the Total"
-meta_description: "Most receipt scanner apps save a photo and a total. See why the individual line items are what actually make a budget app useful, and how to use them."
+title: "Receipt Scanner App That Reads Every Line Item"
+meta_description: "Most receipt scanner apps keep a photo and a total. Scan the whole receipt instead: every product and price, so you see what is getting more expensive."
 target_keyword: "receipt scanner app"
 slug: "receipt-scanner-app"
 pair: "receipts"
