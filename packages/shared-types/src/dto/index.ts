@@ -27,6 +27,7 @@ export * from './notification';
 export * from './subscription';
 export * from './wallet';
 export * from './insights';
+export * from './real-salary';
 export * from './purchase-request';
 export * from './family-feed';
 export * from './price-history';

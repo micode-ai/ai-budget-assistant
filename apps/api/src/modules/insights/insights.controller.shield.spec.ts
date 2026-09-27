@@ -7,6 +7,7 @@ describe('InsightsController — inflation-shield route', () => {
     const ctrl = new InsightsController(
       undefined as any, undefined as any, undefined as any,
       undefined as any, undefined as any, undefined as any, shield as any,
+      undefined as any, undefined as any,
     );
     const req: any = { accountId: 'a1', user: { id: 'u1', currencyCode: 'PLN' } };
     const res = await ctrl.getInflationShield(req);

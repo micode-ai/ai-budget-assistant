@@ -155,6 +155,7 @@ model User {
   currencyCode               String        @default("USD") @map("currency_code")
   timezone                   String        @default("UTC")
   language                   String        @default("en")
+  inflationCountry           String?       @map("inflation_country")
   pushToken                  String?       @map("push_token")
   notifyBudgetAlerts         Boolean       @default(true) @map("notify_budget_alerts")
   notifySharedActivity       Boolean       @default(true) @map("notify_shared_activity")
@@ -262,6 +263,7 @@ model User {
   exchangeRateWatches  ExchangeRateWatch[]
   telemetryEvents      TelemetryEvent[]
   chatConversationPins ChatConversationPin[]
+  salaryProfiles       SalaryProfile[]
 
   // Where this signup came from, captured from the CTA query string on the visitor's
   // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
@@ -412,6 +414,7 @@ model Account {
   inflationShieldRecommendations InflationShieldRecommendation[]
   shoppingNotificationLogs       ShoppingNotificationLog[]
   insightNotificationLogs        InsightNotificationLog[]
+  salaryProfiles                 SalaryProfile[]
 
   @@map("accounts")
 }
@@ -487,6 +490,7 @@ model Category {
   name                 String
   icon                 String?
   color                String?
+  coicopDivision       String?  @map("coicop_division")
   type                 String   @default("expense")
   isSystem             Boolean  @default(false) @map("is_system")
   parentId             String?  @map("parent_id")
@@ -2249,4 +2253,38 @@ model TelemetryEvent {
   @@index([name, createdAt])
   @@index([userId, sessionId])
   @@map("telemetry_events")
+}
+
+/// Official annual inflation (HICP, COICOP 2018) per country, division and month — fed by
+/// OfficialInflationService from Eurostat `prc_hicp_minr`. Never written on a user request.
+model OfficialInflationRate {
+  id            String   @id @default(uuid())
+  country       String
+  division      String
+  month         String   // 'YYYY-MM'
+  annualRatePct Decimal  @map("annual_rate_pct") @db.Decimal(6, 2)
+  fetchedAt     DateTime @default(now()) @map("fetched_at")
+
+  @@unique([country, division, month])
+  @@index([country, month])
+  @@map("official_inflation_rates")
+}
+
+/// The income series a user confirmed as their salary on one account (real salary).
+model SalaryProfile {
+  id                    String   @id @default(uuid())
+  userId                String   @map("user_id")
+  accountId             String   @map("account_id")
+  /// `${categoryId ?? ''}|${descriptionKey}|${currencyCode}` — see salary-detect.util.ts.
+  salaryKey             String?  @map("salary_key")
+  /// Monthly salary a year ago, typed by the user, in the salary's own currency (the salaryKey's currency), not the base currency.
+  manualPreviousMonthly Decimal? @map("manual_previous_monthly") @db.Decimal(12, 2)
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountId])
+  @@map("salary_profiles")
 }

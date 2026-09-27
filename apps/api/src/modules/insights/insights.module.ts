@@ -10,6 +10,11 @@ import { WrappedService } from './wrapped.service';
 import { InflationShieldService } from './inflation-shield.service';
 import { InsightNotificationLedger } from './insight-notification-ledger.service';
 import { InflationShieldNotifyCron } from './inflation-shield-notify.cron';
+import { RealSalaryService } from './real-salary/real-salary.service';
+import { RealSalaryBriefPdf } from './real-salary/real-salary-brief.pdf';
+import { OfficialInflationService } from './real-salary/official-inflation.service';
+import { CoicopClassifierService } from './real-salary/coicop-classifier.service';
+import { EurostatClient } from './real-salary/eurostat.client';
 import { BudgetsModule } from '../budgets/budgets.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { WalletModule } from '../wallet/wallet.module';
@@ -40,6 +45,11 @@ import { InflationShieldTrackingModule } from './inflation-shield-tracking.modul
     InflationShieldService,
     InsightNotificationLedger,
     InflationShieldNotifyCron,
+    RealSalaryService,
+    RealSalaryBriefPdf,
+    OfficialInflationService,
+    CoicopClassifierService,
+    EurostatClient,
   ],
   exports: [InsightsService, AiInsightsService, StoryService, FatFinderService, SafeToSpendService, WrappedService, InflationShieldService],
 })

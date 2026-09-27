@@ -1,6 +1,32 @@
 # Real salary — personal inflation vs pay — design
 
-Date: 2026-09-26 · Status: approved in brainstorming, awaiting spec review
+Date: 2026-09-26 · Status: approved; corrected 2026-09-26 while planning (see *Corrections*)
+
+## Corrections (verified against the live Eurostat API and the code while planning)
+
+- **Dataset is `prc_hicp_minr`** (HICP, ECOICOP ver.2 / COICOP 2018), dimension **`coicop18`**,
+  unit **`RCH_A`** (annual rate of change). `prc_hicp_manr` was frozen at 2025-12 when Eurostat
+  switched classifications — building on it would show last year's inflation forever.
+- **13 divisions `CP01..CP13`**, and the all-items total is **`TOTAL`**, not `CP00`. COICOP 2018
+  splits old CP12 into CP12 (insurance & financial) and CP13 (personal care & misc), and moves
+  communication to CP08 "Information and communication". Everywhere below, read `CP00` as
+  `TOTAL` and `CP01..CP12` as `CP01..CP13`. Greece is `EL` in Eurostat geo codes.
+- **Salary is grouped by income category + normalised description, NOT by amount.** The
+  Safe-to-Spend detector buckets by amount, which would split a salary series at every raise —
+  the exact change this feature measures. Same 25–35-day cadence, ≥ 2 occurrences, 90-day window.
+  Excluded: debt / repayment incomes and transfers counted as income (`clientId` prefix
+  `transfer-income-`).
+- **Extra status `salary_history_short`**: a confirmed salary without a full prior 12 months and no
+  manual previous figure — the setup asks for last year's salary.
+- **Seed categories map to COICOP by their icon**, which is identical across the 9 seed languages
+  (names are not). A category with no known icon goes to the classifier.
+- **The classifier is not charged to the user's AI limit** — it runs once per category (the answer
+  is stored; "unknown" is stored as `TOTAL` so it is never re-asked), at most 50 categories per
+  request, names only.
+- **Mobile SQLite gets no column.** The category → division editor reads
+  `GET /insights/real-salary/categories`; categories are never edited offline for this.
+- **Implementation is two plans**: API (`plans/2026-09-26-real-salary-api.md`), then mobile.
+
 
 ## Goal
 

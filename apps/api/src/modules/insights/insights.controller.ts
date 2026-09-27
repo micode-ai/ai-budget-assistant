@@ -1,4 +1,5 @@
-import { Controller, Get, Post, Body, Query, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Body, Query, UseGuards, Req, Res } from '@nestjs/common';
+import type { Response } from 'express';
 import { InsightsService } from './insights.service';
 import { AiInsightsService } from './ai-insights.service';
 import { StoryService } from './story.service';
@@ -10,6 +11,10 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { SubscriptionTierGuard } from '../subscriptions/guards/subscription-tier.guard';
 import { RequireTier } from '../subscriptions/decorators/require-tier.decorator';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
+import { RealSalaryService } from './real-salary/real-salary.service';
+import { RealSalaryBriefPdf } from './real-salary/real-salary-brief.pdf';
+import { validateSalaryProfile } from './real-salary/real-salary.validation';
 import { AuthenticatedRequest } from '../../common/types';
 
 @Controller('insights')
@@ -23,6 +28,8 @@ export class InsightsController {
     private readonly safeToSpendService: SafeToSpendService,
     private readonly wrappedService: WrappedService,
     private readonly inflationShieldService: InflationShieldService,
+    private readonly realSalaryService: RealSalaryService,
+    private readonly realSalaryBriefPdf: RealSalaryBriefPdf,
   ) {}
 
   @Get()
@@ -120,5 +127,54 @@ export class InsightsController {
       body.year,
       req.user.currencyCode || 'USD',
     );
+  }
+
+  /**
+   * GET /insights/real-salary
+   * Personal inflation vs. pay: is the caller's raise keeping up with what
+   * their own money actually buys. No tier guard — free, same precedent as
+   * safe-to-spend/wrapped/inflation-shield.
+   */
+  @Get('real-salary')
+  async getRealSalary(@Req() req: AuthenticatedRequest) {
+    return this.realSalaryService.compute(req.accountId, req.user.id, req.user.currencyCode || 'USD');
+  }
+
+  @Get('real-salary/profile')
+  async getRealSalaryProfile(@Req() req: AuthenticatedRequest) {
+    return this.realSalaryService.getProfile(req.accountId, req.user.id);
+  }
+
+  @Put('real-salary/profile')
+  @UseGuards(new ViewerBlockGuard())
+  async saveRealSalaryProfile(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    return this.realSalaryService.saveProfile(req.accountId, req.user.id, validateSalaryProfile(body));
+  }
+
+  @Get('real-salary/categories')
+  async getRealSalaryCategories(@Req() req: AuthenticatedRequest) {
+    return this.realSalaryService.listCategories(req.accountId);
+  }
+
+  @Post('real-salary/brief')
+  @UseGuards(SubscriptionTierGuard)
+  @RequireTier('pro')
+  async getRealSalaryBrief(
+    @Req() req: AuthenticatedRequest,
+    @Query('lang') lang: string | undefined,
+    @Res() res: Response,
+  ) {
+    const data = await this.realSalaryService.compute(req.accountId, req.user.id, req.user.currencyCode || 'USD');
+    if (data.status !== 'ready') {
+      res.status(409).json({ message: 'Real salary is not ready', status: data.status });
+      return;
+    }
+    const pdf = await this.realSalaryBriefPdf.render(data, lang || 'en');
+    const fileName = `real-salary-${data.computedAt.slice(0, 10)}.pdf`;
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
+    res.setHeader('X-Report-Filename', fileName);
+    res.setHeader('Content-Length', pdf.length);
+    res.send(pdf);
   }
 }

@@ -10,6 +10,7 @@ import { TelegramLinkService } from '../telegram/telegram-link.service';
 import { TelegramBotService } from '../telegram/telegram-bot.service';
 import { WhatsAppLinkService } from '../whatsapp/whatsapp-link.service';
 import { SlackLinkService } from '../slack/slack-link.service';
+import { CacheService } from '../../common/cache/cache.service';
 
 function makeController(update = jest.fn()) {
   const usersService = {
@@ -23,6 +24,7 @@ function makeController(update = jest.fn()) {
     {} as any, // telegramBotService
     {} as any, // whatsAppLinkService
     {} as any, // slackLinkService
+    {} as any, // cache
   );
   return { controller, usersService, update };
 }
@@ -65,6 +67,30 @@ describe('UsersController.updateProfile theme prefs', () => {
     const res = await controller.updateProfile(req, { accentColor: null });
     expect(update).toHaveBeenCalledWith('u1', { accentColor: null });
     expect(res.accentColor).toBeNull();
+  });
+});
+
+describe('UsersController.updateProfile real-salary cache', () => {
+  function makeWithCache() {
+    const update = jest.fn().mockResolvedValue({ id: 'u1', email: 'a@b.c', name: 'A', timezone: 'Europe/Berlin' });
+    const usersService = { update, listAccountIds: jest.fn().mockResolvedValue(['acc1', 'acc2']) } as any;
+    const cache = { delByPrefix: jest.fn().mockResolvedValue(undefined) } as any;
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, cache);
+    return { controller, usersService, cache };
+  }
+
+  it('a timezone change busts the real-salary answer of every account (the country is guessed from it)', async () => {
+    const { controller, usersService, cache } = makeWithCache();
+    await controller.updateProfile(req, { timezone: 'Europe/Berlin' });
+    expect(usersService.listAccountIds).toHaveBeenCalledWith('u1');
+    expect(cache.delByPrefix).toHaveBeenCalledWith('rs:acc1:');
+    expect(cache.delByPrefix).toHaveBeenCalledWith('rs:acc2:');
+  });
+
+  it('a change that affects neither country nor timezone busts nothing', async () => {
+    const { controller, cache } = makeWithCache();
+    await controller.updateProfile(req, { name: 'B' });
+    expect(cache.delByPrefix).not.toHaveBeenCalled();
   });
 });
 
@@ -135,7 +161,7 @@ describe('UsersController.getProfile payment handle', () => {
     });
     const getPaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(res.paymentMethod).toBe('paypal');
     expect(res.paymentHandle).toBe('user@paypal.com');
@@ -150,7 +176,7 @@ describe('UsersController.getProfile payment handle', () => {
     });
     const getPaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(res.paymentMethod).toBeNull();
     expect(res.paymentHandle).toBeNull();
@@ -168,7 +194,7 @@ describe('UsersController.getProfile payment handle', () => {
       { method: 'blik', handle: '+48 123 456 789' },
     ]);
     const usersService = { findById, updateLastSync: jest.fn().mockResolvedValue(null), getPaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
     const res = await controller.getProfile(req);
     expect(getPaymentMethods).toHaveBeenCalledWith('u1');
     expect(res.paymentMethods).toEqual([
@@ -185,7 +211,7 @@ describe('UsersController.replacePaymentMethods', () => {
       { method: 'paypal', handle: 'pp-handle' },
     ]);
     const usersService = { replacePaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
 
     const res = await controller.replacePaymentMethods(req, {
       paymentMethods: [
@@ -209,7 +235,7 @@ describe('UsersController.replacePaymentMethods', () => {
   it('accepts an empty list (clears every configured method)', async () => {
     const replacePaymentMethods = jest.fn().mockResolvedValue([]);
     const usersService = { replacePaymentMethods } as any;
-    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any);
+    const controller = new UsersController(usersService, {} as any, {} as any, {} as any, {} as any, {} as any);
 
     const res = await controller.replacePaymentMethods(req, { paymentMethods: [] });
 
@@ -248,6 +274,7 @@ describe('PUT /users/me/payment-methods — DTO validation (real ValidationPipe)
         { provide: TelegramBotService, useValue: {} },
         { provide: WhatsAppLinkService, useValue: {} },
         { provide: SlackLinkService, useValue: {} },
+        { provide: CacheService, useValue: {} },
       ],
     })
       .overrideGuard(JwtAuthGuard)
