@@ -24,6 +24,7 @@ import { priceHistoryApi } from './priceHistory.api';
 import { shoppingListsApi } from './shoppingLists.api';
 import { communityPricesApi } from './community-prices.api';
 import { receiptSplitApi } from './receiptSplit.api';
+import { realSalaryApi } from './realSalary.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -35,6 +36,7 @@ export const api = {
   ...budgetsApi,
   ...categoriesApi,
   ...analyticsApi,
+  ...realSalaryApi,
   ...aiApi,
   ...accountsApi,
   ...walletApi,

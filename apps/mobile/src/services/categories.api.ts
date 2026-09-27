@@ -1,4 +1,4 @@
-import type { Category, Tag } from '@budget/shared-types';
+import type { Category, CoicopDivision, Tag } from '@budget/shared-types';
 import { httpClient } from './http-client';
 
 export const categoriesApi = {
@@ -23,7 +23,7 @@ export const categoriesApi = {
     });
   },
 
-  updateCategory(id: string, data: { name?: string; icon?: string; color?: string }) {
+  updateCategory(id: string, data: { name?: string; icon?: string; color?: string; coicopDivision?: CoicopDivision | null }) {
     return httpClient.request<Category>(`/categories/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data),

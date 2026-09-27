@@ -768,6 +768,27 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="real-salary/index"
+          options={{
+            headerShown: true,
+            title: t('realSalary.title'),
+          }}
+        />
+        <Stack.Screen
+          name="real-salary/setup"
+          options={{
+            headerShown: true,
+            title: t('realSalary.setup.title'),
+          }}
+        />
+        <Stack.Screen
+          name="real-salary/settings"
+          options={{
+            headerShown: true,
+            title: t('realSalary.config.title'),
+          }}
+        />
+        <Stack.Screen
           name="purchase-requests/new"
           options={{
             presentation: 'modal',

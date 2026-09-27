@@ -5,11 +5,11 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 /**
- * Story / Scenario Simulator / Wrapped, demoted from mid-scroll full-width
- * banners to a small bottom row of three (design's "What each mobile
+ * Story / Scenario Simulator / Wrapped / Real salary, demoted from mid-scroll full-width
+ * banners to a small row of four (design's "What each mobile
  * affordance becomes"). Story opens `StoryDialog` (Task 7 — a narrative about
  * the period selected on this screen belongs over the screen that selected
- * it) via `onOpenStory`; Scenario Simulator and Wrapped stay pushes — same
+ * it) via `onOpenStory`; Scenario Simulator, Wrapped, and Real salary stay pushes — same
  * destinations/params/i18n keys as before.
  */
 export function DiscoveryRow({ selectedYear, onOpenStory }: { selectedYear: number; onOpenStory: () => void }) {
@@ -44,6 +44,16 @@ export function DiscoveryRow({ selectedYear, onOpenStory }: { selectedYear: numb
         <Text style={styles.discoveryTitle} numberOfLines={1}>{t('wrapped.title')}</Text>
         <Text style={styles.discoverySubtitle} numberOfLines={1}>{t('wrapped.introSub')}</Text>
       </Pressable>
+
+      <Pressable
+        style={styles.discoveryCard}
+        onPress={() => router.push('/real-salary')}
+        accessibilityRole="button"
+      >
+        <Ionicons name="trending-up-outline" size={20} color={theme.colors.primary} />
+        <Text style={styles.discoveryTitle} numberOfLines={1}>{t('realSalary.entryTitle')}</Text>
+        <Text style={styles.discoverySubtitle} numberOfLines={1}>{t('realSalary.entrySub')}</Text>
+      </Pressable>
     </View>
   );
 }
@@ -55,7 +65,7 @@ const createStyles = (theme: Theme) => ({
     gap: theme.spacing[3],
   },
   discoveryCard: {
-    flexBasis: '31%' as const,
+    flexBasis: '22%' as const,
     flexGrow: 1,
     flexShrink: 1,
     minWidth: 220,

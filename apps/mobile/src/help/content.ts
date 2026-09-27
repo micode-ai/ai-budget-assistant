@@ -4843,6 +4843,99 @@ A link that hasn't been used within 30 days of creation simply stops working. If
 - If the receipt had a **discount**, everyone's share is worked out from what you actually paid, not from the printed prices - so a friend never pays the pre-discount price of their items.
 `,
     },
+    {
+      id: '43-real-salary',
+      title: `Real Salary — is your raise keeping up with your own prices?`,
+      description: `Compares how your pay has changed over the last 12 months against your own personal inflation rate — not the national headline number, but one built from what you actually spend on — so you can see whether a raise is a real gain or just keeping up with rising prices.`,
+      body: `# Real Salary — is your raise keeping up with your own prices?
+
+> Compares how your pay has changed over the last 12 months against your own personal inflation rate — not the national headline number, but one built from what you actually spend on — so you can see whether a raise is a real gain or just keeping up with rising prices.
+
+## What it is
+
+Real Salary answers one question: is your paycheck actually buying more, or only growing on paper? It weighs the change in your own confirmed salary over the last 12 months against your **personal inflation rate** — a rate built from your own spending categories and official price statistics for your country, not a national news headline.
+
+For example: your pay rose **+5%**, but your personal inflation came out at **+8.3%** — your *real* pay actually **fell by about −3.0%**, even though the number on your payslip went up.
+
+It's **free for everyone**. Only the one-page "raise brief" PDF you can download and keep is a **Pro** feature.
+
+## Where to find it
+
+Open the **Analytics** tab and tap the **Real salary** banner ("Your pay vs your own inflation"). The first time you open it, you'll be asked to confirm your salary before it can calculate anything.
+
+## Setting up your salary
+
+The app looks through your recent income entries for something that repeats — roughly once a month, at least twice in the last 90 days — and offers it as a candidate. Pick the one that's your salary.
+
+If the app doesn't have a full year of that salary yet, it also asks for **what you earned a year ago**, typed in the salary's own currency (not your display currency). You can type it the way you'd normally write it — \`8400\`, \`8.400\`, \`8 400\`, and \`8,400.50\` are all understood, comma or dot as the decimal point, dot/comma/space as thousands separators.
+
+If nothing repeating is found, add your pay as income a couple of times first — voice, receipt, or manual entry, any source counts — then come back.
+
+## Settings
+
+Tap the gear icon on the Real Salary screen to open **Real salary settings**:
+
+- **Country for official prices** — guessed from your device's time zone the first time you open the screen (shown as e.g. "Poland (from your time zone)"). Tap it to pick any EU/EEA/Switzerland country by hand, or to go back to the guessed one.
+- **What each category counts as** — each of your expense categories can be mapped to a price group (Food and drinks, Housing and utilities, Transport, Health, and so on). Left on **Automatic**, the app assigns one for you; you only need to touch this if you disagree with a category's guess.
+
+## How it's calculated
+
+- **Pay change** compares the average salary per pay period over the last 12 months against the 12 months before that — using pay *periods*, not calendar months, so a payday that shifts around a weekend doesn't look like a raise or a cut.
+- **Your personal inflation** is a weighted average across your own spending: each price group's official rate for your country, weighted by how much of your spending falls into it. **Food and drinks** is priced from your own scanned-receipt history instead, once you have at least 10 tracked products — your actual grocery prices, not a national average.
+- **Real pay change** adjusts your pay change for that inflation rate, so it answers "did my money buy more or less", not just "did my number go up".
+- **Raise needed to keep up** is how much bigger a raise, on your *current* pay, would have kept you exactly even with your own inflation.
+
+## What you'll see
+
+- A headline number — your real pay change, in green (ahead), red (behind), or neutral.
+- Your pay change and your personal inflation, side by side.
+- A breakdown of where prices rose for you, one row per price group, each tagged **your receipts** or **official data** depending on where its rate came from.
+- A note naming which month the official data is from, or that the answer is based on receipts only when your country has no official coverage.
+- A reminder that this is **an estimate, not financial advice**.
+
+## What each message means
+
+- **"Confirm your salary"** — no repeating income was found yet, or you haven't picked one. Opens the setup screen.
+- **"Tell us last year's salary"** — the app doesn't have a full year of your confirmed salary. Enter last year's monthly figure.
+- **"Keep tracking a little longer"** — the app needs at least 3 months of expenses to know what you spend on.
+- **"No price data for your country"** — no official price statistics are published for your country, and you don't yet have enough scanned receipts to stand in for them. Set your country by hand, or scan a few more receipts.
+- **"Not available with full encryption"** — accounts with full end-to-end encryption keep amounts unreadable on the server, so this can't be calculated for them.
+
+## Sharing
+
+Tap **Share** to post your result. The share card shows **percentages only** — your pay change, your inflation, your real change — never your actual salary or spending amounts, so you can share a win (or a rant) without revealing what you earn.
+
+## The raise brief (Pro)
+
+Tap **Raise brief** to download a one-page PDF summarising your result — useful to bring to a salary conversation. It's built entirely from the number already on your screen (no extra AI cost), available in all app languages, and only downloadable once your result is fully calculated (not while any of the messages above is showing).
+
+## Good to know
+
+- Free for every subscription tier — only the brief PDF is Pro.
+- Needs a connection — it's calculated on the server, with no offline fallback.
+- Country coverage is currently the EU, EEA, and Switzerland (wherever Eurostat publishes official price statistics); outside that, the app can still answer from your receipts alone once you have enough of them.
+- Not available on accounts with full end-to-end encryption.
+- Everything shown is an **estimate** built from your spending categories and public price statistics — not financial or tax advice.
+
+## FAQ
+
+- **Q: Why is my inflation different from what's in the news?**
+  **A:** News headlines report one national average shopping basket. Yours is weighted by what *you* actually spend money on — if you spend more on transport and less on restaurants than the average person, your rate reflects that instead.
+
+- **Q: Why is my country guessed, and can I change it?**
+  **A:** It's guessed from your device's time zone so there's nothing to set up on day one. Change it any time in **Real salary settings → Country for official prices**.
+
+- **Q: Does this work with full encryption turned on?**
+  **A:** No — a fully encrypted account keeps your amounts unreadable on the server, and this calculation needs to read them. You'll see "Not available with full encryption" instead of a result.
+
+- **Q: Which countries have official price data?**
+  **A:** The EU, EEA, and Switzerland — the countries Eurostat publishes harmonised price statistics for. Elsewhere, the app relies entirely on your own scanned receipts once you have enough of them.
+
+---
+
+*See also: Personal Inflation Index | Inflation Shield | Budgets*
+`,
+    },
   ],
   ru: [
     {
@@ -9643,6 +9736,99 @@ OCR иногда неверно читает цену, выдумывает ст
 - Если на чеке была **скидка**, доли считаются от реально уплаченного, а не от напечатанных цен - друг никогда не платит цену своих позиций до скидки.
 `,
     },
+    {
+      id: '43-real-salary',
+      title: `Реальная зарплата — успевает ли ваша прибавка за вашими собственными ценами?`,
+      description: `Сравнивает, как изменилась ваша зарплата за последние 12 месяцев, с вашей личной инфляцией — не с общей цифрой из новостей, а со ставкой, построенной на том, на что вы реально тратите деньги — чтобы вы видели, реальный ли это выигрыш от прибавки или лишь попытка угнаться за ростом цен.`,
+      body: `# Реальная зарплата — успевает ли ваша прибавка за вашими собственными ценами?
+
+> Сравнивает, как изменилась ваша зарплата за последние 12 месяцев, с вашей личной инфляцией — не с общей цифрой из новостей, а со ставкой, построенной на том, на что вы реально тратите деньги — чтобы вы видели, реальный ли это выигрыш от прибавки или лишь попытка угнаться за ростом цен.
+
+## Что это такое
+
+Реальная зарплата отвечает на один вопрос: покупает ли ваша зарплата реально больше, или растёт только на бумаге? Она сопоставляет изменение вашей подтверждённой зарплаты за последние 12 месяцев с вашей **личной инфляцией** — ставкой, построенной на ваших собственных категориях расходов и официальной статистике цен по вашей стране, а не на заголовке новостей.
+
+Например: ваша зарплата выросла на **+5%**, но ваша личная инфляция составила **+8,3%** — ваша *реальная* зарплата на самом деле **упала примерно на −3,0%**, хотя цифра в расчётном листке выросла.
+
+Функция **бесплатна для всех**. Только одностраничный PDF «аргументы к повышению», который можно скачать и сохранить, — функция **Pro**.
+
+## Где её найти
+
+Откройте вкладку **Аналитика** и нажмите на баннер **Реальная зарплата** («Ваша зарплата против вашей личной инфляции»). При первом открытии вас попросят подтвердить зарплату, прежде чем что-либо можно будет рассчитать.
+
+## Настройка зарплаты
+
+Приложение просматривает ваши последние доходы в поисках чего-то повторяющегося — примерно раз в месяц, минимум дважды за последние 90 дней — и предлагает это как кандидата. Выберите тот, что является вашей зарплатой.
+
+Если у приложения ещё нет полного года этой зарплаты, оно также попросит указать, **сколько вы получали год назад**, введённое в валюте самой зарплаты (не в вашей валюте отображения). Можно ввести сумму так, как вы обычно её пишете — \`8400\`, \`8.400\`, \`8 400\` и \`8,400.50\` понимаются одинаково, запятая или точка как десятичный разделитель, точка/запятая/пробел как разделитель тысяч.
+
+Если ничего повторяющегося не найдено, сначала добавьте зарплату как доход несколько раз — голосом, по чеку или вручную, источник не важен — а затем вернитесь.
+
+## Настройки
+
+Нажмите на значок шестерёнки на экране Реальной зарплаты, чтобы открыть **Настройки реальной зарплаты**:
+
+- **Страна для официальных цен** — при первом открытии экрана определяется по часовому поясу вашего устройства (показывается, например, как «Польша (по часовому поясу)»). Нажмите, чтобы вручную выбрать любую страну ЕС/ЕЭЗ/Швейцарии или вернуться к определённой автоматически.
+- **К чему относится каждая категория** — каждую из ваших категорий расходов можно сопоставить с группой цен (Продукты и напитки, Жильё и коммунальные услуги, Транспорт, Здоровье и так далее). Оставленная как **Автоматически**, категория назначается приложением сама; менять это нужно только если вы не согласны с выбором для конкретной категории.
+
+## Как это рассчитывается
+
+- **Изменение зарплаты** сравнивает среднюю зарплату за период выплаты за последние 12 месяцев с предыдущими 12 месяцами — используя *периоды* выплат, а не календарные месяцы, чтобы день выплаты, сдвинутый из-за выходных, не выглядел как повышение или урезание.
+- **Ваша личная инфляция** — это взвешенное среднее по вашим собственным расходам: официальная ставка каждой группы цен для вашей страны, взвешенная по доле ваших расходов, приходящейся на неё. **Продукты и напитки** вместо этого оцениваются по вашей собственной истории отсканированных чеков, как только у вас появится минимум 10 отслеживаемых товаров — ваши реальные цены покупок, а не общенациональное среднее.
+- **Реальное изменение зарплаты** корректирует изменение вашей зарплаты на эту ставку инфляции, отвечая на вопрос «купили ли мои деньги больше или меньше», а не просто «выросла ли моя цифра».
+- **Нужная прибавка, чтобы не отставать** — это на сколько больше должна быть прибавка к вашей *текущей* зарплате, чтобы точно сравняться с вашей личной инфляцией.
+
+## Что вы увидите
+
+- Главную цифру — реальное изменение вашей зарплаты, зелёным (вы опережаете), красным (вы отстаёте) или нейтральным цветом.
+- Изменение зарплаты и вашу личную инфляцию рядом друг с другом.
+- Разбивку того, где цены выросли для вас, по одной строке на группу цен, каждая помечена как **ваши чеки** или **официальные данные** — в зависимости от источника ставки.
+- Пометку, за какой месяц официальные данные, или что ответ основан только на чеках, если у вашей страны нет официального покрытия.
+- Напоминание, что это **оценка, а не финансовая консультация**.
+
+## Что означает каждое сообщение
+
+- **«Подтвердите зарплату»** — повторяющийся доход ещё не найден, либо вы его ещё не выбрали. Открывает экран настройки.
+- **«Укажите зарплату год назад»** — у приложения ещё нет полного года вашей подтверждённой зарплаты. Введите месячную сумму за год назад.
+- **«Поведите учёт ещё немного»** — приложению нужны расходы минимум за 3 месяца, чтобы понять, на что вы тратите.
+- **«Нет данных о ценах для вашей страны»** — для вашей страны не публикуется официальная статистика цен, а отсканированных чеков пока недостаточно, чтобы её заменить. Задайте страну вручную или отсканируйте ещё несколько чеков.
+- **«Недоступно при полном шифровании»** — аккаунты с полным сквозным шифрованием держат суммы нечитаемыми на сервере, поэтому для них это нельзя рассчитать.
+
+## Публикация
+
+Нажмите **Поделиться**, чтобы опубликовать свой результат. Карточка для публикации показывает **только проценты** — изменение зарплаты, вашу инфляцию, реальное изменение — но никогда реальную сумму зарплаты или расходов, так что можно поделиться успехом (или пожаловаться), не раскрывая, сколько вы зарабатываете.
+
+## Аргументы к повышению (Pro)
+
+Нажмите **Аргументы к повышению**, чтобы скачать одностраничный PDF с итогами вашего результата — пригодится для разговора о повышении. Он полностью построен на уже видимой на экране цифре (без дополнительных затрат на ИИ), доступен на всех языках приложения и его можно скачать только после того, как ваш результат полностью рассчитан (а не пока показано одно из сообщений выше).
+
+## Полезно знать
+
+- Бесплатно на любом уровне подписки — платный только PDF с аргументами.
+- Нужно подключение к сети — расчёт выполняется на сервере, без офлайн-режима.
+- Покрытие по странам сейчас — ЕС, ЕЭЗ и Швейцария (везде, где Евростат публикует официальную статистику цен); за их пределами приложение всё равно может отвечать только по вашим чекам, как только их накопится достаточно.
+- Недоступно на аккаунтах с полным сквозным шифрованием.
+- Всё показанное — это **оценка**, построенная на ваших категориях расходов и открытой статистике цен, а не финансовая или налоговая консультация.
+
+## Часто задаваемые вопросы
+
+- **В: Почему моя инфляция отличается от той, что в новостях?**
+  **О:** Заголовки новостей сообщают об одной усреднённой национальной потребительской корзине. Ваша ставка взвешена по тому, на что *вы* реально тратите деньги — если вы тратите больше на транспорт и меньше на рестораны, чем средний человек, ваша ставка отражает именно это.
+
+- **В: Почему моя страна определена автоматически и можно ли это изменить?**
+  **О:** Она определяется по часовому поясу вашего устройства, чтобы в первый день ничего не нужно было настраивать. Измените её в любой момент в **Настройки реальной зарплаты → Страна для официальных цен**.
+
+- **В: Работает ли это при включённом полном шифровании?**
+  **О:** Нет — полностью зашифрованный аккаунт держит ваши суммы нечитаемыми на сервере, а этому расчёту нужно их прочитать. Вместо результата вы увидите «Недоступно при полном шифровании».
+
+- **В: Для каких стран есть официальные данные о ценах?**
+  **О:** ЕС, ЕЭЗ и Швейцария — страны, для которых Евростат публикует гармонизированную статистику цен. В остальных случаях приложение полностью полагается на ваши собственные отсканированные чеки, как только их накопится достаточно.
+
+---
+
+*См. также: Персональный индекс инфляции | Щит от инфляции | Бюджеты*
+`,
+    },
   ],
   ua: [
     {
@@ -14413,6 +14599,99 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - Якщо на чеку була **знижка**, частки рахуються від реально сплаченого, а не від надрукованих цін - друг ніколи не платить ціну своїх позицій до знижки.
 `,
     },
+    {
+      id: '43-real-salary',
+      title: `Реальна зарплата — чи встигає ваше підвищення за вашими власними цінами?`,
+      description: `Порівнює, як змінилася ваша зарплата за останні 12 місяців, із вашою особистою інфляцією — не із загальною цифрою з новин, а зі ставкою, побудованою на тому, на що ви справді витрачаєте гроші — щоб ви бачили, чи підвищення є реальним виграшем, чи лише встигає за зростанням цін.`,
+      body: `# Реальна зарплата — чи встигає ваше підвищення за вашими власними цінами?
+
+> Порівнює, як змінилася ваша зарплата за останні 12 місяців, із вашою особистою інфляцією — не із загальною цифрою з новин, а зі ставкою, побудованою на тому, на що ви справді витрачаєте гроші — щоб ви бачили, чи підвищення є реальним виграшем, чи лише встигає за зростанням цін.
+
+## Що це таке
+
+Реальна зарплата відповідає на одне питання: чи купує ваша зарплата справді більше, чи зростає лише на папері? Вона зіставляє зміну вашої підтвердженої зарплати за останні 12 місяців із вашою **особистою інфляцією** — ставкою, побудованою на ваших власних категоріях витрат та офіційній статистиці цін для вашої країни, а не на заголовку з новин.
+
+Наприклад: ваша зарплата зросла на **+5%**, але ваша особиста інфляція становила **+8,3%** — ваша *реальна* зарплата насправді **впала приблизно на −3,0%**, хоча цифра у вашій розрахунковій відомості зросла.
+
+Функція **безкоштовна для всіх**. Лише односторінковий PDF «аргументи для підвищення», який можна завантажити й зберегти, — це функція **Pro**.
+
+## Де її знайти
+
+Відкрийте вкладку **Аналітика** і торкніться банера **Реальна зарплата** («Ваша зарплата проти вашої особистої інфляції»). Під час першого відкриття вас попросять підтвердити зарплату, перш ніж щось можна буде розрахувати.
+
+## Налаштування зарплати
+
+Застосунок переглядає ваші останні доходи в пошуках чогось, що повторюється — приблизно раз на місяць, щонайменше двічі за останні 90 днів — і пропонує це як кандидата. Оберіть той, що є вашою зарплатою.
+
+Якщо застосунок ще не має повного року цієї зарплати, він також запитає, **скільки ви отримували рік тому**, введене у валюті самої зарплати (не у вашій валюті відображення). Суму можна ввести так, як ви зазвичай її пишете — \`8400\`, \`8.400\`, \`8 400\` і \`8,400.50\` розуміються однаково, кома або крапка як десятковий роздільник, крапка/кома/пробіл як роздільник тисяч.
+
+Якщо нічого повторюваного не знайдено, спочатку додайте зарплату як дохід кілька разів — голосом, за чеком або вручну, джерело не має значення — а потім поверніться.
+
+## Налаштування
+
+Торкніться значка шестерні на екрані Реальної зарплати, щоб відкрити **Налаштування реальної зарплати**:
+
+- **Країна для офіційних цін** — під час першого відкриття екрана визначається за часовим поясом вашого пристрою (показується, наприклад, як «Польща (за часовим поясом)»). Торкніться, щоб вручну обрати будь-яку країну ЄС/ЄЕЗ/Швейцарії або повернутися до автоматично визначеної.
+- **До чого належить кожна категорія** — кожну з ваших категорій витрат можна зіставити з групою цін (Продукти та напої, Житло та комунальні послуги, Транспорт, Здоров'я тощо). Залишена як **Автоматично**, категорія призначається застосунком сама; змінювати це потрібно, лише якщо ви не згодні з припущенням для якоїсь категорії.
+
+## Як це розраховується
+
+- **Зміна зарплати** порівнює середню зарплату за період виплати за останні 12 місяців із попередніми 12 місяцями — використовуючи *періоди* виплат, а не календарні місяці, щоб день виплати, зсунутий через вихідні, не виглядав як підвищення чи скорочення.
+- **Ваша особиста інфляція** — це зважене середнє за вашими власними витратами: офіційна ставка кожної групи цін для вашої країни, зважена часткою ваших витрат, що припадає на неї. **Продукти та напої** натомість оцінюються за вашою власною історією відсканованих чеків, щойно у вас з'явиться щонайменше 10 відстежуваних товарів — ваші реальні ціни покупок, а не загальнонаціональне середнє.
+- **Реальна зміна зарплати** коригує зміну вашої зарплати на цю ставку інфляції, відповідаючи на питання «чи купили мої гроші більше, чи менше», а не просто «чи зросла моя цифра».
+- **Потрібне підвищення, щоб не відставати** — це наскільки більшим має бути підвищення до вашої *поточної* зарплати, щоб точно зрівнятися з вашою особистою інфляцією.
+
+## Що ви побачите
+
+- Головну цифру — реальну зміну вашої зарплати, зеленим (ви випереджаєте), червоним (ви відстаєте) або нейтральним кольором.
+- Зміну зарплати та вашу особисту інфляцію поряд одна з одною.
+- Розбивку того, де ціни зросли для вас, по одному рядку на групу цін, кожен позначений як **ваші чеки** або **офіційні дані** — залежно від джерела ставки.
+- Позначку, за який місяць офіційні дані, або що відповідь ґрунтується лише на чеках, якщо ваша країна не має офіційного покриття.
+- Нагадування, що це **оцінка, а не фінансова консультація**.
+
+## Що означає кожне повідомлення
+
+- **«Підтвердьте зарплату»** — повторюваний дохід ще не знайдено, або ви ще не обрали його. Відкриває екран налаштування.
+- **«Вкажіть зарплату рік тому»** — застосунок ще не має повного року вашої підтвердженої зарплати. Введіть місячну суму за рік тому.
+- **«Ведіть облік ще трохи»** — застосунку потрібні витрати щонайменше за 3 місяці, щоб зрозуміти, на що ви витрачаєте.
+- **«Немає даних про ціни для вашої країни»** — для вашої країни не публікується офіційна статистика цін, а відсканованих чеків поки що недостатньо, щоб її замінити. Встановіть країну вручну або відскануйте ще кілька чеків.
+- **«Недоступно з повним шифруванням»** — акаунти з повним наскрізним шифруванням тримають суми нечитабельними на сервері, тож для них це неможливо розрахувати.
+
+## Публікація
+
+Торкніться **Поділитися**, щоб опублікувати свій результат. Картка для публікації показує **лише відсотки** — зміну зарплати, вашу інфляцію, реальну зміну — але ніколи реальну суму зарплати чи витрат, тож можна поділитися успіхом (або поскаржитися), не розкриваючи, скільки ви заробляєте.
+
+## Аргументи для підвищення (Pro)
+
+Торкніться **Аргументи для підвищення**, щоб завантажити односторінковий PDF із підсумком вашого результату — стане в пригоді для розмови про підвищення. Він повністю побудований на цифрі, вже видимій на екрані (без додаткових витрат на ШІ), доступний усіма мовами застосунку, і завантажити його можна лише після того, як ваш результат повністю розраховано (а не поки показано одне з повідомлень вище).
+
+## Корисно знати
+
+- Безкоштовно на будь-якому рівні підписки — платний лише PDF з аргументами.
+- Потрібне з'єднання — розрахунок виконується на сервері, без офлайн-режиму.
+- Покриття по країнах зараз — ЄС, ЄЕЗ і Швейцарія (всюди, де Євростат публікує офіційну статистику цін); поза цим застосунок усе одно може відповідати лише за вашими чеками, щойно їх набереться достатньо.
+- Недоступно на акаунтах з повним наскрізним шифруванням.
+- Усе показане — це **оцінка**, побудована на ваших категоріях витрат і відкритій статистиці цін, а не фінансова чи податкова консультація.
+
+## Часті запитання
+
+- **З: Чому моя інфляція відрізняється від тієї, що в новинах?**
+  **В:** Заголовки новин повідомляють про один усереднений національний споживчий кошик. Ваша ставка зважена за тим, на що *ви* справді витрачаєте гроші — якщо ви витрачаєте більше на транспорт і менше на ресторани, ніж середня людина, ваша ставка відображає саме це.
+
+- **З: Чому моя країна визначена автоматично і чи можна це змінити?**
+  **В:** Вона визначається за часовим поясом вашого пристрою, щоб першого дня нічого не треба було налаштовувати. Змініть її будь-коли в **Налаштування реальної зарплати → Країна для офіційних цін**.
+
+- **З: Чи працює це з увімкненим повним шифруванням?**
+  **В:** Ні — повністю зашифрований акаунт тримає ваші суми нечитабельними на сервері, а цьому розрахунку потрібно їх прочитати. Замість результату ви побачите «Недоступно з повним шифруванням».
+
+- **З: Для яких країн є офіційні дані про ціни?**
+  **В:** ЄС, ЄЕЗ і Швейцарія — країни, для яких Євростат публікує гармонізовану статистику цін. В інших випадках застосунок повністю покладається на ваші власні відскановані чеки, щойно їх набереться достатньо.
+
+---
+
+*Див. також: Персональний індекс інфляції | Щит від інфляції | Бюджети*
+`,
+    },
   ],
   pl: [
     {
@@ -19168,6 +19447,99 @@ Link, z którego nikt nie skorzystał w ciągu 30 dni od utworzenia, po prostu p
 - Jeśli na paragonie był **rabat**, udziały liczone są od tego, co faktycznie zapłacono, a nie od wydrukowanych cen - znajomy nigdy nie płaci ceny sprzed rabatu.
 `,
     },
+    {
+      id: '43-real-salary',
+      title: `Realna pensja — czy Twoja podwyżka nadąża za Twoimi własnymi cenami?`,
+      description: `Porównuje, jak Twoja pensja zmieniła się w ciągu ostatnich 12 miesięcy, z Twoją własną osobistą stopą inflacji — nie z krajowym nagłówkiem, tylko ze stopą zbudowaną z tego, na co naprawdę wydajesz pieniądze — żebyś widział/a, czy podwyżka to prawdziwy zysk, czy tylko nadążanie za rosnącymi cenami.`,
+      body: `# Realna pensja — czy Twoja podwyżka nadąża za Twoimi własnymi cenami?
+
+> Porównuje, jak Twoja pensja zmieniła się w ciągu ostatnich 12 miesięcy, z Twoją własną osobistą stopą inflacji — nie z krajowym nagłówkiem, tylko ze stopą zbudowaną z tego, na co naprawdę wydajesz pieniądze — żebyś widział/a, czy podwyżka to prawdziwy zysk, czy tylko nadążanie za rosnącymi cenami.
+
+## Czym to jest
+
+Realna pensja odpowiada na jedno pytanie: czy Twoja wypłata rzeczywiście pozwala kupić więcej, czy tylko rośnie na papierze? Zestawia zmianę Twojej potwierdzonej pensji w ciągu ostatnich 12 miesięcy z Twoją **osobistą stopą inflacji** — stopą zbudowaną z Twoich własnych kategorii wydatków i oficjalnych statystyk cen dla Twojego kraju, a nie z nagłówka w wiadomościach.
+
+Na przykład: Twoja pensja wzrosła o **+5%**, ale Twoja osobista inflacja wyniosła **+8,3%** — Twoja *realna* pensja w rzeczywistości **spadła o około −3,0%**, mimo że liczba na Twoim odcinku wypłaty poszła w górę.
+
+Funkcja jest **darmowa dla wszystkich**. Tylko jednostronicowy PDF „argumenty do podwyżki" do pobrania i zachowania jest funkcją **Pro**.
+
+## Gdzie ją znaleźć
+
+Otwórz zakładkę **Analityka** i dotknij baneru **Realna pensja** („Twoja pensja a Twoja własna inflacja"). Przy pierwszym otwarciu zostaniesz poproszony/a o potwierdzenie pensji, zanim cokolwiek zostanie obliczone.
+
+## Ustawianie pensji
+
+Aplikacja przegląda Twoje ostatnie przychody w poszukiwaniu czegoś, co się powtarza — mniej więcej raz w miesiącu, co najmniej dwa razy w ciągu ostatnich 90 dni — i proponuje to jako kandydata. Wybierz ten, który jest Twoją pensją.
+
+Jeśli aplikacja nie ma jeszcze pełnego roku tej pensji, poprosi też o **to, ile zarabiałeś/aś rok temu**, wpisane w walucie samej pensji (nie w Twojej walucie wyświetlania). Możesz wpisać kwotę tak, jak zwykle ją zapisujesz — \`8400\`, \`8.400\`, \`8 400\` i \`8,400.50\` są rozumiane, przecinek lub kropka jako separator dziesiętny, kropka/przecinek/spacja jako separator tysięcy.
+
+Jeśli nic powtarzającego się nie zostanie znalezione, dodaj najpierw kilka razy swoją pensję jako przychód — głosem, z paragonu lub ręcznie, każde źródło się liczy — i wróć później.
+
+## Ustawienia
+
+Dotknij ikony zębatki na ekranie Realnej pensji, aby otworzyć **Ustawienia realnej pensji**:
+
+- **Kraj dla oficjalnych cen** — przy pierwszym otwarciu ekranu zgadywany na podstawie strefy czasowej Twojego urządzenia (pokazywany np. jako „Polska (z Twojej strefy czasowej)"). Dotknij, aby ręcznie wybrać dowolny kraj UE/EOG/Szwajcarii albo wrócić do zgadywanego.
+- **Czym jest każda kategoria** — każdą z Twoich kategorii wydatków można przypisać do grupy cenowej (Żywność i napoje, Mieszkanie i media, Transport, Zdrowie itd.). Pozostawiona na **Automatycznie**, aplikacja sama ją przypisuje; wystarczy to zmienić tylko wtedy, gdy nie zgadzasz się z domysłem dla danej kategorii.
+
+## Jak to jest obliczane
+
+- **Zmiana pensji** porównuje średnią pensję na okres wypłaty w ostatnich 12 miesiącach z poprzednimi 12 miesiącami — używając *okresów* wypłat, a nie miesięcy kalendarzowych, więc dzień wypłaty przesunięty przez weekend nie wygląda jak podwyżka albo obcięcie.
+- **Twoja osobista inflacja** to średnia ważona po Twoich własnych wydatkach: oficjalna stopa każdej grupy cenowej dla Twojego kraju, ważona tym, jaka część Twoich wydatków w nią wpada. **Żywność i napoje** są zamiast tego wyceniane na podstawie Twojej własnej historii zeskanowanych paragonów, gdy masz już co najmniej 10 śledzonych produktów — Twoje prawdziwe ceny zakupów, nie krajowa średnia.
+- **Realna zmiana pensji** koryguje zmianę Twojej pensji o tę stopę inflacji, więc odpowiada na pytanie „czy moje pieniądze kupiły więcej czy mniej", a nie tylko „czy moja liczba wzrosła".
+- **Podwyżka potrzebna, by nie tracić** to o ile większa musiałaby być podwyżka, licząc od Twojej *obecnej* pensji, żeby dokładnie zrównoważyć Twoją własną inflację.
+
+## Co zobaczysz
+
+- Liczbę główną — realną zmianę Twojej pensji, w kolorze zielonym (wyprzedzasz), czerwonym (jesteś w tyle) lub neutralnym.
+- Zmianę pensji i osobistą inflację obok siebie.
+- Rozbicie na to, gdzie ceny wzrosły u Ciebie, jeden wiersz na grupę cenową, każdy oznaczony jako **Twoje paragony** albo **dane oficjalne**, w zależności od źródła stopy.
+- Informację, z którego miesiąca pochodzą dane oficjalne, albo że odpowiedź opiera się wyłącznie na paragonach, gdy Twój kraj nie ma oficjalnego pokrycia.
+- Przypomnienie, że to **szacunek, a nie porada finansowa**.
+
+## Co oznacza każdy komunikat
+
+- **„Potwierdź swoją pensję"** — nie znaleziono jeszcze powtarzającego się przychodu albo jeszcze go nie wybrałeś/aś. Otwiera ekran konfiguracji.
+- **„Podaj pensję sprzed roku"** — aplikacja nie ma jeszcze pełnego roku Twojej potwierdzonej pensji. Wpisz miesięczną kwotę sprzed roku.
+- **„Śledź wydatki jeszcze trochę"** — aplikacja potrzebuje co najmniej 3 miesięcy wydatków, by wiedzieć, na co wydajesz.
+- **„Brak danych o cenach dla Twojego kraju"** — dla Twojego kraju nie publikuje się oficjalnych statystyk cen, a Ty nie masz jeszcze wystarczająco dużo zeskanowanych paragonów, żeby je zastąpić. Ustaw kraj ręcznie albo zeskanuj jeszcze kilka paragonów.
+- **„Niedostępne przy pełnym szyfrowaniu"** — konta z pełnym szyfrowaniem end-to-end trzymają kwoty nieczytelne na serwerze, więc nie da się tego dla nich obliczyć.
+
+## Udostępnianie
+
+Dotknij **Udostępnij**, aby opublikować swój wynik. Karta udostępniania pokazuje **wyłącznie procenty** — zmianę pensji, inflację, realną zmianę — nigdy Twoją rzeczywistą pensję ani kwoty wydatków, więc możesz pochwalić się sukcesem (albo ponarzekać), nie zdradzając, ile zarabiasz.
+
+## Argumenty do podwyżki (Pro)
+
+Dotknij **Argumenty do podwyżki**, aby pobrać jednostronicowy PDF podsumowujący Twój wynik — przydatny na rozmowę o podwyżce. Jest zbudowany wyłącznie z liczby już widocznej na ekranie (bez dodatkowego kosztu AI), dostępny we wszystkich językach aplikacji i możliwy do pobrania dopiero, gdy Twój wynik zostanie w pełni obliczony (nie wtedy, gdy widoczny jest którykolwiek z powyższych komunikatów).
+
+## Warto wiedzieć
+
+- Darmowe na każdym poziomie subskrypcji — Pro jest tylko PDF z argumentami.
+- Wymaga połączenia — obliczenia odbywają się na serwerze, bez trybu offline.
+- Pokrycie krajów obejmuje obecnie UE, EOG i Szwajcarię (wszędzie tam, gdzie Eurostat publikuje oficjalne statystyki cen); poza tym aplikacja nadal może odpowiedzieć wyłącznie na podstawie Twoich paragonów, gdy masz ich już wystarczająco dużo.
+- Niedostępne na kontach z pełnym szyfrowaniem end-to-end.
+- Wszystko, co widzisz, to **szacunek** zbudowany z Twoich kategorii wydatków i publicznych statystyk cen — nie porada finansowa ani podatkowa.
+
+## FAQ
+
+- **P: Dlaczego moja inflacja różni się od tej z wiadomości?**
+  **O:** Nagłówki relacjonują jeden krajowy przeciętny koszyk zakupowy. Twoja stopa jest ważona tym, na co *Ty* naprawdę wydajesz pieniądze — jeśli wydajesz więcej na transport, a mniej na restauracje niż przeciętna osoba, Twoja stopa odzwierciedla właśnie to.
+
+- **P: Dlaczego mój kraj jest zgadywany i czy mogę go zmienić?**
+  **O:** Jest zgadywany na podstawie strefy czasowej Twojego urządzenia, żeby pierwszego dnia nie trzeba było niczego ustawiać. Zmień go w dowolnym momencie w **Ustawienia realnej pensji → Kraj dla oficjalnych cen**.
+
+- **P: Czy to działa przy włączonym pełnym szyfrowaniu?**
+  **O:** Nie — konto z pełnym szyfrowaniem trzyma Twoje kwoty nieczytelne na serwerze, a te obliczenia muszą je odczytać. Zamiast wyniku zobaczysz „Niedostępne przy pełnym szyfrowaniu".
+
+- **P: Dla których krajów są dostępne oficjalne dane o cenach?**
+  **O:** UE, EOG i Szwajcaria — kraje, dla których Eurostat publikuje zharmonizowane statystyki cen. Gdzie indziej aplikacja polega wyłącznie na Twoich własnych zeskanowanych paragonach, gdy masz ich już wystarczająco dużo.
+
+---
+
+*Zobacz także: Osobisty wskaźnik inflacji | Tarcza antyinflacyjna | Budżety*
+`,
+    },
   ],
   de: [
     {
@@ -23898,6 +24270,99 @@ Ein Link, der 30 Tage nach Erstellung nicht genutzt wurde, funktioniert einfach 
 - Trug der Bon einen **Rabatt**, werden die Anteile aus dem tatsächlich gezahlten Betrag berechnet, nicht aus den gedruckten Preisen - ein Freund zahlt also nie den Preis vor Rabatt.
 `,
     },
+    {
+      id: '43-real-salary',
+      title: `Reallohn — hält deine Gehaltserhöhung mit deinen eigenen Preisen mit?`,
+      description: `Vergleicht, wie sich dein Gehalt in den letzten 12 Monaten verändert hat, mit deiner eigenen persönlichen Inflationsrate — nicht der nationalen Schlagzeilenzahl, sondern einer, die aus dem aufgebaut ist, wofür du dein Geld tatsächlich ausgibst — damit du siehst, ob eine Gehaltserhöhung ein echter Gewinn ist oder nur mit steigenden Preisen mithält.`,
+      body: `# Reallohn — hält deine Gehaltserhöhung mit deinen eigenen Preisen mit?
+
+> Vergleicht, wie sich dein Gehalt in den letzten 12 Monaten verändert hat, mit deiner eigenen persönlichen Inflationsrate — nicht der nationalen Schlagzeilenzahl, sondern einer, die aus dem aufgebaut ist, wofür du dein Geld tatsächlich ausgibst — damit du siehst, ob eine Gehaltserhöhung ein echter Gewinn ist oder nur mit steigenden Preisen mithält.
+
+## Was es ist
+
+Der Reallohn beantwortet eine Frage: Kauft dein Gehalt tatsächlich mehr, oder wächst es nur auf dem Papier? Er stellt die Veränderung deines bestätigten Gehalts über die letzten 12 Monate deiner **persönlichen Inflationsrate** gegenüber — einer Rate, die aus deinen eigenen Ausgabenkategorien und amtlichen Preisstatistiken für dein Land gebildet wird, nicht aus einer nationalen Schlagzeile.
+
+Zum Beispiel: Dein Gehalt stieg um **+5 %**, aber deine persönliche Inflation lag bei **+8,3 %** — dein *realer* Lohn ist damit um etwa **−3,0 % gesunken**, obwohl die Zahl auf deiner Gehaltsabrechnung gestiegen ist.
+
+Die Funktion ist **für alle kostenlos**. Nur das einseitige PDF-„Argumentepapier" zum Herunterladen ist eine **Pro**-Funktion.
+
+## Wo du ihn findest
+
+Öffne den Tab **Analysen** und tippe auf das Banner **Reallohn** („Dein Gehalt im Vergleich zu deiner eigenen Inflation"). Beim ersten Öffnen wirst du gebeten, dein Gehalt zu bestätigen, bevor überhaupt etwas berechnet werden kann.
+
+## Dein Gehalt einrichten
+
+Die App durchsucht deine letzten Einnahmen nach etwas, das sich wiederholt — etwa einmal im Monat, mindestens zweimal in den letzten 90 Tagen — und schlägt es dir als Kandidaten vor. Wähle die, die dein Gehalt ist.
+
+Wenn die App noch kein volles Jahr dieses Gehalts kennt, fragt sie zusätzlich, **was du vor einem Jahr verdient hast**, eingegeben in der eigenen Währung des Gehalts (nicht deiner Anzeigewährung). Du kannst es so eingeben, wie du es normalerweise schreibst — \`8400\`, \`8.400\`, \`8 400\` und \`8.400,50\` werden alle verstanden, Komma oder Punkt als Dezimaltrennzeichen, Punkt/Komma/Leerzeichen als Tausendertrennzeichen.
+
+Wird nichts Wiederkehrendes gefunden, erfasse dein Gehalt zuerst ein paar Mal als Einnahme — per Sprache, Beleg oder manuell, jede Quelle zählt — und komm dann zurück.
+
+## Einstellungen
+
+Tippe auf das Zahnrad-Symbol auf dem Reallohn-Bildschirm, um die **Reallohn-Einstellungen** zu öffnen:
+
+- **Land für amtliche Preise** — beim ersten Öffnen des Bildschirms aus der Zeitzone deines Geräts geraten (angezeigt z. B. als „Polen (aus deiner Zeitzone)"). Tippe darauf, um von Hand ein beliebiges EU-/EWR-/Schweiz-Land zu wählen oder zur geratenen Auswahl zurückzukehren.
+- **Wozu jede Kategorie zählt** — jede deiner Ausgabenkategorien kann einer Preisgruppe zugeordnet werden (Lebensmittel und Getränke, Wohnen und Energie, Verkehr, Gesundheit und so weiter). Bleibt sie auf **Automatisch**, weist die App selbst eine zu; ändere das nur, wenn du mit der Vermutung für eine Kategorie nicht einverstanden bist.
+
+## So wird es berechnet
+
+- **Gehaltsänderung** vergleicht das durchschnittliche Gehalt pro Zahlungsperiode der letzten 12 Monate mit den 12 Monaten davor — anhand von Zahlungs*perioden*, nicht Kalendermonaten, damit ein Zahltag, der sich wegen eines Wochenendes verschiebt, nicht wie eine Erhöhung oder Kürzung aussieht.
+- **Deine persönliche Inflation** ist ein gewichteter Durchschnitt über deine eigenen Ausgaben: die amtliche Rate jeder Preisgruppe für dein Land, gewichtet danach, wie viel deiner Ausgaben in sie fällt. **Lebensmittel und Getränke** wird stattdessen aus deiner eigenen Beleg-Historie bepreist, sobald du mindestens 10 erfasste Produkte hast — deine tatsächlichen Einkaufspreise, kein nationaler Durchschnitt.
+- **Reale Gehaltsänderung** passt deine Gehaltsänderung an diese Inflationsrate an und beantwortet damit „konnte ich mir mehr oder weniger leisten", nicht nur „ist meine Zahl gestiegen".
+- **Nötige Erhöhung, um mitzuhalten** ist, um wie viel größer eine Erhöhung auf dein *aktuelles* Gehalt sein müsste, um genau mit deiner eigenen Inflation gleichzuziehen.
+
+## Was du siehst
+
+- Eine Hauptzahl — deine reale Gehaltsänderung, in Grün (voraus), Rot (zurück) oder neutral.
+- Deine Gehaltsänderung und deine persönliche Inflation nebeneinander.
+- Eine Aufschlüsselung, wo die Preise für dich gestiegen sind, eine Zeile pro Preisgruppe, jeweils markiert mit **deine Belege** oder **amtliche Daten**, je nachdem, woher die Rate stammt.
+- Ein Hinweis, für welchen Monat die amtlichen Daten gelten, oder dass die Antwort nur auf Belegen basiert, wenn für dein Land keine amtliche Abdeckung existiert.
+- Eine Erinnerung, dass dies **eine Schätzung, keine Finanzberatung** ist.
+
+## Was jede Meldung bedeutet
+
+- **„Bestätige dein Gehalt"** — es wurde noch keine wiederkehrende Einnahme gefunden, oder du hast noch keine ausgewählt. Öffnet den Einrichtungsbildschirm.
+- **„Nenne dein Gehalt vor einem Jahr"** — die App hat noch kein volles Jahr deines bestätigten Gehalts. Gib die Monatszahl von vor einem Jahr ein.
+- **„Erfasse noch etwas länger"** — die App braucht mindestens 3 Monate Ausgaben, um zu wissen, wofür du Geld ausgibst.
+- **„Keine Preisdaten für dein Land"** — für dein Land werden keine amtlichen Preisstatistiken veröffentlicht, und du hast noch nicht genug gescannte Belege, um sie zu ersetzen. Lege dein Land von Hand fest oder scanne ein paar weitere Belege.
+- **„Bei vollständiger Verschlüsselung nicht verfügbar"** — Konten mit vollständiger Ende-zu-Ende-Verschlüsselung halten Beträge auf dem Server unlesbar, daher kann dies für sie nicht berechnet werden.
+
+## Teilen
+
+Tippe auf **Teilen**, um dein Ergebnis zu posten. Die Teilen-Karte zeigt **nur Prozentwerte** — deine Gehaltsänderung, deine Inflation, deine reale Änderung — nie deinen tatsächlichen Gehalts- oder Ausgabenbetrag, sodass du einen Erfolg (oder Frust) teilen kannst, ohne zu verraten, was du verdienst.
+
+## Argumente für die Gehaltserhöhung (Pro)
+
+Tippe auf **Argumente für die Gehaltserhöhung**, um ein einseitiges PDF mit einer Zusammenfassung deines Ergebnisses herunterzuladen — nützlich für ein Gehaltsgespräch. Es basiert vollständig auf der Zahl, die bereits auf deinem Bildschirm steht (keine zusätzlichen KI-Kosten), ist in allen App-Sprachen verfügbar und nur herunterladbar, sobald dein Ergebnis vollständig berechnet ist (nicht, während eine der obigen Meldungen angezeigt wird).
+
+## Gut zu wissen
+
+- Kostenlos für jede Abo-Stufe — nur das PDF-Dokument ist Pro.
+- Braucht eine Verbindung — die Berechnung läuft auf dem Server, es gibt keinen Offline-Modus.
+- Die Länderabdeckung umfasst derzeit die EU, den EWR und die Schweiz (überall dort, wo Eurostat amtliche Preisstatistiken veröffentlicht); außerhalb davon kann die App trotzdem allein aus deinen Belegen antworten, sobald du genug davon hast.
+- Nicht verfügbar bei Konten mit vollständiger Ende-zu-Ende-Verschlüsselung.
+- Alles Angezeigte ist eine **Schätzung**, aufgebaut aus deinen Ausgabenkategorien und öffentlichen Preisstatistiken — keine Finanz- oder Steuerberatung.
+
+## FAQ
+
+- **F: Warum unterscheidet sich meine Inflation von der in den Nachrichten?**
+  **A:** Schlagzeilen berichten über einen einzigen nationalen Durchschnittswarenkorb. Deine Rate ist danach gewichtet, wofür *du* tatsächlich Geld ausgibst — gibst du mehr für Verkehr und weniger für Restaurants aus als der Durchschnitt, spiegelt deine Rate genau das wider.
+
+- **F: Warum wird mein Land geraten, und kann ich es ändern?**
+  **A:** Es wird aus der Zeitzone deines Geräts geraten, damit du am ersten Tag nichts einrichten musst. Ändere es jederzeit unter **Reallohn-Einstellungen → Land für amtliche Preise**.
+
+- **F: Funktioniert das bei eingeschalteter vollständiger Verschlüsselung?**
+  **A:** Nein — ein vollständig verschlüsseltes Konto hält deine Beträge auf dem Server unlesbar, und diese Berechnung muss sie lesen können. Du siehst stattdessen „Bei vollständiger Verschlüsselung nicht verfügbar".
+
+- **F: Für welche Länder gibt es amtliche Preisdaten?**
+  **A:** Die EU, der EWR und die Schweiz — die Länder, für die Eurostat harmonisierte Preisstatistiken veröffentlicht. Anderswo verlässt sich die App vollständig auf deine eigenen gescannten Belege, sobald du genug davon hast.
+
+---
+
+*Siehe auch: Persönlicher Inflationsindex | Inflationsschutz | Budgets*
+`,
+    },
   ],
   es: [
     {
@@ -28617,6 +29082,99 @@ Un enlace que no se haya usado en los 30 días posteriores a su creación deja d
 - Si el recibo tenía un **descuento**, las partes se calculan sobre lo que realmente pagaste, no sobre los precios impresos - así un amigo nunca paga el precio previo al descuento.
 `,
     },
+    {
+      id: '43-real-salary',
+      title: `Salario real — ¿tu subida va al ritmo de tus propios precios?`,
+      description: `Compara cómo ha cambiado tu sueldo en los últimos 12 meses frente a tu propia tasa de inflación personal — no el titular nacional, sino una calculada a partir de aquello en lo que realmente gastas — para que veas si una subida es una ganancia real o solo sigue el ritmo de los precios.`,
+      body: `# Salario real — ¿tu subida va al ritmo de tus propios precios?
+
+> Compara cómo ha cambiado tu sueldo en los últimos 12 meses frente a tu propia tasa de inflación personal — no el titular nacional, sino una calculada a partir de aquello en lo que realmente gastas — para que veas si una subida es una ganancia real o solo sigue el ritmo de los precios.
+
+## Qué es
+
+El Salario real responde a una sola pregunta: ¿tu sueldo compra realmente más, o solo crece sobre el papel? Compara el cambio de tu sueldo confirmado en los últimos 12 meses con tu **tasa de inflación personal** — una tasa construida a partir de tus propias categorías de gasto y las estadísticas oficiales de precios de tu país, no de un titular de prensa.
+
+Por ejemplo: tu sueldo subió un **+5 %**, pero tu inflación personal resultó ser del **+8,3 %** — tu sueldo *real* en realidad **bajó cerca de un −3,0 %**, aunque la cifra de tu nómina haya subido.
+
+Es **gratis para todos**. Solo el PDF de una página con «argumentos para tu subida», que puedes descargar y guardar, es una función **Pro**.
+
+## Dónde encontrarlo
+
+Abre la pestaña **Análisis** y toca el banner **Salario real** («Tu sueldo frente a tu propia inflación»). La primera vez que lo abras, se te pedirá que confirmes tu sueldo antes de poder calcular nada.
+
+## Configurar tu sueldo
+
+La app revisa tus ingresos recientes en busca de algo que se repita — más o menos una vez al mes, al menos dos veces en los últimos 90 días — y te lo propone como candidato. Elige el que sea tu sueldo.
+
+Si la app todavía no tiene un año completo de ese sueldo, también te pedirá **lo que ganabas hace un año**, escrito en la propia moneda del sueldo (no en tu moneda de visualización). Puedes escribirlo como lo harías normalmente — \`8400\`, \`8.400\`, \`8 400\` y \`8.400,50\` se entienden todos, coma o punto como separador decimal, punto/coma/espacio como separador de miles.
+
+Si no se encuentra nada que se repita, añade tu sueldo como ingreso un par de veces primero — por voz, recibo o entrada manual, cualquier origen cuenta — y vuelve después.
+
+## Ajustes
+
+Toca el icono del engranaje en la pantalla de Salario real para abrir los **Ajustes del salario real**:
+
+- **País para los precios oficiales** — deducido de la zona horaria de tu dispositivo la primera vez que abres la pantalla (se muestra, por ejemplo, como «Polonia (según tu zona horaria)»). Tócalo para elegir a mano cualquier país de la UE, el EEE o Suiza, o para volver a la deducción automática.
+- **A qué corresponde cada categoría** — cada una de tus categorías de gasto puede asignarse a un grupo de precios (Alimentos y bebidas, Vivienda y suministros, Transporte, Salud, etc.). Si se deja en **Automático**, la app asigna uno por ti; solo tienes que tocarlo si no estás de acuerdo con la suposición de una categoría.
+
+## Cómo se calcula
+
+- **El cambio de sueldo** compara el sueldo medio por periodo de pago de los últimos 12 meses con los 12 meses anteriores — usando *periodos* de pago, no meses del calendario, para que una nómina que se desplaza por un fin de semana no parezca una subida o un recorte.
+- **Tu inflación personal** es una media ponderada de tus propios gastos: la tasa oficial de cada grupo de precios para tu país, ponderada según cuánto de tu gasto cae en él. **Alimentos y bebidas** se calcula en cambio a partir de tu propio historial de recibos escaneados, una vez que tienes al menos 10 productos registrados — tus precios reales de compra, no una media nacional.
+- **El cambio real de sueldo** ajusta tu cambio de sueldo por esa tasa de inflación, así que responde a «¿mi dinero compró más o menos?», no solo «¿subió mi número?».
+- **La subida necesaria para no perder** es cuánto más grande tendría que ser una subida, sobre tu sueldo *actual*, para quedar exactamente igualado con tu propia inflación.
+
+## Qué verás
+
+- Una cifra destacada — tu cambio real de sueldo, en verde (vas por delante), rojo (vas por detrás) o neutro.
+- Tu cambio de sueldo y tu inflación personal, uno junto al otro.
+- Un desglose de dónde subieron los precios para ti, una fila por grupo de precios, cada una etiquetada como **tus recibos** o **datos oficiales** según de dónde venga su tasa.
+- Una nota que indica de qué mes son los datos oficiales, o que la respuesta se basa solo en recibos cuando tu país no tiene cobertura oficial.
+- Un recordatorio de que esto es **una estimación, no asesoramiento financiero**.
+
+## Qué significa cada mensaje
+
+- **«Confirma tu sueldo»** — todavía no se ha encontrado ningún ingreso que se repita, o aún no has elegido uno. Abre la pantalla de configuración.
+- **«Indica tu sueldo de hace un año»** — la app todavía no tiene un año completo de tu sueldo confirmado. Introduce la cifra mensual de hace un año.
+- **«Sigue registrando un poco más»** — la app necesita al menos 3 meses de gastos para saber en qué gastas.
+- **«No hay datos de precios para tu país»** — no se publican estadísticas oficiales de precios para tu país, y todavía no tienes suficientes recibos escaneados para sustituirlas. Fija tu país a mano o escanea algunos recibos más.
+- **«No disponible con cifrado completo»** — las cuentas con cifrado de extremo a extremo completo mantienen los importes ilegibles en el servidor, así que esto no se puede calcular para ellas.
+
+## Compartir
+
+Toca **Compartir** para publicar tu resultado. La tarjeta para compartir muestra **solo porcentajes** — tu cambio de sueldo, tu inflación, tu cambio real — nunca tu sueldo real ni tus importes de gasto, para que puedas compartir un logro (o un desahogo) sin revelar cuánto ganas.
+
+## Argumentos para una subida (Pro)
+
+Toca **Argumentos para una subida** para descargar un PDF de una página que resume tu resultado — útil para llevar a una conversación sobre tu sueldo. Se construye enteramente a partir de la cifra que ya tienes en pantalla (sin coste adicional de IA), está disponible en todos los idiomas de la app, y solo se puede descargar una vez que tu resultado esté completamente calculado (no mientras se muestre alguno de los mensajes anteriores).
+
+## Es bueno saber
+
+- Gratis en todos los niveles de suscripción — solo el PDF de argumentos es Pro.
+- Necesita conexión — se calcula en el servidor, sin alternativa sin conexión.
+- La cobertura por país es actualmente la UE, el EEE y Suiza (allí donde Eurostat publica estadísticas oficiales de precios); fuera de eso, la app puede seguir respondiendo solo con tus recibos en cuanto tengas suficientes.
+- No disponible en cuentas con cifrado de extremo a extremo completo.
+- Todo lo que se muestra es una **estimación** construida a partir de tus categorías de gasto y estadísticas públicas de precios — no es asesoramiento financiero ni fiscal.
+
+## Preguntas frecuentes
+
+- **P: ¿Por qué mi inflación es distinta de la que sale en las noticias?**
+  **R:** Los titulares informan de una única cesta media nacional. La tuya está ponderada por aquello en lo que *tú* realmente gastas dinero — si gastas más en transporte y menos en restaurantes que la persona media, tu tasa refleja precisamente eso.
+
+- **P: ¿Por qué se deduce mi país, y puedo cambiarlo?**
+  **A:** Se deduce de la zona horaria de tu dispositivo, para que no tengas que configurar nada el primer día. Cámbialo cuando quieras en **Ajustes del salario real → País para los precios oficiales**.
+
+- **P: ¿Funciona con el cifrado completo activado?**
+  **R:** No — una cuenta totalmente cifrada mantiene tus importes ilegibles en el servidor, y este cálculo necesita leerlos. Verás «No disponible con cifrado completo» en lugar de un resultado.
+
+- **P: ¿Qué países tienen datos oficiales de precios?**
+  **R:** La UE, el EEE y Suiza — los países para los que Eurostat publica estadísticas de precios armonizadas. En el resto, la app depende por completo de tus propios recibos escaneados en cuanto tienes suficientes.
+
+---
+
+*Ver también: Índice de Inflación Personal | Escudo contra la inflación | Presupuestos*
+`,
+    },
   ],
   fr: [
     {
@@ -33334,6 +33892,99 @@ Un lien qui n'a pas été utilisé dans les 30 jours suivant sa création cesse 
 - Si le ticket comportait une **remise**, les parts sont calculées sur ce que vous avez réellement payé, et non sur les prix imprimés - un ami ne paie donc jamais le prix avant remise.
 `,
     },
+    {
+      id: '43-real-salary',
+      title: `Salaire réel — votre augmentation suit-elle vos propres prix ?`,
+      description: `Compare l'évolution de votre salaire sur les 12 derniers mois à votre propre taux d'inflation personnel — pas le chiffre national des gros titres, mais un taux construit à partir de ce que vous dépensez réellement — pour voir si une augmentation est un vrai gain ou seulement de quoi suivre la hausse des prix.`,
+      body: `# Salaire réel — votre augmentation suit-elle vos propres prix ?
+
+> Compare l'évolution de votre salaire sur les 12 derniers mois à votre propre taux d'inflation personnel — pas le chiffre national des gros titres, mais un taux construit à partir de ce que vous dépensez réellement — pour voir si une augmentation est un vrai gain ou seulement de quoi suivre la hausse des prix.
+
+## De quoi s'agit-il
+
+Le Salaire réel répond à une seule question : votre salaire achète-t-il vraiment plus, ou grossit-il seulement sur le papier ? Il compare l'évolution de votre salaire confirmé sur les 12 derniers mois à votre **taux d'inflation personnel** — un taux construit à partir de vos propres catégories de dépenses et des statistiques de prix officielles de votre pays, pas d'un titre de presse national.
+
+Par exemple : votre salaire a augmenté de **+5 %**, mais votre inflation personnelle ressort à **+8,3 %** — votre salaire *réel* a en fait **baissé d'environ −3,0 %**, même si le chiffre sur votre fiche de paie a augmenté.
+
+C'est **gratuit pour tout le monde**. Seul le PDF d'une page « arguments pour l'augmentation », téléchargeable et conservable, est une fonctionnalité **Pro**.
+
+## Où le trouver
+
+Ouvrez l'onglet **Analyses** et touchez la bannière **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
+
+## Configurer votre salaire
+
+L'application parcourt vos revenus récents à la recherche de quelque chose qui se répète — à peu près une fois par mois, au moins deux fois au cours des 90 derniers jours — et vous le propose comme candidat. Choisissez celui qui correspond à votre salaire.
+
+Si l'application n'a pas encore une année complète de ce salaire, elle demande aussi **ce que vous gagniez il y a un an**, saisi dans la devise propre au salaire (pas votre devise d'affichage). Vous pouvez le saisir comme vous l'écririez normalement — \`8400\`, \`8.400\`, \`8 400\` et \`8,400.50\` sont tous compris, virgule ou point comme séparateur décimal, point/virgule/espace comme séparateur de milliers.
+
+Si rien de récurrent n'est trouvé, ajoutez d'abord votre salaire comme revenu à quelques reprises — voix, ticket ou saisie manuelle, toute source compte — puis revenez.
+
+## Réglages
+
+Touchez l'icône en forme d'engrenage sur l'écran Salaire réel pour ouvrir les **Réglages du salaire réel** :
+
+- **Pays pour les prix officiels** — déduit du fuseau horaire de votre appareil la première fois que vous ouvrez l'écran (affiché par exemple « Pologne (d'après votre fuseau horaire) »). Touchez-le pour choisir manuellement n'importe quel pays de l'UE, de l'EEE ou la Suisse, ou pour revenir au pays déduit.
+- **À quoi correspond chaque catégorie** — chacune de vos catégories de dépenses peut être associée à un groupe de prix (Alimentation et boissons, Logement et énergie, Transports, Santé, etc.). Laissée sur **Automatique**, l'application en attribue un pour vous ; vous n'avez à y toucher que si vous n'êtes pas d'accord avec la supposition faite pour une catégorie.
+
+## Comment c'est calculé
+
+- **L'évolution du salaire** compare le salaire moyen par période de paie sur les 12 derniers mois à celui des 12 mois précédents — en utilisant des *périodes* de paie, pas des mois calendaires, pour qu'un jour de paie décalé à cause d'un week-end ne ressemble pas à une augmentation ou à une baisse.
+- **Votre inflation personnelle** est une moyenne pondérée de vos propres dépenses : le taux officiel de chaque groupe de prix pour votre pays, pondéré par la part de vos dépenses qui y correspond. **Alimentation et boissons** est plutôt calculé à partir de votre propre historique de tickets scannés, dès que vous avez au moins 10 produits suivis — vos vrais prix de courses, pas une moyenne nationale.
+- **L'évolution réelle du salaire** ajuste votre évolution de salaire à ce taux d'inflation, ce qui répond à « mon argent a-t-il acheté plus ou moins », pas seulement « mon chiffre a-t-il augmenté ».
+- **L'augmentation nécessaire pour suivre** indique de combien une augmentation, sur votre salaire *actuel*, devrait être plus importante pour vous maintenir exactement au niveau de votre propre inflation.
+
+## Ce que vous verrez
+
+- Un chiffre principal — l'évolution réelle de votre salaire, en vert (vous êtes devant), rouge (vous êtes derrière) ou neutre.
+- Votre évolution de salaire et votre inflation personnelle, côte à côte.
+- Une répartition des endroits où les prix ont augmenté pour vous, une ligne par groupe de prix, chacune marquée **vos tickets** ou **données officielles** selon l'origine du taux.
+- Une note indiquant de quel mois proviennent les données officielles, ou que la réponse repose uniquement sur des tickets lorsque votre pays n'a pas de couverture officielle.
+- Un rappel qu'il s'agit d'**une estimation, pas d'un conseil financier**.
+
+## Ce que signifie chaque message
+
+- **« Confirmez votre salaire »** — aucun revenu récurrent n'a encore été trouvé, ou vous n'en avez pas encore choisi un. Ouvre l'écran de configuration.
+- **« Indiquez votre salaire d'il y a un an »** — l'application n'a pas encore une année complète de votre salaire confirmé. Saisissez le montant mensuel d'il y a un an.
+- **« Continuez encore un peu »** — l'application a besoin d'au moins 3 mois de dépenses pour savoir à quoi vous dépensez.
+- **« Aucune donnée de prix pour votre pays »** — aucune statistique de prix officielle n'est publiée pour votre pays, et vous n'avez pas encore assez de tickets scannés pour compenser. Définissez votre pays manuellement, ou scannez quelques tickets supplémentaires.
+- **« Indisponible avec le chiffrement complet »** — les comptes avec chiffrement de bout en bout complet gardent les montants illisibles côté serveur, donc ce calcul ne peut pas être fait pour eux.
+
+## Partager
+
+Touchez **Partager** pour publier votre résultat. La carte de partage n'affiche que des **pourcentages** — votre évolution de salaire, votre inflation, votre évolution réelle — jamais votre salaire ou vos montants de dépenses réels, afin que vous puissiez partager une victoire (ou un coup de gueule) sans révéler ce que vous gagnez.
+
+## Arguments pour une augmentation (Pro)
+
+Touchez **Arguments pour une augmentation** pour télécharger un PDF d'une page résumant votre résultat — utile à apporter lors d'une discussion sur votre salaire. Il est construit entièrement à partir du chiffre déjà affiché à l'écran (sans coût d'IA supplémentaire), disponible dans toutes les langues de l'application, et téléchargeable uniquement une fois votre résultat entièrement calculé (pas pendant qu'un des messages ci-dessus s'affiche).
+
+## À noter
+
+- Gratuit pour tous les niveaux d'abonnement — seul le PDF d'arguments est Pro.
+- Nécessite une connexion — le calcul se fait sur le serveur, sans solution de repli hors ligne.
+- La couverture par pays est actuellement l'UE, l'EEE et la Suisse (partout où Eurostat publie des statistiques de prix officielles) ; en dehors de cela, l'application peut tout de même répondre à partir de vos seuls tickets une fois que vous en avez suffisamment.
+- Indisponible sur les comptes avec chiffrement de bout en bout complet.
+- Tout ce qui est affiché est une **estimation** construite à partir de vos catégories de dépenses et de statistiques de prix publiques — pas un conseil financier ou fiscal.
+
+## FAQ
+
+- **Q : Pourquoi mon inflation est-elle différente de celle des journaux ?**
+  **R :** Les gros titres rapportent un panier moyen national unique. Le vôtre est pondéré par ce à quoi *vous* dépensez réellement votre argent — si vous dépensez plus en transports et moins au restaurant que la moyenne, votre taux le reflète.
+
+- **Q : Pourquoi mon pays est-il deviné, et puis-je le changer ?**
+  **R :** Il est déduit du fuseau horaire de votre appareil pour qu'il n'y ait rien à configurer le premier jour. Changez-le à tout moment dans **Réglages du salaire réel → Pays pour les prix officiels**.
+
+- **Q : Est-ce que ça fonctionne avec le chiffrement complet activé ?**
+  **R :** Non — un compte entièrement chiffré garde vos montants illisibles côté serveur, et ce calcul a besoin de les lire. Vous verrez « Indisponible avec le chiffrement complet » au lieu d'un résultat.
+
+- **Q : Quels pays disposent de données de prix officielles ?**
+  **R :** L'UE, l'EEE et la Suisse — les pays pour lesquels Eurostat publie des statistiques de prix harmonisées. Ailleurs, l'application dépend entièrement de vos propres tickets scannés une fois que vous en avez suffisamment.
+
+---
+
+*Voir aussi : Indice d'Inflation Personnel | Bouclier anti-inflation | Budgets*
+`,
+    },
   ],
   be: [
     {
@@ -38013,6 +38664,99 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Вы не можаце падзяліць чэк, які сам узнік з чужога падзелу.
 - Сумы заўсёды паказваюцца ў валюце самога рахунку — нічога ніколі не канвертуецца.
 - Калі на чэку была **зніжка**, долі лічацца ад рэальна заплачанага, а не ад надрукаваных цэнаў - сябар ніколі не плаціць цану сваіх пазіцый да зніжкі.
+`,
+    },
+    {
+      id: '43-real-salary',
+      title: `Рэальны заробак — ці паспявае ваша павышэнне за вашымі ўласнымі цэнамі?`,
+      description: `Параўноўвае, як змяніўся ваш заробак за апошнія 12 месяцаў, з вашай асабістай інфляцыяй — не з агульнай лічбай з навін, а са стаўкай, пабудаванай на тым, на што вы сапраўды траціце грошы — каб вы бачылі, ці з'яўляецца павышэнне рэальным выйгрышам, ці толькі паспявае за ростам цэн.`,
+      body: `# Рэальны заробак — ці паспявае ваша павышэнне за вашымі ўласнымі цэнамі?
+
+> Параўноўвае, як змяніўся ваш заробак за апошнія 12 месяцаў, з вашай асабістай інфляцыяй — не з агульнай лічбай з навін, а са стаўкай, пабудаванай на тым, на што вы сапраўды траціце грошы — каб вы бачылі, ці з'яўляецца павышэнне рэальным выйгрышам, ці толькі паспявае за ростам цэн.
+
+## Што гэта такое
+
+Рэальны заробак адказвае на адно пытанне: ці купляе ваш заробак сапраўды больш, ці расце толькі на паперы? Ён супастаўляе змену вашага пацверджанага заробку за апошнія 12 месяцаў з вашай **асабістай інфляцыяй** — стаўкай, пабудаванай на вашых уласных катэгорыях выдаткаў і афіцыйнай статыстыцы цэн для вашай краіны, а не на загалоўку з навін.
+
+Напрыклад: ваш заробак вырас на **+5%**, але ваша асабістая інфляцыя склала **+8,3%** — ваш *рэальны* заробак насамрэч **знізіўся прыблізна на −3,0%**, хоць лічба ў вашым расчотным лісце вырасла.
+
+Функцыя **бясплатная для ўсіх**. Толькі аднастаронкавы PDF «аргументы для павышэння», які можна спампаваць і захаваць, — гэта функцыя **Pro**.
+
+## Дзе яго знайсці
+
+Адкрыйце ўкладку **Аналітыка** і дакраніцеся да банера **Рэальны заробак** («Ваш заробак супраць вашай асабістай інфляцыі»). Пры першым адкрыцці вас папросяць пацвердзіць заробак, перш чым можна будзе штосьці разлічыць.
+
+## Наладжванне заробку
+
+Праграма праглядае вашы апошнія даходы ў пошуках чагосьці, што паўтараецца — прыблізна раз на месяц, прынамсі двойчы за апошнія 90 дзён — і прапануе гэта як кандыдата. Абярыце той, што з'яўляецца вашым заробкам.
+
+Калі ў праграмы яшчэ няма поўнага года гэтага заробку, яна таксама папросіць указаць, **колькі вы атрымлівалі год таму**, уведзенае ў валюце самога заробку (не ў вашай валюце адлюстравання). Суму можна ўвесці так, як вы звычайна яе пішаце — \`8400\`, \`8.400\`, \`8 400\` і \`8,400.50\` разумеюцца аднолькава, коска або кропка як дзесятковы падзяляльнік, кропка/коска/прабел як падзяляльнік тысяч.
+
+Калі нічога, што паўтараецца, не знойдзена, спачатку дадайце заробак як даход некалькі разоў — голасам, па чэку або ўручную, крыніца не мае значэння — а потым вярніцеся.
+
+## Налады
+
+Дакраніцеся да значка шасцярні на экране Рэальнага заробку, каб адкрыць **Налады рэальнага заробку**:
+
+- **Краіна для афіцыйных цэн** — пры першым адкрыцці экрана вызначаецца па гадзінным поясе вашай прылады (паказваецца, напрыклад, як «Польшча (па гадзінным поясе)»). Дакраніцеся, каб уручную выбраць любую краіну ЕС/ЕЭЗ/Швейцарыі альбо вярнуцца да аўтаматычна вызначанай.
+- **Да чаго адносіцца кожная катэгорыя** — кожную з вашых катэгорый выдаткаў можна суаднесці з групай цэн (Прадукты і напоі, Жыллё і камунальныя паслугі, Транспарт, Здароўе і гэтак далей). Пакінутая як **Аўтаматычна**, катэгорыя прызначаецца праграмай сама; змяняць гэта трэба, толькі калі вы не згодныя з здагадкай для нейкай катэгорыі.
+
+## Як гэта разлічваецца
+
+- **Змена заробку** параўноўвае сярэдні заробак за перыяд выплаты за апошнія 12 месяцаў з папярэднімі 12 месяцамі — выкарыстоўваючы *перыяды* выплат, а не каляндарныя месяцы, каб дзень выплаты, зрушаны з-за выходных, не выглядаў як павышэнне або скарачэнне.
+- **Ваша асабістая інфляцыя** — гэта ўзважанае сярэдняе па вашых уласных выдатках: афіцыйная стаўка кожнай групы цэн для вашай краіны, узважаная доляй вашых выдаткаў, якая на яе прыпадае. **Прадукты і напоі** замест гэтага ацэньваюцца па вашай уласнай гісторыі скананых чэкаў, як толькі ў вас з'явіцца прынамсі 10 адсочваемых прадуктаў — вашы рэальныя цэны пакупак, а не агульнанацыянальнае сярэдняе.
+- **Рэальная змена заробку** карэктуе змену вашага заробку на гэтую стаўку інфляцыі, адказваючы на пытанне «ці купілі мае грошы больш, ці менш», а не проста «ці вырасла мая лічба».
+- **Патрэбнае павышэнне, каб не адставаць** — гэта наколькі большым мусіла б быць павышэнне да вашага *бягучага* заробку, каб дакладна параўняцца з вашай асабістай інфляцыяй.
+
+## Што вы ўбачыце
+
+- Галоўную лічбу — рэальную змену вашага заробку, зялёным (вы апярэджваеце), чырвоным (вы адстаяце) або нейтральным колерам.
+- Змену заробку і вашу асабістую інфляцыю побач адна з адной.
+- Разбіўку таго, дзе цэны выраслі для вас, па адным радку на групу цэн, кожны пазначаны як **вашы чэкі** або **афіцыйныя даныя** — у залежнасці ад крыніцы стаўкі.
+- Пазнаку, за які месяц афіцыйныя даныя, або што адказ грунтуецца толькі на чэках, калі ваша краіна не мае афіцыйнага пакрыцця.
+- Напамін, што гэта **ацэнка, а не фінансавая кансультацыя**.
+
+## Што азначае кожнае паведамленне
+
+- **«Пацвердзіце заробак»** — паўтаральны даход яшчэ не знойдзены, альбо вы яго яшчэ не абралі. Адкрывае экран налады.
+- **«Пазначце заробак год таму»** — у праграмы яшчэ няма поўнага года вашага пацверджанага заробку. Увядзіце месячную суму за год таму.
+- **«Павядзіце ўлік яшчэ крыху»** — праграме патрэбныя выдаткі прынамсі за 3 месяцы, каб зразумець, на што вы трацяце.
+- **«Няма даных пра цэны для вашай краіны»** — для вашай краіны не публікуецца афіцыйная статыстыка цэн, а сканаваных чэкаў пакуль недастаткова, каб яе замяніць. Устанавіце краіну ўручную або скануйце яшчэ некалькі чэкаў.
+- **«Недаступна пры поўным шыфраванні»** — акаўнты з поўным скразным шыфраваннем трымаюць сумы нечытэльнымі на серверы, таму для іх гэта немагчыма разлічыць.
+
+## Публікацыя
+
+Дакраніцеся да **Падзяліцца**, каб апублікаваць свой вынік. Картка для публікацыі паказвае **толькі працэнты** — змену заробку, вашу інфляцыю, рэальную змену — але ніколі рэальную суму заробку ці выдаткаў, так што можна падзяліцца поспехам (альбо паскардзіцца), не раскрываючы, колькі вы зарабляеце.
+
+## Аргументы для павышэння (Pro)
+
+Дакраніцеся да **Аргументы для павышэння**, каб спампаваць аднастаронкавы PDF з падсумаваннем вашага выніку — спатрэбіцца для размовы пра павышэнне. Ён цалкам пабудаваны на лічбе, ужо бачнай на экране (без дадатковых выдаткаў на ШІ), даступны на ўсіх мовах праграмы, і спампаваць яго можна толькі пасля таго, як ваш вынік цалкам разлічаны (а не пакуль паказана адно з паведамленняў вышэй).
+
+## Карысна ведаць
+
+- Бясплатна на любым узроўні падпіскі — платны толькі PDF з аргументамі.
+- Патрэбнае злучэнне — разлік выконваецца на серверы, без афлайн-рэжыму.
+- Пакрыццё па краінах зараз — ЕС, ЕЭЗ і Швейцарыя (усюды, дзе Еўрастат публікуе афіцыйную статыстыку цэн); па-за гэтым праграма ўсё роўна можа адказваць толькі па вашых чэках, як толькі іх набярэцца дастаткова.
+- Недаступна на акаўнтах з поўным скразным шыфраваннем.
+- Усё паказанае — гэта **ацэнка**, пабудаваная на вашых катэгорыях выдаткаў і адкрытай статыстыцы цэн, а не фінансавая ці падатковая кансультацыя.
+
+## Частыя пытанні
+
+- **П: Чаму мая інфляцыя адрозніваецца ад той, што ў навінах?**
+  **А:** Загалоўкі навін паведамляюць пра адну ўсярэдненую нацыянальную спажывецкую карзіну. Ваша стаўка ўзважана па тым, на што *вы* сапраўды трацiце грошы — калі вы трацiце больш на транспарт і менш на рэстараны, чым сярэдні чалавек, ваша стаўка адлюстроўвае менавіта гэта.
+
+- **П: Чаму мая краіна вызначаецца аўтаматычна і ці можна гэта змяніць?**
+  **А:** Яна вызначаецца па гадзінным поясе вашай прылады, каб у першы дзень нічога не трэба было наладжваць. Змяніце яе ў любы момант у **Налады рэальнага заробку → Краіна для афіцыйных цэн**.
+
+- **П: Ці працуе гэта пры ўключаным поўным шыфраванні?**
+  **А:** Не — цалкам зашыфраваны акаўнт трымае вашы сумы нечытэльнымі на серверы, а гэтаму разліку трэба іх прачытаць. Замест выніку вы ўбачыце «Недаступна пры поўным шыфраванні».
+
+- **П: Для якіх краін ёсць афіцыйныя даныя пра цэны?**
+  **А:** ЕС, ЕЭЗ і Швейцарыя — краіны, для якіх Еўрастат публікуе гарманізаваную статыстыку цэн. У іншых выпадках праграма цалкам абапіраецца на вашы ўласныя сканаваныя чэкі, як толькі іх набярэцца дастаткова.
+
+---
+
+*Гл. таксама: Персанальны індэкс інфляцыі | Шчыт ад інфляцыі | Бюджэты*
 `,
     },
   ],
@@ -42820,6 +43564,99 @@ Een link die 30 dagen na het aanmaken niet is gebruikt, werkt gewoon niet meer. 
 - Je kunt geen rekening splitsen die zelf al is ontstaan uit de splitsing van iemand anders.
 - Bedragen worden altijd getoond in de eigen valuta van de rekening — er wordt nooit iets omgerekend.
 - Stond er een **korting** op het bonnetje, dan worden de delen berekend over wat je werkelijk betaalde en niet over de gedrukte prijzen - een vriend betaalt dus nooit de prijs van voor de korting.
+`,
+    },
+    {
+      id: '43-real-salary',
+      title: `Reëel salaris — houdt jouw loonsverhoging gelijke tred met je eigen prijzen?`,
+      description: `Vergelijkt hoe je loon de afgelopen 12 maanden is veranderd met je eigen persoonlijke inflatiepercentage — niet het landelijke krantenkopcijfer, maar een percentage dat is opgebouwd uit waar je zelf je geld aan uitgeeft — zodat je ziet of een loonsverhoging een echte winst is of gewoon de stijgende prijzen bijhoudt.`,
+      body: `# Reëel salaris — houdt jouw loonsverhoging gelijke tred met je eigen prijzen?
+
+> Vergelijkt hoe je loon de afgelopen 12 maanden is veranderd met je eigen persoonlijke inflatiepercentage — niet het landelijke krantenkopcijfer, maar een percentage dat is opgebouwd uit waar je zelf je geld aan uitgeeft — zodat je ziet of een loonsverhoging een echte winst is of gewoon de stijgende prijzen bijhoudt.
+
+## Wat het is
+
+Reëel salaris beantwoordt één vraag: koopt je loon echt meer, of groeit het alleen op papier? Het weegt de verandering van je bevestigde salaris over de afgelopen 12 maanden af tegen je **persoonlijke inflatiepercentage** — een percentage opgebouwd uit je eigen uitgavencategorieën en officiële prijsstatistieken voor jouw land, niet een landelijke krantenkop.
+
+Een voorbeeld: je loon steeg met **+5%**, maar je persoonlijke inflatie kwam uit op **+8,3%** — je *reële* loon **daalde daardoor met ongeveer −3,0%**, ook al ging het cijfer op je loonstrook omhoog.
+
+Het is **gratis voor iedereen**. Alleen de pdf van één pagina met "argumenten voor loonsverhoging", die je kunt downloaden en bewaren, is een **Pro**-functie.
+
+## Waar je het vindt
+
+Open het tabblad **Analyse** en tik op de banner **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
+
+## Je salaris instellen
+
+De app doorzoekt je recente inkomsten op iets dat zich herhaalt — ongeveer één keer per maand, minstens twee keer in de afgelopen 90 dagen — en stelt dat voor als kandidaat. Kies degene die je salaris is.
+
+Als de app nog geen vol jaar van dat salaris heeft, vraagt hij ook **wat je een jaar geleden verdiende**, ingevoerd in de eigen valuta van het salaris (niet je weergavevaluta). Je kunt het typen zoals je het normaal zou schrijven — \`8400\`, \`8.400\`, \`8 400\` en \`8,400.50\` worden allemaal begrepen, komma of punt als decimaalteken, punt/komma/spatie als duizendtalscheiding.
+
+Als er niets herhalends wordt gevonden, voeg dan eerst een paar keer je loon toe als inkomsten — via spraak, bon of handmatig, elke bron telt — en kom daarna terug.
+
+## Instellingen
+
+Tik op het tandwielpictogram op het scherm Reëel salaris om **Instellingen reëel salaris** te openen:
+
+- **Land voor officiële prijzen** — de eerste keer dat je het scherm opent, geraden op basis van de tijdzone van je apparaat (weergegeven als bijvoorbeeld "Polen (op basis van je tijdzone)"). Tik erop om handmatig een willekeurig EU-/EER-land of Zwitserland te kiezen, of om terug te gaan naar het geraden land.
+- **Waar elke categorie bij hoort** — elke uitgavencategorie kan worden gekoppeld aan een prijsgroep (Voeding en dranken, Wonen en energie, Vervoer, Gezondheid, enzovoort). Op **Automatisch** gelaten wijst de app er zelf een toe; je hoeft dit alleen aan te passen als je het niet eens bent met de gok voor een categorie.
+
+## Hoe het wordt berekend
+
+- **Loonsverandering** vergelijkt het gemiddelde salaris per uitbetalingsperiode over de afgelopen 12 maanden met de 12 maanden daarvoor — met uitbetalings*periodes*, niet kalendermaanden, zodat een betaaldag die door een weekend verschuift niet als een verhoging of verlaging lijkt.
+- **Jouw persoonlijke inflatie** is een gewogen gemiddelde over je eigen uitgaven: het officiële percentage van elke prijsgroep voor jouw land, gewogen naar hoeveel van je uitgaven daaronder valt. **Voeding en dranken** wordt in plaats daarvan geprijsd op basis van je eigen geschiedenis van gescande bonnetjes, zodra je minstens 10 gevolgde producten hebt — je werkelijke boodschappenprijzen, geen landelijk gemiddelde.
+- **Reële loonsverandering** past je loonsverandering aan voor dat inflatiepercentage, zodat het antwoord geeft op "kocht mijn geld meer of minder", niet alleen "is mijn cijfer gestegen".
+- **Nodige verhoging om bij te blijven** is hoeveel groter een verhoging, op je *huidige* loon, zou moeten zijn om precies gelijk te blijven met je eigen inflatie.
+
+## Wat je ziet
+
+- Een hoofdcijfer — je reële loonsverandering, in groen (je loopt voor), rood (je loopt achter) of neutraal.
+- Je loonsverandering en je persoonlijke inflatie naast elkaar.
+- Een uitsplitsing van waar de prijzen voor jou stegen, één rij per prijsgroep, elk gelabeld met **jouw bonnen** of **officiële cijfers**, afhankelijk van waar het percentage vandaan komt.
+- Een notitie over van welke maand de officiële cijfers zijn, of dat het antwoord alleen op bonnetjes is gebaseerd wanneer jouw land geen officiële dekking heeft.
+- Een herinnering dat dit **een schatting is, geen financieel advies**.
+
+## Wat elk bericht betekent
+
+- **"Bevestig je salaris"** — er is nog geen herhalend inkomen gevonden, of je hebt er nog geen gekozen. Opent het instelscherm.
+- **"Vul je salaris van een jaar geleden in"** — de app heeft nog geen vol jaar van je bevestigde salaris. Vul het maandbedrag van een jaar geleden in.
+- **"Houd nog even bij"** — de app heeft minstens 3 maanden uitgaven nodig om te weten waar je geld aan uitgeeft.
+- **"Geen prijsgegevens voor jouw land"** — er worden geen officiële prijsstatistieken gepubliceerd voor jouw land, en je hebt nog niet genoeg gescande bonnetjes om die te vervangen. Stel je land handmatig in, of scan nog een paar bonnetjes.
+- **"Niet beschikbaar met volledige versleuteling"** — accounts met volledige end-to-end-versleuteling houden bedragen onleesbaar op de server, dus dit kan voor hen niet worden berekend.
+
+## Delen
+
+Tik op **Delen** om je resultaat te plaatsen. De deelkaart toont **alleen percentages** — je loonsverandering, je inflatie, je reële verandering — nooit je werkelijke salaris- of uitgavenbedragen, zodat je een overwinning (of frustratie) kunt delen zonder te onthullen wat je verdient.
+
+## Argumenten voor loonsverhoging (Pro)
+
+Tik op **Argumenten voor loonsverhoging** om een pdf van één pagina te downloaden met een samenvatting van je resultaat — handig om mee te nemen naar een loongesprek. Hij is volledig opgebouwd uit het cijfer dat al op je scherm staat (geen extra AI-kosten), beschikbaar in alle apptalen, en pas te downloaden zodra je resultaat volledig is berekend (niet terwijl een van de bovenstaande berichten wordt getoond).
+
+## Goed om te weten
+
+- Gratis voor elk abonnementsniveau — alleen de pdf met argumenten is Pro.
+- Vereist een verbinding — de berekening gebeurt op de server, zonder offline alternatief.
+- De landendekking is momenteel de EU, de EER en Zwitserland (overal waar Eurostat officiële prijsstatistieken publiceert); daarbuiten kan de app nog steeds antwoorden op basis van alleen je bonnetjes, zodra je er genoeg van hebt.
+- Niet beschikbaar op accounts met volledige end-to-end-versleuteling.
+- Alles wat je ziet is een **schatting**, opgebouwd uit je uitgavencategorieën en openbare prijsstatistieken — geen financieel of fiscaal advies.
+
+## Veelgestelde vragen
+
+- **V: Waarom verschilt mijn inflatie van wat er in het nieuws staat?**
+  **A:** Krantenkoppen berichten over één landelijk gemiddeld boodschappenmandje. Het jouwe is gewogen naar waar *jij* je geld echt aan uitgeeft — als je meer uitgeeft aan vervoer en minder aan restaurants dan de gemiddelde persoon, weerspiegelt jouw percentage precies dat.
+
+- **V: Waarom wordt mijn land geraden, en kan ik dat wijzigen?**
+  **A:** Het wordt geraden op basis van de tijdzone van je apparaat, zodat er op dag één niets ingesteld hoeft te worden. Wijzig het op elk moment in **Instellingen reëel salaris → Land voor officiële prijzen**.
+
+- **V: Werkt dit met volledige versleuteling ingeschakeld?**
+  **A:** Nee — een volledig versleuteld account houdt je bedragen onleesbaar op de server, en deze berekening moet ze kunnen lezen. In plaats van een resultaat zie je "Niet beschikbaar met volledige versleuteling".
+
+- **V: Voor welke landen zijn er officiële prijsgegevens?**
+  **A:** De EU, de EER en Zwitserland — de landen waarvoor Eurostat geharmoniseerde prijsstatistieken publiceert. Daarbuiten vertrouwt de app volledig op je eigen gescande bonnetjes, zodra je er genoeg van hebt.
+
+---
+
+*Zie ook: Persoonlijke Inflatie-index | Inflatieschild | Budgetten*
 `,
     },
   ],

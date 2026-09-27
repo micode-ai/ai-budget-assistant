@@ -43,8 +43,19 @@ the one-page PDF "brief" download (`POST /insights/real-salary/brief`) is Pro-ga
   `Category.coicopDivision`, `User.inflationCountry` (migration `20260927000000_add_real_salary`)
 - Shared types: `packages/shared-types/src/dto/real-salary.ts`
 - Design spec: `docs/superpowers/specs/2026-09-26-real-salary-design.md`
-
-Mobile has no screen yet — see **Known gaps**.
+- `apps/mobile/app/real-salary/index.tsx` — the hero screen (real change, pay vs
+  inflation, breakdown, share, brief download), `apps/mobile/app/real-salary/setup.tsx` —
+  confirm the salary candidate + last year's manual figure, `apps/mobile/app/real-salary/settings.tsx` —
+  country + per-category price group. All three routes registered in `apps/mobile/app/_layout.tsx`.
+- `apps/mobile/src/features/insights/useRealSalary.ts` — the index screen's data hook (see
+  **Invariants**); `apps/mobile/src/features/insights/realSalary.ts` — pure helpers
+  (`formatSignedPct`, `toneOf`, `statusCopy`, `requiredRaiseKey`, `buildShareLines`,
+  `parseMonthlyAmount`, `manualCurrency`, `briefErrorKind`); `apps/mobile/src/services/realSalary.api.ts`
+- `apps/mobile/src/components/real-salary/` — `RealSalaryShareCard.tsx` (thin `ShareImageCard`
+  wrapper, ABA-353 convention), `CountryPickerSheet.tsx`, `DivisionPickerSheet.tsx`
+- Entry points into the screen: a banner in the Analytics tab on both mobile
+  (`AnalyticsMobile.tsx`) and desktop web (`analytics/desktop/DiscoveryRow.tsx`), both reading
+  `realSalary.entryTitle`/`entrySub` and pushing `/real-salary`.
 
 ## Key concepts
 
@@ -189,6 +200,38 @@ registered for reports (`pdf-generator.ts`'s `FONT_REGULAR`/`FONT_BOLD`) — Cyr
 glyph coverage was checked by eye; the covering test only asserts a valid `%PDF-` header and a
 plausible byte length, not glyph rendering.
 
+**The mobile screens are online-only by design** (`useRealSalary.ts`'s own doc comment says so) —
+the answer is computed and cached server-side, there is no SQLite mirror and no offline fallback
+value, unlike most of this app's other data. A load failure is a retry button, not a stale number.
+
+**All three mobile screens (`index`, `setup`, `settings`) guard against an account switch
+mid-request the same way**: the account id is captured at request time, a `useEffect` on
+`currentAccountId` clears the previous account's local state immediately (so nothing stale is
+tappable while the new load is in flight), and every `then`/`catch`/`finally` re-checks
+`useAccountStore.getState().currentAccountId` against the captured id before writing state —
+a response that arrives after the user has switched accounts is discarded rather than painted
+into the new account's screen. `setup.tsx`/`settings.tsx` additionally clear the picked
+selection/local edits on switch, since a stale selected `salaryKey` or open division picker
+would otherwise still be interactable against the wrong account for one frame.
+
+**The share card is percentages-only — the same rule as Financial Wrapped and Inflation Shield.**
+`buildShareLines` (`realSalary.ts`) emits exactly three `formatSignedPct` values (real change, pay
+change, personal inflation) and nothing else; there is no amount, salary figure, or spend total in
+the payload `RealSalaryShareCard`/`ShareImageCard` render or in the plain-text `Share.share`
+fallback. This is deliberate, not an oversight of the wrapped-payload shape: real-salary is the one
+share surface in the app whose whole point is comparing yourself against your own history without
+ever showing what you earn.
+
+**`parseMonthlyAmount` (last year's manual salary figure, `setup.tsx`) accepts the same European
+number formats users actually type, not just `Number()`-parseable ones**: comma OR dot as the
+decimal separator, and dot/comma/space/NBSP/apostrophe as a thousands grouping mark — `8400`,
+`8.400`, `8 400`, `8'400`, and `8,400.50` all parse to the same value class. When both `.` and `,`
+appear, the LATER one in the string is treated as the decimal point and the earlier one must form a
+valid 3-digit thousands grouping or the whole input is rejected (`8.4.0` does not parse; `84.00,5`
+does not either, since `00` isn't a 3-digit group). Empty input parses to `null` (a valid "nothing
+entered" answer, distinct from `NaN` for genuinely unparseable text) — callers must not conflate
+the two.
+
 ## Known gaps
 
 - **No official CPI outside the EU/EEA/Switzerland.** `EUROSTAT_COUNTRIES` is exactly Eurostat's
@@ -198,9 +241,6 @@ plausible byte length, not glyph rendering.
   `(userId, accountId)` and `compute()`'s spend query is scoped to one `accountId`; a user who splits
   income or spend across multiple accounts sees only the picture inside whichever account they ask
   from.
-- **No mobile UI yet.** The screen, setup wizard, country/category editors, share card and brief
-  download are a separate, not-yet-written mobile plan; until it ships, nothing calls these
-  endpoints and the crons simply keep the table warm.
 - **No route-level test coverage for the brief's `409`/headers or the cache busts.**
   `real-salary.routes.spec.ts` (despite its name) only exercises the pure
   `validateSalaryProfile`/`validateInflationCountry` functions; nothing drives an HTTP request
@@ -216,7 +256,7 @@ plausible byte length, not glyph rendering.
   (`PATCH /categories/:id` returns 403), so its spend is priced at the national `TOTAL` rate.
 
 ## History
-[ABA-608](https://github.com/micode-ai/ai-budget-assistant/issues/633) — API half.
+[ABA-608](https://github.com/micode-ai/ai-budget-assistant/issues/633) — API half. [ABA-609](https://github.com/micode-ai/ai-budget-assistant/issues/635) — mobile half (screens, setup, settings, share card, brief download, help section).
 
 Built as one task set against `docs/superpowers/specs/2026-09-26-real-salary-design.md`: the
 Eurostat HICP client and the cron-fed `official_inflation_rates` table · COICOP division seed-icon
