@@ -1,5 +1,7 @@
 # Architecture
 
+Last updated: 2026-09-27
+
 ## System Overview
 
 AI Budget Assistant follows a monorepo architecture with two main applications and shared packages.
@@ -38,14 +40,34 @@ AI Budget Assistant follows a monorepo architecture with two main applications a
 └────────────┘ └──────────┘ └──────┘ └───────────┘ └──────────┘
 ```
 
+### Surfaces
+
+- **Mobile app** (`apps/mobile`) — iOS and Android, offline-first on SQLite.
+- **Web app** — the **same** Expo codebase built for the browser and served at `app.ai-budget.pl`, with a desktop layout at ≥ 1024 px (see Desktop Web Layer below). Deployed on every push to `development` by `web-deploy.yml`.
+- **Admin dashboard** (`apps/admin`) — Next.js 16 at `admin.ai-budget.pl`, talking to the same API (`/admin/*` routes, Socket.io namespace `/admin`).
+- **Chat bots** — Telegram, WhatsApp and Slack, all inside the API process and reusing the same chat, OCR, Whisper and expense services.
+- **Public pages** — receipt-split guest links (`/s/...`) and shopping-list guest links (`/sl/...`), server-rendered HTML with no authentication; plus the static marketing site and help centre (`docs/marketing/`, `docs/wiki/features/marketing-site.md`).
+
+## Knowledge Base (`docs/wiki/`)
+
+Feature-level knowledge lives in an LLM-maintained wiki, not in this file: [`docs/wiki/index.md`](../wiki/index.md) links a hub per domain (api, mobile-app, admin-dashboard, auth, offline-sync, ai-features, analytics-insights, subscriptions, the three bots, shared packages) and a page per feature. Every page has one shape — *What this is · Entry points · Key concepts · Invariants · Known gaps · History* — and its **Invariants** section states what must not break and why. This document keeps the system-level picture and points to those pages instead of repeating them.
+
+Three rituals keep it current:
+
+- **Ingest** — the `finish-aba-task` skill: at the end of every task the learning goes onto a wiki page and one line into [`docs/wiki/log.md`](../wiki/log.md); `CLAUDE.md` changes only when a repo-wide rule changes.
+- **Query** — the `wiki-query` skill: read the wiki before the code, cite the page, and file an expensive finding back even when no code changed.
+- **Lint** — `python scripts/wiki-lint.py` (links, cited paths, orphans) and `scripts/wiki-staleness.py` (pages the code has moved past) run weekly in `.github/workflows/wiki-audit.yml` and comment on the *Wiki audit* issue; they run no model. The reading half is the `wiki-audit` skill, run in a session.
+
+Design: `docs/superpowers/specs/2026-09-22-llm-wiki-design.md`.
+
 ## Multi-Account System
 
 The application supports multi-account access with role-based control:
 
-- **Account types**: `personal`, `business`, `shared`, `investment`
+- **Account types**: `personal`, `business`, `shared`, `investment`, `trip` (a temporary shared wallet with multi-way splits and settle-up — `docs/wiki/features/trip-wallet.md`)
 - **Roles**: `owner` (full access), `editor` (create/edit), `viewer` (read-only)
 - **Account scoping**: All data requests include `X-Account-Id` header; `AccountContextGuard` resolves membership and role
-- **Invitations**: Users can be invited to accounts via invite codes with expiration
+- **Invitations**: Users can be invited to accounts via invite codes with expiration, or found by name/e-mail and invited by push (`docs/wiki/features/invite-by-search.md`)
 
 ### Role-Based Access Control
 
@@ -61,11 +83,13 @@ Write access is enforced at multiple layers so a `viewer` can never mutate accou
 
 ### Technology Stack
 
-- **Framework**: Expo SDK 50 with React Native 0.73
-- **Navigation**: Expo Router 3.4 (file-based routing)
+- **Framework**: Expo SDK 54 with React Native 0.81 (React 19, New Architecture); bare workflow — `android/` is committed
+- **Platforms**: iOS, Android and **web** (`react-native-web` + Metro, deployed as `app.ai-budget.pl`)
+- **Navigation**: Expo Router 6 (file-based routing)
 - **State Management**: Zustand 4.5
 - **Data Fetching**: TanStack React Query 5.17
-- **Local Database**: SQLite with Drizzle ORM 0.29
+- **Local Database**: SQLite (`expo-sqlite`) with Drizzle ORM 0.29; a no-op mock on web
+- **Key-value storage**: MMKV for small persisted preferences (widget order, quick actions, dismissals)
 - **Authentication**: JWT with secure storage
 
 ### Screen Structure
@@ -128,9 +152,24 @@ app/
 ├── fat-finder.tsx         # AI Expense Audit — finds savings opportunities
 ├── scenario-simulator.tsx # What-if simulator: adjust sliders to project savings over 3/6/12 months
 ├── admin.tsx              # Admin dashboard
-├── settings.tsx           # User settings
+├── settings/              # Settings screens (profile, appearance, notifications, bots, import, …)
+├── get-started.tsx        # First-run onboarding
+├── real-salary/           # Real salary (index, setup, settings)
+├── wrapped/               # Financial Wrapped year-in-review
+├── shopping-list/         # Shared shopping lists
+├── purchase-requests/     # Group purchase approval
+├── family-feed/           # Shared-account activity feed
+├── trip/                  # Trip wallet (settle-up, payment settings, map)
+├── goals/                 # Savings goals
+├── inflation-shield/      # Stock-up recommendations
+├── price-history/         # Personal inflation index
+├── alerts/                # Anomaly alert feed
+├── subscriptions/         # Subscription manager (user's recurring charges)
+├── help/                  # In-app help (generated from user_docs/)
 └── _layout.tsx            # Root layout
 ```
+
+The tree is an excerpt; `ls apps/mobile/app` is the list. Every new screen needs a navigation header (title + back), and nothing under `src/` may import from `app/`.
 
 ### Desktop Web Layer
 
@@ -167,6 +206,10 @@ unchanged.
 The full design language — including per-wave retrospectives and the defects each
 one caught — is `docs/contracts/desktop-web-design-language.md`.
 
+### Web Build
+
+The web build shares every screen and store with native; what differs is structural and lives in `.web.ts(x)` siblings, never in route-level branches. SQLite is a no-op mock on web, so the stores load from the API (`docs/wiki/features/web-data-loading.md` — a failed load and a successful empty load must never leave the same state); product telemetry is **web-only** (`telemetry.web.ts` → `POST /telemetry/events`, `docs/wiki/features/web-telemetry.md`); the build is an installable PWA with no service worker, and shows `<version>+<short sha>` from `EXPO_PUBLIC_BUILD_SHA`. Hosting and deploy traps: `docs/wiki/features/web-build-and-hosting.md`.
+
 ### State Management
 
 Zustand stores manage application state:
@@ -194,6 +237,8 @@ Zustand stores manage application state:
 | `useInvestmentStore` | Investment portfolio summary |
 | `useEncryptionStore` | Client-side encryption state |
 | `useSubscriptionStore` | Subscription tier, limits, paywall |
+
+The table is an excerpt, not an inventory — `ls apps/mobile/src/stores` is the list, and `docs/wiki/mobile-app.md` documents the naming conventions. `*Actions.ts` / `*Sync.ts` / `*Progress.ts` files in `src/stores/` are function modules extracted from a composing store (`walletStore`, `authStore`, `budgetStore`, `expenseStore`), not stores; `orderedVisibilityStore.ts` is the factory behind `quickActionStore` and `widgetVisibilityStore`.
 
 ### Local Database Schema
 
@@ -389,6 +434,12 @@ Zustand stores manage application state:
 - **Validation**: class-validator, Zod
 - **AI Integration**: OpenAI SDK 4.24
 - **Push Notifications**: Expo Push API
+- **Scheduling**: `@nestjs/schedule` (`@Cron` jobs — see Scheduled Jobs below)
+- **Billing**: Stripe SDK (apiVersion pinned)
+- **Bots**: Telegraf (Telegram), Meta Cloud API (WhatsApp), Slack Web API
+- **Auth extras**: `google-auth-library` (Google ID tokens), `@simplewebauthn/server` (restore credentials)
+- **Real-time**: Socket.io gateway for the admin dashboard
+- **Errors**: `@sentry/node` 8 (no-op without `SENTRY_DSN`)
 
 ### Module Structure
 
@@ -437,16 +488,23 @@ src/
 │   │   ├── ai.module.ts
 │   │   ├── embedding.module.ts
 │   │   ├── services/
-│   │   │   ├── chat.service.ts                 # OpenAI call lifecycle orchestrator (~415 lines)
+│   │   │   ├── chat.service.ts                 # OpenAI call lifecycle orchestrator
+│   │   │   ├── chat-conversation.service.ts    # Presence + conversation CRUD
+│   │   │   ├── chat-action-lifecycle.service.ts # Confirm / reject / undo of write actions
 │   │   │   ├── user-context-builder.service.ts # Assembles UserContext for the prompt
-│   │   │   ├── ai-tools.service.ts             # 11 function schemas + executeAction dispatcher
+│   │   │   ├── ai-tools.service.ts             # executeAction dispatcher + read cache
+│   │   │   ├── ai-tool-schemas.ts              # data-only function schemas (the chat tool list)
+│   │   │   ├── ai-{expense,budget,debt-goal,shopping,undo}-tools.service.ts  # handlers by domain
 │   │   │   ├── prompt-builder.service.ts       # System prompt, language detection, action i18n
 │   │   │   ├── whisper.service.ts              # Voice transcription
 │   │   │   ├── ocr.service.ts                  # Receipt OCR
 │   │   │   ├── categorization.service.ts
 │   │   │   ├── tag-suggestion.service.ts
 │   │   │   ├── project-suggestion.service.ts
-│   │   │   ├── split-suggestion.service.ts
+│   │   │   ├── receipt-category-split.service.ts
+│   │   │   ├── receipt-finalizer.service.ts
+│   │   │   ├── categorize-suggestions.service.ts / categorize-income-suggestions.service.ts
+│   │   │   ├── geocoding.service.ts            # Nominatim, one DI instance (instance-level throttle)
 │   │   │   ├── goal-planner.service.ts
 │   │   │   ├── embedding.service.ts
 │   │   │   ├── model-resolver.ts
@@ -459,7 +517,12 @@ src/
 │   │   ├── insights.controller.ts
 │   │   ├── insights.service.ts
 │   │   ├── ai-insights.service.ts    # GPT-4 insight generation
-│   │   └── story.service.ts          # AI story narrative generation
+│   │   ├── story.service.ts          # AI story narrative generation
+│   │   ├── fat-finder.service.ts     # AI expense audit (Pro)
+│   │   ├── safe-to-spend.service.ts  # + safe-to-spend.util.ts (pure formula)
+│   │   ├── wrapped.service.ts        # + wrapped.util.ts (pure assembly)
+│   │   ├── inflation-shield*.ts      # stock-up engine, tracking, notify cron
+│   │   └── real-salary/              # Real salary: Eurostat HICP, COICOP classifier, PDF brief
 │   ├── subscriptions/           # Subscription tiers & AI usage
 │   │   ├── subscriptions.service.ts
 │   │   ├── guards/
@@ -567,6 +630,17 @@ src/
 │   │   ├── receipt-split.service.ts
 │   │   ├── split-calculator.ts           # pure resolveItemSplit / resolveEqualSplit
 │   │   └── helpers/                      # guest-page.ts, guest-page-i18n.ts
+│   ├── community-prices/       # Crowdsourced k-anonymised price map (reads dark by default)
+│   ├── family-feed/            # Shared-account activity feed + reactions
+│   ├── investments/            # Investment portfolio (see Investment Portfolio below)
+│   ├── merchant-rules/         # Learned merchant → category rules
+│   ├── purchase-requests/      # Group purchase approval
+│   ├── restore-credentials/    # WebAuthn restore credential (Android session restore)
+│   ├── slack/                  # Slack DM bot, multi-workspace OAuth
+│   ├── telemetry/              # Web-only product telemetry + admin funnel
+│   ├── trip-settle-up/         # Trip wallet balances and settle-up payments
+│   ├── user-subscriptions/     # Subscription manager (user's own recurring charges) + renewal cron
+│   ├── voice-digest/           # Weekly voice digest: facts, narrator, TTS, channel registry, cron
 │   └── whatsapp/               # WhatsApp Business Cloud bot
 │       ├── whatsapp-bot.service.ts
 │       ├── whatsapp-bot.controller.ts
@@ -575,29 +649,70 @@ src/
 │       ├── handlers/
 │       └── helpers/
 ├── common/
-│   ├── decorators/
+│   ├── bot-i18n/                # shared-messages.ts — dictionary + createBotT() for all three bots
+│   ├── cache/                   # CacheService (@Global ioredis wrapper), RedisThrottlerStorage
 │   ├── filters/
-│   ├── guards/
 │   ├── middleware/
-│   │   └── account-context.middleware.ts
-│   ├── interceptors/
-│   └── types/
-└── database/
-    └── prisma.service.ts
+│   │   └── account-context.middleware.ts   # AccountContextGuard / AccountRoleGuard / ViewerBlockGuard
+│   ├── types/
+│   └── utils/                   # fire-and-forget.ts, paginate.ts, fx.ts, financial-month.ts, budget-projection.ts, …
+├── database/
+│   └── prisma.service.ts
+├── global-prefix-exclusions.ts  # routes served without /api/v1 (webhooks, /s/*, /sl/*)
+├── instrument.ts                # Sentry init — imported first in main.ts
+└── main.ts
 ```
+
+The tree is a map, not an inventory: the authoritative module list is `apps/api/src/modules/` itself (mirrored by the API-modules list in `CLAUDE.md`), and the domain hubs in [`docs/wiki/`](../wiki/index.md) describe each module's behaviour and invariants.
+
+### Cross-Cutting Backend Patterns
+
+- **Service signature**: `(accountId, userId, dto)`; every Prisma query filters by `accountId`, taken from the guard-validated `X-Account-Id` — never from a path parameter or a client-supplied identity field.
+- **Resolved ids**: a client may address a row by server PK or by its local `clientId`; a service resolves it once and uses the **resolved** PK in every following write (`docs/wiki/features/client-id-resolution.md`).
+- **Fire-and-forget side effects** (family feed, anomaly checks, gamification, pushes, community-price contributions): `void call().catch(logFireAndForget(this.logger, 'Class.method'))` from `common/utils/fire-and-forget.ts`, which logs at `warn`. A bare `.catch(() => {})` is not allowed — a silent failure there leaves no trace.
+- **Unbounded scans in crons**: `paginateById(fetchPage, batchSize = 500)` from `common/utils/paginate.ts` streams a `findMany` in `id`-ordered batches instead of loading a whole table; every daily notification cron uses it.
+- **Redis primitives**: `CacheService` swallows Redis errors except `incrementWindow(key, windowMs)` (rate limits that must fail closed) and `setIfAbsent(key, ttlSec)` (`SET … NX`, returns `false` when Redis is down) — the latter throttles `LastActiveService.touch`, which `JwtStrategy.validate()` calls on every authenticated request to keep `User.lastSyncAt` a real last-activity stamp.
+- **Display currency**: every server-side total or narration is in the caller's `user.currencyCode`, converted through `common/utils/fx.ts`; an amount with no rate is excluded and flagged `fxApproximate`, never summed unconverted (`docs/wiki/features/display-currency-conversion.md`).
+- **Shared packages are type-only at runtime**: the API has no build step for `packages/*`, so it may `import type` from `@budget/shared-*` but never import a runtime value (an ESLint rule and the pre-deploy script `check-no-shared-utils-runtime-import.sh` enforce it). Logic both sides need is a deliberately duplicated pair — canonical in `apps/api/src/common/utils/`, mirror in `packages/shared-utils` — changed together.
+- **Routes outside `/api/v1`**: webhooks and guest pages are listed once in `global-prefix-exclusions.ts`; the guest subtrees are wildcards so a new guest route cannot fall behind.
+- **Route order**: a literal segment (`bulk`, `templates`, `settings/...`) must be declared before a sibling `:id` route, or Express captures it as an id.
+- **Keeping services small**: large services have been split along their seams (chat, AI tools, expenses, anomaly, admin); a new feature extends the matching focused service rather than growing the orchestrator back.
+
+### Scheduled Jobs
+
+All jobs are `@Cron` methods in the API process (times are server time, UTC in production):
+
+| Schedule | Job | Purpose |
+|----------|-----|---------|
+| every 30 s | `AdminGateway` | Live stats broadcast to the admin dashboard |
+| every minute | `AdminNotificationService` | Send due scheduled notifications |
+| hourly (`0 * * * *`) | `exchange-rate-alert.cron.ts` | Check rate watches, grouped by base currency |
+| hourly at :05 | `voice-digest.cron.ts` | Send weekly voice digests that are due in each user's timezone |
+| 03:00 daily | `referral-qualification.cron.ts`; clean-ups in `exchange-rate-alert.cron.ts`, `FamilyFeedService`, `shopping-reminder.cron.ts`, `inflation-shield-notify.cron.ts`, `report-scheduler.service.ts`, `telemetry-cleanup.cron.ts` | Qualify referrals; prune rate-watch history, old feed events, notification logs, expired reports and telemetry |
+| 06:00 on the 1st and 15th | `OfficialInflationService` | Refresh Eurostat HICP rates for Real Salary |
+| 08:00 daily | `expense-recurring.cron.ts`, `subscription-renewal.cron.ts` (booking), `report-scheduler.service.ts` (weekly e-mails, each user's chosen weekday) | Clone due recurring expenses, book subscription renewals, weekly report e-mails |
+| 09:00 daily | `debt-reminder.cron.ts`, `trip-settle-up-reminder.cron.ts`, `subscription-renewal.cron.ts` (reminders) | Due-date reminders |
+| 09:00 on the 1st | `report-scheduler.service.ts` | Monthly digests |
+| 10:00 daily | `tracking-gap-reminder.cron.ts`, `shopping-reminder.cron.ts`, `trial-reminder.cron.ts` | Engagement pushes |
+| 11:00 daily | `inflation-shield-notify.cron.ts` | Stock-up recommendation pushes |
+
+`grep -rn "@Cron(" apps/api/src` is the authoritative list.
 
 ### Database Schema (PostgreSQL)
 
 ```prisma
 // Enums
-enum AccountType { personal, business, shared }
+enum AccountType { personal, business, shared, investment, trip }
 enum AccountRole { owner, editor, viewer }
 enum InvitationStatus { pending, accepted, declined, expired }
 
 model User {
   id                   String    @id @default(uuid())
   email                String    @unique
-  passwordHash         String
+  passwordHash         String?   // null for a Google-only account
+  googleId             String?   @unique
+  language             String    @default("en")
+  inflationCountry     String?   // Real salary country override
   name                 String
   currencyCode         String    @default("USD")
   timezone             String    @default("UTC")
@@ -1095,6 +1210,30 @@ model SpendingStory {
 }
 ```
 
+### Models Not Shown Above
+
+The block above is an excerpt of the core tables. `apps/api/prisma/schema.prisma` is the source of truth; the remaining models, grouped by area (feature detail on the linked wiki pages):
+
+| Area | Models |
+|------|--------|
+| Accounts, auth, users | `UserPaymentMethod`, `RestoreCredential`, `UserEncryptionProfile`, `AccountEncryptionKey`, `SystemConfig`, `AdminAuditLog` |
+| Transactions and structure | `BudgetCategory`, `MerchantCategoryRule`, `ProductCategoryRule`, `AccountTransfer`, `TripExpenseShare`, `SettleUpTransaction`, `GeocodeCache` |
+| Import | `ImportBatch`, `CsvImportMapping`, `BankStatementSignature` |
+| Receipt splitting | `ReceiptSplitParticipant`, `ReceiptSplitFlag` |
+| Shopping | `ShoppingList`, `ShoppingListItem`, `ShoppingListTemplate`, `ShoppingListTemplateItem`, `ShoppingNotificationLog` |
+| Prices and inflation | `CommunityPriceObservation`, `CommunityStoreGeo`, `InflationShieldRecommendation`, `OfficialInflationRate`, `SalaryProfile` |
+| Insights and alerts | `AnomalyAlert`, `FatFinderReport`, `InsightNotificationLog`, `MonthlyDigestCache`, `GeneratedReport`, `ExchangeRateWatch` |
+| Shared accounts | `FamilyFeedEvent`, `FeedReaction`, `PurchaseRequest`, `PurchaseRequestVote` |
+| Goals, gamification, referrals | `SavingsGoal`, `GoalContribution`, `UserAchievement`, `UserStreak`, `Referral` |
+| Billing and usage | `UsageLog`, `UserSubscription` (the user's own recurring charges), `BackupHistory` |
+| Notifications | `NotificationLog`, `ScheduledNotification` |
+| Bots | `TelegramLink`, `TelegramLinkCode`, `WhatsAppLink`, `WhatsAppLinkCode`, `SlackLink`, `SlackLinkCode`, `SlackInstallation` |
+| Telemetry and releases | `TelemetryEvent`, `AppVersion` |
+
+Plus the investment models described under Investment Portfolio below.
+
+**A `schema.prisma` field change must land with its migration in the same commit.** Nothing in the pipeline catches a missing one: lint, typecheck, tests and the deploy all pass, `prisma migrate deploy` has nothing to apply, and the first query that selects the new column fails in production. `/health` runs `SELECT 1` and never touches an application table, so monitoring stays green — Sentry is the only signal (this took down the transactions list once, ABA-558). Recovery goes through the standard `migrator` service, never a hand-edited database. Columns use `@map("snake_case")`.
+
 ## Synchronization
 
 ### Strategy
@@ -1201,7 +1340,7 @@ Users can choose their preferred AI model in Settings → **AI Model**. The pref
 | `balanced` (default) | `gpt-4o` | 2000 | ×1.0 |
 | `quality` | `gpt-4.1` | 3000 | ×1.5 |
 
-The cost multiplier scales the AI quota consumed per request. For example, with the Free plan (5 AI requests/month), a "quality" request costs 1.5 units and a "fast" request costs 0.75 units.
+The cost multiplier scales the AI quota consumed per request. For example, with the Free plan (50 AI requests/month), a "quality" request costs 1.5 units and a "fast" request costs 0.75 units.
 
 **Implementation:** `apps/api/src/modules/ai/services/model-resolver.ts` — exports `resolveAiModel(pref?)` and `getAiCostMultiplier(pref?)`. The `AiUsageGuard` applies the multiplier centrally before recording quota usage.
 
@@ -1221,6 +1360,10 @@ The cost multiplier scales the AI quota consumed per request. For example, with 
 | Tag Suggestions | User-selected model | Suggest tags based on expense description (history-first, AI fallback) |
 | Project Suggestions | User-selected model | Match expenses to active projects by date range and semantic analysis |
 | Receipt Category Auto-Split | User-selected model | Assign each scanned receipt line to a category (labels only, never amounts) — see below |
+| Categorize Uncategorized | Cheap model, after merchant rules | Suggest categories for uncategorized expenses/incomes; read-only, own daily ceiling (`AI_CATEGORIZE_MAX_PER_DAY`) — `docs/wiki/features/categorize-uncategorized.md` |
+| AI Statement Import | User-selected model | Infer a CSV/XLSX column mapping or extract PDF rows when no bank parser matches — `docs/wiki/features/ai-statement-import.md` |
+| Voice Digest | Cheap model + `gpt-4o-mini-tts` | Narrate deterministic weekly facts (output number-checked, template fallback) and voice them — `docs/wiki/features/voice-digest.md` |
+| Real Salary | Cheap model (classification only) | Map categories to COICOP price groups; the figures themselves are deterministic — `docs/wiki/features/real-salary.md` |
 
 
 ### Receipt Category Auto-Split
@@ -1358,6 +1501,10 @@ Conversations support a per-conversation opt-in group mode for shared accounts. 
 - **AI history**: each member's message is prefixed with a sanitized `[Name]: ` so the model can attribute turns
 - **Deep-link**: tapping a `chat_mention` push switches `accountId` and opens the conversation
 
+### Shared AI Chat Tool Set
+
+The chat's function-calling tools are defined, data only, in `ai/services/ai-tool-schemas.ts`, and handled by domain providers (`ai-expense-tools`, `ai-budget-tools`, `ai-debt-goal-tools`, `ai-shopping-tools`, `ai-undo-tools`) behind the thin `ai-tools.service.ts` dispatcher. The schema file is the list — do not keep a count of it anywhere. Write tools go through the confirm/reject pipeline in `chat-action-lifecycle.service.ts` (viewer-blocked); read tools run immediately behind a 10-minute cache that `invalidateExpenseChatCache` busts per tool. See `docs/wiki/ai-features.md`, `docs/wiki/features/chat-undo-last-action.md`, `docs/wiki/features/chat-spending-questions.md`.
+
 ## Notifications
 
 ### Push Notifications (Expo Push API)
@@ -1373,6 +1520,9 @@ The application uses Expo Push API for sending push notifications. No Firebase c
 - `subscription_renewal` — subscription renewal reminder or auto-charge notification
 - `chat_mention` — user was @mentioned in a shared AI conversation
 - `tracking_gap_reminder` — nudge sent when no expense has been logged for 3+ days (fires on day 3, 6, 9…)
+- `purchase_request_created` / `_voted` / `_approved` / `_rejected`, `trip_settle_up`, `account_invitation`, `shopping_reminder`, `shopping_deal`, `inflation_shield`, `split_payment_claimed`, `split_item_flagged`, `rate_watch_hit`, `voice_digest_disabled`
+
+The authoritative list is the `NotificationType` union in `packages/shared-types/src/entities/primitives.ts`.
 
 **User preferences** (`GET/PATCH /users/me/notification-preferences`)
 - `budgetAlerts` — controls `budget_alert` notifications
@@ -1382,6 +1532,8 @@ The application uses Expo Push API for sending push notifications. No Firebase c
 - `subscriptionRenewals` — controls `subscription_renewal` notifications
 - `anomalyAlerts` — controls `spending_anomaly` push notifications from the anomaly module (default `true`)
 - `trackingGap` — controls `tracking_gap_reminder` notifications (default `true`)
+- `purchaseRequests`, `tripSettleUp`, `shoppingReminders`, `shoppingDeals`, `inflationShield` — control the matching feature pushes
+- One-off action requests (`account_invitation`, `split_payment_claimed`) deliberately have no preference toggle
 
 **Batch processing:** Notifications are sent in batches of 100 messages.
 
@@ -1389,15 +1541,16 @@ The application uses Expo Push API for sending push notifications. No Firebase c
 
 The Telegram module provides two services:
 
-1. **TelegramService** — admin notifications for system events (new user registration, new subscriptions)
+1. **TelegramService** — ops notifications for system events (new registrations, subscriptions, referrals, request-a-bank), sent through the **separate ops bot** (`OPS_TELEGRAM_BOT_TOKEN`/`OPS_TELEGRAM_CHAT_ID`, optional `OPS_PROJECT_NAME` prefix) and skipped entirely when those are unset — never through the user-facing assistant bot
 2. **TelegramBotService** — full-featured user-facing bot with AI chat, expense/income commands, voice transcription, and receipt OCR
 
 **Bot Architecture:**
 - **Middleware**: Resolves `TelegramLink` → sets `ctx.userState` (userId, accountId, conversationId) before every handler
-- **Handlers**: 6 specialized handlers — `ChatHandler` (AI chat), `CommandHandler` (/start, /link, /account, /unlink, /newchat, /help), `ExpenseHandler`, `IncomeHandler`, `VoiceHandler` (Whisper transcription), `PhotoHandler` (OCR receipt scanning)
+- **Handlers**: `ChatHandler` (AI chat), `CommandHandler` (`/start`, `/link`, `/help`, `/unlink`, `/account`, `/newchat`, `/usage`, `/digest`), `ExpenseHandler` (`/expense`), `IncomeHandler` (`/income`), `CategoryHandler` (`/category`, `/categories`), `CategorizeHandler` (`/categorize`), `PurchaseRequestHandler` (voting), `VoiceHandler` (Whisper transcription), `PhotoHandler` (OCR receipt scanning, typed line-item and date corrections before saving)
+- **Pending state in Redis**: AI-confirmation data (`telegram:pa:*`) and pending receipts (`telegram:receipt:*`, `telegram:awaiting_date:*`) live in `CacheService` with a TTL, so a deploy restart no longer orphans an in-flight confirmation
 - **Account linking**: 6-char codes with 10-minute TTL, stored in `TelegramLinkCode` table. One-to-one mapping: Telegram user ↔ App user
 - **Account context resolution**: `resolve-account.ts` helper detects account names in user messages and overrides the default accountId for that query (without permanently switching). This allows users to query different accounts by mentioning the account name (e.g., "Show expenses in Family")
-- **Webhook/Polling**: Uses webhook mode when `TELEGRAM_WEBHOOK_URL` is set, otherwise falls back to long polling for development
+- **Webhook/Polling**: Uses webhook mode when `TELEGRAM_WEBHOOK_URL` is set (inbound requests must carry `X-Telegram-Bot-Api-Secret-Token` = `TELEGRAM_WEBHOOK_SECRET`), otherwise falls back to long polling for development
 
 ### WhatsApp Integration
 
@@ -1411,11 +1564,25 @@ Key differences from Telegram:
 - **Callback IDs use `--` separator** (UUIDs contain single `-`)
 - **Interactive UI**: `WhatsAppClientService.sendButtons` (max 3 × 20 char) / `sendList` (max 10 rows); WhatsApp markdown (`*bold*`, `_italic_`) via `markdownToWhatsApp`
 - **Account linking**: 6-hex code — mobile shows a QR + `wa.me/{phone}?text=link%20{code}` deep link; `CommandHandler.handleLink` is the only command accepted from an unlinked number
-- **Localization**: `helpers/i18n.ts` ports Telegram's keys across 8 languages
+- **Localization**: 9 languages; the shared strings come from `common/bot-i18n/shared-messages.ts` (see Shared Bot i18n below), `helpers/i18n.ts` keeps only the WhatsApp-specific copy
 
 ### Email (Mail)
 
 Mail module provides email sending infrastructure for transactional emails.
+
+### Slack Integration
+
+A DM bot with the same feature set as Telegram and WhatsApp, webhook-only (`POST /slack/events`, `POST /slack/interactivity`, both outside `/api/v1`), verified with Slack's `v0=` HMAC over the raw body (`SLACK_SIGNING_SECRET`). Multi-workspace install goes through `GET /slack/install` → `GET /slack/oauth/callback`; each workspace's bot token is stored AES-256-GCM-encrypted (`SLACK_TOKEN_ENC_KEY`) in `SlackInstallation`. Two traps: the inbound guard must let `subtype === 'file_share'` through (every uploaded file carries it — receipts, voice, PDFs), and a placeholder's `chat.update` must pass no `blocks`. The `files:write` scope is needed to upload the voice-digest audio (without it the digest falls back to text). Details: `docs/wiki/slack-bot.md`.
+
+### Shared Bot i18n
+
+`common/bot-i18n/shared-messages.ts` holds the dictionary shared by all three bots (errors, confirmations, menu labels, category-flow copy) in nine languages, plus `createBotT(messages, { markup, defaultParams })`. Canonical markup is HTML (Telegram's `parse_mode`); `markup: 'markdown'` converts it to WhatsApp/Slack syntax at read time, and `defaultParams` fills per-platform placeholders such as `{{platform}}`. Each bot's `helpers/i18n.ts` is `{ ...sharedMessages, ...platformMessages }` and holds only genuinely platform-specific copy. A new string used by two or more bots belongs in the shared file.
+
+### Voice Digest
+
+An opt-in weekly voice note (with the text alongside) summarising the account's last seven days, delivered through whichever bot the user linked. `VoiceDigestCron` runs hourly and asks `isDue` for each enabled user in their own timezone (day + hour from `GET/PATCH /users/me/voice-digest`). The facts are computed deterministically (`voice-digest-facts.service.ts` → pure `assembleDigestFacts`); a cheap model only narrates them and its output is rejected if it introduces a number that is not in the facts; `tts.service.ts` voices it.
+
+Delivery goes through the **channel registry**: `DigestChannelRegistry` maps a `VoiceDigestChannel` (`telegram`, `whatsapp`, `slack`) to a `DigestSender` (`send`, `isLinked`, `accountIdFor`). Each bot module registers its own sender (`modules/<bot>/digest/*.sender.ts`) from `onModuleInit`, so `VoiceDigestModule` never imports the bot modules. A sender throws `DigestBlockedError` when the user blocked the bot (the digest is disabled and a `voice_digest_disabled` push explains why) or `DigestUnavailableError` when the channel cannot deliver right now. WhatsApp can only reach a user outside its 24-hour window through an approved template, so it is offered only when `WHATSAPP_DIGEST_TEMPLATE` is set. Details: `docs/wiki/features/voice-digest.md`.
 
 ## Subscription System
 
@@ -1425,12 +1592,12 @@ The application uses a tiered subscription model to manage access to AI-powered 
 - **AI usage tracking**: Each AI request is tracked per user with cost units (fractional)
 - **Model cost multiplier**: Applied by `AiUsageGuard` before recording usage — fast=0.75×, balanced=1.0×, quality=1.5×
 - **Trial periods**: New users receive trial access with reduced limits
-  - Trial limits: free = 50, pro = 15, business = 100
+  - Trial limits: free = 50, pro = 300, business = unlimited (`TRIAL_REQUEST_LIMITS` in `subscriptions.service.ts`)
   - Active limits: free = 50, pro = 300, business = unlimited
 - **Guards**:
   - `SubscriptionTierGuard` checks that the user's subscription tier meets the minimum required tier for the endpoint
   - `AiUsageGuard` checks that the user has not exceeded their AI usage limit for the current billing period; applies model cost multiplier
-- **AI features** (insights, story, fat finder) are available on all tiers — only AI request limits differ by plan
+- **Pro-gated features** (`@RequireTier('pro')`, business passes by rank): AI insight charts, Spending Story, Fat Finder, the Real Salary PDF brief, basket comparison and community prices. Everything else — including safe-to-spend, Wrapped, Inflation Shield, Real Salary itself and report generation — is free. A `403` with `code: 'TIER_REQUIRED'` opens the app-wide paywall. Pricing: `docs/wiki/features/subscription-pricing.md`
 
 ## Dashboard Widgets (in-app)
 
@@ -1628,6 +1795,10 @@ A separate leaf module, `InflationShieldTrackingService`, is Prisma-only (no ser
 ### API Endpoints
 
 `GET /insights/inflation-shield` — behind `JwtAuthGuard + AccountContextGuard`. No `SubscriptionTierGuard` — available on the free plan (same precedent as Safe-to-Spend and Financial Wrapped).
+
+## Real Salary
+
+"Is my raise keeping up with what my own money buys": the caller's confirmed salary series (12 months vs the prior 12) against a personal inflation rate built from official Eurostat HICP data for their country plus their own receipt price index, weighted by their spend across COICOP divisions. Deterministic and free; only the one-page PDF brief is Pro. `OfficialInflationService` is the only writer of `official_inflation_rates` (refreshed on the 1st and 15th); `SalaryProfile` stores the confirmed salary series; `Category.coicopDivision` and `User.inflationCountry` are user overrides. Endpoints: `GET /insights/real-salary`, `GET/PUT /insights/real-salary/profile`, `GET /insights/real-salary/categories`, `POST /insights/real-salary/brief` (see [API.md](API.md#real-salary)). Details: `docs/wiki/features/real-salary.md`.
 
 ## Receipt Price Check
 
@@ -2011,7 +2182,7 @@ The investment module includes GPT-4-powered portfolio insights that analyze hol
 **Architecture:**
 - **Caching**: Insights are cached for 24 hours per account
 - **Subscription**: Requires Pro+ tier (2.5 AI credits per request)
-- **Localization**: Supports all 8 app languages
+- **Localization**: Supports all 9 app languages
 - **Charts**: Each insight includes appropriate visualization (donut, bar, line)
 
 ## Security
@@ -2047,7 +2218,10 @@ The investment module includes GPT-4-powered portfolio insights that analyze hol
 
 ### Security Measures
 
-- **JWT Tokens**: Short-lived access tokens (15min), long-lived refresh tokens (7d)
+- **JWT Tokens**: access tokens live `JWT_EXPIRES_IN` (default `7d`), refresh tokens 30 days; every refresh returns a fresh refresh token (sliding session), and JWTs are stateless with no revocation list
+- **Google Sign-In**: the client sends a Google ID token; the server verifies audience (`GOOGLE_OAUTH_CLIENT_IDS`) and `email_verified`, then resolves by `googleId` or auto-links by verified e-mail
+- **Restore credentials**: a WebAuthn credential registered on every authenticated Android launch lets a session survive a device transfer — `docs/wiki/features/restore-credentials.md`
+- **Rate limits**: `ThrottlerGuard` must be paired explicitly with `@Throttle` (no global guard is registered); security-sensitive limits outside it use `CacheService.incrementWindow`, which fails closed on a Redis outage
 - **Secure Storage**: Tokens stored in device keychain/keystore
 - **Biometric Auth**: Optional fingerprint/face unlock
 - **API Key Proxy**: OpenAI key never exposed to client

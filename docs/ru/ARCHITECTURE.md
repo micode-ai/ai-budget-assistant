@@ -1,5 +1,7 @@
 # Архитектура
 
+Последнее обновление: 2026-09-27
+
 ## Обзор системы
 
 AI Budget Assistant построен на монорепозитории с двумя основными приложениями и общими пакетами.
@@ -38,14 +40,34 @@ AI Budget Assistant построен на монорепозитории с дв
 └────────────┘ └──────────┘ └──────┘ └───────────┘ └──────────┘
 ```
 
+### Поверхности
+
+- **Мобильное приложение** (`apps/mobile`) — iOS и Android, offline-first на SQLite.
+- **Веб-приложение** — **тот же** код Expo, собранный для браузера и доступный на `app.ai-budget.pl`, с десктопной раскладкой от 1024 px (см. «Десктопный веб-слой» ниже). Деплоится при каждом push в `development` через `web-deploy.yml`.
+- **Админ-панель** (`apps/admin`) — Next.js 16 на `admin.ai-budget.pl`, работает с тем же API (маршруты `/admin/*`, namespace Socket.io `/admin`).
+- **Чат-боты** — Telegram, WhatsApp и Slack, все внутри процесса API и на тех же сервисах чата, OCR, Whisper и расходов.
+- **Публичные страницы** — гостевые ссылки разделения чека (`/s/...`) и списка покупок (`/sl/...`), HTML с серверной отрисовкой без аутентификации; а также статический маркетинговый сайт и справочный центр (`docs/marketing/`, `docs/wiki/features/marketing-site.md`).
+
+## База знаний (`docs/wiki/`)
+
+Знания уровня функций живут в wiki, которую ведёт LLM, а не в этом файле: [`docs/wiki/index.md`](../wiki/index.md) ссылается на хаб для каждого домена (api, mobile-app, admin-dashboard, auth, offline-sync, ai-features, analytics-insights, subscriptions, три бота, общие пакеты) и на страницу для каждой функции. У каждой страницы одна форма — *What this is · Entry points · Key concepts · Invariants · Known gaps · History*, — а раздел **Invariants** говорит, что нельзя ломать и почему. Этот документ держит картину системы целиком и ссылается на эти страницы, не повторяя их.
+
+Актуальность поддерживают три ритуала:
+
+- **Ingest** — скилл `finish-aba-task`: в конце каждой задачи новое знание попадает на страницу wiki и одной строкой в [`docs/wiki/log.md`](../wiki/log.md); `CLAUDE.md` меняется, только если изменилось правило для всего репозитория.
+- **Query** — скилл `wiki-query`: сначала читать wiki, потом код, ссылаться на страницу и записывать дорогую находку обратно, даже если код не менялся.
+- **Lint** — `python scripts/wiki-lint.py` (ссылки, упомянутые пути, страницы-сироты) и `scripts/wiki-staleness.py` (страницы, от которых код ушёл вперёд) раз в неделю запускаются в `.github/workflows/wiki-audit.yml` и комментируют задачу *Wiki audit*; модель они не вызывают. Читающая половина — скилл `wiki-audit`, запускаемый в сессии.
+
+Дизайн: `docs/superpowers/specs/2026-09-22-llm-wiki-design.md`.
+
 ## Мультиаккаунтная система
 
 Приложение поддерживает мультиаккаунтный доступ с ролевой моделью:
 
-- **Типы аккаунтов**: `personal` (личный), `business` (бизнес), `shared` (общий), `investment` (инвестиции)
+- **Типы аккаунтов**: `personal` (личный), `business` (бизнес), `shared` (общий), `investment` (инвестиции), `trip` (поездка — временный общий кошелёк с разделением расходов и расчётом, `docs/wiki/features/trip-wallet.md`)
 - **Роли**: `owner` (полный доступ), `editor` (создание/редактирование), `viewer` (только чтение)
 - **Контекст аккаунта**: Все запросы данных включают заголовок `X-Account-Id`; `AccountContextGuard` проверяет членство и роль
-- **Приглашения**: Пользователей можно приглашать в аккаунты по инвайт-кодам с истечением срока действия
+- **Приглашения**: Пользователей можно приглашать в аккаунты по инвайт-кодам с истечением срока действия или найти по имени/e-mail и пригласить push-уведомлением (`docs/wiki/features/invite-by-search.md`)
 
 ### Ролевая модель доступа
 
@@ -61,11 +83,13 @@ AI Budget Assistant построен на монорепозитории с дв
 
 ### Технологический стек
 
-- **Фреймворк**: Expo SDK 50 с React Native 0.73
-- **Навигация**: Expo Router 3.4 (файловая маршрутизация)
+- **Фреймворк**: Expo SDK 54 с React Native 0.81 (React 19, New Architecture); bare workflow — папка `android/` лежит в репозитории
+- **Платформы**: iOS, Android и **веб** (`react-native-web` + Metro, развёрнут как `app.ai-budget.pl`)
+- **Навигация**: Expo Router 6 (файловая маршрутизация)
 - **Управление состоянием**: Zustand 4.5
 - **Получение данных**: TanStack React Query 5.17
-- **Локальная БД**: SQLite с Drizzle ORM 0.29
+- **Локальная БД**: SQLite (`expo-sqlite`) с Drizzle ORM 0.29; на вебе — заглушка без операций
+- **Хранилище ключ-значение**: MMKV для небольших сохраняемых настроек (порядок виджетов, быстрые действия, скрытые подсказки)
 - **Аутентификация**: JWT с безопасным хранением
 
 ### Структура экранов
@@ -129,9 +153,24 @@ app/
 ├── fat-finder.tsx         # AI аудит расходов — поиск возможностей для экономии
 ├── scenario-simulator.tsx # Симулятор «что если»: слайдеры для прогноза накоплений на 3/6/12 мес
 ├── admin.tsx              # Панель администратора
-├── settings.tsx           # Настройки
+├── settings/              # Экраны настроек (профиль, оформление, уведомления, боты, импорт, …)
+├── get-started.tsx        # Онбординг при первом запуске
+├── real-salary/           # Реальная зарплата (главный экран, настройка, параметры)
+├── wrapped/               # Financial Wrapped — итоги года
+├── shopping-list/         # Общие списки покупок
+├── purchase-requests/     # Групповое согласование покупок
+├── family-feed/           # Лента активности общего аккаунта
+├── trip/                  # Кошелёк поездки (расчёт, платёжные данные, карта)
+├── goals/                 # Цели накоплений
+├── inflation-shield/      # Рекомендации «купить впрок»
+├── price-history/         # Персональный индекс инфляции
+├── alerts/                # Лента оповещений об аномалиях
+├── subscriptions/         # Менеджер подписок (регулярные платежи пользователя)
+├── help/                  # Встроенная справка (генерируется из user_docs/)
 └── _layout.tsx            # Корневой layout
 ```
+
+Дерево — выдержка; полный список даёт `ls apps/mobile/app`. У каждого нового экрана должен быть навигационный заголовок (название + назад), и ничто в `src/` не может импортировать из `app/`.
 
 ### Десктопный веб-слой
 
@@ -172,6 +211,10 @@ app/
 Полный язык дизайна — включая ретроспективы по каждой волне и найденные ими
 дефекты — находится в `docs/contracts/desktop-web-design-language.md`.
 
+### Веб-сборка
+
+Веб-сборка использует те же экраны и хранилища, что и нативная; всё различие структурное и живёт в соседних файлах `.web.ts(x)`, а не в ветвлениях на уровне маршрутов. На вебе SQLite — заглушка, поэтому хранилища загружаются из API (`docs/wiki/features/web-data-loading.md` — неудачная загрузка и успешная пустая загрузка никогда не должны оставлять одинаковое состояние); продуктовая телеметрия есть **только на вебе** (`telemetry.web.ts` → `POST /telemetry/events`, `docs/wiki/features/web-telemetry.md`); сборка устанавливается как PWA без service worker и показывает `<version>+<short sha>` из `EXPO_PUBLIC_BUILD_SHA`. Хостинг и ловушки деплоя: `docs/wiki/features/web-build-and-hosting.md`.
+
 ### Управление состоянием
 
 Zustand хранилища управляют состоянием приложения:
@@ -199,6 +242,8 @@ Zustand хранилища управляют состоянием прилож�
 | `useInvestmentStore` | Сводка инвестиционного портфеля |
 | `useEncryptionStore` | Состояние клиентского шифрования |
 | `useSubscriptionStore` | Тариф подписки, лимиты, paywall |
+
+Таблица — выдержка, а не опись: полный список даёт `ls apps/mobile/src/stores`, а соглашения об именовании описаны в `docs/wiki/mobile-app.md`. Файлы `*Actions.ts` / `*Sync.ts` / `*Progress.ts` в `src/stores/` — это модули функций, вынесенные из составного хранилища (`walletStore`, `authStore`, `budgetStore`, `expenseStore`), а не хранилища; `orderedVisibilityStore.ts` — фабрика, на которой построены `quickActionStore` и `widgetVisibilityStore`.
 
 ### Схема локальной базы данных
 
@@ -394,6 +439,12 @@ Zustand хранилища управляют состоянием прилож�
 - **Валидация**: class-validator, Zod
 - **AI интеграция**: OpenAI SDK 4.24
 - **Push-уведомления**: Expo Push API
+- **Планировщик**: `@nestjs/schedule` (задачи `@Cron` — см. «Плановые задачи» ниже)
+- **Оплата**: Stripe SDK (apiVersion закреплена)
+- **Боты**: Telegraf (Telegram), Meta Cloud API (WhatsApp), Slack Web API
+- **Дополнительно для аутентификации**: `google-auth-library` (Google ID-токены), `@simplewebauthn/server` (учётные данные восстановления)
+- **Реальное время**: шлюз Socket.io для админ-панели
+- **Ошибки**: `@sentry/node` 8 (ничего не делает без `SENTRY_DSN`)
 
 ### Структура модулей
 
@@ -442,16 +493,23 @@ src/
 │   │   ├── ai.module.ts
 │   │   ├── embedding.module.ts
 │   │   ├── services/
-│   │   │   ├── chat.service.ts                 # Оркестратор жизненного цикла вызова OpenAI (~415 строк)
+│   │   │   ├── chat.service.ts                 # Оркестратор жизненного цикла вызова OpenAI
+│   │   │   ├── chat-conversation.service.ts    # Присутствие + CRUD разговоров
+│   │   │   ├── chat-action-lifecycle.service.ts # Подтверждение / отклонение / отмена действий записи
 │   │   │   ├── user-context-builder.service.ts # Сборка UserContext для промпта
-│   │   │   ├── ai-tools.service.ts             # 11 схем функций + диспетчер executeAction
+│   │   │   ├── ai-tools.service.ts             # Диспетчер executeAction + кэш чтения
+│   │   │   ├── ai-tool-schemas.ts              # схемы функций, только данные (список инструментов чата)
+│   │   │   ├── ai-{expense,budget,debt-goal,shopping,undo}-tools.service.ts  # обработчики по доменам
 │   │   │   ├── prompt-builder.service.ts       # Системный промпт, определение языка, i18n действий
 │   │   │   ├── whisper.service.ts              # Транскрипция голоса
 │   │   │   ├── ocr.service.ts                  # OCR чеков
 │   │   │   ├── categorization.service.ts
 │   │   │   ├── tag-suggestion.service.ts
 │   │   │   ├── project-suggestion.service.ts
-│   │   │   ├── split-suggestion.service.ts
+│   │   │   ├── receipt-category-split.service.ts
+│   │   │   ├── receipt-finalizer.service.ts
+│   │   │   ├── categorize-suggestions.service.ts / categorize-income-suggestions.service.ts
+│   │   │   ├── geocoding.service.ts            # Nominatim, один DI-экземпляр (троттлинг на уровне экземпляра)
 │   │   │   ├── goal-planner.service.ts
 │   │   │   ├── embedding.service.ts
 │   │   │   ├── model-resolver.ts
@@ -464,7 +522,12 @@ src/
 │   │   ├── insights.controller.ts
 │   │   ├── insights.service.ts
 │   │   ├── ai-insights.service.ts    # Генерация инсайтов через GPT-4
-│   │   └── story.service.ts          # Генерация нарративных историй
+│   │   ├── story.service.ts          # Генерация нарративных историй
+│   │   ├── fat-finder.service.ts     # AI-аудит расходов (Pro)
+│   │   ├── safe-to-spend.service.ts  # + safe-to-spend.util.ts (чистая формула)
+│   │   ├── wrapped.service.ts        # + wrapped.util.ts (чистая сборка)
+│   │   ├── inflation-shield*.ts      # движок «купить впрок», отслеживание, cron уведомлений
+│   │   └── real-salary/              # Реальная зарплата: Eurostat HICP, классификатор COICOP, PDF-справка
 │   ├── subscriptions/           # Подписки и AI использование
 │   │   ├── subscriptions.service.ts
 │   │   ├── guards/
@@ -578,6 +641,17 @@ src/
 │   │       ├── format-telegram.ts
 │   │       ├── parse-amount.ts
 │   │       └── resolve-account.ts
+│   ├── community-prices/       # Краудсорсинговая k-анонимная карта цен (чтение по умолчанию выключено)
+│   ├── family-feed/            # Лента активности общего аккаунта + реакции
+│   ├── investments/            # Инвестиционный портфель (см. раздел ниже)
+│   ├── merchant-rules/         # Выученные правила «продавец → категория»
+│   ├── purchase-requests/      # Групповое согласование покупок
+│   ├── restore-credentials/    # WebAuthn-учётные данные восстановления (сессия на Android)
+│   ├── slack/                  # DM-бот Slack, OAuth для нескольких workspace
+│   ├── telemetry/              # Продуктовая телеметрия (только веб) + воронка для админки
+│   ├── trip-settle-up/         # Балансы поездки и расчётные платежи
+│   ├── user-subscriptions/     # Менеджер подписок (регулярные платежи пользователя) + cron продлений
+│   ├── voice-digest/           # Еженедельный голосовой дайджест: факты, озвучка, TTS, реестр каналов, cron
 │   └── whatsapp/               # Бот WhatsApp Business Cloud
 │       ├── whatsapp-bot.service.ts
 │       ├── whatsapp-bot.controller.ts
@@ -586,29 +660,70 @@ src/
 │       ├── handlers/
 │       └── helpers/
 ├── common/
-│   ├── decorators/
+│   ├── bot-i18n/                # shared-messages.ts — словарь + createBotT() для всех трёх ботов
+│   ├── cache/                   # CacheService (@Global-обёртка ioredis), RedisThrottlerStorage
 │   ├── filters/
-│   ├── guards/
 │   ├── middleware/
-│   │   └── account-context.middleware.ts
-│   ├── interceptors/
-│   └── types/
-└── database/
-    └── prisma.service.ts
+│   │   └── account-context.middleware.ts   # AccountContextGuard / AccountRoleGuard / ViewerBlockGuard
+│   ├── types/
+│   └── utils/                   # fire-and-forget.ts, paginate.ts, fx.ts, financial-month.ts, budget-projection.ts, …
+├── database/
+│   └── prisma.service.ts
+├── global-prefix-exclusions.ts  # маршруты без /api/v1 (вебхуки, /s/*, /sl/*)
+├── instrument.ts                # инициализация Sentry — импортируется первым в main.ts
+└── main.ts
 ```
+
+Дерево — это карта, а не опись: авторитетный список модулей — сама папка `apps/api/src/modules/` (его отражает список API-модулей в `CLAUDE.md`), а поведение и инварианты каждого модуля описывают доменные хабы в [`docs/wiki/`](../wiki/index.md).
+
+### Сквозные паттерны бэкенда
+
+- **Сигнатура сервиса**: `(accountId, userId, dto)`; каждый запрос Prisma фильтруется по `accountId`, взятому из проверенного гардом `X-Account-Id` — никогда из параметра пути или присланного клиентом поля личности.
+- **Разрешённые id**: клиент может обращаться к строке по серверному PK или по своему локальному `clientId`; сервис разрешает его один раз и во всех последующих записях использует **разрешённый** PK (`docs/wiki/features/client-id-resolution.md`).
+- **Побочные эффекты fire-and-forget** (семейная лента, проверки аномалий, геймификация, push-уведомления, вклад в цены сообщества): `void call().catch(logFireAndForget(this.logger, 'Class.method'))` из `common/utils/fire-and-forget.ts`, который пишет в лог на уровне `warn`. Голый `.catch(() => {})` запрещён — тихий сбой там не оставляет следов.
+- **Неограниченные выборки в cron**: `paginateById(fetchPage, batchSize = 500)` из `common/utils/paginate.ts` читает `findMany` порциями в порядке `id` вместо загрузки всей таблицы; им пользуются все ежедневные cron уведомлений.
+- **Примитивы Redis**: `CacheService` глотает ошибки Redis, кроме `incrementWindow(key, windowMs)` (лимиты, которые должны отказывать при сбое) и `setIfAbsent(key, ttlSec)` (`SET … NX`, возвращает `false` при недоступном Redis) — последний троттлит `LastActiveService.touch`, который `JwtStrategy.validate()` вызывает на каждом аутентифицированном запросе, чтобы `User.lastSyncAt` был настоящей отметкой последней активности.
+- **Валюта отображения**: каждая серверная сумма или пересказ — в `user.currencyCode` пользователя, через `common/utils/fx.ts`; сумма без курса исключается и помечается `fxApproximate`, а не складывается без конвертации (`docs/wiki/features/display-currency-conversion.md`).
+- **Общие пакеты во время выполнения — только типы**: у API нет шага сборки для `packages/*`, поэтому из `@budget/shared-*` можно делать `import type`, но нельзя импортировать значения (это обеспечивают правило ESLint и скрипт перед деплоем `check-no-shared-utils-runtime-import.sh`). Логика, нужная обеим сторонам, — намеренно продублированная пара: каноническая копия в `apps/api/src/common/utils/`, зеркало в `packages/shared-utils`, меняются вместе.
+- **Маршруты вне `/api/v1`**: вебхуки и гостевые страницы перечислены один раз в `global-prefix-exclusions.ts`; гостевые поддеревья заданы шаблонами, чтобы новый гостевой маршрут не мог выпасть из списка.
+- **Порядок маршрутов**: литеральный сегмент (`bulk`, `templates`, `settings/...`) должен объявляться раньше соседнего маршрута `:id`, иначе Express примет его за id.
+- **Небольшие сервисы**: крупные сервисы разделены по естественным швам (чат, AI-инструменты, расходы, аномалии, админка); новая функция расширяет подходящий узкий сервис, а не раздувает оркестратор обратно.
+
+### Плановые задачи
+
+Все задачи — методы `@Cron` в процессе API (время серверное, в продакшене UTC):
+
+| Расписание | Задача | Назначение |
+|------------|--------|------------|
+| каждые 30 с | `AdminGateway` | Рассылка живой статистики в админ-панель |
+| каждую минуту | `AdminNotificationService` | Отправка запланированных уведомлений, срок которых настал |
+| каждый час (`0 * * * *`) | `exchange-rate-alert.cron.ts` | Проверка отслеживаемых курсов, сгруппированных по базовой валюте |
+| каждый час в :05 | `voice-digest.cron.ts` | Отправка еженедельных голосовых дайджестов, срок которых настал в часовом поясе пользователя |
+| ежедневно в 03:00 | `referral-qualification.cron.ts`; очистка в `exchange-rate-alert.cron.ts`, `FamilyFeedService`, `shopping-reminder.cron.ts`, `inflation-shield-notify.cron.ts`, `report-scheduler.service.ts`, `telemetry-cleanup.cron.ts` | Квалификация рефералов; удаление истории курсов, старых событий ленты, журналов уведомлений, просроченных отчётов и телеметрии |
+| 06:00 1-го и 15-го числа | `OfficialInflationService` | Обновление ставок Eurostat HICP для реальной зарплаты |
+| ежедневно в 08:00 | `expense-recurring.cron.ts`, `subscription-renewal.cron.ts` (списание), `report-scheduler.service.ts` (еженедельные письма, в выбранный пользователем день недели) | Клонирование повторяющихся расходов, запись продлений подписок, еженедельные отчёты по e-mail |
+| ежедневно в 09:00 | `debt-reminder.cron.ts`, `trip-settle-up-reminder.cron.ts`, `subscription-renewal.cron.ts` (напоминания) | Напоминания о сроках |
+| 09:00 1-го числа | `report-scheduler.service.ts` | Ежемесячные дайджесты |
+| ежедневно в 10:00 | `tracking-gap-reminder.cron.ts`, `shopping-reminder.cron.ts`, `trial-reminder.cron.ts` | Push-уведомления для вовлечения |
+| ежедневно в 11:00 | `inflation-shield-notify.cron.ts` | Push-уведомления с рекомендациями «купить впрок» |
+
+Авторитетный список — `grep -rn "@Cron(" apps/api/src`.
 
 ### Схема базы данных (PostgreSQL)
 
 ```prisma
 // Перечисления
-enum AccountType { personal, business, shared }
+enum AccountType { personal, business, shared, investment, trip }
 enum AccountRole { owner, editor, viewer }
 enum InvitationStatus { pending, accepted, declined, expired }
 
 model User {
   id                   String    @id @default(uuid())
   email                String    @unique
-  passwordHash         String
+  passwordHash         String?   // null у аккаунта только через Google
+  googleId             String?   @unique
+  language             String    @default("en")
+  inflationCountry     String?   // переопределение страны для реальной зарплаты
   name                 String
   currencyCode         String    @default("USD")
   timezone             String    @default("UTC")
@@ -1103,6 +1218,30 @@ model SpendingStory {
 }
 ```
 
+### Модели, не показанные выше
+
+Блок выше — выдержка из основных таблиц. Источник истины — `apps/api/prisma/schema.prisma`; остальные модели по областям (подробности — на страницах wiki):
+
+| Область | Модели |
+|---------|--------|
+| Аккаунты, аутентификация, пользователи | `UserPaymentMethod`, `RestoreCredential`, `UserEncryptionProfile`, `AccountEncryptionKey`, `SystemConfig`, `AdminAuditLog` |
+| Транзакции и структура | `BudgetCategory`, `MerchantCategoryRule`, `ProductCategoryRule`, `AccountTransfer`, `TripExpenseShare`, `SettleUpTransaction`, `GeocodeCache` |
+| Импорт | `ImportBatch`, `CsvImportMapping`, `BankStatementSignature` |
+| Разделение чека | `ReceiptSplitParticipant`, `ReceiptSplitFlag` |
+| Покупки | `ShoppingList`, `ShoppingListItem`, `ShoppingListTemplate`, `ShoppingListTemplateItem`, `ShoppingNotificationLog` |
+| Цены и инфляция | `CommunityPriceObservation`, `CommunityStoreGeo`, `InflationShieldRecommendation`, `OfficialInflationRate`, `SalaryProfile` |
+| Инсайты и оповещения | `AnomalyAlert`, `FatFinderReport`, `InsightNotificationLog`, `MonthlyDigestCache`, `GeneratedReport`, `ExchangeRateWatch` |
+| Общие аккаунты | `FamilyFeedEvent`, `FeedReaction`, `PurchaseRequest`, `PurchaseRequestVote` |
+| Цели, геймификация, рефералы | `SavingsGoal`, `GoalContribution`, `UserAchievement`, `UserStreak`, `Referral` |
+| Оплата и использование | `UsageLog`, `UserSubscription` (регулярные платежи пользователя), `BackupHistory` |
+| Уведомления | `NotificationLog`, `ScheduledNotification` |
+| Боты | `TelegramLink`, `TelegramLinkCode`, `WhatsAppLink`, `WhatsAppLinkCode`, `SlackLink`, `SlackLinkCode`, `SlackInstallation` |
+| Телеметрия и релизы | `TelemetryEvent`, `AppVersion` |
+
+А также модели инвестиций, описанные в разделе «Инвестиционный портфель» ниже.
+
+**Изменение поля в `schema.prisma` должно попадать в тот же коммит, что и его миграция.** Пропущенную миграцию в пайплайне ничто не ловит: линт, проверка типов, тесты и деплой проходят, `prisma migrate deploy` применять нечего, а первый же запрос, выбирающий новую колонку, падает в продакшене. `/health` выполняет `SELECT 1` и не касается таблиц приложения, поэтому мониторинг остаётся зелёным — единственный сигнал даёт Sentry (однажды так лёг список транзакций, ABA-558). Восстановление — через стандартный сервис `migrator`, а не ручную правку базы. Колонки именуются через `@map("snake_case")`.
+
 ## Синхронизация
 
 ### Стратегия
@@ -1210,7 +1349,7 @@ model SpendingStory {
 | `balanced` (по умолчанию) | `gpt-4o` | 2000 | ×1.0 |
 | `quality` | `gpt-4.1` | 3000 | ×1.5 |
 
-Множитель стоимости масштабирует расход AI-квоты. Например, при тарифе Free (5 запросов/месяц) запрос в режиме «quality» стоит 1.5 единицы, а в «fast» — 0.75 единицы.
+Множитель стоимости масштабирует расход AI-квоты. Например, при тарифе Free (50 запросов/месяц) запрос в режиме «quality» стоит 1.5 единицы, а в «fast» — 0.75 единицы.
 
 **Реализация:** `apps/api/src/modules/ai/services/model-resolver.ts` — экспортирует `resolveAiModel(pref?)` и `getAiCostMultiplier(pref?)`. `AiUsageGuard` применяет множитель централизованно перед записью использования квоты.
 
@@ -1230,6 +1369,10 @@ model SpendingStory {
 | Подсказки тегов | Выбранная пользователем | Подбор тегов по описанию расхода (сначала из истории, затем AI) |
 | Подсказки проектов | Выбранная пользователем | Привязка расходов к проектам по датам и семантическому анализу |
 | Авторазбивка чека по категориям | Выбранная пользователем | Отнесение каждой строки чека к категории (только названия, никогда суммы) — см. ниже |
+| Категоризация без категории | Дешёвая модель, после правил продавцов | Подсказки категорий для расходов/доходов без категории; только чтение, свой суточный лимит (`AI_CATEGORIZE_MAX_PER_DAY`) — `docs/wiki/features/categorize-uncategorized.md` |
+| AI-импорт выписок | Выбранная пользователем | Определение сопоставления колонок CSV/XLSX или извлечение строк PDF, когда ни один банковский парсер не подошёл — `docs/wiki/features/ai-statement-import.md` |
+| Голосовой дайджест | Дешёвая модель + `gpt-4o-mini-tts` | Пересказ детерминированных фактов недели (вывод сверяется по числам, при сбое — шаблон) и озвучка — `docs/wiki/features/voice-digest.md` |
+| Реальная зарплата | Дешёвая модель (только классификация) | Отнесение категорий к ценовым группам COICOP; сами показатели детерминированы — `docs/wiki/features/real-salary.md` |
 
 
 ### Авторазбивка чека по категориям
@@ -1380,6 +1523,10 @@ const context = {
 - **История для AI**: сообщение каждого участника предваряется санированным `[Name]: `, чтобы модель различала участников
 - **Deep-link**: нажатие на push `chat_mention` переключает `accountId` и открывает диалог
 
+### Набор инструментов AI-чата
+
+Инструменты function calling чата описаны, только как данные, в `ai/services/ai-tool-schemas.ts`, а обрабатываются доменными провайдерами (`ai-expense-tools`, `ai-budget-tools`, `ai-debt-goal-tools`, `ai-shopping-tools`, `ai-undo-tools`) за тонким диспетчером `ai-tools.service.ts`. Файл схем и есть список — не храните их количество где-либо ещё. Инструменты записи проходят конвейер подтверждения/отклонения в `chat-action-lifecycle.service.ts` (закрыт для viewer); инструменты чтения выполняются сразу, с 10-минутным кэшем, который `invalidateExpenseChatCache` сбрасывает по каждому инструменту. См. `docs/wiki/ai-features.md`, `docs/wiki/features/chat-undo-last-action.md`, `docs/wiki/features/chat-spending-questions.md`.
+
 ## Уведомления
 
 ### Push-уведомления (Expo Push API)
@@ -1395,6 +1542,9 @@ const context = {
 - `subscription_renewal` — напоминание о продлении подписки или уведомление об авто-списании
 - `chat_mention` — пользователь упомянут через @ в общем AI-разговоре
 - `tracking_gap_reminder` — напоминание, когда расходы не записывались 3+ дней (отправляется на 3-й, 6-й, 9-й день…)
+- `purchase_request_created` / `_voted` / `_approved` / `_rejected`, `trip_settle_up`, `account_invitation`, `shopping_reminder`, `shopping_deal`, `inflation_shield`, `split_payment_claimed`, `split_item_flagged`, `rate_watch_hit`, `voice_digest_disabled`
+
+Авторитетный список — объединение `NotificationType` в `packages/shared-types/src/entities/primitives.ts`.
 
 **Пользовательские настройки** (`GET/PATCH /users/me/notification-preferences`)
 - `budgetAlerts` — управляет уведомлениями `budget_alert`
@@ -1404,6 +1554,8 @@ const context = {
 - `subscriptionRenewals` — управляет уведомлениями `subscription_renewal`
 - `anomalyAlerts` — управляет push-уведомлениями `spending_anomaly` от модуля аномалий (по умолчанию `true`)
 - `trackingGap` — управляет уведомлениями `tracking_gap_reminder` (по умолчанию `true`)
+- `purchaseRequests`, `tripSettleUp`, `shoppingReminders`, `shoppingDeals`, `inflationShield` — управляют push-уведомлениями соответствующих функций
+- У разовых запросов действия (`account_invitation`, `split_payment_claimed`) переключателя намеренно нет
 
 **Пакетная обработка:** Уведомления отправляются батчами по 100 сообщений.
 
@@ -1411,15 +1563,16 @@ const context = {
 
 Модуль Telegram предоставляет два сервиса:
 
-1. **TelegramService** — уведомления для администраторов о системных событиях (регистрация пользователей, новые подписки)
+1. **TelegramService** — служебные уведомления о системных событиях (регистрации, подписки, рефералы, запросы на новый банк), которые идут через **отдельного ops-бота** (`OPS_TELEGRAM_BOT_TOKEN`/`OPS_TELEGRAM_CHAT_ID`, необязательный префикс `OPS_PROJECT_NAME`) и полностью пропускаются, если эти переменные не заданы — никогда через пользовательского бота-ассистента
 2. **TelegramBotService** — полнофункциональный пользовательский бот с ИИ-чатом, командами расходов/доходов, транскрипцией голоса и OCR чеков
 
 **Архитектура бота:**
 - **Middleware**: Разрешает `TelegramLink` → устанавливает `ctx.userState` (userId, accountId, conversationId) перед каждым обработчиком
-- **Обработчики**: 6 специализированных — `ChatHandler` (ИИ-чат), `CommandHandler` (/start, /link, /account, /unlink, /newchat, /help), `ExpenseHandler`, `IncomeHandler`, `VoiceHandler` (транскрипция через Whisper), `PhotoHandler` (OCR сканирование чеков)
+- **Обработчики**: `ChatHandler` (ИИ-чат), `CommandHandler` (`/start`, `/link`, `/help`, `/unlink`, `/account`, `/newchat`, `/usage`, `/digest`), `ExpenseHandler` (`/expense`), `IncomeHandler` (`/income`), `CategoryHandler` (`/category`, `/categories`), `CategorizeHandler` (`/categorize`), `PurchaseRequestHandler` (голосование), `VoiceHandler` (транскрипция через Whisper), `PhotoHandler` (OCR чеков, исправление позиций и даты текстом до сохранения)
+- **Незавершённое состояние в Redis**: данные подтверждения AI-действий (`telegram:pa:*`) и ожидающие чеки (`telegram:receipt:*`, `telegram:awaiting_date:*`) хранятся в `CacheService` с TTL, поэтому перезапуск при деплое больше не теряет подтверждение «в полёте»
 - **Привязка аккаунтов**: 6-символьные коды с TTL 10 минут, хранятся в таблице `TelegramLinkCode`. Связь один-к-одному: Telegram пользователь ↔ Пользователь приложения
 - **Автоматическое определение счёта**: хелпер `resolve-account.ts` определяет названия счетов в сообщениях пользователя и подменяет `accountId` для данного запроса (без постоянного переключения). Это позволяет пользователям запрашивать данные разных счетов, упоминая название (например, «Покажи расходы в Family»)
-- **Webhook/Polling**: Использует webhook при установленном `TELEGRAM_WEBHOOK_URL`, иначе — long polling для разработки
+- **Webhook/Polling**: Использует webhook при установленном `TELEGRAM_WEBHOOK_URL` (входящие запросы должны нести `X-Telegram-Bot-Api-Secret-Token` = `TELEGRAM_WEBHOOK_SECRET`), иначе — long polling для разработки
 
 ### Интеграция с WhatsApp
 
@@ -1433,7 +1586,7 @@ const context = {
 - **ID колбэков используют разделитель `--`** (UUID содержат одиночный `-`)
 - **Интерактивный UI**: `WhatsAppClientService.sendButtons` (макс. 3 × 20 симв.) / `sendList` (макс. 10 строк); markdown WhatsApp (`*bold*`, `_italic_`) через `markdownToWhatsApp`
 - **Привязка аккаунта**: 6-символьный hex-код — мобильное показывает QR + deep link `wa.me/{phone}?text=link%20{code}`; `CommandHandler.handleLink` — единственная команда, принимаемая от непривязанного номера
-- **Локализация**: `helpers/i18n.ts` портирует ключи Telegram на 8 языков
+- **Локализация**: 9 языков; общие строки берутся из `common/bot-i18n/shared-messages.ts` (см. «Общая локализация ботов» ниже), в `helpers/i18n.ts` остаются только тексты, специфичные для WhatsApp
 
 ### Email (Почта)
 
@@ -1443,6 +1596,20 @@ const context = {
   - `processWeeklyEmails` — ежедневно в 08:00, отправляет еженедельные сводки пользователям Business-тарифа
   - `processMonthlyDigests` — 1-го числа каждого месяца, отправляет ежемесячные дайджесты пользователям Pro+
   - `cleanupExpiredReports` — ежедневно в 03:00, удаляет истёкшие отчёты
+
+### Интеграция со Slack
+
+DM-бот с тем же набором функций, что у Telegram и WhatsApp, только через вебхуки (`POST /slack/events`, `POST /slack/interactivity`, оба вне `/api/v1`), проверяемые HMAC-схемой Slack `v0=` над сырым телом (`SLACK_SIGNING_SECRET`). Установка в несколько workspace идёт через `GET /slack/install` → `GET /slack/oauth/callback`; bot-токен каждого workspace хранится в `SlackInstallation` в зашифрованном AES-256-GCM виде (`SLACK_TOKEN_ENC_KEY`). Две ловушки: входной фильтр должен пропускать `subtype === 'file_share'` (его несёт каждый загруженный файл — чеки, голос, PDF), а `chat.update` плейсхолдера не должен передавать `blocks`. Для загрузки аудио голосового дайджеста нужен scope `files:write` (без него дайджест приходит текстом). Подробности: `docs/wiki/slack-bot.md`.
+
+### Общая локализация ботов
+
+`common/bot-i18n/shared-messages.ts` содержит словарь, общий для всех трёх ботов (ошибки, подтверждения, пункты меню, тексты работы с категориями), на девяти языках, и фабрику `createBotT(messages, { markup, defaultParams })`. Каноническая разметка — HTML (`parse_mode` Telegram); `markup: 'markdown'` переводит её в синтаксис WhatsApp/Slack при чтении, а `defaultParams` подставляет плейсхолдеры платформы вроде `{{platform}}`. `helpers/i18n.ts` каждого бота — это `{ ...sharedMessages, ...platformMessages }`, и в нём остаются только действительно платформенные тексты. Новая строка, нужная двум и более ботам, идёт в общий файл.
+
+### Голосовой дайджест
+
+Еженедельная голосовая заметка по желанию пользователя (текст — рядом), подводящая итог последних семи дней аккаунта и отправляемая через тот бот, который пользователь привязал. `VoiceDigestCron` запускается каждый час и спрашивает `isDue` для каждого включившего дайджест пользователя в его часовом поясе (день и час — из `GET/PATCH /users/me/voice-digest`). Факты считаются детерминированно (`voice-digest-facts.service.ts` → чистая `assembleDigestFacts`); дешёвая модель только пересказывает их, и её вывод отбрасывается, если в нём появилось число, которого нет в фактах; `tts.service.ts` его озвучивает.
+
+Доставка идёт через **реестр каналов**: `DigestChannelRegistry` сопоставляет `VoiceDigestChannel` (`telegram`, `whatsapp`, `slack`) с `DigestSender` (`send`, `isLinked`, `accountIdFor`). Каждый модуль бота регистрирует свой отправитель (`modules/<bot>/digest/*.sender.ts`) в `onModuleInit`, поэтому `VoiceDigestModule` никогда не импортирует модули ботов. Отправитель бросает `DigestBlockedError`, если пользователь заблокировал бота (дайджест отключается, push `voice_digest_disabled` объясняет почему), или `DigestUnavailableError`, если канал сейчас не может доставить сообщение. До пользователя вне 24-часового окна WhatsApp можно достучаться только одобренным шаблоном, поэтому WhatsApp предлагается, только когда задан `WHATSAPP_DIGEST_TEMPLATE`. Подробности: `docs/wiki/features/voice-digest.md`.
 
 ## Аналитика и обнаружение аномалий
 
@@ -1596,6 +1763,10 @@ const context = {
 ### API эндпоинты
 
 `GET /insights/inflation-shield` — под `JwtAuthGuard + AccountContextGuard`. `SubscriptionTierGuard` не используется — доступно на бесплатном тарифе (тот же прецедент, что у Safe-to-Spend и Financial Wrapped).
+
+## Реальная зарплата
+
+«Поспевает ли моя прибавка за тем, что реально можно купить на мои деньги»: подтверждённая серия зарплаты пользователя (12 месяцев против предыдущих 12) против персональной инфляции из официальных данных Eurostat HICP для его страны и собственного индекса цен по чекам, взвешенной по его тратам в разделах COICOP. Детерминированно и бесплатно; только одностраничная PDF-справка — Pro. `OfficialInflationService` — единственный, кто пишет в `official_inflation_rates` (обновление 1-го и 15-го числа); `SalaryProfile` хранит подтверждённую серию зарплаты; `Category.coicopDivision` и `User.inflationCountry` — пользовательские переопределения. Эндпоинты: `GET /insights/real-salary`, `GET/PUT /insights/real-salary/profile`, `GET /insights/real-salary/categories`, `POST /insights/real-salary/brief` (см. [API.md](API.md#реальная-зарплата)). Подробности: `docs/wiki/features/real-salary.md`.
 
 ## Проверка цен по чеку
 
@@ -1758,12 +1929,12 @@ ABA-373. Проверка, выполняемая в момент сканиро
 - **Три уровня**: free, pro, business
 - **Отслеживание AI-использования**: Каждый AI-запрос учитывается с единицами стоимости (дробными)
 - **Множитель стоимости модели**: Применяется `AiUsageGuard` перед записью использования — fast=0.75×, balanced=1.0×, quality=1.5×
-- **Пробные периоды**: Уменьшенные лимиты для пробного периода (free: 50, pro: 15, business: 100)
+- **Пробные периоды**: лимиты пробного периода — free: 50, pro: 300, business: безлимит (`TRIAL_REQUEST_LIMITS` в `subscriptions.service.ts`)
 - **Активные лимиты**: free: 50 запросов, pro: 300 запросов, business: безлимит
 - **Гарды**:
   - `SubscriptionTierGuard` — проверяет, что уровень подписки пользователя соответствует требуемому
   - `AiUsageGuard` — проверяет, что пользователь не превысил лимит AI-запросов; применяет множитель стоимости модели
-- **Требования**: AI-функции (инсайты, истории, fat finder) доступны на всех уровнях подписки — различаются только лимиты AI-запросов
+- **Функции уровня Pro** (`@RequireTier('pro')`, business проходит по рангу): AI-графики инсайтов, история расходов (Spending Story), Fat Finder, PDF-справка реальной зарплаты, сравнение корзины и цены сообщества. Всё остальное — в том числе safe-to-spend, Wrapped, Inflation Shield, сама реальная зарплата и генерация отчётов — бесплатно. Ответ `403` с `code: 'TIER_REQUIRED'` открывает общий paywall приложения. Цены: `docs/wiki/features/subscription-pricing.md`
 
 ## Виджеты дашборда (внутри приложения)
 
@@ -2037,7 +2208,7 @@ app/investment/
 **Архитектура:**
 - **Кэширование**: Инсайты кэшируются на 24 часа для каждого аккаунта
 - **Подписка**: Требуется уровень Pro+ (2.5 AI-кредитов за запрос)
-- **Локализация**: Поддерживает все 8 языков приложения
+- **Локализация**: Поддерживает все 9 языков приложения
 - **Графики**: Каждый инсайт включает соответствующую визуализацию (donut, bar, line)
 
 ## Безопасность
@@ -2073,7 +2244,10 @@ app/investment/
 
 ### Меры безопасности
 
-- **JWT токены**: Короткоживущие access токены (15мин), долгоживущие refresh токены (7д)
+- **JWT-токены**: access-токен живёт `JWT_EXPIRES_IN` (по умолчанию `7d`), refresh-токен — 30 дней; каждое обновление возвращает новый refresh-токен (скользящая сессия), JWT stateless, списка отзыва нет
+- **Вход через Google**: клиент передаёт Google ID token; сервер проверяет audience (`GOOGLE_OAUTH_CLIENT_IDS`) и `email_verified`, затем находит пользователя по `googleId` или автоматически привязывает по подтверждённому e-mail
+- **Учётные данные восстановления**: WebAuthn-ключ, регистрируемый при каждом аутентифицированном запуске на Android, позволяет сессии пережить перенос на новое устройство — `docs/wiki/features/restore-credentials.md`
+- **Ограничения частоты**: `ThrottlerGuard` нужно явно ставить в паре с `@Throttle` (глобальный гард не зарегистрирован); критичные для безопасности лимиты вне его используют `CacheService.incrementWindow`, который при недоступности Redis отказывает (fail closed)
 - **Безопасное хранение**: Токены хранятся в keychain/keystore устройства
 - **Биометрическая аутентификация**: Опциональная разблокировка по отпечатку/лицу
 - **Прокси API ключа**: Ключ OpenAI никогда не передаётся клиенту
