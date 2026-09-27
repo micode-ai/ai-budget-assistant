@@ -97,6 +97,8 @@ the section you came for — it states what must not break and why. A missing se
 ### Bots
 - [bot-receipt-editing](features/bot-receipt-editing.md) — typed line-item and total corrections to a
   scanned receipt, on all three bots
+- [voice-digest](features/voice-digest.md) — the opt-in weekly voice note, deterministic facts
+  narrated by a cheap model, the WhatsApp 24h-window/template split, the channel registry
 
 ### Screens and platform surfaces
 - [desktop-web-shell](features/desktop-web-shell.md) — the top bar and content area every desktop
