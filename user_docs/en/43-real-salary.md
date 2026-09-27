@@ -27,12 +27,12 @@ If nothing repeating is found, add your pay as income a couple of times first �
 Tap the gear icon on the Real Salary screen to open **Real salary settings**:
 
 - **Country for official prices** — guessed from your device's time zone the first time you open the screen (shown as e.g. "Poland (from your time zone)"). Tap it to pick any EU/EEA/Switzerland country by hand, or to go back to the guessed one.
-- **What each category counts as** — each of your expense categories can be mapped to a price group (Food and drinks, Housing and utilities, Transport, Health, and so on). Left on **Automatic**, the app assigns one for you; you only need to touch this if you disagree with a category's guess.
+- **What each category counts as** — each of your expense categories can be mapped to a price group (Food and drinks, Housing and utilities, Transport, Health, and so on). Left on **Automatic**, the app assigns one for you; you only need to touch this if you disagree with a category's guess. The list starts with the categories that have no price group yet (or count as “everything else”), biggest spend first, with each category's spending over the last 12 months shown next to it — the top of the list is where a choice moves your result the most.
 
 ## How it's calculated
 
 - **Pay change** compares the average salary per pay period over the last 12 months against the 12 months before that — using pay *periods*, not calendar months, so a payday that shifts around a weekend doesn't look like a raise or a cut.
-- **Your personal inflation** is a weighted average across your own spending: each price group's official rate for your country, weighted by how much of your spending falls into it. **Food and drinks** is priced from your own scanned-receipt history instead, once you have at least 10 tracked products — your actual grocery prices, not a national average.
+- **Your personal inflation** is a weighted average across your own spending: each price group's official rate for your country, weighted by how much of your spending falls into it. **Food and drinks** is priced from your own scanned-receipt history instead, once you have at least 10 tracked products — your actual grocery prices, not a national average. If your receipt prices point to a food inflation far away (more than 10 percentage points) from the official food rate for your country, the official rate is used instead — a gap that large almost always means a product changed pack size or unit under the same name, not that your groceries really got that much dearer.
 - **Real pay change** adjusts your pay change for that inflation rate, so it answers "did my money buy more or less", not just "did my number go up".
 - **Raise needed to keep up** is how much bigger a raise, on your *current* pay, would have kept you exactly even with your own inflation.
 

@@ -40,7 +40,8 @@ the one-page PDF "brief" download (`POST /insights/real-salary/brief`) is Pro-ga
   `coicopDivision` on `PATCH /categories/:id` (the system-category guard, the cache bust)
 - `apps/api/src/modules/users/users.controller.ts` — `inflationCountry` on `PATCH /users/me`
 - Schema: `apps/api/prisma/schema.prisma` — `SalaryProfile`, `OfficialInflationRate`,
-  `Category.coicopDivision`, `User.inflationCountry` (migration `20260927000000_add_real_salary`)
+  `Category.coicopDivision`, `User.inflationCountry` (migration `20260927000000_add_real_salary`),
+  `Category.coicopSource` (migration `20260929000000_add_category_coicop_source`)
 - Shared types: `packages/shared-types/src/dto/real-salary.ts`
 - Design spec: `docs/superpowers/specs/2026-09-26-real-salary-design.md`
 - `apps/mobile/app/real-salary/index.tsx` — the hero screen (real change, pay vs
@@ -114,7 +115,13 @@ path — it's a small one-time backfill, not a per-request feature). A failed ca
 categories `null` to retry on the next request. `RealSalaryService.loadSpend` then buckets every
 expense (and, honouring the codebase's one split-attribution rule via `attributeToCategories`, every
 category-split share) by its category's `coicopDivision`, or `TOTAL` when the category has none or
-the expense has no category at all. The spend query already excludes debts, debt repayments,
+the expense has no category at all. The prompt reserves `TOTAL` for a person's or a pet's own name
+and for genuinely mixed/unknown categories ("Other", "Misc"), maps generic names (entertainment,
+home, subscriptions, gifts, sport, travel, kids, pets, beauty) to their division, and carries
+examples in several app languages — the first prompt only said "TOTAL when a name fits no single
+division", and in production generic names such as "entertainment" came back `TOTAL` and
+carried a large share of the spend at the national rate (ABA-617). Every write records its source in `Category.coicopSource`:
+`'seed'` (icon map), `'model'` (classifier), `'user'` (`PATCH /categories/:id`). The spend query already excludes debts, debt repayments,
 planned expenses and split-receivables (`isDebt`/`isDebtRepayment`/`isPlanned`/`isSplitReceivable`
 all `false`) — none of those are money the user actually spent.
 
@@ -124,8 +131,11 @@ Laspeyres-style weighted mean over the account's own spend, `Σ(weight × rate) 
 rests on at least `RECEIPT_MIN_PRODUCTS` (10) products — and only after `annualiseHalfYearPct`
 turns it into a year-on-year figure: that index compares mean prices in [12..6 months ago] with
 [6 months ago..now], window midpoints ~6 months apart, so it is a half-year change and is
-compounded, `(1 + p)² − 1`, before it stands in for Eurostat's year-on-year rate; every other division, and CP01 itself below
-that floor, is priced from the official rate for that division, falling back to the country's
+compounded, `(1 + p)² − 1`, before it stands in for Eurostat's year-on-year rate — and only when
+that annual figure is **plausible**: within `RECEIPT_MAX_GAP_PP` (10) percentage points of the
+official CP01 rate (the country's `TOTAL` when there is no CP01 cell), or, with no official data at
+all, within ±`RECEIPT_MAX_ABS_PCT` (30) % (ABA-618, see **Invariants**); every other division, and
+CP01 itself below that floor or outside that band, is priced from the official rate for that division, falling back to the country's
 `TOTAL` rate when the division has no official cell of its own — **never 0**, since an unpriced
 division silently reading as "no inflation" would understate the answer. **Non-finite official or
 receipt rates are treated as absent**: a non-finite per-division rate falls back to `TOTAL` the same
@@ -185,10 +195,40 @@ it would silently change every other account's spend weights too. Every other fi
 category (rename, recolor, even soft-delete) is deliberately unaffected by this guard.
 
 **The classifier sees category names only**, never amounts or merchant data (its client has a
-10 s timeout, no retries, and a 400-token completion cap), and an unresolved or
-invalid model answer is stored as `TOTAL` rather than left to retry forever — a category is asked
-about at most once per account (until its `coicopDivision` is cleared, which nothing currently
-does).
+10 s timeout and no retries), and an unresolved or invalid model answer is stored as `TOTAL` rather
+than left to retry forever — a category is asked about at most once per account (until its
+`coicopDivision` is cleared; the ABA-617 migration did that once for every `TOTAL`).
+
+**The completion budget scales with the batch: `completionBudget(n) = 30 + 12·n` tokens.** A
+pretty-printed `"49": "CP09"` pair is ~8 tokens, so a full `CLASSIFY_BATCH` (50) needs ~400 — the old
+flat 400-token cap truncated it mid-JSON, `JSON.parse` threw, the catch stores nothing (a failed call
+must stay retryable), and the same 50 categories were re-asked and re-truncated on every request,
+forever. A truncated reply is indistinguishable from a failed call here, so it must never happen.
+
+**Every write to `coicopDivision` also writes `coicopSource`** — `'seed'` for the icon map,
+`'model'` for the classifier (including its `TOTAL` fallback), `'user'` in
+`CategoriesService.update` whenever the PATCH body carries `coicopDivision` (the DTO whitelist keeps
+clients from sending `coicopSource` themselves). `NULL` means "set before the column existed". This
+is what lets a future reclassification touch model answers only and never a user's own choice.
+
+**The receipt food rate replaces official CP01 only when it is plausible (ABA-618).** The receipt
+index (`PriceHistoryService`'s `'12m'` `inflationIndex`) is a percent change, not a level, and a
+half-year one — the annualisation is right. It is a ratio of sums, `Σ nᵦ·(p̄ᶜ − p̄ᵦ) / Σ nᵦ·p̄ᵦ`, so
+ordinary price noise averages out; what it cannot absorb is a single product whose pack size or unit
+changed under the same name (two sizes merged into one product, a loose-weight item read as one
+piece): with ~12 products, one such break takes an honest +2 % half-year to +16 %, which compounds to
++35 % a year (reproduced end to end in `__tests__/receipt-index-guard.spec.ts`). A real household
+basket does not sit 10+ pp from national food inflation for a year, so beyond `RECEIPT_MAX_GAP_PP`
+the official rate is used; without official data, beyond ±`RECEIPT_MAX_ABS_PCT` there is no answer
+(`no_inflation_source`) rather than a number built on a data break.
+
+**The settings list reads the same money the answer weighs.** `listCategories(accountId,
+baseCurrency)` returns each category's `spend` (+ `spendCurrency`) from `loadSpendParts` — the one
+query `compute()`'s `loadSpend` also uses (the open account only, 365 days, same exclusions, split
+rule, FX with unknown rates left out). The app (`groupSettingsCategories`, `realSalary.ts`) lists the
+categories priced at `TOTAL` — `null` or `'TOTAL'` — first, biggest spend first, then the rest,
+biggest first, so the choices that move the answer most are at the top. `spend` is optional in the
+shared type and a missing one counts as 0, so an app newer than its API still renders.
 
 **A missing division rate falls back to the country's `TOTAL` rate, never to 0** — both when the
 official data has no cell for a division and when the CP01 receipt index exists but is below the
@@ -261,9 +301,19 @@ the two.
 - **Expenses in global system categories stay weighted as `TOTAL`.** A system category
   (`accountId === null`) is not classified per account and its `coicopDivision` cannot be set
   (`PATCH /categories/:id` returns 403), so its spend is priced at the national `TOTAL` rate.
+- **A `TOTAL` a user picked by hand before ABA-617 was cleared by its migration** and re-classified
+  (seed icon or model): there was no source column to tell it apart from a model answer. Rare, and
+  the user can set it again — it is now stored as `coicopSource: 'user'`.
+- **The receipt guard limits personalisation of food to ±10 pp of the official rate.** A household
+  whose food basket genuinely diverges further is priced at the official rate. And the receipt index
+  itself is not cleaned at the source: the Analytics tab's personal inflation index
+  (`features/personal-inflation-index.md`) still shows the unguarded figure; per-product outliers
+  (a pack-size break) are not detected or trimmed anywhere.
+- **The 10-product floor (`RECEIPT_MIN_PRODUCTS`) is low** — the reason a single product can move
+  the index by double digits. The plausibility band is what protects the answer, not the floor.
 
 ## History
-[ABA-608](https://github.com/micode-ai/ai-budget-assistant/issues/633) — API half. [ABA-609](https://github.com/micode-ai/ai-budget-assistant/issues/635) — mobile half (screens, setup, settings, share card, brief download, help section).
+[ABA-608](https://github.com/micode-ai/ai-budget-assistant/issues/633) — API half. [ABA-609](https://github.com/micode-ai/ai-budget-assistant/issues/635) — mobile half (screens, setup, settings, share card, brief download, help section). [ABA-617](https://github.com/micode-ai/ai-budget-assistant/issues/645) — classifier prompt, batch-sized token budget, `coicopSource`, one-time re-ask of `TOTAL`s, spend-sorted settings list. [ABA-618](https://github.com/micode-ai/ai-budget-assistant/issues/646) — receipt CP01 plausibility band.
 
 Built as one task set against `docs/superpowers/specs/2026-09-26-real-salary-design.md`: the
 Eurostat HICP client and the cron-fed `official_inflation_rates` table · COICOP division seed-icon
