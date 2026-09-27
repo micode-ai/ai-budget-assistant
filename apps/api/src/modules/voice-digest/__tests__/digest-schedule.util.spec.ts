@@ -20,6 +20,13 @@ describe('isoWeekKey', () => {
     // 2027-01-01 is a Friday → ISO week 53 of 2026
     expect(isoWeekKey(new Date('2027-01-01T12:00:00Z'), 'UTC')).toBe('2026-W53');
   });
+
+  it('pins ISO week year boundaries (Sun=0 weekday bug)', () => {
+    // 2027-01-03 is a Sunday → ISO week 53 of 2026 (Sundays belong to the prior week)
+    expect(isoWeekKey(new Date('2027-01-03T12:00:00Z'), 'UTC')).toBe('2026-W53');
+    // 2027-01-04 is a Monday → ISO week 01 of 2027
+    expect(isoWeekKey(new Date('2027-01-04T12:00:00Z'), 'UTC')).toBe('2027-W01');
+  });
 });
 
 describe('isDue', () => {
