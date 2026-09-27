@@ -25,6 +25,7 @@ function makeSender(overrides: Partial<{
 function make(o: {
   user?: any;
   account?: any;
+  accountFindFirstImpl?: (args: any) => Promise<any>;
   sender?: ReturnType<typeof makeSender> | null;
   registerChannels?: ('telegram' | 'whatsapp' | 'slack')[];
   gatherImpl?: () => Promise<any>;
@@ -49,7 +50,9 @@ function make(o: {
       update: jest.fn().mockResolvedValue({}),
     },
     account: {
-      findUnique: jest.fn().mockResolvedValue(o.account ?? { encryptionTier: 0 }),
+      findFirst: o.accountFindFirstImpl
+        ? jest.fn().mockImplementation(o.accountFindFirstImpl)
+        : jest.fn().mockResolvedValue({ id: 'acc-1', encryptionTier: 0, ...(o.account ?? {}) }),
     },
   };
 
@@ -168,6 +171,80 @@ describe('VoiceDigestService.runForUser', () => {
     const sender = makeSender({ accountId: null });
     const { service } = make({ sender });
     expect(await service.runForUser('u1', { now: NOW })).toBe('no_channel');
+  });
+
+  it("falls back to the user's default account when they left the link's account", async () => {
+    const sender = makeSender({ accountId: 'acc-link' });
+    const { service, prisma, factsService } = make({
+      sender,
+      accountFindFirstImpl: async ({ where }: any) => {
+        if (where.id === 'acc-link') return null; // no longer a member
+        if (where.id === 'acc-default') return { id: 'acc-default', encryptionTier: 0 };
+        return null;
+      },
+    });
+    prisma.user.findUnique
+      .mockResolvedValueOnce({ id: 'u1', timezone: 'Europe/Warsaw', language: 'en', currencyCode: 'PLN', voiceDigestChannel: 'telegram' })
+      .mockResolvedValueOnce({ defaultAccountId: 'acc-default' });
+
+    const outcome = await service.runForUser('u1', { now: NOW });
+
+    expect(outcome).toBe('sent');
+    expect(sender.send).toHaveBeenCalledTimes(1);
+    expect(factsService.gather).toHaveBeenCalledWith('acc-default', 'u1', 'PLN', NOW);
+  });
+
+  it("falls back to the user's default account when the link account was soft-deleted (isActive:false)", async () => {
+    const sender = makeSender({ accountId: 'acc-link' });
+    const { service, prisma, subscriptions } = make({
+      sender,
+      // findFirst's own where clause filters isActive:true, so a soft-deleted
+      // link account resolves to null exactly like a lost membership does —
+      // simulated the same way here.
+      accountFindFirstImpl: async ({ where }: any) => {
+        if (where.id === 'acc-link') return null;
+        if (where.id === 'acc-default') return { id: 'acc-default', encryptionTier: 0 };
+        return null;
+      },
+    });
+    prisma.user.findUnique
+      .mockResolvedValueOnce({ id: 'u1', timezone: 'Europe/Warsaw', language: 'en', currencyCode: 'PLN', voiceDigestChannel: 'telegram' })
+      .mockResolvedValueOnce({ defaultAccountId: 'acc-default' });
+
+    const outcome = await service.runForUser('u1', { now: NOW });
+
+    expect(outcome).toBe('sent');
+    expect(subscriptions.recordAdditionalUsage).toHaveBeenCalledWith('u1', 'voice_digest', 0.5, 'acc-default');
+  });
+
+  it('returns no_channel and never gathers or sends when neither the link account nor the default account is valid', async () => {
+    const sender = makeSender({ accountId: 'acc-link' });
+    const { service, prisma, factsService } = make({
+      sender,
+      accountFindFirstImpl: async () => null,
+    });
+    prisma.user.findUnique
+      .mockResolvedValueOnce({ id: 'u1', timezone: 'Europe/Warsaw', language: 'en', currencyCode: 'PLN', voiceDigestChannel: 'telegram' })
+      .mockResolvedValueOnce({ defaultAccountId: 'acc-default' });
+
+    const outcome = await service.runForUser('u1', { now: NOW });
+
+    expect(outcome).toBe('no_channel');
+    expect(sender.send).not.toHaveBeenCalled();
+    expect(factsService.gather).not.toHaveBeenCalled();
+  });
+
+  it('returns no_channel without a second account lookup when the user has no default account either', async () => {
+    const sender = makeSender({ accountId: 'acc-link' });
+    const { service, prisma } = make({ sender, accountFindFirstImpl: async () => null });
+    prisma.user.findUnique
+      .mockResolvedValueOnce({ id: 'u1', timezone: 'Europe/Warsaw', language: 'en', currencyCode: 'PLN', voiceDigestChannel: 'telegram' })
+      .mockResolvedValueOnce({ defaultAccountId: null });
+
+    const outcome = await service.runForUser('u1', { now: NOW });
+
+    expect(outcome).toBe('no_channel');
+    expect(prisma.account.findFirst).toHaveBeenCalledTimes(1);
   });
 
   it('returns encrypted for a tier-2+ account without gathering facts', async () => {

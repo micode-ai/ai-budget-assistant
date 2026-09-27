@@ -77,11 +77,14 @@ export class VoiceDigestService {
       const linked = await sender.isLinked(userId);
       if (!linked) return 'no_channel';
 
-      const accountId = await sender.accountIdFor(userId);
-      if (!accountId) return 'no_channel';
+      const linkAccountId = await sender.accountIdFor(userId);
+      if (!linkAccountId) return 'no_channel';
 
-      const account = await this.prisma.account.findUnique({ where: { id: accountId }, select: { encryptionTier: true } });
-      if ((account?.encryptionTier ?? 0) >= ENCRYPTED_TIER_THRESHOLD) return 'encrypted';
+      const account = await this.resolveAccountId(userId, linkAccountId);
+      if (!account) return 'no_channel';
+      const accountId = account.id;
+
+      if (account.encryptionTier >= ENCRYPTED_TIER_THRESHOLD) return 'encrypted';
 
       const lang = user.language || 'en';
       const inputs = await this.factsService.gather(accountId, userId, user.currencyCode, now);
@@ -121,9 +124,36 @@ export class VoiceDigestService {
 
       return result;
     } catch (err) {
-      this.logger.warn(`VoiceDigestService.runForUser failed: ${errorMessage(err)}`);
+      this.logger.warn(`VoiceDigestService.runForUser failed for user ${userId}: ${errorMessage(err)}`);
       return 'failed';
     }
+  }
+
+  /**
+   * The channel link's stored `accountId` can go stale — the user left the
+   * account, was removed from it, or it was soft-deleted — and nothing
+   * updates the link when that happens (see task-9 review C1). Re-checks
+   * active membership before trusting it, falling back once to the user's
+   * `defaultAccountId` (itself re-checked the same way) so a stale link
+   * degrades to "use my other account" rather than "keep leaking this one".
+   */
+  private async resolveAccountId(
+    userId: string,
+    linkAccountId: string,
+  ): Promise<{ id: string; encryptionTier: number } | null> {
+    const linked = await this.prisma.account.findFirst({
+      where: { id: linkAccountId, isActive: true, members: { some: { userId } } },
+      select: { id: true, encryptionTier: true },
+    });
+    if (linked) return linked;
+
+    const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { defaultAccountId: true } });
+    if (!user?.defaultAccountId || user.defaultAccountId === linkAccountId) return null;
+
+    return this.prisma.account.findFirst({
+      where: { id: user.defaultAccountId, isActive: true, members: { some: { userId } } },
+      select: { id: true, encryptionTier: true },
+    });
   }
 
   async getSettings(userId: string): Promise<VoiceDigestSettings> {

@@ -74,7 +74,7 @@ export class VoiceDigestCron {
           attempted += 1;
           await this.service.runForUser(user.id, { now });
         } catch (err) {
-          this.logger.warn(`VoiceDigestCron.run failed for a user: ${errorMessage(err)}`);
+          this.logger.warn(`VoiceDigestCron.run failed for user ${user.id}: ${errorMessage(err)}`);
         }
       }
     }
