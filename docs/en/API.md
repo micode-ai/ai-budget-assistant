@@ -6229,7 +6229,7 @@ Public. `/health` runs `SELECT 1` and returns `{ "status": "ok", "db": "ok", "up
 
 ## Admin
 
-Every route below requires JWT + `AdminGuard` (`user.isAdmin`); used by the Next.js admin dashboard. See `docs/wiki/admin-dashboard.md` and `docs/wiki/features/admin-revenue-metrics.md`.
+Every route below requires JWT + `AdminGuard` (the caller's e-mail must be listed in `ADMIN_EMAILS`); used by the Next.js admin dashboard. See `docs/wiki/admin-dashboard.md` and `docs/wiki/features/admin-revenue-metrics.md`.
 
 | Method | Path | Purpose |
 |--------|------|---------|

@@ -6164,7 +6164,7 @@ GET /health/ai
 
 ## Администрирование
 
-Каждый маршрут ниже требует JWT + `AdminGuard` (`user.isAdmin`); используется админ-панелью на Next.js. См. `docs/wiki/admin-dashboard.md` и `docs/wiki/features/admin-revenue-metrics.md`.
+Каждый маршрут ниже требует JWT + `AdminGuard` (e-mail вызывающего должен быть в `ADMIN_EMAILS`); используется админ-панелью на Next.js. См. `docs/wiki/admin-dashboard.md` и `docs/wiki/features/admin-revenue-metrics.md`.
 
 | Метод | Путь | Назначение |
 |-------|------|------------|
