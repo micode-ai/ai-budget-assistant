@@ -10,6 +10,7 @@ interface FakeLink {
 
 function makeClient() {
   return {
+    isConfigured: jest.fn().mockReturnValue(true),
     uploadMedia: jest.fn().mockResolvedValue('media-1'),
     sendAudio: jest.fn().mockResolvedValue(undefined),
     sendText: jest.fn().mockResolvedValue(undefined),
@@ -25,7 +26,17 @@ function makeConfig(templateName: string | undefined) {
   return { get: jest.fn().mockReturnValue(templateName) };
 }
 
-/** In-memory stand-in for the WA_REDIS ioredis client. */
+/**
+ * In-memory stand-in for the WA_REDIS ioredis client.
+ *
+ * `get`/`del` are deliberately two SEPARATE round trips (as real GET/DEL
+ * would be) so a concurrency test built on them can reproduce the
+ * non-atomic get-then-del race the old implementation had. `getdel` is a
+ * single call whose read+delete happen synchronously within one microtask
+ * step, mirroring how a real Redis GETDEL is a single atomic server-side
+ * command — with two concurrent callers, only one can observe a non-null
+ * value.
+ */
 function makeRedis() {
   const store = new Map<string, string>();
   return {
@@ -36,6 +47,11 @@ function makeRedis() {
     }),
     get: jest.fn(async (key: string) => store.get(key) ?? null),
     del: jest.fn(async (key: string) => (store.delete(key) ? 1 : 0)),
+    getdel: jest.fn(async (key: string) => {
+      const value = store.get(key) ?? null;
+      store.delete(key);
+      return value;
+    }),
   };
 }
 
@@ -206,5 +222,101 @@ describe('WhatsAppDigestSender', () => {
     await expect(sender.send({ userId: 'user-1', lang: 'en', text: 'hi', audio: null })).rejects.toBeInstanceOf(
       DigestUnavailableError,
     );
+  });
+
+  it('deliverPending is single-delivery under concurrency (two simultaneous "Listen" taps)', async () => {
+    const client = makeClient();
+    const redis = makeRedis();
+    await redis.set(
+      'wa:vd:user-1',
+      JSON.stringify({ text: 'Weekly digest', audioB64: Buffer.from('voice').toString('base64') }),
+      'EX',
+      172800,
+    );
+    const linkService = makeLinkService({ waPhoneNumber: '48500000000', defaultAccountId: 'acc-1', lastInboundAt: null });
+    const sender = new WhatsAppDigestSender(
+      new DigestChannelRegistry(),
+      client as any,
+      linkService as any,
+      makeConfig('voice_digest_ready') as any,
+      redis as any,
+    );
+
+    const [first, second] = await Promise.all([sender.deliverPending('user-1'), sender.deliverPending('user-1')]);
+
+    // Exactly one of the two concurrent calls delivered; the other found the
+    // entry already taken.
+    expect([first, second].sort()).toEqual([false, true]);
+    expect(client.sendText).toHaveBeenCalledTimes(1);
+    expect(client.sendAudio).toHaveBeenCalledTimes(1);
+  });
+
+  it('deliverPending restores the pending entry and rethrows when delivery fails after the entry was taken', async () => {
+    const client = makeClient();
+    const boom = new Error('network blip');
+    client.sendText.mockRejectedValueOnce(boom);
+    const redis = makeRedis();
+    const payload = { text: 'Weekly digest', audioB64: null };
+    await redis.set('wa:vd:user-1', JSON.stringify(payload), 'EX', 172800);
+    const linkService = makeLinkService({ waPhoneNumber: '48500000000', defaultAccountId: 'acc-1', lastInboundAt: null });
+    const sender = new WhatsAppDigestSender(
+      new DigestChannelRegistry(),
+      client as any,
+      linkService as any,
+      makeConfig('voice_digest_ready') as any,
+      redis as any,
+    );
+
+    await expect(sender.deliverPending('user-1')).rejects.toBe(boom);
+
+    // Restored so a retry (another "Listen" tap) can still deliver it.
+    expect(redis.store.get('wa:vd:user-1')).toBe(JSON.stringify(payload));
+    expect(redis.set).toHaveBeenLastCalledWith('wa:vd:user-1', JSON.stringify(payload), 'EX', 172800);
+
+    client.sendText.mockResolvedValueOnce(undefined);
+    await expect(sender.deliverPending('user-1')).resolves.toBe(true);
+  });
+
+  it('send(): an unconfigured WhatsApp client throws DigestUnavailableError before any Redis write or send', async () => {
+    const client = makeClient();
+    client.isConfigured.mockReturnValue(false);
+    const redis = makeRedis();
+    const linkService = makeLinkService({ waPhoneNumber: '48500000000', defaultAccountId: 'acc-1', lastInboundAt: RECENT });
+    const sender = new WhatsAppDigestSender(
+      new DigestChannelRegistry(),
+      client as any,
+      linkService as any,
+      makeConfig('voice_digest_ready') as any,
+      redis as any,
+    );
+
+    await expect(sender.send({ userId: 'user-1', lang: 'en', text: 'hi', audio: null })).rejects.toBeInstanceOf(
+      DigestUnavailableError,
+    );
+    expect(redis.set).not.toHaveBeenCalled();
+    expect(client.sendText).not.toHaveBeenCalled();
+    expect(client.sendTemplate).not.toHaveBeenCalled();
+    expect(client.uploadMedia).not.toHaveBeenCalled();
+  });
+
+  it('deliverPending(): an unconfigured WhatsApp client throws DigestUnavailableError before any Redis read/write or send', async () => {
+    const client = makeClient();
+    client.isConfigured.mockReturnValue(false);
+    const redis = makeRedis();
+    await redis.set('wa:vd:user-1', JSON.stringify({ text: 'hi', audioB64: null }), 'EX', 172800);
+    const linkService = makeLinkService({ waPhoneNumber: '48500000000', defaultAccountId: 'acc-1', lastInboundAt: null });
+    const sender = new WhatsAppDigestSender(
+      new DigestChannelRegistry(),
+      client as any,
+      linkService as any,
+      makeConfig('voice_digest_ready') as any,
+      redis as any,
+    );
+
+    await expect(sender.deliverPending('user-1')).rejects.toBeInstanceOf(DigestUnavailableError);
+    expect(redis.getdel).not.toHaveBeenCalled();
+    expect(client.sendText).not.toHaveBeenCalled();
+    // The entry must be untouched — still there for a retry once configured.
+    expect(redis.store.get('wa:vd:user-1')).toBe(JSON.stringify({ text: 'hi', audioB64: null }));
   });
 });

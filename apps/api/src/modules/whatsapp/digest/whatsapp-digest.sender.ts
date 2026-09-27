@@ -62,6 +62,10 @@ export class WhatsAppDigestSender implements DigestSender, OnModuleInit {
   }
 
   async send(payload: DigestPayload): Promise<'sent' | 'template'> {
+    if (!this.client.isConfigured()) {
+      throw new DigestUnavailableError('WhatsApp client not configured');
+    }
+
     const link = await this.linkService.getLinkByUserId(payload.userId);
     if (!link) {
       throw new DigestUnavailableError('No active WhatsApp link for user');
@@ -90,20 +94,40 @@ export class WhatsAppDigestSender implements DigestSender, OnModuleInit {
     return this.sendViaTemplate(link.waPhoneNumber, payload);
   }
 
-  /** Task 10 routes the "Listen" quick-reply callback here. Returns false when
-   * the pending digest already expired (or was never queued) in Redis. */
+  /**
+   * Task 10 routes the "Listen" quick-reply callback here. Returns false when
+   * the pending digest already expired (or was never queued) in Redis, or
+   * when another concurrent tap already claimed it (see `getdel` below).
+   *
+   * The take is atomic (`GETDEL`, one round trip) rather than a separate
+   * GET+DEL: two "Listen" taps (or a webhook redelivery) arriving together
+   * must result in exactly one delivery, not two. If delivery then fails
+   * (a transient Graph/network error) the entry is restored with a fresh
+   * TTL and the error is rethrown, so a transient failure doesn't silently
+   * lose the digest — a retried tap can still deliver it.
+   */
   async deliverPending(userId: string): Promise<boolean> {
+    if (!this.client.isConfigured()) {
+      throw new DigestUnavailableError('WhatsApp client not configured');
+    }
+
     const key = pendingKey(userId);
-    const raw = await this.redis.get(key);
+    const raw = await this.redis.getdel(key);
     if (!raw) return false;
-    await this.redis.del(key);
 
     const link = await this.linkService.getLinkByUserId(userId);
     if (!link) return false;
 
     const pending = JSON.parse(raw) as PendingDigest;
     const audio = pending.audioB64 ? Buffer.from(pending.audioB64, 'base64') : null;
-    await this.deliverDirect(link.waPhoneNumber, pending.text, audio);
+
+    try {
+      await this.deliverDirect(link.waPhoneNumber, pending.text, audio);
+    } catch (err) {
+      await this.redis.set(key, raw, 'EX', PENDING_DIGEST_TTL_SEC);
+      throw err;
+    }
+
     return true;
   }
 

@@ -54,6 +54,16 @@ describe('TelegramDigestSender', () => {
     );
   });
 
+  it('propagates DigestUnavailableError unchanged when the bot never started (not misclassified as blocked)', async () => {
+    const registry = new DigestChannelRegistry();
+    const unavailable = new DigestUnavailableError('Telegram bot is not configured');
+    const botService = makeBotService(() => Promise.reject(unavailable));
+    const linkService = makeLinkService({ telegramUserId: 'tg-1', defaultAccountId: 'acc-1' });
+    const sender = new TelegramDigestSender(registry, botService as any, linkService as any);
+
+    await expect(sender.send({ userId: 'user-1', lang: 'en', text: 'hi', audio: null })).rejects.toBe(unavailable);
+  });
+
   it('propagates a non-blocked, non-unavailable error unchanged', async () => {
     const registry = new DigestChannelRegistry();
     const boom = new Error('network blip');
