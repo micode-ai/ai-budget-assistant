@@ -3,6 +3,26 @@ import type { CoicopDivision, RealSalaryBreakdownRow } from '@budget/shared-type
 /** The receipt index replaces official CP01 only when it rests on this many products. */
 export const RECEIPT_MIN_PRODUCTS = 10;
 
+/**
+ * How far (percentage points, annual) the receipt food rate may sit from the
+ * official CP01 rate — or the country's TOTAL when there is no CP01 cell —
+ * and still replace it (ABA-618). The receipt index is a weighted mean of
+ * per-product price changes over a handful of products, so ONE product whose
+ * pack size or unit changed under the same name (two sizes merged into one
+ * product, a loose-weight item read as a piece) moves it by double digits, and
+ * annualising the half-year figure doubles that. A real household's food basket
+ * does not run 10+ pp away from national food inflation for a year; a data
+ * break does. Beyond the gap the official rate is used.
+ */
+export const RECEIPT_MAX_GAP_PP = 10;
+
+/**
+ * With no official data to compare against, the largest annual receipt rate
+ * (either sign) still believed — beyond it the answer is `no_inflation_source`
+ * rather than a number built on a data break (ABA-618).
+ */
+export const RECEIPT_MAX_ABS_PCT = 30;
+
 export interface SpendByDivision {
   division: CoicopDivision;
   /** Base currency, positive. */
@@ -27,13 +47,21 @@ export function round1(x: number): number {
  * With official data every division counts (a missing cell falls back to the
  * national TOTAL). Without it (outside Eurostat coverage) only food can be
  * priced — from the receipt index — so only CP01 spend is weighted and the
- * response says "receipts only". Returns null when nothing can be priced.
+ * response says "receipts only". The receipt index is used only when it rests
+ * on RECEIPT_MIN_PRODUCTS products and is plausible (RECEIPT_MAX_GAP_PP /
+ * RECEIPT_MAX_ABS_PCT). Returns null when nothing can be priced.
  */
 export function computePersonalInflation(
   i: InflationInputs,
 ): { inflationPct: number; breakdown: RealSalaryBreakdownRow[]; topDrivers: CoicopDivision[] } | null {
-  const receiptsOk = i.receiptIndexPct !== null && Number.isFinite(i.receiptIndexPct) && i.receiptProductCount >= RECEIPT_MIN_PRODUCTS;
   const hasOfficial = i.officialRates.TOTAL !== undefined && Number.isFinite(i.officialRates.TOTAL);
+  const officialFood = Number.isFinite(i.officialRates.CP01) ? (i.officialRates.CP01 as number) : (i.officialRates.TOTAL as number);
+  const receipt = i.receiptIndexPct;
+  const receiptsOk =
+    receipt !== null && Number.isFinite(receipt) && i.receiptProductCount >= RECEIPT_MIN_PRODUCTS &&
+    // Plausibility (ABA-618): a data break in a few products, not a real
+    // basket, is what puts the receipt rate far from national food inflation.
+    (hasOfficial ? Math.abs(receipt - officialFood) <= RECEIPT_MAX_GAP_PP : Math.abs(receipt) <= RECEIPT_MAX_ABS_PCT);
 
   const totals = new Map<CoicopDivision, number>();
   for (const row of i.spend) {
