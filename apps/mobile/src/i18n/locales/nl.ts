@@ -2720,6 +2720,7 @@ export default {
     breakdownTitle: 'Waar jouw prijzen stegen',
     sourceReceipts: 'jouw bonnen',
     sourceOfficial: 'officiële cijfers',
+    breakdownShare: "{{value}}% van je uitgaven",
     dataMonth: 'Officiële cijfers: {{month}}',
     receiptsOnly: 'Alleen op basis van jouw bonnen — geen officiële cijfers voor jouw land.',
     fxApproximate: 'Sommige bedragen in andere valuta zijn weggelaten.',

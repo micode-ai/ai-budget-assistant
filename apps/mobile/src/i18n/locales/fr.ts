@@ -2720,6 +2720,7 @@ export default {
     breakdownTitle: 'Où vos prix ont augmenté',
     sourceReceipts: 'vos tickets',
     sourceOfficial: 'données officielles',
+    breakdownShare: "{{value}} % de vos dépenses",
     dataMonth: 'Données officielles : {{month}}',
     receiptsOnly: 'Uniquement à partir de vos tickets — aucune donnée officielle pour votre pays.',
     fxApproximate: 'Certains montants dans d’autres devises ont été exclus.',

@@ -159,17 +159,22 @@ export default function RealSalaryScreen() {
                 <View style={styles.card}>
                   <Text style={styles.cardTitle}>{t('realSalary.breakdownTitle')}</Text>
                   {breakdown.map((row) => (
+                    // Two lines: the division name needs the full width (a narrow
+                    // phone truncated it to one letter), and the share of spend
+                    // needs words beside it — a bare "96%" next to "+3.5%" read
+                    // as two unlabelled rates.
                     <View key={row.division} style={styles.breakdownRow}>
-                      <Text style={styles.breakdownDivision} numberOfLines={1}>
-                        {t(`realSalary.division.${row.division}`)}
-                      </Text>
-                      <Text style={styles.breakdownWeight}>{Math.round(row.weight * 100)}%</Text>
-                      <Text style={styles.breakdownRate}>{formatSignedPct(row.ratePct)}</Text>
-                      <View style={styles.sourceTag}>
-                        <Text style={styles.sourceTagText}>
+                      <View style={styles.breakdownText}>
+                        <Text style={styles.breakdownDivision} numberOfLines={2}>
+                          {t(`realSalary.division.${row.division}`)}
+                        </Text>
+                        <Text style={styles.breakdownMeta}>
+                          {t('realSalary.breakdownShare', { value: Math.round(row.weight * 100) })}
+                          {' · '}
                           {t(row.source === 'receipts' ? 'realSalary.sourceReceipts' : 'realSalary.sourceOfficial')}
                         </Text>
                       </View>
+                      <Text style={styles.breakdownRate}>{formatSignedPct(row.ratePct)}</Text>
                     </View>
                   ))}
                 </View>
@@ -305,16 +310,10 @@ const createStyles = (theme: Theme) => ({
     borderTopWidth: 1,
     borderTopColor: theme.colors.border,
   },
-  breakdownDivision: { ...theme.textStyles.bodySm, color: theme.colors.textPrimary, flex: 1 },
-  breakdownWeight: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary, width: 40, textAlign: 'right' as const },
-  breakdownRate: { ...theme.textStyles.bodySmMedium, color: theme.colors.textPrimary, width: 60, textAlign: 'right' as const },
-  sourceTag: {
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.borderRadius.sm,
-    paddingHorizontal: theme.spacing[2],
-    paddingVertical: theme.spacing[0.5],
-  },
-  sourceTagText: { ...theme.textStyles.caption, color: theme.colors.textTertiary },
+  breakdownText: { flex: 1, gap: theme.spacing[0.5] },
+  breakdownDivision: { ...theme.textStyles.bodySm, color: theme.colors.textPrimary },
+  breakdownMeta: { ...theme.textStyles.caption, color: theme.colors.textTertiary },
+  breakdownRate: { ...theme.textStyles.bodySmMedium, color: theme.colors.textPrimary, minWidth: 60, textAlign: 'right' as const },
 
   footnotes: { gap: theme.spacing[1], marginBottom: theme.spacing[4] },
   footnote: { ...theme.textStyles.caption, color: theme.colors.textTertiary },

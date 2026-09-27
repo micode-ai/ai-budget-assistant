@@ -2700,6 +2700,7 @@ export default {
     breakdownTitle: 'Дзе цэны выраслі для вас',
     sourceReceipts: 'вашы чэкі',
     sourceOfficial: 'афіцыйныя даныя',
+    breakdownShare: "{{value}}% вашых выдаткаў",
     dataMonth: 'Афіцыйныя даныя: {{month}}',
     receiptsOnly: 'Толькі па вашых чэках — афіцыйных даных па вашай краіне няма.',
     fxApproximate: 'Частка сум у іншых валютах не ўлічана.',

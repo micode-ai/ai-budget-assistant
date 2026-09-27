@@ -2732,6 +2732,7 @@ export default {
     breakdownTitle: 'Где цены выросли для вас',
     sourceReceipts: 'ваши чеки',
     sourceOfficial: 'официальные данные',
+    breakdownShare: "{{value}}% ваших трат",
     dataMonth: 'Официальные данные: {{month}}',
     receiptsOnly: 'Только по вашим чекам — официальных данных по вашей стране нет.',
     fxApproximate: 'Часть сумм в других валютах не учтена.',

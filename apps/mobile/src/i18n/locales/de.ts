@@ -2720,6 +2720,7 @@ export default {
     breakdownTitle: 'Wo die Preise für dich gestiegen sind',
     sourceReceipts: 'deine Belege',
     sourceOfficial: 'amtliche Daten',
+    breakdownShare: "{{value}} % deiner Ausgaben",
     dataMonth: 'Amtliche Daten: {{month}}',
     receiptsOnly: 'Nur auf Basis deiner Belege – keine amtlichen Daten für dein Land.',
     fxApproximate: 'Einige Beträge in anderen Währungen wurden ausgelassen.',
