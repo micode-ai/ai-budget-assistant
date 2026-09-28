@@ -55,6 +55,16 @@ one real difference — a key missing from the persisted order is **appended** (
 users) — is the explicit `insertMissingByPosition` option. A third reorderable-visibility surface
 should call the factory.
 
+**Presentational dispatchers split by case when they grow, styles shared not duplicated.**
+`HomeWidgetSwitch.tsx` (ABA-304/ABA-456) and `ActionResultCard.tsx` (ABA-621) both `switch` over a
+fixed key (`WidgetKey`, `actionType`) to a per-case card; every case lives in its own file under a
+sibling `widgets/`/`results/` folder. Where most cases share real style rules (`ActionResultCard`'s
+12 AI-function result cards all use the same card/header/list-row/total shapes), that slice is
+factored into one `sharedResultStyles.ts`-style file imported by every case, not copy-pasted 12
+times — only a case with genuinely unique styles (e.g. `BudgetStatusResult`'s progress bar,
+`AffordabilityResult`'s verdict chip) keeps its own small local `createStyles`. A new case gets its
+own file plus a new `case`, not another inline component in the dispatcher.
+
 **Tabs fire a selection haptic** on every `tabPress` (`screenListeners` in `(tabs)/_layout.tsx`, `expo-haptics`, a no-op on web).
 
 **The root layout is a composition of hooks (ABA-354).** `useAppBootstrap`, `useColdStartGate`,
