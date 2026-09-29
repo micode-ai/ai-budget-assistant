@@ -3005,6 +3005,18 @@ Verdeel één uitgave over meerdere categorieën:
 
 > **Tip:** Gebruik **Splitsing voorstellen** om de AI te laten aanbevelen hoe je de uitgave verdeelt.
 
+### Terugkerende uitgaven
+
+Maak van elke uitgave een automatisch geregistreerde reeks — in het aanmaakformulier of later, bij een uitgave die je al hebt opgeslagen:
+
+1. Tik op **Herhalen**
+2. Kies hoe vaak deze zich herhaalt: **Wekelijks**, **Maandelijks** of **Jaarlijks**
+3. Sla op — de app registreert automatisch elke periode een nieuwe kopie van deze uitgave, op de dag dat deze verschuldigd is
+
+> **Tip:** Je hoeft dit niet meteen te beslissen bij het toevoegen van de uitgave. Open een uitgave die nog geen deel uitmaakt van een reeks, tik op **Bewerken**, zet **Herhalen** aan, kies een periode en sla op — dezelfde schakelaar als in het aanmaakformulier.
+
+Een uitgave die al deel uitmaakt van een reeks toont op het detailscherm een banner **Onderdeel van een terugkerende reeks** in plaats van de schakelaar, met de periode (bijv. "Herhaalt Maandelijks"). Tik op **Herhaling stoppen** om de reeks te beëindigen — al gemaakte kopieën blijven staan, alleen de toekomstige automatische registratie stopt.
+
 ## Inkomsten toevoegen
 
 ### Stap voor stap
@@ -3034,7 +3046,7 @@ Tik op een uitgave om de volledige details te bekijken:
 - **Bonafbeelding** — bekijk, deel, sla op in galerij, vervang of verwijder de bonfoto. Pdf-bonnen tonen een documentvoorbeeld dat je kunt aantikken om te openen. Als er nog geen bon is gekoppeld, tik dan op **Bon toevoegen** om er een toe te voegen — kies **Foto maken**, **Kies uit galerij** of **Kies pdf**. Werkt voor elke uitgave, ook voor handmatig toegevoegde. Is de bon pas na het aanmaken van de uitgave gekoppeld, tik dan op **Artikelen extraheren** in de bonkaart om de bon opnieuw door AI te laten lezen en de regels in de uitgave te zetten (met bevestiging als er al items zijn; elke lezing verbruikt één AI-verzoek)
 
 ### Acties op uitgavedetails:
-- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld)
+- **Bewerken** — de uitgave wijzigen, inclusief de **valuta** (tik op de valutachip naast het bedrag; het bedrag zelf wordt niet omgerekend, alleen anders gelabeld); als de uitgave nog geen deel uitmaakt van een terugkerende reeks, kun je hier ook **Herhalen** aanzetten om er een te starten
 - **Kopiëren** — een duplicaat maken
 - **Verwijderen** — de uitgave verwijderen (met bevestiging)
 
@@ -3184,6 +3196,18 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 - **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
 
 De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
+
+### Delen vanuit een andere app (Android)
+
+Heb je een bon als screenshot, een bevestiging uit je bank-app of een e-bon als pdf? Je hoeft de scanner niet te openen:
+
+1. Tik in een willekeurige app (galerij, Gmail, je bank, een winkel-app) op **Delen**
+2. Kies **AI Budget**
+3. De app opent meteen het ingevulde bevestigingsscherm — controleer het en tik op **Opslaan**
+
+Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 10 MB). Meerdere bestanden worden na elkaar losse uitgaven — de titel toont de voortgang ('Bon 2 van 5') en **Volgende** gaat naar het volgende bestand. Kan een bestand niet worden gelezen, kies dan **Overslaan** of **Handmatig invoeren**. Bij sluiten vraagt de app eerst voordat wachtende bestanden worden weggegooid. Elk bestand telt als één bonscan binnen je AI-limiet; is die op, dan blijven de overige bestanden voor later.
+
+Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
 
 ## Spraakinkomsten
 
@@ -6814,6 +6838,8 @@ Iedereen die de link opent, ziet de lijst en kan artikelen aanvinken tijdens het
 
 De link blijft werken totdat je de lijst archiveert of verwijdert, of in hetzelfde menu op **Link intrekken** tikt om hem expliciet uit te schakelen. Opnieuw delen daarna maakt een gloednieuwe link aan. Opnieuw delen zonder eerst in te trekken is veilig — je geeft dan gewoon dezelfde link door in plaats van de al verstuurde link te breken.
 
+Als je prijzen aan artikelen hebt gegeven, toont de gedeelde link die ook — samen met wat er nog te kopen is. Handig als iemand anders de boodschappen voor je doet.
+
 ## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
 
 Als je elke week ongeveer dezelfde boodschappen koopt, sla je je gebruikelijke lijst één keer op en voeg je hem de volgende keer met één tik weer helemaal toe — geen "melk, eieren, brood, koffie…" meer opnieuw typen.
@@ -6836,6 +6862,17 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 - **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
 
 Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
+
+## Prijzen en totalen
+
+Wil je al vóór de kassa weten wat de boodschappen kosten? Geef artikelen een prijs.
+
+- Tik onder de naam van een artikel op **+ Prijs** en typ de prijs **per stuk** (een komma of een punt werkt allebei). Maak het veld leeg en sla op om de prijs te verwijderen.
+- Heb je het product al eens gekocht en de bon gescand, dan stelt het prijsvenster de **laatst betaalde prijs** (en waar) voor — tik erop om hem in te vullen. Je kunt hem altijd aanpassen.
+- Bij een aantal hoger dan 1 toont het artikel de prijs, het aantal en het regeltotaal, bijv. *4,99 × 3 = 14,97*.
+- Zodra minstens één artikel een prijs heeft, verschijnt boven de lijst een overzicht: **Nog te kopen** (alleen niet-afgevinkte artikelen — het bedrag daalt terwijl je afvinkt), het totaal van de **hele lijst** en hoeveel artikelen nog geen prijs hebben.
+
+Prijzen zijn in de valuta van je account. Elk accountlid kan ze invullen, en het is gratis in elk abonnement.
 
 ## Automatisch afvinken bij het scannen van bonnen
 
@@ -7143,3 +7180,92 @@ Een link die 30 dagen na het aanmaken niet is gebruikt, werkt gewoon niet meer. 
 - Je kunt geen rekening splitsen die zelf al is ontstaan uit de splitsing van iemand anders.
 - Bedragen worden altijd getoond in de eigen valuta van de rekening — er wordt nooit iets omgerekend.
 - Stond er een **korting** op het bonnetje, dan worden de delen berekend over wat je werkelijk betaalde en niet over de gedrukte prijzen - een vriend betaalt dus nooit de prijs van voor de korting.
+
+## Reëel salaris — houdt jouw loonsverhoging gelijke tred met je eigen prijzen?
+URL: https://ai-budget.pl/help/nl/real-salary/
+
+> Vergelijkt hoe je loon de afgelopen 12 maanden is veranderd met je eigen persoonlijke inflatiepercentage — niet het landelijke krantenkopcijfer, maar een percentage dat is opgebouwd uit waar je zelf je geld aan uitgeeft — zodat je ziet of een loonsverhoging een echte winst is of gewoon de stijgende prijzen bijhoudt.
+
+## Wat het is
+
+Reëel salaris beantwoordt één vraag: koopt je loon echt meer, of groeit het alleen op papier? Het weegt de verandering van je bevestigde salaris over de afgelopen 12 maanden af tegen je **persoonlijke inflatiepercentage** — een percentage opgebouwd uit je eigen uitgavencategorieën en officiële prijsstatistieken voor jouw land, niet een landelijke krantenkop.
+
+Een voorbeeld: je loon steeg met **+5%**, maar je persoonlijke inflatie kwam uit op **+8,3%** — je *reële* loon **daalde daardoor met ongeveer −3,0%**, ook al ging het cijfer op je loonstrook omhoog.
+
+Het is **gratis voor iedereen**. Alleen de pdf van één pagina met "argumenten voor loonsverhoging", die je kunt downloaden en bewaren, is een **Pro**-functie.
+
+## Waar je het vindt
+
+Open het tabblad **Analyse** en tik op de banner **Reëel salaris** ("Je loon tegenover je eigen inflatie"). De eerste keer dat je het opent, wordt je gevraagd je salaris te bevestigen voordat er iets berekend kan worden.
+
+## Je salaris instellen
+
+De app doorzoekt je recente inkomsten op iets dat zich herhaalt — ongeveer één keer per maand, minstens twee keer in de afgelopen 90 dagen — en stelt dat voor als kandidaat. Kies degene die je salaris is.
+
+Als de app nog geen vol jaar van dat salaris heeft, vraagt hij ook **wat je een jaar geleden verdiende**, ingevoerd in de eigen valuta van het salaris (niet je weergavevaluta). Je kunt het typen zoals je het normaal zou schrijven — `8400`, `8.400`, `8 400` en `8,400.50` worden allemaal begrepen, komma of punt als decimaalteken, punt/komma/spatie als duizendtalscheiding.
+
+Als er niets herhalends wordt gevonden, voeg dan eerst een paar keer je loon toe als inkomsten — via spraak, bon of handmatig, elke bron telt — en kom daarna terug.
+
+## Instellingen
+
+Tik op het tandwielpictogram op het scherm Reëel salaris om **Instellingen reëel salaris** te openen:
+
+- **Land voor officiële prijzen** — de eerste keer dat je het scherm opent, geraden op basis van de tijdzone van je apparaat (weergegeven als bijvoorbeeld "Polen (op basis van je tijdzone)"). Tik erop om handmatig een willekeurig EU-/EER-land of Zwitserland te kiezen, of om terug te gaan naar het geraden land.
+- **Waar elke categorie bij hoort** — elke uitgavencategorie kan worden gekoppeld aan een prijsgroep (Voeding en dranken, Wonen en energie, Vervoer, Gezondheid, enzovoort). Op **Automatisch** gelaten wijst de app er zelf een toe; je hoeft dit alleen aan te passen als je het niet eens bent met de gok voor een categorie. De lijst begint met de categorieën die nog geen prijsgroep hebben (of als ‘al het overige’ tellen), hoogste uitgaven eerst, met naast elke categorie de uitgaven van de afgelopen 12 maanden — bovenaan verandert een keuze je resultaat het meest.
+
+## Hoe het wordt berekend
+
+- **Loonsverandering** vergelijkt het gemiddelde salaris per uitbetalingsperiode over de afgelopen 12 maanden met de 12 maanden daarvoor — met uitbetalings*periodes*, niet kalendermaanden, zodat een betaaldag die door een weekend verschuift niet als een verhoging of verlaging lijkt.
+- **Jouw persoonlijke inflatie** is een gewogen gemiddelde over je eigen uitgaven: het officiële percentage van elke prijsgroep voor jouw land, gewogen naar hoeveel van je uitgaven daaronder valt. **Voeding en dranken** wordt in plaats daarvan geprijsd op basis van je eigen geschiedenis van gescande bonnetjes, zodra je minstens 10 gevolgde producten hebt — je werkelijke boodschappenprijzen, geen landelijk gemiddelde. Als je bonnetjesprijzen wijzen op een voedselinflatie die ver (meer dan 10 procentpunt) afligt van het officiële voedselpercentage voor jouw land, wordt het officiële percentage gebruikt — zo’n groot verschil betekent bijna altijd dat een product onder dezelfde naam van verpakkingsgrootte of eenheid is veranderd, niet dat je boodschappen echt zoveel duurder zijn geworden.
+- **Reële loonsverandering** past je loonsverandering aan voor dat inflatiepercentage, zodat het antwoord geeft op "kocht mijn geld meer of minder", niet alleen "is mijn cijfer gestegen".
+- **Nodige verhoging om bij te blijven** is hoeveel groter een verhoging, op je *huidige* loon, zou moeten zijn om precies gelijk te blijven met je eigen inflatie.
+
+## Wat je ziet
+
+- Een hoofdcijfer — je reële loonsverandering, in groen (je loopt voor), rood (je loopt achter) of neutraal.
+- Je loonsverandering en je persoonlijke inflatie naast elkaar.
+- Een uitsplitsing van waar de prijzen voor jou stegen, één rij per prijsgroep, elk gelabeld met **jouw bonnen** of **officiële cijfers**, afhankelijk van waar het percentage vandaan komt.
+- Een notitie over van welke maand de officiële cijfers zijn, of dat het antwoord alleen op bonnetjes is gebaseerd wanneer jouw land geen officiële dekking heeft.
+- Een herinnering dat dit **een schatting is, geen financieel advies**.
+
+## Wat elk bericht betekent
+
+- **"Bevestig je salaris"** — er is nog geen herhalend inkomen gevonden, of je hebt er nog geen gekozen. Opent het instelscherm.
+- **"Vul je salaris van een jaar geleden in"** — de app heeft nog geen vol jaar van je bevestigde salaris. Vul het maandbedrag van een jaar geleden in.
+- **"Houd nog even bij"** — de app heeft minstens 3 maanden uitgaven nodig om te weten waar je geld aan uitgeeft.
+- **"Geen prijsgegevens voor jouw land"** — er worden geen officiële prijsstatistieken gepubliceerd voor jouw land, en je hebt nog niet genoeg gescande bonnetjes om die te vervangen. Stel je land handmatig in, of scan nog een paar bonnetjes.
+- **"Niet beschikbaar met volledige versleuteling"** — accounts met volledige end-to-end-versleuteling houden bedragen onleesbaar op de server, dus dit kan voor hen niet worden berekend.
+
+## Delen
+
+Tik op **Delen** om je resultaat te plaatsen. De deelkaart toont **alleen percentages** — je loonsverandering, je inflatie, je reële verandering — nooit je werkelijke salaris- of uitgavenbedragen, zodat je een overwinning (of frustratie) kunt delen zonder te onthullen wat je verdient.
+
+## Argumenten voor loonsverhoging (Pro)
+
+Tik op **Argumenten voor loonsverhoging** om een pdf van één pagina te downloaden met een samenvatting van je resultaat — handig om mee te nemen naar een loongesprek. Hij is volledig opgebouwd uit het cijfer dat al op je scherm staat (geen extra AI-kosten), beschikbaar in alle apptalen, en pas te downloaden zodra je resultaat volledig is berekend (niet terwijl een van de bovenstaande berichten wordt getoond).
+
+## Goed om te weten
+
+- Gratis voor elk abonnementsniveau — alleen de pdf met argumenten is Pro.
+- Vereist een verbinding — de berekening gebeurt op de server, zonder offline alternatief.
+- De landendekking is momenteel de EU, de EER en Zwitserland (overal waar Eurostat officiële prijsstatistieken publiceert); daarbuiten kan de app nog steeds antwoorden op basis van alleen je bonnetjes, zodra je er genoeg van hebt.
+- Niet beschikbaar op accounts met volledige end-to-end-versleuteling.
+- Alles wat je ziet is een **schatting**, opgebouwd uit je uitgavencategorieën en openbare prijsstatistieken — geen financieel of fiscaal advies.
+
+## Veelgestelde vragen
+
+- **V: Waarom verschilt mijn inflatie van wat er in het nieuws staat?**
+  **A:** Krantenkoppen berichten over één landelijk gemiddeld boodschappenmandje. Het jouwe is gewogen naar waar *jij* je geld echt aan uitgeeft — als je meer uitgeeft aan vervoer en minder aan restaurants dan de gemiddelde persoon, weerspiegelt jouw percentage precies dat.
+
+- **V: Waarom wordt mijn land geraden, en kan ik dat wijzigen?**
+  **A:** Het wordt geraden op basis van de tijdzone van je apparaat, zodat er op dag één niets ingesteld hoeft te worden. Wijzig het op elk moment in **Instellingen reëel salaris → Land voor officiële prijzen**.
+
+- **V: Werkt dit met volledige versleuteling ingeschakeld?**
+  **A:** Nee — een volledig versleuteld account houdt je bedragen onleesbaar op de server, en deze berekening moet ze kunnen lezen. In plaats van een resultaat zie je "Niet beschikbaar met volledige versleuteling".
+
+- **V: Voor welke landen zijn er officiële prijsgegevens?**
+  **A:** De EU, de EER en Zwitserland — de landen waarvoor Eurostat geharmoniseerde prijsstatistieken publiceert. Daarbuiten vertrouwt de app volledig op je eigen gescande bonnetjes, zodra je er genoeg van hebt.
+
+---
+
+*Zie ook: [Persoonlijke Inflatie-index](./36-personal-inflation-index.md) | [Inflatieschild](./40-inflation-shield.md) | [Budgetten](./05-budgets.md)*

@@ -29,15 +29,27 @@ describe('shopping-list row mappers', () => {
   it('maps an item row to a ShoppingListItem entity (quantity number, isChecked bool, null canonicalName)', () => {
     const item = rowToShoppingListItem({
       id: 'i1', account_id: 'a1', shopping_list_id: 'l1', client_id: 'ci1',
-      canonical_name: null, raw_label: 'Milk', quantity: 2, note: null,
+      canonical_name: null, raw_label: 'Milk', quantity: 2, unit_price: 3.49, note: null,
       is_checked: 1, added_by_user_id: 'u1', sort_order: 0,
       is_deleted: 0, sync_status: 'synced', sync_version: 1,
       created_at: 1000, updated_at: 2000,
     });
     expect(item.rawLabel).toBe('Milk');
     expect(item.quantity).toBe(2);
+    expect(item.unitPrice).toBe(3.49);
     expect(item.isChecked).toBe(true);
     expect(item.canonicalName).toBeNull();
     expect(item.shoppingListId).toBe('l1');
+  });
+
+  it('maps a NULL unit_price (legacy row, or not priced) to a null unitPrice', () => {
+    const item = rowToShoppingListItem({
+      id: 'i2', account_id: 'a1', shopping_list_id: 'l1', client_id: 'ci2',
+      canonical_name: null, raw_label: 'Bread', quantity: 1, unit_price: null, note: null,
+      is_checked: 0, added_by_user_id: 'u1', sort_order: 1,
+      is_deleted: 0, sync_status: 'synced', sync_version: 0,
+      created_at: 1000, updated_at: 2000,
+    });
+    expect(item.unitPrice).toBeNull();
   });
 });

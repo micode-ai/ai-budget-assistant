@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Patch, Delete, Body, Param, Req, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Delete, Body, Param, Query, Req, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
@@ -13,6 +13,7 @@ import {
   CreateTemplateDto,
   UpdateTemplateDto,
   ApplyTemplateDto,
+  PriceHintQueryDto,
 } from './dto';
 
 @Controller('shopping-list')
@@ -45,6 +46,13 @@ export class ShoppingListController {
   @Get('deals')
   getDeals(@Req() req: AuthenticatedRequest) {
     return this.service.getDeals(req.accountId);
+  }
+
+  // GET /shopping-list/price-hint?name= — last receipt price for the price-field
+  // prefill; declared before dynamic :id GET routes (ABA-166 route-order pattern)
+  @Get('price-hint')
+  getPriceHint(@Req() req: AuthenticatedRequest, @Query() query: PriceHintQueryDto) {
+    return this.service.getPriceHint(req.accountId, query.name);
   }
 
   // --- "my weekly staples" templates — declared before dynamic :id, same

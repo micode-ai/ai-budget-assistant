@@ -662,6 +662,9 @@ export async function initializeDatabase(): Promise<void> {
     // (0) row regardless of date, splitting the unpinned block in two.
     try { expoDb.execSync(`ALTER TABLE chat_conversations ADD COLUMN is_pinned INTEGER`); } catch {}
 
+    // Shopping list item price: price per unit, in the account currency. NULL = not priced.
+    try { expoDb.execSync(`ALTER TABLE shopping_list_items ADD COLUMN unit_price REAL`); } catch {}
+
     // Group trip wallet: per-member expense shares
     expoDb.execSync(`
       CREATE TABLE IF NOT EXISTS trip_expense_shares (

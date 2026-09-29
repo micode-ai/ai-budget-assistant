@@ -30,6 +30,8 @@ Każdy, kto otworzy link, zobaczy listę i będzie mógł odznaczać produkty po
 
 Link działa, dopóki nie zarchiwizujesz lub nie usuniesz listy albo nie stukniesz **Cofnij link** w tym samym menu, aby wyraźnie go wyłączyć. Ponowne udostępnienie tworzy wtedy zupełnie nowy link. Ponowne udostępnienie bez wcześniejszego cofnięcia jest bezpieczne — przekazuje ten sam link zamiast unieważniać ten, który już wysłałeś.
 
+Jeśli dodałeś ceny do produktów, udostępniony link też je pokazuje — razem z kwotą, która została do kupienia. Przydaje się, gdy zakupy robi ktoś inny.
+
 ## Zapisz listę jako szablon („Moje cotygodniowe zakupy")
 
 Jeśli co tydzień kupujesz mniej więcej te same produkty, zapisz swoją zwykłą listę raz i za następnym razem dodaj ją całą jednym dotknięciem — bez wpisywania od nowa „mleko, jajka, chleb, kawa…".
@@ -52,6 +54,17 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 - **Dowolny tekst** — jeśli to, co wpisałeś, nie pasuje do żadnego śledzonego produktu, stuknij **Dodaj "…"**, aby dodać go jako zwykły tekst. Pozycje dodane jako dowolny tekst nie są powiązane z historią cen, więc nie pojawią się w porównaniach cen.
 
 Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
+
+## Ceny i sumy
+
+Chcesz wiedzieć, ile wyjdą zakupy, zanim staniesz przy kasie? Dodaj produktom ceny.
+
+- Stuknij **+ Cena** pod nazwą produktu i wpisz cenę **za sztukę** (działa przecinek i kropka). Wyczyść pole i zapisz, aby usunąć cenę.
+- Jeśli kupowałeś już ten produkt i zeskanowałeś paragon, okno ceny podpowie **ostatnio zapłaconą cenę** (i sklep) — stuknij ją, aby wstawić. Zawsze możesz ją zmienić.
+- Przy ilości większej niż 1 produkt pokazuje cenę, ilość i sumę pozycji, np. *4,99 × 3 = 14,97*.
+- Gdy choć jeden produkt ma cenę, nad listą pojawia się podsumowanie: **Zostało do kupienia** (tylko niezaznaczone — kwota maleje, gdy odhaczasz produkty), suma **Całej listy** i liczba produktów bez ceny.
+
+Ceny są w walucie Twojego konta. Może je ustawiać każdy członek konta i są darmowe w każdym planie.
 
 ## Automatyczne zaznaczanie po zeskanowaniu paragonu
 

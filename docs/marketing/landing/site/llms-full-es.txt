@@ -3010,6 +3010,18 @@ Divide un gasto individual entre multiples categorias:
 
 > **Consejo:** Usa **Sugerir division** para que la IA recomiende como dividir el gasto.
 
+### Gastos recurrentes
+
+Convierte cualquier gasto en una serie que se registra automáticamente — en el formulario de creación o más tarde, en un gasto que ya guardaste:
+
+1. Toca **Repetir**
+2. Elige con qué frecuencia se repite: **Semanal**, **Mensual** o **Anual**
+3. Guarda — la app registra automáticamente una nueva copia de este gasto cada período, el día que corresponda
+
+> **Consejo:** No hace falta decidirlo al registrar el gasto. Abre cualquier gasto que aún no forme parte de una serie, toca **Editar**, activa **Repetir**, elige un período y guarda — el mismo interruptor que en el formulario de creación.
+
+Un gasto que ya forma parte de una serie muestra en su pantalla de detalles un aviso **Parte de una serie recurrente** en lugar del interruptor, con el período (por ejemplo, «Se repite Mensual»). Toca **Detener repetición** para terminar la serie — las copias ya creadas se mantienen, solo se detiene el registro automático futuro.
+
 ## Agregar ingresos
 
 ### Paso a paso
@@ -3039,7 +3051,7 @@ Toca cualquier gasto para ver sus detalles completos:
 - **Imagen del recibo** — ver, compartir, guardar en galería, reemplazar o eliminar la foto del recibo. Los recibos PDF muestran una vista previa del documento para abrir. Si aun no hay recibo adjunto, toca **Adjuntar recibo** — elige **Tomar foto**, **Desde la galería** o **Elegir PDF**. Funciona para cualquier gasto, incluidos los agregados manualmente. Si el recibo se adjuntó después de crear el gasto, toca **Extraer artículos** en la tarjeta del recibo para que la IA lo vuelva a leer y añada sus líneas al gasto (con confirmación si ya hay artículos; cada ejecución consume una petición de IA)
 
 ### Acciones en los detalles del gasto:
-- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta)
+- **Editar** — modificar el gasto, incluida su **moneda** (toca el chip de moneda junto al importe; el importe no se convierte, solo se reetiqueta); si aún no forma parte de una serie recurrente, también puedes activar **Repetir** aquí para iniciar una
 - **Copiar** — crear un duplicado
 - **Eliminar** — eliminar el gasto (con confirmacion)
 
@@ -3189,6 +3201,18 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 - **El mismo recibo, foto nueva** — si tras leerlo ya existe un gasto con la misma tienda, importe y fecha (±1 día), la pantalla de confirmación muestra un aviso amarillo con un botón **Abrir**. Aun así puedes guardarlo: puede ser una segunda compra real.
 
 Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
+
+### Compartir desde otra app (Android)
+
+¿Tienes un recibo como captura de pantalla, una confirmación de la app del banco o un recibo electrónico en PDF? No hace falta abrir el escáner:
+
+1. En cualquier app (galería, Gmail, tu banco, la app de una tienda), toca **Compartir**
+2. Elige **AI Budget**
+3. La app se abre directamente en la pantalla de confirmación ya rellenada: revísala y toca **Guardar**
+
+Puedes compartir **imágenes y PDF**, hasta **10 archivos a la vez** (PDF de hasta 10 MB). Varios archivos se convierten en gastos separados, uno tras otro: el título muestra el progreso («Recibo 2 de 5») y **Siguiente** pasa al archivo siguiente. Si un archivo no se puede leer, elige **Omitir** o **Introducir a mano**. Al cerrar la pantalla, la app pregunta antes de descartar los archivos pendientes. Cada archivo cuenta como un escaneo de recibo en tu límite de IA; si se agota, los archivos restantes quedan para más tarde.
+
+Compartir solo funciona en Android. En iPhone y en la app web usa **Escanear recibo**.
 
 ## Ingresos por voz
 
@@ -6732,6 +6756,8 @@ Cualquiera que abra el enlace ve la lista y puede marcar artículos mientras com
 
 El enlace sigue funcionando hasta que archives o elimines la lista, o toques **Revocar enlace** en el mismo menú para desactivarlo explícitamente. Compartir de nuevo después de eso crea un enlace completamente nuevo. Volver a compartir sin revocar antes es seguro — entrega el mismo enlace en lugar de invalidar el que ya enviaste.
 
+Si has añadido precios a los artículos, el enlace compartido también los muestra, junto con lo que falta por comprar — útil cuando otra persona hace la compra por ti.
+
 ## Guardar una lista como plantilla («Mis productos habituales»)
 
 Si compras más o menos los mismos productos cada semana, guarda tu lista habitual una vez y vuelve a añadirla entera de un toque la próxima vez, sin tener que volver a escribir «leche, huevos, pan, café…».
@@ -6754,6 +6780,17 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 - **Texto libre** — si lo que escribiste no coincide con ningún producto rastreado, toca **Añadir "…"** para añadirlo como un artículo de texto sin más. Los artículos de texto libre no están vinculados al historial de precios, así que no aparecerán en las comparaciones de precios.
 
 También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
+
+## Precios y totales
+
+¿Quieres saber cuánto costará la compra antes de llegar a la caja? Ponle precio a los artículos.
+
+- Toca **+ Precio** debajo del nombre de un artículo y escribe el precio **por unidad** (sirven la coma y el punto). Deja el campo vacío y guarda para quitar el precio.
+- Si ya compraste ese producto y escaneaste el recibo, la ventana de precio sugiere el **último precio que pagaste** (y dónde): tócalo para rellenarlo. Siempre puedes cambiarlo.
+- Con una cantidad mayor que 1, el artículo muestra el precio, la cantidad y el total de la línea, p. ej. *4,99 × 3 = 14,97*.
+- En cuanto un artículo tiene precio, aparece un resumen encima de la lista: **Falta por comprar** (solo artículos sin marcar; baja a medida que los marcas), el total de **Toda la lista** y cuántos artículos siguen sin precio.
+
+Los precios están en la moneda de tu cuenta. Cualquier miembro de la cuenta puede ponerlos y son gratis en todos los planes.
 
 ## Marcado automático al escanear recibos
 
@@ -7061,3 +7098,92 @@ Un enlace que no se haya usado en los 30 días posteriores a su creación deja d
 - No puedes dividir una cuenta que ya se creó a partir de la división de otra persona.
 - Los importes siempre se muestran en la moneda propia de la cuenta — nunca se convierte nada.
 - Si el recibo tenía un **descuento**, las partes se calculan sobre lo que realmente pagaste, no sobre los precios impresos - así un amigo nunca paga el precio previo al descuento.
+
+## Salario real — ¿tu subida va al ritmo de tus propios precios?
+URL: https://ai-budget.pl/help/es/real-salary/
+
+> Compara cómo ha cambiado tu sueldo en los últimos 12 meses frente a tu propia tasa de inflación personal — no el titular nacional, sino una calculada a partir de aquello en lo que realmente gastas — para que veas si una subida es una ganancia real o solo sigue el ritmo de los precios.
+
+## Qué es
+
+El Salario real responde a una sola pregunta: ¿tu sueldo compra realmente más, o solo crece sobre el papel? Compara el cambio de tu sueldo confirmado en los últimos 12 meses con tu **tasa de inflación personal** — una tasa construida a partir de tus propias categorías de gasto y las estadísticas oficiales de precios de tu país, no de un titular de prensa.
+
+Por ejemplo: tu sueldo subió un **+5 %**, pero tu inflación personal resultó ser del **+8,3 %** — tu sueldo *real* en realidad **bajó cerca de un −3,0 %**, aunque la cifra de tu nómina haya subido.
+
+Es **gratis para todos**. Solo el PDF de una página con «argumentos para tu subida», que puedes descargar y guardar, es una función **Pro**.
+
+## Dónde encontrarlo
+
+Abre la pestaña **Análisis** y toca el banner **Salario real** («Tu sueldo frente a tu propia inflación»). La primera vez que lo abras, se te pedirá que confirmes tu sueldo antes de poder calcular nada.
+
+## Configurar tu sueldo
+
+La app revisa tus ingresos recientes en busca de algo que se repita — más o menos una vez al mes, al menos dos veces en los últimos 90 días — y te lo propone como candidato. Elige el que sea tu sueldo.
+
+Si la app todavía no tiene un año completo de ese sueldo, también te pedirá **lo que ganabas hace un año**, escrito en la propia moneda del sueldo (no en tu moneda de visualización). Puedes escribirlo como lo harías normalmente — `8400`, `8.400`, `8 400` y `8.400,50` se entienden todos, coma o punto como separador decimal, punto/coma/espacio como separador de miles.
+
+Si no se encuentra nada que se repita, añade tu sueldo como ingreso un par de veces primero — por voz, recibo o entrada manual, cualquier origen cuenta — y vuelve después.
+
+## Ajustes
+
+Toca el icono del engranaje en la pantalla de Salario real para abrir los **Ajustes del salario real**:
+
+- **País para los precios oficiales** — deducido de la zona horaria de tu dispositivo la primera vez que abres la pantalla (se muestra, por ejemplo, como «Polonia (según tu zona horaria)»). Tócalo para elegir a mano cualquier país de la UE, el EEE o Suiza, o para volver a la deducción automática.
+- **A qué corresponde cada categoría** — cada una de tus categorías de gasto puede asignarse a un grupo de precios (Alimentos y bebidas, Vivienda y suministros, Transporte, Salud, etc.). Si se deja en **Automático**, la app asigna uno por ti; solo tienes que tocarlo si no estás de acuerdo con la suposición de una categoría. La lista empieza por las categorías que aún no tienen grupo de precios (o cuentan como «todo lo demás»), primero las de mayor gasto, y junto a cada una se muestra su gasto de los últimos 12 meses — arriba del todo es donde una elección cambia más tu resultado.
+
+## Cómo se calcula
+
+- **El cambio de sueldo** compara el sueldo medio por periodo de pago de los últimos 12 meses con los 12 meses anteriores — usando *periodos* de pago, no meses del calendario, para que una nómina que se desplaza por un fin de semana no parezca una subida o un recorte.
+- **Tu inflación personal** es una media ponderada de tus propios gastos: la tasa oficial de cada grupo de precios para tu país, ponderada según cuánto de tu gasto cae en él. **Alimentos y bebidas** se calcula en cambio a partir de tu propio historial de recibos escaneados, una vez que tienes al menos 10 productos registrados — tus precios reales de compra, no una media nacional. Si los precios de tus recibos apuntan a una inflación alimentaria muy alejada (más de 10 puntos porcentuales) de la tasa oficial de alimentos de tu país, se usa la tasa oficial — una diferencia tan grande casi siempre significa que un producto cambió de tamaño de envase o de unidad con el mismo nombre, no que tu compra se encareciera tanto de verdad.
+- **El cambio real de sueldo** ajusta tu cambio de sueldo por esa tasa de inflación, así que responde a «¿mi dinero compró más o menos?», no solo «¿subió mi número?».
+- **La subida necesaria para no perder** es cuánto más grande tendría que ser una subida, sobre tu sueldo *actual*, para quedar exactamente igualado con tu propia inflación.
+
+## Qué verás
+
+- Una cifra destacada — tu cambio real de sueldo, en verde (vas por delante), rojo (vas por detrás) o neutro.
+- Tu cambio de sueldo y tu inflación personal, uno junto al otro.
+- Un desglose de dónde subieron los precios para ti, una fila por grupo de precios, cada una etiquetada como **tus recibos** o **datos oficiales** según de dónde venga su tasa.
+- Una nota que indica de qué mes son los datos oficiales, o que la respuesta se basa solo en recibos cuando tu país no tiene cobertura oficial.
+- Un recordatorio de que esto es **una estimación, no asesoramiento financiero**.
+
+## Qué significa cada mensaje
+
+- **«Confirma tu sueldo»** — todavía no se ha encontrado ningún ingreso que se repita, o aún no has elegido uno. Abre la pantalla de configuración.
+- **«Indica tu sueldo de hace un año»** — la app todavía no tiene un año completo de tu sueldo confirmado. Introduce la cifra mensual de hace un año.
+- **«Sigue registrando un poco más»** — la app necesita al menos 3 meses de gastos para saber en qué gastas.
+- **«No hay datos de precios para tu país»** — no se publican estadísticas oficiales de precios para tu país, y todavía no tienes suficientes recibos escaneados para sustituirlas. Fija tu país a mano o escanea algunos recibos más.
+- **«No disponible con cifrado completo»** — las cuentas con cifrado de extremo a extremo completo mantienen los importes ilegibles en el servidor, así que esto no se puede calcular para ellas.
+
+## Compartir
+
+Toca **Compartir** para publicar tu resultado. La tarjeta para compartir muestra **solo porcentajes** — tu cambio de sueldo, tu inflación, tu cambio real — nunca tu sueldo real ni tus importes de gasto, para que puedas compartir un logro (o un desahogo) sin revelar cuánto ganas.
+
+## Argumentos para una subida (Pro)
+
+Toca **Argumentos para una subida** para descargar un PDF de una página que resume tu resultado — útil para llevar a una conversación sobre tu sueldo. Se construye enteramente a partir de la cifra que ya tienes en pantalla (sin coste adicional de IA), está disponible en todos los idiomas de la app, y solo se puede descargar una vez que tu resultado esté completamente calculado (no mientras se muestre alguno de los mensajes anteriores).
+
+## Es bueno saber
+
+- Gratis en todos los niveles de suscripción — solo el PDF de argumentos es Pro.
+- Necesita conexión — se calcula en el servidor, sin alternativa sin conexión.
+- La cobertura por país es actualmente la UE, el EEE y Suiza (allí donde Eurostat publica estadísticas oficiales de precios); fuera de eso, la app puede seguir respondiendo solo con tus recibos en cuanto tengas suficientes.
+- No disponible en cuentas con cifrado de extremo a extremo completo.
+- Todo lo que se muestra es una **estimación** construida a partir de tus categorías de gasto y estadísticas públicas de precios — no es asesoramiento financiero ni fiscal.
+
+## Preguntas frecuentes
+
+- **P: ¿Por qué mi inflación es distinta de la que sale en las noticias?**
+  **R:** Los titulares informan de una única cesta media nacional. La tuya está ponderada por aquello en lo que *tú* realmente gastas dinero — si gastas más en transporte y menos en restaurantes que la persona media, tu tasa refleja precisamente eso.
+
+- **P: ¿Por qué se deduce mi país, y puedo cambiarlo?**
+  **A:** Se deduce de la zona horaria de tu dispositivo, para que no tengas que configurar nada el primer día. Cámbialo cuando quieras en **Ajustes del salario real → País para los precios oficiales**.
+
+- **P: ¿Funciona con el cifrado completo activado?**
+  **R:** No — una cuenta totalmente cifrada mantiene tus importes ilegibles en el servidor, y este cálculo necesita leerlos. Verás «No disponible con cifrado completo» en lugar de un resultado.
+
+- **P: ¿Qué países tienen datos oficiales de precios?**
+  **R:** La UE, el EEE y Suiza — los países para los que Eurostat publica estadísticas de precios armonizadas. En el resto, la app depende por completo de tus propios recibos escaneados en cuanto tienes suficientes.
+
+---
+
+*Ver también: [Índice de Inflación Personal](./36-personal-inflation-index.md) | [Escudo contra la inflación](./40-inflation-shield.md) | [Presupuestos](./05-budgets.md)*

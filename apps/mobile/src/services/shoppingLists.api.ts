@@ -15,6 +15,7 @@ import type {
   UpdateShoppingListTemplateDto,
   ApplyShoppingListTemplateResponse,
   ShoppingListGuestLinkResponse,
+  ShoppingItemPriceHint,
 } from '@budget/shared-types';
 
 export const shoppingListsApi = {
@@ -52,6 +53,13 @@ export const shoppingListsApi = {
       method: 'PATCH',
       body: JSON.stringify(dto),
     });
+  },
+
+  /** Last receipt price for a product, or undefined/null when there is none. */
+  getItemPriceHint(name: string) {
+    return httpClient.request<ShoppingItemPriceHint | null | undefined>(
+      `/shopping-list/price-hint?name=${encodeURIComponent(name)}`,
+    );
   },
 
   deleteItem(itemId: string) {

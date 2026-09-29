@@ -30,6 +30,8 @@ Toute personne qui ouvre le lien voit la liste et peut cocher les articles au fu
 
 Le lien continue de fonctionner jusqu'à ce que vous archiviez ou supprimiez la liste, ou que vous appuyiez sur **Révoquer le lien** dans le même menu pour le désactiver explicitement. Le repartager ensuite crée un tout nouveau lien. Le repartager sans le révoquer d'abord est sans risque — cela redonne le même lien plutôt que d'invalider celui déjà envoyé.
 
+Si vous avez ajouté des prix aux articles, le lien partagé les affiche aussi, avec ce qui reste à acheter — pratique quand quelqu’un d’autre fait les courses pour vous.
+
 ## Enregistrer une liste comme modèle (« Mes produits de base hebdomadaires »)
 
 Si vous achetez à peu près les mêmes courses chaque semaine, enregistrez votre liste habituelle une seule fois et rajoutez-la en entier en un geste la prochaine fois — plus besoin de retaper « lait, œufs, pain, café… ».
@@ -52,6 +54,17 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 - **Texte libre** — si ce que vous avez tapé ne correspond à aucun produit suivi, touchez **Ajouter « … »** pour l'ajouter comme simple article texte. Les articles en texte libre ne sont pas reliés à l'historique de prix, donc ils n'apparaîtront pas dans les comparaisons de prix.
 
 Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
+
+## Prix et totaux
+
+Envie de savoir combien coûteront les courses avant d’arriver à la caisse ? Donnez un prix aux articles.
+
+- Touchez **+ Prix** sous le nom d’un article et saisissez le prix **à l’unité** (la virgule comme le point fonctionnent). Videz le champ et enregistrez pour retirer le prix.
+- Si vous avez déjà acheté ce produit et scanné le reçu, la fenêtre de prix propose le **dernier prix payé** (et où) : touchez-le pour le reprendre. Vous pouvez toujours le modifier.
+- Avec une quantité supérieure à 1, l’article affiche le prix, la quantité et le total de la ligne, par ex. *4,99 × 3 = 14,97*.
+- Dès qu’un article a un prix, un récapitulatif apparaît au-dessus de la liste : **Reste à acheter** (articles non cochés uniquement — il baisse à mesure que vous cochez), le total de **Toute la liste** et le nombre d’articles encore sans prix.
+
+Les prix sont dans la devise de votre compte. Tout membre du compte peut les saisir, et c’est gratuit dans toutes les offres.
 
 ## Coche automatique lors du scan des reçus
 

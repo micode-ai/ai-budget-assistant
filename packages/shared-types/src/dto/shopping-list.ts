@@ -5,6 +5,8 @@ export interface ShoppingListItem {
   canonicalName: string | null;
   rawLabel: string;
   quantity: number;
+  /** Price per unit the user typed in, in the account's currency. null = not priced. */
+  unitPrice: number | null;
   note: string | null;
   isChecked: boolean;
   addedByUserId: string;
@@ -39,12 +41,15 @@ export interface CreateShoppingListItemDto {
   canonicalName?: string | null;
   rawLabel: string;
   quantity?: number;
+  unitPrice?: number | null;
   note?: string;
 }
 
 export interface UpdateShoppingListItemDto {
   isChecked?: boolean;
   quantity?: number;
+  /** null clears the price. */
+  unitPrice?: number | null;
   rawLabel?: string;
   note?: string | null;
   sortOrder?: number;
@@ -65,6 +70,13 @@ export interface DealSuggestion {
   avgPrice: number;   // the 90-day average
   dropPct: number;    // e.g. 18 = 18% below average
   currency: string;
+}
+
+/** Last price paid for a product on a scanned receipt, in the account's currency. */
+export interface ShoppingItemPriceHint {
+  unitPrice: number;
+  merchant: string | null;
+  date: string; // ISO date YYYY-MM-DD
 }
 
 // --- "my weekly staples" saved templates ---

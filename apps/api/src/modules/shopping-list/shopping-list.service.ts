@@ -13,6 +13,7 @@ import type {
   RestockSuggestion,
   DealSuggestion,
   ShoppingListGuestLinkResponse,
+  ShoppingItemPriceHint,
 } from '@budget/shared-types';
 
 function isP2002(e: unknown): boolean {
@@ -23,7 +24,9 @@ function toItem(row: any): ShoppingListItem {
   return {
     id: row.id, shoppingListId: row.shoppingListId, clientId: row.clientId,
     canonicalName: row.canonicalName ?? null, rawLabel: row.rawLabel,
-    quantity: Number(row.quantity), note: row.note ?? null,
+    quantity: Number(row.quantity),
+    unitPrice: row.unitPrice == null ? null : Number(row.unitPrice),
+    note: row.note ?? null,
     isChecked: row.isChecked, addedByUserId: row.addedByUserId, sortOrder: row.sortOrder,
   };
 }
@@ -179,7 +182,8 @@ export class ShoppingListService {
         data: {
           accountId, shoppingListId: list.id, clientId: dto.clientId,
           canonicalName: dto.canonicalName ?? null, rawLabel: dto.rawLabel,
-          quantity: dto.quantity ?? 1, note: dto.note ?? null, addedByUserId: userId,
+          quantity: dto.quantity ?? 1, unitPrice: dto.unitPrice ?? null,
+          note: dto.note ?? null, addedByUserId: userId,
         },
       });
       return toItem(created);
@@ -412,7 +416,7 @@ export class ShoppingListService {
     const updated = await this.prisma.shoppingListItem.update({
       where: { id: item.id },
       data: {
-        isChecked: dto.isChecked, quantity: dto.quantity, rawLabel: dto.rawLabel,
+        isChecked: dto.isChecked, quantity: dto.quantity, unitPrice: dto.unitPrice, rawLabel: dto.rawLabel,
         note: dto.note, sortOrder: dto.sortOrder, syncVersion: { increment: 1 },
       },
     });
@@ -465,6 +469,44 @@ export class ShoppingListService {
 
     return predictRestock(byProduct)
       .filter((s) => s.dueInDays <= 0 && !listed.has(s.canonicalName));
+  }
+
+  /**
+   * The last price this account paid for `name` on a scanned receipt — the
+   * prefill for the shopping-list price field. Only receipts in the account's
+   * own currency count, because a list is priced in one currency (the
+   * account's) and a converted figure would be a guess dressed up as a fact.
+   * E2EE line items are skipped: their plaintext amounts are zeroed.
+   */
+  async getPriceHint(accountId: string, name: string): Promise<ShoppingItemPriceHint | null> {
+    const account = await this.prisma.account.findUnique({ where: { id: accountId }, select: { currencyCode: true } });
+    if (!account) return null;
+    // A user alias maps raw OCR names onto `name`; match those as well as `name` itself.
+    const aliases: Array<{ rawName: string }> = await (this.prisma as any).productAlias.findMany({
+      where: { accountId, canonicalName: name },
+      select: { rawName: true },
+    });
+    const names = [name, ...aliases.map((a) => a.rawName)];
+    const row = await this.prisma.expenseItem.findFirst({
+      where: {
+        canonicalName: { in: names },
+        isDeleted: false,
+        encryptedPayload: null,
+        totalPrice: { gt: 0 },
+        expense: { accountId, isDeleted: false, currencyCode: account.currencyCode },
+      },
+      orderBy: [{ expense: { date: 'desc' } }, { createdAt: 'desc' }],
+      select: { unitPrice: true, quantity: true, totalPrice: true, expense: { select: { date: true, merchant: true } } },
+    });
+    if (!row) return null;
+    const q = Number(row.quantity);
+    const perUnit = q > 1 ? Number(row.totalPrice) / q : Number(row.unitPrice) || Number(row.totalPrice);
+    if (!(perUnit > 0)) return null;
+    return {
+      unitPrice: Math.round(perUnit * 100) / 100,
+      merchant: row.expense.merchant ?? null,
+      date: row.expense.date.toISOString().slice(0, 10),
+    };
   }
 
   async getDeals(accountId: string): Promise<DealSuggestion[]> {

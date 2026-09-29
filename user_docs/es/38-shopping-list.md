@@ -30,6 +30,8 @@ Cualquiera que abra el enlace ve la lista y puede marcar artículos mientras com
 
 El enlace sigue funcionando hasta que archives o elimines la lista, o toques **Revocar enlace** en el mismo menú para desactivarlo explícitamente. Compartir de nuevo después de eso crea un enlace completamente nuevo. Volver a compartir sin revocar antes es seguro — entrega el mismo enlace en lugar de invalidar el que ya enviaste.
 
+Si has añadido precios a los artículos, el enlace compartido también los muestra, junto con lo que falta por comprar — útil cuando otra persona hace la compra por ti.
+
 ## Guardar una lista como plantilla («Mis productos habituales»)
 
 Si compras más o menos los mismos productos cada semana, guarda tu lista habitual una vez y vuelve a añadirla entera de un toque la próxima vez, sin tener que volver a escribir «leche, huevos, pan, café…».
@@ -52,6 +54,17 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 - **Texto libre** — si lo que escribiste no coincide con ningún producto rastreado, toca **Añadir "…"** para añadirlo como un artículo de texto sin más. Los artículos de texto libre no están vinculados al historial de precios, así que no aparecerán en las comparaciones de precios.
 
 También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
+
+## Precios y totales
+
+¿Quieres saber cuánto costará la compra antes de llegar a la caja? Ponle precio a los artículos.
+
+- Toca **+ Precio** debajo del nombre de un artículo y escribe el precio **por unidad** (sirven la coma y el punto). Deja el campo vacío y guarda para quitar el precio.
+- Si ya compraste ese producto y escaneaste el recibo, la ventana de precio sugiere el **último precio que pagaste** (y dónde): tócalo para rellenarlo. Siempre puedes cambiarlo.
+- Con una cantidad mayor que 1, el artículo muestra el precio, la cantidad y el total de la línea, p. ej. *4,99 × 3 = 14,97*.
+- En cuanto un artículo tiene precio, aparece un resumen encima de la lista: **Falta por comprar** (solo artículos sin marcar; baja a medida que los marcas), el total de **Toda la lista** y cuántos artículos siguen sin precio.
+
+Los precios están en la moneda de tu cuenta. Cualquier miembro de la cuenta puede ponerlos y son gratis en todos los planes.
 
 ## Marcado automático al escanear recibos
 

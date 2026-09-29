@@ -7,13 +7,13 @@ import { ShoppingListGuestController } from './shopping-list-guest.controller';
  */
 function buildController(opts: {
   list?: any;
-  items?: { id: string; rawLabel: string; quantity: unknown; isChecked: boolean }[];
+  items?: { id: string; rawLabel: string; quantity: unknown; unitPrice?: unknown; isChecked: boolean }[];
 } = {}) {
   const items = opts.items ?? [
-    { id: 'item-1', rawLabel: 'Milk', quantity: 1, isChecked: false },
-    { id: 'item-2', rawLabel: 'Bread', quantity: 2, isChecked: true },
+    { id: 'item-1', rawLabel: 'Milk', quantity: 1, unitPrice: null, isChecked: false },
+    { id: 'item-2', rawLabel: 'Bread', quantity: 2, unitPrice: null, isChecked: true },
   ];
-  const list = opts.list ?? { id: 'list-1', name: 'Weekly groceries', items };
+  const list = opts.list ?? { id: 'list-1', name: 'Weekly groceries', account: { currencyCode: 'PLN' }, items };
 
   const prisma: any = {
     shoppingList: {
@@ -54,6 +54,29 @@ describe('ShoppingListGuestController', () => {
     expect(html).toContain('aria-pressed="true"');
     expect(html).not.toContain('disabled');
     expect(html).not.toContain('type="checkbox"');
+  });
+
+  it('guestPage shows no price or totals block when nothing is priced', async () => {
+    const { controller } = buildController();
+    const html = await controller.guestPage('tok123', req);
+    expect(html).not.toContain('class="item-price"');
+    expect(html).not.toContain('class="totals"');
+  });
+
+  it('guestPage shows line totals, what is still to buy, and the whole-list total', async () => {
+    const { controller } = buildController({
+      items: [
+        { id: 'item-1', rawLabel: 'Milk', quantity: 2, unitPrice: '3.50', isChecked: false },
+        { id: 'item-2', rawLabel: 'Bread', quantity: 1, unitPrice: '5.00', isChecked: true },
+        { id: 'item-3', rawLabel: 'Salt', quantity: 1, unitPrice: null, isChecked: false },
+      ],
+    });
+    const html = await controller.guestPage('tok123', { query: { lang: 'en' }, headers: {} } as any);
+    // 2 × 3.50 = 7.00 still to buy; 12.00 across the whole list
+    expect(html).toContain('Still to buy');
+    expect(html).toMatch(/Still to buy<\/span><strong>[^<]*7\.00/);
+    expect(html).toMatch(/Whole list<\/span><span>[^<]*12\.00/);
+    expect((html.match(/class="item-price"/g) ?? []).length).toBe(2);
   });
 
   it('guestPage renders the not-found page for an unknown token', async () => {

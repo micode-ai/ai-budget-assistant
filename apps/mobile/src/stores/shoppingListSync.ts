@@ -138,12 +138,20 @@ async function pushPendingItems(accountId: string): Promise<void> {
           canonicalName: item.canonicalName,
           rawLabel: item.rawLabel,
           quantity: item.quantity,
+          unitPrice: item.unitPrice,
           note: item.note ?? undefined,
         });
-        if (item.isChecked) {
+        // The create is idempotent on clientId: for a row that already exists
+        // server-side (edited offline after its first sync) it returns the old
+        // row and applies none of these fields. The follow-up update is what
+        // actually lands an offline check / quantity / price edit.
+        if (item.isChecked || item.unitPrice !== null || item.quantity !== 1) {
           await api.updateItem(item.clientId, {
-            isChecked: true,
+            // Only ever push a check, never an uncheck: an unchecked local row
+            // must not overwrite a tick another member made in the meantime.
+            isChecked: item.isChecked ? true : undefined,
             quantity: item.quantity,
+            unitPrice: item.unitPrice,
           });
         }
       }
@@ -271,6 +279,7 @@ async function _doPullAndMerge(accountId: string, set: StoreSet): Promise<void> 
             canonicalName: si.canonicalName,
             rawLabel: si.rawLabel,
             quantity: si.quantity,
+            unitPrice: si.unitPrice ?? null,
             note: si.note,
             isChecked: si.isChecked,
             addedByUserId: si.addedByUserId,

@@ -1059,7 +1059,7 @@ You'll have a clear picture of your spending patterns after one month. Meaningfu
 - [Best Budgeting Apps in 2026: An Honest Buyer's Guide](/blog/en/best-budgeting-apps/)
 - [Expense Map: See Where Your Money Actually Goes](/blog/en/expense-map/)
 - [Automatic Expense Tracking: Stop Typing Every Purchase](/blog/en/automatic-expense-tracking/)
-- [Receipt Scanner App: Why Line Items Beat the Total](/blog/en/receipt-scanner-app/)
+- [Receipt Scanner App That Reads Every Line Item](/blog/en/receipt-scanner-app/)
 - [How to Split Bills With Friends and Get Paid Back](/blog/en/split-bill-with-friends/)
 - [Why Most Budgeting Apps Get Deleted in the First Week](/blog/en/why-budget-apps-abandoned-first-week/)
 - [Monefy alternative: switch and keep your categories](/blog/en/switch-from-monefy-wallet-moneymanager/)
@@ -1996,7 +1996,7 @@ Enough to compare two clear periods. Three months against the previous three is 
 
 *Related articles: [How to Save Money](/blog/en/how-to-save-money/) | [How to Save Money on Groceries Without Coupons](/blog/en/save-money-on-groceries/)*
 
-## Receipt Scanner App: Why Line Items Beat the Total
+## Receipt Scanner App That Reads Every Line Item
 URL: https://ai-budget.pl/blog/en/receipt-scanner-app/
 
 You photographed the receipt, the app saved the amount and the date, and that was it. You know you spent $52.40 at the grocery store on Tuesday. You do not know how much of that was milk, how much was meat, and how much was a one-off purchase you will never make again. Most receipt scanner apps stop exactly there: a photo plus a total, treated as a closed case.
@@ -2993,6 +2993,18 @@ Divide a single expense across multiple categories:
 
 > **Tip:** Use **Suggest Split** to let AI recommend how to divide the expense.
 
+### Recurring Expenses
+
+Turn any expense into an auto-logging series — on the create form, or later on an expense you already saved:
+
+1. Tap **Repeat**
+2. Choose how often it repeats: **Weekly**, **Monthly**, or **Yearly**
+3. Save — the app automatically logs a new copy of this expense each period, on the day it's due
+
+> **Tip:** You don't have to decide this when you first log the expense. Open any expense that isn't part of a series yet, tap **Edit**, turn on **Repeat**, pick a period, and save — the same toggle as on the create form.
+
+An expense that's already part of a series shows a **Part of a recurring series** banner on its details screen instead of the toggle, with the period (e.g., "Repeats Monthly"). Tap **Stop Recurring** to end the series — past copies stay, only future auto-logging stops.
+
 ## Adding Income
 
 ### Step-by-step
@@ -3022,7 +3034,7 @@ Tap any expense to view its full details:
 - **Receipt Image** — view, share, save to gallery, replace, or delete the receipt photo. PDF receipts show a document preview with tap-to-open. If no receipt is attached yet, tap **Attach Receipt** to add one — choose **Take Photo**, **Choose from Gallery**, or **Choose PDF**. Works for any expense, including ones added manually. If the receipt was attached after the expense was created, tap **Extract items** in the receipt card to re-run AI reading and pull its line items into the expense (with confirmation if items already exist; each run uses one AI request)
 
 ### Actions on expense details:
-- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled)
+- **Edit** — modify the expense, including its **currency** (tap the currency chip next to the amount; the amount itself is not converted, only relabelled); if it isn't already part of a recurring series, you can also turn on **Repeat** here to start one
 - **Copy** — create a duplicate
 - **Delete** — remove the expense (with confirmation)
 
@@ -3172,6 +3184,18 @@ The app warns you before a receipt ends up in your expenses twice:
 - **The same receipt, new photo** — after reading, if an expense with the same store, amount and date (±1 day) already exists, the confirmation screen shows a yellow notice with an **Open** button. You can still save: it may be a genuine second purchase.
 
 The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
+
+### Sharing from Another App (Android)
+
+Got a receipt as a screenshot, a banking-app confirmation or an e-receipt PDF? You don't have to open the scanner:
+
+1. In any app (gallery, Gmail, your bank, a store app), tap **Share**
+2. Choose **AI Budget**
+3. The app opens straight on the filled-in confirmation screen — check it and tap **Save**
+
+You can share **images and PDFs**, up to **10 files at a time** (a PDF up to 10 MB). Several files become separate expenses, one after another — the title shows your progress ("Receipt 2 of 5") and **Next** takes you to the following file. If a file can't be read, choose **Skip** or **Enter manually**. Closing the screen asks before discarding the files still waiting. Each file counts as one receipt scan against your AI limit; if the limit runs out, the remaining files are left for later.
+
+Sharing works on Android only. On iPhone and in the web app, use **Scan Receipt** instead.
 
 ## Voice Income
 
@@ -6828,6 +6852,8 @@ Anyone who opens the link sees the list and can check items off as they shop, wi
 
 The link keeps working until you archive or delete the list, or tap **Revoke link** in the same menu to turn it off explicitly. Sharing again after that creates a brand-new link. Re-sharing without revoking first is safe — it hands out the same link rather than breaking the one you already sent.
 
+If you've added prices to items, the shared link shows them too, along with how much is still to buy — handy when someone else is doing the shopping for you.
+
 ## Save a List as a Template ("My Weekly Staples")
 
 If you buy roughly the same groceries every week, save your usual list once and re-add all of it in one tap next time — no need to retype "milk, eggs, bread, coffee…" over and over.
@@ -6852,6 +6878,17 @@ Tap **Add item** to open the add sheet. You can add an item three ways:
 You can also **ask the AI assistant** to add items: open the **Chat** tab and say something like "add milk and bread to my shopping list." The items are added to your active list right away — no confirmation needed.
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
+
+## Prices and Totals
+
+Want to know how much the trip will cost before you get to the checkout? Give items a price.
+
+- Tap **+ Price** under an item's name and type the price **per item** (a comma or a dot both work). Leave the field empty and save to remove the price.
+- If you've bought that product before and scanned the receipt, the price sheet suggests the **last price you paid** (and where) — tap it to fill it in. You can always change it.
+- With a quantity above 1, the item shows the price, the quantity and the line total, e.g. *4.99 × 3 = 14.97*.
+- Once at least one item has a price, a summary appears above the list: **Still to buy** (unchecked items only — it goes down as you tick things off), the **Whole list** total, and how many items still have no price.
+
+Prices are in your account's currency. Anyone on the account can set them, and they're free on every plan.
 
 ## Auto-Check From Receipts
 
@@ -7157,3 +7194,92 @@ A link that hasn't been used within 30 days of creation simply stops working. If
 - You can't split a bill that was itself created by someone else's split.
 - Amounts are always shown in the bill's own currency — nothing is ever converted.
 - If the receipt had a **discount**, everyone's share is worked out from what you actually paid, not from the printed prices - so a friend never pays the pre-discount price of their items.
+
+## Real Salary — is your raise keeping up with your own prices?
+URL: https://ai-budget.pl/help/en/real-salary/
+
+> Compares how your pay has changed over the last 12 months against your own personal inflation rate — not the national headline number, but one built from what you actually spend on — so you can see whether a raise is a real gain or just keeping up with rising prices.
+
+## What it is
+
+Real Salary answers one question: is your paycheck actually buying more, or only growing on paper? It weighs the change in your own confirmed salary over the last 12 months against your **personal inflation rate** — a rate built from your own spending categories and official price statistics for your country, not a national news headline.
+
+For example: your pay rose **+5%**, but your personal inflation came out at **+8.3%** — your *real* pay actually **fell by about −3.0%**, even though the number on your payslip went up.
+
+It's **free for everyone**. Only the one-page "raise brief" PDF you can download and keep is a **Pro** feature.
+
+## Where to find it
+
+Open the **Analytics** tab and tap the **Real salary** banner ("Your pay vs your own inflation"). The first time you open it, you'll be asked to confirm your salary before it can calculate anything.
+
+## Setting up your salary
+
+The app looks through your recent income entries for something that repeats — roughly once a month, at least twice in the last 90 days — and offers it as a candidate. Pick the one that's your salary.
+
+If the app doesn't have a full year of that salary yet, it also asks for **what you earned a year ago**, typed in the salary's own currency (not your display currency). You can type it the way you'd normally write it — `8400`, `8.400`, `8 400`, and `8,400.50` are all understood, comma or dot as the decimal point, dot/comma/space as thousands separators.
+
+If nothing repeating is found, add your pay as income a couple of times first — voice, receipt, or manual entry, any source counts — then come back.
+
+## Settings
+
+Tap the gear icon on the Real Salary screen to open **Real salary settings**:
+
+- **Country for official prices** — guessed from your device's time zone the first time you open the screen (shown as e.g. "Poland (from your time zone)"). Tap it to pick any EU/EEA/Switzerland country by hand, or to go back to the guessed one.
+- **What each category counts as** — each of your expense categories can be mapped to a price group (Food and drinks, Housing and utilities, Transport, Health, and so on). Left on **Automatic**, the app assigns one for you; you only need to touch this if you disagree with a category's guess. The list starts with the categories that have no price group yet (or count as “everything else”), biggest spend first, with each category's spending over the last 12 months shown next to it — the top of the list is where a choice moves your result the most.
+
+## How it's calculated
+
+- **Pay change** compares the average salary per pay period over the last 12 months against the 12 months before that — using pay *periods*, not calendar months, so a payday that shifts around a weekend doesn't look like a raise or a cut.
+- **Your personal inflation** is a weighted average across your own spending: each price group's official rate for your country, weighted by how much of your spending falls into it. **Food and drinks** is priced from your own scanned-receipt history instead, once you have at least 10 tracked products — your actual grocery prices, not a national average. If your receipt prices point to a food inflation far away (more than 10 percentage points) from the official food rate for your country, the official rate is used instead — a gap that large almost always means a product changed pack size or unit under the same name, not that your groceries really got that much dearer.
+- **Real pay change** adjusts your pay change for that inflation rate, so it answers "did my money buy more or less", not just "did my number go up".
+- **Raise needed to keep up** is how much bigger a raise, on your *current* pay, would have kept you exactly even with your own inflation.
+
+## What you'll see
+
+- A headline number — your real pay change, in green (ahead), red (behind), or neutral.
+- Your pay change and your personal inflation, side by side.
+- A breakdown of where prices rose for you, one row per price group, each tagged **your receipts** or **official data** depending on where its rate came from.
+- A note naming which month the official data is from, or that the answer is based on receipts only when your country has no official coverage.
+- A reminder that this is **an estimate, not financial advice**.
+
+## What each message means
+
+- **"Confirm your salary"** — no repeating income was found yet, or you haven't picked one. Opens the setup screen.
+- **"Tell us last year's salary"** — the app doesn't have a full year of your confirmed salary. Enter last year's monthly figure.
+- **"Keep tracking a little longer"** — the app needs at least 3 months of expenses to know what you spend on.
+- **"No price data for your country"** — no official price statistics are published for your country, and you don't yet have enough scanned receipts to stand in for them. Set your country by hand, or scan a few more receipts.
+- **"Not available with full encryption"** — accounts with full end-to-end encryption keep amounts unreadable on the server, so this can't be calculated for them.
+
+## Sharing
+
+Tap **Share** to post your result. The share card shows **percentages only** — your pay change, your inflation, your real change — never your actual salary or spending amounts, so you can share a win (or a rant) without revealing what you earn.
+
+## The raise brief (Pro)
+
+Tap **Raise brief** to download a one-page PDF summarising your result — useful to bring to a salary conversation. It's built entirely from the number already on your screen (no extra AI cost), available in all app languages, and only downloadable once your result is fully calculated (not while any of the messages above is showing).
+
+## Good to know
+
+- Free for every subscription tier — only the brief PDF is Pro.
+- Needs a connection — it's calculated on the server, with no offline fallback.
+- Country coverage is currently the EU, EEA, and Switzerland (wherever Eurostat publishes official price statistics); outside that, the app can still answer from your receipts alone once you have enough of them.
+- Not available on accounts with full end-to-end encryption.
+- Everything shown is an **estimate** built from your spending categories and public price statistics — not financial or tax advice.
+
+## FAQ
+
+- **Q: Why is my inflation different from what's in the news?**
+  **A:** News headlines report one national average shopping basket. Yours is weighted by what *you* actually spend money on — if you spend more on transport and less on restaurants than the average person, your rate reflects that instead.
+
+- **Q: Why is my country guessed, and can I change it?**
+  **A:** It's guessed from your device's time zone so there's nothing to set up on day one. Change it any time in **Real salary settings → Country for official prices**.
+
+- **Q: Does this work with full encryption turned on?**
+  **A:** No — a fully encrypted account keeps your amounts unreadable on the server, and this calculation needs to read them. You'll see "Not available with full encryption" instead of a result.
+
+- **Q: Which countries have official price data?**
+  **A:** The EU, EEA, and Switzerland — the countries Eurostat publishes harmonised price statistics for. Elsewhere, the app relies entirely on your own scanned receipts once you have enough of them.
+
+---
+
+*See also: [Personal Inflation Index](./36-personal-inflation-index.md) | [Inflation Shield](./40-inflation-shield.md) | [Budgets](./05-budgets.md)*

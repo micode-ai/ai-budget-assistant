@@ -9,6 +9,7 @@ interface ShoppingListItemRow {
   canonical_name: string | null;
   raw_label: string;
   quantity: number;
+  unit_price: number | null;
   note: string | null;
   is_checked: number;
   added_by_user_id: string | null;
@@ -40,6 +41,7 @@ export function rowToShoppingListItem(row: ShoppingListItemRow): ShoppingListIte
     canonicalName: row.canonical_name,
     rawLabel: row.raw_label,
     quantity: row.quantity,
+    unitPrice: row.unit_price ?? null,
     note: row.note,
     isChecked: row.is_checked === 1,
     addedByUserId: row.added_by_user_id ?? '',
@@ -68,6 +70,7 @@ function shoppingListItemToParams(item: ShoppingListItemLocal): (string | number
     item.canonicalName ?? null,
     item.rawLabel,
     item.quantity,
+    item.unitPrice ?? null,
     item.note ?? null,
     item.isChecked ? 1 : 0,
     item.addedByUserId ?? null,
@@ -84,9 +87,9 @@ export async function upsertShoppingListItem(item: ShoppingListItemLocal): Promi
   await executeSql(
     `INSERT INTO shopping_list_items (
       id, account_id, shopping_list_id, client_id, canonical_name, raw_label,
-      quantity, note, is_checked, added_by_user_id, sort_order,
+      quantity, unit_price, note, is_checked, added_by_user_id, sort_order,
       is_deleted, sync_status, sync_version, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       account_id = excluded.account_id,
       shopping_list_id = excluded.shopping_list_id,
@@ -94,6 +97,7 @@ export async function upsertShoppingListItem(item: ShoppingListItemLocal): Promi
       canonical_name = excluded.canonical_name,
       raw_label = excluded.raw_label,
       quantity = excluded.quantity,
+      unit_price = excluded.unit_price,
       note = excluded.note,
       is_checked = excluded.is_checked,
       added_by_user_id = excluded.added_by_user_id,
@@ -133,6 +137,10 @@ export async function updateShoppingListItem(
   if (patch.quantity !== undefined) {
     setClauses.push('quantity = ?');
     params.push(patch.quantity);
+  }
+  if (patch.unitPrice !== undefined) {
+    setClauses.push('unit_price = ?');
+    params.push(patch.unitPrice);
   }
   if (patch.note !== undefined) {
     setClauses.push('note = ?');

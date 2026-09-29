@@ -12,7 +12,8 @@ import { getGuestListPageStrings, resolveGuestListLang } from './helpers/guest-l
  * posture of `receipt-split/guest.controller.ts` (the app's other
  * unauthenticated surface): a guest has no account and never will, so treat
  * every line as security-sensitive — never expose accountId, member names,
- * or anything about the account beyond this one list's own item labels.
+ * or anything about the account beyond this one list's own item labels and the
+ * prices members typed onto it (plus the account currency they are in).
  *
  * Deliberately only two routes (`GET /:token`, `POST /:token/items/:itemId/toggle`)
  * — no JSON variant, same "unused public read endpoint is attack surface for
@@ -41,22 +42,33 @@ export class ShoppingListGuestController {
       select: {
         id: true,
         name: true,
+        account: { select: { currencyCode: true } },
         items: {
           where: { isDeleted: false },
           orderBy: [{ sortOrder: 'asc' }, { createdAt: 'asc' }],
-          select: { id: true, rawLabel: true, quantity: true, isChecked: true },
+          select: { id: true, rawLabel: true, quantity: true, unitPrice: true, isChecked: true },
         },
       },
     });
   }
 
-  private buildModel(list: { id: string; name: string; items: { id: string; rawLabel: string; quantity: unknown; isChecked: boolean }[] }, token: string): GuestListPageModel {
+  private buildModel(
+    list: {
+      id: string;
+      name: string;
+      account: { currencyCode: string };
+      items: { id: string; rawLabel: string; quantity: unknown; unitPrice: unknown; isChecked: boolean }[];
+    },
+    token: string,
+  ): GuestListPageModel {
     return {
       listName: list.name,
+      currencyCode: list.account.currencyCode,
       items: list.items.map((item) => ({
         id: item.id,
         rawLabel: item.rawLabel,
         quantity: Number(item.quantity),
+        unitPrice: item.unitPrice == null ? null : Number(item.unitPrice),
         isChecked: item.isChecked,
       })),
       toggleActionBase: `/sl/${token}/items`,
@@ -67,8 +79,8 @@ export class ShoppingListGuestController {
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 20, ttl: 60000 } })
   @Header('Content-Type', 'text/html; charset=utf-8')
-  // No amounts, no member names — nothing on this page rises to the level of
-  // the receipt-split guest page's `no-store`, but it's still a public link
+  // Item prices and a total, but no member names and nothing about the
+  // account's own money — still a public link
   // someone else could be handed after us on a shared device, so keep the
   // same posture: no caching.
   @Header('Cache-Control', 'no-store')

@@ -30,6 +30,8 @@ Anyone who opens the link sees the list and can check items off as they shop, wi
 
 The link keeps working until you archive or delete the list, or tap **Revoke link** in the same menu to turn it off explicitly. Sharing again after that creates a brand-new link. Re-sharing without revoking first is safe — it hands out the same link rather than breaking the one you already sent.
 
+If you've added prices to items, the shared link shows them too, along with how much is still to buy — handy when someone else is doing the shopping for you.
+
 ## Save a List as a Template ("My Weekly Staples")
 
 If you buy roughly the same groceries every week, save your usual list once and re-add all of it in one tap next time — no need to retype "milk, eggs, bread, coffee…" over and over.
@@ -54,6 +56,17 @@ Tap **Add item** to open the add sheet. You can add an item three ways:
 You can also **ask the AI assistant** to add items: open the **Chat** tab and say something like "add milk and bread to my shopping list." The items are added to your active list right away — no confirmation needed.
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
+
+## Prices and Totals
+
+Want to know how much the trip will cost before you get to the checkout? Give items a price.
+
+- Tap **+ Price** under an item's name and type the price **per item** (a comma or a dot both work). Leave the field empty and save to remove the price.
+- If you've bought that product before and scanned the receipt, the price sheet suggests the **last price you paid** (and where) — tap it to fill it in. You can always change it.
+- With a quantity above 1, the item shows the price, the quantity and the line total, e.g. *4.99 × 3 = 14.97*.
+- Once at least one item has a price, a summary appears above the list: **Still to buy** (unchecked items only — it goes down as you tick things off), the **Whole list** total, and how many items still have no price.
+
+Prices are in your account's currency. Anyone on the account can set them, and they're free on every plan.
 
 ## Auto-Check From Receipts
 

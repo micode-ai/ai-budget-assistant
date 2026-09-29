@@ -2990,6 +2990,18 @@ Repartissez une depense unique entre plusieurs categories :
 
 > **Astuce :** Utilisez **Suggerer une repartition** pour laisser l'IA recommander comment diviser la depense.
 
+### Dépenses récurrentes
+
+Transformez n'importe quelle dépense en une série enregistrée automatiquement — depuis le formulaire de création, ou plus tard sur une dépense déjà enregistrée :
+
+1. Appuyez sur **Répéter**
+2. Choisissez la fréquence : **Hebdomadaire**, **Mensuel** ou **Annuel**
+3. Enregistrez — l'application enregistre automatiquement une nouvelle copie de cette dépense à chaque période, le jour où elle est due
+
+> **Astuce :** Vous n'êtes pas obligé de le décider dès la création de la dépense. Ouvrez une dépense qui ne fait pas encore partie d'une série, appuyez sur **Modifier**, activez **Répéter**, choisissez une période, puis enregistrez — le même interrupteur que sur le formulaire de création.
+
+Une dépense qui fait déjà partie d'une série affiche, sur son écran de détails, une bannière **Fait partie d'une série récurrente** à la place de l'interrupteur, avec la période (par ex. « Se répète Mensuel »). Appuyez sur **Arrêter la répétition** pour mettre fin à la série — les copies déjà créées restent, seul l'enregistrement automatique futur s'arrête.
+
 ## Ajouter un revenu
 
 ### Etape par etape
@@ -3019,7 +3031,7 @@ Appuyez sur une depense pour afficher ses details complets :
 - **Photo du reçu** — afficher, partager, enregistrer dans la galerie, remplacer ou supprimer la photo du reçu. Les reçus PDF affichent un aperçu de document qui s'ouvre au toucher. Si aucun reçu n'est encore joint, touchez **Joindre un reçu** pour en ajouter un — choisissez **Prendre une photo**, **Depuis la galerie** ou **Choisir un PDF**. Fonctionne pour toute dépense, y compris celles créées à la main. Si le reçu a été joint après la création de la dépense, touchez **Extraire les articles** dans la carte du reçu pour le relire par l'IA et en intégrer les lignes à la dépense (avec confirmation si des articles existent déjà ; chaque lecture consomme une requête IA)
 
 ### Actions sur les details de la depense :
-- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté)
+- **Modifier** — modifier la dépense, y compris sa **devise** (appuyez sur la puce de devise à côté du montant ; le montant lui-même n'est pas converti, seulement réétiqueté) ; si elle ne fait pas encore partie d'une série récurrente, vous pouvez aussi activer **Répéter** ici pour en démarrer une
 - **Copier** — creer un doublon
 - **Supprimer** — supprimer la depense (avec confirmation)
 
@@ -3169,6 +3181,18 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 - **Le même reçu, nouvelle photo** — si, après lecture, une dépense avec le même magasin, le même montant et la même date (±1 jour) existe déjà, l'écran de confirmation affiche un avis jaune avec un bouton **Ouvrir**. Vous pouvez tout de même enregistrer : il peut s'agir d'un vrai second achat.
 
 Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
+
+### Partager depuis une autre app (Android)
+
+Vous avez un ticket en capture d'écran, une confirmation de l'app bancaire ou un ticket électronique en PDF ? Inutile d'ouvrir le scanner :
+
+1. Dans n'importe quelle app (galerie, Gmail, banque, app d'enseigne), touchez **Partager**
+2. Choisissez **AI Budget**
+3. L'app s'ouvre directement sur l'écran de confirmation pré-rempli — vérifiez et touchez **Enregistrer**
+
+Vous pouvez partager des **images et des PDF**, jusqu'à **10 fichiers à la fois** (PDF jusqu'à 10 Mo). Plusieurs fichiers deviennent des dépenses séparées, l'une après l'autre : le titre indique la progression (« Ticket 2 sur 5 ») et **Suivant** passe au fichier suivant. Si un fichier ne peut pas être lu, choisissez **Passer** ou **Saisir à la main**. À la fermeture, l'app demande confirmation avant d'abandonner les fichiers en attente. Chaque fichier compte comme un scan de ticket dans votre limite d'IA ; si elle est atteinte, les fichiers restants attendent.
+
+Le partage fonctionne uniquement sur Android. Sur iPhone et dans l'app web, utilisez **Scanner un reçu**.
 
 ## Revenus vocaux
 
@@ -6710,6 +6734,8 @@ Toute personne qui ouvre le lien voit la liste et peut cocher les articles au fu
 
 Le lien continue de fonctionner jusqu'à ce que vous archiviez ou supprimiez la liste, ou que vous appuyiez sur **Révoquer le lien** dans le même menu pour le désactiver explicitement. Le repartager ensuite crée un tout nouveau lien. Le repartager sans le révoquer d'abord est sans risque — cela redonne le même lien plutôt que d'invalider celui déjà envoyé.
 
+Si vous avez ajouté des prix aux articles, le lien partagé les affiche aussi, avec ce qui reste à acheter — pratique quand quelqu’un d’autre fait les courses pour vous.
+
 ## Enregistrer une liste comme modèle (« Mes produits de base hebdomadaires »)
 
 Si vous achetez à peu près les mêmes courses chaque semaine, enregistrez votre liste habituelle une seule fois et rajoutez-la en entier en un geste la prochaine fois — plus besoin de retaper « lait, œufs, pain, café… ».
@@ -6732,6 +6758,17 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 - **Texte libre** — si ce que vous avez tapé ne correspond à aucun produit suivi, touchez **Ajouter « … »** pour l'ajouter comme simple article texte. Les articles en texte libre ne sont pas reliés à l'historique de prix, donc ils n'apparaîtront pas dans les comparaisons de prix.
 
 Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
+
+## Prix et totaux
+
+Envie de savoir combien coûteront les courses avant d’arriver à la caisse ? Donnez un prix aux articles.
+
+- Touchez **+ Prix** sous le nom d’un article et saisissez le prix **à l’unité** (la virgule comme le point fonctionnent). Videz le champ et enregistrez pour retirer le prix.
+- Si vous avez déjà acheté ce produit et scanné le reçu, la fenêtre de prix propose le **dernier prix payé** (et où) : touchez-le pour le reprendre. Vous pouvez toujours le modifier.
+- Avec une quantité supérieure à 1, l’article affiche le prix, la quantité et le total de la ligne, par ex. *4,99 × 3 = 14,97*.
+- Dès qu’un article a un prix, un récapitulatif apparaît au-dessus de la liste : **Reste à acheter** (articles non cochés uniquement — il baisse à mesure que vous cochez), le total de **Toute la liste** et le nombre d’articles encore sans prix.
+
+Les prix sont dans la devise de votre compte. Tout membre du compte peut les saisir, et c’est gratuit dans toutes les offres.
 
 ## Coche automatique lors du scan des reçus
 
@@ -7039,3 +7076,92 @@ Un lien qui n'a pas été utilisé dans les 30 jours suivant sa création cesse 
 - Vous ne pouvez pas diviser une addition qui provient elle-même du partage de quelqu'un d'autre.
 - Les montants sont toujours affichés dans la devise propre de l'addition — rien n'est jamais converti.
 - Si le ticket comportait une **remise**, les parts sont calculées sur ce que vous avez réellement payé, et non sur les prix imprimés - un ami ne paie donc jamais le prix avant remise.
+
+## Salaire réel — votre augmentation suit-elle vos propres prix ?
+URL: https://ai-budget.pl/help/fr/real-salary/
+
+> Compare l'évolution de votre salaire sur les 12 derniers mois à votre propre taux d'inflation personnel — pas le chiffre national des gros titres, mais un taux construit à partir de ce que vous dépensez réellement — pour voir si une augmentation est un vrai gain ou seulement de quoi suivre la hausse des prix.
+
+## De quoi s'agit-il
+
+Le Salaire réel répond à une seule question : votre salaire achète-t-il vraiment plus, ou grossit-il seulement sur le papier ? Il compare l'évolution de votre salaire confirmé sur les 12 derniers mois à votre **taux d'inflation personnel** — un taux construit à partir de vos propres catégories de dépenses et des statistiques de prix officielles de votre pays, pas d'un titre de presse national.
+
+Par exemple : votre salaire a augmenté de **+5 %**, mais votre inflation personnelle ressort à **+8,3 %** — votre salaire *réel* a en fait **baissé d'environ −3,0 %**, même si le chiffre sur votre fiche de paie a augmenté.
+
+C'est **gratuit pour tout le monde**. Seul le PDF d'une page « arguments pour l'augmentation », téléchargeable et conservable, est une fonctionnalité **Pro**.
+
+## Où le trouver
+
+Ouvrez l'onglet **Analyses** et touchez la bannière **Salaire réel** (« Votre salaire face à votre propre inflation »). La première fois que vous l'ouvrez, on vous demande de confirmer votre salaire avant que quoi que ce soit puisse être calculé.
+
+## Configurer votre salaire
+
+L'application parcourt vos revenus récents à la recherche de quelque chose qui se répète — à peu près une fois par mois, au moins deux fois au cours des 90 derniers jours — et vous le propose comme candidat. Choisissez celui qui correspond à votre salaire.
+
+Si l'application n'a pas encore une année complète de ce salaire, elle demande aussi **ce que vous gagniez il y a un an**, saisi dans la devise propre au salaire (pas votre devise d'affichage). Vous pouvez le saisir comme vous l'écririez normalement — `8400`, `8.400`, `8 400` et `8,400.50` sont tous compris, virgule ou point comme séparateur décimal, point/virgule/espace comme séparateur de milliers.
+
+Si rien de récurrent n'est trouvé, ajoutez d'abord votre salaire comme revenu à quelques reprises — voix, ticket ou saisie manuelle, toute source compte — puis revenez.
+
+## Réglages
+
+Touchez l'icône en forme d'engrenage sur l'écran Salaire réel pour ouvrir les **Réglages du salaire réel** :
+
+- **Pays pour les prix officiels** — déduit du fuseau horaire de votre appareil la première fois que vous ouvrez l'écran (affiché par exemple « Pologne (d'après votre fuseau horaire) »). Touchez-le pour choisir manuellement n'importe quel pays de l'UE, de l'EEE ou la Suisse, ou pour revenir au pays déduit.
+- **À quoi correspond chaque catégorie** — chacune de vos catégories de dépenses peut être associée à un groupe de prix (Alimentation et boissons, Logement et énergie, Transports, Santé, etc.). Laissée sur **Automatique**, l'application en attribue un pour vous ; vous n'avez à y toucher que si vous n'êtes pas d'accord avec la supposition faite pour une catégorie. La liste commence par les catégories qui n’ont pas encore de groupe de prix (ou comptent comme « tout le reste »), les plus grosses dépenses d’abord, avec à côté de chacune ses dépenses des 12 derniers mois — c’est en haut de la liste qu’un choix change le plus votre résultat.
+
+## Comment c'est calculé
+
+- **L'évolution du salaire** compare le salaire moyen par période de paie sur les 12 derniers mois à celui des 12 mois précédents — en utilisant des *périodes* de paie, pas des mois calendaires, pour qu'un jour de paie décalé à cause d'un week-end ne ressemble pas à une augmentation ou à une baisse.
+- **Votre inflation personnelle** est une moyenne pondérée de vos propres dépenses : le taux officiel de chaque groupe de prix pour votre pays, pondéré par la part de vos dépenses qui y correspond. **Alimentation et boissons** est plutôt calculé à partir de votre propre historique de tickets scannés, dès que vous avez au moins 10 produits suivis — vos vrais prix de courses, pas une moyenne nationale. Si les prix de vos tickets indiquent une inflation alimentaire très éloignée (plus de 10 points de pourcentage) du taux officiel de l’alimentation pour votre pays, c’est le taux officiel qui est utilisé — un écart aussi grand signifie presque toujours qu’un produit a changé de format ou d’unité sous le même nom, et non que vos courses ont vraiment autant augmenté.
+- **L'évolution réelle du salaire** ajuste votre évolution de salaire à ce taux d'inflation, ce qui répond à « mon argent a-t-il acheté plus ou moins », pas seulement « mon chiffre a-t-il augmenté ».
+- **L'augmentation nécessaire pour suivre** indique de combien une augmentation, sur votre salaire *actuel*, devrait être plus importante pour vous maintenir exactement au niveau de votre propre inflation.
+
+## Ce que vous verrez
+
+- Un chiffre principal — l'évolution réelle de votre salaire, en vert (vous êtes devant), rouge (vous êtes derrière) ou neutre.
+- Votre évolution de salaire et votre inflation personnelle, côte à côte.
+- Une répartition des endroits où les prix ont augmenté pour vous, une ligne par groupe de prix, chacune marquée **vos tickets** ou **données officielles** selon l'origine du taux.
+- Une note indiquant de quel mois proviennent les données officielles, ou que la réponse repose uniquement sur des tickets lorsque votre pays n'a pas de couverture officielle.
+- Un rappel qu'il s'agit d'**une estimation, pas d'un conseil financier**.
+
+## Ce que signifie chaque message
+
+- **« Confirmez votre salaire »** — aucun revenu récurrent n'a encore été trouvé, ou vous n'en avez pas encore choisi un. Ouvre l'écran de configuration.
+- **« Indiquez votre salaire d'il y a un an »** — l'application n'a pas encore une année complète de votre salaire confirmé. Saisissez le montant mensuel d'il y a un an.
+- **« Continuez encore un peu »** — l'application a besoin d'au moins 3 mois de dépenses pour savoir à quoi vous dépensez.
+- **« Aucune donnée de prix pour votre pays »** — aucune statistique de prix officielle n'est publiée pour votre pays, et vous n'avez pas encore assez de tickets scannés pour compenser. Définissez votre pays manuellement, ou scannez quelques tickets supplémentaires.
+- **« Indisponible avec le chiffrement complet »** — les comptes avec chiffrement de bout en bout complet gardent les montants illisibles côté serveur, donc ce calcul ne peut pas être fait pour eux.
+
+## Partager
+
+Touchez **Partager** pour publier votre résultat. La carte de partage n'affiche que des **pourcentages** — votre évolution de salaire, votre inflation, votre évolution réelle — jamais votre salaire ou vos montants de dépenses réels, afin que vous puissiez partager une victoire (ou un coup de gueule) sans révéler ce que vous gagnez.
+
+## Arguments pour une augmentation (Pro)
+
+Touchez **Arguments pour une augmentation** pour télécharger un PDF d'une page résumant votre résultat — utile à apporter lors d'une discussion sur votre salaire. Il est construit entièrement à partir du chiffre déjà affiché à l'écran (sans coût d'IA supplémentaire), disponible dans toutes les langues de l'application, et téléchargeable uniquement une fois votre résultat entièrement calculé (pas pendant qu'un des messages ci-dessus s'affiche).
+
+## À noter
+
+- Gratuit pour tous les niveaux d'abonnement — seul le PDF d'arguments est Pro.
+- Nécessite une connexion — le calcul se fait sur le serveur, sans solution de repli hors ligne.
+- La couverture par pays est actuellement l'UE, l'EEE et la Suisse (partout où Eurostat publie des statistiques de prix officielles) ; en dehors de cela, l'application peut tout de même répondre à partir de vos seuls tickets une fois que vous en avez suffisamment.
+- Indisponible sur les comptes avec chiffrement de bout en bout complet.
+- Tout ce qui est affiché est une **estimation** construite à partir de vos catégories de dépenses et de statistiques de prix publiques — pas un conseil financier ou fiscal.
+
+## FAQ
+
+- **Q : Pourquoi mon inflation est-elle différente de celle des journaux ?**
+  **R :** Les gros titres rapportent un panier moyen national unique. Le vôtre est pondéré par ce à quoi *vous* dépensez réellement votre argent — si vous dépensez plus en transports et moins au restaurant que la moyenne, votre taux le reflète.
+
+- **Q : Pourquoi mon pays est-il deviné, et puis-je le changer ?**
+  **R :** Il est déduit du fuseau horaire de votre appareil pour qu'il n'y ait rien à configurer le premier jour. Changez-le à tout moment dans **Réglages du salaire réel → Pays pour les prix officiels**.
+
+- **Q : Est-ce que ça fonctionne avec le chiffrement complet activé ?**
+  **R :** Non — un compte entièrement chiffré garde vos montants illisibles côté serveur, et ce calcul a besoin de les lire. Vous verrez « Indisponible avec le chiffrement complet » au lieu d'un résultat.
+
+- **Q : Quels pays disposent de données de prix officielles ?**
+  **R :** L'UE, l'EEE et la Suisse — les pays pour lesquels Eurostat publie des statistiques de prix harmonisées. Ailleurs, l'application dépend entièrement de vos propres tickets scannés une fois que vous en avez suffisamment.
+
+---
+
+*Voir aussi : [Indice d'Inflation Personnel](./36-personal-inflation-index.md) | [Bouclier anti-inflation](./40-inflation-shield.md) | [Budgets](./05-budgets.md)*

@@ -30,6 +30,8 @@ Iedereen die de link opent, ziet de lijst en kan artikelen aanvinken tijdens het
 
 De link blijft werken totdat je de lijst archiveert of verwijdert, of in hetzelfde menu op **Link intrekken** tikt om hem expliciet uit te schakelen. Opnieuw delen daarna maakt een gloednieuwe link aan. Opnieuw delen zonder eerst in te trekken is veilig — je geeft dan gewoon dezelfde link door in plaats van de al verstuurde link te breken.
 
+Als je prijzen aan artikelen hebt gegeven, toont de gedeelde link die ook — samen met wat er nog te kopen is. Handig als iemand anders de boodschappen voor je doet.
+
 ## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
 
 Als je elke week ongeveer dezelfde boodschappen koopt, sla je je gebruikelijke lijst één keer op en voeg je hem de volgende keer met één tik weer helemaal toe — geen "melk, eieren, brood, koffie…" meer opnieuw typen.
@@ -52,6 +54,17 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 - **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
 
 Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
+
+## Prijzen en totalen
+
+Wil je al vóór de kassa weten wat de boodschappen kosten? Geef artikelen een prijs.
+
+- Tik onder de naam van een artikel op **+ Prijs** en typ de prijs **per stuk** (een komma of een punt werkt allebei). Maak het veld leeg en sla op om de prijs te verwijderen.
+- Heb je het product al eens gekocht en de bon gescand, dan stelt het prijsvenster de **laatst betaalde prijs** (en waar) voor — tik erop om hem in te vullen. Je kunt hem altijd aanpassen.
+- Bij een aantal hoger dan 1 toont het artikel de prijs, het aantal en het regeltotaal, bijv. *4,99 × 3 = 14,97*.
+- Zodra minstens één artikel een prijs heeft, verschijnt boven de lijst een overzicht: **Nog te kopen** (alleen niet-afgevinkte artikelen — het bedrag daalt terwijl je afvinkt), het totaal van de **hele lijst** en hoeveel artikelen nog geen prijs hebben.
+
+Prijzen zijn in de valuta van je account. Elk accountlid kan ze invullen, en het is gratis in elk abonnement.
 
 ## Automatisch afvinken bij het scannen van bonnen
 

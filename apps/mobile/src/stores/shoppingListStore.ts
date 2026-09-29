@@ -74,6 +74,8 @@ interface ShoppingListState {
   /** Reverts exactly the ids `reconcileWithReceipt` returned back to unchecked. */
   undoReceiptReconciliation: (itemIds: string[]) => void;
   updateQuantity: (itemId: string, qty: number) => void;
+  /** Sets the per-unit price (account currency); null clears it. */
+  updatePrice: (itemId: string, unitPrice: number | null) => void;
   removeItem: (itemId: string) => void;
   clearChecked: () => Promise<void>;
   createList: (name: string) => Promise<void>;
@@ -345,6 +347,7 @@ export const useShoppingListStore = create<ShoppingListState>()(
         canonicalName: canonicalName ?? null,
         rawLabel,
         quantity,
+        unitPrice: null,
         note: null,
         isChecked: false,
         addedByUserId: userId,
@@ -487,6 +490,23 @@ export const useShoppingListStore = create<ShoppingListState>()(
 
       api.updateItem(itemId, { quantity: qty }).catch((e) =>
         console.warn('Shopping list item quantity sync deferred (offline?):', e),
+      );
+    },
+
+    updatePrice: (itemId, unitPrice) => {
+      set((state) => ({
+        lists: state.lists.map((l) => ({
+          ...l,
+          items: l.items.map((it) => (it.id === itemId ? { ...it, unitPrice } : it)),
+        })),
+      }));
+
+      updateShoppingListItem(itemId, { unitPrice }).catch((e) =>
+        console.error('Failed to update shopping list item in SQLite:', e),
+      );
+
+      api.updateItem(itemId, { unitPrice }).catch((e) =>
+        console.warn('Shopping list item price sync deferred (offline?):', e),
       );
     },
 

@@ -303,6 +303,7 @@ export const shoppingListItems = sqliteTable('shopping_list_items', {
   canonicalName: text('canonical_name'),
   rawLabel: text('raw_label').notNull(),
   quantity: real('quantity').default(1),
+  unitPrice: real('unit_price'),
   note: text('note'),
   isChecked: integer('is_checked', { mode: 'boolean' }).default(false),
   addedByUserId: text('added_by_user_id'),

@@ -14,6 +14,9 @@ import { AddItemModal } from '@/components/shopping-list/AddItemModal';
 import { ListSwitcherModal } from '@/components/shopping-list/ListSwitcherModal';
 import { TemplatesModal } from '@/components/shopping-list/TemplatesModal';
 import { ListNameModal, type NameModalState } from '@/components/shopping-list/ListNameModal';
+import { ItemPriceModal } from '@/components/shopping-list/ItemPriceModal';
+import { computeShoppingListTotals, lineTotal } from '@/features/shopping-list/listTotals';
+import { formatCurrency } from '@budget/shared-utils';
 import type {
   ShoppingList,
   ShoppingListItem,
@@ -32,6 +35,8 @@ export default function ShoppingListScreen() {
 
   const canEdit = useAccountStore((s) => s.canEdit());
   const currentAccountId = useAccountStore((s) => s.currentAccountId);
+  // A list is priced in one currency: the account's.
+  const currency = useAccountStore((s) => s.currentAccount()?.currencyCode ?? 'USD');
 
   const items = useShoppingListStore((s) => s.items);
   const lists = useShoppingListStore((s) => s.lists);
@@ -45,6 +50,7 @@ export default function ShoppingListScreen() {
   const dismissDeal = useShoppingListStore((s) => s.dismissDeal);
   const toggleChecked = useShoppingListStore((s) => s.toggleChecked);
   const updateQuantity = useShoppingListStore((s) => s.updateQuantity);
+  const updatePrice = useShoppingListStore((s) => s.updatePrice);
   const removeItem = useShoppingListStore((s) => s.removeItem);
   const clearChecked = useShoppingListStore((s) => s.clearChecked);
   const setActiveList = useShoppingListStore((s) => s.setActiveList);
@@ -126,6 +132,16 @@ export default function ShoppingListScreen() {
   };
 
   const checkedCount = useMemo(() => items.filter((i) => i.isChecked).length, [items]);
+  const totals = useMemo(() => computeShoppingListTotals(items), [items]);
+
+  // ─── Item price sheet ─────────────────────────────────────────────────────
+  // Priced by any member, like quantity — a price is a note about the list,
+  // not a write to the account's money.
+  const [priceItemId, setPriceItemId] = useState<string | null>(null);
+  const priceItem = useMemo(
+    () => (priceItemId ? items.find((i) => i.id === priceItemId) ?? null : null),
+    [items, priceItemId],
+  );
   const comparableCount = useMemo(
     () => items.filter((i) => !i.isChecked && i.canonicalName).length,
     [items],
@@ -275,18 +291,39 @@ export default function ShoppingListScreen() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity
-          style={styles.labelTouch}
-          onPress={() => toggleChecked(item.id)}
-          activeOpacity={0.7}
-        >
-          <Text
-            style={[styles.label, item.isChecked && styles.labelChecked]}
-            numberOfLines={2}
+        <View style={styles.labelTouch}>
+          <TouchableOpacity onPress={() => toggleChecked(item.id)} activeOpacity={0.7}>
+            <Text
+              style={[styles.label, item.isChecked && styles.labelChecked]}
+              numberOfLines={2}
+            >
+              {item.rawLabel}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => setPriceItemId(item.id)}
+            hitSlop={{ top: 4, bottom: 8, left: 0, right: 8 }}
+            style={styles.priceTouch}
+            accessibilityRole="button"
+            accessibilityLabel={t('shoppingList.priceTitle')}
           >
-            {item.rawLabel}
-          </Text>
-        </TouchableOpacity>
+            {item.unitPrice != null ? (
+              <Text style={[styles.priceText, item.isChecked && styles.priceTextChecked]} numberOfLines={1}>
+                {item.quantity !== 1
+                  ? t('shoppingList.priceLine', {
+                      price: formatCurrency(item.unitPrice, currency),
+                      qty: item.quantity,
+                      total: formatCurrency(lineTotal(item) ?? 0, currency),
+                    })
+                  : formatCurrency(item.unitPrice, currency)}
+              </Text>
+            ) : (
+              <Text style={styles.addPriceText} numberOfLines={1}>
+                {t('shoppingList.addPrice')}
+              </Text>
+            )}
+          </TouchableOpacity>
+        </View>
 
         <View
           style={styles.stepper}
@@ -451,9 +488,30 @@ export default function ShoppingListScreen() {
             <Text style={styles.emptyText}>{t('shoppingList.emptyList')}</Text>
           </View>
         ) : (
-          <View style={styles.card}>
-            {sortedItems.map((item, i) => renderRow(item, i === sortedItems.length - 1))}
-          </View>
+          <>
+            {totals.hasAnyPrice && (
+              <View style={styles.totalsCard} accessibilityRole="summary">
+                <View style={styles.totalsRow}>
+                  <Text style={styles.totalsLabel}>{t('shoppingList.totalRemaining')}</Text>
+                  <Text style={styles.totalsValue}>{formatCurrency(totals.remaining, currency)}</Text>
+                </View>
+                {totals.remaining !== totals.total && (
+                  <View style={styles.totalsRow}>
+                    <Text style={styles.totalsSubLabel}>{t('shoppingList.totalAll')}</Text>
+                    <Text style={styles.totalsSubValue}>{formatCurrency(totals.total, currency)}</Text>
+                  </View>
+                )}
+                {totals.unpricedCount > 0 && (
+                  <Text style={styles.totalsNote}>
+                    {t('shoppingList.unpricedCount', { count: totals.unpricedCount })}
+                  </Text>
+                )}
+              </View>
+            )}
+            <View style={styles.card}>
+              {sortedItems.map((item, i) => renderRow(item, i === sortedItems.length - 1))}
+            </View>
+          </>
         )}
       </ScrollView>
 
@@ -496,6 +554,14 @@ export default function ShoppingListScreen() {
         onClose={() => setAddModalVisible(false)}
         onAddProduct={handleAddProduct}
         onAddFreeText={handleAddFreeText}
+        bottomInset={insets.bottom}
+      />
+
+      <ItemPriceModal
+        item={priceItem}
+        currency={currency}
+        onSave={updatePrice}
+        onClose={() => setPriceItemId(null)}
         bottomInset={insets.bottom}
       />
 
@@ -691,6 +757,30 @@ const createStyles = (theme: Theme) => ({
   labelTouch: { flex: 1 },
   label: { ...theme.textStyles.body, color: theme.colors.textPrimary },
   labelChecked: { color: theme.colors.textTertiary, textDecorationLine: 'line-through' as const },
+  priceTouch: { alignSelf: 'flex-start' as const, marginTop: theme.spacing[0.5] },
+  priceText: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
+  priceTextChecked: { color: theme.colors.textTertiary },
+  addPriceText: { ...theme.textStyles.bodySm, color: theme.colors.primary },
+
+  totalsCard: {
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    marginBottom: theme.spacing[3],
+    gap: theme.spacing[1],
+  },
+  totalsRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'baseline' as const,
+    justifyContent: 'space-between' as const,
+    gap: theme.spacing[2],
+  },
+  totalsLabel: { ...theme.textStyles.bodyMedium, color: theme.colors.textPrimary, flexShrink: 1 },
+  totalsValue: { ...theme.textStyles.h3, color: theme.colors.textPrimary },
+  totalsSubLabel: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary, flexShrink: 1 },
+  totalsSubValue: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
+  totalsNote: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary },
   stepper: {
     flexDirection: 'row' as const,
     alignItems: 'center' as const,

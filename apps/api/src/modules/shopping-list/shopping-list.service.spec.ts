@@ -10,8 +10,9 @@ describe('ShoppingListService', () => {
     prisma = {
       shoppingList: { findMany: jest.fn(), create: jest.fn(), findFirst: jest.fn(), findUnique: jest.fn(), update: jest.fn(), updateMany: jest.fn(), upsert: jest.fn() },
       shoppingListItem: { findUnique: jest.fn(), create: jest.fn(), findFirst: jest.fn(), update: jest.fn(), updateMany: jest.fn(), findMany: jest.fn() },
-      expenseItem: { findMany: jest.fn() },
+      expenseItem: { findMany: jest.fn(), findFirst: jest.fn() },
       productAlias: { findMany: jest.fn() },
+      account: { findUnique: jest.fn() },
       $transaction: jest.fn(),
     };
     const mod = await Test.createTestingModule({
@@ -450,6 +451,57 @@ describe('ShoppingListService', () => {
     prisma.shoppingListItem.findMany.mockResolvedValue([{ canonicalName: 'Milk' }]);
     const res = await service.getDeals('a1');
     expect(res.every((d) => d.canonicalName !== 'Milk')).toBe(true);
+  });
+
+  describe('item price (shopping-list-item-price)', () => {
+    const itemRow = {
+      id: 'srv-i1', shoppingListId: 'l1', clientId: 'ci1', canonicalName: null, rawLabel: 'Milk',
+      quantity: 2, unitPrice: '3.49', note: null, isChecked: false, addedByUserId: 'u1', sortOrder: 0,
+    };
+
+    it('maps a Decimal unitPrice to a number, and a missing one to null', async () => {
+      prisma.shoppingListItem.findFirst.mockResolvedValue(itemRow);
+      prisma.shoppingListItem.update.mockResolvedValue(itemRow);
+      const priced = await service.updateItem('a1', 'ci1', { unitPrice: 3.49 });
+      expect(priced.unitPrice).toBe(3.49);
+
+      prisma.shoppingListItem.update.mockResolvedValue({ ...itemRow, unitPrice: null });
+      const cleared = await service.updateItem('a1', 'ci1', { unitPrice: null });
+      expect(cleared.unitPrice).toBeNull();
+      // null is written through (clears the column), not dropped
+      expect(prisma.shoppingListItem.update).toHaveBeenLastCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ unitPrice: null }) }),
+      );
+    });
+
+    it('leaves the price untouched when an update does not mention it', async () => {
+      prisma.shoppingListItem.findFirst.mockResolvedValue(itemRow);
+      prisma.shoppingListItem.update.mockResolvedValue(itemRow);
+      await service.updateItem('a1', 'ci1', { isChecked: true });
+      expect(prisma.shoppingListItem.update.mock.calls[0][0].data.unitPrice).toBeUndefined();
+    });
+
+    it('getPriceHint returns the latest receipt price per unit in the account currency, alias-aware', async () => {
+      prisma.account.findUnique.mockResolvedValue({ currencyCode: 'PLN' });
+      prisma.productAlias.findMany.mockResolvedValue([{ rawName: 'MLEKO 2%' }]);
+      prisma.expenseItem.findFirst.mockResolvedValue({
+        unitPrice: '0', quantity: '2', totalPrice: '7.98',
+        expense: { date: new Date('2026-09-20T10:00:00Z'), merchant: 'Biedronka' },
+      });
+      const hint = await service.getPriceHint('a1', 'Mleko');
+      expect(hint).toEqual({ unitPrice: 3.99, merchant: 'Biedronka', date: '2026-09-20' });
+      const where = prisma.expenseItem.findFirst.mock.calls[0][0].where;
+      expect(where.canonicalName).toEqual({ in: ['Mleko', 'MLEKO 2%'] });
+      expect(where.expense).toEqual(expect.objectContaining({ accountId: 'a1', currencyCode: 'PLN' }));
+      expect(where.encryptedPayload).toBeNull();
+    });
+
+    it('getPriceHint returns null when the product was never on a receipt', async () => {
+      prisma.account.findUnique.mockResolvedValue({ currencyCode: 'PLN' });
+      prisma.productAlias.findMany.mockResolvedValue([]);
+      prisma.expenseItem.findFirst.mockResolvedValue(null);
+      expect(await service.getPriceHint('a1', 'Unknown')).toBeNull();
+    });
   });
 
   describe('guest share link (shopping-list-guest-share-link)', () => {

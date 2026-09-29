@@ -8,6 +8,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  Max,
   MaxLength,
   Min,
   ValidateNested,
@@ -28,11 +29,14 @@ export class CreateItemDto {
   @IsOptional() @IsString() canonicalName?: string | null;
   @IsString() @IsNotEmpty() rawLabel: string;
   @IsOptional() @IsNumber() @Min(0.001) quantity?: number;
+  @IsOptional() @IsNumber({ maxDecimalPlaces: 2 }) @Min(0) @Max(9_999_999_999) unitPrice?: number | null;
   @IsOptional() @IsString() note?: string;
 }
 export class UpdateItemDto {
   @IsOptional() @IsBoolean() isChecked?: boolean;
   @IsOptional() @IsNumber() @Min(0.001) quantity?: number;
+  // null clears the price (IsOptional lets null through; undefined leaves it unchanged).
+  @IsOptional() @IsNumber({ maxDecimalPlaces: 2 }) @Min(0) @Max(9_999_999_999) unitPrice?: number | null;
   @IsOptional() @IsString() rawLabel?: string;
   @IsOptional() @IsString() note?: string | null;
   @IsOptional() @IsInt() sortOrder?: number;
@@ -58,6 +62,10 @@ export class CreateTemplateDto {
 
 export class UpdateTemplateDto {
   @IsString() @IsNotEmpty() @MaxLength(60) name: string;
+}
+
+export class PriceHintQueryDto {
+  @IsString() @IsNotEmpty() @MaxLength(200) name: string;
 }
 
 export class ApplyTemplateDto {

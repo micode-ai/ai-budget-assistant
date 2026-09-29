@@ -30,6 +30,8 @@ Wer den Link öffnet, sieht die Liste und kann Artikel beim Einkaufen abhaken, g
 
 Der Link funktioniert weiter, bis du die Liste archivierst oder löschst, oder im selben Menü auf **Link widerrufen** tippst, um ihn ausdrücklich abzuschalten. Teilst du danach erneut, wird ein komplett neuer Link erstellt. Erneutes Teilen ohne vorherigen Widerruf ist unbedenklich — es wird derselbe Link weitergegeben, statt den bereits verschickten ungültig zu machen.
 
+Wenn du Artikeln Preise gegeben hast, zeigt der geteilte Link sie ebenfalls an — samt dem Betrag, der noch einzukaufen ist. Praktisch, wenn jemand anderes für dich einkauft.
+
 ## Eine Liste als Vorlage speichern („Meine wöchentlichen Grundnahrungsmittel")
 
 Wenn du jede Woche ungefähr die gleichen Lebensmittel kaufst, speichere deine übliche Liste einmal und füge sie beim nächsten Mal mit einem Tipp wieder hinzu — kein erneutes Eintippen von „Milch, Eier, Brot, Kaffee …" mehr nötig.
@@ -52,6 +54,17 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 - **Freitext** — wenn das Eingegebene zu keinem erfassten Produkt passt, tippe auf **Hinzufügen „…"**, um es als reinen Textartikel hinzuzufügen. Freitext-Artikel sind nicht mit dem Preisverlauf verknüpft und erscheinen daher nicht in Preisvergleichen.
 
 Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
+
+## Preise und Summen
+
+Du möchtest schon vor der Kasse wissen, was der Einkauf kostet? Gib den Artikeln einen Preis.
+
+- Tippe unter dem Artikelnamen auf **+ Preis** und gib den Preis **pro Stück** ein (Komma und Punkt funktionieren beide). Leere das Feld und speichere, um den Preis zu entfernen.
+- Hast du das Produkt schon einmal gekauft und den Beleg gescannt, schlägt das Preisfenster den **zuletzt bezahlten Preis** (und wo) vor — tippe darauf, um ihn zu übernehmen. Ändern kannst du ihn jederzeit.
+- Bei einer Menge über 1 zeigt der Artikel Preis, Menge und Zeilensumme, z. B. *4,99 × 3 = 14,97*.
+- Sobald mindestens ein Artikel einen Preis hat, erscheint über der Liste eine Übersicht: **Noch zu kaufen** (nur nicht abgehakte Artikel — der Betrag sinkt beim Abhaken), die Summe der **ganzen Liste** und wie viele Artikel noch keinen Preis haben.
+
+Preise gelten in der Währung deines Kontos. Jedes Kontomitglied kann sie setzen, und sie sind in jedem Tarif kostenlos.
 
 ## Automatisch abhaken beim Scannen von Belegen
 

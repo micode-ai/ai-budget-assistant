@@ -142,6 +142,34 @@ Confirmations are deterministic in nine languages (`PromptBuilder.getShoppingLis
 `…RemoveText`), and the phone renders its own result cards. The phone sees a chat-added item on its
 next pull.
 
+### Item prices and totals (ABA-622)
+
+`ShoppingListItem.unitPrice` (nullable `Decimal(12,2)`, SQLite `unit_price REAL`) is a price per
+unit the user types in. Line total = price × quantity; `src/features/shopping-list/listTotals.ts`
+(pure, tested) sums the list into *still to buy* (unchecked) and *whole list*, and counts unpriced
+items so the screen can say the total is partial. `ItemPriceModal` edits it; any member may, like
+quantity.
+
+**One currency per list — the account's.** Prices are never converted, so totals are plain sums.
+The price hint (`GET /shopping-list/price-hint?name=`) follows the same rule: it returns the last
+receipt line in the account currency only (alias-aware, E2EE lines skipped, per-unit =
+`totalPrice / quantity` when quantity > 1, as `getDeals` does). A receipt in another currency is
+ignored rather than converted into a guess.
+
+**The hint is a suggestion, never a write.** It is fetched when the sheet opens for an unpriced
+item with a `canonicalName`, offered as a chip, and applied only on tap. Offline it simply does not
+appear.
+
+**`null` clears, omitted leaves alone.** `UpdateItemDto.unitPrice` relies on `@IsOptional()`
+letting `null` through — Prisma writes `null`, while `undefined` skips the column. Do not coerce one
+into the other.
+
+**The pending sweep must carry edits in its follow-up update.** `addItem` is idempotent on
+`clientId` and returns an existing row untouched, so re-creating an item that was edited offline
+after its first sync applied nothing. The sweep's follow-up `updateItem` now sends quantity and
+price whenever they differ from a fresh row — and a check only as `true`, never an uncheck, so a
+stale local row cannot undo another member's tick.
+
 ### Guest share link (ABA-587)
 
 A public, unauthenticated link so someone with no account — "can you grab milk on your way
@@ -176,9 +204,11 @@ payment-status signal worth hiding. A shopping-list guest link protects no money
 party's financial data, so the worst a timing difference could leak here ("a token existed at some
 point") isn't sensitive.
 
-**No amounts, ever.** A shopping list item has no price, so unlike the receipt-split guest page
-this surface has structurally less to leak — no accountId, no member names, no financial figures,
-only this one list's own item labels.
+**Prices members typed are shown; nothing else about money is (ABA-622).** Once items could
+carry a price, the owner asked for it on the guest page too — a helper doing the shopping needs the
+figure. The page shows each priced line's total and a still-to-buy / whole-list block in the
+account currency. Still no accountId, no member names, and no figure that did not come off this one
+list; the receipt-history price hint never reaches this surface.
 
 **Mobile is online-only, no SQLite mirror.** `shoppingListStore.shareList`/`revokeShareLink` are
 thin passthroughs to the API — the guest token is a server-side bearer credential this module's
@@ -191,6 +221,7 @@ own offline-first mirror has no notion of, same precedent as account-transfers' 
   The server-side path always has the full alias table.
 - No quantity parsing and no named-list targeting for the three AI chat tools.
 - Templates have no management screen — rename and delete are inline in the same sheet.
+- Templates do not carry prices; applying one yields unpriced items.
 - The guest share link has no rotate-without-revoking: "Revoke" then "Share" again is the
   rotation path. No QR code (receipt-split has one for its own group-split flow; not built here).
 
@@ -200,4 +231,4 @@ ABA-330 (M1–M6) · ABA-332 (the shopping hub quick action) · ABA-348 (archive
 AI chat add tool) · ABA-350 (push de-duplication) · ABA-352 and ABA-429 (screen decomposition,
 twice — it grew back once) · ABA-360 (remove and query chat tools) · ABA-455 (the ledger
 generalised) · ABA-531 and ABA-545 (receipt reconciliation, mobile then bots) · ABA-548
-(templates) · ABA-587 (guest share link).
+(templates) · ABA-587 (guest share link) · ABA-622 (item prices, totals, receipt price hint).

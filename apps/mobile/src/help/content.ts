@@ -4508,6 +4508,8 @@ Anyone who opens the link sees the list and can check items off as they shop, wi
 
 The link keeps working until you archive or delete the list, or tap **Revoke link** in the same menu to turn it off explicitly. Sharing again after that creates a brand-new link. Re-sharing without revoking first is safe — it hands out the same link rather than breaking the one you already sent.
 
+If you've added prices to items, the shared link shows them too, along with how much is still to buy — handy when someone else is doing the shopping for you.
+
 ## Save a List as a Template ("My Weekly Staples")
 
 If you buy roughly the same groceries every week, save your usual list once and re-add all of it in one tap next time — no need to retype "milk, eggs, bread, coffee…" over and over.
@@ -4532,6 +4534,17 @@ Tap **Add item** to open the add sheet. You can add an item three ways:
 You can also **ask the AI assistant** to add items: open the **Chat** tab and say something like "add milk and bread to my shopping list." The items are added to your active list right away — no confirmation needed.
 
 Each item on the list has a checkbox, an editable quantity stepper, and a delete icon. Checked items sink to the bottom of the list. Use **Clear checked** (top-right of the screen) to remove everything you've ticked off in one tap.
+
+## Prices and Totals
+
+Want to know how much the trip will cost before you get to the checkout? Give items a price.
+
+- Tap **+ Price** under an item's name and type the price **per item** (a comma or a dot both work). Leave the field empty and save to remove the price.
+- If you've bought that product before and scanned the receipt, the price sheet suggests the **last price you paid** (and where) — tap it to fill it in. You can always change it.
+- With a quantity above 1, the item shows the price, the quantity and the line total, e.g. *4.99 × 3 = 14.97*.
+- Once at least one item has a price, a summary appears above the list: **Still to buy** (unchecked items only — it goes down as you tick things off), the **Whole list** total, and how many items still have no price.
+
+Prices are in your account's currency. Anyone on the account can set them, and they're free on every plan.
 
 ## Auto-Check From Receipts
 
@@ -9413,6 +9426,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Ссылка продолжает работать, пока вы не заархивируете или не удалите список, либо не нажмёте **Отозвать ссылку** в том же меню, чтобы явно её отключить. Повторное «поделиться» после этого создаёт совершенно новую ссылку. Поделиться повторно, не отзывая ссылку заранее, безопасно — вы просто передадите ту же самую ссылку, а не сломаете уже отправленную.
 
+Если вы проставили цены, по ссылке они тоже видны — вместе с суммой, которую осталось потратить. Удобно, когда в магазин идёт кто-то другой.
+
 ## Сохранить список как шаблон («Мои еженедельные покупки»)
 
 Если каждую неделю вы покупаете примерно одни и те же продукты, сохраните свой обычный список один раз и в следующий раз добавляйте его целиком одним касанием — не нужно снова печатать «молоко, яйца, хлеб, кофе…».
@@ -9435,6 +9450,17 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Произвольный текст** — если введённое не совпадает ни с одним отслеживаемым товаром, нажмите **Добавить «…»**, чтобы добавить его как обычный текстовый пункт. Такие пункты не связаны с историей цен, поэтому не будут участвовать в сравнении цен.
 
 Также можно **попросить ИИ-ассистента** добавить товары: откройте вкладку **Чат** и скажите, например, «добавь молоко и хлеб в список покупок». Товары сразу добавляются в активный список — без подтверждения.
+
+## Цены и итог
+
+Хотите знать, во сколько обойдутся покупки, ещё до кассы? Проставьте цены.
+
+- Нажмите **+ Цена** под названием товара и введите цену **за штуку** (подойдёт и запятая, и точка). Очистите поле и сохраните, чтобы убрать цену.
+- Если вы уже покупали этот товар и сканировали чек, окно цены подскажет **цену, которую вы платили в прошлый раз** (и где) — нажмите на неё, чтобы подставить. Изменить её можно в любой момент.
+- Если количество больше 1, у товара видны цена, количество и сумма, например *4,99 × 3 = 14,97*.
+- Как только хотя бы у одного товара есть цена, над списком появляется итог: **Осталось купить** (только неотмеченные — сумма уменьшается по мере того, как вы отмечаете покупки), сумма за **весь список** и сколько товаров ещё без цены.
+
+Цены указываются в валюте счёта. Проставлять их может любой участник счёта, функция бесплатна на всех тарифах.
 
 ## Автоотметка при сканировании чеков
 
@@ -14288,6 +14314,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Посилання продовжує працювати, доки ви не заархівуєте або не видалите список, або не натиснете **Відкликати посилання** у тому самому меню, щоб явно його вимкнути. Повторне «поділитися» після цього створює абсолютно нове посилання. Поділитися повторно, не відкликавши посилання заздалегідь, безпечно — ви просто передасте те саме посилання, а не зламаєте вже надіслане.
 
+Якщо ви вказали ціни, за посиланням вони теж видні — разом із сумою, яку залишилось витратити. Зручно, коли до магазину йде хтось інший.
+
 ## Зберегти список як шаблон («Мої щотижневі покупки»)
 
 Якщо щотижня ви купуєте приблизно одні й ті самі продукти, збережіть свій звичний список один раз і наступного разу додавайте його цілком одним дотиком — не потрібно знову набирати «молоко, яйця, хліб, кава…».
@@ -14310,6 +14338,17 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Довільний текст** — якщо введене не збігається з жодним відстежуваним товаром, натисніть **Додати «…»**, щоб додати його як звичайний текстовий пункт. Такі пункти не пов'язані з історією цін, тому не братимуть участі в порівнянні цін.
 
 Також можна **попросити ШІ-асистента** додати товари: відкрийте вкладку **Чат** і скажіть, наприклад, «додай молоко та хліб до списку покупок». Товари одразу додаються до активного списку — без підтвердження.
+
+## Ціни та підсумок
+
+Хочете знати, скільки коштуватимуть покупки, ще до каси? Вкажіть ціни.
+
+- Натисніть **+ Ціна** під назвою товару й введіть ціну **за штуку** (підійде і кома, і крапка). Очистіть поле й збережіть, щоб прибрати ціну.
+- Якщо ви вже купували цей товар і сканували чек, вікно ціни підкаже **ціну, яку ви платили минулого разу** (і де) — натисніть на неї, щоб підставити. Змінити її можна будь-коли.
+- Якщо кількість більша за 1, у товару видно ціну, кількість і суму, наприклад *4,99 × 3 = 14,97*.
+- Щойно хоча б у одного товару є ціна, над списком з’являється підсумок: **Залишилось купити** (лише непозначені — сума зменшується, коли ви позначаєте покупки), сума за **весь список** і скільки товарів ще без ціни.
+
+Ціни вказуються у валюті рахунку. Вказувати їх може будь-який учасник рахунку, функція безкоштовна на всіх тарифах.
 
 ## Автопозначення під час сканування чеків
 
@@ -19148,6 +19187,8 @@ Każdy, kto otworzy link, zobaczy listę i będzie mógł odznaczać produkty po
 
 Link działa, dopóki nie zarchiwizujesz lub nie usuniesz listy albo nie stukniesz **Cofnij link** w tym samym menu, aby wyraźnie go wyłączyć. Ponowne udostępnienie tworzy wtedy zupełnie nowy link. Ponowne udostępnienie bez wcześniejszego cofnięcia jest bezpieczne — przekazuje ten sam link zamiast unieważniać ten, który już wysłałeś.
 
+Jeśli dodałeś ceny do produktów, udostępniony link też je pokazuje — razem z kwotą, która została do kupienia. Przydaje się, gdy zakupy robi ktoś inny.
+
 ## Zapisz listę jako szablon („Moje cotygodniowe zakupy")
 
 Jeśli co tydzień kupujesz mniej więcej te same produkty, zapisz swoją zwykłą listę raz i za następnym razem dodaj ją całą jednym dotknięciem — bez wpisywania od nowa „mleko, jajka, chleb, kawa…".
@@ -19170,6 +19211,17 @@ Stuknij **Dodaj produkt**, aby otworzyć panel dodawania. Produkt możesz dodać
 - **Dowolny tekst** — jeśli to, co wpisałeś, nie pasuje do żadnego śledzonego produktu, stuknij **Dodaj "…"**, aby dodać go jako zwykły tekst. Pozycje dodane jako dowolny tekst nie są powiązane z historią cen, więc nie pojawią się w porównaniach cen.
 
 Możesz też **poprosić asystenta AI** o dodanie produktów: otwórz kartę **Czat** i powiedz na przykład „dodaj mleko i chleb do listy zakupów". Produkty są dodawane od razu do aktywnej listy — bez potwierdzania.
+
+## Ceny i sumy
+
+Chcesz wiedzieć, ile wyjdą zakupy, zanim staniesz przy kasie? Dodaj produktom ceny.
+
+- Stuknij **+ Cena** pod nazwą produktu i wpisz cenę **za sztukę** (działa przecinek i kropka). Wyczyść pole i zapisz, aby usunąć cenę.
+- Jeśli kupowałeś już ten produkt i zeskanowałeś paragon, okno ceny podpowie **ostatnio zapłaconą cenę** (i sklep) — stuknij ją, aby wstawić. Zawsze możesz ją zmienić.
+- Przy ilości większej niż 1 produkt pokazuje cenę, ilość i sumę pozycji, np. *4,99 × 3 = 14,97*.
+- Gdy choć jeden produkt ma cenę, nad listą pojawia się podsumowanie: **Zostało do kupienia** (tylko niezaznaczone — kwota maleje, gdy odhaczasz produkty), suma **Całej listy** i liczba produktów bez ceny.
+
+Ceny są w walucie Twojego konta. Może je ustawiać każdy członek konta i są darmowe w każdym planie.
 
 ## Automatyczne zaznaczanie po zeskanowaniu paragonu
 
@@ -23983,6 +24035,8 @@ Wer den Link öffnet, sieht die Liste und kann Artikel beim Einkaufen abhaken, g
 
 Der Link funktioniert weiter, bis du die Liste archivierst oder löschst, oder im selben Menü auf **Link widerrufen** tippst, um ihn ausdrücklich abzuschalten. Teilst du danach erneut, wird ein komplett neuer Link erstellt. Erneutes Teilen ohne vorherigen Widerruf ist unbedenklich — es wird derselbe Link weitergegeben, statt den bereits verschickten ungültig zu machen.
 
+Wenn du Artikeln Preise gegeben hast, zeigt der geteilte Link sie ebenfalls an — samt dem Betrag, der noch einzukaufen ist. Praktisch, wenn jemand anderes für dich einkauft.
+
 ## Eine Liste als Vorlage speichern („Meine wöchentlichen Grundnahrungsmittel")
 
 Wenn du jede Woche ungefähr die gleichen Lebensmittel kaufst, speichere deine übliche Liste einmal und füge sie beim nächsten Mal mit einem Tipp wieder hinzu — kein erneutes Eintippen von „Milch, Eier, Brot, Kaffee …" mehr nötig.
@@ -24005,6 +24059,17 @@ Tippe auf **Artikel hinzufügen**, um das Hinzufügen-Menü zu öffnen. Du kanns
 - **Freitext** — wenn das Eingegebene zu keinem erfassten Produkt passt, tippe auf **Hinzufügen „…"**, um es als reinen Textartikel hinzuzufügen. Freitext-Artikel sind nicht mit dem Preisverlauf verknüpft und erscheinen daher nicht in Preisvergleichen.
 
 Du kannst auch den **KI-Assistenten** bitten, Artikel hinzuzufügen: Öffne den Tab **Chat** und sage etwa „Füge Milch und Brot zu meiner Einkaufsliste hinzu." Die Artikel werden sofort zu deiner aktiven Liste hinzugefügt — ohne Bestätigung.
+
+## Preise und Summen
+
+Du möchtest schon vor der Kasse wissen, was der Einkauf kostet? Gib den Artikeln einen Preis.
+
+- Tippe unter dem Artikelnamen auf **+ Preis** und gib den Preis **pro Stück** ein (Komma und Punkt funktionieren beide). Leere das Feld und speichere, um den Preis zu entfernen.
+- Hast du das Produkt schon einmal gekauft und den Beleg gescannt, schlägt das Preisfenster den **zuletzt bezahlten Preis** (und wo) vor — tippe darauf, um ihn zu übernehmen. Ändern kannst du ihn jederzeit.
+- Bei einer Menge über 1 zeigt der Artikel Preis, Menge und Zeilensumme, z. B. *4,99 × 3 = 14,97*.
+- Sobald mindestens ein Artikel einen Preis hat, erscheint über der Liste eine Übersicht: **Noch zu kaufen** (nur nicht abgehakte Artikel — der Betrag sinkt beim Abhaken), die Summe der **ganzen Liste** und wie viele Artikel noch keinen Preis haben.
+
+Preise gelten in der Währung deines Kontos. Jedes Kontomitglied kann sie setzen, und sie sind in jedem Tarif kostenlos.
 
 ## Automatisch abhaken beim Scannen von Belegen
 
@@ -28807,6 +28872,8 @@ Cualquiera que abra el enlace ve la lista y puede marcar artículos mientras com
 
 El enlace sigue funcionando hasta que archives o elimines la lista, o toques **Revocar enlace** en el mismo menú para desactivarlo explícitamente. Compartir de nuevo después de eso crea un enlace completamente nuevo. Volver a compartir sin revocar antes es seguro — entrega el mismo enlace en lugar de invalidar el que ya enviaste.
 
+Si has añadido precios a los artículos, el enlace compartido también los muestra, junto con lo que falta por comprar — útil cuando otra persona hace la compra por ti.
+
 ## Guardar una lista como plantilla («Mis productos habituales»)
 
 Si compras más o menos los mismos productos cada semana, guarda tu lista habitual una vez y vuelve a añadirla entera de un toque la próxima vez, sin tener que volver a escribir «leche, huevos, pan, café…».
@@ -28829,6 +28896,17 @@ Toca **Añadir artículo** para abrir el panel de añadir. Puedes añadir un art
 - **Texto libre** — si lo que escribiste no coincide con ningún producto rastreado, toca **Añadir "…"** para añadirlo como un artículo de texto sin más. Los artículos de texto libre no están vinculados al historial de precios, así que no aparecerán en las comparaciones de precios.
 
 También puedes **pedirle al asistente de IA** que añada artículos: abre la pestaña **Chat** y di algo como «añade leche y pan a mi lista de la compra». Los artículos se añaden a tu lista activa al instante, sin confirmación.
+
+## Precios y totales
+
+¿Quieres saber cuánto costará la compra antes de llegar a la caja? Ponle precio a los artículos.
+
+- Toca **+ Precio** debajo del nombre de un artículo y escribe el precio **por unidad** (sirven la coma y el punto). Deja el campo vacío y guarda para quitar el precio.
+- Si ya compraste ese producto y escaneaste el recibo, la ventana de precio sugiere el **último precio que pagaste** (y dónde): tócalo para rellenarlo. Siempre puedes cambiarlo.
+- Con una cantidad mayor que 1, el artículo muestra el precio, la cantidad y el total de la línea, p. ej. *4,99 × 3 = 14,97*.
+- En cuanto un artículo tiene precio, aparece un resumen encima de la lista: **Falta por comprar** (solo artículos sin marcar; baja a medida que los marcas), el total de **Toda la lista** y cuántos artículos siguen sin precio.
+
+Los precios están en la moneda de tu cuenta. Cualquier miembro de la cuenta puede ponerlos y son gratis en todos los planes.
 
 ## Marcado automático al escanear recibos
 
@@ -33629,6 +33707,8 @@ Toute personne qui ouvre le lien voit la liste et peut cocher les articles au fu
 
 Le lien continue de fonctionner jusqu'à ce que vous archiviez ou supprimiez la liste, ou que vous appuyiez sur **Révoquer le lien** dans le même menu pour le désactiver explicitement. Le repartager ensuite crée un tout nouveau lien. Le repartager sans le révoquer d'abord est sans risque — cela redonne le même lien plutôt que d'invalider celui déjà envoyé.
 
+Si vous avez ajouté des prix aux articles, le lien partagé les affiche aussi, avec ce qui reste à acheter — pratique quand quelqu’un d’autre fait les courses pour vous.
+
 ## Enregistrer une liste comme modèle (« Mes produits de base hebdomadaires »)
 
 Si vous achetez à peu près les mêmes courses chaque semaine, enregistrez votre liste habituelle une seule fois et rajoutez-la en entier en un geste la prochaine fois — plus besoin de retaper « lait, œufs, pain, café… ».
@@ -33651,6 +33731,17 @@ Touchez **Ajouter un article** pour ouvrir le panneau d'ajout. Vous pouvez ajout
 - **Texte libre** — si ce que vous avez tapé ne correspond à aucun produit suivi, touchez **Ajouter « … »** pour l'ajouter comme simple article texte. Les articles en texte libre ne sont pas reliés à l'historique de prix, donc ils n'apparaîtront pas dans les comparaisons de prix.
 
 Vous pouvez aussi **demander à l'assistant IA** d'ajouter des articles : ouvrez l'onglet **Chat** et dites par exemple « ajoute du lait et du pain à ma liste de courses ». Les articles sont ajoutés immédiatement à votre liste active, sans confirmation.
+
+## Prix et totaux
+
+Envie de savoir combien coûteront les courses avant d’arriver à la caisse ? Donnez un prix aux articles.
+
+- Touchez **+ Prix** sous le nom d’un article et saisissez le prix **à l’unité** (la virgule comme le point fonctionnent). Videz le champ et enregistrez pour retirer le prix.
+- Si vous avez déjà acheté ce produit et scanné le reçu, la fenêtre de prix propose le **dernier prix payé** (et où) : touchez-le pour le reprendre. Vous pouvez toujours le modifier.
+- Avec une quantité supérieure à 1, l’article affiche le prix, la quantité et le total de la ligne, par ex. *4,99 × 3 = 14,97*.
+- Dès qu’un article a un prix, un récapitulatif apparaît au-dessus de la liste : **Reste à acheter** (articles non cochés uniquement — il baisse à mesure que vous cochez), le total de **Toute la liste** et le nombre d’articles encore sans prix.
+
+Les prix sont dans la devise de votre compte. Tout membre du compte peut les saisir, et c’est gratuit dans toutes les offres.
 
 ## Coche automatique lors du scan des reçus
 
@@ -38415,6 +38506,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Спасылка працягвае працаваць, пакуль вы не заархівуеце ці не выдаліце спіс, або не націснеце **Адклікаць спасылку** у тым жа меню, каб яўна яе адключыць. Паўторнае «падзяліцца» пасля гэтага стварае зусім новую спасылку. Падзяліцца паўторна, не адклікаўшы спасылку загадзя, бяспечна — вы проста перадасце тую ж спасылку, а не зламаеце ўжо адпраўленую.
 
+Калі вы паставілі цэны, па спасылцы яны таксама бачныя — разам з сумай, якую засталося выдаткаваць. Зручна, калі ў краму ідзе хтосьці іншы.
+
 ## Захаваць спіс як шаблон («Мае штотыднёвыя пакупкі»)
 
 Калі кожны тыдзень вы купляеце прыблізна адны і тыя ж прадукты, захавайце свой звычайны спіс адзін раз і наступным разам дадавайце яго цалкам адным дакрананнем — не трэба зноў набіраць «малако, яйкі, хлеб, кава…».
@@ -38437,6 +38530,17 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Адвольны тэкст** — калі ўведзенае не супадае з ніводным адсочваемым таварам, націсніце **Дадаць «…»**, каб дадаць яго як звычайны тэкставы пункт. Такія пункты не звязаны з гісторыяй цэн, таму не будуць удзельнічаць у параўнанні цэн.
 
 Таксама можна **папрасіць ШІ-асістэнта** дадаць тавары: адкрыйце ўкладку **Чат** і скажыце, напрыклад, «дадай малако і хлеб у спіс пакупак». Тавары адразу дадаюцца ў актыўны спіс — без пацверджання.
+
+## Цэны і вынік
+
+Хочаце ведаць, у колькі абыдуцца пакупкі, яшчэ да касы? Пастаўце цэны.
+
+- Націсніце **+ Цана** пад назвай тавару і ўвядзіце цану **за штуку** (падыдзе і коска, і кропка). Ачысціце поле і захавайце, каб прыбраць цану.
+- Калі вы ўжо куплялі гэты тавар і сканавалі чэк, акно цаны падкажа **цану, якую вы плацілі мінулым разам** (і дзе) — націсніце на яе, каб падставіць. Змяніць яе можна ў любы момант.
+- Калі колькасць большая за 1, у тавару бачныя цана, колькасць і сума, напрыклад *4,99 × 3 = 14,97*.
+- Як толькі хаця б у аднаго тавару ёсць цана, над спісам з’яўляецца вынік: **Засталося купіць** (толькі неадзначаныя — сума змяншаецца, калі вы адзначаеце пакупкі), сума за **увесь спіс** і колькі тавараў яшчэ без цаны.
+
+Цэны паказваюцца ў валюце рахунку. Ставіць іх можа любы ўдзельнік рахунку, функцыя бясплатная на ўсіх тарыфах.
 
 ## Аўтаадзначэнне пры скануванні чэкаў
 
@@ -43327,6 +43431,8 @@ Iedereen die de link opent, ziet de lijst en kan artikelen aanvinken tijdens het
 
 De link blijft werken totdat je de lijst archiveert of verwijdert, of in hetzelfde menu op **Link intrekken** tikt om hem expliciet uit te schakelen. Opnieuw delen daarna maakt een gloednieuwe link aan. Opnieuw delen zonder eerst in te trekken is veilig — je geeft dan gewoon dezelfde link door in plaats van de al verstuurde link te breken.
 
+Als je prijzen aan artikelen hebt gegeven, toont de gedeelde link die ook — samen met wat er nog te kopen is. Handig als iemand anders de boodschappen voor je doet.
+
 ## Een lijst opslaan als sjabloon ("Mijn wekelijkse basisboodschappen")
 
 Als je elke week ongeveer dezelfde boodschappen koopt, sla je je gebruikelijke lijst één keer op en voeg je hem de volgende keer met één tik weer helemaal toe — geen "melk, eieren, brood, koffie…" meer opnieuw typen.
@@ -43349,6 +43455,17 @@ Tik op **Artikel toevoegen** om het toevoegvenster te openen. Je kunt een artike
 - **Vrije tekst** — als wat je typte niet overeenkomt met een bijgehouden product, tik dan op **Voeg "…" toe** om het als gewone tekst toe te voegen. Vrije-tekstartikelen zijn niet gekoppeld aan de prijsgeschiedenis en verschijnen dus niet in prijsvergelijkingen.
 
 Je kunt ook de **AI-assistent** vragen om artikelen toe te voegen: open het tabblad **Chat** en zeg iets als "voeg melk en brood toe aan mijn boodschappenlijst." De artikelen worden meteen aan je actieve lijst toegevoegd — zonder bevestiging.
+
+## Prijzen en totalen
+
+Wil je al vóór de kassa weten wat de boodschappen kosten? Geef artikelen een prijs.
+
+- Tik onder de naam van een artikel op **+ Prijs** en typ de prijs **per stuk** (een komma of een punt werkt allebei). Maak het veld leeg en sla op om de prijs te verwijderen.
+- Heb je het product al eens gekocht en de bon gescand, dan stelt het prijsvenster de **laatst betaalde prijs** (en waar) voor — tik erop om hem in te vullen. Je kunt hem altijd aanpassen.
+- Bij een aantal hoger dan 1 toont het artikel de prijs, het aantal en het regeltotaal, bijv. *4,99 × 3 = 14,97*.
+- Zodra minstens één artikel een prijs heeft, verschijnt boven de lijst een overzicht: **Nog te kopen** (alleen niet-afgevinkte artikelen — het bedrag daalt terwijl je afvinkt), het totaal van de **hele lijst** en hoeveel artikelen nog geen prijs hebben.
+
+Prijzen zijn in de valuta van je account. Elk accountlid kan ze invullen, en het is gratis in elk abonnement.
 
 ## Automatisch afvinken bij het scannen van bonnen
 

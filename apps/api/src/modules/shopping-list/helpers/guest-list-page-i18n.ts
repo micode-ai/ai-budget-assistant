@@ -25,6 +25,11 @@ export interface GuestListPageStrings {
   poweredBy: string;
   ctaButton: string;
   getAndroid: string;
+  /** Totals block, shown only when at least one item has a price. */
+  totalRemaining: string;
+  totalAll: string;
+  /** BCP-47 locale for Intl.NumberFormat money formatting. */
+  intlLocale: string;
 }
 
 // Same 9 locales / same ordering convention as
@@ -40,6 +45,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Shared with AI Budget Assistant',
     ctaButton: 'Get the app',
     getAndroid: 'Get it on Google Play',
+    totalRemaining: 'Still to buy',
+    totalAll: 'Whole list',
+    intlLocale: 'en-US',
   },
   ru: {
     title: (listName) => `${listName} — Список покупок`,
@@ -51,6 +59,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Отправлено через AI Budget Assistant',
     ctaButton: 'Скачать приложение',
     getAndroid: 'Доступно в Google Play',
+    totalRemaining: 'Осталось купить',
+    totalAll: 'Весь список',
+    intlLocale: 'ru-RU',
   },
   ua: {
     title: (listName) => `${listName} — Список покупок`,
@@ -62,6 +73,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Надіслано через AI Budget Assistant',
     ctaButton: 'Завантажити застосунок',
     getAndroid: 'Доступно в Google Play',
+    totalRemaining: 'Залишилось купити',
+    totalAll: 'Весь список',
+    intlLocale: 'uk-UA',
   },
   pl: {
     title: (listName) => `${listName} — Lista zakupów`,
@@ -73,6 +87,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Udostępniono przez AI Budget Assistant',
     ctaButton: 'Pobierz aplikację',
     getAndroid: 'Dostępne w Google Play',
+    totalRemaining: 'Zostało do kupienia',
+    totalAll: 'Cała lista',
+    intlLocale: 'pl-PL',
   },
   es: {
     title: (listName) => `${listName} — Lista de compras`,
@@ -84,6 +101,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Compartido con AI Budget Assistant',
     ctaButton: 'Descargar la app',
     getAndroid: 'Disponible en Google Play',
+    totalRemaining: 'Falta por comprar',
+    totalAll: 'Toda la lista',
+    intlLocale: 'es-ES',
   },
   fr: {
     title: (listName) => `${listName} — Liste de courses`,
@@ -95,6 +115,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Partagé via AI Budget Assistant',
     ctaButton: "Télécharger l'appli",
     getAndroid: 'Disponible sur Google Play',
+    totalRemaining: 'Reste à acheter',
+    totalAll: 'Toute la liste',
+    intlLocale: 'fr-FR',
   },
   de: {
     title: (listName) => `${listName} — Einkaufsliste`,
@@ -106,6 +129,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Geteilt über AI Budget Assistant',
     ctaButton: 'App herunterladen',
     getAndroid: 'Bei Google Play erhältlich',
+    totalRemaining: 'Noch zu kaufen',
+    totalAll: 'Ganze Liste',
+    intlLocale: 'de-DE',
   },
   be: {
     title: (listName) => `${listName} — Спіс пакупак`,
@@ -117,6 +143,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Адпраўлена праз AI Budget Assistant',
     ctaButton: 'Спампаваць праграму',
     getAndroid: 'Даступна ў Google Play',
+    totalRemaining: 'Засталося купіць',
+    totalAll: 'Увесь спіс',
+    intlLocale: 'be-BY',
   },
   nl: {
     title: (listName) => `${listName} — Boodschappenlijst`,
@@ -128,6 +157,9 @@ const translations: Record<string, GuestListPageStrings> = {
     poweredBy: 'Gedeeld via AI Budget Assistant',
     ctaButton: 'App downloaden',
     getAndroid: 'Verkrijgbaar bij Google Play',
+    totalRemaining: 'Nog te kopen',
+    totalAll: 'Hele lijst',
+    intlLocale: 'nl-NL',
   },
 };
 
