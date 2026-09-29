@@ -2693,6 +2693,7 @@ export default {
     scanTagFailedTitle: 'Kaartje niet leesbaar',
     scanTagFailed: 'Het prijskaartje kon niet worden gelezen. Controleer je verbinding en probeer het opnieuw.',
     scanTagEmpty: 'Niets leesbaars op deze foto. Kom dichterbij, met het hele kaartje in beeld.',
+    takePhoto: 'Foto maken',
     totalRemaining: 'Nog te kopen',
     totalAll: 'Hele lijst',
     unpricedCount_one: '{{count}} artikel zonder prijs',

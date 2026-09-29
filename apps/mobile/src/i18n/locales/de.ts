@@ -2693,6 +2693,7 @@ export default {
     scanTagFailedTitle: 'Schild nicht lesbar',
     scanTagFailed: 'Das Preisschild konnte nicht gelesen werden. Prüfe die Verbindung und versuche es erneut.',
     scanTagEmpty: 'Auf dem Foto ist nichts lesbar. Geh näher heran, sodass das ganze Schild im Bild ist.',
+    takePhoto: 'Foto aufnehmen',
     totalRemaining: 'Noch zu kaufen',
     totalAll: 'Ganze Liste',
     unpricedCount_one: '{{count}} Artikel ohne Preis',

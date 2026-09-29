@@ -194,6 +194,10 @@ the user already wrote is appended to, not overwritten.
 **Downscale before base64**, through `receiptImage.ts`, same as a receipt — see
 `receipt-image-memory.md`.
 
+**The camera source goes through `capturePhoto`, not `launchCameraAsync` (ABA-624).** On web it
+shoots inside the page; the system camera app let Android discard the tab and lose every scan a
+user made in production. See `web-build-and-hosting.md`.
+
 ### Guest share link (ABA-587)
 
 A public, unauthenticated link so someone with no account — "can you grab milk on your way
@@ -258,4 +262,4 @@ ABA-330 (M1–M6) · ABA-332 (the shopping hub quick action) · ABA-348 (archive
 AI chat add tool) · ABA-350 (push de-duplication) · ABA-352 and ABA-429 (screen decomposition,
 twice — it grew back once) · ABA-360 (remove and query chat tools) · ABA-455 (the ledger
 generalised) · ABA-531 and ABA-545 (receipt reconciliation, mobile then bots) · ABA-548
-(templates) · ABA-587 (guest share link) · ABA-622 (item prices, totals, receipt price hint) · ABA-623 (price-tag scan).
+(templates) · ABA-587 (guest share link) · ABA-622 (item prices, totals, receipt price hint) · ABA-623 (price-tag scan) · ABA-624 (in-page web camera).

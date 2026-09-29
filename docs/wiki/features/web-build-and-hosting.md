@@ -79,6 +79,16 @@ neither `nginx -s reload` nor `SIGHUP` reliably cycles the workers here; only
 the box. `nginx -t` passing proves nothing about whether your edit landed — grep the file from
 inside the container.
 
+**On web, take photos inside the page — never through `<input capture>` on a path that must not
+lose the photo (ABA-624).** On Android, `<input capture>` opens the separate camera app; while it is
+in front Chrome may discard the backgrounded tab and reload it on return, so the photo — and any
+half-filled form — vanishes before a request is sent. It depends on device memory, so it works on
+the developer's phone and fails on a user's. Proven from production: no API request, a page
+re-download and a new telemetry session ~12 s after the camera opened. Use
+`src/features/camera/capturePhoto` (`.web.ts` shoots via getUserMedia in a DOM overlay; it falls
+back to `<input capture>` only when the browser has no camera API). Receipt scanning still uses
+the old path.
+
 **Do not run `docker volume prune` or `docker image prune -a` on this host.** One Docker daemon is
 shared with several unrelated projects; the volumes include the production database and
 unused-but-tagged images are another project's rollback target.

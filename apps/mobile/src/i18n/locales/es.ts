@@ -2693,6 +2693,7 @@ export default {
     scanTagFailedTitle: 'No se pudo leer la etiqueta',
     scanTagFailed: 'No se pudo leer la etiqueta de precio. Revisa la conexión e inténtalo de nuevo.',
     scanTagEmpty: 'No se lee nada en la foto. Acércate para que la etiqueta entera quede en el encuadre.',
+    takePhoto: 'Hacer foto',
     totalRemaining: 'Falta por comprar',
     totalAll: 'Toda la lista',
     unpricedCount_one: '{{count}} artículo sin precio',

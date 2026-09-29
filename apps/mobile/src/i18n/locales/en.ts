@@ -2700,6 +2700,7 @@ export default {
     scanTagFailedTitle: 'Couldn\'t read the tag',
     scanTagFailed: 'The price tag could not be read. Check your connection and try again.',
     scanTagEmpty: 'Nothing readable on this photo. Try again closer, with the whole tag in frame.',
+    takePhoto: 'Take photo',
     totalRemaining: 'Still to buy',
     totalAll: 'Whole list',
     unpricedCount_one: '{{count}} item has no price',

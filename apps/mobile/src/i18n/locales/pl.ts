@@ -2704,6 +2704,7 @@ export default {
     scanTagFailedTitle: 'Nie udało się odczytać cenówki',
     scanTagFailed: 'Nie udało się rozpoznać cenówki. Sprawdź połączenie i spróbuj ponownie.',
     scanTagEmpty: 'Na zdjęciu nic nie widać. Zrób je bliżej, tak by cała cenówka była w kadrze.',
+    takePhoto: 'Zrób zdjęcie',
     totalRemaining: 'Zostało do kupienia',
     totalAll: 'Cała lista',
     unpricedCount_one: '{{count}} pozycja bez ceny',

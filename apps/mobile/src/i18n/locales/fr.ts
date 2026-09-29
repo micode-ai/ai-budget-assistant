@@ -2693,6 +2693,7 @@ export default {
     scanTagFailedTitle: 'Étiquette illisible',
     scanTagFailed: 'L’étiquette de prix n’a pas pu être lue. Vérifiez la connexion et réessayez.',
     scanTagEmpty: 'Rien de lisible sur cette photo. Rapprochez-vous pour cadrer toute l’étiquette.',
+    takePhoto: 'Prendre la photo',
     totalRemaining: 'Reste à acheter',
     totalAll: 'Toute la liste',
     unpricedCount_one: '{{count}} article sans prix',
