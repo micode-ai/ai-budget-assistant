@@ -125,6 +125,17 @@ the fire-and-forget `checkExpense`, so the stub it deletes is never a `duplicate
 Only notification stubs are ever deletion candidates; two genuine non-notification expenses are
 never deleted by Tier 1.
 
+**A receipt scan is never reconciled silently — it is offered as a merge (ABA-625).**
+`onExpenseCreated` skips Tier 1 for `source: 'ocr'`, and `detectDuplicateCharge` pairs a
+`notification` row with an `ocr` row through `pickPushReceiptCounterpart`
+(`anomaly-helpers.util.ts`): a loose payee match (`payeesLooselyMatch` — diacritics folded, a
+significant token of one label inside the other, legal-form/city words ignored) wins, else a SINGLE
+counterpart on amount + currency + ±1 day alone. Before this, the ABA-568 `suggestMerge` branch was
+unreachable for pushes: with an exact payee Tier 1 had already deleted the stub on the same
+predicate, and without one (the usual case — a push says `ZABKA Z5712 WARSZAWA`, OCR says `Żabka`)
+nothing matched and both rows stayed with no alert. The loose rule applies to this pair ONLY; every
+other pair keeps exact-payee `P`, so two manual rows are never flagged on amount alone.
+
 **`P` and `Q` are mutually exclusive** — same currency versus different currency — so a pair is
 auto-deduplicated or suggested, never both. The `possible_merge` dedup key sorts the two ids, so it
 fires once per pair regardless of which side arrived first.
@@ -137,9 +148,12 @@ fires once per pair regardless of which side arrived first.
   can delay review.
 - The two allow-lists are synchronised by hand; nothing checks they match.
 - CHF is unsupported until added to the `Currency` union and `SUPPORTED_CURRENCIES`.
-- When the push arrives *after* a receipt was scanned for the same charge, Tier 1 handles it; when a
-  receipt is scanned *after* the capture, that pair is surfaced as a merge suggestion instead — see
-  the ABA-568 bullet still in `CLAUDE.md`.
+- The push ↔ receipt single-counterpart fallback can pair two genuinely different purchases of the
+  same amount within a day. Accepted because it only ever produces a suggestion the user confirms.
+- The scan-time duplicate banner (`withDuplicateInfo`, see `receipt-duplicate-warning.md`) still uses
+  the exact payee rule, so it does not warn about the push copy; the post-save merge alert does.
+- `contentMatch.ts` (client skip of a push that arrives after a receipt) is still exact-payee; a
+  push it lets through is caught by the server's loose pairing instead.
 
 ## History
 
@@ -148,4 +162,5 @@ client-side) · ABA-295 (multi-country allow-list, generic parser) ·
 ABA-296 (two-tier dedup, `POST /expenses/merge`) · ABA-297 (New-Arch emission, subscribe-on-mount,
 PKO template) · ABA-387 (the spend gate, percentage masking, the `EUR` and `brutto` fixes) · ABA-597
 (documentation-only: this page previously understated the category resolution above, found while
-investigating why merchant rules weren't yet applied at receipt-scan time).
+investigating why merchant rules weren't yet applied at receipt-scan time) · ABA-625 (receipt scans
+are paired loosely with pushes and offered as a merge; Tier 1 no longer runs for `ocr`).

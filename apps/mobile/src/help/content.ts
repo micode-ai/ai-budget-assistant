@@ -4171,7 +4171,8 @@ If a notification is delivered more than once, or if you also import the same tr
 
 The app also reconciles captured notifications with expenses added through other paths:
 
-- **Same currency:** if you later record the same payment manually, by scanning a receipt, or via a bot, the app automatically keeps the richer record and removes the notification stub. No action needed.
+- **Same currency:** if you later record the same payment manually or via a bot, the app automatically keeps the richer record and removes the notification stub. No action needed.
+- **Receipt scan:** if you scan the receipt for a payment the app already captured from a bank notification (same amount, within a day), you get a merge suggestion in your alerts feed — even when the bank and the receipt name the shop differently ("ZABKA Z5712" vs "Żabka"). Tap it to merge: the receipt's items and photo move onto the kept record.
 - **Different currency:** occasionally the same purchase appears in two currencies — for example, a card charged in euros while the bank notification shows the amount in złoty. The app cannot merge these automatically (the amounts differ), so it shows a suggestion in your alerts feed. Tap the alert to open the merge screen, choose which record to keep, and confirm. You can also merge directly from the import preview screen if you see a "May already exist in another currency" flag on a row.
 
 ### Reviewing captures
@@ -9103,7 +9104,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Приложение также сверяет захваченные уведомления с расходами, добавленными другими способами:
 
-- **Та же валюта:** если вы позже записываете тот же платёж вручную, сканируя чек или через бота, приложение автоматически сохраняет более полную запись и удаляет заготовку из уведомления. Никаких действий не требуется.
+- **Та же валюта:** если вы позже записываете тот же платёж вручную или через бота, приложение автоматически сохраняет более полную запись и удаляет заготовку из уведомления. Никаких действий не требуется.
+- **Скан чека:** если вы сканируете чек за платёж, который приложение уже записало из уведомления банка (та же сумма, в пределах суток), в ленте уведомлений появится предложение объединить — даже если банк и чек называют магазин по-разному («ZABKA Z5712» и «Żabka»). Нажмите на него, чтобы объединить: позиции и фото чека перейдут в сохранённую запись.
 - **Другая валюта:** иногда одна и та же покупка появляется в двух валютах — например, карта списала в евро, а банковское уведомление показывает сумму в злотых. Приложение не может объединить такие записи автоматически (суммы различаются), поэтому отображает предложение в ленте уведомлений. Нажмите на предупреждение, чтобы открыть экран объединения, выберите, какую запись сохранить, и подтвердите. Также можно объединить непосредственно из предпросмотра импорта, если строка помечена «Возможно, уже существует в другой валюте».
 
 ### Проверка захватов
@@ -14003,7 +14005,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Застосунок також звіряє захоплені сповіщення з витратами, доданими іншими шляхами:
 
-- **Та сама валюта:** якщо ви пізніше записуєте той самий платіж вручну, скануючи чек або через бота, застосунок автоматично зберігає більш повний запис і видаляє заготовку зі сповіщення. Жодних дій не потрібно.
+- **Та сама валюта:** якщо ви пізніше записуєте той самий платіж вручну або через бота, застосунок автоматично зберігає більш повний запис і видаляє заготовку зі сповіщення. Жодних дій не потрібно.
+- **Скан чека:** якщо ви скануєте чек за платіж, який застосунок уже записав зі сповіщення банку (та сама сума, протягом доби), у стрічці сповіщень з'явиться пропозиція об'єднати — навіть якщо банк і чек називають магазин по-різному («ZABKA Z5712» і «Żabka»). Натисніть на неї, щоб об'єднати: позиції та фото чека перейдуть до збереженого запису.
 - **Інша валюта:** іноді та сама покупка з'являється у двох валютах — наприклад, картка списала в євро, а банківське сповіщення показує суму в злотих. Застосунок не може автоматично об'єднати такі записи (суми різняться), тому відображає пропозицію в стрічці сповіщень. Натисніть на сповіщення, щоб відкрити екран об'єднання, виберіть, який запис зберегти, і підтвердіть. Також можна об'єднати безпосередньо з попереднього перегляду імпорту, якщо рядок позначено «Можливо, вже існує в іншій валюті».
 
 ### Перевірка захоплень
@@ -18888,7 +18891,8 @@ Jeśli powiadomienie zostanie dostarczone więcej niż raz, lub jeśli zaimportu
 
 Aplikacja uzgadnia też przechwycone powiadomienia z wydatkami dodanymi innymi ścieżkami:
 
-- **Ta sama waluta:** jeśli później zarejestrujesz tę samą płatność ręcznie, skanując paragon lub przez bota, aplikacja automatycznie zachowuje bogatszy rekord i usuwa szkic z powiadomienia. Żadna akcja nie jest wymagana.
+- **Ta sama waluta:** jeśli później zarejestrujesz tę samą płatność ręcznie lub przez bota, aplikacja automatycznie zachowuje bogatszy rekord i usuwa szkic z powiadomienia. Żadna akcja nie jest wymagana.
+- **Skan paragonu:** jeśli zeskanujesz paragon za płatność, którą aplikacja już przechwyciła z powiadomienia banku (ta sama kwota, w ciągu doby), w kanale alertów pojawi się sugestia scalenia — nawet gdy bank i paragon nazywają sklep inaczej („ZABKA Z5712” i „Żabka”). Kliknij ją, aby scalić: pozycje i zdjęcie paragonu trafią do zachowanego rekordu.
 - **Inna waluta:** czasem ta sama płatność pojawia się w dwóch walutach — na przykład karta obciążona w euro, a powiadomienie bankowe pokazuje kwotę w złotych. Aplikacja nie może automatycznie scalić takich rekordów (kwoty się różnią), więc wyświetla sugestię w kanale alertów. Kliknij alert, aby otworzyć ekran scalania, wybierz, który rekord zachować, i potwierdź. Możesz też scalić bezpośrednio z podglądu importu, jeśli widzisz oznaczenie „Może już istnieć w innej walucie" przy danym wierszu.
 
 ### Sprawdzanie przechwytywań
@@ -23748,7 +23752,8 @@ Wenn eine Benachrichtigung mehrfach zugestellt wird oder du dieselbe Transaktion
 
 Die App gleicht erfasste Benachrichtigungen auch mit Ausgaben ab, die auf anderem Wege hinzugefügt wurden:
 
-- **Gleiche Währung:** Wenn du dieselbe Zahlung später manuell, per Belegscan oder über einen Bot einträgst, behält die App automatisch den detaillierteren Eintrag und entfernt den Benachrichtigungs-Stub. Es ist keine Aktion erforderlich.
+- **Gleiche Währung:** Wenn du dieselbe Zahlung später manuell oder über einen Bot einträgst, behält die App automatisch den detaillierteren Eintrag und entfernt den Benachrichtigungs-Stub. Es ist keine Aktion erforderlich.
+- **Belegscan:** Scannst du den Beleg zu einer Zahlung, die die App bereits aus einer Bankbenachrichtigung erfasst hat (gleicher Betrag, innerhalb eines Tages), erscheint im Benachrichtigungs-Feed ein Vorschlag zum Zusammenführen – auch wenn Bank und Beleg das Geschäft unterschiedlich benennen („ZABKA Z5712“ vs. „Żabka“). Tippe darauf, um zusammenzuführen: Positionen und Foto des Belegs wandern in den behaltenen Eintrag.
 - **Unterschiedliche Währung:** Manchmal erscheint dieselbe Zahlung in zwei Währungen – z. B. eine Kartenzahlung in Euro, während die Bankbenachrichtigung den Betrag in Złoty anzeigt. Da sich die Beträge unterscheiden, kann die App diese nicht automatisch zusammenführen. Sie zeigt stattdessen einen Vorschlag im Benachrichtigungs-Feed an. Tippe auf den Hinweis, um den Zusammenführungsbildschirm zu öffnen, wähle den zu behaltenden Eintrag und bestätige. Du kannst auch direkt in der Importvorschau zusammenführen, wenn eine Zeile mit „Möglicherweise bereits in anderer Währung vorhanden" markiert ist.
 
 ### Erfassungen prüfen
@@ -28597,7 +28602,8 @@ Si una notificación se entrega más de una vez, o si también importas la misma
 
 La app también concilia las notificaciones capturadas con los gastos añadidos por otras vías:
 
-- **Misma divisa:** si más tarde registras el mismo pago manualmente, escaneando un recibo o mediante un bot, la app conserva automáticamente el registro más completo y elimina el borrador de notificación. No se requiere ninguna acción.
+- **Misma divisa:** si más tarde registras el mismo pago manualmente o mediante un bot, la app conserva automáticamente el registro más completo y elimina el borrador de notificación. No se requiere ninguna acción.
+- **Escaneo de recibo:** si escaneas el recibo de un pago que la app ya capturó de una notificación bancaria (mismo importe, en el plazo de un día), verás una sugerencia de fusión en el feed de alertas — aunque el banco y el recibo nombren la tienda de forma distinta ("ZABKA Z5712" frente a "Żabka"). Tócala para fusionar: los artículos y la foto del recibo pasan al registro que se conserva.
 - **Divisa diferente:** a veces el mismo pago aparece en dos divisas — por ejemplo, una tarjeta cobrada en euros mientras la notificación bancaria muestra el importe en eslotis. La app no puede fusionarlos automáticamente (los importes difieren), por lo que muestra una sugerencia en el feed de alertas. Toca la alerta para abrir la pantalla de fusión, elige qué registro conservar y confirma. También puedes fusionar directamente desde la vista previa de importación si ves la marca "Puede que ya exista en otra divisa" en una fila.
 
 ### Revisar capturas
@@ -33444,7 +33450,8 @@ Si une notification est livrée plus d'une fois, ou si vous importez également 
 
 L'application réconcilie également les notifications capturées avec les dépenses ajoutées par d'autres voies :
 
-- **Même devise :** si vous enregistrez ensuite le même paiement manuellement, en scannant un reçu ou via un bot, l'application conserve automatiquement l'enregistrement le plus complet et supprime l'ébauche de notification. Aucune action n'est nécessaire.
+- **Même devise :** si vous enregistrez ensuite le même paiement manuellement ou via un bot, l'application conserve automatiquement l'enregistrement le plus complet et supprime l'ébauche de notification. Aucune action n'est nécessaire.
+- **Scan de reçu :** si vous scannez le reçu d'un paiement que l'application a déjà capturé depuis une notification bancaire (même montant, dans la journée), une suggestion de fusion apparaît dans le fil d'alertes — même si la banque et le reçu nomment le magasin différemment (« ZABKA Z5712 » et « Żabka »). Appuyez dessus pour fusionner : les articles et la photo du reçu rejoignent l'enregistrement conservé.
 - **Devise différente :** parfois le même achat apparaît dans deux devises — par exemple, une carte débitée en euros tandis que la notification bancaire affiche le montant en zlotys. L'application ne peut pas fusionner ces enregistrements automatiquement (les montants diffèrent), elle affiche donc une suggestion dans le fil d'alertes. Appuyez sur l'alerte pour ouvrir l'écran de fusion, choisissez quel enregistrement conserver et confirmez. Vous pouvez également fusionner directement depuis l'écran de prévisualisation d'importation si une ligne porte la mention « Peut-être déjà présent dans une autre devise ».
 
 ### Vérifier les captures
@@ -38255,7 +38262,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Праграма таксама звярае захопленыя апавяшчэнні з выдаткамі, дададзенымі іншымі шляхамі:
 
-- **Тая ж валюта:** калі вы пазней запісваеце той жа плацёж уручную, скануючы чэк або праз бота, праграма аўтаматычна захоўвае больш поўны запіс і выдаляе загатоўку з апавяшчэння. Ніякіх дзеянняў не патрабуецца.
+- **Тая ж валюта:** калі вы пазней запісваеце той жа плацёж уручную або праз бота, праграма аўтаматычна захоўвае больш поўны запіс і выдаляе загатоўку з апавяшчэння. Ніякіх дзеянняў не патрабуецца.
+- **Скан чэка:** калі вы скануеце чэк за плацёж, які праграма ўжо запісала з апавяшчэння банка (тая ж сума, на працягу сутак), у стужцы апавяшчэнняў з'явіцца прапанова аб'яднаць — нават калі банк і чэк называюць краму па-рознаму («ZABKA Z5712» і «Żabka»). Націсніце на яе, каб аб'яднаць: пазіцыі і фота чэка пяройдуць у захаваны запіс.
 - **Іншая валюта:** часам тая ж пакупка з'яўляецца ў дзвюх валютах — напрыклад, карта спісала ў еўра, а банкаўскае апавяшчэнне паказвае суму ў злотых. Праграма не можа аб'яднаць такія запісы аўтаматычна (сумы адрозніваюцца), таму адлюстроўвае прапанову ў стужцы апавяшчэнняў. Націсніце на апавяшчэнне, каб адкрыць экран аб'яднання, выберыце, які запіс захаваць, і пацвердзіце. Таксама можна аб'яднаць непасрэдна з папярэдняга прагляду імпарту, калі радок пазначаны «Магчыма, ужо існуе ў іншай валюце».
 
 ### Праверка здымкаў
@@ -43192,7 +43200,8 @@ Als een melding meer dan eens wordt afgeleverd, of als je dezelfde transactie oo
 
 De app stemt vastgelegde meldingen ook af met uitgaven die via andere wegen zijn toegevoegd:
 
-- **Zelfde valuta:** als je dezelfde betaling later handmatig registreert, via een bonnetjescanner of via een bot, behoudt de app automatisch de uitgebreidere vermelding en verwijdert de meldingsstub. Er is geen actie vereist.
+- **Zelfde valuta:** als je dezelfde betaling later handmatig of via een bot registreert, behoudt de app automatisch de uitgebreidere vermelding en verwijdert de meldingsstub. Er is geen actie vereist.
+- **Bonnetjesscan:** scan je het bonnetje van een betaling die de app al uit een bankmelding heeft vastgelegd (zelfde bedrag, binnen een dag), dan verschijnt er een samenvoegsuggestie in het alertoverzicht — ook als de bank en het bonnetje de winkel anders noemen ("ZABKA Z5712" vs "Żabka"). Tik erop om samen te voegen: de artikelen en foto van het bonnetje gaan naar de bewaarde vermelding.
 - **Andere valuta:** soms verschijnt dezelfde aankoop in twee valuta's — bijvoorbeeld een kaartbetaling in euro's terwijl de bankmelding het bedrag in złoty toont. De app kan deze niet automatisch samenvoegen (de bedragen verschillen), dus toont een suggestie in het alertoverzicht. Tik op de melding om het samenvoegscherm te openen, kies welke vermelding je wilt bewaren en bevestig. Je kunt ook samenvoegen vanuit het importvoorbeeldscherm als een rij het label "Bestaat mogelijk al in een andere valuta" draagt.
 
 ### Vastleggingen controleren

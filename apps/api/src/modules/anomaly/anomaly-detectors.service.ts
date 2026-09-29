@@ -12,6 +12,7 @@ import {
 import { AnomalyAlertWriterService } from './anomaly-alert-writer.service';
 import {
   DAY_MS,
+  pickPushReceiptCounterpart,
   PRICE_INCREASE_FACTOR,
   SPIKE_THRESHOLD_PERCENT,
   detectCycle,
@@ -236,7 +237,9 @@ export class AnomalyDetectorsService {
    */
   async detectDuplicateCharge(accountId: string, userId: string, expense: DetectorExpense): Promise<void> {
     const label = expensePayee(expense);
-    if (!label) return; // nothing to identify the charge by
+    // Nothing to identify the charge by — unless it is one half of a
+    // push↔receipt pair, which is matched on amount + currency + date.
+    if (!label && expense.source !== 'notification' && expense.source !== 'ocr') return;
 
     // Candidates share amount + currency + date window; the payee label is
     // matched in JS so merchant OR description can identify the duplicate.
@@ -255,7 +258,12 @@ export class AnomalyDetectorsService {
       },
       select: { id: true, merchant: true, description: true, source: true },
     });
-    const other = candidates.find((c: { merchant?: string | null; description?: string | null }) => expensePayee(c) === label);
+    // Exact payee first; failing that, a bank push and a receipt scan of the
+    // same purchase name the shop differently (`ZABKA Z5712` vs `Żabka`), so
+    // that pair is matched loosely (ABA-625).
+    const other =
+      (label ? candidates.find((c: { merchant?: string | null; description?: string | null }) => expensePayee(c) === label) : undefined) ??
+      pickPushReceiptCounterpart(expense, candidates);
     if (!other) return;
 
     // Receipt-scan vs auto-captured/imported row → the same purchase recorded
@@ -269,7 +277,8 @@ export class AnomalyDetectorsService {
     const suggestMerge = (expenseIsAuto && otherIsReceipt) || (otherIsAuto && expenseIsReceipt);
 
     const params = {
-      merchant: expense.merchant?.trim() || expense.description?.trim() || '',
+      merchant:
+        expense.merchant?.trim() || expense.description?.trim() || other.merchant?.trim() || other.description?.trim() || '',
       amount: Number(expense.amount).toFixed(2),
       currencyCode: expense.currencyCode,
       otherExpenseId: other.id,

@@ -69,7 +69,8 @@ If a notification is delivered more than once, or if you also import the same tr
 
 The app also reconciles captured notifications with expenses added through other paths:
 
-- **Same currency:** if you later record the same payment manually, by scanning a receipt, or via a bot, the app automatically keeps the richer record and removes the notification stub. No action needed.
+- **Same currency:** if you later record the same payment manually or via a bot, the app automatically keeps the richer record and removes the notification stub. No action needed.
+- **Receipt scan:** if you scan the receipt for a payment the app already captured from a bank notification (same amount, within a day), you get a merge suggestion in your alerts feed — even when the bank and the receipt name the shop differently ("ZABKA Z5712" vs "Żabka"). Tap it to merge: the receipt's items and photo move onto the kept record.
 - **Different currency:** occasionally the same purchase appears in two currencies — for example, a card charged in euros while the bank notification shows the amount in złoty. The app cannot merge these automatically (the amounts differ), so it shows a suggestion in your alerts feed. Tap the alert to open the merge screen, choose which record to keep, and confirm. You can also merge directly from the import preview screen if you see a "May already exist in another currency" flag on a row.
 
 ### Reviewing captures

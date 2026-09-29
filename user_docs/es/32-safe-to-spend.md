@@ -69,7 +69,8 @@ Si una notificación se entrega más de una vez, o si también importas la misma
 
 La app también concilia las notificaciones capturadas con los gastos añadidos por otras vías:
 
-- **Misma divisa:** si más tarde registras el mismo pago manualmente, escaneando un recibo o mediante un bot, la app conserva automáticamente el registro más completo y elimina el borrador de notificación. No se requiere ninguna acción.
+- **Misma divisa:** si más tarde registras el mismo pago manualmente o mediante un bot, la app conserva automáticamente el registro más completo y elimina el borrador de notificación. No se requiere ninguna acción.
+- **Escaneo de recibo:** si escaneas el recibo de un pago que la app ya capturó de una notificación bancaria (mismo importe, en el plazo de un día), verás una sugerencia de fusión en el feed de alertas — aunque el banco y el recibo nombren la tienda de forma distinta ("ZABKA Z5712" frente a "Żabka"). Tócala para fusionar: los artículos y la foto del recibo pasan al registro que se conserva.
 - **Divisa diferente:** a veces el mismo pago aparece en dos divisas — por ejemplo, una tarjeta cobrada en euros mientras la notificación bancaria muestra el importe en eslotis. La app no puede fusionarlos automáticamente (los importes difieren), por lo que muestra una sugerencia en el feed de alertas. Toca la alerta para abrir la pantalla de fusión, elige qué registro conservar y confirma. También puedes fusionar directamente desde la vista previa de importación si ves la marca "Puede que ya exista en otra divisa" en una fila.
 
 ### Revisar capturas

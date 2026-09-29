@@ -69,7 +69,8 @@ Jeśli powiadomienie zostanie dostarczone więcej niż raz, lub jeśli zaimportu
 
 Aplikacja uzgadnia też przechwycone powiadomienia z wydatkami dodanymi innymi ścieżkami:
 
-- **Ta sama waluta:** jeśli później zarejestrujesz tę samą płatność ręcznie, skanując paragon lub przez bota, aplikacja automatycznie zachowuje bogatszy rekord i usuwa szkic z powiadomienia. Żadna akcja nie jest wymagana.
+- **Ta sama waluta:** jeśli później zarejestrujesz tę samą płatność ręcznie lub przez bota, aplikacja automatycznie zachowuje bogatszy rekord i usuwa szkic z powiadomienia. Żadna akcja nie jest wymagana.
+- **Skan paragonu:** jeśli zeskanujesz paragon za płatność, którą aplikacja już przechwyciła z powiadomienia banku (ta sama kwota, w ciągu doby), w kanale alertów pojawi się sugestia scalenia — nawet gdy bank i paragon nazywają sklep inaczej („ZABKA Z5712” i „Żabka”). Kliknij ją, aby scalić: pozycje i zdjęcie paragonu trafią do zachowanego rekordu.
 - **Inna waluta:** czasem ta sama płatność pojawia się w dwóch walutach — na przykład karta obciążona w euro, a powiadomienie bankowe pokazuje kwotę w złotych. Aplikacja nie może automatycznie scalić takich rekordów (kwoty się różnią), więc wyświetla sugestię w kanale alertów. Kliknij alert, aby otworzyć ekran scalania, wybierz, który rekord zachować, i potwierdź. Możesz też scalić bezpośrednio z podglądu importu, jeśli widzisz oznaczenie „Może już istnieć w innej walucie" przy danym wierszu.
 
 ### Sprawdzanie przechwytywań

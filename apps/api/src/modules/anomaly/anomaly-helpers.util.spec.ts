@@ -1,4 +1,13 @@
-import { detectCycle, DUP_DAY_MS, expensePayee, monthKey, normalizeMerchant } from './anomaly-helpers.util';
+import {
+  detectCycle,
+  DUP_DAY_MS,
+  expensePayee,
+  isPushReceiptPair,
+  monthKey,
+  normalizeMerchant,
+  payeesLooselyMatch,
+  pickPushReceiptCounterpart,
+} from './anomaly-helpers.util';
 
 describe('pure helpers', () => {
   it('normalizeMerchant trims and lowercases', () => {
@@ -47,5 +56,68 @@ describe('pure helpers', () => {
 
   it('detectCycle: fewer than 3 dates → null', () => {
     expect(detectCycle([new Date('2026-05-01'), new Date('2026-05-31')])).toBe(null);
+  });
+});
+
+describe('push ↔ receipt loose matching (ABA-625)', () => {
+  it('matches a bank push merchant against the receipt store name', () => {
+    expect(payeesLooselyMatch('ZABKA Z5712 K.1 WARSZAWA', 'Żabka')).toBe(true);
+    expect(payeesLooselyMatch('LIDL SP. Z O.O. SP. K.', 'LIDL WARSZAWA UL. MARYWILSKA')).toBe(true);
+    expect(payeesLooselyMatch('JMP S.A. BIEDRONKA 1234', 'Biedronka')).toBe(true);
+    expect(payeesLooselyMatch('Łódź Kawiarnia Ślimak', 'SLIMAK')).toBe(true);
+  });
+
+  it('does not match on legal-form or city words alone', () => {
+    expect(payeesLooselyMatch('ZABKA WARSZAWA', 'Rossmann Warszawa')).toBe(false);
+    expect(payeesLooselyMatch('Kaufland Polska sp. z o.o.', 'Lidl Polska sp. z o.o.')).toBe(false);
+  });
+
+  it('never matches an empty label', () => {
+    expect(payeesLooselyMatch('', 'Zabka')).toBe(false);
+    expect(payeesLooselyMatch('Zabka', '  ')).toBe(false);
+  });
+
+  it('isPushReceiptPair is symmetric and exclusive to notification/ocr', () => {
+    expect(isPushReceiptPair('notification', 'ocr')).toBe(true);
+    expect(isPushReceiptPair('ocr', 'notification')).toBe(true);
+    expect(isPushReceiptPair('import', 'ocr')).toBe(false);
+    expect(isPushReceiptPair('notification', 'notification')).toBe(false);
+    expect(isPushReceiptPair('ocr', null)).toBe(false);
+  });
+
+  const receipt = { merchant: 'Żabka', description: null, source: 'ocr' };
+
+  it('prefers the loosely-matching counterpart among several', () => {
+    const picked = pickPushReceiptCounterpart(receipt, [
+      { id: 'a', merchant: 'ROSSMANN 123', description: null, source: 'notification' },
+      { id: 'b', merchant: 'ZABKA Z5712', description: null, source: 'notification' },
+    ]);
+    expect(picked?.id).toBe('b');
+  });
+
+  it('accepts a single counterpart with an unrelated payee (brand vs legal name)', () => {
+    const picked = pickPushReceiptCounterpart({ merchant: 'Jeronimo Martins Polska', description: null, source: 'ocr' }, [
+      { id: 'a', merchant: 'BIEDRONKA', description: null, source: 'notification' },
+    ]);
+    expect(picked?.id).toBe('a');
+  });
+
+  it('returns null when several counterparts are ambiguous', () => {
+    const picked = pickPushReceiptCounterpart({ merchant: 'Jeronimo Martins Polska', description: null, source: 'ocr' }, [
+      { id: 'a', merchant: 'BIEDRONKA', description: null, source: 'notification' },
+      { id: 'b', merchant: 'ROSSMANN', description: null, source: 'notification' },
+    ]);
+    expect(picked).toBeNull();
+  });
+
+  it('ignores candidates that are not the other capture channel', () => {
+    expect(
+      pickPushReceiptCounterpart(receipt, [{ id: 'a', merchant: 'ZABKA', description: null, source: 'manual' }]),
+    ).toBeNull();
+    expect(
+      pickPushReceiptCounterpart({ merchant: 'Zabka', description: null, source: 'manual' }, [
+        { id: 'a', merchant: 'ZABKA Z1', description: null, source: 'notification' },
+      ]),
+    ).toBeNull();
   });
 });

@@ -138,7 +138,10 @@ export class ExpenseCreatedHooksService {
     // so detectDuplicateCharge sees the stub already gone (isDeleted:true) and
     // does not raise a spurious duplicate_charge alert for the auto-reconciled pair.
     const run = async () => {
-      if (expense.source !== 'notification') {
+      // A receipt scan is NOT reconciled silently: detectDuplicateCharge pairs it
+      // with the push loosely and offers a merge, which carries the receipt's
+      // items and image onto the survivor (ABA-625).
+      if (expense.source !== 'notification' && expense.source !== 'ocr') {
         // Case A: a richer source supersedes the stub. Soft-delete any matching
         // source:'notification' stub. SAFETY: query is hard-scoped to notification
         // rows — two genuine non-notification expenses can never delete each other.

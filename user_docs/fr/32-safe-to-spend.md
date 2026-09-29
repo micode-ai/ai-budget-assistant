@@ -69,7 +69,8 @@ Si une notification est livrée plus d'une fois, ou si vous importez également 
 
 L'application réconcilie également les notifications capturées avec les dépenses ajoutées par d'autres voies :
 
-- **Même devise :** si vous enregistrez ensuite le même paiement manuellement, en scannant un reçu ou via un bot, l'application conserve automatiquement l'enregistrement le plus complet et supprime l'ébauche de notification. Aucune action n'est nécessaire.
+- **Même devise :** si vous enregistrez ensuite le même paiement manuellement ou via un bot, l'application conserve automatiquement l'enregistrement le plus complet et supprime l'ébauche de notification. Aucune action n'est nécessaire.
+- **Scan de reçu :** si vous scannez le reçu d'un paiement que l'application a déjà capturé depuis une notification bancaire (même montant, dans la journée), une suggestion de fusion apparaît dans le fil d'alertes — même si la banque et le reçu nomment le magasin différemment (« ZABKA Z5712 » et « Żabka »). Appuyez dessus pour fusionner : les articles et la photo du reçu rejoignent l'enregistrement conservé.
 - **Devise différente :** parfois le même achat apparaît dans deux devises — par exemple, une carte débitée en euros tandis que la notification bancaire affiche le montant en zlotys. L'application ne peut pas fusionner ces enregistrements automatiquement (les montants diffèrent), elle affiche donc une suggestion dans le fil d'alertes. Appuyez sur l'alerte pour ouvrir l'écran de fusion, choisissez quel enregistrement conserver et confirmez. Vous pouvez également fusionner directement depuis l'écran de prévisualisation d'importation si une ligne porte la mention « Peut-être déjà présent dans une autre devise ».
 
 ### Vérifier les captures

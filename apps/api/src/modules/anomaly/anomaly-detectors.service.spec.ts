@@ -111,6 +111,57 @@ describe('detectDuplicateCharge', () => {
     expect(arg.params.suggestMerge).toBe(true);
   });
 
+  it('suggests a merge when a receipt meets a bank push whose merchant is spelled differently (ABA-625)', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-push', merchant: 'ZABKA Z5712 WARSZAWA', description: null, source: 'notification' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'Żabka', description: null, source: 'ocr' }) as any);
+
+    expect(alertWriter.createAlert).toHaveBeenCalledTimes(1);
+    const arg = alertWriter.createAlert.mock.calls[0][0];
+    expect(arg.params.otherExpenseId).toBe('e-push');
+    expect(arg.params.suggestMerge).toBe(true);
+  });
+
+  it('suggests a merge when the push arrives after the receipt, from the push side', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-ocr', merchant: 'Jeronimo Martins Polska', description: null, source: 'ocr' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'BIEDRONKA', source: 'notification' }) as any);
+
+    const arg = alertWriter.createAlert.mock.calls[0][0];
+    expect(arg.params.otherExpenseId).toBe('e-ocr');
+    expect(arg.params.suggestMerge).toBe(true);
+  });
+
+  it('pairs a receipt with no merchant to a single push, naming the push merchant', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-push', merchant: 'ZABKA Z1', description: null, source: 'notification' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: null, description: null, source: 'ocr' }) as any);
+
+    const arg = alertWriter.createAlert.mock.calls[0][0];
+    expect(arg.params.suggestMerge).toBe(true);
+    expect(arg.params.merchant).toBe('ZABKA Z1');
+  });
+
+  it('keeps the exact-payee rule for other channels — a differently-spelled manual row is not a duplicate', async () => {
+    const { service, prisma, alertWriter } = makeService();
+    prisma.expense.findMany = jest
+      .fn()
+      .mockResolvedValue([{ id: 'e-old', merchant: 'ZABKA Z5712', description: null, source: 'manual' }]);
+
+    await service.detectDuplicateCharge('acc-1', 'user-1', expenseRow({ merchant: 'Żabka', source: 'ocr' }) as any);
+
+    expect(alertWriter.createAlert).not.toHaveBeenCalled();
+  });
+
   it('omits suggestMerge for two manual duplicates (plain double-charge warning)', async () => {
     const { service, prisma, alertWriter } = makeService();
     prisma.expense.findMany = jest

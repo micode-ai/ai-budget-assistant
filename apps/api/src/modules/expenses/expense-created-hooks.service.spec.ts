@@ -103,6 +103,17 @@ describe('reconcileNotificationStub (Tier 1 Case A)', () => {
 
     expect(reconcileSpy).not.toHaveBeenCalled();
   });
+
+  it('does not silently delete the push stub for a receipt scan — it is offered as a merge instead (ABA-625)', async () => {
+    const { service, anomalyService } = makeReconcileHooksService();
+    const reconcileSpy = jest.spyOn(service as any, 'reconcileNotificationStub');
+
+    await service.onExpenseCreated('acc-1', 'u1', { id: 'e-new', amount: 15, currencyCode: 'PLN', source: 'ocr' }, []);
+    await new Promise((r) => setImmediate(r));
+
+    expect(reconcileSpy).not.toHaveBeenCalled();
+    expect(anomalyService.checkExpense).toHaveBeenCalledWith('acc-1', 'u1', 'e-new');
+  });
 });
 
 // ---------------------------------------------------------------------------

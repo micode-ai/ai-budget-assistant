@@ -127,11 +127,13 @@ Newest last within each section.
   → `features/shared-conversations.md`, `features/date-pickers.md`,
   `features/display-currency-conversion.md` (new) + `features/shopping-list.md` (extended).
   CLAUDE.md 21 032 → 19 390 words; 74 pages.
+- 2026-09-29 · [ABA-625](https://github.com/micode-ai/ai-budget-assistant/issues/653) — push ↔
+  receipt pairs are matched loosely and offered as a merge; Tier 1 skipped for `ocr` (the ABA-568
+  branch had been unreachable for pushes). → `features/bank-notification-capture.md`
 
 ## Queries
 
-_None yet. The first entry here is the point at which the wiki starts accumulating from questions
-and not only from changes — see the `wiki-query` skill._
+- 2026-09-29 — why no merge suggestion for bank push + later receipt scan → `features/bank-notification-capture.md` (Known gaps; corrected a false claim)
 
 ## Lint passes
 
