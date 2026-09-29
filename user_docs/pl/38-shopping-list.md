@@ -66,6 +66,18 @@ Chcesz wiedzieć, ile wyjdą zakupy, zanim staniesz przy kasie? Dodaj produktom 
 
 Ceny są w walucie Twojego konta. Może je ustawiać każdy członek konta i są darmowe w każdym planie.
 
+## Skanowanie cenówki
+
+Stoisz przy półce? Zrób zdjęcie cenówki zamiast pisać.
+
+- **Aby dodać nowy produkt**, stuknij **Dodaj produkt → Zeskanuj cenówkę**. Otworzy się aparat; zrób zdjęcie cenówki, a aplikacja uzupełni nazwę produktu, cenę i szczegóły z etykiety.
+- **Dla produktu, który już jest na liście**, stuknij jego cenę (lub **+ Cena**), a potem **Skanuj cenówkę**. Przyciskiem galerii możesz też wybrać zrobione wcześniej zdjęcie.
+- Szczegóły — gramatura, cena za kg lub litr, cena regularna i data końca promocji oraz to, czy cena wymaga karty lojalnościowej — trafiają do **notatki** produktu, widocznej pod jego nazwą. Twoja własna notatka zostaje, a szczegóły z cenówki są dopisywane na końcu.
+- Nic nie zapisuje się, dopóki nie stukniesz **Zapisz**, więc możesz poprawić wszystko, co skan odczytał źle.
+- Jeśli cenówka pokazuje cenę w innej walucie, trafia ona do notatki i nie wlicza się do sumy.
+
+Każde skanowanie zużywa **1 zapytanie AI** z miesięcznego limitu (połowę tego, co skan paragonu).
+
 ## Automatyczne zaznaczanie po zeskanowaniu paragonu
 
 Gdy skanujesz paragon aparatem, każda niezaznaczona pozycja na Twojej liście zakupów, która odpowiada czemuś z paragonu, zostaje automatycznie oznaczona jako kupiona — nie trzeba jej też odznaczać ręcznie po zakupach.

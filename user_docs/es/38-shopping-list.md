@@ -66,6 +66,18 @@ También puedes **pedirle al asistente de IA** que añada artículos: abre la pe
 
 Los precios están en la moneda de tu cuenta. Cualquier miembro de la cuenta puede ponerlos y son gratis en todos los planes.
 
+## Escanear una etiqueta de precio
+
+¿Estás delante del estante? Fotografía la etiqueta en lugar de escribir.
+
+- **Para añadir un artículo nuevo**, toca **Añadir artículo → Escanear una etiqueta de precio**. Se abre la cámara; haz una foto de la etiqueta y la app rellena el nombre del producto, el precio y los detalles impresos.
+- **Para un artículo que ya está en la lista**, toca su precio (o **+ Precio**) y luego **Escanear etiqueta**. También puedes elegir una foto que ya hayas hecho con el botón de galería.
+- Los detalles — tamaño del envase, precio por kg o litro, el precio normal y la fecha de fin de la oferta, y si el precio requiere tarjeta de fidelidad — van a la **nota** del artículo, que se muestra bajo su nombre. Una nota que hayas escrito tú se conserva y los detalles de la etiqueta se añaden detrás.
+- No se guarda nada hasta que tocas **Guardar**, así que puedes corregir lo que el escaneo haya leído mal.
+- Si la etiqueta muestra un precio en otra moneda, se guarda en la nota y no cuenta para el total.
+
+Cada escaneo usa **1 solicitud de IA** de tu límite mensual (la mitad que un recibo).
+
 ## Marcado automático al escanear recibos
 
 Cuando escaneas un recibo con la cámara, cualquier artículo sin marcar de tu lista de compras que coincida con algo del recibo se marca automáticamente como comprado — no tienes que marcarlo también a mano justo después de terminar de comprar.

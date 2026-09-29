@@ -22,6 +22,11 @@ export function sanitizeForPrompt(text: string, maxLength = 200): string {
     .trim();
 }
 
+export const ScanPriceTagRequestSchema = z.object({
+  imageBase64: z.string().min(1),
+  mimeType: z.string().optional(),
+});
+
 export const ScanReceiptRequestSchema = z.object({
   imageBase64: z.string().min(1),
   userPrompt: z.string().max(300).optional(),

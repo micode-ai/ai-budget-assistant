@@ -68,6 +68,18 @@ Want to know how much the trip will cost before you get to the checkout? Give it
 
 Prices are in your account's currency. Anyone on the account can set them, and they're free on every plan.
 
+## Scan a Price Tag
+
+Standing at the shelf? Photograph the price tag instead of typing.
+
+- **To add a new item**, tap **Add item → Scan a price tag**. The camera opens; take a photo of the tag and the app fills in the product name, the price, and the details printed on the tag.
+- **For an item already on the list**, tap its price (or **+ Price**) and then **Scan price tag**. You can also pick a photo you already took with the gallery button.
+- The details — pack size, price per kg or litre, the regular price and promo end date, and whether the price needs a loyalty card — go into the item's **note**, shown under its name. A note you wrote yourself is kept, and the tag's details are added after it.
+- Nothing is saved until you tap **Save**, so you can correct anything the scan got wrong.
+- If the tag shows a price in another currency, it's kept in the note and not used for the total.
+
+Each scan uses **1 AI request** from your monthly limit (half of a receipt scan).
+
 ## Auto-Check From Receipts
 
 When you scan a receipt with the camera, any unchecked item on your shopping list that matches something on the receipt is checked off automatically — you don't have to also tick it by hand right after you're done shopping.

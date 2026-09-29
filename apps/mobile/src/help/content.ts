@@ -4546,6 +4546,18 @@ Want to know how much the trip will cost before you get to the checkout? Give it
 
 Prices are in your account's currency. Anyone on the account can set them, and they're free on every plan.
 
+## Scan a Price Tag
+
+Standing at the shelf? Photograph the price tag instead of typing.
+
+- **To add a new item**, tap **Add item → Scan a price tag**. The camera opens; take a photo of the tag and the app fills in the product name, the price, and the details printed on the tag.
+- **For an item already on the list**, tap its price (or **+ Price**) and then **Scan price tag**. You can also pick a photo you already took with the gallery button.
+- The details — pack size, price per kg or litre, the regular price and promo end date, and whether the price needs a loyalty card — go into the item's **note**, shown under its name. A note you wrote yourself is kept, and the tag's details are added after it.
+- Nothing is saved until you tap **Save**, so you can correct anything the scan got wrong.
+- If the tag shows a price in another currency, it's kept in the note and not used for the total.
+
+Each scan uses **1 AI request** from your monthly limit (half of a receipt scan).
+
 ## Auto-Check From Receipts
 
 When you scan a receipt with the camera, any unchecked item on your shopping list that matches something on the receipt is checked off automatically — you don't have to also tick it by hand right after you're done shopping.
@@ -9462,6 +9474,18 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Цены указываются в валюте счёта. Проставлять их может любой участник счёта, функция бесплатна на всех тарифах.
 
+## Сканирование ценника
+
+Стоите у полки? Сфотографируйте ценник вместо того, чтобы печатать.
+
+- **Чтобы добавить новый товар**, нажмите **Добавить товар → Сканировать ценник**. Откроется камера: снимите ценник, и приложение заполнит название, цену и детали, напечатанные на ценнике.
+- **Для товара, который уже в списке**, нажмите на его цену (или **+ Цена**), а затем **Сканировать ценник**. Кнопкой галереи можно выбрать уже сделанное фото.
+- Детали — объём или вес, цена за кг или литр, обычная цена и срок акции, а также нужна ли для цены карта лояльности — попадают в **заметку** товара и видны под его названием. Заметка, которую вы написали сами, сохраняется, детали с ценника дописываются после неё.
+- Ничего не сохраняется, пока вы не нажмёте **Сохранить**, так что можно поправить всё, что сканер прочитал неверно.
+- Если цена на ценнике в другой валюте, она сохраняется в заметке и в итог не идёт.
+
+Каждое сканирование расходует **1 AI-запрос** из месячного лимита (вдвое меньше, чем скан чека).
+
 ## Автоотметка при сканировании чеков
 
 Когда вы сканируете чек камерой, любая неотмеченная позиция в вашем списке покупок, совпадающая с чем-то на чеке, автоматически отмечается как купленная — не нужно отмечать её вручную сразу после покупок.
@@ -14350,6 +14374,18 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Ціни вказуються у валюті рахунку. Вказувати їх може будь-який учасник рахунку, функція безкоштовна на всіх тарифах.
 
+## Сканування цінника
+
+Стоїте біля полиці? Сфотографуйте цінник замість того, щоб друкувати.
+
+- **Щоб додати новий товар**, натисніть **Додати товар → Сканувати цінник**. Відкриється камера: зніміть цінник, і застосунок заповнить назву, ціну та деталі, надруковані на ціннику.
+- **Для товару, який уже в списку**, натисніть на його ціну (або **+ Ціна**), а потім **Сканувати цінник**. Кнопкою галереї можна вибрати вже зроблене фото.
+- Деталі — обʼєм або вага, ціна за кг чи літр, звичайна ціна й термін акції, а також чи потрібна для ціни карта лояльності — потрапляють у **нотатку** товару й видні під його назвою. Нотатка, яку ви написали самі, зберігається, деталі з цінника дописуються після неї.
+- Нічого не зберігається, доки ви не натиснете **Зберегти**, тож можна виправити все, що сканер прочитав неправильно.
+- Якщо ціна на ціннику в іншій валюті, вона зберігається в нотатці й до підсумку не йде.
+
+Кожне сканування витрачає **1 AI-запит** із місячного ліміту (удвічі менше, ніж скан чека).
+
 ## Автопозначення під час сканування чеків
 
 Коли ви скануєте чек камерою, будь-яка непозначена позиція у вашому списку покупок, яка збігається з чимось на чеку, автоматично позначається як куплена — не потрібно позначати її вручну одразу після покупок.
@@ -19223,6 +19259,18 @@ Chcesz wiedzieć, ile wyjdą zakupy, zanim staniesz przy kasie? Dodaj produktom 
 
 Ceny są w walucie Twojego konta. Może je ustawiać każdy członek konta i są darmowe w każdym planie.
 
+## Skanowanie cenówki
+
+Stoisz przy półce? Zrób zdjęcie cenówki zamiast pisać.
+
+- **Aby dodać nowy produkt**, stuknij **Dodaj produkt → Zeskanuj cenówkę**. Otworzy się aparat; zrób zdjęcie cenówki, a aplikacja uzupełni nazwę produktu, cenę i szczegóły z etykiety.
+- **Dla produktu, który już jest na liście**, stuknij jego cenę (lub **+ Cena**), a potem **Skanuj cenówkę**. Przyciskiem galerii możesz też wybrać zrobione wcześniej zdjęcie.
+- Szczegóły — gramatura, cena za kg lub litr, cena regularna i data końca promocji oraz to, czy cena wymaga karty lojalnościowej — trafiają do **notatki** produktu, widocznej pod jego nazwą. Twoja własna notatka zostaje, a szczegóły z cenówki są dopisywane na końcu.
+- Nic nie zapisuje się, dopóki nie stukniesz **Zapisz**, więc możesz poprawić wszystko, co skan odczytał źle.
+- Jeśli cenówka pokazuje cenę w innej walucie, trafia ona do notatki i nie wlicza się do sumy.
+
+Każde skanowanie zużywa **1 zapytanie AI** z miesięcznego limitu (połowę tego, co skan paragonu).
+
 ## Automatyczne zaznaczanie po zeskanowaniu paragonu
 
 Gdy skanujesz paragon aparatem, każda niezaznaczona pozycja na Twojej liście zakupów, która odpowiada czemuś z paragonu, zostaje automatycznie oznaczona jako kupiona — nie trzeba jej też odznaczać ręcznie po zakupach.
@@ -24071,6 +24119,18 @@ Du möchtest schon vor der Kasse wissen, was der Einkauf kostet? Gib den Artikel
 
 Preise gelten in der Währung deines Kontos. Jedes Kontomitglied kann sie setzen, und sie sind in jedem Tarif kostenlos.
 
+## Preisschild scannen
+
+Du stehst am Regal? Fotografiere das Preisschild, statt zu tippen.
+
+- **Für einen neuen Artikel** tippe auf **Artikel hinzufügen → Preisschild scannen**. Die Kamera öffnet sich; fotografiere das Schild, und die App füllt Produktname, Preis und die aufgedruckten Details aus.
+- **Für einen Artikel, der schon auf der Liste steht**, tippe auf seinen Preis (oder **+ Preis**) und dann auf **Preisschild scannen**. Mit der Galerie-Schaltfläche kannst du auch ein bereits aufgenommenes Foto wählen.
+- Die Details — Packungsgröße, Preis pro kg oder Liter, der reguläre Preis und das Ende des Angebots sowie ob der Preis eine Kundenkarte erfordert — landen in der **Notiz** des Artikels, die unter seinem Namen angezeigt wird. Eine selbst geschriebene Notiz bleibt erhalten; die Details vom Schild werden angehängt.
+- Gespeichert wird erst, wenn du auf **Speichern** tippst — du kannst also alles korrigieren, was der Scan falsch gelesen hat.
+- Zeigt das Schild einen Preis in einer anderen Währung, landet er in der Notiz und zählt nicht zur Summe.
+
+Jeder Scan verbraucht **1 KI-Anfrage** aus deinem Monatslimit (halb so viel wie ein Beleg-Scan).
+
 ## Automatisch abhaken beim Scannen von Belegen
 
 Wenn du einen Beleg mit der Kamera scannst, wird jeder noch nicht abgehakte Artikel auf deiner Einkaufsliste, der zu etwas auf dem Beleg passt, automatisch abgehakt — du musst ihn nach dem Einkauf nicht auch noch von Hand abhaken.
@@ -28908,6 +28968,18 @@ También puedes **pedirle al asistente de IA** que añada artículos: abre la pe
 
 Los precios están en la moneda de tu cuenta. Cualquier miembro de la cuenta puede ponerlos y son gratis en todos los planes.
 
+## Escanear una etiqueta de precio
+
+¿Estás delante del estante? Fotografía la etiqueta en lugar de escribir.
+
+- **Para añadir un artículo nuevo**, toca **Añadir artículo → Escanear una etiqueta de precio**. Se abre la cámara; haz una foto de la etiqueta y la app rellena el nombre del producto, el precio y los detalles impresos.
+- **Para un artículo que ya está en la lista**, toca su precio (o **+ Precio**) y luego **Escanear etiqueta**. También puedes elegir una foto que ya hayas hecho con el botón de galería.
+- Los detalles — tamaño del envase, precio por kg o litro, el precio normal y la fecha de fin de la oferta, y si el precio requiere tarjeta de fidelidad — van a la **nota** del artículo, que se muestra bajo su nombre. Una nota que hayas escrito tú se conserva y los detalles de la etiqueta se añaden detrás.
+- No se guarda nada hasta que tocas **Guardar**, así que puedes corregir lo que el escaneo haya leído mal.
+- Si la etiqueta muestra un precio en otra moneda, se guarda en la nota y no cuenta para el total.
+
+Cada escaneo usa **1 solicitud de IA** de tu límite mensual (la mitad que un recibo).
+
 ## Marcado automático al escanear recibos
 
 Cuando escaneas un recibo con la cámara, cualquier artículo sin marcar de tu lista de compras que coincida con algo del recibo se marca automáticamente como comprado — no tienes que marcarlo también a mano justo después de terminar de comprar.
@@ -33743,6 +33815,18 @@ Envie de savoir combien coûteront les courses avant d’arriver à la caisse ? 
 
 Les prix sont dans la devise de votre compte. Tout membre du compte peut les saisir, et c’est gratuit dans toutes les offres.
 
+## Scanner une étiquette de prix
+
+Devant le rayon ? Photographiez l’étiquette au lieu de taper.
+
+- **Pour ajouter un nouvel article**, touchez **Ajouter un article → Scanner une étiquette de prix**. L’appareil photo s’ouvre ; photographiez l’étiquette et l’appli remplit le nom du produit, le prix et les détails imprimés.
+- **Pour un article déjà sur la liste**, touchez son prix (ou **+ Prix**) puis **Scanner l’étiquette**. Le bouton galerie permet aussi de choisir une photo déjà prise.
+- Les détails — format, prix au kg ou au litre, prix normal et date de fin de promo, et si le prix exige une carte de fidélité — vont dans la **note** de l’article, affichée sous son nom. Une note que vous avez écrite est conservée, et les détails de l’étiquette sont ajoutés à la suite.
+- Rien n’est enregistré avant que vous touchiez **Enregistrer** : vous pouvez corriger ce que le scan a mal lu.
+- Si l’étiquette affiche un prix dans une autre devise, il est gardé dans la note et ne compte pas dans le total.
+
+Chaque scan utilise **1 requête IA** de votre limite mensuelle (la moitié d’un scan de reçu).
+
 ## Coche automatique lors du scan des reçus
 
 Lorsque vous scannez un reçu avec l'appareil photo, tout article non coché de votre liste de courses qui correspond à quelque chose sur le reçu est coché automatiquement — vous n'avez pas besoin de le cocher aussi à la main juste après vos achats.
@@ -38541,6 +38625,18 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Як толькі хаця б у аднаго тавару ёсць цана, над спісам з’яўляецца вынік: **Засталося купіць** (толькі неадзначаныя — сума змяншаецца, калі вы адзначаеце пакупкі), сума за **увесь спіс** і колькі тавараў яшчэ без цаны.
 
 Цэны паказваюцца ў валюце рахунку. Ставіць іх можа любы ўдзельнік рахунку, функцыя бясплатная на ўсіх тарыфах.
+
+## Сканаванне цэнніка
+
+Стаіце каля паліцы? Сфатаграфуйце цэннік замест таго, каб друкаваць.
+
+- **Каб дадаць новы тавар**, націсніце **Дадаць тавар → Сканаваць цэннік**. Адкрыецца камера: здыміце цэннік, і праграма запоўніць назву, цану і дэталі, надрукаваныя на цэнніку.
+- **Для тавару, які ўжо ў спісе**, націсніце на яго цану (або **+ Цана**), а потым **Сканаваць цэннік**. Кнопкай галерэі можна выбраць ужо зробленае фота.
+- Дэталі — аб’ём або вага, цана за кг ці літр, звычайная цана і тэрмін акцыі, а таксама ці патрэбна для цаны картка лаяльнасці — трапляюць у **нататку** тавару і бачныя пад яго назвай. Нататка, якую вы напісалі самі, захоўваецца, дэталі з цэнніка дапісваюцца пасля яе.
+- Нічога не захоўваецца, пакуль вы не націснеце **Захаваць**, так што можна выправіць усё, што сканер прачытаў няправільна.
+- Калі цана на цэнніку ў іншай валюце, яна захоўваецца ў нататцы і ў вынік не ідзе.
+
+Кожнае сканаванне расходуе **1 AI-запыт** з месячнага ліміту (удвая менш, чым скан чэка).
 
 ## Аўтаадзначэнне пры скануванні чэкаў
 
@@ -43466,6 +43562,18 @@ Wil je al vóór de kassa weten wat de boodschappen kosten? Geef artikelen een p
 - Zodra minstens één artikel een prijs heeft, verschijnt boven de lijst een overzicht: **Nog te kopen** (alleen niet-afgevinkte artikelen — het bedrag daalt terwijl je afvinkt), het totaal van de **hele lijst** en hoeveel artikelen nog geen prijs hebben.
 
 Prijzen zijn in de valuta van je account. Elk accountlid kan ze invullen, en het is gratis in elk abonnement.
+
+## Een prijskaartje scannen
+
+Sta je bij het schap? Fotografeer het prijskaartje in plaats van te typen.
+
+- **Om een nieuw artikel toe te voegen**, tik je op **Artikel toevoegen → Scan een prijskaartje**. De camera opent; maak een foto van het kaartje en de app vult de productnaam, de prijs en de gedrukte details in.
+- **Voor een artikel dat al op de lijst staat**, tik je op de prijs (of **+ Prijs**) en daarna op **Prijskaartje scannen**. Met de galerijknop kun je ook een eerder gemaakte foto kiezen.
+- De details — verpakkingsgrootte, prijs per kg of liter, de normale prijs en einddatum van de aanbieding, en of de prijs een klantenkaart vereist — komen in de **notitie** van het artikel, onder de naam. Een notitie die je zelf schreef blijft staan; de details van het kaartje worden erachter gezet.
+- Er wordt niets opgeslagen tot je op **Opslaan** tikt, dus je kunt alles corrigeren wat de scan verkeerd las.
+- Staat er een prijs in een andere valuta op het kaartje, dan komt die in de notitie en telt hij niet mee in het totaal.
+
+Elke scan kost **1 AI-verzoek** van je maandlimiet (de helft van een bonscan).
 
 ## Automatisch afvinken bij het scannen van bonnen
 

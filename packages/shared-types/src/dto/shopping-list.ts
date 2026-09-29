@@ -79,6 +79,28 @@ export interface ShoppingItemPriceHint {
   date: string; // ISO date YYYY-MM-DD
 }
 
+/**
+ * What `POST /ai/scan-price-tag` read off a shelf price tag. Every field is
+ * nullable: a blurry or cropped tag yields what it yields, never a guess.
+ */
+export interface ScanPriceTagResponse {
+  productName: string | null;
+  /** The price to pay now (the promo price when a promo is on). */
+  price: number | null;
+  /** ISO 4217, or null when the tag shows no currency. */
+  currencyCode: string | null;
+  /** Pack size as printed, e.g. "500 g", "1 l", "6 x 0,5 l". */
+  size: string | null;
+  /** Price per kg/l/piece as printed, e.g. "9,98 zł/kg". */
+  unitPriceText: string | null;
+  /** The crossed-out regular price, when the tag shows a promo. */
+  regularPrice: number | null;
+  /** Last day of the promo as printed, e.g. "05.10". */
+  promoUntil: string | null;
+  /** True when the price shown needs a loyalty card or app. */
+  requiresLoyaltyCard: boolean;
+}
+
 // --- "my weekly staples" saved templates ---
 
 export interface ShoppingListTemplateItem {

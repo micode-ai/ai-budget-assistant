@@ -66,6 +66,18 @@ Du möchtest schon vor der Kasse wissen, was der Einkauf kostet? Gib den Artikel
 
 Preise gelten in der Währung deines Kontos. Jedes Kontomitglied kann sie setzen, und sie sind in jedem Tarif kostenlos.
 
+## Preisschild scannen
+
+Du stehst am Regal? Fotografiere das Preisschild, statt zu tippen.
+
+- **Für einen neuen Artikel** tippe auf **Artikel hinzufügen → Preisschild scannen**. Die Kamera öffnet sich; fotografiere das Schild, und die App füllt Produktname, Preis und die aufgedruckten Details aus.
+- **Für einen Artikel, der schon auf der Liste steht**, tippe auf seinen Preis (oder **+ Preis**) und dann auf **Preisschild scannen**. Mit der Galerie-Schaltfläche kannst du auch ein bereits aufgenommenes Foto wählen.
+- Die Details — Packungsgröße, Preis pro kg oder Liter, der reguläre Preis und das Ende des Angebots sowie ob der Preis eine Kundenkarte erfordert — landen in der **Notiz** des Artikels, die unter seinem Namen angezeigt wird. Eine selbst geschriebene Notiz bleibt erhalten; die Details vom Schild werden angehängt.
+- Gespeichert wird erst, wenn du auf **Speichern** tippst — du kannst also alles korrigieren, was der Scan falsch gelesen hat.
+- Zeigt das Schild einen Preis in einer anderen Währung, landet er in der Notiz und zählt nicht zur Summe.
+
+Jeder Scan verbraucht **1 KI-Anfrage** aus deinem Monatslimit (halb so viel wie ein Beleg-Scan).
+
 ## Automatisch abhaken beim Scannen von Belegen
 
 Wenn du einen Beleg mit der Kamera scannst, wird jeder noch nicht abgehakte Artikel auf deiner Einkaufsliste, der zu etwas auf dem Beleg passt, automatisch abgehakt — du musst ihn nach dem Einkauf nicht auch noch von Hand abhaken.

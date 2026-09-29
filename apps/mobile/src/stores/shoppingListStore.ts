@@ -58,7 +58,12 @@ interface ShoppingListState {
   dismissSuggestion: (canonicalName: string) => void;
   dismissDeal: (canonicalName: string, merchant: string) => void;
   loadDeals: () => Promise<void>;
-  addItem: (rawLabel: string, canonicalName?: string | null, quantity?: number) => Promise<void>;
+  addItem: (
+    rawLabel: string,
+    canonicalName?: string | null,
+    quantity?: number,
+    extras?: { unitPrice?: number | null; note?: string | null },
+  ) => Promise<void>;
   toggleChecked: (itemId: string) => void;
   /**
    * Auto-checks off every unchecked item, across all non-archived lists,
@@ -74,8 +79,14 @@ interface ShoppingListState {
   /** Reverts exactly the ids `reconcileWithReceipt` returned back to unchecked. */
   undoReceiptReconciliation: (itemIds: string[]) => void;
   updateQuantity: (itemId: string, qty: number) => void;
-  /** Sets the per-unit price (account currency); null clears it. */
-  updatePrice: (itemId: string, unitPrice: number | null) => void;
+  /**
+   * Edits an item's name, per-unit price (account currency) and/or note.
+   * Omitted fields are left alone; null clears price or note.
+   */
+  updateItemDetails: (
+    itemId: string,
+    patch: { rawLabel?: string; unitPrice?: number | null; note?: string | null },
+  ) => void;
   removeItem: (itemId: string) => void;
   clearChecked: () => Promise<void>;
   createList: (name: string) => Promise<void>;
@@ -329,7 +340,7 @@ export const useShoppingListStore = create<ShoppingListState>()(
       await api.revokeShoppingListGuestLink(id);
     },
 
-    addItem: async (rawLabel, canonicalName = null, quantity = 1) => {
+    addItem: async (rawLabel, canonicalName = null, quantity = 1, extras = {}) => {
       const accountId = useAccountStore.getState().currentAccountId;
       const { lists, activeListId } = get();
       const listId = activeListId ?? lists.find((l) => l.isDefault)?.id ?? lists[0]?.id;
@@ -347,8 +358,8 @@ export const useShoppingListStore = create<ShoppingListState>()(
         canonicalName: canonicalName ?? null,
         rawLabel,
         quantity,
-        unitPrice: null,
-        note: null,
+        unitPrice: extras.unitPrice ?? null,
+        note: extras.note ?? null,
         isChecked: false,
         addedByUserId: userId,
         sortOrder: list ? list.items.length : 0,
@@ -380,6 +391,8 @@ export const useShoppingListStore = create<ShoppingListState>()(
           canonicalName: canonicalName ?? undefined,
           rawLabel,
           quantity,
+          unitPrice: extras.unitPrice ?? undefined,
+          note: extras.note ?? undefined,
         })
         .then(() => {
           markShoppingListItemSynced(id).catch(() => {});
@@ -493,20 +506,20 @@ export const useShoppingListStore = create<ShoppingListState>()(
       );
     },
 
-    updatePrice: (itemId, unitPrice) => {
+    updateItemDetails: (itemId, patch) => {
       set((state) => ({
         lists: state.lists.map((l) => ({
           ...l,
-          items: l.items.map((it) => (it.id === itemId ? { ...it, unitPrice } : it)),
+          items: l.items.map((it) => (it.id === itemId ? { ...it, ...patch } : it)),
         })),
       }));
 
-      updateShoppingListItem(itemId, { unitPrice }).catch((e) =>
+      updateShoppingListItem(itemId, patch).catch((e) =>
         console.error('Failed to update shopping list item in SQLite:', e),
       );
 
-      api.updateItem(itemId, { unitPrice }).catch((e) =>
-        console.warn('Shopping list item price sync deferred (offline?):', e),
+      api.updateItem(itemId, patch).catch((e) =>
+        console.warn('Shopping list item details sync deferred (offline?):', e),
       );
     },
 

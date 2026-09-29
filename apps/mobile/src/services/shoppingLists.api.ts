@@ -16,6 +16,7 @@ import type {
   ApplyShoppingListTemplateResponse,
   ShoppingListGuestLinkResponse,
   ShoppingItemPriceHint,
+  ScanPriceTagResponse,
 } from '@budget/shared-types';
 
 export const shoppingListsApi = {
@@ -60,6 +61,14 @@ export const shoppingListsApi = {
     return httpClient.request<ShoppingItemPriceHint | null | undefined>(
       `/shopping-list/price-hint?name=${encodeURIComponent(name)}`,
     );
+  },
+
+  /** Reads a shelf price tag photo (1 AI request). Creates nothing. */
+  scanPriceTag(imageBase64: string) {
+    return httpClient.request<ScanPriceTagResponse>('/ai/scan-price-tag', {
+      method: 'POST',
+      body: JSON.stringify({ imageBase64, mimeType: 'image/jpeg' }),
+    });
   },
 
   deleteItem(itemId: string) {

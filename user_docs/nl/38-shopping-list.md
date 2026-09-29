@@ -66,6 +66,18 @@ Wil je al vóór de kassa weten wat de boodschappen kosten? Geef artikelen een p
 
 Prijzen zijn in de valuta van je account. Elk accountlid kan ze invullen, en het is gratis in elk abonnement.
 
+## Een prijskaartje scannen
+
+Sta je bij het schap? Fotografeer het prijskaartje in plaats van te typen.
+
+- **Om een nieuw artikel toe te voegen**, tik je op **Artikel toevoegen → Scan een prijskaartje**. De camera opent; maak een foto van het kaartje en de app vult de productnaam, de prijs en de gedrukte details in.
+- **Voor een artikel dat al op de lijst staat**, tik je op de prijs (of **+ Prijs**) en daarna op **Prijskaartje scannen**. Met de galerijknop kun je ook een eerder gemaakte foto kiezen.
+- De details — verpakkingsgrootte, prijs per kg of liter, de normale prijs en einddatum van de aanbieding, en of de prijs een klantenkaart vereist — komen in de **notitie** van het artikel, onder de naam. Een notitie die je zelf schreef blijft staan; de details van het kaartje worden erachter gezet.
+- Er wordt niets opgeslagen tot je op **Opslaan** tikt, dus je kunt alles corrigeren wat de scan verkeerd las.
+- Staat er een prijs in een andere valuta op het kaartje, dan komt die in de notitie en telt hij niet mee in het totaal.
+
+Elke scan kost **1 AI-verzoek** van je maandlimiet (de helft van een bonscan).
+
 ## Automatisch afvinken bij het scannen van bonnen
 
 Wanneer je een kassabon scant met de camera, wordt elk niet-afgevinkt item op je boodschappenlijst dat overeenkomt met iets op de bon automatisch afgevinkt — je hoeft het niet ook nog met de hand af te vinken na het winkelen.

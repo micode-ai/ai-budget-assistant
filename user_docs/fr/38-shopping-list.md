@@ -66,6 +66,18 @@ Envie de savoir combien coûteront les courses avant d’arriver à la caisse ? 
 
 Les prix sont dans la devise de votre compte. Tout membre du compte peut les saisir, et c’est gratuit dans toutes les offres.
 
+## Scanner une étiquette de prix
+
+Devant le rayon ? Photographiez l’étiquette au lieu de taper.
+
+- **Pour ajouter un nouvel article**, touchez **Ajouter un article → Scanner une étiquette de prix**. L’appareil photo s’ouvre ; photographiez l’étiquette et l’appli remplit le nom du produit, le prix et les détails imprimés.
+- **Pour un article déjà sur la liste**, touchez son prix (ou **+ Prix**) puis **Scanner l’étiquette**. Le bouton galerie permet aussi de choisir une photo déjà prise.
+- Les détails — format, prix au kg ou au litre, prix normal et date de fin de promo, et si le prix exige une carte de fidélité — vont dans la **note** de l’article, affichée sous son nom. Une note que vous avez écrite est conservée, et les détails de l’étiquette sont ajoutés à la suite.
+- Rien n’est enregistré avant que vous touchiez **Enregistrer** : vous pouvez corriger ce que le scan a mal lu.
+- Si l’étiquette affiche un prix dans une autre devise, il est gardé dans la note et ne compte pas dans le total.
+
+Chaque scan utilise **1 requête IA** de votre limite mensuelle (la moitié d’un scan de reçu).
+
 ## Coche automatique lors du scan des reçus
 
 Lorsque vous scannez un reçu avec l'appareil photo, tout article non coché de votre liste de courses qui correspond à quelque chose sur le reçu est coché automatiquement — vous n'avez pas besoin de le cocher aussi à la main juste après vos achats.

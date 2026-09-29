@@ -31,7 +31,8 @@ import { GoalPlannerService } from './services/goal-planner.service';
 import { GeocodingService } from './services/geocoding.service';
 import { CategorizeSuggestionsService } from './services/categorize-suggestions.service';
 import { CategorizeIncomeSuggestionsService } from './services/categorize-income-suggestions.service';
-import { ScanReceiptRequestSchema } from './utils/sanitize';
+import { ScanPriceTagRequestSchema, ScanReceiptRequestSchema } from './utils/sanitize';
+import { PriceTagService } from './services/price-tag.service';
 import { UpdateConversationTitleDto } from './dto';
 
 @Controller('ai')
@@ -49,6 +50,7 @@ export class AiController {
     private readonly categorizeSuggestionsService: CategorizeSuggestionsService,
     private readonly categorizeIncomeSuggestionsService: CategorizeIncomeSuggestionsService,
     private readonly receiptDuplicates: ReceiptDuplicateService,
+    private readonly priceTagService: PriceTagService,
   ) {}
 
   // Forward-geocode a typed query into up to 5 candidate places for the expense
@@ -240,6 +242,19 @@ export class AiController {
     }
 
     return this.ocrService.parseReceipt(imageBase64, req.user.id, req.accountId, userPrompt);
+  }
+
+  /**
+   * Reads a shelf price tag for the shopping list (product, price, pack size,
+   * promo). Read-only — the client shows the result for the user to confirm.
+   * Weighted 1.0, half a receipt: one small image and a short JSON answer.
+   */
+  @Post('scan-price-tag')
+  @UseGuards(AiUsageGuard)
+  @TrackAiUsage('ocr', 1.0)
+  async scanPriceTag(@Req() req: AuthenticatedRequest, @Body() body: unknown) {
+    const { imageBase64, mimeType } = ScanPriceTagRequestSchema.parse(body);
+    return this.priceTagService.scan(imageBase64, req.accountId, mimeType);
   }
 
   @Post('extract-text')

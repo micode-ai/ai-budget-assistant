@@ -144,16 +144,16 @@ async function pushPendingItems(accountId: string): Promise<void> {
         // The create is idempotent on clientId: for a row that already exists
         // server-side (edited offline after its first sync) it returns the old
         // row and applies none of these fields. The follow-up update is what
-        // actually lands an offline check / quantity / price edit.
-        if (item.isChecked || item.unitPrice !== null || item.quantity !== 1) {
-          await api.updateItem(item.clientId, {
-            // Only ever push a check, never an uncheck: an unchecked local row
-            // must not overwrite a tick another member made in the meantime.
-            isChecked: item.isChecked ? true : undefined,
-            quantity: item.quantity,
-            unitPrice: item.unitPrice,
-          });
-        }
+        // actually lands an offline check / quantity / price / name / note edit.
+        await api.updateItem(item.clientId, {
+          // Only ever push a check, never an uncheck: an unchecked local row
+          // must not overwrite a tick another member made in the meantime.
+          isChecked: item.isChecked ? true : undefined,
+          quantity: item.quantity,
+          unitPrice: item.unitPrice,
+          rawLabel: item.rawLabel,
+          note: item.note,
+        });
       }
       await markShoppingListItemSynced(item.id);
     } catch (e) {

@@ -147,8 +147,8 @@ next pull.
 `ShoppingListItem.unitPrice` (nullable `Decimal(12,2)`, SQLite `unit_price REAL`) is a price per
 unit the user types in. Line total = price × quantity; `src/features/shopping-list/listTotals.ts`
 (pure, tested) sums the list into *still to buy* (unchecked) and *whole list*, and counts unpriced
-items so the screen can say the total is partial. `ItemPriceModal` edits it; any member may, like
-quantity.
+items so the screen can say the total is partial. `ItemEditModal` edits it (with the name and note);
+any member may, like quantity.
 
 **One currency per list — the account's.** Prices are never converted, so totals are plain sums.
 The price hint (`GET /shopping-list/price-hint?name=`) follows the same rule: it returns the last
@@ -169,6 +169,30 @@ into the other.
 after its first sync applied nothing. The sweep's follow-up `updateItem` now sends quantity and
 price whenever they differ from a fresh row — and a check only as `true`, never an uncheck, so a
 stale local row cannot undo another member's tick.
+
+### Scanning a price tag (ABA-623)
+
+`POST /ai/scan-price-tag` reads a shelf price tag photo — product, current (promo) price, currency,
+pack size, per-unit price, crossed-out regular price, promo end date, loyalty-card condition. It
+lives in its own `ai/services/price-tag.service.ts`, deliberately not in `OcrService`, and costs
+**1.0** AI request (a receipt is 2.0). Entry points on mobile: **Scan price tag** in
+`ItemEditModal` (fills an existing or new item) and **Scan a price tag** in `AddItemModal` (opens
+the create sheet with `autoScan: 'camera'`). Hook: `features/shopping-list/usePriceTagScan.ts`.
+
+**The scan fills a form; it never saves.** The endpoint is read-only and the sheet only populates
+fields — Save is still the user's. That is why no viewer guard is needed: it writes nothing.
+
+**Model output is untrusted.** `normalizePriceTag` (pure, tested) nulls any missing, mistyped or
+absurd field and drops a "regular" price that is not above the current one; an all-empty reading
+is reported as unreadable rather than creating a blank item.
+
+**A foreign-currency price never becomes the item price.** `priceTagToFields` keeps the list's
+one-currency rule: a tag in another currency lands in the note ("on tag 2.99 EUR"), not in
+`unitPrice`. The extras are joined into the existing `note` column — no schema change — and a note
+the user already wrote is appended to, not overwritten.
+
+**Downscale before base64**, through `receiptImage.ts`, same as a receipt — see
+`receipt-image-memory.md`.
 
 ### Guest share link (ABA-587)
 
@@ -222,6 +246,9 @@ own offline-first mirror has no notion of, same precedent as account-transfers' 
 - No quantity parsing and no named-list targeting for the three AI chat tools.
 - Templates have no management screen — rename and delete are inline in the same sheet.
 - Templates do not carry prices; applying one yields unpriced items.
+- No barcode scanning: it needs a new native module and yields a name but never a price.
+- Renaming an item from a scan keeps its old `canonicalName`, so the price-history link still
+  points at the product it was first added as.
 - The guest share link has no rotate-without-revoking: "Revoke" then "Share" again is the
   rotation path. No QR code (receipt-split has one for its own group-split flow; not built here).
 
@@ -231,4 +258,4 @@ ABA-330 (M1–M6) · ABA-332 (the shopping hub quick action) · ABA-348 (archive
 AI chat add tool) · ABA-350 (push de-duplication) · ABA-352 and ABA-429 (screen decomposition,
 twice — it grew back once) · ABA-360 (remove and query chat tools) · ABA-455 (the ledger
 generalised) · ABA-531 and ABA-545 (receipt reconciliation, mobile then bots) · ABA-548
-(templates) · ABA-587 (guest share link) · ABA-622 (item prices, totals, receipt price hint).
+(templates) · ABA-587 (guest share link) · ABA-622 (item prices, totals, receipt price hint) · ABA-623 (price-tag scan).

@@ -14,7 +14,7 @@ import { AddItemModal } from '@/components/shopping-list/AddItemModal';
 import { ListSwitcherModal } from '@/components/shopping-list/ListSwitcherModal';
 import { TemplatesModal } from '@/components/shopping-list/TemplatesModal';
 import { ListNameModal, type NameModalState } from '@/components/shopping-list/ListNameModal';
-import { ItemPriceModal } from '@/components/shopping-list/ItemPriceModal';
+import { ItemEditModal, type ItemEditState, type ItemEditPatch } from '@/components/shopping-list/ItemEditModal';
 import { computeShoppingListTotals, lineTotal } from '@/features/shopping-list/listTotals';
 import { formatCurrency } from '@budget/shared-utils';
 import type {
@@ -50,7 +50,7 @@ export default function ShoppingListScreen() {
   const dismissDeal = useShoppingListStore((s) => s.dismissDeal);
   const toggleChecked = useShoppingListStore((s) => s.toggleChecked);
   const updateQuantity = useShoppingListStore((s) => s.updateQuantity);
-  const updatePrice = useShoppingListStore((s) => s.updatePrice);
+  const updateItemDetails = useShoppingListStore((s) => s.updateItemDetails);
   const removeItem = useShoppingListStore((s) => s.removeItem);
   const clearChecked = useShoppingListStore((s) => s.clearChecked);
   const setActiveList = useShoppingListStore((s) => s.setActiveList);
@@ -134,14 +134,22 @@ export default function ShoppingListScreen() {
   const checkedCount = useMemo(() => items.filter((i) => i.isChecked).length, [items]);
   const totals = useMemo(() => computeShoppingListTotals(items), [items]);
 
-  // ─── Item price sheet ─────────────────────────────────────────────────────
-  // Priced by any member, like quantity — a price is a note about the list,
-  // not a write to the account's money.
-  const [priceItemId, setPriceItemId] = useState<string | null>(null);
-  const priceItem = useMemo(
-    () => (priceItemId ? items.find((i) => i.id === priceItemId) ?? null : null),
-    [items, priceItemId],
-  );
+  // ─── Item edit sheet (name / price / note, scan a price tag) ──────────────
+  // Editable by any member, like quantity — a price is a note about the list,
+  // not a write to the account's money. The open item is held by id and read
+  // live from the store, so a background pull cannot strand a stale copy.
+  const [editTarget, setEditTarget] = useState<'create-scan' | string | null>(null);
+  const editState = useMemo<ItemEditState>(() => {
+    if (editTarget === null) return null;
+    if (editTarget === 'create-scan') return { mode: 'create', autoScan: 'camera' };
+    const found = items.find((i) => i.id === editTarget);
+    return found ? { mode: 'edit', item: found } : null;
+  }, [items, editTarget]);
+
+  const handleCreateFromSheet = (fields: { rawLabel: string; unitPrice: number | null; note: string | null }) => {
+    addItem(fields.rawLabel, null, 1, { unitPrice: fields.unitPrice, note: fields.note });
+  };
+  const handleUpdateFromSheet = (itemId: string, patch: ItemEditPatch) => updateItemDetails(itemId, patch);
   const comparableCount = useMemo(
     () => items.filter((i) => !i.isChecked && i.canonicalName).length,
     [items],
@@ -300,8 +308,15 @@ export default function ShoppingListScreen() {
               {item.rawLabel}
             </Text>
           </TouchableOpacity>
+          {!!item.note && (
+            <TouchableOpacity onPress={() => setEditTarget(item.id)} activeOpacity={0.7}>
+              <Text style={styles.noteText} numberOfLines={2}>
+                {item.note}
+              </Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
-            onPress={() => setPriceItemId(item.id)}
+            onPress={() => setEditTarget(item.id)}
             hitSlop={{ top: 4, bottom: 8, left: 0, right: 8 }}
             style={styles.priceTouch}
             accessibilityRole="button"
@@ -554,14 +569,19 @@ export default function ShoppingListScreen() {
         onClose={() => setAddModalVisible(false)}
         onAddProduct={handleAddProduct}
         onAddFreeText={handleAddFreeText}
+        onScanPriceTag={() => {
+          setAddModalVisible(false);
+          setEditTarget('create-scan');
+        }}
         bottomInset={insets.bottom}
       />
 
-      <ItemPriceModal
-        item={priceItem}
+      <ItemEditModal
+        state={editState}
         currency={currency}
-        onSave={updatePrice}
-        onClose={() => setPriceItemId(null)}
+        onCreate={handleCreateFromSheet}
+        onUpdate={handleUpdateFromSheet}
+        onClose={() => setEditTarget(null)}
         bottomInset={insets.bottom}
       />
 
@@ -758,6 +778,7 @@ const createStyles = (theme: Theme) => ({
   label: { ...theme.textStyles.body, color: theme.colors.textPrimary },
   labelChecked: { color: theme.colors.textTertiary, textDecorationLine: 'line-through' as const },
   priceTouch: { alignSelf: 'flex-start' as const, marginTop: theme.spacing[0.5] },
+  noteText: { ...theme.textStyles.bodySm, color: theme.colors.textTertiary, marginTop: theme.spacing[0.5] },
   priceText: { ...theme.textStyles.bodySm, color: theme.colors.textSecondary },
   priceTextChecked: { color: theme.colors.textTertiary },
   addPriceText: { ...theme.textStyles.bodySm, color: theme.colors.primary },

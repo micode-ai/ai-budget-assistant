@@ -12,6 +12,8 @@ interface AddItemModalProps {
   onClose: () => void;
   onAddProduct: (product: ProductListItem) => void;
   onAddFreeText: (text: string) => void;
+  /** Photograph a shelf price tag to create the item from it. */
+  onScanPriceTag: () => void;
   bottomInset: number;
 }
 
@@ -20,6 +22,7 @@ export function AddItemModal({
   onClose,
   onAddProduct,
   onAddFreeText,
+  onScanPriceTag,
   bottomInset,
 }: AddItemModalProps) {
   const { t } = useTranslation();
@@ -98,6 +101,20 @@ export function AddItemModal({
               </TouchableOpacity>
             )}
           </View>
+
+          <TouchableOpacity
+            style={styles.scanTagRow}
+            onPress={() => {
+              setQuery('');
+              onScanPriceTag();
+            }}
+            accessibilityRole="button"
+          >
+            <Ionicons name="scan-outline" size={18} color={theme.colors.primary} />
+            <Text style={styles.scanTagText} numberOfLines={1}>
+              {t('shoppingList.scanTagToAdd')}
+            </Text>
+          </TouchableOpacity>
 
           <ScrollView style={styles.modalScroll} keyboardShouldPersistTaps="handled">
             {trimmedQuery.length > 0 ? (
@@ -225,6 +242,18 @@ const createStyles = (theme: Theme) => ({
     borderBottomColor: theme.colors.divider,
   },
   freeTextText: { ...theme.textStyles.body, color: theme.colors.textPrimary, flex: 1 },
+  scanTagRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
+    gap: theme.spacing[1.5],
+    paddingVertical: theme.spacing[2.5],
+    marginBottom: theme.spacing[2],
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.primary,
+  },
+  scanTagText: { ...theme.textStyles.bodyMedium, color: theme.colors.primary, flexShrink: 1 },
 
   productRow: {
     flexDirection: 'row' as const,
