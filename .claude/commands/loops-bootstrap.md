@@ -26,7 +26,7 @@ iterations) and shows it in a table.
    - `README.md` / `CLAUDE.md` "Release process" / "Deploy" / "Weekly" sections.
    - Cron files: `crontab`, `.cron`, `pyproject.toml` task runners.
 
-2. **Pick 3–7 loops worth documenting.** A loop is worth a file when:
+2. **Pick the loops worth documenting** — fewer is fine. A loop is worth a file when:
    - It runs more than once (not a one-off task).
    - It has a clear trigger.
    - It can fail and someone has to retry / debug.
@@ -80,4 +80,4 @@ iterations) and shows it in a table.
   process documented, write fewer loops (or none).
 - Cite concrete files: `.github/workflows/test.yml`, `scripts/deploy.sh`.
 - Don't edit code files. Only write into `docs/loops/`.
-- Keep each loop under ~80 lines.
+- Keep each loop to its trigger, steps, and how to tell it worked.

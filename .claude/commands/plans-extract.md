@@ -21,11 +21,11 @@ progress: `- [x]` is done, `- [ ]` is pending.
 1. **Find sources of in-flight work:**
    - Recent commits (`git log --oneline -50`) — themes that span several commits but aren't done yet.
    - `TODO:` / `FIXME:` clusters in code that share a topic.
-   - `CLAUDE.md` "in progress" sections.
-   - Existing files in `docs/specs/`, `docs/superpowers/plans/`, `docs/roadmap/`.
+   - `docs/wiki/` pages' "Known gaps" sections.
+   - Existing files in `docs/superpowers/plans/` and `docs/superpowers/specs/`.
    - Branch names from `git branch -r` that suggest unfinished features.
 
-2. **Pick 3–7 plans worth tracking.** Each plan should:
+2. **Pick the plans worth tracking** — fewer is fine. Each plan should:
    - Have a clear goal (one sentence).
    - Be partially in-flight (some tasks done, some pending) — pure backlog ideas belong in `docs/product-ideas/`, not here.
    - Have visible movement in the codebase (commits or files) to back up the "done" checkboxes.
@@ -77,4 +77,4 @@ progress: `- [x]` is done, `- [ ]` is pending.
 - Mark a task `- [x]` only if you can cite the file / commit that
   completed it.
 - Don't edit code files. Only write into `docs/plans/`.
-- Keep each plan under ~80 lines.
+- Keep each plan to its goal, its tasks and their evidence.

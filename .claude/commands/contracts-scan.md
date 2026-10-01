@@ -25,7 +25,7 @@ against when they change things.
    - For a SPA: each major route/page is a page-level contract.
    - For a CLI: each subcommand.
 
-2. **Pick 5–15 units** for the first pass. Quality > quantity.
+2. **Pick the units worth a contract** — the ones a contributor would otherwise misuse. Quality over quantity.
 
 3. **For each module, write `docs/contracts/{name}.md`:**
 
@@ -87,4 +87,4 @@ against when they change things.
 - Be concrete: quote real filenames, function names, route patterns.
 - If a "module" turns out to be empty / 50 lines / not really its own
   unit — skip it rather than write a generic contract.
-- Keep each contract under ~80 lines.
+- Keep each contract to what a caller needs: inputs, outputs, invariants, failure modes.
