@@ -177,6 +177,9 @@ export class ChatService {
       ],
       tools: this.aiToolsService.getToolDefinitions(),
       tool_choice: 'auto',
+      // Only the first tool call is handled below; without this a second call
+      // ("add expense 20 and income 50") would be dropped silently.
+      parallel_tool_calls: false,
       max_tokens: 1000,
     });
 
@@ -210,7 +213,7 @@ export class ChatService {
 
       if (this.aiToolsService.isWriteAction(functionName)) {
         if (accountRole === 'viewer') {
-          const lang = this.promptBuilder.detectLanguage(message);
+          const lang = this.promptBuilder.detectUserLanguage(message, history, user?.language);
           const viewerRefusals: Record<string, string> = {
             Russian: '🔒 У вас права только для просмотра. Создавать и изменять данные могут редакторы и владельцы аккаунта.',
             Ukrainian: '🔒 У вас лише права перегляду. Створювати і змінювати дані можуть редактори та власники акаунту.',

@@ -10,7 +10,7 @@ import { AI_TOOL_DEFINITIONS, AI_WRITE_ACTION_TYPES } from './ai-tool-schemas';
 import type { ChatActionType, ChatActionResult } from '@budget/shared-types';
 
 /**
- * Thin dispatcher over the 18 AI function-calling tools. The schemas live in
+ * Thin dispatcher over the AI function-calling tools. The schemas live in
  * ai-tool-schemas.ts and the per-tool logic lives in five domain provider services
  * (ai-expense-tools, ai-budget-tools, ai-debt-goal-tools, ai-shopping-tools,
  * ai-undo-tools) — see tech-debt ai-tools-service-god-file for why this was split.

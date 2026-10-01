@@ -22,7 +22,6 @@ const BASE_PARSED_RECEIPT: ParsedReceipt & { suggestedCategory?: string } = {
   currency: 'USD',
   paymentMethod: 'card',
   confidence: 0.9,
-  rawText: 'raw receipt text',
   suggestedCategory: undefined,
 };
 

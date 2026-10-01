@@ -23,6 +23,14 @@ describe('PromptBuilder language detection', () => {
       expect(pb.detectLanguage('Wie viel habe ich für Lebensmittel ausgegeben?')).toBe('German');
       expect(pb.detectLanguage('Ile wydałem w tym miesiącu na zakupy?')).toBe('Polish');
     });
+
+    it('tells Belarusian from Ukrainian — both write "і", only Belarusian has "ў", "ы", "э"', () => {
+      expect(pb.detectLanguage('Колькі я патраціў у гэтым месяцы?')).toBe('Belarusian');
+      expect(pb.detectLanguage('Дадай выдатак на ежу і хлеб')).toBe('Belarusian');
+      expect(pb.detectLanguage('Скільки я витратив цього місяця?')).toBe('Ukrainian');
+      expect(pb.detectLanguage('Додай витрату на їжу')).toBe('Ukrainian');
+      expect(pb.detectLanguage('Покажи мої витрати')).toBe('Ukrainian');
+    });
   });
 
   describe('detectUserLanguage', () => {

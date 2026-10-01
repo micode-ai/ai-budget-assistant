@@ -109,7 +109,7 @@ export class ChatActionLifecycleService {
       }
     }
 
-    const lang = await this.detectConversationLanguage(conversationId);
+    const lang = await this.detectConversationLanguage(conversationId, userId);
 
     const confirmText = result.success
       ? (pendingData.actionType === 'undo_last_action'
@@ -169,7 +169,7 @@ export class ChatActionLifecycleService {
       },
     });
 
-    const lang = await this.detectConversationLanguage(conversationId);
+    const lang = await this.detectConversationLanguage(conversationId, userId);
     const rejectText = this.promptBuilder.getRejectText(lang);
     const assistantMsg = await this.prisma.chatMessage.create({
       data: {
@@ -188,16 +188,23 @@ export class ChatActionLifecycleService {
     };
   }
 
-  private async detectConversationLanguage(conversationId: string): Promise<string> {
-    const recentMessages = await this.prisma.chatMessage.findMany({
-      where: { conversationId, role: 'user' },
-      orderBy: { createdAt: 'desc' },
-      take: 3,
-      select: { content: true },
-    });
-    if (recentMessages.length === 0) return 'English';
+  /**
+   * Same tiers as the chat reply (detectUserLanguage): the recent messages'
+   * script first, then the user's app UI locale for plain-ASCII text — so a
+   * French user typing without accents gets French confirmations too.
+   */
+  private async detectConversationLanguage(conversationId: string, userId: string): Promise<string> {
+    const [recentMessages, user] = await Promise.all([
+      this.prisma.chatMessage.findMany({
+        where: { conversationId, role: 'user' },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+        select: { content: true },
+      }),
+      this.prisma.user.findUnique({ where: { id: userId }, select: { language: true } }),
+    ]);
     const allText = recentMessages.map((m: { content: string }) => m.content).join(' ');
-    return this.promptBuilder.detectLanguage(allText);
+    return this.promptBuilder.detectUserLanguage(allText, [], user?.language);
   }
 
   /**

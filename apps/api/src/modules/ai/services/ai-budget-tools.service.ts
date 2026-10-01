@@ -6,6 +6,13 @@ import { ExchangeRateService } from '../../currency-exchange/exchange-rate.servi
 import { getRatesSafe, convertAmount } from '../../../common/utils/fx';
 import type { ChatActionResult } from '@budget/shared-types';
 
+/** Names of the categories a budget allocates to (empty = an overall budget). */
+function allocationNames(b: { categoryAllocations?: { category?: { name?: string | null } | null }[] }): string[] {
+  return (b.categoryAllocations ?? [])
+    .map((a) => a.category?.name)
+    .filter((n): n is string => !!n);
+}
+
 /**
  * The budget/category chat tools: create_budget, get_budget_status, create_category.
  * Extracted from AiToolsService (tech-debt ai-tools-service-god-file) — see
@@ -35,24 +42,34 @@ export class AiBudgetToolsService {
     accountId: string,
     userId: string,
   ): Promise<ChatActionResult> {
-    let categoryId: string | undefined;
+    const amount = Number(data.amount);
+    // A Budget has no categoryId column — a category budget is a budget with
+    // one BudgetCategory allocation. An unknown category must fail rather than
+    // fall through to a budget that silently counts every expense.
+    let categories: { categoryId: string; amount: number }[] | undefined;
     if (data.categoryName) {
-      const categories = await this.categoriesService.findAll(accountId);
-      const match = categories.find(
-        (c: { name: string }) => c.name.toLowerCase() === String(data.categoryName).toLowerCase(),
-      );
-      categoryId = match?.id;
+      const all = await this.categoriesService.findAll(accountId);
+      const wanted = String(data.categoryName).trim().toLowerCase();
+      const match = all.find((c: { name: string }) => c.name.toLowerCase() === wanted);
+      if (!match) {
+        return {
+          actionType: 'create_budget',
+          success: false,
+          errorMessage: `Category "${String(data.categoryName)}" not found`,
+        };
+      }
+      categories = [{ categoryId: match.id, amount }];
     }
 
     const dto = {
       localId: randomUUID(),
       name: String(data.name),
-      amount: Number(data.amount),
+      amount,
       currencyCode: String(data.currencyCode),
       period: String(data.period),
       startDate: String(data.startDate),
       endDate: data.endDate ? String(data.endDate) : undefined,
-      categoryId,
+      categories,
     };
 
     const budget = await this.budgetsService.create(accountId, userId, dto);
@@ -116,9 +133,10 @@ export class AiBudgetToolsService {
       targetBudgets = targetBudgets.filter((b: any) => b.name.toLowerCase().includes(name));
     }
     if (data.categoryName) {
+      // Category budgets are expressed only through BudgetCategory allocations.
       const catName = String(data.categoryName).toLowerCase();
       targetBudgets = targetBudgets.filter((b: any) =>
-        b.category?.name?.toLowerCase().includes(catName),
+        allocationNames(b).some((n) => n.toLowerCase().includes(catName)),
       );
     }
 
@@ -149,7 +167,7 @@ export class AiBudgetToolsService {
             amount: conv(Number(b.amount), cur).value,
             currencyCode: conv(Number(b.amount), cur).currency,
             period: b.period,
-            category: b.category?.name,
+            categories: allocationNames(b),
             spent: conv(progress.spent, cur).value,
             remaining: conv(progress.remaining, cur).value,
             // overBy is precomputed server-side — the LLM must report this

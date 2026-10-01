@@ -1,7 +1,7 @@
 import OpenAI from 'openai';
 
 /**
- * The 18 OpenAI function-calling tool schemas exposed to the chat model. Data-only —
+ * The OpenAI function-calling tool schemas exposed to the chat model. Data-only —
  * no logic. Extracted from AiToolsService.getToolDefinitions() (tech-debt
  * ai-tools-service-god-file) so the schema block doesn't dominate the dispatcher file.
  */
@@ -15,7 +15,7 @@ export const AI_TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] =
         type: 'object',
         properties: {
           amount: { type: 'number', description: 'The expense amount' },
-          currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'], description: 'Currency code. Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB' },
+          currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'], description: 'Currency code. Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB, Br=BYN' },
           description: { type: 'string', description: 'What the expense was for' },
           categoryName: { type: 'string', description: 'Category name (e.g., "Food & Drinks", "Entertainment", "Transport")' },
           date: { type: 'string', description: 'ISO date string (YYYY-MM-DD). Default to today if not specified.' },
@@ -54,7 +54,7 @@ export const AI_TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] =
           amount: { type: 'number', description: 'Budget limit amount' },
           currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'] },
           period: { type: 'string', enum: ['daily', 'weekly', 'monthly', 'yearly', 'custom'], description: 'Budget period' },
-          categoryName: { type: 'string', description: 'Category to budget for' },
+          categoryName: { type: 'string', description: 'Exact name of an existing category from the available-categories list; the budget then counts only that category. Omit for an overall budget. An unknown name fails the action.' },
           startDate: { type: 'string', description: 'Start date ISO string (YYYY-MM-DD)' },
           endDate: { type: 'string', description: 'End date ISO string (YYYY-MM-DD), for custom period' },
         },
@@ -103,7 +103,7 @@ export const AI_TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] =
         type: 'object',
         properties: {
           budgetName: { type: 'string', description: 'Specific budget name to check' },
-          categoryName: { type: 'string', description: 'Category-linked budget to check' },
+          categoryName: { type: 'string', description: 'Return only budgets allocated to a category whose name contains this text (case-insensitive). Each returned budget lists its allocated `categories`; an empty list means an overall budget.' },
         },
       },
     },
@@ -127,7 +127,7 @@ export const AI_TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] =
     type: 'function',
     function: {
       name: 'get_debt_summary',
-      description: 'Get a summary of all active debts — money lent to others and money borrowed. Use when the user asks about debts, who owes them money, or how much they owe.',
+      description: 'Get every debt — money lent to others and money borrowed — each with its status and remaining balance, plus totals; `activeCount` counts the unpaid ones. Use when the user asks about debts, who owes them money, or how much they owe.',
       parameters: {
         type: 'object',
         properties: {},
@@ -192,7 +192,7 @@ export const AI_TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] =
         type: 'object',
         properties: {
           amount: { type: 'number', description: 'The price the user wants to spend' },
-          currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'], description: 'Currency code. Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB' },
+          currencyCode: { type: 'string', enum: ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'], description: 'Currency code. Infer from symbols: ₴=UAH, $=USD, €=EUR, zł=PLN, £=GBP, ₽=RUB, Br=BYN' },
           description: { type: 'string', description: 'What they want to buy (optional)' },
         },
         required: ['amount'],

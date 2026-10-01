@@ -194,7 +194,7 @@ For each insight, return a JSON object with:
 - chartConfig: { chartType: "bar"|"donut"|"line", title: string, data: [{label: string, value: number, color?: string}] }
 - actionSuggestion: what the user should do (1 sentence)
 
-Return ONLY a valid JSON array. No markdown, no code blocks.`;
+Return a JSON object of the form {"insights": [ ...insight objects... ]}.`;
 
     try {
       const completion = await this.openai.chat.completions.create({

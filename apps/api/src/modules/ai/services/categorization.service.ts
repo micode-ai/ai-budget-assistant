@@ -95,7 +95,7 @@ export class CategorizationService {
     // honoring the user's aiModel preference (gpt-4o by default).
     const userPref = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { aiModel: true },
+      select: { aiModel: true, currencyCode: true },
     });
     const { model: aiModel } = resolveAiModel(userPref?.aiModel);
 
@@ -134,8 +134,8 @@ Return a JSON object with:
 - confidence: number (0-1, how confident you are in the categorization)
 - merchant: string | null (merchant name if mentioned)
 
-If the amount is not specified, estimate a reasonable amount or set to 0.
-If the currency is not specified, default to USD.
+If no amount is stated, return 0 — never estimate one.
+If no currency is stated or shown by a symbol, return null for currency.
 
 Only return valid JSON, no other text.`;
 
@@ -158,7 +158,7 @@ Only return valid JSON, no other text.`;
 
     return {
       amount: result.amount || 0,
-      currencyCode: result.currency || 'USD',
+      currencyCode: result.currency || userPref?.currencyCode || 'USD',
       description: result.description || text,
       categoryId: historySuggestion?.categoryId || embeddingHint?.categoryId || matchedCategory?.id,
       categorySuggestion: historySuggestion?.categoryName || embeddingHint?.categoryName || result.category,
@@ -170,7 +170,7 @@ Only return valid JSON, no other text.`;
   async parseIncomeFromText(text: string, userId: string, accountId: string) {
     const userPref = await this.prisma.user.findUnique({
       where: { id: userId },
-      select: { aiModel: true },
+      select: { aiModel: true, currencyCode: true },
     });
     const { model: aiModel } = resolveAiModel(userPref?.aiModel);
 
@@ -204,8 +204,8 @@ Return a JSON object with:
 - category: string (the most appropriate income category from the list)
 - confidence: number (0-1, how confident you are in the categorization)
 
-If the amount is not specified, estimate a reasonable amount or set to 0.
-If the currency is not specified, default to USD.
+If no amount is stated, return 0 — never estimate one.
+If no currency is stated or shown by a symbol, return null for currency.
 
 Only return valid JSON, no other text.`;
 
@@ -227,7 +227,7 @@ Only return valid JSON, no other text.`;
 
     return {
       amount: result.amount || 0,
-      currencyCode: result.currency || 'USD',
+      currencyCode: result.currency || userPref?.currencyCode || 'USD',
       description: result.description || text,
       categoryId: historySuggestion?.categoryId || embeddingHint?.categoryId || matchedCategory?.id,
       categorySuggestion: historySuggestion?.categoryName || embeddingHint?.categoryName || result.category,

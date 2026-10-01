@@ -9,8 +9,12 @@ export class PromptBuilder {
   detectLanguage(text: string): string {
     const cyrillicRatio = (text.match(/[а-яА-ЯёЁіІїЇєЄґҐўЎ]/g) || []).length / Math.max(text.length, 1);
     if (cyrillicRatio > 0.3) {
-      if (/[іІїЇєЄґҐ]/.test(text)) return 'Ukrainian';
+      // Belarusian writes "і" too, so "і" alone cannot mean Ukrainian: "ў" is
+      // Belarusian-only, "ї/є/ґ" Ukrainian-only, and "і" beside "ы"/"э" (letters
+      // Ukrainian lacks) is Belarusian.
       if (/[ўЎ]/.test(text)) return 'Belarusian';
+      if (/[їЇєЄґҐ]/.test(text)) return 'Ukrainian';
+      if (/[іІ]/.test(text)) return /[ыЫэЭ]/.test(text) ? 'Belarusian' : 'Ukrainian';
       return 'Russian';
     }
     if (/[äöüßÄÖÜ]/.test(text)) return 'German';
@@ -94,16 +98,16 @@ export class PromptBuilder {
     return `You are a helpful financial assistant helping a user manage their budget and expenses.
 Format your responses using Markdown: use **bold**, lists, headers (##), and tables where appropriate for clarity.
 
-Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB
+Currency symbol mapping: ₴=UAH, $=USD, €=EUR, zł/zl=PLN, £=GBP, ₽=RUB, Br=BYN
 CRITICAL currency rule: every amount in the tool results and dynamic context carries its OWN
 \`currencyCode\` field. ALWAYS label each amount with the currency from that field — use the ISO code
 (e.g. "123.45 PLN") or the matching symbol from the mapping above (PLN→zł, USD→$, EUR→€). NEVER show an
 amount with a currency that does not match its \`currencyCode\`. In particular, do NOT default to € (euro)
 for amounts whose \`currencyCode\` is not EUR. When in doubt, write the ISO code rather than a symbol.
 
-You can help analyze spending by tags, by projects, and by individual purchased items from receipts.
-When users reference tags with #, look them up. When they mention project names, match to active projects.
-When asked about specific items or products, use the topItems data from the user-provided context.
+The tag names (users write them with #), project names and topItems in the dynamic context are there so
+you recognise what the user is referring to — they are not a source of amounts. There is no tool that
+totals spending per tag or per project; if asked for one, say so rather than estimating it.
 
 ${getResponseModeInstruction(responseMode)}
 
@@ -161,7 +165,7 @@ expenses, sort by amount descending unless the user explicitly asks for a differ
 When the user mentions debts (someone repaid them, they lent/borrowed money), use the debt tools:
 - record_debt_repayment: Use the debtId from the activeDebts context. If multiple debts share the same contact name, ask a single clarifying question before calling the tool.
 - create_debt: Use direction="lent" when user gave money out; direction="borrowed" when user received money.
-- get_debt_summary: No parameters needed — returns all active debts with remaining balances.
+- get_debt_summary: No parameters needed — returns every debt with its status and remaining balance; \`activeCount\` is the number still unpaid.
 
 When the user wants to update a savings goal balance ("I saved $200 for vacation", "Add $500 to my car goal"), use update_goal_balance with the goalId from the savingsGoals context. Match goal names from context to identify the correct goalId.
 

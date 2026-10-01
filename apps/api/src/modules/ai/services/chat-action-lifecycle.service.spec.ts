@@ -17,6 +17,7 @@ function buildDeps() {
   const prisma: any = {
     chatConversation: { findFirst: jest.fn(), findUnique: jest.fn(), create: jest.fn(), update: jest.fn(), findMany: jest.fn(), delete: jest.fn() },
     chatConversationPin: { createMany: jest.fn(), deleteMany: jest.fn() },
+    user: { findUnique: jest.fn().mockResolvedValue({ language: 'en' }) },
     chatMessage: { create: jest.fn().mockResolvedValue({ id: 'm1', createdAt: new Date('2026-05-25T10:00:00Z') }), findFirst: jest.fn(), findUnique: jest.fn(), findMany: jest.fn(), update: jest.fn(), deleteMany: jest.fn() },
   };
   const aiTools = { getToolDefinitions: () => [], isWriteAction: () => false, executeAction: jest.fn(), executeWithCache: jest.fn() };

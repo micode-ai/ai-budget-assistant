@@ -721,11 +721,11 @@ export class PriceHistoryService {
         {
           role: 'system',
           content: `You extract clean canonical product names from grocery receipt OCR text.
-Reply with a JSON object mapping each input number to its canonical name, e.g. {"1": "Mleko Łaciate 3.2%", "2": "Heinz Ketchup"}.
-Rules:
-- Return ONLY brand + product variant (e.g. "Activia Truskawkowy", "Mleko Łaciate 3.2%", "Heinz Ketchup")
-- Remove: weight (125G, 500ML, 6SZT), unit prices (3,49), store codes, percentages that are nutrition specs unless they identify the product variant (e.g. 3.2% fat milk → keep 3.2%)
-- Keep: brand name, product type, key variant (flavor, key spec)
+Reply with a JSON object mapping each input number to its canonical name, e.g. {"1": "Mleko Łaciate 3,2% 1L", "2": "Heinz Ketchup 500g"}.
+These names must match the ones receipt scanning writes, which keep the size so different pack sizes stay separate products:
+- KEEP: brand, product type, flavour/variant (Truskawkowy, Naturalny), weight/volume of a single unit (500g, 1L, 250ml), fat/alcohol percentage (3,2%, 4,7%)
+- STRIP: pack-quantity multipliers (6SZT, ×6, 4×; from "4×130G" keep the unit "130g"), unit prices (3,49), store codes, PLU numbers
+- Examples: "MLEKO 3,2% ŁACIATE 1L 6SZT" → "Mleko Łaciate 3,2% 1L"; "SERK DANIO TRUSKAWKOWY 4×130G" → "Danio Truskawkowy 130g"; "JOGURT ACTIVIA BRZOSKWINIA 150G" → "Activia Brzoskwinia 150g"
 - Use Title Case
 - Include EVERY input number as a key, using the exact number given
 - Unknown/unclear → best guess product type`,

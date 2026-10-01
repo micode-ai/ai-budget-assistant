@@ -109,7 +109,6 @@ export interface ParsedReceipt {
   currency: string;
   paymentMethod: string | null;
   confidence: number;
-  rawText: string;
 }
 
 /**
@@ -330,8 +329,7 @@ Return a JSON object with the following structure:
   "currency": "USD/EUR/PLN/etc",
   "paymentMethod": "cash/card/etc or null",
   "suggestedCategory": "a category from the available list, or null if none of them genuinely fits this purchase — never pick the closest wrong one; a category that only shares a generic word with the purchase (e.g. 'Zakupy …' / 'Shopping …') is NOT a fit — groceries never go into a building-supplies category",
-  "confidence": 0-1 confidence score,
-  "rawText": "all readable text from receipt"
+  "confidence": 0-1 confidence score
 }
 
 Store-address rules (merchantAddress / merchantStreet / merchantCity / merchantPostalCode / merchantCountry):
