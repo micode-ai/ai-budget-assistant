@@ -143,6 +143,8 @@ the section you came for — it states what must not break and why. A missing se
   wired, why nothing renders a component, and how module-scope side effects leak between files
 
 ### Money movement and lists
+- [debts](features/debts.md) — lent/borrowed money as flagged expenses/incomes, repayments, and
+  the due-date reminders (sent to the owner only)
 - [wallet-currencies](features/wallet-currencies.md) — which currencies get a balance card, and why a
   hidden one stays hidden
 - [account-transfers](features/account-transfers.md) — moving money between accounts, and the only

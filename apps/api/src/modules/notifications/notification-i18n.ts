@@ -552,12 +552,12 @@ const translations: Record<string, {
     debtUpcomingBody: ({ amount, currencyCode, type }) =>
       type === 'lent'
         ? `Pożyczyłeś ${amount} ${currencyCode} — termin spłaty wkrótce`
-        : `Pożyczyłeś ${amount} ${currencyCode} — termin spłaty wkrótce`,
+        : `Masz do oddania ${amount} ${currencyCode} — termin spłaty wkrótce`,
     debtOverdueTitle: ({ contactName }) => `Dług przeterminowany: ${contactName}`,
     debtOverdueBody: ({ amount, currencyCode, type }) =>
       type === 'lent'
         ? `${amount} ${currencyCode}, które pożyczyłeś, jest przeterminowane`
-        : `${amount} ${currencyCode}, które pożyczyłeś, jest przeterminowane`,
+        : `Minął termin oddania ${amount} ${currencyCode}`,
     recurringExpenseTitle: ({ description }) => `Cykliczny wydatek zarejestrowany: ${description}`,
     recurringExpenseBody: ({ amount, currencyCode, period }) =>
       `${amount} ${currencyCode} automatycznie dodane (${period})`,

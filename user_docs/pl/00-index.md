@@ -35,7 +35,7 @@
 14. [Portfel inwestycyjny](./14-investments.md) — sledzenie akcji, ETF, krypto i analityka
 15. [Szyfrowanie end-to-end](./15-encryption.md) — ochrona danych za pomoca E2EE
 16. [Eksport i raporty](./16-export-reports.md) — raporty PDF/Excel/CSV, kopie zapasowe, podsumowania e-mail
-17. [Dlugi i Pozyczki](./17-debts-and-loans.md) — sledzenie pozyczonych i wzietych pieniedzy, splaty, terminy
+17. [Długi i pożyczki](./17-debts-and-loans.md) — śledzenie pożyczonych i zadłużonych pieniędzy, spłaty, terminy
 18. [Cele oszczędnościowe](./18-savings-goals.md) — plany oszczędnościowe oparte na AI z celami składek i punktami kontrolnymi
 19. [Tropiciel wydatków](./19-fat-finder.md) — comiesięczny audyt wydatków w celu identyfikacji marnotrawstwa i sugestii oszczędności
 20. [Tryb odpowiedzi AI](./20-ai-response-mode.md) — dostosowanie stylu komunikacji AI (Prosty, Zrównoważony, Ekspert)
