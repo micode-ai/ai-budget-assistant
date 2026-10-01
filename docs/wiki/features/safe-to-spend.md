@@ -106,15 +106,15 @@ hero row — `renderHomeWidget` returns `null` for it, so it is never a card of 
   production ESM runtime crash-loops on the package barrel. Change both sides together.
 - **Every cache key carries the base currency** (`sts:{accountId}:{baseCurrency}`, and the chat
   tool's key) — the account is shared, the display currency is per user.
-- **An amount with no exchange rate is excluded and flagged**, never summed unconverted.
+- **An amount with no exchange rate is excluded and flagged**, never summed unconverted. For a single
+  purchase that means no verdict: `checkAffordability` returns `reasonCode: 'currency_unconvertible'`
+  instead of judging a foreign amount as if it were in the base currency (ABA-626).
 
 ## Known gaps
 
 - `safe-to-spend.service.spec.ts` tests the **shared-utils** copy of the formula, not
   `safe-to-spend.util.ts`, which is what the service calls. Harmless only while the two are kept
   identical by hand.
-- `checkAffordability` falls back to the **unconverted** amount when the asked currency has no rate
-  — the one place here that breaks the exclude-and-flag rule.
 - The server cache is not invalidated on writes; a new expense moves the number within 5 minutes.
 - No buffer: v1 lets the figure fall to zero exactly at the horizon.
 - The offline fallback omits subscriptions, so offline it reads higher than online.

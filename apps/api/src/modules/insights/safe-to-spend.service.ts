@@ -541,11 +541,20 @@ export class SafeToSpendService {
     // Convert the asked amount to base currency
     let amountInBase = amount;
     if (currencyCode !== baseCurrency) {
-      if (rates) {
-        const conv = convertAmount(amount, currencyCode, baseCurrency, rates);
-        amountInBase = conv ?? amount; // graceful: use native if rate unavailable
+      const conv = rates ? convertAmount(amount, currencyCode, baseCurrency, rates) : null;
+      if (conv === null || conv === undefined) {
+        // Never compare a raw foreign amount against base-currency figures: no verdict.
+        return {
+          affordable: false,
+          amount,
+          currencyCode,
+          safeToSpendToday: sts.safeToSpendToday,
+          amountInBase: 0,
+          reasonCode: 'currency_unconvertible',
+          baseCurrency,
+        };
       }
-      // else keep native as fallback
+      amountInBase = conv;
     }
     amountInBase = Math.round(amountInBase * 100) / 100;
 

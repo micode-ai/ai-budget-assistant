@@ -2531,6 +2531,7 @@ export default {
     tight: 'Abordable, mais serré',
     delaysGoal: 'Abordable, mais retarde un objectif',
     waitUntil: 'Abordable après le {{date}}',
+    currencyUnconvertible: 'Évaluation impossible : aucun taux de change pour cette devise',
   },
   healthScore: {
     title: 'Santé Financière',

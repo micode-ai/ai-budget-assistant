@@ -6,6 +6,27 @@ import { RestoreBackupDto } from './dto';
 /** Thrown inside the restore transaction to force a rollback when any row failed. */
 class RestoreAbort extends Error {}
 
+/** Backup primary key → the row it resolved to in the target account. */
+interface RestoreIdMaps {
+  category: Map<string, string>;
+  tag: Map<string, string>;
+  project: Map<string, string>;
+}
+
+function remap(map: Map<string, string>, id: string | null | undefined): string | null {
+  return id ? (map.get(id) ?? null) : null;
+}
+
+/** The distinct mapped ids of a join list (`expenseTags`, `projectIncomes`, …); unmapped ones are dropped. */
+function mappedIds(map: Map<string, string>, rows: Array<Record<string, unknown>> | undefined, key: string): string[] {
+  const out = new Set<string>();
+  for (const r of rows ?? []) {
+    const id = remap(map, r?.[key] as string | undefined);
+    if (id) out.add(id);
+  }
+  return [...out];
+}
+
 const BACKUP_VERSION = 1;
 const MAX_BACKUP_SIZE = 50 * 1024 * 1024; // 50MB
 
@@ -163,9 +184,15 @@ export class BackupsService {
             errors.push(...errs);
           }
 
+          // Tags and projects get the same backup-id → this-account-id mapping as
+          // categories, so the expense/income links below point at real rows.
+          let tagIdMap = new Map<string, string>();
+          let projectIdMap = new Map<string, string>();
+
           // Restore tags
           if (backup.data.tags?.length) {
-            const { restored, skipped, errs } = await this.restoreTags(tx, accountId, backup.data.tags, dto.overwrite);
+            const { restored, skipped, errs, idMap } = await this.restoreTags(tx, accountId, backup.data.tags, dto.overwrite);
+            tagIdMap = idMap;
             restoredCounts.tags = restored;
             skippedCounts.tags = skipped;
             errors.push(...errs);
@@ -173,7 +200,8 @@ export class BackupsService {
 
           // Restore projects
           if (backup.data.projects?.length) {
-            const { restored, skipped, errs } = await this.restoreProjects(tx, accountId, backup.data.projects, dto.overwrite);
+            const { restored, skipped, errs, idMap } = await this.restoreProjects(tx, accountId, backup.data.projects, dto.overwrite);
+            projectIdMap = idMap;
             restoredCounts.projects = restored;
             skippedCounts.projects = skipped;
             errors.push(...errs);
@@ -195,9 +223,11 @@ export class BackupsService {
             errors.push(...errs);
           }
 
+          const maps: RestoreIdMaps = { category: categoryIdMap, tag: tagIdMap, project: projectIdMap };
+
           // Restore expenses (with items, tags, splits, projects)
           if (backup.data.expenses?.length) {
-            const { restored, skipped, errs } = await this.restoreExpenses(tx, accountId, userId, backup.data.expenses, dto.overwrite, categoryIdMap);
+            const { restored, skipped, errs } = await this.restoreExpenses(tx, accountId, userId, backup.data.expenses, dto.overwrite, maps);
             restoredCounts.expenses = restored;
             skippedCounts.expenses = skipped;
             errors.push(...errs);
@@ -205,7 +235,7 @@ export class BackupsService {
 
           // Restore incomes
           if (backup.data.incomes?.length) {
-            const { restored, skipped, errs } = await this.restoreIncomes(tx, accountId, userId, backup.data.incomes, dto.overwrite, categoryIdMap);
+            const { restored, skipped, errs } = await this.restoreIncomes(tx, accountId, userId, backup.data.incomes, dto.overwrite, maps);
             restoredCounts.incomes = restored;
             skippedCounts.incomes = skipped;
             errors.push(...errs);
@@ -306,37 +336,43 @@ export class BackupsService {
   private async restoreTags(tx: Prisma.TransactionClient, accountId: string, tags: any[], overwrite: boolean) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
+    const idMap = new Map<string, string>();
     for (const tag of tags) {
       try {
         const existing = await tx.tag.findFirst({ where: { accountId, name: tag.name } });
+        if (existing) idMap.set(tag.id, existing.id);
         if (existing && !overwrite) { skipped++; continue; }
         if (existing && overwrite) {
           await tx.tag.update({ where: { id: existing.id }, data: { color: tag.color, icon: tag.icon, encryptedPayload: tag.encryptedPayload, encryptionKeyVersion: tag.encryptionKeyVersion } });
         } else {
-          await tx.tag.create({ data: { accountId, name: tag.name, color: tag.color, icon: tag.icon, usageCount: tag.usageCount || 0, encryptedPayload: tag.encryptedPayload, encryptionKeyVersion: tag.encryptionKeyVersion } });
+          const created = await tx.tag.create({ data: { accountId, name: tag.name, color: tag.color, icon: tag.icon, usageCount: tag.usageCount || 0, encryptedPayload: tag.encryptedPayload, encryptionKeyVersion: tag.encryptionKeyVersion } });
+          idMap.set(tag.id, created.id);
         }
         restored++;
       } catch (e) { errs.push(`tag ${tag.name}: ${e instanceof Error ? e.message : String(e)}`); }
     }
-    return { restored, skipped, errs };
+    return { restored, skipped, errs, idMap };
   }
 
   private async restoreProjects(tx: Prisma.TransactionClient, accountId: string, projects: any[], overwrite: boolean) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
+    const idMap = new Map<string, string>();
     for (const proj of projects) {
       try {
         const existing = await tx.project.findFirst({ where: { accountId, clientId: proj.clientId } });
+        if (existing) idMap.set(proj.id, existing.id);
         if (existing && !overwrite) { skipped++; continue; }
         if (existing && overwrite) {
           await tx.project.update({ where: { id: existing.id }, data: { name: proj.name, description: proj.description, color: proj.color, icon: proj.icon, startDate: proj.startDate, endDate: proj.endDate, budget: proj.budget, currencyCode: proj.currencyCode, isArchived: proj.isArchived, encryptedPayload: proj.encryptedPayload, encryptionKeyVersion: proj.encryptionKeyVersion } });
         } else {
-          await tx.project.create({ data: { accountId, clientId: proj.clientId, name: proj.name, description: proj.description, color: proj.color, icon: proj.icon, startDate: proj.startDate, endDate: proj.endDate, budget: proj.budget, currencyCode: proj.currencyCode, isArchived: proj.isArchived || false, encryptedPayload: proj.encryptedPayload, encryptionKeyVersion: proj.encryptionKeyVersion } });
+          const created = await tx.project.create({ data: { accountId, clientId: proj.clientId, name: proj.name, description: proj.description, color: proj.color, icon: proj.icon, startDate: proj.startDate, endDate: proj.endDate, budget: proj.budget, currencyCode: proj.currencyCode, isArchived: proj.isArchived || false, encryptedPayload: proj.encryptedPayload, encryptionKeyVersion: proj.encryptionKeyVersion } });
+          idMap.set(proj.id, created.id);
         }
         restored++;
       } catch (e) { errs.push(`project ${proj.name}: ${e instanceof Error ? e.message : String(e)}`); }
     }
-    return { restored, skipped, errs };
+    return { restored, skipped, errs, idMap };
   }
 
   private async restoreBudgets(tx: Prisma.TransactionClient, accountId: string, userId: string, budgets: any[], overwrite: boolean) {
@@ -375,7 +411,7 @@ export class BackupsService {
     return { restored, skipped, errs };
   }
 
-  private async restoreExpenses(tx: Prisma.TransactionClient, accountId: string, userId: string, expenses: any[], overwrite: boolean, categoryIdMap: Map<string, string>) {
+  private async restoreExpenses(tx: Prisma.TransactionClient, accountId: string, userId: string, expenses: any[], overwrite: boolean, maps: RestoreIdMaps) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
     for (const exp of expenses) {
@@ -386,27 +422,106 @@ export class BackupsService {
         const data = {
           userId, accountId, clientId: exp.clientId,
           // Remap to this account's category id; null if the category wasn't restored.
-          categoryId: exp.categoryId ? (categoryIdMap.get(exp.categoryId) ?? null) : null,
-          amount: exp.amount, discountAmount: exp.discountAmount, currencyCode: exp.currencyCode || 'USD',
-          description: exp.description, notes: exp.notes, date: new Date(exp.date), time: exp.time,
-          locationLat: exp.locationLat, locationLng: exp.locationLng, receiptUrl: exp.receiptUrl,
-          isRecurring: exp.isRecurring || false, source: exp.source || 'manual',
+          categoryId: remap(maps.category, exp.categoryId),
+          amount: exp.amount, discountAmount: exp.discountAmount, depositAmount: exp.depositAmount,
+          currencyCode: exp.currencyCode || 'USD',
+          description: exp.description, notes: exp.notes, merchant: exp.merchant,
+          date: new Date(exp.date), time: exp.time,
+          locationLat: exp.locationLat, locationLng: exp.locationLng, locationName: exp.locationName,
+          receiptUrl: exp.receiptUrl, receiptFingerprint: exp.receiptFingerprint,
+          isRecurring: exp.isRecurring || false, recurringId: exp.recurringId, recurringPeriod: exp.recurringPeriod,
+          source: exp.source || 'manual',
+          externalRef: await this.freeExternalRef(tx, 'expense', accountId, exp.externalRef, exp.clientId),
+          isDebt: exp.isDebt || false, isDebtRepayment: exp.isDebtRepayment || false,
+          debtContactName: exp.debtContactName, debtDueDate: exp.debtDueDate ? new Date(exp.debtDueDate) : null,
+          isPlanned: exp.isPlanned || false, isSplitReceivable: exp.isSplitReceivable || false,
           encryptedPayload: exp.encryptedPayload, encryptionKeyVersion: exp.encryptionKeyVersion,
+          // Not carried across: the receipt image (stripped from the export), the
+          // import batch, the trip payer and the linked debt income — each points
+          // at a row of the source account.
         };
 
+        let expenseId: string;
         if (existing && overwrite) {
           await tx.expense.update({ where: { id: existing.id }, data });
+          expenseId = existing.id;
         } else {
           // No `id` — let the DB generate one (reusing the global backup id collides).
-          await tx.expense.create({ data });
+          expenseId = (await tx.expense.create({ data })).id;
         }
+        await this.restoreExpenseChildren(tx, expenseId, exp, maps, !!existing);
         restored++;
       } catch (e) { errs.push(`expense ${exp.clientId}: ${e instanceof Error ? e.message : String(e)}`); }
     }
     return { restored, skipped, errs };
   }
 
-  private async restoreIncomes(tx: Prisma.TransactionClient, accountId: string, userId: string, incomes: any[], overwrite: boolean, categoryIdMap: Map<string, string>) {
+  /**
+   * Line items, category splits, tags and project links of one restored expense.
+   * On overwrite the current ones are retired first, so the expense ends up with
+   * exactly the backup's children rather than a union of both.
+   */
+  private async restoreExpenseChildren(tx: Prisma.TransactionClient, expenseId: string, exp: any, maps: RestoreIdMaps, replacing: boolean) {
+    if (replacing) {
+      await tx.expenseItem.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
+      await tx.expenseCategorySplit.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
+      await tx.expenseTag.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
+      await tx.projectExpense.updateMany({ where: { expenseId, isDeleted: false }, data: { isDeleted: true } });
+    }
+    const items = (exp.items ?? []) as any[];
+    if (items.length) {
+      await tx.expenseItem.createMany({
+        data: items.map((it, i) => ({
+          expenseId, description: it.description, canonicalName: it.canonicalName,
+          categoryId: remap(maps.category, it.categoryId),
+          quantity: it.quantity ?? 1, unitPrice: it.unitPrice ?? 0, totalPrice: it.totalPrice,
+          lineDiscount: it.lineDiscount ?? 0, sortOrder: it.sortOrder ?? i,
+          encryptedPayload: it.encryptedPayload, encryptionKeyVersion: it.encryptionKeyVersion,
+        })),
+      });
+    }
+    // A split needs a category; one whose category did not come across is dropped.
+    const splits = ((exp.categorySplits ?? []) as any[])
+      .map((sp) => ({ sp, categoryId: remap(maps.category, sp.categoryId) }))
+      .filter((x): x is { sp: any; categoryId: string } => !!x.categoryId);
+    if (splits.length) {
+      await tx.expenseCategorySplit.createMany({
+        data: splits.map(({ sp, categoryId }) => ({
+          expenseId, categoryId, amount: sp.amount, percentage: sp.percentage, notes: sp.notes,
+          encryptedPayload: sp.encryptedPayload, encryptionKeyVersion: sp.encryptionKeyVersion,
+        })),
+      });
+    }
+    for (const tagId of mappedIds(maps.tag, exp.expenseTags, 'tagId')) {
+      await tx.expenseTag.upsert({
+        where: { expenseId_tagId: { expenseId, tagId } },
+        create: { expenseId, tagId },
+        update: { isDeleted: false },
+      });
+    }
+    for (const projectId of mappedIds(maps.project, exp.projectExpenses, 'projectId')) {
+      await tx.projectExpense.upsert({
+        where: { projectId_expenseId: { projectId, expenseId } },
+        create: { projectId, expenseId },
+        update: { isDeleted: false },
+      });
+    }
+  }
+
+  /**
+   * `externalRef` is the bank-import dedup key, unique per account. Keep it so a
+   * re-import of the same statement still dedups — unless another row in this
+   * account already holds it: that row already is the imported transaction, and
+   * a duplicate key would fail the whole restore.
+   */
+  private async freeExternalRef(tx: Prisma.TransactionClient, kind: 'expense' | 'income', accountId: string, externalRef: string | null | undefined, clientId: string) {
+    if (!externalRef) return null;
+    const where = { accountId, externalRef, NOT: { clientId } };
+    const taken = kind === 'expense' ? await tx.expense.findFirst({ where }) : await tx.income.findFirst({ where });
+    return taken ? null : externalRef;
+  }
+
+  private async restoreIncomes(tx: Prisma.TransactionClient, accountId: string, userId: string, incomes: any[], overwrite: boolean, maps: RestoreIdMaps) {
     let restored = 0, skipped = 0;
     const errs: string[] = [];
     for (const inc of incomes) {
@@ -416,16 +531,38 @@ export class BackupsService {
 
         const data = {
           userId, accountId, clientId: inc.clientId,
-          categoryId: inc.categoryId ? (categoryIdMap.get(inc.categoryId) ?? null) : null,
+          categoryId: remap(maps.category, inc.categoryId),
           amount: inc.amount, currencyCode: inc.currencyCode || 'USD',
           description: inc.description, notes: inc.notes, date: new Date(inc.date),
+          source: inc.source || 'manual',
+          externalRef: await this.freeExternalRef(tx, 'income', accountId, inc.externalRef, inc.clientId),
+          isDebt: inc.isDebt || false, isDebtRepayment: inc.isDebtRepayment || false,
+          debtContactName: inc.debtContactName, debtDueDate: inc.debtDueDate ? new Date(inc.debtDueDate) : null,
           encryptedPayload: inc.encryptedPayload, encryptionKeyVersion: inc.encryptionKeyVersion,
         };
 
+        let incomeId: string;
         if (existing && overwrite) {
           await tx.income.update({ where: { id: existing.id }, data });
+          incomeId = existing.id;
+          await tx.incomeTag.updateMany({ where: { incomeId, isDeleted: false }, data: { isDeleted: true } });
+          await tx.projectIncome.updateMany({ where: { incomeId, isDeleted: false }, data: { isDeleted: true } });
         } else {
-          await tx.income.create({ data });
+          incomeId = (await tx.income.create({ data })).id;
+        }
+        for (const tagId of mappedIds(maps.tag, inc.incomeTags, 'tagId')) {
+          await tx.incomeTag.upsert({
+            where: { incomeId_tagId: { incomeId, tagId } },
+            create: { incomeId, tagId },
+            update: { isDeleted: false },
+          });
+        }
+        for (const projectId of mappedIds(maps.project, inc.projectIncomes, 'projectId')) {
+          await tx.projectIncome.upsert({
+            where: { projectId_incomeId: { projectId, incomeId } },
+            create: { projectId, incomeId },
+            update: { isDeleted: false },
+          });
         }
         restored++;
       } catch (e) { errs.push(`income ${inc.clientId}: ${e instanceof Error ? e.message : String(e)}`); }

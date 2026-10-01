@@ -190,7 +190,7 @@ export const AI_TOOL_DEFINITIONS: OpenAI.Chat.Completions.ChatCompletionTool[] =
     type: 'function',
     function: {
       name: 'check_affordability',
-      description: 'Answer "can I afford X" questions. Computes a deterministic YES/NO from the cashflow engine. Use whenever the user asks if they can afford/buy something for an amount ("can I afford X", "can I buy X for N", "do I have enough for X", "is N within my budget"). Report its `affordable` verdict and `reasonCode` verbatim — never guess a yes/no yourself; the verdict is deterministic and your role is only to narrate it in one friendly sentence.',
+      description: 'Answer "can I afford X" questions. Computes a deterministic YES/NO from the cashflow engine. Use whenever the user asks if they can afford/buy something for an amount ("can I afford X", "can I buy X for N", "do I have enough for X", "is N within my budget"). Report its `affordable` verdict and `reasonCode` verbatim (reasonCode `currency_unconvertible` means no exchange rate is available for the amount currency, so NO yes/no can be given: say it cannot be assessed and ask for the amount in the base currency) — never guess a yes/no yourself; the verdict is deterministic and your role is only to narrate it in one friendly sentence.',
       parameters: {
         type: 'object',
         properties: {

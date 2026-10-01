@@ -2542,6 +2542,7 @@ export default {
     tight: 'Na to stać, ale będzie ciasno',
     delaysGoal: 'Na to stać, ale opóźni cel',
     waitUntil: 'Na to stać po {{date}}',
+    currencyUnconvertible: 'Nie można ocenić: brak kursu dla tej waluty',
   },
   healthScore: {
     title: 'Kondycja Finansowa',

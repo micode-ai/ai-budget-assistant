@@ -60,12 +60,13 @@ never its earlier occurrences — the cron clones forward from the latest row re
 
 **One failed clone must not stop the run.** Each clone is in its own `try`, logged and skipped.
 
+**Stopping recurrence stops the whole series.** `stopRecurring` clears `isRecurring` on every live
+row sharing the `recurringId` in the account, not only the row it was pressed on — the cron picks
+its template among rows still recurring, so stopping just the newest instance handed it an older,
+already-due copy and the series kept cloning (fixed in ABA-626, pinned by a cron-level test).
+
 ## Known gaps
 
-- **Stop flips only the row it was pressed on.** The cron chooses the template among rows still
-  `isRecurring`, so stopping the newest instance of a series that already has older clones leaves
-  the previous instance as the template — its `nextDue` is already past, so the series appears to
-  be cloned again on the next run. Not covered by a test.
 - The clone copies amount, currency, description, notes and category only — not `merchant`, tags,
   project links, line items or splits.
 - "Today" and the `nextDue` arithmetic use the server clock, not `user.timezone`.

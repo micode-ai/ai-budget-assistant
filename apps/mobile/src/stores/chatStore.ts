@@ -301,7 +301,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       const conversations: import('@budget/shared-types').ChatConversation[] = remote.map((c) => ({
         id: c.id,
         userId,
-        accountId: undefined,
+        // The list endpoint is scoped by X-Account-Id, so every row belongs to
+        // the account captured above; stamp it so the local cache can be scoped.
+        accountId,
         isShared: c.isShared,
         title: c.title ?? undefined,
         isPinned: c.isPinned,

@@ -217,18 +217,17 @@ the model, and only `user`/`assistant` reach the client. Mobile caches conversat
 - **Language detection decides on letters unique to a language.** A letter two languages share
   (`é`, Cyrillic `і`) must not decide between them on its own.
 
+- **History is the conversation's tail.** `chat()` reads the last 20 messages newest-first and
+  reverses them; `getConversationMessages` returns the last 50 (or, with `since`, the next 50 after
+  it). Both once read `asc` + `take` and froze long conversations at their first messages (ABA-626).
+- **A pending action expires after `PENDING_ACTION_TTL_SEC` (30 min)**, the same lifetime the bots
+  give theirs; confirming a stale one is a 404, rejecting it still works.
+- **The device cache applies the server's predicate** — `account_id = current AND (is_shared OR
+  user_id = me)`, and `loadConversations` stamps each cached row with the account it was fetched
+  for. Rows cached before that carry no account and stay hidden until the next fetch re-stamps them.
+
 ## Known gaps
 
-- **Long conversations lose their recent turns.** `chat()` loads the conversation with
-  `messages: { orderBy: { createdAt: 'asc' }, take: 20 }` — the *first* 20 messages, not the last
-  20 — so once a conversation passes 20 messages the model's history stops advancing. The same shape
-  in `getConversationMessages` (`asc`, `take: 50`) returns the first 50, not the last 50, so a long
-  conversation reopened on a device shows its beginning.
-- **A pending action has no expiry.** The 404 text says "not found or expired", but nothing checks
-  age; only a newer pending action from the same user supersedes it.
-- **The device cache is not account-scoped for one's own conversations.** `chatRepository.getConversations`
-  selects `user_id = me OR (is_shared AND account_id = current)`, while the server scopes both halves
-  to the account.
 - Goal and debt writes do not delete `uc:{accountId}`; the 60 s TTL is what refreshes them.
 - The invalidators type `` `uc:${accountId}` `` by hand instead of importing `ucKey`.
 - There is no knowledge base: the chat answers from `UserContext` plus tools and cannot answer

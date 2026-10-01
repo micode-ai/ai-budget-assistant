@@ -2538,6 +2538,7 @@ export default {
     tight: 'Affordable, but tight',
     delaysGoal: 'Affordable, but delays a goal',
     waitUntil: 'Affordable after {{date}}',
+    currencyUnconvertible: 'Cannot assess: no exchange rate for this currency',
   },
   healthScore: {
     title: 'Financial Health',

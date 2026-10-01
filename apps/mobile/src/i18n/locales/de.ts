@@ -2531,6 +2531,7 @@ export default {
     tight: 'Erschwinglich, aber knapp',
     delaysGoal: 'Erschwinglich, verzögert aber ein Ziel',
     waitUntil: 'Erschwinglich nach {{date}}',
+    currencyUnconvertible: 'Nicht bewertbar: kein Wechselkurs für diese Währung',
   },
   healthScore: {
     title: 'Finanzielle Gesundheit',

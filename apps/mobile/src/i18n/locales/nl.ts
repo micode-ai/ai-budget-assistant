@@ -2531,6 +2531,7 @@ export default {
     tight: 'Betaalbaar, maar krap',
     delaysGoal: 'Betaalbaar, maar vertraagt een doel',
     waitUntil: 'Betaalbaar na {{date}}',
+    currencyUnconvertible: 'Kan niet beoordelen: geen wisselkoers voor deze valuta',
   },
   healthScore: {
     title: 'Financiële gezondheid',

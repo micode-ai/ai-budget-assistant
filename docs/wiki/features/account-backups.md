@@ -57,14 +57,23 @@ dedup against half-restored data.
 **The request body limit is 50 MB** (`express.json` in `main.ts`); with the API heap set by
 `NODE_OPTIONS` in `docker-compose.prod.yml`. Keep the two in mind together when backups grow.
 
+**Restore brings back what the export carries.** Line items, category splits, tags and project links
+are re-created against the target account's ids — categories, tags and projects each go through a
+backup-id → new-id map, and a split whose category did not come across is dropped rather than left
+dangling. On `overwrite` the current children are soft-deleted first, so the expense ends with the
+backup's set, not a union. `merchant`, `depositAmount`, debt, recurring, planned and split-receivable
+fields travel too; `externalRef` is kept unless another row in the account already holds it (that
+row is the imported transaction, and the duplicate would abort the whole restore). Before ABA-626
+only the expense row's own core columns were restored.
+
+**`POST /backups/restore` is viewer-blocked** (`ViewerBlockGuard`) — it writes, and with `overwrite`
+rewrites, account data.
+
 ## Known gaps
 
-- Restore writes only the expense row's own columns: line items, tags, category splits and project
-  links are exported but **not** restored, despite the "with items, tags, splits, projects" comment
-  in `restoreBackup`; nor are `merchant`, `depositAmount`, debt fields or `recurringId`/
-  `recurringPeriod`. Every restored row is attributed to the restoring user.
-- `POST /backups/restore` carries no `ViewerBlockGuard`, so a viewer of a shared account can restore
-  into it.
+- Not carried across: the receipt image (stripped from the export), the import batch, the trip
+  payer (`paidByUserId`) and the linked debt income/expense — each points at a row of the source
+  account. Every restored row is attributed to the restoring user.
 
 ## History
 

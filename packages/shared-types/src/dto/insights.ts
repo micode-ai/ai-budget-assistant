@@ -30,7 +30,8 @@ export interface AffordabilityVerdict {
     | 'within_available_tight'    // <= projectedAvailable but eats most of it
     | 'over_available'            // exceeds projectedAvailable
     | 'delays_goal'               // affordable but pushes a goal off-track
-    | 'wait_until_income';        // affordable only after next inferred income
+    | 'wait_until_income'         // affordable only after next inferred income
+    | 'currency_unconvertible';   // no exchange rate to base currency: no verdict possible
   goalImpact?: { goalName: string; slipDays: number };
   suggestedDate?: string;         // ISO date, for wait_until_income
   baseCurrency: string;

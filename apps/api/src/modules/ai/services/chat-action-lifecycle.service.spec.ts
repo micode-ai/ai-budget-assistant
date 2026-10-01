@@ -4,6 +4,7 @@ import { ChatActionLifecycleService } from './chat-action-lifecycle.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { AiToolsService } from './ai-tools.service';
 import { PromptBuilder } from './prompt-builder.service';
+import { PENDING_ACTION_TTL_SEC } from './chat-action-lifecycle.service';
 
 const mockChatCreate = jest.fn();
 jest.mock('openai', () => ({
@@ -65,6 +66,32 @@ describe('ChatActionLifecycleService', () => {
     it('rejects confirming in a conversation outside the account', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue(null);
       await expect(service.confirmAction('owner-1', 'c-other', 'act-1', 'acc-1')).rejects.toThrow();
+    });
+  });
+
+  describe('confirmAction expiry', () => {
+    const pendingContent = JSON.stringify({
+      id: 'act-1', actionType: 'create_expense', accountId: 'acc-1', data: { amount: 5 }, displaySummary: 'x',
+    });
+    beforeEach(() => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', isShared: false, userId: 'owner-1' });
+      deps.aiTools.executeAction = jest.fn();
+    });
+
+    it('rejects a pending action older than the TTL without executing it', async () => {
+      const createdAt = new Date(Date.now() - (PENDING_ACTION_TTL_SEC + 60) * 1000);
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'p1', content: pendingContent, createdAt });
+      await expect(service.confirmAction('owner-1', 'c1', 'act-1', 'acc-1')).rejects.toThrow(
+        'Pending action not found or expired',
+      );
+      expect(deps.aiTools.executeAction).not.toHaveBeenCalled();
+    });
+
+    it('still allows rejecting an expired pending action', async () => {
+      const createdAt = new Date(Date.now() - (PENDING_ACTION_TTL_SEC + 60) * 1000);
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'p1', content: pendingContent, createdAt });
+      deps.prisma.chatMessage.findMany.mockResolvedValue([]);
+      await expect(service.rejectAction('owner-1', 'c1', 'act-1', undefined, 'acc-1')).resolves.toBeDefined();
     });
   });
 
@@ -184,7 +211,7 @@ describe('ChatActionLifecycleService', () => {
       });
 
       deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', isShared: false, userId: 'owner-1' });
-      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'pending-1', content: pendingContent });
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'pending-1', content: pendingContent, createdAt: new Date() });
       deps.prisma.chatMessage.findUnique.mockResolvedValue({ id: 'am1', content: sourceContent });
       deps.prisma.chatMessage.findMany.mockResolvedValue([]); // detectConversationLanguage — no history, defaults to English
       deps.aiTools.executeAction = jest.fn().mockResolvedValue({
@@ -209,7 +236,7 @@ describe('ChatActionLifecycleService', () => {
         displaySummary: 'undo the last action',
       });
       deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', isShared: false, userId: 'owner-1' });
-      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'pending-1', content: pendingContent });
+      deps.prisma.chatMessage.findFirst.mockResolvedValue({ id: 'pending-1', content: pendingContent, createdAt: new Date() });
       deps.prisma.chatMessage.findMany.mockResolvedValue([]); // detectConversationLanguage — no history, defaults to English
       deps.aiTools.executeAction = jest.fn().mockResolvedValue({
         actionType: 'undo_last_action',

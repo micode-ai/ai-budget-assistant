@@ -64,12 +64,11 @@ has items. Running OCR twice would otherwise duplicate every line.
 **Saving or attaching a receipt image fires no anomaly check.** Attach and anomaly detection are
 deliberately separate; only an expense create runs the detectors.
 
-## Known gaps
-
-- `ExpensesService.update()` looks the project up by server `id` only, while `create()` also tries
-  `clientId`. The phone's local project id is the server's `clientId`, so changing an existing
-  expense to a project created on the device soft-deletes the old link on the server and creates
-  none, silently. The lookup is also not scoped to `accountId`.
+**A project id resolves as `id` OR `clientId`, within the account, on update as on create.** The
+phone's local project id is the server's `clientId`; `update()` once matched on `id` only and
+silently dropped the link for a project created on the device (ABA-626). An unknown project id
+leaves the existing link alone rather than failing the edit — the project may simply not have
+synced yet; an explicit `null` clears it.
 
 ## History
 

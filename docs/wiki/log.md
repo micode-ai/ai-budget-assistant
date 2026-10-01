@@ -136,6 +136,12 @@ Newest last within each section.
   claims corrected rather than copied (route files that are now thin wrappers, first-20 chat history, admin
   socket event names, restore that drops line items). 28 new pages + 11 extended; CLAUDE.md 19 750 → 13 356
   words. → see the pages listed under each hub in `index.md`.
+- 2026-10-01 · [ABA-626](https://github.com/micode-ai/ai-budget-assistant/issues/654) — fixed the bugs the
+  wiki migration surfaced: viewer-blocked and complete backup restore, Telegram webhook always secret,
+  stop-recurring for the whole series, project link resolved by id|clientId on update, affordability
+  refuses an unconvertible currency, pending chat actions expire, account-scoped device chat cache.
+  → `features/account-backups.md`, `telegram-bot.md`, `features/recurring-expenses.md`,
+  `features/expense-detail-editing.md`, `features/safe-to-spend.md`, `features/chat-architecture.md`
 
 ## Queries
 

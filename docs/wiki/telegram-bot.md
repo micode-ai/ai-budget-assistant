@@ -30,8 +30,7 @@ A Telegraf-based Telegram bot embedded in the NestJS API (`modules/telegram/`) t
 - **Write a mutated cached object back.** With a `Map`, `handleDateInput` mutating the pending receipt's `date` persisted for free by reference; a Redis read is a fresh deserialized copy, so the handler must `cache.set` it again or the edit silently reverts on the next read. The same applies to every handler that edits a cached object.
 - **A new string shared by two or more bots goes in `common/bot-i18n/shared-messages.ts`**, not into this bot's `helpers/i18n.ts`.
 
-## Known gaps
-- With no `TELEGRAM_WEBHOOK_SECRET` configured, `verifyWebhookSecret` accepts every request — fine for long-polling dev, but a webhook deployment without the secret is unauthenticated.
+- **The webhook always carries a secret.** In webhook mode the bot registers `TELEGRAM_WEBHOOK_SECRET`, or a random per-process secret when it is unset, as Telegram's `secret_token`; `verifyWebhookSecret` compares it timing-safely and rejects everything in long-polling mode, where Telegram never calls the endpoint. Before ABA-626 an unset secret made the public webhook accept forged updates.
 
 ## Cross-references
 - Talks to: `ai-features` — `ChatHandler` and `VoiceHandler` call `ChatService` / `WhisperService` directly

@@ -2510,6 +2510,7 @@ export default {
     tight: 'Пасільна, але ўпрытык',
     delaysGoal: 'Пасільна, але затрымае мэту',
     waitUntil: 'Пасільна пасля {{date}}',
+    currencyUnconvertible: 'Немагчыма ацаніць: няма курсу для гэтай валюты',
   },
   healthScore: {
     title: 'Фінансавае здароўе',

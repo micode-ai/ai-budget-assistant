@@ -20,6 +20,10 @@ const UNDOABLE_ACTION_TYPES = new Set<ChatActionType>([
 // turns risks reverting something the user has already built on top of.
 const UNDO_WINDOW_MS = 15 * 60 * 1000;
 
+// How long a queued write action stays confirmable. Matches the Redis TTL the Telegram and
+// WhatsApp bots use for their pending actions (1800s), so every channel expires at the same age.
+export const PENDING_ACTION_TTL_SEC = 1800;
+
 type UndoLookup =
   | { status: 'ok'; messageId: string; actionType: ChatActionType; result: ChatActionResult }
   | { status: 'nothing' | 'stale' };
@@ -52,6 +56,11 @@ export class ChatActionLifecycleService {
     });
 
     if (!pendingMessage) {
+      throw new NotFoundException('Pending action not found or expired');
+    }
+    // Pending actions are ChatMessage rows with no TTL of their own — enforce the expiry here.
+    // (rejectAction deliberately skips this: dropping a stale action is harmless.)
+    if (Date.now() - new Date(pendingMessage.createdAt).getTime() > PENDING_ACTION_TTL_SEC * 1000) {
       throw new NotFoundException('Pending action not found or expired');
     }
 

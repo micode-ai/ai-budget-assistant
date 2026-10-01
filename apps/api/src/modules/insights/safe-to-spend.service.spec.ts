@@ -264,4 +264,24 @@ describe('SafeToSpendService.checkAffordability', () => {
     expect(verdict.affordable).toBe(false);
     expect(verdict.reasonCode).toBe('over_available');
   });
+
+  it('does not issue a yes/no verdict on a foreign amount with no exchange rate', async () => {
+    const service = makeService({
+      walletBalances: [{ currencyCode: 'USD', currentBalance: 2000 }],
+      rates: { USD: 1 }, // no rate for JPY
+    });
+    const verdict = await service.checkAffordability('acc-1', 'user-1', 'USD', 5, 'JPY');
+    expect(verdict.reasonCode).toBe('currency_unconvertible');
+    expect(verdict.affordable).toBe(false);
+    expect(verdict.amountInBase).toBe(0);
+  });
+
+  it('does not issue a verdict when rates are unavailable entirely', async () => {
+    const service = makeService({
+      walletBalances: [{ currencyCode: 'USD', currentBalance: 2000 }],
+      rates: null,
+    });
+    const verdict = await service.checkAffordability('acc-1', 'user-1', 'USD', 5, 'EUR');
+    expect(verdict.reasonCode).toBe('currency_unconvertible');
+  });
 });

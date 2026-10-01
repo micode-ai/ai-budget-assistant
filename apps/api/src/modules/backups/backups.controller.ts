@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
 import { AuthenticatedRequest } from '../../common/types';
 import { RestoreBackupDto } from './dto';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 
 @Controller('backups')
 @UseGuards(JwtAuthGuard, AccountContextGuard)
@@ -22,7 +23,9 @@ export class BackupsController {
     res.send(jsonStr);
   }
 
+  // Restore writes (and with overwrite, rewrites) account data, so a viewer must not reach it.
   @Post('restore')
+  @UseGuards(new ViewerBlockGuard())
   async restoreBackup(
     @Req() req: AuthenticatedRequest,
     @Body() dto: RestoreBackupDto,
