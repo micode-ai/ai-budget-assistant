@@ -20,6 +20,7 @@ import { maybeEncrypt, maybeDecrypt } from '@/services/encryptionHelper';
 import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
 import { UNCATEGORIZED_CATEGORY_FILTER, countsAsUncategorized } from './categoryFilter';
+import { createAccountScopedInflight } from './accountScopedInflight';
 
 interface IncomeFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
@@ -99,7 +100,7 @@ function computeIncomeTotalsByCurrency(incomes: Income[]): Record<string, number
 
 // Module-level state for coalescing concurrent loadIncomes calls and
 // skipping redundant server pulls within a short window.
-let _loadIncomesInflight: Promise<void> | null = null;
+const _loadIncomesInflight = createAccountScopedInflight();
 let _lastIncomesSyncAt = 0;
 let _lastIncomesSyncedAccountId: string | null = null;
 const INCOMES_SYNC_SKIP_WINDOW_MS = 30_000;
@@ -120,9 +121,9 @@ export const useIncomeStore = create<IncomeState>()(
     incomeTotalsByCurrency: {},
 
     loadIncomes: (opts?: { force?: boolean }) => {
-      if (_loadIncomesInflight) return _loadIncomesInflight;
-
-      _loadIncomesInflight = (async () => {
+      // Coalesce per account — see accountScopedInflight.ts for why an
+      // account-blind guard left the new account unloaded after a switch.
+      return _loadIncomesInflight(useAccountStore.getState().currentAccountId, async () => {
       set({ isLoading: true, error: null });
       try {
         const accountId = useAccountStore.getState().currentAccountId;
@@ -290,9 +291,7 @@ export const useIncomeStore = create<IncomeState>()(
         console.error('Failed to load incomes from SQLite:', e);
         set({ error: 'Failed to load incomes', isLoading: false });
       }
-      })();
-      _loadIncomesInflight.finally(() => { _loadIncomesInflight = null; });
-      return _loadIncomesInflight;
+      });
     },
 
     addIncome: async (incomeData) => {

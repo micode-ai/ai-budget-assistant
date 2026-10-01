@@ -48,6 +48,8 @@ the section you came for — it states what must not break and why. A missing se
   idempotency, and why some bugs reproduce only on web
 - [web-data-loading](features/web-data-loading.md) — loading with no local database: failed vs
   empty loads, retries, sign-out resets, and the proxy limit behind `Failed to fetch`
+- [account-switch-reload](features/account-switch-reload.md) — why a switch must not coalesce with
+  the previous account's load, and why account-scoped stores clear before loading
 
 ### Receipts
 - [receipt-duplicate-warning](features/receipt-duplicate-warning.md) — warning before the same receipt

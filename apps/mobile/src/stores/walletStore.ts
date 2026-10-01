@@ -148,6 +148,14 @@ interface WalletState {
 // read-side aggregation (`loadWallet`, `loadAccountSummaries`,
 // `loadMonthlyHistory`, `computeWalletSummary`, `getBalanceForCurrency`),
 // mirroring how expenseStore.ts delegates to expenseSync.ts.
+// The account whose rows the in-memory wallet state currently holds. Every
+// figure below (balances, summary, monthly history, `lastPullAt`) is
+// account-scoped, so `loadWallet` drops them the moment it is asked for a
+// different account — otherwise the new account showed the previous one's
+// amounts until its own load landed, and indefinitely when that load failed
+// (the web summary's failure path keeps "the current figures" on purpose).
+let _walletAccountId: string | null = null;
+
 export const useWalletStore = create<WalletState>()(
   subscribeWithSelector((set, get) => ({
     walletBalances: [],
@@ -179,9 +187,11 @@ export const useWalletStore = create<WalletState>()(
     },
 
     loadMonthlyHistory: async (months) => {
+      const accountId = useAccountStore.getState().currentAccountId;
       set({ isHistoryLoading: true, selectedMonths: months });
       try {
         const result = await api.getWalletMonthlyHistory(months);
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
         set({ monthlyHistory: result.months, isHistoryLoading: false });
       } catch {
         set({ isHistoryLoading: false });
@@ -197,6 +207,11 @@ export const useWalletStore = create<WalletState>()(
           return;
         }
 
+        if (_walletAccountId !== accountId) {
+          _walletAccountId = accountId;
+          set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], monthlyHistory: [], lastPullAt: null });
+        }
+
         // 1. Load from local DB
         const localBalances = await loadAllWalletBalances(accountId);
         const localExchanges = await loadAllExchanges(accountId);
@@ -207,6 +222,7 @@ export const useWalletStore = create<WalletState>()(
 
         // 2. Compute summary from local data
         const summary = await get().computeWalletSummary();
+        if (useAccountStore.getState().currentAccountId !== accountId) return;
         set({ walletSummary: summary, isLoading: false });
 
         // 3. Push queued writes, then sync from server. Order matters: the pull
@@ -361,6 +377,7 @@ export const useWalletStore = create<WalletState>()(
       // Drop the cached cross-account balances too — reset runs on logout, and the
       // next user must not see the previous one's figures.
       accountSummariesStorage.delete(ACCOUNT_SUMMARIES_KEY);
+      _walletAccountId = null;
       set({ walletBalances: [], exchanges: [], transfers: [], walletSummary: [], accountSummaries: {}, monthlyHistory: [], selectedMonths: 6, isHistoryLoading: false, isLoading: false, error: null, lastPullAt: null });
     },
   })),

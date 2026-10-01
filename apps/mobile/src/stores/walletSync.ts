@@ -171,6 +171,7 @@ export async function syncWalletFromServer(
     });
 
     const updatedSummary = await get().computeWalletSummary();
+    if (useAccountStore.getState().currentAccountId !== accountId) return;
     // `lastPullAt` is written HERE and nowhere else: past every account-switch
     // guard, past the `catch` that swallows a failed pull, and only once the
     // server's own rows have actually landed. An assignment any earlier — or

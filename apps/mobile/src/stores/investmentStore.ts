@@ -70,6 +70,34 @@ const getUserId = () => {
   return current?.ownerId || '';
 };
 
+// Everything in this store except the loading/error flags belongs to one
+// account. Remember which, so the first load for a different account drops the
+// previous account's portfolio instead of showing it until (or, when the
+// request fails, instead of) the new figures arriving.
+const ACCOUNT_SCOPED_EMPTY = {
+  holdings: [],
+  transactions: {},
+  summary: null,
+  performanceData: null,
+  assetPriceHistory: {},
+  lastPriceUpdate: null,
+  aiInsights: [],
+} satisfies Partial<InvestmentState>;
+let _investmentAccountId: string | null = null;
+
+/** Clears the store when it still holds another account's portfolio. */
+const claimAccount = (
+  set: (partial: Partial<InvestmentState>) => void,
+  accountId: string | null,
+) => {
+  if (_investmentAccountId === accountId) return;
+  _investmentAccountId = accountId;
+  set({ ...ACCOUNT_SCOPED_EMPTY });
+};
+
+/** True when the user switched accounts while a request was out. */
+const switchedAway = (accountId: string | null) => getAccountId() !== accountId;
+
 export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
   holdings: [],
   transactions: {},
@@ -88,6 +116,7 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
   loadHoldings: async () => {
     const accountId = getAccountId();
     if (!accountId) return;
+    claimAccount(set, accountId);
 
     set({ isLoading: true, error: null });
 
@@ -103,6 +132,7 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
         }),
       );
 
+      if (switchedAway(accountId)) return;
       set({ holdings: holdingsWithAssets, isLoading: false });
 
       // Then sync from server in background
@@ -113,8 +143,10 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
   },
 
   loadHoldingsFromServer: async () => {
+    const requestAccountId = getAccountId();
     try {
       const serverHoldings = await api.getPortfolioHoldings();
+      if (switchedAway(requestAccountId)) return;
       if (!serverHoldings || serverHoldings.length === 0) return;
 
       // Upsert assets and holdings locally
@@ -192,7 +224,7 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
 
       // Reload from local
       const accountId = getAccountId();
-      if (!accountId) return;
+      if (!accountId || accountId !== requestAccountId) return;
       const localHoldings = await investmentRepo.loadHoldingsByAccount(accountId);
       const holdingsWithAssets = await Promise.all(
         localHoldings.map(async (h) => {
@@ -200,6 +232,7 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
           return { ...h, asset: asset ?? undefined };
         }),
       );
+      if (switchedAway(accountId)) return;
       set({ holdings: holdingsWithAssets });
 
       // Reload performance data now that server has synced transactions
@@ -491,9 +524,12 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
   },
 
   loadSummary: async () => {
+    const accountId = getAccountId();
+    claimAccount(set, accountId);
     set({ isLoading: true });
     try {
       const response = await api.getPortfolioSummary();
+      if (switchedAway(accountId)) return;
       if (response) {
         set((state) => {
           // Enrich holdings with price and allocation data from summary
@@ -538,9 +574,12 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
   },
 
   loadPerformance: async (period: string = 'month') => {
+    const accountId = getAccountId();
+    claimAccount(set, accountId);
     set({ performanceLoading: true });
     try {
       const data = await api.getPortfolioAnalytics(period);
+      if (switchedAway(accountId)) return;
       if (data?.performance?.dates?.length > 0) {
         set({
           performanceData: {
@@ -597,9 +636,12 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
   },
 
   loadInvestmentInsights: async (language?: string) => {
+    const accountId = getAccountId();
+    claimAccount(set, accountId);
     set({ insightsLoading: true, insightsError: null });
     try {
       const response = await api.getInvestmentInsights(language);
+      if (switchedAway(accountId)) return;
       set({
         aiInsights: response.insights || [],
         insightsLoading: false,
@@ -620,19 +662,16 @@ export const useInvestmentStore = create<InvestmentState>()((set, get) => ({
 
   clearError: () => set({ error: null }),
 
-  reset: () => set({
-    holdings: [],
-    transactions: {},
-    summary: null,
-    performanceData: null,
-    performanceLoading: false,
-    assetPriceHistory: {},
-    assetPriceLoading: false,
-    isLoading: false,
-    error: null,
-    lastPriceUpdate: null,
-    aiInsights: [],
-    insightsLoading: false,
-    insightsError: null,
-  }),
+  reset: () => {
+    _investmentAccountId = null;
+    set({
+      ...ACCOUNT_SCOPED_EMPTY,
+      performanceLoading: false,
+      assetPriceLoading: false,
+      isLoading: false,
+      error: null,
+      insightsLoading: false,
+      insightsError: null,
+    });
+  },
 }));

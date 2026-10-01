@@ -34,6 +34,7 @@ import { parseServerLocation } from '@/utils/location';
 import { useAccountStore } from './accountStore';
 import { useCategoryStore } from './categoryStore';
 import { useProjectStore } from './projectStore';
+import { createAccountScopedInflight } from './accountScopedInflight';
 
 // Minimal store-state shape the sync functions need from useExpenseStore
 interface SyncableState {
@@ -51,7 +52,7 @@ type StoreSet = (
 type StoreGet = () => SyncableState;
 
 // Module-level guards — were in expenseStore.ts, belong with the sync logic.
-let _loadExpensesInflight: Promise<void> | null = null;
+const _loadExpensesInflight = createAccountScopedInflight();
 let _lastExpensesSyncAt = 0;
 let _lastExpensesSyncedAccountId: string | null = null;
 const EXPENSES_SYNC_SKIP_WINDOW_MS = 30_000;
@@ -214,14 +215,12 @@ export function pullAndMergeExpenses(
   opts?: { force?: boolean },
 ): Promise<void> {
   // Re-entry guard: coalesce concurrent callers (DatabaseProvider, authStore,
-  // tab useEffects all call this in parallel on cold start).
-  if (_loadExpensesInflight) return _loadExpensesInflight;
-
-  _loadExpensesInflight = _doPullAndMerge(set, get, opts);
-  _loadExpensesInflight.finally(() => {
-    _loadExpensesInflight = null;
-  });
-  return _loadExpensesInflight;
+  // tab useEffects all call this in parallel on cold start) — per account, so
+  // a call made right after an account switch is not handed the previous
+  // account's run (see accountScopedInflight.ts).
+  return _loadExpensesInflight(useAccountStore.getState().currentAccountId, () =>
+    _doPullAndMerge(set, get, opts),
+  );
 }
 
 async function _doPullAndMerge(
