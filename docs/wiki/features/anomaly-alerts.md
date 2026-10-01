@@ -32,10 +32,32 @@ from the batch, because imports have no line items.
 No alert text is stored — only `params` Json; mobile renders from i18n and pushes are localized
 server-side.
 
-**The service was split** out of a 689-line god class: helpers (pure), types, the alert writer, and
-the detectors. `AnomalyService` stayed the public face, so no external caller changed.
+**How the module is laid out.** It was split out of one god class mixing alert CRUD with every
+detector (tech-debt `anomaly-service-god-class`, closed) into four layers:
+- `anomaly-helpers.util.ts` — pure and dependency-free: `expensePayee`, `normalizeMerchant`,
+  `monthKey`, `detectCycle`, `DAY_MS`/`DUP_DAY_MS`, `PRICE_INCREASE_FACTOR`,
+  `SPIKE_THRESHOLD_PERCENT`.
+- `anomaly.types.ts` — `CreateAlertInput`, `DetectorExpense`.
+- `anomaly-alert-writer.service.ts` — `AnomalyAlertWriterService.createAlert`, the one insert path:
+  insert, treat P2002 on `dedupKey` as "already alerted", then push unless the account already had
+  `PUSH_DAILY_CAP` pushes today.
+- `anomaly-detectors.service.ts` — `AnomalyDetectorsService`, every `detect*` method plus the
+  `receiptCheckAlertsEnabled()` gate.
+
+`AnomalyService` is the thin orchestrator: `checkExpense`/`checkExpenseBatch` fan out to the
+detectors, and it owns the read/CRUD surface (`findAll`, `getPriceCheckSummary`, `markRead`,
+`markAllRead`, `dismiss`, `dismissForExpense`). The controller and every external caller depend on
+`AnomalyService` alone.
 
 ## Invariants
+
+**Every detector writes through `createAlert`.** A new detector must not re-implement the insert,
+the dedup or the push cap — that duplication is what the writer service was extracted to end.
+
+**Shared constants come from the helpers file, not from a service.** `expense-created-hooks.service.ts`,
+`receipt-duplicate.service.ts` and `import-bank-dedup.service.ts` import `expensePayee` and the day
+windows from `anomaly-helpers.util.ts`; importing them from `AnomalyService` would drag the whole
+DI graph into a pure comparison.
 
 **Payee is `merchant || description`.** A duplicated expense with no merchant is still caught,
 because `expensePayee` falls back to the description. Candidates are queried by amount, currency and

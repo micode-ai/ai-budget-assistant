@@ -15,11 +15,13 @@ receipt OCR.
 - `apps/api/src/modules/ai/services/chat.service.ts` — the orchestrator for the call lifecycle
   (message assembly → API call → response parsing → pending-action management)
 - `apps/api/src/modules/ai/services/ai-tools.service.ts` — the thin `executeAction` dispatcher,
-  `isWriteAction`, and the read-action cache wrapper (`executeWithCache`). The 18 function schemas
-  are data-only in `ai-tool-schemas.ts`; the 18 handlers are split by domain across
+  `isWriteAction`, and the read-action cache wrapper (`executeWithCache`). The function schemas
+  are data-only in `ai-tool-schemas.ts`; the handlers are split by domain across
   `ai-expense-tools.service.ts`, `ai-budget-tools.service.ts`, `ai-debt-goal-tools.service.ts`,
-  `ai-shopping-tools.service.ts` and `ai-undo-tools.service.ts` (ABA-591 — the file was 1,521 lines
-  mixing all of it before this split)
+  `ai-shopping-tools.service.ts` and `ai-undo-tools.service.ts` (ABA-591)
+- `apps/api/src/modules/ai/services/chat-action-lifecycle.service.ts` and
+  `apps/api/src/modules/ai/services/chat-conversation.service.ts` — the confirm/reject/undo
+  lifecycle and conversation CRUD, split out of `chat.service.ts` (ABA-592)
 - `apps/api/src/modules/ai/services/user-context-builder.service.ts` — builds `UserContext`
 - `apps/api/src/modules/ai/services/prompt-builder.service.ts` — system prompt, language detection
 - `apps/api/src/modules/ai/services/embedding.service.ts` — cosine matching of free text against the
@@ -27,10 +29,20 @@ receipt OCR.
 - `apps/mobile/app/(tabs)/chat.tsx`, `apps/mobile/src/stores/chatStore.ts`
 - `apps/mobile/src/components/chat/` — `ActionConfirmationCard`, `ActionResultCard`
 
-Models in use: `gpt-4.1` for chat, `whisper-1` for voice, `text-embedding-3-small` for the matching
-above.
+Models: the main chat turn uses the model the user picked (`User.aiModel`, resolved by
+`resolveAiModel` in `apps/api/src/modules/ai/services/model-resolver.ts`); short formatting and
+narration calls use `resolveCheapModel()`. `whisper-1` transcribes voice and
+`text-embedding-3-small` does the matching above. Model ids live in those files, not here.
 
 ## Feature pages
+
+- [chat-architecture](features/chat-architecture.md) — one chat turn end to end: service boundaries,
+  the confirmation flow, the read cache, `UserContext`, language detection, the `chat/*` endpoints
+- [goals](features/goals.md) — savings goals, the `update_goal_balance` tool, the contribution log
+- [safe-to-spend](features/safe-to-spend.md) — the deterministic engine behind the home hero number
+  and the `check_affordability` tool
+- [income-voice-and-receipt-capture](features/income-voice-and-receipt-capture.md) — voice and
+  receipt capture for incomes, `POST /ai/parse-income`, `Income.source`
 
 - [chat-conversation-management](features/chat-conversation-management.md) — rename, delete, pin,
   sharing
@@ -56,13 +68,15 @@ only places that cannot go stale. Adding a new function touches: one schema obje
 it starts a new domain), and one `case` in `ai-tools.service.ts`'s switch — never a single
 thousand-line file.
 
-**Confirmation flow.** Write actions return a pending confirmation and the client shows
-`ActionConfirmationCard`; read actions execute immediately and are cached. A few write-shaped tools
-are deliberate exceptions that execute immediately — the shopping-list add and remove — because
-their guard rails differ; see `chat.service.ts`'s dedicated branches.
+**Confirmation flow.** Write actions are stored as a `pending_action` chat message and execute only
+from `POST /ai/chat/confirm`, scoped to the member who proposed them; read actions execute
+immediately and are cached for 10 minutes under a key that includes the caller's display currency.
+The two shopping-list writes are the deliberate exceptions that execute immediately. Full detail:
+[chat-architecture](features/chat-architecture.md#the-confirmation-flow).
 
-**Language detection** resolves the reply language from the current message's script first, then the
-user's UI locale, then recent history. All nine app locales.
+**Language detection** resolves the reply language from the current message's unique letters first,
+then the user's UI locale, then recent history — all nine app locales. See
+[chat-architecture](features/chat-architecture.md#language).
 
 **Usage and cost.** AI usage is metered per user and limits are enforced server-side; `AiUsageBadge`
 shows what is left, and the admin dashboard has an AI-usage page. The mobile one-time
@@ -71,8 +85,8 @@ cost-confirmation dialog stores its dismissal in **MMKV** (`react-native-mmkv`, 
 
 ## Known gaps
 
-- `chat.service.ts` was split down to a "lean orchestrator" and has since grown back to roughly
-  twice that size. Worth a look before adding to it.
+- Long conversations lose their recent turns: `chat()` loads the *first* 20 messages as model history,
+  not the last 20 — see [chat-architecture](features/chat-architecture.md#known-gaps).
 - There is no knowledge base behind the chat: it answers from `UserContext` plus function calling,
   so it cannot answer questions about the app itself.
 

@@ -23,8 +23,9 @@ on the server. Which value an endpoint receives depends on whether that row has 
 back, so both must resolve.
 
 **Idempotent creates.** The mobile queue resends a create whose response was lost (retry,
-double-tap, dropped connection) with the same `localId`. `expenses`, `incomes`, `projects` and
-`tags` are idempotent by construction (`upsert` on their `clientId` unique); `budgets` and
+double-tap, dropped connection) with the same `localId`. `expenses`, `incomes` and `projects` are
+idempotent by construction (`upsert` on their `clientId` unique); `tags` upsert on
+`(accountId, name)` instead and store the `clientId` (see [tags](tags.md)); `budgets` and
 `account-transfers` pre-check and catch `P2002`.
 
 ## Invariants

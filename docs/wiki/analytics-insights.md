@@ -14,6 +14,10 @@ The spending analysis layer: server-side aggregations (`modules/analytics/`, `mo
 - `apps/mobile/src/components/charts/` — `Bar`, `Donut`, `Pie`, `Weekday`, `GroupedBar` chart components
 - `apps/mobile/src/components/interactive-charts/` — drill-down charts with `ChartRenderer`
 
+## Feature pages
+- [safe-to-spend](features/safe-to-spend.md) — the deterministic "safe to spend today" number and the chat affordability check
+- [financial-wrapped](features/financial-wrapped.md) — the year-in-review card deck and its share image
+
 ## Key concepts
 - **Dual computation** — heavy aggregations happen server-side via the `analytics` module; lightweight / offline aggregations happen client-side in `useAnalytics.ts` using data already in the Zustand stores
 - **Calendar view** — `useCalendarData.ts` is a shared hook used in both the home widget and the full-screen calendar page; handles multi-currency conversion for per-day totals

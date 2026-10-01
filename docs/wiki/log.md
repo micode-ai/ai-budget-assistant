@@ -130,6 +130,12 @@ Newest last within each section.
 - 2026-09-29 · [ABA-625](https://github.com/micode-ai/ai-budget-assistant/issues/653) — push ↔
   receipt pairs are matched loosely and offered as a merge; Tier 1 skipped for `ocr` (the ABA-568
   branch had been unreachable for pushes). → `features/bank-notification-capture.md`
+- 2026-10-01 · [ABA-626](https://github.com/micode-ai/ai-budget-assistant/issues/654) — CLAUDE.md → wiki
+  migration, three batches: expenses, home and mobile screens; AI chat, goals, Safe-to-Spend, Wrapped; auth,
+  crons, backups, bots, admin, paywall. Every bullet re-verified against the code first — dozens of drifted
+  claims corrected rather than copied (route files that are now thin wrappers, first-20 chat history, admin
+  socket event names, restore that drops line items). 28 new pages + 11 extended; CLAUDE.md 19 750 → 13 356
+  words. → see the pages listed under each hub in `index.md`.
 
 ## Queries
 
