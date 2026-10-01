@@ -26,6 +26,9 @@ interface Props {
   onClose: () => void;
   onEdit: () => void;
   onDuplicate: () => void;
+  /** Present only when this row can be moved (expense row, caller can edit,
+   *  at least one eligible target account) - absent hides the item. */
+  onMove?: () => void;
   onDelete: () => void;
 }
 
@@ -35,7 +38,7 @@ const MENU_WIDTH = 176;
 // worst-case (all three items + a divider) — clamping against an overestimate
 // can only ever leave a little extra margin, never actually push the menu
 // off-screen the way an underestimate could.
-const MENU_ESTIMATED_HEIGHT = 168;
+const MENU_ESTIMATED_HEIGHT = 208;
 const VIEWPORT_MARGIN = 8;
 
 /**
@@ -65,7 +68,7 @@ const VIEWPORT_MARGIN = 8;
  * valid `.focus()` target and steal the trap's initial focus away from the
  * menu's own first item.
  */
-export function RowContextMenu({ anchor, canEdit, onClose, onEdit, onDuplicate, onDelete }: Props) {
+export function RowContextMenu({ anchor, canEdit, onClose, onEdit, onDuplicate, onMove, onDelete }: Props) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
@@ -107,6 +110,13 @@ export function RowContextMenu({ anchor, canEdit, onClose, onEdit, onDuplicate, 
             <Pressable style={styles.item} onPress={act(onDuplicate)} accessibilityRole="menuitem">
               <Ionicons name="copy-outline" size={16} color={theme.colors.primary} />
               <Text style={styles.itemText}>{t('common.duplicate')}</Text>
+            </Pressable>
+          )}
+
+          {canEdit && onMove && (
+            <Pressable style={styles.item} onPress={act(onMove)} accessibilityRole="menuitem">
+              <Ionicons name="swap-horizontal" size={16} color={theme.colors.primary} />
+              <Text style={styles.itemText}>{t('expenseDetail.moveTitle')}</Text>
             </Pressable>
           )}
 

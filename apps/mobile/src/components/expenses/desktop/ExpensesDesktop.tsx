@@ -8,6 +8,7 @@ import { useAccountStore } from '@/stores/accountStore';
 import { useExpensesScreenData, type ActiveTab } from '@/features/expenses/useExpensesScreenData';
 import { rowId, facetValue, type ActiveFacets, type LedgerRow } from '@/features/expenses/desktopTable';
 import { trimToVisible } from '@/features/expenses/desktopSelection';
+import { getMoveTargets } from '@/features/expenses/moveTargets';
 import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
@@ -131,6 +132,14 @@ export function ExpensesDesktop() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentAccount?.id, isTripAccount]);
+
+  // Move to another account (expense rows only - the API moves expenses, not
+  // incomes). Offered only when the caller can edit and some other
+  // non-viewer account exists, like the phone's detail screen.
+  const accountsForMove = useAccountStore((s) => s.accounts);
+  const currentAccountIdForMove = useAccountStore((s) => s.currentAccountId);
+  const canMove = canEdit && getMoveTargets(accountsForMove, currentAccountIdForMove).length > 0;
+  const [moveExpenseId, setMoveExpenseId] = useState<string | null>(null);
 
   const [selectedRowId, setSelectedRowId] = useState<string | null>(null);
   // Fix round 1: whether the dialog about to open for `selectedRowId` should
@@ -277,7 +286,7 @@ export function ExpensesDesktop() {
   // background row silently move or get toggled underneath it.
   // `showCategorize` too: typing a new category name while focus had left the
   // field (`n`) opened "New Expense" underneath the review and closed it.
-  const keyboardNavEnabled = !selectedRow && !createKind && !menuState && !showCategorize;
+  const keyboardNavEnabled = !selectedRow && !createKind && !menuState && !showCategorize && !moveExpenseId;
 
   // `/` and `Ctrl`/`Cmd`+`K` both focus the same search box — `/` is the
   // primary, always-reachable binding; `mod+k` is a convenience some
@@ -617,6 +626,14 @@ export function ExpensesDesktop() {
             closeMenu();
             handleDuplicate();
           }}
+          onMove={
+            canMove && menuState.row.kind === 'expense'
+              ? (() => {
+                  const id = menuState.row.expense.id;
+                  return () => setMoveExpenseId(id);
+                })()
+              : undefined
+          }
           onDelete={() => {
             closeMenu();
             handleDeleteFromList();
@@ -631,6 +648,17 @@ export function ExpensesDesktop() {
         isTripAccount={isTripAccount}
         tripMembers={tripMembers}
         dialogInitialEditing={dialogInitialEditing}
+        onMoveSelected={
+          canMove && selectedRow?.kind === 'expense'
+            ? () => {
+                const id = selectedRow.expense.id;
+                closeDialog();
+                setMoveExpenseId(id);
+              }
+            : undefined
+        }
+        moveExpenseId={moveExpenseId}
+        onCloseMove={() => setMoveExpenseId(null)}
         createKind={createKind}
         onCloseCreateDialog={() => setCreateKind(null)}
         showCategorize={showCategorize}

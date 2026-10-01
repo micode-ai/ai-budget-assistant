@@ -302,6 +302,11 @@ export async function moveExpenseAccountInDb(id: string, targetAccountId: string
     'UPDATE expenses SET account_id = ?, category_id = NULL, updated_at = ?, sync_status = ? WHERE id = ?',
     [targetAccountId, Date.now(), 'synced', id],
   );
+  // Line items carry category ids of the SOURCE account; the server remapped them by name
+  // into the target, but the move response doesn't return them. Clear them locally so no
+  // wrong category is shown; the target account's next pull restores the remapped ones.
+  // Deliberately leaves sync_status/updated_at alone — no push should be triggered.
+  await executeSql('UPDATE expense_items SET category_id = NULL WHERE expense_id = ?', [id]);
 }
 
 export async function saveReceiptImageLocally(

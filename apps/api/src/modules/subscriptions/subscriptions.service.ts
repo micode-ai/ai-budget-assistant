@@ -3,6 +3,9 @@ import {
   ForbiddenException,
   BadRequestException,
   Logger,
+  Optional,
+  Inject,
+  forwardRef,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
@@ -12,6 +15,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import { MailService } from '../mail/mail.service';
 import * as ni18n from '../notifications/notification-i18n';
 import * as pricingData from './pricing-data.json';
+import { AdminGateway } from '../admin/admin.gateway';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 type SubscriptionTier = 'free' | 'pro' | 'business';
@@ -58,6 +62,8 @@ export class SubscriptionsService {
     private readonly telegramService: TelegramService,
     private readonly notificationsService: NotificationsService,
     private readonly mailService: MailService,
+    @Optional() @Inject(forwardRef(() => AdminGateway))
+    private readonly adminGateway?: AdminGateway | null,
   ) {
     const stripeKey = this.configService.get<string>('STRIPE_SECRET_KEY');
     if (stripeKey) {
@@ -503,6 +509,8 @@ export class SubscriptionsService {
 
     const newStatus = this.mapStripeStatus(stripeSub.status);
 
+    this.emitTierChange(userId, previousTier ?? 'free', tier);
+
     // Notify on new paid subscription or tier upgrade
     if (tier !== 'free' && previousTier !== tier) {
       try {
@@ -540,6 +548,11 @@ export class SubscriptionsService {
     const userId = stripeSub.metadata.userId;
     if (!userId) return;
 
+    const existing = await this.prisma.subscription.findUnique({
+      where: { userId },
+      select: { tier: true },
+    });
+
     await this.prisma.subscription.update({
       where: { userId },
       data: {
@@ -551,6 +564,23 @@ export class SubscriptionsService {
         cancelAtPeriodEnd: false,
       },
     });
+
+    this.emitTierChange(userId, existing?.tier ?? 'free', 'free');
+  }
+
+  /** Live admin feed. Fire-and-forget: a gateway failure must never affect the webhook response. */
+  private emitTierChange(userId: string, fromTier: string, toTier: string): void {
+    if (fromTier === toTier) return;
+    try {
+      this.adminGateway?.emitSubscriptionChange({
+        userId,
+        fromTier,
+        toTier,
+        timestamp: new Date().toISOString(),
+      });
+    } catch (err) {
+      this.logger.warn(`SubscriptionsService.emitTierChange failed: ${err}`);
+    }
   }
 
   private async handleInvoicePaid(invoice: Stripe.Invoice): Promise<void> {

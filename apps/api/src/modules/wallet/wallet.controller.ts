@@ -63,7 +63,7 @@ export class WalletController {
   ) {
     const parsedMonths = months ? parseInt(months, 10) : 6;
     const safeMonths = Number.isNaN(parsedMonths) ? 6 : parsedMonths;
-    return this.walletService.getMonthlyBalanceHistory(req.accountId, safeMonths);
+    return this.walletService.getMonthlyBalanceHistory(req.accountId, safeMonths, req.user.timezone);
   }
 
   @Delete(':currencyCode')

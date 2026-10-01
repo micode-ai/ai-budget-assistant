@@ -1,6 +1,7 @@
 import { Injectable, Logger, NotFoundException, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
+import { calendarPartsInTimezone } from '../../common/utils/timezone';
 import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import { accountCurrencyKey, buildWalletBalanceRow } from './wallet-balance.util';
 import { resolveWalletCurrencies } from '../../common/utils/wallet-currencies';
@@ -482,18 +483,22 @@ export class WalletService {
     return { points, currencies };
   }
 
-  async getMonthlyBalanceHistory(accountId: string, months: number) {
+  /**
+   * Every movement `date` here (Expense/Income/CurrencyExchange/AccountTransfer)
+   * is `@db.Date` — a calendar day stored as UTC midnight, with no time of day.
+   * So rows are bucketed by that stored day via the UTC getters, with NO
+   * timezone shift (shifting a date-only value moves it a day for any user off
+   * UTC). The timezone only decides what "now" is: the current month and the
+   * N-month window are anchored on the user's local calendar month.
+   */
+  async getMonthlyBalanceHistory(accountId: string, months: number, timezone?: string | null) {
     const cappedMonths = Math.min(Math.max(1, months), 12);
 
-    const now = new Date();
-    // First day of the earliest month in the window (UTC)
-    const start = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - (cappedMonths - 1), 1, 0, 0, 0, 0),
-    );
-    // Last day of the current month (UTC)
-    const end = new Date(
-      Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 0, 23, 59, 59, 999),
-    );
+    const { year: curYear, month: curMonth } = calendarPartsInTimezone(new Date(), timezone);
+    // First day of the earliest month in the window, as a date-only UTC value
+    const start = new Date(Date.UTC(curYear, curMonth - 1 - (cappedMonths - 1), 1, 0, 0, 0, 0));
+    // Last day of the user's current month
+    const end = new Date(Date.UTC(curYear, curMonth, 0, 23, 59, 59, 999));
 
     const [incomes, expenses, exchanges, transfersOut, transfersIn] = await Promise.all([
       this.prisma.income.findMany({

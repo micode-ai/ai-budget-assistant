@@ -38,7 +38,9 @@ Dashboard (`/`), Login (`/login`), Investor Metrics (`/metrics`), Acquisition (`
 - **Communications (ABA-420)** — `app/communications/page.tsx` is a thin `Tabs` shell; each tab is its own component under `src/components/communications/` — `SendPushTab`, `SendEmailTab`, `BroadcastTab`, `ScheduledTab`, `HistoryTab` — so each tab's form, filter and pagination state is local to that tab. History has summary stat cards, a type filter (push/email/broadcast), expandable rows with recipient details, body preview, broadcast filters, a delivery-success bar and relative dates.
 
 ### Real-time
-`AdminGateway` (namespace `/admin`, one admin room) emits `admin:new-user`, `admin:ai-request`, `admin:subscription-change`, `admin:error` and, every 30 s, `admin:stats`. `use-realtime.ts` listens to the first four and feeds the live activity feed.
+`AdminGateway` (namespace `/admin`, one admin room) emits `admin:new-user`, `admin:ai-request`, `admin:subscription-change`, `admin:error` and, every 30 s, `admin:stats`. `use-realtime.ts` feeds the first four into the live activity feed and merges `admin:stats` (`newUsersToday`, `activeUsersToday`, `mrr`) into the `["admin","analytics","overview"]` query with `setQueryData`, so the KPI cards tick without a refetch (`health` is carried but unused by the client).
+
+Emitters: `admin:new-user` (auth), `admin:ai-request` (`AiUsageGuard`), `admin:subscription-change` (`SubscriptionsService` webhook handling — subscription created/updated/checkout and deleted, only when the tier actually changes; `@Optional()` gateway, failures logged and swallowed), `admin:error` (`SentryExceptionFilter`, status >= 500; message is `status METHOD path` plus the truncated error message, no query string, no stack).
 
 ### Client
 React Query 5 for all server state; shadcn/ui components; Recharts for charts.
@@ -49,8 +51,7 @@ React Query 5 for all server state; shadcn/ui components; Recharts for charts.
 - **The column is "Last Active", not "Last Login"** — `lastSyncAt` is stamped on every authenticated request ([last-active-tracking](features/last-active-tracking.md)).
 
 ## Known gaps
-- `emitSubscriptionChange` and `emitError` have no callers outside the gateway, so those two live-feed event types never fire; only `admin:new-user` (auth) and `admin:ai-request` (`AiUsageGuard`) do.
-- `admin:stats` is emitted every 30 s but `use-realtime.ts` does not listen to it — the cron runs `getSystemHealth` + `getAnalyticsOverview` for nobody.
+- `admin:error` carries the raw exception message (truncated to 200 chars); a message that embeds user data would reach the admin feed.
 
 ## Cross-references
 - Talks to: `api` — all data comes through the NestJS API; admin-only endpoints are behind `JwtAuthGuard` + `AdminGuard`

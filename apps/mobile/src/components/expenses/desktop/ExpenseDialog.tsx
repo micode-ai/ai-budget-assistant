@@ -54,6 +54,8 @@ export interface ExpenseDialogProps {
    * by reading both cards' effect bodies.
    */
   initialEditing?: boolean;
+  /** Opens the move-to-account picker. Absent hides the header action. */
+  onMove?: () => void;
 }
 
 /**
@@ -117,6 +119,7 @@ export function ExpenseDialog({
   isTripAccount = false,
   tripMembers = [],
   initialEditing = false,
+  onMove,
 }: ExpenseDialogProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -209,6 +212,16 @@ export function ExpenseDialog({
                   style={styles.iconButton}
                 >
                   <Ionicons name="pencil" size={18} color={theme.colors.primary} />
+                </Pressable>
+              )}
+              {canEdit && !isEditing && onMove && (
+                <Pressable
+                  onPress={onMove}
+                  accessibilityRole="button"
+                  accessibilityLabel={t('expenseDetail.moveTitle')}
+                  style={styles.iconButton}
+                >
+                  <Ionicons name="swap-horizontal" size={18} color={theme.colors.primary} />
                 </Pressable>
               )}
               <Pressable

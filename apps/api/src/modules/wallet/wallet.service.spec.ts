@@ -44,6 +44,57 @@ describe('WalletService.getMonthlyBalanceHistory', () => {
     const res = await makeService().getMonthlyBalanceHistory('a1', 24);
     expect(res.months).toHaveLength(12);
   });
+
+  describe('user timezone', () => {
+    afterEach(() => jest.useRealTimers());
+
+    function svc(incomes: unknown[] = [], expenses: unknown[] = []) {
+      const prisma = {
+        income: { findMany: jest.fn().mockResolvedValue(incomes) },
+        expense: { findMany: jest.fn().mockResolvedValue(expenses) },
+        currencyExchange: { findMany: jest.fn().mockResolvedValue([]) },
+        accountTransfer: { findMany: jest.fn().mockResolvedValue([]) },
+      };
+      return { service: new WalletService(prisma as never), prisma };
+    }
+
+    it('uses the user-local current month: UTC still Sept 30, Auckland already Oct 1', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-09-30T20:00:00Z'));
+      const { service, prisma } = svc();
+      const res = await service.getMonthlyBalanceHistory('a1', 3, 'Pacific/Auckland');
+      expect(res.months.map((m) => m.month)).toEqual(['2026-08', '2026-09', '2026-10']);
+      const where = prisma.income.findMany.mock.calls[0][0].where.date;
+      expect(where.gte).toEqual(new Date(Date.UTC(2026, 7, 1)));
+      expect(where.lte).toEqual(new Date(Date.UTC(2026, 9, 31, 23, 59, 59, 999)));
+    });
+
+    it('uses the user-local current month west of UTC: UTC already Oct 1, Los Angeles still Sept 30', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-10-01T03:00:00Z'));
+      const res = await svc().service.getMonthlyBalanceHistory('a1', 2, 'America/Los_Angeles');
+      expect(res.months.map((m) => m.month)).toEqual(['2026-08', '2026-09']);
+    });
+
+    it('buckets date-only rows by their stored calendar date, with no timezone shift', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-10-15T12:00:00Z'));
+      const { service } = svc(
+        [{ date: new Date('2026-09-30T00:00:00Z'), amount: 10, currencyCode: 'PLN' }],
+        [{ date: new Date('2026-10-01T00:00:00Z'), amount: 4, currencyCode: 'PLN' }],
+      );
+      for (const tz of ['Pacific/Auckland', 'America/Los_Angeles', 'UTC']) {
+        const res = await service.getMonthlyBalanceHistory('a1', 2, tz);
+        expect(res.months.find((m) => m.month === '2026-09')?.deltas.PLN).toBe(10);
+        expect(res.months.find((m) => m.month === '2026-10')?.deltas.PLN).toBe(-4);
+      }
+    });
+
+    it('falls back to UTC when no or an unknown timezone is given', async () => {
+      jest.useFakeTimers().setSystemTime(new Date('2026-09-30T20:00:00Z'));
+      const a = await svc().service.getMonthlyBalanceHistory('a1', 1);
+      const b = await svc().service.getMonthlyBalanceHistory('a1', 1, 'Not/AZone');
+      expect(a.months[0].month).toBe('2026-09');
+      expect(b.months[0].month).toBe('2026-09');
+    });
+  });
 });
 
 describe('WalletService.getSummary', () => {

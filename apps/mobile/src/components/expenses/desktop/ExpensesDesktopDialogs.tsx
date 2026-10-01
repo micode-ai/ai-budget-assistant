@@ -8,6 +8,7 @@ import type { LedgerRow } from '@/features/expenses/desktopTable';
 import { ExpenseDialog } from './ExpenseDialog';
 import { CreateDialog } from './CreateDialog';
 import { CategorizeDialog } from './CategorizeDialog';
+import { MoveAccountDialog } from './MoveAccountDialog';
 
 interface Props {
   /** The ledger-row view/edit dialog (design decisions 4/5) — `null` renders
@@ -23,6 +24,11 @@ interface Props {
   isTripAccount: boolean;
   tripMembers: { userId: string; name: string }[];
   dialogInitialEditing: boolean;
+  /** Opens the move picker for the selected expense; absent hides the action. */
+  onMoveSelected?: () => void;
+  /** Expense id whose move picker is open, or `null`. */
+  moveExpenseId: string | null;
+  onCloseMove: () => void;
 
   /** The "+ Add expense/income" dialog (Task 3, ABA-500) — `null` renders
    *  nothing. `ExpensesDesktop`'s two top-bar buttons set `createKind`
@@ -89,6 +95,9 @@ export function ExpensesDesktopDialogs({
   isTripAccount,
   tripMembers,
   dialogInitialEditing,
+  onMoveSelected,
+  moveExpenseId,
+  onCloseMove,
   createKind,
   onCloseCreateDialog,
   showCategorize,
@@ -116,8 +125,11 @@ export function ExpensesDesktopDialogs({
           isTripAccount={isTripAccount}
           tripMembers={tripMembers}
           initialEditing={dialogInitialEditing}
+          onMove={onMoveSelected}
         />
       )}
+
+      {moveExpenseId && <MoveAccountDialog expenseId={moveExpenseId} onClose={onCloseMove} />}
 
       {createKind && <CreateDialog kind={createKind} onClose={onCloseCreateDialog} />}
 

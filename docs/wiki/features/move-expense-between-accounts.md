@@ -32,8 +32,10 @@ are dismissed, and the product rules the row's save taught the source account ar
 **The phone treats it as an online action.** Category remap and membership checks are
 server-authoritative, so `moveExpense` removes the row from the current list optimistically, calls
 the server, and restores the row if the call fails. Only on success does it re-home the local SQLite
-row (`account_id` → target, `category_id` → NULL, `sync_status` synced — no push is queued), so the
-row reappears under the target account on its next pull. The action is hidden for viewers and when
+row (`account_id` → target, `category_id` → NULL, `sync_status` synced — no push is queued) and
+clears its line items' `category_id` too — they pointed at the source account's categories, and the
+move response carries no remapped item categories — so the row and its items come back with the
+server's remapped values on the target account's next pull. The action is hidden for viewers and when
 there is no other non-viewer account to move to.
 
 ## Invariants
@@ -60,7 +62,7 @@ rules to forget are keyed by the source ids, so they are read first and passed i
 
 ## Known gaps
 
-- The desktop transaction dialog has no move action; it exists only on the phone's detail screen.
+- Desktop: the row context menu and the expense dialog header carry a swap-horizontal action opening `MoveAccountDialog` (`src/components/expenses/desktop/`), targets from `getMoveTargets` (`src/features/expenses/moveTargets.ts`). Expense rows only. Not verified in a browser.
 
 ## History
 

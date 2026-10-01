@@ -8,7 +8,7 @@ import * as pricingData from './pricing-data.json';
 //   3. Webhook: subscription deleted → account reverts to free/canceled.
 //   4. Webhook: payment failed → status set to past_due.
 
-function makeService(prismaOverrides: Record<string, any> = {}) {
+function makeService(prismaOverrides: Record<string, any> = {}, adminGateway?: any) {
   const baseSub = {
     id: 'sub-1',
     userId: 'u1',
@@ -66,6 +66,7 @@ function makeService(prismaOverrides: Record<string, any> = {}) {
     telegramService,
     notificationsService,
     mailService,
+    adminGateway,
   );
 
   return { service, prisma, telegramService, notificationsService };
@@ -238,6 +239,63 @@ describe('SubscriptionsService — handleWebhookEvent', () => {
       }),
     );
     expect(notificationsService.sendToUser).toHaveBeenCalled();
+  });
+
+  describe('admin live feed', () => {
+    const deletedEvent: any = {
+      type: 'customer.subscription.deleted',
+      data: { object: { id: 'sub_1', metadata: { userId: 'u1' } } },
+    };
+    const proSub = { tier: 'pro', status: 'active' };
+
+    it('emits subscription-change when a paid subscription is deleted', async () => {
+      const gw = { emitSubscriptionChange: jest.fn() };
+      const { service } = makeService(
+        { subscription: { findUnique: jest.fn().mockResolvedValue(proSub), update: jest.fn().mockResolvedValue({}) } },
+        gw,
+      );
+      await service.handleWebhookEvent(deletedEvent);
+      expect(gw.emitSubscriptionChange).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: 'u1', fromTier: 'pro', toTier: 'free' }),
+      );
+    });
+
+    it('emits on checkout/updated when the tier changes', async () => {
+      const gw = { emitSubscriptionChange: jest.fn() };
+      const { service } = makeService({}, gw);
+      (service as any).resolveTierFromPrice = jest.fn().mockResolvedValue('pro');
+      await service.handleWebhookEvent({
+        type: 'customer.subscription.updated',
+        data: {
+          object: {
+            id: 'sub_1',
+            status: 'active',
+            customer: 'cus_1',
+            metadata: { userId: 'u1' },
+            items: { data: [{ price: { id: 'price_1' } }] },
+          },
+        },
+      } as any);
+      expect(gw.emitSubscriptionChange).toHaveBeenCalledWith(
+        expect.objectContaining({ userId: 'u1', fromTier: 'free', toTier: 'pro' }),
+      );
+    });
+
+    it('still resolves when the gateway throws', async () => {
+      const gw = { emitSubscriptionChange: jest.fn(() => { throw new Error('boom'); }) };
+      const { service } = makeService(
+        { subscription: { findUnique: jest.fn().mockResolvedValue(proSub), update: jest.fn().mockResolvedValue({}) } },
+        gw,
+      );
+      await expect(service.handleWebhookEvent(deletedEvent)).resolves.toBeUndefined();
+    });
+
+    it('works when no gateway is injected', async () => {
+      const { service } = makeService(
+        { subscription: { findUnique: jest.fn().mockResolvedValue(proSub), update: jest.fn().mockResolvedValue({}) } },
+      );
+      await expect(service.handleWebhookEvent(deletedEvent)).resolves.toBeUndefined();
+    });
   });
 
   it('does not throw for unhandled event types (graceful no-op)', async () => {

@@ -15,7 +15,7 @@ jest.mock('../client', () => ({
   executeSql: (...args: unknown[]) => mockExecuteSql(...args),
 }));
 
-import { updateExpenseInDb } from '../expenseRepository';
+import { updateExpenseInDb, moveExpenseAccountInDb } from '../expenseRepository';
 
 beforeEach(() => {
   mockExecuteSql.mockClear();
@@ -59,5 +59,18 @@ describe('updateExpenseInDb — recurring columns', () => {
     const [sql, params] = mockExecuteSql.mock.calls[0];
     expect(sql).toContain('is_recurring = ?');
     expect(params[0]).toBe(0);
+  });
+});
+
+describe('moveExpenseAccountInDb', () => {
+  it('re-homes the expense and clears its line items category ids', async () => {
+    await moveExpenseAccountInDb('exp-1', 'acc-2');
+    const calls = mockExecuteSql.mock.calls;
+    expect(calls).toHaveLength(2);
+    expect(calls[0][0]).toContain('UPDATE expenses SET account_id = ?, category_id = NULL');
+    expect(calls[0][1][0]).toBe('acc-2');
+    expect(calls[0][1][3]).toBe('exp-1');
+    expect(calls[1][0]).toBe('UPDATE expense_items SET category_id = NULL WHERE expense_id = ?');
+    expect(calls[1][1]).toEqual(['exp-1']);
   });
 });

@@ -59,10 +59,19 @@ inflow of every counted-as-income transfer.
 money left, and disagreed with the client-side `loadAllExpenses`, which already filtered it
 (ABA-626).
 
+**Month buckets are the stored calendar date; only "now" is timezone-aware.** Every movement `date`
+(`Expense`, `Income`, `CurrencyExchange`, `AccountTransfer`) is `@db.Date` — a day at UTC midnight with
+no time of day — so rows are bucketed with the UTC getters and must NOT be shifted by the user's
+timezone (that would move a date-only value a day for everyone off UTC). The current month and the
+N-month window come from `calendarPartsInTimezone(new Date(), req.user.timezone)` (`'UTC'` default,
+unknown zone falls back to UTC), so a user already in the next month sees it. If a movement type ever
+gains a real timestamp column, bucket that one with `yearMonthIdInTimezone`.
+
 ## Known gaps
 
-- Month buckets are UTC (`getUTCMonth`), so a movement late on a month's last day in a positive-offset
-  timezone can land in the following month.
+- The daily series (`getBalanceHistory`) still builds its window from the server's local clock and
+  keys days with `toISOString()`; it is unused by the current client and was not given the monthly
+  series' timezone treatment.
 - Past months are converted at today's rates, not the rates of that month.
 
 ## History
