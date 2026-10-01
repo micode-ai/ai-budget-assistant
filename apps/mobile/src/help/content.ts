@@ -14849,7 +14849,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 14. Portfel inwestycyjny — sledzenie akcji, ETF, krypto i analityka
 15. Szyfrowanie end-to-end — ochrona danych za pomoca E2EE
 16. Eksport i raporty — raporty PDF/Excel/CSV, kopie zapasowe, podsumowania e-mail
-17. Dlugi i Pozyczki — sledzenie pozyczonych i wzietych pieniedzy, splaty, terminy
+17. Długi i pożyczki — śledzenie pożyczonych i zadłużonych pieniędzy, spłaty, terminy
 18. Cele oszczędnościowe — plany oszczędnościowe oparte na AI z celami składek i punktami kontrolnymi
 19. Tropiciel wydatków — comiesięczny audyt wydatków w celu identyfikacji marnotrawstwa i sugestii oszczędności
 20. Tryb odpowiedzi AI — dostosowanie stylu komunikacji AI (Prosty, Zrównoważony, Ekspert)
@@ -17490,133 +17490,133 @@ Skonfiguruj te opcje w **Ustawienia** > **Raporty i e-mail**:
     },
     {
       id: '17-debts-and-loans',
-      title: `Dlugi i Pozyczki`,
-      description: `Sledz pieniadze, ktore pozyczyles lub pozyczyles od kogos. Zobacz, kto jest ci winien i komu jestes winien, rejestruj splaty i monitoruj terminy — wszystko zintegrowane z wydatkami i przychodami.`,
-      body: `# Dlugi i Pozyczki
+      title: `Długi i pożyczki`,
+      description: `Śledź pieniądze, które pożyczyłeś komuś lub od kogoś. Zobacz, kto jest ci winien i komu ty jesteś winien, zapisuj spłaty i pilnuj terminów — wszystko zintegrowane z wydatkami i przychodami.`,
+      body: `# Długi i pożyczki
 
-> Sledz pieniadze, ktore pozyczyles lub pozyczyles od kogos. Zobacz, kto jest ci winien i komu jestes winien, rejestruj splaty i monitoruj terminy — wszystko zintegrowane z wydatkami i przychodami.
+> Śledź pieniądze, które pożyczyłeś komuś lub od kogoś. Zobacz, kto jest ci winien i komu ty jesteś winien, zapisuj spłaty i pilnuj terminów — wszystko zintegrowane z wydatkami i przychodami.
 
-## Przeglad
+## Przegląd
 
-Funkcja «Dlugi i Pozyczki» umozliwia sledzenie dwoch typow zobowiazan finansowych:
+Funkcja «Długi i pożyczki» pozwala śledzić dwa rodzaje zobowiązań finansowych:
 
 ![Ekran Długi i Pożyczki z pieniędzmi pożyczonymi i wziętymi w dług]({{IMG:debts.jpg}})
 
-- **Pozyczone pieniadze** — pieniadze, ktore dales komus (rejestrowane jako wydatek z oznaczeniem dlugu)
-- **Pieniadze wzięte w dlug** — pieniadze, ktore ktos dal tobie (rejestrowane jako przychod z oznaczeniem dlugu)
+- **Pożyczone pieniądze** — pieniądze, które dałeś komuś (zapisywane jako wydatek oznaczony jako dług)
+- **Zadłużone pieniądze** — pieniądze, które ktoś dał tobie (zapisywane jako przychód oznaczony jako dług)
 
-Splaty dzialaja tak samo:
-- Gdy ktos **ci splaca** — rejestrowane jako przychod powiazany z oryginalnym wydatkiem dlugu
-- Gdy **ty splacasz** — rejestrowane jako wydatek powiazany z oryginalnym przychodem dlugu
+Spłaty działają tak samo:
+- Gdy ktoś **spłaca tobie** — zapisywane jako przychód powiązany z pierwotnym wydatkiem-długiem
+- Gdy **ty spłacasz** — zapisywane jako wydatek powiązany z pierwotnym przychodem-długiem
 
-Status dlugu jest obliczany automatycznie:
-- **Aktywny** — pozostaje nieoplacone saldo
-- **Splacony** — dlug zostal w pelni splacony
-- **Przeterminowany** — termin minal, a saldo nadal jest nieoplacone
+Status długu jest obliczany automatycznie:
+- **Aktywny** — pozostało nieopłacone saldo
+- **Spłacony** — dług został spłacony w całości
+- **Zaległy** — termin minął, a saldo nadal jest nieopłacone
 
-## Tworzenie dlugu
+## Tworzenie długu
 
-Najszybszy sposob na dodanie dlugu to ekran **Dlugi i Pozyczki**:
+Najszybszy sposób na dodanie długu to ekran **Długi i Pożyczki**:
 
-1. Otworz ekran **Dlugi i Pozyczki** (z widgetu na Pulpicie lub z Ustawien)
+1. Otwórz ekran **Długi i Pożyczki** (z widgetu na Pulpicie lub z Ustawień)
 2. Dotknij przycisku **+** w prawym dolnym rogu
-3. Wybierz **Pozyczyc pieniadze** lub **Pozyczyc od kogos**
-4. Wypelnij kwote, opis, nazwe kontaktu i opcjonalny termin splaty
+3. Wybierz **Pożycz komuś** lub **Pożycz od kogoś**
+4. Wpisz kwotę, opis, imię osoby i opcjonalny termin zwrotu
 5. Dotknij **Zapisz**
 
-Mozesz rowniez tworzyc dlugi recznie z formularzy wydatkow lub przychodow (zobacz ponizej).
+Długi możesz też tworzyć z formularzy wydatków lub przychodów (zobacz niżej).
 
-## Pozyczanie pieniedzy
+## Pożyczanie komuś
 
 ### Krok po kroku
 
-1. Przejdz do **Transakcje** i dotknij przycisku **+**
-2. Wybierz **Reczne wprowadzenie**
-3. Wpisz **kwote**, ktora pozyczasz
-4. Wpisz **opis** (np. «Pozyczka dla Jana»)
-5. Wlacz przelacznik **Pozyczylem pieniadze**
-6. Wpisz **nazwe kontaktu** — komu pozyczasz
-7. Opcjonalnie ustaw **termin splaty** — kiedy oczekujesz zwrotu
+1. Przejdź do **Transakcje** i dotknij przycisku **+**
+2. Wybierz **Ręczne wprowadzanie**
+3. Wpisz **kwotę**, którą pożyczasz
+4. Wpisz **opis** (np. «Pożyczka dla Jana»)
+5. Włącz przełącznik **Pożycz komuś**
+6. Wpisz **imię osoby** — komu pożyczasz
+7. Opcjonalnie ustaw **termin zwrotu** — kiedy spodziewasz się zwrotu
 8. Dotknij **Zapisz wydatek**
 
-Wydatek zostanie oznaczony jako dlug i pojawi sie na ekranie Dlugi i Pozyczki.
+Wydatek zostanie oznaczony jako dług i pojawi się na ekranie Długi i Pożyczki.
 
-> **Uwaga:** Kwota wplywa na saldo portfela jak zwykly wydatek (pieniadze wychodza).
+> **Uwaga:** Kwota wpływa na saldo portfela jak zwykły wydatek (pieniądze wychodzą).
 
-## Pozyczanie od kogos
+## Pożyczanie od kogoś
 
 ### Krok po kroku
 
-1. Przejdz do **Transakcje**, przelacz na zakladke **Przychody** i dotknij **+**
-2. Wpisz **kwote**, ktora pozyczasz
-3. Wpisz **opis** (np. «Pozyczka od Marii»)
-4. Wlacz przelacznik **Pozyczylem od kogos**
-5. Wpisz **nazwe kontaktu** — od kogo pozyczasz
-6. Opcjonalnie ustaw **termin splaty** — kiedy musisz oddac
-7. Dotknij **Zapisz przychod**
+1. Przejdź do **Transakcje**, przełącz na zakładkę **Przychody** i dotknij **+**
+2. Wpisz **kwotę**, którą pożyczasz
+3. Wpisz **opis** (np. «Pożyczka od Marii»)
+4. Włącz przełącznik **Pożycz od kogoś**
+5. Wpisz **imię osoby** — od kogo pożyczasz
+6. Opcjonalnie ustaw **termin zwrotu** — kiedy musisz oddać
+7. Dotknij **Zapisz przychód**
 
-Przychod zostanie oznaczony jako dlug i pojawi sie na ekranie Dlugi i Pozyczki.
+Przychód zostanie oznaczony jako dług i pojawi się na ekranie Długi i Pożyczki.
 
-> **Uwaga:** Kwota wplywa na saldo portfela jak zwykly przychod (pieniadze przychodza).
+> **Uwaga:** Kwota wpływa na saldo portfela jak zwykły przychód (pieniądze przychodzą).
 
-## Rejestrowanie splaty
+## Zapisywanie spłaty
 
-### Gdy ktos ci splaca (za pozyczone pieniadze)
+### Gdy ktoś spłaca tobie (pieniądze, które pożyczyłeś)
 
-1. Otworz oryginalny **wydatek** (pozyczke, ktora dales)
-2. Dotknij **Zarejestruj spłate**
-3. Zostaniesz przekierowany do formularza nowego przychodu z wypelnionym imieniem kontaktu i waluta
-4. Wpisz **kwote splaty** (moze byc czesciowa)
-5. Dotknij **Zapisz przychod**
+1. Otwórz pierwotny **wydatek** (pożyczkę, której udzieliłeś)
+2. Dotknij **Zapisz spłatę**
+3. Otworzy się formularz nowego przychodu z wypełnionym imieniem osoby i walutą
+4. Wpisz **kwotę spłaty** (może być częściowa)
+5. Dotknij **Zapisz przychód**
 
-### Gdy ty splacasz (za pieniadze wzięte w dlug)
+### Gdy ty spłacasz (pieniądze wzięte w dług)
 
-1. Otworz oryginalny **przychod** (pozyczke, ktora otrzymales)
-2. Dotknij **Zarejestruj spłate**
-3. Zostaniesz przekierowany do formularza nowego wydatku z wypelnionym imieniem kontaktu i waluta
-4. Wpisz **kwote splaty** (moze byc czesciowa)
+1. Otwórz pierwotny **przychód** (pożyczkę, którą otrzymałeś)
+2. Dotknij **Zapisz spłatę**
+3. Otworzy się formularz nowego wydatku z wypełnionym imieniem osoby i walutą
+4. Wpisz **kwotę spłaty** (może być częściowa)
 5. Dotknij **Zapisz wydatek**
 
-> **Wskazowka:** Mozesz rejestrowac wiele czesciowych splat. Pozostale saldo aktualizuje sie automatycznie.
+> **Wskazówka:** Możesz zapisać wiele częściowych spłat. Pozostałe saldo aktualizuje się automatycznie.
 
-## Ekran Dlugi i Pozyczki
+## Ekran Długi i Pożyczki
 
-Przejdz do ekranu Dlugi i Pozyczki z **Ustawienia > Dlugi i Pozyczki** lub dotykajac widgetu dlugów na Pulpicie.
+Ekran Długi i Pożyczki otworzysz z **Ustawienia > Długi i pożyczki** lub dotykając widgetu długów na Pulpicie.
 
 ### Karty podsumowania
 
-Na gorze ekranu dwie karty pokazuja:
-- **Sa ci winni** — calkowita pozostala kwota, ktora sa ci winni (zielona)
-- **Jestes winien** — calkowita pozostala kwota, ktora jestes winien (czerwona)
+Na górze ekranu dwie karty pokazują:
+- **Są ci winni** — łączna pozostała kwota, którą są ci winni (zielona)
+- **Jesteś winien** — łączna pozostała kwota, którą ty jesteś winien (czerwona)
 
-Kwoty sa automatycznie przeliczane na Twoja walute bazowa po aktualnych kursach wymiany.
+Kwoty są automatycznie przeliczane na twoją walutę bazową po aktualnych kursach wymiany.
 
-### Zakladki
+### Zakładki
 
-Przelaczaj miedzy dwoma widokami:
-- **Pozyczone** — dlugi, gdzie pozyczyłes pieniadze innym
-- **Wzięte w dlug** — dlugi, gdzie pozyczyłes pieniadze od innych
+Przełączaj się między dwoma widokami:
+- **Pożyczone** — długi, w których pożyczyłeś pieniądze innym
+- **Zadłużone** — długi, w których pożyczyłeś pieniądze od innych
 
 ### Filtry
 
-Filtruj dlugi wedlug statusu:
-- **Wszystkie** — pokaz wszystkie dlugi
-- **Aktywne** — tylko dlugi z nieoplaconym saldem
-- **Przeterminowane** — tylko dlugi po terminie
-- **Splacone** — tylko w pelni splacone dlugi
+Filtruj długi według statusu:
+- **Wszystkie** — pokaż wszystkie długi
+- **Aktywne** — tylko długi z nieopłaconym saldem
+- **Zaległe** — tylko długi po terminie
+- **Spłacone** — tylko długi spłacone w całości
 
-### Karta dlugu
+### Karta długu
 
-Kazdy dlug pokazuje:
-- **Nazwe kontaktu** — z kim zwiazany jest dlug
-- **Opis** — za co jest dlug
-- **Znacznik statusu** — Aktywny (niebieski), Przeterminowany (czerwony) lub Splacony (zielony)
-- **Oryginalna kwota** — poczatkowa kwota dlugu w oryginalnej walucie
-- **Pozostala kwota** — ile jeszcze trzeba splacic
-- **Pasek postepu** — wizualny wskaznik postepu splaty (procent)
-- **Termin splaty** — kiedy dlug jest wymagalny (jesli ustawiono)
+Każdy dług pokazuje:
+- **Imię osoby** — z kim związany jest dług
+- **Opis** — za co jest dług
+- **Znacznik statusu** — Aktywny (niebieski), Zaległy (czerwony) lub Spłacony (zielony)
+- **Kwota początkowa** — początkowa kwota długu w oryginalnej walucie
+- **Pozostało** — ile jeszcze trzeba spłacić
+- **Pasek postępu** — wizualny wskaźnik postępu spłaty (procent)
+- **Termin zwrotu** — kiedy dług jest wymagalny (jeśli ustawiono)
 
-Dotknij karty dlugu, aby zobaczyc pelne szczegoly wydatku lub przychodu i zarejestrowac splaty.
+Dotknij karty długu, aby zobaczyć pełne szczegóły wydatku lub przychodu i zapisać spłaty.
 
 ## Powiadomienia push
 
@@ -17629,39 +17629,39 @@ Powiadomienia są wysyłane do właściciela długu (osoby, która go zapisała)
 
 Aby włączyć lub wyłączyć przypomnienia, przejdź do **Ustawienia → Powiadomienia → Przypomnienia o długach**.
 
-## Widget na pulpicie
+## Widget na Pulpicie
 
-Widget Dlugi i Pozyczki jest zawsze widoczny na Pulpicie (gdy jest wlaczony w ustawieniach widgetow):
+Widget Długi i Pożyczki jest zawsze widoczny na Pulpicie (gdy jest włączony w ustawieniach widgetów):
 
-- **Gdy masz dlugi:** pokazuje sumy «Sa ci winni» i «Jestes winien» oraz przycisk **+** do szybkiego przejscia na ekran Dlugi i Pozyczki
-- **Gdy nie masz dlugow:** pokazuje pusty stan z przyciskiem **Dodaj dlug**, aby zaczac
+- **Gdy masz długi:** pokazuje sumy «Są ci winni» i «Jesteś winien» oraz przycisk **+** do szybkiego przejścia na ekran Długi i Pożyczki
+- **Gdy nie masz długów:** pokazuje pusty stan z przyciskiem **Dodaj dług**, aby zacząć
 
-Dotknij widgetu, aby przejsc bezposrednio do ekranu Dlugi i Pozyczki.
+Dotknij widgetu, aby przejść bezpośrednio do ekranu Długi i Pożyczki.
 
-## Obsluga wielu walut
+## Obsługa wielu walut
 
-Dlugi moga byc w dowolnej obslugiwanej walucie. Sumy na Pulpicie i ekranie Dlugów sa automatycznie przeliczane na Twoja walute bazowa po aktualnych kursach wymiany. Poszczegolne karty dlugów zawsze pokazuja kwoty w oryginalnej walucie.
+Długi mogą być w dowolnej obsługiwanej walucie. Sumy na Pulpicie i na ekranie Długów są automatycznie przeliczane na twoją walutę bazową po aktualnych kursach wymiany. Poszczególne karty długów zawsze pokazują kwoty w oryginalnej walucie.
 
-## Najczesciej zadawane pytania
+## Najczęściej zadawane pytania
 
-- **P: Czy moge pozyczyc pieniadze w jednej walucie i otrzymac spłate w innej?**
-  **O:** Splaty sa rejestrowane w tej samej walucie co oryginalny dlug, aby zapewnic dokladne sledzenie.
+- **P: Czy mogę pożyczyć pieniądze w jednej walucie i otrzymać spłatę w innej?**
+  **O:** Spłaty są zapisywane w tej samej walucie co pierwotny dług, aby śledzenie było dokładne.
 
-- **P: Czy pozyczanie pieniedzy wplywa na moj budzet?**
-  **O:** Tak, pozyczanie jest rejestrowane jako wydatek, a pozyczanie od kogos jako przychod. Wplywaja na saldo portfela i sledzenie budzetu jak kazda inna transakcja.
+- **P: Czy pożyczanie pieniędzy wpływa na mój budżet?**
+  **O:** Tak, pożyczenie komuś jest zapisywane jako wydatek, a pożyczenie od kogoś jako przychód. Wpływają na saldo portfela i śledzenie budżetu jak każda inna transakcja.
 
-- **P: Czy moge edytowac dlug po jego utworzeniu?**
-  **O:** Tak, dotknij dlugu, aby zobaczyc jego szczegoly, a nastepnie uzyj przycisku Edytuj. Mozesz zmienic opis, nazwe kontaktu i termin splaty.
+- **P: Czy mogę edytować dług po jego utworzeniu?**
+  **O:** Tak, dotknij długu, aby zobaczyć jego szczegóły, a następnie użyj przycisku Edytuj. Możesz zmienić opis, imię osoby i termin zwrotu.
 
-- **P: Co sie dzieje, gdy dlug zostanie w pelni splacony?**
-  **O:** Status automatycznie zmienia sie na «Splacony», a pasek postepu pokazuje 100%. Dlug pozostaje w historii do wgladu.
+- **P: Co się dzieje, gdy dług zostanie w całości spłacony?**
+  **O:** Status automatycznie zmienia się na «Spłacony», a pasek postępu pokazuje 100%. Dług zostaje w historii do wglądu.
 
-- **P: Jak usunac dlug?**
-  **O:** Otworz szczegoly dlugu i dotknij Usun. Pamietaj, ze usuwa to rowniez powiazany wpis wydatku lub przychodu.
+- **P: Jak usunąć dług?**
+  **O:** Otwórz szczegóły długu i dotknij Usuń. Pamiętaj, że usuwa to również powiązany wpis wydatku lub przychodu.
 
 ---
 
-*Zobacz takze: Wydatki i przychody | Portfel i wymiana walut*
+*Zobacz także: Wydatki i przychody | Portfel i wymiana walut*
 `,
     },
     {

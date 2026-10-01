@@ -154,6 +154,8 @@ the section you came for — it states what must not break and why. A missing se
 - [share-image-card](features/share-image-card.md) — the one WebView-canvas mechanism behind every shareable image
 
 ### Money movement and lists
+- [debts](features/debts.md) — lent/borrowed money as flagged expenses/incomes, repayments, the
+  contact as a plain name
 - [wallet-currencies](features/wallet-currencies.md) — which currencies get a balance card, and why a
   hidden one stays hidden
 - [account-transfers](features/account-transfers.md) — moving money between accounts, and the only

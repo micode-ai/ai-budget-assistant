@@ -1,6 +1,6 @@
 # Debt reminders
 
-*Hub: [api](../api.md) · related: [recurring-expenses](recurring-expenses.md),
+*Hub: [api](../api.md) · related: [debts](debts.md), [recurring-expenses](recurring-expenses.md),
 [gamification](gamification.md)*
 
 ## What this is
@@ -43,6 +43,15 @@ what the pagination was introduced to avoid; the per-batch `in: debtIds` keeps m
 **A fully repaid debt is never reminded about**, even if its due date is in the window — the
 reminder is about money still owed.
 
+**The push goes to the debt's owner only, never to the other party.** The contact is a free-text
+name with no account behind it. Help pages and adverts must not show the other person being
+notified.
+
+**The body must word `lent` and `borrowed` differently in every language.** The recipient can be
+either side. Polish once shipped the lender's sentence for both, telling borrowers "Pożyczyłeś…"
+(you lent) about money they owe (ABA-628); `notification-i18n.spec.ts` fails on any locale whose two
+branches are equal.
+
 **Sends are fire-and-forget with a logged rejection** (`logFireAndForget`), so one failed push does
 not stop the run.
 
@@ -51,7 +60,9 @@ not stop the run.
 - Only the debt's creator (`userId`) is notified, not other members of a shared account.
 - The windows are computed on the server clock, not `user.timezone`.
 - An overdue debt is reminded about once (the day after it fell due), never again.
+- The body prints the currency CODE (`50 PLN`), not the app's display symbol.
 
 ## History
 
-ABA-457 (paginated; per-batch repayment lookup).
+ABA-457 (paginated; per-batch repayment lookup) · ABA-628 (Polish borrowed-debt copy; spec for all
+locales).
