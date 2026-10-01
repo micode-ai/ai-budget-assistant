@@ -1,8 +1,4 @@
----
-name: 2026-05-12 aba-code-reviewer learning note
-description: Study of the aba-code-reviewer agent — what it checks, gaps, and evolution proposals
-type: learning-note
----
+<!-- learning note: 2026-05-12 aba-code-reviewer learning note -->
 
 ## Role
 

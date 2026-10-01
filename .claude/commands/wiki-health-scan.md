@@ -32,9 +32,9 @@ Use today's date (`YYYY-MM-DD`) and these metrics. Skip a metric if you
 genuinely can't compute it — the parser tolerates missing keys.
 
 - **`covered`** *(required)* — number of domain pages in `docs/wiki/`.
-  Count `.md` files at the wiki root excluding `README.md`, `INDEX.md`,
-  any file starting with `_` (archives, lint summaries), and
-  `wiki-health-trends.md` itself.
+  Count `.md` files under `docs/wiki/` recursively (`features/` included),
+  excluding `index.md`, `log.md`, `README.md`, any file starting with `_`
+  (archives, lint summaries), and `wiki-health-trends.md` itself.
 
 - **`learning_notes`** *(required)* — `.md` files under
   `.claude/agents/learning-notes/` (recursive). Use `0` if the directory

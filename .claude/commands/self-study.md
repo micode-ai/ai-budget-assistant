@@ -133,7 +133,8 @@ The report-back `curl` (step 4) is also a Bash command and works the same way.
 
 ## Rules
 
-- Do not edit any file outside `.claude/agents/learning-notes/`.
+- Do not edit any file outside `.claude/agents/learning-notes/` and `.claude/agents/_context/$ARGUMENTS/`.
+- Do not give a learning note YAML frontmatter: a `name:`/`description:` block anywhere under `.claude/agents/` registers the file as a subagent.
 - Do not run package installs, migrations, or anything destructive.
 - If you find yourself wanting to "fix" the agent file, *don't* — write
   that observation under **Agent file issues** in the note and stop.

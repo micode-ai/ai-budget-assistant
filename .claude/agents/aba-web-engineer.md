@@ -78,7 +78,7 @@ Concretely:
   `app/` stays single.
 - **The mobile JSX has one definition** (e.g. `ExpensesMobile.tsx`), imported by
   both platform files. Never copy it.
-- **`src/` may not import from `app/`.** There is no path alias, and every file
+- **`src/` may not import from `app/`.** The `@/*` alias maps only to `src/`, and every file
   under `app/` is a route. Extract into `src/` first — as a **pure move**, with
   every line reappearing unchanged. A behaviour change hidden in a 600-line
   move is invisible in review.

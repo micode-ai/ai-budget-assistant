@@ -142,6 +142,11 @@ Newest last within each section.
   describing the generic `/sync` queue as the mobile sync path when `pushChanges`/`pullChanges` have
   **zero call sites**. Three of the same errors were live in `CLAUDE.md` and were fixed there too.
   **Next target: `api.md`** (46 commits behind on `schema.prisma`), not yet read.
+- 2026-10-01 · [ABA-626](https://github.com/micode-ai/ai-budget-assistant/issues/654) — prompt
+  audit of `CLAUDE.md`, `.claude/` agents/skills/commands and the API's LLM prompts. Fixed stale
+  facts in `CLAUDE.md` (alert secrets, assetlinks guard, paths, enums, locale count) and the agent
+  files; found that a learning note with `name:` frontmatter under `.claude/agents/` registers as a
+  subagent (28 did). App-prompt bugs left as follow-ups in the issue.
 - 2026-09-22 · second pass: `api.md`. Four wrong claims — module count (35 vs 48, deleted),
   `AccountContextGuard` called middleware (it is a guard in a file named `*.middleware.ts`, and
   `AccountContextMiddleware` does not exist), `ViewerBlockGuard` absent although 20 controllers

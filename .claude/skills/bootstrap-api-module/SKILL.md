@@ -5,7 +5,7 @@ description: Use when creating a NEW NestJS module under apps/api/src/modules/. 
 
 # Bootstrapping an API Module
 
-The API has 29 modules under `apps/api/src/modules/<feature>/`. Every new module should follow the same shape so guards, account scoping, and DI wiring stay consistent.
+Modules live under `apps/api/src/modules/<feature>/`. Every new module should follow the same shape so guards, account scoping, and DI wiring stay consistent.
 
 ## Canonical file layout
 

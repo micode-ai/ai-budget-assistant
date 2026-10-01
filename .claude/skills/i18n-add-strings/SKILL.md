@@ -1,11 +1,11 @@
 ---
 name: i18n-add-strings
-description: Use when adding, renaming, or removing i18n keys in the mobile app. Ensures all 8 locale files (en/de/es/fr/pl/ru/ua/be) stay in sync. Triggers on any change to apps/mobile/src/i18n/locales/.
+description: Use when adding, renaming, or removing i18n keys in the mobile app. Ensures all 9 locale files (en/de/es/fr/pl/ru/ua/be/nl) stay in sync. Triggers on any change to apps/mobile/src/i18n/locales/.
 ---
 
 # Adding i18n Strings Across All 8 Locales
 
-The mobile app has 8 locale files at `apps/mobile/src/i18n/locales/`:
+The mobile app has 9 locale files at `apps/mobile/src/i18n/locales/`:
 
 | Locale | File | Language |
 |---|---|---|
@@ -46,7 +46,7 @@ After editing, list the new key(s) and grep each locale to confirm presence:
 grep -l "bulkDelete" apps/mobile/src/i18n/locales/*.ts
 ```
 
-You should see all 8 files. If fewer, you missed a locale.
+You should see all 9 files. If fewer, you missed a locale.
 
 ### 4. Typecheck
 

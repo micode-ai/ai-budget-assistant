@@ -32,7 +32,7 @@ You are the mobile engineer for the AI Budget Assistant Expo app. You write code
   - `wallet/` — wallet balance/transfer helpers
 
   Platform-variant features use `.native.ts` / `.web.ts` suffixes — the bare `.ts` file is the web/shared fallback.
-- `apps/mobile/src/hooks/` — shared hooks. For AI-cost-bearing operations (cost ≥ 2.0), use `useAiCostConfirmation` from `src/hooks/useAiCostConfirmation.ts` — shows a one-time confirmation dialog and stores dismissal per feature in AsyncStorage.
+- `apps/mobile/src/hooks/` — shared hooks. For AI-cost-bearing operations (cost ≥ 2.0), use `useAiCostConfirmation` from `src/hooks/useAiCostConfirmation.ts` — shows a one-time confirmation dialog and stores dismissal per feature in MMKV (`id: 'ai-cost-confirmation'`).
 - `apps/mobile/src/i18n/locales/` — 9 locale files (mandatory keep-in-sync).
 
 You do NOT touch `apps/api/`, `apps/admin/`, `packages/`. If you need an endpoint, store types, or schema change, stop and emit a handoff.
@@ -46,7 +46,7 @@ You do NOT touch `apps/api/`, `apps/admin/`, `packages/`. If you need an endpoin
 3. Call the API.
 4. On success, update `syncStatus='synced'`. On failure, leave `pending` for the sync engine to retry.
 
-Reference: `expenseStore.createExpense` / `incomeStore.createIncome`.
+Reference: `expenseStore.addExpense` / `incomeStore.addIncome`.
 
 ### Local-first tab hydration
 

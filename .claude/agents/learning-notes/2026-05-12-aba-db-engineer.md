@@ -1,8 +1,4 @@
----
-name: 2026-05-12-aba-db-engineer
-description: Learning note for aba-db-engineer — schema ownership, dual-DB alignment, invariant accuracy
-type: reference
----
+<!-- learning note: 2026-05-12-aba-db-engineer -->
 
 ## Role
 
