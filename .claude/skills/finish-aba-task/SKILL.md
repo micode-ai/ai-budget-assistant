@@ -5,8 +5,9 @@ description: Use at the END of every coding task to create an ABA-{N} GitHub iss
 
 # Finishing an ABA Task
 
-When a coding task is complete (feature added, bug fixed, refactor done), you MUST do these, in
-order:
+When a coding task is complete (feature added, bug fixed, refactor done), do these in order — the
+wiki log line and the page's History cite the issue number, and `generate:help` reads the user docs
+you have just edited:
 
 1. Create a GitHub issue `ABA-{N}` describing what was done.
 2. **Ingest into the wiki** — update or create the page(s) for the features you touched, and
@@ -16,7 +17,8 @@ order:
 4. Update user docs (`user_docs/<lang>/NN-slug.md`) for all 9 locales — if the change is
    user-visible.
 
-Skip only when the change has **zero** user-visible behavior. When in doubt, document.
+Steps 1 and 2 always run. Step 4 runs when the change is user-visible; when unsure whether it is,
+update the docs.
 
 ## Critical Conventions
 
@@ -31,8 +33,6 @@ Skip only when the change has **zero** user-visible behavior. When in doubt, doc
 - **Order matters**: code → issue → wiki → CLAUDE.md (if needed) → user docs → `npm run generate:help`.
 
 ## Checklist
-
-Convert each step into a task with TaskCreate, then do them in order.
 
 ### 1. Find the next issue number
 

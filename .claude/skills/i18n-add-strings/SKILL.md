@@ -3,7 +3,7 @@ name: i18n-add-strings
 description: Use when adding, renaming, or removing i18n keys in the mobile app. Ensures all 9 locale files (en/de/es/fr/pl/ru/ua/be/nl) stay in sync. Triggers on any change to apps/mobile/src/i18n/locales/.
 ---
 
-# Adding i18n Strings Across All 8 Locales
+# Adding i18n Strings Across All 9 Locales
 
 The mobile app has 9 locale files at `apps/mobile/src/i18n/locales/`:
 
@@ -17,8 +17,9 @@ The mobile app has 9 locale files at `apps/mobile/src/i18n/locales/`:
 | `ru` | `ru.ts` | Russian |
 | `ua` | `ua.ts` | Ukrainian |
 | `be` | `be.ts` | Belarusian |
+| `nl` | `nl.ts` | Dutch |
 
-All 8 files must have the same key structure. A key missing in one locale breaks that language at runtime.
+All 9 files must have the same key structure. A key missing in one locale breaks that language at runtime.
 
 ## Workflow
 
@@ -26,16 +27,16 @@ All 8 files must have the same key structure. A key missing in one locale breaks
 
 This is the source of truth. Place the new key under the appropriate section (e.g., `common`, `dates`, `expenses`, `budget`). Match the existing nesting style.
 
-### 2. Translate to the remaining 7 locales
+### 2. Translate to the remaining 8 locales
 
-For each of `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`:
+For each of `de`, `es`, `fr`, `pl`, `ru`, `ua`, `be`, `nl`:
 - Add the key at the same nesting path as in `en.ts`.
 - Keep translations concise — mobile UI has limited horizontal space.
 - Match the tone of surrounding strings (formal vs casual is locale-specific).
 
 **Pairing notes:**
 - `ua` and `be` are close to `ru` but distinct languages — do not copy Russian text into them.
-- `de`/`es`/`fr` follow Western European conventions; `pl` follows Slavic.
+- `de`/`es`/`fr`/`nl` follow Western European conventions; `pl` follows Slavic.
 
 ### 3. Verify completeness
 
@@ -48,13 +49,13 @@ grep -l "bulkDelete" apps/mobile/src/i18n/locales/*.ts
 
 You should see all 9 files. If fewer, you missed a locale.
 
-### 4. Typecheck
+### 4. Typecheck the call sites
 
 ```bash
 npm run typecheck
 ```
 
-If TypeScript complains about a missing key in a specific locale, that locale's file is incomplete.
+This checks the code that calls `t(...)`, not the locale files: they are untyped objects, so a key missing from one locale does **not** fail the typecheck. The grep in step 3 is the completeness check.
 
 ### 5. Use the key in code
 
@@ -65,15 +66,15 @@ t('expenses.bulkDelete')
 
 ## Renaming or deleting a key
 
-- Renaming: change the key in **all 8 files** in one pass, then update all `t('old.key')` call sites.
-- Deleting: remove from all 8 files. Grep for residual usages before committing:
+- Renaming: change the key in **all 9 files** in one pass, then update all `t('old.key')` call sites.
+- Deleting: remove from all 9 files. Grep for residual usages before committing:
   ```bash
   grep -rn "t('removed.key')" apps/mobile
   ```
 
 ## Common mistakes
 
-- Adding the key only to `en.ts` and forgetting the other 7. Causes runtime fallback to English (or worse, the key string itself shown to the user).
+- Adding the key only to `en.ts` and forgetting the other 8. Causes runtime fallback to English (or worse, the key string itself shown to the user).
 - Copying Russian into `ua` or `be`. They are separate languages with their own vocabulary.
 - Mismatched nesting — `en.ts` has `expenses.bulkDelete` but `de.ts` has it under `common`. The lookup fails silently.
 - Mixing string interpolation tokens. If `en` uses `{{count}}`, every locale must use `{{count}}` (not `{count}` or `%d`).

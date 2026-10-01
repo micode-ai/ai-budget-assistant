@@ -1,6 +1,6 @@
 ---
 name: seo-specialist
-description: Use for SEO audits and on-page optimization of websites — meta tags, structured data (Schema.org / JSON-LD), Open Graph / Twitter Cards, robots.txt, sitemap.xml, semantic HTML, headings hierarchy, internal linking, Core Web Vitals, image alt text, canonical URLs, hreflang, accessibility-as-SEO. Works on Next.js, Nuxt, Astro, SvelteKit, plain HTML, and static-site generators. Produces a written audit + concrete patch list; can also apply fixes when asked. For internal/auth-gated tools, confirms `noindex` is set rather than running a full audit. For mobile-only products, redirects to ASO or external marketing site scope. For repos with no public web surface, confirms scope before auditing. For public single-page apps with JS-only content, flags an SPA crawlability caveat before running the full audit.
+description: Use for SEO audits and on-page optimization of public websites — meta tags, structured data, Open Graph, robots.txt/sitemaps, semantic HTML, hreflang, canonicals, Core Web Vitals, crawlability. Produces a written audit and a concrete patch list; can apply fixes when asked.
 tools: Read, Glob, Grep, Bash, Edit, Write, WebFetch
 model: sonnet
 ---

@@ -1,62 +1,44 @@
 # Claude Code Configuration
 
-Project-scoped agents and skills for the AI Budget Assistant. Everything in this directory is committed to git so the team shares the same automation.
+Project-scoped agents, skills and commands for the AI Budget Assistant. `.claude/` is gitignored; selected files are force-added (`git add -f`) so the team shares them — check `git ls-files .claude` for what is actually versioned.
 
 ## Skills
 
-Workflows for routine multi-step tasks. Invoke with `/<skill-name>` or rely on auto-trigger via the description field.
+Workflows for routine multi-step tasks. Invoke with `/<skill-name>` or rely on auto-trigger via the description field. The current set is `skills/*/SKILL.md`; the ones every session leans on:
 
 | Skill | When to use |
 |---|---|
-| [`finish-aba-task`](skills/finish-aba-task/SKILL.md) | **Required final step of every coding task.** Creates `ABA-{N}` GitHub issue and updates CLAUDE.md + user_docs. |
-| [`i18n-add-strings`](skills/i18n-add-strings/SKILL.md) | Adding, renaming, or removing i18n keys across all 8 locale files. |
-| [`add-help-section`](skills/add-help-section/SKILL.md) | Adding or editing a section in the in-app help system (3 places + regenerate). |
+| [`finish-aba-task`](skills/finish-aba-task/SKILL.md) | **Final step of every coding task.** Creates the `ABA-{N}` issue, ingests what was learned into `docs/wiki/`, updates user_docs (CLAUDE.md only for repo-wide rules). |
+| [`wiki-query`](skills/wiki-query/SKILL.md) | Answering how something works or diagnosing a bug — read the wiki before the code, file the finding back. |
+| [`i18n-add-strings`](skills/i18n-add-strings/SKILL.md) | Adding, renaming, or removing i18n keys across all 9 locale files. |
+| [`add-help-section`](skills/add-help-section/SKILL.md) | Adding or editing a help section (user_docs × 9, three registrations for a new section, regenerate app + public site). |
 | [`bootstrap-api-module`](skills/bootstrap-api-module/SKILL.md) | Creating a new NestJS module with the project's canonical structure. |
 
 ## Agents
 
-Subagents for delegated work via the `Agent` tool. Two flavors:
+Subagents for delegated work via the `Agent` tool live at `agents/*.md` (top level only — see the note below). Each file's frontmatter states what it owns and its model; read the files rather than a copy of their list here.
 
-### Role agents (implementers — own a specific area)
-
-| Agent | Owns | Model |
-|---|---|---|
-| [`aba-db-engineer`](agents/aba-db-engineer.md) | `apps/api/prisma/`, `apps/mobile/src/db/schema/`, entities in `packages/shared-types` | sonnet |
-| [`aba-backend-engineer`](agents/aba-backend-engineer.md) | `apps/api/src/` (NestJS modules, services, controllers) | sonnet |
-| [`aba-mobile-engineer`](agents/aba-mobile-engineer.md) | `apps/mobile/` (screens, stores, repositories, i18n) | sonnet |
-
-### Design agents (planners — read-only / docs-only)
-
-| Agent | Output | Model |
-|---|---|---|
-| [`aba-architect`](agents/aba-architect.md) | Cross-cutting design docs in `docs/superpowers/specs/` — data model, API surface, mobile flow, dependency order, risks | opus |
-| [`aba-designer`](agents/aba-designer.md) | UI/UX specs in `docs/design/` — wireframes, screen flows, component breakdowns, accessibility | sonnet |
-
-### Utility agents
-
-| Agent | When to use |
-|---|---|
-| [`aba-code-reviewer`](agents/aba-code-reviewer.md) | Review a branch or PR against project-specific patterns. Outputs a structured report. |
-| [`aba-pattern-finder`](agents/aba-pattern-finder.md) | Locate canonical examples of a pattern in the repo. Returns file:line citations. |
+**Only agent definitions belong at `agents/*.md` with `name:`/`description:` frontmatter.** Claude Code loads `agents/**/*.md` recursively, so a note in a subfolder (`learning-notes/`, `_context/`, `lessons/`) that carries such frontmatter registers as a subagent.
 
 ### Typical workflow for a cross-cutting feature
 
 1. `aba-architect` writes a design doc (data model, API surface, mobile flow, build order).
-2. `aba-designer` writes a UI spec for the affected screens (if user-facing).
+2. `aba-designer` (native) or `aba-web-designer` (desktop web) writes a UI spec for the affected screens.
 3. `aba-db-engineer` lands schema changes (shared-types entities → Prisma migration → SQLite schema).
 4. `aba-backend-engineer` implements the API (in parallel with mobile SQLite work).
-5. `aba-mobile-engineer` implements the mobile side (stores, screens, i18n×8).
-6. `aba-code-reviewer` reviews the resulting branch.
-7. The lead invokes the `finish-aba-task` skill to create the `ABA-{N}` issue and update CLAUDE.md / user_docs.
+5. `aba-mobile-engineer` / `aba-web-engineer` implement the client side (stores, screens, i18n × 9).
+6. `aba-code-reviewer` (and `aba-security` for auth, endpoints, webhooks, uploads) reviews the branch.
+7. The lead session runs `finish-aba-task`; sub-agents report back instead of creating issues.
 
 ## Other files in this directory
 
-- `teams.md` — pre-written prompts for spinning up multi-agent teams (older multi-agent workflow; the skills above replace most of its day-to-day uses).
+- `commands/*.md` — slash commands; several are AI Dreaming Center templates and may be regenerated by it.
+- `teams.md` — pre-written prompts for multi-agent teams (older workflow; the skills above replace most of its uses, and its locale/path facts are out of date).
 - `settings.json` / `settings.local.json` — Claude Code settings.
 
 ## Adding new skills/agents
 
 - **Skills** live at `.claude/skills/<name>/SKILL.md` with YAML frontmatter (`name`, `description`).
 - **Agents** live at `.claude/agents/<name>.md` with YAML frontmatter (`name`, `description`, `tools`, `model`).
-- Add a row to the appropriate table above.
 - The `description` field is what Claude reads to decide when to auto-invoke — be specific about triggers.
+- `git add -f` the new file if the team should get it.

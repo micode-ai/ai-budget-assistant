@@ -27,6 +27,7 @@ Some modules add `guards/`, sub-services (e.g., `budget-alert.service.ts`), or `
 - Class-decorated with `@Controller('<route>')` and `@UseGuards(JwtAuthGuard, AccountContextGuard)`.
 - Inject the service via the constructor.
 - Every handler accepts `@Req() req: AuthenticatedRequest` so `req.accountId` and `req.user.id` are available.
+- Every handler that mutates account-scoped data (POST/PATCH/PUT/DELETE) also takes `@UseGuards(new ViewerBlockGuard())` (from `../accounts/guards/account-role.guard`) — the class guards let a viewer through, and this is what keeps viewers read-only.
 - For role-gated actions, add `@UseGuards(AccountRoleGuard)` and `@RequireRole('owner')` (or `'editor'`).
 
 Example shape:
@@ -35,6 +36,7 @@ Example shape:
 import { Controller, Get, Post, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AccountContextGuard } from '../../common/middleware/account-context.middleware';
+import { ViewerBlockGuard } from '../accounts/guards/account-role.guard';
 import { AuthenticatedRequest } from '../../common/types';
 import { FeatureService } from './feature.service';
 
@@ -44,6 +46,7 @@ export class FeatureController {
   constructor(private readonly service: FeatureService) {}
 
   @Post()
+  @UseGuards(new ViewerBlockGuard())
   create(@Req() req: AuthenticatedRequest, @Body() dto: any) {
     return this.service.create(req.accountId, req.user.id, dto);
   }
@@ -53,7 +56,7 @@ export class FeatureController {
 ### Service
 
 - Method signature is `(accountId, userId, dto)` — accountId first, always.
-- Every Prisma query filters by `accountId`. No exceptions.
+- Every Prisma query filters by `accountId` — a missing filter is a cross-account data leak. (A table that is deliberately per-user filters by `userId` instead, and says why.)
 - Inject `PrismaService` from `../../database/prisma.service`.
 
 Example:
@@ -89,7 +92,7 @@ export class FeatureModule {}
 
 ### DTOs (optional)
 
-Define request DTOs in `dto/index.ts` using `class-validator`. The corresponding TypeScript types belong in `packages/shared-types/src/dto/index.ts` so the mobile app can import them.
+Define request DTOs in `dto/index.ts` using `class-validator`. The corresponding TypeScript types go in a per-domain file `packages/shared-types/src/dto/<domain>.ts`, re-exported from that folder's `index.ts`, so the mobile app can import them.
 
 ## Wiring checklist
 
@@ -102,8 +105,8 @@ After creating the files:
    npx prisma migrate dev --name add_<feature>
    npx prisma generate
    ```
-3. If the module exposes new types: add interfaces to `packages/shared-types/src/entities/index.ts` and DTOs to `packages/shared-types/src/dto/index.ts`.
-4. If the mobile app should consume the endpoints: add methods to `apps/mobile/src/services/api.ts` and an optional store under `apps/mobile/src/stores/`.
+3. If the module exposes new types: add a per-domain file (`packages/shared-types/src/entities/<domain>.ts`, `dto/<domain>.ts`) and re-export it from that folder's `index.ts` — the `index.ts` files are barrels.
+4. If the mobile app should consume the endpoints: add a `<domain>.api.ts` in `apps/mobile/src/services/`, spread it into the `api.ts` barrel, and add an optional store under `apps/mobile/src/stores/`.
 
 ## When NOT to use this skill
 

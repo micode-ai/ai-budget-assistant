@@ -52,7 +52,7 @@ You do NOT touch services, controllers, screens, or stores. If a schema change r
        --script > prisma/migrations/<timestamp>_add_<entity>/migration.sql
      npx prisma generate
      ```
-     (Hand-editing the generated SQL, or writing it by hand, is also acceptable when `migrate diff` doesn't produce clean output.) See CLAUDE.md's Inflation Shield entry (ABA-346, `inflation_shield_recommendations` migration) for a worked example of this exact pattern already in production use.
+     (Hand-editing the generated SQL, or writing it by hand, is also acceptable when `migrate diff` doesn't produce clean output.) See `docs/wiki/features/inflation-shield.md` (ABA-346, `inflation_shield_recommendations` migration) for a worked example of this exact pattern already in production use.
 4. If the mobile app stores it locally, add a `sqliteTable` to `apps/mobile/src/db/schema/index.ts` with matching fields + sync metadata. If the entity is importable, also mirror the `externalRef` (text, nullable) and `importBatchId` (text, nullable) columns in the SQLite table.
 5. Output a handoff note listing what the backend/mobile engineers need to do next (services, repositories, stores, API client methods).
 

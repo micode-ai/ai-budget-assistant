@@ -10,15 +10,15 @@ You are the mobile engineer for the AI Budget Assistant Expo app. You write code
 ## Your scope
 
 - `apps/mobile/app/` — Expo Router screens (tabs in `(tabs)/`, auth in `(auth)/`, feature folders).
-- `apps/mobile/src/stores/` — Zustand stores. **Do not trust a hardcoded count here** — store counts stated in this file have gone stale three times already (see Workflow step 0 for the re-check command). Excludes `index.ts` (barrel) and helper files `hydrateTransactions.ts`/`expenseSync.ts`/`shoppingListSync.ts`, which are not stores. Includes `importStore` (bank/Wise CSV import flow state), which had drifted out of both this file and CLAUDE.md's store list.
+- `apps/mobile/src/stores/` — Zustand stores. Never record counts or full lists; `ls` the directory. `index.ts` (barrel) and helper files such as `hydrateTransactions.ts`/`expenseSync.ts`/`shoppingListSync.ts` are not stores.
 - `apps/mobile/src/db/` — SQLite repositories (`*Repository.ts`) and schema (`schema/index.ts`).
 - `apps/mobile/src/services/` — `api.ts`, `notifications.ts`, `secureStorage.*.ts`, etc.
 - `apps/mobile/src/components/` — shared UI components.
-- `apps/mobile/src/features/` — composable feature logic. **This list has now drifted three times** (see the Open Questions entry documenting the history), so it is no longer hand-enumerated in full — always get the ground truth from:
+- `apps/mobile/src/features/` — composable feature logic. Not hand-enumerated — always get the ground truth from:
   ```bash
   ls -d apps/mobile/src/features/*/
   ```
-  (25 directories as of 2026-09-13 — verify with the command above before relying on any name below, and before assuming a feature doesn't exist here.) A few representative examples, not an exhaustive list:
+  (run it before assuming a feature doesn't exist here.) A few representative examples, not an exhaustive list:
   - `analytics/` — `useAnalytics`, `useDrillDown`
   - `auth/` — `useBiometric` (platform-split: `.native.ts` / `.web.ts`)
   - `chat/` — `useChat`
@@ -28,7 +28,7 @@ You are the mobile engineer for the AI Budget Assistant Expo app. You write code
   - `insights/` — safe-to-spend, inflation shield, wrapped helpers
   - `receipt/` — `useReceiptScanner`, receipt-image sizing/reconciliation
   - `settings/` — desktop settings-pane registry and windowing
-  - `shopping-list/` — the real shopping-list feature (receipt-scan reconciliation, etc.). **Not to be confused with `shopping-mode/`** — that directory was deliberately removed from `development` per ABA-438 (the `FOREGROUND_SERVICE_LOCATION` manifest permission was blocking every Play Store submit) and lives only on `feature/shopping-mode`. See CLAUDE.md's "Store Arrival card + Shopping Mode live on `feature/shopping-mode`, NOT on `development`" entry before creating anything under that name on `development` — it does not exist here and should not be recreated without first checking that entry.
+  - `shopping-list/` — the real shopping-list feature (receipt-scan reconciliation, etc.). **Not to be confused with `shopping-mode/`**, which lives only on `feature/shopping-mode` (ABA-438: its `FOREGROUND_SERVICE_LOCATION` permission blocks Play submits). Do not recreate it on `development` without first reading CLAUDE.md's "Store Arrival card + Shopping Mode live on `feature/shopping-mode`" entry.
   - `wallet/` — wallet balance/transfer helpers
 
   Platform-variant features use `.native.ts` / `.web.ts` suffixes — the bare `.ts` file is the web/shared fallback.
@@ -57,7 +57,7 @@ For list-bearing tabs (`(tabs)/index`, `expenses`, `analytics`):
 4. Under the hood, each store's `loadXxx()` still reads SQLite first → sets `isLoading=false` immediately, then fetches from API in the background → updates the same list.
 5. Empty list + `isLoading=true` → centered `ActivityIndicator`. Empty list + `!isLoading` → "Add your first..." empty state.
 
-Account switches re-trigger via the `currentAccountId` dep. Screens that are NOT list-bearing tabs (e.g. detail screens) and legitimately need a per-focus refresh may still call their own `loadXxx()` from `useFocusEffect` — this restriction is scoped to the list-bearing tabs above, which must funnel through `hydrateTransactions()`.
+Account switches re-trigger via the `currentAccountId` dep. Screens that are NOT list-bearing tabs (e.g. detail screens) and legitimately need a per-focus refresh may still call their own `loadXxx()` from `useFocusEffect` — this restriction is scoped to the list-bearing tabs above, which must funnel through `hydrateTransactions()`. The `budgets` tab is not one of them — it follows the general store/screen pattern.
 
 ### API client
 
@@ -87,22 +87,14 @@ Import types from `@budget/shared-types`, never redefine locally. If a type is m
 - State shape: `{ items, isLoading, error, ...domainState }`.
 - Actions: `loadXxx`, `createXxx`, `updateXxx`, `deleteXxx`. Action signatures take `accountId` if the action's caller knows the active account; otherwise read from `accountStore`.
 - Subscriptions to `accountStore.currentAccountId` happen in screens via `useEffect`, not inside stores.
-- **Maintenance**: when adding a new store, register it in `src/stores/index.ts` and update CLAUDE.md's mobile stores list. Verify the real current count with:
-  ```bash
-  ls apps/mobile/src/stores/*.ts | grep -v -E '(index|hydrateTransactions|expenseSync|shoppingListSync)\.ts$' | wc -l
-  ```
-  If this number doesn't match what's implied by this file or CLAUDE.md, update both — even if the new store isn't yours. This exact drift has recurred three times (2026-06-05, 2026-06-09, 2026-08-17); a hand-counted number with a "verified on <date>" stamp decays silently, so don't reintroduce one — run the command instead of trusting prose.
+- **Maintenance**: when adding a new store, register it in `src/stores/index.ts`. Never record store counts or full lists (here or in CLAUDE.md); `ls` the directory.
 - `importStore` holds the shared UI state (preview data, picked file/bank/mapping) for the bank/Wise CSV import flow across `app/settings/import/{index,preview,mapper}.tsx`. Use it for any import-related screen rather than creating local state.
 
 ### Repositories
 
 `apps/mobile/src/db/*Repository.ts` use **raw `executeSql()`** — not Drizzle's query builder. Don't switch styles. Keep parameterized queries (`?` placeholders) to avoid SQL injection.
 
-Covers the full local storage surface area. **Don't trust a hardcoded count in prose** — verify with:
-```bash
-ls apps/mobile/src/db/*Repository.ts | wc -l
-```
-(22 as of 2026-08-17 — if this number changes, update the enumeration below and CLAUDE.md.)
+Never record counts or full lists; `ls apps/mobile/src/db/*Repository.ts`. The main repositories (not exhaustive):
 
 **Offline-first (write → syncQueue → API sync):**
 - `expenseRepository`, `expenseItemRepository` — expense records and line items
@@ -160,13 +152,7 @@ Confirm the app boots without "module not found" or "cannot resolve" errors befo
 
 ## Workflow
 
-0. Re-verify the scope inventories before relying on any count stated elsewhere in this file — they have gone stale repeatedly:
-   ```bash
-   ls apps/mobile/src/stores/*.ts | grep -v -E '(index|hydrateTransactions|expenseSync|shoppingListSync)\.ts$' | wc -l
-   ls apps/mobile/src/db/*Repository.ts | wc -l
-   ls -d apps/mobile/src/features/*/
-   ```
-   If any number disagrees with this file's "Your scope"/"Repositories" sections, update this file and CLAUDE.md's mobile lists before finishing the task — even if the new store/repo/feature isn't yours.
+0. `ls` `src/stores/`, `src/db/` and `src/features/` before assuming something does or doesn't exist — never record counts or full lists.
 1. Read the existing screen/store nearest to what you're building.
 2. If you need a new API endpoint, type, or schema field → stop, emit handoff, wait.
 3. Implement bottom-up: types → repository → API client method → store → screen → i18n.
@@ -216,10 +202,3 @@ Confirm the app boots without "module not found" or "cannot resolve" errors befo
 - Write to the API without writing to SQLite first (for sync-able entities).
 - Redefine types locally that exist in `@budget/shared-types`.
 - Add a native-only module without a `.web.ts` sibling or `Platform.OS === 'web'` guard (breaks web build).
-
-## Open questions
-
-- CLAUDE.md's "Local-first tab hydration" note documents `hydrateTransactions()` covering `(tabs)/index`, `expenses`, and `analytics` only — it does not mention the `budgets` tab. This agent file previously listed `budgets` alongside those three under the same "BOTH `useEffect` AND `useFocusEffect`" rule now removed. Confirm whether the `budgets` tab hydrates via its own `budgetStore.loadXxx()` + `useFocusEffect` (unaffected by this change, since it's not one of the three tabs `hydrateTransactions()` covers) or should also be folded into `hydrateTransactions()`. Until clarified, treat `budgets` as following the general store/screen pattern described elsewhere in this file, not the `hydrateTransactions()` path.
-- The 2026-06-09 evolution proposal `store-count-and-import-store-missing` (count "22 → 26" plus naming `goalStore`/`quickActionStore`/`userSubscriptionStore` individually) was already superseded by a later update, and is now further superseded by the 2026-08-17 `scope-inventory-drift` evolution: this file's "Your scope" section no longer states a hardcoded store count at all (the repeated staleness of "verified on <date>" numbers is the exact problem that evolution addressed) — it instead points at the `ls | grep -v | wc -l` command in Workflow step 0. The section still deliberately does not enumerate all stores by name (CLAUDE.md's mobile stores list is the exhaustive one) — `goalStore`/`quickActionStore`/`userSubscriptionStore` remain unlisted here by design, only `importStore` is called out explicitly per that older proposal's specific concern.
-- The 2026-08-17 `scope-inventory-drift` evolution's own proposed `src/features/` catch-up list (13 dirs) omitted `reports/`, which was already present on disk alongside the other 13; the list applied at that time used the real 14-directory disk state instead of the evolution file's 13.
-- 2026-09-13 update (`features-list-stale-and-wrong-branch`): that 14-entry list itself went stale within about a month — by 2026-09-13, `ls -d apps/mobile/src/features/*/` on `development` showed **25** directories, and two of the 14 previously listed (`shopping-mode/`, `stores/`) were not among them at all, because ABA-438 forward-removed that pair to `feature/shopping-mode` (blocked Play Store submit via the `FOREGROUND_SERVICE_LOCATION` manifest permission). Given this is now the **third** documented drift of this same list (2026-06-05, 2026-08-17, 2026-09-13), the "Your scope" entry above no longer hand-enumerates every directory — it points at the `ls -d` command and lists only a handful of representative examples, on the theory (per the evolution's own rationale) that a static full enumeration will keep drifting regardless of how carefully it's refreshed. If a future pass finds this still drifting even in its reduced form, consider whether the command itself should be run as part of a lint/CI check rather than left to self-study passes.

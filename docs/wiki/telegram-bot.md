@@ -5,11 +5,11 @@ A Telegraf-based Telegram bot embedded in the NestJS API (`modules/telegram/`) t
 
 ## Entry points
 - `apps/api/src/modules/telegram/telegram.module.ts` — registers the bot and all handlers
-- `apps/api/src/modules/telegram/` — handler files: `ChatHandler`, `VoiceHandler`, `PhotoHandler`, `CommandHandler`, `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`
-- `apps/api/src/modules/telegram/helpers/i18n.ts` — system message localisation (8 languages, resolved from `user.language`)
+- `apps/api/src/modules/telegram/handlers/` — one file per handler; commands are registered in `telegram-bot.service.ts`
+- `apps/api/src/modules/telegram/helpers/i18n.ts` — Telegram-specific copy over the shared bot dictionary `common/bot-i18n/shared-messages.ts` (9 languages, resolved from `user.language`)
 
 ## Key concepts
-- **7 handlers** — `ChatHandler` (AI chat, 1.0 credit/msg), `VoiceHandler` (Whisper transcription + chat, 2.0 credits), `PhotoHandler` (OCR receipt scan, 2.0 credits), `CommandHandler` (`/start`, `/link`, `/help`, `/usage`, `/account`, `/newchat`, `/unlink`), `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`
+- **Handlers** — among them `ChatHandler` (AI chat, 1.0 credit/msg), `VoiceHandler` (Whisper transcription + chat, 2.0 credits), `PhotoHandler` (OCR receipt scan, 2.0 credits), `CommandHandler` (`/start`, `/link`, `/help`, `/usage`, `/account`, `/newchat`, `/unlink`), `ExpenseHandler`, `IncomeHandler`, `CategoryHandler`, `CategorizeHandler`, `PurchaseRequestHandler`; `ls` the directory for the current set
 - **Account linking** — users link their Telegram account to the app via `/link`; subsequent messages are scoped to that account
 - **AI usage tracking** — each AI-powered interaction consumes credits; the bot enforces limits and sends a localised warning when the limit is reached
 - **i18n** — all bot messages are localised using `helpers/i18n.ts` based on `user.language`; the same 8 locales as the mobile app
