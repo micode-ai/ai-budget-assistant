@@ -43,6 +43,7 @@ describe('ChatActionLifecycleService', () => {
           detectUserLanguage: () => 'English',
           buildActionSummary: () => 'summary',
           getConfirmText: () => 'ok',
+          getConfirmPromptText: (lang: string, summary: string) => `confirm[${lang}]: ${summary}`,
           getFailText: (_lang: string, err?: string) => `fail: ${err}`,
           getRejectText: () => 'rejected',
           getShoppingListAddText: (_lang: string, listName: string, labels: string[]) => `added ${labels.join(',')} to ${listName}`,
@@ -126,11 +127,6 @@ describe('ChatActionLifecycleService', () => {
           status: 'executed', result: { actionType: 'create_expense', success: true, data: { id: 'e1', amount: 50, currencyCode: 'PLN', description: 'Groceries', category: 'Food' } },
         }),
       });
-      mockChatCreate.mockResolvedValueOnce({
-        choices: [{ message: { content: "I'd like to undo your last expense. Confirm?" } }],
-        usage: { total_tokens: 8 },
-      });
-
       const res = await service.handleUndoLastActionRequest(
         { id: 'conv-1' },
         'SYS',
@@ -153,6 +149,24 @@ describe('ChatActionLifecycleService', () => {
       });
       expect(deps.prisma.chatMessage.create).toHaveBeenCalledWith(
         expect.objectContaining({ data: expect.objectContaining({ role: 'pending_action' }) }),
+      );
+      // Deterministic template, no model call to phrase the confirmation.
+      expect(res.message).toBe('confirm[English]: summary');
+      expect(mockChatCreate).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('handleWriteActionRequest', () => {
+    it('builds the confirmation text from the localized summary without calling OpenAI', async () => {
+      const res = await service.handleWriteActionRequest(
+        { id: 'conv-1' }, 'create_expense', { amount: 5, currencyCode: 'PLN' },
+        'SYS', [], 'dodaj wydatek', 'gpt-4o', 'acc-1', 'owner-1', 'pl',
+      );
+      expect(mockChatCreate).not.toHaveBeenCalled();
+      expect(res.message).toBe('confirm[English]: summary');
+      expect(res.pendingAction).toMatchObject({ actionType: 'create_expense' });
+      expect(deps.prisma.chatMessage.create).toHaveBeenLastCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ role: 'assistant', content: 'confirm[English]: summary' }) }),
       );
     });
   });

@@ -94,7 +94,9 @@ export class ChatService {
     if (conversationId) {
       conversation = await this.prisma.chatConversation.findFirst({
         where: { id: conversationId, accountId, OR: [{ isShared: true }, { userId }] },
-        include: { messages: { orderBy: { createdAt: 'asc' }, take: 20 } },
+        // The LAST 20 messages, newest first, reversed below — `asc` + `take`
+        // would freeze the model's history at the conversation's first 20.
+        include: { messages: { orderBy: { createdAt: 'desc' }, take: 20 } },
       });
     }
     if (!conversation) {
@@ -147,7 +149,7 @@ export class ChatService {
 
     const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true, currencyCode: true, language: true } });
     const responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
-    const { model: aiModel } = resolveAiModel(user?.aiModel);
+    const { model: aiModel, maxTokens } = resolveAiModel(user?.aiModel);
     const context = await this.userContextBuilder.build(userId, accountId);
 
     const prefix = (m: ChatMessageRecord) =>
@@ -155,7 +157,8 @@ export class ChatService {
         ? `[${this.sanitizeName(nameByUserId.get(m.senderUserId))}]: `
         : '';
 
-    const history = conversation.messages
+    const history = [...conversation.messages]
+      .reverse()
       .filter((m: ChatMessageRecord) => ['user', 'assistant', 'system'].includes(m.role))
       .map((m: ChatMessageRecord) => ({
         role: m.role as 'user' | 'assistant' | 'system',
@@ -180,7 +183,8 @@ export class ChatService {
       // Only the first tool call is handled below; without this a second call
       // ("add expense 20 and income 50") would be dropped silently.
       parallel_tool_calls: false,
-      max_tokens: 1000,
+      // Per-tier output budget (AI_MAX_TOKENS_MAP) — the stronger models are allowed longer answers.
+      max_tokens: maxTokens,
     });
 
     logCacheUsage(this.logger, 'chat', response.usage);
@@ -248,7 +252,7 @@ export class ChatService {
           const r = await this.chatActionLifecycle.handleUndoLastActionRequest(conversation, systemPrompt, history, message, aiModel, accountId, userId, user?.language);
           return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
         }
-        const r = await this.chatActionLifecycle.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId);
+        const r = await this.chatActionLifecycle.handleWriteActionRequest(conversation, functionName, functionArgs, systemPrompt, history, message, aiModel, accountId, userId, user?.language);
         return { ...r, aiResponded: true, userMessageId: userMsg.id, userMessageCreatedAt: userMsg.createdAt.toISOString() };
       }
       const r = await this.handleReadAction(conversation, functionName, functionArgs, toolCall, systemPrompt, history, message, accountId, userId, user?.currencyCode);
@@ -356,6 +360,7 @@ ${lines}`;
         max_tokens: 4096,
         response_format: { type: 'json_object' },
       });
+      logCacheUsage(this.logger, 'chat-semantic-filter', response.usage);
       const raw = response.choices[0]?.message?.content || '{}';
       llmIndices = parseMatchedIndices(raw, expenses.length);
     } catch (err) {
@@ -498,6 +503,10 @@ ${lines}`;
           content: `IMPORTANT: Present ONLY these exact numbers to the user. Do NOT modify, round, or estimate any values. Label every amount with the currency from its own \`currencyCode\` field (PLN→zł, USD→$, EUR→€, UAH→₴, GBP→£, RUB→₽, or the ISO code) — NEVER show a currency that differs from the amount's currencyCode, and never default to € for non-EUR amounts. If the data has \`fxConverted: true\`, the amounts were already converted into the user's display currency (\`baseCurrency\`) at approximate current exchange rates — present them as-is and add a short note that the conversion is approximate.\n\n${toolResultJson}`,
         },
       ],
+      // The tool descriptions carry the per-tool result-reporting rules, so the narration
+      // turn must see them too; tool_choice 'none' keeps it from calling anything again.
+      tools: this.aiToolsService.getToolDefinitions(),
+      tool_choice: 'none',
       temperature: 0,
       max_tokens: 1000,
     });

@@ -6,6 +6,8 @@ import { PrismaService } from '../../../database/prisma.service';
 import { getResponseModeInstruction, AiResponseMode } from './response-mode.helper';
 import { resolveAiModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { logCacheUsage } from '../utils/log-cache-usage';
+import { computeGoalPlan, mergeGoalPlan, GoalPlanNarrative } from './goal-plan.util';
 
 @Injectable()
 export class GoalPlannerService {
@@ -50,14 +52,16 @@ export class GoalPlannerService {
     // Fetch response mode and language
     let responseMode: AiResponseMode = 'balanced';
     let userLanguage = 'en';
+    let aiModelPref: string | undefined;
     const resolvedUserId = userId || goal.userId;
     if (resolvedUserId) {
       const user = await this.prisma.user.findUnique({
         where: { id: resolvedUserId },
-        select: { aiResponseMode: true, language: true }
+        select: { aiResponseMode: true, language: true, aiModel: true }
       });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
       userLanguage = user?.language || 'en';
+      aiModelPref = user?.aiModel ?? undefined;
     }
 
     // Gather 3 months of financial data
@@ -117,7 +121,18 @@ export class GoalPlannerService {
     };
     const languageName = languageMap[userLanguage] || 'English';
 
-    const prompt = `You are a financial planner. Given the user's financial data, create a savings plan.
+    const computed = computeGoalPlan({
+      targetAmount,
+      currentAmount,
+      monthsRemaining,
+      avgMonthlyIncome,
+      avgMonthlyExpenses,
+      now,
+      deadline: deadlineDate,
+    });
+    const checkpointCount = computed.checkpoints.length;
+
+    const prompt = `You are a financial planner. The numeric plan has already been computed; you only add judgment.
 
 IMPORTANT: Respond in ${languageName}. All text fields (summary, labels) must be in ${languageName}.
 
@@ -128,6 +143,7 @@ Already saved: ${currentAmount} ${goal.currencyCode}
 Remaining: ${remaining} ${goal.currencyCode}
 Months remaining: ${monthsRemaining}
 Monthly required: ${monthlyRequired.toFixed(2)}
+Feasibility (already assessed): ${computed.feasibility}
 
 User's financial profile (3-month average):
 - Average monthly income: ${avgMonthlyIncome.toFixed(2)}
@@ -135,62 +151,71 @@ User's financial profile (3-month average):
 - Current savings rate: ${savingsRate.toFixed(1)}%
 - Top spending categories (monthly avg): ${JSON.stringify(categories)}
 
-Create a plan with:
-1. Realistic monthly and weekly contribution amounts
-2. Specific category spending limits — for each category show current monthly average vs suggested limit, and how much that saves
-3. 3-5 milestone checkpoints with dates and target cumulative amounts
-4. Feasibility assessment: "easy" (monthly < 30% of avg savings), "moderate" (30-60%), "challenging" (60-90%), "unrealistic" (>90% or exceeds income)
-5. Brief actionable summary (2-3 sentences)
-
-Return ONLY valid JSON:
-{
-  "monthlyContribution": number,
-  "weeklyContribution": number,
-  "checkpoints": [{"date": "YYYY-MM-DD", "targetAmount": number, "label": "string"}],
-  "categoryLimits": [{"categoryName": "string", "currentMonthly": number, "suggestedMonthly": number, "savingsPerMonth": number}],
-  "estimatedCompletionDate": "YYYY-MM-DD",
-  "feasibility": "easy" | "moderate" | "challenging" | "unrealistic",
-  "summary": "string"
-}`;
+Provide:
+1. categoryLimits: for the categories above where trimming is realistic, a suggested monthly limit (never above the current monthly average). Use the exact category names given.
+2. checkpointLabels: exactly ${checkpointCount} short motivating labels for the savings milestones, in order from first to last.
+3. summary: a brief actionable summary (2-3 sentences) consistent with the feasibility above.`;
 
     // Resolve user's preferred AI model
-    let aiModel = 'gpt-4o';
-    if (userId) {
-      const userPref = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-      aiModel = resolveAiModel(userPref?.aiModel).model;
-    }
+    const aiModel = resolveAiModel(aiModelPref).model;
 
     try {
       const completion = await this.openai.chat.completions.create({
         model: aiModel,
         messages: [{ role: 'user', content: prompt }],
-        temperature: 0.7,
+        temperature: 0.3,
         max_tokens: 2000,
-        response_format: { type: 'json_object' },
+        response_format: {
+          type: 'json_schema',
+          json_schema: {
+            name: 'goal_plan_narrative',
+            strict: true,
+            schema: {
+              type: 'object',
+              properties: {
+                categoryLimits: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      categoryName: { type: 'string' },
+                      suggestedMonthly: { type: 'number' },
+                    },
+                    required: ['categoryName', 'suggestedMonthly'],
+                    additionalProperties: false,
+                  },
+                },
+                checkpointLabels: { type: 'array', items: { type: 'string' } },
+                summary: { type: 'string' },
+              },
+              required: ['categoryLimits', 'checkpointLabels', 'summary'],
+              additionalProperties: false,
+            },
+          },
+        },
       });
+      logCacheUsage(this.logger, 'goal-plan', completion.usage);
 
       const responseText = completion.choices[0]?.message?.content || '{}';
-      let plan: any;
+      let narrative: GoalPlanNarrative | null = null;
 
       try {
-        plan = JSON.parse(responseText);
+        narrative = JSON.parse(responseText);
       } catch {
         this.logger.warn('Failed to parse goal plan response');
-        plan = {
-          monthlyContribution: monthlyRequired,
-          weeklyContribution: monthlyRequired / 4,
-          checkpoints: [],
-          categoryLimits: [],
-          estimatedCompletionDate: deadlineDate.toISOString().split('T')[0],
-          feasibility: 'moderate',
-          summary: 'Could not generate detailed plan. Save approximately ' + monthlyRequired.toFixed(2) + ' per month.',
-        };
       }
+
+      const plan = mergeGoalPlan(
+        computed,
+        categories.map((c) => ({ name: c.name, monthlyAvg: c.monthlyAvg })),
+        narrative,
+        'Could not generate detailed plan. Save approximately ' + monthlyRequired.toFixed(2) + ' per month.',
+      );
 
       // Save plan to goal
       await this.prisma.savingsGoal.update({
         where: { id: goalId },
-        data: { aiPlan: plan },
+        data: { aiPlan: plan as unknown as Prisma.InputJsonValue },
       });
 
       const updatedGoal = await this.prisma.savingsGoal.findUnique({ where: { id: goalId } });

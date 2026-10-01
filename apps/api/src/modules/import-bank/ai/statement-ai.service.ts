@@ -1,7 +1,13 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
-import { buildMappingPrompt, buildExtractionPrompt } from './statement-ai.prompt';
+import {
+  buildMappingPrompt,
+  buildExtractionPrompt,
+  buildMappingFormat,
+  EXTRACTION_FORMAT,
+} from './statement-ai.prompt';
+import { logCacheUsage } from '../../ai/utils/log-cache-usage';
 import {
   validateMappingResponse,
   validateExtractedRows,
@@ -41,6 +47,7 @@ export class StatementAiService {
     const content = await this.complete(
       buildMappingPrompt(headers, sampleRows),
       INFERENCE_TIMEOUT_MS,
+      buildMappingFormat(headers),
     );
     if (!content) return null;
     // The validator lives in a different file; a throw there (today it has
@@ -58,7 +65,7 @@ export class StatementAiService {
     const out: ExtractedRow[] = [];
     for (const pageText of pageTexts) {
       if (!pageText.trim()) continue;
-      const content = await this.complete(buildExtractionPrompt(pageText), EXTRACTION_TIMEOUT_MS);
+      const content = await this.complete(buildExtractionPrompt(pageText), EXTRACTION_TIMEOUT_MS, EXTRACTION_FORMAT);
       // A failed page must not discard the pages that worked; completeness is
       // caught downstream by balance reconciliation.
       if (!content) continue;
@@ -74,7 +81,11 @@ export class StatementAiService {
     return out;
   }
 
-  private async complete(prompt: string, timeoutMs: number): Promise<string | null> {
+  private async complete(
+    prompt: string,
+    timeoutMs: number,
+    responseFormat: OpenAI.Chat.Completions.ChatCompletionCreateParams['response_format'],
+  ): Promise<string | null> {
     if (!this.openai) return null;
     try {
       const response = await this.openai.chat.completions.create(
@@ -82,10 +93,11 @@ export class StatementAiService {
           model: MODEL,
           messages: [{ role: 'user', content: prompt }],
           temperature: 0,
-          response_format: { type: 'json_object' },
+          response_format: responseFormat,
         },
         { timeout: timeoutMs },
       );
+      logCacheUsage(this.logger, 'statement-import', response.usage);
       return response.choices?.[0]?.message?.content ?? null;
     } catch (e) {
       this.logger.warn(`Statement AI call failed: ${this.describeError(e)}`);

@@ -4,7 +4,9 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
-import { getAiCostMultiplier } from '../ai/services/model-resolver';
+import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolver';
+import { logCacheUsage } from '../ai/utils/log-cache-usage';
+import { FAT_FINDER_FINDING_TYPES, normalizeFatFinderFindings } from './fat-finder.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 
@@ -124,9 +126,11 @@ export class FatFinderService {
 
     // Fetch response mode
     let responseMode: AiResponseMode = 'balanced';
+    let aiModelPref: string | undefined;
     if (userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+      aiModelPref = user?.aiModel ?? undefined;
     }
 
     // Gather 3 months of expenses
@@ -298,32 +302,80 @@ Detected patterns:
 Full expense list (grouped by category, current month only):
 ${JSON.stringify(Object.fromEntries(expensesByCategory))}
 
-Find 3-7 opportunities to save money. For each finding:
-1. type: "subscription" | "recurring_splurge" | "large_one_off" | "category_excess" | "service_overuse"
+Find 3-7 opportunities to save money. For each finding provide:
+1. type: one of subscription, recurring_splurge, large_one_off, category_excess, service_overuse
 2. title: short headline (max 60 chars)
 3. description: 1-2 sentences with specific amounts
-4. currentMonthly: what user currently spends per month
-5. suggestedMonthly: recommended amount
-6. potentialSavings: currentMonthly - suggestedMonthly
-7. severity: "low" (<5% of total) | "medium" (5-10%) | "high" (>10%)
-8. actionSuggestion: 1 actionable sentence
-9. relatedExpenses: up to 5 items with {description, amount, date}
+4. currentMonthly: what the user currently spends per month on this
+5. suggestedMonthly: recommended monthly amount (between 0 and currentMonthly)
+6. actionSuggestion: 1 actionable sentence
+7. relatedExpenses: up to 5 items with {description, amount, date}
 
-Return ONLY valid JSON: { "findings": [...], "totalPotentialSavings": number }`;
+Do not compute savings, severity or totals; they are calculated separately.`;
 
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: resolveAiModel(aiModelPref).model,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 3000,
-        response_format: { type: 'json_object' },
+        response_format: {
+          type: 'json_schema',
+          json_schema: {
+            name: 'fat_finder_findings',
+            strict: true,
+            schema: {
+              type: 'object',
+              properties: {
+                findings: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      type: { type: 'string', enum: [...FAT_FINDER_FINDING_TYPES] },
+                      title: { type: 'string' },
+                      description: { type: 'string' },
+                      currentMonthly: { type: 'number' },
+                      suggestedMonthly: { type: 'number' },
+                      actionSuggestion: { type: 'string' },
+                      relatedExpenses: {
+                        type: 'array',
+                        items: {
+                          type: 'object',
+                          properties: {
+                            description: { type: 'string' },
+                            amount: { type: 'number' },
+                            date: { type: 'string' },
+                          },
+                          required: ['description', 'amount', 'date'],
+                          additionalProperties: false,
+                        },
+                      },
+                    },
+                    required: [
+                      'type',
+                      'title',
+                      'description',
+                      'currentMonthly',
+                      'suggestedMonthly',
+                      'actionSuggestion',
+                      'relatedExpenses',
+                    ],
+                    additionalProperties: false,
+                  },
+                },
+              },
+              required: ['findings'],
+              additionalProperties: false,
+            },
+          },
+        },
       });
+      logCacheUsage(this.logger, 'fat-finder', completion.usage);
 
       // Track AI usage only after successful OpenAI call
       if (userId) {
-        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-        const adjustedCost = 3.0 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        const adjustedCost = 3.0 * getAiCostMultiplier(aiModelPref);
         await this.subscriptionsService.trackAiUsage(userId, 'fat_finder', adjustedCost, accountId);
       }
 
@@ -337,12 +389,12 @@ Return ONLY valid JSON: { "findings": [...], "totalPotentialSavings": number }`;
         parsed = { findings: [], totalPotentialSavings: 0 };
       }
 
-      const findings = (parsed.findings || []).slice(0, 7).map((f: any, i: number) => ({
+      const normalized = normalizeFatFinderFindings(parsed.findings, totalCurrentMonth, 7);
+      const findings: any[] = normalized.findings.map((f, i) => ({
         id: `ff-${Date.now()}-${i}`,
         ...f,
       }));
-
-      const totalPotentialSavings = parsed.totalPotentialSavings || findings.reduce((s: number, f: any) => s + (f.potentialSavings || 0), 0);
+      const totalPotentialSavings = normalized.totalPotentialSavings;
 
       // Save to database
       const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days

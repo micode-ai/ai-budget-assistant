@@ -37,3 +37,25 @@ describe('buildExtractionPrompt', () => {
     expect(prompt).toContain('YYYY-MM-DD');
   });
 });
+
+describe('statement structured-output formats', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { buildMappingFormat, EXTRACTION_FORMAT } = require('./statement-ai.prompt');
+  it('mapping header fields are enums of the file headers (deduped), all keys required', () => {
+    const f = buildMappingFormat(['Data', 'Kwota', 'Data']);
+    const schema = f.json_schema.schema;
+    expect(f.json_schema.strict).toBe(true);
+    expect(Object.keys(schema.properties).sort()).toEqual([...schema.required].sort());
+    expect(schema.properties.date.anyOf[0].enum).toEqual(['Data', 'Kwota']);
+    expect(schema.properties.amountFormat.enum).toEqual(['polish', 'standard']);
+  });
+  it('wide files degrade to plain string headers', () => {
+    const headers = Array.from({ length: 250 }, (_, i) => `h${i}`);
+    expect(buildMappingFormat(headers).json_schema.schema.properties.date.anyOf[0]).toEqual({ type: 'string' });
+  });
+  it('extraction rows are strict with nullable merchant', () => {
+    const item = EXTRACTION_FORMAT.json_schema.schema.properties.rows.items;
+    expect(item.required).toContain('merchant');
+    expect(item.additionalProperties).toBe(false);
+  });
+});

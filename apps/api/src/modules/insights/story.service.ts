@@ -6,7 +6,9 @@ import { BudgetsService } from '../budgets/budgets.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { translateUncategorized, localizeStoryBlocks } from '../../common/utils/translate';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
-import { getAiCostMultiplier } from '../ai/services/model-resolver';
+import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolver';
+import { logCacheUsage } from '../ai/utils/log-cache-usage';
+import { STORY_RESPONSE_SCHEMA, stripNulls } from './story-blocks.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
 
@@ -137,12 +139,14 @@ export class StoryService {
 
     // Fetch response mode
     let responseMode: AiResponseMode = 'balanced';
+    let aiModelPref: string | undefined;
     if (userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+      aiModelPref = user?.aiModel ?? undefined;
     }
 
-    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId, baseCurrency);
+    return this.generateStory(accountId, periodStart, periodEnd, periodLabel, language, encryptionTier, responseMode, userId, baseCurrency, aiModelPref);
   }
 
   private static readonly LOCALE_MAP: Record<string, string> = {
@@ -200,6 +204,7 @@ export class StoryService {
     responseMode: AiResponseMode = 'balanced',
     userId?: string,
     baseCurrency = 'USD',
+    aiModelPref?: string,
   ): Promise<SpendingStoryResult> {
     // Gather comprehensive data
     const previousPeriodStart = new Date(periodStart);
@@ -401,21 +406,24 @@ Rules:
 - Use real numbers from the data, do NOT fabricate
 - Make the narrative personal and encouraging
 
-Return ONLY valid JSON: { "blocks": [...], "summary": "..." }`;
+Set fields that do not apply to a block's type to null.`;
 
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: resolveAiModel(aiModelPref).model,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.8,
         max_tokens: 3000,
-        response_format: { type: 'json_object' },
+        response_format: {
+          type: 'json_schema',
+          json_schema: { name: 'spending_story', strict: true, schema: STORY_RESPONSE_SCHEMA as unknown as Record<string, unknown> },
+        },
       });
+      logCacheUsage(this.logger, 'story', completion.usage);
 
       // Track AI usage only after successful OpenAI call
       if (userId) {
-        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-        const adjustedCost = 3.0 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        const adjustedCost = 3.0 * getAiCostMultiplier(aiModelPref);
         await this.subscriptionsService.trackAiUsage(userId, 'story', adjustedCost, accountId);
       }
 
@@ -423,7 +431,7 @@ Return ONLY valid JSON: { "blocks": [...], "summary": "..." }`;
       let parsed: { blocks: any[]; summary: string };
 
       try {
-        parsed = JSON.parse(responseText);
+        parsed = stripNulls(JSON.parse(responseText));
         if (!parsed.blocks) parsed = { blocks: [], summary: '' };
       } catch {
         this.logger.warn('Failed to parse story response');

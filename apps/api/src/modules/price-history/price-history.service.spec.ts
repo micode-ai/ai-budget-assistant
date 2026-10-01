@@ -564,3 +564,15 @@ describe('PriceHistoryService', () => {
     });
   });
 });
+
+describe('buildCanonicalNamesFormat', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { buildCanonicalNamesFormat } = require('./price-history.service');
+  it('requires one string property per 1-based input number', () => {
+    const f = buildCanonicalNamesFormat(3);
+    expect(f.json_schema.strict).toBe(true);
+    expect(f.json_schema.schema.required).toEqual(['1', '2', '3']);
+    expect(Object.keys(f.json_schema.schema.properties)).toEqual(['1', '2', '3']);
+    expect(f.json_schema.schema.additionalProperties).toBe(false);
+  });
+});

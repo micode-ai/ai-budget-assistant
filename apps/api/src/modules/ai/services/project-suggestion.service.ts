@@ -1,13 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { EmbeddingService } from './embedding.service';
+import { logCacheUsage } from '../utils/log-cache-usage';
+
+const PROJECT_MATCH_FORMAT = {
+  type: 'json_schema' as const,
+  json_schema: {
+    name: 'project_match',
+    strict: true,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['projectIndex', 'confidence'],
+      properties: {
+        projectIndex: { type: ['integer', 'null'] },
+        confidence: { type: 'number' },
+      },
+    },
+  },
+};
+
+/**
+ * Maps the model's `projectIndex` back to a position in the numbered list.
+ * Anything that is not an integer inside `[0, count)` is rejected (null).
+ */
+export function resolveProjectIndex(raw: unknown, count: number): number | null {
+  if (typeof raw !== 'number' || !Number.isInteger(raw)) return null;
+  if (raw < 0 || raw >= count) return null;
+  return raw;
+}
 
 @Injectable()
 export class ProjectSuggestionService {
+  private readonly logger = new Logger(ProjectSuggestionService.name);
   private readonly openai: OpenAI;
 
   constructor(
@@ -95,7 +124,6 @@ export class ProjectSuggestionService {
       const safeExpenseDesc = sanitizeForPrompt(expense.description, 200);
       const safeLoc = expense.locationName ? sanitizeForPrompt(expense.locationName, 100) : null;
       const safeProjectData = projectDescriptions.map((p: { id: string; name: string; description: string | null; recentExpenses: (string | null)[] }) => ({
-        id: p.id,
         name: sanitizeForPrompt(p.name, 100),
         description: p.description ? sanitizeForPrompt(p.description, 200) : null,
         recentExpenses: p.recentExpenses
@@ -106,24 +134,26 @@ export class ProjectSuggestionService {
 
       const prompt = `Given this expense: "${safeExpenseDesc}"${safeLoc ? ` at "${safeLoc}"` : ''}
 
-Active projects:
-${JSON.stringify(safeProjectData)}
+Active projects (numbered from 0):
+${safeProjectData.map((p, i) => `${i}: ${JSON.stringify(p)}`).join('\n')}
 
-Does this expense belong to any of these projects? Return JSON: { "projectId": "id or null", "projectName": "name or null", "confidence": 0.0-1.0 }
+Does this expense belong to any of these projects? Answer with "projectIndex" (the integer number of the project, or null if none) and "confidence" (0.0-1.0).
 Only suggest if confidence >= 0.6.`;
 
       const response = await this.openai.chat.completions.create({
         model: aiModel,
         messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
+        response_format: PROJECT_MATCH_FORMAT,
         max_tokens: 100,
       });
+      logCacheUsage(this.logger, 'project-suggestion', response.usage);
 
       const result = JSON.parse(response.choices[0]?.message?.content || '{}');
-      if (result.confidence >= 0.6 && result.projectId) {
+      const idx = resolveProjectIndex(result.projectIndex, activeProjects.length);
+      if (idx !== null && typeof result.confidence === 'number' && result.confidence >= 0.6) {
         return {
-          projectId: result.projectId,
-          projectName: result.projectName,
+          projectId: activeProjects[idx].id,
+          projectName: activeProjects[idx].name,
           confidence: result.confidence,
         };
       }

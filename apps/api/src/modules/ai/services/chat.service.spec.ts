@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
+import { AI_MAX_TOKENS_MAP } from './model-resolver';
 import { ChatService } from './chat.service';
 import { PrismaService } from '../../../database/prisma.service';
 import { NotificationsService } from '../../notifications/notifications.service';
@@ -116,6 +117,25 @@ describe('ChatService', () => {
       expect(deps.prisma.chatMessage.create).toHaveBeenCalledWith(expect.objectContaining({ data: expect.objectContaining({ senderUserId: 'owner-1', mentionedUserIds: [] }) }));
     });
 
+    it('sends the model the LAST messages of the conversation, oldest first', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({
+        id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false,
+        // The query reads newest-first; the service must put them back in order.
+        messages: [
+          { role: 'assistant', content: 'second answer', senderUserId: null },
+          { role: 'user', content: 'second question', senderUserId: 'owner-1' },
+        ],
+      });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      mockChatCreate.mockResolvedValue({ choices: [{ message: { content: 'ok' } }], usage: { total_tokens: 5 } });
+      await service.chat('owner-1', 'third question', 'conv-1', 'acc-1', 'Mine', 'owner', 'Alice', []);
+
+      const query = deps.prisma.chatConversation.findFirst.mock.calls[0][0];
+      expect(query.include.messages).toEqual({ orderBy: { createdAt: 'desc' }, take: 20 });
+      const sent = mockChatCreate.mock.calls[0][0].messages.map((m: { content: string }) => m.content);
+      expect(sent.slice(1)).toEqual(['second question', 'second answer', 'third question']);
+    });
+
     it('calls OpenAI when no member is mentioned', async () => {
       deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: true, messages: [] });
       deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
@@ -130,6 +150,15 @@ describe('ChatService', () => {
       expect(deps.prisma.chatMessage.create).toHaveBeenCalledWith(
         expect.objectContaining({ data: expect.objectContaining({ role: 'assistant', mentionedUserIds: [] }) }),
       );
+    });
+
+    it('uses the per-tier output budget from AI_MAX_TOKENS_MAP for the main turn', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'conv-1', userId: 'owner-1', accountId: 'acc-1', isShared: false, messages: [] });
+      deps.prisma.accountMember.findMany.mockResolvedValue([{ userId: 'owner-1', user: { name: 'Alice' } }]);
+      deps.prisma.user.findUnique.mockResolvedValue({ aiResponseMode: 'balanced', aiModel: 'quality', name: 'Alice', currencyCode: 'USD' });
+      mockChatCreate.mockResolvedValue({ choices: [{ message: { content: 'Sure!' } }], usage: { total_tokens: 5 } });
+      await service.chat('owner-1', 'hello', 'conv-1', 'acc-1', 'Family', 'owner', 'Alice', []);
+      expect(mockChatCreate).toHaveBeenCalledWith(expect.objectContaining({ model: 'gpt-4.1', max_tokens: AI_MAX_TOKENS_MAP.quality }));
     });
 
     // Regression (ABA-136): a read action (e.g. get_expenses) must return the

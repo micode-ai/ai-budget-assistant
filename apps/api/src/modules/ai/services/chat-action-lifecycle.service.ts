@@ -1,12 +1,8 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { randomUUID } from 'crypto';
-import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
-import { resolveCheapModel } from './model-resolver';
 import { AiToolsService } from './ai-tools.service';
 import { PromptBuilder } from './prompt-builder.service';
-import { logCacheUsage } from '../utils/log-cache-usage';
 import type { ChatActionType, ChatActionResult, ChatPendingAction, UndoLastActionData } from '@budget/shared-types';
 
 // The 5 write types docs/product-ideas/chat-undo-last-action.md scopes "undo" to. create_budget
@@ -30,19 +26,13 @@ type UndoLookup =
 
 @Injectable()
 export class ChatActionLifecycleService {
-  private readonly openai: OpenAI;
   private readonly logger = new Logger(ChatActionLifecycleService.name);
 
   constructor(
-    private readonly configService: ConfigService,
     private readonly prisma: PrismaService,
     private readonly promptBuilder: PromptBuilder,
     private readonly aiToolsService: AiToolsService,
-  ) {
-    this.openai = new OpenAI({
-      apiKey: this.configService.get<string>('OPENAI_API_KEY'),
-    });
-  }
+  ) {}
 
   async confirmAction(userId: string, conversationId: string, actionId: string, accountId?: string) {
     const conversation = await this.prisma.chatConversation.findFirst({
@@ -286,6 +276,7 @@ export class ChatActionLifecycleService {
       aiModel,
       accountId,
       userId,
+      uiLanguage,
     );
   }
 
@@ -299,6 +290,7 @@ export class ChatActionLifecycleService {
     aiModel: string,
     accountId?: string,
     userId?: string,
+    uiLanguage?: string | null,
   ) {
     const displaySummary = this.promptBuilder.buildActionSummary(actionType, args);
     const pendingAction: ChatPendingAction = {
@@ -318,23 +310,10 @@ export class ChatActionLifecycleService {
       },
     });
 
-    const confirmationSystemPrompt = `${systemPrompt}\n\nThe user wants to perform this action: ${displaySummary}. Generate a SHORT confirmation message (1-2 sentences max) asking them to confirm or cancel. Format: "I'd like to [action]. Please confirm or cancel." Use the SAME language as the conversation.`;
-
-    const confirmResponse = await this.openai.chat.completions.create({
-      // Confirmation rendering is single-language formatting — no reasoning
-      // needed, so we always use the cheap model regardless of user preference.
-      model: resolveCheapModel(),
-      messages: [
-        { role: 'system', content: confirmationSystemPrompt },
-        ...history,
-        { role: 'user', content: userMessage },
-      ],
-      max_tokens: 150,
-    });
-
-    logCacheUsage(this.logger, 'chat-confirm', confirmResponse.usage);
-
-    const confirmMessage = confirmResponse.choices[0]?.message?.content || `I'd like to ${displaySummary}. Please confirm or cancel this action.`;
+    // Deterministic per-language prompt built from the summary — the confirmation card carries
+    // the details, so no model call is needed just to phrase "please confirm or cancel".
+    const lang = this.promptBuilder.detectUserLanguage(userMessage, history, uiLanguage);
+    const confirmMessage = this.promptBuilder.getConfirmPromptText(lang, this.promptBuilder.buildActionSummary(actionType, args, lang));
 
     const confirmMsg = await this.prisma.chatMessage.create({
       data: {

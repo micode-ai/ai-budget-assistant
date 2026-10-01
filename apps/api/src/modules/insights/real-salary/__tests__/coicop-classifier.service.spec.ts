@@ -105,3 +105,15 @@ describe('CoicopClassifierService', () => {
     });
   });
 });
+
+describe('buildCoicopFormat', () => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const { buildCoicopFormat } = require('../coicop-classifier.service');
+  it('requires one division-enum property per 0-based index', () => {
+    const f = buildCoicopFormat(2);
+    expect(f.json_schema.strict).toBe(true);
+    expect(f.json_schema.schema.required).toEqual(['0', '1']);
+    expect(f.json_schema.schema.properties['0'].enum).toContain('TOTAL');
+    expect(f.json_schema.schema.additionalProperties).toBe(false);
+  });
+});

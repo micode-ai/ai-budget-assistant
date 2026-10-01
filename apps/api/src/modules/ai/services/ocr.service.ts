@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel } from './model-resolver';
+import { logCacheUsage } from '../utils/log-cache-usage';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { extractReceiptDiscounts } from '../utils/receipt-discount';
 import {
@@ -12,7 +13,6 @@ import {
   isDiscountAlreadyInLines,
   needsReread,
   reconciliationGapPct,
-  withCorrection,
 } from '../utils/receipt-reconcile';
 import type { ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
 import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
@@ -231,77 +231,12 @@ function todayInTimezone(timezone: string | null | undefined): string {
   }
 }
 
-// Force GPT-4.1 for receipt OCR regardless of the user's general aiModel pref.
-// On scanned-PDF receipts (Biedronka/Lidl/etc) gpt-4o hallucinates items and
-// totals; gpt-4.1 reads the same PDF correctly AND is cheaper per token.
-const OCR_RECEIPT_MODEL = 'gpt-4.1';
+/**
+ * Static receipt extraction rules (sent as the `system` message). Must stay
+ * free of any per-request interpolation so the prefix is cacheable.
+ */
+const RECEIPT_SYSTEM_PROMPT = `You extract structured data from receipts. Per-request context (today's date, the user's app language, available categories, an optional user note) arrives in the user message.
 
-// `readReceipt`'s corrective re-read (see its doc comment) is a real, full
-// second vision call — the same shape and cost as the first — issued only
-// when reconciliation fails. `AiUsageGuard`'s `@TrackAiUsage('ocr', 2.0)`
-// fires as a canActivate guard BEFORE this service ever runs, so it can only
-// ever record the fixed first-call cost; this constant is what makes the
-// re-read visible to admin AI-COGS as its own line, via
-// `SubscriptionsService.recordAdditionalUsage` (see docs/tech-debt/
-// ocr-reread-cost-not-tracked.md). Deliberately not folded into the 'ocr'
-// quota cost — see that method's doc comment.
-export const OCR_REREAD_FEATURE_TYPE = 'ocr_reread';
-const OCR_REREAD_COST_UNITS = 2.0;
-
-@Injectable()
-export class OcrService {
-  private readonly logger = new Logger(OcrService.name);
-  private readonly openai: OpenAI;
-
-  constructor(
-    private readonly configService: ConfigService,
-    private readonly prisma: PrismaService,
-    private readonly receiptFinalizer: ReceiptFinalizerService,
-    private readonly receiptPdf: ReceiptPdfService,
-    private readonly subscriptions: SubscriptionsService,
-    @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
-  ) {
-    this.openai = new OpenAI({
-      apiKey: this.configService.get<string>('OPENAI_API_KEY'),
-    });
-  }
-
-  private buildReceiptPrompt(
-    categoryNames: string,
-    source: 'image' | 'text',
-    context: OcrContext,
-    userPrompt?: string,
-    receiptText?: string,
-  ): string {
-    const sourceLabel = source === 'image' ? 'receipt image' : 'receipt text';
-    const localFmt = getDateFormatForLang(context.language);
-    const localExample = dateExampleForFormat(localFmt);
-    const dayFirstNote = isDayFirstLanguage(context.language)
-      ? `If the date appears as "DD/MM/YYYY", "DD.MM.YYYY", or "DD-MM-YYYY", the FIRST number is the DAY (not the month). Example: "12/04/2026" = 12 April 2026, NOT 4 December.`
-      : `The user's locale is US English: ambiguous slash-dates are MM/DD/YYYY by default. Trust the merchant's country if it's outside the US.`;
-
-    let prompt = `Analyze this ${sourceLabel} and extract all information.
-
-USER CONTEXT (use as a tiebreaker for ambiguous formats):
-- Today's date: ${context.todayIso} — any extracted date MUST NOT be more than 7 days after this.
-- User app language: "${context.language}". On receipts in this locale, dates are typically printed as ${localFmt} (example: 3 April 2026 → "${localExample}").
-- ${dayFirstNote}
-- If the receipt itself indicates a different country (merchant address, language, currency), trust the RECEIPT's locale over the user's app language.
-- ALWAYS output the date strictly as YYYY-MM-DD regardless of how it appears on the receipt.
-
-Available expense categories for classification: ${categoryNames}
-`;
-
-    if (source === 'text' && receiptText) {
-      prompt += `
-Receipt text (extracted via pdf-parse — spacing may be lost, columns may be misaligned, but the content is correct):
----
-${receiptText}
----
-`;
-    }
-
-    prompt += `
 Return a JSON object with the following structure:
 {
   "merchantName": "store/restaurant name or null if not found",
@@ -400,13 +335,182 @@ Important:
 - Extract EVERY line item if possible
 - If currency symbol is not clear, guess based on merchant location/language
 - Total is required - estimate from items if not clearly visible
-- Be thorough but fast
-- Only return valid JSON, no other text`;
+- Be thorough but fast`;
+
+const NULLABLE_STRING = { type: ['string', 'null'] } as const;
+const NULLABLE_NUMBER = { type: ['number', 'null'] } as const;
+
+/**
+ * Strict structured-output schema for the receipt JSON (mirrors the shape in
+ * RECEIPT_SYSTEM_PROMPT). `validateAndNormalizeReceipt` stays as defence.
+ */
+export const RECEIPT_RESPONSE_FORMAT = {
+  type: 'json_schema' as const,
+  json_schema: {
+    name: 'receipt_extraction',
+    strict: true,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: [
+        'merchantName', 'merchantAddress', 'merchantStreet', 'merchantCity', 'merchantPostalCode',
+        'merchantCountry', 'date', 'time', 'items', 'subtotal', 'discount', 'deposit', 'tax', 'total',
+        'currency', 'paymentMethod', 'suggestedCategory', 'confidence',
+      ],
+      properties: {
+        merchantName: NULLABLE_STRING,
+        merchantAddress: NULLABLE_STRING,
+        merchantStreet: NULLABLE_STRING,
+        merchantCity: NULLABLE_STRING,
+        merchantPostalCode: NULLABLE_STRING,
+        merchantCountry: NULLABLE_STRING,
+        date: NULLABLE_STRING,
+        time: NULLABLE_STRING,
+        items: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['description', 'canonicalName', 'quantity', 'unitPrice', 'totalPrice'],
+            properties: {
+              description: { type: 'string' },
+              canonicalName: NULLABLE_STRING,
+              quantity: NULLABLE_NUMBER,
+              unitPrice: NULLABLE_NUMBER,
+              totalPrice: { type: 'number' },
+            },
+          },
+        },
+        subtotal: NULLABLE_NUMBER,
+        discount: NULLABLE_NUMBER,
+        deposit: NULLABLE_NUMBER,
+        tax: NULLABLE_NUMBER,
+        total: NULLABLE_NUMBER,
+        currency: NULLABLE_STRING,
+        paymentMethod: NULLABLE_STRING,
+        suggestedCategory: NULLABLE_STRING,
+        confidence: NULLABLE_NUMBER,
+      },
+    },
+  },
+};
+
+/**
+ * The request with the correction note appended to the text of the LAST
+ * message (the per-request user message). The static system prompt in front
+ * of it is left untouched so it stays a cacheable prefix. Returns a new
+ * object; handles string content and content arrays.
+ */
+function withUserCorrection<T>(request: T, note: string): T {
+  const req = request as any;
+  const messages: any[] | undefined = req?.messages;
+  if (!messages?.length) return request;
+  const last = messages[messages.length - 1];
+  let content: any;
+  if (typeof last.content === 'string') {
+    content = `${last.content}
+
+${note}`;
+  } else if (Array.isArray(last.content)) {
+    const index = last.content.findIndex((p: any) => p?.type === 'text' && typeof p.text === 'string');
+    if (index === -1) return request;
+    content = last.content.map((p: any, i: number) => (i === index ? { ...p, text: `${p.text}
+
+${note}` } : p));
+  } else {
+    return request;
+  }
+  return { ...req, messages: [...messages.slice(0, -1), { ...last, content }] } as T;
+}
+
+// Force GPT-4.1 for receipt OCR regardless of the user's general aiModel pref.
+// On scanned-PDF receipts (Biedronka/Lidl/etc) gpt-4o hallucinates items and
+// totals; gpt-4.1 reads the same PDF correctly AND is cheaper per token.
+const OCR_RECEIPT_MODEL = 'gpt-4.1';
+
+// `readReceipt`'s corrective re-read (see its doc comment) is a real, full
+// second vision call — the same shape and cost as the first — issued only
+// when reconciliation fails. `AiUsageGuard`'s `@TrackAiUsage('ocr', 2.0)`
+// fires as a canActivate guard BEFORE this service ever runs, so it can only
+// ever record the fixed first-call cost; this constant is what makes the
+// re-read visible to admin AI-COGS as its own line, via
+// `SubscriptionsService.recordAdditionalUsage` (see docs/tech-debt/
+// ocr-reread-cost-not-tracked.md). Deliberately not folded into the 'ocr'
+// quota cost — see that method's doc comment.
+export const OCR_REREAD_FEATURE_TYPE = 'ocr_reread';
+const OCR_REREAD_COST_UNITS = 2.0;
+
+@Injectable()
+export class OcrService {
+  private readonly logger = new Logger(OcrService.name);
+  private readonly openai: OpenAI;
+
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly prisma: PrismaService,
+    private readonly receiptFinalizer: ReceiptFinalizerService,
+    private readonly receiptPdf: ReceiptPdfService,
+    private readonly subscriptions: SubscriptionsService,
+    @Optional() private readonly receiptDuplicates?: ReceiptDuplicateService,
+  ) {
+    this.openai = new OpenAI({
+      apiKey: this.configService.get<string>('OPENAI_API_KEY'),
+    });
+  }
+
+  /**
+   * The STATIC half of the receipt prompt: extraction rules + JSON shape. It
+   * is byte-identical for every request (no date, language, categories or
+   * note), so it is sent as the `system` message and forms a prompt prefix
+   * OpenAI can cache across requests. Anything per-request belongs in
+   * `buildReceiptUserText`.
+   */
+  private buildReceiptSystemPrompt(): string {
+    return RECEIPT_SYSTEM_PROMPT;
+  }
+
+  /** The per-request half: date, app language, categories, receipt text, user note. */
+  private buildReceiptUserText(
+    categoryNames: string,
+    source: 'image' | 'text',
+    context: OcrContext,
+    userPrompt?: string,
+    receiptText?: string,
+  ): string {
+    const sourceLabel = source === 'image' ? 'receipt image' : 'receipt text';
+    const localFmt = getDateFormatForLang(context.language);
+    const localExample = dateExampleForFormat(localFmt);
+    const dayFirstNote = isDayFirstLanguage(context.language)
+      ? `If the date appears as "DD/MM/YYYY", "DD.MM.YYYY", or "DD-MM-YYYY", the FIRST number is the DAY (not the month). Example: "12/04/2026" = 12 April 2026, NOT 4 December.`
+      : `The user's locale is US English: ambiguous slash-dates are MM/DD/YYYY by default. Trust the merchant's country if it's outside the US.`;
+
+    let prompt = `Analyze this ${sourceLabel} and extract all information, following the extraction rules.
+
+USER CONTEXT (use as a tiebreaker for ambiguous formats):
+- Today's date: ${context.todayIso} — any extracted date MUST NOT be more than 7 days after this.
+- User app language: "${context.language}". On receipts in this locale, dates are typically printed as ${localFmt} (example: 3 April 2026 → "${localExample}").
+- ${dayFirstNote}
+- If the receipt itself indicates a different country (merchant address, language, currency), trust the RECEIPT's locale over the user's app language.
+- ALWAYS output the date strictly as YYYY-MM-DD regardless of how it appears on the receipt.
+
+Available expense categories for classification: ${categoryNames}
+`;
+
+    if (source === 'text' && receiptText) {
+      prompt += `
+Receipt text (extracted via pdf-parse — spacing may be lost, columns may be misaligned, but the content is correct):
+---
+${receiptText}
+---
+`;
+    }
 
     if (userPrompt) {
       const safeNote = sanitizeForPrompt(userPrompt, 200);
       if (safeNote) {
-        prompt += `\n\nUser note about this receipt: "${safeNote}"`;
+        prompt += `
+
+User note about this receipt: "${safeNote}"`;
       }
     }
 
@@ -449,6 +553,7 @@ Important:
       req: any = request,
     ): Promise<ParsedReceipt & { suggestedCategory?: string }> => {
       const response = await this.openai.chat.completions.create(req);
+      logCacheUsage(this.logger, `ocr/${label}`, (response as any).usage);
       const choice = (response as any).choices?.[0];
       const content = choice?.message?.content;
       this.logger.log(`[${label}] GPT finish_reason: ${choice?.finish_reason}`);
@@ -500,7 +605,7 @@ Important:
 
     let second: ParsedReceipt & { suggestedCategory?: string };
     try {
-      second = await readOnce(withCorrection(request, correction));
+      second = await readOnce(withUserCorrection(request, correction));
     } catch (error) {
       // A failed re-read must never cost the user the reading already in hand.
       this.logger.warn(`[${label}] re-read failed, keeping the first reading: ${error}`);
@@ -728,7 +833,7 @@ Important:
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-    const prompt = this.buildReceiptPrompt(categoryNames, 'image', context, userPrompt);
+    const prompt = this.buildReceiptUserText(categoryNames, 'image', context, userPrompt);
 
     const url = imageDataUrl || `data:image/jpeg;base64,${imageBase64}`;
 
@@ -741,6 +846,7 @@ Important:
     const normalized = await this.readReceipt('Vision', {
       model: aiModel,
       messages: [
+        { role: 'system', content: this.buildReceiptSystemPrompt() },
         {
           role: 'user',
           content: [
@@ -756,7 +862,7 @@ Important:
         },
       ],
       max_tokens: ocrMaxTokens,
-      response_format: { type: 'json_object' },
+      response_format: RECEIPT_RESPONSE_FORMAT,
     }, context, userId, accountId);
     return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), imageBase64, accountId);
   }
@@ -796,15 +902,18 @@ Important:
       // Text-based PDF — use cheaper text-only GPT call
       const categories = await this.getExpenseCategories(accountId);
       const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-      const prompt = this.buildReceiptPrompt(categoryNames, 'text', context, userPrompt, trimmedText);
+      const prompt = this.buildReceiptUserText(categoryNames, 'text', context, userPrompt, trimmedText);
 
       this.logger.log(`[PDF] Using text-based parsing with model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
 
       const normalized = await this.readReceipt('PDF', {
         model: aiModel,
-        messages: [{ role: 'user', content: prompt }],
+        messages: [
+          { role: 'system', content: this.buildReceiptSystemPrompt() },
+          { role: 'user', content: prompt },
+        ],
         max_tokens: ocrMaxTokens,
-        response_format: { type: 'json_object' },
+        response_format: RECEIPT_RESPONSE_FORMAT,
       }, context, userId, accountId);
       return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
     }
@@ -829,7 +938,7 @@ Important:
 
     const categories = await this.getExpenseCategories(accountId);
     const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-    const prompt = this.buildReceiptPrompt(categoryNames, 'image', context, userPrompt);
+    const prompt = this.buildReceiptUserText(categoryNames, 'image', context, userPrompt);
 
     const pdfBuffer = Buffer.from(pdfBase64, 'base64');
 
@@ -848,15 +957,18 @@ Important:
       this.logger.error(`[PDF-File] pdftoppm rendering failed, falling back to raw PDF file upload: ${err instanceof Error ? err.message : err}`);
       const normalized = await this.readReceipt('PDF-File-fallback', {
         model: resolvedModel,
-        messages: [{
+        messages: [
+          { role: 'system', content: this.buildReceiptSystemPrompt() },
+          {
           role: 'user',
           content: [
             { type: 'text', text: prompt },
             { type: 'file', file: { filename: 'receipt.pdf', file_data: `data:application/pdf;base64,${pdfBase64}` } },
           ],
-        }],
+        },
+        ],
         max_tokens: resolvedMaxTokens,
-        response_format: { type: 'json_object' },
+        response_format: RECEIPT_RESPONSE_FORMAT,
       }, context, userId, accountId);
       return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
     }
@@ -864,13 +976,14 @@ Important:
     const normalized = await this.readReceipt('PDF-File', {
       model: resolvedModel,
       messages: [
+        { role: 'system', content: this.buildReceiptSystemPrompt() },
         {
           role: 'user',
           content: [{ type: 'text', text: prompt }, ...imageContents],
         },
       ],
       max_tokens: resolvedMaxTokens,
-      response_format: { type: 'json_object' },
+      response_format: RECEIPT_RESPONSE_FORMAT,
     }, context, userId, accountId);
     return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
   }
@@ -904,6 +1017,7 @@ Important:
       ],
       max_tokens: 1500,
     });
+    logCacheUsage(this.logger, 'ocr/extract-text', response.usage);
 
     return response.choices[0]?.message?.content || '';
   }

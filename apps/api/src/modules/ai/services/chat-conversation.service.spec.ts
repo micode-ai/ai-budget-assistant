@@ -121,6 +121,26 @@ describe('ChatConversationService', () => {
       const res = await service.getConversationMessages('owner-1', 'c1', 'acc-1');
       expect(res[0]).toMatchObject({ senderUserId: 'owner-1', senderName: 'Alice' });
     });
+
+    it('returns the LAST 50 messages oldest-first when no `since` is given', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', isShared: true, userId: 'owner-1' });
+      deps.prisma.accountMember.findMany.mockResolvedValue([]);
+      const msg = (id: string) => ({ id, conversationId: 'c1', role: 'user', content: id, senderUserId: null, mentionedUserIds: [], tokensUsed: null, createdAt: new Date() });
+      deps.prisma.chatMessage.findMany.mockResolvedValue([msg('newest'), msg('older')]); // desc from the DB
+      const res = await service.getConversationMessages('owner-1', 'c1', 'acc-1');
+      const args = deps.prisma.chatMessage.findMany.mock.calls.at(-1)[0];
+      expect(args.orderBy).toEqual({ createdAt: 'desc' });
+      expect(args.take).toBe(50);
+      expect(res.map((m: { id: string }) => m.id)).toEqual(['older', 'newest']);
+    });
+
+    it('reads forward from `since` in ascending order', async () => {
+      deps.prisma.chatConversation.findFirst.mockResolvedValue({ id: 'c1', accountId: 'acc-1', isShared: true, userId: 'owner-1' });
+      deps.prisma.accountMember.findMany.mockResolvedValue([]);
+      deps.prisma.chatMessage.findMany.mockResolvedValue([]);
+      await service.getConversationMessages('owner-1', 'c1', 'acc-1', '2026-10-01T00:00:00Z');
+      expect(deps.prisma.chatMessage.findMany.mock.calls.at(-1)[0].orderBy).toEqual({ createdAt: 'asc' });
+    });
   });
 
   describe('setConversationShared', () => {

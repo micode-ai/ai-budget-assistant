@@ -1,13 +1,43 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { EmbeddingService } from './embedding.service';
+import { logCacheUsage } from '../utils/log-cache-usage';
+
+const TAG_SUGGESTION_FORMAT = {
+  type: 'json_schema' as const,
+  json_schema: {
+    name: 'tag_suggestions',
+    strict: true,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['tags'],
+      properties: {
+        tags: {
+          type: 'array',
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            required: ['name', 'confidence', 'isExisting'],
+            properties: {
+              name: { type: 'string' },
+              confidence: { type: 'number' },
+              isExisting: { type: 'boolean' },
+            },
+          },
+        },
+      },
+    },
+  },
+};
 
 @Injectable()
 export class TagSuggestionService {
+  private readonly logger = new Logger(TagSuggestionService.name);
   private readonly openai: OpenAI;
 
   constructor(
@@ -153,7 +183,7 @@ export class TagSuggestionService {
 Existing tags in this account: ${tagList || 'none yet'}
 
 Suggest 3-5 relevant tags for this expense. Prefer existing tags when they fit.
-Return JSON: { "tags": [{ "name": "tag name", "confidence": 0.0-1.0, "isExisting": boolean }] }
+Each tag has a name, a confidence (0.0-1.0) and isExisting (true when it is one of the existing tags).
 Tags should be short (1-3 words), lowercase, descriptive labels like: subscriptions, entertainment, monthly, groceries, dining-out, work-expense, etc.`;
 
     // Cheap model: tag suggestion is short structured classification.
@@ -164,9 +194,10 @@ Tags should be short (1-3 words), lowercase, descriptive labels like: subscripti
       const response = await this.openai.chat.completions.create({
         model: aiModel,
         messages: [{ role: 'user', content: prompt }],
-        response_format: { type: 'json_object' },
+        response_format: TAG_SUGGESTION_FORMAT,
         max_tokens: 200,
       });
+      logCacheUsage(this.logger, 'tag-suggestion', response.usage);
 
       const result = JSON.parse(response.choices[0]?.message?.content || '{"tags":[]}');
       const suggestedTags: Array<{ name: string; confidence: number; source: 'ai'; existingTagId?: string }> = [];
