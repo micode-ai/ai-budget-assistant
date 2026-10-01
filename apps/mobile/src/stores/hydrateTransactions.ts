@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import { Platform } from 'react-native';
 import { useExpenseStore } from './expenseStore';
 import { useIncomeStore } from './incomeStore';
+import { useAccountStore } from './accountStore';
+import { createAccountScopedInflight } from './accountScopedInflight';
 
 // Tiny store so UI can show a loading indicator while a hydrate cycle runs.
 interface HydrationState {
@@ -20,13 +22,13 @@ export const useHydrationStore = create<HydrationState>(() => ({
 //
 // Plus our own re-entry guard so we don't kick off two hydrate chains in parallel
 // even when many call sites fire at once (DatabaseProvider, authStore, tabs).
+// It is per account: a hydrate requested right after an account switch must
+// not join the previous account's chain (see accountScopedInflight.ts).
 
-let _inflight: Promise<void> | null = null;
+const _inflight = createAccountScopedInflight();
 
 export function hydrateTransactions(opts?: { force?: boolean }): Promise<void> {
-  if (_inflight) return _inflight;
-
-  _inflight = (async () => {
+  return _inflight(useAccountStore.getState().currentAccountId, async () => {
     useHydrationStore.setState({ isHydrating: true });
     try {
       await useExpenseStore.getState().loadExpenses(opts);
@@ -44,15 +46,18 @@ export function hydrateTransactions(opts?: { force?: boolean }): Promise<void> {
       // Dynamic import avoids a static cycle (walletStore → authStore → here).
       if (Platform.OS === 'web') {
         try {
+          const accountId = useAccountStore.getState().currentAccountId;
           const { useWalletStore } = await import('./walletStore');
           const summary = await useWalletStore.getState().computeWalletSummary();
-          useWalletStore.setState({ walletSummary: summary });
+          // The account may have changed while the request was out — never
+          // write one account's balances over another's.
+          if (useAccountStore.getState().currentAccountId === accountId) {
+            useWalletStore.setState({ walletSummary: summary });
+          }
         } catch { /* wallet not ready — loadWallet will fetch it */ }
       }
     } finally {
       useHydrationStore.setState({ isHydrating: false });
     }
-  })();
-  _inflight.finally(() => { _inflight = null; });
-  return _inflight;
+  });
 }

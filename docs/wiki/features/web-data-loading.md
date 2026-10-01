@@ -48,7 +48,9 @@ behind three separate fixes (ABA-506, ABA-518, ABA-519):
   re-fetches only when the list is empty and no load is in flight. Opening the empty menu is itself
   the retry.
 - A failed wallet fetch returns the **current** summary, never `[]`, so the caller's `set` is a
-  no-op and a dropped request leaves what is on screen.
+  no-op and a dropped request leaves what is on screen. "Current" means this account's: `loadWallet` empties the figures first
+  when they belong to another account ([account-switch-reload](account-switch-reload.md)), or a
+  failed fetch right after a switch kept the previous account's balances.
 - A failed `GET /categories` used to fall into the default-seeding loop and end with
   `isInitialized: true` on an empty list. That flag disables **all nine** retry points in the app
   (each shaped `if (!categoriesInitialized) loadCategories()`), so one dropped request left the whole
