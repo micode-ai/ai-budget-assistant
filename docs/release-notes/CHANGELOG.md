@@ -8,6 +8,52 @@ Detailed per-feature notes for individual dates live alongside in `docs/release-
 
 ---
 
+## 1.33.0 - 2026-10-01
+
+**Shopping list**
+
+- **A price for each item, and running totals.** Enter what an item costs and the list
+  adds up the planned and the ticked-off amount as you shop (ABA-622).
+- **Scan a shelf price tag** to add a product, or to fill in the name and price of an item
+  already on the list (ABA-623). On the web the tag is photographed inside the page, so
+  Android browsers no longer lose the photo (ABA-624).
+
+**Accounts and your data**
+
+- **Switching accounts no longer leaves the previous account's figures.** The wallet
+  balances and the investment portfolio on the home screen show the new account right
+  away, whichever way you switched — from the account menu, a notification or a trip
+  (ABA-627, ABA-629).
+- **Chat history shows only the current account's conversations** (ABA-626).
+- **Saved what-if scenarios are private** to you and to the account they were made in,
+  and are cleared from view when you sign out (ABA-626).
+- **Pull to refresh always syncs**, even while a background sync is running (ABA-626).
+- **Moving an expense to another account** carries its receipt lines' categories across
+  too, and the desktop web app can now move an expense (ABA-626).
+- **"Can I afford it" in chat says it cannot judge** an amount in a currency with no
+  exchange rate, instead of answering as if it were in your own currency (ABA-626).
+- **The About screen shows the build number** next to the version (ABA-629).
+
+**Already working before this update** (server-side, live for every app version)
+
+- **A receipt scanned for a payment the app already caught from a bank notification** is
+  offered as a merge, even when the bank and the receipt name the shop differently
+  (ABA-625).
+- **Chat:** asking for a budget for a category now creates one for that category, and
+  "how is my food budget" finds it; Belarusian is recognised; confirmations follow the
+  app language and expire after 30 minutes; long conversations keep their latest
+  messages in view (ABA-626).
+- **Stopping a recurring expense stops the whole series** (ABA-626).
+- **Restoring a backup brings back receipt items, tags, splits and projects**, and the
+  merchant, deposit and debt details; viewers of a shared account can no longer restore
+  into it (ABA-626).
+- **Year in Review and the wallet no longer count planned purchases** (or, in Year in
+  Review, money friends owe you back) as spending; the monthly wallet history follows
+  your time zone (ABA-626).
+- **Polish borrowed-debt reminders** now read as money you owe (ABA-628).
+
+---
+
 ## 1.32.0 - 2026-09-27
 
 **Is your salary keeping up?**
