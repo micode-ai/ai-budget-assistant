@@ -1,4 +1,6 @@
 import { PromptBuilder } from './prompt-builder.service';
+import { AI_TOOL_DEFINITIONS } from './ai-tool-schemas';
+import type { UserContext } from './user-context-builder.service';
 
 describe('PromptBuilder language detection', () => {
   const pb = new PromptBuilder();
@@ -66,6 +68,79 @@ describe('PromptBuilder language detection', () => {
     it('defaults to English when nothing indicates another language', () => {
       expect(pb.detectUserLanguage('how much did I spend?', [], 'en')).toBe('English');
       expect(pb.detectUserLanguage('how much did I spend?', [], undefined)).toBe('English');
+    });
+  });
+
+  describe('buildSystemPrompt', () => {
+    const ctx = {
+      totalSpentThisMonth: 10, monthlyBudget: 0, recentExpenses: [], tags: [], projects: [], topItems: [],
+      categoryNames: ['Food'], savingsGoals: [], activeDebts: [],
+    } as unknown as UserContext;
+    const build = (mode: 'simple' | 'balanced' | 'expert') => pb.buildSystemPrompt(ctx, 0, mode, 'hi', [], null, 'PLN', 'en');
+
+    it('keeps the cacheable prefix identical across response modes; the style block sits after it', () => {
+      const [simple, expert] = [build('simple'), build('expert')];
+      const cut = simple.indexOf('RESPONSE STYLE');
+      expect(cut).toBeGreaterThan(0);
+      expect(simple.slice(0, cut)).toBe(expert.slice(0, expert.indexOf('RESPONSE STYLE')));
+      expect(simple).not.toBe(expert);
+    });
+
+    it('no longer carries per-tool routing prose (it lives in the tool descriptions)', () => {
+      const prompt = build('balanced');
+      const staticPart = prompt.slice(0, prompt.indexOf('--- DYNAMIC CONTEXT ---'));
+      for (const name of ['record_debt_repayment', 'create_debt', 'update_goal_balance', 'check_affordability', 'add_to_shopping_list', 'remove_from_shopping_list', 'get_inflation_shield', 'get_shopping_suggestions', 'get_deposit_total', 'get_discount_total', 'get_expenses', 'descriptionKeyword']) {
+        expect(staticPart).not.toContain(name);
+      }
+    });
+
+    it('moved the multilingual deposit/discount vocabulary and reporting rules into the tool descriptions', () => {
+      const desc = (n: string) => AI_TOOL_DEFINITIONS.find((t) => t.type === 'function' && t.function.name === n)!.function.description!;
+      expect(desc('get_deposit_total')).toContain('kaucja');
+      expect(desc('get_deposit_total')).toContain('ALREADY PAID');
+      expect(desc('get_discount_total')).toContain('korting');
+      expect(desc('check_affordability')).toContain('verbatim');
+      expect(desc('get_expenses')).toContain('matchedExpenses');
+    });
+  });
+
+  describe('buildActionSummary', () => {
+    const pb2 = new PromptBuilder();
+    const langs = ['English', 'Russian', 'Ukrainian', 'Belarusian', 'German', 'Spanish', 'French', 'Polish', 'Dutch'];
+
+    it('describes create_category in every language', () => {
+      const out = langs.map((l) => pb2.buildActionSummary('create_category', { name: 'Pets', type: 'expense' }, l));
+      out.forEach((o) => { expect(o).toContain('"Pets"'); expect(o).not.toContain('undefined'); });
+      expect(new Set(out).size).toBe(langs.length);
+    });
+
+    it('never prints undefined for repayment / goal args that lack currency, contact or goal name', () => {
+      for (const l of langs) {
+        const repay = pb2.buildActionSummary('record_debt_repayment', { debtId: 'd1', amount: 50 }, l);
+        const goal = pb2.buildActionSummary('update_goal_balance', { goalId: 'g1', newAmount: 900 }, l);
+        expect(repay).toContain('50');
+        expect(goal).toContain('900');
+        expect(repay + goal).not.toMatch(/undefined|null/);
+      }
+    });
+
+    it('uses ua/be wording, not Russian', () => {
+      expect(pb2.buildActionSummary('create_expense', { amount: 5, currencyCode: 'PLN' }, 'Ukrainian')).toContain('витрата');
+      expect(pb2.buildActionSummary('create_expense', { amount: 5, currencyCode: 'PLN' }, 'Belarusian')).toContain('выдатак');
+    });
+
+    it('keeps the English create_expense phrasing', () => {
+      expect(pb2.buildActionSummary('create_expense', { amount: 5, currencyCode: 'PLN', description: 'tea', categoryName: 'Food' })).toBe('expense 5 PLN for "tea" [Food]');
+    });
+  });
+
+  describe('getConfirmPromptText', () => {
+    it('embeds the summary in all 9 languages, each distinct', () => {
+      const langs = ['English', 'Russian', 'Ukrainian', 'Belarusian', 'German', 'Spanish', 'French', 'Polish', 'Dutch'];
+      const out = langs.map((l) => pb.getConfirmPromptText(l, 'SUMMARY'));
+      out.forEach((o) => expect(o).toContain('SUMMARY'));
+      expect(new Set(out).size).toBe(9);
+      expect(out[0]).toBe("I'd like to SUMMARY. Please confirm or cancel.");
     });
   });
 });

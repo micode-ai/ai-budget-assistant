@@ -2,6 +2,7 @@ import { Injectable, Logger, Optional } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { CHEAP_MODEL } from '../ai/services/model-resolver';
+import { logCacheUsage } from '../ai/utils/log-cache-usage';
 import { fallbackText, isFaithful } from './digest-text.util';
 import type { DigestFacts } from './digest-facts.util';
 
@@ -90,6 +91,7 @@ export class VoiceDigestNarratorService {
           { role: 'user', content: JSON.stringify(facts) },
         ],
       });
+      logCacheUsage(this.logger, 'voice-digest', res.usage);
       const text = (res.choices?.[0]?.message?.content ?? '').trim();
       if (
         !text ||

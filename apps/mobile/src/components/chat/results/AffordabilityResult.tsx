@@ -32,6 +32,8 @@ export function AffordabilityResult({ data }: { data: Record<string, unknown> })
         return suggestedDate
           ? t('affordability.waitUntil', { date: suggestedDate })
           : t('affordability.no');
+      case 'currency_unconvertible':
+        return t('affordability.currencyUnconvertible');
       case 'over_available':
       default:
         return t('affordability.no');
@@ -47,7 +49,7 @@ export function AffordabilityResult({ data }: { data: Record<string, unknown> })
       <View style={styles.affordabilityChip}>
         <Ionicons name={chipIcon} size={20} color={chipColor} />
         <Text style={[styles.affordabilityVerdict, { color: chipColor }]}>
-          {affordable ? t('affordability.yes') : t('affordability.no')}
+          {reasonCode === 'currency_unconvertible' ? reasonLabel : affordable ? t('affordability.yes') : t('affordability.no')}
         </Text>
       </View>
 

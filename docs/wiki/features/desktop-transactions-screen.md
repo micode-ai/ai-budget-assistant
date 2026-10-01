@@ -32,6 +32,17 @@ five-column table does not fit in that band.
 
 **Expenses and income merge into one table**, with the mobile tab becoming a "kind" facet.
 
+**The screen owns the overlay state; the dialogs file only renders it.** `ExpensesDesktop.tsx`
+keeps every piece of dialog state (`selectedRow`, `createKind`, the categorize kind, the two bulk
+picker flags) because it is inseparable from the row list, selection and context-menu wiring.
+`ExpensesDesktopDialogs.tsx` takes that resolved state plus close callbacks as props and mounts
+`ExpenseDialog` (view/edit a row), `CreateDialog` (the add-expense/income dialog, hosting
+`ExpenseCreateForm` / `IncomeCreateForm`), `CategorizeDialog`, and the bulk category and tag
+pickers. (`ReceiptDialog` and `VoiceDialog` live in the same folder but are opened from the desktop
+dashboard and the web first-run screen, not from here.) The
+row context menu (`RowContextMenu.tsx`) and the facet rail (`FacetRail.tsx`) are their own files.
+`AnalyticsDesktop.tsx` was split along the same lines into section components (ABA-501).
+
 **Nothing renders a component in CI**, so every decision that can be numerically wrong lives in two
 pure, fully unit-tested modules, while layout, hover, focus traps and contrast across all accents
 and both themes are verified by hand.

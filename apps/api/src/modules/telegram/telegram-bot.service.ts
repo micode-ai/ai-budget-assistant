@@ -1,6 +1,7 @@
 import { Injectable, Logger, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Telegraf } from 'telegraf';
+import { randomBytes, timingSafeEqual } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { DigestUnavailableError } from '../voice-digest/digest-channel.registry';
 import { TelegramLinkService } from './telegram-link.service';
@@ -69,9 +70,12 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
       const webhookUrl = this.config.get<string>('TELEGRAM_WEBHOOK_URL');
       if (webhookUrl) {
         const fullUrl = `${webhookUrl}/telegram/webhook`;
-        this.webhookSecret = this.config.get<string>('TELEGRAM_WEBHOOK_SECRET') ?? null;
+        // Every webhook carries a secret: the configured one, or a random one
+        // registered with Telegram for this process — without it the public
+        // endpoint would accept forged updates impersonating any linked user.
+        this.webhookSecret = this.config.get<string>('TELEGRAM_WEBHOOK_SECRET') || randomBytes(32).toString('hex');
         await this.bot.telegram.setWebhook(fullUrl, {
-          secret_token: this.webhookSecret ?? undefined,
+          secret_token: this.webhookSecret,
         });
         this.logger.log(`Telegram webhook set to ${fullUrl}`);
       } else {
@@ -117,9 +121,12 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
   }
 
   verifyWebhookSecret(token: string | undefined): boolean {
-    // If no secret is configured (long-polling / dev mode), allow all requests
-    if (!this.webhookSecret) return true;
-    return token === this.webhookSecret;
+    // No secret means long-polling mode: Telegram sends nothing to the webhook,
+    // so anything that arrives there is not from Telegram.
+    if (!this.webhookSecret || !token) return false;
+    const a = Buffer.from(token);
+    const b = Buffer.from(this.webhookSecret);
+    return a.length === b.length && timingSafeEqual(a, b);
   }
 
   async handleUpdate(body: unknown): Promise<void> {

@@ -4,7 +4,10 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { getResponseModeInstruction, AiResponseMode } from '../ai/services/response-mode.helper';
-import { getAiCostMultiplier } from '../ai/services/model-resolver';
+import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolver';
+import { logCacheUsage } from '../ai/utils/log-cache-usage';
+import { buildInsightsResponseSchema } from './insight-schema.util';
+import { stripNulls } from './story-blocks.util';
 
 @Injectable()
 export class AiInsightsService {
@@ -83,16 +86,18 @@ export class AiInsightsService {
 
     // Fetch response mode
     let responseMode: AiResponseMode = 'balanced';
+    let aiModelPref: string | undefined;
     if (userId) {
-      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true } });
+      const user = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiResponseMode: true, aiModel: true } });
       responseMode = (user?.aiResponseMode as AiResponseMode) || 'balanced';
+      aiModelPref = user?.aiModel ?? undefined;
     }
 
     // Generate new insights — tracking happens inside after successful OpenAI call
-    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language, encryptionTier, responseMode, userId);
+    return this.generateInsights(accountId, currentMonthStart, currentMonthEnd, language, encryptionTier, responseMode, userId, aiModelPref);
   }
 
-  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string, encryptionTier = 0, responseMode: AiResponseMode = 'balanced', userId?: string) {
+  private async generateInsights(accountId: string, periodStart: Date, periodEnd: Date, language?: string, encryptionTier = 0, responseMode: AiResponseMode = 'balanced', userId?: string, aiModelPref?: string) {
     // Gather financial data
     const threeMonthsAgo = new Date(periodStart.getFullYear(), periodStart.getMonth() - 3, 1);
 
@@ -191,24 +196,34 @@ For each insight, return a JSON object with:
 - title: short headline (max 60 chars)
 - description: 1-2 sentence explanation
 - severity: "info" | "warning" | "critical"
-- chartConfig: { chartType: "bar"|"donut"|"line", title: string, data: [{label: string, value: number, color?: string}] }
+- chartConfig: { chartType: "bar"|"donut"|"line", title: string, data: [{label: string, value: number, color: string or null}] }
 - actionSuggestion: what the user should do (1 sentence)
 
-Return a JSON object of the form {"insights": [ ...insight objects... ]}.`;
+Provide the insights in the "insights" array.`;
 
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: resolveAiModel(aiModelPref).model,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 2000,
-        response_format: { type: 'json_object' },
+        response_format: {
+          type: 'json_schema',
+          json_schema: {
+            name: 'ai_insights',
+            strict: true,
+            schema: buildInsightsResponseSchema(
+              ['anomaly_spike', 'category_comparison', 'trend_change', 'budget_burndown', 'savings_opportunity'],
+              ['bar', 'donut', 'line'],
+            ) as unknown as Record<string, unknown>,
+          },
+        },
       });
+      logCacheUsage(this.logger, 'insights', completion.usage);
 
       // Track AI usage only after successful OpenAI call
       if (userId) {
-        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-        const adjustedCost = 2.0 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        const adjustedCost = 2.0 * getAiCostMultiplier(aiModelPref);
         await this.subscriptionsService.trackAiUsage(userId, 'insights', adjustedCost, accountId);
       }
 
@@ -236,7 +251,7 @@ Return a JSON object of the form {"insights": [ ...insight objects... ]}.`;
               title: insight.title || 'Insight',
               description: insight.description || '',
               severity: insight.severity || 'info',
-              chartConfig: insight.chartConfig || { chartType: 'bar', title: '', data: [] },
+              chartConfig: insight.chartConfig ? stripNulls(insight.chartConfig) : { chartType: 'bar', title: '', data: [] },
               actionSuggestion: insight.actionSuggestion,
               periodStart: periodStart,
               periodEnd: periodEnd,

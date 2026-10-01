@@ -23,7 +23,7 @@ write per-item Markdown files into `docs/tech-debt/`.
    - Files >1000 lines (often a smell on their own).
    - Duplicated logic across files (sample a couple of utilities).
 
-2. **Pick the top 5–10 most actionable items.** Each item must be:
+2. **Pick the items a maintainer would act on this month** — fewer is fine; the queue is read by a person. Each item must be:
    - **Concrete** — names specific file(s) and lines.
    - **Bounded** — could be tackled in <1 day.
    - **Worth doing** — has a real cost (slowing development, hiding bugs,

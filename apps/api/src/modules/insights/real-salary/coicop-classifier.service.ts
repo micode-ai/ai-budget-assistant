@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { CHEAP_MODEL } from '../../ai/services/model-resolver';
+import { logCacheUsage } from '../../ai/utils/log-cache-usage';
 import { DIVISIONS, divisionForSeedIcon, isDivision } from './coicop';
 
 export const CLASSIFY_BATCH = 50;
@@ -18,13 +19,35 @@ export type OpenAILike = { chat: { completions: { create(args: any): Promise<any
 export const TOKENS_PER_CATEGORY = 12;
 const TOKENS_OVERHEAD = 30;
 
+/**
+ * Strict schema for one batch: one property per index "0".."count-1", each an
+ * enum of the COICOP divisions. The index set is known at request time, so the
+ * object stays fully specified; the stored-answer guard (`isDivision`) remains.
+ */
+export function buildCoicopFormat(count: number) {
+  const properties: Record<string, unknown> = {};
+  const required: string[] = [];
+  for (let i = 0; i < count; i++) {
+    properties[String(i)] = { type: 'string', enum: [...DIVISIONS] };
+    required.push(String(i));
+  }
+  return {
+    type: 'json_schema' as const,
+    json_schema: {
+      name: 'coicop_divisions',
+      strict: true,
+      schema: { type: 'object', additionalProperties: false, required, properties },
+    },
+  };
+}
+
 export function completionBudget(count: number): number {
   return TOKENS_OVERHEAD + count * TOKENS_PER_CATEGORY;
 }
 
 const SYSTEM = `You map personal-finance expense category names to COICOP 2018 divisions.
 Names may be in any language (Polish, Russian, Ukrainian, Belarusian, German, English, Dutch,
-French, Spanish...). Answer with a JSON object mapping each given index to one code from:
+French, Spanish...). Map each given index to one code from:
 ${DIVISIONS.join(', ')}.
 CP01 food & non-alcoholic drinks, groceries, supermarket.
 CP02 alcohol & tobacco.
@@ -93,12 +116,13 @@ export class CoicopClassifierService {
           model: CHEAP_MODEL,
           temperature: 0,
           max_tokens: completionBudget(rest.length),
-          response_format: { type: 'json_object' },
+          response_format: buildCoicopFormat(rest.length),
           messages: [
             { role: 'system', content: SYSTEM },
             { role: 'user', content: rest.map((c, i) => `${i}: ${c.name}`).join('\n') },
           ],
         });
+        logCacheUsage(this.logger, 'coicop-classifier', res.usage);
         answer = JSON.parse(res.choices?.[0]?.message?.content ?? '{}');
       } catch (e) {
         this.logger.warn(`COICOP classification failed, will retry: ${String(e)}`);

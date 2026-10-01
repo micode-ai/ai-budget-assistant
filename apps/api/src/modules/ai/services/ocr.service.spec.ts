@@ -216,8 +216,11 @@ describe('OcrService', () => {
       expect(mockChatCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           model: 'gpt-4.1',
+          response_format: expect.objectContaining({ type: 'json_schema' }),
           messages: [
+            expect.objectContaining({ role: 'system', content: expect.stringContaining('Return a JSON object') }),
             expect.objectContaining({
+              role: 'user',
               content: expect.arrayContaining([
                 expect.objectContaining({ type: 'image_url' }),
               ]),
@@ -362,7 +365,12 @@ describe('OcrService', () => {
       await service.parseReceiptPdf('cGRmYmFzZTY0', 'user-1', 'acc-1');
 
       expect(mockChatCreate).toHaveBeenCalledWith(
-        expect.objectContaining({ messages: [{ role: 'user', content: expect.any(String) }] }),
+        expect.objectContaining({
+          messages: [
+            expect.objectContaining({ role: 'system' }),
+            { role: 'user', content: expect.any(String) },
+          ],
+        }),
       );
       expect(receiptPdfMock.renderToPngs).not.toHaveBeenCalled();
       expect(receiptFinalizerMock.finalizeReceipt).toHaveBeenCalled();
@@ -379,6 +387,7 @@ describe('OcrService', () => {
       expect(mockChatCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           messages: [
+            expect.objectContaining({ role: 'system', content: expect.stringContaining('Return a JSON object') }),
             expect.objectContaining({
               content: expect.arrayContaining([expect.objectContaining({ type: 'image_url' })]),
             }),
@@ -398,6 +407,7 @@ describe('OcrService', () => {
       expect(mockChatCreate).toHaveBeenCalledWith(
         expect.objectContaining({
           messages: [
+            expect.objectContaining({ role: 'system', content: expect.stringContaining('Return a JSON object') }),
             expect.objectContaining({
               content: expect.arrayContaining([expect.objectContaining({ type: 'file' })]),
             }),
@@ -408,3 +418,37 @@ describe('OcrService', () => {
     });
   });
 });
+
+describe('OcrService receipt prompt structure (cacheable prefix)', () => {
+  const build = () => {
+    const svc = new OcrService(
+      { get: () => 'k' } as any,
+      {} as any,
+      {} as any,
+      {} as any,
+      {} as any,
+    );
+    return svc as any;
+  };
+  const ctx = (todayIso: string, language: string) => ({ todayIso, language });
+
+  it('system prompt is identical across requests and carries no per-request data', () => {
+    const svc = build();
+    const a = svc.buildReceiptSystemPrompt();
+    const b = svc.buildReceiptSystemPrompt();
+    expect(a).toBe(b);
+    expect(a).not.toMatch(/Today's date: \d{4}/);
+    expect(a).toContain('canonicalName rules');
+  });
+
+  it('user text carries date, language, categories, receipt text and note', () => {
+    const svc = build();
+    const t = svc.buildReceiptUserText('Food, Fuel', 'text', ctx('2026-10-01', 'pl'), 'my note', 'RECEIPT BODY');
+    expect(t).toContain('2026-10-01');
+    expect(t).toContain('"pl"');
+    expect(t).toContain('Food, Fuel');
+    expect(t).toContain('RECEIPT BODY');
+    expect(t).toContain('User note about this receipt: "my note"');
+  });
+});
+

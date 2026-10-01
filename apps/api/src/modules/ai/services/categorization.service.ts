@@ -1,18 +1,67 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import { resolveAiModel, resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { EmbeddingService } from './embedding.service';
+import { logCacheUsage } from '../utils/log-cache-usage';
 
 interface CategoryWithName {
   id: string;
   name: string;
 }
 
+/**
+ * A category-name property: an enum of the exact names shown in the prompt when
+ * there are any (the model cannot invent one), a plain string otherwise (an
+ * empty enum is invalid in strict mode).
+ */
+function categoryProperty(names: string[]): Record<string, unknown> {
+  const unique = Array.from(new Set(names.filter((n) => n.length > 0)));
+  return unique.length > 0 ? { type: 'string', enum: unique } : { type: 'string' };
+}
+
+function strictFormat(name: string, properties: Record<string, unknown>) {
+  return {
+    type: 'json_schema' as const,
+    json_schema: {
+      name,
+      strict: true,
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        required: Object.keys(properties),
+        properties,
+      },
+    },
+  };
+}
+
+/** Exported for tests. */
+export function buildParseFormat(kind: 'expense' | 'income', categoryNames: string[]) {
+  const properties: Record<string, unknown> = {
+    amount: { type: 'number' },
+    currency: { type: ['string', 'null'] },
+    description: { type: 'string' },
+    category: categoryProperty(categoryNames),
+    confidence: { type: 'number' },
+  };
+  if (kind === 'expense') properties.merchant = { type: ['string', 'null'] };
+  return strictFormat(`${kind}_parse`, properties);
+}
+
+/** Exported for tests. */
+export function buildCategorizeFormat(categoryNames: string[]) {
+  return strictFormat('categorize', {
+    category: categoryProperty(categoryNames),
+    confidence: { type: 'number' },
+  });
+}
+
 @Injectable()
 export class CategorizationService {
+  private readonly logger = new Logger(CategorizationService.name);
   private readonly openai: OpenAI;
 
   constructor(
@@ -117,7 +166,8 @@ export class CategorizationService {
     });
 
     const safeText = sanitizeForPrompt(text, 500);
-    const categoryNames = categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50)).join(', ');
+    const categoryNameList = categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50));
+    const categoryNames = categoryNameList.join(', ');
 
     const prompt = `Parse the following expense description and extract structured data.
 
@@ -135,15 +185,14 @@ Return a JSON object with:
 - merchant: string | null (merchant name if mentioned)
 
 If no amount is stated, return 0 — never estimate one.
-If no currency is stated or shown by a symbol, return null for currency.
-
-Only return valid JSON, no other text.`;
+If no currency is stated or shown by a symbol, return null for currency.`;
 
     const response = await this.openai.chat.completions.create({
       model: aiModel,
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
+      response_format: buildParseFormat('expense', categoryNameList),
     });
+    logCacheUsage(this.logger, 'parse-expense', response.usage);
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
@@ -188,7 +237,8 @@ Only return valid JSON, no other text.`;
     });
 
     const safeText = sanitizeForPrompt(text, 500);
-    const categoryNames = categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50)).join(', ');
+    const categoryNameList = categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50));
+    const categoryNames = categoryNameList.join(', ');
 
     const prompt = `Parse the following income description and extract structured data.
 
@@ -205,15 +255,14 @@ Return a JSON object with:
 - confidence: number (0-1, how confident you are in the categorization)
 
 If no amount is stated, return 0 — never estimate one.
-If no currency is stated or shown by a symbol, return null for currency.
-
-Only return valid JSON, no other text.`;
+If no currency is stated or shown by a symbol, return null for currency.`;
 
     const response = await this.openai.chat.completions.create({
       model: aiModel,
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
+      response_format: buildParseFormat('income', categoryNameList),
     });
+    logCacheUsage(this.logger, 'parse-income', response.usage);
 
     const content = response.choices[0]?.message?.content;
     if (!content) {
@@ -274,20 +323,20 @@ Only return valid JSON, no other text.`;
     });
 
     const safeDescription = sanitizeForPrompt(description, 500);
+    const categoryNameList = categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50));
     const prompt = `Given the expense description: "${safeDescription}"
-And these available categories: ${categories.map((c: CategoryWithName) => sanitizeForPrompt(c.name, 50)).join(', ')}
+And these available categories: ${categoryNameList.join(', ')}
 
 Return a JSON object with:
 - category: the most appropriate category name
-- confidence: a number 0-1 indicating confidence
-
-Only return valid JSON.`;
+- confidence: a number 0-1 indicating confidence`;
 
     const response = await this.openai.chat.completions.create({
       model: aiModel,
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
+      response_format: buildCategorizeFormat(categoryNameList),
     });
+    logCacheUsage(this.logger, 'categorize', response.usage);
 
     const categorizeContent = response.choices[0]?.message?.content;
     if (!categorizeContent) {

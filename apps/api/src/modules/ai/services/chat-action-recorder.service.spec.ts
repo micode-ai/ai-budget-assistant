@@ -195,6 +195,7 @@ describe('ChatActionRecorderService.recordExternalWrite', () => {
           detectUserLanguage: () => 'English',
           buildActionSummary: () => 'summary',
           getConfirmText: () => 'ok',
+          getConfirmPromptText: () => 'confirm?',
           getFailText: (_lang: string, err?: string) => `fail: ${err}`,
           getRejectText: () => 'rejected',
           getUndoConfirmText: () => 'undone',
@@ -203,11 +204,6 @@ describe('ChatActionRecorderService.recordExternalWrite', () => {
       ],
     }).compile();
     const lifecycle = moduleRef.get(ChatActionLifecycleService);
-
-    mockChatCreate.mockResolvedValueOnce({
-      choices: [{ message: { content: "I'd like to undo your last expense. Confirm?" } }],
-      usage: { total_tokens: 8 },
-    });
 
     const res = await lifecycle.handleUndoLastActionRequest(
       { id: 'conv-1' },

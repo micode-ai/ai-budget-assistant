@@ -2531,6 +2531,7 @@ export default {
     tight: 'Asequible, pero justo',
     delaysGoal: 'Asequible, pero retrasa una meta',
     waitUntil: 'Asequible después del {{date}}',
+    currencyUnconvertible: 'No se puede evaluar: no hay tipo de cambio para esta moneda',
   },
   healthScore: {
     title: 'Salud Financiera',

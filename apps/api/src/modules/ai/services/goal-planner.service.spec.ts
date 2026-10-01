@@ -412,9 +412,7 @@ describe('GoalPlannerService', () => {
         deadline: new Date('2026-04-15T00:00:00.000Z'), // exactly 3 months out -> monthsRemaining = 3
       });
       prisma.savingsGoal.findFirst.mockResolvedValueOnce(goal);
-      prisma.user.findUnique
-        .mockResolvedValueOnce({ aiResponseMode: 'expert', language: 'en' }) // responseMode/language lookup
-        .mockResolvedValueOnce({ aiModel: 'quality' }); // aiModel lookup
+      prisma.user.findUnique.mockResolvedValueOnce({ aiResponseMode: 'expert', language: 'en', aiModel: 'quality' });
       prisma.expense.findMany.mockResolvedValueOnce([
         { amount: 300, category: { name: 'Food' } },
         { amount: 200, category: { name: 'Food' } },
@@ -422,18 +420,14 @@ describe('GoalPlannerService', () => {
       ]);
       prisma.income.findMany.mockResolvedValueOnce([{ amount: 1000 }]);
 
-      const aiPlan = {
-        monthlyContribution: 200,
-        weeklyContribution: 50,
-        checkpoints: [],
-        categoryLimits: [],
-        estimatedCompletionDate: '2026-04-15',
-        feasibility: 'moderate',
+      const narrative = {
+        categoryLimits: [{ categoryName: 'Food', suggestedMonthly: 100 }],
+        checkpointLabels: ['Start', 'Halfway', 'Done'],
         summary: 'Save steadily.',
       };
-      mockChatCreate.mockResolvedValueOnce({ choices: [{ message: { content: JSON.stringify(aiPlan) } }] });
+      mockChatCreate.mockResolvedValueOnce({ choices: [{ message: { content: JSON.stringify(narrative) } }] });
       prisma.savingsGoal.update.mockResolvedValueOnce(undefined);
-      prisma.savingsGoal.findUnique.mockResolvedValueOnce({ ...goal, aiPlan });
+      prisma.savingsGoal.findUnique.mockResolvedValueOnce({ ...goal });
 
       const result = await service.generatePlan('acc-1', 'goal-1', 'user-1');
 
@@ -449,11 +443,21 @@ describe('GoalPlannerService', () => {
       expect(promptArg).toContain('"monthlyAvg":125');
       expect(promptArg).toContain('"name":"Uncategorized"');
 
+      expect(mockChatCreate.mock.calls[0][0].temperature).toBeLessThanOrEqual(0.3);
+      expect(mockChatCreate.mock.calls[0][0].response_format.type).toBe('json_schema');
+
+      // Computable fields come from code, not the model: avg savings 100/mo vs 200 needed.
+      expect(result.plan.monthlyContribution).toBe(200);
+      expect(result.plan.feasibility).toBe('unrealistic');
+      expect(result.plan.checkpoints.map((c: any) => c.label)).toEqual(['Start', 'Halfway', 'Done']);
+      expect(result.plan.categoryLimits).toEqual([
+        { categoryName: 'Food', currentMonthly: 125, suggestedMonthly: 100, savingsPerMonth: 25 },
+      ]);
+      expect(result.plan.summary).toBe('Save steadily.');
       expect(prisma.savingsGoal.update).toHaveBeenCalledWith({
         where: { id: 'goal-1' },
-        data: { aiPlan },
+        data: { aiPlan: result.plan },
       });
-      expect(result.plan).toEqual(aiPlan);
     });
 
     it('falls back to a computed plan when the AI response is not valid JSON', async () => {
@@ -472,9 +476,12 @@ describe('GoalPlannerService', () => {
 
       // remaining = 600, monthsRemaining = 3 -> monthlyRequired = 200
       expect(result.plan.monthlyContribution).toBe(200);
-      expect(result.plan.weeklyContribution).toBe(50);
-      expect(result.plan.feasibility).toBe('moderate');
-      expect(result.plan.checkpoints).toEqual([]);
+      expect(result.plan.weeklyContribution).toBe(46.15);
+      // no income data -> no savings capacity -> computed as unrealistic
+      expect(result.plan.feasibility).toBe('unrealistic');
+      expect(result.plan.checkpoints).toHaveLength(3);
+      expect(result.plan.categoryLimits).toEqual([]);
+      expect(result.plan.summary).toContain('Save approximately 200.00');
     });
 
     it('rethrows when the OpenAI call itself fails', async () => {

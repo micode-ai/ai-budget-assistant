@@ -8,49 +8,39 @@ You are running inside Claude Code, spawned by the AI Dreaming Center
 ## What you have
 
 - `cwd` is the project repository root.
-- Wiki dir: `docs/wiki/` (already exists with domain pages from `/wiki-bootstrap`).
+- Wiki dir: `docs/wiki/` — maintained by ingest (the `finish-aba-task` skill), indexed by
+  `docs/wiki/index.md`, with feature pages under `docs/wiki/features/`. Its log is
+  `docs/wiki/log.md`.
 - Env vars: `LEARNING_SESSION_ID`, `DREAMING_API_URL`, `DREAMING_PROJECT_SLUG`.
 
 ## What to do
 
-1. **List every file in `docs/wiki/`** (Glob `docs/wiki/**/*.md`).
+1. **Run the machine checks** — they are the source of truth for broken links, cited paths that
+   no longer exist, and orphan pages:
+   ```bash
+   python scripts/wiki-lint.py
+   python scripts/wiki-staleness.py
+   ```
 
-2. **For each wiki page:**
-   - Read it.
-   - Find every file reference it makes (anything that looks like a path:
-     `path/to/file.ext`, ``` `pkg/foo.py` ```, links in markdown).
-   - Check each referenced path actually exists in the repo.
+2. **Fix what you can confirm, in place.** For each finding, read the page and the code it cites.
+   A renamed or moved file: update the reference. A claim the code now contradicts: rewrite it to
+   the current fact. Do not add banners or "stale" notes to pages — a page is either corrected or
+   its doubt is recorded in step 3.
 
-3. **Identify stale pages.** A page is stale if:
-   - It references a file that no longer exists (renamed, deleted).
-   - Its "Entry points" section has paths that don't resolve.
-   - Domain it describes is no longer present (e.g. `payments.md` but no
-     `apps/payments/` directory).
+3. **Record what you could not confirm** — a domain that seems gone, a claim you cannot settle
+   from the code — as a short list in your report (step 5), so a person decides. If a whole
+   domain is gone, rename its page to `_archived-{name}.md` rather than deleting it.
 
-4. **Fix what's fixable, flag what's not:**
-   - If a renamed file is easy to identify (e.g. moved to a new directory),
-     update the reference in the wiki page.
-   - If the change is substantial (domain reorganised, file genuinely
-     gone), add a note at the top of the page:
-     ```markdown
-     > **⚠ stale ({YYYY-MM-DD}):** N references no longer resolve. See "Lint findings" below.
-     ```
-     And append a "Lint findings" section listing the broken references.
+4. **Log the pass**: append one line under `## Lint passes` in `docs/wiki/log.md` — the date,
+   what was checked, what was fixed, what is still open. Re-run `python scripts/wiki-lint.py`
+   and confirm it reports no findings you introduced.
 
-5. **If a whole domain is gone**, don't delete the page — rename to
-   `_archived-{name}.md` (parser ignores files starting with `_`) and keep
-   it for history.
-
-6. **Write a one-shot summary** at the end of the run to
-   `docs/wiki/_lint-{YYYY-MM-DD}.md` listing what was checked, what was
-   fixed, what's still stale.
-
-7. **Report back:**
+5. **Report back:**
 
    ```bash
    curl -s -X POST "$DREAMING_API_URL/api/session/finish" \
      -H "Content-Type: application/json" \
-     -d "{\"session_id\":\"$LEARNING_SESSION_ID\",\"status\":\"success\",\"note_path\":\"docs/wiki/_lint-{date}.md\"}"
+     -d "{\"session_id\":\"$LEARNING_SESSION_ID\",\"status\":\"success\",\"note_path\":\"docs/wiki/log.md\"}"
    ```
 
 ## Rules
@@ -58,3 +48,5 @@ You are running inside Claude Code, spawned by the AI Dreaming Center
 - Do **not** delete wiki files outright — rename to `_archived-*.md`.
 - Do **not** edit files outside `docs/wiki/`.
 - Don't re-do a `/wiki-bootstrap` — that's a separate command.
+- The reading half of the audit (contradictions between pages, stale claims) is the `wiki-audit`
+  skill; this command is the mechanical pass.

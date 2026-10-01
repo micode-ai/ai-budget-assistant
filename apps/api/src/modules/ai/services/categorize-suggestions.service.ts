@@ -14,12 +14,61 @@ import { isDepositCategoryName } from '../../../common/utils/deposit-category';
 import { getDefaultCategories } from '../../accounts/default-categories';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { logCacheUsage } from '../utils/log-cache-usage';
 import {
   MAX_NEW_CATEGORIES,
   MIN_EXPENSES_PER_NEW_CATEGORY,
   matchByMerchant,
   validateCategorization,
 } from '../utils/categorize-suggestions.util';
+
+/**
+ * Strict structured-output schema for the categorise answer. `categoryName`
+ * is an enum of the existing names shown in the prompt (a plain string when
+ * the account has none, since an empty enum is invalid). The validators in
+ * categorize-suggestions.util stay as defence.
+ */
+export function buildCategorizeSuggestionsFormat(existingNames: string[]) {
+  const unique = Array.from(new Set(existingNames.filter((n) => n.length > 0)));
+  return {
+    type: 'json_schema' as const,
+    json_schema: {
+      name: 'categorize_suggestions',
+      strict: true,
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['assignments', 'newCategories'],
+        properties: {
+          assignments: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['index', 'categoryName'],
+              properties: {
+                index: { type: 'integer' },
+                categoryName: unique.length > 0 ? { type: 'string', enum: unique } : { type: 'string' },
+              },
+            },
+          },
+          newCategories: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['name', 'indexes'],
+              properties: {
+                name: { type: 'string' },
+                indexes: { type: 'array', items: { type: 'integer' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+}
 
 const MAX_CANDIDATES = 100;
 const DAY_SECONDS = 24 * 60 * 60;
@@ -227,7 +276,8 @@ export class CategorizeSuggestionsService {
     ]);
     const languageCode = owner?.user.language ?? 'en';
     const language = LANGUAGE_NAMES[languageCode] ?? 'English';
-    const names = categories.map((c) => sanitizeForPrompt(c.name, 50)).join(', ') || '(none)';
+    const existingNames = categories.map((c) => sanitizeForPrompt(c.name, 50));
+    const names = existingNames.join(', ') || '(none)';
 
     // Spec input: nudge the model toward this language's standard budgeting
     // category names instead of inventing near-duplicates. Excludes names that
@@ -268,17 +318,16 @@ Rules:
 - Only when no existing category fits, group expenses into a NEW shared category in "newCategories". Prefer one of the standard category names above when it genuinely fits; only invent a new name when none of those fit either. A new category must hold at least ${MIN_EXPENSES_PER_NEW_CATEGORY} expenses; never create one for a single expense. At most ${MAX_NEW_CATEGORIES} new categories. Prefer broad, conventional names (a standard budgeting category) over narrow ones, and use the account's purpose (its name and existing categories) to choose them.
 - Name new categories in ${language}, as a short noun phrase of at most 30 characters, never restating an existing name.
 - If you are not confident about an expense, leave it out entirely.
-- Refer to expenses ONLY by their number.
-
-Return JSON: {"assignments":[{"index":0,"categoryName":"..."}],"newCategories":[{"name":"...","indexes":[1,2]}]}`;
+- Refer to expenses ONLY by their number.`;
 
     const response = await this.openai.chat.completions.create({
       model: resolveCheapModel(),
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
+      response_format: buildCategorizeSuggestionsFormat(existingNames),
       // Same input, same suggestion: a review the user reopens must not reshuffle.
       temperature: 0,
     });
+    logCacheUsage(this.logger, 'categorize-suggestions', response.usage);
     const content = response.choices[0]?.message?.content;
     if (!content) throw new Error('empty model response');
     return JSON.parse(content);

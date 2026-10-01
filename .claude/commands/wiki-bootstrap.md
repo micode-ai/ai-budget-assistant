@@ -17,55 +17,33 @@ populate this project's wiki (`docs/wiki/`) with one Markdown page per
 
 ## What to do
 
-1. **Sample the repo** to identify domains. Look at:
-   - top-level directories (`apps/`, `packages/`, `src/`, `services/`, etc.)
-   - `package.json` / `pyproject.toml` / `Cargo.toml` workspace members
-   - `CLAUDE.md` if present — often lists modules
-   - `README.md` "Architecture" / "Components" sections
+This wiki already exists and is maintained by ingest (the `finish-aba-task` skill): an index at
+`docs/wiki/index.md` with a hub per domain, feature pages under `docs/wiki/features/`, and a log
+at `docs/wiki/log.md`. Bootstrapping here means filling gaps, never starting over.
 
-2. **Pick 5–15 domains** (don't go overboard on the first pass). Each domain
-   is a coherent unit a new contributor would learn separately. Examples:
-   - For a monorepo: each app or package
-   - For a service: each top-level module
-   - For a SaaS: auth, billing, dashboard, integrations, ...
+1. **Read `docs/wiki/index.md`** and list what it already covers.
 
-3. **For each domain, write `docs/wiki/{domain}.md`** with this skeleton:
+2. **Find domains it does not cover.** Sample the repo for subsystems a new contributor would
+   learn separately — `apps/`, `packages/`, `apps/api/src/modules/`, the workspace manifests,
+   `CLAUDE.md` (bullets still holding a full feature description, with no "Moved to the wiki"
+   pointer, are the usual candidates). Add only domains that are genuinely missing; the number is
+   whatever the gap is.
 
-   ```markdown
-   # {Domain name}
+3. **Write each as `docs/wiki/features/<slug>.md`** with the page template in
+   `.claude/skills/finish-aba-task/SKILL.md` (What this is, Entry points, Key concepts,
+   **Invariants**, Known gaps, History). Be specific to this repo — real filenames and
+   identifiers — and omit a section you cannot fill rather than padding it.
 
-   ## What this is
-   One paragraph: what this domain owns and why it exists.
-
-   ## Entry points
-   - `path/to/main-file.ext` — what this is
-   - `path/to/other.ext` — what this is
-
-   ## Key concepts
-   - **Concept A** — one sentence.
-   - **Concept B** — one sentence.
-
-   ## Cross-references
-   - Talks to: `other-domain` via X
-   - Used by: `another-domain` for Y
-
-   ## Where to look first
-   When debugging or changing this domain, start at `path/to/something.ext`.
-   ```
-
-   Aim for ~40–80 lines per page. Be specific to **this** repo — quote real
-   filenames and identifiers. If you can't find concrete details for a
-   section, drop the section rather than fill with generic prose.
-
-4. **Optional: write an index** at `docs/wiki/README.md` listing all the
-   domain pages with one-line summaries each.
+4. **Link every new page from `docs/wiki/index.md`** under its hub, append one line per page to
+   `docs/wiki/log.md`, and run `python scripts/wiki-lint.py` — a page nothing links to is an
+   orphan. Never write `docs/wiki/README.md`; it is a pointer to `index.md`.
 
 5. **Report back** to the Dreaming Center:
 
    ```bash
    curl -s -X POST "$DREAMING_API_URL/api/session/finish" \
      -H "Content-Type: application/json" \
-     -d "{\"session_id\":\"$LEARNING_SESSION_ID\",\"status\":\"success\",\"note_path\":\"docs/wiki/README.md\"}"
+     -d "{\"session_id\":\"$LEARNING_SESSION_ID\",\"status\":\"success\",\"note_path\":\"docs/wiki/index.md\"}"
    ```
 
    On error, send `"status":"failed"` with an `"error_message"`.
@@ -74,6 +52,4 @@ populate this project's wiki (`docs/wiki/`) with one Markdown page per
 
 - Do **not** edit files outside `docs/wiki/`.
 - Do **not** run installs, migrations, or anything destructive.
-- If `docs/wiki/` already has content, **read first, then add only the
-  missing domains** — don't overwrite existing pages.
-- Keep total time under ~10 minutes for the first pass.
+- Don't overwrite or restructure existing pages — they are maintained by ingest.

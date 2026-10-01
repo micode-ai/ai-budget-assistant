@@ -11,6 +11,8 @@ import { PrismaService } from '../../../database/prisma.service';
 import { CacheService } from '../../../common/cache/cache.service';
 import { resolveCheapModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
+import { logCacheUsage } from '../utils/log-cache-usage';
+import { buildCategorizeSuggestionsFormat } from './categorize-suggestions.service';
 import {
   MAX_NEW_CATEGORIES,
   MIN_EXPENSES_PER_NEW_CATEGORY,
@@ -197,7 +199,8 @@ export class CategorizeIncomeSuggestionsService {
     ]);
     const languageCode = owner?.user.language ?? 'en';
     const language = LANGUAGE_NAMES[languageCode] ?? 'English';
-    const names = categories.map((c) => sanitizeForPrompt(c.name, 50)).join(', ') || '(none)';
+    const existingNames = categories.map((c) => sanitizeForPrompt(c.name, 50));
+    const names = existingNames.join(', ') || '(none)';
 
     const lines = rows
       .map((r, i) => `${i}. description="${sanitizeForPrompt(r.description ?? '', 80)}" amount=${r.amount.toString()} ${r.currencyCode} source=${r.source}`)
@@ -221,17 +224,16 @@ Rules:
 - Only when no existing category fits, group incomes into a NEW shared category in "newCategories". A new category must hold at least ${MIN_EXPENSES_PER_NEW_CATEGORY} incomes; never create one for a single income. At most ${MAX_NEW_CATEGORIES} new categories. Prefer broad, conventional names (a standard income category, e.g. Salary, Freelance, Gifts) over narrow ones.
 - Name new categories in ${language}, as a short noun phrase of at most 30 characters, never restating an existing name.
 - If you are not confident about an income, leave it out entirely.
-- Refer to incomes ONLY by their number.
-
-Return JSON: {"assignments":[{"index":0,"categoryName":"..."}],"newCategories":[{"name":"...","indexes":[1,2]}]}`;
+- Refer to incomes ONLY by their number.`;
 
     const response = await this.openai.chat.completions.create({
       model: resolveCheapModel(),
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
+      response_format: buildCategorizeSuggestionsFormat(existingNames),
       // Same input, same suggestion: a review the user reopens must not reshuffle.
       temperature: 0,
     });
+    logCacheUsage(this.logger, 'categorize-income-suggestions', response.usage);
     const content = response.choices[0]?.message?.content;
     if (!content) throw new Error('empty model response');
     return JSON.parse(content);

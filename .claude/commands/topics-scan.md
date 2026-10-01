@@ -3,7 +3,7 @@ description: Propose 5–10 learning topics for project agents and post them to 
 ---
 
 You are running inside Claude Code, spawned by the AI Dreaming Center
-(weekly scanner or on-demand) to propose 5–10 learning topics that the
+(weekly scanner or on-demand) to propose learning topics that the
 project's agents should study during nightly `/self-study` runs.
 
 ## What you have
@@ -29,7 +29,7 @@ project's agents should study during nightly `/self-study` runs.
    exact-title matches as duplicates. Near-duplicates are fine — humans
    prune them later.
 
-2. **Propose 5–10 new topics.** Each topic should be:
+2. **Propose the topics worth an agent's session** — fewer is fine. Each topic should be:
    - **Actionable** — a real thing an agent can study in one session.
    - **Targeted** — name 1-3 agents whose role fits. `target_agents` is a
      comma-separated list of agent filenames (no `.md`). Empty string = all.
@@ -41,11 +41,11 @@ project's agents should study during nightly `/self-study` runs.
    curl -s -X POST "$DREAMING_API_URL/api/p/$DREAMING_PROJECT_SLUG/topics/ingest" \
      -H "Content-Type: application/json" \
      -d '{
-       "title": "Refactor session management — переход на FastAPI DI",
-       "module": "auth",
-       "target_agents": "vera,svetlana",
-       "question": "Какие 3 main pain-points у текущей auth.login()?",
-       "why_important": "Через 2 недели начинается переписывание; до этого нужна inventory pain-points."
+       "title": "Receipt-split discount scaling — which invariants hold today",
+       "module": "receipt-split",
+       "target_agents": "aba-backend-engineer",
+       "question": "Where is a receipt discount scaled across claimed lines, and which tests pin it?",
+       "why_important": "Item shares, disputes and reassignment all depend on it; a wrong share charges a guest the wrong amount."
      }'
    ```
 

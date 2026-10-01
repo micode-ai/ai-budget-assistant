@@ -29,7 +29,7 @@ users.
    - Recently-fixed bug categories that suggest a structural improvement
    - Empty / sparse sections of the product
 
-3. **Pick 3–7 ideas with real user impact.** Each idea must:
+3. **Pick the ideas with real user impact** — fewer is fine; a person reviews every one. Each idea must:
    - Solve a concrete user problem (not "refactor X").
    - Be small enough to ship in <2 weeks.
    - Not duplicate something already on the roadmap.

@@ -2542,6 +2542,7 @@ export default {
     tight: 'По кишені, але впритул',
     delaysGoal: 'По кишені, але затримає ціль',
     waitUntil: 'По кишені після {{date}}',
+    currencyUnconvertible: 'Неможливо оцінити: немає курсу для цієї валюти',
   },
   healthScore: {
     title: 'Фінансове здоров\'я',

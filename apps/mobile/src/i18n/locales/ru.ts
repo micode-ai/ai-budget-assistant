@@ -2542,6 +2542,7 @@ export default {
     tight: 'По карману, но в обрез',
     delaysGoal: 'По карману, но задержит цель',
     waitUntil: 'По карману после {{date}}',
+    currencyUnconvertible: 'Невозможно оценить: нет курса для этой валюты',
   },
   healthScore: {
     title: 'Финансовое здоровье',

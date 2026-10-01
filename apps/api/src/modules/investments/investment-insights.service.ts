@@ -4,7 +4,10 @@ import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { InvestmentsService } from './investments.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
-import { getAiCostMultiplier } from '../ai/services/model-resolver';
+import { getAiCostMultiplier, resolveAiModel } from '../ai/services/model-resolver';
+import { logCacheUsage } from '../ai/utils/log-cache-usage';
+import { buildInsightsResponseSchema } from '../insights/insight-schema.util';
+import { stripNulls } from '../insights/story-blocks.util';
 
 @Injectable()
 export class InvestmentInsightsService {
@@ -176,7 +179,7 @@ For each insight, return a JSON object with:
 - title: short headline (max 60 chars)
 - description: 1-2 sentence explanation with specific data from the portfolio
 - severity: "info" | "warning" | "critical"
-- chartConfig: { chartType: "bar"|"donut"|"line"|"grouped_bar", title: string, data: [{label: string, value: number, color?: string}] }
+- chartConfig: { chartType: "bar"|"donut"|"line"|"grouped_bar", title: string, data: [{label: string, value: number, color: string or null}] }
 - actionSuggestion: specific actionable advice (1-2 sentences)
 
 Severity Guidelines:
@@ -193,21 +196,37 @@ Chart Type Guidelines:
 - cost_basis_alert: use "bar" showing unrealized P&L
 - fee_impact: use "donut" showing fees vs net investment
 
-Return ONLY a valid JSON object with an "insights" array. No markdown, no code blocks.`;
+Provide the insights in the "insights" array.`;
+
+    let aiModelPref: string | undefined;
+    if (userId) {
+      const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
+      aiModelPref = u?.aiModel ?? undefined;
+    }
 
     try {
       const completion = await this.openai.chat.completions.create({
-        model: 'gpt-4o',
+        model: resolveAiModel(aiModelPref).model,
         messages: [{ role: 'user', content: prompt }],
         temperature: 0.7,
         max_tokens: 2500,
-        response_format: { type: 'json_object' },
+        response_format: {
+          type: 'json_schema',
+          json_schema: {
+            name: 'investment_insights',
+            strict: true,
+            schema: buildInsightsResponseSchema(
+              InvestmentInsightsService.INSIGHT_TYPES,
+              ['bar', 'donut', 'line', 'grouped_bar'],
+            ) as unknown as Record<string, unknown>,
+          },
+        },
       });
+      logCacheUsage(this.logger, 'investment-insights', completion.usage);
 
       // Track AI usage only after successful OpenAI call
       if (userId) {
-        const u = await this.prisma.user.findUnique({ where: { id: userId }, select: { aiModel: true } });
-        const adjustedCost = 2.5 * getAiCostMultiplier(u?.aiModel ?? undefined);
+        const adjustedCost = 2.5 * getAiCostMultiplier(aiModelPref);
         await this.subscriptionsService.trackAiUsage(userId, 'investment_insights', adjustedCost, accountId);
       }
 
@@ -246,7 +265,7 @@ Return ONLY a valid JSON object with an "insights" array. No markdown, no code b
               title: insight.title || 'Investment Insight',
               description: insight.description || '',
               severity: insight.severity || 'info',
-              chartConfig: insight.chartConfig || {
+              chartConfig: (insight.chartConfig ? stripNulls(insight.chartConfig) : null) || {
                 chartType: 'bar',
                 title: '',
                 data: [],

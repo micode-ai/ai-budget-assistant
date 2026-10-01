@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { PrismaService } from '../../../database/prisma.service';
 import type { ScanPriceTagResponse } from '@budget/shared-types';
+import { logCacheUsage } from '../utils/log-cache-usage';
 
 // Same vision model as receipt OCR — a price tag is small, but its digits are
 // just as easy to misread (a comma lost turns 4,99 into 499).
@@ -19,9 +20,39 @@ const EMPTY: ScanPriceTagResponse = {
   requiresLoyaltyCard: false,
 };
 
+const NULLABLE_STRING = { type: ['string', 'null'] } as const;
+const NULLABLE_NUMBER = { type: ['number', 'null'] } as const;
+
+/** Strict structured-output schema; `normalizePriceTag` stays as defence. */
+export const PRICE_TAG_FORMAT = {
+  type: 'json_schema' as const,
+  json_schema: {
+    name: 'price_tag',
+    strict: true,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      required: [
+        'productName', 'price', 'currencyCode', 'size', 'unitPriceText', 'regularPrice', 'promoUntil',
+        'requiresLoyaltyCard',
+      ],
+      properties: {
+        productName: NULLABLE_STRING,
+        price: NULLABLE_NUMBER,
+        currencyCode: NULLABLE_STRING,
+        size: NULLABLE_STRING,
+        unitPriceText: NULLABLE_STRING,
+        regularPrice: NULLABLE_NUMBER,
+        promoUntil: NULLABLE_STRING,
+        requiresLoyaltyCard: { type: 'boolean' },
+      },
+    },
+  },
+};
+
 function buildPrompt(accountCurrency: string): string {
   return `You are reading a photo of a shop shelf price tag (or a product with a price label).
-Return ONLY a JSON object with these keys:
+Fill these fields:
 - "productName": product name as printed, brand included, without the pack size. null if unreadable.
 - "price": the price a shopper pays right now for one item, as a number (use a dot for decimals). When a promo price is shown next to a crossed-out regular price, this is the PROMO price. null if unreadable.
 - "currencyCode": ISO 4217 code of that price (zł/PLN -> "PLN", € -> "EUR", $ -> "USD", £ -> "GBP", ₴ -> "UAH", ₽ -> "RUB", Br -> "BYN"). If the tag shows no currency sign, return "${accountCurrency}".
@@ -103,8 +134,9 @@ export class PriceTagService {
       ],
       max_tokens: 400,
       temperature: 0,
-      response_format: { type: 'json_object' },
+      response_format: PRICE_TAG_FORMAT,
     });
+    logCacheUsage(this.logger, 'price-tag', response.usage);
 
     const content = response.choices[0]?.message?.content ?? '';
     try {

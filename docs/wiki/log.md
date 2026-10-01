@@ -130,6 +130,18 @@ Newest last within each section.
 - 2026-09-29 · [ABA-625](https://github.com/micode-ai/ai-budget-assistant/issues/653) — push ↔
   receipt pairs are matched loosely and offered as a merge; Tier 1 skipped for `ocr` (the ABA-568
   branch had been unreachable for pushes). → `features/bank-notification-capture.md`
+- 2026-10-01 · [ABA-626](https://github.com/micode-ai/ai-budget-assistant/issues/654) — CLAUDE.md → wiki
+  migration, three batches: expenses, home and mobile screens; AI chat, goals, Safe-to-Spend, Wrapped; auth,
+  crons, backups, bots, admin, paywall. Every bullet re-verified against the code first — dozens of drifted
+  claims corrected rather than copied (route files that are now thin wrappers, first-20 chat history, admin
+  socket event names, restore that drops line items). 28 new pages + 11 extended; CLAUDE.md 19 750 → 13 356
+  words. → see the pages listed under each hub in `index.md`.
+- 2026-10-01 · [ABA-626](https://github.com/micode-ai/ai-budget-assistant/issues/654) — fixed the bugs the
+  wiki migration surfaced: viewer-blocked and complete backup restore, Telegram webhook always secret,
+  stop-recurring for the whole series, project link resolved by id|clientId on update, affordability
+  refuses an unconvertible currency, pending chat actions expire, account-scoped device chat cache.
+  → `features/account-backups.md`, `telegram-bot.md`, `features/recurring-expenses.md`,
+  `features/expense-detail-editing.md`, `features/safe-to-spend.md`, `features/chat-architecture.md`
 
 ## Queries
 
@@ -198,4 +210,4 @@ Newest last within each section.
 - 2026-09-29 (no issue, query ritual) — purchase-request bot voting is inbound-only: the Telegram/WhatsApp handlers accept `pr_approve`/`pr_reject` but no code sends the buttons ("deferred to Phase 2"), so the page and CLAUDE.md no longer say members vote from the bots. Pages: `features/purchase-requests.md`.
 - 2026-09-29 [ABA-624](https://github.com/micode-ai/ai-budget-assistant/issues/652) — price-tag scans from Android web never reached the API: `<input capture>` opens the camera app, Chrome discarded the tab and reloaded it (page re-download + new telemetry session ~12 s after opening the camera); new `features/camera/capturePhoto` shoots inside the page via getUserMedia on web. Receipts still on the old path. Pages: `features/web-build-and-hosting.md`, `features/shopping-list.md`.
 - 2026-10-01 [ABA-627](https://github.com/micode-ai/ai-budget-assistant/issues/655) — after an account switch the wallet/portfolio could keep the previous account's amounts: the hydrate/expenses/incomes re-entry guards handed the new account's call the old account's promise (which then aborted), and wallet/investment stores neither cleared on account change nor guarded late summary writes. New `accountScopedInflight.ts`. Pages: `features/account-switch-reload.md` (new), `features/web-data-loading.md`.
-- 2026-10-01 [ABA-628](https://github.com/micode-ai/ai-budget-assistant/issues/657) — Polish debt reminders told borrowers "Pożyczyłeś…" (both ternary branches were the lender's text); fixed and pinned for all 9 locales. Polish debts help rewritten with diacritics and the app's real labels. Debt reminders moved from CLAUDE.md. Pages: `features/debts.md` (new).
+- 2026-10-01 [ABA-628](https://github.com/micode-ai/ai-budget-assistant/issues/657) — Polish debt reminders told borrowers "Pożyczyłeś…" (both ternary branches were the lender's text); fixed and pinned for all 9 locales. Polish debts help rewritten with diacritics and the app's real labels. Pages: `features/debt-reminders.md` (owner-only + lent/borrowed invariants), `features/debts.md` (new).

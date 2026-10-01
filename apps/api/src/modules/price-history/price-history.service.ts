@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import OpenAI from 'openai';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { logCacheUsage } from '../ai/utils/log-cache-usage';
 import { computeBasket, BasketRow } from './basket-calculator';
 import { parseCanonicalNameMap } from './canonical-name-parse.util';
 import type {
@@ -43,6 +44,28 @@ export interface ProductTrendRow {
 }
 
 const AI_BACKFILL_BATCH = 50;
+
+/**
+ * Strict schema for one backfill batch: one required string property per
+ * 1-based input number ("1".."count"). The key set is known at request time, so
+ * the object stays fully specified and `parseCanonicalNameMap` is unchanged.
+ */
+export function buildCanonicalNamesFormat(count: number) {
+  const properties: Record<string, unknown> = {};
+  const required: string[] = [];
+  for (let i = 1; i <= count; i++) {
+    properties[String(i)] = { type: 'string' };
+    required.push(String(i));
+  }
+  return {
+    type: 'json_schema' as const,
+    json_schema: {
+      name: 'canonical_product_names',
+      strict: true,
+      schema: { type: 'object', additionalProperties: false, required, properties },
+    },
+  };
+}
 const AI_BACKFILL_MAX_UNIQUE = 500;
 
 @Injectable()
@@ -716,12 +739,12 @@ export class PriceHistoryService {
       // A truncated reply is indistinguishable from a model that skipped entries,
       // so budget generously — this is gpt-4o-mini, the headroom is nearly free.
       max_tokens: descriptions.length * 45 + 250,
-      response_format: { type: 'json_object' },
+      response_format: buildCanonicalNamesFormat(descriptions.length),
       messages: [
         {
           role: 'system',
           content: `You extract clean canonical product names from grocery receipt OCR text.
-Reply with a JSON object mapping each input number to its canonical name, e.g. {"1": "Mleko Łaciate 3,2% 1L", "2": "Heinz Ketchup 500g"}.
+Map each input number to its canonical name, e.g. 1 → "Mleko Łaciate 3,2% 1L", 2 → "Heinz Ketchup 500g".
 These names must match the ones receipt scanning writes, which keep the size so different pack sizes stay separate products:
 - KEEP: brand, product type, flavour/variant (Truskawkowy, Naturalny), weight/volume of a single unit (500g, 1L, 250ml), fat/alcohol percentage (3,2%, 4,7%)
 - STRIP: pack-quantity multipliers (6SZT, ×6, 4×; from "4×130G" keep the unit "130g"), unit prices (3,49), store codes, PLU numbers
@@ -737,6 +760,7 @@ These names must match the ones receipt scanning writes, which keep the size so 
       ],
     });
 
+    logCacheUsage(this.logger, 'price-history-canonical', response.usage);
     const content = response.choices[0]?.message?.content ?? '';
     return parseCanonicalNameMap(content, descriptions.length);
   }

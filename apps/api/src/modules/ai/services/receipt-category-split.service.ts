@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import { CacheService } from '../../../common/cache/cache.service';
 import { ProductRulesService, normalizeProductName } from '../../merchant-rules/product-rules.service';
 import { resolveCheapModel } from './model-resolver';
+import { logCacheUsage } from '../utils/log-cache-usage';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { depositCategoryName, isDepositCategoryName } from '../../../common/utils/deposit-category';
 import { getDefaultCategories } from '../../accounts/default-categories';
@@ -84,6 +85,52 @@ function resolveDailyLimit(raw: string | undefined): number {
  * import holds the model to, and it is what lets buildCategorySplits own all
  * arithmetic. Anything the model invents is dropped, not trusted.
  */
+/**
+ * Strict structured-output schema: `category` is an enum of the listed names
+ * (plain string when there are none). The validators stay as defence.
+ */
+export function buildSplitFormat(categoryNames: string[]) {
+  const unique = Array.from(new Set(categoryNames.filter((n) => n.length > 0)));
+  return {
+    type: 'json_schema' as const,
+    json_schema: {
+      name: 'receipt_line_categories',
+      strict: true,
+      schema: {
+        type: 'object',
+        additionalProperties: false,
+        required: ['assignments', 'newCategories'],
+        properties: {
+          assignments: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['line', 'category'],
+              properties: {
+                line: { type: 'integer' },
+                category: unique.length > 0 ? { type: 'string', enum: unique } : { type: 'string' },
+              },
+            },
+          },
+          newCategories: {
+            type: 'array',
+            items: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['name', 'lines'],
+              properties: {
+                name: { type: 'string' },
+                lines: { type: 'array', items: { type: 'integer' } },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
+}
+
 @Injectable()
 export class ReceiptCategorySplitService {
   private readonly logger = new Logger(ReceiptCategorySplitService.name);
@@ -191,7 +238,7 @@ ${numbered}
 Categories: ${categoryNames}
 Standard category names (for a new category): ${standardNames}
 
-Return JSON: {"assignments":[{"line":1,"category":"<one of the categories above>"}],"newCategories":[{"name":"<new category>","lines":[2,3]}]}
+Put each confidently classified line in "assignments" (its line number and one of the categories above), and each group of lines that needs a new category in "newCategories" (the new name and its line numbers).
 Use only the category names listed, spelled exactly as given.
 Omit a line entirely if you are not confident.
 Assign a line only to a listed category whose meaning genuinely covers that product. A category that merely shares a generic word with it is NOT a fit — food or everyday shopping never belongs in, say, a building-supplies category just because both are "purchases" ("Zakupy …"). When no listed category genuinely fits a group of ordinary lines, put them in "newCategories" under one of the standard category names above (or, if none fits, a short name in ${languageName(language)}) instead of forcing them into a listed one.
@@ -201,10 +248,11 @@ Do not return any amounts, prices, totals or percentages.`;
     const response = await this.openai.chat.completions.create({
       model: resolveCheapModel(),
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
+      response_format: buildSplitFormat(categories.map((c) => c.name)),
       max_tokens: 800,
     });
 
+    logCacheUsage(this.logger, 'receipt-category-split', response.usage);
     const parsed = JSON.parse(response.choices[0]?.message?.content || '{}');
     const assignments = this.validateAssignments(parsed?.assignments, lines, categories);
     const proposals = this.validateProposals(parsed?.newCategories, lines, categories, new Set(assignments.keys()));

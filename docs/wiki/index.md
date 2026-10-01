@@ -50,6 +50,7 @@ the section you came for — it states what must not break and why. A missing se
   empty loads, retries, sign-out resets, and the proxy limit behind `Failed to fetch`
 - [account-switch-reload](features/account-switch-reload.md) — why a switch must not coalesce with
   the previous account's load, and why account-scoped stores clear before loading
+- [account-backups](features/account-backups.md) — the user's JSON export/restore: serialized once, fresh ids, atomic restore
 
 ### Receipts
 - [receipt-duplicate-warning](features/receipt-duplicate-warning.md) — warning before the same receipt
@@ -68,6 +69,7 @@ the section you came for — it states what must not break and why. A missing se
   Yes/Skip/Stop chat flow for Telegram, WhatsApp and Slack
 - [merchant-category-rules](features/merchant-category-rules.md) — learning a merchant's category
   from a manual edit or a bulk recategorization, and applying it at import and categorize time
+- [batch-receipt-scanning](features/batch-receipt-scanning.md) — the session count and the non-blocking checkpoint every fifteen receipts
 
 ### Web, marketing site and growth
 - [web-build-and-hosting](features/web-build-and-hosting.md) — the Expo web build, platform splits,
@@ -95,6 +97,8 @@ the section you came for — it states what must not break and why. A missing se
   mentions that silence the AI, presence, polling, the cold-start deep link
 - [display-currency-conversion](features/display-currency-conversion.md) — one display currency for
   every server-side total and narration, `common/utils/fx.ts`, currency-aware caches
+- [chat-architecture](features/chat-architecture.md) — one chat turn end to end: service boundaries, the confirmation flow, the read cache, `UserContext`, language detection, endpoints
+- [goals](features/goals.md) — savings goals, the `update_goal_balance` tool, the contribution log
 
 ### Bots
 - [bot-receipt-editing](features/bot-receipt-editing.md) — typed line-item and total corrections to a
@@ -119,10 +123,13 @@ the section you came for — it states what must not break and why. A missing se
 - [settings-desktop-shell](features/settings-desktop-shell.md) — the two-pane settings layout and
   its pane-vs-link rule
 - [report-periods](features/report-periods.md) — range selection, report generation, file export
+- [home-screen](features/home-screen.md) — the phone home tab: widget order, quick actions, the decomposition, the shared visibility-store factory
+- [app-version-gate](features/app-version-gate.md) — the update-available / update-required check and the release rows behind it
 
 ### Auth
 - [restore-credentials](features/restore-credentials.md) — WebAuthn so a session survives an Android
   device transfer
+- [last-active-tracking](features/last-active-tracking.md) — `lastSyncAt` as the activity stamp, set on every authenticated request, throttled through Redis
 
 ### Telling users about things, and asking them for something
 - [whats-new-spotlight](features/whats-new-spotlight.md) — the one-time nudge for already-shipped
@@ -131,6 +138,8 @@ the section you came for — it states what must not break and why. A missing se
   asks a user to invite a friend
 - [store-rating-prompt](features/store-rating-prompt.md) — the Play rating request, its two
   throttles, and why it is marked before it fires
+- [debt-reminders](features/debt-reminders.md) — the daily due-soon / overdue push for lent and borrowed money
+- [gamification](features/gamification.md) — achievements, the tracking streak, the every-third-day lapse reminder
 
 ### Appearance
 - [theme-customization](features/theme-customization.md) — mode and accent colour, derived brand
@@ -141,20 +150,29 @@ the section you came for — it states what must not break and why. A missing se
   nothing on web), and converting date-only values without UTC
 - [mobile-test-infrastructure](features/mobile-test-infrastructure.md) — how the Jest suite is
   wired, why nothing renders a component, and how module-scope side effects leak between files
+- [mobile-screen-decompositions](features/mobile-screen-decompositions.md) — which hook or component owns each split screen today
+- [share-image-card](features/share-image-card.md) — the one WebView-canvas mechanism behind every shareable image
 
 ### Money movement and lists
-- [debts](features/debts.md) — lent/borrowed money as flagged expenses/incomes, repayments, and
-  the due-date reminders (sent to the owner only)
+- [debts](features/debts.md) — lent/borrowed money as flagged expenses/incomes, repayments, the
+  contact as a plain name
 - [wallet-currencies](features/wallet-currencies.md) — which currencies get a balance card, and why a
   hidden one stays hidden
 - [account-transfers](features/account-transfers.md) — moving money between accounts, and the only
   feature with its own offline write queue
 - [shopping-list](features/shopping-list.md) — offline-first lists, basket comparison, restock and
   deal pushes, receipt reconciliation, the three AI chat tools
+- [expenses-service](features/expenses-service.md) — which expenses service owns which write path, the create hook chain, `createdByUserName`
+- [expense-bulk-operations](features/expense-bulk-operations.md) — bulk category/tag/delete for expenses and incomes, and the two traps behind every silent no-op
+- [move-expense-between-accounts](features/move-expense-between-accounts.md) — re-homing an expense, what crosses the account boundary and what does not
+- [expense-detail-editing](features/expense-detail-editing.md) — project links, currency relabel, extracting items from a receipt attached later
+- [wallet-balance-history](features/wallet-balance-history.md) — monthly per-currency net change as signed bars, the wallet-local currency toggle
+- [base-currency](features/base-currency.md) — changing `user.currencyCode` on the client, optimistically and through one action
 
 ### Capturing expenses automatically
 - [bank-notification-capture](features/bank-notification-capture.md) — Android bank pushes parsed on
   the device, the spend gate, and reconciliation with receipts and imports
+- [income-voice-and-receipt-capture](features/income-voice-and-receipt-capture.md) — voice and receipt capture for incomes, `POST /ai/parse-income`, `Income.source`
 
 ### Importing
 - [bank-statement-import](features/bank-statement-import.md) — Polish banks, Revolut and Wise: the
@@ -175,6 +193,11 @@ the section you came for — it states what must not break and why. A missing se
   lines, canonical product names, the Laspeyres index
 - [real-salary](features/real-salary.md) — personal inflation vs. pay: Eurostat HICP by COICOP
   division plus the personal receipt index, weighted by the account's own spend
+- [analytics-tab-breakdowns](features/analytics-tab-breakdowns.md) — the by-merchant and by-income-category donuts
+- [financial-health-score](features/financial-health-score.md) — the four-component 0–100 score, and why it lies while loading
+- [scenario-simulator](features/scenario-simulator.md) — what-if projections and device-local saved scenarios
+- [safe-to-spend](features/safe-to-spend.md) — the deterministic home hero number and the chat affordability check
+- [financial-wrapped](features/financial-wrapped.md) — the year-in-review card deck, its cards and its share image
 
 ### Budgets
 - [budgets](features/budgets.md) — periods, the financial month, split-aware progress, the
@@ -185,6 +208,7 @@ the section you came for — it states what must not break and why. A missing se
   charged, and how to change a live Stripe price
 - [admin-revenue-metrics](features/admin-revenue-metrics.md) — investor metrics, acquisition, and
   keeping admin-granted tiers out of revenue
+- [upgrade-paywall](features/upgrade-paywall.md) — `TIER_REQUIRED`, the one upgrade sheet, trial limits, the P2002 upsert race
 
 ### Shared accounts
 - [purchase-requests](features/purchase-requests.md) — proposing a purchase, approval rules, voting
@@ -197,6 +221,7 @@ the section you came for — it states what must not break and why. A missing se
 ### Recurring charges
 - [subscription-manager](features/subscription-manager.md) — tracking the user's own subscriptions,
   renewal reminders, auto-booked renewals (not Stripe)
+- [recurring-expenses](features/recurring-expenses.md) — Repeat-marked expenses cloned by a daily cron, and why Stop is per row
 
 ### Trips
 - [trip-wallet](features/trip-wallet.md) — the trip account type, multi-way splitting, settle-up
@@ -209,6 +234,9 @@ the section you came for — it states what must not break and why. A missing se
   between phone and server, and the five bugs that came from getting it wrong
 - [default-category-seeding](features/default-category-seeding.md) — every new account (not just a
   user's first) gets the localized default category set; `investment` accounts don't
+- [tags](features/tags.md) — device-created tags, `clientId`, and using the resolved PK after a lookup
+- [merchants](features/merchants.md) — the merchant field, filters, capture reconciliation, rename/merge and grouping suggestions
+- [reference-data-screens](features/reference-data-screens.md) — the shared layout of the four reference-data screens, and the viewer-role UI gate
 
 ## Health
 

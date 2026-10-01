@@ -56,14 +56,19 @@ function rowToMessage(row: MessageRow): ChatMessage {
   };
 }
 
+// Same predicate as the server: `accountId = A AND (isShared OR userId = me)`.
+// The account is always required. Legacy rows with a NULL account_id never match
+// `account_id = ?`, so they are excluded; the next list refresh from the server
+// re-fetches them and re-stamps account_id via upsertConversation.
 export async function getConversations(userId: string, accountId?: string): Promise<ChatConversation[]> {
+  if (!accountId) return [];
   // COALESCE is load-bearing (ABA-514, see client.native.ts's migration
   // comment): SQLite sorts NULL BELOW 0, so a legacy row with no opinion on
   // is_pinned would otherwise sort after every explicitly-unpinned (0) row,
   // splitting the unpinned block in two instead of joining it.
   const rows = await executeSql<ConversationRow>(
-    'SELECT * FROM chat_conversations WHERE user_id = ? OR (is_shared = 1 AND account_id = ?) ORDER BY COALESCE(is_pinned, 0) DESC, updated_at DESC LIMIT 20',
-    [userId, accountId ?? ''],
+    'SELECT * FROM chat_conversations WHERE account_id = ? AND (is_shared = 1 OR user_id = ?) ORDER BY COALESCE(is_pinned, 0) DESC, updated_at DESC LIMIT 20',
+    [accountId, userId],
   );
   return rows.map(rowToConversation);
 }

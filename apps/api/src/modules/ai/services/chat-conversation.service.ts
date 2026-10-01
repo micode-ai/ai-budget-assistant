@@ -86,10 +86,13 @@ export class ChatConversationService {
         role: { in: ['user', 'assistant'] },
         ...(validSince ? { createdAt: { gt: validSince } } : {}),
       },
-      orderBy: { createdAt: 'asc' },
+      // With `since`, the next 50 after it in order; without, the LAST 50 —
+      // read newest-first and reversed, so a long conversation shows its tail.
+      orderBy: { createdAt: validSince ? 'asc' : 'desc' },
       take: 50,
       select: { id: true, conversationId: true, role: true, content: true, senderUserId: true, mentionedUserIds: true, tokensUsed: true, createdAt: true },
     });
+    if (!validSince) messages.reverse();
 
     return messages.map((m: any) => ({
       ...m,

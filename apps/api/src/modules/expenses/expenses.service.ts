@@ -417,7 +417,7 @@ export class ExpensesService {
       .catch(logFireAndForget(this.logger, 'ExpensesService.checkAchievements'));
 
     // Fire-and-forget cache invalidation; never block the create response.
-    this.invalidateChatCache(accountId).catch(() => undefined);
+    this.invalidateChatCache(accountId).catch(logFireAndForget(this.logger, 'ExpensesService.invalidateChatCache'));
 
     // Fire-and-forget post-create hook chain — only for genuinely new expenses.
     // learnableItems is computed HERE (needs both the raw dto.items and the
@@ -667,21 +667,25 @@ export class ExpensesService {
 
       // Update project association if provided
       if (dto.projectId !== undefined) {
-        // Soft-delete existing project associations
-        await tx.projectExpense.updateMany({
-          where: { expenseId: expense.id, isDeleted: false },
-          data: { isDeleted: true },
-        });
-        // Create new association if projectId is not null (skip if project doesn't exist on server yet)
-        if (dto.projectId) {
-          const projectExists = await tx.project.findUnique({
-            where: { id: dto.projectId },
-            select: { id: true },
+        // Resolve the project by server id OR clientId, scoped to the account (mirrors
+        // create()). An unknown project (not synced yet) leaves the existing link intact
+        // rather than dropping it; only an explicit null clears.
+        const project = dto.projectId
+          ? await tx.project.findFirst({
+              where: { accountId, isDeleted: false, OR: [{ id: dto.projectId }, { clientId: dto.projectId }] },
+              select: { id: true },
+            })
+          : null;
+        if (!dto.projectId || project) {
+          // Soft-delete existing project associations
+          await tx.projectExpense.updateMany({
+            where: { expenseId: expense.id, isDeleted: false },
+            data: { isDeleted: true },
           });
-          if (projectExists) {
+          if (project) {
             await tx.projectExpense.upsert({
-              where: { projectId_expenseId: { projectId: dto.projectId, expenseId: expense.id } },
-              create: { projectId: dto.projectId, expenseId: expense.id },
+              where: { projectId_expenseId: { projectId: project.id, expenseId: expense.id } },
+              create: { projectId: project.id, expenseId: expense.id },
               update: { isDeleted: false },
             });
           }
@@ -719,10 +723,12 @@ export class ExpensesService {
         },
       });
     }).then((updated) => {
-      this.invalidateChatCache(accountId).catch(() => undefined);
+      this.invalidateChatCache(accountId).catch(logFireAndForget(this.logger, 'ExpensesService.invalidateChatCache'));
       if (updated?.merchant && dto.categoryId !== undefined && resolvedCategoryId) {
         const merchantNormalized = updated.merchant.trim().toLowerCase();
-        this.merchantRules.upsertRule(accountId, merchantNormalized, resolvedCategoryId).catch(() => undefined);
+        this.merchantRules
+          .upsertRule(accountId, merchantNormalized, resolvedCategoryId)
+          .catch(logFireAndForget(this.logger, 'ExpensesService.upsertMerchantRule'));
       }
       return updated ? this.toExpenseResponse(updated) : updated;
     });
@@ -739,7 +745,7 @@ export class ExpensesService {
       },
     });
 
-    this.invalidateChatCache(accountId).catch(() => undefined);
+    this.invalidateChatCache(accountId).catch(logFireAndForget(this.logger, 'ExpensesService.invalidateChatCache'));
     // Resolving a duplicate by deleting the expense must also clear any anomaly
     // alert that deep-links to it, or the alert dead-ends on "Expense not found".
     void this.anomalyService.dismissForExpense(accountId, expense.id);
@@ -758,11 +764,19 @@ export class ExpensesService {
 
   async stopRecurring(accountId: string, id: string) {
     const expense = await this.findOne(accountId, id);
-    await this.prisma.expense.update({
-      where: { id: expense.id },
-      data: { isRecurring: false, syncVersion: { increment: 1 } },
-    });
-    this.invalidateChatCache(accountId).catch(() => undefined);
+    const data = { isRecurring: false, syncVersion: { increment: 1 } };
+    const recurringId = (expense as { recurringId?: string | null }).recurringId;
+    if (recurringId) {
+      // Stop the whole series: the cron picks the latest still-recurring row per
+      // recurringId, so flipping only this one would hand it an older, already-due row.
+      await this.prisma.expense.updateMany({
+        where: { accountId, recurringId, isDeleted: false },
+        data,
+      });
+    } else {
+      await this.prisma.expense.update({ where: { id: expense.id }, data });
+    }
+    this.invalidateChatCache(accountId).catch(logFireAndForget(this.logger, 'ExpensesService.invalidateChatCache'));
     return { id: expense.id, isRecurring: false };
   }
 

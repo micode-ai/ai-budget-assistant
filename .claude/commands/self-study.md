@@ -31,10 +31,10 @@ the denial is a permission decision for the user, not an obstacle to route aroun
    if it's a multi-file agent). If neither exists, jump to step 4 and report
    `status="failed"` with `error_message="agent file not found"`.
 
-2. **Study it carefully — but stay within a tight investigation budget.**
-   Read the agent file end-to-end, then sample the repo. Hard limit:
-   **no more than 6–8 file/grep/glob operations total** before you start
-   writing the note. After that, switch to drafting.
+2. **Study it carefully, and budget the session so the note gets written.**
+   Read the agent file end-to-end, then sample the repo — a session that
+   never reaches the note produces nothing. A short accurate note beats an
+   unfinished survey.
 
    What to look at: `package.json` / `pyproject.toml` / `tsconfig.json` for
    the stack, a top-level directory listing, and 2–3 files the agent
@@ -53,8 +53,8 @@ the denial is a permission decision for the user, not an obstacle to route aroun
 
 3. **Write a Markdown note** to
    `.claude/agents/learning-notes/{today}-$ARGUMENTS.md`, where `{today}` is
-   today's date in `YYYY-MM-DD` form, with the `Write` tool. Sections (keep the whole file under
-   ~150 lines, no fluff):
+   today's date in `YYYY-MM-DD` form, with the `Write` tool. Sections (no fluff —
+   each line should be something the agent's next session can use):
 
    - **Role** — one sentence describing what this agent is for.
    - **Watchlist** — 3–5 concrete things you'd look for in *this* repo if
