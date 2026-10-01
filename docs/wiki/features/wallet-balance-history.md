@@ -28,7 +28,8 @@ existing movement tables — there is no history table.
 **Monthly net change per currency.** Incomes add, expenses subtract, currency exchanges move value
 between their two currencies, outgoing transfers subtract, and incoming transfers add — only those
 with `countAsIncome: false`, because a counted-as-income transfer is already present as its linked
-income row. Split-receivable expense rows are excluded (`EXCLUDE_SPLIT_RECEIVABLE`). Every month in
+income row. Split-receivable expense rows (`EXCLUDE_SPLIT_RECEIVABLE`) and planned expenses
+(`isPlanned`) are excluded. Every month in
 the window gets an entry, including empty ones.
 
 **The daily series** derives per-currency daily snapshots by taking today's balances from
@@ -52,14 +53,17 @@ reset on re-entry) and never writes the global base currency.
 **Inbound transfers count only when `countAsIncome` is false.** Counting both would double the
 inflow of every counted-as-income transfer.
 
+**Every wallet expense aggregation excludes `isPlanned`** — `getSummary`, `getSummariesForAccounts`,
+`getBalanceHistory` and `getMonthlyBalanceHistory` alike. A planned purchase from an approved
+[purchase request](purchase-requests.md) has not been paid; counting it moved the balance before any
+money left, and disagreed with the client-side `loadAllExpenses`, which already filtered it
+(ABA-626).
+
 ## Known gaps
 
 - Month buckets are UTC (`getUTCMonth`), so a movement late on a month's last day in a positive-offset
   timezone can land in the following month.
 - Past months are converted at today's rates, not the rates of that month.
-- The wallet aggregations do not filter `Expense.isPlanned`, so a planned purchase from an approved
-  [purchase request](purchase-requests.md) already moves the balance; the client-side
-  `loadAllExpenses` does filter it.
 
 ## History
 

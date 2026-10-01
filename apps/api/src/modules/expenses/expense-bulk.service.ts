@@ -76,14 +76,32 @@ export class ExpenseBulkService {
         });
         const validTagIds = validTags.map((t) => t.id);
 
+        // Only NEW links count toward Tag.usageCount (as in TagsService.addToExpense):
+        // a live link is left alone, a soft-deleted one is re-activated and counts once.
+        const existingLinks = validTagIds.length
+          ? await tx.expenseTag.findMany({
+              where: { expenseId: { in: ownedIds }, tagId: { in: validTagIds } },
+              select: { expenseId: true, tagId: true, isDeleted: true },
+            })
+          : [];
+        const linkState = new Map(existingLinks.map((l) => [`${l.expenseId}:${l.tagId}`, l.isDeleted]));
+        const added = new Map<string, number>();
+
         for (const expenseId of ownedIds) {
           for (const tagId of validTagIds) {
+            const isDeletedLink = linkState.get(`${expenseId}:${tagId}`);
+            if (isDeletedLink === false) continue;
             await tx.expenseTag.upsert({
               where: { expenseId_tagId: { expenseId, tagId } },
               create: { expenseId, tagId },
-              update: {},
+              update: { isDeleted: false },
             });
+            added.set(tagId, (added.get(tagId) ?? 0) + 1);
           }
+        }
+
+        for (const [tagId, count] of added) {
+          await tx.tag.update({ where: { id: tagId }, data: { usageCount: { increment: count } } });
         }
       }
     });

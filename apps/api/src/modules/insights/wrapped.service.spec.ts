@@ -106,6 +106,15 @@ describe('WrappedService.getWrapped', () => {
     expect(cacheSet).toHaveBeenCalledWith(wrappedCacheKey('acc', 'USD', YEAR), res, expect.any(Number));
   });
 
+  it('excludes planned expenses and split receivables from the spend query but not debts', async () => {
+    const { service, prisma } = makeService({ expenses: [exp(), exp(), exp(), exp(), exp()] });
+    await service.getWrapped('acc', 'user', 'USD', YEAR);
+    const where = prisma.expense.findMany.mock.calls[0][0].where;
+    expect(where.isPlanned).toBe(false);
+    expect(where.isSplitReceivable).toBe(false);
+    expect(where.isDebt).toBeUndefined();
+  });
+
   it('returns empty (hasEnoughData=false) for a tier-2 fully-encrypted account', async () => {
     const { service, prisma } = makeService({ encryptionTier: 2 });
     const res = await service.getWrapped('acc', 'user', 'USD', YEAR);

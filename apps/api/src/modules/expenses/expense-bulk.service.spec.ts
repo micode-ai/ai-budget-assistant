@@ -8,11 +8,15 @@ describe('ExpenseBulkService.bulkUpdate id resolution', () => {
   function makeService(
     findManyResult: Array<{ id: string }>,
     tagFindManyResult: Array<{ id: string }> = [],
+    existingLinks: Array<{ expenseId: string; tagId: string; isDeleted: boolean }> = [],
   ) {
     const tx = {
       expense: { updateMany: jest.fn().mockResolvedValue({ count: findManyResult.length }) },
-      tag: { findMany: jest.fn().mockResolvedValue(tagFindManyResult) },
-      expenseTag: { upsert: jest.fn().mockResolvedValue({}) },
+      tag: { findMany: jest.fn().mockResolvedValue(tagFindManyResult), update: jest.fn().mockResolvedValue({}) },
+      expenseTag: {
+        upsert: jest.fn().mockResolvedValue({}),
+        findMany: jest.fn().mockResolvedValue(existingLinks),
+      },
     };
     const prisma: any = {
       expense: { findMany: jest.fn().mockResolvedValue(findManyResult) },
@@ -83,6 +87,40 @@ describe('ExpenseBulkService.bulkUpdate id resolution', () => {
     expect(tx.expenseTag.upsert).toHaveBeenCalledWith(
       expect.objectContaining({ create: { expenseId: 'server-exp-1', tagId: 'server-tag-1' } }),
     );
+  });
+});
+
+describe('ExpenseBulkService.bulkUpdate tag usageCount', () => {
+  const run = (links: Array<{ expenseId: string; tagId: string; isDeleted: boolean }>) => {
+    // makeService is scoped to the first describe; rebuild the same shape here.
+    const tx = {
+      expense: { updateMany: jest.fn().mockResolvedValue({}) },
+      tag: { findMany: jest.fn().mockResolvedValue([{ id: 't1' }]), update: jest.fn().mockResolvedValue({}) },
+      expenseTag: { upsert: jest.fn().mockResolvedValue({}), findMany: jest.fn().mockResolvedValue(links) },
+    };
+    const prisma: any = {
+      expense: { findMany: jest.fn().mockResolvedValue([{ id: 'e1' }, { id: 'e2' }, { id: 'e3' }]) },
+      $transaction: jest.fn(async (cb: any) => cb(tx)),
+    };
+    const cache: any = { delByPrefix: jest.fn(), del: jest.fn() };
+    return { service: new ExpenseBulkService(prisma, cache), tx };
+  };
+
+  it('increments by new links only: live skipped, soft-deleted re-activated once, missing created', async () => {
+    const { service, tx } = run([
+      { expenseId: 'e1', tagId: 't1', isDeleted: false },
+      { expenseId: 'e2', tagId: 't1', isDeleted: true },
+    ]);
+    await service.bulkUpdate('acc', { ids: ['e1', 'e2', 'e3'], tagIds: ['t1'] });
+    expect(tx.expenseTag.upsert).toHaveBeenCalledTimes(2);
+    expect(tx.tag.update).toHaveBeenCalledWith({ where: { id: 't1' }, data: { usageCount: { increment: 2 } } });
+  });
+
+  it('does not touch usageCount when every link is already live', async () => {
+    const { service, tx } = run(['e1', 'e2', 'e3'].map((expenseId) => ({ expenseId, tagId: 't1', isDeleted: false })));
+    await service.bulkUpdate('acc', { ids: ['e1', 'e2', 'e3'], tagIds: ['t1'] });
+    expect(tx.expenseTag.upsert).not.toHaveBeenCalled();
+    expect(tx.tag.update).not.toHaveBeenCalled();
   });
 });
 

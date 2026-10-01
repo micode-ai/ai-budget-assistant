@@ -83,12 +83,14 @@ namespace in all nine locales.
 - **The cache key carries currency and year** — the account is shared, the display currency is per
   user.
 - **Hide-amounts goes through one masking helper** for both share paths.
+- **The expense query excludes planned expenses and split receivables, not debt rows** — the same
+  spend definition as budgets and analytics. A planned expense (`isPlanned`, see
+  [purchase-requests](purchase-requests.md)) has not happened, and a split receivable
+  (`EXCLUDE_SPLIT_RECEIVABLE`) is money that already left as the receipt; a standalone lent-money
+  row is a real outflow and stays in (ABA-626).
 
 ## Known gaps
 
-- The expense query filters only `isDeleted`: split-receivable rows, planned expenses
-  (`isPlanned`, see [purchase-requests](purchase-requests.md)) and debt rows count as spend in the
-  totals, the biggest month and the categories — unlike the spend filters elsewhere.
 - At `encryptionTier` 1, `merchant` is encrypted on the device and nothing on the server path
   decrypts it, so `top_merchant` groups ciphertext.
 - `personal_inflation` for the just-ended year is really the last 12 months from today, not that

@@ -117,7 +117,7 @@ describe('TagsService', () => {
       const { service, prisma } = makeService();
       // Prisma's upsert on a duplicate (accountId, name) resolves to the
       // existing row via the `update` branch instead of throwing P2002.
-      const existing = { id: 'tag-existing', name: 'Groceries', clientId: 'new-local-id', usageCount: 4 };
+      const existing = { id: 'tag-existing', name: 'Groceries', clientId: 'first-device-id', usageCount: 4 };
       prisma.tag.upsert.mockResolvedValue(existing);
 
       const result = await service.create('acc-1', 'user-1', {
@@ -127,9 +127,20 @@ describe('TagsService', () => {
 
       expect(result).toBe(existing);
       const args = prisma.tag.upsert.mock.calls[0][0];
-      // A second device creating the same-named tag should still update the
-      // clientId so ITS local id also resolves via findOne later.
-      expect(args.update).toEqual({ clientId: 'new-local-id' });
+      // The first device's clientId must survive a second device's create.
+      expect(args.update).toEqual({});
+      expect(prisma.tag.update).not.toHaveBeenCalled();
+    });
+
+    it('adopts the supplied clientId only when the existing tag has none', async () => {
+      const { service, prisma } = makeService();
+      prisma.tag.upsert.mockResolvedValue({ id: 'tag-existing', name: 'Groceries', clientId: null });
+      prisma.tag.update.mockResolvedValue({ id: 'tag-existing', name: 'Groceries', clientId: 'dev-2' });
+
+      const result = await service.create('acc-1', 'user-1', { name: 'Groceries', clientId: 'dev-2' } as any);
+
+      expect(prisma.tag.update).toHaveBeenCalledWith({ where: { id: 'tag-existing' }, data: { clientId: 'dev-2' } });
+      expect(result.clientId).toBe('dev-2');
     });
 
     it('sends an empty update when no clientId is supplied, leaving any existing clientId untouched', async () => {

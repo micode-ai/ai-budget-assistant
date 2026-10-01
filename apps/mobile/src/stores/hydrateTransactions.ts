@@ -27,8 +27,61 @@ export const useHydrationStore = create<HydrationState>(() => ({
 
 const _inflight = createAccountScopedInflight();
 
+// The cycle currently running and whether it was started with `force`. A
+// forced call that lands on a NON-forced cycle must not be collapsed into it
+// (pull-to-refresh / "Sync now" would then do nothing new): exactly one forced
+// follow-up cycle is queued behind it, shared by every forced caller that
+// arrives meanwhile.
+let _running: Promise<void> | null = null;
+let _runningAccountId: string | null = null;
+let _runningForced = false;
+let _followUp: { accountId: string | null; promise: Promise<void> } | null = null;
+
 export function hydrateTransactions(opts?: { force?: boolean }): Promise<void> {
-  return _inflight(useAccountStore.getState().currentAccountId, async () => {
+  const accountId = useAccountStore.getState().currentAccountId;
+  const force = !!opts?.force;
+
+  if (force && _running && _runningAccountId === accountId && !_runningForced) {
+    if (_followUp && _followUp.accountId === accountId) return _followUp.promise;
+    const prev = _running;
+    const promise = prev
+      .catch(() => undefined)
+      .then(() => {
+        _followUp = null;
+        if (_running === prev) {
+          _running = null;
+          _runningAccountId = null;
+          _runningForced = false;
+        }
+        return startCycle(accountId, opts);
+      });
+    _followUp = { accountId, promise };
+    return promise;
+  }
+  return startCycle(accountId, opts);
+}
+
+function startCycle(accountId: string | null, opts?: { force?: boolean }): Promise<void> {
+  const joinsRunning = !!_running && _runningAccountId === accountId;
+  const p = runCycle(accountId, opts);
+  if (!joinsRunning) {
+    _running = p;
+    _runningAccountId = accountId;
+    _runningForced = !!opts?.force;
+    const clear = () => {
+      if (_running === p) {
+        _running = null;
+        _runningAccountId = null;
+        _runningForced = false;
+      }
+    };
+    p.then(clear, clear);
+  }
+  return p;
+}
+
+function runCycle(accountId: string | null, opts?: { force?: boolean }): Promise<void> {
+  return _inflight(accountId, async () => {
     useHydrationStore.setState({ isHydrating: true });
     try {
       await useExpenseStore.getState().loadExpenses(opts);

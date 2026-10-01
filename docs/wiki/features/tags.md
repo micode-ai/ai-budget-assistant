@@ -23,7 +23,8 @@ learned the device's id for them, so no server-side tag link ever matched.
 
 **The device's id is the tag's `clientId`.** `tagStore.createTag` sends `clientId = local id`.
 `tags.service.create` is an `upsert` on `(accountId, name)` — re-creating a same-named tag returns
-the existing row instead of throwing — and stores the `clientId`. `findOne` and the four link/unlink
+the existing row instead of throwing — and adopts the caller's `clientId` only when the row has
+none yet. `findOne` and the four link/unlink
 methods resolve the tag AND the expense/income by `OR: [{ id }, { clientId }]` and write the
 resolved server PKs into the junction, adjusting `usageCount` as they go.
 
@@ -41,10 +42,11 @@ bulk tag picker was empty.
 clientId — `id` into the Prisma `where`, so editing or deleting a tag before its first round-trip
 hit the wrong key (ABA-419). The same rule holds for every `resolve*Pk` helper in the codebase.
 
-## Known gaps
-
-- `create()`'s upsert overwrites `clientId` when a second device creates a tag with the same name,
-  so the last creator's id wins and the first device's id stops resolving until it pulls.
+**The idempotent create never overwrites an existing `clientId`.** The upsert's `update` branch is
+empty; `create` writes the incoming `clientId` only onto a row that has none. Overwriting it let a
+second device creating the same name take over the tag: the first device's id stopped resolving and
+its references were orphaned until it pulled. The second device's own `pending` duplicate is dropped
+by `tagStore.syncFromServer` on its next pull, since a synced tag of that name now exists (ABA-626).
 
 ## History
 

@@ -76,10 +76,16 @@ export class TagsService {
         clientId: dto.clientId,
         usageCount: 0,
       },
-      update: dto.clientId ? { clientId: dto.clientId } : {},
+      // Never overwrite an existing clientId: a second device creating the same
+      // name would otherwise orphan the first device's references.
+      update: {},
     });
-    void this.embeddingService.embedAndStore('tag', created.id, created.name);
-    return created;
+    let result = created;
+    if (dto.clientId && created.clientId == null) {
+      result = await this.prisma.tag.update({ where: { id: created.id }, data: { clientId: dto.clientId } });
+    }
+    void this.embeddingService.embedAndStore('tag', result.id, result.name);
+    return result;
   }
 
   async update(accountId: string, id: string, dto: UpdateTagDto) {

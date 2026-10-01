@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ucKey } from '../ai/services/user-context-builder.service';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { BulkUpdateIncomesDto } from './dto';
@@ -56,7 +57,7 @@ export class IncomeBulkService {
       data: updateData,
     });
 
-    await this.cacheService.del(`uc:${accountId}`);
+    await this.cacheService.del(ucKey(accountId));
 
     return { updated: ownedIds.length };
   }

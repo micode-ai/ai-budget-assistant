@@ -7,6 +7,7 @@ import { GamificationService } from '../gamification/gamification.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import { ucKey } from '../ai/services/user-context-builder.service';
 import {
   resolveExpenseCategoryId,
   resolveCategoryIdForUpdate,
@@ -153,7 +154,7 @@ export class IncomesService {
     this.gamificationService
       .checkAchievements(accountId, userId)
       .catch(logFireAndForget(this.logger, 'IncomesService.checkAchievements'));
-    this.cache.del(`uc:${accountId}`).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
+    this.cache.del(ucKey(accountId)).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
 
     // fire-and-forget: record in family feed (non-personal accounts only)
     if (result) {
@@ -338,7 +339,7 @@ export class IncomesService {
       });
       return updated ? this.toIncomeResponse(updated) : updated;
     });
-    this.cache.del(`uc:${accountId}`).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
+    this.cache.del(ucKey(accountId)).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
     return result;
   }
 
@@ -353,7 +354,7 @@ export class IncomesService {
       },
     });
 
-    this.cache.del(`uc:${accountId}`).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
+    this.cache.del(ucKey(accountId)).catch(logFireAndForget(this.logger, 'IncomesService.invalidateUserContextCache'));
     return { success: true };
   }
 

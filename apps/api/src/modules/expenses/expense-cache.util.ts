@@ -1,4 +1,5 @@
 import { CacheService } from '../../common/cache/cache.service';
+import { ucKey } from '../ai/services/user-context-builder.service';
 
 /**
  * Invalidate every chat tool result cached for this account. Touched on any
@@ -23,6 +24,6 @@ export async function invalidateExpenseChatCache(cacheService: CacheService, acc
     // the internal `shield:` bust (post-create block) isn't enough on the chat
     // surface — bust the chat-layer shield cache on every expense mutation too.
     cacheService.delByPrefix(`chat:get_inflation_shield:${accountId}:`),
-    cacheService.del(`uc:${accountId}`),
+    cacheService.del(ucKey(accountId)),
   ]);
 }

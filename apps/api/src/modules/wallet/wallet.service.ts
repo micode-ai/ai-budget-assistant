@@ -93,7 +93,7 @@ export class WalletService {
     // common/utils/expense-filters.ts for the full accounting rationale.
     const expenseTotals = await this.prisma.expense.groupBy({
       by: ['currencyCode'],
-      where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
+      where: { accountId, isDeleted: false, isPlanned: false, ...EXCLUDE_SPLIT_RECEIVABLE },
       _sum: { amount: true },
     });
 
@@ -248,7 +248,7 @@ export class WalletService {
       // isSplitReceivable: false — see common/utils/expense-filters.ts.
       this.prisma.expense.groupBy({
         by: ['accountId', 'currencyCode'],
-        where: { accountId: { in: accountIds }, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
+        where: { accountId: { in: accountIds }, isDeleted: false, isPlanned: false, ...EXCLUDE_SPLIT_RECEIVABLE },
         _sum: { amount: true },
       }),
       this.prisma.currencyExchange.groupBy({
@@ -400,7 +400,7 @@ export class WalletService {
         }),
         this.prisma.expense.findMany({
           // isSplitReceivable: false — see common/utils/expense-filters.ts.
-          where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: startDate, lte: today } },
+          where: { accountId, isDeleted: false, isPlanned: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: startDate, lte: today } },
           select: { date: true, amount: true, currencyCode: true },
         }),
         this.prisma.currencyExchange.findMany({
@@ -502,7 +502,7 @@ export class WalletService {
       }),
       this.prisma.expense.findMany({
         // isSplitReceivable: false — see common/utils/expense-filters.ts.
-        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: start, lte: end } },
+        where: { accountId, isDeleted: false, isPlanned: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: start, lte: end } },
         select: { date: true, amount: true, currencyCode: true },
       }),
       this.prisma.currencyExchange.findMany({

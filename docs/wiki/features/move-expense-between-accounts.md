@@ -24,7 +24,7 @@ account). It reassigns the existing `accountId` column — no migration, no copy
 **What travels and what does not.** Amount, currency, description, merchant, notes, date, line items
 and the receipt stay with the row. Account-scoped associations do not cross the boundary: the
 category is **remapped by case-insensitive name** into the target account (cleared when there is no
-match); tag links, the project link and category splits are soft-deleted; trip expense shares are
+match), and so is each line item's own `categoryId`; tag links, the project link and category splits are soft-deleted; trip expense shares are
 deleted. Both accounts' chat caches are invalidated, stale source-account anomaly alerts for the row
 are dismissed, and the product rules the row's save taught the source account are unlearned
 (ABA-602).
@@ -49,9 +49,17 @@ sealed with the source account's key and cannot decrypt under the target.
 mocked-Prisma unit test hid it (ABA-351). The moving device self-heals: the target-account pull
 soft-deletes the stale local row (its old clientId is no longer returned) and creates the new one.
 
+**Line items are remapped like the expense's own category.** Each distinct item `categoryId` goes
+through the same `remapCategory` (case-insensitive name match in the target, else `null`) inside the
+move's transaction. Left alone, the items pointed at the source account's categories, which the
+target cannot resolve (ABA-626).
+
+**Product-rule unlearning snapshots the source items before the move.** `forgetSourceRules` runs
+fire-and-forget after the transaction, by which time the items carry the target's category ids; the
+rules to forget are keyed by the source ids, so they are read first and passed in (ABA-626).
+
 ## Known gaps
 
-- Line items keep their own `categoryId`s, which still point at the source account's categories.
 - The desktop transaction dialog has no move action; it exists only on the phone's detail screen.
 
 ## History

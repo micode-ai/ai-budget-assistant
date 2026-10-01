@@ -215,6 +215,7 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
       expenseCategorySplit: { updateMany: jest.fn().mockResolvedValue({}) },
       tripExpenseShare: { deleteMany: jest.fn().mockResolvedValue({}) },
       expense: { update: jest.fn().mockResolvedValue({}) },
+      expenseItem: { updateMany: jest.fn().mockResolvedValue({}) },
     };
     const expense =
       opts.expense === undefined
@@ -295,6 +296,30 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
       { ruleKey: 'Chleb 450g', categoryId: 'cat-build' },
       { ruleKey: 'Marchew', categoryId: 'cat-build' },
     ]);
+  });
+
+  it('remaps line-item categories by name into the target account, else nulls them', async () => {
+    const { service, prisma, tx } = makeService({
+      items: [
+        { description: 'Chleb', canonicalName: 'Chleb', categoryId: 'item-cat-a' },
+        { description: 'Mleko', canonicalName: 'Mleko', categoryId: 'item-cat-a' },
+        { description: 'Szampon', canonicalName: 'Szampon', categoryId: 'item-cat-b' },
+      ],
+    });
+    prisma.category.findUnique.mockImplementation(async ({ where }: any) => ({
+      name: where.id === 'item-cat-a' ? 'Bread' : where.id === 'item-cat-b' ? 'Gone' : 'Food',
+    }));
+    prisma.category.findFirst.mockImplementation(async ({ where }: any) =>
+      where.name.equals === 'Bread' ? { id: 'dst-bread' } : where.name.equals === 'Food' ? { id: 'cat-dst' } : null,
+    );
+
+    await service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' });
+
+    const calls = tx.expenseItem.updateMany.mock.calls.map((c: any) => c[0]);
+    expect(calls).toHaveLength(2);
+    expect(calls.find((c: any) => c.where.categoryId === 'item-cat-a').data.categoryId).toBe('dst-bread');
+    expect(calls.find((c: any) => c.where.categoryId === 'item-cat-b').data.categoryId).toBeNull();
+    expect(calls.every((c: any) => c.where.expenseId === 'srv-1')).toBe(true);
   });
 
   it('clears the category when the target account has no same-named category', async () => {

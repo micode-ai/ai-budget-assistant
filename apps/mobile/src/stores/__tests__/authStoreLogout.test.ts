@@ -99,6 +99,11 @@ jest.mock('../merchantRulesStore', () => {
   return { useMerchantRulesStore: { getState: () => state } };
 });
 
+jest.mock('../scenarioStore', () => {
+  const state = { reset: jest.fn() };
+  return { useScenarioStore: { getState: () => state } };
+});
+
 jest.mock('../chatStore', () => {
   const state = { reset: jest.fn() };
   return { useChatStore: { getState: () => state } };
@@ -132,6 +137,7 @@ import { useInflationShieldStore } from '../inflationShieldStore';
 import { usePriceHistoryStore } from '../priceHistoryStore';
 import { useMerchantRulesStore } from '../merchantRulesStore';
 import { useChatStore } from '../chatStore';
+import { useScenarioStore } from '../scenarioStore';
 import { secureStorage } from '../../services/secureStorage';
 import { api } from '../../services/api';
 import { unregisterPushNotifications } from '../../services/notifications';
@@ -301,5 +307,13 @@ describe('authStore.logout — restore credential cleanup (ABA-465)', () => {
     await useAuthStore.getState().logout();
 
     expect(useChatStore.getState().reset).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets saved scenarios on sign-out', async () => {
+    mockGetItem.mockResolvedValue(null);
+
+    await useAuthStore.getState().logout();
+
+    expect(useScenarioStore.getState().reset).toHaveBeenCalledTimes(1);
   });
 });

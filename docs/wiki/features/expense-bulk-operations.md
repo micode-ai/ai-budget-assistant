@@ -28,8 +28,8 @@ Apply step.
 **Server.** Both endpoints are account-scoped and behind `ViewerBlockGuard` (the expense one also
 `TripArchivedGuard`). Ownership is checked by fetching only the ids that match `accountId` and are
 not deleted; then one `updateMany`. The expense side runs it in a `$transaction` together with a
-per-expense `expenseTag.upsert` loop — tags are **appended**, never replaced — and then busts the
-chat cache. A bulk recategorization also teaches merchant → category rules, the same signal as a
+per-expense `expenseTag.upsert` loop — tags are **appended**, never replaced, and each tag's
+`usageCount` grows by the links the loop added — and then busts the chat cache. A bulk recategorization also teaches merchant → category rules, the same signal as a
 single edit (see [merchant-category-rules](merchant-category-rules.md)).
 
 **Phone.** Long-press on an expense row opens `TransactionActionSheet` (Edit / Duplicate / Delete /
@@ -55,9 +55,13 @@ and for the tag ids written into the junction.
 statement patches up to 500 rows; writing `null` would blank the existing category of every
 selected row (ABA-566).
 
+**The bulk tag append counts only the links it actually adds.** A live link is skipped, a
+soft-deleted one is re-activated, and `Tag.usageCount` grows by the number created or re-activated
+— the same rule as the single `TagsService.addToExpense`. Counting every pair would inflate the
+count each time a selection that already carries the tag is tagged again (ABA-626).
+
 ## Known gaps
 
-- The bulk tag append does not bump `Tag.usageCount`, unlike the single add in `tags.service`.
 - The income endpoint is category-only (no tags, no delete, no merchant learning — incomes have no
   merchant field).
 

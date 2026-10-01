@@ -31,6 +31,15 @@ describe('WalletService.getMonthlyBalanceHistory', () => {
     expect(res.currencies).toEqual(['PLN']);
   });
 
+  it('excludes planned expenses and split receivables from the monthly history', async () => {
+    const service = makeService();
+    await service.getMonthlyBalanceHistory('a1', 3);
+    const where = (service as any).prisma.expense.findMany.mock.calls[0][0].where;
+    expect(where.isPlanned).toBe(false);
+    expect(where.isSplitReceivable).toBe(false);
+    expect(where.isDebt).toBeUndefined();
+  });
+
   it('clamps the window to at most 12 months', async () => {
     const res = await makeService().getMonthlyBalanceHistory('a1', 24);
     expect(res.months).toHaveLength(12);
@@ -173,6 +182,15 @@ describe('WalletService.getSummary', () => {
     // filtering on it would rewrite the numbers of every user tracking debts.
     expect(where.isDebt).toBeUndefined();
   });
+
+  // A planned expense (purchase-request plan) has not happened yet, so it must
+  // not reduce the balance.
+  it('excludes planned expenses from the expense total', async () => {
+    const service = makeService({});
+    await service.getSummary('a1');
+    const where = (service as any).prisma.expense.groupBy.mock.calls[0][0].where;
+    expect(where.isPlanned).toBe(false);
+  });
 });
 
 describe('WalletService.getBalanceHistory', () => {
@@ -253,6 +271,14 @@ describe('WalletService.getBalanceHistory', () => {
     expect(res.points[0].balances).toEqual({ PLN: 630, USD: 65 });
     expect(res.points[2].balances).toEqual({ PLN: 500, USD: 90 });
     expect(res.points[cappedDays].balances).toEqual({ PLN: 500, USD: 100 });
+  });
+
+  it('excludes planned expenses and split receivables from the daily history', async () => {
+    const service = makeService({ summaryBalances: [] });
+    await service.getBalanceHistory('a1', 5);
+    const where = (service as any).prisma.expense.findMany.mock.calls[0][0].where;
+    expect(where.isPlanned).toBe(false);
+    expect(where.isSplitReceivable).toBe(false);
   });
 
   it('clamps the window to at most 90 days', async () => {
@@ -454,6 +480,9 @@ describe('WalletService.getSummariesForAccounts', () => {
 
     expect(prisma.expense.groupBy).toHaveBeenCalledWith(
       expect.objectContaining({ where: expect.objectContaining({ isSplitReceivable: false }) }),
+    );
+    expect(prisma.expense.groupBy).toHaveBeenCalledWith(
+      expect.objectContaining({ where: expect.objectContaining({ isPlanned: false }) }),
     );
     // Second accountTransfer.groupBy call is the incoming side.
     expect(prisma.accountTransfer.groupBy).toHaveBeenNthCalledWith(

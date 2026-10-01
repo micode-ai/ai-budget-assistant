@@ -8,6 +8,7 @@ import {
   EXTRACTION_FORMAT,
 } from './statement-ai.prompt';
 import { logCacheUsage } from '../../ai/utils/log-cache-usage';
+import { CHEAP_MODEL } from '../../ai/services/model-resolver';
 import {
   validateMappingResponse,
   validateExtractedRows,
@@ -18,7 +19,7 @@ import {
 export const INFERENCE_TIMEOUT_MS = 20_000;
 export const EXTRACTION_TIMEOUT_MS = 30_000;
 
-const MODEL = 'gpt-4o-mini';
+const MODEL = CHEAP_MODEL;
 
 /**
  * LLM access for statement import. Owns its own OpenAI client, following the

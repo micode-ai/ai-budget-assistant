@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -13,6 +13,8 @@ import { KeyboardAvoidingScreen as KeyboardAvoidingView } from '@/components/Key
 import { showAlert } from '@/utils/alert';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { useScenarioStore, type SavedScenario } from '@/stores/scenarioStore';
+import { useAuthStore } from '@/stores/authStore';
+import { useAccountStore } from '@/stores/accountStore';
 import { useSubscriptionStore } from '@/stores/subscriptionStore';
 import type { ExtraIncome } from '@/features/scenario/useScenarioProjection';
 
@@ -35,7 +37,15 @@ export function ScenarioManager({
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const isPro = useSubscriptionStore(s => s.isPro());
-  const { scenarios, saveScenario, deleteScenario, canSave } = useScenarioStore();
+  const { scenarios, saveScenario, deleteScenario, canSave, setScope } = useScenarioStore();
+  const userId = useAuthStore(s => s.user?.id);
+  const accountId = useAccountStore(s => s.currentAccountId);
+
+  // Saved scenarios belong to one user + account (their adjustments are keyed
+  // by that account's category ids).
+  useEffect(() => {
+    setScope(userId, accountId);
+  }, [setScope, userId, accountId]);
 
   const [saveModalVisible, setSaveModalVisible] = useState(false);
   const [scenarioName, setScenarioName] = useState('');

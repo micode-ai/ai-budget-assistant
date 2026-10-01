@@ -25,6 +25,7 @@ import { useMerchantRulesStore } from './merchantRulesStore';
 import { useShareIntakeStore } from './shareIntakeStore';
 import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
 import { useChatStore } from './chatStore';
+import { useScenarioStore } from './scenarioStore';
 import * as investmentRepo from '../db/investmentRepository';
 import { registerRestoreCredential, attemptRestoreSession } from '../features/auth/restoreCredential';
 import { clearRestoreCredential, isRestoreCredentialAvailable } from '../services/restoreCredentials';
@@ -632,6 +633,7 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
 
     // Reset stores
     useAccountStore.getState().reset();
+    useScenarioStore.getState().reset();
     useBudgetStore.getState().reset();
     // Categories are account-scoped and this store had no reset until ABA-520:
     // the previous user's category names survived sign-out in memory.

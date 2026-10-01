@@ -15,6 +15,7 @@ import type {
   BasketCompareResponse,
 } from '@budget/shared-types';
 import { perUnitPrice, type ReceiptCheckHistory } from './receipt-check.util';
+import { resolveCheapModel } from '../ai/services/model-resolver';
 
 type Period = PriceHistoryPeriod;
 
@@ -731,7 +732,7 @@ export class PriceHistoryService {
     const numbered = descriptions.map((d, i) => `${i + 1}. ${d}`).join('\n');
 
     const response = await this.openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: resolveCheapModel(),
       temperature: 0,
       // JSON keys, braces and quotes cost tokens the old line format did not, and
       // Polish names with diacritics tokenize far above the previous 20/name

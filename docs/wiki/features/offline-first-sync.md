@@ -35,7 +35,7 @@ near-identical upserts, not independently-evolving entities.
 hooks, the account switcher, `DatabaseProvider`, the auth session actions) calls
 `hydrateTransactions()`. It runs `loadExpenses` then `loadIncomes` **sequentially** and exposes
 `useHydrationStore.isHydrating`; its own in-flight promise collapses many parallel callers into one
-cycle. Each load reads SQLite first and sets `isLoading: false` at once, so a tab paints from the
+cycle, except that a forced call never joins a non-forced one. Each load reads SQLite first and sets `isLoading: false` at once, so a tab paints from the
 local copy, then pushes pending rows and pulls. The pull is skipped inside a 30-second per-account
 window (`EXPENSES_SYNC_SKIP_WINDOW_MS`, `INCOMES_SYNC_SKIP_WINDOW_MS`) unless called with
 `{ force: true }` — pull-to-refresh and Settings → Data "Sync now" force it. The expense merge runs
@@ -75,14 +75,17 @@ the REST endpoints are the source of truth.
 A throw means offline, or a fire-and-forget create that has not landed — a just-scanned receipt
 404s for a moment. A genuine delete still propagates through the empty-success path.
 
+**A `{ force: true }` call never collapses into a non-forced cycle.** Arriving while a non-forced
+hydrate runs, it queues one forced follow-up cycle behind it, shared by every forced caller that
+arrives meanwhile. Handing back the in-flight promise dropped the force, so pull-to-refresh or
+"Sync now" during a background hydrate pulled nothing new (ABA-626).
+
 ## Known gaps
 
 - `pullChanges`' merge writes `categoryId: serverCategoryId || localExpense?.categoryId`, so
   clearing a category on another device never propagates — the fallback keeps the local value.
 - The queue is pumped by specific screens rather than a connectivity listener, so a queued write can
   wait for the next visit to the right screen (documented for account transfers in particular).
-- A `{ force: true }` call that arrives while a non-forced hydrate is in flight gets the in-flight
-  promise back, so its force is silently dropped.
 
 ## History
 

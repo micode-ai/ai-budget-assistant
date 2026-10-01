@@ -199,23 +199,26 @@ export class ExpenseCrossAccountService {
     }
 
     // Remap the category by name into the target account (else clear it).
-    let remappedCategoryId: string | null = null;
-    if (expense.categoryId) {
-      const source = await this.prisma.category.findUnique({
-        where: { id: expense.categoryId },
-        select: { name: true },
-      });
-      if (source?.name) {
-        const match = await this.prisma.category.findFirst({
-          where: {
-            accountId: targetAccountId,
-            isDeleted: false,
-            name: { equals: source.name, mode: 'insensitive' },
-          },
-          select: { id: true },
-        });
-        remappedCategoryId = match?.id ?? null;
-      }
+    const remappedCategoryId = expense.categoryId
+      ? await this.remapCategory(expense.categoryId, targetAccountId)
+      : null;
+
+    // Line items carry their own categoryId, which still points at the SOURCE
+    // account's categories. Snapshot them BEFORE the move (the rule-unlearning
+    // below needs the source category ids) and remap each distinct category.
+    const items = await this.prisma.expenseItem.findMany({
+      where: { expenseId: expense.id, isDeleted: false, categoryId: { not: null } },
+      select: { description: true, canonicalName: true, categoryId: true },
+    });
+    const sourceRules = items
+      .map((i) => ({
+        ruleKey: (i.description?.trim() || i.canonicalName?.trim() || '') as string,
+        categoryId: i.categoryId as string,
+      }))
+      .filter((r) => r.ruleKey);
+    const itemCategoryMap = new Map<string, string | null>();
+    for (const sourceId of new Set(items.map((i) => i.categoryId as string))) {
+      itemCategoryMap.set(sourceId, await this.remapCategory(sourceId, targetAccountId));
     }
 
     // A clientId is unique per account — if the target already holds a row with the
@@ -246,6 +249,12 @@ export class ExpenseCrossAccountService {
         data: { isDeleted: true },
       });
       await tx.tripExpenseShare.deleteMany({ where: { expenseId: expense.id } });
+      for (const [sourceId, targetId] of itemCategoryMap) {
+        await tx.expenseItem.updateMany({
+          where: { expenseId: expense.id, isDeleted: false, categoryId: sourceId },
+          data: { categoryId: targetId, syncVersion: { increment: 1 } },
+        });
+      }
 
       const moveData: Record<string, any> = {
         accountId: targetAccountId,
@@ -266,23 +275,37 @@ export class ExpenseCrossAccountService {
     void this.anomalyService.dismissForExpense(sourceAccountId, expense.id);
     // Moving the expense out says it never belonged here, so the product rules
     // its save taught the SOURCE account are unlearned (ABA-602).
-    void this.forgetSourceRules(sourceAccountId, expense.id).catch(
+    void this.forgetSourceRules(sourceAccountId, sourceRules).catch(
       logFireAndForget(this.logger, 'ExpenseCrossAccountService.forgetSourceRules'),
     );
 
     return { id: expense.id, accountId: targetAccountId, categoryId: remappedCategoryId };
   }
 
-  private async forgetSourceRules(sourceAccountId: string, expenseId: string): Promise<void> {
-    if (!this.productRules) return;
-    const items = await this.prisma.expenseItem.findMany({
-      where: { expenseId, isDeleted: false, categoryId: { not: null } },
-      select: { description: true, canonicalName: true, categoryId: true },
+  /** Case-insensitive name match of a source-account category inside the target account, else null. */
+  private async remapCategory(sourceCategoryId: string, targetAccountId: string): Promise<string | null> {
+    const source = await this.prisma.category.findUnique({
+      where: { id: sourceCategoryId },
+      select: { name: true },
     });
-    // Same key the save-time learner used: printed line first.
-    const rules = items
-      .map((i) => ({ ruleKey: (i.description?.trim() || i.canonicalName?.trim() || '') as string, categoryId: i.categoryId as string }))
-      .filter((r) => r.ruleKey);
+    if (!source?.name) return null;
+    const match = await this.prisma.category.findFirst({
+      where: {
+        accountId: targetAccountId,
+        isDeleted: false,
+        name: { equals: source.name, mode: 'insensitive' },
+      },
+      select: { id: true },
+    });
+    return match?.id ?? null;
+  }
+
+  private async forgetSourceRules(
+    sourceAccountId: string,
+    rules: { ruleKey: string; categoryId: string }[],
+  ): Promise<void> {
+    if (!this.productRules) return;
+    // Same key the save-time learner used: printed line first (computed pre-move).
     if (rules.length > 0) await this.productRules.forgetRules(sourceAccountId, rules);
   }
 }

@@ -5,6 +5,7 @@ import { CacheService } from '../../common/cache/cache.service';
 import { PriceHistoryService } from '../price-history/price-history.service';
 import { StreakService } from '../gamification/streak.service';
 import { getRatesSafe } from '../../common/utils/fx';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 import type { WrappedResponse } from '@budget/shared-types';
 import {
   assembleWrapped,
@@ -82,7 +83,16 @@ export class WrappedService {
 
     const [expenses, incomes, rates] = await Promise.all([
       this.prisma.expense.findMany({
-        where: { accountId, isDeleted: false, date: { gte: rangeStart, lte: rangeEnd } },
+        // Same exclusions as budgets/analytics: a planned expense has not
+        // happened, and a split receivable is money that already left as the
+        // receipt. NOT isDebt — a standalone lent-money row is a real outflow.
+        where: {
+          accountId,
+          isDeleted: false,
+          isPlanned: false,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
+          date: { gte: rangeStart, lte: rangeEnd },
+        },
         select: {
           amount: true,
           currencyCode: true,

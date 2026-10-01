@@ -14,7 +14,8 @@ device-local — there is no API endpoint.
 - `apps/mobile/src/features/scenario/useScenarioProjection.ts`, `useScenarioChartData.ts` — the
   pure projection over the expense and income stores
 - `apps/mobile/src/components/scenario/ScenarioManager.tsx` — save modal and load sheet
-- `apps/mobile/src/stores/scenarioStore.ts` — MMKV id `scenario-storage`
+- `apps/mobile/src/stores/scenarioStore.ts` — MMKV id `scenario-storage`, one key per
+  `saved_scenarios:{userId}:{accountId}`
 
 ## Key concepts
 
@@ -22,15 +23,28 @@ device-local — there is no API endpoint.
 records of adjustments), `extraIncomes`, `horizon` (3 | 6 | 12), `createdAt`. The list is stored as
 one JSON string and loaded newest first.
 
-**The tier limit.** `saveScenario(name, snapshot, isPro)` returns `'ok'` or `'limit_reached'`;
-`canSave(isPro)` answers the same question up front. Free users keep five scenarios; Pro and
-Business are unlimited. `ScenarioManager` reads `isPro` from `subscriptionStore`.
+**The scope.** The visible list belongs to one user and one account. `ScenarioManager` calls
+`setScope(userId, accountId)` from an effect, which loads that scope's key; `logoutAction` calls
+`reset()`, which empties the in-memory list and leaves the persisted rows under their own key.
+
+**The tier limit.** `saveScenario(name, snapshot, isPro)` returns `'ok'`, `'limit_reached'`, or
+`'no_scope'` when no scope is set; `canSave(isPro)` answers the same question up front (always false
+without a scope). Free users keep five scenarios; Pro and Business are unlimited. `ScenarioManager` reads `isPro` from `subscriptionStore`.
+
+## Invariants
+
+**Saved scenarios are scoped to user and account, and nothing is saved without a scope.**
+Adjustments are keyed by one account's category ids, so a scenario loaded under another account or
+another user points at ids that do not exist there. Before scoping, the single unscoped key loaded
+for whoever signed in next (ABA-626).
+
+**Pre-scoping scenarios go to the first scope opened on the device, then the unscoped key is
+deleted.** The old rows carry no owner; the first scope is almost always the person who saved them,
+and deleting them outright would throw away a user's work. They are copied only into an empty scoped
+key (ABA-626).
 
 ## Known gaps
 
-- Saved scenarios are neither account- nor user-scoped: the MMKV store is never cleared on sign-out
-  or account switch, so a scenario saved under one account loads under another, with adjustments
-  keyed to ids that may not exist there.
 - The free limit is enforced on the device only.
 
 ## History
