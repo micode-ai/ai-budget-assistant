@@ -26,6 +26,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+        with:
+          # check-release-version.js compares versionName with the latest v*.*.*
+          # tag. Without tags it finds none, skips that check, and the same
+          # versionName reached Play twice (1.32.0 on 2026-09-27 and 2026-10-01).
+          fetch-tags: true
 
       - uses: actions/setup-node@v4
         with:

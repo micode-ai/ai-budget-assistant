@@ -87,7 +87,7 @@ jest.mock('@/stores/incomeStore', () => ({
   useIncomeStore: { getState: jest.fn(() => ({ incomes: [] })) },
 }));
 
-import { useWalletStore } from '../walletStore';
+import { useWalletStore, walletLoadedFor } from '../walletStore';
 import { api } from '@/services/api';
 
 const getWalletSummary = api.getWalletSummary as jest.Mock;
@@ -131,5 +131,20 @@ describe('walletStore across an account switch', () => {
     answerOld({ balances: pln(500) });
     await oldLoad;
     expect(useWalletStore.getState().walletSummary).toEqual(pln(42));
+  });
+  // A switch that does not go through AccountSwitcher (a notification, a trip
+  // invite, the trip screen) never calls loadWallet itself. The dashboard asks
+  // this to notice the wallet still holds another account's figures.
+  it('reports which account the in-memory wallet belongs to', async () => {
+    expect(walletLoadedFor()).toBeNull();
+    getWalletSummary.mockResolvedValue({ balances: pln(1) });
+    await useWalletStore.getState().loadWallet();
+    expect(walletLoadedFor()).toBe('acc-1');
+    mockAccount.id = 'acc-2';
+    expect(walletLoadedFor()).toBe('acc-1'); // switched, not reloaded yet
+    await useWalletStore.getState().loadWallet();
+    expect(walletLoadedFor()).toBe('acc-2');
+    useWalletStore.getState().reset();
+    expect(walletLoadedFor()).toBeNull();
   });
 });

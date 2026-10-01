@@ -142,6 +142,7 @@ Newest last within each section.
   refuses an unconvertible currency, pending chat actions expire, account-scoped device chat cache.
   → `features/account-backups.md`, `telegram-bot.md`, `features/recurring-expenses.md`,
   `features/expense-detail-editing.md`, `features/safe-to-spend.md`, `features/chat-architecture.md`
+- 2026-10-01 · [ABA-629](https://github.com/micode-ai/ai-budget-assistant/issues/659) — wallet stayed on the previous account after a switch that bypassed AccountSwitcher; dashboard now reloads it via `walletLoadedFor()`. Also: the release-version guard never saw tags (1.32.0 shipped twice). → `features/account-switch-reload.md`
 
 ## Queries
 

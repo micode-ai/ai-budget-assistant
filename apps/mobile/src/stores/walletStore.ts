@@ -156,6 +156,17 @@ interface WalletState {
 // (the web summary's failure path keeps "the current figures" on purpose).
 let _walletAccountId: string | null = null;
 
+/**
+ * The account the in-memory wallet was last loaded for (null before any load
+ * and after sign-out). Only `AccountSwitcher` reloads the wallet itself on a
+ * switch; the other ways an account changes (a notification, a trip invite,
+ * the trip screen) do not, so the dashboard compares this with the current
+ * account and reloads when they differ.
+ */
+export function walletLoadedFor(): string | null {
+  return _walletAccountId;
+}
+
 export const useWalletStore = create<WalletState>()(
   subscribeWithSelector((set, get) => ({
     walletBalances: [],

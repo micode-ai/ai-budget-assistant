@@ -53,6 +53,13 @@ different account.
   emptied the figures when they belonged to another account. Clearing also resets `lastPullAt`, so
   the dashboard's focus retry fires for the new account.
 
+- **The dashboard reloads a wallet that belongs to another account.** Only `AccountSwitcher` calls
+  `loadWallet` on a switch; a switch from a notification, a trip invite or the trip screen does not,
+  and the dashboard's focus retry skips a wallet that has pulled once (`lastPullAt`). So
+  `useHomeScreenData`'s `[currentAccountId]` effect compares `walletLoadedFor()` with the current
+  account and reloads when they differ — otherwise the previous account's balances stayed on the home
+  screen until a pull-to-refresh (ABA-629).
+
 ## Known gaps
 
 - Other account-scoped stores (debts, budgets, gamification, alerts …) were not audited for the same
@@ -63,4 +70,5 @@ different account.
 ## History
 
 ABA-627 — per-account coalescing in hydrate/expenses/incomes; wallet and investment stores clear on
-account change and guard late writes.
+account change and guard late writes. ABA-629 — the dashboard reloads the wallet after a switch that did
+not go through `AccountSwitcher`.

@@ -27,12 +27,18 @@ const SHA_LENGTH = 7;
  * (including an un-expanded `${{ github.sha }}`), and a clean version number is
  * a better answer than a corrupted one.
  */
-export function displayVersion(version: string, sha?: string | null): string {
+export function displayVersion(version: string, sha?: string | null, buildNumber?: string | null): string {
   const base = version.trim();
-  if (!sha) return base;
+  if (sha) {
+    const candidate = sha.trim().toLowerCase();
+    if (/^[0-9a-f]{7,40}$/.test(candidate)) return `${base}+${candidate.slice(0, SHA_LENGTH)}`;
+  }
 
-  const candidate = sha.trim().toLowerCase();
-  if (!/^[0-9a-f]{7,40}$/.test(candidate)) return base;
+  // Native: Play's versionCode, in brackets. The same versionName can reach
+  // Play twice (1.32.0 did), and then this is the only thing on the phone that
+  // says which build is installed. Display only — never part of a comparison.
+  const build = buildNumber?.trim();
+  if (build && /^\d+$/.test(build)) return `${base} (${build})`;
 
-  return `${base}+${candidate.slice(0, SHA_LENGTH)}`;
+  return base;
 }

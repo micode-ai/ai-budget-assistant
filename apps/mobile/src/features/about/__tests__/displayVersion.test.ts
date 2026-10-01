@@ -33,4 +33,16 @@ describe('displayVersion', () => {
   it('trims surrounding whitespace on both halves', () => {
     expect(displayVersion(' 1.26.0 ', ' a3f9c1e ')).toBe('1.26.0+a3f9c1e');
   });
+  // Two Play builds can carry the same versionName (1.32.0 shipped twice), and
+  // then only versionCode tells them apart — so native shows it in brackets.
+  it('appends the native build number in brackets', () => {
+    expect(displayVersion('1.32.0', null, '412')).toBe('1.32.0 (412)');
+    expect(displayVersion('1.32.0', undefined, ' 412 ')).toBe('1.32.0 (412)');
+  });
+
+  it('ignores a build number that is not a plain integer, and never combines it with a sha', () => {
+    expect(displayVersion('1.32.0', null, '')).toBe('1.32.0');
+    expect(displayVersion('1.32.0', null, 'abc')).toBe('1.32.0');
+    expect(displayVersion('1.32.0', 'a3f9c1e', '412')).toBe('1.32.0+a3f9c1e');
+  });
 });

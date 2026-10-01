@@ -5,7 +5,7 @@ import { useBudgetStore } from '@/stores/budgetStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
-import { useWalletStore } from '@/stores/walletStore';
+import { useWalletStore, walletLoadedFor } from '@/stores/walletStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useGamificationStore } from '@/stores/gamificationStore';
 import { useInvestmentStore } from '@/stores/investmentStore';
@@ -59,13 +59,18 @@ export function useHomeScreenData() {
 
   useEffect(() => {
     if (currentAccountId) {
+      // Only AccountSwitcher reloads the wallet on a switch; a switch from a
+      // notification, a trip invite or the trip screen does not, and the focus
+      // retry below skips a wallet that has pulled once — so the previous
+      // account's balances stayed on the dashboard until a pull-to-refresh.
+      if (walletLoadedFor() !== currentAccountId) void loadWallet();
       hydrateTransactions().then(() => loadDebts());
       loadProfile();
       if (currentAccountType === 'investment') {
         loadInvestmentSummary();
       }
     }
-  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary]);
+  }, [currentAccountId, loadProfile, loadDebts, currentAccountType, loadInvestmentSummary, loadWallet]);
 
   // Refresh the alerts feed whenever the home tab regains focus (e.g. after
   // adding an expense and returning). The server creates anomaly alerts

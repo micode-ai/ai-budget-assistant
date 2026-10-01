@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { getLegalUrls } from '@/constants/legal';
 import Constants from 'expo-constants';
+import * as Application from 'expo-application';
 
 import { displayVersion } from '@/features/about/displayVersion';
 import { SettingsScreenScroll } from '../SettingsScreenScroll';
@@ -41,12 +42,13 @@ export function AboutSettings() {
   const theme = useTheme();
   const styles = useStyles(createStyles);
 
-  // `+<sha>` on web only, where `EXPO_PUBLIC_BUILD_SHA` is set by
-  // `web-deploy.yml`; native ships no sha and shows the bare version. See
-  // `displayVersion` for why the web needs a build id at all.
+  // `+<sha>` on web, where `EXPO_PUBLIC_BUILD_SHA` is set by `web-deploy.yml`;
+  // `(<versionCode>)` on native, where `nativeBuildVersion` is Play's build
+  // number (null on web). See `displayVersion` for why each needs a build id.
   const appVersion = displayVersion(
     Constants.expoConfig?.version || '1.0.0',
     process.env.EXPO_PUBLIC_BUILD_SHA,
+    Application.nativeBuildVersion,
   );
 
   return (
