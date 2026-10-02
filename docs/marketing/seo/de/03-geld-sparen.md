@@ -127,3 +127,5 @@ Für die meisten Menschen: ja. Den Abstand zwischen dem geplanten und dem tatsä
 - [Vorrat anlegen, bevor die Preise steigen: Inflationsschutz](/blog/de/inflationsschutz-vorrat/)
 - [Wechselkurs-Alarm: Push bei deinem Zielkurs](/blog/de/wechselkurs-alarm/)
 - [Budget in zwei Währungen: So behältst du den Überblick](/blog/de/budget-in-zwei-waehrungen/)
+- [Weihnachtsbudget: Was kostet Weihnachten wirklich?](/blog/de/weihnachtsbudget/)
+- [Black Friday: Fake-Rabatte erkennen und nicht zu viel zahlen](/blog/de/black-friday-fake-rabatte-erkennen/)

@@ -127,3 +127,5 @@ Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas 
 - [Haz acopio antes de que suban los precios: tu escudo](/blog/es/escudo-antiinflacion/)
 - [Alerta de tipo de cambio: aviso al llegar a tu objetivo](/blog/es/alerta-tipo-cambio/)
 - [Presupuesto en dos monedas: cómo no perder el control](/blog/es/presupuesto-en-dos-monedas/)
+- [Presupuesto de Navidad: cuánto cuesta y cómo ahorrarlo](/blog/es/presupuesto-de-navidad/)
+- [Black Friday: detecta ofertas falsas y no gastes de más](/blog/es/black-friday-ofertas-falsas/)

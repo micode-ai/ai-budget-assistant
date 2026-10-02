@@ -127,3 +127,5 @@ Pour la plupart des gens, oui. Voir en temps réel l'écart entre ce qu'on avait
 - [Faire des réserves avant la hausse des prix](/blog/fr/bouclier-anti-inflation/)
 - [Alerte de taux de change : notification à ton objectif](/blog/fr/alerte-taux-de-change/)
 - [Budget en deux devises : comment garder le contrôle](/blog/fr/budget-en-deux-devises/)
+- [Budget de Noël : combien prévoir, étape par étape](/blog/fr/budget-de-noel/)
+- [Black Friday : repérer les fausses promos avant d'acheter](/blog/fr/black-friday-fausses-promos/)

@@ -139,3 +139,5 @@ Tak, szczególnie jeśli trudno ci wyrobić nawyk. Aplikacja daje natychmiastowy
 - [Zapasy przed podwyżką: tarcza antyinflacyjna w budżecie](/blog/pl/tarcza-antyinflacyjna/)
 - [Alert kursu walut: powiadomienie o wymarzonym kursie](/blog/pl/alert-kursu-walut/)
 - [Budżet w dwóch walutach: jak nie gubić się w przeliczeniach](/blog/pl/budzet-w-dwoch-walutach/)
+- [Ile kosztują święta? Budżet na Boże Narodzenie krok po kroku](/blog/pl/budzet-na-swieta/)
+- [Black Friday: fałszywe promocje i jak nie przepłacić](/blog/pl/black-friday-promocje/)

@@ -129,3 +129,5 @@ date: "2026-06-19"
 - [Запас угодных да падаражэння: шчыт ад інфляцыі](/blog/be/shchyt-ad-infliatsyi/)
 - [Апавяшчэнне пра курс валют, калі ён дасягне мэты](/blog/be/apavyashchenne-pra-kurs-valyut/)
 - [Бюджэт у дзвюх валютах: як не губляць грошы на курсе](/blog/be/byudzhet-u-dzvyukh-valyutakh/)
+- [Бюджэт на Новы год і Каляды: колькі адкласці](/blog/be/byudzhet-na-novy-god/)
+- [Чорная пятніца: як праверыць зніжку і не пераплаціць](/blog/be/chornaya-pyatnitsa-znizhki/)

@@ -127,3 +127,5 @@ For most people, yes. Seeing the gap between what you planned to save and what y
 - [Stock Up Before Prices Rise: an Inflation Shield](/blog/en/inflation-shield-stock-up/)
 - [Exchange Rate Alert: Get Notified at Your Target Rate](/blog/en/exchange-rate-alert/)
 - [Multi-Currency Budgeting: Track Money in Two Currencies](/blog/en/multi-currency-budgeting/)
+- [How Much Does Christmas Cost? A Step-by-Step Budget](/blog/en/christmas-budget/)
+- [Are Black Friday Deals Real? How to Check Before You Buy](/blog/en/black-friday-deals-real/)

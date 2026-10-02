@@ -204,6 +204,91 @@ En un plan gratis-para-siempre bien construido: no. Quedarte en el plan gratuito
 
 *Artículos relacionados: [Control de gastos: cómo llevar un seguimiento que dure](/blog/es/control-de-gastos/) | [Mejores apps de presupuesto en 2026: guía honesta](/blog/es/mejores-apps-de-presupuesto/) | [Plantilla de presupuesto en Excel: estructura y sus límites](/blog/es/plantilla-presupuesto-excel/)*
 
+## Black Friday: detecta ofertas falsas y no gastes de más
+URL: https://ai-budget.pl/blog/es/black-friday-ofertas-falsas/
+
+**Respuesta corta:** no juzgues una oferta por el porcentaje del cartel, sino por lo que pagas frente al precio más bajo de los últimos 30 días y por si estaba o no en tu lista. Tres pasos: fija antes de las rebajas un límite y una lista de lo que de verdad necesitas, comprueba el precio previo al descuento y espera 24 horas ante cualquier compra impulsiva. El resto del texto desarrolla estas tres frases.
+
+El Black Friday pocas veces destroza un presupuesto porque todo sea caro. Lo hace porque durante unos días cada tienda grita «ahora o nunca» y compras cosas que no estaban en ninguna lista. En 2026 cae el 27 de noviembre, así que hay tiempo para prepararse con calma, sin «ahorros medios» inventados y sin meter miedo.
+
+## Cómo comprobar si una oferta es real
+
+**1. Conoce la regla del precio más bajo de 30 días.** Según la Directiva Ómnibus de la UE, que los países miembros aplican en su legislación nacional desde 2022-2023, cuando un comercio anuncia una rebaja de precio debe indicar el precio más bajo que aplicó durante los 30 días anteriores a la rebaja. El porcentaje debe calcularse sobre ese precio, no sobre cualquier «precio original» que elija la tienda. Para productos que llevan menos de 30 días a la venta se admiten plazos más cortos, y en rebajas sucesivas los detalles dependen de la normativa nacional, así que lee la letra pequeña junto al precio.
+
+Dos matices. Primero, la regla no impide subir precios antes de una campaña: solo exige que la comparación sea honesta. Segundo, un «precio recomendado por el fabricante» o un «precio habitual» no equivale al anuncio de una rebaja, de modo que una cifra tachada de ese tipo no demuestra nada. Si sospechas que una tienda incumple las normas, puedes acudir a la autoridad de consumo de tu comunidad.
+
+**2. Revisa tu propio historial de precios.** Si ya compraste el producto y escaneaste el ticket, AI Budget Assistant puede mostrarte cuánto pagaste y en qué tienda. Funciona con lo que compras y escaneas tú, no con los precios de tiendas online, porque la app solo conoce tus propios tickets. De una lavadora que nunca has comprado no hay historial, y entonces te quedan la regla del punto 1 y tus propias notas.
+
+**3. Haz una captura del precio una o dos semanas antes.** El historial de precios más sencillo es el que guardas tú. Desde finales de octubre, es decir, 30 días antes del Black Friday, puedes apuntar los precios de tres o cuatro cosas de tu lista.
+
+**4. Calcula el descuento real.** El número del cartel da igual. Esto sí cuenta: (precio más bajo de los últimos 30 días − precio de oferta) ÷ precio más bajo de los últimos 30 días.
+
+## Las trampas más comunes
+
+**Cuentas atrás y «quedan 2 unidades».** La presión del tiempo busca que compres antes de hacer la cuenta. Una oferta genuina seguirá ahí mañana.
+
+**«Hasta un 70 % de descuento».** Habla de un producto entre muchos y no dice nada del artículo de tu lista.
+
+**Packs y regalos.** «Compra dos y paga menos» solo sale más barato si necesitas los dos. Un regalo que no querías no es un ahorro.
+
+**Pruebas gratuitas.** Muchas ofertas del Black Friday incluyen un periodo gratis que se convierte sin avisar en una suscripción de pago. Apunta enseguida la fecha en que empieza el cobro.
+
+**Cuotas «al 0 %».** Repartir el pago no cambia cuánto gastas, solo cuándo lo notas.
+
+## Checklist antes del Black Friday
+
+1. **Anota lo que de verdad necesitas.** Cosas que ibas a comprar de todos modos en los próximos meses. Todo lo que quede fuera es un impulso.
+2. **Fija un límite.** Una cantidad para toda la campaña, mejor apartada de antemano que un «ya veremos».
+3. **Vigila los precios con tiempo.** Apunta los precios de los artículos de la lista a finales de octubre y en noviembre.
+4. **Aplica la regla de las 24 horas a las compras impulsivas.** Añade al carrito, cierra la pestaña y vuelve mañana. Si aún lo quieres y cabe en el límite, cómpralo.
+5. **Carga los regalos al presupuesto de Navidad.** Lo que compres para otros en el Black Friday no es un gasto extra, sino una línea de tu [presupuesto de Navidad](/blog/es/presupuesto-de-navidad/). Réstalo de esa partida en lugar de contarlo dos veces.
+6. **Revisa tus suscripciones.** Cancela las que no uses antes de que una tienda te ofrezca otras nuevas.
+7. **No dejes los datos de la tarjeta guardados «para luego».** Menos compras reflejo con un clic.
+8. **Haz balance después.** Compara lo gastado con tu límite y anota lo aprendido para el año que viene.
+
+## Ejemplo de cálculo (ilustración)
+
+**Esto es solo un ejemplo.** Las cifras son inventadas para que la cuenta se entienda; no proceden de ninguna encuesta.
+
+Una tienda anuncia unos auriculares: «40 % de descuento, antes 200 €, ahora 120 €». Compruebas el precio más bajo de los 30 días anteriores y era 150 €. La rebaja real es (150 − 120) ÷ 150 = 20 %, no 40 %. Quizá siga siendo un buen precio, pero decides por 30 € de ahorro, no por 80 €. Y si los auriculares no estaban en tu lista, la opción más barata es gastar 0 €.
+
+## Cómo llevarlo en AI Budget Assistant
+
+Todo lo anterior se puede hacer en papel. En la app, algunas cosas son simplemente más cómodas.
+
+**Lista de la compra con precios.** Pon en la lista solo lo planificado y escribe junto a cada artículo el precio que estás dispuesto a pagar (botón «+ Precio»). El total muestra cuánto costará toda la cesta antes de llegar a la caja.
+
+**Presupuesto por categorías con periodo propio.** Puedes crear un presupuesto para el periodo que elijas, por ejemplo del 20 de noviembre al 2 de diciembre, con un límite en una categoría. Cada gasto registrado lo reduce, y así ves lo que queda.
+
+**Tu propio historial de precios.** Para los productos que compras y escaneas, la app muestra un gráfico de precios y la tienda donde pagaste menos. El [escudo antiinflación](/blog/es/escudo-antiinflacion/) señala artículos duraderos que conviene comprar por adelantado, según la tendencia de tus propios tickets. Es estadística de tendencia, no IA ni una predicción, y el ahorro estimado es una estimación prudente.
+
+**Gestor de suscripciones.** Añade una prueba gratuita como suscripción con la fecha en que empieza el cobro y la app te lo recuerda tres días antes. Si cancelas, borra la entrada.
+
+Puedes encontrar la app en [ai-budget.pl](https://ai-budget.pl) y en [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); funciona sin tarjeta de pago. Para saber más sobre gastar con cabeza, lee [cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/) y la guía para [gestionar suscripciones](/blog/es/como-gestionar-suscripciones/).
+
+## FAQ: Black Friday y ofertas
+
+**¿Son reales las ofertas del Black Friday?**
+Depende, y no hay una respuesta válida para todas las tiendas. En vez de adivinar, compara el precio de oferta con el precio más bajo de los 30 días anteriores, que la tienda debe mostrar, y con lo que sueles pagar.
+
+**¿Qué es la regla del precio más bajo de 30 días?**
+Procede de la Directiva Ómnibus de la UE y se aplica a través de la legislación nacional en los países miembros. Cuando una tienda anuncia una rebaja, debe indicar el precio más bajo de los 30 días previos, y el porcentaje se calcula sobre ese precio. Para productos con menos de 30 días a la venta se aplica un plazo más corto.
+
+**¿Cómo compruebo si antes el precio era más bajo?**
+Busca el precio más bajo de 30 días junto al producto, haz una captura del precio unas semanas antes de la campaña y compáralo con tus propios tickets. En la app puedes ver lo que pagaste por los productos que has escaneado.
+
+**¿La app sigue los precios de las tiendas online?**
+No. AI Budget Assistant solo conoce los precios de tus propios tickets. No vigila tiendas online ni juzga si una oferta es honesta.
+
+**¿Cómo evito las compras impulsivas?**
+Haz una lista, fija un límite y usa la regla de las 24 horas: añade al carrito, cierra la pestaña y vuelve al día siguiente. Compra lo que no está en la lista solo si, pasado un día, sigues queriéndolo y cabe en el límite.
+
+**¿Cómo evito la trampa de la prueba gratuita?**
+Apunta enseguida la fecha en que empieza el cobro y cancela antes si no necesitas el servicio. En la app puedes añadir la prueba como suscripción y recibir un aviso tres días antes.
+
+**¿Los regalos comprados en el Black Friday cuentan para el presupuesto de Navidad?**
+Sí, es el mismo dinero. Réstalos de tu partida de regalos para no gastar dos veces en lo mismo.
+
 ## Alternativa a Monefy: cambia sin perder tus categorías
 URL: https://ai-budget.pl/blog/es/cambiar-de-monefy-wallet-moneymanager/
 
@@ -491,6 +576,8 @@ Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas 
 - [Haz acopio antes de que suban los precios: tu escudo](/blog/es/escudo-antiinflacion/)
 - [Alerta de tipo de cambio: aviso al llegar a tu objetivo](/blog/es/alerta-tipo-cambio/)
 - [Presupuesto en dos monedas: cómo no perder el control](/blog/es/presupuesto-en-dos-monedas/)
+- [Presupuesto de Navidad: cuánto cuesta y cómo ahorrarlo](/blog/es/presupuesto-de-navidad/)
+- [Black Friday: detecta ofertas falsas y no gastes de más](/blog/es/black-friday-ofertas-falsas/)
 
 ## Cómo gestionar suscripciones antes de que te vacíen
 URL: https://ai-budget.pl/blog/es/como-gestionar-suscripciones/
@@ -2156,6 +2243,100 @@ Usa el modelo proporcional. Reparte los gastos comunes según la parte que cada 
 
 *Artículos relacionados: [Cómo hacer un presupuesto paso a paso](/blog/es/como-hacer-un-presupuesto/) | [Cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/)*
 
+## Presupuesto de Navidad: cuánto cuesta y cómo ahorrarlo
+URL: https://ai-budget.pl/blog/es/presupuesto-de-navidad/
+
+**Respuesta corta:** no existe una cifra única, porque lo que cuesta la Navidad depende de a cuántas personas regalas, cuánto viajas y qué pones en la mesa. Lo que sí puedes hacer es calcular tu propia cifra en una hora: lista seis categorías de gasto, súmalas y divide el total entre los meses que quedan hasta diciembre. El resultado es lo que tienes que apartar cada mes, empezando en octubre.
+
+La Navidad rara vez rompe un presupuesto por ser cara. Lo rompe porque llega toda de golpe en diciembre y el dinero para ella nunca tuvo una partida propia. Esta guía te enseña a crearla, sin "medias nacionales" inventadas y sin adivinar.
+
+## De qué se compone un presupuesto de Navidad
+
+Casi todos los gastos de las fiestas caben en seis categorías. La tabla es el esqueleto; las cifras las pones tú.
+
+| Categoría | Qué incluye | Importe de ejemplo (ilustración) |
+|---|---|---|
+| Regalos | Personas de tu lista × importe por persona, papel, envío | 480 € |
+| Comida festiva | Cena de Nochebuena, dulces, bebidas, invitados | 280 € |
+| Viajes | Billetes o gasolina para ver a la familia, alojamiento | 180 € |
+| Decoración | Árbol, luces, adornos, velas | 80 € |
+| Eventos y ropa | Cena de empresa, mercadillos, ropa para las fiestas | 120 € |
+| Donaciones y propinas | Donativos, ayuda a alguien, propinas | 60 € |
+| **Total** | | **1.200 €** |
+
+**Esto es solo un ejemplo.** Las cifras son redondas para que la cuenta se vea clara; no salen de ninguna encuesta ni son la media de nada. Las tuyas serán distintas, y de eso se trata: las categorías se quedan, los importes son tuyos.
+
+Dos notas sobre la tabla. Primero, no te saltes viajes y eventos, porque son las partidas que más aparecen en diciembre sin avisar. Segundo, si tienes una categoría que no está aquí (el regalo de la mascota, un invitado extra, tarjetas y sellos), añádela. Mejor tu lista que una ajena.
+
+## La fórmula: cuánto apartar cada mes
+
+**coste total de la Navidad ÷ meses que faltan para Navidad = importe a apartar cada mes**
+
+Con el ejemplo anterior: 1.200 € ÷ 3 meses (octubre, noviembre y diciembre) = 400 € al mes. Si hubieras empezado en septiembre, la misma suma serían 300 €. Cada mes de retraso sube la cuota mensual, por eso octubre es buen momento: todavía puedes repartir el coste y aún no corre prisa.
+
+Dos ajustes que conviene hacer ya:
+
+- **Compra los regalos antes que la comida.** Los regalos se pueden comprar en noviembre, pero el supermercado solo en diciembre; así las primeras cuotas van a regalos y la última espera a la compra de comida.
+- **Si la cuota mensual te asusta, reduce el total, no los meses.** Baja el importe por persona o acorta la lista de regalos. Meter la misma suma en menos tiempo no resuelve nada.
+
+## Lista de pasos
+
+1. **Escribe tu lista de regalos.** A quién regalas y el máximo que quieres gastar en cada uno. La suma es tu partida de "Regalos".
+2. **Mira el año pasado.** Si registraste tus gastos, comprueba cuánto se fue realmente en diciembre en comida, viajes y el resto. Tus propios datos valen más que cualquier media.
+3. **Pon un importe en cada una de las seis categorías** y suma. Ese es tu coste total.
+4. **Divide entre los meses** que faltan hasta diciembre. El resultado es tu cuota mensual.
+5. **Programa el ahorro para el día de cobro.** Lo ideal es justo después de la primera nómina de octubre, antes de que el dinero se pierda en el gasto diario.
+6. **Compra lo de la lista cuando esté de oferta**, pero solo lo que está en la lista. Añadir algo "porque estaba rebajado" es como crece un presupuesto.
+7. **Anota lo que gastas.** Una cuota solo tiene sentido si ves cuánto de cada categoría ya se ha ido.
+8. **Haz un balance en enero.** Compara plan y realidad y apunta las diferencias para el año que viene. Dentro de doce meses tendrás tu propia base en lugar de suposiciones.
+
+## Cómo llevarlo en AI Budget Assistant
+
+Todo lo anterior se puede hacer en una hoja de cálculo. En la app, tres cosas son simplemente más cómodas.
+
+**Un presupuesto por categorías con periodo personalizado.** Puedes crear un presupuesto en modo "Por categorías", con un periodo personalizado del 1 de octubre al 31 de diciembre, y dar a cada una de las seis categorías su propio límite. Cada gasto registrado cuenta contra el límite correcto, así que a mediados de noviembre ves cuánto de "Regalos" ya se ha gastado. Si escaneas el ticket de la compra, sus líneas se reparten entre categorías y cada parte cuenta para el presupuesto de la suya.
+
+**Una lista de la compra compartida con tu familia.** En una cuenta compartida todos ven y editan la misma lista, así que los regalos y los ingredientes de la cena no se compran dos veces. A quien no tenga la app puedes enviarle un enlace público a la lista: puede ir marcando artículos mientras compra, sin crear una cuenta.
+
+**Precios de tus propios tickets.** El [escudo antiinflación](/blog/es/escudo-antiinflacion/) analiza los precios de los productos que de verdad compras y, a partir de la tendencia de tus propios tickets, señala los que conviene comprar con antelación. Es estadística de tendencias, no una predicción, y el ahorro estimado es una estimación prudente. Necesita unos cuantos tickets escaneados del mismo producto y solo sugiere cosas que se conservan, como despensa y artículos del hogar, no alimentos frescos. En Navidad podría ser harina, azúcar o café, pero no el pescado.
+
+Si prefieres tratar el ahorro como una meta, también puedes crear en la app un objetivo de ahorro con fecha límite en diciembre e ir sumando cada cuota. La app está en [ai-budget.pl](https://ai-budget.pl) y en [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); funciona sin tarjeta de pago.
+
+Para el panorama general de cómo apartar dinero sin grandes renuncias, mira [cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/), y para la compra de las fiestas, [ahorrar en el supermercado](/blog/es/ahorrar-en-el-supermercado/).
+
+## Trampas habituales
+
+**Categorías olvidadas.** Los regalos los cuenta todo el mundo. Los viajes, las cenas de empresa y los mercadillos los cuentan pocos, y en diciembre son esas partidas las que marcan la diferencia.
+
+**Sin margen.** Añade al total una pequeña reserva para lo que olvidaste y anótala como partida aparte, para que no desdibuje las demás.
+
+**Ponerlo en la tarjeta de crédito "por ahora".** Si el plan supone que pagarás algo en enero, no es un plan, es un coste aplazado. El dinero que apartas cada mes está para evitar justo eso.
+
+**Empezar en diciembre.** Entonces la fórmula deja de funcionar: divides entre un solo mes. Si ya estás en noviembre, empieza igualmente ahora y ajusta el total a los meses que te quedan.
+
+## FAQ: presupuesto de Navidad
+
+**¿Cuánto cuesta la Navidad?**
+Depende de a cuántas personas regalas, cuánto viajas y cuántos invitados recibes, así que no hay una cifra única fiable. La respuesta honesta es tu propia suma de seis categorías: regalos, comida festiva, viajes, decoración, eventos y ropa, y donaciones. Los importes de la tabla de este artículo son solo un ejemplo.
+
+**¿Cuándo debo empezar a ahorrar para la Navidad?**
+Lo ideal es octubre, porque así tienes tres cuotas hasta diciembre. Cuanto antes empieces, más pequeña será cada una. Si ya es noviembre, no esperes a un momento mejor: empieza ya y divide el total entre dos meses.
+
+**¿Cómo calculo cuánto apartar cada mes?**
+Suma el coste previsto de todas las categorías y divide entre los meses que faltan para Navidad. Con un total de 1.200 € y tres meses, la cuota es de 400 €. Es un cálculo ilustrativo; usa tus propias cifras.
+
+**¿Cómo reduzco el gasto en regalos sin quedar mal?**
+Fija un importe por persona antes de comprar y acorta la lista, por ejemplo con un amigo invisible en las familias grandes. Una lista de regalos compartida evita compras duplicadas, y los gastos registrados muestran cuánto queda en la categoría.
+
+**¿La app predice los precios de Navidad?**
+No. El escudo antiinflación muestra la tendencia de precio de los productos que compras, a partir de tus propios tickets, y el ahorro estimado es una estimación prudente. Necesita unos cuantos tickets del mismo producto y solo cubre cosas que se pueden almacenar.
+
+**¿Puedo planificar la Navidad con mi pareja o mi familia?**
+Sí. En una cuenta compartida todos ven y editan los mismos gastos y la misma lista de la compra. A quien no tenga la app puedes enviarle un enlace público a la lista para que vaya marcando las compras.
+
+**¿Qué hago si me paso del presupuesto de Navidad?**
+Comprueba qué categoría superó el límite y decide si mueves dinero de otra o recortas los gastos que quedan. Anota el motivo para empezar el año que viene con una cifra más realista.
+
 ## Presupuesto en dos monedas: cómo no perder el control
 URL: https://ai-budget.pl/blog/es/presupuesto-en-dos-monedas/
 
@@ -3199,6 +3380,7 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 
 - **El mismo archivo otra vez** — si eliges una foto o un PDF que ya se escaneó y guardó, se te pregunta *antes* de leerlo, así que no se gasta ninguna solicitud de IA. **Abrir** muestra el gasto guardado, **Escanear igualmente** lo vuelve a leer y **Cancelar** lo cancela.
 - **El mismo recibo, foto nueva** — si tras leerlo ya existe un gasto con la misma tienda, importe y fecha (±1 día), la pantalla de confirmación muestra un aviso amarillo con un botón **Abrir**. Aun así puedes guardarlo: puede ser una segunda compra real.
+- **Ya registrado por tu banco** — si el gasto coincidente vino de una notificación del banco o de un extracto importado, el aviso lo indica y ofrece **Unir en un solo gasto**. Con la casilla marcada, al guardar se conserva el recibo (artículos, foto y categoría) y se sustituye la entrada del banco, así la compra cuenta una sola vez. Si solo coinciden el importe y la fecha, la casilla empieza desmarcada: compruébalo antes de unir.
 
 Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
 

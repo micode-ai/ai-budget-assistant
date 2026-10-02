@@ -611,6 +611,91 @@ Zoek naar echte gedeelde accounts waar beide personen vanaf de eigen telefoon in
 
 *Verwante artikelen: [Uitgaven bijhouden zonder gedoe](/blog/nl/uitgaven-bijhouden/) | [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/)*
 
+## Black Friday: herken echte aanbiedingen en nepkortingen
+URL: https://ai-budget.pl/blog/nl/black-friday-echte-aanbiedingen/
+
+**Kort antwoord:** beoordeel een aanbieding niet op het percentage op de banner, maar op wat je betaalt in vergelijking met de laagste prijs van de afgelopen 30 dagen, en op of het product op je lijstje stond. Drie stappen: bepaal vóór de uitverkoop een limiet en een lijst van wat je echt nodig hebt, check de prijs vóór de korting en wacht 24 uur bij een impulsaankoop. De rest van deze gids werkt die drie zinnen uit.
+
+Black Friday ruïneert zelden een budget omdat alles duur is. Het doet dat omdat elke winkel een paar dagen lang roept: "nu of nooit", en jij spullen koopt die op geen enkel lijstje stonden. In 2026 valt het op 27 november, dus je hebt tijd om je rustig voor te bereiden, zonder verzonnen "gemiddelde besparingen" en zonder angst aan te jagen.
+
+## Zo check je of een aanbieding echt is
+
+**1. Ken de regel van de laagste prijs van 30 dagen.** Volgens de Europese Omnibusrichtlijn, die de lidstaten sinds 2022-2023 in hun nationale wetgeving toepassen, moet een winkel die een prijsverlaging aankondigt de laagste prijs vermelden die in de 30 dagen vóór de verlaging werd gehanteerd. Het percentage hoort daarop te worden berekend en niet op een willekeurige "van-prijs". Voor producten die minder dan 30 dagen in de verkoop zijn, is een kortere periode toegestaan, en bij opeenvolgende verlagingen hangen de details af van het nationale recht. Lees dus de kleine lettertjes naast de prijs.
+
+Twee kanttekeningen. Ten eerste verbiedt de regel niet dat prijzen vóór een actie omhooggaan: ze eist alleen een eerlijke vergelijking. Ten tweede is een "adviesprijs van de fabrikant" of "normale prijs" niet hetzelfde als een aankondiging van een prijsverlaging, dus zo'n doorgestreept bedrag bewijst niets. Vermoed je dat een winkel de regels overtreedt, dan kun je dat melden bij de ACM (ConsuWijzer).
+
+**2. Bekijk je eigen prijsgeschiedenis.** Heb je het product al eens gekocht en de kassabon gescand, dan kan AI Budget Assistant tonen wat je betaalde en in welke winkel. Dat werkt voor wat je zelf koopt en scant, niet voor prijzen in webwinkels, want de app kent alleen je eigen bonnen. Van een wasmachine die je nooit eerder kocht is er geen geschiedenis, en dan blijven de regel uit punt 1 en je eigen notities over.
+
+**3. Maak een of twee weken eerder een screenshot van de prijs.** De eenvoudigste prijsgeschiedenis is die je zelf bewaart. Vanaf eind oktober, dus 30 dagen vóór Black Friday, kun je de prijzen van drie of vier dingen op je lijstje noteren.
+
+**4. Reken de echte korting uit.** Het getal op de banner doet er niet toe. Dit wel: (laagste prijs van de afgelopen 30 dagen − actieprijs) ÷ laagste prijs van de afgelopen 30 dagen.
+
+## De meest voorkomende valkuilen
+
+**Aftelklokken en "nog maar 2 op voorraad".** Tijdsdruk moet je laten kopen voordat je rekent. Een echte aanbieding is er morgen nog.
+
+**"Tot wel −70%".** Dat gaat over één product uit vele en zegt niets over het artikel op je lijstje.
+
+**Bundels en gratis extra's.** "Koop er twee, betaal minder" is alleen goedkoper als je beide echt nodig hebt. Een extraatje dat je niet wilde, is geen besparing.
+
+**Gratis proefperiodes.** Veel Black Friday-aanbiedingen hebben een gratis periode die ongemerkt overgaat in een betaald abonnement. Noteer meteen de datum waarop het afschrijven begint.
+
+**Betalen in termijnen "tegen 0%".** Het spreiden van een betaling verandert niet hoeveel je uitgeeft, alleen wanneer je het voelt.
+
+## Checklist vóór Black Friday
+
+1. **Schrijf op wat je echt nodig hebt.** Dingen die je de komende maanden toch al wilde kopen. Alles buiten de lijst is een impuls.
+2. **Stel een limiet in.** Eén bedrag voor de hele actie, het liefst van tevoren apart gezet in plaats van "we zien wel".
+3. **Volg prijzen op tijd.** Noteer de prijzen van de artikelen op je lijst eind oktober en in november.
+4. **Pas de 24-uursregel toe op impulsaankopen.** In het winkelmandje, tabblad dicht, morgen terugkomen. Wil je het dan nog en past het binnen de limiet, koop het dan.
+5. **Boek cadeaus af op je kerstbudget.** Wat je op Black Friday voor anderen koopt, is geen extra uitgave maar een regel uit je [kerstbudget](/blog/nl/kerstbudget/). Haal het van die pot af in plaats van het dubbel te tellen.
+6. **Loop je abonnementen na.** Zeg op wat je niet gebruikt voordat een winkel je nieuwe aanbiedt.
+7. **Laat geen kaartgegevens opgeslagen "voor later".** Minder reflexaankopen met één klik.
+8. **Maak achteraf de balans op.** Vergelijk wat je uitgaf met je limiet en noteer wat je volgend jaar anders doet.
+
+## Rekenvoorbeeld (illustratie)
+
+**Dit is slechts een voorbeeld.** De bedragen zijn verzonnen zodat de som te volgen is; ze komen uit geen enkel onderzoek.
+
+Een winkel adverteert koptelefoons: "40% korting, van € 200 voor € 120". Je checkt de laagste prijs van de afgelopen 30 dagen en die was € 150. De echte verlaging is (150 − 120) ÷ 150 = 20%, niet 40%. Het kan nog steeds een prima prijs zijn, maar je beslist op basis van € 30 besparing, niet € 80. En stond de koptelefoon niet op je lijstje, dan is de goedkoopste optie € 0 uitgeven.
+
+## Zo pak je het aan in AI Budget Assistant
+
+Dit alles kan ook op papier. In de app zijn een paar dingen gewoon handiger.
+
+**Een boodschappenlijst met prijzen.** Zet alleen op de lijst wat je gepland had en vul bij elk artikel de prijs in die je wilt betalen (knop "+ Prijs"). Het totaal laat zien wat je hele mandje kost voordat je bij de kassa bent.
+
+**Een categoriebudget met eigen periode.** Je kunt een budget maken voor een periode naar keuze, bijvoorbeeld van 20 november tot 2 december, met een limiet voor één categorie. Elke vastgelegde uitgave gaat er af, dus je ziet wat er nog over is.
+
+**Je eigen prijsgeschiedenis.** Voor producten die je koopt en scant toont de app een prijsgrafiek en de winkel waar je het minst betaalde. Het [inflatieschild](/blog/nl/inflatieschild/) wijst op houdbare artikelen die je beter vooraf koopt, op basis van de trend in je eigen bonnen. Het is trendstatistiek, geen AI en geen voorspelling, en de geschatte besparing is een voorzichtige schatting.
+
+**Abonnementenbeheer.** Voeg een gratis proefperiode toe als abonnement met de datum waarop het afschrijven begint, en de app herinnert je drie dagen eerder. Zeg je op, verwijder dan de invoer.
+
+Je vindt de app op [ai-budget.pl](https://ai-budget.pl) en in [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); ze werkt zonder betaalkaart. Meer over verstandig uitgeven lees je in [geld besparen](/blog/nl/geld-besparen/) en de gids over [abonnementen beheren](/blog/nl/abonnementen-beheren/).
+
+## FAQ: Black Friday en aanbiedingen
+
+**Zijn Black Friday-aanbiedingen echt?**
+Dat verschilt, en er is geen antwoord voor alle winkels. Vergelijk in plaats van te gokken de actieprijs met de laagste prijs van de afgelopen 30 dagen, die de winkel moet tonen, en met wat je normaal betaalt.
+
+**Wat is de regel van de laagste prijs van 30 dagen?**
+Hij komt uit de Europese Omnibusrichtlijn en geldt via het nationale recht in de EU. Kondigt een winkel een prijsverlaging aan, dan moet die de laagste prijs van de 30 dagen ervoor vermelden, en het percentage wordt daarop berekend. Voor producten die korter dan 30 dagen in de verkoop zijn, geldt een kortere periode.
+
+**Hoe check ik of de prijs eerder lager was?**
+Zoek de laagste prijs van 30 dagen bij het product, maak een paar weken voor de actie een screenshot van de prijs en vergelijk die met je eigen bonnen. In de app zie je wat je betaalde voor producten die je hebt gescand.
+
+**Volgt de app prijzen in webwinkels?**
+Nee. AI Budget Assistant kent alleen de prijzen op je eigen bonnen. De app bewaakt geen webwinkels en beoordeelt niet of een aanbieding eerlijk is.
+
+**Hoe voorkom ik impulsaankopen?**
+Schrijf een lijstje, stel een limiet in en gebruik de 24-uursregel: in het mandje, tabblad dicht en de volgende dag terugkomen. Koop dingen buiten de lijst alleen als je ze na een dag nog wilt en ze binnen de limiet passen.
+
+**Hoe ontwijk ik de valkuil van de gratis proefperiode?**
+Noteer meteen de datum waarop het afschrijven begint en zeg op voordat die aanbreekt als je de dienst niet nodig hebt. In de app kun je de proefperiode als abonnement toevoegen en drie dagen eerder een herinnering krijgen.
+
+**Tellen cadeaus van Black Friday mee voor mijn kerstbudget?**
+Ja, het is hetzelfde geld. Haal ze van je cadeaupot af zodat je niet twee keer uitgeeft aan hetzelfde.
+
 ## Bonnetjes scannen: de regels tellen, niet het totaal
 URL: https://ai-budget.pl/blog/nl/bonnetjes-scannen/
 
@@ -1072,6 +1157,8 @@ Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te spare
 - [Voorraad aanleggen vóór prijsstijgingen: inflatieschild](/blog/nl/inflatieschild/)
 - [Wisselkoersalert: melding bij jouw doelkoers](/blog/nl/wisselkoersalert/)
 - [Budget in twee valuta's: grip houden op je geld](/blog/nl/budget-in-twee-valutas/)
+- [Kerstbudget maken: wat kost het en hoeveel spaar je?](/blog/nl/kerstbudget/)
+- [Black Friday: herken echte aanbiedingen en nepkortingen](/blog/nl/black-friday-echte-aanbiedingen/)
 
 ## Gezinsbudget met kinderen dat echt werkt
 URL: https://ai-budget.pl/blog/nl/gezinsbudget-met-kinderen/
@@ -1458,6 +1545,100 @@ Momenteel niet. Vandaag werkt het volledig op basis van je eigen aankoopgeschied
 ---
 
 *Gerelateerde artikelen: [Hoe geld besparen](/blog/nl/geld-besparen/) | [Jouw persoonlijke inflatie berekenen](/blog/nl/persoonlijke-inflatie/) | [Jouw financiële jaar, gewrapt](/blog/nl/financieel-jaaroverzicht/)*
+
+## Kerstbudget maken: wat kost het en hoeveel spaar je?
+URL: https://ai-budget.pl/blog/nl/kerstbudget/
+
+**Kort antwoord:** er is geen vast bedrag, want wat de feestdagen kosten hangt af van hoeveel mensen je cadeaus geeft, hoe ver je reist en wat er op tafel komt. Je eigen bedrag reken je wel in een uur uit: zet zes kostencategorieën op een rij, tel ze op en deel het totaal door het aantal maanden dat nog rest tot december. Het resultaat is het bedrag dat je vanaf oktober elke maand opzij zet.
+
+De feestdagen verpesten zelden een budget omdat ze zo duur zijn. Het gaat mis omdat alles in december tegelijk komt en het geld ervoor nooit een eigen regel had. Deze gids laat zien hoe je die regel maakt, zonder verzonnen "gemiddelden voor Nederland" en zonder te gokken.
+
+## Waaruit een kerstbudget bestaat
+
+Bijna alle uitgaven rond de feestdagen passen in zes categorieën. De tabel is het geraamte; de bedragen vul je zelf in. In Nederland valt Sinterklaas (5 december) vóór kerst, dus reken die cadeaus in de categorie "Cadeaus" mee.
+
+| Categorie | Wat erin zit | Voorbeeldbedrag (illustratie) |
+|---|---|---|
+| Cadeaus | Sinterklaas en kerst: mensen op je lijst × bedrag per persoon, inpakpapier, verzending | € 480 |
+| Feestmaaltijd | Kerstdiner, bakken, drank, gasten | € 280 |
+| Reizen | Treinkaartjes of benzine naar familie, overnachting | € 180 |
+| Versiering | Boom, lichtjes, kerstballen, kaarsen | € 80 |
+| Uitjes en outfits | Kerstborrel van het werk, kerstmarkt, kleding | € 120 |
+| Giften en fooien | Donaties, hulp voor iemand, fooien | € 60 |
+| **Totaal** | | **€ 1.200** |
+
+**Dit is alleen een voorbeeld.** De bedragen zijn rond gekozen zodat de som te volgen is; ze komen uit geen enkel onderzoek en zijn geen gemiddelde van iets. Die van jou zijn anders, en dat is de bedoeling: de categorieën blijven, de bedragen zijn van jou.
+
+Twee opmerkingen bij de tabel. Eén: sla reizen en uitjes niet over, want dat zijn de regels die in december het vaakst zonder waarschuwing opduiken. Twee: heb je een categorie die er niet tussen staat (een cadeau voor de hond, een extra gast, kaarten en postzegels), voeg die toe. Je eigen lijst is beter dan die van een ander.
+
+## De formule: hoeveel zet je elke maand opzij
+
+**totale kosten ÷ maanden tot de feestdagen = bedrag dat je elke maand opzij zet**
+
+Met het voorbeeld hierboven: € 1.200 ÷ 3 maanden (oktober, november, december) = € 400 per maand. Als je in september was begonnen, was het voor hetzelfde totaal € 300. Elke maand uitstel verhoogt het maandbedrag, daarom is oktober een goed moment: je kunt de kosten nog spreiden en het is nog niet dringend.
+
+Twee aanpassingen om meteen te doen:
+
+- **Koop cadeaus eerder dan eten.** Sinterklaascadeaus moeten er vóór 5 december zijn, het kerstdiner koop je pas in december. De eerste termijnen gaan dus naar cadeaus en de laatste wacht op de supermarkt.
+- **Schrikt het maandbedrag je af, verlaag dan het totaal, niet het aantal maanden.** Verlaag het bedrag per persoon of maak de cadeaulijst korter. Dezelfde som in minder tijd betalen lost niets op.
+
+## Stappenlijst
+
+1. **Schrijf je cadeaulijst op.** Wie krijgt iets en wat is het maximum per persoon? De som is je regel "Cadeaus".
+2. **Kijk naar vorig jaar.** Als je je uitgaven bijhield, zie dan wat er in december echt naar eten, reizen en de rest ging. Je eigen gegevens verslaan elk gemiddelde.
+3. **Vul voor alle zes categorieën een bedrag in** en tel op. Dat zijn je totale kosten.
+4. **Deel door de maanden** tot december. Het resultaat is je maandbedrag.
+5. **Plan het sparen op de dag dat je salaris binnenkomt.** Het liefst direct na het eerste salaris van oktober, voordat het geld in de dagelijkse uitgaven verdwijnt.
+6. **Koop dingen van de lijst als ze in de aanbieding zijn**, maar alleen dingen van de lijst. Iets erbij pakken "want het was in de aanbieding" is hoe een budget groeit.
+7. **Noteer wat je uitgeeft.** Een termijn heeft alleen zin als je ziet hoeveel van elke categorie al weg is.
+8. **Maak in januari de balans op.** Vergelijk plan en werkelijkheid en schrijf de verschillen op voor volgend jaar. Over twaalf maanden heb je je eigen basis in plaats van gokwerk.
+
+## Zo doe je het in AI Budget Assistant
+
+Alles hierboven kan in een spreadsheet. In de app zijn drie dingen gewoon handiger.
+
+**Een categoriebudget met een eigen periode.** Je kunt een budget maken in de modus "Per categorie" met een aangepaste periode van 1 oktober tot en met 31 december en elk van de zes categorieën een eigen limiet geven. Elke vastgelegde uitgave telt mee voor de juiste limiet, dus half november zie je hoeveel van "Cadeaus" al is uitgegeven. Scan je een kassabon van de boodschappen, dan worden de regels over categorieën verdeeld en telt elk deel mee voor het budget van die categorie.
+
+**Een gedeelde boodschappenlijst met je gezin.** Op een gedeeld account zien en bewerken iedereen dezelfde lijst, zodat cadeaus en ingrediënten voor het diner niet dubbel worden gekocht. Iemand zonder de app kun je een openbare link naar de lijst sturen: die kan tijdens het winkelen items afvinken zonder een account aan te maken.
+
+**Prijzen uit je eigen kassabonnen.** Het [inflatieschild](/blog/nl/inflatieschild/) kijkt naar de prijzen van producten die je echt koopt en wijst, op basis van de trend in je eigen bonnen, aan wat het loont om vooruit te kopen. Dat is trendstatistiek, geen voorspelling, en de geschatte besparing is een voorzichtige schatting. Het heeft een paar gescande bonnen van hetzelfde product nodig en stelt alleen dingen voor die houdbaar zijn, zoals voorraadproducten en huishoudspullen, geen verse etenswaren. Voor de feestdagen kan dat bloem, suiker of koffie zijn, maar niet de vis.
+
+Wil je sparen liever als doel zien, dan kun je in de app ook een spaardoel met een deadline in december aanmaken en elke termijn daaraan toevoegen. De app vind je op [ai-budget.pl](https://ai-budget.pl) en in [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); je hebt er geen betaalkaart voor nodig.
+
+Meer over geld opzijzetten zonder grote offers lees je in [geld besparen](/blog/nl/geld-besparen/), en voor de feestboodschappen zelf in [besparen op boodschappen](/blog/nl/besparen-op-boodschappen/).
+
+## Veelgemaakte valkuilen
+
+**Vergeten categorieën.** Cadeaus telt iedereen mee. Reizen, kerstborrels en markten tellen weinig mensen mee, en in december maken juist die regels het verschil.
+
+**Geen buffer.** Reken een kleine reserve voor vergeten dingen bij het totaal en zet die als aparte regel in je budget, zodat ze de rest niet vertroebelt.
+
+**"Even" op de creditcard zetten.** Als het plan ervan uitgaat dat je in januari iets aflost, is het geen plan maar uitgestelde kosten. Het geld dat je elke maand opzijzet, is er juist om dat te voorkomen.
+
+**Pas in december beginnen.** Dan werkt de formule niet meer: je deelt door één maand. Zit je al in november, begin dan toch nu en stem het totaal af op de maanden die je nog hebt.
+
+## FAQ: kerstbudget
+
+**Wat kost kerst?**
+Dat hangt af van hoeveel mensen je cadeaus geeft, hoe ver je reist en hoeveel gasten je ontvangt, dus er is geen betrouwbaar vast bedrag. Het eerlijke antwoord is je eigen som van zes categorieën: cadeaus, feestmaaltijd, reizen, versiering, uitjes en outfits, en giften. De bedragen in de tabel van dit artikel zijn alleen een voorbeeld.
+
+**Wanneer begin ik met sparen voor Sinterklaas en kerst?**
+Het liefst in oktober, dan heb je drie termijnen tot december. Hoe eerder je begint, hoe kleiner elke termijn. Is het al november, wacht dan niet op een beter moment: begin nu en deel het totaal door twee maanden.
+
+**Hoe reken ik uit hoeveel ik per maand moet sparen?**
+Tel de geplande kosten van alle categorieën op en deel door het aantal maanden tot de feestdagen. Bij een totaal van € 1.200 en drie maanden is de termijn € 400. Dit is een illustratieve berekening; gebruik je eigen cijfers.
+
+**Hoe verlaag ik de kosten van cadeaus zonder dat het ongemakkelijk wordt?**
+Spreek vóór het winkelen een bedrag per persoon af en maak de lijst korter, bijvoorbeeld met lootjes trekken of surprises in grote families. Een gedeelde cadeaulijst voorkomt dubbele aankopen en vastgelegde uitgaven laten zien hoeveel er nog over is in de categorie.
+
+**Voorspelt de app de prijzen rond de feestdagen?**
+Nee. Het inflatieschild laat de prijstrend zien van producten die je koopt, op basis van je eigen bonnen, en de geschatte besparing is een voorzichtige schatting. Het heeft een paar bonnen van hetzelfde product nodig en dekt alleen wat je kunt bewaren.
+
+**Kan ik de feestdagen samen met mijn partner of gezin plannen?**
+Ja. Op een gedeeld account zien en bewerken iedereen dezelfde uitgaven en dezelfde boodschappenlijst. Iemand zonder de app kun je een openbare link naar de lijst sturen, zodat die aankopen kan afvinken.
+
+**Wat als ik over mijn kerstbudget heen ga?**
+Kijk welke categorie over de limiet ging en beslis of je geld uit een andere categorie verschuift of de resterende uitgaven inperkt. Schrijf de reden op, zodat je volgend jaar met een realistischer bedrag start.
 
 ## Noodfonds: hoeveel je nodig hebt en hoe je het opbouwt
 URL: https://ai-budget.pl/blog/nl/noodfonds/
@@ -3194,6 +3375,7 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 
 - **Hetzelfde bestand opnieuw** — kies je een foto of PDF die al gescand en opgeslagen is, dan krijg je de vraag *vóór* het uitlezen, zodat er geen AI-verzoek wordt verbruikt. **Openen** toont de opgeslagen uitgave, **Toch scannen** leest de bon opnieuw, **Annuleren** annuleert.
 - **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
+- **Al vastgelegd door je bank** — kwam de overeenkomende uitgave uit een bankmelding of een geïmporteerd afschrift, dan zegt de melding dat en biedt **Samenvoegen tot één uitgave** aan. Aangevinkt bewaart opslaan het bonnetje (artikelen, foto en categorie) en vervangt het de bankregel, zodat de aankoop één keer telt. Komen alleen bedrag en datum overeen, dan staat het vakje eerst uit — controleer vóór het samenvoegen.
 
 De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
 

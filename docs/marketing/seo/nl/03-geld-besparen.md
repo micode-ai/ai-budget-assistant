@@ -127,3 +127,5 @@ Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te spare
 - [Voorraad aanleggen vóór prijsstijgingen: inflatieschild](/blog/nl/inflatieschild/)
 - [Wisselkoersalert: melding bij jouw doelkoers](/blog/nl/wisselkoersalert/)
 - [Budget in twee valuta's: grip houden op je geld](/blog/nl/budget-in-twee-valutas/)
+- [Kerstbudget maken: wat kost het en hoeveel spaar je?](/blog/nl/kerstbudget/)
+- [Black Friday: herken echte aanbiedingen en nepkortingen](/blog/nl/black-friday-echte-aanbiedingen/)

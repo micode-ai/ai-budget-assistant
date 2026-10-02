@@ -123,3 +123,5 @@ date: "2026-06-19"
 - [Запас впрок до подорожания: щит от инфляции](/blog/ru/shchit-ot-inflyatsii/)
 - [Оповещение о курсе валют, когда он достигнет цели](/blog/ru/opoveshchenie-o-kurse-valyut/)
 - [Бюджет в двух валютах: как не терять деньги на курсе](/blog/ru/byudzhet-v-dvukh-valyutakh/)
+- [Бюджет на Новый год и Рождество: сколько отложить](/blog/ru/byudzhet-na-novyy-god/)
+- [Чёрная пятница: как проверить скидку и не переплатить](/blog/ru/chernaya-pyatnica-skidki/)

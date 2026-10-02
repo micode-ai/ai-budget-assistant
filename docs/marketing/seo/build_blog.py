@@ -314,7 +314,7 @@ PAIR_TO_HELP = {
 CLUSTERS = {
     "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school", "irregular-income"],
     "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app"],
-    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency"],
+    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday"],
 }
 def category_of(pair):
     """The pillar a topic belongs to; a pillar is its own category."""

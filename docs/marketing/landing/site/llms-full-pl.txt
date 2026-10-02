@@ -244,6 +244,91 @@ Skan paragonu i wejście głosowe zmniejszają czas wpisywania jednego wydatku d
 
 *Powiązane artykuły: [Jak zaimportować wyciąg bankowy do budżetu](/blog/pl/jak-zaimportowac-wyciag-bankowy/) | [AI w zarządzaniu finansami: jak naprawdę pomaga](/blog/pl/ai-w-zarzadzaniu-finansami/)*
 
+## Black Friday: fałszywe promocje i jak nie przepłacić
+URL: https://ai-budget.pl/blog/pl/black-friday-promocje/
+
+**Krótka odpowiedź:** nie oceniaj promocji po tym, ile procent widnieje na plakacie, tylko po tym, ile płacisz w porównaniu z najniższą ceną z ostatnich 30 dni i z tym, co masz na swojej liście. Trzy proste kroki: ustal z góry limit i listę rzeczy, których naprawdę potrzebujesz, sprawdź cenę sprzed obniżki, a przy zakupie z rozpędu poczekaj dobę. Reszta tego tekstu to rozwinięcie tych trzech zdań.
+
+Black Friday nie rujnuje budżetów dlatego, że wszystko jest drogie. Rujnuje je, bo przez kilka dni każdy sklep mówi „teraz albo nigdy”, a ty kupujesz rzeczy, których nie było na żadnej liście. W 2026 roku wypada 27 listopada, więc jest czas, żeby się przygotować spokojnie, bez wymyślonych „średnich oszczędności” i bez straszenia.
+
+## Jak sprawdzić, czy promocja jest prawdziwa
+
+**1. Poznaj regułę najniższej ceny z 30 dni.** Od 2023 roku w Polsce obowiązują przepisy wprowadzone unijną dyrektywą Omnibus. Gdy sklep ogłasza obniżkę ceny, musi pokazać najniższą cenę, jaka obowiązywała w ciągu 30 dni przed wprowadzeniem obniżki. Procent obniżki ma się odnosić właśnie do tej ceny, a nie do dowolnej „ceny wyjściowej”. Dla towarów, które są w sprzedaży krócej niż 30 dni, przepisy przewidują krótszy okres, a przy kolejnych obniżkach z rzędu szczegóły zależą od przepisów krajowych, więc czytaj drobny druk przy cenie.
+
+Dwa zastrzeżenia. Po pierwsze, reguła nie zabrania podnosić cen przed wyprzedażą: wymusza tylko, żeby porównanie było uczciwe. Jeśli cena tydzień wcześniej była wyższa niż zwykle, najniższa z 30 dni nadal pokaże prawdziwy punkt odniesienia. Po drugie, „cena rekomendowana przez producenta” albo „cena regularna” to nie to samo co informacja o obniżce, więc taka przekreślona kwota niczego nie dowodzi. Jeśli podejrzewasz, że sklep łamie przepisy, możesz zgłosić to do UOKiK.
+
+**2. Sprawdź własną historię cen.** Jeśli kupowałeś już dany produkt i skanowałeś paragon, w AI Budget Assistant możesz zobaczyć, ile i w którym sklepie za niego płaciłeś. To działa dla rzeczy, które kupujesz i skanujesz sam, a nie dla cen w internetowych sklepach, bo aplikacja zna wyłącznie twoje paragony. Dla pralki, której nigdy nie kupowałeś, historii nie ma, i wtedy zostaje reguła z punktu 1 oraz własne notatki.
+
+**3. Zrób zrzut ekranu ceny tydzień lub dwa wcześniej.** Najprostsza „historia cen” to ta, którą zapisałeś sam. Od końca października, czyli 30 dni przed Black Friday, możesz zapisywać ceny trzech-czterech rzeczy z listy.
+
+**4. Policz prawdziwą obniżkę.** Kwota z plakatu nie jest ważna. Ważne jest: (najniższa cena z 30 dni − cena w promocji) ÷ najniższa cena z 30 dni.
+
+## Najczęstsze pułapki
+
+**Odliczanie i „zostały 2 sztuki”.** Presja czasu ma sprawić, że kupisz zanim policzysz. Uczciwa promocja przetrwa dobę.
+
+**„Nawet do −70%”.** Taki zapis mówi o jednym produkcie z wielu. Nie mówi nic o rzeczy, którą masz na liście.
+
+**Zestawy i gratisy.** Zestaw „kup dwa, płać mniej” bywa tańszy tylko wtedy, gdy naprawdę potrzebujesz obu. Gratis, którego nie chciałeś, nie jest oszczędnością.
+
+**Bezpłatny okres próbny.** Wiele ofert Black Friday zachęca do darmowego okresu, który potem sam zamienia się w płatną subskrypcję. Zapisz od razu, kiedy zacznie się naliczanie opłat.
+
+**Raty „0%” i dopłaty.** Rozłożenie płatności nie zmienia tego, ile wydajesz, tylko moment, w którym to czujesz.
+
+## Checklista przed Black Friday
+
+1. **Spisz, czego naprawdę potrzebujesz.** Rzeczy, które i tak planowałeś kupić w ciągu najbliższych miesięcy. Wszystko spoza listy to impuls.
+2. **Ustaw limit.** Jedna kwota na całą wyprzedaż, najlepiej odłożona z góry, a nie „zobaczymy”.
+3. **Sprawdzaj ceny z wyprzedzeniem.** Zapisz ceny rzeczy z listy w ostatnich tygodniach października i listopada.
+4. **Dla zakupów z rozpędu zastosuj zasadę 24 godzin.** Dodaj do koszyka, zamknij kartę, wróć jutro. Jeśli wciąż chcesz i mieści się w limicie, kupuj.
+5. **Prezenty księguj na budżet świąteczny.** To, co kupisz w Black Friday dla bliskich, nie jest dodatkowym wydatkiem, tylko pozycją z [budżetu na święta](/blog/pl/budzet-na-swieta/). Odejmij je od tamtej puli, zamiast liczyć dwa razy.
+6. **Przejrzyj subskrypcje.** Wyłącz te, z których nie korzystasz, zanim sklep zaproponuje nowe.
+7. **Nie zostawiaj danych karty „na później”.** Mniej odruchowych zakupów jednym kliknięciem.
+8. **Po wyprzedaży zrób rozliczenie.** Porównaj, ile wydałeś, z limitem, i zapisz wnioski na przyszły rok.
+
+## Przykład: jak to policzyć (ilustracja)
+
+**To jest wyłącznie przykład.** Liczby są wymyślone, żeby rachunek było widać; nie pochodzą z żadnego badania.
+
+Sklep reklamuje słuchawki: „−38%, było 650 zł, teraz 400 zł”. Sprawdzasz najniższą cenę z 30 dni przed obniżką i widzisz 500 zł. Prawdziwa obniżka to (500 − 400) ÷ 500 = 20%, nie 38%. Może to nadal dobra cena, ale decydujesz na podstawie 100 zł oszczędności, nie 250 zł. A jeśli słuchawek nie było na twojej liście, najtańsza opcja to wydać 0 zł.
+
+## Jak to poprowadzić w AI Budget Assistant
+
+Wszystko wyżej da się zrobić na kartce. W aplikacji kilka rzeczy jest po prostu wygodniejszych.
+
+**Lista zakupów z cenami.** Dodaj do listy tylko to, co zaplanowałeś, i przy pozycjach wpisz cenę, jaką chcesz zapłacić (przycisk „+ Cena”). Suma pokazuje, ile wyniesie cały koszyk, zanim dojdziesz do kasy.
+
+**Budżet z kategoriami na własny okres.** Możesz założyć budżet na wybrany okres, na przykład od 20 listopada do 2 grudnia, z limitem na jedną kategorię. Każdy zapisany wydatek zmniejsza limit, więc widzisz, ile jeszcze możesz wydać.
+
+**Własna historia cen.** Dla produktów, które kupujesz i skanujesz, aplikacja pokazuje wykres cen i sklep, w którym płaciłeś najmniej. [Tarcza antyinflacyjna](/blog/pl/tarcza-antyinflacyjna/) wskazuje rzeczy trwałe, które warto kupić z wyprzedzeniem, na podstawie trendu z twoich paragonów. To statystyka trendu, nie sztuczna inteligencja i nie przepowiednia, a szacowana oszczędność jest ostrożnym szacunkiem.
+
+**Menedżer subskrypcji.** Dodaj okres próbny jako subskrypcję z datą, od której zacznie się naliczanie opłat, a aplikacja przypomni o niej z trzydniowym wyprzedzeniem. Jeśli zrezygnujesz, usuń wpis.
+
+Aplikację znajdziesz na [ai-budget.pl](https://ai-budget.pl) oraz w [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); działa bez karty płatniczej. Więcej o rozsądnym wydawaniu znajdziesz w poradniku [jak oszczędzać pieniądze](/blog/pl/jak-oszczedzac-pieniadze/) i w tekście o [subskrypcjach](/blog/pl/jak-zarzadzac-subskrypcjami/).
+
+## FAQ: Black Friday i promocje
+
+**Czy promocje w Black Friday są prawdziwe?**
+Bywa różnie, i nie ma jednej odpowiedzi na wszystkie sklepy. Zamiast zgadywać, porównaj cenę promocyjną z najniższą ceną z 30 dni przed obniżką, którą sklep ma obowiązek pokazać, i z tym, ile zwykle płaciłeś.
+
+**Jaka jest reguła najniższej ceny z 30 dni?**
+To przepis oparty na unijnej dyrektywie Omnibus, obowiązujący w Polsce od 2023 roku. Przy ogłaszaniu obniżki sklep musi podać najniższą cenę z 30 dni przed jej wprowadzeniem, a procent obniżki liczy się od tej ceny. Dla towarów w sprzedaży krócej niż 30 dni obowiązuje krótszy okres.
+
+**Jak sprawdzić, czy cena była wcześniej niższa?**
+Zobacz informację o najniższej cenie z 30 dni przy produkcie, zrób zrzut ekranu ceny kilka tygodni przed wyprzedażą i porównaj ją z własnymi paragonami. W aplikacji możesz zobaczyć, ile płaciłeś za produkty, które skanowałeś.
+
+**Czy aplikacja śledzi ceny w sklepach internetowych?**
+Nie. AI Budget Assistant zna tylko ceny z twoich własnych paragonów. Nie monitoruje sklepów online i nie ocenia, czy promocja jest uczciwa.
+
+**Jak nie kupować pod wpływem impulsu?**
+Spisz listę, ustal limit i zastosuj zasadę 24 godzin: dodaj do koszyka, zamknij kartę i wróć następnego dnia. Rzeczy spoza listy kupuj tylko wtedy, gdy po dobie nadal ich chcesz i mieszczą się w limicie.
+
+**Jak uniknąć pułapki z bezpłatnym okresem próbnym?**
+Zapisz od razu datę, od której zacznie się naliczanie opłat, i zrezygnuj przed nią, jeśli usługa nie jest ci potrzebna. W aplikacji możesz dodać okres próbny jako subskrypcję i dostać przypomnienie z trzydniowym wyprzedzeniem.
+
+**Czy prezenty kupione w Black Friday wliczają się do budżetu na święta?**
+Tak, to ten sam pieniądz. Odejmij je od puli na prezenty, żeby nie wydać dwa razy na to samo.
+
 ## Budżet domowy w Excelu: szablon i kiedy przestaje wystarczać
 URL: https://ai-budget.pl/blog/pl/budzet-domowy-w-excelu/
 
@@ -382,6 +467,102 @@ Dajcie dziecku własne kieszonkowe, którym może zarządzać, i pomóżcie usta
 ---
 
 *Powiązane artykuły: [Jak prowadzić budżet domowy krok po kroku](/blog/pl/jak-prowadzic-budzet-domowy/) | [Wspólny budżet dla par](/blog/pl/wspolny-budzet-dla-par/)*
+
+## Ile kosztują święta? Budżet na Boże Narodzenie krok po kroku
+URL: https://ai-budget.pl/blog/pl/budzet-na-swieta/
+
+**Krótka odpowiedź:** nie da się podać jednej kwoty, bo koszt świąt zależy od tego, ilu osobom kupujesz prezenty, dokąd jedziesz i jak jesz przy wigilijnym stole. Da się za to policzyć własną kwotę w godzinę: rozpisz sześć kategorii wydatków, zsumuj je i podziel przez liczbę miesięcy, które zostały do grudnia. Wynik to kwota, którą odkładasz co miesiąc, zaczynając od października.
+
+Święta rzadko rujnują budżet dlatego, że są drogie. Rujnują go, bo przychodzą jednym ciosem w grudniu, a pieniądze na nie nigdy nie miały własnej pozycji. Ten tekst pokazuje, jak taką pozycję stworzyć, bez wymyślonych „średnich krajowych" i bez zgadywania.
+
+## Z czego składa się budżet na święta
+
+Większość świątecznych wydatków mieści się w sześciu kategoriach. Poniższa tabela to szkielet, który wypełniasz własnymi liczbami.
+
+| Kategoria | Co w niej jest | Przykładowa kwota (ilustracja) |
+|---|---|---|
+| Prezenty | Lista osób × kwota na osobę, opakowania, wysyłka | 1200 zł |
+| Jedzenie świąteczne | Wigilia, obiady, ciasta, napoje, goście | 700 zł |
+| Podróże | Bilety lub paliwo do rodziny, nocleg | 500 zł |
+| Dekoracje | Choinka, lampki, ozdoby, świece | 200 zł |
+| Wydarzenia i stroje | Firmowa wigilia, jarmark, ubrania na święta | 250 zł |
+| Datki i wsparcie | Zbiórki, pomoc dla kogoś, napiwki | 150 zł |
+| **Razem** | | **3000 zł** |
+
+**To jest wyłącznie przykład.** Liczby są okrągłe, żeby rachunek było widać; nie pochodzą z żadnego badania i nie są średnią czegokolwiek. Twoje będą inne, i o to chodzi: kategorie zostają, kwoty wpisujesz sam.
+
+Dwie uwagi do tabeli. Po pierwsze, kategorii „Podróże" i „Wydarzenia" nie pomijaj, bo to one najczęściej pojawiają się w grudniu bez ostrzeżenia. Po drugie, jeśli masz kategorię, której tu nie ma (prezent dla zwierzaka, dodatkowy gość, kartki i znaczki), dopisz ją. Lepsza własna lista niż cudza.
+
+## Wzór: ile odkładać co miesiąc
+
+Wzór jest prosty:
+
+**łączny koszt świąt ÷ liczba miesięcy do świąt = kwota do odłożenia co miesiąc**
+
+W przykładzie z tabeli: 3000 zł ÷ 3 miesiące (październik, listopad, grudzień) = 1000 zł miesięcznie. Gdybyś zaczął miesiąc wcześniej, we wrześniu, ta sama suma dałaby 750 zł. Każdy miesiąc zwłoki podnosi miesięczną ratę, dlatego październik jest dobrym momentem: nadal da się rozłożyć koszt, a jeszcze nie jest pilnie.
+
+Dwie korekty, które warto zrobić od razu:
+
+- **Kupuj prezenty wcześniej niż jedzenie.** Prezenty możesz kupić już w listopadzie, a jedzenie dopiero w grudniu, więc pierwsze raty wydasz na prezenty, a ostatnia poczeka na zakupy spożywcze.
+- **Jeśli kwota miesięczna cię przeraża, zmniejsz sumę, nie liczbę miesięcy.** Obniż kwotę na osobę albo ogranicz listę obdarowanych. Rozłożenie tej samej sumy na krótszy czas niczego nie rozwiązuje.
+
+## Checklista krok po kroku
+
+1. **Spisz listę osób.** Kto dostaje prezent i ile chcesz maksymalnie wydać na każdą z nich. Suma to twoja kategoria „Prezenty".
+2. **Sprawdź zeszły rok.** Jeśli prowadziłeś wydatki, zobacz, ile naprawdę poszło w grudniu na jedzenie, podróże i resztę. Własne dane są lepsze od każdej średniej.
+3. **Wpisz kwoty do sześciu kategorii** i zsumuj. To twój całkowity koszt.
+4. **Podziel przez miesiące** do grudnia. Wynik to miesięczna rata.
+5. **Ustaw odkładanie na dzień wypłaty.** Najlepiej od razu po pierwszym przelewie w październiku, zanim pieniądze rozejdą się na bieżące wydatki.
+6. **Kup coś na liście, kiedy jest okazja**, ale tylko to, co jest na liście. Dopisanie czegoś „bo była promocja" to sposób, w jaki budżet rośnie.
+7. **Zapisuj, co wydajesz.** Rata ma sens tylko wtedy, gdy widzisz, ile z każdej kategorii już poszło.
+8. **W styczniu zrób rozliczenie.** Porównaj plan z rzeczywistością i zapisz różnice na przyszły rok. Za dwanaście miesięcy będziesz miał własną bazę zamiast zgadywania.
+
+## Jak to poprowadzić w AI Budget Assistant
+
+Wszystko powyżej da się zrobić w arkuszu. W aplikacji trzy rzeczy są po prostu wygodniejsze.
+
+**Budżet z kategoriami na własny okres.** Możesz utworzyć budżet w trybie „Według kategorii", z własnym okresem od 1 października do 31 grudnia, i przypisać limit każdej z sześciu kategorii. Każdy zapisany wydatek liczy się do właściwego limitu, więc w połowie listopada widzisz, ile z „Prezentów" już poszło. Jeśli zeskanujesz paragon z zakupów, jego pozycje są dzielone między kategorie, a udział każdej trafia do jej budżetu.
+
+**Wspólna lista zakupów z rodziną.** Na koncie wspólnym wszyscy widzą i edytują jedną listę, więc prezenty i składniki wigilii nie są kupowane dwa razy. Osobie bez aplikacji możesz wysłać publiczny link do listy: może odhaczać pozycje przy zakupach, bez zakładania konta.
+
+**Ceny z twoich własnych paragonów.** [Tarcza antyinflacyjna](/blog/pl/tarcza-antyinflacyjna/) analizuje ceny produktów, które sam kupujesz, i na podstawie trendu z twoich paragonów wskazuje te, które warto kupić z wyprzedzeniem. To statystyka trendu, a nie przewidywanie przyszłości, a szacowana oszczędność jest ostrożnym szacunkiem. Funkcja potrzebuje kilku zeskanowanych paragonów tego samego produktu i podpowiada tylko rzeczy, które da się przechować, jak produkty suche i chemia, a nie świeże. W kontekście świąt może to dotyczyć mąki, cukru czy kawy, ale nie karpia.
+
+Jeśli wolisz traktować odkładanie jak cel, możesz też założyć w aplikacji cel oszczędnościowy z terminem w grudniu i dopisywać do niego kolejne raty. Aplikację znajdziesz na [ai-budget.pl](https://ai-budget.pl) oraz w [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); działa bez karty płatniczej.
+
+Więcej o odkładaniu pieniędzy bez wielkich wyrzeczeń znajdziesz w poradniku [jak oszczędzać pieniądze](/blog/pl/jak-oszczedzac-pieniadze/), a świąteczne zakupy spożywcze opisujemy osobno: [oszczędzanie na jedzeniu](/blog/pl/jak-oszczedzac-na-jedzeniu/).
+
+## Najczęstsze pułapki
+
+**Pominięte kategorie.** Prezenty wszyscy liczą. Podróże, firmowe wigilie i jarmarki liczy niewielu, a w grudniu to one robią różnicę.
+
+**Brak bufora.** Dopisz do sumy niewielki zapas na rzeczy, o których zapomniałeś, i wpisz go jako osobną pozycję, żeby nie rozmywał pozostałych.
+
+**Płacenie kartą kredytową „na razie".** Jeśli plan zakłada, że w styczniu coś spłacisz, to nie jest plan, tylko przesunięcie kosztu. Pieniądze, które odkładasz co miesiąc, mają właśnie temu zapobiec.
+
+**Zaczynanie w grudniu.** Wtedy wzór nie działa: dzielisz przez jeden miesiąc. Jeśli jesteś już w listopadzie, nadal zacznij teraz i dopasuj sumę do liczby miesięcy, które ci zostały.
+
+## FAQ: budżet na święta
+
+**Ile kosztują święta?**
+To zależy od liczby obdarowanych osób, podróży i gości przy stole, więc nie ma jednej wiarygodnej kwoty. Rzetelna odpowiedź to twoja własna suma z sześciu kategorii: prezenty, jedzenie, podróże, dekoracje, wydarzenia i stroje oraz datki. Kwoty z tabeli w tym artykule są wyłącznie przykładem.
+
+**Od kiedy zacząć odkładać na święta?**
+Najlepiej od października, bo masz wtedy trzy raty do grudnia. Im wcześniej zaczniesz, tym mniejsza miesięczna rata. Jeśli jest już listopad, nie czekaj na lepszy moment: zacznij od razu i podziel sumę przez dwa miesiące.
+
+**Jak policzyć, ile odłożyć co miesiąc?**
+Zsumuj planowane koszty wszystkich kategorii i podziel przez liczbę miesięcy do świąt. Przy sumie 3000 zł i trzech miesiącach rata wynosi 1000 zł. To rachunek ilustracyjny; wstaw własne liczby.
+
+**Jak ograniczyć koszt prezentów bez wstydu?**
+Ustal kwotę na osobę przed zakupami i ogranicz listę, na przykład losując, kto komu kupuje, w większych rodzinach. Wspólna lista prezentów pozwala uniknąć dublowania zakupów, a zapisywane wydatki pokazują, ile zostało w kategorii.
+
+**Czy aplikacja przewidzi ceny świątecznych produktów?**
+Nie przewiduje. Tarcza antyinflacyjna pokazuje trend cen produktów, które sam kupujesz, na podstawie twoich paragonów, a szacowana oszczędność jest ostrożnym szacunkiem. Potrzebuje kilku paragonów z tym samym produktem i dotyczy rzeczy, które można przechować.
+
+**Czy mogę planować święta razem z partnerem lub rodziną?**
+Tak. Na koncie wspólnym wszyscy widzą i edytują te same wydatki i tę samą listę zakupów. Osobie bez aplikacji możesz wysłać publiczny link do listy, żeby mogła odhaczać zakupy.
+
+**Co zrobić, jeśli przekroczę budżet na święta?**
+Sprawdź, która kategoria wyszła poza limit, i zdecyduj, czy przesuniesz pieniądze z innej, czy zmniejszysz kolejne wydatki. Zapisz przyczynę, żeby w przyszłym roku zacząć od realniejszej kwoty.
 
 ## Budżet przy nieregularnych dochodach: co działa
 URL: https://ai-budget.pl/blog/pl/budzet-przy-nieregularnych-dochodach/
@@ -887,6 +1068,8 @@ Tak, szczególnie jeśli trudno ci wyrobić nawyk. Aplikacja daje natychmiastowy
 - [Zapasy przed podwyżką: tarcza antyinflacyjna w budżecie](/blog/pl/tarcza-antyinflacyjna/)
 - [Alert kursu walut: powiadomienie o wymarzonym kursie](/blog/pl/alert-kursu-walut/)
 - [Budżet w dwóch walutach: jak nie gubić się w przeliczeniach](/blog/pl/budzet-w-dwoch-walutach/)
+- [Ile kosztują święta? Budżet na Boże Narodzenie krok po kroku](/blog/pl/budzet-na-swieta/)
+- [Black Friday: fałszywe promocje i jak nie przepłacić](/blog/pl/black-friday-promocje/)
 
 ## Jak podzielić rachunek ze znajomymi: 3 sposoby
 URL: https://ai-budget.pl/blog/pl/jak-podzielic-rachunek/
@@ -3185,6 +3368,7 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 
 - **Ten sam plik ponownie** — jeśli wybierzesz zdjęcie lub PDF, który został już zeskanowany i zapisany, zobaczysz pytanie *przed* odczytem, więc żadne zapytanie AI nie zostanie zużyte. **Otwórz** pokaże zapisany wydatek, **Skanuj mimo to** odczyta paragon ponownie, **Anuluj** — anuluje.
 - **Ten sam paragon, nowe zdjęcie** — jeśli po odczycie istnieje już wydatek z tym samym sklepem, kwotą i datą (±1 dzień), na ekranie potwierdzenia pojawi się żółty komunikat z przyciskiem **Otwórz**. Nadal możesz zapisać: to może być naprawdę drugi zakup.
+- **Już zapisane przez bank** — jeśli pasujący wydatek pochodzi z powiadomienia banku albo z importu wyciągu, komunikat to pokazuje i proponuje **Połącz w jeden wydatek**. Gdy pole jest zaznaczone, zapis zachowa paragon (pozycje, zdjęcie i kategorię) i zastąpi wpis z banku, więc zakup zostanie policzony raz. Jeśli zgadzają się tylko kwota i data, pole jest na początku odznaczone — sprawdź przed połączeniem.
 
 Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
 

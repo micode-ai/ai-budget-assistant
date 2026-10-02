@@ -463,6 +463,187 @@ Look for true shared accounts where both people log from their own phones into o
 
 *Related articles: [Expense tracker: how to keep up with spending](/blog/en/expense-tracker/) | [How to budget your money step by step](/blog/en/how-to-budget/)*
 
+## Are Black Friday Deals Real? How to Check Before You Buy
+URL: https://ai-budget.pl/blog/en/black-friday-deals-real/
+
+**Short answer:** do not judge a deal by the percentage on the banner. Judge it by what you pay compared with the lowest price of the previous 30 days, and by whether it was on your list at all. Three steps: set a cap and a list of what you actually need before the sales start, check the price before the discount, and wait 24 hours on anything you feel like grabbing on impulse. The rest of this guide expands those three sentences.
+
+Black Friday rarely wrecks a budget because everything is expensive. It does it because for a few days every shop says "now or never" and you buy things that were on no list. In 2026 it falls on 27 November, so there is time to prepare calmly, without invented "average savings" and without scare tactics.
+
+## How to check if a deal is real
+
+**1. Know the 30-day lowest price rule.** Under the EU's Omnibus Directive, which national laws across the EU have applied since 2022-2023, a shop that announces a price reduction has to show the lowest price it charged in the 30 days before the reduction. The percentage is meant to be measured against that price, not against any "original price" the shop picks. For goods sold for less than 30 days, the rules allow a shorter period, and for successive markdowns the details depend on national law, so read the small print next to the price.
+
+Two caveats. First, the rule does not stop a shop from raising prices before a sale: it only requires the comparison to be honest. Second, a "manufacturer's recommended price" or "regular price" is not the same as a notice of a reduction, so a crossed-out figure like that proves nothing. If you suspect a shop is breaking the rules, you can report it to your national consumer authority.
+
+**2. Check your own price history.** If you have bought the product before and scanned the receipt, AI Budget Assistant can show what you paid and at which shop. This works for things you buy and scan yourself, not for prices in online shops, because the app only knows your own receipts. For a washing machine you have never bought there is no history, and you are left with the rule in step 1 and your own notes.
+
+**3. Screenshot the price a week or two ahead.** The simplest price history is the one you save yourself. From the end of October, which is 30 days before Black Friday, note the prices of three or four items on your list.
+
+**4. Calculate the real discount.** The number on the banner does not matter. This does: (lowest price in the last 30 days − sale price) ÷ lowest price in the last 30 days.
+
+## The most common traps
+
+**Countdown timers and "only 2 left".** Time pressure is there to make you buy before you do the sum. A genuine deal will still be there tomorrow.
+
+**"Up to 70% off".** That describes one product among many. It says nothing about the item on your list.
+
+**Bundles and freebies.** "Buy two, pay less" is cheaper only if you truly need both. A freebie you did not want is not a saving.
+
+**Free trials.** Many Black Friday offers come with a free period that quietly turns into a paid subscription. Write down the date charging starts straight away.
+
+**"0%" instalments.** Spreading a payment does not change how much you spend, only when you feel it.
+
+## A pre-Black-Friday checklist
+
+1. **Write down what you actually need.** Things you were going to buy in the next few months anyway. Anything off the list is an impulse.
+2. **Set a cap.** One amount for the whole sale, ideally set aside in advance rather than "we'll see".
+3. **Watch prices early.** Note the prices of list items in late October and November.
+4. **Apply the 24-hour rule to impulse buys.** Add to cart, close the tab, come back tomorrow. If you still want it and it fits the cap, buy it.
+5. **Count gifts against your Christmas budget.** What you buy for others on Black Friday is not extra spending, it is a line from your [Christmas budget](/blog/en/christmas-budget/). Subtract it from that pot instead of counting it twice.
+6. **Review your subscriptions.** Cancel the ones you do not use before a shop offers you new ones.
+7. **Do not leave card details saved "for later".** Fewer one-click reflex purchases.
+8. **Review afterwards.** Compare what you spent with your cap and write down what you learned for next year.
+
+## Worked example (illustration)
+
+**This is an example only.** The figures are made up so the arithmetic is easy to follow; they do not come from any survey.
+
+A shop advertises headphones: "40% off, was $200, now $120". You check the lowest price of the previous 30 days and it was $150. The real reduction is ($150 − $120) ÷ $150 = 20%, not 40%. It may still be a fine price, but you are deciding on a $30 saving, not an $80 one. And if the headphones were not on your list, the cheapest option is spending $0.
+
+## How to run it in AI Budget Assistant
+
+Everything above can be done on paper. In the app, a few things are simply easier.
+
+**A shopping list with prices.** Put only what you planned on the list and enter the price you are willing to pay next to each item (the "+ Price" button). The total shows what the whole basket will cost before you reach the checkout.
+
+**A category budget on a custom period.** You can create a budget for a period you choose, for example 20 November to 2 December, with a limit on one category. Every recorded expense draws it down, so you can see what is left.
+
+**Your own price history.** For products you buy and scan, the app shows a price chart and the shop where you paid the least. The [Inflation Shield](/blog/en/inflation-shield-stock-up/) points out durable items worth buying ahead of time, based on the trend in your own receipts. It is trend statistics, not AI and not a prediction, and the estimated saving is a conservative estimate.
+
+**Subscription manager.** Add a free trial as a subscription with the date charging begins, and the app reminds you three days before. If you cancel, delete the entry.
+
+You can find the app at [ai-budget.pl](https://ai-budget.pl) and on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); it works without a payment card. For more on spending sensibly, see [how to save money](/blog/en/how-to-save-money/) and the guide to [tracking subscriptions](/blog/en/track-subscriptions/).
+
+## FAQ: Black Friday deals
+
+**Are Black Friday deals real?**
+It varies, and there is no single answer for every shop. Instead of guessing, compare the sale price with the lowest price of the previous 30 days, which the shop is required to show, and with what you usually pay.
+
+**What is the 30-day lowest price rule?**
+It comes from the EU's Omnibus Directive and applies in national law across the EU. When a shop announces a price cut it must show the lowest price from the 30 days before, and the percentage is measured against that price. For goods sold for less than 30 days a shorter period applies.
+
+**How do I check whether the price was lower before?**
+Look for the 30-day lowest price next to the product, screenshot the price a few weeks before the sale, and compare it with your own receipts. In the app you can see what you paid for products you have scanned.
+
+**Does the app track prices in online shops?**
+No. AI Budget Assistant only knows the prices on your own receipts. It does not monitor online shops and does not judge whether a deal is honest.
+
+**How do I avoid impulse buys?**
+Write a list, set a cap and use the 24-hour rule: add to cart, close the tab and come back the next day. Buy off-list items only if you still want them after a day and they fit the cap.
+
+**How do I avoid the free-trial trap?**
+Note the date charging starts straight away and cancel before it if you do not need the service. In the app you can add the trial as a subscription and get a reminder three days ahead.
+
+**Do gifts bought on Black Friday count toward my Christmas budget?**
+Yes, it is the same money. Subtract them from your gift pot so you do not spend twice on the same thing.
+
+## How Much Does Christmas Cost? A Step-by-Step Budget
+URL: https://ai-budget.pl/blog/en/christmas-budget/
+
+**Short answer:** there is no single number, because what Christmas costs depends on how many people you buy for, how far you travel and what ends up on the table. What you can do is work out your own figure in an hour: list six spending categories, add them up, and divide by the number of months left before December. That result is the amount to set aside each month, starting in October.
+
+Christmas rarely wrecks a budget because it is expensive. It does it because it all lands at once in December, and the money for it never had a line of its own. This guide shows how to give it one, without invented "national averages" and without guessing.
+
+## What a Christmas budget is made of
+
+Nearly every festive expense fits into six categories. The table below is the skeleton; you fill in your own numbers.
+
+| Category | What it covers | Example amount (illustration) |
+|---|---|---|
+| Gifts | People on your list × amount per person, wrapping, postage | $600 |
+| Festive food | Christmas dinner, baking, drinks, guests | $350 |
+| Travel | Tickets or fuel to see family, a place to stay | $250 |
+| Decorations | Tree, lights, ornaments, candles | $100 |
+| Events and outfits | Work party, markets, clothes for the occasion | $125 |
+| Charity and giving | Donations, a neighbour in need, tips | $75 |
+| **Total** | | **$1,500** |
+
+**This is an example only.** The figures are round so the arithmetic is easy to follow; they do not come from any survey and are not an average of anything. Yours will differ, and that is the point: the categories stay, the amounts are yours.
+
+Two notes on the table. First, do not skip travel and events, because they are the lines that most often show up in December without warning. Second, if you have a category that is not here (a pet's present, an extra guest, cards and stamps), add it. Your own list beats someone else's.
+
+## The formula: how much to set aside each month
+
+The formula is short:
+
+**total cost of Christmas ÷ months left until Christmas = amount to set aside each month**
+
+With the example above: $1,500 ÷ 3 months (October, November, December) = $500 a month. Had you started in September, the same total would be $375. Every month of delay raises the monthly instalment, which is why October works well: you can still spread the cost, and it is not yet urgent.
+
+Two adjustments worth making straight away:
+
+- **Buy gifts earlier than food.** Gifts can be bought in November, but groceries only in December, so the first instalments go to gifts and the last one waits for the supermarket.
+- **If the monthly figure scares you, shrink the total, not the number of months.** Lower the amount per person or shorten the gift list. Squeezing the same sum into less time solves nothing.
+
+## A step-by-step checklist
+
+1. **Write down your gift list.** Who gets a present and the most you want to spend on each. The sum is your Gifts line.
+2. **Check last year.** If you tracked spending, see what actually went on food, travel and the rest in December. Your own data beats any average.
+3. **Enter an amount for each of the six categories** and add them up. That is your total cost.
+4. **Divide by the months left** until December. The result is your monthly instalment.
+5. **Schedule the saving for payday.** Ideally right after the first October paycheck arrives, before the money disappears into everyday spending.
+6. **Buy things on the list when they are on offer**, but only things that are on the list. Adding something "because it was on sale" is how a budget grows.
+7. **Record what you spend.** An instalment only means something if you can see how much of each category is already gone.
+8. **Do a review in January.** Compare plan and reality and write down the differences for next year. In twelve months you will have your own baseline instead of guesses.
+
+## How to run it in AI Budget Assistant
+
+Everything above can be done in a spreadsheet. In the app, three things are simply easier.
+
+**A category budget on a custom period.** You can create a budget in "By Category" mode with a custom period from 1 October to 31 December and give each of the six categories its own limit. Every recorded expense counts against the right limit, so in mid-November you can see how much of "Gifts" is already spent. If you scan a grocery receipt, its line items are split across categories and each share counts toward that category's budget.
+
+**A shared shopping list with your family.** On a shared account everyone sees and edits the same list, so gifts and dinner ingredients are not bought twice. For someone who does not have the app, you can send a public link to the list: they can tick items off while shopping without creating an account.
+
+**Prices from your own receipts.** The [Inflation Shield](/blog/en/inflation-shield-stock-up/) looks at the prices of products you actually buy and, from the trend in your own receipts, points out the ones worth buying ahead of time. It is trend statistics, not a prediction, and the estimated saving is a conservative estimate. It needs a few scanned receipts for the same product and only suggests things that keep, such as pantry staples and household goods, not fresh food. For Christmas that might mean flour, sugar or coffee, but not the fish.
+
+If you prefer to treat saving as a target, you can also create a savings goal in the app with a December deadline and add each instalment to it. You can find the app at [ai-budget.pl](https://ai-budget.pl) and on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant); it works without a payment card.
+
+For the wider picture on setting money aside without heavy sacrifices, see [how to save money](/blog/en/how-to-save-money/), and for the festive shop specifically, [saving on groceries](/blog/en/save-money-on-groceries/).
+
+## Common traps
+
+**Forgotten categories.** Everyone counts gifts. Few people count travel, work parties and markets, and in December those are the lines that make the difference.
+
+**No buffer.** Add a small reserve to the total for things you forgot, and enter it as its own line so it does not blur the others.
+
+**Putting it on a credit card "for now".** If the plan assumes you will pay something off in January, it is not a plan, it is a delayed cost. The money you set aside each month is there to prevent exactly that.
+
+**Starting in December.** Then the formula stops working: you are dividing by one month. If it is already November, start now anyway and match the total to the months you have left.
+
+## FAQ: Christmas budget
+
+**How much does Christmas cost?**
+It depends on how many people you buy for, how far you travel and how many guests you host, so there is no single reliable figure. The honest answer is your own total across six categories: gifts, festive food, travel, decorations, events and outfits, and giving. The amounts in this article's table are only an example.
+
+**When should I start saving for Christmas?**
+Ideally in October, which gives you three instalments before December. The earlier you start, the smaller each one. If it is already November, do not wait for a better moment: start now and divide the total by two months.
+
+**How do I work out how much to save each month?**
+Add up the planned cost of all categories and divide by the months until Christmas. With a total of $1,500 and three months, the instalment is $500. That is an illustrative calculation; use your own numbers.
+
+**How can I cut gift costs without awkwardness?**
+Set an amount per person before you shop, and shorten the list, for example by drawing names in a large family. A shared gift list avoids duplicate purchases, and recorded spending shows how much of the category is left.
+
+**Will the app predict Christmas prices?**
+No. The Inflation Shield shows the price trend of products you buy, based on your own receipts, and the estimated saving is a conservative estimate. It needs a few receipts for the same product and only covers things that can be stored.
+
+**Can I plan Christmas with a partner or family?**
+Yes. On a shared account everyone sees and edits the same expenses and the same shopping list. For someone without the app, you can send a public link to the list so they can tick things off.
+
+**What if I go over my Christmas budget?**
+Check which category went over the limit and decide whether to move money from another one or trim the remaining spending. Write down the reason so you start next year from a more realistic figure.
+
 ## Emergency Fund: How Much You Need and How to Build It
 URL: https://ai-budget.pl/blog/en/emergency-fund/
 
@@ -1586,6 +1767,8 @@ For most people, yes. Seeing the gap between what you planned to save and what y
 - [Stock Up Before Prices Rise: an Inflation Shield](/blog/en/inflation-shield-stock-up/)
 - [Exchange Rate Alert: Get Notified at Your Target Rate](/blog/en/exchange-rate-alert/)
 - [Multi-Currency Budgeting: Track Money in Two Currencies](/blog/en/multi-currency-budgeting/)
+- [How Much Does Christmas Cost? A Step-by-Step Budget](/blog/en/christmas-budget/)
+- [Are Black Friday Deals Real? How to Check Before You Buy](/blog/en/black-friday-deals-real/)
 
 ## How to Import a Bank Statement Into a Budget App
 URL: https://ai-budget.pl/blog/en/import-bank-statement/
@@ -3182,6 +3365,7 @@ The app warns you before a receipt ends up in your expenses twice:
 
 - **The same file again** — if you pick a photo or PDF that was already scanned and saved, you are asked *before* it is read, so no AI request is spent. Choose **Open** to see the saved expense, **Scan anyway** to read it again, or **Cancel**.
 - **The same receipt, new photo** — after reading, if an expense with the same store, amount and date (±1 day) already exists, the confirmation screen shows a yellow notice with an **Open** button. You can still save: it may be a genuine second purchase.
+- **Already recorded by your bank** — if the matching expense came from a bank notification or a bank statement import, the notice says so and offers **Merge into one expense**. With it ticked, saving keeps the receipt (its items, photo and category) and replaces the bank entry, so the purchase is counted once. The box starts unticked when only the amount and date matched — check before merging.
 
 The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
 

@@ -127,3 +127,5 @@ date: "2026-06-19"
 - [Запас про запас до подорожчання: щит від інфляції](/blog/ua/shchyt-vid-infliatsii/)
 - [Сповіщення про курс валют, коли він досягне цілі](/blog/ua/spovishchennya-pro-kurs-valyut/)
 - [Бюджет у двох валютах: як не втрачати гроші на курсі](/blog/ua/byudzhet-u-dvokh-valyutakh/)
+- [Бюджет на Новий рік і Різдво: скільки відкласти](/blog/ua/biudzhet-na-novyi-rik/)
+- [Чорна п'ятниця: як перевірити знижку й не переплатити](/blog/ua/chorna-piatnytsia-znyzhky/)
