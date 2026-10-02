@@ -196,6 +196,12 @@ export class CreateExpenseDto {
   @Matches(/^[0-9a-f]{64}$/)
   receiptFingerprint?: string;
 
+  /** Receipt scans only: the bank-captured expense (notification/import) this
+   *  receipt replaces — merged into the new row after the create. */
+  @IsOptional()
+  @IsString()
+  mergeWithExpenseId?: string;
+
   @IsOptional()
   @IsArray()
   @IsUUID('4', { each: true })

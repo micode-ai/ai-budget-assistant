@@ -115,6 +115,7 @@ The app warns you before a receipt ends up in your expenses twice:
 
 - **The same file again** — if you pick a photo or PDF that was already scanned and saved, you are asked *before* it is read, so no AI request is spent. Choose **Open** to see the saved expense, **Scan anyway** to read it again, or **Cancel**.
 - **The same receipt, new photo** — after reading, if an expense with the same store, amount and date (±1 day) already exists, the confirmation screen shows a yellow notice with an **Open** button. You can still save: it may be a genuine second purchase.
+- **Already recorded by your bank** — if the matching expense came from a bank notification or a bank statement import, the notice says so and offers **Merge into one expense**. With it ticked, saving keeps the receipt (its items, photo and category) and replaces the bank entry, so the purchase is counted once. The box starts unticked when only the amount and date matched — check before merging.
 
 The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
 

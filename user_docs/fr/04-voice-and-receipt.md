@@ -115,6 +115,7 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 
 - **Le même fichier à nouveau** — si vous choisissez une photo ou un PDF déjà scanné et enregistré, la question vous est posée *avant* la lecture, donc aucune requête IA n'est consommée. **Ouvrir** affiche la dépense enregistrée, **Scanner quand même** relit le reçu, **Annuler** annule.
 - **Le même reçu, nouvelle photo** — si, après lecture, une dépense avec le même magasin, le même montant et la même date (±1 jour) existe déjà, l'écran de confirmation affiche un avis jaune avec un bouton **Ouvrir**. Vous pouvez tout de même enregistrer : il peut s'agir d'un vrai second achat.
+- **Déjà enregistré par votre banque** — si la dépense correspondante provient d'une notification bancaire ou d'un relevé importé, l'avis l'indique et propose **Fusionner en une seule dépense**. Case cochée, l'enregistrement conserve le reçu (articles, photo et catégorie) et remplace l'entrée bancaire : l'achat n'est compté qu'une fois. Si seuls le montant et la date correspondent, la case est décochée au départ — vérifiez avant de fusionner.
 
 Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
 

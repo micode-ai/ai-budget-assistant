@@ -33,6 +33,33 @@ describe('pickLikelyDuplicate', () => {
   it('does not match a different payee', () => {
     expect(pickLikelyDuplicate({ merchant: 'Lidl' }, [row() as any])).toBeNull();
   });
+
+  it("reports the saved row's source", () => {
+    const m = pickLikelyDuplicate({ merchant: 'Biedronka' }, [row({ source: 'import' }) as any]);
+    expect(m).toMatchObject({ source: 'import' });
+    expect(m?.amountOnly).toBeUndefined();
+  });
+
+  it('matches a bank push loosely, the way the bank spells the shop', () => {
+    const m = pickLikelyDuplicate({ merchant: 'Żabka' }, [row({ merchant: 'ZABKA Z5712 WARSZAWA', source: 'notification' }) as any]);
+    expect(m).toMatchObject({ expenseId: 'srv-1', source: 'notification' });
+    expect(m?.amountOnly).toBeUndefined();
+  });
+
+  it('accepts a single bank row on amount alone, flagged amountOnly', () => {
+    const m = pickLikelyDuplicate({ merchant: 'Jeronimo Martins Polska' }, [row({ merchant: 'BIEDRONKA 123', source: 'import' }) as any]);
+    expect(m).toMatchObject({ expenseId: 'srv-1', amountOnly: true });
+  });
+
+  it('never pairs on amount alone with a manual row, or with two bank rows', () => {
+    expect(pickLikelyDuplicate({ merchant: 'Lidl' }, [row({ source: 'manual' }) as any])).toBeNull();
+    expect(
+      pickLikelyDuplicate({ merchant: 'Lidl' }, [
+        row({ id: 'a', merchant: 'ORLEN', source: 'import' }) as any,
+        row({ id: 'b', merchant: 'SHELL', source: 'notification' }) as any,
+      ]),
+    ).toBeNull();
+  });
 });
 
 describe('ReceiptDuplicateService', () => {

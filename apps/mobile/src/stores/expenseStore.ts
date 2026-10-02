@@ -90,7 +90,7 @@ interface ExpenseState {
   // Actions
   loadExpenses: (opts?: { force?: boolean }) => Promise<void>;
   setExpenses: (expenses: Expense[]) => void;
-  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items' | 'splits'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number; categoryId?: string }[]; receiptImageBase64?: string; receiptFingerprint?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
+  addExpense: (expense: Omit<Expense, 'id' | 'localId' | 'accountId' | 'createdAt' | 'updatedAt' | 'syncStatus' | 'syncVersion' | 'isDeleted' | 'items' | 'splits'> & { items?: { description: string; canonicalName?: string; quantity?: number; unitPrice?: number; totalPrice: number; sortOrder?: number; categoryId?: string }[]; receiptImageBase64?: string; receiptFingerprint?: string; mergeWithExpenseId?: string; splits?: { categoryId: string; amount: number; percentage: number; notes?: string }[]; splitType?: ShareType; shares?: ExpenseShareDto[] }) => Promise<Expense>;
   updateExpense: (id: string, updates: Partial<Expense> & { splitType?: ShareType; shares?: ExpenseShareDto[] }) => void;
   setExpenseProject: (expenseId: string, projectId: string | null) => Promise<void>;
   deleteExpense: (id: string) => void;
@@ -148,7 +148,7 @@ export const useExpenseStore = create<ExpenseState>()(
     setExpenses: (expenses) => set({ expenses }),
 
     addExpense: async (expenseData) => {
-      const { items, receiptImageBase64, receiptFingerprint, tagIds, projectId, splits, shares, splitType, ...coreData } = expenseData;
+      const { items, receiptImageBase64, receiptFingerprint, mergeWithExpenseId, tagIds, projectId, splits, shares, splitType, ...coreData } = expenseData;
       const id = generateUUID();
       const now = new Date();
       const accountId = useAccountStore.getState().currentAccountId || '';
@@ -172,6 +172,23 @@ export const useExpenseStore = create<ExpenseState>()(
 
       // Await local SQLite writes so data is persisted before navigation
       await insertExpense(newExpense);
+
+      // A receipt replacing the bank's copy of the same purchase: hide that
+      // row now; the server folds it into this one when the create lands and
+      // the next pull confirms the soft-delete on every device.
+      if (mergeWithExpenseId) {
+        const bankRow = get().expenses.find(
+          (e) =>
+            e.id !== id &&
+            (e.id === mergeWithExpenseId || e.serverId === mergeWithExpenseId || (e as any).clientId === mergeWithExpenseId),
+        );
+        if (bankRow) {
+          set((state) => ({ expenses: state.expenses.filter((e) => e.id !== bankRow.id) }));
+          softDeleteExpenseInDb(bankRow.id, now).catch((e) =>
+            console.warn('[expenseStore] addExpense: bank copy soft-delete deferred:', e),
+          );
+        }
+      }
 
       // Trip expense shares (Group Trip Wallet): only present when the expense
       // was created with a split — a no-op for every other expense create.
@@ -317,6 +334,7 @@ export const useExpenseStore = create<ExpenseState>()(
           // Only on this first push, like the image: an offline retry through
           // syncPendingExpenses does not carry it (ABA-603 known gap).
           receiptFingerprint,
+          mergeWithExpenseId,
           splits: splits?.length ? splits.map(s => ({ ...s, categoryId: resolveCatId(s.categoryId) || s.categoryId })) : undefined,
           isDebt: newExpense.isDebt || undefined,
           isDebtRepayment: newExpense.isDebtRepayment || undefined,

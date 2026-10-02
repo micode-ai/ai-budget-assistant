@@ -150,8 +150,9 @@ fires once per pair regardless of which side arrived first.
 - CHF is unsupported until added to the `Currency` union and `SUPPORTED_CURRENCIES`.
 - The push ↔ receipt single-counterpart fallback can pair two genuinely different purchases of the
   same amount within a day. Accepted because it only ever produces a suggestion the user confirms.
-- The scan-time duplicate banner (`withDuplicateInfo`, see `receipt-duplicate-warning.md`) still uses
-  the exact payee rule, so it does not warn about the push copy; the post-save merge alert does.
+- The scan-time duplicate banner (`withDuplicateInfo`, see `receipt-duplicate-warning.md`) matches a
+  push or imported row loosely since ABA-630 and offers the merge before saving; the post-save alert
+  remains the fallback when the box is left unticked or the create was retried offline.
 - `contentMatch.ts` (client skip of a push that arrives after a receipt) is still exact-payee; a
   push it lets through is caught by the server's loose pairing instead.
 

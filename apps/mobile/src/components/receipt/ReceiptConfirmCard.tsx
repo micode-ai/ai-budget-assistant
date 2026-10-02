@@ -37,6 +37,9 @@ interface Props {
   onToggleSaveImage: () => void;
   /** Opens a saved expense the scan probably duplicates (ABA-603). */
   onOpenDuplicate: (expenseId: string) => void;
+  /** "Merge with the bank's record" — shown only when the match is a bank copy. */
+  mergeWithBank: boolean;
+  onToggleMergeWithBank: () => void;
   onEdit: () => void;
   onConfirm: () => void;
   onRetry: () => void;
@@ -69,6 +72,8 @@ export default function ReceiptConfirmCard({
   saveImage,
   onToggleSaveImage,
   onOpenDuplicate,
+  mergeWithBank,
+  onToggleMergeWithBank,
   onEdit,
   onConfirm,
   onRetry,
@@ -85,7 +90,12 @@ export default function ReceiptConfirmCard({
         <Image source={{ uri: imageUri }} style={styles.receiptImage} />
       )}
 
-      <DuplicateReceiptBanner match={scannedReceipt?.possibleDuplicate} onOpen={onOpenDuplicate} />
+      <DuplicateReceiptBanner
+        match={scannedReceipt?.possibleDuplicate}
+        onOpen={onOpenDuplicate}
+        mergeWithBank={mergeWithBank}
+        onToggleMergeWithBank={onToggleMergeWithBank}
+      />
 
       <View style={styles.expenseCard}>
         <View style={styles.expenseRow}>

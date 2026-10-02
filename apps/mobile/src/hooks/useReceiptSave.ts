@@ -29,6 +29,12 @@ interface UseReceiptSaveParams {
   currentSplits: ReceiptCategorySplit[];
   itemCategories: Record<number, string | null>;
   proposedNamesToCreate: string[];
+  /**
+   * The bank-captured expense (push or statement import) the user chose to
+   * merge this receipt into on the confirm card; undefined saves a new row
+   * beside it, exactly as before.
+   */
+  mergeWithExpenseId?: string;
   /** Resets the whole scan (scanner state + split state + confirm UI). */
   onReset: () => void;
   /**
@@ -86,6 +92,7 @@ export function useReceiptSave({
   currentSplits,
   itemCategories,
   proposedNamesToCreate,
+  mergeWithExpenseId,
   onReset,
   onSaved,
   onDone,
@@ -172,6 +179,7 @@ export function useReceiptSave({
         items,
         receiptImageBase64,
         receiptFingerprint: scannedReceipt.fingerprint,
+        mergeWithExpenseId,
         location: scannedReceipt.location ?? gpsLocationRef.current ?? undefined,
         splits: currentSplits.length > 1
           ? currentSplits.map((s) => ({

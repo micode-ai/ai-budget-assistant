@@ -9,6 +9,7 @@ import { InflationShieldTrackingService } from '../insights/inflation-shield-tra
 import { ProductRulesService } from '../merchant-rules/product-rules.service';
 import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { invalidateExpenseChatCache } from './expense-cache.util';
+import { ExpenseCrossAccountService } from './expense-cross-account.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
 /** The subset of a persisted Expense row the post-create hook chain needs. */
@@ -17,6 +18,14 @@ export interface ExpenseCreatedHookExpense {
   amount: unknown;
   currencyCode: string;
   source: string | null;
+}
+
+/** Sources a receipt scan may be merged into from the scan screen: the bank's own copies. */
+export const BANK_CAPTURED_SOURCES = ['notification', 'import'] as const;
+
+export interface ExpenseCreatedHookOptions {
+  /** The bank-captured row the user chose to merge this receipt into. */
+  mergeWithExpenseId?: string;
 }
 
 /** A resolved, already-server-categorized receipt line, ready to teach a product rule. */
@@ -58,7 +67,35 @@ export class ExpenseCreatedHooksService {
     @Optional() private readonly shieldTracking?: InflationShieldTrackingService,
     @Optional() private readonly productRules?: ProductRulesService,
     @Optional() private readonly walletCurrency?: WalletCurrencyService,
+    @Optional() private readonly crossAccount?: ExpenseCrossAccountService,
   ) {}
+
+  /**
+   * The user ticked "merge with the bank's record" on the receipt scan screen.
+   * The receipt is the survivor (it carries the items, image, category and the
+   * shop's real name); the bank copy is folded in and soft-deleted, exactly as
+   * the post-save `possible_merge` suggestion would have done — just without
+   * the round trip through an alert.
+   *
+   * SAFETY: only an `ocr` row may ask, and only a bank-captured row
+   * (`notification`/`import`) in the same account can be folded — a client
+   * cannot use this to delete an arbitrary expense.
+   */
+  private async mergeBankCopy(accountId: string, userId: string, receiptId: string, bankId: string): Promise<void> {
+    if (!this.crossAccount) return;
+    const bank = await this.prisma.expense.findFirst({
+      where: {
+        accountId,
+        isDeleted: false,
+        id: { not: receiptId },
+        source: { in: [...BANK_CAPTURED_SOURCES] },
+        OR: [{ id: bankId }, { clientId: bankId }],
+      },
+      select: { id: true },
+    });
+    if (!bank) return;
+    await this.crossAccount.mergeExpenses(accountId, userId, { keepId: receiptId, mergeId: bank.id });
+  }
 
   /**
    * Tier 1 Case A — stub-yield reconciliation.
@@ -133,11 +170,19 @@ export class ExpenseCreatedHooksService {
     userId: string,
     expense: ExpenseCreatedHookExpense,
     learnableItems: LearnableExpenseItem[],
+    options: ExpenseCreatedHookOptions = {},
   ): Promise<void> {
     // ORDERING IS CRITICAL: reconcileNotificationStub must run BEFORE checkExpense
     // so detectDuplicateCharge sees the stub already gone (isDeleted:true) and
     // does not raise a spurious duplicate_charge alert for the auto-reconciled pair.
     const run = async () => {
+      // The user's explicit merge goes first, so checkExpense never sees the
+      // bank copy and raises no possible_merge alert for a pair already merged.
+      if (expense.source === 'ocr' && options.mergeWithExpenseId) {
+        await this.mergeBankCopy(accountId, userId, expense.id, options.mergeWithExpenseId).catch(
+          logFireAndForget(this.logger, 'ExpenseCreatedHooksService.mergeBankCopy'),
+        );
+      }
       // A receipt scan is NOT reconciled silently: detectDuplicateCharge pairs it
       // with the push loosely and offers a merge, which carries the receipt's
       // items and image onto the survivor (ABA-625).

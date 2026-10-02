@@ -115,6 +115,7 @@ Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
 
 - **Dieselbe Datei erneut** — wählst du ein Foto oder PDF, das schon gescannt und gespeichert wurde, wirst du *vor* dem Auslesen gefragt, sodass keine KI-Anfrage verbraucht wird. **Öffnen** zeigt die gespeicherte Ausgabe, **Trotzdem scannen** liest den Beleg erneut, **Abbrechen** bricht ab.
 - **Derselbe Beleg, neues Foto** — gibt es nach dem Auslesen schon eine Ausgabe mit demselben Geschäft, Betrag und Datum (±1 Tag), zeigt der Bestätigungsbildschirm einen gelben Hinweis mit einer **Öffnen**-Schaltfläche. Speichern bleibt möglich: Es kann ein echter zweiter Einkauf sein.
+- **Bereits von der Bank erfasst** — stammt die passende Ausgabe aus einer Bankbenachrichtigung oder einem Kontoauszug-Import, sagt der Hinweis das und bietet **Zu einer Ausgabe zusammenführen** an. Ist es angehakt, behält das Speichern den Beleg (Positionen, Foto und Kategorie) und ersetzt den Bankeintrag, sodass der Einkauf nur einmal zählt. Stimmen nur Betrag und Datum überein, ist das Kästchen anfangs nicht angehakt — vor dem Zusammenführen prüfen.
 
 Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
 

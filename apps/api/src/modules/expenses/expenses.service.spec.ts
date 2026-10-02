@@ -326,6 +326,7 @@ describe('create() hands off to ExpenseCreatedHooksService', () => {
       'u1',
       expect.objectContaining({ id: expense.id }),
       [],
+      { mergeWithExpenseId: undefined },
     );
   });
 
@@ -523,6 +524,7 @@ describe('create with categorized receipt items', () => {
       // classifier looks rules up by. Teaching under the model's invented name
       // and reading under the printed one is the mismatch this replaced.
       [{ ruleKey: 'Piwo', categoryId: 'c-alc' }],
+      { mergeWithExpenseId: undefined },
     );
   });
 

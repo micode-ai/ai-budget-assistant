@@ -693,6 +693,7 @@ The app warns you before a receipt ends up in your expenses twice:
 
 - **The same file again** — if you pick a photo or PDF that was already scanned and saved, you are asked *before* it is read, so no AI request is spent. Choose **Open** to see the saved expense, **Scan anyway** to read it again, or **Cancel**.
 - **The same receipt, new photo** — after reading, if an expense with the same store, amount and date (±1 day) already exists, the confirmation screen shows a yellow notice with an **Open** button. You can still save: it may be a genuine second purchase.
+- **Already recorded by your bank** — if the matching expense came from a bank notification or a bank statement import, the notice says so and offers **Merge into one expense**. With it ticked, saving keeps the receipt (its items, photo and category) and replaces the bank entry, so the purchase is counted once. The box starts unticked when only the amount and date matched — check before merging.
 
 The Telegram, WhatsApp and Slack bots give the same warnings, with a **Scan anyway** button.
 
@@ -5657,6 +5658,7 @@ iOS, Android, Web
 
 - **Тот же файл ещё раз** — если выбрать фото или PDF, который уже сканировали и сохранили, вы увидите вопрос *до* распознавания, поэтому AI-запрос не тратится. **Открыть** покажет сохранённый расход, **Всё равно распознать** прочитает чек заново, **Отмена** — отменит.
 - **Тот же чек, новое фото** — если после распознавания уже есть расход с тем же магазином, суммой и датой (±1 день), на экране подтверждения появится жёлтая плашка с кнопкой **Открыть**. Сохранить всё равно можно: это может быть действительно вторая покупка.
+- **Уже записано банком** — если совпавший расход пришёл из уведомления банка или из импорта выписки, плашка об этом скажет и предложит **Объединить в один расход**. С галочкой при сохранении останется чек (позиции, фото и категория), а запись из банка будет заменена — покупка посчитается один раз. Если совпали только сумма и дата, галочка изначально снята — проверьте перед объединением.
 
 Боты в Telegram, WhatsApp и Slack предупреждают так же и предлагают кнопку **Всё равно распознать**.
 
@@ -10599,6 +10601,7 @@ iOS, Android, Web
 
 - **Той самий файл ще раз** — якщо обрати фото чи PDF, який уже сканували й зберегли, ви побачите запитання *до* розпізнавання, тож AI-запит не витрачається. **Відкрити** покаже збережену витрату, **Все одно розпізнати** прочитає чек знову, **Скасувати** — скасує.
 - **Той самий чек, нове фото** — якщо після розпізнавання вже є витрата з тим самим магазином, сумою й датою (±1 день), на екрані підтвердження з'явиться жовта плашка з кнопкою **Відкрити**. Зберегти все одно можна: це може бути справді друга покупка.
+- **Вже записано банком** — якщо збіжна витрата прийшла зі сповіщення банку або з імпорту виписки, плашка про це скаже й запропонує **Об’єднати в одну витрату**. З галочкою під час збереження залишиться чек (позиції, фото й категорія), а запис із банку буде замінено — покупку буде пораховано один раз. Якщо збіглися лише сума й дата, галочку спочатку знято — перевірте перед об’єднанням.
 
 Боти в Telegram, WhatsApp і Slack попереджають так само й пропонують кнопку **Все одно розпізнати**.
 
@@ -15489,6 +15492,7 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 
 - **Ten sam plik ponownie** — jeśli wybierzesz zdjęcie lub PDF, który został już zeskanowany i zapisany, zobaczysz pytanie *przed* odczytem, więc żadne zapytanie AI nie zostanie zużyte. **Otwórz** pokaże zapisany wydatek, **Skanuj mimo to** odczyta paragon ponownie, **Anuluj** — anuluje.
 - **Ten sam paragon, nowe zdjęcie** — jeśli po odczycie istnieje już wydatek z tym samym sklepem, kwotą i datą (±1 dzień), na ekranie potwierdzenia pojawi się żółty komunikat z przyciskiem **Otwórz**. Nadal możesz zapisać: to może być naprawdę drugi zakup.
+- **Już zapisane przez bank** — jeśli pasujący wydatek pochodzi z powiadomienia banku albo z importu wyciągu, komunikat to pokazuje i proponuje **Połącz w jeden wydatek**. Gdy pole jest zaznaczone, zapis zachowa paragon (pozycje, zdjęcie i kategorię) i zastąpi wpis z banku, więc zakup zostanie policzony raz. Jeśli zgadzają się tylko kwota i data, pole jest na początku odznaczone — sprawdź przed połączeniem.
 
 Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
 
@@ -20375,6 +20379,7 @@ Die App warnt dich, bevor ein Beleg doppelt in deinen Ausgaben landet:
 
 - **Dieselbe Datei erneut** — wählst du ein Foto oder PDF, das schon gescannt und gespeichert wurde, wirst du *vor* dem Auslesen gefragt, sodass keine KI-Anfrage verbraucht wird. **Öffnen** zeigt die gespeicherte Ausgabe, **Trotzdem scannen** liest den Beleg erneut, **Abbrechen** bricht ab.
 - **Derselbe Beleg, neues Foto** — gibt es nach dem Auslesen schon eine Ausgabe mit demselben Geschäft, Betrag und Datum (±1 Tag), zeigt der Bestätigungsbildschirm einen gelben Hinweis mit einer **Öffnen**-Schaltfläche. Speichern bleibt möglich: Es kann ein echter zweiter Einkauf sein.
+- **Bereits von der Bank erfasst** — stammt die passende Ausgabe aus einer Bankbenachrichtigung oder einem Kontoauszug-Import, sagt der Hinweis das und bietet **Zu einer Ausgabe zusammenführen** an. Ist es angehakt, behält das Speichern den Beleg (Positionen, Foto und Kategorie) und ersetzt den Bankeintrag, sodass der Einkauf nur einmal zählt. Stimmen nur Betrag und Datum überein, ist das Kästchen anfangs nicht angehakt — vor dem Zusammenführen prüfen.
 
 Die Bots in Telegram, WhatsApp und Slack warnen genauso und bieten eine Schaltfläche **Trotzdem scannen** an.
 
@@ -25236,6 +25241,7 @@ La app te avisa antes de que un recibo acabe dos veces en tus gastos:
 
 - **El mismo archivo otra vez** — si eliges una foto o un PDF que ya se escaneó y guardó, se te pregunta *antes* de leerlo, así que no se gasta ninguna solicitud de IA. **Abrir** muestra el gasto guardado, **Escanear igualmente** lo vuelve a leer y **Cancelar** lo cancela.
 - **El mismo recibo, foto nueva** — si tras leerlo ya existe un gasto con la misma tienda, importe y fecha (±1 día), la pantalla de confirmación muestra un aviso amarillo con un botón **Abrir**. Aun así puedes guardarlo: puede ser una segunda compra real.
+- **Ya registrado por tu banco** — si el gasto coincidente vino de una notificación del banco o de un extracto importado, el aviso lo indica y ofrece **Unir en un solo gasto**. Con la casilla marcada, al guardar se conserva el recibo (artículos, foto y categoría) y se sustituye la entrada del banco, así la compra cuenta una sola vez. Si solo coinciden el importe y la fecha, la casilla empieza desmarcada: compruébalo antes de unir.
 
 Los bots de Telegram, WhatsApp y Slack avisan igual y ofrecen un botón **Escanear igualmente**.
 
@@ -30086,6 +30092,7 @@ L'application vous prévient avant qu'un reçu n'apparaisse deux fois dans vos d
 
 - **Le même fichier à nouveau** — si vous choisissez une photo ou un PDF déjà scanné et enregistré, la question vous est posée *avant* la lecture, donc aucune requête IA n'est consommée. **Ouvrir** affiche la dépense enregistrée, **Scanner quand même** relit le reçu, **Annuler** annule.
 - **Le même reçu, nouvelle photo** — si, après lecture, une dépense avec le même magasin, le même montant et la même date (±1 jour) existe déjà, l'écran de confirmation affiche un avis jaune avec un bouton **Ouvrir**. Vous pouvez tout de même enregistrer : il peut s'agir d'un vrai second achat.
+- **Déjà enregistré par votre banque** — si la dépense correspondante provient d'une notification bancaire ou d'un relevé importé, l'avis l'indique et propose **Fusionner en une seule dépense**. Case cochée, l'enregistrement conserve le reçu (articles, photo et catégorie) et remplace l'entrée bancaire : l'achat n'est compté qu'une fois. Si seuls le montant et la date correspondent, la case est décochée au départ — vérifiez avant de fusionner.
 
 Les bots Telegram, WhatsApp et Slack préviennent de la même façon et proposent un bouton **Scanner quand même**.
 
@@ -34934,6 +34941,7 @@ iOS, Android, Web
 
 - **Той жа файл яшчэ раз** — калі выбраць фота ці PDF, які ўжо сканавалі і захавалі, вы ўбачыце пытанне *да* распазнавання, таму AI-запыт не марнуецца. **Адкрыць** пакажа захаваны выдатак, **Усё роўна распазнаць** прачытае чэк нанова, **Скасаваць** — скасуе.
 - **Той жа чэк, новае фота** — калі пасля распазнавання ўжо ёсць выдатак з той жа крамай, сумай і датай (±1 дзень), на экране пацверджання з'явіцца жоўтая плашка з кнопкай **Адкрыць**. Захаваць усё роўна можна: гэта можа быць сапраўды другая пакупка.
+- **Ужо запісана банкам** — калі супалы выдатак прыйшоў з апавяшчэння банка або з імпарту выпіскі, плашка пра гэта скажа і прапануе **Аб’яднаць у адзін выдатак**. З птушкай пры захаванні застанецца чэк (пазіцыі, фота і катэгорыя), а запіс з банка будзе заменены — пакупка палічыцца адзін раз. Калі супалі толькі сума і дата, птушка спачатку знятая — праверце перад аб’яднаннем.
 
 Боты ў Telegram, WhatsApp і Slack папярэджваюць гэтак жа і прапануюць кнопку **Усё роўна распазнаць**.
 
@@ -39746,6 +39754,7 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 
 - **Hetzelfde bestand opnieuw** — kies je een foto of PDF die al gescand en opgeslagen is, dan krijg je de vraag *vóór* het uitlezen, zodat er geen AI-verzoek wordt verbruikt. **Openen** toont de opgeslagen uitgave, **Toch scannen** leest de bon opnieuw, **Annuleren** annuleert.
 - **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
+- **Al vastgelegd door je bank** — kwam de overeenkomende uitgave uit een bankmelding of een geïmporteerd afschrift, dan zegt de melding dat en biedt **Samenvoegen tot één uitgave** aan. Aangevinkt bewaart opslaan het bonnetje (artikelen, foto en categorie) en vervangt het de bankregel, zodat de aankoop één keer telt. Komen alleen bedrag en datum overeen, dan staat het vakje eerst uit — controleer vóór het samenvoegen.
 
 De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
 

@@ -42,6 +42,12 @@ export interface CreateExpenseDto {
   items?: CreateExpenseItemDto[];
   /** SHA-256 of the scanned receipt file, from the scan response (ABA-603). */
   receiptFingerprint?: string;
+  /**
+   * A receipt scan only: the bank-captured expense (source `notification` or
+   * `import`) this receipt replaces. The server merges it into the new row
+   * right after the create — the receipt survives, the bank row is folded in.
+   */
+  mergeWithExpenseId?: string;
   tagIds?: string[];
   projectId?: string;
   isDebt?: boolean;
@@ -129,6 +135,12 @@ export interface ReceiptDuplicateMatch {
   currencyCode: string;
   /** ISO date of the saved expense. */
   date: string;
+  /** How the saved row was recorded — `notification`/`import` are bank copies
+   *  the receipt can be merged into. Absent on an older server. */
+  source?: ExpenseSource | null;
+  /** True when the pair matched on amount, currency and date alone (no payee
+   *  match) — the app then leaves the merge box unticked. */
+  amountOnly?: boolean;
 }
 
 export interface ReceiptDuplicateCheckResponse {

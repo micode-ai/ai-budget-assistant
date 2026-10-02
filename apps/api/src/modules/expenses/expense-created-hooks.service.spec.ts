@@ -336,3 +336,57 @@ describe('onExpenseCreated wallet currency registration', () => {
     ).resolves.toBeUndefined();
   });
 });
+
+// ---------------------------------------------------------------------------
+// mergeBankCopy — "merge with the bank's record" ticked on the receipt scan
+// ---------------------------------------------------------------------------
+
+describe('onExpenseCreated — merge a receipt into the bank copy', () => {
+  const flush = () => new Promise((r) => setImmediate(r));
+
+  function make(bankRow: { id: string } | null) {
+    const prisma: any = { expense: { findFirst: jest.fn().mockResolvedValue(bankRow), findMany: jest.fn(), update: jest.fn() } };
+    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+    const cacheService: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    const crossAccount: any = { mergeExpenses: jest.fn().mockResolvedValue({}) };
+    const service = new ExpenseCreatedHooksService(
+      prisma, anomalyService, cacheService,
+      undefined, undefined, undefined, undefined, undefined, crossAccount,
+    );
+    return { service, prisma, anomalyService, crossAccount };
+  }
+
+  it('keeps the receipt, folds in the bank row, then runs the anomaly check', async () => {
+    const { service, prisma, anomalyService, crossAccount } = make({ id: 'bank-srv' });
+    await service.onExpenseCreated('acc-1', 'u-1', { id: 'rcpt', amount: 10, currencyCode: 'PLN', source: 'ocr' }, [], {
+      mergeWithExpenseId: 'bank-cli',
+    });
+    await flush();
+    const where = prisma.expense.findFirst.mock.calls[0][0].where;
+    expect(where).toMatchObject({ accountId: 'acc-1', isDeleted: false, source: { in: ['notification', 'import'] } });
+    expect(where.OR).toEqual([{ id: 'bank-cli' }, { clientId: 'bank-cli' }]);
+    expect(crossAccount.mergeExpenses).toHaveBeenCalledWith('acc-1', 'u-1', { keepId: 'rcpt', mergeId: 'bank-srv' });
+    expect(crossAccount.mergeExpenses.mock.invocationCallOrder[0]).toBeLessThan(
+      anomalyService.checkExpense.mock.invocationCallOrder[0],
+    );
+  });
+
+  it('never folds a row that is not a bank copy', async () => {
+    const { service, crossAccount } = make(null);
+    await service.onExpenseCreated('acc-1', 'u-1', { id: 'rcpt', amount: 10, currencyCode: 'PLN', source: 'ocr' }, [], {
+      mergeWithExpenseId: 'manual-row',
+    });
+    await flush();
+    expect(crossAccount.mergeExpenses).not.toHaveBeenCalled();
+  });
+
+  it('ignores the request from anything but a receipt scan', async () => {
+    const { service, prisma, crossAccount } = make({ id: 'bank-srv' });
+    prisma.expense.findMany.mockResolvedValue([]);
+    await service.onExpenseCreated('acc-1', 'u-1', { id: 'm', amount: 10, currencyCode: 'PLN', source: 'manual' }, [], {
+      mergeWithExpenseId: 'bank-srv',
+    });
+    await flush();
+    expect(crossAccount.mergeExpenses).not.toHaveBeenCalled();
+  });
+});

@@ -437,7 +437,9 @@ export class ExpensesService {
         }));
 
       void this.createdHooks
-        .onExpenseCreated(accountId, userId, result.expense, learnableItems)
+        .onExpenseCreated(accountId, userId, result.expense, learnableItems, {
+          mergeWithExpenseId: dto.mergeWithExpenseId,
+        })
         .catch(logFireAndForget(this.logger, 'ExpensesService.onExpenseCreated'));
     }
 

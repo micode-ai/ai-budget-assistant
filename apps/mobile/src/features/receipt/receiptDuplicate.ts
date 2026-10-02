@@ -15,3 +15,18 @@ export function describeDuplicateMatch(match: ReceiptDuplicateMatch, locale: str
     : day.toLocaleDateString(locale, { timeZone: 'UTC' });
   return [who, amount, date].filter(Boolean).join(' · ');
 }
+
+/**
+ * The bank's own copy of this purchase — a push captured on the device or a
+ * row from an imported statement. Only such a row is offered for merging on
+ * the scan screen; the server refuses to fold anything else.
+ */
+export function bankCopySource(match: ReceiptDuplicateMatch | null | undefined): 'notification' | 'import' | null {
+  if (!match || match.kind !== 'likely') return null;
+  return match.source === 'notification' || match.source === 'import' ? match.source : null;
+}
+
+/** The merge box starts ticked unless the pair matched on the amount alone. */
+export function defaultMergeWithBank(match: ReceiptDuplicateMatch | null | undefined): boolean {
+  return bankCopySource(match) !== null && !match?.amountOnly;
+}

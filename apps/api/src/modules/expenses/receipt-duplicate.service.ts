@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { createHash } from 'crypto';
 import type { ReceiptDuplicateMatch } from '@budget/shared-types';
 import { PrismaService } from '../../database/prisma.service';
-import { DAY_MS, expensePayee } from '../anomaly/anomaly-helpers.util';
+import { DAY_MS, expensePayee, payeesLooselyMatch } from '../anomaly/anomaly-helpers.util';
 
 /**
  * The receipt file's fingerprint: SHA-256 of its base64 text, whitespace
@@ -24,9 +24,12 @@ interface CandidateRow {
   amount: unknown;
   currencyCode: string;
   date: Date;
+  source?: string | null;
 }
 
-function toMatch(kind: ReceiptDuplicateMatch['kind'], row: CandidateRow): ReceiptDuplicateMatch {
+const BANK_SOURCES = new Set(['notification', 'import']);
+
+function toMatch(kind: ReceiptDuplicateMatch['kind'], row: CandidateRow, amountOnly = false): ReceiptDuplicateMatch {
   return {
     kind,
     expenseId: row.id,
@@ -36,6 +39,8 @@ function toMatch(kind: ReceiptDuplicateMatch['kind'], row: CandidateRow): Receip
     amount: Number(row.amount),
     currencyCode: row.currencyCode,
     date: row.date.toISOString(),
+    source: (row.source ?? null) as ReceiptDuplicateMatch['source'],
+    ...(amountOnly && { amountOnly: true }),
   };
 }
 
@@ -44,15 +49,24 @@ function toMatch(kind: ReceiptDuplicateMatch['kind'], row: CandidateRow): Receip
  * same rule the post-save duplicate alert uses (`detectDuplicateCharge`) —
  * same payee label, amount and currency within ±1 day. Candidates are already
  * filtered on amount/currency/date by the query; this decides the payee.
+ *
+ * A bank-captured copy (`notification`/`import`) names the shop the bank's way
+ * (`ZABKA Z5712 WARSZAWA` vs the receipt's `Żabka`), so against those rows the
+ * payee is matched loosely, and failing that a SINGLE bank row is accepted on
+ * amount alone (`amountOnly`) — the same pairing `pickPushReceiptCounterpart`
+ * uses after the save. It is a suggestion the user confirms, never a merge.
  */
 export function pickLikelyDuplicate(
   receipt: { merchant?: string | null; description?: string | null },
   candidates: CandidateRow[],
 ): ReceiptDuplicateMatch | null {
   const label = expensePayee(receipt);
-  if (!label) return null;
-  const hit = candidates.find((c) => expensePayee(c) === label);
-  return hit ? toMatch('likely', hit) : null;
+  const hit = label ? candidates.find((c) => expensePayee(c) === label) : undefined;
+  if (hit) return toMatch('likely', hit);
+  const bank = candidates.filter((c) => BANK_SOURCES.has(c.source ?? ''));
+  const loose = label ? bank.find((c) => payeesLooselyMatch(label, expensePayee(c))) : undefined;
+  if (loose) return toMatch('likely', loose);
+  return bank.length === 1 ? toMatch('likely', bank[0], true) : null;
 }
 
 const SELECT = {
@@ -63,6 +77,7 @@ const SELECT = {
   amount: true,
   currencyCode: true,
   date: true,
+  source: true,
 } as const;
 
 /**

@@ -115,6 +115,7 @@ Aplikacja ostrzeże Cię, zanim paragon trafi do wydatków dwa razy:
 
 - **Ten sam plik ponownie** — jeśli wybierzesz zdjęcie lub PDF, który został już zeskanowany i zapisany, zobaczysz pytanie *przed* odczytem, więc żadne zapytanie AI nie zostanie zużyte. **Otwórz** pokaże zapisany wydatek, **Skanuj mimo to** odczyta paragon ponownie, **Anuluj** — anuluje.
 - **Ten sam paragon, nowe zdjęcie** — jeśli po odczycie istnieje już wydatek z tym samym sklepem, kwotą i datą (±1 dzień), na ekranie potwierdzenia pojawi się żółty komunikat z przyciskiem **Otwórz**. Nadal możesz zapisać: to może być naprawdę drugi zakup.
+- **Już zapisane przez bank** — jeśli pasujący wydatek pochodzi z powiadomienia banku albo z importu wyciągu, komunikat to pokazuje i proponuje **Połącz w jeden wydatek**. Gdy pole jest zaznaczone, zapis zachowa paragon (pozycje, zdjęcie i kategorię) i zastąpi wpis z banku, więc zakup zostanie policzony raz. Jeśli zgadzają się tylko kwota i data, pole jest na początku odznaczone — sprawdź przed połączeniem.
 
 Boty w Telegramie, WhatsAppie i Slacku ostrzegają tak samo i oferują przycisk **Skanuj mimo to**.
 

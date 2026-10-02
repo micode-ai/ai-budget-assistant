@@ -115,6 +115,7 @@ De app waarschuwt je voordat een bon twee keer in je uitgaven belandt:
 
 - **Hetzelfde bestand opnieuw** — kies je een foto of PDF die al gescand en opgeslagen is, dan krijg je de vraag *vóór* het uitlezen, zodat er geen AI-verzoek wordt verbruikt. **Openen** toont de opgeslagen uitgave, **Toch scannen** leest de bon opnieuw, **Annuleren** annuleert.
 - **Dezelfde bon, nieuwe foto** — bestaat er na het uitlezen al een uitgave met dezelfde winkel, hetzelfde bedrag en dezelfde datum (±1 dag), dan toont het bevestigingsscherm een gele melding met een knop **Openen**. Opslaan kan nog steeds: het kan echt een tweede aankoop zijn.
+- **Al vastgelegd door je bank** — kwam de overeenkomende uitgave uit een bankmelding of een geïmporteerd afschrift, dan zegt de melding dat en biedt **Samenvoegen tot één uitgave** aan. Aangevinkt bewaart opslaan het bonnetje (artikelen, foto en categorie) en vervangt het de bankregel, zodat de aankoop één keer telt. Komen alleen bedrag en datum overeen, dan staat het vakje eerst uit — controleer vóór het samenvoegen.
 
 De bots in Telegram, WhatsApp en Slack waarschuwen op dezelfde manier en bieden een knop **Toch scannen**.
 

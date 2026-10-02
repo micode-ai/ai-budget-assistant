@@ -1,4 +1,4 @@
-import { describeDuplicateMatch } from '../receiptDuplicate';
+import { bankCopySource, defaultMergeWithBank, describeDuplicateMatch } from '../receiptDuplicate';
 
 const match = {
   kind: 'exact' as const,
@@ -30,5 +30,27 @@ describe('describeDuplicateMatch', () => {
 
   it('omits an unparseable date rather than printing "Invalid Date"', () => {
     expect(describeDuplicateMatch({ ...match, date: 'nope' }, 'en-GB')).not.toContain('Invalid');
+  });
+});
+
+describe('bankCopySource / defaultMergeWithBank', () => {
+  const likely = { ...match, kind: 'likely' as const };
+
+  it('offers a merge for a push or an imported row, ticked by default', () => {
+    expect(bankCopySource({ ...likely, source: 'notification' })).toBe('notification');
+    expect(bankCopySource({ ...likely, source: 'import' })).toBe('import');
+    expect(defaultMergeWithBank({ ...likely, source: 'import' })).toBe(true);
+  });
+
+  it('leaves the box unticked when only the amount matched', () => {
+    expect(defaultMergeWithBank({ ...likely, source: 'notification', amountOnly: true })).toBe(false);
+    expect(bankCopySource({ ...likely, source: 'notification', amountOnly: true })).toBe('notification');
+  });
+
+  it('never offers a merge for a manual row, an exact re-upload, or an older server', () => {
+    expect(bankCopySource({ ...likely, source: 'manual' })).toBeNull();
+    expect(bankCopySource({ ...match, source: 'import' })).toBeNull();
+    expect(bankCopySource(likely)).toBeNull();
+    expect(bankCopySource(null)).toBeNull();
   });
 });

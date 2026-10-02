@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { router } from 'expo-router';
 import { showAlert } from '@/utils/alert';
 import { getIntlLocale } from '@/i18n';
-import { describeDuplicateMatch } from '@/features/receipt/receiptDuplicate';
+import { bankCopySource, defaultMergeWithBank, describeDuplicateMatch } from '@/features/receipt/receiptDuplicate';
 import type { ReceiptDuplicateMatch } from '@budget/shared-types';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useTranslation } from 'react-i18next';
@@ -118,6 +118,8 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
   const [saveImage, setSaveImage] = useState(true);
   const [userPrompt, setUserPrompt] = useState('');
   const [merchant, setMerchant] = useState('');
+  /** "Merge with the bank's record" on the confirm card — reset per scan. */
+  const [mergeWithBank, setMergeWithBank] = useState(false);
   const getDistinctMerchants = useExpenseStore((s) => s.getDistinctMerchants);
   const { getExpenseCategories } = useCategoryStore();
 
@@ -247,6 +249,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     if (scannedReceipt) {
       setShowConfirm(true);
       setMerchant(resolveExistingMerchant(scannedReceipt.merchant, getDistinctMerchants()));
+      setMergeWithBank(defaultMergeWithBank(scannedReceipt.possibleDuplicate));
       useSubscriptionStore.getState().loadUsage();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -273,6 +276,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     reset();
     setShowConfirm(false);
     setSaveImage(false);
+    setMergeWithBank(false);
     resetSplitState();
   };
 
@@ -345,6 +349,10 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     currentSplits,
     itemCategories,
     proposedNamesToCreate,
+    mergeWithExpenseId:
+      mergeWithBank && bankCopySource(scannedReceipt?.possibleDuplicate)
+        ? scannedReceipt?.possibleDuplicate?.expenseId
+        : undefined,
     // In share mode the only caller of onReset is "Edit" (there is no "Scan
     // another"): the file becomes the manual form's expense, so it leaves the
     // queue — otherwise the user returns to a stuck, already-handled head.
@@ -410,6 +418,8 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
             saveImage={saveImage}
             onToggleSaveImage={() => setSaveImage(!saveImage)}
             onOpenDuplicate={openExpense}
+            mergeWithBank={mergeWithBank}
+            onToggleMergeWithBank={() => setMergeWithBank((v) => !v)}
             onEdit={handleEditExpense}
             onConfirm={handleConfirmExpense}
             onRetry={shareMode ? retryShareHead : handleReset}

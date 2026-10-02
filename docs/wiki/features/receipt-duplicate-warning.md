@@ -29,7 +29,18 @@ The bots likewise check before `trackAiUsage`, and park the scan in Redis (`*:du
 so "Scan anyway" needs no re-upload.
 
 **Stage 2 reuses the post-save duplicate rule** — same payee label (`expensePayee`), amount and
-currency within ±1 day, as `detectDuplicateCharge`. `withDuplicateInfo` checks the fingerprint first
+currency within ±1 day, as `detectDuplicateCharge`. Against a **bank-captured** row (`source`
+`notification` or `import`) it then falls back to the push↔receipt pairing: a loose payee match
+(`payeesLooselyMatch`), else a SINGLE bank row on amount alone, flagged `amountOnly` (ABA-630).
+
+**A bank copy can be merged from the scan screen (ABA-630).** The match carries `source`; when it is a
+bank copy the banner names the origin and shows a "Merge into one expense" box — ticked by default,
+unticked when `amountOnly`. Saving with it ticked sends `mergeWithExpenseId` on the create;
+`ExpenseCreatedHooksService.mergeBankCopy` folds the bank row into the receipt through
+`ExpenseCrossAccountService.mergeExpenses` BEFORE `checkExpense`, so no `possible_merge` alert is
+raised for a pair already merged. The receipt is the survivor (items, image, category, the shop's
+real name); tags, project and notes gap-fill from the bank row. The app hides the bank row
+optimistically. `withDuplicateInfo` checks the fingerprint first
 too, so a client that skipped stage 1 (an older build, income or re-extract flows) still learns of an
 exact re-upload.
 
@@ -40,7 +51,10 @@ exact re-upload.
 - The fingerprint is written with a conditional spread on BOTH create-upsert branches, so a push
   without one never clears a stored fingerprint.
 - A warning, never a block: a match can be a genuine second purchase, or the bank-notification copy
-  of this very receipt.
+  of this very receipt. The merge happens only on the user's tick.
+- `mergeWithExpenseId` folds only a `notification`/`import` row in the same account, and only from an
+  `ocr` create — the server re-checks both, so a client cannot use it to delete an arbitrary expense.
+- The amount-only fallback applies to bank rows ONLY; two manual rows are never paired on amount.
 
 ## Known gaps
 - Expenses saved before ABA-603 have no fingerprint; only stage 2 catches them.
@@ -49,6 +63,10 @@ exact re-upload.
 - A fresh camera photo is a different file — only stage 2 can catch it. Stage 1 on a re-picked
   gallery photo relies on the device downscaling the same source identically.
 - Income receipt scans and the "Extract items" re-scan do not run stage 1.
+- `mergeWithExpenseId` rides only the first create push; an offline retry does not carry it — the
+  post-save `possible_merge` alert still catches the pair.
+- The bots warn at scan time but do not offer the merge.
 
 ## History
-ABA-603 (the feature; bot scan flows unified into one `runScan` per bot).
+ABA-603 (the feature; bot scan flows unified into one `runScan` per bot) · [ABA-630](https://github.com/micode-ai/ai-budget-assistant/issues/660) (bank-copy
+matching and the merge checkbox).
