@@ -23,6 +23,35 @@ for a campaign.
    `.tmp/research/` as procedural-film step 2 asks.
 3. **Confirm the brief** with the user (procedural-film step 0): feature, mode (default
    **drawn**), the one-sentence premise, length (~30 s), aspect (default 9:16, 1080×1920).
+4. **Read `PITFALLS.md`** (next to this file) and paste the rows that apply into the film's
+   `docs/SCENE-BRIEF.md`. When the film is delivered, add every new defect that cost a re-do —
+   symptom → cause and fix — to `PITFALLS.md`. That file is how the next film starts smarter.
+
+## 1b. Story rules (apply in the storyboard step)
+
+- **One turn at 35–45 % of the length** (a click, a hit, a flash): before it small, quiet, cool;
+  after it big, bright, warm. Save the warm brand accent for after the turn.
+- **The last ~3 s are a poster**: every text fully written, nothing fast moving — the CTA must
+  land complete by `duration − 3 s` (the house CTA is 2.5 s; give it 3 s and finish its type-on
+  in the first beat).
+- **Frame 0 is never empty**: it is the autoplay cover. Start drawing slightly before zero.
+- **≤ 15 s: one continuous scene** in 3–4 phases. **≥ 20 s: a chain of scenes** where the last
+  object of one scene becomes the first object of the next (match cuts, G tables).
+- **Captions**: cap height ≥ 48–56 px at 1080 wide (≈ 66–78 px font), slogans ≥ 64 px cap height;
+  nothing must-read in the bottom 20 % (the Shorts/Reels UI).
+- **Plan a magnifier** for every payoff UI state (a chip, a pill, a total) — a character's phone is
+  too small to read at feed size (PITFALLS.md, Readability).
+
+## 1c. Two house styles — pick one in the brief
+
+| | **Ink** (default) | **Pencil** |
+|---|---|---|
+| For | Stories with people and the product's screens: 30 s, chained shots, comedy, characters (Bartek, Kuba, Ola), phone UI | Short "explain the calculation" ads, 10–15 s, one continuous scene: a number being worked out (Safe-to-Spend, budget, real salary, split totals) |
+| Look | Hand-inked illustration on striped paper plates + navy blueprint shots | Graphite on notebook/kraft paper: pen lifts, overshooting contours, hatching, eraser ghosts, handwriting written stroke by stroke; six role-based themes (notebook, kraft, chalk, blueprint, neon, mystic) recolour with one line |
+| Pipeline | global `procedural-film` skill (this file, sections 1–6) | `D:\Work\tools\pencil-film\` — read its `README.md`; new film: `node D:/Work/tools/pencil-film/new-film.cjs <slug> --theme notebook --seconds 12`; render with HyperFrames 0.8.111 (`-q standard -w 6`, ~45 s for 12 s); deliver: `node tools/deliver.cjs` |
+| Characters / UI | `src/cast.js` | none — it is a diagram style; composite the real app icon PNG in the poster |
+
+Both styles share sections 1b (story rules), 2–3 (brand and truth), 4 (where deliverables go) and 6 (done means: deliverables + Story + copy). Reference pencil film: `D:\Work\tools\films\pencil-test-2\`. Known pencil issues: the script `cj` pair can read as "g" (prefer the sans hand for words with "cj"), the script middle dot sits low.
 
 ## 2. Brand brief — paste into the film's art bible
 
