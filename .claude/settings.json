@@ -5,5 +5,10 @@
       "Edit(.claude/agents/learning-notes/**)",
       "Edit(.claude/agents/_context/**)"
     ]
+  },
+  "attribution": {
+    "commit": "",
+    "pr": "",
+    "sessionUrl": false
   }
 }
