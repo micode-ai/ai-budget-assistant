@@ -5,7 +5,7 @@ defect that cost a re-do, write it here as *symptom → cause and fix* before th
 Read it at the start of every film and paste the relevant rows into the scene brief.
 
 Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnastego`, `kto-placi`
-(and their `-en` copies), `paragon-anime` (the anime house style), 2026-09/10.
+(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), 2026-09/10.
 
 ## Story and timing
 
@@ -14,6 +14,7 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | N events "on 8ths" don't fit their window (seven rows in five 8ths; 49 coins "two per 16th"; three ticks on 8ths in a quarter-beat) | The storyboard was written without counting. Count every timed list against its grid before handing it out: events ≤ window ÷ step. |
 | The first tap of a shot lands 3 frames after the cut, so its sound cue is early | Frame 0 must equal the previous shot's end, so nothing can change on frame 0. Put the first action at least one 16th after the cut, and put the cue there too. |
 | Running totals in the film differ from the storyboard's numbers | The app's maths (a shared line divides among whoever has claimed it so far) beats the storyboard's invented sequence. Let the cast compute from state; write only the endpoints in the storyboard. |
+| Viewers can't finish reading a caption before the cut (noir: line 2 finished typing 0.4 s before the cut) | Type EVERY line within ~0.7 s of the shot start and hold it to the cut; budget ~15 characters per second of hold. When a shot is too short for its caption, keep the card up over the first beat of the next shot. Move the typewriter-clack cues with the typing. |
 | A caption is half-typed on frame 0 | House rule: captions type on over 6 frames. Only the thumbnail shot (01) draws its caption complete on frame 0. |
 
 ## Readability at feed size
@@ -86,3 +87,16 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | A push in the film says `50 zł` but the real app says `50 PLN` | The product's push copy prints the currency code (`50 PLN`, `EUR 50`). Copy push text verbatim from `notification-i18n.ts`; brand money style applies everywhere else. |
 | A child is in the frame and the set has a bar or bottles | No alcohol in any set or receipt when a child appears (paragon-anime moved the scene from a bar to a café; the receipt has no alcohol lines). |
 | A feature claim the code doesn't support | Every string, number and status comes from the wiki page, `pl.ts`/`en.ts` or the server i18n. Name the source in the art bible's subject section. |
+
+## Noir grade (from `sprawa-pieniedzy`)
+
+| Symptom | Cause and fix |
+|---|---|
+| Every panel of a look-test sheet shows the same frame | `FILM.render` memoizes per drawing. Render each panel at a different time (`100 + 10 * i`). |
+| The kept colour, the tint or a key light lands beside its object in a zoomed shot | Grade options are SCREEN coordinates and the camera moved the object. Compute them from the camera (the turn: phone at (540, ~976) after the zoom), or from anchors returned this frame. |
+| Blind bands stripe across the payoff card and make it hard to read | Mark the card `unlit` (light = 1, no vignette) from the drawing it appears. |
+| A grey box shows where the app icon will pop | A `raw` rect leaves pixels ungraded even before the icon draws. Gate `raw` on the icon being visible. |
+| A pop, stamp or flash shows one drawing after its sound | `prog(cue, …)` is 0 on the cue drawing (the pencil rule again). Start it ~0.08 s before the cue. And point the sync region at where the event really is (the stamp lands at y 1440, not mid-frame). |
+| The orange flood makes the phone screen unreadable | Do not apply the tint inside the keep rects; the screen stays neutral white with only its orange in colour. |
+| A Story crop cuts off the hero's hat | Crops copied from another film's Story script: check the frame before you build the card. |
+
