@@ -5,7 +5,7 @@ defect that cost a re-do, write it here as *symptom → cause and fix* before th
 Read it at the start of every film and paste the relevant rows into the scene brief.
 
 Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnastego`, `kto-placi`
-(and their `-en` copies), 2026-09/10.
+(and their `-en` copies), `paragon-anime` (the anime house style), 2026-09/10.
 
 ## Story and timing
 
@@ -45,8 +45,18 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | Two blueprint shots that should be "the same diagram" drift in styling | No owner for the shared geometry. Name one scene as the owner, make it write the shared block (`// ===== G3 … =====`) **first**, and have the others poll for it and copy it verbatim. |
 | A match-cut shot's frame 0 doesn't equal the previous shot's end | The director must forward the exact final-frame calls (stripes call, character pose and opts, screen state) from the finished shot to the next agent. Ask every scene agent to describe its final frame's calls in its report. |
 | A characters' expression can't be changed ("grin wider", "eyes slide", "head turns") | The cast API had poses only. Design cast characters with expression parameters (grin level, brow, gaze direction, head turn) from the start. |
+| Scenes hand-place hands and props and they drift from shot to shot | The cast exposed whole poses only. Give the cast **hand anchors** (returned points for each hand) and **arm-only / forearm calls** (`CAST.forearm`, `CAST.phoneHeld`) from the start, so a scene attaches a phone or a pointing finger instead of guessing coordinates. |
 | A message to a scene agent went to the wrong agent | Keep a written shot → agent map when launching a wave. |
 | Characters drift between shots | Characters, phones, app screens and sets live in one `src/cast.js`; scenes call it and never redraw them. |
+
+## Characters, hands and poses (from `paragon-anime`)
+
+| Symptom | Cause and fix |
+|---|---|
+| A phone held and tapped by two hands tangles into crossed forearms | Both hands came from the same side of the body. Hold the phone with one hand and tap with the hand from the **other** side. |
+| A pose with crossed forearms, or a hand floating beside the head, reads as broken | The elbow is hidden or detached. Keep every elbow attached and visible; tightly folded arms need a short, foreshortened forearm (`L2`) or the sleeves cross into an X. |
+| A pose looks different in every scene that uses it | Scenes overrode the pose's arm per shot. Fix the cast's default for that pose once and remove the per-scene overrides. |
+| A real-person caricature keeps coming back for "one more fix" | Likeness converges feature by feature (hair, then eyes, then relative height). Plan several short rounds, one feature each, and get the likeness sheet + style frames approved **before** any scene is written. |
 
 ## Windows and files
 
@@ -61,10 +71,12 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 
 | Symptom | Cause and fix |
 |---|---|
-| An event drawn one drawing (83 ms) after its sound | The seek time sits just below k/24, and `floor(t*12)` rounds down. Quantise with a tolerance (`floor(t*12 + 1e-3)`), and snap cue constants to the drawing grid (`round(c*12)/12`). A reveal `prog(T, cue, …)` is 0 *on* the cue drawing — start it a hair before the cue. |
+| An event drawn one drawing (83 ms) after its sound | The seek time sits just below k/24, and `floor(t*12)` rounds down. Quantise with a tolerance of **+0.05 drawing** (`floor(t*12 + 0.05)`, ~4 ms) — HyperFrames seeks further below k/24 than `+1e-3` covers, so that one still lands on the previous drawing (paragon-anime), and snap cue constants to the drawing grid (`round(c*12)/12`). A reveal `prog(T, cue, …)` is 0 *on* the cue drawing — start it a hair before the cue. |
 | `loudnorm I=-14:TP=-1.5` lands at −13 or overshoots the peak | Two-pass linear loudnorm can't reach −14 inside the TP cap on a −15/−16 LUFS mix and falls back to dynamic mode. Two-pass loudnorm then `alimiter`, and measure again. |
 | A home-made limiter misses the true peak | Decimating a 4× oversampled signal with `[::4]` drops the inter-sample peak; take the max per group of 4. |
 | An eraser leaves striped residue or a ghost that clutters the poster | Sweep a filled band with a rough edge (not a zigzag wider than the brush), pad the rect by overshoot + wobble, and erase to 93–95 % for a "clear the page" rub. |
+| "Make the music more anime" | It means a TV-anime **J-rock OP**: double-time drums (120 bpm felt at 240), two rhythm guitars hard L/R + a lead, the royal-road progression IVmaj7–V7–iii7–vi in the choruses, and a key change up a step for the last chorus. Template: `paragon-anime/audio/synth.py`. |
+| Sound cues are inaudible or unmeasurable in a dense mix (onset check fails) | The bed masks the cue's attack. Duck every stem for ~45 ms before each cue (paragon-anime: −9 dB) and sharpen the cue's transient; check every onset against the WAV (`audio/onsets.py`, budget 10 ms). |
 | HyperFrames is no faster than our renderer on Windows | Screenshot capture mode (~8 fps) plus encoding: ~80 s for 12 s. Iterate with `hyperframes snapshot --at`, render once at the end. |
 
 ## Truth
@@ -72,4 +84,5 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | Symptom | Cause and fix |
 |---|---|
 | A push in the film says `50 zł` but the real app says `50 PLN` | The product's push copy prints the currency code (`50 PLN`, `EUR 50`). Copy push text verbatim from `notification-i18n.ts`; brand money style applies everywhere else. |
+| A child is in the frame and the set has a bar or bottles | No alcohol in any set or receipt when a child appears (paragon-anime moved the scene from a bar to a café; the receipt has no alcohol lines). |
 | A feature claim the code doesn't support | Every string, number and status comes from the wiki page, `pl.ts`/`en.ts` or the server i18n. Name the source in the art bible's subject section. |

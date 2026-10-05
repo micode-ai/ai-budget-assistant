@@ -42,16 +42,16 @@ for a campaign.
 - **Plan a magnifier** for every payoff UI state (a chip, a pill, a total) — a character's phone is
   too small to read at feed size (PITFALLS.md, Readability).
 
-## 1c. Two house styles — pick one in the brief
+## 1c. Three house styles — pick one in the brief
 
-| | **Ink** (default) | **Pencil** |
-|---|---|---|
-| For | Stories with people and the product's screens: 30 s, chained shots, comedy, characters (Bartek, Kuba, Ola), phone UI | Short "explain the calculation" ads, 10–15 s, one continuous scene: a number being worked out (Safe-to-Spend, budget, real salary, split totals) |
-| Look | Hand-inked illustration on striped paper plates + navy blueprint shots | Graphite on notebook/kraft paper: pen lifts, overshooting contours, hatching, eraser ghosts, handwriting written stroke by stroke; six role-based themes (notebook, kraft, chalk, blueprint, neon, mystic) recolour with one line |
-| Pipeline | global `procedural-film` skill (this file, sections 1–6) | `D:\Work\tools\pencil-film\` — read its `README.md`; new film: `node D:/Work/tools/pencil-film/new-film.cjs <slug> --theme notebook --seconds 12`; render with HyperFrames 0.8.111 (`-q standard -w 6`, ~45 s for 12 s); deliver: `node tools/deliver.cjs` |
-| Characters / UI | `src/cast.js` | none — it is a diagram style; composite the real app icon PNG in the poster |
+| | **Ink** (default) | **Pencil** | **Anime** |
+|---|---|---|---|
+| For | Stories with people and the product's screens: 30 s, chained shots, comedy, characters (Bartek, Kuba, Ola), phone UI | Short "explain the calculation" ads, 10–15 s, one continuous scene: a number being worked out (Safe-to-Spend, budget, real salary, split totals) | Shōnen-action comedy with characters (including caricatures of real people via likeness sheets) and the app's screens: 30 s, chained shots |
+| Look | Hand-inked illustration on striped paper plates + navy blueprint shots | Graphite on notebook/kraft paper: pen lifts, overshooting contours, hatching, eraser ghosts, handwriting written stroke by stroke; six role-based themes (notebook, kraft, chalk, blueprint, neon, mystic) recolour with one line | Clean variable-weight ink line, cel shading (base + hard-edged shadow + highlight), speed and focus lines, impact frames, chibi beats, sound-effect lettering in Polish/English words — never Japanese; gradients and glows allowed |
+| Pipeline | global `procedural-film` skill (this file, sections 1–6) | `D:\Work\tools\pencil-film\` — read its `README.md`; new film: `node D:/Work/tools/pencil-film/new-film.cjs <slug> --theme notebook --seconds 12`; render with HyperFrames 0.8.111 (`-q standard -w 6`, ~45 s for 12 s); deliver: `node tools/deliver.cjs` | Copy the reference project `D:\Work\tools\films\paragon-anime\` (read its `HANDOFF.md`): engine `src/engine/anime.js`, `fx.js`, `sets.js`; tools `shot.cjs`, `measure.cjs`, `deliver.cjs`; HyperFrames render (~2 min for 30 s, `-w 6`); score = J-rock OP from `audio/synth.py`, checked by `audio/onsets.py` |
+| Characters / UI | `src/cast.js` | none — it is a diagram style; composite the real app icon PNG in the poster | `src/cast.js` (characters, expression params, chibi) + `src/cast-props.js` (phone, real app screens, receipt); every on-screen string in `src/strings.js` — a language is a new table there, not edited scenes |
 
-Both styles share sections 1b (story rules), 2–3 (brand and truth), 4 (where deliverables go) and 6 (done means: deliverables + Story + copy). Reference pencil film: `D:\Work\tools\films\pencil-test-2\`. Known pencil issues: the script `cj` pair can read as "g" (prefer the sans hand for words with "cj"), the script middle dot sits low.
+All three styles share sections 1b (story rules), 2–3 (brand and truth), 4 (where deliverables go) and 6 (done means: deliverables + Story + copy). Reference pencil film: `D:\Work\tools\films\pencil-test-2\`. Known pencil issues: the script `cj` pair can read as "g" (prefer the sans hand for words with "cj"), the script middle dot sits low. Anime: present the likeness sheet and style frames before any scene is written (PITFALLS.md, Characters).
 
 ## 2. Brand brief — paste into the film's art bible
 
