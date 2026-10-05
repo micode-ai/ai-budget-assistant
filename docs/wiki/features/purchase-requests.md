@@ -5,8 +5,14 @@
 ## What this is
 
 Any member of a shared account — viewers included — can propose a purchase. The other members vote
-in the app or through the Telegram/WhatsApp bots; an approved request can be turned into a
-**planned** expense and later marked as purchased.
+in the app; an approved request can be turned into a **planned** expense and later marked as
+purchased.
+
+**Bot voting is only half-built.** The Telegram and WhatsApp bots can *receive* a vote
+(`pr_approve:`/`pr_reject:` callbacks, `modules/{telegram,whatsapp}/handlers/purchase-request.handler.ts`),
+but nothing in `apps/api` ever *sends* those buttons — the handler's own header defers outbound
+messages "to Phase 2". So today no member can vote from a bot; do not describe or advertise bot
+voting until the outbound half ships. (Found 2026-09-29 while fact-checking an advert script.)
 
 ## Entry points
 
