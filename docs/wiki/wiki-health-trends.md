@@ -8,3 +8,7 @@ AI Dreaming Center appends to this file via the `/wiki-health-scan` command.
 - `covered`: 11
 - `learning_notes`: 8
 - `covered_pct`: 100.0
+
+## Снимок (2026-09-28)
+- `covered`: 14
+- `learning_notes`: 103
