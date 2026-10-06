@@ -5,7 +5,7 @@ defect that cost a re-do, write it here as *symptom → cause and fix* before th
 Read it at the start of every film and paste the relevant rows into the scene brief.
 
 Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnastego`, `kto-placi`
-(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), 2026-09/10.
+(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), 2026-09/10.
 
 ## Story and timing
 
@@ -99,4 +99,16 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | A pop, stamp or flash shows one drawing after its sound | `prog(cue, …)` is 0 on the cue drawing (the pencil rule again). Start it ~0.08 s before the cue. And point the sync region at where the event really is (the stamp lands at y 1440, not mid-frame). |
 | The orange flood makes the phone screen unreadable | Do not apply the tint inside the keep rects; the screen stays neutral white with only its orange in colour. |
 | A Story crop cuts off the hero's hat | Crops copied from another film's Story script: check the frame before you build the card. |
+
+## 1930s cartoon (from `na-glos`)
+
+| Symptom | Cause and fix |
+|---|---|
+| "Something is wrong with every character's right hand" | The glove was drawn the same way on both sides, so the right one came out inside out (thumb pointing backwards). Mirror the glove across its own axis on one side, so both thumbs point outward. |
+| A bow reads as the whole family tipping sideways | A rotation about the feet is a lean, not a bow. Front view: squash the figure from the feet and close the eyes. |
+| A woman reads taller than the man in a two-shot | Hair counts toward height. Measure the top of the hair, not the head (Kasia: figure scale 0.84). |
+| A cut opens on a black frame | An iris that opens from radius 0 shows nothing on the first drawing. Start it at ~160 px, centred on the hero's face, and close the previous shot onto the same face. |
+| The sync check reports a tap 170 ms early | The approaching finger enters the region before the press. Check the press frames in a snapshot; such a region is a false positive. |
+| A `✓` (or other symbol) renders as a box in a Pillow Story | Segoe UI Bold has no glyph for it. Use text only, or a font that has the glyph. |
+| `cat > file <<'EOF'` with JS inside fails again ("here-document delimited by end-of-file") | Already in Windows and files: write scripts with the editor tool. A heredoc that holds both quote kinds breaks. |
 
