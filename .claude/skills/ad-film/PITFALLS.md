@@ -105,6 +105,7 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | Symptom | Cause and fix |
 |---|---|
 | "Something is wrong with every character's right hand" | The glove was drawn the same way on both sides, so the right one came out inside out (thumb pointing backwards). Mirror the glove across its own axis on one side, so both thumbs point outward. |
+| One arm of every character is missing ("не видно правой руки") | The arm target was mirrored twice (the pose already said "outward" with a minus, then the rig flipped it again), so the left-of-frame arm went inward, behind the body, beard or curls. Write arm targets in the figure's own x, check BOTH hands in every shot's contact sheet, and keep a raised hand outside the hair cloud and inside the frame. |
 | A bow reads as the whole family tipping sideways | A rotation about the feet is a lean, not a bow. Front view: squash the figure from the feet and close the eyes. |
 | A woman reads taller than the man in a two-shot | Hair counts toward height. Measure the top of the hair, not the head (Kasia: figure scale 0.84). |
 | A cut opens on a black frame | An iris that opens from radius 0 shows nothing on the first drawing. Start it at ~160 px, centred on the hero's face, and close the previous shot onto the same face. |
