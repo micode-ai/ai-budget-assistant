@@ -16,7 +16,9 @@ Un buen sistema de control de gastos no exige que te vuelvas más disciplinado. 
 
 Esta guía analiza cómo registrar gastos sin el tedio habitual, qué hacer con los datos una vez que los tienes y cómo hacer que el control de gastos funcione para dos personas en lugar de solo para una.
 
-## Por qué la gente abandona el seguimiento de gastos
+## ¿Por qué la gente abandona el seguimiento de gastos?
+
+Casi siempre por falta de automatización: cada registro manual se puede saltar, sobre todo al volver cansado del trabajo o comprando con prisa. A eso se suma la falta de contexto, como un movimiento sin descripción, y que normalmente una sola persona hace el seguimiento de todo el hogar. La solución es una herramienta que registre por ti y sea compartida.
 
 La razón más frecuente es que el registro manual es aburrido. Sacar el teléfono en la caja del supermercado para escribir "Mercadona, 42,30 euros, alimentación" está bien la primera vez y resulta agotador al décimo día.
 
@@ -24,7 +26,18 @@ La segunda razón es que los datos se vuelven ilegibles rápidamente. Una larga 
 
 La tercera razón, y esta importa más de lo que la gente admite, es que el seguimiento es un esfuerzo individual. Una persona anota con diligencia cada café y cada recarga de gasolina, mientras la otra mitad del hogar no registra nada. El resultado es, en el mejor caso, una imagen incompleta. A final de mes sigues sin saber realmente qué ha pasado.
 
-## Métodos que funcionan de verdad
+## ¿Qué métodos de control de gastos funcionan de verdad?
+
+Funcionan tres enfoques: sobres para el efectivo, la regla de las 24 horas para las compras impulsivas y el seguimiento automático con una aplicación. Solo la aplicación escala a pagos con tarjeta, compras online y suscripciones, por eso la mayoría de la gente la combina con uno de los otros dos como apoyo de conducta.
+
+Comparación de métodos de control de gastos (valoración orientativa, sin datos numéricos):
+
+| Método | Esfuerzo diario | Sirve para tarjeta y pagos online | Ideal para |
+|---|---|---|---|
+| Sobres de efectivo | medio (efectivo, sobres separados) | no | frenar el gasto impulsivo en una categoría |
+| Regla de las 24 horas | bajo | parcialmente | compras grandes no planificadas |
+| Hoja de cálculo (Excel, Google Sheets) | alto (registro manual) | sí, pero a mano | un simple diario de gastos |
+| Aplicación con importación bancaria y escaneo de tickets | bajo | sí | seguimiento constante a largo plazo |
 
 ### El sistema de sobres
 
@@ -45,7 +58,9 @@ Aquí es donde el enfoque cambia por completo. En lugar de introducir cada gasto
 
 Cuando añadir un gasto lleva tres segundos en lugar de treinta, el hábito es mucho más fácil de mantener.
 
-## Importación bancaria frente a registro manual
+## ¿Es mejor importar del banco que registrar los gastos a mano?
+
+Para la mayoría de las personas, sí. Cargar un extracto en CSV o PDF te da de golpe entre 30 y 90 días de historial ya categorizado, y la aplicación marca los posibles duplicados para no contar nada dos veces. El registro manual queda para el efectivo y las pequeñas compras que nunca llegan al banco.
 
 Si ya usas tarjeta de débito o crédito para la mayoría de tus compras, importar extractos bancarios es la forma más rápida de obtener una imagen completa de tus gastos. Descarga un extracto en CSV o PDF, súbelo a tu aplicación de control de gastos y tendrás semanas o meses de historial categorizado automáticamente.
 
@@ -53,13 +68,17 @@ AI Budget Assistant admite importación directa desde Wise, Revolut y una varied
 
 Para quienes vienen de un sistema manual, este enfoque significa que puedes poner al día un mes entero en pocos minutos en lugar de introducir cientos de transacciones a mano.
 
-## Escaneo de tickets para compras en efectivo
+## ¿Puedo escanear los tickets en lugar de teclear las compras?
+
+Sí. Fotografías el ticket y el reconocimiento de texto (OCR) lee el importe, la fecha y la tienda. Es especialmente útil con efectivo y compras de supermercado, porque el cargo con tarjeta del extracto solo muestra un total, mientras que el ticket escaneado revela de qué se compone.
 
 La importación bancaria cubre las transacciones con tarjeta. ¿Y el efectivo? ¿O las situaciones en las que necesitas capturar el desglose de artículos, no solo el total?
 
 Fotografiar el ticket es la respuesta práctica. El OCR lee el importe, la fecha y normalmente el nombre del establecimiento sin necesidad de teclear nada. Para las compras en efectivo en el supermercado o los gastos donde los detalles importan (gastos de trabajo, costes compartidos de un viaje), esto es notablemente más rápido que el registro manual.
 
-## Control de gastos en pareja o familia
+## ¿Cómo controlar los gastos en pareja o en familia?
+
+Lo más sencillo es una cuenta compartida en una aplicación que cada miembro abre desde su propio móvil. Cada movimiento es visible para todos en el momento, así que a fin de mes no hay sorpresas. También puedes preguntar al asistente de IA cuánto ha gastado toda la cuenta en una categoría.
 
 Aquí está el hueco que la mayoría de las aplicaciones de control de gastos no cubre. Si tú registras tus gastos pero tu pareja no, tienes la mitad de la imagen. No puedes gestionar un presupuesto compartido con datos parciales.
 
@@ -69,7 +88,9 @@ AI Budget Assistant gestiona esto con cuentas familiares compartidas. Cada perso
 
 Construir un presupuesto útil sobre estos datos es el paso natural siguiente, que el artículo complementario sobre [cómo hacer un presupuesto](/blog/es/como-hacer-un-presupuesto/) cubre en profundidad.
 
-## Establecer límites de gasto que realmente consultes
+## ¿Cómo fijo límites de gasto que no acabe ignorando?
+
+Observa un mes sin límites y luego fija límites con margen: si gastas de media 450 euros en comida, no empieces en 250. Activa un aviso al 75-80 % del límite, porque una alerta después de haberlo superado llega demasiado tarde para cambiar nada.
 
 Tener categorías es útil. Tener límites por categoría es todavía más útil. Pero la mayoría de las personas los fijan una vez y los ignoran hasta que ya los han superado.
 
@@ -83,11 +104,15 @@ Algunas cosas que ayudan:
 
 ## ¿Es segura una aplicación de control de gastos?
 
+Depende de la aplicación. Fíjate en tres cosas: si guarda tus datos cifrados, si funciona sin conexión para que no viajen constantemente a la nube y si su política de privacidad es clara. Compruébalo antes de instalarla, porque se trata de información financiera sensible.
+
 Las cosas clave que hay que comprobar: ¿los datos están cifrados en reposo? ¿La aplicación funciona sin conexión para que tus datos no salgan constantemente del dispositivo? ¿Hay una política de privacidad clara?
 
 AI Budget Assistant funciona primero en local: los gastos se guardan localmente antes de sincronizarse, y los datos de transacciones están cifrados de extremo a extremo.
 
-## Aplicaciones gratuitas frente a aplicaciones de pago
+## ¿Vale la pena pagar por una aplicación de control de gastos?
+
+El plan gratuito suele bastar para el seguimiento básico. Los planes de pago suelen añadir más automatización, historial completo, analítica y cuentas compartidas con más miembros. Pregúntate cuánto pierdes hoy por no llevar el control: si son 50 euros al mes, un plan que cueste menos se paga solo.
 
 Una versión gratuita cubre el seguimiento básico. Los planes de pago desbloquean más automatización, historial completo, análisis y cuentas compartidas con varios miembros. La pregunta útil es cuánto estás perdiendo ahora mismo por no saber adónde va el dinero. Si esa cifra es de 100 euros al mes, una aplicación de pago se amortiza rápido.
 
@@ -113,6 +138,14 @@ Sí, y deberías. Busca aplicaciones con funcionalidades de cuenta compartida do
 
 Tendrás una imagen clara de tus patrones de gasto después de un mes. Los cambios significativos en el comportamiento, y los ahorros que conllevan, suelen aparecer después de dos o tres meses, cuando puedes ver tendencias y hacer ajustes intencionados en lugar de solo reaccionar.
 
+**¿Cómo controlo el gasto en efectivo que no aparece en el extracto bancario?**
+
+Fotografía el ticket o añade el gasto en una frase por voz o texto, por ejemplo «12 euros comida». Anota el efectivo justo después de comprar, porque luego es fácil olvidarlo. Todo lo que pasa por el banco entra solo mediante la importación del extracto.
+
+**¿Qué diferencia hay entre controlar los gastos y hacer un presupuesto?**
+
+El control responde a cuánto has gastado ya y en qué. El presupuesto es un plan de futuro: cuánto puedes gastar en cada categoría. Primero registra durante un mes y después fija límites, para que se basen en hechos y no en deseos.
+
 ---
 
 *Artículos relacionados: [Cómo hacer un presupuesto personal paso a paso](/blog/es/como-hacer-un-presupuesto/) | [Cómo ahorrar dinero con un plan concreto](/blog/es/como-ahorrar-dinero/)*
@@ -131,3 +164,8 @@ Tendrás una imagen clara de tus patrones de gasto después de un mes. Los cambi
 - [Alternativa a Monefy: cambia sin perder tus categorías](/blog/es/cambiar-de-monefy-wallet-moneymanager/)
 - [Plantilla de presupuesto en Excel: estructura y sus límites](/blog/es/plantilla-presupuesto-excel/)
 - [App gratis de control de gastos: qué es 'gratis' de verdad](/blog/es/app-gratis-control-de-gastos/)
+- [Monefy vs AI Budget Assistant: ¿cuál te conviene?](/blog/es/monefy-vs-ai-budget-assistant/)
+- [Wallet by BudgetBakers vs AI Budget Assistant](/blog/es/wallet-budgetbakers-vs-ai-budget-assistant/)
+- [Alternativa a YNAB: YNAB vs AI Budget Assistant](/blog/es/alternativa-a-ynab/)
+- [Money Manager vs AI Budget Assistant: ¿cuál te conviene?](/blog/es/money-manager-vs-ai-budget-assistant/)
+- [Importar el extracto de Revolut a tu presupuesto](/blog/es/importar-extracto-revolut/)

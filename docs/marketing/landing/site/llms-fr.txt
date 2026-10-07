@@ -9,22 +9,30 @@
 - Tarifs: Cœur gratuit ; formules Pro et Business
 - Plateformes: Android, Web
 - Langues: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
-- Devises: USD, EUR, PLN, GBP, UAH, RUB
+- Devises: USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Key Features
 
 - Saisie vocale des dépenses : enregistrez une dépense en parlant naturellement, transcrite par l'IA
 - Scan de tickets de caisse : photographiez un ticket pour en extraire le montant, le commerçant et la catégorie par OCR
 - Détection des notifications bancaires : l'appli Android lit les notifications push de la banque et crée la dépense directement sur l'appareil (40+ banques européennes, sans identifiants)
-- Import de relevés bancaires : fichiers CSV et PDF de Wise, mBank, PKO BP, Revolut, Erste, Alior
-- Assistant de chat IA : posez des questions financières et donnez des commandes en langage naturel (GPT-4)
+- Import de relevés bancaires : fichiers CSV et PDF de Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior ; ceux des autres banques sont lus par l'import IA
+- Migration depuis Monefy, Wallet by BudgetBakers et Money Manager en gardant vos catégories
+- Partage d'addition : vos amis reçoivent un lien invité avec leur part, sans installer l'appli
+- Cagnotte de voyage : compte partagé temporaire avec répartition des dépenses et règlement
+- Listes de courses partagées
+- Indice d'inflation personnel et Inflation Shield à partir des prix de vos propres tickets
+- Financial Wrapped : le bilan de l'année en cartes
+- Suivi des dettes avec rappels d'échéance
+- Alertes de taux de change
+- Assistant de chat IA : posez des questions financières et donnez des commandes en langage naturel
 - Comptes familiaux partagés avec des rôles (propriétaire/éditeur/observateur) et un fil d'activité en temps réel
 - Vote et approbation des achats de groupe
 - Budgets par catégorie avec historique, alertes et suivi par période
 - Objectifs d'épargne avec historique des contributions
 - Gestionnaire d'abonnements avec rappels de renouvellement et simulation de prélèvement
 - Bots Telegram, WhatsApp et Slack
-- Architecture offline-first avec chiffrement de bout en bout
+- Architecture offline-first ; chiffrement de bout en bout en option
 - Moteur Safe-to-Spend : montant dépensable aujourd'hui à partir du solde moins les engagements à venir
 - Détection d'anomalies : doublons de charges, hausses de prix, pics de dépenses
 

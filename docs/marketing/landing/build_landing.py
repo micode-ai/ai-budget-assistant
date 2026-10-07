@@ -1090,7 +1090,7 @@ def lp(lang):
     return f"{BASE}/{lang}/"
 
 BLOG_SRC = os.path.join(ROOT, "..", "seo")
-FROM_BLOG_PAIRS = ["black-friday", "christmas", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "best-apps", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
+FROM_BLOG_PAIRS = ["black-friday", "christmas", "tax-refund", "budget", "split-bill", "auto-capture", "receipts", "ai-budget", "inflation", "expense-map", "family", "shared-budget", "bank-import", "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste", "best-apps", "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager", "saving"]  # curated homepage -> article internal links (every list item renders; no truncation). USP + high-intent topics first. The seasonal `christmas` and `black-friday` are included, at the front, on the owner's explicit request (every blog article should appear here); `school` stays absent for now.
 
 def _blog_front(path):
     raw = open(path, encoding="utf-8").read()
@@ -1238,15 +1238,24 @@ def about_page(lang):
     url = SITE + about_url(lang)
     alts = [(l, SITE + about_url(l)) for l in LANG_NAMES if l in ABOUT] + [("x-default", SITE + about_url("en"))]
     alt_tags = "".join(f'<link rel="alternate" hreflang="{bcp47(hl)}" href="{href}">' for hl, href in alts)
+    # The blog's articles name this page as their author's home (#author): the Person node is
+    # described here once, under the same @id every article references.
+    author_html = (f'<h2 id="author">{bb.AUTHOR_LABEL[lang]}: {html.escape(bb.AUTHOR["name"])}</h2>'
+                   f'<p>{html.escape(bb.AUTHOR_BIO.get(lang, bb.AUTHOR_BIO["en"]))}</p>')
+    ld = {"@context": "https://schema.org", "@graph": [
+        bb.org_node(), bb.author_node(lang),
+        {"@type": "AboutPage", "@id": url, "url": url, "name": title, "inLanguage": bcp47(lang),
+         "about": {"@id": f"{SITE}/#app"}, "publisher": {"@id": f"{SITE}/#organization"}}]}
     return (f'<!DOCTYPE html><html lang="{bcp47(lang)}"><head><meta charset="utf-8">'
             f'<meta name="viewport" content="width=device-width, initial-scale=1">'
             f'<title>{html.escape(title)}</title><meta name="description" content="{html.escape(meta)}">'
             f'<link rel="canonical" href="{url}"><meta name="robots" content="{ROBOTS}">{alt_tags}'
+            f'<script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>'
             f'<style>{CSS}</style></head><body>'
             f'<header><div class="wrap"><a class="brand" href="{lp(lang)}">AI <span>Budget</span> Assistant</a>'
             f'<nav class="nav"><a href="{about_url(lang)}">{ABOUT_LABELS[lang]}</a>'
             f'<a class="btn p" href="{app_url("nav", lang)}">{C[lang]["nav_login"]}</a></nav></div></header>'
-            f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}</main>'
+            f'<main class="wrap legal"><h1>{html.escape(h1)}</h1>{body}{author_html}</main>'
             + footer_html(lang) + consent_html(lang) + '</body></html>')
 
 def pricing_page(lang):
@@ -1347,15 +1356,23 @@ def jsonld(lang, langs):
              "Voice expense capture via AI transcription",
              "Receipt scanning with OCR",
              "Bank notification auto-capture (Android, 40+ European banks)",
-             "Bank statement import: Wise, mBank, PKO BP, Revolut, Erste, Alior, CSV",
+             "Bank statement import: Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior, plus AI import for any other bank",
+             "Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories",
+             "Bill splitting: friends get a guest link with their share, no app install needed",
+             "Trip wallet: temporary shared account with multi-way splits and settle-up",
+             "Shared shopping lists",
+             "Personal inflation index and Inflation Shield from your own receipt prices",
+             "Financial Wrapped: a year-in-review card deck",
+             "Debt tracking with due-date reminders",
+             "Exchange-rate alerts",
              "AI chat assistant for natural language financial questions",
              "Shared family accounts with role-based access",
              "Category budgets with period tracking and overspend alerts",
              "Savings goals with contribution history",
              "Subscription manager with renewal reminders",
              "Telegram, WhatsApp and Slack bots",
-             "Offline-first with end-to-end encryption",
-             "Multi-currency: USD, EUR, PLN, GBP, UAH, RUB",
+             "Offline-first, with optional end-to-end encryption",
+             "Multi-currency: USD, EUR, PLN, GBP, UAH, RUB, BYN",
              "9 interface languages",
              "Safe-to-spend daily limit calculation",
              "Spending anomaly detection",
@@ -1542,15 +1559,23 @@ LLMS_TXT_I18N = {
             "Spracherfassung von Ausgaben: Ausgaben durch natürliches Sprechen erfassen, per KI transkribiert",
             "Kassenbon-Scan: einen Kassenbon fotografieren, um Betrag, Händler und Kategorie per OCR zu erkennen",
             "Bank-Benachrichtigungs-Erfassung: Die Android-App liest Bank-Push-Benachrichtigungen mit und legt Ausgaben direkt auf dem Gerät an (40+ europäische Banken, keine Zugangsdaten nötig)",
-            "Bankauszug-Import: CSV- und PDF-Auszüge von Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "KI-Chat-Assistent: Finanzfragen stellen und Befehle in normaler Sprache geben (GPT-4)",
+            "Bankauszug-Import: CSV- und PDF-Auszüge von Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; Auszüge anderer Banken liest der KI-Import",
+            "Umzug von Monefy, Wallet by BudgetBakers und Money Manager mit den eigenen Kategorien",
+            "Rechnung teilen: Freunde erhalten einen Gast-Link mit ihrem Anteil, ohne die App zu installieren",
+            "Reisekasse: gemeinsames Konto auf Zeit mit Aufteilung und Abrechnung",
+            "Gemeinsame Einkaufslisten",
+            "Persönlicher Inflationsindex und Inflation Shield aus den eigenen Kassenbon-Preisen",
+            "Financial Wrapped: Jahresrückblick in Karten",
+            "Schulden verfolgen mit Fälligkeitserinnerungen",
+            "Wechselkurs-Alarme",
+            "KI-Chat-Assistent: Finanzfragen stellen und Befehle in normaler Sprache geben",
             "Geteilte Familienkonten mit Rollen (Inhaber/Bearbeiter/Betrachter) und Live-Aktivitätsfeed",
             "Gemeinsame Kaufanfragen mit Abstimmung und Freigabe",
             "Kategorie-Budgets mit Verlauf, Warnungen und Zeitraum-Tracking",
             "Sparziele mit Beitragsverlauf",
             "Abonnement-Manager mit Verlängerungserinnerungen und Abbuchungssimulation",
             "Telegram-, WhatsApp- und Slack-Bots",
-            "Offline-first-Architektur mit Ende-zu-Ende-Verschlüsselung",
+            "Offline-first-Architektur; optionale Ende-zu-Ende-Verschlüsselung",
             "Safe-to-Spend-Rechner: täglich verfügbarer Betrag aus Kontostand minus anstehenden Verpflichtungen",
             "Anomalie-Erkennung: doppelte Abbuchungen, Preiserhöhungen, Ausgabenspitzen",
         ],
@@ -1576,15 +1601,23 @@ LLMS_TXT_I18N = {
             "Spraakinvoer van uitgaven: uitgaven vastleggen door natuurlijk te spreken, getranscribeerd door AI",
             "Bonnetjes scannen: fotografeer een bonnetje om bedrag, winkel en categorie via OCR te herkennen",
             "Bankmelding-detectie: de Android-app leest bank-pushmeldingen mee en maakt uitgaven op het toestel zelf aan (40+ Europese banken, geen inloggegevens nodig)",
-            "Bankimport: CSV- en PDF-afschriften van Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "AI-chatassistent: stel financiële vragen en geef opdrachten in gewone taal (GPT-4)",
+            "Bankimport: CSV- en PDF-afschriften van Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; afschriften van andere banken leest de AI-import",
+            "Overstappen van Monefy, Wallet by BudgetBakers en Money Manager met je eigen categorieën",
+            "Rekening delen: vrienden krijgen een gastlink met hun deel, zonder de app te installeren",
+            "Reisportemonnee: tijdelijke gedeelde rekening met verdeling en verrekening",
+            "Gedeelde boodschappenlijsten",
+            "Persoonlijke inflatie-index en Inflation Shield op basis van je eigen bonprijzen",
+            "Financial Wrapped: jaaroverzicht in kaarten",
+            "Schulden bijhouden met herinneringen op de vervaldatum",
+            "Wisselkoersalarmen",
+            "AI-chatassistent: stel financiële vragen en geef opdrachten in gewone taal",
             "Gedeelde gezinsaccounts met rollen (eigenaar/bewerker/kijker) en live activiteitenfeed",
             "Gezamenlijke aankoopverzoeken met stemmen en goedkeuring",
             "Categoriebudgetten met geschiedenis, meldingen en periode-tracking",
             "Spaardoelen met bijdragegeschiedenis",
             "Abonnementenbeheerder met verlengingsherinneringen en incasso-simulatie",
             "Telegram-, WhatsApp- en Slack-bots",
-            "Offline-first-architectuur met end-to-end-encryptie",
+            "Offline-first-architectuur; optionele end-to-end-encryptie",
             "Safe-to-spend-motor: dagelijks besteedbaar bedrag op basis van saldo minus aankomende verplichtingen",
             "Anomaliedetectie: dubbele afschrijvingen, prijsstijgingen, uitgavenpieken",
         ],
@@ -1610,15 +1643,23 @@ LLMS_TXT_I18N = {
             "Dodawanie wydatków głosem: rejestruj wydatki, mówiąc naturalnie - AI transkrybuje i kategoryzuje",
             "Skanowanie paragonów: zrób zdjęcie paragonu, aby OCR odczytał kwotę, sprzedawcę i kategorię",
             "Wykrywanie powiadomień bankowych: aplikacja na Androida odczytuje powiadomienia push z banku i tworzy wydatki lokalnie na urządzeniu (40+ europejskich banków, bez podawania danych logowania)",
-            "Import wyciągów bankowych: pliki CSV i PDF z Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "Asystent czatu AI: zadawaj pytania finansowe i wydawaj polecenia zwykłym językiem (GPT-4)",
+            "Import wyciągów bankowych: pliki CSV i PDF z Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; wyciągi z innych banków odczytuje import AI",
+            "Przeprowadzka z Monefy, Wallet by BudgetBakers i Money Manager razem z własnymi kategoriami",
+            "Dzielenie rachunku: znajomi dostają link gościa ze swoją częścią, bez instalowania aplikacji",
+            "Portfel wyjazdowy: tymczasowe wspólne konto z podziałem kosztów i rozliczeniem",
+            "Wspólne listy zakupów",
+            "Osobisty wskaźnik inflacji i Tarcza antyinflacyjna z cen z własnych paragonów",
+            "Financial Wrapped: podsumowanie roku w kartach",
+            "Śledzenie długów z przypomnieniami o terminie",
+            "Alerty kursów walut",
+            "Asystent czatu AI: zadawaj pytania finansowe i wydawaj polecenia zwykłym językiem",
             "Wspólne konta rodzinne z rolami (właściciel/edytor/obserwator) i kanałem aktywności na żywo",
             "Głosowanie nad wspólnymi zakupami i zatwierdzanie",
             "Budżety kategorii z historią, alertami i śledzeniem okresu",
             "Cele oszczędnościowe z historią wpłat",
             "Menedżer subskrypcji z przypomnieniami o odnowieniu i symulacją obciążenia",
             "Boty na Telegramie, WhatsApp i Slacku",
-            "Architektura offline-first z szyfrowaniem end-to-end",
+            "Architektura offline-first; opcjonalne szyfrowanie end-to-end",
             "Silnik Safe-to-Spend: dzienna kwota do wydania na podstawie salda pomniejszonego o nadchodzące zobowiązania",
             "Wykrywanie anomalii: podwójne obciążenia, podwyżki cen, skoki wydatków",
         ],
@@ -1642,15 +1683,23 @@ LLMS_TXT_I18N = {
             "Голосовой ввод расходов: добавляйте расходы, просто произнося их вслух — AI распознаёт и категоризирует",
             "Сканирование чеков: сфотографируйте чек, чтобы OCR распознал сумму, продавца и категорию",
             "Распознавание банковских уведомлений: приложение на Android перехватывает push-уведомления банка и создаёт расход прямо на устройстве (40+ европейских банков, без ввода логина и пароля)",
-            "Импорт банковских выписок: файлы CSV и PDF из Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "AI-чат-ассистент: задавайте финансовые вопросы и отдавайте команды обычным языком (GPT-4)",
+            "Импорт банковских выписок: файлы CSV и PDF из Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; выписки других банков читает AI-импорт",
+            "Переезд из Monefy, Wallet by BudgetBakers и Money Manager вместе со своими категориями",
+            "Разделение счёта: друзья получают гостевую ссылку со своей долей, без установки приложения",
+            "Кошелёк поездки: временный общий счёт с разделением расходов и взаиморасчётом",
+            "Общие списки покупок",
+            "Личный индекс инфляции и Inflation Shield по ценам из ваших чеков",
+            "Financial Wrapped: итоги года в карточках",
+            "Учёт долгов с напоминаниями о сроке",
+            "Оповещения о курсе валют",
+            "AI-чат-ассистент: задавайте финансовые вопросы и отдавайте команды обычным языком",
             "Общие семейные счета с ролями (владелец/редактор/наблюдатель) и лентой активности в реальном времени",
             "Голосование за групповые покупки и их одобрение",
             "Бюджеты по категориям с историей, оповещениями и отслеживанием периода",
             "Накопительные цели с историей взносов",
             "Менеджер подписок с напоминаниями о продлении и симуляцией автосписания",
             "Боты в Telegram, WhatsApp и Slack",
-            "Офлайн-архитектура со сквозным шифрованием",
+            "Офлайн-архитектура; сквозное шифрование по желанию",
             "Safe-to-Spend: сколько можно потратить сегодня, исходя из баланса за вычетом предстоящих обязательств",
             "Обнаружение аномалий: повторные списания, рост цен, всплески расходов",
         ],
@@ -1676,15 +1725,23 @@ LLMS_TXT_I18N = {
             "Registro de gastos por voz: registra un gasto hablando de forma natural, transcrito por IA",
             "Escaneo de recibos: fotografía un recibo para extraer el importe, el comercio y la categoría mediante OCR",
             "Detección de notificaciones bancarias: la app de Android lee las notificaciones push del banco y crea el gasto directamente en el dispositivo (40+ bancos europeos, sin credenciales)",
-            "Importación de extractos bancarios: archivos CSV y PDF de Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "Asistente de chat con IA: haz preguntas financieras y da órdenes en lenguaje natural (GPT-4)",
+            "Importación de extractos bancarios: archivos CSV y PDF de Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; los de otros bancos los lee la importación con IA",
+            "Cambio desde Monefy, Wallet by BudgetBakers y Money Manager conservando tus categorías",
+            "Dividir cuentas: tus amigos reciben un enlace de invitado con su parte, sin instalar la app",
+            "Monedero de viaje: cuenta compartida temporal con reparto de gastos y liquidación",
+            "Listas de la compra compartidas",
+            "Índice de inflación personal e Inflation Shield con los precios de tus propios tickets",
+            "Financial Wrapped: resumen del año en tarjetas",
+            "Seguimiento de deudas con recordatorios de vencimiento",
+            "Alertas de tipo de cambio",
+            "Asistente de chat con IA: haz preguntas financieras y da órdenes en lenguaje natural",
             "Cuentas familiares compartidas con roles (propietario/editor/observador) y un feed de actividad en tiempo real",
             "Votación y aprobación de compras en grupo",
             "Presupuestos por categoría con historial, alertas y seguimiento por periodo",
             "Metas de ahorro con historial de aportaciones",
             "Gestor de suscripciones con recordatorios de renovación y simulación de cobro",
             "Bots de Telegram, WhatsApp y Slack",
-            "Arquitectura offline-first con cifrado de extremo a extremo",
+            "Arquitectura offline-first; cifrado de extremo a extremo opcional",
             "Motor Safe-to-Spend: cuánto puedes gastar hoy según el saldo menos las obligaciones próximas",
             "Detección de anomalías: cargos duplicados, subidas de precio, picos de gasto",
         ],
@@ -1711,15 +1768,23 @@ LLMS_TXT_I18N = {
             "Saisie vocale des dépenses : enregistrez une dépense en parlant naturellement, transcrite par l'IA",
             "Scan de tickets de caisse : photographiez un ticket pour en extraire le montant, le commerçant et la catégorie par OCR",
             "Détection des notifications bancaires : l'appli Android lit les notifications push de la banque et crée la dépense directement sur l'appareil (40+ banques européennes, sans identifiants)",
-            "Import de relevés bancaires : fichiers CSV et PDF de Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "Assistant de chat IA : posez des questions financières et donnez des commandes en langage naturel (GPT-4)",
+            "Import de relevés bancaires : fichiers CSV et PDF de Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior ; ceux des autres banques sont lus par l'import IA",
+            "Migration depuis Monefy, Wallet by BudgetBakers et Money Manager en gardant vos catégories",
+            "Partage d'addition : vos amis reçoivent un lien invité avec leur part, sans installer l'appli",
+            "Cagnotte de voyage : compte partagé temporaire avec répartition des dépenses et règlement",
+            "Listes de courses partagées",
+            "Indice d'inflation personnel et Inflation Shield à partir des prix de vos propres tickets",
+            "Financial Wrapped : le bilan de l'année en cartes",
+            "Suivi des dettes avec rappels d'échéance",
+            "Alertes de taux de change",
+            "Assistant de chat IA : posez des questions financières et donnez des commandes en langage naturel",
             "Comptes familiaux partagés avec des rôles (propriétaire/éditeur/observateur) et un fil d'activité en temps réel",
             "Vote et approbation des achats de groupe",
             "Budgets par catégorie avec historique, alertes et suivi par période",
             "Objectifs d'épargne avec historique des contributions",
             "Gestionnaire d'abonnements avec rappels de renouvellement et simulation de prélèvement",
             "Bots Telegram, WhatsApp et Slack",
-            "Architecture offline-first avec chiffrement de bout en bout",
+            "Architecture offline-first ; chiffrement de bout en bout en option",
             "Moteur Safe-to-Spend : montant dépensable aujourd'hui à partir du solde moins les engagements à venir",
             "Détection d'anomalies : doublons de charges, hausses de prix, pics de dépenses",
         ],
@@ -1745,15 +1810,23 @@ LLMS_TXT_I18N = {
             "Голосове введення витрат: додавайте витрати, просто промовляючи їх — AI розпізнає й категоризує",
             "Сканування чеків: сфотографуйте чек, щоб OCR розпізнав суму, продавця і категорію",
             "Розпізнавання банківських сповіщень: застосунок на Android перехоплює push-сповіщення банку і створює витрату прямо на пристрої (40+ європейських банків, без введення логіна і пароля)",
-            "Імпорт банківських виписок: файли CSV і PDF з Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "AI-чат-асистент: ставте фінансові питання та віддавайте команди звичайною мовою (GPT-4)",
+            "Імпорт банківських виписок: файли CSV і PDF з Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; виписки інших банків читає AI-імпорт",
+            "Переїзд з Monefy, Wallet by BudgetBakers і Money Manager разом із власними категоріями",
+            "Розділення рахунку: друзі отримують гостьове посилання зі своєю часткою, без встановлення застосунку",
+            "Гаманець подорожі: тимчасовий спільний рахунок з розподілом витрат і взаєморозрахунком",
+            "Спільні списки покупок",
+            "Особистий індекс інфляції та Inflation Shield за цінами з ваших чеків",
+            "Financial Wrapped: підсумки року в картках",
+            "Облік боргів з нагадуваннями про строк",
+            "Сповіщення про курс валют",
+            "AI-чат-асистент: ставте фінансові питання та віддавайте команди звичайною мовою",
             "Спільні сімейні рахунки з ролями (власник/редактор/спостерігач) і стрічкою активності в реальному часі",
             "Голосування за групові покупки та їх схвалення",
             "Бюджети за категоріями з історією, сповіщеннями та відстеженням періоду",
             "Накопичувальні цілі з історією внесків",
             "Менеджер підписок з нагадуваннями про продовження та симуляцією автосписання",
             "Боти в Telegram, WhatsApp і Slack",
-            "Офлайн-архітектура з наскрізним шифруванням",
+            "Офлайн-архітектура; наскрізне шифрування за бажанням",
             "Safe-to-Spend: скільки можна витратити сьогодні, виходячи з балансу за вирахуванням майбутніх зобов'язань",
             "Виявлення аномалій: повторні списання, зростання цін, сплески витрат",
         ],
@@ -1780,15 +1853,23 @@ LLMS_TXT_I18N = {
             "Галасавая фіксацыя выдаткаў: дадавайце выдаткі, проста прамаўляючы іх услых — ШІ распазнае і катэгарызуе",
             "Сканаванне чэкаў: сфатаграфуйце чэк, каб OCR распазнаў суму, прадаўца і катэгорыю",
             "Распазнаванне банкаўскіх апавяшчэнняў: дадатак на Android перахоплівае push-апавяшчэнні банка і стварае выдатак проста на прыладзе (40+ еўрапейскіх банкаў, без уводу логіна і пароля)",
-            "Імпарт банкаўскіх выпісак: файлы CSV і PDF з Wise, mBank, PKO BP, Revolut, Erste, Alior",
-            "Чат-асістэнт са ШІ: задавайце фінансавыя пытанні і аддавайце каманды звычайнай мовай (GPT-4)",
+            "Імпарт банкаўскіх выпісак: файлы CSV і PDF з Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; выпіскі іншых банкаў чытае AI-імпарт",
+            "Пераезд з Monefy, Wallet by BudgetBakers і Money Manager разам з уласнымі катэгорыямі",
+            "Падзел рахунку: сябры атрымліваюць гасцявую спасылку са сваёй доляй, без усталявання дадатку",
+            "Кашалёк паездкі: часовы агульны рахунак з падзелам выдаткаў і ўзаемаразлікам",
+            "Агульныя спісы пакупак",
+            "Асабісты індэкс інфляцыі і Inflation Shield па цэнах з вашых чэкаў",
+            "Financial Wrapped: вынікі года ў картках",
+            "Улік даўгоў з напамінамі пра тэрмін",
+            "Апавяшчэнні пра курс валют",
+            "Чат-асістэнт са ШІ: задавайце фінансавыя пытанні і аддавайце каманды звычайнай мовай",
             "Супольныя сямейныя рахункі з ролямі (уладальнік/рэдактар/назіральнік) і стужкай актыўнасці ў рэальным часе",
             "Галасаванне за групавыя пакупкі і іх зацвярджэнне",
             "Бюджэты па катэгорыях з гісторыяй, апавяшчэннямі і адсочваннем перыяду",
             "Мэты па назапашванні з гісторыяй унёскаў",
             "Мэнэджар падпісак з напамінамі аб падаўжэнні і сімуляцыяй спісання",
             "Боты ў Telegram, WhatsApp і Slack",
-            "Афлайн-архітэктура са скразным шыфраваннем",
+            "Афлайн-архітэктура; скразное шыфраванне па жаданні",
             "Safe-to-Spend: колькі можна патраціць сёння, зыходзячы з балансу за вылікам будучых абавязацельстваў",
             "Выяўленне анамалій: паўторныя спісанні, рост цэн, ускокі выдаткаў",
         ],
@@ -1819,7 +1900,7 @@ def write_llms_txt_localized(lang):
         f"- {t['pricing_label']}: {t['pricing_value']}\n"
         f"- {t['platforms_label']}: Android, Web\n"
         f"- {t['languages_label']}: {langs_line}\n"
-        f"- {t['currencies_label']}: USD, EUR, PLN, GBP, UAH, RUB\n\n"
+        f"- {t['currencies_label']}: USD, EUR, PLN, GBP, UAH, RUB, BYN\n\n"
         f"## Key Features\n\n"
         + "".join(f"- {feat}\n" for feat in t["features"])
         + "\n"
@@ -2014,20 +2095,28 @@ def build():
             f"- Pricing: Free core; Pro and Business subscription tiers\n"
             f"- Platforms: Android, Web\n"
             f"- Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch\n"
-            f"- Currencies: USD, EUR, PLN, GBP, UAH, RUB\n\n"
+            f"- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN\n\n"
             f"## Key Features\n\n"
             f"- Voice expense capture: log expenses by speaking naturally, transcribed by AI\n"
             f"- Receipt scanning: photograph a receipt to extract amount, merchant and category via OCR\n"
             f"- Bank notification capture: Android app intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials required)\n"
-            f"- Bank import: CSV and PDF statements from Wise, mBank, PKO BP, Revolut, Erste, Alior\n"
-            f"- AI chat assistant: ask financial questions and give commands in natural language (GPT-4)\n"
+            f"- Bank import: CSV and PDF statements from Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; statements from any other bank are read by the AI import\n"
+            f"- Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories\n"
+            f"- Bill splitting: friends get a guest link with their share, no app install needed\n"
+            f"- Trip wallet: temporary shared account with multi-way splits and settle-up\n"
+            f"- Shared shopping lists\n"
+            f"- Personal inflation index and Inflation Shield from your own receipt prices\n"
+            f"- Financial Wrapped: a year-in-review card deck\n"
+            f"- Debt tracking with due-date reminders\n"
+            f"- Exchange-rate alerts\n"
+            f"- AI chat assistant: ask financial questions and give commands in natural language\n"
             f"- Shared family accounts with owner/editor/viewer roles and live activity feed\n"
             f"- Group purchase voting and approval workflows\n"
             f"- Category budgets with history, alerts and period tracking\n"
             f"- Savings goals with contribution log\n"
             f"- Subscription manager with renewal reminders and auto-charge simulation\n"
             f"- Telegram, WhatsApp and Slack bots\n"
-            f"- Offline-first architecture with end-to-end encryption\n"
+            f"- Offline-first architecture; optional end-to-end encryption\n"
             f"- Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations\n"
             f"- Anomaly detection: duplicate charges, price increases, spending spikes\n\n"
             f"## Documentation\n\n"

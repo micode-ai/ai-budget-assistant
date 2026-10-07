@@ -16,7 +16,9 @@ Una rueda reventada, una factura inesperada del veterinario, unas semanas entre 
 
 Esta guía explica qué es realmente un fondo de emergencia, cuánto necesitas, dónde guardarlo y cómo crear uno paso a paso, incluso cuando el dinero anda justo.
 
-## Qué es un fondo de emergencia (y qué no es)
+## ¿Qué es un fondo de emergencia y qué cuenta como emergencia?
+
+Un fondo de emergencia es dinero reservado para gastos inesperados, necesarios y urgentes: perder el empleo, una factura médica urgente, la avería de un electrodoméstico esencial o la reparación del coche que necesitas para ir a trabajar. Las vacaciones, unas rebajas o una reparación previsible no lo son. Pregúntate: ¿inesperado, necesario y urgente?
 
 Un fondo de emergencia es dinero apartado para gastos genuinos, imprevistos y necesarios. La palabra clave es imprevistos. Unas vacaciones en diciembre no son una emergencia, porque sabías que diciembre venía. Un coche que sabías que necesitaba pastillas de freno nuevas tampoco es una emergencia. Eso va en tu presupuesto normal o en un objetivo de ahorro aparte.
 
@@ -24,7 +26,9 @@ Una emergencia de verdad es algo que no podías prever razonablemente y no puede
 
 Esta distinción importa porque la forma más habitual de perder el fondo de emergencia es redefinir en silencio "emergencia" para que incluya una rebaja que no querías perderte.
 
-## ¿Cuánto deberías tener?
+## ¿Cuánto debería tener un fondo de emergencia?
+
+El objetivo habitual es de tres a seis meses de gastos esenciales: alquiler, suministros, comida, seguros, transporte y cuotas mínimas de deuda, no todo tu estilo de vida. Tres meses encajan con un empleo estable y un segundo ingreso en casa; seis meses, con ingresos irregulares, trabajo autónomo o si eres el único sostén del hogar.
 
 La recomendación estándar es de tres a seis meses de gastos esenciales. Fíjate en la palabra esenciales. No son tres a seis meses de tu estilo de vida completo. Son alquiler, suministros, alimentación, seguros, transporte y pagos mínimos de deuda. Lo que mantiene la luz encendida si tus ingresos se cortan.
 
@@ -34,7 +38,23 @@ Ese objetivo puede parecer imposiblemente lejano cuando partes de cero. Así que
 
 Si todavía estás averiguando cuáles son siquiera tus costes mensuales esenciales, la guía complementaria sobre [cómo hacer un presupuesto paso a paso](/blog/es/como-hacer-un-presupuesto/) explica primero cómo clasificar el gasto.
 
-## Dónde guardarlo
+## ¿Cuántos meses de gastos necesitas según tu situación?
+
+Con empleo estable y un segundo ingreso en casa bastan unos 3 meses de gastos esenciales; un autónomo o quien tiene ingresos irregulares debería apuntar a unos 6, y una familia con un solo ingreso también a unos 6. La tabla lo convierte en euros con 2.000 € de gastos esenciales al mes, a modo de ejemplo.
+
+*Ejemplo ilustrativo: una regla orientativa, no asesoramiento personalizado.*
+
+| Situación | Meses de gastos esenciales | Ejemplo con 2.000 € al mes |
+|---|---|---|
+| Empleo estable, segundo ingreso en casa | 3 | 6.000 € |
+| Autónomo o ingresos irregulares | 6 | 12.000 € |
+| Familia con un solo ingreso | 6 | 12.000 € |
+
+<!-- calculator:emergency -->
+
+## ¿Dónde guardar un fondo de emergencia?
+
+Guárdalo en una cuenta de ahorro aparte y de fácil acceso, distinta de la cuenta del día a día y disponible en uno o dos días. Una cuenta remunerada encaja bien. No lo inviertas en bolsa, criptomonedas ni nada que pueda perder valor, porque las emergencias suelen llegar justo cuando los mercados caen.
 
 Tres reglas para dónde vive tu fondo de emergencia:
 
@@ -74,7 +94,9 @@ Acabarás usando el fondo en algún momento. Eso es un éxito, no un fracaso: si
 
 Hacer este seguimiento es donde un objetivo con un saldo visible ayuda. Cuando el fondo baja de 6.000 a 4.500 euros tras una reparación, puedes ver el hueco y dirigir tus transferencias de cobro a cerrarlo. Es gratis para empezar y funciona en el navegador en [ai-budget.pl](https://ai-budget.pl) o en Android a través de [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), sin necesidad de tarjeta para crear tu primer objetivo.
 
-## Errores comunes que evitar
+## ¿Qué errores evitar al crear un fondo de emergencia?
+
+Los tres errores más comunes son invertir el fondo en algo volátil, dejarlo en la misma cuenta que los gastos diarios y fijar un primer objetivo tan alto que acabas abandonando. Empieza con un hito pequeño, automatiza una transferencia el día de cobro y sube el objetivo solo cuando lo alcances.
 
 **Invertirlo.** Ya lo comentamos arriba, pero vale la pena repetirlo porque es el error más tentador. Un fondo de emergencia que perdió un 30% la semana que lo necesitabas no es un fondo de emergencia. Mantenlo aburrido.
 
@@ -101,6 +123,14 @@ Crea primero un pequeño fondo de partida de 1.000 euros, luego céntrate en la 
 **¿Qué cuenta como una emergencia de verdad?**
 
 Algo imprevisto, necesario y urgente: la pérdida del empleo, una factura médica urgente, un electrodoméstico esencial que falla, una reparación del coche que necesitas para ir a trabajar. Un gasto planificado, una rebaja o unas vacaciones no cuentan, aunque se sientan apremiantes. Si sabías que venía, va en tu presupuesto o en un objetivo de ahorro aparte, no en el fondo de emergencia.
+
+**¿Con qué cantidad debo empezar?**
+
+Empieza con un hito de 1.000 euros o un mes de gastos esenciales, lo que alcances antes. Eso ya absorbe la mayoría de los sustos pequeños que de otro modo acaban en la tarjeta de crédito. Cuando lo logres, sigue hacia los tres o seis meses completos.
+
+**¿Cuánto se tarda en crear un fondo de emergencia?**
+
+Depende del objetivo y de tu aportación mensual. Con 500 € al mes, llegar a 6.000 € (tres meses de 2.000 €) lleva 12 meses y llegar a 12.000 €, 24 meses. Una transferencia automática el día de cobro acorta el camino más que cualquier truco, porque elimina la decisión mensual.
 
 ---
 

@@ -34,6 +34,8 @@ Je saldo bereken je het simpelst als een lopende som: startsaldo plus inkomsten 
 
 Dat is het zo ongeveer. Excel en Google Spreadsheets gedragen zich hier identiek, dus gebruik wat je toch al open hebt staan.
 
+**[Download het kant-en-klare sjabloon (.xlsx)](/blog/nl/assets/budget-template.xlsx)** — Transacties, categorieën en een maandoverzicht met de formules al ingevuld; werkt in Excel, Google Spreadsheets en LibreOffice.
+
 ## Waar een spreadsheet begint te haperen
 
 Eerlijk is eerlijk: voor wie het leuk vindt om hem bij te houden en simpele financiën heeft, houdt een spreadsheet jarenlang stand. Het probleem zit niet in de formules. Het zit erin dat iedere regel door een mens met de hand moet worden ingetypt, elke keer opnieuw.

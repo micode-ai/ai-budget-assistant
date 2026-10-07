@@ -9,22 +9,30 @@
 - Cena: darmowy rdzeń; plany Pro i Business
 - Platformy: Android, Web
 - Języki: Polski, English, Deutsch, Español, Français, Русский, Українська, Беларуская, Nederlands
-- Waluty: USD, EUR, PLN, GBP, UAH, RUB
+- Waluty: USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Key Features
 
 - Dodawanie wydatków głosem: rejestruj wydatki, mówiąc naturalnie - AI transkrybuje i kategoryzuje
 - Skanowanie paragonów: zrób zdjęcie paragonu, aby OCR odczytał kwotę, sprzedawcę i kategorię
 - Wykrywanie powiadomień bankowych: aplikacja na Androida odczytuje powiadomienia push z banku i tworzy wydatki lokalnie na urządzeniu (40+ europejskich banków, bez podawania danych logowania)
-- Import wyciągów bankowych: pliki CSV i PDF z Wise, mBank, PKO BP, Revolut, Erste, Alior
-- Asystent czatu AI: zadawaj pytania finansowe i wydawaj polecenia zwykłym językiem (GPT-4)
+- Import wyciągów bankowych: pliki CSV i PDF z Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; wyciągi z innych banków odczytuje import AI
+- Przeprowadzka z Monefy, Wallet by BudgetBakers i Money Manager razem z własnymi kategoriami
+- Dzielenie rachunku: znajomi dostają link gościa ze swoją częścią, bez instalowania aplikacji
+- Portfel wyjazdowy: tymczasowe wspólne konto z podziałem kosztów i rozliczeniem
+- Wspólne listy zakupów
+- Osobisty wskaźnik inflacji i Tarcza antyinflacyjna z cen z własnych paragonów
+- Financial Wrapped: podsumowanie roku w kartach
+- Śledzenie długów z przypomnieniami o terminie
+- Alerty kursów walut
+- Asystent czatu AI: zadawaj pytania finansowe i wydawaj polecenia zwykłym językiem
 - Wspólne konta rodzinne z rolami (właściciel/edytor/obserwator) i kanałem aktywności na żywo
 - Głosowanie nad wspólnymi zakupami i zatwierdzanie
 - Budżety kategorii z historią, alertami i śledzeniem okresu
 - Cele oszczędnościowe z historią wpłat
 - Menedżer subskrypcji z przypomnieniami o odnowieniu i symulacją obciążenia
 - Boty na Telegramie, WhatsApp i Slacku
-- Architektura offline-first z szyfrowaniem end-to-end
+- Architektura offline-first; opcjonalne szyfrowanie end-to-end
 - Silnik Safe-to-Spend: dzienna kwota do wydania na podstawie salda pomniejszonego o nadchodzące zobowiązania
 - Wykrywanie anomalii: podwójne obciążenia, podwyżki cen, skoki wydatków
 

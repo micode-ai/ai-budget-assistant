@@ -34,6 +34,8 @@ Saldo liczysz najprościej jako sumę bieżącą: stan początkowy plus wpływy 
 
 To wszystko. Excel i Arkusze Google działają tu identycznie, więc użyj tego, które już masz otwarte.
 
+**[Pobierz gotowy szablon (.xlsx)](/blog/pl/assets/budget-template.xlsx)** — Transakcje, kategorie i miesięczne podsumowanie z gotowymi formułami; działa w Excelu, Arkuszach Google i LibreOffice.
+
 ## Gdzie arkusz zaczyna szwankować
 
 Uczciwie: dla osoby, która lubi go prowadzić i ma proste finanse, arkusz wystarcza na lata. Problem nie leży w formułach. Leży w tym, że każdy wpis musi wykonać człowiek, ręcznie, za każdym razem.

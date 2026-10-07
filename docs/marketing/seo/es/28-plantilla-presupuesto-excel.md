@@ -34,6 +34,8 @@ El saldo se calcula más fácil como una suma acumulada: saldo inicial más ingr
 
 Y eso es prácticamente todo. Excel y Google Sheets se comportan igual aquí, así que usa el que ya tengas abierto.
 
+**[Descarga la plantilla lista (.xlsx)](/blog/es/assets/budget-template.xlsx)** — Movimientos, categorías y un resumen mensual con las fórmulas ya puestas; funciona en Excel, Hojas de cálculo de Google y LibreOffice.
+
 ## Dónde una hoja de cálculo empieza a fallar
 
 Siendo honestos: para quien disfruta manteniéndola y tiene finanzas sencillas, una hoja aguanta años. El problema no está en las fórmulas. Está en que cada apunte lo tiene que escribir una persona, a mano, cada vez.

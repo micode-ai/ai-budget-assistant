@@ -34,6 +34,8 @@ Le solde se calcule le plus simplement comme une somme cumulée : solde de dépa
 
 Et c'est à peu près tout. Excel et Google Sheets se comportent de façon identique ici, alors utilisez celui que vous avez déjà ouvert.
 
+**[Télécharger le modèle prêt à l’emploi (.xlsx)](/blog/fr/assets/budget-template.xlsx)** — Transactions, catégories et synthèse mensuelle avec les formules déjà en place ; fonctionne dans Excel, Google Sheets et LibreOffice.
+
 ## Où un tableur commence à montrer ses limites
 
 Soyons honnêtes : pour quelqu'un qui aime le tenir et dont les finances sont simples, un tableur tient des années. Le problème n'est pas dans les formules. Il est dans le fait que chaque ligne doit être tapée par une personne, à la main, à chaque fois.

@@ -16,7 +16,9 @@ Le problème n'est presque jamais la motivation. C'est la méthode. Un budget qu
 
 Ce guide couvre les étapes essentielles : comprendre ses dépenses réelles, construire un budget réaliste, le faire tenir dans le temps, et le gérer à deux sans que cela ne devienne une source de conflit.
 
-## Pourquoi la plupart des budgets s'effondrent en quelques semaines
+## Pourquoi la plupart des budgets échouent-ils en quelques semaines ?
+
+Un budget échoue le plus souvent parce que noter chaque dépense à la main prend trop de temps et que les personnes qui partagent l'argent ne voient pas les mêmes chiffres. Dès qu'une urgence survient, l'habitude disparaît, généralement en deux ou trois semaines. Seul tient le système qui automatise la saisie et montre à tous la même image.
 
 La raison principale est la friction. Noter chaque achat manuellement est assez fastidieux pour qu'on saute une transaction, puis une autre, et que tout le système s'écroule.
 
@@ -24,7 +26,9 @@ Deuxième raison : le budget reste souvent un projet solitaire. Une personne sui
 
 Troisième raison : on planifie pour une version idéalisée de soi-même. Un budget qui suppose que vous cuisinerez chaque repas et n'achèterez jamais rien sur un coup de tête n'est pas un budget, c'est une fiction. La première pizza commandée, et tout s'effondre.
 
-## Étape 1 : Découvrir où part réellement l'argent
+## Comment savoir où part réellement mon argent ?
+
+Rassemblez pendant un mois des données réelles sur vos revenus et vos dépenses, tirées des relevés bancaires et non de la mémoire. Le plus rapide est d'importer les transactions des 30 derniers jours dans une application qui attribue les catégories automatiquement. Ce n'est qu'avec cette image que vous pouvez fixer des limites réalistes.
 
 Avant tout plan, passez un mois à observer sans modifier quoi que ce soit. Pas de limites, pas de culpabilité, juste des données. Deux questions auxquelles il faut répondre honnêtement :
 
@@ -33,7 +37,9 @@ Avant tout plan, passez un mois à observer sans modifier quoi que ce soit. Pas 
 
 Ne vous fiez pas à vos estimations. Reprenez vos relevés bancaires des 30 derniers jours et parcourez-les ligne par ligne. Si votre banque permet l'export de transactions, vous pouvez importer cet historique automatiquement et éviter la saisie manuelle entièrement.
 
-## Étape 2 : Classer les dépenses par catégories
+## Comment classer les dépenses du foyer par catégories ?
+
+Utilisez trois groupes : les charges fixes (loyer ou prêt, énergie, assurances, abonnements), les dépenses variables nécessaires (alimentation, transports, médicaments) et les dépenses discrétionnaires (restaurants, vêtements, loisirs). Les charges fixes bougent le moins, les loisirs le plus : c'est donc là que se cachent les plus grosses surprises.
 
 Une fois les données en main, regroupez-les. Une structure simple qui fonctionne pour la majorité des situations :
 
@@ -45,7 +51,18 @@ Une fois les données en main, regroupez-les. Une structure simple qui fonctionn
 
 La plupart des personnes qui font cet exercice découvrent que leurs "petites" dépenses s'accumulent plus vite qu'attendu. Quelques abonnements streaming, le café quotidien et quelques achats en ligne peuvent silencieusement absorber 150 à 300 euros par mois sans que ça se remarque au quotidien.
 
-## Étape 3 : Fixer des limites réalistes
+## Quelles limites fixer et la règle 50/30/20 est-elle réaliste ?
+
+La règle 50/30/20 répartit le revenu net ainsi : 50 % pour les besoins, 30 % pour les envies et 20 % pour l'épargne et le remboursement des dettes. C'est un point de départ, pas une loi : dans une ville chère, les besoins peuvent atteindre 60 %. Fixez d'abord vos limites d'après vos dépenses réelles, puis resserrez-les peu à peu.
+
+Exemple de répartition d'un revenu net de 2 500 euros par mois selon la règle 50/30/20 (chiffres illustratifs, pas un conseil personnalisé) :
+
+| Groupe de dépenses | Part | Montant mensuel | Ce qui s'y range |
+|---|---|---|---|
+| Besoins | 50 % | 1 250 € | loyer ou prêt, énergie, alimentation, transports, médicaments |
+| Envies | 30 % | 750 € | restaurants, vêtements, loisirs, streaming |
+| Épargne et dettes | 20 % | 500 € | fonds d'urgence, objectifs, remboursement anticipé |
+| **Total** | **100 %** | **2 500 €** | |
 
 Vous avez maintenant des chiffres réels. Un cadre souvent cité comme point de départ est la règle 50/30/20 :
 
@@ -57,7 +74,9 @@ C'est un point de départ, pas une règle universelle. Si vous vivez dans une gr
 
 Le piège à éviter : ne budgétisez pas en fonction de qui vous voulez être. Budgétisez en fonction de qui vous êtes aujourd'hui, puis ajustez graduellement. Les objectifs draconiens font du bien à définir et font mal à tenir.
 
-## Étape 4 : Gérer un budget à deux
+## Comment gérer un budget à deux ou en famille ?
+
+Il faut une vue commune que chacun peut mettre à jour depuis son propre téléphone et qui montre immédiatement l'effet de chaque achat. Si une seule personne fait les comptes pour tous, le plan s'effondre dès le premier achat commun. Commencez par des objectifs partagés plutôt que par le contrôle des tickets.
 
 Si quelqu'un d'autre dans votre foyer dépense de l'argent, cette personne doit faire partie du processus. Un budget géré par une seule personne et ignoré par l'autre s'effondre dès le premier achat important non concerté.
 
@@ -65,7 +84,9 @@ La solution concrète : une vision partagée du budget, mise à jour en temps r�
 
 AI Budget Assistant, disponible sur Android et dans le navigateur à [ai-budget.pl](https://ai-budget.pl), permet de partager un compte familial où chacun saisit ses dépenses depuis son propre téléphone et le budget se met à jour pour tout le monde instantanément. Vous pouvez aussi interroger l'assistant IA intégré en posant des questions comme "combien avons-nous dépensé en courses ce mois-ci ?" et obtenir une réponse immédiate, sans calcul manuel.
 
-## Étape 5 : Constituer d'abord un fonds d'urgence
+## Quel montant pour le fonds d'urgence et par où commencer ?
+
+La recommandation courante est de trois à six mois de dépenses, mais un premier palier plus abordable est de 500 à 1 000 euros, de quoi absorber une panne de voiture ou un appareil en panne. Gardez cet argent sur un compte distinct : une petite barrière suffit à éviter de le dépenser au quotidien.
 
 Avant de viser de grands objectifs d'épargne, assurez-vous d'avoir un matelas financier. La recommandation standard est de trois à six mois de dépenses, ce qui peut sembler ambitieux au départ. Un premier palier plus abordable : un à deux mois de charges, ou même simplement 500 à 1 000 euros.
 
@@ -73,7 +94,9 @@ L'objectif d'un fonds d'urgence est simple : une réparation imprévue ou une fa
 
 Gardez cet argent sur un compte légèrement distinct de votre compte courant. Cette petite friction suffit généralement à éviter qu'il soit utilisé pour des dépenses du quotidien.
 
-## Comment ne pas se perdre dans les détails
+## Comment garder un budget simple sans se perdre dans les détails ?
+
+Concentrez-vous d'abord sur les postes les plus lourds : logement, alimentation, transports, assurances et abonnements. Vérifiez si vous payez des services inutilisés avant de chercher à gagner 5 euros sur les courses. Dix à quinze minutes par semaine suffisent pour garder une vue d'ensemble sans microgestion.
 
 Une fois le budget en place, la tentation est d'optimiser chaque ligne. Résistez-y, du moins au début. Passer vingt minutes à analyser si vous pouvez économiser 5 euros sur votre facture de téléphone est un usage discutable de votre énergie. Il vaut mieux vérifier si vous payez des abonnements que vous avez oubliés.
 
@@ -81,7 +104,9 @@ C'est là qu'un gestionnaire d'abonnements aide. AI Budget Assistant en intègre
 
 Pour aller plus loin sur la réduction des dépenses, l'article complémentaire sur le [suivi des dépenses](/blog/fr/suivi-des-depenses/) couvre les tactiques en détail.
 
-## Les erreurs courantes à éviter
+## Quelles sont les erreurs les plus courantes quand on fait un budget ?
+
+Les plus fréquentes : oublier les dépenses irrégulières comme les assurances, l'entretien de la voiture ou les fêtes, budgéter pour une version idéalisée de soi-même et abandonner après le premier mois raté. Divisez les coûts annuels par douze, planifiez selon vos habitudes réelles et voyez les deux ou trois premiers mois comme un calibrage.
 
 **Ignorer les dépenses irrégulières.** Primes d'assurance annuelles, cotisations, cadeaux de fin d'année, contrôle technique, soins dentaires. Ce ne sont pas des surprises, ce sont des dépenses prévisibles. Divisez les coûts annuels par 12 et intégrez-les dans votre budget mensuel.
 
@@ -108,6 +133,14 @@ Oui, et il est encore plus important quand les revenus varient. Basez votre plan
 **Comment faire un budget avec un partenaire qui ne veut pas suivre ses dépenses ?**
 
 Commencez par une conversation sur vos objectifs communs, pas sur le budget. "On veut partir en vacances pour 2 500 euros en août" est un point de départ très différent de "tu dois noter chaque achat". Quand les deux personnes voient un objectif partagé, le suivi devient un outil plutôt qu'une surveillance.
+
+**En quoi consiste la règle 50/30/20 en budget ?**
+
+Elle répartit le revenu net en trois parts : 50 % pour les besoins, 30 % pour les envies et 20 % pour l'épargne et le remboursement des dettes. Prenez-la comme un point de départ. Si le loyer est élevé et que les besoins montent à 60 %, réduisez la part des envies plutôt que de supprimer l'épargne.
+
+**Quel montant faut-il mettre dans un fonds d'urgence ?**
+
+L'objectif est de trois à six mois de dépenses essentielles. Si cela paraît lointain, commencez avec 500 à 1 000 euros et augmentez chaque mois. Gardez cet argent sur un compte à part, séparé des dépenses courantes.
 
 ---
 

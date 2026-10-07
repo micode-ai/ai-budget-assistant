@@ -14,7 +14,9 @@ Demandez à quelqu'un combien d'abonnements il paie et il devinera en général 
 
 C'est la dérive des abonnements. Chaque prélèvement est assez petit pour être ignoré, la facturation est automatique, et les dates de renouvellement sont éparpillées dans le mois, donc aucun relevé ne rend le total évident. La solution, ce n'est pas la volonté. C'est un audit ponctuel plus un système qui garde la liste visible.
 
-## Pourquoi les abonnements échappent si facilement au radar
+## Pourquoi les abonnements échappent-ils si facilement au radar ?
+
+Les abonnements passent inaperçus parce que les prélèvements sont automatiques et sans moment d'achat pour réfléchir, parce que les formules annuelles masquent leur coût mensuel réel et parce que les essais gratuits se transforment en offres payantes sans bruit. Il en résulte une fuite lente qui s'aggrave, car personne ne décide de l'arrêter.
 
 Plusieurs choses jouent contre vous :
 
@@ -38,13 +40,17 @@ Notez chacun avec trois détails : le coût, le cycle de facturation (mensuel, t
 
 C'est là qu'[AI Budget Assistant](https://ai-budget.pl) aide. Son gestionnaire d'abonnements vous permet d'enregistrer chaque service avec son cycle de facturation et sa date de prochain renouvellement, puis de les afficher dans une vue calendrier des renouvellements pour voir ce qui arrive et quand. C'est gratuit pour commencer et ça tourne dans le navigateur, vous pouvez donc bâtir la liste en quelques minutes.
 
-## Étape 3 : Additionner le vrai total mensuel ET annuel
+## Étape 3 : Comment calculer le vrai coût mensuel et annuel ?
+
+Convertissez chaque abonnement en équivalent mensuel : divisez les formules annuelles par 12, les trimestrielles par 3, et multipliez les hebdomadaires par 52 avant de diviser par 12. Additionnez pour obtenir le total mensuel, puis multipliez par 12 pour le total annuel. C'est souvent le chiffre annuel qui pousse à agir.
 
 Voici l'étape que la plupart des gens sautent, et c'est celle qui change les comportements. Convertissez tout en équivalent mensuel pour comparer ce qui est comparable. Une formule annuelle à 99 euros, c'est 8,25 euros par mois ; un forfait trimestriel à 30 euros, c'est 10 euros par mois. Additionnez les chiffres mensuels pour votre vrai coût mensuel, puis multipliez par douze pour le chiffre annuel.
 
 C'est en général le chiffre annuel qui marque les esprits. "120 euros par mois" se balaie d'un revers de main. "1 440 euros par an", c'est des vacances. Voir les deux côte à côte est ce qui rend les étapes suivantes dignes d'effort. AI Budget Assistant affiche le total en équivalent mensuel de l'ensemble combiné, de sorte que les formules annuelles et hebdomadaires se fondent en un seul chiffre comparable pour vous.
 
-## Étape 4 : Résilier ce que vous n'avez pas utilisé en 30 jours
+## Étape 4 : Quels abonnements faut-il résilier ?
+
+Résiliez tout abonnement que vous n'avez pas utilisé ces 30 derniers jours. Peu importe que vous puissiez vous en servir un jour : se réabonner prend généralement quelques minutes, alors qu'un abonnement inutilisé coûte chaque mois. Beaucoup récupèrent de l'argent réel à cette étape sans changer leur mode de vie.
 
 Maintenant, les gains faciles. Parcourez la liste et posez une question par élément : l'ai-je utilisé au cours des 30 derniers jours ? Pas "pourrais-je un jour", pas "je vais m'y remettre". L'ai-je réellement utilisé.
 
@@ -72,7 +78,26 @@ La dernière pièce consiste à rendre le système auto-entretenu. Pour chaque a
 
 Un rappel trois jours avant un renouvellement annuel à 99 euros vous offre un vrai moment pour vous demander "est-ce que j'en tire toujours 99 euros de valeur ?". Parfois la réponse est oui et vous ne faites rien. Parfois c'est non et vous venez d'économiser 99 euros. Dans AI Budget Assistant, ces rappels arrivent automatiquement avant le prélèvement, et tous les membres d'un compte partagé voient la même liste, ce qui compte quand deux personnes s'inscrivent à des choses chacune de leur côté.
 
-## Faites un audit d'abonnements deux fois par an
+## À quoi ressemble un audit d'abonnements type ?
+
+Un audit type liste chaque service avec son coût mensuel et annuel. Dans l'exemple ci-dessous, sept abonnements totalisent 67 € par mois, soit 804 € par an, alors qu'aucun ne paraît cher isolément. Les montants sont illustratifs et non des moyennes du marché.
+
+*Exemple illustratif : montants inventés, pas des données de marché.*
+
+| Type de service | Par mois | Par an |
+|---|---|---|
+| Streaming vidéo | 13 € | 156 € |
+| Streaming musical | 11 € | 132 € |
+| Stockage cloud | 3 € | 36 € |
+| Appli de fitness | 10 € | 120 € |
+| Logiciel (formule annuelle à 96 €) | 8 € | 96 € |
+| Site d'actualités | 10 € | 120 € |
+| Abonnement jeux | 12 € | 144 € |
+| **Total** | **67 €** | **804 €** |
+
+## À quelle fréquence faut-il auditer ses abonnements ?
+
+Auditez vos abonnements au moins deux fois par an, par exemple tous les six mois, en prévoyant environ 20 minutes. Repassez vos relevés en revue, mettez à jour la liste, résiliez ce qui ne sert plus et vérifiez les hausses de prix. De nouveaux services s'ajoutent sans cesse et les anciens renchérissent discrètement.
 
 Un audit d'abonnements n'est pas un événement ponctuel. De nouveaux services s'invitent, d'anciens se font oublier à nouveau, les prix dérivent vers le haut. Mettez un audit récurrent de 20 minutes au calendrier, une fois tous les six mois suffit largement : repassez vos relevés, mettez la liste à jour, résiliez les poids morts, vérifiez les hausses de prix.
 
@@ -93,6 +118,18 @@ Si vous ne l'avez pas utilisé au cours des 30 derniers jours, résiliez-le. Se 
 **Une application peut-elle me prévenir avant le renouvellement d'un abonnement ?**
 
 Oui. Le gestionnaire d'abonnements d'AI Budget Assistant envoie des rappels de renouvellement avant le prélèvement et peut signaler les hausses de prix ou les prélèvements récurrents que vous n'avez pas encore ajoutés au suivi. Vous pouvez commencer gratuitement dans le navigateur à [ai-budget.pl](https://ai-budget.pl) ou le télécharger depuis [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), sans carte bancaire.
+
+**Combien les abonnements peuvent-ils coûter par an ?**
+
+Les petits prélèvements s'additionnent vite. Dans l'audit d'exemple, sept services représentent 67 € par mois et 804 € par an. Votre total sera différent, mais regardez toujours le chiffre annuel, car il montre l'ampleur réelle de la dépense.
+
+**Comment éviter d'être pris au dépourvu par un essai gratuit ?**
+
+Dès le début d'un essai gratuit, programmez un rappel deux jours avant sa fin et notez la date de renouvellement dans votre liste d'abonnements. C'est votre moment de décision : soit vous l'avez assez utilisé pour le garder, soit vous résiliez avant le premier prélèvement.
+
+**Comment savoir si un abonnement a augmenté ?**
+
+Comparez le montant de vos derniers relevés au prix de votre liste. Les hausses sont souvent modestes et peu annoncées : vérifiez donc chaque ligne lors de l'audit semestriel. Une formule qui passe discrètement de 9,99 € à 12,99 € vous coûte 36 € de plus par an.
 
 ---
 

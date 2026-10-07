@@ -16,7 +16,9 @@ Un presupuesto es, sencillamente, un plan para tu dinero. No es un castigo ni un
 
 Esta guía cubre lo esencial: cómo construir un presupuesto, cómo hacer que se mantenga en el tiempo y cómo gestionarlo en pareja o en familia sin que se convierta en fuente de conflictos.
 
-## Por qué la mayoría de los presupuestos fracasan en pocas semanas
+## ¿Por qué la mayoría de los presupuestos fracasan en pocas semanas?
+
+Un presupuesto suele fracasar porque anotar cada gasto a mano lleva demasiado tiempo y las personas que comparten el dinero no ven las mismas cifras. Cuando surge algo más urgente, el hábito desaparece, normalmente en dos o tres semanas. Solo sobrevive el sistema que automatiza los registros y muestra a todos el mismo panorama.
 
 La primera razón es la fricción. Anotar cada gasto a mano es suficientemente tedioso como para que empieces a saltarte una transacción, luego otra, y finalmente todo el sistema se venga abajo.
 
@@ -24,7 +26,9 @@ La segunda razón es que el presupuesto suele ser un proyecto individual. Una pe
 
 La tercera razón es que la gente planifica para una versión idealizada de sí misma. Un presupuesto que asume que siempre cocinarás en casa y nunca comprarás nada por impulso no es un presupuesto real: es una fantasía. La primera vez que pides comida a domicilio, sientes que has roto las reglas y lo abandonas todo.
 
-## Paso 1: Descubre adónde va tu dinero realmente
+## ¿Cómo averiguo adónde va realmente mi dinero?
+
+Reúne durante un mes datos reales de ingresos y gastos, sacados de los extractos del banco y no de la memoria. Lo más rápido es importar los movimientos de los últimos 30 días a una aplicación que asigne las categorías automáticamente. Solo con esa imagen puedes fijar límites acordes con tu vida real.
 
 Antes de planificar nada, dedica un mes entero a observar. Sin límites, sin culpa, solo datos. Necesitas respuestas honestas a dos preguntas:
 
@@ -33,7 +37,9 @@ Antes de planificar nada, dedica un mes entero a observar. Sin límites, sin cul
 
 No estimes. Revisa los extractos bancarios de los últimos treinta días línea por línea. Si tu banco te permite exportar transacciones en CSV (la mayoría lo permite), puedes importar ese historial automáticamente y ahorrarte el trabajo manual. La categorización ocurre en segundo plano.
 
-## Paso 2: Clasifica tus gastos por categorías
+## ¿Cómo clasifico los gastos del hogar por categorías?
+
+Usa tres grupos: gastos fijos (alquiler o hipoteca, suministros, seguros, suscripciones), gastos variables necesarios (comida, transporte, medicinas) y gastos discrecionales (restaurantes, ropa, ocio). Los fijos son los que menos puedes cambiar y los discrecionales los que más, por eso las mayores sorpresas suelen esconderse en el tercer grupo.
 
 Una vez que tienes los datos, agrúpalos. Un esquema sencillo que funciona para la mayoría de las personas:
 
@@ -45,7 +51,18 @@ Una vez que tienes los datos, agrúpalos. Un esquema sencillo que funciona para 
 
 La mayoría de las personas que hacen este ejercicio descubren que sus compras "pequeñas" suman mucho más de lo esperado. Unos cuantos servicios de streaming, el café diario y las compras por impulso online pueden comerse fácilmente varios cientos de euros al mes de forma casi invisible.
 
-## Paso 3: Establece límites realistas
+## ¿Qué límites debo fijar y es realista la regla 50/30/20?
+
+La regla 50/30/20 reparte los ingresos netos así: 50 % para necesidades, 30 % para deseos y 20 % para ahorro y pago de deudas. Es un punto de partida, no una ley: en una ciudad cara las necesidades pueden llegar al 60 %. Fija primero los límites con tus gastos reales y ajústalos poco a poco.
+
+Ejemplo de reparto de unos ingresos netos de 2.000 euros al mes según la regla 50/30/20 (cifras ilustrativas, no un consejo personalizado):
+
+| Grupo de gasto | Porcentaje | Importe mensual | Qué incluye |
+|---|---|---|---|
+| Necesidades | 50 % | 1.000 € | alquiler o hipoteca, suministros, comida, transporte, medicinas |
+| Deseos | 30 % | 600 € | restaurantes, ropa, ocio, streaming |
+| Ahorro y deudas | 20 % | 400 € | fondo de emergencia, objetivos, amortización de deudas |
+| **Total** | **100 %** | **2.000 €** | |
 
 Ahora tienes cifras reales con las que trabajar. Un punto de partida muy usado es la regla 50/30/20:
 
@@ -57,7 +74,9 @@ Es un punto de partida, no una ley. Si vives en una ciudad cara o tienes una hip
 
 La trampa que debes evitar: no hagas el presupuesto basándote en quien quieres ser. Hazlo basándote en quien eres ahora mismo, y ajusta desde ahí con pequeños pasos. Los objetivos drásticos quedan muy bien sobre el papel y son muy difíciles de sostener en el día a día.
 
-## Paso 4: Haz el presupuesto en equipo si compartes finanzas
+## ¿Cómo hacemos el presupuesto en pareja o en familia?
+
+Necesitáis una vista compartida que cada uno pueda actualizar desde su propio móvil y que muestre al instante el efecto de cada compra. Si una sola persona hace las cuentas por todos, el plan se rompe en la primera compra conjunta. Empezad por objetivos comunes, no por revisar tickets.
 
 Si otra persona en tu hogar también gasta dinero, tiene que formar parte del proceso. Un presupuesto gestionado por una sola persona y pasado por alto por la otra se derrumbará la primera vez que alguien haga una compra grande sin consultar.
 
@@ -65,7 +84,9 @@ La solución práctica es tener una vista compartida del presupuesto, actualizad
 
 Las herramientas digitales ayudan mucho en este punto. AI Budget Assistant, disponible en Android y en el navegador en [ai-budget.pl](https://ai-budget.pl), permite cuentas familiares compartidas donde cada persona añade sus gastos desde su propio teléfono y el presupuesto se actualiza para todos al instante. Además, puedes preguntarle al asistente de inteligencia artificial incorporado cosas como "¿cuánto hemos gastado en alimentación este mes?" y obtener una respuesta inmediata, sin hacer ningún cálculo manual.
 
-## Paso 5: Crea un pequeño fondo de emergencia primero
+## ¿Cuánto debe tener un fondo de emergencia y por dónde empiezo?
+
+La recomendación habitual es de tres a seis meses de gastos, pero un primer hito más práctico son 500 a 1.000 euros, suficientes para una avería del coche o un electrodoméstico roto. Guarda ese dinero en una cuenta aparte para que una pequeña barrera te frene antes de gastarlo en compras cotidianas.
 
 Antes de perseguir objetivos de ahorro más grandes, asegúrate de tener un colchón financiero. La recomendación estándar es de tres a seis meses de gastos, lo cual puede parecer muy lejano al principio. Un primer hito más práctico es uno o dos meses de gastos, o incluso solo 500 a 1.000 euros.
 
@@ -73,7 +94,9 @@ El fondo de emergencia sirve para que una reparación del coche inesperada o una
 
 Guarda este dinero en una cuenta separada de la que usas a diario. La pequeña fricción que supone tener que acceder a otra cuenta suele ser suficiente para evitar que lo uses para gastos cotidianos.
 
-## Cómo no perderse en los detalles
+## ¿Cómo mantengo el presupuesto sencillo sin perderme en los detalles?
+
+Céntrate primero en las partidas mayores: vivienda, comida, transporte, seguros y suscripciones. Comprueba si pagas servicios que ya no usas antes de buscar ahorrar 5 euros en el supermercado. Diez o quince minutos por semana bastan para conservar la visión de conjunto sin caer en la microoptimización.
 
 Una vez que tienes el presupuesto en marcha, la tentación es optimizarlo todo. Resiste esa tentación, al menos al principio. Dedicar veinte minutos a analizar si puedes ahorrar cinco euros en la compra del supermercado es una mala inversión de energía comparado con verificar si estás pagando suscripciones que ni siquiera usas.
 
@@ -81,7 +104,9 @@ Aquí es donde un gestor de suscripciones resulta muy útil. AI Budget Assistant
 
 Para profundizar en cómo reducir gastos y encontrar dinero que no sabías que tenías, el artículo complementario sobre [control de gastos](/blog/es/control-de-gastos/) explica las tácticas con más detalle.
 
-## Errores habituales al hacer un presupuesto
+## ¿Cuáles son los errores más habituales al hacer un presupuesto?
+
+Los más comunes son olvidar los gastos irregulares como seguros, revisiones del coche o fiestas, presupuestar para una versión idealizada de ti mismo y abandonar tras el primer mes fallido. Divide los costes anuales entre doce, planifica según tus hábitos reales y trata los primeros dos o tres meses como calibración.
 
 **Ignorar los gastos irregulares.** Primas de seguros, renovaciones anuales de software, regalos de Navidad, revisión del coche, revisiones médicas. No son sorpresas, son gastos predecibles. Divide los costes anuales entre doce e inclúyelos en tu presupuesto mensual como una partida más.
 
@@ -108,6 +133,14 @@ Sí, y además importa más cuando los ingresos varían. Basa tu plan de gastos 
 **¿Cómo hago el presupuesto con una pareja que no quiere registrar gastos?**
 
 Empieza con una conversación sobre objetivos, no sobre el presupuesto. "Queremos hacer un viaje de 2.000 euros en verano" es un punto de partida muy diferente a "tienes que anotar cada compra". Cuando las dos personas pueden ver un objetivo compartido, el registro se convierte en una herramienta, no en una forma de vigilancia.
+
+**¿En qué consiste la regla 50/30/20 del presupuesto?**
+
+Divide los ingresos netos en tres partes: 50 % para necesidades, 30 % para deseos y 20 % para ahorro y pago de deudas. Tómala como punto de partida. Si el alquiler es alto y las necesidades llegan al 60 %, recorta la parte de deseos en lugar de eliminar el ahorro.
+
+**¿Cuánto dinero debería tener un fondo de emergencia?**
+
+El objetivo es de tres a seis meses de gastos esenciales. Si te parece lejano, empieza con 500 a 1.000 euros y auméntalo cada mes. Guarda el dinero en una cuenta aparte, separado de los gastos del día a día.
 
 ---
 

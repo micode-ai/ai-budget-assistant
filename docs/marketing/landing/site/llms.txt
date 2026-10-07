@@ -9,22 +9,30 @@
 - Pricing: Free core; Pro and Business subscription tiers
 - Platforms: Android, Web
 - Languages: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch
-- Currencies: USD, EUR, PLN, GBP, UAH, RUB
+- Currencies: USD, EUR, PLN, GBP, UAH, RUB, BYN
 
 ## Key Features
 
 - Voice expense capture: log expenses by speaking naturally, transcribed by AI
 - Receipt scanning: photograph a receipt to extract amount, merchant and category via OCR
 - Bank notification capture: Android app intercepts bank push notifications and creates expenses on-device (40+ European banks, no credentials required)
-- Bank import: CSV and PDF statements from Wise, mBank, PKO BP, Revolut, Erste, Alior
-- AI chat assistant: ask financial questions and give commands in natural language (GPT-4)
+- Bank import: CSV and PDF statements from Wise, mBank, PKO BP, ING, Millennium, Pekao, Revolut, Erste, Alior; statements from any other bank are read by the AI import
+- Migration from Monefy, Wallet by BudgetBakers and Money Manager, keeping your own categories
+- Bill splitting: friends get a guest link with their share, no app install needed
+- Trip wallet: temporary shared account with multi-way splits and settle-up
+- Shared shopping lists
+- Personal inflation index and Inflation Shield from your own receipt prices
+- Financial Wrapped: a year-in-review card deck
+- Debt tracking with due-date reminders
+- Exchange-rate alerts
+- AI chat assistant: ask financial questions and give commands in natural language
 - Shared family accounts with owner/editor/viewer roles and live activity feed
 - Group purchase voting and approval workflows
 - Category budgets with history, alerts and period tracking
 - Savings goals with contribution log
 - Subscription manager with renewal reminders and auto-charge simulation
 - Telegram, WhatsApp and Slack bots
-- Offline-first architecture with end-to-end encryption
+- Offline-first architecture; optional end-to-end encryption
 - Safe-to-spend engine: daily spendable amount from balance minus upcoming obligations
 - Anomaly detection: duplicate charges, price increases, spending spikes
 

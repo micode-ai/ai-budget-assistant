@@ -14,7 +14,9 @@ Pregúntale a alguien cuántas suscripciones paga y normalmente dirá cuatro o c
 
 Esto es la acumulación silenciosa de suscripciones. Cada cargo es lo bastante pequeño como para ignorarlo, la facturación es automática y las fechas de renovación están repartidas por todo el mes, así que ningún extracto hace evidente el total. La solución no es fuerza de voluntad. Es una auditoría puntual más un sistema que mantenga la lista a la vista.
 
-## Por qué es tan fácil perder la pista de las suscripciones
+## ¿Por qué es tan fácil perder la pista de las suscripciones?
+
+Las suscripciones se pierden de vista porque los cobros son automáticos y no hay un momento de compra para replantearse, los planes anuales ocultan su coste mensual real y las pruebas gratuitas se convierten en pago sin avisar. El resultado es una fuga lenta que crece porque nadie decide frenarla.
 
 Hay varias cosas que conspiran en tu contra:
 
@@ -38,13 +40,17 @@ Anota cada una con tres datos: el coste, el ciclo de facturación (mensual, trim
 
 Aquí es donde ayuda [AI Budget Assistant](https://ai-budget.pl). Su gestor de suscripciones te deja registrar cada servicio con su ciclo de facturación y su próxima fecha de renovación, y luego las muestra en una vista de calendario de renovaciones para que veas qué viene y cuándo. Es gratis para empezar y funciona en el navegador, así que puedes montar la lista en unos minutos.
 
-## Paso 3: Suma el total real mensual Y anual
+## Paso 3: ¿Cómo se calcula el coste real mensual y anual?
+
+Convierte cada suscripción a su equivalente mensual: divide los planes anuales entre 12, los trimestrales entre 3 y multiplica los semanales por 52 para dividir después entre 12. Suma los resultados para el total mensual y multiplícalo por 12 para el anual. Suele ser la cifra anual la que impulsa a actuar.
 
 Este es el paso que la mayoría se salta, y es el que cambia el comportamiento. Convierte todo a un equivalente mensual para poder comparar como con como. Un plan anual de 99 euros son 8,25 euros al mes; un plan trimestral de 30 euros son 10 al mes. Suma las cifras mensuales para tu coste mensual real y luego multiplica por doce para la cifra anual.
 
 La cifra anual suele ser la que cala. "120 euros al mes" es fácil de quitarse de encima. "1.440 euros al año" son unas vacaciones. Ver ambas una al lado de la otra es lo que hace que los siguientes pasos merezcan la pena. AI Budget Assistant muestra el total en equivalente mensual de todo combinado, así que los planes anuales y semanales se funden en una única cifra comparable por ti.
 
-## Paso 4: Cancela lo que no hayas usado en 30 días
+## Paso 4: ¿Qué suscripciones debes cancelar?
+
+Cancela toda suscripción que no hayas usado en los últimos 30 días. Da igual que quizá la uses algún día: volver a suscribirte suele llevar minutos, mientras que una suscripción sin uso te cuesta cada mes. Mucha gente recupera dinero real en este paso sin cambiar su estilo de vida.
 
 Ahora las victorias fáciles. Repasa la lista y hazte una pregunta por elemento: ¿lo he usado en los últimos 30 días? No "podría algún día", no "ya volveré a engancharme". Lo he usado de verdad.
 
@@ -72,7 +78,26 @@ La última pieza es hacer que el sistema se mantenga solo. Para cada suscripció
 
 Un recordatorio tres días antes de una renovación anual de 99 euros te da un momento real para preguntarte "¿sigo sacándole 99 euros de valor a esto?". A veces la respuesta es sí y no haces nada. A veces es no y acabas de ahorrarte 99 euros. En AI Budget Assistant estos recordatorios llegan automáticamente antes de que te cobren, y todos los miembros de una cuenta compartida ven la misma lista, lo que importa cuando dos personas se apuntan a cosas por su cuenta.
 
-## Haz una auditoría de suscripciones dos veces al año
+## ¿Cómo es una auditoría de suscripciones de ejemplo?
+
+Una auditoría típica lista cada servicio con su coste mensual y anual. En el ejemplo de abajo, siete suscripciones suman 67 € al mes, es decir 804 € al año, aunque ninguna parezca cara por separado. Las cifras son ilustrativas y no medias de mercado.
+
+*Ejemplo ilustrativo: importes inventados, no datos de mercado.*
+
+| Tipo de servicio | Al mes | Al año |
+|---|---|---|
+| Vídeo en streaming | 13 € | 156 € |
+| Música en streaming | 11 € | 132 € |
+| Almacenamiento en la nube | 3 € | 36 € |
+| App de fitness | 10 € | 120 € |
+| Software (plan anual de 96 €) | 8 € | 96 € |
+| Medio de noticias | 10 € | 120 € |
+| Suscripción de videojuegos | 12 € | 144 € |
+| **Total** | **67 €** | **804 €** |
+
+## ¿Cada cuánto conviene auditar las suscripciones?
+
+Audita tus suscripciones al menos dos veces al año, por ejemplo cada seis meses, y reserva unos 20 minutos. Vuelve a revisar los extractos, actualiza la lista, cancela lo que ya no uses y comprueba las subidas de precio. Entran servicios nuevos constantemente y los antiguos se encarecen en silencio.
 
 Una auditoría de suscripciones no es un evento de una sola vez. Aparecen servicios nuevos, los viejos se vuelven a olvidar, los precios suben poco a poco. Pon en el calendario una auditoría recurrente de 20 minutos, una vez cada seis meses es suficiente: vuelve a revisar tus extractos, actualiza la lista, cancela el peso muerto y comprueba las subidas de precio.
 
@@ -93,6 +118,18 @@ Si no lo has usado en los últimos 30 días, cancélalo. Volver a suscribirse ca
 **¿Puede una app avisarme antes de que se renueve una suscripción?**
 
 Sí. El gestor de suscripciones de AI Budget Assistant envía recordatorios de renovación antes de que te cobren y puede señalar subidas de precio o cargos recurrentes que aún no has añadido al gestor. Puedes empezar gratis en el navegador en [ai-budget.pl](https://ai-budget.pl) o descargarlo desde [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), sin tarjeta.
+
+**¿Cuánto pueden costar las suscripciones al año?**
+
+Los cargos pequeños suman rápido. En la auditoría de ejemplo, siete servicios dan 67 € al mes y 804 € al año. Tu total será distinto, pero mira siempre la cifra anual, porque muestra la escala real del gasto.
+
+**¿Cómo evito que me sorprenda una prueba gratuita?**
+
+Al empezar una prueba gratuita, pon un recordatorio dos días antes de que termine y anota la fecha de renovación en tu lista de suscripciones. Es tu momento de decisión: o la has usado lo bastante para quedártela, o cancelas antes del primer cobro.
+
+**¿Cómo sé si una suscripción ha subido de precio?**
+
+Compara el importe de tus últimos extractos con el precio de tu lista. Las subidas suelen ser pequeñas y casi sin aviso, así que revisa cada línea en la auditoría semestral. Un plan que sube sin ruido de 9,99 € a 12,99 € te cuesta 36 € más al año.
 
 ---
 

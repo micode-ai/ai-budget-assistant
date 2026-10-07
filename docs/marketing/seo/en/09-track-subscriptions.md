@@ -14,7 +14,9 @@ Ask someone how many subscriptions they pay for and they'll usually guess four o
 
 This is subscription creep. Each charge is small enough to ignore, the billing is automatic, and the renewal dates are scattered across the month, so no statement makes the total obvious. The fix isn't willpower. It's a one-time audit plus a system that keeps the list visible.
 
-## Why Subscriptions Are So Easy to Lose Track Of
+## Why Are Subscriptions So Easy to Lose Track Of?
+
+Subscriptions slip out of sight because charges are automatic with no checkout moment to reconsider, annual plans hide their real monthly cost, and free trials convert to paid plans silently. The result is a slow leak that keeps growing because nobody ever decides to stop it.
 
 A few things conspire against you:
 
@@ -38,13 +40,17 @@ Write down each one with three details: the cost, the billing cycle (monthly, qu
 
 This is where [AI Budget Assistant](https://ai-budget.pl) helps. Its subscription manager lets you record each service with its billing cycle and next renewal date, then shows them in a renewal calendar view so you can see what's coming up and when. It's free to start and runs in the browser, so you can build the list in a few minutes.
 
-## Step 3: Add Up the True Monthly AND Yearly Total
+## Step 3: How Do You Calculate the True Monthly and Yearly Cost?
+
+Convert every subscription to a monthly equivalent: divide annual plans by 12, quarterly plans by 3, and multiply weekly plans by 52 and divide by 12. Add the results for your monthly total, then multiply by 12 for the yearly figure. The yearly number is usually the one that motivates action.
 
 Here's the step most people skip, and it's the one that changes behavior. Convert everything to a monthly equivalent so you can compare like with like. A $99 annual plan is $8.25 a month, a $30 quarterly plan is $10 a month. Add the monthly figures for your true monthly cost, then multiply by twelve for the annual number.
 
 The annual figure is usually the one that lands. "$120 a month" is easy to wave off. "$1,440 a year" is a vacation. Seeing both side by side is what makes the next steps feel worth doing. AI Budget Assistant shows the monthly-equivalent total of everything combined, so yearly and weekly plans roll into one comparable number for you.
 
-## Step 4: Cancel What You Haven't Used in 30 Days
+## Step 4: Which Subscriptions Should You Cancel?
+
+Cancel every subscription you have not used in the last 30 days. It does not matter whether you might use it someday: resubscribing usually takes minutes, while an unused subscription costs you every month. Many people recover real money at this step with no change to their lifestyle.
 
 Now the easy wins. Go through the list and ask one question per item: have I used this in the last 30 days? Not "might I someday," not "I'll get back into it." Have I actually used it.
 
@@ -72,7 +78,26 @@ The final piece is making the system maintain itself. For every subscription you
 
 A reminder three days before a $99 annual renewal gives you a real moment to ask "am I still getting $99 of value from this?" Sometimes the answer is yes and you do nothing. Sometimes it's no and you've just saved $99. In AI Budget Assistant these reminders come automatically before you're charged, and members of a shared account all see the same list, which matters when two people sign up for things independently.
 
-## Run a Subscription Audit Twice a Year
+## What Does a Sample Subscription Audit Look Like?
+
+A typical audit lists each service with its monthly and yearly cost. In the example below, seven subscriptions add up to $67.25 a month, or $807 a year, even though none of them looks expensive on its own. The figures are illustrative, not market averages.
+
+*Illustrative example: made-up amounts, not market data.*
+
+| Service type | Per month | Per year |
+|---|---|---|
+| Video streaming | $15 | $180 |
+| Music streaming | $11 | $132 |
+| Cloud storage | $3 | $36 |
+| Fitness app | $10 | $120 |
+| Software (annual plan, $99) | $8.25 | $99 |
+| News site | $8 | $96 |
+| Game pass | $12 | $144 |
+| **Total** | **$67.25** | **$807** |
+
+## How Often Should You Audit Your Subscriptions?
+
+Audit your subscriptions at least twice a year, for example once every six months, and set aside about 20 minutes. Re-scan your statements, update the list, cancel what you no longer use and check for price increases. New services creep in constantly and old ones quietly get more expensive.
 
 A subscription audit isn't a one-time event. New services creep in, old ones get forgotten again, prices drift up. Put a recurring 20-minute audit on the calendar, once every six months is plenty: re-scan your statements, update the list, cancel the dead weight, check for price increases.
 
@@ -93,6 +118,18 @@ If you haven't used it in the last 30 days, cancel it. Resubscribing is almost a
 **Can an app remind me before a subscription renews?**
 
 Yes. AI Budget Assistant's subscription manager sends renewal reminders before you're charged and can flag price increases or recurring charges you haven't added to the tracker yet. You can start free in the browser at [ai-budget.pl](https://ai-budget.pl) or download it from [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), no card required.
+
+**How much can subscriptions cost per year?**
+
+Small charges add up quickly. In the sample audit above, seven services come to $67.25 a month and $807 a year. Your own total will differ, but always look at the yearly figure, because it shows the real scale of the spending.
+
+**How do I avoid being caught by a free trial?**
+
+When you start a free trial, set a reminder for two days before it ends and note the renewal date in your subscription list. That is your decision point: either you have used it enough to keep it, or you cancel before the first charge.
+
+**How do I know if a subscription got more expensive?**
+
+Compare the amount on your latest statements with the price on your list. Increases are often small and barely announced, so check every line during your twice-a-year audit. A $9.99 plan that quietly becomes $12.99 costs you $36 more per year.
 
 ---
 

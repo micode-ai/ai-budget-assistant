@@ -16,7 +16,9 @@ A blown tire, a sudden vet bill, a few weeks between jobs. Without a buffer, eac
 
 This guide covers what an emergency fund actually is, how much you need, where to keep it, and how to build one step by step even when money feels tight.
 
-## What an Emergency Fund Is (and Isn't)
+## What Is an Emergency Fund, and What Counts as an Emergency?
+
+An emergency fund is cash set aside for unexpected, necessary and urgent expenses: a job loss, an urgent medical bill, a dead essential appliance, or a car repair you need to get to work. A holiday, a sale or a repair you saw coming is not an emergency. Use the three-part test: unexpected, necessary, urgent.
 
 An emergency fund is cash set aside for genuine, unexpected, necessary expenses. The key word is unexpected. A holiday in December is not an emergency, because you knew December was coming. A car you knew needed new brakes is not an emergency either. Those belong in your normal budget or in a separate savings goal.
 
@@ -24,7 +26,9 @@ A real emergency is something you could not reasonably plan for and cannot postp
 
 This distinction matters because the most common way people lose their emergency fund is by quietly redefining "emergency" to include a sale they didn't want to miss.
 
-## How Much Should You Have?
+## How Much Should an Emergency Fund Be?
+
+The standard target is three to six months of essential expenses: rent, utilities, groceries, insurance, transport and minimum debt payments, not your full lifestyle. Three months fits stable employment with a second earner at home; six months fits irregular income, self-employment, or being the only earner in the household.
 
 The standard recommendation is three to six months of essential expenses. Note the word essential. This is not three to six months of your full lifestyle. It is rent, utilities, groceries, insurance, transport, and minimum debt payments. The things that keep the lights on if your income stops.
 
@@ -34,7 +38,23 @@ That target can feel impossibly far away when you are starting from zero. So don
 
 If you are still working out what your essential monthly costs even are, the companion guide on [how to budget your money step by step](/blog/en/how-to-budget/) walks through categorizing spending first.
 
-## Where to Keep It
+## How Many Months of Expenses Do You Need in Your Situation?
+
+A stable job with a second earner in the household justifies about 3 months of essential expenses; a freelancer or anyone with irregular income should aim for about 6; a single-income family should also aim for about 6. The table converts this into dollars, assuming $2,200 of essential costs per month, as an example.
+
+*Illustrative example: a rule of thumb, not personal advice.*
+
+| Situation | Months of essential expenses | Example at $2,200 a month |
+|---|---|---|
+| Stable job, second income in the household | 3 | $6,600 |
+| Freelancer or irregular income | 6 | $13,200 |
+| Single-income family | 6 | $13,200 |
+
+<!-- calculator:emergency -->
+
+## Where Should You Keep an Emergency Fund?
+
+Keep it in a separate, easily accessible savings account that is not your everyday checking, reachable within a day or two. A high-yield savings account fits well. Do not invest it in stocks, crypto or anything that can drop in value, because emergencies tend to arrive when markets are down.
 
 Three rules for where your emergency fund lives:
 
@@ -74,7 +94,9 @@ You will use the fund eventually. That is success, not failure, it means the sys
 
 Tracking this is where a goal with a visible balance helps. When the fund drops from $6,000 to $4,500 after a repair, you can see the gap and direct your payday transfers back to closing it. It is free to start and runs in your browser at [ai-budget.pl](https://ai-budget.pl) or on Android via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), with no card required to set up your first goal.
 
-## Common Mistakes to Avoid
+## What Mistakes Should You Avoid When Building an Emergency Fund?
+
+The three most common mistakes are investing the fund in something volatile, keeping it in the same account as daily spending, and setting a first target so high that you give up. Start with a small milestone, automate a transfer on payday, and raise the target only after you reach it.
 
 **Investing it.** Covered above, but worth repeating because it is the most tempting mistake. An emergency fund that lost 30% the week you needed it is not an emergency fund. Keep it boring.
 
@@ -101,6 +123,14 @@ Build a small $1,000 starter fund first, then focus on high-interest debt, then 
 **What counts as a real emergency?**
 
 Something unexpected, necessary, and urgent: a job loss, an urgent medical bill, an essential appliance failing, a car repair you need to get to work. A planned expense, a sale, or a holiday does not qualify, even when it feels pressing. If you knew it was coming, it belongs in your budget or a separate savings goal, not the emergency fund.
+
+**How much should I start with?**
+
+Start with a $1,000 milestone or one month of essential expenses, whichever you reach first. That already absorbs most small shocks that would otherwise land on a credit card. Once you hit it, keep going toward the full three to six months.
+
+**How long does it take to build an emergency fund?**
+
+It depends on the target and your monthly transfer. At $600 a month, $6,600 (three months of $2,200 essentials) takes about 11 months and $13,200 about 22 months. An automatic transfer on payday shortens the road more than any budgeting trick, because it removes the monthly decision.
 
 ---
 

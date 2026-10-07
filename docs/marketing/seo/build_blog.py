@@ -284,6 +284,33 @@ def git_date(path, fallback=PUBLISH_DATE):
     _date_cache[path] = d
     return d
 
+# The person who writes the guides: a named author is an E-E-A-T signal Google and answer
+# engines weigh on money topics, where "author: Organization" reads as anonymous. One stable
+# @id, referenced from every article and described once on the about page (build_landing.py
+# renders AUTHOR_BIO there under #author). Add LinkedIn to `sameAs` once the URL is confirmed.
+AUTHOR = {"name": "Mikhail Peraviortkin", "sameAs": ["https://github.com/micode-ai"]}
+AUTHOR_ID = f"{SITE}/#author"
+def author_url(lang):
+    return f"{SITE}{about_url(lang)}#author"
+AUTHOR_BIO = {
+    "en": "Mikhail Peraviortkin builds AI Budget Assistant at MICODE sp. z o.o. and writes the guides on this blog.",
+    "pl": "Mikhail Peraviortkin tworzy AI Budget Assistant w MICODE sp. z o.o. i pisze poradniki na tym blogu.",
+    "de": "Mikhail Peraviortkin entwickelt AI Budget Assistant bei MICODE sp. z o.o. und schreibt die Ratgeber in diesem Blog.",
+    "es": "Mikhail Peraviortkin desarrolla AI Budget Assistant en MICODE sp. z o.o. y escribe las guías de este blog.",
+    "fr": "Mikhail Peraviortkin développe AI Budget Assistant chez MICODE sp. z o.o. et rédige les guides de ce blog.",
+    "ru": "Mikhail Peraviortkin создаёт AI Budget Assistant в MICODE sp. z o.o. и пишет руководства в этом блоге.",
+    "ua": "Mikhail Peraviortkin створює AI Budget Assistant у MICODE sp. z o.o. і пише посібники в цьому блозі.",
+    "be": "Mikhail Peraviortkin стварае AI Budget Assistant у MICODE sp. z o.o. і піша дапаможнікі ў гэтым блогу.",
+    "nl": "Mikhail Peraviortkin bouwt AI Budget Assistant bij MICODE sp. z o.o. en schrijft de gidsen op deze blog.",
+}
+AUTHOR_LABEL = {"en": "Author", "pl": "Autor", "de": "Autor", "es": "Autor", "fr": "Auteur",
+                "ru": "Автор", "ua": "Автор", "be": "Аўтар", "nl": "Auteur"}
+def author_node(lang="en"):
+    return {"@type": "Person", "@id": AUTHOR_ID, "name": AUTHOR["name"],
+            "url": author_url(lang), "sameAs": AUTHOR["sameAs"],
+            "description": AUTHOR_BIO.get(lang, AUTHOR_BIO["en"]),
+            "worksFor": {"@id": f"{SITE}/#organization"}}
+
 def org_node():
     """Shared Organization entity with a stable @id so every page references one node
     (better Knowledge-Graph / AI-engine entity consolidation than ~500 inline duplicates)."""
@@ -305,6 +332,8 @@ PAIR_TO_HELP = {
     "family": "family-feed", "ai-budget": "ai-chat", "inflation": "personal-inflation-index",
     "expense-map": "expense-map", "split-bill": "receipt-split", "receipts": "voice-and-receipt",
     "auto-capture": "expenses-and-income", "school": "budgets",
+    "tax-refund": "savings-goals",
+    **{f"import-{b}": "bank-import" for b in ("revolut", "mbank", "pko", "ing", "millennium", "pekao", "alior", "erste")},
 }
 
 # Pillar -> its cluster children. Single source of truth for BOTH the generated pillar
@@ -313,8 +342,10 @@ PAIR_TO_HELP = {
 # new topics here.
 CLUSTERS = {
     "budget": ["shared-budget", "envelope", "rule-503020", "categories", "family", "ai-budget", "school", "irregular-income"],
-    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app"],
-    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday"],
+    "expenses": ["bank-import", "best-apps", "expense-map", "auto-capture", "receipts", "split-bill", "app-abandonment", "switch-apps", "excel-budget", "free-app",
+                 "vs-monefy", "vs-wallet", "vs-ynab", "vs-moneymanager",
+                 "import-revolut", "import-mbank", "import-pko", "import-ing", "import-millennium", "import-pekao", "import-alior", "import-erste"],
+    "saving": ["groceries", "emergency-fund", "subscriptions", "debt", "inflation", "wrapped", "inflation-shield", "rate-alert", "multi-currency", "christmas", "black-friday", "tax-refund"],
 }
 def category_of(pair):
     """The pillar a topic belongs to; a pillar is its own category."""
@@ -507,8 +538,69 @@ def parse(path):
         body = m.group(2)
     return meta, body
 
+# In-article calculators, placed by a `<!-- calculator:<kind> -->` line in the markdown. They sit
+# on the article that already ranks for the topic rather than on a separate /tools/ URL, which
+# would compete with it for the same query. Plain inline JS, no dependency, no tracking; the
+# page reads the same without it.
+CALC_I18N = {
+    "en": ("Calculator", "Monthly net income", "Needs (50%)", "Wants (30%)", "Savings and debt (20%)",
+           "Essential monthly expenses", "Months of cover", "Target fund", "Saving per month", "Months to reach it"),
+    "pl": ("Kalkulator", "Miesięczny dochód netto", "Potrzeby (50%)", "Zachcianki (30%)", "Oszczędności i długi (20%)",
+           "Niezbędne wydatki miesięczne", "Ile miesięcy", "Docelowa poduszka", "Odkładasz miesięcznie", "Miesięcy do celu"),
+    "de": ("Rechner", "Monatliches Nettoeinkommen", "Bedürfnisse (50 %)", "Wünsche (30 %)", "Sparen und Schulden (20 %)",
+           "Notwendige Monatsausgaben", "Monate Puffer", "Ziel-Notgroschen", "Sparrate pro Monat", "Monate bis zum Ziel"),
+    "es": ("Calculadora", "Ingreso neto mensual", "Necesidades (50 %)", "Deseos (30 %)", "Ahorro y deudas (20 %)",
+           "Gastos esenciales al mes", "Meses de cobertura", "Fondo objetivo", "Ahorro al mes", "Meses para lograrlo"),
+    "fr": ("Calculateur", "Revenu net mensuel", "Besoins (50 %)", "Envies (30 %)", "Épargne et dettes (20 %)",
+           "Dépenses essentielles par mois", "Mois de couverture", "Épargne visée", "Épargne par mois", "Mois pour y arriver"),
+    "nl": ("Rekenhulp", "Netto-inkomen per maand", "Behoeften (50%)", "Wensen (30%)", "Sparen en schulden (20%)",
+           "Noodzakelijke maanduitgaven", "Maanden buffer", "Doelbedrag", "Sparen per maand", "Maanden tot het doel"),
+    "ru": ("Калькулятор", "Чистый доход в месяц", "Нужды (50%)", "Желания (30%)", "Накопления и долги (20%)",
+           "Обязательные расходы в месяц", "Сколько месяцев", "Целевая подушка", "Откладываете в месяц", "Месяцев до цели"),
+    "ua": ("Калькулятор", "Чистий дохід на місяць", "Потреби (50%)", "Бажання (30%)", "Заощадження і борги (20%)",
+           "Обов’язкові витрати на місяць", "Скільки місяців", "Цільова подушка", "Відкладаєте щомісяця", "Місяців до мети"),
+    "be": ("Калькулятар", "Чысты даход за месяц", "Патрэбы (50%)", "Жаданні (30%)", "Зберажэнні і даўгі (20%)",
+           "Абавязковыя выдаткі за месяц", "Колькі месяцаў", "Мэтавая падушка", "Адкладаеце штомесяц", "Месяцаў да мэты"),
+}
+CALC_CSS = (".calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}"
+            ".calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}"
+            ".calc input,.calc select{width:100%;max-width:260px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #ccc}"
+            ".calc output{display:block;font-size:18px;font-weight:700}")
+CSS += CALC_CSS  # inlined per page with the rest; shared by build_help via `bb.CSS`
+_CALC_FMT = "function f(n){return isFinite(n)&&n>0?Math.round(n).toLocaleString(document.documentElement.lang):'-'}"
+
+def calc_html(kind, lang):
+    t = CALC_I18N.get(lang, CALC_I18N["en"])
+    if kind == "503020":
+        return ('<div class="calc" id="calc-503020"><h3>' + t[0] + ': 50/30/20</h3>'
+                '<label for="c5i">' + t[1] + '</label><input id="c5i" type="number" inputmode="decimal" min="0" step="100">'
+                '<label>' + t[2] + '</label><output id="c5n">-</output>'
+                '<label>' + t[3] + '</label><output id="c5w">-</output>'
+                '<label>' + t[4] + '</label><output id="c5s">-</output></div>'
+                '<script>(function(){' + _CALC_FMT + ';var i=document.getElementById("c5i");'
+                'i.addEventListener("input",function(){var v=parseFloat(i.value);'
+                'document.getElementById("c5n").textContent=f(v*.5);'
+                'document.getElementById("c5w").textContent=f(v*.3);'
+                'document.getElementById("c5s").textContent=f(v*.2)})})()</script>')
+    if kind == "emergency":
+        opts = "".join('<option value="%d"%s>%d</option>' % (m, " selected" if m == 6 else "", m) for m in (3, 6, 9, 12))
+        return ('<div class="calc" id="calc-emergency"><h3>' + t[0] + '</h3>'
+                '<label for="cee">' + t[5] + '</label><input id="cee" type="number" inputmode="decimal" min="0" step="100">'
+                '<label for="cem">' + t[6] + '</label><select id="cem">' + opts + '</select>'
+                '<label>' + t[7] + '</label><output id="cet">-</output>'
+                '<label for="ces">' + t[8] + '</label><input id="ces" type="number" inputmode="decimal" min="0" step="50">'
+                '<label>' + t[9] + '</label><output id="cen">-</output></div>'
+                '<script>(function(){' + _CALC_FMT + ';function g(id){return parseFloat(document.getElementById(id).value)}'
+                'function u(){var t=g("cee")*g("cem");document.getElementById("cet").textContent=f(t);'
+                'document.getElementById("cen").textContent=f(Math.ceil(t/g("ces")))}'
+                '["cee","cem","ces"].forEach(function(id){document.getElementById(id).addEventListener("input",u)})})()</script>')
+    raise ValueError("unknown calculator %r" % kind)
+
+_CALC_RE = re.compile(r"(?:<p>)?<!--\s*calculator:([a-z0-9]+)\s*-->(?:</p>)?")
+
 def to_html(body, lang=None, src="blog"):
     out = md_lib.markdown(body, extensions=["extra", "sane_lists", "smarty"])
+    out = _CALC_RE.sub(lambda m: calc_html(m.group(1), lang or "en"), out)
     # wrap tables so wide ones scroll horizontally on mobile (CSS .tablewrap)
     out = re.sub(r"<table>(.*?)</table>", r'<div class="tablewrap"><table>\1</table></div>',
                  out, flags=re.S)
@@ -687,10 +779,11 @@ def article_jsonld(lang, title, desc, url, og_path, src_path=None, pub=None):
     t = I18N[lang]
     return {"@context": "https://schema.org", "@graph": [
         org_node(),
+        author_node(lang),
         {"@type": "Article", "headline": title, "description": desc, "inLanguage": bcp47(lang),
          "datePublished": pub or PUBLISH_DATE, "dateModified": git_date(src_path),
          "mainEntityOfPage": {"@type": "WebPage", "@id": url},
-         "author": {"@type": "Organization", "name": "AI Budget Assistant", "url": f"{SITE}{about_url(lang)}"},
+         "author": {"@id": AUTHOR_ID},
          "publisher": {"@id": f"{SITE}/#organization"},
          "image": f"{SITE}{og_path}"},
         {"@type": "BreadcrumbList", "itemListElement": [
@@ -698,7 +791,30 @@ def article_jsonld(lang, title, desc, url, og_path, src_path=None, pub=None):
             {"@type": "ListItem", "position": 2, "name": t["blog"], "item": f"{SITE}/blog/{lang}/"},
             {"@type": "ListItem", "position": 3, "name": title, "item": url}]}]}
 
-def build_og(path, lang):
+def _wrap(d, text, font, width, max_lines):
+    """Greedy word wrap by rendered width; the last line is ellipsised if text overflows."""
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        trial = (cur + " " + w).strip()
+        if d.textlength(trial, font=font) <= width:
+            cur = trial
+        else:
+            if cur:
+                lines.append(cur)
+            cur = w
+    if cur:
+        lines.append(cur)
+    if len(lines) > max_lines:
+        lines = lines[:max_lines]
+        while lines[-1] and d.textlength(lines[-1] + "…", font=font) > width:
+            lines[-1] = lines[-1][:-1]
+        lines[-1] = lines[-1].rstrip() + "…"
+    return lines
+
+def build_og(path, lang, title=None):
+    """The share card. With `title` it is the article's own card (its headline set large), so a
+    link shared to a chat, a social feed or Discover shows what the page is about rather than the
+    same generic slogan on all ~450 articles; without it, the per-language default."""
     W, H = 1200, 630
     img = Image.new("RGB", (W, H), (24, 16, 9))
     d = ImageDraw.Draw(img)
@@ -718,11 +834,23 @@ def build_og(path, lang):
     l1, l2, sub = OG_TEXT.get(lang, OG_TEXT["en"])
     d.rounded_rectangle([80, 70, 170, 80], radius=5, fill=(245, 131, 42))
     d.text((80, 110), "AI Budget Assistant", font=brand, fill=(245, 131, 42))
-    d.text((80, 250), l1, font=bold, fill=(250, 250, 252))
-    d.text((80, 330), l2, font=bold, fill=(250, 250, 252))
-    d.text((80, 470), sub, font=reg, fill=(205, 205, 212))
+    if title:
+        try:
+            tfont = ImageFont.truetype("C:/Windows/Fonts/segoeuib.ttf", 64)
+        except OSError:
+            tfont = bold
+        for i, line in enumerate(_wrap(d, title, tfont, W - 160, 3)):
+            d.text((80, 200 + i * 82), line, font=tfont, fill=(250, 250, 252))
+        d.text((80, 520), f"ai-budget.pl/blog/{lang}", font=reg, fill=(205, 205, 212))
+    else:
+        d.text((80, 250), l1, font=bold, fill=(250, 250, 252))
+        d.text((80, 330), l2, font=bold, fill=(250, 250, 252))
+        d.text((80, 470), sub, font=reg, fill=(205, 205, 212))
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    img.save(path, "PNG")
+    if path.endswith(".jpg"):
+        img.save(path, "JPEG", quality=85, optimize=True)
+    else:
+        img.save(path, "PNG")
 
 def read_articles():
     arts = []
@@ -803,13 +931,19 @@ def build():
 
     for lang in langs:
         build_og(os.path.join(OUT, "blog", lang, "assets", "og-default.png"), lang)
+        # Hand-made downloads (build_excel_template.py) live in the source tree, because
+        # OUT is wiped on every build.
+        src_assets = os.path.join(ROOT, "assets", lang)
+        if os.path.isdir(src_assets):
+            shutil.copytree(src_assets, os.path.join(OUT, "blog", lang, "assets"), dirs_exist_ok=True)
 
     # article pages
     for a in arts:
         lang, m = a["lang"], a["m"]
         url = url_for(a)
-        og = f"/blog/{lang}/assets/og-default.png"
         title, desc = m.get("title", m["slug"]), m.get("meta_description", "")
+        og = f"/blog/{lang}/{m['slug']}/og.jpg"
+        build_og(os.path.join(OUT, "blog", lang, m["slug"], "og.jpg"), lang, title)
         alts = alternates_for_pair(by_pair, m["pair"])
         alt_map = {l: u for l, u in alts if l != "x-default"}
         menu = lang_menu(lang, alt_map, langs)
@@ -831,7 +965,8 @@ def build():
         # later. git_date() is the last-commit date, so a repo-wide frontmatter edit would
         # otherwise stamp every article as updated today and bury when it was actually published.
         mod = git_date(a["path"])
-        byline = (f'<p class="byline">AI Budget Assistant &middot; <time datetime="{a["date"]}">{a["date"]}</time>'
+        byline = (f'<p class="byline">{AUTHOR_LABEL[lang]}: <a href="{about_url(lang)}#author" rel="author">'
+                  f'{AUTHOR["name"]}</a> &middot; <time datetime="{a["date"]}">{a["date"]}</time>'
                   + (f' &middot; {UPDATED[lang]} {mod}' if mod != a["date"] else "") + '</p>')
         body_html = (body_html.replace("</h1>", "</h1>" + byline, 1)
                      if "</h1>" in body_html else byline + body_html)

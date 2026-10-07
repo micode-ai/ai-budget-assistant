@@ -14,7 +14,9 @@ Vraag iemand hoeveel abonnementen hij betaalt en hij gokt meestal vier of vijf. 
 
 Dit is abonnementenwildgroei. Elke afschrijving is klein genoeg om te negeren, het afrekenen is automatisch, en de verlengingsdata liggen verspreid over de maand, zodat geen enkel afschrift het totaal duidelijk maakt. De oplossing is geen wilskracht. Het is een eenmalige inventarisatie plus een systeem dat de lijst zichtbaar houdt.
 
-## Waarom abonnementen zo makkelijk uit het zicht raken
+## Waarom raken abonnementen zo makkelijk uit het zicht?
+
+Abonnementen raken uit het zicht omdat afschrijvingen automatisch gaan zonder koopmoment om je te bedenken, jaarplannen hun echte maandkosten verbergen en gratis proefperiodes ongemerkt betaald worden. Het gevolg is een langzaam lek dat groeit, omdat niemand ooit besluit het te stoppen.
 
 Een paar dingen werken tegen je:
 
@@ -38,13 +40,17 @@ Schrijf elk abonnement op met drie gegevens: de kosten, de afrekencyclus (maande
 
 Hier helpt [AI Budget Assistant](https://ai-budget.pl). Met de abonnementenbeheerder leg je elke dienst vast met de afrekencyclus en de volgende verlengingsdatum, en zie je ze daarna in een verlengingskalender, zodat je ziet wat eraan komt en wanneer. Het is gratis te starten en draait in de browser, zodat je de lijst in een paar minuten opbouwt.
 
-## Stap 3: Tel het echte maand- EN jaartotaal op
+## Stap 3: Hoe bereken je de echte maand- en jaarkosten?
+
+Reken elk abonnement om naar een maandbedrag: deel jaarplannen door 12, kwartaalplannen door 3 en vermenigvuldig weekplannen met 52 om daarna door 12 te delen. Tel de uitkomsten op voor je maandtotaal en vermenigvuldig dat met 12 voor het jaarbedrag. Meestal is het jaarbedrag het getal dat tot actie aanzet.
 
 Dit is de stap die de meeste mensen overslaan, en het is degene die gedrag verandert. Zet alles om naar een maandequivalent zodat je gelijk met gelijk vergelijkt. Een jaarabonnement van 99 euro is 8,25 euro per maand, een kwartaalabonnement van 30 euro is 10 euro per maand. Tel de maandbedragen op voor je echte maandkosten, en vermenigvuldig dan met twaalf voor het jaargetal.
 
 Het jaargetal is meestal degene die binnenkomt. "120 euro per maand" is makkelijk weg te wuiven. "1.440 euro per jaar" is een vakantie. Allebei naast elkaar zien is wat de volgende stappen de moeite waard maakt. AI Budget Assistant toont het maandequivalente totaal van alles samen, zodat jaar- en weekabonnementen voor je in een vergelijkbaar getal rollen.
 
-## Stap 4: Zeg op wat je de afgelopen 30 dagen niet gebruikte
+## Stap 4: Welke abonnementen zeg je op?
+
+Zeg elk abonnement op dat je de afgelopen 30 dagen niet hebt gebruikt. Of je het ooit nog gebruikt, doet er niet toe: opnieuw afsluiten duurt meestal minuten, terwijl een ongebruikt abonnement elke maand geld kost. Veel mensen houden in deze stap echt geld over zonder hun leven te veranderen.
 
 Nu de makkelijke winst. Loop de lijst langs en stel per item een vraag: heb ik dit de afgelopen 30 dagen gebruikt? Niet "misschien ooit", niet "ik pak het wel weer op". Heb ik het werkelijk gebruikt.
 
@@ -72,7 +78,26 @@ Het laatste stuk is het systeem zichzelf laten onderhouden. Stel voor elk abonne
 
 Een herinnering drie dagen voor een jaarverlenging van 99 euro geeft je een echt moment om te vragen "haal ik nog 99 euro aan waarde uit dit?" Soms is het antwoord ja en doe je niets. Soms is het nee en heb je net 99 euro bespaard. In AI Budget Assistant komen deze herinneringen automatisch voordat je wordt afgeschreven, en de leden van een gedeeld account zien allemaal dezelfde lijst, wat telt als twee mensen onafhankelijk dingen afsluiten.
 
-## Doe twee keer per jaar een abonnementeninventarisatie
+## Hoe ziet een voorbeeld van een abonnementenaudit eruit?
+
+Een typische audit noemt elke dienst met maand- en jaarkosten. In het voorbeeld hieronder tellen zeven abonnementen op tot € 67 per maand, oftewel € 804 per jaar, terwijl geen enkel abonnement op zichzelf duur lijkt. De bedragen zijn illustratief en geen marktgemiddelden.
+
+*Illustratief voorbeeld: verzonnen bedragen, geen marktgegevens.*
+
+| Soort dienst | Per maand | Per jaar |
+|---|---|---|
+| Videostreaming | € 13 | € 156 |
+| Muziekstreaming | € 11 | € 132 |
+| Cloudopslag | € 3 | € 36 |
+| Fitnessapp | € 10 | € 120 |
+| Software (jaarplan € 96) | € 8 | € 96 |
+| Nieuwssite | € 10 | € 120 |
+| Gameabonnement | € 12 | € 144 |
+| **Totaal** | **€ 67** | **€ 804** |
+
+## Hoe vaak moet je je abonnementen controleren?
+
+Controleer je abonnementen minstens twee keer per jaar, bijvoorbeeld elke zes maanden, en reserveer ongeveer 20 minuten. Loop de afschriften opnieuw door, werk de lijst bij, zeg op wat je niet meer gebruikt en let op prijsverhogingen. Er komen steeds nieuwe diensten bij en oude worden stilletjes duurder.
 
 Een abonnementeninventarisatie is geen eenmalige gebeurtenis. Nieuwe diensten sluipen binnen, oude raken weer vergeten, prijzen kruipen omhoog. Zet een terugkerende inventarisatie van 20 minuten in de agenda, een keer per half jaar is ruim voldoende: scan je afschriften opnieuw, werk de lijst bij, zeg het dode hout op, controleer op prijsverhogingen.
 
@@ -93,6 +118,18 @@ Heb je het de afgelopen 30 dagen niet gebruikt, zeg het dan op. Opnieuw aanmelde
 **Kan een app me waarschuwen voordat een abonnement verlengt?**
 
 Ja. De abonnementenbeheerder van AI Budget Assistant stuurt verlengingsherinneringen voordat je wordt afgeschreven en kan prijsverhogingen of terugkerende afschrijvingen markeren die je nog niet aan de tracker hebt toegevoegd. Je kunt gratis starten in de browser op [ai-budget.pl](https://ai-budget.pl) of het downloaden via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), zonder creditcard.
+
+**Hoeveel kunnen abonnementen per jaar kosten?**
+
+Kleine bedragen tellen snel op. In de voorbeeldaudit komen zeven diensten uit op € 67 per maand en € 804 per jaar. Jouw eigen totaal zal anders zijn, maar kijk altijd naar het jaarbedrag, want dat laat de echte omvang van de uitgave zien.
+
+**Hoe voorkom ik dat een gratis proefperiode me verrast?**
+
+Zet bij de start van een proefperiode meteen een herinnering twee dagen voor het einde en noteer de verlengingsdatum in je abonnementenlijst. Dat is je beslismoment: of je hebt de dienst genoeg gebruikt om hem te houden, of je zegt op vóór de eerste afschrijving.
+
+**Hoe zie ik dat een abonnement duurder is geworden?**
+
+Vergelijk het bedrag op je laatste afschriften met de prijs in je lijst. Verhogingen zijn vaak klein en nauwelijks aangekondigd, dus controleer elke regel bij de halfjaarlijkse audit. Een abonnement dat stilletjes van € 9,99 naar € 12,99 gaat, kost je € 36 per jaar extra.
 
 ---
 

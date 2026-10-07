@@ -16,7 +16,9 @@ Een klapband, een plotselinge rekening bij de dierenarts, een paar weken tussen 
 
 In dit artikel lees je wat een noodfonds nu eigenlijk is, hoeveel je nodig hebt, waar je het bewaart, en hoe je er stap voor stap een opbouwt, ook als geld krap voelt.
 
-## Wat een noodfonds is (en niet is)
+## Wat is een noodfonds en wat telt als noodgeval?
+
+Een noodfonds is geld dat je apart zet voor onverwachte, noodzakelijke en dringende uitgaven: baanverlies, een dringende medische rekening, een kapot essentieel apparaat of een autoreparatie die je nodig hebt om naar je werk te komen. Een vakantie, een uitverkoop of een voorspelbare reparatie is dat niet. Test: onverwacht, noodzakelijk, dringend?
 
 Een noodfonds is geld dat je opzij zet voor echte, onverwachte, noodzakelijke uitgaven. Het sleutelwoord is onverwacht. Een vakantie in december is geen noodgeval, want je wist dat december eraan kwam. Een auto waarvan je wist dat hij nieuwe remmen nodig had, is ook geen noodgeval. Die horen in je normale budget of in een apart spaardoel.
 
@@ -24,7 +26,9 @@ Een echt noodgeval is iets waarop je je redelijkerwijs niet kon voorbereiden en 
 
 Dit onderscheid telt, omdat de meest voorkomende manier waarop mensen hun noodfonds kwijtraken is door "noodgeval" stilletjes te herdefinieren tot een aanbieding die ze niet wilden missen.
 
-## Hoeveel moet je hebben?
+## Hoeveel moet er in een noodfonds zitten?
+
+Het gebruikelijke doel is drie tot zes maanden aan essentiële uitgaven: huur, vaste lasten, boodschappen, verzekeringen, vervoer en minimale aflossingen, niet je hele levensstijl. Drie maanden past bij een vaste baan met een tweede inkomen thuis, zes maanden bij wisselend inkomen, als zzp'er of als je de enige kostwinner bent.
 
 De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Let op het woord essentieel. Dit is geen drie tot zes maanden van je volledige levensstijl. Het is huur, energie, boodschappen, verzekeringen, vervoer en minimale aflossingen. De dingen die het licht aanhouden als je inkomen wegvalt.
 
@@ -34,7 +38,23 @@ Dat doel kan onbereikbaar ver voelen als je bij nul begint. Begin er dus niet. B
 
 Weet je nog niet eens wat je essentiële maandkosten zijn, dan loopt de bijbehorende gids over [hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) je eerst door het categoriseren van je uitgaven.
 
-## Waar je het bewaart
+## Hoeveel maanden aan uitgaven heb je nodig in jouw situatie?
+
+Met een vaste baan en een tweede inkomen in het huishouden zijn ongeveer 3 maanden aan essentiële uitgaven genoeg; een zzp'er of iemand met wisselend inkomen mikt op ongeveer 6, en een gezin met één inkomen ook op ongeveer 6. De tabel rekent dit om in euro's bij € 2.000 aan essentiële kosten per maand, als voorbeeld.
+
+*Illustratief voorbeeld: een vuistregel, geen persoonlijk advies.*
+
+| Situatie | Maanden essentiële uitgaven | Voorbeeld bij € 2.000 per maand |
+|---|---|---|
+| Vaste baan, tweede inkomen in het huishouden | 3 | € 6.000 |
+| Zzp'er of wisselend inkomen | 6 | € 12.000 |
+| Gezin met één inkomen | 6 | € 12.000 |
+
+<!-- calculator:emergency -->
+
+## Waar bewaar je een noodfonds het best?
+
+Bewaar het op een aparte, makkelijk bereikbare spaarrekening, los van je betaalrekening en binnen een of twee dagen beschikbaar. Een spaarrekening met rente past goed. Belegg het niet in aandelen, crypto of iets anders dat in waarde kan dalen, want noodgevallen komen vaak precies als de markten laag staan.
 
 Drie regels voor waar je noodfonds woont:
 
@@ -74,7 +94,9 @@ Je gaat het fonds uiteindelijk gebruiken. Dat is succes, geen mislukking, het be
 
 Dit bijhouden is waar een doel met een zichtbaar saldo helpt. Zakt het fonds van 6.000 naar 4.500 euro na een reparatie, dan zie je het gat en stuur je je salarisoverboekingen terug om het te dichten. Het is gratis te starten en draait in je browser op [ai-budget.pl](https://ai-budget.pl) of op Android via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), zonder creditcard om je eerste doel op te zetten.
 
-## Veelgemaakte fouten om te vermijden
+## Welke fouten vermijd je bij het opbouwen van een noodfonds?
+
+De drie meest gemaakte fouten: het fonds beleggen in iets schommelends, het op dezelfde rekening laten staan als je dagelijkse uitgaven en een eerste doel stellen dat zo hoog is dat je opgeeft. Begin met een kleine mijlpaal, automatiseer een overboeking op de dag dat je salaris binnenkomt en verhoog het doel pas als je het haalt.
 
 **Het beleggen.** Hierboven al behandeld, maar het verdient herhaling want het is de meest verleidelijke fout. Een noodfonds dat 30% verloor in de week dat je het nodig had, is geen noodfonds. Houd het saai.
 
@@ -101,6 +123,14 @@ Bouw eerst een klein startfonds van 1.000 euro, richt je daarna op schuld met ho
 **Wat telt als een echt noodgeval?**
 
 Iets onverwachts, noodzakelijks en dringends: baanverlies, een dringende medische rekening, een essentieel apparaat dat het begeeft, een autoreparatie die je nodig hebt om naar je werk te komen. Een geplande uitgave, een aanbieding of een vakantie kwalificeert niet, ook al voelt het dringend. Wist je dat het eraan kwam, dan hoort het in je budget of een apart spaardoel, niet in het noodfonds.
+
+**Met welk bedrag moet ik beginnen?**
+
+Begin met een mijlpaal van 1.000 euro of een maand aan essentiële uitgaven, wat je het eerst haalt. Daarmee dek je al de meeste kleine tegenvallers die anders op de creditcard belanden. Daarna werk je toe naar de volle drie tot zes maanden.
+
+**Hoe lang duurt het om een noodfonds op te bouwen?**
+
+Dat hangt af van je doel en je maandelijkse bedrag. Met € 500 per maand duurt het 12 maanden tot € 6.000 (drie maanden van € 2.000) en 24 maanden tot € 12.000. Een automatische overboeking op de dag dat je salaris binnenkomt verkort de weg meer dan elke spaartruc, omdat de maandelijkse keuze verdwijnt.
 
 ---
 

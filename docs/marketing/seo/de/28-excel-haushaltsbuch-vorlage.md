@@ -34,6 +34,8 @@ Den Saldo trackst du am einfachsten als laufende Summe: Startsaldo plus Einnahme
 
 Das war es auch schon. Excel und Google Sheets verhalten sich hier identisch, also nimm einfach, was du gerade offen hast.
 
+**[Fertige Vorlage herunterladen (.xlsx)](/blog/de/assets/budget-template.xlsx)** — Buchungen, Kategorien und eine Monatsübersicht mit fertigen Formeln; funktioniert in Excel, Google Sheets und LibreOffice.
+
 ## Wo eine Tabelle an ihre Grenzen kommt
 
 Ehrlich gesagt: Für jemanden, der sie gern pflegt und einfache Finanzen hat, hält eine Tabelle jahrelang. Das Problem liegt nicht in den Formeln. Es liegt daran, dass jede einzelne Eingabe ein Mensch von Hand tippen muss, jedes Mal aufs Neue.

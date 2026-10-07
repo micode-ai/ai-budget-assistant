@@ -14,7 +14,9 @@ The 50/30/20 budget rule is the most quoted piece of budgeting advice on the int
 
 That's the whole rule. The hard part isn't memorizing the numbers, it's deciding what actually goes in each bucket and what to do when your real life doesn't divide neatly into thirds. This guide covers both.
 
-## What Each Bucket Actually Means
+## What Does Each Bucket in the 50/30/20 Rule Mean?
+
+The 50/30/20 rule splits your after-tax income into three buckets: 50% for needs (rent, utilities, groceries, transport, minimum debt payments), 30% for wants (dining out, streaming, hobbies, travel) and 20% for savings and extra debt repayment. The test is whether a cost is unavoidable, not whether you enjoy it.
 
 The percentages are easy. The categories are where people get stuck, because the line between a need and a want is blurrier than it looks.
 
@@ -36,7 +38,23 @@ This bucket covers your emergency fund, retirement contributions, savings goals,
 
 For a deeper look at the savings side, the companion guide on [how to save money](/blog/en/how-to-save-money/) breaks down how to layer an emergency fund, short-term goals, and long-term goals.
 
-## When 50/30/20 Doesn't Fit
+## What Does 50/30/20 Look Like in Dollars?
+
+On a $4,000 monthly after-tax income, the 50/30/20 rule gives $2,000 to needs, $1,200 to wants and $800 to savings and debt. The table shows the split for three sample incomes. These are illustrative examples, not advice tailored to your situation.
+
+*Illustrative example: splitting monthly after-tax income (USD).*
+
+| After-tax income | 50% needs | 30% wants | 20% savings and debt |
+|---|---|---|---|
+| $2,500 | $1,250 | $750 | $500 |
+| $4,000 | $2,000 | $1,200 | $800 |
+| $6,000 | $3,000 | $1,800 | $1,200 |
+
+<!-- calculator:503020 -->
+
+## When Does the 50/30/20 Rule Not Work, and What Should You Do Instead?
+
+The 50/30/20 rule breaks down when rent alone takes half your pay, when you carry expensive debt, or when income is very low. In those cases treat it as a direction: protect the 20% for savings as much as you can, accept needs of 60-65%, and trim wants first, or temporarily send extra cash to high-interest debt.
 
 The rule assumes a fairly average cost of living. Plenty of people don't have that, and pretending otherwise is how a framework becomes discouraging instead of useful.
 
@@ -46,7 +64,9 @@ The rule assumes a fairly average cost of living. Plenty of people don't have th
 
 **Low income.** When income is genuinely low, needs can take 70% or more, and there's a floor on how much cutting helps. The rule still has value as a target to grow toward, but the bigger lever is income. Be honest with yourself about which problem you actually have, because the solutions are different.
 
-## How to Apply the 50/30/20 Rule
+## How Do You Apply the 50/30/20 Rule Step by Step?
+
+Work out your after-tax income, sort the last 30 days of spending into needs, wants and savings, compare your real split with the 50/30/20 targets, fix the one bucket furthest off, and re-check every month. The first pass takes an evening; later reviews take a few minutes.
 
 Here's the practical sequence. Five steps, monthly cycle.
 
@@ -72,7 +92,9 @@ A budget is not a one-time setup. Check your split once a month, the same way yo
 
 This monthly review is much easier when the work is automated. In AI Budget Assistant you can set three category budgets that mirror the rule, let the spending breakdown sort transactions into the buckets for you, and see at a glance whether you're inside each target. The budget history view then shows the trend across months, so you can tell whether your 58/32/10 is slowly becoming 52/30/18. It's free to start, works in the browser at [ai-budget.pl](https://ai-budget.pl) with no card required, and there's an Android app on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
 
-## It's a Starting Framework, Not a Law
+## Is the 50/30/20 Rule a Strict Law?
+
+No. The 50/30/20 rule is a starting framework, not a law. What matters is having three buckets and reviewing them regularly, not hitting exact percentages. The best split is the one you can keep for a year, even if it ends up as 60/20/20 or 55/25/20.
 
 The 50/30/20 rule is a useful default, not a commandment. If your situation pushes you toward a different split, that's fine, the structure of three buckets is what matters more than the exact percentages. Some people prefer a hands-on cash-style method instead, which the guide on [envelope budgeting](/blog/en/envelope-budgeting/) covers in detail. The right ratio is the one you can actually maintain for a year, not the one that looks tidiest on paper. Start with 50/30/20, see where your real numbers land, and adjust from there.
 
@@ -95,6 +117,14 @@ Yes, with a tweak. Minimum debt payments count as needs, but high-interest debt 
 **How is 50/30/20 different from zero-based budgeting?**
 
 The 50/30/20 rule gives you three broad buckets and lets you spend freely inside each one. Zero-based budgeting assigns every single dollar a job until nothing is left unallocated. The 50/30/20 rule is lower effort and easier to stick with, while zero-based gives you tighter control. Many people start with 50/30/20 and only move to a more detailed method if they need it.
+
+**What is the 50/30/20 rule?**
+
+It is a budgeting method that splits your after-tax income into 50% needs, 30% wants and 20% savings and debt repayment. Senator Elizabeth Warren popularized it in the book "All Your Worth". It gives you three simple buckets instead of dozens of categories, which makes it a good first budget.
+
+**Where do groceries, eating out and subscriptions go?**
+
+Basic groceries are needs. Eating out, streaming and most subscriptions are wants, unless one is essential for your job. If you are unsure, ask whether a cheaper version of the same thing would still meet the need. Anything above that cheaper version goes into wants.
 
 ---
 
@@ -653,7 +683,9 @@ A blown tire, a sudden vet bill, a few weeks between jobs. Without a buffer, eac
 
 This guide covers what an emergency fund actually is, how much you need, where to keep it, and how to build one step by step even when money feels tight.
 
-## What an Emergency Fund Is (and Isn't)
+## What Is an Emergency Fund, and What Counts as an Emergency?
+
+An emergency fund is cash set aside for unexpected, necessary and urgent expenses: a job loss, an urgent medical bill, a dead essential appliance, or a car repair you need to get to work. A holiday, a sale or a repair you saw coming is not an emergency. Use the three-part test: unexpected, necessary, urgent.
 
 An emergency fund is cash set aside for genuine, unexpected, necessary expenses. The key word is unexpected. A holiday in December is not an emergency, because you knew December was coming. A car you knew needed new brakes is not an emergency either. Those belong in your normal budget or in a separate savings goal.
 
@@ -661,7 +693,9 @@ A real emergency is something you could not reasonably plan for and cannot postp
 
 This distinction matters because the most common way people lose their emergency fund is by quietly redefining "emergency" to include a sale they didn't want to miss.
 
-## How Much Should You Have?
+## How Much Should an Emergency Fund Be?
+
+The standard target is three to six months of essential expenses: rent, utilities, groceries, insurance, transport and minimum debt payments, not your full lifestyle. Three months fits stable employment with a second earner at home; six months fits irregular income, self-employment, or being the only earner in the household.
 
 The standard recommendation is three to six months of essential expenses. Note the word essential. This is not three to six months of your full lifestyle. It is rent, utilities, groceries, insurance, transport, and minimum debt payments. The things that keep the lights on if your income stops.
 
@@ -671,7 +705,23 @@ That target can feel impossibly far away when you are starting from zero. So don
 
 If you are still working out what your essential monthly costs even are, the companion guide on [how to budget your money step by step](/blog/en/how-to-budget/) walks through categorizing spending first.
 
-## Where to Keep It
+## How Many Months of Expenses Do You Need in Your Situation?
+
+A stable job with a second earner in the household justifies about 3 months of essential expenses; a freelancer or anyone with irregular income should aim for about 6; a single-income family should also aim for about 6. The table converts this into dollars, assuming $2,200 of essential costs per month, as an example.
+
+*Illustrative example: a rule of thumb, not personal advice.*
+
+| Situation | Months of essential expenses | Example at $2,200 a month |
+|---|---|---|
+| Stable job, second income in the household | 3 | $6,600 |
+| Freelancer or irregular income | 6 | $13,200 |
+| Single-income family | 6 | $13,200 |
+
+<!-- calculator:emergency -->
+
+## Where Should You Keep an Emergency Fund?
+
+Keep it in a separate, easily accessible savings account that is not your everyday checking, reachable within a day or two. A high-yield savings account fits well. Do not invest it in stocks, crypto or anything that can drop in value, because emergencies tend to arrive when markets are down.
 
 Three rules for where your emergency fund lives:
 
@@ -711,7 +761,9 @@ You will use the fund eventually. That is success, not failure, it means the sys
 
 Tracking this is where a goal with a visible balance helps. When the fund drops from $6,000 to $4,500 after a repair, you can see the gap and direct your payday transfers back to closing it. It is free to start and runs in your browser at [ai-budget.pl](https://ai-budget.pl) or on Android via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), with no card required to set up your first goal.
 
-## Common Mistakes to Avoid
+## What Mistakes Should You Avoid When Building an Emergency Fund?
+
+The three most common mistakes are investing the fund in something volatile, keeping it in the same account as daily spending, and setting a first target so high that you give up. Start with a small milestone, automate a transfer on payday, and raise the target only after you reach it.
 
 **Investing it.** Covered above, but worth repeating because it is the most tempting mistake. An emergency fund that lost 30% the week you needed it is not an emergency fund. Keep it boring.
 
@@ -738,6 +790,14 @@ Build a small $1,000 starter fund first, then focus on high-interest debt, then 
 **What counts as a real emergency?**
 
 Something unexpected, necessary, and urgent: a job loss, an urgent medical bill, an essential appliance failing, a car repair you need to get to work. A planned expense, a sale, or a holiday does not qualify, even when it feels pressing. If you knew it was coming, it belongs in your budget or a separate savings goal, not the emergency fund.
+
+**How much should I start with?**
+
+Start with a $1,000 milestone or one month of essential expenses, whichever you reach first. That already absorbs most small shocks that would otherwise land on a credit card. Once you hit it, keep going toward the full three to six months.
+
+**How long does it take to build an emergency fund?**
+
+It depends on the target and your monthly transfer. At $600 a month, $6,600 (three months of $2,200 essentials) takes about 11 months and $13,200 about 22 months. An automatic transfer on payday shortens the road more than any budgeting trick, because it removes the monthly decision.
 
 ---
 
@@ -858,6 +918,8 @@ For the summary tab, use a conditional-sum formula: `SUMIF` in Excel and Google 
 The simplest way to track your balance is a running total: starting balance plus income minus expenses, carried forward row by row, or month by month in the summary tab. It doesn't need to be clever. It just needs to tell you whether you're on track before the end of the month surprises you.
 
 That's genuinely the whole thing. Excel and Google Sheets behave identically here, so use whichever one you already have open.
+
+**[Download the ready-made template (.xlsx)](/blog/en/assets/budget-template.xlsx)** — Transactions, categories and a monthly summary with the formulas already in place; works in Excel, Google Sheets and LibreOffice.
 
 ## Where a Spreadsheet Starts to Strain
 
@@ -1133,7 +1195,9 @@ A good expense tracker doesn't demand that you become more disciplined. It reduc
 
 This guide looks at how to track expenses without the tedium, what to do with the data once you have it, and how to make expense tracking work for two people instead of just one.
 
-## Why People Stop Tracking Expenses
+## Why do people stop tracking their expenses?
+
+Mostly because there is no automation: every manual entry can be skipped, especially when you are tired or shopping in a hurry. Add missing context, such as an unlabeled transaction, and the fact that one person usually tracks for the whole household. The fix is a tool that records for you and is shared.
 
 The most common reason is that manual entry is just boring. Pulling out your phone at the checkout line to type "Grocery store - $34.50 - food" feels fine the first time and exhausting by day ten.
 
@@ -1141,7 +1205,18 @@ The second reason is that the data quickly becomes unreadable. A long list of tr
 
 Third, and this one matters more than people admit: tracking is a solo effort. One person diligently logs every coffee and gas station stop, while the other half of the household doesn't. The result is a partial picture at best. At the end of the month you still don't really know what happened.
 
-## Methods That Actually Work
+## Which expense tracking methods actually work?
+
+Three approaches work: envelopes for cash, the 24-hour rule for impulse buys, and automatic tracking with an app. Only the app scales to card payments, online purchases and subscriptions, so most people pair it with one of the other two as a behavior guardrail rather than relying on either alone.
+
+Comparison of expense tracking methods (rough assessment, no numerical data):
+
+| Method | Daily effort | Works for cards and online payments | Best for |
+|---|---|---|---|
+| Cash envelopes | Medium (cash, separate envelopes) | No | Curbing impulse spending in one category |
+| 24-hour rule | Low | Partly | Larger unplanned purchases |
+| Spreadsheet (Excel, Google Sheets) | High (manual entry) | Yes, but by hand | A simple spending diary |
+| App with bank import and receipt scanning | Low | Yes | Long-term, consistent tracking |
 
 ### The Envelope System
 
@@ -1162,7 +1237,9 @@ This is where the approach changes. Instead of manually entering each expense, y
 
 When adding an expense takes three seconds instead of thirty, the habit is much easier to maintain.
 
-## Bank Import vs. Manual Entry
+## Is bank import better than manual entry?
+
+For most people, yes. Loading a CSV or PDF statement gives you 30 to 90 days of categorized history at once, and the app flags likely duplicates so nothing is counted twice. Keep manual entry for cash and small purchases that never reach your bank account.
 
 If you already use a debit card or credit card for most purchases, importing bank statements is the fastest way to get a complete picture of your spending. Download a statement in CSV or PDF format, upload it to your expense tracker, and you have weeks or months of history categorized automatically.
 
@@ -1170,13 +1247,17 @@ AI Budget Assistant supports direct import from Wise, Revolut, and a range of ot
 
 For anyone switching from a manual system, this approach means you can backfill a whole month in a few minutes instead of entering hundreds of transactions by hand.
 
-## Receipt Scanning for Cash Purchases
+## Can I scan receipts instead of typing purchases?
+
+Yes. Photograph the receipt and text recognition (OCR) reads the amount, date and store for you. It is especially useful for cash and grocery trips, because a card transaction on your statement shows only a total, while the scanned receipt shows what made up that total.
 
 Bank imports cover card transactions. What about cash? Or situations where you want to capture the line items, not just the total?
 
 Taking a photo of the receipt is the practical answer. OCR reads the amount, date, and usually the store name without any typing. For groceries paid in cash or purchases where the details matter (business expenses, shared trip costs), this is significantly faster than manual entry.
 
-## Tracking Expenses as a Couple or Family
+## How can couples and families track expenses together?
+
+The simplest way is one shared account in an app that everyone opens from their own phone. Every transaction is visible to all members as it happens, so there are no surprises at month end. You can also ask the AI assistant what the whole account spent on a category.
 
 Here's the gap that most expense tracker apps miss. If you're tracking your spending but your partner isn't, you have half the picture. You can't manage a shared budget on partial data.
 
@@ -1186,7 +1267,9 @@ AI Budget Assistant handles this with shared family accounts. Everyone gets thei
 
 Building a useful budget on top of this data is the natural next step, which the companion article [how to budget](/blog/en/how-to-budget/) covers in depth.
 
-## Setting Spending Limits That You Actually Check
+## How do I set spending limits I will not ignore?
+
+Observe for a month without limits, then set limits with a buffer: if you average $600 on groceries, start at $550-$600, not $350. Turn on an alert at 75-80% of the limit, because a warning after you have already overspent arrives too late to change anything.
 
 Having categories is useful. Having limits per category is more useful. But most people set limits once and then ignore them until they've blown past them.
 
@@ -1198,13 +1281,17 @@ A few things that help:
 
 **Review weekly, not daily.** Daily reviews create anxiety without useful information. A weekly 10-minute check gives you enough data to see if a category is tracking high and enough time to adjust.
 
-## Is an Expense Tracker App Safe?
+## Is an expense tracker app safe?
+
+It depends on the app. Check three things: whether your data is stored encrypted, whether the app works offline so data need not constantly travel to the cloud, and whether the privacy policy is clear. Review these before installing, because you are handing over sensitive financial information.
 
 The key things to check: Is data encrypted at rest? Does the app work offline so your data doesn't constantly leave your device? Is there a clear privacy policy?
 
 AI Budget Assistant is offline-first: expenses save locally before syncing, and transaction data is encrypted end-to-end.
 
-## Free vs. Paid Expense Tracker Apps
+## Is it worth paying for an expense tracker app?
+
+A free tier usually covers basic tracking. Paid plans typically add more automation, full history, analytics and shared accounts with more members. Ask how much you lose today by not tracking: if untracked spending costs you $50 a month, a plan that costs less than that pays for itself.
 
 A free tier covers basic tracking. Paid plans unlock more automation, full history, analytics, and shared accounts with multiple members. The useful question is how much you're currently losing by not knowing where the money goes. If that's even $100 a month, a paid app pays for itself quickly.
 
@@ -1228,6 +1315,14 @@ Yes, and you should. Look for apps with shared account features where both peopl
 
 You'll have a clear picture of your spending patterns after one month. Meaningful changes in behavior, and the savings that follow, typically appear after two to three months, once you can see trends and make intentional adjustments rather than just reactions.
 
+**How do I track cash spending that never shows up on a bank statement?**
+
+Photograph the receipt, or add the expense in one sentence by voice or text, for example "$12 lunch". Log cash right after buying, because it is easy to forget later. Everything that goes through your bank can come in automatically through statement import.
+
+**What is the difference between expense tracking and budgeting?**
+
+Tracking answers how much you have already spent and on what. A budget is a plan for the future: how much you may spend in each category. Track for a month first, then set limits, so the limits rest on facts rather than wishes.
+
 ---
 
 *Related articles: [How to budget your money step by step](/blog/en/how-to-budget/) | [How to save money with a concrete plan](/blog/en/how-to-save-money/)*
@@ -1246,6 +1341,11 @@ You'll have a clear picture of your spending patterns after one month. Meaningfu
 - [Monefy alternative: switch and keep your categories](/blog/en/switch-from-monefy-wallet-moneymanager/)
 - [Excel Budget Template: A Real Structure You Can Copy Today](/blog/en/excel-budget-template/)
 - [Free Budgeting App: What 'Free' Actually Means](/blog/en/free-budgeting-app/)
+- [Monefy vs AI Budget Assistant: which fits you?](/blog/en/monefy-vs-ai-budget-assistant/)
+- [Wallet by BudgetBakers vs AI Budget Assistant](/blog/en/wallet-budgetbakers-vs-ai-budget-assistant/)
+- [YNAB alternative: YNAB vs AI Budget Assistant](/blog/en/ynab-vs-ai-budget-assistant/)
+- [Money Manager vs AI Budget Assistant: which fits you?](/blog/en/money-manager-vs-ai-budget-assistant/)
+- [Import a Revolut Statement into a Budget App (CSV)](/blog/en/import-revolut-statement-to-budget-app/)
 
 ## Family Budgeting With Kids: A Practical Guide
 URL: https://ai-budget.pl/blog/en/family-budget-with-kids/
@@ -1537,7 +1637,9 @@ A budget is just a plan for your money. Not a punishment. Not a vow to stop enjo
 
 This guide covers the essentials: how to build a budget, how to make it stick, and how to manage it with a partner or family without it turning into an argument.
 
-## Why Most Budgets Fail Within Weeks
+## Why do most budgets fail within a few weeks?
+
+Most budgets fail because logging every expense by hand takes too much time and the people sharing the money cannot see the same numbers. When something more urgent comes up, the habit disappears, usually within two or three weeks. A budget survives only if entry is automated and everyone sees one live picture.
 
 The number one reason budgets collapse is friction. Manually logging every purchase is tedious enough that people skip one transaction, then another, and then the whole system breaks down.
 
@@ -1545,7 +1647,9 @@ The second reason is that budgets are often a solo project. One person tracks ev
 
 Third: people plan for an idealized version of themselves. A budget that assumes you'll cook every meal and never buy anything spontaneously isn't a budget, it's a fantasy. The first time you order takeout, the whole plan feels broken.
 
-## Step 1: Find Out Where Your Money Actually Goes
+## How do I find out where my money actually goes?
+
+Collect one month of real data on income and spending, taken from bank statements rather than memory. The fastest way is to import the last 30 days of transactions into an app that assigns categories automatically. Only with that picture can you set limits that match how you actually live.
 
 Before any planning, spend one month just observing. No limits, no guilt, just data. You need honest answers to two questions:
 
@@ -1554,7 +1658,9 @@ Before any planning, spend one month just observing. No limits, no guilt, just d
 
 Don't estimate. Pull up your bank statements from the past 30 days and go through them line by line. If you use an app or bank that lets you export transactions (most do), you can import that history automatically and skip the manual work entirely. Categorization happens in the background.
 
-## Step 2: Sort Your Spending Into Categories
+## How should I sort household spending into categories?
+
+Use three groups: fixed costs (rent or mortgage, utilities, insurance, subscriptions), essential variable costs (groceries, transport, medicine) and discretionary spending (restaurants, clothes, entertainment). Fixed costs change least and discretionary spending changes most, which is why the biggest surprises usually hide in the third group.
 
 Once you have the data, group it. A simple breakdown that works for most people:
 
@@ -1566,7 +1672,18 @@ Once you have the data, group it. A simple breakdown that works for most people:
 
 Most people who go through this exercise discover that their "small" purchases add up faster than expected. A few streaming services, a coffee habit, and regular impulse buys online can quietly consume a few hundred dollars a month that felt invisible.
 
-## Step 3: Set Realistic Limits
+## What limits should I set, and is the 50/30/20 rule realistic?
+
+The 50/30/20 rule puts 50% of take-home pay toward needs, 30% toward wants and 20% toward savings and debt repayment. It is a starting point, not a law: in an expensive city needs may reach 60%. Set limits from your real spending first, then tighten them gradually.
+
+Example split of $4,000 monthly take-home pay using the 50/30/20 rule (illustrative figures, not personal advice):
+
+| Spending group | Share | Monthly amount | What goes here |
+|---|---|---|---|
+| Needs | 50% | $2,000 | rent or mortgage, utilities, groceries, transport, medicine |
+| Wants | 30% | $1,200 | restaurants, clothes, entertainment, streaming |
+| Savings and debt | 20% | $800 | emergency fund, goals, extra debt payments |
+| **Total** | **100%** | **$4,000** | |
 
 Now you have actual numbers to work with. A widely used starting framework is the 50/30/20 rule:
 
@@ -1578,7 +1695,9 @@ This is a starting point, not a rule. If you live in an expensive city or carry 
 
 The trap to avoid: don't budget based on who you want to be. Budget based on who you are right now, and make small adjustments from there. Drastic targets feel good to set and terrible to maintain.
 
-## Step 4: Budget Together If You Share Finances
+## How do we budget together as a couple or family?
+
+You need one shared view of the budget that everyone can update from their own phone and that shows the effect of each purchase immediately. One person doing the math for everyone breaks down at the first joint purchase. Start from shared goals rather than from checking each other's receipts.
 
 If someone else in your household spends money, they have to be part of this. A budget managed by one person and ignored by another will collapse the first time the other person makes a big purchase without checking in.
 
@@ -1586,7 +1705,9 @@ The practical solution is a shared view of the budget, updated in real time. Bot
 
 Tools help here. AI Budget Assistant (available on Android and via browser at [ai-budget.pl](https://ai-budget.pl)) supports shared family accounts where everyone adds expenses from their own phone and the budget updates for everyone simultaneously. You can also ask the built-in AI assistant questions like "how much have we spent on groceries this month?" and get an immediate answer, without doing any manual calculations.
 
-## Step 5: Build a Small Emergency Fund First
+## How big should an emergency fund be, and where do I start?
+
+The standard guidance is three to six months of essential expenses, but a practical first milestone is $1,000-$2,000, enough to absorb a car repair or a broken appliance. Keep it in a separate account so a little friction stops you from spending it on everyday purchases.
 
 Before working toward larger savings goals, make sure you have a financial buffer. The standard recommendation is three to six months of expenses, which can feel overwhelming to start. A more practical first milestone is one to two months, or even just $1,000-$2,000.
 
@@ -1594,7 +1715,9 @@ The point of an emergency fund is that an unexpected car repair or medical bill 
 
 Keep this money somewhere slightly separate from your everyday account. The small friction of a separate account is usually enough to stop you from using it for everyday purchases.
 
-## How to Not Get Lost in the Details
+## How do I keep a budget simple without getting lost in details?
+
+Focus on the biggest lines first: housing, food, transport, insurance and subscriptions. Check whether you pay for services you no longer use before hunting for $5 savings on groceries. Ten to fifteen minutes a week is enough to keep the full picture without over-optimizing small items.
 
 Once you have a budget running, the temptation is to optimize everything. Resist it, at least at first. Spending twenty minutes analyzing whether you can save $8 on your grocery bill is a poor use of energy compared to checking whether you're paying for subscriptions you've forgotten about.
 
@@ -1602,7 +1725,9 @@ This is where a subscription manager helps. AI Budget Assistant has one built in
 
 For deeper work on cutting expenses and finding money you didn't know you had, the companion article [expense tracker](/blog/en/expense-tracker/) covers the tactics in more detail.
 
-## Common Budgeting Mistakes to Avoid
+## What are the most common budgeting mistakes?
+
+The three most common are forgetting irregular costs such as insurance, car service and holidays, budgeting for an idealized version of yourself, and quitting after the first month that goes wrong. Divide yearly costs by twelve, plan around real habits, and treat the first two to three months as calibration.
 
 **Ignoring irregular expenses.** Insurance premiums, annual software renewals, holiday gifts, vehicle registration, medical checkups. These aren't surprises, they're predictable. Divide annual costs by 12 and include them in your monthly budget as a line item.
 
@@ -1630,6 +1755,14 @@ Yes, and it matters more when income varies. Base your spending plan on your low
 
 Start with a goals conversation, not a budget conversation. "We want to take a vacation for $3,000 in October" is a very different starting point than "you need to track every purchase." When both people can see a shared goal, the tracking becomes a tool rather than surveillance.
 
+**What is the 50/30/20 budget rule?**
+
+It splits take-home pay into three parts: 50% for needs, 30% for wants and 20% for savings and debt repayment. Treat it as a starting point. If rent is high and needs take 60%, trim the wants share rather than dropping savings entirely.
+
+**How much should I keep in an emergency fund?**
+
+Aim for three to six months of essential expenses. If that feels far away, begin with $1,000-$2,000 and add to it every month. Keep the money in a separate account so it stays apart from everyday spending.
+
 ---
 
 *Related articles: [How to track expenses effectively](/blog/en/expense-tracker/) | [How to save money with a concrete plan](/blog/en/how-to-save-money/)*
@@ -1654,7 +1787,9 @@ Every guide on how to save money eventually tells you to cut your coffee and sto
 
 This guide covers the real reasons people fail to save, how to find money that's already being wasted, and how to build savings goals that stay on track over months and years.
 
-## Why Most People Don't Save, Even When They Mean To
+## Why don't people save, even when they mean to?
+
+Most people save whatever is left at the end of the month, and usually little or nothing is. Goals are vague ("I want to save more"), and few of us know what we really spend on eating out and subscriptions. Without a concrete amount, a deadline and real data, saving stays abstract.
 
 A few patterns come up again and again:
 
@@ -1664,13 +1799,25 @@ A few patterns come up again and again:
 
 **No visibility into actual spending.** Most people significantly underestimate what they spend on food, subscriptions, and small impulse purchases. Without real data, there's no accurate picture of where savings could come from.
 
-## The Most Important Mindset Shift: Pay Yourself First
+## What does "pay yourself first" mean, and how much should I set aside?
+
+It means moving a fixed amount to savings on payday, before paying anything else. Even $200 or $300 a month makes a difference when it happens automatically. If you feel you cannot afford it, that is a signal your spending is too high, not that you are too poor to save.
+
+What a payday transfer adds up to, for $4,000 monthly take-home pay (illustrative calculation, no interest included):
+
+| Savings rate | Set aside per month | Set aside per year |
+|---|---|---|
+| 5% | $200 | $2,400 |
+| 10% | $400 | $4,800 |
+| 20% | $800 | $9,600 |
 
 Instead of saving what's left over, schedule a transfer to savings on the same day you get paid, before paying anything else. Even $200 or $300 a month. This is a standing order, not a decision you make each month.
 
 If this feels impossible at your current income, that's a signal worth examining. In most cases it means spending is slightly too high, not that savings are genuinely out of reach. The distinction matters because the solutions are different.
 
-## Step 1: Find Money That's Already Leaving Without Much Return
+## How do I find money that is already leaking out of my budget?
+
+List every subscription and recurring charge, then mark the ones you have not used in the past 30 days. Inactive subscriptions are savings with no sacrifice, often $50-150 a month. A subscription manager with renewal dates shows all recurring payments in one place.
 
 Before looking for spending to cut, audit what you're already paying for automatically. Recurring charges are the most common source of quiet waste.
 
@@ -1680,7 +1827,9 @@ A subscription manager that shows all your recurring charges in one place, with 
 
 After subscriptions, look at insurance policies, phone plans, and utility contracts. Many households are paying rates negotiated years ago on contracts that have since gotten more competitive. A few calls can free up meaningful money.
 
-## Step 2: Set Up Specific Savings Goals
+## How do I set savings goals that actually work?
+
+A good goal has a specific amount and a date, such as $5,000 by December. Arrange goals in three layers: an emergency fund (three to six months of essentials), short-term goals such as a trip or equipment, and long-term goals such as a down payment. Divide the amount by months to get the monthly figure.
 
 Saving without a target is like running without a destination. You might be moving, but you have no way to know if you're making progress.
 
@@ -1694,7 +1843,9 @@ Structure your goals in layers:
 
 Tracking these goals visually makes a real difference. Seeing "8 more months to hit the vacation goal" is far more motivating than a vague sense that you should be saving more. Apps like AI Budget Assistant let you set goals with target amounts and track progress over time. It's available on Android or in the browser at [ai-budget.pl](https://ai-budget.pl), with a free tier that covers savings tracking without requiring a card.
 
-## Step 3: Find the Real Places to Cut Spending
+## Where can I realistically cut spending?
+
+Where you pay a lot but get little value: impulse purchases, convenience premiums and services you barely use. Spending analytics by category helps, for instance by showing $600 on dining out instead of the $250 you assumed. The aim is a conscious choice, not giving everything up.
 
 Once you have data on your spending (see the companion article on [expense tracking](/blog/en/expense-tracker/) for how to get it efficiently), look for categories where spending doesn't match the value you get.
 
@@ -1702,7 +1853,9 @@ A few questions that cut through the noise: What did I buy impulsively last mont
 
 If you see that you spent $600 on dining out last month and estimated it at $250, you have a real number to work with. Not "never go to restaurants" but "what amount am I comfortable with and can stick to?" Targeting poor-value categories is more sustainable than across-the-board cuts.
 
-## How to Save Money as a Couple or Family
+## How can couples save money together?
+
+Agree on a shared goal instead of shared restrictions, for example $400 a month toward a trip. Give each person pocket money to spend without explanation, which removes most tension. One shared view of the budget and goals also stops the "who spent what" arguments.
 
 Saving together is harder and easier than saving alone. Harder because two people have different habits and different definitions of what's worth spending on. Easier because you have a partner to keep you accountable.
 
@@ -1712,7 +1865,9 @@ Saving together is harder and easier than saving alone. Harder because two peopl
 
 **Keep a shared view.** A single account in an app where both people see real-time balances and goal progress resolves most "who spent what" questions before they become arguments. AI Budget Assistant supports shared family accounts: each person logs from their own phone, and you can ask the AI assistant "how close are we to the vacation goal?" and get an immediate answer across both people's transactions.
 
-## Common Mistakes to Avoid
+## What mistakes should I avoid when saving?
+
+The three worst are saving too aggressively at the start (which ends in a rebound by month four), keeping all savings in one pot, and comparing your rate with other people's. Pick a level you can sustain for a year, separate the emergency fund from goals, and judge only your own situation.
 
 **Starting too aggressively.** Extreme cuts for three months often lead to a compensatory blow-out in month four. Set a savings rate you can maintain for a full year, not one that impresses you in January.
 
@@ -1720,7 +1875,9 @@ Saving together is harder and easier than saving alone. Harder because two peopl
 
 **Comparing your rate to others.** Someone saving 30% might earn three times as much, have no kids, or live rent-free. Your plan is for your situation. Small consistent savings over a long period beats impressive numbers that collapse after two months.
 
-## Tracking Progress Without Obsessing
+## How often should I check my savings progress?
+
+Once a month, not daily, because constant checking creates stress without helping decisions. Ask three questions: how much did I save against plan, are my goals getting closer, and what surprised me financially. Recurring surprises mean your budget misses some real costs.
 
 Check in once a month, not daily. Three questions that matter:
 
@@ -1750,6 +1907,14 @@ Prioritize the emergency fund, even at $100 a month. Eliminate all hidden charge
 
 For most people, yes. Seeing the gap between what you planned to save and what you actually saved, in real time, is the main driver of behavior change. AI Budget Assistant is free to start. Try it at [ai-budget.pl](https://ai-budget.pl) in your browser or download it from Google Play without a card. Set one goal, watch it for a month. That feedback loop is what makes the habit stick.
 
+**How big should my emergency fund be?**
+
+Aim for three to six months of essential expenses. A first milestone of $1,000-$2,000 already reduces stress noticeably. Keep it in a separate account and do not count it toward your goal savings.
+
+**Should I pay off debt or save first?**
+
+Pay down high-interest debt first, because that gives a guaranteed return equal to the interest rate. At the same time, set aside a small amount for an emergency fund so a sudden expense does not push you into more debt.
+
 ---
 
 *Related articles: [How to budget your money step by step](/blog/en/how-to-budget/) | [How to track expenses without the tedium](/blog/en/expense-tracker/)*
@@ -1769,6 +1934,7 @@ For most people, yes. Seeing the gap between what you planned to save and what y
 - [Multi-Currency Budgeting: Track Money in Two Currencies](/blog/en/multi-currency-budgeting/)
 - [How Much Does Christmas Cost? A Step-by-Step Budget](/blog/en/christmas-budget/)
 - [Are Black Friday Deals Real? How to Check Before You Buy](/blog/en/black-friday-deals-real/)
+- [What to Do With a Tax Refund: A Simple Plan](/blog/en/what-to-do-with-tax-refund/)
 
 ## How to Import a Bank Statement Into a Budget App
 URL: https://ai-budget.pl/blog/en/import-bank-statement/
@@ -1846,6 +2012,82 @@ Importing a statement file is simply uploading a record of transactions you alre
 ---
 
 *Related articles: [An expense tracker that actually sticks](/blog/en/expense-tracker/) | [Expense categories that actually work](/blog/en/expense-categories/)*
+
+## Import a Revolut Statement into a Budget App (CSV)
+URL: https://ai-budget.pl/blog/en/import-revolut-statement-to-budget-app/
+
+To import a Revolut statement, generate a CSV statement in the Revolut app, then in AI Budget Assistant open Settings → Import transactions → Revolut and pick the file. You get a preview with suggested categories, duplicates unticked and currency exchanges merged into one entry. The whole thing takes a few minutes.
+
+Revolut is one of the easier banks to import: its CSV has a fixed column layout and carries the currency of every single row. Here is exactly what the app reads from the file and what to watch for.
+
+## How do I export a statement from Revolut?
+
+In the Revolut app, open your account statements (the section is called Statements in the English interface), choose the date range and the CSV format, then download the file to your phone or computer. Revolut renames buttons from time to time, so if the screen looks different, look for the option that generates a statement and lets you pick CSV.
+
+A good habit: on the first run, download a longer period, say three to six months. Re-importing overlapping ranges is safe because the app recognises transactions it already has.
+
+## How do I import the file, step by step?
+
+1. **Download the CSV from Revolut** to the device where the app runs.
+2. In AI Budget Assistant, go to **Settings → Import transactions**.
+3. Choose **Revolut** from the list (or **Detect automatically (any bank)**, which recognises the Revolut layout from its headers).
+4. Pick the file. The app shows a preview: each row as an expense, an income or a currency exchange, with a suggested category.
+5. Untick rows you do not want, fix categories and tap **Import**.
+
+In the preview you will see counters for what is selected and what is already imported. Rows the app already knows are unticked by default.
+
+## What does the app read from a Revolut file?
+
+| Item | How it is handled |
+|---|---|
+| Format | Comma-separated CSV, headers on the first row |
+| Columns | Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance |
+| Date | From Started Date (the date only, no time) |
+| Amount | Signed: negative is an expense, positive is an income |
+| Currency | Per row, so a multi-currency account never mixes currencies |
+| State | Only COMPLETED rows are imported; declined and pending ones are skipped |
+| Currency exchange | Two EXCHANGE rows with the same date and opposite signs are merged into one currency exchange |
+| Merchant | From Description, with a cleaned-up name for well-known chains |
+
+## What happens to exchanges and multi-currency accounts?
+
+A Revolut account often holds several currencies. When you swap zloty for euro, the file contains two rows: money out in one currency and money in another. Counted separately, they would create a fake expense and a fake income. So the app pairs them and stores one **currency exchange**, visible in the Wallet rather than in your spending.
+
+Purchases in foreign currencies stay in their own currency. For how to read a budget when part of your life happens in euro, see our guide on budgeting in two currencies.
+
+## How do I avoid duplicates, and what if something goes wrong?
+
+The app protects you twice. First, every row gets a unique ID built from the date, amount and description, so importing the same file again adds nothing. Second, it compares date, amount and currency against the transactions already in your account, including manual ones, and unticks likely repeats.
+
+Two identical purchases on the same day, such as two coffees at the same price, are kept as two separate transactions. If you do not like the result, the import history at the bottom of the screen lets you undo it with one tap within 30 days, and you can then import the same file again.
+
+For the general mechanics, read [How to import a bank statement](/blog/en/import-bank-statement/). If your bank is not on the list, see [What to do when your bank is not on the list](/blog/en/ai-import-any-bank-statement/).
+
+## Is it safe?
+
+You never enter your Revolut login or password. You import a static file that you downloaded yourself, so the app only sees the transaction history in that file. You can try AI Budget Assistant for free at [ai-budget.pl](https://ai-budget.pl) or on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: Importing a Revolut statement
+
+**Which Revolut statement format do I need?**
+
+CSV. It is the file with the columns Type, Started Date, Description, Amount, Currency, State and Balance, which Revolut generates in the statements section of your account. A PDF can only be read through AI reading, which is a Pro feature, so choose CSV for regular imports.
+
+**Are declined or pending transactions imported?**
+
+No. Only rows with the state COMPLETED are taken. A declined card payment will not reduce your balance in the budget, and a pending one appears in a later statement once it settles.
+
+**Will a Revolut currency exchange count as an expense?**
+
+No. Two exchange rows with the same date and opposite signs are merged into a single currency exchange in the Wallet. It inflates neither your spending nor your income.
+
+**Can I import the same statement twice?**
+
+You can, and nothing will be duplicated. Repeated rows are recognised and unticked in the preview as already imported.
+
+**Can I undo a Revolut import?**
+
+Yes. In the import history at the bottom of the import screen, tap the undo arrow next to the import. It works for 30 days, and afterwards you can import the same file again.
 
 ## Stock Up Before Prices Rise: an Inflation Shield
 URL: https://ai-budget.pl/blog/en/inflation-shield-stock-up/
@@ -1970,6 +2212,171 @@ Indirectly, yes. We go into more detail in our piece on [how AI helps budgeting]
 ---
 
 *Related articles: [How to budget: a practical guide](/blog/en/how-to-budget/) | [The 50/30/20 budget rule: a practical guide](/blog/en/50-30-20-budget-rule/) | [How AI can help you budget (honestly)](/blog/en/how-ai-helps-budgeting/)*
+
+## Monefy vs AI Budget Assistant: which fits you?
+URL: https://ai-budget.pl/blog/en/monefy-vs-ai-budget-assistant/
+
+Monefy and AI Budget Assistant are both expense trackers, but they are built for different habits. Monefy is a small, fast app for logging spending by hand. AI Budget Assistant adds an AI chat, voice input, receipt scanning, shared accounts and bank-statement import. This page compares them side by side so you can pick without installing both. It is based on each app's public pages as of October 2026, and apps change, so check the current listing before you decide.
+
+## At a glance: Monefy vs AI Budget Assistant
+
+| | Monefy | AI Budget Assistant |
+|---|---|---|
+| Platforms | Android and iOS apps | Android app and a web app (installable to the home screen); no native iOS app |
+| Price | Free core app, optional paid Premium | Free plan; Pro $4.99/month or $29.99/year, 7-day trial |
+| Free tier limits | Premium adds unlimited accounts | 3 accounts, 1 member, 50 AI requests per month |
+| AI | Not a focus; the app stresses simplicity and speed | AI chat, voice input, receipt scanning with line items |
+| Data location | On your device or in your own Google Drive / Dropbox | Synced to the app's server; optional end-to-end encryption |
+| Bank connection | No automatic bank connections | No live bank link; you import statements (CSV/PDF) |
+| Import | Manual statement import | Polish banks, Revolut, Wise, plus Monefy, Wallet and Money Manager exports |
+| Reports and export | Backup file | CSV, PDF and Excel reports, free on every plan |
+| Shared budgets | Sync of your own data across your devices | Shared accounts with Owner, Editor and Viewer roles (members need Pro) |
+| Offline | Data stored locally | Mobile app writes locally first and syncs later; web app needs internet |
+| Currencies | 150+ | Multi-currency with display-currency conversion |
+| Languages | 25+ | 9 (English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch) |
+
+## Which app is faster for plain manual expense logging?
+
+Monefy. Its own site describes recording a purchase in two taps and puts simplicity, speed and privacy first. If all you want is to tap an amount, pick a category and move on, it is hard to beat. AI Budget Assistant has a manual form too, but it is a larger app built around more than quick logging.
+
+## Which app has AI features?
+
+AI Budget Assistant. You can type or say "spent 45 on groceries" in the AI chat, and the app asks you to confirm before it saves anything. You can also scan a receipt, including line items, and ask questions about your spending. Monefy's site lists no AI features. The free plan includes 50 AI requests per month; higher limits and some advanced AI features need a paid plan.
+
+## Which platforms does each app support?
+
+Monefy has apps for Android and iOS. AI Budget Assistant has an Android app and a web app at [ai-budget.pl](https://ai-budget.pl) that you can add to your home screen like an app. There is no native iOS app. If you are on an iPhone and want a store app, Monefy fits better; if you also want a browser on a laptop, AI Budget Assistant does.
+
+## Which one costs less?
+
+Both start free. Monefy's core app is free, with an optional Premium upgrade that, according to its help center, includes unlimited accounts. AI Budget Assistant's free plan gives you 3 accounts and 50 AI requests a month; Pro is $4.99 a month or $29.99 a year, with a 7-day free trial. Monefy's Premium price depends on your store and country, so read its listing for the current figure.
+
+## Which is better for a shared family budget?
+
+AI Budget Assistant. It has shared accounts where each member is an Owner, Editor or Viewer, so a partner can add expenses and a child can only look. Adding more members needs Pro, which allows up to 5 per account. Monefy's sync via Google Drive or Dropbox keeps your own data on your own devices; it is not a multi-person budget.
+
+## Can I take my Monefy data with me?
+
+Yes. AI Budget Assistant has a dedicated Monefy import that keeps the categories you built. Transfers between your own Monefy accounts and opening balances are skipped, because they are bookkeeping rather than spending. The full walkthrough is in [switching from Monefy, Wallet or Money Manager](/blog/en/switch-from-monefy-wallet-moneymanager/), so it is not repeated here.
+
+## When Monefy is the better choice
+
+- You use an iPhone and want a native app from the App Store.
+- You want the simplest possible tracker with no AI and no extras.
+- You prefer your data to stay on your device or in your own Google Drive or Dropbox.
+- You need an interface in one of its 25+ languages and yours is not among our nine.
+
+## When AI Budget Assistant is the better choice
+
+- You want to log expenses by chat or voice, or scan receipts.
+- You share a budget with a partner or family and want roles.
+- You import bank statements from mBank, PKO, Revolut or Wise and want them categorized.
+- You want a web app next to your Android phone.
+- You want CSV, PDF or Excel reports without paying.
+
+## How to move from Monefy
+
+Export from Monefy, upload the file in the import section, check the preview, and confirm. Duplicate detection means re-uploading an overlapping file is safe. Details are in [the switching guide](/blog/en/switch-from-monefy-wallet-moneymanager/). You can try it free at [ai-budget.pl](https://ai-budget.pl) or on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant). If you are also weighing price, see [what a free budgeting app really means](/blog/en/free-budgeting-app/), or compare with [Wallet by BudgetBakers](/blog/en/wallet-budgetbakers-vs-ai-budget-assistant/).
+
+---
+
+## FAQ: Monefy vs AI Budget Assistant
+
+**Is Monefy free?**
+
+Monefy's core app is free, with an optional Premium upgrade. According to its help center, Premium includes unlimited accounts. The exact Premium price varies by store and country, so check its listing.
+
+**Does AI Budget Assistant work on iPhone?**
+
+There is no native iOS app. You can use the web app in Safari and add it to your home screen, which gives it its own icon. It needs an internet connection.
+
+**Is AI Budget Assistant free?**
+
+Yes, there is a free plan with 3 accounts and 50 AI requests per month. Pro costs $4.99 per month or $29.99 per year and includes a 7-day free trial.
+
+**Can I import my Monefy history into AI Budget Assistant?**
+
+Yes. Export your data from Monefy and upload it in the import section; categories carry over. Transfers between your own Monefy accounts and opening balances are not imported.
+
+**Which is better for a family budget?**
+
+AI Budget Assistant, because shared accounts support Owner, Editor and Viewer roles. Monefy syncs your own data between your devices rather than sharing one budget between people.
+
+---
+
+*Related articles: [Switching from Monefy, Wallet or Money Manager](/blog/en/switch-from-monefy-wallet-moneymanager/) | [Wallet by BudgetBakers vs AI Budget Assistant](/blog/en/wallet-budgetbakers-vs-ai-budget-assistant/) | [Free budgeting app: what "free" means](/blog/en/free-budgeting-app/)*
+
+## Money Manager vs AI Budget Assistant: which fits you?
+URL: https://ai-budget.pl/blog/en/money-manager-vs-ai-budget-assistant/
+
+"Money Manager" is the name of more than one app. The well-known one is Money Manager Expense & Budget by Realbyte, which its own site says has passed 20 million downloads on Google Play. A different, simpler app with the same name also exists, with its own export format. This article compares AI Budget Assistant with the Realbyte app. If you use the other one, the comparison is looser, but the import section below applies to both.
+
+What we say about Money Manager comes from Realbyte's website and its App Store listing, checked in October 2026. Plans and prices change, so confirm them in the store before you decide.
+
+## Money Manager vs AI Budget Assistant at a glance
+
+| | Money Manager (Realbyte) | AI Budget Assistant |
+|---|---|---|
+| Core idea | A detailed manual ledger: accounts, categories and subcategories, calendar view, double-entry for assets and loans | Fast capture with AI, then category budgets with an end-of-period projection |
+| Platforms | Android and iOS | Android and web (no native iOS app) |
+| Price model | Free with in-app purchases; a monthly or yearly subscription includes its Data Sync Service | Free plan; Pro subscription with a 7-day trial |
+| Listed price | $2.49 per month or $19.99 per year on the US App Store | Pro: $4.99 per month or $29.99 per year (USD) |
+| Receipts | Saves photos of receipts with transactions | Scans receipts and reads the line items |
+| Import / export | Excel/CSV export and backup, per its site | Bank statements, other apps, AI column mapping; export to CSV, Excel, PDF; account backup |
+| Shared budgets | Not described on the pages we checked | Shared accounts: up to 5 members per account on Pro (1 on Free) |
+| AI | Not described on the pages we checked | AI chat, voice entry, receipt scanning, insights |
+| Offline | Not stated on the pages we checked | Android app works offline and syncs later; the web version needs a connection |
+| Languages | Not checked | 9 interface languages |
+
+## Which is better for me, Money Manager or AI Budget Assistant?
+
+Pick Money Manager if you like a detailed manual ledger, want an iOS app, and are happy to enter everything yourself. Pick AI Budget Assistant if typing every transaction is what makes you quit: it lets you chat, speak or photograph a receipt instead, and it adds shared accounts and a web version. Both support budgets and multiple currencies, so the difference is mostly in how entries get in.
+
+Think about how you used your last budgeting app. If you enjoyed the bookkeeping itself, a ledger-style app suits you. If you gave up after a few weeks, lowering the effort of capture is the more useful change.
+
+## What is the difference in price?
+
+Money Manager is free to use, with in-app purchases; on the US App Store its subscription, which includes data sync, is listed at $2.49 a month or $19.99 a year. AI Budget Assistant is free to start, with 50 AI requests a month, and Pro costs $4.99 a month or $29.99 a year with a 7-day trial. Money Manager is cheaper if you only need a ledger; ours covers AI and sharing.
+
+Regional prices differ, so treat these as a reference point. For a wider view of how free tiers work, see [what "free" means in a budgeting app](/blog/en/free-budgeting-app/).
+
+## Can I import my Money Manager data?
+
+Yes. Export your data from Money Manager as a CSV file and upload it in the import section. AI Budget Assistant reads both Money Manager shapes (the full Realbyte-style export, which keeps category and subcategory, and the simpler one with title and note columns), plus the near-identical 1Money export. Your categories come across as you built them, and you see a preview before anything is saved.
+
+What does not travel: budgets, recurring rules and receipt photos that live only inside Money Manager. We have not been able to test every export variant, so skim the preview. Overlapping uploads are safe, because duplicates are detected. The full walkthrough is in [switching from Monefy, Wallet or Money Manager](/blog/en/switch-from-monefy-wallet-moneymanager/), so we will not repeat it here.
+
+## When is Money Manager the better choice?
+
+Money Manager is the better choice in these cases:
+
+- **You want a detailed ledger.** Many account types, categories with subcategories, and double-entry bookkeeping for savings, insurance, loans or real estate are what it advertises.
+- **You like the calendar view.** Seeing a month day by day in one screen is part of its design.
+- **You use an iPhone.** It has an iOS app; we do not.
+- **You want to keep full manual control**, with no AI involved.
+- **You want a lower price for plain tracking.** Its subscription is cheaper than our Pro plan.
+
+## When is AI Budget Assistant the better choice?
+
+It fits better when entry effort is your obstacle. Say "coffee and a sandwich, 24" or scan a receipt, and the expense is filled in; ask the chat "how much did I spend on groceries this month?" and get an answer from your data. You can share an account with a partner or family, use the web version on a laptop, and switch the interface among nine languages.
+
+The limits: no native iOS app, no live bank connection (you import statements, and on Android a bank notification can be captured), and no offline use on the web. If you are weighing several apps, [the best budgeting apps compared](/blog/en/best-budgeting-apps/) gives the wider picture, and the [guide to shared budgets for couples](/blog/en/shared-budget-for-couples/) covers the sharing side.
+
+You can try the free plan at [ai-budget.pl](https://ai-budget.pl) and import your Money Manager history to see your own data in it.
+
+## FAQ: Money Manager vs AI Budget Assistant
+
+**Which Money Manager app are you comparing?**
+Money Manager Expense & Budget by Realbyte, the best-known app with that name. A simpler, unrelated app is also called Money Manager. Our importer reads exports from both, plus 1Money, but the feature comparison above is about the Realbyte app.
+
+**Do I lose my categories when I move?**
+No. Categories and subcategories in a Money Manager CSV export are carried across, so "Food / Groceries" stays as you set it. Budgets, recurring rules and receipt photos stored only in Money Manager do not transfer.
+
+**Does AI Budget Assistant work on iPhone?**
+Not as a native app. The web version works in a mobile browser and can be added to the home screen, but it needs a connection. Money Manager does have an iOS app, which matters if you are an iPhone user.
+
+**Is AI Budget Assistant free?**
+There is a free plan with expense tracking, AI chat, voice input and receipt scanning, limited to 50 AI requests a month. Pro is $4.99 a month or $29.99 a year, with a 7-day trial.
 
 ## Multi-Currency Budgeting: Track Money in Two Currencies
 URL: https://ai-budget.pl/blog/en/multi-currency-budgeting/
@@ -2608,7 +3015,9 @@ Ask someone how many subscriptions they pay for and they'll usually guess four o
 
 This is subscription creep. Each charge is small enough to ignore, the billing is automatic, and the renewal dates are scattered across the month, so no statement makes the total obvious. The fix isn't willpower. It's a one-time audit plus a system that keeps the list visible.
 
-## Why Subscriptions Are So Easy to Lose Track Of
+## Why Are Subscriptions So Easy to Lose Track Of?
+
+Subscriptions slip out of sight because charges are automatic with no checkout moment to reconsider, annual plans hide their real monthly cost, and free trials convert to paid plans silently. The result is a slow leak that keeps growing because nobody ever decides to stop it.
 
 A few things conspire against you:
 
@@ -2632,13 +3041,17 @@ Write down each one with three details: the cost, the billing cycle (monthly, qu
 
 This is where [AI Budget Assistant](https://ai-budget.pl) helps. Its subscription manager lets you record each service with its billing cycle and next renewal date, then shows them in a renewal calendar view so you can see what's coming up and when. It's free to start and runs in the browser, so you can build the list in a few minutes.
 
-## Step 3: Add Up the True Monthly AND Yearly Total
+## Step 3: How Do You Calculate the True Monthly and Yearly Cost?
+
+Convert every subscription to a monthly equivalent: divide annual plans by 12, quarterly plans by 3, and multiply weekly plans by 52 and divide by 12. Add the results for your monthly total, then multiply by 12 for the yearly figure. The yearly number is usually the one that motivates action.
 
 Here's the step most people skip, and it's the one that changes behavior. Convert everything to a monthly equivalent so you can compare like with like. A $99 annual plan is $8.25 a month, a $30 quarterly plan is $10 a month. Add the monthly figures for your true monthly cost, then multiply by twelve for the annual number.
 
 The annual figure is usually the one that lands. "$120 a month" is easy to wave off. "$1,440 a year" is a vacation. Seeing both side by side is what makes the next steps feel worth doing. AI Budget Assistant shows the monthly-equivalent total of everything combined, so yearly and weekly plans roll into one comparable number for you.
 
-## Step 4: Cancel What You Haven't Used in 30 Days
+## Step 4: Which Subscriptions Should You Cancel?
+
+Cancel every subscription you have not used in the last 30 days. It does not matter whether you might use it someday: resubscribing usually takes minutes, while an unused subscription costs you every month. Many people recover real money at this step with no change to their lifestyle.
 
 Now the easy wins. Go through the list and ask one question per item: have I used this in the last 30 days? Not "might I someday," not "I'll get back into it." Have I actually used it.
 
@@ -2666,7 +3079,26 @@ The final piece is making the system maintain itself. For every subscription you
 
 A reminder three days before a $99 annual renewal gives you a real moment to ask "am I still getting $99 of value from this?" Sometimes the answer is yes and you do nothing. Sometimes it's no and you've just saved $99. In AI Budget Assistant these reminders come automatically before you're charged, and members of a shared account all see the same list, which matters when two people sign up for things independently.
 
-## Run a Subscription Audit Twice a Year
+## What Does a Sample Subscription Audit Look Like?
+
+A typical audit lists each service with its monthly and yearly cost. In the example below, seven subscriptions add up to $67.25 a month, or $807 a year, even though none of them looks expensive on its own. The figures are illustrative, not market averages.
+
+*Illustrative example: made-up amounts, not market data.*
+
+| Service type | Per month | Per year |
+|---|---|---|
+| Video streaming | $15 | $180 |
+| Music streaming | $11 | $132 |
+| Cloud storage | $3 | $36 |
+| Fitness app | $10 | $120 |
+| Software (annual plan, $99) | $8.25 | $99 |
+| News site | $8 | $96 |
+| Game pass | $12 | $144 |
+| **Total** | **$67.25** | **$807** |
+
+## How Often Should You Audit Your Subscriptions?
+
+Audit your subscriptions at least twice a year, for example once every six months, and set aside about 20 minutes. Re-scan your statements, update the list, cancel what you no longer use and check for price increases. New services creep in constantly and old ones quietly get more expensive.
 
 A subscription audit isn't a one-time event. New services creep in, old ones get forgotten again, prices drift up. Put a recurring 20-minute audit on the calendar, once every six months is plenty: re-scan your statements, update the list, cancel the dead weight, check for price increases.
 
@@ -2688,9 +3120,177 @@ If you haven't used it in the last 30 days, cancel it. Resubscribing is almost a
 
 Yes. AI Budget Assistant's subscription manager sends renewal reminders before you're charged and can flag price increases or recurring charges you haven't added to the tracker yet. You can start free in the browser at [ai-budget.pl](https://ai-budget.pl) or download it from [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), no card required.
 
+**How much can subscriptions cost per year?**
+
+Small charges add up quickly. In the sample audit above, seven services come to $67.25 a month and $807 a year. Your own total will differ, but always look at the yearly figure, because it shows the real scale of the spending.
+
+**How do I avoid being caught by a free trial?**
+
+When you start a free trial, set a reminder for two days before it ends and note the renewal date in your subscription list. That is your decision point: either you have used it enough to keep it, or you cancel before the first charge.
+
+**How do I know if a subscription got more expensive?**
+
+Compare the amount on your latest statements with the price on your list. Increases are often small and barely announced, so check every line during your twice-a-year audit. A $9.99 plan that quietly becomes $12.99 costs you $36 more per year.
+
 ---
 
 *Related articles: [How to save money](/blog/en/how-to-save-money/) | [Best budgeting apps in 2026](/blog/en/best-budgeting-apps/)*
+
+## Wallet by BudgetBakers vs AI Budget Assistant
+URL: https://ai-budget.pl/blog/en/wallet-budgetbakers-vs-ai-budget-assistant/
+
+Wallet by BudgetBakers and AI Budget Assistant solve the same problem in different ways. Wallet leans on connecting your bank accounts and has a very wide language and platform reach. AI Budget Assistant leans on an AI chat, voice input, receipt scanning and statement import, with no live bank link. Below is a side-by-side look so you can choose. It is based on each company's public pages as of October 2026; prices and plans change, so confirm on the current listing.
+
+## At a glance: Wallet vs AI Budget Assistant
+
+| | Wallet by BudgetBakers | AI Budget Assistant |
+|---|---|---|
+| Platforms | Web, iOS and Android | Android app and a web app (installable to the home screen); no native iOS app |
+| Price | Free to start; paid Premium with a free trial | Free plan; Pro $4.99/month or $29.99/year, 7-day trial |
+| Bank connection | Automatic bank connection | No live bank link; you import statements (CSV/PDF) |
+| AI | Learns categories from synced bank transactions | AI chat, voice input, receipt scanning with line items |
+| Shared / family | Positions itself for personal and family finances | Shared accounts with Owner, Editor and Viewer roles (members need Pro) |
+| Import | Bank sync | Polish banks, Revolut, Wise, plus Monefy, Wallet and Money Manager exports |
+| Reports and export | Data export is a paid Wallet feature | CSV, PDF and Excel reports, free on every plan |
+| Languages | 50 | 9 (English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian, Dutch) |
+| Security statements | ISO 27001 certified and GDPR compliant, per its site | Optional end-to-end encryption you switch on in Settings |
+
+## Which app connects directly to my bank?
+
+Wallet. Its site advertises automatic bank connection and categorization that learns from synced transactions, which saves manual work. AI Budget Assistant has no live bank link. You download a statement from your bank (mBank, PKO, Revolut, Wise and others) and upload it; you see a preview before anything is saved.
+
+## Which app has AI features?
+
+AI Budget Assistant is built around them. You can type or say an expense into the AI chat and confirm it, scan a receipt with line items, and ask questions about your spending. The free plan includes 50 AI requests per month, and advanced AI features need Pro. Wallet's strength is bank-driven automation; see its site for its own assistant products.
+
+## Which platforms does each app support?
+
+Wallet runs on the web, iOS and Android. AI Budget Assistant has an Android app and a web app at [ai-budget.pl](https://ai-budget.pl) that you can add to your home screen, but no native iOS app. If you want a store app on an iPhone, Wallet is the option of the two. If Android and a browser cover you, either works.
+
+## Which one costs less?
+
+Both start free. Wallet offers a paid Premium plan with a free trial; its price depends on region and billing period, so read the current listing. AI Budget Assistant's free plan gives 3 accounts and 50 AI requests a month; Pro is $4.99 a month or $29.99 a year, with a 7-day trial. Compare what each free tier lets you do, not only the headline price.
+
+## Which is better for sharing a budget with family?
+
+Both target households. AI Budget Assistant offers shared accounts with Owner, Editor and Viewer roles, so a partner can add spending while a child can only view. More than one member needs Pro, which allows up to 5 per account. Check Wallet's own plan page for how it handles sharing before you commit.
+
+## Which app supports my language?
+
+Wallet lists 50 languages; AI Budget Assistant offers 9: English, Polish, German, Spanish, French, Russian, Ukrainian, Belarusian and Dutch. If your language is one of our nine, the interface, the chat and the in-app help are available in it. If not, Wallet is the safer bet.
+
+## When Wallet is the better choice
+
+- You want your bank transactions pulled in automatically.
+- You use an iPhone and want a native app.
+- Your language is not one of our nine.
+- You want a long-established product with certifications it states on its site.
+
+## When AI Budget Assistant is the better choice
+
+- You prefer entering spending by chat, voice or receipt scan over linking a bank.
+- You want to control what gets in by importing statements and reviewing a preview.
+- You want shared accounts with roles, plus a web app next to your Android phone.
+- You want CSV, PDF or Excel reports on the free plan.
+
+## How to move from Wallet
+
+Wallet's own data export is a paid Wallet feature, so export before you cancel Premium. Then upload the file in the import section, check the preview and confirm. AI Budget Assistant drops Wallet's transfer rows, since they are not spending. The step-by-step guide is in [switching from Monefy, Wallet or Money Manager](/blog/en/switch-from-monefy-wallet-moneymanager/). Try it free at [ai-budget.pl](https://ai-budget.pl) or on [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant). Weighing a simpler tracker? See [Monefy vs AI Budget Assistant](/blog/en/monefy-vs-ai-budget-assistant/).
+
+---
+
+## FAQ: Wallet by BudgetBakers vs AI Budget Assistant
+
+**Does AI Budget Assistant connect to my bank automatically?**
+
+No. There is no live bank connection. You import a statement file from your bank, review the preview, and confirm. Supported sources include mBank, PKO, Revolut and Wise.
+
+**Is Wallet by BudgetBakers free?**
+
+You can start free, and Wallet also has a paid Premium plan with a free trial. Prices vary by region, so check its current listing.
+
+**Can I import my Wallet data into AI Budget Assistant?**
+
+Yes. Export from Wallet and upload the file in the import section; your categories carry over. Wallet's transfer rows are not imported because they are not spending. Wallet's export is a paid Wallet feature.
+
+**Does AI Budget Assistant have an iPhone app?**
+
+Not a native one. You can use the web app in Safari and add it to your home screen. It needs an internet connection.
+
+**How much does AI Budget Assistant cost?**
+
+There is a free plan with 3 accounts and 50 AI requests per month. Pro is $4.99 per month or $29.99 per year, with a 7-day free trial.
+
+---
+
+*Related articles: [Switching from Monefy, Wallet or Money Manager](/blog/en/switch-from-monefy-wallet-moneymanager/) | [Monefy vs AI Budget Assistant](/blog/en/monefy-vs-ai-budget-assistant/) | [Free budgeting app: what "free" means](/blog/en/free-budgeting-app/)*
+
+## What to Do With a Tax Refund: A Simple Plan
+URL: https://ai-budget.pl/blog/en/what-to-do-with-tax-refund/
+
+The best use of a tax refund is a split decided before the money arrives: clear expensive debt first, then top up your emergency fund, put a slice toward one savings goal, and keep a small, deliberate share for something you actually want. A refund is a one-off lump sum, so the plan matters more than the amount.
+
+## Why does a tax refund disappear so fast?
+
+Because it shows up as unplanned money. It isn't part of your monthly budget, it arrives in one piece, and it feels like a bonus rather than your own earnings coming back late. Without a plan, it drifts into everyday spending. The fix is simple: give every unit of it a job before it lands, the same way you would with a salary.
+
+## How should I split a tax refund?
+
+Start with a ratio, then adjust it to your situation. A common order of priority is: expensive debt, then a safety buffer, then a goal, then a treat. Here is a sample split of a refund of 1,200 (use your own currency and your own number):
+
+| Where it goes | Share | Amount | Why |
+|---|---|---|---|
+| Expensive debt (card, loan with a high rate) | 40% | 480 | A guaranteed "return" equal to the interest you stop paying |
+| Emergency fund | 30% | 360 | Turns the next surprise bill into an inconvenience, not a crisis |
+| One savings goal (holiday, deposit, laptop) | 20% | 240 | Moves a named target closer |
+| Planned purchase or treat | 10% | 120 | Keeps the plan realistic and easy to stick to |
+
+If you have no expensive debt, give that share to the emergency fund or the goal. If your buffer is already full, move it to the goal. For the reasoning behind each step, see our guides on [building an emergency fund](/blog/en/emergency-fund/) and [paying off debt](/blog/en/pay-off-debt/).
+
+## Should I pay off debt or save the refund?
+
+Pay off debt first when its interest rate is higher than anything your savings could earn, which is almost always true for credit cards and consumer loans. Keep a small cushion, though: if a refund wipes out your cash and an unexpected bill then goes on the same card, you are back where you started. That is why the table above keeps 30% for the emergency fund even while debt is being paid.
+
+AI Budget Assistant tracks money you lent or borrowed (for example a loan from a relative) as a debt with repayments and a due date, and you can record a repayment from the debts screen or in chat. For a bank loan or card, log the extra payment as an ordinary expense so your balance stays correct.
+
+## How do I plan for a tax refund before it arrives?
+
+Do three things while you are still waiting:
+
+1. **Estimate the amount conservatively.** Use the figure from your tax software or your authority's pre-filled return, and plan around the lower end.
+2. **Write the split down.** Percentages like the ones above, attached to real names: which debt, which fund, which goal.
+3. **Create the targets in advance.** If the goal and the budget category already exist, the money has somewhere to go on day one.
+
+In AI Budget Assistant, a savings goal has a name, a target amount and a deadline, and every top-up is saved in the goal's contribution log, so you can see afterwards exactly how the refund was used. You can also tell the chat "put 240 into the holiday goal" instead of opening the goal screen. When the refund lands, record it as income (by voice, or by photographing the document) so your balance and your safe-to-spend figure reflect it.
+
+## How do I stop a refund from distorting my monthly budget?
+
+Treat it as one-off income, not as part of your regular monthly pay. Your recurring budget should stay built on your normal earnings; the refund is allocated separately through the split above. If you want a planned purchase to come out of it, set it aside as its own line instead of letting it blend into groceries and bills. A [budget in the app](https://ai-budget.pl) lets you keep that separate from your everyday categories.
+
+## When do refunds usually arrive?
+
+It depends entirely on your country and on when you file. In general, filing earlier in the season usually means getting the money earlier, and filing a correct, complete return avoids delays. Check your tax authority's official pages for the current deadlines and expected payment times rather than relying on a blog post, including this one.
+
+*This article is general budgeting information, not tax advice.*
+
+You can try goals, debts and budgets without a card in your browser at [ai-budget.pl](https://ai-budget.pl), or install the Android app from [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: Tax Refund
+
+**What is the best thing to do with a tax refund?**
+Pay down high-interest debt first, then add to an emergency fund, then fund one savings goal. Keep a small share for a planned purchase so the plan is realistic. The exact ratio depends on your debts and how full your safety buffer already is.
+
+**Should I spend my entire tax refund on debt?**
+Not necessarily. Paying off expensive debt is a strong move, but leaving yourself with no cash can push you back onto a card at the next surprise bill. A split between debt and an emergency fund is usually safer.
+
+**How do I track a tax refund in a budgeting app?**
+Record it as one-off income when it arrives, then move parts of it into savings goals and debt repayments. In AI Budget Assistant, goal top-ups are kept in a contribution log, so you can see how the refund was allocated.
+
+**Is a tax refund free money?**
+No. It is your own money that was withheld or prepaid and is being returned. Treating it that way makes it easier to use it purposefully instead of spending it as a windfall.
+
+**Can I plan a refund if I don't know the exact amount?**
+Yes. Use a conservative estimate and plan in percentages rather than fixed amounts. If the real refund is higher, the extra goes to the same priorities in the same order.
 
 ## Why Most Budgeting Apps Get Deleted in the First Week
 URL: https://ai-budget.pl/blog/en/why-budget-apps-abandoned-first-week/
@@ -2756,6 +3356,82 @@ After. Showing a price list before someone has seen the app do anything with the
 ---
 
 *Related articles: [Expense Tracker: How to Actually Keep Up With Spending](/blog/en/expense-tracker/) | [Best Budgeting Apps in 2026: An Honest Buyer's Guide](/blog/en/best-budgeting-apps/) | [How AI Can Help You Budget](/blog/en/how-ai-helps-budgeting/)*
+
+## YNAB alternative: YNAB vs AI Budget Assistant
+URL: https://ai-budget.pl/blog/en/ynab-vs-ai-budget-assistant/
+
+YNAB and AI Budget Assistant are not two copies of the same product. YNAB is built around a method: you decide what every amount you receive is for before you spend it. AI Budget Assistant is built around capturing spending with as little effort as possible (chat, voice, a photo of a receipt) and then helping you understand it. This comparison tells you which one matches how you actually handle money.
+
+A note on sources: what we say about YNAB comes from YNAB's own website, checked in October 2026. Prices and plans change, so confirm them on ynab.com before you decide.
+
+## YNAB vs AI Budget Assistant at a glance
+
+| | YNAB | AI Budget Assistant |
+|---|---|---|
+| Core idea | Plan first: give each amount a purpose before spending it | Capture fast with AI, then category budgets with an end-of-period projection |
+| Platforms | iOS, Android, web | Android and web (no native iOS app; the web version can be added to a home screen) |
+| Price model | Subscription after a 34-day free trial, no card required | Free plan; Pro subscription with a 7-day trial |
+| Listed price | $14.99 per month or $109 per year (USD) | Pro: $4.99 per month or $29.99 per year (USD) |
+| Bank connection | Links your accounts to import transactions automatically | No live bank link; statement import (CSV, PDF) and Android bank-notification capture |
+| Import / export | File-based import of bank transaction files | Bank statements, Monefy, Wallet and Money Manager exports, AI column mapping; export to CSV, Excel, PDF |
+| Shared budgets | One subscription can be shared with up to six people | Shared accounts: up to 5 members per account on Pro (1 member on Free) |
+| AI | Not described on the pages we checked | AI chat, voice entry, receipt scanning, statement mapping, insights |
+| Offline | Works without an internet connection, according to its features page | Android app works offline and syncs later; the web version needs a connection |
+| Languages | Not checked | 9 interface languages |
+
+## Which is better for me, YNAB or AI Budget Assistant?
+
+Pick YNAB if you want a structured method: plan every amount you receive before you spend it, and you are happy to pay for that discipline. Pick AI Budget Assistant if your real problem is capturing and understanding spending, you want a free plan to start with, or you want shared accounts at a lower price. Plenty of people need only one of the two.
+
+The honest way to decide is to ask what goes wrong in your month today. If the problem is "I never decided what my money was for", YNAB's method addresses it directly. If the problem is "I forget to log things and cannot see where it went", faster capture matters more than a method.
+
+## How do the prices compare?
+
+YNAB is subscription-only after a 34-day free trial; its pricing page lists $14.99 a month or $109 a year in USD, and a free 365-day trial for college students. AI Budget Assistant has a free plan and a Pro plan at $4.99 a month or $29.99 a year, with a 7-day trial. The free plan limits AI to 50 requests a month and sharing to one member.
+
+Price is not quality. YNAB's price buys a mature method and automatic bank linking. Our lower price buys AI capture and shared accounts, without a live bank connection. Compare what you would actually use. For a deeper look at what "free" really means in a budgeting app, see [our guide to free budgeting apps](/blog/en/free-budgeting-app/).
+
+## Can I import my YNAB data into AI Budget Assistant?
+
+Partly, and without a dedicated tool. AI Budget Assistant has no YNAB-specific importer. If you export your transactions to a CSV file, you can upload it in the import section. The app tries to recognise the format; if it cannot, an AI model suggests which column is the date, the amount and the description, and you see a preview before anything is saved.
+
+Be realistic about what travels. Transactions come across; the way you assigned money to categories in YNAB does not, because that lives inside YNAB. The AI step asks for your consent once per account, and you should skim the categories afterwards, since a file from a tool we have no parser for is read with less certainty than one we know. Duplicate detection means uploading overlapping files is safe. The mechanism is explained in [importing a statement from any bank](/blog/en/ai-import-any-bank-statement/). Check YNAB's own help for how to export your data; we have not verified its export options.
+
+## When is YNAB the better choice?
+
+YNAB is the better choice in these cases, and we say so plainly:
+
+- **You want a method, not just a tracker.** Deciding what every amount is for before you spend it is a real strength, and it is the thing YNAB is built around. AI Budget Assistant does not force that discipline; it gives you category budgets and a "safe to spend today" figure instead.
+- **You want automatic bank linking.** YNAB links accounts and imports transactions on its own. We do not connect to banks live.
+- **You use an iPhone and want a native app.** YNAB offers iOS; we do not.
+- **You want debt and net-worth tools.** Its features page lists a loan calculator, goal tracking and net-worth charts.
+- **You prefer a tool without AI.** Some people do, and that is a fine reason.
+
+## When is AI Budget Assistant the better choice?
+
+AI Budget Assistant fits better when logging is the hard part. You can type or say "lunch 38 zloty", ask the chat questions about your spending, or scan a receipt and have its line items read. It starts free, supports nine interface languages, handles several currencies, and lets you share an account with family or a partner.
+
+The limits are real too: no native iOS app, no live bank connection, and the web version does not work offline. If you share a budget as a couple, the [guide to a shared budget for couples](/blog/en/shared-budget-for-couples/) shows how shared accounts work in practice.
+
+## How do I switch if I decide to try it?
+
+Start with a CSV export from your current tool and use the import section; the previous answer covers what to expect from YNAB files. If you are moving from Monefy, Wallet or Money Manager instead, the app has dedicated importers that keep your original categories, described in [switching from Monefy, Wallet or Money Manager](/blog/en/switch-from-monefy-wallet-moneymanager/). If you are still choosing between several apps, read [the best budgeting apps compared](/blog/en/best-budgeting-apps/).
+
+You can try the free plan at [ai-budget.pl](https://ai-budget.pl) without giving up YNAB first; running both for a month is a fair test.
+
+## FAQ: YNAB vs AI Budget Assistant
+
+**Does AI Budget Assistant replace YNAB's zero-based method?**
+No. It does not make you assign every amount before spending. It offers budgets per category and period, a projection of where the period will end, and a "safe to spend today" figure. If the method itself is what you want, YNAB is the closer fit.
+
+**Does AI Budget Assistant have an iPhone app?**
+Not a native one. The web version works in a mobile browser and can be added to the home screen, but it needs an internet connection. The Android app also works offline.
+
+**Is there a free plan?**
+Yes. The free plan includes expense tracking, AI chat, voice input and receipt scanning, with 50 AI requests a month. Pro costs $4.99 a month or $29.99 a year and starts with a 7-day trial.
+
+**Can I run both apps at the same time?**
+Yes, and it is a sensible way to compare. Keep YNAB for planning and try AI Budget Assistant for quick capture for a month, then keep whichever you actually opened more often.
 
 
 # Help center

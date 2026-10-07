@@ -34,6 +34,8 @@ The simplest way to track your balance is a running total: starting balance plus
 
 That's genuinely the whole thing. Excel and Google Sheets behave identically here, so use whichever one you already have open.
 
+**[Download the ready-made template (.xlsx)](/blog/en/assets/budget-template.xlsx)** — Transactions, categories and a monthly summary with the formulas already in place; works in Excel, Google Sheets and LibreOffice.
+
 ## Where a Spreadsheet Starts to Strain
 
 To be honest about it: for someone who enjoys maintaining one and has fairly simple finances, a spreadsheet holds up for years. The problem isn't the formulas. It's that every single entry has to be typed by a person, every time.

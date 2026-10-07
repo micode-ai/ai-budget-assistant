@@ -14,7 +14,9 @@ De 50/30/20-regel is het meest aangehaalde budgetadvies op internet, en niet zon
 
 Dat is de hele regel. Het lastige is niet de getallen onthouden, het is beslissen wat er werkelijk in elke pot gaat en wat je doet als je echte leven zich niet netjes in derden laat delen. Deze gids behandelt allebei.
 
-## Wat elke pot werkelijk betekent
+## Wat betekent elke pot van de 50/30/20-regel?
+
+De 50/30/20-regel verdeelt je netto-inkomen over drie potten: 50% voor behoeften (huur, vaste lasten, boodschappen, vervoer, minimale aflossingen), 30% voor wensen (uit eten, streaming, hobby's, reizen) en 20% voor sparen en extra aflossen. De vraag is of een uitgave onvermijdelijk is, niet of je ervan geniet.
 
 De percentages zijn makkelijk. Bij de categorieen lopen mensen vast, want de grens tussen een behoefte en een wens is vager dan hij lijkt.
 
@@ -36,7 +38,23 @@ Deze pot dekt je noodfonds, pensioeninleg, spaardoelen en alle aflossingen boven
 
 Voor een diepere blik op de spaarkant breekt de bijbehorende gids over [hoe geld besparen](/blog/nl/geld-besparen/) op hoe je een noodfonds, kortetermijndoelen en langetermijndoelen in lagen opbouwt.
 
-## Wanneer 50/30/20 niet past
+## Hoe ziet de 50/30/20-regel eruit in euro's?
+
+Bij een netto-inkomen van € 3.000 per maand geeft de 50/30/20-regel € 1.500 aan behoeften, € 900 aan wensen en € 600 aan sparen en schulden. De tabel toont de verdeling voor drie voorbeeldinkomens. Het zijn illustratieve voorbeelden, geen persoonlijk advies voor jouw situatie.
+
+*Illustratief voorbeeld: verdeling van het maandelijkse netto-inkomen (EUR).*
+
+| Netto-inkomen | 50% behoeften | 30% wensen | 20% sparen en schulden |
+|---|---|---|---|
+| € 2.000 | € 1.000 | € 600 | € 400 |
+| € 3.000 | € 1.500 | € 900 | € 600 |
+| € 4.500 | € 2.250 | € 1.350 | € 900 |
+
+<!-- calculator:503020 -->
+
+## Wanneer werkt de 50/30/20-regel niet, en wat doe je dan?
+
+De regel past niet als alleen de huur al de helft van je inkomen opslokt, als je dure schulden hebt of als je inkomen erg laag is. Zie hem dan als richting: bescherm de 20% sparen zo goed mogelijk, accepteer 60 tot 65% behoeften en snoei eerst in wensen, of stuur tijdelijk overschot naar de dure schuld.
 
 De regel gaat uit van een vrij gemiddelde levensstandaard. Veel mensen hebben die niet, en doen alsof het wel zo is, is hoe een kader ontmoedigend wordt in plaats van nuttig.
 
@@ -46,7 +64,9 @@ De regel gaat uit van een vrij gemiddelde levensstandaard. Veel mensen hebben di
 
 **Laag inkomen.** Is het inkomen werkelijk laag, dan kunnen behoeften 70% of meer opslokken, en zit er een bodem aan hoeveel snijden helpt. De regel heeft dan nog waarde als doel om naartoe te groeien, maar de grootste hefboom is inkomen. Wees eerlijk tegen jezelf over welk probleem je echt hebt, want de oplossingen verschillen.
 
-## Hoe je de 50/30/20-regel toepast
+## Hoe pas je de 50/30/20-regel stap voor stap toe?
+
+Bereken je netto-inkomen, sorteer de uitgaven van de afgelopen 30 dagen over de drie potten, vergelijk je echte verdeling met de 50/30/20-doelen, pas de pot aan die het meest afwijkt en controleer elke maand opnieuw. De eerste ronde kost een avond, daarna slechts een paar minuten.
 
 Dit is de praktische volgorde. Vijf stappen, maandelijkse cyclus.
 
@@ -72,7 +92,9 @@ Een budget is geen eenmalige instelling. Controleer je verdeling een keer per ma
 
 Die maandelijkse controle is veel makkelijker als het werk geautomatiseerd is. In AI Budget Assistant stel je drie categoriebudgetten in die de regel spiegelen, laat je het uitgavenoverzicht de transacties voor je in de potten sorteren, en zie je in een oogopslag of je binnen elk doel zit. Het overzicht met budgetgeschiedenis toont vervolgens de trend over de maanden, zodat je kunt zien of je 58/32/10 langzaam 52/30/18 wordt. Het is gratis te starten, werkt in de browser op [ai-budget.pl](https://ai-budget.pl) zonder creditcard, en er is een Android-app op [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
 
-## Het is een startkader, geen wet
+## Is de 50/30/20-regel een strenge wet?
+
+Nee. De 50/30/20-regel is een startkader, geen wet. Het gaat om de drie potten en een regelmatige controle, niet om exacte percentages. De beste verdeling is die je een jaar volhoudt, ook als die uiteindelijk 60/20/20 of 55/25/20 heet. Begin ermee en stel bij waar je echte cijfers afwijken.
 
 De 50/30/20-regel is een nuttig uitgangspunt, geen gebod. Duwt jouw situatie je naar een andere verdeling, dan is dat prima, de structuur van drie potten telt zwaarder dan de exacte percentages. Sommige mensen geven de voorkeur aan een meer hands-on methode in cash-stijl, die de gids over [de enveloppenmethode](/blog/nl/enveloppenmethode/) in detail behandelt. De juiste verhouding is degene die je een jaar lang kunt volhouden, niet degene die op papier het netst oogt. Begin met 50/30/20, kijk waar je echte cijfers landen, en stel van daaruit bij.
 
@@ -96,6 +118,14 @@ Ja, met een aanpassing. Minimale aflossingen tellen als behoeften, maar schuld m
 
 De 50/30/20-regel geeft je drie brede potten en laat je binnen elke pot vrij uitgeven. Een nulbasisbudget geeft elke euro een taak tot er niets meer onverdeeld is. De 50/30/20-regel kost minder moeite en is makkelijker vol te houden, terwijl een nulbasisbudget je strakkere controle geeft. Veel mensen beginnen met 50/30/20 en stappen alleen op een gedetailleerdere methode over als ze die nodig hebben.
 
+**Wat is de 50/30/20-regel?**
+
+Het is een budgetmethode die je netto-inkomen verdeelt in 50% behoeften, 30% wensen en 20% sparen en schulden aflossen. Elizabeth Warren maakte haar bekend met het boek "All Your Worth". Je krijgt drie eenvoudige potten in plaats van tientallen categorieën, daarom werkt het goed als eerste budget.
+
+**In welke pot horen boodschappen, uit eten en abonnementen?**
+
+Basisboodschappen zijn behoeften. Uit eten, streaming en de meeste abonnementen zijn wensen, tenzij er een onmisbaar is voor je werk. Twijfel je, vraag dan of een goedkopere versie van hetzelfde de behoefte nog zou dekken. Alles daarboven hoort bij de wensen.
+
 ---
 
 *Verwante artikelen: [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) | [De enveloppenmethode uitgelegd](/blog/nl/enveloppenmethode/)*
@@ -107,7 +137,9 @@ Vraag iemand hoeveel abonnementen hij betaalt en hij gokt meestal vier of vijf. 
 
 Dit is abonnementenwildgroei. Elke afschrijving is klein genoeg om te negeren, het afrekenen is automatisch, en de verlengingsdata liggen verspreid over de maand, zodat geen enkel afschrift het totaal duidelijk maakt. De oplossing is geen wilskracht. Het is een eenmalige inventarisatie plus een systeem dat de lijst zichtbaar houdt.
 
-## Waarom abonnementen zo makkelijk uit het zicht raken
+## Waarom raken abonnementen zo makkelijk uit het zicht?
+
+Abonnementen raken uit het zicht omdat afschrijvingen automatisch gaan zonder koopmoment om je te bedenken, jaarplannen hun echte maandkosten verbergen en gratis proefperiodes ongemerkt betaald worden. Het gevolg is een langzaam lek dat groeit, omdat niemand ooit besluit het te stoppen.
 
 Een paar dingen werken tegen je:
 
@@ -131,13 +163,17 @@ Schrijf elk abonnement op met drie gegevens: de kosten, de afrekencyclus (maande
 
 Hier helpt [AI Budget Assistant](https://ai-budget.pl). Met de abonnementenbeheerder leg je elke dienst vast met de afrekencyclus en de volgende verlengingsdatum, en zie je ze daarna in een verlengingskalender, zodat je ziet wat eraan komt en wanneer. Het is gratis te starten en draait in de browser, zodat je de lijst in een paar minuten opbouwt.
 
-## Stap 3: Tel het echte maand- EN jaartotaal op
+## Stap 3: Hoe bereken je de echte maand- en jaarkosten?
+
+Reken elk abonnement om naar een maandbedrag: deel jaarplannen door 12, kwartaalplannen door 3 en vermenigvuldig weekplannen met 52 om daarna door 12 te delen. Tel de uitkomsten op voor je maandtotaal en vermenigvuldig dat met 12 voor het jaarbedrag. Meestal is het jaarbedrag het getal dat tot actie aanzet.
 
 Dit is de stap die de meeste mensen overslaan, en het is degene die gedrag verandert. Zet alles om naar een maandequivalent zodat je gelijk met gelijk vergelijkt. Een jaarabonnement van 99 euro is 8,25 euro per maand, een kwartaalabonnement van 30 euro is 10 euro per maand. Tel de maandbedragen op voor je echte maandkosten, en vermenigvuldig dan met twaalf voor het jaargetal.
 
 Het jaargetal is meestal degene die binnenkomt. "120 euro per maand" is makkelijk weg te wuiven. "1.440 euro per jaar" is een vakantie. Allebei naast elkaar zien is wat de volgende stappen de moeite waard maakt. AI Budget Assistant toont het maandequivalente totaal van alles samen, zodat jaar- en weekabonnementen voor je in een vergelijkbaar getal rollen.
 
-## Stap 4: Zeg op wat je de afgelopen 30 dagen niet gebruikte
+## Stap 4: Welke abonnementen zeg je op?
+
+Zeg elk abonnement op dat je de afgelopen 30 dagen niet hebt gebruikt. Of je het ooit nog gebruikt, doet er niet toe: opnieuw afsluiten duurt meestal minuten, terwijl een ongebruikt abonnement elke maand geld kost. Veel mensen houden in deze stap echt geld over zonder hun leven te veranderen.
 
 Nu de makkelijke winst. Loop de lijst langs en stel per item een vraag: heb ik dit de afgelopen 30 dagen gebruikt? Niet "misschien ooit", niet "ik pak het wel weer op". Heb ik het werkelijk gebruikt.
 
@@ -165,7 +201,26 @@ Het laatste stuk is het systeem zichzelf laten onderhouden. Stel voor elk abonne
 
 Een herinnering drie dagen voor een jaarverlenging van 99 euro geeft je een echt moment om te vragen "haal ik nog 99 euro aan waarde uit dit?" Soms is het antwoord ja en doe je niets. Soms is het nee en heb je net 99 euro bespaard. In AI Budget Assistant komen deze herinneringen automatisch voordat je wordt afgeschreven, en de leden van een gedeeld account zien allemaal dezelfde lijst, wat telt als twee mensen onafhankelijk dingen afsluiten.
 
-## Doe twee keer per jaar een abonnementeninventarisatie
+## Hoe ziet een voorbeeld van een abonnementenaudit eruit?
+
+Een typische audit noemt elke dienst met maand- en jaarkosten. In het voorbeeld hieronder tellen zeven abonnementen op tot € 67 per maand, oftewel € 804 per jaar, terwijl geen enkel abonnement op zichzelf duur lijkt. De bedragen zijn illustratief en geen marktgemiddelden.
+
+*Illustratief voorbeeld: verzonnen bedragen, geen marktgegevens.*
+
+| Soort dienst | Per maand | Per jaar |
+|---|---|---|
+| Videostreaming | € 13 | € 156 |
+| Muziekstreaming | € 11 | € 132 |
+| Cloudopslag | € 3 | € 36 |
+| Fitnessapp | € 10 | € 120 |
+| Software (jaarplan € 96) | € 8 | € 96 |
+| Nieuwssite | € 10 | € 120 |
+| Gameabonnement | € 12 | € 144 |
+| **Totaal** | **€ 67** | **€ 804** |
+
+## Hoe vaak moet je je abonnementen controleren?
+
+Controleer je abonnementen minstens twee keer per jaar, bijvoorbeeld elke zes maanden, en reserveer ongeveer 20 minuten. Loop de afschriften opnieuw door, werk de lijst bij, zeg op wat je niet meer gebruikt en let op prijsverhogingen. Er komen steeds nieuwe diensten bij en oude worden stilletjes duurder.
 
 Een abonnementeninventarisatie is geen eenmalige gebeurtenis. Nieuwe diensten sluipen binnen, oude raken weer vergeten, prijzen kruipen omhoog. Zet een terugkerende inventarisatie van 20 minuten in de agenda, een keer per half jaar is ruim voldoende: scan je afschriften opnieuw, werk de lijst bij, zeg het dode hout op, controleer op prijsverhogingen.
 
@@ -186,6 +241,18 @@ Heb je het de afgelopen 30 dagen niet gebruikt, zeg het dan op. Opnieuw aanmelde
 **Kan een app me waarschuwen voordat een abonnement verlengt?**
 
 Ja. De abonnementenbeheerder van AI Budget Assistant stuurt verlengingsherinneringen voordat je wordt afgeschreven en kan prijsverhogingen of terugkerende afschrijvingen markeren die je nog niet aan de tracker hebt toegevoegd. Je kunt gratis starten in de browser op [ai-budget.pl](https://ai-budget.pl) of het downloaden via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), zonder creditcard.
+
+**Hoeveel kunnen abonnementen per jaar kosten?**
+
+Kleine bedragen tellen snel op. In de voorbeeldaudit komen zeven diensten uit op € 67 per maand en € 804 per jaar. Jouw eigen totaal zal anders zijn, maar kijk altijd naar het jaarbedrag, want dat laat de echte omvang van de uitgave zien.
+
+**Hoe voorkom ik dat een gratis proefperiode me verrast?**
+
+Zet bij de start van een proefperiode meteen een herinnering twee dagen voor het einde en noteer de verlengingsdatum in je abonnementenlijst. Dat is je beslismoment: of je hebt de dienst genoeg gebruikt om hem te houden, of je zegt op vóór de eerste afschrijving.
+
+**Hoe zie ik dat een abonnement duurder is geworden?**
+
+Vergelijk het bedrag op je laatste afschriften met de prijs in je lijst. Verhogingen zijn vaak klein en nauwelijks aangekondigd, dus controleer elke regel bij de halfjaarlijkse audit. Een abonnement dat stilletjes van € 9,99 naar € 12,99 gaat, kost je € 36 per jaar extra.
 
 ---
 
@@ -1044,7 +1111,9 @@ Ieder artikel over hoe geld besparen eindigt uiteindelijk bij dezelfde tips: min
 
 Dit artikel gaat over de echte redenen waarom mensen niet sparen ook al zijn ze dat van plan, hoe je geld vindt dat nu al ongemerkt weglekt, en hoe je spaardoelen opzet die maanden en jaren standhouden.
 
-## Waarom de meeste mensen niet sparen, ook al willen ze het wel
+## Waarom sparen de meeste mensen niet, ook al willen ze het wel?
+
+De meeste mensen sparen wat er aan het eind van de maand overblijft, en dat is vaak weinig of niets. Doelen zijn vaag ("ik wil meer sparen") en bijna niemand weet wat er echt aan uit eten en abonnementen opgaat. Zonder concreet bedrag, deadline en echte gegevens blijft sparen abstract.
 
 Een paar patronen komen steeds terug:
 
@@ -1054,13 +1123,25 @@ Een paar patronen komen steeds terug:
 
 **Geen zicht op werkelijke uitgaven.** De meeste mensen onderschatten aanzienlijk wat ze uitgeven aan eten, abonnementen en kleine impulsaankopen. Zonder echte data is er geen nauwkeurig beeld van waar besparen mogelijk is.
 
-## De belangrijkste mentaliteitswijziging: betaal jezelf eerst
+## Wat betekent "betaal jezelf eerst" en hoeveel moet ik opzijzetten?
+
+Het betekent dat je op de dag dat je salaris binnenkomt een vast bedrag naar je spaarrekening overmaakt, voordat je iets anders betaalt. Zelfs 100 of 150 euro per maand maakt verschil als het automatisch gebeurt. Voelt dat onmogelijk, dan zijn je uitgaven te hoog, niet ben je te arm om te sparen.
+
+Wat een vaste overboeking op salarisdag oplevert, bij een netto maandinkomen van 2.800 euro (illustratieve berekening, zonder rente):
+
+| Spaarpercentage | Opzij per maand | Opzij per jaar |
+|---|---|---|
+| 5% | € 140 | € 1.680 |
+| 10% | € 280 | € 3.360 |
+| 20% | € 560 | € 6.720 |
 
 In plaats van te sparen wat er overblijft, plan je een overboeking naar je spaarrekening op de dag dat je salaris binnenkomt, voor je iets anders betaalt. Ook al is het maar 100 of 150 euro. Dit is een automatische opdracht, geen beslissing die je elke maand opnieuw neemt.
 
 Als dat onmogelijk aanvoelt bij jouw huidige inkomen, is dat een signaal dat de moeite waard is om nader te bekijken. In de meeste gevallen betekent het dat de uitgaven iets te hoog zijn, niet dat sparen werkelijk buiten bereik is. Het verschil is belangrijk, want de oplossingen zijn anders.
 
-## Stap 1: Vind geld dat al vertrekt zonder veel op te leveren
+## Hoe vind ik geld dat nu al uit mijn budget weglekt?
+
+Maak een lijst van alle abonnementen en terugkerende betalingen en markeer wat je de afgelopen 30 dagen niet hebt gebruikt. Inactieve abonnementen zijn besparingen zonder opoffering, vaak 20 tot 60 euro per maand. Een abonnementenbeheer met verlengdata toont alle terugkerende betalingen op één plek.
 
 Voordat je op zoek gaat naar bestedingen om te snijden, controleer je wat je nu al automatisch betaalt. Terugkerende kosten zijn de meest voorkomende bron van stil verlies.
 
@@ -1070,7 +1151,9 @@ Een abonnementenoverzicht dat al je terugkerende kosten op een plek toont, met v
 
 Kijk daarna naar verzekeringen, telefoonabonnementen en energiecontracten. Veel huishoudens betalen nog tarieven die jaren geleden zijn afgesloten op contracten die sindsdien veel concurrerender zijn geworden. Een paar telefoontjes kunnen betekenisvolle ruimte vrijmaken.
 
-## Stap 2: Stel concrete spaardoelen in
+## Hoe stel ik spaardoelen die echt werken?
+
+Een goed doel heeft een concreet bedrag en een datum, bijvoorbeeld 3.000 euro op je noodfondsrekening in december. Verdeel doelen over drie lagen: noodfonds (drie tot zes maanden aan uitgaven), doelen op korte termijn zoals een vakantie of apparatuur, en lange termijn zoals een aanbetaling op een huis. Deel het bedrag door het aantal maanden.
 
 Sparen zonder doel is als rennen zonder bestemming. Je beweegt misschien, maar je weet niet of je vooruitgang boekt.
 
@@ -1084,7 +1167,9 @@ Structureer je doelen in lagen:
 
 Doelen visueel bijhouden maakt een merkbaar verschil. Zien dat je "nog 6 maanden te gaan hebt voor het vakantiedoel" motiveert veel meer dan een vaag besef dat je eigenlijk meer zou moeten sparen. Met AI Budget Assistant stel je doelen in met een streefbedrag en volg je de voortgang in de tijd bij. De app is beschikbaar op Android en via de browser op [ai-budget.pl](https://ai-budget.pl), met een gratis versie die spaardoelen dekt zonder dat je een creditcard hoeft in te vullen.
 
-## Stap 3: Vind de plekken waar snijden het meest oplevert
+## Waar kan ik realistisch op uitgaven bezuinigen?
+
+Waar je veel betaalt en weinig waarde krijgt: impulsaankopen, gemaksopslagen en diensten die je nauwelijks gebruikt. Analyse per categorie helpt, bijvoorbeeld wanneer die 400 euro aan uit eten laat zien in plaats van de 150 die je dacht. Het doel is een bewuste keuze, niet alles opgeven.
 
 Zodra je data hebt over je uitgaven (zie het artikel over [uitgaven bijhouden](/blog/nl/uitgaven-bijhouden/) voor een efficiente manier om die te verzamelen), zoek je categorieen waarbij uitgaven niet overeenkomen met de waarde die je ervoor terugkrijgt.
 
@@ -1092,7 +1177,9 @@ Drie vragen die door de ruis heen snijden: Wat kocht ik vorige maand impulsief e
 
 Als je ziet dat je vorige maand 400 euro hebt uitgegeven aan eten buiten de deur terwijl je dacht dat het 150 euro was, heb je een concreet getal. Niet "nooit meer een restaurant in", maar "welk bedrag vind ik comfortabel en houd ik vol?" Gericht snijden in categorieen met weinig rendement is duurzamer dan overal tegelijk bezuinigen.
 
-## Hoe geld besparen als stel of gezin
+## Hoe spaar je geld samen als stel of gezin?
+
+Spreek een gezamenlijk doel af in plaats van gezamenlijke beperkingen, bijvoorbeeld 300 euro per maand voor een reis naar Italië. Geef iedereen zakgeld om zonder uitleg uit te geven, dat haalt de meeste spanning weg. Eén gedeeld overzicht van budget en doelen voorkomt discussies over wie wat heeft uitgegeven.
 
 Samen sparen is lastiger en makkelijker dan alleen sparen. Lastiger omdat twee mensen andere gewoonten en een ander gevoel hebben voor wat iets waard is. Makkelijker omdat je iemand hebt die je op koers houdt.
 
@@ -1102,7 +1189,9 @@ Samen sparen is lastiger en makkelijker dan alleen sparen. Lastiger omdat twee m
 
 **Houd een gedeeld overzicht bij.** Een enkel account in een app waar jullie allebei realtime saldi en voortgang op spaardoelen zien, lost de meeste "wie heeft wat uitgegeven"-gesprekken op voordat het discussies worden. AI Budget Assistant ondersteunt gedeelde gezinsaccounts: iedereen logt in op zijn eigen telefoon en je kunt de AI-assistent vragen "hoe dicht zijn we bij het vakantiedoel?" en direct een antwoord krijgen over ieders transacties samen.
 
-## Veelgemaakte fouten bij het sparen
+## Welke fouten moet ik vermijden bij het sparen?
+
+De drie ergste: te agressief beginnen (eindigt rond maand vier in een terugval), al je spaargeld op één hoop houden en jezelf vergelijken met anderen. Kies een niveau dat je een jaar volhoudt, scheid het noodfonds van doelen en beoordeel alleen je eigen situatie.
 
 **Te agressief beginnen.** Extreme bezuinigingen leiden vaak tot een compenserende uitbarsting in maand vier. Stel een spaartempo in dat je een volledig jaar kunt volhouden.
 
@@ -1110,7 +1199,9 @@ Samen sparen is lastiger en makkelijker dan alleen sparen. Lastiger omdat twee m
 
 **Jezelf vergelijken met anderen.** Iemand die 30 procent spaart, verdient misschien drie keer zoveel, heeft geen kinderen of woont huurvrij. Jouw plan is voor jouw situatie. Kleine, consistente besparingen over een lange periode verslaan indrukwekkende bedragen die na twee maanden instorten.
 
-## Voortgang bijhouden zonder eraan vast te zitten
+## Hoe vaak moet ik mijn spaarvoortgang controleren?
+
+Eén keer per maand, niet dagelijks, want constant kijken geeft stress zonder dat het je beslissingen helpt. Stel jezelf drie vragen: hoeveel heb ik gespaard ten opzichte van het plan, komen mijn doelen dichterbij en wat verraste me financieel. Terugkerende verrassingen betekenen dat je budget echte kosten mist.
 
 Check eens per maand, niet dagelijks. Drie vragen die ertoe doen:
 
@@ -1140,6 +1231,14 @@ Prioriteer het noodfonds, ook al is het maar 50 euro per maand. Elimineer eerst 
 
 Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te sparen en wat je werkelijk hebt gespaard, in realtime, is de voornaamste aanjager van gedragsverandering. AI Budget Assistant is gratis te proberen op [ai-budget.pl](https://ai-budget.pl) in je browser of te downloaden via Google Play, zonder creditcard. Stel een doel in en volg het een maand. Die terugkoppeling is wat de gewoonte doet beklijven.
 
+**Hoe groot moet mijn noodfonds zijn?**
+
+Streef naar drie tot zes maanden aan noodzakelijke uitgaven. Een eerste mijlpaal van 1.000 euro verlaagt de stress al merkbaar. Bewaar het op een aparte rekening en tel het niet mee bij je spaargeld voor doelen.
+
+**Moet ik eerst schulden aflossen of sparen?**
+
+Los eerst schulden met een hoge rente af, want dat levert een gegarandeerd rendement gelijk aan de rente. Zet daarnaast een klein bedrag opzij voor een noodfonds, zodat een onverwachte uitgave je niet nog verder in de schulden brengt.
+
 ---
 
 *Verwante artikelen: [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) | [Uitgaven bijhouden zonder gedoe](/blog/nl/uitgaven-bijhouden/)*
@@ -1159,6 +1258,7 @@ Voor de meeste mensen wel. Het verschil zien tussen wat je van plan was te spare
 - [Budget in twee valuta's: grip houden op je geld](/blog/nl/budget-in-twee-valutas/)
 - [Kerstbudget maken: wat kost het en hoeveel spaar je?](/blog/nl/kerstbudget/)
 - [Black Friday: herken echte aanbiedingen en nepkortingen](/blog/nl/black-friday-echte-aanbiedingen/)
+- [Belastingteruggave: wat doe je ermee? Een eenvoudig plan](/blog/nl/wat-doen-met-belastingteruggave/)
 
 ## Gezinsbudget met kinderen dat echt werkt
 URL: https://ai-budget.pl/blog/nl/gezinsbudget-met-kinderen/
@@ -1289,7 +1389,9 @@ Veel mensen weten dat ze een budget zouden moeten hebben. De meesten beginnen er
 
 Weten hoe maak je een budget is de eerste stap, maar een budget dat je daadwerkelijk bijhoudt is een tweede. Dit artikel behandelt hoe je een werkend maandbudget opzet, hoe je het realistisch houdt en hoe je het samen met een partner beheert zonder dat het gesprekken worden over wie wat heeft uitgegeven.
 
-## Waarom budgetten mislukken
+## Waarom mislukken de meeste budgetten binnen een paar weken?
+
+Een budget mislukt meestal omdat elke uitgave met de hand noteren te veel tijd kost en de mensen die het geld delen niet dezelfde cijfers zien. Zodra er iets dringenders opduikt, verdwijnt de gewoonte, meestal binnen twee tot drie weken. Alleen een systeem dat invoer automatiseert en iedereen hetzelfde actuele beeld geeft, houdt stand.
 
 Het vaakst terugkerende probleem is weerstand. Elke uitgave handmatig invoeren is zo tijdrovend dat je na een paar dagen een transactie overslaat, dan nog een, en uiteindelijk de hele boel laat vallen.
 
@@ -1297,7 +1399,9 @@ Een tweede reden: budgetten zijn vaak een soloprojekt. Een persoon houdt nauwgez
 
 De derde valkuil is ideaaldenken. Een budget dat ervan uitgaat dat je nooit spontaan iets koopt of eten bestelt, is geen plan maar een fantasie. De eerste keer dat je toch een pizza laat bezorgen, voelt het hele systeem kapot.
 
-## Stap 1: Breng in kaart waar je geld naartoe gaat
+## Hoe kom ik erachter waar mijn geld echt naartoe gaat?
+
+Verzamel een maand lang echte gegevens over inkomsten en uitgaven, uit bankafschriften in plaats van uit je geheugen. Het snelst is het om de transacties van de afgelopen 30 dagen te importeren in een app die categorieën automatisch toewijst. Pas met dat beeld kun je limieten stellen die bij je echte leven passen.
 
 Voordat je limieten stelt, heb je data nodig. Kijk een volledige maand terug zonder oordeel: geen verbeteringen, geen restricties, alleen feiten. Twee vragen die je eerlijk moet beantwoorden:
 
@@ -1306,7 +1410,9 @@ Voordat je limieten stelt, heb je data nodig. Kijk een volledige maand terug zon
 
 Ga niet op gevoel af. Download je bankafschriften van de afgelopen dertig dagen en ga ze regel voor regel door. Als je bank CSV-exports ondersteunt, kun je die direct importeren in een app die automatisch categoriseert. Dat scheelt een uur handmatig intikken.
 
-## Stap 2: Groepeer je uitgaven in categorieen
+## Hoe deel ik huishoudelijke uitgaven in categorieën in?
+
+Gebruik drie groepen: vaste lasten (huur of hypotheek, energie, verzekeringen, abonnementen), noodzakelijke variabele kosten (boodschappen, vervoer, medicijnen) en vrije uitgaven (restaurants, kleding, ontspanning). Vaste lasten kun je het minst veranderen, vrije uitgaven het meest, dus de grootste verrassingen zitten meestal in de derde groep.
 
 Zodra je de data hebt, maak je er structuur in. Een indeling die voor de meeste mensen werkt:
 
@@ -1318,7 +1424,18 @@ Zodra je de data hebt, maak je er structuur in. Een indeling die voor de meeste 
 
 De meeste mensen die dit voor het eerst doen, ontdekken dat "kleine" aankopen sneller optellen dan verwacht. Een paar streamingdiensten, een koffiepauze-gewoonte en wat impulsaankopen online kunnen al gauw een paar honderd euro per maand zijn die je niet eens bemerkte.
 
-## Stap 3: Stel realistische limieten in
+## Welke limieten moet ik stellen, en is de 50/30/20-regel realistisch?
+
+De 50/30/20-regel verdeelt je netto inkomen: 50% voor noodzakelijke uitgaven, 30% voor wensen en 20% voor sparen en schulden aflossen. Het is een startpunt, geen wet: in een dure stad kunnen de noodzakelijke uitgaven 60% bereiken. Stel limieten eerst op je echte uitgaven af en scherp ze geleidelijk aan.
+
+Voorbeeld van de verdeling van een netto maandinkomen van 2.800 euro volgens de 50/30/20-regel (illustratieve cijfers, geen persoonlijk advies):
+
+| Uitgavengroep | Aandeel | Bedrag per maand | Wat hieronder valt |
+|---|---|---|---|
+| Noodzakelijke uitgaven | 50% | € 1.400 | huur of hypotheek, energie, boodschappen, vervoer, medicijnen |
+| Wensen | 30% | € 840 | restaurants, kleding, ontspanning, streaming |
+| Sparen en schulden | 20% | € 560 | noodfonds, spaardoelen, extra aflossing |
+| **Totaal** | **100%** | **€ 2.800** | |
 
 Nu heb maak je een budget op basis van echte getallen. Een bekend uitgangspunt is de 50/30/20-regel:
 
@@ -1330,7 +1447,9 @@ Dit is een startpunt, geen wet. Woon je in een dure stad of heb je een hoge hypo
 
 De valkuil om te vermijden: maak geen budget op basis van wie je hoopt te worden. Maak het op basis van wie je nu bent, en schaal van daaruit kleine stappen. Ambitieuze doelen voelen goed bij het invullen en rampzalig twee weken later.
 
-## Stap 4: Budget samen met je partner of gezin
+## Hoe budgetteer je samen als stel of gezin?
+
+Je hebt één gedeeld overzicht nodig dat iedereen vanaf de eigen telefoon kan bijwerken en dat direct het effect van elke aankoop laat zien. Als één persoon voor iedereen de cijfers bijhoudt, valt het plan bij de eerste gezamenlijke aankoop uit elkaar. Begin met gedeelde doelen, niet met het controleren van bonnetjes.
 
 Als iemand anders in je huishouden ook geld uitgeeft, moet diegene erbij betrokken zijn. Een budget dat door een persoon wordt bijgehouden en door de ander genegeerd, bezwijkt zodra er een grote aankoop plaatsvindt zonder overleg.
 
@@ -1338,7 +1457,9 @@ De praktische oplossing is een gedeeld overzicht dat realtime bijgewerkt wordt. 
 
 AI Budget Assistant, beschikbaar op Android en via de browser op [ai-budget.pl](https://ai-budget.pl), ondersteunt gedeelde gezinsaccounts waarbij iedereen uitgaven invoert vanaf zijn eigen telefoon en het budget voor alle leden tegelijk bijwerkt. Je kunt ook de ingebouwde AI-assistent vragen stellen zoals "hoeveel hebben we dit maand aan boodschappen uitgegeven?" en direct een antwoord krijgen, zonder handmatige berekeningen.
 
-## Stap 5: Bouw eerst een kleine buffer op
+## Hoe groot moet een noodfonds zijn en waar begin ik?
+
+De gangbare richtlijn is drie tot zes maanden aan uitgaven, maar een praktische eerste mijlpaal is 1.000 tot 2.000 euro, genoeg voor een autoreparatie of een kapot apparaat. Bewaar het geld op een aparte rekening, zodat een kleine drempel je ervan weerhoudt het aan dagelijkse aankopen uit te geven.
 
 Voordat je grote spaardoelen nastreeft, zorg je voor een financiële buffer. De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Dat voelt overweldigend als startpunt. Een realistischer eerste doel is een tot twee maanden, of zelfs gewoon 1.000 tot 2.000 euro.
 
@@ -1346,7 +1467,9 @@ Het doel van een noodfonds is dat een onverwachte autoreparatie of medische reke
 
 Zet dit geld op een aparte rekening, los van je dagelijkse bestedingen. De kleine drempel van een aparte rekening is genoeg om te voorkomen dat je het gebruikt voor alledaagse aankopen.
 
-## Niet verdwalen in details
+## Hoe houd ik een budget eenvoudig zonder te verdwalen in details?
+
+Richt je eerst op de grootste posten: wonen, eten, vervoer, verzekeringen en abonnementen. Controleer of je betaalt voor diensten die je niet meer gebruikt voordat je 5 euro probeert te besparen op boodschappen. Tien tot vijftien minuten per week is genoeg om het overzicht te houden zonder te veel te optimaliseren.
 
 Zodra je budget draait, is de verleiding groot om alles te optimaliseren. Weersta dat, in ieder geval in het begin. Twintig minuten nadenken over of je twee euro kunt besparen op je boodschappenlijst is minder waardevol dan checken of je nog betaalt voor vergeten abonnementen.
 
@@ -1354,7 +1477,9 @@ Dit is waar een abonnementenbeheerder helpt. AI Budget Assistant heeft er een in
 
 Voor meer over het terugdringen van uitgaven en het terugvinden van geld dat je ongemerkt kwijtraakt, lees het artikel [uitgaven bijhouden](/blog/nl/uitgaven-bijhouden/).
 
-## Veelgemaakte budgetfouten
+## Wat zijn de meest gemaakte fouten bij budgetteren?
+
+De drie meest gemaakte fouten zijn onregelmatige kosten vergeten, zoals verzekeringen, autoonderhoud en feestdagen, budgetteren voor een geïdealiseerde versie van jezelf, en opgeven na de eerste mislukte maand. Deel jaarkosten door twaalf, plan naar je echte gewoonten en zie de eerste twee tot drie maanden als ijking.
 
 **Onregelmatige uitgaven vergeten.** Verzekeringspremies, jaarlijkse software-abonnementen, sinterklaas- en kerstcadeaus, APK-keuring, tandartsbezoek. Dit zijn geen verrassingen, maar voorspelbare kosten. Deel jaarlijkse bedragen door 12 en neem ze op als vaste maandpost.
 
@@ -1381,6 +1506,14 @@ Ja, en het is dan juist extra belangrijk. Baseer je bestedingsplan op je laagste
 **Hoe budgetteer ik met een partner die niet wil bijhouden?**
 
 Begin met een gesprek over doelen, niet over het budget zelf. "We willen in oktober met vakantie voor 2.000 euro" is een heel ander startpunt dan "je moet al je uitgaven bijhouden." Als jullie allebei hetzelfde doel voor ogen hebben, wordt bijhouden een hulpmiddel in plaats van controle.
+
+**Wat is de 50/30/20-regel voor een budget?**
+
+Je verdeelt je netto inkomen in drie delen: 50% voor noodzakelijke uitgaven, 30% voor wensen en 20% voor sparen en schulden aflossen. Zie het als startpunt. Als de huur hoog is en de noodzakelijke uitgaven op 60% uitkomen, knip dan in het deel voor wensen in plaats van het sparen te schrappen.
+
+**Hoeveel geld hoort er in een noodfonds?**
+
+Streef naar drie tot zes maanden aan noodzakelijke uitgaven. Voelt dat ver weg, begin dan met 1.000 tot 2.000 euro en vul het elke maand aan. Bewaar het geld op een aparte rekening, gescheiden van je dagelijkse uitgaven.
 
 ---
 
@@ -1425,6 +1558,8 @@ Gebruik voor het overzicht een voorwaardelijke somformule: `SOM.ALS` in de Neder
 Je saldo bereken je het simpelst als een lopende som: startsaldo plus inkomsten min uitgaven, oplopend bijgehouden per rij of per maand op het overzichtstabblad. Het hoeft niet slim te zijn, het moet je alleen laten zien of je in de plus staat voordat het einde van de maand je verrast.
 
 Dat is het zo ongeveer. Excel en Google Spreadsheets gedragen zich hier identiek, dus gebruik wat je toch al open hebt staan.
+
+**[Download het kant-en-klare sjabloon (.xlsx)](/blog/nl/assets/budget-template.xlsx)** — Transacties, categorieën en een maandoverzicht met de formules al ingevuld; werkt in Excel, Google Spreadsheets en LibreOffice.
 
 ## Waar een spreadsheet begint te haperen
 
@@ -1640,6 +1775,171 @@ Ja. Op een gedeeld account zien en bewerken iedereen dezelfde uitgaven en dezelf
 **Wat als ik over mijn kerstbudget heen ga?**
 Kijk welke categorie over de limiet ging en beslis of je geld uit een andere categorie verschuift of de resterende uitgaven inperkt. Schrijf de reden op, zodat je volgend jaar met een realistischer bedrag start.
 
+## Monefy vs AI Budget Assistant: de vergelijking
+URL: https://ai-budget.pl/blog/nl/monefy-vergelijking-ai-budget-assistant/
+
+Monefy en AI Budget Assistant zijn allebei apps om uitgaven bij te houden, maar ze zijn gebouwd voor andere gewoonten. Monefy is een kleine, snelle app om uitgaven met de hand te noteren. AI Budget Assistant voegt een AI-chat, spraakinvoer, bonnetjes scannen, gedeelde rekeningen en het importeren van bankafschriften toe. Hier staan ze naast elkaar, zodat je kunt kiezen zonder beide te installeren. We baseren ons op de openbare pagina's van beide apps, stand oktober 2026. Aanbod verandert, dus controleer de actuele omschrijving voordat je beslist.
+
+## In één oogopslag: Monefy en AI Budget Assistant
+
+| | Monefy | AI Budget Assistant |
+|---|---|---|
+| Platforms | Apps voor Android en iOS | Android-app en webapp (te installeren op het startscherm); geen native iOS-app |
+| Prijs | Gratis basis, optioneel betaald Premium | Gratis abonnement; Pro $4,99/maand of $29,99/jaar, 7 dagen proberen |
+| Beperkingen gratis versie | Premium voegt onbeperkt aantal rekeningen toe | 3 rekeningen, 1 lid, 50 AI-verzoeken per maand |
+| AI | Geen speerpunt; de app kiest voor eenvoud en snelheid | AI-chat, spraakinvoer, bonnetjes scannen met artikelregels |
+| Waar je data staat | Op je apparaat of in je eigen Google Drive / Dropbox | Gesynchroniseerd met de server van de app; optionele end-to-end-encryptie |
+| Bankkoppeling | Geen automatische bankkoppelingen | Geen live bankkoppeling; je importeert afschriften (CSV/PDF) |
+| Import | Handmatig afschriften importeren | Poolse banken, Revolut, Wise en exports van Monefy, Wallet en Money Manager |
+| Rapporten en export | Back-upbestand | CSV-, PDF- en Excel-rapporten, gratis in elk abonnement |
+| Gedeeld budget | Synchronisatie van je eigen gegevens tussen je eigen apparaten | Gedeelde rekeningen met de rollen Eigenaar, Bewerker en Kijker (leden vereisen Pro) |
+| Offline | Gegevens lokaal opgeslagen | De mobiele app schrijft eerst lokaal en synchroniseert later; de webapp heeft internet nodig |
+| Valuta | 150+ | Meerdere valuta met omrekening naar je weergavevaluta |
+| Talen | 25+ | 9 (Engels, Pools, Duits, Spaans, Frans, Russisch, Oekraïens, Wit-Russisch, Nederlands) |
+
+## Welke app is sneller voor gewoon handmatig noteren?
+
+Monefy. De eigen website beschrijft een aankoop vastleggen in twee tikken en zet eenvoud, snelheid en privacy voorop. Als je alleen een bedrag wilt intikken, een categorie kiest en verdergaat, is dat lastig te verslaan. AI Budget Assistant heeft ook een handmatig formulier, maar is een grotere app die voor meer dan snel noteren is gemaakt.
+
+## Welke app heeft AI-functies?
+
+AI Budget Assistant. In de AI-chat kun je „45 uitgegeven aan boodschappen” typen of zeggen, en de app vraagt om bevestiging voordat er iets wordt opgeslagen. Je kunt ook een bonnetje met artikelregels scannen en vragen stellen over je uitgaven. Op de website van Monefy staan geen AI-functies. Het gratis abonnement bevat 50 AI-verzoeken per maand; hogere limieten en sommige geavanceerde AI-functies vragen een betaald abonnement.
+
+## Welke platforms ondersteunt elke app?
+
+Monefy heeft apps voor Android en iOS. AI Budget Assistant heeft een Android-app en een webapp op [ai-budget.pl](https://ai-budget.pl) die je als app aan je startscherm kunt toevoegen. Er is geen native iOS-app. Heb je een iPhone en wil je een app uit de store, dan past Monefy beter; wil je ook een browser op je laptop, dan AI Budget Assistant.
+
+## Welke is goedkoper?
+
+Beide beginnen gratis. De basis van Monefy is gratis, met een optioneel Premium dat volgens het helpcentrum onbeperkt veel rekeningen bevat. Het gratis abonnement van AI Budget Assistant geeft 3 rekeningen en 50 AI-verzoeken per maand; Pro kost $4,99 per maand of $29,99 per jaar, met 7 dagen proefperiode. De prijs van Monefy Premium hangt af van store en land, dus bekijk de omschrijving voor het actuele bedrag.
+
+## Welke is beter voor een gedeeld huishoudbudget?
+
+AI Budget Assistant. Het heeft gedeelde rekeningen waarin elk lid Eigenaar, Bewerker of Kijker is: je partner kan uitgaven toevoegen en een kind alleen meekijken. Meer leden vereisen Pro, dat tot 5 leden per rekening toestaat. De synchronisatie van Monefy via Google Drive of Dropbox houdt je eigen gegevens op je eigen apparaten; het is geen budget dat meerdere mensen delen.
+
+## Kan ik mijn Monefy-gegevens meenemen?
+
+Ja. AI Budget Assistant heeft een eigen Monefy-import die je categorieën behoudt. Overboekingen tussen je eigen Monefy-rekeningen en beginsaldo's worden overgeslagen, omdat het boekhouding is en geen uitgaven. De volledige handleiding staat in het artikel [overstappen van Monefy, Wallet of Money Manager](/blog/nl/overstappen-van-monefy-wallet-moneymanager/), dus die herhalen we hier niet.
+
+## Wanneer Monefy de betere keuze is
+
+- Je gebruikt een iPhone en wilt een native app uit de App Store.
+- Je wilt de simpelst mogelijke tracker, zonder AI en extra's.
+- Je wilt dat je gegevens op je apparaat of in je eigen Google Drive of Dropbox blijven.
+- Je wilt een interface in een van de meer dan 25 talen en de jouwe zit niet bij onze negen.
+
+## Wanneer AI Budget Assistant de betere keuze is
+
+- Je wilt uitgaven via chat of spraak vastleggen, of bonnetjes scannen.
+- Je deelt een budget met een partner of gezin en wilt rollen.
+- Je importeert afschriften van mBank, PKO, Revolut of Wise en wilt ze gecategoriseerd hebben.
+- Je wilt een webapp naast je Android-telefoon.
+- Je wilt CSV-, PDF- of Excel-rapporten zonder te betalen.
+
+## Zo stap je over van Monefy
+
+Exporteer uit Monefy, upload het bestand in het importgedeelte, controleer het voorbeeld en bevestig. Dankzij duplicaatdetectie is het veilig om een overlappend bestand opnieuw te uploaden. Details staan in [de overstapgids](/blog/nl/overstappen-van-monefy-wallet-moneymanager/). Gratis proberen kan op [ai-budget.pl](https://ai-budget.pl) of via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant). Weeg je ook de prijs af, lees dan [wat een gratis huishoudboekje-app echt betekent](/blog/nl/gratis-huishoudboekje-app/) of de vergelijking met [Wallet by BudgetBakers](/blog/nl/wallet-budgetbakers-vergelijking-ai-budget-assistant/).
+
+---
+
+## FAQ: Monefy vs AI Budget Assistant
+
+**Is Monefy gratis?**
+
+De basisapp van Monefy is gratis, met een optioneel Premium. Volgens het helpcentrum bevat Premium onbeperkt veel rekeningen. De exacte prijs hangt af van store en land, controleer die in de omschrijving van de app.
+
+**Werkt AI Budget Assistant op een iPhone?**
+
+Er is geen native iOS-app. Je kunt de webapp in Safari gebruiken en aan je startscherm toevoegen, waarna hij een eigen icoon heeft. Hij heeft een internetverbinding nodig.
+
+**Is AI Budget Assistant gratis?**
+
+Ja, er is een gratis abonnement met 3 rekeningen en 50 AI-verzoeken per maand. Pro kost $4,99 per maand of $29,99 per jaar, met 7 dagen gratis proberen.
+
+**Kan ik mijn Monefy-geschiedenis importeren in AI Budget Assistant?**
+
+Ja. Exporteer je gegevens uit Monefy en upload ze in het importgedeelte; categorieën blijven behouden. Overboekingen tussen je eigen Monefy-rekeningen en beginsaldo's worden niet geïmporteerd.
+
+**Welke is beter voor een gezinsbudget?**
+
+AI Budget Assistant, omdat gedeelde rekeningen de rollen Eigenaar, Bewerker en Kijker kennen. Monefy synchroniseert je eigen gegevens tussen je apparaten in plaats van één budget te delen tussen meerdere mensen.
+
+---
+
+*Gerelateerde artikelen: [Overstappen van Monefy, Wallet of Money Manager](/blog/nl/overstappen-van-monefy-wallet-moneymanager/) | [Wallet by BudgetBakers vs AI Budget Assistant](/blog/nl/wallet-budgetbakers-vergelijking-ai-budget-assistant/) | [Gratis huishoudboekje app](/blog/nl/gratis-huishoudboekje-app/)*
+
+## Money Manager vs AI Budget Assistant: de vergelijking
+URL: https://ai-budget.pl/blog/nl/money-manager-vergelijking-ai-budget-assistant/
+
+"Money Manager" is de naam van meer dan één app. De bekendste is Money Manager Expense & Budget van Realbyte, die volgens de eigen website meer dan 20 miljoen downloads in Google Play heeft gehaald. Er bestaat ook een andere, eenvoudigere app met dezelfde naam en een eigen exportformaat. Dit artikel vergelijkt AI Budget Assistant met de Realbyte-app. Gebruik je de andere, dan is de vergelijking minder precies, maar het importgedeelte geldt voor beide.
+
+Wat we over Money Manager zeggen komt van de website van Realbyte en de App Store-pagina, bekeken in oktober 2026. Abonnementen en prijzen veranderen, dus controleer ze in de winkel voordat je beslist.
+
+## Money Manager en AI Budget Assistant in één oogopslag
+
+| | Money Manager (Realbyte) | AI Budget Assistant |
+|---|---|---|
+| Kernidee | Een gedetailleerd handmatig grootboek: rekeningen, categorieën en subcategorieën, agendaweergave, dubbel boekhouden voor bezittingen en leningen | Snel vastleggen met AI, daarna categoriebudgetten met een prognose voor het einde van de periode |
+| Platforms | Android en iOS | Android en web (geen native iOS-app) |
+| Prijsmodel | Gratis met in-app-aankopen; een maand- of jaarabonnement bevat de gegevenssynchronisatie | Gratis abonnement; Pro-abonnement met 7 dagen proef |
+| Vermelde prijs | 2,49 USD per maand of 19,99 USD per jaar in de Amerikaanse App Store | Pro: 4,99 USD per maand of 29,99 USD per jaar |
+| Bonnen | Bewaart foto's van bonnen bij transacties | Scant bonnen en leest de regels uit |
+| Import / export | Excel-/CSV-export en back-up, volgens de website | Afschriften, andere apps, kolomherkenning met AI; export naar CSV, Excel, PDF; rekeningback-up |
+| Gedeeld budget | Niet beschreven op de bekeken pagina's | Gedeelde rekeningen: tot 5 leden per rekening met Pro (1 in het gratis abonnement) |
+| AI | Niet beschreven op de bekeken pagina's | AI-chat, spraakinvoer, bonnen scannen, analyses |
+| Offline | Niet vermeld op de bekeken pagina's | De Android-app werkt offline en synchroniseert later; de webversie heeft een verbinding nodig |
+| Talen | Niet gecontroleerd | 9 interfacetalen |
+
+## Wat is beter voor mij: Money Manager of AI Budget Assistant?
+
+Kies Money Manager als je een gedetailleerd handmatig grootboek prettig vindt, een iOS-app wilt en het niet erg vindt alles zelf in te voeren. Kies AI Budget Assistant als het intypen van elke transactie de reden is dat je afhaakt: je kunt chatten, praten of een bon fotograferen, en je krijgt gedeelde rekeningen en een webversie erbij. Beide hebben budgetten en meerdere valuta's, dus het verschil zit vooral in hoe invoer binnenkomt.
+
+Denk terug aan hoe je je vorige budgetapp gebruikte. Als je de boekhouding zelf leuk vond, past een grootboekachtige app bij je. Als je na een paar weken afhaakte, helpt het meer om de moeite van vastleggen te verkleinen.
+
+## Wat is het prijsverschil?
+
+Money Manager is gratis te gebruiken, met in-app-aankopen; in de Amerikaanse App Store staat het abonnement met gegevenssynchronisatie voor 2,49 USD per maand of 19,99 USD per jaar. AI Budget Assistant begint gratis, met 50 AI-verzoeken per maand, en Pro kost 4,99 USD per maand of 29,99 USD per jaar, met 7 dagen proef. Money Manager is goedkoper als je alleen een grootboek nodig hebt; bij ons krijg je AI en delen erbij.
+
+Regionale prijzen verschillen, zie dit dus als richtlijn. Meer over gratis abonnementen lees je in de [gids over gratis huishoudboekjes](/blog/nl/gratis-huishoudboekje-app/).
+
+## Kan ik mijn Money Manager-gegevens importeren?
+
+Ja. Exporteer je gegevens uit Money Manager als CSV-bestand en upload het in het importgedeelte. AI Budget Assistant leest beide Money Manager-varianten (de volledige export in Realbyte-stijl, die categorie en subcategorie behoudt, en de eenvoudigere met titel- en notitiekolommen) en de bijna identieke 1Money-export. Je categorieën komen mee zoals je ze hebt opgebouwd, en je ziet een voorbeeld voordat er iets wordt opgeslagen.
+
+Wat niet meekomt: budgetten, terugkerende regels en bonfoto's die alleen in Money Manager bestaan. We hebben niet elke exportvariant kunnen testen, dus loop het voorbeeld even na. Overlappende uploads zijn veilig, omdat dubbelen worden herkend. De volledige stappen staan in [overstappen van Monefy, Wallet of Money Manager](/blog/nl/overstappen-van-monefy-wallet-moneymanager/), dus die herhalen we hier niet.
+
+## Wanneer is Money Manager de betere keuze?
+
+Money Manager is in deze gevallen de betere keuze:
+
+- **Je wilt een gedetailleerd grootboek.** Veel rekeningtypen, categorieën met subcategorieën en dubbel boekhouden voor spaargeld, verzekeringen, leningen of vastgoed zijn wat de app aanprijst.
+- **Je houdt van de agendaweergave.** Een maand dag voor dag op één scherm zien hoort bij het ontwerp.
+- **Je hebt een iPhone.** Er is een iOS-app; bij ons niet.
+- **Je wilt volledige handmatige controle**, zonder AI.
+- **Je wilt een lagere prijs voor gewoon bijhouden.** Het abonnement is goedkoper dan ons Pro.
+
+## Wanneer is AI Budget Assistant de betere keuze?
+
+Het past beter als de moeite van invoeren je drempel is. Zeg "koffie en een broodje, 6 euro" of scan een bon, en de uitgave wordt ingevuld; vraag de chat "hoeveel heb ik deze maand aan boodschappen uitgegeven?" en krijg een antwoord uit je eigen gegevens. Je kunt een rekening delen met partner of gezin, de webversie op een laptop gebruiken en de interface wisselen tussen negen talen.
+
+De beperkingen: geen native iOS-app, geen live bankverbinding (je importeert afschriften, en op Android kunnen bankmeldingen worden vastgelegd) en geen offline gebruik van het web. Vergelijk je meerdere apps, dan geeft de [vergelijking van de beste budgetapps](/blog/nl/beste-budget-app/) een breder beeld, en de [gids over samen budgetteren](/blog/nl/samen-budgetteren/) behandelt het delen.
+
+Je kunt het gratis abonnement proberen op [ai-budget.pl](https://ai-budget.pl) en je Money Manager-historie importeren om je eigen gegevens erin te zien.
+
+## FAQ: Money Manager vs AI Budget Assistant
+
+**Welke Money Manager-app vergelijken jullie?**
+Money Manager Expense & Budget van Realbyte, de bekendste app met die naam. Een eenvoudigere, niet-verwante app heet ook Money Manager. Onze importer leest exports van beide en van 1Money, maar de functievergelijking gaat over de Realbyte-app.
+
+**Verlies ik mijn categorieën als ik overstap?**
+Nee. Categorieën en subcategorieën uit een Money Manager-CSV-export worden overgenomen, dus "Food / Groceries" blijft zoals je het hebt ingesteld. Budgetten, terugkerende regels en bonfoto's die alleen in Money Manager staan, worden niet overgezet.
+
+**Werkt AI Budget Assistant op iPhone?**
+Niet als native app. De webversie werkt in de browser van je telefoon en kan aan het beginscherm worden toegevoegd, maar heeft een verbinding nodig. Money Manager heeft wel een iOS-app, wat telt als je een iPhone hebt.
+
+**Is AI Budget Assistant gratis?**
+Er is een gratis abonnement met uitgaven bijhouden, AI-chat, spraakinvoer en bonnen scannen, beperkt tot 50 AI-verzoeken per maand. Pro kost 4,99 USD per maand of 29,99 USD per jaar, met 7 dagen proef.
+
 ## Noodfonds: hoeveel je nodig hebt en hoe je het opbouwt
 URL: https://ai-budget.pl/blog/nl/noodfonds/
 
@@ -1649,7 +1949,9 @@ Een klapband, een plotselinge rekening bij de dierenarts, een paar weken tussen 
 
 In dit artikel lees je wat een noodfonds nu eigenlijk is, hoeveel je nodig hebt, waar je het bewaart, en hoe je er stap voor stap een opbouwt, ook als geld krap voelt.
 
-## Wat een noodfonds is (en niet is)
+## Wat is een noodfonds en wat telt als noodgeval?
+
+Een noodfonds is geld dat je apart zet voor onverwachte, noodzakelijke en dringende uitgaven: baanverlies, een dringende medische rekening, een kapot essentieel apparaat of een autoreparatie die je nodig hebt om naar je werk te komen. Een vakantie, een uitverkoop of een voorspelbare reparatie is dat niet. Test: onverwacht, noodzakelijk, dringend?
 
 Een noodfonds is geld dat je opzij zet voor echte, onverwachte, noodzakelijke uitgaven. Het sleutelwoord is onverwacht. Een vakantie in december is geen noodgeval, want je wist dat december eraan kwam. Een auto waarvan je wist dat hij nieuwe remmen nodig had, is ook geen noodgeval. Die horen in je normale budget of in een apart spaardoel.
 
@@ -1657,7 +1959,9 @@ Een echt noodgeval is iets waarop je je redelijkerwijs niet kon voorbereiden en 
 
 Dit onderscheid telt, omdat de meest voorkomende manier waarop mensen hun noodfonds kwijtraken is door "noodgeval" stilletjes te herdefinieren tot een aanbieding die ze niet wilden missen.
 
-## Hoeveel moet je hebben?
+## Hoeveel moet er in een noodfonds zitten?
+
+Het gebruikelijke doel is drie tot zes maanden aan essentiële uitgaven: huur, vaste lasten, boodschappen, verzekeringen, vervoer en minimale aflossingen, niet je hele levensstijl. Drie maanden past bij een vaste baan met een tweede inkomen thuis, zes maanden bij wisselend inkomen, als zzp'er of als je de enige kostwinner bent.
 
 De gangbare aanbeveling is drie tot zes maanden aan essentiële uitgaven. Let op het woord essentieel. Dit is geen drie tot zes maanden van je volledige levensstijl. Het is huur, energie, boodschappen, verzekeringen, vervoer en minimale aflossingen. De dingen die het licht aanhouden als je inkomen wegvalt.
 
@@ -1667,7 +1971,23 @@ Dat doel kan onbereikbaar ver voelen als je bij nul begint. Begin er dus niet. B
 
 Weet je nog niet eens wat je essentiële maandkosten zijn, dan loopt de bijbehorende gids over [hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) je eerst door het categoriseren van je uitgaven.
 
-## Waar je het bewaart
+## Hoeveel maanden aan uitgaven heb je nodig in jouw situatie?
+
+Met een vaste baan en een tweede inkomen in het huishouden zijn ongeveer 3 maanden aan essentiële uitgaven genoeg; een zzp'er of iemand met wisselend inkomen mikt op ongeveer 6, en een gezin met één inkomen ook op ongeveer 6. De tabel rekent dit om in euro's bij € 2.000 aan essentiële kosten per maand, als voorbeeld.
+
+*Illustratief voorbeeld: een vuistregel, geen persoonlijk advies.*
+
+| Situatie | Maanden essentiële uitgaven | Voorbeeld bij € 2.000 per maand |
+|---|---|---|
+| Vaste baan, tweede inkomen in het huishouden | 3 | € 6.000 |
+| Zzp'er of wisselend inkomen | 6 | € 12.000 |
+| Gezin met één inkomen | 6 | € 12.000 |
+
+<!-- calculator:emergency -->
+
+## Waar bewaar je een noodfonds het best?
+
+Bewaar het op een aparte, makkelijk bereikbare spaarrekening, los van je betaalrekening en binnen een of twee dagen beschikbaar. Een spaarrekening met rente past goed. Belegg het niet in aandelen, crypto of iets anders dat in waarde kan dalen, want noodgevallen komen vaak precies als de markten laag staan.
 
 Drie regels voor waar je noodfonds woont:
 
@@ -1707,7 +2027,9 @@ Je gaat het fonds uiteindelijk gebruiken. Dat is succes, geen mislukking, het be
 
 Dit bijhouden is waar een doel met een zichtbaar saldo helpt. Zakt het fonds van 6.000 naar 4.500 euro na een reparatie, dan zie je het gat en stuur je je salarisoverboekingen terug om het te dichten. Het is gratis te starten en draait in je browser op [ai-budget.pl](https://ai-budget.pl) of op Android via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), zonder creditcard om je eerste doel op te zetten.
 
-## Veelgemaakte fouten om te vermijden
+## Welke fouten vermijd je bij het opbouwen van een noodfonds?
+
+De drie meest gemaakte fouten: het fonds beleggen in iets schommelends, het op dezelfde rekening laten staan als je dagelijkse uitgaven en een eerste doel stellen dat zo hoog is dat je opgeeft. Begin met een kleine mijlpaal, automatiseer een overboeking op de dag dat je salaris binnenkomt en verhoog het doel pas als je het haalt.
 
 **Het beleggen.** Hierboven al behandeld, maar het verdient herhaling want het is de meest verleidelijke fout. Een noodfonds dat 30% verloor in de week dat je het nodig had, is geen noodfonds. Houd het saai.
 
@@ -1734,6 +2056,14 @@ Bouw eerst een klein startfonds van 1.000 euro, richt je daarna op schuld met ho
 **Wat telt als een echt noodgeval?**
 
 Iets onverwachts, noodzakelijks en dringends: baanverlies, een dringende medische rekening, een essentieel apparaat dat het begeeft, een autoreparatie die je nodig hebt om naar je werk te komen. Een geplande uitgave, een aanbieding of een vakantie kwalificeert niet, ook al voelt het dringend. Wist je dat het eraan kwam, dan hoort het in je budget of een apart spaardoel, niet in het noodfonds.
+
+**Met welk bedrag moet ik beginnen?**
+
+Begin met een mijlpaal van 1.000 euro of een maand aan essentiële uitgaven, wat je het eerst haalt. Daarmee dek je al de meeste kleine tegenvallers die anders op de creditcard belanden. Daarna werk je toe naar de volle drie tot zes maanden.
+
+**Hoe lang duurt het om een noodfonds op te bouwen?**
+
+Dat hangt af van je doel en je maandelijkse bedrag. Met € 500 per maand duurt het 12 maanden tot € 6.000 (drie maanden van € 2.000) en 24 maanden tot € 12.000. Een automatische overboeking op de dag dat je salaris binnenkomt verkort de weg meer dan elke spaartruc, omdat de maandelijkse keuze verdwijnt.
 
 ---
 
@@ -2005,6 +2335,82 @@ Nee. Wat vrienden je verschuldigd zijn wordt los van je eigen uitgaven bijgehoud
 ---
 
 *Gerelateerde artikelen: [Uitgaven bijhouden: zo doe je het zonder gedoe](/blog/nl/uitgaven-bijhouden/) | [Samen budgetteren met je partner](/blog/nl/samen-budgetteren/) | [Gezinsbudget met kinderen](/blog/nl/gezinsbudget-met-kinderen/)*
+
+## Revolut-afschrift importeren in je huishoudboekje
+URL: https://ai-budget.pl/blog/nl/revolut-afschrift-importeren/
+
+Om een Revolut-afschrift te importeren, maak je in de Revolut-app een afschrift als CSV en open je in AI Budget Assistant Instellingen → Transacties importeren → Revolut en kies je het bestand. Je krijgt een voorbeeld met voorgestelde categorieën, afgevinkte dubbele posten en valutawissels samengevoegd tot één boeking. Het kost een paar minuten.
+
+Revolut is een van de makkelijkste banken om te importeren: de CSV heeft een vaste kolomindeling en vermeldt de valuta van elke regel. Hieronder staat wat de app precies uit het bestand leest en waar je op moet letten.
+
+## Hoe exporteer ik een afschrift uit Revolut?
+
+Open in de Revolut-app de afschriften van je rekening (in de Engelse interface heet het onderdeel Statements), kies de periode en het formaat CSV en download het bestand naar je telefoon of computer. Revolut hernoemt knoppen af en toe. Ziet het scherm er anders uit, zoek dan de optie waarmee je een afschrift maakt en CSV kunt kiezen.
+
+Goede gewoonte: download de eerste keer een langere periode, bijvoorbeeld drie tot zes maanden. Overlappende periodes opnieuw importeren is veilig, omdat de app boekingen herkent die hij al heeft.
+
+## Hoe importeer ik het bestand stap voor stap?
+
+1. **Download de CSV uit Revolut** op het apparaat waarop de app draait.
+2. Ga in AI Budget Assistant naar **Instellingen → Transacties importeren**.
+3. Kies **Revolut** in de lijst (of **Automatisch herkennen (elke bank)**, dat de Revolut-indeling aan de kopregels herkent).
+4. Kies het bestand. De app toont een voorbeeld: elke regel als uitgave, inkomst of valutawissel, met een voorgestelde categorie.
+5. Vink regels uit die je niet wilt, pas categorieën aan en tik op **Importeren**.
+
+In het voorbeeld zie je tellers voor geselecteerde en al geïmporteerde regels. Regels die de app al kent, staan standaard uitgevinkt.
+
+## Wat leest de app uit een Revolut-bestand?
+
+| Onderdeel | Verwerking |
+|---|---|
+| Formaat | CSV met komma's, kopregels op de eerste regel |
+| Kolommen | Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance |
+| Datum | Uit Started Date (alleen de datum, zonder tijd) |
+| Bedrag | Met teken: negatief is een uitgave, positief een inkomst |
+| Valuta | Per regel, dus een meervaluta-rekening mengt niets |
+| Status | Alleen COMPLETED-regels worden geïmporteerd; geweigerde en lopende worden overgeslagen |
+| Valutawissel | Twee EXCHANGE-regels met dezelfde datum en tegengestelde tekens worden één valutawissel |
+| Winkel | Uit Description, met een opgeschoonde naam voor bekende ketens |
+
+## Wat gebeurt er met valutawissels en meervaluta-rekeningen?
+
+Een Revolut-rekening bevat vaak meerdere valuta. Wissel je zloty naar euro, dan staan er twee regels in het bestand: geld eruit in de ene valuta, geld erin in de andere. Los geteld zouden ze een nepuitgave en een nepinkomst opleveren. Daarom koppelt de app die regels en slaat hij één **valutawissel** op, zichtbaar in de Portemonnee en niet in je uitgaven.
+
+Aankopen in vreemde valuta blijven in hun eigen valuta.
+
+## Hoe voorkom ik dubbele posten, en wat als er iets misgaat?
+
+De app beschermt je op twee manieren. Eerst krijgt elke regel een uniek ID uit datum, bedrag en omschrijving, zodat hetzelfde bestand opnieuw importeren niets toevoegt. Daarnaast vergelijkt hij datum, bedrag en valuta met de boekingen die al in je account staan, ook handmatige, en vinkt hij waarschijnlijke herhalingen uit.
+
+Twee identieke aankopen op dezelfde dag, zoals twee koffies voor dezelfde prijs, blijven twee aparte boekingen. Bevalt het resultaat niet, dan maak je de import in de importgeschiedenis onderaan het scherm met één tik ongedaan binnen 30 dagen, en kun je hetzelfde bestand opnieuw importeren.
+
+De algemene werking lees je in [Bankafschriften importeren](/blog/nl/bankafschrift-importeren/). Staat je bank niet in de lijst, kijk dan bij [Bankafschrift van elke bank importeren](/blog/nl/bankafschrift-van-elke-bank-importeren/).
+
+## Is het veilig?
+
+Je voert nooit je Revolut-inloggegevens in. Je importeert een statisch bestand dat je zelf hebt gedownload, dus de app ziet alleen de transactiegeschiedenis uit dat bestand. Je kunt AI Budget Assistant gratis proberen op [ai-budget.pl](https://ai-budget.pl) of via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: Revolut-afschrift importeren
+
+**Welk formaat Revolut-afschrift heb ik nodig?**
+
+CSV. Dat is het bestand met de kolommen Type, Started Date, Description, Amount, Currency, State en Balance dat Revolut maakt in het afschriftenonderdeel van je rekening. Een pdf kan alleen via AI-uitlezing worden verwerkt, een Pro-functie, dus kies voor reguliere imports CSV.
+
+**Worden geweigerde of lopende transacties geïmporteerd?**
+
+Nee. Alleen regels met status COMPLETED worden overgenomen. Een geweigerde kaartbetaling verlaagt je budget dus niet, en een lopende verschijnt in een later afschrift zodra die is verwerkt.
+
+**Telt een valutawissel bij Revolut als uitgave?**
+
+Nee. Twee wisselregels met dezelfde datum en tegengestelde tekens worden samengevoegd tot één valutawissel in de Portemonnee. Dat blaast noch je uitgaven noch je inkomsten op.
+
+**Kan ik hetzelfde afschrift twee keer importeren?**
+
+Ja, er wordt niets dubbel opgeslagen. Herhaalde regels worden herkend en in het voorbeeld uitgevinkt als al geïmporteerd.
+
+**Kan ik een Revolut-import ongedaan maken?**
+
+Ja. Tik in de importgeschiedenis onderaan het importscherm op de pijl voor ongedaan maken bij de import. Dat kan 30 dagen, daarna kun je hetzelfde bestand opnieuw importeren.
 
 ## Samen budgetteren met je partner zonder ruzie
 URL: https://ai-budget.pl/blog/nl/samen-budgetteren/
@@ -2362,7 +2768,9 @@ De meeste mensen hebben het wel eens geprobeerd: nauwgezet elke aankoop noteren,
 
 Goed uitgaven bijhouden vraagt niet dat je strenger wordt voor jezelf. Het vraagt een aanpak waarbij het werk zo klein mogelijk is dat de gewoonte een drukke week overleeft. In dit artikel lees je hoe je je uitgaven bijhoudt zonder de verveling, wat je met de data kunt doen zodra je die hebt, en hoe je het samen met een partner laat werken.
 
-## Waarom mensen stoppen met uitgaven bijhouden
+## Waarom stoppen mensen met uitgaven bijhouden?
+
+Meestal door gebrek aan automatisering: elke handmatige invoer kun je overslaan, zeker na het werk of tijdens haastige boodschappen. Daar komt ontbrekende context bij, zoals een transactie zonder omschrijving, en het feit dat meestal één persoon de uitgaven van het hele huishouden bijhoudt. De oplossing is een hulpmiddel dat voor je vastlegt en gedeeld is.
 
 De meest genoemde reden is simpelweg dat handmatig invoeren saai is. Je telefoon erbij pakken bij de kassa om "Supermarkt -- 43,80 euro -- boodschappen" in te typen voelt de eerste keer prima, op dag tien vermoeiend.
 
@@ -2370,7 +2778,18 @@ De tweede reden: de data worden al snel onleesbaar. Een lange lijst transacties 
 
 De derde reden, en die telt zwaarder dan mensen denken: bijhouden is een soloprojekt. Een persoon logt elke koffie en tankbeurt nauwkeurig, terwijl de andere helft van het huishouden dat niet doet. Het resultaat is op zijn best een half beeld. Aan het einde van de maand weet je nog steeds niet precies wat er is gebeurd.
 
-## Methoden die werken
+## Welke methoden om uitgaven bij te houden werken echt?
+
+Drie aanpakken werken: enveloppen voor contant geld, de 24-uursregel voor impulsaankopen en automatisch bijhouden met een app. Alleen de app schaalt mee naar pinbetalingen, online aankopen en abonnementen, dus de meeste mensen combineren die met een van de andere twee als gedragsmatige steun.
+
+Vergelijking van methoden om uitgaven bij te houden (globale beoordeling, zonder cijfers):
+
+| Methode | Dagelijkse inspanning | Werkt bij pinpas en online betalen | Het best voor |
+|---|---|---|---|
+| Contante enveloppen | gemiddeld (contant geld, aparte enveloppen) | nee | impulsuitgaven in één categorie beperken |
+| 24-uursregel | laag | gedeeltelijk | grotere ongeplande aankopen |
+| Spreadsheet (Excel, Google Sheets) | hoog (handmatig invoeren) | ja, maar met de hand | een eenvoudig uitgavendagboek |
+| App met bankimport en bonnetjes scannen | laag | ja | consistent bijhouden op de lange termijn |
 
 ### Het enveloppensysteem
 
@@ -2391,7 +2810,9 @@ Hier verandert de aanpak fundamenteel. In plaats van elke uitgave handmatig in t
 
 Als een uitgave toevoegen drie seconden kost in plaats van dertig, is de gewoonte veel makkelijker vol te houden.
 
-## Bankimport versus handmatig invoeren
+## Is bankimport beter dan handmatig invoeren?
+
+Voor de meeste mensen wel. Een afschrift als CSV of PDF inlezen geeft je in één keer 30 tot 90 dagen aan gecategoriseerde geschiedenis, en de app markeert waarschijnlijke dubbele transacties zodat niets twee keer meetelt. Handmatig invoeren bewaar je voor contant geld en kleine aankopen die nooit op je rekening komen.
 
 Als je toch al grotendeels met een betaalpas of creditcard betaalt, is het importeren van bankafschriften de snelste manier om een volledig beeld van je bestedingen te krijgen. Download een afschrift in CSV- of PDF-formaat, upload het in je app voor uitgaven bijhouden, en je hebt weken of maanden aan geschiedenis automatisch gecategoriseerd.
 
@@ -2399,11 +2820,15 @@ AI Budget Assistant ondersteunt directe import vanuit Wise, Revolut en een reeks
 
 Voor iemand die overschakelt vanuit een handmatig systeem betekent dit dat je een volledige maand kunt aanvullen in een paar minuten, in plaats van honderden transacties met de hand in te voeren.
 
-## Bonnetjes scannen voor contante betalingen
+## Kan ik bonnetjes scannen in plaats van aankopen in te typen?
+
+Ja. Je fotografeert het bonnetje en tekstherkenning (OCR) leest het bedrag, de datum en de winkel uit. Dat is vooral handig bij contante betalingen en boodschappen: de pinbetaling op je afschrift toont alleen een totaal, terwijl het gescande bonnetje laat zien waaruit dat totaal bestaat.
 
 Bankimports dekken pinbetalingen. Wat betreft contante aankopen: een foto nemen van het bonnetje is de praktische oplossing. OCR leest het bedrag, de datum en meestal de winkelnaam zonder dat je iets hoeft te typen. Voor boodschappen betaald in cash of aankopen waarbij de details van belang zijn, is dit aanzienlijk sneller dan handmatig invoeren.
 
-## Uitgaven bijhouden als stel of gezin
+## Hoe houden stellen en gezinnen samen uitgaven bij?
+
+Het eenvoudigst is één gedeelde rekening in een app die iedereen vanaf de eigen telefoon opent. Elke transactie is direct zichtbaar voor alle leden, dus aan het eind van de maand zijn er geen verrassingen. Je kunt de AI-assistent ook vragen hoeveel de hele rekening aan een categorie heeft uitgegeven.
 
 Dit is het gat dat de meeste apps voor uitgaven bijhouden laten vallen. Als jij je bestedingen bijhoudt maar je partner niet, heb je de helft van het verhaal. Je kunt geen gedeeld budget beheren op basis van onvolledige data.
 
@@ -2413,7 +2838,9 @@ AI Budget Assistant biedt gedeelde gezinsaccounts. Iedereen heeft een eigen logi
 
 Een nuttig budget opbouwen bovenop deze data is de logische volgende stap. Het artikel [hoe maak je een budget](/blog/nl/hoe-maak-je-een-budget/) behandelt dat in detail.
 
-## Bestedingslimieten instellen die je ook controleert
+## Hoe stel ik bestedingslimieten in die ik niet negeer?
+
+Observeer eerst een maand zonder limieten en stel dan limieten met ruimte in: als je gemiddeld 450 euro aan boodschappen uitgeeft, begin dan niet bij 250. Zet een melding aan bij 75 tot 80% van de limiet, want een waarschuwing nadat je je limiet hebt overschreden komt te laat om nog iets te veranderen.
 
 Categorieen zijn nuttig. Limieten per categorie zijn nuttiger. Maar de meeste mensen stellen limieten eenmalig in en negeren ze daarna totdat ze er al overheen zijn gegaan.
 
@@ -2427,11 +2854,15 @@ Wat helpt:
 
 ## Is een app voor uitgaven bijhouden veilig?
 
+Dat hangt van de app af. Let op drie dingen: of je gegevens versleuteld worden opgeslagen, of de app offline werkt zodat niet alles voortdurend naar de cloud gaat, en of het privacybeleid duidelijk is. Controleer dat voor je de app installeert, want het gaat om gevoelige financiële gegevens.
+
 De belangrijkste punten om te controleren: is de data versleuteld opgeslagen? Werkt de app offline zodat je gegevens niet voortdurend je apparaat verlaten? Is er een duidelijk privacybeleid?
 
 AI Budget Assistant werkt offline-first: uitgaven worden lokaal opgeslagen voordat ze worden gesynchroniseerd, en transactiedata zijn end-to-end versleuteld.
 
-## Gratis versus betaalde apps voor uitgaven bijhouden
+## Is het de moeite waard om te betalen voor een app voor uitgaven bijhouden?
+
+Een gratis versie dekt meestal het basis bijhouden. Betaalde abonnementen voegen doorgaans meer automatisering, volledige geschiedenis, analyses en gedeelde rekeningen met meer leden toe. Vraag je af wat je nu verliest door gebrek aan overzicht: is dat 50 euro per maand, dan verdient een goedkoper abonnement zich terug.
 
 Een gratis versie dekt de basisregistratie. Betaalde abonnementen bieden meer automatisering, volledige geschiedenis en gedeelde accounts met meerdere leden. De nuttige vraag is hoeveel geld je nu verliest doordat je niet weet waar het naartoe gaat. Als dat zelfs maar 100 euro per maand is, verdient een betaalde app zichzelf snel terug.
 
@@ -2455,6 +2886,14 @@ Ja, en dat zou je ook moeten doen. Zoek een app met gedeelde accountfuncties waa
 
 Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedragsveranderingen, en de besparingen die daarna volgen, komen doorgaans na twee tot drie maanden, wanneer je trends kunt zien en bewuste keuzes kunt maken in plaats van te reageren op verrassingen.
 
+**Hoe houd ik contante uitgaven bij die niet op het bankafschrift staan?**
+
+Fotografeer het bonnetje of voeg de uitgave in één zin toe met spraak of tekst, bijvoorbeeld "12 euro lunch". Noteer contant geld direct na de aankoop, want later vergeet je het snel. Alles wat via je bank loopt, komt automatisch binnen met de import van het afschrift.
+
+**Wat is het verschil tussen uitgaven bijhouden en budgetteren?**
+
+Bijhouden beantwoordt hoeveel je al hebt uitgegeven en waaraan. Een budget is een plan voor de toekomst: hoeveel je per categorie mag uitgeven. Houd eerst een maand bij en stel daarna limieten in, zodat ze op feiten rusten en niet op wensen.
+
 ---
 
 *Verwante artikelen: [Hoe maak je een budget stap voor stap](/blog/nl/hoe-maak-je-een-budget/) | [Hoe geld besparen met een concreet plan](/blog/nl/geld-besparen/)*
@@ -2473,6 +2912,11 @@ Na een maand heb je een helder beeld van je bestedingspatronen. Merkbare gedrags
 - [Monefy-alternatief: overstappen met behoud van categorieën](/blog/nl/overstappen-van-monefy-wallet-moneymanager/)
 - [Huishoudboekje in Excel: sjabloon en de grens ervan](/blog/nl/huishoudboekje-excel-sjabloon/)
 - [Gratis huishoudboekje app: wat 'gratis' betekent](/blog/nl/gratis-huishoudboekje-app/)
+- [Monefy vs AI Budget Assistant: de vergelijking](/blog/nl/monefy-vergelijking-ai-budget-assistant/)
+- [Wallet by BudgetBakers vs AI Budget Assistant](/blog/nl/wallet-budgetbakers-vergelijking-ai-budget-assistant/)
+- [YNAB alternatief: YNAB vs AI Budget Assistant](/blog/nl/ynab-alternatief/)
+- [Money Manager vs AI Budget Assistant: de vergelijking](/blog/nl/money-manager-vergelijking-ai-budget-assistant/)
+- [Revolut-afschrift importeren in je huishoudboekje](/blog/nl/revolut-afschrift-importeren/)
 
 ## Uitgavencategorieën die echt werken in je budget
 URL: https://ai-budget.pl/blog/nl/uitgavencategorieen/
@@ -2700,6 +3144,162 @@ Erna. Een prijslijst tonen voordat iemand heeft gezien wat de app met zijn eigen
 
 *Gerelateerde artikelen: [Uitgaven bijhouden zonder alles handmatig in te voeren](/blog/nl/uitgaven-bijhouden/) | [Beste budget-app van 2026: een eerlijke vergelijking](/blog/nl/beste-budget-app/) | [Hoe AI je écht helpt met je budget](/blog/nl/ai-voor-je-budget/)*
 
+## Wallet by BudgetBakers vs AI Budget Assistant
+URL: https://ai-budget.pl/blog/nl/wallet-budgetbakers-vergelijking-ai-budget-assistant/
+
+Wallet by BudgetBakers en AI Budget Assistant lossen hetzelfde probleem op verschillende manieren op. Wallet draait om het koppelen van je bankrekeningen en heeft een zeer groot bereik in talen en platforms. AI Budget Assistant draait om een AI-chat, spraakinvoer, bonnetjes scannen en het importeren van afschriften, zonder live bankkoppeling. Hieronder staat de vergelijking naast elkaar. We baseren ons op de openbare pagina's van beide bedrijven, stand oktober 2026; prijzen en abonnementen veranderen, bevestig ze dus in de actuele omschrijving.
+
+## In één oogopslag: Wallet en AI Budget Assistant
+
+| | Wallet by BudgetBakers | AI Budget Assistant |
+|---|---|---|
+| Platforms | Web, iOS en Android | Android-app en webapp (te installeren op het startscherm); geen native iOS-app |
+| Prijs | Gratis starten; betaald Premium met proefperiode | Gratis abonnement; Pro $4,99/maand of $29,99/jaar, 7 dagen proberen |
+| Bankkoppeling | Automatische bankkoppeling | Geen live bankkoppeling; je importeert afschriften (CSV/PDF) |
+| AI | Leert categorieën uit gesynchroniseerde banktransacties | AI-chat, spraakinvoer, bonnetjes scannen met artikelregels |
+| Gedeeld / gezin | Positioneert zich voor persoonlijke en gezinsfinanciën | Gedeelde rekeningen met de rollen Eigenaar, Bewerker en Kijker (leden vereisen Pro) |
+| Import | Banksynchronisatie | Poolse banken, Revolut, Wise en exports van Monefy, Wallet en Money Manager |
+| Rapporten en export | Data-export is een betaalde functie van Wallet | CSV-, PDF- en Excel-rapporten, gratis in elk abonnement |
+| Talen | 50 | 9 (Engels, Pools, Duits, Spaans, Frans, Russisch, Oekraïens, Wit-Russisch, Nederlands) |
+| Beveiligingsclaims | ISO 27001-gecertificeerd en AVG-conform, volgens de eigen site | Optionele end-to-end-encryptie die je in Instellingen aanzet |
+
+## Welke app koppelt direct aan mijn bank?
+
+Wallet. De site adverteert met automatische bankkoppeling en een categorisering die leert van gesynchroniseerde transacties, wat handwerk bespaart. AI Budget Assistant heeft geen live bankkoppeling. Je downloadt een afschrift van je bank (mBank, PKO, Revolut, Wise en andere) en uploadt het; je ziet een voorbeeld voordat er iets wordt opgeslagen.
+
+## Welke app heeft AI-functies?
+
+AI Budget Assistant is eromheen gebouwd. Je kunt een uitgave in de AI-chat typen of inspreken en bevestigen, een bonnetje met artikelregels scannen en vragen stellen over je uitgaven. Het gratis abonnement bevat 50 AI-verzoeken per maand en geavanceerde AI-functies vragen Pro. De kracht van Wallet is bankgestuurde automatisering; zijn eigen assistentproducten vind je op zijn site.
+
+## Welke platforms ondersteunt elke app?
+
+Wallet werkt op het web, iOS en Android. AI Budget Assistant heeft een Android-app en een webapp op [ai-budget.pl](https://ai-budget.pl) die je aan je startscherm kunt toevoegen, maar geen native iOS-app. Wil je een store-app op de iPhone, dan blijft van de twee Wallet over. Volstaan Android en een browser, dan werkt elk van beide.
+
+## Welke is goedkoper?
+
+Beide beginnen gratis. Wallet biedt een betaald Premium-abonnement met proefperiode; de prijs hangt af van regio en factureringsperiode, dus bekijk de actuele omschrijving. Het gratis abonnement van AI Budget Assistant geeft 3 rekeningen en 50 AI-verzoeken per maand; Pro kost $4,99 per maand of $29,99 per jaar, met 7 dagen proefperiode. Vergelijk wat elke gratis variant je laat doen, niet alleen de prijs in de kop.
+
+## Welke is beter om een budget met het gezin te delen?
+
+Beide richten zich op huishoudens. AI Budget Assistant biedt gedeelde rekeningen met de rollen Eigenaar, Bewerker en Kijker: je partner kan uitgaven toevoegen en een kind alleen meekijken. Meer dan één lid vereist Pro, dat tot 5 leden per rekening toestaat. Bekijk de abonnementspagina van Wallet om te zien hoe delen daar werkt voordat je kiest.
+
+## Welke app ondersteunt mijn taal?
+
+Wallet noemt 50 talen; AI Budget Assistant biedt er 9: Engels, Pools, Duits, Spaans, Frans, Russisch, Oekraïens, Wit-Russisch en Nederlands. Zit jouw taal bij onze negen, dan zijn de interface, de chat en de hulp in de app erin beschikbaar. Zo niet, dan is Wallet de veiligere keuze.
+
+## Wanneer Wallet de betere keuze is
+
+- Je wilt dat je banktransacties automatisch binnenkomen.
+- Je gebruikt een iPhone en wilt een native app.
+- Je taal zit niet bij onze negen.
+- Je waardeert een gevestigd product met certificeringen die het op zijn site noemt.
+
+## Wanneer AI Budget Assistant de betere keuze is
+
+- Je legt uitgaven liever vast via chat, spraak of bonnetjesscan dan een bank te koppelen.
+- Je wilt controle over wat er binnenkomt door afschriften te importeren en een voorbeeld te bekijken.
+- Je wilt gedeelde rekeningen met rollen en een webapp naast je Android-telefoon.
+- Je wilt CSV-, PDF- of Excel-rapporten in het gratis abonnement.
+
+## Zo stap je over van Wallet
+
+De data-export van Wallet is een betaalde functie van Wallet, dus exporteer voordat je Premium opzegt. Upload het bestand daarna in het importgedeelte, controleer het voorbeeld en bevestig. AI Budget Assistant laat de overboekingsregels van Wallet weg, omdat het geen uitgaven zijn. De stap-voor-stapgids staat in het artikel [overstappen van Monefy, Wallet of Money Manager](/blog/nl/overstappen-van-monefy-wallet-moneymanager/). Gratis proberen op [ai-budget.pl](https://ai-budget.pl) of via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant). Twijfel je over een eenvoudigere tracker? Lees [Monefy vs AI Budget Assistant](/blog/nl/monefy-vergelijking-ai-budget-assistant/).
+
+---
+
+## FAQ: Wallet by BudgetBakers vs AI Budget Assistant
+
+**Koppelt AI Budget Assistant automatisch aan mijn bank?**
+
+Nee. Er is geen live bankkoppeling. Je importeert een afschriftbestand van je bank, controleert het voorbeeld en bevestigt. Ondersteunde bronnen zijn onder meer mBank, PKO, Revolut en Wise.
+
+**Is Wallet by BudgetBakers gratis?**
+
+Je kunt gratis beginnen, en Wallet heeft ook een betaald Premium-abonnement met proefperiode. Prijzen verschillen per regio, controleer dus de actuele omschrijving.
+
+**Kan ik mijn Wallet-gegevens importeren in AI Budget Assistant?**
+
+Ja. Exporteer uit Wallet en upload het bestand in het importgedeelte; je categorieën blijven behouden. De overboekingsregels van Wallet worden niet geïmporteerd omdat het geen uitgaven zijn. De export van Wallet is een betaalde functie.
+
+**Heeft AI Budget Assistant een iPhone-app?**
+
+Geen native app. Je kunt de webapp in Safari gebruiken en aan je startscherm toevoegen. Hij heeft een internetverbinding nodig.
+
+**Wat kost AI Budget Assistant?**
+
+Er is een gratis abonnement met 3 rekeningen en 50 AI-verzoeken per maand. Pro kost $4,99 per maand of $29,99 per jaar, met 7 dagen proefperiode.
+
+---
+
+*Gerelateerde artikelen: [Overstappen van Monefy, Wallet of Money Manager](/blog/nl/overstappen-van-monefy-wallet-moneymanager/) | [Monefy vs AI Budget Assistant](/blog/nl/monefy-vergelijking-ai-budget-assistant/) | [Gratis huishoudboekje app](/blog/nl/gratis-huishoudboekje-app/)*
+
+## Belastingteruggave: wat doe je ermee? Een eenvoudig plan
+URL: https://ai-budget.pl/blog/nl/wat-doen-met-belastingteruggave/
+
+Je gebruikt een belastingteruggave het best met een verdeling die vaststaat voordat het geld binnenkomt: eerst dure schulden aflossen, dan je noodfonds aanvullen, een deel naar één spaardoel en een klein, bewust gepland bedrag voor iets leuks. Een teruggave is een eenmalige som, dus het plan telt zwaarder dan het bedrag.
+
+## Waarom is een belastingteruggave zo snel op?
+
+Omdat het binnenkomt als ongepland geld. Het hoort niet bij je maandbudget, komt in één keer en voelt als een bonus in plaats van als je eigen geld dat te laat terugkomt. Zonder plan verdwijnt het in de dagelijkse uitgaven. De oplossing: geef elke euro een taak voordat hij binnenkomt, net als bij je salaris.
+
+## Hoe verdeel je een belastingteruggave?
+
+Begin met een verhouding en pas die aan je situatie aan. Een gangbare volgorde: dure schuld, buffer, doel, beloning. Voorbeeld bij een teruggave van € 1.200:
+
+| Waarheen | Deel | Bedrag | Waarom |
+|---|---|---|---|
+| Dure schuld (creditcard, rood staan, lening met hoge rente) | 40% | € 480 | Gegarandeerd „rendement” gelijk aan de rente die je niet meer betaalt |
+| Noodfonds | 30% | € 360 | De volgende tegenvaller wordt een ergernis, geen crisis |
+| Eén spaardoel (vakantie, aanbetaling, laptop) | 20% | € 240 | Brengt een concreet doel dichterbij |
+| Geplande aankoop of beloning | 10% | € 120 | Houdt het plan realistisch en vol te houden |
+
+Heb je geen dure schuld, geef dat deel dan aan het noodfonds of het doel. Is de buffer vol, dan naar het doel. De uitleg per stap vind je in onze gidsen over het [noodfonds](/blog/nl/noodfonds/) en [schulden aflossen](/blog/nl/schulden-aflossen/).
+
+## Schulden aflossen of de teruggave sparen?
+
+Los eerst af als de rente hoger is dan wat je spaargeld zou opleveren, wat bij creditcards en consumptieve leningen bijna altijd zo is. Houd wel een klein kussen aan: als de teruggave je saldo leegt en een onverwachte rekening weer op dezelfde kaart belandt, ben je terug bij af. Daarom houdt de tabel 30% voor het noodfonds, ook terwijl je aflost.
+
+AI Budget Assistant legt geld vast dat je hebt uitgeleend of geleend (bijvoorbeeld van familie) als een schuld met aflossingen en een vervaldatum. Een aflossing boek je op het schuldenscherm of in de chat. Een extra aflossing op een bankkrediet of kaart boek je als gewone uitgave, zodat je saldo klopt.
+
+## Hoe plan je de teruggave voordat hij binnen is?
+
+Doe drie dingen terwijl je wacht:
+
+1. **Schat het bedrag voorzichtig.** Gebruik het bedrag uit je aangifte of de voorlopige berekening en plan met de lage kant.
+2. **Schrijf de verdeling op.** Percentages als hierboven, gekoppeld aan echte namen: welke schuld, welk fonds, welk doel.
+3. **Maak de bestemmingen vooraf aan.** Bestaan doel en budgetcategorie al, dan heeft het geld vanaf dag één een plek.
+
+In AI Budget Assistant heeft een spaardoel een naam, een streefbedrag en een deadline, en elke storting komt in het stortingsoverzicht van het doel, zodat je achteraf precies ziet waar de teruggave naartoe ging. Je kunt de chat ook vragen: „stort € 240 op het vakantiedoel”. Zodra het geld er is, leg je het vast als inkomen (met je stem of een foto van het document), zodat je saldo en je veilig-te-besteden-bedrag kloppen.
+
+## Wanneer komt de teruggave?
+
+Volgens de [Belastingdienst](https://www.belastingdienst.nl/wps/wcm/connect/nl/belastingaangifte) kun je de aangifte inkomstenbelasting doen vanaf 1 maart, en moet hij vóór 1 mei binnen zijn. Wanneer je precies geld terugkrijgt, hangt af van je aangifte en van de verwerking, en een voorlopige aanslag of voorlopige teruggave kan het bedrag al eerder in de loop van het jaar verrekenen. Een tijdige, juiste aangifte voorkomt vertraging. Controleer actuele data en termijnen altijd bij de Belastingdienst.
+
+## Hoe voorkom je dat de teruggave je maandbudget verstoort?
+
+Behandel hem als eenmalig inkomen, niet als onderdeel van je salaris. Je vaste budget blijft gebouwd op je normale inkomsten; de teruggave verdeel je apart. Moet een geplande aankoop eruit komen, zet die dan op een eigen regel in plaats van hem te laten opgaan in boodschappen en rekeningen. Met een [budget in de app](https://ai-budget.pl) houd je dat gescheiden van je dagelijkse categorieën.
+
+*Dit artikel bevat algemene budgetinformatie en is geen belastingadvies.*
+
+Doelen, schulden en budgetten probeer je zonder kaart in de browser op [ai-budget.pl](https://ai-budget.pl), of installeer de Android-app via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: belastingteruggave
+
+**Wat doe je het beste met een belastingteruggave?**
+Los eerst schulden met een hoge rente af, vul dan het noodfonds aan en stort daarna op één spaardoel. Houd een klein deel voor een geplande aankoop, dan blijft het plan realistisch. De precieze verhouding hangt af van je schulden en hoe vol je buffer al is.
+
+**Moet ik de hele teruggave aan schulden besteden?**
+Niet per se. Dure schuld aflossen is sterk, maar zonder contante reserve beland je bij de volgende tegenvaller weer op de kaart. Een verdeling tussen schuld en noodfonds is meestal veiliger.
+
+**Hoe leg ik een belastingteruggave vast in een budgetapp?**
+Boek hem als eenmalig inkomen zodra hij binnen is en verdeel er delen van over spaardoelen en aflossingen. In AI Budget Assistant worden stortingen op een doel in een overzicht bewaard.
+
+**Is een belastingteruggave gratis geld?**
+Nee. Het is je eigen geld dat te veel is ingehouden of vooruit betaald en nu terugkomt. Zo bekeken gebruik je het gerichter in plaats van het als meevaller uit te geven.
+
+**Kan ik plannen als ik het exacte bedrag niet ken?**
+Ja. Gebruik een voorzichtige schatting en plan in percentages in plaats van vaste bedragen. Valt de teruggave hoger uit, dan gaat het extra naar dezelfde prioriteiten in dezelfde volgorde.
+
 ## Wisselkoersalert: melding bij jouw doelkoers
 URL: https://ai-budget.pl/blog/nl/wisselkoersalert/
 
@@ -2766,6 +3366,82 @@ Je kunt tot twintig actieve alerts tegelijk hebben, over elk gewenst aantal valu
 ---
 
 *Gerelateerde artikelen: [Hoe geld besparen](/blog/nl/geld-besparen/) | [Voorraad aanleggen voordat de prijzen stijgen](/blog/nl/inflatieschild/)*
+
+## YNAB alternatief: YNAB vs AI Budget Assistant
+URL: https://ai-budget.pl/blog/nl/ynab-alternatief/
+
+YNAB en AI Budget Assistant zijn niet twee varianten van hetzelfde product. YNAB draait om een methode: je bepaalt waar elk bedrag dat je ontvangt voor bedoeld is voordat je het uitgeeft. AI Budget Assistant draait om uitgaven met zo min mogelijk moeite vastleggen (chat, spraak, foto van een kassabon) en je helpen ze te begrijpen. Deze vergelijking laat zien welke van de twee past bij hoe jij echt met geld omgaat.
+
+Over de bronnen: wat we over YNAB zeggen komt van de officiële YNAB-website, bekeken in oktober 2026. Prijzen en abonnementen veranderen, dus controleer ze op ynab.com voordat je beslist.
+
+## YNAB en AI Budget Assistant in één oogopslag
+
+| | YNAB | AI Budget Assistant |
+|---|---|---|
+| Kernidee | Eerst plannen: elk bedrag krijgt een doel voordat je het uitgeeft | Snel vastleggen met AI, daarna categoriebudgetten met een prognose voor het einde van de periode |
+| Platforms | iOS, Android, web | Android en web (geen native iOS-app; de webversie kun je aan je beginscherm toevoegen) |
+| Prijsmodel | Abonnement na 34 dagen gratis proef, zonder kaart | Gratis abonnement; Pro-abonnement met 7 dagen proef |
+| Vermelde prijs | 14,99 USD per maand of 109 USD per jaar | Pro: 4,99 USD per maand of 29,99 USD per jaar |
+| Bankkoppeling | Koppelt rekeningen en importeert transacties automatisch | Geen live bankkoppeling; import van afschriften (CSV, PDF) en vastleggen van bankmeldingen op Android |
+| Import / export | Bestandsimport van banktransacties | Afschriften, exports van Monefy, Wallet en Money Manager, kolomherkenning met AI; export naar CSV, Excel, PDF |
+| Gedeeld budget | Eén abonnement is te delen met maximaal zes mensen | Gedeelde rekeningen: tot 5 leden per rekening met Pro (1 in het gratis abonnement) |
+| AI | Niet beschreven op de bekeken pagina's | AI-chat, spraakinvoer, bonnen scannen, afschriftherkenning, analyses |
+| Offline | Werkt zonder internet, volgens de functiepagina | De Android-app werkt offline en synchroniseert later; de webversie heeft een verbinding nodig |
+| Talen | Niet gecontroleerd | 9 interfacetalen |
+
+## Wat is beter voor mij: YNAB of AI Budget Assistant?
+
+Kies YNAB als je een gestructureerde methode wilt: elk ontvangen bedrag plannen voordat je het uitgeeft, en je bereid bent voor die discipline te betalen. Kies AI Budget Assistant als je echte probleem het vastleggen en begrijpen van uitgaven is, je gratis wilt beginnen of gedeelde rekeningen goedkoper wilt. Veel mensen hebben aan maar één van de twee genoeg.
+
+Het eerlijkst is jezelf afvragen wat er nu in je maand misgaat. Is het probleem "ik bepaal nooit waar mijn geld voor is", dan pakt de methode van YNAB dat rechtstreeks aan. Is het "ik vergeet het bij te houden en zie niet waar het gebleven is", dan telt sneller vastleggen zwaarder dan een methode.
+
+## Hoe verhouden de prijzen zich?
+
+YNAB is alleen een abonnement na 34 dagen gratis; de prijspagina noemt 14,99 USD per maand of 109 USD per jaar, en een gratis proef van 365 dagen voor studenten. AI Budget Assistant heeft een gratis abonnement en Pro voor 4,99 USD per maand of 29,99 USD per jaar, met 7 dagen proef. Het gratis abonnement beperkt AI tot 50 verzoeken per maand en delen tot één lid.
+
+Prijs is geen kwaliteit. Bij YNAB betaal je voor een doorontwikkelde methode en automatische bankkoppeling. Onze lagere prijs levert AI-invoer en gedeelde rekeningen, zonder live bankverbinding. Vergelijk wat je echt zou gebruiken. Wat "gratis" bij een budgetapp betekent, lees je in de [gids over gratis huishoudboekjes](/blog/nl/gratis-huishoudboekje-app/).
+
+## Kan ik mijn YNAB-gegevens importeren in AI Budget Assistant?
+
+Gedeeltelijk, en zonder speciaal hulpmiddel. AI Budget Assistant heeft geen YNAB-specifieke importer. Exporteer je transacties naar een CSV-bestand, dan upload je dat in het importgedeelte. De app probeert het formaat te herkennen; lukt dat niet, dan stelt een AI-model voor welke kolom de datum, het bedrag en de omschrijving is, en zie je een voorbeeld voordat er iets wordt opgeslagen.
+
+Wees realistisch over wat meekomt. Transacties komen mee; de manier waarop je in YNAB geld aan categorieën toewees niet, want die zit in YNAB zelf. De AI-stap vraagt eenmalig per rekening om je toestemming, en je loopt de categorieën daarna best even na, omdat een bestand uit een tool waarvoor we geen eigen parser hebben minder zeker wordt gelezen. Door de dubbelendetectie is het veilig om overlappende bestanden te uploaden. Het mechanisme staat in [een afschrift van elke bank importeren](/blog/nl/bankafschrift-van-elke-bank-importeren/). Hoe je gegevens uit YNAB exporteert, zoek je op in de hulp van YNAB; de exportopties hebben wij niet gecontroleerd.
+
+## Wanneer is YNAB de betere keuze?
+
+YNAB is in deze gevallen de betere keuze, en dat zeggen we gewoon:
+
+- **Je wilt een methode, niet alleen een bijhouder.** Bepalen waar elk bedrag voor is voordat je het uitgeeft, is een echte kracht en daar is YNAB omheen gebouwd. AI Budget Assistant dwingt die discipline niet af; het biedt categoriebudgetten en een bedrag "dit kan ik vandaag veilig uitgeven".
+- **Je wilt automatische bankkoppeling.** YNAB koppelt rekeningen en importeert zelf. Wij maken geen live verbinding met banken.
+- **Je hebt een iPhone en wilt een native app.** YNAB heeft iOS; wij niet.
+- **Je hebt hulpmiddelen voor schulden en vermogen nodig.** De functiepagina noemt een leningcalculator, doelen en grafieken van het nettovermogen.
+- **Je geeft de voorkeur aan een tool zonder AI.** Sommigen willen dat, en dat is een goede reden.
+
+## Wanneer is AI Budget Assistant de betere keuze?
+
+Het past beter als het vastleggen zelf de drempel is. Je kunt "lunch 12 euro" typen of zeggen, de chat vragen stellen over je uitgaven of een bon scannen en de regels laten uitlezen. Je begint gratis, de interface is er in negen talen, meerdere valuta's worden ondersteund en je kunt een rekening delen met gezin of partner.
+
+De beperkingen zijn echt: geen native iOS-app, geen live bankverbinding en geen offline gebruik van de webversie. Beheren jullie het budget samen, dan laat de [gids over samen budgetteren](/blog/nl/samen-budgetteren/) zien hoe gedeelde rekeningen in de praktijk werken.
+
+## Hoe stap ik over als ik het wil proberen?
+
+Begin met een CSV-export uit je huidige tool en gebruik het importgedeelte; het antwoord hierboven legt uit wat je van YNAB-bestanden mag verwachten. Kom je van Monefy, Wallet of Money Manager, dan zijn er speciale importers die je categorieën behouden, beschreven in [overstappen van Monefy, Wallet of Money Manager](/blog/nl/overstappen-van-monefy-wallet-moneymanager/). Twijfel je nog tussen meerdere apps, lees dan de [vergelijking van de beste budgetapps](/blog/nl/beste-budget-app/).
+
+Het gratis abonnement kun je proberen op [ai-budget.pl](https://ai-budget.pl) zonder eerst YNAB op te geven; een maand met beide is een eerlijke test.
+
+## FAQ: YNAB vs AI Budget Assistant
+
+**Vervangt AI Budget Assistant de methode van YNAB?**
+Nee. Het dwingt je niet om elk bedrag toe te wijzen voordat je het uitgeeft. Het biedt budgetten per categorie en periode, een prognose voor het einde van de periode en een bedrag "dit kan ik vandaag veilig uitgeven". Gaat het je om de methode zelf, dan past YNAB beter.
+
+**Heeft AI Budget Assistant een iPhone-app?**
+Geen native. De webversie werkt in de browser van je telefoon en kan aan het beginscherm worden toegevoegd, maar heeft internet nodig. De Android-app werkt ook offline.
+
+**Is er een gratis abonnement?**
+Ja. Het omvat uitgaven bijhouden, AI-chat, spraakinvoer en bonnen scannen, met 50 AI-verzoeken per maand. Pro kost 4,99 USD per maand of 29,99 USD per jaar en begint met 7 dagen proef.
+
+**Kan ik beide apps tegelijk gebruiken?**
+Ja, en het is een verstandige manier om te vergelijken. Houd YNAB om te plannen en probeer AI Budget Assistant een maand voor snel vastleggen; houd daarna de app die je vaker hebt geopend.
 
 
 # Help center

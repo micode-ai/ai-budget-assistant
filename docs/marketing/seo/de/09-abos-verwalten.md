@@ -14,7 +14,9 @@ Frag jemanden, wie viele Abos er bezahlt, und er rät meist vier oder fünf. Dan
 
 Das ist Abo-Schleichwuchs. Jede Abbuchung ist klein genug zum Ignorieren, die Abrechnung läuft automatisch, und die Verlängerungsdaten sind über den Monat verstreut, sodass kein Auszug die Summe offensichtlich macht. Die Lösung ist nicht Willenskraft. Es ist ein einmaliges Audit plus ein System, das die Liste sichtbar hält.
 
-## Warum man Abos so leicht aus den Augen verliert
+## Warum verliert man Abos so leicht aus den Augen?
+
+Abos geraten aus dem Blick, weil die Abbuchungen automatisch laufen und es keinen Kaufmoment zum Überdenken gibt, Jahrespläne ihre echten Monatskosten verstecken und kostenlose Testphasen unbemerkt in bezahlte Abos übergehen. Das Ergebnis ist ein schleichender Abfluss, der wächst, weil nie jemand entscheidet, ihn zu stoppen.
 
 Ein paar Dinge verschwören sich gegen dich:
 
@@ -38,13 +40,17 @@ Schreib jedes mit drei Angaben auf: die Kosten, den Abrechnungszyklus (monatlich
 
 Hier hilft [AI Budget Assistant](https://ai-budget.pl). Der Abonnement-Manager lässt dich jeden Dienst mit Abrechnungszyklus und nächstem Verlängerungsdatum erfassen und zeigt sie dann in einer Verlängerungskalender-Ansicht, sodass du siehst, was wann ansteht. Kostenlos zu starten und im Browser laufend, sodass du die Liste in wenigen Minuten aufbaust.
 
-## Schritt 3: Zähl die echte Monats- UND Jahressumme zusammen
+## Schritt 3: Wie berechnest du die echten Monats- und Jahreskosten?
+
+Rechne jedes Abo auf einen Monatswert um: Jahrespläne durch 12 teilen, Quartalspläne durch 3, Wochenpläne mit 52 multiplizieren und durch 12 teilen. Addiere die Ergebnisse zur Monatssumme und multipliziere sie mit 12 für den Jahresbetrag. Meist ist es die Jahreszahl, die zum Handeln bewegt.
 
 Hier ist der Schritt, den die meisten überspringen, und es ist der, der das Verhalten ändert. Rechne alles in einen Monatswert um, damit du Gleiches mit Gleichem vergleichst. Ein Jahresplan für 99 Euro sind 8,25 Euro im Monat, ein Vierteljahresplan für 30 Euro sind 10 Euro im Monat. Addiere die Monatszahlen für deine echte Monatskost, dann multipliziere mit zwölf für die Jahreszahl.
 
 Die Jahreszahl ist meist die, die landet. "120 Euro im Monat" lässt sich leicht abwinken. "1.440 Euro im Jahr" ist ein Urlaub. Beide nebeneinander zu sehen ist das, was die nächsten Schritte lohnenswert erscheinen lässt. AI Budget Assistant zeigt die Monatswert-Summe von allem zusammen, sodass Jahres- und Wochenpläne für dich in eine vergleichbare Zahl einfließen.
 
-## Schritt 4: Kündige, was du in 30 Tagen nicht genutzt hast
+## Schritt 4: Welche Abos solltest du kündigen?
+
+Kündige jedes Abo, das du in den letzten 30 Tagen nicht genutzt hast. Es spielt keine Rolle, ob du es irgendwann vielleicht nutzt: Das erneute Abschließen dauert meist nur Minuten, während ein ungenutztes Abo jeden Monat Geld kostet. Viele holen in diesem Schritt echtes Geld zurück, ohne ihren Alltag zu ändern.
 
 Jetzt die leichten Siege. Geh die Liste durch und stell pro Eintrag eine Frage: Habe ich das in den letzten 30 Tagen genutzt? Nicht "könnte ich irgendwann", nicht "ich steige wieder ein". Habe ich es tatsächlich genutzt.
 
@@ -72,7 +78,26 @@ Das letzte Stück ist, das System sich selbst pflegen zu lassen. Setz für jedes
 
 Eine Erinnerung drei Tage vor einer Jahresverlängerung für 99 Euro gibt dir einen echten Moment, um zu fragen "Bekomme ich dafür noch 99 Euro an Wert?". Manchmal ist die Antwort ja und du tust nichts. Manchmal ist sie nein und du hast gerade 99 Euro gespart. In AI Budget Assistant kommen diese Erinnerungen automatisch, bevor du belastet wirst, und Mitglieder eines geteilten Kontos sehen alle dieselbe Liste, was zählt, wenn zwei Personen unabhängig voneinander Dinge abonnieren.
 
-## Mach zweimal im Jahr ein Abo-Audit
+## Wie sieht ein beispielhaftes Abo-Audit aus?
+
+Ein typisches Audit listet jeden Dienst mit Monats- und Jahreskosten auf. Im Beispiel unten summieren sich sieben Abos auf 67 € im Monat, also 804 € im Jahr, obwohl keines für sich teuer wirkt. Die Beträge sind illustrativ und keine Marktdurchschnitte.
+
+*Illustratives Beispiel: erfundene Beträge, keine Marktdaten.*
+
+| Diensttyp | Pro Monat | Pro Jahr |
+|---|---|---|
+| Video-Streaming | 13 € | 156 € |
+| Musik-Streaming | 11 € | 132 € |
+| Cloud-Speicher | 3 € | 36 € |
+| Fitness-App | 10 € | 120 € |
+| Software (Jahresplan 96 €) | 8 € | 96 € |
+| Nachrichtenseite | 10 € | 120 € |
+| Spiele-Abo | 12 € | 144 € |
+| **Summe** | **67 €** | **804 €** |
+
+## Wie oft solltest du deine Abos prüfen?
+
+Prüfe deine Abos mindestens zweimal im Jahr, zum Beispiel alle sechs Monate, und plane etwa 20 Minuten ein. Geh die Kontoauszüge erneut durch, aktualisiere die Liste, kündige Ungenutztes und achte auf Preiserhöhungen. Ständig kommen neue Dienste hinzu, und alte werden still teurer.
 
 Ein Abo-Audit ist kein einmaliges Ereignis. Neue Dienste schleichen sich ein, alte geraten wieder in Vergessenheit, Preise driften nach oben. Setz dir ein wiederkehrendes 20-Minuten-Audit in den Kalender, einmal alle sechs Monate reicht: Auszüge neu durchsuchen, die Liste aktualisieren, das tote Gewicht kündigen, auf Preiserhöhungen prüfen.
 
@@ -93,6 +118,18 @@ Wenn du es in den letzten 30 Tagen nicht genutzt hast, kündige es. Wieder zu ab
 **Kann eine App mich erinnern, bevor sich ein Abo verlängert?**
 
 Ja. Der Abonnement-Manager von AI Budget Assistant sendet Verlängerungserinnerungen, bevor du belastet wirst, und kann Preiserhöhungen oder wiederkehrende Abbuchungen markieren, die du noch nicht zum Tracker hinzugefügt hast. Du kannst kostenlos im Browser unter [ai-budget.pl](https://ai-budget.pl) starten oder es bei [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant) herunterladen, ohne Kartenpflicht.
+
+**Wie viel können Abos im Jahr kosten?**
+
+Kleine Beträge summieren sich schnell. Im Beispiel-Audit oben kommen sieben Dienste auf 67 € im Monat und 804 € im Jahr. Deine eigene Summe wird anders aussehen, doch schau immer auf den Jahresbetrag, denn er zeigt die wahre Größenordnung der Ausgabe.
+
+**Wie vermeide ich, von einer kostenlosen Testphase überrascht zu werden?**
+
+Setze beim Start einer Testphase sofort eine Erinnerung zwei Tage vor Ablauf und trage das Verlängerungsdatum in deine Abo-Liste ein. Das ist dein Entscheidungsmoment: Entweder hast du den Dienst genug genutzt, um ihn zu behalten, oder du kündigst vor der ersten Abbuchung.
+
+**Woran erkenne ich, dass ein Abo teurer geworden ist?**
+
+Vergleiche den Betrag auf den letzten Kontoauszügen mit dem Preis in deiner Liste. Erhöhungen sind oft klein und kaum angekündigt, prüfe deshalb beim halbjährlichen Audit jede Zeile. Ein Tarif, der still von 9,99 € auf 12,99 € steigt, kostet dich 36 € mehr im Jahr.
 
 ---
 

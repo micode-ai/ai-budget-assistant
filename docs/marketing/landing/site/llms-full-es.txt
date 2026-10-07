@@ -149,6 +149,82 @@ Puedes tener hasta veinte alertas activas a la vez, en cualquier número de pare
 
 *Artículos relacionados: [Cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/) | [Haz acopio antes de que suban los precios](/blog/es/escudo-antiinflacion/)*
 
+## Alternativa a YNAB: YNAB vs AI Budget Assistant
+URL: https://ai-budget.pl/blog/es/alternativa-a-ynab/
+
+YNAB y AI Budget Assistant no son dos versiones del mismo producto. YNAB se basa en un método: decides para qué es cada cantidad que recibes antes de gastarla. AI Budget Assistant se basa en registrar los gastos con el mínimo esfuerzo (chat, voz, foto del ticket) y ayudarte a entenderlos. Esta comparación te dice cuál se parece más a cómo manejas realmente tu dinero.
+
+Sobre las fuentes: lo que decimos de YNAB procede de la web oficial de YNAB, consultada en octubre de 2026. Los precios y planes cambian, así que confírmalos en ynab.com antes de decidir.
+
+## YNAB y AI Budget Assistant de un vistazo
+
+| | YNAB | AI Budget Assistant |
+|---|---|---|
+| Idea central | Primero planificar: cada cantidad recibe un propósito antes de gastarse | Registro rápido con IA y después presupuestos por categoría con proyección de fin de periodo |
+| Plataformas | iOS, Android, web | Android y web (sin app nativa para iOS; la versión web se puede añadir a la pantalla de inicio) |
+| Modelo de precio | Suscripción tras 34 días de prueba gratuita, sin tarjeta | Plan gratuito; suscripción Pro con 7 días de prueba |
+| Precio publicado | 14,99 USD al mes o 109 USD al año | Pro: 4,99 USD al mes o 29,99 USD al año |
+| Conexión bancaria | Vincula cuentas e importa transacciones automáticamente | Sin conexión bancaria en vivo; importación de extractos (CSV, PDF) y captura de notificaciones bancarias en Android |
+| Importar / exportar | Importación de archivos de transacciones bancarias | Extractos, exportaciones de Monefy, Wallet y Money Manager, mapeo de columnas con IA; exportación a CSV, Excel, PDF |
+| Presupuestos compartidos | Una suscripción se puede compartir con hasta seis personas | Cuentas compartidas: hasta 5 miembros por cuenta con Pro (1 en el plan gratuito) |
+| IA | No se describe en las páginas consultadas | Chat con IA, entrada por voz, escaneo de tickets, mapeo de extractos, análisis |
+| Sin conexión | Funciona sin internet, según su página de funciones | La app de Android funciona sin conexión y sincroniza después; la web necesita conexión |
+| Idiomas | No comprobado | 9 idiomas de interfaz |
+
+## ¿Cuál es mejor para mí, YNAB o AI Budget Assistant?
+
+Elige YNAB si quieres un método estructurado: planificar cada cantidad que recibes antes de gastarla, y estás dispuesto a pagar por esa disciplina. Elige AI Budget Assistant si tu problema real es registrar y entender los gastos, quieres empezar gratis o necesitas cuentas compartidas a menor precio. A mucha gente le basta con una de las dos.
+
+Lo más honesto es preguntarte qué falla hoy en tu mes. Si el problema es «nunca decido para qué es mi dinero», el método de YNAB lo aborda de frente. Si es «se me olvida apuntar y no veo adónde se fue», importa más registrar rápido que tener un método.
+
+## ¿Cómo se comparan los precios?
+
+YNAB es solo de suscripción tras 34 días gratis; su página de precios indica 14,99 USD al mes o 109 USD al año, y una prueba gratuita de 365 días para universitarios. AI Budget Assistant tiene un plan gratuito y Pro a 4,99 USD al mes o 29,99 USD al año, con 7 días de prueba. El plan gratuito limita la IA a 50 consultas al mes y el uso compartido a un miembro.
+
+El precio no es calidad. En YNAB pagas por un método maduro y la vinculación bancaria automática. Nuestro precio menor da registro con IA y cuentas compartidas, sin conexión bancaria en vivo. Compara lo que de verdad usarías. Para entender qué significa «gratis» en una app de presupuesto, mira la [guía de apps gratis para controlar gastos](/blog/es/app-gratis-control-de-gastos/).
+
+## ¿Puedo importar mis datos de YNAB a AI Budget Assistant?
+
+En parte, y sin una herramienta dedicada. AI Budget Assistant no tiene un importador específico de YNAB. Si exportas tus transacciones a un archivo CSV, lo subes en la sección de importación. La app intenta reconocer el formato; si no puede, un modelo de IA sugiere qué columna es la fecha, el importe y la descripción, y ves una vista previa antes de guardar nada.
+
+Sé realista con lo que se transfiere. Pasan las transacciones; la forma en que asignabas dinero a categorías en YNAB no, porque eso vive dentro de YNAB. El paso con IA pide tu consentimiento una vez por cuenta, y conviene revisar las categorías después, porque un archivo de una herramienta para la que no tenemos analizador se lee con menos certeza. La detección de duplicados hace seguro subir archivos que se solapan. El mecanismo se explica en [importar el extracto de cualquier banco](/blog/es/importar-extracto-de-cualquier-banco/). Cómo exportar datos de YNAB, consúltalo en su ayuda; sus opciones de exportación no las hemos verificado.
+
+## ¿Cuándo es mejor YNAB?
+
+YNAB es la mejor opción en estos casos, y lo decimos claramente:
+
+- **Quieres un método, no solo un registro.** Decidir para qué es cada cantidad antes de gastarla es una fortaleza real y es lo que YNAB tiene como base. AI Budget Assistant no impone esa disciplina; ofrece presupuestos por categoría y una cifra de «cuánto puedo gastar hoy con seguridad».
+- **Quieres vinculación bancaria automática.** YNAB vincula cuentas e importa por sí mismo. Nosotros no nos conectamos a los bancos en vivo.
+- **Usas iPhone y quieres una app nativa.** YNAB tiene iOS; nosotros no.
+- **Necesitas herramientas de deudas y patrimonio neto.** Su página de funciones menciona una calculadora de préstamos, objetivos y gráficos de patrimonio neto.
+- **Prefieres una herramienta sin IA.** Hay quien lo prefiere, y es una buena razón.
+
+## ¿Cuándo es mejor AI Budget Assistant?
+
+Encaja mejor cuando lo difícil es registrar. Puedes escribir o decir «comida 12 euros», preguntar al chat por tus gastos o escanear un ticket y leer sus líneas. Empiezas gratis, la interfaz está en nueve idiomas, admite varias monedas y permite compartir una cuenta con tu familia o pareja.
+
+Los límites son reales: sin app nativa para iOS, sin conexión bancaria en vivo y sin uso sin conexión en la versión web. Si llevan el presupuesto en pareja, la [guía del presupuesto compartido en pareja](/blog/es/presupuesto-compartido-en-pareja/) muestra cómo funcionan las cuentas compartidas en la práctica.
+
+## ¿Cómo me paso si quiero probarla?
+
+Empieza con una exportación CSV de tu herramienta actual y usa la sección de importación; la respuesta anterior explica qué esperar de los archivos de YNAB. Si vienes de Monefy, Wallet o Money Manager, hay importadores dedicados que conservan tus categorías, descritos en [cambiar de Monefy, Wallet o Money Manager](/blog/es/cambiar-de-monefy-wallet-moneymanager/). Si aún eliges entre varias apps, lee la [comparativa de las mejores apps de presupuesto](/blog/es/mejores-apps-de-presupuesto/).
+
+Puedes probar el plan gratuito en [ai-budget.pl](https://ai-budget.pl) sin abandonar antes YNAB; un mes con ambas es una prueba justa.
+
+## FAQ: YNAB vs AI Budget Assistant
+
+**¿AI Budget Assistant sustituye el método de YNAB?**
+No. No te obliga a asignar cada cantidad antes de gastarla. Ofrece presupuestos por categoría y periodo, una proyección del cierre del periodo y una cifra de «cuánto puedo gastar hoy con seguridad». Si lo que quieres es el método en sí, YNAB encaja más.
+
+**¿AI Budget Assistant tiene app para iPhone?**
+Nativa no. La versión web funciona en el navegador del móvil y se puede añadir a la pantalla de inicio, pero necesita conexión a internet. La app de Android también funciona sin conexión.
+
+**¿Hay un plan gratuito?**
+Sí. Incluye registro de gastos, chat con IA, entrada por voz y escaneo de tickets, con 50 consultas de IA al mes. Pro cuesta 4,99 USD al mes o 29,99 USD al año y empieza con 7 días de prueba.
+
+**¿Puedo usar las dos apps a la vez?**
+Sí, y es una forma sensata de comparar. Deja YNAB para planificar y prueba AI Budget Assistant un mes para el registro rápido; quédate con la que abras más a menudo.
+
 ## App gratis de control de gastos: qué es 'gratis' de verdad
 URL: https://ai-budget.pl/blog/es/app-gratis-control-de-gastos/
 
@@ -463,7 +539,9 @@ Todas las guías sobre cómo ahorrar dinero acaban diciéndote que dejes el caf�
 
 Esta guía aborda las razones reales por las que la gente no ahorra, cómo encontrar dinero que ya se está desperdiciando y cómo construir objetivos de ahorro que se mantengan a lo largo de meses y años.
 
-## Por qué la mayoría de las personas no ahorra, aunque quieran hacerlo
+## ¿Por qué la mayoría de las personas no ahorra aunque quiera?
+
+La mayoría ahorra lo que sobra a final de mes, y suele sobrar poco o nada. Además los objetivos son vagos («quiero ahorrar más») y casi nadie sabe cuánto gasta de verdad en comer fuera y en suscripciones. Sin una cantidad concreta, una fecha y datos reales, ahorrar sigue siendo algo abstracto.
 
 Hay unos patrones que se repiten una y otra vez:
 
@@ -473,13 +551,25 @@ Hay unos patrones que se repiten una y otra vez:
 
 **Sin visibilidad real del gasto.** La mayoría de las personas subestima significativamente lo que gasta en alimentación, suscripciones y pequeñas compras por impulso. Sin datos reales, no hay una imagen precisa de dónde podrían venir los ahorros.
 
-## El cambio de mentalidad más importante: págate primero a ti
+## ¿Qué significa «págate primero a ti» y cuánto debería apartar?
+
+Significa transferir una cantidad fija al ahorro el día de cobro, antes de pagar cualquier otra cosa. Incluso 100 o 200 euros al mes marcan la diferencia cuando salen de forma automática. Si sientes que no puedes permitírtelo, es señal de que los gastos son demasiado altos, no de que seas demasiado pobre para ahorrar.
+
+Lo que suma una transferencia el día de cobro, con unos ingresos netos de 2.000 euros al mes (cálculo ilustrativo, sin intereses):
+
+| Tasa de ahorro | Apartas al mes | Apartas al año |
+|---|---|---|
+| 5 % | 100 € | 1.200 € |
+| 10 % | 200 € | 2.400 € |
+| 20 % | 400 € | 4.800 € |
 
 En lugar de ahorrar lo que sobra, programa una transferencia al ahorro el mismo día que cobras, antes de pagar cualquier otra cosa. Aunque sean 100 o 200 euros al mes. Una orden permanente, no una decisión que tomas cada mes.
 
 Si esto parece imposible con tus ingresos actuales, esa sensación merece una reflexión. En la mayoría de los casos significa que el gasto está ligeramente demasiado alto, no que el ahorro sea genuinamente inalcanzable. La distinción importa porque las soluciones son diferentes.
 
-## Paso 1: Encuentra el dinero que ya se va sin darte nada a cambio
+## ¿Cómo encuentro el dinero que ya se escapa de mi presupuesto?
+
+Haz una lista de todas las suscripciones y pagos recurrentes y marca las que no has usado en los últimos 30 días. Las suscripciones inactivas son ahorro sin sacrificio, a menudo entre 20 y 60 euros al mes. Un gestor de suscripciones con fechas de renovación muestra todos los pagos periódicos en un solo lugar.
 
 Antes de buscar gastos que recortar, revisa todo aquello que ya estás pagando automáticamente. Los cargos recurrentes son la fuente más común de desperdicio silencioso.
 
@@ -489,7 +579,9 @@ Un gestor de suscripciones que muestre todos tus cargos recurrentes en un único
 
 Después de las suscripciones, revisa las pólizas de seguros, las tarifas del móvil y los contratos de suministros. Muchos hogares están pagando tarifas negociadas hace años en contratos que desde entonces se han vuelto mucho más competitivos. Unas pocas gestiones pueden liberar dinero significativo.
 
-## Paso 2: Establece objetivos de ahorro específicos
+## ¿Cómo fijo objetivos de ahorro que de verdad funcionen?
+
+Un buen objetivo tiene una cantidad concreta y una fecha, por ejemplo 3.000 euros de fondo de emergencia en diciembre. Ordénalos en tres niveles: fondo de emergencia (tres a seis meses de gastos), metas a corto plazo como un viaje o un equipo, y metas a largo plazo como la entrada de una vivienda. Divide la cantidad entre los meses.
 
 Ahorrar sin un destino es como correr sin rumbo. Puede que te estés moviendo, pero no tienes forma de saber si avanzas.
 
@@ -503,7 +595,9 @@ Estructura tus objetivos en capas:
 
 Visualizar estos objetivos marca una diferencia real. Ver "quedan 8 meses para alcanzar el objetivo del viaje" es mucho más motivador que tener una vaga sensación de que deberías estar ahorrando más. Aplicaciones como AI Budget Assistant te permiten establecer objetivos con importes objetivo y seguir el progreso a lo largo del tiempo. Está disponible en Android o en el navegador en [ai-budget.pl](https://ai-budget.pl), con una versión gratuita que cubre el seguimiento de ahorros sin necesidad de tarjeta.
 
-## Paso 3: Encuentra los lugares reales donde recortar gastos
+## ¿Dónde puedo recortar gastos de forma realista?
+
+Donde pagas mucho y recibes poco valor: compras impulsivas, sobrecostes por comodidad y servicios que apenas usas. La analítica por categorías ayuda, por ejemplo al mostrar 400 euros en restaurantes en lugar de los 150 que suponías. El objetivo es elegir con conciencia, no renunciar a todo.
 
 Una vez que tienes datos sobre tus gastos (el artículo complementario sobre [control de gastos](/blog/es/control-de-gastos/) explica cómo obtenerlos de forma eficiente), busca categorías donde el gasto no se corresponde con el valor que obtienes.
 
@@ -511,7 +605,9 @@ Algunas preguntas que ayudan a cortar el ruido: ¿Qué compré impulsivamente el
 
 Si ves que gastaste 400 euros en restaurantes el mes pasado y estimabas que eran 150, tienes una cifra real con la que trabajar. No "nunca vuelvas a salir a comer", sino "¿qué importe me parece razonable y puedo mantener?" Atacar las categorías de bajo valor es más sostenible que los recortes generalizados.
 
-## Cómo ahorrar dinero en pareja o familia
+## ¿Cómo ahorrar dinero en pareja o en familia?
+
+Acordad un objetivo común en lugar de restricciones comunes, por ejemplo 300 euros al mes para el viaje a Canarias. Dad a cada persona un dinero de bolsillo para gastar sin dar explicaciones, lo que elimina casi toda la tensión. Una vista compartida de presupuesto y metas evita discusiones sobre quién gastó qué.
 
 Ahorrar juntos es más difícil y más fácil que ahorrar solo. Más difícil porque dos personas tienen hábitos diferentes y definiciones distintas de en qué vale la pena gastar. Más fácil porque tienes a alguien que te mantiene responsable.
 
@@ -521,7 +617,9 @@ Ahorrar juntos es más difícil y más fácil que ahorrar solo. Más difícil po
 
 **Mantén una vista compartida.** Una única cuenta en una aplicación donde las dos personas ven los saldos y el progreso de los objetivos en tiempo real resuelve la mayoría de las preguntas del tipo "¿quién gastó qué?" antes de que se conviertan en discusiones. AI Budget Assistant admite cuentas familiares compartidas: cada persona registra desde su propio teléfono, y puedes preguntarle al asistente de IA "¿a cuánto estamos del objetivo del viaje?" y obtienes una respuesta inmediata con los datos de las dos personas.
 
-## Errores habituales que hay que evitar
+## ¿Qué errores debo evitar al ahorrar?
+
+Los tres peores: empezar demasiado agresivo (acaba en recaída hacia el cuarto mes), guardar todos los ahorros en un solo cajón y compararte con los demás. Elige un nivel que puedas mantener durante un año, separa el fondo de emergencia de las metas y juzga solo tu propia situación.
 
 **Empezar demasiado agresivamente.** Los recortes extremos durante tres meses suelen provocar un exceso compensatorio en el cuarto. Fija una tasa de ahorro que puedas mantener durante un año completo, no una que te impresione en enero.
 
@@ -529,7 +627,9 @@ Ahorrar juntos es más difícil y más fácil que ahorrar solo. Más difícil po
 
 **Compararte con los demás.** Alguien que ahorra el 30% puede ganar el triple que tú, no tener hijos o vivir sin pagar alquiler. Tu plan es para tu situación. Un ahorro pequeño y constante a lo largo del tiempo supera unas cifras impresionantes que se derrumban a los dos meses.
 
-## Seguimiento del progreso sin obsesionarse
+## ¿Con qué frecuencia debo revisar mi progreso de ahorro?
+
+Una vez al mes, no a diario, porque mirar constantemente genera estrés sin ayudar a decidir. Hazte tres preguntas: cuánto he ahorrado respecto al plan, si mis metas se acercan y qué me sorprendió económicamente. Las sorpresas repetidas indican que el presupuesto no recoge todos los costes reales.
 
 Revisa una vez al mes, no a diario. Tres preguntas que importan:
 
@@ -559,6 +659,14 @@ Prioriza el fondo de emergencia, aunque sean 50 euros al mes. Elimina primero to
 
 Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas ahorrar y lo que realmente has ahorrado, en tiempo real, es el principal motor del cambio de comportamiento. AI Budget Assistant es gratuito para empezar. Pruébalo en [ai-budget.pl](https://ai-budget.pl) en el navegador o descárgalo de Google Play sin necesidad de tarjeta. Fija un objetivo, obsérvalo durante un mes. Ese bucle de retroalimentación es lo que hace que el hábito se afiance.
 
+**¿Qué tamaño debe tener mi fondo de emergencia?**
+
+El objetivo es de tres a seis meses de gastos esenciales. Un primer hito de 500 a 1.000 euros ya reduce el estrés de forma notable. Guárdalo en una cuenta aparte y no lo cuentes dentro de los ahorros para metas.
+
+**¿Es mejor pagar deudas o ahorrar primero?**
+
+Paga antes las deudas con intereses altos, porque eso da una rentabilidad garantizada igual al tipo de interés. En paralelo, aparta una pequeña cantidad para el fondo de emergencia, de modo que un gasto imprevisto no te lleve a endeudarte más.
+
 ---
 
 *Artículos relacionados: [Cómo hacer un presupuesto personal paso a paso](/blog/es/como-hacer-un-presupuesto/) | [Control de gastos: cómo llevar un seguimiento real](/blog/es/control-de-gastos/)*
@@ -578,6 +686,7 @@ Para la mayoría de las personas, sí. Ver la diferencia entre lo que planeabas 
 - [Presupuesto en dos monedas: cómo no perder el control](/blog/es/presupuesto-en-dos-monedas/)
 - [Presupuesto de Navidad: cuánto cuesta y cómo ahorrarlo](/blog/es/presupuesto-de-navidad/)
 - [Black Friday: detecta ofertas falsas y no gastes de más](/blog/es/black-friday-ofertas-falsas/)
+- [Devolución de la renta: en qué gastarla con cabeza](/blog/es/que-hacer-con-la-devolucion-de-la-renta/)
 
 ## Cómo gestionar suscripciones antes de que te vacíen
 URL: https://ai-budget.pl/blog/es/como-gestionar-suscripciones/
@@ -586,7 +695,9 @@ Pregúntale a alguien cuántas suscripciones paga y normalmente dirá cuatro o c
 
 Esto es la acumulación silenciosa de suscripciones. Cada cargo es lo bastante pequeño como para ignorarlo, la facturación es automática y las fechas de renovación están repartidas por todo el mes, así que ningún extracto hace evidente el total. La solución no es fuerza de voluntad. Es una auditoría puntual más un sistema que mantenga la lista a la vista.
 
-## Por qué es tan fácil perder la pista de las suscripciones
+## ¿Por qué es tan fácil perder la pista de las suscripciones?
+
+Las suscripciones se pierden de vista porque los cobros son automáticos y no hay un momento de compra para replantearse, los planes anuales ocultan su coste mensual real y las pruebas gratuitas se convierten en pago sin avisar. El resultado es una fuga lenta que crece porque nadie decide frenarla.
 
 Hay varias cosas que conspiran en tu contra:
 
@@ -610,13 +721,17 @@ Anota cada una con tres datos: el coste, el ciclo de facturación (mensual, trim
 
 Aquí es donde ayuda [AI Budget Assistant](https://ai-budget.pl). Su gestor de suscripciones te deja registrar cada servicio con su ciclo de facturación y su próxima fecha de renovación, y luego las muestra en una vista de calendario de renovaciones para que veas qué viene y cuándo. Es gratis para empezar y funciona en el navegador, así que puedes montar la lista en unos minutos.
 
-## Paso 3: Suma el total real mensual Y anual
+## Paso 3: ¿Cómo se calcula el coste real mensual y anual?
+
+Convierte cada suscripción a su equivalente mensual: divide los planes anuales entre 12, los trimestrales entre 3 y multiplica los semanales por 52 para dividir después entre 12. Suma los resultados para el total mensual y multiplícalo por 12 para el anual. Suele ser la cifra anual la que impulsa a actuar.
 
 Este es el paso que la mayoría se salta, y es el que cambia el comportamiento. Convierte todo a un equivalente mensual para poder comparar como con como. Un plan anual de 99 euros son 8,25 euros al mes; un plan trimestral de 30 euros son 10 al mes. Suma las cifras mensuales para tu coste mensual real y luego multiplica por doce para la cifra anual.
 
 La cifra anual suele ser la que cala. "120 euros al mes" es fácil de quitarse de encima. "1.440 euros al año" son unas vacaciones. Ver ambas una al lado de la otra es lo que hace que los siguientes pasos merezcan la pena. AI Budget Assistant muestra el total en equivalente mensual de todo combinado, así que los planes anuales y semanales se funden en una única cifra comparable por ti.
 
-## Paso 4: Cancela lo que no hayas usado en 30 días
+## Paso 4: ¿Qué suscripciones debes cancelar?
+
+Cancela toda suscripción que no hayas usado en los últimos 30 días. Da igual que quizá la uses algún día: volver a suscribirte suele llevar minutos, mientras que una suscripción sin uso te cuesta cada mes. Mucha gente recupera dinero real en este paso sin cambiar su estilo de vida.
 
 Ahora las victorias fáciles. Repasa la lista y hazte una pregunta por elemento: ¿lo he usado en los últimos 30 días? No "podría algún día", no "ya volveré a engancharme". Lo he usado de verdad.
 
@@ -644,7 +759,26 @@ La última pieza es hacer que el sistema se mantenga solo. Para cada suscripció
 
 Un recordatorio tres días antes de una renovación anual de 99 euros te da un momento real para preguntarte "¿sigo sacándole 99 euros de valor a esto?". A veces la respuesta es sí y no haces nada. A veces es no y acabas de ahorrarte 99 euros. En AI Budget Assistant estos recordatorios llegan automáticamente antes de que te cobren, y todos los miembros de una cuenta compartida ven la misma lista, lo que importa cuando dos personas se apuntan a cosas por su cuenta.
 
-## Haz una auditoría de suscripciones dos veces al año
+## ¿Cómo es una auditoría de suscripciones de ejemplo?
+
+Una auditoría típica lista cada servicio con su coste mensual y anual. En el ejemplo de abajo, siete suscripciones suman 67 € al mes, es decir 804 € al año, aunque ninguna parezca cara por separado. Las cifras son ilustrativas y no medias de mercado.
+
+*Ejemplo ilustrativo: importes inventados, no datos de mercado.*
+
+| Tipo de servicio | Al mes | Al año |
+|---|---|---|
+| Vídeo en streaming | 13 € | 156 € |
+| Música en streaming | 11 € | 132 € |
+| Almacenamiento en la nube | 3 € | 36 € |
+| App de fitness | 10 € | 120 € |
+| Software (plan anual de 96 €) | 8 € | 96 € |
+| Medio de noticias | 10 € | 120 € |
+| Suscripción de videojuegos | 12 € | 144 € |
+| **Total** | **67 €** | **804 €** |
+
+## ¿Cada cuánto conviene auditar las suscripciones?
+
+Audita tus suscripciones al menos dos veces al año, por ejemplo cada seis meses, y reserva unos 20 minutos. Vuelve a revisar los extractos, actualiza la lista, cancela lo que ya no uses y comprueba las subidas de precio. Entran servicios nuevos constantemente y los antiguos se encarecen en silencio.
 
 Una auditoría de suscripciones no es un evento de una sola vez. Aparecen servicios nuevos, los viejos se vuelven a olvidar, los precios suben poco a poco. Pon en el calendario una auditoría recurrente de 20 minutos, una vez cada seis meses es suficiente: vuelve a revisar tus extractos, actualiza la lista, cancela el peso muerto y comprueba las subidas de precio.
 
@@ -666,6 +800,18 @@ Si no lo has usado en los últimos 30 días, cancélalo. Volver a suscribirse ca
 
 Sí. El gestor de suscripciones de AI Budget Assistant envía recordatorios de renovación antes de que te cobren y puede señalar subidas de precio o cargos recurrentes que aún no has añadido al gestor. Puedes empezar gratis en el navegador en [ai-budget.pl](https://ai-budget.pl) o descargarlo desde [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), sin tarjeta.
 
+**¿Cuánto pueden costar las suscripciones al año?**
+
+Los cargos pequeños suman rápido. En la auditoría de ejemplo, siete servicios dan 67 € al mes y 804 € al año. Tu total será distinto, pero mira siempre la cifra anual, porque muestra la escala real del gasto.
+
+**¿Cómo evito que me sorprenda una prueba gratuita?**
+
+Al empezar una prueba gratuita, pon un recordatorio dos días antes de que termine y anota la fecha de renovación en tu lista de suscripciones. Es tu momento de decisión: o la has usado lo bastante para quedártela, o cancelas antes del primer cobro.
+
+**¿Cómo sé si una suscripción ha subido de precio?**
+
+Compara el importe de tus últimos extractos con el precio de tu lista. Las subidas suelen ser pequeñas y casi sin aviso, así que revisa cada línea en la auditoría semestral. Un plan que sube sin ruido de 9,99 € a 12,99 € te cuesta 36 € más al año.
+
 ---
 
 *Artículos relacionados: [Cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/) | [Mejores apps de presupuesto en 2026](/blog/es/mejores-apps-de-presupuesto/)*
@@ -679,7 +825,9 @@ Un presupuesto es, sencillamente, un plan para tu dinero. No es un castigo ni un
 
 Esta guía cubre lo esencial: cómo construir un presupuesto, cómo hacer que se mantenga en el tiempo y cómo gestionarlo en pareja o en familia sin que se convierta en fuente de conflictos.
 
-## Por qué la mayoría de los presupuestos fracasan en pocas semanas
+## ¿Por qué la mayoría de los presupuestos fracasan en pocas semanas?
+
+Un presupuesto suele fracasar porque anotar cada gasto a mano lleva demasiado tiempo y las personas que comparten el dinero no ven las mismas cifras. Cuando surge algo más urgente, el hábito desaparece, normalmente en dos o tres semanas. Solo sobrevive el sistema que automatiza los registros y muestra a todos el mismo panorama.
 
 La primera razón es la fricción. Anotar cada gasto a mano es suficientemente tedioso como para que empieces a saltarte una transacción, luego otra, y finalmente todo el sistema se venga abajo.
 
@@ -687,7 +835,9 @@ La segunda razón es que el presupuesto suele ser un proyecto individual. Una pe
 
 La tercera razón es que la gente planifica para una versión idealizada de sí misma. Un presupuesto que asume que siempre cocinarás en casa y nunca comprarás nada por impulso no es un presupuesto real: es una fantasía. La primera vez que pides comida a domicilio, sientes que has roto las reglas y lo abandonas todo.
 
-## Paso 1: Descubre adónde va tu dinero realmente
+## ¿Cómo averiguo adónde va realmente mi dinero?
+
+Reúne durante un mes datos reales de ingresos y gastos, sacados de los extractos del banco y no de la memoria. Lo más rápido es importar los movimientos de los últimos 30 días a una aplicación que asigne las categorías automáticamente. Solo con esa imagen puedes fijar límites acordes con tu vida real.
 
 Antes de planificar nada, dedica un mes entero a observar. Sin límites, sin culpa, solo datos. Necesitas respuestas honestas a dos preguntas:
 
@@ -696,7 +846,9 @@ Antes de planificar nada, dedica un mes entero a observar. Sin límites, sin cul
 
 No estimes. Revisa los extractos bancarios de los últimos treinta días línea por línea. Si tu banco te permite exportar transacciones en CSV (la mayoría lo permite), puedes importar ese historial automáticamente y ahorrarte el trabajo manual. La categorización ocurre en segundo plano.
 
-## Paso 2: Clasifica tus gastos por categorías
+## ¿Cómo clasifico los gastos del hogar por categorías?
+
+Usa tres grupos: gastos fijos (alquiler o hipoteca, suministros, seguros, suscripciones), gastos variables necesarios (comida, transporte, medicinas) y gastos discrecionales (restaurantes, ropa, ocio). Los fijos son los que menos puedes cambiar y los discrecionales los que más, por eso las mayores sorpresas suelen esconderse en el tercer grupo.
 
 Una vez que tienes los datos, agrúpalos. Un esquema sencillo que funciona para la mayoría de las personas:
 
@@ -708,7 +860,18 @@ Una vez que tienes los datos, agrúpalos. Un esquema sencillo que funciona para 
 
 La mayoría de las personas que hacen este ejercicio descubren que sus compras "pequeñas" suman mucho más de lo esperado. Unos cuantos servicios de streaming, el café diario y las compras por impulso online pueden comerse fácilmente varios cientos de euros al mes de forma casi invisible.
 
-## Paso 3: Establece límites realistas
+## ¿Qué límites debo fijar y es realista la regla 50/30/20?
+
+La regla 50/30/20 reparte los ingresos netos así: 50 % para necesidades, 30 % para deseos y 20 % para ahorro y pago de deudas. Es un punto de partida, no una ley: en una ciudad cara las necesidades pueden llegar al 60 %. Fija primero los límites con tus gastos reales y ajústalos poco a poco.
+
+Ejemplo de reparto de unos ingresos netos de 2.000 euros al mes según la regla 50/30/20 (cifras ilustrativas, no un consejo personalizado):
+
+| Grupo de gasto | Porcentaje | Importe mensual | Qué incluye |
+|---|---|---|---|
+| Necesidades | 50 % | 1.000 € | alquiler o hipoteca, suministros, comida, transporte, medicinas |
+| Deseos | 30 % | 600 € | restaurantes, ropa, ocio, streaming |
+| Ahorro y deudas | 20 % | 400 € | fondo de emergencia, objetivos, amortización de deudas |
+| **Total** | **100 %** | **2.000 €** | |
 
 Ahora tienes cifras reales con las que trabajar. Un punto de partida muy usado es la regla 50/30/20:
 
@@ -720,7 +883,9 @@ Es un punto de partida, no una ley. Si vives en una ciudad cara o tienes una hip
 
 La trampa que debes evitar: no hagas el presupuesto basándote en quien quieres ser. Hazlo basándote en quien eres ahora mismo, y ajusta desde ahí con pequeños pasos. Los objetivos drásticos quedan muy bien sobre el papel y son muy difíciles de sostener en el día a día.
 
-## Paso 4: Haz el presupuesto en equipo si compartes finanzas
+## ¿Cómo hacemos el presupuesto en pareja o en familia?
+
+Necesitáis una vista compartida que cada uno pueda actualizar desde su propio móvil y que muestre al instante el efecto de cada compra. Si una sola persona hace las cuentas por todos, el plan se rompe en la primera compra conjunta. Empezad por objetivos comunes, no por revisar tickets.
 
 Si otra persona en tu hogar también gasta dinero, tiene que formar parte del proceso. Un presupuesto gestionado por una sola persona y pasado por alto por la otra se derrumbará la primera vez que alguien haga una compra grande sin consultar.
 
@@ -728,7 +893,9 @@ La solución práctica es tener una vista compartida del presupuesto, actualizad
 
 Las herramientas digitales ayudan mucho en este punto. AI Budget Assistant, disponible en Android y en el navegador en [ai-budget.pl](https://ai-budget.pl), permite cuentas familiares compartidas donde cada persona añade sus gastos desde su propio teléfono y el presupuesto se actualiza para todos al instante. Además, puedes preguntarle al asistente de inteligencia artificial incorporado cosas como "¿cuánto hemos gastado en alimentación este mes?" y obtener una respuesta inmediata, sin hacer ningún cálculo manual.
 
-## Paso 5: Crea un pequeño fondo de emergencia primero
+## ¿Cuánto debe tener un fondo de emergencia y por dónde empiezo?
+
+La recomendación habitual es de tres a seis meses de gastos, pero un primer hito más práctico son 500 a 1.000 euros, suficientes para una avería del coche o un electrodoméstico roto. Guarda ese dinero en una cuenta aparte para que una pequeña barrera te frene antes de gastarlo en compras cotidianas.
 
 Antes de perseguir objetivos de ahorro más grandes, asegúrate de tener un colchón financiero. La recomendación estándar es de tres a seis meses de gastos, lo cual puede parecer muy lejano al principio. Un primer hito más práctico es uno o dos meses de gastos, o incluso solo 500 a 1.000 euros.
 
@@ -736,7 +903,9 @@ El fondo de emergencia sirve para que una reparación del coche inesperada o una
 
 Guarda este dinero en una cuenta separada de la que usas a diario. La pequeña fricción que supone tener que acceder a otra cuenta suele ser suficiente para evitar que lo uses para gastos cotidianos.
 
-## Cómo no perderse en los detalles
+## ¿Cómo mantengo el presupuesto sencillo sin perderme en los detalles?
+
+Céntrate primero en las partidas mayores: vivienda, comida, transporte, seguros y suscripciones. Comprueba si pagas servicios que ya no usas antes de buscar ahorrar 5 euros en el supermercado. Diez o quince minutos por semana bastan para conservar la visión de conjunto sin caer en la microoptimización.
 
 Una vez que tienes el presupuesto en marcha, la tentación es optimizarlo todo. Resiste esa tentación, al menos al principio. Dedicar veinte minutos a analizar si puedes ahorrar cinco euros en la compra del supermercado es una mala inversión de energía comparado con verificar si estás pagando suscripciones que ni siquiera usas.
 
@@ -744,7 +913,9 @@ Aquí es donde un gestor de suscripciones resulta muy útil. AI Budget Assistant
 
 Para profundizar en cómo reducir gastos y encontrar dinero que no sabías que tenías, el artículo complementario sobre [control de gastos](/blog/es/control-de-gastos/) explica las tácticas con más detalle.
 
-## Errores habituales al hacer un presupuesto
+## ¿Cuáles son los errores más habituales al hacer un presupuesto?
+
+Los más comunes son olvidar los gastos irregulares como seguros, revisiones del coche o fiestas, presupuestar para una versión idealizada de ti mismo y abandonar tras el primer mes fallido. Divide los costes anuales entre doce, planifica según tus hábitos reales y trata los primeros dos o tres meses como calibración.
 
 **Ignorar los gastos irregulares.** Primas de seguros, renovaciones anuales de software, regalos de Navidad, revisión del coche, revisiones médicas. No son sorpresas, son gastos predecibles. Divide los costes anuales entre doce e inclúyelos en tu presupuesto mensual como una partida más.
 
@@ -771,6 +942,14 @@ Sí, y además importa más cuando los ingresos varían. Basa tu plan de gastos 
 **¿Cómo hago el presupuesto con una pareja que no quiere registrar gastos?**
 
 Empieza con una conversación sobre objetivos, no sobre el presupuesto. "Queremos hacer un viaje de 2.000 euros en verano" es un punto de partida muy diferente a "tienes que anotar cada compra". Cuando las dos personas pueden ver un objetivo compartido, el registro se convierte en una herramienta, no en una forma de vigilancia.
+
+**¿En qué consiste la regla 50/30/20 del presupuesto?**
+
+Divide los ingresos netos en tres partes: 50 % para necesidades, 30 % para deseos y 20 % para ahorro y pago de deudas. Tómala como punto de partida. Si el alquiler es alto y las necesidades llegan al 60 %, recorta la parte de deseos en lugar de eliminar el ahorro.
+
+**¿Cuánto dinero debería tener un fondo de emergencia?**
+
+El objetivo es de tres a seis meses de gastos esenciales. Si te parece lejano, empieza con 500 a 1.000 euros y auméntalo cada mes. Guarda el dinero en una cuenta aparte, separado de los gastos del día a día.
 
 ---
 
@@ -869,7 +1048,9 @@ Un buen sistema de control de gastos no exige que te vuelvas más disciplinado. 
 
 Esta guía analiza cómo registrar gastos sin el tedio habitual, qué hacer con los datos una vez que los tienes y cómo hacer que el control de gastos funcione para dos personas en lugar de solo para una.
 
-## Por qué la gente abandona el seguimiento de gastos
+## ¿Por qué la gente abandona el seguimiento de gastos?
+
+Casi siempre por falta de automatización: cada registro manual se puede saltar, sobre todo al volver cansado del trabajo o comprando con prisa. A eso se suma la falta de contexto, como un movimiento sin descripción, y que normalmente una sola persona hace el seguimiento de todo el hogar. La solución es una herramienta que registre por ti y sea compartida.
 
 La razón más frecuente es que el registro manual es aburrido. Sacar el teléfono en la caja del supermercado para escribir "Mercadona, 42,30 euros, alimentación" está bien la primera vez y resulta agotador al décimo día.
 
@@ -877,7 +1058,18 @@ La segunda razón es que los datos se vuelven ilegibles rápidamente. Una larga 
 
 La tercera razón, y esta importa más de lo que la gente admite, es que el seguimiento es un esfuerzo individual. Una persona anota con diligencia cada café y cada recarga de gasolina, mientras la otra mitad del hogar no registra nada. El resultado es, en el mejor caso, una imagen incompleta. A final de mes sigues sin saber realmente qué ha pasado.
 
-## Métodos que funcionan de verdad
+## ¿Qué métodos de control de gastos funcionan de verdad?
+
+Funcionan tres enfoques: sobres para el efectivo, la regla de las 24 horas para las compras impulsivas y el seguimiento automático con una aplicación. Solo la aplicación escala a pagos con tarjeta, compras online y suscripciones, por eso la mayoría de la gente la combina con uno de los otros dos como apoyo de conducta.
+
+Comparación de métodos de control de gastos (valoración orientativa, sin datos numéricos):
+
+| Método | Esfuerzo diario | Sirve para tarjeta y pagos online | Ideal para |
+|---|---|---|---|
+| Sobres de efectivo | medio (efectivo, sobres separados) | no | frenar el gasto impulsivo en una categoría |
+| Regla de las 24 horas | bajo | parcialmente | compras grandes no planificadas |
+| Hoja de cálculo (Excel, Google Sheets) | alto (registro manual) | sí, pero a mano | un simple diario de gastos |
+| Aplicación con importación bancaria y escaneo de tickets | bajo | sí | seguimiento constante a largo plazo |
 
 ### El sistema de sobres
 
@@ -898,7 +1090,9 @@ Aquí es donde el enfoque cambia por completo. En lugar de introducir cada gasto
 
 Cuando añadir un gasto lleva tres segundos en lugar de treinta, el hábito es mucho más fácil de mantener.
 
-## Importación bancaria frente a registro manual
+## ¿Es mejor importar del banco que registrar los gastos a mano?
+
+Para la mayoría de las personas, sí. Cargar un extracto en CSV o PDF te da de golpe entre 30 y 90 días de historial ya categorizado, y la aplicación marca los posibles duplicados para no contar nada dos veces. El registro manual queda para el efectivo y las pequeñas compras que nunca llegan al banco.
 
 Si ya usas tarjeta de débito o crédito para la mayoría de tus compras, importar extractos bancarios es la forma más rápida de obtener una imagen completa de tus gastos. Descarga un extracto en CSV o PDF, súbelo a tu aplicación de control de gastos y tendrás semanas o meses de historial categorizado automáticamente.
 
@@ -906,13 +1100,17 @@ AI Budget Assistant admite importación directa desde Wise, Revolut y una varied
 
 Para quienes vienen de un sistema manual, este enfoque significa que puedes poner al día un mes entero en pocos minutos en lugar de introducir cientos de transacciones a mano.
 
-## Escaneo de tickets para compras en efectivo
+## ¿Puedo escanear los tickets en lugar de teclear las compras?
+
+Sí. Fotografías el ticket y el reconocimiento de texto (OCR) lee el importe, la fecha y la tienda. Es especialmente útil con efectivo y compras de supermercado, porque el cargo con tarjeta del extracto solo muestra un total, mientras que el ticket escaneado revela de qué se compone.
 
 La importación bancaria cubre las transacciones con tarjeta. ¿Y el efectivo? ¿O las situaciones en las que necesitas capturar el desglose de artículos, no solo el total?
 
 Fotografiar el ticket es la respuesta práctica. El OCR lee el importe, la fecha y normalmente el nombre del establecimiento sin necesidad de teclear nada. Para las compras en efectivo en el supermercado o los gastos donde los detalles importan (gastos de trabajo, costes compartidos de un viaje), esto es notablemente más rápido que el registro manual.
 
-## Control de gastos en pareja o familia
+## ¿Cómo controlar los gastos en pareja o en familia?
+
+Lo más sencillo es una cuenta compartida en una aplicación que cada miembro abre desde su propio móvil. Cada movimiento es visible para todos en el momento, así que a fin de mes no hay sorpresas. También puedes preguntar al asistente de IA cuánto ha gastado toda la cuenta en una categoría.
 
 Aquí está el hueco que la mayoría de las aplicaciones de control de gastos no cubre. Si tú registras tus gastos pero tu pareja no, tienes la mitad de la imagen. No puedes gestionar un presupuesto compartido con datos parciales.
 
@@ -922,7 +1120,9 @@ AI Budget Assistant gestiona esto con cuentas familiares compartidas. Cada perso
 
 Construir un presupuesto útil sobre estos datos es el paso natural siguiente, que el artículo complementario sobre [cómo hacer un presupuesto](/blog/es/como-hacer-un-presupuesto/) cubre en profundidad.
 
-## Establecer límites de gasto que realmente consultes
+## ¿Cómo fijo límites de gasto que no acabe ignorando?
+
+Observa un mes sin límites y luego fija límites con margen: si gastas de media 450 euros en comida, no empieces en 250. Activa un aviso al 75-80 % del límite, porque una alerta después de haberlo superado llega demasiado tarde para cambiar nada.
 
 Tener categorías es útil. Tener límites por categoría es todavía más útil. Pero la mayoría de las personas los fijan una vez y los ignoran hasta que ya los han superado.
 
@@ -936,11 +1136,15 @@ Algunas cosas que ayudan:
 
 ## ¿Es segura una aplicación de control de gastos?
 
+Depende de la aplicación. Fíjate en tres cosas: si guarda tus datos cifrados, si funciona sin conexión para que no viajen constantemente a la nube y si su política de privacidad es clara. Compruébalo antes de instalarla, porque se trata de información financiera sensible.
+
 Las cosas clave que hay que comprobar: ¿los datos están cifrados en reposo? ¿La aplicación funciona sin conexión para que tus datos no salgan constantemente del dispositivo? ¿Hay una política de privacidad clara?
 
 AI Budget Assistant funciona primero en local: los gastos se guardan localmente antes de sincronizarse, y los datos de transacciones están cifrados de extremo a extremo.
 
-## Aplicaciones gratuitas frente a aplicaciones de pago
+## ¿Vale la pena pagar por una aplicación de control de gastos?
+
+El plan gratuito suele bastar para el seguimiento básico. Los planes de pago suelen añadir más automatización, historial completo, analítica y cuentas compartidas con más miembros. Pregúntate cuánto pierdes hoy por no llevar el control: si son 50 euros al mes, un plan que cueste menos se paga solo.
 
 Una versión gratuita cubre el seguimiento básico. Los planes de pago desbloquean más automatización, historial completo, análisis y cuentas compartidas con varios miembros. La pregunta útil es cuánto estás perdiendo ahora mismo por no saber adónde va el dinero. Si esa cifra es de 100 euros al mes, una aplicación de pago se amortiza rápido.
 
@@ -966,6 +1170,14 @@ Sí, y deberías. Busca aplicaciones con funcionalidades de cuenta compartida do
 
 Tendrás una imagen clara de tus patrones de gasto después de un mes. Los cambios significativos en el comportamiento, y los ahorros que conllevan, suelen aparecer después de dos o tres meses, cuando puedes ver tendencias y hacer ajustes intencionados en lugar de solo reaccionar.
 
+**¿Cómo controlo el gasto en efectivo que no aparece en el extracto bancario?**
+
+Fotografía el ticket o añade el gasto en una frase por voz o texto, por ejemplo «12 euros comida». Anota el efectivo justo después de comprar, porque luego es fácil olvidarlo. Todo lo que pasa por el banco entra solo mediante la importación del extracto.
+
+**¿Qué diferencia hay entre controlar los gastos y hacer un presupuesto?**
+
+El control responde a cuánto has gastado ya y en qué. El presupuesto es un plan de futuro: cuánto puedes gastar en cada categoría. Primero registra durante un mes y después fija límites, para que se basen en hechos y no en deseos.
+
 ---
 
 *Artículos relacionados: [Cómo hacer un presupuesto personal paso a paso](/blog/es/como-hacer-un-presupuesto/) | [Cómo ahorrar dinero con un plan concreto](/blog/es/como-ahorrar-dinero/)*
@@ -984,6 +1196,11 @@ Tendrás una imagen clara de tus patrones de gasto después de un mes. Los cambi
 - [Alternativa a Monefy: cambia sin perder tus categorías](/blog/es/cambiar-de-monefy-wallet-moneymanager/)
 - [Plantilla de presupuesto en Excel: estructura y sus límites](/blog/es/plantilla-presupuesto-excel/)
 - [App gratis de control de gastos: qué es 'gratis' de verdad](/blog/es/app-gratis-control-de-gastos/)
+- [Monefy vs AI Budget Assistant: ¿cuál te conviene?](/blog/es/monefy-vs-ai-budget-assistant/)
+- [Wallet by BudgetBakers vs AI Budget Assistant](/blog/es/wallet-budgetbakers-vs-ai-budget-assistant/)
+- [Alternativa a YNAB: YNAB vs AI Budget Assistant](/blog/es/alternativa-a-ynab/)
+- [Money Manager vs AI Budget Assistant: ¿cuál te conviene?](/blog/es/money-manager-vs-ai-budget-assistant/)
+- [Importar el extracto de Revolut a tu presupuesto](/blog/es/importar-extracto-revolut/)
 
 ## Vuelta al colegio: cuánto cuesta y cómo planificarla
 URL: https://ai-budget.pl/blog/es/cuanto-cuesta-la-vuelta-al-colegio/
@@ -1329,7 +1546,9 @@ Una rueda reventada, una factura inesperada del veterinario, unas semanas entre 
 
 Esta guía explica qué es realmente un fondo de emergencia, cuánto necesitas, dónde guardarlo y cómo crear uno paso a paso, incluso cuando el dinero anda justo.
 
-## Qué es un fondo de emergencia (y qué no es)
+## ¿Qué es un fondo de emergencia y qué cuenta como emergencia?
+
+Un fondo de emergencia es dinero reservado para gastos inesperados, necesarios y urgentes: perder el empleo, una factura médica urgente, la avería de un electrodoméstico esencial o la reparación del coche que necesitas para ir a trabajar. Las vacaciones, unas rebajas o una reparación previsible no lo son. Pregúntate: ¿inesperado, necesario y urgente?
 
 Un fondo de emergencia es dinero apartado para gastos genuinos, imprevistos y necesarios. La palabra clave es imprevistos. Unas vacaciones en diciembre no son una emergencia, porque sabías que diciembre venía. Un coche que sabías que necesitaba pastillas de freno nuevas tampoco es una emergencia. Eso va en tu presupuesto normal o en un objetivo de ahorro aparte.
 
@@ -1337,7 +1556,9 @@ Una emergencia de verdad es algo que no podías prever razonablemente y no puede
 
 Esta distinción importa porque la forma más habitual de perder el fondo de emergencia es redefinir en silencio "emergencia" para que incluya una rebaja que no querías perderte.
 
-## ¿Cuánto deberías tener?
+## ¿Cuánto debería tener un fondo de emergencia?
+
+El objetivo habitual es de tres a seis meses de gastos esenciales: alquiler, suministros, comida, seguros, transporte y cuotas mínimas de deuda, no todo tu estilo de vida. Tres meses encajan con un empleo estable y un segundo ingreso en casa; seis meses, con ingresos irregulares, trabajo autónomo o si eres el único sostén del hogar.
 
 La recomendación estándar es de tres a seis meses de gastos esenciales. Fíjate en la palabra esenciales. No son tres a seis meses de tu estilo de vida completo. Son alquiler, suministros, alimentación, seguros, transporte y pagos mínimos de deuda. Lo que mantiene la luz encendida si tus ingresos se cortan.
 
@@ -1347,7 +1568,23 @@ Ese objetivo puede parecer imposiblemente lejano cuando partes de cero. Así que
 
 Si todavía estás averiguando cuáles son siquiera tus costes mensuales esenciales, la guía complementaria sobre [cómo hacer un presupuesto paso a paso](/blog/es/como-hacer-un-presupuesto/) explica primero cómo clasificar el gasto.
 
-## Dónde guardarlo
+## ¿Cuántos meses de gastos necesitas según tu situación?
+
+Con empleo estable y un segundo ingreso en casa bastan unos 3 meses de gastos esenciales; un autónomo o quien tiene ingresos irregulares debería apuntar a unos 6, y una familia con un solo ingreso también a unos 6. La tabla lo convierte en euros con 2.000 € de gastos esenciales al mes, a modo de ejemplo.
+
+*Ejemplo ilustrativo: una regla orientativa, no asesoramiento personalizado.*
+
+| Situación | Meses de gastos esenciales | Ejemplo con 2.000 € al mes |
+|---|---|---|
+| Empleo estable, segundo ingreso en casa | 3 | 6.000 € |
+| Autónomo o ingresos irregulares | 6 | 12.000 € |
+| Familia con un solo ingreso | 6 | 12.000 € |
+
+<!-- calculator:emergency -->
+
+## ¿Dónde guardar un fondo de emergencia?
+
+Guárdalo en una cuenta de ahorro aparte y de fácil acceso, distinta de la cuenta del día a día y disponible en uno o dos días. Una cuenta remunerada encaja bien. No lo inviertas en bolsa, criptomonedas ni nada que pueda perder valor, porque las emergencias suelen llegar justo cuando los mercados caen.
 
 Tres reglas para dónde vive tu fondo de emergencia:
 
@@ -1387,7 +1624,9 @@ Acabarás usando el fondo en algún momento. Eso es un éxito, no un fracaso: si
 
 Hacer este seguimiento es donde un objetivo con un saldo visible ayuda. Cuando el fondo baja de 6.000 a 4.500 euros tras una reparación, puedes ver el hueco y dirigir tus transferencias de cobro a cerrarlo. Es gratis para empezar y funciona en el navegador en [ai-budget.pl](https://ai-budget.pl) o en Android a través de [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), sin necesidad de tarjeta para crear tu primer objetivo.
 
-## Errores comunes que evitar
+## ¿Qué errores evitar al crear un fondo de emergencia?
+
+Los tres errores más comunes son invertir el fondo en algo volátil, dejarlo en la misma cuenta que los gastos diarios y fijar un primer objetivo tan alto que acabas abandonando. Empieza con un hito pequeño, automatiza una transferencia el día de cobro y sube el objetivo solo cuando lo alcances.
 
 **Invertirlo.** Ya lo comentamos arriba, pero vale la pena repetirlo porque es el error más tentador. Un fondo de emergencia que perdió un 30% la semana que lo necesitabas no es un fondo de emergencia. Mantenlo aburrido.
 
@@ -1414,6 +1653,14 @@ Crea primero un pequeño fondo de partida de 1.000 euros, luego céntrate en la 
 **¿Qué cuenta como una emergencia de verdad?**
 
 Algo imprevisto, necesario y urgente: la pérdida del empleo, una factura médica urgente, un electrodoméstico esencial que falla, una reparación del coche que necesitas para ir a trabajar. Un gasto planificado, una rebaja o unas vacaciones no cuentan, aunque se sientan apremiantes. Si sabías que venía, va en tu presupuesto o en un objetivo de ahorro aparte, no en el fondo de emergencia.
+
+**¿Con qué cantidad debo empezar?**
+
+Empieza con un hito de 1.000 euros o un mes de gastos esenciales, lo que alcances antes. Eso ya absorbe la mayoría de los sustos pequeños que de otro modo acaban en la tarjeta de crédito. Cuando lo logres, sigue hacia los tres o seis meses completos.
+
+**¿Cuánto se tarda en crear un fondo de emergencia?**
+
+Depende del objetivo y de tu aportación mensual. Con 500 € al mes, llegar a 6.000 € (tres meses de 2.000 €) lleva 12 meses y llegar a 12.000 €, 24 meses. Una transferencia automática el día de cobro acorta el camino más que cualquier truco, porque elimina la decisión mensual.
 
 ---
 
@@ -1653,6 +1900,82 @@ Depende del formato del archivo, pero el mecanismo está pensado para mejorar co
 ---
 
 *Artículos relacionados: [Cómo importar un extracto bancario a tu app de presupuesto](/blog/es/importar-extracto-bancario/) | [Registrar gastos automáticamente sin escribir nada](/blog/es/registrar-gastos-automaticamente/)*
+
+## Importar el extracto de Revolut a tu presupuesto
+URL: https://ai-budget.pl/blog/es/importar-extracto-revolut/
+
+Para importar un extracto de Revolut, genera un extracto en CSV en la app de Revolut y, en AI Budget Assistant, abre Ajustes → Importar transacciones → Revolut y elige el archivo. Verás una vista previa con categorías sugeridas, duplicados desmarcados y cambios de divisa unidos en un solo movimiento. Todo en pocos minutos.
+
+Revolut es de los bancos más fáciles de importar: su CSV tiene un diseño de columnas fijo e indica la divisa de cada fila. Aquí tienes qué lee exactamente la app y en qué fijarte.
+
+## ¿Cómo exporto un extracto desde Revolut?
+
+En la app de Revolut abre los extractos de tu cuenta (en la interfaz en inglés la sección se llama Statements), elige el periodo y el formato CSV, y descarga el archivo en tu móvil u ordenador. Revolut cambia los nombres de los botones de vez en cuando; si la pantalla es distinta, busca la opción que genera un extracto y te deja elegir CSV.
+
+Un buen hábito: la primera vez descarga un periodo largo, de tres a seis meses. Reimportar periodos que se solapan es seguro, porque la app reconoce lo que ya tiene.
+
+## ¿Cómo importo el archivo paso a paso?
+
+1. **Descarga el CSV de Revolut** en el dispositivo donde usas la app.
+2. En AI Budget Assistant, ve a **Ajustes → Importar transacciones**.
+3. Elige **Revolut** en la lista (o **Detectar automáticamente (cualquier banco)**, que reconoce el diseño de Revolut por sus cabeceras).
+4. Selecciona el archivo. La app muestra una vista previa: cada fila como gasto, ingreso o cambio de divisa, con categoría sugerida.
+5. Desmarca las filas que no quieras, corrige categorías y pulsa **Importar**.
+
+En la vista previa verás contadores de filas seleccionadas y ya importadas. Las que la app ya conoce aparecen desmarcadas por defecto.
+
+## ¿Qué lee la app de un archivo de Revolut?
+
+| Elemento | Tratamiento |
+|---|---|
+| Formato | CSV separado por comas, cabeceras en la primera fila |
+| Columnas | Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance |
+| Fecha | De Started Date (solo la fecha, sin hora) |
+| Importe | Con signo: negativo es gasto, positivo es ingreso |
+| Divisa | Por fila, así una cuenta multidivisa no mezcla monedas |
+| Estado | Solo se importan filas COMPLETED; las rechazadas y pendientes se omiten |
+| Cambio de divisa | Dos filas EXCHANGE con la misma fecha y signos opuestos se unen en un cambio de divisa |
+| Comercio | De Description, con nombre normalizado para las cadenas conocidas |
+
+## ¿Qué pasa con los cambios de divisa y las cuentas multidivisa?
+
+Una cuenta de Revolut suele tener varias divisas. Si cambias eslotis por euros, el archivo trae dos filas: una salida en una divisa y una entrada en otra. Contadas por separado, crearían un gasto falso y un ingreso falso. Por eso la app las empareja y guarda un único **cambio de divisa**, visible en la Cartera y no en tus gastos.
+
+Las compras en divisas extranjeras se quedan en su propia divisa.
+
+## ¿Cómo evito duplicados y qué hago si algo sale mal?
+
+La app te protege de dos maneras. Primero, cada fila recibe un identificador único formado por fecha, importe y descripción, así que importar el mismo archivo otra vez no añade nada. Segundo, compara fecha, importe y divisa con las transacciones de tu cuenta, también las manuales, y desmarca las repeticiones probables.
+
+Dos compras idénticas el mismo día, como dos cafés al mismo precio, se conservan como dos transacciones. Si no te convence el resultado, en el historial de importaciones, al final de la pantalla, puedes deshacerlo con un toque durante 30 días y volver a importar el mismo archivo.
+
+Para la mecánica general, lee [Importar extracto bancario](/blog/es/importar-extracto-bancario/). Si tu banco no está en la lista, mira [Importar extracto de cualquier banco](/blog/es/importar-extracto-de-cualquier-banco/).
+
+## ¿Es seguro?
+
+Nunca introduces tu usuario ni contraseña de Revolut. Importas un archivo estático que descargaste tú, así que la app solo ve el historial de ese archivo. Puedes probar AI Budget Assistant gratis en [ai-budget.pl](https://ai-budget.pl) o en [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: Importar el extracto de Revolut
+
+**¿Qué formato de extracto de Revolut necesito?**
+
+CSV. Es el archivo con las columnas Type, Started Date, Description, Amount, Currency, State y Balance que Revolut genera en la sección de extractos de tu cuenta. Un PDF solo se puede leer mediante lectura con IA, que es una función Pro, así que para importaciones habituales elige CSV.
+
+**¿Se importan las transacciones rechazadas o pendientes?**
+
+No. Solo se toman las filas con estado COMPLETED. Un pago con tarjeta rechazado no restará de tu presupuesto, y uno pendiente aparecerá en un extracto posterior cuando se liquide.
+
+**¿Un cambio de divisa en Revolut cuenta como gasto?**
+
+No. Dos filas de cambio con la misma fecha y signos opuestos se unen en un cambio de divisa en la Cartera. No infla ni los gastos ni los ingresos.
+
+**¿Puedo importar el mismo extracto dos veces?**
+
+Sí, y no se duplicará nada. Las filas repetidas se reconocen y se desmarcan en la vista previa como ya importadas.
+
+**¿Puedo deshacer una importación de Revolut?**
+
+Sí. En el historial de importaciones, al final de la pantalla de importación, toca la flecha de deshacer junto a la importación. Funciona durante 30 días y después puedes importar el mismo archivo de nuevo.
 
 ## Tu inflación personal: cómo calcularla
 URL: https://ai-budget.pl/blog/es/inflacion-personal/
@@ -2009,6 +2332,171 @@ Resuelven problemas distintos y funcionan bien juntos. La regla 50/30/20 fija tu
 
 *Artículos relacionados: [Cómo hacer un presupuesto paso a paso](/blog/es/como-hacer-un-presupuesto/) | [La regla 50/30/20 explicada](/blog/es/regla-50-30-20/)*
 
+## Monefy vs AI Budget Assistant: ¿cuál te conviene?
+URL: https://ai-budget.pl/blog/es/monefy-vs-ai-budget-assistant/
+
+Monefy y AI Budget Assistant son dos apps para controlar gastos, pero están pensadas para hábitos distintos. Monefy es una app pequeña y rápida para anotar gastos a mano. AI Budget Assistant añade un chat con IA, entrada por voz, escaneo de tickets, cuentas compartidas e importación de extractos bancarios. Aquí las comparamos lado a lado para que elijas sin instalar las dos. Nos basamos en las páginas públicas de cada app a octubre de 2026; las ofertas cambian, así que revisa la ficha actual antes de decidir.
+
+## De un vistazo: Monefy y AI Budget Assistant
+
+| | Monefy | AI Budget Assistant |
+|---|---|---|
+| Plataformas | Apps para Android e iOS | App para Android y app web (se puede instalar en la pantalla de inicio); sin app nativa para iOS |
+| Precio | Base gratuita, Premium de pago opcional | Plan gratuito; Pro 4,99 USD/mes o 29,99 USD/año, 7 días de prueba |
+| Límites de la versión gratuita | Premium añade cuentas ilimitadas | 3 cuentas, 1 miembro, 50 solicitudes de IA al mes |
+| IA | No es su foco; la app apuesta por la sencillez y la rapidez | Chat con IA, entrada por voz, escaneo de tickets con líneas de detalle |
+| Dónde están los datos | En tu dispositivo o en tu propio Google Drive / Dropbox | Sincronizados con el servidor de la app; cifrado de extremo a extremo opcional |
+| Conexión bancaria | Sin conexiones bancarias automáticas | Sin enlace bancario en vivo; importas extractos (CSV/PDF) |
+| Importación | Importación manual de extractos | Bancos polacos, Revolut, Wise y exportaciones de Monefy, Wallet y Money Manager |
+| Informes y exportación | Archivo de copia de seguridad | Informes CSV, PDF y Excel, gratis en todos los planes |
+| Presupuesto compartido | Sincronización de tus propios datos entre tus dispositivos | Cuentas compartidas con roles Propietario, Editor y Lector (los miembros requieren Pro) |
+| Sin conexión | Datos guardados en local | La app móvil guarda primero en local y sincroniza después; la app web necesita internet |
+| Monedas | 150+ | Multimoneda con conversión a la moneda de visualización |
+| Idiomas | 25+ | 9 (inglés, polaco, alemán, español, francés, ruso, ucraniano, bielorruso, neerlandés) |
+
+## ¿Qué app es más rápida para anotar gastos a mano?
+
+Monefy. Su propia web habla de registrar una compra en dos toques y pone por delante la sencillez, la rapidez y la privacidad. Si solo quieres teclear un importe, elegir una categoría y seguir, cuesta superarla. AI Budget Assistant también tiene un formulario manual, pero es una app más grande, pensada para algo más que anotar rápido.
+
+## ¿Qué app tiene funciones de IA?
+
+AI Budget Assistant. En el chat con IA puedes escribir o decir «gasté 45 en el súper», y la app te pide confirmar antes de guardar nada. También puedes escanear un ticket con sus líneas y preguntar por tus gastos. La web de Monefy no enumera funciones de IA. El plan gratuito incluye 50 solicitudes de IA al mes; los límites mayores y algunas funciones avanzadas requieren un plan de pago.
+
+## ¿Qué plataformas admite cada app?
+
+Monefy tiene apps para Android e iOS. AI Budget Assistant tiene una app para Android y una app web en [ai-budget.pl](https://ai-budget.pl) que puedes añadir a la pantalla de inicio como una app. No hay app nativa para iOS. Si usas iPhone y quieres una app de la tienda, encaja mejor Monefy; si además quieres un navegador en el portátil, AI Budget Assistant.
+
+## ¿Cuál es más barata?
+
+Las dos empiezan gratis. La base de Monefy es gratuita, con un Premium opcional que, según su centro de ayuda, incluye cuentas ilimitadas. El plan gratuito de AI Budget Assistant ofrece 3 cuentas y 50 solicitudes de IA al mes; Pro cuesta 4,99 USD al mes o 29,99 USD al año, con 7 días de prueba. El precio del Premium de Monefy depende de la tienda y del país, así que consulta su ficha para la cifra actual.
+
+## ¿Cuál es mejor para un presupuesto familiar compartido?
+
+AI Budget Assistant. Tiene cuentas compartidas donde cada miembro es Propietario, Editor o Lector: tu pareja puede añadir gastos y un hijo solo mirar. Más miembros requieren Pro, que permite hasta 5 por cuenta. La sincronización de Monefy con Google Drive o Dropbox mantiene tus propios datos en tus dispositivos; no es un presupuesto compartido entre varias personas.
+
+## ¿Puedo llevarme mis datos de Monefy?
+
+Sí. AI Budget Assistant tiene una importación específica de Monefy que conserva tus categorías. Las transferencias entre tus propias cuentas de Monefy y los saldos iniciales se omiten, porque son contabilidad y no gasto. La guía completa está en [cambiar de Monefy, Wallet o Money Manager](/blog/es/cambiar-de-monefy-wallet-moneymanager/), así que no la repetimos aquí.
+
+## Cuándo es mejor Monefy
+
+- Usas un iPhone y quieres una app nativa de la App Store.
+- Quieres el registrador más simple posible, sin IA ni extras.
+- Prefieres que tus datos se queden en el dispositivo o en tu propio Google Drive o Dropbox.
+- Necesitas una interfaz en uno de sus más de 25 idiomas y el tuyo no está entre nuestros nueve.
+
+## Cuándo es mejor AI Budget Assistant
+
+- Quieres anotar gastos por chat o por voz, o escanear tickets.
+- Compartes presupuesto con tu pareja o tu familia y quieres roles.
+- Importas extractos de mBank, PKO, Revolut o Wise y los quieres categorizados.
+- Quieres una app web junto a tu móvil Android.
+- Quieres informes CSV, PDF o Excel sin pagar.
+
+## Cómo pasar de Monefy
+
+Exporta desde Monefy, sube el archivo en la sección de importación, revisa la vista previa y confirma. La detección de duplicados hace que volver a subir un archivo que se solapa sea seguro. Los detalles están en [la guía para cambiar de app](/blog/es/cambiar-de-monefy-wallet-moneymanager/). Puedes probarla gratis en [ai-budget.pl](https://ai-budget.pl) o en [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant). Si también comparas precios, mira [qué significa de verdad una app gratis de control de gastos](/blog/es/app-gratis-control-de-gastos/) o la comparativa con [Wallet by BudgetBakers](/blog/es/wallet-budgetbakers-vs-ai-budget-assistant/).
+
+---
+
+## FAQ: Monefy vs AI Budget Assistant
+
+**¿Es gratis Monefy?**
+
+La app base de Monefy es gratuita, con un Premium opcional. Según su centro de ayuda, Premium incluye cuentas ilimitadas. El precio exacto depende de la tienda y del país, así que consúltalo en la ficha de la app.
+
+**¿Funciona AI Budget Assistant en iPhone?**
+
+No hay app nativa para iOS. Puedes usar la app web en Safari y añadirla a la pantalla de inicio, con lo que tiene su propio icono. Necesita conexión a internet.
+
+**¿Es gratis AI Budget Assistant?**
+
+Sí, hay un plan gratuito con 3 cuentas y 50 solicitudes de IA al mes. Pro cuesta 4,99 USD al mes o 29,99 USD al año, con 7 días de prueba gratuita.
+
+**¿Puedo importar mi historial de Monefy a AI Budget Assistant?**
+
+Sí. Exporta tus datos desde Monefy y súbelos en la sección de importación; las categorías se conservan. Las transferencias entre tus cuentas de Monefy y los saldos iniciales no se importan.
+
+**¿Cuál es mejor para un presupuesto familiar?**
+
+AI Budget Assistant, porque las cuentas compartidas admiten los roles Propietario, Editor y Lector. Monefy sincroniza tus propios datos entre tus dispositivos en lugar de compartir un presupuesto entre varias personas.
+
+---
+
+*Artículos relacionados: [Cambiar de Monefy, Wallet o Money Manager](/blog/es/cambiar-de-monefy-wallet-moneymanager/) | [Wallet by BudgetBakers vs AI Budget Assistant](/blog/es/wallet-budgetbakers-vs-ai-budget-assistant/) | [App gratis de control de gastos](/blog/es/app-gratis-control-de-gastos/)*
+
+## Money Manager vs AI Budget Assistant: ¿cuál te conviene?
+URL: https://ai-budget.pl/blog/es/money-manager-vs-ai-budget-assistant/
+
+«Money Manager» es el nombre de más de una app. La más conocida es Money Manager Expense & Budget, de Realbyte, que según su propia web ha superado los 20 millones de descargas en Google Play. Existe además otra app más sencilla con el mismo nombre y su propio formato de exportación. Este artículo compara AI Budget Assistant con la app de Realbyte. Si usas la otra, la comparación es más aproximada, pero la sección de importación sirve para ambas.
+
+Lo que decimos de Money Manager procede de la web de Realbyte y de su ficha en App Store, consultadas en octubre de 2026. Los planes y precios cambian, así que confírmalos en la tienda antes de decidir.
+
+## Money Manager y AI Budget Assistant de un vistazo
+
+| | Money Manager (Realbyte) | AI Budget Assistant |
+|---|---|---|
+| Idea central | Libro de registro manual y detallado: cuentas, categorías y subcategorías, vista de calendario, partida doble para activos y préstamos | Registro rápido con IA y después presupuestos por categoría con proyección de fin de periodo |
+| Plataformas | Android e iOS | Android y web (sin app nativa para iOS) |
+| Modelo de precio | Gratis con compras dentro de la app; una suscripción mensual o anual incluye su servicio de sincronización de datos | Plan gratuito; suscripción Pro con 7 días de prueba |
+| Precio publicado | 2,49 USD al mes o 19,99 USD al año en la App Store de EE. UU. | Pro: 4,99 USD al mes o 29,99 USD al año |
+| Tickets | Guarda fotos de los tickets con las transacciones | Escanea tickets y lee sus líneas |
+| Importar / exportar | Exportación a Excel/CSV y copia de seguridad, según su web | Extractos, otras apps, mapeo de columnas con IA; exportación a CSV, Excel, PDF; copia de la cuenta |
+| Presupuestos compartidos | No se describe en las páginas consultadas | Cuentas compartidas: hasta 5 miembros por cuenta con Pro (1 en el plan gratuito) |
+| IA | No se describe en las páginas consultadas | Chat con IA, entrada por voz, escaneo de tickets, análisis |
+| Sin conexión | No se indica en las páginas consultadas | La app de Android funciona sin conexión y sincroniza después; la web necesita conexión |
+| Idiomas | No comprobado | 9 idiomas de interfaz |
+
+## ¿Cuál es mejor para mí, Money Manager o AI Budget Assistant?
+
+Elige Money Manager si te gusta un registro manual y detallado, quieres una app para iOS y no te importa introducirlo todo tú. Elige AI Budget Assistant si lo que te hace abandonar es teclear cada movimiento: puedes escribir en el chat, hablar o fotografiar un ticket, y además tienes cuentas compartidas y versión web. Ambas tienen presupuestos y varias monedas, así que la diferencia está sobre todo en cómo entran los datos.
+
+Piensa cómo usabas tu anterior app de presupuesto. Si disfrutabas con la contabilidad en sí, te va una app tipo libro de registro. Si lo dejaste a las pocas semanas, ayuda más reducir el esfuerzo de registrar.
+
+## ¿Qué diferencia hay en el precio?
+
+Money Manager se puede usar gratis, con compras dentro de la app; en la App Store de EE. UU. su suscripción con sincronización de datos figura a 2,49 USD al mes o 19,99 USD al año. AI Budget Assistant empieza gratis, con 50 consultas de IA al mes, y Pro cuesta 4,99 USD al mes o 29,99 USD al año, con 7 días de prueba. Money Manager sale más barato si solo necesitas un registro; con nosotros obtienes IA y cuentas compartidas.
+
+Los precios regionales varían, así que tómalos como referencia. Para ver cómo funcionan los planes gratuitos en general, consulta la [guía de apps gratis para controlar gastos](/blog/es/app-gratis-control-de-gastos/).
+
+## ¿Puedo importar mis datos de Money Manager?
+
+Sí. Exporta tus datos de Money Manager a un archivo CSV y súbelo en la sección de importación. AI Budget Assistant lee las dos variantes de Money Manager (la exportación completa al estilo Realbyte, que conserva categoría y subcategoría, y la más sencilla con columnas de título y nota), además de la exportación casi idéntica de 1Money. Tus categorías pasan como las construiste y ves una vista previa antes de guardar.
+
+No se transfieren los presupuestos, las reglas recurrentes ni las fotos de tickets que solo existen dentro de Money Manager. No hemos podido probar todas las variantes de exportación, así que revisa la vista previa. Subir archivos que se solapan es seguro, porque se detectan los duplicados. El paso a paso completo está en [cambiar de Monefy, Wallet o Money Manager](/blog/es/cambiar-de-monefy-wallet-moneymanager/), así que no lo repetimos aquí.
+
+## ¿Cuándo es mejor Money Manager?
+
+Money Manager es la mejor opción en estos casos:
+
+- **Quieres un registro detallado.** Muchos tipos de cuenta, categorías con subcategorías y partida doble para ahorros, seguros, préstamos o inmuebles son lo que anuncia.
+- **Te gusta la vista de calendario.** Ver un mes día a día en una sola pantalla forma parte de su diseño.
+- **Usas iPhone.** Tiene app para iOS; nosotros no.
+- **Quieres control manual total**, sin IA.
+- **Quieres un precio menor por el registro básico.** Su suscripción es más barata que nuestro Pro.
+
+## ¿Cuándo es mejor AI Budget Assistant?
+
+Encaja mejor cuando el esfuerzo de introducir datos es tu obstáculo. Di «café y bocadillo, 6 euros» o escanea un ticket y el gasto se rellena; pregunta al chat «¿cuánto he gastado este mes en comida?» y recibe una respuesta con tus datos. Puedes compartir una cuenta con tu pareja o familia, usar la versión web en el portátil y cambiar la interfaz entre nueve idiomas.
+
+Los límites: sin app nativa para iOS, sin conexión bancaria en vivo (importas extractos, y en Android se pueden capturar notificaciones del banco) y sin uso sin conexión en la web. Si comparas varias apps, la [comparativa de las mejores apps de presupuesto](/blog/es/mejores-apps-de-presupuesto/) da una visión más amplia, y la [guía del presupuesto compartido en pareja](/blog/es/presupuesto-compartido-en-pareja/) trata la parte de compartir.
+
+Puedes probar el plan gratuito en [ai-budget.pl](https://ai-budget.pl) e importar tu historial de Money Manager para ver tus propios datos.
+
+## FAQ: Money Manager vs AI Budget Assistant
+
+**¿Qué app Money Manager comparáis?**
+Money Manager Expense & Budget de Realbyte, la app más conocida con ese nombre. También existe otra más sencilla y sin relación que se llama Money Manager. Nuestro importador lee las exportaciones de ambas y de 1Money, pero la comparación de funciones es sobre la app de Realbyte.
+
+**¿Pierdo mis categorías al cambiar?**
+No. Las categorías y subcategorías de una exportación CSV de Money Manager se trasladan, así que «Food / Groceries» queda como lo configuraste. Los presupuestos, las reglas recurrentes y las fotos de tickets guardados solo en Money Manager no se transfieren.
+
+**¿AI Budget Assistant funciona en iPhone?**
+No como app nativa. La versión web funciona en el navegador del móvil y se puede añadir a la pantalla de inicio, pero necesita conexión. Money Manager sí tiene app para iOS, lo que cuenta si usas iPhone.
+
+**¿AI Budget Assistant es gratis?**
+Hay un plan gratuito con registro de gastos, chat con IA, entrada por voz y escaneo de tickets, limitado a 50 consultas de IA al mes. Pro cuesta 4,99 USD al mes o 29,99 USD al año, con 7 días de prueba.
+
 ## Plantilla de presupuesto en Excel: estructura y sus límites
 URL: https://ai-budget.pl/blog/es/plantilla-presupuesto-excel/
 
@@ -2035,6 +2523,8 @@ Para el resumen, usa una fórmula de suma condicional: `SUMAR.SI` en la versión
 El saldo se calcula más fácil como una suma acumulada: saldo inicial más ingresos menos gastos, arrastrado fila a fila o mes a mes en la pestaña de resumen. No necesita ser sofisticado, solo tiene que decirte si vas bien antes de que te sorprenda el fin de mes.
 
 Y eso es prácticamente todo. Excel y Google Sheets se comportan igual aquí, así que usa el que ya tengas abierto.
+
+**[Descarga la plantilla lista (.xlsx)](/blog/es/assets/budget-template.xlsx)** — Movimientos, categorías y un resumen mensual con las fórmulas ya puestas; funciona en Excel, Hojas de cálculo de Google y LibreOffice.
 
 ## Dónde una hoja de cálculo empieza a fallar
 
@@ -2510,6 +3000,73 @@ Indirectamente, sí. Lo explicamos con más detalle en nuestro artículo sobre [
 
 *Artículos relacionados: [Cómo hacer un presupuesto personal que funcione de verdad](/blog/es/como-hacer-un-presupuesto/) | [La regla 50/30/20: una guía práctica](/blog/es/regla-50-30-20/) | [IA para las finanzas personales: cómo te ayuda de verdad](/blog/es/ia-para-las-finanzas/)*
 
+## Devolución de la renta: en qué gastarla con cabeza
+URL: https://ai-budget.pl/blog/es/que-hacer-con-la-devolucion-de-la-renta/
+
+Lo mejor es repartir la devolución de la renta con un plan fijado antes de que llegue el dinero: primero saldar deudas caras, después reforzar el fondo de emergencia, destinar una parte a un objetivo de ahorro y reservar una cantidad pequeña y deliberada para un capricho. Es un ingreso puntual, así que importa más el plan que la cifra.
+
+## ¿Por qué la devolución de la renta se esfuma tan rápido?
+
+Porque llega como dinero no planificado. No forma parte del presupuesto mensual, entra de golpe y se vive como un extra, no como dinero propio que vuelve con retraso. Sin plan, se diluye en el gasto diario. La solución es sencilla: asigna una función a cada euro antes de que llegue, igual que harías con una nómina.
+
+## ¿Cómo repartir la devolución de la renta?
+
+Empieza con una proporción y ajústala a tu situación. Un orden habitual: deuda cara, colchón de seguridad, objetivo, capricho. Ejemplo con una devolución de 1.200 €:
+
+| Destino | Parte | Importe | Por qué |
+|---|---|---|---|
+| Deuda cara (tarjeta, préstamo con interés alto) | 40 % | 480 € | “Rentabilidad” segura igual a los intereses que dejas de pagar |
+| Fondo de emergencia | 30 % | 360 € | El próximo imprevisto será una molestia, no una crisis |
+| Un objetivo de ahorro (viaje, entrada, portátil) | 20 % | 240 € | Acerca una meta concreta |
+| Compra planificada o capricho | 10 % | 120 € | Hace el plan realista y fácil de cumplir |
+
+Si no tienes deuda cara, pasa esa parte al fondo o al objetivo. Si el colchón ya está lleno, al objetivo. El razonamiento de cada paso está en nuestras guías sobre el [fondo de emergencia](/blog/es/fondo-de-emergencia/) y [cómo pagar deudas](/blog/es/como-pagar-deudas/).
+
+## ¿Pago deudas o ahorro la devolución?
+
+Paga primero la deuda cuando su interés supere lo que podrían rentar tus ahorros, algo casi siempre cierto en tarjetas y préstamos al consumo. Pero deja un pequeño colchón: si la devolución te deja sin efectivo y el siguiente gasto imprevisto vuelve a la misma tarjeta, estás como al principio. Por eso la tabla reserva un 30 % para el fondo de emergencia incluso mientras pagas deudas.
+
+AI Budget Assistant registra el dinero que has prestado o que te han prestado (por ejemplo, un préstamo familiar) como una deuda con pagos y fecha de vencimiento, y puedes anotar un pago desde la pantalla de deudas o en el chat. Una amortización extra de un préstamo bancario o de una tarjeta, regístrala como un gasto normal para que el saldo cuadre.
+
+## ¿Cómo planificar la devolución antes de que llegue?
+
+Haz tres cosas mientras esperas:
+
+1. **Estima la cifra con prudencia.** Usa el importe del borrador de tu declaración y planifica con el valor más bajo.
+2. **Escribe el reparto.** Porcentajes como los de arriba, con nombres reales: qué deuda, qué fondo, qué objetivo.
+3. **Crea los destinos de antemano.** Si el objetivo y la categoría de presupuesto ya existen, el dinero tiene dónde ir desde el primer día.
+
+En AI Budget Assistant, un objetivo de ahorro tiene nombre, importe objetivo y fecha límite, y cada aportación queda en el historial de aportaciones del objetivo, así que luego ves exactamente en qué se usó la devolución. También puedes decir al chat “aporta 240 € al objetivo de vacaciones” sin abrir la pantalla del objetivo. Cuando llegue, regístrala como ingreso (por voz o con una foto del documento) para que el saldo y la cifra segura para gastar estén al día.
+
+## ¿Cuándo llega la devolución de la renta?
+
+Según la [Agencia Tributaria](https://sede.agenciatributaria.gob.es/Sede/Renta.html), la campaña de la renta de 2025 se abrió el 8 de abril de 2026, y las devoluciones suelen tramitarse en unos meses. Cuanto antes presentes una declaración correcta, antes suele llegar el dinero. Consulta siempre en la sede electrónica los plazos vigentes y los tiempos de devolución.
+
+## ¿Cómo evito que la devolución distorsione mi presupuesto mensual?
+
+Trátala como un ingreso puntual, no como parte de tu sueldo. El presupuesto recurrente sigue basado en tus ingresos normales y la devolución se reparte aparte con el plan anterior. Si quieres que una compra planificada salga de ella, resérvala como una línea propia en lugar de mezclarla con el súper y las facturas. Un [presupuesto en la app](https://ai-budget.pl) te permite mantenerlo separado de las categorías diarias.
+
+*Este artículo es información general de presupuestos, no asesoramiento fiscal.*
+
+Puedes probar objetivos, deudas y presupuestos sin tarjeta en el navegador, en [ai-budget.pl](https://ai-budget.pl), o instalar la app para Android desde [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
+
+## FAQ: devolución de la renta
+
+**¿Qué es lo mejor que puedo hacer con la devolución de la renta?**
+Pagar primero la deuda con interés alto, después reforzar el fondo de emergencia y luego financiar un objetivo de ahorro. Reserva una parte pequeña para una compra planificada y el plan será realista. La proporción exacta depende de tus deudas y de cómo de lleno esté tu colchón.
+
+**¿Debería usar toda la devolución para pagar deudas?**
+No necesariamente. Saldar deuda cara es una gran jugada, pero quedarte sin efectivo puede devolverte a la tarjeta ante el siguiente imprevisto. Repartir entre deuda y fondo de emergencia suele ser más seguro.
+
+**¿Cómo registro la devolución en una app de presupuestos?**
+Anótala como ingreso puntual cuando llegue y reparte partes en objetivos de ahorro y pagos de deuda. En AI Budget Assistant las aportaciones a un objetivo se guardan en un historial, así ves cómo se repartió.
+
+**¿La devolución de la renta es dinero regalado?**
+No. Es dinero tuyo que se retuvo o se pagó por adelantado y te devuelven. Verlo así ayuda a usarlo con propósito en vez de gastarlo como un premio.
+
+**¿Puedo planificarla sin saber la cifra exacta?**
+Sí. Usa una estimación prudente y planifica en porcentajes, no en importes fijos. Si resulta mayor, el extra va a las mismas prioridades en el mismo orden.
+
 ## Registrar gastos automáticamente sin escribir nada
 URL: https://ai-budget.pl/blog/es/registrar-gastos-automaticamente/
 
@@ -2608,7 +3165,9 @@ La regla 50/30/20 es el consejo de presupuesto más citado de internet, y con ra
 
 Esa es toda la regla. La parte difícil no es memorizar los números, sino decidir qué va realmente en cada bolsa y qué hacer cuando tu vida real no se divide limpiamente en tercios. Esta guía aborda las dos cosas.
 
-## Qué significa de verdad cada bolsa
+## ¿Qué significa cada bolsa de la regla 50/30/20?
+
+La regla 50/30/20 reparte tu ingreso neto en tres bolsas: 50% para necesidades (alquiler, suministros, comida básica, transporte, cuotas mínimas de deuda), 30% para caprichos (restaurantes, streaming, aficiones, viajes) y 20% para ahorro y amortización extra de deudas. Lo que decide es si el gasto es inevitable, no si te gusta.
 
 Los porcentajes son fáciles. Donde la gente se atasca es en las categorías, porque la línea entre una necesidad y un capricho es más borrosa de lo que parece.
 
@@ -2630,7 +3189,23 @@ Esta bolsa cubre tu fondo de emergencia, las aportaciones a la jubilación, tus 
 
 Para profundizar en la parte del ahorro, la guía complementaria sobre [cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/) explica cómo construir por capas un fondo de emergencia, objetivos a corto plazo y objetivos a largo plazo.
 
-## Cuándo la regla 50/30/20 no encaja
+## ¿Cómo se ve la regla 50/30/20 en euros?
+
+Con un ingreso neto de 3000 € al mes, la regla 50/30/20 asigna 1500 € a necesidades, 900 € a caprichos y 600 € a ahorro y deudas. La tabla muestra el reparto para tres ingresos de ejemplo. Son cifras ilustrativas, no un consejo personalizado para tu situación.
+
+*Ejemplo ilustrativo: reparto del ingreso neto mensual (EUR).*
+
+| Ingreso neto | 50% necesidades | 30% caprichos | 20% ahorro y deudas |
+|---|---|---|---|
+| 2000 € | 1000 € | 600 € | 400 € |
+| 3000 € | 1500 € | 900 € | 600 € |
+| 4500 € | 2250 € | 1350 € | 900 € |
+
+<!-- calculator:503020 -->
+
+## ¿Cuándo no funciona la regla 50/30/20 y qué hacer entonces?
+
+No encaja cuando solo el alquiler se come la mitad del sueldo, cuando tienes deuda cara o cuando el ingreso es muy bajo. Úsala entonces como dirección: protege el 20% de ahorro todo lo que puedas, acepta unas necesidades del 60-65% y recorta primero los caprichos, o desvía temporalmente el sobrante a la deuda con intereses altos.
 
 La regla asume un coste de vida bastante medio. Mucha gente no lo tiene, y fingir lo contrario es lo que convierte un marco útil en algo desalentador.
 
@@ -2640,7 +3215,9 @@ La regla asume un coste de vida bastante medio. Mucha gente no lo tiene, y fingi
 
 **Ingresos bajos.** Cuando el ingreso es genuinamente bajo, las necesidades pueden llevarse el 70% o más, y hay un suelo en lo que el recorte puede ayudar. La regla sigue teniendo valor como objetivo al que aspirar, pero la palanca mayor son los ingresos. Sé honesto contigo mismo sobre qué problema tienes realmente, porque las soluciones son distintas.
 
-## Cómo aplicar la regla 50/30/20
+## ¿Cómo se aplica la regla 50/30/20 paso a paso?
+
+Calcula tu ingreso neto, clasifica los gastos de los últimos 30 días en las tres bolsas, compara tu reparto real con los objetivos 50/30/20, corrige la bolsa que más se desvíe y revísalo todo cada mes. La primera pasada lleva una tarde; las siguientes, unos minutos.
 
 Esta es la secuencia práctica. Cinco pasos, ciclo mensual.
 
@@ -2666,7 +3243,9 @@ Un presupuesto no es una configuración de una sola vez. Revisa tu reparto una v
 
 Esta revisión mensual es mucho más fácil cuando el trabajo está automatizado. En AI Budget Assistant puedes crear tres presupuestos por categoría que reflejen la regla, dejar que el desglose de gasto clasifique las transacciones en las bolsas por ti y ver de un vistazo si estás dentro de cada objetivo. La vista de historial de presupuesto te muestra entonces la tendencia a lo largo de los meses, así que puedes saber si tu 58/32/10 se está convirtiendo poco a poco en 52/30/18. Es gratis para empezar, funciona en el navegador en [ai-budget.pl](https://ai-budget.pl) sin tarjeta, y hay una app de Android en [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant).
 
-## Es un marco de partida, no una ley
+## ¿Es la regla 50/30/20 una ley estricta?
+
+No. La regla 50/30/20 es un marco de partida, no una ley. Importan las tres bolsas y la revisión periódica, no los porcentajes exactos. El mejor reparto es el que puedas mantener durante un año, aunque acabe siendo 60/20/20 o 55/25/20.
 
 La regla 50/30/20 es un punto de partida útil, no un mandamiento. Si tu situación te empuja hacia otro reparto, está bien: la estructura de tres bolsas importa más que los porcentajes exactos. Algunas personas prefieren un método más manual al estilo del efectivo, que la guía sobre el [método de sobres](/blog/es/metodo-de-sobres/) detalla a fondo. La proporción correcta es la que de verdad puedes mantener durante un año, no la que queda más ordenada sobre el papel. Empieza con 50/30/20, mira dónde caen tus números reales y ajusta desde ahí.
 
@@ -2689,6 +3268,14 @@ Sí, con un matiz. Los pagos mínimos de deuda cuentan como necesidades, pero la
 **¿En qué se diferencia el 50/30/20 del presupuesto base cero?**
 
 La regla 50/30/20 te da tres bolsas amplias y te deja gastar con libertad dentro de cada una. El presupuesto base cero asigna una tarea a cada euro hasta que no queda nada sin destinar. La regla 50/30/20 exige menos esfuerzo y es más fácil de mantener, mientras que el base cero te da un control más estricto. Mucha gente empieza con 50/30/20 y solo pasa a un método más detallado si lo necesita.
+
+**¿Qué es la regla 50/30/20?**
+
+Es un método de presupuesto que reparte tu ingreso neto en un 50% de necesidades, un 30% de caprichos y un 20% de ahorro y pago de deudas. La popularizó Elizabeth Warren en el libro "All Your Worth". Ofrece tres bolsas simples en lugar de decenas de categorías, por eso funciona bien como primer presupuesto.
+
+**¿Dónde van la compra, comer fuera y las suscripciones?**
+
+La compra básica de comida es una necesidad. Comer fuera, el streaming y la mayoría de las suscripciones son caprichos, salvo que alguna sea imprescindible para tu trabajo. Si dudas, pregúntate si una versión más barata de lo mismo cubriría igualmente la necesidad. Todo lo que exceda esa versión va a caprichos.
 
 ---
 
@@ -2771,6 +3358,95 @@ Sí. AI Budget Assistant puede generar tanto un resumen de texto como una tarjet
 ---
 
 *Artículos relacionados: [Cómo ahorrar dinero](/blog/es/como-ahorrar-dinero/) | [Tu inflación personal: cómo calcularla](/blog/es/inflacion-personal/) | [Cómo gestionar suscripciones](/blog/es/como-gestionar-suscripciones/)*
+
+## Wallet by BudgetBakers vs AI Budget Assistant
+URL: https://ai-budget.pl/blog/es/wallet-budgetbakers-vs-ai-budget-assistant/
+
+Wallet by BudgetBakers y AI Budget Assistant resuelven el mismo problema de formas distintas. Wallet se apoya en conectar tus cuentas bancarias y tiene un alcance muy amplio de idiomas y plataformas. AI Budget Assistant se apoya en un chat con IA, entrada por voz, escaneo de tickets e importación de extractos, sin enlace bancario en vivo. Abajo tienes la comparación lado a lado. Nos basamos en las páginas públicas de cada empresa a octubre de 2026; los precios y planes cambian, así que confírmalos en la ficha actual.
+
+## De un vistazo: Wallet y AI Budget Assistant
+
+| | Wallet by BudgetBakers | AI Budget Assistant |
+|---|---|---|
+| Plataformas | Web, iOS y Android | App para Android y app web (se puede instalar en la pantalla de inicio); sin app nativa para iOS |
+| Precio | Empieza gratis; Premium de pago con prueba gratuita | Plan gratuito; Pro 4,99 USD/mes o 29,99 USD/año, 7 días de prueba |
+| Conexión bancaria | Conexión bancaria automática | Sin enlace bancario en vivo; importas extractos (CSV/PDF) |
+| IA | Aprende categorías de las transacciones bancarias sincronizadas | Chat con IA, entrada por voz, escaneo de tickets con líneas de detalle |
+| Compartido / familia | Se presenta para finanzas personales y familiares | Cuentas compartidas con roles Propietario, Editor y Lector (los miembros requieren Pro) |
+| Importación | Sincronización bancaria | Bancos polacos, Revolut, Wise y exportaciones de Monefy, Wallet y Money Manager |
+| Informes y exportación | La exportación de datos es una función de pago de Wallet | Informes CSV, PDF y Excel, gratis en todos los planes |
+| Idiomas | 50 | 9 (inglés, polaco, alemán, español, francés, ruso, ucraniano, bielorruso, neerlandés) |
+| Seguridad (según declaran) | Certificada ISO 27001 y conforme con el RGPD, según su web | Cifrado de extremo a extremo opcional, que se activa en Ajustes |
+
+## ¿Qué app se conecta directamente a mi banco?
+
+Wallet. Su web anuncia la conexión bancaria automática y una categorización que aprende de las transacciones sincronizadas, lo que ahorra trabajo manual. AI Budget Assistant no tiene enlace bancario en vivo. Descargas un extracto de tu banco (mBank, PKO, Revolut, Wise y otros) y lo subes; ves una vista previa antes de guardar nada.
+
+## ¿Qué app tiene funciones de IA?
+
+AI Budget Assistant está construida alrededor de ellas. Puedes escribir o decir un gasto en el chat con IA y confirmarlo, escanear un ticket con sus líneas y preguntar por tus gastos. El plan gratuito incluye 50 solicitudes de IA al mes y las funciones avanzadas requieren Pro. La fuerza de Wallet es la automatización basada en el banco; sus propios productos de asistentes los encuentras en su web.
+
+## ¿Qué plataformas admite cada app?
+
+Wallet funciona en la web, iOS y Android. AI Budget Assistant tiene una app para Android y una app web en [ai-budget.pl](https://ai-budget.pl) que puedes añadir a la pantalla de inicio, pero no una app nativa para iOS. Si quieres una app de la tienda en el iPhone, de las dos queda Wallet. Si te bastan Android y un navegador, sirven ambas.
+
+## ¿Cuál es más barata?
+
+Las dos empiezan gratis. Wallet ofrece un plan Premium de pago con prueba gratuita; su precio depende de la región y del periodo de facturación, así que consulta la ficha actual. El plan gratuito de AI Budget Assistant da 3 cuentas y 50 solicitudes de IA al mes; Pro cuesta 4,99 USD al mes o 29,99 USD al año, con 7 días de prueba. Compara lo que permite cada nivel gratuito, no solo el precio del titular.
+
+## ¿Cuál es mejor para compartir presupuesto con la familia?
+
+Las dos apuntan a los hogares. AI Budget Assistant ofrece cuentas compartidas con roles Propietario, Editor y Lector: tu pareja puede añadir gastos y un hijo solo verlos. Más de un miembro requiere Pro, que permite hasta 5 por cuenta. Revisa la página de planes de Wallet para saber cómo gestiona el compartir antes de decidirte.
+
+## ¿Qué app admite mi idioma?
+
+Wallet indica 50 idiomas; AI Budget Assistant ofrece 9: inglés, polaco, alemán, español, francés, ruso, ucraniano, bielorruso y neerlandés. Si tu idioma es uno de nuestros nueve, la interfaz, el chat y la ayuda dentro de la app están disponibles en él. Si no, Wallet es la apuesta más segura.
+
+## Cuándo es mejor Wallet
+
+- Quieres que las transacciones de tu banco lleguen solas.
+- Usas un iPhone y quieres una app nativa.
+- Tu idioma no está entre nuestros nueve.
+- Valoras un producto veterano con certificaciones que indica en su web.
+
+## Cuándo es mejor AI Budget Assistant
+
+- Prefieres anotar gastos por chat, voz o escaneo de ticket antes que enlazar un banco.
+- Quieres controlar lo que entra importando extractos y revisando una vista previa.
+- Quieres cuentas compartidas con roles y una app web junto a tu móvil Android.
+- Quieres informes CSV, PDF o Excel en el plan gratuito.
+
+## Cómo pasar de Wallet
+
+La exportación de datos de Wallet es una función de pago de Wallet, así que exporta antes de cancelar Premium. Después sube el archivo en la sección de importación, revisa la vista previa y confirma. AI Budget Assistant descarta las filas de transferencias de Wallet porque no son gasto. La guía paso a paso está en [cambiar de Monefy, Wallet o Money Manager](/blog/es/cambiar-de-monefy-wallet-moneymanager/). Pruébala gratis en [ai-budget.pl](https://ai-budget.pl) o en [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant). ¿Te interesa un registrador más simple? Mira [Monefy vs AI Budget Assistant](/blog/es/monefy-vs-ai-budget-assistant/).
+
+---
+
+## FAQ: Wallet by BudgetBakers vs AI Budget Assistant
+
+**¿Se conecta AI Budget Assistant a mi banco automáticamente?**
+
+No. No hay enlace bancario en vivo. Importas un archivo de extracto de tu banco, revisas la vista previa y confirmas. Entre las fuentes admitidas están mBank, PKO, Revolut y Wise.
+
+**¿Es gratis Wallet by BudgetBakers?**
+
+Puedes empezar gratis, y Wallet también tiene un plan Premium de pago con prueba gratuita. Los precios varían según la región, así que consulta la ficha actual.
+
+**¿Puedo importar mis datos de Wallet a AI Budget Assistant?**
+
+Sí. Exporta desde Wallet y sube el archivo en la sección de importación; tus categorías se conservan. Las filas de transferencias de Wallet no se importan porque no son gasto. La exportación de Wallet es una función de pago.
+
+**¿Tiene AI Budget Assistant una app para iPhone?**
+
+No nativa. Puedes usar la app web en Safari y añadirla a la pantalla de inicio. Necesita conexión a internet.
+
+**¿Cuánto cuesta AI Budget Assistant?**
+
+Hay un plan gratuito con 3 cuentas y 50 solicitudes de IA al mes. Pro cuesta 4,99 USD al mes o 29,99 USD al año, con 7 días de prueba gratuita.
+
+---
+
+*Artículos relacionados: [Cambiar de Monefy, Wallet o Money Manager](/blog/es/cambiar-de-monefy-wallet-moneymanager/) | [Monefy vs AI Budget Assistant](/blog/es/monefy-vs-ai-budget-assistant/) | [App gratis de control de gastos](/blog/es/app-gratis-control-de-gastos/)*
 
 
 # Help center

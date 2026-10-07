@@ -16,7 +16,9 @@ Ein geplatzter Reifen, eine plötzliche Tierarztrechnung, ein paar Wochen zwisch
 
 Dieser Artikel erklärt, was ein Notgroschen tatsächlich ist, wie viel du brauchst, wo du ihn aufbewahrst und wie du ihn Schritt für Schritt aufbaust, selbst wenn das Geld knapp wirkt.
 
-## Was ein Notgroschen ist (und was nicht)
+## Was ist ein Notgroschen, und was zählt als Notfall?
+
+Ein Notgroschen ist Bargeld für unerwartete, notwendige und dringende Ausgaben: Jobverlust, eine dringende Arztrechnung, ein ausgefallenes unverzichtbares Gerät oder eine Autoreparatur, die du für den Arbeitsweg brauchst. Urlaub, ein Sonderangebot oder eine absehbare Reparatur sind kein Notfall. Prüfe mit drei Fragen: unerwartet, notwendig, dringend?
 
 Ein Notgroschen ist Bargeld, das für echte, unerwartete, notwendige Ausgaben zurückgelegt ist. Das Schlüsselwort ist unerwartet. Ein Urlaub im Dezember ist kein Notfall, weil du wusstest, dass der Dezember kommt. Ein Auto, von dem du wusstest, dass es neue Bremsen braucht, ist auch keiner. Das gehört in dein normales Budget oder in ein separates Sparziel.
 
@@ -24,7 +26,9 @@ Ein echter Notfall ist etwas, das du nicht vernünftig einplanen konntest und ni
 
 Diese Unterscheidung ist wichtig, weil der häufigste Weg, wie Menschen ihren Notgroschen verlieren, darin besteht, "Notfall" still und leise so umzudeuten, dass ein Angebot dazuzählt, das man nicht verpassen wollte.
 
-## Wie viel solltest du haben?
+## Wie viel sollte ein Notgroschen betragen?
+
+Üblich sind drei bis sechs Monate notwendiger Ausgaben: Miete, Nebenkosten, Lebensmittel, Versicherungen, Fahrtkosten und Mindestraten, nicht dein gesamter Lebensstil. Drei Monate genügen bei sicherer Anstellung und einem zweiten Einkommen im Haushalt, sechs Monate bei schwankendem Einkommen, Selbstständigkeit oder wenn du allein verdienst.
 
 Die Standardempfehlung lautet drei bis sechs Monatsausgaben für das Lebensnotwendige. Beachte das Wort notwendig. Das sind nicht drei bis sechs Monate deines vollen Lebensstils. Es sind Miete, Nebenkosten, Lebensmittel, Versicherungen, Verkehr und Mindesttilgungen. Die Dinge, die das Licht anlassen, wenn dein Einkommen ausbleibt.
 
@@ -34,7 +38,23 @@ Dieses Ziel kann unerreichbar weit weg wirken, wenn du bei null startest. Also s
 
 Wer noch herausfindet, wie hoch seine notwendigen Monatskosten überhaupt sind, dem zeigt der Begleiterartikel zum [Haushaltsbuch führen](/blog/de/haushaltsbuch-fuehren/) zuerst das Kategorisieren der Ausgaben.
 
-## Wo du ihn aufbewahrst
+## Wie viele Monatsausgaben brauchst du in deiner Situation?
+
+Bei sicherer Anstellung und einem zweiten Einkommen im Haushalt sind etwa 3 Monate notwendiger Ausgaben sinnvoll, Freiberufler und Menschen mit schwankendem Einkommen sollten etwa 6 Monate anpeilen, eine Familie mit nur einem Einkommen ebenfalls etwa 6. Die Tabelle rechnet das beispielhaft bei 2.000 € notwendigen Monatskosten in Euro um.
+
+*Illustratives Beispiel: eine Faustregel, keine individuelle Beratung.*
+
+| Situation | Monate notwendiger Ausgaben | Beispiel bei 2.000 € im Monat |
+|---|---|---|
+| Sicherer Job, zweites Einkommen im Haushalt | 3 | 6.000 € |
+| Freiberufler oder schwankendes Einkommen | 6 | 12.000 € |
+| Familie mit einem Einkommen | 6 | 12.000 € |
+
+<!-- calculator:emergency -->
+
+## Wo bewahrst du einen Notgroschen am besten auf?
+
+Bewahre ihn auf einem separaten, leicht zugänglichen Sparkonto auf, getrennt vom Girokonto für den Alltag und innerhalb von ein bis zwei Tagen verfügbar. Ein Tagesgeldkonto passt gut. Investiere ihn nicht in Aktien, Krypto oder anderes, das an Wert verlieren kann, denn Notfälle kommen gern, wenn die Märkte fallen.
 
 Drei Regeln dafür, wo dein Notgroschen lebt:
 
@@ -74,7 +94,9 @@ Du wirst den Fonds irgendwann nutzen. Das ist Erfolg, kein Scheitern, es bedeute
 
 Das zu verfolgen ist die Stelle, an der ein Ziel mit sichtbarem Saldo hilft. Wenn der Fonds nach einer Reparatur von 6.000 Euro auf 4.500 Euro fällt, siehst du die Lücke und lenkst deine Zahltags-Überweisungen zurück aufs Schließen. Kostenlos zu starten, läuft im Browser unter [ai-budget.pl](https://ai-budget.pl) oder für Android über [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), ohne Kartenpflicht, um dein erstes Ziel einzurichten.
 
-## Häufige Fehler, die du vermeiden solltest
+## Welche Fehler solltest du beim Aufbau eines Notgroschens vermeiden?
+
+Die drei häufigsten Fehler: den Notgroschen in etwas Schwankendes investieren, ihn auf dem Konto für die Alltagsausgaben lassen und das erste Ziel so hoch ansetzen, dass du aufgibst. Starte mit einem kleinen Meilenstein, richte am Zahltag einen Dauerauftrag ein und erhöhe das Ziel erst, wenn du es erreicht hast.
 
 **Ihn anlegen.** Oben behandelt, aber wert, es zu wiederholen, weil es der verlockendste Fehler ist. Ein Notgroschen, der in der Woche, in der du ihn brauchtest, 30 % verloren hat, ist kein Notgroschen. Halt ihn langweilig.
 
@@ -101,6 +123,14 @@ Bau zuerst einen kleinen Startfonds von 1.000 Euro auf, konzentriere dich dann a
 **Was zählt als echter Notfall?**
 
 Etwas Unerwartetes, Notwendiges und Dringendes: ein Jobverlust, eine dringende Arztrechnung, ein essenzielles Gerät, das ausfällt, eine Autoreparatur, die du brauchst, um zur Arbeit zu kommen. Eine geplante Ausgabe, ein Angebot oder ein Urlaub zählt nicht, selbst wenn es drängend wirkt. Wenn du wusstest, dass es kommt, gehört es in dein Budget oder ein separates Sparziel, nicht in den Notgroschen.
+
+**Mit welchem Betrag sollte ich anfangen?**
+
+Starte mit einem Meilenstein von 1.000 Euro oder einer Monatsausgabe, je nachdem, was du zuerst erreichst. Das fängt die meisten kleinen Schocks ab, die sonst auf der Kreditkarte landen. Danach arbeitest du dich zu den vollen drei bis sechs Monaten vor.
+
+**Wie lange dauert es, einen Notgroschen aufzubauen?**
+
+Das hängt vom Ziel und deiner monatlichen Rate ab. Bei 500 € im Monat dauert es 12 Monate bis 6.000 € (drei Monate à 2.000 €) und 24 Monate bis 12.000 €. Ein Dauerauftrag am Zahltag verkürzt den Weg mehr als jeder Spartrick, weil er die monatliche Entscheidung entfernt.
 
 ---
 

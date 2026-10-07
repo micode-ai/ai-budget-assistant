@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="be"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Імпарт выпіскі Revolut у праграму для бюджэту</title>
+<meta name="description" content="Як імпартаваць CSV-выпіску Revolut у праграму для бюджэту: экспарт, папярэдні прагляд, абмен валют адным запісам і ніякіх дублікатаў пры паўторы.">
+<link rel="canonical" href="https://ai-budget.pl/blog/be/import-vypiski-revolut/"><meta name="robots" content="index,follow,max-image-preview:large">
+<meta property="og:type" content="article"><meta property="og:site_name" content="AI Budget Assistant">
+<meta property="og:locale" content="be_BY"><meta property="og:title" content="Імпарт выпіскі Revolut у праграму для бюджэту">
+<meta property="og:description" content="Як імпартаваць CSV-выпіску Revolut у праграму для бюджэту: экспарт, папярэдні прагляд, абмен валют адным запісам і ніякіх дублікатаў пры паўторы."><meta property="og:url" content="https://ai-budget.pl/blog/be/import-vypiski-revolut/">
+<meta property="og:image" content="https://ai-budget.pl/blog/be/import-vypiski-revolut/og.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Імпарт выпіскі Revolut у праграму для бюджэту">
+<meta name="twitter:description" content="Як імпартаваць CSV-выпіску Revolut у праграму для бюджэту: экспарт, папярэдні прагляд, абмен валют адным запісам і ніякіх дублікатаў пры паўторы."><meta name="twitter:image" content="https://ai-budget.pl/blog/be/import-vypiski-revolut/og.jpg">
+<link rel="alternate" hreflang="pl" href="https://ai-budget.pl/blog/pl/import-wyciagu-revolut/">
+<link rel="alternate" hreflang="be" href="https://ai-budget.pl/blog/be/import-vypiski-revolut/">
+<link rel="alternate" hreflang="de" href="https://ai-budget.pl/blog/de/revolut-kontoauszug-importieren/">
+<link rel="alternate" hreflang="en" href="https://ai-budget.pl/blog/en/import-revolut-statement-to-budget-app/">
+<link rel="alternate" hreflang="es" href="https://ai-budget.pl/blog/es/importar-extracto-revolut/">
+<link rel="alternate" hreflang="fr" href="https://ai-budget.pl/blog/fr/importer-releve-revolut/">
+<link rel="alternate" hreflang="nl" href="https://ai-budget.pl/blog/nl/revolut-afschrift-importeren/">
+<link rel="alternate" hreflang="ru" href="https://ai-budget.pl/blog/ru/import-vypiski-revolut/">
+<link rel="alternate" hreflang="uk" href="https://ai-budget.pl/blog/ua/import-vypysky-revolut/">
+<link rel="alternate" hreflang="x-default" href="https://ai-budget.pl/blog/en/import-revolut-statement-to-budget-app/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Organization", "@id": "https://ai-budget.pl/#organization", "name": "MICODE sp. z o.o.", "alternateName": ["MiCode Sp. z o.o.", "MiCode"], "taxID": "5833510147", "url": "https://mi-code.pl/", "sameAs": ["https://mi-code.pl/", "https://github.com/micode-ai", "https://www.wikidata.org/wiki/Q141551004"], "logo": {"@type": "ImageObject", "url": "https://ai-budget.pl/assets/mi_code_logo.svg", "width": 512, "height": 512}}, {"@type": "Person", "@id": "https://ai-budget.pl/#author", "name": "Mikhail Peraviortkin", "url": "https://ai-budget.pl/be/about/#author", "sameAs": ["https://github.com/micode-ai"], "description": "Mikhail Peraviortkin стварае AI Budget Assistant у MICODE sp. z o.o. і піша дапаможнікі ў гэтым блогу.", "worksFor": {"@id": "https://ai-budget.pl/#organization"}}, {"@type": "Article", "headline": "Імпарт выпіскі Revolut у праграму для бюджэту", "description": "Як імпартаваць CSV-выпіску Revolut у праграму для бюджэту: экспарт, папярэдні прагляд, абмен валют адным запісам і ніякіх дублікатаў пры паўторы.", "inLanguage": "be", "datePublished": "2026-10-07", "dateModified": "2026-06-19", "mainEntityOfPage": {"@type": "WebPage", "@id": "https://ai-budget.pl/blog/be/import-vypiski-revolut/"}, "author": {"@id": "https://ai-budget.pl/#author"}, "publisher": {"@id": "https://ai-budget.pl/#organization"}, "image": "https://ai-budget.pl/blog/be/import-vypiski-revolut/og.jpg"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Галоўная", "item": "https://ai-budget.pl/"}, {"@type": "ListItem", "position": 2, "name": "Блог", "item": "https://ai-budget.pl/blog/be/"}, {"@type": "ListItem", "position": 3, "name": "Імпарт выпіскі Revolut у праграму для бюджэту", "item": "https://ai-budget.pl/blog/be/import-vypiski-revolut/"}]}, {"@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Які фармат выпіскі Revolut патрэбны?", "acceptedAnswer": {"@type": "Answer", "text": "CSV. Гэта файл са слупкамі Type, Started Date, Description, Amount, Currency, State і Balance, які Revolut фармуе ў раздзеле выпісак па рахунку. PDF можна прачытаць толькі праз ШІ, а гэта функцыя тарыфу Pro, таму для рэгулярнага імпарту абірайце CSV."}}, {"@type": "Question", "name": "Ці імпартуюцца адхіленыя або тыя, што чакаюць, аперацыі?", "acceptedAnswer": {"@type": "Answer", "text": "Не. Бяруцца толькі радкі са статусам COMPLETED. Адхілены плацёж картай не паменшыць бюджэт, а той, што чакае, з'явіцца ў пазнейшай выпісцы, калі пройдзе."}}, {"@type": "Question", "name": "Ці палічыцца абмен валют у Revolut расходам?", "acceptedAnswer": {"@type": "Answer", "text": "Не. Два радкі абмену з аднолькавай датай і супрацьлеглымі знакамі аб'ядноўваюцца ў адзін абмен валют у Кашальку. Ён не раздзімае ні расходы, ні прыбыткі."}}, {"@type": "Question", "name": "Ці можна імпартаваць адну і тую ж выпіску двойчы?", "acceptedAnswer": {"@type": "Answer", "text": "Можна, нічога не падвоіцца. Радкі, што паўтараюцца, распазнаюцца і ў папярэднім праглядзе адзначаны як ужо імпартаваныя."}}, {"@type": "Question", "name": "Ці можна скасаваць імпарт з Revolut?", "acceptedAnswer": {"@type": "Answer", "text": "Так. У гісторыі імпартаў унізе экрана імпарту націсніце стрэлку скасавання каля патрэбнага імпарту. Гэта даступна 30 дзён, пасля чаго той самы файл можна імпартаваць зноў."}}]}]}</script>
+<style>
+:root{--o:#B45309;--ink:#1a1a1d;--mut:#5b5b66;--line:#ececf0;--bg:#fff}
+*{box-sizing:border-box}
+html,body{overflow-x:hidden}
+body{margin:0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.7}
+.wrap{max-width:760px;margin:0 auto;padding:0 22px}
+header.site{position:sticky;top:0;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);z-index:10}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.brand{font-weight:800;color:var(--ink);text-decoration:none;font-size:18px}.brand span{color:var(--o)}
+.nav{display:flex;align-items:center;gap:16px}.nav>a{color:var(--mut);font-weight:600;font-size:15px;text-decoration:none}
+.btn-login{color:#fff!important;background:var(--o);padding:8px 14px;border-radius:8px}
+.langmenu{position:relative}.langmenu>summary{list-style:none;cursor:pointer;color:var(--mut);font-weight:600;font-size:15px}
+.langmenu>summary::-webkit-details-marker{display:none}
+.langlist{position:absolute;top:150%;right:0;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(0,0,0,.12);padding:6px;min-width:170px;z-index:20}
+.langlist a{display:block;padding:9px 12px;border-radius:8px;color:#3a3a42;font-size:14px;font-weight:600;text-decoration:none}
+.langlist a:hover{background:#fff3e6}.langlist a.active{color:var(--o)}
+nav.crumb{font-size:13px;color:var(--mut);padding:16px 0}nav.crumb a{color:var(--mut)}
+article h1{font-size:32px;line-height:1.25;margin:8px 0 16px}
+article h2{font-size:23px;margin:34px 0 10px}article h3{font-size:18px;margin:24px 0 8px}
+article p,article li{font-size:17px;color:#27272e}article a{color:var(--o)}article ul{padding-left:22px}
+article .byline{color:var(--mut);font-size:14px;margin:-6px 0 20px}
+article img{display:block;width:100%;max-width:320px;height:auto;margin:20px auto;border-radius:14px;border:1px solid var(--line)}
+hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.tablewrap{overflow-x:auto;margin:18px 0}
+article table{border-collapse:collapse;width:100%;font-size:15px}
+article th,article td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+article th{background:#faf6f1;font-weight:700}
+article tbody tr:nth-child(even) td{background:#fafafb}
+.cta{margin:36px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:#fffaf4}
+.cta h3{margin:0 0 6px}.cta p{margin:0 0 14px;color:var(--mut);font-size:15px}
+.btn{display:inline-block;margin:4px 8px 4px 0;padding:11px 18px;border-radius:10px;text-decoration:none;font-weight:700;font-size:15px}
+.btn.p{background:var(--o);color:#fff}.btn.s{background:#fff;color:var(--ink);border:1px solid #e3e3e8}
+.related{margin:36px 0}.related h2{font-size:20px}
+.related a{display:block;padding:12px 0;border-bottom:1px solid var(--line);text-decoration:none;color:var(--ink);font-weight:600}
+.card{display:block;padding:18px 0;border-bottom:1px solid var(--line);text-decoration:none}
+.card h2{margin:0 0 6px;font-size:21px;color:var(--ink)}.card p{margin:0;color:var(--mut);font-size:15px}
+.cmeta{font-size:13px;color:var(--mut);margin:0 0 4px!important}
+.cfoot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px!important}
+.ccat{background:#f1f1f4;color:#3a3a42;border-radius:4px;padding:2px 8px;font-size:12px}
+.more{color:var(--o);font-weight:600;font-size:14px}
+.card:hover h2{text-decoration:underline}
+.blogfilter>input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0 4px}
+.chip{background:#f1f1f4;color:#3a3a42;border-radius:999px;padding:5px 13px;font-size:13px;cursor:pointer;user-select:none}
+.chip:hover{background:#e4e4ea}
+#bc-all:checked~.chips label[for=bc-all],#bc-budget:checked~.chips label[for=bc-budget],
+#bc-expenses:checked~.chips label[for=bc-expenses],#bc-saving:checked~.chips label[for=bc-saving]{background:var(--o);color:#fff}
+#bc-budget:checked~.cards>.card:not(.cat-budget),
+#bc-expenses:checked~.cards>.card:not(.cat-expenses),
+#bc-saving:checked~.cards>.card:not(.cat-saving){display:none}
+.blogfilter>input:focus-visible~.chips label{outline:2px solid var(--o);outline-offset:2px}
+footer.site{border-top:1px solid var(--line);background:#fafafb;color:#63636b;font-size:14px;text-align:center;margin-top:48px}
+footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-items:center;gap:16px}
+.f-links{display:flex;gap:18px;flex-wrap:wrap;justify-content:center}.f-links a{color:var(--mut);font-weight:600;text-decoration:none}
+.f-co{display:flex;align-items:center;justify-content:center;gap:12px;border-top:1px solid var(--line);padding-top:16px;width:100%}
+.f-co img{height:30px;width:30px}
+.f-badge{display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}.f-badge .b-sf{height:34px;width:108px}.f-badge .b-pp{height:34px;width:120px}.f-badge .b-fo{height:34px;width:88px}.f-badge .b-fz{height:34px;width:144px}.f-badge .b-ls{height:34px;width:109px}.f-badge .b-un{height:34px;width:130px}.f-badge .b-tc{height:34px;width:109px}.f-badge .b-swb{height:34px;width:136px}.f-badge .b-lf{height:34px;width:126px}.f-badge .b-as{height:34px;width:130px}
+.cc{position:fixed;left:16px;right:16px;bottom:16px;max-width:560px;margin:0 auto;background:#1a1a1d;color:#fff;border-radius:14px;padding:16px 18px;box-shadow:0 12px 40px rgba(0,0,0,.35);z-index:60;font-size:14px;display:none}
+.cc.show{display:block}.cc p{margin:0 0 12px;line-height:1.5}
+.cc .row{display:flex;gap:10px;justify-content:flex-end}
+.cc button{cursor:pointer;border:0;border-radius:8px;padding:9px 16px;font-weight:700;font-size:14px}
+.cc .ok{background:var(--o);color:#fff}.cc .no{background:#2e2e33;color:#cfcfd6}
+.lang-short{display:none}
+@media(max-width:760px){header.site .wrap{padding:0 16px}.brand{font-size:16px;white-space:nowrap}.nav{gap:10px}.btn-login{padding:8px 12px}}
+@media(max-width:480px){.lang-full{display:none}.lang-short{display:inline}}
+.calc{border:1px solid #e5e5ea;border-radius:12px;padding:16px 18px;margin:20px 0}.calc h3{margin:0 0 10px}.calc label{display:block;margin:10px 0 4px;font-weight:600}.calc input,.calc select{width:100%;max-width:260px;padding:8px;font-size:16px;border-radius:8px;border:1px solid #ccc}.calc output{display:block;font-size:18px;font-weight:700}</style></head><body>
+<header class="site"><div class="wrap"><a class="brand" href="/be/">AI <span>Budget</span> Assistant</a>
+<nav class="nav"><details class="langmenu"><summary><span class="lang-full">Беларуская</span><span class="lang-short">BE</span> &#9662;</summary><div class="langlist"><a class="" href="https://ai-budget.pl/blog/pl/import-wyciagu-revolut/">Polski</a><a class="" href="https://ai-budget.pl/blog/en/import-revolut-statement-to-budget-app/">English</a><a class="" href="https://ai-budget.pl/blog/de/revolut-kontoauszug-importieren/">Deutsch</a><a class="" href="https://ai-budget.pl/blog/es/importar-extracto-revolut/">Español</a><a class="" href="https://ai-budget.pl/blog/fr/importer-releve-revolut/">Français</a><a class="" href="https://ai-budget.pl/blog/ru/import-vypiski-revolut/">Русский</a><a class="" href="https://ai-budget.pl/blog/ua/import-vypysky-revolut/">Українська</a><a class="active" href="https://ai-budget.pl/blog/be/import-vypiski-revolut/">Беларуская</a><a class="" href="https://ai-budget.pl/blog/nl/revolut-afschrift-importeren/">Nederlands</a></div></details><a href="/blog/be/">Блог</a><a class="btn-login" href="https://app.ai-budget.pl?src=blog&amp;loc=nav&amp;lang=be">Увайсці</a></nav></div></header>
+<main class="wrap"><nav class="crumb"><a href="/be/">Галоўная</a> / <a href="/blog/be/">Блог</a> / <span>Імпарт выпіскі Revolut у праграму для бюджэту</span></nav><article><h1>Імпарт выпіскі Revolut у бюджэт за некалькі хвілін</h1><p class="byline">Аўтар: <a href="/be/about/#author" rel="author">Mikhail Peraviortkin</a> &middot; <time datetime="2026-10-07">2026-10-07</time> &middot; Абноўлена 2026-06-19</p>
+<p>Каб імпартаваць выпіску Revolut, сфармуйце ў праграме Revolut выпіску ў фармаце CSV, а ў AI Budget Assistant адкрыйце Налады → Імпарт транзакцый → Revolut і абярыце файл. Вы ўбачыце папярэдні прагляд з прапанаванымі катэгорыямі, знятымі адзнакамі ля дублікатаў і абменам валют адным запісам. Усё займае некалькі хвілін.</p>
+<p>Revolut імпартуецца прасцей за многія банкі: яго CSV мае пастаянны набор слупкоў, а валюта пазначана ў кожным радку. Ніжэй: што менавіта праграма чытае з файла і на што звярнуць увагу.</p>
+<h2>Як выгрузіць выпіску з Revolut?</h2>
+<p>У праграме Revolut адкрыйце выпіскі па рахунку (у англійскім інтэрфейсе раздзел завецца Statements), абярыце перыяд і фармат CSV і спампуйце файл на тэлефон або камп&rsquo;ютар. Revolut часам перайменоўвае кнопкі, таму, калі экран выглядае інакш, шукайце пункт фармавання выпіскі з выбарам CSV.</p>
+<p>Парада: першы раз спампуйце даўжэйшы перыяд, ад трох да шасці месяцаў. Паўторны імпарт перыядаў, што перасякаюцца, бяспечны, бо праграма пазнае аперацыі, якія ўжо мае.</p>
+<h2>Як імпартаваць файл крок за крокам?</h2>
+<ol>
+<li><strong>Спампуйце CSV з Revolut</strong> на прыладу, дзе працуе праграма.</li>
+<li>У AI Budget Assistant адкрыйце <strong>Налады → Імпарт транзакцый</strong>.</li>
+<li>Абярыце <strong>Revolut</strong> у спісе (або <strong>Вызначыць аўтаматычна (любы банк)</strong> — фармат Revolut распазнаецца па загалоўках).</li>
+<li>Пакажыце файл. Праграма пакажа папярэдні прагляд: кожны радок як расход, прыбытак або абмен валют, з прапанаванай катэгорыяй.</li>
+<li>Здыміце адзнакі з непатрэбных радкоў, выпраўце катэгорыі і націсніце <strong>Імпартаваць</strong>.</li>
+</ol>
+<p>У папярэднім праглядзе ёсць лічыльнікі абраных і ўжо імпартаваных радкоў. Ужо вядомыя радкі па змоўчанні не адзначаны.</p>
+<h2>Што праграма чытае з файла Revolut?</h2>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Элемент</th>
+<th>Як апрацоўваецца</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Фармат</td>
+<td>CSV з падзяляльнікам-коскай, загалоўкі ў першым радку</td>
+</tr>
+<tr>
+<td>Слупкі</td>
+<td>Type, Product, Started Date, Completed Date, Description, Amount, Fee, Currency, State, Balance</td>
+</tr>
+<tr>
+<td>Дата</td>
+<td>Са Started Date (толькі дата, без часу)</td>
+</tr>
+<tr>
+<td>Сума</td>
+<td>Са знакам: мінус — расход, плюс — прыбытак</td>
+</tr>
+<tr>
+<td>Валюта</td>
+<td>У кожным радку асобна, таму мультывалютны рахунак нічога не змешвае</td>
+</tr>
+<tr>
+<td>Статус</td>
+<td>Імпартуюцца толькі радкі COMPLETED; адхіленыя і тыя, што чакаюць, прапускаюцца</td>
+</tr>
+<tr>
+<td>Абмен валют</td>
+<td>Два радкі EXCHANGE з аднолькавай датай і супрацьлеглымі знакамі аб&rsquo;ядноўваюцца ў адзін абмен валют</td>
+</tr>
+<tr>
+<td>Крама</td>
+<td>З Description, у вядомых сетак назва прыводзіцца да адзінага выгляду</td>
+</tr>
+</tbody>
+</table></div>
+<h2>Што з абменам валют і мультывалютным рахункам?</h2>
+<p>На рахунку Revolut часта ляжыць некалькі валют. Калі вы мяняеце злотыя на еўра, у файле два радкі: спісанне ў адной валюце і залічэнне ў другой. Калі лічыць іх паасобку, атрымаецца ілжывы расход і ілжывы прыбытак. Таму праграма злучае такія радкі ў адзін <strong>абмен валют</strong>, які бачны ў Кашальку, а не ў расходах.</p>
+<p>Пакупкі ў замежнай валюце застаюцца ў сваёй валюце.</p>
+<h2>Як пазбегнуць дублікатаў і што рабіць, калі нешта пайшло не так?</h2>
+<p>Праграма абараняе двума спосабамі. Па-першае, кожны радок атрымлівае ўнікальны ідэнтыфікатар з даты, сумы і апісання, таму паўторны імпарт таго самага файла нічога не дадасць. Па-другое, яна параўноўвае дату, суму і валюту з аперацыямі, якія ўжо ёсць у рахунку, у тым ліку ўнесенымі ўручную, і здымае адзнакі з верагодных паўтораў.</p>
+<p>Дзве аднолькавыя пакупкі ў адзін дзень, напрыклад дзве кавы па аднолькавай цане, захоўваюцца як дзве асобныя аперацыі. Калі вынік не задавальняе, у гісторыі імпартаў унізе экрана яго можна скасаваць адным націскам на працягу 30 дзён і потым імпартаваць той самы файл нанова.</p>
+<p>Агульныя прынцыпы апісаны ў артыкуле <a href="/blog/be/import-bankauskay-vypiski/">Імпарт банкаўскай выпіскі</a>. Калі вашага банка няма ў спісе, чытайце <a href="/blog/be/import-vypiski-nevyadomaga-banka/">Імпарт выпіскі невядомага банка</a>.</p>
+<h2>Ці бяспечна гэта?</h2>
+<p>Вы не ўводзіце лагін і пароль ад Revolut. Вы імпартуеце статычны файл, які спампавалі самі, таму праграма бачыць толькі гісторыю аперацый з гэтага файла. Паспрабаваць AI Budget Assistant бясплатна можна на <a href="/be/">ai-budget.pl</a> або ў <a href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dblog%26loc%3Dbody%26lang%3Dbe%26utm_source%3Dblog%26utm_medium%3Dbody">Google Play</a>.</p>
+<h2>FAQ: Імпарт выпіскі Revolut</h2>
+<h3>Які фармат выпіскі Revolut патрэбны?</h3>
+<p>CSV. Гэта файл са слупкамі Type, Started Date, Description, Amount, Currency, State і Balance, які Revolut фармуе ў раздзеле выпісак па рахунку. PDF можна прачытаць толькі праз ШІ, а гэта функцыя тарыфу Pro, таму для рэгулярнага імпарту абірайце CSV.</p>
+<h3>Ці імпартуюцца адхіленыя або тыя, што чакаюць, аперацыі?</h3>
+<p>Не. Бяруцца толькі радкі са статусам COMPLETED. Адхілены плацёж картай не паменшыць бюджэт, а той, што чакае, з&rsquo;явіцца ў пазнейшай выпісцы, калі пройдзе.</p>
+<h3>Ці палічыцца абмен валют у Revolut расходам?</h3>
+<p>Не. Два радкі абмену з аднолькавай датай і супрацьлеглымі знакамі аб&rsquo;ядноўваюцца ў адзін абмен валют у Кашальку. Ён не раздзімае ні расходы, ні прыбыткі.</p>
+<h3>Ці можна імпартаваць адну і тую ж выпіску двойчы?</h3>
+<p>Можна, нічога не падвоіцца. Радкі, што паўтараюцца, распазнаюцца і ў папярэднім праглядзе адзначаны як ужо імпартаваныя.</p>
+<h3>Ці можна скасаваць імпарт з Revolut?</h3>
+<p>Так. У гісторыі імпартаў унізе экрана імпарту націсніце стрэлку скасавання каля патрэбнага імпарту. Гэта даступна 30 дзён, пасля чаго той самы файл можна імпартаваць зноў.</p></article><aside class="cta"><h3>Кіруйце грашыма з ШІ</h3><p>Дадавайце выдаткі голасам або фота чэка, сачыце за бюджэтамі і зберажэннямі, разам з сям'ёй. Пачніце бясплатна.</p><a class="btn p" href="https://app.ai-budget.pl?src=blog&amp;loc=cta&amp;lang=be">Адкрыць дадатак</a><a class="btn s" href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dblog%26loc%3Dcta%26lang%3Dbe%26utm_source%3Dblog%26utm_medium%3Dcta">Спампаваць у Google Play</a></aside><section class="related"><h2>Падобныя артыкулы</h2><a href="/help/be/bank-import/">Пакрокавая інструкцыя ў Даведцы &rarr;</a><a href="/blog/be/yak-vesci-budzet/">Як весці бюджэт: практычнае кіраўніцтва для пачаткоўцаў</a><a href="/blog/be/ulik-vydatkau/">Улік выдаткаў: як сапраўды не губляць грошы</a><a href="/blog/be/yak-ekanomic/">Як эканоміць грошы: канкрэтны план, які працуе</a><a href="/blog/be/supolny-budzet/">Супольны бюджэт для пары: план без спрэчак</a><a href="/blog/be/metad-kanvertau/">Метад канвертаў: сістэма, што спыняе залішнія траты</a><a href="/blog/be/pravila-50-30-20/">Правіла 50/30/20: практычнае кіраўніцтва</a><a href="/blog/be/lepshyya-prahramy-dlya-budzetu/">Лепшыя праграмы для бюджэту ў 2026: сумленны агляд</a><a href="/blog/be/finansavaya-padushka/">Фінансавая падушка: колькі трэба і як яе сабраць</a><a href="/blog/be/yak-kiravac-padpiskami/">Як кіраваць падпіскамі, пакуль яны не апустошылі вас</a><a href="/blog/be/ekanomiya-na-praduktah/">Як эканоміць на прадуктах без купонаў і самаабмежавання</a><a href="/blog/be/katehoryi-vydatkau/">Катэгорыі выдаткаў: гатовы спіс, які працуе</a><a href="/blog/be/yak-pagasic-dougi/">Як пагасіць даўгі: метад снежнага кома супраць лавіны</a><a href="/blog/be/import-bankauskay-vypiski/">Імпарт банкаўскай выпіскі ў дадатак для бюджэту</a><a href="/blog/be/semejny-budzet-z-dzecmi/">Сямейны бюджэт з дзецьмі: план для ўсёй сям&#x27;і</a><a href="/blog/be/ai-dlya-budzetu/">ШІ для кіравання фінансамі: як ён дапамагае з бюджэтам</a><a href="/blog/be/asabistaya-inflyatsyya/">Асабістая інфляцыя: як яе разлічыць</a><a href="/blog/be/karta-vydatkau/">Карта выдаткаў: дзе сапраўды дзяваюцца вашы грошы</a><a href="/blog/be/yak-padzialic-rahunak-z-siabrami/">Як падзяліць рахунак з сябрамі і рэальна атрымаць грошы</a><a href="/blog/be/autamatychny-ulik-vydatkau/">Аўтаматычны ўлік выдаткаў без ручнога ўводу</a><a href="/blog/be/skanavanne-chekau/">Сканаванне чэкаў: важныя пазіцыі, а не сума</a><a href="/blog/be/kolki-koshtue-sabrats-dzicya-u-shkolu/">Колькі коштуе сабраць дзіця ў школу</a><a href="/blog/be/import-vypiski-nevyadomaga-banka/">Што адбываецца, калі вашага банка няма ў спісе</a><a href="/blog/be/chamu-vydalyayuc-prahramy-dlya-budzetu/">Чаму праграмы для бюджету выдаляюць за тыдзень</a><a href="/blog/be/perakhod-z-monefy-wallet-moneymanager/">Альтэрнатыва Monefy: пераход без страты катэгорый</a><a href="/blog/be/finansavyya-vyniki-goda/">Фінансавыя вынікі году: што яны паказваюць</a><a href="/blog/be/shchyt-ad-infliatsyi/">Запас угодных да падаражэння: шчыт ад інфляцыі</a><a href="/blog/be/apavyashchenne-pra-kurs-valyut/">Апавяшчэнне пра курс валют, калі ён дасягне мэты</a><a href="/blog/be/shablon-budzetu-u-excel/">Шаблон бюджэту ў Excel: структура і яе межы</a><a href="/blog/be/byasplatny-dadatak-dlya-uliku-vydatkau/">Бясплатны дадатак для ўліку выдаткаў: што гэта значыць</a><a href="/blog/be/byudzhet-pry-neregulyarnym-dakhodze/">Бюджэт пры нерэгулярным даходзе: што дапамагае</a><a href="/blog/be/byudzhet-u-dzvyukh-valyutakh/">Бюджэт у дзвюх валютах: як не губляць грошы на курсе</a><a href="/blog/be/byudzhet-na-novy-god/">Бюджэт на Новы год і Каляды: колькі адкласці</a><a href="/blog/be/chornaya-pyatnitsa-znizhki/">Чорная пятніца: як праверыць зніжку і не пераплаціць</a><a href="/blog/be/monefy-paraunanne-ai-budget-assistant/">Monefy ці AI Budget Assistant: параўнанне</a><a href="/blog/be/wallet-budgetbakers-paraunanne-ai-budget-assistant/">Wallet by BudgetBakers ці AI Budget Assistant</a><a href="/blog/be/alternatyva-ynab/">Альтэрнатыва YNAB: YNAB ці AI Budget Assistant</a><a href="/blog/be/money-manager-paraunanne-ai-budget-assistant/">Money Manager ці AI Budget Assistant: параўнанне</a><a href="/blog/be/vyartanne-padatku-na-shto-vydatkavac/">Вяртанне падатку: на што выдаткаваць з розумам. План</a></section></main><footer class="site"><div class="wrap"><div class="f-links"><a href="/blog/be/">Блог</a><a href="/help/be/">Дапамога</a><a href="/be/about/">Пра нас</a><a href="/en/privacy/">Прыватнасць</a><a href="/en/terms/">Умовы</a><a href="/en/cookies/">Cookie</a><a href="https://app.ai-budget.pl?src=blog&amp;loc=footer&amp;lang=be">Увайсці</a><a href="https://play.google.com/store/apps/details?id=com.budget.assistant&amp;referrer=src%3Dblog%26loc%3Dfooter%26lang%3Dbe%26utm_source%3Dblog%26utm_medium%3Dfooter">Google Play</a></div><div class="f-badge"><a href="https://startupfa.me/s/ai-budget?utm_source=ai-budget.pl" target="_blank" rel="noopener"><img class="b-sf" src="/assets/startup-fame-badge.webp" alt="AI Budget - Featured on Startup Fame" width="108" height="34" loading="lazy"></a><a href="https://peerpush.com/p/ai-budget-assistant" target="_blank" rel="noopener"><img class="b-pp" src="https://peerpush.com/p/ai-budget-assistant/badge.png" alt="AI Budget Assistant on PeerPush" width="120" height="34" loading="lazy"></a><a href="https://bestaibrands.com/ai-budget-assistant" target="_blank" rel="noopener" style="text-decoration:none;"><div style="display:inline-flex;flex-direction:column;align-items:center;background:#fff;border:1px solid #eee;border-radius:12px;padding:8px 32px;height:54px;justify-content:center;font-family:sans-serif;box-shadow:0 10px 15px -3px rgba(0,0,0,0.1);"><div style="font-size:8px;color:#999;font-weight:bold;text-transform:uppercase;letter-spacing:0.2em;line-height:1;margin-bottom:4px;white-space:nowrap;">Featured On</div><div style="font-size:14px;font-weight:bold;color:#000;letter-spacing:-0.01em;line-height:1;white-space:nowrap;">bestaibrands.com</div></div></a><a href="https://firsto.co/projects/ai-budget-assistant" target="_blank" rel="noopener"><img class="b-fo" src="https://firsto.co/images/badges/find-us-on-firsto.svg" alt="AI Budget Assistant | Firsto Launch" width="88" height="34" loading="lazy"></a><a href="https://liftoapp.com/product/ai-budget-assistant" target="_blank" rel="noopener"><img class="b-lf" src="https://liftoapp.com/badges/featured-dark.svg" alt="AI Budget Assistant - Featured on Lifto" width="126" height="34" loading="lazy"></a></div><div class="f-badge"><a href="https://fazier.com/launches/ai-budget.pl" target="_blank" rel="noopener"><img class="b-fz" src="https://fazier.com/api/v1//public/badges/launch_badges.svg?badge_type=featured&amp;theme=light" alt="AI Budget Assistant on Fazier" width="144" height="34" loading="lazy"></a><a href="https://launchstag.com/p/tool-1789044587266" target="_blank" rel="noopener"><img class="b-ls" src="https://launchstag.com/badge-light.svg" alt="AI Budget Assistant - Featured on Launchstag" width="109" height="34" loading="lazy"></a><a href="https://www.uneed.best/tool/ai-budget-assistant" target="_blank" rel="noopener"><img class="b-un" src="https://www.uneed.best/EMBED3B.png" alt="AI Budget Assistant - Launching Soon on Uneed" width="130" height="34" loading="lazy"></a><a href="https://tools.cafe/p/tool-1789322958894" target="_blank" rel="noopener"><img class="b-tc" src="https://tools.cafe/b/light.svg" alt="AI Budget Assistant - Featured on tools.cafe" width="109" height="34" loading="lazy"></a><a href="https://sellwithboost.com" target="_blank" rel="noopener"><img class="b-swb" src="https://sellwithboost.com/badge/listing.svg" alt="AI Budget Assistant - Listed on Sell With Boost" width="136" height="34" loading="lazy"></a><a href="https://alphashot.com/products/ai-budget-assistant?utm_source=alphashot&amp;utm_medium=badge&amp;utm_campaign=embed" target="_blank" rel="noopener"><img class="b-as" src="https://alphashot.com/badge/ai-budget-assistant.svg" alt="AI Budget Assistant - Featured on AlphaShot" width="130" height="34" loading="lazy"></a></div><div class="f-co"><a href="https://mi-code.pl/" target="_blank" rel="noopener"><img src="/assets/mi_code_logo.svg" alt="MICODE sp. z o.o." width="30" height="30"></a><span>&copy; 2026 AI Budget Assistant &mdash; <a href="https://mi-code.pl/" target="_blank" rel="noopener" style="color:inherit">MICODE sp. z o.o.</a>. Усе правы абаронены.</span></div></div></footer>
+<div class="cc" id="cc"><p>Мы выкарыстоўваем файлы cookie для аналізу трафіку і паляпшэння сайта. <a href="/en/cookies/" style="color:#F58320;text-decoration:underline">Падрабязней</a></p><div class="row"><button class="no" id="cc-no">Адхіліць</button><button class="ok" id="cc-ok">Прыняць</button></div></div>
+<script>(function(){var ID="G-WMEFHYETVX",K="cc-consent";function L(){var s=document.createElement("script");s.async=1;s.src="https://www.googletagmanager.com/gtag/js?id="+ID;document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function g(){dataLayer.push(arguments);}window.gtag=g;g("js",new Date());g("config",ID);}var v=localStorage.getItem(K),b=document.getElementById("cc");if(v==="granted"){L();}else if(!v&&b){b.classList.add("show");document.getElementById("cc-ok").onclick=function(){localStorage.setItem(K,"granted");b.classList.remove("show");L();};document.getElementById("cc-no").onclick=function(){localStorage.setItem(K,"denied");b.classList.remove("show");};}})();</script></body></html>

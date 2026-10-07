@@ -16,7 +16,9 @@ Przebita opona, nagły rachunek u weterynarza, kilka tygodni między pracami. Be
 
 Ten poradnik omawia, czym właściwie jest poduszka finansowa, ile potrzebujesz, gdzie ją trzymać i jak zbudować ją krok po kroku, nawet gdy z pieniędzmi jest napięto.
 
-## Czym jest poduszka finansowa (i czym nie jest)
+## Czym jest poduszka finansowa i co liczy się jako nagły wypadek?
+
+Poduszka finansowa to gotówka odłożona na nieoczekiwane, konieczne i pilne wydatki: utratę pracy, pilny rachunek medyczny, awarię niezbędnego sprzętu albo naprawę auta potrzebnego w dojeździe do pracy. Wakacje, wyprzedaż i znany z góry przegląd samochodu nią nie są. Sprawdź wydatek trzema pytaniami: czy jest nieoczekiwany, konieczny i pilny?
 
 Poduszka finansowa to gotówka odłożona na prawdziwe, niespodziewane, niezbędne wydatki. Kluczowe słowo to niespodziewane. Wakacje w grudniu nie są nagłym wypadkiem, bo wiedziałeś, że grudzień nadejdzie. Auto, o którym wiedziałeś, że potrzebuje nowych klocków hamulcowych, też nie jest nagłym wypadkiem. To należy do twojego zwykłego budżetu albo do osobnego celu oszczędnościowego.
 
@@ -24,7 +26,9 @@ Prawdziwy nagły wypadek to coś, czego nie dało się rozsądnie zaplanować i 
 
 To rozróżnienie ma znaczenie, bo najczęstszym sposobem, w jaki ludzie tracą poduszkę finansową, jest ciche redefiniowanie "nagłego wypadku" tak, by objął promocję, której nie chcieli przegapić.
 
-## Ile powinieneś mieć?
+## Ile powinna wynosić poduszka finansowa?
+
+Standardowy cel to trzy do sześciu miesięcy niezbędnych wydatków: czynszu, rachunków, jedzenia, ubezpieczeń, dojazdów i minimalnych rat, a nie całego twojego stylu życia. Trzy miesiące wystarczą przy stabilnej pracy i drugim dochodzie w domu, sześć przy dochodach nieregularnych, działalności na własny rachunek lub gdy jesteś jedynym żywicielem.
 
 Standardowa rekomendacja to trzy do sześciu miesięcy niezbędnych wydatków. Zwróć uwagę na słowo niezbędnych. To nie trzy do sześciu miesięcy twojego pełnego stylu życia. To czynsz, rachunki, jedzenie, ubezpieczenie, transport i minimalne raty długów. Rzeczy, które utrzymują światło, jeśli twój dochód się zatrzyma.
 
@@ -34,7 +38,23 @@ Ten cel może wydawać się nieosiągalnie odległy, gdy zaczynasz od zera. Wię
 
 Jeśli wciąż ustalasz, ile w ogóle wynoszą twoje niezbędne koszty miesięczne, towarzyszący poradnik [jak prowadzić budżet domowy krok po kroku](/blog/pl/jak-prowadzic-budzet-domowy/) prowadzi najpierw przez kategoryzowanie wydatków.
 
-## Gdzie ją trzymać
+## Ile miesięcy wydatków potrzebujesz w swojej sytuacji?
+
+Przy stabilnej pracy i drugim dochodzie w domu wystarczy około 3 miesięcy niezbędnych wydatków, freelancer lub osoba z nieregularnymi dochodami powinna mieć około 6 miesięcy, a rodzina z jednym dochodem również około 6. Tabela przelicza to na złotówki przy niezbędnych wydatkach 5 000 zł miesięcznie, jako przykład.
+
+*Przykład ilustracyjny: reguła kciuka, a nie indywidualna porada.*
+
+| Sytuacja | Miesiące niezbędnych wydatków | Przykład przy 5 000 zł miesięcznie |
+|---|---|---|
+| Stabilna praca, drugi dochód w domu | 3 | 15 000 zł |
+| Freelancer lub nieregularne dochody | 6 | 30 000 zł |
+| Rodzina z jednym dochodem | 6 | 30 000 zł |
+
+<!-- calculator:emergency -->
+
+## Gdzie trzymać poduszkę finansową?
+
+Trzymaj ją na osobnym, łatwo dostępnym koncie oszczędnościowym, oddzielonym od konta na codzienne wydatki, z dostępem w ciągu jednego lub dwóch dni. Nie inwestuj jej w akcje, kryptowaluty ani nic, co może stracić na wartości, bo nagłe wypadki lubią zdarzać się akurat wtedy, gdy rynki spadają.
 
 Trzy zasady dotyczące tego, gdzie żyje twoja poduszka finansowa:
 
@@ -74,7 +94,9 @@ W końcu użyjesz funduszu. To sukces, nie porażka, to znaczy, że system zadzi
 
 Śledzenie tego jest tam, gdzie pomaga cel z widocznym saldem. Gdy fundusz spada z 18 000 zł do 13 500 zł po naprawie, widzisz lukę i kierujesz przelewy z dnia wypłaty z powrotem na jej zamknięcie. Jest darmowy na start i działa w przeglądarce na [ai-budget.pl](https://ai-budget.pl) lub na Androidzie przez [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), bez podawania karty, żeby ustawić swój pierwszy cel.
 
-## Częste błędy, których warto unikać
+## Jakich błędów unikać przy budowaniu poduszki finansowej?
+
+Trzy najczęstsze błędy to zainwestowanie poduszki w coś zmiennego, trzymanie jej na tym samym koncie co codzienne wydatki i wyznaczenie tak wysokiego pierwszego celu, że rezygnujesz. Zacznij od małego kamienia milowego, zautomatyzuj przelew w dniu wypłaty i podnoś cel dopiero po jego osiągnięciu.
 
 **Inwestowanie jej.** Omówione wyżej, ale warto powtórzyć, bo to najbardziej kuszący błąd. Poduszka finansowa, która straciła 30% w tygodniu, gdy jej potrzebowałeś, nie jest poduszką finansową. Trzymaj ją nudną.
 
@@ -101,6 +123,14 @@ Zbuduj najpierw mały startowy fundusz 4000 zł, potem skup się na drogich dłu
 **Co liczy się jako prawdziwy nagły wypadek?**
 
 Coś niespodziewanego, niezbędnego i pilnego: utrata pracy, pilny rachunek medyczny, awaria niezbędnego sprzętu, naprawa auta, którym musisz dojechać do pracy. Zaplanowany wydatek, promocja albo wakacje się nie kwalifikują, nawet gdy wydają się naglące. Jeśli wiedziałeś, że to nadchodzi, należy to do twojego budżetu albo osobnego celu oszczędnościowego, nie do poduszki finansowej.
+
+**Od jakiej kwoty zacząć budować poduszkę finansową?**
+
+Zacznij od pierwszego kamienia milowego: 4000 zł albo jednego miesiąca niezbędnych wydatków, zależnie od tego, co osiągniesz szybciej. Taka kwota pochłania większość drobnych szoków, które inaczej kończą na karcie kredytowej. Potem celuj w pełne trzy do sześciu miesięcy.
+
+**Jak długo trwa budowanie poduszki finansowej?**
+
+To zależy od celu i miesięcznej wpłaty. Przy odkładaniu 1 000 zł miesięcznie 15 000 zł (trzy miesiące przy wydatkach 5 000 zł) uzbierasz w 15 miesięcy, a 30 000 zł w 30. Automatyczny przelew w dniu wypłaty skraca drogę bardziej niż jakikolwiek trik, bo usuwa comiesięczną decyzję.
 
 ---
 

@@ -16,7 +16,9 @@ Un pneu crevé, une facture vétérinaire imprévue, quelques semaines entre deu
 
 Ce guide explique ce qu'est réellement une épargne de précaution, combien il vous en faut, où la placer, et comment la constituer pas à pas même quand l'argent est serré.
 
-## Ce qu'est une épargne de précaution (et ce qu'elle n'est pas)
+## Qu'est-ce qu'une épargne de précaution et qu'est-ce qui compte comme urgence ?
+
+Une épargne de précaution est un capital mis de côté pour des dépenses imprévues, nécessaires et urgentes : perte d'emploi, facture médicale urgente, panne d'un appareil essentiel ou réparation de la voiture dont vous avez besoin pour travailler. Des vacances, des soldes ou une réparation prévisible n'en sont pas. Testez : imprévu, nécessaire, urgent ?
 
 Une épargne de précaution, c'est de l'argent mis de côté pour des dépenses véritablement imprévues, nécessaires et inattendues. Le mot clé est inattendu. Des vacances en décembre ne sont pas une urgence, parce que vous saviez que décembre arrivait. Une voiture dont vous saviez qu'elle avait besoin de freins neufs n'est pas une urgence non plus. Cela relève de votre budget normal ou d'un objectif d'épargne distinct.
 
@@ -24,7 +26,9 @@ Une vraie urgence, c'est quelque chose que vous ne pouviez pas raisonnablement p
 
 Cette distinction compte, parce que la manière la plus courante de perdre son épargne de précaution, c'est de redéfinir discrètement "urgence" pour y inclure une promo qu'on ne voulait pas rater.
 
-## Combien faut-il avoir ?
+## Combien faut-il avoir dans son épargne de précaution ?
+
+L'objectif habituel est de trois à six mois de dépenses essentielles : loyer, charges, alimentation, assurances, transports et remboursements minimums, pas tout votre train de vie. Trois mois conviennent avec un emploi stable et un second revenu au foyer ; six mois si les revenus sont irréguliers, si vous êtes indépendant ou seul apporteur de revenus.
 
 La recommandation standard est de trois à six mois de dépenses essentielles. Notez le mot essentielles. Ce ne sont pas trois à six mois de votre train de vie complet. C'est le loyer, l'énergie, les courses, les assurances, le transport et les mensualités minimales de dettes. Ce qui maintient la lumière allumée si vos revenus s'arrêtent.
 
@@ -34,7 +38,23 @@ Cette cible peut sembler infiniment lointaine quand vous partez de zéro. Alors 
 
 Si vous cherchez encore à savoir quels sont vos coûts mensuels essentiels, le guide complémentaire sur [comment faire un budget personnel étape par étape](/blog/fr/comment-faire-un-budget/) explique d'abord comment catégoriser ses dépenses.
 
-## Où la placer
+## Combien de mois de dépenses faut-il selon votre situation ?
+
+Avec un emploi stable et un second revenu au foyer, environ 3 mois de dépenses essentielles suffisent ; un indépendant ou une personne aux revenus irréguliers devrait viser environ 6 mois, tout comme une famille à revenu unique. Le tableau le convertit en euros avec 2 000 € de dépenses essentielles par mois, à titre d'exemple.
+
+*Exemple illustratif : une règle empirique, pas un conseil personnalisé.*
+
+| Situation | Mois de dépenses essentielles | Exemple avec 2 000 € par mois |
+|---|---|---|
+| Emploi stable, second revenu au foyer | 3 | 6 000 € |
+| Indépendant ou revenus irréguliers | 6 | 12 000 € |
+| Famille à revenu unique | 6 | 12 000 € |
+
+<!-- calculator:emergency -->
+
+## Où placer son épargne de précaution ?
+
+Placez-la sur un compte d'épargne distinct et facilement accessible, séparé du compte courant et disponible en un ou deux jours, par exemple un livret. Ne l'investissez pas en actions, en cryptomonnaies ni dans rien qui puisse perdre de la valeur, car les urgences arrivent souvent quand les marchés baissent.
 
 Trois règles pour le lieu de vie de votre épargne de précaution :
 
@@ -74,7 +94,9 @@ Vous finirez par puiser dans le fonds. C'est une réussite, pas un échec : cela
 
 Suivre cela est plus facile avec un objectif au solde visible. Quand le fonds passe de 6 000 à 4 500 euros après une réparation, vous voyez l'écart et vous redirigez vos virements de paie vers son comblement. C'est gratuit pour commencer, ça tourne dans votre navigateur à [ai-budget.pl](https://ai-budget.pl) ou sur Android via [Google Play](https://play.google.com/store/apps/details?id=com.budget.assistant), sans carte bancaire pour configurer votre premier objectif.
 
-## Erreurs courantes à éviter
+## Quelles erreurs éviter en constituant son épargne de précaution ?
+
+Les trois erreurs les plus courantes : l'investir dans un support volatil, la laisser sur le compte des dépenses quotidiennes et viser d'emblée une cible si haute qu'on abandonne. Commencez par un petit palier, automatisez un virement le jour de paie et ne relevez la cible qu'une fois le palier atteint.
 
 **L'investir.** Déjà couvert, mais cela mérite répétition car c'est l'erreur la plus tentante. Une épargne de précaution qui a perdu 30 % la semaine où vous en aviez besoin n'est pas une épargne de précaution. Gardez-la ennuyeuse.
 
@@ -101,6 +123,14 @@ Constituez d'abord un petit fonds de départ de 1 000 euros, puis concentrez-vou
 **Qu'est-ce qui compte comme une vraie urgence ?**
 
 Quelque chose d'inattendu, de nécessaire et d'urgent : une perte d'emploi, une facture médicale urgente, un appareil essentiel qui lâche, une réparation de voiture indispensable pour aller travailler. Une dépense prévue, une promo ou des vacances ne comptent pas, même quand cela paraît pressant. Si vous saviez que cela arrivait, cela relève de votre budget ou d'un objectif d'épargne distinct, pas de l'épargne de précaution.
+
+**Par quel montant commencer ?**
+
+Commencez avec un palier de 1 000 euros ou un mois de dépenses essentielles, selon ce que vous atteignez en premier. Cela absorbe déjà la plupart des petits imprévus qui finiraient sinon sur une carte de crédit. Une fois atteint, continuez vers les trois à six mois complets.
+
+**Combien de temps faut-il pour constituer une épargne de précaution ?**
+
+Cela dépend de la cible et de votre versement mensuel. À 500 € par mois, il faut 12 mois pour atteindre 6 000 € (trois mois à 2 000 €) et 24 mois pour 12 000 €. Un virement automatique le jour de paie raccourcit le chemin plus que n'importe quelle astuce, car il supprime la décision mensuelle.
 
 ---
 

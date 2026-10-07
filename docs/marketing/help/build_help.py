@@ -151,6 +151,37 @@ def help_jsonld(lang, title, desc, url, og_path, src_path=None):
             {"@type": "ListItem", "position": 2, "name": HELP_NAV[lang], "item": f"{SITE}/help/{lang}/"},
             {"@type": "ListItem", "position": 3, "name": title, "item": url}]}]}
 
+_QHEAD = re.compile(r"^#{2,3}\s+(.+\?)\s*$")
+
+def help_faq(body):
+    """Question/answer pairs for FAQPage: the blog's bold-question FAQ block, plus every
+    question-shaped heading (`## How do I ...?`) answered by the paragraph under it. Help
+    sections are written as task guides, so most of their questions live in headings."""
+    pairs = list(bb.extract_faq(body))
+    lines = body.split("\n")
+    for i, ln in enumerate(lines):
+        m = _QHEAD.match(ln.strip())
+        if not m:
+            continue
+        ans = []
+        for nxt in lines[i + 1:]:
+            t = nxt.strip()
+            if t.startswith("#"):
+                break
+            if not t:
+                if ans:
+                    break
+                continue
+            ans.append(t)
+        if ans:
+            pairs.append((bb._plain(m.group(1)), bb._plain(" ".join(ans))))
+    seen, out = set(), []
+    for q, a in pairs:
+        if q not in seen:
+            seen.add(q)
+            out.append((q, a))
+    return out
+
 def build():
     if os.path.isdir(OUT):
         shutil.rmtree(OUT)
@@ -197,6 +228,11 @@ def build():
         alt_map = {l: u for l, u in alts if l != "x-default"}
         menu = bb.lang_menu(lang, alt_map, LANGS)
         ld = help_jsonld(lang, title, desc, url, og, a["path"])
+        faq = help_faq(transform(a["raw"], lang))
+        if len(faq) >= 2:
+            ld["@graph"].append({"@type": "FAQPage", "mainEntity": [
+                {"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": ans}}
+                for q, ans in faq]})
         body = bb.to_html(transform(a["raw"], lang))
         # related = other sections in the same language
         sibs = [x for x in arts if x["lang"] == lang and x["slug"] != slug]

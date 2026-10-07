@@ -194,6 +194,25 @@ Wave 5 notes (`multi-currency`, topic 31):
 - The link-anchor discipline from the excel-budget/free-app fix commits (`7d99eb1c1`, `b900c034c`) and irregular-income's own preventive pass was checked programmatically across all 9 languages before commit (a word-count-per-anchor script over every in-body link, not eyeballing): two 5-word anchors were found and fixed (ES `alerta de tipo de cambio` → `alerta` with the rest of the phrase left as plain text outside the link, FR `alerte de taux de change` → `alerte` the same way), and the ru/ua/be drafts were initially missing their pillar and second-sibling in-body links entirely (only the rate-alert sibling and the product CTA were linked in the first pass) — a short pillar-link sentence and a short inflation-link sentence were added to all three before commit, bringing every language to the same 3-in-body-link (pillar + 2 siblings, all ≤4-word anchors) plus full-title footer-line shape.
 - Blog now at 31 topics / 279 articles once this topic ships (was 30 topics / 270 articles after `irregular-income`). **Wave 5 is complete: all 4 topics (`excel-budget`, `free-app`, `irregular-income`, `multi-currency`) are live in all 9 languages — 36 articles total.**
 
+## Wave 12 — SEO/GEO/AEO pass (2026-10-07)
+
+| # | Pair | Languages | Angle |
+|---|---|---|---|
+| 34 | `vs-monefy` | 9 | Monefy vs AI Budget Assistant — comparison table first; links to `switch-apps` for the move |
+| 35 | `vs-wallet` | 9 | Wallet by BudgetBakers vs AI Budget Assistant |
+| 36 | `vs-ynab` | 9 | YNAB vs/alternative — YNAB is not covered by `switch-apps`, so "alternative" is safe here |
+| 37 | `vs-moneymanager` | 9 | Money Manager vs AI Budget Assistant — "vs", never "alternative" (that query belongs to `switch-apps`) |
+| 38 | `import-revolut` | 9 | How to import a Revolut statement |
+| 39–45 | `import-mbank` … `import-erste` | pl only | One guide per Polish bank parser; export steps generic where the bank's own help could not be fetched |
+| 46 | `tax-refund` | 9 | What to do with a tax refund; per-market deadlines only where an official source confirmed them (DE has none) |
+
+Wave 12 notes:
+- **Comparison pages and cannibalisation.** Topic 24 (`switch-apps`) ranks for "<app> alternative" and answers *how to move*. The `vs-*` pages answer *which fits me*, lead with a table, and link to topic 24 for the move instead of repeating it. Re-measure topic 24 four weeks after publication; if it drops, merge rather than keep both.
+- **Competitor facts are dated.** Every competitor claim was checked on the competitor's own site on 2026-10-07; prices are labelled with the store they came from. Re-check before any edit.
+- **AEO restructure of existing pillars and clusters** (01–03, 06, 08, 09 in 9 languages): question-shaped H2s, each opening with a 40–60-word self-contained answer, one data table per article, FAQ extended to six. Titles, slugs and dates unchanged.
+- **Calculators** sit inside topics 06 and 08 via a `<!-- calculator:503020 -->` / `<!-- calculator:emergency -->` line (rendered by `calc_html` in `build_blog.py`), not on separate `/tools/` URLs that would compete for the same query.
+- **Topic 28** links a real `.xlsx` (`assets/<lang>/budget-template.xlsx`, written by `build_excel_template.py`, copied into the site by `build_blog.py`).
+
 Seasonal backlog with publish windows: `new-year` (late Dec). (`christmas` and `black-friday` shipped in Wave 11 above.) (`year-review`, originally slotted here for early Dec, shipped early as Wave 8's `wrapped` topic instead — see above.)
 
 ## Article conventions (per piece)

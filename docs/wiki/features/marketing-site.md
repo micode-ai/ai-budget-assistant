@@ -71,6 +71,34 @@ silence a warning.
 committed `site/` trees without ever running these generators. Forgetting either means the change
 exists locally and nowhere else.
 
+**`llms.txt` and `featureList` state product facts that answer engines repeat verbatim (ABA-638).**
+They had drifted badly — a model name, a missing currency, six of nine bank parsers, end-to-end
+encryption presented as the default — in all nine languages at once, because the English
+`llms.txt` in `build()`, `LLMS_TXT_I18N` and the JSON-LD `featureList` are three hand-written
+copies. Check a claim against the wiki before adding it, and never list a feature that is
+flag-gated off in production (receipt price-check alerts, Community Price Map). Do not name the AI
+model; it goes stale.
+
+**Articles have a named author.** `AUTHOR`/`author_node()` in `build_blog.py` is one `Person` with
+the stable `@id` `/#author`, referenced by every article's `author`; the about page (in
+`build_landing.py`) is where the node is described and carries `id="author"` for the byline link.
+Help pages keep the Organization as author — they are product documentation.
+
+**Each article renders its own share card** (`/blog/<lang>/<slug>/og.jpg`, the headline set by
+`build_og(..., title)`); the per-language `og-default.png` is only for indexes.
+
+**Calculators live inside the article that ranks for the topic**, placed by a
+`<!-- calculator:503020 -->` / `<!-- calculator:emergency -->` line and rendered by `calc_html` —
+never as a separate `/tools/` page competing for the same query.
+
+**Hand-made downloads live in `docs/marketing/seo/assets/<lang>/`**, because `site/` is wiped on
+every build; `build_blog.py` copies them in. The Excel template is written by
+`build_excel_template.py`, run by hand — an `.xlsx` is a zip with timestamps, so regenerating it
+per build would commit a changed binary every time.
+
+**Help pages get FAQPage from question-shaped headings too** (`help_faq` in `build_help.py`), since
+help is written as task guides and its questions sit in headings, not in a bold FAQ block.
+
 **A title change cascades.** Article titles are quoted verbatim in the generated pillar down-links
 and in the landing's "From the blog" section, so correcting one means re-running
 `build_pillar_links.py` and the landing build.
@@ -102,6 +130,10 @@ versions at 5–7.5, zero clicks), retitled around "Monefy alternative" rather t
   "MiCode Sp. z o.o." and has no `@id`, so the two sites still meet only through `alternateName`
   and the shared URL.
 - Below-fold lightbox images are not served as WebP/AVIF.
+- The author `Person` has no LinkedIn in `sameAs` yet, and the app has no `aggregateRating` (no
+  verified rating source).
+- `llms.txt`, `LLMS_TXT_I18N` and `featureList` are three hand-maintained copies of the same
+  feature list; nothing cross-checks them against each other or against the product.
 
 ## History
 
@@ -109,4 +141,6 @@ ABA-267 (the blog) · ABA-269 (landing at the apex) · ABA-280 (cross-site langu
 ABA-281 (internal linking, index schema) · ABA-320 (pricing driven from one JSON) · ABA-393/394/395
 (waves, index listing, orthography) · ABA-397 (`SoftwareApplication`) · ABA-435 (in-body links
 pointed at the Polish homepage for every language) · ABA-571/572 (diacritics, meta budgets) ·
-ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet).
+ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet) · ABA-638 (SEO/GEO/AEO pass:
+`llms.txt` facts, named author, per-article OG, calculators, Excel template, help FAQPage, comparison
+and per-bank pages — content-plan Wave 12).
