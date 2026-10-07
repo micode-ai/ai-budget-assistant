@@ -218,3 +218,17 @@ Newest last within each section.
 - 2026-10-05 [ABA-634](https://github.com/micode-ai/ai-budget-assistant/issues/664) — the `ad-film` skill gained a fourth house style, noir (the anime cast in fedora/trench, black dress and veil; a B&W grading pass with blinds and rain, only the brand orange in colour; reference project `D:\Work\tools\films\sprawa-pieniedzy`, noir-jazz score), and `PITFALLS.md` gained a caption reading-time rule and a Noir grade section. No wiki page: tooling outside the product.
 - 2026-10-06 [ABA-636](https://github.com/micode-ai/ai-budget-assistant/issues/666) — the `ad-film` skill gained a fifth house style, a 1930s rubber-hose cartoon (pie-cut eyes, rubber-hose limbs, white gloves, beat bounce, a sepia/grain/scratch pass; reference project `D:\Work\tools\films\na-glos`, swing score with instruments singing the lines), and `PITFALLS.md` gained a 1930s-cartoon section (glove mirroring, bow as squash, iris, sync false positives). No wiki page: tooling outside the product.
 - 2026-10-07 [ABA-637](https://github.com/micode-ai/ai-budget-assistant/issues/667) — a real ten-year Monefy export did not import although the parser read every row: the commit's per-row `create` overran Prisma's 5 s interactive-transaction default (now chunked `createMany` with a 120 s timeout), identical rows in one file shared an `externalRef` and all but the first were dropped (now suffixed `#N` by source `idx`), and Monefy's `To '…'`/`From '…'`/`Initial balance '…'` bookkeeping rows imported as spending (now dropped). Pages: `features/bank-statement-import.md`, `features/competitor-app-migration.md`.
+- 2026-10-07 · [ABA-635](https://github.com/micode-ai/ai-budget-assistant/issues/665) audit issue — lint
+  already clean (its 12 dead citations were fixed after it was filed). Read `shared-utils.md` (10
+  commits behind) and `features/shared-conversations.md` against the code. `shared-utils.md` was the
+  untouched May bootstrap and claimed the API consumes its Zod schemas in validation pipes — the
+  deploy guard makes any API runtime import impossible; rewritten around what the package really is
+  (mobile formatting/constants plus the offline mirrors of API-canonical pure functions, now tabled
+  with both paths). **Flagged, not fixed:** none of the Zod schemas in
+  `packages/shared-utils/src/validation/index.ts` is imported anywhere — dead code.
+  `shared-conversations.md`: entry points still pointed at `chat.service.ts` for sharing/presence/
+  confirm, moved out by ABA-592; the `notifySharedActivity` gate is in `NotificationsService`.
+  Glanced: `help-content-pipeline.md` (its commits are `content.ts` regenerations), `api.md` and
+  `offline-sync.md` (cite `schema.prisma` only as the source of truth — false positives).
+  **Next targets:** `features/directory-badges.md`, `features/acquisition-tracking.md` (generator
+  commits), `features/receipt-price-check.md`.

@@ -11,8 +11,15 @@ sharing control itself are on [chat-conversation-management](chat-conversation-m
 
 ## Entry points
 
-- `apps/api/src/modules/ai/services/chat.service.ts` — `chat()` (mentions, presence, AI history),
-  `setConversationShared`, `touchPresence` / `isPresent`, `sanitizeName`
+- `apps/api/src/modules/ai/services/chat.service.ts` — `chat()` (mention parsing, the
+  `chat_mention` push, the `[Name]: ` history prefix via `sanitizeName`, `handleReadAction`). Its
+  `setConversationShared` / `touchPresence` / `isPresent` are one-line delegates since ABA-592.
+- `apps/api/src/modules/ai/services/chat-conversation.service.ts` — the real
+  `setConversationShared`, presence (`touchPresence` / `isPresent`, the Redis key), listing and poll
+- `apps/api/src/modules/ai/services/chat-action-lifecycle.service.ts` — confirm/reject, scoped by
+  `senderUserId`
+- `apps/api/src/modules/notifications/notifications.service.ts` — the `notifySharedActivity` gate
+  on `chat_mention`
 - `apps/api/src/modules/ai/ai.controller.ts` — `GET /ai/chat/conversations` (account-scoped),
   `…/:id/messages`, `…/:id/poll?since=`, `PATCH …/:id/shared`, `POST /ai/chat/confirm|reject`
 - Schema: `ChatConversation.accountId`, `.isShared`; `ChatMessage.senderUserId`, `.mentionedUserIds`
@@ -30,7 +37,9 @@ members with the sender removed. A message with at least one valid mention is st
 `aiResponded: false`. A message with no mention goes to the AI as usual.
 
 **Presence** is a Redis key `chat:presence:{conversationId}:{userId}` with a 45 s TTL, refreshed by
-the poll. The `chat_mention` push is gated by `user.notifySharedActivity`.
+the poll. The `chat_mention` push is gated by `user.notifySharedActivity` — inside
+`NotificationsService`, not in the chat code, so a new caller sending `chat_mention` gets the gate
+for free.
 
 **The AI sees who said what**: in a shared conversation each member's message in the history is
 prefixed with `[Name]: `, the name passed through `sanitizeName`.
@@ -73,4 +82,6 @@ This gate must stay symmetric with the `Linking` deep-link gate.
 ## History
 
 Shared conversations (the original feature) · ABA-264 (cold-start deep-link gate) · ABA-334 (any
-member may share their own conversation; the sender-side duplicate; the read-action user id).
+member may share their own conversation; the sender-side duplicate; the read-action user id) ·
+ABA-592 (sharing, presence and confirm/reject moved out of `chat.service.ts`; see
+[chat-architecture](chat-architecture.md)).
