@@ -130,8 +130,7 @@ versions at 5–7.5, zero clicks), retitled around "Monefy alternative" rather t
   "MiCode Sp. z o.o." and has no `@id`, so the two sites still meet only through `alternateName`
   and the shared URL.
 - Below-fold lightbox images are not served as WebP/AVIF.
-- The author `Person` has no LinkedIn in `sameAs` yet, and the app has no `aggregateRating` (no
-  verified rating source).
+- The app has no `aggregateRating` (no verified rating source).
 - `llms.txt`, `LLMS_TXT_I18N` and `featureList` are three hand-maintained copies of the same
   feature list; nothing cross-checks them against each other or against the product.
 

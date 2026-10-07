@@ -287,27 +287,28 @@ def git_date(path, fallback=PUBLISH_DATE):
 # The person who writes the guides: a named author is an E-E-A-T signal Google and answer
 # engines weigh on money topics, where "author: Organization" reads as anonymous. One stable
 # @id, referenced from every article and described once on the about page (build_landing.py
-# renders AUTHOR_BIO there under #author). Add LinkedIn to `sameAs` once the URL is confirmed.
-AUTHOR = {"name": "Mikhail Peraviortkin", "sameAs": ["https://github.com/micode-ai"]}
+# renders AUTHOR_BIO there under #author).
+AUTHOR = {"name": "Mikhail Peraviortkin", "jobTitle": "Founder",
+          "sameAs": ["https://www.linkedin.com/in/mikhailperaviortkin/", "https://github.com/micode-ai"]}
 AUTHOR_ID = f"{SITE}/#author"
 def author_url(lang):
     return f"{SITE}{about_url(lang)}#author"
 AUTHOR_BIO = {
-    "en": "Mikhail Peraviortkin builds AI Budget Assistant at MICODE sp. z o.o. and writes the guides on this blog.",
-    "pl": "Mikhail Peraviortkin tworzy AI Budget Assistant w MICODE sp. z o.o. i pisze poradniki na tym blogu.",
-    "de": "Mikhail Peraviortkin entwickelt AI Budget Assistant bei MICODE sp. z o.o. und schreibt die Ratgeber in diesem Blog.",
-    "es": "Mikhail Peraviortkin desarrolla AI Budget Assistant en MICODE sp. z o.o. y escribe las guías de este blog.",
-    "fr": "Mikhail Peraviortkin développe AI Budget Assistant chez MICODE sp. z o.o. et rédige les guides de ce blog.",
-    "ru": "Mikhail Peraviortkin создаёт AI Budget Assistant в MICODE sp. z o.o. и пишет руководства в этом блоге.",
-    "ua": "Mikhail Peraviortkin створює AI Budget Assistant у MICODE sp. z o.o. і пише посібники в цьому блозі.",
-    "be": "Mikhail Peraviortkin стварае AI Budget Assistant у MICODE sp. z o.o. і піша дапаможнікі ў гэтым блогу.",
-    "nl": "Mikhail Peraviortkin bouwt AI Budget Assistant bij MICODE sp. z o.o. en schrijft de gidsen op deze blog.",
+    "en": "Mikhail Peraviortkin is the founder of MICODE sp. z o.o., the company behind AI Budget Assistant, and writes the guides on this blog.",
+    "pl": "Mikhail Peraviortkin jest założycielem MICODE sp. z o.o., firmy, która tworzy AI Budget Assistant, i autorem poradników na tym blogu.",
+    "de": "Mikhail Peraviortkin ist Gründer von MICODE sp. z o.o., dem Unternehmen hinter AI Budget Assistant, und schreibt die Ratgeber in diesem Blog.",
+    "es": "Mikhail Peraviortkin es el fundador de MICODE sp. z o.o., la empresa que desarrolla AI Budget Assistant, y escribe las guías de este blog.",
+    "fr": "Mikhail Peraviortkin est le fondateur de MICODE sp. z o.o., la société qui développe AI Budget Assistant, et rédige les guides de ce blog.",
+    "ru": "Mikhail Peraviortkin — основатель MICODE sp. z o.o., компании, которая создаёт AI Budget Assistant, и автор руководств в этом блоге.",
+    "ua": "Mikhail Peraviortkin — засновник MICODE sp. z o.o., компанії, що створює AI Budget Assistant, і автор посібників у цьому блозі.",
+    "be": "Mikhail Peraviortkin — заснавальнік MICODE sp. z o.o., кампаніі, якая стварае AI Budget Assistant, і аўтар дапаможнікаў у гэтым блогу.",
+    "nl": "Mikhail Peraviortkin is de oprichter van MICODE sp. z o.o., het bedrijf achter AI Budget Assistant, en schrijft de gidsen op deze blog.",
 }
 AUTHOR_LABEL = {"en": "Author", "pl": "Autor", "de": "Autor", "es": "Autor", "fr": "Auteur",
                 "ru": "Автор", "ua": "Автор", "be": "Аўтар", "nl": "Auteur"}
 def author_node(lang="en"):
     return {"@type": "Person", "@id": AUTHOR_ID, "name": AUTHOR["name"],
-            "url": author_url(lang), "sameAs": AUTHOR["sameAs"],
+            "url": author_url(lang), "jobTitle": AUTHOR["jobTitle"], "sameAs": AUTHOR["sameAs"],
             "description": AUTHOR_BIO.get(lang, AUTHOR_BIO["en"]),
             "worksFor": {"@id": f"{SITE}/#organization"}}
 
