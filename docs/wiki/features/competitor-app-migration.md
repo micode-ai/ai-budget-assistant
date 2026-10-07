@@ -27,7 +27,15 @@ parser buys a model call not spent, the exporting app's own categories carried a
 entry point.
 
 **Per-format gotchas.** Monefy emits `currency` twice (raw and converted), so it is parsed in array
-mode — a keyed parse silently collapses the pair. Wallet states Expense/Income explicitly, marks
+mode — a keyed parse silently collapses the pair. A real export (ABA-637) is comma-delimited with dot
+decimals and an NBSP thousands separator (`-1 250`), quotes notes containing quotes, and leaves
+the note empty on many rows. It writes its own bookkeeping as ordinary rows: each half of a transfer
+between Monefy accounts has the category `To '<account>'` / `From '<account>'`, and an opening
+balance `Initial balance '<account>'` — English and quoted even when the app runs in another
+language. The parser drops those rows (as Wallet drops its transfers); the quotes are what keep a
+user category such as "From grandma". Monefy also logs one row per item, so identical rows on one
+day are routine — see the repeated-row rule on
+[bank-statement-import](bank-statement-import.md). Wallet states Expense/Income explicitly, marks
 `transfer` rows (dropped: not spending, and mapping them needs account mapping this import lacks),
 and restates amounts in its own base currency via `refAmount`/`refCurrency` (ignored; the
 transaction's own currency wins). Its header is known in two spellings, the
@@ -85,10 +93,11 @@ leaves the user nowhere to go, and it leaves nothing in the API log either — t
 
 ## Known gaps
 
-- **Monefy, Wallet and the full Money Manager shape are still unverified against real files.**
-  The simple Money Manager shape is the only one checked against a real export (ABA-582). Monefy
+- **Wallet and the full Money Manager shape are still unverified against real files.** Monefy was
+  checked against a real export in ABA-637, the simple Money Manager shape in ABA-582. Monefy
   and Wallet still use the shared `parsePolishDate`, which reads a slash date day-first and never
   validates the month; the per-file order detection lives only in the Money Manager parser.
+- Monefy's `account` column is ignored: every row lands in the account being imported into.
 - An amount with no currency symbol falls back to `PLN`: `parsePreview` does not pass the
   user's display currency to a named parser (only the AI path resolves one).
 - The picked-parser fallback exists on the CSV/XLSX path only, not on `parsePdfPreview`.
@@ -102,3 +111,5 @@ leaves the user nowhere to go, and it leaves nothing in the API log either — t
   DTO derived from the registry, commit records the detected parser.
 - ABA-582 — the Money Manager parser reads the simple export shape, with per-file date order.
 - ABA-583 — Wallet detection accepts both header spellings in circulation.
+- ABA-637 — a real ten-year Monefy export did not import: the commit timed out, repeated purchases
+  were dropped as duplicates, and transfers between Monefy accounts imported as spending.

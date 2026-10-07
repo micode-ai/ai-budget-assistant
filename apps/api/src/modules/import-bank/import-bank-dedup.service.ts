@@ -5,7 +5,7 @@ import { normalizeMerchantPL } from './merchants/merchants-pl';
 import { pairFxRows } from './utils/fx-pairing';
 import type { BankParser } from './parsers/parser.interface';
 import type { BankImportPreviewResponse, ImportRow } from '@budget/shared-types';
-import { buildExternalRef } from './utils/build-external-ref';
+import { buildExternalRef, disambiguateRepeatedRefs } from './utils/build-external-ref';
 
 /**
  * Preview-shaping + dedup concern, split out of ImportBankService (ABA — see
@@ -34,7 +34,7 @@ export class ImportBankDedupService {
       alreadyImported: false,
     }));
 
-    const paired = pairFxRows(withRefs, parser.id);
+    const paired = disambiguateRepeatedRefs(pairFxRows(withRefs, parser.id));
 
     const refs = paired.map((r) => r.externalRef);
     const [exExp, exInc, exFx] = await Promise.all([

@@ -94,6 +94,52 @@ describe('MonefyParser', () => {
       expect(rows[0].suggestedCategoryName).toBe('Food');
     });
 
+    it('reads the shape of a real export: NBSP thousands, quoted notes, empty notes', () => {
+      const real = [
+        'date,account,category,amount,currency,converted amount,currency,description',
+        '10/03/2020,Наличные,Хозтовары,-1 250,RUB,-1 250,RUB,Батарейки',
+        '10/03/2020,Наличные,Еда,-40,RUB,-40,RUB,"Кофе ""Brand"""',
+        '10/03/2020,Наличные,Подработка,12 000,RUB,12 000,RUB,',
+      ].join('\n');
+
+      const { rows } = parser.parse(real);
+
+      expect(rows.map((r) => [r.kind, r.amount, r.description])).toEqual([
+        ['expense', 1250, 'Батарейки'],
+        ['expense', 40, 'Кофе "Brand"'],
+        ['income', 12000, 'Подработка'],
+      ]);
+    });
+
+    // Monefy writes a transfer between its own accounts as a pair of ordinary
+    // rows whose category is `To '<account>'` / `From '<account>'`, and an
+    // account's opening balance as `Initial balance '<account>'`. Imported, each
+    // transfer became a fake expense AND a fake income, under junk categories named after the account.
+    it('drops transfers between Monefy accounts and opening balances', () => {
+      const real = [
+        'date,account,category,amount,currency,converted amount,currency,description',
+        "01/09/2026,Карта,Initial balance 'Карта',1 000.00,RUB,1 000.00,RUB,",
+        "02/09/2026,Наличные,To 'Карта',-5 000.00,RUB,-5 000.00,RUB,",
+        "02/09/2026,Карта,From 'Наличные',5 000.00,RUB,5 000.00,RUB,",
+        '03/09/2026,Карта,Проценты,3.50,RUB,3.50,RUB,',
+        "04/09/2026,Наличные,Связь,-1 500,RUB,-1 500,RUB,Телефон",
+      ].join('\n');
+
+      const { rows } = parser.parse(real);
+
+      expect(rows.map((r) => r.suggestedCategoryName)).toEqual(['Проценты', 'Связь']);
+    });
+
+    it('keeps an ordinary category that merely starts with "To" or "From"', () => {
+      const csv = [
+        'date,account,category,amount,currency,converted amount,currency,description',
+        '01/02/2024,Cash,Toys,-20.00,EUR,-20.00,EUR,Lego',
+        "01/02/2024,Cash,From grandma,50.00,EUR,50.00,EUR,Gift",
+      ].join('\n');
+
+      expect(parser.parse(csv).rows).toHaveLength(2);
+    });
+
     it('reports the detected headers', () => {
       const { detectedHeaders } = parser.parse(fixture);
       expect(detectedHeaders).toEqual(headers);

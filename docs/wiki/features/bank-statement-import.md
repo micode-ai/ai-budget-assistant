@@ -58,6 +58,14 @@ and `wise:<TransferWise ID>`, stored as `externalRef` under `@@unique([accountId
 Expense, Income and CurrencyExchange (NULLs are distinct in Postgres). A parser id, once shipped, is
 part of every key it produced.
 
+**Identical rows in one file are distinct transactions (ABA-637).** The key carries no time of day,
+so buying the same thing twice in a day produces two equal keys, and `dropDuplicateRows` used to
+keep only the first. `disambiguateRepeatedRefs` (in `build-external-ref.ts`, run by
+`buildPreviewResponse` for every parser and the AI paths) suffixes the Nth repeat `#N`, numbered by
+source `idx` — never by array position, since `pairFxRows` reorders — so re-importing the same file
+reproduces the same keys. The first occurrence keeps the bare key, so files imported before the
+change still dedup against what they created.
+
 **Two dedup layers in preview.** Exact `externalRef` match (re-importing the same file), then
 `flagContentDuplicates` — `(date, signedAmountCents, currency)` against all of the account's
 expenses and incomes regardless of source, greedy one-to-one, FX excluded. Matches are marked
@@ -67,9 +75,15 @@ exact.
 **Drop duplicates BEFORE opening the transaction (ABA-313).** Postgres aborts the whole
 transaction on the first unique violation (later statements fail with `25P02`), so the old
 catch-P2002-and-continue crashed the entire import. `dropDuplicateRows` removes refs already in the
-DB and intra-batch repeats first, and the per-row `catch` rethrows everything — a poisoned
-transaction cannot continue. This covers what `alreadyImported` misses: repeats within one file and
+DB and intra-batch repeats first; any failure inside the transaction aborts the whole import — a
+poisoned transaction cannot continue. This covers what `alreadyImported` misses: repeats within one file and
 rows imported between preview and commit.
+
+**The commit inserts with chunked `createMany` under an explicit timeout (ABA-637).** One `create`
+per row inside an interactive `$transaction` overran Prisma's 5 s default on a ~12k-row history and
+rolled the whole import back. Rows are built first, then written 1000 per statement inside a
+transaction with `timeout: 120_000`. Expense ids are generated in the service because `createMany`
+returns no rows and `checkExpenseBatch` needs them. Do not reintroduce per-row writes there.
 
 **Every commit writes an `ImportBatch` in the same transaction** and stamps its rows with
 `importBatchId`. Rollback (`DELETE /import/batches/:id`, within 30 days of a committed batch) sets
@@ -82,8 +96,11 @@ The controller's `POST /import/bank/ai-consent` injects `ImportBankAiPreviewServ
 ## Known gaps
 
 - ING, Millennium and Pekao are unvalidated against real exports.
+- `AnomalyService.checkExpenseBatch` runs its detectors over every imported expense one by one; on
+  a multi-year history that is a very long fire-and-forget pass and may raise alerts about old data.
 
 ## History
 
 Wise import · ABA-126 (Polish banks) · ABA-116 (Revolut) · ABA-130 (batch history) · ABA-254
-(merchant normalization) · ABA-313 (commit dedup crash) · the service split.
+(merchant normalization) · ABA-313 (commit dedup crash) · the service split · ABA-637 (chunked
+commit, repeated rows in one file).

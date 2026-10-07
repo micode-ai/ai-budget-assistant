@@ -22,6 +22,15 @@ import { sniffDelimiter } from '../utils/delimiter';
  * is passed through as `suggestedCategoryName` rather than guessed from the
  * merchant — migrating a history is only worth doing if it stays organised.
  */
+/**
+ * The category Monefy writes on its own bookkeeping rows: `To 'Savings'` /
+ * `From 'Cash'` for each half of a transfer, `Initial balance 'Cash'` for an
+ * account's opening balance. These labels are English and quoted in a real
+ * export even when the app runs in Russian; the quotes are what keep a user
+ * category such as "From grandma" from matching.
+ */
+const MONEFY_BOOKKEEPING_CATEGORY = /^(To|From|Initial balance) '.*'$/;
+
 export class MonefyParser implements BankParser {
   id = 'monefy' as const;
   displayName = 'Monefy';
@@ -92,6 +101,10 @@ export class MonefyParser implements BankParser {
     if (!Number.isFinite(amount) || amount === 0) return null;
 
     const category = at(col.category);
+    // Transfers between the user's own Monefy accounts and opening balances
+    // are not spending or income; mapping them would need account mapping
+    // this import does not have (the Wallet parser drops its transfers too).
+    if (MONEFY_BOOKKEEPING_CATEGORY.test(category)) return null;
     const note = at(col.description);
     // Monefy lets a transaction have no note at all; the category is the only
     // human-readable thing left, and an empty description would leave the row

@@ -134,6 +134,29 @@ describe('ImportBankService.parsePreview', () => {
     });
   });
 
+  // Monefy logs a purchase per item, so two identical lines on one day are two
+  // real purchases (a real export had over a hundred). They must not collapse
+  // into one dedup key, or the commit's intra-batch filter drops the repeats.
+  it('gives repeated identical rows in one file distinct, stable externalRefs', async () => {
+    const csv = [
+      'date,account,category,amount,currency,converted amount,currency,description',
+      '10/03/2020,Cash,Food,-15,RUB,-15,RUB,Bun',
+      '10/03/2020,Cash,Food,-30,RUB,-30,RUB,Bread',
+      '10/03/2020,Cash,Food,-15,RUB,-15,RUB,Bun',
+      '10/03/2020,Cash,Food,-15,RUB,-15,RUB,Bun',
+    ].join('\n');
+
+    const first = await service.parsePreview('acc-1', 'user-1', Buffer.from(csv, 'utf-8'), {});
+    const again = await service.parsePreview('acc-1', 'user-1', Buffer.from(csv, 'utf-8'), {});
+
+    const refs = first.rows!.map((r) => r.externalRef);
+    expect(new Set(refs).size).toBe(4);
+    // The first occurrence keeps the bare key, so files imported before the
+    // fix still dedup against what they already created.
+    expect(first.rows!.find((r) => r.idx === 0)!.externalRef).toMatch(/^bank:monefy:2020-03-10:-1500:[0-9a-f]{8}$/);
+    expect(again.rows!.map((r) => r.externalRef)).toEqual(refs);
+  });
+
   it('returns needs_picker for unrecognized CSV', async () => {
     const text = 'Col1;Col2\nfoo;bar';
     const res = await service.parsePreview('acc-1', 'user-1', Buffer.from(text, 'utf-8'), {});
@@ -242,9 +265,9 @@ describe('ImportBankService.parsePreview', () => {
     prisma.expense.findMany.mockImplementation((args: any) =>
       Promise.resolve((args.where.externalRef?.in ?? []).includes('bank:x:exists') ? [{ externalRef: 'bank:x:exists' }] : []),
     );
-    const txExpenseCreate = jest.fn().mockResolvedValue({ id: 'e-new' });
+    const txExpenseCreateMany = jest.fn(async ({ data }: any) => ({ count: data.length }));
     const tx = {
-      expense: { create: txExpenseCreate },
+      expense: { createMany: txExpenseCreateMany },
       income: { create: jest.fn() },
       currencyExchange: { create: jest.fn() },
     };
@@ -269,9 +292,51 @@ describe('ImportBankService.parsePreview', () => {
     const res = await service.commit('acc-1', 'user-1', { rows } as any);
 
     // Only the two genuinely-new refs get inserted; no throw (the crash regression).
-    expect(txExpenseCreate).toHaveBeenCalledTimes(2);
+    expect(txExpenseCreateMany.mock.calls[0][0].data.map((d: any) => d.externalRef)).toEqual([
+      'bank:x:dup',
+      'bank:x:new',
+    ]);
     expect(res.createdExpenses).toBe(2);
     expect(res.skippedDuplicates).toBe(2);
+  });
+
+  // A ten-year Monefy history is ~12k rows. One `create` per row inside an
+  // interactive transaction overran Prisma's 5 s default timeout, and the
+  // whole import rolled back. Rows go in with batched createMany under an
+  // explicit timeout.
+  it('commits a large file in createMany batches under an explicit transaction timeout', async () => {
+    const expenseCreateMany = jest.fn(async ({ data }: any) => ({ count: data.length }));
+    const incomeCreateMany = jest.fn(async ({ data }: any) => ({ count: data.length }));
+    const tx = {
+      expense: { create: jest.fn(), createMany: expenseCreateMany },
+      income: { create: jest.fn(), createMany: incomeCreateMany },
+      currencyExchange: { create: jest.fn(), createMany: jest.fn(async ({ data }: any) => ({ count: data.length })) },
+    };
+    const txSpy = jest.fn(async (cb: any, _opts?: any) => cb(tx));
+    (prisma as any).$transaction = txSpy;
+
+    const rows = Array.from({ length: 2500 }, (_, i) => ({
+      kind: i % 10 === 0 ? ('income' as const) : ('expense' as const),
+      externalRef: `bank:monefy:2020-03-10:${i}:abcdef01`,
+      amount: i + 1,
+      currencyCode: 'RUB',
+      description: `row ${i}`,
+      merchant: `row ${i}`,
+      date: '2020-03-10',
+      alreadyImported: false,
+    }));
+
+    const res = await service.commit('acc-1', 'user-1', { rows, bankId: 'monefy' } as any);
+
+    expect(res.createdExpenses).toBe(2250);
+    expect(res.createdIncomes).toBe(250);
+    expect(tx.expense.create).not.toHaveBeenCalled();
+    expect(expenseCreateMany.mock.calls.length).toBeGreaterThan(1);
+    for (const [args] of expenseCreateMany.mock.calls) expect(args.data.length).toBeLessThanOrEqual(1000);
+    expect(txSpy.mock.calls[0][1]).toEqual(expect.objectContaining({ timeout: expect.any(Number) }));
+    expect(txSpy.mock.calls[0][1].timeout).toBeGreaterThan(5000);
+    // Anomaly detection still receives the ids of what was created.
+    expect(anomaly.checkExpenseBatch.mock.calls[0][2]).toHaveLength(2250);
   });
 
   // Signature dictionary bookkeeping: a successful commit either confirms

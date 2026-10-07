@@ -27,6 +27,22 @@ import type {
 import type { BankImportCommitBodyDto, RequestBankBodyDto } from './dto';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
 
+/** Rows per createMany statement — well under Postgres's 65535 bind-parameter cap at ~14 columns. */
+const INSERT_CHUNK_SIZE = 1000;
+/** Upper bound for the commit transaction; ~12k rows in batches take a few seconds. */
+const COMMIT_TX_TIMEOUT_MS = 120_000;
+
+async function insertInChunks(
+  createMany: (data: Record<string, unknown>[]) => Promise<{ count: number }>,
+  rows: Record<string, unknown>[],
+): Promise<number> {
+  let count = 0;
+  for (let i = 0; i < rows.length; i += INSERT_CHUNK_SIZE) {
+    count += (await createMany(rows.slice(i, i + INSERT_CHUNK_SIZE))).count;
+  }
+  return count;
+}
+
 export interface PreviewOptions {
   bankId?: BankParser['id'];
   mappingId?: string;
@@ -287,96 +303,99 @@ export class ImportBankService {
     // `(account_id, name, type)` constraint mid-import.
     await preloadCategories(this.prisma, accountId, rowsToInsert, categoryCache);
 
+    // Rows go in through batched createMany, not one `create` each: a ten-year
+    // Monefy history is ~12k rows, and per-row INSERTs inside an interactive
+    // transaction overran Prisma's 5 s default timeout, rolling the whole
+    // import back. The timeout is raised as well, for the same reason the
+    // backup restore raises it — the work is bounded by the file, not by us.
     await this.prisma.$transaction(async (tx) => {
       batchId = await this.importBatches.createBatch(tx as any, { accountId, userId, source });
 
-      for (const row of rowsToInsert) {
-        try {
-          if (row.kind === 'expense') {
-            // Apply user's learned merchant rule (higher priority than parser-suggested category)
-            const normalizedMerchant = row.merchant?.trim().toLowerCase();
-            const userRuleCategoryId = normalizedMerchant ? merchantRulesMap.get(normalizedMerchant) ?? null : null;
+      const expenses: Record<string, unknown>[] = [];
+      const incomes: Record<string, unknown>[] = [];
+      const exchanges: Record<string, unknown>[] = [];
 
-            const categoryId = userRuleCategoryId ?? await resolveCategoryId(
-              tx as any,
-              accountId,
-              row.suggestedCategoryName,
-              categoryCache,
-              'expense',
-            );
-            const created = await (tx as any).expense.create({
-              data: {
-                accountId,
-                userId,
-                clientId: randomUUID(),
-                amount: row.amount,
-                currencyCode: row.currencyCode,
-                description: row.description,
-                // Re-normalize defensively (idempotent) in case an old client sent a raw merchant.
-                merchant: normalizeMerchantPL(row.merchant) ?? null,
-                date: new Date(row.date),
-                source: 'import',
-                externalRef: row.externalRef,
-                importBatchId: batchId,
-                ...(categoryId ? { categoryId } : {}),
-              },
-              select: { id: true },
-            });
-            createdExpenseIds.push(created.id);
-            createdExpenses++;
-          } else if (row.kind === 'income') {
-            const categoryId = await resolveCategoryId(
-              tx as any,
-              accountId,
-              row.suggestedCategoryName,
-              categoryCache,
-              'income',
-            );
-            await (tx as any).income.create({
-              data: {
-                accountId,
-                userId,
-                clientId: randomUUID(),
-                amount: row.amount,
-                currencyCode: row.currencyCode,
-                description: row.description,
-                date: new Date(row.date),
-                externalRef: row.externalRef,
-                importBatchId: batchId,
-                ...(categoryId ? { categoryId } : {}),
-              },
-            });
-            createdIncomes++;
-          } else if (row.kind === 'fx') {
-            await (tx as any).currencyExchange.create({
-              data: {
-                accountId,
-                userId,
-                clientId: randomUUID(),
-                fromCurrency: row.fxFromCurrency!,
-                toCurrency: row.fxToCurrency!,
-                fromAmount: row.fxFromAmount!,
-                toAmount: row.fxToAmount!,
-                exchangeRate: row.fxRate ?? 0,
-                date: new Date(row.date),
-                externalRef: row.externalRef,
-                importBatchId: batchId,
-              },
-            });
-            createdExchanges++;
-          }
-        } catch (err: any) {
-          // A per-row failure poisons the whole Postgres transaction (25P02), so
-          // we cannot skip-and-continue — abort and roll back the import (no
-          // partial commit). Duplicates were already removed above, so a P2002
-          // here is only a rare concurrent double-commit race; the client can
-          // safely retry (the pre-filter will then skip the now-existing row).
-          throw err;
+      for (const row of rowsToInsert) {
+        if (row.kind === 'expense') {
+          // Apply user's learned merchant rule (higher priority than parser-suggested category)
+          const normalizedMerchant = row.merchant?.trim().toLowerCase();
+          const userRuleCategoryId = normalizedMerchant ? merchantRulesMap.get(normalizedMerchant) ?? null : null;
+
+          const categoryId = userRuleCategoryId ?? await resolveCategoryId(
+            tx as any,
+            accountId,
+            row.suggestedCategoryName,
+            categoryCache,
+            'expense',
+          );
+          // The id is generated here because createMany returns no rows, and
+          // anomaly detection below needs the ids of what was created.
+          const id = randomUUID();
+          expenses.push({
+            id,
+            accountId,
+            userId,
+            clientId: randomUUID(),
+            amount: row.amount,
+            currencyCode: row.currencyCode,
+            description: row.description,
+            // Re-normalize defensively (idempotent) in case an old client sent a raw merchant.
+            merchant: normalizeMerchantPL(row.merchant) ?? null,
+            date: new Date(row.date),
+            source: 'import',
+            externalRef: row.externalRef,
+            importBatchId: batchId,
+            ...(categoryId ? { categoryId } : {}),
+          });
+          createdExpenseIds.push(id);
+        } else if (row.kind === 'income') {
+          const categoryId = await resolveCategoryId(
+            tx as any,
+            accountId,
+            row.suggestedCategoryName,
+            categoryCache,
+            'income',
+          );
+          incomes.push({
+            accountId,
+            userId,
+            clientId: randomUUID(),
+            amount: row.amount,
+            currencyCode: row.currencyCode,
+            description: row.description,
+            date: new Date(row.date),
+            externalRef: row.externalRef,
+            importBatchId: batchId,
+            ...(categoryId ? { categoryId } : {}),
+          });
+        } else if (row.kind === 'fx') {
+          exchanges.push({
+            accountId,
+            userId,
+            clientId: randomUUID(),
+            fromCurrency: row.fxFromCurrency!,
+            toCurrency: row.fxToCurrency!,
+            fromAmount: row.fxFromAmount!,
+            toAmount: row.fxToAmount!,
+            exchangeRate: row.fxRate ?? 0,
+            date: new Date(row.date),
+            externalRef: row.externalRef,
+            importBatchId: batchId,
+          });
         }
       }
 
+      // Any failure here aborts and rolls back the whole import — a failed
+      // statement poisons the Postgres transaction (25P02), so there is no
+      // skip-and-continue. Duplicates were removed above, so a P2002 is only a
+      // rare concurrent double-commit race, and a retry is safe (the pre-filter
+      // then skips the rows that now exist).
+      createdExpenses = await insertInChunks((data) => (tx as any).expense.createMany({ data }), expenses);
+      createdIncomes = await insertInChunks((data) => (tx as any).income.createMany({ data }), incomes);
+      createdExchanges = await insertInChunks((data) => (tx as any).currencyExchange.createMany({ data }), exchanges);
+
       await this.importBatches.finalizeBatch(tx as any, batchId, createdExpenses + createdIncomes + createdExchanges);
-    });
+    }, { timeout: COMMIT_TX_TIMEOUT_MS, maxWait: 10_000 });
 
     // Fire-and-forget anomaly detection on the committed expenses.
     this.anomaly
