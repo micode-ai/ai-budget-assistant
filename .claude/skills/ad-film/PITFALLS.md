@@ -118,6 +118,8 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | Symptom | Cause and fix |
 |---|---|
 | Pixel art looks like a blurry vector drawing | Antialiased shapes at full size. Draw at the native low resolution, snap the palette, then scale up nearest-neighbour; text must be thresholded, not just drawn small. |
+| "The hero has no eyes in the battle" | The genre's back-view player sprite hides the face, and a caricature of a real person needs his face. Turn the party to the camera; put the supporting cast (the son) in the fight too, reacting to every hit. |
+| A victory screen feels empty | A bare "YOU WIN" is no reward. Give the ending a goal from the genre: a castle, a treasure chest that pays out the saving, a princess (Kasia) who joins the party. |
 | Polish letters vanish in the pixel font | The stock 8x8 NES fonts have no ą ę ł ś ż. Render a system font at native size and threshold its alpha; bold Consolas/Tahoma at 11 px and up keep the diacritics. |
 | A string in the EN version is still Polish ("AI Budżet" in a push, "-87,40" in a column) | A literal in a scene instead of a `STR` key. Every visible string, including brand names and number formats, goes through `strings.js`; check the EN contact sheet frame by frame. |
 | A wide word overflows the frame on its first frame | The slam starts at 1.6x scale. Use a smaller `from` (1.15) for long headlines. |
