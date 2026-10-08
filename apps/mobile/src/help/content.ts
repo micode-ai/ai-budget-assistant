@@ -4682,6 +4682,20 @@ Whatever you choose, the **Hide amounts** setting is respected.
 
 Wrapped needs a bit of history to be worth showing. If you've only tracked a few items, or the year you picked has little activity, you'll see a friendly "not enough data yet" message instead of the deck. Keep tracking and it fills in.
 
+## Month in review
+
+There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** banner on the **Analytics** tab, next to Wrapped.
+
+The monthly deck has its own cards (again, only those with data):
+
+- **Compared with last month** — how much more or less you spent than the month before, in percent.
+- **Biggest single purchase** — the largest expense of the month, with where and what.
+- **Your priciest weekday** — the day of the week your money went on most.
+- **Top spot** — the place you came back to most often (from two visits).
+- plus total tracked, top category and mix, receipts scanned, savings (when you had income that month) and your streak.
+
+Sharing and **Hide amounts** work exactly as in the yearly deck. To stop the monthly push, turn off **Month in review** in **Settings → Notifications**.
+
 ## Notes
 
 - Wrapped is **free** — there's no Pro requirement.
@@ -9615,6 +9629,20 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Для того чтобы Итоги года имели смысл, нужна небольшая история. Если вы отследили всего несколько операций или выбранный год почти не содержит активности, вместо колоды карточек вы увидите дружелюбное сообщение «пока недостаточно данных». Продолжайте вести учёт — и итоги заполнятся.
 
+## Итоги месяца
+
+Есть и короткая колода для одного месяца. **1-го числа каждого месяца** приходит уведомление — *Итоги месяца готовы*, — если за прошедший месяц достаточно данных; нажмите на него, чтобы открыть карточки. Открыть их можно и в любой момент — баннер **Итоги месяца** на вкладке **Аналитика**, рядом с итогами года.
+
+У месячной колоды свои карточки (тоже только те, по которым есть данные):
+
+- **По сравнению с прошлым месяцем** — на сколько процентов больше или меньше вы потратили, чем месяцем раньше.
+- **Самая крупная покупка** — самый большой расход месяца: где и на что.
+- **Самый дорогой день недели** — день недели, на который пришлось больше всего трат.
+- **Ваше любимое место** — место, куда вы возвращались чаще всего (от двух визитов).
+- а также общая сумма, главная категория и распределение, отсканированные чеки, сбережения (если в этом месяце был доход) и серия.
+
+Публикация и **Скрыть суммы** работают так же, как в итогах года. Чтобы отключить ежемесячное уведомление, выключите **Итоги месяца** в **Настройки → Уведомления**.
+
 ## Примечания
 
 - Итоги года — это **бесплатно**, подписка Pro не требуется.
@@ -14518,6 +14546,20 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Щоб Підсумки року мали сенс, потрібна невелика історія. Якщо ви відстежили лише кілька операцій або обраний рік містить мало активності, замість колоди карток ви побачите доброзичливе повідомлення «поки що недостатньо даних». Продовжуйте вести облік — і підсумки заповняться.
 
+## Підсумки місяця
+
+Є й коротка колода для одного місяця. **1-го числа кожного місяця** надходить сповіщення — *Підсумки місяця готові*, — якщо за минулий місяць достатньо даних; натисніть на нього, щоб відкрити картки. Відкрити їх можна й будь-коли — банер **Підсумки місяця** на вкладці **Аналітика**, поруч із підсумками року.
+
+Місячна колода має власні картки (теж лише ті, для яких є дані):
+
+- **Порівняно з минулим місяцем** — на скільки відсотків більше чи менше ви витратили, ніж місяцем раніше.
+- **Найбільша покупка** — найбільша витрата місяця: де і на що.
+- **Найдорожчий день тижня** — день тижня, на який припало найбільше витрат.
+- **Ваше улюблене місце** — місце, куди ви поверталися найчастіше (від двох візитів).
+- а також загальна сума, головна категорія й розподіл, відскановані чеки, заощадження (якщо цього місяця був дохід) і серія.
+
+Публікація та **Приховати суми** працюють так само, як у підсумках року. Щоб вимкнути щомісячне сповіщення, вимкніть **Підсумки місяця** в **Налаштування → Сповіщення**.
+
 ## Примітки
 
 - Підсумки року — це **безкоштовно**, підписка Pro не потрібна.
@@ -19406,6 +19448,20 @@ Niezależnie od wyboru, ustawienie **Ukryj kwoty** jest respektowane.
 
 Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetlanie. Jeśli zarejestrowałeś tylko kilka pozycji albo wybrany rok ma niewiele aktywności, zamiast zestawu kart zobaczysz przyjazny komunikat „wciąż za mało danych". Śledź dalej swoje finanse, a podsumowanie się uzupełni.
 
+## Podsumowanie miesiąca
+
+Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z banera **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
+
+Miesięczna talia ma własne karty (również tylko te, dla których są dane):
+
+- **W porównaniu z poprzednim miesiącem** — o ile procent wydałeś więcej lub mniej niż miesiąc wcześniej.
+- **Największy pojedynczy zakup** — największy wydatek miesiąca, z miejscem i kategorią.
+- **Najdroższy dzień tygodnia** — dzień tygodnia, w którym wydałeś najwięcej.
+- **Twoje ulubione miejsce** — miejsce, do którego wracałeś najczęściej (od dwóch wizyt).
+- a także łączne wydatki, główna kategoria i podział, zeskanowane paragony, oszczędności (gdy w tym miesiącu był dochód) i seria.
+
+Udostępnianie i **Ukryj kwoty** działają tak samo jak w podsumowaniu roku. Aby wyłączyć comiesięczne powiadomienie, wyłącz **Podsumowanie miesiąca** w **Ustawienia → Powiadomienia**.
+
 ## Uwagi
 
 - Podsumowanie roku jest **darmowe** — nie wymaga abonamentu Pro.
@@ -24269,6 +24325,20 @@ Egal, wofür du dich entscheidest, die Einstellung **Beträge ausblenden** wird 
 
 Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn du erst wenige Einträge erfasst hast oder das gewählte Jahr wenig Aktivität aufweist, siehst du statt des Kartenstapels eine freundliche Meldung „Noch nicht genug Daten". Erfasse weiter deine Finanzen, dann füllt er sich.
 
+## Monatsrückblick
+
+Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über das Banner **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
+
+Der Monatsstapel hat eigene Karten (auch hier nur solche mit Daten):
+
+- **Im Vergleich zum Vormonat** — wie viel Prozent mehr oder weniger du als im Monat davor ausgegeben hast.
+- **Größter Einzelkauf** — die größte Ausgabe des Monats, mit Ort und Kategorie.
+- **Dein teuerster Wochentag** — der Wochentag, an dem das meiste Geld ausgegeben wurde.
+- **Dein Lieblingsort** — der Ort, an den du am häufigsten zurückgekehrt bist (ab zwei Besuchen).
+- dazu Gesamtsumme, Top-Kategorie und Verteilung, gescannte Belege, Ersparnisse (wenn du in dem Monat Einnahmen hattest) und deine Serie.
+
+Teilen und **Beträge ausblenden** funktionieren genau wie im Jahresrückblick. Um die monatliche Benachrichtigung abzuschalten, deaktiviere **Monatsrückblick** unter **Einstellungen → Benachrichtigungen**.
+
 ## Hinweise
 
 - Der Jahresrückblick ist **kostenlos** — es ist kein Pro-Abo nötig.
@@ -29121,6 +29191,20 @@ Elijas lo que elijas, se respeta la configuración de **Ocultar cantidades**.
 
 El Resumen del año necesita algo de historial para que merezca la pena mostrarlo. Si solo has registrado unos pocos movimientos, o el año que elegiste tiene poca actividad, verás un mensaje amistoso de "todavía no hay suficientes datos" en lugar del mazo de tarjetas. Sigue registrando y se irá completando.
 
+## Resumen del mes
+
+También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde el banner **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
+
+El mazo mensual tiene sus propias tarjetas (de nuevo, solo las que tienen datos):
+
+- **Comparado con el mes pasado** — cuánto gastaste de más o de menos que el mes anterior, en porcentaje.
+- **La compra más grande** — el mayor gasto del mes, con dónde y en qué.
+- **Tu día de la semana más caro** — el día de la semana en que más gastaste.
+- **Tu lugar favorito** — el sitio al que más volviste (a partir de dos visitas).
+- además del total registrado, la categoría principal y el reparto, los tickets escaneados, el ahorro (si tuviste ingresos ese mes) y tu racha.
+
+Compartir y **Ocultar cantidades** funcionan igual que en el resumen anual. Para dejar de recibir la notificación mensual, desactiva **Resumen del mes** en **Ajustes → Notificaciones**.
+
 ## Notas
 
 - El Resumen del año es **gratuito** — no requiere Pro.
@@ -33971,6 +34055,20 @@ Quel que soit votre choix, le réglage **Masquer les montants** est respecté.
 
 La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée. Si vous n'avez suivi que quelques éléments, ou si l'année choisie a peu d'activité, vous verrez un message convivial « pas encore assez de données » à la place du jeu de cartes. Continuez à suivre vos finances, et elle se remplira.
 
+## Bilan du mois
+
+Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la bannière **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
+
+Le paquet mensuel a ses propres cartes (là encore, seulement celles qui ont des données) :
+
+- **Par rapport au mois dernier** — combien vous avez dépensé de plus ou de moins que le mois précédent, en pourcentage.
+- **Le plus gros achat** — la plus grosse dépense du mois, avec où et quoi.
+- **Votre jour le plus cher** — le jour de la semaine où vous avez le plus dépensé.
+- **Votre lieu favori** — l'endroit où vous êtes revenu le plus souvent (à partir de deux visites).
+- ainsi que le total suivi, la catégorie principale et la répartition, les tickets scannés, l'épargne (si vous avez eu des revenus ce mois-là) et votre série.
+
+Le partage et **Masquer les montants** fonctionnent comme dans la rétro annuelle. Pour arrêter la notification mensuelle, désactivez **Bilan du mois** dans **Réglages → Notifications**.
+
 ## À noter
 
 - La Rétro de l'année est **gratuite** — aucun abonnement Pro requis.
@@ -38784,6 +38882,20 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Пакуль недастаткова дадзеных
 
 Каб Вынікі году мелі сэнс, патрэбна невялікая гісторыя. Калі вы адсачылі толькі некалькі аперацый, або абраны год мае мала актыўнасці, замест калоды картак вы ўбачыце прыязнае паведамленне «пакуль недастаткова дадзеных». Працягвайце весці ўлік — і вынікі запоўняцца.
+
+## Вынікі месяца
+
+Ёсць і кароткая калода для аднаго месяца. **1-га чысла кожнага месяца** прыходзіць апавяшчэнне — *Вынікі месяца гатовыя*, — калі за мінулы месяц дастаткова дадзеных; націсніце на яго, каб адкрыць карткі. Адкрыць іх можна і ў любы момант — банэр **Вынікі месяца** на ўкладцы **Аналітыка**, побач з вынікамі году.
+
+У месячнай калоды свае карткі (таксама толькі тыя, па якіх ёсць дадзеныя):
+
+- **У параўнанні з мінулым месяцам** — на колькі працэнтаў больш ці менш вы выдаткавалі, чым месяцам раней.
+- **Найбуйнейшая пакупка** — найбольшы выдатак месяца: дзе і на што.
+- **Самы дарагі дзень тыдня** — дзень тыдня, на які прыйшлося найбольш выдаткаў.
+- **Ваша любімае месца** — месца, куды вы вярталіся найчасцей (ад двух візітаў).
+- а таксама агульная сума, галоўная катэгорыя і размеркаванне, адсканаваныя чэкі, зберажэнні (калі ў гэтым месяцы быў даход) і серыя.
+
+Публікацыя і **Схаваць сумы** працуюць гэтак жа, як у выніках году. Каб адключыць штомесячнае апавяшчэнне, выключыце **Вынікі месяца** ў **Налады → Апавяшчэнні**.
 
 ## Заўвагі
 
@@ -43724,6 +43836,20 @@ Wat je ook kiest, de instelling **Bedragen verbergen** wordt gerespecteerd.
 ## Nog niet genoeg data
 
 Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als je slechts een paar dingen hebt bijgehouden, of het gekozen jaar heeft weinig activiteit, zie je in plaats van de kaartenstapel een vriendelijk bericht "nog niet genoeg data". Blijf bijhouden en het overzicht vult zich.
+
+## Maandoverzicht
+
+Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de banner **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
+
+De maandstapel heeft eigen kaarten (ook hier alleen die met data):
+
+- **Vergeleken met vorige maand** — hoeveel procent meer of minder je uitgaf dan de maand ervoor.
+- **Grootste losse aankoop** — de grootste uitgave van de maand, met waar en wat.
+- **Je duurste dag van de week** — de weekdag waarop het meeste geld opging.
+- **Je vaste plek** — de plek waar je het vaakst terugkwam (vanaf twee bezoeken).
+- plus het totaal, de topcategorie en verdeling, gescande bonnen, sparen (als je die maand inkomen had) en je reeks.
+
+Delen en **Bedragen verbergen** werken precies zoals in het jaaroverzicht. Wil je de maandelijkse melding niet meer, zet dan **Maandoverzicht** uit in **Instellingen → Meldingen**.
 
 ## Opmerkingen
 

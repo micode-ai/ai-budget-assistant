@@ -58,6 +58,9 @@ const GRADIENTS: Record<WrappedCard['type'], [string, string, string]> = {
   savings: ['#047857', '#059669', '#14B8A6'],
   personal_inflation: ['#B91C1C', '#DC2626', '#F97316'],
   streak: ['#C2410C', '#EA580C', '#F59E0B'],
+  biggest_purchase: ['#BE123C', '#E11D48', '#FB7185'],
+  busiest_weekday: ['#4338CA', '#4F46E5', '#818CF8'],
+  vs_last_month: ['#0F766E', '#0D9488', '#2DD4BF'],
   outro: ['#6D28D9', '#9333EA', '#DB2777'],
 };
 
@@ -65,6 +68,11 @@ const GRADIENTS: Record<WrappedCard['type'], [string, string, string]> = {
 // exactly ONE card, never more, regardless of how fast/far the fling is.
 const COMMIT_DISTANCE_RATIO = 0.18; // fraction of screen width
 const COMMIT_VELOCITY = 450; // px/s
+
+// Signed percentage for the vs-last-month card: "+12.5%", "−8%", "0%".
+function pctChange(n: number): string {
+  return `${n > 0 ? '+' : n < 0 ? '−' : ''}${Math.abs(n)}%`;
+}
 
 function clampW(v: number, min: number, max: number) {
   'worklet';
@@ -78,10 +86,13 @@ export default function WrappedScreen() {
   const intlLocale = getIntlLocale();
   const { width, height } = useWindowDimensions();
 
-  const params = useLocalSearchParams<{ year?: string }>();
-  const year = params.year ? Number(params.year) : undefined;
+  const params = useLocalSearchParams<{ year?: string; month?: string }>();
+  const year = params.year ? Number(params.year) || undefined : undefined;
+  // ?month=1..12 opens the monthly deck (ABA-641); the server echoes it back as data.month.
+  const monthParam = params.month ? Number(params.month) || undefined : undefined;
 
-  const { data, loading, error } = useWrapped(year);
+  const { data, loading, error } = useWrapped(year, monthParam);
+  const isMonthly = !!data?.month;
   const [hideAmounts, setHideAmounts] = useState(false);
   const shareCardRef = useRef<WrappedShareCardHandle>(null);
 
@@ -110,9 +121,24 @@ export default function WrappedScreen() {
     [intlLocale],
   );
 
+  // "September 2026" on a monthly deck, "2026" on the yearly one.
+  const periodLabel = data?.month ? monthLabel(data.month - 1, data.year) : String(data?.year ?? '');
+  const shareTitle = data?.month
+    ? t('wrapped.monthShareTitle', { period: periodLabel })
+    : t('wrapped.shareTitle', { year: data?.year });
+
+  const weekdayLabel = useCallback(
+    (weekday: number) => {
+      // 2024-01-07 was a Sunday, so +weekday lands on the right day of the week.
+      const name = new Date(2024, 0, 7 + weekday).toLocaleDateString(intlLocale, { weekday: 'long' });
+      return `${name.charAt(0).toUpperCase()}${name.slice(1)}`;
+    },
+    [intlLocale],
+  );
+
   const buildShareMessage = useCallback((): string => {
     if (!data) return '';
-    const lines: string[] = [t('wrapped.shareTitle', { year: data.year })];
+    const lines: string[] = [shareTitle];
     for (const c of data.cards) {
       switch (c.type) {
         case 'total_tracked':
@@ -141,6 +167,15 @@ export default function WrappedScreen() {
         case 'streak':
           lines.push(`🔥 ${t('wrapped.shareStreak', { count: c.longestStreak })}`);
           break;
+        case 'biggest_purchase':
+          lines.push(`🛍️ ${t('wrapped.shareBiggestPurchase', { value: money(c.amount) })}`);
+          break;
+        case 'busiest_weekday':
+          lines.push(`📆 ${t('wrapped.shareWeekday', { weekday: weekdayLabel(c.weekday) })}`);
+          break;
+        case 'vs_last_month':
+          lines.push(`📊 ${t('wrapped.shareVsLastMonth', { change: pctChange(c.changePct) })}`);
+          break;
         default:
           break;
       }
@@ -148,7 +183,7 @@ export default function WrappedScreen() {
     lines.push('');
     lines.push(t('wrapped.shareCta'));
     return lines.join('\n');
-  }, [data, t, money, monthLabel]);
+  }, [data, t, money, monthLabel, shareTitle, weekdayLabel]);
 
   // Same per-card selection as buildShareMessage above, restructured into
   // {emoji,label} rows for the rendered story-card image. `money()` already
@@ -186,17 +221,27 @@ export default function WrappedScreen() {
         case 'streak':
           push('🔥', t('wrapped.shareStreak', { count: c.longestStreak }));
           break;
+        case 'biggest_purchase':
+          push('🛍️', t('wrapped.shareBiggestPurchase', { value: money(c.amount) }));
+          break;
+        case 'busiest_weekday':
+          push('📆', t('wrapped.shareWeekday', { weekday: weekdayLabel(c.weekday) }));
+          break;
+        case 'vs_last_month':
+          push('📊', t('wrapped.shareVsLastMonth', { change: pctChange(c.changePct) }));
+          break;
         default:
           break;
       }
     }
     return {
-      year: data.year,
-      title: t('wrapped.shareTitle', { year: data.year }),
+      // names the file: wrapped-2026.png, or wrapped-2026-09.png for a month
+      year: data.month ? `${data.year}-${String(data.month).padStart(2, '0')}` : data.year,
+      title: shareTitle,
       lines,
       footer: t('wrapped.shareCta'),
     };
-  }, [data, t, money, monthLabel]);
+  }, [data, t, money, monthLabel, shareTitle, weekdayLabel]);
 
   const onShare = useCallback(async () => {
     // Native: try the rendered PNG story card first; fall back to the text
@@ -244,7 +289,9 @@ export default function WrappedScreen() {
         </TouchableOpacity>
         <Ionicons name="sparkles-outline" size={48} color={styles.emptyText.color} />
         <Text style={styles.emptyTitle}>{t('wrapped.notEnoughData')}</Text>
-        <Text style={styles.emptyText}>{t('wrapped.notEnoughDataDesc')}</Text>
+        <Text style={styles.emptyText}>
+          {monthParam ? t('wrapped.notEnoughDataMonthDesc') : t('wrapped.notEnoughDataDesc')}
+        </Text>
       </SafeAreaView>
     );
   }
@@ -329,8 +376,10 @@ export default function WrappedScreen() {
         return (
           <>
             <Text style={styles.emoji}>🎁</Text>
-            <Text style={styles.bigTitle}>{t('wrapped.introTitle', { year: card.year })}</Text>
-            <Text style={styles.sub}>{t('wrapped.introSub')}</Text>
+            <Text style={styles.bigTitle}>
+              {isMonthly ? t('wrapped.monthIntroTitle', { period: periodLabel }) : t('wrapped.introTitle', { year: card.year })}
+            </Text>
+            <Text style={styles.sub}>{isMonthly ? t('wrapped.monthIntroSub') : t('wrapped.introSub')}</Text>
             <Text style={styles.swipeHint}>{t('wrapped.swipeHint')}</Text>
           </>
         );
@@ -340,7 +389,7 @@ export default function WrappedScreen() {
             <Text style={styles.emoji}>💸</Text>
             <Text style={styles.label}>{t('wrapped.totalTracked')}</Text>
             <Text style={styles.hero}>{money(card.totalExpenses)}</Text>
-            <Text style={styles.sub}>{t('wrapped.spentLabel')}</Text>
+            <Text style={styles.sub}>{isMonthly ? t('wrapped.spentLabelMonth') : t('wrapped.spentLabel')}</Text>
             <View style={styles.statRow}>
               <Stat value={money(card.totalIncome)} label={t('wrapped.earnedLabel')} styles={styles} />
               <Stat value={String(card.transactionCount)} label={t('wrapped.transactions')} styles={styles} />
@@ -439,12 +488,54 @@ export default function WrappedScreen() {
             <Text style={styles.label}>{t('wrapped.longestStreak')}</Text>
           </>
         );
+      case 'biggest_purchase':
+        return (
+          <>
+            <Text style={styles.emoji}>🛍️</Text>
+            <Text style={styles.label}>{t('wrapped.biggestPurchase')}</Text>
+            <Text style={styles.hero}>{money(card.amount)}</Text>
+            {(card.merchant || card.categoryName) && (
+              <Text style={styles.sub}>{[card.merchant, card.categoryName].filter(Boolean).join(' · ')}</Text>
+            )}
+            <Text style={styles.subSmall}>
+              {new Date(`${card.date}T12:00:00`).toLocaleDateString(intlLocale, { day: 'numeric', month: 'long' })}
+            </Text>
+          </>
+        );
+      case 'busiest_weekday':
+        return (
+          <>
+            <Text style={styles.emoji}>📆</Text>
+            <Text style={styles.label}>{t('wrapped.busiestWeekday')}</Text>
+            <Text style={styles.hero}>{weekdayLabel(card.weekday)}</Text>
+            <Text style={styles.sub}>{money(card.amount)}</Text>
+            <Text style={styles.subSmall}>{t('wrapped.busiestWeekdayDesc')}</Text>
+          </>
+        );
+      case 'vs_last_month':
+        return (
+          <>
+            <Text style={styles.emoji}>{card.changePct > 0 ? '📈' : '📉'}</Text>
+            <Text style={styles.label}>{t('wrapped.vsLastMonth')}</Text>
+            <Text style={styles.hero}>{pctChange(card.changePct)}</Text>
+            <Text style={styles.sub}>
+              {card.changePct > 0
+                ? t('wrapped.vsLastMonthMore')
+                : card.changePct < 0
+                  ? t('wrapped.vsLastMonthLess')
+                  : t('wrapped.vsLastMonthSame')}
+            </Text>
+            <Text style={styles.subSmall}>{`${money(card.prevTotalExpenses)} → ${money(card.totalExpenses)}`}</Text>
+          </>
+        );
       case 'outro':
         return (
           <>
             <Text style={styles.emoji}>✨</Text>
-            <Text style={styles.bigTitle}>{t('wrapped.outroTitle', { year: card.year })}</Text>
-            <Text style={styles.sub}>{t('wrapped.outroDesc')}</Text>
+            <Text style={styles.bigTitle}>
+              {isMonthly ? t('wrapped.monthOutroTitle', { period: periodLabel }) : t('wrapped.outroTitle', { year: card.year })}
+            </Text>
+            <Text style={styles.sub}>{isMonthly ? t('wrapped.monthOutroDesc') : t('wrapped.outroDesc')}</Text>
             <View style={styles.hideRow}>
               <Text style={styles.hideLabel}>{t('wrapped.hideAmounts')}</Text>
               <Switch value={hideAmounts} onValueChange={setHideAmounts} />

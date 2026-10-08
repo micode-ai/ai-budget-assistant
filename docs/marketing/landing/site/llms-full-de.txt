@@ -7778,6 +7778,20 @@ Egal, wofür du dich entscheidest, die Einstellung **Beträge ausblenden** wird 
 
 Der Jahresrückblick braucht etwas Verlauf, damit sich die Anzeige lohnt. Wenn du erst wenige Einträge erfasst hast oder das gewählte Jahr wenig Aktivität aufweist, siehst du statt des Kartenstapels eine freundliche Meldung „Noch nicht genug Daten". Erfasse weiter deine Finanzen, dann füllt er sich.
 
+## Monatsrückblick
+
+Es gibt auch einen kurzen Kartenstapel für einen einzelnen Monat. Am **1. jedes Monats** bekommst du eine Benachrichtigung — *Dein Monatsrückblick ist fertig* —, wenn der vergangene Monat genug Daten hat; tippe darauf, um die Karten zu öffnen. Du kannst ihn auch jederzeit über das Banner **Monatsrückblick** im Tab **Analysen** neben dem Jahresrückblick öffnen.
+
+Der Monatsstapel hat eigene Karten (auch hier nur solche mit Daten):
+
+- **Im Vergleich zum Vormonat** — wie viel Prozent mehr oder weniger du als im Monat davor ausgegeben hast.
+- **Größter Einzelkauf** — die größte Ausgabe des Monats, mit Ort und Kategorie.
+- **Dein teuerster Wochentag** — der Wochentag, an dem das meiste Geld ausgegeben wurde.
+- **Dein Lieblingsort** — der Ort, an den du am häufigsten zurückgekehrt bist (ab zwei Besuchen).
+- dazu Gesamtsumme, Top-Kategorie und Verteilung, gescannte Belege, Ersparnisse (wenn du in dem Monat Einnahmen hattest) und deine Serie.
+
+Teilen und **Beträge ausblenden** funktionieren genau wie im Jahresrückblick. Um die monatliche Benachrichtigung abzuschalten, deaktiviere **Monatsrückblick** unter **Einstellungen → Benachrichtigungen**.
+
 ## Hinweise
 
 - Der Jahresrückblick ist **kostenlos** — es ist kein Pro-Abo nötig.

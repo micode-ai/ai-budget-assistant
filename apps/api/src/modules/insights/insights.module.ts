@@ -10,6 +10,7 @@ import { WrappedService } from './wrapped.service';
 import { InflationShieldService } from './inflation-shield.service';
 import { InsightNotificationLedger } from './insight-notification-ledger.service';
 import { InflationShieldNotifyCron } from './inflation-shield-notify.cron';
+import { MonthlyWrappedNotifyCron } from './monthly-wrapped-notify.cron';
 import { RealSalaryService } from './real-salary/real-salary.service';
 import { RealSalaryBriefPdf } from './real-salary/real-salary-brief.pdf';
 import { OfficialInflationService } from './real-salary/official-inflation.service';
@@ -45,6 +46,7 @@ import { InflationShieldTrackingModule } from './inflation-shield-tracking.modul
     InflationShieldService,
     InsightNotificationLedger,
     InflationShieldNotifyCron,
+    MonthlyWrappedNotifyCron,
     RealSalaryService,
     RealSalaryBriefPdf,
     OfficialInflationService,

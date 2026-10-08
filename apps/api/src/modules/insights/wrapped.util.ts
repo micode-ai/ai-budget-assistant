@@ -39,8 +39,44 @@ export interface WrappedInputs {
   streakCurrent: number;
 }
 
-function round2(n: number): number {
+export function round2(n: number): number {
   return Math.round(n * 100) / 100;
+}
+
+export interface RankedCategory {
+  categoryId: string | null;
+  name: string;
+  color: string | null;
+  amount: number;
+}
+
+/**
+ * Categories by converted spend, descending, zero-spend dropped, plus a share-of-total helper.
+ * Shared by the yearly and the monthly assembler (ABA-641) so both decks rank alike.
+ */
+export function rankCategories(
+  rows: Pick<WrappedExpenseRow, 'amount' | 'currencyCode' | 'categoryId' | 'categoryName' | 'categoryColor'>[],
+  convert: (amount: number, from: string) => number,
+): { categoriesSorted: RankedCategory[]; pct: (amount: number) => number } {
+  const catMap = new Map<string, RankedCategory>();
+  for (const e of rows) {
+    const id = e.categoryId || 'uncategorized';
+    const cur = catMap.get(id) || {
+      categoryId: e.categoryId ?? null,
+      name: e.categoryName || 'Uncategorized',
+      color: e.categoryColor ?? null,
+      amount: 0,
+    };
+    cur.amount += convert(e.amount, e.currencyCode);
+    catMap.set(id, cur);
+  }
+  const categoriesSorted = [...catMap.values()]
+    .map((c) => ({ ...c, amount: round2(c.amount) }))
+    .filter((c) => c.amount > 0)
+    .sort((a, b) => b.amount - a.amount);
+  const catTotal = categoriesSorted.reduce((sum, c) => sum + c.amount, 0);
+  const pct = (amt: number) => (catTotal > 0 ? Math.round((amt / catTotal) * 1000) / 10 : 0);
+  return { categoriesSorted, pct };
 }
 
 /**
@@ -111,27 +147,7 @@ export function assembleWrapped(inputs: WrappedInputs): WrappedResponse {
   const hasMonthSpend = monthTotals[biggestMonthIdx] > 0;
 
   // ── Categories ────────────────────────────────────────────
-  const catMap = new Map<
-    string,
-    { categoryId: string | null; name: string; color: string | null; amount: number }
-  >();
-  for (const e of yearExpenses) {
-    const id = e.categoryId || 'uncategorized';
-    const cur = catMap.get(id) || {
-      categoryId: e.categoryId ?? null,
-      name: e.categoryName || 'Uncategorized',
-      color: e.categoryColor ?? null,
-      amount: 0,
-    };
-    cur.amount += convert(e.amount, e.currencyCode);
-    catMap.set(id, cur);
-  }
-  const categoriesSorted = [...catMap.values()]
-    .map((c) => ({ ...c, amount: round2(c.amount) }))
-    .filter((c) => c.amount > 0)
-    .sort((a, b) => b.amount - a.amount);
-  const catTotal = categoriesSorted.reduce((s, c) => s + c.amount, 0);
-  const pct = (amt: number) => (catTotal > 0 ? Math.round((amt / catTotal) * 1000) / 10 : 0);
+  const { categoriesSorted, pct } = rankCategories(yearExpenses, convert);
 
   // ── Receipts scanned ──────────────────────────────────────
   const receiptsScanned = yearExpenses.filter((e) => RECEIPT_SOURCES.includes(e.source)).length;

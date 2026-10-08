@@ -92,8 +92,9 @@ export const analyticsApi = {
     return httpClient.request<SafeToSpendResponse>('/insights/safe-to-spend');
   },
 
-  getWrapped(year?: number) {
-    const params = year ? `?year=${year}` : '';
+  getWrapped(year?: number, month?: number) {
+    const q = [year ? `year=${year}` : '', month ? `month=${month}` : ''].filter(Boolean).join('&');
+    const params = q ? `?${q}` : '';
     return httpClient.request<WrappedResponse>(`/insights/wrapped${params}`);
   },
 

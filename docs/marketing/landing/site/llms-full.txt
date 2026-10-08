@@ -7881,6 +7881,20 @@ Whatever you choose, the **Hide amounts** setting is respected.
 
 Wrapped needs a bit of history to be worth showing. If you've only tracked a few items, or the year you picked has little activity, you'll see a friendly "not enough data yet" message instead of the deck. Keep tracking and it fills in.
 
+## Month in review
+
+There is also a short deck for a single month. On the **1st of each month** you get a push — *Your month in review is ready* — when the month just ended has enough data; tap it to open the deck. You can also open it any time from the **Month in review** banner on the **Analytics** tab, next to Wrapped.
+
+The monthly deck has its own cards (again, only those with data):
+
+- **Compared with last month** — how much more or less you spent than the month before, in percent.
+- **Biggest single purchase** — the largest expense of the month, with where and what.
+- **Your priciest weekday** — the day of the week your money went on most.
+- **Top spot** — the place you came back to most often (from two visits).
+- plus total tracked, top category and mix, receipts scanned, savings (when you had income that month) and your streak.
+
+Sharing and **Hide amounts** work exactly as in the yearly deck. To stop the monthly push, turn off **Month in review** in **Settings → Notifications**.
+
 ## Notes
 
 - Wrapped is **free** — there's no Pro requirement.

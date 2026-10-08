@@ -7783,6 +7783,20 @@ Elijas lo que elijas, se respeta la configuración de **Ocultar cantidades**.
 
 El Resumen del año necesita algo de historial para que merezca la pena mostrarlo. Si solo has registrado unos pocos movimientos, o el año que elegiste tiene poca actividad, verás un mensaje amistoso de "todavía no hay suficientes datos" en lugar del mazo de tarjetas. Sigue registrando y se irá completando.
 
+## Resumen del mes
+
+También hay un mazo corto para un solo mes. El **día 1 de cada mes** recibes una notificación — *Tu resumen del mes está listo* — cuando el mes que acaba de terminar tiene datos suficientes; tócala para abrir las tarjetas. También puedes abrirlo en cualquier momento desde el banner **Resumen del mes** de la pestaña **Análisis**, junto al resumen del año.
+
+El mazo mensual tiene sus propias tarjetas (de nuevo, solo las que tienen datos):
+
+- **Comparado con el mes pasado** — cuánto gastaste de más o de menos que el mes anterior, en porcentaje.
+- **La compra más grande** — el mayor gasto del mes, con dónde y en qué.
+- **Tu día de la semana más caro** — el día de la semana en que más gastaste.
+- **Tu lugar favorito** — el sitio al que más volviste (a partir de dos visitas).
+- además del total registrado, la categoría principal y el reparto, los tickets escaneados, el ahorro (si tuviste ingresos ese mes) y tu racha.
+
+Compartir y **Ocultar cantidades** funcionan igual que en el resumen anual. Para dejar de recibir la notificación mensual, desactiva **Resumen del mes** en **Ajustes → Notificaciones**.
+
 ## Notas
 
 - El Resumen del año es **gratuito** — no requiere Pro.

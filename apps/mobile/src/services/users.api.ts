@@ -58,13 +58,13 @@ export const usersApi = {
   },
 
   getNotificationPreferences() {
-    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean }>(
+    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean }>(
       '/users/me/notification-preferences',
     );
   },
 
-  updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean }) {
-    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean }>(
+  updateNotificationPreferences(prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean }) {
+    return httpClient.request<{ budgetAlerts: boolean; sharedAccountActivity: boolean; debtReminders: boolean; recurringExpenses: boolean; subscriptionRenewals: boolean; anomalyAlerts: boolean; trackingGap: boolean; purchaseRequests: boolean; tripSettleUp: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean }>(
       '/users/me/notification-preferences',
       {
         method: 'PATCH',

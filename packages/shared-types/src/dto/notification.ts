@@ -15,6 +15,7 @@ export interface UpdateNotificationPreferencesDto {
   shoppingReminders?: boolean;
   shoppingDeals?: boolean;
   inflationShield?: boolean;
+  monthlyWrapped?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -30,4 +31,5 @@ export interface NotificationPreferencesResponse {
   shoppingReminders: boolean;
   shoppingDeals: boolean;
   inflationShield: boolean;
+  monthlyWrapped: boolean;
 }

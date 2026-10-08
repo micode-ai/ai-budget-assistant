@@ -51,7 +51,7 @@ export class InsightsController {
   }
 
   /**
-   * GET /insights/wrapped?year=YYYY
+   * GET /insights/wrapped?year=YYYY[&month=M]
    * Spotify-Wrapped-style year-in-review, assembled from existing data.
    * No tier guard — FREE (a growth/shareability feature), same precedent as safe-to-spend.
    * Defaults to the current year; clamps to a sane range.
@@ -60,11 +60,20 @@ export class InsightsController {
   async getWrapped(
     @Req() req: AuthenticatedRequest,
     @Query('year') year?: string,
+    @Query('month') month?: string,
   ) {
     const baseCurrency = req.user.currencyCode || 'USD';
-    const now = new Date().getFullYear();
+    const today = new Date();
+    const now = today.getFullYear();
     let target = parseInt(year ?? '', 10);
     if (!Number.isFinite(target) || target < 2000 || target > now) target = now;
+    // ?month=1..12 → the monthly deck (ABA-641). A month in the future becomes the current one.
+    if (month !== undefined) {
+      let m = parseInt(month, 10);
+      if (!Number.isFinite(m) || m < 1 || m > 12) m = today.getMonth() + 1;
+      if (target === now && m > today.getMonth() + 1) m = today.getMonth() + 1;
+      return this.wrappedService.getMonthlyWrapped(req.accountId, req.user.id, baseCurrency, target, m);
+    }
     return this.wrappedService.getWrapped(req.accountId, req.user.id, baseCurrency, target);
   }
 

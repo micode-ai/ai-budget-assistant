@@ -12,6 +12,11 @@ import {
   WrappedExpenseRow,
   WrappedIncomeRow,
 } from './wrapped.util';
+import {
+  assembleMonthlyWrapped,
+  MonthlyWrappedExpenseRow,
+  MonthlyWrappedIncomeRow,
+} from './wrapped-monthly.util';
 
 // Wrapped is a stable, year-scoped artifact — cache for an hour.
 const CACHE_TTL_SEC = 3600;
@@ -20,8 +25,13 @@ const CACHE_TTL_SEC = 3600;
  * Redis cache key for a Wrapped result.
  * Per-user base currency is folded in (same reasoning as safeToSpendCacheKey).
  */
-export function wrappedCacheKey(accountId: string, baseCurrency: string, year: number): string {
-  return `wrapped:${accountId}:${baseCurrency}:${year}`;
+export function wrappedCacheKey(accountId: string, baseCurrency: string, year: number, month?: number): string {
+  const period = month ? `${year}-${String(month).padStart(2, '0')}` : String(year);
+  return `wrapped:${accountId}:${baseCurrency}:${period}`;
+}
+
+function localDateKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
 @Injectable()
@@ -49,6 +59,111 @@ export class WrappedService {
     const result = await this.compute(accountId, userId, baseCurrency, year);
     await this.cacheService.set(key, result, CACHE_TTL_SEC);
     return result;
+  }
+
+  /** Monthly deck (ABA-641): `month` is 1-12. Same cache, same exclusions as the yearly deck. */
+  async getMonthlyWrapped(
+    accountId: string,
+    userId: string,
+    baseCurrency: string,
+    year: number,
+    month: number,
+  ): Promise<WrappedResponse> {
+    const key = wrappedCacheKey(accountId, baseCurrency, year, month);
+    const cached = await this.cacheService.get<WrappedResponse>(key);
+    if (cached) return cached;
+
+    const result = await this.computeMonthly(accountId, userId, baseCurrency, year, month);
+    await this.cacheService.set(key, result, CACHE_TTL_SEC);
+    return result;
+  }
+
+  private async computeMonthly(
+    accountId: string,
+    userId: string,
+    baseCurrency: string,
+    year: number,
+    month: number,
+  ): Promise<WrappedResponse> {
+    const account = await this.prisma.account.findUnique({
+      where: { id: accountId },
+      select: { encryptionTier: true },
+    });
+    if ((account?.encryptionTier ?? 0) >= 2) {
+      return { ...this.emptyResponse(year, baseCurrency), month };
+    }
+
+    // This month + the previous one in one query, for the vs-last-month card.
+    const monthStart = new Date(year, month - 1, 1, 0, 0, 0, 0);
+    const rangeStart = new Date(year, month - 2, 1, 0, 0, 0, 0);
+    const rangeEnd = new Date(year, month, 0, 23, 59, 59, 999);
+
+    const [expenses, incomes, rates] = await Promise.all([
+      this.prisma.expense.findMany({
+        // Same spend definition as the yearly deck (see compute()).
+        where: {
+          accountId,
+          isDeleted: false,
+          isPlanned: false,
+          ...EXCLUDE_SPLIT_RECEIVABLE,
+          date: { gte: rangeStart, lte: rangeEnd },
+        },
+        select: {
+          amount: true,
+          currencyCode: true,
+          date: true,
+          merchant: true,
+          source: true,
+          categoryId: true,
+          category: { select: { name: true, color: true } },
+        },
+      }),
+      this.prisma.income.findMany({
+        where: { accountId, isDeleted: false, date: { gte: rangeStart, lte: rangeEnd } },
+        select: { amount: true, currencyCode: true, date: true },
+      }),
+      getRatesSafe(this.exchangeRateService, baseCurrency),
+    ]);
+
+    const expenseRows: MonthlyWrappedExpenseRow[] = expenses.map((e) => ({
+      amount: Number(e.amount),
+      currencyCode: e.currencyCode || baseCurrency,
+      inMonth: e.date >= monthStart,
+      date: localDateKey(e.date),
+      weekday: e.date.getDay(),
+      merchant: e.merchant ?? null,
+      source: e.source,
+      categoryId: e.categoryId ?? null,
+      categoryName: e.category?.name ?? null,
+      categoryColor: e.category?.color ?? null,
+    }));
+    const incomeRows: MonthlyWrappedIncomeRow[] = incomes.map((i) => ({
+      amount: Number(i.amount),
+      currencyCode: i.currencyCode || baseCurrency,
+      inMonth: i.date >= monthStart,
+    }));
+
+    let streakLongest = 0;
+    let streakCurrent = 0;
+    try {
+      const streak = await this.streakService.getStreak(accountId, userId);
+      streakLongest = streak?.longestStreak ?? 0;
+      streakCurrent = streak?.currentStreak ?? 0;
+    } catch (err) {
+      this.logger.warn(`Monthly wrapped streak lookup failed for ${accountId}: ${err}`);
+    }
+
+    return assembleMonthlyWrapped({
+      year,
+      month,
+      baseCurrency,
+      generatedAt: new Date().toISOString(),
+      expenses: expenseRows,
+      incomes: incomeRows,
+      rates,
+      streakLongest,
+      streakCurrent,
+    });
   }
 
   private emptyResponse(year: number, baseCurrency: string): WrappedResponse {

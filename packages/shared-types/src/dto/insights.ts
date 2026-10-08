@@ -80,11 +80,15 @@ export type WrappedCardType =
   | 'savings'
   | 'personal_inflation'
   | 'streak'
+  | 'biggest_purchase'
+  | 'busiest_weekday'
+  | 'vs_last_month'
   | 'outro';
 
 export interface WrappedIntroCard {
   type: 'intro';
   year: number;
+  month?: number;                 // 1-12 on a monthly deck (ABA-641), absent on the yearly one
   baseCurrency: string;
 }
 
@@ -167,6 +171,35 @@ export interface WrappedStreakCard {
 export interface WrappedOutroCard {
   type: 'outro';
   year: number;
+  month?: number;                 // 1-12 on a monthly deck
+}
+
+// ── Monthly-only cards (ABA-641) ──
+export interface WrappedBiggestPurchaseCard {
+  type: 'biggest_purchase';
+  amount: number;                 // in baseCurrency
+  merchant: string | null;
+  categoryName: string | null;
+  date: string;                   // 'YYYY-MM-DD'
+  baseCurrency: string;
+  fxApproximate: boolean;
+}
+
+export interface WrappedBusiestWeekdayCard {
+  type: 'busiest_weekday';
+  weekday: number;                // 0 = Sunday … 6 = Saturday (JS getDay)
+  amount: number;                 // total spent on that weekday in the month, in baseCurrency
+  baseCurrency: string;
+  fxApproximate: boolean;
+}
+
+export interface WrappedVsLastMonthCard {
+  type: 'vs_last_month';
+  totalExpenses: number;          // this month, in baseCurrency
+  prevTotalExpenses: number;      // previous month, in baseCurrency
+  changePct: number;              // (this - prev) / prev * 100, one decimal
+  baseCurrency: string;
+  fxApproximate: boolean;
 }
 
 export type WrappedCard =
@@ -180,10 +213,14 @@ export type WrappedCard =
   | WrappedSavingsCard
   | WrappedPersonalInflationCard
   | WrappedStreakCard
+  | WrappedBiggestPurchaseCard
+  | WrappedBusiestWeekdayCard
+  | WrappedVsLastMonthCard
   | WrappedOutroCard;
 
 export interface WrappedResponse {
   year: number;
+  month?: number;                 // 1-12 when this is a monthly deck (GET /insights/wrapped?year=&month=)
   baseCurrency: string;
   generatedAt: string;            // ISO datetime
   hasEnoughData: boolean;         // false → client shows a friendly "not enough yet" state

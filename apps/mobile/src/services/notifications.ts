@@ -149,6 +149,12 @@ export function handleNotificationResponse(
     case 'inflation_shield':
       router.push('/inflation-shield' as any);
       break;
+    case 'monthly_wrapped':
+      router.push({
+        pathname: '/wrapped',
+        params: { year: String(data.year ?? ''), month: String(data.month ?? '') },
+      } as any);
+      break;
     case 'rate_watch_hit': {
       const fromCurrency = data.fromCurrency ? String(data.fromCurrency) : undefined;
       const toCurrency = data.toCurrency ? String(data.toCurrency) : undefined;

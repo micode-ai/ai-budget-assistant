@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { router } from 'expo-router';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { previousMonthParams } from '@/features/insights/previousMonth';
 import {
   AnalyticsHeader, SummaryCards, SpendingTrendChart, CategoryBreakdown,
   IncomeCategoryBreakdown, MerchantBreakdown, TagBreakdown, ProjectBreakdown,
@@ -115,6 +116,19 @@ export function AnalyticsMobile() {
             <Text style={styles.storyBannerSubtext}>{t('wrapped.introSub')}</Text>
           </View>
           <Ionicons name="sparkles" size={16} color={theme.colors.warning} />
+          <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
+        </TouchableOpacity>
+
+        {/* Monthly Wrapped (ABA-641): always the month just ended — the one the 1st-of-month push opens. */}
+        <TouchableOpacity
+          style={styles.storyBanner}
+          onPress={() => router.push({ pathname: '/wrapped', params: previousMonthParams() })}
+        >
+          <Ionicons name="calendar-outline" size={24} color={theme.colors.primary} />
+          <View style={styles.storyBannerContent}>
+            <Text style={styles.storyBannerTitle}>{t('wrapped.monthTitle')}</Text>
+            <Text style={styles.storyBannerSubtext}>{t('wrapped.monthIntroSub')}</Text>
+          </View>
           <Ionicons name="chevron-forward" size={20} color={theme.colors.textTertiary} />
         </TouchableOpacity>
 

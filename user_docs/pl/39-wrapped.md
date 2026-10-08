@@ -44,6 +44,20 @@ Niezależnie od wyboru, ustawienie **Ukryj kwoty** jest respektowane.
 
 Podsumowanie roku potrzebuje trochę historii, żeby miało sens jego wyświetlanie. Jeśli zarejestrowałeś tylko kilka pozycji albo wybrany rok ma niewiele aktywności, zamiast zestawu kart zobaczysz przyjazny komunikat „wciąż za mało danych". Śledź dalej swoje finanse, a podsumowanie się uzupełni.
 
+## Podsumowanie miesiąca
+
+Jest też krótka talia kart dla jednego miesiąca. **1. dnia każdego miesiąca** dostaniesz powiadomienie — *Podsumowanie miesiąca gotowe* — jeśli w miniony miesiąc jest wystarczająco dużo danych; dotknij go, aby otworzyć karty. Możesz je też otworzyć w każdej chwili z banera **Podsumowanie miesiąca** na karcie **Analityka**, obok podsumowania roku.
+
+Miesięczna talia ma własne karty (również tylko te, dla których są dane):
+
+- **W porównaniu z poprzednim miesiącem** — o ile procent wydałeś więcej lub mniej niż miesiąc wcześniej.
+- **Największy pojedynczy zakup** — największy wydatek miesiąca, z miejscem i kategorią.
+- **Najdroższy dzień tygodnia** — dzień tygodnia, w którym wydałeś najwięcej.
+- **Twoje ulubione miejsce** — miejsce, do którego wracałeś najczęściej (od dwóch wizyt).
+- a także łączne wydatki, główna kategoria i podział, zeskanowane paragony, oszczędności (gdy w tym miesiącu był dochód) i seria.
+
+Udostępnianie i **Ukryj kwoty** działają tak samo jak w podsumowaniu roku. Aby wyłączyć comiesięczne powiadomienie, wyłącz **Podsumowanie miesiąca** w **Ustawienia → Powiadomienia**.
+
 ## Uwagi
 
 - Podsumowanie roku jest **darmowe** — nie wymaga abonamentu Pro.

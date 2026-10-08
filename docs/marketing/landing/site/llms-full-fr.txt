@@ -7761,6 +7761,20 @@ Quel que soit votre choix, le réglage **Masquer les montants** est respecté.
 
 La Rétro a besoin d'un peu d'historique pour valoir la peine d'être affichée. Si vous n'avez suivi que quelques éléments, ou si l'année choisie a peu d'activité, vous verrez un message convivial « pas encore assez de données » à la place du jeu de cartes. Continuez à suivre vos finances, et elle se remplira.
 
+## Bilan du mois
+
+Il existe aussi un court paquet de cartes pour un seul mois. Le **1er de chaque mois**, vous recevez une notification — *Le bilan de votre mois est prêt* — quand le mois écoulé contient assez de données ; touchez-la pour ouvrir les cartes. Vous pouvez aussi l'ouvrir à tout moment depuis la bannière **Bilan du mois** de l'onglet **Analyses**, à côté de la rétro de l'année.
+
+Le paquet mensuel a ses propres cartes (là encore, seulement celles qui ont des données) :
+
+- **Par rapport au mois dernier** — combien vous avez dépensé de plus ou de moins que le mois précédent, en pourcentage.
+- **Le plus gros achat** — la plus grosse dépense du mois, avec où et quoi.
+- **Votre jour le plus cher** — le jour de la semaine où vous avez le plus dépensé.
+- **Votre lieu favori** — l'endroit où vous êtes revenu le plus souvent (à partir de deux visites).
+- ainsi que le total suivi, la catégorie principale et la répartition, les tickets scannés, l'épargne (si vous avez eu des revenus ce mois-là) et votre série.
+
+Le partage et **Masquer les montants** fonctionnent comme dans la rétro annuelle. Pour arrêter la notification mensuelle, désactivez **Bilan du mois** dans **Réglages → Notifications**.
+
 ## À noter
 
 - La Rétro de l'année est **gratuite** — aucun abonnement Pro requis.

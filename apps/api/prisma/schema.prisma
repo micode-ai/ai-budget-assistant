@@ -169,6 +169,7 @@ model User {
   notifyShoppingReminders    Boolean       @default(true) @map("notify_shopping_reminders")
   notifyShoppingDeals        Boolean       @default(true) @map("notify_shopping_deals")
   notifyInflationShield      Boolean       @default(true) @map("notify_inflation_shield")
+  notifyMonthlyWrapped       Boolean       @default(true) @map("notify_monthly_wrapped")
   voiceDigestEnabled         Boolean       @default(false) @map("voice_digest_enabled")
   voiceDigestDay             Int           @default(1) @map("voice_digest_day")
   voiceDigestHour            Int           @default(8) @map("voice_digest_hour")

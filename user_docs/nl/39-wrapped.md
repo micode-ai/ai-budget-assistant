@@ -44,6 +44,20 @@ Wat je ook kiest, de instelling **Bedragen verbergen** wordt gerespecteerd.
 
 Het Jaaroverzicht heeft wat geschiedenis nodig om de moeite waard te zijn. Als je slechts een paar dingen hebt bijgehouden, of het gekozen jaar heeft weinig activiteit, zie je in plaats van de kaartenstapel een vriendelijk bericht "nog niet genoeg data". Blijf bijhouden en het overzicht vult zich.
 
+## Maandoverzicht
+
+Er is ook een korte stapel kaarten voor één maand. Op de **1e van elke maand** krijg je een melding — *Je maandoverzicht staat klaar* — als de afgelopen maand genoeg data heeft; tik erop om de kaarten te openen. Je kunt het ook altijd openen via de banner **Maandoverzicht** op het tabblad **Analyse**, naast het jaaroverzicht.
+
+De maandstapel heeft eigen kaarten (ook hier alleen die met data):
+
+- **Vergeleken met vorige maand** — hoeveel procent meer of minder je uitgaf dan de maand ervoor.
+- **Grootste losse aankoop** — de grootste uitgave van de maand, met waar en wat.
+- **Je duurste dag van de week** — de weekdag waarop het meeste geld opging.
+- **Je vaste plek** — de plek waar je het vaakst terugkwam (vanaf twee bezoeken).
+- plus het totaal, de topcategorie en verdeling, gescande bonnen, sparen (als je die maand inkomen had) en je reeks.
+
+Delen en **Bedragen verbergen** werken precies zoals in het jaaroverzicht. Wil je de maandelijkse melding niet meer, zet dan **Maandoverzicht** uit in **Instellingen → Meldingen**.
+
 ## Opmerkingen
 
 - Het Jaaroverzicht is **gratis** — er is geen Pro-abonnement voor nodig.
