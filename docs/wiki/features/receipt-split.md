@@ -26,7 +26,10 @@ Migrations: `20260726120000_add_receipt_split`, `20260726130000_add_receipt_spli
 
 ## Key concepts
 
-**Two controllers.** `GuestController` is the only unauthenticated surface in the app. Payer CRUD
+**Two controllers.** `GuestController` (`s/`) is this feature's unauthenticated surface, one of
+three public guest controllers in the app — the others are `ShoppingListGuestController` (`sl/`,
+[shopping-list](shopping-list.md)) and `GroupGuestController` (`g/`, [shared-groups](shared-groups.md)),
+each excluded from `/api/v1` by its own wildcard. Payer CRUD
 is a separate `ReceiptSplitController` at `/expenses/:id/receipt-split*` — a distinct route segment
 from the unrelated category-splits `/expenses/:id/splits` — carrying `JwtAuthGuard` +
 `AccountContextGuard` at class level and `ViewerBlockGuard` + `TripArchivedGuard` per route,

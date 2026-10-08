@@ -11,6 +11,7 @@ export const QUICK_ACTION_KEYS = [
   'transfers',
   'subscriptions',
   'shopping_hub',
+  'groups',
 ] as const;
 
 export type QuickActionKey = (typeof QUICK_ACTION_KEYS)[number];
@@ -27,6 +28,7 @@ export const DEFAULT_VISIBILITY: Record<QuickActionKey, boolean> = {
   transfers: true,
   subscriptions: true,
   shopping_hub: true,
+  groups: true,
 };
 
 const { useStore, resolveVisibility, resolveOrder } = createOrderedVisibilityStore(QUICK_ACTION_KEYS, {

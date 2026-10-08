@@ -141,6 +141,7 @@ export class HttpClient {
       const apiError: any = new Error(message);
       apiError.status = response.status;
       apiError.details = error.details;
+      apiError.code = typeof error.code === 'string' ? error.code : undefined;
       throw apiError;
     }
 

@@ -86,6 +86,14 @@ const SUBSCRIPTIONS = `<svg viewBox="0 0 57 46" fill="none" xmlns="http://www.w3
 <path d="M6 39.6064L6 12.3936L21.249 26L6 39.6064Z" stroke="${ICON_COLOR}"/>
 </svg>`;
 
+// Groups — two people side by side (shared expense groups, ABA-640)
+const GROUPS = `<svg viewBox="2 4 44 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="17" cy="16" r="6" stroke="${ICON_COLOR}" stroke-width="1.8"/>
+<path d="M5 38C5 31 10 27 17 27C24 27 29 31 29 38" stroke="${ICON_COLOR}" stroke-width="1.8" stroke-linecap="round"/>
+<circle cx="33" cy="18" r="5" stroke="${ICON_COLOR}" stroke-width="1.8"/>
+<path d="M31 27.5C38 27 43 31 43 38" stroke="${ICON_COLOR}" stroke-width="1.8" stroke-linecap="round"/>
+</svg>`;
+
 // Each icon carries its symbol's viewBox aspect (w/h) so we can render the SVG
 // at exactly that shape — no internal letterboxing — and let the flex container
 // center it. Square boxes would otherwise push a wide symbol (transfers) off-center.
@@ -102,6 +110,7 @@ const ICONS: Record<string, { xml: string; w: number; h: number }> = {
   purchase_request: { xml: CART, w: 44, h: 40 },
   shopping: { xml: CART, w: 44, h: 40 },
   shopping_hub: { xml: CART, w: 44, h: 40 },
+  groups: { xml: GROUPS, w: 44, h: 40 },
 };
 
 const BOX = 46;

@@ -52,6 +52,7 @@ import { TripSettleUpModule } from './modules/trip-settle-up/trip-settle-up.modu
 import { PriceHistoryModule } from './modules/price-history/price-history.module';
 import { ShoppingListModule } from './modules/shopping-list/shopping-list.module';
 import { CommunityPriceModule } from './modules/community-prices/community-price.module';
+import { GroupsModule } from './modules/groups/groups.module';
 import { ReceiptSplitModule } from './modules/receipt-split/receipt-split.module';
 import { RestoreCredentialsModule } from './modules/restore-credentials/restore-credentials.module';
 import { TelemetryModule } from './modules/telemetry/telemetry.module';
@@ -144,6 +145,7 @@ import { VoiceDigestModule } from './modules/voice-digest/voice-digest.module';
     ReceiptSplitModule,
     RestoreCredentialsModule,
     TelemetryModule,
+    GroupsModule,
   ],
   providers: [
     {

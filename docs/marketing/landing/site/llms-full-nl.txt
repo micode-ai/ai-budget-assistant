@@ -8169,3 +8169,106 @@ Tik op **Argumenten voor loonsverhoging** om een pdf van één pagina te downloa
 ---
 
 *Zie ook: [Persoonlijke Inflatie-index](./36-personal-inflation-index.md) | [Inflatieschild](./40-inflation-shield.md) | [Budgetten](./05-budgets.md)*
+
+## Gedeelde groepen — doorlopende kosten delen met vrienden die geen app nodig hebben
+URL: https://ai-budget.pl/help/nl/shared-groups/
+
+> Een groep voor het huis, een reis of de gezamenlijke boodschappen. Jij voegt de uitgaven toe, vrienden openen één link in hun browser, en iedereen ziet wie er betaald heeft, wie wie wat schuldig is, en kan met één tik verrekenen.
+
+## Wat het is
+
+Een groep houdt een lopende stand bij van gedeelde kosten tussen meerdere mensen. Elke uitgave legt vast wie betaald heeft en hoe ze verdeeld wordt; de groep berekent ieders saldo en een eenvoudig plan „wie betaalt wie”, met weinig betalingen, dat alles gelijktrekt. Je vrienden hebben de app en een account niet nodig: ze gebruiken de groep via een link in elke browser. Groepen zijn gratis in elk abonnement.
+
+Groepsgeld blijft gescheiden van je eigen financiën: niets uit een groep verschijnt in je budgetten, analyses of portemonnee.
+
+## Waar je het vindt
+
+Tik op **Groepen** in de snelle acties op het startscherm. Je ziet je groepen en je saldo in elke groep, plus **Nieuwe groep** en **Deelnemen met link**.
+
+## Een groep maken
+
+1. Tik op **Nieuwe groep**.
+2. Vul een **Groepsnaam** in en kies eventueel een **Emoji (optioneel)**.
+3. Kies de **Valuta**. Je kunt dit alleen wijzigen tot de eerste uitgave is toegevoegd — een groep gebruikt één valuta.
+4. Controleer **Jouw naam in deze groep** — zo zien de anderen jou.
+5. Typ onder **Andere leden (optioneel)** de namen van je vrienden. Tik op **Nog een naam toevoegen** voor meer. Elke vriend kiest zijn naam als hij de link opent. Namen moeten van elkaar verschillen.
+6. Tik op **Groep maken**.
+
+Je kunt eigenaar zijn van maximaal 20 actieve groepen, met elk maximaal 50 leden.
+
+## Vrienden uitnodigen
+
+Op het groepsscherm heeft de kaart **Uitnodigen met een link** de knoppen **Link kopiëren**, **Delen** en **QR-code tonen**. Stuur de link zoals je wilt, of laat de mensen aan tafel de QR-code scannen. Eén link is genoeg voor de hele groep.
+
+## Wat vrienden in de browser zien
+
+De link opent een eenvoudige pagina in hun browser — niets installeren, niet registreren.
+
+1. **Wie ben jij?** Ze tikken op hun eigen naam in de lijst. Staan ze er niet bij, dan tikken ze op **Ik sta niet in de lijst**, vullen **Jouw naam** in en tikken op **Deelnemen**.
+2. **Bewaar je herstelcode.** Direct na het deelnemen toont de pagina één keer een persoonlijke herstelcode. Daarmee kom je als dezelfde persoon terug op een andere telefoon of na het wissen van je browsergegevens. Wie de code heeft, kan namens hen handelen, dus houd hem privé.
+3. Ze zien de **Saldo’s**, **Wie betaalt wie** en de **Geschiedenis** van de groep.
+
+Daarna kunnen ze:
+
+- **Uitgave toevoegen** — *Waarvoor?*, het bedrag, de datum en wie betaald heeft invullen, kiezen voor **Gelijk verdeeld** (aanvinken wie meedoet) of **Exacte bedragen** (invullen wat ieder schuldig is) en op **Uitgave toevoegen** tikken. Een uitgave die ze zelf hebben toegevoegd, kunnen ze met **Verwijderen** weghalen.
+- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving.
+- **Jouw betaalgegevens** — een methode kiezen, een rekening of gebruikersnaam invullen en op **Opslaan** tikken. Alleen wie hen moet betalen ziet deze gegevens, op zijn eigen betaalregel, waar mogelijk met een kant-en-klare Revolut- of PayPal-knop.
+- **Dat ben ik niet / dit apparaat vergeten** — meldt deze browser af van hun naam, bijvoorbeeld op een gedeelde telefoon of computer.
+- **Heb je een herstelcode?** — op een nieuw apparaat de **Herstelcode** invullen en op **Herstellen** tikken.
+
+Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest.
+
+Op een paar handige momenten raadt de pagina ook de app aan — voor meldingen, het lezen van papieren bonnen of herinneringen — maar niets op de pagina vereist hem.
+
+### Van de browser naar de app
+
+Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**.
+
+## Een groep gebruiken in de app
+
+Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Alles verrekend**), **Jouw deel deze maand**, het plan **Wie betaalt wie** en de lijst **Activiteit**.
+
+**Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
+
+## Verrekenen
+
+Tik in een regel van **Wie betaalt wie** die jou aangaat op **Verrekenen**. Heeft de persoon die je betaalt betaalgegevens ingevuld, dan zie je een knop of instructies om te betalen. Kies **Hoe is er betaald?** en tik op **Ik heb betaald** — of op **Ik heb het ontvangen** als jij degene bent die betaald wordt (handig als een vriend je contant betaalde en nooit meer op de link terugkwam).
+
+Een betaling telt meteen, voor iedereen. Is hij per ongeluk vastgelegd, open hem dan in de activiteitenlijst en tik op **Betaling ongeldig maken**: hij blijft in de geschiedenis staan, gemarkeerd als ongeldig, en de saldi gaan terug. Heeft iemand anders de groep gewijzigd terwijl jij verrekende, dan zie je „De saldi zijn gewijzigd” — controleer de bedragen en probeer het opnieuw.
+
+## Leden
+
+Tik op **Leden** om iedereen te zien. Leden met **Nog niet toegetreden** hebben hun naam nog niet via de link gekozen. Hier kun je:
+
+- een naam toevoegen met **Toevoegen**;
+- jezelf hernoemen (de eigenaar kan iedereen hernoemen);
+- **Mijn betaalgegevens** instellen — vrienden zien ze alleen bij een betaling die naar jou gaat;
+- een lid verwijderen (eigenaar) of **Groep verlaten** (iedereen behalve de eigenaar). Het saldo van het lid moet eerst nul zijn. Zijn geschiedenis blijft bewaard.
+
+Een lid dat door de eigenaar is verwijderd, kan niet via de link terugkomen.
+
+### Eigenaarsopties
+
+Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
+
+- **Toegang via de gastlink** — zet dit uit om iedereen te blokkeren die alleen de link heeft.
+- **Link opnieuw instellen** — de oude link werkt niet meer, en iedereen die via een browser is toegetreden moet zijn naam opnieuw kiezen. Gebruik dit als de link bij iemand terechtkwam die hem niet had mogen hebben.
+- **Groep archiveren** — de groep wordt voor iedereen alleen-lezen, maar de eindsaldi blijven zichtbaar. Staan er nog saldi open, dan bevestig je met **Toch archiveren**.
+- **Groep verwijderen** — verwijdert de groep en de hele geschiedenis voor iedereen. Dit kan niet ongedaan worden gemaakt.
+
+Verwijdert de eigenaar zijn eigen account, dan worden zijn groepen ook verwijderd.
+
+## Deelnemen aan een groep in de app
+
+Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link**, plak hem in **Groepslink**, vul **Jouw naam in deze groep** in en tik op **Deelnemen aan groep**. Heb je je naam al in de browser gekozen, neem dan niet nog eens deel: open de link in de browser en tik op **Openen in de app**, zodat je je geschiedenis houdt.
+
+## Meldingen
+
+Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hooguit één per groep per paar minuten. Tikken opent de groep. Uitzetten kan onder **Instellingen → Meldingen → Groepsactiviteit**.
+
+## Privacy
+
+- **Iedereen met de link kan de groep zien** — de namen van de leden, de uitgaven, de bedragen en de geschiedenis. Deel hem alleen met de mensen in de groep.
+- Groepsgegevens zijn **niet end-to-end versleuteld**, ook niet als je end-to-end-versleuteling voor je eigen gegevens gebruikt, omdat vrienden ze in een gewone browser lezen.
+- De pagina toont nooit iemands e-mailadres en ook niet of iemand de app gebruikt. Jouw betaalgegevens ziet alleen degene die jou betaalt.
+- Is de link uitgelekt, gebruik dan **Link opnieuw instellen** of zet **Toegang via de gastlink** uit.

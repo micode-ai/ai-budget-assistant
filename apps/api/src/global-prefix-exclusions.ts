@@ -39,4 +39,8 @@ export const GLOBAL_PREFIX_EXCLUDED_ROUTES: string[] = [
   // /sl/:token, /sl/:token/items/:itemId/toggle. Same wildcard reasoning as
   // 's/(.*)' above — one controller, one entry, nothing to fall behind.
   'sl/(.*)',
+  // Every GroupGuestController route (ABA-640 shared groups): /g/:token and everything
+  // under it. Same wildcard reasoning: one controller, one entry. (/s/g/:groupToken is the
+  // QR route of 's/(.*)' above, not this one.)
+  'g/(.*)',
 ];

@@ -5004,6 +5004,113 @@ Tap **Raise brief** to download a one-page PDF summarising your result — usefu
 *See also: Personal Inflation Index | Inflation Shield | Budgets*
 `,
     },
+    {
+      id: '44-shared-groups',
+      title: `Shared groups — split ongoing costs with friends, no app required for them`,
+      description: `A group for a flat, a trip or shared shopping. You add the expenses, friends open one link in their browser, and everyone sees who paid, who owes whom, and can settle up in one tap.`,
+      body: `# Shared groups — split ongoing costs with friends, no app required for them
+
+> A group for a flat, a trip or shared shopping. You add the expenses, friends open one link in their browser, and everyone sees who paid, who owes whom, and can settle up in one tap.
+
+## What it is
+
+A group keeps a running tally of shared costs between several people. Every expense records who paid and how it's split; the group works out everyone's balance and a simple plan of who pays whom, with few payments, to even things out. Your friends don't need the app or an account: they use the group from a link in any browser. Groups are free on every plan.
+
+Group money is kept separate from your own finances: nothing in a group shows up in your budgets, analytics or wallet.
+
+## Where to find it
+
+Tap **Groups** in the quick actions on the home screen. You'll see your groups and your balance in each, plus **New group** and **Join with link**.
+
+## Creating a group
+
+1. Tap **New group**.
+2. Enter a **Group name**, and optionally an **Emoji (optional)**.
+3. Pick the **Currency**. You can change it only until the first expense is added — a group uses one currency.
+4. Check **Your name in this group** — this is how the others will see you.
+5. Under **Other members (optional)**, type your friends' names. Tap **Add another name** for more. Each friend will pick their name when they open the link. Names must be different from each other.
+6. Tap **Create group**.
+
+You can own up to 20 active groups, with up to 50 members each.
+
+## Inviting friends
+
+On the group screen, the **Invite with a link** card has **Copy link**, **Share** and **Show QR code**. Send the link however you like, or let people at the table scan the QR code. One link serves the whole group.
+
+## What friends see in the browser
+
+The link opens a simple page in their browser — no install, no sign-up.
+
+1. **Who are you?** They tap their own name from the list. If they're not on it, they tap **I'm not on the list**, type **Your name** and tap **Join**.
+2. **Save your restore code.** Right after joining, the page shows a personal restore code once. It lets them come back as the same person on another phone or after clearing the browser. Anyone who has the code can act as them, so it should be kept private.
+3. They see the **Balances**, **Who pays whom** and the **History** of the group.
+
+From there they can:
+
+- **Add an expense** — fill in *What for?*, the amount, the date and who paid, choose **Equally** (tick who shares it) or **Exact amounts** (enter what each person owes), and tap **Add expense**. They can **Delete** an expense they added themselves.
+- **Settle up** — on a transfer that involves them, tap **Mark as paid** (when they paid) or **Mark as received** (when they got the money). A payment recorded by mistake can be cancelled with **Undo** by the person who recorded it or the person who received it.
+- **Your payment details** — choose a method and enter an account or handle, then **Save**. Only the person who pays them sees these details, on their own transfer line, with a ready Revolut or PayPal button where possible.
+- **Not me / forget this device** — signs this browser out of their name, for a shared phone or computer.
+- **Have a restore code?** — on a new device, enter the **Restore code** and tap **Restore**.
+
+If someone loses both their browser data and their restore code, they can join again under a slightly different name, or the group owner can reset the link (see below) so everyone picks their name again.
+
+The page also suggests the app at a few useful moments — for notifications, reading paper receipts, or reminders — but nothing on the page requires it.
+
+### Moving from the browser to the app
+
+Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**.
+
+## Using a group in the app
+
+The group screen shows whether **You are owed** or **You owe** (or **All settled up**), **Your share this month**, the **Who pays whom** plan, and the **Activity** list.
+
+**Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
+
+## Settling up
+
+On a line of **Who pays whom** that involves you, tap **Settle**. If the person you're paying added payment details, you'll see a button or instructions to pay them. Choose **How was it paid?**, then tap **I paid** — or **I received it** if you're the one being paid (useful when a friend paid you in cash and never came back to the link).
+
+A payment counts right away, for everyone. If one was recorded by mistake, open it in the activity list and tap **Void payment**: it stays in the history, marked as voided, and the balances go back. If someone else changed the group while you were settling, you'll see "Balances changed" — check the numbers and try again.
+
+## Members
+
+Tap **Members** to see everyone. Members marked **Not joined yet** haven't picked their name from the link yet. Here you can:
+
+- add a name with **Add**;
+- rename yourself (the owner can rename anyone);
+- set **My payment details** — friends see them only on a payment that goes to you;
+- remove a member (owner) or **Leave group** (anyone except the owner). A member's balance must be zero first. Their history stays.
+
+A member removed by the owner can't rejoin through the link.
+
+### Owner controls
+
+The person who created the group also sees **Owner controls**:
+
+- **Guest link access** — turn it off to block everyone who only has the link.
+- **Reset the link** — the old link stops working, and everyone who joined from a browser has to pick their name again. Use it if the link reached someone it shouldn't have.
+- **Archive group** — the group becomes read-only for everyone, but the final balances stay visible. If balances are still open, you'll be asked to confirm with **Archive anyway**.
+- **Delete group** — deletes the group and its whole history for everyone. This can't be undone.
+
+If the owner deletes their own account, their groups are deleted too.
+
+## Joining a group in the app
+
+If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen, paste it into **Group link**, enter **Your name in this group** and tap **Join group**. If you already picked your name in the browser, don't join again: open the link in the browser and tap **Open in the app**, so you keep your history.
+
+## Notifications
+
+When someone else adds an expense or a payment, you get a notification — at most one per group every few minutes. Tapping it opens the group. Turn it off under **Settings → Notifications → Group activity**.
+
+## Privacy
+
+- **Anyone with the link can see the group** — the members' names, the expenses, the amounts and the history. Share it only with the people in the group.
+- Group data is **not end-to-end encrypted**, even if you use end-to-end encryption for your own data, because friends read it in an ordinary browser.
+- The page never shows anyone's email or whether they use the app. Your payment details are shown only to the person who is paying you.
+- If the link leaks, use **Reset the link**, or turn off **Guest link access**.
+`,
+    },
   ],
   ru: [
     {
@@ -9965,6 +10072,113 @@ OCR иногда неверно читает цену, выдумывает ст
 *См. также: Персональный индекс инфляции | Щит от инфляции | Бюджеты*
 `,
     },
+    {
+      id: '44-shared-groups',
+      title: `Общие группы — делите постоянные расходы с друзьями, им приложение не нужно`,
+      description: `Группа для квартиры, поездки или общих покупок. Вы добавляете расходы, друзья открывают одну ссылку в браузере, и все видят, кто платил, кто кому сколько должен, и могут рассчитаться в одно касание.`,
+      body: `# Общие группы — делите постоянные расходы с друзьями, им приложение не нужно
+
+> Группа для квартиры, поездки или общих покупок. Вы добавляете расходы, друзья открывают одну ссылку в браузере, и все видят, кто платил, кто кому сколько должен, и могут рассчитаться в одно касание.
+
+## Что это
+
+Группа ведёт текущий учёт общих расходов нескольких человек. Каждый расход фиксирует, кто заплатил и как его разделить; группа считает баланс каждого и простой план «кто кому сколько» с небольшим числом переводов, который выравнивает счёт. Друзьям не нужны ни приложение, ни аккаунт: они пользуются группой по ссылке в любом браузере. Группы бесплатны на любом тарифе.
+
+Деньги группы отделены от ваших личных финансов: ничего из группы не попадает в ваши бюджеты, аналитику или кошелёк.
+
+## Где найти
+
+Нажмите **Группы** в быстрых действиях на главном экране. Вы увидите свои группы и свой баланс в каждой из них, а также **Новая группа** и **Войти по ссылке**.
+
+## Создание группы
+
+1. Нажмите **Новая группа**.
+2. Введите **Название группы** и при желании **Эмодзи (необязательно)**.
+3. Выберите **Валюта**. Изменить её можно только до добавления первого расхода — у группы одна валюта.
+4. Проверьте **Ваше имя в этой группе** — так вас будут видеть остальные.
+5. В поле **Другие участники (необязательно)** впишите имена друзей. Нажмите **Добавить ещё одно имя**, чтобы добавить больше. Каждый друг выберет своё имя, когда откроет ссылку. Имена не должны повторяться.
+6. Нажмите **Создать группу**.
+
+Вы можете владеть максимум 20 активными группами, в каждой — до 50 участников.
+
+## Приглашение друзей
+
+На экране группы в карточке **Пригласить по ссылке** есть кнопки **Копировать ссылку**, **Поделиться** и **Показать QR-код**. Отправьте ссылку любым удобным способом или дайте тем, кто рядом, отсканировать QR-код. Одной ссылки хватает на всю группу.
+
+## Что друзья видят в браузере
+
+Ссылка открывает простую страницу в браузере — без установки и регистрации.
+
+1. **Кто вы?** Друг нажимает своё имя в списке. Если его там нет, он нажимает **Меня нет в списке**, вводит **Ваше имя** и нажимает **Присоединиться**.
+2. **Сохраните код восстановления.** Сразу после присоединения страница один раз показывает личный код восстановления. С ним можно вернуться тем же человеком на другом телефоне или после очистки браузера. Любой, у кого есть этот код, может действовать от его имени, поэтому код лучше держать при себе.
+3. Он видит **Балансы**, **Кто кому сколько** и **История** группы.
+
+Дальше он может:
+
+- **Добавить расход** — заполнить *На что?*, сумму, дату и плательщика, выбрать **Поровну** (отметить, кто участвует) или **Точные суммы** (вписать, сколько должен каждый) и нажать **Добавить расход**. Расход, который он добавил сам, можно убрать кнопкой **Удалить**.
+- **Рассчитаться** — на переводе, который его касается, нажать **Отметить как оплаченное** (если он заплатил) или **Отметить как полученное** (если получил деньги). Платёж, отмеченный по ошибке, может отменить кнопкой **Отменить** тот, кто его записал, или тот, кто его получил.
+- **Ваши платёжные данные** — выбрать способ, ввести счёт или логин и нажать **Сохранить**. Эти данные видит только тот, кто ему платит, в строке своего перевода, по возможности с готовой кнопкой Revolut или PayPal.
+- **Это не я / забыть это устройство** — отвязывает этот браузер от его имени, например на общем телефоне или компьютере.
+- **Есть код восстановления?** — на новом устройстве ввести **Код восстановления** и нажать **Восстановить**.
+
+Если человек потерял и данные браузера, и код восстановления, он может присоединиться заново под немного другим именем, или владелец группы может сбросить ссылку (см. ниже), чтобы все заново выбрали свои имена.
+
+В нескольких уместных местах страница предлагает приложение — для уведомлений, чтения бумажных чеков или напоминаний, — но ничего на странице его не требует.
+
+### Переход из браузера в приложение
+
+В разделе **Сохраните эту группу в приложении** друг может нажать **Продолжить в веб-версии приложения** (или **Открыть в приложении** на Android, если приложение уже установлено). После входа или регистрации группа со всей историей переходит в этот аккаунт — ничего не теряется. Эта ссылка срабатывает один раз и только несколько минут. Если он сначала установит приложение из Google Play, потом нужно снова открыть ссылку группы в браузере и нажать **Открыть в приложении**.
+
+## Группа в приложении
+
+Экран группы показывает, **Вам должны** или **Вы должны** (или **Все рассчитано**), **Ваша доля в этом месяце**, план **Кто кому сколько** и список **Активность**.
+
+**Добавить расход** открывает форму: **Сумма**, **Описание**, **Дата**, **Плательщик** и **Разделение**: **Поровну**, **Точные суммы**, **Проценты** или **Доли**. **Сканировать чек** читает бумажный чек и сам заполняет сумму, описание и дату. Изменить или удалить расход могут тот, кто его добавил, тот, кто за него заплатил, и владелец группы. Удалённый расход остаётся в истории с пометкой «удалён».
+
+## Расчёт
+
+В строке **Кто кому сколько**, которая вас касается, нажмите **Рассчитаться**. Если получатель указал платёжные данные, вы увидите кнопку или инструкцию для оплаты. Выберите **Как оплатили?** и нажмите **Я заплатил(а)** — или **Я получил(а)**, если платят вам (удобно, когда друг отдал наличными и больше не открывал ссылку).
+
+Платёж засчитывается сразу и для всех. Если его записали по ошибке, откройте его в списке активности и нажмите **Отменить платёж**: он останется в истории с пометкой «отменён», а балансы вернутся. Если кто-то изменил группу, пока вы рассчитывались, вы увидите «Балансы изменились» — проверьте цифры и попробуйте снова.
+
+## Участники
+
+Нажмите **Участники**, чтобы увидеть всех. Отмеченные **Ещё не присоединился** пока не выбрали своё имя по ссылке. Здесь можно:
+
+- добавить имя кнопкой **Добавить**;
+- переименовать себя (владелец может переименовать любого);
+- указать **Мои реквизиты для оплаты** — друзья видят их только на платеже, который идёт вам;
+- удалить участника (владелец) или **Выйти из группы** (любой, кроме владельца). Баланс участника сначала должен быть нулевым. Его история сохраняется.
+
+Участник, которого удалил владелец, не может вернуться по ссылке.
+
+### Настройки владельца
+
+Тот, кто создал группу, видит ещё **Настройки владельца**:
+
+- **Доступ по гостевой ссылке** — выключите, чтобы закрыть доступ всем, у кого есть только ссылка.
+- **Сбросить ссылку** — старая ссылка перестаёт работать, и все, кто присоединился из браузера, должны заново выбрать своё имя. Используйте, если ссылка попала к постороннему.
+- **Архивировать группу** — группа становится доступной только для чтения для всех, но итоговые балансы остаются видны. Если балансы ещё не закрыты, подтвердите кнопкой **Всё равно архивировать**.
+- **Удалить группу** — удаляет группу и всю её историю для всех. Отменить это нельзя.
+
+Если владелец удалит свой аккаунт, его группы тоже удалятся.
+
+## Присоединение к группе в приложении
+
+Если друг прислал ссылку на группу, а у вас есть приложение, нажмите **Войти по ссылке** на экране «Группы», вставьте её в поле **Ссылка на группу**, введите **Ваше имя в этой группе** и нажмите **Присоединиться**. Если вы уже выбрали своё имя в браузере, не присоединяйтесь повторно: откройте ссылку в браузере и нажмите **Открыть в приложении**, чтобы сохранить свою историю.
+
+## Уведомления
+
+Когда кто-то другой добавляет расход или платёж, вы получаете уведомление — не чаще одного на группу раз в несколько минут. Нажатие открывает группу. Отключить можно в **Настройки → Уведомления → Активность в группах**.
+
+## Конфиденциальность
+
+- **Любой, у кого есть ссылка, видит группу** — имена участников, расходы, суммы и историю. Делитесь ею только с участниками группы.
+- Данные группы **не защищены сквозным шифрованием**, даже если вы используете сквозное шифрование для своих данных, ведь друзья читают их в обычном браузере.
+- Страница никогда не показывает чей-либо e-mail и то, пользуется ли человек приложением. Ваши платёжные данные видит только тот, кто вам платит.
+- Если ссылка утекла, нажмите **Сбросить ссылку** или выключите **Доступ по гостевой ссылке**.
+`,
+    },
   ],
   ua: [
     {
@@ -14896,6 +15110,113 @@ OCR іноді неправильно читає ціну, вигадує ряд
 *Див. також: Персональний індекс інфляції | Щит від інфляції | Бюджети*
 `,
     },
+    {
+      id: '44-shared-groups',
+      title: `Спільні групи — діліть постійні витрати з друзями, їм застосунок не потрібен`,
+      description: `Група для квартири, подорожі чи спільних покупок. Ви додаєте витрати, друзі відкривають одне посилання в браузері, і всі бачать, хто платив, хто кому скільки винен, і можуть розрахуватися одним дотиком.`,
+      body: `# Спільні групи — діліть постійні витрати з друзями, їм застосунок не потрібен
+
+> Група для квартири, подорожі чи спільних покупок. Ви додаєте витрати, друзі відкривають одне посилання в браузері, і всі бачать, хто платив, хто кому скільки винен, і можуть розрахуватися одним дотиком.
+
+## Що це
+
+Група веде поточний облік спільних витрат кількох людей. Кожна витрата фіксує, хто заплатив і як її поділити; група рахує баланс кожного і простий план «хто кому скільки» з невеликою кількістю переказів, який вирівнює рахунок. Друзям не потрібні ні застосунок, ні акаунт: вони користуються групою за посиланням у будь-якому браузері. Групи безкоштовні на будь-якому тарифі.
+
+Гроші групи відокремлені від ваших особистих фінансів: нічого з групи не потрапляє у ваші бюджети, аналітику чи гаманець.
+
+## Де знайти
+
+Натисніть **Групи** у швидких діях на головному екрані. Ви побачите свої групи і свій баланс у кожній, а також **Нова група** і **Приєднатися за посиланням**.
+
+## Створення групи
+
+1. Натисніть **Нова група**.
+2. Введіть **Назва групи** і за бажанням **Емодзі (необов'язково)**.
+3. Виберіть **Валюта**. Змінити її можна лише до додавання першої витрати — у групи одна валюта.
+4. Перевірте **Ваше ім'я в цій групі** — так вас бачитимуть інші.
+5. У полі **Інші учасники (необов'язково)** впишіть імена друзів. Натисніть **Додати ще одне ім'я**, щоб додати більше. Кожен друг вибере своє ім'я, коли відкриє посилання. Імена не повинні повторюватися.
+6. Натисніть **Створити групу**.
+
+Ви можете володіти щонайбільше 20 активними групами, у кожній — до 50 учасників.
+
+## Запрошення друзів
+
+На екрані групи в картці **Запросити за посиланням** є кнопки **Копіювати посилання**, **Поділитися** і **Показати QR-код**. Надішліть посилання будь-яким зручним способом або дайте тим, хто поруч, відсканувати QR-код. Одного посилання вистачає на всю групу.
+
+## Що друзі бачать у браузері
+
+Посилання відкриває просту сторінку в браузері — без встановлення і реєстрації.
+
+1. **Хто ви?** Друг натискає своє ім'я у списку. Якщо його там немає, він натискає **Мене немає в списку**, вводить **Ваше імʼя** і натискає **Приєднатися**.
+2. **Збережіть код відновлення.** Одразу після приєднання сторінка один раз показує особистий код відновлення. З ним можна повернутися тією самою людиною на іншому телефоні або після очищення браузера. Будь-хто, хто має цей код, може діяти від його імені, тож код краще тримати при собі.
+3. Він бачить **Баланси**, **Хто кому скільки** та **Історія** групи.
+
+Далі він може:
+
+- **Додати витрату** — заповнити *На що?*, суму, дату і платника, вибрати **Порівну** (позначити, хто бере участь) або **Точні суми** (вписати, скільки винен кожен) і натиснути **Додати витрату**. Витрату, яку він додав сам, можна прибрати кнопкою **Видалити**.
+- **Розрахуватися** — на переказі, який його стосується, натиснути **Позначити як сплачене** (якщо він заплатив) або **Позначити як отримане** (якщо отримав гроші). Платіж, позначений помилково, може скасувати кнопкою **Скасувати** той, хто його записав, або той, хто його отримав.
+- **Ваші платіжні дані** — вибрати спосіб, ввести рахунок або логін і натиснути **Зберегти**. Ці дані бачить лише той, хто йому платить, у рядку свого переказу, за можливості з готовою кнопкою Revolut або PayPal.
+- **Це не я / забути цей пристрій** — відв'язує цей браузер від його імені, наприклад на спільному телефоні чи комп'ютері.
+- **Є код відновлення?** — на новому пристрої ввести **Код відновлення** і натиснути **Відновити**.
+
+Якщо людина втратила і дані браузера, і код відновлення, вона може приєднатися знову під трохи іншим ім'ям, або власник групи може скинути посилання (див. нижче), щоб усі заново вибрали свої імена.
+
+У кількох доречних місцях сторінка пропонує застосунок — для сповіщень, читання паперових чеків чи нагадувань, — але ніщо на сторінці його не вимагає.
+
+### Перехід із браузера в застосунок
+
+У розділі **Збережіть цю групу в застосунку** друг може натиснути **Продовжити у веб-версії застосунку** (або **Відкрити в застосунку** на Android, якщо застосунок уже встановлено). Після входу чи реєстрації група з усією історією переходить у цей акаунт — нічого не втрачається. Це посилання спрацьовує один раз і лише кілька хвилин. Якщо він спершу встановить застосунок із Google Play, потім треба знову відкрити посилання групи в браузері й натиснути **Відкрити в застосунку**.
+
+## Група в застосунку
+
+Екран групи показує, **Вам винні** чи **Ви винні** (або **Усе розраховано**), **Ваша частка цього місяця**, план **Хто кому скільки** і список **Активність**.
+
+**Додати витрату** відкриває форму: **Сума**, **Опис**, **Дата**, **Платник** і **Розподіл**: **Порівну**, **Точні суми**, **Відсотки** або **Частки**. **Сканувати чек** читає паперовий чек і сам заповнює суму, опис і дату. Змінити чи видалити витрату можуть той, хто її додав, той, хто за неї заплатив, і власник групи. Видалена витрата лишається в історії з позначкою «видалено».
+
+## Розрахунок
+
+У рядку **Хто кому скільки**, який вас стосується, натисніть **Розрахуватися**. Якщо отримувач вказав платіжні дані, ви побачите кнопку або інструкцію для оплати. Виберіть **Як сплатили?** і натисніть **Я заплатив(ла)** — або **Я отримав(ла)**, якщо платять вам (зручно, коли друг віддав готівкою і більше не відкривав посилання).
+
+Платіж зараховується одразу і для всіх. Якщо його записали помилково, відкрийте його у списку активності й натисніть **Скасувати платіж**: він залишиться в історії з позначкою «скасовано», а баланси повернуться. Якщо хтось змінив групу, поки ви розраховувалися, ви побачите «Баланси змінилися» — перевірте цифри і спробуйте ще раз.
+
+## Учасники
+
+Натисніть **Учасники**, щоб побачити всіх. Позначені **Ще не приєднався** поки не вибрали своє ім'я за посиланням. Тут можна:
+
+- додати ім'я кнопкою **Додати**;
+- перейменувати себе (власник може перейменувати будь-кого);
+- вказати **Мої реквізити для оплати** — друзі бачать їх лише на платежі, який іде вам;
+- видалити учасника (власник) або **Вийти з групи** (будь-хто, крім власника). Баланс учасника спершу має бути нульовим. Його історія зберігається.
+
+Учасник, якого видалив власник, не може повернутися за посиланням.
+
+### Налаштування власника
+
+Той, хто створив групу, бачить ще **Налаштування власника**:
+
+- **Доступ за гостьовим посиланням** — вимкніть, щоб закрити доступ усім, хто має лише посилання.
+- **Скинути посилання** — старе посилання перестає працювати, і всі, хто приєднався з браузера, мають заново вибрати своє ім'я. Скористайтеся цим, якщо посилання потрапило до сторонньої людини.
+- **Архівувати групу** — група стає доступною лише для читання для всіх, але підсумкові баланси залишаються видимими. Якщо баланси ще не закриті, підтвердіть кнопкою **Усе одно архівувати**.
+- **Видалити групу** — видаляє групу і всю її історію для всіх. Скасувати це неможливо.
+
+Якщо власник видалить свій акаунт, його групи теж видаляться.
+
+## Приєднання до групи в застосунку
+
+Якщо друг надіслав посилання на групу, а у вас є застосунок, натисніть **Приєднатися за посиланням** на екрані «Групи», вставте його в поле **Посилання на групу**, введіть **Ваше ім'я в цій групі** і натисніть **Приєднатися**. Якщо ви вже вибрали своє ім'я в браузері, не приєднуйтеся вдруге: відкрийте посилання в браузері й натисніть **Відкрити в застосунку**, щоб зберегти свою історію.
+
+## Сповіщення
+
+Коли хтось інший додає витрату чи платіж, ви отримуєте сповіщення — не частіше одного на групу раз на кілька хвилин. Натискання відкриває групу. Вимкнути можна в **Налаштування → Сповіщення → Активність у групах**.
+
+## Конфіденційність
+
+- **Будь-хто, хто має посилання, бачить групу** — імена учасників, витрати, суми й історію. Діліться ним лише з учасниками групи.
+- Дані групи **не захищені наскрізним шифруванням**, навіть якщо ви використовуєте наскрізне шифрування для своїх даних, адже друзі читають їх у звичайному браузері.
+- Сторінка ніколи не показує нічий e-mail і того, чи користується людина застосунком. Ваші платіжні дані бачить лише той, хто вам платить.
+- Якщо посилання витекло, натисніть **Скинути посилання** або вимкніть **Доступ за гостьовим посиланням**.
+`,
+    },
   ],
   pl: [
     {
@@ -19812,6 +20133,113 @@ Dotknij **Argumenty do podwyżki**, aby pobrać jednostronicowy PDF podsumowują
 *Zobacz także: Osobisty wskaźnik inflacji | Tarcza antyinflacyjna | Budżety*
 `,
     },
+    {
+      id: '44-shared-groups',
+      title: `Wspólne grupy — dzielcie stałe koszty ze znajomymi, oni nie potrzebują aplikacji`,
+      description: `Grupa na mieszkanie, wyjazd albo wspólne zakupy. Dodajesz wydatki, znajomi otwierają jeden link w przeglądarce i każdy widzi, kto zapłacił, kto komu ile jest winien, i może rozliczyć się jednym dotknięciem.`,
+      body: `# Wspólne grupy — dzielcie stałe koszty ze znajomymi, oni nie potrzebują aplikacji
+
+> Grupa na mieszkanie, wyjazd albo wspólne zakupy. Dodajesz wydatki, znajomi otwierają jeden link w przeglądarce i każdy widzi, kto zapłacił, kto komu ile jest winien, i może rozliczyć się jednym dotknięciem.
+
+## Co to jest
+
+Grupa prowadzi bieżące rozliczenie wspólnych kosztów kilku osób. Każdy wydatek zapisuje, kto zapłacił i jak go podzielić; grupa wylicza saldo każdego i prosty plan „kto komu ile”, z niewielką liczbą przelewów, który wyrównuje rachunki. Twoi znajomi nie potrzebują aplikacji ani konta: korzystają z grupy przez link w dowolnej przeglądarce. Grupy są bezpłatne w każdym planie.
+
+Pieniądze z grupy są oddzielone od Twoich własnych finansów: nic z grupy nie pojawia się w Twoich budżetach, analizach ani w portfelu.
+
+## Gdzie to znaleźć
+
+Dotknij **Grupy** w szybkich akcjach na ekranie głównym. Zobaczysz swoje grupy i swoje saldo w każdej z nich, a także **Nowa grupa** i **Dołącz z linku**.
+
+## Tworzenie grupy
+
+1. Dotknij **Nowa grupa**.
+2. Wpisz **Nazwa grupy** i opcjonalnie wybierz **Emoji (opcjonalnie)**.
+3. Wybierz **Waluta**. Możesz ją zmienić tylko do czasu dodania pierwszego wydatku — grupa używa jednej waluty.
+4. Sprawdź **Twoje imię w tej grupie** — tak zobaczą Cię pozostali.
+5. W polu **Pozostali członkowie (opcjonalnie)** wpisz imiona znajomych. Dotknij **Dodaj kolejne imię**, aby dodać więcej. Każdy znajomy wybierze swoje imię po otwarciu linku. Imiona muszą się od siebie różnić.
+6. Dotknij **Utwórz grupę**.
+
+Możesz być właścicielem maksymalnie 20 aktywnych grup, każda może mieć do 50 członków.
+
+## Zapraszanie znajomych
+
+Na ekranie grupy karta **Zaproś linkiem** ma przyciski **Kopiuj link**, **Udostępnij** i **Pokaż kod QR**. Wyślij link w dowolny sposób albo pozwól osobom przy stole zeskanować kod QR. Jeden link wystarcza dla całej grupy.
+
+## Co znajomi widzą w przeglądarce
+
+Link otwiera prostą stronę w przeglądarce — bez instalacji i bez rejestracji.
+
+1. **Kim jesteś?** Znajomy dotyka swojego imienia na liście. Jeśli go tam nie ma, dotyka **Nie ma mnie na liście**, wpisuje **Twoje imię** i dotyka **Dołącz**.
+2. **Zapisz swój kod odzyskiwania.** Zaraz po dołączeniu strona jednorazowo pokazuje osobisty kod odzyskiwania. Pozwala wrócić jako ta sama osoba na innym telefonie albo po wyczyszczeniu przeglądarki. Każdy, kto ma ten kod, może działać w jego imieniu, więc trzeba go zachować dla siebie.
+3. Widzi **Salda**, **Kto komu ile** i **Historia** grupy.
+
+Następnie może:
+
+- **Dodaj wydatek** — wypełnić *Za co?*, kwotę, datę i płatnika, wybrać **Po równo** (zaznaczyć, kto się dzieli) albo **Dokładne kwoty** (wpisać, ile winna jest każda osoba) i dotknąć **Dodaj wydatek**. Wydatek dodany przez siebie może usunąć przyciskiem **Usuń**.
+- **Rozliczyć się** — przy przelewie, którego dotyczy, dotknąć **Oznacz jako zapłacone** (gdy zapłacił) albo **Oznacz jako otrzymane** (gdy dostał pieniądze). Płatność zapisaną przez pomyłkę może anulować przyciskiem **Cofnij** osoba, która ją zapisała, albo osoba, która ją otrzymała.
+- **Twoje dane do płatności** — wybrać metodę, wpisać konto lub identyfikator i dotknąć **Zapisz**. Te dane widzi tylko osoba, która mu płaci, w swojej linii przelewu, w miarę możliwości z gotowym przyciskiem Revolut lub PayPal.
+- **To nie ja / zapomnij to urządzenie** — wylogowuje tę przeglądarkę z jego imienia, na wspólnym telefonie lub komputerze.
+- **Masz kod odzyskiwania?** — na nowym urządzeniu wpisać **Kod odzyskiwania** i dotknąć **Przywróć**.
+
+Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może dołączyć ponownie pod nieco innym imieniem albo właściciel grupy może zresetować link (patrz niżej), aby wszyscy wybrali swoje imiona od nowa.
+
+Strona w kilku przydatnych momentach poleca też aplikację — dla powiadomień, odczytywania papierowych paragonów czy przypomnień — ale nic na stronie jej nie wymaga.
+
+### Przejście z przeglądarki do aplikacji
+
+W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**.
+
+## Korzystanie z grupy w aplikacji
+
+Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo **Wszystko rozliczone**), **Twój udział w tym miesiącu**, plan **Kto komu ile** i listę **Aktywność**.
+
+**Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
+
+## Rozliczanie
+
+W linii **Kto komu ile**, która Cię dotyczy, dotknij **Rozlicz**. Jeśli osoba, której płacisz, dodała dane do płatności, zobaczysz przycisk lub instrukcję zapłaty. Wybierz **Jak zapłacono?**, a potem dotknij **Zapłaciłem(-am)** — albo **Otrzymałem(-am)**, jeśli to Tobie się płaci (przydatne, gdy znajomy oddał gotówkę i już nie wrócił do linku).
+
+Płatność liczy się od razu, dla wszystkich. Jeśli zapisano ją przez pomyłkę, otwórz ją na liście aktywności i dotknij **Unieważnij płatność**: zostaje w historii, oznaczona jako unieważniona, a salda wracają. Jeśli ktoś inny zmienił grupę w czasie Twojego rozliczania, zobaczysz „Salda się zmieniły” — sprawdź liczby i spróbuj ponownie.
+
+## Członkowie
+
+Dotknij **Członkowie**, aby zobaczyć wszystkich. Osoby oznaczone **Jeszcze nie dołączył(a)** nie wybrały jeszcze swojego imienia z linku. Tutaj możesz:
+
+- dodać imię przyciskiem **Dodaj**;
+- zmienić swoje imię (właściciel może zmienić imię każdemu);
+- ustawić **Moje dane do płatności** — znajomi widzą je tylko przy płatności, która trafia do Ciebie;
+- usunąć członka (właściciel) albo **Opuść grupę** (każdy oprócz właściciela). Saldo członka musi najpierw wynosić zero. Jego historia zostaje.
+
+Członek usunięty przez właściciela nie może wrócić przez link.
+
+### Opcje właściciela
+
+Osoba, która utworzyła grupę, widzi też **Opcje właściciela**:
+
+- **Dostęp przez link dla gości** — wyłącz, aby zablokować wszystkich, którzy mają tylko link.
+- **Zresetuj link** — stary link przestaje działać, a każdy, kto dołączył z przeglądarki, musi ponownie wybrać swoje imię. Użyj tego, jeśli link trafił do kogoś niepowołanego.
+- **Zarchiwizuj grupę** — grupa staje się tylko do odczytu dla wszystkich, ale końcowe salda pozostają widoczne. Jeśli salda nie są jeszcze rozliczone, potwierdzisz to przyciskiem **Zarchiwizuj mimo to**.
+- **Usuń grupę** — usuwa grupę i całą jej historię dla wszystkich. Tego nie można cofnąć.
+
+Jeśli właściciel usunie swoje konto, jego grupy też zostaną usunięte.
+
+## Dołączanie do grupy w aplikacji
+
+Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy, wklej go w pole **Link do grupy**, wpisz **Twoje imię w tej grupie** i dotknij **Dołącz do grupy**. Jeśli Twoje imię zostało już wybrane w przeglądarce, nie dołączaj ponownie: otwórz link w przeglądarce i dotknij **Otwórz w aplikacji**, żeby zachować swoją historię.
+
+## Powiadomienia
+
+Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyżej jedno na grupę co kilka minut. Dotknięcie otwiera grupę. Wyłączysz je w **Ustawienia → Powiadomienia → Aktywność w grupach**.
+
+## Prywatność
+
+- **Każdy, kto ma link, widzi grupę** — imiona członków, wydatki, kwoty i historię. Udostępniaj go tylko osobom z grupy.
+- Dane grupy **nie są szyfrowane end-to-end**, nawet jeśli używasz szyfrowania end-to-end dla swoich danych, bo znajomi czytają je w zwykłej przeglądarce.
+- Strona nigdy nie pokazuje niczyjego adresu e-mail ani tego, czy ktoś korzysta z aplikacji. Twoje dane do płatności widzi tylko osoba, która Ci płaci.
+- Jeśli link wycieknie, użyj **Zresetuj link** albo wyłącz **Dostęp przez link dla gości**.
+`,
+    },
   ],
   de: [
     {
@@ -24703,6 +25131,113 @@ Tippe auf **Argumente für die Gehaltserhöhung**, um ein einseitiges PDF mit ei
 *Siehe auch: Persönlicher Inflationsindex | Inflationsschutz | Budgets*
 `,
     },
+    {
+      id: '44-shared-groups',
+      title: `Gemeinsame Gruppen — laufende Kosten mit Freunden teilen, die keine App brauchen`,
+      description: `Eine Gruppe für die WG, eine Reise oder gemeinsame Einkäufe. Du trägst die Ausgaben ein, Freunde öffnen einen Link im Browser, und alle sehen, wer bezahlt hat, wer wem etwas schuldet, und können mit einem Tippen ausgleichen.`,
+      body: `# Gemeinsame Gruppen — laufende Kosten mit Freunden teilen, die keine App brauchen
+
+> Eine Gruppe für die WG, eine Reise oder gemeinsame Einkäufe. Du trägst die Ausgaben ein, Freunde öffnen einen Link im Browser, und alle sehen, wer bezahlt hat, wer wem etwas schuldet, und können mit einem Tippen ausgleichen.
+
+## Was das ist
+
+Eine Gruppe führt eine laufende Abrechnung gemeinsamer Kosten zwischen mehreren Personen. Jede Ausgabe hält fest, wer bezahlt hat und wie sie aufgeteilt wird; die Gruppe berechnet daraus den Saldo jeder Person und einen einfachen Plan „wer zahlt wem“ mit wenigen Zahlungen, der alles ausgleicht. Deine Freunde brauchen weder die App noch ein Konto: Sie nutzen die Gruppe über einen Link in jedem Browser. Gruppen sind in jedem Tarif kostenlos.
+
+Gruppengeld bleibt von deinen eigenen Finanzen getrennt: Nichts aus einer Gruppe taucht in deinen Budgets, Analysen oder deiner Geldbörse auf.
+
+## Wo du es findest
+
+Tippe in den Schnellaktionen auf dem Startbildschirm auf **Gruppen**. Du siehst deine Gruppen und deinen Saldo in jeder davon, dazu **Neue Gruppe** und **Per Link beitreten**.
+
+## Eine Gruppe erstellen
+
+1. Tippe auf **Neue Gruppe**.
+2. Gib einen **Gruppenname** ein und wähle optional ein **Emoji (optional)**.
+3. Wähle die **Währung**. Du kannst sie nur ändern, bis die erste Ausgabe hinzugefügt wurde — eine Gruppe nutzt eine Währung.
+4. Prüfe **Dein Name in dieser Gruppe** — so sehen dich die anderen.
+5. Trage unter **Weitere Mitglieder (optional)** die Namen deiner Freunde ein. Tippe auf **Weiteren Namen hinzufügen** für weitere. Jeder Freund wählt seinen Namen, wenn er den Link öffnet. Die Namen müssen sich voneinander unterscheiden.
+6. Tippe auf **Gruppe erstellen**.
+
+Du kannst bis zu 20 aktive Gruppen besitzen, mit jeweils bis zu 50 Mitgliedern.
+
+## Freunde einladen
+
+Auf dem Gruppenbildschirm hat die Karte **Per Link einladen** die Schaltflächen **Link kopieren**, **Teilen** und **QR-Code anzeigen**. Verschicke den Link, wie du möchtest, oder lass die Leute am Tisch den QR-Code scannen. Ein Link reicht für die ganze Gruppe.
+
+## Was Freunde im Browser sehen
+
+Der Link öffnet eine einfache Seite im Browser — ohne Installation, ohne Registrierung.
+
+1. **Wer bist du?** Sie tippen auf ihren Namen in der Liste. Stehen sie nicht darauf, tippen sie auf **Ich stehe nicht in der Liste**, geben **Dein Name** ein und tippen auf **Beitreten**.
+2. **Speichere deinen Wiederherstellungscode.** Direkt nach dem Beitritt zeigt die Seite einmalig einen persönlichen Wiederherstellungscode. Damit kommt man auf einem anderen Handy oder nach dem Löschen der Browserdaten als dieselbe Person zurück. Wer den Code hat, kann in ihrem Namen handeln, deshalb sollte er privat bleiben.
+3. Sie sehen die **Salden**, **Wer zahlt wem** und den **Verlauf** der Gruppe.
+
+Danach können sie:
+
+- **Ausgabe hinzufügen** — *Wofür?*, den Betrag, das Datum und den Zahler ausfüllen, **Zu gleichen Teilen** (ankreuzen, wer sich beteiligt) oder **Genaue Beträge** (eintragen, was jede Person schuldet) wählen und auf **Ausgabe hinzufügen** tippen. Eine selbst hinzugefügte Ausgabe können sie mit **Löschen** entfernen.
+- **Ausgleichen** — bei einer Zahlung, die sie betrifft, auf **Als bezahlt markieren** (wenn sie bezahlt haben) oder **Als erhalten markieren** (wenn sie das Geld bekommen haben) tippen. Eine versehentlich erfasste Zahlung kann mit **Rückgängig** von der Person, die sie erfasst hat, oder von der Person, die sie erhalten hat, zurückgenommen werden.
+- **Deine Zahlungsdaten** — eine Methode wählen, ein Konto oder einen Benutzernamen eintragen und auf **Speichern** tippen. Diese Daten sieht nur, wer ihnen Geld schuldet, in seiner eigenen Zahlungszeile, wenn möglich mit fertiger Revolut- oder PayPal-Schaltfläche.
+- **Das bin ich nicht / dieses Gerät vergessen** — meldet diesen Browser von ihrem Namen ab, etwa auf einem geteilten Handy oder Computer.
+- **Hast du einen Wiederherstellungscode?** — auf einem neuen Gerät den **Wiederherstellungscode** eingeben und auf **Wiederherstellen** tippen.
+
+Wer sowohl die Browserdaten als auch den Wiederherstellungscode verliert, kann unter einem leicht anderen Namen erneut beitreten, oder der Gruppenbesitzer setzt den Link zurück (siehe unten), damit alle ihren Namen neu wählen.
+
+Die Seite empfiehlt die App an einigen passenden Stellen — für Benachrichtigungen, das Lesen von Papierbelegen oder Erinnerungen —, aber nichts auf der Seite setzt sie voraus.
+
+### Vom Browser in die App wechseln
+
+Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-App fortfahren** tippen (oder auf Android auf **In der App öffnen**, wenn die App schon installiert ist). Nach der Anmeldung oder Kontoerstellung wandert die Gruppe mit ihrem gesamten Verlauf in dieses Konto — es geht nichts verloren. Dieser Link funktioniert nur einmal und nur wenige Minuten lang. Wer die App zuerst aus Google Play installiert, öffnet danach den Gruppenlink erneut im Browser und tippt auf **In der App öffnen**.
+
+## Eine Gruppe in der App nutzen
+
+Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **Alles ausgeglichen**), **Dein Anteil in diesem Monat**, den Plan **Wer zahlt wem** und die Liste **Aktivität**.
+
+**Ausgabe hinzufügen** öffnet das Ausgabenformular: **Betrag**, **Beschreibung**, **Datum**, **Bezahlt von** und **Aufteilung**: **Gleichmäßig**, **Genaue Beträge**, **Prozent** oder **Anteile**. **Beleg scannen** liest einen Papierbeleg und füllt Betrag, Beschreibung und Datum für dich aus. Wer eine Ausgabe hinzugefügt hat, wer sie bezahlt hat, und der Gruppenbesitzer können sie bearbeiten oder löschen. Eine gelöschte Ausgabe bleibt im Verlauf, als gelöscht markiert.
+
+## Ausgleichen
+
+Tippe in einer Zeile von **Wer zahlt wem**, die dich betrifft, auf **Begleichen**. Hat die Person, der du zahlst, Zahlungsdaten hinterlegt, siehst du eine Schaltfläche oder eine Anleitung zum Bezahlen. Wähle **Wie wurde bezahlt?** und tippe auf **Ich habe bezahlt** — oder auf **Ich habe es erhalten**, wenn du das Geld bekommst (praktisch, wenn ein Freund bar bezahlt hat und nie wieder auf den Link zurückkam).
+
+Eine Zahlung zählt sofort, für alle. Wurde sie versehentlich erfasst, öffne sie in der Aktivitätsliste und tippe auf **Zahlung stornieren**: Sie bleibt im Verlauf, als storniert markiert, und die Salden gehen zurück. Hat jemand anderes die Gruppe geändert, während du ausgleichst, siehst du „Die Salden haben sich geändert“ — prüfe die Zahlen und versuche es erneut.
+
+## Mitglieder
+
+Tippe auf **Mitglieder**, um alle zu sehen. Mitglieder mit **Noch nicht beigetreten** haben ihren Namen noch nicht über den Link gewählt. Hier kannst du:
+
+- einen Namen mit **Hinzufügen** ergänzen;
+- dich umbenennen (der Besitzer kann jeden umbenennen);
+- **Meine Zahlungsdaten** festlegen — Freunde sehen sie nur bei einer Zahlung an dich;
+- ein Mitglied entfernen (Besitzer) oder **Gruppe verlassen** (alle außer dem Besitzer). Der Saldo des Mitglieds muss vorher null sein. Sein Verlauf bleibt erhalten.
+
+Ein vom Besitzer entferntes Mitglied kann nicht über den Link zurückkehren.
+
+### Besitzer-Optionen
+
+Wer die Gruppe erstellt hat, sieht außerdem **Besitzer-Optionen**:
+
+- **Zugriff über den Gastlink** — ausschalten, um alle zu sperren, die nur den Link haben.
+- **Link zurücksetzen** — der alte Link funktioniert nicht mehr, und alle, die über den Browser beigetreten sind, müssen ihren Namen neu wählen. Nutze das, wenn der Link bei jemandem gelandet ist, der ihn nicht haben sollte.
+- **Gruppe archivieren** — die Gruppe wird für alle schreibgeschützt, die Endsalden bleiben aber sichtbar. Sind noch Salden offen, bestätigst du mit **Trotzdem archivieren**.
+- **Gruppe löschen** — löscht die Gruppe und ihren gesamten Verlauf für alle. Das lässt sich nicht rückgängig machen.
+
+Löscht der Besitzer sein eigenes Konto, werden auch seine Gruppen gelöscht.
+
+## Einer Gruppe in der App beitreten
+
+Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Gruppen-Bildschirm auf **Per Link beitreten**, füge ihn in **Gruppenlink** ein, gib **Dein Name in dieser Gruppe** ein und tippe auf **Gruppe beitreten**. Hast du deinen Namen schon im Browser gewählt, tritt nicht noch einmal bei: Öffne den Link im Browser und tippe auf **In der App öffnen**, damit dein Verlauf erhalten bleibt.
+
+## Benachrichtigungen
+
+Wenn jemand anderes eine Ausgabe oder Zahlung hinzufügt, bekommst du eine Benachrichtigung — höchstens eine pro Gruppe alle paar Minuten. Ein Tippen öffnet die Gruppe. Abschalten kannst du sie unter **Einstellungen → Benachrichtigungen → Gruppenaktivität**.
+
+## Datenschutz
+
+- **Jeder mit dem Link kann die Gruppe sehen** — die Namen der Mitglieder, die Ausgaben, die Beträge und den Verlauf. Teile ihn nur mit den Leuten aus der Gruppe.
+- Gruppendaten sind **nicht Ende-zu-Ende-verschlüsselt**, auch wenn du für deine eigenen Daten Ende-zu-Ende-Verschlüsselung nutzt, denn Freunde lesen sie in einem gewöhnlichen Browser.
+- Die Seite zeigt nie die E-Mail-Adresse von jemandem und auch nicht, ob jemand die App nutzt. Deine Zahlungsdaten sieht nur, wer dir Geld zahlt.
+- Ist der Link durchgesickert, nutze **Link zurücksetzen** oder schalte **Zugriff über den Gastlink** aus.
+`,
+    },
   ],
   es: [
     {
@@ -29583,6 +30118,113 @@ Toca **Argumentos para una subida** para descargar un PDF de una página que res
 *Ver también: Índice de Inflación Personal | Escudo contra la inflación | Presupuestos*
 `,
     },
+    {
+      id: '44-shared-groups',
+      title: `Grupos compartidos — reparte gastos continuos con amigos que no necesitan la app`,
+      description: `Un grupo para el piso, un viaje o la compra compartida. Tú añades los gastos, tus amigos abren un único enlace en el navegador y todos ven quién pagó, quién debe a quién, y pueden saldar cuentas con un toque.`,
+      body: `# Grupos compartidos — reparte gastos continuos con amigos que no necesitan la app
+
+> Un grupo para el piso, un viaje o la compra compartida. Tú añades los gastos, tus amigos abren un único enlace en el navegador y todos ven quién pagó, quién debe a quién, y pueden saldar cuentas con un toque.
+
+## Qué es
+
+Un grupo lleva la cuenta de los gastos compartidos entre varias personas. Cada gasto registra quién pagó y cómo se reparte; el grupo calcula el saldo de cada uno y un plan sencillo de quién paga a quién, con pocos pagos, para dejarlo todo a la par. Tus amigos no necesitan la app ni una cuenta: usan el grupo desde un enlace en cualquier navegador. Los grupos son gratuitos en todos los planes.
+
+El dinero de los grupos se mantiene separado de tus propias finanzas: nada de un grupo aparece en tus presupuestos, tus análisis ni tu monedero.
+
+## Dónde encontrarlo
+
+Toca **Grupos** en las acciones rápidas de la pantalla de inicio. Verás tus grupos y tu saldo en cada uno, además de **Nuevo grupo** y **Unirse con enlace**.
+
+## Crear un grupo
+
+1. Toca **Nuevo grupo**.
+2. Escribe el **Nombre del grupo** y, si quieres, un **Emoji (opcional)**.
+3. Elige la **Moneda**. Solo puedes cambiarla hasta que se añada el primer gasto: un grupo usa una sola moneda.
+4. Revisa **Tu nombre en este grupo**: así te verán los demás.
+5. En **Otros miembros (opcional)**, escribe los nombres de tus amigos. Toca **Añadir otro nombre** para añadir más. Cada amigo elegirá su nombre al abrir el enlace. Los nombres deben ser distintos entre sí.
+6. Toca **Crear grupo**.
+
+Puedes ser propietario de hasta 20 grupos activos, con hasta 50 miembros cada uno.
+
+## Invitar a tus amigos
+
+En la pantalla del grupo, la tarjeta **Invitar con un enlace** tiene **Copiar enlace**, **Compartir** y **Mostrar código QR**. Envía el enlace como prefieras o deja que quienes estén en la mesa escaneen el código QR. Un solo enlace sirve para todo el grupo.
+
+## Qué ven tus amigos en el navegador
+
+El enlace abre una página sencilla en su navegador, sin instalar nada ni registrarse.
+
+1. **¿Quién eres?** Tocan su propio nombre en la lista. Si no están, tocan **No estoy en la lista**, escriben **Tu nombre** y tocan **Unirme**.
+2. **Guarda tu código de recuperación.** Justo después de unirse, la página muestra una sola vez un código de recuperación personal. Sirve para volver como la misma persona en otro teléfono o después de borrar los datos del navegador. Quien tenga el código puede actuar en su nombre, así que conviene guardarlo en privado.
+3. Ven los **Saldos**, **Quién paga a quién** y el **Historial** del grupo.
+
+A partir de ahí pueden:
+
+- **Añadir un gasto**: rellenar *¿Para qué?*, el importe, la fecha y quién pagó, elegir **A partes iguales** (marcar quién lo comparte) o **Importes exactos** (escribir lo que debe cada persona) y tocar **Añadir gasto**. Pueden **Eliminar** un gasto que hayan añadido ellos.
+- **Saldar cuentas**: en una transferencia que les afecte, tocar **Marcar como pagado** (si han pagado) o **Marcar como recibido** (si han recibido el dinero). Un pago registrado por error lo puede anular con **Deshacer** quien lo registró o quien lo recibió.
+- **Tus datos de pago**: elegir un método, escribir una cuenta o usuario y tocar **Guardar**. Solo los ve quien les tiene que pagar, en su propia línea de transferencia, con un botón de Revolut o PayPal listo cuando es posible.
+- **No soy yo / olvidar este dispositivo**: desconecta este navegador de su nombre, por ejemplo en un teléfono u ordenador compartido.
+- **¿Tienes un código de recuperación?**: en un dispositivo nuevo, escribir el **Código de recuperación** y tocar **Recuperar**.
+
+Si alguien pierde a la vez los datos del navegador y su código de recuperación, puede volver a unirse con un nombre un poco distinto, o el propietario del grupo puede restablecer el enlace (ver más abajo) para que todos vuelvan a elegir su nombre.
+
+La página también sugiere la app en algunos momentos útiles —para recibir notificaciones, leer tickets en papel o recibir recordatorios—, pero nada en la página la exige.
+
+### Pasar del navegador a la app
+
+En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app del navegador** (o **Abrir en la app** en Android, si ya tiene la app instalada). Tras iniciar sesión o crear una cuenta, el grupo con todo su historial pasa a esa cuenta: no se pierde nada. Este enlace funciona una sola vez y solo durante unos minutos. Si primero instala la app desde Google Play, después debe volver a abrir el enlace del grupo en el navegador y tocar **Abrir en la app**.
+
+## Usar un grupo en la app
+
+La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), **Tu parte este mes**, el plan **Quién paga a quién** y la lista de **Actividad**.
+
+**Añadir gasto** abre el formulario: **Importe**, **Descripción**, **Fecha**, **Pagado por** y **División**: **A partes iguales**, **Importes exactos**, **Porcentajes** o **Partes**. **Escanear recibo** lee un ticket en papel y rellena por ti el importe, la descripción y la fecha. Quien añadió el gasto, quien lo pagó y el propietario del grupo pueden editarlo o eliminarlo. Un gasto eliminado sigue en el historial, marcado como eliminado.
+
+## Saldar cuentas
+
+En una línea de **Quién paga a quién** que te afecte, toca **Saldar**. Si la persona a la que pagas ha añadido sus datos de pago, verás un botón o instrucciones para pagarle. Elige **¿Cómo se pagó?** y toca **He pagado**, o **Lo he recibido** si eres tú quien cobra (útil cuando un amigo te pagó en efectivo y no volvió a abrir el enlace).
+
+Un pago cuenta al instante, para todos. Si se registró por error, ábrelo en la lista de actividad y toca **Anular pago**: sigue en el historial, marcado como anulado, y los saldos vuelven atrás. Si otra persona cambió el grupo mientras saldabas, verás «Los saldos han cambiado»: revisa las cifras y vuelve a intentarlo.
+
+## Miembros
+
+Toca **Miembros** para ver a todos. Los marcados con **Aún no se ha unido** todavía no han elegido su nombre desde el enlace. Aquí puedes:
+
+- añadir un nombre con **Añadir**;
+- cambiar tu nombre (el propietario puede cambiar el de cualquiera);
+- configurar **Mis datos de pago**: tus amigos solo los ven en un pago que va hacia ti;
+- eliminar a un miembro (propietario) o **Salir del grupo** (cualquiera salvo el propietario). Antes, el saldo del miembro debe ser cero. Su historial se conserva.
+
+Un miembro eliminado por el propietario no puede volver a entrar con el enlace.
+
+### Controles del propietario
+
+Quien creó el grupo ve además **Controles del propietario**:
+
+- **Acceso por el enlace de invitados**: desactívalo para bloquear a todos los que solo tienen el enlace.
+- **Restablecer el enlace**: el enlace antiguo deja de funcionar y todos los que se unieron desde un navegador tienen que volver a elegir su nombre. Úsalo si el enlace llegó a alguien que no debía tenerlo.
+- **Archivar grupo**: el grupo pasa a ser de solo lectura para todos, aunque los saldos finales siguen visibles. Si aún hay saldos pendientes, lo confirmarás con **Archivar de todos modos**.
+- **Eliminar grupo**: elimina el grupo y todo su historial para todos. No se puede deshacer.
+
+Si el propietario elimina su propia cuenta, sus grupos también se eliminan.
+
+## Unirse a un grupo desde la app
+
+Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con enlace** en la pantalla Grupos, pégalo en **Enlace del grupo**, escribe **Tu nombre en este grupo** y toca **Unirse al grupo**. Si ya elegiste tu nombre en el navegador, no vuelvas a unirte: abre el enlace en el navegador y toca **Abrir en la app**, así conservas tu historial.
+
+## Notificaciones
+
+Cuando otra persona añade un gasto o un pago, recibes una notificación: como mucho una por grupo cada pocos minutos. Al tocarla se abre el grupo. Puedes desactivarlas en **Ajustes → Notificaciones → Actividad de grupos**.
+
+## Privacidad
+
+- **Cualquiera con el enlace puede ver el grupo**: los nombres de los miembros, los gastos, los importes y el historial. Compártelo solo con las personas del grupo.
+- Los datos del grupo **no están cifrados de extremo a extremo**, aunque uses el cifrado de extremo a extremo para tus propios datos, porque tus amigos los leen en un navegador normal.
+- La página nunca muestra el correo electrónico de nadie ni si alguien usa la app. Tus datos de pago solo los ve quien te está pagando.
+- Si el enlace se filtra, usa **Restablecer el enlace** o desactiva **Acceso por el enlace de invitados**.
+`,
+    },
   ],
   fr: [
     {
@@ -34461,6 +35103,113 @@ Touchez **Arguments pour une augmentation** pour télécharger un PDF d'une page
 *Voir aussi : Indice d'Inflation Personnel | Bouclier anti-inflation | Budgets*
 `,
     },
+    {
+      id: '44-shared-groups',
+      title: `Groupes partagés — partagez des frais courants avec des amis, sans appli pour eux`,
+      description: `Un groupe pour la coloc, un voyage ou les courses communes. Vous ajoutez les dépenses, vos amis ouvrent un seul lien dans leur navigateur, et chacun voit qui a payé, qui doit combien à qui, et peut régler en un geste.`,
+      body: `# Groupes partagés — partagez des frais courants avec des amis, sans appli pour eux
+
+> Un groupe pour la coloc, un voyage ou les courses communes. Vous ajoutez les dépenses, vos amis ouvrent un seul lien dans leur navigateur, et chacun voit qui a payé, qui doit combien à qui, et peut régler en un geste.
+
+## De quoi s'agit-il
+
+Un groupe tient un décompte continu des frais partagés entre plusieurs personnes. Chaque dépense enregistre qui a payé et comment elle est répartie ; le groupe calcule le solde de chacun et un plan simple « qui paie qui », avec peu de paiements, pour tout équilibrer. Vos amis n'ont besoin ni de l'appli ni d'un compte : ils utilisent le groupe depuis un lien, dans n'importe quel navigateur. Les groupes sont gratuits dans toutes les formules.
+
+L'argent des groupes reste séparé de vos propres finances : rien d'un groupe n'apparaît dans vos budgets, vos analyses ou votre portefeuille.
+
+## Où le trouver
+
+Touchez **Groupes** dans les actions rapides de l'écran d'accueil. Vous voyez vos groupes et votre solde dans chacun, ainsi que **Nouveau groupe** et **Rejoindre avec un lien**.
+
+## Créer un groupe
+
+1. Touchez **Nouveau groupe**.
+2. Saisissez le **Nom du groupe** et, si vous le souhaitez, un **Emoji (facultatif)**.
+3. Choisissez la **Devise**. Vous ne pouvez la changer que jusqu'à l'ajout de la première dépense : un groupe utilise une seule devise.
+4. Vérifiez **Votre nom dans ce groupe** : c'est ainsi que les autres vous verront.
+5. Sous **Autres membres (facultatif)**, saisissez les prénoms de vos amis. Touchez **Ajouter un autre nom** pour en ajouter d'autres. Chaque ami choisira son nom en ouvrant le lien. Les noms doivent être différents les uns des autres.
+6. Touchez **Créer le groupe**.
+
+Vous pouvez posséder jusqu'à 20 groupes actifs, avec jusqu'à 50 membres chacun.
+
+## Inviter vos amis
+
+Sur l'écran du groupe, la carte **Inviter avec un lien** propose **Copier le lien**, **Partager** et **Afficher le code QR**. Envoyez le lien comme vous voulez, ou laissez les personnes autour de la table scanner le code QR. Un seul lien suffit pour tout le groupe.
+
+## Ce que vos amis voient dans le navigateur
+
+Le lien ouvre une page simple dans leur navigateur, sans installation ni inscription.
+
+1. **Qui êtes-vous ?** Ils touchent leur nom dans la liste. S'ils n'y figurent pas, ils touchent **Je ne suis pas dans la liste**, saisissent **Votre nom** et touchent **Rejoindre**.
+2. **Enregistrez votre code de restauration.** Juste après l'arrivée dans le groupe, la page affiche une seule fois un code de restauration personnel. Il permet de revenir comme la même personne sur un autre téléphone ou après avoir effacé les données du navigateur. Quiconque possède ce code peut agir à leur place : il faut donc le garder pour soi.
+3. Ils voient les **Soldes**, **Qui paie qui** et l'**Historique** du groupe.
+
+Ensuite, ils peuvent :
+
+- **Ajouter une dépense** : remplir *Pour quoi ?*, le montant, la date et qui a payé, choisir **À parts égales** (cocher qui la partage) ou **Montants exacts** (saisir ce que doit chaque personne), puis toucher **Ajouter la dépense**. Ils peuvent **Supprimer** une dépense qu'ils ont eux-mêmes ajoutée.
+- **Régler** : sur un virement qui les concerne, toucher **Marquer comme payé** (s'ils ont payé) ou **Marquer comme reçu** (s'ils ont reçu l'argent). Un paiement enregistré par erreur peut être annulé avec **Annuler** par la personne qui l'a enregistré ou par celle qui l'a reçu.
+- **Vos coordonnées de paiement** : choisir une méthode, saisir un compte ou un identifiant, puis **Enregistrer**. Seule la personne qui doit les payer voit ces coordonnées, sur sa propre ligne de virement, avec un bouton Revolut ou PayPal prêt à l'emploi quand c'est possible.
+- **Ce n'est pas moi / oublier cet appareil** : déconnecte ce navigateur de leur nom, sur un téléphone ou un ordinateur partagé.
+- **Vous avez un code de restauration ?** : sur un nouvel appareil, saisir le **Code de restauration** et toucher **Restaurer**.
+
+Si quelqu'un perd à la fois les données de son navigateur et son code de restauration, il peut rejoindre le groupe sous un nom légèrement différent, ou le propriétaire du groupe peut réinitialiser le lien (voir plus bas) pour que chacun choisisse à nouveau son nom.
+
+La page suggère aussi l'appli à quelques moments utiles — pour les notifications, la lecture des tickets papier ou les rappels —, mais rien sur la page ne l'exige.
+
+### Passer du navigateur à l'appli
+
+Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**.
+
+## Utiliser un groupe dans l'appli
+
+L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout est réglé**), **Votre part ce mois-ci**, le plan **Qui paie qui** et la liste **Activité**.
+
+**Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
+
+## Régler
+
+Sur une ligne de **Qui paie qui** qui vous concerne, touchez **Régler**. Si la personne que vous payez a renseigné ses coordonnées de paiement, vous verrez un bouton ou des instructions pour la payer. Choisissez **Comment a-t-il été payé ?**, puis touchez **J'ai payé**, ou **Je l'ai reçu** si c'est vous qui êtes payé (pratique quand un ami vous a payé en espèces et n'est jamais revenu sur le lien).
+
+Un paiement compte immédiatement, pour tout le monde. S'il a été enregistré par erreur, ouvrez-le dans la liste d'activité et touchez **Annuler le paiement** : il reste dans l'historique, marqué comme annulé, et les soldes reviennent en arrière. Si quelqu'un d'autre a modifié le groupe pendant votre règlement, vous verrez « Les soldes ont changé » : vérifiez les chiffres et réessayez.
+
+## Membres
+
+Touchez **Membres** pour voir tout le monde. Les membres marqués **Pas encore rejoint** n'ont pas encore choisi leur nom depuis le lien. Ici, vous pouvez :
+
+- ajouter un nom avec **Ajouter** ;
+- changer votre nom (le propriétaire peut renommer n'importe qui) ;
+- définir **Mes coordonnées de paiement** : vos amis ne les voient que sur un paiement qui vous est destiné ;
+- retirer un membre (propriétaire) ou **Quitter le groupe** (tout le monde sauf le propriétaire). Le solde du membre doit d'abord être nul. Son historique est conservé.
+
+Un membre retiré par le propriétaire ne peut pas revenir par le lien.
+
+### Options du propriétaire
+
+La personne qui a créé le groupe voit aussi les **Options du propriétaire** :
+
+- **Accès par le lien invité** : désactivez-le pour bloquer toutes les personnes qui n'ont que le lien.
+- **Réinitialiser le lien** : l'ancien lien cesse de fonctionner, et toutes les personnes arrivées par un navigateur doivent choisir à nouveau leur nom. Utilisez-le si le lien est parvenu à quelqu'un qui n'aurait pas dû l'avoir.
+- **Archiver le groupe** : le groupe passe en lecture seule pour tous, mais les soldes finaux restent visibles. Si des soldes restent ouverts, vous confirmerez avec **Archiver quand même**.
+- **Supprimer le groupe** : supprime le groupe et tout son historique pour tout le monde. C'est irréversible.
+
+Si le propriétaire supprime son propre compte, ses groupes sont également supprimés.
+
+## Rejoindre un groupe dans l'appli
+
+Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes, collez-le dans **Lien du groupe**, saisissez **Votre nom dans ce groupe** et touchez **Rejoindre le groupe**. Si vous avez déjà choisi votre nom dans le navigateur, ne rejoignez pas une seconde fois : ouvrez le lien dans le navigateur et touchez **Ouvrir dans l'appli**, pour garder votre historique.
+
+## Notifications
+
+Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une notification — au plus une par groupe toutes les quelques minutes. La toucher ouvre le groupe. Vous pouvez la désactiver dans **Paramètres → Notifications → Activité des groupes**.
+
+## Confidentialité
+
+- **Toute personne ayant le lien peut voir le groupe** : les noms des membres, les dépenses, les montants et l'historique. Ne le partagez qu'avec les membres du groupe.
+- Les données du groupe **ne sont pas chiffrées de bout en bout**, même si vous utilisez le chiffrement de bout en bout pour vos propres données, car vos amis les lisent dans un navigateur ordinaire.
+- La page n'affiche jamais l'adresse e-mail de quiconque, ni le fait que quelqu'un utilise l'appli. Vos coordonnées de paiement ne sont visibles que par la personne qui vous paie.
+- Si le lien a fuité, utilisez **Réinitialiser le lien** ou désactivez **Accès par le lien invité**.
+`,
+    },
   ],
   be: [
     {
@@ -39301,6 +40050,113 @@ OCR часам няправільна чытае цану, выдумляе ра
 ---
 
 *Гл. таксама: Персанальны індэкс інфляцыі | Шчыт ад інфляцыі | Бюджэты*
+`,
+    },
+    {
+      id: '44-shared-groups',
+      title: `Агульныя групы — дзяліце пастаянныя выдаткі з сябрамі, ім праграма не патрэбная`,
+      description: `Група для кватэры, паездкі ці агульных пакупак. Вы дадаеце выдаткі, сябры адкрываюць адну спасылку ў браўзеры, і ўсе бачаць, хто плаціў, хто каму колькі вінен, і могуць разлічыцца адным дотыкам.`,
+      body: `# Агульныя групы — дзяліце пастаянныя выдаткі з сябрамі, ім праграма не патрэбная
+
+> Група для кватэры, паездкі ці агульных пакупак. Вы дадаеце выдаткі, сябры адкрываюць адну спасылку ў браўзеры, і ўсе бачаць, хто плаціў, хто каму колькі вінен, і могуць разлічыцца адным дотыкам.
+
+## Што гэта
+
+Група вядзе бягучы ўлік агульных выдаткаў некалькіх людзей. Кожны выдатак фіксуе, хто заплаціў і як яго падзяліць; група лічыць баланс кожнага і просты план «хто каму колькі» з невялікай колькасцю пераводаў, які выраўноўвае рахунак. Сябрам не патрэбныя ні праграма, ні акаўнт: яны карыстаюцца групай па спасылцы ў любым браўзеры. Групы бясплатныя на любым тарыфе.
+
+Грошы групы аддзеленыя ад вашых асабістых фінансаў: нічога з групы не трапляе ў вашы бюджэты, аналітыку ці кашалёк.
+
+## Дзе знайсці
+
+Націсніце **Групы** ў хуткіх дзеяннях на галоўным экране. Вы ўбачыце свае групы і свой баланс у кожнай, а таксама **Новая група** і **Далучыцца па спасылцы**.
+
+## Стварэнне групы
+
+1. Націсніце **Новая група**.
+2. Увядзіце **Назва групы** і пры жаданні **Эмодзі (неабавязкова)**.
+3. Выберыце **Валюта**. Змяніць яе можна толькі да дадання першага выдатку — у групы адна валюта.
+4. Праверце **Ваша імя ў гэтай групе** — так вас будуць бачыць астатнія.
+5. У полі **Іншыя ўдзельнікі (неабавязкова)** упішыце імёны сяброў. Націсніце **Дадаць яшчэ адно імя**, каб дадаць больш. Кожны сябар выбера сваё імя, калі адкрые спасылку. Імёны не павінны паўтарацца.
+6. Націсніце **Стварыць групу**.
+
+Вы можаце валодаць максімум 20 актыўнымі групамі, у кожнай — да 50 удзельнікаў.
+
+## Запрашэнне сяброў
+
+На экране групы ў картцы **Запрасіць па спасылцы** ёсць кнопкі **Капіяваць спасылку**, **Падзяліцца** і **Паказаць QR-код**. Адпраўце спасылку любым зручным спосабам або дайце тым, хто побач, адсканаваць QR-код. Адной спасылкі хапае на ўсю групу.
+
+## Што сябры бачаць у браўзеры
+
+Спасылка адкрывае простую старонку ў браўзеры — без усталявання і рэгістрацыі.
+
+1. **Хто вы?** Сябар націскае сваё імя ў спісе. Калі яго там няма, ён націскае **Мяне няма ў спісе**, уводзіць **Ваша імя** і націскае **Далучыцца**.
+2. **Захавайце код аднаўлення.** Адразу пасля далучэння старонка адзін раз паказвае асабісты код аднаўлення. З ім можна вярнуцца тым самым чалавекам на іншым тэлефоне або пасля ачысткі браўзера. Любы, у каго ёсць гэты код, можа дзейнічаць ад яго імя, таму код лепш трымаць пры сабе.
+3. Ён бачыць **Балансы**, **Хто каму колькі** і **Гісторыя** групы.
+
+Далей ён можа:
+
+- **Дадаць выдатак** — запоўніць *На што?*, суму, дату і плацельшчыка, выбраць **Пароўну** (адзначыць, хто ўдзельнічае) або **Дакладныя сумы** (упісаць, колькі вінен кожны) і націснуць **Дадаць выдатак**. Выдатак, які ён дадаў сам, можна прыбраць кнопкай **Выдаліць**.
+- **Разлічыцца** — на пераводзе, які яго тычыцца, націснуць **Адзначыць як аплачанае** (калі ён заплаціў) або **Адзначыць як атрыманае** (калі атрымаў грошы). Плацёж, адзначаны памылкова, можа скасаваць кнопкай **Скасаваць** той, хто яго запісаў, або той, хто яго атрымаў.
+- **Вашы плацёжныя даныя** — выбраць спосаб, увесці рахунак або лагін і націснуць **Захаваць**. Гэтыя даныя бачыць толькі той, хто яму плаціць, у радку свайго пераводу, па магчымасці з гатовай кнопкай Revolut або PayPal.
+- **Гэта не я / забыць гэту прыладу** — адвязвае гэты браўзер ад яго імя, напрыклад на агульным тэлефоне ці камп'ютары.
+- **Ёсць код аднаўлення?** — на новай прыладзе ўвесці **Код аднаўлення** і націснуць **Аднавіць**.
+
+Калі чалавек страціў і даныя браўзера, і код аднаўлення, ён можа далучыцца зноў пад крыху іншым імем, або ўладальнік групы можа скінуць спасылку (гл. ніжэй), каб усе нанова выбралі свае імёны.
+
+У некалькіх дарэчных месцах старонка прапануе праграму — для паведамленняў, чытання папяровых чэкаў ці напамінаў, — але нішто на старонцы яе не патрабуе.
+
+### Пераход з браўзера ў праграму
+
+У раздзеле **Захавайце гэтую групу ў праграме** сябар можа націснуць **Працягнуць у вэб-версіі праграмы** (або **Адкрыць у праграме** на Android, калі праграма ўжо ўсталяваная). Пасля ўваходу ці рэгістрацыі група з усёй гісторыяй пераходзіць у гэты акаўнт — нічога не губляецца. Гэтая спасылка спрацоўвае адзін раз і толькі некалькі хвілін. Калі ён спачатку ўсталюе праграму з Google Play, потым трэба зноў адкрыць спасылку групы ў браўзеры і націснуць **Адкрыць у праграме**.
+
+## Група ў праграме
+
+Экран групы паказвае, **Вам вінны** ці **Вы вінны** (або **Усё разлічана**), **Ваша доля ў гэтым месяцы**, план **Хто каму колькі** і спіс **Актыўнасць**.
+
+**Дадаць выдатак** адкрывае форму: **Сума**, **Апісанне**, **Дата**, **Плацельшчык** і **Падзел**: **Параўну**, **Дакладныя сумы**, **Працэнты** або **Долі**. **Сканіраваць чэк** чытае папяровы чэк і сам запаўняе суму, апісанне і дату. Змяніць ці выдаліць выдатак могуць той, хто яго дадаў, той, хто за яго заплаціў, і ўладальнік групы. Выдалены выдатак застаецца ў гісторыі з пазнакай «выдалены».
+
+## Разлік
+
+У радку **Хто каму колькі**, які вас тычыцца, націсніце **Разлічыцца**. Калі атрымальнік указаў плацёжныя даныя, вы ўбачыце кнопку або інструкцыю для аплаты. Выберыце **Як аплацілі?** і націсніце **Я заплаціў(ла)** — або **Я атрымаў(ла)**, калі плацяць вам (зручна, калі сябар аддаў наяўнымі і больш не адкрываў спасылку).
+
+Плацёж залічваецца адразу і для ўсіх. Калі яго запісалі памылкова, адкрыйце яго ў спісе актыўнасці і націсніце **Скасаваць плацёж**: ён застанецца ў гісторыі з пазнакай «скасаваны», а балансы вернуцца. Калі нехта змяніў групу, пакуль вы разлічваліся, вы ўбачыце «Балансы змяніліся» — праверце лічбы і паспрабуйце зноў.
+
+## Удзельнікі
+
+Націсніце **Удзельнікі**, каб убачыць усіх. Адзначаныя **Яшчэ не далучыўся** пакуль не выбралі сваё імя па спасылцы. Тут можна:
+
+- дадаць імя кнопкай **Дадаць**;
+- перайменаваць сябе (уладальнік можа перайменаваць любога);
+- указаць **Мае рэквізіты для аплаты** — сябры бачаць іх толькі на плацяжы, які ідзе вам;
+- выдаліць удзельніка (уладальнік) або **Выйсці з групы** (любы, акрамя ўладальніка). Баланс удзельніка спачатку павінен быць нулявым. Яго гісторыя захоўваецца.
+
+Удзельнік, якога выдаліў уладальнік, не можа вярнуцца па спасылцы.
+
+### Налады ўладальніка
+
+Той, хто стварыў групу, бачыць яшчэ **Налады ўладальніка**:
+
+- **Доступ па гасцявой спасылцы** — выключыце, каб закрыць доступ усім, у каго ёсць толькі спасылка.
+- **Скінуць спасылку** — старая спасылка перастае працаваць, і ўсе, хто далучыўся з браўзера, павінны нанова выбраць сваё імя. Карыстайцеся гэтым, калі спасылка трапіла да старонняга чалавека.
+- **Архіваваць групу** — група становіцца даступнай толькі для чытання для ўсіх, але выніковыя балансы застаюцца бачнымі. Калі балансы яшчэ не закрытыя, пацвердзіце кнопкай **Усё роўна архіваваць**.
+- **Выдаліць групу** — выдаляе групу і ўсю яе гісторыю для ўсіх. Адмяніць гэта нельга.
+
+Калі ўладальнік выдаліць свой акаўнт, яго групы таксама выдаляцца.
+
+## Далучэнне да групы ў праграме
+
+Калі сябар даслаў спасылку на групу, а ў вас ёсць праграма, націсніце **Далучыцца па спасылцы** на экране «Групы», устаўце яе ў поле **Спасылка на групу**, увядзіце **Ваша імя ў гэтай групе** і націсніце **Далучыцца**. Калі вы ўжо выбралі сваё імя ў браўзеры, не далучайцеся паўторна: адкрыйце спасылку ў браўзеры і націсніце **Адкрыць у праграме**, каб захаваць сваю гісторыю.
+
+## Паведамленні
+
+Калі нехта іншы дадае выдатак ці плацёж, вы атрымліваеце паведамленне — не часцей за адно на групу раз на некалькі хвілін. Націсканне адкрывае групу. Выключыць можна ў **Налады → Паведамленні → Актыўнасць у групах**.
+
+## Прыватнасць
+
+- **Любы, у каго ёсць спасылка, бачыць групу** — імёны ўдзельнікаў, выдаткі, сумы і гісторыю. Дзяліцеся ёю толькі з удзельнікамі групы.
+- Даныя групы **не абароненыя скразным шыфраваннем**, нават калі вы карыстаецеся скразным шыфраваннем для сваіх даных, бо сябры чытаюць іх у звычайным браўзеры.
+- Старонка ніколі не паказвае нічыйго e-mail і таго, ці карыстаецца чалавек праграмай. Вашы плацёжныя даныя бачыць толькі той, хто вам плаціць.
+- Калі спасылка выцекла, націсніце **Скінуць спасылку** або выключыце **Доступ па гасцявой спасылцы**.
 `,
     },
   ],
@@ -44269,6 +45125,113 @@ Tik op **Argumenten voor loonsverhoging** om een pdf van één pagina te downloa
 ---
 
 *Zie ook: Persoonlijke Inflatie-index | Inflatieschild | Budgetten*
+`,
+    },
+    {
+      id: '44-shared-groups',
+      title: `Gedeelde groepen — doorlopende kosten delen met vrienden die geen app nodig hebben`,
+      description: `Een groep voor het huis, een reis of de gezamenlijke boodschappen. Jij voegt de uitgaven toe, vrienden openen één link in hun browser, en iedereen ziet wie er betaald heeft, wie wie wat schuldig is, en kan met één tik verrekenen.`,
+      body: `# Gedeelde groepen — doorlopende kosten delen met vrienden die geen app nodig hebben
+
+> Een groep voor het huis, een reis of de gezamenlijke boodschappen. Jij voegt de uitgaven toe, vrienden openen één link in hun browser, en iedereen ziet wie er betaald heeft, wie wie wat schuldig is, en kan met één tik verrekenen.
+
+## Wat het is
+
+Een groep houdt een lopende stand bij van gedeelde kosten tussen meerdere mensen. Elke uitgave legt vast wie betaald heeft en hoe ze verdeeld wordt; de groep berekent ieders saldo en een eenvoudig plan „wie betaalt wie”, met weinig betalingen, dat alles gelijktrekt. Je vrienden hebben de app en een account niet nodig: ze gebruiken de groep via een link in elke browser. Groepen zijn gratis in elk abonnement.
+
+Groepsgeld blijft gescheiden van je eigen financiën: niets uit een groep verschijnt in je budgetten, analyses of portemonnee.
+
+## Waar je het vindt
+
+Tik op **Groepen** in de snelle acties op het startscherm. Je ziet je groepen en je saldo in elke groep, plus **Nieuwe groep** en **Deelnemen met link**.
+
+## Een groep maken
+
+1. Tik op **Nieuwe groep**.
+2. Vul een **Groepsnaam** in en kies eventueel een **Emoji (optioneel)**.
+3. Kies de **Valuta**. Je kunt dit alleen wijzigen tot de eerste uitgave is toegevoegd — een groep gebruikt één valuta.
+4. Controleer **Jouw naam in deze groep** — zo zien de anderen jou.
+5. Typ onder **Andere leden (optioneel)** de namen van je vrienden. Tik op **Nog een naam toevoegen** voor meer. Elke vriend kiest zijn naam als hij de link opent. Namen moeten van elkaar verschillen.
+6. Tik op **Groep maken**.
+
+Je kunt eigenaar zijn van maximaal 20 actieve groepen, met elk maximaal 50 leden.
+
+## Vrienden uitnodigen
+
+Op het groepsscherm heeft de kaart **Uitnodigen met een link** de knoppen **Link kopiëren**, **Delen** en **QR-code tonen**. Stuur de link zoals je wilt, of laat de mensen aan tafel de QR-code scannen. Eén link is genoeg voor de hele groep.
+
+## Wat vrienden in de browser zien
+
+De link opent een eenvoudige pagina in hun browser — niets installeren, niet registreren.
+
+1. **Wie ben jij?** Ze tikken op hun eigen naam in de lijst. Staan ze er niet bij, dan tikken ze op **Ik sta niet in de lijst**, vullen **Jouw naam** in en tikken op **Deelnemen**.
+2. **Bewaar je herstelcode.** Direct na het deelnemen toont de pagina één keer een persoonlijke herstelcode. Daarmee kom je als dezelfde persoon terug op een andere telefoon of na het wissen van je browsergegevens. Wie de code heeft, kan namens hen handelen, dus houd hem privé.
+3. Ze zien de **Saldo’s**, **Wie betaalt wie** en de **Geschiedenis** van de groep.
+
+Daarna kunnen ze:
+
+- **Uitgave toevoegen** — *Waarvoor?*, het bedrag, de datum en wie betaald heeft invullen, kiezen voor **Gelijk verdeeld** (aanvinken wie meedoet) of **Exacte bedragen** (invullen wat ieder schuldig is) en op **Uitgave toevoegen** tikken. Een uitgave die ze zelf hebben toegevoegd, kunnen ze met **Verwijderen** weghalen.
+- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving.
+- **Jouw betaalgegevens** — een methode kiezen, een rekening of gebruikersnaam invullen en op **Opslaan** tikken. Alleen wie hen moet betalen ziet deze gegevens, op zijn eigen betaalregel, waar mogelijk met een kant-en-klare Revolut- of PayPal-knop.
+- **Dat ben ik niet / dit apparaat vergeten** — meldt deze browser af van hun naam, bijvoorbeeld op een gedeelde telefoon of computer.
+- **Heb je een herstelcode?** — op een nieuw apparaat de **Herstelcode** invullen en op **Herstellen** tikken.
+
+Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest.
+
+Op een paar handige momenten raadt de pagina ook de app aan — voor meldingen, het lezen van papieren bonnen of herinneringen — maar niets op de pagina vereist hem.
+
+### Van de browser naar de app
+
+Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**.
+
+## Een groep gebruiken in de app
+
+Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Alles verrekend**), **Jouw deel deze maand**, het plan **Wie betaalt wie** en de lijst **Activiteit**.
+
+**Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
+
+## Verrekenen
+
+Tik in een regel van **Wie betaalt wie** die jou aangaat op **Verrekenen**. Heeft de persoon die je betaalt betaalgegevens ingevuld, dan zie je een knop of instructies om te betalen. Kies **Hoe is er betaald?** en tik op **Ik heb betaald** — of op **Ik heb het ontvangen** als jij degene bent die betaald wordt (handig als een vriend je contant betaalde en nooit meer op de link terugkwam).
+
+Een betaling telt meteen, voor iedereen. Is hij per ongeluk vastgelegd, open hem dan in de activiteitenlijst en tik op **Betaling ongeldig maken**: hij blijft in de geschiedenis staan, gemarkeerd als ongeldig, en de saldi gaan terug. Heeft iemand anders de groep gewijzigd terwijl jij verrekende, dan zie je „De saldi zijn gewijzigd” — controleer de bedragen en probeer het opnieuw.
+
+## Leden
+
+Tik op **Leden** om iedereen te zien. Leden met **Nog niet toegetreden** hebben hun naam nog niet via de link gekozen. Hier kun je:
+
+- een naam toevoegen met **Toevoegen**;
+- jezelf hernoemen (de eigenaar kan iedereen hernoemen);
+- **Mijn betaalgegevens** instellen — vrienden zien ze alleen bij een betaling die naar jou gaat;
+- een lid verwijderen (eigenaar) of **Groep verlaten** (iedereen behalve de eigenaar). Het saldo van het lid moet eerst nul zijn. Zijn geschiedenis blijft bewaard.
+
+Een lid dat door de eigenaar is verwijderd, kan niet via de link terugkomen.
+
+### Eigenaarsopties
+
+Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
+
+- **Toegang via de gastlink** — zet dit uit om iedereen te blokkeren die alleen de link heeft.
+- **Link opnieuw instellen** — de oude link werkt niet meer, en iedereen die via een browser is toegetreden moet zijn naam opnieuw kiezen. Gebruik dit als de link bij iemand terechtkwam die hem niet had mogen hebben.
+- **Groep archiveren** — de groep wordt voor iedereen alleen-lezen, maar de eindsaldi blijven zichtbaar. Staan er nog saldi open, dan bevestig je met **Toch archiveren**.
+- **Groep verwijderen** — verwijdert de groep en de hele geschiedenis voor iedereen. Dit kan niet ongedaan worden gemaakt.
+
+Verwijdert de eigenaar zijn eigen account, dan worden zijn groepen ook verwijderd.
+
+## Deelnemen aan een groep in de app
+
+Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link**, plak hem in **Groepslink**, vul **Jouw naam in deze groep** in en tik op **Deelnemen aan groep**. Heb je je naam al in de browser gekozen, neem dan niet nog eens deel: open de link in de browser en tik op **Openen in de app**, zodat je je geschiedenis houdt.
+
+## Meldingen
+
+Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hooguit één per groep per paar minuten. Tikken opent de groep. Uitzetten kan onder **Instellingen → Meldingen → Groepsactiviteit**.
+
+## Privacy
+
+- **Iedereen met de link kan de groep zien** — de namen van de leden, de uitgaven, de bedragen en de geschiedenis. Deel hem alleen met de mensen in de groep.
+- Groepsgegevens zijn **niet end-to-end versleuteld**, ook niet als je end-to-end-versleuteling voor je eigen gegevens gebruikt, omdat vrienden ze in een gewone browser lezen.
+- De pagina toont nooit iemands e-mailadres en ook niet of iemand de app gebruikt. Jouw betaalgegevens ziet alleen degene die jou betaalt.
+- Is de link uitgelekt, gebruik dan **Link opnieuw instellen** of zet **Toegang via de gastlink** uit.
 `,
     },
   ],

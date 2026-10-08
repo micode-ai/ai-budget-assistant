@@ -6,7 +6,7 @@ import { router } from 'expo-router';
  * Handles deep links from widgets and external sources (`budget://` custom
  * scheme + `https://ai-budget.pl/...` universal links), excluding
  * `subscription/success|cancel` (handled by `WebBrowser.openAuthSessionAsync`)
- * and `trip-invite/` (handled by `useTripInviteDeepLink`).
+ * `trip-invite/` (handled by `useTripInviteDeepLink`) and `groups/` (routed by the router itself).
  *
  * Gated only on `!isInitializing && isAuthenticated` — deliberately WITHOUT
  * `fontsLoaded`, unlike the notification/trip-invite flush gates. Do not
@@ -30,6 +30,11 @@ export function useGenericDeepLink(isInitializing: boolean, isAuthenticated: boo
       // Trip-invite links are handled by the dedicated capture/flush effects above —
       // ignore here to avoid a duplicate push to an unmatched "/trip-invite/<code>" route.
       if (url.includes('trip-invite/')) return;
+
+      // Group links (`groups/link?code=`, `groups/join`) resolve to their own routes through the
+      // router; pushing them here as well would open the screen twice and spend the single-use
+      // link code on the first mount, so the second would fail.
+      if (url.includes('groups/')) return;
 
       // Prevent duplicate navigation for the same URL
       if (lastHandledUrl.current === url) return;

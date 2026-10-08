@@ -155,6 +155,14 @@ export function handleNotificationResponse(
         params: { year: String(data.year ?? ''), month: String(data.month ?? '') },
       } as any);
       break;
+    case 'group_activity':
+      // Groups are not account-scoped, so there is no account to switch to first.
+      if (data.groupId) {
+        router.push(`/groups/${String(data.groupId)}` as any);
+      } else {
+        router.push('/groups' as any);
+      }
+      break;
     case 'rate_watch_hit': {
       const fromCurrency = data.fromCurrency ? String(data.fromCurrency) : undefined;
       const toCurrency = data.toCurrency ? String(data.toCurrency) : undefined;

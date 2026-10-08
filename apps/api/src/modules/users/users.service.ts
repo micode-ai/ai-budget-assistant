@@ -173,6 +173,7 @@ export class UsersService {
         notifyShoppingDeals: true,
         notifyInflationShield: true,
         notifyMonthlyWrapped: true,
+        notifyGroupActivity: true,
       },
     });
     return {
@@ -189,12 +190,13 @@ export class UsersService {
       shoppingDeals: user?.notifyShoppingDeals ?? true,
       inflationShield: user?.notifyInflationShield ?? true,
       monthlyWrapped: user?.notifyMonthlyWrapped ?? true,
+      groupActivity: user?.notifyGroupActivity ?? true,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean },
   ) {
     const data: Record<string, boolean> = {};
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
@@ -210,6 +212,7 @@ export class UsersService {
     if (prefs.shoppingDeals !== undefined) data.notifyShoppingDeals = prefs.shoppingDeals;
     if (prefs.inflationShield !== undefined) data.notifyInflationShield = prefs.inflationShield;
     if (prefs.monthlyWrapped !== undefined) data.notifyMonthlyWrapped = prefs.monthlyWrapped;
+    if (prefs.groupActivity !== undefined) data.notifyGroupActivity = prefs.groupActivity;
 
     await this.prisma.user.update({ where: { id: userId }, data });
     return this.getNotificationPreferences(userId);

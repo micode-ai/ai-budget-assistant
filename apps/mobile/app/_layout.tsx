@@ -24,6 +24,7 @@ import { useBankNotificationCapture } from '@/hooks/useBankNotificationCapture';
 import { useAuthenticatedBootstrap } from '@/hooks/useAuthenticatedBootstrap';
 import { useNotificationDeepLink } from '@/hooks/useNotificationDeepLink';
 import { useTripInviteDeepLink } from '@/hooks/useTripInviteDeepLink';
+import { useGroupLinkDeepLink } from '@/hooks/useGroupLinkDeepLink';
 import { useShareIntake } from '@/hooks/useShareIntake';
 import { useGenericDeepLink } from '@/hooks/useGenericDeepLink';
 import { useFirstRunOnboarding } from '@/hooks/useFirstRunOnboarding';
@@ -57,6 +58,7 @@ function RootNavigator() {
   // stranded by a crash must be cleaned up whether or not anyone signs in.
   useNotificationDeepLink(coldStartGateReady);
   useTripInviteDeepLink(coldStartGateReady, t);
+  useGroupLinkDeepLink(coldStartGateReady);
   useShareIntake(coldStartGateReady);
   useFirstRunOnboarding(coldStartGateReady);
   useGenericDeepLink(isInitializing, isAuthenticated);
@@ -830,6 +832,62 @@ function RootNavigator() {
           options={{
             headerShown: true,
             title: t('subscriptionManager.editTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/index"
+          options={{
+            headerShown: true,
+            title: t('groups.title'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/new"
+          options={{
+            headerShown: true,
+            title: t('groups.newTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/[id]/index"
+          options={{
+            headerShown: true,
+            title: t('groups.detailTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/[id]/expense"
+          options={{
+            headerShown: true,
+            title: t('groups.expenseAddTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/[id]/settle"
+          options={{
+            headerShown: true,
+            title: t('groups.settleTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/[id]/members"
+          options={{
+            headerShown: true,
+            title: t('groups.membersTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/join"
+          options={{
+            headerShown: true,
+            title: t('groups.joinTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="groups/link"
+          options={{
+            headerShown: true,
+            title: t('groups.linkTitle'),
           }}
         />
         <Stack.Screen

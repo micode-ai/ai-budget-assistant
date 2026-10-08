@@ -271,6 +271,11 @@ model User {
   chatConversationPins ChatConversationPin[]
   salaryProfiles       SalaryProfile[]
 
+  // Shared groups (ABA-640)
+  notifyGroupActivity     Boolean              @default(true) @map("notify_group_activity")
+  ownedExpenseGroups      ExpenseGroup[]       @relation("OwnedExpenseGroups")
+  expenseGroupMemberships ExpenseGroupMember[]
+
   // Where this signup came from, captured from the CTA query string on the visitor's
   // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
   // rather than one Json blob on purpose: the admin groups by these, and Prisma cannot
@@ -572,8 +577,8 @@ model Expense {
   encryptedPayload     String? @map("encrypted_payload")
   encryptionKeyVersion Int?    @map("encryption_key_version")
 
-  receiptImage    Bytes?  @map("receipt_image")
-  receiptMimeType String? @map("receipt_mime_type")
+  receiptImage       Bytes?  @map("receipt_image")
+  receiptMimeType    String? @map("receipt_mime_type")
   /// SHA-256 of the receipt file as scanned (base64 text) — spots a re-upload of the same file before OCR (ABA-603).
   receiptFingerprint String? @map("receipt_fingerprint")
 
@@ -2272,7 +2277,7 @@ model OfficialInflationRate {
   id            String   @id @default(uuid())
   country       String
   division      String
-  month         String   // 'YYYY-MM'
+  month         String // 'YYYY-MM'
   annualRatePct Decimal  @map("annual_rate_pct") @db.Decimal(6, 2)
   fetchedAt     DateTime @default(now()) @map("fetched_at")
 
@@ -2298,4 +2303,130 @@ model SalaryProfile {
 
   @@unique([userId, accountId])
   @@map("salary_profiles")
+}
+
+enum ExpenseGroupStatus {
+  active
+  archived
+}
+
+model ExpenseGroup {
+  id            String             @id @default(uuid())
+  name          String // 1..60, trimmed
+  emoji         String? // single grapheme, optional
+  currencyCode  String             @map("currency_code") // immutable once any expense exists
+  ownerUserId   String             @map("owner_user_id")
+  // Bearer credential for the public link: randomBytes(16).hex (128-bit, same TOKEN_BYTES as
+  // receipt-split). Stored plain because the members re-share it. Rotation = new value.
+  guestToken    String             @unique @map("guest_token")
+  guestAccess   Boolean            @default(true) @map("guest_access") // owner kill-switch
+  status        ExpenseGroupStatus @default(active)
+  // Compare-and-swap counter, bumped by EVERY ledger write inside its $transaction.
+  // A settlement must quote the version it was computed against (see "Settle-up").
+  ledgerVersion Int                @default(0) @map("ledger_version")
+  archivedAt    DateTime?          @map("archived_at")
+  createdAt     DateTime           @default(now()) @map("created_at")
+  updatedAt     DateTime           @updatedAt @map("updated_at")
+
+  owner       User                 @relation("OwnedExpenseGroups", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  members     ExpenseGroupMember[]
+  expenses    GroupExpense[]
+  settlements GroupSettlement[]
+
+  @@index([ownerUserId])
+  @@map("expense_groups")
+}
+
+model ExpenseGroupMember {
+  id             String        @id @default(uuid())
+  groupId        String        @map("group_id")
+  userId         String?       @map("user_id") // NULL = guest
+  displayName    String        @map("display_name") // 1..40, trimmed, shown to everyone with the link
+  nameKey        String        @map("name_key") // displayName.trim().toLowerCase()
+  // sha256(hex) of the guest's device secret (the cookie value). NULL = unclaimed placeholder
+  // (added by name, nobody has taken it yet). An app-user member has no secret until it
+  // also uses a browser. Never stored in plaintext.
+  claimTokenHash String?       @unique @map("claim_token_hash")
+  claimedAt      DateTime?     @map("claimed_at")
+  paymentMethod  SettleMethod? @map("payment_method") // set per group by the member themself
+  paymentHandle  String?       @map("payment_handle") // ≤ 64 chars
+  removedAt      DateTime?     @map("removed_at") // soft removal, only at zero balance
+  // True when the OWNER removed this member (not a self-leave). Such a member cannot rejoin via
+  // the link (403 GROUP_REMOVED); a self-removed one can, through the normal join checks.
+  removedByOwner Boolean       @default(false) @map("removed_by_owner")
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+
+  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
+  group           ExpenseGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  paidExpenses    GroupExpense[]      @relation("GroupExpensePayer")
+  shares          GroupExpenseShare[]
+  settlementsFrom GroupSettlement[]   @relation("GroupSettlementFrom")
+  settlementsTo   GroupSettlement[]   @relation("GroupSettlementTo")
+
+  @@unique([groupId, nameKey]) // names are the guest's only identity cue; no duplicates
+  @@unique([groupId, userId]) // one member per app user per group (NULLs distinct → many guests)
+  @@index([userId])
+  @@map("expense_group_members")
+}
+
+model GroupExpense {
+  id                String    @id @default(uuid())
+  groupId           String    @map("group_id")
+  description       String // 1..120
+  amount            Decimal   @db.Decimal(12, 2) // group currency, > 0, ≤ 1_000_000
+  date              DateTime  @db.Date
+  paidByMemberId    String    @map("paid_by_member_id")
+  splitType         ShareType @map("split_type") // reuses the trip enum
+  createdByMemberId String    @map("created_by_member_id")
+  // Idempotency: app = client UUID; guest = hidden `rid` nonce minted at form render.
+  clientRequestId   String?   @map("client_request_id")
+  deletedAt         DateTime? @map("deleted_at") // soft, shown in history, out of balances
+  deletedByMemberId String?   @map("deleted_by_member_id")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  group  ExpenseGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  paidBy ExpenseGroupMember  @relation("GroupExpensePayer", fields: [paidByMemberId], references: [id], onDelete: NoAction)
+  shares GroupExpenseShare[]
+
+  @@unique([groupId, clientRequestId])
+  @@index([groupId, deletedAt, date])
+  @@map("group_expenses")
+}
+
+model GroupExpenseShare {
+  id             String             @id @default(uuid())
+  groupExpenseId String             @map("group_expense_id")
+  memberId       String             @map("member_id")
+  shareValue     Decimal?           @map("share_value") @db.Decimal(12, 4) // raw input (exact / % / units); NULL for equal
+  shareAmount    Decimal            @map("share_amount") @db.Decimal(12, 2) // resolved by resolveShares
+  expense        GroupExpense       @relation(fields: [groupExpenseId], references: [id], onDelete: Cascade)
+  member         ExpenseGroupMember @relation(fields: [memberId], references: [id], onDelete: NoAction)
+
+  @@unique([groupExpenseId, memberId])
+  @@index([memberId])
+  @@map("group_expense_shares")
+}
+
+model GroupSettlement {
+  id                 String        @id @default(uuid())
+  groupId            String        @map("group_id")
+  fromMemberId       String        @map("from_member_id")
+  toMemberId         String        @map("to_member_id")
+  amount             Decimal       @db.Decimal(12, 2)
+  method             SettleMethod?
+  recordedByMemberId String        @map("recorded_by_member_id")
+  clientRequestId    String?       @map("client_request_id")
+  voidedAt           DateTime?     @map("voided_at")
+  voidedByMemberId   String?       @map("voided_by_member_id")
+  createdAt          DateTime      @default(now()) @map("created_at")
+
+  group ExpenseGroup       @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  from  ExpenseGroupMember @relation("GroupSettlementFrom", fields: [fromMemberId], references: [id], onDelete: NoAction)
+  to    ExpenseGroupMember @relation("GroupSettlementTo", fields: [toMemberId], references: [id], onDelete: NoAction)
+
+  @@unique([groupId, clientRequestId])
+  @@index([groupId, voidedAt])
+  @@map("group_settlements")
 }

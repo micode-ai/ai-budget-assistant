@@ -60,6 +60,7 @@ export function NotificationsSettings() {
   const [notifShoppingDeals, setNotifShoppingDeals] = useState(true);
   const [notifInflationShield, setNotifInflationShield] = useState(true);
   const [notifMonthlyWrapped, setNotifMonthlyWrapped] = useState(true);
+  const [notifGroupActivity, setNotifGroupActivity] = useState(true);
   const [notifLoading, setNotifLoading] = useState(true);
 
   const loadNotificationPreferences = useCallback(async () => {
@@ -78,6 +79,7 @@ export function NotificationsSettings() {
       setNotifShoppingDeals(prefs.shoppingDeals ?? true);
       setNotifInflationShield(prefs.inflationShield ?? true);
       setNotifMonthlyWrapped(prefs.monthlyWrapped ?? true);
+      setNotifGroupActivity(prefs.groupActivity ?? true);
     } catch (e) {
       console.error('Failed to load notification preferences:', e);
     } finally {
@@ -220,6 +222,16 @@ export function NotificationsSettings() {
     }
   };
 
+  const handleToggleGroupActivity = async (value: boolean) => {
+    setNotifGroupActivity(value);
+    try {
+      await api.updateNotificationPreferences({ groupActivity: value });
+    } catch (e) {
+      setNotifGroupActivity(!value);
+      showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
+    }
+  };
+
   const handleToggleAllNotifications = async (value: boolean) => {
     setNotifBudgetAlerts(value);
     setNotifSharedActivity(value);
@@ -234,8 +246,9 @@ export function NotificationsSettings() {
     setNotifShoppingDeals(value);
     setNotifInflationShield(value);
     setNotifMonthlyWrapped(value);
+    setNotifGroupActivity(value);
     try {
-      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value, trackingGap: value, purchaseRequests: value, tripSettleUp: value, shoppingReminders: value, shoppingDeals: value, inflationShield: value, monthlyWrapped: value });
+      await api.updateNotificationPreferences({ budgetAlerts: value, sharedAccountActivity: value, debtReminders: value, recurringExpenses: value, subscriptionRenewals: value, anomalyAlerts: value, trackingGap: value, purchaseRequests: value, tripSettleUp: value, shoppingReminders: value, shoppingDeals: value, inflationShield: value, monthlyWrapped: value, groupActivity: value });
     } catch (e) {
       setNotifBudgetAlerts(!value);
       setNotifSharedActivity(!value);
@@ -250,6 +263,7 @@ export function NotificationsSettings() {
       setNotifShoppingDeals(!value);
       setNotifInflationShield(!value);
       setNotifMonthlyWrapped(!value);
+      setNotifGroupActivity(!value);
       showAlert(t('common.error'), e instanceof Error ? e.message : t('errors.unknown'));
     }
   };
@@ -266,7 +280,7 @@ export function NotificationsSettings() {
               <Text style={styles.fieldDesc}>{t('notifications.pushNotificationsDesc')}</Text>
             </View>
             <Switch
-              value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts || notifTrackingGap || notifPurchaseRequests || notifTripSettleUp || notifShoppingReminders || notifShoppingDeals || notifInflationShield || notifMonthlyWrapped}
+              value={notifBudgetAlerts || notifSharedActivity || notifDebtReminders || notifRecurringExpenses || notifSubscriptionRenewals || notifAnomalyAlerts || notifTrackingGap || notifPurchaseRequests || notifTripSettleUp || notifShoppingReminders || notifShoppingDeals || notifInflationShield || notifMonthlyWrapped || notifGroupActivity}
               onValueChange={handleToggleAllNotifications}
               trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
               disabled={notifLoading}
@@ -463,6 +477,21 @@ export function NotificationsSettings() {
             <Switch
               value={notifMonthlyWrapped}
               onValueChange={handleToggleMonthlyWrapped}
+              trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
+              disabled={notifLoading}
+            />
+          </View>
+
+          <View style={styles.divider} />
+
+          <View style={styles.fieldRow}>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.fieldLabel}>{t('notifications.groupActivity')}</Text>
+              <Text style={styles.fieldDesc}>{t('notifications.groupActivityDesc')}</Text>
+            </View>
+            <Switch
+              value={notifGroupActivity}
+              onValueChange={handleToggleGroupActivity}
               trackColor={{ false: theme.colors.border, true: theme.colors.primary }}
               disabled={notifLoading}
             />

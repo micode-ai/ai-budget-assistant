@@ -90,8 +90,10 @@ function statusFor(p: { openedAt: Date | null; claimedAt: Date | null; settledAt
 }
 
 /**
- * The ONLY unauthenticated surface in the app. A guest has no account and never will —
- * this page is the entire product experience for them. Treat every line as
+ * The receipt-split guest page (`s/`), one of the app's three public, unauthenticated
+ * surfaces — the others are `ShoppingListGuestController` (`sl/`) and `GroupGuestController`
+ * (`g/`, ABA-640), each with its own `/api/v1` exclusion. A guest has no account and never
+ * will — this page is the entire product experience for them. Treat every line as
  * security-sensitive:
  *  - never expose accountId, another participant's name/amount, other line items, the
  *    receipt image, or anyone's email;

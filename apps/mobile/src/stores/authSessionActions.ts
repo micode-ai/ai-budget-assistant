@@ -24,6 +24,7 @@ import { usePriceHistoryStore } from './priceHistoryStore';
 import { useMerchantRulesStore } from './merchantRulesStore';
 import { useShareIntakeStore } from './shareIntakeStore';
 import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
+import { useGroupStore } from './groupStore';
 import { useChatStore } from './chatStore';
 import { useScenarioStore } from './scenarioStore';
 import * as investmentRepo from '../db/investmentRepository';
@@ -663,6 +664,7 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     useMerchantRulesStore.getState().reset();
     useShareIntakeStore.getState().reset();
     useShoppingListTemplateStore.getState().reset();
+    useGroupStore.getState().reset();
     // `accountStore` also clears this on an account switch (ABA-513) — this
     // call is deliberately redundant with that, not a duplicate to prune. A
     // conversation can carry another person's name, amounts, anything the

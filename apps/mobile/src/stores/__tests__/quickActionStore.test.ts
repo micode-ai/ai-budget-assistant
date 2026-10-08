@@ -17,6 +17,14 @@ describe('quickActionStore default resolution', () => {
     expect(vis.converter).toBe(true);
     expect(vis.transfers).toBe(true);
     expect(vis.shopping_hub).toBe(true);
+    expect(vis.groups).toBe(true);
+  });
+
+  it('inserts the groups action into an order persisted before it existed', () => {
+    const stored = JSON.stringify(QUICK_ACTION_KEYS.filter((k) => k !== 'groups'));
+    const out = resolveOrder(stored);
+    expect(out).toContain('groups');
+    expect([...out].sort()).toEqual([...QUICK_ACTION_KEYS].sort());
   });
 
   it('DEFAULT_VISIBILITY covers every key', () => {

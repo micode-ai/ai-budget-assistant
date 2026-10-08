@@ -36,10 +36,13 @@ the section you came for — it states what must not break and why. A missing se
 ## Feature pages
 
 ### Splitting a bill with people who do not have the app
-- [receipt-split](features/receipt-split.md) — guest links, the unauthenticated surface,
+- [receipt-split](features/receipt-split.md) — guest links, the `s/` unauthenticated surface,
   split-receivable accounting, payment-method resolution
 - [receipt-split-item-shares](features/receipt-split-item-shares.md) — per-line claims, shared
   lines, explicit percentages, discount scaling, guest disputes and reassignment
+- [shared-groups](features/shared-groups.md) — ongoing expense groups friends use from a browser
+  link: the standalone model, the `g/` guest surface and its security, the ledger and settle-up,
+  guest-to-account linking
 
 ### Offline-first and identity
 - [offline-first-sync](features/offline-first-sync.md) — the write/push convention, `SyncService`'s

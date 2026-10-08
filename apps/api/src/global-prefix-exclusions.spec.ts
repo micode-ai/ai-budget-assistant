@@ -2,6 +2,7 @@ import { PATH_METADATA, METHOD_METADATA } from '@nestjs/common/constants';
 import * as pathToRegexp from 'path-to-regexp';
 import { GLOBAL_PREFIX_EXCLUDED_ROUTES } from './global-prefix-exclusions';
 import { GuestController } from './modules/receipt-split/guest.controller';
+import { GroupGuestController } from './modules/groups/group-guest.controller';
 
 /**
  * `main.ts` serves every route under `api/v1` EXCEPT the ones named here. The
@@ -50,6 +51,12 @@ describe('GLOBAL_PREFIX_EXCLUDED_ROUTES', () => {
 
     const notExcluded = guestRoutes.filter((route) => !isExcluded(route));
     expect(notExcluded).toEqual([]);
+  });
+
+  it('excludes EVERY group guest route from the api/v1 prefix', () => {
+    const routes = routesOf(GroupGuestController);
+    expect(routes.length).toBeGreaterThanOrEqual(10);
+    expect(routes.filter((route) => !isExcluded(route))).toEqual([]);
   });
 
   it('excludes the QR-code group routes specifically', () => {

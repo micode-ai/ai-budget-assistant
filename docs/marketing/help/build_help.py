@@ -54,7 +54,7 @@ SECTIONS = [
     "32-safe-to-spend", "33-purchase-requests", "34-family-feed", "35-group-trip-wallet",
     "36-personal-inflation-index", "37-expense-map", "38-shopping-list", "39-wrapped",
     "40-inflation-shield", "41-receipt-price-check", "42-receipt-split",
-    "43-real-salary",
+    "43-real-salary", "44-shared-groups",
 ]
 
 HELP_NAV = {"en": "Help", "pl": "Pomoc", "de": "Hilfe", "es": "Ayuda", "fr": "Aide",

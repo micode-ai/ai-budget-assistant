@@ -69,6 +69,7 @@ export function WidgetsSettings() {
     transfers: t('dashboard.transfers'),
     subscriptions: t('subscriptionManager.title'),
     shopping_hub: t('dashboard.shoppingList'),
+    groups: t('groups.title'),
   };
 
   const widgetLabels: Record<WidgetKey, string> = {

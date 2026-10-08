@@ -16,6 +16,7 @@ export interface UpdateNotificationPreferencesDto {
   shoppingDeals?: boolean;
   inflationShield?: boolean;
   monthlyWrapped?: boolean;
+  groupActivity?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -32,4 +33,5 @@ export interface NotificationPreferencesResponse {
   shoppingDeals: boolean;
   inflationShield: boolean;
   monthlyWrapped: boolean;
+  groupActivity: boolean;
 }

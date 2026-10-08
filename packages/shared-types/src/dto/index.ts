@@ -38,3 +38,4 @@ export * from './receipt-check';
 export * from './receipt-split';
 export * from './user';
 export * from './telemetry';
+export * from './group';

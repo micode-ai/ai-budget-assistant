@@ -46,6 +46,7 @@ const SECTIONS = [
   '41-receipt-price-check',
   '42-receipt-split',
   '43-real-salary',
+  '44-shared-groups',
 ];
 
 const docsRoot = path.resolve(__dirname, '..', 'user_docs');

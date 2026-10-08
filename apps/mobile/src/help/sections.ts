@@ -51,4 +51,5 @@ export const sectionsMeta: SectionMeta[] = [
   { id: '41-receipt-price-check', icon: 'pricetag-outline', color: '#F59E0B' },
   { id: '42-receipt-split', icon: 'people-circle-outline', color: '#06B6D4' },
   { id: '43-real-salary', icon: 'trending-up-outline', color: '#0EA5E9' },
+  { id: '44-shared-groups', icon: 'people-outline', color: '#14B8A6' },
 ];

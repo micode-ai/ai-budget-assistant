@@ -21,6 +21,7 @@ const quickActionRoutes: Record<QuickActionKey, string> = {
   transfers: '/wallet/transfer',
   subscriptions: '/subscriptions',
   shopping_hub: '',
+  groups: '/groups',
 };
 
 const quickActionLabelKey: Record<QuickActionKey, string> = {
@@ -34,6 +35,7 @@ const quickActionLabelKey: Record<QuickActionKey, string> = {
   transfers: 'dashboard.transfers',
   subscriptions: 'subscriptionManager.title',
   shopping_hub: 'dashboard.shoppingList',
+  groups: 'groups.title',
 };
 
 // The two actions merged behind the `shopping_hub` button.

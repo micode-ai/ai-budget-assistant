@@ -208,6 +208,8 @@ const translations: Record<string, {
   inflationShieldBody: (product: string, monthlyChangePct: number) => string;
   monthlyWrappedTitle: () => string;
   monthlyWrappedBody: () => string;
+  groupActivityTitle: (groupName: string) => string;
+  groupActivityBody: () => string;
   possibleMergeTitle: (p: PossibleMergeParams) => string;
   possibleMergeBody: (p: PossibleMergeParams) => string;
   tripSettleUpTitle: (p: TripSettleUpParams) => string;
@@ -305,6 +307,8 @@ const translations: Record<string, {
       `${product} prices are rising ~${monthlyChangePct}%/month — now's a good time to stock up.`,
     monthlyWrappedTitle: () => 'Your month in review is ready',
     monthlyWrappedBody: () => 'Top category, biggest purchase and how it compares with last month — swipe through it.',
+    groupActivityTitle: (groupName) => `New activity in "${groupName}"`,
+    groupActivityBody: () => 'Someone added an expense or a payment. Open the group to see the balances.',
     possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
@@ -403,6 +407,8 @@ const translations: Record<string, {
       `Цены на ${product} растут примерно на ${monthlyChangePct}% в месяц — сейчас хорошее время запастись.`,
     monthlyWrappedTitle: () => 'Итоги месяца готовы',
     monthlyWrappedBody: () => 'Главная категория, самая крупная покупка и сравнение с прошлым месяцем — листайте карточки.',
+    groupActivityTitle: (groupName) => `Новая активность в «${groupName}»`,
+    groupActivityBody: () => 'Кто-то добавил расход или платёж. Откройте группу, чтобы увидеть балансы.',
     possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
@@ -501,6 +507,8 @@ const translations: Record<string, {
       `Ціни на ${product} зростають приблизно на ${monthlyChangePct}% на місяць — зараз гарний час запастися.`,
     monthlyWrappedTitle: () => 'Підсумки місяця готові',
     monthlyWrappedBody: () => 'Головна категорія, найбільша покупка й порівняння з минулим місяцем — гортайте картки.',
+    groupActivityTitle: (groupName) => `Нова активність у «${groupName}»`,
+    groupActivityBody: () => 'Хтось додав витрату або платіж. Відкрийте групу, щоб побачити баланси.',
     possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
@@ -599,6 +607,8 @@ const translations: Record<string, {
       `Ceny "${product}" rosną o ok. ${monthlyChangePct}%/miesiąc — to dobry moment, żeby zrobić zapas.`,
     monthlyWrappedTitle: () => 'Podsumowanie miesiąca gotowe',
     monthlyWrappedBody: () => 'Główna kategoria, największy zakup i porównanie z poprzednim miesiącem — przesuń karty.',
+    groupActivityTitle: (groupName) => `Nowa aktywność w „${groupName}”`,
+    groupActivityBody: () => 'Ktoś dodał wydatek lub płatność. Otwórz grupę, aby zobaczyć salda.',
     possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
@@ -697,6 +707,8 @@ const translations: Record<string, {
       `Los precios de ${product} suben ~${monthlyChangePct}%/mes — es un buen momento para abastecerte.`,
     monthlyWrappedTitle: () => 'Tu resumen del mes está listo',
     monthlyWrappedBody: () => 'Categoría principal, la compra más grande y la comparación con el mes pasado: desliza las tarjetas.',
+    groupActivityTitle: (groupName) => `Nueva actividad en «${groupName}»`,
+    groupActivityBody: () => 'Alguien añadió un gasto o un pago. Abre el grupo para ver los saldos.',
     possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
@@ -795,6 +807,8 @@ const translations: Record<string, {
       `Le prix de ${product} augmente d'environ ${monthlyChangePct}%/mois — c'est le bon moment pour faire des stocks.`,
     monthlyWrappedTitle: () => 'Le bilan de votre mois est prêt',
     monthlyWrappedBody: () => 'Catégorie principale, plus gros achat et comparaison avec le mois dernier : faites défiler les cartes.',
+    groupActivityTitle: (groupName) => `Nouvelle activité dans « ${groupName} »`,
+    groupActivityBody: () => "Quelqu'un a ajouté une dépense ou un paiement. Ouvrez le groupe pour voir les soldes.",
     possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
@@ -893,6 +907,8 @@ const translations: Record<string, {
       `Die Preise für ${product} steigen um etwa ${monthlyChangePct}%/Monat — jetzt ist ein guter Zeitpunkt zum Bevorraten.`,
     monthlyWrappedTitle: () => 'Dein Monatsrückblick ist fertig',
     monthlyWrappedBody: () => 'Top-Kategorie, größter Einkauf und der Vergleich zum Vormonat — wisch durch die Karten.',
+    groupActivityTitle: (groupName) => `Neue Aktivität in „${groupName}“`,
+    groupActivityBody: () => 'Jemand hat eine Ausgabe oder eine Zahlung hinzugefügt. Öffne die Gruppe, um die Salden zu sehen.',
     possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
@@ -991,6 +1007,8 @@ const translations: Record<string, {
       `Цэны на ${product} растуць прыблізна на ${monthlyChangePct}% у месяц — зараз добры час запасціся.`,
     monthlyWrappedTitle: () => 'Вынікі месяца гатовыя',
     monthlyWrappedBody: () => 'Галоўная катэгорыя, найбуйнейшая пакупка і параўнанне з мінулым месяцам — гартайце карткі.',
+    groupActivityTitle: (groupName) => `Новая актыўнасць у «${groupName}»`,
+    groupActivityBody: () => 'Хтосьці дадаў расход або плацёж. Адкрыйце групу, каб убачыць балансы.',
     possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
@@ -1089,6 +1107,8 @@ const translations: Record<string, {
       `De prijzen van ${product} stijgen ~${monthlyChangePct}%/maand — nu is een goed moment om voorraad in te slaan.`,
     monthlyWrappedTitle: () => 'Je maandoverzicht staat klaar',
     monthlyWrappedBody: () => 'Topcategorie, grootste aankoop en de vergelijking met vorige maand — swipe door de kaarten.',
+    groupActivityTitle: (groupName) => `Nieuwe activiteit in "${groupName}"`,
+    groupActivityBody: () => 'Iemand heeft een uitgave of betaling toegevoegd. Open de groep om de saldi te zien.',
     possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
@@ -1305,6 +1325,14 @@ export function monthlyWrappedTitle(lang: Lang): string {
 
 export function monthlyWrappedBody(lang: Lang): string {
   return t(lang).monthlyWrappedBody();
+}
+
+export function groupActivityTitle(lang: Lang, groupName: string): string {
+  return t(lang).groupActivityTitle(groupName);
+}
+
+export function groupActivityBody(lang: Lang): string {
+  return t(lang).groupActivityBody();
 }
 
 export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): string {

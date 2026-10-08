@@ -50,6 +50,7 @@ export class NotificationsService {
         notifyShoppingDeals: true,
         notifyInflationShield: true,
         notifyMonthlyWrapped: true,
+        notifyGroupActivity: true,
       },
     });
 
@@ -72,6 +73,7 @@ export class NotificationsService {
     if (notificationType === 'shopping_deal' && !user.notifyShoppingDeals) return false;
     if (notificationType === 'inflation_shield' && !user.notifyInflationShield) return false;
     if (notificationType === 'monthly_wrapped' && !user.notifyMonthlyWrapped) return false;
+    if (notificationType === 'group_activity' && !user.notifyGroupActivity) return false;
 
     if (!this.isValidExpoPushToken(user.pushToken)) {
       this.logger.warn(`Invalid push token for user ${userId}, clearing`);
@@ -119,6 +121,7 @@ export class NotificationsService {
         notifyPurchaseRequests: true,
         notifyInflationShield: true,
         notifyMonthlyWrapped: true,
+        notifyGroupActivity: true,
       },
     });
 
@@ -137,6 +140,7 @@ export class NotificationsService {
       if (notificationType === 'purchase_request_rejected' && !u.notifyPurchaseRequests) return false;
       if (notificationType === 'inflation_shield' && !u.notifyInflationShield) return false;
       if (notificationType === 'monthly_wrapped' && !u.notifyMonthlyWrapped) return false;
+      if (notificationType === 'group_activity' && !u.notifyGroupActivity) return false;
       return true;
     });
 
