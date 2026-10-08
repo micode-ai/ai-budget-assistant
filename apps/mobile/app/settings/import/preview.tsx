@@ -21,6 +21,8 @@ import { buildCommitMappingContext } from '@/features/import/buildCommitMappingC
 import { isTierRequiredError } from '@/services/importErrors';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { trackAction } from '@/services/telemetry';
+import { MIN_REPORT_EXPENSES } from '@/features/import/importReport';
+import { exitImportFlow } from '@/features/import/importExit';
 
 /** Every non-`alreadyImported` row checked — the initial/re-seeded default. */
 function seedSelected(rowsForSeed: ImportRow[]): Set<number> {
@@ -187,6 +189,12 @@ export default function ImportPreviewScreen() {
       await useExpenseStore.getState().loadExpenses({ force: true });
       await useIncomeStore.getState().loadIncomes({ force: true });
 
+      // A real statement gets the instant report (ABA-643); a handful of rows keeps the plain alert.
+      if (result.batchId && result.createdExpenses >= MIN_REPORT_EXPENSES) {
+        router.replace({ pathname: '/settings/import/report', params: { batchId: result.batchId } });
+        return;
+      }
+
       showAlert(
         t('common.done'),
         t('bankImport.summary', {
@@ -194,7 +202,7 @@ export default function ImportPreviewScreen() {
           incomes: result.createdIncomes,
           exchanges: result.createdExchanges,
         }),
-        [{ text: t('common.ok'), onPress: () => router.replace('/settings') }],
+        [{ text: t('common.ok'), onPress: exitImportFlow }],
       );
     } catch (err) {
       trackAction('import_bank', 'failed');

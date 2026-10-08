@@ -29,6 +29,14 @@ interface ImportState {
    * be an invisible loop.
    */
   aiConsentGrantedFor: string | null;
+  /**
+   * Where this import was started from. `onboarding` (the first-run screen, ABA-643) makes the
+   * post-import report finish onboarding instead of returning to settings. Deliberately NOT
+   * cleared by `reset()` — the hub calls `reset()` when it mounts, which is after the first-run
+   * screen set it; the report clears it.
+   */
+  origin: 'onboarding' | null;
+  setOrigin: (origin: 'onboarding' | null) => void;
   setPreview: (preview: BankImportPreviewResponse | null) => void;
   setFileAsset: (asset: ImportFileAsset | null) => void;
   setPickedBankId: (id: string | null) => void;
@@ -45,6 +53,8 @@ export const useImportStore = create<ImportState>((set) => ({
   pickedMappingId: null,
   pendingMapping: null,
   aiConsentGrantedFor: null,
+  origin: null,
+  setOrigin: (origin) => set({ origin }),
   setPreview: (previewData) => set({ previewData }),
   setFileAsset: (fileAsset) => set({ fileAsset }),
   setPickedBankId: (pickedBankId) => set({ pickedBankId }),

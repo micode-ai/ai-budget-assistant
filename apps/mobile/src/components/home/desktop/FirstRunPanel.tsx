@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SetupChecklist } from '@/components/home/SetupChecklist';
+import { useImportStore } from '@/stores/importStore';
 import {
   ROUTE_EXPENSE_NEW,
   ROUTE_IMPORT,
@@ -34,9 +35,9 @@ interface EntryCard {
  * is the only one of the four that is *easier* here than on a phone — the bank
  * export is on this machine, the camera and the microphone are not — and the
  * only one that turns all nine dashboard cards into real numbers in a single
- * step. The phone leads with "Scan a receipt" for the mirror-image reason, and
- * `app/get-started.tsx` keeps that opposite order untouched. The two platforms
- * disagree on purpose.
+ * step. Since ABA-643 the phone leads with the import too: three months of a
+ * statement give the instant post-import report, which is worth more on day one
+ * than a single scanned receipt.
  *
  * It became full width because a filled tile inside a 2x2 grid does not read
  * as primary at all — it reads as one of four, coloured differently.
@@ -233,7 +234,11 @@ function EntryCardView({
       // One table decides which entries open over the dashboard and which
       // replace it (`dashboardDialogs.ts`), and it is applied once, by the
       // owner of the dialog slot — so this card just names its route.
-      onPress={() => onOpenRoute(card.route)}
+      onPress={() => {
+        // An import started here returns to the dashboard, not to settings (ABA-643).
+        useImportStore.getState().setOrigin(card.route === ROUTE_IMPORT ? 'onboarding' : null);
+        onOpenRoute(card.route);
+      }}
       activeOpacity={0.85}
       accessibilityRole="button"
     >

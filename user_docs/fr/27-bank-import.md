@@ -88,3 +88,16 @@ Votre application n’est pas dans la liste ? Utilisez **Détection automatique*
 ---
 
 *Voir aussi : [Dépenses et revenus](./03-expenses-and-income.md) | [Portefeuille et change](./10-wallet-and-exchange.md) | [Paramètres](./11-settings.md)*
+
+## Le rapport après un import
+
+Quand un import apporte une vraie période d'historique (dix dépenses ou plus), l'appli ouvre un court rapport au lieu d'un simple « terminé » :
+
+- **Dépense moyenne par mois** et la période couverte par le relevé.
+- **Où est passé votre argent** — vos principales catégories, avec montants et parts.
+- **Abonnements trouvés** — des prélèvements du même montant chez le même bénéficiaire à intervalle régulier, mensuel ou hebdomadaire, que vous ne suivez pas encore.
+- **Budgets mensuels suggérés** — pour vos plus grosses catégories sans budget, d'après votre dépense mensuelle moyenne arrondie au-dessus.
+- **Doublons possibles** — même bénéficiaire et même montant à un jour d'écart. Ce sont souvent deux vrais achats : ils sont seulement signalés, jamais supprimés — mieux vaut vérifier rapidement auprès de votre banque.
+- **Où vous dépensez le plus** — vos principaux commerçants.
+
+Toutes les suggestions sont déjà cochées. Touchez **Configurer la sélection** pour créer ces budgets et suivre ces abonnements en une fois, décochez d'abord ce que vous ne voulez pas, ou touchez **Pas maintenant**. Rien n'est créé tant que vous ne touchez pas. Les montants s'affichent dans votre devise d'affichage.

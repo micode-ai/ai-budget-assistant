@@ -88,3 +88,16 @@ Las transferencias entre tus propias cuentas en la aplicación anterior se omite
 ---
 
 *Ver también: [Gastos e ingresos](./03-expenses-and-income.md) | [Cartera y cambio](./10-wallet-and-exchange.md) | [Ajustes](./11-settings.md)*
+
+## El informe tras una importación
+
+Cuando una importación trae un periodo real de historial (diez gastos o más), la app abre un breve informe en lugar de un simple «listo»:
+
+- **Gasto medio al mes** y el periodo que cubre el extracto.
+- **En qué se fue tu dinero**: tus categorías principales, con importes y porcentajes.
+- **Suscripciones encontradas**: cargos del mismo importe al mismo beneficiario con intervalo regular, mensual o semanal, que aún no sigues.
+- **Presupuestos mensuales sugeridos**: para tus categorías más grandes sin presupuesto, a partir de tu gasto medio mensual redondeado hacia arriba.
+- **Posibles duplicados**: mismo beneficiario e importe con un día de diferencia. A menudo son dos compras reales, por eso solo se muestran, nunca se eliminan; vale la pena comprobarlo con tu banco.
+- **Dónde gastas más**: tus comercios principales.
+
+Todo lo sugerido aparece ya marcado. Toca **Configurar lo seleccionado** para crear esos presupuestos y seguir esas suscripciones de una vez, desmarca antes lo que no quieras o toca **Ahora no**. No se crea nada hasta que tocas. Los importes se muestran en tu divisa de visualización.

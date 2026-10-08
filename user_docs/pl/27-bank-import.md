@@ -98,3 +98,16 @@ Twojej aplikacji nie ma na liście? Użyj **Wykryj automatycznie** na górze —
 ---
 
 *Zobacz też: [Wydatki i dochody](./03-expenses-and-income.md) | [Portfel i wymiana](./10-wallet-and-exchange.md) | [Ustawienia](./11-settings.md)*
+
+## Raport po imporcie
+
+Gdy import wnosi prawdziwy kawałek historii (co najmniej dziesięć wydatków), aplikacja zamiast zwykłego „gotowe” otwiera krótki raport:
+
+- **Średnie wydatki miesięczne** i okres, który obejmuje wyciąg.
+- **Na co poszły pieniądze** — główne kategorie z kwotami i udziałem.
+- **Znalezione subskrypcje** — płatności tej samej kwoty u tego samego odbiorcy w regularnym, miesięcznym lub tygodniowym odstępie, których jeszcze nie śledzisz.
+- **Proponowane budżety miesięczne** — dla największych kategorii bez budżetu, na podstawie średnich wydatków, zaokrąglone w górę.
+- **Możliwe duplikaty** — ten sam odbiorca i kwota w odstępie jednego dnia. Często to dwa prawdziwe zakupy, więc są tylko pokazywane, nigdy usuwane — warto szybko sprawdzić w banku.
+- **Gdzie wydajesz najwięcej** — najwięksi sprzedawcy.
+
+Wszystkie propozycje są od razu zaznaczone. Dotknij **Ustaw zaznaczone**, aby jednym ruchem utworzyć budżety i zacząć śledzić subskrypcje, wcześniej odznacz to, czego nie chcesz, albo dotknij **Nie teraz**. Nic nie powstaje, dopóki nie dotkniesz. Kwoty są pokazane w Twojej walucie wyświetlania.

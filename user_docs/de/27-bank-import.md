@@ -88,3 +88,16 @@ Ihre App fehlt in der Liste? Nutzen Sie **Automatisch erkennen** oben — unbeka
 ---
 
 *Siehe auch: [Ausgaben & Einnahmen](./03-expenses-and-income.md) | [Wallet & Tausch](./10-wallet-and-exchange.md) | [Einstellungen](./11-settings.md)*
+
+## Der Bericht nach einem Import
+
+Bringt ein Import einen echten Zeitraum mit (zehn Ausgaben oder mehr), öffnet die App statt einer einfachen „Fertig“-Meldung einen kurzen Bericht:
+
+- **Durchschnittliche Ausgaben pro Monat** und der Zeitraum des Auszugs.
+- **Wohin dein Geld ging** — deine wichtigsten Kategorien mit Beträgen und Anteilen.
+- **Gefundene Abos** — gleich hohe Abbuchungen desselben Empfängers in regelmäßigem monatlichem oder wöchentlichem Abstand, die du noch nicht verfolgst.
+- **Vorgeschlagene Monatsbudgets** — für deine größten Kategorien ohne Budget, aus deinen durchschnittlichen Monatsausgaben, aufgerundet.
+- **Mögliche Doppelbuchungen** — gleicher Empfänger und Betrag im Abstand eines Tages. Oft sind es zwei echte Käufe, deshalb werden sie nur angezeigt, nie entfernt — ein kurzer Blick bei der Bank lohnt sich.
+- **Wo du am meisten ausgibst** — deine größten Händler.
+
+Alle Vorschläge sind schon angehakt. Tippe auf **Auswahl einrichten**, um die Budgets anzulegen und die Abos auf einmal zu verfolgen, entferne vorher die Haken bei allem, was du nicht willst, oder tippe auf **Nicht jetzt**. Erst dein Tippen legt etwas an. Beträge erscheinen in deiner Anzeigewährung.

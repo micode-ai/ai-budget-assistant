@@ -7,6 +7,7 @@ import type {
   CsvImportMapping,
   CreateCsvImportMappingDto,
   ImportBatchListResponse,
+  ImportReportResponse,
   RollbackImportBatchResponse,
 } from '@budget/shared-types';
 
@@ -57,6 +58,11 @@ export const importBankApi = {
       throw new ImportRequestError(message, response.status, err.code, err.requiredTier);
     }
     return response.json();
+  },
+
+  /** The instant report for a just-committed import (ABA-643). */
+  getImportReport(batchId: string): Promise<ImportReportResponse> {
+    return httpClient.request<ImportReportResponse>(`/import/batches/${batchId}/report`);
   },
 
   importBankCommit(payload: BankImportCommitDto): Promise<BankImportCommitResponse> {

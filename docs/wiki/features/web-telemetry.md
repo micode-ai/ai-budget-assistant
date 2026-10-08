@@ -32,7 +32,8 @@ never `usePathname()`'s resolved path.
 
 **Flows are a closed list kept in two places** — mobile's `TelemetryFlow` union in
 `telemetry.types.ts` and the API's `STRING_PROPS.flow` in `telemetry.validator.ts`; a flow missing
-from the validator is silently dropped. `ios_install` (ABA-645) is the newest: `started` when the
+from the validator is silently dropped. `import_report` (ABA-643): `started` when the post-import
+report is shown, `completed` when its suggestions are applied. `ios_install` (ABA-645): `started` when the
 iPhone install card is shown, `completed` on a standalone iOS launch — the ratio is the install rate
 of the guide.
 
@@ -103,4 +104,4 @@ registration, a policy omitting the data category being collected.
 
 ## History
 
-ABA-497 · ABA-645 (`ios_install` flow).
+ABA-497 · ABA-645 (`ios_install` flow) · ABA-643 (`import_report` flow).

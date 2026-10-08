@@ -57,10 +57,11 @@ Als je je wachtwoord bent vergeten:
 
 De eerste keer dat je de app opent zonder dat er nog iets is vastgelegd, zie je een kort scherm met de vraag **"Waar wil je beginnen?"** — kies wat voor jou het snelst gaat:
 
-- **Bon scannen** — maak een foto en de app leest de winkel, het bedrag en zelfs de afzonderlijke regels voor je uit
-- **Gebruik je stem** — zeg wat je hebt uitgegeven, en de app vult de details voor je in
-- **Handmatig invoeren** — voer je eerste uitgave zelf stap voor stap in
-- **Importeer je geschiedenis** — importeer eerdere transacties uit je bankafschrift of een andere budget-app
+- **Importeer je laatste 3 maanden** (aanbevolen) — upload een bankafschrift of een export uit Monefy, Wallet of Money Manager; direct na de import zie je een rapport over waar je geld heen ging, met voorgestelde budgetten en de gevonden abonnementen
+- **Bon scannen** — maak een foto en de app leest de winkel, het bedrag en zelfs losse regels voor je uit
+- **Gebruik je stem** — zeg waar je geld aan uitgaf en de app vult de details in
+- **Handmatig invoeren** — voer je eerste uitgave zelf in, stap voor stap
+- **Bankmeldingen vastleggen** (Android) — uitgaven worden automatisch toegevoegd vanuit de meldingen van je bankapp
 
 Tik op **Dat doe ik later** als je liever eerst rondkijkt — je gaat dan direct naar je dashboard. Dit scherm verschijnt alleen totdat je je eerste transactie hebt toegevoegd; daarna zie je het niet meer.
 

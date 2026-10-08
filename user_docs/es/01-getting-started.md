@@ -57,10 +57,11 @@ Si olvidaste tu contraseña:
 
 La primera vez que abres la app sin nada registrado todavía, verás una pantalla breve que te pregunta **"¿Por dónde te gustaría empezar?"** — elige lo que te resulte más rápido:
 
-- **Escanear un recibo** — toma una foto y la app lee la tienda, el importe e incluso los artículos individuales por ti
-- **Usar tu voz** — di lo que gastaste y la app completa los detalles
-- **Escribirlo manualmente** — introduce tu primer gasto tú mismo, paso a paso
-- **Importa tu historial** — importa transacciones pasadas desde tu extracto bancario o desde otra app de presupuesto
+- **Importa tus últimos 3 meses** (recomendado): sube un extracto bancario o una exportación de Monefy, Wallet o Money Manager y, justo después, verás un informe de en qué se fue tu dinero, con presupuestos sugeridos y las suscripciones encontradas
+- **Escanear un recibo**: haz una foto y la app lee la tienda, el importe e incluso cada línea por ti
+- **Usar tu voz**: di en qué has gastado y la app completa los detalles
+- **Escribirlo manualmente**: introduce tu primer gasto tú mismo, paso a paso
+- **Captura las notificaciones del banco** (Android): los gastos se añaden solos a partir de los avisos de tu app bancaria
 
 Toca **Lo haré más tarde** si prefieres explorar primero — irás directamente a tu panel. Esta pantalla solo aparece hasta que agregues tu primera transacción; después, no volverá a mostrarse.
 

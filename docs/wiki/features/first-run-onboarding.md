@@ -4,8 +4,11 @@
 
 ## What this is
 
-A brand-new user is routed once to a get-started screen — scan a receipt, or voice, manual entry or
-import — instead of landing on an empty dashboard. On web the same problem is solved as a dashboard
+A brand-new user is routed once to a get-started screen — import the last three months of a
+statement, or scan a receipt, voice, manual entry, and on Android bank-notification capture — instead
+of landing on an empty dashboard. The import leads (ABA-643) because it shows value before effort:
+the post-import report ([bank-statement-import](bank-statement-import.md)) says where the money went
+and offers budgets and subscriptions on one tap. On web the same problem is solved as a dashboard
 state rather than a screen.
 
 ## Entry points
@@ -15,6 +18,9 @@ state rather than a screen.
 - `apps/mobile/src/hooks/useFirstRunOnboarding.ts`
 - `apps/mobile/app/get-started.tsx`
 - `apps/mobile/src/db/expenseRepository.ts` — `countTransactions`
+- `apps/mobile/src/components/onboarding/GetStartedMobile.tsx` — the entries; sets
+  `importStore.origin` for the import
+- `apps/mobile/src/features/import/importExit.ts` — where an import started here ends
 
 ## Key concepts
 
@@ -72,6 +78,12 @@ navigation in the app, on the JS thread during transition animations.
 and the entry screens are pushed on top, so acting immediately replaced the receipt screen underneath
 its own open success alert.
 
+**An import started from onboarding ends onboarding, not in settings.** `GetStartedMobile` (and the
+web `FirstRunPanel`) set `importStore.origin = 'onboarding'` for the import entry; the import hub's
+`reset()` deliberately does not clear it, and `exitImportFlow` — called by the report's Done/Not now
+and by the small-import alert — marks seen and goes to `/welcome` or the tabs, the same destination
+as `finish()`. Without it the user would land in Settings after their first import.
+
 ## Known gaps
 
 - A restored device marks onboarding seen for a different reason — see
@@ -80,5 +92,5 @@ its own open success alert.
 
 ## History
 
-The feature, plus ABA-507 (the web dashboard state, the setup checklist, and the route-to-dialog
+The feature · ABA-643 (import leads, origin hand-off to the post-import report) · ABA-507 (the web dashboard state, the setup checklist, and the route-to-dialog
 table it shares with the dashboard).

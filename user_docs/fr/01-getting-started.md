@@ -57,10 +57,11 @@ Si vous avez oublié votre mot de passe :
 
 La première fois que vous ouvrez l'application sans rien avoir encore enregistré, un court écran vous demande **"Par où voulez-vous commencer ?"** — choisissez l'option la plus rapide pour vous :
 
-- **Scanner un reçu** — prenez une photo, l'application lit le magasin, le montant et même chaque article pour vous
-- **Utiliser votre voix** — dites ce que vous avez dépensé, et l'application remplit les détails
-- **Le saisir manuellement** — saisissez vous-même votre première dépense, étape par étape
-- **Importer votre historique** — importez vos transactions passées depuis votre relevé bancaire ou une autre application de budget
+- **Importez vos 3 derniers mois** (recommandé) — importez un relevé bancaire ou un export de Monefy, Wallet ou Money Manager : juste après, un rapport montre où est passé votre argent, avec des budgets suggérés et les abonnements trouvés
+- **Scanner un reçu** — prenez une photo, l'appli lit le magasin, le montant et même chaque ligne pour vous
+- **Utiliser votre voix** — dites ce que vous avez dépensé, l'appli complète les détails
+- **Le saisir manuellement** — entrez vous-même votre première dépense, étape par étape
+- **Capturer les notifications bancaires** (Android) — les dépenses s'ajoutent automatiquement à partir des alertes de votre appli bancaire
 
 Appuyez sur **Je le ferai plus tard** si vous préférez explorer d'abord l'application — vous accéderez directement à votre tableau de bord. Cet écran n'apparaît que tant que vous n'avez pas ajouté votre première transaction ; ensuite, il ne s'affichera plus.
 

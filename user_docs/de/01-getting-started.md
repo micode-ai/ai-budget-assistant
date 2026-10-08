@@ -57,10 +57,11 @@ Wenn Sie Ihr Passwort vergessen haben:
 
 Wenn du die App zum ersten Mal öffnest und noch nichts erfasst hast, siehst du einen kurzen Bildschirm mit der Frage **"Wo möchten Sie beginnen?"** — wähle, was für dich am schnellsten geht:
 
+- **Importiere die letzten 3 Monate** (empfohlen) — lade einen Kontoauszug oder einen Export aus Monefy, Wallet oder Money Manager hoch; direkt nach dem Import siehst du einen Bericht, wohin dein Geld ging, mit Budgetvorschlägen und den gefundenen Abos
 - **Beleg scannen** — mach ein Foto, und die App liest Geschäft, Betrag und sogar einzelne Positionen für dich aus
-- **Stimme verwenden** — sag, was du ausgegeben hast, und die App füllt die Details aus
-- **Manuell eingeben** — trage deine erste Ausgabe selbst Schritt für Schritt ein
-- **Verlauf importieren** — importiere vergangene Transaktionen von deinem Kontoauszug oder einer anderen Budget-App
+- **Stimme verwenden** — sag, wofür du Geld ausgegeben hast, und die App ergänzt die Details
+- **Manuell eingeben** — erfasse deine erste Ausgabe selbst, Schritt für Schritt
+- **Bank-Benachrichtigungen erfassen** (Android) — Ausgaben werden automatisch aus den Meldungen deiner Banking-App hinzugefügt
 
 Tippe auf **Das mache ich später**, wenn du lieber zuerst alles erkunden möchtest — du gelangst direkt zu deinem Dashboard. Dieser Bildschirm erscheint nur, bis du deine erste Ausgabe hinzugefügt hast; danach wird er nicht mehr angezeigt.
 

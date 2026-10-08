@@ -101,3 +101,16 @@ Staat jouw app er niet bij? Gebruik **Automatisch detecteren** bovenaan — onbe
 ---
 
 *Zie ook: [Uitgaven & inkomsten](./03-expenses-and-income.md) | [Portemonnee & wissel](./10-wallet-and-exchange.md) | [Instellingen](./11-settings.md)*
+
+## Het rapport na een import
+
+Brengt een import een echte periode geschiedenis mee (tien uitgaven of meer), dan opent de app een kort rapport in plaats van een simpele ‘klaar’-melding:
+
+- **Gemiddeld uitgegeven per maand** en de periode van het afschrift.
+- **Waar je geld heen ging** — je belangrijkste categorieën, met bedragen en aandelen.
+- **Gevonden abonnementen** — afschrijvingen van hetzelfde bedrag bij dezelfde begunstigde met een vaste tussenpoos, maandelijks of wekelijks, die je nog niet volgt.
+- **Voorgestelde maandbudgetten** — voor je grootste categorieën zonder budget, op basis van je gemiddelde maanduitgaven, naar boven afgerond.
+- **Mogelijke dubbele afschrijvingen** — dezelfde begunstigde en hetzelfde bedrag een dag uit elkaar. Vaak zijn het twee echte aankopen, dus ze worden alleen getoond en nooit verwijderd — even nakijken bij je bank loont.
+- **Waar je het meest uitgeeft** — je grootste winkels.
+
+Alle voorstellen staan al aangevinkt. Tik op **Selectie instellen** om die budgetten in één keer aan te maken en die abonnementen te volgen, vink eerst uit wat je niet wilt, of tik op **Niet nu**. Er wordt niets aangemaakt tot je tikt. Bedragen staan in je weergavevaluta.

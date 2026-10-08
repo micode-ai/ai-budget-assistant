@@ -486,6 +486,13 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/import/report"
+          options={{
+            headerShown: true,
+            title: t('importReport.title'),
+          }}
+        />
+        <Stack.Screen
           name="settings/import/request-bank"
           options={{
             headerShown: true,

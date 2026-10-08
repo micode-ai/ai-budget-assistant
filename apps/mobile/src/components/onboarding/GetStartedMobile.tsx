@@ -1,5 +1,5 @@
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react';
-import { View, Text, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
@@ -7,6 +7,8 @@ import { useTranslation } from 'react-i18next';
 import { useFirstRunStore } from '@/stores/firstRunStore';
 import { useExpenseStore } from '@/stores/expenseStore';
 import { useIncomeStore } from '@/stores/incomeStore';
+import { useImportStore } from '@/stores/importStore';
+import { ROUTE_IMPORT } from '@/features/dashboard/dashboardDialogs';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 type IconName = keyof typeof Ionicons.glyphMap;
@@ -18,15 +20,22 @@ interface SecondaryOption {
   route: string;
 }
 
+// The headline entry is the statement import (ABA-643): three months of history give an instant
+// report — where the money went, subscriptions, possible duplicates, suggested budgets — before the
+// user has typed anything. Receipt scanning stays one tap away as the first alternative.
 const SECONDARY_OPTIONS: SecondaryOption[] = [
+  { icon: 'receipt-outline', labelKey: 'onboarding.scanReceipt', hintKey: 'onboarding.scanReceiptHint', route: '/expense/receipt' },
   { icon: 'mic-outline', labelKey: 'onboarding.useVoice', route: '/expense/voice' },
   { icon: 'create-outline', labelKey: 'onboarding.typeManually', route: '/expense/new' },
-  {
-    icon: 'cloud-download-outline',
-    labelKey: 'onboarding.bringHistory',
-    hintKey: 'onboarding.bringHistoryHint',
-    route: '/settings/import',
-  },
+  // Bank-notification capture exists only on Android (a NotificationListenerService).
+  ...(Platform.OS === 'android'
+    ? [{
+        icon: 'notifications-outline' as IconName,
+        labelKey: 'onboarding.autoCapture',
+        hintKey: 'onboarding.autoCaptureHint',
+        route: '/settings/auto-capture',
+      }]
+    : []),
 ];
 
 /**
@@ -119,6 +128,8 @@ export const GetStartedMobile = forwardRef<GetStartedHandle, GetStartedMobilePro
 
     const goTo = (route: string) => {
       markSeen();
+      // Lets the post-import report finish onboarding instead of returning to settings.
+      useImportStore.getState().setOrigin(route === ROUTE_IMPORT ? 'onboarding' : null);
       if (onSelect) onSelect(route);
       else router.push(route as any);
     };
@@ -135,18 +146,18 @@ export const GetStartedMobile = forwardRef<GetStartedHandle, GetStartedMobilePro
             <Text style={styles.subheading}>{t('onboarding.subheading')}</Text>
           </View>
 
-          {/* Primary option — scan a receipt */}
+          {/* Primary option — import the last three months of a bank statement */}
           <TouchableOpacity
             style={styles.primaryCard}
-            onPress={() => goTo('/expense/receipt')}
+            onPress={() => goTo(ROUTE_IMPORT)}
             activeOpacity={0.85}
           >
             <View style={styles.primaryIconContainer}>
-              <Ionicons name="receipt-outline" size={26} color={theme.colors.textInverse} />
+              <Ionicons name="cloud-upload-outline" size={26} color={theme.colors.textInverse} />
             </View>
             <View style={styles.primaryContent}>
-              <Text style={styles.primaryLabel}>{t('onboarding.scanReceipt')}</Text>
-              <Text style={styles.primaryHint}>{t('onboarding.scanReceiptHint')}</Text>
+              <Text style={styles.primaryLabel}>{t('onboarding.importStatement')}</Text>
+              <Text style={styles.primaryHint}>{t('onboarding.importStatementHint')}</Text>
             </View>
             <Ionicons name="chevron-forward" size={20} color={theme.colors.textInverse} />
           </TouchableOpacity>

@@ -51,6 +51,25 @@ column mapping to the next file with the same header.
 
 **Request a bank** forwards the file and name to the **ops** Telegram chat, never the user.
 
+### The report after an import (ABA-643)
+
+A commit that created at least `MIN_REPORT_EXPENSES` (10) expenses no longer ends on the
+"imported N rows" alert: `preview.tsx` replaces itself with `settings/import/report?batchId=`,
+which renders `ImportReportView` over `GET /import/batches/:id/report`. The endpoint is
+`ImportReportService` (IO, kept out of `ImportBatchesService` so the import modules that inject
+that service do not inherit an FX dependency) over the pure `buildImportReport`
+(`import-batches/import-report.util.ts`). It reads only the batch's own rows, in the caller's
+display currency, and returns: period and monthly average, categories (`rankCategories`, shared with
+Wrapped), top merchants, **subscriptions** (same normalized payee + amount + currency at a monthly
+or weekly cadence, not already tracked), **possible duplicates** (same payee + amount + currency
+within a day, inside the batch), and **budget suggestions** (top categories without an active
+budget allocation, monthly average rounded up by `niceBudget`).
+
+One tap ("Set up selected") creates the checked budgets through `budgetStore.addBudget` and tracks
+the checked subscriptions through `userSubscriptionStore.createSubscription`; nothing is created
+before it. `exitImportFlow` (`features/import/importExit.ts`) decides where the flow ends: back to
+settings, or — when `importStore.origin === 'onboarding'` — the end of onboarding.
+
 ## Invariants
 
 **Dedup keys are permanent.** `bank:<bankId>:<isoDate>:<signedAmountCents>:<sha256(desc)[0..8]>`
@@ -93,6 +112,18 @@ returns no rows and `checkExpenseBatch` needs them. Do not reintroduce per-row w
 preview, AI PDF and category-util pieces; a new concern extends one of those, not the orchestrator.
 The controller's `POST /import/bank/ai-consent` injects `ImportBankAiPreviewService` directly.
 
+**A suggested subscription's renewal date is rolled forward to today or later before it is created**
+(`rollForwardRenewal`). A statement is history, so its "next charge" is often already past, and the
+subscription manager books a renewal as an expense once that date is due — a past date would re-book
+a charge the import has just brought in.
+
+**Duplicates are only flagged, never removed, and the copy says "worth checking".** Two identical
+charges a day apart are usually two real purchases; the report cannot tell.
+
+**The subscription detector is deliberately more lenient than the anomaly one** (two monthly-spaced
+charges, not three): a three-month statement holds only two or three charges of a monthly
+subscription, and the user confirms each one before anything is tracked.
+
 ## Known gaps
 
 - ING, Millennium and Pekao are unvalidated against real exports.
@@ -103,4 +134,4 @@ The controller's `POST /import/bank/ai-consent` injects `ImportBankAiPreviewServ
 
 Wise import · ABA-126 (Polish banks) · ABA-116 (Revolut) · ABA-130 (batch history) · ABA-254
 (merchant normalization) · ABA-313 (commit dedup crash) · the service split · ABA-637 (chunked
-commit, repeated rows in one file).
+commit, repeated rows in one file) · ABA-643 (the post-import report).

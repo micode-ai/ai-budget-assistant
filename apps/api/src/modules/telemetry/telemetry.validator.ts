@@ -42,6 +42,7 @@ const STRING_PROPS: Record<string, ReadonlySet<string>> = {
     'chat_message',
     'rate_alert_create',
     'ios_install',
+    'import_report',
   ]),
   status: new Set(FUNNEL_STATUSES),
 };

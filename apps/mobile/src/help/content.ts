@@ -130,10 +130,11 @@ If you forgot your password:
 
 The first time you open the app with nothing tracked yet, you'll see a short screen asking **"Where would you like to start?"** — pick whichever is fastest for you:
 
+- **Import your last 3 months** (recommended) — upload a bank statement, or an export from Monefy, Wallet or Money Manager, and right after the import you get a report on where your money went, with suggested budgets and the subscriptions it found
 - **Scan a receipt** — snap a photo and the app reads the store, amount, and even individual line items for you
 - **Use your voice** — say what you spent, and the app fills in the details
 - **Type it manually** — enter your first expense yourself, step by step
-- **Bring your history** — import past transactions from your bank statement or another budgeting app
+- **Capture bank notifications** (Android) — expenses are added automatically from your bank app's alerts
 
 Tap **I'll do this later** if you'd rather explore first — you'll go straight to your dashboard. This screen appears only until you've added your first transaction; after that, it won't show up again.
 
@@ -3782,6 +3783,19 @@ Your app isn't on the list? Use **Auto-detect** at the top — unknown export fo
 ---
 
 *See also: Expenses & Income | Wallet & Exchange | Settings*
+
+## The report after an import
+
+When an import brings in a real stretch of history (ten expenses or more), the app opens a short report instead of a plain "done" message:
+
+- **Average spent per month** and the period the statement covers.
+- **Where your money went** — your top categories, with amounts and shares.
+- **Subscriptions found** — charges of the same amount from the same payee at a regular monthly or weekly interval that you don't track yet.
+- **Suggested monthly budgets** — for your biggest categories that have no budget yet, from your average monthly spend rounded up.
+- **Possible duplicates** — the same payee and amount a day apart. Often these are two real purchases, so they are only shown, never removed — worth a quick check with your bank.
+- **Where you spend the most** — your biggest merchants.
+
+Everything suggested starts ticked. Tap **Set up selected** to create those budgets and track those subscriptions in one go, untick anything you don't want first, or tap **Not now**. Nothing is created until you tap. Amounts are shown in your display currency.
 `,
     },
     {
@@ -5110,10 +5124,11 @@ iOS, Android, Web
 
 Когда вы впервые открываете приложение и ещё ничего не добавили, появится короткий экран с вопросом **«С чего хотите начать?»** — выберите то, что удобнее всего:
 
+- **Загрузите выписку за 3 месяца** (рекомендуем) — банковскую выписку или экспорт из Monefy, Wallet или Money Manager; сразу после импорта вы увидите отчёт, куда ушли деньги, с предложенными бюджетами и найденными подписками
 - **Сканировать чек** — сфотографируйте чек, и приложение само распознает магазин, сумму и даже отдельные позиции
-- **Использовать голос** — скажите, на что вы потратили деньги, а приложение заполнит детали
-- **Ввести вручную** — добавьте первый расход самостоятельно, шаг за шагом
-- **Перенести историю** — импортируйте прошлые операции из банковской выписки или другого приложения для учёта финансов
+- **Использовать голос** — скажите, на что потратили, и приложение заполнит детали
+- **Ввести вручную** — введите первый расход сами, шаг за шагом
+- **Перехват уведомлений банка** (Android) — расходы добавляются сами из уведомлений банковского приложения
 
 Нажмите **Сделаю это позже**, если хотите сначала осмотреться — вы сразу попадёте на главный экран. Этот экран показывается только до тех пор, пока вы не добавите первую транзакцию — после этого он больше не появится.
 
@@ -8739,6 +8754,19 @@ OCR иногда неверно читает цену, выдумывает ст
 ---
 
 *См. также: Расходы и доходы | Кошелёк и обмен | Настройки*
+
+## Отчёт после импорта
+
+Если импорт приносит настоящий отрезок истории (десять расходов и больше), вместо простого «готово» приложение открывает короткий отчёт:
+
+- **Средние траты в месяц** и период, который покрывает выписка.
+- **Куда ушли деньги** — главные категории с суммами и долями.
+- **Найденные подписки** — списания одной суммы одному получателю с регулярным интервалом, раз в месяц или в неделю, которые вы ещё не отслеживаете.
+- **Предлагаемые бюджеты на месяц** — для самых крупных категорий без бюджета, по средним тратам в месяц с округлением вверх.
+- **Возможные дубли** — тот же получатель и сумма с разницей в день. Часто это две настоящие покупки, поэтому они только показываются и никогда не удаляются — стоит быстро сверить с банком.
+- **Где вы тратите больше всего** — крупнейшие продавцы.
+
+Все предложения сразу отмечены. Нажмите **Настроить выбранное**, чтобы одним движением создать бюджеты и начать отслеживать подписки; снимите отметку с ненужного или нажмите **Не сейчас**. Пока вы не нажмёте, ничего не создаётся. Суммы показываются в вашей валюте отображения.
 `,
     },
     {
@@ -10057,10 +10085,11 @@ iOS, Android, Web
 
 Коли ви вперше відкриваєте застосунок і ще нічого не додали, з'явиться короткий екран із запитанням **«З чого хочете почати?»** — оберіть варіант, який найзручніший саме для вас:
 
-- **Сканувати чек** — сфотографуйте чек, і застосунок сам розпізнає магазин, суму та навіть окремі позиції
-- **Використати голос** — скажіть, на що ви витратили гроші, а застосунок заповнить деталі
-- **Ввести вручну** — додайте першу витрату самостійно, крок за кроком
-- **Перенести історію** — імпортуйте минулі операції з банківської виписки або іншого застосунку для бюджету
+- **Завантажте виписку за 3 місяці** (рекомендуємо) — банківську виписку або експорт з Monefy, Wallet чи Money Manager; одразу після імпорту ви побачите звіт, куди пішли гроші, із запропонованими бюджетами та знайденими підписками
+- **Сканувати чек** — сфотографуйте чек, і застосунок сам розпізнає магазин, суму й навіть окремі позиції
+- **Використати голос** — скажіть, на що витратили, і застосунок заповнить деталі
+- **Ввести вручну** — введіть першу витрату самі, крок за кроком
+- **Перехоплення сповіщень банку** (Android) — витрати додаються самі зі сповіщень банківського застосунку
 
 Натисніть **Зроблю це пізніше**, якщо хочете спершу роздивитися застосунок — ви одразу потрапите на головний екран. Цей екран з'являється лише доки ви не додасте першу транзакцію — після цього він більше не показуватиметься.
 
@@ -13656,6 +13685,19 @@ OCR іноді неправильно читає ціну, вигадує ряд
 ---
 
 *Дивіться також: Витрати і доходи | Гаманець і обмін | Налаштування*
+
+## Звіт після імпорту
+
+Якщо імпорт приносить справжній відрізок історії (десять витрат і більше), замість простого «готово» застосунок відкриває короткий звіт:
+
+- **Середні витрати на місяць** і період, який охоплює виписка.
+- **Куди пішли гроші** — головні категорії із сумами та частками.
+- **Знайдені підписки** — списання однієї суми одному отримувачу з регулярним інтервалом, раз на місяць чи на тиждень, які ви ще не відстежуєте.
+- **Запропоновані бюджети на місяць** — для найбільших категорій без бюджету, за середніми витратами на місяць з округленням угору.
+- **Можливі дублікати** — той самий отримувач і сума з різницею в день. Часто це дві справжні покупки, тому вони лише показуються й ніколи не видаляються — варто швидко звірити з банком.
+- **Де ви витрачаєте найбільше** — найбільші продавці.
+
+Усі пропозиції одразу позначені. Натисніть **Налаштувати вибране**, щоб одним рухом створити бюджети й почати відстежувати підписки; зніміть позначку з непотрібного або натисніть **Не зараз**. Доки ви не натиснете, нічого не створюється. Суми показуються у вашій валюті відображення.
 `,
     },
     {
@@ -14974,10 +15016,11 @@ Jeśli zapomniałeś hasła:
 
 Gdy pierwszy raz otwierasz aplikację i nie masz jeszcze żadnych zapisanych transakcji, zobaczysz krótki ekran z pytaniem **"Od czego chcesz zacząć?"** — wybierz opcję, która jest dla Ciebie najszybsza:
 
+- **Wgraj wyciąg z ostatnich 3 miesięcy** (polecane) — wgraj wyciąg z banku albo eksport z Monefy, Wallet czy Money Manager, a zaraz po imporcie zobaczysz raport, na co poszły pieniądze, z proponowanymi budżetami i znalezionymi subskrypcjami
 - **Zeskanuj paragon** — zrób zdjęcie, a aplikacja sama odczyta sklep, kwotę, a nawet poszczególne pozycje
 - **Użyj głosu** — powiedz, na co wydałeś pieniądze, a aplikacja uzupełni szczegóły
 - **Wpisz ręcznie** — wprowadź swój pierwszy wydatek samodzielnie, krok po kroku
-- **Zaimportuj historię** — zaimportuj wcześniejsze transakcje z wyciągu bankowego lub innej aplikacji budżetowej
+- **Przechwytuj powiadomienia z banku** (Android) — wydatki dodają się same z powiadomień aplikacji bankowej
 
 Dotknij **Zrobię to później**, jeśli wolisz najpierw rozejrzeć się po aplikacji — trafisz od razu na pulpit. Ten ekran pojawia się tylko do momentu dodania pierwszej transakcji; potem już się nie wyświetli.
 
@@ -18562,6 +18605,19 @@ Twojej aplikacji nie ma na liście? Użyj **Wykryj automatycznie** na górze —
 ---
 
 *Zobacz też: Wydatki i dochody | Portfel i wymiana | Ustawienia*
+
+## Raport po imporcie
+
+Gdy import wnosi prawdziwy kawałek historii (co najmniej dziesięć wydatków), aplikacja zamiast zwykłego „gotowe” otwiera krótki raport:
+
+- **Średnie wydatki miesięczne** i okres, który obejmuje wyciąg.
+- **Na co poszły pieniądze** — główne kategorie z kwotami i udziałem.
+- **Znalezione subskrypcje** — płatności tej samej kwoty u tego samego odbiorcy w regularnym, miesięcznym lub tygodniowym odstępie, których jeszcze nie śledzisz.
+- **Proponowane budżety miesięczne** — dla największych kategorii bez budżetu, na podstawie średnich wydatków, zaokrąglone w górę.
+- **Możliwe duplikaty** — ten sam odbiorca i kwota w odstępie jednego dnia. Często to dwa prawdziwe zakupy, więc są tylko pokazywane, nigdy usuwane — warto szybko sprawdzić w banku.
+- **Gdzie wydajesz najwięcej** — najwięksi sprzedawcy.
+
+Wszystkie propozycje są od razu zaznaczone. Dotknij **Ustaw zaznaczone**, aby jednym ruchem utworzyć budżety i zacząć śledzić subskrypcje, wcześniej odznacz to, czego nie chcesz, albo dotknij **Nie teraz**. Nic nie powstaje, dopóki nie dotkniesz. Kwoty są pokazane w Twojej walucie wyświetlania.
 `,
     },
     {
@@ -19876,10 +19932,11 @@ Wenn Sie Ihr Passwort vergessen haben:
 
 Wenn du die App zum ersten Mal öffnest und noch nichts erfasst hast, siehst du einen kurzen Bildschirm mit der Frage **"Wo möchten Sie beginnen?"** — wähle, was für dich am schnellsten geht:
 
+- **Importiere die letzten 3 Monate** (empfohlen) — lade einen Kontoauszug oder einen Export aus Monefy, Wallet oder Money Manager hoch; direkt nach dem Import siehst du einen Bericht, wohin dein Geld ging, mit Budgetvorschlägen und den gefundenen Abos
 - **Beleg scannen** — mach ein Foto, und die App liest Geschäft, Betrag und sogar einzelne Positionen für dich aus
-- **Stimme verwenden** — sag, was du ausgegeben hast, und die App füllt die Details aus
-- **Manuell eingeben** — trage deine erste Ausgabe selbst Schritt für Schritt ein
-- **Verlauf importieren** — importiere vergangene Transaktionen von deinem Kontoauszug oder einer anderen Budget-App
+- **Stimme verwenden** — sag, wofür du Geld ausgegeben hast, und die App ergänzt die Details
+- **Manuell eingeben** — erfasse deine erste Ausgabe selbst, Schritt für Schritt
+- **Bank-Benachrichtigungen erfassen** (Android) — Ausgaben werden automatisch aus den Meldungen deiner Banking-App hinzugefügt
 
 Tippe auf **Das mache ich später**, wenn du lieber zuerst alles erkunden möchtest — du gelangst direkt zu deinem Dashboard. Dieser Bildschirm erscheint nur, bis du deine erste Ausgabe hinzugefügt hast; danach wird er nicht mehr angezeigt.
 
@@ -23442,6 +23499,19 @@ Ihre App fehlt in der Liste? Nutzen Sie **Automatisch erkennen** oben — unbeka
 ---
 
 *Siehe auch: Ausgaben & Einnahmen | Wallet & Tausch | Einstellungen*
+
+## Der Bericht nach einem Import
+
+Bringt ein Import einen echten Zeitraum mit (zehn Ausgaben oder mehr), öffnet die App statt einer einfachen „Fertig“-Meldung einen kurzen Bericht:
+
+- **Durchschnittliche Ausgaben pro Monat** und der Zeitraum des Auszugs.
+- **Wohin dein Geld ging** — deine wichtigsten Kategorien mit Beträgen und Anteilen.
+- **Gefundene Abos** — gleich hohe Abbuchungen desselben Empfängers in regelmäßigem monatlichem oder wöchentlichem Abstand, die du noch nicht verfolgst.
+- **Vorgeschlagene Monatsbudgets** — für deine größten Kategorien ohne Budget, aus deinen durchschnittlichen Monatsausgaben, aufgerundet.
+- **Mögliche Doppelbuchungen** — gleicher Empfänger und Betrag im Abstand eines Tages. Oft sind es zwei echte Käufe, deshalb werden sie nur angezeigt, nie entfernt — ein kurzer Blick bei der Bank lohnt sich.
+- **Wo du am meisten ausgibst** — deine größten Händler.
+
+Alle Vorschläge sind schon angehakt. Tippe auf **Auswahl einrichten**, um die Budgets anzulegen und die Abos auf einmal zu verfolgen, entferne vorher die Haken bei allem, was du nicht willst, oder tippe auf **Nicht jetzt**. Erst dein Tippen legt etwas an. Beträge erscheinen in deiner Anzeigewährung.
 `,
     },
     {
@@ -24753,10 +24823,11 @@ Si olvidaste tu contraseña:
 
 La primera vez que abres la app sin nada registrado todavía, verás una pantalla breve que te pregunta **"¿Por dónde te gustaría empezar?"** — elige lo que te resulte más rápido:
 
-- **Escanear un recibo** — toma una foto y la app lee la tienda, el importe e incluso los artículos individuales por ti
-- **Usar tu voz** — di lo que gastaste y la app completa los detalles
-- **Escribirlo manualmente** — introduce tu primer gasto tú mismo, paso a paso
-- **Importa tu historial** — importa transacciones pasadas desde tu extracto bancario o desde otra app de presupuesto
+- **Importa tus últimos 3 meses** (recomendado): sube un extracto bancario o una exportación de Monefy, Wallet o Money Manager y, justo después, verás un informe de en qué se fue tu dinero, con presupuestos sugeridos y las suscripciones encontradas
+- **Escanear un recibo**: haz una foto y la app lee la tienda, el importe e incluso cada línea por ti
+- **Usar tu voz**: di en qué has gastado y la app completa los detalles
+- **Escribirlo manualmente**: introduce tu primer gasto tú mismo, paso a paso
+- **Captura las notificaciones del banco** (Android): los gastos se añaden solos a partir de los avisos de tu app bancaria
 
 Toca **Lo haré más tarde** si prefieres explorar primero — irás directamente a tu panel. Esta pantalla solo aparece hasta que agregues tu primera transacción; después, no volverá a mostrarse.
 
@@ -28309,6 +28380,19 @@ Las transferencias entre tus propias cuentas en la aplicación anterior se omite
 ---
 
 *Ver también: Gastos e ingresos | Cartera y cambio | Ajustes*
+
+## El informe tras una importación
+
+Cuando una importación trae un periodo real de historial (diez gastos o más), la app abre un breve informe en lugar de un simple «listo»:
+
+- **Gasto medio al mes** y el periodo que cubre el extracto.
+- **En qué se fue tu dinero**: tus categorías principales, con importes y porcentajes.
+- **Suscripciones encontradas**: cargos del mismo importe al mismo beneficiario con intervalo regular, mensual o semanal, que aún no sigues.
+- **Presupuestos mensuales sugeridos**: para tus categorías más grandes sin presupuesto, a partir de tu gasto medio mensual redondeado hacia arriba.
+- **Posibles duplicados**: mismo beneficiario e importe con un día de diferencia. A menudo son dos compras reales, por eso solo se muestran, nunca se eliminan; vale la pena comprobarlo con tu banco.
+- **Dónde gastas más**: tus comercios principales.
+
+Todo lo sugerido aparece ya marcado. Toca **Configurar lo seleccionado** para crear esos presupuestos y seguir esas suscripciones de una vez, desmarca antes lo que no quieras o toca **Ahora no**. No se crea nada hasta que tocas. Los importes se muestran en tu divisa de visualización.
 `,
     },
     {
@@ -29619,10 +29703,11 @@ Si vous avez oublié votre mot de passe :
 
 La première fois que vous ouvrez l'application sans rien avoir encore enregistré, un court écran vous demande **"Par où voulez-vous commencer ?"** — choisissez l'option la plus rapide pour vous :
 
-- **Scanner un reçu** — prenez une photo, l'application lit le magasin, le montant et même chaque article pour vous
-- **Utiliser votre voix** — dites ce que vous avez dépensé, et l'application remplit les détails
-- **Le saisir manuellement** — saisissez vous-même votre première dépense, étape par étape
-- **Importer votre historique** — importez vos transactions passées depuis votre relevé bancaire ou une autre application de budget
+- **Importez vos 3 derniers mois** (recommandé) — importez un relevé bancaire ou un export de Monefy, Wallet ou Money Manager : juste après, un rapport montre où est passé votre argent, avec des budgets suggérés et les abonnements trouvés
+- **Scanner un reçu** — prenez une photo, l'appli lit le magasin, le montant et même chaque ligne pour vous
+- **Utiliser votre voix** — dites ce que vous avez dépensé, l'appli complète les détails
+- **Le saisir manuellement** — entrez vous-même votre première dépense, étape par étape
+- **Capturer les notifications bancaires** (Android) — les dépenses s'ajoutent automatiquement à partir des alertes de votre appli bancaire
 
 Appuyez sur **Je le ferai plus tard** si vous préférez explorer d'abord l'application — vous accéderez directement à votre tableau de bord. Cet écran n'apparaît que tant que vous n'avez pas ajouté votre première transaction ; ensuite, il ne s'affichera plus.
 
@@ -33173,6 +33258,19 @@ Votre application n’est pas dans la liste ? Utilisez **Détection automatique*
 ---
 
 *Voir aussi : Dépenses et revenus | Portefeuille et change | Paramètres*
+
+## Le rapport après un import
+
+Quand un import apporte une vraie période d'historique (dix dépenses ou plus), l'appli ouvre un court rapport au lieu d'un simple « terminé » :
+
+- **Dépense moyenne par mois** et la période couverte par le relevé.
+- **Où est passé votre argent** — vos principales catégories, avec montants et parts.
+- **Abonnements trouvés** — des prélèvements du même montant chez le même bénéficiaire à intervalle régulier, mensuel ou hebdomadaire, que vous ne suivez pas encore.
+- **Budgets mensuels suggérés** — pour vos plus grosses catégories sans budget, d'après votre dépense mensuelle moyenne arrondie au-dessus.
+- **Doublons possibles** — même bénéficiaire et même montant à un jour d'écart. Ce sont souvent deux vrais achats : ils sont seulement signalés, jamais supprimés — mieux vaut vérifier rapidement auprès de votre banque.
+- **Où vous dépensez le plus** — vos principaux commerçants.
+
+Toutes les suggestions sont déjà cochées. Touchez **Configurer la sélection** pour créer ces budgets et suivre ces abonnements en une fois, décochez d'abord ce que vous ne voulez pas, ou touchez **Pas maintenant**. Rien n'est créé tant que vous ne touchez pas. Les montants s'affichent dans votre devise d'affichage.
 `,
     },
     {
@@ -34483,10 +34581,11 @@ iOS, Android, Web
 
 Калі вы ўпершыню адкрываеце праграму і яшчэ нічога не дадалі, з'явіцца кароткі экран з пытаннем **«З чаго хочаце пачаць?»** — выберыце варыянт, які найбольш зручны для вас:
 
+- **Загрузіце выпіску за 3 месяцы** (раім) — банкаўскую выпіску або экспарт з Monefy, Wallet ці Money Manager; адразу пасля імпарту вы ўбачыце справаздачу, куды пайшлі грошы, з прапанаванымі бюджэтамі і знойдзенымі падпіскамі
 - **Сканаваць чэк** — сфатаграфуйце чэк, і праграма сама распазнае краму, суму і нават асобныя пазіцыі
-- **Выкарыстаць голас** — скажыце, на што вы патрацілі грошы, а праграма запоўніць дэталі
-- **Увесці ўручную** — дадайце першы выдатак самастойна, крок за крокам
-- **Перанесці гісторыю** — імпартуйце мінулыя аперацыі з банкаўскай выпіскі ці іншай праграмы для бюджэту
+- **Выкарыстаць голас** — скажыце, на што выдаткавалі, і праграма запоўніць дэталі
+- **Увесці ўручную** — увядзіце першы выдатак самі, крок за крокам
+- **Перахоп апавяшчэнняў банка** (Android) — выдаткі дадаюцца самі з апавяшчэнняў банкаўскай праграмы
 
 Націсніце **Зраблю гэта пазней**, калі хочаце спачатку агледзецца ў праграме — вы адразу трапіце на галоўны экран. Гэты экран з'яўляецца толькі пакуль вы не дадасце першую транзакцыю — пасля гэтага ён больш не паказваецца.
 
@@ -38012,6 +38111,19 @@ OCR часам няправільна чытае цану, выдумляе ра
 ---
 
 *Гл. таксама: Выдаткі і даходы | Кашалёк і абмен | Налады*
+
+## Справаздача пасля імпарту
+
+Калі імпарт прыносіць сапраўдны адрэзак гісторыі (дзесяць выдаткаў і больш), замест простага «гатова» праграма адкрывае кароткую справаздачу:
+
+- **Сярэднія выдаткі за месяц** і перыяд, які ахоплівае выпіска.
+- **Куды пайшлі грошы** — галоўныя катэгорыі з сумамі і долямі.
+- **Знойдзеныя падпіскі** — спісанні адной сумы аднаму атрымальніку з рэгулярным інтэрвалам, раз на месяц ці на тыдзень, якія вы яшчэ не адсочваеце.
+- **Прапанаваныя бюджэты на месяц** — для найбуйнейшых катэгорый без бюджэту, па сярэдніх выдатках за месяц з акругленнем уверх.
+- **Магчымыя дублі** — той жа атрымальнік і сума з розніцай у дзень. Часта гэта дзве сапраўдныя пакупкі, таму яны толькі паказваюцца і ніколі не выдаляюцца — варта хутка звярыць з банкам.
+- **Дзе вы выдаткоўваеце найбольш** — найбуйнейшыя прадаўцы.
+
+Усе прапановы адразу адзначаныя. Націсніце **Наладзіць выбранае**, каб адным рухам стварыць бюджэты і пачаць адсочваць падпіскі; зніміце адзнаку з непатрэбнага або націсніце **Не зараз**. Пакуль вы не націснеце, нічога не ствараецца. Сумы паказваюцца ў вашай валюце адлюстравання.
 `,
     },
     {
@@ -39311,10 +39423,11 @@ Als je je wachtwoord bent vergeten:
 
 De eerste keer dat je de app opent zonder dat er nog iets is vastgelegd, zie je een kort scherm met de vraag **"Waar wil je beginnen?"** — kies wat voor jou het snelst gaat:
 
-- **Bon scannen** — maak een foto en de app leest de winkel, het bedrag en zelfs de afzonderlijke regels voor je uit
-- **Gebruik je stem** — zeg wat je hebt uitgegeven, en de app vult de details voor je in
-- **Handmatig invoeren** — voer je eerste uitgave zelf stap voor stap in
-- **Importeer je geschiedenis** — importeer eerdere transacties uit je bankafschrift of een andere budget-app
+- **Importeer je laatste 3 maanden** (aanbevolen) — upload een bankafschrift of een export uit Monefy, Wallet of Money Manager; direct na de import zie je een rapport over waar je geld heen ging, met voorgestelde budgetten en de gevonden abonnementen
+- **Bon scannen** — maak een foto en de app leest de winkel, het bedrag en zelfs losse regels voor je uit
+- **Gebruik je stem** — zeg waar je geld aan uitgaf en de app vult de details in
+- **Handmatig invoeren** — voer je eerste uitgave zelf in, stap voor stap
+- **Bankmeldingen vastleggen** (Android) — uitgaven worden automatisch toegevoegd vanuit de meldingen van je bankapp
 
 Tik op **Dat doe ik later** als je liever eerst rondkijkt — je gaat dan direct naar je dashboard. Dit scherm verschijnt alleen totdat je je eerste transactie hebt toegevoegd; daarna zie je het niet meer.
 
@@ -42944,6 +43057,19 @@ Staat jouw app er niet bij? Gebruik **Automatisch detecteren** bovenaan — onbe
 ---
 
 *Zie ook: Uitgaven & inkomsten | Portemonnee & wissel | Instellingen*
+
+## Het rapport na een import
+
+Brengt een import een echte periode geschiedenis mee (tien uitgaven of meer), dan opent de app een kort rapport in plaats van een simpele ‘klaar’-melding:
+
+- **Gemiddeld uitgegeven per maand** en de periode van het afschrift.
+- **Waar je geld heen ging** — je belangrijkste categorieën, met bedragen en aandelen.
+- **Gevonden abonnementen** — afschrijvingen van hetzelfde bedrag bij dezelfde begunstigde met een vaste tussenpoos, maandelijks of wekelijks, die je nog niet volgt.
+- **Voorgestelde maandbudgetten** — voor je grootste categorieën zonder budget, op basis van je gemiddelde maanduitgaven, naar boven afgerond.
+- **Mogelijke dubbele afschrijvingen** — dezelfde begunstigde en hetzelfde bedrag een dag uit elkaar. Vaak zijn het twee echte aankopen, dus ze worden alleen getoond en nooit verwijderd — even nakijken bij je bank loont.
+- **Waar je het meest uitgeeft** — je grootste winkels.
+
+Alle voorstellen staan al aangevinkt. Tik op **Selectie instellen** om die budgetten in één keer aan te maken en die abonnementen te volgen, vink eerst uit wat je niet wilt, of tik op **Niet nu**. Er wordt niets aangemaakt tot je tikt. Bedragen staan in je weergavevaluta.
 `,
     },
     {

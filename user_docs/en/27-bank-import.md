@@ -101,3 +101,16 @@ Your app isn't on the list? Use **Auto-detect** at the top — unknown export fo
 ---
 
 *See also: [Expenses & Income](./03-expenses-and-income.md) | [Wallet & Exchange](./10-wallet-and-exchange.md) | [Settings](./11-settings.md)*
+
+## The report after an import
+
+When an import brings in a real stretch of history (ten expenses or more), the app opens a short report instead of a plain "done" message:
+
+- **Average spent per month** and the period the statement covers.
+- **Where your money went** — your top categories, with amounts and shares.
+- **Subscriptions found** — charges of the same amount from the same payee at a regular monthly or weekly interval that you don't track yet.
+- **Suggested monthly budgets** — for your biggest categories that have no budget yet, from your average monthly spend rounded up.
+- **Possible duplicates** — the same payee and amount a day apart. Often these are two real purchases, so they are only shown, never removed — worth a quick check with your bank.
+- **Where you spend the most** — your biggest merchants.
+
+Everything suggested starts ticked. Tap **Set up selected** to create those budgets and track those subscriptions in one go, untick anything you don't want first, or tap **Not now**. Nothing is created until you tap. Amounts are shown in your display currency.

@@ -57,10 +57,11 @@ Jeśli zapomniałeś hasła:
 
 Gdy pierwszy raz otwierasz aplikację i nie masz jeszcze żadnych zapisanych transakcji, zobaczysz krótki ekran z pytaniem **"Od czego chcesz zacząć?"** — wybierz opcję, która jest dla Ciebie najszybsza:
 
+- **Wgraj wyciąg z ostatnich 3 miesięcy** (polecane) — wgraj wyciąg z banku albo eksport z Monefy, Wallet czy Money Manager, a zaraz po imporcie zobaczysz raport, na co poszły pieniądze, z proponowanymi budżetami i znalezionymi subskrypcjami
 - **Zeskanuj paragon** — zrób zdjęcie, a aplikacja sama odczyta sklep, kwotę, a nawet poszczególne pozycje
 - **Użyj głosu** — powiedz, na co wydałeś pieniądze, a aplikacja uzupełni szczegóły
 - **Wpisz ręcznie** — wprowadź swój pierwszy wydatek samodzielnie, krok po kroku
-- **Zaimportuj historię** — zaimportuj wcześniejsze transakcje z wyciągu bankowego lub innej aplikacji budżetowej
+- **Przechwytuj powiadomienia z banku** (Android) — wydatki dodają się same z powiadomień aplikacji bankowej
 
 Dotknij **Zrobię to później**, jeśli wolisz najpierw rozejrzeć się po aplikacji — trafisz od razu na pulpit. Ten ekran pojawia się tylko do momentu dodania pierwszej transakcji; potem już się nie wyświetli.
 

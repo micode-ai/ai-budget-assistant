@@ -57,10 +57,11 @@ If you forgot your password:
 
 The first time you open the app with nothing tracked yet, you'll see a short screen asking **"Where would you like to start?"** — pick whichever is fastest for you:
 
+- **Import your last 3 months** (recommended) — upload a bank statement, or an export from Monefy, Wallet or Money Manager, and right after the import you get a report on where your money went, with suggested budgets and the subscriptions it found
 - **Scan a receipt** — snap a photo and the app reads the store, amount, and even individual line items for you
 - **Use your voice** — say what you spent, and the app fills in the details
 - **Type it manually** — enter your first expense yourself, step by step
-- **Bring your history** — import past transactions from your bank statement or another budgeting app
+- **Capture bank notifications** (Android) — expenses are added automatically from your bank app's alerts
 
 Tap **I'll do this later** if you'd rather explore first — you'll go straight to your dashboard. This screen appears only until you've added your first transaction; after that, it won't show up again.
 

@@ -3511,10 +3511,11 @@ Si olvidaste tu contraseña:
 
 La primera vez que abres la app sin nada registrado todavía, verás una pantalla breve que te pregunta **"¿Por dónde te gustaría empezar?"** — elige lo que te resulte más rápido:
 
-- **Escanear un recibo** — toma una foto y la app lee la tienda, el importe e incluso los artículos individuales por ti
-- **Usar tu voz** — di lo que gastaste y la app completa los detalles
-- **Escribirlo manualmente** — introduce tu primer gasto tú mismo, paso a paso
-- **Importa tu historial** — importa transacciones pasadas desde tu extracto bancario o desde otra app de presupuesto
+- **Importa tus últimos 3 meses** (recomendado): sube un extracto bancario o una exportación de Monefy, Wallet o Money Manager y, justo después, verás un informe de en qué se fue tu dinero, con presupuestos sugeridos y las suscripciones encontradas
+- **Escanear un recibo**: haz una foto y la app lee la tienda, el importe e incluso cada línea por ti
+- **Usar tu voz**: di en qué has gastado y la app completa los detalles
+- **Escribirlo manualmente**: introduce tu primer gasto tú mismo, paso a paso
+- **Captura las notificaciones del banco** (Android): los gastos se añaden solos a partir de los avisos de tu app bancaria
 
 Toca **Lo haré más tarde** si prefieres explorar primero — irás directamente a tu panel. Esta pantalla solo aparece hasta que agregues tu primera transacción; después, no volverá a mostrarse.
 
@@ -6951,6 +6952,19 @@ Las transferencias entre tus propias cuentas en la aplicación anterior se omite
 ---
 
 *Ver también: [Gastos e ingresos](./03-expenses-and-income.md) | [Cartera y cambio](./10-wallet-and-exchange.md) | [Ajustes](./11-settings.md)*
+
+## El informe tras una importación
+
+Cuando una importación trae un periodo real de historial (diez gastos o más), la app abre un breve informe en lugar de un simple «listo»:
+
+- **Gasto medio al mes** y el periodo que cubre el extracto.
+- **En qué se fue tu dinero**: tus categorías principales, con importes y porcentajes.
+- **Suscripciones encontradas**: cargos del mismo importe al mismo beneficiario con intervalo regular, mensual o semanal, que aún no sigues.
+- **Presupuestos mensuales sugeridos**: para tus categorías más grandes sin presupuesto, a partir de tu gasto medio mensual redondeado hacia arriba.
+- **Posibles duplicados**: mismo beneficiario e importe con un día de diferencia. A menudo son dos compras reales, por eso solo se muestran, nunca se eliminan; vale la pena comprobarlo con tu banco.
+- **Dónde gastas más**: tus comercios principales.
+
+Todo lo sugerido aparece ya marcado. Toca **Configurar lo seleccionado** para crear esos presupuestos y seguir esas suscripciones de una vez, desmarca antes lo que no quieras o toca **Ahora no**. No se crea nada hasta que tocas. Los importes se muestran en tu divisa de visualización.
 
 ## Datos de referencia
 URL: https://ai-budget.pl/help/es/reference-data/

@@ -168,3 +168,66 @@ export interface ImportBatchListResponse {
 export interface RollbackImportBatchResponse {
   rolledBack: number;
 }
+
+// ── Import report (ABA-643) ──────────────────────────────────
+// What a just-committed import says about the user's money, shown right after the import
+// (the first-run "upload 3 months" path). Server returns facts in the caller's display currency;
+// the client narrates them and turns suggestions into budgets/subscriptions on a tap.
+
+export interface ImportReportCategory {
+  categoryId: string | null;
+  name: string;
+  color: string | null;
+  amount: number;          // in baseCurrency
+  percentage: number;      // share of the batch's spend
+}
+
+export interface ImportReportMerchant {
+  name: string;
+  visits: number;
+  amount: number;          // in baseCurrency
+}
+
+export interface ImportReportSubscription {
+  name: string;            // the payee as it appears on the statement
+  amount: number;          // in the charge's own currency — a subscription is tracked in it
+  currencyCode: string;
+  billingCycle: 'monthly' | 'weekly';
+  charges: number;
+  lastDate: string;        // 'YYYY-MM-DD'
+  nextRenewalDate: string; // 'YYYY-MM-DD', lastDate + one cycle
+  categoryId: string | null;
+}
+
+export interface ImportReportDuplicate {
+  payee: string;
+  amount: number;          // in the charge's own currency
+  currencyCode: string;
+  date: string;            // 'YYYY-MM-DD' of the first of the pair
+  expenseIds: [string, string];
+}
+
+export interface ImportReportBudgetSuggestion {
+  categoryId: string;
+  name: string;
+  monthlyAmount: number;   // rounded-up monthly average, in baseCurrency
+}
+
+export interface ImportReportResponse {
+  batchId: string;
+  baseCurrency: string;
+  fxApproximate: boolean;
+  hasEnoughData: boolean;  // false below the threshold → the client skips the report
+  periodStart: string | null; // 'YYYY-MM-DD'
+  periodEnd: string | null;
+  monthsCovered: number;
+  expenseCount: number;
+  totalSpent: number;
+  totalIncome: number;
+  monthlyAverageSpend: number;
+  categories: ImportReportCategory[];
+  topMerchants: ImportReportMerchant[];
+  subscriptions: ImportReportSubscription[];   // not already tracked
+  duplicates: ImportReportDuplicate[];
+  budgetSuggestions: ImportReportBudgetSuggestion[]; // categories without an active budget
+}
