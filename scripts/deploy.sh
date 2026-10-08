@@ -13,6 +13,15 @@ fi
 
 cd "$APP_DIR"
 
+# Inbound e-mail container (ABA-644). It sits behind the `inbound-mail` compose profile, so the
+# regular deploy never starts it and host port 25 stays closed. It is built/started here ONLY
+# when .env.production carries INBOUND_MAIL_CONTAINER=true (set by hand per docs/ops/inbound-mail.md).
+inbound_mail_enabled() {
+  local v
+  v="$(grep -E '^INBOUND_MAIL_CONTAINER=' "$ENV_FILE" 2>/dev/null | tail -1 | cut -d= -f2- | tr -d '"'"'"' \r' || true)"
+  [[ "$v" == "true" ]]
+}
+
 if [[ ! -f "$ENV_FILE" ]]; then
   echo "ERROR: $ENV_FILE not found in $APP_DIR" >&2
   exit 1
@@ -31,6 +40,10 @@ docker container prune -f 2>/dev/null || true
 
 echo "=== Building containers ==="
 $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile migrate build api admin migrator
+if inbound_mail_enabled; then
+  echo "=== Building inbound-mail (INBOUND_MAIL_CONTAINER=true) ==="
+  $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile inbound-mail build inbound-mail
+fi
 
 echo "=== Starting infrastructure ==="
 $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d postgres redis
@@ -56,6 +69,15 @@ $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile migrate run --rm migrato
 
 echo "=== Starting application services ==="
 $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" up -d --force-recreate api admin
+
+# No --force-recreate: compose recreates it only when its image or config changed, so an
+# unrelated deploy does not drop in-flight SMTP sessions (senders would just retry, but why).
+if inbound_mail_enabled; then
+  echo "=== Starting inbound-mail ==="
+  $DC -f "$COMPOSE_FILE" --env-file "$ENV_FILE" --profile inbound-mail up -d inbound-mail
+else
+  echo "inbound-mail not enabled (INBOUND_MAIL_CONTAINER != true) - port 25 stays closed."
+fi
 
 echo "=== Waiting for services to start ==="
 sleep 10

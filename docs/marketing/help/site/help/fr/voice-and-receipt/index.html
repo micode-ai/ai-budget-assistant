@@ -202,6 +202,50 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ol>
 <p>Vous pouvez partager des <strong>images et des PDF</strong>, jusqu&rsquo;à <strong>10 fichiers à la fois</strong> (PDF jusqu&rsquo;à 10 Mo). Plusieurs fichiers deviennent des dépenses séparées, l&rsquo;une après l&rsquo;autre : le titre indique la progression (« Ticket 2 sur 5 ») et <strong>Suivant</strong> passe au fichier suivant. Si un fichier ne peut pas être lu, choisissez <strong>Passer</strong> ou <strong>Saisir à la main</strong>. À la fermeture, l&rsquo;app demande confirmation avant d&rsquo;abandonner les fichiers en attente. Chaque fichier compte comme un scan de ticket dans votre limite d&rsquo;IA ; si elle est atteinte, les fichiers restants attendent.</p>
 <p>Le partage fonctionne uniquement sur Android. Sur iPhone et dans l&rsquo;app web, utilisez <strong>Scanner un reçu</strong>.</p>
+<h3>Transférer ses e-reçus par e-mail</h3>
+<p>Beaucoup de magasins et de boutiques en ligne vous envoient un reçu ou une confirmation de commande par e-mail. Au lieu de le scanner, vous pouvez le transférer vers votre propre adresse privée : chaque e-mail transféré apparaît dans l&rsquo;app comme une dépense qui vous attend. <strong>Rien n&rsquo;est enregistré avant votre confirmation.</strong></p>
+<blockquote>
+<p><strong>Déploiement progressif.</strong> Cette fonctionnalité est activée peu à peu. Si vous voyez <strong>Reçus par e-mail</strong> dans les <strong>Paramètres</strong>, vous pouvez l&rsquo;utiliser. Sinon, elle n&rsquo;est pas encore arrivée sur votre compte.</p>
+</blockquote>
+<h4>Votre adresse</h4>
+<ol>
+<li>Ouvrez <strong>Paramètres</strong> → <strong>Reçus par e-mail</strong></li>
+<li>Appuyez sur <strong>Créer mon adresse</strong> (seuls les propriétaires et les éditeurs du compte peuvent le faire)</li>
+<li>Sous <strong>Votre adresse privée</strong>, appuyez sur <strong>Copier</strong></li>
+<li>Sous <strong>Ajouter les reçus à</strong>, choisissez le compte où les reçus confirmés sont enregistrés (seuls les comptes que vous pouvez modifier sont proposés)</li>
+</ol>
+<p>L&rsquo;adresse vous appartient, pas au compte : les membres d&rsquo;un compte partagé ne voient jamais les e-mails que vous transférez.</p>
+<h4>Configurer le transfert dans Gmail</h4>
+<ol>
+<li>Dans Gmail, ouvrez <strong>Paramètres</strong> → <strong>Voir tous les paramètres</strong> → <strong>Transfert et POP/IMAP</strong> → <strong>Ajouter une adresse de transfert</strong> et collez votre adresse privée</li>
+<li>Gmail envoie un code de confirmation à cette adresse. Il apparaît dans l&rsquo;app, dans <strong>Paramètres</strong> → <strong>Reçus par e-mail</strong>, sur une carte <strong>Code de confirmation Gmail</strong> avec un bouton <strong>Copier</strong>. Saisissez-le dans Gmail. Le code n&rsquo;est affiché que dans l&rsquo;app — jamais dans une notification — et seulement pendant environ 30 minutes ; s&rsquo;il a disparu, demandez à Gmail de le renvoyer</li>
+<li>Créez un <strong>filtre</strong> (<strong>Paramètres</strong> → <strong>Filtres et adresses bloquées</strong>) pour l&rsquo;adresse de l&rsquo;expéditeur du magasin ou un objet tel que « reçu » ou « commande », puis choisissez <strong>Le transférer à</strong> votre adresse</li>
+</ol>
+<p>Ne transférez pas tout votre courrier : utilisez un filtre, pour votre confidentialité et pour que les messages sans rapport n&rsquo;épuisent pas votre limite d&rsquo;IA.</p>
+<h4>Configurer le transfert dans Outlook</h4>
+<ol>
+<li>Dans Outlook, ouvrez <strong>Paramètres</strong> → <strong>Courrier</strong> → <strong>Règles</strong> et ajoutez une règle pour les messages du magasin ou dont l&rsquo;objet contient « reçu »</li>
+<li>Choisissez l&rsquo;action <strong>Transférer à</strong> et saisissez votre adresse privée</li>
+</ol>
+<p>Certains comptes Outlook.com et Microsoft 365 bloquent le transfert automatique vers des adresses externes. Si c&rsquo;est votre cas, transférez chaque reçu manuellement — un transfert manuel depuis votre téléphone fonctionne tout aussi bien.</p>
+<h4>Confirmer un reçu</h4>
+<p>Quand un reçu transféré a été lu, vous recevez une notification et un bandeau s&rsquo;affiche sur l&rsquo;écran Transactions : <strong>Reçus par e-mail à confirmer : N</strong>. Vous pouvez aussi ouvrir la liste à tout moment via <strong>Paramètres</strong> → <strong>Reçus par e-mail</strong> → <strong>Ouvrir la boîte des reçus par e-mail</strong>.</p>
+<ul>
+<li>L&rsquo;onglet <strong>À confirmer</strong> liste les reçus qui vous attendent. Appuyez sur l&rsquo;un d&rsquo;eux pour ouvrir l&rsquo;écran habituel de confirmation du reçu, vérifiez les informations et appuyez sur <strong>Enregistrer la dépense</strong></li>
+<li>Si le reçu ressemble à une dépense que vous avez déjà, vous voyez le même avertissement de doublon que pour un scan, y compris <strong>Fusionner en une seule dépense</strong></li>
+<li>Appuyez sur <strong>Écarter</strong> pour abandonner un reçu sans l&rsquo;enregistrer</li>
+<li>L&rsquo;onglet <strong>Traités</strong> montre ce qui a été ignoré : un reçu que vous avez déjà, un e-mail sans reçu, un reçu illisible ou un reçu non lu parce que votre limite d&rsquo;IA était atteinte — le cas échéant, appuyez sur <strong>Réessayer</strong></li>
+</ul>
+<p>Chaque e-reçu lu compte comme un scan de reçu dans votre limite d&rsquo;IA ; les doublons et les e-mails sans reçu sont ignorés sans l&rsquo;utiliser. Si un magasin n&rsquo;envoie qu&rsquo;un lien vers le reçu, transférez plutôt le PDF : les liens ne sont jamais ouverts. Une photo du reçu peut être conservée avec la dépense ; un PDF ou un simple e-mail n&rsquo;est pas joint. La liste nécessite une connexion internet.</p>
+<h4>Si votre adresse fuite</h4>
+<p>Appuyez sur <strong>Changer d&rsquo;adresse</strong>. L&rsquo;ancienne adresse cesse immédiatement de fonctionner et les messages qui lui sont envoyés sont rejetés. Remplacez ensuite, dans votre messagerie, la règle de transfert par la nouvelle adresse (Gmail redemandera un code de confirmation). Pour ne plus recevoir d&rsquo;e-reçus du tout, appuyez sur <strong>Désactiver l&rsquo;adresse</strong>.</p>
+<h4>Confidentialité et conservation</h4>
+<ul>
+<li>Notre serveur lit l&rsquo;e-mail transféré pendant son traitement, comme pour tout reçu que vous scannez</li>
+<li>Seul le reçu lui-même est conservé, jamais l&rsquo;e-mail entier. Les liens de l&rsquo;e-mail ne sont jamais ouverts et ses images ne sont jamais chargées</li>
+<li>Le reçu stocké est supprimé dès que vous le confirmez ou l&rsquo;écartez ; les éléments non confirmés sont supprimés automatiquement au bout de 30 jours</li>
+<li>Les reçus par e-mail <strong>ne sont pas disponibles</strong> pour les comptes en <strong>Niveau 2 — Chiffrement complet</strong>. Avec le chiffrement de Niveau 1, ils fonctionnent, mais les éléments non confirmés sont supprimés au bout de 7 jours. Voir <a href="/help/fr/encryption/">Chiffrement</a></li>
+</ul>
 <h2>Revenus vocaux</h2>
 <p>Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.</p>
 <h3>Comment ça marche</h3>

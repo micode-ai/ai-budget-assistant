@@ -373,6 +373,27 @@ export class SubscriptionsService {
     ]);
   }
 
+  /**
+   * Gives back units charged by `trackAiUsage` when the work turned out not to be
+   * billable (ABA-644: the model classified a forwarded mail as "not a receipt").
+   * Never takes the counter below zero; records a negative usage-log row so the
+   * history still adds up.
+   */
+  async refundAiUsage(userId: string, featureType: string, costUnits: number, accountId?: string): Promise<void> {
+    const sub = await this.getOrCreateSubscription(userId);
+    const refund = Math.min(costUnits, Math.max(0, sub.aiRequestsUsed ?? 0));
+    if (refund <= 0) return;
+    await this.prisma.$transaction([
+      this.prisma.subscription.update({
+        where: { userId },
+        data: { aiRequestsUsed: { decrement: refund } },
+      }),
+      this.prisma.usageLog.create({
+        data: { userId, subscriptionId: sub.id, featureType, costUnits: -refund, accountId },
+      }),
+    ]);
+  }
+
   async checkMemberLimit(userId: string, accountId: string): Promise<void> {
     const sub = await this.getOrCreateSubscription(userId);
     const memberCount = await this.prisma.accountMember.count({

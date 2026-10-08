@@ -25,6 +25,7 @@ import { useMerchantRulesStore } from './merchantRulesStore';
 import { useShareIntakeStore } from './shareIntakeStore';
 import { useShoppingListTemplateStore } from './shoppingListTemplateStore';
 import { useGroupStore } from './groupStore';
+import { useInboundReceiptStore } from './inboundReceiptStore';
 import { useChatStore } from './chatStore';
 import { useScenarioStore } from './scenarioStore';
 import * as investmentRepo from '../db/investmentRepository';
@@ -665,6 +666,9 @@ export async function logoutAction(set: AuthStoreSet): Promise<void> {
     useShareIntakeStore.getState().reset();
     useShoppingListTemplateStore.getState().reset();
     useGroupStore.getState().reset();
+    // E-mail receipts (ABA-644): the address, the pending items and the feature gate are
+    // per user - the next person to sign in must not see another's inbox.
+    useInboundReceiptStore.getState().reset();
     // `accountStore` also clears this on an account switch (ABA-513) — this
     // call is deliberately redundant with that, not a duplicate to prune. A
     // conversation can carry another person's name, amounts, anything the

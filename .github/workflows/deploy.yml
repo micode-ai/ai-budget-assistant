@@ -6,6 +6,7 @@ on:
     paths:
       - 'apps/api/**'
       - 'apps/admin/**'
+      - 'apps/inbound-mail/**'
       - 'packages/shared-types/**'
       - 'packages/shared-utils/**'
       - 'docker/**'

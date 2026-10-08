@@ -440,6 +440,12 @@ const OCR_RECEIPT_MODEL = 'gpt-4.1';
 export const OCR_REREAD_FEATURE_TYPE = 'ocr_reread';
 const OCR_REREAD_COST_UNITS = 2.0;
 
+/** Replaces every URL in untrusted text with a neutral placeholder (nothing in a mail may be fetched or echoed). */
+export function stripUrlsFromText(text: string): string {
+  return (text ?? '').replace(/(?:https?:\/\/|www\.)[^\s<>"')\]]+/gi, '[link]');
+}
+
+
 @Injectable()
 export class OcrService {
   private readonly logger = new Logger(OcrService.name);
@@ -900,27 +906,57 @@ User note about this receipt: "${safeNote}"`;
 
     if (hasMeaningfulText) {
       // Text-based PDF — use cheaper text-only GPT call
-      const categories = await this.getExpenseCategories(accountId);
-      const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
-      const prompt = this.buildReceiptUserText(categoryNames, 'text', context, userPrompt, trimmedText);
-
-      this.logger.log(`[PDF] Using text-based parsing with model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
-
-      const normalized = await this.readReceipt('PDF', {
-        model: aiModel,
-        messages: [
-          { role: 'system', content: this.buildReceiptSystemPrompt() },
-          { role: 'user', content: prompt },
-        ],
-        max_tokens: ocrMaxTokens,
-        response_format: RECEIPT_RESPONSE_FORMAT,
-      }, context, userId, accountId);
-      return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
+      return this.parseReceiptText(trimmedText, userId, accountId, userPrompt, { fingerprintSource: pdfBase64, logTag: 'PDF' });
     }
 
     // Scanned PDF — send the full PDF as a file
     this.logger.log(`[PDF] Insufficient meaningful text (${meaningfulTextLength} chars), sending full PDF as file with model: ${aiModel}`);
     return this.parseReceiptFile(pdfBase64, userId, accountId, context, userPrompt, aiModel, ocrMaxTokens);
+  }
+
+  /**
+   * Extracts a receipt from PLAIN TEXT only (a text-layer PDF, or an e-mail body
+   * forwarded to the inbound-mail address, ABA-644). The model receives exactly
+   * one text message: no `image_url`, no `file` part, so there is nothing the
+   * provider could fetch. Any `http(s)://`/`www.` URL inside the text is replaced
+   * by a placeholder before it reaches the prompt — an e-mail is attacker-written,
+   * and a tracking link is neither needed for extraction nor safe to echo.
+   * `fingerprintSource` is the base64 the duplicate fingerprint is taken over
+   * (the PDF's own bytes for a PDF; defaults to the text for an e-mail body).
+   */
+  async parseReceiptText(
+    text: string,
+    userId: string,
+    accountId: string,
+    userPrompt?: string,
+    options: { fingerprintSource?: string; logTag?: string } = {},
+  ): Promise<ReceiptExpense> {
+    const { context } = await this.getUserOcrPrefs(userId);
+    const aiModel = OCR_RECEIPT_MODEL;
+    const ocrMaxTokens = 4096;
+    const safeText = stripUrlsFromText(text);
+
+    const categories = await this.getExpenseCategories(accountId);
+    const categoryNames = categories.map((c: CategoryWithName) => c.name).join(', ');
+    const prompt = this.buildReceiptUserText(categoryNames, 'text', context, userPrompt, safeText);
+
+    this.logger.log(`[${options.logTag ?? 'Text'}] Using text-based parsing with model: ${aiModel}, maxTokens: ${ocrMaxTokens}`);
+
+    const normalized = await this.readReceipt(options.logTag ?? 'Text', {
+      model: aiModel,
+      messages: [
+        { role: 'system', content: this.buildReceiptSystemPrompt() },
+        { role: 'user', content: prompt },
+      ],
+      max_tokens: ocrMaxTokens,
+      response_format: RECEIPT_RESPONSE_FORMAT,
+    }, context, userId, accountId);
+    const fingerprintSource = options.fingerprintSource ?? Buffer.from(text, 'utf8').toString('base64');
+    return await this.withDuplicateInfo(
+      await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId),
+      fingerprintSource,
+      accountId,
+    );
   }
 
   private async parseReceiptFile(

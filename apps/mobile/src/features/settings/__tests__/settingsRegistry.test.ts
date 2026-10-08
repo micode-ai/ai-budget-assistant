@@ -152,7 +152,18 @@ describe('settingsRegistry', () => {
     expect(adminOnly.map((e) => e.key)).toEqual(['admin']);
     expect(visibleSettingsEntries(false).some((e) => e.key === 'admin')).toBe(false);
     expect(visibleSettingsEntries(true).some((e) => e.key === 'admin')).toBe(true);
-    expect(visibleSettingsEntries(true).length).toBe(SETTINGS_ENTRIES.length);
+    expect(visibleSettingsEntries(true, { inboundMail: true }).length).toBe(SETTINGS_ENTRIES.length);
+  });
+
+  // Catches: the e-mail receipts row showing while the server flag is off (every
+  // route behind it answers 404, so the row would open a dead screen), or staying
+  // hidden once the app has learned the feature is on.
+  it('shows a feature-gated row only while its server feature is on', () => {
+    const gated = SETTINGS_ENTRIES.filter((e) => e.requiresFeature);
+    expect(gated.map((e) => e.key)).toEqual(['emailReceipts']);
+    expect(visibleSettingsEntries(false).some((e) => e.key === 'emailReceipts')).toBe(false);
+    expect(visibleSettingsEntries(false, { inboundMail: false }).some((e) => e.key === 'emailReceipts')).toBe(false);
+    expect(visibleSettingsEntries(false, { inboundMail: true }).some((e) => e.key === 'emailReceipts')).toBe(true);
   });
 
   // Catches: a minted i18n key, and a key that exists in `en` but not in one
@@ -175,7 +186,7 @@ describe('settingsRegistry', () => {
   // draws - so this also pins that a newly promoted row rises into the pane
   // block in its intended place rather than being appended.
   it('records which entries are panes today', () => {
-    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'accounts', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'security', 'data', 'categories', 'merchants', 'products', 'tags', 'projects', 'about']);
+    expect(SETTINGS_ENTRIES.filter(isPaneEntry).map((e) => e.key)).toEqual(['profile', 'accounts', 'appearance', 'ai', 'widgets', 'notifications', 'bots', 'emailReceipts', 'security', 'data', 'categories', 'merchants', 'products', 'tags', 'projects', 'about']);
   });
 });
 

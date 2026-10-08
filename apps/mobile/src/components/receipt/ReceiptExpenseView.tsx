@@ -25,6 +25,7 @@ import { useShareIntakeStore } from '@/stores/shareIntakeStore';
 import { useUpgradeStore } from '@/stores/upgradeStore';
 import { current, remaining } from '@/features/share-intake/shareIntakeQueue';
 import { deleteSharedFile } from '@/services/shareIntake';
+import type { InboundReceiptDetail } from '@budget/shared-types';
 
 interface ReceiptExpenseViewProps {
   /**
@@ -73,6 +74,19 @@ interface ReceiptExpenseViewProps {
    * scanning underneath — its alerts would pop up over the other screen.
    */
   paused?: boolean;
+  /**
+   * E-mail inbox (ABA-644): seed the confirm card from an item the server already
+   * extracted instead of offering capture. The save path is the ordinary one
+   * (`source: 'ocr'`, encryption through `addExpense`); `onSaved` receives the
+   * created expense's client id so the host can confirm the item. "Scan another"
+   * and "Scan again" do not apply - both leave through `onDone`.
+   */
+  inbound?: {
+    detail: InboundReceiptDetail;
+    /** Downloaded image document, or null (PDF / text body). */
+    documentUri: string | null;
+    onSaved: (expenseId: string) => void;
+  };
 }
 
 /**
@@ -92,7 +106,7 @@ interface ReceiptExpenseViewProps {
  * `_layout.tsx` alone will find a `title` that is never rendered and no badge
  * at all. The route keeps drawing its own, unchanged.
  */
-export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpense, shareMode, paused }: ReceiptExpenseViewProps) {
+export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpense, shareMode, paused, inbound }: ReceiptExpenseViewProps) {
   useEffect(() => {
     trackAction('expense_receipt', 'started');
   }, []);
@@ -195,6 +209,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     pickFromGallery,
     pickPdfDocument,
     processSharedFile,
+    seedFromInbound,
     reset,
   } = useReceiptScanner({ onDuplicate: confirmDuplicateScan });
 
@@ -254,6 +269,16 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scannedReceipt]);
+
+  // Seeded once per item: the confirm card below is then exactly the scan's.
+  const inboundId = inbound?.detail.id;
+  useEffect(() => {
+    if (!inbound) return;
+    if (!seedFromInbound(inbound.detail, inbound.documentUri)) {
+      showAlert(t('common.error'), t('emailReceipts.noExtraction'), [{ text: 'OK', onPress: onDone }]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inboundId]);
 
   const {
     itemCategories,
@@ -356,12 +381,15 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
     // In share mode the only caller of onReset is "Edit" (there is no "Scan
     // another"): the file becomes the manual form's expense, so it leaves the
     // queue — otherwise the user returns to a stuck, already-handled head.
-    onReset: shareMode ? advanceQueue : handleReset,
+    onReset: inbound ? onDone : shareMode ? advanceQueue : handleReset,
     onDone,
     onEdit,
-    queue: shareMode
-      ? { hasNext: remaining(shareQueue).length > 1, onNext: advanceQueue }
-      : undefined,
+    queue: inbound
+      ? { hasNext: false, onNext: onDone }
+      : shareMode
+        ? { hasNext: remaining(shareQueue).length > 1, onNext: advanceQueue }
+        : undefined,
+    onExpenseCreated: inbound ? (expense) => inbound.onSaved(expense.id) : undefined,
     onSaved: () => {
       if (!completedRef.current) {
         completedRef.current = true;
@@ -397,7 +425,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
           onGalleryPress={handleGalleryPress}
           onPdfPress={handlePdfPress}
           sessionCount={sessionCount}
-          hideCaptureButtons={shareMode}
+          hideCaptureButtons={shareMode || !!inbound}
         />
       ) : (
         <>
@@ -422,7 +450,7 @@ export function ReceiptExpenseView({ onDone, onEdit, onDirtyChange, onOpenExpens
             onToggleMergeWithBank={() => setMergeWithBank((v) => !v)}
             onEdit={handleEditExpense}
             onConfirm={handleConfirmExpense}
-            onRetry={shareMode ? retryShareHead : handleReset}
+            onRetry={inbound ? onDone : shareMode ? retryShareHead : handleReset}
           />
 
           <ItemCategorySheet

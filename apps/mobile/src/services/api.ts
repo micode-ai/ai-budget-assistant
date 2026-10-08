@@ -26,6 +26,7 @@ import { communityPricesApi } from './community-prices.api';
 import { receiptSplitApi } from './receiptSplit.api';
 import { realSalaryApi } from './realSalary.api';
 import { groupsApi } from './groups.api';
+import { inboundMailApi } from './inboundMail.api';
 
 export const api = {
   setAccountIdGetter: (getter: () => string | null) => httpClient.setAccountIdGetter(getter),
@@ -57,6 +58,7 @@ export const api = {
   ...communityPricesApi,
   ...receiptSplitApi,
   ...groupsApi,
+  ...inboundMailApi,
 };
 
 export function getApiBaseUrl(): string {

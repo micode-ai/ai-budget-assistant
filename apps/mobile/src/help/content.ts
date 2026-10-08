@@ -710,6 +710,59 @@ You can share **images and PDFs**, up to **10 files at a time** (a PDF up to 10 
 
 Sharing works on Android only. On iPhone and in the web app, use **Scan Receipt** instead.
 
+### Forwarding E-receipts by E-mail
+
+Many shops and online stores e-mail you a receipt or an order confirmation. Instead of scanning it, you can forward it to your own private address. Each forwarded e-mail shows up in the app as an expense waiting for you. **Nothing is saved until you confirm it.**
+
+> **Being rolled out.** This feature is switched on gradually. If you see **E-mail receipts** in **Settings**, you can use it. If you don't see it yet, it hasn't reached your account.
+
+#### Getting your address
+
+1. Open **Settings** → **E-mail receipts**
+2. Tap **Create my address**. Only account owners and editors can do this.
+3. Under **Your private address**, tap **Copy**
+4. Under **Add receipts to**, choose the account where confirmed receipts are saved. Only accounts you can edit are listed.
+
+The address belongs to you, not to the account. Members of a shared account never see the e-mails you forward.
+
+#### Setting up forwarding in Gmail
+
+1. In Gmail, open **Settings** → **See all settings** → **Forwarding and POP/IMAP** → **Add a forwarding address**, and paste your private address
+2. Gmail sends a confirmation code to that address. It appears in the app under **Settings** → **E-mail receipts** on a **Gmail confirmation code** card, with a **Copy** button. Enter the code in Gmail. The code is shown only in the app, never in a notification, and only for about 30 minutes. If it has gone, ask Gmail to send it again.
+3. Create a **filter** (**Settings** → **Filters and blocked addresses**) for the shop's sender address, or for a subject such as "receipt" or "order", and choose **Forward it to** your address
+
+Don't forward all your mail. Use a filter. It protects your privacy, and unrelated messages won't use up your AI limit.
+
+#### Setting up forwarding in Outlook
+
+1. In Outlook, open **Settings** → **Mail** → **Rules**, and add a rule for messages from the shop or with "receipt" in the subject
+2. Choose the action **Forward to** and enter your private address
+
+Some Outlook.com and Microsoft 365 accounts block automatic forwarding to outside addresses. If yours does, forward each receipt by hand. A manual forward from your phone works just as well.
+
+#### Confirming a receipt
+
+When a forwarded receipt has been read, you get a notification. You'll also see a banner on the Transactions screen, **E-mail receipts to confirm: N**. You can always open the list from **Settings** → **E-mail receipts** → **Open the e-mail receipts inbox**.
+
+- The **To confirm** tab lists the receipts waiting for you. Tap one to open the usual receipt confirmation screen, check the details, and tap **Save Expense**.
+- If the receipt looks like an expense you already have, you see the same duplicate warning as for a scanned receipt, including **Merge into one expense**.
+- Tap **Dismiss** to drop a receipt without saving it.
+- The **Handled** tab shows what was skipped: a receipt you already have, an e-mail with no receipt in it, one that couldn't be read, or one left unread because your AI limit was reached. Where it applies, tap **Try again**.
+
+Each e-receipt that is read counts as one receipt scan against your AI limit. Duplicates, and e-mails with no receipt in them, are skipped without using it. If a shop only sends a link to the receipt, forward the PDF instead, because links are never opened. A photo of the receipt can be kept with the expense. A PDF or a plain e-mail is not attached. The list needs an internet connection.
+
+#### If your address leaks
+
+Tap **Rotate address**. The old address stops working immediately, and mail sent to it is rejected. Then update the forwarding rule in your mailbox to the new address. Gmail asks for a confirmation code again. To stop receiving e-receipts altogether, tap **Disable address**.
+
+#### Privacy and retention
+
+- Our server reads a forwarded e-mail while processing it, the same as any receipt you scan.
+- Only the receipt itself is kept, never the whole e-mail. Links in the e-mail are never opened, and images in it are never loaded.
+- The stored receipt is deleted as soon as you confirm or dismiss it.
+- Items you don't confirm are deleted automatically after 30 days.
+- E-mail receipts are **not available** for accounts with **Tier 2 — Full Encryption**. With Tier 1 encryption they work, but unconfirmed items are deleted after 7 days. See Encryption.
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.
@@ -5811,6 +5864,58 @@ iOS, Android, Web
 
 Функция работает только на Android. На iPhone и в веб-версии используйте **Сканировать чек**.
 
+### Пересылка электронных чеков по почте
+
+Многие магазины и интернет-магазины присылают чек или подтверждение заказа по электронной почте. Вместо того чтобы сканировать его, перешлите письмо на свой личный адрес — каждое пересланное письмо появится в приложении как расход, ожидающий подтверждения. **Ничего не сохранится, пока вы не подтвердите.**
+
+> **Функция включается постепенно.** Если вы видите **Чеки из почты** в **Настройках**, ею уже можно пользоваться. Если пока не видите — до вашего аккаунта она ещё не дошла.
+
+#### Ваш адрес
+
+1. Откройте **Настройки** → **Чеки из почты**
+2. Нажмите **Создать мой адрес** (это могут сделать только владельцы и редакторы счёта)
+3. В разделе **Ваш личный адрес** нажмите **Копировать**
+4. В разделе **Добавлять чеки в** выберите счёт, в который будут сохраняться подтверждённые чеки (показаны только счета, которые вы можете редактировать)
+
+Адрес принадлежит вам, а не счёту: участники общего счёта никогда не видят письма, которые пересылаете вы.
+
+#### Настройка пересылки в Gmail
+
+1. В Gmail откройте **Настройки** → **Все настройки** → **Пересылка и POP/IMAP** → **Добавить адрес пересылки** и вставьте свой личный адрес
+2. Gmail отправит на этот адрес код подтверждения. Он появится в приложении в **Настройки** → **Чеки из почты** на карточке **Код подтверждения Gmail** с кнопкой **Копировать**. Введите его в Gmail. Код показывается только в приложении — никогда в уведомлении — и только около 30 минут; если он исчез, попросите Gmail отправить его ещё раз
+3. Создайте **фильтр** (**Настройки** → **Фильтры и заблокированные адреса**) по адресу отправителя магазина или по теме вроде «чек» или «заказ» и выберите **Пересылать** на ваш адрес
+
+Не пересылайте всю почту — используйте фильтр: так лучше для вашей конфиденциальности, и посторонние письма не расходуют лимит ИИ.
+
+#### Настройка пересылки в Outlook
+
+1. В Outlook откройте **Параметры** → **Почта** → **Правила** и добавьте правило для писем от магазина или со словом «чек» в теме
+2. Выберите действие **Переслать на** и введите свой личный адрес
+
+Некоторые учётные записи Outlook.com и Microsoft 365 блокируют автоматическую пересылку на внешние адреса. В таком случае пересылайте каждый чек вручную — ручная пересылка с телефона работает так же.
+
+#### Подтверждение чека
+
+Когда пересланный чек прочитан, вы получите уведомление, а на экране Транзакций появится баннер **Чеков из почты к подтверждению: N**. Список всегда можно открыть и через **Настройки** → **Чеки из почты** → **Открыть входящие чеки из почты**.
+
+- Вкладка **К подтверждению** показывает чеки, которые ждут вас. Нажмите на чек, чтобы открыть привычный экран подтверждения чека, проверьте данные и нажмите **Сохранить расход**
+- Если чек похож на уже записанный расход, вы увидите то же предупреждение о дубликате, что и при сканировании, включая **Объединить в один расход**
+- Нажмите **Отклонить**, чтобы убрать чек, не сохраняя его
+- Вкладка **Обработанные** показывает пропущенное: чек, который у вас уже есть, письмо без чека, чек, который не удалось прочитать, или непрочитанный из-за исчерпанного лимита ИИ — где это возможно, нажмите **Повторить**
+
+Каждый прочитанный электронный чек — одно сканирование чека в лимите ИИ; дубликаты и письма без чека пропускаются, не расходуя его. Если магазин присылает только ссылку на чек, перешлите вместо этого PDF — ссылки никогда не открываются. Фото чека можно сохранить вместе с расходом; PDF или обычное письмо не прикрепляются. Для списка нужно подключение к интернету.
+
+#### Если адрес стал известен посторонним
+
+Нажмите **Сменить адрес**. Текущий адрес сразу перестанет работать, а письма на него будут отклоняться. Затем измените правило пересылки в своей почте на новый адрес (Gmail снова попросит код подтверждения). Чтобы совсем перестать получать электронные чеки, нажмите **Отключить адрес**.
+
+#### Конфиденциальность и хранение
+
+- Наш сервер читает пересланное письмо во время обработки — так же, как любой чек, который вы сканируете
+- Хранится только сам чек, никогда не всё письмо. Ссылки в письме никогда не открываются, а картинки никогда не загружаются
+- Сохранённый чек удаляется, как только вы его подтвердите или отклоните; неподтверждённые элементы удаляются автоматически через 30 дней
+- Чеки из почты **недоступны** для счетов с **Уровнем 2 — Полным шифрованием**. С шифрованием Уровня 1 они работают, но неподтверждённые элементы удаляются через 7 дней. См. Шифрование
+
 ## Голосовой ввод дохода
 
 Регистрируйте полученные платежи голосом — тот же процесс, что и для голосового расхода, оптимизированный для доходов.
@@ -10890,6 +10995,58 @@ iOS, Android, Web
 
 Функція працює лише на Android. На iPhone і у вебверсії використовуйте **Сканувати чек**.
 
+### Пересилання електронних чеків поштою
+
+Багато магазинів та інтернет-магазинів надсилають чек або підтвердження замовлення електронною поштою. Замість того щоб сканувати його, перешліть лист на свою особисту адресу — кожен пересланий лист з'явиться в застосунку як витрата, що чекає на підтвердження. **Нічого не збережеться, доки ви не підтвердите.**
+
+> **Функція вмикається поступово.** Якщо ви бачите **Чеки з пошти** в **Налаштуваннях**, нею вже можна користуватися. Якщо поки не бачите — до вашого облікового запису вона ще не дійшла.
+
+#### Ваша адреса
+
+1. Відкрийте **Налаштування** → **Чеки з пошти**
+2. Натисніть **Створити мою адресу** (це можуть зробити лише власники та редактори рахунку)
+3. У розділі **Ваша особиста адреса** натисніть **Копіювати**
+4. У розділі **Додавати чеки до** оберіть рахунок, до якого зберігатимуться підтверджені чеки (показано лише рахунки, які ви можете редагувати)
+
+Адреса належить вам, а не рахунку: учасники спільного рахунку ніколи не бачать листів, які пересилаєте ви.
+
+#### Налаштування пересилання в Gmail
+
+1. У Gmail відкрийте **Налаштування** → **Переглянути всі налаштування** → **Пересилання та POP/IMAP** → **Додати адресу пересилання** і вставте свою особисту адресу
+2. Gmail надішле на цю адресу код підтвердження. Він з'явиться в застосунку в **Налаштування** → **Чеки з пошти** на картці **Код підтвердження Gmail** з кнопкою **Копіювати**. Введіть його в Gmail. Код показується лише в застосунку — ніколи в сповіщенні — і лише близько 30 хвилин; якщо він зник, попросіть Gmail надіслати його ще раз
+3. Створіть **фільтр** (**Налаштування** → **Фільтри та заблоковані адреси**) за адресою відправника магазину або темою на кшталт «чек» чи «замовлення» і виберіть **Пересилати** на вашу адресу
+
+Не пересилайте всю пошту — використовуйте фільтр: так краще для вашої конфіденційності, а сторонні листи не витрачатимуть ліміт ШІ.
+
+#### Налаштування пересилання в Outlook
+
+1. В Outlook відкрийте **Параметри** → **Пошта** → **Правила** і додайте правило для листів від магазину або зі словом «чек» у темі
+2. Виберіть дію **Переслати на** і введіть свою особисту адресу
+
+Деякі облікові записи Outlook.com і Microsoft 365 блокують автоматичне пересилання на зовнішні адреси. Якщо це ваш випадок, пересилайте кожен чек вручну — ручне пересилання з телефона працює так само.
+
+#### Підтвердження чека
+
+Коли пересланий чек прочитано, ви отримаєте сповіщення, а на екрані Транзакцій з'явиться банер **Чеків з пошти до підтвердження: N**. Список завжди можна відкрити й через **Налаштування** → **Чеки з пошти** → **Відкрити вхідні чеки з пошти**.
+
+- Вкладка **До підтвердження** показує чеки, що чекають на вас. Натисніть на чек, щоб відкрити звичний екран підтвердження чека, перевірте дані й натисніть **Зберегти витрату**
+- Якщо чек схожий на вже записану витрату, ви побачите те саме попередження про дублікат, що й під час сканування, зокрема **Об’єднати в одну витрату**
+- Натисніть **Відхилити**, щоб прибрати чек, не зберігаючи його
+- Вкладка **Оброблені** показує пропущене: чек, який у вас уже є, лист без чека, чек, який не вдалося прочитати, або непрочитаний через вичерпаний ліміт ШІ — де це можливо, натисніть **Повторити**
+
+Кожен прочитаний електронний чек — одне сканування чека в ліміті ШІ; дублікати й листи без чека пропускаються, не витрачаючи його. Якщо магазин надсилає лише посилання на чек, перешліть натомість PDF — посилання ніколи не відкриваються. Фото чека можна зберегти разом із витратою; PDF або звичайний лист не прикріплюються. Для списку потрібне підключення до інтернету.
+
+#### Якщо адреса стала відома стороннім
+
+Натисніть **Змінити адресу**. Поточна адреса одразу перестане працювати, а листи на неї відхилятимуться. Потім змініть правило пересилання у своїй пошті на нову адресу (Gmail знову попросить код підтвердження). Щоб зовсім перестати отримувати електронні чеки, натисніть **Вимкнути адресу**.
+
+#### Конфіденційність і зберігання
+
+- Наш сервер читає пересланий лист під час обробки — так само, як будь-який чек, який ви скануєте
+- Зберігається лише сам чек, ніколи не весь лист. Посилання в листі ніколи не відкриваються, а зображення ніколи не завантажуються
+- Збережений чек видаляється, щойно ви його підтвердите або відхилите; непідтверджені елементи видаляються автоматично через 30 днів
+- Чеки з пошти **недоступні** для рахунків із **Рівнем 2 — Повним шифруванням**. Із шифруванням Рівня 1 вони працюють, але непідтверджені елементи видаляються через 7 днів. Див. Шифрування
+
 ## Голосовий дохід
 
 Реєструйте отримані платежі голосом — той самий процес, що й для голосової витрати, оптимізований для доходів.
@@ -15917,6 +16074,58 @@ Możesz udostępniać **zdjęcia i pliki PDF**, maksymalnie **10 plików naraz**
 
 Udostępnianie działa tylko na Androidzie. Na iPhonie i w aplikacji webowej użyj **Skanuj paragon**.
 
+### Przekazywanie e-paragonów e-mailem
+
+Wiele sklepów i sklepów internetowych wysyła paragon lub potwierdzenie zamówienia e-mailem. Zamiast go skanować, możesz przekazać go na swój prywatny adres — każdy przekazany e-mail pojawi się w aplikacji jako wydatek czekający na Ciebie. **Nic nie zostanie zapisane, dopóki tego nie potwierdzisz.**
+
+> **Funkcja jest stopniowo udostępniana.** Jeśli widzisz **Paragony z e-maila** w **Ustawieniach**, możesz z niej korzystać. Jeśli jeszcze jej nie widzisz, nie dotarła jeszcze do Twojego konta.
+
+#### Twój adres
+
+1. Otwórz **Ustawienia** → **Paragony z e-maila**
+2. Dotknij **Utwórz mój adres** (mogą to zrobić tylko właściciele i edytorzy konta)
+3. W sekcji **Twój prywatny adres** dotknij **Kopiuj**
+4. W sekcji **Dodawaj paragony do** wybierz konto, w którym będą zapisywane potwierdzone paragony (widać tylko konta, które możesz edytować)
+
+Adres należy do Ciebie, nie do konta — członkowie wspólnego konta nigdy nie widzą e-maili, które przekazujesz.
+
+#### Konfiguracja przekazywania w Gmailu
+
+1. W Gmailu otwórz **Ustawienia** → **Wyświetl wszystkie ustawienia** → **Przekazywanie i POP/IMAP** → **Dodaj adres przekazywania** i wklej swój prywatny adres
+2. Gmail wyśle na ten adres kod potwierdzający. Pojawi się on w aplikacji w **Ustawienia** → **Paragony z e-maila** na karcie **Kod potwierdzający Gmaila** z przyciskiem **Kopiuj**. Wpisz go w Gmailu. Kod jest widoczny tylko w aplikacji — nigdy w powiadomieniu — i tylko przez około 30 minut; jeśli zniknął, poproś Gmaila o ponowne wysłanie
+3. Utwórz **filtr** (**Ustawienia** → **Filtry i zablokowane adresy**) dla adresu nadawcy sklepu lub tematu, np. „paragon” albo „zamówienie”, i wybierz **Przekaż dalej** na swój adres
+
+Nie przekazuj całej poczty — użyj filtra, dla własnej prywatności i po to, by niepowiązane wiadomości nie zużywały limitu AI.
+
+#### Konfiguracja przekazywania w Outlooku
+
+1. W Outlooku otwórz **Ustawienia** → **Poczta** → **Reguły** i dodaj regułę dla wiadomości ze sklepu lub ze słowem „paragon” w temacie
+2. Wybierz akcję **Przekaż dalej do** i wpisz swój prywatny adres
+
+Niektóre konta Outlook.com i Microsoft 365 blokują automatyczne przekazywanie na adresy zewnętrzne. Jeśli tak jest u Ciebie, przekazuj każdy paragon ręcznie — ręczne przekazanie z telefonu działa tak samo.
+
+#### Potwierdzanie paragonu
+
+Gdy przekazany paragon zostanie odczytany, dostaniesz powiadomienie, a na ekranie Transakcji pojawi się baner **Paragony z e-maila do potwierdzenia: N**. Listę możesz też zawsze otworzyć przez **Ustawienia** → **Paragony z e-maila** → **Otwórz skrzynkę paragonów z e-maila**.
+
+- Zakładka **Do potwierdzenia** pokazuje paragony czekające na Ciebie. Dotknij paragonu, aby otworzyć zwykły ekran potwierdzenia paragonu, sprawdź dane i dotknij **Zapisz wydatek**
+- Jeśli paragon wygląda na wydatek, który już masz, zobaczysz to samo ostrzeżenie o duplikacie co przy skanowaniu — łącznie z **Połącz w jeden wydatek**
+- Dotknij **Odrzuć**, aby pominąć paragon bez zapisywania
+- Zakładka **Obsłużone** pokazuje to, co zostało pominięte: paragon, który już masz, e-mail bez paragonu, paragon, którego nie dało się odczytać, albo nieodczytany z powodu wyczerpanego limitu AI — w razie potrzeby dotknij **Spróbuj ponownie**
+
+Każdy odczytany e-paragon to jedno skanowanie paragonu w limicie AI; duplikaty i e-maile bez paragonu są pomijane bez zużywania limitu. Jeśli sklep wysyła tylko link do paragonu, przekaż zamiast tego plik PDF — linki nigdy nie są otwierane. Zdjęcie paragonu można zachować przy wydatku; PDF ani zwykły e-mail nie są dołączane. Lista wymaga połączenia z internetem.
+
+#### Jeśli Twój adres wycieknie
+
+Dotknij **Zmień adres**. Obecny adres natychmiast przestaje działać, a poczta wysłana na niego jest odrzucana. Następnie zmień regułę przekazywania w swojej skrzynce na nowy adres (Gmail ponownie poprosi o kod potwierdzający). Aby całkowicie przestać odbierać e-paragony, dotknij **Wyłącz adres**.
+
+#### Prywatność i przechowywanie
+
+- Nasz serwer odczytuje przekazany e-mail podczas przetwarzania, tak samo jak każdy skanowany paragon
+- Przechowywany jest tylko sam paragon, nigdy cały e-mail. Linki w e-mailu nigdy nie są otwierane, a obrazy nigdy nie są pobierane
+- Zapisany paragon jest usuwany, gdy tylko go potwierdzisz lub odrzucisz; niepotwierdzone pozycje są usuwane automatycznie po 30 dniach
+- Paragony z e-maila **nie są dostępne** dla kont z **Poziomem 2 — Pełnym szyfrowaniem**. Przy szyfrowaniu na Poziomie 1 działają, ale niepotwierdzone pozycje są usuwane po 7 dniach. Zobacz Szyfrowanie
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.
@@ -20940,6 +21149,58 @@ Du kannst **Bilder und PDFs** teilen, bis zu **10 Dateien auf einmal** (PDF bis 
 
 Teilen funktioniert nur unter Android. Auf dem iPhone und in der Web-App nutze **Beleg scannen**.
 
+### E-Belege per E-Mail weiterleiten
+
+Viele Geschäfte und Online-Shops schicken dir einen Beleg oder eine Bestellbestätigung per E-Mail. Statt ihn zu scannen, kannst du ihn an deine eigene private Adresse weiterleiten – jede weitergeleitete E-Mail erscheint in der App als Ausgabe, die auf dich wartet. **Nichts wird gespeichert, bevor du bestätigst.**
+
+> **Wird schrittweise eingeführt.** Die Funktion wird nach und nach freigeschaltet. Wenn du **E-Mail-Belege** in den **Einstellungen** siehst, kannst du sie nutzen. Siehst du sie noch nicht, ist sie für dein Konto noch nicht verfügbar.
+
+#### Deine Adresse
+
+1. Öffne **Einstellungen** → **E-Mail-Belege**
+2. Tippe auf **Meine Adresse erstellen** (nur Inhaber und Bearbeiter eines Kontos können das)
+3. Tippe unter **Deine private Adresse** auf **Kopieren**
+4. Wähle unter **Belege hinzufügen zu** das Konto, in dem bestätigte Belege gespeichert werden (es werden nur Konten angezeigt, die du bearbeiten darfst)
+
+Die Adresse gehört dir, nicht dem Konto – Mitglieder eines gemeinsamen Kontos sehen die E-Mails, die du weiterleitest, nie.
+
+#### Weiterleitung in Gmail einrichten
+
+1. Öffne in Gmail **Einstellungen** → **Alle Einstellungen aufrufen** → **Weiterleitung und POP/IMAP** → **Weiterleitungsadresse hinzufügen** und füge deine private Adresse ein
+2. Gmail schickt einen Bestätigungscode an diese Adresse. Er erscheint in der App unter **Einstellungen** → **E-Mail-Belege** auf einer Karte **Gmail-Bestätigungscode** mit einer Schaltfläche **Kopieren**. Gib ihn in Gmail ein. Der Code wird nur in der App angezeigt – nie in einer Benachrichtigung – und nur etwa 30 Minuten lang; ist er verschwunden, lass ihn dir von Gmail erneut senden
+3. Erstelle einen **Filter** (**Einstellungen** → **Filter und blockierte Adressen**) für die Absenderadresse des Shops oder einen Betreff wie „Beleg“ oder „Bestellung“ und wähle **Weiterleiten an** deine Adresse
+
+Leite nicht deine gesamte Post weiter – nutze einen Filter, für deine Privatsphäre und damit unpassende Nachrichten nicht dein KI-Limit verbrauchen.
+
+#### Weiterleitung in Outlook einrichten
+
+1. Öffne in Outlook **Einstellungen** → **E-Mail** → **Regeln** und füge eine Regel für Nachrichten vom Shop oder mit „Beleg“ im Betreff hinzu
+2. Wähle die Aktion **Weiterleiten an** und gib deine private Adresse ein
+
+Manche Outlook.com- und Microsoft-365-Konten blockieren die automatische Weiterleitung an externe Adressen. Falls das bei dir so ist, leite jeden Beleg manuell weiter – eine manuelle Weiterleitung vom Handy funktioniert genauso.
+
+#### Einen Beleg bestätigen
+
+Sobald ein weitergeleiteter Beleg gelesen wurde, bekommst du eine Benachrichtigung, und auf dem Transaktionen-Bildschirm erscheint ein Banner **E-Mail-Belege zu bestätigen: N**. Die Liste öffnest du jederzeit auch über **Einstellungen** → **E-Mail-Belege** → **Posteingang der E-Mail-Belege öffnen**.
+
+- Der Reiter **Zu bestätigen** zeigt die Belege, die auf dich warten. Tippe auf einen, um den gewohnten Bestätigungsbildschirm für Belege zu öffnen, prüfe die Angaben und tippe auf **Ausgabe speichern**
+- Sieht der Beleg aus wie eine Ausgabe, die du schon hast, erscheint dieselbe Duplikat-Warnung wie beim Scannen – einschließlich **Zu einer Ausgabe zusammenführen**
+- Tippe auf **Verwerfen**, um einen Beleg ohne Speichern zu verwerfen
+- Der Reiter **Erledigt** zeigt, was übersprungen wurde: ein Beleg, den du schon hast, eine E-Mail ohne Beleg, einer, der nicht gelesen werden konnte, oder einer, der wegen deines erreichten KI-Limits ungelesen blieb – wo es passt, tippe auf **Erneut versuchen**
+
+Jeder gelesene E-Beleg zählt als ein Belegscan gegen dein KI-Limit; Duplikate und E-Mails ohne Beleg werden übersprungen, ohne es zu verbrauchen. Schickt ein Shop nur einen Link zum Beleg, leite stattdessen das PDF weiter – Links werden nie geöffnet. Ein Foto des Belegs kann bei der Ausgabe gespeichert werden; ein PDF oder eine reine Text-E-Mail wird nicht angehängt. Die Liste braucht eine Internetverbindung.
+
+#### Wenn deine Adresse bekannt wird
+
+Tippe auf **Adresse erneuern**. Die alte Adresse funktioniert sofort nicht mehr, und an sie gesendete Mails werden abgelehnt. Ändere dann die Weiterleitungsregel in deinem Postfach auf die neue Adresse (Gmail fragt erneut nach einem Bestätigungscode). Um gar keine E-Belege mehr zu empfangen, tippe auf **Adresse deaktivieren**.
+
+#### Datenschutz und Aufbewahrung
+
+- Unser Server liest eine weitergeleitete E-Mail während der Verarbeitung, genau wie jeden Beleg, den du scannst
+- Gespeichert wird nur der Beleg selbst, nie die ganze E-Mail. Links in der E-Mail werden nie geöffnet, Bilder darin nie geladen
+- Der gespeicherte Beleg wird gelöscht, sobald du ihn bestätigst oder verwirfst; unbestätigte Einträge werden nach 30 Tagen automatisch gelöscht
+- E-Mail-Belege sind für Konten mit **Stufe 2 — Vollständige Verschlüsselung** **nicht verfügbar**. Mit Verschlüsselung der Stufe 1 funktionieren sie, unbestätigte Einträge werden dann aber nach 7 Tagen gelöscht. Siehe Verschlüsselung
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
@@ -25938,6 +26199,58 @@ Puedes compartir **imágenes y PDF**, hasta **10 archivos a la vez** (PDF de has
 
 Compartir solo funciona en Android. En iPhone y en la app web usa **Escanear recibo**.
 
+### Reenviar e-recibos por correo
+
+Muchas tiendas físicas y online te envían un recibo o una confirmación de pedido por correo. En lugar de escanearlo, puedes reenviarlo a tu propia dirección privada: cada correo reenviado aparece en la app como un gasto que espera tu confirmación. **No se guarda nada hasta que lo confirmas.**
+
+> **Se está activando poco a poco.** Si ves **Recibos por e-mail** en **Ajustes**, ya puedes usarla. Si todavía no la ves, aún no ha llegado a tu cuenta.
+
+#### Tu dirección
+
+1. Abre **Ajustes** → **Recibos por e-mail**
+2. Toca **Crear mi dirección** (solo los propietarios y editores de la cuenta pueden hacerlo)
+3. En **Tu dirección privada**, toca **Copiar**
+4. En **Añadir recibos a**, elige la cuenta donde se guardan los recibos confirmados (solo aparecen las cuentas que puedes editar)
+
+La dirección es tuya, no de la cuenta: los miembros de una cuenta compartida nunca ven los correos que reenvías.
+
+#### Configurar el reenvío en Gmail
+
+1. En Gmail abre **Configuración** → **Ver toda la configuración** → **Reenvío y correo POP/IMAP** → **Añadir una dirección de reenvío** y pega tu dirección privada
+2. Gmail envía un código de confirmación a esa dirección. Aparece en la app, en **Ajustes** → **Recibos por e-mail**, en una tarjeta **Código de confirmación de Gmail** con un botón **Copiar**. Introdúcelo en Gmail. El código solo se muestra en la app —nunca en una notificación— y solo durante unos 30 minutos; si ya no está, pide a Gmail que lo envíe de nuevo
+3. Crea un **filtro** (**Configuración** → **Filtros y direcciones bloqueadas**) para la dirección del remitente de la tienda o un asunto como «recibo» o «pedido», y elige **Reenviarlo a** tu dirección
+
+No reenvíes todo tu correo: usa un filtro, por tu privacidad y para que los mensajes ajenos no gasten tu límite de IA.
+
+#### Configurar el reenvío en Outlook
+
+1. En Outlook abre **Configuración** → **Correo** → **Reglas** y añade una regla para los mensajes de la tienda o con «recibo» en el asunto
+2. Elige la acción **Reenviar a** e introduce tu dirección privada
+
+Algunas cuentas de Outlook.com y Microsoft 365 bloquean el reenvío automático a direcciones externas. Si es tu caso, reenvía cada recibo manualmente: un reenvío manual desde el móvil funciona igual.
+
+#### Confirmar un recibo
+
+Cuando se ha leído un recibo reenviado, recibes una notificación y aparece un aviso en la pantalla de Transacciones: **Recibos por e-mail por confirmar: N**. También puedes abrir la lista en cualquier momento desde **Ajustes** → **Recibos por e-mail** → **Abrir la bandeja de recibos por e-mail**.
+
+- La pestaña **Por confirmar** muestra los recibos que te esperan. Toca uno para abrir la pantalla habitual de confirmación del recibo, revisa los datos y toca **Guardar gasto**
+- Si el recibo parece un gasto que ya tienes, verás el mismo aviso de duplicado que al escanear, incluido **Unir en un solo gasto**
+- Toca **Descartar** para desechar un recibo sin guardarlo
+- La pestaña **Gestionados** muestra lo que se omitió: un recibo que ya tienes, un correo sin recibo, uno que no se pudo leer o uno sin leer porque se alcanzó tu límite de IA; cuando corresponda, toca **Reintentar**
+
+Cada e-recibo leído cuenta como un escaneo de recibo en tu límite de IA; los duplicados y los correos sin recibo se omiten sin gastarlo. Si una tienda solo envía un enlace al recibo, reenvía el PDF: los enlaces nunca se abren. Una foto del recibo se puede guardar con el gasto; un PDF o un correo de texto no se adjuntan. La lista necesita conexión a internet.
+
+#### Si tu dirección se filtra
+
+Toca **Cambiar dirección**. La dirección actual deja de funcionar al instante y el correo enviado a ella se rechaza. Después cambia la regla de reenvío de tu buzón a la nueva dirección (Gmail volverá a pedir un código de confirmación). Para dejar de recibir e-recibos por completo, toca **Desactivar dirección**.
+
+#### Privacidad y conservación
+
+- Nuestro servidor lee el correo reenviado mientras lo procesa, igual que cualquier recibo que escaneas
+- Solo se guarda el recibo, nunca el correo completo. Los enlaces del correo nunca se abren y sus imágenes nunca se cargan
+- El recibo guardado se elimina en cuanto lo confirmas o descartas; los elementos sin confirmar se eliminan automáticamente a los 30 días
+- Los recibos por e-mail **no están disponibles** en cuentas con **Nivel 2 — Cifrado completo**. Con el cifrado de Nivel 1 funcionan, pero los elementos sin confirmar se eliminan a los 7 días. Consulta Cifrado
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.
@@ -30925,6 +31238,58 @@ Vous pouvez partager des **images et des PDF**, jusqu'à **10 fichiers à la foi
 
 Le partage fonctionne uniquement sur Android. Sur iPhone et dans l'app web, utilisez **Scanner un reçu**.
 
+### Transférer ses e-reçus par e-mail
+
+Beaucoup de magasins et de boutiques en ligne vous envoient un reçu ou une confirmation de commande par e-mail. Au lieu de le scanner, vous pouvez le transférer vers votre propre adresse privée : chaque e-mail transféré apparaît dans l'app comme une dépense qui vous attend. **Rien n'est enregistré avant votre confirmation.**
+
+> **Déploiement progressif.** Cette fonctionnalité est activée peu à peu. Si vous voyez **Reçus par e-mail** dans les **Paramètres**, vous pouvez l'utiliser. Sinon, elle n'est pas encore arrivée sur votre compte.
+
+#### Votre adresse
+
+1. Ouvrez **Paramètres** → **Reçus par e-mail**
+2. Appuyez sur **Créer mon adresse** (seuls les propriétaires et les éditeurs du compte peuvent le faire)
+3. Sous **Votre adresse privée**, appuyez sur **Copier**
+4. Sous **Ajouter les reçus à**, choisissez le compte où les reçus confirmés sont enregistrés (seuls les comptes que vous pouvez modifier sont proposés)
+
+L'adresse vous appartient, pas au compte : les membres d'un compte partagé ne voient jamais les e-mails que vous transférez.
+
+#### Configurer le transfert dans Gmail
+
+1. Dans Gmail, ouvrez **Paramètres** → **Voir tous les paramètres** → **Transfert et POP/IMAP** → **Ajouter une adresse de transfert** et collez votre adresse privée
+2. Gmail envoie un code de confirmation à cette adresse. Il apparaît dans l'app, dans **Paramètres** → **Reçus par e-mail**, sur une carte **Code de confirmation Gmail** avec un bouton **Copier**. Saisissez-le dans Gmail. Le code n'est affiché que dans l'app — jamais dans une notification — et seulement pendant environ 30 minutes ; s'il a disparu, demandez à Gmail de le renvoyer
+3. Créez un **filtre** (**Paramètres** → **Filtres et adresses bloquées**) pour l'adresse de l'expéditeur du magasin ou un objet tel que « reçu » ou « commande », puis choisissez **Le transférer à** votre adresse
+
+Ne transférez pas tout votre courrier : utilisez un filtre, pour votre confidentialité et pour que les messages sans rapport n'épuisent pas votre limite d'IA.
+
+#### Configurer le transfert dans Outlook
+
+1. Dans Outlook, ouvrez **Paramètres** → **Courrier** → **Règles** et ajoutez une règle pour les messages du magasin ou dont l'objet contient « reçu »
+2. Choisissez l'action **Transférer à** et saisissez votre adresse privée
+
+Certains comptes Outlook.com et Microsoft 365 bloquent le transfert automatique vers des adresses externes. Si c'est votre cas, transférez chaque reçu manuellement — un transfert manuel depuis votre téléphone fonctionne tout aussi bien.
+
+#### Confirmer un reçu
+
+Quand un reçu transféré a été lu, vous recevez une notification et un bandeau s'affiche sur l'écran Transactions : **Reçus par e-mail à confirmer : N**. Vous pouvez aussi ouvrir la liste à tout moment via **Paramètres** → **Reçus par e-mail** → **Ouvrir la boîte des reçus par e-mail**.
+
+- L'onglet **À confirmer** liste les reçus qui vous attendent. Appuyez sur l'un d'eux pour ouvrir l'écran habituel de confirmation du reçu, vérifiez les informations et appuyez sur **Enregistrer la dépense**
+- Si le reçu ressemble à une dépense que vous avez déjà, vous voyez le même avertissement de doublon que pour un scan, y compris **Fusionner en une seule dépense**
+- Appuyez sur **Écarter** pour abandonner un reçu sans l'enregistrer
+- L'onglet **Traités** montre ce qui a été ignoré : un reçu que vous avez déjà, un e-mail sans reçu, un reçu illisible ou un reçu non lu parce que votre limite d'IA était atteinte — le cas échéant, appuyez sur **Réessayer**
+
+Chaque e-reçu lu compte comme un scan de reçu dans votre limite d'IA ; les doublons et les e-mails sans reçu sont ignorés sans l'utiliser. Si un magasin n'envoie qu'un lien vers le reçu, transférez plutôt le PDF : les liens ne sont jamais ouverts. Une photo du reçu peut être conservée avec la dépense ; un PDF ou un simple e-mail n'est pas joint. La liste nécessite une connexion internet.
+
+#### Si votre adresse fuite
+
+Appuyez sur **Changer d'adresse**. L'ancienne adresse cesse immédiatement de fonctionner et les messages qui lui sont envoyés sont rejetés. Remplacez ensuite, dans votre messagerie, la règle de transfert par la nouvelle adresse (Gmail redemandera un code de confirmation). Pour ne plus recevoir d'e-reçus du tout, appuyez sur **Désactiver l'adresse**.
+
+#### Confidentialité et conservation
+
+- Notre serveur lit l'e-mail transféré pendant son traitement, comme pour tout reçu que vous scannez
+- Seul le reçu lui-même est conservé, jamais l'e-mail entier. Les liens de l'e-mail ne sont jamais ouverts et ses images ne sont jamais chargées
+- Le reçu stocké est supprimé dès que vous le confirmez ou l'écartez ; les éléments non confirmés sont supprimés automatiquement au bout de 30 jours
+- Les reçus par e-mail **ne sont pas disponibles** pour les comptes en **Niveau 2 — Chiffrement complet**. Avec le chiffrement de Niveau 1, ils fonctionnent, mais les éléments non confirmés sont supprimés au bout de 7 jours. Voir Chiffrement
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.
@@ -35910,6 +36275,58 @@ iOS, Android, Web
 
 Функцыя працуе толькі на Android. На iPhone і ў вэб-версіі выкарыстоўвайце **Сканаваць чэк**.
 
+### Перасылка электронных чэкаў поштай
+
+Многія крамы і інтэрнэт-крамы дасылаюць чэк або пацверджанне заказу па электроннай пошце. Замест таго каб сканаваць яго, перашліце ліст на свой асабісты адрас — кожны перасланы ліст з'явіцца ў праграме як выдатак, які чакае пацверджання. **Нічога не захаваецца, пакуль вы не пацвердзіце.**
+
+> **Функцыя ўключаецца паступова.** Калі вы бачыце **Чэкі з пошты** ў **Наладах**, ёю ўжо можна карыстацца. Калі пакуль не бачыце — да вашага ўліковага запісу яна яшчэ не дайшла.
+
+#### Ваш адрас
+
+1. Адкрыйце **Налады** → **Чэкі з пошты**
+2. Націсніце **Стварыць мой адрас** (гэта могуць зрабіць толькі ўладальнікі і рэдактары рахунку)
+3. У раздзеле **Ваш асабісты адрас** націсніце **Капіраваць**
+4. У раздзеле **Дадаваць чэкі ў** абярыце рахунак, у які будуць захоўвацца пацверджаныя чэкі (паказаны толькі рахункі, якія вы можаце рэдагаваць)
+
+Адрас належыць вам, а не рахунку: удзельнікі агульнага рахунку ніколі не бачаць лістоў, якія перасылаеце вы.
+
+#### Наладжванне перасылкі ў Gmail
+
+1. У Gmail адкрыйце **Налады** → **Прагледзець усе налады** → **Перасылка і POP/IMAP** → **Дадаць адрас перасылкі** і ўстаўце свой асабісты адрас
+2. Gmail адправіць на гэты адрас код пацверджання. Ён з'явіцца ў праграме ў **Налады** → **Чэкі з пошты** на картцы **Код пацверджання Gmail** з кнопкай **Капіраваць**. Увядзіце яго ў Gmail. Код паказваецца толькі ў праграме — ніколі ў апавяшчэнні — і толькі каля 30 хвілін; калі ён знік, папрасіце Gmail адправіць яго яшчэ раз
+3. Стварыце **фільтр** (**Налады** → **Фільтры і заблакіраваныя адрасы**) па адрасе адпраўніка крамы або тэме накшталт «чэк» ці «заказ» і абярыце **Перасылаць** на ваш адрас
+
+Не перасылайце ўсю пошту — выкарыстоўвайце фільтр: так лепш для вашай прыватнасці, а староннія лісты не будуць расходаваць ліміт ШІ.
+
+#### Наладжванне перасылкі ў Outlook
+
+1. У Outlook адкрыйце **Параметры** → **Пошта** → **Правілы** і дадайце правіла для лістоў ад крамы або са словам «чэк» у тэме
+2. Абярыце дзеянне **Пераслаць на** і ўвядзіце свой асабісты адрас
+
+Некаторыя ўліковыя запісы Outlook.com і Microsoft 365 блакуюць аўтаматычную перасылку на знешнія адрасы. Калі гэта ваш выпадак, перасылайце кожны чэк уручную — ручная перасылка з тэлефона працуе гэтак жа.
+
+#### Пацверджанне чэка
+
+Калі перасланы чэк прачытаны, вы атрымаеце апавяшчэнне, а на экране Транзакцый з'явіцца банер **Чэкаў з пошты да пацверджання: N**. Спіс заўсёды можна адкрыць і праз **Налады** → **Чэкі з пошты** → **Адкрыць уваходныя чэкі з пошты**.
+
+- Укладка **Да пацверджання** паказвае чэкі, якія чакаюць вас. Націсніце на чэк, каб адкрыць звыклы экран пацверджання чэка, праверце даныя і націсніце **Захаваць выдатак**
+- Калі чэк падобны на ўжо запісаны выдатак, вы ўбачыце тое ж папярэджанне пра дублікат, што і пры сканаванні, у тым ліку **Аб’яднаць у адзін выдатак**
+- Націсніце **Адхіліць**, каб прыбраць чэк, не захоўваючы яго
+- Укладка **Апрацаваныя** паказвае прапушчанае: чэк, які ў вас ужо ёсць, ліст без чэка, чэк, які не ўдалося прачытаць, або непрачытаны з-за вычарпанага ліміту ШІ — дзе гэта магчыма, націсніце **Паўтарыць**
+
+Кожны прачытаны электронны чэк — адно сканаванне чэка ў ліміце ШІ; дублікаты і лісты без чэка прапускаюцца, не расходуючы яго. Калі крама дасылае толькі спасылку на чэк, перашліце замест гэтага PDF — спасылкі ніколі не адкрываюцца. Фота чэка можна захаваць разам з выдаткам; PDF або звычайны ліст не прымацоўваюцца. Для спіса патрэбна падключэнне да інтэрнэту.
+
+#### Калі адрас стаў вядомы староннім
+
+Націсніце **Змяніць адрас**. Бягучы адрас адразу перастане працаваць, а лісты на яго будуць адхіляцца. Потым змяніце правіла перасылкі ў сваёй пошце на новы адрас (Gmail зноў папросіць код пацверджання). Каб зусім перастаць атрымліваць электронныя чэкі, націсніце **Адключыць адрас**.
+
+#### Прыватнасць і захоўванне
+
+- Наш сервер чытае перасланы ліст падчас апрацоўкі — гэтак жа, як любы чэк, які вы скануеце
+- Захоўваецца толькі сам чэк, ніколі не ўвесь ліст. Спасылкі ў лісце ніколі не адкрываюцца, а выявы ніколі не загружаюцца
+- Захаваны чэк выдаляецца, як толькі вы яго пацвердзіце або адхіліце; непацверджаныя элементы выдаляюцца аўтаматычна праз 30 дзён
+- Чэкі з пошты **недаступныя** для рахункаў з **Узроўнем 2 — Поўным шыфраваннем**. З шыфраваннем Узроўню 1 яны працуюць, але непацверджаныя элементы выдаляюцца праз 7 дзён. Гл. Шыфраванне
+
 ## Галасавы даход
 
 Рэгіструйце атрыманыя плацяжы голасам — той самы працэс, што і для галасавога выдатку, аптымізаваны для даходаў.
@@ -40858,6 +41275,58 @@ Heb je een bon als screenshot, een bevestiging uit je bank-app of een e-bon als 
 Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 10 MB). Meerdere bestanden worden na elkaar losse uitgaven — de titel toont de voortgang ('Bon 2 van 5') en **Volgende** gaat naar het volgende bestand. Kan een bestand niet worden gelezen, kies dan **Overslaan** of **Handmatig invoeren**. Bij sluiten vraagt de app eerst voordat wachtende bestanden worden weggegooid. Elk bestand telt als één bonscan binnen je AI-limiet; is die op, dan blijven de overige bestanden voor later.
 
 Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
+
+### E-bonnetjes doorsturen per e-mail
+
+Veel winkels en webshops mailen je een bonnetje of een orderbevestiging. In plaats van het te scannen kun je het doorsturen naar je eigen privéadres — elke doorgestuurde e-mail verschijnt in de app als een uitgave die op je wacht. **Er wordt niets opgeslagen tot je het bevestigt.**
+
+> **Wordt geleidelijk uitgerold.** Deze functie wordt stap voor stap ingeschakeld. Zie je **Bonnetjes per e-mail** in **Instellingen**, dan kun je hem gebruiken. Zie je hem nog niet, dan is hij nog niet beschikbaar voor je account.
+
+#### Je adres
+
+1. Open **Instellingen** → **Bonnetjes per e-mail**
+2. Tik op **Mijn adres aanmaken** (alleen eigenaren en bewerkers van een account kunnen dit)
+3. Tik onder **Je privéadres** op **Kopiëren**
+4. Kies onder **Bonnetjes toevoegen aan** het account waarin bevestigde bonnetjes worden opgeslagen (alleen accounts die je kunt bewerken staan erbij)
+
+Het adres is van jou, niet van het account — leden van een gedeeld account zien de e-mails die jij doorstuurt nooit.
+
+#### Doorsturen instellen in Gmail
+
+1. Open in Gmail **Instellingen** → **Alle instellingen bekijken** → **Doorsturen en POP/IMAP** → **Een doorstuuradres toevoegen** en plak je privéadres
+2. Gmail stuurt een bevestigingscode naar dat adres. Die verschijnt in de app onder **Instellingen** → **Bonnetjes per e-mail** op een kaart **Gmail-bevestigingscode** met een knop **Kopiëren**. Voer hem in Gmail in. De code staat alleen in de app — nooit in een melding — en maar ongeveer 30 minuten; is hij weg, laat Gmail hem dan opnieuw sturen
+3. Maak een **filter** (**Instellingen** → **Filters en geblokkeerde adressen**) voor het afzenderadres van de winkel of een onderwerp zoals "bonnetje" of "bestelling" en kies **Doorsturen naar** je adres
+
+Stuur niet al je e-mail door — gebruik een filter, voor je privacy en zodat niet-gerelateerde berichten je AI-limiet niet opgebruiken.
+
+#### Doorsturen instellen in Outlook
+
+1. Open in Outlook **Instellingen** → **E-mail** → **Regels** en voeg een regel toe voor berichten van de winkel of met "bonnetje" in het onderwerp
+2. Kies de actie **Doorsturen naar** en voer je privéadres in
+
+Sommige Outlook.com- en Microsoft 365-accounts blokkeren automatisch doorsturen naar externe adressen. Is dat bij jou zo, stuur dan elk bonnetje handmatig door — handmatig doorsturen vanaf je telefoon werkt net zo goed.
+
+#### Een bonnetje bevestigen
+
+Zodra een doorgestuurd bonnetje is gelezen, krijg je een melding en verschijnt er een banner op het scherm Transacties: **Bonnetjes per e-mail om te bevestigen: N**. Je kunt de lijst ook altijd openen via **Instellingen** → **Bonnetjes per e-mail** → **Inbox met bonnetjes per e-mail openen**.
+
+- Het tabblad **Te bevestigen** toont de bonnetjes die op je wachten. Tik op een bonnetje om het vertrouwde bevestigingsscherm voor bonnen te openen, controleer de gegevens en tik op **Uitgave opslaan**
+- Lijkt het bonnetje op een uitgave die je al hebt, dan zie je dezelfde waarschuwing voor een dubbele bon als bij scannen, inclusief **Samenvoegen tot één uitgave**
+- Tik op **Negeren** om een bonnetje te laten vallen zonder het op te slaan
+- Het tabblad **Afgehandeld** toont wat is overgeslagen: een bonnetje dat je al hebt, een e-mail zonder bonnetje, een bonnetje dat niet gelezen kon worden of een dat ongelezen bleef omdat je AI-limiet bereikt was — tik waar mogelijk op **Opnieuw proberen**
+
+Elk gelezen e-bonnetje telt als één bonscan binnen je AI-limiet; dubbele bonnen en e-mails zonder bonnetje worden overgeslagen zonder die te gebruiken. Stuurt een winkel alleen een link naar het bonnetje, stuur dan de pdf door — links worden nooit geopend. Een foto van het bonnetje kan bij de uitgave bewaard worden; een pdf of een gewone e-mail wordt niet bijgevoegd. De lijst heeft een internetverbinding nodig.
+
+#### Als je adres uitlekt
+
+Tik op **Adres vernieuwen**. Het oude adres werkt meteen niet meer en e-mail die ernaartoe wordt gestuurd, wordt geweigerd. Pas daarna de doorstuurregel in je mailbox aan naar het nieuwe adres (Gmail vraagt opnieuw om een bevestigingscode). Wil je helemaal geen e-bonnetjes meer ontvangen, tik dan op **Adres uitschakelen**.
+
+#### Privacy en bewaartermijn
+
+- Onze server leest een doorgestuurde e-mail tijdens de verwerking, net als elk bonnetje dat je scant
+- Alleen het bonnetje zelf wordt bewaard, nooit de hele e-mail. Links in de e-mail worden nooit geopend en afbeeldingen nooit geladen
+- Het opgeslagen bonnetje wordt verwijderd zodra je het bevestigt of negeert; onbevestigde items worden na 30 dagen automatisch verwijderd
+- Bonnetjes per e-mail zijn **niet beschikbaar** voor accounts met **Niveau 2 — Volledige versleuteling**. Met versleuteling op Niveau 1 werken ze, maar onbevestigde items worden dan na 7 dagen verwijderd. Zie Versleuteling
 
 ## Spraakinkomsten
 

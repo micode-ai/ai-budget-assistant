@@ -24,6 +24,7 @@ import { ExpenseFilterBar } from '@/components/expenses/ExpenseFilterBar';
 import { BulkTagPickerSheet } from '@/components/BulkTagPickerSheet';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { UncategorizedBanner } from '@/components/categorize/UncategorizedBanner';
+import { InboundReceiptsBanner } from '@/components/inboundMail/InboundReceiptsBanner';
 import { useExpensesScreenData } from '@/features/expenses/useExpensesScreenData';
 
 export function ExpensesMobile() {
@@ -224,6 +225,7 @@ export function ExpensesMobile() {
         </View>
       )}
 
+      {activeTab === 'expenses' && <InboundReceiptsBanner />}
       {activeTab === 'expenses' && (
         <UncategorizedBanner onPress={() => router.push('/expense/categorize')} />
       )}

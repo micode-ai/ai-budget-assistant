@@ -202,6 +202,50 @@ footer.site .wrap{padding:30px 22px;display:flex;flex-direction:column;align-ite
 </ol>
 <p>Puedes compartir <strong>imágenes y PDF</strong>, hasta <strong>10 archivos a la vez</strong> (PDF de hasta 10 MB). Varios archivos se convierten en gastos separados, uno tras otro: el título muestra el progreso («Recibo 2 de 5») y <strong>Siguiente</strong> pasa al archivo siguiente. Si un archivo no se puede leer, elige <strong>Omitir</strong> o <strong>Introducir a mano</strong>. Al cerrar la pantalla, la app pregunta antes de descartar los archivos pendientes. Cada archivo cuenta como un escaneo de recibo en tu límite de IA; si se agota, los archivos restantes quedan para más tarde.</p>
 <p>Compartir solo funciona en Android. En iPhone y en la app web usa <strong>Escanear recibo</strong>.</p>
+<h3>Reenviar e-recibos por correo</h3>
+<p>Muchas tiendas físicas y online te envían un recibo o una confirmación de pedido por correo. En lugar de escanearlo, puedes reenviarlo a tu propia dirección privada: cada correo reenviado aparece en la app como un gasto que espera tu confirmación. <strong>No se guarda nada hasta que lo confirmas.</strong></p>
+<blockquote>
+<p><strong>Se está activando poco a poco.</strong> Si ves <strong>Recibos por e-mail</strong> en <strong>Ajustes</strong>, ya puedes usarla. Si todavía no la ves, aún no ha llegado a tu cuenta.</p>
+</blockquote>
+<h4>Tu dirección</h4>
+<ol>
+<li>Abre <strong>Ajustes</strong> → <strong>Recibos por e-mail</strong></li>
+<li>Toca <strong>Crear mi dirección</strong> (solo los propietarios y editores de la cuenta pueden hacerlo)</li>
+<li>En <strong>Tu dirección privada</strong>, toca <strong>Copiar</strong></li>
+<li>En <strong>Añadir recibos a</strong>, elige la cuenta donde se guardan los recibos confirmados (solo aparecen las cuentas que puedes editar)</li>
+</ol>
+<p>La dirección es tuya, no de la cuenta: los miembros de una cuenta compartida nunca ven los correos que reenvías.</p>
+<h4>Configurar el reenvío en Gmail</h4>
+<ol>
+<li>En Gmail abre <strong>Configuración</strong> → <strong>Ver toda la configuración</strong> → <strong>Reenvío y correo POP/IMAP</strong> → <strong>Añadir una dirección de reenvío</strong> y pega tu dirección privada</li>
+<li>Gmail envía un código de confirmación a esa dirección. Aparece en la app, en <strong>Ajustes</strong> → <strong>Recibos por e-mail</strong>, en una tarjeta <strong>Código de confirmación de Gmail</strong> con un botón <strong>Copiar</strong>. Introdúcelo en Gmail. El código solo se muestra en la app —nunca en una notificación— y solo durante unos 30 minutos; si ya no está, pide a Gmail que lo envíe de nuevo</li>
+<li>Crea un <strong>filtro</strong> (<strong>Configuración</strong> → <strong>Filtros y direcciones bloqueadas</strong>) para la dirección del remitente de la tienda o un asunto como «recibo» o «pedido», y elige <strong>Reenviarlo a</strong> tu dirección</li>
+</ol>
+<p>No reenvíes todo tu correo: usa un filtro, por tu privacidad y para que los mensajes ajenos no gasten tu límite de IA.</p>
+<h4>Configurar el reenvío en Outlook</h4>
+<ol>
+<li>En Outlook abre <strong>Configuración</strong> → <strong>Correo</strong> → <strong>Reglas</strong> y añade una regla para los mensajes de la tienda o con «recibo» en el asunto</li>
+<li>Elige la acción <strong>Reenviar a</strong> e introduce tu dirección privada</li>
+</ol>
+<p>Algunas cuentas de Outlook.com y Microsoft 365 bloquean el reenvío automático a direcciones externas. Si es tu caso, reenvía cada recibo manualmente: un reenvío manual desde el móvil funciona igual.</p>
+<h4>Confirmar un recibo</h4>
+<p>Cuando se ha leído un recibo reenviado, recibes una notificación y aparece un aviso en la pantalla de Transacciones: <strong>Recibos por e-mail por confirmar: N</strong>. También puedes abrir la lista en cualquier momento desde <strong>Ajustes</strong> → <strong>Recibos por e-mail</strong> → <strong>Abrir la bandeja de recibos por e-mail</strong>.</p>
+<ul>
+<li>La pestaña <strong>Por confirmar</strong> muestra los recibos que te esperan. Toca uno para abrir la pantalla habitual de confirmación del recibo, revisa los datos y toca <strong>Guardar gasto</strong></li>
+<li>Si el recibo parece un gasto que ya tienes, verás el mismo aviso de duplicado que al escanear, incluido <strong>Unir en un solo gasto</strong></li>
+<li>Toca <strong>Descartar</strong> para desechar un recibo sin guardarlo</li>
+<li>La pestaña <strong>Gestionados</strong> muestra lo que se omitió: un recibo que ya tienes, un correo sin recibo, uno que no se pudo leer o uno sin leer porque se alcanzó tu límite de IA; cuando corresponda, toca <strong>Reintentar</strong></li>
+</ul>
+<p>Cada e-recibo leído cuenta como un escaneo de recibo en tu límite de IA; los duplicados y los correos sin recibo se omiten sin gastarlo. Si una tienda solo envía un enlace al recibo, reenvía el PDF: los enlaces nunca se abren. Una foto del recibo se puede guardar con el gasto; un PDF o un correo de texto no se adjuntan. La lista necesita conexión a internet.</p>
+<h4>Si tu dirección se filtra</h4>
+<p>Toca <strong>Cambiar dirección</strong>. La dirección actual deja de funcionar al instante y el correo enviado a ella se rechaza. Después cambia la regla de reenvío de tu buzón a la nueva dirección (Gmail volverá a pedir un código de confirmación). Para dejar de recibir e-recibos por completo, toca <strong>Desactivar dirección</strong>.</p>
+<h4>Privacidad y conservación</h4>
+<ul>
+<li>Nuestro servidor lee el correo reenviado mientras lo procesa, igual que cualquier recibo que escaneas</li>
+<li>Solo se guarda el recibo, nunca el correo completo. Los enlaces del correo nunca se abren y sus imágenes nunca se cargan</li>
+<li>El recibo guardado se elimina en cuanto lo confirmas o descartas; los elementos sin confirmar se eliminan automáticamente a los 30 días</li>
+<li>Los recibos por e-mail <strong>no están disponibles</strong> en cuentas con <strong>Nivel 2 — Cifrado completo</strong>. Con el cifrado de Nivel 1 funcionan, pero los elementos sin confirmar se eliminan a los 7 días. Consulta <a href="/help/es/encryption/">Cifrado</a></li>
+</ul>
 <h2>Ingresos por voz</h2>
 <p>Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.</p>
 <h3>Cómo funciona</h3>

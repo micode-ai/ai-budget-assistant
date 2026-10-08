@@ -1,0 +1,40 @@
+# Receive-only SMTP container for forwarded e-receipts (ABA-644).
+# Internet-facing: small image, non-root, no shared packages, no outbound mail code.
+#
+# Base image: Node 22 LTS, pinned by digest (the tag is only a human-readable label; the digest is
+# what is pulled). To bump: look up the new digest of node:<tag>-alpine<ver> and change BOTH.
+# Dependencies come from apps/inbound-mail/package-lock.json via `npm ci` (exact, reproducible).
+# That lock is standalone on purpose: the root lock needs every workspace (incl. apps/mobile, which
+# .dockerignore excludes), so `npm ci` against it cannot run in this image. Regenerate it after any
+# dependency change: see docs/ops/inbound-mail.md ("Dependency updates").
+
+ARG NODE_IMAGE=node:22.22.3-alpine3.23@sha256:968df39aedcea65eeb078fb336ed7191baf48f972b4479711397108be0966920
+
+FROM ${NODE_IMAGE} AS deps
+WORKDIR /app
+COPY apps/inbound-mail/package.json apps/inbound-mail/package-lock.json ./
+RUN npm ci --no-audit --no-fund
+
+FROM deps AS builder
+COPY apps/inbound-mail/tsconfig.json apps/inbound-mail/tsconfig.build.json ./
+COPY apps/inbound-mail/src ./src
+RUN npm run build
+
+FROM ${NODE_IMAGE} AS proddeps
+WORKDIR /app
+COPY apps/inbound-mail/package.json apps/inbound-mail/package-lock.json ./
+RUN npm ci --omit=dev --no-audit --no-fund
+
+FROM ${NODE_IMAGE} AS runner
+ENV NODE_ENV=production
+WORKDIR /app
+COPY --from=proddeps /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY apps/inbound-mail/package.json ./
+USER node
+EXPOSE 2525
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
+  CMD ["node", "dist/healthcheck.js"]
+
+CMD ["node", "dist/main.js"]

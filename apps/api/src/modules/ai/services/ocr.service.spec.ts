@@ -1,4 +1,4 @@
-import { buildCanonicalNameFallback, OcrService, OCR_REREAD_FEATURE_TYPE, ParsedReceipt } from './ocr.service';
+import { buildCanonicalNameFallback, OcrService, OCR_REREAD_FEATURE_TYPE, ParsedReceipt, stripUrlsFromText } from './ocr.service';
 
 describe('buildCanonicalNameFallback', () => {
   it('preserves size discriminators: fat% and volume (original token order)', () => {
@@ -350,6 +350,54 @@ describe('OcrService', () => {
         'acc-1',
         'user-1',
       );
+    });
+  });
+
+  describe('parseReceiptText (ABA-644: e-mail bodies)', () => {
+    it('sends ONE plain-text user message: no image_url or file part, so nothing can be fetched', async () => {
+      mockOpenAiResponse();
+
+      await service.parseReceiptText('Total 12,50 PLN', 'user-1', 'acc-1', 'Source: forwarded e-mail from shop.pl');
+
+      const call = mockChatCreate.mock.calls[0][0];
+      expect(call.messages).toHaveLength(2);
+      expect(typeof call.messages[1].content).toBe('string');
+      expect(JSON.stringify(call)).not.toContain('image_url');
+      expect(JSON.stringify(call)).not.toContain('"file"');
+    });
+
+    it('replaces every URL in the text with a placeholder before it reaches the model', async () => {
+      mockOpenAiResponse();
+
+      await service.parseReceiptText(
+        'Paragon 12,50 PLN https://track.example.com/open?id=1 and www.evil.test/x <img src="http://px.test/a.gif">',
+        'user-1',
+        'acc-1',
+      );
+
+      const sent = mockChatCreate.mock.calls[0][0].messages[1].content as string;
+      expect(sent).not.toMatch(/https?:\/\//);
+      expect(sent).not.toContain('www.evil.test');
+      expect(sent).toContain('[link]');
+      expect(sent).toContain('12,50 PLN');
+    });
+
+    it('fingerprints the text by default, and the supplied source when given', async () => {
+      const { createHash } = await import('crypto');
+      const sha = (v: string) => createHash('sha256').update(v).digest('hex');
+      mockOpenAiResponse();
+
+      const byText = await service.parseReceiptText('hello', 'user-1', 'acc-1');
+      const bySource = await service.parseReceiptText('hello', 'user-1', 'acc-1', undefined, { fingerprintSource: 'cGRm' });
+
+      expect(byText.fingerprint).toBe(sha(Buffer.from('hello').toString('base64')));
+      expect(bySource.fingerprint).toBe(sha('cGRm'));
+    });
+  });
+
+  describe('stripUrlsFromText', () => {
+    it('leaves URL-free text untouched', () => {
+      expect(stripUrlsFromText('Mleko 3,20 zł')).toBe('Mleko 3,20 zł');
     });
   });
 

@@ -131,6 +131,58 @@ Vous pouvez partager des **images et des PDF**, jusqu'à **10 fichiers à la foi
 
 Le partage fonctionne uniquement sur Android. Sur iPhone et dans l'app web, utilisez **Scanner un reçu**.
 
+### Transférer ses e-reçus par e-mail
+
+Beaucoup de magasins et de boutiques en ligne vous envoient un reçu ou une confirmation de commande par e-mail. Au lieu de le scanner, vous pouvez le transférer vers votre propre adresse privée : chaque e-mail transféré apparaît dans l'app comme une dépense qui vous attend. **Rien n'est enregistré avant votre confirmation.**
+
+> **Déploiement progressif.** Cette fonctionnalité est activée peu à peu. Si vous voyez **Reçus par e-mail** dans les **Paramètres**, vous pouvez l'utiliser. Sinon, elle n'est pas encore arrivée sur votre compte.
+
+#### Votre adresse
+
+1. Ouvrez **Paramètres** → **Reçus par e-mail**
+2. Appuyez sur **Créer mon adresse** (seuls les propriétaires et les éditeurs du compte peuvent le faire)
+3. Sous **Votre adresse privée**, appuyez sur **Copier**
+4. Sous **Ajouter les reçus à**, choisissez le compte où les reçus confirmés sont enregistrés (seuls les comptes que vous pouvez modifier sont proposés)
+
+L'adresse vous appartient, pas au compte : les membres d'un compte partagé ne voient jamais les e-mails que vous transférez.
+
+#### Configurer le transfert dans Gmail
+
+1. Dans Gmail, ouvrez **Paramètres** → **Voir tous les paramètres** → **Transfert et POP/IMAP** → **Ajouter une adresse de transfert** et collez votre adresse privée
+2. Gmail envoie un code de confirmation à cette adresse. Il apparaît dans l'app, dans **Paramètres** → **Reçus par e-mail**, sur une carte **Code de confirmation Gmail** avec un bouton **Copier**. Saisissez-le dans Gmail. Le code n'est affiché que dans l'app — jamais dans une notification — et seulement pendant environ 30 minutes ; s'il a disparu, demandez à Gmail de le renvoyer
+3. Créez un **filtre** (**Paramètres** → **Filtres et adresses bloquées**) pour l'adresse de l'expéditeur du magasin ou un objet tel que « reçu » ou « commande », puis choisissez **Le transférer à** votre adresse
+
+Ne transférez pas tout votre courrier : utilisez un filtre, pour votre confidentialité et pour que les messages sans rapport n'épuisent pas votre limite d'IA.
+
+#### Configurer le transfert dans Outlook
+
+1. Dans Outlook, ouvrez **Paramètres** → **Courrier** → **Règles** et ajoutez une règle pour les messages du magasin ou dont l'objet contient « reçu »
+2. Choisissez l'action **Transférer à** et saisissez votre adresse privée
+
+Certains comptes Outlook.com et Microsoft 365 bloquent le transfert automatique vers des adresses externes. Si c'est votre cas, transférez chaque reçu manuellement — un transfert manuel depuis votre téléphone fonctionne tout aussi bien.
+
+#### Confirmer un reçu
+
+Quand un reçu transféré a été lu, vous recevez une notification et un bandeau s'affiche sur l'écran Transactions : **Reçus par e-mail à confirmer : N**. Vous pouvez aussi ouvrir la liste à tout moment via **Paramètres** → **Reçus par e-mail** → **Ouvrir la boîte des reçus par e-mail**.
+
+- L'onglet **À confirmer** liste les reçus qui vous attendent. Appuyez sur l'un d'eux pour ouvrir l'écran habituel de confirmation du reçu, vérifiez les informations et appuyez sur **Enregistrer la dépense**
+- Si le reçu ressemble à une dépense que vous avez déjà, vous voyez le même avertissement de doublon que pour un scan, y compris **Fusionner en une seule dépense**
+- Appuyez sur **Écarter** pour abandonner un reçu sans l'enregistrer
+- L'onglet **Traités** montre ce qui a été ignoré : un reçu que vous avez déjà, un e-mail sans reçu, un reçu illisible ou un reçu non lu parce que votre limite d'IA était atteinte — le cas échéant, appuyez sur **Réessayer**
+
+Chaque e-reçu lu compte comme un scan de reçu dans votre limite d'IA ; les doublons et les e-mails sans reçu sont ignorés sans l'utiliser. Si un magasin n'envoie qu'un lien vers le reçu, transférez plutôt le PDF : les liens ne sont jamais ouverts. Une photo du reçu peut être conservée avec la dépense ; un PDF ou un simple e-mail n'est pas joint. La liste nécessite une connexion internet.
+
+#### Si votre adresse fuite
+
+Appuyez sur **Changer d'adresse**. L'ancienne adresse cesse immédiatement de fonctionner et les messages qui lui sont envoyés sont rejetés. Remplacez ensuite, dans votre messagerie, la règle de transfert par la nouvelle adresse (Gmail redemandera un code de confirmation). Pour ne plus recevoir d'e-reçus du tout, appuyez sur **Désactiver l'adresse**.
+
+#### Confidentialité et conservation
+
+- Notre serveur lit l'e-mail transféré pendant son traitement, comme pour tout reçu que vous scannez
+- Seul le reçu lui-même est conservé, jamais l'e-mail entier. Les liens de l'e-mail ne sont jamais ouverts et ses images ne sont jamais chargées
+- Le reçu stocké est supprimé dès que vous le confirmez ou l'écartez ; les éléments non confirmés sont supprimés automatiquement au bout de 30 jours
+- Les reçus par e-mail **ne sont pas disponibles** pour les comptes en **Niveau 2 — Chiffrement complet**. Avec le chiffrement de Niveau 1, ils fonctionnent, mais les éléments non confirmés sont supprimés au bout de 7 jours. Voir [Chiffrement](./15-encryption.md)
+
 ## Revenus vocaux
 
 Enregistrez les paiements reçus par la voix — même flux que la dépense vocale, optimisé pour les revenus.

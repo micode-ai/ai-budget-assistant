@@ -28,3 +28,4 @@ export * from './purchase-request';
 export * from './family-feed';
 export * from './trip';
 export * from './group';
+export * from './inboundMail';

@@ -136,6 +136,18 @@ export class CacheService implements OnModuleDestroy {
     return totalHits as number;
   }
 
+  /**
+   * Current hit count of a window counter written by `incrementWindow`, WITHOUT
+   * incrementing it (0 when the key is absent). Like `incrementWindow` it does
+   * NOT swallow Redis errors — a security limit that reads "0" on an outage is
+   * a limit that is off exactly when it matters, so callers must fail closed.
+   */
+  async peekWindow(key: string): Promise<number> {
+    const raw = await this.redis.get(key);
+    const n = raw === null ? 0 : parseInt(raw, 10);
+    return Number.isFinite(n) ? n : 0;
+  }
+
   async onModuleDestroy(): Promise<void> {
     await this.redis.quit().catch(() => undefined);
   }

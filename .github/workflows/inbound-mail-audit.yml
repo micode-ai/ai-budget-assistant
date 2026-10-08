@@ -1,0 +1,56 @@
+name: Inbound-mail dependency audit
+
+# smtp-server / mailparser / mailauth / html-to-text parse hostile internet input on port 25
+# (ABA-644), so a high-severity advisory in their runtime tree must surface within a week, not at
+# the next release. Audits the standalone lock the Docker image installs from (npm ci), production
+# dependencies only (the dev tree is not shipped).
+
+on:
+  push:
+    branches: [development]
+    paths:
+      - 'apps/inbound-mail/package.json'
+      - 'apps/inbound-mail/package-lock.json'
+      - '.github/workflows/inbound-mail-audit.yml'
+  pull_request:
+    paths:
+      - 'apps/inbound-mail/package.json'
+      - 'apps/inbound-mail/package-lock.json'
+  schedule:
+    - cron: '30 6 * * 1' # Mondays 06:30 UTC
+  workflow_dispatch:
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      # Copied out of the workspace: inside the monorepo npm resolves the ROOT lock (every app's
+      # dependencies) and the audit would be about the wrong tree.
+      - name: npm audit (production, high+)
+        run: |
+          set -euo pipefail
+          D=$(mktemp -d)
+          cp apps/inbound-mail/package.json apps/inbound-mail/package-lock.json "$D"/
+          cd "$D"
+          npm ci --ignore-scripts --omit=dev --no-fund
+          npm audit --omit=dev --audit-level=high
+      - name: Notify Telegram on failure
+        if: failure() && github.event_name == 'schedule'
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.OPS_TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.OPS_TELEGRAM_CHAT_ID }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$TELEGRAM_BOT_TOKEN" ] || [ -z "$TELEGRAM_CHAT_ID" ]; then
+            echo "OPS_TELEGRAM_* secrets missing, cannot alert" >&2
+            exit 1
+          fi
+          curl -sS -m 15 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=inbound-mail: npm audit found a high/critical advisory in the SMTP container's runtime dependencies. ${RUN_URL}" \
+            > /dev/null

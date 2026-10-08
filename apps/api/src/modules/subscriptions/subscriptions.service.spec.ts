@@ -72,6 +72,44 @@ function makeService(prismaOverrides: Record<string, any> = {}, adminGateway?: a
   return { service, prisma, telegramService, notificationsService };
 }
 
+// ── refundAiUsage (ABA-644: a mail the model calls "not a receipt" is not billed) ──
+
+describe('SubscriptionsService — refundAiUsage', () => {
+  const subWith = (aiRequestsUsed: number) => ({
+    id: 'sub-1', userId: 'u1', tier: 'free', status: 'active', aiRequestsUsed,
+    aiRequestsResetAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    customAiLimit: null, bonusAiRequests: 0,
+  });
+
+  it('decrements the counter and records a negative usage-log row', async () => {
+    const { service, prisma } = makeService({
+      subscription: {
+        upsert: jest.fn().mockResolvedValue(subWith(10)),
+        update: jest.fn().mockResolvedValue({}),
+      },
+    });
+    await service.refundAiUsage('u1', 'ocr', 2, 'acc-1');
+    expect(prisma.subscription.update).toHaveBeenCalledWith({ where: { userId: 'u1' }, data: { aiRequestsUsed: { decrement: 2 } } });
+    expect(prisma.usageLog.create).toHaveBeenCalledWith({
+      data: { userId: 'u1', subscriptionId: 'sub-1', featureType: 'ocr', costUnits: -2, accountId: 'acc-1' },
+    });
+  });
+
+  it('never takes the counter below zero (a period reset between charge and refund)', async () => {
+    const { service, prisma } = makeService({
+      subscription: { upsert: jest.fn().mockResolvedValue(subWith(0.5)), update: jest.fn().mockResolvedValue({}) },
+    });
+    await service.refundAiUsage('u1', 'ocr', 2);
+    expect(prisma.subscription.update).toHaveBeenCalledWith({ where: { userId: 'u1' }, data: { aiRequestsUsed: { decrement: 0.5 } } });
+
+    const zero = makeService({
+      subscription: { upsert: jest.fn().mockResolvedValue(subWith(0)), update: jest.fn() },
+    });
+    await zero.service.refundAiUsage('u1', 'ocr', 2);
+    expect(zero.prisma.subscription.update).not.toHaveBeenCalled();
+  });
+});
+
 // ── trackAiUsage ──────────────────────────────────────────────────────────────
 
 describe('SubscriptionsService — trackAiUsage (tier gating)', () => {

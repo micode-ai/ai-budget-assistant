@@ -43,7 +43,9 @@ export class BackupsService {
     });
     if (!account) throw new NotFoundException('Account not found');
 
-    // Query all entities in parallel
+    // Query all entities in parallel. Deliberately NOT exported: inbound e-receipts
+    // (inbound_receipts / inbound_mail_addresses, ABA-644) are transient staging rows holding
+    // forwarded mail, and a backup file must never carry them.
     const [expenses, incomes, budgets, categories, tags, projects, walletBalances, currencyExchanges] = await Promise.all([
       this.prisma.expense.findMany({
         where: { accountId, isDeleted: false },

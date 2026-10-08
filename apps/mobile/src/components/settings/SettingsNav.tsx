@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Pressable } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
 import { SETTINGS_NAV_WIDTH } from '@/components/webLayout.constants';
 import {
   isCurrentSelection,
@@ -40,7 +41,12 @@ interface Props {
  */
 export function SettingsNav({ selectedKey, isAdmin, pendingPurchaseRequests }: Props) {
   const styles = useStyles(createStyles);
-  const entries = visibleSettingsEntries(isAdmin);
+  const inboundMail = useInboundReceiptStore((s) => s.availability === 'available');
+  // Learn whether the e-mail receipts feature is on (a 404 hides its row).
+  useEffect(() => {
+    void useInboundReceiptStore.getState().probe();
+  }, []);
+  const entries = visibleSettingsEntries(isAdmin, { inboundMail });
   const panes = entries.filter(isPaneEntry);
   const links = entries.filter(isLinkEntry);
 

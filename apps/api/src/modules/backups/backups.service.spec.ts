@@ -128,6 +128,20 @@ describe('BackupsService — exportBackup', () => {
     await expect(service.exportBackup('no-acc', 'u1')).rejects.toThrow(NotFoundException);
   });
 
+  it('never reads inbound e-receipt staging rows into a backup (ABA-644)', async () => {
+    const prisma: any = makePrisma({
+      inboundReceipt: { findMany: jest.fn() },
+      inboundMailAddress: { findMany: jest.fn() },
+    });
+    const service = new BackupsService(prisma as any);
+
+    const { jsonStr } = await service.exportBackup('acc-1', 'u1');
+
+    expect(prisma.inboundReceipt.findMany).not.toHaveBeenCalled();
+    expect(prisma.inboundMailAddress.findMany).not.toHaveBeenCalled();
+    expect(Object.keys(JSON.parse(jsonStr).data)).not.toEqual(expect.arrayContaining(['inboundReceipts']));
+  });
+
   it('strips receiptImage from every expense so it is absent from the JSON output', async () => {
     const receiptBuffer = Buffer.from([1, 2, 3]);
     const prisma = makePrisma({

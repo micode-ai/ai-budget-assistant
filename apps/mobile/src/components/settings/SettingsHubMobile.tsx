@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '@/stores/authStore';
 import { usePurchaseRequestStore } from '@/stores/purchaseRequestStore';
+import { useInboundReceiptStore } from '@/stores/inboundReceiptStore';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { SettingsProfileCard, SettingsLogoutButton } from './SettingsIdentity';
 
@@ -41,6 +42,12 @@ export function SettingsHubMobile() {
   useEffect(() => {
     loadPendingCount();
   }, [loadPendingCount]);
+
+  // E-mail receipts (ABA-644): the row exists only while the server feature is on.
+  const inboundMailOn = useInboundReceiptStore((s) => s.availability === 'available');
+  useEffect(() => {
+    void useInboundReceiptStore.getState().probe();
+  }, []);
 
   const categories: SettingsCategory[] = [
     {
@@ -95,6 +102,16 @@ export function SettingsHubMobile() {
       description: t('settings.bots.subtitle'),
       route: '/settings/bots',
     },
+    ...(inboundMailOn
+      ? [
+          {
+            icon: 'mail-outline' as IconName,
+            label: t('emailReceipts.title'),
+            description: t('emailReceipts.subtitle'),
+            route: '/settings/email-receipts',
+          },
+        ]
+      : []),
     {
       icon: 'cloud-download-outline',
       label: t('bankImport.title'),

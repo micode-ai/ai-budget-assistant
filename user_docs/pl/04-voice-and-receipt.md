@@ -131,6 +131,58 @@ Możesz udostępniać **zdjęcia i pliki PDF**, maksymalnie **10 plików naraz**
 
 Udostępnianie działa tylko na Androidzie. Na iPhonie i w aplikacji webowej użyj **Skanuj paragon**.
 
+### Przekazywanie e-paragonów e-mailem
+
+Wiele sklepów i sklepów internetowych wysyła paragon lub potwierdzenie zamówienia e-mailem. Zamiast go skanować, możesz przekazać go na swój prywatny adres — każdy przekazany e-mail pojawi się w aplikacji jako wydatek czekający na Ciebie. **Nic nie zostanie zapisane, dopóki tego nie potwierdzisz.**
+
+> **Funkcja jest stopniowo udostępniana.** Jeśli widzisz **Paragony z e-maila** w **Ustawieniach**, możesz z niej korzystać. Jeśli jeszcze jej nie widzisz, nie dotarła jeszcze do Twojego konta.
+
+#### Twój adres
+
+1. Otwórz **Ustawienia** → **Paragony z e-maila**
+2. Dotknij **Utwórz mój adres** (mogą to zrobić tylko właściciele i edytorzy konta)
+3. W sekcji **Twój prywatny adres** dotknij **Kopiuj**
+4. W sekcji **Dodawaj paragony do** wybierz konto, w którym będą zapisywane potwierdzone paragony (widać tylko konta, które możesz edytować)
+
+Adres należy do Ciebie, nie do konta — członkowie wspólnego konta nigdy nie widzą e-maili, które przekazujesz.
+
+#### Konfiguracja przekazywania w Gmailu
+
+1. W Gmailu otwórz **Ustawienia** → **Wyświetl wszystkie ustawienia** → **Przekazywanie i POP/IMAP** → **Dodaj adres przekazywania** i wklej swój prywatny adres
+2. Gmail wyśle na ten adres kod potwierdzający. Pojawi się on w aplikacji w **Ustawienia** → **Paragony z e-maila** na karcie **Kod potwierdzający Gmaila** z przyciskiem **Kopiuj**. Wpisz go w Gmailu. Kod jest widoczny tylko w aplikacji — nigdy w powiadomieniu — i tylko przez około 30 minut; jeśli zniknął, poproś Gmaila o ponowne wysłanie
+3. Utwórz **filtr** (**Ustawienia** → **Filtry i zablokowane adresy**) dla adresu nadawcy sklepu lub tematu, np. „paragon” albo „zamówienie”, i wybierz **Przekaż dalej** na swój adres
+
+Nie przekazuj całej poczty — użyj filtra, dla własnej prywatności i po to, by niepowiązane wiadomości nie zużywały limitu AI.
+
+#### Konfiguracja przekazywania w Outlooku
+
+1. W Outlooku otwórz **Ustawienia** → **Poczta** → **Reguły** i dodaj regułę dla wiadomości ze sklepu lub ze słowem „paragon” w temacie
+2. Wybierz akcję **Przekaż dalej do** i wpisz swój prywatny adres
+
+Niektóre konta Outlook.com i Microsoft 365 blokują automatyczne przekazywanie na adresy zewnętrzne. Jeśli tak jest u Ciebie, przekazuj każdy paragon ręcznie — ręczne przekazanie z telefonu działa tak samo.
+
+#### Potwierdzanie paragonu
+
+Gdy przekazany paragon zostanie odczytany, dostaniesz powiadomienie, a na ekranie Transakcji pojawi się baner **Paragony z e-maila do potwierdzenia: N**. Listę możesz też zawsze otworzyć przez **Ustawienia** → **Paragony z e-maila** → **Otwórz skrzynkę paragonów z e-maila**.
+
+- Zakładka **Do potwierdzenia** pokazuje paragony czekające na Ciebie. Dotknij paragonu, aby otworzyć zwykły ekran potwierdzenia paragonu, sprawdź dane i dotknij **Zapisz wydatek**
+- Jeśli paragon wygląda na wydatek, który już masz, zobaczysz to samo ostrzeżenie o duplikacie co przy skanowaniu — łącznie z **Połącz w jeden wydatek**
+- Dotknij **Odrzuć**, aby pominąć paragon bez zapisywania
+- Zakładka **Obsłużone** pokazuje to, co zostało pominięte: paragon, który już masz, e-mail bez paragonu, paragon, którego nie dało się odczytać, albo nieodczytany z powodu wyczerpanego limitu AI — w razie potrzeby dotknij **Spróbuj ponownie**
+
+Każdy odczytany e-paragon to jedno skanowanie paragonu w limicie AI; duplikaty i e-maile bez paragonu są pomijane bez zużywania limitu. Jeśli sklep wysyła tylko link do paragonu, przekaż zamiast tego plik PDF — linki nigdy nie są otwierane. Zdjęcie paragonu można zachować przy wydatku; PDF ani zwykły e-mail nie są dołączane. Lista wymaga połączenia z internetem.
+
+#### Jeśli Twój adres wycieknie
+
+Dotknij **Zmień adres**. Obecny adres natychmiast przestaje działać, a poczta wysłana na niego jest odrzucana. Następnie zmień regułę przekazywania w swojej skrzynce na nowy adres (Gmail ponownie poprosi o kod potwierdzający). Aby całkowicie przestać odbierać e-paragony, dotknij **Wyłącz adres**.
+
+#### Prywatność i przechowywanie
+
+- Nasz serwer odczytuje przekazany e-mail podczas przetwarzania, tak samo jak każdy skanowany paragon
+- Przechowywany jest tylko sam paragon, nigdy cały e-mail. Linki w e-mailu nigdy nie są otwierane, a obrazy nigdy nie są pobierane
+- Zapisany paragon jest usuwany, gdy tylko go potwierdzisz lub odrzucisz; niepotwierdzone pozycje są usuwane automatycznie po 30 dniach
+- Paragony z e-maila **nie są dostępne** dla kont z **Poziomem 2 — Pełnym szyfrowaniem**. Przy szyfrowaniu na Poziomie 1 działają, ale niepotwierdzone pozycje są usuwane po 7 dniach. Zobacz [Szyfrowanie](./15-encryption.md)
+
 ## Głosowe przychody
 
 Rejestruj otrzymane płatności głosowo — ten sam przepływ co Wydatek głosowy, zoptymalizowany dla przychodów.

@@ -276,6 +276,10 @@ model User {
   ownedExpenseGroups      ExpenseGroup[]       @relation("OwnedExpenseGroups")
   expenseGroupMemberships ExpenseGroupMember[]
 
+  // Inbound e-receipts by e-mail forwarding (ABA-644)
+  inboundMailAddress InboundMailAddress?
+  inboundReceipts    InboundReceipt[]
+
   // Where this signup came from, captured from the CTA query string on the visitor's
   // FIRST arrival at the web app and replayed at registration (ABA-436). Flat columns
   // rather than one Json blob on purpose: the admin groups by these, and Prisma cannot
@@ -427,6 +431,8 @@ model Account {
   shoppingNotificationLogs       ShoppingNotificationLog[]
   insightNotificationLogs        InsightNotificationLog[]
   salaryProfiles                 SalaryProfile[]
+  inboundMailAddresses           InboundMailAddress[]
+  inboundReceipts                InboundReceipt[]
 
   @@map("accounts")
 }
@@ -2429,4 +2435,61 @@ model GroupSettlement {
   @@unique([groupId, clientRequestId])
   @@index([groupId, voidedAt])
   @@map("group_settlements")
+}
+
+// Inbound e-receipts by e-mail forwarding (ABA-644). One private address per user;
+// forwarded mail becomes a pending InboundReceipt the user confirms in the app.
+model InboundMailAddress {
+  id              String    @id @default(uuid())
+  userId          String    @unique @map("user_id")
+  token           String    @unique // 16 chars [a-z2-7], 80 bits
+  targetAccountId String    @map("target_account_id")
+  disabledAt      DateTime? @map("disabled_at")
+  rotatedAt       DateTime? @map("rotated_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  user          User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  targetAccount Account @relation(fields: [targetAccountId], references: [id], onDelete: Cascade)
+
+  @@map("inbound_mail_addresses")
+}
+
+model InboundReceipt {
+  id                     String   @id @default(uuid())
+  userId                 String   @map("user_id")
+  accountId              String   @map("account_id")
+  kind                   String   @default("receipt") // receipt | forwarding_verification
+  // received | processing | pending | confirmed | dismissed | duplicate
+  // | not_a_receipt | quota_exceeded | unsupported | failed
+  status                 String   @default("received")
+  messageIdHash          String   @map("message_id_hash")
+  contentHash            String?  @map("content_hash")
+  fromAddress            String   @map("from_address")
+  subject                String?
+  authSpf                String?  @map("auth_spf")
+  authDkim               String?  @map("auth_dkim")
+  authDmarc              String?  @map("auth_dmarc")
+  documentKind           String?  @map("document_kind") // pdf | image | text
+  documentMime           String?  @map("document_mime")
+  document               Bytes? // nulled on confirm/dismiss/expiry
+  documentText           String?  @map("document_text") // text body, same lifecycle
+  ignoredAttachmentCount Int      @default(0) @map("ignored_attachment_count")
+  extraction             Json? // ReceiptExpense minus possibleDuplicate
+  verificationCode       String?  @map("verification_code")
+  expenseId              String?  @map("expense_id") // server PK after confirm
+  attempts               Int      @default(0)
+  errorCode              String?  @map("error_code")
+  expiresAt              DateTime @map("expires_at")
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, messageIdHash])
+  @@index([userId, accountId, status])
+  @@index([status, updatedAt])
+  @@index([expiresAt])
+  @@map("inbound_receipts")
 }

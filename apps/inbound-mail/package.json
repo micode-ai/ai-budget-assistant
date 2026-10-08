@@ -1,0 +1,42 @@
+{
+  "name": "@budget/inbound-mail",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Receive-only SMTP container for forwarded e-receipts (ABA-644). No outbound path, no relay.",
+  "main": "dist/main.js",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "lint": "eslint \"src/**/*.ts\"",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "audit": "npm audit --audit-level=high"
+  },
+  "dependencies": {
+    "html-to-text": "9.0.5",
+    "mailauth": "7.1.1",
+    "mailparser": "3.9.37",
+    "smtp-server": "3.19.18"
+  },
+  "devDependencies": {
+    "@types/html-to-text": "9.0.4",
+    "@types/jest": "29.5.14",
+    "@types/mailparser": "3.9.0",
+    "@types/node": "20.19.32",
+    "@types/smtp-server": "3.5.13",
+    "@typescript-eslint/eslint-plugin": "6.21.0",
+    "@typescript-eslint/parser": "6.21.0",
+    "eslint": "8.57.1",
+    "jest": "29.7.0",
+    "ts-jest": "29.4.6",
+    "typescript": "5.9.3"
+  },
+  "jest": {
+    "moduleFileExtensions": ["js", "json", "ts"],
+    "rootDir": "src",
+    "testRegex": ".*[.]spec[.]ts$",
+    "transform": { "^.+[.]ts$": "ts-jest" },
+    "testEnvironment": "node"
+  }
+}

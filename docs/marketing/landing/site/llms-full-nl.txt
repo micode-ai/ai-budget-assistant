@@ -4068,6 +4068,58 @@ Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 
 
 Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
 
+### E-bonnetjes doorsturen per e-mail
+
+Veel winkels en webshops mailen je een bonnetje of een orderbevestiging. In plaats van het te scannen kun je het doorsturen naar je eigen privéadres — elke doorgestuurde e-mail verschijnt in de app als een uitgave die op je wacht. **Er wordt niets opgeslagen tot je het bevestigt.**
+
+> **Wordt geleidelijk uitgerold.** Deze functie wordt stap voor stap ingeschakeld. Zie je **Bonnetjes per e-mail** in **Instellingen**, dan kun je hem gebruiken. Zie je hem nog niet, dan is hij nog niet beschikbaar voor je account.
+
+#### Je adres
+
+1. Open **Instellingen** → **Bonnetjes per e-mail**
+2. Tik op **Mijn adres aanmaken** (alleen eigenaren en bewerkers van een account kunnen dit)
+3. Tik onder **Je privéadres** op **Kopiëren**
+4. Kies onder **Bonnetjes toevoegen aan** het account waarin bevestigde bonnetjes worden opgeslagen (alleen accounts die je kunt bewerken staan erbij)
+
+Het adres is van jou, niet van het account — leden van een gedeeld account zien de e-mails die jij doorstuurt nooit.
+
+#### Doorsturen instellen in Gmail
+
+1. Open in Gmail **Instellingen** → **Alle instellingen bekijken** → **Doorsturen en POP/IMAP** → **Een doorstuuradres toevoegen** en plak je privéadres
+2. Gmail stuurt een bevestigingscode naar dat adres. Die verschijnt in de app onder **Instellingen** → **Bonnetjes per e-mail** op een kaart **Gmail-bevestigingscode** met een knop **Kopiëren**. Voer hem in Gmail in. De code staat alleen in de app — nooit in een melding — en maar ongeveer 30 minuten; is hij weg, laat Gmail hem dan opnieuw sturen
+3. Maak een **filter** (**Instellingen** → **Filters en geblokkeerde adressen**) voor het afzenderadres van de winkel of een onderwerp zoals "bonnetje" of "bestelling" en kies **Doorsturen naar** je adres
+
+Stuur niet al je e-mail door — gebruik een filter, voor je privacy en zodat niet-gerelateerde berichten je AI-limiet niet opgebruiken.
+
+#### Doorsturen instellen in Outlook
+
+1. Open in Outlook **Instellingen** → **E-mail** → **Regels** en voeg een regel toe voor berichten van de winkel of met "bonnetje" in het onderwerp
+2. Kies de actie **Doorsturen naar** en voer je privéadres in
+
+Sommige Outlook.com- en Microsoft 365-accounts blokkeren automatisch doorsturen naar externe adressen. Is dat bij jou zo, stuur dan elk bonnetje handmatig door — handmatig doorsturen vanaf je telefoon werkt net zo goed.
+
+#### Een bonnetje bevestigen
+
+Zodra een doorgestuurd bonnetje is gelezen, krijg je een melding en verschijnt er een banner op het scherm Transacties: **Bonnetjes per e-mail om te bevestigen: N**. Je kunt de lijst ook altijd openen via **Instellingen** → **Bonnetjes per e-mail** → **Inbox met bonnetjes per e-mail openen**.
+
+- Het tabblad **Te bevestigen** toont de bonnetjes die op je wachten. Tik op een bonnetje om het vertrouwde bevestigingsscherm voor bonnen te openen, controleer de gegevens en tik op **Uitgave opslaan**
+- Lijkt het bonnetje op een uitgave die je al hebt, dan zie je dezelfde waarschuwing voor een dubbele bon als bij scannen, inclusief **Samenvoegen tot één uitgave**
+- Tik op **Negeren** om een bonnetje te laten vallen zonder het op te slaan
+- Het tabblad **Afgehandeld** toont wat is overgeslagen: een bonnetje dat je al hebt, een e-mail zonder bonnetje, een bonnetje dat niet gelezen kon worden of een dat ongelezen bleef omdat je AI-limiet bereikt was — tik waar mogelijk op **Opnieuw proberen**
+
+Elk gelezen e-bonnetje telt als één bonscan binnen je AI-limiet; dubbele bonnen en e-mails zonder bonnetje worden overgeslagen zonder die te gebruiken. Stuurt een winkel alleen een link naar het bonnetje, stuur dan de pdf door — links worden nooit geopend. Een foto van het bonnetje kan bij de uitgave bewaard worden; een pdf of een gewone e-mail wordt niet bijgevoegd. De lijst heeft een internetverbinding nodig.
+
+#### Als je adres uitlekt
+
+Tik op **Adres vernieuwen**. Het oude adres werkt meteen niet meer en e-mail die ernaartoe wordt gestuurd, wordt geweigerd. Pas daarna de doorstuurregel in je mailbox aan naar het nieuwe adres (Gmail vraagt opnieuw om een bevestigingscode). Wil je helemaal geen e-bonnetjes meer ontvangen, tik dan op **Adres uitschakelen**.
+
+#### Privacy en bewaartermijn
+
+- Onze server leest een doorgestuurde e-mail tijdens de verwerking, net als elk bonnetje dat je scant
+- Alleen het bonnetje zelf wordt bewaard, nooit de hele e-mail. Links in de e-mail worden nooit geopend en afbeeldingen nooit geladen
+- Het opgeslagen bonnetje wordt verwijderd zodra je het bevestigt of negeert; onbevestigde items worden na 30 dagen automatisch verwijderd
+- Bonnetjes per e-mail zijn **niet beschikbaar** voor accounts met **Niveau 2 — Volledige versleuteling**. Met versleuteling op Niveau 1 werken ze, maar onbevestigde items worden dan na 7 dagen verwijderd. Zie [Versleuteling](./15-encryption.md)
+
 ## Spraakinkomsten
 
 Leg ontvangen betalingen vast met spraak — dezelfde flow als Spraakuitgave, geoptimaliseerd voor inkomsten.
@@ -7620,9 +7672,18 @@ De index vereist minimaal 3 producten met aankopen in zowel de basis- als de hui
 
 Alleen bonnetjes die met de camera zijn gescand (OCR) dragen bij aan de index. Handmatig ingevoerde uitgaven en bankimports bevatten geen afzonderlijke artikelregels.
 
+## Communityprijzen — waar is het goedkoopst
+
+**Waar is het goedkoopst** (Analyse → Persoonlijke inflatie-index → communitybanner) is **gratis voor iedereen**. Het vergelijkt de prijs van een product tussen winkels met anonieme prijzen van bonnetjes die andere kopers wilden delen.
+
+- Het is **optioneel**: zet **Instellingen → Gegevens → Anonieme prijzen delen** aan om bij te dragen. Communityprijzen kun je hoe dan ook bekijken.
+- Een prijs verschijnt pas als **meerdere verschillende kopers** hem hebben bevestigd, dus één bonnetje bepaalt nooit de prijs van een winkel. Het scherm toont dit bijvoorbeeld als "5+ kopers".
+- Daarom kan een winkel of product nog ontbreken — te weinig mensen hebben het bevestigd. Prijzen verschijnen na enkele weken aan gegevens.
+- Niets is naar jou herleidbaar: alleen product, winkelomgeving en prijs worden bewaard, nooit je naam, account of exacte locatie.
+
 ## Privacy
 
-Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd.
+Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd. De enige uitzondering zijn de optionele anonieme communityprijzen die hierboven zijn beschreven.
 
 ## Uitgavenkaart
 URL: https://ai-budget.pl/help/nl/expense-map/
@@ -7947,7 +8008,7 @@ Dit staat standaard aan en kan apart worden uitgezet bij **Instellingen → Meld
 
 - Inflatieschild is **gratis** voor iedereen — er is geen Pro-abonnement voor nodig.
 - Prijzen en besparingen worden getoond in je **weergavevaluta**.
-- Aanbevelingen zijn voorlopig alleen gebaseerd op **je eigen aankoopgeschiedenis**. Prijzen vergelijken op basis van aankopen van andere gebruikers in de buurt, om de goedkoopste winkel voor te stellen, staat gepland voor een toekomstige update.
+- Aanbevelingen zijn gebaseerd op **je eigen aankoopgeschiedenis**. Om prijzen met andere kopers te vergelijken, zie **Waar is het goedkoopst** (communityprijzen) in het onderdeel Persoonlijke inflatie-index — het is gratis.
 
 ## Bonnetje-prijscontrole — is dit duurder dan gebruikelijk?
 URL: https://ai-budget.pl/help/nl/receipt-price-check/
@@ -7983,6 +8044,10 @@ Een product heeft minstens **twee** eerdere aankopen in dezelfde winkel nodig vo
 - Alleen **dezelfde valuta** — er wordt voor deze vergelijking nooit iets omgerekend.
 - Verschillende verpakkingsgroottes tellen als verschillende producten: de scanner houdt de grootte in de productnaam (bijvoorbeeld "Mleko Łaciate 3,2% 1L"), dus een fles van 1 l en van 0,5 l worden apart bijgehouden — precies zoals het hoort.
 - Een enorme prijssprong wordt bewust genegeerd in plaats van gemeld — het is veel waarschijnlijker dat het een ander product is (of een verkeerd gelezen regel) dan een echte prijsverandering.
+
+## Communityprijzen op een bonnetje
+
+Als je te weinig eigen geschiedenis voor een product hebt, kan de controle het vergelijken met wat andere kopers **in dezelfde winkel** meestal betalen (anoniem, dezelfde valuta). Zo'n regel toont **"anderen betalen meestal"** en vermeldt dat het op anonieme prijzen van andere kopers is gebaseerd. De formulering blijft voorzichtig: meer dan andere kopers hier meestal betalen — het bonnetje is het controleren waard. Communityprijzen moeten eerst door meerdere kopers worden bevestigd en zijn gratis voor iedereen.
 
 ## Het jaartotaal
 

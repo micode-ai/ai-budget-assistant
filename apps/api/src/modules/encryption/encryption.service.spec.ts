@@ -87,3 +87,43 @@ describe('EncryptionService.recover — rate limiting', () => {
     );
   });
 });
+
+// Inbound e-receipts (ABA-644) cannot serve a tier-2 account.
+describe('EncryptionService.enableAccountEncryption — inbound e-receipt hook', () => {
+  const dto = (tier: number) => ({ tier, wrappedAccountKey: 'wrapped' }) as any;
+  let tx: any;
+  let service: EncryptionService;
+
+  beforeEach(() => {
+    tx = {
+      account: { update: jest.fn().mockResolvedValue({ id: 'acc-1' }) },
+      accountEncryptionKey: { upsert: jest.fn().mockResolvedValue({}) },
+      inboundMailAddress: { updateMany: jest.fn().mockResolvedValue({ count: 1 }) },
+      inboundReceipt: { deleteMany: jest.fn().mockResolvedValue({ count: 2 }) },
+    };
+    const prisma: any = {
+      account: { findUnique: jest.fn().mockResolvedValue({ id: 'acc-1' }) },
+      $transaction: jest.fn(async (cb: any) => cb(tx)),
+    };
+    service = new EncryptionService(prisma, { incrementWindow: jest.fn() } as any);
+  });
+
+  it('disables the addresses targeting the account and purges its non-terminal rows at tier 2', async () => {
+    await service.enableAccountEncryption('acc-1', 'user-1', dto(2));
+
+    expect(tx.inboundMailAddress.updateMany).toHaveBeenCalledWith({
+      where: { targetAccountId: 'acc-1', disabledAt: null },
+      data: { disabledAt: expect.any(Date) },
+    });
+    expect(tx.inboundReceipt.deleteMany).toHaveBeenCalledWith({
+      where: { accountId: 'acc-1', status: { notIn: ['confirmed', 'dismissed'] } },
+    });
+  });
+
+  it('leaves e-receipts alone at tier 1', async () => {
+    await service.enableAccountEncryption('acc-1', 'user-1', dto(1));
+
+    expect(tx.inboundMailAddress.updateMany).not.toHaveBeenCalled();
+    expect(tx.inboundReceipt.deleteMany).not.toHaveBeenCalled();
+  });
+});

@@ -131,6 +131,58 @@ Je kunt **afbeeldingen en pdf's** delen, tot **10 bestanden tegelijk** (pdf tot 
 
 Delen werkt alleen op Android. Gebruik op iPhone en in de web-app **Bon scannen**.
 
+### E-bonnetjes doorsturen per e-mail
+
+Veel winkels en webshops mailen je een bonnetje of een orderbevestiging. In plaats van het te scannen kun je het doorsturen naar je eigen privéadres — elke doorgestuurde e-mail verschijnt in de app als een uitgave die op je wacht. **Er wordt niets opgeslagen tot je het bevestigt.**
+
+> **Wordt geleidelijk uitgerold.** Deze functie wordt stap voor stap ingeschakeld. Zie je **Bonnetjes per e-mail** in **Instellingen**, dan kun je hem gebruiken. Zie je hem nog niet, dan is hij nog niet beschikbaar voor je account.
+
+#### Je adres
+
+1. Open **Instellingen** → **Bonnetjes per e-mail**
+2. Tik op **Mijn adres aanmaken** (alleen eigenaren en bewerkers van een account kunnen dit)
+3. Tik onder **Je privéadres** op **Kopiëren**
+4. Kies onder **Bonnetjes toevoegen aan** het account waarin bevestigde bonnetjes worden opgeslagen (alleen accounts die je kunt bewerken staan erbij)
+
+Het adres is van jou, niet van het account — leden van een gedeeld account zien de e-mails die jij doorstuurt nooit.
+
+#### Doorsturen instellen in Gmail
+
+1. Open in Gmail **Instellingen** → **Alle instellingen bekijken** → **Doorsturen en POP/IMAP** → **Een doorstuuradres toevoegen** en plak je privéadres
+2. Gmail stuurt een bevestigingscode naar dat adres. Die verschijnt in de app onder **Instellingen** → **Bonnetjes per e-mail** op een kaart **Gmail-bevestigingscode** met een knop **Kopiëren**. Voer hem in Gmail in. De code staat alleen in de app — nooit in een melding — en maar ongeveer 30 minuten; is hij weg, laat Gmail hem dan opnieuw sturen
+3. Maak een **filter** (**Instellingen** → **Filters en geblokkeerde adressen**) voor het afzenderadres van de winkel of een onderwerp zoals "bonnetje" of "bestelling" en kies **Doorsturen naar** je adres
+
+Stuur niet al je e-mail door — gebruik een filter, voor je privacy en zodat niet-gerelateerde berichten je AI-limiet niet opgebruiken.
+
+#### Doorsturen instellen in Outlook
+
+1. Open in Outlook **Instellingen** → **E-mail** → **Regels** en voeg een regel toe voor berichten van de winkel of met "bonnetje" in het onderwerp
+2. Kies de actie **Doorsturen naar** en voer je privéadres in
+
+Sommige Outlook.com- en Microsoft 365-accounts blokkeren automatisch doorsturen naar externe adressen. Is dat bij jou zo, stuur dan elk bonnetje handmatig door — handmatig doorsturen vanaf je telefoon werkt net zo goed.
+
+#### Een bonnetje bevestigen
+
+Zodra een doorgestuurd bonnetje is gelezen, krijg je een melding en verschijnt er een banner op het scherm Transacties: **Bonnetjes per e-mail om te bevestigen: N**. Je kunt de lijst ook altijd openen via **Instellingen** → **Bonnetjes per e-mail** → **Inbox met bonnetjes per e-mail openen**.
+
+- Het tabblad **Te bevestigen** toont de bonnetjes die op je wachten. Tik op een bonnetje om het vertrouwde bevestigingsscherm voor bonnen te openen, controleer de gegevens en tik op **Uitgave opslaan**
+- Lijkt het bonnetje op een uitgave die je al hebt, dan zie je dezelfde waarschuwing voor een dubbele bon als bij scannen, inclusief **Samenvoegen tot één uitgave**
+- Tik op **Negeren** om een bonnetje te laten vallen zonder het op te slaan
+- Het tabblad **Afgehandeld** toont wat is overgeslagen: een bonnetje dat je al hebt, een e-mail zonder bonnetje, een bonnetje dat niet gelezen kon worden of een dat ongelezen bleef omdat je AI-limiet bereikt was — tik waar mogelijk op **Opnieuw proberen**
+
+Elk gelezen e-bonnetje telt als één bonscan binnen je AI-limiet; dubbele bonnen en e-mails zonder bonnetje worden overgeslagen zonder die te gebruiken. Stuurt een winkel alleen een link naar het bonnetje, stuur dan de pdf door — links worden nooit geopend. Een foto van het bonnetje kan bij de uitgave bewaard worden; een pdf of een gewone e-mail wordt niet bijgevoegd. De lijst heeft een internetverbinding nodig.
+
+#### Als je adres uitlekt
+
+Tik op **Adres vernieuwen**. Het oude adres werkt meteen niet meer en e-mail die ernaartoe wordt gestuurd, wordt geweigerd. Pas daarna de doorstuurregel in je mailbox aan naar het nieuwe adres (Gmail vraagt opnieuw om een bevestigingscode). Wil je helemaal geen e-bonnetjes meer ontvangen, tik dan op **Adres uitschakelen**.
+
+#### Privacy en bewaartermijn
+
+- Onze server leest een doorgestuurde e-mail tijdens de verwerking, net als elk bonnetje dat je scant
+- Alleen het bonnetje zelf wordt bewaard, nooit de hele e-mail. Links in de e-mail worden nooit geopend en afbeeldingen nooit geladen
+- Het opgeslagen bonnetje wordt verwijderd zodra je het bevestigt of negeert; onbevestigde items worden na 30 dagen automatisch verwijderd
+- Bonnetjes per e-mail zijn **niet beschikbaar** voor accounts met **Niveau 2 — Volledige versleuteling**. Met versleuteling op Niveau 1 werken ze, maar onbevestigde items worden dan na 7 dagen verwijderd. Zie [Versleuteling](./15-encryption.md)
+
 ## Spraakinkomsten
 
 Leg ontvangen betalingen vast met spraak — dezelfde flow als Spraakuitgave, geoptimaliseerd voor inkomsten.

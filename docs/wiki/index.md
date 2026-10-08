@@ -60,6 +60,9 @@ the section you came for — it states what must not break and why. A missing se
   is recorded twice (same file before OCR, same receipt after)
 - [receipt-price-check](features/receipt-price-check.md) — comparing each scanned line against the
   median of what this user paid for it before, at that store
+- [inbound-e-receipts](features/inbound-e-receipts.md) — forwarding e-receipts to a private
+  address: the receive-only SMTP container, the internal API and its three guards, the staging
+  table the user confirms from, dedup, quota, Gmail forwarding codes, E2EE tiers, the two switches
 - [share-to-capture](features/share-to-capture.md) — Android "Share → AI Budget": shared images and
   PDFs become expenses on the receipt confirm card, one after another
 - [receipt-category-split](features/receipt-category-split.md) — splitting one receipt's line items

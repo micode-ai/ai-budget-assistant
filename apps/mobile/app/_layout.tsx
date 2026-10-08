@@ -453,6 +453,27 @@ function RootNavigator() {
           }}
         />
         <Stack.Screen
+          name="settings/email-receipts"
+          options={{
+            headerShown: settingsHeaderShown('settings/email-receipts'),
+            title: t('emailReceipts.title'),
+          }}
+        />
+        <Stack.Screen
+          name="inbox/email-receipts"
+          options={{
+            headerShown: true,
+            title: t('emailReceipts.inboxTitle'),
+          }}
+        />
+        <Stack.Screen
+          name="inbox/email-receipt"
+          options={{
+            headerShown: true,
+            title: t('emailReceipts.confirmTitle'),
+          }}
+        />
+        <Stack.Screen
           name="settings/wise-import"
           options={{
             headerShown: true,

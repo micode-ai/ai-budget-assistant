@@ -131,6 +131,58 @@ Puedes compartir **imágenes y PDF**, hasta **10 archivos a la vez** (PDF de has
 
 Compartir solo funciona en Android. En iPhone y en la app web usa **Escanear recibo**.
 
+### Reenviar e-recibos por correo
+
+Muchas tiendas físicas y online te envían un recibo o una confirmación de pedido por correo. En lugar de escanearlo, puedes reenviarlo a tu propia dirección privada: cada correo reenviado aparece en la app como un gasto que espera tu confirmación. **No se guarda nada hasta que lo confirmas.**
+
+> **Se está activando poco a poco.** Si ves **Recibos por e-mail** en **Ajustes**, ya puedes usarla. Si todavía no la ves, aún no ha llegado a tu cuenta.
+
+#### Tu dirección
+
+1. Abre **Ajustes** → **Recibos por e-mail**
+2. Toca **Crear mi dirección** (solo los propietarios y editores de la cuenta pueden hacerlo)
+3. En **Tu dirección privada**, toca **Copiar**
+4. En **Añadir recibos a**, elige la cuenta donde se guardan los recibos confirmados (solo aparecen las cuentas que puedes editar)
+
+La dirección es tuya, no de la cuenta: los miembros de una cuenta compartida nunca ven los correos que reenvías.
+
+#### Configurar el reenvío en Gmail
+
+1. En Gmail abre **Configuración** → **Ver toda la configuración** → **Reenvío y correo POP/IMAP** → **Añadir una dirección de reenvío** y pega tu dirección privada
+2. Gmail envía un código de confirmación a esa dirección. Aparece en la app, en **Ajustes** → **Recibos por e-mail**, en una tarjeta **Código de confirmación de Gmail** con un botón **Copiar**. Introdúcelo en Gmail. El código solo se muestra en la app —nunca en una notificación— y solo durante unos 30 minutos; si ya no está, pide a Gmail que lo envíe de nuevo
+3. Crea un **filtro** (**Configuración** → **Filtros y direcciones bloqueadas**) para la dirección del remitente de la tienda o un asunto como «recibo» o «pedido», y elige **Reenviarlo a** tu dirección
+
+No reenvíes todo tu correo: usa un filtro, por tu privacidad y para que los mensajes ajenos no gasten tu límite de IA.
+
+#### Configurar el reenvío en Outlook
+
+1. En Outlook abre **Configuración** → **Correo** → **Reglas** y añade una regla para los mensajes de la tienda o con «recibo» en el asunto
+2. Elige la acción **Reenviar a** e introduce tu dirección privada
+
+Algunas cuentas de Outlook.com y Microsoft 365 bloquean el reenvío automático a direcciones externas. Si es tu caso, reenvía cada recibo manualmente: un reenvío manual desde el móvil funciona igual.
+
+#### Confirmar un recibo
+
+Cuando se ha leído un recibo reenviado, recibes una notificación y aparece un aviso en la pantalla de Transacciones: **Recibos por e-mail por confirmar: N**. También puedes abrir la lista en cualquier momento desde **Ajustes** → **Recibos por e-mail** → **Abrir la bandeja de recibos por e-mail**.
+
+- La pestaña **Por confirmar** muestra los recibos que te esperan. Toca uno para abrir la pantalla habitual de confirmación del recibo, revisa los datos y toca **Guardar gasto**
+- Si el recibo parece un gasto que ya tienes, verás el mismo aviso de duplicado que al escanear, incluido **Unir en un solo gasto**
+- Toca **Descartar** para desechar un recibo sin guardarlo
+- La pestaña **Gestionados** muestra lo que se omitió: un recibo que ya tienes, un correo sin recibo, uno que no se pudo leer o uno sin leer porque se alcanzó tu límite de IA; cuando corresponda, toca **Reintentar**
+
+Cada e-recibo leído cuenta como un escaneo de recibo en tu límite de IA; los duplicados y los correos sin recibo se omiten sin gastarlo. Si una tienda solo envía un enlace al recibo, reenvía el PDF: los enlaces nunca se abren. Una foto del recibo se puede guardar con el gasto; un PDF o un correo de texto no se adjuntan. La lista necesita conexión a internet.
+
+#### Si tu dirección se filtra
+
+Toca **Cambiar dirección**. La dirección actual deja de funcionar al instante y el correo enviado a ella se rechaza. Después cambia la regla de reenvío de tu buzón a la nueva dirección (Gmail volverá a pedir un código de confirmación). Para dejar de recibir e-recibos por completo, toca **Desactivar dirección**.
+
+#### Privacidad y conservación
+
+- Nuestro servidor lee el correo reenviado mientras lo procesa, igual que cualquier recibo que escaneas
+- Solo se guarda el recibo, nunca el correo completo. Los enlaces del correo nunca se abren y sus imágenes nunca se cargan
+- El recibo guardado se elimina en cuanto lo confirmas o descartas; los elementos sin confirmar se eliminan automáticamente a los 30 días
+- Los recibos por e-mail **no están disponibles** en cuentas con **Nivel 2 — Cifrado completo**. Con el cifrado de Nivel 1 funcionan, pero los elementos sin confirmar se eliminan a los 7 días. Consulta [Cifrado](./15-encryption.md)
+
 ## Ingresos por voz
 
 Registra los pagos recibidos por voz — el mismo flujo que Gasto por voz, optimizado para ingresos.

@@ -6,6 +6,7 @@ import { router } from 'expo-router';
 import { api } from './api';
 import { useAccountStore } from '@/stores/accountStore';
 import { resolveExpenseIdForParticipant } from '@/stores/receiptSplitParticipantIndex';
+import { inboundPushRoute } from '@/features/inboundMail/inboundMail';
 
 // Configure foreground notification display (native only — expo-notifications
 // throws "not available on web" for the handler API).
@@ -130,6 +131,11 @@ export function handleNotificationResponse(
       } else {
         router.push('/purchase-requests' as any);
       }
+      break;
+    case 'inbound_receipt':
+      // E-mail receipts (ABA-644). The batched, quota and Gmail-verification pushes carry
+      // no item id and open the inbox; a single-item push opens the item.
+      router.push(inboundPushRoute(data) as any);
       break;
     case 'spending_anomaly':
       router.push('/alerts' as any);

@@ -69,6 +69,7 @@ export const SETTINGS_PANE_KEYS = [
   'widgets',
   'notifications',
   'bots',
+  'emailReceipts',
   'security',
   'data',
   'categories',
@@ -116,7 +117,16 @@ interface SettingsEntryBase {
    * row in its own card behind `user.isAdmin`.
    */
   adminOnly?: boolean;
+  /**
+   * Rendered only while the named server feature is on (ABA-644: the inbound e-mail flag
+   * answers 404 on every route when off, and the app learns that at runtime).
+   */
+  requiresFeature?: SettingsFeatureKey;
 }
+
+/** Server-flagged features a settings row can depend on. */
+export type SettingsFeatureKey = 'inboundMail';
+export type SettingsFeatures = Partial<Record<SettingsFeatureKey, boolean>>;
 
 export interface SettingsPaneEntry extends SettingsEntryBase {
   kind: 'pane';
@@ -170,6 +180,7 @@ export const SETTINGS_ENTRIES: readonly SettingsEntry[] = [
   { kind: 'pane', key: 'widgets', labelKey: 'settingsNav.widgets', route: '/settings/widgets', width: 'form' },
   { kind: 'pane', key: 'notifications', labelKey: 'settingsNav.notifications', route: '/settings/notifications', width: 'form' },
   { kind: 'pane', key: 'bots', labelKey: 'settings.bots.title', route: '/settings/bots', width: 'form' },
+  { kind: 'pane', key: 'emailReceipts', labelKey: 'emailReceipts.title', route: '/settings/email-receipts', width: 'form', requiresFeature: 'inboundMail' },
   { kind: 'pane', key: 'security', labelKey: 'settingsNav.security', route: '/settings/security', width: 'form' },
   { kind: 'pane', key: 'data', labelKey: 'settingsNav.data', route: '/settings/data', width: 'form' },
   // The reference-data group, in the same order `app/settings/reference.tsx`
@@ -224,8 +235,13 @@ export function isLinkEntry(entry: SettingsEntry): entry is SettingsLinkEntry {
  * shell keeps the one conditional row testable — a leak would otherwise be
  * invisible to everything in CI.
  */
-export function visibleSettingsEntries(isAdmin: boolean): readonly SettingsEntry[] {
-  return isAdmin ? SETTINGS_ENTRIES : SETTINGS_ENTRIES.filter((entry) => !entry.adminOnly);
+export function visibleSettingsEntries(
+  isAdmin: boolean,
+  features: SettingsFeatures = {},
+): readonly SettingsEntry[] {
+  return SETTINGS_ENTRIES.filter(
+    (entry) => (isAdmin || !entry.adminOnly) && (!entry.requiresFeature || features[entry.requiresFeature] === true),
+  );
 }
 
 /**

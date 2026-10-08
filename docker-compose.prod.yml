@@ -95,6 +95,9 @@ services:
         condition: service_healthy
     networks:
       - budget-network
+      # Private link to the inbound-mail container (ABA-644). The network exists even while
+      # that service's profile is off, so the API never needs recreating to be reachable.
+      - inbound-mail-net
     deploy:
       resources:
         limits:
@@ -127,10 +130,79 @@ services:
         limits:
           memory: 256M
 
+  # Receive-only SMTP container for forwarded e-receipts (ABA-644). Runbook: docs/ops/inbound-mail.md.
+  # BEHIND A PROFILE ON PURPOSE: scripts/deploy.sh's `up -d --force-recreate api admin` does not
+  # start it, so host port 25 stays closed until it is activated by hand (INBOUND_MAIL_CONTAINER=true
+  # in .env.production, then `docker compose ... --profile inbound-mail up -d inbound-mail`).
+  # Internet-facing, therefore: NO env_file (only the variables below), NOT on budget-network
+  # (no route to Postgres/Redis), non-root image, read-only rootfs, all capabilities dropped, 384M limit.
+  inbound-mail:
+    profiles:
+      - inbound-mail
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.inbound-mail
+    container_name: budget-inbound-mail-prod
+    restart: unless-stopped
+    # Docker-published ports BYPASS ufw: only a Hetzner Cloud Firewall (if attached) gates this.
+    # IPv4 only on purpose: the MX/A record has no AAAA, and a bare "25:2525" would also publish
+    # on [::] with a separate, unfirewalled path.
+    ports:
+      - "0.0.0.0:25:2525"
+    # Hardening for an internet-facing parser (ABA-644 audit M8).
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    environment:
+      NODE_ENV: production
+      # Heap 256 + ~128M non-heap must fit under the 384M limit. Parsing runs in worker threads
+      # (heap capped at 64M each, 2 concurrent at most) and raw DATA bytes across all sessions
+      # are capped at 64M in code (MAX_INFLIGHT_BYTES), so the main heap stays small.
+      NODE_OPTIONS: "--max-old-space-size=256"
+      INBOUND_MAIL_DOMAIN: ${INBOUND_MAIL_DOMAIN:-in.ai-budget.pl}
+      INBOUND_MAIL_HOSTNAME: ${INBOUND_MAIL_HOSTNAME:-mail-in.ai-budget.pl}
+      # Empty here is fine for the regular deploy (service not started); the container itself
+      # refuses to start without it.
+      INBOUND_MAIL_SHARED_SECRET: ${INBOUND_MAIL_SHARED_SECRET:-}
+      API_INTERNAL_URL: http://api:3000/api/v1
+      TLS_CERT: /tls/fullchain.pem
+      TLS_KEY: /tls/privkey.pem
+    volumes:
+      # ONLY the mail-in.ai-budget.pl cert pair, copied here by scripts/inbound-mail-cert-hook.sh
+      # (certbot deploy hook). Never mount /etc/letsencrypt: that exposes the private keys of
+      # api./admin./apex to an internet-facing parser.
+      - /opt/ai-budget/inbound-mail-tls:/tls:ro
+    networks:
+      - inbound-mail-net
+    healthcheck:
+      test: ["CMD", "node", "dist/healthcheck.js"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    deploy:
+      resources:
+        limits:
+          memory: 384M
+          # Main thread + libuv/V8 helpers + up to 2 parse workers (each a few threads).
+          pids: 128
+
 volumes:
   postgres_data:
   redis_data:
 
 networks:
   budget-network:
+    driver: bridge
+  # Only `api` and the inbound-mail container live here (ABA-644).
+  inbound-mail-net:
     driver: bridge

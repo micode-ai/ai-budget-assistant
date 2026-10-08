@@ -5,9 +5,10 @@ import { uriToBase64 } from '@/utils/fileBase64';
 import { downscaleForOcr } from './receiptImage';
 import { api } from '@/services/api';
 import i18n from '@/i18n';
-import type { ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
+import type { InboundReceiptDetail, ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
 import { computeReceiptFingerprint } from './receiptFingerprint';
 import { sharedFileKind } from '@/features/share-intake/sharedFileKind';
+import { inboundScannerState } from '@/features/inboundMail/seedFromInbound';
 
 export interface ReceiptItem {
   description: string;
@@ -317,6 +318,18 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     [],
   );
 
+  /**
+   * E-mail inbox entry (ABA-644): instead of scanning, seed the scanner from an
+   * item the server already extracted, so the one confirm card and the one save
+   * path serve it. `documentUri` is the downloaded image (null for a PDF or text
+   * body). Returns `false` when the item has no usable extraction.
+   */
+  const seedFromInbound = useCallback((detail: InboundReceiptDetail, documentUri: string | null): boolean => {
+    const next = inboundScannerState(detail, documentUri);
+    setState(next);
+    return next.scannedReceipt !== null;
+  }, []);
+
   const reset = useCallback(() => {
     setState({
       isProcessing: false,
@@ -335,6 +348,7 @@ export function useReceiptScanner(options: ReceiptScannerOptions = {}) {
     pickPdfDocument,
     processExistingImage,
     processSharedFile,
+    seedFromInbound,
     reset,
   };
 }

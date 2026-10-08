@@ -71,6 +71,12 @@ interface UseReceiptSaveParams {
    * to. Omitted, the alert is exactly as before.
    */
   queue?: { hasNext: boolean; onNext: () => void };
+  /**
+   * Called with the created expense right after `addExpense` resolved - the e-mail
+   * inbox (ABA-644) confirms its item against `expense.id` (the client id). Omitted
+   * by every other host.
+   */
+  onExpenseCreated?: (expense: { id: string }) => void;
 }
 
 /**
@@ -98,6 +104,7 @@ export function useReceiptSave({
   onDone,
   onEdit,
   queue,
+  onExpenseCreated,
 }: UseReceiptSaveParams) {
   const { t } = useTranslation();
   const { addExpense } = useExpenseStore();
@@ -162,7 +169,7 @@ export function useReceiptSave({
         resolvedCategoryId = matched?.id;
       }
 
-      await addExpense({
+      const created = await addExpense({
         userId: user?.id || '',
         amount: scannedReceipt.amount,
         discountAmount: scannedReceipt.discountAmount ?? undefined,
@@ -189,6 +196,8 @@ export function useReceiptSave({
             }))
           : undefined,
       });
+
+      if (created) onExpenseCreated?.(created);
 
       // The rating ask rides on "Done", never on "Scan another": the user is
       // leaving satisfied, and interrupting a batch-scanning run with a system

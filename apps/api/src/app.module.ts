@@ -57,6 +57,7 @@ import { ReceiptSplitModule } from './modules/receipt-split/receipt-split.module
 import { RestoreCredentialsModule } from './modules/restore-credentials/restore-credentials.module';
 import { TelemetryModule } from './modules/telemetry/telemetry.module';
 import { VoiceDigestModule } from './modules/voice-digest/voice-digest.module';
+import { InboundMailModule } from './modules/inbound-mail/inbound-mail.module';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { VoiceDigestModule } from './modules/voice-digest/voice-digest.module';
     // senders register themselves into it, so it must be in the graph
     // before (or alongside) those bot modules.
     VoiceDigestModule,
+    InboundMailModule,
 
     // Infrastructure
     MailModule,

@@ -136,6 +136,19 @@ export class EncryptionService {
         },
       });
 
+      if (dto.tier >= 2) {
+        // Inbound e-receipts (ABA-644) cannot serve a tier-2 account: the server must not hold a
+        // readable pending expense for it. Disable the addresses that target it and purge
+        // their non-terminal rows, in the same transaction as the tier change.
+        await tx.inboundMailAddress.updateMany({
+          where: { targetAccountId: accountId, disabledAt: null },
+          data: { disabledAt: new Date() },
+        });
+        await tx.inboundReceipt.deleteMany({
+          where: { accountId, status: { notIn: ['confirmed', 'dismissed'] } },
+        });
+      }
+
       return updatedAccount;
     });
   }

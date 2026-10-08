@@ -13,6 +13,7 @@ import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildExpenseMapPoints } from '@/components/map/buildMapPoints';
 import { UncategorizedBanner } from '@/components/categorize/UncategorizedBanner';
+import { InboundReceiptsBanner } from '@/components/inboundMail/InboundReceiptsBanner';
 import { FACET_RAIL_MIN_WIDTH } from '@/components/webLayout.constants';
 import { BulkActionBar } from '@/components/BulkActionBar';
 import { SummaryStrip } from './SummaryStrip';
@@ -505,6 +506,7 @@ export function ExpensesDesktop() {
           {!collapsed && <FacetRail layout="stack" {...facetRailProps} />}
 
         <View style={styles.mainColumn}>
+          <InboundReceiptsBanner />
           <UncategorizedBanner onPress={() => setShowCategorize('expense')} />
           <UncategorizedBanner entityType="income" onPress={() => setShowCategorize('income')} />
 

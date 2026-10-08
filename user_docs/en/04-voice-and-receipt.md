@@ -131,6 +131,59 @@ You can share **images and PDFs**, up to **10 files at a time** (a PDF up to 10 
 
 Sharing works on Android only. On iPhone and in the web app, use **Scan Receipt** instead.
 
+### Forwarding E-receipts by E-mail
+
+Many shops and online stores e-mail you a receipt or an order confirmation. Instead of scanning it, you can forward it to your own private address. Each forwarded e-mail shows up in the app as an expense waiting for you. **Nothing is saved until you confirm it.**
+
+> **Being rolled out.** This feature is switched on gradually. If you see **E-mail receipts** in **Settings**, you can use it. If you don't see it yet, it hasn't reached your account.
+
+#### Getting your address
+
+1. Open **Settings** → **E-mail receipts**
+2. Tap **Create my address**. Only account owners and editors can do this.
+3. Under **Your private address**, tap **Copy**
+4. Under **Add receipts to**, choose the account where confirmed receipts are saved. Only accounts you can edit are listed.
+
+The address belongs to you, not to the account. Members of a shared account never see the e-mails you forward.
+
+#### Setting up forwarding in Gmail
+
+1. In Gmail, open **Settings** → **See all settings** → **Forwarding and POP/IMAP** → **Add a forwarding address**, and paste your private address
+2. Gmail sends a confirmation code to that address. It appears in the app under **Settings** → **E-mail receipts** on a **Gmail confirmation code** card, with a **Copy** button. Enter the code in Gmail. The code is shown only in the app, never in a notification, and only for about 30 minutes. If it has gone, ask Gmail to send it again.
+3. Create a **filter** (**Settings** → **Filters and blocked addresses**) for the shop's sender address, or for a subject such as "receipt" or "order", and choose **Forward it to** your address
+
+Don't forward all your mail. Use a filter. It protects your privacy, and unrelated messages won't use up your AI limit.
+
+#### Setting up forwarding in Outlook
+
+1. In Outlook, open **Settings** → **Mail** → **Rules**, and add a rule for messages from the shop or with "receipt" in the subject
+2. Choose the action **Forward to** and enter your private address
+
+Some Outlook.com and Microsoft 365 accounts block automatic forwarding to outside addresses. If yours does, forward each receipt by hand. A manual forward from your phone works just as well.
+
+#### Confirming a receipt
+
+When a forwarded receipt has been read, you get a notification. You'll also see a banner on the Transactions screen, **E-mail receipts to confirm: N**. You can always open the list from **Settings** → **E-mail receipts** → **Open the e-mail receipts inbox**.
+
+- The **To confirm** tab lists the receipts waiting for you. Tap one to open the usual receipt confirmation screen, check the details, and tap **Save Expense**.
+- If the receipt looks like an expense you already have, you see the same duplicate warning as for a scanned receipt, including **Merge into one expense**.
+- Tap **Dismiss** to drop a receipt without saving it.
+- The **Handled** tab shows what was skipped: a receipt you already have, an e-mail with no receipt in it, one that couldn't be read, or one left unread because your AI limit was reached. Where it applies, tap **Try again**.
+
+Each e-receipt that is read counts as one receipt scan against your AI limit. Duplicates, and e-mails with no receipt in them, are skipped without using it. If a shop only sends a link to the receipt, forward the PDF instead, because links are never opened. A photo of the receipt can be kept with the expense. A PDF or a plain e-mail is not attached. The list needs an internet connection.
+
+#### If your address leaks
+
+Tap **Rotate address**. The old address stops working immediately, and mail sent to it is rejected. Then update the forwarding rule in your mailbox to the new address. Gmail asks for a confirmation code again. To stop receiving e-receipts altogether, tap **Disable address**.
+
+#### Privacy and retention
+
+- Our server reads a forwarded e-mail while processing it, the same as any receipt you scan.
+- Only the receipt itself is kept, never the whole e-mail. Links in the e-mail are never opened, and images in it are never loaded.
+- The stored receipt is deleted as soon as you confirm or dismiss it.
+- Items you don't confirm are deleted automatically after 30 days.
+- E-mail receipts are **not available** for accounts with **Tier 2 — Full Encryption**. With Tier 1 encryption they work, but unconfirmed items are deleted after 7 days. See [Encryption](./15-encryption.md).
+
 ## Voice Income
 
 Capture received payments by voice — same flow as Voice Expense, optimised for income.

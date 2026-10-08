@@ -131,6 +131,58 @@ Du kannst **Bilder und PDFs** teilen, bis zu **10 Dateien auf einmal** (PDF bis 
 
 Teilen funktioniert nur unter Android. Auf dem iPhone und in der Web-App nutze **Beleg scannen**.
 
+### E-Belege per E-Mail weiterleiten
+
+Viele Geschäfte und Online-Shops schicken dir einen Beleg oder eine Bestellbestätigung per E-Mail. Statt ihn zu scannen, kannst du ihn an deine eigene private Adresse weiterleiten – jede weitergeleitete E-Mail erscheint in der App als Ausgabe, die auf dich wartet. **Nichts wird gespeichert, bevor du bestätigst.**
+
+> **Wird schrittweise eingeführt.** Die Funktion wird nach und nach freigeschaltet. Wenn du **E-Mail-Belege** in den **Einstellungen** siehst, kannst du sie nutzen. Siehst du sie noch nicht, ist sie für dein Konto noch nicht verfügbar.
+
+#### Deine Adresse
+
+1. Öffne **Einstellungen** → **E-Mail-Belege**
+2. Tippe auf **Meine Adresse erstellen** (nur Inhaber und Bearbeiter eines Kontos können das)
+3. Tippe unter **Deine private Adresse** auf **Kopieren**
+4. Wähle unter **Belege hinzufügen zu** das Konto, in dem bestätigte Belege gespeichert werden (es werden nur Konten angezeigt, die du bearbeiten darfst)
+
+Die Adresse gehört dir, nicht dem Konto – Mitglieder eines gemeinsamen Kontos sehen die E-Mails, die du weiterleitest, nie.
+
+#### Weiterleitung in Gmail einrichten
+
+1. Öffne in Gmail **Einstellungen** → **Alle Einstellungen aufrufen** → **Weiterleitung und POP/IMAP** → **Weiterleitungsadresse hinzufügen** und füge deine private Adresse ein
+2. Gmail schickt einen Bestätigungscode an diese Adresse. Er erscheint in der App unter **Einstellungen** → **E-Mail-Belege** auf einer Karte **Gmail-Bestätigungscode** mit einer Schaltfläche **Kopieren**. Gib ihn in Gmail ein. Der Code wird nur in der App angezeigt – nie in einer Benachrichtigung – und nur etwa 30 Minuten lang; ist er verschwunden, lass ihn dir von Gmail erneut senden
+3. Erstelle einen **Filter** (**Einstellungen** → **Filter und blockierte Adressen**) für die Absenderadresse des Shops oder einen Betreff wie „Beleg“ oder „Bestellung“ und wähle **Weiterleiten an** deine Adresse
+
+Leite nicht deine gesamte Post weiter – nutze einen Filter, für deine Privatsphäre und damit unpassende Nachrichten nicht dein KI-Limit verbrauchen.
+
+#### Weiterleitung in Outlook einrichten
+
+1. Öffne in Outlook **Einstellungen** → **E-Mail** → **Regeln** und füge eine Regel für Nachrichten vom Shop oder mit „Beleg“ im Betreff hinzu
+2. Wähle die Aktion **Weiterleiten an** und gib deine private Adresse ein
+
+Manche Outlook.com- und Microsoft-365-Konten blockieren die automatische Weiterleitung an externe Adressen. Falls das bei dir so ist, leite jeden Beleg manuell weiter – eine manuelle Weiterleitung vom Handy funktioniert genauso.
+
+#### Einen Beleg bestätigen
+
+Sobald ein weitergeleiteter Beleg gelesen wurde, bekommst du eine Benachrichtigung, und auf dem Transaktionen-Bildschirm erscheint ein Banner **E-Mail-Belege zu bestätigen: N**. Die Liste öffnest du jederzeit auch über **Einstellungen** → **E-Mail-Belege** → **Posteingang der E-Mail-Belege öffnen**.
+
+- Der Reiter **Zu bestätigen** zeigt die Belege, die auf dich warten. Tippe auf einen, um den gewohnten Bestätigungsbildschirm für Belege zu öffnen, prüfe die Angaben und tippe auf **Ausgabe speichern**
+- Sieht der Beleg aus wie eine Ausgabe, die du schon hast, erscheint dieselbe Duplikat-Warnung wie beim Scannen – einschließlich **Zu einer Ausgabe zusammenführen**
+- Tippe auf **Verwerfen**, um einen Beleg ohne Speichern zu verwerfen
+- Der Reiter **Erledigt** zeigt, was übersprungen wurde: ein Beleg, den du schon hast, eine E-Mail ohne Beleg, einer, der nicht gelesen werden konnte, oder einer, der wegen deines erreichten KI-Limits ungelesen blieb – wo es passt, tippe auf **Erneut versuchen**
+
+Jeder gelesene E-Beleg zählt als ein Belegscan gegen dein KI-Limit; Duplikate und E-Mails ohne Beleg werden übersprungen, ohne es zu verbrauchen. Schickt ein Shop nur einen Link zum Beleg, leite stattdessen das PDF weiter – Links werden nie geöffnet. Ein Foto des Belegs kann bei der Ausgabe gespeichert werden; ein PDF oder eine reine Text-E-Mail wird nicht angehängt. Die Liste braucht eine Internetverbindung.
+
+#### Wenn deine Adresse bekannt wird
+
+Tippe auf **Adresse erneuern**. Die alte Adresse funktioniert sofort nicht mehr, und an sie gesendete Mails werden abgelehnt. Ändere dann die Weiterleitungsregel in deinem Postfach auf die neue Adresse (Gmail fragt erneut nach einem Bestätigungscode). Um gar keine E-Belege mehr zu empfangen, tippe auf **Adresse deaktivieren**.
+
+#### Datenschutz und Aufbewahrung
+
+- Unser Server liest eine weitergeleitete E-Mail während der Verarbeitung, genau wie jeden Beleg, den du scannst
+- Gespeichert wird nur der Beleg selbst, nie die ganze E-Mail. Links in der E-Mail werden nie geöffnet, Bilder darin nie geladen
+- Der gespeicherte Beleg wird gelöscht, sobald du ihn bestätigst oder verwirfst; unbestätigte Einträge werden nach 30 Tagen automatisch gelöscht
+- E-Mail-Belege sind für Konten mit **Stufe 2 — Vollständige Verschlüsselung** **nicht verfügbar**. Mit Verschlüsselung der Stufe 1 funktionieren sie, unbestätigte Einträge werden dann aber nach 7 Tagen gelöscht. Siehe [Verschlüsselung](./15-encryption.md)
+
 ## Spracheingabe Einnahmen
 
 Erfasse erhaltene Zahlungen per Sprache — gleicher Ablauf wie bei der Sprachausgabe, optimiert für Einnahmen.
