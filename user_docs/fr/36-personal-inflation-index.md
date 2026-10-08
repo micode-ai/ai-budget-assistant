@@ -68,6 +68,15 @@ L'indice requiert au moins 3 produits avec des achats dans les deux périodes, b
 
 Seuls les tickets scannés avec l'appareil photo (OCR) contribuent à l'indice. Les dépenses saisies manuellement et les imports bancaires n'incluent pas les articles individuels.
 
+## Prix de la communauté — où est-ce moins cher
+
+**Où est-ce moins cher** (Analyses → Indice d'inflation personnel → bannière de la communauté) est **gratuit pour tout le monde**. Il compare le prix d'un produit entre magasins à partir de prix anonymes issus de reçus que d'autres acheteurs ont choisi de partager.
+
+- C'est **facultatif** : activez **Réglages → Données → Partager des prix anonymes** pour contribuer. Vous pouvez consulter les prix de la communauté dans tous les cas.
+- Un prix n'apparaît que lorsque **plusieurs acheteurs différents** l'ont confirmé : un seul reçu ne fixe donc jamais le prix d'un magasin. L'écran l'affiche par exemple sous la forme « 5+ acheteurs ».
+- C'est pourquoi un magasin ou un produit peut ne pas encore apparaître : trop peu de personnes l'ont confirmé. Les prix apparaissent après quelques semaines de données.
+- Rien ne remonte jusqu'à vous : seuls le produit, la zone du magasin et le prix sont conservés, jamais votre nom, votre compte ni votre position exacte.
+
 ## Confidentialité
 
-Tout l'historique des prix est stocké dans votre compte sur le serveur. Il n'est pas partagé entre comptes et n'est pas utilisé pour construire un catalogue de produits commun. Si vous supprimez votre compte, tout l'historique des prix est supprimé avec lui.
+Tout l'historique des prix est stocké dans votre compte sur le serveur. Il n'est pas partagé entre comptes et n'est pas utilisé pour construire un catalogue de produits commun. Si vous supprimez votre compte, tout l'historique des prix est supprimé avec lui. La seule exception concerne les prix anonymes de la communauté, facultatifs, décrits plus haut.

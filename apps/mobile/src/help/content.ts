@@ -4478,9 +4478,18 @@ The index requires at least 3 products with purchases in both the base and curre
 
 Only receipts scanned with the camera (OCR) contribute to the index. Manually entered expenses and bank imports do not include product-level line items.
 
+## Community prices — where's cheapest
+
+**Where's cheapest** (Analytics → Personal Inflation Index → the community banner) is **free for everyone**. It compares the price of a product across stores using anonymous prices from receipts that other shoppers chose to share.
+
+- It is **opt-in**: switch on **Settings → Data → Share anonymous prices** to contribute. You can read community prices either way.
+- A price shows up only once **several different shoppers** have confirmed it, so one receipt can never set a store's price. The screen shows this as, for example, "5+ shoppers".
+- That is why a store or product may not appear yet — it simply has not been confirmed by enough people. Prices appear after a few weeks of data.
+- Nothing is traceable to you: only the product, store area and price are kept, never your name, account or exact location.
+
 ## Privacy
 
-All price history is stored in your account on the server. It is not shared across accounts or used to build any shared product catalog. If you delete your account, all price history is deleted with it.
+All price history is stored in your account on the server. It is not shared across accounts or used to build any shared product catalog. If you delete your account, all price history is deleted with it. The one exception is the opt-in anonymous community prices described above.
 `,
     },
     {
@@ -4821,7 +4830,7 @@ This is on by default and can be turned off independently in **Settings → Noti
 
 - Inflation Shield is **free** for everyone — no Pro subscription needed.
 - Prices and savings are shown in your **display currency**.
-- Recommendations are based only on **your own purchase history** for now. Comparing prices across other users' purchases nearby, to suggest the cheapest store, is planned for a future update.
+- Recommendations are based on **your own purchase history**. To compare prices with other shoppers, see **Where's cheapest** (community prices) in the Personal Inflation Index section — it is free.
 `,
     },
     {
@@ -4861,6 +4870,10 @@ A product needs at least **two** earlier purchases at the same store before the 
 - Only **the same currency** — nothing is ever converted for this comparison.
 - Different pack sizes count as different products: the scanner keeps the size in the product name (for example "Mleko Łaciate 3,2% 1L"), so a 1 L and a 0.5 L bottle are tracked separately, exactly as they should be.
 - An enormous jump in price is deliberately ignored rather than reported — it's far more likely to be a different product (or a misread line) than a genuine price change.
+
+## Community prices on a receipt
+
+If you have too little history of your own for a product, the check may compare it with what other shoppers usually pay **at the same store** (anonymous, same currency). Such a line says **"others usually pay"** and notes that it is based on anonymous prices from other shoppers. The wording stays the same careful one: more than other shoppers usually pay here — worth checking the receipt. Community prices need several shoppers to confirm them first, and they are free for everyone.
 
 ## The yearly total
 
@@ -9598,9 +9611,18 @@ OCR иногда неверно читает цену, выдумывает ст
 
 В индекс входят только чеки, отсканированные через камеру (OCR). Расходы, введённые вручную, и банковские импорты не содержат позиций на уровне отдельных товаров.
 
+## Цены сообщества — где дешевле всего
+
+**Где дешевле всего** (Аналитика → Личный индекс инфляции → баннер сообщества) **бесплатно для всех**. Функция сравнивает цену товара в магазинах по анонимным ценам из чеков, которыми поделились другие покупатели.
+
+- Участие **добровольное**: включите **Настройки → Данные → Делиться анонимными ценами**, чтобы вносить свой вклад. Смотреть цены сообщества можно в любом случае.
+- Цена появляется, только когда её подтвердят **несколько разных покупателей**, поэтому один чек никогда не задаёт цену магазина. На экране это выглядит, например, как «5+ покупателей».
+- Поэтому магазин или товар может пока не отображаться — его подтвердило слишком мало людей. Цены появляются после нескольких недель накопления данных.
+- Ничто не связывается с вами: хранятся только товар, район магазина и цена — никогда имя, аккаунт или точное местоположение.
+
 ## Конфиденциальность
 
-Вся история цен хранится в вашем аккаунте на сервере. Она не передаётся между аккаунтами и не используется для создания общего каталога товаров. При удалении аккаунта вся история цен также удаляется.
+Вся история цен хранится в вашем аккаунте на сервере. Она не передаётся между аккаунтами и не используется для создания общего каталога товаров. При удалении аккаунта вся история цен также удаляется. Единственное исключение — добровольные анонимные цены сообщества, описанные выше.
 `,
     },
     {
@@ -9941,7 +9963,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 - Щит от инфляции **бесплатен** для всех — подписка Pro не требуется.
 - Цены и экономия показываются в вашей **отображаемой валюте**.
-- Пока рекомендации основаны только на **вашей собственной истории покупок**. Сравнение цен на основе покупок других пользователей поблизости, чтобы подсказать самый дешёвый магазин, планируется в будущем обновлении.
+- Рекомендации основаны на **вашей собственной истории покупок**. Чтобы сравнить цены с другими покупателями, смотрите **Где дешевле всего** (цены сообщества) в разделе «Личный индекс инфляции» — это бесплатно.
 `,
     },
     {
@@ -9981,6 +10003,10 @@ OCR иногда неверно читает цену, выдумывает ст
 - Только **одна и та же валюта** — для этого сравнения ничего никогда не конвертируется.
 - Разные объёмы упаковки считаются разными товарами: сканер сохраняет объём в названии товара (например, «Mleko Łaciate 3,2% 1L»), поэтому бутылка 1 л и 0,5 л отслеживаются отдельно — так и должно быть.
 - Огромный скачок цены намеренно игнорируется, а не сообщается — гораздо вероятнее, что это другой товар (или неверно распознанная строка), а не реальное изменение цены.
+
+## Цены сообщества в чеке
+
+Если у вас слишком мало собственной истории по товару, проверка может сравнить его с тем, сколько обычно платят другие покупатели **в том же магазине** (анонимно, в той же валюте). Такая строка помечена **«обычно платят другие»** и сообщает, что основана на анонимных ценах других покупателей. Формулировка остаётся осторожной: больше, чем здесь обычно платят другие покупатели — стоит проверить чек. Цены сообщества сначала должны подтвердить несколько покупателей, и они бесплатны для всех.
 
 ## Итог за год
 
@@ -14688,9 +14714,18 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 До індексу входять лише чеки, відскановані через камеру (OCR). Витрати, введені вручну, та банківські імпорти не містять позицій на рівні окремих товарів.
 
+## Ціни спільноти — де найдешевше
+
+**Де найдешевше** (Аналітика → Особистий індекс інфляції → банер спільноти) **безкоштовно для всіх**. Функція порівнює ціну товару в магазинах за анонімними цінами з чеків, якими поділилися інші покупці.
+
+- Участь **добровільна**: увімкніть **Налаштування → Дані → Ділитися анонімними цінами**, щоб робити свій внесок. Переглядати ціни спільноти можна в будь-якому разі.
+- Ціна з'являється, лише коли її підтвердять **кілька різних покупців**, тому один чек ніколи не задає ціну магазину. На екрані це виглядає, наприклад, як «5+ покупців».
+- Тому магазин або товар може ще не відображатися — його підтвердило замало людей. Ціни з'являються після кількох тижнів накопичення даних.
+- Ніщо не пов'язується з вами: зберігаються лише товар, район магазину та ціна — ніколи ім'я, обліковий запис чи точне місцезнаходження.
+
 ## Конфіденційність
 
-Уся історія цін зберігається у вашому обліковому записі на сервері. Вона не передається між обліковими записами і не використовується для створення спільного каталогу товарів. При видаленні облікового запису вся історія цін також видаляється.
+Уся історія цін зберігається у вашому обліковому записі на сервері. Вона не передається між обліковими записами і не використовується для створення спільного каталогу товарів. При видаленні облікового запису вся історія цін також видаляється. Єдиний виняток — добровільні анонімні ціни спільноти, описані вище.
 `,
     },
     {
@@ -15031,7 +15066,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 - Щит від інфляції **безкоштовний** для всіх — підписка Pro не потрібна.
 - Ціни та заощадження показуються у вашій **валюті відображення**.
-- Наразі рекомендації базуються лише на **вашій власній історії покупок**. Порівняння цін на основі покупок інших користувачів поблизу, щоб підказати найдешевший магазин, заплановано на майбутнє оновлення.
+- Рекомендації базуються на **вашій власній історії покупок**. Щоб порівняти ціни з іншими покупцями, дивіться **Де найдешевше** (ціни спільноти) в розділі «Особистий індекс інфляції» — це безкоштовно.
 `,
     },
     {
@@ -15071,6 +15106,10 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - Лише **та сама валюта** — для цього порівняння ніщо ніколи не конвертується.
 - Різні обсяги упаковки вважаються різними товарами: сканер зберігає обсяг у назві товару (наприклад, «Mleko Łaciate 3,2% 1L»), тож пляшка 1 л і 0,5 л відстежуються окремо — саме так, як і має бути.
 - Величезний стрибок ціни навмисно ігнорується, а не повідомляється — набагато ймовірніше, що це інший товар (або неправильно розпізнаний рядок), ніж справжня зміна ціни.
+
+## Ціни спільноти в чеку
+
+Якщо у вас замало власної історії щодо товару, перевірка може порівняти його з тим, скільки зазвичай платять інші покупці **в тому самому магазині** (анонімно, в тій самій валюті). Такий рядок позначено **«зазвичай платять інші»** і зазначено, що він ґрунтується на анонімних цінах інших покупців. Формулювання лишається обережним: більше, ніж тут зазвичай платять інші покупці — варто перевірити чек. Ціни спільноти спершу мають підтвердити кілька покупців, і вони безкоштовні для всіх.
 
 ## Річний підсумок
 
@@ -19763,9 +19802,18 @@ Wskaźnik wymaga co najmniej 3 produktów z zakupami zarówno w okresie bazowym,
 
 Do wskaźnika przyczyniają się tylko paragony skanowane aparatem (OCR). Ręcznie wprowadzone wydatki i importy bankowe nie zawierają pozycji produktowych.
 
+## Ceny społeczności — gdzie najtaniej
+
+**Gdzie najtaniej** (Analityka → Osobisty indeks inflacji → baner społeczności) jest **darmowe dla wszystkich**. Porównuje cenę produktu w sklepach na podstawie anonimowych cen z paragonów, które inni kupujący zdecydowali się udostępnić.
+
+- To rozwiązanie **opcjonalne**: włącz **Ustawienia → Dane → Udostępniaj anonimowe ceny**, aby wnosić swój wkład. Ceny społeczności możesz przeglądać w obu przypadkach.
+- Cena pojawia się dopiero, gdy potwierdzi ją **kilku różnych kupujących**, więc pojedynczy paragon nigdy nie ustali ceny w sklepie. Ekran pokazuje to np. jako „5+ osób”.
+- Dlatego sklep lub produkt może się jeszcze nie pojawić — nie potwierdziło go dość osób. Ceny pojawiają się po kilku tygodniach danych.
+- Nic nie da się powiązać z Tobą: zachowywane są tylko produkt, okolica sklepu i cena — nigdy imię, konto ani dokładna lokalizacja.
+
 ## Prywatność
 
-Cała historia cen jest przechowywana na Twoim koncie na serwerze. Nie jest udostępniana między kontami ani nie służy do budowania żadnego wspólnego katalogu produktów. Jeśli usuniesz konto, cała historia cen zostanie usunięta razem z nim.
+Cała historia cen jest przechowywana na Twoim koncie na serwerze. Nie jest udostępniana między kontami ani nie służy do budowania żadnego wspólnego katalogu produktów. Jeśli usuniesz konto, cała historia cen zostanie usunięta razem z nim. Jedynym wyjątkiem są opcjonalne anonimowe ceny społeczności opisane powyżej.
 `,
     },
     {
@@ -20106,7 +20154,7 @@ Jest to domyślnie włączone i można to wyłączyć niezależnie w **Ustawieni
 
 - Tarcza antyinflacyjna jest **darmowa** dla wszystkich — nie wymaga abonamentu Pro.
 - Ceny i oszczędności są pokazywane w Twojej **walucie wyświetlania**.
-- Rekomendacje opierają się na razie wyłącznie na **Twojej własnej historii zakupów**. Porównywanie cen na podstawie zakupów innych użytkowników w pobliżu, żeby podpowiedzieć najtańszy sklep, jest planowane na przyszłość.
+- Rekomendacje opierają się na **Twojej własnej historii zakupów**. Aby porównać ceny z innymi kupującymi, zobacz **Gdzie najtaniej** (ceny społeczności) w sekcji Osobisty indeks inflacji — to darmowe.
 `,
     },
     {
@@ -20146,6 +20194,10 @@ Produkt potrzebuje co najmniej **dwóch** wcześniejszych zakupów w tym samym s
 - Tylko **ta sama waluta** — do tego porównania nic nigdy nie jest przeliczane.
 - Różne rozmiary opakowań liczą się jako różne produkty: skaner zachowuje rozmiar w nazwie produktu (np. „Mleko Łaciate 3,2% 1L"), więc butelka 1 l i 0,5 l są śledzone osobno — dokładnie tak, jak powinno być.
 - Ogromny skok ceny jest celowo pomijany, a nie zgłaszany — o wiele bardziej prawdopodobne, że to inny produkt (albo błędnie odczytana linijka), niż że to prawdziwa zmiana ceny.
+
+## Ceny społeczności na paragonie
+
+Jeśli masz zbyt mało własnej historii dla produktu, sprawdzenie może porównać go z tym, ile zwykle płacą inni kupujący **w tym samym sklepie** (anonimowo, w tej samej walucie). Taka pozycja ma etykietę **„inni zwykle płacą”** i informację, że opiera się na anonimowych cenach innych kupujących. Sformułowanie pozostaje ostrożne: więcej niż zwykle płacą tu inni kupujący — warto sprawdzić paragon. Ceny społeczności muszą najpierw potwierdzić kilku kupujących i są darmowe dla wszystkich.
 
 ## Roczne podsumowanie
 
@@ -24813,9 +24865,18 @@ Der Index benötigt mindestens 3 Produkte mit Käufen sowohl im Basis- als auch 
 
 Nur mit der Kamera gescannte Kassenbons (OCR) fließen in den Index ein. Manuell eingegebene Ausgaben und Bankimporte enthalten keine produktspezifischen Positionen.
 
+## Community-Preise — wo ist es am günstigsten
+
+**Wo ist es am günstigsten** (Analyse → Persönlicher Inflationsindex → Community-Banner) ist **für alle kostenlos**. Es vergleicht den Preis eines Produkts zwischen Geschäften anhand anonymer Preise aus Belegen, die andere Käufer teilen wollten.
+
+- Es ist **freiwillig**: Aktiviere **Einstellungen → Daten → Anonyme Preise teilen**, um beizutragen. Community-Preise kannst du in jedem Fall ansehen.
+- Ein Preis erscheint erst, wenn ihn **mehrere verschiedene Käufer** bestätigt haben, sodass ein einzelner Beleg nie den Preis eines Geschäfts bestimmt. Der Bildschirm zeigt das z. B. als „5+ Nutzer“.
+- Deshalb kann ein Geschäft oder Produkt noch fehlen — es wurde von zu wenigen bestätigt. Preise erscheinen nach einigen Wochen Datenlage.
+- Nichts ist auf dich zurückführbar: Gespeichert werden nur Produkt, Umgebung des Geschäfts und Preis, nie dein Name, Konto oder genauer Standort.
+
 ## Datenschutz
 
-Der gesamte Preisverlauf wird in deinem Konto auf dem Server gespeichert. Er wird nicht kontoübergreifend geteilt und nicht zur Erstellung eines gemeinsamen Produktkatalogs verwendet. Wenn du dein Konto löschst, wird der gesamte Preisverlauf damit gelöscht.
+Der gesamte Preisverlauf wird in deinem Konto auf dem Server gespeichert. Er wird nicht kontoübergreifend geteilt und nicht zur Erstellung eines gemeinsamen Produktkatalogs verwendet. Wenn du dein Konto löschst, wird der gesamte Preisverlauf damit gelöscht. Die einzige Ausnahme sind die freiwilligen anonymen Community-Preise, die oben beschrieben sind.
 `,
     },
     {
@@ -25156,7 +25217,7 @@ Dies ist standardmäßig aktiviert und kann unabhängig unter **Einstellungen �
 
 - Der Inflationsschutz ist für alle **kostenlos** — es ist kein Pro-Abo nötig.
 - Preise und Ersparnisse werden in deiner **Anzeigewährung** angezeigt.
-- Empfehlungen basieren derzeit ausschließlich auf deiner **eigenen Kaufhistorie**. Der Vergleich von Preisen anhand der Käufe anderer Nutzer in deiner Nähe, um das günstigste Geschäft vorzuschlagen, ist für ein zukünftiges Update geplant.
+- Empfehlungen basieren auf **deiner eigenen Kaufhistorie**. Um Preise mit anderen Käufern zu vergleichen, siehe **Wo ist es am günstigsten** (Community-Preise) im Abschnitt Persönlicher Inflationsindex — kostenlos.
 `,
     },
     {
@@ -25196,6 +25257,10 @@ Ein Produkt braucht mindestens **zwei** frühere Käufe im selben Geschäft, bev
 - Nur **dieselbe Währung** — für diesen Vergleich wird nie etwas umgerechnet.
 - Unterschiedliche Packungsgrößen zählen als unterschiedliche Produkte: Der Scanner behält die Größe im Produktnamen (z. B. „Mleko Łaciate 3,2% 1L"), sodass eine 1-l- und eine 0,5-l-Flasche getrennt erfasst werden — genau wie es sein soll.
 - Ein riesiger Preissprung wird bewusst ignoriert statt gemeldet — viel wahrscheinlicher ist ein anderes Produkt (oder eine falsch gelesene Zeile) als eine echte Preisänderung.
+
+## Community-Preise auf einem Beleg
+
+Wenn du für ein Produkt zu wenig eigenen Verlauf hast, kann die Prüfung es mit dem vergleichen, was andere Käufer **im selben Geschäft** üblicherweise zahlen (anonym, gleiche Währung). Eine solche Zeile trägt den Hinweis **„andere zahlen üblicherweise“** und vermerkt, dass sie auf anonymen Preisen anderer Käufer beruht. Die Formulierung bleibt vorsichtig: mehr, als andere Käufer hier üblicherweise zahlen — der Beleg ist einen Blick wert. Community-Preise müssen zuerst von mehreren Käufern bestätigt werden und sind für alle kostenlos.
 
 ## Die Jahressumme
 
@@ -29852,9 +29917,18 @@ El índice requiere al menos 3 productos con compras en ambos períodos, base y 
 
 Solo los tiques escaneados con la cámara (OCR) contribuyen al índice. Los gastos introducidos manualmente y las importaciones bancarias no incluyen líneas de productos individuales.
 
+## Precios de la comunidad — dónde es más barato
+
+**Dónde es más barato** (Analítica → Índice de inflación personal → banner de la comunidad) es **gratuito para todos**. Compara el precio de un producto entre tiendas con precios anónimos de recibos que otros compradores decidieron compartir.
+
+- Es **opcional**: activa **Ajustes → Datos → Compartir precios anónimos** para contribuir. Puedes consultar los precios de la comunidad en cualquier caso.
+- Un precio aparece solo cuando lo han confirmado **varios compradores distintos**, así que un solo recibo nunca fija el precio de una tienda. La pantalla lo muestra, por ejemplo, como «5+ compradores».
+- Por eso puede que una tienda o un producto aún no aparezca: todavía no lo confirman suficientes personas. Los precios aparecen tras unas semanas de datos.
+- Nada es rastreable hasta ti: solo se guardan el producto, la zona de la tienda y el precio, nunca tu nombre, tu cuenta ni tu ubicación exacta.
+
 ## Privacidad
 
-Todo el historial de precios se almacena en tu cuenta en el servidor. No se comparte entre cuentas ni se utiliza para construir ningún catálogo de productos compartido. Si eliminas tu cuenta, todo el historial de precios se elimina con ella.
+Todo el historial de precios se almacena en tu cuenta en el servidor. No se comparte entre cuentas ni se utiliza para construir ningún catálogo de productos compartido. Si eliminas tu cuenta, todo el historial de precios se elimina con ella. La única excepción son los precios anónimos de la comunidad, opcionales, descritos arriba.
 `,
     },
     {
@@ -30195,7 +30269,7 @@ Esto está activado por defecto y se puede desactivar por separado en **Ajustes 
 
 - El Escudo contra la inflación es **gratuito** para todos — no requiere Pro.
 - Los precios y los ahorros se muestran en tu **moneda de visualización**.
-- Por ahora, las recomendaciones se basan únicamente en **tu propio historial de compra**. Comparar precios con las compras de otros usuarios cercanos, para sugerir el comercio más barato, está previsto para una futura actualización.
+- Las recomendaciones se basan en **tu propio historial de compra**. Para comparar precios con otros compradores, mira **Dónde es más barato** (precios de la comunidad) en la sección Índice de inflación personal — es gratuito.
 `,
     },
     {
@@ -30235,6 +30309,10 @@ Un producto necesita al menos **dos** compras anteriores en el mismo comercio an
 - Solo **la misma moneda** — nunca se convierte nada para esta comparación.
 - Distintos tamaños de envase cuentan como productos distintos: el escáner conserva el tamaño en el nombre del producto (por ejemplo, "Mleko Łaciate 3,2% 1L"), así que una botella de 1 L y una de 0,5 L se siguen por separado — tal y como debe ser.
 - Un salto de precio enorme se ignora a propósito en lugar de reportarse — es mucho más probable que sea un producto distinto (o una línea mal leída) que un cambio de precio real.
+
+## Precios de la comunidad en un recibo
+
+Si tienes muy poco historial propio de un producto, la comprobación puede compararlo con lo que otros compradores suelen pagar **en la misma tienda** (de forma anónima y en la misma moneda). Esa línea indica **«otros suelen pagar»** y señala que se basa en precios anónimos de otros compradores. La redacción sigue siendo prudente: más de lo que suelen pagar aquí otros compradores — conviene revisar el recibo. Los precios de la comunidad necesitan antes la confirmación de varios compradores y son gratuitos para todos.
 
 ## El total anual
 
@@ -34889,9 +34967,18 @@ L'indice requiert au moins 3 produits avec des achats dans les deux périodes, b
 
 Seuls les tickets scannés avec l'appareil photo (OCR) contribuent à l'indice. Les dépenses saisies manuellement et les imports bancaires n'incluent pas les articles individuels.
 
+## Prix de la communauté — où est-ce moins cher
+
+**Où est-ce moins cher** (Analyses → Indice d'inflation personnel → bannière de la communauté) est **gratuit pour tout le monde**. Il compare le prix d'un produit entre magasins à partir de prix anonymes issus de reçus que d'autres acheteurs ont choisi de partager.
+
+- C'est **facultatif** : activez **Réglages → Données → Partager des prix anonymes** pour contribuer. Vous pouvez consulter les prix de la communauté dans tous les cas.
+- Un prix n'apparaît que lorsque **plusieurs acheteurs différents** l'ont confirmé : un seul reçu ne fixe donc jamais le prix d'un magasin. L'écran l'affiche par exemple sous la forme « 5+ acheteurs ».
+- C'est pourquoi un magasin ou un produit peut ne pas encore apparaître : trop peu de personnes l'ont confirmé. Les prix apparaissent après quelques semaines de données.
+- Rien ne remonte jusqu'à vous : seuls le produit, la zone du magasin et le prix sont conservés, jamais votre nom, votre compte ni votre position exacte.
+
 ## Confidentialité
 
-Tout l'historique des prix est stocké dans votre compte sur le serveur. Il n'est pas partagé entre comptes et n'est pas utilisé pour construire un catalogue de produits commun. Si vous supprimez votre compte, tout l'historique des prix est supprimé avec lui.
+Tout l'historique des prix est stocké dans votre compte sur le serveur. Il n'est pas partagé entre comptes et n'est pas utilisé pour construire un catalogue de produits commun. Si vous supprimez votre compte, tout l'historique des prix est supprimé avec lui. La seule exception concerne les prix anonymes de la communauté, facultatifs, décrits plus haut.
 `,
     },
     {
@@ -35232,7 +35319,7 @@ C'est activé par défaut et peut être désactivé indépendamment dans **Param
 
 - Le Bouclier anti-inflation est **gratuit** pour tout le monde — aucun abonnement Pro requis.
 - Les prix et les économies sont affichés dans votre **devise d'affichage**.
-- Pour l'instant, les recommandations se basent uniquement sur **votre propre historique d'achats**. Comparer les prix à partir des achats d'autres utilisateurs à proximité, pour suggérer le magasin le moins cher, est prévu pour une prochaine mise à jour.
+- Les recommandations se basent sur **votre propre historique d'achats**. Pour comparer les prix avec d'autres acheteurs, voyez **Où est-ce moins cher** (prix de la communauté) dans la section Indice d'inflation personnel — c'est gratuit.
 `,
     },
     {
@@ -35272,6 +35359,10 @@ Un produit a besoin d'au moins **deux** achats précédents dans le même magasi
 - Seulement **la même devise** — rien n'est jamais converti pour cette comparaison.
 - Des tailles de conditionnement différentes comptent comme des produits différents : le scanner conserve la taille dans le nom du produit (par exemple « Mleko Łaciate 3,2 % 1L »), donc une bouteille de 1 L et une de 0,5 L sont suivies séparément — exactement comme il se doit.
 - Un bond de prix énorme est délibérément ignoré plutôt que signalé — il est bien plus probable qu'il s'agisse d'un produit différent (ou d'une ligne mal lue) que d'un véritable changement de prix.
+
+## Prix de la communauté sur un reçu
+
+Si vous avez trop peu d'historique personnel pour un produit, la vérification peut le comparer à ce que les autres acheteurs paient d'habitude **dans le même magasin** (de façon anonyme, dans la même devise). Une telle ligne indique **« les autres paient d'habitude »** et précise qu'elle repose sur des prix anonymes d'autres acheteurs. La formulation reste prudente : plus que ce que les autres acheteurs paient d'habitude ici — à vérifier sur le reçu. Les prix de la communauté doivent d'abord être confirmés par plusieurs acheteurs et sont gratuits pour tous.
 
 ## Le total annuel
 
@@ -39890,9 +39981,18 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 У індэкс уваходзяць толькі чэкі, адсканаваныя праз камеру (OCR). Расходы, уведзеныя ўручную, і банкаўскія імпарты не ўтрымліваюць пазіцый на ўзроўні асобных тавараў.
 
+## Цэны суполкі — дзе танней
+
+**Дзе танней** (Аналітыка → Асабісты індэкс інфляцыі → банер суполкі) **бясплатна для ўсіх**. Функцыя параўноўвае кошт тавару ў крамах па ананімных коштах з чэкаў, якімі падзяліліся іншыя пакупнікі.
+
+- Удзел **добраахвотны**: уключыце **Налады → Даныя → Дзяліцца ананімнымі коштамі**, каб рабіць свой унёсак. Глядзець цэны суполкі можна ў любым выпадку.
+- Кошт з'яўляецца, толькі калі яго пацвердзяць **некалькі розных пакупнікоў**, таму адзін чэк ніколі не задае кошт крамы. На экране гэта выглядае, напрыклад, як «5+ пакупнікоў».
+- Таму крама або тавар можа яшчэ не адлюстроўвацца — яго пацвердзіла замала людзей. Цэны з'яўляюцца пасля некалькіх тыдняў назапашвання даных.
+- Нішто не звязваецца з вамі: захоўваюцца толькі тавар, раён крамы і кошт — ніколі імя, уліковы запіс або дакладнае месцазнаходжанне.
+
 ## Канфідэнцыяльнасць
 
-Уся гісторыя цэн захоўваецца ў вашым уліковым запісе на серверы. Яна не перадаецца паміж уліковымі запісамі і не выкарыстоўваецца для стварэння агульнага каталога тавараў. Пры выдаленні ўліковага запісу ўся гісторыя цэн таксама выдаляецца.
+Уся гісторыя цэн захоўваецца ў вашым уліковым запісе на серверы. Яна не перадаецца паміж уліковымі запісамі і не выкарыстоўваецца для стварэння агульнага каталога тавараў. Пры выдаленні ўліковага запісу ўся гісторыя цэн таксама выдаляецца. Адзінае выключэнне — добраахвотныя ананімныя цэны суполкі, апісаныя вышэй.
 `,
     },
     {
@@ -40233,7 +40333,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 - Шчыт ад інфляцыі **бясплатны** для ўсіх — падпіска Pro не патрэбна.
 - Цэны і эканомія паказваюцца ў вашай **валюце адлюстравання**.
-- Пакуль рэкамендацыі грунтуюцца толькі на **вашай уласнай гісторыі пакупак**. Параўнанне цэн на аснове пакупак іншых карыстальнікаў паблізу, каб падказаць найдзяшоўшую краму, плануецца ў будучым абнаўленні.
+- Рэкамендацыі грунтуюцца на **вашай уласнай гісторыі пакупак**. Каб параўнаць цэны з іншымі пакупнікамі, глядзіце **Дзе танней** (цэны суполкі) у раздзеле «Асабісты індэкс інфляцыі» — гэта бясплатна.
 `,
     },
     {
@@ -40273,6 +40373,10 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Толькі **тая ж валюта** — для гэтага параўнання нішто ніколі не канвертуецца.
 - Розныя аб'ёмы ўпакоўкі лічацца рознымі таварамі: сканер захоўвае аб'ём у назве тавару (напрыклад, «Mleko Łaciate 3,2% 1L»), таму бутэлька 1 л і 0,5 л адсочваюцца асобна — менавіта так, як і мае быць.
 - Велізарны скачок цаны наўмысна ігнаруецца, а не паведамляецца — значна больш верагодна, што гэта іншы тавар (або няправільна распазнаны радок), чым сапраўдная змена цаны.
+
+## Цэны суполкі ў чэку
+
+Калі ў вас занадта мала ўласнай гісторыі па тавары, праверка можа параўнаць яго з тым, колькі звычайна плацяць іншыя пакупнікі **ў той жа краме** (ананімна, у той жа валюце). Такі радок пазначаны **«звычайна плацяць іншыя»** і паведамляе, што абапіраецца на ананімныя цэны іншых пакупнікоў. Фармулёўка застаецца асцярожнай: больш, чым тут звычайна плацяць іншыя пакупнікі — варта праверыць чэк. Цэны суполкі спачатку павінны пацвердзіць некалькі пакупнікоў, і яны бясплатныя для ўсіх.
 
 ## Гадавы вынік
 
@@ -45017,9 +45121,18 @@ De index vereist minimaal 3 producten met aankopen in zowel de basis- als de hui
 
 Alleen bonnetjes die met de camera zijn gescand (OCR) dragen bij aan de index. Handmatig ingevoerde uitgaven en bankimports bevatten geen afzonderlijke artikelregels.
 
+## Communityprijzen — waar is het goedkoopst
+
+**Waar is het goedkoopst** (Analyse → Persoonlijke inflatie-index → communitybanner) is **gratis voor iedereen**. Het vergelijkt de prijs van een product tussen winkels met anonieme prijzen van bonnetjes die andere kopers wilden delen.
+
+- Het is **optioneel**: zet **Instellingen → Gegevens → Anonieme prijzen delen** aan om bij te dragen. Communityprijzen kun je hoe dan ook bekijken.
+- Een prijs verschijnt pas als **meerdere verschillende kopers** hem hebben bevestigd, dus één bonnetje bepaalt nooit de prijs van een winkel. Het scherm toont dit bijvoorbeeld als "5+ kopers".
+- Daarom kan een winkel of product nog ontbreken — te weinig mensen hebben het bevestigd. Prijzen verschijnen na enkele weken aan gegevens.
+- Niets is naar jou herleidbaar: alleen product, winkelomgeving en prijs worden bewaard, nooit je naam, account of exacte locatie.
+
 ## Privacy
 
-Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd.
+Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd. De enige uitzondering zijn de optionele anonieme communityprijzen die hierboven zijn beschreven.
 `,
     },
     {
@@ -45360,7 +45473,7 @@ Dit staat standaard aan en kan apart worden uitgezet bij **Instellingen → Meld
 
 - Inflatieschild is **gratis** voor iedereen — er is geen Pro-abonnement voor nodig.
 - Prijzen en besparingen worden getoond in je **weergavevaluta**.
-- Aanbevelingen zijn voorlopig alleen gebaseerd op **je eigen aankoopgeschiedenis**. Prijzen vergelijken op basis van aankopen van andere gebruikers in de buurt, om de goedkoopste winkel voor te stellen, staat gepland voor een toekomstige update.
+- Aanbevelingen zijn gebaseerd op **je eigen aankoopgeschiedenis**. Om prijzen met andere kopers te vergelijken, zie **Waar is het goedkoopst** (communityprijzen) in het onderdeel Persoonlijke inflatie-index — het is gratis.
 `,
     },
     {
@@ -45400,6 +45513,10 @@ Een product heeft minstens **twee** eerdere aankopen in dezelfde winkel nodig vo
 - Alleen **dezelfde valuta** — er wordt voor deze vergelijking nooit iets omgerekend.
 - Verschillende verpakkingsgroottes tellen als verschillende producten: de scanner houdt de grootte in de productnaam (bijvoorbeeld "Mleko Łaciate 3,2% 1L"), dus een fles van 1 l en van 0,5 l worden apart bijgehouden — precies zoals het hoort.
 - Een enorme prijssprong wordt bewust genegeerd in plaats van gemeld — het is veel waarschijnlijker dat het een ander product is (of een verkeerd gelezen regel) dan een echte prijsverandering.
+
+## Communityprijzen op een bonnetje
+
+Als je te weinig eigen geschiedenis voor een product hebt, kan de controle het vergelijken met wat andere kopers **in dezelfde winkel** meestal betalen (anoniem, dezelfde valuta). Zo'n regel toont **"anderen betalen meestal"** en vermeldt dat het op anonieme prijzen van andere kopers is gebaseerd. De formulering blijft voorzichtig: meer dan andere kopers hier meestal betalen — het bonnetje is het controleren waard. Communityprijzen moeten eerst door meerdere kopers worden bevestigd en zijn gratis voor iedereen.
 
 ## Het jaartotaal
 

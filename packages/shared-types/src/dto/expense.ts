@@ -43,6 +43,12 @@ export interface CreateExpenseDto {
   /** SHA-256 of the scanned receipt file, from the scan response (ABA-603). */
   receiptFingerprint?: string;
   /**
+   * Server-signed scan token from the scan response (ABA-642). Send it on the
+   * FIRST push of a scanned receipt only, beside `receiptFingerprint`; without
+   * it the receipt never contributes to the community price map.
+   */
+  scanAttestation?: string;
+  /**
    * A receipt scan only: the bank-captured expense (source `notification` or
    * `import`) this receipt replaces. The server merges it into the new row
    * right after the create — the receipt survives, the bank row is folded in.

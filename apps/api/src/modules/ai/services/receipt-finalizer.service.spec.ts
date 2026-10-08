@@ -213,27 +213,27 @@ describe('ReceiptFinalizerService price check', () => {
         },
       ]),
     );
-    const findings = await service.runPriceCheck('acc-1', receipt);
+    const findings = await service.runPriceCheck('acc-1', 'user-1', receipt);
     expect(findings).toHaveLength(1);
     expect(findings[0].canonicalName).toBe('Kawa');
   });
 
   it('returns an empty array — not undefined — when there is no merchant', async () => {
     const service = makeService(jest.fn());
-    const findings = await service.runPriceCheck('acc-1', { ...receipt, merchant: null });
+    const findings = await service.runPriceCheck('acc-1', 'user-1', { ...receipt, merchant: null });
     expect(findings).toEqual([]);
     expect(service.priceHistory.getProductTrendsFor).not.toHaveBeenCalled();
   });
 
   it('is fail-silent: a thrown query still yields an empty array', async () => {
     const service = makeService(jest.fn().mockRejectedValue(new Error('db down')));
-    await expect(service.runPriceCheck('acc-1', receipt)).resolves.toEqual([]);
+    await expect(service.runPriceCheck('acc-1', 'user-1', receipt)).resolves.toEqual([]);
     expect(service.logger.warn).toHaveBeenCalled();
   });
 
   it('skips items without a canonical name', async () => {
     const service = makeService(jest.fn());
-    const findings = await service.runPriceCheck('acc-1', {
+    const findings = await service.runPriceCheck('acc-1', 'user-1', {
       ...receipt,
       receiptItems: [{ description: 'COS', quantity: 1, unitPrice: 30, totalPrice: 30 }],
     });

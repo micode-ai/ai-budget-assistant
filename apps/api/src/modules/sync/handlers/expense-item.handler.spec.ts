@@ -47,7 +47,7 @@ describe('processExpenseItemChange', () => {
     expect(mockPrisma.expenseItem.create).not.toHaveBeenCalled();
   });
 
-  it('creates a new item and fires the community-price contribution when canonicalName is set', async () => {
+  it('creates a new item and NEVER contributes to the community prices (ABA-642: only a signed scan token can)', async () => {
     mockPrisma.expenseItem.findUnique.mockResolvedValue(null);
     mockPrisma.expenseItem.create.mockResolvedValue({
       id: 'item-1',
@@ -67,10 +67,33 @@ describe('processExpenseItemChange', () => {
     } as any);
 
     expect(result).toEqual({ entityId: 'item-1', status: 'success', serverId: 'item-1', serverVersion: 0 });
-    expect(mockCommunityPrices.recordContribution).toHaveBeenCalledWith('acc-1', 'user-1', 'exp-1');
+    expect(mockCommunityPrices.recordContribution).not.toHaveBeenCalled();
   });
 
-  it('does not fire the community-price contribution when canonicalName is absent', async () => {
+  it('an item update with a canonicalName never re-votes either (an edit must not rewrite a price)', async () => {
+    mockPrisma.expenseItem.findUnique.mockResolvedValue({ id: 'item-1', syncVersion: 1 });
+    mockPrisma.expenseItem.update.mockResolvedValue({
+      id: 'item-1',
+      expenseId: 'exp-1',
+      canonicalName: 'Milk 1L',
+      syncVersion: 2,
+    });
+
+    const result = await processExpenseItemChange(makeCtx(), 'acc-1', 'user-1', {
+      entityType: 'expense_item',
+      entityId: 'item-1',
+      operation: 'update',
+      clientVersion: 1,
+      accountId: 'acc-1',
+      payload: { expenseId: 'exp-1', description: 'Milk', canonicalName: 'Milk 1L', totalPrice: 1 },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
+
+    expect(result.status).toBe('success');
+    expect(mockCommunityPrices.recordContribution).not.toHaveBeenCalled();
+  });
+
+  it('does not contribute when canonicalName is absent', async () => {
     mockPrisma.expenseItem.findUnique.mockResolvedValue(null);
     mockPrisma.expenseItem.create.mockResolvedValue({
       id: 'item-1',

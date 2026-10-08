@@ -186,6 +186,7 @@ export function useReceiptSave({
         items,
         receiptImageBase64,
         receiptFingerprint: scannedReceipt.fingerprint,
+        scanAttestation: scannedReceipt.scanAttestation,
         mergeWithExpenseId,
         location: scannedReceipt.location ?? gpsLocationRef.current ?? undefined,
         splits: currentSplits.length > 1

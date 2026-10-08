@@ -16,7 +16,7 @@ import {
 } from '../utils/receipt-reconcile';
 import type { ReceiptCheckFinding, ReceiptDuplicateMatch } from '@budget/shared-types';
 import { ReceiptDuplicateService, receiptFingerprint } from '../../expenses/receipt-duplicate.service';
-import { ReceiptFinalizerService } from './receipt-finalizer.service';
+import { ReceiptFinalizerService, type ReceiptFinalizeOptions } from './receipt-finalizer.service';
 import { ReceiptPdfService } from './receipt-pdf.service';
 import { SubscriptionsService } from '../../subscriptions/subscriptions.service';
 
@@ -148,6 +148,10 @@ export interface ReceiptExpense {
   /** SHA-256 of the scanned file's base64 text; the client hands it back on
    *  create so a later re-upload of the same file is caught before OCR (ABA-603). */
   fingerprint?: string;
+  /** Server-signed scan token (ABA-642): present only when the server's own OCR passed
+   *  every attestation gate. The client hands it back on the FIRST expense create so the
+   *  receipt's lines may contribute to the community price map. Never stored. */
+  scanAttestation?: string;
   /** A saved expense this receipt probably duplicates — same file, or same
    *  merchant/amount/currency/date ±1 day. A warning only; null when none. */
   possibleDuplicate?: ReceiptDuplicateMatch | null;
@@ -833,6 +837,7 @@ User note about this receipt: "${safeNote}"`;
     accountId: string,
     userPrompt?: string,
     imageDataUrl?: string,
+    scanOptions: ReceiptFinalizeOptions = {},
   ): Promise<ReceiptExpense> {
     const { context } = await this.getUserOcrPrefs(userId);
     const aiModel = OCR_RECEIPT_MODEL;
@@ -870,7 +875,7 @@ User note about this receipt: "${safeNote}"`;
       max_tokens: ocrMaxTokens,
       response_format: RECEIPT_RESPONSE_FORMAT,
     }, context, userId, accountId);
-    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), imageBase64, accountId);
+    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), imageBase64, accountId);
   }
 
   /**
@@ -895,6 +900,7 @@ User note about this receipt: "${safeNote}"`;
     userId: string,
     accountId: string,
     userPrompt?: string,
+    scanOptions: ReceiptFinalizeOptions = {},
   ): Promise<ReceiptExpense> {
     const { context } = await this.getUserOcrPrefs(userId);
     const aiModel = OCR_RECEIPT_MODEL;
@@ -905,13 +911,15 @@ User note about this receipt: "${safeNote}"`;
     const { text: trimmedText, meaningfulTextLength, hasMeaningfulText } = await this.receiptPdf.extractText(buffer);
 
     if (hasMeaningfulText) {
-      // Text-based PDF — use cheaper text-only GPT call
-      return this.parseReceiptText(trimmedText, userId, accountId, userPrompt, { fingerprintSource: pdfBase64, logTag: 'PDF' });
+      // Text-based PDF — use cheaper text-only GPT call. NEVER attested (ABA-642 audit
+      // HIGH 2): a text layer is whatever its author typed, so it is treated like plain
+      // text. Only an image scan or a scanned (rasterised) PDF below may attest.
+      return this.parseReceiptText(trimmedText, userId, accountId, userPrompt, { fingerprintSource: pdfBase64, logTag: 'PDF', scanOptions: { ...scanOptions, attest: false } });
     }
 
     // Scanned PDF — send the full PDF as a file
     this.logger.log(`[PDF] Insufficient meaningful text (${meaningfulTextLength} chars), sending full PDF as file with model: ${aiModel}`);
-    return this.parseReceiptFile(pdfBase64, userId, accountId, context, userPrompt, aiModel, ocrMaxTokens);
+    return this.parseReceiptFile(pdfBase64, userId, accountId, context, userPrompt, aiModel, ocrMaxTokens, scanOptions);
   }
 
   /**
@@ -929,7 +937,7 @@ User note about this receipt: "${safeNote}"`;
     userId: string,
     accountId: string,
     userPrompt?: string,
-    options: { fingerprintSource?: string; logTag?: string } = {},
+    options: { fingerprintSource?: string; logTag?: string; scanOptions?: ReceiptFinalizeOptions } = {},
   ): Promise<ReceiptExpense> {
     const { context } = await this.getUserOcrPrefs(userId);
     const aiModel = OCR_RECEIPT_MODEL;
@@ -953,7 +961,14 @@ User note about this receipt: "${safeNote}"`;
     }, context, userId, accountId);
     const fingerprintSource = options.fingerprintSource ?? Buffer.from(text, 'utf8').toString('base64');
     return await this.withDuplicateInfo(
-      await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId),
+      // ABA-642: plain text (an e-mail body, a text-layer PDF) is attacker-written, so
+      // it NEVER earns a scan attestation, whatever the caller asks. The token proves
+      // "our OCR read this document", not that it is a genuine receipt — which is only
+      // a meaningful claim for pixels (an image / rasterised PDF), not typed text.
+      await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, {
+        ...(options.scanOptions ?? {}),
+        attest: false,
+      }),
       fingerprintSource,
       accountId,
     );
@@ -967,6 +982,7 @@ User note about this receipt: "${safeNote}"`;
     userPrompt?: string,
     aiModel?: string,
     maxTokens?: number,
+    scanOptions: ReceiptFinalizeOptions = {},
   ): Promise<ReceiptExpense> {
     const resolvedModel = aiModel || OCR_RECEIPT_MODEL;
     const resolvedMaxTokens = maxTokens || 4096;
@@ -1006,7 +1022,7 @@ User note about this receipt: "${safeNote}"`;
         max_tokens: resolvedMaxTokens,
         response_format: RECEIPT_RESPONSE_FORMAT,
       }, context, userId, accountId);
-      return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
+      return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), pdfBase64, accountId);
     }
 
     const normalized = await this.readReceipt('PDF-File', {
@@ -1021,7 +1037,7 @@ User note about this receipt: "${safeNote}"`;
       max_tokens: resolvedMaxTokens,
       response_format: RECEIPT_RESPONSE_FORMAT,
     }, context, userId, accountId);
-    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId), pdfBase64, accountId);
+    return await this.withDuplicateInfo(await this.receiptFinalizer.finalizeReceipt(normalized, categories, accountId, userId, scanOptions), pdfBase64, accountId);
   }
 
   async extractTextFromImage(imageBase64: string, userId?: string): Promise<string> {

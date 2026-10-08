@@ -231,17 +231,20 @@ export class AiController {
     @Req() req: AuthenticatedRequest,
     @Body() body: unknown,
   ) {
-    const { imageBase64, userPrompt, mimeType } = ScanReceiptRequestSchema.parse(body);
+    const { imageBase64, userPrompt, mimeType, communityBaseline } = ScanReceiptRequestSchema.parse(body);
+    // ABA-642: only new app builds send `communityBaseline`; bots and old builds never do.
+    const scanOptions = { communityBaseline: communityBaseline === true };
     if (mimeType === 'application/pdf') {
       return this.ocrService.parseReceiptPdf(
         imageBase64,
         req.user.id,
         req.accountId,
         userPrompt,
+        scanOptions,
       );
     }
 
-    return this.ocrService.parseReceipt(imageBase64, req.user.id, req.accountId, userPrompt);
+    return this.ocrService.parseReceipt(imageBase64, req.user.id, req.accountId, userPrompt, undefined, scanOptions);
   }
 
   /**

@@ -68,6 +68,15 @@ The index requires at least 3 products with purchases in both the base and curre
 
 Only receipts scanned with the camera (OCR) contribute to the index. Manually entered expenses and bank imports do not include product-level line items.
 
+## Community prices — where's cheapest
+
+**Where's cheapest** (Analytics → Personal Inflation Index → the community banner) is **free for everyone**. It compares the price of a product across stores using anonymous prices from receipts that other shoppers chose to share.
+
+- It is **opt-in**: switch on **Settings → Data → Share anonymous prices** to contribute. You can read community prices either way.
+- A price shows up only once **several different shoppers** have confirmed it, so one receipt can never set a store's price. The screen shows this as, for example, "5+ shoppers".
+- That is why a store or product may not appear yet — it simply has not been confirmed by enough people. Prices appear after a few weeks of data.
+- Nothing is traceable to you: only the product, store area and price are kept, never your name, account or exact location.
+
 ## Privacy
 
-All price history is stored in your account on the server. It is not shared across accounts or used to build any shared product catalog. If you delete your account, all price history is deleted with it.
+All price history is stored in your account on the server. It is not shared across accounts or used to build any shared product catalog. If you delete your account, all price history is deleted with it. The one exception is the opt-in anonymous community prices described above.

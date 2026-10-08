@@ -1,6 +1,5 @@
 import type { SyncChange } from '@budget/shared-types';
 import { resolveExpenseCategoryId } from '../../expenses/expense-category-resolver.util';
-import { logFireAndForget } from '../../../common/utils/fire-and-forget';
 import { SyncHandlerContext, SyncResult } from '../sync-types';
 
 export async function processExpenseItemChange(
@@ -59,15 +58,9 @@ export async function processExpenseItemChange(
       },
     });
 
-    // Sync parity (ABA-335): item-level sync writes canonicalName in a
-    // separate entity from the parent expense create, so the community-price
-    // hook in ExpensesService.create ran before this data existed. Fire the
-    // same contribution here for device-created receipts.
-    if (created.canonicalName) {
-      void ctx.communityPrices
-        ?.recordContribution(accountId, userId, created.expenseId)
-        .catch(logFireAndForget(ctx.logger, 'SyncService.recordContribution#create'));
-    }
+    // ABA-642: no community-price contribution here. Only a signed scan token handed
+    // back on expense create can contribute (ExpenseCreatedHooksService), so an item
+    // created or edited through sync can never vote or rewrite a vote.
 
     return { entityId, status: 'success', serverId: created.id, serverVersion: created.syncVersion };
   }
@@ -96,11 +89,6 @@ export async function processExpenseItemChange(
         syncVersion: { increment: 1 },
       },
     });
-    if (updated.canonicalName) {
-      void ctx.communityPrices
-        ?.recordContribution(accountId, userId, updated.expenseId)
-        .catch(logFireAndForget(ctx.logger, 'SyncService.recordContribution#update'));
-    }
     return { entityId, status: 'success', serverVersion: updated.syncVersion };
   }
 

@@ -69,6 +69,8 @@ interface PendingReceiptData {
   receiptImageBase64: string;
   receiptMimeType: string;
   receiptFingerprint?: string;
+  /** Server-signed scan token (ABA-642), handed back on create; never edited. */
+  scanAttestation?: string;
   language: string;
 }
 
@@ -275,6 +277,7 @@ export class PhotoHandler {
         receiptImageBase64: base64,
         receiptMimeType: mimeType,
         receiptFingerprint: receipt.fingerprint,
+        scanAttestation: receipt.scanAttestation,
         language,
       };
       await this.redis.set(`slack:receipt:${shortId}`, JSON.stringify(data), 'EX', 1800);
@@ -396,6 +399,7 @@ export class PhotoHandler {
         receiptImageBase64: data.receiptImageBase64,
         receiptMimeType: data.receiptMimeType,
         receiptFingerprint: data.receiptFingerprint,
+        scanAttestation: data.scanAttestation,
         items: data.items.map((item, index) => ({
           description: item.description,
           canonicalName: item.canonicalName,

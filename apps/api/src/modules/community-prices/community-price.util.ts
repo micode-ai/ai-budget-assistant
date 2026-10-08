@@ -1,4 +1,5 @@
 import { createHash } from 'crypto';
+import { normalizeMerchantPL } from '../import-bank/merchants/merchants-pl';
 
 /**
  * Monday-of-week bucket for a purchase date (API-local — do NOT import
@@ -37,22 +38,29 @@ export function regionBucket(lat: number, lng: number, city?: string | null): st
 }
 
 /**
- * Salted SHA-256 hash of the contributing accountId. This is the ONLY link
- * between an observation row and its contributor — a one-way hash, never
- * reversible, never exposed to clients. It enforces the one-vote-per-account-
- * per-week dedup (the unique constraint) and, on the future read path, the
- * k-anonymity gate (COUNT(DISTINCT contributor_key) >= K). Deterministic for a
- * given (salt, accountId) pair so the same account always dedups against
- * itself; a different salt (e.g. rotated in an incident) produces entirely
+ * Salted SHA-256 hash of the contributing PERSON (ABA-642 D2: keyed on userId,
+ * not accountId — personal + business + trip accounts of one human must be one
+ * contributor, not three). This is the ONLY link between an observation row and
+ * its contributor — a one-way hash, never reversible, never exposed to clients.
+ * It enforces the one-vote-per-person-per-week dedup (the unique constraint) and
+ * feeds the read-path k-anonymity gate. The `:u:` domain tag keeps it unrelated
+ * to the legacy per-account keys; a different salt (rotation) produces entirely
  * unrelated keys, breaking any correlation with historical rows.
  */
-export function computeContributorKey(salt: string, accountId: string): string {
-  return createHash('sha256').update(`${salt}:${accountId}`).digest('hex');
+export function computeContributorKey(salt: string, userId: string): string {
+  return createHash('sha256').update(`${salt}:u:${userId}`).digest('hex');
+}
+
+/** Store name as the corpus keys it (shared by the scan attestation and the contribution). */
+export function normalizeCommunityMerchant(merchant: string | null | undefined): string | null {
+  if (!merchant) return null;
+  const n = normalizeMerchantPL(merchant)?.trim().toLowerCase();
+  return n ? n : null;
 }
 
 /**
- * Contributor-eligibility gate (ABA-335 anti-Sybil, defense-in-depth). An account
- * must be at least `minAgeDays` old AND have at least `minExpenses` real tracked
+ * Contributor-eligibility gate (ABA-335 anti-Sybil, defense-in-depth; ABA-642: evaluated per
+ * USER, across all of the user's accounts). A user must be at least `minAgeDays` old AND have at least `minExpenses` real tracked
  * expenses before its contributions count toward the k-anonymity corpus. Age alone
  * is cheap to fake at scale (register + wait); requiring sustained real usage raises
  * the per-identity cost of a Sybil fleet meaningfully. Pure so it's unit-testable;

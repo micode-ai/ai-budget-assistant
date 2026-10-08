@@ -32,6 +32,10 @@ Un producto necesita al menos **dos** compras anteriores en el mismo comercio an
 - Distintos tamaños de envase cuentan como productos distintos: el escáner conserva el tamaño en el nombre del producto (por ejemplo, "Mleko Łaciate 3,2% 1L"), así que una botella de 1 L y una de 0,5 L se siguen por separado — tal y como debe ser.
 - Un salto de precio enorme se ignora a propósito en lugar de reportarse — es mucho más probable que sea un producto distinto (o una línea mal leída) que un cambio de precio real.
 
+## Precios de la comunidad en un recibo
+
+Si tienes muy poco historial propio de un producto, la comprobación puede compararlo con lo que otros compradores suelen pagar **en la misma tienda** (de forma anónima y en la misma moneda). Esa línea indica **«otros suelen pagar»** y señala que se basa en precios anónimos de otros compradores. La redacción sigue siendo prudente: más de lo que suelen pagar aquí otros compradores — conviene revisar el recibo. Los precios de la comunidad necesitan antes la confirmación de varios compradores y son gratuitos para todos.
+
 ## El total anual
 
 Si alguna vez se ha encontrado algo en más de una moneda, la pestaña Analítica muestra solo un total — tu propia moneda, si algo apareció en ella, o si no, el importe individual más alto. Los importes nunca se suman entre monedas, porque eso implicaría convertir dinero, algo que esta función se cuida mucho de no hacer nunca.

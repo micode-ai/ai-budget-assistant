@@ -84,8 +84,11 @@ label (`товаров: {{count}}`) rather than before an agreeing noun. Do not 
   detector still runs and logs what it would have written. Flipping it is blocked on an actual store
   rollout of the build that renders the real card — before that, `alerts/index.tsx`'s `default:`
   branch would show installed apps a card titled `price_overcharge` with an empty body.
-- Community prices are implemented and unit-tested as a fallback baseline but **not service-wired**,
-  because production community reads are off behind their own kill switch.
+- The community fallback is wired (ABA-642) but inert while `COMMUNITY_PRICE_READ_ENABLED` is off. It runs
+  only when the scan request carries `communityBaseline: true` (new app builds; bots never), the store has
+  a server-geocoded location, and only for the same store/region/currency; a personal history of 2+ points
+  wins. Community findings are inline-only: `detectPriceOvercharge` stays personal-only, so the "both
+  passes agree" invariant is scoped to `source: 'personal'`.
 - No per-litre/kg normalization: that needs a *parsed* size — value, unit and conversion — not a raw
   token.
 - No index on `expense_items.canonical_name`.

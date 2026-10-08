@@ -13,6 +13,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { useAuthStore } from '@/stores/authStore';
+import { api } from '@/services/api';
 import { useCommunityPriceStore } from '@/stores/communityPriceStore';
 import { ExpenseMapView } from '@/components/map/ExpenseMapView';
 import { buildCommunityMapPoints } from '@/components/map/buildCommunityMapPoints';
@@ -49,6 +51,17 @@ export default function CommunityPriceScreen() {
   } = useCommunityPriceStore();
 
   const [viewMode, setViewMode] = useState<ViewMode>('list');
+
+  const contributes = useAuthStore((s) => s.user?.contributeCommunityPrices ?? false);
+  const updateUser = useAuthStore((s) => s.updateUser);
+  // Same consent flag as Settings > Data; flipping it here drives supply.
+  const handleContribute = useCallback(() => {
+    updateUser({ contributeCommunityPrices: true });
+    api.updateProfile({ contributeCommunityPrices: true }).catch((e) => {
+      console.warn('Failed to update community-price consent', e);
+      updateUser({ contributeCommunityPrices: false });
+    });
+  }, [updateUser]);
 
   const debounceTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -251,6 +264,15 @@ export default function CommunityPriceScreen() {
     <>
       <Stack.Screen options={{ title: t('communityPrices.screenTitle') }} />
       <SafeAreaView style={styles.container} edges={[]}>
+        {!contributes && (
+          <View style={styles.ctaCard}>
+            <Text style={styles.ctaTitle}>{t('communityPrices.contributeCtaTitle')}</Text>
+            <Text style={styles.ctaBody}>{t('communityPrices.contributeCtaBody')}</Text>
+            <TouchableOpacity style={styles.ctaButton} onPress={handleContribute} accessibilityRole="button">
+              <Text style={styles.ctaButtonText}>{t('communityPrices.contributeCtaButton')}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
         <View style={styles.searchContainer}>
           <View style={styles.searchBar}>
             <Ionicons name="search-outline" size={20} color={theme.colors.textTertiary} />
@@ -301,6 +323,36 @@ const createStyles = (theme: Theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  ctaCard: {
+    margin: theme.spacing[4],
+    marginBottom: 0,
+    padding: theme.spacing[4],
+    borderRadius: theme.borderRadius.lg,
+    backgroundColor: theme.colors.surface,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    gap: theme.spacing[2],
+  },
+  ctaTitle: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textPrimary,
+    fontWeight: '600' as const,
+  },
+  ctaBody: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+  },
+  ctaButton: {
+    alignSelf: 'flex-start' as const,
+    backgroundColor: theme.colors.primary,
+    borderRadius: theme.borderRadius.lg,
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[2],
+  },
+  ctaButtonText: {
+    ...theme.textStyles.bodySmMedium,
+    color: theme.colors.textInverse,
   },
   searchContainer: {
     padding: theme.spacing[4],

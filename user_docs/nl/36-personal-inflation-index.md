@@ -68,6 +68,15 @@ De index vereist minimaal 3 producten met aankopen in zowel de basis- als de hui
 
 Alleen bonnetjes die met de camera zijn gescand (OCR) dragen bij aan de index. Handmatig ingevoerde uitgaven en bankimports bevatten geen afzonderlijke artikelregels.
 
+## Communityprijzen — waar is het goedkoopst
+
+**Waar is het goedkoopst** (Analyse → Persoonlijke inflatie-index → communitybanner) is **gratis voor iedereen**. Het vergelijkt de prijs van een product tussen winkels met anonieme prijzen van bonnetjes die andere kopers wilden delen.
+
+- Het is **optioneel**: zet **Instellingen → Gegevens → Anonieme prijzen delen** aan om bij te dragen. Communityprijzen kun je hoe dan ook bekijken.
+- Een prijs verschijnt pas als **meerdere verschillende kopers** hem hebben bevestigd, dus één bonnetje bepaalt nooit de prijs van een winkel. Het scherm toont dit bijvoorbeeld als "5+ kopers".
+- Daarom kan een winkel of product nog ontbreken — te weinig mensen hebben het bevestigd. Prijzen verschijnen na enkele weken aan gegevens.
+- Niets is naar jou herleidbaar: alleen product, winkelomgeving en prijs worden bewaard, nooit je naam, account of exacte locatie.
+
 ## Privacy
 
-Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd.
+Alle prijsgeschiedenis wordt opgeslagen in jouw account op de server. Het wordt niet gedeeld tussen accounts en niet gebruikt om een gedeelde productcatalogus op te bouwen. Als je je account verwijdert, wordt alle prijsgeschiedenis daarmee verwijderd. De enige uitzondering zijn de optionele anonieme communityprijzen die hierboven zijn beschreven.

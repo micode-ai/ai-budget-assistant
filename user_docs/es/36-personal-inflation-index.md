@@ -68,6 +68,15 @@ El índice requiere al menos 3 productos con compras en ambos períodos, base y 
 
 Solo los tiques escaneados con la cámara (OCR) contribuyen al índice. Los gastos introducidos manualmente y las importaciones bancarias no incluyen líneas de productos individuales.
 
+## Precios de la comunidad — dónde es más barato
+
+**Dónde es más barato** (Analítica → Índice de inflación personal → banner de la comunidad) es **gratuito para todos**. Compara el precio de un producto entre tiendas con precios anónimos de recibos que otros compradores decidieron compartir.
+
+- Es **opcional**: activa **Ajustes → Datos → Compartir precios anónimos** para contribuir. Puedes consultar los precios de la comunidad en cualquier caso.
+- Un precio aparece solo cuando lo han confirmado **varios compradores distintos**, así que un solo recibo nunca fija el precio de una tienda. La pantalla lo muestra, por ejemplo, como «5+ compradores».
+- Por eso puede que una tienda o un producto aún no aparezca: todavía no lo confirman suficientes personas. Los precios aparecen tras unas semanas de datos.
+- Nada es rastreable hasta ti: solo se guardan el producto, la zona de la tienda y el precio, nunca tu nombre, tu cuenta ni tu ubicación exacta.
+
 ## Privacidad
 
-Todo el historial de precios se almacena en tu cuenta en el servidor. No se comparte entre cuentas ni se utiliza para construir ningún catálogo de productos compartido. Si eliminas tu cuenta, todo el historial de precios se elimina con ella.
+Todo el historial de precios se almacena en tu cuenta en el servidor. No se comparte entre cuentas ni se utiliza para construir ningún catálogo de productos compartido. Si eliminas tu cuenta, todo el historial de precios se elimina con ella. La única excepción son los precios anónimos de la comunidad, opcionales, descritos arriba.

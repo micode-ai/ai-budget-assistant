@@ -204,6 +204,8 @@ export const aiApi = {
         itemIndexes: number[];
       }[];
       fingerprint?: string;
+      /** Short-lived (24 h) server-signed token (ABA-642); sent once on first create. */
+      scanAttestation?: string;
       possibleDuplicate?: ReceiptDuplicateMatch | null;
     }>('/ai/scan-receipt', {
       method: 'POST',
@@ -211,6 +213,7 @@ export const aiApi = {
         imageBase64,
         ...(userPrompt ? { userPrompt } : {}),
         ...(mimeType ? { mimeType } : {}),
+        communityBaseline: true,
       }),
     });
   },

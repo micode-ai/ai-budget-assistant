@@ -51,6 +51,51 @@ const toCents = (amount: number): number => Math.round(amount * 100);
 const fromCents = (cents: number): number => Math.round(cents) / 100;
 const isUsableAmount = (amount: number): boolean => Number.isFinite(amount) && amount > 0;
 
+/**
+ * Do the receipt's lines add up to its total, within `tolerancePct`?
+ *
+ * Extracted from `buildCategorySplits` (ABA-642) with no behaviour change, so
+ * the category split and the community-price scan attestation share one gate.
+ * Compares in cents, on NET line prices (amount minus per-line discount):
+ *
+ *   |Σ net lines − basket discount + deposit − total| / total <= tolerancePct
+ *
+ * - A basket-level `discount` is taken off after the lines were priced: the
+ *   lines keep their full price and only the total reflects it (a 25 on a 183
+ *   Lidl basket reads as a 10% gap otherwise).
+ * - A `deposit` (Polish `kaucja`) runs the other way: it is printed below the
+ *   goods and included in the amount due, so the lines fall short by exactly
+ *   that much.
+ * Lines without a usable amount are ignored. Mirrored in
+ * `packages/shared-utils/src/formatting/receipt-category-split.ts`.
+ */
+export function receiptTotalsReconcile(params: {
+  items: Array<{ amount: number; lineDiscount?: number }>;
+  total: number;
+  discount?: number | null;
+  deposit?: number | null;
+  tolerancePct?: number;
+}): boolean {
+  const { items, total, discount, deposit } = params;
+  const tolerancePct = params.tolerancePct ?? RECEIPT_SPLIT_DEFAULTS.tolerancePct;
+  if (!Number.isFinite(total) || total <= 0) return false;
+  const usable = items.filter((i) => isUsableAmount(i.amount));
+  if (usable.length === 0) return false;
+
+  const totalCents = toCents(total);
+  const netItemsCents = usable.reduce((sum, i) => {
+    const lineDiscountCents = i.lineDiscount ? toCents(i.lineDiscount) : 0;
+    return sum + Math.max(0, toCents(i.amount) - lineDiscountCents);
+  }, 0);
+  const discountCents =
+    typeof discount === 'number' && Number.isFinite(discount) && discount > 0 ? toCents(discount) : 0;
+  const depositCents =
+    typeof deposit === 'number' && Number.isFinite(deposit) && deposit > 0 ? toCents(deposit) : 0;
+
+  const gapPct = (Math.abs(netItemsCents - discountCents + depositCents - totalCents) / totalCents) * 100;
+  return gapPct <= tolerancePct;
+}
+
 export function buildCategorySplits(params: {
   items: SplitInputItem[];
   total: number;
@@ -85,43 +130,23 @@ export function buildCategorySplits(params: {
   const totalCents = toCents(total);
 
   // Every line counts toward the tolerance check, assigned or not: an
-  // unassigned line's money is still part of this receipt.
-  // Compute net prices: amount minus per-line discount (if any).
-  const usableNetCents = usable.map((i) => {
-    const amountCents = toCents(i.amount);
-    const lineDiscountCents = i.lineDiscount ? toCents(i.lineDiscount) : 0;
-    return Math.max(0, amountCents - lineDiscountCents);
-  });
-  const itemsCents = usable.reduce((sum, i) => sum + toCents(i.amount), 0);
-  const netItemsCents = usableNetCents.reduce((sum, c) => sum + c, 0);
+  // unassigned line's money is still part of this receipt. The arithmetic
+  // (net prices, basket discount, deposit) lives in receiptTotalsReconcile so
+  // the community-price scan attestation (ABA-642) applies the SAME gate.
+  if (!receiptTotalsReconcile({ items: usable, total, discount, deposit, tolerancePct: config.tolerancePct })) {
+    return [];
+  }
 
-  // A basket-level discount is money taken off after the lines were priced: the
-  // lines keep their full price and only the total reflects it. Measuring the
-  // gap without subtracting it fails every such receipt — a 25 on a 183 Lidl
-  // basket reads as a 10% discrepancy — which silently disabled the whole
-  // feature at the shops whose entire marketing is basket coupons. A shop that
-  // prints its discounts per line is unaffected: those are already folded into
-  // the line prices, and `discount` is then 0.
+  // The basket discount is spread across the groups below (it is money off the
+  // lines); the deposit only feeds its own group and is never spread.
+  const netItemsCents = usable.reduce((sum, i) => {
+    const lineDiscountCents = i.lineDiscount ? toCents(i.lineDiscount) : 0;
+    return sum + Math.max(0, toCents(i.amount) - lineDiscountCents);
+  }, 0);
   const discountCents =
     typeof discount === 'number' && Number.isFinite(discount) && discount > 0 ? toCents(discount) : 0;
-
-  // A deposit runs the other way: bottle and can deposits are printed in their
-  // own block below the goods total, never as line items, yet the amount due
-  // includes them. So the lines legitimately fall short by exactly that much,
-  // and charging it to the tolerance spends the budget on a number that was
-  // never a discrepancy — on the Biedronka receipt that prompted this, 4.50 of
-  // deposits was 1.9% of the total before a single line had been misread.
-  //
-  // Only the gate is affected. The deposit is NOT spread across the groups the
-  // way the discount is: it belongs to whichever lines the bottles were on, and
-  // guessing which is worse than leaving it in the residual below.
   const depositCents =
     typeof deposit === 'number' && Number.isFinite(deposit) && deposit > 0 ? toCents(deposit) : 0;
-
-  // Tolerance check uses NET prices: sum of net items + deposit should be close to total
-  const gapPct =
-    (Math.abs(netItemsCents - discountCents + depositCents - totalCents) / totalCents) * 100;
-  if (gapPct > config.tolerancePct) return [];
 
   const groups = new Map<string, { categoryName: string; cents: number; itemIndexes: number[] }>();
   for (const line of usable) {

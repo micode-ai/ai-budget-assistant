@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, Optional } from '@nestjs/common';
 import { PrismaService } from '../../../database/prisma.service';
 import { GeocodingService, GeocodeResult } from './geocoding.service';
 import { MerchantRulesService } from '../../merchant-rules/merchant-rules.service';
@@ -8,6 +8,7 @@ import {
   perUnitPrice,
   resolveReceiptCheckConfig,
   type ReceiptCheckLine,
+  type CommunityBaseline,
 } from '../../price-history/receipt-check.util';
 import { PriceHistoryService } from '../../price-history/price-history.service';
 import {
@@ -17,7 +18,17 @@ import {
   proposedNameFromKey,
   depositCategoryName,
 } from './receipt-category-split.service';
-import { buildCategorySplits } from '../../../common/utils/receipt-category-split';
+import { buildCategorySplits, receiptTotalsReconcile } from '../../../common/utils/receipt-category-split';
+import { CommunityPriceService } from '../../community-prices/community-price.service';
+import { normalizeCommunityMerchant } from '../../community-prices/community-price.util';
+import {
+  ATTESTED_NAME_MAX_LEN,
+  SCAN_ATTESTATION_MAX_LINES,
+  SCAN_ATTESTATION_VERSION,
+  attestedLineHash,
+  signScanAttestation,
+  usableCommunitySalt,
+} from '../../community-prices/scan-attestation.util';
 import { isDepositCategoryName } from '../../../common/utils/deposit-category';
 import { reconcileReceiptCategory } from '../utils/receipt-overall-category.util';
 import type {
@@ -27,6 +38,22 @@ import type {
   ReceiptExpense,
   ReceiptItemCategory,
 } from './ocr.service';
+
+/** Default OCR-confidence floor (percent) for issuing a community scan attestation. */
+const DEFAULT_MIN_OCR_CONFIDENCE_PCT = 80;
+/** A receipt needs at least this many priced, named lines to be attested. */
+const MIN_ATTESTED_LINES = 2;
+
+export interface ReceiptFinalizeOptions {
+  /**
+   * The caller (a new app build) asked for the same-store community baseline in
+   * `priceFindings` (ABA-642). Bots and old builds never set it, so their copy
+   * ("above your usual price") stays personal-only.
+   */
+  communityBaseline?: boolean;
+  /** Issue a scan attestation when the gates pass. Default true; false for plain text. */
+  attest?: boolean;
+}
 
 // Smallest share of a receipt a proposed category may account for. A category
 // is a lasting part of the user's taxonomy; minting one for a rounding error's
@@ -56,6 +83,7 @@ export class ReceiptFinalizerService {
     private readonly priceHistory: PriceHistoryService,
     private readonly categorySplitter: ReceiptCategorySplitService,
     private readonly merchantRules: MerchantRulesService,
+    @Optional() private readonly communityPrices?: CommunityPriceService,
   ) {}
 
   private async buildReceiptExpense(
@@ -132,7 +160,12 @@ export class ReceiptFinalizerService {
    * same product in the same store. Fail-silent by contract: a receipt scan
    * must never break because a price comparison failed.
    */
-  private async runPriceCheck(accountId: string, receipt: ReceiptExpense): Promise<ReceiptCheckFinding[]> {
+  private async runPriceCheck(
+    accountId: string,
+    userId: string,
+    receipt: ReceiptExpense,
+    options: ReceiptFinalizeOptions = {},
+  ): Promise<ReceiptCheckFinding[]> {
     try {
       const merchant = receipt.merchant?.trim();
       if (!merchant) return [];
@@ -158,12 +191,33 @@ export class ReceiptFinalizerService {
         receipt.currencyCode,
       );
 
+      // Community fallback (ABA-642): only when the read flag is on, the caller is a
+      // build that labels it honestly ("others usually pay here"), and the store has a
+      // SERVER-geocoded location. Same store + region + currency only; a personal
+      // history of >= 2 points still wins inside checkReceiptPrices. Inline-only:
+      // the post-create detector never persists a community finding.
+      let community: CommunityBaseline[] = [];
+      if (options.communityBaseline === true && this.communityPrices?.readEnabled() && receipt.location) {
+        const merchantKey = normalizeCommunityMerchant(merchant);
+        if (merchantKey) {
+          community = await this.communityPrices.getStoreBaselines(
+            userId,
+            lines.map((l) => l.canonicalName),
+            merchantKey,
+            receipt.location.lat,
+            receipt.location.lng,
+            receipt.currencyCode,
+          );
+        }
+      }
+
       const result = checkReceiptPrices({
         lines,
         history,
         merchant,
         currencyCode: receipt.currencyCode,
         now,
+        community,
         config,
       });
 
@@ -411,12 +465,13 @@ export class ReceiptFinalizerService {
     categories: CategoryWithName[],
     accountId: string,
     userId: string,
+    options: ReceiptFinalizeOptions = {},
   ): Promise<ReceiptExpense> {
     // One fetch per scan, not per line — mirrors import-bank.service.ts and
     // categorize-suggestions.service.ts's own single getRulesMap() call per batch.
     const merchantRulesMap = await this.merchantRules.getRulesMap(accountId);
     const receipt = await this.buildReceiptExpense(parsed, categories, merchantRulesMap);
-    receipt.priceFindings = await this.runPriceCheck(accountId, receipt);
+    receipt.priceFindings = await this.runPriceCheck(accountId, userId, receipt, options);
 
     const { splits, itemCategories } = await this.runCategorySplit(accountId, receipt, userId);
     receipt.categorySplits = splits;
@@ -455,7 +510,93 @@ export class ReceiptFinalizerService {
     receipt.categoryId = overall.categoryId;
     receipt.categorySuggestion = overall.categorySuggestion;
 
+    if (options.attest !== false) {
+      const token = this.issueScanAttestation(receipt, parsed, accountId, userId);
+      if (token) receipt.scanAttestation = token;
+    }
+
     return receipt;
+  }
+
+  /**
+   * Community-price scan attestation (ABA-642 D1): a server-signed token that says
+   * "the server's own OCR read these lines on this receipt for this user". Issued
+   * only when EVERY gate passes; otherwise none, and the scan works exactly as before
+   * (the receipt just never contributes). Fail-silent for the same reason as the
+   * other derived extras. Reads the salt from the environment, like the contribution
+   * path does: with no salt there is no key, so no token.
+   *
+   * Gates: salt set; OCR confidence >= COMMUNITY_MIN_OCR_CONFIDENCE_PCT (default 80;
+   * a missing confidence defaults to 0.7 upstream and so fails on purpose); line sum
+   * reconciles with the total within the split tolerance (same arithmetic as
+   * buildCategorySplits); >= 2 priced lines with a canonicalName of <= 64 chars;
+   * merchant, ISO date and currency present; and a SERVER-geocoded store location,
+   * because `receipt.location` is only ever set from the printed address, never
+   * client GPS.
+   */
+  private issueScanAttestation(
+    receipt: ReceiptExpense,
+    parsed: ParsedReceipt,
+    accountId: string,
+    userId: string,
+  ): string | null {
+    try {
+      // A salt shorter than 32 chars is a weak key: no token (the service warns at startup).
+      const salt = usableCommunitySalt(process.env.COMMUNITY_PRICE_SALT);
+      if (!salt) return null;
+
+      const minPctRaw = parseInt(process.env.COMMUNITY_MIN_OCR_CONFIDENCE_PCT ?? '', 10);
+      const minPct = Number.isFinite(minPctRaw) && minPctRaw >= 0 ? minPctRaw : DEFAULT_MIN_OCR_CONFIDENCE_PCT;
+      if (!(receipt.confidence >= minPct / 100)) return null;
+
+      const merchant = normalizeCommunityMerchant(receipt.merchant);
+      if (!merchant || merchant.length > ATTESTED_NAME_MAX_LEN) return null;
+      if (!receipt.date || !/^\d{4}-\d{2}-\d{2}$/.test(receipt.date)) return null;
+      if (!parsed.currency || !/^[A-Z]{3}$/.test(receipt.currencyCode)) return null;
+      if (!receipt.location) return null;
+      const lat = Math.round(receipt.location.lat * 1e4) / 1e4;
+      const lng = Math.round(receipt.location.lng * 1e4) / 1e4;
+      if (!Number.isFinite(lat) || !Number.isFinite(lng) || (lat === 0 && lng === 0)) return null;
+
+      const items = receipt.receiptItems ?? [];
+      if (
+        !receiptTotalsReconcile({
+          items: items.map((i) => ({ amount: Number(i.totalPrice), lineDiscount: i.lineDiscount })),
+          total: receipt.amount,
+          discount: receipt.discountAmount,
+          deposit: receipt.depositAmount,
+        })
+      ) {
+        return null;
+      }
+
+      const hashes: string[] = [];
+      for (const item of items) {
+        const name = item.canonicalName;
+        const total = Number(item.totalPrice);
+        if (!name || !name.trim() || name.length > ATTESTED_NAME_MAX_LEN) continue;
+        if (!(Number.isFinite(total) && total > 0)) continue;
+        hashes.push(attestedLineHash(name, Number(item.quantity) > 0 ? Number(item.quantity) : 1, total));
+      }
+      if (hashes.length < MIN_ATTESTED_LINES || hashes.length > SCAN_ATTESTATION_MAX_LINES) return null;
+
+      return signScanAttestation(salt, {
+        v: SCAN_ATTESTATION_VERSION,
+        u: userId,
+        a: accountId,
+        iat: Date.now(),
+        m: merchant,
+        c: receipt.currencyCode,
+        d: receipt.date,
+        t: parsed.time ?? null,
+        tot: Math.round(receipt.amount * 100),
+        loc: [lat, lng],
+        h: hashes,
+      });
+    } catch (error) {
+      this.logger.warn(`[ScanAttestation] skipped: ${error}`);
+      return null;
+    }
   }
 
   /**

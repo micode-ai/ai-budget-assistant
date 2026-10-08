@@ -439,6 +439,7 @@ export class ExpensesService {
       void this.createdHooks
         .onExpenseCreated(accountId, userId, result.expense, learnableItems, {
           mergeWithExpenseId: dto.mergeWithExpenseId,
+          scanAttestation: dto.scanAttestation,
         })
         .catch(logFireAndForget(this.logger, 'ExpensesService.onExpenseCreated'));
     }

@@ -45,4 +45,4 @@ C'est activé par défaut et peut être désactivé indépendamment dans **Param
 
 - Le Bouclier anti-inflation est **gratuit** pour tout le monde — aucun abonnement Pro requis.
 - Les prix et les économies sont affichés dans votre **devise d'affichage**.
-- Pour l'instant, les recommandations se basent uniquement sur **votre propre historique d'achats**. Comparer les prix à partir des achats d'autres utilisateurs à proximité, pour suggérer le magasin le moins cher, est prévu pour une prochaine mise à jour.
+- Les recommandations se basent sur **votre propre historique d'achats**. Pour comparer les prix avec d'autres acheteurs, voyez **Où est-ce moins cher** (prix de la communauté) dans la section Indice d'inflation personnel — c'est gratuit.

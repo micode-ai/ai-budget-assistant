@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
 import { CommunityPriceService } from './community-price.service';
 import { CommunityPriceController } from './community-price.controller';
+import { CommunityReceiptSeenPruneCron } from './community-receipt-seen-prune.cron';
 import { GeocodingModule } from '../ai/geocoding.module';
-import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 
-// PrismaService + ConfigService are both @Global() — no explicit module import
-// needed for either.
+// PrismaService, ConfigService and CacheService are all @Global() — no explicit
+// module import needed. SubscriptionsModule is no longer imported (ABA-642): the
+// read routes are free on every tier, so nothing here uses a tier guard.
 //
 // GeocodingService comes from the standalone GeocodingModule, NOT from
 // importing AiModule directly — AiModule already imports ExpensesModule, and
@@ -18,9 +19,9 @@ import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 // each independently pace their own ≥1.1s gap and could together exceed
 // Nominatim's 1 req/s usage-policy limit from this server's single IP.
 @Module({
-  imports: [SubscriptionsModule, GeocodingModule],
+  imports: [GeocodingModule],
   controllers: [CommunityPriceController],
-  providers: [CommunityPriceService],
+  providers: [CommunityPriceService, CommunityReceiptSeenPruneCron],
   exports: [CommunityPriceService],
 })
 export class CommunityPriceModule {}

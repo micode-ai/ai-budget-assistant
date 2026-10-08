@@ -68,6 +68,15 @@ Wskaźnik wymaga co najmniej 3 produktów z zakupami zarówno w okresie bazowym,
 
 Do wskaźnika przyczyniają się tylko paragony skanowane aparatem (OCR). Ręcznie wprowadzone wydatki i importy bankowe nie zawierają pozycji produktowych.
 
+## Ceny społeczności — gdzie najtaniej
+
+**Gdzie najtaniej** (Analityka → Osobisty indeks inflacji → baner społeczności) jest **darmowe dla wszystkich**. Porównuje cenę produktu w sklepach na podstawie anonimowych cen z paragonów, które inni kupujący zdecydowali się udostępnić.
+
+- To rozwiązanie **opcjonalne**: włącz **Ustawienia → Dane → Udostępniaj anonimowe ceny**, aby wnosić swój wkład. Ceny społeczności możesz przeglądać w obu przypadkach.
+- Cena pojawia się dopiero, gdy potwierdzi ją **kilku różnych kupujących**, więc pojedynczy paragon nigdy nie ustali ceny w sklepie. Ekran pokazuje to np. jako „5+ osób”.
+- Dlatego sklep lub produkt może się jeszcze nie pojawić — nie potwierdziło go dość osób. Ceny pojawiają się po kilku tygodniach danych.
+- Nic nie da się powiązać z Tobą: zachowywane są tylko produkt, okolica sklepu i cena — nigdy imię, konto ani dokładna lokalizacja.
+
 ## Prywatność
 
-Cała historia cen jest przechowywana na Twoim koncie na serwerze. Nie jest udostępniana między kontami ani nie służy do budowania żadnego wspólnego katalogu produktów. Jeśli usuniesz konto, cała historia cen zostanie usunięta razem z nim.
+Cała historia cen jest przechowywana na Twoim koncie na serwerze. Nie jest udostępniana między kontami ani nie służy do budowania żadnego wspólnego katalogu produktów. Jeśli usuniesz konto, cała historia cen zostanie usunięta razem z nim. Jedynym wyjątkiem są opcjonalne anonimowe ceny społeczności opisane powyżej.

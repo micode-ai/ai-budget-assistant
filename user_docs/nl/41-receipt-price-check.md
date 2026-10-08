@@ -32,6 +32,10 @@ Een product heeft minstens **twee** eerdere aankopen in dezelfde winkel nodig vo
 - Verschillende verpakkingsgroottes tellen als verschillende producten: de scanner houdt de grootte in de productnaam (bijvoorbeeld "Mleko Łaciate 3,2% 1L"), dus een fles van 1 l en van 0,5 l worden apart bijgehouden — precies zoals het hoort.
 - Een enorme prijssprong wordt bewust genegeerd in plaats van gemeld — het is veel waarschijnlijker dat het een ander product is (of een verkeerd gelezen regel) dan een echte prijsverandering.
 
+## Communityprijzen op een bonnetje
+
+Als je te weinig eigen geschiedenis voor een product hebt, kan de controle het vergelijken met wat andere kopers **in dezelfde winkel** meestal betalen (anoniem, dezelfde valuta). Zo'n regel toont **"anderen betalen meestal"** en vermeldt dat het op anonieme prijzen van andere kopers is gebaseerd. De formulering blijft voorzichtig: meer dan andere kopers hier meestal betalen — het bonnetje is het controleren waard. Communityprijzen moeten eerst door meerdere kopers worden bevestigd en zijn gratis voor iedereen.
+
 ## Het jaartotaal
 
 Als er ooit in meer dan één valuta iets is gevonden, toont het tabblad Analyse slechts één totaal — je eigen valuta, als daar iets is opgedoken, anders het grootste losse bedrag. Bedragen worden nooit opgeteld over valuta's heen, want dat zou omrekenen betekenen, en dat doet deze functie juist heel bewust nooit.

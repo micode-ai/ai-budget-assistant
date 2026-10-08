@@ -45,4 +45,4 @@ Jest to domyślnie włączone i można to wyłączyć niezależnie w **Ustawieni
 
 - Tarcza antyinflacyjna jest **darmowa** dla wszystkich — nie wymaga abonamentu Pro.
 - Ceny i oszczędności są pokazywane w Twojej **walucie wyświetlania**.
-- Rekomendacje opierają się na razie wyłącznie na **Twojej własnej historii zakupów**. Porównywanie cen na podstawie zakupów innych użytkowników w pobliżu, żeby podpowiedzieć najtańszy sklep, jest planowane na przyszłość.
+- Rekomendacje opierają się na **Twojej własnej historii zakupów**. Aby porównać ceny z innymi kupującymi, zobacz **Gdzie najtaniej** (ceny społeczności) w sekcji Osobisty indeks inflacji — to darmowe.

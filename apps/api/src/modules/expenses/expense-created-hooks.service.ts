@@ -26,6 +26,8 @@ export const BANK_CAPTURED_SOURCES = ['notification', 'import'] as const;
 export interface ExpenseCreatedHookOptions {
   /** The bank-captured row the user chose to merge this receipt into. */
   mergeWithExpenseId?: string;
+  /** Server-signed scan token (ABA-642). Verified by the community-price service, never stored. */
+  scanAttestation?: string;
 }
 
 /** A resolved, already-server-categorized receipt line, ready to teach a product rule. */
@@ -208,10 +210,12 @@ export class ExpenseCreatedHooksService {
       })
       .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.recordEvent'));
 
-    // fire-and-forget: contribute to the community price corpus (ABA-335,
-    // consent + location + E2EE gated inside the service; never throws)
+    // fire-and-forget: contribute to the community price corpus (ABA-335/ABA-642).
+    // This is the ONLY contribution site: it needs a valid server-signed scan token,
+    // so an item edit through sync can never re-vote. Consent, E2EE, eligibility and
+    // rate limits are gated inside the service; never throws.
     void this.communityPrices
-      ?.recordContribution(accountId, userId, expense.id)
+      ?.recordContribution(accountId, userId, expense.id, options.scanAttestation)
       .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.recordContribution'));
 
     // fire-and-forget: credit any active inflation-shield recommendation this

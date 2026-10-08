@@ -45,4 +45,4 @@ Dies ist standardmäßig aktiviert und kann unabhängig unter **Einstellungen �
 
 - Der Inflationsschutz ist für alle **kostenlos** — es ist kein Pro-Abo nötig.
 - Preise und Ersparnisse werden in deiner **Anzeigewährung** angezeigt.
-- Empfehlungen basieren derzeit ausschließlich auf deiner **eigenen Kaufhistorie**. Der Vergleich von Preisen anhand der Käufe anderer Nutzer in deiner Nähe, um das günstigste Geschäft vorzuschlagen, ist für ein zukünftiges Update geplant.
+- Empfehlungen basieren auf **deiner eigenen Kaufhistorie**. Um Preise mit anderen Käufern zu vergleichen, siehe **Wo ist es am günstigsten** (Community-Preise) im Abschnitt Persönlicher Inflationsindex — kostenlos.

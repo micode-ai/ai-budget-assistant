@@ -49,6 +49,40 @@ const toCents = (amount: number): number => Math.round(amount * 100);
 const fromCents = (cents: number): number => Math.round(cents) / 100;
 const isUsableAmount = (amount: number): boolean => Number.isFinite(amount) && amount > 0;
 
+/**
+ * Do the receipt's lines add up to its total, within `tolerancePct`? The same
+ * gate `buildCategorySplits` applies, exported on its own (ABA-642). Mirrored in
+ * `apps/api/src/common/utils/receipt-category-split.ts` — change one, change the
+ * other. Net line prices (amount minus per-line discount), basket discount and
+ * deposit, compared in cents.
+ */
+export function receiptTotalsReconcile(params: {
+  items: Array<{ amount: number; lineDiscount?: number }>;
+  total: number;
+  discount?: number | null;
+  deposit?: number | null;
+  tolerancePct?: number;
+}): boolean {
+  const { items, total, discount, deposit } = params;
+  const tolerancePct = params.tolerancePct ?? RECEIPT_SPLIT_DEFAULTS.tolerancePct;
+  if (!Number.isFinite(total) || total <= 0) return false;
+  const usable = items.filter((i) => isUsableAmount(i.amount));
+  if (usable.length === 0) return false;
+
+  const totalCents = toCents(total);
+  const netItemsCents = usable.reduce((sum, i) => {
+    const lineDiscountCents = i.lineDiscount ? toCents(i.lineDiscount) : 0;
+    return sum + Math.max(0, toCents(i.amount) - lineDiscountCents);
+  }, 0);
+  const discountCents =
+    typeof discount === 'number' && Number.isFinite(discount) && discount > 0 ? toCents(discount) : 0;
+  const depositCents =
+    typeof deposit === 'number' && Number.isFinite(deposit) && deposit > 0 ? toCents(deposit) : 0;
+
+  const gapPct = (Math.abs(netItemsCents - discountCents + depositCents - totalCents) / totalCents) * 100;
+  return gapPct <= tolerancePct;
+}
+
 export function buildCategorySplits(params: {
   items: SplitInputItem[];
   total: number;

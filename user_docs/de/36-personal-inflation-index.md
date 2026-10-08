@@ -68,6 +68,15 @@ Der Index benötigt mindestens 3 Produkte mit Käufen sowohl im Basis- als auch 
 
 Nur mit der Kamera gescannte Kassenbons (OCR) fließen in den Index ein. Manuell eingegebene Ausgaben und Bankimporte enthalten keine produktspezifischen Positionen.
 
+## Community-Preise — wo ist es am günstigsten
+
+**Wo ist es am günstigsten** (Analyse → Persönlicher Inflationsindex → Community-Banner) ist **für alle kostenlos**. Es vergleicht den Preis eines Produkts zwischen Geschäften anhand anonymer Preise aus Belegen, die andere Käufer teilen wollten.
+
+- Es ist **freiwillig**: Aktiviere **Einstellungen → Daten → Anonyme Preise teilen**, um beizutragen. Community-Preise kannst du in jedem Fall ansehen.
+- Ein Preis erscheint erst, wenn ihn **mehrere verschiedene Käufer** bestätigt haben, sodass ein einzelner Beleg nie den Preis eines Geschäfts bestimmt. Der Bildschirm zeigt das z. B. als „5+ Nutzer“.
+- Deshalb kann ein Geschäft oder Produkt noch fehlen — es wurde von zu wenigen bestätigt. Preise erscheinen nach einigen Wochen Datenlage.
+- Nichts ist auf dich zurückführbar: Gespeichert werden nur Produkt, Umgebung des Geschäfts und Preis, nie dein Name, Konto oder genauer Standort.
+
 ## Datenschutz
 
-Der gesamte Preisverlauf wird in deinem Konto auf dem Server gespeichert. Er wird nicht kontoübergreifend geteilt und nicht zur Erstellung eines gemeinsamen Produktkatalogs verwendet. Wenn du dein Konto löschst, wird der gesamte Preisverlauf damit gelöscht.
+Der gesamte Preisverlauf wird in deinem Konto auf dem Server gespeichert. Er wird nicht kontoübergreifend geteilt und nicht zur Erstellung eines gemeinsamen Produktkatalogs verwendet. Wenn du dein Konto löschst, wird der gesamte Preisverlauf damit gelöscht. Die einzige Ausnahme sind die freiwilligen anonymen Community-Preise, die oben beschrieben sind.

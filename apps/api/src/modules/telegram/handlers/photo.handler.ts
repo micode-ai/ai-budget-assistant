@@ -91,6 +91,8 @@ interface PendingReceiptData {
   receiptImageBase64: string;
   receiptMimeType: string;
   receiptFingerprint?: string;
+  /** Server-signed scan token (ABA-642), handed back on create; never edited. */
+  scanAttestation?: string;
   language?: string;
 }
 
@@ -326,6 +328,7 @@ export class PhotoHandler {
         items: receipt.receiptItems || [],
         receiptImageBase64: scan.base64,
         receiptFingerprint: receipt.fingerprint,
+        scanAttestation: receipt.scanAttestation,
         language: lang,
       },
       PENDING_RECEIPT_TTL_SEC,
@@ -380,6 +383,7 @@ export class PhotoHandler {
           receiptMimeType: data.receiptMimeType,
           receiptImageBase64: data.receiptImageBase64,
           receiptFingerprint: data.receiptFingerprint,
+          scanAttestation: data.scanAttestation,
           items: data.items.map((item, index) => ({
             description: item.description,
             canonicalName: item.canonicalName,

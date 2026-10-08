@@ -8,8 +8,9 @@
 export interface CommunityPriceStore {
   merchantName: string;
   medianPrice: number;
-  minPrice: number;
+  /** Bucketed like contributorCount (floor of 5 / 10 / 20 / 50), never the exact figure (ABA-642 audit). */
   receiptCount: number;
+  /** Bucketed to the floor of 5 / 10 / 20 / 50 (ABA-642); the UI shows "5+ shoppers". */
   contributorCount: number;
   currencyCode: string;
   isCheapest: boolean;

@@ -196,6 +196,14 @@ export class CreateExpenseDto {
   @Matches(/^[0-9a-f]{64}$/)
   receiptFingerprint?: string;
 
+  /** Server-signed scan token from the scan response (ABA-642). Verified, never
+   *  stored; only the first push carries it. Without a valid one the receipt
+   *  does not contribute to the community price map. */
+  @IsOptional()
+  @IsString()
+  @MaxLength(8192)
+  scanAttestation?: string;
+
   /** Receipt scans only: the bank-captured expense (notification/import) this
    *  receipt replaces — merged into the new row after the create. */
   @IsOptional()

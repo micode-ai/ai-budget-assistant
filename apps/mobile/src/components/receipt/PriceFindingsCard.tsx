@@ -53,6 +53,7 @@ export default function PriceFindingsCard({ findings }: Props) {
 
   const { count, total, currencyCode } = summary;
   const shown = findings.filter((f) => f.currencyCode === currencyCode);
+  const anyCommunity = shown.some((f) => f.source === 'community');
 
   return (
     <View style={styles.card}>
@@ -66,7 +67,7 @@ export default function PriceFindingsCard({ findings }: Props) {
         <View style={styles.headerText}>
           <Text style={styles.title}>{t('receiptCheck.cardTitle', { count })}</Text>
           <Text style={styles.subtitle}>
-            {t('receiptCheck.cardSubtitle', {
+            {t(anyCommunity ? 'receiptCheck.cardSubtitleCommunity' : 'receiptCheck.cardSubtitle', {
               amount: formatCurrency(total, currencyCode as Currency),
             })}
           </Text>
@@ -87,7 +88,7 @@ export default function PriceFindingsCard({ findings }: Props) {
             </Text>
             <View style={styles.prices}>
               <Text style={styles.priceLabel}>
-                {t('receiptCheck.usually')}{' '}
+                {t(f.source === 'community' ? 'receiptCheck.othersUsually' : 'receiptCheck.usually')}{' '}
                 {formatCurrency(f.baselineUnitPrice, currencyCode as Currency)}
               </Text>
               <Text style={styles.priceLabel}>
@@ -99,7 +100,9 @@ export default function PriceFindingsCard({ findings }: Props) {
                 {formatCurrency(f.overpaidAmount, currencyCode as Currency)}
               </Text>
             </View>
-            {f.confidence === 'low' && (
+            {f.source === 'community' ? (
+              <Text style={styles.lowConfidence}>{t('receiptCheck.communityBaseline')}</Text>
+            ) : f.confidence === 'low' && (
               <Text style={styles.lowConfidence}>{t('receiptCheck.lowConfidence')}</Text>
             )}
           </View>

@@ -53,6 +53,8 @@ export interface ScannedReceipt {
   /** Fingerprint of the scanned file — handed back on create so a later
    *  re-upload of the same file is caught before OCR (ABA-603). */
   fingerprint?: string;
+  /** Short-lived signed token (ABA-642), forwarded once on the first create push, never persisted. */
+  scanAttestation?: string;
   /** A saved expense this receipt probably duplicates; a warning, never a block. */
   possibleDuplicate?: ReceiptDuplicateMatch | null;
 }

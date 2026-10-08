@@ -1,7 +1,5 @@
 import { create } from 'zustand';
 import { api } from '@/services/api';
-import i18n from '@/i18n';
-import { useUpgradeStore } from './upgradeStore';
 import type {
   CommunityPriceResponse,
   CommunityPriceMapPoint,
@@ -35,7 +33,7 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
   isSearching: false,
   selectedProduct: null,
   result: null,
-  period: '1w',
+  period: '4w',
   isLoading: false,
   mapPoints: [],
   isLoadingMap: false,
@@ -53,12 +51,9 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
       set({ searchResults, isSearching: false });
     } catch (e) {
       set({ isSearching: false });
+      // 429 (60/min) is transient: keep prior results, no UI error.
       const status = (e as { status?: number }).status;
-      if (status === 403) {
-        useUpgradeStore.getState().show(i18n.t('communityPrices.paywall'), 'pro');
-      } else {
-        console.warn('[communityPriceStore] search failed', e);
-      }
+      console.warn('[communityPriceStore] search failed', e, status === 429 ? '(rate limited)' : '');
     }
   },
 
@@ -70,12 +65,9 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
       set({ result, isLoading: false });
     } catch (e) {
       set({ isLoading: false });
+      // 429 (60/min) is transient: keep prior results, no UI error.
       const status = (e as { status?: number }).status;
-      if (status === 403) {
-        useUpgradeStore.getState().show(i18n.t('communityPrices.paywall'), 'pro');
-      } else {
-        console.warn('[communityPriceStore] loadPrices failed', e);
-      }
+      console.warn('[communityPriceStore] loadPrices failed', e, status === 429 ? '(rate limited)' : '');
     }
   },
 
@@ -87,12 +79,9 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
       set({ mapPoints, isLoadingMap: false });
     } catch (e) {
       set({ isLoadingMap: false });
+      // 429 (60/min) is transient: keep prior results, no UI error.
       const status = (e as { status?: number }).status;
-      if (status === 403) {
-        useUpgradeStore.getState().show(i18n.t('communityPrices.paywall'), 'pro');
-      } else {
-        console.warn('[communityPriceStore] loadMap failed', e);
-      }
+      console.warn('[communityPriceStore] loadMap failed', e, status === 429 ? '(rate limited)' : '');
     }
   },
 
@@ -111,7 +100,7 @@ export const useCommunityPriceStore = create<CommunityPriceState>()((set, get) =
       isSearching: false,
       selectedProduct: null,
       result: null,
-      period: '1w',
+      period: '4w',
       isLoading: false,
       mapPoints: [],
       isLoadingMap: false,

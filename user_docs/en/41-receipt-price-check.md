@@ -32,6 +32,10 @@ A product needs at least **two** earlier purchases at the same store before the 
 - Different pack sizes count as different products: the scanner keeps the size in the product name (for example "Mleko Łaciate 3,2% 1L"), so a 1 L and a 0.5 L bottle are tracked separately, exactly as they should be.
 - An enormous jump in price is deliberately ignored rather than reported — it's far more likely to be a different product (or a misread line) than a genuine price change.
 
+## Community prices on a receipt
+
+If you have too little history of your own for a product, the check may compare it with what other shoppers usually pay **at the same store** (anonymous, same currency). Such a line says **"others usually pay"** and notes that it is based on anonymous prices from other shoppers. The wording stays the same careful one: more than other shoppers usually pay here — worth checking the receipt. Community prices need several shoppers to confirm them first, and they are free for everyone.
+
 ## The yearly total
 
 If anything has ever been found in more than one currency, the Analytics tab shows just one total — your own currency, if something turned up there, otherwise the largest single amount. Amounts are never added across currencies, since that would mean converting money this feature is careful never to convert.

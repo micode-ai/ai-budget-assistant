@@ -45,4 +45,4 @@ This is on by default and can be turned off independently in **Settings → Noti
 
 - Inflation Shield is **free** for everyone — no Pro subscription needed.
 - Prices and savings are shown in your **display currency**.
-- Recommendations are based only on **your own purchase history** for now. Comparing prices across other users' purchases nearby, to suggest the cheapest store, is planned for a future update.
+- Recommendations are based on **your own purchase history**. To compare prices with other shoppers, see **Where's cheapest** (community prices) in the Personal Inflation Index section — it is free.

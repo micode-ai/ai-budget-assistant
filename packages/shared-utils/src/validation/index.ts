@@ -318,6 +318,8 @@ export const ScanReceiptRequestSchema = z.object({
   imageBase64: z.string().min(1),
   userPrompt: z.string().max(300).optional(),
   mimeType: z.string().optional(),
+  /** ABA-642: new app builds ask for the same-store community baseline in priceFindings. */
+  communityBaseline: z.boolean().optional(),
 });
 
 // Query parameter schemas

@@ -8,6 +8,7 @@ import { PriceTagService } from './services/price-tag.service';
 import { ReceiptFinalizerService } from './services/receipt-finalizer.service';
 import { ReceiptPdfService } from './services/receipt-pdf.service';
 import { GeocodingModule } from './geocoding.module';
+import { CommunityPriceModule } from '../community-prices/community-price.module';
 import { TagSuggestionService } from './services/tag-suggestion.service';
 import { ProjectSuggestionService } from './services/project-suggestion.service';
 import { ReceiptCategorySplitService } from './services/receipt-category-split.service';
@@ -42,7 +43,7 @@ import { PriceHistoryModule } from '../price-history/price-history.module';
 import { MerchantRulesModule } from '../merchant-rules/merchant-rules.module';
 
 @Module({
-  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule, PriceHistoryModule, MerchantRulesModule, GeocodingModule],
+  imports: [EmbeddingModule, SubscriptionsModule, ExpensesModule, IncomesModule, BudgetsModule, CategoriesModule, AnalyticsModule, DebtsModule, AccountsModule, CurrencyExchangeModule, InsightsModule, ShoppingListModule, PriceHistoryModule, MerchantRulesModule, GeocodingModule, CommunityPriceModule],
   controllers: [AiController],
   providers: [
     WhisperService,

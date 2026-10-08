@@ -60,7 +60,6 @@ export const WHATS_NEW_ENTRIES: WhatsNewEntry[] = [
   },
   {
     id: 'community-price-map',
-    tier: 'pro',
     route: '/price-history/community',
   },
   {
@@ -87,4 +86,8 @@ export const WHATS_NEW_ENTRIES: WhatsNewEntry[] = [
     id: 'shopping-list-auto-check',
     route: '/shopping-list',
   },
+  // NOTE: the `community-prices-live` entry (ABA-642) is deliberately NOT here yet. Web deploys
+  // on every push while COMMUNITY_PRICE_READ_ENABLED is off, so the nudge would point at an empty
+  // screen. It is added, with its nine i18n objects, in the same change that flips the server flag
+  // (see the Rollout section of the community-prices anti-Sybil spec).
 ];

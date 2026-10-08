@@ -45,4 +45,4 @@ Esto está activado por defecto y se puede desactivar por separado en **Ajustes 
 
 - El Escudo contra la inflación es **gratuito** para todos — no requiere Pro.
 - Los precios y los ahorros se muestran en tu **moneda de visualización**.
-- Por ahora, las recomendaciones se basan únicamente en **tu propio historial de compra**. Comparar precios con las compras de otros usuarios cercanos, para sugerir el comercio más barato, está previsto para una futura actualización.
+- Las recomendaciones se basan en **tu propio historial de compra**. Para comparar precios con otros compradores, mira **Dónde es más barato** (precios de la comunidad) en la sección Índice de inflación personal — es gratuito.

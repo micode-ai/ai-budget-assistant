@@ -105,6 +105,22 @@ describe('InboundReceiptProcessorService.process', () => {
     expect(notifications.sendToUser).toHaveBeenCalledWith('user-1', expect.any(Function), expect.any(Function), { inboundReceiptId: 'rec-1' }, 'inbound_receipt');
   });
 
+  it('ABA-642 audit: every OCR route is called with attest:false and a stray scanAttestation is never persisted', async () => {
+    for (const kind of ['pdf', 'image', 'text'] as const) {
+      const { prisma, ocr, lastStatus, service } = setup();
+      prisma.inboundReceipt.findUnique.mockResolvedValue(
+        baseRow({ documentKind: kind, documentMime: kind === 'pdf' ? 'application/pdf' : 'image/png', document: kind === 'text' ? null : Buffer.from(kind === 'pdf' ? '%PDF-1.7 body' : 'png-bytes'), documentText: kind === 'text' ? 'Razem 42,50 PLN https://t.example/x' : null }),
+      );
+      for (const fn of ['parseReceiptPdf', 'parseReceipt', 'parseReceiptText']) {
+        ocr[fn].mockResolvedValue(extraction({ scanAttestation: 'forged.token' }));
+      }
+      await service.process('rec-1');
+      const call = [...ocr.parseReceiptPdf.mock.calls, ...ocr.parseReceipt.mock.calls, ...ocr.parseReceiptText.mock.calls][0];
+      expect(JSON.stringify(call)).toContain('"attest":false');
+      expect(lastStatus().extraction.scanAttestation).toBeUndefined();
+    }
+  });
+
   it('never passes the attacker-controlled subject to the model, only a neutral sender-domain hint', async () => {
     const { ocr, service } = setup();
 
@@ -128,7 +144,7 @@ describe('InboundReceiptProcessorService.process', () => {
       'user-1',
       'acc-1',
       'Source: forwarded e-mail from shop.pl',
-      { logTag: 'Email' },
+      { logTag: 'Email', scanOptions: { attest: false } },
     );
     expect(ocr.parseReceiptPdf).not.toHaveBeenCalled();
     expect(ocr.parseReceipt).not.toHaveBeenCalled();
@@ -148,6 +164,7 @@ describe('InboundReceiptProcessorService.process', () => {
       'acc-1',
       expect.any(String),
       `data:image/png;base64,${Buffer.from('png-bytes').toString('base64')}`,
+      { attest: false },
     );
   });
 

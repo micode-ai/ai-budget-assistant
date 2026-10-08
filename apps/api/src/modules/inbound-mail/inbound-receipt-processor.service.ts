@@ -11,6 +11,12 @@ import { inboundMailPush } from './inbound-mail-push';
 import { PUSH_THROTTLE_SEC, QUOTA_PUSH_THROTTLE_SEC, STUCK_AFTER_MS, isInboundMailEnabled } from './inbound-mail.config';
 import { looksLikeReceiptText, senderDomain } from './inbound-mail.util';
 
+/**
+ * An e-mailed receipt is attacker-written, so NO scan path may mint a community
+ * price attestation for it (ABA-642 audit HIGH 1) — passed on every OCR call.
+ */
+const NO_ATTEST = { attest: false } as const;
+
 /** Same weight as a receipt scan (`@TrackAiUsage('ocr', 2.0)` on POST /ai/scan-receipt). */
 export const INBOUND_OCR_COST_UNITS = 2.0;
 
@@ -123,8 +129,9 @@ export class InboundReceiptProcessorService {
         return;
       }
 
-      const { possibleDuplicate: _ignored, ...stored } = extraction;
+      const { possibleDuplicate: _ignored, scanAttestation: _att, ...stored } = extraction;
       void _ignored;
+      void _att; // defence in depth: an inbound extraction NEVER carries a community scan token (ABA-642 audit)
       await this.finish(id, 'pending', { extraction: stored });
       await this.pushPendingThrottled(row.userId, id);
     } catch (err) {
@@ -147,17 +154,20 @@ export class InboundReceiptProcessorService {
 
     if (row.documentKind === 'text') {
       if (!row.documentText) return null;
-      return this.ocr.parseReceiptText(row.documentText, row.userId, row.accountId, hint, { logTag: 'Email' });
+      return this.ocr.parseReceiptText(row.documentText, row.userId, row.accountId, hint, {
+        logTag: 'Email',
+        scanOptions: NO_ATTEST,
+      });
     }
 
     if (!row.document) return null;
     const base64 = Buffer.from(row.document).toString('base64');
     if (row.documentKind === 'pdf') {
-      return this.ocr.parseReceiptPdf(base64, row.userId, row.accountId, hint);
+      return this.ocr.parseReceiptPdf(base64, row.userId, row.accountId, hint, NO_ATTEST);
     }
     if (row.documentKind === 'image') {
       const mime = row.documentMime ?? 'image/jpeg';
-      return this.ocr.parseReceipt(base64, row.userId, row.accountId, hint, `data:${mime};base64,${base64}`);
+      return this.ocr.parseReceipt(base64, row.userId, row.accountId, hint, `data:${mime};base64,${base64}`, NO_ATTEST);
     }
     return null;
   }

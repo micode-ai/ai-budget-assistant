@@ -45,4 +45,4 @@ Dit staat standaard aan en kan apart worden uitgezet bij **Instellingen → Meld
 
 - Inflatieschild is **gratis** voor iedereen — er is geen Pro-abonnement voor nodig.
 - Prijzen en besparingen worden getoond in je **weergavevaluta**.
-- Aanbevelingen zijn voorlopig alleen gebaseerd op **je eigen aankoopgeschiedenis**. Prijzen vergelijken op basis van aankopen van andere gebruikers in de buurt, om de goedkoopste winkel voor te stellen, staat gepland voor een toekomstige update.
+- Aanbevelingen zijn gebaseerd op **je eigen aankoopgeschiedenis**. Om prijzen met andere kopers te vergelijken, zie **Waar is het goedkoopst** (communityprijzen) in het onderdeel Persoonlijke inflatie-index — het is gratis.

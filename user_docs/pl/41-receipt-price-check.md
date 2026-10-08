@@ -32,6 +32,10 @@ Produkt potrzebuje co najmniej **dwóch** wcześniejszych zakupów w tym samym s
 - Różne rozmiary opakowań liczą się jako różne produkty: skaner zachowuje rozmiar w nazwie produktu (np. „Mleko Łaciate 3,2% 1L"), więc butelka 1 l i 0,5 l są śledzone osobno — dokładnie tak, jak powinno być.
 - Ogromny skok ceny jest celowo pomijany, a nie zgłaszany — o wiele bardziej prawdopodobne, że to inny produkt (albo błędnie odczytana linijka), niż że to prawdziwa zmiana ceny.
 
+## Ceny społeczności na paragonie
+
+Jeśli masz zbyt mało własnej historii dla produktu, sprawdzenie może porównać go z tym, ile zwykle płacą inni kupujący **w tym samym sklepie** (anonimowo, w tej samej walucie). Taka pozycja ma etykietę **„inni zwykle płacą”** i informację, że opiera się na anonimowych cenach innych kupujących. Sformułowanie pozostaje ostrożne: więcej niż zwykle płacą tu inni kupujący — warto sprawdzić paragon. Ceny społeczności muszą najpierw potwierdzić kilku kupujących i są darmowe dla wszystkich.
+
 ## Roczne podsumowanie
 
 Jeśli kiedykolwiek coś znaleziono w więcej niż jednej walucie, karta Analityka pokazuje tylko jedną sumę — Twoją własną walutę, jeśli coś się w niej znalazło, w przeciwnym razie największą pojedynczą kwotę. Kwoty nigdy nie są sumowane między walutami, bo to oznaczałoby przeliczanie, którego ta funkcja celowo nigdy nie robi.

@@ -233,6 +233,7 @@ describe('OcrService', () => {
         [],
         'acc-1',
         'user-1',
+        {},
       );
       expect(result).toEqual({
         receiptItems: [],
@@ -325,6 +326,7 @@ describe('OcrService', () => {
         [],
         'acc-1',
         'user-1',
+        {},
       );
     });
 
@@ -349,6 +351,7 @@ describe('OcrService', () => {
         [],
         'acc-1',
         'user-1',
+        {},
       );
     });
   });
@@ -422,6 +425,35 @@ describe('OcrService', () => {
       );
       expect(receiptPdfMock.renderToPngs).not.toHaveBeenCalled();
       expect(receiptFinalizerMock.finalizeReceipt).toHaveBeenCalled();
+    });
+
+    it('ABA-642 audit: a text-layer PDF is NEVER attested, even when the caller leaves attest unset or true', async () => {
+      receiptPdfMock.extractText.mockResolvedValue({ text: 'A'.repeat(200), meaningfulTextLength: 200, hasMeaningfulText: true });
+      mockOpenAiResponse();
+      await service.parseReceiptPdf('cGRmYmFzZTY0', 'user-1', 'acc-1');
+      mockOpenAiResponse();
+      await service.parseReceiptPdf('cGRmYmFzZTY0', 'user-1', 'acc-1', undefined, { attest: true });
+      for (const call of receiptFinalizerMock.finalizeReceipt.mock.calls) {
+        expect(call[4]).toMatchObject({ attest: false });
+      }
+    });
+
+    it('ABA-642 audit: a scanned (rasterised) PDF honours the caller and may attest; attest:false is respected', async () => {
+      receiptPdfMock.extractText.mockResolvedValue({ text: '', meaningfulTextLength: 0, hasMeaningfulText: false });
+      receiptPdfMock.renderToPngs.mockResolvedValue([Buffer.from('fake-png')]);
+      mockOpenAiResponse();
+      await service.parseReceiptPdf('cGRmYmFzZTY0', 'user-1', 'acc-1');
+      mockOpenAiResponse();
+      await service.parseReceiptPdf('cGRmYmFzZTY0', 'user-1', 'acc-1', undefined, { attest: false });
+      const [first, second] = receiptFinalizerMock.finalizeReceipt.mock.calls;
+      expect(first[4].attest).not.toBe(false);
+      expect(second[4]).toMatchObject({ attest: false });
+    });
+
+    it('ABA-642 audit: parseReceiptText never attests regardless of scanOptions', async () => {
+      mockOpenAiResponse();
+      await service.parseReceiptText('Total 12,50', 'user-1', 'acc-1', undefined, { scanOptions: { attest: true } });
+      expect(receiptFinalizerMock.finalizeReceipt.mock.calls[0][4]).toMatchObject({ attest: false });
     });
 
     it('renders pages to PNG and sends a vision request for a scanned PDF', async () => {

@@ -193,10 +193,20 @@ describe('onExpenseCreated', () => {
     const communityPrices: any = { recordContribution: jest.fn().mockResolvedValue(undefined) };
     const { service } = makeHooksService({ communityPrices });
 
+    await service.onExpenseCreated('a1', 'u1', baseExpense, [], { scanAttestation: 'tok' });
+    await new Promise((r) => setImmediate(r));
+
+    expect(communityPrices.recordContribution).toHaveBeenCalledWith('a1', 'u1', 'e-1', 'tok');
+  });
+
+  it('passes no attestation when the create carried none (so nothing can contribute)', async () => {
+    const communityPrices: any = { recordContribution: jest.fn().mockResolvedValue(undefined) };
+    const { service } = makeHooksService({ communityPrices });
+
     await service.onExpenseCreated('a1', 'u1', baseExpense, []);
     await new Promise((r) => setImmediate(r));
 
-    expect(communityPrices.recordContribution).toHaveBeenCalledWith('a1', 'u1', 'e-1');
+    expect(communityPrices.recordContribution).toHaveBeenCalledWith('a1', 'u1', 'e-1', undefined);
   });
 
   it('fires inflation-shield reconcilePurchase after a new expense', async () => {

@@ -236,6 +236,7 @@ export {
 export {
   buildCategorySplits,
   rescaleSplits,
+  receiptTotalsReconcile,
   RECEIPT_SPLIT_DEFAULTS,
   type ExistingSplitShare,
   type ReceiptCategorySplit,

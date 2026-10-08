@@ -32,6 +32,10 @@ Un produit a besoin d'au moins **deux** achats précédents dans le même magasi
 - Des tailles de conditionnement différentes comptent comme des produits différents : le scanner conserve la taille dans le nom du produit (par exemple « Mleko Łaciate 3,2 % 1L »), donc une bouteille de 1 L et une de 0,5 L sont suivies séparément — exactement comme il se doit.
 - Un bond de prix énorme est délibérément ignoré plutôt que signalé — il est bien plus probable qu'il s'agisse d'un produit différent (ou d'une ligne mal lue) que d'un véritable changement de prix.
 
+## Prix de la communauté sur un reçu
+
+Si vous avez trop peu d'historique personnel pour un produit, la vérification peut le comparer à ce que les autres acheteurs paient d'habitude **dans le même magasin** (de façon anonyme, dans la même devise). Une telle ligne indique **« les autres paient d'habitude »** et précise qu'elle repose sur des prix anonymes d'autres acheteurs. La formulation reste prudente : plus que ce que les autres acheteurs paient d'habitude ici — à vérifier sur le reçu. Les prix de la communauté doivent d'abord être confirmés par plusieurs acheteurs et sont gratuits pour tous.
+
 ## Le total annuel
 
 Si quelque chose a déjà été trouvé dans plusieurs devises, l'onglet Analyse n'affiche qu'un seul total — votre propre devise, si quelque chose y est apparu, sinon le montant unique le plus élevé. Les montants ne sont jamais additionnés entre devises, car cela impliquerait de convertir de l'argent, ce que cette fonctionnalité se garde bien de jamais faire.

@@ -32,6 +32,10 @@ Ein Produkt braucht mindestens **zwei** frühere Käufe im selben Geschäft, bev
 - Unterschiedliche Packungsgrößen zählen als unterschiedliche Produkte: Der Scanner behält die Größe im Produktnamen (z. B. „Mleko Łaciate 3,2% 1L"), sodass eine 1-l- und eine 0,5-l-Flasche getrennt erfasst werden — genau wie es sein soll.
 - Ein riesiger Preissprung wird bewusst ignoriert statt gemeldet — viel wahrscheinlicher ist ein anderes Produkt (oder eine falsch gelesene Zeile) als eine echte Preisänderung.
 
+## Community-Preise auf einem Beleg
+
+Wenn du für ein Produkt zu wenig eigenen Verlauf hast, kann die Prüfung es mit dem vergleichen, was andere Käufer **im selben Geschäft** üblicherweise zahlen (anonym, gleiche Währung). Eine solche Zeile trägt den Hinweis **„andere zahlen üblicherweise“** und vermerkt, dass sie auf anonymen Preisen anderer Käufer beruht. Die Formulierung bleibt vorsichtig: mehr, als andere Käufer hier üblicherweise zahlen — der Beleg ist einen Blick wert. Community-Preise müssen zuerst von mehreren Käufern bestätigt werden und sind für alle kostenlos.
+
 ## Die Jahressumme
 
 Wurde jemals in mehr als einer Währung etwas gefunden, zeigt der Tab Analyse nur eine Summe — deine eigene Währung, falls dort etwas aufgetaucht ist, sonst den größten Einzelbetrag. Beträge werden nie über Währungen hinweg addiert, denn das würde eine Umrechnung bedeuten, die diese Funktion bewusst nie vornimmt.
