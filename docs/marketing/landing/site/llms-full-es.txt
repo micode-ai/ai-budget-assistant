@@ -7098,6 +7098,7 @@ No hay nada que descargar ni instalar. La aplicación web funciona en ordenadore
 Puedes instalar la app web para que se abra como una app normal — con su propio icono y sin barra de direcciones.
 
 - **iPhone / iPad (Safari):** toca Compartir y luego **Añadir a pantalla de inicio**. Hoy es la única forma de tener un icono en iOS, ya que aún no hay versión en la App Store.
+  Si abres la app web en Safari en un iPhone, el panel muestra una tarjeta breve con los mismos tres pasos. Ciérrala con ✕ y no volverá durante dos semanas; cuando la app ya está en la pantalla de inicio, deja de aparecer. Dentro de Instagram, Facebook o TikTok la tarjeta te pide abrir antes la página en Safari: esos navegadores integrados no pueden añadir a la pantalla de inicio.
 - **Android (Chrome):** abre el menú del navegador y elige **Añadir a pantalla de inicio**.
 - **Escritorio (Chrome / Edge):** busca el icono de instalar en la barra de direcciones.
 

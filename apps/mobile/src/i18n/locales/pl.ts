@@ -948,6 +948,15 @@ export default {
     inflationShield: 'Powiadomienia o zapasach',
     inflationShieldDesc: 'Otrzymuj powiadomienie, gdy cena stałego produktu ma wkrótce wzrosnąć',
   },
+  iosInstall: {
+    title: 'Dodaj AI Budżet do ekranu iPhone’a',
+    body: 'Otwiera się jak aplikacja: na pełnym ekranie, z własną ikoną.',
+    step1: 'Dotknij ikony Udostępnij w Safari',
+    step2: 'Wybierz „Do ekranu początkowego”',
+    step3: 'Dotknij „Dodaj” — gotowe',
+    inAppBrowser: 'Ta przeglądarka nie dodaje aplikacji do ekranu. Najpierw otwórz tę stronę w Safari.',
+    dismiss: 'Zamknij',
+  },
   alerts: {
     title: 'Alerty',
     empty: 'Brak alertów. Powiadomimy Cię, gdy zauważymy coś nietypowego w Twoich finansach.',

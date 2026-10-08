@@ -3954,6 +3954,7 @@ There is nothing to download or install. The web app works on desktops, laptops,
 You can install the web app so it opens like a normal app — its own icon, no browser address bar.
 
 - **iPhone / iPad (Safari):** tap the Share button, then **Add to Home Screen**. This is the only way to get an app icon on iOS today, as there is no App Store version yet.
+  When you open the web app in Safari on an iPhone, the dashboard shows a short three-step card with the same instructions. Close it with ✕ and it stays hidden for two weeks; once the app is on your home screen it no longer appears. Inside Instagram, Facebook or TikTok the card asks you to open the page in Safari first — those built-in browsers can't add to the home screen.
 - **Android (Chrome):** open the browser menu and choose **Add to Home screen**.
 - **Desktop (Chrome / Edge):** look for the install icon in the address bar.
 
@@ -8893,6 +8894,7 @@ OCR иногда неверно читает цену, выдумывает ст
 Веб-версию можно установить, чтобы она открывалась как обычное приложение — со своей иконкой и без адресной строки.
 
 - **iPhone / iPad (Safari):** нажмите «Поделиться», затем **На экран «Домой»**. Сегодня это единственный способ получить иконку приложения на iOS — версии в App Store пока нет.
+  Если открыть веб-приложение в Safari на iPhone, на главном экране появится короткая карточка с теми же тремя шагами. Закройте её крестиком ✕ — и она не вернётся две недели; когда приложение уже на экране «Домой», карточка не показывается. Внутри Instagram, Facebook или TikTok карточка сначала попросит открыть страницу в Safari: встроенные браузеры этих приложений не умеют добавлять иконку на экран.
 - **Android (Chrome):** откройте меню браузера и выберите **Добавить на главный экран**.
 - **Компьютер (Chrome / Edge):** нажмите значок установки в адресной строке.
 
@@ -13795,6 +13797,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Вебверсію можна встановити, щоб вона відкривалася як звичайний застосунок — із власною іконкою та без адресного рядка.
 
 - **iPhone / iPad (Safari):** натисніть «Поділитися», потім **На екран «Додому»**. Сьогодні це єдиний спосіб отримати іконку застосунку на iOS — версії в App Store поки немає.
+  Якщо відкрити вебзастосунок у Safari на iPhone, на головному екрані з’явиться коротка картка з тими самими трьома кроками. Закрийте її хрестиком ✕ — і вона не повернеться два тижні; коли застосунок уже на екрані «Додому», картка не показується. Усередині Instagram, Facebook чи TikTok картка спершу попросить відкрити сторінку в Safari: вбудовані браузери цих застосунків не вміють додавати іконку на екран.
 - **Android (Chrome):** відкрийте меню браузера й виберіть **Додати на головний екран**.
 - **Комп'ютер (Chrome / Edge):** натисніть значок встановлення в адресному рядку.
 
@@ -18682,6 +18685,7 @@ Nie trzeba niczego pobierać ani instalować. Aplikacja webowa działa na komput
 Aplikację webową można zainstalować, żeby otwierała się jak zwykła aplikacja — z własną ikoną i bez paska adresu.
 
 - **iPhone / iPad (Safari):** dotknij Udostępnij, a potem **Do ekranu początkowego**. To dziś jedyny sposób na ikonę aplikacji w iOS, bo wersji z App Store jeszcze nie ma.
+  Gdy otworzysz aplikację w Safari na iPhonie, na pulpicie pojawi się krótka karta z tymi samymi trzema krokami. Zamknij ją ✕, a nie wróci przez dwa tygodnie; gdy aplikacja jest już na ekranie początkowym, karta się nie pokazuje. W Instagramie, Facebooku czy TikToku karta poprosi najpierw o otwarcie strony w Safari — wbudowane przeglądarki tych aplikacji nie dodają ikon do ekranu.
 - **Android (Chrome):** otwórz menu przeglądarki i wybierz **Dodaj do ekranu głównego**.
 - **Komputer (Chrome / Edge):** poszukaj ikony instalacji na pasku adresu.
 
@@ -23544,6 +23548,7 @@ Es gibt nichts herunterzuladen oder zu installieren. Die Web-App funktioniert au
 Du kannst die Web-App installieren, sodass sie wie eine normale App startet — mit eigenem Symbol und ohne Adressleiste.
 
 - **iPhone / iPad (Safari):** auf „Teilen" tippen, dann **Zum Home-Bildschirm**. Das ist derzeit der einzige Weg zu einem App-Symbol unter iOS, da es noch keine App-Store-Version gibt.
+  Wenn du die Web-App in Safari auf dem iPhone öffnest, zeigt das Dashboard eine kurze Karte mit denselben drei Schritten. Schließe sie mit ✕, dann bleibt sie zwei Wochen ausgeblendet; liegt die App schon auf dem Home-Bildschirm, erscheint sie nicht mehr. In Instagram, Facebook oder TikTok bittet die Karte dich, die Seite zuerst in Safari zu öffnen — deren eingebaute Browser können nichts zum Home-Bildschirm hinzufügen.
 - **Android (Chrome):** Browser-Menü öffnen und **Zum Startbildschirm zufügen** wählen.
 - **Desktop (Chrome / Edge):** das Installationssymbol in der Adressleiste anklicken.
 
@@ -28395,6 +28400,7 @@ No hay nada que descargar ni instalar. La aplicación web funciona en ordenadore
 Puedes instalar la app web para que se abra como una app normal — con su propio icono y sin barra de direcciones.
 
 - **iPhone / iPad (Safari):** toca Compartir y luego **Añadir a pantalla de inicio**. Hoy es la única forma de tener un icono en iOS, ya que aún no hay versión en la App Store.
+  Si abres la app web en Safari en un iPhone, el panel muestra una tarjeta breve con los mismos tres pasos. Ciérrala con ✕ y no volverá durante dos semanas; cuando la app ya está en la pantalla de inicio, deja de aparecer. Dentro de Instagram, Facebook o TikTok la tarjeta te pide abrir antes la página en Safari: esos navegadores integrados no pueden añadir a la pantalla de inicio.
 - **Android (Chrome):** abre el menú del navegador y elige **Añadir a pantalla de inicio**.
 - **Escritorio (Chrome / Edge):** busca el icono de instalar en la barra de direcciones.
 
@@ -33244,6 +33250,7 @@ Rien à télécharger ni à installer. L’application web fonctionne sur ordina
 Vous pouvez installer l'application web pour qu'elle s'ouvre comme une vraie application — avec sa propre icône et sans barre d'adresse.
 
 - **iPhone / iPad (Safari) :** appuyez sur Partager, puis **Sur l'écran d'accueil**. C'est aujourd'hui le seul moyen d'avoir une icône sur iOS, faute de version App Store.
+  Quand vous ouvrez l'application web dans Safari sur iPhone, le tableau de bord affiche une courte carte reprenant ces trois étapes. Fermez-la avec ✕ et elle reste masquée deux semaines ; une fois l'application sur l'écran d'accueil, elle n'apparaît plus. Dans Instagram, Facebook ou TikTok, la carte vous invite d'abord à ouvrir la page dans Safari : ces navigateurs intégrés ne peuvent pas ajouter d'icône à l'écran d'accueil.
 - **Android (Chrome) :** ouvrez le menu du navigateur et choisissez **Ajouter à l'écran d'accueil**.
 - **Ordinateur (Chrome / Edge) :** cherchez l'icône d'installation dans la barre d'adresse.
 
@@ -38057,6 +38064,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 Вэб-версію можна ўсталяваць, каб яна адкрывалася як звычайная праграма — са сваёй іконкай і без адраснага радка.
 
 - **iPhone / iPad (Safari):** націсніце «Падзяліцца», потым **На экран «Дадому»**. Сёння гэта адзіны спосаб атрымаць іконку праграмы на iOS — версіі ў App Store пакуль няма.
+  Калі адкрыць вэб-праграму ў Safari на iPhone, на галоўным экране з’явіцца кароткая картка з тымі ж трыма крокамі. Закрыйце яе крыжыкам ✕ — і яна не вернецца два тыдні; калі праграма ўжо на экране «Дадому», картка не паказваецца. Унутры Instagram, Facebook ці TikTok картка спачатку папросіць адкрыць старонку ў Safari: убудаваныя браўзеры гэтых праграм не ўмеюць дадаваць іконку на экран.
 - **Android (Chrome):** адкрыйце меню браўзера і выберыце **Дадаць на галоўны экран**.
 - **Камп'ютар (Chrome / Edge):** націсніце значок усталявання ў адрасным радку.
 
@@ -42996,6 +43004,7 @@ Er valt niets te downloaden of te installeren. De web-app werkt op desktops, lap
 Je kunt de web-app installeren zodat hij opent als een gewone app — met een eigen icoon en zonder adresbalk.
 
 - **iPhone / iPad (Safari):** tik op Deel en dan **Zet op beginscherm**. Dit is vandaag de enige manier om een app-icoon op iOS te krijgen, want er is nog geen App Store-versie.
+  Open je de webapp in Safari op een iPhone, dan toont het dashboard een korte kaart met dezelfde drie stappen. Sluit hem met ✕ en hij blijft twee weken weg; staat de app al op je beginscherm, dan verschijnt hij niet meer. In Instagram, Facebook of TikTok vraagt de kaart je eerst de pagina in Safari te openen — die ingebouwde browsers kunnen niets op het beginscherm zetten.
 - **Android (Chrome):** open het browsermenu en kies **Toevoegen aan startscherm**.
 - **Desktop (Chrome / Edge):** klik op het installatie-icoon in de adresbalk.
 

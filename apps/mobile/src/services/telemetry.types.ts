@@ -11,6 +11,7 @@ export type TelemetryFlow =
   | 'import_bank'
   | 'budget_create'
   | 'chat_message'
-  | 'rate_alert_create';
+  | 'rate_alert_create'
+  | 'ios_install';
 
 export type TelemetryStatus = 'started' | 'completed' | 'failed' | 'abandoned';

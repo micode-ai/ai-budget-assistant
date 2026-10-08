@@ -1184,7 +1184,49 @@ _TRACK_TPL = ('<script>(function(){'
               '})();</script>')
 
 def track_html():
-    return _TRACK_TPL.replace("__APP__", APP).replace("__PLAY__", PLAY)
+    return _TRACK_TPL.replace("__APP__", APP).replace("__PLAY__", PLAY) + IOS_HTML
+
+
+# ABA-645 phase 1: there is no iOS app, and an iPhone visitor tapping a Google Play badge dead-ends. On iOS
+# (and not already inside the installed web app) every Play link is pointed at the web app instead, and a
+# small dismissible bar explains Add to Home Screen. Never an App Store badge, never "iPhone app".
+# loc=ios on the rewritten link keeps the signup traceable (parseAcquisition reads src/loc/lang).
+IOS_TEXT = {
+    "pl": ("Masz iPhone'a? AI Budżet działa w przeglądarce: otwórz go w Safari i wybierz „Udostępnij” → „Do ekranu początkowego”.", "Otwórz"),
+    "en": ("On an iPhone? AI Budget runs in your browser: open it in Safari and tap Share → “Add to Home Screen”.", "Open"),
+    "de": ("Auf dem iPhone? AI Budget läuft im Browser: in Safari öffnen und Teilen → „Zum Home-Bildschirm“ wählen.", "Öffnen"),
+    "es": ("¿Tienes iPhone? AI Budget funciona en el navegador: ábrelo en Safari y pulsa Compartir → «Añadir a pantalla de inicio».", "Abrir"),
+    "fr": ("Sur iPhone ? AI Budget fonctionne dans le navigateur : ouvrez-le dans Safari, puis Partager → « Sur l’écran d’accueil ».", "Ouvrir"),
+    "ru": ("У вас iPhone? AI Budget работает в браузере: откройте его в Safari и нажмите «Поделиться» → «На экран „Домой“».", "Открыть"),
+    "ua": ("Маєте iPhone? AI Budget працює в браузері: відкрийте його в Safari й натисніть «Поділитися» → «На початковий екран».", "Відкрити"),
+    "be": ("Маеце iPhone? AI Budget працуе ў браўзеры: адкрыйце яго ў Safari і націсніце «Падзяліцца» → «На экран „Дадому“».", "Адкрыць"),
+    "nl": ("Op een iPhone? AI Budget werkt in je browser: open het in Safari en tik op Deel → ‘Zet op beginscherm’.", "Openen"),
+}
+IOS_HTML = ('<script>(function(){'
+            'var ua=navigator.userAgent||"",ios=/iPad|iPhone|iPod/.test(ua)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);'
+            'if(!ios||navigator.standalone===true)return;'
+            'var T=' + json.dumps({k: list(v) for k, v in IOS_TEXT.items()}, ensure_ascii=False) + ';'
+            'var lg=(document.documentElement.lang||"en").slice(0,2);if(lg==="uk")lg="ua";var t=T[lg]||T.en;'
+            'var APP="' + APP + '",PLAY="' + PLAY + '",dest=APP+"/?src=landing&loc=ios&lang="+lg;'
+            'function fix(){var as=document.querySelectorAll("a[href]");for(var i=0;i<as.length;i++){'
+            # a Play BUTTON is hidden (the "Open the app" button already sits beside it); an inline/footer Play
+            # link keeps its place but points at the web app and says so
+            'if((as[i].getAttribute("href")||"").indexOf(PLAY)!==0)continue;'
+            'if(as[i].classList.contains("btn")){as[i].style.display="none";continue;}'
+            'as[i].setAttribute("href",dest);as[i].textContent="app.ai-budget.pl";}}'
+            'function bar(){try{if(localStorage.getItem("ios-bar-off"))return;}catch(e){}'
+            'var d=document.createElement("div");d.setAttribute("role","note");'
+            'd.style.cssText="position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;background:#1F1A16;color:#FFF4E6;'
+            'border:2px solid #E37F2B;border-radius:16px;padding:14px 44px 14px 16px;font:15px/1.4 system-ui,-apple-system,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35)";'
+            'var p=document.createElement("div");p.textContent=t[0];d.appendChild(p);'
+            'var a=document.createElement("a");a.href=dest;a.textContent=t[1]+" →";'
+            'a.style.cssText="display:inline-block;margin-top:8px;color:#E37F2B;font-weight:700;text-decoration:none";d.appendChild(a);'
+            'var x=document.createElement("button");x.setAttribute("aria-label","×");x.textContent="×";'
+            'x.style.cssText="position:absolute;top:6px;right:8px;background:none;border:0;color:#FFF4E6;font-size:24px;line-height:1;padding:6px;cursor:pointer";'
+            'x.onclick=function(){d.remove();try{localStorage.setItem("ios-bar-off","1");}catch(e){}};d.appendChild(x);'
+            'document.body.appendChild(d);}'
+            'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",function(){fix();bar();});else{fix();bar();}'
+            '})();</script>')
 
 def consent_html(lang):
     txt, ok, no = CONSENT.get(lang, CONSENT["en"])

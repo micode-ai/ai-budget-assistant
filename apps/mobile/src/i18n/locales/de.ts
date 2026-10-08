@@ -942,6 +942,15 @@ export default {
     inflationShield: 'Bevorratungs-Hinweise',
     inflationShieldDesc: 'Erhalte eine Benachrichtigung, wenn ein regelmäßiger Artikel im Preis steigen wird',
   },
+  iosInstall: {
+    title: 'Füge AI Budget deinem iPhone-Home-Bildschirm hinzu',
+    body: 'Es öffnet sich wie eine App: im Vollbild, mit eigenem Symbol.',
+    step1: 'Tippe in Safari auf das Teilen-Symbol',
+    step2: 'Wähle „Zum Home-Bildschirm“',
+    step3: 'Tippe auf „Hinzufügen“ — fertig',
+    inAppBrowser: 'Dieser Browser kann keine Apps zum Home-Bildschirm hinzufügen. Öffne die Seite zuerst in Safari.',
+    dismiss: 'Schließen',
+  },
   alerts: {
     title: 'Hinweise',
     empty: 'Noch keine Hinweise. Wir melden uns, wenn uns etwas Ungewöhnliches auffällt.',

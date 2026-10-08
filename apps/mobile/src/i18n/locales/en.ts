@@ -946,6 +946,15 @@ export default {
     inflationShield: 'Stock-up alerts',
     inflationShieldDesc: 'Get notified when a regular item is about to rise in price',
   },
+  iosInstall: {
+    title: 'Add AI Budget to your iPhone home screen',
+    body: 'It opens like an app: full screen, with its own icon.',
+    step1: 'Tap the Share icon in Safari',
+    step2: 'Choose “Add to Home Screen”',
+    step3: 'Tap “Add” — done',
+    inAppBrowser: 'This browser can’t add apps to the home screen. Open this page in Safari first.',
+    dismiss: 'Dismiss',
+  },
   alerts: {
     title: 'Alerts',
     empty: "No alerts yet. We'll notify you when something unusual happens with your money.",

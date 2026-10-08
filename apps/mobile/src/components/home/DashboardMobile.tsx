@@ -10,6 +10,7 @@ import { HomeQuickActionStrip } from '@/components/home/HomeQuickActionStrip';
 import { SafeToSpendSheet } from '@/components/home/SafeToSpendSheet';
 import { InvestmentCard, renderHomeWidget, type HomeWidgetContext } from '@/components/home/HomeWidgetSwitch';
 import type { QuickActionKey } from '@/stores/quickActionStore';
+import { IosInstallCard } from '@/components/home/IosInstallCard';
 
 export function DashboardMobile() {
   const [safeToSpendSheetVisible, setSafeToSpendSheetVisible] = useState(false);
@@ -115,6 +116,8 @@ export function DashboardMobile() {
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={theme.colors.primary} />}
       >
+        {/* iOS web only: the "Add to Home Screen" guide (a native no-op; ABA-645) */}
+        {!isDesktopWeb && <IosInstallCard />}
         {(() => {
           const investmentEl = currentAccountType === 'investment' && investmentSummary ? (
             <InvestmentCard key="investment" ctx={widgetCtx} />

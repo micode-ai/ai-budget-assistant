@@ -30,6 +30,12 @@ telemetry at all — not a convention that could be relaxed.
 **`screen` is the route PATTERN** read off `navigationRef.getCurrentRoute()?.name` (`expense/[id]`),
 never `usePathname()`'s resolved path.
 
+**Flows are a closed list kept in two places** — mobile's `TelemetryFlow` union in
+`telemetry.types.ts` and the API's `STRING_PROPS.flow` in `telemetry.validator.ts`; a flow missing
+from the validator is silently dropped. `ios_install` (ABA-645) is the newest: `started` when the
+iPhone install card is shown, `completed` on a standalone iOS launch — the ratio is the install rate
+of the guide.
+
 **`abandoned` is derived on read**, as `max(stored, started − completed − failed)`. A screen that
 has been left cannot run code to report itself.
 
@@ -97,4 +103,4 @@ registration, a policy omitting the data category being collected.
 
 ## History
 
-ABA-497.
+ABA-497 · ABA-645 (`ios_install` flow).

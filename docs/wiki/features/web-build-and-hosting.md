@@ -72,6 +72,17 @@ the launcher's shape and a full-bleed icon loses the top of the wallet; and `app
 flattened opaque, because **iOS reads none of the manifest** — without that `<link>` an installed
 shortcut uses a screenshot of the page as its icon.
 
+**iOS has no install prompt, so the app explains it (ABA-645).** On an iPhone/iPad that is not
+already running standalone, the phone dashboard shows `IosInstallCard` — Share → Add to Home Screen →
+done — dismissible for `REPROMPT_DAYS` (14) via localStorage. The rules are pure helpers in
+`src/features/install/iosInstall.ts` (tested): iPadOS is detected as `MacIntel` with touch, a
+standalone launch is `navigator.standalone === true` or `(display-mode: standalone)`, and a social
+in-app browser (Instagram, Facebook, TikTok…) gets "open in Safari first" instead of the steps,
+because those webviews cannot add to the home screen. `IosInstallCard.tsx` is a real native no-op,
+not a re-export of the `.web.tsx` (the `telemetry.ts` rule). It reports flow `ios_install`:
+`started` when shown, `completed` once per session on a standalone iOS launch
+(`features/web-telemetry.md`). The landing's own iOS handling is on `features/marketing-site.md`.
+
 **A single-file bind mount does not survive `sed -i`.** `nginx.conf` is mounted as one file, so an
 edit that replaces the inode leaves the container reading the old one — truncate in place. And
 neither `nginx -s reload` nor `SIGHUP` reliably cycles the workers here; only
@@ -99,7 +110,7 @@ unused-but-tagged images are another project's rollback target.
   that gates on a local-row count behaves as if the account were empty. Several bugs have come from
   code that reads a persisted value on a path only native reaches.
 - No service worker, so Chrome shows "Add to home screen" rather than an install prompt; iOS
-  installs from the manifest alone. Deliberate: a naive shell-caching worker risks serving a stale
+  installs from the manifest alone, guided by the dashboard card (ABA-645). Deliberate: a naive shell-caching worker risks serving a stale
   JS bundle, and the web app has no offline story to cache for (no SQLite on web).
 - Logging limits are set on the four compose-managed containers only; the two hand-created
   ai-budget web containers and `shared-nginx` have no `max-size`, and one had reached 244 MB.
@@ -111,4 +122,5 @@ so both the session-restore and the logout paths must gate token retention on
 `Platform.OS !== 'web'` — otherwise a logout keeps tokens and the next refresh signs the user back
 in) · ABA-269 (SPA moved to `app.ai-budget.pl`, apex became the marketing landing) · ABA-271 (real
 404s, SPA noindex) · ABA-488 (PWA manifest and icons) · ABA-522 (the API rate limit that made cold
-starts fail invisibly on web).
+starts fail invisibly on web) · ABA-645 (iOS add-to-home-screen card and landing redirect; phase 2,
+a native iOS app or not, is still open).

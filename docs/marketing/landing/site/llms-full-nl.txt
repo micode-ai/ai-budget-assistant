@@ -7180,6 +7180,7 @@ Er valt niets te downloaden of te installeren. De web-app werkt op desktops, lap
 Je kunt de web-app installeren zodat hij opent als een gewone app — met een eigen icoon en zonder adresbalk.
 
 - **iPhone / iPad (Safari):** tik op Deel en dan **Zet op beginscherm**. Dit is vandaag de enige manier om een app-icoon op iOS te krijgen, want er is nog geen App Store-versie.
+  Open je de webapp in Safari op een iPhone, dan toont het dashboard een korte kaart met dezelfde drie stappen. Sluit hem met ✕ en hij blijft twee weken weg; staat de app al op je beginscherm, dan verschijnt hij niet meer. In Instagram, Facebook of TikTok vraagt de kaart je eerst de pagina in Safari te openen — die ingebouwde browsers kunnen niets op het beginscherm zetten.
 - **Android (Chrome):** open het browsermenu en kies **Toevoegen aan startscherm**.
 - **Desktop (Chrome / Edge):** klik op het installatie-icoon in de adresbalk.
 

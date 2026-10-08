@@ -15,6 +15,7 @@ There is nothing to download or install. The web app works on desktops, laptops,
 You can install the web app so it opens like a normal app — its own icon, no browser address bar.
 
 - **iPhone / iPad (Safari):** tap the Share button, then **Add to Home Screen**. This is the only way to get an app icon on iOS today, as there is no App Store version yet.
+  When you open the web app in Safari on an iPhone, the dashboard shows a short three-step card with the same instructions. Close it with ✕ and it stays hidden for two weeks; once the app is on your home screen it no longer appears. Inside Instagram, Facebook or TikTok the card asks you to open the page in Safari first — those built-in browsers can't add to the home screen.
 - **Android (Chrome):** open the browser menu and choose **Add to Home screen**.
 - **Desktop (Chrome / Edge):** look for the install icon in the address bar.
 

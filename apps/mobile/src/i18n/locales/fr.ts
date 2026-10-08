@@ -942,6 +942,15 @@ export default {
     inflationShield: 'Alertes de stockage',
     inflationShieldDesc: 'Recevez une notification quand le prix d\'un article habituel est sur le point d\'augmenter',
   },
+  iosInstall: {
+    title: 'Ajoutez AI Budget à l’écran d’accueil de l’iPhone',
+    body: 'Il s’ouvre comme une appli : en plein écran, avec sa propre icône.',
+    step1: 'Touchez l’icône Partager dans Safari',
+    step2: 'Choisissez « Sur l’écran d’accueil »',
+    step3: 'Touchez « Ajouter » — c’est fait',
+    inAppBrowser: 'Ce navigateur ne peut pas ajouter d’applis à l’écran d’accueil. Ouvrez d’abord cette page dans Safari.',
+    dismiss: 'Fermer',
+  },
   alerts: {
     title: 'Alertes',
     empty: "Pas encore d'alertes. Nous vous préviendrons en cas d'activité inhabituelle.",

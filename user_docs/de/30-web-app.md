@@ -15,6 +15,7 @@ Es gibt nichts herunterzuladen oder zu installieren. Die Web-App funktioniert au
 Du kannst die Web-App installieren, sodass sie wie eine normale App startet — mit eigenem Symbol und ohne Adressleiste.
 
 - **iPhone / iPad (Safari):** auf „Teilen" tippen, dann **Zum Home-Bildschirm**. Das ist derzeit der einzige Weg zu einem App-Symbol unter iOS, da es noch keine App-Store-Version gibt.
+  Wenn du die Web-App in Safari auf dem iPhone öffnest, zeigt das Dashboard eine kurze Karte mit denselben drei Schritten. Schließe sie mit ✕, dann bleibt sie zwei Wochen ausgeblendet; liegt die App schon auf dem Home-Bildschirm, erscheint sie nicht mehr. In Instagram, Facebook oder TikTok bittet die Karte dich, die Seite zuerst in Safari zu öffnen — deren eingebaute Browser können nichts zum Home-Bildschirm hinzufügen.
 - **Android (Chrome):** Browser-Menü öffnen und **Zum Startbildschirm zufügen** wählen.
 - **Desktop (Chrome / Edge):** das Installationssymbol in der Adressleiste anklicken.
 

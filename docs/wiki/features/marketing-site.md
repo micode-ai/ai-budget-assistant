@@ -33,6 +33,14 @@ per page, so a style change re-touches every committed HTML file.
 all nine languages, and the blog's brand and breadcrumb link back to the language-matched landing
 via `home_url(lang)`. Do not hardcode `/` or an `en`/`pl`-only blog link in either generator.
 
+**On iOS the landing must not send people to Google Play (ABA-645).** `track_html()` appends
+`IOS_HTML`, a small script (text in `IOS_TEXT`, 9 languages) that runs only on an iPhone/iPad not
+already standalone: it hides the Google Play `.btn` buttons, repoints inline Play links to
+`app.ai-budget.pl/?src=landing&loc=ios&lang=<lang>` labelled with that domain, and shows a fixed
+dismissible bar (`localStorage` `ios-bar-off`) explaining Add to Home Screen. Desktop and Android
+render unchanged. The `loc=ios` tag makes those arrivals separable in acquisition data
+(`features/acquisition-tracking.md`).
+
 ## Invariants
 
 **Regenerate the landing with its production environment**, or the committed production site is
@@ -142,4 +150,4 @@ ABA-281 (internal linking, index schema) · ABA-320 (pricing driven from one JSO
 pointed at the Polish homepage for every language) · ABA-571/572 (diacritics, meta budgets) ·
 ABA-574 (wave 5) · ABA-584 (the ABA-435 re-measure, FR snippet) · ABA-638 (SEO/GEO/AEO pass:
 `llms.txt` facts, named author, per-article OG, calculators, Excel template, help FAQPage, comparison
-and per-bank pages — content-plan Wave 12).
+and per-bank pages — content-plan Wave 12) · ABA-645 (iOS visitors sent to the web app, not Play).

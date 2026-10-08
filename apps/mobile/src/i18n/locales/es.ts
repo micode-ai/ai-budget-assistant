@@ -942,6 +942,15 @@ export default {
     inflationShield: 'Alertas de abastecimiento',
     inflationShieldDesc: 'Recibe una notificación cuando el precio de un artículo habitual esté por subir',
   },
+  iosInstall: {
+    title: 'Añade AI Budget a la pantalla de inicio del iPhone',
+    body: 'Se abre como una app: a pantalla completa y con su propio icono.',
+    step1: 'Toca el icono Compartir en Safari',
+    step2: 'Elige «Añadir a pantalla de inicio»',
+    step3: 'Toca «Añadir» — listo',
+    inAppBrowser: 'Este navegador no puede añadir apps a la pantalla de inicio. Abre primero esta página en Safari.',
+    dismiss: 'Cerrar',
+  },
   alerts: {
     title: 'Alertas',
     empty: 'Aún no hay alertas. Te avisaremos cuando notemos algo inusual en tus finanzas.',

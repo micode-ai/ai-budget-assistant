@@ -942,6 +942,15 @@ export default {
     inflationShield: 'Voorraadmeldingen',
     inflationShieldDesc: 'Ontvang een melding wanneer een vast artikel binnenkort duurder wordt',
   },
+  iosInstall: {
+    title: 'Zet AI Budget op het beginscherm van je iPhone',
+    body: 'Het opent als een app: schermvullend, met een eigen icoon.',
+    step1: 'Tik in Safari op het Deel-icoon',
+    step2: 'Kies ‘Zet op beginscherm’',
+    step3: 'Tik op ‘Voeg toe’ — klaar',
+    inAppBrowser: 'Deze browser kan geen apps op het beginscherm zetten. Open deze pagina eerst in Safari.',
+    dismiss: 'Sluiten',
+  },
   alerts: {
     title: 'Meldingen',
     empty: 'Nog geen meldingen. We laten het weten als er iets ongewoons gebeurt met je geld.',

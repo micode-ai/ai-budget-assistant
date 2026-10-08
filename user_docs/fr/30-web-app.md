@@ -15,6 +15,7 @@ Rien à télécharger ni à installer. L’application web fonctionne sur ordina
 Vous pouvez installer l'application web pour qu'elle s'ouvre comme une vraie application — avec sa propre icône et sans barre d'adresse.
 
 - **iPhone / iPad (Safari) :** appuyez sur Partager, puis **Sur l'écran d'accueil**. C'est aujourd'hui le seul moyen d'avoir une icône sur iOS, faute de version App Store.
+  Quand vous ouvrez l'application web dans Safari sur iPhone, le tableau de bord affiche une courte carte reprenant ces trois étapes. Fermez-la avec ✕ et elle reste masquée deux semaines ; une fois l'application sur l'écran d'accueil, elle n'apparaît plus. Dans Instagram, Facebook ou TikTok, la carte vous invite d'abord à ouvrir la page dans Safari : ces navigateurs intégrés ne peuvent pas ajouter d'icône à l'écran d'accueil.
 - **Android (Chrome) :** ouvrez le menu du navigateur et choisissez **Ajouter à l'écran d'accueil**.
 - **Ordinateur (Chrome / Edge) :** cherchez l'icône d'installation dans la barre d'adresse.
 
