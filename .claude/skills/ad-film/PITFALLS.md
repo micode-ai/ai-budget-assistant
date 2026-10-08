@@ -5,7 +5,7 @@ defect that cost a re-do, write it here as *symptom → cause and fix* before th
 Read it at the start of every film and paste the relevant rows into the scene brief.
 
 Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnastego`, `kto-placi`
-(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), 2026-09/10.
+(and their `-en` copies), `paragon-anime` (the anime house style), `sprawa-pieniedzy` (noir), `na-glos` (1930s cartoon), `rpg-subskrypcje` (8-bit RPG), `import-typo` (kinetic typography), `okna-95` (90s OS), 2026-09/10.
 
 ## Story and timing
 
@@ -112,4 +112,16 @@ Collected from `receipt-journey`, `real-salary`, `shared-family`, `oddam-pietnas
 | The sync check reports a tap 170 ms early | The approaching finger enters the region before the press. Check the press frames in a snapshot; such a region is a false positive. |
 | A `✓` (or other symbol) renders as a box in a Pillow Story | Segoe UI Bold has no glyph for it. Use text only, or a font that has the glyph. |
 | `cat > file <<'EOF'` with JS inside fails again ("here-document delimited by end-of-file") | Already in Windows and files: write scripts with the editor tool. A heredoc that holds both quote kinds breaks. |
+
+## 8-bit RPG, kinetic typography, 90s OS (from `rpg-subskrypcje`, `import-typo`, `okna-95`)
+
+| Symptom | Cause and fix |
+|---|---|
+| Pixel art looks like a blurry vector drawing | Antialiased shapes at full size. Draw at the native low resolution, snap the palette, then scale up nearest-neighbour; text must be thresholded, not just drawn small. |
+| Polish letters vanish in the pixel font | The stock 8x8 NES fonts have no ą ę ł ś ż. Render a system font at native size and threshold its alpha; bold Consolas/Tahoma at 11 px and up keep the diacritics. |
+| A string in the EN version is still Polish ("AI Budżet" in a push, "-87,40" in a column) | A literal in a scene instead of a `STR` key. Every visible string, including brand names and number formats, goes through `strings.js`; check the EN contact sheet frame by frame. |
+| A wide word overflows the frame on its first frame | The slam starts at 1.6x scale. Use a smaller `from` (1.15) for long headlines. |
+| A typed/stacked layout leaves the bottom third of a 9:16 frame empty | The Reels UI covers the bottom 20 %, but empty is not the same as safe. Fill it with decoration (ground, fence, flowers, a taskbar) that carries nothing must-read. |
+| A claim the feature can't back ("AI reads your PDF", "the app cancels the subscription") | Check the gate and the actor: AI PDF reading is Pro, the tracker only reminds — the user cancels. Say who does what on screen ("MICHAŁ anuluje…"). |
+| A real-world UI parody drifts toward a trademark | Use the era's grammar only (bevels, title bars, an hourglass), our own product name, our own sounds. |
 
