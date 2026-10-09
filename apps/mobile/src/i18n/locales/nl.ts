@@ -1784,6 +1784,7 @@ export default {
     addExpense: 'Uitgave toevoegen',
     membersAction: 'Leden',
     archivedBanner: 'Deze groep is gearchiveerd en alleen-lezen.',
+    offlineBanner: 'Je bent offline. Groepen hebben een verbinding nodig, dus wijzigingen zijn gepauzeerd tot je weer online bent.',
     youTag: 'Jij',
     expenseAddTitle: 'Uitgave toevoegen',
     expenseEditTitle: 'Uitgave bewerken',

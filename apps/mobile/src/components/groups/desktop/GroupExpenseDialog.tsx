@@ -43,6 +43,7 @@ export function GroupExpenseDialog({
               label={t('groups.deleteExpense')}
               onPress={() => ref.current?.remove?.()}
               variant="danger"
+              write
               disabled={state.submitting}
               style={styles.footerButton}
             />
@@ -51,6 +52,7 @@ export function GroupExpenseDialog({
             label={t('groups.saveExpense')}
             onPress={() => void ref.current?.submit()}
             loading={state.submitting}
+            write
             disabled={!state.canSubmit}
             style={styles.footerButton}
           />

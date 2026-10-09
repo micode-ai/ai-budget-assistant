@@ -101,3 +101,7 @@ When someone else adds an expense or a payment, you get a notification — at mo
 - Group data is **not end-to-end encrypted**, even if you use end-to-end encryption for your own data, because friends read it in an ordinary browser.
 - The page never shows anyone's email or whether they use the app. Your payment details are shown only to the person who is paying you.
 - If the link leaks, use **Reset the link**, or turn off **Guest link access**.
+
+## Offline
+
+Groups need a connection to the server. While the app can't reach it, a banner says so and the buttons that change something (new group, join, add expense, settle, members and the like) are disabled. You can still read what's already on screen. Everything unlocks by itself as soon as the connection is back.

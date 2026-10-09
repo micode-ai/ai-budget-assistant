@@ -1791,6 +1791,7 @@ export default {
     addExpense: 'Add expense',
     membersAction: 'Members',
     archivedBanner: 'This group is archived and read-only.',
+    offlineBanner: 'You are offline. Groups need a connection, so changes are paused until you are back online.',
     youTag: 'You',
     expenseAddTitle: 'Add expense',
     expenseEditTitle: 'Edit expense',

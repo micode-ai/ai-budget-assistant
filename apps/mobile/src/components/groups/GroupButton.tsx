@@ -1,5 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, ActivityIndicator, type StyleProp, type ViewStyle } from 'react-native';
+import { useTranslation } from 'react-i18next';
+import { useConnectivity } from '@/hooks/useConnectivity';
 import { useTheme, useStyles, type Theme } from '@/theme';
 
 interface GroupButtonProps {
@@ -8,6 +10,8 @@ interface GroupButtonProps {
   variant?: 'primary' | 'secondary' | 'danger';
   loading?: boolean;
   disabled?: boolean;
+  /** A server write: disabled (with an a11y hint) while the app is offline. */
+  write?: boolean;
   style?: StyleProp<ViewStyle>;
 }
 
@@ -18,11 +22,15 @@ export function GroupButton({
   variant = 'primary',
   loading = false,
   disabled = false,
+  write = false,
   style,
 }: GroupButtonProps) {
   const theme = useTheme();
   const styles = useStyles(createStyles);
-  const inactive = disabled || loading;
+  const { t } = useTranslation();
+  const { isOffline } = useConnectivity();
+  const offlineBlocked = write && isOffline;
+  const inactive = disabled || loading || offlineBlocked;
   const textColor =
     variant === 'primary'
       ? theme.colors.textInverse
@@ -37,6 +45,7 @@ export function GroupButton({
       disabled={inactive}
       accessibilityRole="button"
       accessibilityState={{ disabled: inactive }}
+      accessibilityHint={offlineBlocked ? t('groups.offlineBanner') : undefined}
     >
       {loading ? (
         <ActivityIndicator color={textColor} />

@@ -5177,6 +5177,10 @@ When someone else adds an expense or a payment, you get a notification — at mo
 - Group data is **not end-to-end encrypted**, even if you use end-to-end encryption for your own data, because friends read it in an ordinary browser.
 - The page never shows anyone's email or whether they use the app. Your payment details are shown only to the person who is paying you.
 - If the link leaks, use **Reset the link**, or turn off **Guest link access**.
+
+## Offline
+
+Groups need a connection to the server. While the app can't reach it, a banner says so and the buttons that change something (new group, join, add expense, settle, members and the like) are disabled. You can still read what's already on screen. Everything unlocks by itself as soon as the connection is back.
 `,
     },
   ],
@@ -10312,6 +10316,10 @@ OCR иногда неверно читает цену, выдумывает ст
 - Данные группы **не защищены сквозным шифрованием**, даже если вы используете сквозное шифрование для своих данных, ведь друзья читают их в обычном браузере.
 - Страница никогда не показывает чей-либо e-mail и то, пользуется ли человек приложением. Ваши платёжные данные видит только тот, кто вам платит.
 - Если ссылка утекла, нажмите **Сбросить ссылку** или выключите **Доступ по гостевой ссылке**.
+
+## Без сети
+
+Группам нужно соединение с сервером. Пока приложение не может до него достучаться, вверху виден баннер, а кнопки, которые что-то меняют (новая группа, вступление, добавление траты, расчёт, участники и т. п.), отключены. Уже открытое на экране можно читать. Всё включится само, как только появится связь.
 `,
     },
   ],
@@ -15417,6 +15425,10 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - Дані групи **не захищені наскрізним шифруванням**, навіть якщо ви використовуєте наскрізне шифрування для своїх даних, адже друзі читають їх у звичайному браузері.
 - Сторінка ніколи не показує нічий e-mail і того, чи користується людина застосунком. Ваші платіжні дані бачить лише той, хто вам платить.
 - Якщо посилання витекло, натисніть **Скинути посилання** або вимкніть **Доступ за гостьовим посиланням**.
+
+## Без мережі
+
+Групам потрібне з’єднання із сервером. Поки застосунок не може до нього достукатися, угорі видно банер, а кнопки, що щось змінюють (нова група, вступ, додавання витрати, розрахунок, учасники тощо), вимкнено. Те, що вже на екрані, можна читати. Усе ввімкнеться саме, щойно з’явиться зв’язок.
 `,
     },
   ],
@@ -20507,6 +20519,10 @@ Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyż
 - Dane grupy **nie są szyfrowane end-to-end**, nawet jeśli używasz szyfrowania end-to-end dla swoich danych, bo znajomi czytają je w zwykłej przeglądarce.
 - Strona nigdy nie pokazuje niczyjego adresu e-mail ani tego, czy ktoś korzysta z aplikacji. Twoje dane do płatności widzi tylko osoba, która Ci płaci.
 - Jeśli link wycieknie, użyj **Zresetuj link** albo wyłącz **Dostęp przez link dla gości**.
+
+## Tryb offline
+
+Grupy wymagają połączenia z serwerem. Dopóki aplikacja nie może się z nim połączyć, widać o tym informację, a przyciski zmieniające dane (nowa grupa, dołączenie, dodanie wydatku, rozliczenie, członkowie itp.) są wyłączone. To, co już jest na ekranie, nadal możesz czytać. Wszystko odblokuje się samo, gdy tylko wróci połączenie.
 `,
     },
   ],
@@ -25572,6 +25588,10 @@ Wenn jemand anderes eine Ausgabe oder Zahlung hinzufügt, bekommst du eine Benac
 - Gruppendaten sind **nicht Ende-zu-Ende-verschlüsselt**, auch wenn du für deine eigenen Daten Ende-zu-Ende-Verschlüsselung nutzt, denn Freunde lesen sie in einem gewöhnlichen Browser.
 - Die Seite zeigt nie die E-Mail-Adresse von jemandem und auch nicht, ob jemand die App nutzt. Deine Zahlungsdaten sieht nur, wer dir Geld zahlt.
 - Ist der Link durchgesickert, nutze **Link zurücksetzen** oder schalte **Zugriff über den Gastlink** aus.
+
+## Offline
+
+Gruppen brauchen eine Verbindung zum Server. Solange die App ihn nicht erreicht, weist ein Hinweis darauf hin und alle Schaltflächen, die etwas ändern (neue Gruppe, Beitreten, Ausgabe hinzufügen, Ausgleichen, Mitglieder usw.), sind deaktiviert. Lesen kannst du weiterhin, was schon angezeigt wird. Sobald die Verbindung zurück ist, wird alles von selbst wieder freigeschaltet.
 `,
     },
   ],
@@ -30626,6 +30646,10 @@ Cuando otra persona añade un gasto o un pago, recibes una notificación: como m
 - Los datos del grupo **no están cifrados de extremo a extremo**, aunque uses el cifrado de extremo a extremo para tus propios datos, porque tus amigos los leen en un navegador normal.
 - La página nunca muestra el correo electrónico de nadie ni si alguien usa la app. Tus datos de pago solo los ve quien te está pagando.
 - Si el enlace se filtra, usa **Restablecer el enlace** o desactiva **Acceso por el enlace de invitados**.
+
+## Sin conexión
+
+Los grupos necesitan conexión con el servidor. Mientras la app no pueda alcanzarlo, un aviso lo indica y los botones que cambian algo (nuevo grupo, unirse, añadir gasto, saldar, miembros, etc.) quedan desactivados. Puedes seguir leyendo lo que ya está en pantalla. Todo se reactiva solo en cuanto vuelve la conexión.
 `,
     },
   ],
@@ -35678,6 +35702,10 @@ Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une not
 - Les données du groupe **ne sont pas chiffrées de bout en bout**, même si vous utilisez le chiffrement de bout en bout pour vos propres données, car vos amis les lisent dans un navigateur ordinaire.
 - La page n'affiche jamais l'adresse e-mail de quiconque, ni le fait que quelqu'un utilise l'appli. Vos coordonnées de paiement ne sont visibles que par la personne qui vous paie.
 - Si le lien a fuité, utilisez **Réinitialiser le lien** ou désactivez **Accès par le lien invité**.
+
+## Hors ligne
+
+Les groupes nécessitent une connexion au serveur. Tant que l’app ne peut pas l’atteindre, un bandeau l’indique et les boutons qui modifient quelque chose (nouveau groupe, rejoindre, ajouter une dépense, régler, membres, etc.) sont désactivés. Vous pouvez toujours lire ce qui est déjà affiché. Tout se réactive tout seul dès le retour de la connexion.
 `,
     },
   ],
@@ -40694,6 +40722,10 @@ OCR часам няправільна чытае цану, выдумляе ра
 - Даныя групы **не абароненыя скразным шыфраваннем**, нават калі вы карыстаецеся скразным шыфраваннем для сваіх даных, бо сябры чытаюць іх у звычайным браўзеры.
 - Старонка ніколі не паказвае нічыйго e-mail і таго, ці карыстаецца чалавек праграмай. Вашы плацёжныя даныя бачыць толькі той, хто вам плаціць.
 - Калі спасылка выцекла, націсніце **Скінуць спасылку** або выключыце **Доступ па гасцявой спасылцы**.
+
+## Без сеткі
+
+Групам патрэбна злучэнне з серверам. Пакуль праграма не можа да яго дастукацца, уверсе бачны банер, а кнопкі, якія нешта змяняюць (новая група, далучэнне, даданне выдаткаў, разлік, удзельнікі і г. д.), адключаны. Тое, што ўжо на экране, можна чытаць. Усё ўключыцца само, як толькі з’явіцца сувязь.
 `,
     },
   ],
@@ -45836,6 +45868,10 @@ Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hoo
 - Groepsgegevens zijn **niet end-to-end versleuteld**, ook niet als je end-to-end-versleuteling voor je eigen gegevens gebruikt, omdat vrienden ze in een gewone browser lezen.
 - De pagina toont nooit iemands e-mailadres en ook niet of iemand de app gebruikt. Jouw betaalgegevens ziet alleen degene die jou betaalt.
 - Is de link uitgelekt, gebruik dan **Link opnieuw instellen** of zet **Toegang via de gastlink** uit.
+
+## Offline
+
+Groepen hebben een verbinding met de server nodig. Zolang de app die niet kan bereiken, meldt een balk dat en zijn de knoppen die iets wijzigen (nieuwe groep, deelnemen, uitgave toevoegen, afrekenen, leden enzovoort) uitgeschakeld. Wat al op het scherm staat, kun je gewoon lezen. Zodra de verbinding terug is, wordt alles vanzelf weer actief.
 `,
     },
   ],

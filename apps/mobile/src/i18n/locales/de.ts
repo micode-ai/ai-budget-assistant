@@ -1784,6 +1784,7 @@ export default {
     addExpense: 'Ausgabe hinzufügen',
     membersAction: 'Mitglieder',
     archivedBanner: 'Diese Gruppe ist archiviert und schreibgeschützt.',
+    offlineBanner: 'Du bist offline. Gruppen brauchen eine Verbindung, daher sind Änderungen pausiert, bis du wieder online bist.',
     youTag: 'Du',
     expenseAddTitle: 'Ausgabe hinzufügen',
     expenseEditTitle: 'Ausgabe bearbeiten',

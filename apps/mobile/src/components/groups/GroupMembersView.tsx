@@ -13,6 +13,7 @@ import { balanceOf, findMember, isGroupWritable, liveMembers } from '@/features/
 import { MAX_MEMBER_NAME_LENGTH } from '@/features/groups/groupSplit';
 import type { GroupMember } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
+import { GroupOfflineBanner } from './GroupOfflineBanner';
 import { GroupErrorState } from './GroupErrorState';
 import { GroupMemberSheet } from './GroupMemberSheet';
 import { GroupOwnerControls } from './GroupOwnerControls';
@@ -138,6 +139,7 @@ export function GroupMembersView({
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
+        <GroupOfflineBanner />
         <View style={styles.card}>
           <Text style={styles.title}>{t('groups.membersTitle')}</Text>
           {members.map((m) => {
@@ -194,6 +196,7 @@ export function GroupMembersView({
                 label={t('groups.add')}
                 onPress={add}
                 loading={adding}
+                write
                 disabled={newName.trim().length === 0}
               />
             </View>

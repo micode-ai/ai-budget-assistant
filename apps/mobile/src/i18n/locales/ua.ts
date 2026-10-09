@@ -1793,6 +1793,7 @@ export default {
     addExpense: 'Додати витрату',
     membersAction: 'Учасники',
     archivedBanner: 'Ця група в архіві й доступна лише для читання.',
+    offlineBanner: 'Ви офлайн. Групам потрібне з’єднання, тому зміни призупинено до появи мережі.',
     youTag: 'Ви',
     expenseAddTitle: 'Додати витрату',
     expenseEditTitle: 'Змінити витрату',

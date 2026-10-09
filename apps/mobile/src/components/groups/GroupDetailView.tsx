@@ -11,6 +11,7 @@ import type { GroupExpense, GroupTransfer } from '@budget/shared-types';
 import { GroupActivityList } from './GroupActivityList';
 import { GroupBalanceHero } from './GroupBalanceHero';
 import { GroupButton } from './GroupButton';
+import { GroupOfflineBanner } from './GroupOfflineBanner';
 import { GroupErrorState } from './GroupErrorState';
 import { GroupShareCard } from './GroupShareCard';
 import { GroupTransfersCard } from './GroupTransfersCard';
@@ -70,6 +71,7 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
         contentContainerStyle={styles.content}
         refreshControl={<RefreshControl refreshing={refreshing || isLoading} onRefresh={onRefresh} />}
       >
+        <GroupOfflineBanner />
         {!writable && (
           <View style={styles.banner}>
             <Text style={styles.bannerText}>{t('groups.archivedBanner')}</Text>
@@ -83,6 +85,7 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
             <GroupButton
               label={t('groups.addExpense')}
               onPress={() => router.push(`/groups/${groupId}/expense` as never)}
+              write
               style={styles.rowButton}
             />
             <GroupButton

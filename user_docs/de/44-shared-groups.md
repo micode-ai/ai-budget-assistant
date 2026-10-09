@@ -101,3 +101,7 @@ Wenn jemand anderes eine Ausgabe oder Zahlung hinzufügt, bekommst du eine Benac
 - Gruppendaten sind **nicht Ende-zu-Ende-verschlüsselt**, auch wenn du für deine eigenen Daten Ende-zu-Ende-Verschlüsselung nutzt, denn Freunde lesen sie in einem gewöhnlichen Browser.
 - Die Seite zeigt nie die E-Mail-Adresse von jemandem und auch nicht, ob jemand die App nutzt. Deine Zahlungsdaten sieht nur, wer dir Geld zahlt.
 - Ist der Link durchgesickert, nutze **Link zurücksetzen** oder schalte **Zugriff über den Gastlink** aus.
+
+## Offline
+
+Gruppen brauchen eine Verbindung zum Server. Solange die App ihn nicht erreicht, weist ein Hinweis darauf hin und alle Schaltflächen, die etwas ändern (neue Gruppe, Beitreten, Ausgabe hinzufügen, Ausgleichen, Mitglieder usw.), sind deaktiviert. Lesen kannst du weiterhin, was schon angezeigt wird. Sobald die Verbindung zurück ist, wird alles von selbst wieder freigeschaltet.

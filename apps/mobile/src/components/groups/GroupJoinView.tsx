@@ -21,6 +21,7 @@ import {
 } from '@/features/groups/groupJoin';
 import { useGroupJoinPreview } from '@/features/groups/useGroupJoinPreview';
 import { GroupButton } from './GroupButton';
+import { GroupOfflineBanner } from './GroupOfflineBanner';
 
 /**
  * Join a group from a pasted `/g/<token>` link (or a `?t=` link the router passes in as
@@ -109,6 +110,7 @@ export function GroupJoinView({
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen style={styles.scroll} contentContainerStyle={styles.content}>
+        <GroupOfflineBanner />
         <Text style={styles.label}>{t('groups.joinLinkLabel')}</Text>
         <TextInput
           style={styles.input}
@@ -191,6 +193,7 @@ export function GroupJoinView({
               label={t('groups.joinButton')}
               onPress={submit}
               loading={submitting}
+              write
               disabled={!canSubmitJoin(selection, name, preview)}
               style={styles.submit}
             />

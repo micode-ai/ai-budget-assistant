@@ -12,6 +12,7 @@ import { findCurrentTransfer, findMember, memberName } from '@/features/groups/g
 import { SETTLE_METHODS, buildGroupPayLink } from '@/features/groups/groupPay';
 import type { SettleMethod } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
+import { GroupOfflineBanner } from './GroupOfflineBanner';
 import { GroupErrorState } from './GroupErrorState';
 
 interface GroupSettleViewProps {
@@ -106,6 +107,7 @@ export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewPr
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
+        <GroupOfflineBanner />
         <View style={styles.card}>
           <Text style={styles.names}>
             {t('groups.transferRow', {
@@ -161,6 +163,7 @@ export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewPr
           label={iPay ? t('groups.settleConfirmPaid') : t('groups.settleConfirmReceived')}
           onPress={confirm}
           loading={submitting}
+          write
           style={styles.confirm}
         />
       </ScrollView>

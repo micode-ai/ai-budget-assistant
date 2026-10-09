@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
+import { useConnectivity } from '@/hooks/useConnectivity';
 import { fromDateInputValue } from '@/utils/dateInput';
 import { canModifyExpense, canVoidSettlement, memberName } from '@/features/groups/groupDisplay';
 import type { ActivityDay, ActivityTableRow } from '@/features/groups/groupActivityTable';
@@ -57,6 +58,7 @@ export function GroupActivityTable({
   onVoidSettlement,
 }: Props) {
   const { t } = useTranslation();
+  const { isOffline } = useConnectivity();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
@@ -182,10 +184,12 @@ export function GroupActivityTable({
           {voidable && (
             <Pressable
               onPress={() => onVoidSettlement(s)}
+              disabled={isOffline}
+              accessibilityHint={isOffline ? t('groups.offlineBanner') : undefined}
               onFocus={() => setFocusedControlId(row.id)}
               onBlur={() => setFocusedControlId((cur) => (cur === row.id ? null : cur))}
               accessibilityRole="button"
-              style={{ opacity: revealed ? 1 : 0, paddingHorizontal: 6, paddingVertical: 4, borderRadius: 4 }}
+              style={{ opacity: revealed ? (isOffline ? 0.55 : 1) : 0, paddingHorizontal: 6, paddingVertical: 4, borderRadius: 4 }}
             >
               <Text style={styles.voidText}>{t('groups.voidPayment')}</Text>
             </Pressable>

@@ -17,6 +17,8 @@ import { GroupBalancesCard } from '../GroupBalancesCard';
 import { GroupErrorState } from '../GroupErrorState';
 import { GroupShareCard } from '../GroupShareCard';
 import { GroupTransfersCard } from '../GroupTransfersCard';
+import { GroupOfflineBanner } from '../GroupOfflineBanner';
+import { useConnectivity } from '@/hooks/useConnectivity';
 import { GroupActivityTable } from './GroupActivityTable';
 import { GroupDetailDialogs, type GroupDetailDialogState } from './GroupDetailDialogs';
 
@@ -41,6 +43,7 @@ interface Props {
  */
 export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
   const { t } = useTranslation();
+  const { isOffline } = useConnectivity();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
@@ -150,8 +153,10 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
           {writable && (
             <Pressable
               onPress={() => setDialog({ kind: 'expense' })}
+              disabled={isOffline}
               accessibilityRole="button"
-              style={styles.primaryButton}
+              accessibilityHint={isOffline ? t('groups.offlineBanner') : undefined}
+              style={[styles.primaryButton, isOffline && { opacity: 0.55 }]}
             >
               <Ionicons name="add" size={18} color={theme.colors.textInverse} />
               <Text style={styles.primaryButtonText}>{t('groups.addExpense')}</Text>
@@ -174,6 +179,8 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
           </Pressable>
         </View>
       )}
+
+      <GroupOfflineBanner style={{ marginHorizontal: 24 }} />
 
       <ScrollView style={styles.pageScroll} contentContainerStyle={styles.pageContent}>
         <View style={styles.body}>

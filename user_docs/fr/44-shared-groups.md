@@ -101,3 +101,7 @@ Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une not
 - Les données du groupe **ne sont pas chiffrées de bout en bout**, même si vous utilisez le chiffrement de bout en bout pour vos propres données, car vos amis les lisent dans un navigateur ordinaire.
 - La page n'affiche jamais l'adresse e-mail de quiconque, ni le fait que quelqu'un utilise l'appli. Vos coordonnées de paiement ne sont visibles que par la personne qui vous paie.
 - Si le lien a fuité, utilisez **Réinitialiser le lien** ou désactivez **Accès par le lien invité**.
+
+## Hors ligne
+
+Les groupes nécessitent une connexion au serveur. Tant que l’app ne peut pas l’atteindre, un bandeau l’indique et les boutons qui modifient quelque chose (nouveau groupe, rejoindre, ajouter une dépense, régler, membres, etc.) sont désactivés. Vous pouvez toujours lire ce qui est déjà affiché. Tout se réactive tout seul dès le retour de la connexion.

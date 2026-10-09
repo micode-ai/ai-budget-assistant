@@ -1793,6 +1793,7 @@ export default {
     addExpense: 'Dodaj wydatek',
     membersAction: 'Członkowie',
     archivedBanner: 'Ta grupa jest zarchiwizowana i tylko do odczytu.',
+    offlineBanner: 'Jesteś offline. Grupy wymagają połączenia, więc zmiany są wstrzymane do czasu powrotu online.',
     youTag: 'Ty',
     expenseAddTitle: 'Dodaj wydatek',
     expenseEditTitle: 'Edytuj wydatek',

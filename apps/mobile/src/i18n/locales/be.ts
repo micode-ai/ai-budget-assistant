@@ -1777,6 +1777,7 @@ export default {
     addExpense: 'Дадаць выдатак',
     membersAction: 'Удзельнікі',
     archivedBanner: 'Гэтая група ў архіве і даступна толькі для чытання.',
+    offlineBanner: 'Вы афлайн. Групам патрэбна злучэнне, таму змены прыпынены, пакуль не з’явіцца сетка.',
     youTag: 'Вы',
     expenseAddTitle: 'Дадаць выдатак',
     expenseEditTitle: 'Змяніць выдатак',

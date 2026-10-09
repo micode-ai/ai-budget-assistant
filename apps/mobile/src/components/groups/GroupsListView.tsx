@@ -44,11 +44,13 @@ export function GroupsListView() {
       <GroupButton
         label={t('groups.newGroup')}
         onPress={() => router.push('/groups/new' as never)}
+        write
         style={styles.actionButton}
       />
       <GroupButton
         label={t('groups.joinWithLink')}
         onPress={() => router.push('/groups/join' as never)}
+        write
         variant="secondary"
         style={styles.actionButton}
       />

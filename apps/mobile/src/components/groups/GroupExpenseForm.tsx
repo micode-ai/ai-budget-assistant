@@ -12,6 +12,7 @@ import { showAlert } from '@/utils/alert';
 import { MAX_DESCRIPTION_LENGTH, type SplitIssue } from '@/features/groups/groupSplit';
 import type { GroupDetail, GroupExpense } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
+import { GroupOfflineBanner } from './GroupOfflineBanner';
 import { GroupSplitEditor } from './GroupSplitEditor';
 import type { GroupFormHandle, GroupFormState } from './groupFormHandle';
 
@@ -94,6 +95,7 @@ export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProp
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen style={styles.scroll} contentContainerStyle={styles.content}>
+        <GroupOfflineBanner />
         {!form.isEditing && (
           <GroupButton
             label={t('groups.scanReceipt')}
@@ -172,6 +174,7 @@ export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProp
             label={t('groups.saveExpense')}
             onPress={onSave}
             loading={form.submitting}
+            write
             disabled={!form.validity.ok}
             style={styles.save}
           />
@@ -181,6 +184,7 @@ export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProp
             label={t('groups.deleteExpense')}
             onPress={onDelete}
             variant="danger"
+            write
             disabled={form.submitting}
             style={styles.gap}
           />

@@ -1784,6 +1784,7 @@ export default {
     addExpense: 'Añadir gasto',
     membersAction: 'Miembros',
     archivedBanner: 'Este grupo está archivado y es de solo lectura.',
+    offlineBanner: 'Estás sin conexión. Los grupos necesitan conexión, así que los cambios están en pausa hasta que vuelvas a estar en línea.',
     youTag: 'Tú',
     expenseAddTitle: 'Añadir gasto',
     expenseEditTitle: 'Editar gasto',

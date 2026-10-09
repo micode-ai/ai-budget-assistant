@@ -101,3 +101,7 @@ Cuando otra persona añade un gasto o un pago, recibes una notificación: como m
 - Los datos del grupo **no están cifrados de extremo a extremo**, aunque uses el cifrado de extremo a extremo para tus propios datos, porque tus amigos los leen en un navegador normal.
 - La página nunca muestra el correo electrónico de nadie ni si alguien usa la app. Tus datos de pago solo los ve quien te está pagando.
 - Si el enlace se filtra, usa **Restablecer el enlace** o desactiva **Acceso por el enlace de invitados**.
+
+## Sin conexión
+
+Los grupos necesitan conexión con el servidor. Mientras la app no pueda alcanzarlo, un aviso lo indica y los botones que cambian algo (nuevo grupo, unirse, añadir gasto, saldar, miembros, etc.) quedan desactivados. Puedes seguir leyendo lo que ya está en pantalla. Todo se reactiva solo en cuanto vuelve la conexión.

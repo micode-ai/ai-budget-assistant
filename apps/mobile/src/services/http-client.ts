@@ -1,4 +1,5 @@
 import { secureStorage } from './secureStorage';
+import { reportApiFetchFailure, reportApiResponse } from './connectivity';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
 
@@ -102,7 +103,10 @@ export class HttpClient {
         ...fetchOptions,
         headers,
       });
+      reportApiResponse();
     } catch (e) {
+      // Only an offline CANDIDATE: connectivity confirms with a /health probe (ABA-648).
+      reportApiFetchFailure();
       throw e;
     }
 

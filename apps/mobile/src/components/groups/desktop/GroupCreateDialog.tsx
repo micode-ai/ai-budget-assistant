@@ -40,6 +40,7 @@ export function GroupCreateDialog({
           label={t('groups.createGroup')}
           onPress={() => void ref.current?.submit()}
           loading={state.submitting}
+          write
           disabled={!state.canSubmit}
           style={styles.footerButton}
         />

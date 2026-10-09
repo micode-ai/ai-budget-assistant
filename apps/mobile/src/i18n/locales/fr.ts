@@ -1784,6 +1784,7 @@ export default {
     addExpense: 'Ajouter une dépense',
     membersAction: 'Membres',
     archivedBanner: 'Ce groupe est archivé et en lecture seule.',
+    offlineBanner: 'Vous êtes hors ligne. Les groupes nécessitent une connexion : les modifications sont suspendues jusqu’au retour en ligne.',
     youTag: 'Vous',
     expenseAddTitle: 'Ajouter une dépense',
     expenseEditTitle: 'Modifier la dépense',

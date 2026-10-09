@@ -101,3 +101,7 @@ Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyż
 - Dane grupy **nie są szyfrowane end-to-end**, nawet jeśli używasz szyfrowania end-to-end dla swoich danych, bo znajomi czytają je w zwykłej przeglądarce.
 - Strona nigdy nie pokazuje niczyjego adresu e-mail ani tego, czy ktoś korzysta z aplikacji. Twoje dane do płatności widzi tylko osoba, która Ci płaci.
 - Jeśli link wycieknie, użyj **Zresetuj link** albo wyłącz **Dostęp przez link dla gości**.
+
+## Tryb offline
+
+Grupy wymagają połączenia z serwerem. Dopóki aplikacja nie może się z nim połączyć, widać o tym informację, a przyciski zmieniające dane (nowa grupa, dołączenie, dodanie wydatku, rozliczenie, członkowie itp.) są wyłączone. To, co już jest na ekranie, nadal możesz czytać. Wszystko odblokuje się samo, gdy tylko wróci połączenie.

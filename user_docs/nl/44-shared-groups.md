@@ -101,3 +101,7 @@ Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hoo
 - Groepsgegevens zijn **niet end-to-end versleuteld**, ook niet als je end-to-end-versleuteling voor je eigen gegevens gebruikt, omdat vrienden ze in een gewone browser lezen.
 - De pagina toont nooit iemands e-mailadres en ook niet of iemand de app gebruikt. Jouw betaalgegevens ziet alleen degene die jou betaalt.
 - Is de link uitgelekt, gebruik dan **Link opnieuw instellen** of zet **Toegang via de gastlink** uit.
+
+## Offline
+
+Groepen hebben een verbinding met de server nodig. Zolang de app die niet kan bereiken, meldt een balk dat en zijn de knoppen die iets wijzigen (nieuwe groep, deelnemen, uitgave toevoegen, afrekenen, leden enzovoort) uitgeschakeld. Wat al op het scherm staat, kun je gewoon lezen. Zodra de verbinding terug is, wordt alles vanzelf weer actief.

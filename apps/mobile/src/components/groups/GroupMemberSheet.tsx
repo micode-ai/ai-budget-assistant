@@ -87,6 +87,7 @@ export function GroupMemberSheet({
             label={t('common.save')}
             onPress={save}
             loading={saving}
+            write
             disabled={!changed}
             style={styles.gap}
           />
@@ -97,6 +98,7 @@ export function GroupMemberSheet({
           label={removeLabel}
           onPress={() => onRemove(member)}
           variant="danger"
+          write
           style={styles.gap}
         />
       )}

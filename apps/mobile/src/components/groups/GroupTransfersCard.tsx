@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useStyles, type Theme } from '@/theme';
+import { useConnectivity } from '@/hooks/useConnectivity';
 import { memberName } from '@/features/groups/groupDisplay';
 import type { GroupDetail, GroupTransfer } from '@budget/shared-types';
 
@@ -16,6 +17,7 @@ interface GroupTransfersCardProps {
 export function GroupTransfersCard({ detail, canSettle, onSettle }: GroupTransfersCardProps) {
   const { t } = useTranslation();
   const styles = useStyles(createStyles);
+  const { isOffline } = useConnectivity();
 
   return (
     <View style={styles.card}>
@@ -40,7 +42,13 @@ export function GroupTransfersCard({ detail, canSettle, onSettle }: GroupTransfe
                   <Text style={styles.amount}>{formatCurrency(transfer.amount, detail.currencyCode)}</Text>
                 </View>
                 {involvesMe && canSettle && (
-                  <TouchableOpacity style={styles.settleButton} onPress={() => onSettle(transfer)}>
+                  <TouchableOpacity
+                    style={[styles.settleButton, isOffline && { opacity: 0.55 }]}
+                    onPress={() => onSettle(transfer)}
+                    disabled={isOffline}
+                    accessibilityState={{ disabled: isOffline }}
+                    accessibilityHint={isOffline ? t('groups.offlineBanner') : undefined}
+                  >
                     <Text style={styles.settleText}>{t('groups.settleButton')}</Text>
                   </TouchableOpacity>
                 )}

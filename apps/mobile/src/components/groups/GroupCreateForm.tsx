@@ -13,6 +13,7 @@ import { showAlert } from '@/utils/alert';
 import { buildCreateGroupDto, MAX_INITIAL_MEMBER_NAMES } from '@/features/groups/groupCreate';
 import { MAX_GROUP_NAME_LENGTH, MAX_MEMBER_NAME_LENGTH } from '@/features/groups/groupSplit';
 import { GroupButton } from './GroupButton';
+import { GroupOfflineBanner } from './GroupOfflineBanner';
 import type { GroupFormHandle, GroupFormState } from './groupFormHandle';
 
 interface GroupCreateFormProps {
@@ -78,6 +79,7 @@ export const GroupCreateForm = forwardRef<GroupFormHandle, GroupCreateFormProps>
   return (
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <KeyboardAwareScreen style={styles.scroll} contentContainerStyle={styles.content}>
+        <GroupOfflineBanner />
         <Text style={styles.label}>{t('groups.nameLabel')}</Text>
         <TextInput
           style={styles.input}
@@ -164,6 +166,7 @@ export const GroupCreateForm = forwardRef<GroupFormHandle, GroupCreateFormProps>
             label={t('groups.createGroup')}
             onPress={handleCreate}
             loading={submitting}
+            write
             disabled={name.trim().length === 0}
             style={styles.submit}
           />

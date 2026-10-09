@@ -11,6 +11,8 @@ import { resolveNextFocusedRow } from '@/features/expenses/rowKeyboardNav';
 import { groupsTotalsByCurrency, sortGroupsForTable } from '@/features/groups/groupListTable';
 import { WIDE_TABLE_MIN_WIDTH } from '@/components/webLayout.constants';
 import { GroupButton } from '../GroupButton';
+import { GroupOfflineBanner } from '../GroupOfflineBanner';
+import { useConnectivity } from '@/hooks/useConnectivity';
 import { GroupErrorState } from '../GroupErrorState';
 import { GroupsDesktopDialogs, type GroupsDialog } from './GroupsDesktopDialogs';
 import type { GroupSummary } from '@budget/shared-types';
@@ -31,6 +33,7 @@ interface Props {
  */
 export function GroupsDesktop({ initialDialog, initialLink }: Props) {
   const { t } = useTranslation();
+  const { isOffline } = useConnectivity();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const { width } = useWindowDimensions();
@@ -134,11 +137,12 @@ export function GroupsDesktop({ initialDialog, initialLink }: Props) {
           <Text style={styles.emptyTitle}>{t('groups.listEmpty')}</Text>
           <Text style={styles.emptyHint}>{t('groups.listEmptyHint')}</Text>
           <View style={styles.emptyActions}>
-            <GroupButton label={t('groups.newGroup')} onPress={() => setDialog('new')} style={styles.emptyButton} />
+            <GroupButton label={t('groups.newGroup')} onPress={() => setDialog('new')} write style={styles.emptyButton} />
             <GroupButton
               label={t('groups.joinWithLink')}
               onPress={() => setDialog('join')}
               variant="secondary"
+              write
               style={styles.emptyButton}
             />
           </View>
@@ -173,12 +177,20 @@ export function GroupsDesktop({ initialDialog, initialLink }: Props) {
         <View style={styles.toolbarRight}>
           <Pressable
             onPress={() => setDialog('join')}
+            disabled={isOffline}
             accessibilityRole="button"
-            style={styles.secondaryButton}
+            accessibilityHint={isOffline ? t('groups.offlineBanner') : undefined}
+            style={[styles.secondaryButton, isOffline && { opacity: 0.55 }]}
           >
             <Text style={styles.secondaryButtonText}>{t('groups.joinWithLink')}</Text>
           </Pressable>
-          <Pressable onPress={() => setDialog('new')} accessibilityRole="button" style={styles.primaryButton}>
+          <Pressable
+            onPress={() => setDialog('new')}
+            disabled={isOffline}
+            accessibilityRole="button"
+            accessibilityHint={isOffline ? t('groups.offlineBanner') : undefined}
+            style={[styles.primaryButton, isOffline && { opacity: 0.55 }]}
+          >
             <Ionicons name="add" size={18} color={theme.colors.textInverse} />
             <Text style={styles.primaryButtonText}>{t('groups.newGroup')}</Text>
           </Pressable>
@@ -194,6 +206,8 @@ export function GroupsDesktop({ initialDialog, initialLink }: Props) {
           </Pressable>
         </View>
       )}
+
+      <GroupOfflineBanner style={{ marginHorizontal: 24 }} />
 
       <ScrollView style={styles.pageScroll} contentContainerStyle={styles.pageContent}>
         {/* Never blend currencies, and never draw a total before the list has answered. */}

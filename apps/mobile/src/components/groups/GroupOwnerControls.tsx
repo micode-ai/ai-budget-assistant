@@ -47,6 +47,7 @@ export function GroupOwnerControls({
             label={t('groups.rotateLink')}
             onPress={actions.confirmRotate}
             variant="secondary"
+            write
             disabled={actions.busy}
             style={styles.gap}
           />
@@ -54,6 +55,7 @@ export function GroupOwnerControls({
             label={t('groups.archiveGroup')}
             onPress={actions.confirmArchive}
             variant="secondary"
+            write
             disabled={actions.busy}
             style={styles.gap}
           />
@@ -63,6 +65,7 @@ export function GroupOwnerControls({
         label={t('groups.deleteGroup')}
         onPress={actions.confirmDelete}
         variant="danger"
+        write
         disabled={actions.busy}
         style={styles.gap}
       />
