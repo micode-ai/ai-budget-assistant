@@ -49,6 +49,10 @@ Si alguien pierde a la vez los datos del navegador y su código de recuperación
 
 La página también sugiere la app en algunos momentos útiles —para recibir notificaciones, leer tickets en papel o recibir recordatorios—, pero nada en la página la exige.
 
+### Dividir un ticket línea por línea
+
+Cuando un ticket se ha añadido al grupo línea por línea, la página lo muestra durante una semana en **Dividir un ticket**. Ábrelo, marca lo que tomaste y toca **Guardar mis productos**. Una línea marcada por varias personas se reparte a partes iguales entre ellas, y lo que nadie marque se queda con quien pagó. Cada línea que marcaste muestra **tu parte**, y **Tu parte de este ticket** muestra el total. Una línea con **repartido por** y un nombre la repartió a mano quien pagó y no se puede cambiar aquí. Pasada una semana, o cuando quien pagó cierre el ticket, solo esa persona o el propietario del grupo pueden cambiar quién tomó qué. Mientras un ticket se sigue dividiendo, **Quién paga a quién** avisa de que los importes aún pueden cambiar. Un pago ya registrado se queda como está: si tu parte cambia después, simplemente vuelve a aparecer un saldo pequeño.
+
 ### Pasar del navegador a la app
 
 En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app del navegador** (o **Abrir en la app** en Android, si ya tiene la app instalada). Tras iniciar sesión o crear una cuenta, el grupo con todo su historial pasa a esa cuenta: no se pierde nada. Este enlace funciona una sola vez y solo durante unos minutos. Si primero instala la app desde Google Play, después debe volver a abrir el enlace del grupo en el navegador y tocar **Abrir en la app**.

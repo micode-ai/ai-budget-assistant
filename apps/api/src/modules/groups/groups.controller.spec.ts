@@ -46,6 +46,15 @@ describe('GroupsController throttling', () => {
     expect(Reflect.getMetadata('THROTTLER:TTLdefault', proto.resetClaim)).toBe(60000);
   });
 
+  it.each(['setMyClaims', 'setClaims', 'closeClaims'])('%s: throttled, member + active guards, not owner-only (ABA-655)', (name) => {
+    expect(guardsOf(proto[name])).toEqual([ThrottlerGuard, GroupMemberGuard, GroupActiveGuard]);
+    expect(Reflect.getMetadata('THROTTLER:LIMITdefault', proto[name])).toBeGreaterThan(0);
+  });
+
+  it('expenseItems is member-only and works on an archived group (a read)', () => {
+    expect(guardsOf(proto.expenseItems)).toEqual([GroupMemberGuard]);
+  });
+
   it('adopt: throttled, member and active guards, deliberately NOT owner-only (ABA-650)', () => {
     expect(guardsOf(proto.adopt)).toEqual([ThrottlerGuard, GroupMemberGuard, GroupActiveGuard]);
     expect(guardsOf(proto.adopt)).not.toContain(GroupOwnerGuard);

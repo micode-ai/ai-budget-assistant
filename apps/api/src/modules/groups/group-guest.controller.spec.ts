@@ -13,6 +13,7 @@ import {
   verifyCsrf,
 } from './group-guest.service';
 import { GroupsService, linkClaimBinding } from './groups.service';
+import { GroupItemsService } from './group-items.service';
 import { escapeHtml } from '../receipt-split/helpers/guest-page';
 
 const TOKEN = 'a'.repeat(32);
@@ -190,7 +191,7 @@ describe('GroupGuestController', () => {
       getAndDelete: jest.fn(),
     };
     groups = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any, { getRates: jest.fn() } as any);
-    svc = new GroupGuestService(prisma, cache, groups);
+    svc = new GroupGuestService(prisma, cache, groups, new GroupItemsService(prisma, groups, cache));
     controller = new GroupGuestController(svc);
   });
 
@@ -603,7 +604,7 @@ describe('GroupGuestController', () => {
       // A planted foreign share key is never read: only live members of this group are iterated.
       const spy2 = jest.spyOn(groups, 'createExpense').mockResolvedValue({} as any);
       await controller.addExpense(TOKEN, expenseBody({ 'inc_m-foreign': '1' }), mkReq() as any, mkRes());
-      const shares = spy2.mock.calls[0][2].shares.map((s) => s.memberId);
+      const shares = (spy2.mock.calls[0][2].shares ?? []).map((s) => s.memberId);
       expect(shares).toEqual([A, B]);
     });
 

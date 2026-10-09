@@ -62,10 +62,41 @@ export interface GroupExpense {
   fxRate: number | null;
   fxRateSource: GroupFxRateSource | null;
   fxRateAt: string | null;
+  /**
+   * ABA-655. True when the expense is divided by its line items: `shares` are then RESOLVED from the
+   * members' claims (receipt-split math, the payer keeps whatever nobody claimed) and stored as an
+   * exact split. Lines live behind `GET /groups/:id/expenses/:expenseId/items`.
+   */
+  itemized: boolean;
+  /** Basket-wide discount, in the entry currency (`originalCurrency` when set). Null when none or not itemised. */
+  discountAmount: number | null;
+  /** Until when every member may claim their own lines; null when not itemised. In the past = closed. */
+  claimsOpenUntil: string | null;
   deletedAt: string | null;
   deletedByMemberId: string | null;
   createdAt: string;
   updatedAt: string;
+}
+
+/** ABA-655: one member's claim on a line. `shareBp` null = an equal slice among the line's claimants. */
+export interface GroupItemClaimView {
+  memberId: string;
+  /** Explicit share in basis points (6000 = 60%); null = divided equally. Only the payer/creator/owner sets it. */
+  shareBp: number | null;
+}
+
+/** ABA-655: a line of an itemised group expense. Prices are in `GroupExpenseItemsView.itemCurrency`. */
+export interface GroupExpenseItemView {
+  id: string;
+  name: string;
+  /** Gross line price. */
+  totalPrice: number;
+  /** Amount off this line, or null. */
+  lineDiscount: number | null;
+  position: number;
+  claims: GroupItemClaimView[];
+  /** The caller's part of this line in `itemCurrency`, basket discount included; 0 when not claimed. */
+  myPart: number;
 }
 
 export interface GroupSettlement {

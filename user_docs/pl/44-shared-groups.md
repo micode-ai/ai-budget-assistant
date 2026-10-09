@@ -49,6 +49,10 @@ Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może d
 
 Strona w kilku przydatnych momentach poleca też aplikację — dla powiadomień, odczytywania papierowych paragonów czy przypomnień — ale nic na stronie jej nie wymaga.
 
+### Dzielenie paragonu pozycja po pozycji
+
+Gdy paragon został dodany do grupy pozycja po pozycji, strona przez tydzień pokazuje go w sekcji **Podziel paragon**. Otwórz go, zaznacz, co było Twoje, i stuknij **Zapisz moje pozycje**. Pozycja zaznaczona przez kilka osób dzieli się między nie po równo, a to, czego nikt nie zaznaczy, zostaje u osoby, która płaciła. Przy każdej zaznaczonej pozycji widać **Twoją część**, a **Twoja część tego paragonu** pokazuje sumę. Pozycja oznaczona jako **podzielone przez** z imieniem została podzielona ręcznie przez osobę, która płaciła, i nie można jej tu zmienić. Po tygodniu albo gdy osoba, która płaciła, zamknie paragon, tylko ona lub właściciel grupy mogą zmienić, kto co miał. Dopóki paragon jest dzielony, w sekcji **Kto komu płaci** widać uwagę, że kwoty mogą się jeszcze zmienić. Płatność, która już została zapisana, zostaje bez zmian: jeśli Twoja część zmieni się później, po prostu znów pojawi się niewielkie saldo.
+
 ### Przejście z przeglądarki do aplikacji
 
 W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**.

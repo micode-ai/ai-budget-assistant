@@ -7,6 +7,7 @@ import {
   IsInt,
   IsISO8601,
   IsNumber,
+  IsObject,
   IsOptional,
   IsPositive,
   IsString,
@@ -16,6 +17,7 @@ import {
   Max,
   MaxLength,
   Min,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
@@ -141,6 +143,30 @@ export class GroupExpenseShareInputDto {
   value?: number;
 }
 
+/** ABA-655: a line of an itemised expense, in the entry currency. Sums are checked in the service. */
+export class GroupExpenseItemInputDto {
+  /** Only on an edit: keeps that line (re-scoped to the expense in the service). */
+  @IsOptional()
+  @IsUUID()
+  id?: string;
+
+  @Transform(trim)
+  @IsString()
+  @Length(1, 120)
+  name: string;
+
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1_000_000)
+  totalPrice: number;
+
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1_000_000)
+  lineDiscount?: number;
+}
+
 export class CreateGroupExpenseDto implements ICreateGroupExpenseDto {
   @IsString()
   @Length(8, 64)
@@ -162,15 +188,34 @@ export class CreateGroupExpenseDto implements ICreateGroupExpenseDto {
   @IsUUID()
   paidByMemberId: string;
 
+  // Required unless the expense is itemised (ABA-655): its shares are resolved from claims.
+  @ValidateIf((o: CreateGroupExpenseDto) => o.items === undefined)
   @IsIn(SHARE_TYPES as unknown as string[])
-  splitType: (typeof SHARE_TYPES)[number];
+  splitType?: (typeof SHARE_TYPES)[number];
 
+  @ValidateIf((o: CreateGroupExpenseDto) => o.items === undefined)
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(20)
   @ValidateNested({ each: true })
   @Type(() => GroupExpenseShareInputDto)
-  shares: GroupExpenseShareInputDto[];
+  shares?: GroupExpenseShareInputDto[];
+
+  /** ABA-655: presence makes the expense itemised. At most 100 lines; claims open for 7 days. */
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @ValidateNested({ each: true })
+  @Type(() => GroupExpenseItemInputDto)
+  items?: GroupExpenseItemInputDto[];
+
+  /** ABA-655: basket-wide discount in the entry currency. Itemised expenses only. */
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1_000_000)
+  discountAmount?: number;
 
   /**
    * ABA-654: the currency `amount` is entered in. Default: the group currency. Another one is
@@ -235,6 +280,62 @@ export class UpdateGroupExpenseDto implements IUpdateGroupExpenseDto {
   @IsPositive()
   @Max(1_000_000)
   fxRate?: number;
+
+  /** ABA-655, itemised only: the full new line list (an `id` keeps a line and its claims). */
+  @IsOptional()
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @ValidateNested({ each: true })
+  @Type(() => GroupExpenseItemInputDto)
+  items?: GroupExpenseItemInputDto[];
+
+  /** ABA-655, itemised only; null clears it. */
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @Min(0)
+  @Max(1_000_000)
+  discountAmount?: number | null;
+}
+
+/** PUT /groups/:groupId/expenses/:expenseId/claims/me (ABA-655). Ids are re-scoped to the expense. */
+export class SetMyGroupClaimsDto {
+  @IsArray()
+  @ArrayMaxSize(100)
+  @IsUUID('all', { each: true })
+  itemIds: string[];
+}
+
+export class GroupClaimEntryDto {
+  @IsUUID()
+  memberId: string;
+
+  @IsArray()
+  @ArrayMaxSize(100)
+  @IsUUID('all', { each: true })
+  itemIds: string[];
+
+  /** Item id -> basis points. class-validator has no "record of bounded integers": the service checks it. */
+  @IsOptional()
+  @IsObject()
+  shareBp?: Record<string, number>;
+}
+
+/** PUT /groups/:groupId/expenses/:expenseId/claims (ABA-655): payer, creator or owner. */
+export class SetGroupClaimsDto {
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(50)
+  @ValidateNested({ each: true })
+  @Type(() => GroupClaimEntryDto)
+  claims: GroupClaimEntryDto[];
+}
+
+export class CloseGroupClaimsDto {
+  @IsOptional()
+  @IsBoolean()
+  reopen?: boolean;
 }
 
 export class CreateGroupSettlementDto implements ICreateGroupSettlementDto {

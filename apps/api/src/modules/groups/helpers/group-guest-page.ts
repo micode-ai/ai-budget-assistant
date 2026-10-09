@@ -81,6 +81,30 @@ export type GuestActivityView =
       targetName: string;
     };
 
+/** ABA-655: one open itemised receipt on the guest page. Lines and totals in `itemCurrency`. */
+export interface GuestClaimReceiptView {
+  id: string;
+  description: string;
+  /** Group currency. */
+  amount: number;
+  itemCurrency: string;
+  payerName: string;
+  /** YYYY-MM-DD, the last day members can claim. */
+  openUntil: string;
+  /** The viewer's total over their claimed lines. */
+  myTotal: number;
+  lines: {
+    id: string;
+    name: string;
+    price: number;
+    claimants: number;
+    /** Explicit shares set by the payer: shown read-only, never part of the form. */
+    handSplit: boolean;
+    mine: boolean;
+    myPart: number;
+  }[];
+}
+
 export interface GroupPageModel {
   token: string;
   lang: string;
@@ -105,6 +129,10 @@ export interface GroupPageModel {
   ledgerVersion: number;
   activity: GuestActivityView[];
   nextBefore: string | null;
+  /** ABA-655: open itemised receipts the viewer can claim lines on (at most 5). */
+  receipts: GuestClaimReceiptView[];
+  /** ABA-655: some receipt is still being divided, so the settle form warns that amounts may move. */
+  claimsOpen: boolean;
   /** Fresh idempotency nonce for this render's forms. */
   rid: string;
   flash: string | null;
@@ -173,6 +201,9 @@ const FLASH_KEYS: Record<string, GroupStrKey> = {
   badcode: 'msgBadCode',
   alreadyin: 'msgAlreadyIn',
   toomuch: 'msgTooMuch',
+  claimed: 'msgClaimed',
+  claimsclosed: 'msgClaimsClosed',
+  busy: 'msgBusy',
 };
 
 export const FLASH_CODES = [...Object.keys(FLASH_KEYS), 'archived'];
@@ -297,6 +328,35 @@ function renderExpenseForm(m: GroupPageModel, s: GroupGuestStrings): string {
   return `<div class="card"><h2>${escapeHtml(s.t('addHeading'))}</h2><form method="post" action="${escapeHtml(actionUrl(m, '/expenses'))}">${csrfField(m)}<input type="hidden" name="rid" value="${escapeHtml(m.rid)}"><label for="d">${escapeHtml(s.t('descLabel'))}</label><input id="d" type="text" name="description" maxlength="120" required><label for="a">${escapeHtml(s.t('amountPlainLabel'))}</label><input id="a" type="number" name="amount" step="0.01" min="0.01" inputmode="decimal" required><label for="cur">${escapeHtml(s.t('currencyLabel'))}</label><select id="cur" name="currency">${currencies}</select><p class="muted">${escapeHtml(s.t('fxHint', m.currencyCode))}</p><label for="dt">${escapeHtml(s.t('dateLabel'))}</label><input id="dt" type="date" name="date" value="${escapeHtml(m.today)}"><label for="p">${escapeHtml(s.t('paidByLabel'))}</label><select id="p" name="paidBy">${payers}</select><label for="st">${escapeHtml(s.t('splitLabel'))}</label><select id="st" name="splitType"><option value="equal">${escapeHtml(s.t('splitEqual'))}</option><option value="exact">${escapeHtml(s.t('splitExact'))}</option></select><p class="muted">${escapeHtml(s.t('splitHint'))}</p>${memberRows}<button class="btn btn-main" type="submit">${escapeHtml(s.t('addButton'))}</button></form>${ctaCard(s, 'form')}</div>`;
 }
 
+/**
+ * ABA-655: one `<details>` per open itemised receipt, no script. Every rendered line carries a hidden
+ * `l_<id>` so the server can tell an unticked box (no `c_<id>`) from a line that was not on the page.
+ * A hand-split line (the payer set explicit shares) is shown read-only and carries neither key, so a
+ * guest submit can never touch it. Every item name goes through `escapeHtml`.
+ */
+function renderClaimReceipts(m: GroupPageModel, s: GroupGuestStrings): string {
+  if (!m.me || m.archived || m.receipts.length === 0) return '';
+  const blocks = m.receipts
+    .map((r) => {
+      const rows = r.lines
+        .map((l) => {
+          const label = `${escapeHtml(l.name)} <span class="muted">${escapeHtml(formatAmount(l.price, r.itemCurrency))}${
+            l.claimants > 1 ? ` · ${escapeHtml(s.t('claimsSharedWith', l.claimants))}` : ''
+          }${l.mine ? ` · ${escapeHtml(s.t('claimsYourPart', formatAmount(l.myPart, r.itemCurrency)))}` : ''}</span>`;
+          if (l.handSplit) {
+            return `<div class="pick"><span>${label} <span class="tag">${escapeHtml(s.t('claimsHandSplit', r.payerName))}</span></span></div>`;
+          }
+          const id = escapeHtml(l.id);
+          return `<div class="pick"><input type="hidden" name="l_${id}" value="1"><input type="checkbox" id="c-${id}" name="c_${id}" value="1"${l.mine ? ' checked' : ''}><label for="c-${id}" style="margin:0;color:inherit;font-size:14px;flex:1">${label}</label></div>`;
+        })
+        .join('');
+      const summary = s.t('claimsSummary', r.description, formatAmount(r.amount, m.currencyCode), r.openUntil);
+      return `<details><summary>${escapeHtml(summary)}</summary><form method="post" action="${escapeHtml(actionUrl(m, `/expenses/${encodeURIComponent(r.id)}/claims`))}">${csrfField(m)}<p class="muted">${escapeHtml(s.t('claimsHint', r.payerName))}</p>${rows}<p class="muted">${escapeHtml(s.t('claimsYourTotal', formatAmount(r.myTotal, r.itemCurrency)))}</p><button class="btn btn-main" type="submit">${escapeHtml(s.t('claimsSaveButton'))}</button></form></details>`;
+    })
+    .join('');
+  return `<div class="card"><h2>${escapeHtml(s.t('claimsHeading'))}</h2>${blocks}</div>`;
+}
+
 function renderPaymentForm(m: GroupPageModel, s: GroupGuestStrings): string {
   const cur = m.me?.paymentMethod ?? '';
   const opt = (value: string, label: string) =>
@@ -340,7 +400,10 @@ export function renderGroupPage(m: GroupPageModel, s: GroupGuestStrings, cta: Ct
     picker,
     ctaAfter,
     `<div class="card"><h2>${escapeHtml(s.t('balancesHeading'))}</h2>${renderBalances(m, s)}</div>`,
-    `<div class="card"><h2>${escapeHtml(s.t('transfersHeading'))}</h2>${renderTransfers(m, s)}</div>`,
+    `<div class="card"><h2>${escapeHtml(s.t('transfersHeading'))}</h2>${
+      m.claimsOpen ? `<p class="muted">${escapeHtml(s.t('settleClaimsOpenNote'))}</p>` : ''
+    }${renderTransfers(m, s)}</div>`,
+    renderClaimReceipts(m, s),
     writeBlocks,
     `<div class="card"><h2>${escapeHtml(s.t('historyHeading'))}</h2>${activityRows(m, s, !m.archived)}${
       m.nextBefore

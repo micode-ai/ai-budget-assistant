@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Query,
   Req,
   UseGuards,
@@ -16,10 +17,12 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { AuthenticatedRequest } from '../../common/types';
 import { GroupsService } from './groups.service';
 import { GroupOwnershipService } from './group-ownership.service';
+import { GroupItemsService } from './group-items.service';
 import { GroupActiveGuard, GroupMemberGuard, GroupOwnerGuard, type GroupRequest } from './guards';
 import {
   AddGroupMemberDto,
   ArchiveGroupDto,
+  CloseGroupClaimsDto,
   CreateGroupDto,
   CreateGroupExpenseDto,
   CreateGroupSettlementDto,
@@ -27,6 +30,8 @@ import {
   GroupFxPreviewQueryDto,
   JoinGroupDto,
   LinkGuestDto,
+  SetGroupClaimsDto,
+  SetMyGroupClaimsDto,
   TransferGroupOwnerDto,
   UpdateGroupDto,
   UpdateGroupExpenseDto,
@@ -41,6 +46,7 @@ export class GroupsController {
   constructor(
     private readonly service: GroupsService,
     private readonly ownership: GroupOwnershipService,
+    private readonly items: GroupItemsService,
   ) {}
 
   @Get()
@@ -192,6 +198,39 @@ export class GroupsController {
   @UseGuards(GroupMemberGuard, GroupActiveGuard)
   deleteExpense(@Req() req: GroupRequest, @Param('expenseId') expenseId: string) {
     return this.service.deleteExpense(req.groupId, req.groupMember.id, expenseId);
+  }
+
+  // ------------------------------------------------ line items + claims (ABA-655)
+  // The expense and every item/member id are re-scoped to the guard's group in GroupItemsService.
+
+  @Get(':groupId/expenses/:expenseId/items')
+  @UseGuards(GroupMemberGuard)
+  expenseItems(@Req() req: GroupRequest, @Param('expenseId') expenseId: string) {
+    return this.items.getItems(req.groupId, req.groupMember.id, expenseId);
+  }
+
+  // The caller's own lines. Open window: any live member; closed: payer, creator or owner only.
+  @Put(':groupId/expenses/:expenseId/claims/me')
+  @UseGuards(ThrottlerGuard, GroupMemberGuard, GroupActiveGuard)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  setMyClaims(@Req() req: GroupRequest, @Param('expenseId') expenseId: string, @Body() dto: SetMyGroupClaimsDto) {
+    return this.items.setMyClaims(req.groupId, req.groupMember.id, expenseId, dto.itemIds, { strict: true });
+  }
+
+  // Anyone's claims and shares: payer, creator or owner (checked in the service), at any time.
+  @Put(':groupId/expenses/:expenseId/claims')
+  @UseGuards(ThrottlerGuard, GroupMemberGuard, GroupActiveGuard)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  setClaims(@Req() req: GroupRequest, @Param('expenseId') expenseId: string, @Body() dto: SetGroupClaimsDto) {
+    return this.items.setClaims(req.groupId, req.groupMember.id, expenseId, dto.claims);
+  }
+
+  @Post(':groupId/expenses/:expenseId/claims/close')
+  @HttpCode(200)
+  @UseGuards(ThrottlerGuard, GroupMemberGuard, GroupActiveGuard)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  closeClaims(@Req() req: GroupRequest, @Param('expenseId') expenseId: string, @Body() dto: CloseGroupClaimsDto) {
+    return this.items.closeClaims(req.groupId, req.groupMember.id, expenseId, dto.reopen === true);
   }
 
   @Post(':groupId/settlements')

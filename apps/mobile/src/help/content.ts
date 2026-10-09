@@ -5125,6 +5125,10 @@ If someone loses both their browser data and their restore code, they can join a
 
 The page also suggests the app at a few useful moments — for notifications, reading paper receipts, or reminders — but nothing on the page requires it.
 
+### Dividing a receipt line by line
+
+When a receipt was added to the group line by line, the page shows it under **Divide a receipt** for a week. Open it, tick what you had and tap **Save my items**. A line ticked by several people is split equally between them, and whatever nobody ticks stays with the person who paid. Each line you ticked shows **your part**, and **Your part of this receipt** shows the total. A line marked **split by** and a name was divided by hand by the person who paid and can't be changed here. After a week, or once the person who paid closes the receipt, only they or the group owner can change who had what. While a receipt is still being divided, **Who pays whom** notes that amounts may still change. A payment that was already made stays as it is: if your part changes afterwards, a small balance simply shows up again.
+
 ### Moving from the browser to the app
 
 Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**.
@@ -10284,6 +10288,10 @@ OCR иногда неверно читает цену, выдумывает ст
 
 В нескольких уместных местах страница предлагает приложение — для уведомлений, чтения бумажных чеков или напоминаний, — но ничего на странице его не требует.
 
+### Деление чека по позициям
+
+Если чек добавлен в группу по позициям, страница неделю показывает его в разделе **Разделить чек**. Откройте его, отметьте, что было вашим, и нажмите **Сохранить мои позиции**. Позиция, отмеченная несколькими людьми, делится между ними поровну, а то, что никто не отметит, остаётся за тем, кто платил. У каждой отмеченной позиции видна **ваша часть**, а **Ваша часть этого чека** показывает сумму. Позицию с пометкой **разделено:** и именем разделил вручную тот, кто платил, здесь её изменить нельзя. Через неделю или когда тот, кто платил, закроет чек, менять, кому что досталось, могут только он или владелец группы. Пока чек делится, в разделе **Кто кому платит** есть пометка, что суммы ещё могут измениться. Уже записанный платёж остаётся как есть: если ваша часть потом изменится, просто снова появится небольшой остаток.
+
 ### Переход из браузера в приложение
 
 В разделе **Сохраните эту группу в приложении** друг может нажать **Продолжить в веб-версии приложения** (или **Открыть в приложении** на Android, если приложение уже установлено). После входа или регистрации группа со всей историей переходит в этот аккаунт — ничего не теряется. Эта ссылка срабатывает один раз и только несколько минут. Если он сначала установит приложение из Google Play, потом нужно снова открыть ссылку группы в браузере и нажать **Открыть в приложении**.
@@ -15413,6 +15421,10 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 У кількох доречних місцях сторінка пропонує застосунок — для сповіщень, читання паперових чеків чи нагадувань, — але ніщо на сторінці його не вимагає.
 
+### Поділ чека за позиціями
+
+Якщо чек додано до групи за позиціями, сторінка тиждень показує його в розділі **Розділити чек**. Відкрийте його, позначте, що було вашим, і натисніть **Зберегти мої позиції**. Позиція, яку позначили кілька людей, ділиться між ними порівну, а те, що ніхто не позначить, лишається за тим, хто платив. Біля кожної позначеної позиції видно **вашу частину**, а **Ваша частина цього чека** показує суму. Позицію з позначкою **розділено:** та ім’ям розділив уручну той, хто платив, тут її змінити не можна. Через тиждень або коли той, хто платив, закриє чек, змінювати, кому що дісталося, можуть лише він або власник групи. Поки чек ділиться, у розділі **Хто кому платить** є примітка, що суми ще можуть змінитися. Уже записаний платіж лишається як є: якщо ваша частина потім зміниться, просто знову з’явиться невеликий залишок.
+
 ### Перехід із браузера в застосунок
 
 У розділі **Збережіть цю групу в застосунку** друг може натиснути **Продовжити у веб-версії застосунку** (або **Відкрити в застосунку** на Android, якщо застосунок уже встановлено). Після входу чи реєстрації група з усією історією переходить у цей акаунт — нічого не втрачається. Це посилання спрацьовує один раз і лише кілька хвилин. Якщо він спершу встановить застосунок із Google Play, потім треба знову відкрити посилання групи в браузері й натиснути **Відкрити в застосунку**.
@@ -20527,6 +20539,10 @@ Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może d
 
 Strona w kilku przydatnych momentach poleca też aplikację — dla powiadomień, odczytywania papierowych paragonów czy przypomnień — ale nic na stronie jej nie wymaga.
 
+### Dzielenie paragonu pozycja po pozycji
+
+Gdy paragon został dodany do grupy pozycja po pozycji, strona przez tydzień pokazuje go w sekcji **Podziel paragon**. Otwórz go, zaznacz, co było Twoje, i stuknij **Zapisz moje pozycje**. Pozycja zaznaczona przez kilka osób dzieli się między nie po równo, a to, czego nikt nie zaznaczy, zostaje u osoby, która płaciła. Przy każdej zaznaczonej pozycji widać **Twoją część**, a **Twoja część tego paragonu** pokazuje sumę. Pozycja oznaczona jako **podzielone przez** z imieniem została podzielona ręcznie przez osobę, która płaciła, i nie można jej tu zmienić. Po tygodniu albo gdy osoba, która płaciła, zamknie paragon, tylko ona lub właściciel grupy mogą zmienić, kto co miał. Dopóki paragon jest dzielony, w sekcji **Kto komu płaci** widać uwagę, że kwoty mogą się jeszcze zmienić. Płatność, która już została zapisana, zostaje bez zmian: jeśli Twoja część zmieni się później, po prostu znów pojawi się niewielkie saldo.
+
 ### Przejście z przeglądarki do aplikacji
 
 W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**.
@@ -25616,6 +25632,10 @@ Wer sowohl die Browserdaten als auch den Wiederherstellungscode verliert, kann u
 
 Die Seite empfiehlt die App an einigen passenden Stellen — für Benachrichtigungen, das Lesen von Papierbelegen oder Erinnerungen —, aber nichts auf der Seite setzt sie voraus.
 
+### Einen Kassenbon Position für Position aufteilen
+
+Wenn ein Kassenbon Position für Position zur Gruppe hinzugefügt wurde, zeigt die Seite ihn eine Woche lang unter **Einen Kassenbon aufteilen**. Öffne ihn, hake an, was du hattest, und tippe auf **Meine Positionen speichern**. Eine Position, die mehrere ankreuzen, wird gleichmäßig unter ihnen geteilt; was niemand ankreuzt, bleibt bei der Person, die bezahlt hat. Bei jeder angehakten Position steht **dein Anteil**, und **Dein Anteil an diesem Bon** zeigt die Summe. Eine Position mit **aufgeteilt von** und einem Namen hat die Person, die bezahlt hat, von Hand aufgeteilt; sie lässt sich hier nicht ändern. Nach einer Woche, oder sobald die Person, die bezahlt hat, den Bon schließt, können nur noch sie oder der Gruppeninhaber ändern, wer was hatte. Solange ein Bon noch aufgeteilt wird, weist **Wer zahlt wem** darauf hin, dass sich Beträge noch ändern können. Eine bereits erfasste Zahlung bleibt, wie sie ist: Ändert sich dein Anteil danach, erscheint einfach wieder ein kleiner offener Betrag.
+
 ### Vom Browser in die App wechseln
 
 Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-App fortfahren** tippen (oder auf Android auf **In der App öffnen**, wenn die App schon installiert ist). Nach der Anmeldung oder Kontoerstellung wandert die Gruppe mit ihrem gesamten Verlauf in dieses Konto — es geht nichts verloren. Dieser Link funktioniert nur einmal und nur wenige Minuten lang. Wer die App zuerst aus Google Play installiert, öffnet danach den Gruppenlink erneut im Browser und tippt auf **In der App öffnen**.
@@ -30694,6 +30714,10 @@ Si alguien pierde a la vez los datos del navegador y su código de recuperación
 
 La página también sugiere la app en algunos momentos útiles —para recibir notificaciones, leer tickets en papel o recibir recordatorios—, pero nada en la página la exige.
 
+### Dividir un ticket línea por línea
+
+Cuando un ticket se ha añadido al grupo línea por línea, la página lo muestra durante una semana en **Dividir un ticket**. Ábrelo, marca lo que tomaste y toca **Guardar mis productos**. Una línea marcada por varias personas se reparte a partes iguales entre ellas, y lo que nadie marque se queda con quien pagó. Cada línea que marcaste muestra **tu parte**, y **Tu parte de este ticket** muestra el total. Una línea con **repartido por** y un nombre la repartió a mano quien pagó y no se puede cambiar aquí. Pasada una semana, o cuando quien pagó cierre el ticket, solo esa persona o el propietario del grupo pueden cambiar quién tomó qué. Mientras un ticket se sigue dividiendo, **Quién paga a quién** avisa de que los importes aún pueden cambiar. Un pago ya registrado se queda como está: si tu parte cambia después, simplemente vuelve a aparecer un saldo pequeño.
+
 ### Pasar del navegador a la app
 
 En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app del navegador** (o **Abrir en la app** en Android, si ya tiene la app instalada). Tras iniciar sesión o crear una cuenta, el grupo con todo su historial pasa a esa cuenta: no se pierde nada. Este enlace funciona una sola vez y solo durante unos minutos. Si primero instala la app desde Google Play, después debe volver a abrir el enlace del grupo en el navegador y tocar **Abrir en la app**.
@@ -35770,6 +35794,10 @@ Si quelqu'un perd à la fois les données de son navigateur et son code de resta
 
 La page suggère aussi l'appli à quelques moments utiles — pour les notifications, la lecture des tickets papier ou les rappels —, mais rien sur la page ne l'exige.
 
+### Partager un ticket ligne par ligne
+
+Quand un ticket a été ajouté au groupe ligne par ligne, la page l’affiche pendant une semaine sous **Partager un ticket**. Ouvrez-le, cochez ce que vous avez pris et touchez **Enregistrer mes articles**. Une ligne cochée par plusieurs personnes est partagée à parts égales entre elles, et ce que personne ne coche reste à la personne qui a payé. Chaque ligne cochée affiche **votre part**, et **Votre part de ce ticket** affiche le total. Une ligne marquée **réparti par** suivi d’un nom a été répartie à la main par la personne qui a payé et ne peut pas être modifiée ici. Après une semaine, ou dès que la personne qui a payé clôt le ticket, seule elle ou le propriétaire du groupe peut changer qui a pris quoi. Tant qu’un ticket est en cours de partage, **Qui paie qui** indique que les montants peuvent encore changer. Un paiement déjà enregistré reste tel quel : si votre part change ensuite, un petit solde réapparaît simplement.
+
 ### Passer du navigateur à l'appli
 
 Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**.
@@ -40809,6 +40837,10 @@ OCR часам няправільна чытае цану, выдумляе ра
 Калі чалавек страціў і даныя браўзера, і код аднаўлення, ён можа далучыцца зноў пад крыху іншым імем, або ўладальнік групы можа скінуць спасылку (гл. ніжэй), каб усе нанова выбралі свае імёны. Уладальнік можа вызваліць і толькі гэтае адно імя: гл. **Скінуць уваход гэтага чалавека** у раздзеле «Удзельнікі».
 
 У некалькіх дарэчных месцах старонка прапануе праграму — для паведамленняў, чытання папяровых чэкаў ці напамінаў, — але нішто на старонцы яе не патрабуе.
+
+### Падзел чэка па пазіцыях
+
+Калі чэк дададзены ў групу па пазіцыях, старонка тыдзень паказвае яго ў раздзеле **Падзяліць чэк**. Адкрыйце яго, адзначце, што было вашым, і націсніце **Захаваць мае пазіцыі**. Пазіцыя, якую адзначылі некалькі чалавек, дзеліцца паміж імі пароўну, а тое, што ніхто не адзначыць, застаецца за тым, хто плаціў. Ля кожнай адзначанай пазіцыі відаць **вашу частку**, а **Ваша частка гэтага чэка** паказвае суму. Пазіцыю з пазнакай **падзелена:** і імем падзяліў уручную той, хто плаціў, тут яе змяніць нельга. Праз тыдзень або калі той, хто плаціў, закрые чэк, змяняць, каму што дасталося, могуць толькі ён або ўладальнік групы. Пакуль чэк дзеліцца, у раздзеле **Хто каму плаціць** ёсць заўвага, што сумы яшчэ могуць змяніцца. Ужо запісаны плацёж застаецца як ёсць: калі ваша частка потым зменіцца, проста зноў з’явіцца невялікі астатак.
 
 ### Пераход з браўзера ў праграму
 
@@ -45975,6 +46007,10 @@ Daarna kunnen ze:
 Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest. De eigenaar kan ook alleen die ene naam vrijgeven: zie **Aanmelding van deze persoon resetten** onder Leden.
 
 Op een paar handige momenten raadt de pagina ook de app aan — voor meldingen, het lezen van papieren bonnen of herinneringen — maar niets op de pagina vereist hem.
+
+### Een bon regel voor regel verdelen
+
+Als een bon regel voor regel aan de groep is toegevoegd, toont de pagina hem een week lang onder **Een bon verdelen**. Open hem, vink aan wat jij had en tik op **Mijn items opslaan**. Een regel die meerdere mensen aanvinken, wordt gelijk tussen hen verdeeld, en wat niemand aanvinkt, blijft bij degene die betaalde. Elke regel die je aanvinkte toont **jouw deel**, en **Jouw deel van deze bon** toont het totaal. Een regel met **verdeeld door** en een naam is met de hand verdeeld door degene die betaalde en kan hier niet worden gewijzigd. Na een week, of zodra degene die betaalde de bon sluit, kunnen alleen die persoon of de eigenaar van de groep nog wijzigen wie wat had. Zolang een bon nog wordt verdeeld, meldt **Wie betaalt wie** dat bedragen nog kunnen veranderen. Een betaling die al is vastgelegd, blijft zoals ze is: verandert jouw deel daarna, dan verschijnt er gewoon weer een klein saldo.
 
 ### Van de browser naar de app
 

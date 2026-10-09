@@ -49,6 +49,10 @@ Wer sowohl die Browserdaten als auch den Wiederherstellungscode verliert, kann u
 
 Die Seite empfiehlt die App an einigen passenden Stellen — für Benachrichtigungen, das Lesen von Papierbelegen oder Erinnerungen —, aber nichts auf der Seite setzt sie voraus.
 
+### Einen Kassenbon Position für Position aufteilen
+
+Wenn ein Kassenbon Position für Position zur Gruppe hinzugefügt wurde, zeigt die Seite ihn eine Woche lang unter **Einen Kassenbon aufteilen**. Öffne ihn, hake an, was du hattest, und tippe auf **Meine Positionen speichern**. Eine Position, die mehrere ankreuzen, wird gleichmäßig unter ihnen geteilt; was niemand ankreuzt, bleibt bei der Person, die bezahlt hat. Bei jeder angehakten Position steht **dein Anteil**, und **Dein Anteil an diesem Bon** zeigt die Summe. Eine Position mit **aufgeteilt von** und einem Namen hat die Person, die bezahlt hat, von Hand aufgeteilt; sie lässt sich hier nicht ändern. Nach einer Woche, oder sobald die Person, die bezahlt hat, den Bon schließt, können nur noch sie oder der Gruppeninhaber ändern, wer was hatte. Solange ein Bon noch aufgeteilt wird, weist **Wer zahlt wem** darauf hin, dass sich Beträge noch ändern können. Eine bereits erfasste Zahlung bleibt, wie sie ist: Ändert sich dein Anteil danach, erscheint einfach wieder ein kleiner offener Betrag.
+
 ### Vom Browser in die App wechseln
 
 Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-App fortfahren** tippen (oder auf Android auf **In der App öffnen**, wenn die App schon installiert ist). Nach der Anmeldung oder Kontoerstellung wandert die Gruppe mit ihrem gesamten Verlauf in dieses Konto — es geht nichts verloren. Dieser Link funktioniert nur einmal und nur wenige Minuten lang. Wer die App zuerst aus Google Play installiert, öffnet danach den Gruppenlink erneut im Browser und tippt auf **In der App öffnen**.

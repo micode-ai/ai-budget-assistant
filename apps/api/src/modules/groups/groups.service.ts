@@ -7,7 +7,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { createHash, randomBytes } from 'crypto';
+import { createHash, randomBytes, randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
@@ -33,10 +33,20 @@ import {
   type FxRateSource,
 } from './group-fx';
 import {
+  claimWindowEnd,
+  computeItemizedShares,
+  isClaimsOpen,
+  validateItemLines,
+  type ClaimRow,
+  type ItemRow,
+  type LinesRejection,
+} from './group-items';
+import {
   AddGroupMemberDto,
   CreateGroupDto,
   CreateGroupExpenseDto,
   CreateGroupSettlementDto,
+  GroupExpenseItemInputDto,
   GroupExpenseShareInputDto,
   JoinGroupDto,
   UpdateGroupDto,
@@ -119,8 +129,8 @@ export class GroupsService {
     return randomBytes(16).toString('hex');
   }
 
-  /** The acting member, re-resolved from the DB. Never trust a bare id. */
-  private async resolveActor(groupId: string, memberId: string): Promise<Actor> {
+  /** The acting member, re-resolved from the DB. Never trust a bare id. Shared with GroupItemsService. */
+  async resolveActor(groupId: string, memberId: string): Promise<Actor> {
     const m = await this.prisma.expenseGroupMember.findFirst({
       where: { id: memberId, groupId, removedAt: null },
       select: { id: true, userId: true, group: { select: { ownerUserId: true } } },
@@ -130,9 +140,9 @@ export class GroupsService {
   }
 
   /** Re-resolves incoming member ids; every one must be a live member of THIS group. */
-  private async assertLiveMembers(groupId: string, ids: string[]): Promise<void> {
+  private async assertLiveMembers(groupId: string, ids: string[], db: any = this.prisma): Promise<void> {
     const unique = [...new Set(ids)];
-    const found = await this.prisma.expenseGroupMember.findMany({
+    const found = await db.expenseGroupMember.findMany({
       where: { id: { in: unique }, groupId, removedAt: null },
       select: { id: true },
     });
@@ -153,6 +163,9 @@ export class GroupsService {
           paidByMemberId: true,
           amount: true,
           date: true,
+          // ABA-655: only to tell whether a receipt is still being divided; the ledger never reads items.
+          itemized: true,
+          claimsOpenUntil: true,
           shares: { select: { memberId: true, shareAmount: true } },
         },
       }),
@@ -179,7 +192,12 @@ export class GroupsService {
       ledgerExpenses,
       ledgerSettlements,
     );
-    return { members, ledgerExpenses, ledger };
+    // ABA-655: an itemised expense still open for claims means the balances may still move.
+    const now = new Date();
+    const hasOpenItemClaims = expenses.some((e: any) =>
+      isClaimsOpen({ itemized: e.itemized === true, claimsOpenUntil: e.claimsOpenUntil ?? null }, now),
+    );
+    return { members, ledgerExpenses, ledger, hasOpenItemClaims };
   }
 
   private toMember(m: any): GroupMember {
@@ -218,6 +236,10 @@ export class GroupsService {
       fxRate: e.fxRate == null ? null : Number(e.fxRate),
       fxRateSource: e.fxRateSource ?? null,
       fxRateAt: e.fxRateAt ? new Date(e.fxRateAt).toISOString() : null,
+      // ABA-655: lines are fetched separately (GET .../items); the shares above are already resolved.
+      itemized: e.itemized === true,
+      discountAmount: e.discountAmount == null ? null : Number(e.discountAmount),
+      claimsOpenUntil: e.claimsOpenUntil ? new Date(e.claimsOpenUntil).toISOString() : null,
       deletedAt: e.deletedAt ? new Date(e.deletedAt).toISOString() : null,
       deletedByMemberId: e.deletedByMemberId ?? null,
       createdAt: new Date(e.createdAt).toISOString(),
@@ -240,9 +262,19 @@ export class GroupsService {
     };
   }
 
-  private async fireGroupActivityPush(groupId: string, groupName: string, actorMemberId: string): Promise<void> {
+  private async fireGroupActivityPush(
+    groupId: string,
+    groupName: string,
+    actorMemberId: string,
+    onlyMemberIds?: string[],
+  ): Promise<void> {
     const recipients = await this.prisma.expenseGroupMember.findMany({
-      where: { groupId, removedAt: null, userId: { not: null }, id: { not: actorMemberId } },
+      where: {
+        groupId,
+        removedAt: null,
+        userId: { not: null },
+        id: onlyMemberIds ? { in: onlyMemberIds.filter((id) => id !== actorMemberId) } : { not: actorMemberId },
+      },
       select: { userId: true },
     });
     for (const r of recipients) {
@@ -259,6 +291,19 @@ export class GroupsService {
     }
   }
 
+  /**
+   * ABA-655: the `group_activity` push to ONLY the given members (a claim change notifies the people
+   * whose share moved), still app users other than the actor, still coalesced per recipient.
+   */
+  notifyMembers(groupId: string, actorMemberId: string, memberIds: string[]): void {
+    const ids = memberIds.filter((id) => id !== actorMemberId);
+    if (ids.length === 0) return;
+    void this.prisma.expenseGroup
+      .findUnique({ where: { id: groupId }, select: { name: true } })
+      .then((g: { name: string } | null) => (g ? this.fireGroupActivityPush(groupId, g.name, actorMemberId, ids) : undefined))
+      .catch(logFireAndForget(this.logger, 'GroupsService.notifyMembers'));
+  }
+
   private notifyActivity(groupId: string, actorMemberId: string): void {
     void this.prisma.expenseGroup
       .findUnique({ where: { id: groupId }, select: { name: true } })
@@ -271,7 +316,7 @@ export class GroupsService {
   async getDetail(groupId: string, memberId: string): Promise<GroupDetail> {
     const group = await this.prisma.expenseGroup.findUnique({ where: { id: groupId } });
     if (!group) throw new NotFoundException('Group not found');
-    const { members, ledgerExpenses, ledger } = await this.loadState(groupId);
+    const { members, ledgerExpenses, ledger, hasOpenItemClaims } = await this.loadState(groupId);
     const me = members.find((m: any) => m.id === memberId);
     if (!me) throw new NotFoundException('Group not found');
     const ownerMember = members.find((m: any) => m.userId && m.userId === group.ownerUserId);
@@ -294,6 +339,8 @@ export class GroupsService {
       ledgerVersion: group.ledgerVersion,
       guestUrl: this.buildGuestUrl(group.guestToken),
       myShareThisMonth: myShareThisMonth(me.id, ledgerExpenses),
+      // ABA-655: the settle screens warn while a receipt is still being divided. Archived = frozen.
+      hasOpenItemClaims: group.status === 'active' && hasOpenItemClaims === true,
     };
   }
 
@@ -657,9 +704,36 @@ export class GroupsService {
     if (Math.abs(bal) > 0.005) {
       throw new ConflictException({ code: 'NONZERO_BALANCE', message: 'The balance must be settled before removing a member' });
     }
-    await this.prisma.expenseGroupMember.update({
-      where: { id: target.id },
-      data: { removedAt: new Date(), claimTokenHash: null, removedByOwner: !self },
+    // ABA-655 review H1: a member who still holds claims on a receipt that is open for claims cannot
+    // leave until those are released, or their stale claims would dilute the others' shares. The
+    // affected expenses' row locks are taken first (the same no-op update a claim change takes) and
+    // the check re-runs under them, so a concurrent claim change either commits before the check
+    // (and is seen) or runs after and finds the member gone. A removed member's claims are in any
+    // case treated as unclaimed by GroupItemsService, which is the safety net for the rest.
+    await this.prisma.$transaction(async (tx: any) => {
+      const openClaims = () =>
+        tx.groupExpense.findMany({
+          where: {
+            groupId,
+            deletedAt: null,
+            itemized: true,
+            claimsOpenUntil: { gt: new Date() },
+            items: { some: { claims: { some: { memberId: target.id } } } },
+          },
+          select: { id: true },
+        });
+      const first: { id: string }[] = (await openClaims()) ?? [];
+      for (const e of first) await tx.groupExpense.update({ where: { id: e.id }, data: { updatedAt: new Date() } });
+      if (first.length && ((await openClaims()) ?? []).length) {
+        throw new ConflictException({
+          code: 'MEMBER_HAS_OPEN_CLAIMS',
+          message: 'Release this member’s line claims on open receipts before removing them',
+        });
+      }
+      await tx.expenseGroupMember.update({
+        where: { id: target.id },
+        data: { removedAt: new Date(), claimTokenHash: null, removedByOwner: !self },
+      });
     });
   }
 
@@ -821,11 +895,18 @@ export class GroupsService {
     if (count >= MAX_EXPENSES) {
       throw new BadRequestException({ code: 'EXPENSE_LIMIT', message: `A group has at most ${MAX_EXPENSES} expenses` });
     }
-    await this.assertLiveMembers(groupId, [dto.paidByMemberId, ...dto.shares.map((s) => s.memberId)]);
+    if (dto.items !== undefined) return this.createItemizedExpense(groupId, actor.id, dto);
+    if (dto.discountAmount !== undefined) {
+      throw new BadRequestException({ code: 'EXPENSE_NOT_ITEMIZED', message: 'A discount needs line items' });
+    }
+    if (!dto.splitType || !dto.shares) throw new BadRequestException('splitType and shares are required');
+    const splitType = dto.splitType;
+    const shares = dto.shares;
+    await this.assertLiveMembers(groupId, [dto.paidByMemberId, ...shares.map((s) => s.memberId)]);
     const groupCurrency = await this.groupCurrencyOf(groupId);
     // `dto.amount` is in the ENTRY currency; the ledger stores the converted figure (ABA-654).
     const conv = await this.convertEntry(dto.amount, dto.currencyCode ?? groupCurrency, groupCurrency, dto.fxRate);
-    const resolved = this.resolveFxShares(conv.amount, conv.fx.originalAmount, dto.splitType, dto.shares);
+    const resolved = this.resolveFxShares(conv.amount, conv.fx.originalAmount, splitType, shares);
 
     try {
       await this.prisma.$transaction(async (tx: any) => {
@@ -837,7 +918,7 @@ export class GroupsService {
             ...conv.fx,
             date: toDateOnly(dto.date),
             paidByMemberId: dto.paidByMemberId,
-            splitType: dto.splitType,
+            splitType,
             createdByMemberId: actor.id,
             clientRequestId: dto.clientRequestId,
             shares: {
@@ -868,6 +949,10 @@ export class GroupsService {
     if (!expense) throw new NotFoundException('Expense not found');
     if (!actor.isOwner && expense.createdByMemberId !== actor.id && expense.paidByMemberId !== actor.id) {
       throw new ForbiddenException('Only the creator, the payer or the owner can edit this expense');
+    }
+    if (expense.itemized) return this.updateItemizedExpense(groupId, actor.id, expense, dto);
+    if (dto.items !== undefined || dto.discountAmount !== undefined) {
+      throw new BadRequestException({ code: 'EXPENSE_NOT_ITEMIZED', message: 'This expense has no line items' });
     }
 
     const splitType = dto.splitType ?? expense.splitType;
@@ -968,6 +1053,247 @@ export class GroupsService {
       await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
     });
     return this.getDetail(groupId, actor.id);
+  }
+
+  // ------------------------------------------------------- itemised (ABA-655)
+
+  private linesRejected(reason: LinesRejection): BadRequestException {
+    return new BadRequestException({
+      code: 'ITEMS_INVALID',
+      reason,
+      message: 'The line items do not fit the amount paid',
+    });
+  }
+
+  /**
+   * An itemised expense: lines (entry currency), no claims yet, so the payer holds the whole amount
+   * until people claim. Claims are open for CLAIM_WINDOW_DAYS. Stored as an exact split with the
+   * resolved shares, so the ledger reads it like any other expense.
+   */
+  private async createItemizedExpense(groupId: string, actorId: string, dto: CreateGroupExpenseDto): Promise<GroupDetail> {
+    if (dto.splitType !== undefined || dto.shares !== undefined) {
+      throw new BadRequestException({ code: 'EXPENSE_ITEMIZED', message: 'An itemised expense is split by its claims' });
+    }
+    const items = dto.items as GroupExpenseItemInputDto[];
+    if (items.some((i) => i.id !== undefined)) throw new BadRequestException('New lines carry no id');
+    await this.assertLiveMembers(groupId, [dto.paidByMemberId]);
+    const groupCurrency = await this.groupCurrencyOf(groupId);
+    const conv = await this.convertEntry(dto.amount, dto.currencyCode ?? groupCurrency, groupCurrency, dto.fxRate);
+    const billTotal = conv.fx.originalAmount ?? conv.amount;
+    const discountAmount = dto.discountAmount ? dto.discountAmount : null;
+    const bad = validateItemLines(items, billTotal, discountAmount);
+    if (bad) throw this.linesRejected(bad);
+
+    const rows: (ItemRow & { name: string; position: number })[] = items.map((i, position) => ({
+      id: randomUUID(),
+      name: i.name,
+      totalPrice: i.totalPrice,
+      lineDiscount: i.lineDiscount ? i.lineDiscount : null,
+      position,
+    }));
+    const shares = computeItemizedShares(
+      { amount: conv.amount, originalAmount: conv.fx.originalAmount, discountAmount, paidByMemberId: dto.paidByMemberId },
+      rows,
+      [],
+    );
+    const now = new Date();
+    try {
+      await this.prisma.$transaction(async (tx: any) => {
+        await tx.groupExpense.create({
+          data: {
+            groupId,
+            description: dto.description,
+            amount: conv.amount,
+            ...conv.fx,
+            date: toDateOnly(dto.date),
+            paidByMemberId: dto.paidByMemberId,
+            splitType: 'exact',
+            createdByMemberId: actorId,
+            clientRequestId: dto.clientRequestId,
+            itemized: true,
+            discountAmount,
+            claimsOpenUntil: claimWindowEnd(now),
+            items: {
+              create: rows.map((r) => ({
+                id: r.id,
+                name: r.name,
+                totalPrice: r.totalPrice,
+                lineDiscount: r.lineDiscount,
+                position: r.position,
+              })),
+            },
+            shares: {
+              create: shares.map((s) => ({ memberId: s.memberId, shareValue: s.shareValue, shareAmount: s.shareAmount })),
+            },
+          },
+        });
+        await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
+      });
+    } catch (e) {
+      if (isP2002(e)) return this.getDetail(groupId, actorId);
+      throw e;
+    }
+    this.notifyActivity(groupId, actorId);
+    return this.getDetail(groupId, actorId);
+  }
+
+  /** The figures, lines and payer of an itemised edit, derived from `expense` and its stored lines. */
+  private async planItemizedUpdate(groupId: string, expense: any, storedItems: any[], dto: UpdateGroupExpenseDto) {
+    const paidBy: string = dto.paidByMemberId ?? expense.paidByMemberId;
+    const groupCurrency = await this.groupCurrencyOf(groupId);
+    const stored = {
+      amount: Number(expense.amount),
+      originalAmount: expense.originalAmount == null ? null : Number(expense.originalAmount),
+      originalCurrency: expense.originalCurrency ?? null,
+      fxRate: expense.fxRate == null ? null : Number(expense.fxRate),
+    };
+    if (dto.currencyCode !== undefined) this.assertEntryCurrency(dto.currencyCode, groupCurrency);
+    const plan = planExpenseFxEdit(stored, groupCurrency, dto);
+    let amount: number;
+    let originalAmount: number | null;
+    let fxData: Record<string, unknown> = {};
+    if (plan.kind === 'keep') {
+      amount = stored.amount;
+      originalAmount = stored.originalCurrency ? stored.originalAmount : null;
+    } else if (plan.kind === 'reuse') {
+      const r = this.checked(
+        convertAtRate(plan.entryAmount, stored.originalCurrency as string, groupCurrency, stored.fxRate as number, 'provider', new Date()),
+      );
+      amount = r.amount;
+      originalAmount = r.fx.originalAmount;
+      fxData = { originalAmount };
+    } else {
+      const r =
+        plan.kind === 'group'
+          ? await this.convertEntry(plan.entryAmount, groupCurrency, groupCurrency)
+          : await this.convertEntry(plan.entryAmount, plan.currency, groupCurrency, plan.kind === 'manual' ? plan.rate : undefined);
+      amount = r.amount;
+      originalAmount = r.fx.originalAmount;
+      fxData = { ...r.fx };
+    }
+    const discountAmount =
+      dto.discountAmount !== undefined
+        ? dto.discountAmount || null
+        : expense.discountAmount == null
+          ? null
+          : Number(expense.discountAmount);
+
+    const storedIds = new Set<string>(storedItems.map((i) => i.id));
+    let next: (ItemRow & { name: string; position: number; isNew: boolean })[];
+    if (dto.items !== undefined) {
+      const seen = new Set<string>();
+      for (const i of dto.items) {
+        if (i.id === undefined) continue;
+        // Re-scoped: a line id from another expense (or group) is not this expense's line.
+        if (!storedIds.has(i.id) || seen.has(i.id)) throw new NotFoundException('Item not found');
+        seen.add(i.id);
+      }
+      next = dto.items.map((i, position) => ({
+        id: i.id ?? randomUUID(),
+        name: i.name,
+        totalPrice: i.totalPrice,
+        lineDiscount: i.lineDiscount ? i.lineDiscount : null,
+        position,
+        isNew: i.id === undefined,
+      }));
+    } else {
+      next = storedItems.map((i) => ({
+        id: i.id,
+        name: i.name,
+        totalPrice: Number(i.totalPrice),
+        lineDiscount: i.lineDiscount == null ? null : Number(i.lineDiscount),
+        position: i.position,
+        isNew: false,
+      }));
+    }
+    const bad = validateItemLines(next, originalAmount ?? amount, discountAmount);
+    if (bad) throw this.linesRejected(bad);
+    const keptIds = next.filter((i) => !i.isNew).map((i) => i.id);
+    const removedIds = [...storedIds].filter((id) => !keptIds.includes(id));
+    return { paidBy, amount, originalAmount, fxData, discountAmount, next, keptIds, removedIds };
+  }
+
+  /**
+   * Edits an itemised expense (creator, payer or owner: the caller checked). `splitType`/`shares` are
+   * refused: the shares are the claims' result. Figures follow the ABA-654 edit rule. `items` replaces
+   * the line list (an `id` keeps a line and its claims, a missing line is deleted and its claims go
+   * with it, which prunes stale claims in storage). The shares are re-derived from the claims inside
+   * the same transaction that bumps `ledgerVersion`, after taking the expense row's lock.
+   */
+  private async updateItemizedExpense(
+    groupId: string,
+    actorId: string,
+    expense: any,
+    dto: UpdateGroupExpenseDto,
+  ): Promise<GroupDetail> {
+    if (dto.splitType !== undefined || dto.shares !== undefined) {
+      throw new BadRequestException({ code: 'EXPENSE_ITEMIZED', message: 'An itemised expense is split by its claims' });
+    }
+    const paidBy = dto.paidByMemberId ?? expense.paidByMemberId;
+    if (dto.paidByMemberId !== undefined) await this.assertLiveMembers(groupId, [paidBy]);
+
+    // Planned once outside the transaction so a bad request fails before any lock is taken, then
+    // planned AGAIN from the row as it is under the lock (ABA-655 review M4).
+    const loadItems = (db: any): Promise<any[]> =>
+      db.groupExpenseItem.findMany({ where: { groupExpenseId: expense.id }, orderBy: { position: 'asc' } });
+    await this.planItemizedUpdate(groupId, expense, await loadItems(this.prisma), dto);
+
+
+    await this.prisma.$transaction(async (tx: any) => {
+      // The expense row's lock first, so a concurrent claim change serialises behind this edit.
+      await tx.groupExpense.update({ where: { id: expense.id }, data: { updatedAt: new Date() } });
+      // Re-read under the lock: a delete (or any edit) that committed while we waited must win. A
+      // deleted expense is a 404 here, never revived by this write, and the figures, lines and
+      // payer are all re-derived from this fresh row and its stored lines.
+      const fresh = await tx.groupExpense.findFirst({
+        where: { id: expense.id, groupId, deletedAt: null, itemized: true },
+      });
+      if (!fresh) throw new NotFoundException('Expense not found');
+      const { paidBy, amount, originalAmount, fxData, discountAmount, next, keptIds, removedIds } = await this.planItemizedUpdate(
+        groupId,
+        fresh,
+        await loadItems(tx),
+        dto,
+      );
+      if (dto.paidByMemberId !== undefined) await this.assertLiveMembers(groupId, [paidBy], tx);
+      if (removedIds.length) {
+        // Cascades the lines' claims: stale claims are pruned in storage, not only in the recompute.
+        await tx.groupExpenseItem.deleteMany({ where: { id: { in: removedIds }, groupExpenseId: expense.id } });
+      }
+      if (dto.items !== undefined) {
+        for (const i of next) {
+          const data = { name: i.name, totalPrice: i.totalPrice, lineDiscount: i.lineDiscount ?? null, position: i.position };
+          if (i.isNew) await tx.groupExpenseItem.create({ data: { id: i.id, groupExpenseId: expense.id, ...data } });
+          else await tx.groupExpenseItem.update({ where: { id: i.id }, data });
+        }
+      }
+      const claims: ClaimRow[] = keptIds.length
+        ? (await tx.groupItemClaim.findMany({ where: { itemId: { in: keptIds } } })).map((c: any) => ({
+            itemId: c.itemId,
+            memberId: c.memberId,
+            shareBp: c.shareBp ?? null,
+          }))
+        : [];
+      const shares = computeItemizedShares({ amount, originalAmount, discountAmount, paidByMemberId: paidBy }, next, claims);
+      await tx.groupExpenseShare.deleteMany({ where: { groupExpenseId: expense.id } });
+      await tx.groupExpense.update({
+        where: { id: expense.id },
+        data: {
+          description: dto.description ?? fresh.description,
+          amount,
+          ...fxData,
+          discountAmount,
+          date: dto.date ? toDateOnly(dto.date) : fresh.date,
+          paidByMemberId: paidBy,
+          shares: {
+            create: shares.map((s) => ({ memberId: s.memberId, shareValue: s.shareValue, shareAmount: s.shareAmount })),
+          },
+        },
+      });
+      await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
+    });
+    this.notifyActivity(groupId, actorId);
+    return this.getDetail(groupId, actorId);
   }
 
   // ------------------------------------------------------------ settlements

@@ -275,6 +275,24 @@ export class GroupGuestController {
     return this.guarded(token, req, res, body, (g, a) => this.svc.deleteExpense(g, a, expenseId));
   }
 
+  /**
+   * ABA-655: claim my lines of an open itemised receipt. The full guarded pipeline (usable group, not
+   * archived, cookie actor, CSRF, write ceiling) runs before anything; the lines are re-scoped to the
+   * expense and the group in GroupItemsService.
+   */
+  @Post(':token/expenses/:expenseId/claims')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  claimItems(
+    @Param('token') token: string,
+    @Param('expenseId') expenseId: string,
+    @Body() body: unknown,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    return this.guarded(token, req, res, body, (g, a, b) => this.svc.claimItems(g, a, expenseId, b));
+  }
+
   @Post(':token/settle')
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 10, ttl: 60000 } })

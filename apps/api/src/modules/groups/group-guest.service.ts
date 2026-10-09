@@ -15,8 +15,10 @@ import { GroupsService, linkClaimBinding, MAX_MEMBERS, MAX_SHARES } from './grou
 import { SETTLE_METHODS } from './dto';
 import { maxSettlementAmount } from './group-ledger';
 import { entryCurrencyOptions, isAllowedEntryCurrency } from './group-fx';
+import { GroupItemsService } from './group-items.service';
 import type {
   GuestActivityView,
+  GuestClaimReceiptView,
   GuestMemberView,
   GuestTransferView,
   GroupPageModel,
@@ -37,6 +39,10 @@ export const GUEST_PAGE_ACTIVITY = 50;
 
 const SECRET_RE = /^[a-f0-9]{32}$/;
 const RID_RE = /^[A-Za-z0-9_-]{8,64}$/;
+/** `l_<itemId>` (a line the form rendered) and `c_<itemId>` (a ticked line) on the guest claim form. */
+const CLAIM_KEY_RE = /^([lc])_([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/;
+/** Lines one claim form can name: MAX_ITEMS (100), with room for both key kinds. */
+const MAX_CLAIM_KEYS = 200;
 // eslint-disable-next-line no-control-regex -- stripping control characters is the point
 const CONTROL_CHARS = /[\u0000-\u001f\u007f]/g;
 const guestLinkBase = () => process.env.APP_PUBLIC_URL || 'https://api.ai-budget.pl';
@@ -142,6 +148,7 @@ export function flashFor(e: unknown): string {
   if (e instanceof ConflictException) {
     const code = (e.getResponse() as { code?: string })?.code;
     if (code === 'LEDGER_CHANGED') return 'changed';
+    if (code === 'CLAIMS_CLOSED') return 'claimsclosed';
     if (code === 'MEMBER_NAME_TAKEN') return 'nameclash';
     return 'invalid';
   }
@@ -153,7 +160,10 @@ export function flashFor(e: unknown): string {
     if (code === 'FX_RATE_UNAVAILABLE') return 'norate';
     return 'invalid';
   }
-  if (e instanceof HttpException) return 'invalid';
+  if (e instanceof HttpException) {
+    const st = e.getStatus();
+    return st === 429 || st === 503 ? 'busy' : 'invalid';
+  }
   throw e;
 }
 
@@ -165,6 +175,7 @@ export class GroupGuestService {
     private readonly prisma: PrismaService,
     private readonly cache: CacheService,
     private readonly groups: GroupsService,
+    private readonly items: GroupItemsService,
   ) {}
 
   // ----------------------------------------------------------- identity
@@ -238,7 +249,7 @@ export class GroupGuestService {
     actor: GuestActor | null,
     opts: { lang: string; flash: string | null; showAndroidAppButton: boolean; restoreCode: string | null; before?: string },
   ): Promise<GroupPageModel> {
-    const [state, allMembers, activity] = await Promise.all([
+    const [state, allMembers, activity, openReceipts] = await Promise.all([
       this.groups.loadState(group.id),
       this.prisma.expenseGroupMember.findMany({
         where: { groupId: group.id },
@@ -255,6 +266,8 @@ export class GroupGuestService {
       }),
       // guestView: only the event kinds a public page may show (never owner/claim events).
       this.groups.getActivity(group.id, opts.before, GUEST_PAGE_ACTIVITY, { guestView: true }),
+      // ABA-655: the open itemised receipts the viewer can claim lines on (never on an archived group).
+      actor && group.status === 'active' ? this.items.listOpenForGuest(group.id, actor.id) : Promise.resolve([]),
     ]);
 
     const names = new Map<string, string>(allMembers.map((m: any) => [m.id, m.displayName]));
@@ -348,6 +361,17 @@ export class GroupGuestService {
       }];
     });
 
+    const receipts: GuestClaimReceiptView[] = openReceipts.map((r) => ({
+      id: r.id,
+      description: r.description,
+      amount: r.amount,
+      itemCurrency: r.itemCurrency,
+      payerName: nameOf(r.paidByMemberId),
+      openUntil: r.claimsOpenUntil.slice(0, 10),
+      myTotal: r.myTotal,
+      lines: r.lines,
+    }));
+
     const meRow = actor ? byId.get(actor.id) : null;
     return {
       token: group.guestToken,
@@ -373,6 +397,9 @@ export class GroupGuestService {
       ledgerVersion: group.ledgerVersion,
       activity: items,
       nextBefore: activity.nextBefore,
+      receipts,
+      // ABA-655: the settle form warns while any receipt is still being divided.
+      claimsOpen: group.status === 'active' && state.hasOpenItemClaims === true,
       rid: randomBytes(8).toString('hex'),
       flash: opts.flash,
       showAndroidAppButton: opts.showAndroidAppButton,
@@ -468,6 +495,40 @@ export class GroupGuestService {
         currencyCode: currency,
       });
       return currency === group.currencyCode ? 'added' : 'addedfx';
+    } catch (e) {
+      return flashFor(e);
+    }
+  }
+
+  /**
+   * ABA-655: the guest claim form. The actor is the cookie member (never a form field). The `l_` keys
+   * say which lines the form rendered, so an unchecked box (no `c_` key) is told apart from a line
+   * that was not on the page; only rendered lines change. The ids are intersected with the expense's
+   * real lines in GroupItemsService (non-strict), so a planted or foreign id is ignored. Explicit
+   * shares stay as they are. Window rule as in the app: CLAIMS_CLOSED -> flash `claimsclosed`.
+   */
+  async claimItems(group: GuestGroup, actor: GuestActor, expenseId: string, body: Record<string, unknown>): Promise<string> {
+    if (typeof expenseId !== 'string' || !/^[0-9a-f-]{36}$/.test(expenseId)) return '';
+    const scope: string[] = [];
+    const checked: string[] = [];
+    let seen = 0;
+    for (const key of Object.keys(body)) {
+      const m = CLAIM_KEY_RE.exec(key);
+      if (!m) continue;
+      if (++seen > MAX_CLAIM_KEYS) return 'invalid';
+      (m[1] === 'l' ? scope : checked).push(m[2]);
+    }
+    if (scope.length === 0) return 'invalid';
+    const inScope = new Set(scope);
+    try {
+      await this.items.setMyClaims(
+        group.id,
+        actor.id,
+        expenseId,
+        checked.filter((id) => inScope.has(id)),
+        { scope, strict: false, skipHandSplit: true },
+      );
+      return 'claimed';
     } catch (e) {
       return flashFor(e);
     }

@@ -49,6 +49,10 @@ Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij 
 
 Op een paar handige momenten raadt de pagina ook de app aan — voor meldingen, het lezen van papieren bonnen of herinneringen — maar niets op de pagina vereist hem.
 
+### Een bon regel voor regel verdelen
+
+Als een bon regel voor regel aan de groep is toegevoegd, toont de pagina hem een week lang onder **Een bon verdelen**. Open hem, vink aan wat jij had en tik op **Mijn items opslaan**. Een regel die meerdere mensen aanvinken, wordt gelijk tussen hen verdeeld, en wat niemand aanvinkt, blijft bij degene die betaalde. Elke regel die je aanvinkte toont **jouw deel**, en **Jouw deel van deze bon** toont het totaal. Een regel met **verdeeld door** en een naam is met de hand verdeeld door degene die betaalde en kan hier niet worden gewijzigd. Na een week, of zodra degene die betaalde de bon sluit, kunnen alleen die persoon of de eigenaar van de groep nog wijzigen wie wat had. Zolang een bon nog wordt verdeeld, meldt **Wie betaalt wie** dat bedragen nog kunnen veranderen. Een betaling die al is vastgelegd, blijft zoals ze is: verandert jouw deel daarna, dan verschijnt er gewoon weer een klein saldo.
+
 ### Van de browser naar de app
 
 Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**.

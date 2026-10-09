@@ -49,6 +49,10 @@ If someone loses both their browser data and their restore code, they can join a
 
 The page also suggests the app at a few useful moments — for notifications, reading paper receipts, or reminders — but nothing on the page requires it.
 
+### Dividing a receipt line by line
+
+When a receipt was added to the group line by line, the page shows it under **Divide a receipt** for a week. Open it, tick what you had and tap **Save my items**. A line ticked by several people is split equally between them, and whatever nobody ticks stays with the person who paid. Each line you ticked shows **your part**, and **Your part of this receipt** shows the total. A line marked **split by** and a name was divided by hand by the person who paid and can't be changed here. After a week, or once the person who paid closes the receipt, only they or the group owner can change who had what. While a receipt is still being divided, **Who pays whom** notes that amounts may still change. A payment that was already made stays as it is: if your part changes afterwards, a small balance simply shows up again.
+
 ### Moving from the browser to the app
 
 Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**.

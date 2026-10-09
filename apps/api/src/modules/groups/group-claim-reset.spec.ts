@@ -1,5 +1,6 @@
 import { ConflictException, ExecutionContext, ForbiddenException, GoneException, NotFoundException } from '@nestjs/common';
 import { GroupsService } from './groups.service';
+import { GroupItemsService } from './group-items.service';
 import { GroupGuestService, sha256Hex } from './group-guest.service';
 import { GroupOwnerGuard } from './guards/group-owner.guard';
 
@@ -130,7 +131,7 @@ describe('Group claim reset (ABA-651)', () => {
       incrementWindow: jest.fn(async () => 1),
     };
     groups = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any, { getRates: jest.fn() } as any);
-    guest = new GroupGuestService(prisma, cache, groups);
+    guest = new GroupGuestService(prisma, cache, groups, new GroupItemsService(prisma, groups, cache));
   });
 
   const guestGroup = () => ({ id: G, guestToken: TOKEN, name: 'Flat', emoji: null, currencyCode: 'PLN', status: 'active', ledgerVersion: 4 }) as any;

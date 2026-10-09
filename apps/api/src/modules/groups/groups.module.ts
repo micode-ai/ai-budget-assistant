@@ -9,13 +9,14 @@ import { GroupOwnerGuard } from './guards/group-owner.guard';
 import { GroupActiveGuard } from './guards/group-active.guard';
 import { GroupOwnershipService } from './group-ownership.service';
 import { GroupReminderCron } from './group-reminder.cron';
+import { GroupItemsService } from './group-items.service';
 
 // PrismaService, CacheService and NotificationsService are @Global().
 @Module({
   // ABA-654: the existing singleton ExchangeRateService for write-time conversion; never a second one.
   imports: [CurrencyExchangeModule],
   controllers: [GroupsController, GroupGuestController],
-  providers: [GroupsService, GroupGuestService, GroupOwnershipService, GroupReminderCron, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
+  providers: [GroupsService, GroupItemsService, GroupGuestService, GroupOwnershipService, GroupReminderCron, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
   // GroupOwnershipService: UsersService / AdminService hand groups on before an account goes away.
   exports: [GroupsService, GroupOwnershipService],
 })

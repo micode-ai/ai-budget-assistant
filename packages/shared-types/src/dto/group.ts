@@ -3,6 +3,8 @@ import type {
   ExpenseGroupStatus,
   GroupBalance,
   GroupExpense,
+  GroupExpenseItemView,
+  GroupExpenseShare,
   GroupMember,
   GroupMemberEventView,
   GroupSettlement,
@@ -46,15 +48,30 @@ export interface GroupExpenseShareInputDto {
   value?: number;
 }
 
+/** ABA-655: one line of an itemised expense, in the entry currency. `id` only on an edit (keeps the line and its claims). */
+export interface GroupExpenseItemInputDto {
+  id?: string;
+  name: string;
+  totalPrice: number;
+  lineDiscount?: number;
+}
+
 export interface CreateGroupExpenseDto {
   clientRequestId: string;
   description: string;
+  /** What was paid, in the entry currency: the lines, minus discounts, plus anything that is not a line (a deposit). */
   amount: number;
   /** YYYY-MM-DD */
   date: string;
   paidByMemberId: string;
-  splitType: ShareType;
-  shares: GroupExpenseShareInputDto[];
+  /** Required unless `items` is sent (an itemised expense is resolved from claims). */
+  splitType?: ShareType;
+  /** Required unless `items` is sent. */
+  shares?: GroupExpenseShareInputDto[];
+  /** ABA-655: presence makes the expense itemised (1..100 lines). Claims open for 7 days; the payer keeps everything unclaimed. */
+  items?: GroupExpenseItemInputDto[];
+  /** ABA-655: basket-wide discount, entry currency; scales every claim by (lines - discount) / lines. */
+  discountAmount?: number;
   /** ABA-654: the currency `amount` is entered in; default the group's. Converted once, at write time. */
   currencyCode?: string;
   /** Manual override: the value of 1 `currencyCode` in the group currency. */
@@ -71,6 +88,69 @@ export interface UpdateGroupExpenseDto {
   /** ABA-654: a new currency fetches a new rate (or takes `fxRate`); a new amount alone reuses the stored rate. */
   currencyCode?: string;
   fxRate?: number;
+  /**
+   * ABA-655, itemised expenses only: the full new line list. A line with an `id` is kept (with its
+   * claims), one without is new, a missing one is deleted with its claims. `splitType`/`shares` are
+   * refused on an itemised expense (400 EXPENSE_ITEMIZED).
+   */
+  items?: GroupExpenseItemInputDto[];
+  /** ABA-655, itemised only; null clears it. */
+  discountAmount?: number | null;
+}
+
+/** PUT /groups/:groupId/expenses/:expenseId/claims/me (ABA-655): the caller's full set of claimed lines. */
+export interface SetMyGroupClaimsDto {
+  itemIds: string[];
+}
+
+/** One member's claims as set by the payer, creator or owner (ABA-655). */
+export interface GroupClaimEntryDto {
+  memberId: string;
+  /** The member's full set of claimed lines on this expense ([] removes every claim). */
+  itemIds: string[];
+  /**
+   * Explicit shares in basis points keyed by item id; only for lines in `itemIds`, whole numbers
+   * 0..10000, at most 10000 per line across members. Omitted = keep the member's stored shares on
+   * the lines they keep. Sent = the member's full map (a line absent from it divides equally).
+   */
+  shareBp?: Record<string, number>;
+}
+
+/** PUT /groups/:groupId/expenses/:expenseId/claims (ABA-655): payer, creator or owner, any time. */
+export interface SetGroupClaimsDto {
+  claims: GroupClaimEntryDto[];
+}
+
+/** POST /groups/:groupId/expenses/:expenseId/claims/close (ABA-655). `reopen` opens it for another 7 days. */
+export interface CloseGroupClaimsDto {
+  reopen?: boolean;
+}
+
+/** GET /groups/:groupId/expenses/:expenseId/items, and the answer of every claim write (ABA-655). */
+export interface GroupExpenseItemsView {
+  expenseId: string;
+  description: string;
+  groupCurrency: string;
+  /** The currency the lines and `discountAmount` are in: the expense's original currency, else the group's. */
+  itemCurrency: string;
+  /** Group currency. */
+  amount: number;
+  /** Entry currency; null when entered in the group currency. */
+  originalAmount: number | null;
+  discountAmount: number | null;
+  paidByMemberId: string;
+  createdByMemberId: string;
+  claimsOpenUntil: string | null;
+  /** Every live member may claim their own lines right now. */
+  claimsOpen: boolean;
+  /** The caller is the payer, creator or owner: may edit anyone's claims and shares, close and reopen. */
+  canManageClaims: boolean;
+  /** The caller may change their own claims now (open, or a manager), and the group is active. */
+  canClaim: boolean;
+  items: GroupExpenseItemView[];
+  /** The resolved per-member amounts, group currency (the same rows the balances use). */
+  shares: GroupExpenseShare[];
+  ledgerVersion: number;
 }
 
 export interface CreateGroupSettlementDto {
@@ -113,6 +193,11 @@ export interface GroupDetail {
   ledgerVersion: number;
   guestUrl: string;
   myShareThisMonth: number;
+  /**
+   * ABA-655: an itemised expense is still open for claims, so amounts may still change. The settle
+   * screens show a note while it is true. Always false on an archived group.
+   */
+  hasOpenItemClaims: boolean;
 }
 
 export type GroupActivityItem =

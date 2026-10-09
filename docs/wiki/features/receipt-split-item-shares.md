@@ -12,7 +12,10 @@ line without cancelling the split.
 ## Entry points
 
 - `apps/api/src/modules/receipt-split/split-calculator.ts` — `resolveItemSplit`,
-  `reassignSplitItem`, `allocateItemShares`
+  `reassignSplitItem`, `allocateItemShares`. Also imported by the shared-groups line claims
+  (`apps/api/src/modules/groups/group-items.ts`, ABA-655, [shared-groups](shared-groups.md)): a change
+  to the rounding, discount or bp rules here changes group shares too, and `group-items.spec.ts` pins
+  the parity.
 - `apps/mobile/src/components/split/itemAssignments.ts` — `toggleItemAssignment`,
   `itemIdsForParticipant`, `assigneeLabel`
 - `apps/mobile/src/components/split/itemShares.ts` — all per-line share arithmetic

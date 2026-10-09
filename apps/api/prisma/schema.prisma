@@ -2453,6 +2453,7 @@ model ExpenseGroupMember {
   shares          GroupExpenseShare[]
   settlementsFrom GroupSettlement[]   @relation("GroupSettlementFrom")
   settlementsTo   GroupSettlement[]   @relation("GroupSettlementTo")
+  itemClaims      GroupItemClaim[]
 
   @@unique([groupId, nameKey]) // names are the guest's only identity cue; no duplicates
   @@unique([groupId, userId]) // one member per app user per group (NULLs distinct → many guests)
@@ -2476,6 +2477,14 @@ model GroupExpense {
   fxRate            Decimal?  @map("fx_rate") @db.Decimal(18, 8) // 1 original = fxRate group currency
   fxRateSource      String?   @map("fx_rate_source") // provider | manual
   fxRateAt          DateTime? @map("fx_rate_at")
+  // ABA-655: line items + claims. An itemised expense stores splitType = exact with the shares
+  // RESOLVED from its claims (receipt-split math), so balances never learn about items. Lines and
+  // `discountAmount` are in the ENTRY currency (originalCurrency when set). Claims are open to every
+  // live member until `claimsOpenUntil` (creation + 7 days, or "now" once closed); after that only
+  // the payer, creator or owner changes them. NULL / false on every non-itemised row.
+  itemized          Boolean   @default(false)
+  discountAmount    Decimal?  @map("discount_amount") @db.Decimal(12, 2) // basket-wide discount
+  claimsOpenUntil   DateTime? @map("claims_open_until")
   // Idempotency: app = client UUID; guest = hidden `rid` nonce minted at form render.
   clientRequestId   String?   @map("client_request_id")
   deletedAt         DateTime? @map("deleted_at") // soft, shown in history, out of balances
@@ -2486,10 +2495,45 @@ model GroupExpense {
   group  ExpenseGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)
   paidBy ExpenseGroupMember  @relation("GroupExpensePayer", fields: [paidByMemberId], references: [id], onDelete: NoAction)
   shares GroupExpenseShare[]
+  items  GroupExpenseItem[]
 
   @@unique([groupId, clientRequestId])
   @@index([groupId, deletedAt, date])
   @@map("group_expenses")
+}
+
+// ABA-655: one line of an itemised group expense (at most 100). Prices are in the expense's entry
+// currency. Deleting a line cascades its claims, which is how stale claims are pruned in storage.
+model GroupExpenseItem {
+  id             String           @id @default(uuid())
+  groupExpenseId String           @map("group_expense_id")
+  name           String // 1..120
+  totalPrice     Decimal          @map("total_price") @db.Decimal(12, 2) // gross line price
+  lineDiscount   Decimal?         @map("line_discount") @db.Decimal(12, 2) // amount OFF this line
+  position       Int
+  createdAt      DateTime         @default(now()) @map("created_at")
+  expense        GroupExpense     @relation(fields: [groupExpenseId], references: [id], onDelete: Cascade)
+  claims         GroupItemClaim[]
+
+  @@index([groupExpenseId])
+  @@map("group_expense_items")
+}
+
+// ABA-655: a member's claim on a line. `shareBp` NULL = divide the line equally among its
+// claimants; set = an explicit share in basis points (receipt-split's `itemShareBp`, per line),
+// whatever is left of the line belongs to the payer. An explicit 0 is kept, never deleted.
+model GroupItemClaim {
+  id        String             @id @default(uuid())
+  itemId    String             @map("item_id")
+  memberId  String             @map("member_id")
+  shareBp   Int?               @map("share_bp")
+  createdAt DateTime           @default(now()) @map("created_at")
+  item      GroupExpenseItem   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  member    ExpenseGroupMember @relation(fields: [memberId], references: [id], onDelete: NoAction)
+
+  @@unique([itemId, memberId])
+  @@index([memberId])
+  @@map("group_item_claims")
 }
 
 model GroupExpenseShare {

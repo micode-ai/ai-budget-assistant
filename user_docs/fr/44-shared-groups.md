@@ -49,6 +49,10 @@ Si quelqu'un perd à la fois les données de son navigateur et son code de resta
 
 La page suggère aussi l'appli à quelques moments utiles — pour les notifications, la lecture des tickets papier ou les rappels —, mais rien sur la page ne l'exige.
 
+### Partager un ticket ligne par ligne
+
+Quand un ticket a été ajouté au groupe ligne par ligne, la page l’affiche pendant une semaine sous **Partager un ticket**. Ouvrez-le, cochez ce que vous avez pris et touchez **Enregistrer mes articles**. Une ligne cochée par plusieurs personnes est partagée à parts égales entre elles, et ce que personne ne coche reste à la personne qui a payé. Chaque ligne cochée affiche **votre part**, et **Votre part de ce ticket** affiche le total. Une ligne marquée **réparti par** suivi d’un nom a été répartie à la main par la personne qui a payé et ne peut pas être modifiée ici. Après une semaine, ou dès que la personne qui a payé clôt le ticket, seule elle ou le propriétaire du groupe peut changer qui a pris quoi. Tant qu’un ticket est en cours de partage, **Qui paie qui** indique que les montants peuvent encore changer. Un paiement déjà enregistré reste tel quel : si votre part change ensuite, un petit solde réapparaît simplement.
+
 ### Passer du navigateur à l'appli
 
 Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**.

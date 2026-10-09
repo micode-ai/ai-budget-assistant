@@ -22,6 +22,9 @@ API (`apps/api/src/modules/groups/`):
   write ceilings; delegates ledger writes to `GroupsService`, never re-implements them
 - `apps/api/src/modules/groups/group-ledger.ts` — pure math, no DI
 - `apps/api/src/modules/groups/group-fx.ts` — pure write-time currency conversion and the edit rule (ABA-654)
+- `apps/api/src/modules/groups/group-items.ts` and `apps/api/src/modules/groups/group-items.service.ts` — line
+  items and claims on an itemised expense: the claims-to-shares mapper over receipt-split's calculator, the
+  lock rule, the claim routes and the guest claim form's data (ABA-655)
 - `apps/api/src/modules/groups/group-reminder.cron.ts` and `apps/api/src/modules/groups/group-reminder.ts`
   — the daily balance reminder cron and its pure episode state machine (ABA-653)
 - `apps/api/src/modules/groups/group-ownership.service.ts` — ownership transfer, succession on an
@@ -47,7 +50,7 @@ Mobile:
 
 Migrations: `20261009000000_add_expense_groups`, `20261012000000_group_member_join_provenance`,
 `20261013000000_group_ownership_transfer`, `20261014000000_group_balance_reminders`,
-`20261015000000_group_expense_fx`. Design:
+`20261015000000_group_expense_fx`, `20261016000000_group_expense_items`. Design:
 [`docs/superpowers/specs/2026-10-08-shared-groups-design.md`](../../superpowers/specs/2026-10-08-shared-groups-design.md)
 — where it and the code differ, the code is right (the spec's `GET /g/:token/me/:secret` restore
 link and `Restrict` member FKs were both replaced in the security hardening).
@@ -247,6 +250,95 @@ written before the migration (no backfill needed). `amount = round2(originalAmou
   `30.00 EUR → 120.00 PLN`. CSRF, `Sec-Fetch-Site`, `Referrer-Policy: same-origin` and the write
   ceilings are unchanged. A guest who dislikes the rate deletes their own expense and re-enters it.
 - **Settlements** stay in the group currency; nothing about them changed.
+
+**Line items and claims (ABA-655).** An expense can be **itemised**: it carries its receipt lines
+(`GroupExpenseItem`: name, gross `totalPrice`, optional `lineDiscount`, `position`; at most 100) and an
+optional basket `discountAmount`, and each member claims the lines they had (`GroupItemClaim
+{itemId, memberId, shareBp?}`, unique per line and member). Phase-2 spec section G
+(`docs/superpowers/specs/2026-10-09-shared-groups-phase2-design.md`).
+- **The math is receipt-split's, imported, not copied.** `group-items.ts` calls `resolveItemSplit` and
+  `allocateItemShares` from `apps/api/src/modules/receipt-split/split-calculator.ts` (a pure file with no
+  imports, so there is no module cycle) with **every member who claims as a participant, the payer
+  included**. The payer's share = their own claims + `ownShare` (unclaimed lines, rounding, and anything that
+  is not a line, such as a deposit). A line claimed by several people divides equally; a line with an explicit
+  `shareBp` uses the numbers and the rest of it is the payer's (a claimant with no bp on a hand-split line takes
+  nothing, as in receipt-split); per-line discounts and the `(lines - discount) / lines` basket scaling come with
+  it. `validateItemLines` refuses lines that cannot fit what was paid (net lines minus the basket discount above
+  `amount`: 400 `ITEMS_INVALID`), `validateClaimShares` applies receipt-split's bp rules (whole numbers
+  0..10000, at most 10000 per line; 400 `CLAIM_SHARE_INVALID`).
+- **Materialised as ordinary shares.** The resolved per-member amounts are written as `GroupExpenseShare` rows
+  of an `exact` split (`itemized = true` on the expense; the trip `ShareType` enum is untouched), so
+  `loadState`, balances, reminders, the guest page and admin metrics never learn about items. With no claims
+  the payer holds the whole amount.
+- **Foreign currency (ABA-654).** Lines and `discountAmount` are in the entry currency; the split is computed
+  there against `originalAmount`, and the per-member results are converted with `resolveGroupShares(amount,
+  'shares', ...)` as weights, payer last, so the shares sum exactly to the stored group `amount`
+  (`toGroupCurrencyShares`). `shareValue` keeps the entry-currency figure.
+- **Writes.** `POST /groups/:id/expenses` with `items` (and no `splitType`/`shares`) creates an itemised
+  expense with `claimsOpenUntil = now + 7 days`. A claim change (`GroupItemsService.mutate`) runs in ONE
+  `$transaction` that first takes the expense row's lock (a no-op `update`), re-reads the expense inside it,
+  applies the lock rule, rewrites the claims (delete + recreate), re-derives the shares and, **only when they
+  moved**, rewrites them and bumps `ledgerVersion` (a no-op submit therefore does not stale anyone's settle
+  form). The `group_activity` push goes only to app users whose share moved (`notifyMembers`, still coalesced).
+  `PATCH` on an itemised expense refuses `splitType`/`shares` (400 `EXPENSE_ITEMIZED`), takes `items` as the
+  full new list (an `id` keeps a line and its claims; a missing line is deleted and its claims cascade, which
+  prunes stale claims in storage), follows the ABA-654 figure rule, and re-derives the shares the same way;
+  `items`/`discountAmount` on a non-itemised expense is 400 `EXPENSE_NOT_ITEMIZED`.
+- **The lock rule (user decision, 2026-10-09).** While `claimsOpenUntil` is in the future, **every live member
+  sets their own claims** (app `PUT .../claims/me`, or the guest form). After it, or once the payer, creator or
+  owner closes the receipt (`POST .../claims/close`, which sets `claimsOpenUntil = now`; `{reopen: true}` gives
+  another 7 days), a self-claim is 409 `CLAIMS_CLOSED` (guest flash `claimsclosed`). The **payer, creator and
+  owner** (`canManageClaims`) can set anyone's claims and bp at any time (`PUT .../claims`) and may self-claim
+  after the window too: exactly the authority they already have over the expense's shares. Archiving freezes
+  everything (`GroupActiveGuard` and the guest pipeline). Closing writes no ledger. **Why not receipt-split's
+  rule** (lock once anyone claimed or settled): on an ongoing ledger settlements are not tied to expenses, so
+  "anyone settled" is true almost at once and most people would never get to claim; "never lock" would let a
+  late visitor reshape co-claimants' shares months later. The window gives a predictable period in which the
+  bill is divided, after which it is as stable as any expense.
+  The creator of an expense paid by someone else may manage its claims (they are the one who framed it); every
+  member whose share moves as a result is notified by the usual coalesced push, and the activity trail still
+  names the creator, so this is accepted rather than restricted to the payer.
+- **Removed members and claim races (review H1/M1/M3/M4).** `removeMember` is 409 `MEMBER_HAS_OPEN_CLAIMS`
+  while the member holds claims on an itemised expense whose window is still open; it takes those expenses'
+  row locks and re-checks inside one transaction. Every claims read and write treats a member with `removedAt`
+  set as unclaimed (`dropRemovedClaims`), so stale claims never dilute or move shares and are pruned on the
+  next write; a claim transaction re-checks the actor's liveness after taking the lock. Claim changes are
+  limited to 10 per member per expense per hour (`grp:claim:{expenseId}:{memberId}`, app and guest, 429
+  `CLAIMS_BUSY`, fail closed with 503 on a Redis outage; guest flash `busy`). `closeClaims` and an itemised
+  edit take the expense row lock first; the edit re-reads the row `{id, groupId, deletedAt: null, itemized}`
+  under the lock and re-plans from it, so a concurrent delete is a 404 and is never revived.
+- **A claim change never re-validates or voids a settlement.** A settlement is money that moved (the MVP's rule
+  for expense edits); a share that shifts afterwards simply reopens a small balance, which the suggested
+  transfers then show. To make that visible, `loadState` returns `hasOpenItemClaims` and
+  `GroupDetail.hasOpenItemClaims` (false on an archived group) drives a "Some receipts are still being divided,
+  so amounts may still change" note on the settle surfaces; the guest page shows it in **Who pays whom**.
+- **App routes** (`groups.controller.ts`, all `JwtAuthGuard` + `GroupMemberGuard`; the expense, every item id and
+  every member id re-scoped `{id, groupId}` in `GroupItemsService`, members also `removedAt: null`):
+  `GET /groups/:groupId/expenses/:expenseId/items` -> `GroupExpenseItemsView` (lines with their claims, the
+  caller's `myPart` per line in `itemCurrency`, the resolved shares, `claimsOpen`, `canManageClaims`,
+  `canClaim`, `ledgerVersion`); `PUT .../claims/me {itemIds}` (full set; a foreign line id is 404);
+  `PUT .../claims {claims: [{memberId, itemIds, shareBp?}]}` (listed members replaced; `shareBp` omitted keeps
+  their stored bp on kept lines, sent is their full map); `POST .../claims/close {reopen?}`. The three writes add
+  `ThrottlerGuard` per route (30, 30 and 10 per minute) and `GroupActiveGuard`. Shared types:
+  `GroupExpenseItemView`, `GroupItemClaimView` (entities), `GroupExpenseItemsView`, `SetMyGroupClaimsDto`,
+  `SetGroupClaimsDto`, `GroupClaimEntryDto`, `CloseGroupClaimsDto`, `GroupExpenseItemInputDto` (dto);
+  `GroupExpense` gained `itemized`, `discountAmount`, `claimsOpenUntil`.
+- **Guest claim form.** For a cookie member on an active group, `buildPage` lists at most 5 open itemised
+  receipts (newest first; `listOpenForGuest` filters on `itemized` and the window in the query and again in
+  code), each a collapsed `<details>` with one row per line: name (`escapeHtml`), net price, "split N ways",
+  "your part", a checkbox `c_<itemId>` and a hidden `l_<itemId>=1` for **every rendered line**, so the server
+  tells "unticked" from "not shown". A hand-split line (any explicit bp) is rendered read-only with **neither
+  key**, and the server drops hand-split lines from a guest's scope too (`skipHandSplit`), so even a crafted
+  POST can never touch it. `POST /g/:token/expenses/:expenseId/claims` (`ThrottlerGuard`
+  10/min) goes through the full `guarded()` pipeline (usable group, not archived, cookie actor, CSRF, write
+  ceiling, in that order), parses only keys matching `^[lc]_<uuid>$` (at most 200), and calls
+  `setMyClaims(..., {scope: l-keys, strict: false})`: the ids are intersected with the expense's real lines, a
+  planted or foreign id is ignored, explicit bp on kept lines stays, newly ticked lines divide equally; 303 with
+  flash `claimed`. Guests claim equal shares only and never create itemised expenses. `Sec-Fetch-Site`,
+  `Referrer-Policy: same-origin` and the CSP are unchanged. 11 strings x 9 locales in
+  `group-guest-page-i18n.ts`.
+- **Dark for app clients until ABA-656.** No app screen creates itemised expenses or claims yet; the API returns
+  the new fields and the routes exist.
 
 **Members.** Removal is soft and requires a zero balance. The owner cannot leave while they own
 the group: they transfer it first (below), then leave like anyone else. A member the
@@ -451,6 +543,31 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
 - **The guest currency is a form field, so it is re-scoped to the allowed list on the server**, like any
   member id on that form. The rate provider is the existing `ExchangeRateService` singleton; do not
   provide a second instance or a second rate source.
+- **Item math is receipt-split's calculator, imported** (ABA-655). Do not copy `resolveItemSplit` or
+  `allocateItemShares` into the groups module: two copies of the discount scaling and remainder rules would
+  drift, and the parity test in `group-items.spec.ts` compares against the receipt-split function itself.
+- **The payer is a participant and the remainder is theirs.** Never invent a "payer row" or split the
+  unclaimed part among claimants: whatever nobody claims (and any non-line amount such as a deposit) stays with
+  the payer, and the shares sum to `amount` by construction (a subtraction in cents; for a converted expense,
+  payer last as the residual of the weights).
+- **Claims are materialised as ordinary `GroupExpenseShare` rows**, re-derived from ALL the expense's claims
+  inside the same `$transaction` that bumps `ledgerVersion`, after the expense row's lock. The ledger, reminders
+  and the guest balances must never read items; a second code path that sums claims would disagree with them.
+- **The lock rule: 7 days open to every live member for their own lines, then (or after the payer, creator or
+  owner closes it) only those three edit claims.** Do not lock on "someone settled" (receipt-split's rule): on
+  an ongoing ledger that is almost always true, so nobody could claim. Do not drop the window either: a late
+  visitor could then reshape co-claimants' shares months later.
+- **A claim change never re-validates or voids a settlement**; it may reopen a balance, and the settle surfaces
+  say so while `hasOpenItemClaims` is true. Auto-voiding would erase money that really moved.
+- **A removed member never holds a claim that counts** (H1): removal is refused while they hold claims on an open
+  receipt, and any leftover claim of a `removedAt` member is read as unclaimed everywhere. Do not "simplify" by
+  loading claims without that filter, and keep the expense lock before the liveness check in the claim transaction.
+- **Every claims write is under the expense row lock** (claim change, close/reopen, itemised edit, member removal),
+  and an itemised edit re-reads the row under it. A delete must never be undone by a racing edit.
+- **The guest claim form changes only the lines it rendered** (`l_` keys), only for the cookie actor, only lines
+  of that expense in that group (intersected, never trusted), and never a hand-split line or an explicit bp.
+- **No ledger write for a no-op**: a claim submit that leaves the shares unchanged does not bump
+  `ledgerVersion`, so an idle re-submit cannot make everyone's settle form fail with "Balances changed".
 
 ## Desktop
 
@@ -555,8 +672,14 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 
 ## Known gaps
 
-- **Line claims** (per-item splitting like receipt-split) are phase 2: a claim changes shares after
-  others may have settled against them, and the right lock rule for an ongoing ledger is open.
+- **Line claims (ABA-655) have no app UI yet**: the item editor, `GroupClaimsView` and the desktop claims
+  dialog are ABA-656. The server, the migration `20261016000000_group_expense_items` and the guest form are
+  unverified against real Postgres and in a browser (mocked Prisma and server-rendered-HTML tests only); the
+  concurrent-claim serialisation relies on the row lock and is not exercised by a test against a real database.
+  A removed member's claims stay as stored: a later re-derivation may move their (settled) share and leave a
+  small stray balance on a removed row, which `computeGroupLedger` keeps rather than drops. The group-delete
+  cascade now also runs through `group_item_claims.member_id` (`NO ACTION`), the same unverified class as the
+  shares.
 - **The group currency itself** is still changeable only while the group has no expenses (unchanged by
   ABA-654: changing it would need every stored conversion re-based).
 - **ABA-654 is unverified on a device, in a desktop browser and against real Postgres**: the currency
@@ -619,6 +742,11 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   stored; no read-time conversion), the edit rule, `FX_RATE_UNAVAILABLE`, `GET /groups/:id/fx-preview`,
   a currency chip and rate row in the app's expense form (phone and desktop dialog), two-figure activity
   rows, and a currency select on the guest page.
+- [ABA-655](https://github.com/micode-ai/ai-budget-assistant/issues/685) — line items and claims on group
+  expenses, server and guest page: `GroupExpenseItem` + `GroupItemClaim`, receipt-split's calculator with the
+  payer as a participant, shares materialised inside the ledger transaction, the 7-day lock rule (then payer,
+  creator or owner; close/reopen), settlements never touched, `hasOpenItemClaims`, the app routes, and a no-JS
+  guest claim form.
 - [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
   pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
   member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its
