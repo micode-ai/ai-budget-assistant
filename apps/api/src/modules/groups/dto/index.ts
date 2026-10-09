@@ -385,6 +385,17 @@ export class LinkGuestDto {
   @IsString()
   @Matches(/^[a-f0-9]{32}$/)
   code: string;
+
+  /** ABA-657: after a 409 ALREADY_MEMBER, merge the guest row into the caller's own row. */
+  @IsOptional()
+  @IsBoolean()
+  merge?: boolean;
+}
+
+/** POST /groups/:groupId/members/:memberId/merge (ABA-657). Both ids are re-scoped in the service. */
+export class MergeGroupMemberDto {
+  @IsUUID()
+  intoMemberId: string;
 }
 
 /** POST /groups/:groupId/owner (ABA-650). The id is re-scoped to the group in the service. */

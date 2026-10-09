@@ -247,6 +247,18 @@ describe('GroupItemsService (ABA-655)', () => {
       expect(prisma.$transaction).toHaveBeenCalledTimes(1);
     });
 
+    it('ABA-657 review H1: the GROUP row lock comes first, and an archived group refuses the claim', async () => {
+      await items.setMyClaims(G, ANN, E, [I1]);
+      const groupLock = prisma.expenseGroup.update.mock.invocationCallOrder[0];
+      const expenseLock = prisma.groupExpense.update.mock.invocationCallOrder[0];
+      expect(groupLock).toBeLessThan(expenseLock);
+
+      db.groups[0].status = 'archived';
+      const claimsBefore = JSON.stringify(db.claims);
+      await expect(items.setMyClaims(G, ANN, E, [I2])).rejects.toMatchObject({ status: 403, response: { code: 'GROUP_ARCHIVED' } });
+      expect(JSON.stringify(db.claims)).toBe(claimsBefore);
+    });
+
     it('a shared line is split between its claimants; the ledger sums to the expense total', async () => {
       await items.setMyClaims(G, ANN, E, [I1, I2]);
       await items.setMyClaims(G, BO, E, [I2]);
@@ -538,7 +550,9 @@ describe('GroupItemsService (ABA-655)', () => {
       });
       await expect(groups.updateExpense(G, PAYER, E, { items: [{ id: I1, name: 'Pizza', totalPrice: 40 }] })).rejects.toBeInstanceOf(NotFoundException);
       expect(db.expenses[0].deletedAt).not.toBeNull();
-      expect(db.groups[0].ledgerVersion).toBe(5);
+      // The lock's bump now runs first (ABA-657 review H1); a real database rolls it back with the
+      // failed transaction, this double has no rollback. What matters: nothing else was written.
+      expect(db.groups[0].ledgerVersion).toBe(6);
       expect(db.log.some((l) => l === `update:${E}`)).toBe(false);
     });
 

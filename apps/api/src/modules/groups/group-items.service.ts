@@ -264,6 +264,9 @@ export class GroupItemsService {
     await this.chargeClaimChange(expenseId, actor.id);
 
     const moved = await this.prisma.$transaction(async (tx: any) => {
+      // ABA-657 review H1: the group row's lock first (shared with the member merge and every other
+      // ledger write, also re-checks the group is active), then the expense row's.
+      await this.groups.lockGroup(tx, groupId, false);
       // The lock: a no-op UPDATE on the expense row. A second claimer waits here until we commit.
       await tx.groupExpense.update({ where: { id: expenseId }, data: { updatedAt: new Date() } });
       // Liveness re-checked under the lock: a member removed while we waited cannot claim.

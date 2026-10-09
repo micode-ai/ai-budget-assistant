@@ -6,6 +6,7 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { createHash, randomBytes, randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
@@ -24,6 +25,7 @@ import {
   type LedgerSettlement,
 } from './group-ledger';
 import { isAdoptionEligible, MAX_GROUPS_OWNED } from './group-ownership.service';
+import { GroupMergeService } from './group-merge.service';
 import {
   convertAtRate,
   isAllowedEntryCurrency,
@@ -84,6 +86,12 @@ export const GUEST_VISIBLE_EVENT_KINDS: GroupMemberEventKind[] = ['member_merged
 export const linkClaimBinding = (claimTokenHash: string) =>
   createHash('sha256').update(`grp-link-claim:${claimTokenHash}`).digest('hex');
 export const MAX_MEMBERS = 50;
+/**
+ * ABA-657: a 409 ALREADY_MEMBER that offers a merge puts the (unspent) code back for this long, so
+ * the follow-up `{code, merge: true}` can redeem it. The code was consumed by GETDEL but nothing was
+ * bound, so it is as unused as before; the same 10 minutes as a freshly minted code.
+ */
+export const LINK_CODE_MERGE_RETRY_SECONDS = 600;
 export const MAX_EXPENSES = 5000;
 /** ABA-654 review M2: the widest a manual rate may sit from the provider's, either way. */
 export const FX_MANUAL_RATE_FACTOR = 3;
@@ -117,6 +125,9 @@ export class GroupsService {
     private readonly notifications: NotificationsService,
     // The existing singleton (CurrencyExchangeModule), never a second instance (ABA-654).
     private readonly rates: ExchangeRateService,
+    // ABA-657: the link-code self-merge. Optional only so specs that never merge can omit it; the
+    // module always provides it.
+    @Optional() private readonly merger?: GroupMergeService,
   ) {}
 
   // ---------------------------------------------------------------- helpers
@@ -147,6 +158,25 @@ export class GroupsService {
       select: { id: true },
     });
     if (found.length !== unique.length) throw new NotFoundException('Member not found');
+  }
+
+  /**
+   * ABA-657 review H1: the FIRST statement of every ledger write. A no-op/bump UPDATE on the group row
+   * takes its row lock, so writers (expenses, settlements, claims, removals) and the member merge
+   * serialise; only then is the group re-checked as active and every referenced member re-checked as
+   * live (`assertLiveMembers(..., tx)`) on the state the lock now protects. `bump` increments
+   * `ledgerVersion` (a ledger change, which also stales any open settle form); a claim change that
+   * moves no share locks without bumping.
+   */
+  async lockGroup(tx: any, groupId: string, bump = true): Promise<void> {
+    const g = await tx.expenseGroup.update({
+      where: { id: groupId },
+      data: bump ? { ledgerVersion: { increment: 1 } } : { updatedAt: new Date() },
+      select: { status: true },
+    });
+    if (g.status !== 'active') {
+      throw new ForbiddenException({ code: 'GROUP_ARCHIVED', message: 'This group is archived and read-only' });
+    }
   }
 
   /** Live members + live ledger. Shared with the guest surface (group-guest.service.ts). */
@@ -699,11 +729,6 @@ export class GroupsService {
     if (self && actor.isOwner) {
       throw new BadRequestException({ code: 'OWNER_CANNOT_LEAVE', message: 'The owner cannot leave the group' });
     }
-    const { ledger } = await this.loadState(groupId);
-    const bal = ledger.balances.find((b) => b.memberId === target.id)?.netAmount ?? 0;
-    if (Math.abs(bal) > 0.005) {
-      throw new ConflictException({ code: 'NONZERO_BALANCE', message: 'The balance must be settled before removing a member' });
-    }
     // ABA-655 review H1: a member who still holds claims on a receipt that is open for claims cannot
     // leave until those are released, or their stale claims would dilute the others' shares. The
     // affected expenses' row locks are taken first (the same no-op update a claim change takes) and
@@ -711,6 +736,16 @@ export class GroupsService {
     // (and is seen) or runs after and finds the member gone. A removed member's claims are in any
     // case treated as unclaimed by GroupItemsService, which is the safety net for the rest.
     await this.prisma.$transaction(async (tx: any) => {
+      // ABA-657 review H1: the group row's lock first (a no-op: removal changes no figure), then the
+      // member is re-checked live and the zero-balance rule runs on the ledger as the lock protects it,
+      // so an expense that committed after the old pre-check can no longer leave a removed payer.
+      await this.lockGroup(tx, groupId, false);
+      await this.assertLiveMembers(groupId, [target.id], tx);
+      const { ledger } = await this.loadState(groupId);
+      const bal = ledger.balances.find((b) => b.memberId === target.id)?.netAmount ?? 0;
+      if (Math.abs(bal) > 0.005) {
+        throw new ConflictException({ code: 'NONZERO_BALANCE', message: 'The balance must be settled before removing a member' });
+      }
       const openClaims = () =>
         tx.groupExpense.findMany({
           where: {
@@ -910,6 +945,8 @@ export class GroupsService {
 
     try {
       await this.prisma.$transaction(async (tx: any) => {
+        await this.lockGroup(tx, groupId);
+        await this.assertLiveMembers(groupId, [dto.paidByMemberId, ...shares.map((s) => s.memberId)], tx);
         await tx.groupExpense.create({
           data: {
             groupId,
@@ -930,8 +967,7 @@ export class GroupsService {
             },
           },
         });
-        await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
-      });
+        });
     } catch (e) {
       if (isP2002(e)) return this.getDetail(groupId, actor.id);
       throw e;
@@ -1009,6 +1045,8 @@ export class GroupsService {
     const resolved = this.resolveFxShares(amount, originalAmount, splitType, rawShares);
 
     await this.prisma.$transaction(async (tx: any) => {
+      await this.lockGroup(tx, groupId);
+      await this.assertLiveMembers(groupId, [paidBy, ...rawShares.map((s) => s.memberId)], tx);
       // Shares are fully deleted and recreated, never patched.
       await tx.groupExpenseShare.deleteMany({ where: { groupExpenseId: expense.id } });
       await tx.groupExpense.update({
@@ -1029,7 +1067,6 @@ export class GroupsService {
           },
         },
       });
-      await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
     });
     this.notifyActivity(groupId, actor.id);
     return this.getDetail(groupId, actor.id);
@@ -1046,11 +1083,11 @@ export class GroupsService {
       throw new ForbiddenException('Only the creator, the payer or the owner can delete this expense');
     }
     await this.prisma.$transaction(async (tx: any) => {
+      await this.lockGroup(tx, groupId);
       await tx.groupExpense.update({
         where: { id: expense.id },
         data: { deletedAt: new Date(), deletedByMemberId: actor.id },
       });
-      await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
     });
     return this.getDetail(groupId, actor.id);
   }
@@ -1099,6 +1136,8 @@ export class GroupsService {
     const now = new Date();
     try {
       await this.prisma.$transaction(async (tx: any) => {
+        await this.lockGroup(tx, groupId);
+        await this.assertLiveMembers(groupId, [dto.paidByMemberId], tx);
         await tx.groupExpense.create({
           data: {
             groupId,
@@ -1127,8 +1166,7 @@ export class GroupsService {
             },
           },
         });
-        await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
-      });
+        });
     } catch (e) {
       if (isP2002(e)) return this.getDetail(groupId, actorId);
       throw e;
@@ -1240,7 +1278,9 @@ export class GroupsService {
 
 
     await this.prisma.$transaction(async (tx: any) => {
-      // The expense row's lock first, so a concurrent claim change serialises behind this edit.
+      // The group row's lock first (the member merge and every other ledger write), then the expense
+      // row's, so a concurrent claim change serialises behind this edit.
+      await this.lockGroup(tx, groupId);
       await tx.groupExpense.update({ where: { id: expense.id }, data: { updatedAt: new Date() } });
       // Re-read under the lock: a delete (or any edit) that committed while we waited must win. A
       // deleted expense is a 404 here, never revived by this write, and the figures, lines and
@@ -1255,7 +1295,9 @@ export class GroupsService {
         await loadItems(tx),
         dto,
       );
-      if (dto.paidByMemberId !== undefined) await this.assertLiveMembers(groupId, [paidBy], tx);
+      // The payer is re-checked under the lock even when the edit does not name one: a merge or removal
+      // that committed while we waited must not leave the expense paid by a soft-removed member.
+      await this.assertLiveMembers(groupId, [paidBy], tx);
       if (removedIds.length) {
         // Cascades the lines' claims: stale claims are pruned in storage, not only in the recompute.
         await tx.groupExpenseItem.deleteMany({ where: { id: { in: removedIds }, groupExpenseId: expense.id } });
@@ -1290,7 +1332,6 @@ export class GroupsService {
           },
         },
       });
-      await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
     });
     this.notifyActivity(groupId, actorId);
     return this.getDetail(groupId, actorId);
@@ -1344,6 +1385,13 @@ export class GroupsService {
         if (cas.count === 0) {
           throw new ConflictException({ code: 'LEDGER_CHANGED', message: 'Balances changed, refresh and retry' });
         }
+        // The CAS above holds the group row's lock: re-check, on what it protects, that the group is
+        // still active and both parties are still live (a merge or removal may have run first).
+        const locked = await tx.expenseGroup.findUnique({ where: { id: groupId }, select: { status: true } });
+        if (!locked || locked.status !== 'active') {
+          throw new ForbiddenException({ code: 'GROUP_ARCHIVED', message: 'This group is archived and read-only' });
+        }
+        await this.assertLiveMembers(groupId, [dto.fromMemberId, dto.toMemberId], tx);
         await tx.groupSettlement.create({
           data: {
             groupId,
@@ -1376,33 +1424,57 @@ export class GroupsService {
       throw new ForbiddenException('Only the recorder, the receiver or the owner can void this payment');
     }
     await this.prisma.$transaction(async (tx: any) => {
+      await this.lockGroup(tx, groupId);
       await tx.groupSettlement.update({
         where: { id: s.id },
         data: { voidedAt: new Date(), voidedByMemberId: actor.id },
       });
-      await tx.expenseGroup.update({ where: { id: groupId }, data: { ledgerVersion: { increment: 1 } } });
     });
     return this.getDetail(groupId, actor.id);
   }
 
   // ------------------------------------------------------- guest -> user link
 
+  /** The guest row's current net balance in the group currency, for the merge offer (numbers only). */
+  private async guestNet(groupId: string, memberId: string): Promise<{ balance: number; currencyCode: string } | null> {
+    try {
+      const [{ ledger }, currencyCode] = await Promise.all([this.loadState(groupId), this.groupCurrencyOf(groupId)]);
+      const bal = ledger.balances.find((b) => b.memberId === memberId)?.netAmount ?? 0;
+      return { balance: Math.round(bal * 100) / 100, currencyCode };
+    } catch {
+      return null;
+    }
+  }
+
   /**
    * Binds the caller to the guest member a `POST /g/:token/link` code was minted for. The code is
    * single-use: `getAndDelete` is an atomic GETDEL, so two concurrent redeemers cannot both win.
    * Its null return also covers a Redis outage, which denies, as it should.
    */
-  async linkGuest(userId: string, code: string): Promise<GroupDetail> {
+  async linkGuest(userId: string, code: string, opts: { merge?: boolean } = {}): Promise<GroupDetail> {
+    const key = `grp:link:${code}`;
     const payload = await this.cache.getAndDelete<{
       groupId: string;
       memberId: string;
       guestToken?: string;
       claim?: string;
-    }>(`grp:link:${code}`);
+      exp?: number;
+      mergeUserId?: string;
+    }>(key);
     const gone = () =>
       new GoneException({ code: 'LINK_CODE_INVALID', message: 'This link code is invalid or has expired' });
     // A payload without `claim` predates ABA-651 (10-minute TTL): refused like any stale code.
     if (!payload?.groupId || !payload?.memberId || !payload?.guestToken || !payload?.claim) throw gone();
+    // ABA-657 review M3: a code put back for the merge offer is bound to the user who got the 409.
+    // Anyone else redeeming it with merge:true gets 410, and the code is put back for its user.
+    const restore = async () => {
+      const remaining = typeof payload.exp === 'number' ? Math.ceil((payload.exp - Date.now()) / 1000) : 0;
+      if (remaining > 0) await this.cache.set(key, payload, Math.min(remaining, LINK_CODE_MERGE_RETRY_SECONDS));
+    };
+    if (opts.merge === true && payload.mergeUserId && payload.mergeUserId !== userId) {
+      await restore();
+      throw gone();
+    }
 
     // The code outlives the link it was minted from: re-read the group so a rotated link, a
     // guestAccess=false kill-switch or an archive all invalidate it.
@@ -1416,7 +1488,7 @@ export class GroupsService {
 
     const member = await this.prisma.expenseGroupMember.findFirst({
       where: { id: payload.memberId, groupId: payload.groupId, removedAt: null },
-      select: { id: true, userId: true, claimTokenHash: true },
+      select: { id: true, userId: true, claimTokenHash: true, displayName: true },
     });
     if (!member || member.userId) throw gone();
     // ABA-651: the code is only as good as the claim it was minted under. A reset (or forget, or a
@@ -1425,12 +1497,35 @@ export class GroupsService {
 
     const existing = await this.prisma.expenseGroupMember.findFirst({
       where: { groupId: payload.groupId, userId },
-      select: { id: true, displayName: true },
+      select: { id: true, displayName: true, removedAt: true },
     });
     if (existing) {
+      // ABA-657: a LIVE caller may fold the guest row into their own row instead (spec D, the
+      // self-merge). The code proved the guest cookie, the JWT proves the app row.
+      const canMerge = !existing.removedAt && !!this.merger;
+      if (canMerge && opts.merge === true) {
+        await this.merger!.mergeViaLinkCode(payload.groupId, existing.id, member.id, member.claimTokenHash);
+        return this.getDetail(payload.groupId, existing.id);
+      }
+      // Nothing was bound, so the code goes back for the follow-up merge request. `set` swallows a
+      // Redis error: the merge then fails as 410 and the guest mints a new code.
+      // Restored with the REMAINING lifetime (the original expiry travels in the payload; a payload
+      // without one is not restored) and bound to this caller.
+      if (canMerge) {
+        payload.mergeUserId = userId;
+        await restore();
+      }
+      const net = canMerge ? await this.guestNet(payload.groupId, member.id) : null;
       throw new ConflictException({
         code: 'ALREADY_MEMBER',
         message: `You're already in this group as ${existing.displayName}`,
+        // The caller holds the code, i.e. the guest's own browser session: naming that row is no leak.
+        details: {
+          canMerge,
+          guestName: member.displayName,
+          myName: existing.displayName,
+          ...(net ? { guestBalance: net.balance, currencyCode: net.currencyCode } : {}),
+        },
       });
     }
 

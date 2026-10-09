@@ -29,6 +29,8 @@ API (`apps/api/src/modules/groups/`):
   — the daily balance reminder cron and its pure episode state machine (ABA-653)
 - `apps/api/src/modules/groups/group-ownership.service.ts` — ownership transfer, succession on an
   account departure, orphan adoption, the "Former member" rename (ABA-650)
+- `apps/api/src/modules/groups/group-merge.ts` and `apps/api/src/modules/groups/group-merge.service.ts` — merging
+  two members: the pure consent rule, plan and balance check, and the one transaction that applies them (ABA-657)
 - `apps/api/src/modules/groups/helpers/group-guest-page.ts` and
   `apps/api/src/modules/groups/helpers/group-guest-page-i18n.ts` — the script-free HTML page, 9 locales
 - `apps/api/src/modules/groups/guards/` — `GroupMemberGuard`, `GroupOwnerGuard`, `GroupActiveGuard`
@@ -47,13 +49,16 @@ Mobile:
 - `apps/mobile/src/components/groups/GroupClaimsView.tsx`, `apps/mobile/src/components/groups/GroupItemsEditor.tsx`,
   `apps/mobile/src/hooks/useGroupExpenseItems.ts` — itemised expenses and claims (ABA-656)
 - `apps/mobile/src/hooks/useGroupLinkDeepLink.ts` — a link code stashed while signed out
+- `apps/mobile/src/features/groups/groupMerge.ts` — who the member sheet offers a merge with, the confirm's
+  preview, the link-code merge offer (ABA-657)
 - Entry: the `groups` quick action (`apps/mobile/src/stores/quickActionStore.ts`); the activity push opens
   `/groups/:id`, the balance reminder `/groups/:id/settle` (`apps/mobile/src/services/notifications.ts`
   through `apps/mobile/src/features/groups/groupPush.ts`)
 
 Migrations: `20261009000000_add_expense_groups`, `20261012000000_group_member_join_provenance`,
 `20261013000000_group_ownership_transfer`, `20261014000000_group_balance_reminders`,
-`20261015000000_group_expense_fx`, `20261016000000_group_expense_items`. Design:
+`20261015000000_group_expense_fx`, `20261016000000_group_expense_items`,
+`20261017000000_group_member_merge`. Design:
 [`docs/superpowers/specs/2026-10-08-shared-groups-design.md`](../../superpowers/specs/2026-10-08-shared-groups-design.md)
 — where it and the code differ, the code is right (the spec's `GET /g/:token/me/:secret` restore
 link and `Restrict` member FKs were both replaced in the security hardening).
@@ -460,7 +465,8 @@ login** in `GroupMemberSheet` (owner, active group, a live claimed guest: `canRe
 
 **Event log (ABA-650).** `GroupMemberEvent` (`kind` `owner_transferred | member_merged | claim_reset`,
 `actorMemberId?`, `subjectMemberId`, `targetMemberId?`, `subjectName` snapshot). Member columns are
-plain ids with **no FK**, so the later merge task never re-points audit rows. `owner_transferred`
+plain ids with **no FK**, so a merge (ABA-657) never re-points audit rows: the absorbed row stays,
+soft-removed, and old events keep resolving to its name. `owner_transferred`
 covers four cases told apart by its fields: actor = subject = old owner and a target is a manual
 transfer; no actor is a succession; no actor and no target is orphaning; subject = target is an
 adoption (`apps/mobile/src/features/groups/groupOwnership.ts` `describeGroupEvent`). `getActivity`
@@ -468,6 +474,82 @@ merges it as a third source (`{kind: 'event'}`), with the actor's and target's C
 `GUEST_VISIBLE_EVENT_KINDS` (`member_merged` only) is applied **in the query** for the guest page,
 and the guest service drops any other kind a second time: an owner or claim-reset event would reveal
 that a member is an app user.
+
+**Merging two members (ABA-657).** For one person who ended up in a group twice ("Ania" in the
+browser and "Ania" in the app, or "Ania (2)" after a lost cookie). Phase-2 spec section D. The pure half is
+`apps/api/src/modules/groups/group-merge.ts`; `GroupMergeService` (`apps/api/src/modules/groups/group-merge.service.ts`,
+Prisma only, so `GroupsService` can inject it for the link-code path without a cycle) runs it.
+- **Routes.** `POST /groups/:groupId/members/:memberId/merge {intoMemberId}` (`ThrottlerGuard` 10/min +
+  `GroupMemberGuard` + `GroupActiveGuard`; deliberately NOT `GroupOwnerGuard`, because absorbing an unclaimed
+  name is open to any member, so the consent rule is in the service) → `GroupDetail`. And
+  `POST /groups/link-guest {code, merge: true}`: the self-merge.
+- **Direction and consent** (`normaliseMergePair`, `mergeConsent`). Never two app-user rows (409
+  `BOTH_APP_USERS`); an app-user `from` with a guest `into` is swapped, so the app user's row survives and the
+  absorbed row is always a guest. The **owner** may merge into an UNCLAIMED guest row or into their own row (a guest row
+  another person's browser has claimed is 403 `MERGE_NOT_ALLOWED`); **any member** may absorb an UNCLAIMED guest
+  row (an unclaimed placeholder) into their own row. This is deliberate: it is no more power than claiming that
+  placeholder through the guest link, which anyone holding the link already has; nothing
+  may push a balance onto another app user's row (403 `MERGE_NOT_ALLOWED`) — they consent by doing it
+  themselves. Same id 400 `MERGE_SAME_MEMBER`; foreign, removed (including already merged) or unknown ids one
+  404; archived 403 `GROUP_ARCHIVED` (re-checked under the lock).
+- **One `$transaction`.** It first bumps `ledgerVersion` (the group row lock: every other ledger write waits,
+  every open settle form goes stale), then re-scopes both ids and the actor `{id in, groupId, removedAt: null}`,
+  applies the consent rule, snapshots the balances, and re-points: expense `paidBy`/`createdBy`/`deletedBy`,
+  settlement `from`/`to`/`recordedBy`/`voidedBy`, shares and claims. Then `from` gets `removedAt`,
+  `claimTokenHash`/`claimedAt`/payment details NULL and `mergedIntoMemberId = into` (a CAS `updateMany` on the
+  state read under the lock), the balances are **re-read from the database** and `checkMergeBalances` asserts
+  that `into` holds exactly the old pair sum, `from` nothing, and every other member (removed strays
+  included) moved by less than half a cent. A failure is logged and throws 500 `MERGE_INVARIANT`, which rolls
+  everything back: it is a bug, not user input. Last, the `member_merged` event (actor, subject = `from` with its
+  name snapshot, target = `into`), shown in the app and, as before, on the guest page (`GUEST_VISIBLE_EVENT_KINDS`).
+- **Shares** (`planMemberMerge`). Where only `from` is on an expense, the row is re-pointed. Where both are,
+  `into`'s row takes the summed `shareAmount` and `from`'s is deleted (`@@unique([groupExpenseId, memberId])`);
+  `shareValue` is summed for exact (original-currency values on a converted expense), percentage and shares. An
+  **equal** split both were on becomes a **`shares`** split (`into` 2 units, everyone else 1), deviating from
+  the spec's "NULL for equal": an equal split re-resolved by a later edit would otherwise divide the amount n-1
+  ways and silently move money. Converted (ABA-654) and itemised rows need nothing special: balances are only
+  `paidBy` and share amounts.
+- **Claims** (ABA-655). A line only `from` claimed is re-pointed (its bp kept). A line both claimed: `from`'s
+  claim is deleted and `into` keeps the line — whole when the pair were the only claimants; on a hand-split line
+  with bp summed (null reads 0, capped 10000); on an equal line with a third claimant, every remaining claimant
+  is converted to explicit bp at its current fractions (`apportionBp`: `into` 2 slices, others 1, summing to
+  exactly 10000), so the third person's slice does not grow from 1/n to 1/(n-1). A removed member's claim counts
+  as unclaimed here too. **The merge does not re-derive an itemised expense's shares**, unlike the spec's step 3:
+  it sums the share rows like any expense, which keeps every balance to the cent by construction. A third of a
+  line is not a whole number of basis points, so a re-derivation could move a cent between the third claimant
+  and the payer and would trip the assertion. The next claim change re-derives as usual (within a cent).
+- **Settlements between the pair** become `into -> into` and are **voided** (`voidedByMemberId` = the actor):
+  their effect on the pair summed to zero. Already-voided ones are only re-pointed.
+- **Event rows are not re-pointed** (no FK, by design above). Reminder columns on `into` are left to the cron.
+- **Every ledger writer locks first (ABA-657 review H1).** `GroupsService.lockGroup(tx, groupId, bump)` is the
+  first statement of the transaction in `createExpense`, `updateExpense`, `deleteExpense`, the itemised
+  create/update, `voidSettlement` (bumping `ledgerVersion`, which replaces the old bump at the end), the claim
+  writes in `GroupItemsService.mutate` and `removeMember` (no-op lock). It re-checks the group is active (403
+  `GROUP_ARCHIVED`), and the writer then re-checks every referenced member is live with `assertLiveMembers(..., tx)`
+  on the state the lock protects; `removeMember` runs its zero-balance rule under the lock too, and the settle CAS
+  re-checks status and both parties after it. The merge takes the same lock, so a writer that validated before a
+  merge/removal fails after it instead of attaching shares or a payer to the soft-removed row; the bot path
+  (`GroupBotService` -> `createExpense`) is covered by the same code. New ledger writers must do the same.
+- **Link-code self-merge.** `linkGuest` runs its usual checks (GETDEL, rotation/guest-access/archive re-read, the
+  ABA-651 claim digest). When the caller already has a LIVE row there, the 409 `ALREADY_MEMBER` carries
+  `details: {canMerge: true, guestName, myName, guestBalance, currencyCode}` (the caller holds the guest's own
+  code, so naming that row is no leak; `guestBalance` is its current net balance in the group currency, shown in
+  the confirm so it is informed) and **the unspent code is put back**, since nothing was bound, with its REMAINING
+  lifetime (the payload carries an absolute `exp`; a payload without one is not restored, and the restore never
+  outlives the original 10 minutes) and **bound to the user who got the 409** (`mergeUserId`): another user
+  redeeming it with `merge: true` gets 410 and the code is put back for its user.
+  `{code, merge: true}` then calls `mergeViaLinkCode`: `from` = the guest row, `into` = the caller's row, and the
+  guest row is a CAS on the very claim hash the code was checked against, so a reset or re-claim landing in
+  between is 410 and rolls back. A removed caller row gets `canMerge: false` and the code is not kept.
+- **App.** `GroupMemberSheet` has **Merge with…** (when `canMergeMember`, `apps/mobile/src/features/groups/groupMerge.ts`,
+  which mirrors the server rule) that turns the sheet into a picker of `mergePartners`; picking one opens a
+  destructive `showAlert` confirm in `GroupMembersView` naming the direction, the survivor's resulting balance
+  (`mergedBalancePreview`, a client-side sum labelled as a preview) and "This cannot be undone". Every button is
+  `GroupButton write` (offline-gated). The same sheet serves the phone screen and the desktop members dialog.
+  `GroupLinkView` (the same centred screen on both) shows the offer when `processGroupLink` reports
+  `mergeOffer`: **Merge “Ania” into your account** (`mergeGroupLink`) or **Not now**; the post-sign-in flush
+  instead re-opens `/groups/link?code=` so the screen asks again. 16 strings x 9 locales; no guest-page copy
+  changed.
 
 **Settling in the app (ABA-652).** `GroupSettleView` has an editable amount: it opens at the
 suggested transfer (`defaultSettleAmount`), shows the bound ("up to …") and a validation message,
@@ -609,6 +691,19 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
   of that expense in that group (intersected, never trusted), and never a hand-split line or an explicit bp.
 - **No ledger write for a no-op**: a claim submit that leaves the shares unchanged does not bump
   `ledgerVersion`, so an idle re-submit cannot make everyone's settle form fail with "Balances changed".
+- **A merge changes no balance except by moving `from`'s into `into`** (ABA-657), and that is asserted INSIDE the
+  transaction on balances re-read from the database, aborting the whole merge otherwise. Do not move the check
+  outside the transaction or compute it from the plan instead of the stored rows: it exists to catch a write
+  that went wrong.
+- **The merge sums share rows; it never re-derives an itemised expense's shares**, because a bp conversion of a
+  three-way equal line cannot be exact and the re-derivation would move a third member's cent.
+- **Whoever ends up holding the merged balance consents** (threat 3): the owner only into a guest row or their
+  own row, a member only an unclaimed guest into their own row, the link code for a claimed guest. Two app-user
+  rows never merge, and the survivor is always the app-user row.
+- **A merge is the first write in its transaction to bump `ledgerVersion`**, so it serialises with every other
+  ledger write and every settle form quoting the old version fails with "Balances changed".
+- **The absorbed row is soft-removed, never deleted**, with `mergedIntoMemberId`; its name stays reserved and old
+  event rows keep pointing at it.
 
 ## Desktop
 
@@ -757,7 +852,13 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 - **ABA-652 UI is unverified on a device and in a desktop browser**: the amount field, the
   counterpart picker, the Record a payment buttons and the guest page's amount input have only
   pure-helper and server-rendered-HTML tests (nothing renders in CI).
-- Merging two members and bot channels are phase 2 (`docs/superpowers/specs/2026-10-09-shared-groups-phase2-design.md`).
+- Bot channels are phase 2 (`docs/superpowers/specs/2026-10-09-shared-groups-phase2-design.md`).
+- **ABA-657 (merge) is unverified against real Postgres, on a device and in a desktop browser**: the transaction
+  ran only over an in-memory Prisma (with rollback) in `group-merge.service.spec.ts`, the migration has not run
+  here, and the "Merge with…" picker, its confirm and the link screen's merge offer have only pure-helper tests.
+  An itemised expense's stored shares and its converted claims can disagree by a cent until the next claim
+  change re-derives them (the merge sums share rows on purpose, see above). There is no push to the survivor
+  and no "reverse a merge" (out of scope in the spec).
 - **Balance reminders (ABA-653):** the windows are on the server clock (UTC days), not
   `user.timezone`, and there is no per-group mute (both follow-ups in the phase-2 spec). The settings
   toggle is unverified on a device and in a desktop browser (nothing renders in CI), the migration has
@@ -803,6 +904,10 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   phone and desktop: the itemise switch and line editor in the expense form (typed or prefilled from the scan),
   `GroupClaimsView` (my lines with a preview; everyone, percentages, close/reopen for the payer, creator and owner)
   on its own route and in a desktop dialog, the itemised row badge, and the open-claims note on the settle surfaces.
+- [ABA-657](https://github.com/micode-ai/ai-budget-assistant/issues/687) — merging two members without
+  changing anyone's balance: owner merges, absorbing an unclaimed name, the link-code self-merge after
+  ALREADY_MEMBER, one transaction with an in-transaction balance assertion, `mergedIntoMemberId`, the
+  `member_merged` event, "Merge with…" in the member sheet (phone and desktop) and the link screen's offer.
 - [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
   pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
   member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its

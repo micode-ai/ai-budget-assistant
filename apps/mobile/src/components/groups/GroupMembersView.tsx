@@ -12,6 +12,7 @@ import { showAlert } from '@/utils/alert';
 import { balanceOf, findMember, isGroupWritable, liveMembers } from '@/features/groups/groupDisplay';
 import { canMakeOwner, canResetClaim, claimResetErrorReason, ownerErrorReason } from '@/features/groups/groupOwnership';
 import { MAX_MEMBER_NAME_LENGTH } from '@/features/groups/groupSplit';
+import { canMergeMember, mergedBalancePreview, mergeErrorReason, mergePair, mergePartners } from '@/features/groups/groupMerge';
 import type { GroupMember } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
 import { GroupOfflineBanner } from './GroupOfflineBanner';
@@ -22,7 +23,7 @@ import { GroupPaymentInfoCard } from './GroupPaymentInfoCard';
 
 /**
  * Members: add a placeholder name, rename, my payment details, remove, make owner (ABA-650), reset a
- * guest's browser login (ABA-651), and the owner controls. Hosted unchanged by the desktop members dialog, so every change here is on both.
+ * guest's browser login (ABA-651), merge two members (ABA-657), and the owner controls. Hosted unchanged by the desktop members dialog, so every change here is on both.
  */
 export function GroupMembersView({
   groupId,
@@ -44,6 +45,7 @@ export function GroupMembersView({
   const removeMember = useGroupStore((s) => s.removeMember);
   const transferOwnership = useGroupStore((s) => s.transferOwnership);
   const resetMemberClaim = useGroupStore((s) => s.resetMemberClaim);
+  const mergeMembers = useGroupStore((s) => s.mergeMembers);
   const [newName, setNewName] = useState('');
   const [adding, setAdding] = useState(false);
   const [selected, setSelected] = useState<GroupMember | null>(null);
@@ -207,6 +209,52 @@ export function GroupMembersView({
     );
   };
 
+  const mergeErrorText = (e: unknown): string => {
+    switch (mergeErrorReason(e)) {
+      case 'notAllowed':
+        return t('groups.mergeNotAllowed');
+      case 'bothAppUsers':
+        return t('groups.mergeBothAppUsers');
+      case 'changed':
+      case 'gone':
+        return t('groups.mergeChanged');
+      default:
+        return e instanceof Error ? e.message : t('errors.unknown');
+    }
+  };
+
+  // ABA-657: the confirm previews the survivor's balance (a client-side sum; the server re-checks
+  // and refuses the merge if anyone's balance would move) and says it cannot be undone.
+  const confirmMerge = (member: GroupMember, partner: GroupMember) => {
+    const pair = mergePair(detail, member, partner);
+    if (!pair) return;
+    const preview = formatCurrency(mergedBalancePreview(detail, pair), detail.currencyCode);
+    showAlert(
+      t('groups.mergeConfirmTitle', { from: pair.from.displayName, into: pair.into.displayName }),
+      `${t('groups.mergeConfirmBody', { from: pair.from.displayName, into: pair.into.displayName, balance: preview })}
+
+${t('groups.mergeIrreversible')}`,
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('groups.mergeConfirmAction'),
+          style: 'destructive',
+          onPress: () =>
+            void (async () => {
+              try {
+                await mergeMembers(groupId, pair.from.id, pair.into.id);
+                setSelected(null);
+                showAlert(t('groups.mergeDone', { from: pair.from.displayName, into: pair.into.displayName }));
+              } catch (e) {
+                setSelected(null);
+                showAlert(t('errors.error'), mergeErrorText(e));
+              }
+            })(),
+        },
+      ],
+    );
+  };
+
   const canRename = (m: GroupMember) => writable && (detail.isOwner || m.id === detail.myMemberId);
   const removeLabelFor = (m: GroupMember): string | null => {
     if (!writable) return null;
@@ -231,7 +279,11 @@ export function GroupMembersView({
             const balance = balanceOf(detail, m.id);
             const tag = memberTag(m);
             const tappable =
-              canRename(m) || removeLabelFor(m) !== null || canMakeOwner(detail, m) || canResetClaim(detail, m);
+              canRename(m) ||
+              removeLabelFor(m) !== null ||
+              canMakeOwner(detail, m) ||
+              canResetClaim(detail, m) ||
+              canMergeMember(detail, m);
             return (
               <TouchableOpacity
                 key={m.id}
@@ -314,6 +366,8 @@ export function GroupMembersView({
         onMakeOwner={confirmMakeOwner}
         canResetClaim={selected ? canResetClaim(detail, selected) : false}
         onResetClaim={confirmResetClaim}
+        mergeOptions={selected ? mergePartners(detail, selected) : undefined}
+        onMerge={confirmMerge}
       />
     </SafeAreaView>
   );

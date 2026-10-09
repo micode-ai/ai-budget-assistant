@@ -24,10 +24,17 @@ interface GroupMemberSheetProps {
   /** ABA-651: the owner looking at a claimed guest. Optional, so other hosts stay unchanged. */
   canResetClaim?: boolean;
   onResetClaim?: (member: GroupMember) => void;
+  /**
+   * ABA-657: the members this one can be merged with (empty or absent hides "Merge with…"). Picking
+   * one calls `onMerge`, whose host shows the confirm with the preview. Optional, like the others.
+   */
+  mergeOptions?: GroupMember[];
+  onMerge?: (member: GroupMember, partner: GroupMember) => void;
 }
 
 /**
- * One member: rename, make owner (ABA-650), reset a guest's browser login (ABA-651) and remove. A bottom sheet on a phone, a centred dialog on desktop web (via
+ * One member: rename, make owner (ABA-650), reset a guest's browser login (ABA-651), merge with
+ * another member (ABA-657) and remove. A bottom sheet on a phone, a centred dialog on desktop web (via
  * `SheetDialog`, which also owns the system navigation bar inset, ABA-483, so the last button
  * stays tappable on a three-button device).
  */
@@ -42,15 +49,19 @@ export function GroupMemberSheet({
   onMakeOwner,
   canResetClaim = false,
   onResetClaim,
+  mergeOptions,
+  onMerge,
 }: GroupMemberSheetProps) {
   const { t } = useTranslation();
   const theme = useTheme();
   const styles = useStyles(createStyles);
   const [name, setName] = useState('');
   const [saving, setSaving] = useState(false);
+  const [picking, setPicking] = useState(false);
 
   useEffect(() => {
     setName(member?.displayName ?? '');
+    setPicking(false);
   }, [member]);
 
   if (!member) return null;
@@ -83,59 +94,90 @@ export function GroupMemberSheet({
       <Text nativeID={TITLE_ID} style={styles.title}>
         {member.displayName}
       </Text>
-      {canRename && (
+      {picking && mergeOptions && onMerge ? (
         <>
-          <Text style={styles.label}>{t('groups.renameLabel')}</Text>
-          <TextInput
-            style={styles.input}
-            value={name}
-            onChangeText={setName}
-            maxLength={MAX_MEMBER_NAME_LENGTH}
-            placeholderTextColor={theme.colors.textTertiary}
-          />
-          <GroupButton
-            label={t('common.save')}
-            onPress={save}
-            loading={saving}
-            write
-            disabled={!changed}
-            style={styles.gap}
-          />
+          <Text style={styles.label}>{t('groups.mergePickTitle', { name: member.displayName })}</Text>
+          <Text style={styles.hint}>{t('groups.mergePickHint')}</Text>
+          {mergeOptions.map((p) => (
+            <GroupButton
+              key={p.id}
+              label={p.displayName}
+              onPress={() => onMerge(member, p)}
+              variant="secondary"
+              write
+              style={styles.gap}
+            />
+          ))}
+          <TouchableOpacity style={styles.close} onPress={() => setPicking(false)}>
+            <Text style={styles.closeText}>{t('common.back')}</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <>
+          {canRename && (
+            <>
+              <Text style={styles.label}>{t('groups.renameLabel')}</Text>
+              <TextInput
+                style={styles.input}
+                value={name}
+                onChangeText={setName}
+                maxLength={MAX_MEMBER_NAME_LENGTH}
+                placeholderTextColor={theme.colors.textTertiary}
+              />
+              <GroupButton
+                label={t('common.save')}
+                onPress={save}
+                loading={saving}
+                write
+                disabled={!changed}
+                style={styles.gap}
+              />
+            </>
+          )}
+          {canMakeOwner && onMakeOwner && (
+            <GroupButton
+              label={t('groups.makeOwner')}
+              onPress={() => onMakeOwner(member)}
+              variant="secondary"
+              write
+              style={styles.gap}
+            />
+          )}
+          {canResetClaim && onResetClaim && (
+            <>
+              <GroupButton
+                label={t('groups.resetClaim')}
+                onPress={() => onResetClaim(member)}
+                variant="secondary"
+                write
+                style={styles.gap}
+              />
+              <Text style={styles.hint}>{t('groups.resetClaimHint')}</Text>
+            </>
+          )}
+          {mergeOptions && mergeOptions.length > 0 && onMerge && (
+            <GroupButton
+              label={t('groups.mergeWith')}
+              onPress={() => setPicking(true)}
+              variant="secondary"
+              write
+              style={styles.gap}
+            />
+          )}
+          {removeLabel && (
+            <GroupButton
+              label={removeLabel}
+              onPress={() => onRemove(member)}
+              variant="danger"
+              write
+              style={styles.gap}
+            />
+          )}
+          <TouchableOpacity style={styles.close} onPress={onClose}>
+            <Text style={styles.closeText}>{t('common.cancel')}</Text>
+          </TouchableOpacity>
         </>
       )}
-      {canMakeOwner && onMakeOwner && (
-        <GroupButton
-          label={t('groups.makeOwner')}
-          onPress={() => onMakeOwner(member)}
-          variant="secondary"
-          write
-          style={styles.gap}
-        />
-      )}
-      {canResetClaim && onResetClaim && (
-        <>
-          <GroupButton
-            label={t('groups.resetClaim')}
-            onPress={() => onResetClaim(member)}
-            variant="secondary"
-            write
-            style={styles.gap}
-          />
-          <Text style={styles.hint}>{t('groups.resetClaimHint')}</Text>
-        </>
-      )}
-      {removeLabel && (
-        <GroupButton
-          label={removeLabel}
-          onPress={() => onRemove(member)}
-          variant="danger"
-          write
-          style={styles.gap}
-        />
-      )}
-      <TouchableOpacity style={styles.close} onPress={onClose}>
-        <Text style={styles.closeText}>{t('common.cancel')}</Text>
-      </TouchableOpacity>
     </SheetDialog>
   );
 }

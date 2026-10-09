@@ -55,6 +55,12 @@ describe('GroupsController throttling', () => {
     expect(guardsOf(proto.expenseItems)).toEqual([GroupMemberGuard]);
   });
 
+  it('mergeMember: throttled, member + active guards, consent in the service, not owner-only (ABA-657)', () => {
+    expect(guardsOf(proto.mergeMember)).toEqual([ThrottlerGuard, GroupMemberGuard, GroupActiveGuard]);
+    expect(Reflect.getMetadata('THROTTLER:LIMITdefault', proto.mergeMember)).toBe(10);
+    expect(Reflect.getMetadata('THROTTLER:TTLdefault', proto.mergeMember)).toBe(60000);
+  });
+
   it('adopt: throttled, member and active guards, deliberately NOT owner-only (ABA-650)', () => {
     expect(guardsOf(proto.adopt)).toEqual([ThrottlerGuard, GroupMemberGuard, GroupActiveGuard]);
     expect(guardsOf(proto.adopt)).not.toContain(GroupOwnerGuard);

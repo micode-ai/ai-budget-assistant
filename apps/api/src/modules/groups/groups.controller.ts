@@ -18,6 +18,7 @@ import type { AuthenticatedRequest } from '../../common/types';
 import { GroupsService } from './groups.service';
 import { GroupOwnershipService } from './group-ownership.service';
 import { GroupItemsService } from './group-items.service';
+import { GroupMergeService } from './group-merge.service';
 import { GroupActiveGuard, GroupMemberGuard, GroupOwnerGuard, type GroupRequest } from './guards';
 import {
   AddGroupMemberDto,
@@ -30,6 +31,7 @@ import {
   GroupFxPreviewQueryDto,
   JoinGroupDto,
   LinkGuestDto,
+  MergeGroupMemberDto,
   SetGroupClaimsDto,
   SetMyGroupClaimsDto,
   TransferGroupOwnerDto,
@@ -47,6 +49,7 @@ export class GroupsController {
     private readonly service: GroupsService,
     private readonly ownership: GroupOwnershipService,
     private readonly items: GroupItemsService,
+    private readonly merger: GroupMergeService,
   ) {}
 
   @Get()
@@ -81,7 +84,7 @@ export class GroupsController {
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   linkGuest(@Req() req: AuthenticatedRequest, @Body() dto: LinkGuestDto) {
-    return this.service.linkGuest(req.user.id, dto.code);
+    return this.service.linkGuest(req.user.id, dto.code, { merge: dto.merge === true });
   }
 
   @Get(':groupId')
@@ -180,6 +183,18 @@ export class GroupsController {
   @Throttle({ default: { limit: 10, ttl: 60000 } })
   resetClaim(@Req() req: GroupRequest, @Param('memberId') memberId: string) {
     return this.service.resetClaim(req.groupId, req.groupMember.id, memberId);
+  }
+
+  // ABA-657. NOT owner-only: an app user may absorb an UNCLAIMED guest row into their own row. The
+  // consent rule (owner: into a guest row or the owner's own row; never two app users) and the
+  // re-scoping of both ids run in GroupMergeService, inside the transaction. Throttled per route.
+  @Post(':groupId/members/:memberId/merge')
+  @HttpCode(200)
+  @UseGuards(ThrottlerGuard, GroupMemberGuard, GroupActiveGuard)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  async mergeMember(@Req() req: GroupRequest, @Param('memberId') memberId: string, @Body() dto: MergeGroupMemberDto) {
+    await this.merger.merge(req.groupId, req.groupMember.id, memberId, dto.intoMemberId);
+    return this.service.getDetail(req.groupId, req.groupMember.id);
   }
 
   @Post(':groupId/expenses')

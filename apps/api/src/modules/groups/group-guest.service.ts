@@ -624,7 +624,10 @@ export class GroupGuestService {
     // `claim` ties the code to THIS cookie's claim (ABA-651): an owner reset or "forget" kills it.
     await this.cache.set(
       key,
-      { groupId: group.id, memberId: actor.id, guestToken: group.guestToken, claim: linkClaimBinding(sha256Hex(actor.secret)) },
+      { groupId: group.id, memberId: actor.id, guestToken: group.guestToken, claim: linkClaimBinding(sha256Hex(actor.secret)),
+        // Absolute expiry, so a re-stored copy (ABA-657 merge offer) never outlives the original.
+        exp: Date.now() + LINK_CODE_TTL_SECONDS * 1000,
+      },
       LINK_CODE_TTL_SECONDS,
     );
     const stored = await this.cache.get<{ groupId: string }>(key);

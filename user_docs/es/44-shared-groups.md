@@ -55,7 +55,7 @@ Cuando un ticket se ha añadido al grupo línea por línea, la página lo muestr
 
 ### Pasar del navegador a la app
 
-En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app del navegador** (o **Abrir en la app** en Android, si ya tiene la app instalada). Tras iniciar sesión o crear una cuenta, el grupo con todo su historial pasa a esa cuenta: no se pierde nada. Este enlace funciona una sola vez y solo durante unos minutos. Si primero instala la app desde Google Play, después debe volver a abrir el enlace del grupo en el navegador y tocar **Abrir en la app**.
+En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app del navegador** (o **Abrir en la app** en Android, si ya tiene la app instalada). Tras iniciar sesión o crear una cuenta, el grupo con todo su historial pasa a esa cuenta: no se pierde nada. Este enlace funciona una sola vez y solo durante unos minutos. Si primero instala la app desde Google Play, después debe volver a abrir el enlace del grupo en el navegador y tocar **Abrir en la app**. Si ya estás en el grupo en la app con otro nombre, la app ofrece en su lugar **Fusionar «Ania» con tu cuenta** (con tu nombre del navegador): ese nombre y todo lo que tiene pasan a tu nombre de la app, y el saldo de nadie más cambia.
 
 ## Usar un grupo en la app
 
@@ -99,6 +99,12 @@ Toca **Miembros** para ver a todos. Los marcados con **Aún no se ha unido** tod
 Un miembro eliminado por el propietario no puede volver a entrar con el enlace.
 
 Si alguien perdió el acceso en el navegador, o si otra persona eligió su nombre, el propietario puede tocar a ese miembro, elegir **Restablecer el acceso de esta persona** y confirmar. El nombre vuelve a quedar libre en el enlace, y quien siga usando el navegador anterior pierde el acceso. No afecta a nadie más, y los gastos y el saldo del miembro quedan exactamente como estaban. Solo se ofrece para amigos que usan el grupo desde el navegador y ya eligieron su nombre. El restablecimiento aparece en la lista de **Actividad** de la app; la página del navegador no lo muestra.
+
+### Fusionar dos miembros
+
+A veces una persona acaba dos veces en el grupo: por ejemplo, «Ania» del navegador y «Ania» que después se unió desde la app, o «Ania (2)» tras perder los datos del navegador. Toca a una de ellas en **Miembros**, elige **Fusionar con…** y escoge el otro nombre. La confirmación muestra el saldo que tendrá el nombre que se queda. Todo lo que el nombre fusionado pagó, debía y liquidó pasa al que se queda, un pago entre ambos se anula (era dinero que pasaba de un bolsillo a otro) y el saldo de nadie más cambia ni un céntimo. Una fusión no se puede deshacer.
+
+El propietario puede fusionar dos nombres del navegador, o un nombre del navegador con el suyo. Cualquiera puede fusionar con su propio nombre un nombre que nadie ha elegido todavía. No se pueden fusionar dos personas que usan la app, y nadie puede pasar un saldo a la cuenta de la app de otra persona: tiene que hacerlo esa persona. La fusión aparece en **Actividad** en la app y en la página del navegador.
 
 ### Controles del propietario
 

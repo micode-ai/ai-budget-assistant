@@ -2417,35 +2417,39 @@ enum ExpenseGroupJoinVia {
 }
 
 model ExpenseGroupMember {
-  id               String               @id @default(uuid())
-  groupId          String               @map("group_id")
-  userId           String?              @map("user_id") // NULL = guest
-  displayName      String               @map("display_name") // 1..40, trimmed, shown to everyone with the link
-  nameKey          String               @map("name_key") // displayName.trim().toLowerCase()
+  id                 String               @id @default(uuid())
+  groupId            String               @map("group_id")
+  userId             String?              @map("user_id") // NULL = guest
+  displayName        String               @map("display_name") // 1..40, trimmed, shown to everyone with the link
+  nameKey            String               @map("name_key") // displayName.trim().toLowerCase()
   // sha256(hex) of the guest's device secret (the cookie value). NULL = unclaimed placeholder
   // (added by name, nobody has taken it yet). An app-user member has no secret until it
   // also uses a browser. Never stored in plaintext.
-  claimTokenHash   String?              @unique @map("claim_token_hash")
-  claimedAt        DateTime?            @map("claimed_at")
-  paymentMethod    SettleMethod?        @map("payment_method") // set per group by the member themself
-  paymentHandle    String?              @map("payment_handle") // ≤ 64 chars
-  removedAt        DateTime?            @map("removed_at") // soft removal, only at zero balance
+  claimTokenHash     String?              @unique @map("claim_token_hash")
+  claimedAt          DateTime?            @map("claimed_at")
+  paymentMethod      SettleMethod?        @map("payment_method") // set per group by the member themself
+  paymentHandle      String?              @map("payment_handle") // ≤ 64 chars
+  removedAt          DateTime?            @map("removed_at") // soft removal, only at zero balance
   // True when the OWNER removed this member (not a self-leave). Such a member cannot rejoin via
   // the link (403 GROUP_REMOVED); a self-removed one can, through the normal join checks.
-  removedByOwner   Boolean              @default(false) @map("removed_by_owner")
+  removedByOwner     Boolean              @default(false) @map("removed_by_owner")
   // Provenance for metrics only (ABA-647). NULL = created before the column; never backfilled.
-  joinedVia        ExpenseGroupJoinVia? @map("joined_via")
-  linkedAt         DateTime?            @map("linked_at") // when a guest row was bound to an app account
+  joinedVia          ExpenseGroupJoinVia? @map("joined_via")
+  linkedAt           DateTime?            @map("linked_at") // when a guest row was bound to an app account
   // Balance reminder episode (ABA-653), maintained only by GroupReminderCron, app-user rows only.
   // An episode is an open balance (|net| >= 1.00) of one sign; it ends when the balance closes or the
   // sign flips, and the cron then resets all four columns. NULL with an open balance = the clock
   // starts on the next run (no backfill).
-  balanceOpenSince DateTime?            @map("balance_open_since")
-  balanceOpenSign  Int?                 @map("balance_open_sign") // -1 owes, 1 is owed
-  lastReminderAt   DateTime?            @map("last_reminder_at")
-  reminderCount    Int                  @default(0) @map("reminder_count") // at most 4 per episode
-  createdAt        DateTime             @default(now()) @map("created_at")
-  updatedAt        DateTime             @updatedAt @map("updated_at")
+  balanceOpenSince   DateTime?            @map("balance_open_since")
+  balanceOpenSign    Int?                 @map("balance_open_sign") // -1 owes, 1 is owed
+  lastReminderAt     DateTime?            @map("last_reminder_at")
+  reminderCount      Int                  @default(0) @map("reminder_count") // at most 4 per episode
+  // ABA-657: set on an ABSORBED row when it was merged into another member of the same group. The
+  // row stays, soft-removed, so history still reads; every ledger row it held now points at that
+  // member. A plain id with no FK, like the event log (a merge is irreversible).
+  mergedIntoMemberId String?              @map("merged_into_member_id")
+  createdAt          DateTime             @default(now()) @map("created_at")
+  updatedAt          DateTime             @updatedAt @map("updated_at")
 
   user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
   group           ExpenseGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)

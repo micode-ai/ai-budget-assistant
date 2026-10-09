@@ -27,6 +27,30 @@ export interface JoinGroupDto {
 
 export interface LinkGuestDto {
   code: string;
+  /** ABA-657: after a 409 ALREADY_MEMBER with `canMerge`, fold the guest row into the caller's row. */
+  merge?: boolean;
+}
+
+/** `details` of the 409 ALREADY_MEMBER from `POST /groups/link-guest` (ABA-657). */
+export interface GroupLinkAlreadyMemberDetails {
+  /** True when the caller's own row is live, so the guest row can be merged into it. */
+  canMerge: boolean;
+  /** The guest row the code was minted for. */
+  guestName: string;
+  /** The caller's existing row in that group. */
+  myName: string;
+  /**
+   * The guest row's current net balance in the group currency (positive: owed money), so the merge is
+   * confirmed knowing what moves. Additive: absent from older servers.
+   */
+  guestBalance?: number;
+  /** The group's currency, the unit of `guestBalance`. */
+  currencyCode?: string;
+}
+
+/** POST /groups/:groupId/members/:memberId/merge (ABA-657): `memberId` is absorbed into `intoMemberId`. */
+export interface MergeGroupMemberDto {
+  intoMemberId: string;
 }
 
 export interface UpdateGroupDto {

@@ -1062,7 +1062,7 @@ describe('GroupGuestController', () => {
       await controller.link(TOKEN, { csrf: csrf(), target: 'web' }, mkReq() as any, res);
       const [key, value, ttl] = cache.set.mock.calls[0];
       expect(key).toMatch(/^grp:link:[a-f0-9]{32}$/);
-      expect(value).toEqual({ groupId: G, memberId: A, guestToken: TOKEN, claim: linkClaimBinding(SECRET_HASH) });
+      expect(value).toEqual({ groupId: G, memberId: A, guestToken: TOKEN, claim: linkClaimBinding(SECRET_HASH), exp: expect.any(Number) });
       expect(ttl).toBe(600);
       const code = key.split(':')[2];
       expect(res.statusCode).toBe(303);

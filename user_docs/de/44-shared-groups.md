@@ -55,7 +55,7 @@ Wenn ein Kassenbon Position für Position zur Gruppe hinzugefügt wurde, zeigt d
 
 ### Vom Browser in die App wechseln
 
-Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-App fortfahren** tippen (oder auf Android auf **In der App öffnen**, wenn die App schon installiert ist). Nach der Anmeldung oder Kontoerstellung wandert die Gruppe mit ihrem gesamten Verlauf in dieses Konto — es geht nichts verloren. Dieser Link funktioniert nur einmal und nur wenige Minuten lang. Wer die App zuerst aus Google Play installiert, öffnet danach den Gruppenlink erneut im Browser und tippt auf **In der App öffnen**.
+Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-App fortfahren** tippen (oder auf Android auf **In der App öffnen**, wenn die App schon installiert ist). Nach der Anmeldung oder Kontoerstellung wandert die Gruppe mit ihrem gesamten Verlauf in dieses Konto — es geht nichts verloren. Dieser Link funktioniert nur einmal und nur wenige Minuten lang. Wer die App zuerst aus Google Play installiert, öffnet danach den Gruppenlink erneut im Browser und tippt auf **In der App öffnen**. Bist du in der App schon unter einem anderen Namen in der Gruppe, bietet die App stattdessen **„Ania“ mit deinem Konto zusammenführen** an (mit deinem Browsernamen): Der Browsername und alles darunter gehen auf deinen App-Namen über, und die Salden aller anderen bleiben gleich.
 
 ## Eine Gruppe in der App nutzen
 
@@ -99,6 +99,12 @@ Tippe auf **Mitglieder**, um alle zu sehen. Mitglieder mit **Noch nicht beigetre
 Ein vom Besitzer entferntes Mitglied kann nicht über den Link zurückkehren.
 
 Hat jemand den Zugang im Browser verloren oder hat sich jemand anderes seinen Namen genommen, kann der Besitzer dieses Mitglied antippen, **Anmeldung dieser Person zurücksetzen** wählen und bestätigen. Der Name ist im Link wieder frei, und wer den alten Browser noch nutzt, verliert den Zugang dazu. Sonst ist niemand betroffen, und die Ausgaben und der Saldo des Mitglieds bleiben genau, wie sie waren. Das wird nur für Freunde angeboten, die die Gruppe im Browser nutzen und ihren Namen schon gewählt haben. Das Zurücksetzen erscheint in der App in der Liste **Aktivität**; die Browserseite zeigt es nicht.
+
+### Zwei Mitglieder zusammenführen
+
+Manchmal ist eine Person zweimal in der Gruppe — etwa „Ania“ aus dem Browser und „Ania“, die später in der App beigetreten ist, oder „Ania (2)“, nachdem ihre Browserdaten verloren gingen. Tippe in **Mitglieder** auf einen der beiden, wähle **Zusammenführen mit…** und dann den anderen Namen. Die Bestätigung zeigt, welchen Saldo der verbleibende Name haben wird. Alles, was der zusammengeführte Name bezahlt, geschuldet und ausgeglichen hat, geht auf den verbleibenden über, eine Zahlung zwischen den beiden wird storniert (das war Geld von einer Tasche in die andere), und der Saldo aller anderen ändert sich um keinen Cent. Eine Zusammenführung kann nicht rückgängig gemacht werden.
+
+Der Besitzer kann zwei Browsernamen zusammenführen oder einen Browsernamen mit seinem eigenen. Jeder kann einen Namen, den noch niemand gewählt hat, mit seinem eigenen zusammenführen. Zwei Personen, die beide die App nutzen, lassen sich nicht zusammenführen, und niemand kann einen Saldo auf das App-Konto einer anderen Person schieben — das muss diese Person selbst tun. Die Zusammenführung erscheint unter **Aktivität** in der App und auf der Browserseite.
 
 ### Besitzer-Optionen
 

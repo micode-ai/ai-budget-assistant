@@ -55,7 +55,7 @@ Gdy paragon został dodany do grupy pozycja po pozycji, strona przez tydzień po
 
 ### Przejście z przeglądarki do aplikacji
 
-W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**.
+W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**. Jeśli jesteś już w tej grupie w aplikacji pod innym imieniem, aplikacja zaproponuje zamiast tego **Połącz „Ania” ze swoim kontem** (z Twoim imieniem z przeglądarki): imię z przeglądarki i wszystko, co pod nim jest, przechodzi na Twoje imię w aplikacji, a saldo nikogo innego się nie zmienia.
 
 ## Korzystanie z grupy w aplikacji
 
@@ -99,6 +99,12 @@ Dotknij **Członkowie**, aby zobaczyć wszystkich. Osoby oznaczone **Jeszcze nie
 Członek usunięty przez właściciela nie może wrócić przez link.
 
 Jeśli ktoś stracił dostęp w przeglądarce albo ktoś inny wybrał jego imię, właściciel może dotknąć tego członka, wybrać **Zresetuj logowanie tej osoby** i potwierdzić. Imię znów staje się wolne w linku, a ten, kto nadal korzysta ze starej przeglądarki, traci do niego dostęp. Nikogo innego to nie dotyczy, a wydatki i saldo członka pozostają bez zmian. Opcja jest dostępna tylko dla znajomych, którzy korzystają z grupy w przeglądarce i już wybrali swoje imię. Reset widać na liście **Aktywność** w aplikacji; strona w przeglądarce go nie pokazuje.
+
+### Łączenie dwóch członków
+
+Czasem jedna osoba trafia do grupy dwa razy — na przykład „Ania” z przeglądarki i „Ania”, która potem dołączyła w aplikacji, albo „Ania (2)” po utracie danych przeglądarki. Dotknij jednej z nich w **Członkowie**, wybierz **Połącz z…** i wskaż drugie imię. Potwierdzenie pokazuje, jakie saldo będzie miało pozostałe imię. Wszystko, co połączone imię zapłaciło, było winne i rozliczyło, przechodzi na pozostałe, płatność między nimi dwiema zostaje anulowana (to były pieniądze przełożone z jednej kieszeni do drugiej), a saldo nikogo innego nie zmienia się ani o grosz. Połączenia nie da się cofnąć.
+
+Właściciel może połączyć dwa imiona z przeglądarki albo imię z przeglądarki ze swoim. Każdy może połączyć ze swoim imieniem imię, którego nikt jeszcze nie wybrał. Nie można połączyć dwóch osób, które obie korzystają z aplikacji, i nikt nie może przenieść salda na cudze konto w aplikacji — ta osoba musi zrobić to sama. Połączenie widać w **Aktywności** w aplikacji i na stronie w przeglądarce.
 
 ### Opcje właściciela
 

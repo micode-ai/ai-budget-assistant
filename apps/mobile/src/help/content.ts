@@ -5131,7 +5131,7 @@ When a receipt was added to the group line by line, the page shows it under **Di
 
 ### Moving from the browser to the app
 
-Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**.
+Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**. If you are already in the group in the app under another name, the app offers **Merge “Ania” into your account** instead (with your browser name): the browser name and everything under it move to your app name, and nobody else's balance changes.
 
 ## Using a group in the app
 
@@ -5175,6 +5175,12 @@ Tap **Members** to see everyone. Members marked **Not joined yet** haven't picke
 A member removed by the owner can't rejoin through the link.
 
 If someone lost access in the browser, or someone else picked their name, the owner can tap that member and choose **Reset this person's login**, then confirm. The name becomes free on the link again, and whoever still uses the old browser loses access to it. Nobody else is affected, and the member's expenses and balance stay exactly as they were. This is offered only for friends who use the group from the browser and have already picked their name. The reset appears in the **Activity** list in the app; the browser page doesn't show it.
+
+### Merging two members
+
+Sometimes one person ends up in the group twice — for example "Ania" from the browser and "Ania" who later joined in the app, or "Ania (2)" after she lost her browser data. Tap one of them in **Members**, choose **Merge with…** and pick the other name. The confirmation shows the balance the remaining name will have. Everything the merged name paid, owed and settled moves to the remaining one, a payment between the two of them is cancelled (it was money moving from one pocket to the other), and nobody else's balance changes by a single cent. A merge can't be undone.
+
+The owner can merge two browser names, or a browser name into their own. Anyone can merge a name nobody has picked yet into their own name. Two people who both use the app can't be merged, and nobody can move a balance onto someone else's app account — that person has to do it themselves. The merge shows up in **Activity** in the app and on the browser page.
 
 ### Owner controls
 
@@ -10304,7 +10310,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ### Переход из браузера в приложение
 
-В разделе **Сохраните эту группу в приложении** друг может нажать **Продолжить в веб-версии приложения** (или **Открыть в приложении** на Android, если приложение уже установлено). После входа или регистрации группа со всей историей переходит в этот аккаунт — ничего не теряется. Эта ссылка срабатывает один раз и только несколько минут. Если он сначала установит приложение из Google Play, потом нужно снова открыть ссылку группы в браузере и нажать **Открыть в приложении**.
+В разделе **Сохраните эту группу в приложении** друг может нажать **Продолжить в веб-версии приложения** (или **Открыть в приложении** на Android, если приложение уже установлено). После входа или регистрации группа со всей историей переходит в этот аккаунт — ничего не теряется. Эта ссылка срабатывает один раз и только несколько минут. Если он сначала установит приложение из Google Play, потом нужно снова открыть ссылку группы в браузере и нажать **Открыть в приложении**. Если вы уже в этой группе в приложении под другим именем, приложение вместо этого предложит **Объединить «Аня» с вашим аккаунтом** (с вашим именем из браузера): это имя и всё, что за ним числится, перейдут к вашему имени в приложении, а баланс остальных не изменится.
 
 ## Группа в приложении
 
@@ -10348,6 +10354,12 @@ OCR иногда неверно читает цену, выдумывает ст
 Участник, которого удалил владелец, не может вернуться по ссылке.
 
 Если человек потерял доступ в браузере или кто-то другой выбрал его имя, владелец может нажать на этого участника, выбрать **Сбросить вход этого человека** и подтвердить. Имя снова становится свободным по ссылке, а тот, кто ещё пользуется старым браузером, теряет к нему доступ. Больше это никого не затрагивает, а расходы и баланс участника остаются как были. Действие доступно только для друзей, которые пользуются группой в браузере и уже выбрали своё имя. Сброс появляется в списке **Активность** в приложении; страница в браузере его не показывает.
+
+### Объединение двух участников
+
+Бывает, что один человек оказывается в группе дважды — например, «Аня» из браузера и «Аня», которая потом присоединилась в приложении, или «Аня (2)» после потери данных браузера. Нажмите на одну из них в **Участники**, выберите **Объединить с…** и укажите второе имя. В подтверждении видно, какой баланс будет у оставшегося имени. Всё, что объединённое имя оплатило, было должно и погасило, переходит к оставшемуся, платёж между ними двумя отменяется (это были деньги из одного кармана в другой), а баланс остальных не меняется ни на копейку. Объединение нельзя отменить.
+
+Владелец может объединить два имени из браузера или имя из браузера со своим. Любой может объединить со своим именем имя, которое ещё никто не выбрал. Нельзя объединить двух людей, которые оба пользуются приложением, и никто не может перенести баланс на чужой аккаунт в приложении — это должен сделать сам этот человек. Объединение видно в **Активность** в приложении и на странице в браузере.
 
 ### Настройки владельца
 
@@ -15447,7 +15459,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ### Перехід із браузера в застосунок
 
-У розділі **Збережіть цю групу в застосунку** друг може натиснути **Продовжити у веб-версії застосунку** (або **Відкрити в застосунку** на Android, якщо застосунок уже встановлено). Після входу чи реєстрації група з усією історією переходить у цей акаунт — нічого не втрачається. Це посилання спрацьовує один раз і лише кілька хвилин. Якщо він спершу встановить застосунок із Google Play, потім треба знову відкрити посилання групи в браузері й натиснути **Відкрити в застосунку**.
+У розділі **Збережіть цю групу в застосунку** друг може натиснути **Продовжити у веб-версії застосунку** (або **Відкрити в застосунку** на Android, якщо застосунок уже встановлено). Після входу чи реєстрації група з усією історією переходить у цей акаунт — нічого не втрачається. Це посилання спрацьовує один раз і лише кілька хвилин. Якщо він спершу встановить застосунок із Google Play, потім треба знову відкрити посилання групи в браузері й натиснути **Відкрити в застосунку**. Якщо ви вже в цій групі в застосунку під іншим ім'ям, застосунок натомість запропонує **Об’єднати «Аня» з вашим акаунтом** (з вашим ім'ям із браузера): це ім'я і все, що за ним рахується, перейдуть до вашого імені в застосунку, а баланс інших не зміниться.
 
 ## Група в застосунку
 
@@ -15491,6 +15503,12 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Учасник, якого видалив власник, не може повернутися за посиланням.
 
 Якщо людина втратила доступ у браузері або хтось інший вибрав її ім'я, власник може натиснути на цього учасника, вибрати **Скинути вхід цієї людини** і підтвердити. Ім'я знову стає вільним за посиланням, а той, хто ще користується старим браузером, втрачає до нього доступ. Більше це нікого не стосується, а витрати й баланс учасника залишаються як були. Дія доступна лише для друзів, які користуються групою в браузері та вже вибрали своє ім'я. Скидання з'являється в списку **Активність** у застосунку; сторінка в браузері його не показує.
+
+### Об’єднання двох учасників
+
+Буває, що одна людина опиняється в групі двічі — наприклад, «Аня» з браузера й «Аня», яка потім приєдналася в застосунку, або «Аня (2)» після втрати даних браузера. Натисніть на одну з них в **Учасники**, виберіть **Об’єднати з…** і вкажіть друге ім'я. У підтвердженні видно, який баланс матиме ім'я, що залишиться. Усе, що об’єднане ім'я оплатило, було винне й погасило, переходить до того, що залишилося, платіж між ними двома скасовується (це були гроші з однієї кишені в іншу), а баланс інших не змінюється ні на копійку. Об’єднання не можна скасувати.
+
+Власник може об’єднати два імені з браузера або ім'я з браузера зі своїм. Будь-хто може об’єднати зі своїм ім'ям ім'я, яке ще ніхто не вибрав. Не можна об’єднати двох людей, які обидва користуються застосунком, і ніхто не може перенести баланс на чужий акаунт у застосунку — це має зробити сама ця людина. Об’єднання видно в **Активність** у застосунку і на сторінці в браузері.
 
 ### Налаштування власника
 
@@ -20575,7 +20593,7 @@ Gdy paragon został dodany do grupy pozycja po pozycji, strona przez tydzień po
 
 ### Przejście z przeglądarki do aplikacji
 
-W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**.
+W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj w aplikacji w przeglądarce** (albo **Otwórz w aplikacji** na Androidzie, jeśli aplikacja jest już zainstalowana). Po zalogowaniu lub założeniu konta grupa z całą historią przechodzi na to konto — nic nie ginie. Ten link działa tylko raz i tylko przez kilka minut. Jeśli najpierw zainstaluje aplikację z Google Play, powinien potem ponownie otworzyć link do grupy w przeglądarce i dotknąć **Otwórz w aplikacji**. Jeśli jesteś już w tej grupie w aplikacji pod innym imieniem, aplikacja zaproponuje zamiast tego **Połącz „Ania” ze swoim kontem** (z Twoim imieniem z przeglądarki): imię z przeglądarki i wszystko, co pod nim jest, przechodzi na Twoje imię w aplikacji, a saldo nikogo innego się nie zmienia.
 
 ## Korzystanie z grupy w aplikacji
 
@@ -20619,6 +20637,12 @@ Dotknij **Członkowie**, aby zobaczyć wszystkich. Osoby oznaczone **Jeszcze nie
 Członek usunięty przez właściciela nie może wrócić przez link.
 
 Jeśli ktoś stracił dostęp w przeglądarce albo ktoś inny wybrał jego imię, właściciel może dotknąć tego członka, wybrać **Zresetuj logowanie tej osoby** i potwierdzić. Imię znów staje się wolne w linku, a ten, kto nadal korzysta ze starej przeglądarki, traci do niego dostęp. Nikogo innego to nie dotyczy, a wydatki i saldo członka pozostają bez zmian. Opcja jest dostępna tylko dla znajomych, którzy korzystają z grupy w przeglądarce i już wybrali swoje imię. Reset widać na liście **Aktywność** w aplikacji; strona w przeglądarce go nie pokazuje.
+
+### Łączenie dwóch członków
+
+Czasem jedna osoba trafia do grupy dwa razy — na przykład „Ania” z przeglądarki i „Ania”, która potem dołączyła w aplikacji, albo „Ania (2)” po utracie danych przeglądarki. Dotknij jednej z nich w **Członkowie**, wybierz **Połącz z…** i wskaż drugie imię. Potwierdzenie pokazuje, jakie saldo będzie miało pozostałe imię. Wszystko, co połączone imię zapłaciło, było winne i rozliczyło, przechodzi na pozostałe, płatność między nimi dwiema zostaje anulowana (to były pieniądze przełożone z jednej kieszeni do drugiej), a saldo nikogo innego nie zmienia się ani o grosz. Połączenia nie da się cofnąć.
+
+Właściciel może połączyć dwa imiona z przeglądarki albo imię z przeglądarki ze swoim. Każdy może połączyć ze swoim imieniem imię, którego nikt jeszcze nie wybrał. Nie można połączyć dwóch osób, które obie korzystają z aplikacji, i nikt nie może przenieść salda na cudze konto w aplikacji — ta osoba musi zrobić to sama. Połączenie widać w **Aktywności** w aplikacji i na stronie w przeglądarce.
 
 ### Opcje właściciela
 
@@ -25678,7 +25702,7 @@ Wenn ein Kassenbon Position für Position zur Gruppe hinzugefügt wurde, zeigt d
 
 ### Vom Browser in die App wechseln
 
-Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-App fortfahren** tippen (oder auf Android auf **In der App öffnen**, wenn die App schon installiert ist). Nach der Anmeldung oder Kontoerstellung wandert die Gruppe mit ihrem gesamten Verlauf in dieses Konto — es geht nichts verloren. Dieser Link funktioniert nur einmal und nur wenige Minuten lang. Wer die App zuerst aus Google Play installiert, öffnet danach den Gruppenlink erneut im Browser und tippt auf **In der App öffnen**.
+Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-App fortfahren** tippen (oder auf Android auf **In der App öffnen**, wenn die App schon installiert ist). Nach der Anmeldung oder Kontoerstellung wandert die Gruppe mit ihrem gesamten Verlauf in dieses Konto — es geht nichts verloren. Dieser Link funktioniert nur einmal und nur wenige Minuten lang. Wer die App zuerst aus Google Play installiert, öffnet danach den Gruppenlink erneut im Browser und tippt auf **In der App öffnen**. Bist du in der App schon unter einem anderen Namen in der Gruppe, bietet die App stattdessen **„Ania“ mit deinem Konto zusammenführen** an (mit deinem Browsernamen): Der Browsername und alles darunter gehen auf deinen App-Namen über, und die Salden aller anderen bleiben gleich.
 
 ## Eine Gruppe in der App nutzen
 
@@ -25722,6 +25746,12 @@ Tippe auf **Mitglieder**, um alle zu sehen. Mitglieder mit **Noch nicht beigetre
 Ein vom Besitzer entferntes Mitglied kann nicht über den Link zurückkehren.
 
 Hat jemand den Zugang im Browser verloren oder hat sich jemand anderes seinen Namen genommen, kann der Besitzer dieses Mitglied antippen, **Anmeldung dieser Person zurücksetzen** wählen und bestätigen. Der Name ist im Link wieder frei, und wer den alten Browser noch nutzt, verliert den Zugang dazu. Sonst ist niemand betroffen, und die Ausgaben und der Saldo des Mitglieds bleiben genau, wie sie waren. Das wird nur für Freunde angeboten, die die Gruppe im Browser nutzen und ihren Namen schon gewählt haben. Das Zurücksetzen erscheint in der App in der Liste **Aktivität**; die Browserseite zeigt es nicht.
+
+### Zwei Mitglieder zusammenführen
+
+Manchmal ist eine Person zweimal in der Gruppe — etwa „Ania“ aus dem Browser und „Ania“, die später in der App beigetreten ist, oder „Ania (2)“, nachdem ihre Browserdaten verloren gingen. Tippe in **Mitglieder** auf einen der beiden, wähle **Zusammenführen mit…** und dann den anderen Namen. Die Bestätigung zeigt, welchen Saldo der verbleibende Name haben wird. Alles, was der zusammengeführte Name bezahlt, geschuldet und ausgeglichen hat, geht auf den verbleibenden über, eine Zahlung zwischen den beiden wird storniert (das war Geld von einer Tasche in die andere), und der Saldo aller anderen ändert sich um keinen Cent. Eine Zusammenführung kann nicht rückgängig gemacht werden.
+
+Der Besitzer kann zwei Browsernamen zusammenführen oder einen Browsernamen mit seinem eigenen. Jeder kann einen Namen, den noch niemand gewählt hat, mit seinem eigenen zusammenführen. Zwei Personen, die beide die App nutzen, lassen sich nicht zusammenführen, und niemand kann einen Saldo auf das App-Konto einer anderen Person schieben — das muss diese Person selbst tun. Die Zusammenführung erscheint unter **Aktivität** in der App und auf der Browserseite.
 
 ### Besitzer-Optionen
 
@@ -30770,7 +30800,7 @@ Cuando un ticket se ha añadido al grupo línea por línea, la página lo muestr
 
 ### Pasar del navegador a la app
 
-En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app del navegador** (o **Abrir en la app** en Android, si ya tiene la app instalada). Tras iniciar sesión o crear una cuenta, el grupo con todo su historial pasa a esa cuenta: no se pierde nada. Este enlace funciona una sola vez y solo durante unos minutos. Si primero instala la app desde Google Play, después debe volver a abrir el enlace del grupo en el navegador y tocar **Abrir en la app**.
+En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app del navegador** (o **Abrir en la app** en Android, si ya tiene la app instalada). Tras iniciar sesión o crear una cuenta, el grupo con todo su historial pasa a esa cuenta: no se pierde nada. Este enlace funciona una sola vez y solo durante unos minutos. Si primero instala la app desde Google Play, después debe volver a abrir el enlace del grupo en el navegador y tocar **Abrir en la app**. Si ya estás en el grupo en la app con otro nombre, la app ofrece en su lugar **Fusionar «Ania» con tu cuenta** (con tu nombre del navegador): ese nombre y todo lo que tiene pasan a tu nombre de la app, y el saldo de nadie más cambia.
 
 ## Usar un grupo en la app
 
@@ -30814,6 +30844,12 @@ Toca **Miembros** para ver a todos. Los marcados con **Aún no se ha unido** tod
 Un miembro eliminado por el propietario no puede volver a entrar con el enlace.
 
 Si alguien perdió el acceso en el navegador, o si otra persona eligió su nombre, el propietario puede tocar a ese miembro, elegir **Restablecer el acceso de esta persona** y confirmar. El nombre vuelve a quedar libre en el enlace, y quien siga usando el navegador anterior pierde el acceso. No afecta a nadie más, y los gastos y el saldo del miembro quedan exactamente como estaban. Solo se ofrece para amigos que usan el grupo desde el navegador y ya eligieron su nombre. El restablecimiento aparece en la lista de **Actividad** de la app; la página del navegador no lo muestra.
+
+### Fusionar dos miembros
+
+A veces una persona acaba dos veces en el grupo: por ejemplo, «Ania» del navegador y «Ania» que después se unió desde la app, o «Ania (2)» tras perder los datos del navegador. Toca a una de ellas en **Miembros**, elige **Fusionar con…** y escoge el otro nombre. La confirmación muestra el saldo que tendrá el nombre que se queda. Todo lo que el nombre fusionado pagó, debía y liquidó pasa al que se queda, un pago entre ambos se anula (era dinero que pasaba de un bolsillo a otro) y el saldo de nadie más cambia ni un céntimo. Una fusión no se puede deshacer.
+
+El propietario puede fusionar dos nombres del navegador, o un nombre del navegador con el suyo. Cualquiera puede fusionar con su propio nombre un nombre que nadie ha elegido todavía. No se pueden fusionar dos personas que usan la app, y nadie puede pasar un saldo a la cuenta de la app de otra persona: tiene que hacerlo esa persona. La fusión aparece en **Actividad** en la app y en la página del navegador.
 
 ### Controles del propietario
 
@@ -35860,7 +35896,7 @@ Quand un ticket a été ajouté au groupe ligne par ligne, la page l’affiche p
 
 ### Passer du navigateur à l'appli
 
-Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**.
+Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**. Si vous êtes déjà dans le groupe dans l'appli sous un autre nom, l'appli propose à la place **Fusionner « Ania » dans votre compte** (avec votre nom du navigateur) : ce nom et tout ce qu'il contient passent sur votre nom dans l'appli, et le solde des autres ne change pas.
 
 ## Utiliser un groupe dans l'appli
 
@@ -35904,6 +35940,12 @@ Touchez **Membres** pour voir tout le monde. Les membres marqués **Pas encore r
 Un membre retiré par le propriétaire ne peut pas revenir par le lien.
 
 Si quelqu'un a perdu l'accès dans le navigateur, ou si quelqu'un d'autre a pris son nom, le propriétaire peut toucher ce membre, choisir **Réinitialiser la connexion de cette personne** et confirmer. Le nom redevient libre dans le lien, et quiconque utilise encore l'ancien navigateur en perd l'accès. Personne d'autre n'est concerné, et les dépenses et le solde du membre restent exactement comme avant. L'option n'est proposée que pour les amis qui utilisent le groupe depuis le navigateur et ont déjà choisi leur nom. La réinitialisation apparaît dans la liste **Activité** de l'appli ; la page du navigateur ne l'affiche pas.
+
+### Fusionner deux membres
+
+Il arrive qu'une personne se retrouve deux fois dans le groupe — par exemple « Ania » du navigateur et « Ania » qui a rejoint plus tard dans l'appli, ou « Ania (2) » après avoir perdu ses données de navigateur. Touchez l'un des deux dans **Membres**, choisissez **Fusionner avec…** puis l'autre nom. La confirmation indique le solde qu'aura le nom restant. Tout ce que le nom fusionné a payé, devait et réglé passe sur le nom restant, un paiement entre les deux est annulé (c'était de l'argent passé d'une poche à l'autre), et le solde des autres ne bouge pas d'un centime. Une fusion est irréversible.
+
+Le propriétaire peut fusionner deux noms du navigateur, ou un nom du navigateur dans le sien. Chacun peut fusionner dans son propre nom un nom que personne n'a encore choisi. Deux personnes qui utilisent toutes les deux l'appli ne peuvent pas être fusionnées, et personne ne peut faire passer un solde sur le compte d'appli de quelqu'un d'autre : cette personne doit le faire elle-même. La fusion apparaît dans **Activité** dans l'appli et sur la page du navigateur.
 
 ### Options du propriétaire
 
@@ -40914,7 +40956,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ### Пераход з браўзера ў праграму
 
-У раздзеле **Захавайце гэтую групу ў праграме** сябар можа націснуць **Працягнуць у вэб-версіі праграмы** (або **Адкрыць у праграме** на Android, калі праграма ўжо ўсталяваная). Пасля ўваходу ці рэгістрацыі група з усёй гісторыяй пераходзіць у гэты акаўнт — нічога не губляецца. Гэтая спасылка спрацоўвае адзін раз і толькі некалькі хвілін. Калі ён спачатку ўсталюе праграму з Google Play, потым трэба зноў адкрыць спасылку групы ў браўзеры і націснуць **Адкрыць у праграме**.
+У раздзеле **Захавайце гэтую групу ў праграме** сябар можа націснуць **Працягнуць у вэб-версіі праграмы** (або **Адкрыць у праграме** на Android, калі праграма ўжо ўсталяваная). Пасля ўваходу ці рэгістрацыі група з усёй гісторыяй пераходзіць у гэты акаўнт — нічога не губляецца. Гэтая спасылка спрацоўвае адзін раз і толькі некалькі хвілін. Калі ён спачатку ўсталюе праграму з Google Play, потым трэба зноў адкрыць спасылку групы ў браўзеры і націснуць **Адкрыць у праграме**. Калі вы ўжо ў гэтай групе ў праграме пад іншым імем, праграма замест гэтага прапануе **Аб’яднаць «Аня» з вашым акаўнтам** (з вашым імем з браўзера): гэтае імя і ўсё, што за ім лічыцца, пяройдуць да вашага імя ў праграме, а баланс астатніх не зменіцца.
 
 ## Група ў праграме
 
@@ -40958,6 +41000,12 @@ OCR часам няправільна чытае цану, выдумляе ра
 Удзельнік, якога выдаліў уладальнік, не можа вярнуцца па спасылцы.
 
 Калі чалавек страціў доступ у браўзеры або хтосьці іншы выбраў яго імя, уладальнік можа націснуць на гэтага ўдзельніка, выбраць **Скінуць уваход гэтага чалавека** і пацвердзіць. Імя зноў становіцца вольным па спасылцы, а той, хто яшчэ карыстаецца старым браўзерам, губляе да яго доступ. Больш гэта нікога не датычыць, а выдаткі і баланс удзельніка застаюцца як былі. Дзеянне даступнае толькі для сяброў, якія карыстаюцца групай у браўзеры і ўжо выбралі сваё імя. Скід з'яўляецца ў спісе **Актыўнасць** у праграме; старонка ў браўзеры яго не паказвае.
+
+### Аб’яднанне двух удзельнікаў
+
+Бывае, што адзін чалавек апыняецца ў групе двойчы — напрыклад, «Аня» з браўзера і «Аня», якая потым далучылася ў праграме, або «Аня (2)» пасля страты даных браўзера. Націсніце на адну з іх у **Удзельнікі**, выберыце **Аб’яднаць з…** і ўкажыце другое імя. У пацвярджэнні відаць, які баланс будзе ў імя, што застанецца. Усё, што аб’яднанае імя аплаціла, было павіннае і пагасіла, пераходзіць да таго, што засталося, плацёж паміж імі дзвюма адмяняецца (гэта былі грошы з адной кішэні ў другую), а баланс астатніх не мяняецца ні на капейку. Аб’яднанне нельга адмяніць.
+
+Уладальнік можа аб’яднаць два імені з браўзера або імя з браўзера са сваім. Любы можа аб’яднаць са сваім імем імя, якое яшчэ ніхто не выбраў. Нельга аб’яднаць дваіх людзей, якія абодва карыстаюцца праграмай, і ніхто не можа перанесці баланс на чужы акаўнт у праграме — гэта павінен зрабіць сам гэты чалавек. Аб’яднанне відаць у **Актыўнасць** у праграме і на старонцы ў браўзеры.
 
 ### Налады ўладальніка
 
@@ -46094,7 +46142,7 @@ Als een bon regel voor regel aan de groep is toegevoegd, toont de pagina hem een
 
 ### Van de browser naar de app
 
-Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**.
+Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**. Zit je in de app al onder een andere naam in de groep, dan biedt de app in plaats daarvan **“Ania” samenvoegen met je account** aan (met je browsernaam): die naam en alles eronder gaan naar je app-naam, en niemand anders zijn saldo verandert.
 
 ## Een groep gebruiken in de app
 
@@ -46138,6 +46186,12 @@ Tik op **Leden** om iedereen te zien. Leden met **Nog niet toegetreden** hebben 
 Een lid dat door de eigenaar is verwijderd, kan niet via de link terugkomen.
 
 Is iemand de toegang in de browser kwijt, of heeft iemand anders zijn naam gekozen, dan kan de eigenaar op dat lid tikken, **Aanmelding van deze persoon resetten** kiezen en bevestigen. De naam is dan weer vrij in de link, en wie de oude browser nog gebruikt, verliest de toegang. Verder verandert er voor niemand iets, en de uitgaven en het saldo van het lid blijven precies zoals ze waren. Dit wordt alleen aangeboden voor vrienden die de groep in de browser gebruiken en hun naam al hebben gekozen. De reset verschijnt in de app in de lijst **Activiteit**; de browserpagina toont hem niet.
+
+### Twee leden samenvoegen
+
+Soms staat één persoon twee keer in de groep — bijvoorbeeld “Ania” uit de browser en “Ania” die later via de app meedeed, of “Ania (2)” nadat haar browsergegevens weg waren. Tik in **Leden** op een van beiden, kies **Samenvoegen met…** en kies de andere naam. De bevestiging toont welk saldo de overgebleven naam krijgt. Alles wat de samengevoegde naam betaald heeft, schuldig was en verrekend heeft, gaat naar de overgebleven naam, een betaling tussen die twee wordt geannuleerd (dat was geld van de ene zak naar de andere), en niemand anders zijn saldo verandert ook maar een cent. Samenvoegen kan niet ongedaan worden gemaakt.
+
+De eigenaar kan twee browsernamen samenvoegen, of een browsernaam met de eigen naam. Iedereen kan een naam die nog niemand gekozen heeft met de eigen naam samenvoegen. Twee mensen die allebei de app gebruiken, kunnen niet worden samengevoegd, en niemand kan een saldo op het app-account van een ander zetten — dat moet die persoon zelf doen. De samenvoeging verschijnt onder **Activiteit** in de app en op de browserpagina.
 
 ### Eigenaarsopties
 

@@ -55,7 +55,7 @@ Quand un ticket a été ajouté au groupe ligne par ligne, la page l’affiche p
 
 ### Passer du navigateur à l'appli
 
-Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**.
+Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'appli du navigateur** (ou **Ouvrir dans l'appli** sur Android, si l'appli est déjà installée). Après connexion ou création d'un compte, le groupe et tout son historique passent sur ce compte : rien n'est perdu. Ce lien ne fonctionne qu'une fois et seulement quelques minutes. S'il installe d'abord l'appli depuis Google Play, il doit ensuite rouvrir le lien du groupe dans le navigateur et toucher **Ouvrir dans l'appli**. Si vous êtes déjà dans le groupe dans l'appli sous un autre nom, l'appli propose à la place **Fusionner « Ania » dans votre compte** (avec votre nom du navigateur) : ce nom et tout ce qu'il contient passent sur votre nom dans l'appli, et le solde des autres ne change pas.
 
 ## Utiliser un groupe dans l'appli
 
@@ -99,6 +99,12 @@ Touchez **Membres** pour voir tout le monde. Les membres marqués **Pas encore r
 Un membre retiré par le propriétaire ne peut pas revenir par le lien.
 
 Si quelqu'un a perdu l'accès dans le navigateur, ou si quelqu'un d'autre a pris son nom, le propriétaire peut toucher ce membre, choisir **Réinitialiser la connexion de cette personne** et confirmer. Le nom redevient libre dans le lien, et quiconque utilise encore l'ancien navigateur en perd l'accès. Personne d'autre n'est concerné, et les dépenses et le solde du membre restent exactement comme avant. L'option n'est proposée que pour les amis qui utilisent le groupe depuis le navigateur et ont déjà choisi leur nom. La réinitialisation apparaît dans la liste **Activité** de l'appli ; la page du navigateur ne l'affiche pas.
+
+### Fusionner deux membres
+
+Il arrive qu'une personne se retrouve deux fois dans le groupe — par exemple « Ania » du navigateur et « Ania » qui a rejoint plus tard dans l'appli, ou « Ania (2) » après avoir perdu ses données de navigateur. Touchez l'un des deux dans **Membres**, choisissez **Fusionner avec…** puis l'autre nom. La confirmation indique le solde qu'aura le nom restant. Tout ce que le nom fusionné a payé, devait et réglé passe sur le nom restant, un paiement entre les deux est annulé (c'était de l'argent passé d'une poche à l'autre), et le solde des autres ne bouge pas d'un centime. Une fusion est irréversible.
+
+Le propriétaire peut fusionner deux noms du navigateur, ou un nom du navigateur dans le sien. Chacun peut fusionner dans son propre nom un nom que personne n'a encore choisi. Deux personnes qui utilisent toutes les deux l'appli ne peuvent pas être fusionnées, et personne ne peut faire passer un solde sur le compte d'appli de quelqu'un d'autre : cette personne doit le faire elle-même. La fusion apparaît dans **Activité** dans l'appli et sur la page du navigateur.
 
 ### Options du propriétaire
 

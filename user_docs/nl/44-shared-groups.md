@@ -55,7 +55,7 @@ Als een bon regel voor regel aan de groep is toegevoegd, toont de pagina hem een
 
 ### Van de browser naar de app
 
-Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**.
+Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser-app** tikken (of op Android op **Openen in de app**, als de app al geïnstalleerd is). Na het inloggen of een account aanmaken gaat de groep met de volledige geschiedenis naar dat account — er gaat niets verloren. Deze link werkt maar één keer en maar een paar minuten. Installeert hij eerst de app uit Google Play, dan opent hij daarna de groepslink opnieuw in de browser en tikt op **Openen in de app**. Zit je in de app al onder een andere naam in de groep, dan biedt de app in plaats daarvan **“Ania” samenvoegen met je account** aan (met je browsernaam): die naam en alles eronder gaan naar je app-naam, en niemand anders zijn saldo verandert.
 
 ## Een groep gebruiken in de app
 
@@ -99,6 +99,12 @@ Tik op **Leden** om iedereen te zien. Leden met **Nog niet toegetreden** hebben 
 Een lid dat door de eigenaar is verwijderd, kan niet via de link terugkomen.
 
 Is iemand de toegang in de browser kwijt, of heeft iemand anders zijn naam gekozen, dan kan de eigenaar op dat lid tikken, **Aanmelding van deze persoon resetten** kiezen en bevestigen. De naam is dan weer vrij in de link, en wie de oude browser nog gebruikt, verliest de toegang. Verder verandert er voor niemand iets, en de uitgaven en het saldo van het lid blijven precies zoals ze waren. Dit wordt alleen aangeboden voor vrienden die de groep in de browser gebruiken en hun naam al hebben gekozen. De reset verschijnt in de app in de lijst **Activiteit**; de browserpagina toont hem niet.
+
+### Twee leden samenvoegen
+
+Soms staat één persoon twee keer in de groep — bijvoorbeeld “Ania” uit de browser en “Ania” die later via de app meedeed, of “Ania (2)” nadat haar browsergegevens weg waren. Tik in **Leden** op een van beiden, kies **Samenvoegen met…** en kies de andere naam. De bevestiging toont welk saldo de overgebleven naam krijgt. Alles wat de samengevoegde naam betaald heeft, schuldig was en verrekend heeft, gaat naar de overgebleven naam, een betaling tussen die twee wordt geannuleerd (dat was geld van de ene zak naar de andere), en niemand anders zijn saldo verandert ook maar een cent. Samenvoegen kan niet ongedaan worden gemaakt.
+
+De eigenaar kan twee browsernamen samenvoegen, of een browsernaam met de eigen naam. Iedereen kan een naam die nog niemand gekozen heeft met de eigen naam samenvoegen. Twee mensen die allebei de app gebruiken, kunnen niet worden samengevoegd, en niemand kan een saldo op het app-account van een ander zetten — dat moet die persoon zelf doen. De samenvoeging verschijnt onder **Activiteit** in de app en op de browserpagina.
 
 ### Eigenaarsopties
 

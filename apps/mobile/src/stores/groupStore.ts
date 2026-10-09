@@ -37,7 +37,8 @@ interface GroupState {
   loadMoreActivity: () => Promise<void>;
   create: (dto: CreateGroupDto) => Promise<GroupDetail>;
   join: (dto: JoinGroupDto) => Promise<GroupDetail>;
-  linkGuest: (code: string) => Promise<GroupDetail>;
+  /** `merge` (ABA-657): after a 409 ALREADY_MEMBER offering it, fold the guest row into mine. */
+  linkGuest: (code: string, opts?: { merge?: boolean }) => Promise<GroupDetail>;
   addExpense: (
     groupId: string,
     dto: Omit<CreateGroupExpenseDto, 'clientRequestId'>,
@@ -56,6 +57,8 @@ interface GroupState {
   removeMember: (groupId: string, memberId: string) => Promise<void>;
   /** ABA-651: owner frees one guest's browser claim; reloads the group (members + the event row). */
   resetMemberClaim: (groupId: string, memberId: string) => Promise<void>;
+  /** ABA-657: `memberId` is absorbed into `intoMemberId`. Reloads on 404/409, then rethrows. */
+  mergeMembers: (groupId: string, memberId: string, intoMemberId: string) => Promise<void>;
   updateGroup: (groupId: string, dto: UpdateGroupDto) => Promise<void>;
   rotateLink: (groupId: string) => Promise<string>;
   /** ABA-650: hand the group to another app-user member. Reloads on 409 OWNER_CHANGED, then rethrows. */
@@ -168,8 +171,10 @@ export const useGroupStore = create<GroupState>()((set, get) => {
       return detail;
     },
 
-    linkGuest: async (code) => {
-      const detail = await run('linkGuest', () => api.linkGuestGroup({ code }));
+    linkGuest: async (code, opts) => {
+      const detail = await run('linkGuest', () =>
+        api.linkGuestGroup(opts?.merge ? { code, merge: true } : { code }),
+      );
       set({ current: detail });
       await get().loadGroups().catch(() => undefined);
       return detail;
@@ -257,6 +262,20 @@ export const useGroupStore = create<GroupState>()((set, get) => {
         throw e;
       }
       await get().loadGroup(groupId);
+    },
+
+    mergeMembers: async (groupId, memberId, intoMemberId) => {
+      let detail: GroupDetail;
+      try {
+        detail = await run('mergeMembers', () => api.mergeGroupMember(groupId, memberId, intoMemberId));
+      } catch (e) {
+        // 404 / 409: someone left, was merged, or the ledger moved; the list on screen is stale.
+        const status = (e as { status?: number } | undefined)?.status;
+        if (status === 409 || status === 404) await get().loadGroup(groupId).catch(() => undefined);
+        throw e;
+      }
+      await applyDetail(detail);
+      await get().loadGroups().catch(() => undefined);
     },
 
     updateGroup: async (groupId, dto) => {

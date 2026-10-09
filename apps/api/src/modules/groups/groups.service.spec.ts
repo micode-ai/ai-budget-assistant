@@ -672,6 +672,114 @@ describe('GroupsService', () => {
     });
   });
 
+  // ABA-657 review H1: every ledger writer takes the group row lock FIRST, then re-checks the group
+  // is active and every referenced member is live. The lock mock plays "a merge/removal committed
+  // while we waited for the lock": the pre-lock validation passed, the in-lock one must fail.
+  describe('ledger writers lock the group row first (ABA-657 review)', () => {
+    const removeDuringLock = (id: string) =>
+      prisma.expenseGroup.update.mockImplementation(async () => {
+        members.find((m) => m.id === id)!.removedAt = new Date();
+        return group;
+      });
+    const exp = {
+      id: 'e1',
+      groupId: G,
+      description: 'x',
+      amount: 90,
+      date: new Date('2026-01-10'),
+      deletedAt: null,
+      itemized: false,
+      splitType: 'equal',
+      createdByMemberId: A,
+      paidByMemberId: A,
+      originalAmount: null,
+      originalCurrency: null,
+      fxRate: null,
+      shares: [
+        { memberId: A, shareValue: null, shareAmount: 45 },
+        { memberId: B, shareValue: null, shareAmount: 45 },
+      ],
+    };
+    const createDto = {
+      clientRequestId: 'req-00000009',
+      description: 'Groceries',
+      amount: 60,
+      date: '2026-01-12',
+      paidByMemberId: A,
+      splitType: 'equal' as const,
+      shares: [{ memberId: A }, { memberId: B }],
+    };
+
+    it('createExpense: a share holder removed after validation fails under the lock, nothing is written', async () => {
+      removeDuringLock(B);
+      await expect(service.createExpense(G, A, createDto)).rejects.toBeInstanceOf(NotFoundException);
+      expect(prisma.groupExpense.create).not.toHaveBeenCalled();
+    });
+
+    it('createExpense: a payer removed after validation fails under the lock', async () => {
+      removeDuringLock(C);
+      await expect(service.createExpense(G, A, { ...createDto, paidByMemberId: C })).rejects.toBeInstanceOf(NotFoundException);
+      expect(prisma.groupExpense.create).not.toHaveBeenCalled();
+    });
+
+    it('createExpense: takes the lock before the liveness check and the insert, and bumps once', async () => {
+      await service.createExpense(G, A, createDto);
+      const lock = prisma.expenseGroup.update.mock.invocationCallOrder[0];
+      expect(lock).toBeLessThan(prisma.groupExpense.create.mock.invocationCallOrder[0]);
+      expect(prisma.expenseGroup.update).toHaveBeenCalledTimes(1);
+      expect(prisma.expenseGroup.update).toHaveBeenCalledWith(expect.objectContaining({ data: { ledgerVersion: { increment: 1 } } }));
+    });
+
+    it('createExpense (the bot and guest path): an archived group is refused under the lock', async () => {
+      prisma.expenseGroup.update.mockImplementation(async () => ({ ...group, status: 'archived' }));
+      await expect(service.createExpense(G, A, createDto)).rejects.toMatchObject({ status: 403, response: { code: 'GROUP_ARCHIVED' } });
+      expect(prisma.groupExpense.create).not.toHaveBeenCalled();
+    });
+
+    it('updateExpense: a share holder merged away after validation fails under the lock', async () => {
+      prisma.groupExpense.findFirst.mockResolvedValue(exp);
+      removeDuringLock(B);
+      await expect(service.updateExpense(G, A, 'e1', { description: 'y' })).rejects.toBeInstanceOf(NotFoundException);
+      expect(prisma.groupExpenseShare.deleteMany).not.toHaveBeenCalled();
+      expect(prisma.groupExpense.update).not.toHaveBeenCalled();
+    });
+
+    it('deleteExpense and voidSettlement take the group lock first', async () => {
+      prisma.groupExpense.findFirst.mockResolvedValue({ id: 'e1', createdByMemberId: A, paidByMemberId: A });
+      await service.deleteExpense(G, A, 'e1');
+      expect(prisma.expenseGroup.update.mock.invocationCallOrder[0]).toBeLessThan(prisma.groupExpense.update.mock.invocationCallOrder[0]);
+
+      prisma.expenseGroup.update.mockClear();
+      prisma.groupSettlement.findFirst.mockResolvedValue({ id: 's1', recordedByMemberId: A, toMemberId: A });
+      await service.voidSettlement(G, A, 's1');
+      expect(prisma.expenseGroup.update.mock.invocationCallOrder[0]).toBeLessThan(prisma.groupSettlement.update.mock.invocationCallOrder[0]);
+      prisma.expenseGroup.update.mockImplementation(async () => ({ ...group, status: 'archived' }));
+      await expect(service.voidSettlement(G, A, 's1')).rejects.toMatchObject({ status: 403 });
+    });
+
+    it('createSettlement: a party removed between the CAS and the write fails, nothing recorded', async () => {
+      prisma.expenseGroup.updateMany.mockImplementation(async () => {
+        members.find((m) => m.id === A)!.removedAt = new Date();
+        return { count: 1 };
+      });
+      await expect(
+        service.createSettlement(G, B, { clientRequestId: 'req-00000003', fromMemberId: B, toMemberId: A, amount: 30, ledgerVersion: 3 }),
+      ).rejects.toBeInstanceOf(NotFoundException);
+      expect(prisma.groupSettlement.create).not.toHaveBeenCalled();
+    });
+
+    it('removeMember: a balance created after the pre-checks is caught under the lock', async () => {
+      expenses = [];
+      prisma.expenseGroup.update.mockImplementation(async () => {
+        // an expense that committed before our lock: bob now owes 30
+        expenses = [{ id: 'e2', paidByMemberId: A, amount: 60, date: new Date(), shares: [{ memberId: A, shareAmount: 30 }, { memberId: B, shareAmount: 30 }] }];
+        return group;
+      });
+      await expect(service.removeMember(G, A, B)).rejects.toMatchObject({ status: 409, response: { code: 'NONZERO_BALANCE' } });
+      expect(prisma.expenseGroupMember.update).not.toHaveBeenCalled();
+    });
+  });
+
   describe('member removal and the atomic cap', () => {
     it('records removedByOwner=true when the owner removes someone, false for a self-leave', async () => {
       expenses = [];

@@ -55,7 +55,7 @@ When a receipt was added to the group line by line, the page shows it under **Di
 
 ### Moving from the browser to the app
 
-Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**.
+Under **Keep this group in the app**, a friend can tap **Continue in the browser app** (or **Open in the app** on Android, if the app is already installed). After signing in or creating an account, the group and its whole history move to that account — nothing is lost. This link works once and only for a few minutes. If they install the app from Google Play first, they should open the group link in the browser again afterwards and tap **Open in the app**. If you are already in the group in the app under another name, the app offers **Merge “Ania” into your account** instead (with your browser name): the browser name and everything under it move to your app name, and nobody else's balance changes.
 
 ## Using a group in the app
 
@@ -99,6 +99,12 @@ Tap **Members** to see everyone. Members marked **Not joined yet** haven't picke
 A member removed by the owner can't rejoin through the link.
 
 If someone lost access in the browser, or someone else picked their name, the owner can tap that member and choose **Reset this person's login**, then confirm. The name becomes free on the link again, and whoever still uses the old browser loses access to it. Nobody else is affected, and the member's expenses and balance stay exactly as they were. This is offered only for friends who use the group from the browser and have already picked their name. The reset appears in the **Activity** list in the app; the browser page doesn't show it.
+
+### Merging two members
+
+Sometimes one person ends up in the group twice — for example "Ania" from the browser and "Ania" who later joined in the app, or "Ania (2)" after she lost her browser data. Tap one of them in **Members**, choose **Merge with…** and pick the other name. The confirmation shows the balance the remaining name will have. Everything the merged name paid, owed and settled moves to the remaining one, a payment between the two of them is cancelled (it was money moving from one pocket to the other), and nobody else's balance changes by a single cent. A merge can't be undone.
+
+The owner can merge two browser names, or a browser name into their own. Anyone can merge a name nobody has picked yet into their own name. Two people who both use the app can't be merged, and nobody can move a balance onto someone else's app account — that person has to do it themselves. The merge shows up in **Activity** in the app and on the browser page.
 
 ### Owner controls
 

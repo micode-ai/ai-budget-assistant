@@ -35,7 +35,10 @@ export const groupsApi = {
   joinGroup(dto: JoinGroupDto) {
     return httpClient.request<GroupDetail>('/groups/join', { method: 'POST', body: json(dto) });
   },
-  /** 409 ALREADY_MEMBER, 410 LINK_CODE_INVALID. */
+  /**
+   * 409 ALREADY_MEMBER (its `details` offer a merge, ABA-657), 410 LINK_CODE_INVALID. With `merge: true`
+   * after that 409, the guest row is folded into the caller's own row.
+   */
   linkGuestGroup(dto: LinkGuestDto) {
     return httpClient.request<GroupDetail>('/groups/link-guest', { method: 'POST', body: json(dto) });
   },
@@ -62,6 +65,16 @@ export const groupsApi = {
   /** ABA-651: the owner frees one guest's browser claim. 404 (foreign/app user/removed), 409 NOT_CLAIMED. */
   resetGroupMemberClaim(groupId: string, memberId: string) {
     return httpClient.request<GroupMember>(`/groups/${groupId}/members/${memberId}/reset-claim`, { method: 'POST' });
+  },
+  /**
+   * ABA-657: `memberId` is absorbed into `intoMemberId` (the server keeps an app-user row and checks
+   * consent). 403 MERGE_NOT_ALLOWED, 409 BOTH_APP_USERS / MERGE_CHANGED, 404 a stale member.
+   */
+  mergeGroupMember(groupId: string, memberId: string, intoMemberId: string) {
+    return httpClient.request<GroupDetail>(`/groups/${groupId}/members/${memberId}/merge`, {
+      method: 'POST',
+      body: json({ intoMemberId }),
+    });
   },
   /** ABA-650: take over an orphaned group. 409 GROUP_HAS_OWNER / OWNER_LIMIT. */
   adoptGroup(groupId: string) {
