@@ -240,11 +240,11 @@ describe('GroupGuestController', () => {
       expect(res.statusCode).toBe(200);
       expect(res.headers['Cache-Control']).toBe('no-store');
       expect(res.headers['X-Robots-Tag']).toBe('noindex');
-      expect(res.headers['Referrer-Policy']).toBe('no-referrer');
+      expect(res.headers['Referrer-Policy']).toBe('same-origin');
       expect(res.headers['Content-Security-Policy']).toBe(GROUP_GUEST_CSP);
       expect(GROUP_GUEST_CSP).toContain("default-src 'none'");
       expect(GROUP_GUEST_CSP).toContain("frame-ancestors 'none'");
-      expect(res.body).toContain('<meta name="referrer" content="no-referrer">');
+      expect(res.body).toContain('<meta name="referrer" content="same-origin">');
       expect(res.body).not.toContain('<script');
       expect(res.body).not.toContain('SENTINEL');
       expect(res.body).not.toContain('isAppUser');
@@ -465,11 +465,30 @@ describe('GroupGuestController', () => {
         expect(res.cookies).toHaveLength(1);
         expect(res.location).toContain('f=joined');
       });
-      it('isTrustedRequestOrigin: no Origin and no Sec-Fetch-Site passes; same-site is not cross-site', () => {
+      it('isTrustedRequestOrigin: Sec-Fetch-Site decides when present, Origin only without it', () => {
         expect(isTrustedRequestOrigin({})).toBe(true);
         expect(isTrustedRequestOrigin({ 'sec-fetch-site': 'same-origin' })).toBe(true);
         expect(isTrustedRequestOrigin({ 'sec-fetch-site': 'cross-site' })).toBe(false);
+        expect(isTrustedRequestOrigin({ 'sec-fetch-site': 'same-site' })).toBe(false);
+        expect(isTrustedRequestOrigin({ 'sec-fetch-site': 'none' })).toBe(false);
         expect(isTrustedRequestOrigin({ origin: 'not a url' })).toBe(false);
+      });
+      // Regression (2026-10-09): a real browser on a page with a no-referrer policy POSTs its own
+      // form with `Origin: null` + `Sec-Fetch-Site: same-origin`; every join was refused.
+      it.each(cases)('%s accepts a same-origin POST that carries Origin: null', async (_n, call) => {
+        const res = mkRes();
+        await call(mkReq({ headers: { origin: 'null', 'sec-fetch-site': 'same-origin' } }), res);
+        expect(res.location).not.toContain('f=forbidden');
+        expect(res.cookies).toHaveLength(1);
+      });
+      it.each(cases)('%s still refuses a cross-site POST even with our own Origin', async (_n, call) => {
+        const res = mkRes();
+        await call(
+          mkReq({ headers: { origin: 'https://api.ai-budget.pl', 'sec-fetch-site': 'cross-site' } }),
+          res,
+        );
+        expect(res.location).toContain('f=forbidden');
+        expect(res.cookies).toHaveLength(0);
       });
     });
 

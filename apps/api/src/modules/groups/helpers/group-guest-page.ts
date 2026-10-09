@@ -112,7 +112,7 @@ const CSS =
   '.cta{background:#fff;border:1px solid #e5e5e5;border-radius:12px;padding:16px;margin-bottom:16px;text-align:center}.cta-title{font-size:14px;font-weight:600;margin-bottom:10px}.btn-cta{background:#E37F2B;color:#fff}.cta .play{display:inline-block;margin-top:6px;font-size:13px;color:#6b6b73}';
 
 function pageShell(lang: string, title: string, bodyHtml: string): string {
-  return `<!doctype html><html lang="${escapeHtml(lang)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="robots" content="noindex"><title>${escapeHtml(title)}</title><style>${CSS}</style></head><body>${bodyHtml}</body></html>`;
+  return `<!doctype html><html lang="${escapeHtml(lang)}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="referrer" content="same-origin"><meta name="robots" content="noindex"><title>${escapeHtml(title)}</title><style>${CSS}</style></head><body>${bodyHtml}</body></html>`;
 }
 
 /** A page with a title and one paragraph. Depends only on `strings` + the keys it is given. */

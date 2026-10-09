@@ -41,13 +41,22 @@ const guestLinkBase = () => process.env.APP_PUBLIC_URL || 'https://api.ai-budget
 
 /**
  * CSRF / login-CSRF gate for the cookie-less POSTs (join, restore), which cannot carry a per-member
- * token. False when the browser says the request is cross-site, or when an Origin header is present
- * and is neither this API's own origin nor the request's own Host. No Origin and no Sec-Fetch-Site
- * (older clients, curl) passes: those cannot be driven by another site's page.
+ * token.
+ *
+ * When the browser sends Sec-Fetch-Site it decides: only 'same-origin' passes. A page cannot forge
+ * that header, so it is the authoritative answer. Only without it (older browsers, curl) does the
+ * Origin header decide: absent passes, our own origin or the request's own Host passes, anything
+ * else — including the opaque "null" — fails.
+ *
+ * Why Sec-Fetch-Site comes first: with `Referrer-Policy: no-referrer` a browser sends `Origin: null`
+ * even on a same-origin form POST, which made the old Origin-first check refuse every real join
+ * ("You can't do that", 2026-10-09). The page now uses `same-origin`, but the browser's own
+ * judgement is the safer source either way.
  */
 export function isTrustedRequestOrigin(headers: Record<string, string | string[] | undefined>): boolean {
   const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
-  if (one(headers['sec-fetch-site']) === 'cross-site') return false;
+  const site = one(headers['sec-fetch-site']);
+  if (site !== undefined) return site === 'same-origin';
   const origin = one(headers.origin);
   if (origin === undefined) return true;
   let parsed: URL;

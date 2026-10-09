@@ -60,7 +60,9 @@ export class GroupGuestController {
     res.set({
       'Cache-Control': 'no-store',
       'X-Robots-Tag': 'noindex',
-      'Referrer-Policy': 'no-referrer',
+      // same-origin, not no-referrer: no-referrer makes browsers send `Origin: null` on our own form
+      // POSTs; same-origin still never leaks the tokened URL to an external site (pay links).
+      'Referrer-Policy': 'same-origin',
       'Content-Security-Policy': GROUP_GUEST_CSP,
       'X-Content-Type-Options': 'nosniff',
     });

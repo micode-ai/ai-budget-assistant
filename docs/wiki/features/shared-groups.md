@@ -88,7 +88,7 @@ captured (notification, import, receipt), their budget shows the full outflow, n
 `GuestController` (`s/`) and `ShoppingListGuestController` (`sl/`), excluded from `/api/v1` by the
 `'g/(.*)'` wildcard in `apps/api/src/global-prefix-exclusions.ts`. Server-rendered HTML with no
 `<script>`, plain forms, Post/Redirect/Get (every POST answers 303 to `/g/:token`), and headers
-`no-store`, `noindex`, `no-referrer`, `nosniff` and a strict CSP (`default-src 'none'`,
+`no-store`, `noindex`, `Referrer-Policy: same-origin`, `nosniff` and a strict CSP (`default-src 'none'`,
 `form-action` limited to self plus the two link-handoff destinations, `frame-ancestors 'none'`).
 Security model:
 - **Token.** `guestToken` is 128-bit random, the group's bearer credential, stored plain because
@@ -103,9 +103,14 @@ Security model:
   guest member.
 - **CSRF.** Every cookie-authenticated form carries `csrf = sha256('grp-csrf:' + secret)`,
   compared with `timingSafeEqual`. The two cookie-minting POSTs (join, restore) cannot carry it, so
-  `isTrustedRequestOrigin` refuses a `Sec-Fetch-Site: cross-site` request and an `Origin` that is
-  neither the API's own origin nor the request's host, and they never replace a cookie that already
-  resolves to a live member (login CSRF / session fixation).
+  `isTrustedRequestOrigin` lets the browser decide through `Sec-Fetch-Site` (only `same-origin`
+  passes); only when that header is absent does it fall back to `Origin` (absent, our own origin or
+  the request's host pass; `null` fails). They also never replace a cookie that already resolves to
+  a live member (login CSRF / session fixation). **Never make this Origin-first and never set the
+  page to `no-referrer`:** with `no-referrer` a browser sends `Origin: null` on its own same-origin
+  form POST, and that refused every real join with "You can't do that" on the first day in
+  production (2026-10-09). The page uses `Referrer-Policy: same-origin`, which still never leaks the
+  tokened URL to an external site.
 - **Write ceilings.** After the actor and CSRF checks pass, a write charges a per-member hourly
   bucket (`grp:w:{groupId}:{memberId}`) and then the per-group one (`grp:w:{groupId}`); joins have
   their own per-group bucket (`grp:j:{groupId}`). They go through `CacheService.incrementWindow`,
