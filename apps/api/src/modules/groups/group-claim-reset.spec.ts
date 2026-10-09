@@ -129,7 +129,7 @@ describe('Group claim reset (ABA-651)', () => {
       setIfAbsent: jest.fn(async () => true),
       incrementWindow: jest.fn(async () => 1),
     };
-    groups = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any);
+    groups = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any, { getRates: jest.fn() } as any);
     guest = new GroupGuestService(prisma, cache, groups);
   });
 

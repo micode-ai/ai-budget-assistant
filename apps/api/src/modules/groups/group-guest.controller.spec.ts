@@ -189,7 +189,7 @@ describe('GroupGuestController', () => {
       get: jest.fn(async () => ({ groupId: G })),
       getAndDelete: jest.fn(),
     };
-    groups = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any);
+    groups = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any, { getRates: jest.fn() } as any);
     svc = new GroupGuestService(prisma, cache, groups);
     controller = new GroupGuestController(svc);
   });
@@ -831,6 +831,101 @@ describe('GroupGuestController', () => {
     });
   });
 
+  // ------------------------------------------------- multi-currency (ABA-654)
+
+  describe('multi-currency add form (ABA-654)', () => {
+    const body = (over: any = {}) => ({
+      csrf: csrf(),
+      rid: RID,
+      description: 'Museum',
+      amount: '30',
+      paidBy: A,
+      splitType: 'equal',
+      [`inc_${A}`]: '1',
+      [`inc_${B}`]: '1',
+      ...over,
+    });
+
+    it('renders a script-free currency select, group currency first and selected', async () => {
+      const res = mkRes();
+      await controller.page(TOKEN, undefined, undefined, mkReq() as any, res);
+      expect(res.body).toContain('<select id="cur" name="currency"><option value="PLN" selected>PLN</option>');
+      expect(res.body).toContain('<option value="EUR">EUR</option>');
+      expect(res.body).not.toContain('<script');
+    });
+
+    it('passes an allowed foreign currency to GroupsService and flashes the converted note', async () => {
+      const spy = jest.spyOn(groups, 'createExpense').mockResolvedValue({} as any);
+      const res = mkRes();
+      await controller.addExpense(TOKEN, body({ currency: 'EUR' }), mkReq() as any, res);
+      expect(spy.mock.calls[0][2]).toMatchObject({ amount: 30, currencyCode: 'EUR' });
+      expect(res.statusCode).toBe(303);
+      expect(res.location).toContain('f=addedfx');
+      expect(res.location).toContain('cta=added');
+    });
+
+    it('defaults to the group currency when the field is absent or empty', async () => {
+      const spy = jest.spyOn(groups, 'createExpense').mockResolvedValue({} as any);
+      const res = mkRes();
+      await controller.addExpense(TOKEN, body(), mkReq() as any, res);
+      await controller.addExpense(TOKEN, body({ currency: '' }), mkReq() as any, mkRes());
+      expect(spy.mock.calls[0][2].currencyCode).toBe('PLN');
+      expect(spy.mock.calls[1][2].currencyCode).toBe('PLN');
+      expect(res.location).toContain('f=added');
+      expect(res.location).not.toContain('addedfx');
+    });
+
+    it('refuses a currency outside the allowed list (a select is still just a form field)', async () => {
+      const spy = jest.spyOn(groups, 'createExpense');
+      for (const currency of ['XYZ', 'eur', '<b>', ['EUR', 'USD']]) {
+        const res = mkRes();
+        await controller.addExpense(TOKEN, body({ currency }), mkReq() as any, res);
+        expect(res.location).toContain('f=invalid');
+      }
+      expect(spy).not.toHaveBeenCalled();
+      expect(prisma.groupExpense.create).not.toHaveBeenCalled();
+    });
+
+    it('an unknown rate is the "norate" flash and nothing is written', async () => {
+      // The rate provider mock returns nothing, so getRatesSafe yields null.
+      const res = mkRes();
+      await controller.addExpense(TOKEN, body({ currency: 'EUR' }), mkReq() as any, res);
+      expect(res.location).toContain('f=norate');
+      expect(prisma.groupExpense.create).not.toHaveBeenCalled();
+      const page = mkRes();
+      await controller.page(TOKEN, 'norate', undefined, mkReq() as any, page);
+      expect(page.body).toContain('No exchange rate is available right now');
+      expect(page.body).toContain('enter the amount in PLN');
+    });
+
+    it('a converted expense row shows the original amount next to the converted one', async () => {
+      Object.assign(expenses[0], { amount: 120, originalAmount: 30, originalCurrency: 'EUR', fxRate: 4, fxRateSource: 'provider' });
+      const res = mkRes();
+      await controller.page(TOKEN, undefined, undefined, mkReq() as any, res);
+      expect(res.body).toContain('<span class="muted">30.00 EUR → </span>120.00 PLN');
+    });
+
+    it('the converted flash names the group currency', async () => {
+      const res = mkRes();
+      await controller.page(TOKEN, 'addedfx', undefined, mkReq() as any, res);
+      expect(res.body).toContain('converted to PLN');
+    });
+
+    it('every locale has the multi-currency copy', async () => {
+      const keys = ['amountPlainLabel', 'currencyLabel', 'fxHint', 'msgAddedFx', 'msgNoRate'] as const;
+      const { getGroupGuestStrings } = await import('./helpers/group-guest-page-i18n');
+      const en = getGroupGuestStrings('en');
+      for (const lang of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']) {
+        const t = getGroupGuestStrings(lang);
+        for (const k of keys) {
+          expect(t.t(k, 'PLN')).toBeTruthy();
+          expect(t.t(k, 'PLN')).not.toBe(en.t(k, 'PLN'));
+        }
+        expect(t.t('msgNoRate', 'PLN')).toContain('PLN');
+      }
+    });
+  });
+
   // ------------------------------------------------- atomic member cap
 
   describe('member cap is atomic', () => {
@@ -1049,7 +1144,7 @@ describe('GroupsService.linkGuest', () => {
       groupMemberEvent: { findMany: jest.fn(async () => []) },
     };
     cache = { getAndDelete: jest.fn(async () => payload) };
-    service = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any);
+    service = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any, { getRates: jest.fn() } as any);
   });
 
   it('redeems with an atomic GETDEL and binds the caller with a userId:null guard', async () => {

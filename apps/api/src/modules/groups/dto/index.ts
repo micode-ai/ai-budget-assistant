@@ -8,6 +8,7 @@ import {
   IsISO8601,
   IsNumber,
   IsOptional,
+  IsPositive,
   IsString,
   IsUUID,
   Length,
@@ -170,6 +171,21 @@ export class CreateGroupExpenseDto implements ICreateGroupExpenseDto {
   @ValidateNested({ each: true })
   @Type(() => GroupExpenseShareInputDto)
   shares: GroupExpenseShareInputDto[];
+
+  /**
+   * ABA-654: the currency `amount` is entered in. Default: the group currency. Another one is
+   * converted ONCE, now, into the group currency; the original amount and the rate are stored too.
+   */
+  @IsOptional()
+  @Matches(/^[A-Z]{3}$/)
+  currencyCode?: string;
+
+  /** Manual rate override: the value of 1 `currencyCode` in the group currency. Ignored for the group currency. */
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 8 })
+  @IsPositive()
+  @Max(1_000_000)
+  fxRate?: number;
 }
 
 export class UpdateGroupExpenseDto implements IUpdateGroupExpenseDto {
@@ -204,6 +220,21 @@ export class UpdateGroupExpenseDto implements IUpdateGroupExpenseDto {
   @ValidateNested({ each: true })
   @Type(() => GroupExpenseShareInputDto)
   shares?: GroupExpenseShareInputDto[];
+
+  /**
+   * ABA-654: the currency `amount` is entered in. Default: the group currency. Another one is
+   * converted ONCE, now, into the group currency; the original amount and the rate are stored too.
+   */
+  @IsOptional()
+  @Matches(/^[A-Z]{3}$/)
+  currencyCode?: string;
+
+  /** Manual rate override: the value of 1 `currencyCode` in the group currency. Ignored for the group currency. */
+  @IsOptional()
+  @IsNumber({ maxDecimalPlaces: 8 })
+  @IsPositive()
+  @Max(1_000_000)
+  fxRate?: number;
 }
 
 export class CreateGroupSettlementDto implements ICreateGroupSettlementDto {
@@ -242,6 +273,11 @@ export class GroupActivityQueryDto {
   @Min(1)
   @Max(100)
   limit?: number;
+}
+
+export class GroupFxPreviewQueryDto {
+  @Matches(/^[A-Z]{3}$/)
+  currency: string;
 }
 
 export class LinkGuestDto {

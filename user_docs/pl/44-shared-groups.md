@@ -59,6 +59,12 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 
 **Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
 
+## Wydatki w innej walucie
+
+Każda grupa prowadzi rozliczenia w jednej walucie — tej wybranej przy jej tworzeniu. Wydatek zapłacony w innej walucie i tak można dodać. W aplikacji stuknij walutę obok pola **Kwota** i wybierz tę, w której płaciłeś. Wiersz **Kurs wymiany** pokaże wtedy dzisiejszy kurs (np. *1 EUR =* 4,32 w walucie grupy) i to, ile wydatek będzie liczony; zmień kurs, jeśli znasz ten, po którym faktycznie zapłaciłeś. W przeglądarce znajomi wybierają **Walutę** pod kwotą.
+
+Wydatek jest przeliczany na walutę grupy jeden raz, przy zapisie, i to przeliczona kwota trafia do sald. Później już się nie zmienia, nawet gdy kursy się ruszają, więc rozliczona grupa pozostaje rozliczona. Historia pokazuje obie kwoty, np. „12,00 € → 51,80 zł”. Gdy później zmienisz kwotę, użyty zostanie ten sam kurs; gdy zmienisz walutę — nowy. Jeśli kurs jest niedostępny, aplikacja poprosi o jego wpisanie, a strona w przeglądarce — o ponowną próbę później albo wpisanie kwoty w walucie grupy. Przy podziale **Dokładne kwoty** wpisz część każdej osoby w walucie, w której płaciłeś. Płatności są zawsze w walucie grupy.
+
 ## Rozliczanie
 
 W linii **Kto komu ile**, która Cię dotyczy, dotknij **Rozlicz**. Jeśli osoba, której płacisz, dodała dane do płatności, zobaczysz przycisk lub instrukcję zapłaty. Wybierz **Jak zapłacono?**, a potem dotknij **Zapłaciłem(-am)** — albo **Otrzymałem(-am)**, jeśli to Tobie się płaci (przydatne, gdy znajomy oddał gotówkę i już nie wrócił do linku).

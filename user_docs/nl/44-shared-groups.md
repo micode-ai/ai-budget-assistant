@@ -59,6 +59,12 @@ Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Al
 
 **Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
 
+## Uitgaven in een andere valuta
+
+Elke groep houdt de rekening bij in één valuta, die bij het aanmaken is gekozen. Een uitgave in een andere valuta kun je toch toevoegen. Tik in de app op de valuta naast **Bedrag** en kies die waarin je hebt betaald. De rij **Wisselkoers** toont dan de koers van vandaag (bijvoorbeeld *1 EUR =* 4,32 in de groepsvaluta) en hoeveel de uitgave telt; pas de koers aan als je weet welke je echt hebt betaald. In de browser kiezen vrienden de **Valuta** onder het bedrag.
+
+De uitgave wordt één keer, bij het opslaan, omgerekend naar de groepsvaluta, en dat omgerekende bedrag gebruiken de saldi. Het verandert daarna nooit meer, ook niet als koersen bewegen, dus een verrekende groep blijft verrekend. De geschiedenis toont beide bedragen, bijvoorbeeld '€ 12,00 → 51,80 zł'. Pas je later het bedrag aan, dan wordt dezelfde koers gebruikt; pas je de valuta aan, dan wordt een nieuwe koers genomen. Is er geen koers beschikbaar, dan vraagt de app je hem in te vullen, en de browserpagina om het later opnieuw te proberen of het bedrag in de groepsvaluta in te voeren. Bij **Exacte bedragen** vul je ieders deel in de valuta in waarin je hebt betaald. Betalingen zijn altijd in de groepsvaluta.
+
 ## Verrekenen
 
 Tik in een regel van **Wie betaalt wie** die jou aangaat op **Verrekenen**. Heeft de persoon die je betaalt betaalgegevens ingevuld, dan zie je een knop of instructies om te betalen. Kies **Hoe is er betaald?** en tik op **Ik heb betaald** — of op **Ik heb het ontvangen** als jij degene bent die betaald wordt (handig als een vriend je contant betaalde en nooit meer op de link terugkwam).

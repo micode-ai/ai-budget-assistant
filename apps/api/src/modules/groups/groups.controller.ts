@@ -24,6 +24,7 @@ import {
   CreateGroupExpenseDto,
   CreateGroupSettlementDto,
   GroupActivityQueryDto,
+  GroupFxPreviewQueryDto,
   JoinGroupDto,
   LinkGuestDto,
   TransferGroupOwnerDto,
@@ -87,6 +88,15 @@ export class GroupsController {
   @UseGuards(GroupMemberGuard)
   activity(@Req() req: GroupRequest, @Query() q: GroupActivityQueryDto) {
     return this.service.getActivity(req.groupId, q.before, q.limit);
+  }
+
+  // ABA-654: the provider rate the expense form shows for a foreign currency. Member-only; throttled
+  // per route because it can reach the external rate provider (cached for an hour there).
+  @Get(':groupId/fx-preview')
+  @UseGuards(ThrottlerGuard, GroupMemberGuard)
+  @Throttle({ default: { limit: 30, ttl: 60000 } })
+  fxPreview(@Req() req: GroupRequest, @Query() q: GroupFxPreviewQueryDto) {
+    return this.service.fxPreview(req.groupId, q.currency);
   }
 
   @Patch(':groupId')

@@ -55,6 +55,10 @@ export interface CreateGroupExpenseDto {
   paidByMemberId: string;
   splitType: ShareType;
   shares: GroupExpenseShareInputDto[];
+  /** ABA-654: the currency `amount` is entered in; default the group's. Converted once, at write time. */
+  currencyCode?: string;
+  /** Manual override: the value of 1 `currencyCode` in the group currency. */
+  fxRate?: number;
 }
 
 export interface UpdateGroupExpenseDto {
@@ -64,6 +68,9 @@ export interface UpdateGroupExpenseDto {
   paidByMemberId?: string;
   splitType?: ShareType;
   shares?: GroupExpenseShareInputDto[];
+  /** ABA-654: a new currency fetches a new rate (or takes `fxRate`); a new amount alone reuses the stored rate. */
+  currencyCode?: string;
+  fxRate?: number;
 }
 
 export interface CreateGroupSettlementDto {
@@ -133,6 +140,13 @@ export interface GroupJoinPreview {
   groupId?: string;
   /** Free names to take over: live placeholders nobody has claimed. Id + display name only. */
   unclaimed: Array<{ id: string; displayName: string }>;
+}
+
+/** GET /groups/:groupId/fx-preview?currency= (ABA-654). `rate` = 1 `currencyCode` in `groupCurrency`; null when unknown. */
+export interface GroupFxPreview {
+  groupCurrency: string;
+  currencyCode: string;
+  rate: number | null;
 }
 
 /** POST /groups/:groupId/owner (ABA-650): the target must be a live app-user member, not the caller. */

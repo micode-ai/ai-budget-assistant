@@ -49,3 +49,22 @@ export function convertAmount(
   if (!r || r <= 0) return null;
   return Math.round((amount / r) * 100) / 100;
 }
+
+/**
+ * The value of ONE unit of `from` in `base` (e.g. 1 EUR = 4.31670000 PLN), rounded to 8 decimals,
+ * or null when the rate is unknown. Same rate convention as `convertAmount` (`1 base = rates[X] X`,
+ * so `1 X = 1 / rates[X] base`). Used where a rate must be STORED and re-applied later (group
+ * expenses, ABA-654), so the amount is always recomputable from the stored figure.
+ */
+export function unitRate(from: string, base: string, rates: Record<string, number> | null): number | null {
+  if (from === base) return 1;
+  if (!rates) return null;
+  const r = rates[from];
+  if (!r || r <= 0 || !Number.isFinite(r)) return null;
+  return Math.round((1 / r) * 1e8) / 1e8;
+}
+
+/** `amount` of the original currency times a stored unit rate, in the base currency, to the cent. */
+export function applyUnitRate(amount: number, rate: number): number {
+  return Math.round(amount * rate * 100) / 100;
+}

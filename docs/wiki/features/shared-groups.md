@@ -21,6 +21,7 @@ API (`apps/api/src/modules/groups/`):
 - `apps/api/src/modules/groups/group-guest.service.ts` — cookie identity, CSRF, origin check,
   write ceilings; delegates ledger writes to `GroupsService`, never re-implements them
 - `apps/api/src/modules/groups/group-ledger.ts` — pure math, no DI
+- `apps/api/src/modules/groups/group-fx.ts` — pure write-time currency conversion and the edit rule (ABA-654)
 - `apps/api/src/modules/groups/group-reminder.cron.ts` and `apps/api/src/modules/groups/group-reminder.ts`
   — the daily balance reminder cron and its pure episode state machine (ABA-653)
 - `apps/api/src/modules/groups/group-ownership.service.ts` — ownership transfer, succession on an
@@ -37,14 +38,16 @@ Mobile:
 - `apps/mobile/src/components/groups/` — the screen bodies
 - `apps/mobile/src/stores/groupStore.ts`, `apps/mobile/src/services/groups.api.ts` — in-memory,
   server-only; reset on sign-out from `apps/mobile/src/stores/authSessionActions.ts`
-- `apps/mobile/src/features/groups/` — pure helpers (split validation, display, pay links, link codes)
+- `apps/mobile/src/features/groups/` — pure helpers (split validation, display, pay links, link codes,
+  `groupFx.ts` for the currency chip and the two-figure rows)
 - `apps/mobile/src/hooks/useGroupLinkDeepLink.ts` — a link code stashed while signed out
 - Entry: the `groups` quick action (`apps/mobile/src/stores/quickActionStore.ts`); the activity push opens
   `/groups/:id`, the balance reminder `/groups/:id/settle` (`apps/mobile/src/services/notifications.ts`
   through `apps/mobile/src/features/groups/groupPush.ts`)
 
 Migrations: `20261009000000_add_expense_groups`, `20261012000000_group_member_join_provenance`,
-`20261013000000_group_ownership_transfer`, `20261014000000_group_balance_reminders`. Design:
+`20261013000000_group_ownership_transfer`, `20261014000000_group_balance_reminders`,
+`20261015000000_group_expense_fx`. Design:
 [`docs/superpowers/specs/2026-10-08-shared-groups-design.md`](../../superpowers/specs/2026-10-08-shared-groups-design.md)
 — where it and the code differ, the code is right (the spec's `GET /g/:token/me/:secret` restore
 link and `Restrict` member FKs were both replaced in the security hardening).
@@ -200,6 +203,50 @@ on `GET/PATCH /users/me/notification-preferences`, toggled in `NotificationsSett
 screen and the desktop settings pane are the same component) and included in the master switch.
 Copy: four push strings × 9 locales in `notification-i18n.ts`; the amount prints as `42.00 PLN`
 (currency code, like debt reminders). Related: [debt-reminders](debt-reminders.md).
+
+**Multi-currency (ABA-654).** The group currency is the **ledger currency**; an expense may be entered
+in another one and is converted **once, at write time**, by `GroupsService` over the pure
+`apps/api/src/modules/groups/group-fx.ts`. `GroupExpense.amount` is always the group-currency figure the
+ledger sums; five nullable columns hold what was entered: `originalAmount`, `originalCurrency`, `fxRate`
+(the value of ONE original unit in the group currency, `Decimal(18,8)`), `fxRateSource`
+(`provider` | `manual`) and `fxRateAt`. All NULL = entered in the group currency, which is every row
+written before the migration (no backfill needed). `amount = round2(originalAmount * fxRate)`.
+- **Rate.** The existing singleton `ExchangeRateService` (`GroupsModule` imports `CurrencyExchangeModule`)
+  through `getRatesSafe` + `unitRate` in `apps/api/src/common/utils/fx.ts`, base = group currency. The
+  provider has no history, so it is the rate **at entry time**, not at the expense date. A manual
+  `fxRate` in the DTO overrides it. No rate and no override = 400 `FX_RATE_UNAVAILABLE`, before any write.
+  A manual rate is bounded: when the provider has a rate for the pair, one more than 3x above or below it is
+  400 `FX_RATE_IMPLAUSIBLE` (`FX_MANUAL_RATE_FACTOR`, create and edit alike); with no provider rate there is
+  nothing to compare and it stands. `fxRateSource` is always stored, and the guest activity row shows a
+  "manual rate" tag (`manualRateTag`, 9 languages) beside the original figure. **Known gap:** an edit that
+  changes the rate does not record the previous one anywhere (the group event log only holds member events).
+- **Currencies.** The group's own, or one of `SUPPORTED_RATE_CURRENCIES` (exported by
+  `exchange-rate.service.ts`, the provider's list); anything else is 400 `CURRENCY_UNSUPPORTED`. A
+  converted amount outside 0.01 .. 1 000 000 is 400 `FX_AMOUNT_OUT_OF_RANGE`.
+- **Shares.** Equal, percentage and shares resolve on the converted amount. An **exact** split is typed in
+  the original currency: it must add up to the original amount, then the values are applied as
+  **weights** to the converted amount (`resolveConvertedShares`), so the shares sum exactly to the stored
+  amount, residual cent on the last member. `shareValue` keeps the original-currency values.
+- **Edits** (`planExpenseFxEdit`): a new amount alone reuses the **stored** rate (source and timestamp
+  unchanged); a new currency fetches a new provider rate or takes the override; a changed `fxRate` alone
+  is a manual override; back to the group currency clears the columns; anything else touches no figure.
+- **Preview.** `GET /groups/:groupId/fx-preview?currency=` (`ThrottlerGuard` 30/min + `GroupMemberGuard`)
+  returns `{groupCurrency, currencyCode, rate | null}` for the form. It writes nothing.
+- **App.** `GroupExpenseForm` has a currency chip beside the amount (group currency first, then the app's
+  `SUPPORTED_CURRENCIES`) and, when foreign, an editable **Exchange rate** row seeded from the preview,
+  with the converted figure under it. `buildFxBody` sends `currencyCode` always and `fxRate` only when the
+  user typed one, so an untouched rate means "provider" on create and "reuse the stored one" on an edit.
+  An edited foreign expense reopens with its original amount, currency and stored rate. A scanned
+  receipt's own currency is applied when the group accepts it. One form serves the phone screen and the
+  desktop dialog. Rows (`GroupActivityList`, desktop `GroupActivityTable`) show the original as a
+  secondary line above the stored figure (`€12.00 →` over `51.80 zł`, `fxAmountParts`), read as stored.
+- **Guest page.** A `<select name="currency">` (group currency first and selected, then the provider list)
+  under the amount; no script, so no live preview. The server re-checks the field against the allowed list
+  (a non-string, an unknown or a lowercase code is the `invalid` flash) and converts; the flash is
+  `addedfx` ("converted to PLN at today's rate") or `norate` on an unknown rate. History rows show
+  `30.00 EUR → 120.00 PLN`. CSRF, `Sec-Fetch-Site`, `Referrer-Policy: same-origin` and the write
+  ceilings are unchanged. A guest who dislikes the rate deletes their own expense and re-enters it.
+- **Settlements** stay in the group currency; nothing about them changed.
 
 **Members.** Removal is soft and requires a zero balance. The owner cannot leave while they own
 the group: they transfer it first (below), then leave like anyone else. A member the
@@ -387,6 +434,23 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
   no settle form goes stale because of it and no ledger write gets slower.
 - **Opt-out is filtered before the claim and gated again in `NotificationsService`.** Removing either
   half either burns opted-out users' reminders or sends to them.
+- **A foreign-currency expense is converted ONCE, at write time, and nothing converts on read**
+  (ABA-654). `loadState`, `getDetail`, `getActivity` and the guest page read `amount` as stored and never
+  call the rate provider. Converting at read time would let a settled ledger drift with FX and un-settle
+  itself; a "refresh the rate" job is out of scope for the same reason.
+- **An unknown rate is refused, never stored unconverted** (the display-currency invariant): 400
+  `FX_RATE_UNAVAILABLE`, nothing written. Summing a foreign amount as if it were group currency is the
+  bug `common/utils/fx.ts` exists to prevent.
+- **An edit reuses the stored rate unless the currency (or the rate itself) changes.** Re-fetching on every
+  edit would silently re-price old expenses that someone may already have settled against.
+- **A manual rate is bounded to 3x of the provider's** (`FX_RATE_IMPLAUSIBLE`) and always stored as
+  `fxRateSource: 'manual'`, shown as a tag on the guest page. A one-field typo (or a malicious rate) can
+  otherwise move a debt arbitrarily; the guard is skipped only when the provider has no rate for the pair.
+- **`amount` is always the group currency.** Every consumer (balances, reminders, the share-this-month
+  figure, admin metrics) sums `amount`; the original columns are display data only.
+- **The guest currency is a form field, so it is re-scoped to the allowed list on the server**, like any
+  member id on that form. The rate provider is the existing `ExchangeRateService` singleton; do not
+  provide a second instance or a second rate source.
 
 ## Desktop
 
@@ -493,9 +557,14 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 
 - **Line claims** (per-item splitting like receipt-split) are phase 2: a claim changes shares after
   others may have settled against them, and the right lock rule for an ongoing ledger is open.
-- **One currency per group**, changeable only while the group has no expenses. Multi-currency must
-  store a write-time-converted amount — never convert at read time, or a settled ledger drifts with
-  FX and un-settles itself.
+- **The group currency itself** is still changeable only while the group has no expenses (unchanged by
+  ABA-654: changing it would need every stored conversion re-based).
+- **ABA-654 is unverified on a device, in a desktop browser and against real Postgres**: the currency
+  chip, the rate row, the two-figure rows and the guest `<select>` have only pure-helper and
+  server-rendered-HTML tests (nothing renders in CI), and the migration has not run here. The rate is the
+  provider's at entry time (no history), not at the expense date; and the guest's post-add flash names the
+  group currency but not the two figures (the redirect carries only a flash code), which the history row
+  then shows.
 - **"Count my share in my budget"** — linking a group expense to the user's own Expense with
   receipt-split accounting — is phase 2.
 - **Desktop, unverified in a browser:** whether the group expense dialog's "Take a photo" path
@@ -545,6 +614,11 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   `SETTLEMENT_EXCEEDS_BALANCE`) replaced `isValidSettlement`; an editable amount on the app's
   settle screen and dialog, *Record a payment* with a counterpart picker, and a visible amount
   field on the guest settle form.
+- [ABA-654](https://github.com/micode-ai/ai-budget-assistant/issues/684) — expenses in other currencies,
+  converted once at write time into the group currency (original amount, currency, rate, source and time
+  stored; no read-time conversion), the edit rule, `FX_RATE_UNAVAILABLE`, `GET /groups/:id/fx-preview`,
+  a currency chip and rate row in the app's expense form (phone and desktop dialog), two-figure activity
+  rows, and a currency select on the guest page.
 - [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
   pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
   member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its

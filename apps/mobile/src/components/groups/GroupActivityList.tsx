@@ -7,6 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { fromDateInputValue } from '@/utils/dateInput';
 import { canModifyExpense, canVoidSettlement, memberName } from '@/features/groups/groupDisplay';
 import { describeGroupEvent } from '@/features/groups/groupOwnership';
+import { fxAmountParts } from '@/features/groups/groupFx';
 import type {
   GroupActivityItem,
   GroupDetail,
@@ -64,6 +65,9 @@ export function GroupActivityList({
             const e = item.expense;
             const struck = e.deletedAt !== null;
             const editable = canWrite && !struck && canModifyExpense(detail, e);
+            // ABA-654: an expense entered in another currency shows what was entered above the
+            // stored group-currency figure ("12.00 EUR ->" over "51.80 PLN"). Both are as stored.
+            const fx = fxAmountParts(e, detail.currencyCode);
             return (
               <TouchableOpacity
                 key={`e-${e.id}`}
@@ -81,9 +85,12 @@ export function GroupActivityList({
                     {struck ? ` · ${t('groups.deletedTag')}` : ''}
                   </Text>
                 </View>
-                <Text style={[styles.rowAmount, struck && styles.struck]}>
-                  {formatCurrency(e.amount, detail.currencyCode)}
-                </Text>
+                <View style={styles.amountCol} accessibilityLabel={fx ? fx.line : undefined}>
+                  {fx && <Text style={[styles.rowOriginal, struck && styles.struck]}>{`${fx.original} →`}</Text>}
+                  <Text style={[styles.rowAmount, struck && styles.struck]}>
+                    {formatCurrency(e.amount, detail.currencyCode)}
+                  </Text>
+                </View>
               </TouchableOpacity>
             );
           }
@@ -189,6 +196,13 @@ const createStyles = (theme: Theme) => ({
   rowAmount: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textPrimary,
+  },
+  amountCol: {
+    alignItems: 'flex-end' as const,
+  },
+  rowOriginal: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
   },
   eventText: {
     ...theme.textStyles.bodySm,

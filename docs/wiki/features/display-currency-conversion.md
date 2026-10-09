@@ -19,6 +19,9 @@ the shared helper. (Changing the display currency on the phone is the `setCurren
 - Chat: `ai/services/ai-tools.service.ts` (read tools, `buildToolCacheKey`),
   `prompt-builder.service.ts` (the labelling rule), `chat.service.ts` (passes `baseCurrency`)
 - `insights/fat-finder.service.ts`, `insights/story.service.ts`
+- `unitRate` / `applyUnitRate` in the same file — for a rate that is STORED and re-applied later rather
+  than used once; the consumer is write-time conversion of group expenses
+  ([shared-groups](shared-groups.md), ABA-654), which converts once and never on read
 
 ## Key concepts
 

@@ -8,6 +8,9 @@ interface CachedRates {
 
 const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hour
 
+/** The currencies this provider returns rates for. Anything else has no rate here. */
+export const SUPPORTED_RATE_CURRENCIES = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'] as const;
+
 @Injectable()
 export class ExchangeRateService {
   private readonly logger = new Logger(ExchangeRateService.name);
@@ -34,7 +37,7 @@ export class ExchangeRateService {
       const data = await response.json();
 
       // Filter to only supported currencies
-      const supportedCurrencies = ['USD', 'EUR', 'PLN', 'GBP', 'UAH', 'RUB', 'BYN'];
+      const supportedCurrencies = SUPPORTED_RATE_CURRENCIES;
       const rates: Record<string, number> = {};
       for (const currency of supportedCurrencies) {
         if (data.rates[currency] !== undefined) {

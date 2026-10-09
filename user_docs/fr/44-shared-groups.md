@@ -59,6 +59,12 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 
 **Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
 
+## Dépenses dans une autre devise
+
+Chaque groupe tient ses comptes dans une seule devise, celle choisie à sa création. Une dépense payée dans une autre devise peut quand même être ajoutée. Dans l'appli, touchez la devise à côté de **Montant** et choisissez celle que vous avez utilisée. La ligne **Taux de change** affiche alors le taux du jour (par exemple *1 EUR =* 4,32 dans la devise du groupe) et ce que comptera la dépense ; modifiez le taux si vous connaissez celui réellement payé. Dans le navigateur, vos amis choisissent la **Devise** sous le montant.
+
+La dépense est convertie dans la devise du groupe une seule fois, à l'enregistrement, et c'est ce montant converti qu'utilisent les soldes. Il ne change plus ensuite, même quand les taux bougent : un groupe réglé reste réglé. L'historique affiche les deux montants, par exemple « 12,00 € → 51,80 zł ». Si vous changez ensuite le montant, le même taux est réutilisé ; si vous changez la devise, un nouveau taux est pris. Quand aucun taux n'est disponible, l'appli vous demande de le saisir, et la page du navigateur de réessayer plus tard ou de saisir le montant dans la devise du groupe. Avec **Montants exacts**, saisissez la part de chacun dans la devise de paiement. Les paiements sont toujours dans la devise du groupe.
+
 ## Régler
 
 Sur une ligne de **Qui paie qui** qui vous concerne, touchez **Régler**. Si la personne que vous payez a renseigné ses coordonnées de paiement, vous verrez un bouton ou des instructions pour la payer. Choisissez **Comment a-t-il été payé ?**, puis touchez **J'ai payé**, ou **Je l'ai reçu** si c'est vous qui êtes payé (pratique quand un ami vous a payé en espèces et n'est jamais revenu sur le lien).

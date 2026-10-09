@@ -483,7 +483,7 @@ describe('GroupsService ownership-aware reads and adoption on join (ABA-650)', (
       },
       $transaction: jest.fn(async (fn: any) => fn(prisma)),
     };
-    service = new GroupsService(prisma, { setIfAbsent: jest.fn() } as any, { sendToUser: jest.fn() } as any);
+    service = new GroupsService(prisma, { setIfAbsent: jest.fn() } as any, { sendToUser: jest.fn() } as any, { getRates: jest.fn() } as any);
   });
 
   it('an orphaned group reads isOrphaned, with no owner and isOwner false for everyone', async () => {
@@ -529,7 +529,7 @@ describe('GroupsService ownership-aware reads and adoption on join (ABA-650)', (
     const cache = {
       getAndDelete: jest.fn(async () => ({ groupId: G, memberId: 'm-g', guestToken: group.guestToken, claim: linkClaimBinding('h-g') })),
     };
-    service = new GroupsService(prisma, cache as any, { sendToUser: jest.fn() } as any);
+    service = new GroupsService(prisma, cache as any, { sendToUser: jest.fn() } as any, { getRates: jest.fn() } as any);
     prisma.expenseGroupMember.findFirst.mockImplementation(async ({ where }: any) => {
       if (where.userId !== undefined) return null; // not yet a member
       return members.find((m) => m.id === where.id) ?? null;

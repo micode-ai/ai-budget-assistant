@@ -59,6 +59,12 @@ La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), 
 
 **Añadir gasto** abre el formulario: **Importe**, **Descripción**, **Fecha**, **Pagado por** y **División**: **A partes iguales**, **Importes exactos**, **Porcentajes** o **Partes**. **Escanear recibo** lee un ticket en papel y rellena por ti el importe, la descripción y la fecha. Quien añadió el gasto, quien lo pagó y el propietario del grupo pueden editarlo o eliminarlo. Un gasto eliminado sigue en el historial, marcado como eliminado.
 
+## Gastos en otra moneda
+
+Cada grupo lleva sus cuentas en una moneda, la elegida al crearlo. Aun así se puede añadir un gasto pagado en otra moneda. En la app, toca la moneda junto a **Importe** y elige la que usaste. La fila **Tipo de cambio** muestra entonces el tipo de hoy (por ejemplo *1 EUR =* 4,32 en la moneda del grupo) y cuánto contará el gasto; cambia el tipo si conoces el que pagaste de verdad. En el navegador, tus amigos eligen la **Moneda** debajo del importe.
+
+El gasto se convierte a la moneda del grupo una sola vez, al guardarlo, y ese importe convertido es el que usan los saldos. Después ya no cambia, aunque se muevan los tipos de cambio, así que un grupo saldado sigue saldado. El historial muestra las dos cifras, por ejemplo «12,00 € → 51,80 zł». Si luego cambias el importe, se vuelve a usar el mismo tipo; si cambias la moneda, se toma uno nuevo. Si no hay tipo disponible, la app te pide que lo introduzcas, y la página del navegador que lo intentes más tarde o introduzcas el importe en la moneda del grupo. Con **Importes exactos**, introduce la parte de cada persona en la moneda en la que pagaste. Los pagos son siempre en la moneda del grupo.
+
 ## Saldar cuentas
 
 En una línea de **Quién paga a quién** que te afecte, toca **Saldar**. Si la persona a la que pagas ha añadido sus datos de pago, verás un botón o instrucciones para pagarle. Elige **¿Cómo se pagó?** y toca **He pagado**, o **Lo he recibido** si eres tú quien cobra (útil cuando un amigo te pagó en efectivo y no volvió a abrir el enlace).

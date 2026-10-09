@@ -258,7 +258,7 @@ export class GroupGuestController {
       res,
       body,
       (g, a, b) => this.svc.addExpense(g, a, b),
-      (f) => (f === 'added' ? 'added' : undefined),
+      (f) => (f === 'added' || f === 'addedfx' ? 'added' : undefined),
     );
   }
 

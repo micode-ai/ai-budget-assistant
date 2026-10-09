@@ -87,13 +87,31 @@ export type GroupStrKey =
   | 'msgLimit'
   | 'msgSaved'
   | 'msgAdded'
+  | 'amountPlainLabel'
+  | 'currencyLabel'
+  | 'fxHint'
+  | 'msgAddedFx'
+  | 'msgNoRate'
   | 'msgSettled'
   | 'msgLinkFailed'
   | 'ctaAdded'
   | 'ctaReceipt'
   | 'ctaSettled'
   | 'ctaButton'
-  | 'getAndroid';
+  | 'getAndroid'
+  | 'claimsHeading'
+  | 'claimsSummary'
+  | 'claimsHint'
+  | 'claimsSharedWith'
+  | 'claimsYourPart'
+  | 'claimsHandSplit'
+  | 'claimsYourTotal'
+  | 'claimsSaveButton'
+  | 'msgClaimed'
+  | 'msgClaimsClosed'
+  | 'msgBusy'
+  | 'manualRateTag'
+  | 'settleClaimsOpenNote';
 
 type Dict = Record<GroupStrKey, string>;
 
@@ -175,6 +193,11 @@ const en: Dict = {
   msgLimit: 'This group has reached its limit.',
   msgSaved: 'Saved.',
   msgAdded: 'Expense added.',
+  amountPlainLabel: 'Amount',
+  currencyLabel: 'Currency',
+  fxHint: 'Paid in another currency? Pick it: the amount is converted to {0} once, at today’s rate, and the history shows both figures.',
+  msgAddedFx: 'Expense added and converted to {0} at today’s rate. The history shows both amounts; delete it if the rate looks wrong.',
+  msgNoRate: 'No exchange rate is available right now. Try again later, or enter the amount in {0}.',
   msgSettled: 'Payment recorded.',
   msgLinkFailed: 'Could not create the link. Try again.',
   ctaAdded: 'Get notified when friends add expenses',
@@ -182,6 +205,19 @@ const en: Dict = {
   ctaSettled: 'Get a reminder when someone owes you',
   ctaButton: 'Try the app',
   getAndroid: 'Get it on Google Play',
+  claimsHeading: 'Divide a receipt',
+  claimsSummary: '{0} · {1} · open until {2}',
+  claimsHint: 'Tick what you had. A line ticked by several people is split between them; anything nobody ticks stays with {0}, who paid.',
+  claimsSharedWith: 'split {0} ways',
+  claimsYourPart: 'your part {0}',
+  claimsHandSplit: 'split by {0}',
+  claimsYourTotal: 'Your part of this receipt: {0}',
+  claimsSaveButton: 'Save my items',
+  msgClaimed: 'Saved. Your share of the receipt was updated.',
+  msgClaimsClosed: 'This receipt is no longer being divided. Ask whoever paid to change it.',
+  msgBusy: 'You changed this receipt many times. Please wait a while and try again.',
+  manualRateTag: 'manual rate',
+  settleClaimsOpenNote: 'Some receipts are still being divided, so amounts may still change.',
 };
 
 const pl: Dict = {
@@ -262,6 +298,11 @@ const pl: Dict = {
   msgLimit: 'Ta grupa osiągnęła limit.',
   msgSaved: 'Zapisano.',
   msgAdded: 'Wydatek dodany.',
+  amountPlainLabel: 'Kwota',
+  currencyLabel: 'Waluta',
+  fxHint: 'Płacono w innej walucie? Wybierz ją: kwota zostanie przeliczona na {0} jeden raz, po dzisiejszym kursie, a historia pokaże obie kwoty.',
+  msgAddedFx: 'Wydatek dodany i przeliczony na {0} po dzisiejszym kursie. Historia pokazuje obie kwoty; usuń go, jeśli kurs się nie zgadza.',
+  msgNoRate: 'Kurs wymiany jest teraz niedostępny. Spróbuj później albo wpisz kwotę w {0}.',
   msgSettled: 'Płatność zapisana.',
   msgLinkFailed: 'Nie udało się utworzyć linku. Spróbuj ponownie.',
   ctaAdded: 'Dostawaj powiadomienia, gdy znajomi dodają wydatki',
@@ -269,6 +310,19 @@ const pl: Dict = {
   ctaSettled: 'Dostań przypomnienie, gdy ktoś jest Ci coś winien',
   ctaButton: 'Wypróbuj aplikację',
   getAndroid: 'Pobierz z Google Play',
+  claimsHeading: 'Podziel paragon',
+  claimsSummary: '{0} · {1} · otwarte do {2}',
+  claimsHint: 'Zaznacz, co było Twoje. Pozycja zaznaczona przez kilka osób dzieli się między nie; to, czego nikt nie zaznaczy, zostaje u osoby, która płaciła ({0}).',
+  claimsSharedWith: 'na {0} osoby',
+  claimsYourPart: 'Twoja część {0}',
+  claimsHandSplit: 'podzielone przez: {0}',
+  claimsYourTotal: 'Twoja część tego paragonu: {0}',
+  claimsSaveButton: 'Zapisz moje pozycje',
+  msgClaimed: 'Zapisano. Twoja część paragonu została zaktualizowana.',
+  msgClaimsClosed: 'Ten paragon nie jest już dzielony. Poproś osobę, która płaciła, o zmianę.',
+  msgBusy: 'Zmieniasz ten paragon zbyt często. Odczekaj chwilę i spróbuj ponownie.',
+  manualRateTag: 'kurs ręczny',
+  settleClaimsOpenNote: 'Niektóre paragony są jeszcze dzielone, więc kwoty mogą się zmienić.',
 };
 
 const de: Dict = {
@@ -349,6 +403,11 @@ const de: Dict = {
   msgLimit: 'Diese Gruppe hat ihr Limit erreicht.',
   msgSaved: 'Gespeichert.',
   msgAdded: 'Ausgabe hinzugefügt.',
+  amountPlainLabel: 'Betrag',
+  currencyLabel: 'Währung',
+  fxHint: 'In einer anderen Währung bezahlt? Wähle sie aus: Der Betrag wird einmal, zum heutigen Kurs, in {0} umgerechnet, und der Verlauf zeigt beide Beträge.',
+  msgAddedFx: 'Ausgabe hinzugefügt und zum heutigen Kurs in {0} umgerechnet. Der Verlauf zeigt beide Beträge; lösche sie, wenn der Kurs nicht stimmt.',
+  msgNoRate: 'Gerade ist kein Wechselkurs verfügbar. Versuche es später erneut oder gib den Betrag in {0} ein.',
   msgSettled: 'Zahlung erfasst.',
   msgLinkFailed: 'Der Link konnte nicht erstellt werden. Versuche es erneut.',
   ctaAdded: 'Werde benachrichtigt, wenn Freunde Ausgaben hinzufügen',
@@ -356,6 +415,19 @@ const de: Dict = {
   ctaSettled: 'Erhalte eine Erinnerung, wenn dir jemand Geld schuldet',
   ctaButton: 'App ausprobieren',
   getAndroid: 'Bei Google Play herunterladen',
+  claimsHeading: 'Einen Kassenbon aufteilen',
+  claimsSummary: '{0} · {1} · offen bis {2}',
+  claimsHint: 'Hake an, was du hattest. Eine Position, die mehrere ankreuzen, wird unter ihnen geteilt; was niemand ankreuzt, bleibt bei der Person, die bezahlt hat ({0}).',
+  claimsSharedWith: 'durch {0} geteilt',
+  claimsYourPart: 'dein Anteil {0}',
+  claimsHandSplit: 'aufgeteilt von {0}',
+  claimsYourTotal: 'Dein Anteil an diesem Bon: {0}',
+  claimsSaveButton: 'Meine Positionen speichern',
+  msgClaimed: 'Gespeichert. Dein Anteil am Bon wurde aktualisiert.',
+  msgClaimsClosed: 'Dieser Bon wird nicht mehr aufgeteilt. Bitte die Person, die bezahlt hat, ihn zu ändern.',
+  msgBusy: 'Du hast diesen Bon sehr oft geändert. Bitte warte eine Weile und versuche es erneut.',
+  manualRateTag: 'manueller Kurs',
+  settleClaimsOpenNote: 'Einige Kassenbons werden noch aufgeteilt, die Beträge können sich also noch ändern.',
 };
 
 const es: Dict = {
@@ -436,6 +508,11 @@ const es: Dict = {
   msgLimit: 'Este grupo ha alcanzado su límite.',
   msgSaved: 'Guardado.',
   msgAdded: 'Gasto añadido.',
+  amountPlainLabel: 'Importe',
+  currencyLabel: 'Moneda',
+  fxHint: '¿Pagaste en otra moneda? Elígela: el importe se convierte a {0} una sola vez, al tipo de hoy, y el historial muestra las dos cifras.',
+  msgAddedFx: 'Gasto añadido y convertido a {0} al tipo de hoy. El historial muestra los dos importes; bórralo si el tipo no te cuadra.',
+  msgNoRate: 'Ahora mismo no hay tipo de cambio disponible. Inténtalo más tarde o introduce el importe en {0}.',
   msgSettled: 'Pago registrado.',
   msgLinkFailed: 'No se pudo crear el enlace. Inténtalo de nuevo.',
   ctaAdded: 'Recibe un aviso cuando tus amigos añadan gastos',
@@ -443,6 +520,19 @@ const es: Dict = {
   ctaSettled: 'Recibe un recordatorio cuando alguien te deba dinero',
   ctaButton: 'Probar la app',
   getAndroid: 'Disponible en Google Play',
+  claimsHeading: 'Dividir un ticket',
+  claimsSummary: '{0} · {1} · abierto hasta {2}',
+  claimsHint: 'Marca lo que tomaste. Una línea marcada por varias personas se reparte entre ellas; lo que nadie marque se queda con {0}, que pagó.',
+  claimsSharedWith: 'entre {0}',
+  claimsYourPart: 'tu parte {0}',
+  claimsHandSplit: 'repartido por {0}',
+  claimsYourTotal: 'Tu parte de este ticket: {0}',
+  claimsSaveButton: 'Guardar mis productos',
+  msgClaimed: 'Guardado. Tu parte del ticket se ha actualizado.',
+  msgClaimsClosed: 'Este ticket ya no se está dividiendo. Pide a quien pagó que lo cambie.',
+  msgBusy: 'Has cambiado este ticket muchas veces. Espera un rato e inténtalo de nuevo.',
+  manualRateTag: 'tasa manual',
+  settleClaimsOpenNote: 'Algunos tickets todavía se están dividiendo, así que los importes aún pueden cambiar.',
 };
 
 const fr: Dict = {
@@ -523,6 +613,11 @@ const fr: Dict = {
   msgLimit: 'Ce groupe a atteint sa limite.',
   msgSaved: 'Enregistré.',
   msgAdded: 'Dépense ajoutée.',
+  amountPlainLabel: 'Montant',
+  currencyLabel: 'Devise',
+  fxHint: 'Payé dans une autre devise ? Choisissez-la : le montant est converti en {0} une seule fois, au taux du jour, et l’historique affiche les deux montants.',
+  msgAddedFx: 'Dépense ajoutée et convertie en {0} au taux du jour. L’historique affiche les deux montants ; supprimez-la si le taux ne convient pas.',
+  msgNoRate: 'Aucun taux de change n’est disponible pour le moment. Réessayez plus tard ou saisissez le montant en {0}.',
   msgSettled: 'Paiement enregistré.',
   msgLinkFailed: "Impossible de créer le lien. Réessayez.",
   ctaAdded: 'Soyez averti quand vos amis ajoutent des dépenses',
@@ -530,6 +625,19 @@ const fr: Dict = {
   ctaSettled: "Recevez un rappel quand quelqu'un vous doit de l'argent",
   ctaButton: "Essayer l'appli",
   getAndroid: 'Disponible sur Google Play',
+  claimsHeading: 'Partager un ticket',
+  claimsSummary: '{0} · {1} · ouvert jusqu’au {2}',
+  claimsHint: 'Cochez ce que vous avez pris. Une ligne cochée par plusieurs personnes est partagée entre elles ; ce que personne ne coche reste à {0}, qui a payé.',
+  claimsSharedWith: 'partagé à {0}',
+  claimsYourPart: 'votre part {0}',
+  claimsHandSplit: 'réparti par {0}',
+  claimsYourTotal: 'Votre part de ce ticket : {0}',
+  claimsSaveButton: 'Enregistrer mes articles',
+  msgClaimed: 'Enregistré. Votre part du ticket a été mise à jour.',
+  msgClaimsClosed: 'Ce ticket n’est plus en cours de partage. Demandez à la personne qui a payé de le modifier.',
+  msgBusy: 'Vous avez modifié ce ticket très souvent. Patientez un moment puis réessayez.',
+  manualRateTag: 'taux manuel',
+  settleClaimsOpenNote: 'Certains tickets sont encore en cours de partage, les montants peuvent donc encore changer.',
 };
 
 const ru: Dict = {
@@ -610,6 +718,11 @@ const ru: Dict = {
   msgLimit: 'Эта группа достигла лимита.',
   msgSaved: 'Сохранено.',
   msgAdded: 'Расход добавлен.',
+  amountPlainLabel: 'Сумма',
+  currencyLabel: 'Валюта',
+  fxHint: 'Платили в другой валюте? Выберите её: сумма будет один раз пересчитана в {0} по сегодняшнему курсу, а в истории останутся обе суммы.',
+  msgAddedFx: 'Расход добавлен и пересчитан в {0} по сегодняшнему курсу. В истории видны обе суммы; удалите расход, если курс не подходит.',
+  msgNoRate: 'Курс обмена сейчас недоступен. Попробуйте позже или введите сумму в {0}.',
   msgSettled: 'Платёж записан.',
   msgLinkFailed: 'Не удалось создать ссылку. Попробуйте снова.',
   ctaAdded: 'Получайте уведомления, когда друзья добавляют расходы',
@@ -617,6 +730,19 @@ const ru: Dict = {
   ctaSettled: 'Получайте напоминание, когда вам кто-то должен',
   ctaButton: 'Попробовать приложение',
   getAndroid: 'Скачать в Google Play',
+  claimsHeading: 'Разделить чек',
+  claimsSummary: '{0} · {1} · открыто до {2}',
+  claimsHint: 'Отметьте, что было вашим. Позиция, отмеченная несколькими людьми, делится между ними; то, что никто не отметит, остаётся за тем, кто платил ({0}).',
+  claimsSharedWith: 'на {0}',
+  claimsYourPart: 'ваша часть {0}',
+  claimsHandSplit: 'разделено: {0}',
+  claimsYourTotal: 'Ваша часть этого чека: {0}',
+  claimsSaveButton: 'Сохранить мои позиции',
+  msgClaimed: 'Сохранено. Ваша доля чека обновлена.',
+  msgClaimsClosed: 'Этот чек больше не делится. Попросите того, кто платил, изменить его.',
+  msgBusy: 'Вы слишком часто меняли этот чек. Подождите немного и повторите.',
+  manualRateTag: 'курс вручную',
+  settleClaimsOpenNote: 'Некоторые чеки ещё делятся, поэтому суммы могут измениться.',
 };
 
 const ua: Dict = {
@@ -697,6 +823,11 @@ const ua: Dict = {
   msgLimit: 'Ця група досягла ліміту.',
   msgSaved: 'Збережено.',
   msgAdded: 'Витрату додано.',
+  amountPlainLabel: 'Сума',
+  currencyLabel: 'Валюта',
+  fxHint: 'Платили в іншій валюті? Виберіть її: суму буде один раз перераховано в {0} за сьогоднішнім курсом, а в історії залишаться обидві суми.',
+  msgAddedFx: 'Витрату додано й перераховано в {0} за сьогоднішнім курсом. В історії видно обидві суми; видаліть витрату, якщо курс не підходить.',
+  msgNoRate: 'Курс обміну зараз недоступний. Спробуйте пізніше або введіть суму в {0}.',
   msgSettled: 'Платіж записано.',
   msgLinkFailed: 'Не вдалося створити посилання. Спробуйте ще раз.',
   ctaAdded: 'Отримуйте сповіщення, коли друзі додають витрати',
@@ -704,6 +835,19 @@ const ua: Dict = {
   ctaSettled: 'Отримуйте нагадування, коли вам хтось винен',
   ctaButton: 'Спробувати застосунок',
   getAndroid: 'Завантажити в Google Play',
+  claimsHeading: 'Розділити чек',
+  claimsSummary: '{0} · {1} · відкрито до {2}',
+  claimsHint: 'Позначте, що було вашим. Позиція, яку позначили кілька людей, ділиться між ними; те, що ніхто не позначить, лишається за тим, хто платив ({0}).',
+  claimsSharedWith: 'на {0}',
+  claimsYourPart: 'ваша частина {0}',
+  claimsHandSplit: 'розділено: {0}',
+  claimsYourTotal: 'Ваша частина цього чека: {0}',
+  claimsSaveButton: 'Зберегти мої позиції',
+  msgClaimed: 'Збережено. Вашу частку чека оновлено.',
+  msgClaimsClosed: 'Цей чек більше не ділиться. Попросіть того, хто платив, змінити його.',
+  msgBusy: 'Ви надто часто змінювали цей чек. Зачекайте трохи й повторіть.',
+  manualRateTag: 'курс уручну',
+  settleClaimsOpenNote: 'Деякі чеки ще діляться, тому суми можуть змінитися.',
 };
 
 const be: Dict = {
@@ -784,6 +928,11 @@ const be: Dict = {
   msgLimit: 'Гэта група дасягнула ліміту.',
   msgSaved: 'Захавана.',
   msgAdded: 'Выдатак дададзены.',
+  amountPlainLabel: 'Сума',
+  currencyLabel: 'Валюта',
+  fxHint: 'Плацілі ў іншай валюце? Выберыце яе: суму адзін раз пералічаць у {0} па сённяшнім курсе, а ў гісторыі застануцца абедзве сумы.',
+  msgAddedFx: 'Выдатак дададзены і пералічаны ў {0} па сённяшнім курсе. У гісторыі відаць абедзве сумы; выдаліце выдатак, калі курс не падыходзіць.',
+  msgNoRate: 'Курс абмену зараз недаступны. Паспрабуйце пазней або ўвядзіце суму ў {0}.',
   msgSettled: 'Плацёж запісаны.',
   msgLinkFailed: 'Не ўдалося стварыць спасылку. Паспрабуйце яшчэ раз.',
   ctaAdded: 'Атрымлівайце апавяшчэнні, калі сябры дадаюць выдаткі',
@@ -791,6 +940,19 @@ const be: Dict = {
   ctaSettled: 'Атрымлівайце напамін, калі вам хтосьці вінен',
   ctaButton: 'Паспрабаваць праграму',
   getAndroid: 'Спампаваць у Google Play',
+  claimsHeading: 'Падзяліць чэк',
+  claimsSummary: '{0} · {1} · адкрыта да {2}',
+  claimsHint: 'Адзначце, што было вашым. Пазіцыя, якую адзначылі некалькі чалавек, дзеліцца паміж імі; тое, што ніхто не адзначыць, застаецца за тым, хто плаціў ({0}).',
+  claimsSharedWith: 'на {0}',
+  claimsYourPart: 'ваша частка {0}',
+  claimsHandSplit: 'падзелена: {0}',
+  claimsYourTotal: 'Ваша частка гэтага чэка: {0}',
+  claimsSaveButton: 'Захаваць мае пазіцыі',
+  msgClaimed: 'Захавана. Вашу долю чэка абноўлена.',
+  msgClaimsClosed: 'Гэты чэк больш не дзеліцца. Папрасіце таго, хто плаціў, змяніць яго.',
+  msgBusy: 'Вы занадта часта змянялі гэты чэк. Пачакайце крыху і паўтарыце.',
+  manualRateTag: 'курс уручную',
+  settleClaimsOpenNote: 'Некаторыя чэкі яшчэ дзеляцца, таму сумы могуць змяніцца.',
 };
 
 const nl: Dict = {
@@ -871,6 +1033,11 @@ const nl: Dict = {
   msgLimit: 'Deze groep heeft zijn limiet bereikt.',
   msgSaved: 'Opgeslagen.',
   msgAdded: 'Uitgave toegevoegd.',
+  amountPlainLabel: 'Bedrag',
+  currencyLabel: 'Valuta',
+  fxHint: 'In een andere valuta betaald? Kies die: het bedrag wordt één keer, tegen de koers van vandaag, omgerekend naar {0}, en de geschiedenis toont beide bedragen.',
+  msgAddedFx: 'Uitgave toegevoegd en tegen de koers van vandaag omgerekend naar {0}. De geschiedenis toont beide bedragen; verwijder haar als de koers niet klopt.',
+  msgNoRate: 'Er is nu geen wisselkoers beschikbaar. Probeer het later opnieuw of voer het bedrag in {0} in.',
   msgSettled: 'Betaling vastgelegd.',
   msgLinkFailed: 'De link kon niet worden gemaakt. Probeer het opnieuw.',
   ctaAdded: 'Krijg een melding wanneer vrienden uitgaven toevoegen',
@@ -878,6 +1045,19 @@ const nl: Dict = {
   ctaSettled: 'Krijg een herinnering wanneer iemand jou geld schuldig is',
   ctaButton: 'Probeer de app',
   getAndroid: 'Downloaden via Google Play',
+  claimsHeading: 'Een bon verdelen',
+  claimsSummary: '{0} · {1} · open tot {2}',
+  claimsHint: 'Vink aan wat jij had. Een regel die meerdere mensen aanvinken, wordt tussen hen verdeeld; wat niemand aanvinkt, blijft bij {0}, die betaalde.',
+  claimsSharedWith: 'gedeeld door {0}',
+  claimsYourPart: 'jouw deel {0}',
+  claimsHandSplit: 'verdeeld door {0}',
+  claimsYourTotal: 'Jouw deel van deze bon: {0}',
+  claimsSaveButton: 'Mijn items opslaan',
+  msgClaimed: 'Opgeslagen. Jouw deel van de bon is bijgewerkt.',
+  msgClaimsClosed: 'Deze bon wordt niet meer verdeeld. Vraag degene die betaalde om hem aan te passen.',
+  msgBusy: 'Je hebt deze bon te vaak gewijzigd. Wacht even en probeer het opnieuw.',
+  manualRateTag: 'handmatige koers',
+  settleClaimsOpenNote: 'Sommige bonnen worden nog verdeeld, dus bedragen kunnen nog veranderen.',
 };
 
 export const GROUP_GUEST_TRANSLATIONS: Record<string, Dict> = { en, pl, de, es, fr, ru, ua, be, nl };

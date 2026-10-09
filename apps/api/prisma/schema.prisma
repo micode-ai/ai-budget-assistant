@@ -2469,6 +2469,13 @@ model GroupExpense {
   paidByMemberId    String    @map("paid_by_member_id")
   splitType         ShareType @map("split_type") // reuses the trip enum
   createdByMemberId String    @map("created_by_member_id")
+  // ABA-654: write-time FX. All NULL = entered in the group currency (no backfill). Otherwise
+  // `amount` is round2(originalAmount * fxRate), converted ONCE when written and never on read.
+  originalAmount    Decimal?  @map("original_amount") @db.Decimal(12, 2)
+  originalCurrency  String?   @map("original_currency")
+  fxRate            Decimal?  @map("fx_rate") @db.Decimal(18, 8) // 1 original = fxRate group currency
+  fxRateSource      String?   @map("fx_rate_source") // provider | manual
+  fxRateAt          DateTime? @map("fx_rate_at")
   // Idempotency: app = client UUID; guest = hidden `rid` nonce minted at form render.
   clientRequestId   String?   @map("client_request_id")
   deletedAt         DateTime? @map("deleted_at") // soft, shown in history, out of balances

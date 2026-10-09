@@ -14,6 +14,7 @@ import { buildGuestPayLink } from '../receipt-split/helpers/guest-page';
 import { GroupsService, linkClaimBinding, MAX_MEMBERS, MAX_SHARES } from './groups.service';
 import { SETTLE_METHODS } from './dto';
 import { maxSettlementAmount } from './group-ledger';
+import { entryCurrencyOptions, isAllowedEntryCurrency } from './group-fx';
 import type {
   GuestActivityView,
   GuestMemberView,
@@ -149,6 +150,7 @@ export function flashFor(e: unknown): string {
     const code = (e.getResponse() as { code?: string })?.code;
     if (code === 'EXPENSE_LIMIT' || code === 'GROUP_MEMBER_LIMIT') return 'limit';
     if (code === 'SETTLEMENT_EXCEEDS_BALANCE') return 'toomuch';
+    if (code === 'FX_RATE_UNAVAILABLE') return 'norate';
     return 'invalid';
   }
   if (e instanceof HttpException) return 'invalid';
@@ -322,6 +324,11 @@ export class GroupGuestService {
           id: e.id,
           description: e.description,
           amount: e.amount,
+          // ABA-654: what was entered, shown beside the converted figure. Stored, never re-converted.
+          original:
+            e.originalCurrency && e.originalAmount !== null && e.originalCurrency !== group.currencyCode
+              ? { amount: e.originalAmount, currencyCode: e.originalCurrency, manualRate: e.fxRateSource === 'manual' }
+              : null,
           date: e.date,
           paidByName: nameOf(e.paidByMemberId),
           addedByName: e.createdByMemberId && e.createdByMemberId !== e.paidByMemberId ? nameOf(e.createdByMemberId) : null,
@@ -348,6 +355,7 @@ export class GroupGuestService {
       groupName: group.name,
       emoji: group.emoji,
       currencyCode: group.currencyCode,
+      entryCurrencies: entryCurrencyOptions(group.currencyCode),
       archived: group.status === 'archived',
       me: actor
         ? {
@@ -423,6 +431,12 @@ export class GroupGuestService {
     const date = parseDate(body.date, today);
     const paidBy = str(body.paidBy);
     const splitType = body.splitType === 'exact' ? 'exact' : body.splitType === 'equal' ? 'equal' : null;
+    // ABA-654: the entry currency. Absent = the group's; anything outside the allowed list is refused
+    // (a <select> is still just a form field). Converted once, server-side, in GroupsService.
+    if (body.currency !== undefined && typeof body.currency !== 'string') return 'invalid';
+    const rawCurrency = str(body.currency);
+    const currency = rawCurrency === null || rawCurrency === '' ? group.currencyCode : rawCurrency;
+    if (!isAllowedEntryCurrency(currency, group.currencyCode)) return 'invalid';
     if (!rid || !RID_RE.test(rid) || !description || amount === null || !date || !paidBy || !splitType) return 'invalid';
 
     // Only fields of LIVE members of this group are ever read, so a planted foreign id is ignored.
@@ -451,8 +465,9 @@ export class GroupGuestService {
         paidByMemberId: paidBy,
         splitType,
         shares,
+        currencyCode: currency,
       });
-      return 'added';
+      return currency === group.currencyCode ? 'added' : 'addedfx';
     } catch (e) {
       return flashFor(e);
     }

@@ -112,7 +112,7 @@ describe('GroupsService', () => {
     };
     cache = { setIfAbsent: jest.fn(async () => true) };
     notifications = { sendToUser: jest.fn(async () => true) };
-    service = new GroupsService(prisma, cache, notifications);
+    service = new GroupsService(prisma, cache, notifications, { getRates: jest.fn() } as any);
   });
 
   describe('guards', () => {

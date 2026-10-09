@@ -59,6 +59,12 @@ Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **A
 
 **Ausgabe hinzufügen** öffnet das Ausgabenformular: **Betrag**, **Beschreibung**, **Datum**, **Bezahlt von** und **Aufteilung**: **Gleichmäßig**, **Genaue Beträge**, **Prozent** oder **Anteile**. **Beleg scannen** liest einen Papierbeleg und füllt Betrag, Beschreibung und Datum für dich aus. Wer eine Ausgabe hinzugefügt hat, wer sie bezahlt hat, und der Gruppenbesitzer können sie bearbeiten oder löschen. Eine gelöschte Ausgabe bleibt im Verlauf, als gelöscht markiert.
 
+## Ausgaben in einer anderen Währung
+
+Jede Gruppe rechnet in einer Währung ab, der beim Erstellen gewählten. Eine Ausgabe in einer anderen Währung lässt sich trotzdem eintragen. Tippe in der App auf die Währung neben **Betrag** und wähle die, in der du bezahlt hast. Die Zeile **Wechselkurs** zeigt dann den heutigen Kurs (zum Beispiel *1 EUR =* 4,32 in der Gruppenwährung) und wie viel die Ausgabe zählt; ändere den Kurs, wenn du den tatsächlich gezahlten kennst. Im Browser wählen Freunde die **Währung** unter dem Betrag.
+
+Die Ausgabe wird einmal, beim Speichern, in die Gruppenwährung umgerechnet, und dieser umgerechnete Betrag geht in die Salden ein. Er ändert sich danach nie mehr, auch wenn sich die Kurse bewegen, sodass eine ausgeglichene Gruppe ausgeglichen bleibt. Der Verlauf zeigt beide Beträge, zum Beispiel „12,00 € → 51,80 zł“. Änderst du später den Betrag, gilt derselbe Kurs; änderst du die Währung, wird ein neuer Kurs genommen. Ist kein Kurs verfügbar, bittet die App dich, ihn einzugeben, und die Browserseite, es später erneut zu versuchen oder den Betrag in der Gruppenwährung einzugeben. Bei **Genaue Beträge** gibst du den Anteil jeder Person in der Währung ein, in der du bezahlt hast. Zahlungen erfolgen immer in der Gruppenwährung.
+
 ## Ausgleichen
 
 Tippe in einer Zeile von **Wer zahlt wem**, die dich betrifft, auf **Begleichen**. Hat die Person, der du zahlst, Zahlungsdaten hinterlegt, siehst du eine Schaltfläche oder eine Anleitung zum Bezahlen. Wähle **Wie wurde bezahlt?** und tippe auf **Ich habe bezahlt** — oder auf **Ich habe es erhalten**, wenn du das Geld bekommst (praktisch, wenn ein Freund bar bezahlt hat und nie wieder auf den Link zurückkam).

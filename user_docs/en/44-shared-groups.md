@@ -59,6 +59,12 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 
 **Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
 
+## Expenses in another currency
+
+Each group keeps its accounts in one currency, the one chosen when it was created. An expense paid in another currency can still be added. In the app, tap the currency next to the **Amount** and pick the one you paid in. The **Exchange rate** row then shows today's rate (for example *1 EUR =* 4.32 in the group currency) and what the expense will count as; change the rate if you know the one you actually paid. In the browser, friends pick the **Currency** under the amount.
+
+The expense is converted into the group currency once, when it is saved, and the converted amount is what the balances use. It never changes afterwards, even when exchange rates move, so a group that is settled stays settled. The history shows both figures, for example "€12.00 → 51.80 zł". If you later change the amount, the same rate is used again; if you change the currency, a new rate is taken. When no rate is available, the app asks you to enter one, and the browser page asks to try again later or to enter the amount in the group currency. With **Exact amounts**, enter each person's part in the currency you paid in. Payments are always in the group currency.
+
 ## Settling up
 
 On a line of **Who pays whom** that involves you, tap **Settle**. If the person you're paying added payment details, you'll see a button or instructions to pay them. Choose **How was it paid?**, then tap **I paid** — or **I received it** if you're the one being paid (useful when a friend paid you in cash and never came back to the link).

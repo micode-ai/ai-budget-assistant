@@ -4,6 +4,7 @@ import type {
   CreateGroupSettlementDto,
   GroupActivityPage,
   GroupDetail,
+  GroupFxPreview,
   GroupJoinPreview,
   GroupMember,
   GroupSummary,
@@ -96,6 +97,10 @@ export const groupsApi = {
       method: 'PATCH',
       body: json(dto),
     });
+  },
+  /** ABA-654: the provider rate for the form (1 `currency` in the group currency); `rate` null when unknown. */
+  getGroupFxPreview(groupId: string, currency: string) {
+    return httpClient.request<GroupFxPreview>(`/groups/${groupId}/fx-preview?currency=${encodeURIComponent(currency)}`);
   },
   deleteGroupExpense(groupId: string, expenseId: string) {
     return httpClient.request<GroupDetail>(`/groups/${groupId}/expenses/${expenseId}`, { method: 'DELETE' });

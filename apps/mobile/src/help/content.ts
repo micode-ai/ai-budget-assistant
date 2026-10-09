@@ -5135,6 +5135,12 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 
 **Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
 
+## Expenses in another currency
+
+Each group keeps its accounts in one currency, the one chosen when it was created. An expense paid in another currency can still be added. In the app, tap the currency next to the **Amount** and pick the one you paid in. The **Exchange rate** row then shows today's rate (for example *1 EUR =* 4.32 in the group currency) and what the expense will count as; change the rate if you know the one you actually paid. In the browser, friends pick the **Currency** under the amount.
+
+The expense is converted into the group currency once, when it is saved, and the converted amount is what the balances use. It never changes afterwards, even when exchange rates move, so a group that is settled stays settled. The history shows both figures, for example "€12.00 → 51.80 zł". If you later change the amount, the same rate is used again; if you change the currency, a new rate is taken. When no rate is available, the app asks you to enter one, and the browser page asks to try again later or to enter the amount in the group currency. With **Exact amounts**, enter each person's part in the currency you paid in. Payments are always in the group currency.
+
 ## Settling up
 
 On a line of **Who pays whom** that involves you, tap **Settle**. If the person you're paying added payment details, you'll see a button or instructions to pay them. Choose **How was it paid?**, then tap **I paid** — or **I received it** if you're the one being paid (useful when a friend paid you in cash and never came back to the link).
@@ -10288,6 +10294,12 @@ OCR иногда неверно читает цену, выдумывает ст
 
 **Добавить расход** открывает форму: **Сумма**, **Описание**, **Дата**, **Плательщик** и **Разделение**: **Поровну**, **Точные суммы**, **Проценты** или **Доли**. **Сканировать чек** читает бумажный чек и сам заполняет сумму, описание и дату. Изменить или удалить расход могут тот, кто его добавил, тот, кто за него заплатил, и владелец группы. Удалённый расход остаётся в истории с пометкой «удалён».
 
+## Расходы в другой валюте
+
+Каждая группа ведёт расчёты в одной валюте — той, что выбрали при создании. Расход, оплаченный в другой валюте, всё равно можно добавить. В приложении нажмите на валюту рядом с полем **Сумма** и выберите ту, в которой платили. Строка **Курс обмена** покажет сегодняшний курс (например, *1 EUR =* 4,32 в валюте группы) и то, сколько составит расход; измените курс, если знаете тот, по которому платили на самом деле. В браузере друзья выбирают **Валюту** под суммой.
+
+Расход пересчитывается в валюту группы один раз, при сохранении, и именно пересчитанная сумма идёт в балансы. Потом она уже не меняется, даже когда курсы двигаются, так что рассчитанная группа остаётся рассчитанной. В истории видны обе суммы, например «12,00 € → 51,80 zł». Если позже изменить сумму, используется тот же курс; если изменить валюту — берётся новый. Если курс недоступен, приложение попросит ввести его, а страница в браузере — попробовать позже или ввести сумму в валюте группы. При разделении **Точные суммы** вводите долю каждого в той валюте, в которой платили. Платежи всегда в валюте группы.
+
 ## Расчёт
 
 В строке **Кто кому сколько**, которая вас касается, нажмите **Рассчитаться**. Если получатель указал платёжные данные, вы увидите кнопку или инструкцию для оплаты. Выберите **Как оплатили?** и нажмите **Я заплатил(а)** — или **Я получил(а)**, если платят вам (удобно, когда друг отдал наличными и больше не открывал ссылку).
@@ -15411,6 +15423,12 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 **Додати витрату** відкриває форму: **Сума**, **Опис**, **Дата**, **Платник** і **Розподіл**: **Порівну**, **Точні суми**, **Відсотки** або **Частки**. **Сканувати чек** читає паперовий чек і сам заповнює суму, опис і дату. Змінити чи видалити витрату можуть той, хто її додав, той, хто за неї заплатив, і власник групи. Видалена витрата лишається в історії з позначкою «видалено».
 
+## Витрати в іншій валюті
+
+Кожна група веде розрахунки в одній валюті — тій, яку вибрали під час створення. Витрату, оплачену в іншій валюті, однаково можна додати. У застосунку натисніть на валюту поруч із полем **Сума** й виберіть ту, якою платили. Рядок **Курс обміну** покаже сьогоднішній курс (наприклад, *1 EUR =* 4,32 у валюті групи) і те, скільки становитиме витрата; змініть курс, якщо знаєте той, за яким платили насправді. У браузері друзі вибирають **Валюту** під сумою.
+
+Витрату перераховують у валюту групи один раз, під час збереження, і саме перерахована сума йде в баланси. Потім вона вже не змінюється, навіть коли курси рухаються, тож розрахована група залишається розрахованою. В історії видно обидві суми, наприклад «12,00 € → 51,80 zł». Якщо згодом змінити суму, використовується той самий курс; якщо змінити валюту — береться новий. Якщо курс недоступний, застосунок попросить ввести його, а сторінка в браузері — спробувати пізніше або ввести суму у валюті групи. При розподілі **Точні суми** вводьте частку кожного у валюті, якою платили. Платежі завжди у валюті групи.
+
 ## Розрахунок
 
 У рядку **Хто кому скільки**, який вас стосується, натисніть **Розрахуватися**. Якщо отримувач вказав платіжні дані, ви побачите кнопку або інструкцію для оплати. Виберіть **Як сплатили?** і натисніть **Я заплатив(ла)** — або **Я отримав(ла)**, якщо платять вам (зручно, коли друг віддав готівкою і більше не відкривав посилання).
@@ -20519,6 +20537,12 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 
 **Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
 
+## Wydatki w innej walucie
+
+Każda grupa prowadzi rozliczenia w jednej walucie — tej wybranej przy jej tworzeniu. Wydatek zapłacony w innej walucie i tak można dodać. W aplikacji stuknij walutę obok pola **Kwota** i wybierz tę, w której płaciłeś. Wiersz **Kurs wymiany** pokaże wtedy dzisiejszy kurs (np. *1 EUR =* 4,32 w walucie grupy) i to, ile wydatek będzie liczony; zmień kurs, jeśli znasz ten, po którym faktycznie zapłaciłeś. W przeglądarce znajomi wybierają **Walutę** pod kwotą.
+
+Wydatek jest przeliczany na walutę grupy jeden raz, przy zapisie, i to przeliczona kwota trafia do sald. Później już się nie zmienia, nawet gdy kursy się ruszają, więc rozliczona grupa pozostaje rozliczona. Historia pokazuje obie kwoty, np. „12,00 € → 51,80 zł”. Gdy później zmienisz kwotę, użyty zostanie ten sam kurs; gdy zmienisz walutę — nowy. Jeśli kurs jest niedostępny, aplikacja poprosi o jego wpisanie, a strona w przeglądarce — o ponowną próbę później albo wpisanie kwoty w walucie grupy. Przy podziale **Dokładne kwoty** wpisz część każdej osoby w walucie, w której płaciłeś. Płatności są zawsze w walucie grupy.
+
 ## Rozliczanie
 
 W linii **Kto komu ile**, która Cię dotyczy, dotknij **Rozlicz**. Jeśli osoba, której płacisz, dodała dane do płatności, zobaczysz przycisk lub instrukcję zapłaty. Wybierz **Jak zapłacono?**, a potem dotknij **Zapłaciłem(-am)** — albo **Otrzymałem(-am)**, jeśli to Tobie się płaci (przydatne, gdy znajomy oddał gotówkę i już nie wrócił do linku).
@@ -25602,6 +25626,12 @@ Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **A
 
 **Ausgabe hinzufügen** öffnet das Ausgabenformular: **Betrag**, **Beschreibung**, **Datum**, **Bezahlt von** und **Aufteilung**: **Gleichmäßig**, **Genaue Beträge**, **Prozent** oder **Anteile**. **Beleg scannen** liest einen Papierbeleg und füllt Betrag, Beschreibung und Datum für dich aus. Wer eine Ausgabe hinzugefügt hat, wer sie bezahlt hat, und der Gruppenbesitzer können sie bearbeiten oder löschen. Eine gelöschte Ausgabe bleibt im Verlauf, als gelöscht markiert.
 
+## Ausgaben in einer anderen Währung
+
+Jede Gruppe rechnet in einer Währung ab, der beim Erstellen gewählten. Eine Ausgabe in einer anderen Währung lässt sich trotzdem eintragen. Tippe in der App auf die Währung neben **Betrag** und wähle die, in der du bezahlt hast. Die Zeile **Wechselkurs** zeigt dann den heutigen Kurs (zum Beispiel *1 EUR =* 4,32 in der Gruppenwährung) und wie viel die Ausgabe zählt; ändere den Kurs, wenn du den tatsächlich gezahlten kennst. Im Browser wählen Freunde die **Währung** unter dem Betrag.
+
+Die Ausgabe wird einmal, beim Speichern, in die Gruppenwährung umgerechnet, und dieser umgerechnete Betrag geht in die Salden ein. Er ändert sich danach nie mehr, auch wenn sich die Kurse bewegen, sodass eine ausgeglichene Gruppe ausgeglichen bleibt. Der Verlauf zeigt beide Beträge, zum Beispiel „12,00 € → 51,80 zł“. Änderst du später den Betrag, gilt derselbe Kurs; änderst du die Währung, wird ein neuer Kurs genommen. Ist kein Kurs verfügbar, bittet die App dich, ihn einzugeben, und die Browserseite, es später erneut zu versuchen oder den Betrag in der Gruppenwährung einzugeben. Bei **Genaue Beträge** gibst du den Anteil jeder Person in der Währung ein, in der du bezahlt hast. Zahlungen erfolgen immer in der Gruppenwährung.
+
 ## Ausgleichen
 
 Tippe in einer Zeile von **Wer zahlt wem**, die dich betrifft, auf **Begleichen**. Hat die Person, der du zahlst, Zahlungsdaten hinterlegt, siehst du eine Schaltfläche oder eine Anleitung zum Bezahlen. Wähle **Wie wurde bezahlt?** und tippe auf **Ich habe bezahlt** — oder auf **Ich habe es erhalten**, wenn du das Geld bekommst (praktisch, wenn ein Freund bar bezahlt hat und nie wieder auf den Link zurückkam).
@@ -30674,6 +30704,12 @@ La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), 
 
 **Añadir gasto** abre el formulario: **Importe**, **Descripción**, **Fecha**, **Pagado por** y **División**: **A partes iguales**, **Importes exactos**, **Porcentajes** o **Partes**. **Escanear recibo** lee un ticket en papel y rellena por ti el importe, la descripción y la fecha. Quien añadió el gasto, quien lo pagó y el propietario del grupo pueden editarlo o eliminarlo. Un gasto eliminado sigue en el historial, marcado como eliminado.
 
+## Gastos en otra moneda
+
+Cada grupo lleva sus cuentas en una moneda, la elegida al crearlo. Aun así se puede añadir un gasto pagado en otra moneda. En la app, toca la moneda junto a **Importe** y elige la que usaste. La fila **Tipo de cambio** muestra entonces el tipo de hoy (por ejemplo *1 EUR =* 4,32 en la moneda del grupo) y cuánto contará el gasto; cambia el tipo si conoces el que pagaste de verdad. En el navegador, tus amigos eligen la **Moneda** debajo del importe.
+
+El gasto se convierte a la moneda del grupo una sola vez, al guardarlo, y ese importe convertido es el que usan los saldos. Después ya no cambia, aunque se muevan los tipos de cambio, así que un grupo saldado sigue saldado. El historial muestra las dos cifras, por ejemplo «12,00 € → 51,80 zł». Si luego cambias el importe, se vuelve a usar el mismo tipo; si cambias la moneda, se toma uno nuevo. Si no hay tipo disponible, la app te pide que lo introduzcas, y la página del navegador que lo intentes más tarde o introduzcas el importe en la moneda del grupo. Con **Importes exactos**, introduce la parte de cada persona en la moneda en la que pagaste. Los pagos son siempre en la moneda del grupo.
+
 ## Saldar cuentas
 
 En una línea de **Quién paga a quién** que te afecte, toca **Saldar**. Si la persona a la que pagas ha añadido sus datos de pago, verás un botón o instrucciones para pagarle. Elige **¿Cómo se pagó?** y toca **He pagado**, o **Lo he recibido** si eres tú quien cobra (útil cuando un amigo te pagó en efectivo y no volvió a abrir el enlace).
@@ -35744,6 +35780,12 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 
 **Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
 
+## Dépenses dans une autre devise
+
+Chaque groupe tient ses comptes dans une seule devise, celle choisie à sa création. Une dépense payée dans une autre devise peut quand même être ajoutée. Dans l'appli, touchez la devise à côté de **Montant** et choisissez celle que vous avez utilisée. La ligne **Taux de change** affiche alors le taux du jour (par exemple *1 EUR =* 4,32 dans la devise du groupe) et ce que comptera la dépense ; modifiez le taux si vous connaissez celui réellement payé. Dans le navigateur, vos amis choisissent la **Devise** sous le montant.
+
+La dépense est convertie dans la devise du groupe une seule fois, à l'enregistrement, et c'est ce montant converti qu'utilisent les soldes. Il ne change plus ensuite, même quand les taux bougent : un groupe réglé reste réglé. L'historique affiche les deux montants, par exemple « 12,00 € → 51,80 zł ». Si vous changez ensuite le montant, le même taux est réutilisé ; si vous changez la devise, un nouveau taux est pris. Quand aucun taux n'est disponible, l'appli vous demande de le saisir, et la page du navigateur de réessayer plus tard ou de saisir le montant dans la devise du groupe. Avec **Montants exacts**, saisissez la part de chacun dans la devise de paiement. Les paiements sont toujours dans la devise du groupe.
+
 ## Régler
 
 Sur une ligne de **Qui paie qui** qui vous concerne, touchez **Régler**. Si la personne que vous payez a renseigné ses coordonnées de paiement, vous verrez un bouton ou des instructions pour la payer. Choisissez **Comment a-t-il été payé ?**, puis touchez **J'ai payé**, ou **Je l'ai reçu** si c'est vous qui êtes payé (pratique quand un ami vous a payé en espèces et n'est jamais revenu sur le lien).
@@ -40777,6 +40819,12 @@ OCR часам няправільна чытае цану, выдумляе ра
 Экран групы паказвае, **Вам вінны** ці **Вы вінны** (або **Усё разлічана**), **Ваша доля ў гэтым месяцы**, план **Хто каму колькі** і спіс **Актыўнасць**.
 
 **Дадаць выдатак** адкрывае форму: **Сума**, **Апісанне**, **Дата**, **Плацельшчык** і **Падзел**: **Параўну**, **Дакладныя сумы**, **Працэнты** або **Долі**. **Сканіраваць чэк** чытае папяровы чэк і сам запаўняе суму, апісанне і дату. Змяніць ці выдаліць выдатак могуць той, хто яго дадаў, той, хто за яго заплаціў, і ўладальнік групы. Выдалены выдатак застаецца ў гісторыі з пазнакай «выдалены».
+
+## Выдаткі ў іншай валюце
+
+Кожная група вядзе разлікі ў адной валюце — той, што выбралі пры стварэнні. Выдатак, аплачаны ў іншай валюце, усё роўна можна дадаць. У праграме націсніце на валюту побач з полем **Сума** і выберыце тую, якой плацілі. Радок **Курс абмену** пакажа сённяшні курс (напрыклад, *1 EUR =* 4,32 у валюце групы) і тое, колькі складзе выдатак; змяніце курс, калі ведаеце той, па якім плацілі насамрэч. У браўзеры сябры выбіраюць **Валюту** пад сумай.
+
+Выдатак пералічваецца ў валюту групы адзін раз, пры захаванні, і менавіта пералічаная сума ідзе ў балансы. Потым яна ўжо не змяняецца, нават калі курсы рухаюцца, таму разлічаная група застаецца разлічанай. У гісторыі відаць абедзве сумы, напрыклад «12,00 € → 51,80 zł». Калі пазней змяніць суму, выкарыстоўваецца той самы курс; калі змяніць валюту — бярэцца новы. Калі курс недаступны, праграма папросіць увесці яго, а старонка ў браўзеры — паспрабаваць пазней або ўвесці суму ў валюце групы. Пры падзеле **Дакладныя сумы** уводзьце долю кожнага ў той валюце, якой плацілі. Плацяжы заўсёды ў валюце групы.
 
 ## Разлік
 
@@ -45937,6 +45985,12 @@ Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser
 Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Alles verrekend**), **Jouw deel deze maand**, het plan **Wie betaalt wie** en de lijst **Activiteit**.
 
 **Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
+
+## Uitgaven in een andere valuta
+
+Elke groep houdt de rekening bij in één valuta, die bij het aanmaken is gekozen. Een uitgave in een andere valuta kun je toch toevoegen. Tik in de app op de valuta naast **Bedrag** en kies die waarin je hebt betaald. De rij **Wisselkoers** toont dan de koers van vandaag (bijvoorbeeld *1 EUR =* 4,32 in de groepsvaluta) en hoeveel de uitgave telt; pas de koers aan als je weet welke je echt hebt betaald. In de browser kiezen vrienden de **Valuta** onder het bedrag.
+
+De uitgave wordt één keer, bij het opslaan, omgerekend naar de groepsvaluta, en dat omgerekende bedrag gebruiken de saldi. Het verandert daarna nooit meer, ook niet als koersen bewegen, dus een verrekende groep blijft verrekend. De geschiedenis toont beide bedragen, bijvoorbeeld '€ 12,00 → 51,80 zł'. Pas je later het bedrag aan, dan wordt dezelfde koers gebruikt; pas je de valuta aan, dan wordt een nieuwe koers genomen. Is er geen koers beschikbaar, dan vraagt de app je hem in te vullen, en de browserpagina om het later opnieuw te proberen of het bedrag in de groepsvaluta in te voeren. Bij **Exacte bedragen** vul je ieders deel in de valuta in waarin je hebt betaald. Betalingen zijn altijd in de groepsvaluta.
 
 ## Verrekenen
 

@@ -8,6 +8,7 @@ import { useConnectivity } from '@/hooks/useConnectivity';
 import { fromDateInputValue } from '@/utils/dateInput';
 import { canModifyExpense, canVoidSettlement, memberName } from '@/features/groups/groupDisplay';
 import { describeGroupEvent } from '@/features/groups/groupOwnership';
+import { fxAmountParts } from '@/features/groups/groupFx';
 import type { ActivityDay, ActivityTableRow } from '@/features/groups/groupActivityTable';
 import type { GroupDetail, GroupExpense, GroupSettlement } from '@budget/shared-types';
 
@@ -85,6 +86,8 @@ export function GroupActivityTable({
       const e = row.item.expense;
       const struck = e.deletedAt !== null;
       const editable = canWrite && !struck && canModifyExpense(detail, e);
+      // ABA-654: the original amount as a secondary line above the stored group figure.
+      const fx = fxAmountParts(e, detail.currencyCode);
       return (
         <Pressable
           key={row.id}
@@ -111,7 +114,12 @@ export function GroupActivityTable({
               {memberName(detail, e.paidByMemberId)}
             </Text>
           </View>
-          <View style={styles.cellAmount}>
+          <View style={styles.cellAmount} accessibilityLabel={fx ? fx.line : undefined}>
+            {fx && (
+              <Text style={[styles.cellMuted, styles.alignRight, styles.tabular, struck && styles.struck]} numberOfLines={1}>
+                {`${fx.original} →`}
+              </Text>
+            )}
             <Text style={[styles.amountText, styles.alignRight, styles.tabular, struck && styles.struck]}>
               {formatCurrency(e.amount, detail.currencyCode)}
             </Text>

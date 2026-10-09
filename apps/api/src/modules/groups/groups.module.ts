@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { CurrencyExchangeModule } from '../currency-exchange/currency-exchange.module';
 import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
 import { GroupGuestController } from './group-guest.controller';
@@ -11,6 +12,8 @@ import { GroupReminderCron } from './group-reminder.cron';
 
 // PrismaService, CacheService and NotificationsService are @Global().
 @Module({
+  // ABA-654: the existing singleton ExchangeRateService for write-time conversion; never a second one.
+  imports: [CurrencyExchangeModule],
   controllers: [GroupsController, GroupGuestController],
   providers: [GroupsService, GroupGuestService, GroupOwnershipService, GroupReminderCron, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
   // GroupOwnershipService: UsersService / AdminService hand groups on before an account goes away.

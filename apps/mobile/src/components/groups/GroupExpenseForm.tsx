@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
+import { formatCurrency, SUPPORTED_CURRENCIES } from '@budget/shared-utils';
 import { DatePicker } from '@/components/DatePicker';
 import { KeyboardAwareScreen } from '@/components/KeyboardAwareScreen';
 import { useGroupExpenseForm } from '@/hooks/useGroupExpenseForm';
@@ -42,11 +43,12 @@ export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProp
   const styles = useStyles(createStyles);
   const form = useGroupExpenseForm(detail, existing);
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showCurrencyPicker, setShowCurrencyPicker] = useState(false);
 
   const splitIssue: SplitIssue | null =
     form.amount > 0 &&
     form.validity.issue !== null &&
-    !['amount', 'description', 'payer'].includes(form.validity.issue)
+    !['amount', 'description', 'payer', 'rate'].includes(form.validity.issue)
       ? (form.validity.issue as SplitIssue)
       : null;
 
@@ -115,8 +117,65 @@ export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProp
             placeholder="0.00"
             placeholderTextColor={theme.colors.textTertiary}
           />
-          <Text style={styles.currency}>{detail.currencyCode}</Text>
+          {/* ABA-654: the entry currency. Another one is converted ONCE by the server when saved. */}
+          <TouchableOpacity
+            style={[styles.currencyChip, form.isForeign && styles.chipActive]}
+            onPress={() => setShowCurrencyPicker((v) => !v)}
+            accessibilityRole="button"
+            accessibilityLabel={t('groups.fxCurrencyLabel')}
+          >
+            <Text style={[styles.currencyChipText, form.isForeign && styles.chipTextActive]}>{form.currency}</Text>
+            <Ionicons name="chevron-down" size={14} color={form.isForeign ? theme.colors.primary : theme.colors.textSecondary} />
+          </TouchableOpacity>
         </View>
+        {showCurrencyPicker && (
+          <View style={styles.pickerContainer}>
+            {form.currencies.map((code) => {
+              const active = form.currency === code;
+              const meta = SUPPORTED_CURRENCIES.find((c) => c.code === code);
+              return (
+                <TouchableOpacity
+                  key={code}
+                  style={[styles.pickerItem, active && styles.pickerItemSelected]}
+                  onPress={() => {
+                    form.setCurrency(code);
+                    setShowCurrencyPicker(false);
+                  }}
+                >
+                  <Text style={styles.pickerSymbol}>{meta?.symbol ?? code}</Text>
+                  <Text style={styles.pickerLabel}>
+                    {code}
+                    {code === detail.currencyCode ? ` · ${t('groups.fxGroupCurrency')}` : ''}
+                  </Text>
+                  {active && <Ionicons name="checkmark" size={20} color={theme.colors.primary} />}
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        )}
+        {form.isForeign && (
+          <View style={styles.rateBox}>
+            <Text style={styles.rateLabel}>{t('groups.fxRateLabel')}</Text>
+            <View style={styles.amountRow}>
+              <Text style={styles.currency}>{t('groups.fxRatePrefix', { currency: form.currency })}</Text>
+              <TextInput
+                style={[styles.input, styles.amountInput]}
+                value={form.rateText}
+                onChangeText={form.setRateText}
+                keyboardType="decimal-pad"
+                placeholder={form.rateLoading ? t('groups.fxRateLoading') : '0.0000'}
+                placeholderTextColor={theme.colors.textTertiary}
+                accessibilityLabel={t('groups.fxRateLabel')}
+              />
+              <Text style={styles.currency}>{detail.currencyCode}</Text>
+            </View>
+            <Text style={styles.rateHint}>
+              {form.rateUnavailable && form.validity.issue === 'rate'
+                ? t('groups.fxRateMissing')
+                : t('groups.fxConvertedPreview', { amount: formatCurrency(form.convertedAmount, detail.currencyCode) })}
+            </Text>
+          </View>
+        )}
 
         <Text style={styles.label}>{t('groups.descriptionLabel')}</Text>
         <TextInput
@@ -162,7 +221,7 @@ export const GroupExpenseForm = forwardRef<GroupFormHandle, GroupExpenseFormProp
           members={form.members}
           draft={form.draft}
           amount={form.amount}
-          currencyCode={detail.currencyCode}
+          currencyCode={form.currency}
           issue={splitIssue}
           onSplitType={form.setSplitType}
           onToggleMember={form.toggleMember}
@@ -232,6 +291,64 @@ const createStyles = (theme: Theme) => ({
   currency: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textSecondary,
+  },
+  currencyChip: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[1],
+    paddingHorizontal: theme.spacing[3],
+    paddingVertical: theme.spacing[3],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+  },
+  currencyChipText: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
+  },
+  pickerContainer: {
+    marginTop: theme.spacing[2],
+    backgroundColor: theme.colors.surface,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    overflow: 'hidden' as const,
+  },
+  pickerItem: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+    paddingHorizontal: theme.spacing[4],
+    paddingVertical: theme.spacing[3],
+    borderBottomWidth: 1,
+    borderBottomColor: theme.colors.divider,
+  },
+  pickerItemSelected: {
+    backgroundColor: theme.colors.primaryLight,
+  },
+  pickerSymbol: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textPrimary,
+    width: 28,
+  },
+  pickerLabel: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textPrimary,
+    flex: 1,
+  },
+  rateBox: {
+    marginTop: theme.spacing[3],
+  },
+  rateLabel: {
+    ...theme.textStyles.label,
+    color: theme.colors.textSecondary,
+    marginBottom: theme.spacing[2],
+  },
+  rateHint: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+    marginTop: theme.spacing[2],
   },
   dateButton: {
     backgroundColor: theme.colors.surfaceSecondary,

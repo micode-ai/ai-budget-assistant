@@ -53,7 +53,10 @@ export type GuestActivityView =
       kind: 'expense';
       id: string;
       description: string;
+      /** Group (ledger) currency. */
       amount: number;
+      /** ABA-654: the amount as entered in another currency; null when entered in the group currency. */
+      original: { amount: number; currencyCode: string; manualRate?: boolean } | null;
       date: string;
       paidByName: string;
       /** Set only when the creator is not the payer, so a framing expense stays visible. */
@@ -84,6 +87,8 @@ export interface GroupPageModel {
   groupName: string;
   emoji: string | null;
   currencyCode: string;
+  /** ABA-654: the add form's currency options, the group currency first. */
+  entryCurrencies: string[];
   archived: boolean;
   me: null | {
     id: string;
@@ -161,6 +166,8 @@ const FLASH_KEYS: Record<string, GroupStrKey> = {
   limit: 'msgLimit',
   saved: 'msgSaved',
   added: 'msgAdded',
+  addedfx: 'msgAddedFx',
+  norate: 'msgNoRate',
   settled: 'msgSettled',
   linkfailed: 'msgLinkFailed',
   badcode: 'msgBadCode',
@@ -210,7 +217,7 @@ function activityRows(m: GroupPageModel, s: GroupGuestStrings, allowActions: boo
             ? `<form class="inline" method="post" action="${escapeHtml(actionUrl(m, `/expenses/${encodeURIComponent(a.id)}/delete`))}">${csrfField(m)}<button class="btn btn-secondary btn-small" type="submit">${escapeHtml(s.t('deleteButton'))}</button></form>`
             : '';
         const tag = a.deleted ? `<span class="tag">${escapeHtml(s.t('deletedTag'))}</span>` : '';
-        return `<div class="row"><div class="${a.deleted ? 'struck' : ''}">${escapeHtml(a.description)}${tag}<div class="muted">${escapeHtml(a.date)} · ${escapeHtml(s.t('expensePaidBy', a.paidByName))}${a.addedByName ? ` · ${escapeHtml(s.t('expenseAddedBy', a.addedByName))}` : ''}</div></div><div>${escapeHtml(formatAmount(a.amount, m.currencyCode))}<div>${del}</div></div></div>`;
+        return `<div class="row"><div class="${a.deleted ? 'struck' : ''}">${escapeHtml(a.description)}${tag}<div class="muted">${escapeHtml(a.date)} · ${escapeHtml(s.t('expensePaidBy', a.paidByName))}${a.addedByName ? ` · ${escapeHtml(s.t('expenseAddedBy', a.addedByName))}` : ''}</div></div><div>${a.original ? `<span class="muted">${escapeHtml(formatAmount(a.original.amount, a.original.currencyCode))} → </span>` : ''}${a.original?.manualRate ? `<span class="tag">${escapeHtml(s.t('manualRateTag'))}</span> ` : ''}${escapeHtml(formatAmount(a.amount, m.currencyCode))}<div>${del}</div></div></div>`;
       }
       const undo =
         allowActions && a.canVoid && !a.voided && m.me
@@ -283,7 +290,11 @@ function renderExpenseForm(m: GroupPageModel, s: GroupGuestStrings): string {
   const payers = m.members
     .map((mem) => `<option value="${escapeHtml(mem.id)}"${mem.id === m.me?.id ? ' selected' : ''}>${escapeHtml(mem.name)}</option>`)
     .join('');
-  return `<div class="card"><h2>${escapeHtml(s.t('addHeading'))}</h2><form method="post" action="${escapeHtml(actionUrl(m, '/expenses'))}">${csrfField(m)}<input type="hidden" name="rid" value="${escapeHtml(m.rid)}"><label for="d">${escapeHtml(s.t('descLabel'))}</label><input id="d" type="text" name="description" maxlength="120" required><label for="a">${escapeHtml(s.t('amountLabel', m.currencyCode))}</label><input id="a" type="number" name="amount" step="0.01" min="0.01" inputmode="decimal" required><label for="dt">${escapeHtml(s.t('dateLabel'))}</label><input id="dt" type="date" name="date" value="${escapeHtml(m.today)}"><label for="p">${escapeHtml(s.t('paidByLabel'))}</label><select id="p" name="paidBy">${payers}</select><label for="st">${escapeHtml(s.t('splitLabel'))}</label><select id="st" name="splitType"><option value="equal">${escapeHtml(s.t('splitEqual'))}</option><option value="exact">${escapeHtml(s.t('splitExact'))}</option></select><p class="muted">${escapeHtml(s.t('splitHint'))}</p>${memberRows}<button class="btn btn-main" type="submit">${escapeHtml(s.t('addButton'))}</button></form>${ctaCard(s, 'form')}</div>`;
+  // ABA-654: no script, so no live preview; the server converts and the history shows both figures.
+  const currencies = (m.entryCurrencies.length ? m.entryCurrencies : [m.currencyCode])
+    .map((c) => `<option value="${escapeHtml(c)}"${c === m.currencyCode ? ' selected' : ''}>${escapeHtml(c)}</option>`)
+    .join('');
+  return `<div class="card"><h2>${escapeHtml(s.t('addHeading'))}</h2><form method="post" action="${escapeHtml(actionUrl(m, '/expenses'))}">${csrfField(m)}<input type="hidden" name="rid" value="${escapeHtml(m.rid)}"><label for="d">${escapeHtml(s.t('descLabel'))}</label><input id="d" type="text" name="description" maxlength="120" required><label for="a">${escapeHtml(s.t('amountPlainLabel'))}</label><input id="a" type="number" name="amount" step="0.01" min="0.01" inputmode="decimal" required><label for="cur">${escapeHtml(s.t('currencyLabel'))}</label><select id="cur" name="currency">${currencies}</select><p class="muted">${escapeHtml(s.t('fxHint', m.currencyCode))}</p><label for="dt">${escapeHtml(s.t('dateLabel'))}</label><input id="dt" type="date" name="date" value="${escapeHtml(m.today)}"><label for="p">${escapeHtml(s.t('paidByLabel'))}</label><select id="p" name="paidBy">${payers}</select><label for="st">${escapeHtml(s.t('splitLabel'))}</label><select id="st" name="splitType"><option value="equal">${escapeHtml(s.t('splitEqual'))}</option><option value="exact">${escapeHtml(s.t('splitExact'))}</option></select><p class="muted">${escapeHtml(s.t('splitHint'))}</p>${memberRows}<button class="btn btn-main" type="submit">${escapeHtml(s.t('addButton'))}</button></form>${ctaCard(s, 'form')}</div>`;
 }
 
 function renderPaymentForm(m: GroupPageModel, s: GroupGuestStrings): string {
@@ -302,7 +313,8 @@ function renderLinkCard(m: GroupPageModel, s: GroupGuestStrings): string {
 export function renderGroupPage(m: GroupPageModel, s: GroupGuestStrings, cta: CtaMoment | null): string {
   const title = `${m.emoji ? `${m.emoji} ` : ''}${m.groupName}`;
   const flashKey = m.flash ? FLASH_KEYS[m.flash] : undefined;
-  const flash = flashKey ? `<div class="flash">${escapeHtml(s.t(flashKey))}</div>` : '';
+  // The group currency fills the `{0}` of the FX flashes (ABA-654); the others have no placeholder.
+  const flash = flashKey ? `<div class="flash">${escapeHtml(s.t(flashKey, m.currencyCode))}</div>` : '';
   const archived = m.archived ? `<div class="flash">${escapeHtml(s.t('archivedNote'))}</div>` : '';
 
   const header = `<div class="card"><h1>${escapeHtml(title)}</h1>${
