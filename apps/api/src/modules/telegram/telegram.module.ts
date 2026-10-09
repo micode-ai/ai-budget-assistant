@@ -12,6 +12,7 @@ import { PhotoHandler } from './handlers/photo.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { GroupHandler } from './handlers/group.handler';
 import { TelegramDigestSender } from './digest/telegram-digest.sender';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
@@ -20,6 +21,7 @@ import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { PurchaseRequestsModule } from '../purchase-requests/purchase-requests.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
+import { GroupsModule } from '../groups/groups.module';
 
 @Global()
 @Module({
@@ -31,6 +33,7 @@ import { ShoppingListModule } from '../shopping-list/shopping-list.module';
     SubscriptionsModule,
     PurchaseRequestsModule,
     ShoppingListModule,
+    GroupsModule, // GroupBotService: the /group command (ABA-658)
   ],
   controllers: [TelegramBotController],
   providers: [
@@ -46,6 +49,7 @@ import { ShoppingListModule } from '../shopping-list/shopping-list.module';
     CategoryHandler,
     PurchaseRequestHandler,
     CategorizeHandler,
+    GroupHandler,
     TelegramDigestSender,
   ],
   exports: [TelegramService, TelegramLinkService, TelegramBotService],

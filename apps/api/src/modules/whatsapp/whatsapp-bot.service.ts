@@ -11,6 +11,7 @@ import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { GroupHandler } from './handlers/group.handler';
 import { WhatsAppDigestSender } from './digest/whatsapp-digest.sender';
 import { VoiceDigestService } from '../voice-digest/voice-digest.service';
 import { parseCommand } from './helpers/parse-command';
@@ -42,6 +43,7 @@ export class WhatsAppBotService {
     private readonly digestSender: WhatsAppDigestSender,
     @Inject(WA_REDIS) private readonly redis: Redis,
     private readonly voiceDigestService: VoiceDigestService,
+    private readonly groupHandler: GroupHandler,
   ) {}
 
   async handleUpdate(body: WaWebhookBody): Promise<void> {
@@ -256,6 +258,8 @@ export class WhatsAppBotService {
             return this.categorizeHandler.handle(userState);
           case 'digest':
             return this.commandHandler.handleDigest(parsed.args, userState);
+          case 'group':
+            return this.groupHandler.handle(parsed.args, msg.id, userState);
         }
       }
 
@@ -310,6 +314,13 @@ export class WhatsAppBotService {
         return this.categorizeHandler.handleNo(Number(payload), userState);
       case 'catz_s':
         return this.categorizeHandler.handleStop(Number(payload), userState);
+      // Shared-group expense (ABA-658): picker row, confirm, cancel.
+      case 'gp':
+        return this.groupHandler.handlePick(payload, userState);
+      case 'gc':
+        return this.groupHandler.handleConfirm(payload, userState);
+      case 'gx':
+        return this.groupHandler.handleCancel(payload, userState);
       case 'vd':
         return this.handleDigestCallback(payload, userState);
       default:

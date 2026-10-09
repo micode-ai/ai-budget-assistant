@@ -45,6 +45,7 @@ To connect: **Settings → Chat Bots**.
 |---|---|
 | `/link CODE` | Link your messenger to the app |
 | `/expense 50 lunch` | Add an expense |
+| `/group 120 pizza` | Add an expense to a shared group |
 | `/income 3000 salary` | Add an income |
 | `/category expense Food` | Create a category |
 | `/usage` | View AI request usage and limits |
@@ -54,6 +55,10 @@ To connect: **Settings → Chat Bots**.
 | `/help` | Show all commands |
 
 > In **WhatsApp** and **Slack**, commands work with or without the leading `/`. You can also just type an amount and description: `50 lunch`.
+
+## Adding an expense to a shared group
+
+Send `/group 120 pizza` to add an expense to one of your shared groups (in WhatsApp and Slack, `group 120 pizza` works too). If you are in several groups, the bot asks which one — pick it from the list. Then check the card: group, amount, description, *paid by you*, *split equally* — and tap **Confirm**, or **Cancel** to add nothing. You are always the payer and the expense is always split equally among all members; for another payer or a different split, add it in the app. To enter another currency, put it after the amount (`/group 25 EUR taxi`): the expense is converted into the group currency at today's rate, and if no rate is available the bot says so and adds nothing. Archived groups are not offered, and this does not use AI requests.
 
 ## Receipt Scanning
 

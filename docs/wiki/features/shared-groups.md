@@ -34,6 +34,8 @@ API (`apps/api/src/modules/groups/`):
 - `apps/api/src/modules/groups/helpers/group-guest-page.ts` and
   `apps/api/src/modules/groups/helpers/group-guest-page-i18n.ts` — the script-free HTML page, 9 locales
 - `apps/api/src/modules/groups/guards/` — `GroupMemberGuard`, `GroupOwnerGuard`, `GroupActiveGuard`
+- `apps/api/src/modules/groups/group-bot.service.ts` and `apps/api/src/modules/groups/group-bot.ts` — adding
+  an expense from Telegram, WhatsApp and Slack (ABA-658); the bots' `handlers/group.handler.ts` render it
 
 Shared types: `packages/shared-types/src/entities/group.ts`, `packages/shared-types/src/dto/group.ts`.
 
@@ -705,6 +707,41 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
 - **The absorbed row is soft-removed, never deleted**, with `mergedIntoMemberId`; its name stays reserved and old
   event rows keep pointing at it.
 
+## From the bots (ABA-658)
+
+`group <amount> [currency] [description]` (Telegram `/group`) adds an expense from Telegram, WhatsApp
+or Slack, with no AI call and no AI usage charge. One active group goes straight to a confirm card
+("Flat · 120.00 PLN · pizza · paid by you · split equally among 4"); several give a picker of at most
+10 by recent activity (`ExpenseGroup.updatedAt`, which every ledger write bumps): a Telegram inline
+keyboard, a WhatsApp interactive list (its 10-row cap is the limit) or a Slack `static_select`. The
+defaults are fixed: the payer is the user's own member row and the split is equal among every live
+member. Anything else, and a group over the 20-share cap, gets "add it in the app".
+
+- **One flow, three renderers.** `apps/api/src/modules/groups/group-bot.service.ts` (`GroupBotService`,
+  exported by `GroupsModule`) owns the parse, the picker, the card and confirm/cancel, and returns a
+  platform-neutral reply; each bot's `handlers/group.handler.ts` only renders it. The write is
+  `GroupsService.createExpense` — the same path as the app and the guest page, never a second one.
+  `apps/api/src/modules/groups/group-bot.ts` is the pure parser and the request-id derivation.
+- **Authorization is re-resolved at every step** (picker choice, card, confirm) from the database:
+  the linked identity's `userId` must be a live member of an **active** group. A callback carries
+  only a draft id and an index into the draft's own candidate list, never a group id, and a draft is
+  bound to the user who started it, so a replayed or forged callback reads as "expired". The
+  **account viewer role is deliberately not applied** (locked decision 1): groups are not
+  account-scoped, so a viewer of the bot's default account can still add to their group.
+- **Drafts** live in `CacheService` under `telegram:grp:{id}`, `wa:grp:{id}`, `slack:grp:{id}` (TTL
+  1800 s); a picker choice mutates the draft and writes it back with `cache.set`; confirm, cancel and
+  every terminal refusal delete it.
+- **Idempotency.** The expense's `clientRequestId` is derived from the platform's own message id
+  (Telegram chat + message id, the WhatsApp wamid, the Slack channel + ts), so a redelivered command
+  and a double-tapped Confirm both land on the existing `{groupId, clientRequestId}` dedup.
+- **Currency** (ABA-654). A symbol or a code after the amount is the entry currency; the card shows
+  a provider-rate preview ("100.00 EUR ≈ 430.00 PLN") and the write converts again at confirm. An
+  unsupported code or a missing rate is refused with a clear message and nothing is written; a rate
+  that disappears between card and confirm keeps the draft for a retry.
+- **Date** is the server's calendar day (UTC), as for every other bot write. Strings: 13 `group*` keys
+  in `common/bot-i18n/shared-messages.ts` (9 languages, pinned by `shared-messages.spec.ts`) plus one
+  `helpText` line per bot.
+
 ## Desktop
 
 At ≥1024 px web, **ABA-646** gives groups their own layout. Nothing here is rendered in CI; layout,
@@ -852,7 +889,10 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 - **ABA-652 UI is unverified on a device and in a desktop browser**: the amount field, the
   counterpart picker, the Record a payment buttons and the guest page's amount input have only
   pure-helper and server-rendered-HTML tests (nothing renders in CI).
-- Bot channels are phase 2 (`docs/superpowers/specs/2026-10-09-shared-groups-phase2-design.md`).
+- **ABA-658 (bots) is unverified against the live Telegram, WhatsApp and Slack APIs**: the handlers ran
+  only against mocked clients and an in-memory stand-in for `GroupsService` (whose dedup and FX refusal it
+  mirrors), so the inline keyboard, the WhatsApp list and the Slack `static_select` have not been tapped on
+  a real device, and the bot write has not run against real Postgres. Payer and split are fixed (me, equal).
 - **ABA-657 (merge) is unverified against real Postgres, on a device and in a desktop browser**: the transaction
   ran only over an in-memory Prisma (with rollback) in `group-merge.service.spec.ts`, the migration has not run
   here, and the "Merge with…" picker, its confirm and the link screen's merge offer have only pure-helper tests.
@@ -908,6 +948,10 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   changing anyone's balance: owner merges, absorbing an unclaimed name, the link-code self-merge after
   ALREADY_MEMBER, one transaction with an in-transaction balance assertion, `mergedIntoMemberId`, the
   `member_merged` event, "Merge with…" in the member sheet (phone and desktop) and the link screen's offer.
+- [ABA-658](https://github.com/micode-ai/ai-budget-assistant/issues/688) — adding an expense to a group from
+  Telegram, WhatsApp and Slack: `group <amount> [currency] [description]`, a picker of up to 10 groups, a
+  confirm card, `GroupBotService` over `GroupsService.createExpense`, membership re-resolved at confirm, the
+  account viewer role deliberately not applied, drafts in `CacheService`, the message id as the request id.
 - [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
   pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
   member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its

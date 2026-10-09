@@ -45,6 +45,7 @@ Para conectar: **Ajustes → Chatbots**.
 |---|---|
 | `/link CÓDIGO` | Vincular el mensajero a la app |
 | `/expense 50 almuerzo` | Añadir un gasto |
+| `/group 120 pizza` | Añadir un gasto a un grupo compartido |
 | `/income 3000 salario` | Añadir un ingreso |
 | `/usage` | Ver uso de IA |
 | `/account` | Cambiar cuenta activa |
@@ -53,6 +54,10 @@ Para conectar: **Ajustes → Chatbots**.
 | `/help` | Mostrar todos los comandos |
 
 > En **WhatsApp** y **Slack** los comandos funcionan con o sin `/`. También puedes escribir solo un importe y descripción: `50 almuerzo`.
+
+## Añadir un gasto a un grupo compartido
+
+Envía `/group 120 pizza` para añadir un gasto a uno de tus grupos compartidos (en WhatsApp y Slack también vale `group 120 pizza`). Si estás en varios grupos, el bot te pregunta a cuál: elígelo de la lista. Después revisa la tarjeta (grupo, importe, descripción, *pagado por ti*, *a partes iguales*) y toca **Confirmar**, o **Cancelar** para no añadir nada. Tú siempre eres quien paga y el gasto siempre se divide a partes iguales entre todos los miembros; si pagó otra persona o quieres otro reparto, añádelo en la app. Para indicar otra moneda, escríbela tras el importe (`/group 25 EUR taxi`): el gasto se convierte a la moneda del grupo al tipo de hoy y, si no hay tipo disponible, el bot te lo dice y no añade nada. Los grupos archivados no aparecen y esto no consume solicitudes de IA.
 
 ## Escaneo de recibos
 

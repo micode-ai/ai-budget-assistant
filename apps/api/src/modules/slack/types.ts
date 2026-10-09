@@ -59,7 +59,8 @@ export interface SlackBlockActionsPayload {
   type: 'block_actions';
   user: { id: string; team_id: string };
   channel?: { id: string };
-  actions: Array<{ action_id: string; value?: string }>;
+  /** `selected_option` is set for a `static_select` (the group picker, ABA-658). */
+  actions: Array<{ action_id: string; value?: string; selected_option?: { value: string } }>;
 }
 
 export const SLACK_REDIS = 'SLACK_REDIS';

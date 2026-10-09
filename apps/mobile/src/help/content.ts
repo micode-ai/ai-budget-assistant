@@ -3449,6 +3449,7 @@ To connect: **Settings → Chat Bots**.
 |---|---|
 | \`/link CODE\` | Link your messenger to the app |
 | \`/expense 50 lunch\` | Add an expense |
+| \`/group 120 pizza\` | Add an expense to a shared group |
 | \`/income 3000 salary\` | Add an income |
 | \`/category expense Food\` | Create a category |
 | \`/usage\` | View AI request usage and limits |
@@ -3458,6 +3459,10 @@ To connect: **Settings → Chat Bots**.
 | \`/help\` | Show all commands |
 
 > In **WhatsApp** and **Slack**, commands work with or without the leading \`/\`. You can also just type an amount and description: \`50 lunch\`.
+
+## Adding an expense to a shared group
+
+Send \`/group 120 pizza\` to add an expense to one of your shared groups (in WhatsApp and Slack, \`group 120 pizza\` works too). If you are in several groups, the bot asks which one — pick it from the list. Then check the card: group, amount, description, *paid by you*, *split equally* — and tap **Confirm**, or **Cancel** to add nothing. You are always the payer and the expense is always split equally among all members; for another payer or a different split, add it in the app. To enter another currency, put it after the amount (\`/group 25 EUR taxi\`): the expense is converted into the group currency at today's rate, and if no rate is available the bot says so and adds nothing. Archived groups are not offered, and this does not use AI requests.
 
 ## Receipt Scanning
 
@@ -5138,6 +5143,8 @@ Under **Keep this group in the app**, a friend can tap **Continue in the browser
 The group screen shows whether **You are owed** or **You owe** (or **All settled up**), **Your share this month**, the **Who pays whom** plan, and the **Activity** list.
 
 **Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
+
+You can also add an expense from the Telegram, WhatsApp or Slack bot: send \`/group 120 pizza\`, pick the group and confirm — you are the payer and it is split equally among everyone (see Chat Bots).
 
 ## Itemised expenses
 
@@ -8648,6 +8655,7 @@ AI Budget Assistant предлагает три уровня подписки. �
 |---|---|
 | \`/link КОД\` | Привязать мессенджер к приложению |
 | \`/expense 50 обед\` | Добавить расход |
+| \`/group 120 пицца\` | Добавить расход в общую группу |
 | \`/income 3000 зарплата\` | Добавить доход |
 | \`/category expense Еда\` | Создать категорию |
 | \`/usage\` | Просмотр использования ИИ |
@@ -8657,6 +8665,10 @@ AI Budget Assistant предлагает три уровня подписки. �
 | \`/help\` | Показать все команды |
 
 > В **WhatsApp** и **Slack** команды работают как с символом \`/\`, так и без него. Можно просто написать сумму и описание: \`50 обед\`.
+
+## Расход в общую группу
+
+Отправьте \`/group 120 пицца\`, чтобы добавить расход в одну из ваших общих групп (в WhatsApp и Slack можно и без слэша: \`group 120 пицца\`). Если вы состоите в нескольких группах, бот спросит, в какую, — выберите её из списка. Затем проверьте карточку: группа, сумма, описание, *платили вы*, *поровну* — и нажмите **Подтвердить** или **Отмена**, чтобы ничего не добавлять. Плательщик — всегда вы, а расход всегда делится поровну между всеми участниками; если платил кто-то другой или делить нужно иначе, добавьте расход в приложении. Чтобы указать другую валюту, напишите её после суммы (\`/group 25 EUR такси\`): расход пересчитается в валюту группы по сегодняшнему курсу, а если курса нет, бот сообщит об этом и ничего не добавит. Архивные группы в списке не показываются, запросы ИИ на это не тратятся.
 
 ## Сканирование чеков
 
@@ -10317,6 +10329,8 @@ OCR иногда неверно читает цену, выдумывает ст
 Экран группы показывает, **Вам должны** или **Вы должны** (или **Все рассчитано**), **Ваша доля в этом месяце**, план **Кто кому сколько** и список **Активность**.
 
 **Добавить расход** открывает форму: **Сумма**, **Описание**, **Дата**, **Плательщик** и **Разделение**: **Поровну**, **Точные суммы**, **Проценты** или **Доли**. **Сканировать чек** читает бумажный чек и сам заполняет сумму, описание и дату. Изменить или удалить расход могут тот, кто его добавил, тот, кто за него заплатил, и владелец группы. Удалённый расход остаётся в истории с пометкой «удалён».
+
+Расход можно добавить и из бота в Telegram, WhatsApp или Slack: отправьте \`/group 120 пицца\`, выберите группу и подтвердите — платите вы, а расход делится поровну между всеми (подробнее в разделе «Чат-боты»).
 
 ## Расходы по позициям
 
@@ -13810,6 +13824,7 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 |---|---|
 | \`/link КОД\` | Прив'язати месенджер до застосунку |
 | \`/expense 50 обід\` | Додати витрату |
+| \`/group 120 піца\` | Додати витрату до спільної групи |
 | \`/income 3000 зарплата\` | Додати дохід |
 | \`/category expense Їжа\` | Створити категорію |
 | \`/usage\` | Перегляд використання ШІ |
@@ -13819,6 +13834,10 @@ AI Budget Assistant пропонує три рівні підписки. Кож�
 | \`/help\` | Показати всі команди |
 
 > У **WhatsApp** і **Slack** команди працюють як із символом \`/\`, так і без нього. Можна просто написати суму та опис: \`50 обід\`.
+
+## Витрата до спільної групи
+
+Надішліть \`/group 120 піца\`, щоб додати витрату до однієї з ваших спільних груп (у WhatsApp і Slack можна й без слеша: \`group 120 піца\`). Якщо ви в кількох групах, бот запитає, до якої, — оберіть її зі списку. Потім перевірте картку: група, сума, опис, *платили ви*, *порівну* — і натисніть **Підтвердити** або **Скасувати**, щоб нічого не додавати. Платник — завжди ви, а витрата завжди ділиться порівну між усіма учасниками; якщо платив хтось інший або ділити треба інакше, додайте витрату в застосунку. Щоб вказати іншу валюту, напишіть її після суми (\`/group 25 EUR таксі\`): витрату буде перераховано у валюту групи за сьогоднішнім курсом, а якщо курсу немає, бот про це повідомить і нічого не додасть. Архівні групи у списку не показуються, запити ШІ на це не витрачаються.
 
 ## Сканування чеків
 
@@ -15466,6 +15485,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Екран групи показує, **Вам винні** чи **Ви винні** (або **Усе розраховано**), **Ваша частка цього місяця**, план **Хто кому скільки** і список **Активність**.
 
 **Додати витрату** відкриває форму: **Сума**, **Опис**, **Дата**, **Платник** і **Розподіл**: **Порівну**, **Точні суми**, **Відсотки** або **Частки**. **Сканувати чек** читає паперовий чек і сам заповнює суму, опис і дату. Змінити чи видалити витрату можуть той, хто її додав, той, хто за неї заплатив, і власник групи. Видалена витрата лишається в історії з позначкою «видалено».
+
+Витрату можна додати й із бота в Telegram, WhatsApp або Slack: надішліть \`/group 120 піца\`, оберіть групу й підтвердьте — платите ви, а витрата ділиться порівну між усіма (докладніше в розділі «Чат-боти»).
 
 ## Витрати за позиціями
 
@@ -18943,6 +18964,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 |---|---|
 | \`/link KOD\` | Połącz komunikator z aplikacją |
 | \`/expense 50 obiad\` | Dodaj wydatek |
+| \`/group 120 pizza\` | Dodaj wydatek do wspólnej grupy |
 | \`/income 3000 wynagrodzenie\` | Dodaj dochód |
 | \`/category expense Jedzenie\` | Utwórz kategorię |
 | \`/usage\` | Sprawdź użycie AI |
@@ -18952,6 +18974,10 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 | \`/help\` | Pokaż wszystkie polecenia |
 
 > W **WhatsApp** i **Slacku** polecenia działają z \`/\` lub bez. Możesz też wpisać tylko kwotę i opis: \`50 obiad\`.
+
+## Wydatek we wspólnej grupie
+
+Wyślij \`/group 120 pizza\`, aby dodać wydatek do jednej ze swoich wspólnych grup (w WhatsAppie i Slacku działa też \`group 120 pizza\`). Jeśli należysz do kilku grup, bot zapyta, do której — wybierz ją z listy. Potem sprawdź kartę: grupa, kwota, opis, *płacisz ty*, *po równo* — i dotknij **Potwierdź** albo **Anuluj**, żeby nic nie dodawać. Płacącym jesteś zawsze ty, a wydatek zawsze dzieli się po równo między wszystkich członków; jeśli płacił ktoś inny albo podział ma być inny, dodaj wydatek w aplikacji. Aby podać inną walutę, wpisz ją po kwocie (\`/group 25 EUR taksówka\`): wydatek zostanie przeliczony na walutę grupy po dzisiejszym kursie, a jeśli kursu nie ma, bot o tym poinformuje i niczego nie doda. Zarchiwizowane grupy nie są proponowane, a to nie zużywa zapytań AI.
 
 ## Skanowanie paragonów
 
@@ -20600,6 +20626,8 @@ W sekcji **Zachowaj tę grupę w aplikacji** znajomy może dotknąć **Kontynuuj
 Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo **Wszystko rozliczone**), **Twój udział w tym miesiącu**, plan **Kto komu ile** i listę **Aktywność**.
 
 **Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
+
+Wydatek możesz też dodać z bota w Telegramie, WhatsAppie lub Slacku: wyślij \`/group 120 pizza\`, wybierz grupę i potwierdź — płacisz ty, a wydatek dzieli się po równo między wszystkich (zobacz Boty czatowe).
 
 ## Wydatki według pozycji
 
@@ -24075,6 +24103,7 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 |---|---|
 | \`/link CODE\` | Messenger mit App verknüpfen |
 | \`/expense 50 Mittagessen\` | Ausgabe hinzufügen |
+| \`/group 120 Pizza\` | Ausgabe zu einer gemeinsamen Gruppe hinzufügen |
 | \`/income 3000 Gehalt\` | Einnahme hinzufügen |
 | \`/usage\` | KI-Nutzung anzeigen |
 | \`/account\` | Aktives Konto wechseln |
@@ -24083,6 +24112,10 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 | \`/help\` | Alle Befehle anzeigen |
 
 > Bei **WhatsApp** und **Slack** funktionieren Befehle mit oder ohne \`/\`. Du kannst auch einfach Betrag und Beschreibung eingeben: \`50 Mittagessen\`.
+
+## Ausgabe zu einer gemeinsamen Gruppe hinzufügen
+
+Sende \`/group 120 Pizza\`, um eine Ausgabe zu einer deiner gemeinsamen Gruppen hinzuzufügen (in WhatsApp und Slack geht auch \`group 120 Pizza\`). Bist du in mehreren Gruppen, fragt der Bot, in welche – wähle sie aus der Liste. Prüfe dann die Karte: Gruppe, Betrag, Beschreibung, *bezahlt von dir*, *zu gleichen Teilen* – und tippe auf **Bestätigen**, oder auf **Abbrechen**, um nichts hinzuzufügen. Du bist immer der Zahler, und die Ausgabe wird immer zu gleichen Teilen auf alle Mitglieder aufgeteilt; für einen anderen Zahler oder eine andere Aufteilung füge sie in der App hinzu. Für eine andere Währung schreibe sie hinter den Betrag (\`/group 25 EUR Taxi\`): Die Ausgabe wird zum heutigen Kurs in die Gruppenwährung umgerechnet; gibt es keinen Kurs, sagt der Bot das und fügt nichts hinzu. Archivierte Gruppen werden nicht angeboten, und es werden keine KI-Anfragen verbraucht.
 
 ## Belegscan
 
@@ -25709,6 +25742,8 @@ Unter **Diese Gruppe in der App behalten** kann ein Freund auf **In der Browser-
 Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **Alles ausgeglichen**), **Dein Anteil in diesem Monat**, den Plan **Wer zahlt wem** und die Liste **Aktivität**.
 
 **Ausgabe hinzufügen** öffnet das Ausgabenformular: **Betrag**, **Beschreibung**, **Datum**, **Bezahlt von** und **Aufteilung**: **Gleichmäßig**, **Genaue Beträge**, **Prozent** oder **Anteile**. **Beleg scannen** liest einen Papierbeleg und füllt Betrag, Beschreibung und Datum für dich aus. Wer eine Ausgabe hinzugefügt hat, wer sie bezahlt hat, und der Gruppenbesitzer können sie bearbeiten oder löschen. Eine gelöschte Ausgabe bleibt im Verlauf, als gelöscht markiert.
+
+Du kannst eine Ausgabe auch über den Telegram-, WhatsApp- oder Slack-Bot hinzufügen: Sende \`/group 120 Pizza\`, wähle die Gruppe und bestätige – du bist der Zahler, und es wird zu gleichen Teilen auf alle aufgeteilt (siehe Chat-Bots).
 
 ## Ausgaben nach Positionen
 
@@ -29184,6 +29219,7 @@ Para conectar: **Ajustes → Chatbots**.
 |---|---|
 | \`/link CÓDIGO\` | Vincular el mensajero a la app |
 | \`/expense 50 almuerzo\` | Añadir un gasto |
+| \`/group 120 pizza\` | Añadir un gasto a un grupo compartido |
 | \`/income 3000 salario\` | Añadir un ingreso |
 | \`/usage\` | Ver uso de IA |
 | \`/account\` | Cambiar cuenta activa |
@@ -29192,6 +29228,10 @@ Para conectar: **Ajustes → Chatbots**.
 | \`/help\` | Mostrar todos los comandos |
 
 > En **WhatsApp** y **Slack** los comandos funcionan con o sin \`/\`. También puedes escribir solo un importe y descripción: \`50 almuerzo\`.
+
+## Añadir un gasto a un grupo compartido
+
+Envía \`/group 120 pizza\` para añadir un gasto a uno de tus grupos compartidos (en WhatsApp y Slack también vale \`group 120 pizza\`). Si estás en varios grupos, el bot te pregunta a cuál: elígelo de la lista. Después revisa la tarjeta (grupo, importe, descripción, *pagado por ti*, *a partes iguales*) y toca **Confirmar**, o **Cancelar** para no añadir nada. Tú siempre eres quien paga y el gasto siempre se divide a partes iguales entre todos los miembros; si pagó otra persona o quieres otro reparto, añádelo en la app. Para indicar otra moneda, escríbela tras el importe (\`/group 25 EUR taxi\`): el gasto se convierte a la moneda del grupo al tipo de hoy y, si no hay tipo disponible, el bot te lo dice y no añade nada. Los grupos archivados no aparecen y esto no consume solicitudes de IA.
 
 ## Escaneo de recibos
 
@@ -30807,6 +30847,8 @@ En **Conserva este grupo en la app**, un amigo puede tocar **Continuar en la app
 La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), **Tu parte este mes**, el plan **Quién paga a quién** y la lista de **Actividad**.
 
 **Añadir gasto** abre el formulario: **Importe**, **Descripción**, **Fecha**, **Pagado por** y **División**: **A partes iguales**, **Importes exactos**, **Porcentajes** o **Partes**. **Escanear recibo** lee un ticket en papel y rellena por ti el importe, la descripción y la fecha. Quien añadió el gasto, quien lo pagó y el propietario del grupo pueden editarlo o eliminarlo. Un gasto eliminado sigue en el historial, marcado como eliminado.
+
+También puedes añadir un gasto desde el bot de Telegram, WhatsApp o Slack: envía \`/group 120 pizza\`, elige el grupo y confirma; tú pagas y se divide a partes iguales entre todos (consulta Bots de chat).
 
 ## Gastos por artículos
 
@@ -34280,6 +34322,7 @@ Pour connecter : **Paramètres → Chatbots**.
 |---|---|
 | \`/link CODE\` | Lier la messagerie à l'application |
 | \`/expense 50 déjeuner\` | Ajouter une dépense |
+| \`/group 120 pizza\` | Ajouter une dépense à un groupe partagé |
 | \`/income 3000 salaire\` | Ajouter un revenu |
 | \`/usage\` | Voir l'utilisation IA |
 | \`/account\` | Changer de compte actif |
@@ -34288,6 +34331,10 @@ Pour connecter : **Paramètres → Chatbots**.
 | \`/help\` | Afficher toutes les commandes |
 
 > Sur **WhatsApp** et **Slack**, les commandes fonctionnent avec ou sans \`/\`. Vous pouvez aussi simplement taper un montant et une description : \`50 déjeuner\`.
+
+## Ajouter une dépense à un groupe partagé
+
+Envoyez \`/group 120 pizza\` pour ajouter une dépense à l'un de vos groupes partagés (dans WhatsApp et Slack, \`group 120 pizza\` fonctionne aussi). Si vous faites partie de plusieurs groupes, le bot vous demande lequel : choisissez-le dans la liste. Vérifiez ensuite la carte — groupe, montant, description, *payé par vous*, *à parts égales* — et appuyez sur **Confirmer**, ou sur **Annuler** pour ne rien ajouter. C'est toujours vous qui payez et la dépense est toujours partagée à parts égales entre tous les membres ; pour un autre payeur ou une autre répartition, ajoutez-la dans l'appli. Pour une autre devise, indiquez-la après le montant (\`/group 25 EUR taxi\`) : la dépense est convertie dans la devise du groupe au taux du jour, et si aucun taux n'est disponible, le bot vous le dit et n'ajoute rien. Les groupes archivés ne sont pas proposés, et cela ne consomme pas de requêtes IA.
 
 ## Scan de reçus
 
@@ -35903,6 +35950,8 @@ Sous **Gardez ce groupe dans l'appli**, un ami peut toucher **Continuer dans l'a
 L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout est réglé**), **Votre part ce mois-ci**, le plan **Qui paie qui** et la liste **Activité**.
 
 **Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
+
+Vous pouvez aussi ajouter une dépense depuis le bot Telegram, WhatsApp ou Slack : envoyez \`/group 120 pizza\`, choisissez le groupe et confirmez — vous êtes le payeur et la dépense est partagée à parts égales entre tous (voir Bots de messagerie).
 
 ## Dépenses par articles
 
@@ -39371,6 +39420,7 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 |---|---|
 | \`/link КОД\` | Прывязаць мэсэнджэр да прыкладання |
 | \`/expense 50 абед\` | Дадаць выдатак |
+| \`/group 120 піца\` | Дадаць выдатак у агульную групу |
 | \`/income 3000 заплата\` | Дадаць даход |
 | \`/usage\` | Праверыць выкарыстанне ШІ |
 | \`/account\` | Пераключыць акаўнт |
@@ -39379,6 +39429,10 @@ AI Budget Assistant прапануе тры ўзроўні падпіскі. К�
 | \`/help\` | Паказаць усе каманды |
 
 > У **WhatsApp** і **Slack** каманды працуюць з \`/\` або без яго. Можна таксама проста напісаць суму і апісанне: \`50 абед\`.
+
+## Выдатак у агульную групу
+
+Адпраўце \`/group 120 піца\`, каб дадаць выдатак у адну з вашых агульных груп (у WhatsApp і Slack можна і без слэша: \`group 120 піца\`). Калі вы ўваходзіце ў некалькі груп, бот спытае, у якую, — выберыце яе са спіса. Потым праверце картку: група, сума, апісанне, *плацілі вы*, *пароўну* — і націсніце **Пацвердзіць** або **Адмяніць**, каб нічога не дадаваць. Плацельшчык — заўсёды вы, а выдатак заўсёды дзеліцца пароўну паміж усімі ўдзельнікамі; калі плаціў хтосьці іншы або дзяліць трэба інакш, дадайце выдатак у праграме. Каб пазначыць іншую валюту, напішыце яе пасля сумы (\`/group 25 EUR таксі\`): выдатак пералічыцца ў валюту групы па сённяшнім курсе, а калі курсу няма, бот паведаміць пра гэта і нічога не дадасць. Архіўныя групы ў спісе не паказваюцца, запыты ШІ на гэта не марнуюцца.
 
 ## Сканаванне чэкаў
 
@@ -40963,6 +41017,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 Экран групы паказвае, **Вам вінны** ці **Вы вінны** (або **Усё разлічана**), **Ваша доля ў гэтым месяцы**, план **Хто каму колькі** і спіс **Актыўнасць**.
 
 **Дадаць выдатак** адкрывае форму: **Сума**, **Апісанне**, **Дата**, **Плацельшчык** і **Падзел**: **Параўну**, **Дакладныя сумы**, **Працэнты** або **Долі**. **Сканіраваць чэк** чытае папяровы чэк і сам запаўняе суму, апісанне і дату. Змяніць ці выдаліць выдатак могуць той, хто яго дадаў, той, хто за яго заплаціў, і ўладальнік групы. Выдалены выдатак застаецца ў гісторыі з пазнакай «выдалены».
+
+Выдатак можна дадаць і з бота ў Telegram, WhatsApp або Slack: адпраўце \`/group 120 піца\`, выберыце групу і пацвердзіце — плаціце вы, а выдатак дзеліцца пароўну паміж усімі (падрабязней у раздзеле «Чат-боты»).
 
 ## Выдаткі па пазіцыях
 
@@ -44467,6 +44523,7 @@ Om te verbinden: **Instellingen → Chatbots**.
 |---|---|
 | \`/link CODE\` | Koppel je messenger aan de app |
 | \`/expense 50 lunch\` | Voeg een uitgave toe |
+| \`/group 120 pizza\` | Voeg een uitgave toe aan een gedeelde groep |
 | \`/income 3000 salary\` | Voeg inkomsten toe |
 | \`/category expense Food\` | Maak een categorie aan |
 | \`/usage\` | Bekijk AI-verzoekgebruik en limieten |
@@ -44476,6 +44533,10 @@ Om te verbinden: **Instellingen → Chatbots**.
 | \`/help\` | Toon alle commando's |
 
 > In **WhatsApp** en **Slack** werken commando's met of zonder de voorloop-\`/\`. Je kunt ook gewoon een bedrag en omschrijving typen: \`50 lunch\`.
+
+## Een uitgave aan een gedeelde groep toevoegen
+
+Stuur \`/group 120 pizza\` om een uitgave toe te voegen aan een van je gedeelde groepen (in WhatsApp en Slack werkt ook \`group 120 pizza\`). Zit je in meerdere groepen, dan vraagt de bot welke — kies die uit de lijst. Controleer daarna de kaart: groep, bedrag, omschrijving, *betaald door jou*, *gelijk verdeeld* — en tik op **Bevestigen**, of op **Annuleren** om niets toe te voegen. Jij bent altijd de betaler en de uitgave wordt altijd gelijk verdeeld over alle leden; voor een andere betaler of een andere verdeling voeg je hem toe in de app. Voor een andere valuta zet je die na het bedrag (\`/group 25 EUR taxi\`): de uitgave wordt tegen de koers van vandaag omgerekend naar de valuta van de groep, en als er geen koers is, meldt de bot dat en voegt hij niets toe. Gearchiveerde groepen worden niet aangeboden, en het kost geen AI-verzoeken.
 
 ## Bonnen scannen
 
@@ -46149,6 +46210,8 @@ Onder **Bewaar deze groep in de app** kan een vriend op **Doorgaan in de browser
 Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Alles verrekend**), **Jouw deel deze maand**, het plan **Wie betaalt wie** en de lijst **Activiteit**.
 
 **Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
+
+Je kunt ook een uitgave toevoegen via de Telegram-, WhatsApp- of Slack-bot: stuur \`/group 120 pizza\`, kies de groep en bevestig — jij bent de betaler en het wordt gelijk verdeeld over iedereen (zie Chatbots).
 
 ## Uitgaven per artikel
 

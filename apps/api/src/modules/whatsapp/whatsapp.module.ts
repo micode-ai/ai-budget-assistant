@@ -14,6 +14,7 @@ import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { GroupHandler } from './handlers/group.handler';
 import { WhatsAppDigestSender } from './digest/whatsapp-digest.sender';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
@@ -22,6 +23,7 @@ import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { PurchaseRequestsModule } from '../purchase-requests/purchase-requests.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
+import { GroupsModule } from '../groups/groups.module';
 import { WA_REDIS } from './types';
 
 @Global()
@@ -34,6 +36,7 @@ import { WA_REDIS } from './types';
     SubscriptionsModule,
     PurchaseRequestsModule,
     ShoppingListModule,
+    GroupsModule, // GroupBotService: the `group` command (ABA-658)
   ],
   controllers: [WhatsAppBotController],
   providers: [
@@ -49,6 +52,7 @@ import { WA_REDIS } from './types';
     PhotoHandler,
     PurchaseRequestHandler,
     CategorizeHandler,
+    GroupHandler,
     WhatsAppDigestSender,
     {
       provide: WA_REDIS,

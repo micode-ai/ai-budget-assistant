@@ -70,6 +70,12 @@ function makeService(overrides: {
   const photoHandler = makePhotoHandler();
   const chatHandler = { handleText: jest.fn().mockResolvedValue(undefined) };
   const unused = {};
+  const groupHandler = {
+    handle: jest.fn().mockResolvedValue(undefined),
+    handlePick: jest.fn().mockResolvedValue(undefined),
+    handleConfirm: jest.fn().mockResolvedValue(undefined),
+    handleCancel: jest.fn().mockResolvedValue(undefined),
+  };
 
   const service = new WhatsAppBotService(
     linkService as never,
@@ -86,9 +92,10 @@ function makeService(overrides: {
     digestSender as never,
     redis as never,
     voiceDigestService as never,
+    groupHandler as never,
   );
 
-  return { service, linkService, client, commandHandler, digestSender, redis, voiceDigestService };
+  return { service, linkService, client, commandHandler, digestSender, redis, voiceDigestService, groupHandler };
 }
 
 function interactiveBody(buttonId: string, from = '48500600700', msgId = 'wamid.btn.1') {
@@ -317,5 +324,23 @@ describe('WhatsAppBotService — async digest delivery statuses', () => {
 
     expect(digestSender.takeDigestRecipient).not.toHaveBeenCalled();
     expect(voiceDigestService.handleBlocked).not.toHaveBeenCalled();
+  });
+});
+
+describe('WhatsAppBotService — the group command (ABA-658)', () => {
+  it('routes `group 120 pizza` to the group handler with the inbound message id', async () => {
+    const { service, groupHandler } = makeService();
+    await service.handleUpdate(textBody('group 120 pizza', '48500600700', 'wamid.grp.1') as never);
+    expect(groupHandler.handle).toHaveBeenCalledWith('120 pizza', 'wamid.grp.1', expect.objectContaining({ userId: 'user-1' }));
+  });
+
+  it('routes the picker row and the confirm / cancel buttons by their `--` ids', async () => {
+    const { service, groupHandler } = makeService();
+    await service.handleUpdate(interactiveBody('gp--0123456789abcdef:1', '48500600700', 'wamid.a') as never);
+    await service.handleUpdate(interactiveBody('gc--0123456789abcdef', '48500600700', 'wamid.b') as never);
+    await service.handleUpdate(interactiveBody('gx--0123456789abcdef', '48500600700', 'wamid.c') as never);
+    expect(groupHandler.handlePick).toHaveBeenCalledWith('0123456789abcdef:1', expect.anything());
+    expect(groupHandler.handleConfirm).toHaveBeenCalledWith('0123456789abcdef', expect.anything());
+    expect(groupHandler.handleCancel).toHaveBeenCalledWith('0123456789abcdef', expect.anything());
   });
 });

@@ -63,6 +63,8 @@ Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Al
 
 **Uitgave toevoegen** opent het formulier: **Bedrag**, **Omschrijving**, **Datum**, **Betaald door** en **Verdeling**: **Gelijk**, **Exacte bedragen**, **Percentages** of **Delen**. **Bon scannen** leest een papieren bon en vult bedrag, omschrijving en datum voor je in. Wie een uitgave heeft toegevoegd, wie hem heeft betaald en de eigenaar van de groep kunnen hem bewerken of verwijderen. Een verwijderde uitgave blijft in de geschiedenis staan, gemarkeerd als verwijderd.
 
+Je kunt ook een uitgave toevoegen via de Telegram-, WhatsApp- of Slack-bot: stuur `/group 120 pizza`, kies de groep en bevestig — jij bent de betaler en het wordt gelijk verdeeld over iedereen (zie Chatbots).
+
 ## Uitgaven per artikel
 
 Als iedereen iets anders had, voeg de uitgave dan regel voor regel toe in plaats van het totaal te verdelen. Zet in **Uitgave toevoegen** **Per artikel (verdelen per bonregel)** aan. Vul onder **Bonregels** elk **Artikel** in met zijn **Prijs** en, als die er was, zijn **Korting**; **Regel toevoegen** voegt er meer toe. Een **Korting op de bon (optioneel)** op de hele bon wordt naar verhouding verdeeld. **Bon scannen** vult de regels voor je in. Het **Bedrag** is wat er betaald is: is het hoger dan de regels (statiegeld, een fooi), dan **blijft de rest bij wie betaalde**; **Gebruik het totaal van de regels als bedrag** neemt het totaal van de regels over.

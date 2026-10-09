@@ -63,6 +63,8 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 
 **Ajouter une dépense** ouvre le formulaire : **Montant**, **Description**, **Date**, **Payé par** et **Répartition** : **À parts égales**, **Montants exacts**, **Pourcentages** ou **Parts**. **Scanner un ticket** lit un ticket papier et remplit pour vous le montant, la description et la date. La personne qui a ajouté une dépense, celle qui l'a payée et le propriétaire du groupe peuvent la modifier ou la supprimer. Une dépense supprimée reste dans l'historique, marquée comme supprimée.
 
+Vous pouvez aussi ajouter une dépense depuis le bot Telegram, WhatsApp ou Slack : envoyez `/group 120 pizza`, choisissez le groupe et confirmez — vous êtes le payeur et la dépense est partagée à parts égales entre tous (voir Bots de messagerie).
+
 ## Dépenses par articles
 
 Quand chacun a pris quelque chose de différent, ajoutez la dépense ligne par ligne au lieu de partager le total. Dans **Ajouter une dépense**, activez **Par articles (partager par lignes du ticket)**. Sous **Lignes du ticket**, saisissez chaque **Article** avec son **Prix** et, s'il y en avait une, sa **Remise** ; **Ajouter une ligne** en ajoute d'autres. Une **Remise sur le ticket (facultatif)** sur l'ensemble du ticket est répartie au prorata. **Scanner un ticket** remplit les lignes pour vous. Le **Montant** est ce qui a été payé : s'il dépasse les lignes (une consigne, un pourboire), **le reste reste à la charge de qui a payé** ; **Utiliser le total des lignes comme montant** recopie le total des lignes.

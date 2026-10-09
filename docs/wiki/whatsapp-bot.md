@@ -34,6 +34,8 @@ A NestJS module (`modules/whatsapp/`) embedded in the API that lets users intera
 - **Viewer role** — `WhatsAppUserState` carries `accountRole` (joined from `AccountMember` in `getLink()`); write handlers check it before executing.
 - **Account linking** — mobile **Chat bots** screen shows QR + `wa.me/{phone}?text=link%20{6-hex}` deep link. `CommandHandler.handleLink` is the only command accepted from unlinked numbers. Link endpoints live on `UsersController` (`POST/GET/DELETE /users/me/whatsapp-link[-code]`).
 
+- **`group` (ABA-658)** — `GroupHandler` renders `GroupBotService`'s shared-group expense flow: a list picker `gp--{draftId}:{index}`, buttons `gc--`/`gx--`, drafts under `wa:grp:{id}` in `CacheService`, the wamid as the expense's request id; `parseCommand` treats `group` as a command only before an amount. See [shared-groups](features/shared-groups.md#from-the-bots-aba-658).
+
 ## Required env vars
 - `WHATSAPP_ACCESS_TOKEN` — System User token, scope `whatsapp_business_messaging`
 - `WHATSAPP_PHONE_NUMBER_ID` — sender number ID (from API Setup or WhatsApp Manager)

@@ -10,6 +10,7 @@ import { CategoryHandler } from './handlers/category.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { GroupHandler } from './handlers/group.handler';
 import { parseCommand } from './helpers/parse-command';
 import { t } from './helpers/i18n';
 import {
@@ -36,6 +37,7 @@ export class SlackBotService {
     private readonly photoHandler: PhotoHandler,
     private readonly categorizeHandler: CategorizeHandler,
     @Inject(SLACK_REDIS) private readonly redis: Redis,
+    private readonly groupHandler: GroupHandler,
   ) {}
 
   /** Events API callback (DM messages). */
@@ -96,7 +98,9 @@ export class SlackBotService {
     }
 
     try {
-      await this.routeCallback(action.action_id, userState);
+      // A static_select carries its choice in `selected_option`, not in the action id (ABA-658).
+      const actionId = action.selected_option ? `${action.action_id}:${action.selected_option.value}` : action.action_id;
+      await this.routeCallback(actionId, userState);
     } catch (err) {
       this.logger.error(`Interactivity crash: ${err instanceof Error ? err.stack || err.message : err}`);
     }
@@ -190,6 +194,7 @@ export class SlackBotService {
         case 'categories': return this.categoryHandler.handleList(userState);
         case 'categorize': return this.categorizeHandler.handle(userState);
         case 'digest': return this.commandHandler.handleDigest(parsed.args, userState);
+        case 'group': return this.groupHandler.handle(parsed.args, event.ts, userState);
       }
     }
 
@@ -222,6 +227,10 @@ export class SlackBotService {
       case 'catz_y': return this.categorizeHandler.handleYes(Number(payload), userState);
       case 'catz_n': return this.categorizeHandler.handleNo(Number(payload), userState);
       case 'catz_s': return this.categorizeHandler.handleStop(Number(payload), userState);
+      // Shared-group expense (ABA-658): picker choice, confirm, cancel.
+      case 'gp': return this.groupHandler.handlePick(payload, userState);
+      case 'gc': return this.groupHandler.handleConfirm(payload, userState);
+      case 'gx': return this.groupHandler.handleCancel(payload, userState);
       default: this.logger.warn(`Unknown callback prefix: ${prefix}`);
     }
   }

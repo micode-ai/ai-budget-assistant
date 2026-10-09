@@ -4,6 +4,12 @@ import { WebClient } from '@slack/web-api';
 import { downloadSlackFile, DownloadedFile } from './helpers/download-file';
 import { SlackInstallationService } from './slack-installation.service';
 
+/** One option of a `static_select` (ABA-658 group picker). */
+export interface SlackSelectOption {
+  value: string;
+  label: string;
+}
+
 export interface SlackButton {
   id: string; // becomes action_id + value
   title: string;
@@ -81,6 +87,43 @@ export class SlackClientService {
     const c = await this.clientFor(teamId);
     if (!c) return;
     await c.chat.postMessage({ channel, text: bodyText, blocks: this.buildButtonBlocks(bodyText, buttons) });
+  }
+
+  /**
+   * A message with one `static_select` (up to 100 options, sidestepping the 5-button cap of an
+   * actions block). The choice arrives on interactivity as `selected_option.value` under `actionId`.
+   */
+  async sendSelect(
+    teamId: string,
+    channel: string,
+    bodyText: string,
+    actionId: string,
+    placeholder: string,
+    options: SlackSelectOption[],
+  ): Promise<void> {
+    const c = await this.clientFor(teamId);
+    if (!c) return;
+    await c.chat.postMessage({
+      channel,
+      text: bodyText,
+      blocks: [
+        { type: 'section', text: { type: 'mrkdwn', text: bodyText } },
+        {
+          type: 'actions',
+          elements: [
+            {
+              type: 'static_select',
+              action_id: actionId,
+              placeholder: { type: 'plain_text', text: placeholder.slice(0, 150) },
+              options: options.slice(0, 100).map((o) => ({
+                text: { type: 'plain_text', text: o.label.slice(0, 75) },
+                value: o.value,
+              })),
+            },
+          ],
+        },
+      ],
+    });
   }
 
   async postPlaceholder(teamId: string, channel: string, text: string): Promise<string | undefined> {

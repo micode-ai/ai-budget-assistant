@@ -14,6 +14,7 @@ import { PhotoHandler } from './handlers/photo.handler';
 import { CategoryHandler } from './handlers/category.handler';
 import { PurchaseRequestHandler } from './handlers/purchase-request.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { GroupHandler } from './handlers/group.handler';
 import { BotContext } from './types';
 
 @Injectable()
@@ -36,6 +37,7 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     private readonly categoryHandler: CategoryHandler,
     private readonly purchaseRequestHandler: PurchaseRequestHandler,
     private readonly categorizeHandler: CategorizeHandler,
+    private readonly groupHandler: GroupHandler,
   ) {}
 
   async onModuleInit(): Promise<void> {
@@ -179,12 +181,27 @@ export class TelegramBotService implements OnModuleInit, OnModuleDestroy {
     this.bot.command('usage', (ctx) => this.commandHandler.handleUsage(ctx));
     this.bot.command('categorize', (ctx) => this.categorizeHandler.handle(ctx));
     this.bot.command('digest', (ctx) => this.commandHandler.handleDigest(ctx));
+    this.bot.command('group', (ctx) => this.groupHandler.handle(ctx));
 
     // Callback queries (inline keyboard buttons)
     this.bot.on('callback_query', async (ctx) => {
       if (!('data' in ctx.callbackQuery)) return;
 
       const data = ctx.callbackQuery.data;
+
+      // Shared-group expense callbacks (ABA-658): picker, confirm, cancel
+      if (data.startsWith('gp:')) {
+        await this.groupHandler.handlePick(ctx, data.slice('gp:'.length));
+        return;
+      }
+      if (data.startsWith('gc:')) {
+        await this.groupHandler.handleConfirm(ctx, data.slice('gc:'.length));
+        return;
+      }
+      if (data.startsWith('gx:')) {
+        await this.groupHandler.handleCancel(ctx, data.slice('gx:'.length));
+        return;
+      }
 
       // Account switch callback
       if (data.startsWith('account:')) {

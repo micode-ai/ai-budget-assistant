@@ -16,6 +16,7 @@ import { CategoryHandler } from './handlers/category.handler';
 import { VoiceHandler } from './handlers/voice.handler';
 import { PhotoHandler } from './handlers/photo.handler';
 import { CategorizeHandler } from './handlers/categorize.handler';
+import { GroupHandler } from './handlers/group.handler';
 import { SlackDigestSender } from './digest/slack-digest.sender';
 import { AiModule } from '../ai/ai.module';
 import { ExpensesModule } from '../expenses/expenses.module';
@@ -23,6 +24,7 @@ import { IncomesModule } from '../incomes/incomes.module';
 import { CategoriesModule } from '../categories/categories.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { ShoppingListModule } from '../shopping-list/shopping-list.module';
+import { GroupsModule } from '../groups/groups.module';
 import { SLACK_REDIS } from './types';
 
 @Global()
@@ -34,6 +36,7 @@ import { SLACK_REDIS } from './types';
     CategoriesModule,
     SubscriptionsModule,
     ShoppingListModule,
+    GroupsModule, // GroupBotService: the `group` command (ABA-658)
   ],
   controllers: [SlackBotController, SlackOAuthController],
   providers: [
@@ -50,6 +53,7 @@ import { SLACK_REDIS } from './types';
     VoiceHandler,
     PhotoHandler,
     CategorizeHandler,
+    GroupHandler,
     SlackDigestSender,
     {
       provide: SLACK_REDIS,

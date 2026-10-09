@@ -26,6 +26,8 @@ A NestJS module (`modules/slack/`) embedded in the API that lets users interact 
 - **Account linking** — mobile screen shows a 6-char hex code the user sends to the bot as `link <code>`. `CommandHandler.handleLink` is the only command accepted from unlinked Slack users. Link data is stored in `SlackLink` and `SlackLinkCode` tables (migration `20260604103259_add_slack_links`). Link endpoints live on `UsersController` (`POST/GET/DELETE /users/me/slack-link[-code]`).
 - **Expense source** — bot-created expenses carry `source: 'slack'`. `ExpenseSource` in `packages/shared-types/src/entities/primitives.ts` includes `'telegram' | 'whatsapp' | 'slack'` as the bot-channel values.
 
+- **`group` (ABA-658)** — `GroupHandler` renders `GroupBotService`'s shared-group expense flow: a `static_select` picker (`gp:{draftId}`, the choice arrives as `selected_option.value` and `handleInteractivity` appends it to the action id), buttons `gc:`/`gx:`, drafts under `slack:grp:{id}`, replies always as new messages. See [shared-groups](features/shared-groups.md#from-the-bots-aba-658).
+
 ## Invariants
 
 - **Let `subtype === 'file_share'` through (ABA-256).** `SlackBotService.handleEvent` drops bot/self

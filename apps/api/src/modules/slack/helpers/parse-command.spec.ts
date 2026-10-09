@@ -35,3 +35,19 @@ describe('parseCommand (slack)', () => {
     );
   });
 });
+
+describe('parseCommand — group (ABA-658)', () => {
+  it('is a command when an amount follows, with or without a slash or a symbol', () => {
+    expect(parseCommand('group 120 pizza')).toEqual({ command: 'group', args: '120 pizza' });
+    expect(parseCommand('/Group 25 EUR taxi')).toEqual({ command: 'group', args: '25 EUR taxi' });
+    expect(parseCommand('group €25 taxi')).toEqual({ command: 'group', args: '€25 taxi' });
+  });
+
+  it('alone is a command (the usage line)', () => {
+    expect(parseCommand('group')).toEqual({ command: 'group', args: '' });
+  });
+
+  it('followed by words is chat', () => {
+    expect(parseCommand('group my expenses by category')).toBeNull();
+  });
+});

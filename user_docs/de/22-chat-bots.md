@@ -45,6 +45,7 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 |---|---|
 | `/link CODE` | Messenger mit App verknüpfen |
 | `/expense 50 Mittagessen` | Ausgabe hinzufügen |
+| `/group 120 Pizza` | Ausgabe zu einer gemeinsamen Gruppe hinzufügen |
 | `/income 3000 Gehalt` | Einnahme hinzufügen |
 | `/usage` | KI-Nutzung anzeigen |
 | `/account` | Aktives Konto wechseln |
@@ -53,6 +54,10 @@ Zum Verbinden: **Einstellungen → Chat-Bots**.
 | `/help` | Alle Befehle anzeigen |
 
 > Bei **WhatsApp** und **Slack** funktionieren Befehle mit oder ohne `/`. Du kannst auch einfach Betrag und Beschreibung eingeben: `50 Mittagessen`.
+
+## Ausgabe zu einer gemeinsamen Gruppe hinzufügen
+
+Sende `/group 120 Pizza`, um eine Ausgabe zu einer deiner gemeinsamen Gruppen hinzuzufügen (in WhatsApp und Slack geht auch `group 120 Pizza`). Bist du in mehreren Gruppen, fragt der Bot, in welche – wähle sie aus der Liste. Prüfe dann die Karte: Gruppe, Betrag, Beschreibung, *bezahlt von dir*, *zu gleichen Teilen* – und tippe auf **Bestätigen**, oder auf **Abbrechen**, um nichts hinzuzufügen. Du bist immer der Zahler, und die Ausgabe wird immer zu gleichen Teilen auf alle Mitglieder aufgeteilt; für einen anderen Zahler oder eine andere Aufteilung füge sie in der App hinzu. Für eine andere Währung schreibe sie hinter den Betrag (`/group 25 EUR Taxi`): Die Ausgabe wird zum heutigen Kurs in die Gruppenwährung umgerechnet; gibt es keinen Kurs, sagt der Bot das und fügt nichts hinzu. Archivierte Gruppen werden nicht angeboten, und es werden keine KI-Anfragen verbraucht.
 
 ## Belegscan
 

@@ -45,6 +45,7 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 |---|---|
 | `/link KOD` | Połącz komunikator z aplikacją |
 | `/expense 50 obiad` | Dodaj wydatek |
+| `/group 120 pizza` | Dodaj wydatek do wspólnej grupy |
 | `/income 3000 wynagrodzenie` | Dodaj dochód |
 | `/category expense Jedzenie` | Utwórz kategorię |
 | `/usage` | Sprawdź użycie AI |
@@ -54,6 +55,10 @@ Aby połączyć: **Ustawienia → Czat-boty**.
 | `/help` | Pokaż wszystkie polecenia |
 
 > W **WhatsApp** i **Slacku** polecenia działają z `/` lub bez. Możesz też wpisać tylko kwotę i opis: `50 obiad`.
+
+## Wydatek we wspólnej grupie
+
+Wyślij `/group 120 pizza`, aby dodać wydatek do jednej ze swoich wspólnych grup (w WhatsAppie i Slacku działa też `group 120 pizza`). Jeśli należysz do kilku grup, bot zapyta, do której — wybierz ją z listy. Potem sprawdź kartę: grupa, kwota, opis, *płacisz ty*, *po równo* — i dotknij **Potwierdź** albo **Anuluj**, żeby nic nie dodawać. Płacącym jesteś zawsze ty, a wydatek zawsze dzieli się po równo między wszystkich członków; jeśli płacił ktoś inny albo podział ma być inny, dodaj wydatek w aplikacji. Aby podać inną walutę, wpisz ją po kwocie (`/group 25 EUR taksówka`): wydatek zostanie przeliczony na walutę grupy po dzisiejszym kursie, a jeśli kursu nie ma, bot o tym poinformuje i niczego nie doda. Zarchiwizowane grupy nie są proponowane, a to nie zużywa zapytań AI.
 
 ## Skanowanie paragonów
 

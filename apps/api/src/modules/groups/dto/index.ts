@@ -170,6 +170,8 @@ export class GroupExpenseItemInputDto {
 export class CreateGroupExpenseDto implements ICreateGroupExpenseDto {
   @IsString()
   @Length(8, 64)
+  // `bot:` is reserved for ids the bot flow derives (group-bot.ts); a client may never produce one.
+  @Matches(/^(?!bot:)/, { message: 'clientRequestId must not start with "bot:"' })
   clientRequestId: string;
 
   @Transform(trim)

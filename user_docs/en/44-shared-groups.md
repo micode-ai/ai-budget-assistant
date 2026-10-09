@@ -63,6 +63,8 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 
 **Add expense** opens the expense form: **Amount**, **Description**, **Date**, **Paid by**, and **Split**: **Equally**, **Exact amounts**, **Percentages** or **Shares**. **Scan receipt** reads a paper receipt and fills in the amount, description and date for you. The person who added an expense, the person who paid it and the group owner can edit or delete it. A deleted expense stays in the history, marked as deleted.
 
+You can also add an expense from the Telegram, WhatsApp or Slack bot: send `/group 120 pizza`, pick the group and confirm — you are the payer and it is split equally among everyone (see Chat Bots).
+
 ## Itemised expenses
 
 When everyone had something different, add the expense line by line instead of splitting the total. In **Add expense**, turn on **Itemised (split by receipt lines)**. Under **Receipt lines**, enter each **Item** with its **Price** and, if there was one, its **Discount**; tap **Add line** for more. A **Receipt discount (optional)** on the whole receipt is shared out in proportion. **Scan receipt** fills the lines in for you. The **Amount** is what was paid: if it is more than the lines (a bottle deposit, a tip), **The rest … stays with the payer**; **Use the lines total as the amount** copies the lines total into it.

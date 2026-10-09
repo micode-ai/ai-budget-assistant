@@ -11,14 +11,16 @@ import { GroupOwnershipService } from './group-ownership.service';
 import { GroupReminderCron } from './group-reminder.cron';
 import { GroupItemsService } from './group-items.service';
 import { GroupMergeService } from './group-merge.service';
+import { GroupBotService } from './group-bot.service';
 
 // PrismaService, CacheService and NotificationsService are @Global().
 @Module({
   // ABA-654: the existing singleton ExchangeRateService for write-time conversion; never a second one.
   imports: [CurrencyExchangeModule],
   controllers: [GroupsController, GroupGuestController],
-  providers: [GroupsService, GroupItemsService, GroupMergeService, GroupGuestService, GroupOwnershipService, GroupReminderCron, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
+  providers: [GroupsService, GroupItemsService, GroupMergeService, GroupBotService, GroupGuestService, GroupOwnershipService, GroupReminderCron, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
   // GroupOwnershipService: UsersService / AdminService hand groups on before an account goes away.
-  exports: [GroupsService, GroupOwnershipService],
+  // GroupBotService: the Telegram / WhatsApp / Slack `group` command (ABA-658).
+  exports: [GroupsService, GroupOwnershipService, GroupBotService],
 })
 export class GroupsModule {}

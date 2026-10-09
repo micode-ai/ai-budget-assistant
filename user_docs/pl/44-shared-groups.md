@@ -63,6 +63,8 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 
 **Dodaj wydatek** otwiera formularz wydatku: **Kwota**, **Opis**, **Data**, **Płatnik** i **Podział**: **Po równo**, **Dokładne kwoty**, **Procenty** albo **Udziały**. **Zeskanuj paragon** odczytuje papierowy paragon i uzupełnia za Ciebie kwotę, opis i datę. Osoba, która dodała wydatek, osoba, która go zapłaciła, oraz właściciel grupy mogą go edytować lub usunąć. Usunięty wydatek zostaje w historii, oznaczony jako usunięty.
 
+Wydatek możesz też dodać z bota w Telegramie, WhatsAppie lub Slacku: wyślij `/group 120 pizza`, wybierz grupę i potwierdź — płacisz ty, a wydatek dzieli się po równo między wszystkich (zobacz Boty czatowe).
+
 ## Wydatki według pozycji
 
 Gdy każdy miał coś innego, dodaj wydatek pozycja po pozycji zamiast dzielić całą kwotę. W **Dodaj wydatek** włącz **Według pozycji (podział po liniach paragonu)**. W **Pozycje paragonu** wpisz każdą **Pozycję** z jej **Ceną** i, jeśli był, **Rabatem**; **Dodaj pozycję** dodaje kolejną. **Rabat na paragon (opcjonalnie)** na cały paragon rozkłada się proporcjonalnie. **Skanuj paragon** wypełni pozycje za Ciebie. **Kwota** to to, co zapłacono: jeśli jest większa niż pozycje (kaucja za butelkę, napiwek), **reszta zostaje u płacącego**; **Użyj sumy pozycji jako kwoty** przepisuje sumę pozycji do kwoty.

@@ -45,6 +45,7 @@ Om te verbinden: **Instellingen → Chatbots**.
 |---|---|
 | `/link CODE` | Koppel je messenger aan de app |
 | `/expense 50 lunch` | Voeg een uitgave toe |
+| `/group 120 pizza` | Voeg een uitgave toe aan een gedeelde groep |
 | `/income 3000 salary` | Voeg inkomsten toe |
 | `/category expense Food` | Maak een categorie aan |
 | `/usage` | Bekijk AI-verzoekgebruik en limieten |
@@ -54,6 +55,10 @@ Om te verbinden: **Instellingen → Chatbots**.
 | `/help` | Toon alle commando's |
 
 > In **WhatsApp** en **Slack** werken commando's met of zonder de voorloop-`/`. Je kunt ook gewoon een bedrag en omschrijving typen: `50 lunch`.
+
+## Een uitgave aan een gedeelde groep toevoegen
+
+Stuur `/group 120 pizza` om een uitgave toe te voegen aan een van je gedeelde groepen (in WhatsApp en Slack werkt ook `group 120 pizza`). Zit je in meerdere groepen, dan vraagt de bot welke — kies die uit de lijst. Controleer daarna de kaart: groep, bedrag, omschrijving, *betaald door jou*, *gelijk verdeeld* — en tik op **Bevestigen**, of op **Annuleren** om niets toe te voegen. Jij bent altijd de betaler en de uitgave wordt altijd gelijk verdeeld over alle leden; voor een andere betaler of een andere verdeling voeg je hem toe in de app. Voor een andere valuta zet je die na het bedrag (`/group 25 EUR taxi`): de uitgave wordt tegen de koers van vandaag omgerekend naar de valuta van de groep, en als er geen koers is, meldt de bot dat en voegt hij niets toe. Gearchiveerde groepen worden niet aangeboden, en het kost geen AI-verzoeken.
 
 ## Bonnen scannen
 

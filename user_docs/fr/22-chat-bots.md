@@ -45,6 +45,7 @@ Pour connecter : **Paramètres → Chatbots**.
 |---|---|
 | `/link CODE` | Lier la messagerie à l'application |
 | `/expense 50 déjeuner` | Ajouter une dépense |
+| `/group 120 pizza` | Ajouter une dépense à un groupe partagé |
 | `/income 3000 salaire` | Ajouter un revenu |
 | `/usage` | Voir l'utilisation IA |
 | `/account` | Changer de compte actif |
@@ -53,6 +54,10 @@ Pour connecter : **Paramètres → Chatbots**.
 | `/help` | Afficher toutes les commandes |
 
 > Sur **WhatsApp** et **Slack**, les commandes fonctionnent avec ou sans `/`. Vous pouvez aussi simplement taper un montant et une description : `50 déjeuner`.
+
+## Ajouter une dépense à un groupe partagé
+
+Envoyez `/group 120 pizza` pour ajouter une dépense à l'un de vos groupes partagés (dans WhatsApp et Slack, `group 120 pizza` fonctionne aussi). Si vous faites partie de plusieurs groupes, le bot vous demande lequel : choisissez-le dans la liste. Vérifiez ensuite la carte — groupe, montant, description, *payé par vous*, *à parts égales* — et appuyez sur **Confirmer**, ou sur **Annuler** pour ne rien ajouter. C'est toujours vous qui payez et la dépense est toujours partagée à parts égales entre tous les membres ; pour un autre payeur ou une autre répartition, ajoutez-la dans l'appli. Pour une autre devise, indiquez-la après le montant (`/group 25 EUR taxi`) : la dépense est convertie dans la devise du groupe au taux du jour, et si aucun taux n'est disponible, le bot vous le dit et n'ajoute rien. Les groupes archivés ne sont pas proposés, et cela ne consomme pas de requêtes IA.
 
 ## Scan de reçus
 

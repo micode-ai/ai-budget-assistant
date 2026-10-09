@@ -63,6 +63,8 @@ Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **A
 
 **Ausgabe hinzufügen** öffnet das Ausgabenformular: **Betrag**, **Beschreibung**, **Datum**, **Bezahlt von** und **Aufteilung**: **Gleichmäßig**, **Genaue Beträge**, **Prozent** oder **Anteile**. **Beleg scannen** liest einen Papierbeleg und füllt Betrag, Beschreibung und Datum für dich aus. Wer eine Ausgabe hinzugefügt hat, wer sie bezahlt hat, und der Gruppenbesitzer können sie bearbeiten oder löschen. Eine gelöschte Ausgabe bleibt im Verlauf, als gelöscht markiert.
 
+Du kannst eine Ausgabe auch über den Telegram-, WhatsApp- oder Slack-Bot hinzufügen: Sende `/group 120 Pizza`, wähle die Gruppe und bestätige – du bist der Zahler, und es wird zu gleichen Teilen auf alle aufgeteilt (siehe Chat-Bots).
+
 ## Ausgaben nach Positionen
 
 Wenn alle etwas anderes hatten, füge die Ausgabe Position für Position hinzu, statt den Gesamtbetrag zu teilen. Schalte in **Ausgabe hinzufügen** **Nach Positionen (nach Bonzeilen teilen)** ein. Gib unter **Bonpositionen** jede **Position** mit ihrem **Preis** und, falls es einen gab, ihrem **Rabatt** ein; **Position hinzufügen** fügt weitere hinzu. Ein **Rabatt auf den Bon (optional)** für den ganzen Bon wird anteilig verteilt. **Beleg scannen** füllt die Positionen für dich aus. Der **Betrag** ist das, was bezahlt wurde: Ist er höher als die Positionen (Flaschenpfand, Trinkgeld), **bleibt der Rest bei der zahlenden Person**; **Summe der Positionen als Betrag übernehmen** trägt die Summe der Positionen ein.

@@ -63,6 +63,8 @@ La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), 
 
 **Añadir gasto** abre el formulario: **Importe**, **Descripción**, **Fecha**, **Pagado por** y **División**: **A partes iguales**, **Importes exactos**, **Porcentajes** o **Partes**. **Escanear recibo** lee un ticket en papel y rellena por ti el importe, la descripción y la fecha. Quien añadió el gasto, quien lo pagó y el propietario del grupo pueden editarlo o eliminarlo. Un gasto eliminado sigue en el historial, marcado como eliminado.
 
+También puedes añadir un gasto desde el bot de Telegram, WhatsApp o Slack: envía `/group 120 pizza`, elige el grupo y confirma; tú pagas y se divide a partes iguales entre todos (consulta Bots de chat).
+
 ## Gastos por artículos
 
 Cuando cada uno tomó algo distinto, añade el gasto línea por línea en lugar de dividir el total. En **Añadir gasto**, activa **Por artículos (dividir por líneas del ticket)**. En **Líneas del ticket**, escribe cada **Artículo** con su **Precio** y, si lo hubo, su **Descuento**; **Añadir línea** añade más. Un **Descuento del ticket (opcional)** sobre todo el ticket se reparte en proporción. **Escanear recibo** rellena las líneas por ti. El **Importe** es lo que se pagó: si es mayor que las líneas (un envase retornable, una propina), **el resto se queda con quien pagó**; **Usar el total de las líneas como importe** copia el total de las líneas.
