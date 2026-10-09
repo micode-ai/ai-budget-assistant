@@ -945,6 +945,8 @@ export default {
     monthlyWrappedDesc: 'Op de 1e van elke maand: je vorige maand in een paar kaarten',
     groupActivity: 'Groepsactiviteit',
     groupActivityDesc: 'Wanneer iemand een uitgave of betaling toevoegt in een gedeelde groep',
+    groupReminders: 'Herinneringen voor groepssaldi',
+    groupRemindersDesc: 'Eén keer per week, maximaal 4 keer, zolang je in een groep geld schuldig bent of nog krijgt',
   },
   iosInstall: {
     title: 'Zet AI Budget op het beginscherm van je iPhone',

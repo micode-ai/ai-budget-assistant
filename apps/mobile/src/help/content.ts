@@ -5183,6 +5183,8 @@ If a friend sends you a group link and you have the app, tap **Join with link** 
 
 When someone else adds an expense or a payment, you get a notification — at most one per group every few minutes. Tapping it opens the group. Turn it off under **Settings → Notifications → Group activity**.
 
+**Balance reminders.** While you owe money in a group, or someone owes you, you get a reminder once a week — the first one a week after the balance opened, and at most four for the same balance. If you owe, it opens the settle screen on the suggested payment, and you can pay part of it; if you are owed, it opens **Record a payment**, and you can share the group link to remind the others. You get at most one reminder a day, for the group with the largest balance. Balances under 1.00 are never reminded about, and once a balance is settled the count starts again. Friends who use the group only from the browser never get reminders. Turn them off under **Settings → Notifications → Group balance reminders**; this is separate from Group activity.
+
 ## Privacy
 
 - **Anyone with the link can see the group** — the members' names, the expenses, the amounts and the history. Share it only with the people in the group.
@@ -10334,6 +10336,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Когда кто-то другой добавляет расход или платёж, вы получаете уведомление — не чаще одного на группу раз в несколько минут. Нажатие открывает группу. Отключить можно в **Настройки → Уведомления → Активность в группах**.
 
+**Напоминания о балансе.** Пока вы должны в группе или должны вам, раз в неделю приходит напоминание — первое через неделю после того, как появился долг, и не больше четырёх по одному и тому же балансу. Если должны вы, оно открывает экран расчёта с предложенным платежом, и можно оплатить часть суммы; если должны вам — открывается **Записать платёж**, а ссылкой на группу можно поделиться, чтобы напомнить остальным. Напоминание приходит не чаще одного в день — по группе с самым большим балансом. О суммах меньше 1,00 не напоминаем, а после расчёта счёт начинается заново. Друзья, которые пользуются группой только в браузере, напоминаний не получают. Отключить можно в **Настройки → Уведомления → Напоминания о долгах в группах**; это отдельно от активности в группах.
+
 ## Конфиденциальность
 
 - **Любой, у кого есть ссылка, видит группу** — имена участников, расходы, суммы и историю. Делитесь ею только с участниками группы.
@@ -15455,6 +15459,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Коли хтось інший додає витрату чи платіж, ви отримуєте сповіщення — не частіше одного на групу раз на кілька хвилин. Натискання відкриває групу. Вимкнути можна в **Налаштування → Сповіщення → Активність у групах**.
 
+**Нагадування про баланс.** Поки ви винні в групі або вам винні, раз на тиждень приходить нагадування — перше через тиждень після появи боргу, і не більше чотирьох щодо того самого балансу. Якщо винні ви, воно відкриває екран розрахунку із запропонованим платежем, і можна сплатити частину суми; якщо винні вам — відкривається **Записати платіж**, а посиланням на групу можна поділитися, щоб нагадати іншим. Нагадування приходить не частіше одного на день — щодо групи з найбільшим балансом. Про суми менші за 1,00 не нагадуємо, а після розрахунку лік починається заново. Друзі, які користуються групою лише в браузері, нагадувань не отримують. Вимкнути можна в **Налаштування → Сповіщення → Нагадування про борги в групах**; це окремо від активності в групах.
+
 ## Конфіденційність
 
 - **Будь-хто, хто має посилання, бачить групу** — імена учасників, витрати, суми й історію. Діліться ним лише з учасниками групи.
@@ -20561,6 +20567,8 @@ Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z 
 
 Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyżej jedno na grupę co kilka minut. Dotknięcie otwiera grupę. Wyłączysz je w **Ustawienia → Powiadomienia → Aktywność w grupach**.
 
+**Przypomnienia o saldzie.** Dopóki masz coś do oddania w grupie albo ktoś jest Ci winien, raz w tygodniu dostajesz przypomnienie — pierwsze tydzień po powstaniu salda i najwyżej cztery dla tego samego salda. Jeśli to Ty masz oddać, otwiera ekran rozliczenia z proponowaną płatnością i możesz zapłacić część kwoty; jeśli ktoś jest Ci winien, otwiera **Zapisz płatność**, a link do grupy możesz udostępnić, żeby przypomnieć innym. Dostajesz najwyżej jedno przypomnienie dziennie — dla grupy z największym saldem. O kwotach poniżej 1,00 nie przypominamy, a po rozliczeniu licznik zaczyna się od nowa. Znajomi, którzy korzystają z grupy tylko w przeglądarce, nie dostają przypomnień. Wyłączysz je w **Ustawienia → Powiadomienia → Przypomnienia o saldach w grupach**; to osobny przełącznik niż Aktywność w grupach.
+
 ## Prywatność
 
 - **Każdy, kto ma link, widzi grupę** — imiona członków, wydatki, kwoty i historię. Udostępniaj go tylko osobom z grupy.
@@ -25642,6 +25650,8 @@ Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Grup
 
 Wenn jemand anderes eine Ausgabe oder Zahlung hinzufügt, bekommst du eine Benachrichtigung — höchstens eine pro Gruppe alle paar Minuten. Ein Tippen öffnet die Gruppe. Abschalten kannst du sie unter **Einstellungen → Benachrichtigungen → Gruppenaktivität**.
 
+**Saldo-Erinnerungen.** Solange du in einer Gruppe Geld schuldest oder jemand dir etwas schuldet, bekommst du einmal pro Woche eine Erinnerung — die erste eine Woche nach dem Entstehen des Saldos und höchstens vier für denselben Saldo. Schuldest du, öffnet sie den Ausgleichsbildschirm mit der vorgeschlagenen Zahlung, und du kannst auch einen Teil zahlen; bekommst du Geld, öffnet sie **Zahlung erfassen**, und du kannst den Gruppenlink teilen, um die anderen zu erinnern. Du bekommst höchstens eine Erinnerung pro Tag, für die Gruppe mit dem größten Saldo. An Beträge unter 1,00 erinnern wir nie, und sobald ein Saldo ausgeglichen ist, beginnt die Zählung neu. Freunde, die die Gruppe nur im Browser nutzen, bekommen nie Erinnerungen. Abschalten kannst du sie unter **Einstellungen → Benachrichtigungen → Erinnerungen an Gruppensalden**; das ist unabhängig von Gruppenaktivität.
+
 ## Datenschutz
 
 - **Jeder mit dem Link kann die Gruppe sehen** — die Namen der Mitglieder, die Ausgaben, die Beträge und den Verlauf. Teile ihn nur mit den Leuten aus der Gruppe.
@@ -30712,6 +30722,8 @@ Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con e
 
 Cuando otra persona añade un gasto o un pago, recibes una notificación: como mucho una por grupo cada pocos minutos. Al tocarla se abre el grupo. Puedes desactivarlas en **Ajustes → Notificaciones → Actividad de grupos**.
 
+**Recordatorios de saldo.** Mientras debas dinero en un grupo, o alguien te lo deba, recibes un recordatorio una vez por semana: el primero una semana después de que apareciera el saldo, y como máximo cuatro por el mismo saldo. Si debes tú, abre la pantalla de liquidar con el pago sugerido, y puedes pagar una parte; si te deben, abre **Registrar un pago**, y puedes compartir el enlace del grupo para recordárselo a los demás. Recibes como máximo un recordatorio al día, del grupo con el saldo más alto. Nunca avisamos de saldos menores de 1,00, y cuando un saldo se liquida la cuenta vuelve a empezar. Los amigos que usan el grupo solo desde el navegador nunca reciben recordatorios. Puedes desactivarlos en **Ajustes → Notificaciones → Recordatorios de saldos de grupos**; es independiente de Actividad de grupos.
+
 ## Privacidad
 
 - **Cualquiera con el enlace puede ver el grupo**: los nombres de los miembros, los gastos, los importes y el historial. Compártelo solo con las personas del grupo.
@@ -35780,6 +35792,8 @@ Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Re
 
 Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une notification — au plus une par groupe toutes les quelques minutes. La toucher ouvre le groupe. Vous pouvez la désactiver dans **Paramètres → Notifications → Activité des groupes**.
 
+**Rappels de solde.** Tant que vous devez de l'argent dans un groupe, ou qu'on vous en doit, vous recevez un rappel une fois par semaine — le premier une semaine après l'apparition du solde, et quatre au plus pour le même solde. Si c'est vous qui devez, il ouvre l'écran de règlement sur le paiement suggéré, et vous pouvez en payer une partie ; si on vous doit, il ouvre **Enregistrer un paiement**, et vous pouvez partager le lien du groupe pour le rappeler aux autres. Vous recevez au plus un rappel par jour, pour le groupe au solde le plus élevé. Aucun rappel pour un solde inférieur à 1,00, et une fois un solde réglé le compte repart de zéro. Les amis qui n'utilisent le groupe que dans le navigateur ne reçoivent jamais de rappels. Vous pouvez les désactiver dans **Paramètres → Notifications → Rappels de soldes des groupes** ; c'est distinct d'Activité des groupes.
+
 ## Confidentialité
 
 - **Toute personne ayant le lien peut voir le groupe** : les noms des membres, les dépenses, les montants et l'historique. Ne le partagez qu'avec les membres du groupe.
@@ -40811,6 +40825,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Паведамленні
 
 Калі нехта іншы дадае выдатак ці плацёж, вы атрымліваеце паведамленне — не часцей за адно на групу раз на некалькі хвілін. Націсканне адкрывае групу. Выключыць можна ў **Налады → Паведамленні → Актыўнасць у групах**.
+
+**Напаміны пра баланс.** Пакуль вы павінны ў групе або вам павінны, раз на тыдзень прыходзіць напамін — першы праз тыдзень пасля таго, як з’явіўся доўг, і не больш за чатыры па адным і тым жа балансе. Калі павінны вы, ён адкрывае экран разліку з прапанаваным плацяжом, і можна заплаціць частку сумы; калі павінны вам — адкрываецца **Запісаць плацёж**, а спасылкай на групу можна падзяліцца, каб нагадаць астатнім. Напамін прыходзіць не часцей за адзін на дзень — па групе з найбольшым балансам. Пра сумы меншыя за 1,00 не нагадваем, а пасля разліку лік пачынаецца нанова. Сябры, якія карыстаюцца групай толькі ў браўзеры, напамінаў не атрымліваюць. Выключыць можна ў **Налады → Паведамленні → Напаміны пра даўгі ў групах**; гэта асобна ад актыўнасці ў групах.
 
 ## Прыватнасць
 
@@ -45969,6 +45985,8 @@ Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groe
 ## Meldingen
 
 Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hooguit één per groep per paar minuten. Tikken opent de groep. Uitzetten kan onder **Instellingen → Meldingen → Groepsactiviteit**.
+
+**Saldoherinneringen.** Zolang je in een groep geld schuldig bent, of iemand jou iets schuldig is, krijg je één keer per week een herinnering — de eerste een week nadat het saldo ontstond, en hooguit vier voor hetzelfde saldo. Ben jij iets schuldig, dan opent ze het afrekenscherm op de voorgestelde betaling en kun je ook een deel betalen; krijg je nog geld, dan opent ze **Betaling vastleggen** en kun je de groepslink delen om de anderen eraan te herinneren. Je krijgt hooguit één herinnering per dag, voor de groep met het grootste saldo. Voor saldi onder 1,00 sturen we nooit een herinnering, en zodra een saldo is vereffend begint de telling opnieuw. Vrienden die de groep alleen in de browser gebruiken, krijgen nooit herinneringen. Uitzetten kan onder **Instellingen → Meldingen → Herinneringen voor groepssaldi**; dit staat los van Groepsactiviteit.
 
 ## Privacy
 

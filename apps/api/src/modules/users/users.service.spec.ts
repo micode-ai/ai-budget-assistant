@@ -47,6 +47,28 @@ describe('UsersService notification preferences', () => {
       );
     });
   });
+
+  describe('notification preferences — group reminders (ABA-653)', () => {
+    it('defaults groupReminders to true when the column is absent', async () => {
+      prisma.user.findUnique = jest.fn().mockResolvedValue({ notifyGroupActivity: false });
+      const prefs = await service.getNotificationPreferences('user-1');
+      expect(prefs.groupReminders).toBe(true);
+      expect(prefs.groupActivity).toBe(false);
+    });
+
+    it('reads notifyGroupReminders', async () => {
+      prisma.user.findUnique = jest.fn().mockResolvedValue({ notifyGroupReminders: false });
+      const prefs = await service.getNotificationPreferences('user-1');
+      expect(prefs.groupReminders).toBe(false);
+    });
+
+    it('writes only notifyGroupReminders for { groupReminders }', async () => {
+      prisma.user.update = jest.fn().mockResolvedValue({});
+      prisma.user.findUnique = jest.fn().mockResolvedValue({ notifyGroupReminders: false });
+      await service.updateNotificationPreferences('user-1', { groupReminders: false });
+      expect(prisma.user.update).toHaveBeenCalledWith({ where: { id: 'user-1' }, data: { notifyGroupReminders: false } });
+    });
+  });
 });
 
 describe('UsersService.search', () => {

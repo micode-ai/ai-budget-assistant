@@ -107,6 +107,8 @@ If a friend sends you a group link and you have the app, tap **Join with link** 
 
 When someone else adds an expense or a payment, you get a notification — at most one per group every few minutes. Tapping it opens the group. Turn it off under **Settings → Notifications → Group activity**.
 
+**Balance reminders.** While you owe money in a group, or someone owes you, you get a reminder once a week — the first one a week after the balance opened, and at most four for the same balance. If you owe, it opens the settle screen on the suggested payment, and you can pay part of it; if you are owed, it opens **Record a payment**, and you can share the group link to remind the others. You get at most one reminder a day, for the group with the largest balance. Balances under 1.00 are never reminded about, and once a balance is settled the count starts again. Friends who use the group only from the browser never get reminders. Turn them off under **Settings → Notifications → Group balance reminders**; this is separate from Group activity.
+
 ## Privacy
 
 - **Anyone with the link can see the group** — the members' names, the expenses, the amounts and the history. Share it only with the people in the group.

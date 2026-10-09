@@ -17,6 +17,7 @@ export interface UpdateNotificationPreferencesDto {
   inflationShield?: boolean;
   monthlyWrapped?: boolean;
   groupActivity?: boolean;
+  groupReminders?: boolean;
 }
 
 export interface NotificationPreferencesResponse {
@@ -34,4 +35,5 @@ export interface NotificationPreferencesResponse {
   inflationShield: boolean;
   monthlyWrapped: boolean;
   groupActivity: boolean;
+  groupReminders: boolean;
 }

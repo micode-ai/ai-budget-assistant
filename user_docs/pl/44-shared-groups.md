@@ -107,6 +107,8 @@ Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z 
 
 Gdy ktoś inny doda wydatek lub płatność, dostajesz powiadomienie — najwyżej jedno na grupę co kilka minut. Dotknięcie otwiera grupę. Wyłączysz je w **Ustawienia → Powiadomienia → Aktywność w grupach**.
 
+**Przypomnienia o saldzie.** Dopóki masz coś do oddania w grupie albo ktoś jest Ci winien, raz w tygodniu dostajesz przypomnienie — pierwsze tydzień po powstaniu salda i najwyżej cztery dla tego samego salda. Jeśli to Ty masz oddać, otwiera ekran rozliczenia z proponowaną płatnością i możesz zapłacić część kwoty; jeśli ktoś jest Ci winien, otwiera **Zapisz płatność**, a link do grupy możesz udostępnić, żeby przypomnieć innym. Dostajesz najwyżej jedno przypomnienie dziennie — dla grupy z największym saldem. O kwotach poniżej 1,00 nie przypominamy, a po rozliczeniu licznik zaczyna się od nowa. Znajomi, którzy korzystają z grupy tylko w przeglądarce, nie dostają przypomnień. Wyłączysz je w **Ustawienia → Powiadomienia → Przypomnienia o saldach w grupach**; to osobny przełącznik niż Aktywność w grupach.
+
 ## Prywatność
 
 - **Każdy, kto ma link, widzi grupę** — imiona członków, wydatki, kwoty i historię. Udostępniaj go tylko osobom z grupy.

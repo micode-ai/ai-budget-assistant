@@ -98,3 +98,24 @@ describe('handleNotificationResponse — split_item_flagged (ABA guest-split-ite
     expect(push).toHaveBeenCalledWith('/(tabs)/expenses');
   });
 });
+
+describe('handleNotificationResponse — group pushes (ABA-653)', () => {
+  beforeEach(() => push.mockClear());
+
+  it('group_activity opens the group', () => {
+    handleNotificationResponse(notificationResponse({ type: 'group_activity', groupId: 'g1' }));
+    expect(push).toHaveBeenCalledWith('/groups/g1');
+  });
+
+  it('a debtor reminder opens the settle screen on the suggested pair', () => {
+    handleNotificationResponse(
+      notificationResponse({ type: 'group_reminder', groupId: 'g1', reminder: 'owe', fromMemberId: 'a', toMemberId: 'b' }),
+    );
+    expect(push).toHaveBeenCalledWith({ pathname: '/groups/g1/settle', params: { from: 'a', to: 'b' } });
+  });
+
+  it('a creditor reminder opens Record a payment', () => {
+    handleNotificationResponse(notificationResponse({ type: 'group_reminder', groupId: 'g1', reminder: 'owed' }));
+    expect(push).toHaveBeenCalledWith('/groups/g1/settle');
+  });
+});

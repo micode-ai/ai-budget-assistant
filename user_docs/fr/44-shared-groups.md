@@ -107,6 +107,8 @@ Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Re
 
 Quand quelqu'un d'autre ajoute une dépense ou un paiement, vous recevez une notification — au plus une par groupe toutes les quelques minutes. La toucher ouvre le groupe. Vous pouvez la désactiver dans **Paramètres → Notifications → Activité des groupes**.
 
+**Rappels de solde.** Tant que vous devez de l'argent dans un groupe, ou qu'on vous en doit, vous recevez un rappel une fois par semaine — le premier une semaine après l'apparition du solde, et quatre au plus pour le même solde. Si c'est vous qui devez, il ouvre l'écran de règlement sur le paiement suggéré, et vous pouvez en payer une partie ; si on vous doit, il ouvre **Enregistrer un paiement**, et vous pouvez partager le lien du groupe pour le rappeler aux autres. Vous recevez au plus un rappel par jour, pour le groupe au solde le plus élevé. Aucun rappel pour un solde inférieur à 1,00, et une fois un solde réglé le compte repart de zéro. Les amis qui n'utilisent le groupe que dans le navigateur ne reçoivent jamais de rappels. Vous pouvez les désactiver dans **Paramètres → Notifications → Rappels de soldes des groupes** ; c'est distinct d'Activité des groupes.
+
 ## Confidentialité
 
 - **Toute personne ayant le lien peut voir le groupe** : les noms des membres, les dépenses, les montants et l'historique. Ne le partagez qu'avec les membres du groupe.

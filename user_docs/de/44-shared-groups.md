@@ -107,6 +107,8 @@ Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Grup
 
 Wenn jemand anderes eine Ausgabe oder Zahlung hinzufügt, bekommst du eine Benachrichtigung — höchstens eine pro Gruppe alle paar Minuten. Ein Tippen öffnet die Gruppe. Abschalten kannst du sie unter **Einstellungen → Benachrichtigungen → Gruppenaktivität**.
 
+**Saldo-Erinnerungen.** Solange du in einer Gruppe Geld schuldest oder jemand dir etwas schuldet, bekommst du einmal pro Woche eine Erinnerung — die erste eine Woche nach dem Entstehen des Saldos und höchstens vier für denselben Saldo. Schuldest du, öffnet sie den Ausgleichsbildschirm mit der vorgeschlagenen Zahlung, und du kannst auch einen Teil zahlen; bekommst du Geld, öffnet sie **Zahlung erfassen**, und du kannst den Gruppenlink teilen, um die anderen zu erinnern. Du bekommst höchstens eine Erinnerung pro Tag, für die Gruppe mit dem größten Saldo. An Beträge unter 1,00 erinnern wir nie, und sobald ein Saldo ausgeglichen ist, beginnt die Zählung neu. Freunde, die die Gruppe nur im Browser nutzen, bekommen nie Erinnerungen. Abschalten kannst du sie unter **Einstellungen → Benachrichtigungen → Erinnerungen an Gruppensalden**; das ist unabhängig von Gruppenaktivität.
+
 ## Datenschutz
 
 - **Jeder mit dem Link kann die Gruppe sehen** — die Namen der Mitglieder, die Ausgaben, die Beträge und den Verlauf. Teile ihn nur mit den Leuten aus der Gruppe.

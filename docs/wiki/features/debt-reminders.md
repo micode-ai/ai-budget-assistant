@@ -1,7 +1,7 @@
 # Debt reminders
 
 *Hub: [api](../api.md) · related: [debts](debts.md), [recurring-expenses](recurring-expenses.md),
-[gamification](gamification.md)*
+[gamification](gamification.md), [shared-groups](shared-groups.md)*
 
 ## What this is
 
@@ -59,7 +59,9 @@ not stop the run.
 
 - Only the debt's creator (`userId`) is notified, not other members of a shared account.
 - The windows are computed on the server clock, not `user.timezone`.
-- An overdue debt is reminded about once (the day after it fell due), never again.
+- An overdue debt is reminded about once (the day after it fell due), never again. Group balances
+  are reminded about by a separate cron with its own toggle: weekly, at most 4 per open balance
+  (`GroupReminderCron`, ABA-653, see [shared-groups](shared-groups.md)).
 - The body prints the currency CODE (`50 PLN`), not the app's display symbol.
 
 ## History

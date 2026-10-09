@@ -951,6 +951,8 @@ export default {
     monthlyWrappedDesc: '1-го числа каждого месяца: прошлый месяц в нескольких карточках',
     groupActivity: 'Активность в группах',
     groupActivityDesc: 'Когда кто-то добавляет расход или платёж в общей группе',
+    groupReminders: 'Напоминания о долгах в группах',
+    groupRemindersDesc: 'Раз в неделю, не больше 4 раз, пока вы должны или вам должны в группе',
   },
   iosInstall: {
     title: 'Добавьте AI Budget на экран «Домой» iPhone',

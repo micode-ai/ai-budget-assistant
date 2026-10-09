@@ -107,6 +107,8 @@ Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con e
 
 Cuando otra persona añade un gasto o un pago, recibes una notificación: como mucho una por grupo cada pocos minutos. Al tocarla se abre el grupo. Puedes desactivarlas en **Ajustes → Notificaciones → Actividad de grupos**.
 
+**Recordatorios de saldo.** Mientras debas dinero en un grupo, o alguien te lo deba, recibes un recordatorio una vez por semana: el primero una semana después de que apareciera el saldo, y como máximo cuatro por el mismo saldo. Si debes tú, abre la pantalla de liquidar con el pago sugerido, y puedes pagar una parte; si te deben, abre **Registrar un pago**, y puedes compartir el enlace del grupo para recordárselo a los demás. Recibes como máximo un recordatorio al día, del grupo con el saldo más alto. Nunca avisamos de saldos menores de 1,00, y cuando un saldo se liquida la cuenta vuelve a empezar. Los amigos que usan el grupo solo desde el navegador nunca reciben recordatorios. Puedes desactivarlos en **Ajustes → Notificaciones → Recordatorios de saldos de grupos**; es independiente de Actividad de grupos.
+
 ## Privacidad
 
 - **Cualquiera con el enlace puede ver el grupo**: los nombres de los miembros, los gastos, los importes y el historial. Compártelo solo con las personas del grupo.

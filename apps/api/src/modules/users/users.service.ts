@@ -178,6 +178,7 @@ export class UsersService {
         notifyInflationShield: true,
         notifyMonthlyWrapped: true,
         notifyGroupActivity: true,
+        notifyGroupReminders: true,
       },
     });
     return {
@@ -195,12 +196,13 @@ export class UsersService {
       inflationShield: user?.notifyInflationShield ?? true,
       monthlyWrapped: user?.notifyMonthlyWrapped ?? true,
       groupActivity: user?.notifyGroupActivity ?? true,
+      groupReminders: user?.notifyGroupReminders ?? true,
     };
   }
 
   async updateNotificationPreferences(
     userId: string,
-    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean },
+    prefs: { budgetAlerts?: boolean; sharedAccountActivity?: boolean; debtReminders?: boolean; recurringExpenses?: boolean; subscriptionRenewals?: boolean; anomalyAlerts?: boolean; trackingGap?: boolean; purchaseRequests?: boolean; tripSettleUp?: boolean; shoppingReminders?: boolean; shoppingDeals?: boolean; inflationShield?: boolean; monthlyWrapped?: boolean; groupActivity?: boolean; groupReminders?: boolean },
   ) {
     const data: Record<string, boolean> = {};
     if (prefs.budgetAlerts !== undefined) data.notifyBudgetAlerts = prefs.budgetAlerts;
@@ -217,6 +219,7 @@ export class UsersService {
     if (prefs.inflationShield !== undefined) data.notifyInflationShield = prefs.inflationShield;
     if (prefs.monthlyWrapped !== undefined) data.notifyMonthlyWrapped = prefs.monthlyWrapped;
     if (prefs.groupActivity !== undefined) data.notifyGroupActivity = prefs.groupActivity;
+    if (prefs.groupReminders !== undefined) data.notifyGroupReminders = prefs.groupReminders;
 
     await this.prisma.user.update({ where: { id: userId }, data });
     return this.getNotificationPreferences(userId);

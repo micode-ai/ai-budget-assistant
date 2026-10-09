@@ -147,6 +147,14 @@ interface SplitItemFlaggedTitleParams {
   name: string;
 }
 
+/** Group balance reminder (ABA-653). `amount` is the absolute balance, already formatted. */
+export interface GroupReminderParams {
+  groupName: string;
+  amount: string;
+  currencyCode: string;
+  direction: 'owe' | 'owed';
+}
+
 const translations: Record<string, {
   sharedExpenseTitle: (p: SharedExpenseParams) => string;
   sharedExpenseBody: (p: SharedExpenseParams) => string;
@@ -212,6 +220,10 @@ const translations: Record<string, {
   groupActivityBody: () => string;
   groupOwnerTitle: (groupName: string) => string;
   groupOwnerBody: () => string;
+  groupReminderOweTitle: (groupName: string) => string;
+  groupReminderOweBody: (p: GroupReminderParams) => string;
+  groupReminderOwedTitle: (groupName: string) => string;
+  groupReminderOwedBody: (p: GroupReminderParams) => string;
   possibleMergeTitle: (p: PossibleMergeParams) => string;
   possibleMergeBody: (p: PossibleMergeParams) => string;
   tripSettleUpTitle: (p: TripSettleUpParams) => string;
@@ -313,6 +325,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Someone added an expense or a payment. Open the group to see the balances.',
     groupOwnerTitle: (groupName) => `You are now the owner of "${groupName}"`,
     groupOwnerBody: () => 'You can manage its link, archive it or delete it.',
+    groupReminderOweTitle: (g) => `Settle up in "${g}"`,
+    groupReminderOweBody: (p) => `You owe ${p.amount} ${p.currencyCode} in "${p.groupName}". Tap to record a payment, even part of it.`,
+    groupReminderOwedTitle: (g) => `"${g}": you are owed money`,
+    groupReminderOwedBody: (p) => `You are owed ${p.amount} ${p.currencyCode} in "${p.groupName}". Share the group link to remind the others, or record a payment you received.`,
     possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
@@ -415,6 +431,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Кто-то добавил расход или платёж. Откройте группу, чтобы увидеть балансы.',
     groupOwnerTitle: (groupName) => `Теперь вы владелец группы «${groupName}»`,
     groupOwnerBody: () => 'Вы можете управлять ссылкой, архивировать или удалить группу.',
+    groupReminderOweTitle: (g) => `Рассчитайтесь в «${g}»`,
+    groupReminderOweBody: (p) => `Вы должны ${p.amount} ${p.currencyCode} в группе «${p.groupName}». Нажмите, чтобы отметить платёж — можно и часть суммы.`,
+    groupReminderOwedTitle: (g) => `«${g}»: вам должны`,
+    groupReminderOwedBody: (p) => `Вам должны ${p.amount} ${p.currencyCode} в группе «${p.groupName}». Поделитесь ссылкой на группу, чтобы напомнить, или отметьте полученный платёж.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
@@ -517,6 +537,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Хтось додав витрату або платіж. Відкрийте групу, щоб побачити баланси.',
     groupOwnerTitle: (groupName) => `Тепер ви власник групи «${groupName}»`,
     groupOwnerBody: () => 'Ви можете керувати посиланням, архівувати або видалити групу.',
+    groupReminderOweTitle: (g) => `Розрахуйтеся в «${g}»`,
+    groupReminderOweBody: (p) => `Ви винні ${p.amount} ${p.currencyCode} у групі «${p.groupName}». Натисніть, щоб позначити платіж — можна й частину суми.`,
+    groupReminderOwedTitle: (g) => `«${g}»: вам винні`,
+    groupReminderOwedBody: (p) => `Вам винні ${p.amount} ${p.currencyCode} у групі «${p.groupName}». Поділіться посиланням на групу, щоб нагадати, або позначте отриманий платіж.`,
     possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
@@ -619,6 +643,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Ktoś dodał wydatek lub płatność. Otwórz grupę, aby zobaczyć salda.',
     groupOwnerTitle: (groupName) => `Jesteś teraz właścicielem grupy „${groupName}”`,
     groupOwnerBody: () => 'Możesz zarządzać linkiem, zarchiwizować lub usunąć grupę.',
+    groupReminderOweTitle: (g) => `Rozlicz się w „${g}”`,
+    groupReminderOweBody: (p) => `Masz do oddania ${p.amount} ${p.currencyCode} w grupie „${p.groupName}”. Dotknij, aby zapisać płatność — nawet część kwoty.`,
+    groupReminderOwedTitle: (g) => `„${g}”: należą Ci się pieniądze`,
+    groupReminderOwedBody: (p) => `Należy Ci się ${p.amount} ${p.currencyCode} w grupie „${p.groupName}”. Udostępnij link do grupy, aby przypomnieć innym, albo zapisz otrzymaną płatność.`,
     possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
@@ -721,6 +749,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Alguien añadió un gasto o un pago. Abre el grupo para ver los saldos.',
     groupOwnerTitle: (groupName) => `Ahora eres el propietario de «${groupName}»`,
     groupOwnerBody: () => 'Puedes gestionar su enlace, archivarlo o eliminarlo.',
+    groupReminderOweTitle: (g) => `Ajusta cuentas en «${g}»`,
+    groupReminderOweBody: (p) => `Debes ${p.amount} ${p.currencyCode} en «${p.groupName}». Toca para registrar un pago, aunque sea parcial.`,
+    groupReminderOwedTitle: (g) => `«${g}»: te deben dinero`,
+    groupReminderOwedBody: (p) => `Te deben ${p.amount} ${p.currencyCode} en «${p.groupName}». Comparte el enlace del grupo para recordárselo o registra un pago que hayas recibido.`,
     possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
@@ -823,6 +855,10 @@ const translations: Record<string, {
     groupActivityBody: () => "Quelqu'un a ajouté une dépense ou un paiement. Ouvrez le groupe pour voir les soldes.",
     groupOwnerTitle: (groupName) => `Vous êtes maintenant propriétaire de « ${groupName} »`,
     groupOwnerBody: () => 'Vous pouvez gérer son lien, l’archiver ou le supprimer.',
+    groupReminderOweTitle: (g) => `Réglez vos comptes dans « ${g} »`,
+    groupReminderOweBody: (p) => `Vous devez ${p.amount} ${p.currencyCode} dans « ${p.groupName} ». Touchez pour enregistrer un paiement, même partiel.`,
+    groupReminderOwedTitle: (g) => `« ${g} » : on vous doit de l’argent`,
+    groupReminderOwedBody: (p) => `On vous doit ${p.amount} ${p.currencyCode} dans « ${p.groupName} ». Partagez le lien du groupe pour le rappeler aux autres, ou enregistrez un paiement reçu.`,
     possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
@@ -925,6 +961,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Jemand hat eine Ausgabe oder eine Zahlung hinzugefügt. Öffne die Gruppe, um die Salden zu sehen.',
     groupOwnerTitle: (groupName) => `Du bist jetzt Inhaber von „${groupName}“`,
     groupOwnerBody: () => 'Du kannst den Link verwalten, die Gruppe archivieren oder löschen.',
+    groupReminderOweTitle: (g) => `Ausgleichen in „${g}“`,
+    groupReminderOweBody: (p) => `Du schuldest ${p.amount} ${p.currencyCode} in „${p.groupName}“. Tippe, um eine Zahlung zu erfassen – auch einen Teilbetrag.`,
+    groupReminderOwedTitle: (g) => `„${g}“: Du bekommst noch Geld`,
+    groupReminderOwedBody: (p) => `Du bekommst noch ${p.amount} ${p.currencyCode} in „${p.groupName}“. Teile den Gruppenlink, um die anderen zu erinnern, oder erfasse eine erhaltene Zahlung.`,
     possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
@@ -1027,6 +1067,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Хтосьці дадаў расход або плацёж. Адкрыйце групу, каб убачыць балансы.',
     groupOwnerTitle: (groupName) => `Цяпер вы ўладальнік групы «${groupName}»`,
     groupOwnerBody: () => 'Вы можаце кіраваць спасылкай, архіваваць або выдаліць групу.',
+    groupReminderOweTitle: (g) => `Разлічыцеся ў «${g}»`,
+    groupReminderOweBody: (p) => `Вы павінны ${p.amount} ${p.currencyCode} у групе «${p.groupName}». Націсніце, каб адзначыць плацёж — можна і частку сумы.`,
+    groupReminderOwedTitle: (g) => `«${g}»: вам павінны`,
+    groupReminderOwedBody: (p) => `Вам павінны ${p.amount} ${p.currencyCode} у групе «${p.groupName}». Падзяліцеся спасылкай на групу, каб нагадаць, або адзначце атрыманы плацёж.`,
     possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
@@ -1129,6 +1173,10 @@ const translations: Record<string, {
     groupActivityBody: () => 'Iemand heeft een uitgave of betaling toegevoegd. Open de groep om de saldi te zien.',
     groupOwnerTitle: (groupName) => `Je bent nu de eigenaar van "${groupName}"`,
     groupOwnerBody: () => 'Je kunt de link beheren, de groep archiveren of verwijderen.',
+    groupReminderOweTitle: (g) => `Afrekenen in "${g}"`,
+    groupReminderOweBody: (p) => `Je bent ${p.amount} ${p.currencyCode} schuldig in "${p.groupName}". Tik om een betaling vast te leggen, ook een deel ervan.`,
+    groupReminderOwedTitle: (g) => `"${g}": je krijgt nog geld`,
+    groupReminderOwedBody: (p) => `Je krijgt nog ${p.amount} ${p.currencyCode} in "${p.groupName}". Deel de groepslink om de anderen eraan te herinneren, of leg een ontvangen betaling vast.`,
     possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
@@ -1361,6 +1409,16 @@ export function groupOwnerTitle(lang: Lang, groupName: string): string {
 
 export function groupOwnerBody(lang: Lang): string {
   return t(lang).groupOwnerBody();
+}
+
+export function groupReminderTitle(lang: Lang, params: GroupReminderParams): string {
+  return params.direction === 'owe'
+    ? t(lang).groupReminderOweTitle(params.groupName)
+    : t(lang).groupReminderOwedTitle(params.groupName);
+}
+
+export function groupReminderBody(lang: Lang, params: GroupReminderParams): string {
+  return params.direction === 'owe' ? t(lang).groupReminderOweBody(params) : t(lang).groupReminderOwedBody(params);
 }
 
 export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): string {

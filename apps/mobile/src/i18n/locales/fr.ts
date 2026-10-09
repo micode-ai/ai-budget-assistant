@@ -945,6 +945,8 @@ export default {
     monthlyWrappedDesc: 'Le 1er de chaque mois : votre mois précédent en quelques cartes',
     groupActivity: 'Activité des groupes',
     groupActivityDesc: 'Quand quelqu\'un ajoute une dépense ou un paiement dans un groupe partagé',
+    groupReminders: 'Rappels de soldes des groupes',
+    groupRemindersDesc: 'Un rappel par semaine, 4 fois au plus, tant que vous devez ou qu’on vous doit de l’argent dans un groupe',
   },
   iosInstall: {
     title: 'Ajoutez AI Budget à l’écran d’accueil de l’iPhone',

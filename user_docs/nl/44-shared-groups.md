@@ -107,6 +107,8 @@ Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groe
 
 Als iemand anders een uitgave of betaling toevoegt, krijg je een melding — hooguit één per groep per paar minuten. Tikken opent de groep. Uitzetten kan onder **Instellingen → Meldingen → Groepsactiviteit**.
 
+**Saldoherinneringen.** Zolang je in een groep geld schuldig bent, of iemand jou iets schuldig is, krijg je één keer per week een herinnering — de eerste een week nadat het saldo ontstond, en hooguit vier voor hetzelfde saldo. Ben jij iets schuldig, dan opent ze het afrekenscherm op de voorgestelde betaling en kun je ook een deel betalen; krijg je nog geld, dan opent ze **Betaling vastleggen** en kun je de groepslink delen om de anderen eraan te herinneren. Je krijgt hooguit één herinnering per dag, voor de groep met het grootste saldo. Voor saldi onder 1,00 sturen we nooit een herinnering, en zodra een saldo is vereffend begint de telling opnieuw. Vrienden die de groep alleen in de browser gebruiken, krijgen nooit herinneringen. Uitzetten kan onder **Instellingen → Meldingen → Herinneringen voor groepssaldi**; dit staat los van Groepsactiviteit.
+
 ## Privacy
 
 - **Iedereen met de link kan de groep zien** — de namen van de leden, de uitgaven, de bedragen en de geschiedenis. Deel hem alleen met de mensen in de groep.

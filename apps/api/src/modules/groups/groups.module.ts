@@ -7,11 +7,12 @@ import { GroupMemberGuard } from './guards/group-member.guard';
 import { GroupOwnerGuard } from './guards/group-owner.guard';
 import { GroupActiveGuard } from './guards/group-active.guard';
 import { GroupOwnershipService } from './group-ownership.service';
+import { GroupReminderCron } from './group-reminder.cron';
 
 // PrismaService, CacheService and NotificationsService are @Global().
 @Module({
   controllers: [GroupsController, GroupGuestController],
-  providers: [GroupsService, GroupGuestService, GroupOwnershipService, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
+  providers: [GroupsService, GroupGuestService, GroupOwnershipService, GroupReminderCron, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
   // GroupOwnershipService: UsersService / AdminService hand groups on before an account goes away.
   exports: [GroupsService, GroupOwnershipService],
 })

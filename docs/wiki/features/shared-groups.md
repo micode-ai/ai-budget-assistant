@@ -21,6 +21,8 @@ API (`apps/api/src/modules/groups/`):
 - `apps/api/src/modules/groups/group-guest.service.ts` — cookie identity, CSRF, origin check,
   write ceilings; delegates ledger writes to `GroupsService`, never re-implements them
 - `apps/api/src/modules/groups/group-ledger.ts` — pure math, no DI
+- `apps/api/src/modules/groups/group-reminder.cron.ts` and `apps/api/src/modules/groups/group-reminder.ts`
+  — the daily balance reminder cron and its pure episode state machine (ABA-653)
 - `apps/api/src/modules/groups/group-ownership.service.ts` — ownership transfer, succession on an
   account departure, orphan adoption, the "Former member" rename (ABA-650)
 - `apps/api/src/modules/groups/helpers/group-guest-page.ts` and
@@ -37,11 +39,12 @@ Mobile:
   server-only; reset on sign-out from `apps/mobile/src/stores/authSessionActions.ts`
 - `apps/mobile/src/features/groups/` — pure helpers (split validation, display, pay links, link codes)
 - `apps/mobile/src/hooks/useGroupLinkDeepLink.ts` — a link code stashed while signed out
-- Entry: the `groups` quick action (`apps/mobile/src/stores/quickActionStore.ts`); the push opens
-  `/groups/:id` (`apps/mobile/src/services/notifications.ts`)
+- Entry: the `groups` quick action (`apps/mobile/src/stores/quickActionStore.ts`); the activity push opens
+  `/groups/:id`, the balance reminder `/groups/:id/settle` (`apps/mobile/src/services/notifications.ts`
+  through `apps/mobile/src/features/groups/groupPush.ts`)
 
 Migrations: `20261009000000_add_expense_groups`, `20261012000000_group_member_join_provenance`,
-`20261013000000_group_ownership_transfer`. Design:
+`20261013000000_group_ownership_transfer`, `20261014000000_group_balance_reminders`. Design:
 [`docs/superpowers/specs/2026-10-08-shared-groups-design.md`](../../superpowers/specs/2026-10-08-shared-groups-design.md)
 — where it and the code differ, the code is right (the spec's `GET /g/:token/me/:secret` restore
 link and `Restrict` member FKs were both replaced in the security hardening).
@@ -166,6 +169,37 @@ as that member.
 app-user members other than the actor, gated by `User.notifyGroupActivity` (the toggle in
 notification settings), and coalesced per recipient per group for 10 minutes through
 `CacheService.setIfAbsent('grp:push:{groupId}:{userId}')`. Sent on expense create/edit and settle.
+
+**Balance reminders (ABA-653).** `GroupReminderCron` (`apps/api/src/modules/groups/group-reminder.cron.ts`,
+`@Cron('0 17 * * *')`, 17:00 UTC daily) over the pure state machine in
+`apps/api/src/modules/groups/group-reminder.ts`. It streams active groups that have a live app-user
+member through `paginateById`, calls `GroupsService.loadState` per group, and keeps an **episode**
+on each app-user member row: `balanceOpenSince`, `balanceOpenSign` (-1 owes, 1 is owed),
+`lastReminderAt`, `reminderCount`. `nextReminderState(prev, net, now)`:
+- |net| < 1.00 (`REMINDER_MIN_BALANCE`) closes the episode and resets all four columns, so a settled
+  balance starts the count again;
+- a first sight of an open balance, or a sign flip, opens a new episode (clock = today, no push);
+- inside an episode a reminder is due 7 whole UTC days after the episode opened, then 7 days after
+  the previous one, at most 4 (`REMINDER_MAX_PER_EPISODE`), never twice on one UTC day.
+Columns are written only when they change. Of everything due, each user gets **one** push per day,
+for the group with the largest |balance| (`pickPerUser`, tie on the lower group id); the rest stay due
+and go out on later days. A user any of whose rows was reminded today is skipped (re-runs), and the
+send is claimed by a compare-and-swap `updateMany` on that row's `reminderCount`, `lastReminderAt` and
+`balanceOpenSign`, so a second run or instance sends nothing: the member row is the dedup ledger
+(the account-scoped `NotificationDedupLedger` tables do not fit a model with no `accountId`).
+Recipients are filtered to `isActive`, a push token and `notifyGroupReminders` BEFORE the claim, so an
+opted-out user does not spend a reminder; `NotificationsService` gates the `group_reminder` type again
+in both `sendToUser` and `sendToUsers`. Debtors get "you owe" with data
+`{groupId, reminder: 'owe', fromMemberId, toMemberId}` (their largest suggested transfer); creditors
+get "you are owed" with `{groupId, reminder: 'owed'}`. The app's `groupPushRoute`
+(`apps/mobile/src/features/groups/groupPush.ts`) opens `/groups/:id/settle` with the pair (debtor) or
+without one, i.e. *Record a payment* (creditor); the settle screen re-resolves the pair against live
+balances and takes any amount up to the bound (ABA-652). Sends are fire-and-forget through
+`logFireAndForget`. The preference is `User.notifyGroupReminders` (default `true`), `groupReminders`
+on `GET/PATCH /users/me/notification-preferences`, toggled in `NotificationsSettings.tsx` (the phone
+screen and the desktop settings pane are the same component) and included in the master switch.
+Copy: four push strings × 9 locales in `notification-i18n.ts`; the amount prints as `42.00 PLN`
+(currency code, like debt reminders). Related: [debt-reminders](debt-reminders.md).
 
 **Members.** Removal is soft and requires a zero balance. The owner cannot leave while they own
 the group: they transfer it first (below), then leave like anyone else. A member the
@@ -340,6 +374,19 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
   a suspension hands groups on but does not anonymize.
 - **A hard or self delete renames, it does not delete, the member rows**, and renames the event snapshots with
   them; the balances must keep adding up for everyone else.
+- **A guest (no `userId`) is never reminded and its row never gets reminder state.** Guests have no
+  push; an email or SMS to them is out of scope.
+- **At most one reminder push per user per UTC day, weekly per episode, at most 4 per episode**
+  (threat 12 of the phase-2 spec, reminder spam). Do not lift the per-user cap to "one per group":
+  a user in five groups would get five pushes in one evening.
+- **The reminder send is a compare-and-swap on the member row's reminder columns**, which is what makes
+  a re-run or a second instance a no-op. A plain `update` before or after the send double-sends.
+- **A balance under 1.00, or a settled one, resets the episode**; a sign flip is a new episode. The
+  count is per episode, never lifetime.
+- **The reminder cron never writes the ledger** (no `ledgerVersion` bump, no hook on a ledger write), so
+  no settle form goes stale because of it and no ledger write gets slower.
+- **Opt-out is filtered before the claim and gated again in `NotificationsService`.** Removing either
+  half either burns opted-out users' reminders or sends to them.
 
 ## Desktop
 
@@ -466,7 +513,13 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 - **ABA-652 UI is unverified on a device and in a desktop browser**: the amount field, the
   counterpart picker, the Record a payment buttons and the guest page's amount input have only
   pure-helper and server-rendered-HTML tests (nothing renders in CI).
-- Merging two members, reminder pushes and bot channels are phase 2 (`docs/superpowers/specs/2026-10-09-shared-groups-phase2-design.md`).
+- Merging two members and bot channels are phase 2 (`docs/superpowers/specs/2026-10-09-shared-groups-phase2-design.md`).
+- **Balance reminders (ABA-653):** the windows are on the server clock (UTC days), not
+  `user.timezone`, and there is no per-group mute (both follow-ups in the phase-2 spec). The settings
+  toggle is unverified on a device and in a desktop browser (nothing renders in CI), the migration has
+  not run against a real Postgres here, and the cron's per-group `loadState` is fine at today's
+  volume but would want a "skip groups whose `ledgerVersion` did not change" shortcut if group counts
+  grow.
 - **Repo-wide: there is no global throttler.** No `APP_GUARD` registers `ThrottlerGuard`, so the
   `ThrottlerModule` default in `apps/api/src/app.module.ts` applies nowhere and a bare `@Throttle`
   is inert; only routes that add `@UseGuards(ThrottlerGuard)` are rate-limited (the groups module
@@ -492,3 +545,7 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   `SETTLEMENT_EXCEEDS_BALANCE`) replaced `isValidSettlement`; an editable amount on the app's
   settle screen and dialog, *Record a payment* with a counterpart picker, and a visible amount
   field on the guest settle form.
+- [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
+  pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
+  member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its
+  settings toggle, and the push opening the settle screen.

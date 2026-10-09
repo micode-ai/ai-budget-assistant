@@ -7,6 +7,7 @@ import { api } from './api';
 import { useAccountStore } from '@/stores/accountStore';
 import { resolveExpenseIdForParticipant } from '@/stores/receiptSplitParticipantIndex';
 import { inboundPushRoute } from '@/features/inboundMail/inboundMail';
+import { groupPushRoute } from '@/features/groups/groupPush';
 
 // Configure foreground notification display (native only — expo-notifications
 // throws "not available on web" for the handler API).
@@ -162,12 +163,10 @@ export function handleNotificationResponse(
       } as any);
       break;
     case 'group_activity':
-      // Groups are not account-scoped, so there is no account to switch to first.
-      if (data.groupId) {
-        router.push(`/groups/${String(data.groupId)}` as any);
-      } else {
-        router.push('/groups' as any);
-      }
+    case 'group_reminder':
+      // Groups are not account-scoped, so there is no account to switch to first. A balance
+      // reminder (ABA-653) opens the settle screen; see groupPushRoute.
+      router.push(groupPushRoute(data.type === 'group_reminder' ? 'group_reminder' : 'group_activity', data) as any);
       break;
     case 'rate_watch_hit': {
       const fromCurrency = data.fromCurrency ? String(data.fromCurrency) : undefined;

@@ -949,6 +949,8 @@ export default {
     monthlyWrappedDesc: 'On the 1st of each month: your previous month in a few cards',
     groupActivity: 'Group activity',
     groupActivityDesc: 'When someone adds an expense or a payment in a shared group',
+    groupReminders: 'Group balance reminders',
+    groupRemindersDesc: 'A weekly nudge, at most 4 times, while you owe or are owed money in a group',
   },
   iosInstall: {
     title: 'Add AI Budget to your iPhone home screen',
