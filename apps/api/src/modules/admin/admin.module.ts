@@ -8,6 +8,7 @@ import { AdminGuard } from './admin.guard';
 import { AdminGateway } from './admin.gateway';
 import { ReferralsModule } from '../referrals/referrals.module';
 import { AdminInvestorMetricsService } from './admin-investor-metrics.service';
+import { AdminGroupMetricsService } from './admin-group-metrics.service';
 
 @Module({
   imports: [
@@ -15,7 +16,7 @@ import { AdminInvestorMetricsService } from './admin-investor-metrics.service';
     forwardRef(() => ReferralsModule),
   ],
   controllers: [AdminController],
-  providers: [AdminService, AdminAnalyticsService, AdminNotificationService, AdminInvestorMetricsService, AdminGuard, AdminGateway],
+  providers: [AdminService, AdminAnalyticsService, AdminNotificationService, AdminInvestorMetricsService, AdminGroupMetricsService, AdminGuard, AdminGateway],
   exports: [AdminService, AdminAnalyticsService, AdminNotificationService, AdminGateway],
 })
 export class AdminModule {}

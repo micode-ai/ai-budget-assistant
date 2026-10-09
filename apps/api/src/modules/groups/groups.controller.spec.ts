@@ -17,6 +17,14 @@ describe('GroupsController throttling', () => {
     expect(Reflect.getMetadata('THROTTLER:TTLdefault', proto[name])).toBe(60000);
   });
 
+  it('preview is throttled at 20/min with ThrottlerGuard applied, and declared before :groupId', () => {
+    expect(guardsOf(proto.preview)).toContain(ThrottlerGuard);
+    expect(Reflect.getMetadata('THROTTLER:LIMITdefault', proto.preview)).toBe(20);
+    expect(Reflect.getMetadata('THROTTLER:TTLdefault', proto.preview)).toBe(60000);
+    const names = Object.getOwnPropertyNames(proto);
+    expect(names.indexOf('preview')).toBeLessThan(names.indexOf('detail'));
+  });
+
   it('keeps JwtAuthGuard at class level, so it runs before the throttler', () => {
     expect(guardsOf(GroupsController)).toEqual([JwtAuthGuard]);
   });

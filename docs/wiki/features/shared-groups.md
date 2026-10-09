@@ -151,6 +151,20 @@ self-removed one may rejoin through the normal archive and member-cap checks. Th
 enforced inside a transaction that first locks the group row, so concurrent joins cannot overshoot
 it.
 
+
+**Joining from the app (ABA-647).** The join screen first calls `GET /groups/preview?guestToken=`
+(throttled 20/min): the group's name, emoji, currency, status and the free names — live placeholders
+with no `userId` and no `claimTokenHash`, as id + display name only. Unknown, guest-access-off and
+deleted links are one identical 404, like the guest page. The user picks a free name
+(`POST /groups/join {guestToken, memberId}`, atomic; 409 `MEMBER_TAKEN` re-fetches the preview) or
+"I'm not on the list" with a new name. `groupId` and `myMemberId` come back only to someone who is
+already a live member, so "Open group" goes straight there. A name a guest already claimed in the
+browser can still only be taken over with a link code.
+
+**Join provenance (ABA-647).** `ExpenseGroupMember.joinedVia` (`owner`, `placeholder`, `app_link`,
+`guest`, `guest_linked`) and `linkedAt` record how each member arrived, for the admin Groups page.
+Rows created before 2026-10-09 have none (no backfill).
+
 ## Invariants
 
 - **Groups must not move into `Account`/`Expense`.** The model is standalone on purpose (above);
@@ -227,6 +241,24 @@ is `docs/superpowers/specs/2026-10-09-desktop-groups-receipts-report-design.md`.
   gated on edit or account type) and Settings has a permanent `groups` link, so a user who hid the
   quick action still has a door.
 
+## Admin metrics
+
+**ABA-647** adds `GET /admin/groups/metrics?days=` (1–365, default 30;
+`apps/api/src/modules/admin/admin-group-metrics.service.ts`), shown on the admin **Groups** page
+(`apps/admin/src/app/groups/page.tsx`). Aggregates only — no group name, member name, token or user
+id leaves the service.
+
+- **Totals are all-time except `activeGroups`**: non-archived groups with an expense or settlement
+  created inside the window. `membersTotal` is current members (`removedAt: null`).
+- **Provenance** is `ExpenseGroupMember.joinedVia` (`guest`, `guest_linked`, `app_link`) and
+  `linkedAt`. `guestMembers` = `joinedVia` guest or guest_linked; `guestsLinked` = `linkedAt` set;
+  `appUsersJoinedViaLink` = `app_link`. The admin page derives guest → account conversion as
+  `guestsLinked / guestMembers` and shows `—` when there are no guests.
+- **Provenance is recorded only from 2026-10-09** and was not backfilled: older members count in
+  `membersTotal` but in no provenance figure, so conversion and the guest series understate anything
+  before that date.
+- The daily series (`groupsCreated`, `guestsJoined`, `guestsLinked`) is bucketed by UTC day.
+
 ## Known gaps
 
 - **Line claims** (per-item splitting like receipt-split) are phase 2: a claim changes shares after
@@ -239,9 +271,6 @@ is `docs/superpowers/specs/2026-10-09-desktop-groups-receipts-report-design.md`.
 - **Desktop, unverified in a browser:** whether the group expense dialog's "Take a photo" path
   degrades to a file picker on a desktop browser, and whether the Stack header duplicates the in-page
   title on `/groups` and `/groups/:id`.
-- **The app join cannot pick an unclaimed name.** `app/groups/join.tsx` only creates a new member by
-  name; there is no preview endpoint listing a group's placeholders for an app user, although
-  `JoinGroupDto.memberId` is accepted by the API.
 - **Writes are not disabled offline.** The store is online-only, but there is no connectivity hook
   in the app to disable the buttons, so an offline write simply fails with the error state.
 - **`DELETE /groups/:id` with ledger data is unverified against real Postgres.** It is a hard

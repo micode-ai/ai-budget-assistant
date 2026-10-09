@@ -89,7 +89,7 @@ Si el propietario elimina su propia cuenta, sus grupos también se eliminan.
 
 ## Unirse a un grupo desde la app
 
-Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con enlace** en la pantalla Grupos, pégalo en **Enlace del grupo**, escribe **Tu nombre en este grupo** y toca **Unirse al grupo**. Si ya elegiste tu nombre en el navegador, no vuelvas a unirte: abre el enlace en el navegador y toca **Abrir en la app**, así conservas tu historial.
+Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con enlace** en la pantalla Grupos y pégalo en **Enlace del grupo**. La app muestra el nombre del grupo y los nombres que nadie ha elegido todavía. Toca tu nombre, o **No estoy en la lista** y escribe **Tu nombre en este grupo** (al principio es el nombre de tu cuenta), y luego toca **Unirse al grupo**. Si ya te añadieron por nombre, elige ese nombre y ocuparás ese lugar con su historial. Si alguien elige el nombre justo antes que tú, la lista se actualiza y eliges de nuevo. Si ya estás en el grupo, la app te ofrece **Abrir grupo**. A un grupo archivado, que es de solo lectura, no se puede unir nadie. Si ya elegiste tu nombre en el navegador, usa **Abrir en la app** en la página para invitados, así conservas tu historial.
 
 ## Notificaciones
 

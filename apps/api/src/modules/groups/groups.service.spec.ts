@@ -475,6 +475,106 @@ describe('GroupsService', () => {
     });
   });
 
+  describe('join: claim and provenance (ABA-647)', () => {
+    it('picking a placeholder someone else just claimed is a 409 MEMBER_TAKEN', async () => {
+      prisma.expenseGroupMember.findFirst.mockResolvedValueOnce(null);
+      prisma.expenseGroupMember.updateMany.mockResolvedValueOnce({ count: 0 });
+      await expect(service.join('u-x', { guestToken: 'tok-tok-tok', memberId: B })).rejects.toMatchObject({
+        response: { code: 'MEMBER_TAKEN' },
+        status: 409,
+      });
+    });
+
+    it('claims atomically (only an unclaimed, live, user-less row) and records app_link', async () => {
+      prisma.expenseGroupMember.findFirst.mockResolvedValueOnce(null);
+      jest.spyOn(service, 'getDetail').mockResolvedValue({} as any);
+      await service.join('u-x', { guestToken: 'tok-tok-tok', memberId: B });
+      const arg = prisma.expenseGroupMember.updateMany.mock.calls[0][0];
+      expect(arg.where).toMatchObject({ id: B, groupId: G, userId: null, claimTokenHash: null, removedAt: null });
+      expect(arg.data).toMatchObject({ userId: 'u-x', joinedVia: 'app_link' });
+    });
+
+    it('a brand-new app member is app_link, a guest-page member is guest', async () => {
+      prisma.expenseGroupMember.findFirst.mockResolvedValueOnce(null);
+      prisma.expenseGroupMember.create.mockResolvedValue({ id: 'm-new' });
+      jest.spyOn(service, 'getDetail').mockResolvedValue({} as any);
+      await service.join('u-x', { guestToken: 'tok-tok-tok', displayName: 'Dan' });
+      expect(prisma.expenseGroupMember.create.mock.calls[0][0].data.joinedVia).toBe('app_link');
+      await service.createMember(G, 'Eve', null, 'hash');
+      expect(prisma.expenseGroupMember.create.mock.calls[1][0].data.joinedVia).toBe('guest');
+      await service.createMember(G, 'Fay', null);
+      expect(prisma.expenseGroupMember.create.mock.calls[2][0].data.joinedVia).toBe('placeholder');
+    });
+
+    it('createGroup marks the owner and the placeholders', async () => {
+      prisma.expenseGroup.count.mockResolvedValue(0);
+      prisma.expenseGroup.create = jest.fn(async () => ({ id: G, members: [{ id: A, userId: 'u-alice' }] }));
+      jest.spyOn(service, 'getDetail').mockResolvedValue({} as any);
+      await service.createGroup('u-alice', 'Alice', { name: 'Flat', currencyCode: 'PLN', memberNames: ['Bob'] } as any);
+      const created = prisma.expenseGroup.create.mock.calls[0][0].data.members.create;
+      expect(created.map((m: any) => m.joinedVia)).toEqual(['owner', 'placeholder']);
+    });
+  });
+
+  describe('preview (ABA-647)', () => {
+    it('answers one identical 404 for malformed, unknown and guest-access-off tokens', async () => {
+      const errs: any[] = [];
+      for (const t of ['x', 'unknown-token']) {
+        if (t === 'unknown-token') prisma.expenseGroup.findUnique.mockResolvedValueOnce(null);
+        errs.push(await service.preview('u-x', t).catch((e) => e));
+      }
+      group.guestAccess = false;
+      errs.push(await service.preview('u-x', 'tok-tok-tok').catch((e) => e));
+      for (const e of errs) expect(e).toBeInstanceOf(NotFoundException);
+      expect(new Set(errs.map((e) => JSON.stringify(e.getResponse()))).size).toBe(1);
+    });
+
+    it('lists only unclaimed live placeholders, id + displayName only', async () => {
+      prisma.expenseGroupMember.findFirst.mockResolvedValueOnce(null);
+      prisma.expenseGroupMember.findMany.mockResolvedValueOnce([{ id: B, displayName: 'Bob' }]);
+      const res = await service.preview('u-x', 'tok-tok-tok');
+      expect(prisma.expenseGroupMember.findMany.mock.calls[0][0].where).toEqual({
+        groupId: G,
+        userId: null,
+        claimTokenHash: null,
+        removedAt: null,
+      });
+      expect(res).toEqual({
+        groupName: 'Flat',
+        emoji: null,
+        currencyCode: 'PLN',
+        status: 'active',
+        alreadyMember: false,
+        unclaimed: [{ id: B, displayName: 'Bob' }],
+      });
+    });
+
+    it('detects an existing live membership and returns the member id', async () => {
+      prisma.expenseGroupMember.findFirst.mockResolvedValueOnce(mkMember(C, 'u-carol'));
+      prisma.expenseGroupMember.findMany.mockResolvedValueOnce([]);
+      const res = await service.preview('u-carol', 'tok-tok-tok');
+      expect(res.alreadyMember).toBe(true);
+      expect(res.myMemberId).toBe(C);
+      expect(res.groupId).toBeTruthy(); // members get the group to open
+    });
+
+    it('a removed membership is not "already a member"', async () => {
+      prisma.expenseGroupMember.findFirst.mockResolvedValueOnce(mkMember(C, 'u-carol', { removedAt: new Date() }));
+      prisma.expenseGroupMember.findMany.mockResolvedValueOnce([]);
+      const res = await service.preview('u-carol', 'tok-tok-tok');
+      expect(res.alreadyMember).toBe(false);
+      expect(res.myMemberId).toBeUndefined();
+      expect(res.groupId).toBeUndefined(); // never disclosed to a non-member
+    });
+
+    it('an archived group is previewed but marked archived', async () => {
+      group.status = 'archived';
+      prisma.expenseGroupMember.findFirst.mockResolvedValueOnce(null);
+      prisma.expenseGroupMember.findMany.mockResolvedValueOnce([]);
+      expect((await service.preview('u-x', 'tok-tok-tok')).status).toBe('archived');
+    });
+  });
+
   describe('member removal and the atomic cap', () => {
     it('records removedByOwner=true when the owner removes someone, false for a self-leave', async () => {
       expenses = [];

@@ -51,3 +51,26 @@ export interface AdminDashboardResponse {
     users: AdminUserUsageItem[];
   };
 }
+
+export interface AdminGroupMetricsDailyPoint {
+  date: string;
+  groupsCreated: number;
+  guestsJoined: number;
+  guestsLinked: number;
+}
+
+/** GET /admin/groups/metrics — shared expense groups (ABA-640). Aggregates only, no PII. */
+export interface AdminGroupMetricsResponse {
+  windowDays: number;
+  totals: {
+    groupsCreated: number;
+    /** Non-archived groups with activity (an expense or a settlement) inside the window. */
+    activeGroups: number;
+    archivedGroups: number;
+    membersTotal: number;
+    guestMembers: number;
+    guestsLinked: number;
+    appUsersJoinedViaLink: number;
+  };
+  daily: AdminGroupMetricsDailyPoint[];
+}

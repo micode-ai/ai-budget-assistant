@@ -89,7 +89,7 @@ Verwijdert de eigenaar zijn eigen account, dan worden zijn groepen ook verwijder
 
 ## Deelnemen aan een groep in de app
 
-Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link**, plak hem in **Groepslink**, vul **Jouw naam in deze groep** in en tik op **Deelnemen aan groep**. Heb je je naam al in de browser gekozen, neem dan niet nog eens deel: open de link in de browser en tik op **Openen in de app**, zodat je je geschiedenis houdt.
+Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link** en plak hem in **Groepslink**. De app toont de naam van de groep en de namen die nog niemand heeft gekozen. Tik op je eigen naam, of op **Ik sta niet in de lijst** en vul **Jouw naam in deze groep** in (eerst is dat de naam van je account), en tik op **Deelnemen aan groep**. Is je naam al eerder toegevoegd, kies dan die naam, dan neem je die plek met de bijbehorende geschiedenis over. Kiest iemand de naam vlak voor jou, dan ververst de lijst en kies je opnieuw. Zit je al in de groep, dan biedt de app **Groep openen** aan. Een gearchiveerde groep is alleen-lezen, dus daaraan kun je niet deelnemen. Heb je je naam al in de browser gekozen, gebruik dan **Openen in de app** op de gastpagina, zodat je je geschiedenis houdt.
 
 ## Meldingen
 

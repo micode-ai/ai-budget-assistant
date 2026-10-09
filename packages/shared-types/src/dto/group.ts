@@ -112,3 +112,19 @@ export interface GroupActivityPage {
   /** ISO cursor to pass as `before`; null when there is no older page. */
   nextBefore: string | null;
 }
+
+/** GET /groups/preview?guestToken= — what the app shows before joining by link (ABA-647). */
+export interface GroupJoinPreview {
+  groupName: string;
+  emoji: string | null;
+  currencyCode: string;
+  /** `archived` means the app must refuse joining (read-only group). */
+  status: ExpenseGroupStatus;
+  alreadyMember: boolean;
+  /** Only when `alreadyMember` and the membership is live. */
+  myMemberId?: string;
+  /** Only when `alreadyMember`: the group to open. Never given to a non-member. */
+  groupId?: string;
+  /** Free names to take over: live placeholders nobody has claimed. Id + display name only. */
+  unclaimed: Array<{ id: string; displayName: string }>;
+}

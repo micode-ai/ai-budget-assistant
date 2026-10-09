@@ -47,6 +47,14 @@ export class GroupsController {
     return this.service.createGroup(req.user.id, req.user.name, dto);
   }
 
+  // Declared before ':groupId' so 'preview' is not captured as an id.
+  @Get('preview')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 20, ttl: 60000 } })
+  preview(@Req() req: AuthenticatedRequest, @Query('guestToken') guestToken: string) {
+    return this.service.preview(req.user.id, guestToken);
+  }
+
   // ThrottlerGuard is applied per route: @Throttle alone is inert (no APP_GUARD is registered), and a
   // class-level guard would start rate-limiting every other route here with the default limit.
   @Post('join')

@@ -2,7 +2,8 @@
 
 *Related: [admin-revenue-metrics](features/admin-revenue-metrics.md),
 [app-version-gate](features/app-version-gate.md),
-[last-active-tracking](features/last-active-tracking.md), [web-telemetry](features/web-telemetry.md)*
+[last-active-tracking](features/last-active-tracking.md), [web-telemetry](features/web-telemetry.md),
+[shared-groups](features/shared-groups.md)*
 
 ## What this is
 An internal web dashboard for operators — user management, AI usage monitoring, subscription and revenue oversight, push/email communications, and app-version releases. A separate Next.js app (`apps/admin`, port 3001) over an admin-only API module (`apps/api/src/modules/admin/`).
@@ -29,13 +30,15 @@ Four focused services, each injected directly into `AdminController` (no facade 
 **Who is an admin.** `AdminGuard` (HTTP) and `AdminGateway.handleConnection` (socket) both check the caller's email against the `ADMIN_EMAILS` env list — there is no admin role column.
 
 ### Pages
-Dashboard (`/`), Login (`/login`), Investor Metrics (`/metrics`), Acquisition (`/acquisition`), Users (`/users`, `/users/[id]`), AI Usage (`/ai-usage`), Subscriptions (`/subscriptions`), Communications (`/communications`), App Versions (`/app-versions`), Referrals (`/referrals`), Telemetry (`/telemetry`), Audit Log (`/audit-log`), Settings (`/settings`). `ls apps/admin/src/app` for the current set.
+Dashboard (`/`), Login (`/login`), Investor Metrics (`/metrics`), Acquisition (`/acquisition`), Users (`/users`, `/users/[id]`), AI Usage (`/ai-usage`), Subscriptions (`/subscriptions`), Communications (`/communications`), App Versions (`/app-versions`), Referrals (`/referrals`), Groups (`/groups`), Telemetry (`/telemetry`), Audit Log (`/audit-log`), Settings (`/settings`). `ls apps/admin/src/app` for the current set.
 
 - **Dashboard** — `KpiCards`, `SubscriptionPieChart`, `LiveActivityFeed`, `RegistrationsChart`, `AiCostChart` (all in `src/components/dashboard/`) plus a Top AI Spenders table inline in `app/page.tsx`.
 - **Users** — search (debounced 300 ms) and tier / billing / status filters over a paginated table. `SortableHead` makes Name, Email, Registered (`createdAt`) and Last Active (`lastSyncAt`) sortable: clicking toggles asc/desc, switching column resets to asc, and both reset to page 1. `sortBy`/`order` flow through `useUsers` to `GET admin/users`, where `AdminService` allow-lists exactly those four fields (anything else falls back to `createdAt`). Tier, status and AI requests are not sortable — they are relation or computed fields.
 - **User detail** — `app/users/[id]/page.tsx` is a thin composition (`useUserDetail`, `useUserNotificationHistory`, profile/subscription/actions cards, accounts table, AI usage chart, recent expenses, notification history). Each user action is its own component under `src/components/users/`, owning its own state and mutation hook: `ChangeTierDialog`, `AiLimitCard` (inline, non-modal), `SendPushDialog`, `SendEmailDialog`, `DeactivateDeleteDialog` (deactivate + delete confirmation, the "danger zone").
 - **App Versions** — per-platform tabs (Android / iOS); the newest release per platform carries a "Current" badge; a "New release" `Dialog` with semver inputs and one release-notes textarea per app locale (`LOCALES`, EN required). Clicking a release row opens a read-only detail `Dialog` (versions, store URL, notes per locale); the trash button is separate, with a `Dialog` confirm (there is no `AlertDialog` primitive). Hooks: `src/hooks/use-app-versions.ts`. What the rows mean: [app-version-gate](features/app-version-gate.md).
 - **Communications (ABA-420)** — `app/communications/page.tsx` is a thin `Tabs` shell; each tab is its own component under `src/components/communications/` — `SendPushTab`, `SendEmailTab`, `BroadcastTab`, `ScheduledTab`, `HistoryTab` — so each tab's form, filter and pagination state is local to that tab. History has summary stat cards, a type filter (push/email/broadcast), expandable rows with recipient details, body preview, broadcast filters, a delivery-success bar and relative dates.
+
+- **Groups (ABA-647)** — `app/groups/page.tsx` over `GET admin/groups/metrics?days=` (`useGroupMetrics`, typed `AdminGroupMetricsResponse`), with the 7/30/90-day selector the Acquisition page uses. `GroupKpiCards` and `GroupDailyChart` live in `src/components/groups/`: eight KPI cards (all-time totals except "Active groups", which is the window) including a derived guest → account conversion (`guestsLinked / guestMembers`, `—` when there are no guests), and a daily bar chart of groups created / guests joined / guests linked. What the figures mean, and why older members carry no provenance: [shared-groups](features/shared-groups.md#admin-metrics).
 
 ### Real-time
 `AdminGateway` (namespace `/admin`, one admin room) emits `admin:new-user`, `admin:ai-request`, `admin:subscription-change`, `admin:error` and, every 30 s, `admin:stats`. `use-realtime.ts` feeds the first four into the live activity feed and merges `admin:stats` (`newUsersToday`, `activeUsersToday`, `mrr`) into the `["admin","analytics","overview"]` query with `setQueryData`, so the KPI cards tick without a refetch (`health` is carried but unused by the client).
@@ -61,4 +64,4 @@ React Query 5 for all server state; shadcn/ui components; Recharts for charts.
 Start at `apps/admin/src/app/<page>/page.tsx` for any page-level change, and `apps/admin/src/lib/api-client.ts` for auth or HTTP issues.
 
 ## History
-ABA-175 (admin service split) · ABA-202 (sortable users table, app-version detail dialog) · ABA-389 ("Last Active") · ABA-420 (communications tab split).
+ABA-175 (admin service split) · ABA-202 (sortable users table, app-version detail dialog) · ABA-389 ("Last Active") · ABA-420 (communications tab split) · ABA-647 (groups metrics page).

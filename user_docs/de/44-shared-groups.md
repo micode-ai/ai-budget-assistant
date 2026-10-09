@@ -89,7 +89,7 @@ Löscht der Besitzer sein eigenes Konto, werden auch seine Gruppen gelöscht.
 
 ## Einer Gruppe in der App beitreten
 
-Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Gruppen-Bildschirm auf **Per Link beitreten**, füge ihn in **Gruppenlink** ein, gib **Dein Name in dieser Gruppe** ein und tippe auf **Gruppe beitreten**. Hast du deinen Namen schon im Browser gewählt, tritt nicht noch einmal bei: Öffne den Link im Browser und tippe auf **In der App öffnen**, damit dein Verlauf erhalten bleibt.
+Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Gruppen-Bildschirm auf **Per Link beitreten** und füge ihn in **Gruppenlink** ein. Die App zeigt den Namen der Gruppe und die Namen, die noch niemand gewählt hat. Tippe auf deinen Namen oder auf **Ich stehe nicht in der Liste** und gib **Dein Name in dieser Gruppe** ein (zuerst ist es dein Kontoname), dann tippe auf **Gruppe beitreten**. Wurdest du schon mit Namen eingetragen, wähle diesen Namen, dann übernimmst du den Platz samt Verlauf. Wenn jemand den Namen kurz vor dir vergibt, aktualisiert sich die Liste und du wählst neu. Bist du schon in der Gruppe, bietet die App stattdessen **Gruppe öffnen** an. Einer archivierten Gruppe, die schreibgeschützt ist, kann man nicht beitreten. Hast du deinen Namen schon im Browser gewählt, nutze auf der Gästeseite **In der App öffnen**, damit dein Verlauf erhalten bleibt.
 
 ## Benachrichtigungen
 

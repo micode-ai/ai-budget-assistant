@@ -4,6 +4,7 @@ import type {
   CreateGroupSettlementDto,
   GroupActivityPage,
   GroupDetail,
+  GroupJoinPreview,
   GroupMember,
   GroupSummary,
   JoinGroupDto,
@@ -23,6 +24,10 @@ export const groupsApi = {
   },
   createGroup(dto: CreateGroupDto) {
     return httpClient.request<GroupDetail>('/groups', { method: 'POST', body: json(dto) });
+  },
+  /** 404 for an unknown, disabled or deleted link. */
+  previewGroupJoin(guestToken: string) {
+    return httpClient.request<GroupJoinPreview>(`/groups/preview?guestToken=${encodeURIComponent(guestToken)}`);
   },
   joinGroup(dto: JoinGroupDto) {
     return httpClient.request<GroupDetail>('/groups/join', { method: 'POST', body: json(dto) });

@@ -89,7 +89,7 @@ Jeśli właściciel usunie swoje konto, jego grupy też zostaną usunięte.
 
 ## Dołączanie do grupy w aplikacji
 
-Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy, wklej go w pole **Link do grupy**, wpisz **Twoje imię w tej grupie** i dotknij **Dołącz do grupy**. Jeśli Twoje imię zostało już wybrane w przeglądarce, nie dołączaj ponownie: otwórz link w przeglądarce i dotknij **Otwórz w aplikacji**, żeby zachować swoją historię.
+Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy i wklej go w pole **Link do grupy**. Aplikacja pokaże nazwę grupy oraz imiona, których nikt jeszcze nie wybrał. Dotknij swojego imienia albo **Nie ma mnie na liście** i wpisz **Twoje imię w tej grupie** (na początku to nazwa Twojego konta), a potem dotknij **Dołącz do grupy**. Jeśli ktoś dopisał Cię już z imienia, wybierz to imię, a przejmiesz to miejsce wraz z historią. Gdy ktoś zajmie imię chwilę przed Tobą, lista odświeży się i wybierzesz ponownie. Jeśli jesteś już w grupie, aplikacja zaproponuje **Otwórz grupę**. Do zarchiwizowanej grupy, która jest tylko do odczytu, nie można dołączyć. Jeśli swoje imię wybrano już w przeglądarce, użyj **Otwórz w aplikacji** na stronie dla gości, żeby zachować historię.
 
 ## Powiadomienia
 

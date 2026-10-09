@@ -89,7 +89,7 @@ Si le propriétaire supprime son propre compte, ses groupes sont également supp
 
 ## Rejoindre un groupe dans l'appli
 
-Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes, collez-le dans **Lien du groupe**, saisissez **Votre nom dans ce groupe** et touchez **Rejoindre le groupe**. Si vous avez déjà choisi votre nom dans le navigateur, ne rejoignez pas une seconde fois : ouvrez le lien dans le navigateur et touchez **Ouvrir dans l'appli**, pour garder votre historique.
+Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes et collez-le dans **Lien du groupe**. L'appli affiche le nom du groupe et les noms que personne n'a encore pris. Touchez votre nom, ou **Je ne suis pas dans la liste** puis saisissez **Votre nom dans ce groupe** (au départ, le nom de votre compte), et touchez **Rejoindre le groupe**. Si l'on vous a déjà ajouté par votre nom, choisissez-le pour reprendre cette place avec son historique. Si quelqu'un prend le nom juste avant vous, la liste se rafraîchit et vous choisissez de nouveau. Si vous êtes déjà dans le groupe, l'appli propose **Ouvrir le groupe**. Un groupe archivé est en lecture seule : on ne peut pas le rejoindre. Si vous avez déjà choisi votre nom dans le navigateur, utilisez **Ouvrir dans l'appli** sur la page invité, pour garder votre historique.
 
 ## Notifications
 

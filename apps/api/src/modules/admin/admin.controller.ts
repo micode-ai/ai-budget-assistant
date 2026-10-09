@@ -18,6 +18,7 @@ import { AdminAnalyticsService } from './admin-analytics.service';
 import { AdminNotificationService } from './admin-notification.service';
 import { ReferralsService } from '../referrals/referrals.service';
 import { AdminInvestorMetricsService } from './admin-investor-metrics.service';
+import { AdminGroupMetricsService } from './admin-group-metrics.service';
 
 interface AdminRequest extends Request {
   user: { id: string; email: string; name: string };
@@ -32,6 +33,7 @@ export class AdminController {
     private readonly adminNotificationService: AdminNotificationService,
     private readonly referralsService: ReferralsService,
     private readonly investorMetricsService: AdminInvestorMetricsService,
+    private readonly groupMetricsService: AdminGroupMetricsService,
   ) {}
 
   private getIp(req: Request): string | null {
@@ -254,6 +256,15 @@ export class AdminController {
     const n = parseInt(days ?? '', 10);
     const clamped = Number.isNaN(n) ? 30 : Math.min(365, Math.max(1, n));
     return this.adminAnalyticsService.getAcquisitionBreakdown(clamped);
+  }
+
+  // ─── Shared groups (ABA-647) ───────────────────────
+
+  @Get('groups/metrics')
+  async getGroupMetrics(@Query('days') days?: string) {
+    const n = parseInt(days ?? '', 10);
+    const clamped = Number.isNaN(n) ? 30 : Math.min(365, Math.max(1, n));
+    return this.groupMetricsService.getGroupMetrics(clamped);
   }
 
   // ─── Audit Log ───────────────────────────────────

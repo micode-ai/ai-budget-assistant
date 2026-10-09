@@ -370,7 +370,7 @@ export class GroupGuestService {
       // Atomic: the loser of a race, or a claimed / app-user / foreign / removed row, matches nothing.
       const res = await this.prisma.expenseGroupMember.updateMany({
         where: { id: memberId, groupId: group.id, userId: null, claimTokenHash: null, removedAt: null },
-        data: { claimTokenHash: hash, claimedAt: new Date() },
+        data: { claimTokenHash: hash, claimedAt: new Date(), joinedVia: 'guest' },
       });
       return res.count === 1 ? { secret } : { flash: 'taken' };
     }

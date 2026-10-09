@@ -5165,7 +5165,7 @@ If the owner deletes their own account, their groups are deleted too.
 
 ## Joining a group in the app
 
-If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen, paste it into **Group link**, enter **Your name in this group** and tap **Join group**. If you already picked your name in the browser, don't join again: open the link in the browser and tap **Open in the app**, so you keep your history.
+If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen and paste it into **Group link**. The app shows the group's name and the names nobody has taken yet. Tap your own name, or **I'm not on the list** and type **Your name in this group** (it starts as your account name), then tap **Join group**. If you were already added by name, pick that name so you take over that person's place and history. If someone takes the name a moment before you, the list refreshes and you pick again. If you're already in the group, the app offers **Open group** instead. An archived group is read-only, so it can't be joined. If you already picked your name in a browser, use **Open in the app** on the guest page instead, so you keep your history.
 
 ## Notifications
 
@@ -10300,7 +10300,7 @@ OCR иногда неверно читает цену, выдумывает ст
 
 ## Присоединение к группе в приложении
 
-Если друг прислал ссылку на группу, а у вас есть приложение, нажмите **Войти по ссылке** на экране «Группы», вставьте её в поле **Ссылка на группу**, введите **Ваше имя в этой группе** и нажмите **Присоединиться**. Если вы уже выбрали своё имя в браузере, не присоединяйтесь повторно: откройте ссылку в браузере и нажмите **Открыть в приложении**, чтобы сохранить свою историю.
+Если друг прислал ссылку на группу, а у вас есть приложение, нажмите **Войти по ссылке** на экране «Группы» и вставьте её в поле **Ссылка на группу**. Приложение покажет название группы и имена, которые пока никто не занял. Нажмите своё имя либо **Меня нет в списке** и введите **Ваше имя в этой группе** (сначала это имя вашего аккаунта), затем нажмите **Присоединиться**. Если вас уже добавили по имени, выберите это имя, и вы займёте это место вместе с историей. Если кто-то займёт имя чуть раньше вас, список обновится, и вы выберете снова. Если вы уже в группе, приложение предложит **Открыть группу**. К группе в архиве, доступной только для чтения, присоединиться нельзя. Если вы уже выбрали своё имя в браузере, нажмите **Открыть в приложении** на гостевой странице, чтобы сохранить историю.
 
 ## Уведомления
 
@@ -15405,7 +15405,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 ## Приєднання до групи в застосунку
 
-Якщо друг надіслав посилання на групу, а у вас є застосунок, натисніть **Приєднатися за посиланням** на екрані «Групи», вставте його в поле **Посилання на групу**, введіть **Ваше ім'я в цій групі** і натисніть **Приєднатися**. Якщо ви вже вибрали своє ім'я в браузері, не приєднуйтеся вдруге: відкрийте посилання в браузері й натисніть **Відкрити в застосунку**, щоб зберегти свою історію.
+Якщо друг надіслав посилання на групу, а у вас є застосунок, натисніть **Приєднатися за посиланням** на екрані «Групи» і вставте його в поле **Посилання на групу**. Застосунок покаже назву групи та імена, які ще ніхто не зайняв. Натисніть своє ім'я або **Мене немає в списку** і введіть **Ваше ім'я в цій групі** (спочатку це ім'я вашого облікового запису), потім натисніть **Приєднатися**. Якщо вас уже додали за іменем, оберіть це ім'я, і ви посядете це місце разом з історією. Якщо хтось займе ім'я трохи раніше за вас, список оновиться, і ви оберете знову. Якщо ви вже в групі, застосунок запропонує **Відкрити групу**. До групи в архіві, що доступна лише для читання, приєднатися не можна. Якщо ви вже обрали своє ім'я в браузері, натисніть **Відкрити в застосунку** на гостьовій сторінці, щоб зберегти історію.
 
 ## Сповіщення
 
@@ -20495,7 +20495,7 @@ Jeśli właściciel usunie swoje konto, jego grupy też zostaną usunięte.
 
 ## Dołączanie do grupy w aplikacji
 
-Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy, wklej go w pole **Link do grupy**, wpisz **Twoje imię w tej grupie** i dotknij **Dołącz do grupy**. Jeśli Twoje imię zostało już wybrane w przeglądarce, nie dołączaj ponownie: otwórz link w przeglądarce i dotknij **Otwórz w aplikacji**, żeby zachować swoją historię.
+Jeśli znajomy wyśle Ci link do grupy, a masz aplikację, dotknij **Dołącz z linku** na ekranie Grupy i wklej go w pole **Link do grupy**. Aplikacja pokaże nazwę grupy oraz imiona, których nikt jeszcze nie wybrał. Dotknij swojego imienia albo **Nie ma mnie na liście** i wpisz **Twoje imię w tej grupie** (na początku to nazwa Twojego konta), a potem dotknij **Dołącz do grupy**. Jeśli ktoś dopisał Cię już z imienia, wybierz to imię, a przejmiesz to miejsce wraz z historią. Gdy ktoś zajmie imię chwilę przed Tobą, lista odświeży się i wybierzesz ponownie. Jeśli jesteś już w grupie, aplikacja zaproponuje **Otwórz grupę**. Do zarchiwizowanej grupy, która jest tylko do odczytu, nie można dołączyć. Jeśli swoje imię wybrano już w przeglądarce, użyj **Otwórz w aplikacji** na stronie dla gości, żeby zachować historię.
 
 ## Powiadomienia
 
@@ -25560,7 +25560,7 @@ Löscht der Besitzer sein eigenes Konto, werden auch seine Gruppen gelöscht.
 
 ## Einer Gruppe in der App beitreten
 
-Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Gruppen-Bildschirm auf **Per Link beitreten**, füge ihn in **Gruppenlink** ein, gib **Dein Name in dieser Gruppe** ein und tippe auf **Gruppe beitreten**. Hast du deinen Namen schon im Browser gewählt, tritt nicht noch einmal bei: Öffne den Link im Browser und tippe auf **In der App öffnen**, damit dein Verlauf erhalten bleibt.
+Schickt dir ein Freund einen Gruppenlink und du hast die App, tippe auf dem Gruppen-Bildschirm auf **Per Link beitreten** und füge ihn in **Gruppenlink** ein. Die App zeigt den Namen der Gruppe und die Namen, die noch niemand gewählt hat. Tippe auf deinen Namen oder auf **Ich stehe nicht in der Liste** und gib **Dein Name in dieser Gruppe** ein (zuerst ist es dein Kontoname), dann tippe auf **Gruppe beitreten**. Wurdest du schon mit Namen eingetragen, wähle diesen Namen, dann übernimmst du den Platz samt Verlauf. Wenn jemand den Namen kurz vor dir vergibt, aktualisiert sich die Liste und du wählst neu. Bist du schon in der Gruppe, bietet die App stattdessen **Gruppe öffnen** an. Einer archivierten Gruppe, die schreibgeschützt ist, kann man nicht beitreten. Hast du deinen Namen schon im Browser gewählt, nutze auf der Gästeseite **In der App öffnen**, damit dein Verlauf erhalten bleibt.
 
 ## Benachrichtigungen
 
@@ -30614,7 +30614,7 @@ Si el propietario elimina su propia cuenta, sus grupos también se eliminan.
 
 ## Unirse a un grupo desde la app
 
-Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con enlace** en la pantalla Grupos, pégalo en **Enlace del grupo**, escribe **Tu nombre en este grupo** y toca **Unirse al grupo**. Si ya elegiste tu nombre en el navegador, no vuelvas a unirte: abre el enlace en el navegador y toca **Abrir en la app**, así conservas tu historial.
+Si un amigo te envía el enlace de un grupo y tienes la app, toca **Unirse con enlace** en la pantalla Grupos y pégalo en **Enlace del grupo**. La app muestra el nombre del grupo y los nombres que nadie ha elegido todavía. Toca tu nombre, o **No estoy en la lista** y escribe **Tu nombre en este grupo** (al principio es el nombre de tu cuenta), y luego toca **Unirse al grupo**. Si ya te añadieron por nombre, elige ese nombre y ocuparás ese lugar con su historial. Si alguien elige el nombre justo antes que tú, la lista se actualiza y eliges de nuevo. Si ya estás en el grupo, la app te ofrece **Abrir grupo**. A un grupo archivado, que es de solo lectura, no se puede unir nadie. Si ya elegiste tu nombre en el navegador, usa **Abrir en la app** en la página para invitados, así conservas tu historial.
 
 ## Notificaciones
 
@@ -35666,7 +35666,7 @@ Si le propriétaire supprime son propre compte, ses groupes sont également supp
 
 ## Rejoindre un groupe dans l'appli
 
-Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes, collez-le dans **Lien du groupe**, saisissez **Votre nom dans ce groupe** et touchez **Rejoindre le groupe**. Si vous avez déjà choisi votre nom dans le navigateur, ne rejoignez pas une seconde fois : ouvrez le lien dans le navigateur et touchez **Ouvrir dans l'appli**, pour garder votre historique.
+Si un ami vous envoie le lien d'un groupe et que vous avez l'appli, touchez **Rejoindre avec un lien** sur l'écran Groupes et collez-le dans **Lien du groupe**. L'appli affiche le nom du groupe et les noms que personne n'a encore pris. Touchez votre nom, ou **Je ne suis pas dans la liste** puis saisissez **Votre nom dans ce groupe** (au départ, le nom de votre compte), et touchez **Rejoindre le groupe**. Si l'on vous a déjà ajouté par votre nom, choisissez-le pour reprendre cette place avec son historique. Si quelqu'un prend le nom juste avant vous, la liste se rafraîchit et vous choisissez de nouveau. Si vous êtes déjà dans le groupe, l'appli propose **Ouvrir le groupe**. Un groupe archivé est en lecture seule : on ne peut pas le rejoindre. Si vous avez déjà choisi votre nom dans le navigateur, utilisez **Ouvrir dans l'appli** sur la page invité, pour garder votre historique.
 
 ## Notifications
 
@@ -40682,7 +40682,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 ## Далучэнне да групы ў праграме
 
-Калі сябар даслаў спасылку на групу, а ў вас ёсць праграма, націсніце **Далучыцца па спасылцы** на экране «Групы», устаўце яе ў поле **Спасылка на групу**, увядзіце **Ваша імя ў гэтай групе** і націсніце **Далучыцца**. Калі вы ўжо выбралі сваё імя ў браўзеры, не далучайцеся паўторна: адкрыйце спасылку ў браўзеры і націсніце **Адкрыць у праграме**, каб захаваць сваю гісторыю.
+Калі сябар даслаў спасылку на групу, а ў вас ёсць праграма, націсніце **Далучыцца па спасылцы** на экране «Групы» і ўстаўце яе ў поле **Спасылка на групу**. Праграма пакажа назву групы і імёны, якія пакуль ніхто не заняў. Націсніце сваё імя або **Мяне няма ў спісе** і ўвядзіце **Ваша імя ў гэтай групе** (спачатку гэта імя вашага ўліковага запісу), потым націсніце **Далучыцца**. Калі вас ужо дадалі па імені, абярыце гэтае імя, і вы зоймеце гэтае месца разам з гісторыяй. Калі хтосьці зоймет імя крыху раней за вас, спіс абновіцца, і вы абярэце зноў. Калі вы ўжо ў групе, праграма прапануе **Адкрыць групу**. Да групы ў архіве, даступнай толькі для чытання, далучыцца нельга. Калі вы ўжо выбралі сваё імя ў браўзеры, націсніце **Адкрыць у праграме** на старонцы для гасцей, каб захаваць гісторыю.
 
 ## Паведамленні
 
@@ -45824,7 +45824,7 @@ Verwijdert de eigenaar zijn eigen account, dan worden zijn groepen ook verwijder
 
 ## Deelnemen aan een groep in de app
 
-Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link**, plak hem in **Groepslink**, vul **Jouw naam in deze groep** in en tik op **Deelnemen aan groep**. Heb je je naam al in de browser gekozen, neem dan niet nog eens deel: open de link in de browser en tik op **Openen in de app**, zodat je je geschiedenis houdt.
+Stuurt een vriend je een groepslink en heb je de app, tik dan op het scherm Groepen op **Deelnemen met link** en plak hem in **Groepslink**. De app toont de naam van de groep en de namen die nog niemand heeft gekozen. Tik op je eigen naam, of op **Ik sta niet in de lijst** en vul **Jouw naam in deze groep** in (eerst is dat de naam van je account), en tik op **Deelnemen aan groep**. Is je naam al eerder toegevoegd, kies dan die naam, dan neem je die plek met de bijbehorende geschiedenis over. Kiest iemand de naam vlak voor jou, dan ververst de lijst en kies je opnieuw. Zit je al in de groep, dan biedt de app **Groep openen** aan. Een gearchiveerde groep is alleen-lezen, dus daaraan kun je niet deelnemen. Heb je je naam al in de browser gekozen, gebruik dan **Openen in de app** op de gastpagina, zodat je je geschiedenis houdt.
 
 ## Meldingen
 

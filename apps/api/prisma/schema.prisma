@@ -2393,25 +2393,38 @@ model ExpenseGroup {
   @@map("expense_groups")
 }
 
+// How a member row came to be, for the admin group metrics (ABA-647). NULL on rows created before
+// this column existed: there is deliberately NO backfill, so old groups are simply not attributed.
+enum ExpenseGroupJoinVia {
+  owner // the group creator
+  placeholder // a name added in advance by a member and not claimed through a tracked path
+  app_link // an app user who joined through the link (new row, or claiming a placeholder)
+  guest // a browser guest (new row, or claiming a placeholder on the guest page)
+  guest_linked // a guest that later bound its row to an app account
+}
+
 model ExpenseGroupMember {
-  id             String        @id @default(uuid())
-  groupId        String        @map("group_id")
-  userId         String?       @map("user_id") // NULL = guest
-  displayName    String        @map("display_name") // 1..40, trimmed, shown to everyone with the link
-  nameKey        String        @map("name_key") // displayName.trim().toLowerCase()
+  id             String               @id @default(uuid())
+  groupId        String               @map("group_id")
+  userId         String?              @map("user_id") // NULL = guest
+  displayName    String               @map("display_name") // 1..40, trimmed, shown to everyone with the link
+  nameKey        String               @map("name_key") // displayName.trim().toLowerCase()
   // sha256(hex) of the guest's device secret (the cookie value). NULL = unclaimed placeholder
   // (added by name, nobody has taken it yet). An app-user member has no secret until it
   // also uses a browser. Never stored in plaintext.
-  claimTokenHash String?       @unique @map("claim_token_hash")
-  claimedAt      DateTime?     @map("claimed_at")
-  paymentMethod  SettleMethod? @map("payment_method") // set per group by the member themself
-  paymentHandle  String?       @map("payment_handle") // ≤ 64 chars
-  removedAt      DateTime?     @map("removed_at") // soft removal, only at zero balance
+  claimTokenHash String?              @unique @map("claim_token_hash")
+  claimedAt      DateTime?            @map("claimed_at")
+  paymentMethod  SettleMethod?        @map("payment_method") // set per group by the member themself
+  paymentHandle  String?              @map("payment_handle") // ≤ 64 chars
+  removedAt      DateTime?            @map("removed_at") // soft removal, only at zero balance
   // True when the OWNER removed this member (not a self-leave). Such a member cannot rejoin via
   // the link (403 GROUP_REMOVED); a self-removed one can, through the normal join checks.
-  removedByOwner Boolean       @default(false) @map("removed_by_owner")
-  createdAt      DateTime      @default(now()) @map("created_at")
-  updatedAt      DateTime      @updatedAt @map("updated_at")
+  removedByOwner Boolean              @default(false) @map("removed_by_owner")
+  // Provenance for metrics only (ABA-647). NULL = created before the column; never backfilled.
+  joinedVia      ExpenseGroupJoinVia? @map("joined_via")
+  linkedAt       DateTime?            @map("linked_at") // when a guest row was bound to an app account
+  createdAt      DateTime             @default(now()) @map("created_at")
+  updatedAt      DateTime             @updatedAt @map("updated_at")
 
   user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
   group           ExpenseGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)

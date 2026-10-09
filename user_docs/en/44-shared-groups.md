@@ -89,7 +89,7 @@ If the owner deletes their own account, their groups are deleted too.
 
 ## Joining a group in the app
 
-If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen, paste it into **Group link**, enter **Your name in this group** and tap **Join group**. If you already picked your name in the browser, don't join again: open the link in the browser and tap **Open in the app**, so you keep your history.
+If a friend sends you a group link and you have the app, tap **Join with link** on the Groups screen and paste it into **Group link**. The app shows the group's name and the names nobody has taken yet. Tap your own name, or **I'm not on the list** and type **Your name in this group** (it starts as your account name), then tap **Join group**. If you were already added by name, pick that name so you take over that person's place and history. If someone takes the name a moment before you, the list refreshes and you pick again. If you're already in the group, the app offers **Open group** instead. An archived group is read-only, so it can't be joined. If you already picked your name in a browser, use **Open in the app** on the guest page instead, so you keep your history.
 
 ## Notifications
 

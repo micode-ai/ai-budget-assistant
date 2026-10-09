@@ -18,6 +18,7 @@ import {
   LineChart,
   Megaphone,
   Activity,
+  UsersRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +39,7 @@ export const navItems = [
   { href: "/communications", label: "Communications", icon: MessageSquare },
   { href: "/app-versions", label: "App Versions", icon: Smartphone },
   { href: "/referrals", label: "Referrals", icon: UserPlus },
+  { href: "/groups", label: "Groups", icon: UsersRound },
   { href: "/audit-log", label: "Audit Log", icon: ScrollText },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

@@ -36,6 +36,7 @@ import type {
   GroupActivityItem,
   GroupActivityPage,
   GroupDetail,
+  GroupJoinPreview,
   GroupExpense,
   GroupMember,
   GroupSettlement,
@@ -325,6 +326,7 @@ export class GroupsService {
             displayName: n,
             nameKey: keys[i],
             userId: i === 0 ? userId : null,
+            joinedVia: i === 0 ? ('owner' as const) : ('placeholder' as const),
           })),
         },
       },
@@ -332,6 +334,40 @@ export class GroupsService {
     });
     const me = group.members.find((m: any) => m.userId === userId);
     return this.getDetail(group.id, me!.id);
+  }
+
+  /**
+   * Read-only look at a group by its link token, for the app's join screen. Same token semantics as
+   * the guest page: unknown, malformed, guest-access-off and deleted are one identical 404. An
+   * archived group is returned with its status so the app refuses to join. Only unclaimed live
+   * placeholders are listed, and only as id + display name.
+   */
+  async preview(userId: string, guestToken: string): Promise<GroupJoinPreview> {
+    if (typeof guestToken !== 'string' || guestToken.length < 8 || guestToken.length > 128) {
+      throw new NotFoundException('Group not found');
+    }
+    const group = await this.prisma.expenseGroup.findUnique({ where: { guestToken } });
+    if (!group || !group.guestAccess) throw new NotFoundException('Group not found');
+
+    const [mine, unclaimed] = await Promise.all([
+      this.prisma.expenseGroupMember.findFirst({ where: { groupId: group.id, userId } }),
+      this.prisma.expenseGroupMember.findMany({
+        where: { groupId: group.id, userId: null, claimTokenHash: null, removedAt: null },
+        select: { id: true, displayName: true },
+        orderBy: { createdAt: 'asc' },
+      }),
+    ]);
+    const live = mine && !mine.removedAt ? mine : null;
+    return {
+      groupName: group.name,
+      emoji: group.emoji ?? null,
+      currencyCode: group.currencyCode,
+      status: group.status,
+      alreadyMember: !!live,
+      // The group id is disclosed only to someone who already is a live member of it.
+      ...(live ? { myMemberId: live.id, groupId: group.id } : {}),
+      unclaimed: unclaimed.map((m: { id: string; displayName: string }) => ({ id: m.id, displayName: m.displayName })),
+    };
   }
 
   async join(userId: string, dto: JoinGroupDto): Promise<GroupDetail> {
@@ -360,7 +396,7 @@ export class GroupsService {
       // Take over an UNCLAIMED placeholder only. Atomic: the loser of a race matches zero rows.
       const res = await this.prisma.expenseGroupMember.updateMany({
         where: { id: dto.memberId, groupId: group.id, userId: null, claimTokenHash: null, removedAt: null },
-        data: { userId, claimedAt: new Date() },
+        data: { userId, claimedAt: new Date(), joinedVia: 'app_link' },
       });
       if (res.count === 0) {
         throw new ConflictException({ code: 'MEMBER_TAKEN', message: 'That name was just taken' });
@@ -370,7 +406,7 @@ export class GroupsService {
     if (!dto.displayName) {
       throw new BadRequestException('memberId or displayName is required');
     }
-    const member = await this.createMember(group.id, dto.displayName, userId);
+    const member = await this.createMember(group.id, dto.displayName, userId, undefined, 'app_link');
     return this.getDetail(group.id, member.id);
   }
 
@@ -392,7 +428,13 @@ export class GroupsService {
   }
 
   /** `claimTokenHash` is set only by the guest surface, which mints the member already claimed. */
-  async createMember(groupId: string, displayName: string, userId: string | null, claimTokenHash?: string) {
+  async createMember(
+    groupId: string,
+    displayName: string,
+    userId: string | null,
+    claimTokenHash?: string,
+    joinedVia: 'placeholder' | 'app_link' | 'guest' = claimTokenHash ? 'guest' : userId ? 'app_link' : 'placeholder',
+  ) {
     try {
       return await this.withMemberSlot<any>(groupId, (tx) =>
         tx.expenseGroupMember.create({
@@ -401,6 +443,7 @@ export class GroupsService {
             displayName,
             nameKey: nameKeyOf(displayName),
             userId,
+            joinedVia,
             ...(claimTokenHash ? { claimTokenHash, claimedAt: new Date() } : {}),
           },
         }),
@@ -793,7 +836,7 @@ export class GroupsService {
         where: { id: member.id, groupId: payload.groupId, userId: null },
         // The browser cookie must stop acting as this (now app-linked) member: its authority was the
         // claim hash, so clear it. The app session is the identity from here on.
-        data: { userId, claimedAt: null, claimTokenHash: null },
+        data: { userId, claimedAt: null, claimTokenHash: null, joinedVia: 'guest_linked', linkedAt: new Date() },
       });
       if (res.count === 0) throw gone();
     } catch (e) {

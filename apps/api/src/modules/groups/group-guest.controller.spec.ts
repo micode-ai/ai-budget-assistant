@@ -1074,7 +1074,7 @@ describe('GroupsService.linkGuest', () => {
     await service.linkGuest('u-me', 'f'.repeat(32));
     expect(prisma.expenseGroupMember.updateMany).toHaveBeenCalledWith({
       where: { id: B, groupId: G, userId: null },
-      data: { userId: 'u-me', claimedAt: null, claimTokenHash: null },
+      data: { userId: 'u-me', claimedAt: null, claimTokenHash: null, joinedVia: 'guest_linked', linkedAt: expect.any(Date) },
     });
   });
 });
