@@ -1,4 +1,4 @@
-import type { Expense } from '@budget/shared-types';
+import type { Expense, Income } from '@budget/shared-types';
 
 /**
  * Drop rows that are bookkeeping of a receivable rather than consumption.
@@ -27,4 +27,16 @@ import type { Expense } from '@budget/shared-types';
  */
 export function filterConsumption(expenses: Expense[]): Expense[] {
   return expenses.filter((e) => !e.isSplitReceivable);
+}
+
+/**
+ * The income side of the same rule (shared-groups phase 2, task H1). An income
+ * carries `isSplitReceivable` when another row already accounts for its money,
+ * and it is then kept out of every income total, exactly as the expense rows
+ * are. Nothing sets the income flag yet, so every total is unchanged; this is
+ * applied at each place an income total sits beside a `filterConsumption`-ed
+ * expense total. Never filter on `isDebt` instead.
+ */
+export function filterIncomeConsumption(incomes: Income[]): Income[] {
+  return incomes.filter((i) => !i.isSplitReceivable);
 }

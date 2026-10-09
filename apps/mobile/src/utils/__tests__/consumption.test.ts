@@ -1,4 +1,4 @@
-import { filterConsumption } from '../consumption';
+import { filterConsumption, filterIncomeConsumption } from '../consumption';
 
 const expense = (over: Partial<any> = {}): any => ({
   id: 'e1',
@@ -37,5 +37,37 @@ describe('filterConsumption', () => {
     ];
     const total = filterConsumption(rows).reduce((sum, e) => sum + e.amount, 0);
     expect(total).toBe(200);
+  });
+});
+
+describe('filterIncomeConsumption (shared-groups phase 2, task H1)', () => {
+  const income = (over: Partial<any> = {}): any => ({
+    id: 'i1',
+    amount: 1000,
+    isDeleted: false,
+    ...over,
+  });
+
+  it('is behaviour-neutral while nothing sets the flag: the total is identical', () => {
+    const rows = [
+      income({ id: 'salary', amount: 5000 }),
+      income({ id: 'bonus', amount: 300, isSplitReceivable: false }),
+      income({ id: 'old', amount: 20, isSplitReceivable: undefined }),
+      income({ id: 'nulled', amount: 7, isSplitReceivable: null as any }),
+    ];
+    const raw = rows.reduce((sum, i) => sum + i.amount, 0);
+    const filtered = filterIncomeConsumption(rows).reduce((sum, i) => sum + i.amount, 0);
+    expect(filtered).toBe(raw);
+    expect(filterIncomeConsumption(rows)).toHaveLength(rows.length);
+  });
+
+  it('drops a flagged income from the total', () => {
+    const rows = [income({ id: 'salary', amount: 5000 }), income({ id: 'settle', amount: 150, isSplitReceivable: true })];
+    expect(filterIncomeConsumption(rows).reduce((sum, i) => sum + i.amount, 0)).toBe(5000);
+  });
+
+  it('KEEPS a borrowed-money debt income — never excluded by isDebt', () => {
+    expect(filterIncomeConsumption([income({ isDebt: true })])).toHaveLength(1);
+    expect(filterIncomeConsumption([income({ isDebtRepayment: true })])).toHaveLength(1);
   });
 });

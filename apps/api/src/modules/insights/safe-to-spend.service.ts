@@ -109,7 +109,7 @@ export class SafeToSpendService {
     since.setDate(since.getDate() - INCOME_LOOKBACK_DAYS);
 
     const incomes = await this.prisma.income.findMany({
-      where: { accountId, isDeleted: false, date: { gte: since } },
+      where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: since } },
       select: { amount: true, currencyCode: true, description: true, date: true },
       orderBy: { date: 'asc' },
     });

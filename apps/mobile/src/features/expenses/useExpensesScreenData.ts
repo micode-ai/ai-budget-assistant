@@ -12,7 +12,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore } from '@/stores/exchangeRateStore';
 import { sumConverted } from '@/utils/total';
-import { filterConsumption } from '@/utils/consumption';
+import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { Expense, Income } from '@budget/shared-types';
 import { useTagStore } from '@/stores/tagStore';
 import { useExpenseMultiSelect } from '@/hooks/useExpenseMultiSelect';
@@ -75,7 +75,7 @@ export function useExpensesScreenData() {
   // their contribution to this header total is wrong (the money already left
   // as the original receipt expense). See `src/utils/consumption.ts`.
   const filteredTotal = sumConverted(
-    activeTab === 'expenses' ? filterConsumption(expenses) : incomes,
+    activeTab === 'expenses' ? filterConsumption(expenses) : filterIncomeConsumption(incomes),
     baseCurrency,
     rates,
   );

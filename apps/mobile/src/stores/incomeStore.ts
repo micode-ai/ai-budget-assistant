@@ -21,6 +21,7 @@ import { useCategoryStore } from './categoryStore';
 import { useGamificationStore } from './gamificationStore';
 import { UNCATEGORIZED_CATEGORY_FILTER, countsAsUncategorized } from './categoryFilter';
 import { createAccountScopedInflight } from './accountScopedInflight';
+import { filterIncomeConsumption } from '@/utils/consumption';
 
 interface IncomeFilters {
   dateRange: 'week' | 'month' | 'year' | 'all' | 'custom';
@@ -80,13 +81,16 @@ interface IncomeState {
   reset: () => void;
 }
 
-function computeIncomeTotalsByCurrency(incomes: Income[]): Record<string, number> {
+export function computeIncomeTotalsByCurrency(incomes: Income[]): Record<string, number> {
   const now = new Date();
   const startOfMonth = getStartOfMonth(now);
   const endOfMonth = getEndOfMonth(now);
 
   const totals: Record<string, number> = {};
-  incomes
+  // filterIncomeConsumption drops split-receivable incomes (shared-groups
+  // phase 2, task H1) — the income mirror of `computeExpenseTotalsByCurrency`.
+  // This feeds `convertedIncomeTotal` (home "Total income" and savings rate).
+  filterIncomeConsumption(incomes)
     .filter((i) => !i.isDeleted)
     .filter((i) => {
       const incomeDate = new Date(i.date);
@@ -216,6 +220,7 @@ export const useIncomeStore = create<IncomeState>()(
               source: (decrypted.source ?? 'manual') as Income['source'],
               isDebt: decrypted.isDebt || false,
               isDebtRepayment: decrypted.isDebtRepayment || false,
+              isSplitReceivable: decrypted.isSplitReceivable || false,
               debtContactName: decrypted.debtContactName ?? undefined,
               debtDueDate: decrypted.debtDueDate ? new Date(decrypted.debtDueDate) : undefined,
               relatedDebtExpenseId: decrypted.relatedDebtExpenseId ?? undefined,

@@ -21,7 +21,7 @@ import {
   NET_PROFIT_WIDEST_RANGE_MONTHS,
   type NetProfitRange,
 } from '@/features/dashboard/netProfitSeries';
-import { filterConsumption } from '@/utils/consumption';
+import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { SafeToSpendResponse } from '@budget/shared-types';
 
 /** 3M/6M/12M window for the trend chart — desktop's range control (see
@@ -118,7 +118,9 @@ export function NetProfitWidget({
   // the original receipt already carries the outflow. Net profit is a cash-flow
   // surface, so it excludes them too (see docs/superpowers/specs/2026-07-24-receipt-split-guest-link-design.md).
   const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
-  const { incomes } = useIncomeStore();
+  const { incomes: rawIncomes } = useIncomeStore();
+  // Split-receivable incomes are kept out of income totals too (task H1).
+  const incomes = useMemo(() => filterIncomeConsumption(rawIncomes), [rawIncomes]);
   const { rates } = useExchangeRateStore();
   const displayCurrency = user?.currencyCode || useExchangeRateStore.getState().baseCurrency || 'USD';
   // eslint-disable-next-line react-hooks/exhaustive-deps

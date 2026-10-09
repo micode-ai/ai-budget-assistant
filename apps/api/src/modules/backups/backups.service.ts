@@ -539,6 +539,7 @@ export class BackupsService {
           source: inc.source || 'manual',
           externalRef: await this.freeExternalRef(tx, 'income', accountId, inc.externalRef, inc.clientId),
           isDebt: inc.isDebt || false, isDebtRepayment: inc.isDebtRepayment || false,
+          isSplitReceivable: inc.isSplitReceivable || false,
           debtContactName: inc.debtContactName, debtDueDate: inc.debtDueDate ? new Date(inc.debtDueDate) : null,
           encryptedPayload: inc.encryptedPayload, encryptionKeyVersion: inc.encryptionKeyVersion,
         };

@@ -25,6 +25,7 @@ interface IncomeRow {
   is_deleted: number;
   sync_status: string;
   sync_version: number;
+  is_split_receivable: number | null;
 }
 
 function rowToIncome(row: IncomeRow): Income {
@@ -52,6 +53,7 @@ function rowToIncome(row: IncomeRow): Income {
     isDeleted: row.is_deleted === 1,
     syncStatus: row.sync_status as SyncStatus,
     syncVersion: row.sync_version,
+    isSplitReceivable: row.is_split_receivable === 1,
   };
 }
 
@@ -80,6 +82,7 @@ function incomeToParams(income: Income): (string | number | null)[] {
     income.isDeleted ? 1 : 0,
     income.syncStatus,
     income.syncVersion,
+    income.isSplitReceivable ? 1 : 0,
   ];
 }
 
@@ -105,8 +108,8 @@ export async function insertIncome(income: Income): Promise<void> {
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_expense_id,
       created_by_user_name,
       created_at, updated_at,
-      is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      is_deleted, sync_status, sync_version, is_split_receivable
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     incomeToParams(income),
   );
 }
@@ -119,8 +122,8 @@ export async function upsertIncome(income: Income): Promise<void> {
       is_debt, is_debt_repayment, debt_contact_name, debt_due_date, related_debt_expense_id,
       created_by_user_name,
       created_at, updated_at,
-      is_deleted, sync_status, sync_version
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      is_deleted, sync_status, sync_version, is_split_receivable
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT(id) DO UPDATE SET
       local_id = excluded.local_id,
       server_id = excluded.server_id,
@@ -143,7 +146,8 @@ export async function upsertIncome(income: Income): Promise<void> {
       updated_at = excluded.updated_at,
       is_deleted = excluded.is_deleted,
       sync_status = excluded.sync_status,
-      sync_version = excluded.sync_version`,
+      sync_version = excluded.sync_version,
+      is_split_receivable = excluded.is_split_receivable`,
     incomeToParams(income),
   );
 }
@@ -200,6 +204,10 @@ export async function updateIncomeInDb(
   if (updates.relatedDebtExpenseId !== undefined) {
     setClauses.push('related_debt_expense_id = ?');
     params.push(updates.relatedDebtExpenseId ?? null);
+  }
+  if (updates.isSplitReceivable !== undefined) {
+    setClauses.push('is_split_receivable = ?');
+    params.push(updates.isSplitReceivable ? 1 : 0);
   }
 
   setClauses.push('updated_at = ?');

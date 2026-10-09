@@ -224,6 +224,15 @@ describe('summarise', () => {
     expect(out.count).toBe(1);
   });
 
+  it('earns the same total with the income flag false or absent, and drops a flagged income (task H1)', () => {
+    const plain = summarise([inc('s', '2026-09-02', 12400), inc('b', '2026-09-02', 100, { isSplitReceivable: false })]);
+    expect(plain.earnedByCurrency.get('PLN')).toBe(12500);
+
+    const flagged = summarise([inc('s', '2026-09-02', 12400), inc('t', '2026-09-02', 150, { isSplitReceivable: true })]);
+    expect(flagged.earnedByCurrency.get('PLN')).toBe(12400);
+    expect(flagged.count).toBe(2);
+  });
+
   it('still counts a plain debt as spend — the wrong field would rewrite every debt-tracker`s totals', () => {
     const out = summarise([exp('d', '2026-09-02', 500, { isDebt: true })]);
 

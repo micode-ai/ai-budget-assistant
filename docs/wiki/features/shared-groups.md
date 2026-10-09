@@ -115,6 +115,27 @@ money and no `isSplitReceivable`/`isDebt` filter is involved. "Your share this m
 screen is display-only. The cost: when the user's own card payment for a group expense is also
 captured (notification, import, receipt), their budget shows the full outflow, not their share.
 
+**`Income.isSplitReceivable` exists, and nothing sets it yet (ABA-659, phase-2 task H1).** The
+budget mirror (H2) will link a captured incoming settlement transfer to the group and exclude it,
+so the income side needed the marker the expense side already had. It is a server-owned column
+(`NOT NULL DEFAULT false`, migration `20261018000000_income_split_receivable`) that rides the
+existing income pull (never pushed), with a mobile SQLite column and `rowToIncome` mapping; the
+same `EXCLUDE_SPLIT_RECEIVABLE` object is spread into every income total — analytics summary,
+aggregated summary and project totals, wallet summary, all-accounts summaries, daily and monthly
+balance history, safe-to-spend's income inference, both Wrapped decks, the spending story, real
+salary, the monthly digest, the weekly and monthly report e-mails, gamification's net-positive
+month and the goal planner's average income — and on the device `filterIncomeConsumption()` into
+`computeIncomeTotalsByCurrency`, the wallet totals (SQL and the web store path), the analytics,
+calendar, scenario, net-profit and safe-to-spend hooks, the expenses-tab header total, the desktop
+ledger's earned total and `localAnalytics`. Behaviour-neutral on its own: every row is `false`, and
+`income-split-receivable.spec.ts` runs each server total with and without a flagged income and
+requires a deep-equal result. Deliberately NOT filtered: income listings and the report export
+(rows the user recorded are shown), row counts (admin metrics, the `first_income` achievement,
+category usage), debt repayment lookups and import dedup. Expense-side gaps the H2 linker will
+meet: the digest, scheduled report e-mails, gamification, story, goal planner and the report export
+sum expenses WITHOUT `EXCLUDE_SPLIT_RECEIVABLE` today, so a linked cash-leg expense would still
+count there (pre-existing for receipt splits; left alone here because fixing it changes figures).
+
 **The guest surface (`GroupGuestController`, `@Controller('g')`).** A sibling of
 `GuestController` (`s/`) and `ShoppingListGuestController` (`sl/`), excluded from `/api/v1` by the
 `'g/(.*)'` wildcard in `apps/api/src/global-prefix-exclusions.ts`. Server-rendered HTML with no
@@ -872,8 +893,9 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   provider's at entry time (no history), not at the expense date; and the guest's post-add flash names the
   group currency but not the two figures (the redirect carries only a flash code), which the history row
   then shows.
-- **"Count my share in my budget"** — linking a group expense to the user's own Expense with
-  receipt-split accounting — is phase 2.
+- **"Count my share in my budget"** — the consumption mirror (phase-2 tasks H2/H3) is not built.
+  Only H1 has landed: `Income.isSplitReceivable` and its exclusion from income totals (ABA-659),
+  which nothing sets yet. The migration has not run against a real Postgres here.
 - **Desktop, unverified in a browser:** whether the group expense dialog's "Take a photo" path
   degrades to a file picker on a desktop browser, and whether the Stack header duplicates the in-page
   title on `/groups` and `/groups/:id`.
@@ -952,6 +974,9 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   Telegram, WhatsApp and Slack: `group <amount> [currency] [description]`, a picker of up to 10 groups, a
   confirm card, `GroupBotService` over `GroupsService.createExpense`, membership re-resolved at confirm, the
   account viewer role deliberately not applied, drafts in `CacheService`, the message id as the request id.
+- [ABA-659](https://github.com/micode-ai/ai-budget-assistant/issues/689) — phase-2 task H1:
+  `Income.isSplitReceivable` (server, SQLite, pull mapping, backup restore) and its exclusion from every
+  income total on the server and the device, behaviour-neutral until the budget mirror sets it.
 - [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
   pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
   member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its

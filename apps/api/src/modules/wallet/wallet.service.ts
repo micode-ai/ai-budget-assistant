@@ -84,7 +84,9 @@ export class WalletService {
     // Get income totals grouped by currency
     const incomeTotals = await this.prisma.income.groupBy({
       by: ['currencyCode'],
-      where: { accountId, isDeleted: false },
+      // isSplitReceivable: false — an income whose money another row already
+      // accounts for (same rule as the expense query below).
+      where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
       _sum: { amount: true },
     });
 
@@ -243,7 +245,7 @@ export class WalletService {
       }),
       this.prisma.income.groupBy({
         by: ['accountId', 'currencyCode'],
-        where: { accountId: { in: accountIds }, isDeleted: false },
+        where: { accountId: { in: accountIds }, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE },
         _sum: { amount: true },
       }),
       // isSplitReceivable: false — see common/utils/expense-filters.ts.
@@ -396,7 +398,7 @@ export class WalletService {
       await Promise.all([
         this.getSummary(accountId),
         this.prisma.income.findMany({
-          where: { accountId, isDeleted: false, date: { gte: startDate, lte: today } },
+          where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: startDate, lte: today } },
           select: { date: true, amount: true, currencyCode: true },
         }),
         this.prisma.expense.findMany({
@@ -502,7 +504,7 @@ export class WalletService {
 
     const [incomes, expenses, exchanges, transfersOut, transfersIn] = await Promise.all([
       this.prisma.income.findMany({
-        where: { accountId, isDeleted: false, date: { gte: start, lte: end } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: start, lte: end } },
         select: { date: true, amount: true, currencyCode: true },
       }),
       this.prisma.expense.findMany({

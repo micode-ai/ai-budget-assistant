@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, Logger } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 
 @Injectable()
 export class DigestService {
@@ -42,7 +43,7 @@ export class DigestService {
         _sum: { amount: true },
       }),
       this.prisma.income.aggregate({
-        where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd }, currencyCode },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: periodStart, lte: periodEnd }, currencyCode },
         _sum: { amount: true },
       }),
     ]);
@@ -83,7 +84,7 @@ export class DigestService {
         _sum: { amount: true },
       }),
       this.prisma.income.aggregate({
-        where: { accountId, isDeleted: false, date: { gte: prevStart, lte: prevEnd }, currencyCode },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: prevStart, lte: prevEnd }, currencyCode },
         _sum: { amount: true },
       }),
     ]);

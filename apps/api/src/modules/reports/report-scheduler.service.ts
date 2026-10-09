@@ -3,6 +3,7 @@ import { Cron } from '@nestjs/schedule';
 import { PrismaService } from '../../database/prisma.service';
 import { MailService } from '../mail/mail.service';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 
 @Injectable()
 export class ReportSchedulerService {
@@ -139,7 +140,7 @@ export class ReportSchedulerService {
           }),
           this.prisma.income.groupBy({
             by: ['currencyCode'],
-            where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+            where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: weekStart, lte: now } },
             _sum: { amount: true },
           }),
         ]);
@@ -256,7 +257,7 @@ export class ReportSchedulerService {
             }),
             this.prisma.income.groupBy({
               by: ['currencyCode'],
-              where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
+              where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: prevMonth, lte: prevMonthEnd } },
               _sum: { amount: true },
             }),
             this.prisma.expense.groupBy({
@@ -266,7 +267,7 @@ export class ReportSchedulerService {
             }),
             this.prisma.income.groupBy({
               by: ['currencyCode'],
-              where: { accountId: account.id, isDeleted: false, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
+              where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
               _sum: { amount: true },
             }),
           ]);

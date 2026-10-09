@@ -226,6 +226,7 @@ export class AnalyticsService {
         accountId,
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
       },
       _sum: { amount: true },
     });
@@ -462,6 +463,7 @@ export class AnalyticsService {
         accountId: { in: accountIds },
         date: { gte: startDate, lte: endDate },
         isDeleted: false,
+        ...EXCLUDE_SPLIT_RECEIVABLE,
       },
       _sum: { amount: true },
     });
@@ -1038,7 +1040,7 @@ export class AnalyticsService {
           include: { expense: { select: { amount: true, currencyCode: true } } },
         },
         projectIncomes: {
-          where: { isDeleted: false },
+          where: { isDeleted: false, income: { ...EXCLUDE_SPLIT_RECEIVABLE } },
           include: { income: { select: { amount: true } } },
         },
       },

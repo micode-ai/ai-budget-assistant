@@ -1004,6 +1004,10 @@ model Income {
   debtDueDate          DateTime? @map("debt_due_date") @db.Date
   relatedDebtExpenseId String?   @map("related_debt_expense_id")
   isDeleted            Boolean   @default(false) @map("is_deleted")
+  /// True when the money is accounted for by another row, so the income is
+  /// kept out of every income total (the Expense flag's mirror, shared-groups
+  /// phase 2 task H1). Nothing sets it yet. Never exclude by `isDebt` instead.
+  isSplitReceivable    Boolean   @default(false) @map("is_split_receivable")
   syncVersion          Int       @default(0) @map("sync_version")
   encryptedPayload     String?   @map("encrypted_payload")
   encryptionKeyVersion Int?      @map("encryption_key_version")

@@ -67,6 +67,13 @@ total (`analytics.service.ts`, `budget-alert.service.ts`, `safe-to-spend.service
 `wallet.service.ts`); mobile mirrors it with `filterConsumption()` (absent means false — the column
 is nullable client-side), consumed by seven client surfaces.
 
+**The flag exists on incomes too (ABA-659).** `Income.isSplitReceivable` has the same meaning —
+the money is accounted for by another row — and the same `EXCLUDE_SPLIT_RECEIVABLE` object is
+spread into every income total (mobile: `filterIncomeConsumption()`). Receipt splits never set it:
+the guests' repayment income is the real cash that nets the split back to the author's own share,
+so it must stay counted. Its first writer will be the shared-groups budget mirror
+(`features/shared-groups.md`).
+
 **Unknown, expired and cancelled tokens must be indistinguishable.** They render byte-identical
 responses — same status, body and length — so a probing guest cannot tell "never existed" from
 "used to exist". Enforced by a deliberately two-query `findUsableParticipant`; the split matters

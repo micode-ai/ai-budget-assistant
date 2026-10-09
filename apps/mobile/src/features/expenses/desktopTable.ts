@@ -158,7 +158,11 @@ export function summarise(rows: LedgerRow[]): {
   for (const r of rows) {
     const cur = rowCurrency(r);
     if (r.kind === 'income') {
-      earnedByCurrency.set(cur, (earnedByCurrency.get(cur) ?? 0) + r.income.amount);
+      // A split-receivable income (task H1) is still shown, but its money is
+      // accounted for by another row, so it never counts as earned.
+      if (!r.income.isSplitReceivable) {
+        earnedByCurrency.set(cur, (earnedByCurrency.get(cur) ?? 0) + r.income.amount);
+      }
     } else if (isSpend(r)) {
       spentByCurrency.set(cur, (spentByCurrency.get(cur) ?? 0) + r.expense.amount);
     }

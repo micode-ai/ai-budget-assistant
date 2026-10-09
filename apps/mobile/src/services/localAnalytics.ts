@@ -46,6 +46,7 @@ export async function getLocalAnalyticsSummary(
   const incomeTotal = await executeSql<TotalRow>(
     `SELECT COALESCE(SUM(amount), 0) as total FROM incomes
      WHERE account_id = ? AND is_deleted = 0
+     AND (is_split_receivable IS NULL OR is_split_receivable = 0)
      AND date >= ? AND date <= ?`,
     [accountId, startDate, endDate],
   );
@@ -191,7 +192,7 @@ export async function getLocalMonthlyTotals(
   const incomeRows = await executeSql<{ month: string; total: number }>(
     `SELECT strftime('%Y-%m', date) as month, SUM(amount) as total
      FROM incomes
-     WHERE account_id = ? AND is_deleted = 0 AND date >= ?
+     WHERE account_id = ? AND is_deleted = 0 AND (is_split_receivable IS NULL OR is_split_receivable = 0) AND date >= ?
      GROUP BY strftime('%Y-%m', date)
      ORDER BY month ASC`,
     [accountId, startStr],

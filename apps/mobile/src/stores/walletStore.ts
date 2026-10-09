@@ -13,7 +13,7 @@ import {
 import { loadAllExchanges } from '@/db/currencyExchangeRepository';
 import { loadTransfersByAccount } from '@/db/accountTransferRepository';
 import { api } from '@/services/api';
-import { filterConsumption } from '@/utils/consumption';
+import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import { useAccountStore } from './accountStore';
 import { useExpenseStore } from './expenseStore';
 import { useIncomeStore } from './incomeStore';
@@ -344,7 +344,8 @@ export const useWalletStore = create<WalletState>()(
         // native path's `getExpenseTotalsByCurrency` SQL guard. See
         // `src/utils/consumption.ts` for the full accounting rationale.
         const expenses = filterConsumption(useExpenseStore.getState().expenses).filter((e) => !e.isDeleted);
-        const incomes = useIncomeStore.getState().incomes.filter((i) => !i.isDeleted);
+        // Same rule for incomes (task H1) — mirrors `getIncomeTotalsByCurrency`.
+        const incomes = filterIncomeConsumption(useIncomeStore.getState().incomes).filter((i) => !i.isDeleted);
         const exchanges = get().exchanges.filter((x) => !x.isDeleted);
         const transfers = get().transfers.filter((t) => !t.isDeleted);
 

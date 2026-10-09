@@ -195,6 +195,7 @@ export class RealSalaryService {
       where: {
         userId,
         isDeleted: false,
+        isSplitReceivable: false,
         date: { gte: since },
         account: { isActive: true, encryptionTier: { lt: 2 }, members: { some: { userId } } },
       },

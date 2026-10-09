@@ -7,7 +7,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { useAuthStore } from '@/stores/authStore';
 import { getIntlLocale } from '@/i18n';
-import { filterConsumption } from '@/utils/consumption';
+import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import { categoryLabel } from '@/utils/entityLabel';
 
 export interface CalendarDay {
@@ -63,7 +63,9 @@ export function useCalendarData(
   // by the original receipt expense — exclude them so the calendar's totals,
   // category breakdowns, and net profit don't double-count a split bill.
   const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
-  const { incomes } = useIncomeStore();
+  const { incomes: rawIncomes } = useIncomeStore();
+  // Split-receivable incomes are kept out of income totals too (task H1).
+  const incomes = useMemo(() => filterIncomeConsumption(rawIncomes), [rawIncomes]);
   const { categories } = useCategoryStore();
   const { rates } = useExchangeRateStore();
   const { user } = useAuthStore();

@@ -23,7 +23,7 @@ jest.mock('expo-sqlite', () => ({
   }),
 }));
 
-import { getExpenseTotalsByCurrency } from '../walletRepository';
+import { getExpenseTotalsByCurrency, getIncomeTotalsByCurrency } from '../walletRepository';
 
 describe('getExpenseTotalsByCurrency', () => {
   beforeEach(() => {
@@ -47,5 +47,27 @@ describe('getExpenseTotalsByCurrency', () => {
     expect(capturedSql).toMatch(
       /is_split_receivable\s+IS\s+NULL\s+OR\s+is_split_receivable\s*=\s*0/i,
     );
+  });
+});
+
+describe('getIncomeTotalsByCurrency (shared-groups phase 2, task H1)', () => {
+  beforeEach(() => {
+    capturedSql = undefined;
+    capturedParams = [];
+  });
+
+  it('excludes split-receivable incomes with the same absent-means-false guard as expenses', async () => {
+    await getIncomeTotalsByCurrency('account-1');
+
+    expect(capturedParams).toEqual(['account-1']);
+    expect(capturedSql).toMatch(/FROM incomes/);
+    expect(capturedSql).toMatch(/is_deleted\s*=\s*0/);
+    // `IS NULL OR = 0`: every pre-existing row (column absent or 0) still
+    // counts, so the total is unchanged until something sets the flag.
+    expect(capturedSql).toMatch(
+      /is_split_receivable\s+IS\s+NULL\s+OR\s+is_split_receivable\s*=\s*0/i,
+    );
+    // Never the debt flag.
+    expect(capturedSql).not.toMatch(/is_debt/);
   });
 });

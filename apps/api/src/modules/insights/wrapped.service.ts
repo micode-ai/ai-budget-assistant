@@ -119,7 +119,7 @@ export class WrappedService {
         },
       }),
       this.prisma.income.findMany({
-        where: { accountId, isDeleted: false, date: { gte: rangeStart, lte: rangeEnd } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: rangeStart, lte: rangeEnd } },
         select: { amount: true, currencyCode: true, date: true },
       }),
       getRatesSafe(this.exchangeRateService, baseCurrency),
@@ -219,7 +219,7 @@ export class WrappedService {
         },
       }),
       this.prisma.income.findMany({
-        where: { accountId, isDeleted: false, date: { gte: rangeStart, lte: rangeEnd } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: rangeStart, lte: rangeEnd } },
         select: { amount: true, currencyCode: true, date: true },
       }),
       getRatesSafe(this.exchangeRateService, baseCurrency),

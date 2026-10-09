@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { StreakService } from './streak.service';
 import { ACHIEVEMENT_DEFINITIONS, getLevel } from './achievement-definitions';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 
 @Injectable()
 export class GamificationService {
@@ -100,7 +101,7 @@ export class GamificationService {
         _sum: { amount: true },
       }),
       this.prisma.income.aggregate({
-        where: { accountId, userId, isDeleted: false, date: { gte: startOfMonth, lte: endOfMonth } },
+        where: { accountId, userId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: startOfMonth, lte: endOfMonth } },
         _sum: { amount: true },
       }),
     ]);

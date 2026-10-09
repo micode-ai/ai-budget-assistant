@@ -26,6 +26,15 @@
  * budget-alert.service.ts, wallet.service.ts. Spread this into every Prisma
  * `where` clause that sums/aggregates Expense rows for a user-facing total —
  * do not add a second copy of this object literal.
+ *
+ * Incomes too (shared-groups phase 2, task H1): `Income.isSplitReceivable`
+ * has the same meaning — the money is accounted for by another row — and the
+ * same object is spread into every Income total (analytics, wallet, safe-to-
+ * spend, wrapped, story, real salary, digest, scheduled reports, gamification,
+ * goal planner). Nothing sets the income flag yet, so those figures are
+ * unchanged until the budget mirror (H2) links an incoming settlement to it.
+ * A receipt split's repayment income is NOT flagged — it is the real cash
+ * that nets the split back to the author's share.
  */
 export const EXCLUDE_SPLIT_RECEIVABLE = { isSplitReceivable: false } as const;
 

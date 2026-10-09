@@ -85,6 +85,7 @@ jest.mock('@/stores/incomeStore', () => ({
 
 import { useWalletStore } from '../walletStore';
 import { useExpenseStore } from '@/stores/expenseStore';
+import { useIncomeStore } from '@/stores/incomeStore';
 import type { Expense, WalletBalance } from '@budget/shared-types';
 
 const getExpenseState = useExpenseStore.getState as jest.Mock;
@@ -165,5 +166,29 @@ describe('computeWalletSummaryLocal — split-receivable exclusion', () => {
       expect(pln?.totalExpenses).toBe(500);
       expect(pln?.currentBalance).toBe(500);
     });
+  });
+
+  it('income: an unflagged income moves the balance exactly as before, a flagged one does not (task H1)', async () => {
+    const getIncomeState = useIncomeStore.getState as jest.Mock;
+    getExpenseState.mockReturnValue({ expenses: [] });
+    const income = (over: Record<string, unknown>) => ({
+      id: 'i', accountId: 'acc-1', amount: 0, currencyCode: 'PLN', date: new Date('2026-07-20'),
+      isDeleted: false, ...over,
+    });
+
+    getIncomeState.mockReturnValue({
+      incomes: [income({ id: 'salary', amount: 300 }), income({ id: 'old', amount: 20, isSplitReceivable: false })],
+    });
+    let pln = (await useWalletStore.getState().computeWalletSummaryLocal()).find((s) => s.currencyCode === 'PLN');
+    expect(pln?.totalIncomes).toBe(320);
+    expect(pln?.currentBalance).toBe(1320);
+
+    getIncomeState.mockReturnValue({
+      incomes: [income({ id: 'salary', amount: 300 }), income({ id: 'settle', amount: 150, isSplitReceivable: true })],
+    });
+    pln = (await useWalletStore.getState().computeWalletSummaryLocal()).find((s) => s.currencyCode === 'PLN');
+    expect(pln?.totalIncomes).toBe(300);
+    expect(pln?.currentBalance).toBe(1300);
+    getIncomeState.mockReturnValue({ incomes: [] });
   });
 });

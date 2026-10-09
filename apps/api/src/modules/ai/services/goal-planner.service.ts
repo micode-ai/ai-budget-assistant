@@ -8,6 +8,7 @@ import { resolveAiModel } from './model-resolver';
 import { sanitizeForPrompt } from '../utils/sanitize';
 import { logCacheUsage } from '../utils/log-cache-usage';
 import { computeGoalPlan, mergeGoalPlan, GoalPlanNarrative } from './goal-plan.util';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../../common/utils/expense-filters';
 
 @Injectable()
 export class GoalPlannerService {
@@ -74,7 +75,7 @@ export class GoalPlannerService {
         include: { category: true },
       }),
       this.prisma.income.findMany({
-        where: { accountId, isDeleted: false, date: { gte: threeMonthsAgo } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: threeMonthsAgo } },
       }),
     ]);
 

@@ -261,7 +261,8 @@ export async function initializeDatabase(): Promise<void> {
         updated_at INTEGER NOT NULL,
         is_deleted INTEGER DEFAULT 0,
         sync_status TEXT NOT NULL DEFAULT 'pending',
-        sync_version INTEGER DEFAULT 0
+        sync_version INTEGER DEFAULT 0,
+        is_split_receivable INTEGER DEFAULT 0
       );
     `);
 
@@ -619,6 +620,10 @@ export async function initializeDatabase(): Promise<void> {
     // from client-computed spend totals since the money already left as the original
     // receipt. Never filter on is_debt instead (see src/utils/consumption.ts).
     try { expoDb.execSync(`ALTER TABLE expenses ADD COLUMN is_split_receivable INTEGER DEFAULT 0`); } catch {}
+    // The same flag on incomes (shared-groups phase 2, task H1): an income whose
+    // money another row accounts for, kept out of income totals. Server-owned,
+    // arrives on the pull; nothing sets it yet.
+    try { expoDb.execSync(`ALTER TABLE incomes ADD COLUMN is_split_receivable INTEGER DEFAULT 0`); } catch {}
 
     // Transaction attribution: cache the creator's display name on each row so
     // shared-account screens can show "Added by …" without an extra user lookup.

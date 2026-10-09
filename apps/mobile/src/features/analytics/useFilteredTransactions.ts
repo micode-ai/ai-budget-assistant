@@ -4,7 +4,7 @@ import { useIncomeStore } from '@/stores/incomeStore';
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { getStartOfMonth, getEndOfMonth, getStartOfWeek, getEndOfWeek } from '@budget/shared-utils';
-import { filterConsumption } from '@/utils/consumption';
+import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { TimeRange } from './useAnalytics';
 
 export function useFilteredTransactions(
@@ -15,7 +15,9 @@ export function useFilteredTransactions(
 ) {
   const { expenses: rawExpenses } = useExpenseStore();
   const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
-  const { incomes } = useIncomeStore();
+  const { incomes: rawIncomes } = useIncomeStore();
+  // Split-receivable incomes are kept out of income totals too (task H1).
+  const incomes = useMemo(() => filterIncomeConsumption(rawIncomes), [rawIncomes]);
   const { categories } = useCategoryStore();
   const { rates } = useExchangeRateStore();
 

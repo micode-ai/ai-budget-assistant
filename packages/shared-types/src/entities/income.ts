@@ -31,6 +31,16 @@ export interface Income {
   debtDueDate?: Date;
   relatedDebtExpenseId?: string;
   createdByUserName?: string | null;
+  /**
+   * True when the money is accounted for by another row, so the income is
+   * excluded from every income total — the mirror of `Expense.isSplitReceivable`
+   * (shared-groups phase 2, task H1). Server-owned: it arrives on the pull and
+   * is never pushed. Nothing sets it yet.
+   *
+   * Treat absent as false: filter with `!i.isSplitReceivable`, never with
+   * `i.isSplitReceivable === false`. Never exclude by `isDebt` instead.
+   */
+  isSplitReceivable?: boolean;
   /** E2EE encrypted payload field (present on API responses when encryption is enabled). */
   encryptedPayload?: string | null;
   /** E2EE key version field. */

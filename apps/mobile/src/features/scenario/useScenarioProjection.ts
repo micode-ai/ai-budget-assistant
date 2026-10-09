@@ -5,7 +5,7 @@ import { useCategoryStore } from '@/stores/categoryStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { getCategoryDisplayName } from '@/utils/categoryDisplayName';
 import { categoryLabel } from '@/utils/entityLabel';
-import { filterConsumption } from '@/utils/consumption';
+import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import { useTranslation } from 'react-i18next';
 
 export interface CategoryAdjustment {
@@ -103,7 +103,9 @@ export function useScenarioProjection(
 ): ScenarioProjection {
   const { t } = useTranslation();
   const { expenses: rawExpenses } = useExpenseStore();
-  const { incomes } = useIncomeStore();
+  const { incomes: rawIncomes } = useIncomeStore();
+  // Split-receivable incomes are kept out of income totals too (task H1).
+  const incomes = useMemo(() => filterIncomeConsumption(rawIncomes), [rawIncomes]);
   const { categories } = useCategoryStore();
   const { rates, baseCurrency } = useExchangeRateStore();
 

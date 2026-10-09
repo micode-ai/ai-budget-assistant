@@ -8,7 +8,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useAccountStore } from '@/stores/accountStore';
 import { useExchangeRateStore, convertAmount } from '@/stores/exchangeRateStore';
 import { computeSafeToSpend } from '@budget/shared-utils';
-import { filterConsumption } from '@/utils/consumption';
+import { filterConsumption, filterIncomeConsumption } from '@/utils/consumption';
 import type { SafeToSpendResponse } from '@budget/shared-types';
 
 export interface UseSafeToSpendResult {
@@ -33,7 +33,9 @@ export function useSafeToSpend(): UseSafeToSpendResult {
   // Split-receivable debt rows are a receivable already carried by the original
   // receipt, not upcoming obligations — exclude them from the offline formula.
   const expenses = useMemo(() => filterConsumption(rawExpenses), [rawExpenses]);
-  const { incomes } = useIncomeStore();
+  const { incomes: rawIncomes } = useIncomeStore();
+  // Split-receivable incomes are kept out of income totals too (task H1).
+  const incomes = useMemo(() => filterIncomeConsumption(rawIncomes), [rawIncomes]);
   const { walletSummary } = useWalletStore();
   const { goals } = useGoalStore();
   const { user } = useAuthStore();

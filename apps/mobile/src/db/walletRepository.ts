@@ -99,10 +99,13 @@ export async function getExpenseTotalsByCurrency(accountId: string): Promise<Rec
 }
 
 export async function getIncomeTotalsByCurrency(accountId: string): Promise<Record<string, number>> {
+  // Split-receivable incomes are excluded by the same `IS NULL OR = 0` rule as
+  // the expense query above (shared-groups phase 2, task H1). Nothing sets the
+  // income flag yet, so this total is unchanged until the budget mirror does.
   const rows = await executeSql<{ currency_code: string; total: number }>(
     `SELECT currency_code, SUM(amount) as total
      FROM incomes
-     WHERE account_id = ? AND is_deleted = 0
+     WHERE account_id = ? AND is_deleted = 0 AND (is_split_receivable IS NULL OR is_split_receivable = 0)
      GROUP BY currency_code`,
     [accountId],
   );

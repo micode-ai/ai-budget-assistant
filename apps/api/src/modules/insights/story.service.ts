@@ -11,6 +11,7 @@ import { logCacheUsage } from '../ai/utils/log-cache-usage';
 import { STORY_RESPONSE_SCHEMA, stripNulls } from './story-blocks.util';
 import { ExchangeRateService } from '../currency-exchange/exchange-rate.service';
 import { getRatesSafe, convertAmount } from '../../common/utils/fx';
+import { EXCLUDE_SPLIT_RECEIVABLE } from '../../common/utils/expense-filters';
 
 /** Mirrors SpendingStoryResponse in @budget/shared-types (not importable at runtime). */
 export interface SpendingStoryResult {
@@ -226,7 +227,7 @@ export class StoryService {
         include: { category: true },
       }),
       this.prisma.income.findMany({
-        where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: periodStart, lte: periodEnd } },
       }),
       this.prisma.budget.findMany({
         where: { accountId, isActive: true, isDeleted: false },
