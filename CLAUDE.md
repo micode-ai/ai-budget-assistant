@@ -287,6 +287,7 @@ See `.env.example`:
 - `INBOUND_MAIL_SHARED_SECRET` — shared secret (`openssl rand -hex 32`) the SMTP container sends as `X-Inbound-Secret` to `/api/v1/internal/inbound-mail/*`. Must be at least 32 characters: unset or shorter means the API rejects every internal call, and the container refuses to start without one.
 - `INBOUND_MAIL_INTERNAL_CIDR` — comma-separated CIDRs the internal inbound-mail routes accept as the TCP peer (`req.socket.remoteAddress`, never a header); default RFC1918 (`10.0.0.0/8,172.16.0.0/12,192.168.0.0/16`), invalid entries are skipped with a warning.
 - `INBOUND_MAIL_CONTAINER` — `true` makes `scripts/deploy.sh` build and start the `inbound-mail` compose profile and `scripts/infra-check.sh` watch it and its TLS cert; read by those scripts only, never by the API. Unset/false keeps port 25 closed. Flip it only after the activation steps in `docs/ops/inbound-mail.md`.
+- `GROUP_SHARE_BASE_URL` (ABA-649) — optional base for the expense-group guest/share/QR links (`GroupsService.buildGuestUrl` only); unset = `APP_PUBLIC_URL`, else `https://api.ai-budget.pl`. `https://ai-budget.pl` is the apex short link, an nginx **302 redirect (not a proxy)** to the API guest page — set it only after the nginx block is live and verified, never change `APP_PUBLIC_URL` for it. Runbook `docs/ops/group-short-link.md`; not yet activated.
 - `SENTRY_DSN` — optional. When set, `apps/api/src/instrument.ts` initializes `@sentry/node` (must be imported FIRST in `main.ts`, before any other module). When unset, Sentry is a no-op.
 
 ## Production

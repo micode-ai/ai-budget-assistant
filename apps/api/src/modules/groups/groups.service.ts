@@ -49,8 +49,11 @@ export const MAX_EXPENSES = 5000;
 export const MAX_SHARES = 20;
 export const PUSH_COALESCE_SECONDS = 600;
 
-// Mirrors receipt-split's GUEST_LINK_BASE: the apex form needs an nginx block that does not exist yet.
-const GUEST_LINK_BASE = process.env.APP_PUBLIC_URL || 'https://api.ai-budget.pl';
+// ABA-649: GROUP_SHARE_BASE_URL (the apex short link, an nginx 302 to the API guest page) applies to
+// the links WE HAND OUT only. Unset = today's base. APP_PUBLIC_URL and the guest controller's own
+// origin check are deliberately untouched. Read per call so a spec can toggle it.
+const guestLinkBase = () =>
+  (process.env.GROUP_SHARE_BASE_URL || process.env.APP_PUBLIC_URL || 'https://api.ai-budget.pl').replace(/\/+$/, '');
 
 const nameKeyOf = (name: string) => name.trim().toLowerCase();
 const isP2002 = (e: unknown) => (e as { code?: string })?.code === 'P2002';
@@ -75,7 +78,7 @@ export class GroupsService {
   // ---------------------------------------------------------------- helpers
 
   private buildGuestUrl(token: string): string {
-    return `${GUEST_LINK_BASE}/g/${token}`;
+    return `${guestLinkBase()}/g/${token}`;
   }
 
   private newToken(): string {

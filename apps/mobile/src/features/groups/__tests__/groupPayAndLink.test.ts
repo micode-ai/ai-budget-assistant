@@ -31,6 +31,9 @@ describe('buildGroupPayLink', () => {
 describe('extractGroupToken', () => {
   it('reads a /g/ link, a ?t= link and a bare token', () => {
     expect(extractGroupToken(`https://api.ai-budget.pl/g/${TOKEN}`)).toBe(TOKEN);
+    // ABA-649: the apex short link 302s to the API page, but a pasted short link must parse too.
+    expect(extractGroupToken(`https://ai-budget.pl/g/${TOKEN}`)).toBe(TOKEN);
+    expect(extractGroupToken(`ai-budget.pl/g/${TOKEN}/`)).toBe(TOKEN);
     expect(extractGroupToken(`https://api.ai-budget.pl/g/${TOKEN}?lang=pl`)).toBe(TOKEN);
     expect(extractGroupToken(`budget://groups/join?t=${TOKEN.toUpperCase()}`)).toBe(TOKEN);
     expect(extractGroupToken(`  ${TOKEN}  `)).toBe(TOKEN);

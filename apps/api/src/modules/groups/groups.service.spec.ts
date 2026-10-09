@@ -159,6 +159,35 @@ describe('GroupsService', () => {
     });
   });
 
+  describe('buildGuestUrl base (ABA-649)', () => {
+    const saved = { g: process.env.GROUP_SHARE_BASE_URL, a: process.env.APP_PUBLIC_URL };
+    afterEach(() => {
+      for (const [k, v] of [['GROUP_SHARE_BASE_URL', saved.g], ['APP_PUBLIC_URL', saved.a]] as const) {
+        if (v === undefined) delete process.env[k];
+        else process.env[k] = v;
+      }
+    });
+
+    it('defaults to the API host when neither variable is set', async () => {
+      delete process.env.GROUP_SHARE_BASE_URL;
+      delete process.env.APP_PUBLIC_URL;
+      expect((await service.getDetail(G, A)).guestUrl).toBe('https://api.ai-budget.pl/g/tok');
+    });
+
+    it('uses GROUP_SHARE_BASE_URL when set (trailing slash trimmed)', async () => {
+      process.env.GROUP_SHARE_BASE_URL = 'https://ai-budget.pl/';
+      expect((await service.getDetail(G, A)).guestUrl).toBe('https://ai-budget.pl/g/tok');
+    });
+
+    it('prefers GROUP_SHARE_BASE_URL over APP_PUBLIC_URL, and falls back to APP_PUBLIC_URL', async () => {
+      process.env.APP_PUBLIC_URL = 'https://example.test';
+      process.env.GROUP_SHARE_BASE_URL = 'https://ai-budget.pl';
+      expect((await service.getDetail(G, A)).guestUrl).toBe('https://ai-budget.pl/g/tok');
+      delete process.env.GROUP_SHARE_BASE_URL;
+      expect((await service.getDetail(G, A)).guestUrl).toBe('https://example.test/g/tok');
+    });
+  });
+
   describe('createExpense', () => {
     const dto = (over: any = {}) => ({
       clientRequestId: 'req-00000001',
