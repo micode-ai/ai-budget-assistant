@@ -5116,7 +5116,7 @@ The link opens a simple page in their browser — no install, no sign-up.
 From there they can:
 
 - **Add an expense** — fill in *What for?*, the amount, the date and who paid, choose **Equally** (tick who shares it) or **Exact amounts** (enter what each person owes), and tap **Add expense**. They can **Delete** an expense they added themselves.
-- **Settle up** — on a transfer that involves them, tap **Mark as paid** (when they paid) or **Mark as received** (when they got the money). A payment recorded by mistake can be cancelled with **Undo** by the person who recorded it or the person who received it.
+- **Settle up** — on a transfer that involves them, tap **Mark as paid** (when they paid) or **Mark as received** (when they got the money). A payment recorded by mistake can be cancelled with **Undo** by the person who recorded it or the person who received it. The amount is filled in with the suggested payment and can be changed to pay part of it.
 - **Your payment details** — choose a method and enter an account or handle, then **Save**. Only the person who pays them sees these details, on their own transfer line, with a ready Revolut or PayPal button where possible.
 - **Not me / forget this device** — signs this browser out of their name, for a shared phone or computer.
 - **Have a restore code?** — on a new device, enter the **Restore code** and tap **Restore**.
@@ -5138,6 +5138,8 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 ## Settling up
 
 On a line of **Who pays whom** that involves you, tap **Settle**. If the person you're paying added payment details, you'll see a button or instructions to pay them. Choose **How was it paid?**, then tap **I paid** — or **I received it** if you're the one being paid (useful when a friend paid you in cash and never came back to the link).
+
+You don't have to pay everything at once. The **Amount** opens at the suggested payment; change it to record part of it. It can't be more than what's owed between the two of you, so a payment only ever brings both balances closer to zero. To pay someone who isn't on your **Who pays whom** line, or to record money you got from someone, tap **Record a payment** on the group screen (on a computer, in the toolbar), pick the person, and enter the amount.
 
 A payment counts right away, for everyone. If one was recorded by mistake, open it in the activity list and tap **Void payment**: it stays in the history, marked as voided, and the balances go back. If someone else changed the group while you were settling, you'll see "Balances changed" — check the numbers and try again.
 
@@ -10265,7 +10267,7 @@ OCR иногда неверно читает цену, выдумывает ст
 Дальше он может:
 
 - **Добавить расход** — заполнить *На что?*, сумму, дату и плательщика, выбрать **Поровну** (отметить, кто участвует) или **Точные суммы** (вписать, сколько должен каждый) и нажать **Добавить расход**. Расход, который он добавил сам, можно убрать кнопкой **Удалить**.
-- **Рассчитаться** — на переводе, который его касается, нажать **Отметить как оплаченное** (если он заплатил) или **Отметить как полученное** (если получил деньги). Платёж, отмеченный по ошибке, может отменить кнопкой **Отменить** тот, кто его записал, или тот, кто его получил.
+- **Рассчитаться** — на переводе, который его касается, нажать **Отметить как оплаченное** (если он заплатил) или **Отметить как полученное** (если получил деньги). Платёж, отмеченный по ошибке, может отменить кнопкой **Отменить** тот, кто его записал, или тот, кто его получил. Сумма уже заполнена предложенным платежом, и её можно изменить, чтобы заплатить часть.
 - **Ваши платёжные данные** — выбрать способ, ввести счёт или логин и нажать **Сохранить**. Эти данные видит только тот, кто ему платит, в строке своего перевода, по возможности с готовой кнопкой Revolut или PayPal.
 - **Это не я / забыть это устройство** — отвязывает этот браузер от его имени, например на общем телефоне или компьютере.
 - **Есть код восстановления?** — на новом устройстве ввести **Код восстановления** и нажать **Восстановить**.
@@ -10287,6 +10289,8 @@ OCR иногда неверно читает цену, выдумывает ст
 ## Расчёт
 
 В строке **Кто кому сколько**, которая вас касается, нажмите **Рассчитаться**. Если получатель указал платёжные данные, вы увидите кнопку или инструкцию для оплаты. Выберите **Как оплатили?** и нажмите **Я заплатил(а)** — или **Я получил(а)**, если платят вам (удобно, когда друг отдал наличными и больше не открывал ссылку).
+
+Не обязательно платить всё сразу. Поле **Сумма** открывается с предложенным платежом; измените его, чтобы записать часть. Сумма не может быть больше, чем вы должны друг другу, поэтому платёж только приближает оба баланса к нулю. Чтобы заплатить тому, кого нет в вашей строке **Кто кому сколько**, или записать деньги, полученные от кого-то, нажмите **Записать платёж** на экране группы (на компьютере — на панели инструментов), выберите человека и введите сумму.
 
 Платёж засчитывается сразу и для всех. Если его записали по ошибке, откройте его в списке активности и нажмите **Отменить платёж**: он останется в истории с пометкой «отменён», а балансы вернутся. Если кто-то изменил группу, пока вы рассчитывались, вы увидите «Балансы изменились» — проверьте цифры и попробуйте снова.
 
@@ -15384,7 +15388,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 Далі він може:
 
 - **Додати витрату** — заповнити *На що?*, суму, дату і платника, вибрати **Порівну** (позначити, хто бере участь) або **Точні суми** (вписати, скільки винен кожен) і натиснути **Додати витрату**. Витрату, яку він додав сам, можна прибрати кнопкою **Видалити**.
-- **Розрахуватися** — на переказі, який його стосується, натиснути **Позначити як сплачене** (якщо він заплатив) або **Позначити як отримане** (якщо отримав гроші). Платіж, позначений помилково, може скасувати кнопкою **Скасувати** той, хто його записав, або той, хто його отримав.
+- **Розрахуватися** — на переказі, який його стосується, натиснути **Позначити як сплачене** (якщо він заплатив) або **Позначити як отримане** (якщо отримав гроші). Платіж, позначений помилково, може скасувати кнопкою **Скасувати** той, хто його записав, або той, хто його отримав. Сума вже заповнена запропонованим платежем, і її можна змінити, щоб заплатити частину.
 - **Ваші платіжні дані** — вибрати спосіб, ввести рахунок або логін і натиснути **Зберегти**. Ці дані бачить лише той, хто йому платить, у рядку свого переказу, за можливості з готовою кнопкою Revolut або PayPal.
 - **Це не я / забути цей пристрій** — відв'язує цей браузер від його імені, наприклад на спільному телефоні чи комп'ютері.
 - **Є код відновлення?** — на новому пристрої ввести **Код відновлення** і натиснути **Відновити**.
@@ -15406,6 +15410,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 ## Розрахунок
 
 У рядку **Хто кому скільки**, який вас стосується, натисніть **Розрахуватися**. Якщо отримувач вказав платіжні дані, ви побачите кнопку або інструкцію для оплати. Виберіть **Як сплатили?** і натисніть **Я заплатив(ла)** — або **Я отримав(ла)**, якщо платять вам (зручно, коли друг віддав готівкою і більше не відкривав посилання).
+
+Не обов'язково платити все одразу. Поле **Сума** відкривається із запропонованим платежем; змініть його, щоб записати частину. Сума не може бути більшою, ніж ви винні одне одному, тому платіж лише наближає обидва баланси до нуля. Щоб заплатити тому, кого немає у вашому рядку **Хто кому скільки**, або записати гроші, отримані від когось, натисніть **Записати платіж** на екрані групи (на комп'ютері — на панелі інструментів), виберіть людину і введіть суму.
 
 Платіж зараховується одразу і для всіх. Якщо його записали помилково, відкрийте його у списку активності й натисніть **Скасувати платіж**: він залишиться в історії з позначкою «скасовано», а баланси повернуться. Якщо хтось змінив групу, поки ви розраховувалися, ви побачите «Баланси змінилися» — перевірте цифри і спробуйте ще раз.
 
@@ -20488,7 +20494,7 @@ Link otwiera prostą stronę w przeglądarce — bez instalacji i bez rejestracj
 Następnie może:
 
 - **Dodaj wydatek** — wypełnić *Za co?*, kwotę, datę i płatnika, wybrać **Po równo** (zaznaczyć, kto się dzieli) albo **Dokładne kwoty** (wpisać, ile winna jest każda osoba) i dotknąć **Dodaj wydatek**. Wydatek dodany przez siebie może usunąć przyciskiem **Usuń**.
-- **Rozliczyć się** — przy przelewie, którego dotyczy, dotknąć **Oznacz jako zapłacone** (gdy zapłacił) albo **Oznacz jako otrzymane** (gdy dostał pieniądze). Płatność zapisaną przez pomyłkę może anulować przyciskiem **Cofnij** osoba, która ją zapisała, albo osoba, która ją otrzymała.
+- **Rozliczyć się** — przy przelewie, którego dotyczy, dotknąć **Oznacz jako zapłacone** (gdy zapłacił) albo **Oznacz jako otrzymane** (gdy dostał pieniądze). Płatność zapisaną przez pomyłkę może anulować przyciskiem **Cofnij** osoba, która ją zapisała, albo osoba, która ją otrzymała. Kwota jest wypełniona proponowaną płatnością i można ją zmienić, żeby zapłacić część.
 - **Twoje dane do płatności** — wybrać metodę, wpisać konto lub identyfikator i dotknąć **Zapisz**. Te dane widzi tylko osoba, która mu płaci, w swojej linii przelewu, w miarę możliwości z gotowym przyciskiem Revolut lub PayPal.
 - **To nie ja / zapomnij to urządzenie** — wylogowuje tę przeglądarkę z jego imienia, na wspólnym telefonie lub komputerze.
 - **Masz kod odzyskiwania?** — na nowym urządzeniu wpisać **Kod odzyskiwania** i dotknąć **Przywróć**.
@@ -20510,6 +20516,8 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 ## Rozliczanie
 
 W linii **Kto komu ile**, która Cię dotyczy, dotknij **Rozlicz**. Jeśli osoba, której płacisz, dodała dane do płatności, zobaczysz przycisk lub instrukcję zapłaty. Wybierz **Jak zapłacono?**, a potem dotknij **Zapłaciłem(-am)** — albo **Otrzymałem(-am)**, jeśli to Tobie się płaci (przydatne, gdy znajomy oddał gotówkę i już nie wrócił do linku).
+
+Nie trzeba płacić wszystkiego naraz. Pole **Kwota** otwiera się z proponowaną płatnością; zmień ją, żeby zapisać część. Nie może być większa niż to, co jesteście sobie winni, więc płatność zawsze tylko zbliża oba salda do zera. Żeby zapłacić komuś, kogo nie ma w Twojej linii **Kto komu ile**, albo zapisać pieniądze otrzymane od kogoś, dotknij **Zapisz płatność** na ekranie grupy (na komputerze — na pasku narzędzi), wybierz osobę i wpisz kwotę.
 
 Płatność liczy się od razu, dla wszystkich. Jeśli zapisano ją przez pomyłkę, otwórz ją na liście aktywności i dotknij **Unieważnij płatność**: zostaje w historii, oznaczona jako unieważniona, a salda wracają. Jeśli ktoś inny zmienił grupę w czasie Twojego rozliczania, zobaczysz „Salda się zmieniły” — sprawdź liczby i spróbuj ponownie.
 
@@ -25567,7 +25575,7 @@ Der Link öffnet eine einfache Seite im Browser — ohne Installation, ohne Regi
 Danach können sie:
 
 - **Ausgabe hinzufügen** — *Wofür?*, den Betrag, das Datum und den Zahler ausfüllen, **Zu gleichen Teilen** (ankreuzen, wer sich beteiligt) oder **Genaue Beträge** (eintragen, was jede Person schuldet) wählen und auf **Ausgabe hinzufügen** tippen. Eine selbst hinzugefügte Ausgabe können sie mit **Löschen** entfernen.
-- **Ausgleichen** — bei einer Zahlung, die sie betrifft, auf **Als bezahlt markieren** (wenn sie bezahlt haben) oder **Als erhalten markieren** (wenn sie das Geld bekommen haben) tippen. Eine versehentlich erfasste Zahlung kann mit **Rückgängig** von der Person, die sie erfasst hat, oder von der Person, die sie erhalten hat, zurückgenommen werden.
+- **Ausgleichen** — bei einer Zahlung, die sie betrifft, auf **Als bezahlt markieren** (wenn sie bezahlt haben) oder **Als erhalten markieren** (wenn sie das Geld bekommen haben) tippen. Eine versehentlich erfasste Zahlung kann mit **Rückgängig** von der Person, die sie erfasst hat, oder von der Person, die sie erhalten hat, zurückgenommen werden. Der Betrag ist mit der vorgeschlagenen Zahlung vorausgefüllt und lässt sich ändern, um nur einen Teil zu zahlen.
 - **Deine Zahlungsdaten** — eine Methode wählen, ein Konto oder einen Benutzernamen eintragen und auf **Speichern** tippen. Diese Daten sieht nur, wer ihnen Geld schuldet, in seiner eigenen Zahlungszeile, wenn möglich mit fertiger Revolut- oder PayPal-Schaltfläche.
 - **Das bin ich nicht / dieses Gerät vergessen** — meldet diesen Browser von ihrem Namen ab, etwa auf einem geteilten Handy oder Computer.
 - **Hast du einen Wiederherstellungscode?** — auf einem neuen Gerät den **Wiederherstellungscode** eingeben und auf **Wiederherstellen** tippen.
@@ -25589,6 +25597,8 @@ Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **A
 ## Ausgleichen
 
 Tippe in einer Zeile von **Wer zahlt wem**, die dich betrifft, auf **Begleichen**. Hat die Person, der du zahlst, Zahlungsdaten hinterlegt, siehst du eine Schaltfläche oder eine Anleitung zum Bezahlen. Wähle **Wie wurde bezahlt?** und tippe auf **Ich habe bezahlt** — oder auf **Ich habe es erhalten**, wenn du das Geld bekommst (praktisch, wenn ein Freund bar bezahlt hat und nie wieder auf den Link zurückkam).
+
+Du musst nicht alles auf einmal zahlen. Der **Betrag** steht zuerst auf der vorgeschlagenen Zahlung; ändere ihn, um einen Teil zu erfassen. Er kann nicht höher sein als das, was zwischen euch beiden offen ist, eine Zahlung bringt also beide Salden immer nur näher an null. Um jemanden zu bezahlen, der nicht in deiner Zeile von **Wer zahlt wem** steht, oder Geld zu erfassen, das du von jemandem bekommen hast, tippe auf dem Gruppenbildschirm auf **Zahlung erfassen** (am Computer in der Werkzeugleiste), wähle die Person und gib den Betrag ein.
 
 Eine Zahlung zählt sofort, für alle. Wurde sie versehentlich erfasst, öffne sie in der Aktivitätsliste und tippe auf **Zahlung stornieren**: Sie bleibt im Verlauf, als storniert markiert, und die Salden gehen zurück. Hat jemand anderes die Gruppe geändert, während du ausgleichst, siehst du „Die Salden haben sich geändert“ — prüfe die Zahlen und versuche es erneut.
 
@@ -30635,7 +30645,7 @@ El enlace abre una página sencilla en su navegador, sin instalar nada ni regist
 A partir de ahí pueden:
 
 - **Añadir un gasto**: rellenar *¿Para qué?*, el importe, la fecha y quién pagó, elegir **A partes iguales** (marcar quién lo comparte) o **Importes exactos** (escribir lo que debe cada persona) y tocar **Añadir gasto**. Pueden **Eliminar** un gasto que hayan añadido ellos.
-- **Saldar cuentas**: en una transferencia que les afecte, tocar **Marcar como pagado** (si han pagado) o **Marcar como recibido** (si han recibido el dinero). Un pago registrado por error lo puede anular con **Deshacer** quien lo registró o quien lo recibió.
+- **Saldar cuentas**: en una transferencia que les afecte, tocar **Marcar como pagado** (si han pagado) o **Marcar como recibido** (si han recibido el dinero). Un pago registrado por error lo puede anular con **Deshacer** quien lo registró o quien lo recibió. El importe viene rellenado con el pago sugerido y se puede cambiar para pagar solo una parte.
 - **Tus datos de pago**: elegir un método, escribir una cuenta o usuario y tocar **Guardar**. Solo los ve quien les tiene que pagar, en su propia línea de transferencia, con un botón de Revolut o PayPal listo cuando es posible.
 - **No soy yo / olvidar este dispositivo**: desconecta este navegador de su nombre, por ejemplo en un teléfono u ordenador compartido.
 - **¿Tienes un código de recuperación?**: en un dispositivo nuevo, escribir el **Código de recuperación** y tocar **Recuperar**.
@@ -30657,6 +30667,8 @@ La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), 
 ## Saldar cuentas
 
 En una línea de **Quién paga a quién** que te afecte, toca **Saldar**. Si la persona a la que pagas ha añadido sus datos de pago, verás un botón o instrucciones para pagarle. Elige **¿Cómo se pagó?** y toca **He pagado**, o **Lo he recibido** si eres tú quien cobra (útil cuando un amigo te pagó en efectivo y no volvió a abrir el enlace).
+
+No hace falta pagarlo todo de una vez. El **Importe** se abre con el pago sugerido; cámbialo para registrar una parte. No puede ser mayor que lo que se deben entre ustedes dos, así que un pago solo acerca ambos saldos a cero. Para pagar a alguien que no aparece en tu línea de **Quién paga a quién**, o para registrar dinero que te dio alguien, toca **Registrar un pago** en la pantalla del grupo (en el ordenador, en la barra de herramientas), elige a la persona e introduce el importe.
 
 Un pago cuenta al instante, para todos. Si se registró por error, ábrelo en la lista de actividad y toca **Anular pago**: sigue en el historial, marcado como anulado, y los saldos vuelven atrás. Si otra persona cambió el grupo mientras saldabas, verás «Los saldos han cambiado»: revisa las cifras y vuelve a intentarlo.
 
@@ -35701,7 +35713,7 @@ Le lien ouvre une page simple dans leur navigateur, sans installation ni inscrip
 Ensuite, ils peuvent :
 
 - **Ajouter une dépense** : remplir *Pour quoi ?*, le montant, la date et qui a payé, choisir **À parts égales** (cocher qui la partage) ou **Montants exacts** (saisir ce que doit chaque personne), puis toucher **Ajouter la dépense**. Ils peuvent **Supprimer** une dépense qu'ils ont eux-mêmes ajoutée.
-- **Régler** : sur un virement qui les concerne, toucher **Marquer comme payé** (s'ils ont payé) ou **Marquer comme reçu** (s'ils ont reçu l'argent). Un paiement enregistré par erreur peut être annulé avec **Annuler** par la personne qui l'a enregistré ou par celle qui l'a reçu.
+- **Régler** : sur un virement qui les concerne, toucher **Marquer comme payé** (s'ils ont payé) ou **Marquer comme reçu** (s'ils ont reçu l'argent). Un paiement enregistré par erreur peut être annulé avec **Annuler** par la personne qui l'a enregistré ou par celle qui l'a reçu. Le montant est prérempli avec le paiement suggéré et peut être modifié pour n'en payer qu'une partie.
 - **Vos coordonnées de paiement** : choisir une méthode, saisir un compte ou un identifiant, puis **Enregistrer**. Seule la personne qui doit les payer voit ces coordonnées, sur sa propre ligne de virement, avec un bouton Revolut ou PayPal prêt à l'emploi quand c'est possible.
 - **Ce n'est pas moi / oublier cet appareil** : déconnecte ce navigateur de leur nom, sur un téléphone ou un ordinateur partagé.
 - **Vous avez un code de restauration ?** : sur un nouvel appareil, saisir le **Code de restauration** et toucher **Restaurer**.
@@ -35723,6 +35735,8 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 ## Régler
 
 Sur une ligne de **Qui paie qui** qui vous concerne, touchez **Régler**. Si la personne que vous payez a renseigné ses coordonnées de paiement, vous verrez un bouton ou des instructions pour la payer. Choisissez **Comment a-t-il été payé ?**, puis touchez **J'ai payé**, ou **Je l'ai reçu** si c'est vous qui êtes payé (pratique quand un ami vous a payé en espèces et n'est jamais revenu sur le lien).
+
+Pas besoin de tout payer d'un coup. Le **Montant** s'ouvre sur le paiement suggéré ; modifiez-le pour en enregistrer une partie. Il ne peut pas dépasser ce qui est dû entre vous deux : un paiement ne fait donc que rapprocher les deux soldes de zéro. Pour payer quelqu'un qui n'est pas sur votre ligne de **Qui paie qui**, ou pour enregistrer de l'argent reçu de quelqu'un, touchez **Enregistrer un paiement** sur l'écran du groupe (sur ordinateur, dans la barre d'outils), choisissez la personne et saisissez le montant.
 
 Un paiement compte immédiatement, pour tout le monde. S'il a été enregistré par erreur, ouvrez-le dans la liste d'activité et touchez **Annuler le paiement** : il reste dans l'historique, marqué comme annulé, et les soldes reviennent en arrière. Si quelqu'un d'autre a modifié le groupe pendant votre règlement, vous verrez « Les soldes ont changé » : vérifiez les chiffres et réessayez.
 
@@ -40731,7 +40745,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 Далей ён можа:
 
 - **Дадаць выдатак** — запоўніць *На што?*, суму, дату і плацельшчыка, выбраць **Пароўну** (адзначыць, хто ўдзельнічае) або **Дакладныя сумы** (упісаць, колькі вінен кожны) і націснуць **Дадаць выдатак**. Выдатак, які ён дадаў сам, можна прыбраць кнопкай **Выдаліць**.
-- **Разлічыцца** — на пераводзе, які яго тычыцца, націснуць **Адзначыць як аплачанае** (калі ён заплаціў) або **Адзначыць як атрыманае** (калі атрымаў грошы). Плацёж, адзначаны памылкова, можа скасаваць кнопкай **Скасаваць** той, хто яго запісаў, або той, хто яго атрымаў.
+- **Разлічыцца** — на пераводзе, які яго тычыцца, націснуць **Адзначыць як аплачанае** (калі ён заплаціў) або **Адзначыць як атрыманае** (калі атрымаў грошы). Плацёж, адзначаны памылкова, можа скасаваць кнопкай **Скасаваць** той, хто яго запісаў, або той, хто яго атрымаў. Сума ўжо запоўнена прапанаваным плацяжом, і яе можна змяніць, каб заплаціць частку.
 - **Вашы плацёжныя даныя** — выбраць спосаб, увесці рахунак або лагін і націснуць **Захаваць**. Гэтыя даныя бачыць толькі той, хто яму плаціць, у радку свайго пераводу, па магчымасці з гатовай кнопкай Revolut або PayPal.
 - **Гэта не я / забыць гэту прыладу** — адвязвае гэты браўзер ад яго імя, напрыклад на агульным тэлефоне ці камп'ютары.
 - **Ёсць код аднаўлення?** — на новай прыладзе ўвесці **Код аднаўлення** і націснуць **Аднавіць**.
@@ -40753,6 +40767,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 ## Разлік
 
 У радку **Хто каму колькі**, які вас тычыцца, націсніце **Разлічыцца**. Калі атрымальнік указаў плацёжныя даныя, вы ўбачыце кнопку або інструкцыю для аплаты. Выберыце **Як аплацілі?** і націсніце **Я заплаціў(ла)** — або **Я атрымаў(ла)**, калі плацяць вам (зручна, калі сябар аддаў наяўнымі і больш не адкрываў спасылку).
+
+Не абавязкова плаціць усё адразу. Поле **Сума** адкрываецца з прапанаваным плацяжом; змяніце яго, каб запісаць частку. Сума не можа быць большай, чым вы вінныя адно аднаму, таму плацёж толькі набліжае абодва балансы да нуля. Каб заплаціць таму, каго няма ў вашым радку **Хто каму колькі**, або запісаць грошы, атрыманыя ад кагосьці, націсніце **Запісаць плацёж** на экране групы (на камп'ютары — на панэлі інструментаў), выберыце чалавека і ўвядзіце суму.
 
 Плацёж залічваецца адразу і для ўсіх. Калі яго запісалі памылкова, адкрыйце яго ў спісе актыўнасці і націсніце **Скасаваць плацёж**: ён застанецца ў гісторыі з пазнакай «скасаваны», а балансы вернуцца. Калі нехта змяніў групу, пакуль вы разлічваліся, вы ўбачыце «Балансы змяніліся» — праверце лічбы і паспрабуйце зноў.
 
@@ -45887,7 +45903,7 @@ De link opent een eenvoudige pagina in hun browser — niets installeren, niet r
 Daarna kunnen ze:
 
 - **Uitgave toevoegen** — *Waarvoor?*, het bedrag, de datum en wie betaald heeft invullen, kiezen voor **Gelijk verdeeld** (aanvinken wie meedoet) of **Exacte bedragen** (invullen wat ieder schuldig is) en op **Uitgave toevoegen** tikken. Een uitgave die ze zelf hebben toegevoegd, kunnen ze met **Verwijderen** weghalen.
-- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving.
+- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving. Het bedrag is ingevuld met de voorgestelde betaling en kan worden aangepast om een deel te betalen.
 - **Jouw betaalgegevens** — een methode kiezen, een rekening of gebruikersnaam invullen en op **Opslaan** tikken. Alleen wie hen moet betalen ziet deze gegevens, op zijn eigen betaalregel, waar mogelijk met een kant-en-klare Revolut- of PayPal-knop.
 - **Dat ben ik niet / dit apparaat vergeten** — meldt deze browser af van hun naam, bijvoorbeeld op een gedeelde telefoon of computer.
 - **Heb je een herstelcode?** — op een nieuw apparaat de **Herstelcode** invullen en op **Herstellen** tikken.
@@ -45909,6 +45925,8 @@ Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Al
 ## Verrekenen
 
 Tik in een regel van **Wie betaalt wie** die jou aangaat op **Verrekenen**. Heeft de persoon die je betaalt betaalgegevens ingevuld, dan zie je een knop of instructies om te betalen. Kies **Hoe is er betaald?** en tik op **Ik heb betaald** — of op **Ik heb het ontvangen** als jij degene bent die betaald wordt (handig als een vriend je contant betaalde en nooit meer op de link terugkwam).
+
+Je hoeft niet alles in één keer te betalen. Het **Bedrag** opent met de voorgestelde betaling; pas het aan om een deel vast te leggen. Het kan niet hoger zijn dan wat jullie elkaar schuldig zijn, dus een betaling brengt beide saldi altijd alleen dichter bij nul. Wil je iemand betalen die niet in jouw regel van **Wie betaalt wie** staat, of geld vastleggen dat je van iemand kreeg, tik dan op het groepsscherm op **Betaling vastleggen** (op de computer in de werkbalk), kies de persoon en vul het bedrag in.
 
 Een betaling telt meteen, voor iedereen. Is hij per ongeluk vastgelegd, open hem dan in de activiteitenlijst en tik op **Betaling ongeldig maken**: hij blijft in de geschiedenis staan, gemarkeerd als ongeldig, en de saldi gaan terug. Heeft iemand anders de groep gewijzigd terwijl jij verrekende, dan zie je „De saldi zijn gewijzigd” — controleer de bedragen en probeer het opnieuw.
 

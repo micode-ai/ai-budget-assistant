@@ -1,6 +1,7 @@
 import {
   computeGroupLedger,
-  isValidSettlement,
+  maxSettlementAmount,
+  validateSettlement,
   myShareThisMonth,
   resolveGroupShares,
   type LedgerExpense,
@@ -137,19 +138,90 @@ describe('computeGroupLedger', () => {
   });
 });
 
-describe('isValidSettlement', () => {
-  const suggested = [{ fromMemberId: 'a', toMemberId: 'b', amount: 25.5 }];
+describe('validateSettlement (ABA-652)', () => {
+  // a owes 50, b owes 10, c is owed 30, d is owed 30. Suggested: a->c 30, a->d 20, b->d 10.
+  const balances = [
+    { memberId: 'a', netAmount: -50 },
+    { memberId: 'b', netAmount: -10 },
+    { memberId: 'c', netAmount: 30 },
+    { memberId: 'd', netAmount: 30 },
+    { memberId: 'z', netAmount: 0 },
+  ];
+  const v = (fromMemberId: string, toMemberId: string, amount: number) =>
+    validateSettlement({ fromMemberId, toMemberId, amount }, balances);
 
-  it('accepts a match within 0.01', () => {
-    expect(isValidSettlement({ fromMemberId: 'a', toMemberId: 'b', amount: 25.5 }, suggested)).toBe(true);
-    expect(isValidSettlement({ fromMemberId: 'a', toMemberId: 'b', amount: 25.51 }, suggested)).toBe(true);
+  it.each([
+    ['partial', 'a', 'c', 12.34, { ok: true, amount: 12.34 }],
+    ['exact bound', 'a', 'c', 30, { ok: true, amount: 30 }],
+    ['bound + 0.01 is clamped', 'a', 'c', 30.01, { ok: true, amount: 30 }],
+    ['over by 0.02', 'a', 'c', 30.02, { ok: false, reason: 'exceeds_balance' }],
+    ['bound is the smaller side (debtor)', 'b', 'c', 10.01, { ok: true, amount: 10 }],
+    ['debtor side over', 'b', 'c', 10.02, { ok: false, reason: 'exceeds_balance' }],
+    ['non-suggested creditor', 'b', 'c', 10, { ok: true, amount: 10 }],
+    ['non-debtor from (a creditor)', 'c', 'd', 1, { ok: false, reason: 'not_debtor' }],
+    ['non-debtor from (zero)', 'z', 'c', 1, { ok: false, reason: 'not_debtor' }],
+    ['non-creditor to (a debtor)', 'a', 'b', 1, { ok: false, reason: 'not_creditor' }],
+    ['non-creditor to (zero)', 'a', 'z', 1, { ok: false, reason: 'not_creditor' }],
+    ['unknown member', 'a', 'nobody', 1, { ok: false, reason: 'not_creditor' }],
+    ['same member', 'a', 'a', 1, { ok: false, reason: 'same_member' }],
+    ['zero', 'a', 'c', 0, { ok: false, reason: 'too_small' }],
+    ['negative', 'a', 'c', -5, { ok: false, reason: 'too_small' }],
+    ['NaN', 'a', 'c', Number.NaN, { ok: false, reason: 'too_small' }],
+  ])('%s', (_label, from, to, amount, expected) => {
+    expect(v(from as string, to as string, amount as number)).toEqual(expected);
   });
 
-  it('rejects a different amount, reversed direction or unknown pair', () => {
-    expect(isValidSettlement({ fromMemberId: 'a', toMemberId: 'b', amount: 25.6 }, suggested)).toBe(false);
-    expect(isValidSettlement({ fromMemberId: 'b', toMemberId: 'a', amount: 25.5 }, suggested)).toBe(false);
-    expect(isValidSettlement({ fromMemberId: 'a', toMemberId: 'c', amount: 25.5 }, suggested)).toBe(false);
-    expect(isValidSettlement({ fromMemberId: 'a', toMemberId: 'b', amount: 1 }, [])).toBe(false);
+  it('accepts every suggested transfer of a real ledger', () => {
+    const members = ids(5);
+    const all = members.map((m) => m.id);
+    const l = computeGroupLedger(
+      members,
+      [expense('a', 'm1', 123.45, all), expense('b', 'm3', 50, ['m2', 'm4']), expense('c', 'm5', 9.99, all)],
+      [],
+    );
+    expect(l.suggestedTransfers.length).toBeGreaterThan(0);
+    for (const t of l.suggestedTransfers) {
+      expect(validateSettlement(t, l.balances)).toEqual({ ok: true, amount: t.amount });
+    }
+  });
+
+  it('only shrinks both balances and never flips a sign, whatever amount is accepted', () => {
+    const members = ids(3);
+    const exps = [expense('e1', 'm1', 100, ['m1', 'm2', 'm3'])]; // m1 +66.67, m2 -33.33, m3 -33.34
+    const before = computeGroupLedger(members, exps, []);
+    const net = (l: typeof before, id: string) => l.balances.find((b) => b.memberId === id)!.netAmount;
+    for (const amount of [0.01, 1, 33.32, 33.33, 33.34, 40]) {
+      const check = validateSettlement({ fromMemberId: 'm2', toMemberId: 'm1', amount }, before.balances);
+      if (!check.ok) {
+        expect(amount).toBeGreaterThan(33.34);
+        continue;
+      }
+      const after = computeGroupLedger(members, exps, [
+        { id: 's', fromMemberId: 'm2', toMemberId: 'm1', amount: check.amount },
+      ]);
+      expect(net(after, 'm2')).toBeLessThanOrEqual(0);
+      expect(net(after, 'm2')).toBeGreaterThan(net(before, 'm2'));
+      expect(net(after, 'm1')).toBeGreaterThanOrEqual(0);
+      expect(net(after, 'm1')).toBeLessThan(net(before, 'm1'));
+    }
+  });
+
+  it('ignores a sub-cent rounding residue as a balance', () => {
+    const tiny = [
+      { memberId: 'a', netAmount: -0.004 },
+      { memberId: 'b', netAmount: 0.004 },
+    ];
+    expect(validateSettlement({ fromMemberId: 'a', toMemberId: 'b', amount: 0.01 }, tiny)).toEqual({
+      ok: false,
+      reason: 'not_debtor',
+    });
+  });
+
+  it('maxSettlementAmount is min(owed, owed-to), or null off the debtor -> creditor direction', () => {
+    expect(maxSettlementAmount('a', 'c', balances)).toBe(30);
+    expect(maxSettlementAmount('b', 'd', balances)).toBe(10);
+    expect(maxSettlementAmount('c', 'a', balances)).toBeNull();
+    expect(maxSettlementAmount('a', 'a', balances)).toBeNull();
   });
 });
 

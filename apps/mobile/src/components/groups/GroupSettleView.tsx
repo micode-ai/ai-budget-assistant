@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, ActivityIndicator, Linking, ScrollView } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Linking, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,13 @@ import { useGroupStore } from '@/stores/groupStore';
 import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { showAlert } from '@/utils/alert';
-import { findCurrentTransfer, findMember, memberName } from '@/features/groups/groupDisplay';
+import { findMember, memberName } from '@/features/groups/groupDisplay';
+import {
+  checkSettleAmountInput,
+  defaultSettleAmount,
+  maxSettleAmount,
+  settleCounterparts,
+} from '@/features/groups/groupMath';
 import { SETTLE_METHODS, buildGroupPayLink } from '@/features/groups/groupPay';
 import type { SettleMethod } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
@@ -17,6 +23,10 @@ import { GroupErrorState } from './GroupErrorState';
 
 interface GroupSettleViewProps {
   groupId: string;
+  /**
+   * The pair of a suggested row. Both absent = "Record a payment" (ABA-652): the user picks whom
+   * they paid (a debtor) or who paid them (a creditor) from everyone they can settle with.
+   */
   from?: string;
   to?: string;
   /**
@@ -27,10 +37,12 @@ interface GroupSettleViewProps {
 }
 
 /**
- * Confirm one suggested payment. The pair from the route is re-resolved against the live detail,
- * so a payment that stopped being suggested says so instead of recording a stale amount. The
- * ledger-version check on the server turns a double tap, or two members settling the same
- * transfer, into "Balances changed, please check again".
+ * Record a payment. The pair from the route is re-resolved against the live balances, so a pair
+ * that can no longer settle says so instead of recording a stale amount. The amount is editable
+ * (ABA-652): it opens at the suggested transfer and may be anything from 0.01 up to
+ * `min(what the payer owes, what the receiver is owed)`, the same bound the server enforces, so a
+ * payment only ever shrinks both balances. The ledger-version check on the server turns a double
+ * tap, or two members settling at once, into "Balances changed, please check again".
  */
 export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewProps) {
   const { t } = useTranslation();
@@ -40,6 +52,10 @@ export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewPr
   const settle = useGroupStore((s) => s.settle);
   const [method, setMethod] = useState<SettleMethod | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  /** Record mode: the counterpart the user picked (null = the first one offered). */
+  const [pickedId, setPickedId] = useState<string | null>(null);
+  /** What the user typed; null = untouched, so the field shows the current default. */
+  const [amountText, setAmountText] = useState<string | null>(null);
   // Once recorded, the transfer drops out of the live detail; keep the screen quiet until it closes.
   const [done, setDone] = useState(false);
   const finish = () => (onDone ? onDone() : router.back());
@@ -58,37 +74,65 @@ export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewPr
     );
   }
 
-  const transfer = findCurrentTransfer(detail, from, to);
-  if (!transfer) {
+  const me = detail.myMemberId;
+  const recordMode = !from || !to;
+  const record = recordMode ? settleCounterparts(detail) : null;
+  const picked = record
+    ? (record.counterparts.find((c) => c.memberId === pickedId) ?? record.counterparts[0] ?? null)
+    : null;
+  const fromId = record ? (record.direction === 'pay' ? me : picked?.memberId) : from;
+  const toId = record ? (record.direction === 'pay' ? picked?.memberId : me) : to;
+  const max = maxSettleAmount(detail.balances, fromId, toId);
+  const fallback = defaultSettleAmount(detail, fromId, toId);
+  // Only a payment I am part of (the server's acting-member rule).
+  const iAmParty = fromId === me || toId === me;
+
+  if (!fromId || !toId || max === null || fallback === null || !iAmParty) {
     return (
       <SafeAreaView style={styles.container} edges={[]}>
         <View style={styles.centered}>
-          <Text style={styles.gone}>{t('groups.transferGone')}</Text>
+          <Text style={styles.gone}>{t(recordMode ? 'groups.recordNothing' : 'groups.transferGone')}</Text>
           <GroupButton label={t('common.back')} onPress={finish} variant="secondary" />
         </View>
       </SafeAreaView>
     );
   }
 
-  const iPay = transfer.fromMemberId === detail.myMemberId;
-  const creditor = findMember(detail, transfer.toMemberId);
+  const text = amountText ?? fallback.toFixed(2);
+  const check = checkSettleAmountInput(text, max);
+  const amount = check.ok ? check.amount : fallback;
+  const amountError = check.ok
+    ? null
+    : check.reason === 'tooMuch'
+      ? t('groups.settleAmountTooMuch', { max: formatCurrency(max, detail.currencyCode) })
+      : t('groups.settleAmountInvalid');
+
+  const iPay = fromId === me;
+  const creditor = findMember(detail, toId);
   const effectiveMethod = method ?? creditor?.paymentMethod ?? null;
   const pay = buildGroupPayLink(
     creditor?.paymentMethod,
     creditor?.paymentHandle,
-    transfer.amount,
+    amount,
     detail.currencyCode,
   );
 
   const confirm = async () => {
     setSubmitting(true);
     try {
+      if (!check.ok) return;
       const result = await settle(groupId, {
-        fromMemberId: transfer.fromMemberId,
-        toMemberId: transfer.toMemberId,
-        amount: transfer.amount,
+        fromMemberId: fromId,
+        toMemberId: toId,
+        amount: check.amount,
         ...(effectiveMethod ? { method: effectiveMethod } : {}),
       });
+      if (!result.ok && result.reason === 'exceedsBalance') {
+        // The bound moved under us; the store reloaded, so stay and show the new one.
+        setAmountText(null);
+        showAlert(t('groups.settleExceedsBalance'));
+        return;
+      }
       setDone(true);
       if (!result.ok) {
         showAlert(t('groups.ledgerChanged'));
@@ -108,14 +152,67 @@ export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewPr
     <SafeAreaView style={styles.container} edges={['bottom']}>
       <ScrollView contentContainerStyle={styles.content}>
         <GroupOfflineBanner />
+        {record && (
+          <>
+            <Text style={styles.label}>
+              {t(record.direction === 'pay' ? 'groups.recordPickPay' : 'groups.recordPickReceive')}
+            </Text>
+            <View style={styles.chipRow}>
+              {record.counterparts.map((c) => {
+                const active = c.memberId === picked?.memberId;
+                return (
+                  <TouchableOpacity
+                    key={c.memberId}
+                    style={[styles.chip, active && styles.chipActive]}
+                    onPress={() => {
+                      setPickedId(c.memberId);
+                      setAmountText(null);
+                      setMethod(null);
+                    }}
+                    accessibilityRole="button"
+                    accessibilityState={{ selected: active }}
+                  >
+                    <Text style={[styles.chipText, active && styles.chipTextActive]}>
+                      {memberName(detail, c.memberId)} · {formatCurrency(c.max, detail.currencyCode)}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          </>
+        )}
+
         <View style={styles.card}>
           <Text style={styles.names}>
             {t('groups.transferRow', {
-              from: memberName(detail, transfer.fromMemberId),
-              to: memberName(detail, transfer.toMemberId),
+              from: memberName(detail, fromId),
+              to: memberName(detail, toId),
             })}
           </Text>
-          <Text style={styles.amount}>{formatCurrency(transfer.amount, detail.currencyCode)}</Text>
+          <Text style={styles.sectionTitle}>{t('groups.settleAmountLabel')}</Text>
+          <View style={styles.amountRow}>
+            <TextInput
+              style={[styles.amountInput, !!amountError && styles.amountInputError]}
+              value={text}
+              onChangeText={setAmountText}
+              keyboardType="decimal-pad"
+              placeholder="0.00"
+              placeholderTextColor={theme.colors.textTertiary}
+              accessibilityLabel={t('groups.settleAmountLabel')}
+              maxLength={10}
+              selectTextOnFocus
+            />
+            <Text style={styles.currency}>{detail.currencyCode}</Text>
+          </View>
+          {amountError ? (
+            <Text style={styles.error} accessibilityLiveRegion="polite">
+              {amountError}
+            </Text>
+          ) : (
+            <Text style={styles.bounds}>
+              {t('groups.settleAmountBounds', { max: formatCurrency(max, detail.currencyCode) })}
+            </Text>
+          )}
         </View>
 
         {iPay && (
@@ -163,6 +260,7 @@ export function GroupSettleView({ groupId, from, to, onDone }: GroupSettleViewPr
           label={iPay ? t('groups.settleConfirmPaid') : t('groups.settleConfirmReceived')}
           onPress={confirm}
           loading={submitting}
+          disabled={!check.ok}
           write
           style={styles.confirm}
         />
@@ -205,10 +303,36 @@ const createStyles = (theme: Theme) => ({
     color: theme.colors.textPrimary,
     textAlign: 'center' as const,
   },
-  amount: {
-    ...theme.textStyles.h1,
+  amountRow: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[3],
+  },
+  amountInput: {
+    ...theme.textStyles.h2,
+    flex: 1,
     color: theme.colors.textPrimary,
-    textAlign: 'center' as const,
+    backgroundColor: theme.colors.background,
+    borderRadius: theme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: theme.colors.border,
+    paddingHorizontal: theme.spacing[3.5],
+    paddingVertical: theme.spacing[2.5],
+  },
+  amountInputError: {
+    borderColor: theme.colors.danger,
+  },
+  currency: {
+    ...theme.textStyles.bodyMedium,
+    color: theme.colors.textSecondary,
+  },
+  bounds: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textSecondary,
+  },
+  error: {
+    ...theme.textStyles.caption,
+    color: theme.colors.danger,
   },
   sectionTitle: {
     ...theme.textStyles.label,

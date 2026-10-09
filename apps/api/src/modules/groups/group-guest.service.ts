@@ -13,6 +13,7 @@ import { CacheService } from '../../common/cache/cache.service';
 import { buildGuestPayLink } from '../receipt-split/helpers/guest-page';
 import { GroupsService, linkClaimBinding, MAX_MEMBERS, MAX_SHARES } from './groups.service';
 import { SETTLE_METHODS } from './dto';
+import { maxSettlementAmount } from './group-ledger';
 import type {
   GuestActivityView,
   GuestMemberView,
@@ -147,6 +148,7 @@ export function flashFor(e: unknown): string {
   if (e instanceof BadRequestException) {
     const code = (e.getResponse() as { code?: string })?.code;
     if (code === 'EXPENSE_LIMIT' || code === 'GROUP_MEMBER_LIMIT') return 'limit';
+    if (code === 'SETTLEMENT_EXCEEDS_BALANCE') return 'toomuch';
     return 'invalid';
   }
   if (e instanceof HttpException) return 'invalid';
@@ -293,6 +295,7 @@ export class GroupGuestService {
         fromName: nameOf(t.fromMemberId),
         toName: nameOf(t.toMemberId),
         amount: t.amount,
+        maxAmount: maxSettlementAmount(t.fromMemberId, t.toMemberId, state.ledger.balances) ?? t.amount,
         canSettle: iAmPayer || iAmReceiver,
         iAmReceiver,
         pay,
@@ -470,7 +473,10 @@ export class GroupGuestService {
     }
   }
 
-  /** Same validation as the app: from-or-to, current suggested transfer, CAS on `v`. */
+  /**
+   * Same validation as the app: from-or-to, the balance bound (ABA-652: partial amounts allowed,
+   * never more than min(owed, owed-to)), CAS on `v`. The amount field is user-editable.
+   */
   async settle(group: GuestGroup, actor: GuestActor, body: Record<string, unknown>): Promise<string> {
     const rid = str(body.rid);
     const from = str(body.fromMemberId);

@@ -326,10 +326,71 @@ describe('GroupsService', () => {
       expect(prisma.groupSettlement.create).not.toHaveBeenCalled();
     });
 
-    it('rejects a triple that matches no suggested transfer before any write', async () => {
-      await expect(service.createSettlement(G, B, dto({ amount: 5 }))).rejects.toBeInstanceOf(BadRequestException);
-      await expect(service.createSettlement(G, A, dto({ fromMemberId: A, toMemberId: B }))).rejects.toBeInstanceOf(BadRequestException);
+    // ABA-652: balances here are alice +60, bob -30, carol -30.
+    it('records a partial payment, stored as sent', async () => {
+      await service.createSettlement(G, B, dto({ amount: 12.5 }));
+      expect(prisma.groupSettlement.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ amount: 12.5, fromMemberId: B, toMemberId: A }) }),
+      );
+    });
+
+    it('clamps an amount within the cent of tolerance to the bound', async () => {
+      await service.createSettlement(G, B, dto({ amount: 30.01 }));
+      expect(prisma.groupSettlement.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ amount: 30 }) }),
+      );
+    });
+
+    it('refuses paying more than is owed, before any write', async () => {
+      const err = await service.createSettlement(G, B, dto({ amount: 30.02 })).catch((e) => e);
+      expect(err).toBeInstanceOf(BadRequestException);
+      expect(err.getResponse()).toMatchObject({ code: 'SETTLEMENT_EXCEEDS_BALANCE', reason: 'exceeds_balance' });
+      await expect(service.createSettlement(G, B, dto({ amount: 1000 }))).rejects.toBeInstanceOf(BadRequestException);
       expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('refuses a payment to someone who is not owed (no becoming a creditor by settling)', async () => {
+      // bob "pays" carol: carol owes too, so this would push her balance up and flip bob's sign.
+      const err = await service.createSettlement(G, B, dto({ toMemberId: C, amount: 10 })).catch((e) => e);
+      expect(err).toBeInstanceOf(BadRequestException);
+      expect(err.getResponse()).toMatchObject({ code: 'SETTLEMENT_EXCEEDS_BALANCE', reason: 'not_creditor' });
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('refuses a payment from someone who owes nothing (reversed direction)', async () => {
+      const err = await service.createSettlement(G, A, dto({ fromMemberId: A, toMemberId: B })).catch((e) => e);
+      expect(err).toBeInstanceOf(BadRequestException);
+      expect(err.getResponse()).toMatchObject({ reason: 'not_debtor' });
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('refuses an actor outside the pair even for a valid partial amount', async () => {
+      await expect(service.createSettlement(G, C, dto({ amount: 5 }))).rejects.toBeInstanceOf(ForbiddenException);
+      expect(prisma.$transaction).not.toHaveBeenCalled();
+    });
+
+    it('accepts a payment to a creditor who is not the suggested one', async () => {
+      // carol paid 60 for alice and bob: alice +30, bob -60, carol +30. Pay carol 25.
+      expenses.push({
+        id: 'e2',
+        paidByMemberId: C,
+        amount: 60,
+        date: new Date('2026-01-11'),
+        shares: [
+          { memberId: A, shareAmount: 30 },
+          { memberId: B, shareAmount: 30 },
+        ],
+      });
+      await service.createSettlement(G, B, dto({ toMemberId: C, amount: 25 }));
+      expect(prisma.groupSettlement.create).toHaveBeenCalledWith(
+        expect.objectContaining({ data: expect.objectContaining({ toMemberId: C, amount: 25 }) }),
+      );
+    });
+
+    it('checks the stale version before the balance rule', async () => {
+      await expect(service.createSettlement(G, B, dto({ amount: 1000, ledgerVersion: 2 }))).rejects.toBeInstanceOf(
+        ConflictException,
+      );
     });
 
     it('rejects a foreign from/to member id', async () => {
@@ -352,6 +413,13 @@ describe('GroupsService', () => {
       prisma.groupSettlement.findFirst.mockResolvedValueOnce({ id: 's-existing' });
       await service.createSettlement(G, B, dto());
       expect(prisma.groupSettlement.create).not.toHaveBeenCalled();
+    });
+
+    it('a replayed clientRequestId is a no-op even when its amount would now be refused', async () => {
+      prisma.groupSettlement.findFirst.mockResolvedValueOnce({ id: 's-existing' });
+      await service.createSettlement(G, B, dto({ amount: 1000 }));
+      expect(prisma.groupSettlement.create).not.toHaveBeenCalled();
+      expect(prisma.$transaction).not.toHaveBeenCalled();
     });
   });
 

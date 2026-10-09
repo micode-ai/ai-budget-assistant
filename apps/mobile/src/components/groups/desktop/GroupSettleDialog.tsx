@@ -20,8 +20,10 @@ export function GroupSettleDialog({
   onClose: () => void;
 }) {
   const { t } = useTranslation();
+  // No pair = "Record a payment" (ABA-652): the view offers a counterpart picker.
+  const title = from && to ? t('groups.settleTitle') : t('groups.recordPayment');
   return (
-    <DesktopDialogFrame title={t('groups.settleTitle')} titleId={TITLE_ID} onRequestClose={onClose} width={480} height={560}>
+    <DesktopDialogFrame title={title} titleId={TITLE_ID} onRequestClose={onClose} width={480} height={620}>
       <GroupSettleView groupId={groupId} from={from} to={to} onDone={onClose} />
     </DesktopDialogFrame>
   );

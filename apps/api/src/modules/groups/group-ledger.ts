@@ -134,20 +134,52 @@ export function computeGroupLedger(
   };
 }
 
+export type SettlementRejection = 'same_member' | 'too_small' | 'not_debtor' | 'not_creditor' | 'exceeds_balance';
+
+export type SettlementCheck = { ok: true; amount: number } | { ok: false; reason: SettlementRejection };
+
+/** A balance counts as non-zero from half a cent, so a rounding residue never makes a debtor. */
+const BALANCE_EPSILON = 0.005;
+
 /**
- * True when the proposed settlement matches a current suggested transfer (same direction, amount
- * within 0.01). Call before any write.
+ * The most `from` may pay `to` right now (ABA-652): `min(what from owes, what to is owed)`, or null
+ * when `from` is not a debtor or `to` is not a creditor. A payment up to this bound only SHRINKS
+ * both balances toward zero and never flips a sign.
  */
-export function isValidSettlement(
+export function maxSettlementAmount(
+  fromMemberId: string,
+  toMemberId: string,
+  balances: LedgerBalance[],
+): number | null {
+  if (fromMemberId === toMemberId) return null;
+  const net = (id: string) => balances.find((b) => b.memberId === id)?.netAmount ?? 0;
+  const from = net(fromMemberId);
+  const to = net(toMemberId);
+  if (from > -BALANCE_EPSILON || to < BALANCE_EPSILON) return null;
+  return round2(Math.min(-from, to));
+}
+
+/**
+ * Validates a proposed settlement against the CURRENT balances (ABA-652; replaced the
+ * "must equal a suggested transfer" rule). Valid when `from` owes, `to` is owed, and
+ * `0.01 <= amount <= min(-balance[from], balance[to]) + 0.01`. The amount to STORE is returned
+ * clamped to that bound, so the cent of tolerance can never flip a sign. Every suggested transfer
+ * passes, because `simplifyDebts` never exceeds either side. Call before any write.
+ * The acting-member rule (actor is from or to) is the caller's, not this function's.
+ */
+export function validateSettlement(
   proposed: { fromMemberId: string; toMemberId: string; amount: number },
-  suggested: LedgerTransfer[],
-): boolean {
-  return suggested.some(
-    (t) =>
-      t.fromMemberId === proposed.fromMemberId &&
-      t.toMemberId === proposed.toMemberId &&
-      round2(Math.abs(t.amount - proposed.amount)) <= SETTLE_TOLERANCE,
-  );
+  balances: LedgerBalance[],
+): SettlementCheck {
+  if (proposed.fromMemberId === proposed.toMemberId) return { ok: false, reason: 'same_member' };
+  if (!Number.isFinite(proposed.amount) || round2(proposed.amount) < 0.01) return { ok: false, reason: 'too_small' };
+  const net = (id: string) => balances.find((b) => b.memberId === id)?.netAmount ?? 0;
+  if (net(proposed.fromMemberId) > -BALANCE_EPSILON) return { ok: false, reason: 'not_debtor' };
+  if (net(proposed.toMemberId) < BALANCE_EPSILON) return { ok: false, reason: 'not_creditor' };
+  const cap = maxSettlementAmount(proposed.fromMemberId, proposed.toMemberId, balances) as number;
+  const amount = round2(proposed.amount);
+  if (round2(amount - cap) > SETTLE_TOLERANCE) return { ok: false, reason: 'exceeds_balance' };
+  return { ok: true, amount: Math.min(amount, cap) };
 }
 
 function toDate(d: Date | string): Date {

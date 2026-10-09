@@ -40,7 +40,7 @@ Le lien ouvre une page simple dans leur navigateur, sans installation ni inscrip
 Ensuite, ils peuvent :
 
 - **Ajouter une dépense** : remplir *Pour quoi ?*, le montant, la date et qui a payé, choisir **À parts égales** (cocher qui la partage) ou **Montants exacts** (saisir ce que doit chaque personne), puis toucher **Ajouter la dépense**. Ils peuvent **Supprimer** une dépense qu'ils ont eux-mêmes ajoutée.
-- **Régler** : sur un virement qui les concerne, toucher **Marquer comme payé** (s'ils ont payé) ou **Marquer comme reçu** (s'ils ont reçu l'argent). Un paiement enregistré par erreur peut être annulé avec **Annuler** par la personne qui l'a enregistré ou par celle qui l'a reçu.
+- **Régler** : sur un virement qui les concerne, toucher **Marquer comme payé** (s'ils ont payé) ou **Marquer comme reçu** (s'ils ont reçu l'argent). Un paiement enregistré par erreur peut être annulé avec **Annuler** par la personne qui l'a enregistré ou par celle qui l'a reçu. Le montant est prérempli avec le paiement suggéré et peut être modifié pour n'en payer qu'une partie.
 - **Vos coordonnées de paiement** : choisir une méthode, saisir un compte ou un identifiant, puis **Enregistrer**. Seule la personne qui doit les payer voit ces coordonnées, sur sa propre ligne de virement, avec un bouton Revolut ou PayPal prêt à l'emploi quand c'est possible.
 - **Ce n'est pas moi / oublier cet appareil** : déconnecte ce navigateur de leur nom, sur un téléphone ou un ordinateur partagé.
 - **Vous avez un code de restauration ?** : sur un nouvel appareil, saisir le **Code de restauration** et toucher **Restaurer**.
@@ -62,6 +62,8 @@ L'écran du groupe indique si **On vous doit** ou si **Vous devez** (ou **Tout e
 ## Régler
 
 Sur une ligne de **Qui paie qui** qui vous concerne, touchez **Régler**. Si la personne que vous payez a renseigné ses coordonnées de paiement, vous verrez un bouton ou des instructions pour la payer. Choisissez **Comment a-t-il été payé ?**, puis touchez **J'ai payé**, ou **Je l'ai reçu** si c'est vous qui êtes payé (pratique quand un ami vous a payé en espèces et n'est jamais revenu sur le lien).
+
+Pas besoin de tout payer d'un coup. Le **Montant** s'ouvre sur le paiement suggéré ; modifiez-le pour en enregistrer une partie. Il ne peut pas dépasser ce qui est dû entre vous deux : un paiement ne fait donc que rapprocher les deux soldes de zéro. Pour payer quelqu'un qui n'est pas sur votre ligne de **Qui paie qui**, ou pour enregistrer de l'argent reçu de quelqu'un, touchez **Enregistrer un paiement** sur l'écran du groupe (sur ordinateur, dans la barre d'outils), choisissez la personne et saisissez le montant.
 
 Un paiement compte immédiatement, pour tout le monde. S'il a été enregistré par erreur, ouvrez-le dans la liste d'activité et touchez **Annuler le paiement** : il reste dans l'historique, marqué comme annulé, et les soldes reviennent en arrière. Si quelqu'un d'autre a modifié le groupe pendant votre règlement, vous verrez « Les soldes ont changé » : vérifiez les chiffres et réessayez.
 

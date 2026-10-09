@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { randomUUID } from 'expo-crypto';
 import { api } from '@/services/api';
-import { isLedgerChanged, type SettleResult } from '@/features/groups/groupMath';
+import { isLedgerChanged, isSettlementExceedsBalance, type SettleResult } from '@/features/groups/groupMath';
 import type {
   CreateGroupDto,
   CreateGroupExpenseDto,
@@ -213,6 +213,13 @@ export const useGroupStore = create<GroupState>()((set, get) => {
           await get().loadGroup(groupId).catch(() => undefined);
           set({ error: null });
           return { ok: false, reason: 'ledgerChanged' };
+        }
+        // ABA-652: the amount no longer fits the balances (the form's bound was stale). Reload so
+        // the screen shows the new bound.
+        if (isSettlementExceedsBalance(e)) {
+          await get().loadGroup(groupId).catch(() => undefined);
+          set({ error: null });
+          return { ok: false, reason: 'exceedsBalance' };
         }
         throw e;
       }

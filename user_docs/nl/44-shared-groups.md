@@ -40,7 +40,7 @@ De link opent een eenvoudige pagina in hun browser — niets installeren, niet r
 Daarna kunnen ze:
 
 - **Uitgave toevoegen** — *Waarvoor?*, het bedrag, de datum en wie betaald heeft invullen, kiezen voor **Gelijk verdeeld** (aanvinken wie meedoet) of **Exacte bedragen** (invullen wat ieder schuldig is) en op **Uitgave toevoegen** tikken. Een uitgave die ze zelf hebben toegevoegd, kunnen ze met **Verwijderen** weghalen.
-- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving.
+- **Verrekenen** — bij een betaling die hen aangaat op **Markeren als betaald** tikken (als zij betaald hebben) of op **Markeren als ontvangen** (als zij het geld kregen). Een per ongeluk vastgelegde betaling kan met **Ongedaan maken** worden teruggedraaid door wie hem vastlegde of door wie hem ontving. Het bedrag is ingevuld met de voorgestelde betaling en kan worden aangepast om een deel te betalen.
 - **Jouw betaalgegevens** — een methode kiezen, een rekening of gebruikersnaam invullen en op **Opslaan** tikken. Alleen wie hen moet betalen ziet deze gegevens, op zijn eigen betaalregel, waar mogelijk met een kant-en-klare Revolut- of PayPal-knop.
 - **Dat ben ik niet / dit apparaat vergeten** — meldt deze browser af van hun naam, bijvoorbeeld op een gedeelde telefoon of computer.
 - **Heb je een herstelcode?** — op een nieuw apparaat de **Herstelcode** invullen en op **Herstellen** tikken.
@@ -62,6 +62,8 @@ Het groepsscherm toont of **Je krijgt nog** of **Je bent verschuldigd** (of **Al
 ## Verrekenen
 
 Tik in een regel van **Wie betaalt wie** die jou aangaat op **Verrekenen**. Heeft de persoon die je betaalt betaalgegevens ingevuld, dan zie je een knop of instructies om te betalen. Kies **Hoe is er betaald?** en tik op **Ik heb betaald** — of op **Ik heb het ontvangen** als jij degene bent die betaald wordt (handig als een vriend je contant betaalde en nooit meer op de link terugkwam).
+
+Je hoeft niet alles in één keer te betalen. Het **Bedrag** opent met de voorgestelde betaling; pas het aan om een deel vast te leggen. Het kan niet hoger zijn dan wat jullie elkaar schuldig zijn, dus een betaling brengt beide saldi altijd alleen dichter bij nul. Wil je iemand betalen die niet in jouw regel van **Wie betaalt wie** staat, of geld vastleggen dat je van iemand kreeg, tik dan op het groepsscherm op **Betaling vastleggen** (op de computer in de werkbalk), kies de persoon en vul het bedrag in.
 
 Een betaling telt meteen, voor iedereen. Is hij per ongeluk vastgelegd, open hem dan in de activiteitenlijst en tik op **Betaling ongeldig maken**: hij blijft in de geschiedenis staan, gemarkeerd als ongeldig, en de saldi gaan terug. Heeft iemand anders de groep gewijzigd terwijl jij verrekende, dan zie je „De saldi zijn gewijzigd” — controleer de bedragen en probeer het opnieuw.
 

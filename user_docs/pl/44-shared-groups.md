@@ -40,7 +40,7 @@ Link otwiera prostą stronę w przeglądarce — bez instalacji i bez rejestracj
 Następnie może:
 
 - **Dodaj wydatek** — wypełnić *Za co?*, kwotę, datę i płatnika, wybrać **Po równo** (zaznaczyć, kto się dzieli) albo **Dokładne kwoty** (wpisać, ile winna jest każda osoba) i dotknąć **Dodaj wydatek**. Wydatek dodany przez siebie może usunąć przyciskiem **Usuń**.
-- **Rozliczyć się** — przy przelewie, którego dotyczy, dotknąć **Oznacz jako zapłacone** (gdy zapłacił) albo **Oznacz jako otrzymane** (gdy dostał pieniądze). Płatność zapisaną przez pomyłkę może anulować przyciskiem **Cofnij** osoba, która ją zapisała, albo osoba, która ją otrzymała.
+- **Rozliczyć się** — przy przelewie, którego dotyczy, dotknąć **Oznacz jako zapłacone** (gdy zapłacił) albo **Oznacz jako otrzymane** (gdy dostał pieniądze). Płatność zapisaną przez pomyłkę może anulować przyciskiem **Cofnij** osoba, która ją zapisała, albo osoba, która ją otrzymała. Kwota jest wypełniona proponowaną płatnością i można ją zmienić, żeby zapłacić część.
 - **Twoje dane do płatności** — wybrać metodę, wpisać konto lub identyfikator i dotknąć **Zapisz**. Te dane widzi tylko osoba, która mu płaci, w swojej linii przelewu, w miarę możliwości z gotowym przyciskiem Revolut lub PayPal.
 - **To nie ja / zapomnij to urządzenie** — wylogowuje tę przeglądarkę z jego imienia, na wspólnym telefonie lub komputerze.
 - **Masz kod odzyskiwania?** — na nowym urządzeniu wpisać **Kod odzyskiwania** i dotknąć **Przywróć**.
@@ -62,6 +62,8 @@ Ekran grupy pokazuje, czy **Należy Ci się**, czy **Jesteś winien(-na)** (albo
 ## Rozliczanie
 
 W linii **Kto komu ile**, która Cię dotyczy, dotknij **Rozlicz**. Jeśli osoba, której płacisz, dodała dane do płatności, zobaczysz przycisk lub instrukcję zapłaty. Wybierz **Jak zapłacono?**, a potem dotknij **Zapłaciłem(-am)** — albo **Otrzymałem(-am)**, jeśli to Tobie się płaci (przydatne, gdy znajomy oddał gotówkę i już nie wrócił do linku).
+
+Nie trzeba płacić wszystkiego naraz. Pole **Kwota** otwiera się z proponowaną płatnością; zmień ją, żeby zapisać część. Nie może być większa niż to, co jesteście sobie winni, więc płatność zawsze tylko zbliża oba salda do zera. Żeby zapłacić komuś, kogo nie ma w Twojej linii **Kto komu ile**, albo zapisać pieniądze otrzymane od kogoś, dotknij **Zapisz płatność** na ekranie grupy (na komputerze — na pasku narzędzi), wybierz osobę i wpisz kwotę.
 
 Płatność liczy się od razu, dla wszystkich. Jeśli zapisano ją przez pomyłkę, otwórz ją na liście aktywności i dotknij **Unieważnij płatność**: zostaje w historii, oznaczona jako unieważniona, a salda wracają. Jeśli ktoś inny zmienił grupę w czasie Twojego rozliczania, zobaczysz „Salda się zmieniły” — sprawdź liczby i spróbuj ponownie.
 

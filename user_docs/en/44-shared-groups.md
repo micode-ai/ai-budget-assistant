@@ -40,7 +40,7 @@ The link opens a simple page in their browser — no install, no sign-up.
 From there they can:
 
 - **Add an expense** — fill in *What for?*, the amount, the date and who paid, choose **Equally** (tick who shares it) or **Exact amounts** (enter what each person owes), and tap **Add expense**. They can **Delete** an expense they added themselves.
-- **Settle up** — on a transfer that involves them, tap **Mark as paid** (when they paid) or **Mark as received** (when they got the money). A payment recorded by mistake can be cancelled with **Undo** by the person who recorded it or the person who received it.
+- **Settle up** — on a transfer that involves them, tap **Mark as paid** (when they paid) or **Mark as received** (when they got the money). A payment recorded by mistake can be cancelled with **Undo** by the person who recorded it or the person who received it. The amount is filled in with the suggested payment and can be changed to pay part of it.
 - **Your payment details** — choose a method and enter an account or handle, then **Save**. Only the person who pays them sees these details, on their own transfer line, with a ready Revolut or PayPal button where possible.
 - **Not me / forget this device** — signs this browser out of their name, for a shared phone or computer.
 - **Have a restore code?** — on a new device, enter the **Restore code** and tap **Restore**.
@@ -62,6 +62,8 @@ The group screen shows whether **You are owed** or **You owe** (or **All settled
 ## Settling up
 
 On a line of **Who pays whom** that involves you, tap **Settle**. If the person you're paying added payment details, you'll see a button or instructions to pay them. Choose **How was it paid?**, then tap **I paid** — or **I received it** if you're the one being paid (useful when a friend paid you in cash and never came back to the link).
+
+You don't have to pay everything at once. The **Amount** opens at the suggested payment; change it to record part of it. It can't be more than what's owed between the two of you, so a payment only ever brings both balances closer to zero. To pay someone who isn't on your **Who pays whom** line, or to record money you got from someone, tap **Record a payment** on the group screen (on a computer, in the toolbar), pick the person, and enter the amount.
 
 A payment counts right away, for everyone. If one was recorded by mistake, open it in the activity list and tap **Void payment**: it stays in the history, marked as voided, and the balances go back. If someone else changed the group while you were settling, you'll see "Balances changed" — check the numbers and try again.
 

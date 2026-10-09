@@ -40,7 +40,7 @@ Der Link öffnet eine einfache Seite im Browser — ohne Installation, ohne Regi
 Danach können sie:
 
 - **Ausgabe hinzufügen** — *Wofür?*, den Betrag, das Datum und den Zahler ausfüllen, **Zu gleichen Teilen** (ankreuzen, wer sich beteiligt) oder **Genaue Beträge** (eintragen, was jede Person schuldet) wählen und auf **Ausgabe hinzufügen** tippen. Eine selbst hinzugefügte Ausgabe können sie mit **Löschen** entfernen.
-- **Ausgleichen** — bei einer Zahlung, die sie betrifft, auf **Als bezahlt markieren** (wenn sie bezahlt haben) oder **Als erhalten markieren** (wenn sie das Geld bekommen haben) tippen. Eine versehentlich erfasste Zahlung kann mit **Rückgängig** von der Person, die sie erfasst hat, oder von der Person, die sie erhalten hat, zurückgenommen werden.
+- **Ausgleichen** — bei einer Zahlung, die sie betrifft, auf **Als bezahlt markieren** (wenn sie bezahlt haben) oder **Als erhalten markieren** (wenn sie das Geld bekommen haben) tippen. Eine versehentlich erfasste Zahlung kann mit **Rückgängig** von der Person, die sie erfasst hat, oder von der Person, die sie erhalten hat, zurückgenommen werden. Der Betrag ist mit der vorgeschlagenen Zahlung vorausgefüllt und lässt sich ändern, um nur einen Teil zu zahlen.
 - **Deine Zahlungsdaten** — eine Methode wählen, ein Konto oder einen Benutzernamen eintragen und auf **Speichern** tippen. Diese Daten sieht nur, wer ihnen Geld schuldet, in seiner eigenen Zahlungszeile, wenn möglich mit fertiger Revolut- oder PayPal-Schaltfläche.
 - **Das bin ich nicht / dieses Gerät vergessen** — meldet diesen Browser von ihrem Namen ab, etwa auf einem geteilten Handy oder Computer.
 - **Hast du einen Wiederherstellungscode?** — auf einem neuen Gerät den **Wiederherstellungscode** eingeben und auf **Wiederherstellen** tippen.
@@ -62,6 +62,8 @@ Der Gruppenbildschirm zeigt, ob **Dir steht zu** oder **Du schuldest** (oder **A
 ## Ausgleichen
 
 Tippe in einer Zeile von **Wer zahlt wem**, die dich betrifft, auf **Begleichen**. Hat die Person, der du zahlst, Zahlungsdaten hinterlegt, siehst du eine Schaltfläche oder eine Anleitung zum Bezahlen. Wähle **Wie wurde bezahlt?** und tippe auf **Ich habe bezahlt** — oder auf **Ich habe es erhalten**, wenn du das Geld bekommst (praktisch, wenn ein Freund bar bezahlt hat und nie wieder auf den Link zurückkam).
+
+Du musst nicht alles auf einmal zahlen. Der **Betrag** steht zuerst auf der vorgeschlagenen Zahlung; ändere ihn, um einen Teil zu erfassen. Er kann nicht höher sein als das, was zwischen euch beiden offen ist, eine Zahlung bringt also beide Salden immer nur näher an null. Um jemanden zu bezahlen, der nicht in deiner Zeile von **Wer zahlt wem** steht, oder Geld zu erfassen, das du von jemandem bekommen hast, tippe auf dem Gruppenbildschirm auf **Zahlung erfassen** (am Computer in der Werkzeugleiste), wähle die Person und gib den Betrag ein.
 
 Eine Zahlung zählt sofort, für alle. Wurde sie versehentlich erfasst, öffne sie in der Aktivitätsliste und tippe auf **Zahlung stornieren**: Sie bleibt im Verlauf, als storniert markiert, und die Salden gehen zurück. Hat jemand anderes die Gruppe geändert, während du ausgleichst, siehst du „Die Salden haben sich geändert“ — prüfe die Zahlen und versuche es erneut.
 

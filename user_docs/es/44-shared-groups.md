@@ -40,7 +40,7 @@ El enlace abre una página sencilla en su navegador, sin instalar nada ni regist
 A partir de ahí pueden:
 
 - **Añadir un gasto**: rellenar *¿Para qué?*, el importe, la fecha y quién pagó, elegir **A partes iguales** (marcar quién lo comparte) o **Importes exactos** (escribir lo que debe cada persona) y tocar **Añadir gasto**. Pueden **Eliminar** un gasto que hayan añadido ellos.
-- **Saldar cuentas**: en una transferencia que les afecte, tocar **Marcar como pagado** (si han pagado) o **Marcar como recibido** (si han recibido el dinero). Un pago registrado por error lo puede anular con **Deshacer** quien lo registró o quien lo recibió.
+- **Saldar cuentas**: en una transferencia que les afecte, tocar **Marcar como pagado** (si han pagado) o **Marcar como recibido** (si han recibido el dinero). Un pago registrado por error lo puede anular con **Deshacer** quien lo registró o quien lo recibió. El importe viene rellenado con el pago sugerido y se puede cambiar para pagar solo una parte.
 - **Tus datos de pago**: elegir un método, escribir una cuenta o usuario y tocar **Guardar**. Solo los ve quien les tiene que pagar, en su propia línea de transferencia, con un botón de Revolut o PayPal listo cuando es posible.
 - **No soy yo / olvidar este dispositivo**: desconecta este navegador de su nombre, por ejemplo en un teléfono u ordenador compartido.
 - **¿Tienes un código de recuperación?**: en un dispositivo nuevo, escribir el **Código de recuperación** y tocar **Recuperar**.
@@ -62,6 +62,8 @@ La pantalla del grupo muestra si **Te deben** o **Debes** (o **Todo saldado**), 
 ## Saldar cuentas
 
 En una línea de **Quién paga a quién** que te afecte, toca **Saldar**. Si la persona a la que pagas ha añadido sus datos de pago, verás un botón o instrucciones para pagarle. Elige **¿Cómo se pagó?** y toca **He pagado**, o **Lo he recibido** si eres tú quien cobra (útil cuando un amigo te pagó en efectivo y no volvió a abrir el enlace).
+
+No hace falta pagarlo todo de una vez. El **Importe** se abre con el pago sugerido; cámbialo para registrar una parte. No puede ser mayor que lo que se deben entre ustedes dos, así que un pago solo acerca ambos saldos a cero. Para pagar a alguien que no aparece en tu línea de **Quién paga a quién**, o para registrar dinero que te dio alguien, toca **Registrar un pago** en la pantalla del grupo (en el ordenador, en la barra de herramientas), elige a la persona e introduce el importe.
 
 Un pago cuenta al instante, para todos. Si se registró por error, ábrelo en la lista de actividad y toca **Anular pago**: sigue en el historial, marcado como anulado, y los saldos vuelven atrás. Si otra persona cambió el grupo mientras saldabas, verás «Los saldos han cambiado»: revisa las cifras y vuelve a intentarlo.
 

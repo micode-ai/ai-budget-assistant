@@ -15,7 +15,7 @@ import { NotificationsService } from '../notifications/notifications.service';
 import * as ni18n from '../notifications/notification-i18n';
 import {
   computeGroupLedger,
-  isValidSettlement,
+  validateSettlement,
   myShareThisMonth,
   resolveGroupShares,
   type LedgerExpense,
@@ -845,12 +845,16 @@ export class GroupsService {
       throw new ConflictException({ code: 'LEDGER_CHANGED', message: 'Balances changed, refresh and retry' });
     }
 
-    // Validated against the CURRENT suggested transfers before any write.
+    // ABA-652: validated against the CURRENT balances before any write. A payment may be partial or
+    // go to a creditor who is not the suggested one, but it can only shrink both balances, never
+    // flip a sign, so nobody can record "I paid 1000" to become a creditor.
     const { ledger } = await this.loadState(groupId);
-    if (!isValidSettlement(dto, ledger.suggestedTransfers)) {
+    const check = validateSettlement(dto, ledger.balances);
+    if (!check.ok) {
       throw new BadRequestException({
-        code: 'SETTLEMENT_MISMATCH',
-        message: 'That payment does not match a current suggested transfer',
+        code: 'SETTLEMENT_EXCEEDS_BALANCE',
+        reason: check.reason,
+        message: 'That payment is larger than what is owed between these two members',
       });
     }
 
@@ -868,7 +872,8 @@ export class GroupsService {
             groupId,
             fromMemberId: dto.fromMemberId,
             toMemberId: dto.toMemberId,
-            amount: dto.amount,
+            // Clamped to min(owed, owed-to): the cent of tolerance never flips a sign.
+            amount: check.amount,
             method: dto.method ?? null,
             recordedByMemberId: actor.id,
             clientRequestId: dto.clientRequestId,

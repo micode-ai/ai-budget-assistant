@@ -7,6 +7,7 @@ import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useGroupVoidSettlement } from '@/hooks/useGroupVoidSettlement';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { isGroupWritable } from '@/features/groups/groupDisplay';
+import { canRecordPayment } from '@/features/groups/groupMath';
 import type { GroupExpense, GroupTransfer } from '@budget/shared-types';
 import { GroupActivityList } from './GroupActivityList';
 import { GroupBalanceHero } from './GroupBalanceHero';
@@ -98,6 +99,16 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
               style={styles.rowButton}
             />
           </View>
+        )}
+        {/* ABA-652: a partial payment, or one to a creditor who is not the suggested one. */}
+        {writable && canRecordPayment(detail) && (
+          <GroupButton
+            label={t('groups.recordPayment')}
+            onPress={() => router.push(`/groups/${groupId}/settle` as never)}
+            variant="secondary"
+            write
+            style={styles.gap}
+          />
         )}
         {!writable && (
           <GroupButton

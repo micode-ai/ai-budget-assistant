@@ -706,11 +706,51 @@ describe('GroupGuestController', () => {
         expect(prisma.groupSettlement.create).not.toHaveBeenCalled();
       });
 
-      it('rejects an amount that matches no current transfer, before any write', async () => {
+      // ABA-652: Ann owes Cat 30. A partial amount is a valid payment; more than that is not.
+      it('records a partial amount typed into the form (comma decimal accepted)', async () => {
         const res = mkRes();
-        await controller.settle(TOKEN, body({ amount: '5.00' }), mkReq() as any, res);
-        expect(res.location).toContain('f=invalid');
-        expect(prisma.groupSettlement.create).not.toHaveBeenCalled();
+        await controller.settle(TOKEN, body({ amount: '12,50' }), mkReq() as any, res);
+        expect(prisma.groupSettlement.create).toHaveBeenCalledTimes(1);
+        expect(prisma.groupSettlement.create.mock.calls[0][0].data).toMatchObject({ amount: 12.5, fromMemberId: A });
+        expect(res.location).toContain('cta=settled');
+      });
+
+      it('refuses paying more than is owed as "toomuch", before any write', async () => {
+        const res = mkRes();
+        await controller.settle(TOKEN, body({ amount: '30.02' }), mkReq() as any, res);
+        expect(res.location).toContain('f=toomuch');
+        expect(prisma.$transaction).not.toHaveBeenCalled();
+      });
+
+      it('refuses a forged payment to a member who is not owed (Ann -> Bob) as "toomuch"', async () => {
+        const res = mkRes();
+        await controller.settle(TOKEN, body({ toMemberId: B, amount: '5.00' }), mkReq() as any, res);
+        expect(res.location).toContain('f=toomuch');
+        expect(prisma.$transaction).not.toHaveBeenCalled();
+      });
+
+      it('refuses a garbage amount as "invalid" without reaching the ledger', async () => {
+        for (const amount of ['0', '-5', '1e3', '12.345', 'abc', '']) {
+          const res = mkRes();
+          await controller.settle(TOKEN, body({ amount }), mkReq() as any, res);
+          expect(res.location).toContain('f=invalid');
+        }
+        expect(prisma.$transaction).not.toHaveBeenCalled();
+      });
+
+      it('renders an editable amount prefilled with the suggested transfer, plus the bound', async () => {
+        const res = mkRes();
+        await controller.page(TOKEN, undefined, undefined, mkReq() as any, res);
+        expect(res.body).toMatch(/<input id="sa-0" type="text" name="amount" value="30\.00"/);
+        expect(res.body).not.toContain('type="hidden" name="amount"');
+        expect(res.body).toContain('30.00 PLN');
+        expect(res.body).not.toContain('<script');
+      });
+
+      it('shows the "toomuch" flash', async () => {
+        const res = mkRes();
+        await controller.page(TOKEN, 'toomuch', undefined, mkReq() as any, res);
+        expect(res.body).toContain('more than is owed');
       });
 
       it('rejects a transfer the acting member is not part of', async () => {
@@ -778,7 +818,7 @@ describe('GroupGuestController', () => {
     });
 
     it('every locale has the new copy (real translations, not the English fallback)', async () => {
-      const keys = ['restoreSummary', 'restoreFormTitle', 'restoreCodeLabel', 'restoreButton', 'msgBadCode', 'msgAlreadyIn', 'expenseAddedBy'] as const;
+      const keys = ['restoreSummary', 'restoreFormTitle', 'restoreCodeLabel', 'restoreButton', 'msgBadCode', 'msgAlreadyIn', 'expenseAddedBy', 'settleAmountLabel', 'settlePartialHint', 'msgTooMuch'] as const;
       const { getGroupGuestStrings } = await import('./helpers/group-guest-page-i18n');
       const en = getGroupGuestStrings('en');
       for (const lang of ['pl', 'de', 'es', 'fr', 'ru', 'ua', 'be', 'nl']) {

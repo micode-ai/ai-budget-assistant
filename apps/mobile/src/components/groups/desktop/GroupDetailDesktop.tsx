@@ -9,6 +9,7 @@ import { useGroupVoidSettlement } from '@/hooks/useGroupVoidSettlement';
 import { useDesktopShortcut } from '@/hooks/useDesktopShortcuts';
 import { resolveNextFocusedRow } from '@/features/expenses/rowKeyboardNav';
 import { canModifyExpense, isGroupWritable, liveMembers } from '@/features/groups/groupDisplay';
+import { canRecordPayment } from '@/features/groups/groupMath';
 import { groupActivityByDay } from '@/features/groups/groupActivityTable';
 import { WIDE_TABLE_MIN_WIDTH } from '@/components/webLayout.constants';
 import type { GroupExpense, GroupTransfer } from '@budget/shared-types';
@@ -151,6 +152,18 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
           >
             <Text style={styles.secondaryButtonText}>{t('groups.membersAction')}</Text>
           </Pressable>
+          {/* ABA-652: a partial payment, or one to a creditor who is not the suggested one. */}
+          {writable && canRecordPayment(detail) && (
+            <Pressable
+              onPress={() => setDialog({ kind: 'settle' })}
+              disabled={isOffline}
+              accessibilityRole="button"
+              accessibilityHint={isOffline ? t('groups.offlineBanner') : undefined}
+              style={[styles.secondaryButton, isOffline && { opacity: 0.55 }]}
+            >
+              <Text style={styles.secondaryButtonText}>{t('groups.recordPayment')}</Text>
+            </Pressable>
+          )}
           {writable && (
             <Pressable
               onPress={() => setDialog({ kind: 'expense' })}

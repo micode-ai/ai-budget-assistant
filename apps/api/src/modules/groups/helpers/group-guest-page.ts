@@ -39,6 +39,8 @@ export interface GuestTransferView {
   fromName: string;
   toName: string;
   amount: number;
+  /** ABA-652: the most this pair can settle now, min(owed, owed-to); at least `amount`. */
+  maxAmount: number;
   /** The viewing (cookie-identified) member is the payer or the receiver of this transfer. */
   canSettle: boolean;
   iAmReceiver: boolean;
@@ -163,6 +165,7 @@ const FLASH_KEYS: Record<string, GroupStrKey> = {
   linkfailed: 'msgLinkFailed',
   badcode: 'msgBadCode',
   alreadyin: 'msgAlreadyIn',
+  toomuch: 'msgTooMuch',
 };
 
 export const FLASH_CODES = [...Object.keys(FLASH_KEYS), 'archived'];
@@ -222,10 +225,12 @@ function activityRows(m: GroupPageModel, s: GroupGuestStrings, allowActions: boo
 function renderTransfers(m: GroupPageModel, s: GroupGuestStrings): string {
   if (m.transfers.length === 0) return `<p class="muted">${escapeHtml(s.t('nothingToSettle'))}</p>`;
   return m.transfers
-    .map((t) => {
+    .map((t, i) => {
+      // ABA-652: the amount is editable (prefilled with the suggested transfer); the server re-checks
+      // it against the current balances, so this field is never trusted.
       const settleForm =
         m.me && !m.archived && t.canSettle
-          ? `<form method="post" action="${escapeHtml(actionUrl(m, '/settle'))}">${csrfField(m)}<input type="hidden" name="fromMemberId" value="${escapeHtml(t.fromId)}"><input type="hidden" name="toMemberId" value="${escapeHtml(t.toId)}"><input type="hidden" name="amount" value="${escapeHtml(t.amount.toFixed(2))}"><input type="hidden" name="v" value="${m.ledgerVersion}"><input type="hidden" name="rid" value="${escapeHtml(m.rid)}-${escapeHtml(t.fromId.slice(0, 8))}${escapeHtml(t.toId.slice(0, 8))}"><button class="btn btn-secondary" type="submit">${escapeHtml(s.t(t.iAmReceiver ? 'markReceived' : 'markPaid'))}</button></form>`
+          ? `<form method="post" action="${escapeHtml(actionUrl(m, '/settle'))}">${csrfField(m)}<input type="hidden" name="fromMemberId" value="${escapeHtml(t.fromId)}"><input type="hidden" name="toMemberId" value="${escapeHtml(t.toId)}"><label for="sa-${i}">${escapeHtml(s.t('settleAmountLabel', m.currencyCode))}</label><input id="sa-${i}" type="text" name="amount" value="${escapeHtml(t.amount.toFixed(2))}" inputmode="decimal" maxlength="10" autocomplete="off" required><p class="muted">${escapeHtml(s.t('settlePartialHint', formatAmount(t.maxAmount, m.currencyCode)))}</p><input type="hidden" name="v" value="${m.ledgerVersion}"><input type="hidden" name="rid" value="${escapeHtml(m.rid)}-${escapeHtml(t.fromId.slice(0, 8))}${escapeHtml(t.toId.slice(0, 8))}"><button class="btn btn-secondary" type="submit">${escapeHtml(s.t(t.iAmReceiver ? 'markReceived' : 'markPaid'))}</button></form>`
           : '';
       let pay = '';
       if (t.pay) {
