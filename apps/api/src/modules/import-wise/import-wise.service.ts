@@ -1,4 +1,5 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, Optional } from '@nestjs/common';
+import { GroupBudgetMirrorService } from '../groups/group-budget-mirror.service';
 import { randomUUID } from 'crypto';
 import * as Papa from 'papaparse';
 import { PrismaService } from '../../database/prisma.service';
@@ -92,6 +93,8 @@ export class ImportWiseService {
     private readonly importBatches: ImportBatchesService,
     private readonly anomaly: AnomalyService,
     private readonly merchantRules: MerchantRulesService,
+    // ABA-660: imports bypass ExpenseCreatedHooksService, so the budget mirror's matcher runs here.
+    @Optional() private readonly groupMirror?: GroupBudgetMirrorService,
   ) {}
 
   async parsePreview(
@@ -364,6 +367,7 @@ export class ImportWiseService {
     this.anomaly
       .checkExpenseBatch(accountId, userId, createdExpenseIds)
       .catch(logFireAndForget(this.logger, 'ImportWiseService.checkExpenseBatch'));
+    if (createdExpenses + createdIncomes > 0) this.groupMirror?.afterPersonalWrite(accountId, userId);
 
     return { createdExpenses, createdIncomes, createdExchanges, batchId };
   }

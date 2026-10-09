@@ -12,12 +12,15 @@ import { GroupReminderCron } from './group-reminder.cron';
 import { GroupItemsService } from './group-items.service';
 import { GroupMergeService } from './group-merge.service';
 import { GroupBotService } from './group-bot.service';
+import { GroupBudgetMirrorModule } from './group-budget-mirror.module';
+import { GroupBudgetMirrorController } from './group-budget-mirror.controller';
 
 // PrismaService, CacheService and NotificationsService are @Global().
 @Module({
   // ABA-654: the existing singleton ExchangeRateService for write-time conversion; never a second one.
-  imports: [CurrencyExchangeModule],
-  controllers: [GroupsController, GroupGuestController],
+  // ABA-660: the budget mirror (ledger-write hooks, its routes); the module has no path back here.
+  imports: [CurrencyExchangeModule, GroupBudgetMirrorModule],
+  controllers: [GroupsController, GroupGuestController, GroupBudgetMirrorController],
   providers: [GroupsService, GroupItemsService, GroupMergeService, GroupBotService, GroupGuestService, GroupOwnershipService, GroupReminderCron, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard],
   // GroupOwnershipService: UsersService / AdminService hand groups on before an account goes away.
   // GroupBotService: the Telegram / WhatsApp / Slack `group` command (ABA-658).

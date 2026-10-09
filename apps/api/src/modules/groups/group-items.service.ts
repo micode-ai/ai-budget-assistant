@@ -7,10 +7,12 @@ import {
   Injectable,
   Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { GroupsService } from './groups.service';
+import { GroupBudgetMirrorService } from './group-budget-mirror.service';
 import {
   applyManagedClaims,
   applyOwnClaims,
@@ -82,6 +84,8 @@ export class GroupItemsService {
     private readonly prisma: PrismaService,
     private readonly groups: GroupsService,
     private readonly cache: CacheService,
+    // ABA-660: a claim change that moves shares re-syncs the budget mirror. Optional for older specs.
+    @Optional() private readonly mirror?: GroupBudgetMirrorService,
   ) {}
 
   /**
@@ -328,7 +332,10 @@ export class GroupItemsService {
       return membersWithMovedShares(before, after);
     });
 
-    if (moved.length) this.groups.notifyMembers(groupId, actor.id, moved);
+    if (moved.length) {
+      this.groups.notifyMembers(groupId, actor.id, moved);
+      this.mirror?.afterLedgerWrite(groupId);
+    }
     return this.getItems(groupId, actor.id, expenseId);
   }
 

@@ -436,6 +436,7 @@ model Account {
   salaryProfiles                 SalaryProfile[]
   inboundMailAddresses           InboundMailAddress[]
   inboundReceipts                InboundReceipt[]
+  groupBudgetMirrors             ExpenseGroupMember[]            @relation("GroupBudgetMirrorAccount")
 
   @@map("accounts")
 }
@@ -540,6 +541,7 @@ model Category {
   userSubscriptions     UserSubscription[]
   merchantCategoryRules MerchantCategoryRule[]
   productCategoryRules  ProductCategoryRule[]
+  groupBudgetMirrors    ExpenseGroupMember[]   @relation("GroupBudgetMirrorCategory")
 
   @@unique([accountId, name, type])
   @@unique([accountId, clientId])
@@ -593,21 +595,36 @@ model Expense {
 
   paidByUserId String? @map("paid_by_user_id")
 
+  // Shared-groups budget mirror (ABA-660): a `source: 'group'` row mirroring ONE member's share of ONE
+  // group expense, written only by GroupBudgetMirrorService. Plain ids with no FK (the group side is
+  // torn down explicitly, see shared-groups.md); unique per account, so rows frozen in an account the user can
+  // no longer write never block the new one. A row the user deleted keeps both ids, so it is not
+  // recreated; a row the MIRROR removes is soft-deleted AND detached (ids NULL), so it can come back.
+  // `groupShareAmount` is the share in the GROUP currency this row was written from: the row is
+  // re-priced only when the share moves, never on a rate change.
+  groupExpenseId   String?  @map("group_expense_id")
+  groupMemberId    String?  @map("group_member_id")
+  groupShareAmount Decimal? @map("group_share_amount") @db.Decimal(12, 2)
+
   // Relations
-  user              User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account           Account                   @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  category          Category?                 @relation(fields: [categoryId], references: [id])
-  importBatch       ImportBatch?              @relation(fields: [importBatchId], references: [id])
-  items             ExpenseItem[]
-  expenseTags       ExpenseTag[]
-  categorySplits    ExpenseCategorySplit[]
-  projectExpenses   ProjectExpense[]
-  purchaseRequest   PurchaseRequest?          @relation("PlannedPurchase")
-  shares            TripExpenseShare[]
-  splitParticipants ReceiptSplitParticipant[]
+  user                 User                      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account              Account                   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category             Category?                 @relation(fields: [categoryId], references: [id])
+  importBatch          ImportBatch?              @relation(fields: [importBatchId], references: [id])
+  items                ExpenseItem[]
+  expenseTags          ExpenseTag[]
+  categorySplits       ExpenseCategorySplit[]
+  projectExpenses      ProjectExpense[]
+  purchaseRequest      PurchaseRequest?          @relation("PlannedPurchase")
+  shares               TripExpenseShare[]
+  splitParticipants    ReceiptSplitParticipant[]
+  groupCashLink        GroupCashLink?
+  groupCashSuggestions GroupCashSuggestion[]
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
+  @@unique([groupExpenseId, groupMemberId, accountId])
+  @@index([groupMemberId])
   @@index([accountId, date(sort: Desc)])
   @@index([categoryId])
   @@index([accountId, isDebt])
@@ -1015,13 +1032,15 @@ model Income {
   updatedAt            DateTime  @updatedAt @map("updated_at")
 
   // Relations
-  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account        Account          @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  category       Category?        @relation(fields: [categoryId], references: [id])
-  importBatch    ImportBatch?     @relation(fields: [importBatchId], references: [id])
-  incomeTags     IncomeTag[]
-  projectIncomes ProjectIncome[]
-  linkedTransfer AccountTransfer? @relation("TransferLinkedIncome")
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account              Account               @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category             Category?             @relation(fields: [categoryId], references: [id])
+  importBatch          ImportBatch?          @relation(fields: [importBatchId], references: [id])
+  incomeTags           IncomeTag[]
+  projectIncomes       ProjectIncome[]
+  linkedTransfer       AccountTransfer?      @relation("TransferLinkedIncome")
+  groupCashLink        GroupCashLink?
+  groupCashSuggestions GroupCashSuggestion[]
 
   @@unique([accountId, clientId])
   @@unique([accountId, externalRef])
@@ -2452,20 +2471,31 @@ model ExpenseGroupMember {
   // row stays, soft-removed, so history still reads; every ledger row it held now points at that
   // member. A plain id with no FK, like the event log (a merge is irreversible).
   mergedIntoMemberId String?              @map("merged_into_member_id")
+  // ABA-660 budget mirror ("count my share in my budget"), app-user rows only. Set = on: shares of
+  // expenses dated from `budgetMirrorFrom` (the first day of the month it was turned on) are written
+  // into `budgetAccountId` as personal `source: 'group'` expenses, in `budgetCategoryId`.
+  budgetMirrorFrom   DateTime?            @map("budget_mirror_from") @db.Date
+  budgetAccountId    String?              @map("budget_account_id")
+  budgetCategoryId   String?              @map("budget_category_id")
   createdAt          DateTime             @default(now()) @map("created_at")
   updatedAt          DateTime             @updatedAt @map("updated_at")
 
-  user            User?               @relation(fields: [userId], references: [id], onDelete: SetNull)
-  group           ExpenseGroup        @relation(fields: [groupId], references: [id], onDelete: Cascade)
-  paidExpenses    GroupExpense[]      @relation("GroupExpensePayer")
+  user            User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
+  group           ExpenseGroup          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  paidExpenses    GroupExpense[]        @relation("GroupExpensePayer")
   shares          GroupExpenseShare[]
-  settlementsFrom GroupSettlement[]   @relation("GroupSettlementFrom")
-  settlementsTo   GroupSettlement[]   @relation("GroupSettlementTo")
+  settlementsFrom GroupSettlement[]     @relation("GroupSettlementFrom")
+  settlementsTo   GroupSettlement[]     @relation("GroupSettlementTo")
   itemClaims      GroupItemClaim[]
+  budgetAccount   Account?              @relation("GroupBudgetMirrorAccount", fields: [budgetAccountId], references: [id], onDelete: SetNull)
+  budgetCategory  Category?             @relation("GroupBudgetMirrorCategory", fields: [budgetCategoryId], references: [id], onDelete: SetNull)
+  cashLinks       GroupCashLink[]
+  cashSuggestions GroupCashSuggestion[]
 
   @@unique([groupId, nameKey]) // names are the guest's only identity cue; no duplicates
   @@unique([groupId, userId]) // one member per app user per group (NULLs distinct → many guests)
   @@index([userId])
+  @@index([budgetAccountId])
   @@map("expense_group_members")
 }
 
@@ -2603,6 +2633,73 @@ model GroupMemberEvent {
 
   @@index([groupId, createdAt])
   @@map("group_member_events")
+}
+
+// ABA-660: a group cash movement of a mirroring member, as it can appear in their own books.
+enum GroupCashLinkKind {
+  payer_expense // my card payment for a group expense I paid (an Expense)
+  settlement_out // my transfer paying a group balance (an Expense)
+  settlement_in // a transfer I received for a group balance (an Income)
+}
+
+enum GroupCashLinkOrigin {
+  auto // the single exact candidate, linked by the matcher (undoable)
+  user // linked by hand, or a suggestion the user accepted
+}
+
+enum GroupCashSuggestionStatus {
+  open
+  rejected // never offered or auto-linked again for this leg
+}
+
+// ABA-660: a linked cash leg. The personal row it names carries `isSplitReceivable = true` for as
+// long as this row exists (the money is accounted for by the member's share rows), never `isDebt`.
+// `legKey` = "<kind>:<groupExpenseId | settlementId>"; one link per leg, one leg per personal row.
+model GroupCashLink {
+  id             String              @id @default(uuid())
+  memberId       String              @map("member_id")
+  kind           GroupCashLinkKind
+  legKey         String              @map("leg_key")
+  groupExpenseId String?             @map("group_expense_id")
+  settlementId   String?             @map("settlement_id")
+  expenseId      String?             @unique @map("expense_id")
+  incomeId       String?             @unique @map("income_id")
+  origin         GroupCashLinkOrigin
+  createdAt      DateTime            @default(now()) @map("created_at")
+
+  member  ExpenseGroupMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  expense Expense?           @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  income  Income?            @relation(fields: [incomeId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, legKey])
+  @@map("group_cash_links")
+}
+
+// ABA-660: a possible link the matcher could not make on its own (several exact candidates, or a
+// near match). `rejected` rows are kept so the pair is never offered or auto-linked again.
+model GroupCashSuggestion {
+  id             String                    @id @default(uuid())
+  memberId       String                    @map("member_id")
+  kind           GroupCashLinkKind
+  legKey         String                    @map("leg_key")
+  groupExpenseId String?                   @map("group_expense_id")
+  settlementId   String?                   @map("settlement_id")
+  // "e:<expenseId>" | "i:<incomeId>", so one unique key covers both sides.
+  candidateKey   String                    @map("candidate_key")
+  expenseId      String?                   @map("expense_id")
+  incomeId       String?                   @map("income_id")
+  status         GroupCashSuggestionStatus @default(open)
+  createdAt      DateTime                  @default(now()) @map("created_at")
+  updatedAt      DateTime                  @updatedAt @map("updated_at")
+
+  member  ExpenseGroupMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  expense Expense?           @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+  income  Income?            @relation(fields: [incomeId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, legKey, candidateKey])
+  @@index([expenseId])
+  @@index([incomeId])
+  @@map("group_cash_suggestions")
 }
 
 // Inbound e-receipts by e-mail forwarding (ABA-644). One private address per user;

@@ -97,7 +97,7 @@ export class GamificationService {
 
     const [expenseSum, incomeSum] = await Promise.all([
       this.prisma.expense.aggregate({
-        where: { accountId, userId, isDeleted: false, date: { gte: startOfMonth, lte: endOfMonth } },
+        where: { accountId, userId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: startOfMonth, lte: endOfMonth } },
         _sum: { amount: true },
       }),
       this.prisma.income.aggregate({
@@ -124,6 +124,7 @@ export class GamificationService {
             where: {
               accountId,
               isDeleted: false,
+              ...EXCLUDE_SPLIT_RECEIVABLE,
               currencyCode: budget.currencyCode,
               date: { gte: budget.startDate, lte: budget.endDate || now },
               ...(categoryIds.length > 0 ? { categoryId: { in: categoryIds } } : {}),

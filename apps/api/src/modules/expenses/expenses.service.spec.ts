@@ -1224,3 +1224,35 @@ describe('a hand-made split survives an amount edit', () => {
     expect(createdSplitTotal(splitCreateMany)).toBe(238);
   });
 });
+
+// ABA-660: a budget-mirror share row (`source: 'group'`) follows the group for amount, currency
+// and date; the user still owns its category, notes and the rest.
+describe('update() — a budget-mirror share row', () => {
+  it('ignores amount, currency and date, keeps the category edit', async () => {
+    const { service, prisma, tx } = makeSplitDefenceService({ amount: 50 });
+    const row = await prisma.expense.findFirst();
+    prisma.expense.findFirst.mockResolvedValue({ ...row, source: 'group' });
+    prisma.category.findFirst.mockResolvedValue({ id: 'c-mine' });
+
+    await service.update('acc-1', 'e-split-1', {
+      amount: 999,
+      currencyCode: 'EUR',
+      date: '2026-01-01',
+      categoryId: 'c-mine',
+      notes: 'shared flat',
+    } as any);
+
+    const data = tx.expense.update.mock.calls[0][0].data;
+    expect(data.amount).toBeUndefined();
+    expect(data.currencyCode).toBeUndefined();
+    expect(data.date).toBeUndefined();
+    expect(data.notes).toBe('shared flat');
+  });
+
+  it('an ordinary row still takes all three', async () => {
+    const { service, tx } = makeSplitDefenceService({ amount: 50 });
+    await service.update('acc-1', 'e-split-1', { amount: 60, currencyCode: 'EUR', date: '2026-01-01' } as any);
+    const data = tx.expense.update.mock.calls[0][0].data;
+    expect(data).toEqual(expect.objectContaining({ amount: 60, currencyCode: 'EUR', date: new Date('2026-01-01') }));
+  });
+});

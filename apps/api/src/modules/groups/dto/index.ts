@@ -405,3 +405,36 @@ export class TransferGroupOwnerDto {
   @IsUUID()
   memberId: string;
 }
+
+/** PUT /groups/:groupId/budget-mirror (ABA-660). Both ids are re-scoped to the caller in the service. */
+export class SetGroupBudgetMirrorDto {
+  @IsUUID()
+  accountId: string;
+
+  @IsOptional()
+  @ValidateIf((_o, v) => v !== null)
+  @IsUUID()
+  categoryId?: string | null;
+}
+
+/** POST /groups/:groupId/budget-links (ABA-660). Every id is re-scoped in the service. */
+export class CreateGroupCashLinkDto {
+  @IsIn(['payer_expense', 'settlement_out', 'settlement_in'])
+  kind: 'payer_expense' | 'settlement_out' | 'settlement_in';
+
+  @IsOptional()
+  @IsUUID()
+  groupExpenseId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  settlementId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  expenseId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  incomeId?: string;
+}

@@ -71,7 +71,7 @@ export class GoalPlannerService {
 
     const [expenses, incomes] = await Promise.all([
       this.prisma.expense.findMany({
-        where: { accountId, isDeleted: false, date: { gte: threeMonthsAgo } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: threeMonthsAgo } },
         include: { category: true },
       }),
       this.prisma.income.findMany({

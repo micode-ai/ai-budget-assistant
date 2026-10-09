@@ -432,11 +432,13 @@ export class BackupsService {
           locationLat: exp.locationLat, locationLng: exp.locationLng, locationName: exp.locationName,
           receiptUrl: exp.receiptUrl, receiptFingerprint: exp.receiptFingerprint,
           isRecurring: exp.isRecurring || false, recurringId: exp.recurringId, recurringPeriod: exp.recurringPeriod,
-          source: exp.source || 'manual',
+          // ABA-660 review M2: 'group' is reserved for the budget mirror's own rows and a restored flag has no
+          // link behind it, so neither survives a restore (a forged backup could hide spend otherwise).
+          source: !exp.source || exp.source === 'group' ? 'manual' : exp.source,
           externalRef: await this.freeExternalRef(tx, 'expense', accountId, exp.externalRef, exp.clientId),
           isDebt: exp.isDebt || false, isDebtRepayment: exp.isDebtRepayment || false,
           debtContactName: exp.debtContactName, debtDueDate: exp.debtDueDate ? new Date(exp.debtDueDate) : null,
-          isPlanned: exp.isPlanned || false, isSplitReceivable: exp.isSplitReceivable || false,
+          isPlanned: exp.isPlanned || false, isSplitReceivable: false,
           encryptedPayload: exp.encryptedPayload, encryptionKeyVersion: exp.encryptionKeyVersion,
           // Not carried across: the receipt image (stripped from the export), the
           // import batch, the trip payer and the linked debt income — each points
@@ -536,10 +538,10 @@ export class BackupsService {
           categoryId: remap(maps.category, inc.categoryId),
           amount: inc.amount, currencyCode: inc.currencyCode || 'USD',
           description: inc.description, notes: inc.notes, date: new Date(inc.date),
-          source: inc.source || 'manual',
+          source: !inc.source || inc.source === 'group' ? 'manual' : inc.source,
           externalRef: await this.freeExternalRef(tx, 'income', accountId, inc.externalRef, inc.clientId),
           isDebt: inc.isDebt || false, isDebtRepayment: inc.isDebtRepayment || false,
-          isSplitReceivable: inc.isSplitReceivable || false,
+          isSplitReceivable: false,
           debtContactName: inc.debtContactName, debtDueDate: inc.debtDueDate ? new Date(inc.debtDueDate) : null,
           encryptedPayload: inc.encryptedPayload, encryptionKeyVersion: inc.encryptionKeyVersion,
         };

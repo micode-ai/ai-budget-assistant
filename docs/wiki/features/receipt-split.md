@@ -64,15 +64,20 @@ reflects over `GuestController`'s real routes and asserts each one is excluded.
 the outflow, so filtering on `isDebt` would silently rewrite the numbers of every user who tracks
 debts. `EXCLUDE_SPLIT_RECEIVABLE` is the single shared predicate spread into every user-facing
 total (`analytics.service.ts`, `budget-alert.service.ts`, `safe-to-spend.service.ts`,
-`wallet.service.ts`); mobile mirrors it with `filterConsumption()` (absent means false — the column
+`wallet.service.ts`, and since ABA-660 also the monthly digest, the scheduled report e-mails,
+gamification, the spending story, the goal planner and the report export's totals, which had
+counted a split's debt rows on top of the receipt); mobile mirrors it with `filterConsumption()` (absent means false — the column
 is nullable client-side), consumed by seven client surfaces.
 
 **The flag exists on incomes too (ABA-659).** `Income.isSplitReceivable` has the same meaning —
 the money is accounted for by another row — and the same `EXCLUDE_SPLIT_RECEIVABLE` object is
 spread into every income total (mobile: `filterIncomeConsumption()`). Receipt splits never set it:
 the guests' repayment income is the real cash that nets the split back to the author's own share,
-so it must stay counted. Its first writer will be the shared-groups budget mirror
-(`features/shared-groups.md`).
+so it must stay counted. Its first writer is the shared-groups budget mirror (ABA-660,
+[shared-groups](shared-groups.md), *Count my share in my budget*), which flags a member's captured group
+cash legs (a card payment for a group expense, a settlement transfer in or out) on both tables. Those rows
+are not receipt-split rows: they carry the flag without `isDebt`, and only a `GroupCashLink` ties them to
+the group.
 
 **Unknown, expired and cancelled tokens must be indistinguishable.** They render byte-identical
 responses — same status, body and length — so a probing guest cannot tell "never existed" from

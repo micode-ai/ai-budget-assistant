@@ -1,4 +1,5 @@
-import { Injectable, Logger, BadRequestException } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, Optional } from '@nestjs/common';
+import { GroupBudgetMirrorService } from '../groups/group-budget-mirror.service';
 import { randomUUID } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { ImportBatchesService } from '../import-batches/import-batches.service';
@@ -18,7 +19,7 @@ import { ImportBankAiPreviewService } from './ai-preview.service';
 import { ImportBankAiPdfService } from './ai-pdf.service';
 import { ImportBankDedupService } from './import-bank-dedup.service';
 import { resolveCategoryId, preloadCategories } from './import-bank-category.util';
-import { PARSERS, getParserById, detectParser, detectPdfParser } from './parsers/registry';
+import { getParserById, detectParser, detectPdfParser } from './parsers/registry';
 import type { BankParser } from './parsers/parser.interface';
 import type {
   BankImportPreviewResponse,
@@ -68,6 +69,8 @@ export class ImportBankService {
     private readonly aiPreview: ImportBankAiPreviewService,
     private readonly aiPdf: ImportBankAiPdfService,
     private readonly dedup: ImportBankDedupService,
+    // ABA-660: imports bypass ExpenseCreatedHooksService, so the budget mirror's matcher runs here.
+    @Optional() private readonly groupMirror?: GroupBudgetMirrorService,
   ) {}
 
   /**
@@ -401,6 +404,7 @@ export class ImportBankService {
     this.anomaly
       .checkExpenseBatch(accountId, userId, createdExpenseIds)
       .catch(logFireAndForget(this.logger, 'ImportBankService.checkExpenseBatch'));
+    if (createdExpenses + createdIncomes > 0) this.groupMirror?.afterPersonalWrite(accountId, userId);
 
     let savedMappingId: string | undefined;
     if (dto.saveMapping && dto.mapping && dto.headerFingerprint) {

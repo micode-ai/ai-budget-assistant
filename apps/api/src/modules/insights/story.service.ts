@@ -218,12 +218,12 @@ export class StoryService {
       budgets,
     ] = await Promise.all([
       this.prisma.expense.findMany({
-        where: { accountId, isDeleted: false, date: { gte: periodStart, lte: periodEnd } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: periodStart, lte: periodEnd } },
         include: { category: true },
         orderBy: { amount: 'desc' },
       }),
       this.prisma.expense.findMany({
-        where: { accountId, isDeleted: false, date: { gte: previousPeriodStart, lt: periodStart } },
+        where: { accountId, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: previousPeriodStart, lt: periodStart } },
         include: { category: true },
       }),
       this.prisma.income.findMany({

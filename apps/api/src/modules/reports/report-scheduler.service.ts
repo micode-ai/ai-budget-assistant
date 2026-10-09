@@ -135,7 +135,7 @@ export class ReportSchedulerService {
         const [expenseGroups, incomeGroups] = await Promise.all([
           this.prisma.expense.groupBy({
             by: ['currencyCode'],
-            where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+            where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: weekStart, lte: now } },
             _sum: { amount: true },
           }),
           this.prisma.income.groupBy({
@@ -152,7 +152,7 @@ export class ReportSchedulerService {
         // Top categories — group by category AND currency, then convert and re-aggregate
         const categoryBreakdownRaw = await this.prisma.expense.groupBy({
           by: ['categoryId', 'currencyCode'],
-          where: { accountId: account.id, isDeleted: false, date: { gte: weekStart, lte: now } },
+          where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: weekStart, lte: now } },
           _sum: { amount: true },
         });
 
@@ -252,7 +252,7 @@ export class ReportSchedulerService {
           const [expGroups, incGroups, prevExpGroups, prevIncGroups] = await Promise.all([
             this.prisma.expense.groupBy({
               by: ['currencyCode'],
-              where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
+              where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: prevMonth, lte: prevMonthEnd } },
               _sum: { amount: true },
             }),
             this.prisma.income.groupBy({
@@ -262,7 +262,7 @@ export class ReportSchedulerService {
             }),
             this.prisma.expense.groupBy({
               by: ['currencyCode'],
-              where: { accountId: account.id, isDeleted: false, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
+              where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: twoMonthsAgo, lte: twoMonthsAgoEnd } },
               _sum: { amount: true },
             }),
             this.prisma.income.groupBy({
@@ -284,7 +284,7 @@ export class ReportSchedulerService {
           // Top categories — group by category AND currency, then convert and re-aggregate
           const categoryBreakdownRaw = await this.prisma.expense.groupBy({
             by: ['categoryId', 'currencyCode'],
-            where: { accountId: account.id, isDeleted: false, date: { gte: prevMonth, lte: prevMonthEnd } },
+            where: { accountId: account.id, isDeleted: false, ...EXCLUDE_SPLIT_RECEIVABLE, date: { gte: prevMonth, lte: prevMonthEnd } },
             _sum: { amount: true },
           });
 

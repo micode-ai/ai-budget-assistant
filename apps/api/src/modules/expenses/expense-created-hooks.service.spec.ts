@@ -400,3 +400,45 @@ describe('onExpenseCreated — merge a receipt into the bank copy', () => {
     expect(crossAccount.mergeExpenses).not.toHaveBeenCalled();
   });
 });
+
+// ---------------------------------------------------------------------------
+// ABA-660 — a captured payment may be a group cash leg (budget mirror)
+// ---------------------------------------------------------------------------
+
+describe('onExpenseCreated budget mirror trigger', () => {
+  function makeService() {
+    const prisma: any = { expense: { findFirst: jest.fn().mockResolvedValue(null) } };
+    const cacheService: any = { delByPrefix: jest.fn().mockResolvedValue(undefined) };
+    const anomalyService: any = { checkExpense: jest.fn().mockResolvedValue(undefined) };
+    const afterPersonalWrite = jest.fn();
+    const service = new ExpenseCreatedHooksService(
+      prisma,
+      anomalyService,
+      cacheService,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      undefined,
+      { afterPersonalWrite } as never,
+    );
+    return { service, afterPersonalWrite, anomalyService };
+  }
+  const flush = () => new Promise((r) => setImmediate(r));
+
+  it('runs the matcher for the account after the anomaly check', async () => {
+    const { service, afterPersonalWrite, anomalyService } = makeService();
+    await service.onExpenseCreated('acc-1', 'user-1', { id: 'e-1', amount: 200, currencyCode: 'PLN', source: 'notification' }, []);
+    await flush();
+    expect(afterPersonalWrite).toHaveBeenCalledWith('acc-1', 'user-1');
+    expect(anomalyService.checkExpense.mock.invocationCallOrder[0]).toBeLessThan(afterPersonalWrite.mock.invocationCallOrder[0]);
+  });
+
+  it('never for a share row the mirror wrote itself', async () => {
+    const { service, afterPersonalWrite } = makeService();
+    await service.onExpenseCreated('acc-1', 'user-1', { id: 'e-1', amount: 50, currencyCode: 'PLN', source: 'group' }, []);
+    await flush();
+    expect(afterPersonalWrite).not.toHaveBeenCalled();
+  });
+});

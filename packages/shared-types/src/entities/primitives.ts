@@ -2,7 +2,8 @@ export type Currency = 'USD' | 'EUR' | 'PLN' | 'GBP' | 'UAH' | 'RUB' | 'BYN';
 
 export type SyncStatus = 'pending' | 'synced' | 'conflict' | 'error';
 
-export type ExpenseSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack' | 'notification';
+/** `group`: a share row the shared-groups budget mirror writes (ABA-660); amount, date and currency follow the group. */
+export type ExpenseSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack' | 'notification' | 'group';
 
 export type IncomeSource = 'manual' | 'voice' | 'ocr' | 'import' | 'telegram' | 'whatsapp' | 'slack';
 

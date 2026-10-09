@@ -26,6 +26,7 @@ import {
 } from './group-ledger';
 import { isAdoptionEligible, MAX_GROUPS_OWNED } from './group-ownership.service';
 import { GroupMergeService } from './group-merge.service';
+import { GroupBudgetMirrorService } from './group-budget-mirror.service';
 import {
   convertAtRate,
   isAllowedEntryCurrency,
@@ -128,6 +129,9 @@ export class GroupsService {
     // ABA-657: the link-code self-merge. Optional only so specs that never merge can omit it; the
     // module always provides it.
     @Optional() private readonly merger?: GroupMergeService,
+    // ABA-660: post-commit reconcile of members who count their share in their budget. Optional only
+    // so specs that never mirror can omit it; the module always provides it.
+    @Optional() private readonly mirror?: GroupBudgetMirrorService,
   ) {}
 
   // ---------------------------------------------------------------- helpers
@@ -675,7 +679,17 @@ export class GroupsService {
   }
 
   async deleteGroup(groupId: string): Promise<void> {
-    await this.prisma.expenseGroup.delete({ where: { id: groupId } });
+    if (!this.mirror) {
+      await this.prisma.expenseGroup.delete({ where: { id: groupId } });
+      return;
+    }
+    // ABA-660: the ledger rows cascade away with the group, so every member's mirror is torn down
+    // first, in the same transaction: share rows removed, linked legs counted again.
+    const mirror = this.mirror;
+    await this.prisma.$transaction(async (tx: any) => {
+      await mirror.teardownGroup(tx, groupId);
+      await tx.expenseGroup.delete({ where: { id: groupId } });
+    });
   }
 
   // ---------------------------------------------------------------- members
@@ -769,6 +783,8 @@ export class GroupsService {
         where: { id: target.id },
         data: { removedAt: new Date(), claimTokenHash: null, removedByOwner: !self },
       });
+      // ABA-660 review H2: the removed member's budget mirror goes in the same transaction.
+      await this.mirror?.teardownMember(tx, target.id);
     });
   }
 
@@ -973,6 +989,7 @@ export class GroupsService {
       throw e;
     }
     this.notifyActivity(groupId, actor.id);
+    this.mirror?.afterLedgerWrite(groupId);
     return this.getDetail(groupId, actor.id);
   }
 
@@ -1069,6 +1086,7 @@ export class GroupsService {
       });
     });
     this.notifyActivity(groupId, actor.id);
+    this.mirror?.afterLedgerWrite(groupId);
     return this.getDetail(groupId, actor.id);
   }
 
@@ -1089,6 +1107,7 @@ export class GroupsService {
         data: { deletedAt: new Date(), deletedByMemberId: actor.id },
       });
     });
+    this.mirror?.afterLedgerWrite(groupId);
     return this.getDetail(groupId, actor.id);
   }
 
@@ -1172,6 +1191,7 @@ export class GroupsService {
       throw e;
     }
     this.notifyActivity(groupId, actorId);
+    this.mirror?.afterLedgerWrite(groupId);
     return this.getDetail(groupId, actorId);
   }
 
@@ -1334,6 +1354,7 @@ export class GroupsService {
       });
     });
     this.notifyActivity(groupId, actorId);
+    this.mirror?.afterLedgerWrite(groupId);
     return this.getDetail(groupId, actorId);
   }
 
@@ -1410,6 +1431,7 @@ export class GroupsService {
       throw e;
     }
     this.notifyActivity(groupId, actor.id);
+    this.mirror?.afterLedgerWrite(groupId);
     return this.getDetail(groupId, actor.id);
   }
 
@@ -1430,6 +1452,7 @@ export class GroupsService {
         data: { voidedAt: new Date(), voidedByMemberId: actor.id },
       });
     });
+    this.mirror?.afterLedgerWrite(groupId);
     return this.getDetail(groupId, actor.id);
   }
 

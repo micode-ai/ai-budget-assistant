@@ -7,6 +7,7 @@ import { GamificationService } from '../gamification/gamification.service';
 import { FamilyFeedService } from '../family-feed/family-feed.service';
 import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import { GroupBudgetMirrorService } from '../groups/group-budget-mirror.service';
 import { ucKey } from '../ai/services/user-context-builder.service';
 import {
   resolveExpenseCategoryId,
@@ -33,6 +34,7 @@ export class IncomesService {
     private readonly gamificationService: GamificationService,
     @Optional() private readonly familyFeed?: FamilyFeedService,
     @Optional() private readonly walletCurrency?: WalletCurrencyService,
+    @Optional() private readonly groupMirror?: GroupBudgetMirrorService,
   ) {}
 
   private toIncomeResponse(income: IncomeWithRelations): IncomeResponse {
@@ -171,6 +173,9 @@ export class IncomesService {
       void this.walletCurrency
         ?.ensureCurrencies(accountId, userId, [result.currencyCode])
         .catch(logFireAndForget(this.logger, 'IncomesService.ensureCurrencies'));
+
+      // ABA-660: an incoming transfer may be a settlement of one of the user's groups (budget mirror).
+      this.groupMirror?.afterPersonalWrite(accountId, userId);
     }
 
     return result;

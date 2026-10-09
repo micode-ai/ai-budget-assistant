@@ -5,9 +5,10 @@ import { IncomeBulkService } from './income-bulk.service';
 import { GamificationModule } from '../gamification/gamification.module';
 import { FamilyFeedModule } from '../family-feed/family-feed.module';
 import { WalletCurrencyModule } from '../wallet/wallet-currency.module';
+import { GroupBudgetMirrorModule } from '../groups/group-budget-mirror.module';
 
 @Module({
-  imports: [WalletCurrencyModule, GamificationModule, FamilyFeedModule],
+  imports: [WalletCurrencyModule, GamificationModule, FamilyFeedModule, GroupBudgetMirrorModule],
   controllers: [IncomesController],
   providers: [IncomesService, IncomeBulkService],
   exports: [IncomesService, IncomeBulkService],

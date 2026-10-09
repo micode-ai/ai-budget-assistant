@@ -199,6 +199,8 @@ export class ExpensesService {
       const isNew = !existing;
 
       const resolvedCategoryId = await this.resolveCategoryId(dto.categoryId, accountId);
+      // ABA-660: `group` rows are written only by the budget mirror; a client cannot mint one.
+      const source = dto.source === 'group' ? 'manual' : dto.source;
 
       const expenseData = {
         accountId,
@@ -215,7 +217,7 @@ export class ExpensesService {
         date: new Date(dto.date),
         time: dto.time,
         ...buildLocationColumns(dto.location),
-        source: dto.source,
+        source,
         receiptImage,
         receiptMimeType,
         ...(dto.receiptFingerprint && { receiptFingerprint: dto.receiptFingerprint }),
@@ -245,7 +247,7 @@ export class ExpensesService {
           categoryId: resolvedCategoryId,
           date: new Date(dto.date),
           ...buildLocationColumns(dto.location),
-          source: dto.source,
+          source,
           receiptImage,
           receiptMimeType,
           ...(dto.receiptFingerprint && { receiptFingerprint: dto.receiptFingerprint }),
@@ -584,6 +586,9 @@ export class ExpensesService {
 
   async update(accountId: string, id: string, dto: UpdateExpenseDto) {
     const expense = await this.findOne(accountId, id);
+    // ABA-660: a budget-mirror share row's amount, currency and date follow the group (the mirror
+    // re-syncs them); the user owns everything else on it, the category above all.
+    const mirrorOwned = expense.source === 'group';
     // Tri-state on purpose: a string sets the category, `null` clears it on an
     // explicit request, and `undefined` leaves it alone. The old code mapped an
     // UNRESOLVABLE id to `null` as well, which erased a category the row
@@ -596,15 +601,15 @@ export class ExpensesService {
 
     return this.prisma.$transaction(async (tx: PrismaClient) => {
       const expenseUpdateData = {
-          amount: dto.amount,
+          amount: mirrorOwned ? undefined : dto.amount,
           discountAmount: dto.discountAmount,
           depositAmount: dto.depositAmount,
-          currencyCode: dto.currencyCode,
+          currencyCode: mirrorOwned ? undefined : dto.currencyCode,
           description: dto.description,
           notes: dto.notes,
           merchant: dto.merchant === undefined ? undefined : dto.merchant,
           categoryId: resolvedCategoryId,
-          date: dto.date ? new Date(dto.date) : undefined,
+          date: dto.date && !mirrorOwned ? new Date(dto.date) : undefined,
           time: dto.time,
           ...buildLocationColumns(dto.location),
           isRecurring: dto.isRecurring,
@@ -632,7 +637,7 @@ export class ExpensesService {
       // persisted item categories against the new amount; the split is removed
       // when they no longer reconcile. Runs inside the transaction so a failure
       // rolls the amount edit back rather than committing a drifted pair.
-      if (dto.amount !== undefined && Number(dto.amount) !== Number(expense.amount)) {
+      if (!mirrorOwned && dto.amount !== undefined && Number(dto.amount) !== Number(expense.amount)) {
         await this.rebuildCategorySplits(tx, expense.id, Number(dto.amount));
       }
 

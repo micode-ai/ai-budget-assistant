@@ -15,6 +15,7 @@ import { CommunityPriceModule } from '../community-prices/community-price.module
 import { InflationShieldTrackingModule } from '../insights/inflation-shield-tracking.module';
 import { ReceiptSplitModule } from '../receipt-split/receipt-split.module';
 import { WalletCurrencyModule } from '../wallet/wallet-currency.module';
+import { GroupBudgetMirrorModule } from '../groups/group-budget-mirror.module';
 
 // Module-cycle check (Fix 3, ABA receipt-split review): ReceiptSplitModule only
 // imports DebtsModule, and DebtsModule imports nothing at all (a true leaf on
@@ -22,7 +23,7 @@ import { WalletCurrencyModule } from '../wallet/wallet-currency.module';
 // DebtsModule is a one-way edge with no path back to ExpensesModule. Real DI is
 // safe here; do not revert to importing a standalone function.
 @Module({
-  imports: [WalletCurrencyModule, BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule, ReceiptSplitModule],
+  imports: [WalletCurrencyModule, BudgetsModule, GamificationModule, AnomalyModule, MerchantRulesModule, FamilyFeedModule, CommunityPriceModule, InflationShieldTrackingModule, ReceiptSplitModule, GroupBudgetMirrorModule],
   controllers: [ExpensesController],
   providers: [ReceiptDuplicateService, ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ExpenseCreatedHooksService, ExpenseRecurringCron],
   exports: [ExpensesService, ExpenseBulkService, ExpenseCrossAccountService, ReceiptDuplicateService],

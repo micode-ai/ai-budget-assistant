@@ -816,4 +816,50 @@ describe('GroupsService', () => {
       await expect(service.addMember(G, A, { displayName: 'Dan' })).rejects.toBeInstanceOf(ConflictException);
     });
   });
+  describe('budget mirror hooks (ABA-660)', () => {
+    let mirror: { afterLedgerWrite: jest.Mock; teardownGroup: jest.Mock };
+    beforeEach(() => {
+      mirror = { afterLedgerWrite: jest.fn(), teardownGroup: jest.fn(async () => undefined) };
+      service = new GroupsService(prisma, cache, notifications, { getRates: jest.fn() } as any, undefined, mirror as any);
+    });
+
+    it('reconciles after every committed ledger write', async () => {
+      await service.createExpense(G, A, {
+        clientRequestId: 'req-00000010',
+        description: 'Groceries',
+        amount: 60,
+        date: '2026-01-12',
+        paidByMemberId: A,
+        splitType: 'equal',
+        shares: [{ memberId: A }, { memberId: B }],
+      } as any);
+      prisma.groupExpense.findFirst.mockResolvedValue({
+        id: 'e1', groupId: G, description: 'x', amount: 90, date: new Date('2026-01-10'), paidByMemberId: A,
+        createdByMemberId: A, splitType: 'equal', itemized: false, shares: [{ memberId: A }, { memberId: B }, { memberId: C }],
+      });
+      await service.updateExpense(G, A, 'e1', { description: 'y' } as any);
+      await service.deleteExpense(G, A, 'e1');
+      await service.createSettlement(G, B, { clientRequestId: 'req-00000011', fromMemberId: B, toMemberId: A, amount: 30, ledgerVersion: 3 } as any);
+      prisma.groupSettlement.findFirst.mockResolvedValue({ id: 's1', recordedByMemberId: A, toMemberId: A });
+      await service.voidSettlement(G, A, 's1');
+      expect(mirror.afterLedgerWrite).toHaveBeenCalledTimes(5);
+      expect(mirror.afterLedgerWrite.mock.calls.every((c) => c[0] === G)).toBe(true);
+    });
+
+    it('not for a refused write or a replay', async () => {
+      prisma.groupExpense.findFirst.mockResolvedValue({ id: 'dup' });
+      await service.createExpense(G, A, { clientRequestId: 'req-00000012' } as any);
+      await expect(
+        service.createSettlement(G, B, { clientRequestId: 'req-00000013', fromMemberId: B, toMemberId: A, amount: 999, ledgerVersion: 3 } as any),
+      ).rejects.toBeInstanceOf(BadRequestException);
+      expect(mirror.afterLedgerWrite).not.toHaveBeenCalled();
+    });
+
+    it('a group delete tears every mirror down first, in the same transaction', async () => {
+      await service.deleteGroup(G);
+      expect(prisma.$transaction).toHaveBeenCalled();
+      expect(mirror.teardownGroup).toHaveBeenCalledWith(prisma, G);
+      expect(mirror.teardownGroup.mock.invocationCallOrder[0]).toBeLessThan(prisma.expenseGroup.delete.mock.invocationCallOrder[0]);
+    });
+  });
 });

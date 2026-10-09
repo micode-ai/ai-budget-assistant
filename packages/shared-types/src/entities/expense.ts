@@ -141,6 +141,12 @@ export interface Expense {
    * simply omitted the field.
    */
   isSplitReceivable?: boolean;
+  /**
+   * Budget mirror (ABA-660): set on a `source: 'group'` share row, the group expense it mirrors.
+   * Amount, date and currency of such a row follow the group and are read-only; the category is the
+   * user's. Absent on every other row.
+   */
+  groupExpenseId?: string | null;
   paidByUserId?: string | null;
   /** E2EE encrypted payload field (present on API responses when encryption is enabled). */
   encryptedPayload?: string | null;

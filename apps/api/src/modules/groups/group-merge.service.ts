@@ -7,9 +7,11 @@ import {
   InternalServerErrorException,
   Logger,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
 import { computeGroupLedger } from './group-ledger';
+import { GroupBudgetMirrorService } from './group-budget-mirror.service';
 import {
   checkMergeBalances,
   mergeConsent,
@@ -50,11 +52,21 @@ const numOrNull = (v: unknown) => (v === null || v === undefined ? null : Number
 export class GroupMergeService {
   private readonly logger = new Logger(GroupMergeService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    // ABA-660: the survivor's shares grew, so its budget mirror (if any) re-syncs after the commit.
+    @Optional() private readonly mirror?: GroupBudgetMirrorService,
+  ) {}
 
   /** POST /groups/:groupId/members/:memberId/merge. The consent rule is in `mergeConsent`. */
   merge(groupId: string, actorMemberId: string, memberId: string, intoMemberId: string): Promise<MergeOutcome> {
-    return this.run(groupId, actorMemberId, memberId, intoMemberId, { kind: 'app' });
+    return this.afterCommit(groupId, this.run(groupId, actorMemberId, memberId, intoMemberId, { kind: 'app' }));
+  }
+
+  private async afterCommit(groupId: string, merged: Promise<MergeOutcome>): Promise<MergeOutcome> {
+    const out = await merged;
+    this.mirror?.afterLedgerWrite(groupId);
+    return out;
   }
 
   /**
@@ -69,11 +81,14 @@ export class GroupMergeService {
     guestMemberId: string,
     claimTokenHash: string,
   ): Promise<MergeOutcome> {
-    return this.run(groupId, callerMemberId, guestMemberId, callerMemberId, {
-      kind: 'link',
-      guestMemberId,
-      claimTokenHash,
-    });
+    return this.afterCommit(
+      groupId,
+      this.run(groupId, callerMemberId, guestMemberId, callerMemberId, {
+        kind: 'link',
+        guestMemberId,
+        claimTokenHash,
+      }),
+    );
   }
 
   /** Net balance per member (live members padded at 0, removed strays kept), read through `db`. */
@@ -278,6 +293,8 @@ export class GroupMergeService {
         if (mode.kind === 'link') throw gone();
         throw new ConflictException({ code: 'MERGE_CHANGED', message: 'That member just changed, refresh and retry' });
       }
+      // ABA-660 review H2: every path that sets removedAt tears the mirror down (a guest row has none).
+      await this.mirror?.teardownMember(tx, from.id);
 
       // 8. The invariant, on balances re-read after every write above.
       const after = await this.ledgerNet(tx, groupId);

@@ -11,6 +11,7 @@ import { WalletCurrencyService } from '../wallet/wallet-currency.service';
 import { invalidateExpenseChatCache } from './expense-cache.util';
 import { ExpenseCrossAccountService } from './expense-cross-account.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
+import { GroupBudgetMirrorService } from '../groups/group-budget-mirror.service';
 
 /** The subset of a persisted Expense row the post-create hook chain needs. */
 export interface ExpenseCreatedHookExpense {
@@ -70,6 +71,7 @@ export class ExpenseCreatedHooksService {
     @Optional() private readonly productRules?: ProductRulesService,
     @Optional() private readonly walletCurrency?: WalletCurrencyService,
     @Optional() private readonly crossAccount?: ExpenseCrossAccountService,
+    @Optional() private readonly groupMirror?: GroupBudgetMirrorService,
   ) {}
 
   /**
@@ -199,6 +201,9 @@ export class ExpenseCreatedHooksService {
       await this.anomalyService
         .checkExpense(accountId, userId, expense.id)
         .catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.checkExpense'));
+      // ABA-660: a captured payment may be one of the user's group cash legs (budget mirror). Last, so
+      // a notification stub the reconciliation above just removed is never the row that gets linked.
+      if (expense.source !== 'group') this.groupMirror?.afterPersonalWrite(accountId, userId);
     };
     void run().catch(logFireAndForget(this.logger, 'ExpenseCreatedHooksService.onExpenseCreated#run'));
 

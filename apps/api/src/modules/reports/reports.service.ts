@@ -124,8 +124,11 @@ export class ReportsService {
       ? await getRatesSafe(this.exchangeRateService, baseCurrency)
       : null;
 
-    const convertedExpenses = convertRowsToBase(filteredExpenses, baseCurrency, rates);
-    const convertedIncomes = convertRowsToBase(filteredIncomes, baseCurrency, rates);
+    // The rows above are all LISTED (the export is a ledger of what was recorded), but a split
+    // receivable is accounted for by another row (a receipt split's debt row, a group cash leg linked by
+    // the budget mirror), so it stays out of every total and the category table (ABA-660).
+    const convertedExpenses = convertRowsToBase(filteredExpenses.filter((e) => !e.isSplitReceivable), baseCurrency, rates);
+    const convertedIncomes = convertRowsToBase(filteredIncomes.filter((i) => !i.isSplitReceivable), baseCurrency, rates);
 
     const totalExpenses = convertedExpenses.total;
     const totalIncome = convertedIncomes.total;

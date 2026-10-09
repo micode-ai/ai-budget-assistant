@@ -36,6 +36,8 @@ API (`apps/api/src/modules/groups/`):
 - `apps/api/src/modules/groups/guards/` — `GroupMemberGuard`, `GroupOwnerGuard`, `GroupActiveGuard`
 - `apps/api/src/modules/groups/group-bot.service.ts` and `apps/api/src/modules/groups/group-bot.ts` — adding
   an expense from Telegram, WhatsApp and Slack (ABA-658); the bots' `handlers/group.handler.ts` render it
+- `apps/api/src/modules/groups/group-budget-mirror.service.ts` (+ `group-budget-mirror.ts`, `.cron.ts`,
+  `.controller.ts`, `.module.ts`) — "count my share in my budget" (ABA-660, below)
 
 Shared types: `packages/shared-types/src/entities/group.ts`, `packages/shared-types/src/dto/group.ts`.
 
@@ -60,7 +62,7 @@ Mobile:
 Migrations: `20261009000000_add_expense_groups`, `20261012000000_group_member_join_provenance`,
 `20261013000000_group_ownership_transfer`, `20261014000000_group_balance_reminders`,
 `20261015000000_group_expense_fx`, `20261016000000_group_expense_items`,
-`20261017000000_group_member_merge`. Design:
+`20261017000000_group_member_merge`, `20261019000000_group_budget_mirror`. Design:
 [`docs/superpowers/specs/2026-10-08-shared-groups-design.md`](../../superpowers/specs/2026-10-08-shared-groups-design.md)
 — where it and the code differ, the code is right (the spec's `GET /g/:token/me/:secret` restore
 link and `Restrict` member FKs were both replaced in the security hardening).
@@ -109,13 +111,16 @@ because guests visit sporadically and a "waiting for the creditor" state would l
 in the common case. A wrong one is **voided** (recorder, receiver or owner in the app; recorder or
 receiver on the guest page) and stays in the history.
 
-**Money never reaches the user's own budget.** The ledger writes no `Expense` or `Income` row, so
+**Money never reaches the user's own budget, unless they opt in (ABA-660).** The ledger itself writes
+no `Expense` or `Income` row, so
 analytics, budgets, safe-to-spend, wallet, the AI context, anomaly and gamification never see group
 money and no `isSplitReceivable`/`isDebt` filter is involved. "Your share this month" on the group
 screen is display-only. The cost: when the user's own card payment for a group expense is also
-captured (notification, import, receipt), their budget shows the full outflow, not their share.
+captured (notification, import, receipt), their budget shows the full outflow, not their share. The
+opt-in budget mirror (section *Count my share in my budget* below) is the only writer of personal rows
+from a group, and only for the member who turned it on.
 
-**`Income.isSplitReceivable` exists, and nothing sets it yet (ABA-659, phase-2 task H1).** The
+**`Income.isSplitReceivable` exists (ABA-659, phase-2 task H1); the budget mirror sets it (ABA-660).** The
 budget mirror (H2) will link a captured incoming settlement transfer to the group and exclude it,
 so the income side needed the marker the expense side already had. It is a server-owned column
 (`NOT NULL DEFAULT false`, migration `20261018000000_income_split_receivable`) that rides the
@@ -132,9 +137,13 @@ ledger's earned total and `localAnalytics`. Behaviour-neutral on its own: every 
 requires a deep-equal result. Deliberately NOT filtered: income listings and the report export
 (rows the user recorded are shown), row counts (admin metrics, the `first_income` achievement,
 category usage), debt repayment lookups and import dedup. Expense-side gaps the H2 linker will
-meet: the digest, scheduled report e-mails, gamification, story, goal planner and the report export
-sum expenses WITHOUT `EXCLUDE_SPLIT_RECEIVABLE` today, so a linked cash-leg expense would still
-count there (pre-existing for receipt splits; left alone here because fixing it changes figures).
+meet were closed by ABA-660: the digest, the scheduled weekly and monthly report e-mails,
+gamification (net-positive month and its budget check), the spending story, the goal planner and the
+report export's totals and category table now spread `EXCLUDE_SPLIT_RECEIVABLE` on the expense side too.
+This deliberately corrected their figures for anyone with a receipt split (its debt rows had been
+counted on top of the receipt); the export still LISTS the flagged rows and its income totals exclude
+flagged incomes as well. `expense-split-receivable-totals.spec.ts` pins each one (and that a plain
+`isDebt` loan is still counted).
 
 **The guest surface (`GroupGuestController`, `@Controller('g')`).** A sibling of
 `GuestController` (`s/`) and `ShoppingListGuestController` (`sl/`), excluded from `/api/v1` by the
@@ -599,8 +608,9 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
 ## Invariants
 
 - **Groups must not move into `Account`/`Expense`.** The model is standalone on purpose (above);
-  a group write must never create an `Expense` or `Income` row in this iteration — that is what
-  keeps every personal total free of group money without a filter.
+  a group LEDGER write never creates an `Expense` or `Income` row — that is what keeps every personal
+  total free of group money without a filter. The only exception is the opt-in budget mirror
+  (ABA-660), which runs after the commit, as its own service, for the member who asked for it.
 - **Every incoming member, expense and settlement id is re-scoped to the group** (`{id, groupId}`,
   members also `removedAt: null`) before use. The group itself comes from the guard (app) or the
   token (guest), never a body field. That is the IDOR line.
@@ -727,6 +737,153 @@ focusable, left out of the keyboard `order` (so `Enter` cannot land on one).
   ledger write and every settle form quoting the old version fails with "Balances changed".
 - **The absorbed row is soft-removed, never deleted**, with `mergedIntoMemberId`; its name stays reserved and old
   event rows keep pointing at it.
+- **The mirror writes only my share rows and my leg flags, and only into an account I can write** (ABA-660,
+  threat 6 and 7). Re-check the target on every pass and every write, not just at opt-in: owner or editor,
+  active, plaintext (`encryptionTier` 0). A paused mirror writes nothing; turning it off while paused
+  touches nothing in that account.
+- **A linked leg is excluded with `isSplitReceivable`, never `isDebt`** (the receipt-split rule): a lent
+  debt row is a real outflow and filtering it would rewrite every debt tracker's numbers.
+- **Auto-link only a single exact candidate that is exact for no other leg**; everything else is a
+  suggestion, and a rejected or unlinked pair is never planned again. Guessing between two equal
+  transfers mislabels real spending as "accounted for".
+- **The mirror is re-derived, never incremental.** `reconcileMember` reads the ledger and plans to it, so
+  a lost post-commit call, a merge, a claim change or a currency edit all converge on the next pass and
+  the sweep. Do not add a code path that edits share rows from a delta.
+- **A share row is re-priced only when the share moves**, never when a rate moves; a row the user deleted
+  is never recreated; a row the mirror removes is detached so it can come back.
+- **Turning it off is one transaction** (share rows and every flag), so the books are always either pure
+  cash or the full mirror, never half of each.
+
+## Count my share in my budget (ABA-660, server)
+
+Phase-2 spec section H2, user decision of 2026-10-09: the **consumption mirror**, opt-in per group.
+Server only; the app UI is ABA-661 (task H3), so nothing can turn it on yet. Files:
+`apps/api/src/modules/groups/group-budget-mirror.ts` (pure: share-row plan, the two-tier matcher, the
+accounting check), `apps/api/src/modules/groups/group-budget-mirror.service.ts`
+(`GroupBudgetMirrorService`), `apps/api/src/modules/groups/group-budget-mirror.cron.ts` (the sweep),
+`apps/api/src/modules/groups/group-budget-mirror.controller.ts`, and
+`apps/api/src/modules/groups/group-budget-mirror.module.ts`, a module of its own (Prisma, cache and the
+singleton `ExchangeRateService` only) so `ExpensesModule`, `IncomesModule` and both imports can trigger it
+without importing `GroupsModule`. Migration `20261019000000_group_budget_mirror`.
+
+**The model.** Receipt-split's accounting keeps the whole bill in the budget, and its per-counterparty
+receivables do not survive `simplifyDebts` netting, so "my share" needs the other pure model: book only
+**shares**, and exclude every group cash movement that is linked. With every leg linked, the counted
+outflow is exactly my consumption (the accounting table in `group-budget-mirror.spec.ts`: payer, debtor,
+and mixed with a netted transfer).
+- **Opt-in** on my own member row: `budgetMirrorFrom` (the first day of the UTC month it was turned on:
+  no history dump into closed budgets), `budgetAccountId`, `budgetCategoryId` (both FK `SetNull`).
+- **Share rows.** One `Expense` per live group expense dated from `budgetMirrorFrom` with my
+  `shareAmount > 0`: `source: 'group'`, `amount` = my share, `date` = the expense date, description
+  `"<group>: <description>"` (written on create only), my category, `clientId = randomUUID()`,
+  `groupExpenseId` + `groupMemberId` (plain ids, no FK) and `groupShareAmount` (the share in the group
+  currency the row was written from). Unique `(groupExpenseId, groupMemberId, accountId)`: per member, so
+  two members sharing an account each get theirs, and per account, so rows frozen in an account I can no
+  longer write never block a new one. **Currency:** when the account's `currencyCode` differs from the
+  group's, the share is converted with `convertAmount` over the provider rate (budgets compare in their
+  own currency); with no rate the row keeps the group currency, never a mislabelled figure. A row is
+  **re-priced only when the share moves** (`groupShareAmount` differs), never because a rate moved.
+  Amount, currency and date belong to the mirror: `ExpensesService.update` ignores those three on a
+  `group` row (category, notes and the rest stay the user's), a client-sent `source: 'group'` is stored
+  as `manual`, and `POST /expenses/:id/move` refuses a share row or a linked leg (400 `EXPENSE_LINKED`).
+- **Deleting is respected.** A share row the USER deleted keeps both ids and is never recreated or
+  touched. A row the MIRROR removes (expense deleted, my share 0, date moved before the window) is
+  soft-deleted **and detached** (ids NULL, `syncVersion` bumped so devices pull it), so it can come back
+  as a fresh row if the share returns.
+- **Cash legs.** `payer_expense` (a live group expense I paid, matched in the currency it was ENTERED in,
+  ABA-654), `settlement_out` (a non-voided settlement from me, an Expense) and `settlement_in` (to me, an
+  Income), dated by the expense date or the settlement's `createdAt`, inside the window. A linked leg is a
+  `GroupCashLink` row (`legKey = "<kind>:<id>"`, unique per member and leg; `expenseId`/`incomeId` unique,
+  so one row is one leg) and the personal row gets **`isSplitReceivable = true`, never `isDebt`**.
+  Linkable rows only: mine, in the mirror's account, not deleted, not `isDebt`/`isDebtRepayment`/
+  `isPlanned`/already flagged, not a `group` row, no live receipt split (`LINKABLE_EXPENSE`/`LINKABLE_INCOME`).
+- **Two tiers** (`planCashLinks`, the bank-notification precedent). Automatic: the leg has exactly ONE
+  exact candidate (same side, currency and amount, within 3 days, `MIRROR_EXACT_DAYS`) and that row is the
+  exact candidate of no other leg, so two equal transfers on one day are never guessed at. Everything else
+  within the same currency, 10% and 7 days is a `GroupCashSuggestion` (`open`, at most 5 per leg). The link
+  is a CAS: the row is flagged with `updateMany` on it still being linkable, in the same transaction as the
+  link row, so a race loses cleanly. Rejecting a suggestion, or unlinking (even an auto link), records the
+  pair as `rejected`, so it is never offered or auto-linked again.
+- **Triggers.** `GroupBudgetMirrorService.reconcileMember(memberId)` re-derives everything and is
+  idempotent. Post-commit and fire-and-forget (`logFireAndForget`): `afterLedgerWrite(groupId)` from
+  `GroupsService` (create, edit, delete, itemised create/edit, settle, void), `GroupItemsService` (a claim
+  change that moved shares) and `GroupMergeService` (both merge paths); `afterPersonalWrite(accountId,
+  userId)` from `ExpenseCreatedHooksService.onExpenseCreated` (last in the chain, after the notification
+  stub reconciliation; never for a `group` row), `IncomesService.create`, and the bank and Wise import
+  commits (they bypass the hook). Replays and refused writes trigger nothing.
+- **The sweep.** `GroupBudgetMirrorCron` (`@Cron('30 3 * * *')`, 03:30 UTC) streams every live app-user
+  member with the mirror on through `paginateById` (500) and reconciles each; one failing member is logged
+  and skipped. It is what catches a lost post-commit call, a deleted linked row (the leg is freed) and a
+  voided settlement (the row counts again).
+- **Never into an account I cannot write.** Every pass and every write re-checks the target
+  (`checkAccount`): a live `AccountMember` of mine that is not `viewer`, the account active, not an archived
+  trip, and **`encryptionTier` 0** (tier 1 too, not only 2: the server writes `description`, a tier-1
+  encrypted field, in plaintext). Failing it the mirror is `paused` and writes nothing at all.
+- **Turning it off** deletes the share rows (soft, detached) and unlinks every leg (flags back to false) in
+  ONE transaction, so the books return to the pure cash model with nothing half-applied. While paused, off
+  clears only the group side and leaves that account exactly as it was. Switching to another account tears
+  the old one down first in the same transaction. **A group delete** tears every member's mirror down inside
+  the delete's transaction (the ledger rows cascade away with it). A removed member is no longer reconciled;
+  its rows stay as they were.
+- **Honest limit (for the UI to state, ABA-661):** a captured payment that is NOT linked is counted twice;
+  `unlinked` in the links view lists those legs. While balances are open the wallet balance differs from the
+  bank by the open group balance (shares are booked, linked cash is excluded); it converges when settled.
+
+**API** (`GroupBudgetMirrorController`, all `JwtAuthGuard` + `ThrottlerGuard` + `GroupMemberGuard`, no
+`AccountContextGuard`: the account comes from the body or the member row and is re-checked in the service;
+no `GroupActiveGuard`, so an archived group can still be turned off or unlinked). Types in
+`packages/shared-types/src/dto/group.ts`.
+
+| Verb | Route | Body | Answer |
+|---|---|---|---|
+| GET | `/groups/:groupId/budget-mirror` | — | `GroupBudgetMirrorView {status: off\|active\|paused, pausedReason, accountId, categoryId, from, shareRowCount}` |
+| PUT | `/groups/:groupId/budget-mirror` | `SetGroupBudgetMirrorDto {accountId, categoryId?}` | `GroupBudgetMirrorView` (after a first reconcile) |
+| DELETE | `/groups/:groupId/budget-mirror` | — | 204 |
+| GET | `/groups/:groupId/budget-links` | — | `GroupBudgetLinksView {mirror, links, suggestions, unlinked}` |
+| POST | `/groups/:groupId/budget-links` | `CreateGroupCashLinkDto {kind, groupExpenseId? \| settlementId?, expenseId? \| incomeId?}` | `GroupBudgetLinksView` |
+| POST | `/groups/:groupId/budget-links/suggestions/:id/accept` | — | `GroupBudgetLinksView` |
+| POST | `/groups/:groupId/budget-links/suggestions/:id/reject` | — | `GroupBudgetLinksView` |
+| DELETE | `/groups/:groupId/budget-links/:linkId` | — | `GroupBudgetLinksView` |
+
+Errors: 404 `ACCOUNT_NOT_FOUND` (not my account or no such account: one answer), 403
+`MIRROR_ACCOUNT_READ_ONLY` / `MIRROR_ACCOUNT_ENCRYPTED` / `MIRROR_ACCOUNT_ARCHIVED`, 404
+`CATEGORY_NOT_FOUND` (not an expense category of that account), 409 `MIRROR_OFF`, 400 `LINK_INVALID` (ids
+that do not fit the kind), 404 `LEG_NOT_FOUND` (not my leg in this group's window), 404 `ROW_NOT_FOUND`
+(re-scoped to `{userId: me, accountId: the mirror's}`), 409 `LEG_ALREADY_LINKED`, 409 `ROW_NOT_LINKABLE`,
+404 `SUGGESTION_NOT_FOUND` / `LINK_NOT_FOUND` (re-scoped to my member row). Rate limits: reads 60/min,
+on/off 10/min, link writes 20/min. Shared types also gained `ExpenseSource` `'group'` and
+`Expense.groupExpenseId?`.
+
+**Invariants from the security review (ABA-660 follow-up).** Server side, `apps/api` only.
+- **Only legs I wrote are ever auto-linked (H1).** Tier 1 requires `CashLeg.authoredByMe`: the group
+  expense's `createdByMemberId`, or the settlement's `recordedByMemberId`, is the mirroring member. Any
+  member can type a group expense that names me as payer, so an automatic link on a leg someone else
+  wrote would let them flag (hide) one of MY real expenses by matching its amount. Such a leg is a
+  suggestion only (a foreign leg still counts toward the exclusivity check, which only makes a shared
+  candidate more ambiguous), `linkPair` refuses `origin: 'auto'` for it as defence in depth, and accepting
+  the suggestion by hand is still the member's own decision. The app can show who added what: legs carry
+  `addedByOther`/`addedByName`, and `GroupBudgetLinksView.shareRows` lists my share rows that came from an
+  expense another member added. A new suggestion from someone else sends one coalesced
+  (`grp:sugg:{group}:{user}`, 10 min) fire-and-forget `group_activity` push to the mirroring member.
+- **A removed member's mirror dies with the membership (H2).** `GroupsService.removeMember` and the merge's
+  absorbed row call `GroupBudgetMirrorService.teardownMember(tx, memberId)` inside the same transaction that
+  sets `removedAt`: share rows removed, links dropped, flags cleared, and the opt-in columns nulled (so a
+  rejoin starts off). `disable` also works for a removed member (cleanup).
+- **A flag never outlives its link (M1, L2).** Teardown clears `isSplitReceivable` on every linked row
+  WITHOUT the writable check (clearing only restores "counted"), scoped to the user's own rows, and only
+  rows a link names, so only rows the mirror flagged. Share rows are removed when I am still a member of the
+  account (any role), and left alone when I am not. Every clear (teardown, a stale link, unlink) refuses a
+  row that is a receipt with live split participants (`NOT_A_LIVE_RECEIPT_SPLIT`): that flag is the receipt
+  split's.
+- **A shared account needs its owner (M3).** An editor may enable the mirror only into a personal account
+  with a single member; a shared/trip/business account, or one with more than one member, needs the
+  account OWNER (403 `MIRROR_ACCOUNT_SHARED_NEEDS_OWNER`), because share rows and flags change every
+  member's figures.
+- **Paused reveals nothing (M4).** `getLinks` returns only the mirror status (empty links, suggestions,
+  unlinked, shareRows) while the mirror is not active.
+- **Backups never restore group rows (M2).** A restore maps source `'group'` to `'manual'` and forces
+  `isSplitReceivable = false` on expenses and incomes. The candidate read is ordered `date desc, id asc`
+  (I1) so the 1000-row cap is deterministic.
 
 ## From the bots (ABA-658)
 
@@ -893,9 +1050,16 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
   provider's at entry time (no history), not at the expense date; and the guest's post-add flash names the
   group currency but not the two figures (the redirect carries only a flash code), which the history row
   then shows.
-- **"Count my share in my budget"** — the consumption mirror (phase-2 tasks H2/H3) is not built.
-  Only H1 has landed: `Income.isSplitReceivable` and its exclusion from income totals (ABA-659),
-  which nothing sets yet. The migration has not run against a real Postgres here.
+- **"Count my share in my budget" (ABA-660) is server-only and dark**: no client can turn it on until
+  the UI (ABA-661, task H3: the opt-in, the "may be counted twice" card, read-only `group` rows) ships.
+  Unverified against a real Postgres (the migration `20261019000000_group_budget_mirror` has not run here;
+  the specs use an in-memory Prisma with rollback), and the `groupCashLink: { is: null }` /
+  `splitParticipants: { none: ... }` relation filters are exercised only by that fake. Known limits: share
+  rows do not fire budget threshold pushes, anomaly checks or the Family Feed (they are written by the
+  mirror, not through `ExpensesService.create`); the description is written once and does not follow a
+  later rename; a device that re-sends a `create` for a pulled share row's `clientId` would go through the
+  create upsert's update branch (no known client path does); and a mirror turned off while its account could not be written leaves that account's rows
+  (shares and flags) exactly as they were. The H1 income migration has not run against a real Postgres either.
 - **Desktop, unverified in a browser:** whether the group expense dialog's "Take a photo" path
   degrades to a file picker on a desktop browser, and whether the Stack header duplicates the in-page
   title on `/groups` and `/groups/:id`.
@@ -977,6 +1141,12 @@ split, trips) can adopt the hook later. A failed request while offline stays `co
 - [ABA-659](https://github.com/micode-ai/ai-budget-assistant/issues/689) — phase-2 task H1:
   `Income.isSplitReceivable` (server, SQLite, pull mapping, backup restore) and its exclusion from every
   income total on the server and the device, behaviour-neutral until the budget mirror sets it.
+- [ABA-660](https://github.com/micode-ai/ai-budget-assistant/issues/690) — phase-2 task H2, the budget mirror on
+  the server: opt-in per member (`budgetMirrorFrom`/`budgetAccountId`/`budgetCategoryId`), one `source: 'group'`
+  share row per group expense, cash legs linked and excluded with `isSplitReceivable` (`GroupCashLink`), the
+  two-tier matcher with `GroupCashSuggestion`, post-commit reconciles from every ledger and capture path, the
+  03:30 UTC sweep, eight routes; and the expense totals that still counted split receivables (digest, report
+  e-mails, gamification, story, goal planner, report export) now exclude them.
 - [ABA-653](https://github.com/micode-ai/ai-budget-assistant/issues/683) — weekly balance reminder
   pushes to app-user debtors and creditors (`GroupReminderCron`, 17:00 UTC; episode columns on the
   member row; at most 4 per open balance, one per user per day), `User.notifyGroupReminders` and its

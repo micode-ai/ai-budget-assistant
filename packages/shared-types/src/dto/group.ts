@@ -262,3 +262,115 @@ export interface GroupFxPreview {
 export interface TransferGroupOwnerDto {
   memberId: string;
 }
+
+// ---------------------------------------------------------------- budget mirror (ABA-660)
+
+/** A group cash movement of mine, as it may show up in my own books. */
+export type GroupCashLegKind = 'payer_expense' | 'settlement_out' | 'settlement_in';
+
+/**
+ * `off` = not turned on. `active` = share rows are written. `paused` = turned on, but the target
+ * account can no longer be written (I became a viewer or left it, it was archived or deactivated, or
+ * end-to-end encryption was turned on); nothing is written until it is fixed or turned off.
+ */
+export type GroupBudgetMirrorStatus = 'off' | 'active' | 'paused';
+
+export type GroupBudgetMirrorPauseReason = 'account_unavailable' | 'viewer' | 'encrypted' | 'archived';
+
+/** GET/PUT /groups/:groupId/budget-mirror. */
+export interface GroupBudgetMirrorView {
+  status: GroupBudgetMirrorStatus;
+  pausedReason: GroupBudgetMirrorPauseReason | null;
+  accountId: string | null;
+  categoryId: string | null;
+  /** First day (YYYY-MM-DD) of the expenses that are mirrored; null when off. */
+  from: string | null;
+  /** Live share rows written into the account. */
+  shareRowCount: number;
+}
+
+/** PUT /groups/:groupId/budget-mirror. The account must be mine to write (owner or editor) and not end-to-end encrypted. */
+export interface SetGroupBudgetMirrorDto {
+  accountId: string;
+  /** An expense category of that account; omitted or null = uncategorised. */
+  categoryId?: string | null;
+}
+
+/** One cash movement on the group side. Settlements are dated by when they were recorded. */
+export interface GroupCashLegView {
+  kind: GroupCashLegKind;
+  groupExpenseId: string | null;
+  settlementId: string | null;
+  /** The expense's description, or the other member's display name for a settlement. */
+  label: string;
+  /** In the currency it was paid in (an expense entered in another currency keeps that one). */
+  amount: number;
+  currencyCode: string;
+  date: string;
+  /** ABA-660 review H1: another member created this expense / recorded this settlement. Only ever a suggestion. */
+  addedByOther?: boolean;
+  /** Who added it, when `addedByOther`; otherwise null. */
+  addedByName?: string | null;
+}
+
+/** The personal row a leg is (or may be) linked to. */
+export interface GroupCashPersonalRowView {
+  expenseId: string | null;
+  incomeId: string | null;
+  amount: number;
+  currencyCode: string;
+  date: string;
+  description: string | null;
+  merchant: string | null;
+  source: string;
+}
+
+export interface GroupCashLinkView {
+  id: string;
+  origin: 'auto' | 'user';
+  leg: GroupCashLegView;
+  personal: GroupCashPersonalRowView;
+}
+
+export interface GroupCashSuggestionView {
+  id: string;
+  leg: GroupCashLegView;
+  personal: GroupCashPersonalRowView;
+}
+
+/**
+ * GET /groups/:groupId/budget-links, and the answer to every link write. `unlinked` are my legs with
+ * no linked personal row: if one of them was ALSO captured in my budget (a card payment, a transfer),
+ * it is counted twice until it is linked. That cannot be ruled out by construction, so the app lists them.
+ */
+export interface GroupBudgetLinksView {
+  mirror: GroupBudgetMirrorView;
+  links: GroupCashLinkView[];
+  suggestions: GroupCashSuggestionView[];
+  unlinked: GroupCashLegView[];
+  /** ABA-660 review H1: my live share rows that came from an expense another member added ("added by <name>"). */
+  shareRows?: GroupShareRowView[];
+}
+
+export interface GroupShareRowView {
+  /** The personal expense (source 'group'). */
+  expenseId: string;
+  groupExpenseId: string;
+  amount: number;
+  currencyCode: string;
+  addedByOther: boolean;
+  addedByName: string | null;
+}
+
+/** POST /groups/:groupId/budget-links: link one of my legs to one of my rows in the mirror's account by hand. */
+export interface CreateGroupCashLinkDto {
+  kind: GroupCashLegKind;
+  /** For `payer_expense`. */
+  groupExpenseId?: string;
+  /** For `settlement_out` / `settlement_in`. */
+  settlementId?: string;
+  /** For `payer_expense` / `settlement_out`. */
+  expenseId?: string;
+  /** For `settlement_in`. */
+  incomeId?: string;
+}

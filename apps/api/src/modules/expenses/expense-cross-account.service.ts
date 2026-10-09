@@ -178,9 +178,15 @@ export class ExpenseCrossAccountService {
     // Resolve the expense within the source account (by server PK or clientId).
     const expense = await this.prisma.expense.findFirst({
       where: { accountId: sourceAccountId, isDeleted: false, OR: [{ id }, { clientId: id }] },
-      select: { id: true, clientId: true, categoryId: true, encryptedPayload: true },
+      select: { id: true, clientId: true, categoryId: true, encryptedPayload: true, source: true, groupCashLink: { select: { id: true } } },
     });
     if (!expense) throw new NotFoundException('Expense not found');
+
+    // ABA-660: a budget-mirror share row lives in the account the mirror writes to, and a linked
+    // group cash leg is excluded there because of that link; moving either would break both books.
+    if (expense.source === 'group' || expense.groupCashLink) {
+      throw new BadRequestException({ code: 'EXPENSE_LINKED', message: 'This expense is tied to a group and cannot be moved' });
+    }
 
     if (expense.encryptedPayload != null) {
       throw new BadRequestException('Encrypted expenses cannot be moved between accounts');

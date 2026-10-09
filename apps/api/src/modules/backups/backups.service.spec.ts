@@ -360,6 +360,16 @@ describe('BackupsService — restoreBackup (children and fields)', () => {
     expect(tx.projectIncome.upsert.mock.calls[0][0].create).toEqual({ projectId: 'new-proj-proj-c', incomeId: 'new-inc-inc-c' });
   });
 
+  it("never restores source 'group' or an isSplitReceivable flag (ABA-660 review M2)", async () => {
+    const tx = makeTxClient();
+    await restoreWith(tx, {
+      expenses: [{ clientId: 'e-g', amount: 5, currencyCode: 'PLN', date: '2026-01-01', source: 'group', isSplitReceivable: true }],
+      incomes: [{ clientId: 'i-g', amount: 5, currencyCode: 'PLN', date: '2026-01-01', source: 'group', isSplitReceivable: true }],
+    });
+    expect(tx.expense.create.mock.calls[0][0].data).toMatchObject({ source: 'manual', isSplitReceivable: false });
+    expect(tx.income.create.mock.calls[0][0].data).toMatchObject({ source: 'manual', isSplitReceivable: false });
+  });
+
   it('retires the existing children before re-creating them on overwrite', async () => {
     const tx = makeTxClient();
     tx.expense.findFirst = jest.fn().mockImplementation(({ where }) =>

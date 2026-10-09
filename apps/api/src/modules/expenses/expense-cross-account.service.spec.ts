@@ -367,6 +367,19 @@ describe('ExpenseCrossAccountService.moveToAccount', () => {
     expect(tx.expense.update).not.toHaveBeenCalled();
   });
 
+  it('rejects a budget-mirror share row and a linked group cash leg (ABA-660)', async () => {
+    for (const expense of [
+      { id: 'srv-1', clientId: 'cli-1', categoryId: null, encryptedPayload: null, source: 'group', groupCashLink: null },
+      { id: 'srv-1', clientId: 'cli-1', categoryId: null, encryptedPayload: null, source: 'notification', groupCashLink: { id: 'l-1' } },
+    ]) {
+      const { service, tx } = makeService({ expense });
+      await expect(
+        service.moveToAccount('acc-src', 'user-1', 'cli-1', { targetAccountId: 'acc-dst' }),
+      ).rejects.toMatchObject({ response: { code: 'EXPENSE_LINKED' } });
+      expect(tx.expense.update).not.toHaveBeenCalled();
+    }
+  });
+
   it('rejects when the caller is not a member of the target account', async () => {
     const { service, tx } = makeService({ targetMember: null });
     await expect(
