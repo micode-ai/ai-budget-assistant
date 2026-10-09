@@ -7,7 +7,8 @@ export interface ExpenseGroup {
   name: string;
   emoji: string | null;
   currencyCode: string;
-  ownerUserId: string;
+  /** Null = orphaned (ABA-650): the owner left and nobody could succeed them yet. */
+  ownerUserId: string | null;
   guestAccess: boolean;
   status: ExpenseGroupStatus;
   ledgerVersion: number;
@@ -77,4 +78,28 @@ export interface GroupTransfer {
   fromMemberId: string;
   toMemberId: string;
   amount: number;
+}
+
+/** ABA-650. Shared with the later claim-reset and merge tasks. */
+export type GroupMemberEventKind = 'owner_transferred' | 'member_merged' | 'claim_reset';
+
+/**
+ * A membership event, shown as a system row in the activity. For `owner_transferred` the fields read:
+ * manual transfer = actor and subject are the old owner, target the new one; succession on an
+ * account departure = no actor, subject the old owner, target the successor; orphaned = no actor and
+ * no target; adoption = subject and target are both the member who took the group over.
+ */
+export interface GroupMemberEventView {
+  id: string;
+  kind: GroupMemberEventKind;
+  actorMemberId: string | null;
+  subjectMemberId: string;
+  /** Snapshot at the time of the event (the subject may since have left or been merged). */
+  subjectName: string;
+  targetMemberId: string | null;
+  /** The target's current display name, removed members included; null without a target. */
+  targetName: string | null;
+  /** The actor's current display name; null when the system acted. */
+  actorName: string | null;
+  createdAt: string;
 }

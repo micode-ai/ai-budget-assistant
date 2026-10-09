@@ -52,6 +52,18 @@ export const groupsApi = {
   rotateGroupLink(groupId: string) {
     return httpClient.request<{ guestUrl: string }>(`/groups/${groupId}/rotate-link`, { method: 'POST' });
   },
+  /** ABA-650. 409 OWNER_LIMIT / OWNER_CHANGED, 400 OWNER_TARGET_INVALID. */
+  transferGroupOwner(groupId: string, memberId: string) {
+    return httpClient.request<GroupDetail>(`/groups/${groupId}/owner`, { method: 'POST', body: json({ memberId }) });
+  },
+  /** ABA-651: the owner frees one guest's browser claim. 404 (foreign/app user/removed), 409 NOT_CLAIMED. */
+  resetGroupMemberClaim(groupId: string, memberId: string) {
+    return httpClient.request<GroupMember>(`/groups/${groupId}/members/${memberId}/reset-claim`, { method: 'POST' });
+  },
+  /** ABA-650: take over an orphaned group. 409 GROUP_HAS_OWNER / OWNER_LIMIT. */
+  adoptGroup(groupId: string) {
+    return httpClient.request<GroupDetail>(`/groups/${groupId}/adopt`, { method: 'POST' });
+  },
   archiveGroup(groupId: string, force?: boolean) {
     return httpClient.request<GroupDetail>(`/groups/${groupId}/archive`, {
       method: 'POST',

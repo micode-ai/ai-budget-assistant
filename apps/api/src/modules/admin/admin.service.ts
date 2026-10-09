@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
+import { GroupOwnershipService } from '../groups/group-ownership.service';
 import { estimateCost } from './admin-analytics.service';
 import { isComplimentarySub, PAID_SUB_WHERE, COMPED_SUB_WHERE } from './admin-comped.util';
 import type { AdminUserUsageItem } from '@budget/shared-types';
@@ -13,6 +14,7 @@ export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly cacheService: CacheService,
+    private readonly groupOwnership: GroupOwnershipService,
   ) {}
 
   // ─── Audit Log ───────────────────────────────────
@@ -312,11 +314,15 @@ export class AdminService {
   async deactivateUser(userId: string) {
     const user = await this.prisma.user.findUnique({ where: { id: userId } });
     if (!user) throw new NotFoundException('User not found');
-    return this.prisma.user.update({
-      where: { id: userId },
-      data: { isActive: false },
-      select: { id: true, name: true, email: true, isActive: true },
-    });
+    // ABA-650: hand owned groups on before the account goes inactive (see UsersService.deactivate).
+    // A suspension is reversible, so the group identity is NOT anonymized (only handed on).
+    return this.groupOwnership.leavePlatform(userId, { anonymize: false }, (tx) =>
+      tx.user.update({
+        where: { id: userId },
+        data: { isActive: false },
+        select: { id: true, name: true, email: true, isActive: true },
+      }),
+    );
   }
 
   async deleteUser(userId: string, adminId: string, ipAddress: string | null = null) {
@@ -327,7 +333,9 @@ export class AdminService {
     });
     if (!user) throw new NotFoundException('User not found');
     await this.logAction(adminId, 'user.delete', 'user', userId, { userName: user.name, userEmail: user.email }, ipAddress);
-    await this.prisma.user.delete({ where: { id: userId } });
+    // ABA-650, in the SAME transaction as the delete: owned groups pass to a successor (or are orphaned),
+    // and the user's member rows become "Former member". The owner FK is SetNull as a backstop.
+    await this.groupOwnership.leavePlatform(userId, { anonymize: true }, (tx) => tx.user.delete({ where: { id: userId } }));
     return { id: user.id, email: user.email, name: user.name, deleted: true };
   }
 

@@ -9,11 +9,13 @@ import { AdminGateway } from './admin.gateway';
 import { ReferralsModule } from '../referrals/referrals.module';
 import { AdminInvestorMetricsService } from './admin-investor-metrics.service';
 import { AdminGroupMetricsService } from './admin-group-metrics.service';
+import { GroupsModule } from '../groups/groups.module';
 
 @Module({
   imports: [
     JwtModule.register({}),
     forwardRef(() => ReferralsModule),
+    GroupsModule, // GroupOwnershipService for deactivate / delete (ABA-650)
   ],
   controllers: [AdminController],
   providers: [AdminService, AdminAnalyticsService, AdminNotificationService, AdminInvestorMetricsService, AdminGroupMetricsService, AdminGuard, AdminGateway],

@@ -12,7 +12,7 @@ import {
   sha256Hex,
   verifyCsrf,
 } from './group-guest.service';
-import { GroupsService } from './groups.service';
+import { GroupsService, linkClaimBinding } from './groups.service';
 import { escapeHtml } from '../receipt-split/helpers/guest-page';
 
 const TOKEN = 'a'.repeat(32);
@@ -82,6 +82,7 @@ describe('GroupGuestController', () => {
   let members: any[];
   let expenses: any[];
   let settlements: any[];
+  let events: any[];
 
   const csrf = () => csrfFor(SECRET);
 
@@ -124,6 +125,7 @@ describe('GroupGuestController', () => {
       },
     ];
     settlements = [];
+    events = [];
 
     const live = (where: any) => members.filter((m) => where?.removedAt !== null || m.removedAt === null);
     prisma = {
@@ -176,6 +178,8 @@ describe('GroupGuestController', () => {
         create: jest.fn(),
         update: jest.fn(),
       },
+      // The mock deliberately IGNORES the kind filter, so the service's own second filter is tested too.
+      groupMemberEvent: { findMany: jest.fn(async () => events), create: jest.fn(), updateMany: jest.fn() },
       $transaction: jest.fn(async (fn: any) => fn(prisma)),
     };
     cache = {
@@ -300,6 +304,41 @@ describe('GroupGuestController', () => {
       const anon = mkRes();
       await controller.page(TOKEN, undefined, undefined, mkReq({ headers: {} }) as any, anon);
       expect(anon.body).not.toContain('catrev');
+    });
+
+    describe('membership events (ABA-650)', () => {
+      const ev = (kind: string, over: any = {}) => ({
+        id: `ev-${kind}`,
+        groupId: G,
+        kind,
+        actorMemberId: null,
+        subjectMemberId: B,
+        targetMemberId: C,
+        subjectName: 'Old Bob',
+        createdAt: new Date('2026-01-11'),
+        ...over,
+      });
+
+      it('asks the database for the public kinds only', async () => {
+        const res = mkRes();
+        await controller.page(TOKEN, undefined, undefined, mkReq() as any, res);
+        expect(prisma.groupMemberEvent.findMany).toHaveBeenCalledWith(
+          expect.objectContaining({ where: expect.objectContaining({ groupId: G, kind: { in: ['member_merged'] } }) }),
+        );
+      });
+
+      it('renders a merge event, and never an ownership or claim-reset event even if one slipped through', async () => {
+        events = [
+          ev('member_merged'),
+          ev('owner_transferred', { id: 'ev-own', subjectName: 'SENTINEL-OWNER-NAME' }),
+          ev('claim_reset', { id: 'ev-reset', subjectName: 'SENTINEL-RESET-NAME' }),
+        ];
+        const res = mkRes();
+        await controller.page(TOKEN, undefined, undefined, mkReq() as any, res);
+        expect(res.body).toContain(escapeHtml('Old Bob was merged into Cat'));
+        expect(res.body).not.toContain('SENTINEL-OWNER-NAME');
+        expect(res.body).not.toContain('SENTINEL-RESET-NAME');
+      });
     });
 
     it('offers the Android deep-link button on an Android user agent only', async () => {
@@ -887,7 +926,7 @@ describe('GroupGuestController', () => {
       await controller.link(TOKEN, { csrf: csrf(), target: 'web' }, mkReq() as any, res);
       const [key, value, ttl] = cache.set.mock.calls[0];
       expect(key).toMatch(/^grp:link:[a-f0-9]{32}$/);
-      expect(value).toEqual({ groupId: G, memberId: A, guestToken: TOKEN });
+      expect(value).toEqual({ groupId: G, memberId: A, guestToken: TOKEN, claim: linkClaimBinding(SECRET_HASH) });
       expect(ttl).toBe(600);
       const code = key.split(':')[2];
       expect(res.statusCode).toBe(303);
@@ -938,7 +977,8 @@ describe('GroupsService.linkGuest', () => {
   let prisma: any;
   let cache: any;
   let service: GroupsService;
-  const payload = { groupId: G, memberId: B, guestToken: TOKEN };
+  const B_HASH = sha256Hex('c'.repeat(32));
+  const payload = { groupId: G, memberId: B, guestToken: TOKEN, claim: linkClaimBinding(B_HASH) };
 
   beforeEach(() => {
     prisma = {
@@ -958,7 +998,7 @@ describe('GroupsService.linkGuest', () => {
       expenseGroupMember: {
         findFirst: jest.fn(async ({ where }: any) => {
           if (where.userId === 'u-me') return null; // not yet a member
-          if (where.id === B) return { id: B, userId: null, claimedAt: new Date() };
+          if (where.id === B) return { id: B, userId: null, claimedAt: new Date(), claimTokenHash: B_HASH };
           return null;
         }),
         findMany: jest.fn(async () => [mkMember(B, { userId: 'u-me' })]),
@@ -966,6 +1006,7 @@ describe('GroupsService.linkGuest', () => {
       },
       groupExpense: { findMany: jest.fn(async () => []) },
       groupSettlement: { findMany: jest.fn(async () => []) },
+      groupMemberEvent: { findMany: jest.fn(async () => []) },
     };
     cache = { getAndDelete: jest.fn(async () => payload) };
     service = new GroupsService(prisma, cache, { sendToUser: jest.fn() } as any);
@@ -975,7 +1016,7 @@ describe('GroupsService.linkGuest', () => {
     const out = await service.linkGuest('u-me', 'f'.repeat(32));
     expect(cache.getAndDelete).toHaveBeenCalledWith(`grp:link:${'f'.repeat(32)}`);
     expect(prisma.expenseGroupMember.updateMany).toHaveBeenCalledWith({
-      where: { id: B, groupId: G, userId: null },
+      where: { id: B, groupId: G, userId: null, claimTokenHash: B_HASH },
       data: expect.objectContaining({ userId: 'u-me' }),
     });
     expect(out.id).toBe(G);
@@ -1012,7 +1053,7 @@ describe('GroupsService.linkGuest', () => {
   it('409 ALREADY_MEMBER when the caller is already in the group', async () => {
     prisma.expenseGroupMember.findFirst.mockImplementation(async ({ where }: any) => {
       if (where.userId === 'u-me') return { id: 'm-mine', displayName: 'Me' };
-      if (where.id === B) return { id: B, userId: null, claimedAt: null };
+      if (where.id === B) return { id: B, userId: null, claimedAt: null, claimTokenHash: B_HASH };
       return null;
     });
     await expect(service.linkGuest('u-me', 'f'.repeat(32))).rejects.toMatchObject({
@@ -1068,12 +1109,28 @@ describe('GroupsService.linkGuest', () => {
       cache.getAndDelete.mockResolvedValue({ groupId: G, memberId: B });
       await expectGone();
     });
+    it('for a pre-ABA-651 payload with no claim binding', async () => {
+      cache.getAndDelete.mockResolvedValue({ groupId: G, memberId: B, guestToken: TOKEN });
+      await expectGone();
+    });
+    it('after the owner reset that claim (the hash is gone)', async () => {
+      prisma.expenseGroupMember.findFirst.mockImplementation(async ({ where }: any) =>
+        where.id === B ? { id: B, userId: null, claimedAt: null, claimTokenHash: null } : null,
+      );
+      await expectGone();
+    });
+    it('after another device claimed the name (a different hash)', async () => {
+      prisma.expenseGroupMember.findFirst.mockImplementation(async ({ where }: any) =>
+        where.id === B ? { id: B, userId: null, claimedAt: new Date(), claimTokenHash: sha256Hex('d'.repeat(32)) } : null,
+      );
+      await expectGone();
+    });
   });
 
   it('clears claimTokenHash and claimedAt so the old browser cookie stops acting as the linked member', async () => {
     await service.linkGuest('u-me', 'f'.repeat(32));
     expect(prisma.expenseGroupMember.updateMany).toHaveBeenCalledWith({
-      where: { id: B, groupId: G, userId: null },
+      where: { id: B, groupId: G, userId: null, claimTokenHash: B_HASH },
       data: { userId: 'u-me', claimedAt: null, claimTokenHash: null, joinedVia: 'guest_linked', linkedAt: expect.any(Date) },
     });
   });

@@ -7,7 +7,7 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
-import { randomBytes } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { logFireAndForget } from '../../common/utils/fire-and-forget';
@@ -21,6 +21,7 @@ import {
   type LedgerExpense,
   type LedgerSettlement,
 } from './group-ledger';
+import { isAdoptionEligible, MAX_GROUPS_OWNED } from './group-ownership.service';
 import {
   AddGroupMemberDto,
   CreateGroupDto,
@@ -39,11 +40,28 @@ import type {
   GroupJoinPreview,
   GroupExpense,
   GroupMember,
+  GroupMemberEventKind,
+  GroupMemberEventView,
   GroupSettlement,
   GroupSummary,
 } from '@budget/shared-types';
 
-export const MAX_GROUPS_OWNED = 20;
+export { MAX_GROUPS_OWNED };
+/**
+ * Event kinds the public guest page may show (ABA-650). `owner_transferred` and `claim_reset` would
+ * reveal that a member is an app user or was reset, which the page must never show. Filtered in the
+ * QUERY, so a private event never even reaches the guest service.
+ */
+export const GUEST_VISIBLE_EVENT_KINDS: GroupMemberEventKind[] = ['member_merged'];
+/**
+ * What a `grp:link:*` code carries about the claim it was minted under (ABA-651): a one-way digest
+ * of the member's `claimTokenHash` at mint time. Redemption recomputes it from the member's CURRENT
+ * hash, so a code dies with the claim that minted it: an owner's claim reset, "forget this device",
+ * a rotation and a re-claim by someone else all change or clear that hash. Derived rather than the
+ * hash itself, so Redis never holds the value `identify` looks a cookie up by.
+ */
+export const linkClaimBinding = (claimTokenHash: string) =>
+  createHash('sha256').update(`grp-link-claim:${claimTokenHash}`).digest('hex');
 export const MAX_MEMBERS = 50;
 export const MAX_EXPENSES = 5000;
 export const MAX_SHARES = 20;
@@ -244,6 +262,9 @@ export class GroupsService {
       guestAccess: group.guestAccess,
       isOwner: !!me.userId && me.userId === group.ownerUserId,
       ownerMemberId: ownerMember?.id ?? null,
+      isOrphaned: group.ownerUserId === null,
+      // ABA-650 review: only a member who was live BEFORE the orphaning may adopt (see isAdoptionEligible).
+      canAdopt: group.ownerUserId === null && group.status === 'active' && isAdoptionEligible(me, group.orphanedAt),
       myMemberId: me.id,
       members: members.map((m: any) => this.toMember(m)),
       balances: ledger.balances,
@@ -276,10 +297,19 @@ export class GroupsService {
     );
   }
 
-  async getActivity(groupId: string, before?: string, limit = 50): Promise<GroupActivityPage> {
+  /**
+   * Expenses, payments and membership events, merged newest first. `guestView` limits the events to
+   * GUEST_VISIBLE_EVENT_KINDS (the public page); the app sees every kind.
+   */
+  async getActivity(
+    groupId: string,
+    before?: string,
+    limit = 50,
+    opts: { guestView?: boolean } = {},
+  ): Promise<GroupActivityPage> {
     const take = Math.min(Math.max(limit, 1), 100);
     const createdAt = before ? { lt: new Date(before) } : undefined;
-    const [expenses, settlements] = await Promise.all([
+    const [expenses, settlements, events] = await Promise.all([
       this.prisma.groupExpense.findMany({
         where: { groupId, ...(createdAt ? { createdAt } : {}) },
         include: { shares: true },
@@ -291,13 +321,50 @@ export class GroupsService {
         orderBy: { createdAt: 'desc' },
         take: take + 1,
       }),
+      this.prisma.groupMemberEvent.findMany({
+        where: {
+          groupId,
+          ...(createdAt ? { createdAt } : {}),
+          ...(opts.guestView ? { kind: { in: GUEST_VISIBLE_EVENT_KINDS } } : {}),
+        },
+        orderBy: { createdAt: 'desc' },
+        take: take + 1,
+      }),
     ]);
+    const eventViews = await this.toEventViews(groupId, events);
     const all: GroupActivityItem[] = [
       ...expenses.map((e: any) => ({ kind: 'expense' as const, at: new Date(e.createdAt).toISOString(), expense: this.toExpense(e) })),
       ...settlements.map((s: any) => ({ kind: 'settlement' as const, at: new Date(s.createdAt).toISOString(), settlement: this.toSettlement(s) })),
+      ...eventViews.map((ev) => ({ kind: 'event' as const, at: ev.createdAt, event: ev })),
     ].sort((a, b) => (a.at < b.at ? 1 : a.at > b.at ? -1 : 0));
     const items = all.slice(0, take);
     return { items, nextBefore: all.length > take ? items[items.length - 1].at : null };
+  }
+
+  /** Member names for the event rows: the CURRENT names, removed members included, scoped to the group. */
+  private async toEventViews(groupId: string, events: any[]): Promise<GroupMemberEventView[]> {
+    if (events.length === 0) return [];
+    const ids = [
+      ...new Set(events.flatMap((e: any) => [e.actorMemberId, e.targetMemberId]).filter((x: unknown): x is string => !!x)),
+    ];
+    const rows = ids.length
+      ? await this.prisma.expenseGroupMember.findMany({
+          where: { groupId, id: { in: ids } },
+          select: { id: true, displayName: true },
+        })
+      : [];
+    const names = new Map<string, string>(rows.map((r: { id: string; displayName: string }) => [r.id, r.displayName]));
+    return events.map((e: any) => ({
+      id: e.id,
+      kind: e.kind,
+      actorMemberId: e.actorMemberId ?? null,
+      subjectMemberId: e.subjectMemberId,
+      subjectName: e.subjectName,
+      targetMemberId: e.targetMemberId ?? null,
+      targetName: e.targetMemberId ? (names.get(e.targetMemberId) ?? null) : null,
+      actorName: e.actorMemberId ? (names.get(e.actorMemberId) ?? null) : null,
+      createdAt: new Date(e.createdAt).toISOString(),
+    }));
   }
 
   // ------------------------------------------------------------ group-level
@@ -389,7 +456,7 @@ export class GroupsService {
       // A self-removed member may rejoin, but through the same archive + member-cap checks as a new join.
       if (group.status === 'archived') throw archived();
       await this.withMemberSlot(group.id, (tx) =>
-        tx.expenseGroupMember.update({ where: { id: existing.id }, data: { removedAt: null, removedByOwner: false } }),
+        tx.expenseGroupMember.update({ where: { id: existing.id }, data: { removedAt: null, removedByOwner: false, claimedAt: new Date() } }),
       );
       return this.getDetail(group.id, existing.id);
     }
@@ -572,6 +639,48 @@ export class GroupsService {
       where: { id: target.id },
       data: { removedAt: new Date(), claimTokenHash: null, removedByOwner: !self },
     });
+  }
+
+  /**
+   * ABA-651: the owner frees ONE guest's browser claim (the guards prove the caller owns the group).
+   * Only a live guest row (no `userId`) that is currently claimed qualifies; the target is re-scoped
+   * to the group, and a foreign, removed or app-user id is the same 404. The row, its history and its
+   * balance stay; only `claimTokenHash`/`claimedAt` go NULL, so that device's cookie stops resolving,
+   * its outstanding link code fails at redemption, and the name is on the picker again. The write is a
+   * CAS on the hash that was read, with the `claim_reset` event in the same transaction. No
+   * `ledgerVersion` bump: nothing in the ledger changed.
+   */
+  async resetClaim(groupId: string, actorMemberId: string, targetId: string): Promise<GroupMember> {
+    const target = await this.prisma.expenseGroupMember.findFirst({
+      where: { id: targetId, groupId, removedAt: null },
+      select: { id: true, userId: true, displayName: true, claimTokenHash: true },
+    });
+    if (!target || target.userId) throw new NotFoundException('Member not found');
+    const notClaimed = () =>
+      new ConflictException({ code: 'NOT_CLAIMED', message: 'Nobody has signed in as this member' });
+    if (!target.claimTokenHash) throw notClaimed();
+
+    const updated = await this.prisma.$transaction(async (tx: any) => {
+      const res = await tx.expenseGroupMember.updateMany({
+        where: { id: target.id, groupId, userId: null, removedAt: null, claimTokenHash: target.claimTokenHash },
+        // Payout details go too (ABA-651 review): the next person to pick this name must not inherit
+        // the previous claimant's payment method/handle.
+        data: { claimTokenHash: null, claimedAt: null, paymentMethod: null, paymentHandle: null },
+      });
+      if (res.count === 0) throw notClaimed();
+      await tx.groupMemberEvent.create({
+        data: {
+          groupId,
+          kind: 'claim_reset',
+          actorMemberId,
+          subjectMemberId: target.id,
+          targetMemberId: null,
+          subjectName: target.displayName,
+        },
+      });
+      return tx.expenseGroupMember.findFirst({ where: { id: target.id, groupId } });
+    });
+    return this.toMember(updated);
   }
 
   // --------------------------------------------------------------- expenses
@@ -802,16 +911,22 @@ export class GroupsService {
    * Its null return also covers a Redis outage, which denies, as it should.
    */
   async linkGuest(userId: string, code: string): Promise<GroupDetail> {
-    const payload = await this.cache.getAndDelete<{ groupId: string; memberId: string; guestToken?: string }>(`grp:link:${code}`);
+    const payload = await this.cache.getAndDelete<{
+      groupId: string;
+      memberId: string;
+      guestToken?: string;
+      claim?: string;
+    }>(`grp:link:${code}`);
     const gone = () =>
       new GoneException({ code: 'LINK_CODE_INVALID', message: 'This link code is invalid or has expired' });
-    if (!payload?.groupId || !payload?.memberId || !payload?.guestToken) throw gone();
+    // A payload without `claim` predates ABA-651 (10-minute TTL): refused like any stale code.
+    if (!payload?.groupId || !payload?.memberId || !payload?.guestToken || !payload?.claim) throw gone();
 
     // The code outlives the link it was minted from: re-read the group so a rotated link, a
     // guestAccess=false kill-switch or an archive all invalidate it.
     const group = await this.prisma.expenseGroup.findUnique({
       where: { id: payload.groupId },
-      select: { guestToken: true, guestAccess: true, status: true },
+      select: { guestToken: true, guestAccess: true, status: true, ownerUserId: true },
     });
     if (!group || group.guestToken !== payload.guestToken || !group.guestAccess || group.status !== 'active') {
       throw gone();
@@ -819,9 +934,12 @@ export class GroupsService {
 
     const member = await this.prisma.expenseGroupMember.findFirst({
       where: { id: payload.memberId, groupId: payload.groupId, removedAt: null },
-      select: { id: true, userId: true },
+      select: { id: true, userId: true, claimTokenHash: true },
     });
     if (!member || member.userId) throw gone();
+    // ABA-651: the code is only as good as the claim it was minted under. A reset (or forget, or a
+    // re-claim by another device) changed the hash, so the code no longer proves anything.
+    if (!member.claimTokenHash || linkClaimBinding(member.claimTokenHash) !== payload.claim) throw gone();
 
     const existing = await this.prisma.expenseGroupMember.findFirst({
       where: { groupId: payload.groupId, userId },
@@ -836,7 +954,8 @@ export class GroupsService {
 
     try {
       const res = await this.prisma.expenseGroupMember.updateMany({
-        where: { id: member.id, groupId: payload.groupId, userId: null },
+        // CAS on the claim too, so a reset landing between the read above and this write still wins.
+        where: { id: member.id, groupId: payload.groupId, userId: null, claimTokenHash: member.claimTokenHash },
         // The browser cookie must stop acting as this (now app-linked) member: its authority was the
         // claim hash, so clear it. The app session is the identity from here on.
         data: { userId, claimedAt: null, claimTokenHash: null, joinedVia: 'guest_linked', linkedAt: new Date() },

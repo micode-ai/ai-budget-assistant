@@ -10,6 +10,7 @@ import { useGroupDetail } from '@/hooks/useGroupDetail';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { showAlert } from '@/utils/alert';
 import { balanceOf, findMember, isGroupWritable, liveMembers } from '@/features/groups/groupDisplay';
+import { canMakeOwner, canResetClaim, claimResetErrorReason, ownerErrorReason } from '@/features/groups/groupOwnership';
 import { MAX_MEMBER_NAME_LENGTH } from '@/features/groups/groupSplit';
 import type { GroupMember } from '@budget/shared-types';
 import { GroupButton } from './GroupButton';
@@ -19,7 +20,10 @@ import { GroupMemberSheet } from './GroupMemberSheet';
 import { GroupOwnerControls } from './GroupOwnerControls';
 import { GroupPaymentInfoCard } from './GroupPaymentInfoCard';
 
-/** Members: add a placeholder name, rename, my payment details, remove, and the owner controls. */
+/**
+ * Members: add a placeholder name, rename, my payment details, remove, make owner (ABA-650), reset a
+ * guest's browser login (ABA-651), and the owner controls. Hosted unchanged by the desktop members dialog, so every change here is on both.
+ */
 export function GroupMembersView({
   groupId,
   onLeftGroup,
@@ -38,6 +42,8 @@ export function GroupMembersView({
   const addMember = useGroupStore((s) => s.addMember);
   const updateMember = useGroupStore((s) => s.updateMember);
   const removeMember = useGroupStore((s) => s.removeMember);
+  const transferOwnership = useGroupStore((s) => s.transferOwnership);
+  const resetMemberClaim = useGroupStore((s) => s.resetMemberClaim);
   const [newName, setNewName] = useState('');
   const [adding, setAdding] = useState(false);
   const [selected, setSelected] = useState<GroupMember | null>(null);
@@ -122,6 +128,77 @@ export function GroupMembersView({
     );
   };
 
+  const ownerErrorText = (e: unknown): string => {
+    switch (ownerErrorReason(e)) {
+      case 'limit':
+        return t('groups.ownerLimit');
+      case 'changed':
+        return t('groups.ownerChanged');
+      case 'invalidTarget':
+        return t('groups.ownerTargetInvalid');
+      default:
+        return e instanceof Error ? e.message : t('errors.unknown');
+    }
+  };
+
+  const confirmMakeOwner = (member: GroupMember) => {
+    showAlert(
+      t('groups.makeOwnerConfirmTitle', { name: member.displayName }),
+      t('groups.makeOwnerConfirmBody'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('groups.makeOwner'),
+          onPress: () =>
+            void (async () => {
+              try {
+                await transferOwnership(groupId, member.id);
+                setSelected(null);
+                showAlert(t('groups.ownerTransferred', { name: member.displayName }));
+              } catch (e) {
+                setSelected(null);
+                showAlert(t('errors.error'), ownerErrorText(e));
+              }
+            })(),
+        },
+      ],
+    );
+  };
+
+  const confirmResetClaim = (member: GroupMember) => {
+    showAlert(
+      t('groups.resetClaimConfirmTitle', { name: member.displayName }),
+      t('groups.resetClaimConfirmBody'),
+      [
+        { text: t('common.cancel'), style: 'cancel' },
+        {
+          text: t('groups.resetClaimConfirmAction'),
+          style: 'destructive',
+          onPress: () =>
+            void (async () => {
+              try {
+                await resetMemberClaim(groupId, member.id);
+                setSelected(null);
+                showAlert(t('groups.claimResetDone', { name: member.displayName }));
+              } catch (e) {
+                setSelected(null);
+                showAlert(
+                  t('errors.error'),
+                  claimResetErrorReason(e) === 'notClaimed'
+                    ? t('groups.claimResetNotClaimed', { name: member.displayName })
+                    : claimResetErrorReason(e) === 'gone'
+                      ? t('groups.claimResetGone')
+                      : e instanceof Error
+                        ? e.message
+                        : t('errors.unknown'),
+                );
+              }
+            })(),
+        },
+      ],
+    );
+  };
+
   const canRename = (m: GroupMember) => writable && (detail.isOwner || m.id === detail.myMemberId);
   const removeLabelFor = (m: GroupMember): string | null => {
     if (!writable) return null;
@@ -145,7 +222,8 @@ export function GroupMembersView({
           {members.map((m) => {
             const balance = balanceOf(detail, m.id);
             const tag = memberTag(m);
-            const tappable = canRename(m) || removeLabelFor(m) !== null;
+            const tappable =
+              canRename(m) || removeLabelFor(m) !== null || canMakeOwner(detail, m) || canResetClaim(detail, m);
             return (
               <TouchableOpacity
                 key={m.id}
@@ -224,6 +302,10 @@ export function GroupMembersView({
         onClose={() => setSelected(null)}
         onRename={rename}
         onRemove={confirmRemove}
+        canMakeOwner={selected ? canMakeOwner(detail, selected) : false}
+        onMakeOwner={confirmMakeOwner}
+        canResetClaim={selected ? canResetClaim(detail, selected) : false}
+        onResetClaim={confirmResetClaim}
       />
     </SafeAreaView>
   );

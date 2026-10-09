@@ -4,6 +4,7 @@ import type {
   GroupBalance,
   GroupExpense,
   GroupMember,
+  GroupMemberEventView,
   GroupSettlement,
   GroupTransfer,
 } from '../entities/group';
@@ -94,6 +95,10 @@ export interface GroupDetail {
   guestAccess: boolean;
   isOwner: boolean;
   ownerMemberId: string | null;
+  /** True when the group has no owner (ABA-650). */
+  isOrphaned: boolean;
+  /** True when the caller may adopt it: orphaned, active, and a live app-user member from BEFORE the orphaning. */
+  canAdopt: boolean;
   myMemberId: string;
   members: GroupMember[];
   balances: GroupBalance[];
@@ -105,7 +110,8 @@ export interface GroupDetail {
 
 export type GroupActivityItem =
   | { kind: 'expense'; at: string; expense: GroupExpense }
-  | { kind: 'settlement'; at: string; settlement: GroupSettlement };
+  | { kind: 'settlement'; at: string; settlement: GroupSettlement }
+  | { kind: 'event'; at: string; event: GroupMemberEventView };
 
 export interface GroupActivityPage {
   items: GroupActivityItem[];
@@ -127,4 +133,9 @@ export interface GroupJoinPreview {
   groupId?: string;
   /** Free names to take over: live placeholders nobody has claimed. Id + display name only. */
   unclaimed: Array<{ id: string; displayName: string }>;
+}
+
+/** POST /groups/:groupId/owner (ABA-650): the target must be a live app-user member, not the caller. */
+export interface TransferGroupOwnerDto {
+  memberId: string;
 }

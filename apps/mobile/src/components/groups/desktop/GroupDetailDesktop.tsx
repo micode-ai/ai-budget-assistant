@@ -18,6 +18,7 @@ import { GroupErrorState } from '../GroupErrorState';
 import { GroupShareCard } from '../GroupShareCard';
 import { GroupTransfersCard } from '../GroupTransfersCard';
 import { GroupOfflineBanner } from '../GroupOfflineBanner';
+import { GroupOrphanBanner } from '../GroupOrphanBanner';
 import { useConnectivity } from '@/hooks/useConnectivity';
 import { GroupActivityTable } from './GroupActivityTable';
 import { GroupDetailDialogs, type GroupDetailDialogState } from './GroupDetailDialogs';
@@ -185,6 +186,8 @@ export function GroupDetailDesktop({ groupId, initialDialog }: Props) {
       <ScrollView style={styles.pageScroll} contentContainerStyle={styles.pageContent}>
         <View style={styles.body}>
           <View style={styles.mainColumn}>
+            {/* ABA-650: no owner. Above the hero, so it reads before the money. */}
+            <GroupOrphanBanner detail={detail} style={{ marginBottom: 0 }} />
             <GroupBalanceHero detail={detail} desktop />
             <Text style={styles.sectionTitle}>{t('groups.activityTitle')}</Text>
             <GroupActivityTable

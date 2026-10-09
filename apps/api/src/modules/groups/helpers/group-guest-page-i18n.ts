@@ -39,6 +39,7 @@ export type GroupStrKey =
   | 'deletedTag'
   | 'voidedTag'
   | 'settlementLine'
+  | 'eventMerged'
   | 'deleteButton'
   | 'undoButton'
   | 'olderHistory'
@@ -123,6 +124,7 @@ const en: Dict = {
   deletedTag: 'deleted',
   voidedTag: 'cancelled',
   settlementLine: '{0} paid {1}',
+  eventMerged: '{0} was merged into {1}',
   deleteButton: 'Delete',
   undoButton: 'Undo',
   olderHistory: 'Older history',
@@ -206,6 +208,7 @@ const pl: Dict = {
   deletedTag: 'usunięte',
   voidedTag: 'anulowane',
   settlementLine: '{0} zapłacił(a) {1}',
+  eventMerged: '{0} — połączono z {1}',
   deleteButton: 'Usuń',
   undoButton: 'Cofnij',
   olderHistory: 'Starsza historia',
@@ -289,6 +292,7 @@ const de: Dict = {
   deletedTag: 'gelöscht',
   voidedTag: 'storniert',
   settlementLine: '{0} hat {1} bezahlt',
+  eventMerged: '{0} wurde mit {1} zusammengeführt',
   deleteButton: 'Löschen',
   undoButton: 'Rückgängig',
   olderHistory: 'Älterer Verlauf',
@@ -372,6 +376,7 @@ const es: Dict = {
   deletedTag: 'eliminado',
   voidedTag: 'anulado',
   settlementLine: '{0} pagó a {1}',
+  eventMerged: '{0} se fusionó con {1}',
   deleteButton: 'Eliminar',
   undoButton: 'Deshacer',
   olderHistory: 'Historial anterior',
@@ -455,6 +460,7 @@ const fr: Dict = {
   deletedTag: 'supprimé',
   voidedTag: 'annulé',
   settlementLine: '{0} a payé {1}',
+  eventMerged: '{0} a été fusionné(e) avec {1}',
   deleteButton: 'Supprimer',
   undoButton: 'Annuler',
   olderHistory: 'Historique plus ancien',
@@ -538,6 +544,7 @@ const ru: Dict = {
   deletedTag: 'удалено',
   voidedTag: 'отменено',
   settlementLine: '{0} заплатил(а) {1}',
+  eventMerged: '{0} объединён(а) с {1}',
   deleteButton: 'Удалить',
   undoButton: 'Отменить',
   olderHistory: 'Более ранняя история',
@@ -621,6 +628,7 @@ const ua: Dict = {
   deletedTag: 'видалено',
   voidedTag: 'скасовано',
   settlementLine: '{0} заплатив(ла) {1}',
+  eventMerged: '{0} об’єднано з {1}',
   deleteButton: 'Видалити',
   undoButton: 'Скасувати',
   olderHistory: 'Давніша історія',
@@ -704,6 +712,7 @@ const be: Dict = {
   deletedTag: 'выдалена',
   voidedTag: 'скасавана',
   settlementLine: '{0} заплаціў(ла) {1}',
+  eventMerged: '{0} аб’яднаны(ая) з {1}',
   deleteButton: 'Выдаліць',
   undoButton: 'Скасаваць',
   olderHistory: 'Больш ранняя гісторыя',
@@ -787,6 +796,7 @@ const nl: Dict = {
   deletedTag: 'verwijderd',
   voidedTag: 'geannuleerd',
   settlementLine: '{0} betaalde {1}',
+  eventMerged: '{0} is samengevoegd met {1}',
   deleteButton: 'Verwijderen',
   undoButton: 'Ongedaan maken',
   olderHistory: 'Oudere geschiedenis',

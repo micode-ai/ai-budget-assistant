@@ -5121,7 +5121,7 @@ From there they can:
 - **Not me / forget this device** — signs this browser out of their name, for a shared phone or computer.
 - **Have a restore code?** — on a new device, enter the **Restore code** and tap **Restore**.
 
-If someone loses both their browser data and their restore code, they can join again under a slightly different name, or the group owner can reset the link (see below) so everyone picks their name again.
+If someone loses both their browser data and their restore code, they can join again under a slightly different name, or the group owner can reset the link (see below) so everyone picks their name again. The owner can also free just that one name: see **Reset this person's login** under Members.
 
 The page also suggests the app at a few useful moments — for notifications, reading paper receipts, or reminders — but nothing on the page requires it.
 
@@ -5152,6 +5152,8 @@ Tap **Members** to see everyone. Members marked **Not joined yet** haven't picke
 
 A member removed by the owner can't rejoin through the link.
 
+If someone lost access in the browser, or someone else picked their name, the owner can tap that member and choose **Reset this person's login**, then confirm. The name becomes free on the link again, and whoever still uses the old browser loses access to it. Nobody else is affected, and the member's expenses and balance stay exactly as they were. This is offered only for friends who use the group from the browser and have already picked their name. The reset appears in the **Activity** list in the app; the browser page doesn't show it.
+
 ### Owner controls
 
 The person who created the group also sees **Owner controls**:
@@ -5161,7 +5163,15 @@ The person who created the group also sees **Owner controls**:
 - **Archive group** — the group becomes read-only for everyone, but the final balances stay visible. If balances are still open, you'll be asked to confirm with **Archive anyway**.
 - **Delete group** — deletes the group and its whole history for everyone. This can't be undone.
 
-If the owner deletes their own account, their groups are deleted too.
+### Handing the group over
+
+The owner can't leave a group while they own it. To leave, open **Members**, tap a member who uses the app and choose **Make owner**, then confirm. They become the owner and get a notification; you stay an ordinary member and can then **Leave group** as usual (your balance must be zero first). Only members who use the app can become the owner, not friends who use the group only from the browser.
+
+If the owner deletes their account, the group does not disappear. It passes automatically to the member who joined earliest among those who use the app. If nobody else in the group uses the app, the group keeps working for everyone (adding expenses and settling up included) but has no owner for a while: the group screen says so, and the owner controls are unavailable. Only a member who was already in the group, using the app, before it lost its owner can tap **Become the owner**; someone who joins afterwards cannot take it over. If you delete your own account, your name in every group becomes "Former member" and your payment details there are removed; the expenses and balances stay as they are.
+
+Ownership changes appear in the **Activity** list, for example "Ann made Bo the owner". The browser page doesn't show them.
+
+If an account is removed permanently by our support team, that person appears in their groups as **Former member**. Their expenses and payments stay, so the balances still add up.
 
 ## Joining a group in the app
 
@@ -10260,7 +10270,7 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Это не я / забыть это устройство** — отвязывает этот браузер от его имени, например на общем телефоне или компьютере.
 - **Есть код восстановления?** — на новом устройстве ввести **Код восстановления** и нажать **Восстановить**.
 
-Если человек потерял и данные браузера, и код восстановления, он может присоединиться заново под немного другим именем, или владелец группы может сбросить ссылку (см. ниже), чтобы все заново выбрали свои имена.
+Если человек потерял и данные браузера, и код восстановления, он может присоединиться заново под немного другим именем, или владелец группы может сбросить ссылку (см. ниже), чтобы все заново выбрали свои имена. Владелец может освободить и только это одно имя: см. **Сбросить вход этого человека** в разделе «Участники».
 
 В нескольких уместных местах страница предлагает приложение — для уведомлений, чтения бумажных чеков или напоминаний, — но ничего на странице его не требует.
 
@@ -10291,6 +10301,8 @@ OCR иногда неверно читает цену, выдумывает ст
 
 Участник, которого удалил владелец, не может вернуться по ссылке.
 
+Если человек потерял доступ в браузере или кто-то другой выбрал его имя, владелец может нажать на этого участника, выбрать **Сбросить вход этого человека** и подтвердить. Имя снова становится свободным по ссылке, а тот, кто ещё пользуется старым браузером, теряет к нему доступ. Больше это никого не затрагивает, а расходы и баланс участника остаются как были. Действие доступно только для друзей, которые пользуются группой в браузере и уже выбрали своё имя. Сброс появляется в списке **Активность** в приложении; страница в браузере его не показывает.
+
 ### Настройки владельца
 
 Тот, кто создал группу, видит ещё **Настройки владельца**:
@@ -10300,7 +10312,15 @@ OCR иногда неверно читает цену, выдумывает ст
 - **Архивировать группу** — группа становится доступной только для чтения для всех, но итоговые балансы остаются видны. Если балансы ещё не закрыты, подтвердите кнопкой **Всё равно архивировать**.
 - **Удалить группу** — удаляет группу и всю её историю для всех. Отменить это нельзя.
 
-Если владелец удалит свой аккаунт, его группы тоже удалятся.
+### Передача группы
+
+Владелец не может выйти из группы, пока он её владелец. Чтобы выйти, откройте **Участники**, нажмите на участника, который пользуется приложением, выберите **Сделать владельцем** и подтвердите. Он станет владельцем и получит уведомление; вы останетесь обычным участником и потом сможете, как обычно, нажать **Выйти из группы** (сначала ваш баланс должен быть нулевым). Владельцем может стать только участник, который пользуется приложением, а не друг, который открывает группу только в браузере.
+
+Если владелец удалит свой аккаунт, группа не исчезнет. Она автоматически перейдёт к участнику, который раньше всех присоединился среди пользователей приложения. Если больше никто в группе не пользуется приложением, группа продолжит работать для всех (включая добавление расходов и расчёты), но какое-то время останется без владельца: экран группы сообщит об этом, а настройки владельца будут недоступны. Только участник, который уже был в группе и пользовался приложением до того, как у неё не стало владельца, может нажать **Стать владельцем**; тот, кто присоединится позже, забрать её не сможет. Если вы удалите собственный аккаунт, ваше имя в каждой группе станет «Former member», а ваши платёжные данные там будут удалены; расходы и балансы останутся без изменений.
+
+Смена владельца видна в списке **Активность**, например «Аня сделал(а) владельцем Борю». Страница в браузере её не показывает.
+
+Если аккаунт удалит насовсем наша служба поддержки, этот человек будет показан в своих группах как **Former member** (бывший участник). Его расходы и платежи останутся, чтобы балансы по-прежнему сходились.
 
 ## Присоединение к группе в приложении
 
@@ -15369,7 +15389,7 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Це не я / забути цей пристрій** — відв'язує цей браузер від його імені, наприклад на спільному телефоні чи комп'ютері.
 - **Є код відновлення?** — на новому пристрої ввести **Код відновлення** і натиснути **Відновити**.
 
-Якщо людина втратила і дані браузера, і код відновлення, вона може приєднатися знову під трохи іншим ім'ям, або власник групи може скинути посилання (див. нижче), щоб усі заново вибрали свої імена.
+Якщо людина втратила і дані браузера, і код відновлення, вона може приєднатися знову під трохи іншим ім'ям, або власник групи може скинути посилання (див. нижче), щоб усі заново вибрали свої імена. Власник може звільнити й лише це одне ім'я: див. **Скинути вхід цієї людини** в розділі «Учасники».
 
 У кількох доречних місцях сторінка пропонує застосунок — для сповіщень, читання паперових чеків чи нагадувань, — але ніщо на сторінці його не вимагає.
 
@@ -15400,6 +15420,8 @@ OCR іноді неправильно читає ціну, вигадує ряд
 
 Учасник, якого видалив власник, не може повернутися за посиланням.
 
+Якщо людина втратила доступ у браузері або хтось інший вибрав її ім'я, власник може натиснути на цього учасника, вибрати **Скинути вхід цієї людини** і підтвердити. Ім'я знову стає вільним за посиланням, а той, хто ще користується старим браузером, втрачає до нього доступ. Більше це нікого не стосується, а витрати й баланс учасника залишаються як були. Дія доступна лише для друзів, які користуються групою в браузері та вже вибрали своє ім'я. Скидання з'являється в списку **Активність** у застосунку; сторінка в браузері його не показує.
+
 ### Налаштування власника
 
 Той, хто створив групу, бачить ще **Налаштування власника**:
@@ -15409,7 +15431,15 @@ OCR іноді неправильно читає ціну, вигадує ряд
 - **Архівувати групу** — група стає доступною лише для читання для всіх, але підсумкові баланси залишаються видимими. Якщо баланси ще не закриті, підтвердіть кнопкою **Усе одно архівувати**.
 - **Видалити групу** — видаляє групу і всю її історію для всіх. Скасувати це неможливо.
 
-Якщо власник видалить свій акаунт, його групи теж видаляться.
+### Передача групи
+
+Власник не може вийти з групи, доки він її власник. Щоб вийти, відкрийте **Учасники**, торкніться учасника, який користується застосунком, виберіть **Зробити власником** і підтвердьте. Він стане власником і отримає сповіщення; ви залишитеся звичайним учасником і потім зможете, як зазвичай, натиснути **Вийти з групи** (спершу ваш баланс має бути нульовим). Власником може стати лише учасник, який користується застосунком, а не друг, який відкриває групу тільки в браузері.
+
+Якщо власник видалить свій акаунт, група не зникне. Вона автоматично перейде до учасника, який найраніше приєднався серед користувачів застосунку. Якщо більше ніхто в групі не користується застосунком, група й далі працюватиме для всіх (зокрема додавання витрат і розрахунки), але якийсь час залишиться без власника: екран групи повідомить про це, а налаштування власника будуть недоступні. Лише учасник, який уже був у групі й користувався застосунком до того, як у неї не стало власника, може натиснути **Стати власником**; хто приєднається пізніше, забрати її не зможе. Якщо ви видалите власний акаунт, ваше ім'я в кожній групі стане «Former member», а ваші платіжні дані там буде видалено; витрати й баланси залишаться без змін.
+
+Зміна власника видна в списку **Активність**, наприклад «Аня зробив(ла) власником Богдана». Сторінка в браузері її не показує.
+
+Якщо акаунт остаточно видалить наша служба підтримки, ця людина показуватиметься у своїх групах як **Former member** (колишній учасник). Її витрати й платежі залишаться, щоб баланси й далі сходилися.
 
 ## Приєднання до групи в застосунку
 
@@ -20463,7 +20493,7 @@ Następnie może:
 - **To nie ja / zapomnij to urządzenie** — wylogowuje tę przeglądarkę z jego imienia, na wspólnym telefonie lub komputerze.
 - **Masz kod odzyskiwania?** — na nowym urządzeniu wpisać **Kod odzyskiwania** i dotknąć **Przywróć**.
 
-Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może dołączyć ponownie pod nieco innym imieniem albo właściciel grupy może zresetować link (patrz niżej), aby wszyscy wybrali swoje imiona od nowa.
+Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może dołączyć ponownie pod nieco innym imieniem albo właściciel grupy może zresetować link (patrz niżej), aby wszyscy wybrali swoje imiona od nowa. Właściciel może też zwolnić tylko to jedno imię: zobacz **Zresetuj logowanie tej osoby** w sekcji Członkowie.
 
 Strona w kilku przydatnych momentach poleca też aplikację — dla powiadomień, odczytywania papierowych paragonów czy przypomnień — ale nic na stronie jej nie wymaga.
 
@@ -20494,6 +20524,8 @@ Dotknij **Członkowie**, aby zobaczyć wszystkich. Osoby oznaczone **Jeszcze nie
 
 Członek usunięty przez właściciela nie może wrócić przez link.
 
+Jeśli ktoś stracił dostęp w przeglądarce albo ktoś inny wybrał jego imię, właściciel może dotknąć tego członka, wybrać **Zresetuj logowanie tej osoby** i potwierdzić. Imię znów staje się wolne w linku, a ten, kto nadal korzysta ze starej przeglądarki, traci do niego dostęp. Nikogo innego to nie dotyczy, a wydatki i saldo członka pozostają bez zmian. Opcja jest dostępna tylko dla znajomych, którzy korzystają z grupy w przeglądarce i już wybrali swoje imię. Reset widać na liście **Aktywność** w aplikacji; strona w przeglądarce go nie pokazuje.
+
 ### Opcje właściciela
 
 Osoba, która utworzyła grupę, widzi też **Opcje właściciela**:
@@ -20503,7 +20535,15 @@ Osoba, która utworzyła grupę, widzi też **Opcje właściciela**:
 - **Zarchiwizuj grupę** — grupa staje się tylko do odczytu dla wszystkich, ale końcowe salda pozostają widoczne. Jeśli salda nie są jeszcze rozliczone, potwierdzisz to przyciskiem **Zarchiwizuj mimo to**.
 - **Usuń grupę** — usuwa grupę i całą jej historię dla wszystkich. Tego nie można cofnąć.
 
-Jeśli właściciel usunie swoje konto, jego grupy też zostaną usunięte.
+### Przekazanie grupy
+
+Właściciel nie może opuścić grupy, dopóki jest jej właścicielem. Aby wyjść, otwórz **Członkowie**, dotknij członka, który korzysta z aplikacji, wybierz **Przekaż własność** i potwierdź. Ta osoba zostaje właścicielem i dostaje powiadomienie; ty zostajesz zwykłym członkiem i możesz potem jak zwykle wybrać **Opuść grupę** (twoje saldo musi najpierw wynosić zero). Właścicielem mogą zostać tylko członkowie korzystający z aplikacji, a nie znajomi, którzy używają grupy tylko w przeglądarce.
+
+Jeśli właściciel usunie swoje konto, grupa nie znika. Przechodzi automatycznie na członka, który dołączył najwcześniej spośród korzystających z aplikacji. Jeśli nikt inny w grupie nie korzysta z aplikacji, grupa dalej działa dla wszystkich (także dodawanie wydatków i rozliczanie), ale przez jakiś czas nie ma właściciela: ekran grupy o tym informuje, a opcje właściciela są niedostępne. Tylko członek, który był już w grupie i korzystał z aplikacji, zanim straciła właściciela, może dotknąć **Zostać właścicielem**; kto dołączy później, nie może jej przejąć. Jeśli usuniesz własne konto, Twoje imię w każdej grupie zmieni się na „Former member”, a Twoje dane do płatności tam zostaną usunięte; wydatki i salda pozostaną bez zmian.
+
+Zmiany właściciela widać na liście **Aktywność**, na przykład „Ania przekazał(a) własność osobie Bartek”. Strona w przeglądarce ich nie pokazuje.
+
+Jeśli konto zostanie trwale usunięte przez nasz zespół wsparcia, ta osoba pojawia się w swoich grupach jako **Former member** (były członek). Jej wydatki i płatności zostają, więc salda nadal się zgadzają.
 
 ## Dołączanie do grupy w aplikacji
 
@@ -25532,7 +25572,7 @@ Danach können sie:
 - **Das bin ich nicht / dieses Gerät vergessen** — meldet diesen Browser von ihrem Namen ab, etwa auf einem geteilten Handy oder Computer.
 - **Hast du einen Wiederherstellungscode?** — auf einem neuen Gerät den **Wiederherstellungscode** eingeben und auf **Wiederherstellen** tippen.
 
-Wer sowohl die Browserdaten als auch den Wiederherstellungscode verliert, kann unter einem leicht anderen Namen erneut beitreten, oder der Gruppenbesitzer setzt den Link zurück (siehe unten), damit alle ihren Namen neu wählen.
+Wer sowohl die Browserdaten als auch den Wiederherstellungscode verliert, kann unter einem leicht anderen Namen erneut beitreten, oder der Gruppenbesitzer setzt den Link zurück (siehe unten), damit alle ihren Namen neu wählen. Der Besitzer kann auch nur diesen einen Namen freigeben: siehe **Anmeldung dieser Person zurücksetzen** unter Mitglieder.
 
 Die Seite empfiehlt die App an einigen passenden Stellen — für Benachrichtigungen, das Lesen von Papierbelegen oder Erinnerungen —, aber nichts auf der Seite setzt sie voraus.
 
@@ -25563,6 +25603,8 @@ Tippe auf **Mitglieder**, um alle zu sehen. Mitglieder mit **Noch nicht beigetre
 
 Ein vom Besitzer entferntes Mitglied kann nicht über den Link zurückkehren.
 
+Hat jemand den Zugang im Browser verloren oder hat sich jemand anderes seinen Namen genommen, kann der Besitzer dieses Mitglied antippen, **Anmeldung dieser Person zurücksetzen** wählen und bestätigen. Der Name ist im Link wieder frei, und wer den alten Browser noch nutzt, verliert den Zugang dazu. Sonst ist niemand betroffen, und die Ausgaben und der Saldo des Mitglieds bleiben genau, wie sie waren. Das wird nur für Freunde angeboten, die die Gruppe im Browser nutzen und ihren Namen schon gewählt haben. Das Zurücksetzen erscheint in der App in der Liste **Aktivität**; die Browserseite zeigt es nicht.
+
 ### Besitzer-Optionen
 
 Wer die Gruppe erstellt hat, sieht außerdem **Besitzer-Optionen**:
@@ -25572,7 +25614,15 @@ Wer die Gruppe erstellt hat, sieht außerdem **Besitzer-Optionen**:
 - **Gruppe archivieren** — die Gruppe wird für alle schreibgeschützt, die Endsalden bleiben aber sichtbar. Sind noch Salden offen, bestätigst du mit **Trotzdem archivieren**.
 - **Gruppe löschen** — löscht die Gruppe und ihren gesamten Verlauf für alle. Das lässt sich nicht rückgängig machen.
 
-Löscht der Besitzer sein eigenes Konto, werden auch seine Gruppen gelöscht.
+### Die Gruppe übergeben
+
+Der Besitzer kann eine Gruppe nicht verlassen, solange sie ihm gehört. Um auszutreten, öffne **Mitglieder**, tippe auf ein Mitglied, das die App nutzt, wähle **Zum Inhaber machen** und bestätige. Diese Person wird Inhaber und bekommt eine Benachrichtigung; du bleibst normales Mitglied und kannst danach wie gewohnt **Gruppe verlassen** wählen (dein Saldo muss vorher null sein). Inhaber können nur Mitglieder werden, die die App nutzen, nicht Freunde, die die Gruppe nur im Browser verwenden.
+
+Löscht der Besitzer sein Konto, verschwindet die Gruppe nicht. Sie geht automatisch an das Mitglied, das unter den App-Nutzern am frühesten beigetreten ist. Nutzt sonst niemand in der Gruppe die App, funktioniert die Gruppe für alle weiter (auch Ausgaben hinzufügen und ausgleichen), hat aber eine Weile keinen Inhaber: Der Gruppenbildschirm weist darauf hin, und die Besitzer-Optionen sind nicht verfügbar. Nur ein Mitglied, das schon vor dem Verlust des Inhabers in der Gruppe war und die App nutzt, kann auf **Inhaber werden** tippen; wer erst danach beitritt, kann sie nicht übernehmen. Löschst du dein eigenes Konto, wird dein Name in jeder Gruppe zu „Former member“ und deine Zahlungsdaten dort werden entfernt; Ausgaben und Salden bleiben unverändert.
+
+Inhaberwechsel erscheinen in der Liste **Aktivität**, zum Beispiel „Anna hat Ben zum Inhaber gemacht“. Die Browserseite zeigt sie nicht.
+
+Wird ein Konto von unserem Support dauerhaft entfernt, erscheint diese Person in ihren Gruppen als **Former member** (ehemaliges Mitglied). Ihre Ausgaben und Zahlungen bleiben erhalten, damit die Salden weiter stimmen.
 
 ## Einer Gruppe in der App beitreten
 
@@ -30590,7 +30640,7 @@ A partir de ahí pueden:
 - **No soy yo / olvidar este dispositivo**: desconecta este navegador de su nombre, por ejemplo en un teléfono u ordenador compartido.
 - **¿Tienes un código de recuperación?**: en un dispositivo nuevo, escribir el **Código de recuperación** y tocar **Recuperar**.
 
-Si alguien pierde a la vez los datos del navegador y su código de recuperación, puede volver a unirse con un nombre un poco distinto, o el propietario del grupo puede restablecer el enlace (ver más abajo) para que todos vuelvan a elegir su nombre.
+Si alguien pierde a la vez los datos del navegador y su código de recuperación, puede volver a unirse con un nombre un poco distinto, o el propietario del grupo puede restablecer el enlace (ver más abajo) para que todos vuelvan a elegir su nombre. El propietario también puede liberar solo ese nombre: consulta **Restablecer el acceso de esta persona** en Miembros.
 
 La página también sugiere la app en algunos momentos útiles —para recibir notificaciones, leer tickets en papel o recibir recordatorios—, pero nada en la página la exige.
 
@@ -30621,6 +30671,8 @@ Toca **Miembros** para ver a todos. Los marcados con **Aún no se ha unido** tod
 
 Un miembro eliminado por el propietario no puede volver a entrar con el enlace.
 
+Si alguien perdió el acceso en el navegador, o si otra persona eligió su nombre, el propietario puede tocar a ese miembro, elegir **Restablecer el acceso de esta persona** y confirmar. El nombre vuelve a quedar libre en el enlace, y quien siga usando el navegador anterior pierde el acceso. No afecta a nadie más, y los gastos y el saldo del miembro quedan exactamente como estaban. Solo se ofrece para amigos que usan el grupo desde el navegador y ya eligieron su nombre. El restablecimiento aparece en la lista de **Actividad** de la app; la página del navegador no lo muestra.
+
 ### Controles del propietario
 
 Quien creó el grupo ve además **Controles del propietario**:
@@ -30630,7 +30682,15 @@ Quien creó el grupo ve además **Controles del propietario**:
 - **Archivar grupo**: el grupo pasa a ser de solo lectura para todos, aunque los saldos finales siguen visibles. Si aún hay saldos pendientes, lo confirmarás con **Archivar de todos modos**.
 - **Eliminar grupo**: elimina el grupo y todo su historial para todos. No se puede deshacer.
 
-Si el propietario elimina su propia cuenta, sus grupos también se eliminan.
+### Traspasar el grupo
+
+El propietario no puede salir de un grupo mientras sea su propietario. Para salir, abre **Miembros**, toca a un miembro que use la app, elige **Hacer propietario** y confirma. Esa persona pasa a ser la propietaria y recibe una notificación; tú sigues siendo un miembro normal y después puedes **Salir del grupo** como siempre (antes tu saldo debe ser cero). Solo pueden ser propietarios los miembros que usan la app, no los amigos que usan el grupo solo desde el navegador.
+
+Si el propietario elimina su cuenta, el grupo no desaparece. Pasa automáticamente al miembro que se unió antes entre los que usan la app. Si nadie más del grupo usa la app, el grupo sigue funcionando para todos (también añadir gastos y saldar cuentas), pero se queda sin propietario durante un tiempo: la pantalla del grupo lo indica y los controles del propietario no están disponibles. Solo un miembro que ya estaba en el grupo, usando la app, antes de que se quedara sin propietario puede tocar **Ser el propietario**; quien se una después no puede hacerse con él. Si eliminas tu propia cuenta, tu nombre en cada grupo pasa a ser «Former member» y se borran tus datos de pago allí; los gastos y los saldos no cambian.
+
+Los cambios de propietario aparecen en la lista **Actividad**, por ejemplo «Ana hizo propietario a Beto». La página del navegador no los muestra.
+
+Si nuestro equipo de soporte elimina una cuenta de forma permanente, esa persona aparece en sus grupos como **Former member** (antiguo miembro). Sus gastos y pagos se conservan, así que los saldos siguen cuadrando.
 
 ## Unirse a un grupo desde la app
 
@@ -35646,7 +35706,7 @@ Ensuite, ils peuvent :
 - **Ce n'est pas moi / oublier cet appareil** : déconnecte ce navigateur de leur nom, sur un téléphone ou un ordinateur partagé.
 - **Vous avez un code de restauration ?** : sur un nouvel appareil, saisir le **Code de restauration** et toucher **Restaurer**.
 
-Si quelqu'un perd à la fois les données de son navigateur et son code de restauration, il peut rejoindre le groupe sous un nom légèrement différent, ou le propriétaire du groupe peut réinitialiser le lien (voir plus bas) pour que chacun choisisse à nouveau son nom.
+Si quelqu'un perd à la fois les données de son navigateur et son code de restauration, il peut rejoindre le groupe sous un nom légèrement différent, ou le propriétaire du groupe peut réinitialiser le lien (voir plus bas) pour que chacun choisisse à nouveau son nom. Le propriétaire peut aussi libérer uniquement ce nom : voir **Réinitialiser la connexion de cette personne** dans Membres.
 
 La page suggère aussi l'appli à quelques moments utiles — pour les notifications, la lecture des tickets papier ou les rappels —, mais rien sur la page ne l'exige.
 
@@ -35677,6 +35737,8 @@ Touchez **Membres** pour voir tout le monde. Les membres marqués **Pas encore r
 
 Un membre retiré par le propriétaire ne peut pas revenir par le lien.
 
+Si quelqu'un a perdu l'accès dans le navigateur, ou si quelqu'un d'autre a pris son nom, le propriétaire peut toucher ce membre, choisir **Réinitialiser la connexion de cette personne** et confirmer. Le nom redevient libre dans le lien, et quiconque utilise encore l'ancien navigateur en perd l'accès. Personne d'autre n'est concerné, et les dépenses et le solde du membre restent exactement comme avant. L'option n'est proposée que pour les amis qui utilisent le groupe depuis le navigateur et ont déjà choisi leur nom. La réinitialisation apparaît dans la liste **Activité** de l'appli ; la page du navigateur ne l'affiche pas.
+
 ### Options du propriétaire
 
 La personne qui a créé le groupe voit aussi les **Options du propriétaire** :
@@ -35686,7 +35748,15 @@ La personne qui a créé le groupe voit aussi les **Options du propriétaire** :
 - **Archiver le groupe** : le groupe passe en lecture seule pour tous, mais les soldes finaux restent visibles. Si des soldes restent ouverts, vous confirmerez avec **Archiver quand même**.
 - **Supprimer le groupe** : supprime le groupe et tout son historique pour tout le monde. C'est irréversible.
 
-Si le propriétaire supprime son propre compte, ses groupes sont également supprimés.
+### Transmettre le groupe
+
+Le propriétaire ne peut pas quitter un groupe tant qu'il en est propriétaire. Pour partir, ouvrez **Membres**, touchez un membre qui utilise l'appli, choisissez **Nommer propriétaire** et confirmez. Cette personne devient propriétaire et reçoit une notification ; vous restez un membre ordinaire et pouvez ensuite **Quitter le groupe** comme d'habitude (votre solde doit d'abord être à zéro). Seuls les membres qui utilisent l'appli peuvent devenir propriétaires, pas les amis qui n'utilisent le groupe que dans le navigateur.
+
+Si le propriétaire supprime son compte, le groupe ne disparaît pas. Il passe automatiquement au membre arrivé le plus tôt parmi ceux qui utilisent l'appli. Si personne d'autre dans le groupe n'utilise l'appli, le groupe continue de fonctionner pour tous (ajout de dépenses et règlements compris), mais reste un moment sans propriétaire : l'écran du groupe l'indique et les options du propriétaire sont indisponibles. Seul un membre qui était déjà dans le groupe, avec l'appli, avant qu'il perde son propriétaire peut appuyer sur **Devenir propriétaire** ; une personne qui rejoint après ne peut pas le reprendre. Si vous supprimez votre propre compte, votre nom dans chaque groupe devient « Former member » et vos coordonnées de paiement y sont effacées ; les dépenses et les soldes restent inchangés.
+
+Les changements de propriétaire apparaissent dans la liste **Activité**, par exemple « Anne a nommé Paul propriétaire ». La page du navigateur ne les affiche pas.
+
+Si un compte est supprimé définitivement par notre équipe d'assistance, cette personne apparaît dans ses groupes sous le nom **Former member** (ancien membre). Ses dépenses et paiements restent, pour que les soldes tombent toujours juste.
 
 ## Rejoindre un groupe dans l'appli
 
@@ -40666,7 +40736,7 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Гэта не я / забыць гэту прыладу** — адвязвае гэты браўзер ад яго імя, напрыклад на агульным тэлефоне ці камп'ютары.
 - **Ёсць код аднаўлення?** — на новай прыладзе ўвесці **Код аднаўлення** і націснуць **Аднавіць**.
 
-Калі чалавек страціў і даныя браўзера, і код аднаўлення, ён можа далучыцца зноў пад крыху іншым імем, або ўладальнік групы можа скінуць спасылку (гл. ніжэй), каб усе нанова выбралі свае імёны.
+Калі чалавек страціў і даныя браўзера, і код аднаўлення, ён можа далучыцца зноў пад крыху іншым імем, або ўладальнік групы можа скінуць спасылку (гл. ніжэй), каб усе нанова выбралі свае імёны. Уладальнік можа вызваліць і толькі гэтае адно імя: гл. **Скінуць уваход гэтага чалавека** у раздзеле «Удзельнікі».
 
 У некалькіх дарэчных месцах старонка прапануе праграму — для паведамленняў, чытання папяровых чэкаў ці напамінаў, — але нішто на старонцы яе не патрабуе.
 
@@ -40697,6 +40767,8 @@ OCR часам няправільна чытае цану, выдумляе ра
 
 Удзельнік, якога выдаліў уладальнік, не можа вярнуцца па спасылцы.
 
+Калі чалавек страціў доступ у браўзеры або хтосьці іншы выбраў яго імя, уладальнік можа націснуць на гэтага ўдзельніка, выбраць **Скінуць уваход гэтага чалавека** і пацвердзіць. Імя зноў становіцца вольным па спасылцы, а той, хто яшчэ карыстаецца старым браўзерам, губляе да яго доступ. Больш гэта нікога не датычыць, а выдаткі і баланс удзельніка застаюцца як былі. Дзеянне даступнае толькі для сяброў, якія карыстаюцца групай у браўзеры і ўжо выбралі сваё імя. Скід з'яўляецца ў спісе **Актыўнасць** у праграме; старонка ў браўзеры яго не паказвае.
+
 ### Налады ўладальніка
 
 Той, хто стварыў групу, бачыць яшчэ **Налады ўладальніка**:
@@ -40706,7 +40778,15 @@ OCR часам няправільна чытае цану, выдумляе ра
 - **Архіваваць групу** — група становіцца даступнай толькі для чытання для ўсіх, але выніковыя балансы застаюцца бачнымі. Калі балансы яшчэ не закрытыя, пацвердзіце кнопкай **Усё роўна архіваваць**.
 - **Выдаліць групу** — выдаляе групу і ўсю яе гісторыю для ўсіх. Адмяніць гэта нельга.
 
-Калі ўладальнік выдаліць свой акаўнт, яго групы таксама выдаляцца.
+### Перадача групы
+
+Уладальнік не можа выйсці з групы, пакуль ён яе ўладальнік. Каб выйсці, адкрыйце **Удзельнікі**, націсніце на ўдзельніка, які карыстаецца праграмай, выберыце **Зрабіць уладальнікам** і пацвердзіце. Ён стане ўладальнікам і атрымае паведамленне; вы застанецеся звычайным удзельнікам і потым зможаце, як звычайна, націснуць **Выйсці з групы** (спачатку ваш баланс павінен быць нулявым). Уладальнікам можа стаць толькі ўдзельнік, які карыстаецца праграмай, а не сябар, які адкрывае групу толькі ў браўзеры.
+
+Калі ўладальнік выдаліць свой акаўнт, група не знікне. Яна аўтаматычна пяройдзе да ўдзельніка, які раней за ўсіх далучыўся сярод карыстальнікаў праграмы. Калі больш ніхто ў групе не карыстаецца праграмай, група будзе працаваць для ўсіх і далей (у тым ліку дадаванне выдаткаў і разлікі), але нейкі час застанецца без уладальніка: экран групы паведаміць пра гэта, а налады ўладальніка будуць недаступныя. Толькі ўдзельнік, які ўжо быў у групе і карыстаўся праграмай да таго, як у яе не стала ўладальніка, можа націснуць **Стаць уладальнікам**; хто далучыцца пазней, забраць яе не зможа. Калі вы выдаліце ўласны акаўнт, ваша імя ў кожнай групе стане «Former member», а вашы плацёжныя даныя там будуць выдалены; выдаткі і балансы застануцца без змен.
+
+Змена ўладальніка відаць у спісе **Актыўнасць**, напрыклад «Ганна зрабіў(ла) уладальнікам Барыса». Старонка ў браўзеры яе не паказвае.
+
+Калі акаўнт канчаткова выдаліць наша служба падтрымкі, гэты чалавек будзе паказаны ў сваіх групах як **Former member** (былы ўдзельнік). Яго выдаткі і плацяжы застануцца, каб балансы па-ранейшаму сыходзіліся.
 
 ## Далучэнне да групы ў праграме
 
@@ -45812,7 +45892,7 @@ Daarna kunnen ze:
 - **Dat ben ik niet / dit apparaat vergeten** — meldt deze browser af van hun naam, bijvoorbeeld op een gedeelde telefoon of computer.
 - **Heb je een herstelcode?** — op een nieuw apparaat de **Herstelcode** invullen en op **Herstellen** tikken.
 
-Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest.
+Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest. De eigenaar kan ook alleen die ene naam vrijgeven: zie **Aanmelding van deze persoon resetten** onder Leden.
 
 Op een paar handige momenten raadt de pagina ook de app aan — voor meldingen, het lezen van papieren bonnen of herinneringen — maar niets op de pagina vereist hem.
 
@@ -45843,6 +45923,8 @@ Tik op **Leden** om iedereen te zien. Leden met **Nog niet toegetreden** hebben 
 
 Een lid dat door de eigenaar is verwijderd, kan niet via de link terugkomen.
 
+Is iemand de toegang in de browser kwijt, of heeft iemand anders zijn naam gekozen, dan kan de eigenaar op dat lid tikken, **Aanmelding van deze persoon resetten** kiezen en bevestigen. De naam is dan weer vrij in de link, en wie de oude browser nog gebruikt, verliest de toegang. Verder verandert er voor niemand iets, en de uitgaven en het saldo van het lid blijven precies zoals ze waren. Dit wordt alleen aangeboden voor vrienden die de groep in de browser gebruiken en hun naam al hebben gekozen. De reset verschijnt in de app in de lijst **Activiteit**; de browserpagina toont hem niet.
+
 ### Eigenaarsopties
 
 Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
@@ -45852,7 +45934,15 @@ Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
 - **Groep archiveren** — de groep wordt voor iedereen alleen-lezen, maar de eindsaldi blijven zichtbaar. Staan er nog saldi open, dan bevestig je met **Toch archiveren**.
 - **Groep verwijderen** — verwijdert de groep en de hele geschiedenis voor iedereen. Dit kan niet ongedaan worden gemaakt.
 
-Verwijdert de eigenaar zijn eigen account, dan worden zijn groepen ook verwijderd.
+### De groep overdragen
+
+De eigenaar kan een groep niet verlaten zolang hij de eigenaar is. Om te vertrekken open je **Leden**, tik je op een lid dat de app gebruikt, kies je **Eigenaar maken** en bevestig je. Diegene wordt eigenaar en krijgt een melding; jij blijft gewoon lid en kunt daarna zoals altijd **Groep verlaten** kiezen (je saldo moet eerst nul zijn). Alleen leden die de app gebruiken kunnen eigenaar worden, niet vrienden die de groep alleen in de browser gebruiken.
+
+Verwijdert de eigenaar zijn account, dan verdwijnt de groep niet. Hij gaat automatisch naar het lid dat als eerste lid werd onder wie de app gebruikt. Gebruikt verder niemand in de groep de app, dan blijft de groep voor iedereen werken (ook uitgaven toevoegen en afrekenen), maar heeft hij een tijdje geen eigenaar: het groepsscherm meldt dat, en de eigenaarsopties zijn niet beschikbaar. Alleen een lid dat al in de groep zat en de app gebruikte voordat die geen eigenaar meer had, kan op **Eigenaar worden** tikken; wie later lid wordt, kan hem niet overnemen. Verwijder je je eigen account, dan wordt je naam in elke groep "Former member" en worden je betaalgegevens daar gewist; uitgaven en saldo's blijven zoals ze zijn.
+
+Eigenaarswissels staan in de lijst **Activiteit**, bijvoorbeeld "Anna heeft Bram eigenaar gemaakt". De browserpagina laat ze niet zien.
+
+Wordt een account door ons supportteam definitief verwijderd, dan staat die persoon in zijn groepen als **Former member** (voormalig lid). Zijn uitgaven en betalingen blijven, zodat de saldi blijven kloppen.
 
 ## Deelnemen aan een groep in de app
 

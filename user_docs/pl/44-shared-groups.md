@@ -45,7 +45,7 @@ Następnie może:
 - **To nie ja / zapomnij to urządzenie** — wylogowuje tę przeglądarkę z jego imienia, na wspólnym telefonie lub komputerze.
 - **Masz kod odzyskiwania?** — na nowym urządzeniu wpisać **Kod odzyskiwania** i dotknąć **Przywróć**.
 
-Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może dołączyć ponownie pod nieco innym imieniem albo właściciel grupy może zresetować link (patrz niżej), aby wszyscy wybrali swoje imiona od nowa.
+Jeśli ktoś straci zarówno dane przeglądarki, jak i kod odzyskiwania, może dołączyć ponownie pod nieco innym imieniem albo właściciel grupy może zresetować link (patrz niżej), aby wszyscy wybrali swoje imiona od nowa. Właściciel może też zwolnić tylko to jedno imię: zobacz **Zresetuj logowanie tej osoby** w sekcji Członkowie.
 
 Strona w kilku przydatnych momentach poleca też aplikację — dla powiadomień, odczytywania papierowych paragonów czy przypomnień — ale nic na stronie jej nie wymaga.
 
@@ -76,6 +76,8 @@ Dotknij **Członkowie**, aby zobaczyć wszystkich. Osoby oznaczone **Jeszcze nie
 
 Członek usunięty przez właściciela nie może wrócić przez link.
 
+Jeśli ktoś stracił dostęp w przeglądarce albo ktoś inny wybrał jego imię, właściciel może dotknąć tego członka, wybrać **Zresetuj logowanie tej osoby** i potwierdzić. Imię znów staje się wolne w linku, a ten, kto nadal korzysta ze starej przeglądarki, traci do niego dostęp. Nikogo innego to nie dotyczy, a wydatki i saldo członka pozostają bez zmian. Opcja jest dostępna tylko dla znajomych, którzy korzystają z grupy w przeglądarce i już wybrali swoje imię. Reset widać na liście **Aktywność** w aplikacji; strona w przeglądarce go nie pokazuje.
+
 ### Opcje właściciela
 
 Osoba, która utworzyła grupę, widzi też **Opcje właściciela**:
@@ -85,7 +87,15 @@ Osoba, która utworzyła grupę, widzi też **Opcje właściciela**:
 - **Zarchiwizuj grupę** — grupa staje się tylko do odczytu dla wszystkich, ale końcowe salda pozostają widoczne. Jeśli salda nie są jeszcze rozliczone, potwierdzisz to przyciskiem **Zarchiwizuj mimo to**.
 - **Usuń grupę** — usuwa grupę i całą jej historię dla wszystkich. Tego nie można cofnąć.
 
-Jeśli właściciel usunie swoje konto, jego grupy też zostaną usunięte.
+### Przekazanie grupy
+
+Właściciel nie może opuścić grupy, dopóki jest jej właścicielem. Aby wyjść, otwórz **Członkowie**, dotknij członka, który korzysta z aplikacji, wybierz **Przekaż własność** i potwierdź. Ta osoba zostaje właścicielem i dostaje powiadomienie; ty zostajesz zwykłym członkiem i możesz potem jak zwykle wybrać **Opuść grupę** (twoje saldo musi najpierw wynosić zero). Właścicielem mogą zostać tylko członkowie korzystający z aplikacji, a nie znajomi, którzy używają grupy tylko w przeglądarce.
+
+Jeśli właściciel usunie swoje konto, grupa nie znika. Przechodzi automatycznie na członka, który dołączył najwcześniej spośród korzystających z aplikacji. Jeśli nikt inny w grupie nie korzysta z aplikacji, grupa dalej działa dla wszystkich (także dodawanie wydatków i rozliczanie), ale przez jakiś czas nie ma właściciela: ekran grupy o tym informuje, a opcje właściciela są niedostępne. Tylko członek, który był już w grupie i korzystał z aplikacji, zanim straciła właściciela, może dotknąć **Zostać właścicielem**; kto dołączy później, nie może jej przejąć. Jeśli usuniesz własne konto, Twoje imię w każdej grupie zmieni się na „Former member”, a Twoje dane do płatności tam zostaną usunięte; wydatki i salda pozostaną bez zmian.
+
+Zmiany właściciela widać na liście **Aktywność**, na przykład „Ania przekazał(a) własność osobie Bartek”. Strona w przeglądarce ich nie pokazuje.
+
+Jeśli konto zostanie trwale usunięte przez nasz zespół wsparcia, ta osoba pojawia się w swoich grupach jako **Former member** (były członek). Jej wydatki i płatności zostają, więc salda nadal się zgadzają.
 
 ## Dołączanie do grupy w aplikacji
 

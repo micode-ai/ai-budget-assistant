@@ -249,3 +249,9 @@ export class LinkGuestDto {
   @Matches(/^[a-f0-9]{32}$/)
   code: string;
 }
+
+/** POST /groups/:groupId/owner (ABA-650). The id is re-scoped to the group in the service. */
+export class TransferGroupOwnerDto {
+  @IsUUID()
+  memberId: string;
+}

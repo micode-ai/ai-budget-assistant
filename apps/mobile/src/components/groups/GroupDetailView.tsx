@@ -12,6 +12,7 @@ import { GroupActivityList } from './GroupActivityList';
 import { GroupBalanceHero } from './GroupBalanceHero';
 import { GroupButton } from './GroupButton';
 import { GroupOfflineBanner } from './GroupOfflineBanner';
+import { GroupOrphanBanner } from './GroupOrphanBanner';
 import { GroupErrorState } from './GroupErrorState';
 import { GroupShareCard } from './GroupShareCard';
 import { GroupTransfersCard } from './GroupTransfersCard';
@@ -77,6 +78,8 @@ export function GroupDetailView({ groupId }: { groupId: string }) {
             <Text style={styles.bannerText}>{t('groups.archivedBanner')}</Text>
           </View>
         )}
+
+        <GroupOrphanBanner detail={detail} />
 
         <GroupBalanceHero detail={detail} />
 

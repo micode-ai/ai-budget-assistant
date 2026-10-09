@@ -45,7 +45,7 @@ A partir de ahí pueden:
 - **No soy yo / olvidar este dispositivo**: desconecta este navegador de su nombre, por ejemplo en un teléfono u ordenador compartido.
 - **¿Tienes un código de recuperación?**: en un dispositivo nuevo, escribir el **Código de recuperación** y tocar **Recuperar**.
 
-Si alguien pierde a la vez los datos del navegador y su código de recuperación, puede volver a unirse con un nombre un poco distinto, o el propietario del grupo puede restablecer el enlace (ver más abajo) para que todos vuelvan a elegir su nombre.
+Si alguien pierde a la vez los datos del navegador y su código de recuperación, puede volver a unirse con un nombre un poco distinto, o el propietario del grupo puede restablecer el enlace (ver más abajo) para que todos vuelvan a elegir su nombre. El propietario también puede liberar solo ese nombre: consulta **Restablecer el acceso de esta persona** en Miembros.
 
 La página también sugiere la app en algunos momentos útiles —para recibir notificaciones, leer tickets en papel o recibir recordatorios—, pero nada en la página la exige.
 
@@ -76,6 +76,8 @@ Toca **Miembros** para ver a todos. Los marcados con **Aún no se ha unido** tod
 
 Un miembro eliminado por el propietario no puede volver a entrar con el enlace.
 
+Si alguien perdió el acceso en el navegador, o si otra persona eligió su nombre, el propietario puede tocar a ese miembro, elegir **Restablecer el acceso de esta persona** y confirmar. El nombre vuelve a quedar libre en el enlace, y quien siga usando el navegador anterior pierde el acceso. No afecta a nadie más, y los gastos y el saldo del miembro quedan exactamente como estaban. Solo se ofrece para amigos que usan el grupo desde el navegador y ya eligieron su nombre. El restablecimiento aparece en la lista de **Actividad** de la app; la página del navegador no lo muestra.
+
 ### Controles del propietario
 
 Quien creó el grupo ve además **Controles del propietario**:
@@ -85,7 +87,15 @@ Quien creó el grupo ve además **Controles del propietario**:
 - **Archivar grupo**: el grupo pasa a ser de solo lectura para todos, aunque los saldos finales siguen visibles. Si aún hay saldos pendientes, lo confirmarás con **Archivar de todos modos**.
 - **Eliminar grupo**: elimina el grupo y todo su historial para todos. No se puede deshacer.
 
-Si el propietario elimina su propia cuenta, sus grupos también se eliminan.
+### Traspasar el grupo
+
+El propietario no puede salir de un grupo mientras sea su propietario. Para salir, abre **Miembros**, toca a un miembro que use la app, elige **Hacer propietario** y confirma. Esa persona pasa a ser la propietaria y recibe una notificación; tú sigues siendo un miembro normal y después puedes **Salir del grupo** como siempre (antes tu saldo debe ser cero). Solo pueden ser propietarios los miembros que usan la app, no los amigos que usan el grupo solo desde el navegador.
+
+Si el propietario elimina su cuenta, el grupo no desaparece. Pasa automáticamente al miembro que se unió antes entre los que usan la app. Si nadie más del grupo usa la app, el grupo sigue funcionando para todos (también añadir gastos y saldar cuentas), pero se queda sin propietario durante un tiempo: la pantalla del grupo lo indica y los controles del propietario no están disponibles. Solo un miembro que ya estaba en el grupo, usando la app, antes de que se quedara sin propietario puede tocar **Ser el propietario**; quien se una después no puede hacerse con él. Si eliminas tu propia cuenta, tu nombre en cada grupo pasa a ser «Former member» y se borran tus datos de pago allí; los gastos y los saldos no cambian.
+
+Los cambios de propietario aparecen en la lista **Actividad**, por ejemplo «Ana hizo propietario a Beto». La página del navegador no los muestra.
+
+Si nuestro equipo de soporte elimina una cuenta de forma permanente, esa persona aparece en sus grupos como **Former member** (antiguo miembro). Sus gastos y pagos se conservan, así que los saldos siguen cuadrando.
 
 ## Unirse a un grupo desde la app
 

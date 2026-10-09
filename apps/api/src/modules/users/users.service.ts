@@ -1,5 +1,6 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../database/prisma.service';
+import { GroupOwnershipService } from '../groups/group-ownership.service';
 import type { SettleMethod } from '@budget/shared-types';
 import { AcquisitionDto } from '../auth/dto';
 
@@ -29,7 +30,10 @@ interface CreateUserData {
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly groupOwnership: GroupOwnershipService,
+  ) {}
 
   async create(data: CreateUserData) {
     return this.prisma.user.create({
@@ -248,11 +252,17 @@ export class UsersService {
     });
   }
 
+  /**
+   * Self-service account deletion is SOFT (isActive=false, nothing cascades). Groups the user owns
+   * are handed on FIRST (ABA-650), or they would be left headless: nobody could rotate, archive,
+   * reset or remove anyone. A failure there aborts before the account changes.
+   */
   async deactivate(id: string) {
-    return this.prisma.user.update({
-      where: { id },
-      data: { isActive: false },
-    });
+    // ABA-650: one transaction. Owned groups pass on and the user's group identity is anonymized
+    // (like the admin hard delete) together with the account change, so nothing is left half-done.
+    return this.groupOwnership.leavePlatform(id, { anonymize: true }, (tx) =>
+      tx.user.update({ where: { id }, data: { isActive: false } }),
+    );
   }
 
   /** Every account this user belongs to — used to bust per-account real-salary caches. */

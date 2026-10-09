@@ -2371,7 +2371,14 @@ model ExpenseGroup {
   name          String // 1..60, trimmed
   emoji         String? // single grapheme, optional
   currencyCode  String             @map("currency_code") // immutable once any expense exists
-  ownerUserId   String             @map("owner_user_id")
+  // NULL = orphaned (ABA-650): the owner left the platform and no live member with an active
+  // account could succeed them. Members and guests keep using it; only owner actions wait until an
+  // app-user member adopts it.
+  ownerUserId   String?            @map("owner_user_id")
+  // When the owner became NULL. Adoption is open only to members who were live BEFORE this moment
+  // (a joiner after it must not take the group over). Stamped by GroupOwnershipService and, for the
+  // SetNull FK backstop, by the expense_groups_orphaned_at trigger in the migration.
+  orphanedAt    DateTime?          @map("orphaned_at")
   // Bearer credential for the public link: randomBytes(16).hex (128-bit, same TOKEN_BYTES as
   // receipt-split). Stored plain because the members re-share it. Rotation = new value.
   guestToken    String             @unique @map("guest_token")
@@ -2384,10 +2391,13 @@ model ExpenseGroup {
   createdAt     DateTime           @default(now()) @map("created_at")
   updatedAt     DateTime           @updatedAt @map("updated_at")
 
-  owner       User                 @relation("OwnedExpenseGroups", fields: [ownerUserId], references: [id], onDelete: Cascade)
+  // SetNull, never Cascade (ABA-650): GroupOwnershipService hands the group on before an account
+  // goes away; a path that forgets that hook orphans the group instead of deleting it for everyone.
+  owner       User?                @relation("OwnedExpenseGroups", fields: [ownerUserId], references: [id], onDelete: SetNull)
   members     ExpenseGroupMember[]
   expenses    GroupExpense[]
   settlements GroupSettlement[]
+  events      GroupMemberEvent[]
 
   @@index([ownerUserId])
   @@map("expense_groups")
@@ -2498,6 +2508,31 @@ model GroupSettlement {
   @@unique([groupId, clientRequestId])
   @@index([groupId, voidedAt])
   @@map("group_settlements")
+}
+
+// Membership events shown as system rows in the group activity (ABA-650). Shared with the later
+// claim-reset and merge tasks. Member columns are plain ids with NO foreign key, so a merge never has
+// to re-point audit rows; `subjectName` is a snapshot because the subject may leave or be merged.
+enum GroupMemberEventKind {
+  owner_transferred // manual transfer, succession on departure, orphaning (no target) or adoption
+  member_merged
+  claim_reset
+}
+
+model GroupMemberEvent {
+  id              String               @id @default(uuid())
+  groupId         String               @map("group_id")
+  kind            GroupMemberEventKind
+  actorMemberId   String?              @map("actor_member_id") // NULL = the system (account departure)
+  subjectMemberId String               @map("subject_member_id")
+  targetMemberId  String?              @map("target_member_id")
+  subjectName     String               @map("subject_name")
+  createdAt       DateTime             @default(now()) @map("created_at")
+
+  group ExpenseGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@index([groupId, createdAt])
+  @@map("group_member_events")
 }
 
 // Inbound e-receipts by e-mail forwarding (ABA-644). One private address per user;

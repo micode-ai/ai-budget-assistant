@@ -45,7 +45,7 @@ Daarna kunnen ze:
 - **Dat ben ik niet / dit apparaat vergeten** — meldt deze browser af van hun naam, bijvoorbeeld op een gedeelde telefoon of computer.
 - **Heb je een herstelcode?** — op een nieuw apparaat de **Herstelcode** invullen en op **Herstellen** tikken.
 
-Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest.
+Raakt iemand zowel zijn browsergegevens als zijn herstelcode kwijt, dan kan hij opnieuw deelnemen onder een iets andere naam, of de eigenaar van de groep stelt de link opnieuw in (zie hieronder) zodat iedereen zijn naam opnieuw kiest. De eigenaar kan ook alleen die ene naam vrijgeven: zie **Aanmelding van deze persoon resetten** onder Leden.
 
 Op een paar handige momenten raadt de pagina ook de app aan — voor meldingen, het lezen van papieren bonnen of herinneringen — maar niets op de pagina vereist hem.
 
@@ -76,6 +76,8 @@ Tik op **Leden** om iedereen te zien. Leden met **Nog niet toegetreden** hebben 
 
 Een lid dat door de eigenaar is verwijderd, kan niet via de link terugkomen.
 
+Is iemand de toegang in de browser kwijt, of heeft iemand anders zijn naam gekozen, dan kan de eigenaar op dat lid tikken, **Aanmelding van deze persoon resetten** kiezen en bevestigen. De naam is dan weer vrij in de link, en wie de oude browser nog gebruikt, verliest de toegang. Verder verandert er voor niemand iets, en de uitgaven en het saldo van het lid blijven precies zoals ze waren. Dit wordt alleen aangeboden voor vrienden die de groep in de browser gebruiken en hun naam al hebben gekozen. De reset verschijnt in de app in de lijst **Activiteit**; de browserpagina toont hem niet.
+
 ### Eigenaarsopties
 
 Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
@@ -85,7 +87,15 @@ Wie de groep heeft gemaakt, ziet ook **Eigenaarsopties**:
 - **Groep archiveren** — de groep wordt voor iedereen alleen-lezen, maar de eindsaldi blijven zichtbaar. Staan er nog saldi open, dan bevestig je met **Toch archiveren**.
 - **Groep verwijderen** — verwijdert de groep en de hele geschiedenis voor iedereen. Dit kan niet ongedaan worden gemaakt.
 
-Verwijdert de eigenaar zijn eigen account, dan worden zijn groepen ook verwijderd.
+### De groep overdragen
+
+De eigenaar kan een groep niet verlaten zolang hij de eigenaar is. Om te vertrekken open je **Leden**, tik je op een lid dat de app gebruikt, kies je **Eigenaar maken** en bevestig je. Diegene wordt eigenaar en krijgt een melding; jij blijft gewoon lid en kunt daarna zoals altijd **Groep verlaten** kiezen (je saldo moet eerst nul zijn). Alleen leden die de app gebruiken kunnen eigenaar worden, niet vrienden die de groep alleen in de browser gebruiken.
+
+Verwijdert de eigenaar zijn account, dan verdwijnt de groep niet. Hij gaat automatisch naar het lid dat als eerste lid werd onder wie de app gebruikt. Gebruikt verder niemand in de groep de app, dan blijft de groep voor iedereen werken (ook uitgaven toevoegen en afrekenen), maar heeft hij een tijdje geen eigenaar: het groepsscherm meldt dat, en de eigenaarsopties zijn niet beschikbaar. Alleen een lid dat al in de groep zat en de app gebruikte voordat die geen eigenaar meer had, kan op **Eigenaar worden** tikken; wie later lid wordt, kan hem niet overnemen. Verwijder je je eigen account, dan wordt je naam in elke groep "Former member" en worden je betaalgegevens daar gewist; uitgaven en saldo's blijven zoals ze zijn.
+
+Eigenaarswissels staan in de lijst **Activiteit**, bijvoorbeeld "Anna heeft Bram eigenaar gemaakt". De browserpagina laat ze niet zien.
+
+Wordt een account door ons supportteam definitief verwijderd, dan staat die persoon in zijn groepen als **Former member** (voormalig lid). Zijn uitgaven en betalingen blijven, zodat de saldi blijven kloppen.
 
 ## Deelnemen aan een groep in de app
 

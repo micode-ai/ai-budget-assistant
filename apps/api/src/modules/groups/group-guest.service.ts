@@ -11,7 +11,7 @@ import { createHash, randomBytes, timingSafeEqual } from 'crypto';
 import { PrismaService } from '../../database/prisma.service';
 import { CacheService } from '../../common/cache/cache.service';
 import { buildGuestPayLink } from '../receipt-split/helpers/guest-page';
-import { GroupsService, MAX_MEMBERS, MAX_SHARES } from './groups.service';
+import { GroupsService, linkClaimBinding, MAX_MEMBERS, MAX_SHARES } from './groups.service';
 import { SETTLE_METHODS } from './dto';
 import type {
   GuestActivityView,
@@ -249,7 +249,8 @@ export class GroupGuestService {
         },
         orderBy: { createdAt: 'asc' },
       }),
-      this.groups.getActivity(group.id, opts.before, GUEST_PAGE_ACTIVITY),
+      // guestView: only the event kinds a public page may show (never owner/claim events).
+      this.groups.getActivity(group.id, opts.before, GUEST_PAGE_ACTIVITY, { guestView: true }),
     ]);
 
     const names = new Map<string, string>(allMembers.map((m: any) => [m.id, m.displayName]));
@@ -298,10 +299,22 @@ export class GroupGuestService {
       };
     });
 
-    const items: GuestActivityView[] = activity.items.map((it) => {
+    const items: GuestActivityView[] = activity.items.flatMap((it): GuestActivityView[] => {
+      if (it.kind === 'event') {
+        // Belt and braces over the query filter: a non-public kind is dropped here too.
+        if (it.event.kind !== 'member_merged') return [];
+        return [
+          {
+            kind: 'event' as const,
+            id: it.event.id,
+            subjectName: it.event.subjectName,
+            targetName: it.event.targetName ?? nameOf(it.event.targetMemberId ?? ''),
+          },
+        ];
+      }
       if (it.kind === 'expense') {
         const e = it.expense;
-        return {
+        return [{
           kind: 'expense' as const,
           id: e.id,
           description: e.description,
@@ -311,10 +324,10 @@ export class GroupGuestService {
           addedByName: e.createdByMemberId && e.createdByMemberId !== e.paidByMemberId ? nameOf(e.createdByMemberId) : null,
           deleted: !!e.deletedAt,
           canDelete: !!actor && e.createdByMemberId === actor.id,
-        };
+        }];
       }
       const s = it.settlement;
-      return {
+      return [{
         kind: 'settlement' as const,
         id: s.id,
         fromName: nameOf(s.fromMemberId),
@@ -322,7 +335,7 @@ export class GroupGuestService {
         amount: s.amount,
         voided: !!s.voidedAt,
         canVoid: !!actor && (s.recordedByMemberId === actor.id || s.toMemberId === actor.id),
-      };
+      }];
     });
 
     const meRow = actor ? byId.get(actor.id) : null;
@@ -526,7 +539,12 @@ export class GroupGuestService {
   async mintLinkCode(group: GuestGroup, actor: GuestActor): Promise<string | null> {
     const code = randomBytes(16).toString('hex');
     const key = `grp:link:${code}`;
-    await this.cache.set(key, { groupId: group.id, memberId: actor.id, guestToken: group.guestToken }, LINK_CODE_TTL_SECONDS);
+    // `claim` ties the code to THIS cookie's claim (ABA-651): an owner reset or "forget" kills it.
+    await this.cache.set(
+      key,
+      { groupId: group.id, memberId: actor.id, guestToken: group.guestToken, claim: linkClaimBinding(sha256Hex(actor.secret)) },
+      LINK_CODE_TTL_SECONDS,
+    );
     const stored = await this.cache.get<{ groupId: string }>(key);
     return stored ? code : null;
   }

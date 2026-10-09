@@ -45,7 +45,7 @@ Danach können sie:
 - **Das bin ich nicht / dieses Gerät vergessen** — meldet diesen Browser von ihrem Namen ab, etwa auf einem geteilten Handy oder Computer.
 - **Hast du einen Wiederherstellungscode?** — auf einem neuen Gerät den **Wiederherstellungscode** eingeben und auf **Wiederherstellen** tippen.
 
-Wer sowohl die Browserdaten als auch den Wiederherstellungscode verliert, kann unter einem leicht anderen Namen erneut beitreten, oder der Gruppenbesitzer setzt den Link zurück (siehe unten), damit alle ihren Namen neu wählen.
+Wer sowohl die Browserdaten als auch den Wiederherstellungscode verliert, kann unter einem leicht anderen Namen erneut beitreten, oder der Gruppenbesitzer setzt den Link zurück (siehe unten), damit alle ihren Namen neu wählen. Der Besitzer kann auch nur diesen einen Namen freigeben: siehe **Anmeldung dieser Person zurücksetzen** unter Mitglieder.
 
 Die Seite empfiehlt die App an einigen passenden Stellen — für Benachrichtigungen, das Lesen von Papierbelegen oder Erinnerungen —, aber nichts auf der Seite setzt sie voraus.
 
@@ -76,6 +76,8 @@ Tippe auf **Mitglieder**, um alle zu sehen. Mitglieder mit **Noch nicht beigetre
 
 Ein vom Besitzer entferntes Mitglied kann nicht über den Link zurückkehren.
 
+Hat jemand den Zugang im Browser verloren oder hat sich jemand anderes seinen Namen genommen, kann der Besitzer dieses Mitglied antippen, **Anmeldung dieser Person zurücksetzen** wählen und bestätigen. Der Name ist im Link wieder frei, und wer den alten Browser noch nutzt, verliert den Zugang dazu. Sonst ist niemand betroffen, und die Ausgaben und der Saldo des Mitglieds bleiben genau, wie sie waren. Das wird nur für Freunde angeboten, die die Gruppe im Browser nutzen und ihren Namen schon gewählt haben. Das Zurücksetzen erscheint in der App in der Liste **Aktivität**; die Browserseite zeigt es nicht.
+
 ### Besitzer-Optionen
 
 Wer die Gruppe erstellt hat, sieht außerdem **Besitzer-Optionen**:
@@ -85,7 +87,15 @@ Wer die Gruppe erstellt hat, sieht außerdem **Besitzer-Optionen**:
 - **Gruppe archivieren** — die Gruppe wird für alle schreibgeschützt, die Endsalden bleiben aber sichtbar. Sind noch Salden offen, bestätigst du mit **Trotzdem archivieren**.
 - **Gruppe löschen** — löscht die Gruppe und ihren gesamten Verlauf für alle. Das lässt sich nicht rückgängig machen.
 
-Löscht der Besitzer sein eigenes Konto, werden auch seine Gruppen gelöscht.
+### Die Gruppe übergeben
+
+Der Besitzer kann eine Gruppe nicht verlassen, solange sie ihm gehört. Um auszutreten, öffne **Mitglieder**, tippe auf ein Mitglied, das die App nutzt, wähle **Zum Inhaber machen** und bestätige. Diese Person wird Inhaber und bekommt eine Benachrichtigung; du bleibst normales Mitglied und kannst danach wie gewohnt **Gruppe verlassen** wählen (dein Saldo muss vorher null sein). Inhaber können nur Mitglieder werden, die die App nutzen, nicht Freunde, die die Gruppe nur im Browser verwenden.
+
+Löscht der Besitzer sein Konto, verschwindet die Gruppe nicht. Sie geht automatisch an das Mitglied, das unter den App-Nutzern am frühesten beigetreten ist. Nutzt sonst niemand in der Gruppe die App, funktioniert die Gruppe für alle weiter (auch Ausgaben hinzufügen und ausgleichen), hat aber eine Weile keinen Inhaber: Der Gruppenbildschirm weist darauf hin, und die Besitzer-Optionen sind nicht verfügbar. Nur ein Mitglied, das schon vor dem Verlust des Inhabers in der Gruppe war und die App nutzt, kann auf **Inhaber werden** tippen; wer erst danach beitritt, kann sie nicht übernehmen. Löschst du dein eigenes Konto, wird dein Name in jeder Gruppe zu „Former member“ und deine Zahlungsdaten dort werden entfernt; Ausgaben und Salden bleiben unverändert.
+
+Inhaberwechsel erscheinen in der Liste **Aktivität**, zum Beispiel „Anna hat Ben zum Inhaber gemacht“. Die Browserseite zeigt sie nicht.
+
+Wird ein Konto von unserem Support dauerhaft entfernt, erscheint diese Person in ihren Gruppen als **Former member** (ehemaliges Mitglied). Ihre Ausgaben und Zahlungen bleiben erhalten, damit die Salden weiter stimmen.
 
 ## Einer Gruppe in der App beitreten
 

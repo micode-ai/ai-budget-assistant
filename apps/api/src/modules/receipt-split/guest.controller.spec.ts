@@ -614,7 +614,7 @@ describe('Legacy pair clearing on PUT /users/me/payment-methods closes the stale
       expense: { findFirst: jest.fn().mockResolvedValue(null) },
     };
 
-    const usersService = new UsersService(prisma);
+    const usersService = new UsersService(prisma, { handleOwnerDeparture: jest.fn() } as any);
     const notificationsService: any = { sendToUser: jest.fn().mockResolvedValue(true) };
     const guestController = new GuestController(prisma, notificationsService);
 
@@ -840,7 +840,7 @@ describe('GuestController guard metadata — the no-authentication invariant', (
   const GUARDS_METADATA = '__guards__';
 
   function nonThrottlerGuardNames(target: object): string[] {
-    const guards = (Reflect.getMetadata(GUARDS_METADATA, target) as Function[] | undefined) ?? [];
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, target) as Array<{ name: string }> | undefined) ?? [];
     // ThrottlerGuard is the one guard this public surface is supposed to carry (rate
     // limiting, not authentication) — everything else attached here would be an auth or
     // account-scoping guard that has no business on an unauthenticated guest page.
@@ -853,31 +853,31 @@ describe('GuestController guard metadata — the no-authentication invariant', (
   });
 
   it('attaches no authentication guard on GET /:token, and keeps ThrottlerGuard', () => {
-    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.guestPage) as Function[] | undefined) ?? [];
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.guestPage) as unknown[] | undefined) ?? [];
     expect(nonThrottlerGuardNames(GuestController.prototype.guestPage)).toEqual([]);
     expect(guards).toContain(ThrottlerGuard);
   });
 
   it('attaches no authentication guard on POST /:token/paid, and keeps ThrottlerGuard', () => {
-    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.markPaid) as Function[] | undefined) ?? [];
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.markPaid) as unknown[] | undefined) ?? [];
     expect(nonThrottlerGuardNames(GuestController.prototype.markPaid)).toEqual([]);
     expect(guards).toContain(ThrottlerGuard);
   });
 
   it('attaches no authentication guard on GET /g/:groupToken, and keeps ThrottlerGuard', () => {
-    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.groupPicker) as Function[] | undefined) ?? [];
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.groupPicker) as unknown[] | undefined) ?? [];
     expect(nonThrottlerGuardNames(GuestController.prototype.groupPicker)).toEqual([]);
     expect(guards).toContain(ThrottlerGuard);
   });
 
   it('attaches no authentication guard on GET /g/:groupToken/:seq, and keeps ThrottlerGuard', () => {
-    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.groupConfirm) as Function[] | undefined) ?? [];
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.groupConfirm) as unknown[] | undefined) ?? [];
     expect(nonThrottlerGuardNames(GuestController.prototype.groupConfirm)).toEqual([]);
     expect(guards).toContain(ThrottlerGuard);
   });
 
   it('attaches no authentication guard on POST /:token/flag, and keeps ThrottlerGuard', () => {
-    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.flagItem) as Function[] | undefined) ?? [];
+    const guards = (Reflect.getMetadata(GUARDS_METADATA, GuestController.prototype.flagItem) as unknown[] | undefined) ?? [];
     expect(nonThrottlerGuardNames(GuestController.prototype.flagItem)).toEqual([]);
     expect(guards).toContain(ThrottlerGuard);
   });

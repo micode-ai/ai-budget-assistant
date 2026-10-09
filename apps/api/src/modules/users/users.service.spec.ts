@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 import { UsersService } from './users.service';
+import { GroupOwnershipService } from '../groups/group-ownership.service';
 import { PrismaService } from '../../database/prisma.service';
 
 describe('UsersService notification preferences', () => {
@@ -15,7 +16,7 @@ describe('UsersService notification preferences', () => {
     };
 
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     service = module.get(UsersService);
   });
@@ -60,7 +61,7 @@ describe('UsersService.search', () => {
     };
 
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     service = module.get(UsersService);
   });
@@ -159,7 +160,7 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
   it('happy path: stores the list in the order given and getPaymentMethods returns it ordered by sortOrder', async () => {
     const prisma = makeInMemoryPaymentMethodPrisma();
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     const service = module.get(UsersService);
 
@@ -178,7 +179,7 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
   it('replacing truly removes the previous entries — a second call with a disjoint list leaves none of the first list behind', async () => {
     const prisma = makeInMemoryPaymentMethodPrisma();
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     const service = module.get(UsersService);
 
@@ -204,7 +205,7 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
   it("replacing one user's list never touches another user's rows", async () => {
     const prisma = makeInMemoryPaymentMethodPrisma();
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     const service = module.get(UsersService);
 
@@ -221,7 +222,7 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
     const prisma = makeInMemoryPaymentMethodPrisma();
     prisma._seedLegacyPair('user-1', { paymentMethod: 'revolut', paymentHandle: 'legacy-revolut' });
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     const service = module.get(UsersService);
 
@@ -241,7 +242,7 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
     const prisma = makeInMemoryPaymentMethodPrisma();
     prisma._seedLegacyPair('user-1', { paymentMethod: 'revolut', paymentHandle: 'legacy-revolut' });
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     const service = module.get(UsersService);
 
@@ -255,7 +256,7 @@ describe('UsersService.replacePaymentMethods / getPaymentMethods', () => {
     const prisma = makeInMemoryPaymentMethodPrisma();
     prisma._seedLegacyPair('user-1', { paymentMethod: 'revolut', paymentHandle: 'legacy-revolut' });
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     const service = module.get(UsersService);
 
@@ -281,7 +282,7 @@ describe('UsersService.updateAcquisition', () => {
     };
 
     const module = await Test.createTestingModule({
-      providers: [UsersService, { provide: PrismaService, useValue: prisma }],
+      providers: [UsersService, { provide: PrismaService, useValue: prisma }, { provide: GroupOwnershipService, useValue: { handleOwnerDeparture: jest.fn() } }],
     }).compile();
     service = module.get(UsersService);
   });
@@ -314,5 +315,42 @@ describe('UsersService.updateAcquisition', () => {
       prisma.user.updateMany.mockResolvedValue({ count: 0 });
       await expect(service.updateAcquisition('user-1', { src: 'blog' })).resolves.toBeUndefined();
     });
+  });
+});
+
+describe('UsersService.deactivate (ABA-650)', () => {
+  it('anonymizes the group identity and updates the account inside the ownership transaction', async () => {
+    const order: string[] = [];
+    const tx = {
+      user: {
+        update: jest.fn(async () => {
+          order.push('update');
+          return { id: 'u1', isActive: false };
+        }),
+      },
+    };
+    const groupOwnership = {
+      leavePlatform: jest.fn(async (_id: string, _opts: any, then: (t: any) => Promise<any>) => {
+        order.push('groups');
+        return then(tx);
+      }),
+    };
+    const module = await Test.createTestingModule({
+      providers: [
+        UsersService,
+        { provide: PrismaService, useValue: {} },
+        { provide: GroupOwnershipService, useValue: groupOwnership },
+      ],
+    }).compile();
+    const service = module.get(UsersService);
+    await service.deactivate('u1');
+    expect(groupOwnership.leavePlatform).toHaveBeenCalledWith('u1', { anonymize: true }, expect.any(Function));
+    expect(tx.user.update).toHaveBeenCalledWith({ where: { id: 'u1' }, data: { isActive: false } });
+    expect(order).toEqual(['groups', 'update']);
+
+    groupOwnership.leavePlatform.mockRejectedValueOnce(new Error('db down'));
+    tx.user.update.mockClear();
+    await expect(service.deactivate('u1')).rejects.toThrow('db down');
+    expect(tx.user.update).not.toHaveBeenCalled();
   });
 });

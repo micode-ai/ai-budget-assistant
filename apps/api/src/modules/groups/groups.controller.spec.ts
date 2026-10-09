@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GroupsController } from './groups.controller';
+import { GroupActiveGuard, GroupMemberGuard, GroupOwnerGuard } from './guards';
 
 /**
  * `@Throttle` only sets metadata; with no APP_GUARD registered it is inert unless ThrottlerGuard is
@@ -32,5 +33,21 @@ describe('GroupsController throttling', () => {
   it('does not change the other routes (no class-level ThrottlerGuard)', () => {
     expect(guardsOf(GroupsController)).not.toContain(ThrottlerGuard);
     expect(guardsOf(proto.list)).not.toContain(ThrottlerGuard);
+  });
+
+  it('transferOwner: throttled, owner-only and active-only (ABA-650)', () => {
+    expect(guardsOf(proto.transferOwner)).toEqual([ThrottlerGuard, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard]);
+    expect(Reflect.getMetadata('THROTTLER:LIMITdefault', proto.transferOwner)).toBe(10);
+  });
+
+  it('resetClaim: throttled, owner-only and active-only (ABA-651)', () => {
+    expect(guardsOf(proto.resetClaim)).toEqual([ThrottlerGuard, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard]);
+    expect(Reflect.getMetadata('THROTTLER:LIMITdefault', proto.resetClaim)).toBe(10);
+    expect(Reflect.getMetadata('THROTTLER:TTLdefault', proto.resetClaim)).toBe(60000);
+  });
+
+  it('adopt: throttled, member and active guards, deliberately NOT owner-only (ABA-650)', () => {
+    expect(guardsOf(proto.adopt)).toEqual([ThrottlerGuard, GroupMemberGuard, GroupActiveGuard]);
+    expect(guardsOf(proto.adopt)).not.toContain(GroupOwnerGuard);
   });
 });

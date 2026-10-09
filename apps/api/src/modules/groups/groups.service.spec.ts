@@ -464,7 +464,7 @@ describe('GroupsService', () => {
         expect(prisma.expenseGroup.update).toHaveBeenCalled(); // row lock first
         expect(prisma.expenseGroupMember.update).toHaveBeenCalledWith({
           where: { id: A },
-          data: { removedAt: null, removedByOwner: false },
+          data: { removedAt: null, removedByOwner: false, claimedAt: expect.any(Date) },
         });
       });
       it('who left on their own is refused when the group is full (50)', async () => {

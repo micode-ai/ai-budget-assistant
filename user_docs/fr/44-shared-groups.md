@@ -45,7 +45,7 @@ Ensuite, ils peuvent :
 - **Ce n'est pas moi / oublier cet appareil** : déconnecte ce navigateur de leur nom, sur un téléphone ou un ordinateur partagé.
 - **Vous avez un code de restauration ?** : sur un nouvel appareil, saisir le **Code de restauration** et toucher **Restaurer**.
 
-Si quelqu'un perd à la fois les données de son navigateur et son code de restauration, il peut rejoindre le groupe sous un nom légèrement différent, ou le propriétaire du groupe peut réinitialiser le lien (voir plus bas) pour que chacun choisisse à nouveau son nom.
+Si quelqu'un perd à la fois les données de son navigateur et son code de restauration, il peut rejoindre le groupe sous un nom légèrement différent, ou le propriétaire du groupe peut réinitialiser le lien (voir plus bas) pour que chacun choisisse à nouveau son nom. Le propriétaire peut aussi libérer uniquement ce nom : voir **Réinitialiser la connexion de cette personne** dans Membres.
 
 La page suggère aussi l'appli à quelques moments utiles — pour les notifications, la lecture des tickets papier ou les rappels —, mais rien sur la page ne l'exige.
 
@@ -76,6 +76,8 @@ Touchez **Membres** pour voir tout le monde. Les membres marqués **Pas encore r
 
 Un membre retiré par le propriétaire ne peut pas revenir par le lien.
 
+Si quelqu'un a perdu l'accès dans le navigateur, ou si quelqu'un d'autre a pris son nom, le propriétaire peut toucher ce membre, choisir **Réinitialiser la connexion de cette personne** et confirmer. Le nom redevient libre dans le lien, et quiconque utilise encore l'ancien navigateur en perd l'accès. Personne d'autre n'est concerné, et les dépenses et le solde du membre restent exactement comme avant. L'option n'est proposée que pour les amis qui utilisent le groupe depuis le navigateur et ont déjà choisi leur nom. La réinitialisation apparaît dans la liste **Activité** de l'appli ; la page du navigateur ne l'affiche pas.
+
 ### Options du propriétaire
 
 La personne qui a créé le groupe voit aussi les **Options du propriétaire** :
@@ -85,7 +87,15 @@ La personne qui a créé le groupe voit aussi les **Options du propriétaire** :
 - **Archiver le groupe** : le groupe passe en lecture seule pour tous, mais les soldes finaux restent visibles. Si des soldes restent ouverts, vous confirmerez avec **Archiver quand même**.
 - **Supprimer le groupe** : supprime le groupe et tout son historique pour tout le monde. C'est irréversible.
 
-Si le propriétaire supprime son propre compte, ses groupes sont également supprimés.
+### Transmettre le groupe
+
+Le propriétaire ne peut pas quitter un groupe tant qu'il en est propriétaire. Pour partir, ouvrez **Membres**, touchez un membre qui utilise l'appli, choisissez **Nommer propriétaire** et confirmez. Cette personne devient propriétaire et reçoit une notification ; vous restez un membre ordinaire et pouvez ensuite **Quitter le groupe** comme d'habitude (votre solde doit d'abord être à zéro). Seuls les membres qui utilisent l'appli peuvent devenir propriétaires, pas les amis qui n'utilisent le groupe que dans le navigateur.
+
+Si le propriétaire supprime son compte, le groupe ne disparaît pas. Il passe automatiquement au membre arrivé le plus tôt parmi ceux qui utilisent l'appli. Si personne d'autre dans le groupe n'utilise l'appli, le groupe continue de fonctionner pour tous (ajout de dépenses et règlements compris), mais reste un moment sans propriétaire : l'écran du groupe l'indique et les options du propriétaire sont indisponibles. Seul un membre qui était déjà dans le groupe, avec l'appli, avant qu'il perde son propriétaire peut appuyer sur **Devenir propriétaire** ; une personne qui rejoint après ne peut pas le reprendre. Si vous supprimez votre propre compte, votre nom dans chaque groupe devient « Former member » et vos coordonnées de paiement y sont effacées ; les dépenses et les soldes restent inchangés.
+
+Les changements de propriétaire apparaissent dans la liste **Activité**, par exemple « Anne a nommé Paul propriétaire ». La page du navigateur ne les affiche pas.
+
+Si un compte est supprimé définitivement par notre équipe d'assistance, cette personne apparaît dans ses groupes sous le nom **Former member** (ancien membre). Ses dépenses et paiements restent, pour que les soldes tombent toujours juste.
 
 ## Rejoindre un groupe dans l'appli
 

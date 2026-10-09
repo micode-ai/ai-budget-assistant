@@ -45,7 +45,7 @@ From there they can:
 - **Not me / forget this device** — signs this browser out of their name, for a shared phone or computer.
 - **Have a restore code?** — on a new device, enter the **Restore code** and tap **Restore**.
 
-If someone loses both their browser data and their restore code, they can join again under a slightly different name, or the group owner can reset the link (see below) so everyone picks their name again.
+If someone loses both their browser data and their restore code, they can join again under a slightly different name, or the group owner can reset the link (see below) so everyone picks their name again. The owner can also free just that one name: see **Reset this person's login** under Members.
 
 The page also suggests the app at a few useful moments — for notifications, reading paper receipts, or reminders — but nothing on the page requires it.
 
@@ -76,6 +76,8 @@ Tap **Members** to see everyone. Members marked **Not joined yet** haven't picke
 
 A member removed by the owner can't rejoin through the link.
 
+If someone lost access in the browser, or someone else picked their name, the owner can tap that member and choose **Reset this person's login**, then confirm. The name becomes free on the link again, and whoever still uses the old browser loses access to it. Nobody else is affected, and the member's expenses and balance stay exactly as they were. This is offered only for friends who use the group from the browser and have already picked their name. The reset appears in the **Activity** list in the app; the browser page doesn't show it.
+
 ### Owner controls
 
 The person who created the group also sees **Owner controls**:
@@ -85,7 +87,15 @@ The person who created the group also sees **Owner controls**:
 - **Archive group** — the group becomes read-only for everyone, but the final balances stay visible. If balances are still open, you'll be asked to confirm with **Archive anyway**.
 - **Delete group** — deletes the group and its whole history for everyone. This can't be undone.
 
-If the owner deletes their own account, their groups are deleted too.
+### Handing the group over
+
+The owner can't leave a group while they own it. To leave, open **Members**, tap a member who uses the app and choose **Make owner**, then confirm. They become the owner and get a notification; you stay an ordinary member and can then **Leave group** as usual (your balance must be zero first). Only members who use the app can become the owner, not friends who use the group only from the browser.
+
+If the owner deletes their account, the group does not disappear. It passes automatically to the member who joined earliest among those who use the app. If nobody else in the group uses the app, the group keeps working for everyone (adding expenses and settling up included) but has no owner for a while: the group screen says so, and the owner controls are unavailable. Only a member who was already in the group, using the app, before it lost its owner can tap **Become the owner**; someone who joins afterwards cannot take it over. If you delete your own account, your name in every group becomes "Former member" and your payment details there are removed; the expenses and balances stay as they are.
+
+Ownership changes appear in the **Activity** list, for example "Ann made Bo the owner". The browser page doesn't show them.
+
+If an account is removed permanently by our support team, that person appears in their groups as **Former member**. Their expenses and payments stay, so the balances still add up.
 
 ## Joining a group in the app
 

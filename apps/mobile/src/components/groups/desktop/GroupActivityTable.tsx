@@ -7,6 +7,7 @@ import { useTheme, useStyles, type Theme } from '@/theme';
 import { useConnectivity } from '@/hooks/useConnectivity';
 import { fromDateInputValue } from '@/utils/dateInput';
 import { canModifyExpense, canVoidSettlement, memberName } from '@/features/groups/groupDisplay';
+import { describeGroupEvent } from '@/features/groups/groupOwnership';
 import type { ActivityDay, ActivityTableRow } from '@/features/groups/groupActivityTable';
 import type { GroupDetail, GroupExpense, GroupSettlement } from '@budget/shared-types';
 
@@ -134,6 +135,26 @@ export function GroupActivityTable({
             )}
           </View>
         </Pressable>
+      );
+    }
+
+    if (row.item.kind === 'event') {
+      // ABA-650: a system row. No subtotal, never a keyboard target (left out of `order`), not
+      // focusable and not a click target; the text spans the description, payer and amount cells.
+      const text = describeGroupEvent(row.item.event);
+      return (
+        <View key={row.id} focusable={false} style={[styles.row, styles.eventRow]}>
+          <View style={styles.cellDate}>
+            <Text style={styles.cellMuted}>{formatDay(dayKey, { month: 'short', day: 'numeric' })}</Text>
+          </View>
+          <View style={[styles.cellDescription, styles.eventCell]}>
+            <Ionicons name="people-outline" size={14} color={theme.colors.textTertiary} />
+            <Text style={styles.eventText} numberOfLines={2}>
+              {t(text.key, text.params)}
+            </Text>
+          </View>
+          <View style={styles.cellActions} />
+        </View>
       );
     }
 
@@ -343,6 +364,19 @@ const createStyles = (theme: Theme) => ({
     ...theme.textStyles.caption,
     color: theme.colors.textTertiary,
     marginTop: 1,
+  },
+  eventRow: {
+    cursor: 'default',
+  } as object,
+  eventCell: {
+    flexDirection: 'row' as const,
+    alignItems: 'center' as const,
+    gap: theme.spacing[2],
+  },
+  eventText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
+    flexShrink: 1,
   },
   voidText: {
     ...theme.textStyles.bodySmMedium,

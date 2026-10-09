@@ -5,7 +5,8 @@ import type { AuthenticatedRequest } from '../../../common/types';
 export interface GroupRequestMember {
   id: string;
   userId: string | null;
-  group: { id: string; ownerUserId: string; status: 'active' | 'archived' };
+  /** Null = orphaned (ABA-650): GroupOwnerGuard then refuses everyone. */
+  group: { id: string; ownerUserId: string | null; status: 'active' | 'archived' };
 }
 
 export interface GroupRequest extends AuthenticatedRequest {

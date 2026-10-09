@@ -18,10 +18,16 @@ interface GroupMemberSheetProps {
   onClose: () => void;
   onRename: (memberId: string, name: string) => Promise<void>;
   onRemove: (member: GroupMember) => void;
+  /** ABA-650: the owner looking at another app-user member. Optional, so other hosts stay unchanged. */
+  canMakeOwner?: boolean;
+  onMakeOwner?: (member: GroupMember) => void;
+  /** ABA-651: the owner looking at a claimed guest. Optional, so other hosts stay unchanged. */
+  canResetClaim?: boolean;
+  onResetClaim?: (member: GroupMember) => void;
 }
 
 /**
- * One member: rename and remove. A bottom sheet on a phone, a centred dialog on desktop web (via
+ * One member: rename, make owner (ABA-650), reset a guest's browser login (ABA-651) and remove. A bottom sheet on a phone, a centred dialog on desktop web (via
  * `SheetDialog`, which also owns the system navigation bar inset, ABA-483, so the last button
  * stays tappable on a three-button device).
  */
@@ -32,6 +38,10 @@ export function GroupMemberSheet({
   onClose,
   onRename,
   onRemove,
+  canMakeOwner = false,
+  onMakeOwner,
+  canResetClaim = false,
+  onResetClaim,
 }: GroupMemberSheetProps) {
   const { t } = useTranslation();
   const theme = useTheme();
@@ -93,6 +103,27 @@ export function GroupMemberSheet({
           />
         </>
       )}
+      {canMakeOwner && onMakeOwner && (
+        <GroupButton
+          label={t('groups.makeOwner')}
+          onPress={() => onMakeOwner(member)}
+          variant="secondary"
+          write
+          style={styles.gap}
+        />
+      )}
+      {canResetClaim && onResetClaim && (
+        <>
+          <GroupButton
+            label={t('groups.resetClaim')}
+            onPress={() => onResetClaim(member)}
+            variant="secondary"
+            write
+            style={styles.gap}
+          />
+          <Text style={styles.hint}>{t('groups.resetClaimHint')}</Text>
+        </>
+      )}
       {removeLabel && (
         <GroupButton
           label={removeLabel}
@@ -140,6 +171,11 @@ const createStyles = (theme: Theme) => ({
   },
   gap: {
     marginTop: theme.spacing[3],
+  },
+  hint: {
+    ...theme.textStyles.caption,
+    color: theme.colors.textTertiary,
+    marginTop: theme.spacing[1],
   },
   close: {
     alignItems: 'center' as const,

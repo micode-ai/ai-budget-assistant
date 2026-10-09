@@ -7,10 +7,10 @@ import type { GroupActivityItem, GroupExpense } from '@budget/shared-types';
  */
 
 export interface ActivityTableRow {
-  /** `e-<id>` / `s-<id>`: the keyboard cursor's identity, unique across both kinds. */
+  /** `e-<id>` / `s-<id>` / `v-<id>`: the row identity (and the keyboard cursor's), unique across kinds. */
   id: string;
   item: GroupActivityItem;
-  /** My share of an expense; null for a settlement or an expense I am not part of. */
+  /** My share of an expense; null for a settlement, a membership event or an expense I am not part of. */
   myShare: number | null;
 }
 
@@ -23,7 +23,9 @@ export interface ActivityDay {
 }
 
 export function activityItemId(item: GroupActivityItem): string {
-  return item.kind === 'expense' ? `e-${item.expense.id}` : `s-${item.settlement.id}`;
+  if (item.kind === 'expense') return `e-${item.expense.id}`;
+  if (item.kind === 'settlement') return `s-${item.settlement.id}`;
+  return `v-${item.event.id}`;
 }
 
 function localDay(iso: string): string {
@@ -34,9 +36,11 @@ function localDay(iso: string): string {
   return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
 }
 
-/** An expense sits under its own date; a settlement under the local day it was recorded. */
+/** An expense sits under its own date; a settlement or a membership event under its local day. */
 export function activityDayKey(item: GroupActivityItem): string {
-  return item.kind === 'expense' ? item.expense.date : localDay(item.settlement.createdAt);
+  if (item.kind === 'expense') return item.expense.date;
+  if (item.kind === 'settlement') return localDay(item.settlement.createdAt);
+  return localDay(item.event.createdAt);
 }
 
 export function myShareOf(expense: Pick<GroupExpense, 'shares'>, myMemberId: string): number | null {
@@ -48,7 +52,9 @@ const round2 = (n: number) => Math.round(n * 100) / 100;
 /**
  * Days newest first (an expense is dated by its own `date`, which can be older than when it was
  * entered, so the feed order alone is not day order); rows within a day keep the feed's order.
- * `order` is the flat rendered id order, which is what `↑`/`↓` must walk.
+ * `order` is the flat rendered id order, which is what `↑`/`↓` must walk. Membership events
+ * (ABA-650) are rendered but left OUT of `order`: they are system rows, never a keyboard target, so
+ * the cursor skips them and `Enter` can never land on one.
  */
 export function groupActivityByDay(
   items: GroupActivityItem[],
@@ -72,5 +78,8 @@ export function groupActivityByDay(
   const days = [...byDay.values()]
     .sort((a, b) => (a.dayKey < b.dayKey ? 1 : a.dayKey > b.dayKey ? -1 : 0))
     .map((d) => ({ ...d, subtotal: round2(d.subtotal) }));
-  return { days, order: days.flatMap((d) => d.rows.map((r) => r.id)) };
+  return {
+    days,
+    order: days.flatMap((d) => d.rows.filter((r) => r.item.kind !== 'event').map((r) => r.id)),
+  };
 }

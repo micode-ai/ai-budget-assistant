@@ -210,6 +210,8 @@ const translations: Record<string, {
   monthlyWrappedBody: () => string;
   groupActivityTitle: (groupName: string) => string;
   groupActivityBody: () => string;
+  groupOwnerTitle: (groupName: string) => string;
+  groupOwnerBody: () => string;
   possibleMergeTitle: (p: PossibleMergeParams) => string;
   possibleMergeBody: (p: PossibleMergeParams) => string;
   tripSettleUpTitle: (p: TripSettleUpParams) => string;
@@ -309,6 +311,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Top category, biggest purchase and how it compares with last month — swipe through it.',
     groupActivityTitle: (groupName) => `New activity in "${groupName}"`,
     groupActivityBody: () => 'Someone added an expense or a payment. Open the group to see the balances.',
+    groupOwnerTitle: (groupName) => `You are now the owner of "${groupName}"`,
+    groupOwnerBody: () => 'You can manage its link, archive it or delete it.',
     possibleMergeTitle: ({ merchant }) => `Same purchase, two currencies? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} and ${amountB} ${currencyB} at ${merchant} look like one transaction. Merge them?`,
@@ -409,6 +413,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Главная категория, самая крупная покупка и сравнение с прошлым месяцем — листайте карточки.',
     groupActivityTitle: (groupName) => `Новая активность в «${groupName}»`,
     groupActivityBody: () => 'Кто-то добавил расход или платёж. Откройте группу, чтобы увидеть балансы.',
+    groupOwnerTitle: (groupName) => `Теперь вы владелец группы «${groupName}»`,
+    groupOwnerBody: () => 'Вы можете управлять ссылкой, архивировать или удалить группу.',
     possibleMergeTitle: ({ merchant }) => `Одна покупка, две валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} и ${amountB} ${currencyB} у ${merchant} похоже на одну транзакцию. Объединить?`,
@@ -509,6 +515,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Головна категорія, найбільша покупка й порівняння з минулим місяцем — гортайте картки.',
     groupActivityTitle: (groupName) => `Нова активність у «${groupName}»`,
     groupActivityBody: () => 'Хтось додав витрату або платіж. Відкрийте групу, щоб побачити баланси.',
+    groupOwnerTitle: (groupName) => `Тепер ви власник групи «${groupName}»`,
+    groupOwnerBody: () => 'Ви можете керувати посиланням, архівувати або видалити групу.',
     possibleMergeTitle: ({ merchant }) => `Одна покупка, дві валюти? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} схожі на одну транзакцію. Об'єднати?`,
@@ -609,6 +617,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Główna kategoria, największy zakup i porównanie z poprzednim miesiącem — przesuń karty.',
     groupActivityTitle: (groupName) => `Nowa aktywność w „${groupName}”`,
     groupActivityBody: () => 'Ktoś dodał wydatek lub płatność. Otwórz grupę, aby zobaczyć salda.',
+    groupOwnerTitle: (groupName) => `Jesteś teraz właścicielem grupy „${groupName}”`,
+    groupOwnerBody: () => 'Możesz zarządzać linkiem, zarchiwizować lub usunąć grupę.',
     possibleMergeTitle: ({ merchant }) => `Ten sam zakup, dwie waluty? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} i ${amountB} ${currencyB} u ${merchant} wyglądają jak jedna transakcja. Połączyć?`,
@@ -709,6 +719,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Categoría principal, la compra más grande y la comparación con el mes pasado: desliza las tarjetas.',
     groupActivityTitle: (groupName) => `Nueva actividad en «${groupName}»`,
     groupActivityBody: () => 'Alguien añadió un gasto o un pago. Abre el grupo para ver los saldos.',
+    groupOwnerTitle: (groupName) => `Ahora eres el propietario de «${groupName}»`,
+    groupOwnerBody: () => 'Puedes gestionar su enlace, archivarlo o eliminarlo.',
     possibleMergeTitle: ({ merchant }) => `¿La misma compra, dos monedas? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} y ${amountB} ${currencyB} en ${merchant} parecen una sola transacción. ¿Fusionarlos?`,
@@ -809,6 +821,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Catégorie principale, plus gros achat et comparaison avec le mois dernier : faites défiler les cartes.',
     groupActivityTitle: (groupName) => `Nouvelle activité dans « ${groupName} »`,
     groupActivityBody: () => "Quelqu'un a ajouté une dépense ou un paiement. Ouvrez le groupe pour voir les soldes.",
+    groupOwnerTitle: (groupName) => `Vous êtes maintenant propriétaire de « ${groupName} »`,
+    groupOwnerBody: () => 'Vous pouvez gérer son lien, l’archiver ou le supprimer.',
     possibleMergeTitle: ({ merchant }) => `Même achat, deux devises ? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} et ${amountB} ${currencyB} chez ${merchant} semblent être une seule transaction. Les fusionner ?`,
@@ -909,6 +923,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Top-Kategorie, größter Einkauf und der Vergleich zum Vormonat — wisch durch die Karten.',
     groupActivityTitle: (groupName) => `Neue Aktivität in „${groupName}“`,
     groupActivityBody: () => 'Jemand hat eine Ausgabe oder eine Zahlung hinzugefügt. Öffne die Gruppe, um die Salden zu sehen.',
+    groupOwnerTitle: (groupName) => `Du bist jetzt Inhaber von „${groupName}“`,
+    groupOwnerBody: () => 'Du kannst den Link verwalten, die Gruppe archivieren oder löschen.',
     possibleMergeTitle: ({ merchant }) => `Gleicher Kauf, zwei Währungen? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} und ${amountB} ${currencyB} bei ${merchant} sehen nach einer Transaktion aus. Zusammenführen?`,
@@ -1009,6 +1025,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Галоўная катэгорыя, найбуйнейшая пакупка і параўнанне з мінулым месяцам — гартайце карткі.',
     groupActivityTitle: (groupName) => `Новая актыўнасць у «${groupName}»`,
     groupActivityBody: () => 'Хтосьці дадаў расход або плацёж. Адкрыйце групу, каб убачыць балансы.',
+    groupOwnerTitle: (groupName) => `Цяпер вы ўладальнік групы «${groupName}»`,
+    groupOwnerBody: () => 'Вы можаце кіраваць спасылкай, архіваваць або выдаліць групу.',
     possibleMergeTitle: ({ merchant }) => `Адна пакупка, дзве валюты? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} і ${amountB} ${currencyB} у ${merchant} падобна на адну транзакцыю. Аб'яднаць?`,
@@ -1109,6 +1127,8 @@ const translations: Record<string, {
     monthlyWrappedBody: () => 'Topcategorie, grootste aankoop en de vergelijking met vorige maand — swipe door de kaarten.',
     groupActivityTitle: (groupName) => `Nieuwe activiteit in "${groupName}"`,
     groupActivityBody: () => 'Iemand heeft een uitgave of betaling toegevoegd. Open de groep om de saldi te zien.',
+    groupOwnerTitle: (groupName) => `Je bent nu de eigenaar van "${groupName}"`,
+    groupOwnerBody: () => 'Je kunt de link beheren, de groep archiveren of verwijderen.',
     possibleMergeTitle: ({ merchant }) => `Zelfde aankoop, twee valuta? — ${merchant}`,
     possibleMergeBody: ({ amountA, currencyA, amountB, currencyB, merchant }) =>
       `${amountA} ${currencyA} en ${amountB} ${currencyB} bij ${merchant} lijken één transactie. Samenvoegen?`,
@@ -1333,6 +1353,14 @@ export function groupActivityTitle(lang: Lang, groupName: string): string {
 
 export function groupActivityBody(lang: Lang): string {
   return t(lang).groupActivityBody();
+}
+
+export function groupOwnerTitle(lang: Lang, groupName: string): string {
+  return t(lang).groupOwnerTitle(groupName);
+}
+
+export function groupOwnerBody(lang: Lang): string {
+  return t(lang).groupOwnerBody();
 }
 
 export function possibleMergeTitle(lang: Lang, params: PossibleMergeParams): string {

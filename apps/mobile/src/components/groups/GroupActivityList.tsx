@@ -1,10 +1,12 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useTranslation } from 'react-i18next';
 import { formatCurrency } from '@budget/shared-utils';
 import { useTheme, useStyles, type Theme } from '@/theme';
 import { fromDateInputValue } from '@/utils/dateInput';
 import { canModifyExpense, canVoidSettlement, memberName } from '@/features/groups/groupDisplay';
+import { describeGroupEvent } from '@/features/groups/groupOwnership';
 import type {
   GroupActivityItem,
   GroupDetail,
@@ -33,7 +35,10 @@ function formatDay(dateOnly: string): string {
   });
 }
 
-/** Expenses and payments, newest first. Deleted / voided rows stay visible, struck through. */
+/**
+ * Expenses, payments and membership events (ABA-650), newest first. Deleted / voided rows stay
+ * visible, struck through. An event is a plain system row: never tappable.
+ */
 export function GroupActivityList({
   detail,
   items,
@@ -80,6 +85,23 @@ export function GroupActivityList({
                   {formatCurrency(e.amount, detail.currencyCode)}
                 </Text>
               </TouchableOpacity>
+            );
+          }
+
+          if (item.kind === 'event') {
+            const text = describeGroupEvent(item.event);
+            return (
+              <View key={`v-${item.event.id}`} style={styles.row} accessibilityRole="text">
+                <Ionicons name="people-outline" size={16} color={theme.colors.textTertiary} />
+                <View style={styles.rowInfo}>
+                  <Text style={styles.eventText} numberOfLines={3}>
+                    {t(text.key, text.params)}
+                  </Text>
+                  <Text style={styles.rowMeta} numberOfLines={1}>
+                    {new Date(item.event.createdAt).toLocaleDateString()}
+                  </Text>
+                </View>
+              </View>
             );
           }
 
@@ -167,6 +189,10 @@ const createStyles = (theme: Theme) => ({
   rowAmount: {
     ...theme.textStyles.bodyMedium,
     color: theme.colors.textPrimary,
+  },
+  eventText: {
+    ...theme.textStyles.bodySm,
+    color: theme.colors.textSecondary,
   },
   struck: {
     textDecorationLine: 'line-through' as const,

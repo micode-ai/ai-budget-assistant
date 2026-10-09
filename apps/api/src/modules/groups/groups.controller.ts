@@ -15,6 +15,7 @@ import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { AuthenticatedRequest } from '../../common/types';
 import { GroupsService } from './groups.service';
+import { GroupOwnershipService } from './group-ownership.service';
 import { GroupActiveGuard, GroupMemberGuard, GroupOwnerGuard, type GroupRequest } from './guards';
 import {
   AddGroupMemberDto,
@@ -25,6 +26,7 @@ import {
   GroupActivityQueryDto,
   JoinGroupDto,
   LinkGuestDto,
+  TransferGroupOwnerDto,
   UpdateGroupDto,
   UpdateGroupExpenseDto,
   UpdateGroupMemberDto,
@@ -35,7 +37,10 @@ import {
 @Controller('groups')
 @UseGuards(JwtAuthGuard)
 export class GroupsController {
-  constructor(private readonly service: GroupsService) {}
+  constructor(
+    private readonly service: GroupsService,
+    private readonly ownership: GroupOwnershipService,
+  ) {}
 
   @Get()
   list(@Req() req: AuthenticatedRequest) {
@@ -96,6 +101,28 @@ export class GroupsController {
     return this.service.rotateLink(req.groupId);
   }
 
+  // ABA-650. The caller is the guard-derived owner; the target id is re-scoped to the group in the
+  // service. Throttled per route (no APP_GUARD exists, a bare @Throttle would be inert).
+  @Post(':groupId/owner')
+  @HttpCode(200)
+  @UseGuards(ThrottlerGuard, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  async transferOwner(@Req() req: GroupRequest, @Body() dto: TransferGroupOwnerDto) {
+    await this.ownership.transfer(req.groupId, { memberId: req.groupMember.id, userId: req.user.id }, dto.memberId);
+    return this.service.getDetail(req.groupId, req.groupMember.id);
+  }
+
+  // ABA-650. Any live member (the guard proves an app user) takes over an ORPHANED group; a group
+  // with an owner answers 409 GROUP_HAS_OWNER.
+  @Post(':groupId/adopt')
+  @HttpCode(200)
+  @UseGuards(ThrottlerGuard, GroupMemberGuard, GroupActiveGuard)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  async adopt(@Req() req: GroupRequest) {
+    await this.ownership.adopt(req.groupId, req.groupMember.id, req.user.id);
+    return this.service.getDetail(req.groupId, req.groupMember.id);
+  }
+
   @Post(':groupId/archive')
   @HttpCode(200)
   @UseGuards(GroupMemberGuard, GroupOwnerGuard)
@@ -127,6 +154,16 @@ export class GroupsController {
   @UseGuards(GroupMemberGuard, GroupActiveGuard)
   async removeMember(@Req() req: GroupRequest, @Param('memberId') memberId: string): Promise<void> {
     await this.service.removeMember(req.groupId, req.groupMember.id, memberId);
+  }
+
+  // ABA-651. The owner frees one guest's browser claim. Owner-only (an orphaned group passes nobody),
+  // the target re-scoped to the group in the service; throttled per route (no APP_GUARD exists).
+  @Post(':groupId/members/:memberId/reset-claim')
+  @HttpCode(200)
+  @UseGuards(ThrottlerGuard, GroupMemberGuard, GroupOwnerGuard, GroupActiveGuard)
+  @Throttle({ default: { limit: 10, ttl: 60000 } })
+  resetClaim(@Req() req: GroupRequest, @Param('memberId') memberId: string) {
+    return this.service.resetClaim(req.groupId, req.groupMember.id, memberId);
   }
 
   @Post(':groupId/expenses')

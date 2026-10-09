@@ -28,6 +28,8 @@ export function GroupOwnerControls({
   return (
     <View style={styles.card}>
       <Text style={styles.title}>{t('groups.ownerSection')}</Text>
+      {/* ABA-650: the owner's "Leave group" is replaced by this pointer to "Make owner". */}
+      {writable && <Text style={styles.hint}>{t('groups.ownerLeaveHint')}</Text>}
 
       {writable && (
         <>

@@ -67,6 +67,13 @@ export type GuestActivityView =
       amount: number;
       voided: boolean;
       canVoid: boolean;
+    }
+  | {
+      /** ABA-650: only `member_merged` ever reaches the page (an app-user status must never show). */
+      kind: 'event';
+      id: string;
+      subjectName: string;
+      targetName: string;
     };
 
 export interface GroupPageModel {
@@ -191,6 +198,9 @@ function activityRows(m: GroupPageModel, s: GroupGuestStrings, allowActions: boo
   if (m.activity.length === 0) return `<p class="muted">${escapeHtml(s.t('noHistory'))}</p>`;
   return m.activity
     .map((a) => {
+      if (a.kind === 'event') {
+        return `<div class="row"><div class="muted">${escapeHtml(s.t('eventMerged', a.subjectName, a.targetName))}</div></div>`;
+      }
       if (a.kind === 'expense') {
         const del =
           allowActions && a.canDelete && !a.deleted && m.me

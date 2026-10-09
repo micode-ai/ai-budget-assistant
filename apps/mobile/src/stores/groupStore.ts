@@ -54,8 +54,14 @@ interface GroupState {
   addMember: (groupId: string, displayName: string) => Promise<GroupMember>;
   updateMember: (groupId: string, memberId: string, dto: UpdateGroupMemberDto) => Promise<void>;
   removeMember: (groupId: string, memberId: string) => Promise<void>;
+  /** ABA-651: owner frees one guest's browser claim; reloads the group (members + the event row). */
+  resetMemberClaim: (groupId: string, memberId: string) => Promise<void>;
   updateGroup: (groupId: string, dto: UpdateGroupDto) => Promise<void>;
   rotateLink: (groupId: string) => Promise<string>;
+  /** ABA-650: hand the group to another app-user member. Reloads on 409 OWNER_CHANGED, then rethrows. */
+  transferOwnership: (groupId: string, memberId: string) => Promise<void>;
+  /** ABA-650: take over an orphaned group. Reloads on 409 GROUP_HAS_OWNER, then rethrows. */
+  adoptGroup: (groupId: string) => Promise<void>;
   archive: (groupId: string, force?: boolean) => Promise<void>;
   removeGroup: (groupId: string) => Promise<void>;
   reset: () => void;
@@ -234,6 +240,18 @@ export const useGroupStore = create<GroupState>()((set, get) => {
       await get().loadGroup(groupId);
     },
 
+    resetMemberClaim: async (groupId, memberId) => {
+      try {
+        await run('resetMemberClaim', () => api.resetGroupMemberClaim(groupId, memberId));
+      } catch (e) {
+        // 409 NOT_CLAIMED / 404: the list is stale (they already left, linked or forgot the device).
+        const status = (e as { status?: number } | undefined)?.status;
+        if (status === 409 || status === 404) await get().loadGroup(groupId).catch(() => undefined);
+        throw e;
+      }
+      await get().loadGroup(groupId);
+    },
+
     updateGroup: async (groupId, dto) => {
       const detail = await run('updateGroup', () => api.updateGroup(groupId, dto));
       set({ current: detail });
@@ -243,6 +261,28 @@ export const useGroupStore = create<GroupState>()((set, get) => {
       const { guestUrl } = await run('rotateLink', () => api.rotateGroupLink(groupId));
       set((s) => (s.current?.id === groupId ? { current: { ...s.current, guestUrl } } : {}));
       return guestUrl;
+    },
+
+    transferOwnership: async (groupId, memberId) => {
+      try {
+        await applyDetail(await run('transferOwnership', () => api.transferGroupOwner(groupId, memberId)));
+      } catch (e) {
+        if ((e as { status?: number } | undefined)?.status === 409) {
+          await get().loadGroup(groupId).catch(() => undefined);
+        }
+        throw e;
+      }
+    },
+
+    adoptGroup: async (groupId) => {
+      try {
+        await applyDetail(await run('adoptGroup', () => api.adoptGroup(groupId)));
+      } catch (e) {
+        if ((e as { status?: number } | undefined)?.status === 409) {
+          await get().loadGroup(groupId).catch(() => undefined);
+        }
+        throw e;
+      }
     },
 
     archive: async (groupId, force) => {
